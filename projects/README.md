@@ -4,48 +4,47 @@ This directory contains multiple **standalone research projects**, each with ind
 
 ## Exemplar Projects Showcase
 
-This directory contains **two exemplar projects** demonstrating the template's full capabilities:
+This directory contains **four exemplar projects** demonstrating the template's full capabilities:
 
 ### 🚀 **code_project**: Computational Research Exemplar
+
 A optimization research project featuring:
+
 - **Advanced Algorithms**: Full gradient descent implementation with convergence analysis
 - **Publication-Quality Output**: Professional LaTeX manuscript with cross-references
 - **Rigorous Testing**: 96%+ test coverage with performance benchmarks
 - **Automated Analysis**: Script-driven figure generation and data visualization
 
-### 🧠 **active_inference_meta_pragmatic**: Active Inference Research
-A active inference research project demonstrating:
-- **Meta-Pragmatic Framework**: Advanced theoretical development
-- **Active Inference Models**: Implementation of active inference principles
-- **Analysis**: Extensive experimental validation
-- **Professional Documentation**: Publication-quality manuscript
+### 🔐 **Cognitive Security Framework** (3-Part Series)
 
-### 📚 **ento_linguistics**: Ento-Linguistic Research
-A ento-linguistic research project demonstrating:
-- **Domain Analysis**: Term extraction and literature mining
-- **Multi-Domain Taxonomy**: Six-domain classification system
-- **Testing**: 484 tests with 83% coverage
-- **Research Pipeline**: analysis workflows
+A comprehensive cognitive security research series:
 
-**Note:** Archived projects (e.g., `prose_project/`) are preserved in `projects_archive/` for reference but are not actively executed.
+- **cogsec_multiagent_1_theory**: Formal foundations and theoretical analysis (DOI: 10.5281/zenodo.18364119)
+- **cogsec_multiagent_2_computational**: Computational validation and implementation (DOI: 10.5281/zenodo.18364128)
+- **cogsec_multiagent_3_practical**: Practical deployment guidance (DOI: 10.5281/zenodo.18364130)
+
+**Note:** Archived projects are preserved in `projects_archive/` for reference but are not actively executed.
 
 ## Standalone Project Paradigm
 
 Each project in `projects/` is **completely self-contained** with three critical guarantees:
 
 ### 🔒 **Tests**: Independent Test Suites
+
 - Each project has its own `tests/` directory with 90%+ coverage requirement
 - Tests use data only (no mocks policy)
 - Tests import from `projects/{name}/src/` and `infrastructure/`
 - Can be run independently: `pytest projects/{name}/tests/`
 
 ### 🧠 **Methods**: Business Logic Isolation
+
 - All research algorithms in `projects/{name}/src/`
 - No cross-project imports or dependencies
 - Can import from `infrastructure/` modules for shared utilities
 - Scripts in `projects/{name}/scripts/` are thin orchestrators
 
 ### 📝 **Manuscript**: Independent Content
+
 - Each project has its own `manuscript/` directory
 - Independent config.yaml, references.bib, and markdown sections
 - Rendered independently via infrastructure.rendering
@@ -58,7 +57,9 @@ Each project in `projects/` is **completely self-contained** with three critical
 The template distinguishes between **active projects** and **archived projects**:
 
 #### ✅ **Active Projects (`projects/`)**
+
 Projects in the `projects/` directory are **actively discovered and executed** by infrastructure:
+
 - **Discovered** by `infrastructure.project.discovery.discover_projects()`
 - **Listed** in `run.sh` interactive menu for selection
 - **Executed** by all pipeline scripts (`01_run_tests.py`, `02_run_analysis.py`, etc.)
@@ -66,54 +67,46 @@ Projects in the `projects/` directory are **actively discovered and executed** b
 - **Outputs** organized in `projects/{name}/output/` and `output/{name}/`
 
 #### 📦 **Archived Projects (`projects_archive/`)**
+
 Projects in the `projects_archive/` directory are **preserved but not executed**:
+
 - **NOT discovered** by infrastructure discovery functions
 - **NOT listed** in `run.sh` menu
 - **NOT executed** by any pipeline scripts
 - **Preserved** for historical reference and potential reactivation
 
-### 🔄 **Project Lifecycle**
-
-#### Archiving an Active Project
-```bash
 # Move project to archive
+
 mv projects/myproject projects_archive/myproject
-# Project is now archived and will not be discovered
-```
 
-#### Reactivating an Archived Project
-```bash
 # Move project back to active
+
 mv projects_archive/myproject projects/myproject
+
 # Project will be automatically discovered on next run.sh execution
-```
 
-### 📋 **Current Active Projects**
-
-| Project | Description | Status |
-|---------|-------------|--------|
 | `code_project/` | Minimal optimization algorithms research | ✅ Active |
-| `active_inference_meta_pragmatic/` | Active inference and meta-pragmatic research | ✅ Active |
-| `ento_linguistics/` | Ento-linguistic research project | ✅ Active |
+| `cogsec_multiagent_1_theory/` | CIF Part 1: Formal foundations | ✅ Active |
+| `cogsec_multiagent_2_computational/` | CIF Part 2: Computational validation | ✅ Active |
+| `cogsec_multiagent_3_practical/` | CIF Part 3: Practical guidance | ✅ Active |
 
-**Archived projects** (e.g., `prose_project/`) are available in `projects_archive/` for historical reference.
+**Archived projects** are available in `projects_archive/` for historical reference.
 
 ```mermaid
 graph TD
     subgraph projects["projects/ - Multi-Project Container"]
-        ENTO[ento_linguistics/<br/>Ento-Linguistic Analysis<br/>484 tests, 83% coverage]
-        ACTIVE[active_inference_meta_pragmatic/<br/>Active Inference Framework<br/>Meta-cognitive analysis]
-        SMALL_CODE[code_project/<br/>Optimization Research<br/>Gradient descent algorithms]
-        ACTIVE_INF[active_inference_meta_pragmatic/<br/>Active Inference Research<br/>Meta-pragmatic framework]
-        ENTO[ento_linguistics/<br/>Ento-Linguistic Research<br/>Domain analysis & taxonomy]
+        CIF1[cogsec_multiagent_1_theory/<br/>CIF Part 1: Theory<br/>Formal foundations]
+        CIF2[cogsec_multiagent_2_computational/<br/>CIF Part 2: Computational<br/>Empirical validation]
+        CODE[code_project/<br/>Optimization Research<br/>Gradient descent algorithms]
+        CIF3[cogsec_multiagent_3_practical/<br/>CIF Part 3: Practical<br/>Deployment guidance]
         CUSTOM[your_project/<br/>Custom research<br/>Your algorithms here]
 
-        ENTO --> ENTO_SRC[src/<br/>Term extraction,<br/>Domain analysis,<br/>Literature mining]
-        ENTO --> ENTO_TESTS[tests/<br/>Unit & integration tests<br/>90% coverage]
-        ENTO --> ENTO_SCRIPTS[scripts/<br/>Analysis pipelines<br/>Thin orchestrators]
-        ENTO --> ENTO_MANUSCRIPT[manuscript/<br/>Ento-linguistic research<br/>6-domain taxonomy]
-        ENTO --> ENTO_OUTPUT[output/<br/>Generated analyses<br/>Disposable]
-        ENTO --> ENTO_CONFIG[pyproject.toml<br/>Project metadata]
+        CIF1 --> CIF1_SRC[src/<br/>Trust calculus,<br/>Firewall,<br/>Consensus]
+        CIF1 --> CIF1_TESTS[tests/<br/>Unit & integration tests<br/>90% coverage]
+        CIF1 --> CIF1_SCRIPTS[scripts/<br/>Figure generation<br/>18 scripts]
+        CIF1 --> CIF1_MANUSCRIPT[manuscript/<br/>Formal theory<br/>Proofs & notation]
+        CIF1 --> CIF1_OUTPUT[output/<br/>Generated figures<br/>Disposable]
+        CIF1 --> CIF1_CONFIG[pyproject.toml<br/>Project metadata]
     end
 
     subgraph Infrastructure["🔧 Shared Infrastructure"]
@@ -158,38 +151,42 @@ graph TD
 Each project is **operated upon** by infrastructure modules while maintaining independence:
 
 ### 🔍 **Project Discovery** (`infrastructure.project.discovery`)
+
 ```python
 from infrastructure.project import discover_projects, validate_project_structure
 
 # Automatically discovers all valid projects
-projects = discover_projects(Path("."))  # Finds ento_linguistics, active_inference_meta_pragmatic, etc.
+projects = discover_projects(Path("."))  # Finds cogsec_multiagent_1_theory, code_project, etc.
 
 # Validates project structure
-is_valid, message = validate_project_structure(Path("projects/ento_linguistics"))
+is_valid, message = validate_project_structure(Path("projects/cogsec_multiagent_1_theory"))
 # Returns: (True, "Valid project structure")
 ```
 
 ### 🧪 **Test Execution** (`scripts/01_run_tests.py`)
+
 ```bash
 # Runs project-specific tests with infrastructure orchestration
-python3 scripts/01_run_tests.py --project ento_linguistics
+python3 scripts/01_run_tests.py --project code_project
 
 # Infrastructure validates structure, then runs:
-# pytest projects/ento_linguistics/tests/ --cov=projects/ento_linguistics/src --cov-fail-under=90
+# pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-under=90
 ```
 
 ### ⚙️ **Analysis Scripts** (`scripts/02_run_analysis.py`)
+
 ```python
 # Discovers and executes project scripts
-python3 scripts/02_run_analysis.py --project active_inference_meta_pragmatic
+python3 scripts/02_run_analysis.py --project cogsec_multiagent_2_computational
 
 # Infrastructure finds and runs:
-# projects/active_inference_meta_pragmatic/scripts/analysis_pipeline.py
-# projects/active_inference_meta_pragmatic/scripts/generate_quadrant_matrix.py
+# projects/cogsec_multiagent_2_computational/scripts/analysis_pipeline.py
+# projects/cogsec_multiagent_1_theory/scripts/generate_figures.py
 # etc.
 ```
 
 ### 📄 **PDF Rendering** (`scripts/03_render_pdf.py`)
+
 ```python
 # Renders project manuscript using infrastructure.rendering
 python3 scripts/03_render_pdf.py --project code_project
@@ -199,6 +196,7 @@ python3 scripts/03_render_pdf.py --project code_project
 ```
 
 ### ✅ **Quality Validation** (`scripts/04_validate_output.py`)
+
 ```python
 # Validates project outputs using infrastructure.validation
 python3 scripts/04_validate_output.py --project project
@@ -207,27 +205,31 @@ python3 scripts/04_validate_output.py --project project
 ```
 
 ### 📋 **Output Management** (`scripts/05_copy_outputs.py`)
+
 ```python
 # Organizes final deliverables
-python3 scripts/05_copy_outputs.py --project ento_linguistics
+python3 scripts/05_copy_outputs.py --project cogsec_multiagent_3_practical
 
-# Copies from projects/ento_linguistics/output/ to output/ento_linguistics/
+# Copies from projects/cogsec_multiagent_3_practical/output/ to output/cogsec_multiagent_3_practical/
 ```
 
 ## Project Isolation Principles
 
 ### ✅ **Independence**
+
 - **Source Code**: Each project has independent `src/` with unique algorithms
 - **Test Suites**: Separate `tests/` directories with project-specific coverage
 - **Manuscripts**: Independent `manuscript/` with own content and references
 - **Dependencies**: Can specify project-specific requirements in `pyproject.toml`
 
 ### ✅ **Shared Infrastructure Access**
+
 - **Import Pattern**: Projects import from `infrastructure/` but not from each other
 - **Common Utilities**: Logging, validation, rendering, reporting shared across projects
 - **Quality Standards**: All projects follow same .cursorrules compliance
 
 ### ❌ **No Cross-Project Dependencies**
+
 - Projects cannot import from other projects
 - No shared business logic between projects
 - Each project maintains its own scientific domain and methodology
@@ -237,39 +239,46 @@ python3 scripts/05_copy_outputs.py --project ento_linguistics
 Every project must comply with development standards defined in `.cursorrules/`:
 
 ### ✅ **Testing Standards** (`.cursorrules/testing_standards.md`)
+
 - [ ] **90% minimum coverage** for project code (`projects/{name}/src/`)
 - [ ] **data only** - No mocks in test suites
 - [ ] **integration tests** for critical workflows
 - [ ] **Deterministic results** with seeded randomness
 
 ### ✅ **Documentation Standards** (`.cursorrules/documentation_standards.md`)
+
 - [ ] **`AGENTS.md`** in each directory with technical documentation
 - [ ] **`README.md`** in each directory with quick reference and Mermaid diagrams
 - [ ] **docstrings** with examples for all public APIs
 - [ ] **Cross-references** to related documentation sections
 
 ### ✅ **Type Hints Standards** (`.cursorrules/type_hints_standards.md`)
+
 - [ ] **type annotations** on all public APIs
 - [ ] **Generic types** where appropriate (List, Dict, Optional, etc.)
 - [ ] **Consistent type hint patterns** across modules
 
 ### ✅ **Error Handling Standards** (`.cursorrules/error_handling.md`)
+
 - [ ] **Custom exception hierarchy** from `infrastructure.core.exceptions`
 - [ ] **Context preservation** with exception chaining
 - [ ] **Informative error messages** with actionable guidance
 
 ### ✅ **Logging Standards** (`.cursorrules/python_logging.md`)
+
 - [ ] **Unified logging** via `infrastructure.core.logging_utils.get_logger(__name__)`
 - [ ] **Appropriate log levels** (DEBUG, INFO, WARNING, ERROR)
 - [ ] **Context-rich messages** for debugging
 
 ### ✅ **Infrastructure Module Standards** (`.cursorrules/infrastructure_modules.md`)
+
 - [ ] **Thin orchestrator pattern** in scripts (import from `src/`, handle I/O only)
 - [ ] **Business logic isolation** in `src/` modules
 - [ ] **Infrastructure imports** for shared utilities
 - [ ] **Domain independence** in imported infrastructure modules
 
 ### ✅ **Code Style Standards** (`.cursorrules/code_style.md`)
+
 - [ ] **Black formatting** with 88-character line limits
 - [ ] **Descriptive variable names** and clear function signatures
 - [ ] **Consistent import organization** (stdlib, third-party, local)
@@ -280,35 +289,28 @@ Every project must comply with development standards defined in `.cursorrules/`:
 Each project follows this structure:
 
 ```
-projects/
-├── code_project/         # Optimization research project
-│   ├── src/              # Source code
-│   ├── tests/            # Test suite
-│   ├── scripts/          # Analysis scripts
-│   ├── manuscript/       # Research manuscript
-│   ├── output/           # Generated outputs (not in git)
-│   └── pyproject.toml    # Project configuration
-├── active_inference_meta_pragmatic/  # Active inference research
-│   ├── src/              # Source code
-│   ├── tests/            # Test suite
-│   ├── scripts/          # Analysis scripts
-│   ├── manuscript/       # Research manuscript
-│   ├── output/           # Generated outputs (not in git)
-│   └── pyproject.toml    # Project configuration
-├── ento_linguistics/     # Ento-linguistic research
-│   ├── src/              # Source code
-│   ├── tests/            # Test suite
-│   ├── scripts/          # Analysis scripts
-│   ├── manuscript/       # Research manuscript
-│   ├── output/           # Generated outputs (not in git)
-│   └── pyproject.toml    # Project configuration
-├── myresearch/           # Custom project 1
-│   ├── src/
-│   ├── tests/
-│   ├── manuscript/
-│   └── pyproject.toml
-└── experiment2/          # Custom project 2
-    └── ...
+307: projects/
+308: ├── code_project/         # Optimization research project
+309: │   ├── src/              # Source code
+310: │   ├── tests/            # Test suite
+311: │   ├── scripts/          # Analysis scripts
+312: │   ├── manuscript/       # Research manuscript
+313: │   ├── output/           # Generated outputs (not in git)
+314: │   └── pyproject.toml    # Project configuration
+315: ├── cogsec_multiagent_1_theory/     # CIF Part 1: Theory
+316: │   ├── src/
+317: │   ├── tests/
+318: │   ├── scripts/
+319: │   ├── manuscript/
+320: │   └── pyproject.toml
+321: ├── cogsec_multiagent_2_computational/  # CIF Part 2: Computational
+322: │   └── ...
+323: ├── cogsec_multiagent_3_practical/      # CIF Part 3: Practical
+324: │   └── ...
+325: ├── myresearch/           # Custom project 1
+326: │   └── ...
+327: └── experiment2/          # Custom project 2
+328:     └── ...
 ```
 
 ## Creating a New Project
@@ -316,7 +318,7 @@ projects/
 ### Option 1: Copy the Template
 
 ```bash
-# Copy an existing project as a starting point (choose code_project, active_inference_meta_pragmatic, or ento_linguistics)
+# Copy an existing project as a starting point (choose code_project or cogsec templates)
 cp -r projects/code_project projects/myresearch
 
 # Customize pyproject.toml
@@ -440,10 +442,12 @@ When no `--project` is specified, the default template project is used:
 ## Project Requirements
 
 Each project must have:
+
 - ✅ `src/` directory with Python modules
 - ✅ `tests/` directory with test files
 
 Optional but recommended:
+
 - `scripts/` - Analysis scripts (discovered by `02_run_analysis.py`)
 - `manuscript/` - Manuscript markdown files (rendered by `03_render_pdf.py`)
 - `pyproject.toml` - Project configuration
@@ -454,7 +458,9 @@ Optional but recommended:
 Each project's outputs are stored in two locations:
 
 ### Working Directory: `projects/{name}/output/`
+
 Generated during pipeline execution:
+
 - `pdf/` - PDF manuscripts
 - `figures/` - Generated figures
 - `data/` - Data files
@@ -465,7 +471,9 @@ Generated during pipeline execution:
 - `logs/` - Pipeline logs
 
 ### Final Directory: `output/{name}/`
+
 Copied by `05_copy_outputs.py`:
+
 - Same structure as working directory
 - All project outputs in one place
 - Ready for distribution
@@ -473,16 +481,17 @@ Copied by `05_copy_outputs.py`:
 **Important**: The root `output/` directory should only contain project-specific folders. Root-level directories (`data/`, `figures/`, `pdf/`, etc.) are automatically cleaned during the pipeline to maintain proper organization.
 
 Example:
+
 ```
 output/
 ├── code_project/      # Optimization research project
 │   ├── pdf/
 │   ├── figures/
 │   └── ...
-├── active_inference_meta_pragmatic/  # Active inference outputs
+├── cogsec_multiagent_1_theory/  # CIF Part 1
 │   ├── pdf/
 │   └── ...
-├── ento_linguistics/     # Ento-linguistics outputs
+├── cogsec_multiagent_2_computational/  # CIF Part 2
 │   ├── pdf/
 │   └── ...
 └── your_project/      # Your custom research project
@@ -492,6 +501,7 @@ output/
 ## Project Isolation
 
 Each project is completely independent:
+
 - ✅ Separate source code
 - ✅ Separate test suites
 - ✅ Separate outputs
@@ -512,6 +522,7 @@ print(f"Valid: {is_valid}, Message: {message}")
 ```
 
 Required checks:
+
 - Directory exists
 - Has `src/` with Python files
 - Has `tests/` directory
@@ -580,54 +591,58 @@ Available projects are automatically discovered - use `--project {name}` to spec
 
 ## Real Project Examples
 
-### 🦗 **Ento-Linguistic Research** (`projects/ento_linguistics/`)
-research project analyzing how language shapes entomological understanding:
+### 🔐 **Cognitive Security Framework** (`cogsec_multiagent_1_theory/`)
+
+Comprehensive cognitive security research series:
 
 **Standalone Guarantees:**
-- **Tests**: 484 tests passing, 83.74% coverage, real literature data from PubMed/arXiv
-- **Methods**: 6-domain Ento-Linguistic framework in `src/`, no cross-project imports
-- **Manuscript**: Independent analysis of terminology networks in entomology
+
+- **Tests**: 90%+ coverage, formal verification of security theories
+- **Methods**: Formal models, game theoretic analysis, and simulation in `src/`
+- **Manuscript**: Independent analysis of multiagent security properties
 
 **Infrastructure Operations:**
+
 ```bash
 # Infrastructure discovers and validates project
-python3 -c "from infrastructure.project import validate_project_structure; print(validate_project_structure(Path('projects/ento_linguistics')))"
+python3 -c "from infrastructure.project import validate_project_structure; print(validate_project_structure(Path('projects/cogsec_multiagent_1_theory')))"
 
 # Infrastructure runs project tests
-python3 scripts/01_run_tests.py --project ento_linguistics
+python3 scripts/01_run_tests.py --project cogsec_multiagent_1_theory
 
 # Infrastructure executes analysis scripts
-python3 scripts/02_run_analysis.py --project ento_linguistics
+python3 scripts/02_run_analysis.py --project cogsec_multiagent_1_theory
 ```
 
-### 🧠 **Active Inference Framework** (`projects/active_inference_meta_pragmatic/`)
-Meta-cognitive analysis implementing Active Inference as meta-methodology:
+### 🧠 **Computational Validation** (`cogsec_multiagent_2_computational/`)
+
+Computational implementation and simulation of the framework:
 
 **Standalone Guarantees:**
-- **Tests**: 90%+ coverage, theoretical validation of EFE calculations
-- **Methods**: 2×2 matrix framework, generative models, meta-cognition in `src/`
-- **Manuscript**: Independent meta-pragmatic analysis with mathematical derivations
+
+- **Tests**: 90%+ coverage, validation of simulation dynamics
+- **Methods**: Agent-based modeling, attack surface simulation in `src/`
+- **Manuscript**: Computational analysis and results verification
 
 **Infrastructure Operations:**
-```bash
-# Infrastructure validates project structure
-from infrastructure.project import discover_projects
-projects = discover_projects(Path("."))
-code_project = next(p for p in projects if p.name == "code_project")
 
-# Infrastructure renders manuscript
-python3 scripts/03_render_pdf.py --project code_project
+```bash
+# Infrastructure executes analysis scripts
+python3 scripts/02_run_analysis.py --project cogsec_multiagent_2_computational
 ```
 
 ### ⚙️ **Optimization Research** (`projects/code_project/`)
+
 Minimal project demonstrating gradient descent algorithms:
 
 **Standalone Guarantees:**
+
 - **Tests**: Unit tests for optimization algorithms with convergence validation
 - **Methods**: Gradient descent implementation in `src/optimizer.py`
 - **Manuscript**: Basic research manuscript with algorithm description
 
 **Infrastructure Operations:**
+
 ```bash
 # pipeline execution
 python3 scripts/execute_pipeline.py --project code_project --core-only
@@ -679,14 +694,15 @@ vim manuscript/02_methodology.md
 ### Method 3: Manuscript-Focused Research
 
 ```bash
-# Use active_inference_meta_pragmatic as template for manuscript-heavy research
-cp -r projects/active_inference_meta_pragmatic projects/literature_review
+# Use cogsec_multiagent_1_theory as template for manuscript-heavy research
+cp -r projects/cogsec_multiagent_1_theory projects/literature_review
 cd projects/literature_review
 
 # Focus on manuscript content with equations
 vim manuscript/01_abstract.md
 vim manuscript/02_introduction.md
 vim manuscript/03_methodology.md
+vim manuscript/04_analysis.md
 
 # Add minimal supporting code
 vim src/theoretical_model.py
@@ -730,11 +746,13 @@ python3 -c "from infrastructure.project import validate_project_structure; print
 ```
 
 **Symptoms:**
+
 - Project exists but not listed in `run.sh` menu
 - Infrastructure reports "project not found"
 - Project appears to be missing from `projects/` directory
 
 **Solution:**
+
 1. Check if project exists in `projects_archive/` directory
 2. If archived, move it back to `projects/` directory
 3. Validate project structure (must have `src/` and `tests/`)
@@ -869,29 +887,34 @@ LOG_LEVEL=0 python3 scripts/03_render_pdf.py --project myproject
 The `projects/` directory implements a **standalone project paradigm** with infrastructure compliance:
 
 ### 🔒 **Standalone Guarantees**
+
 - **Tests**: Independent test suites (90%+ coverage, data only)
 - **Methods**: Isolated business logic with no cross-project imports
 - **Manuscript**: Independent content with own references and metadata
 
 ### 🔧 **Infrastructure Integration**
+
 - **Discovery**: Automatic project detection via `infrastructure.project.discovery`
 - **Validation**: Structure compliance checking
 - **Execution**: Test/analysis/rendering via root `scripts/`
 - **Quality Assurance**: PDF/markdown validation via `infrastructure.validation`
 
 ### 📋 **Compliance Framework**
+
 - **.cursorrules Standards**: Testing, documentation, type hints, error handling, logging
 - **Quality Gates**: 90% coverage, documentation, type safety
 - **Infrastructure Access**: Import from `infrastructure/` modules for shared utilities
 
 ### 🎯 **Real Examples**
-- **ento_linguistics**: Ento-Linguistic research (484 tests, literature mining)
-- **active_inference_meta_pragmatic**: Meta-cognitive framework (theoretical validation)
+
+- **cogsec_multiagent_1_theory**: CIF Part 1 (formal foundations, trust calculus)
+- **cogsec_multiagent_2_computational**: CIF Part 2 (empirical validation, benchmarks)
 - **code_project**: Optimization algorithms (minimal template)
 
-**Note:** Archived projects (e.g., `prose_project/`) are preserved in `projects_archive/` for reference.
+**Note:** Archived projects are preserved in `projects_archive/` for reference.
 
 ### 🚀 **Workflow**
+
 1. **Create**: Copy existing project or start from template
 2. **Develop**: Add algorithms to `src/`, tests to `tests/`, content to `manuscript/`
 3. **Validate**: Ensure .cursorrules compliance and infrastructure integration

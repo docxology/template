@@ -1,16 +1,20 @@
 """Tests for concept visualization functionality."""
+
 from __future__ import annotations
 
-import pytest
-import numpy as np
 import matplotlib
-matplotlib.use('Agg')  # Use non-interactive backend for testing
-import matplotlib.pyplot as plt
+import numpy as np
+import pytest
+
+matplotlib.use("Agg")  # Use non-interactive backend for testing
 from pathlib import Path
+
+import matplotlib.pyplot as plt
 
 # Check if networkx is available (required for concept visualization)
 try:
     import networkx as nx
+
     NETWORKX_AVAILABLE = True
 except ImportError:
     NETWORKX_AVAILABLE = False
@@ -19,17 +23,19 @@ except ImportError:
 if NETWORKX_AVAILABLE:
     try:
         from src.concept_visualization import ConceptVisualizer
-        from src.conceptual_mapping import ConceptMap, Concept
+        from src.conceptual_mapping import Concept, ConceptMap
     except ImportError:
         from concept_visualization import ConceptVisualizer
-        from conceptual_mapping import ConceptMap, Concept
+        from conceptual_mapping import Concept, ConceptMap
 else:
     ConceptVisualizer = None
     ConceptMap = None
     Concept = None
 
 
-@pytest.mark.skipif(not NETWORKX_AVAILABLE, reason="networkx not available for visualization tests")
+@pytest.mark.skipif(
+    not NETWORKX_AVAILABLE, reason="networkx not available for visualization tests"
+)
 class TestConceptVisualizer:
     """Test ConceptVisualizer functionality."""
 
@@ -48,7 +54,7 @@ class TestConceptVisualizer:
             name="colony_organization",
             description="How ant colonies are organized",
             terms={"colony", "queen", "worker"},
-            domains={"unit_of_individuality", "power_and_labor"}
+            domains={"unit_of_individuality", "power_and_labor"},
         )
         concept1.confidence = 0.8
 
@@ -56,7 +62,7 @@ class TestConceptVisualizer:
             name="division_of_labor",
             description="Task specialization in colonies",
             terms={"worker", "forager", "nurse"},
-            domains={"behavior_and_identity", "power_and_labor"}
+            domains={"behavior_and_identity", "power_and_labor"},
         )
         concept2.confidence = 0.7
 
@@ -77,14 +83,21 @@ class TestConceptVisualizer:
     def test_domain_colors_complete(self, visualizer: ConceptVisualizer) -> None:
         """Test that all six domains have colors defined."""
         expected_domains = {
-            'unit_of_individuality', 'behavior_and_identity', 'power_and_labor',
-            'sex_and_reproduction', 'kin_and_relatedness', 'economics'
+            "unit_of_individuality",
+            "behavior_and_identity",
+            "power_and_labor",
+            "sex_and_reproduction",
+            "kin_and_relatedness",
+            "economics",
         }
         assert set(visualizer.DOMAIN_COLORS.keys()) == expected_domains
 
-    def test_visualize_concept_map(self, visualizer: ConceptVisualizer,
-                                 sample_concept_map: ConceptMap,
-                                 tmp_path: Path) -> None:
+    def test_visualize_concept_map(
+        self,
+        visualizer: ConceptVisualizer,
+        sample_concept_map: ConceptMap,
+        tmp_path: Path,
+    ) -> None:
         """Test concept map visualization."""
         filepath = tmp_path / "test_concept_map.png"
 
@@ -97,13 +110,14 @@ class TestConceptVisualizer:
 
         plt.close(fig)
 
-    def test_create_domain_comparison_plot(self, visualizer: ConceptVisualizer,
-                                         tmp_path: Path) -> None:
+    def test_create_domain_comparison_plot(
+        self, visualizer: ConceptVisualizer, tmp_path: Path
+    ) -> None:
         """Test domain comparison plot creation."""
         domain_data = {
-            'unit_of_individuality': {'terms': 50, 'confidence': 0.8},
-            'behavior_and_identity': {'terms': 75, 'confidence': 0.7},
-            'power_and_labor': {'terms': 60, 'confidence': 0.9}
+            "unit_of_individuality": {"terms": 50, "confidence": 0.8},
+            "behavior_and_identity": {"terms": 75, "confidence": 0.7},
+            "power_and_labor": {"terms": 60, "confidence": 0.9},
         }
 
         filepath = tmp_path / "domain_comparison.png"
@@ -117,20 +131,21 @@ class TestConceptVisualizer:
 
         plt.close(fig)
 
-    def test_visualize_terminology_network(self, visualizer: ConceptVisualizer,
-                                         tmp_path: Path) -> None:
+    def test_visualize_terminology_network(
+        self, visualizer: ConceptVisualizer, tmp_path: Path
+    ) -> None:
         """Test terminology network visualization."""
         terms = [
             ("colony", {"domains": ["unit_of_individuality"], "frequency": 10}),
             ("queen", {"domains": ["power_and_labor"], "frequency": 8}),
             ("worker", {"domains": ["power_and_labor"], "frequency": 12}),
             ("forager", {"domains": ["behavior_and_identity"], "frequency": 6}),
-            ("nurse", {"domains": ["behavior_and_identity"], "frequency": 5})
+            ("nurse", {"domains": ["behavior_and_identity"], "frequency": 5}),
         ]
         relationships = {
             ("colony", "queen"): 0.8,
             ("colony", "worker"): 0.9,
-            ("worker", "forager"): 0.7
+            ("worker", "forager"): 0.7,
         }
 
         filepath = tmp_path / "term_network.png"
@@ -144,20 +159,23 @@ class TestConceptVisualizer:
 
         plt.close(fig)
 
-    def test_get_concept_color(self, visualizer: ConceptVisualizer,
-                              sample_concept_map: ConceptMap) -> None:
+    def test_get_concept_color(
+        self, visualizer: ConceptVisualizer, sample_concept_map: ConceptMap
+    ) -> None:
         """Test concept color retrieval."""
-        color = visualizer._get_concept_color('colony_organization', sample_concept_map)
+        color = visualizer._get_concept_color("colony_organization", sample_concept_map)
         # Should be one of the domain colors (power_and_labor is first in iteration)
-        assert color in ['#1f77b4', '#2ca02c', '#7f7f7f']  # unit_of_individuality, power_and_labor, or default
+        assert color in [
+            "#1f77b4",
+            "#2ca02c",
+            "#7f7f7f",
+        ]  # unit_of_individuality, power_and_labor, or default
 
         # Test unknown concept
-        color = visualizer._get_concept_color('unknown_concept', sample_concept_map)
-        assert color == '#7f7f7f'  # Default gray
+        color = visualizer._get_concept_color("unknown_concept", sample_concept_map)
+        assert color == "#7f7f7f"  # Default gray
 
-
-    def test_figure_saving(self, visualizer: ConceptVisualizer,
-                          tmp_path: Path) -> None:
+    def test_figure_saving(self, visualizer: ConceptVisualizer, tmp_path: Path) -> None:
         """Test figure saving functionality."""
         fig, ax = plt.subplots()
         ax.plot([1, 2, 3], [1, 4, 2])
@@ -185,7 +203,7 @@ class TestConceptVisualizer:
         fig, ax = plt.subplots()
         ax.plot([1, 2, 3], [1, 2, 3])
 
-        for ext in ['.png', '.pdf', '.svg']:
+        for ext in [".png", ".pdf", ".svg"]:
             filepath = tmp_path / f"test_figure{ext}"
 
             fig.savefig(filepath)
@@ -213,8 +231,9 @@ class TestConceptVisualizer:
         assert len(concept_map.concepts) == 1
         assert len(concept_map.concept_relationships) == 0
 
-    def test_visualize_concept_hierarchy(self, visualizer: ConceptVisualizer,
-                                        tmp_path: Path) -> None:
+    def test_visualize_concept_hierarchy(
+        self, visualizer: ConceptVisualizer, tmp_path: Path
+    ) -> None:
         """Test concept hierarchy visualization."""
         # Test with empty hierarchy (should not save file)
         hierarchy_data = {}
@@ -226,9 +245,14 @@ class TestConceptVisualizer:
 
         # Test with hierarchy data
         hierarchy_data = {
-            'centrality_scores': {'concept1': 0.8, 'concept2': 0.6, 'concept3': 0.4, 'concept4': 0.2},
-            'core_concepts': ['concept1'],
-            'peripheral_concepts': ['concept2', 'concept3']
+            "centrality_scores": {
+                "concept1": 0.8,
+                "concept2": 0.6,
+                "concept3": 0.4,
+                "concept4": 0.2,
+            },
+            "core_concepts": ["concept1"],
+            "peripheral_concepts": ["concept2", "concept3"],
         }
         filepath = tmp_path / "hierarchy.png"
         fig = visualizer.visualize_concept_hierarchy(hierarchy_data, filepath)
@@ -236,26 +260,30 @@ class TestConceptVisualizer:
         assert filepath.exists()
         plt.close(fig)
 
-    def test_create_anthropomorphic_analysis_plot(self, visualizer: ConceptVisualizer,
-                                                 tmp_path: Path) -> None:
+    def test_create_anthropomorphic_analysis_plot(
+        self, visualizer: ConceptVisualizer, tmp_path: Path
+    ) -> None:
         """Test anthropomorphic analysis plot creation."""
         anthropomorphic_data = {
-            'sentences': [
+            "sentences": [
                 "The colony behaves intelligently",
                 "Workers communicate effectively",
-                "The queen makes decisions"
+                "The queen makes decisions",
             ],
-            'anthropomorphic_terms': ['behaves', 'communicate', 'decisions']
+            "anthropomorphic_terms": ["behaves", "communicate", "decisions"],
         }
 
         filepath = tmp_path / "anthropomorphic.png"
-        fig = visualizer.create_anthropomorphic_analysis_plot(anthropomorphic_data, filepath)
+        fig = visualizer.create_anthropomorphic_analysis_plot(
+            anthropomorphic_data, filepath
+        )
         assert isinstance(fig, plt.Figure)
         assert filepath.exists()
         plt.close(fig)
 
-    def test_export_visualization_metadata(self, visualizer: ConceptVisualizer,
-                                          tmp_path: Path) -> None:
+    def test_export_visualization_metadata(
+        self, visualizer: ConceptVisualizer, tmp_path: Path
+    ) -> None:
         """Test visualization metadata export."""
         # Create some test figures
         fig1, ax1 = plt.subplots()
@@ -263,13 +291,10 @@ class TestConceptVisualizer:
         ax1.set_title("Test Figure 1")
 
         fig2, ax2 = plt.subplots()
-        ax2.bar(['A', 'B', 'C'], [1, 2, 3])
+        ax2.bar(["A", "B", "C"], [1, 2, 3])
         ax2.set_title("Test Figure 2")
 
-        figures = {
-            'figure1': fig1,
-            'figure2': fig2
-        }
+        figures = {"figure1": fig1, "figure2": fig2}
 
         metadata_path = tmp_path / "visualization_metadata.json"
         visualizer.export_visualization_metadata(figures, metadata_path)
@@ -291,15 +316,15 @@ class TestConceptVisualizer:
         """Test term color retrieval."""
         # Create a mock graph with node attributes
         G = nx.Graph()
-        G.add_node('term1', domains=['unit_of_individuality'])
-        G.add_node('term2', domains=['power_and_labor'])
-        G.add_node('term3', domains=['unknown_domain'])
+        G.add_node("term1", domains=["unit_of_individuality"])
+        G.add_node("term2", domains=["power_and_labor"])
+        G.add_node("term3", domains=["unknown_domain"])
 
-        color1 = visualizer._get_term_color('term1', G)
-        color2 = visualizer._get_term_color('term2', G)
-        color3 = visualizer._get_term_color('term3', G)
+        color1 = visualizer._get_term_color("term1", G)
+        color2 = visualizer._get_term_color("term2", G)
+        color3 = visualizer._get_term_color("term3", G)
 
         # Should return domain colors or default
-        assert color1 in visualizer.DOMAIN_COLORS.values() or color1 == '#7f7f7f'
-        assert color2 in visualizer.DOMAIN_COLORS.values() or color2 == '#7f7f7f'
-        assert color3 == '#7f7f7f'  # Default for unknown domain
+        assert color1 in visualizer.DOMAIN_COLORS.values() or color1 == "#7f7f7f"
+        assert color2 in visualizer.DOMAIN_COLORS.values() or color2 == "#7f7f7f"
+        assert color3 == "#7f7f7f"  # Default for unknown domain

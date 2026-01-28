@@ -84,6 +84,7 @@ k \geq \frac{\log(\epsilon)}{\log(\rho)}
 where $\rho = \sqrt{\frac{\kappa - 1}{\kappa + 1}}$ is the convergence factor \cite{polyak1964some}.
 
 For our results, the convergence factors are:
+
 - $\alpha = 0.01$: $\rho \approx 0.99$, requiring ~458 iterations for $\epsilon = 10^{-6}$
 - $\alpha = 0.05$: $\rho \approx 0.95$, requiring ~87 iterations for $\epsilon = 10^{-6}$
 - $\alpha = 0.10$: $\rho \approx 0.90$, requiring ~43 iterations for $\epsilon = 10^{-6}$
@@ -94,12 +95,14 @@ For our results, the convergence factors are:
 ### Convergence Speed
 
 The results show a clear trade-off between step size and convergence speed:
+
 - Small step sizes require more iterations but provide stable convergence
 - Large step sizes converge faster but may be less stable in more complex problems
 
 ### Solution Accuracy
 
 All tested step sizes achieved the analytical optimum within numerical precision:
+
 - Target solution: $x = 1.0000$
 - Target objective: $f(x) = -0.5000$
 
@@ -126,6 +129,7 @@ Figure \ref{fig:complexity} provides a visualization of the algorithm's computat
 ![Algorithm complexity analysis showing computational requirements and scalability characteristics of the gradient descent implementation.](../output/figures/algorithm_complexity.png){#fig:complexity}
 
 The algorithm demonstrates efficient performance for small-scale optimization problems:
+
 - **Time complexity**: $O(d)$ per iteration for gradient computation
 - **Space complexity**: $O(d)$ for storing variables and gradients
 - **Convergence**: Typically $< 20$ iterations for this quadratic problem
@@ -146,11 +150,13 @@ Figure \ref{fig:stability} demonstrates the numerical stability characteristics 
 ### Performance Metrics Summary
 
 **Iteration Statistics:**
+
 - Minimum iterations: 9 (for $\alpha = 0.2$)
 - Maximum iterations: 165 (for $\alpha = 0.01$)
 - Average convergence: $< 50$ iterations across all test cases
 
 **Numerical Accuracy:**
+
 - Solution precision: $< 10^{-4}$ relative error
 - Objective accuracy: $< 10^{-6}$ absolute error
 - Gradient tolerance: $< 10^{-6}$ achieved in all cases
@@ -158,6 +164,7 @@ Figure \ref{fig:stability} demonstrates the numerical stability characteristics 
 ## Validation
 
 The implementation was validated through:
+
 - **Unit tests** covering all core functionality
 - **Integration tests** verifying algorithm convergence
 - **Numerical accuracy** checks against analytical solutions

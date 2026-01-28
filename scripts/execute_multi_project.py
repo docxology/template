@@ -98,7 +98,6 @@ def execute_multi_project(
         # Show project status summary
         if hasattr(result, 'project_results') and result.project_results:
             print(f"\nProject Status:")
-            print(f"Debug: project_results type = {type(result.project_results)}")
             if isinstance(result.project_results, dict):
                 for proj_name in sorted(result.project_results.keys()):
                     proj_result = result.project_results[proj_name]
@@ -111,13 +110,12 @@ def execute_multi_project(
                     else:
                         print(f"  ❓ {proj_name}: Unknown status")
             else:
-                print(f"  Debug: project_results is not a dict, it's {type(result.project_results)}")
+                print(f"  ⚠ project_results format unexpected")
 
         print(f"{'='*60}")
 
         # Generate comprehensive final summary
         try:
-            print(f"Debug: About to generate summary, result.project_results type = {type(result.project_results)}")
             from infrastructure.reporting.pipeline_reporter import generate_multi_project_summary_report
             summary_output_dir = repo_root / "output" / "multi_project_summary"
             summary_output_dir.mkdir(parents=True, exist_ok=True)

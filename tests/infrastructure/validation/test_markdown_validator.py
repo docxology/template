@@ -5,6 +5,7 @@ import os
 import sys
 import tempfile
 from pathlib import Path
+
 import pytest
 
 # Add infrastructure to path for imports
@@ -12,19 +13,13 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.insert(0, ROOT)
 
 from infrastructure.validation.markdown_validator import (
-    find_markdown_files,
-    collect_symbols,
-    validate_images,
-    validate_refs,
-    validate_math,
-    validate_markdown,
-    find_manuscript_directory,
-)
+    collect_symbols, find_manuscript_directory, find_markdown_files,
+    validate_images, validate_markdown, validate_math, validate_refs)
 
 
 class TestFindMarkdownFiles:
     """Test find_markdown_files function."""
-    
+
     def test_finds_and_sorts_markdown_files(self, tmp_path):
         """Test find_markdown_files finds and sorts markdown files."""
         # Create test markdown files
@@ -33,38 +28,38 @@ class TestFindMarkdownFiles:
         (manuscript / "02_second.md").write_text("content")
         (manuscript / "01_first.md").write_text("content")
         (manuscript / "not_md.txt").write_text("content")
-        
+
         files = find_markdown_files(manuscript)
-        
+
         assert len(files) == 2
         assert "01_first.md" in files[0]
         assert "02_second.md" in files[1]
-    
+
     def test_nonexistent_directory_raises(self, tmp_path):
         """Test find_markdown_files raises on nonexistent directory."""
         with pytest.raises(FileNotFoundError):
             find_markdown_files(tmp_path / "nonexistent")
-    
+
     def test_file_instead_of_directory_raises(self, tmp_path):
         """Test find_markdown_files raises when given a file."""
         test_file = tmp_path / "test.txt"
         test_file.write_text("content")
         with pytest.raises(NotADirectoryError):
             find_markdown_files(test_file)
-    
+
     def test_empty_directory(self, tmp_path):
         """Test find_markdown_files with empty directory."""
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
-        
+
         files = find_markdown_files(manuscript)
-        
+
         assert files == []
 
 
 class TestCollectSymbols:
     """Test collect_symbols function."""
-    
+
     def test_extracts_labels_and_anchors(self, tmp_path):
         """Test collect_symbols extracts labels and anchors."""
         # Create test markdown files
@@ -78,26 +73,25 @@ class TestCollectSymbols:
             "\\begin{equation}\\label{eq:test2}\\end{equation}\n"
             "## Subsection {#subsec:test2}\n"
         )
-        
-        labels, anchors = collect_symbols([
-            str(manuscript / "test1.md"),
-            str(manuscript / "test2.md")
-        ])
-        
+
+        labels, anchors = collect_symbols(
+            [str(manuscript / "test1.md"), str(manuscript / "test2.md")]
+        )
+
         assert labels == {"eq:test1", "eq:test2"}
         assert anchors == {"sec:test1", "subsec:test2"}
-    
+
     def test_empty_file_list(self):
         """Test collect_symbols with empty file list."""
         labels, anchors = collect_symbols([])
-        
+
         assert labels == set()
         assert anchors == set()
 
 
 class TestValidateImages:
     """Test validate_images function."""
-    
+
     def test_detects_missing_image(self, tmp_path):
         """Test validate_images detects missing images."""
         # Create test markdown file
@@ -106,12 +100,12 @@ class TestValidateImages:
         (manuscript / "test.md").write_text(
             "![alt text](../output/figures/missing.png)"
         )
-        
+
         problems = validate_images([str(manuscript / "test.md")], tmp_path)
-        
+
         assert len(problems) == 1
         assert "Missing image: ../output/figures/missing.png" in problems[0]
-    
+
     def test_validates_existing_image(self, tmp_path):
         """Test validate_images doesn't flag existing images."""
         # Create test markdown file and image
@@ -122,123 +116,114 @@ class TestValidateImages:
         )
         (tmp_path / "output" / "figures").mkdir(parents=True)
         (tmp_path / "output" / "figures" / "existing.png").write_text("fake image")
-        
+
         problems = validate_images([str(manuscript / "test.md")], tmp_path)
-        
+
         assert len(problems) == 0
-    
+
     def test_absolute_path(self, tmp_path):
         """Test validate_images with absolute image paths."""
         # Create test markdown file with absolute path
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
         abs_image_path = str(tmp_path / "absolute_image.png")
-        (manuscript / "test.md").write_text(
-            f"![alt text]({abs_image_path})"
-        )
-        
+        (manuscript / "test.md").write_text(f"![alt text]({abs_image_path})")
+
         # Don't create the image file so it will be missing
         problems = validate_images([str(manuscript / "test.md")], tmp_path)
-        
+
         assert len(problems) == 1
         assert abs_image_path in problems[0]
-    
+
     def test_relative_path_not_absolute_after_normpath(self, tmp_path, monkeypatch):
         """Test validate_images with relative path that stays relative after normpath.
-        
+
         This covers line 94 where abs_path is joined with repo_root when not absolute.
         """
         # Create a manuscript directory with an image reference
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir(parents=True)
-        
-        (manuscript / "test.md").write_text(
-            "![alt text](../output/figures/test.png)"
-        )
-        
+
+        (manuscript / "test.md").write_text("![alt text](../output/figures/test.png)")
+
         # Change to tmp_path so we can use relative paths
         monkeypatch.chdir(tmp_path)
-        
+
         # Pass RELATIVE path to markdown file - this triggers line 94
         # because dirname("manuscript/test.md") = "manuscript"
         # and join("manuscript", "../output/figures/test.png") = "output/figures/test.png" (relative!)
         relative_md_path = "manuscript/test.md"
-        
+
         problems = validate_images([relative_md_path], tmp_path)
-        
+
         # Should report missing image since we didn't create it
         assert len(problems) == 1
-        assert "output/figures/test.png" in problems[0] or "../output/figures/test.png" in problems[0]
-    
+        assert (
+            "output/figures/test.png" in problems[0]
+            or "../output/figures/test.png" in problems[0]
+        )
+
     def test_relative_path_exists_after_repo_root_join(self, tmp_path):
         """Test validate_images with relative path that exists when joined with repo_root.
-        
+
         This covers line 94 with a file that actually exists.
         """
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
-        
+
         # Create the image in a relative location from manuscript
         figures_dir = manuscript / "figures"
         figures_dir.mkdir()
         (figures_dir / "local_image.png").write_text("fake image")
-        
+
         # Reference with simple relative path
-        (manuscript / "test.md").write_text(
-            "![alt text](figures/local_image.png)"
-        )
-        
+        (manuscript / "test.md").write_text("![alt text](figures/local_image.png)")
+
         problems = validate_images([str(manuscript / "test.md")], tmp_path)
-        
+
         # Image exists, should have no problems
         assert len(problems) == 0
 
 
 class TestValidateRefs:
     """Test validate_refs function."""
-    
+
     def test_detects_missing_equation_label(self, tmp_path):
         """Test validate_refs detects missing equation labels."""
         # Create test markdown file
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
-        (manuscript / "test.md").write_text(
-            "Reference to \\eqref{eq:missing}"
-        )
-        
+        (manuscript / "test.md").write_text("Reference to \\eqref{eq:missing}")
+
         problems = validate_refs([str(manuscript / "test.md")], set(), set(), tmp_path)
-        
+
         assert len(problems) == 1
         assert "Missing equation label for \\eqref{eq:missing}" in problems[0]
-    
+
     def test_detects_missing_anchor(self, tmp_path):
         """Test validate_refs detects missing anchors."""
         # Create test markdown file
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
-        (manuscript / "test.md").write_text(
-            "Link to [section](#missing_anchor)"
-        )
-        
+        (manuscript / "test.md").write_text("Link to [section](#missing_anchor)")
+
         problems = validate_refs([str(manuscript / "test.md")], set(), set(), tmp_path)
-        
+
         assert len(problems) == 1
         assert "Missing anchor/label for link (#missing_anchor)" in problems[0]
-    
+
     def test_detects_bare_url(self, tmp_path):
         """Test validate_refs detects bare URLs."""
         # Create test markdown file
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
-        (manuscript / "test.md").write_text(
-            "Visit https://example.com for more info"
-        )
-        
+        (manuscript / "test.md").write_text("Visit https://example.com for more info")
+
         problems = validate_refs([str(manuscript / "test.md")], set(), set(), tmp_path)
-        
+
         assert len(problems) == 1
         assert "Bare URL found" in problems[0]
-    
+
     def test_detects_non_informative_link(self, tmp_path):
         """Test validate_refs detects non-informative link text."""
         # Create test markdown file
@@ -247,9 +232,9 @@ class TestValidateRefs:
         (manuscript / "test.md").write_text(
             "[https://example.com](https://example.com)"
         )
-        
+
         problems = validate_refs([str(manuscript / "test.md")], set(), set(), tmp_path)
-        
+
         # The regex patterns can detect multiple issues with the same text
         assert len(problems) >= 1
         assert any("Non-informative link text" in p for p in problems)
@@ -257,35 +242,31 @@ class TestValidateRefs:
 
 class TestValidateMath:
     """Test validate_math function."""
-    
+
     def test_detects_dollar_math(self, tmp_path):
         """Test validate_math detects dollar math notation."""
         # Create test markdown file with $$ math
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
-        (manuscript / "test.md").write_text(
-            "Math: $$x^2 + y^2 = z^2$$"
-        )
-        
+        (manuscript / "test.md").write_text("Math: $$x^2 + y^2 = z^2$$")
+
         problems = validate_math([str(manuscript / "test.md")], tmp_path)
-        
+
         assert len(problems) == 1
         assert "Use equation environment instead of $$" in problems[0]
-    
+
     def test_detects_bracket_math(self, tmp_path):
         """Test validate_math detects bracket math notation."""
         # Create test markdown file
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
-        (manuscript / "test.md").write_text(
-            "Math: \\[x^2 + y^2 = z^2\\]"
-        )
-        
+        (manuscript / "test.md").write_text("Math: \\[x^2 + y^2 = z^2\\]")
+
         problems = validate_math([str(manuscript / "test.md")], tmp_path)
-        
+
         assert len(problems) == 1
         assert "Use equation environment instead of \\[ \\]" in problems[0]
-    
+
     def test_detects_missing_label(self, tmp_path):
         """Test validate_math detects equations without labels."""
         # Create test markdown file
@@ -294,12 +275,12 @@ class TestValidateMath:
         (manuscript / "test.md").write_text(
             r"\begin{equation}x^2 + y^2 = z^2\end{equation}"
         )
-        
+
         problems = validate_math([str(manuscript / "test.md")], tmp_path)
-        
+
         assert len(problems) == 1
         assert "Equation missing \\label{...}" in problems[0]
-    
+
     def test_detects_duplicate_label(self, tmp_path):
         """Test validate_math detects duplicate equation labels."""
         # Create test markdown file
@@ -309,12 +290,12 @@ class TestValidateMath:
             r"\begin{equation}\label{eq:duplicate}x^2\end{equation}" + "\n"
             r"\begin{equation}\label{eq:duplicate}y^2\end{equation}"
         )
-        
+
         problems = validate_math([str(manuscript / "test.md")], tmp_path)
-        
+
         assert len(problems) == 1
         assert "Duplicate equation label '{eq:duplicate}'" in problems[0]
-    
+
     def test_accepts_valid_equations(self, tmp_path):
         """Test validate_math accepts valid labeled equations."""
         # Create test markdown file
@@ -324,70 +305,70 @@ class TestValidateMath:
             "\\begin{equation}\\label{eq:valid1}x^2 + y^2 = z^2\\end{equation}\n"
             "\\begin{equation}\\label{eq:valid2}a^2 + b^2 = c^2\\end{equation}"
         )
-        
+
         problems = validate_math([str(manuscript / "test.md")], tmp_path)
-        
+
         assert len(problems) == 0
 
 
 class TestValidateMarkdown:
     """Test validate_markdown function."""
-    
+
     def test_no_problems_returns_zero(self, tmp_path):
         """Test validate_markdown returns 0 when no problems found."""
         # Create test markdown directory with valid content
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
         (manuscript / "test.md").write_text("# Test\n\nNo problems here.")
-        
+
         problems, exit_code = validate_markdown(manuscript, tmp_path, strict=False)
-        
+
         assert exit_code == 0
         assert problems == []
-    
+
     def test_problems_non_strict_returns_zero(self, tmp_path):
         """Test validate_markdown returns 0 with problems in non-strict mode."""
         # Create test markdown directory with problems
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
         (manuscript / "test.md").write_text("\\begin{equation}x^2\\end{equation}")
-        
+
         problems, exit_code = validate_markdown(manuscript, tmp_path, strict=False)
-        
+
         assert exit_code == 0
         assert len(problems) > 0
-    
+
     def test_problems_strict_returns_one(self, tmp_path):
         """Test validate_markdown returns 1 with problems in strict mode."""
         # Create test markdown directory with problems
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
         (manuscript / "test.md").write_text("\\begin{equation}x^2\\end{equation}")
-        
+
         problems, exit_code = validate_markdown(manuscript, tmp_path, strict=True)
-        
+
         assert exit_code == 1
         assert len(problems) > 0
-    
+
     def test_nonexistent_directory_raises(self, tmp_path):
         """Test validate_markdown raises on nonexistent directory."""
         with pytest.raises(FileNotFoundError):
             validate_markdown(tmp_path / "nonexistent", tmp_path)
-    
+
     def test_empty_directory_returns_zero(self, tmp_path):
         """Test validate_markdown with empty directory."""
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
-        
+
         problems, exit_code = validate_markdown(manuscript, tmp_path)
-        
+
         assert exit_code == 0
         assert problems == []
 
 
 class TestFindManuscriptDirectory:
     """Test find_manuscript_directory function."""
-    
+
     def test_finds_project_manuscript(self, tmp_path):
         """Test find_manuscript_directory finds projects/project/manuscript."""
         manuscript = tmp_path / "projects" / "project" / "manuscript"
@@ -396,7 +377,7 @@ class TestFindManuscriptDirectory:
         result = find_manuscript_directory(tmp_path, "project")
 
         assert result == manuscript
-    
+
     def test_raises_when_not_found(self, tmp_path):
         """Test find_manuscript_directory raises when not found."""
         with pytest.raises(FileNotFoundError):
@@ -405,17 +386,18 @@ class TestFindManuscriptDirectory:
 
 class TestIntegration:
     """Integration tests for the complete validation flow."""
-    
+
     def test_full_validation_flow(self, tmp_path):
         """Test complete validation with images, refs, and math."""
         # Create test project structure
         output_dir = tmp_path / "output" / "figures"
         output_dir.mkdir(parents=True)
         (output_dir / "test_figure.png").write_text("fake image")
-        
+
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
-        (manuscript / "test.md").write_text(r"""
+        (manuscript / "test.md").write_text(
+            r"""
 # Test Section {#sec:test}
 
 Valid content with image:
@@ -431,18 +413,20 @@ x^2 + y^2 = z^2
 Valid reference: \eqref{eq:test}
 
 Valid link: [See section](#sec:test)
-""")
-        
+"""
+        )
+
         problems, exit_code = validate_markdown(manuscript, tmp_path)
-        
+
         assert exit_code == 0
         assert problems == []
-    
+
     def test_multiple_problems_detected(self, tmp_path):
         """Test detection of multiple types of problems."""
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
-        (manuscript / "test.md").write_text(r"""
+        (manuscript / "test.md").write_text(
+            r"""
 # Test Section
 
 Missing image: ![Missing](../output/figures/missing.png)
@@ -454,10 +438,10 @@ Unlabeled equation: \begin{equation}x^2\end{equation}
 Missing ref: \eqref{eq:missing}
 
 Bare URL: https://example.com
-""")
-        
+"""
+        )
+
         problems, exit_code = validate_markdown(manuscript, tmp_path, strict=False)
-        
+
         assert exit_code == 0  # Non-strict mode
         assert len(problems) >= 5  # At least 5 different types of problems
-

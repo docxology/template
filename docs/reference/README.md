@@ -16,24 +16,29 @@ The `reference/` directory contains quick reference materials, API documentation
 | [`GLOSSARY.md`](GLOSSARY.md) | Terms and definitions | All users |
 | [`FAQ.md`](FAQ.md) | Frequently asked questions | All users |
 | [`QUICK_START_CHEATSHEET.md`](QUICK_START_CHEATSHEET.md) | Essential commands reference | All users |
-| [`../reference/COMMON_WORKFLOWS.md`](../reference/COMMON_WORKFLOWS.md) | Step-by-step workflow recipes | All users |
+| [`COMMON_WORKFLOWS.md`](COMMON_WORKFLOWS.md) | Step-by-step workflow recipes | All users |
 | [`COPYPASTA.md`](COPYPASTA.md) | Ready-to-use sharing content | All users |
 
 ## Quick Navigation
 
 ### Need Quick Answers?
+
 → Check **[FAQ](FAQ.md)** - Common questions
 
 ### Looking for a Command?
+
 → Use **[Quick Start Cheatsheet](QUICK_START_CHEATSHEET.md)** - Essential commands
 
 ### Need API Details?
+
 → Reference **[API Reference](API_REFERENCE.md)** - API docs
 
 ### Understanding Terms?
+
 → Consult **[Glossary](GLOSSARY.md)** - Definitions
 
 ### Following a Workflow?
+
 → Use **[Common Workflows](../reference/COMMON_WORKFLOWS.md)** - Step-by-step recipes
 
 ## Related Documentation
@@ -46,8 +51,3 @@ The `reference/` directory contains quick reference materials, API documentation
 
 - [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - documentation index
 - [`../README.md`](../README.md) - Documentation hub overview
-
-
-
-
-

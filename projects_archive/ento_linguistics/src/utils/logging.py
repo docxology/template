@@ -2,6 +2,7 @@
 
 This module provides basic logging functionality using Python's standard logging module.
 """
+
 import logging
 import os
 from typing import Optional
@@ -21,12 +22,12 @@ def get_logger(name: str) -> logging.Logger:
     # Only configure if not already configured
     if not logger.handlers:
         # Set level from environment or default to INFO
-        level_str = os.getenv('LOG_LEVEL', '1')
+        level_str = os.getenv("LOG_LEVEL", "1")
         level_map = {
-            '0': logging.DEBUG,
-            '1': logging.INFO,
-            '2': logging.WARNING,
-            '3': logging.ERROR
+            "0": logging.DEBUG,
+            "1": logging.INFO,
+            "2": logging.WARNING,
+            "3": logging.ERROR,
         }
         level = level_map.get(level_str, logging.INFO)
 
@@ -37,7 +38,7 @@ def get_logger(name: str) -> logging.Logger:
         handler.setLevel(level)
 
         # Create formatter
-        formatter = logging.Formatter('%(levelname)s - %(name)s - %(message)s')
+        formatter = logging.Formatter("%(levelname)s - %(name)s - %(message)s")
         handler.setFormatter(formatter)
 
         logger.addHandler(handler)
@@ -57,7 +58,9 @@ def log_substep(message: str, logger: Optional[logging.Logger] = None) -> None:
     logger.info(f"  {message}")
 
 
-def log_progress_bar(current: int, total: int, task: str, logger: Optional[logging.Logger] = None) -> None:
+def log_progress_bar(
+    current: int, total: int, task: str, logger: Optional[logging.Logger] = None
+) -> None:
     """Log progress with a simple bar.
 
     Args:
@@ -74,7 +77,12 @@ def log_progress_bar(current: int, total: int, task: str, logger: Optional[loggi
     logger.info(f"[{bar}] {percentage}% - {task}")
 
 
-def log_stage(stage_num: int, total_stages: int, stage_name: str, logger: Optional[logging.Logger] = None) -> None:
+def log_stage(
+    stage_num: int,
+    total_stages: int,
+    stage_name: str,
+    logger: Optional[logging.Logger] = None,
+) -> None:
     """Log a pipeline stage header.
 
     Args:

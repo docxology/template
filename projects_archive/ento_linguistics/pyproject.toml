@@ -1,12 +1,17 @@
+# Ento-Linguistics Project Configuration
+# Inherits workspace settings from root pyproject.toml
+
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "ento-linguistic-research"
 version = "1.0.0"
 description = "Ento-Linguistic analysis of scientific terminology in entomology"
-authors = [{name = "Ento-Linguistic Research Team", email = "research@example.com"}]
+authors = [
+    {name = "Ento-Linguistic Research Team", email = "research@example.com"}
+]
 requires-python = ">=3.10"
 dependencies = [
     # Core scientific computing
@@ -25,29 +30,36 @@ dependencies = [
     # System monitoring (required by infrastructure)
     "psutil>=5.9.0",
     # Infrastructure dependencies
-    "pyyaml>=6.0",  # Required by infrastructure validation modules
-    # Testing and development
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
     "pytest>=7.4.0",
     "pytest-cov>=4.1.0",
-    "pytest-httpserver>=1.0.0",  # For HTTP testing
+    "pytest-httpserver>=1.0.0",
 ]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 testpaths = ["tests"]
-addopts = "--strict-markers"
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short --strict-markers"
 
 [tool.coverage.run]
 source = ["src"]
-omit = ["*/tests/*", "*/test_*.py"]
+omit = ["tests/*", "*/__init__.py", "*/test_*.py"]
 
 [tool.coverage.report]
-precision = 2
+fail_under = 90
 show_missing = true
+precision = 2
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+    "raise NotImplementedError",
+]
 
 [tool.uv]
 # Inherits workspace settings from root pyproject.toml
-
-[tool.hatch.build.targets.wheel]
-packages = ["src"]
-

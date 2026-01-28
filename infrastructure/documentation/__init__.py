@@ -11,9 +11,10 @@ Modules:
 """
 
 from .figure_manager import FigureManager, FigureMetadata
+from .glossary_gen import (ApiEntry, build_api_index, generate_markdown_table,
+                           inject_between_markers)
 from .image_manager import ImageManager
 from .markdown_integration import MarkdownIntegration
-from .glossary_gen import build_api_index, generate_markdown_table, inject_between_markers, ApiEntry
 
 __all__ = [
     "FigureManager",
@@ -25,4 +26,3 @@ __all__ = [
     "inject_between_markers",
     "ApiEntry",
 ]
-

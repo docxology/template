@@ -1,58 +1,46 @@
-# 🔧 Figures and Analysis Guide (Levels 4-6)
+# 🔧 Intermediate Usage Guide
 
-> **Add figures, analysis, and automation** to your research project
+> **Overview page** - Redirects to the main Figures and Analysis guide
 
 **Previous**: [Getting Started](GETTING_STARTED.md) (Levels 1-3) | **Next**: [Testing and Reproducibility](TESTING_AND_REPRODUCIBILITY.md) (Levels 7-9)
 
-This guide has been **split into specialized guides** for better organization. Choose the topic that matches your needs:
+> [!NOTE]
+> This page exists for backward compatibility. The main intermediate guide is **[Figures and Analysis](FIGURES_AND_ANALYSIS.md)**.
 
-## 📚 Available Intermediate Guides
+## 📚 Intermediate Guides (Levels 4-6)
 
-### 🎨 [Figures and Analysis](FIGURES_AND_ANALYSIS.md)
-**Add custom figures and data visualization** to your research project
+The intermediate level covers:
 
-**What you'll learn:**
-- Generate figures from data using analysis scripts
-- Create publication-quality plots and charts
-- Integrate figures into your manuscript
-- Understand the thin orchestrator pattern
+### 🎨 [Figures and Analysis](FIGURES_AND_ANALYSIS.md) — Main Guide
 
-**for:** Researchers who want to add visual elements to their work
-
-### 🔄 [Extending and Automation](EXTENDING_AND_AUTOMATION.md)
-**Extend the template and automate your workflows**
+**Primary intermediate guide covering Levels 4-6**
 
 **What you'll learn:**
-- Add new Python modules with proper testing
-- Create custom analysis pipelines
-- Automate repetitive research tasks
-- Modify and extend template functionality
 
-**for:** Developers who want to customize the research workflow
+- **Level 4**: Generate figures from data using analysis scripts
+- **Level 5**: Create data analysis pipelines with proper testing
+- **Level 6**: Automate workflows and batch processing
+
+**Best for:** Researchers and developers ready to add visualization and automation to their projects.
 
 ## 🎯 Quick Start by Goal
 
-| If you want to... | Start with this guide |
-|-------------------|----------------------|
+| If you want to... | Go to |
+|-------------------|-------|
 | Add figures to your manuscript | [Figures and Analysis](FIGURES_AND_ANALYSIS.md) |
 | Create data visualizations | [Figures and Analysis](FIGURES_AND_ANALYSIS.md) |
-| Automate analysis workflows | [Extending and Automation](EXTENDING_AND_AUTOMATION.md) |
-| Add custom Python modules | [Extending and Automation](EXTENDING_AND_AUTOMATION.md) |
-| Extend template functionality | [Extending and Automation](EXTENDING_AND_AUTOMATION.md) |
+| Add analysis pipelines | [Figures and Analysis](FIGURES_AND_ANALYSIS.md) |
+| Automate workflows | [Figures and Analysis](FIGURES_AND_ANALYSIS.md) |
 
 ## 📖 Learning Path
 
-For the **full intermediate experience**, work through both guides in order:
-
-1. **[Figures and Analysis](FIGURES_AND_ANALYSIS.md)** - Learn to create and integrate visual elements
-2. **[Extending and Automation](EXTENDING_AND_AUTOMATION.md)** - Learn to customize and automate workflows
+1. ✅ **[Getting Started](GETTING_STARTED.md)** (Levels 1-3) - Completed
+2. **→ [Figures and Analysis](FIGURES_AND_ANALYSIS.md)** (Levels 4-6) - **You are here**
+3. **[Testing and Reproducibility](TESTING_AND_REPRODUCIBILITY.md)** (Levels 7-9) - Next
+4. **[Extending and Automation](EXTENDING_AND_AUTOMATION.md)** (Levels 10-12) - Expert
 
 ## 🆘 Need Help?
 
 - **Beginner?** Start with [Getting Started](GETTING_STARTED.md)
-- **Advanced user?** Check [Testing and Reproducibility](TESTING_AND_REPRODUCIBILITY.md)
+- **Ready for TDD?** Check [Testing and Reproducibility](TESTING_AND_REPRODUCIBILITY.md)
 - **Stuck?** See [troubleshooting guide](../operational/TROUBLESHOOTING_GUIDE.md)
-
----
-
-**Note:** This overview guide maintains compatibility with existing references. For detailed instructions, follow the links above to the specialized guides.

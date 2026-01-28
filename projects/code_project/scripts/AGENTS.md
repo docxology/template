@@ -249,7 +249,7 @@ performance_metrics = monitor.stop()
 
 ### Error Handling Patterns
 
-error handling with recovery suggestions:
+Comprehensive error handling with recovery suggestions:
 
 ```python
 try:

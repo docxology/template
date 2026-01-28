@@ -3,14 +3,16 @@
 This module contains comprehensive tests for literature mining functionality
 used in Ento-Linguistic research.
 """
+
 from __future__ import annotations
 
-import pytest
 import json
 from pathlib import Path
-from typing import List, Dict
+from typing import Dict, List
 
-from src.literature_mining import LiteratureCorpus, Publication, PubMedMiner, ArXivMiner
+import pytest
+from src.literature_mining import (ArXivMiner, LiteratureCorpus, Publication,
+                                   PubMedMiner)
 
 
 class TestPublication:
@@ -23,7 +25,7 @@ class TestPublication:
             authors=["Smith, J.", "Doe, A."],
             abstract="This paper studies ant colonies.",
             doi="10.1234/example",
-            year=2023
+            year=2023,
         )
 
         assert pub.title == "Ant Colony Behavior"
@@ -34,29 +36,25 @@ class TestPublication:
 
     def test_publication_to_dict(self) -> None:
         """Test converting Publication to dictionary."""
-        pub = Publication(
-            title="Test Paper",
-            authors=["Author, A."],
-            year=2023
-        )
+        pub = Publication(title="Test Paper", authors=["Author, A."], year=2023)
 
         data = pub.to_dict()
 
-        assert data['title'] == "Test Paper"
-        assert data['authors'] == ["Author, A."]
-        assert data['year'] == 2023
-        assert data['keywords'] == []  # Should be initialized as empty list
+        assert data["title"] == "Test Paper"
+        assert data["authors"] == ["Author, A."]
+        assert data["year"] == 2023
+        assert data["keywords"] == []  # Should be initialized as empty list
 
     def test_publication_from_dict(self) -> None:
         """Test creating Publication from dictionary."""
         data = {
-            'title': "Test Paper",
-            'authors': ["Author, A."],
-            'abstract': "Abstract text",
-            'doi': "10.1234/test",
-            'year': 2023,
-            'journal': "Test Journal",
-            'keywords': ["test", "paper"]
+            "title": "Test Paper",
+            "authors": ["Author, A."],
+            "abstract": "Abstract text",
+            "doi": "10.1234/test",
+            "year": 2023,
+            "journal": "Test Journal",
+            "keywords": ["test", "paper"],
         }
 
         pub = Publication.from_dict(data)
@@ -91,20 +89,20 @@ class TestLiteratureCorpus:
                 title="Ant Colony Optimization",
                 authors=["Dorigo, M.", "Colorni, A."],
                 abstract="Algorithm inspired by ant behavior",
-                year=1996
+                year=1996,
             ),
             Publication(
                 title="Eusociality in Insects",
                 authors=["Wilson, E.O."],
                 abstract="Evolution of social insects",
-                year=1971
+                year=1971,
             ),
             Publication(
                 title="Division of Labor in Ants",
                 authors=["Oster, G.", "Wilson, E.O."],
                 abstract="Mathematical modeling of task allocation",
-                year=1978
-            )
+                year=1978,
+            ),
         ]
 
     @pytest.fixture
@@ -178,7 +176,9 @@ class TestLiteratureCorpus:
         # Search by author
         results = corpus.search_publications("wilson", field="all")
         assert len(results) >= 1
-        assert any("wilson" in author.lower() for pub in results for author in pub.authors)
+        assert any(
+            "wilson" in author.lower() for pub in results for author in pub.authors
+        )
 
         # Search all fields
         results = corpus.search_publications("evolution", field="all")
@@ -193,24 +193,24 @@ class TestLiteratureCorpus:
         """Test corpus statistics generation."""
         stats = corpus.get_statistics()
 
-        assert 'total_publications' in stats
-        assert 'date_range' in stats
-        assert 'unique_journals' in stats
-        assert 'publications_with_abstract' in stats
-        assert 'avg_title_length' in stats
+        assert "total_publications" in stats
+        assert "date_range" in stats
+        assert "unique_journals" in stats
+        assert "publications_with_abstract" in stats
+        assert "avg_title_length" in stats
 
-        assert stats['total_publications'] == 3
-        assert stats['publications_with_abstract'] == 3  # All have abstracts
-        assert stats['avg_title_length'] > 0
+        assert stats["total_publications"] == 3
+        assert stats["publications_with_abstract"] == 3  # All have abstracts
+        assert stats["avg_title_length"] > 0
 
     def test_empty_corpus_statistics(self) -> None:
         """Test statistics for empty corpus."""
         corpus = LiteratureCorpus()
         stats = corpus.get_statistics()
 
-        assert stats['total_publications'] == 0
-        assert stats['date_range'] is None
-        assert stats['publications_with_abstract'] == 0
+        assert stats["total_publications"] == 0
+        assert stats["date_range"] is None
+        assert stats["publications_with_abstract"] == 0
 
 
 class TestPubMedMiner:
@@ -224,23 +224,19 @@ class TestPubMedMiner:
     def test_search_success(self, httpserver, miner: PubMedMiner) -> None:
         """Test successful PubMed search."""
         # Mock PubMed API response
-        response_data = {
-            "esearchresult": {
-                "idlist": ["12345", "67890"]
-            }
-        }
+        response_data = {"esearchresult": {"idlist": ["12345", "67890"]}}
 
         # Configure mock server to expect the request
-        httpserver.expect_request(
-            "/esearch.fcgi"
-        ).respond_with_json(response_data)
+        httpserver.expect_request("/esearch.fcgi").respond_with_json(response_data)
 
         # Temporarily override the base URL to point to our test server
         original_base_url = miner.BASE_URL
         miner.BASE_URL = httpserver.url_for("")  # Just the server URL without path
 
         try:
-            results = miner.search("ant+colony", max_results=10)  # Use URL-encoded query
+            results = miner.search(
+                "ant+colony", max_results=10
+            )  # Use URL-encoded query
 
             assert len(results) == 2
             assert "12345" in results
@@ -277,7 +273,7 @@ class TestPubMedMiner:
                     "pubdate": "2023",
                     "source": "Test Journal",
                     "elocationid": "10.1234/test",
-                    "uid": "12345"
+                    "uid": "12345",
                 }
             }
         }
@@ -300,7 +296,9 @@ class TestPubMedMiner:
         finally:
             miner.BASE_URL = original_base_url
 
-    def test_fetch_publications_parse_error(self, httpserver, miner: PubMedMiner) -> None:
+    def test_fetch_publications_parse_error(
+        self, httpserver, miner: PubMedMiner
+    ) -> None:
         """Test handling of PubMed parsing errors."""
         # Configure server to return invalid JSON
         httpserver.expect_request("/esummary.fcgi").respond_with_data("invalid json")
@@ -317,10 +315,7 @@ class TestPubMedMiner:
 
     def test_parse_pubmed_summary_minimal(self, miner: PubMedMiner) -> None:
         """Test parsing minimal PubMed summary."""
-        data = {
-            "title": "Minimal Paper",
-            "authors": [{"name": "Author, A."}]
-        }
+        data = {"title": "Minimal Paper", "authors": [{"name": "Author, A."}]}
 
         pub = miner._parse_pubmed_summary(data)
 
@@ -331,9 +326,7 @@ class TestPubMedMiner:
 
     def test_parse_pubmed_summary_missing_title(self, miner: PubMedMiner) -> None:
         """Test parsing PubMed summary with missing title."""
-        data = {
-            "authors": [{"name": "Author, A."}]
-        }
+        data = {"authors": [{"name": "Author, A."}]}
 
         pub = miner._parse_pubmed_summary(data)
 
@@ -410,7 +403,7 @@ class TestArXivMiner:
         </entry>"""
 
         entry = ET.fromstring(entry_xml)
-        ns = {'arxiv': 'http://www.w3.org/2005/Atom'}
+        ns = {"arxiv": "http://www.w3.org/2005/Atom"}
 
         pub = miner._parse_arxiv_entry(entry, ns)
 
@@ -430,7 +423,7 @@ class TestArXivMiner:
         </entry>"""
 
         entry = ET.fromstring(entry_xml)
-        ns = {'arxiv': 'http://www.w3.org/2005/Atom'}
+        ns = {"arxiv": "http://www.w3.org/2005/Atom"}
 
         pub = miner._parse_arxiv_entry(entry, ns)
 
@@ -447,7 +440,7 @@ class TestLiteratureMiningIntegration:
         # Create mock publications
         pubs = [
             Publication(title="Paper 1", authors=["Author 1"], abstract="Abstract 1"),
-            Publication(title="Paper 2", authors=["Author 2"], abstract="Abstract 2")
+            Publication(title="Paper 2", authors=["Author 2"], abstract="Abstract 2"),
         ]
 
         for pub in pubs:
@@ -466,10 +459,18 @@ class TestLiteratureMiningIntegration:
 
         # Simulate miner results
         publications = [
-            Publication(title="Entomology Paper", authors=["Ento, A."],
-                       abstract="Study of insect behavior", year=2023),
-            Publication(title="Ant Research", authors=["Ant, B."],
-                       abstract="Colony organization study", year=2022)
+            Publication(
+                title="Entomology Paper",
+                authors=["Ento, A."],
+                abstract="Study of insect behavior",
+                year=2023,
+            ),
+            Publication(
+                title="Ant Research",
+                authors=["Ant, B."],
+                abstract="Colony organization study",
+                year=2022,
+            ),
         ]
 
         for pub in publications:
@@ -481,8 +482,8 @@ class TestLiteratureMiningIntegration:
 
         # Test statistics
         stats = corpus.get_statistics()
-        assert stats['total_publications'] == 2
-        assert stats['publications_with_abstract'] == 2
+        assert stats["total_publications"] == 2
+        assert stats["publications_with_abstract"] == 2
 
     @pytest.mark.skipif(not Path("tmp").exists(), reason="Temporary directory needed")
     def test_full_mining_workflow(self, tmp_path: Path) -> None:
@@ -491,10 +492,18 @@ class TestLiteratureMiningIntegration:
 
         # Add sample publications
         pubs = [
-            Publication(title="Eusociality in Ants", authors=["Wilson, E.O."],
-                       abstract="Evolution of social behavior in ants", year=1971),
-            Publication(title="Division of Labor", authors=["Oster, G."],
-                       abstract="Mathematical models of task allocation", year=1978)
+            Publication(
+                title="Eusociality in Ants",
+                authors=["Wilson, E.O."],
+                abstract="Evolution of social behavior in ants",
+                year=1971,
+            ),
+            Publication(
+                title="Division of Labor",
+                authors=["Oster, G."],
+                abstract="Mathematical models of task allocation",
+                year=1978,
+            ),
         ]
 
         for pub in pubs:
@@ -527,16 +536,16 @@ class TestLiteratureMiningIntegration:
         assert "ants" in query
         assert "eusocial" in query
         assert "English[Language]" in query
-        assert ' OR ' in query  # Should join terms with OR
+        assert " OR " in query  # Should join terms with OR
 
     def test_mine_entomology_literature(self) -> None:
         """Test the complete entomology literature mining workflow."""
-        from src.literature_mining import mine_entomology_literature, LiteratureCorpus
+        from src.literature_mining import (LiteratureCorpus,
+                                           mine_entomology_literature)
 
         # This test is primarily for code coverage - the actual mining
         # would require real API calls, so we just test that it returns a corpus
         # Note: This function makes real API calls, so we'll just test the structure
-
         # Test that the function exists and can be called (without actually calling it
         # to avoid real API dependencies in CI)
         assert callable(mine_entomology_literature)

@@ -75,8 +75,6 @@ package = false  # This is not a distributable package
 [tool.uv.workspace]
 # Workspace configuration for multi-project support
 members = [
-    "projects/project",
-    "projects/prose_project",
     "projects/code_project"
 ]
 ```
@@ -547,8 +545,6 @@ The root `pyproject.toml` defines the workspace:
 ```toml
 [tool.uv.workspace]
 members = [
-    "projects/project",
-    "projects/prose_project",
     "projects/code_project"
 ]
 exclude = [

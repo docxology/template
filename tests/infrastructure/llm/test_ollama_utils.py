@@ -6,18 +6,14 @@ These tests run against a real Ollama installation when available.
 
 import pytest
 
-from infrastructure.llm.utils.ollama import (
-    is_ollama_running,
-    get_available_models,
-    get_model_names,
-    select_best_model,
-    select_small_fast_model,
-    ensure_ollama_ready,
-    get_model_info,
-    check_model_loaded,
-    preload_model,
-    DEFAULT_MODEL_PREFERENCES,
-)
+from infrastructure.llm.utils.ollama import (DEFAULT_MODEL_PREFERENCES,
+                                             check_model_loaded,
+                                             ensure_ollama_ready,
+                                             get_available_models,
+                                             get_model_info, get_model_names,
+                                             is_ollama_running, preload_model,
+                                             select_best_model,
+                                             select_small_fast_model)
 
 
 class TestIsOllamaRunning:
@@ -126,7 +122,7 @@ class TestSelectBestModel:
             # Get base name (without tag)
             first_model = available[0]
             base_name = first_model.split(":")[0]
-            
+
             model = select_best_model(preferences=[base_name])
             assert model is not None
             assert base_name in model
@@ -235,9 +231,7 @@ class TestOllamaUtilsWithoutServer:
         """Test get_available_models with retry logic."""
         # Should retry on timeout
         models = get_available_models(
-            base_url="http://localhost:99999",
-            timeout=0.1,
-            retries=1
+            base_url="http://localhost:99999", timeout=0.1, retries=1
         )
         assert models == []
 
@@ -254,8 +248,7 @@ class TestOllamaUtilsWithoutServer:
     def test_ensure_ollama_ready_no_server_no_auto_start(self):
         """Test ensure_ollama_ready returns False without server and auto_start."""
         result = ensure_ollama_ready(
-            base_url="http://localhost:99999",
-            auto_start=False
+            base_url="http://localhost:99999", auto_start=False
         )
         assert result is False
 
@@ -266,8 +259,7 @@ class TestCheckModelLoaded:
     def test_check_model_loaded_no_server(self):
         """Test check_model_loaded with no server returns (False, None)."""
         is_loaded, model_name = check_model_loaded(
-            "test-model",
-            base_url="http://localhost:99999"
+            "test-model", base_url="http://localhost:99999"
         )
         assert is_loaded is False
         assert model_name is None
@@ -283,9 +275,7 @@ class TestCheckModelLoaded:
     def test_check_model_loaded_timeout(self):
         """Test check_model_loaded with timeout."""
         is_loaded, model_name = check_model_loaded(
-            "test-model",
-            base_url="http://localhost:99999",
-            timeout=0.1
+            "test-model", base_url="http://localhost:99999", timeout=0.1
         )
         assert is_loaded is False
         assert model_name is None
@@ -295,15 +285,15 @@ class TestCheckModelLoaded:
         """Test check_model_loaded with running Ollama server."""
         if not is_ollama_running():
             pytest.skip("Ollama server not available")
-        
+
         # Get first available model
         models = get_model_names()
         if not models:
             pytest.skip("No models available")
-        
+
         model_name = models[0]
         is_loaded, loaded_name = check_model_loaded(model_name)
-        
+
         # Result should be a valid tuple
         assert isinstance(is_loaded, bool)
         # loaded_name is either a string or None
@@ -314,15 +304,15 @@ class TestCheckModelLoaded:
         """Test check_model_loaded with partial model name match."""
         if not is_ollama_running():
             pytest.skip("Ollama server not available")
-        
+
         models = get_model_names()
         if not models:
             pytest.skip("No models available")
-        
+
         # Get base name without tag
         first_model = models[0]
         base_name = first_model.split(":")[0]
-        
+
         is_loaded, loaded_name = check_model_loaded(base_name)
         assert isinstance(is_loaded, bool)
         assert loaded_name is None or isinstance(loaded_name, str)
@@ -334,9 +324,7 @@ class TestPreloadModel:
     def test_preload_model_no_server(self):
         """Test preload_model with no server returns (False, error)."""
         success, error = preload_model(
-            "test-model",
-            base_url="http://localhost:99999",
-            timeout=1.0
+            "test-model", base_url="http://localhost:99999", timeout=1.0
         )
         assert success is False
         assert error is not None
@@ -357,7 +345,7 @@ class TestPreloadModel:
             "test-model",
             base_url="http://localhost:99999",
             timeout=1.0,
-            check_loaded_first=True
+            check_loaded_first=True,
         )
         assert success is False
         assert error is not None
@@ -367,15 +355,15 @@ class TestPreloadModel:
         """Test preload_model with running Ollama server."""
         if not is_ollama_running():
             pytest.skip("Ollama server not available")
-        
+
         # Get first available model
         models = get_model_names()
         if not models:
             pytest.skip("No models available")
-        
+
         model_name = models[0]
         success, error = preload_model(model_name, timeout=60.0)
-        
+
         # Should either succeed or fail gracefully
         assert isinstance(success, bool)
         assert error is None or isinstance(error, str)
@@ -385,20 +373,21 @@ class TestPreloadModel:
         """Test preload_model when model is already loaded."""
         if not is_ollama_running():
             pytest.skip("Ollama server not available")
-        
+
         models = get_model_names()
         if not models:
             pytest.skip("No models available")
-        
+
         model_name = models[0]
-        
+
         # Preload once
         success1, error1 = preload_model(model_name, timeout=60.0)
         if not success1:
             pytest.skip(f"Could not preload model {model_name}: {error1}")
-        
+
         # Preload again - should detect it's already loaded
-        success2, error2 = preload_model(model_name, check_loaded_first=True, timeout=60.0)
+        success2, error2 = preload_model(
+            model_name, check_loaded_first=True, timeout=60.0
+        )
         assert success2 is True
         assert error2 is None
-

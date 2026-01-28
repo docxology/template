@@ -1,42 +1,29 @@
 """Prompt templates for research tasks."""
-from infrastructure.llm.templates.base import ResearchTemplate
-from infrastructure.llm.templates.helpers import (
-    format_requirements,
-    token_budget_awareness,
-    content_requirements,
-    section_structure,
-    validation_hints,
-)
-from infrastructure.llm.templates.research import (
-    SummarizeAbstract,
-    LiteratureReview,
-    CodeDocumentation,
-    DataInterpretation,
-    PaperSummarization,
-    LiteratureReviewSynthesis,
-    ScienceCommunicationNarrative,
-    ComparativeAnalysis,
-    ResearchGapIdentification,
-    CitationNetworkAnalysis,
-)
-from infrastructure.llm.templates.manuscript import (
-    ManuscriptExecutiveSummary,
-    ManuscriptQualityReview,
-    ManuscriptMethodologyReview,
-    ManuscriptImprovementSuggestions,
-    ManuscriptTranslationAbstract,
-    REVIEW_MIN_WORDS,
-    TRANSLATION_LANGUAGES,
-)
 
 from infrastructure.core.exceptions import LLMTemplateError
 from infrastructure.core.logging_utils import get_logger
+from infrastructure.llm.templates.base import ResearchTemplate
+from infrastructure.llm.templates.helpers import (content_requirements,
+                                                  format_requirements,
+                                                  section_structure,
+                                                  token_budget_awareness,
+                                                  validation_hints)
+from infrastructure.llm.templates.manuscript import (
+    REVIEW_MIN_WORDS, TRANSLATION_LANGUAGES, ManuscriptExecutiveSummary,
+    ManuscriptImprovementSuggestions, ManuscriptMethodologyReview,
+    ManuscriptQualityReview, ManuscriptTranslationAbstract)
+from infrastructure.llm.templates.research import (
+    CitationNetworkAnalysis, CodeDocumentation, ComparativeAnalysis,
+    DataInterpretation, LiteratureReview, LiteratureReviewSynthesis,
+    PaperSummarization, ResearchGapIdentification,
+    ScienceCommunicationNarrative, SummarizeAbstract)
 
 logger = get_logger(__name__)
 
 # Try to import prompt composer system
 try:
     from infrastructure.llm.prompts.composer import PromptComposer
+
     PROMPT_COMPOSER_AVAILABLE = True
 except ImportError:
     PROMPT_COMPOSER_AVAILABLE = False
@@ -76,33 +63,33 @@ def get_template(name: str) -> ResearchTemplate:
 # Public API exports
 __all__ = [
     # Base class
-    'ResearchTemplate',
+    "ResearchTemplate",
     # Helper functions
-    'format_requirements',
-    'token_budget_awareness',
-    'content_requirements',
-    'section_structure',
-    'validation_hints',
+    "format_requirements",
+    "token_budget_awareness",
+    "content_requirements",
+    "section_structure",
+    "validation_hints",
     # Template classes
-    'SummarizeAbstract',
-    'LiteratureReview',
-    'CodeDocumentation',
-    'DataInterpretation',
-    'PaperSummarization',
-    'ManuscriptExecutiveSummary',
-    'ManuscriptQualityReview',
-    'ManuscriptMethodologyReview',
-    'ManuscriptImprovementSuggestions',
-    'ManuscriptTranslationAbstract',
-    'LiteratureReviewSynthesis',
-    'ScienceCommunicationNarrative',
-    'ComparativeAnalysis',
-    'ResearchGapIdentification',
-    'CitationNetworkAnalysis',
+    "SummarizeAbstract",
+    "LiteratureReview",
+    "CodeDocumentation",
+    "DataInterpretation",
+    "PaperSummarization",
+    "ManuscriptExecutiveSummary",
+    "ManuscriptQualityReview",
+    "ManuscriptMethodologyReview",
+    "ManuscriptImprovementSuggestions",
+    "ManuscriptTranslationAbstract",
+    "LiteratureReviewSynthesis",
+    "ScienceCommunicationNarrative",
+    "ComparativeAnalysis",
+    "ResearchGapIdentification",
+    "CitationNetworkAnalysis",
     # Constants
-    'REVIEW_MIN_WORDS',
-    'TRANSLATION_LANGUAGES',
+    "REVIEW_MIN_WORDS",
+    "TRANSLATION_LANGUAGES",
     # Functions
-    'get_template',
-    'TEMPLATES',
+    "get_template",
+    "TEMPLATES",
 ]

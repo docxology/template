@@ -4,11 +4,12 @@ This test suite validates error handling and edge cases that span multiple
 infrastructure modules, ensuring graceful degradation and proper error propagation.
 """
 
-import pytest
 from pathlib import Path
 
-from infrastructure.validation import integrity
+import pytest
+
 from infrastructure.scientific import check_numerical_stability
+from infrastructure.validation import integrity
 
 
 class TestEdgeCasesAndErrorPaths:
@@ -18,17 +19,18 @@ class TestEdgeCasesAndErrorPaths:
         """Test that modules handle empty inputs gracefully."""
         # integrity - verify_file_integrity handles empty list
         assert len(integrity.verify_file_integrity([])) == 0
-        
+
         # scientific - check_numerical_stability handles empty test inputs
         def dummy_func(x):
             return x
+
         result = check_numerical_stability(dummy_func, [])
         assert result.stability_score == 0.0
 
     def test_invalid_path_handling(self, tmp_path):
         """Test handling of invalid paths."""
         invalid = tmp_path / "nonexistent" / "path" / "file.txt"
-        
+
         # These should not crash - integrity module handles invalid paths gracefully
         # Note: calculate_file_hash may not exist, so we test verify_file_integrity instead
         result = integrity.verify_file_integrity([invalid])
@@ -40,25 +42,9 @@ class TestEdgeCasesAndErrorPaths:
         """Test handling of malformed data files."""
         bad_json = tmp_path / "bad.json"
         bad_json.write_text("{invalid json}")
-        
+
         # Should handle gracefully - verify_file_integrity handles invalid files
         result = integrity.verify_file_integrity([bad_json])
         # Result should be a dict mapping paths to integrity status
         assert isinstance(result, dict)
         assert str(bad_json) in result
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

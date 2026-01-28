@@ -2,11 +2,13 @@
 
 Follows No Mocks Policy - all tests use real data and real execution.
 """
-import pytest
+
 from pathlib import Path
 
-from infrastructure.rendering.poster_renderer import PosterRenderer
+import pytest
+
 from infrastructure.rendering.config import RenderingConfig
+from infrastructure.rendering.poster_renderer import PosterRenderer
 
 
 class TestPosterRenderer:
@@ -59,5 +61,4 @@ class TestPosterRenderer:
         config = RenderingConfig(output_dir=str(tmp_path))
         renderer = PosterRenderer(config)
         assert renderer is not None
-        assert hasattr(renderer, 'render')
-
+        assert hasattr(renderer, "render")

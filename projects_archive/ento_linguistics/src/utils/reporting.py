@@ -7,18 +7,26 @@ from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
 
+
 # Lazy imports to avoid import issues during test collection
 def _get_infra_generate_pipeline_report():
-    from infrastructure.reporting.pipeline_reporter import generate_pipeline_report
+    from infrastructure.reporting.pipeline_reporter import \
+        generate_pipeline_report
+
     return generate_pipeline_report
+
 
 def _get_infra_save_pipeline_report():
     from infrastructure.reporting.pipeline_reporter import save_pipeline_report
+
     return save_pipeline_report
+
 
 def _get_infra_ErrorAggregator():
     from infrastructure.reporting.error_aggregator import ErrorAggregator
+
     return ErrorAggregator
+
 
 def get_error_aggregator():
     """Get error aggregator instance from infrastructure.
@@ -56,10 +64,7 @@ class ReportGenerator:
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
     def generate_markdown_report(
-        self,
-        title: str,
-        results: Dict[str, Any],
-        filename: Optional[str] = None
+        self, title: str, results: Dict[str, Any], filename: Optional[str] = None
     ) -> Path:
         """Generate markdown report.
 
@@ -82,7 +87,7 @@ class ReportGenerator:
             f"**Generated**: {self._get_timestamp()}",
             "",
             "## Summary",
-            ""
+            "",
         ]
 
         # Add summary statistics
@@ -91,42 +96,30 @@ class ReportGenerator:
 
         # Add key findings
         if "findings" in results:
-            lines.extend([
-                "## Key Findings",
-                ""
-            ])
+            lines.extend(["## Key Findings", ""])
             for finding in results["findings"]:
                 lines.append(f"- {finding}")
             lines.append("")
 
         # Add detailed results
         if "details" in results:
-            lines.extend([
-                "## Detailed Results",
-                ""
-            ])
+            lines.extend(["## Detailed Results", ""])
             lines.extend(self._format_details(results["details"]))
 
         # Add tables
         if "tables" in results:
-            lines.extend([
-                "## Tables",
-                ""
-            ])
+            lines.extend(["## Tables", ""])
             for table_name, table_data in results["tables"].items():
                 lines.extend(self._format_table(table_name, table_data))
 
         # Write report
-        with open(report_path, 'w') as f:
+        with open(report_path, "w") as f:
             f.write("\n".join(lines))
 
         return report_path
 
     def generate_latex_report(
-        self,
-        title: str,
-        results: Dict[str, Any],
-        filename: Optional[str] = None
+        self, title: str, results: Dict[str, Any], filename: Optional[str] = None
     ) -> Path:
         """Generate LaTeX report.
 
@@ -154,7 +147,7 @@ class ReportGenerator:
             "\\maketitle",
             "",
             "\\section{Summary}",
-            ""
+            "",
         ]
 
         # Add summary
@@ -163,28 +156,19 @@ class ReportGenerator:
 
         # Add tables
         if "tables" in results:
-            lines.extend([
-                "\\section{Tables}",
-                ""
-            ])
+            lines.extend(["\\section{Tables}", ""])
             for table_name, table_data in results["tables"].items():
                 lines.extend(self._format_table_latex(table_name, table_data))
 
-        lines.extend([
-            "",
-            "\\end{document}"
-        ])
+        lines.extend(["", "\\end{document}"])
 
-        with open(report_path, 'w') as f:
+        with open(report_path, "w") as f:
             f.write("\n".join(lines))
 
         return report_path
 
     def generate_html_report(
-        self,
-        title: str,
-        results: Dict[str, Any],
-        filename: Optional[str] = None
+        self, title: str, results: Dict[str, Any], filename: Optional[str] = None
     ) -> Path:
         """Generate HTML report.
 
@@ -231,7 +215,7 @@ class ReportGenerator:
 </body>
 </html>"""
 
-        with open(report_path, 'w') as f:
+        with open(report_path, "w") as f:
             f.write(html)
 
         return report_path
@@ -267,9 +251,7 @@ class ReportGenerator:
         return save_pipeline_report(report, self.output_dir)
 
     def extract_key_findings(
-        self,
-        results: Dict[str, Any],
-        threshold: float = 0.1
+        self, results: Dict[str, Any], threshold: float = 0.1
     ) -> List[str]:
         """Extract key findings from results.
 
@@ -293,7 +275,9 @@ class ReportGenerator:
         if "convergence" in results:
             conv = results["convergence"]
             if conv.get("is_converged", False):
-                findings.append(f"Simulation converged in {conv.get('iterations', 'N/A')} iterations")
+                findings.append(
+                    f"Simulation converged in {conv.get('iterations', 'N/A')} iterations"
+                )
             else:
                 findings.append("Simulation did not converge within tolerance")
 
@@ -306,9 +290,7 @@ class ReportGenerator:
         return findings
 
     def create_comparison_report(
-        self,
-        runs: List[Dict[str, Any]],
-        comparison_metrics: List[str]
+        self, runs: List[Dict[str, Any]], comparison_metrics: List[str]
     ) -> Dict[str, Any]:
         """Create comparison report across multiple runs.
 
@@ -322,7 +304,7 @@ class ReportGenerator:
         report = {
             "n_runs": len(runs),
             "comparison_metrics": comparison_metrics,
-            "comparisons": {}
+            "comparisons": {},
         }
 
         for metric in comparison_metrics:
@@ -337,7 +319,7 @@ class ReportGenerator:
                     "std": float(np.std(values)),
                     "min": float(np.min(values)),
                     "max": float(np.max(values)),
-                    "values": values
+                    "values": values,
                 }
 
         return report
@@ -394,10 +376,7 @@ class ReportGenerator:
 
     def _format_table(self, name: str, data: Dict[str, List[Any]]) -> List[str]:
         """Format table for markdown."""
-        lines = [
-            f"### {name}",
-            ""
-        ]
+        lines = [f"### {name}", ""]
 
         # Get headers
         headers = list(data.keys())
@@ -423,7 +402,7 @@ class ReportGenerator:
             "\\begin{table}[h]",
             "\\centering",
             "\\begin{tabular}{" + "c" * len(data) + "}",
-            "\\toprule"
+            "\\toprule",
         ]
 
         # Headers
@@ -437,26 +416,29 @@ class ReportGenerator:
             row = [str(data[h][i]) if i < len(data[h]) else "" for h in headers]
             lines.append(" & ".join(row) + " \\\\")
 
-        lines.extend([
-            "\\bottomrule",
-            "\\end{tabular}",
-            f"\\caption{{{name}}}",
-            "\\end{table}",
-            ""
-        ])
+        lines.extend(
+            [
+                "\\bottomrule",
+                "\\end{tabular}",
+                f"\\caption{{{name}}}",
+                "\\end{table}",
+                "",
+            ]
+        )
 
         return lines
 
     def _get_timestamp(self) -> str:
         """Get current timestamp."""
         from datetime import datetime
+
         return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
 # Re-export infrastructure functions and local classes for backward compatibility
 __all__ = [
-    'generate_pipeline_report',
-    'save_pipeline_report',
-    'get_error_aggregator',
-    'ReportGenerator'
+    "generate_pipeline_report",
+    "save_pipeline_report",
+    "get_error_aggregator",
+    "ReportGenerator",
 ]

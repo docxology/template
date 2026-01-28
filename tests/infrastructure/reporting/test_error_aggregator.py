@@ -3,11 +3,9 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from infrastructure.reporting.error_aggregator import (
-    ErrorAggregator,
-    get_error_aggregator,
-    reset_error_aggregator,
-)
+from infrastructure.reporting.error_aggregator import (ErrorAggregator,
+                                                       get_error_aggregator,
+                                                       reset_error_aggregator)
 
 
 def test_error_aggregator_summary_and_actionable_fixes() -> None:
@@ -76,7 +74,7 @@ def test_error_aggregator_save_report_creates_json_and_markdown(tmp_path: Path) 
 def test_error_entry_to_dict() -> None:
     """Test ErrorEntry to_dict method."""
     from infrastructure.reporting.error_aggregator import ErrorEntry
-    
+
     entry = ErrorEntry(
         type="test_failure",
         message="Test failed",
@@ -85,7 +83,7 @@ def test_error_entry_to_dict() -> None:
         line=42,
         severity="error",
         suggestions=["Fix it"],
-        context={"key": "value"}
+        context={"key": "value"},
     )
     entry_dict = entry.to_dict()
     assert entry_dict["type"] == "test_failure"
@@ -106,7 +104,7 @@ def test_error_aggregator_empty() -> None:
     assert summary["total_warnings"] == 0
     assert summary["errors_by_type"] == {}
     assert summary["warnings_by_type"] == {}
-    
+
     fixes = aggregator.get_actionable_fixes()
     assert fixes == []
 
@@ -116,7 +114,7 @@ def test_error_aggregator_warning_severity() -> None:
     aggregator = ErrorAggregator()
     aggregator.add_error("performance", "Slow", severity="warning")
     aggregator.add_error("info", "Info message", severity="info")
-    
+
     summary = aggregator.get_summary()
     assert summary["total_errors"] == 0
     assert summary["total_warnings"] == 2
@@ -127,8 +125,10 @@ def test_error_aggregator_warning_severity() -> None:
 def test_error_aggregator_get_actionable_fixes_generic() -> None:
     """Test ErrorAggregator generates generic fixes for unknown error types."""
     aggregator = ErrorAggregator()
-    aggregator.add_error("unknown_error", "Something went wrong", suggestions=["Check logs"])
-    
+    aggregator.add_error(
+        "unknown_error", "Something went wrong", suggestions=["Check logs"]
+    )
+
     fixes = aggregator.get_actionable_fixes()
     assert len(fixes) == 1
     assert fixes[0]["priority"] == "medium"
@@ -140,7 +140,7 @@ def test_error_aggregator_get_actionable_fixes_no_suggestions() -> None:
     """Test ErrorAggregator handles errors without suggestions."""
     aggregator = ErrorAggregator()
     aggregator.add_error("unknown_error", "Something went wrong")
-    
+
     fixes = aggregator.get_actionable_fixes()
     assert len(fixes) == 1
     assert "Review error messages" in fixes[0]["actions"]
@@ -152,10 +152,10 @@ def test_error_aggregator_multiple_same_type() -> None:
     aggregator.add_error("test_failure", "Test 1 failed")
     aggregator.add_error("test_failure", "Test 2 failed")
     aggregator.add_error("test_failure", "Test 3 failed")
-    
+
     summary = aggregator.get_summary()
     assert summary["errors_by_type"]["test_failure"] == 3
-    
+
     fixes = aggregator.get_actionable_fixes()
     test_fix = next(fix for fix in fixes if "test failure" in fix["issue"])
     assert "3 test failure" in test_fix["issue"]
@@ -174,7 +174,7 @@ def test_reset_error_aggregator() -> None:
     reset_error_aggregator()
     aggregator1 = get_error_aggregator()
     aggregator1.add_error("test", "error")
-    
+
     reset_error_aggregator()
     aggregator2 = get_error_aggregator()
     assert aggregator2 is not aggregator1
@@ -186,23 +186,9 @@ def test_error_aggregator_markdown_truncation(tmp_path: Path) -> None:
     aggregator = ErrorAggregator()
     for i in range(15):
         aggregator.add_error("test_failure", f"Error {i}")
-    
+
     aggregator.save_report(tmp_path)
     md_content = (tmp_path / "error_summary.md").read_text()
     assert "Error 1" in md_content
     assert "Error 10" in md_content
     assert "... and 5 more errors" in md_content
-
-
-
-
-
-
-
-
-
-
-
-
-
-

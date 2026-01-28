@@ -7,6 +7,7 @@ Provides comprehensive validation including:
 - Formatting quality checks
 - Repetition detection for LLM output loops
 """
+
 from __future__ import annotations
 
 import json
@@ -15,23 +16,15 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from infrastructure.core.exceptions import ValidationError
 from infrastructure.core.logging_utils import get_logger
-
-# Import from split modules
-from infrastructure.llm.validation.repetition import (
-    detect_repetition,
-    deduplicate_sections,
-)
 from infrastructure.llm.validation.format import (
-    check_format_compliance,
-    is_off_topic,
-    has_on_topic_signals,
-    detect_conversational_phrases,
-)
+    check_format_compliance, detect_conversational_phrases,
+    has_on_topic_signals, is_off_topic)
+# Import from split modules
+from infrastructure.llm.validation.repetition import (deduplicate_sections,
+                                                      detect_repetition)
 from infrastructure.llm.validation.structure import (
-    validate_section_completeness,
-    extract_structured_sections,
-    validate_response_structure,
-)
+    extract_structured_sections, validate_response_structure,
+    validate_section_completeness)
 
 logger = get_logger(__name__)
 
@@ -48,27 +41,27 @@ class OutputValidator:
                 content = content.split("```json")[1].split("```")[0]
             elif "```" in content:
                 content = content.split("```")[1].split("```")[0]
-                
+
             return json.loads(content.strip())
         except json.JSONDecodeError as e:
             raise ValidationError(
                 "LLM output is not valid JSON",
-                context={"error": str(e), "content": content[:100]}
+                context={"error": str(e), "content": content[:100]},
             )
 
     @staticmethod
-    def validate_length(content: str, min_len: int = 0, max_len: Optional[int] = None) -> bool:
+    def validate_length(
+        content: str, min_len: int = 0, max_len: Optional[int] = None
+    ) -> bool:
         """Validate output length."""
         length = len(content)
         if length < min_len:
             raise ValidationError(
-                f"Output too short ({length} < {min_len})",
-                context={"length": length}
+                f"Output too short ({length} < {min_len})", context={"length": length}
             )
         if max_len and length > max_len:
             raise ValidationError(
-                f"Output too long ({length} > {max_len})",
-                context={"length": length}
+                f"Output too long ({length} > {max_len})", context={"length": length}
             )
         return True
 
@@ -104,25 +97,34 @@ class OutputValidator:
         """Validate structured response against schema."""
         required_keys = schema.get("required", [])
         properties = schema.get("properties", {})
-        
+
         # Check required fields
         for key in required_keys:
             if key not in content:
                 raise ValidationError(
                     f"Missing required field in structure: {key}",
-                    context={"required": required_keys, "present": list(content.keys())}
+                    context={
+                        "required": required_keys,
+                        "present": list(content.keys()),
+                    },
                 )
-        
+
         # Type validation (basic)
         for key, value in content.items():
             if key in properties:
                 expected_type = properties[key].get("type")
-                if expected_type and not OutputValidator._check_type(value, expected_type):
+                if expected_type and not OutputValidator._check_type(
+                    value, expected_type
+                ):
                     raise ValidationError(
                         f"Field '{key}' has wrong type",
-                        context={"field": key, "expected": expected_type, "got": type(value).__name__}
+                        context={
+                            "field": key,
+                            "expected": expected_type,
+                            "got": type(value).__name__,
+                        },
                     )
-        
+
         return True
 
     @staticmethod
@@ -146,50 +148,48 @@ class OutputValidator:
         """Extract and validate citations in content."""
         # Look for common citation patterns
         patterns = [
-            r'\(([A-Z][a-z]+(?:\s+&\s+[A-Z][a-z]+)*\s+\d{4})\)',  # (Author Year)
-            r'\[(\d+)\]',  # [1]
-            r'@(\w+)',  # @key
+            r"\(([A-Z][a-z]+(?:\s+&\s+[A-Z][a-z]+)*\s+\d{4})\)",  # (Author Year)
+            r"\[(\d+)\]",  # [1]
+            r"@(\w+)",  # @key
         ]
-        
+
         citations = []
         for pattern in patterns:
             citations.extend(re.findall(pattern, content))
-        
+
         return citations
 
     @staticmethod
     def validate_formatting(content: str) -> bool:
         """Validate basic formatting quality."""
         issues = []
-        
+
         # Check for excessive punctuation
         if "!!!" in content or "???" in content:
             issues.append("Excessive punctuation detected")
-        
+
         # Check for common typos/issues
         if "  " in content:
             issues.append("Double spaces detected")
-        
+
         if issues:
             logger.warning(f"Formatting issues: {', '.join(issues)}")
             return False
-        
+
         return True
 
     @staticmethod
     def validate_complete(
-        content: str,
-        mode: str = "standard",
-        schema: Optional[Dict[str, Any]] = None
+        content: str, mode: str = "standard", schema: Optional[Dict[str, Any]] = None
     ) -> bool:
         """Comprehensive validation based on mode."""
         if not content or not content.strip():
             raise ValidationError("Empty response")
-        
+
         # Basic formatting check
         if not OutputValidator.validate_formatting(content):
             logger.warning("Response has formatting issues")
-        
+
         # Mode-specific validation
         if mode == "short":
             return OutputValidator.validate_short_response(content)
@@ -201,7 +201,7 @@ class OutputValidator:
                 return OutputValidator.validate_structure(data, schema)
             except json.JSONDecodeError as e:
                 raise ValidationError(f"Invalid JSON for structured mode: {e}")
-        
+
         return True
 
     @staticmethod
@@ -210,36 +210,36 @@ class OutputValidator:
         max_allowed_ratio: float = 0.3,
     ) -> Tuple[bool, Dict[str, Any]]:
         """Validate that response doesn't contain excessive repetition.
-        
+
         Detects when LLM output gets stuck in a loop repeating content.
-        
+
         Args:
             content: The response text to validate
             max_allowed_ratio: Maximum ratio of repeated content (0.0-1.0)
                               0.3 means at most 30% of content can be repeated
-        
+
         Returns:
             Tuple of (is_valid, details dict with repetition info)
         """
         has_repetition, duplicates, unique_ratio = detect_repetition(content)
-        
+
         details = {
             "has_repetition": has_repetition,
             "unique_ratio": unique_ratio,
             "duplicates_found": len(duplicates),
             "duplicate_samples": duplicates[:3],  # First 3 examples
         }
-        
+
         # Calculate repetition ratio
         repetition_ratio = 1.0 - unique_ratio
         is_valid = repetition_ratio <= max_allowed_ratio
-        
+
         if not is_valid:
             logger.warning(
                 f"Excessive repetition detected: {repetition_ratio:.1%} repeated "
                 f"(max allowed: {max_allowed_ratio:.1%})"
             )
-        
+
         return is_valid, details
 
     @staticmethod
@@ -248,13 +248,13 @@ class OutputValidator:
         max_repetitions: int = 2,
     ) -> str:
         """Clean repetitive content from LLM output.
-        
+
         Post-processing step to remove repeated sections/paragraphs.
-        
+
         Args:
             content: The response text to clean
             max_repetitions: Maximum times a section can appear
-            
+
         Returns:
             Cleaned text with repetitions removed
         """
@@ -268,5 +268,5 @@ class OutputValidator:
 # Note: Functions are imported at module level above for use in OutputValidator methods
 __all__ = [
     # Core class
-    'OutputValidator',
+    "OutputValidator",
 ]

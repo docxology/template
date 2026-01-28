@@ -68,4 +68,3 @@ def format_menu(title: str, options: Sequence[MenuOption], current_project: str)
     for opt in options:
         lines.append(f"  {opt.key}. {opt.label}")
     return "\n".join(lines)
-

@@ -5,6 +5,7 @@ Functions:
 - generate_markdown_table(entries): Build a Markdown table from entries
 - inject_between_markers(text, begin_marker, end_marker, content): Replace content between markers
 """
+
 from __future__ import annotations
 
 import ast
@@ -16,13 +17,14 @@ from typing import Iterable, List
 @dataclass
 class ApiEntry:
     """Represents a public API entry from source code.
-    
+
     Attributes:
         module: The module name where the API is defined
         name: The name of the function or class
         kind: The type of API ("function" or "class")
         summary: A brief description extracted from the docstring
     """
+
     module: str
     name: str
     kind: str  # "function" | "class"
@@ -44,7 +46,9 @@ def _first_sentence(doc: str | None) -> str:
 def _iter_py_files(root: str) -> Iterable[str]:
     for dirpath, _, filenames in os.walk(root):
         for fname in filenames:
-            if fname.endswith(".py") and (not fname.startswith("_") or fname == "__init__.py"):
+            if fname.endswith(".py") and (
+                not fname.startswith("_") or fname == "__init__.py"
+            ):
                 yield os.path.join(dirpath, fname)
 
 
@@ -92,10 +96,10 @@ def build_api_index(src_dir: str) -> List[ApiEntry]:
 
 def generate_markdown_table(entries: List[ApiEntry]) -> str:
     """Generate a Markdown table from API entries.
-    
+
     Args:
         entries: List of API entries to format
-        
+
     Returns:
         Markdown table string with headers and data rows
     """
@@ -110,7 +114,9 @@ def generate_markdown_table(entries: List[ApiEntry]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def inject_between_markers(text: str, begin_marker: str, end_marker: str, content: str) -> str:
+def inject_between_markers(
+    text: str, begin_marker: str, end_marker: str, content: str
+) -> str:
     """Replace content between begin_marker and end_marker (inclusive markers preserved)."""
     start = text.find(begin_marker)
     end = text.find(end_marker)
@@ -119,4 +125,10 @@ def inject_between_markers(text: str, begin_marker: str, end_marker: str, conten
         block = f"\n\n{begin_marker}\n{content}\n{end_marker}\n"
         return text + ("\n" if not text.endswith("\n") else "") + block
     start_end = start + len(begin_marker)
-    return text[:start_end] + "\n" + content + ("\n" if not content.endswith("\n") else "") + text[end:]
+    return (
+        text[:start_end]
+        + "\n"
+        + content
+        + ("\n" if not content.endswith("\n") else "")
+        + text[end:]
+    )

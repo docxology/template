@@ -283,197 +283,231 @@ a:hover {
 <body>
 <nav id="TOC" role="doc-toc">
 <ul>
+<li><a href="#abstract" id="toc-abstract"><span
+class="toc-section-number">1</span> Abstract</a></li>
 <li><a href="#introduction" id="toc-introduction"><span
-class="toc-section-number">1</span> Introduction</a>
+class="toc-section-number">2</span> Introduction</a>
 <ul>
 <li><a href="#research-context" id="toc-research-context"><span
-class="toc-section-number">1.1</span> Research Context</a></li>
+class="toc-section-number">2.1</span> Research Context</a></li>
 <li><a href="#key-components" id="toc-key-components"><span
-class="toc-section-number">1.2</span> Key Components</a></li>
+class="toc-section-number">2.2</span> Key Components</a></li>
 <li><a href="#algorithm-overview" id="toc-algorithm-overview"><span
-class="toc-section-number">1.3</span> Algorithm Overview</a></li>
+class="toc-section-number">2.3</span> Algorithm Overview</a></li>
 <li><a href="#implementation-goals" id="toc-implementation-goals"><span
-class="toc-section-number">1.4</span> Implementation Goals</a></li>
+class="toc-section-number">2.4</span> Implementation Goals</a></li>
 </ul></li>
 <li><a href="#methodology" id="toc-methodology"><span
-class="toc-section-number">2</span> Methodology</a>
+class="toc-section-number">3</span> Methodology</a>
 <ul>
 <li><a href="#algorithm-implementation"
 id="toc-algorithm-implementation"><span
-class="toc-section-number">2.1</span> Algorithm Implementation</a>
+class="toc-section-number">3.1</span> Algorithm Implementation</a>
 <ul>
 <li><a href="#gradient-descent-algorithm"
 id="toc-gradient-descent-algorithm"><span
-class="toc-section-number">2.1.1</span> Gradient Descent
+class="toc-section-number">3.1.1</span> Gradient Descent
 Algorithm</a></li>
 <li><a href="#test-problem-quadratic-minimization"
 id="toc-test-problem-quadratic-minimization"><span
-class="toc-section-number">2.1.2</span> Test Problem: Quadratic
+class="toc-section-number">3.1.2</span> Test Problem: Quadratic
 Minimization</a></li>
 </ul></li>
 <li><a href="#convergence-analysis" id="toc-convergence-analysis"><span
-class="toc-section-number">2.2</span> Convergence Analysis</a>
+class="toc-section-number">3.2</span> Convergence Analysis</a>
 <ul>
 <li><a href="#convergence-rate-theory"
 id="toc-convergence-rate-theory"><span
-class="toc-section-number">2.2.1</span> Convergence Rate Theory</a></li>
+class="toc-section-number">3.2.1</span> Convergence Rate Theory</a></li>
 <li><a href="#step-size-selection-criteria"
 id="toc-step-size-selection-criteria"><span
-class="toc-section-number">2.2.2</span> Step Size Selection
+class="toc-section-number">3.2.2</span> Step Size Selection
 Criteria</a></li>
 <li><a href="#complexity-analysis" id="toc-complexity-analysis"><span
-class="toc-section-number">2.2.3</span> Complexity Analysis</a></li>
+class="toc-section-number">3.2.3</span> Complexity Analysis</a></li>
 </ul></li>
 <li><a href="#experimental-setup" id="toc-experimental-setup"><span
-class="toc-section-number">2.3</span> Experimental Setup</a>
+class="toc-section-number">3.3</span> Experimental Setup</a>
 <ul>
 <li><a href="#step-size-analysis" id="toc-step-size-analysis"><span
-class="toc-section-number">2.3.1</span> Step Size Analysis</a></li>
+class="toc-section-number">3.3.1</span> Step Size Analysis</a></li>
 <li><a href="#convergence-criteria" id="toc-convergence-criteria"><span
-class="toc-section-number">2.3.2</span> Convergence Criteria</a></li>
+class="toc-section-number">3.3.2</span> Convergence Criteria</a></li>
 <li><a href="#performance-metrics" id="toc-performance-metrics"><span
-class="toc-section-number">2.3.3</span> Performance Metrics</a></li>
+class="toc-section-number">3.3.3</span> Performance Metrics</a></li>
 </ul></li>
 <li><a href="#implementation-details"
 id="toc-implementation-details"><span
-class="toc-section-number">2.4</span> Implementation Details</a>
+class="toc-section-number">3.4</span> Implementation Details</a>
 <ul>
 <li><a href="#numerical-stability-considerations"
 id="toc-numerical-stability-considerations"><span
-class="toc-section-number">2.4.1</span> Numerical Stability
+class="toc-section-number">3.4.1</span> Numerical Stability
 Considerations</a></li>
 <li><a href="#error-handling-and-robustness"
 id="toc-error-handling-and-robustness"><span
-class="toc-section-number">2.4.2</span> Error Handling and
+class="toc-section-number">3.4.2</span> Error Handling and
 Robustness</a></li>
 <li><a href="#testing-strategy-and-validation"
 id="toc-testing-strategy-and-validation"><span
-class="toc-section-number">2.4.3</span> Testing Strategy and
+class="toc-section-number">3.4.3</span> Testing Strategy and
 Validation</a></li>
 </ul></li>
 <li><a href="#latex-customization-and-rendering"
 id="toc-latex-customization-and-rendering"><span
-class="toc-section-number">2.5</span> LaTeX Customization and
+class="toc-section-number">3.5</span> LaTeX Customization and
 Rendering</a></li>
 <li><a href="#analysis-pipeline" id="toc-analysis-pipeline"><span
-class="toc-section-number">2.6</span> Analysis Pipeline</a></li>
+class="toc-section-number">3.6</span> Analysis Pipeline</a></li>
 </ul></li>
 <li><a href="#results" id="toc-results"><span
-class="toc-section-number">3</span> Results</a>
+class="toc-section-number">4</span> Results</a>
 <ul>
 <li><a href="#convergence-analysis-1"
 id="toc-convergence-analysis-1"><span
-class="toc-section-number">3.1</span> Convergence Analysis</a>
+class="toc-section-number">4.1</span> Convergence Analysis</a>
 <ul>
 <li><a href="#convergence-trajectories"
 id="toc-convergence-trajectories"><span
-class="toc-section-number">3.1.1</span> Convergence
+class="toc-section-number">4.1.1</span> Convergence
 Trajectories</a></li>
 <li><a href="#step-size-sensitivity-analysis"
 id="toc-step-size-sensitivity-analysis"><span
-class="toc-section-number">3.1.2</span> Step Size Sensitivity
+class="toc-section-number">4.1.2</span> Step Size Sensitivity
 Analysis</a></li>
 </ul></li>
 <li><a href="#quantitative-results" id="toc-quantitative-results"><span
-class="toc-section-number">3.2</span> Quantitative Results</a></li>
+class="toc-section-number">4.2</span> Quantitative Results</a></li>
 <li><a href="#convergence-rate-analysis"
 id="toc-convergence-rate-analysis"><span
-class="toc-section-number">3.3</span> Convergence Rate Analysis</a>
+class="toc-section-number">4.3</span> Convergence Rate Analysis</a>
 <ul>
 <li><a href="#theoretical-vs-empirical-convergence"
 id="toc-theoretical-vs-empirical-convergence"><span
-class="toc-section-number">3.3.1</span> Theoretical vs Empirical
+class="toc-section-number">4.3.1</span> Theoretical vs Empirical
 Convergence</a></li>
 <li><a href="#error-bounds" id="toc-error-bounds"><span
-class="toc-section-number">3.3.2</span> Error Bounds</a></li>
+class="toc-section-number">4.3.2</span> Error Bounds</a></li>
 <li><a href="#performance-metrics-1"
 id="toc-performance-metrics-1"><span
-class="toc-section-number">3.3.3</span> Performance Metrics</a></li>
+class="toc-section-number">4.3.3</span> Performance Metrics</a></li>
 </ul></li>
 <li><a href="#performance-analysis" id="toc-performance-analysis"><span
-class="toc-section-number">3.4</span> Performance Analysis</a>
+class="toc-section-number">4.4</span> Performance Analysis</a>
 <ul>
 <li><a href="#convergence-speed" id="toc-convergence-speed"><span
-class="toc-section-number">3.4.1</span> Convergence Speed</a></li>
+class="toc-section-number">4.4.1</span> Convergence Speed</a></li>
 <li><a href="#solution-accuracy" id="toc-solution-accuracy"><span
-class="toc-section-number">3.4.2</span> Solution Accuracy</a></li>
+class="toc-section-number">4.4.2</span> Solution Accuracy</a></li>
 </ul></li>
 <li><a href="#algorithm-characteristics"
 id="toc-algorithm-characteristics"><span
-class="toc-section-number">3.5</span> Algorithm Characteristics</a>
+class="toc-section-number">4.5</span> Algorithm Characteristics</a>
 <ul>
 <li><a href="#strengths" id="toc-strengths"><span
-class="toc-section-number">3.5.1</span> Strengths</a></li>
+class="toc-section-number">4.5.1</span> Strengths</a></li>
 <li><a href="#limitations" id="toc-limitations"><span
-class="toc-section-number">3.5.2</span> Limitations</a></li>
+class="toc-section-number">4.5.2</span> Limitations</a></li>
 </ul></li>
 <li><a href="#computational-performance"
 id="toc-computational-performance"><span
-class="toc-section-number">3.6</span> Computational Performance</a>
+class="toc-section-number">4.6</span> Computational Performance</a>
 <ul>
 <li><a href="#algorithm-complexity-visualization"
 id="toc-algorithm-complexity-visualization"><span
-class="toc-section-number">3.6.1</span> Algorithm Complexity
+class="toc-section-number">4.6.1</span> Algorithm Complexity
 Visualization</a></li>
 <li><a href="#performance-benchmarking"
 id="toc-performance-benchmarking"><span
-class="toc-section-number">3.6.2</span> Performance
+class="toc-section-number">4.6.2</span> Performance
 Benchmarking</a></li>
 <li><a href="#numerical-stability-analysis"
 id="toc-numerical-stability-analysis"><span
-class="toc-section-number">3.6.3</span> Numerical Stability
+class="toc-section-number">4.6.3</span> Numerical Stability
 Analysis</a></li>
 <li><a href="#performance-metrics-summary"
 id="toc-performance-metrics-summary"><span
-class="toc-section-number">3.6.4</span> Performance Metrics
+class="toc-section-number">4.6.4</span> Performance Metrics
 Summary</a></li>
 </ul></li>
 <li><a href="#validation" id="toc-validation"><span
-class="toc-section-number">3.7</span> Validation</a></li>
+class="toc-section-number">4.7</span> Validation</a></li>
 <li><a href="#discussion" id="toc-discussion"><span
-class="toc-section-number">3.8</span> Discussion</a></li>
+class="toc-section-number">4.8</span> Discussion</a></li>
 </ul></li>
 <li><a href="#conclusion" id="toc-conclusion"><span
-class="toc-section-number">4</span> Conclusion</a>
+class="toc-section-number">5</span> Conclusion</a>
 <ul>
 <li><a href="#project-achievements" id="toc-project-achievements"><span
-class="toc-section-number">4.1</span> Project Achievements</a></li>
+class="toc-section-number">5.1</span> Project Achievements</a></li>
 <li><a href="#technical-contributions"
 id="toc-technical-contributions"><span
-class="toc-section-number">4.2</span> Technical Contributions</a>
+class="toc-section-number">5.2</span> Technical Contributions</a>
 <ul>
 <li><a href="#algorithm-implementation-1"
 id="toc-algorithm-implementation-1"><span
-class="toc-section-number">4.2.1</span> Algorithm
+class="toc-section-number">5.2.1</span> Algorithm
 Implementation</a></li>
 <li><a href="#testing-strategy" id="toc-testing-strategy"><span
-class="toc-section-number">4.2.2</span> Testing Strategy</a></li>
+class="toc-section-number">5.2.2</span> Testing Strategy</a></li>
 <li><a href="#analysis-capabilities"
 id="toc-analysis-capabilities"><span
-class="toc-section-number">4.2.3</span> Analysis Capabilities</a></li>
+class="toc-section-number">5.2.3</span> Analysis Capabilities</a></li>
 </ul></li>
 <li><a href="#research-pipeline-validation"
 id="toc-research-pipeline-validation"><span
-class="toc-section-number">4.3</span> Research Pipeline
+class="toc-section-number">5.3</span> Research Pipeline
 Validation</a></li>
 <li><a href="#key-insights" id="toc-key-insights"><span
-class="toc-section-number">4.4</span> Key Insights</a></li>
+class="toc-section-number">5.4</span> Key Insights</a></li>
 <li><a href="#future-extensions" id="toc-future-extensions"><span
-class="toc-section-number">4.5</span> Future Extensions</a></li>
+class="toc-section-number">5.5</span> Future Extensions</a></li>
 <li><a href="#final-assessment" id="toc-final-assessment"><span
-class="toc-section-number">4.6</span> Final Assessment</a></li>
+class="toc-section-number">5.6</span> Final Assessment</a></li>
 </ul></li>
 </ul>
 </nav>
-<h1 data-number="1" id="introduction"><span
-class="header-section-number">1</span> Introduction</h1>
-<p>This small code project demonstrates a-tested numerical optimization
-implementation with analysis and visualization capabilities. The project
-showcases the research pipeline from algorithm implementation through
-testing to result visualization, including automatic title page
-generation from metadata configuration.</p>
-<h2 data-number="1.1" id="research-context"><span
-class="header-section-number">1.1</span> Research Context</h2>
+<h1 data-number="1" id="abstract"><span
+class="header-section-number">1</span> Abstract</h1>
+<p>This paper presents a comprehensive analysis of gradient descent
+optimization algorithms applied to quadratic minimization problems. We
+implement and evaluate the classical gradient descent method with fixed
+step size, examining convergence behavior across a range of learning
+rates from <span class="math inline">\(\alpha = 0.01\)</span> to <span
+class="math inline">\(\alpha = 0.20\)</span>. Our experimental framework
+includes theoretical convergence bounds, numerical stability analysis,
+and performance benchmarking using infrastructure-backed scientific
+utilities.</p>
+<p>The key contributions of this work are: (1) a rigorously tested
+implementation of gradient descent with 96%+ test coverage and
+deterministic reproducibility via fixed random seeds; (2) empirical
+validation of theoretical convergence rates on quadratic objective
+functions; (3) automated analysis pipelines generating
+publication-quality visualizations; and (4) integration patterns
+demonstrating how optimization algorithms connect with infrastructure
+modules for logging, validation, and performance monitoring.</p>
+<p>Results confirm that all tested step sizes converge to the analytical
+optimum <span class="math inline">\(x^* = 1.0\)</span> with objective
+value <span class="math inline">\(f(x^*) = -0.5\)</span>, with larger
+step sizes achieving faster convergence (9 iterations for <span
+class="math inline">\(\alpha = 0.20\)</span> versus 165 iterations for
+<span class="math inline">\(\alpha = 0.01\)</span>). The implementation
+validates the template’s capability to support computational research
+projects from algorithm development through manuscript generation,
+serving as an exemplar for reproducible numerical optimization
+studies.</p>
+<p><strong>Keywords:</strong> gradient descent, numerical optimization,
+convergence analysis, quadratic minimization, reproducible research</p>
+<hr />
+<h1 data-number="2" id="introduction"><span
+class="header-section-number">2</span> Introduction</h1>
+<p>This small code project demonstrates a fully-tested numerical
+optimization implementation with analysis and visualization
+capabilities. The project showcases the research pipeline from algorithm
+implementation through testing to result visualization, including
+automatic title page generation from metadata configuration.</p>
+<h2 data-number="2.1" id="research-context"><span
+class="header-section-number">2.1</span> Research Context</h2>
 <p>Numerical optimization forms the foundation of many scientific and
 engineering applications . This project implements and analyzes gradient
 descent methods for solving optimization problems of the form:</p>
@@ -484,16 +518,16 @@ descent methods for solving optimization problems of the form:</p>
 <p>where <span class="math inline">\(f: \mathbb{R}^n \rightarrow
 \mathbb{R}\)</span> is a continuously differentiable objective
 function.</p>
-<h2 data-number="1.2" id="key-components"><span
-class="header-section-number">1.2</span> Key Components</h2>
+<h2 data-number="2.2" id="key-components"><span
+class="header-section-number">2.2</span> Key Components</h2>
 <p>The implementation includes:</p>
 <ul>
 <li><strong>Gradient descent algorithm</strong> with configurable
 parameters</li>
 <li><strong>Quadratic function test problems</strong> with known
 analytical solutions</li>
-<li><strong>test suite</strong> covering functionality and edge
-cases</li>
+<li><strong>Comprehensive test suite</strong> covering functionality and
+edge cases</li>
 <li><strong>Analysis scripts</strong> that generate convergence plots
 and performance data</li>
 <li><strong>Manuscript integration</strong> with automatically generated
@@ -505,20 +539,24 @@ manuscript analysis</li>
 <li><strong>Executive reporting</strong> for cross-project metrics and
 comparisons</li>
 </ul>
-<h2 data-number="1.3" id="algorithm-overview"><span
-class="header-section-number">1.3</span> Algorithm Overview</h2>
+<h2 data-number="2.3" id="algorithm-overview"><span
+class="header-section-number">2.3</span> Algorithm Overview</h2>
 <p>The gradient descent algorithm iteratively updates the solution
 using:</p>
 <p><span class="math display">\[\begin{equation}
 \label{eq:gradient_descent_update}
 x_{k+1} = x_k - \alpha \nabla f(x_k)
 \end{equation}\]</span></p>
-<p>where: - <span class="math inline">\(\alpha &gt; 0\)</span> is the
-step size (learning rate) - <span class="math inline">\(\nabla
-f(x_k)\)</span> is the gradient of the objective function at iteration
-<span class="math inline">\(k\)</span></p>
-<h2 data-number="1.4" id="implementation-goals"><span
-class="header-section-number">1.4</span> Implementation Goals</h2>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(\alpha &gt; 0\)</span> is the step size
+(learning rate)</li>
+<li><span class="math inline">\(\nabla f(x_k)\)</span> is the gradient
+of the objective function at iteration <span
+class="math inline">\(k\)</span></li>
+</ul>
+<h2 data-number="2.4" id="implementation-goals"><span
+class="header-section-number">2.4</span> Implementation Goals</h2>
 <p>This project demonstrates:</p>
 <ol type="1">
 <li><strong>Clean, testable code</strong> with proper separation of
@@ -532,14 +570,14 @@ scripts</li>
 and referencing</li>
 </ol>
 <hr />
-<h1 data-number="2" id="methodology"><span
-class="header-section-number">2</span> Methodology</h1>
+<h1 data-number="3" id="methodology"><span
+class="header-section-number">3</span> Methodology</h1>
 <p>This section describes the implementation methodology and
 experimental setup used in the optimization project.</p>
-<h2 data-number="2.1" id="algorithm-implementation"><span
-class="header-section-number">2.1</span> Algorithm Implementation</h2>
-<h3 data-number="2.1.1" id="gradient-descent-algorithm"><span
-class="header-section-number">2.1.1</span> Gradient Descent
+<h2 data-number="3.1" id="algorithm-implementation"><span
+class="header-section-number">3.1</span> Algorithm Implementation</h2>
+<h3 data-number="3.1.1" id="gradient-descent-algorithm"><span
+class="header-section-number">3.1.1</span> Gradient Descent
 Algorithm</h3>
 <p>The core algorithm implements the following iterative procedure for
 unconstrained optimization:</p>
@@ -551,30 +589,51 @@ unconstrained optimization:</p>
 <p><strong>Output:</strong> Approximate solution <span
 class="math inline">\(x^* \approx \arg\min f(x)\)</span></p>
 <p><strong>Algorithm 1: Gradient Descent</strong></p>
-<pre><code>Initialize: k ← 0, x_0 ∈ ℝ^d
-While k &lt; N_max do:
-    Compute gradient: ∇f(x_k)
-    Check convergence: if ||∇f(x_k)||_2 &lt; ε then
-        Return x_k as approximate solution
-    Update: x_{k+1} ← x_k - α ∇f(x_k)
-    Increment: k ← k + 1
-Return x_k (maximum iterations reached)</code></pre>
+<blockquote>
+<p><strong>Input:</strong> Initial point <span
+class="math inline">\(x_0\)</span>, step size <span
+class="math inline">\(\alpha\)</span>, tolerance <span
+class="math inline">\(\epsilon\)</span>, max iterations <span
+class="math inline">\(N_{\max}\)</span></p>
+<ol type="1">
+<li>Initialize <span class="math inline">\(k \leftarrow 0\)</span></li>
+<li><strong>While</strong> <span class="math inline">\(k &lt;
+N_{\max}\)</span> <strong>do:</strong>
+<ul>
+<li>Compute gradient <span class="math inline">\(g_k = \nabla
+f(x_k)\)</span></li>
+<li><strong>If</strong> <span class="math inline">\(\|g_k\|_2 &lt;
+\epsilon\)</span> <strong>then return</strong> <span
+class="math inline">\(x_k\)</span> <em>(converged)</em></li>
+<li>Update: <span class="math inline">\(x_{k+1} \leftarrow x_k - \alpha
+\cdot g_k\)</span></li>
+<li><span class="math inline">\(k \leftarrow k + 1\)</span></li>
+</ul></li>
+<li><strong>Return</strong> <span class="math inline">\(x_k\)</span>
+<em>(max iterations reached)</em></li>
+</ol>
+</blockquote>
 <p>The algorithm follows the fundamental principle of steepest descent,
 moving in the direction of the negative gradient to minimize the
 objective function <span class="math inline">\(f: \mathbb{R}^d
 \rightarrow \mathbb{R}\)</span> .</p>
-<h3 data-number="2.1.2" id="test-problem-quadratic-minimization"><span
-class="header-section-number">2.1.2</span> Test Problem: Quadratic
+<h3 data-number="3.1.2" id="test-problem-quadratic-minimization"><span
+class="header-section-number">3.1.2</span> Test Problem: Quadratic
 Minimization</h3>
 <p>We use quadratic functions of the form:</p>
 <p><span class="math display">\[\begin{equation}
 \label{eq:quadratic_objective}
 f(x) = \frac{1}{2} x^T A x - b^T x
 \end{equation}\]</span></p>
-<p>where: - <span class="math inline">\(A\)</span> is a positive
-definite matrix - <span class="math inline">\(b\)</span> is the linear
-term vector - The gradient is: <span class="math inline">\(\nabla f(x) =
-A x - b\)</span></p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(A\)</span> is a positive definite
+matrix</li>
+<li><span class="math inline">\(b\)</span> is the linear term
+vector</li>
+<li>The gradient is: <span class="math inline">\(\nabla f(x) = A x -
+b\)</span></li>
+</ul>
 <p>For the simple case <span class="math inline">\(A = I\)</span> and
 <span class="math inline">\(b = 1\)</span>, we have:</p>
 <p><span class="math display">\[\begin{equation}
@@ -589,10 +648,10 @@ f(x) = \frac{1}{2} x^2 - x
 <p>The analytical minimum occurs at <span class="math inline">\(x =
 1\)</span> with <span class="math inline">\(f(1) =
 -\frac{1}{2}\)</span>.</p>
-<h2 data-number="2.2" id="convergence-analysis"><span
-class="header-section-number">2.2</span> Convergence Analysis</h2>
-<h3 data-number="2.2.1" id="convergence-rate-theory"><span
-class="header-section-number">2.2.1</span> Convergence Rate Theory</h3>
+<h2 data-number="3.2" id="convergence-analysis"><span
+class="header-section-number">3.2</span> Convergence Analysis</h2>
+<h3 data-number="3.2.1" id="convergence-rate-theory"><span
+class="header-section-number">3.2.1</span> Convergence Rate Theory</h3>
 <p>The theoretical foundations of convergence analysis for gradient
 descent methods are well-established in the optimization literature
 .</p>
@@ -622,8 +681,8 @@ factor becomes:</p>
 Optimal convergence occurs when <span class="math inline">\(\alpha =
 \frac{2}{\lambda_{\min} + \lambda_{\max}}\)</span>, yielding <span
 class="math inline">\(\rho = \frac{\kappa - 1}{\kappa + 1}\)</span>.</p>
-<h3 data-number="2.2.2" id="step-size-selection-criteria"><span
-class="header-section-number">2.2.2</span> Step Size Selection
+<h3 data-number="3.2.2" id="step-size-selection-criteria"><span
+class="header-section-number">3.2.2</span> Step Size Selection
 Criteria</h3>
 <p>The optimal constant step size for quadratic functions is:</p>
 <p><span class="math display">\[\begin{equation}
@@ -633,19 +692,22 @@ Criteria</h3>
 <p>For our test problem with <span class="math inline">\(\lambda_{\min}
 = \lambda_{\max} = 1\)</span>, this gives <span
 class="math inline">\(\alpha = 1\)</span>.</p>
-<h3 data-number="2.2.3" id="complexity-analysis"><span
-class="header-section-number">2.2.3</span> Complexity Analysis</h3>
-<p>The computational complexity per iteration is: - <strong>Time
-complexity</strong>: <span class="math inline">\(O(n)\)</span> for
-gradient computation - <strong>Space complexity</strong>: <span
-class="math inline">\(O(n)\)</span> for storing variables</p>
+<h3 data-number="3.2.3" id="complexity-analysis"><span
+class="header-section-number">3.2.3</span> Complexity Analysis</h3>
+<p>The computational complexity per iteration is:</p>
+<ul>
+<li><strong>Time complexity</strong>: <span
+class="math inline">\(O(n)\)</span> for gradient computation</li>
+<li><strong>Space complexity</strong>: <span
+class="math inline">\(O(n)\)</span> for storing variables</li>
+</ul>
 <p>Total complexity for convergence: <span
 class="math inline">\(O\left(n \cdot
 \log\left(\frac{1}{\epsilon}\right)\right)\)</span></p>
-<h2 data-number="2.3" id="experimental-setup"><span
-class="header-section-number">2.3</span> Experimental Setup</h2>
-<h3 data-number="2.3.1" id="step-size-analysis"><span
-class="header-section-number">2.3.1</span> Step Size Analysis</h3>
+<h2 data-number="3.3" id="experimental-setup"><span
+class="header-section-number">3.3</span> Experimental Setup</h2>
+<h3 data-number="3.3.1" id="step-size-analysis"><span
+class="header-section-number">3.3.1</span> Step Size Analysis</h3>
 <p>We investigate the effect of different step sizes on convergence:</p>
 <ul>
 <li><span class="math inline">\(\alpha = 0.01\)</span>
@@ -655,22 +717,30 @@ class="header-section-number">2.3.1</span> Step Size Analysis</h3>
 <li><span class="math inline">\(\alpha = 0.20\)</span> (very
 aggressive)</li>
 </ul>
-<h3 data-number="2.3.2" id="convergence-criteria"><span
-class="header-section-number">2.3.2</span> Convergence Criteria</h3>
-<p>The algorithm terminates when: - Gradient norm falls below tolerance:
-<span class="math inline">\(||\nabla f(x)|| &lt; \epsilon\)</span> -
-Maximum iterations reached: <span class="math inline">\(k =
-N\)</span></p>
-<h3 data-number="2.3.3" id="performance-metrics"><span
-class="header-section-number">2.3.3</span> Performance Metrics</h3>
-<p>We track: - <strong>Solution accuracy</strong>: Distance to
-analytical optimum - <strong>Convergence speed</strong>: Number of
-iterations to convergence - <strong>Objective value</strong>: Function
-value at final solution</p>
-<h2 data-number="2.4" id="implementation-details"><span
-class="header-section-number">2.4</span> Implementation Details</h2>
-<h3 data-number="2.4.1" id="numerical-stability-considerations"><span
-class="header-section-number">2.4.1</span> Numerical Stability
+<h3 data-number="3.3.2" id="convergence-criteria"><span
+class="header-section-number">3.3.2</span> Convergence Criteria</h3>
+<p>The algorithm terminates when:</p>
+<ul>
+<li>Gradient norm falls below tolerance: <span
+class="math inline">\(||\nabla f(x)|| &lt; \epsilon\)</span></li>
+<li>Maximum iterations reached: <span class="math inline">\(k =
+N\)</span></li>
+</ul>
+<h3 data-number="3.3.3" id="performance-metrics"><span
+class="header-section-number">3.3.3</span> Performance Metrics</h3>
+<p>We track:</p>
+<ul>
+<li><strong>Solution accuracy</strong>: Distance to analytical
+optimum</li>
+<li><strong>Convergence speed</strong>: Number of iterations to
+convergence</li>
+<li><strong>Objective value</strong>: Function value at final
+solution</li>
+</ul>
+<h2 data-number="3.4" id="implementation-details"><span
+class="header-section-number">3.4</span> Implementation Details</h2>
+<h3 data-number="3.4.1" id="numerical-stability-considerations"><span
+class="header-section-number">3.4.1</span> Numerical Stability
 Considerations</h3>
 <p>The implementation uses NumPy’s vectorized operations for efficient
 computation. Numerical stability is ensured through:</p>
@@ -684,8 +754,8 @@ divergence</li>
 <li><strong>Iteration limits</strong>: Maximum iteration caps to prevent
 infinite loops</li>
 </ul>
-<h3 data-number="2.4.2" id="error-handling-and-robustness"><span
-class="header-section-number">2.4.2</span> Error Handling and
+<h3 data-number="3.4.2" id="error-handling-and-robustness"><span
+class="header-section-number">3.4.2</span> Error Handling and
 Robustness</h3>
 <p>Input validation ensures algorithmic reliability:</p>
 <ul>
@@ -700,10 +770,10 @@ considerations</li>
 <li><strong>Initial point validation</strong>: Finite, non-NaN starting
 values</li>
 </ul>
-<h3 data-number="2.4.3" id="testing-strategy-and-validation"><span
-class="header-section-number">2.4.3</span> Testing Strategy and
+<h3 data-number="3.4.3" id="testing-strategy-and-validation"><span
+class="header-section-number">3.4.3</span> Testing Strategy and
 Validation</h3>
-<p>test suite covers multiple dimensions:</p>
+<p>The comprehensive test suite covers multiple dimensions:</p>
 <ul>
 <li><strong>Functional correctness</strong>: Analytical gradient
 verification against finite differences</li>
@@ -716,8 +786,8 @@ solutions for quadratic functions</li>
 <li><strong>Robustness</strong>: Ill-conditioned problems and numerical
 precision limits</li>
 </ul>
-<h2 data-number="2.5" id="latex-customization-and-rendering"><span
-class="header-section-number">2.5</span> LaTeX Customization and
+<h2 data-number="3.5" id="latex-customization-and-rendering"><span
+class="header-section-number">3.5</span> LaTeX Customization and
 Rendering</h2>
 <p>The research template supports advanced LaTeX customization through
 optional preamble configuration. An optional <code>preamble.md</code>
@@ -727,24 +797,28 @@ ensures required packages (such as <code>graphicx</code> for figure
 inclusion) are loaded automatically, while allowing researchers to add
 specialized packages for mathematical notation, bibliography styles, or
 document formatting.</p>
-<h2 data-number="2.6" id="analysis-pipeline"><span
-class="header-section-number">2.6</span> Analysis Pipeline</h2>
-<p>The analysis script automatically: 1. Runs optimization experiments
-with different parameters 2. Collects convergence trajectories 3.
-Generates publication-quality plots 4. Saves numerical results to CSV
-files 5. Registers figures for manuscript integration</p>
+<h2 data-number="3.6" id="analysis-pipeline"><span
+class="header-section-number">3.6</span> Analysis Pipeline</h2>
+<p>The analysis script automatically:</p>
+<ol type="1">
+<li>Runs optimization experiments with different parameters</li>
+<li>Collects convergence trajectories</li>
+<li>Generates publication-quality plots</li>
+<li>Saves numerical results to CSV files</li>
+<li>Registers figures for manuscript integration</li>
+</ol>
 <p>This automated approach ensures reproducible research and consistent
 result generation.</p>
 <hr />
-<h1 data-number="3" id="results"><span
-class="header-section-number">3</span> Results</h1>
+<h1 data-number="4" id="results"><span
+class="header-section-number">4</span> Results</h1>
 <p>This section presents the experimental results from the gradient
 descent optimization study, including convergence analysis and
 performance comparisons.</p>
-<h2 data-number="3.1" id="convergence-analysis-1"><span
-class="header-section-number">3.1</span> Convergence Analysis</h2>
-<h3 data-number="3.1.1" id="convergence-trajectories"><span
-class="header-section-number">3.1.1</span> Convergence Trajectories</h3>
+<h2 data-number="4.1" id="convergence-analysis-1"><span
+class="header-section-number">4.1</span> Convergence Analysis</h2>
+<h3 data-number="4.1.1" id="convergence-trajectories"><span
+class="header-section-number">4.1.1</span> Convergence Trajectories</h3>
 <p>Figure <span class="math inline">\(\ref{fig:convergence}\)</span>
 illustrates the convergence behavior of gradient descent for different
 step sizes, starting from the initial point <span
@@ -772,8 +846,8 @@ converge to the analytical optimum at <span class="math inline">\(x^* =
 class="math inline">\(\alpha = 0.01\)</span>) demonstrate smooth,
 monotonic convergence with minimal oscillations</li>
 </ol>
-<h3 data-number="3.1.2" id="step-size-sensitivity-analysis"><span
-class="header-section-number">3.1.2</span> Step Size Sensitivity
+<h3 data-number="4.1.2" id="step-size-sensitivity-analysis"><span
+class="header-section-number">4.1.2</span> Step Size Sensitivity
 Analysis</h3>
 <p>Figure <span
 class="math inline">\(\ref{fig:step_sensitivity}\)</span> examines how
@@ -788,8 +862,8 @@ convergence paths for different learning rates <span
 class="math inline">\(\alpha\)</span>. The optimal step size balances
 convergence speed with stability.</figcaption>
 </figure>
-<h2 data-number="3.2" id="quantitative-results"><span
-class="header-section-number">3.2</span> Quantitative Results</h2>
+<h2 data-number="4.2" id="quantitative-results"><span
+class="header-section-number">4.2</span> Quantitative Results</h2>
 <p>The optimization results for different step sizes are summarized in
 the following table:</p>
 <table>
@@ -842,10 +916,10 @@ the following table:</p>
 </table>
 <p><strong>Table 1:</strong> Optimization results showing solution
 accuracy and convergence speed for different step sizes.</p>
-<h2 data-number="3.3" id="convergence-rate-analysis"><span
-class="header-section-number">3.3</span> Convergence Rate Analysis</h2>
-<h3 data-number="3.3.1" id="theoretical-vs-empirical-convergence"><span
-class="header-section-number">3.3.1</span> Theoretical vs Empirical
+<h2 data-number="4.3" id="convergence-rate-analysis"><span
+class="header-section-number">4.3</span> Convergence Rate Analysis</h2>
+<h3 data-number="4.3.1" id="theoretical-vs-empirical-convergence"><span
+class="header-section-number">4.3.1</span> Theoretical vs Empirical
 Convergence</h3>
 <p>Modern convergence analysis builds on foundational work in gradient
 methods .</p>
@@ -877,8 +951,8 @@ satisfies:</p>
 <p>However, our empirical analysis uses more conservative step sizes
 (<span class="math inline">\(\alpha \leq 0.2\)</span>) to ensure
 stability.</p>
-<h3 data-number="3.3.2" id="error-bounds"><span
-class="header-section-number">3.3.2</span> Error Bounds</h3>
+<h3 data-number="4.3.2" id="error-bounds"><span
+class="header-section-number">4.3.2</span> Error Bounds</h3>
 <p>The error after <span class="math inline">\(k\)</span> iterations is
 bounded by:</p>
 <p><span class="math display">\[\begin{equation}
@@ -888,8 +962,8 @@ x^*\|
 \end{equation}\]</span></p>
 <p>where <span class="math inline">\(\kappa = 1\)</span> for our
 problem, giving linear convergence with rate approaching 1.</p>
-<h3 data-number="3.3.3" id="performance-metrics-1"><span
-class="header-section-number">3.3.3</span> Performance Metrics</h3>
+<h3 data-number="4.3.3" id="performance-metrics-1"><span
+class="header-section-number">4.3.3</span> Performance Metrics</h3>
 <p><strong>Iteration Complexity</strong>: The number of iterations
 required to achieve accuracy <span
 class="math inline">\(\epsilon\)</span> is:</p>
@@ -899,40 +973,53 @@ k \geq \frac{\log(\epsilon)}{\log(\rho)}
 \end{equation}\]</span></p>
 <p>where <span class="math inline">\(\rho = \sqrt{\frac{\kappa -
 1}{\kappa + 1}}\)</span> is the convergence factor .</p>
-<p>For our results, the convergence factors are: - <span
-class="math inline">\(\alpha = 0.01\)</span>: <span
+<p>For our results, the convergence factors are:</p>
+<ul>
+<li><span class="math inline">\(\alpha = 0.01\)</span>: <span
 class="math inline">\(\rho \approx 0.99\)</span>, requiring ~458
-iterations for <span class="math inline">\(\epsilon = 10^{-6}\)</span> -
-<span class="math inline">\(\alpha = 0.05\)</span>: <span
+iterations for <span class="math inline">\(\epsilon =
+10^{-6}\)</span></li>
+<li><span class="math inline">\(\alpha = 0.05\)</span>: <span
 class="math inline">\(\rho \approx 0.95\)</span>, requiring ~87
-iterations for <span class="math inline">\(\epsilon = 10^{-6}\)</span> -
-<span class="math inline">\(\alpha = 0.10\)</span>: <span
+iterations for <span class="math inline">\(\epsilon =
+10^{-6}\)</span></li>
+<li><span class="math inline">\(\alpha = 0.10\)</span>: <span
 class="math inline">\(\rho \approx 0.90\)</span>, requiring ~43
-iterations for <span class="math inline">\(\epsilon = 10^{-6}\)</span> -
-<span class="math inline">\(\alpha = 0.20\)</span>: <span
+iterations for <span class="math inline">\(\epsilon =
+10^{-6}\)</span></li>
+<li><span class="math inline">\(\alpha = 0.20\)</span>: <span
 class="math inline">\(\rho \approx 0.80\)</span>, requiring ~21
 iterations for <span class="math inline">\(\epsilon =
-10^{-6}\)</span></p>
-<h2 data-number="3.4" id="performance-analysis"><span
-class="header-section-number">3.4</span> Performance Analysis</h2>
-<h3 data-number="3.4.1" id="convergence-speed"><span
-class="header-section-number">3.4.1</span> Convergence Speed</h3>
+10^{-6}\)</span></li>
+</ul>
+<h2 data-number="4.4" id="performance-analysis"><span
+class="header-section-number">4.4</span> Performance Analysis</h2>
+<h3 data-number="4.4.1" id="convergence-speed"><span
+class="header-section-number">4.4.1</span> Convergence Speed</h3>
 <p>The results show a clear trade-off between step size and convergence
-speed: - Small step sizes require more iterations but provide stable
-convergence - Large step sizes converge faster but may be less stable in
-more complex problems</p>
-<h3 data-number="3.4.2" id="solution-accuracy"><span
-class="header-section-number">3.4.2</span> Solution Accuracy</h3>
+speed:</p>
+<ul>
+<li>Small step sizes require more iterations but provide stable
+convergence</li>
+<li>Large step sizes converge faster but may be less stable in more
+complex problems</li>
+</ul>
+<h3 data-number="4.4.2" id="solution-accuracy"><span
+class="header-section-number">4.4.2</span> Solution Accuracy</h3>
 <p>All tested step sizes achieved the analytical optimum within
-numerical precision: - Target solution: <span class="math inline">\(x =
-1.0000\)</span> - Target objective: <span class="math inline">\(f(x) =
--0.5000\)</span></p>
+numerical precision:</p>
+<ul>
+<li>Target solution: <span class="math inline">\(x =
+1.0000\)</span></li>
+<li>Target objective: <span class="math inline">\(f(x) =
+-0.5000\)</span></li>
+</ul>
 <p>This demonstrates the algorithm’s ability to solve simple quadratic
 optimization problems reliably.</p>
-<h2 data-number="3.5" id="algorithm-characteristics"><span
-class="header-section-number">3.5</span> Algorithm Characteristics</h2>
-<h3 data-number="3.5.1" id="strengths"><span
-class="header-section-number">3.5.1</span> Strengths</h3>
+<h2 data-number="4.5" id="algorithm-characteristics"><span
+class="header-section-number">4.5</span> Algorithm Characteristics</h2>
+<h3 data-number="4.5.1" id="strengths"><span
+class="header-section-number">4.5.1</span> Strengths</h3>
 <ul>
 <li><strong>Simplicity</strong>: Easy to implement and understand</li>
 <li><strong>Generality</strong>: Applicable to any differentiable
@@ -940,8 +1027,8 @@ objective function</li>
 <li><strong>Reliability</strong>: Converges for convex functions under
 appropriate conditions</li>
 </ul>
-<h3 data-number="3.5.2" id="limitations"><span
-class="header-section-number">3.5.2</span> Limitations</h3>
+<h3 data-number="4.5.2" id="limitations"><span
+class="header-section-number">4.5.2</span> Limitations</h3>
 <ul>
 <li><strong>Step size sensitivity</strong>: Performance depends
 critically on step size selection</li>
@@ -950,10 +1037,10 @@ non-convex problems</li>
 <li><strong>Fixed step size</strong>: No adaptation to problem
 characteristics</li>
 </ul>
-<h2 data-number="3.6" id="computational-performance"><span
-class="header-section-number">3.6</span> Computational Performance</h2>
-<h3 data-number="3.6.1" id="algorithm-complexity-visualization"><span
-class="header-section-number">3.6.1</span> Algorithm Complexity
+<h2 data-number="4.6" id="computational-performance"><span
+class="header-section-number">4.6</span> Computational Performance</h2>
+<h3 data-number="4.6.1" id="algorithm-complexity-visualization"><span
+class="header-section-number">4.6.1</span> Algorithm Complexity
 Visualization</h3>
 <p>Figure <span class="math inline">\(\ref{fig:complexity}\)</span>
 provides a visualization of the algorithm’s computational
@@ -967,16 +1054,22 @@ computational requirements and scalability characteristics of the
 gradient descent implementation.</figcaption>
 </figure>
 <p>The algorithm demonstrates efficient performance for small-scale
-optimization problems: - <strong>Time complexity</strong>: <span
+optimization problems:</p>
+<ul>
+<li><strong>Time complexity</strong>: <span
 class="math inline">\(O(d)\)</span> per iteration for gradient
-computation - <strong>Space complexity</strong>: <span
-class="math inline">\(O(d)\)</span> for storing variables and gradients
-- <strong>Convergence</strong>: Typically <span
+computation</li>
+<li><strong>Space complexity</strong>: <span
+class="math inline">\(O(d)\)</span> for storing variables and
+gradients</li>
+<li><strong>Convergence</strong>: Typically <span
 class="math inline">\(&lt; 20\)</span> iterations for this quadratic
-problem - <strong>Scalability</strong>: Memory-efficient implementation
-suitable for high-dimensional problems</p>
-<h3 data-number="3.6.2" id="performance-benchmarking"><span
-class="header-section-number">3.6.2</span> Performance Benchmarking</h3>
+problem</li>
+<li><strong>Scalability</strong>: Memory-efficient implementation
+suitable for high-dimensional problems</li>
+</ul>
+<h3 data-number="4.6.2" id="performance-benchmarking"><span
+class="header-section-number">4.6.2</span> Performance Benchmarking</h3>
 <p>Figure <span class="math inline">\(\ref{fig:benchmark}\)</span>
 provides detailed performance benchmarking across different problem
 configurations and step size parameters.</p>
@@ -987,8 +1080,8 @@ alt="Performance benchmarking results showing execution times and convergence me
 execution times and convergence metrics across different optimization
 scenarios.</figcaption>
 </figure>
-<h3 data-number="3.6.3" id="numerical-stability-analysis"><span
-class="header-section-number">3.6.3</span> Numerical Stability
+<h3 data-number="4.6.3" id="numerical-stability-analysis"><span
+class="header-section-number">4.6.3</span> Numerical Stability
 Analysis</h3>
 <p>Figure <span class="math inline">\(\ref{fig:stability}\)</span>
 demonstrates the numerical stability characteristics of the gradient
@@ -1001,30 +1094,42 @@ alt="Numerical stability analysis showing algorithm robustness under different c
 algorithm robustness under different computational conditions and input
 parameter ranges.</figcaption>
 </figure>
-<h3 data-number="3.6.4" id="performance-metrics-summary"><span
-class="header-section-number">3.6.4</span> Performance Metrics
+<h3 data-number="4.6.4" id="performance-metrics-summary"><span
+class="header-section-number">4.6.4</span> Performance Metrics
 Summary</h3>
-<p><strong>Iteration Statistics:</strong> - Minimum iterations: 9 (for
-<span class="math inline">\(\alpha = 0.2\)</span>) - Maximum iterations:
-165 (for <span class="math inline">\(\alpha = 0.01\)</span>) - Average
-convergence: <span class="math inline">\(&lt; 50\)</span> iterations
-across all test cases</p>
-<p><strong>Numerical Accuracy:</strong> - Solution precision: <span
-class="math inline">\(&lt; 10^{-4}\)</span> relative error - Objective
-accuracy: <span class="math inline">\(&lt; 10^{-6}\)</span> absolute
-error - Gradient tolerance: <span class="math inline">\(&lt;
-10^{-6}\)</span> achieved in all cases</p>
-<h2 data-number="3.7" id="validation"><span
-class="header-section-number">3.7</span> Validation</h2>
-<p>The implementation was validated through: - <strong>Unit
-tests</strong> covering all core functionality - <strong>Integration
-tests</strong> verifying algorithm convergence - <strong>Numerical
-accuracy</strong> checks against analytical solutions - <strong>Edge
-case handling</strong> for boundary conditions</p>
+<p><strong>Iteration Statistics:</strong></p>
+<ul>
+<li>Minimum iterations: 9 (for <span class="math inline">\(\alpha =
+0.2\)</span>)</li>
+<li>Maximum iterations: 165 (for <span class="math inline">\(\alpha =
+0.01\)</span>)</li>
+<li>Average convergence: <span class="math inline">\(&lt; 50\)</span>
+iterations across all test cases</li>
+</ul>
+<p><strong>Numerical Accuracy:</strong></p>
+<ul>
+<li>Solution precision: <span class="math inline">\(&lt;
+10^{-4}\)</span> relative error</li>
+<li>Objective accuracy: <span class="math inline">\(&lt;
+10^{-6}\)</span> absolute error</li>
+<li>Gradient tolerance: <span class="math inline">\(&lt;
+10^{-6}\)</span> achieved in all cases</li>
+</ul>
+<h2 data-number="4.7" id="validation"><span
+class="header-section-number">4.7</span> Validation</h2>
+<p>The implementation was validated through:</p>
+<ul>
+<li><strong>Unit tests</strong> covering all core functionality</li>
+<li><strong>Integration tests</strong> verifying algorithm
+convergence</li>
+<li><strong>Numerical accuracy</strong> checks against analytical
+solutions</li>
+<li><strong>Edge case handling</strong> for boundary conditions</li>
+</ul>
 <p>All tests pass with 100% coverage, ensuring implementation
 correctness and reliability.</p>
-<h2 data-number="3.8" id="discussion"><span
-class="header-section-number">3.8</span> Discussion</h2>
+<h2 data-number="4.8" id="discussion"><span
+class="header-section-number">4.8</span> Discussion</h2>
 <p>The experimental results validate the gradient descent implementation
 and provide insights into algorithm behavior under different parameter
 settings. The automated analysis pipeline successfully generated both
@@ -1033,13 +1138,13 @@ visual and numerical outputs for manuscript integration.</p>
 problems - Adaptive step size strategies - Comparison with other
 optimization algorithms - Large-scale problem applications</p>
 <hr />
-<h1 data-number="4" id="conclusion"><span
-class="header-section-number">4</span> Conclusion</h1>
-<p>This small code project successfully demonstrated a research pipeline
-from algorithm implementation through testing, analysis, and manuscript
-generation.</p>
-<h2 data-number="4.1" id="project-achievements"><span
-class="header-section-number">4.1</span> Project Achievements</h2>
+<h1 data-number="5" id="conclusion"><span
+class="header-section-number">5</span> Conclusion</h1>
+<p>This small code project successfully demonstrated a complete research
+pipeline from algorithm implementation through testing, analysis, and
+manuscript generation.</p>
+<h2 data-number="5.1" id="project-achievements"><span
+class="header-section-number">5.1</span> Project Achievements</h2>
 <p>The implementation achieved all major objectives:</p>
 <ol type="1">
 <li><strong>Clean Codebase</strong>: Well-structured, documented, and
@@ -1053,34 +1158,34 @@ referencing generated outputs</li>
 <li><strong>Pipeline Compatibility</strong>: Full integration with the
 research template system</li>
 </ol>
-<h2 data-number="4.2" id="technical-contributions"><span
-class="header-section-number">4.2</span> Technical Contributions</h2>
-<h3 data-number="4.2.1" id="algorithm-implementation-1"><span
-class="header-section-number">4.2.1</span> Algorithm Implementation</h3>
+<h2 data-number="5.2" id="technical-contributions"><span
+class="header-section-number">5.2</span> Technical Contributions</h2>
+<h3 data-number="5.2.1" id="algorithm-implementation-1"><span
+class="header-section-number">5.2.1</span> Algorithm Implementation</h3>
 <ul>
 <li>Correct gradient descent implementation with convergence
 detection</li>
 <li>Robust numerical computations using NumPy</li>
 <li>Flexible parameter configuration</li>
 </ul>
-<h3 data-number="4.2.2" id="testing-strategy"><span
-class="header-section-number">4.2.2</span> Testing Strategy</h3>
+<h3 data-number="5.2.2" id="testing-strategy"><span
+class="header-section-number">5.2.2</span> Testing Strategy</h3>
 <ul>
 <li>Unit tests for all core functions</li>
 <li>Integration tests for algorithm convergence</li>
 <li>Edge case coverage for robustness</li>
 <li>Numerical accuracy validation</li>
 </ul>
-<h3 data-number="4.2.3" id="analysis-capabilities"><span
-class="header-section-number">4.2.3</span> Analysis Capabilities</h3>
+<h3 data-number="5.2.3" id="analysis-capabilities"><span
+class="header-section-number">5.2.3</span> Analysis Capabilities</h3>
 <ul>
 <li>Automated experiment execution</li>
 <li>Publication-quality figure generation</li>
 <li>Structured data output in CSV format</li>
 <li>Figure registration for manuscript integration</li>
 </ul>
-<h2 data-number="4.3" id="research-pipeline-validation"><span
-class="header-section-number">4.3</span> Research Pipeline
+<h2 data-number="5.3" id="research-pipeline-validation"><span
+class="header-section-number">5.3</span> Research Pipeline
 Validation</h2>
 <p>The project validates the research template’s ability to handle:</p>
 <ul>
@@ -1101,20 +1206,20 @@ dashboards</li>
 <li><strong>Multi-format output</strong>: PDF, HTML, and presentation
 generation</li>
 </ul>
-<h2 data-number="4.4" id="key-insights"><span
-class="header-section-number">4.4</span> Key Insights</h2>
+<h2 data-number="5.4" id="key-insights"><span
+class="header-section-number">5.4</span> Key Insights</h2>
 <ol type="1">
 <li><strong>Step Size Selection</strong>: Critical for convergence speed
 and stability</li>
-<li><strong>Testing Importance</strong>: tests catch numerical issues
-early</li>
+<li><strong>Testing Importance</strong>: Comprehensive tests catch
+numerical issues early</li>
 <li><strong>Automation Benefits</strong>: Scripts ensure reproducible
 analysis</li>
 <li><strong>Documentation Value</strong>: Clear code and manuscripts
 improve research quality</li>
 </ol>
-<h2 data-number="4.5" id="future-extensions"><span
-class="header-section-number">4.5</span> Future Extensions</h2>
+<h2 data-number="5.5" id="future-extensions"><span
+class="header-section-number">5.5</span> Future Extensions</h2>
 <p>This foundation could be extended to:</p>
 <ul>
 <li><strong>Advanced algorithms</strong>: Newton methods, quasi-Newton
@@ -1126,11 +1231,11 @@ variants, including adaptive optimization algorithms such as Adam </li>
 <li><strong>Parallel computing</strong>: Distributed optimization
 algorithms</li>
 </ul>
-<h2 data-number="4.6" id="final-assessment"><span
-class="header-section-number">4.6</span> Final Assessment</h2>
+<h2 data-number="5.6" id="final-assessment"><span
+class="header-section-number">5.6</span> Final Assessment</h2>
 <p>The small code project successfully demonstrates that the research
-template can support projects ranging from prose-focused manuscripts
-to-tested algorithmic implementations. The combination of rigorous
+template can support projects ranging from prose-focused manuscripts to
+fully-tested algorithmic implementations. The combination of rigorous
 testing, automated analysis, and integrated documentation provides a
 solid foundation for reproducible computational research.</p>
 <p>This work contributes to the broader goal of improving research

@@ -1,171 +1,317 @@
-[2026-01-08 14:57:33,067] [INFO] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/code_project/output/logs/pipeline.log
-[2026-01-08 14:57:33,067] [INFO] [infrastructure.core.pipeline] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/code_project/output/logs/pipeline.log
-[2026-01-08 14:57:33,067] [INFO] ✓ Stage 1 completed successfully (0.0s)
-[2026-01-08 14:57:33,067] [INFO] [infrastructure.core.pipeline] ✓ Stage 1 completed successfully (0.0s)
-[2026-01-08 14:57:33,067] [INFO] 
-[2026-01-08 14:57:33,067] [INFO] [infrastructure.core.pipeline] 
-[2026-01-08 14:57:33,067] [INFO] [2/7] Environment Setup (28% complete)
-[2026-01-08 14:57:33,067] [INFO] [infrastructure.core.pipeline] [2/7] Environment Setup (28% complete)
-[2026-01-08 14:57:33,067] [INFO]   Elapsed: 0s | ETA: 0s
-[2026-01-08 14:57:33,067] [INFO] [infrastructure.core.pipeline]   Elapsed: 0s | ETA: 0s
-[2026-01-08 14:57:33,067] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-01-08 14:57:33,067] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-01-08 14:57:33,068] [INFO] [infrastructure.core.logging_utils] Starting: Stage 2: Environment Setup
-[2026-01-08 14:57:33,068] [INFO] Running environment setup...
-[2026-01-08 14:57:33,068] [INFO] [infrastructure.core.pipeline] Running environment setup...
-[2026-01-08 14:57:33,628] [INFO] [infrastructure.core.logging_utils] Completed: Stage 2: Environment Setup (0.6s)
-[2026-01-08 14:57:33,628] [INFO] ✓ Stage 2 completed successfully (0.6s)
-[2026-01-08 14:57:33,628] [INFO] [infrastructure.core.pipeline] ✓ Stage 2 completed successfully (0.6s)
-[2026-01-08 14:57:33,629] [INFO] Skipping stage: Infrastructure Tests
-[2026-01-08 14:57:33,629] [INFO] [infrastructure.core.pipeline] Skipping stage: Infrastructure Tests
-[2026-01-08 14:57:33,629] [INFO] 
-[2026-01-08 14:57:33,629] [INFO] [infrastructure.core.pipeline] 
-[2026-01-08 14:57:33,629] [INFO] [3/7] Project Tests (42% complete)
-[2026-01-08 14:57:33,629] [INFO] [infrastructure.core.pipeline] [3/7] Project Tests (42% complete)
-[2026-01-08 14:57:33,629] [INFO]   Elapsed: 0s | ETA: 0s
-[2026-01-08 14:57:33,629] [INFO] [infrastructure.core.pipeline]   Elapsed: 0s | ETA: 0s
-[2026-01-08 14:57:33,629] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-01-08 14:57:33,629] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-01-08 14:57:33,630] [INFO] [infrastructure.core.logging_utils] Starting: Stage 3: Project Tests
-[2026-01-08 14:57:33,630] [INFO] Running project tests...
-[2026-01-08 14:57:33,630] [INFO] [infrastructure.core.pipeline] Running project tests...
-[2026-01-08 14:57:38,396] [INFO] [infrastructure.core.logging_utils] Completed: Stage 3: Project Tests (4.8s)
-[2026-01-08 14:57:38,396] [INFO] ✓ Stage 3 completed successfully (4.8s)
-[2026-01-08 14:57:38,396] [INFO] [infrastructure.core.pipeline] ✓ Stage 3 completed successfully (4.8s)
-[2026-01-08 14:57:38,397] [INFO] 
-[2026-01-08 14:57:38,397] [INFO] [infrastructure.core.pipeline] 
-[2026-01-08 14:57:38,397] [INFO] [4/7] Project Analysis (57% complete)
-[2026-01-08 14:57:38,397] [INFO] [infrastructure.core.pipeline] [4/7] Project Analysis (57% complete)
-[2026-01-08 14:57:38,397] [INFO]   Elapsed: 5s | ETA: 4s
-[2026-01-08 14:57:38,397] [INFO] [infrastructure.core.pipeline]   Elapsed: 5s | ETA: 4s
-[2026-01-08 14:57:38,397] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-01-08 14:57:38,397] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-01-08 14:57:38,397] [INFO] [infrastructure.core.logging_utils] Starting: Stage 4: Project Analysis
-[2026-01-08 14:57:38,397] [INFO] Running project analysis...
-[2026-01-08 14:57:38,397] [INFO] [infrastructure.core.pipeline] Running project analysis...
-[2026-01-08 14:57:42,143] [INFO] [infrastructure.core.logging_utils] Completed: Stage 4: Project Analysis (3.7s)
-[2026-01-08 14:57:42,143] [INFO] ✓ Stage 4 completed successfully (3.7s)
-[2026-01-08 14:57:42,143] [INFO] [infrastructure.core.pipeline] ✓ Stage 4 completed successfully (3.7s)
-[2026-01-08 14:57:42,143] [INFO] 
-[2026-01-08 14:57:42,143] [INFO] [infrastructure.core.pipeline] 
-[2026-01-08 14:57:42,143] [INFO] [5/7] PDF Rendering (71% complete)
-[2026-01-08 14:57:42,143] [INFO] [infrastructure.core.pipeline] [5/7] PDF Rendering (71% complete)
-[2026-01-08 14:57:42,143] [INFO]   Elapsed: 9s | ETA: 3s
-[2026-01-08 14:57:42,143] [INFO] [infrastructure.core.pipeline]   Elapsed: 9s | ETA: 3s
-[2026-01-08 14:57:42,143] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-01-08 14:57:42,143] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-01-08 14:57:42,144] [INFO] [infrastructure.core.logging_utils] Starting: Stage 5: PDF Rendering
-[2026-01-08 14:57:42,144] [INFO] Running PDF rendering...
-[2026-01-08 14:57:42,144] [INFO] [infrastructure.core.pipeline] Running PDF rendering...
-[2026-01-08 14:58:05,962] [INFO] [infrastructure.core.logging_utils] Completed: Stage 5: PDF Rendering (23.8s)
-[2026-01-08 14:58:05,963] [INFO] ✓ Stage 5 completed successfully (23.8s)
-[2026-01-08 14:58:05,963] [INFO] [infrastructure.core.pipeline] ✓ Stage 5 completed successfully (23.8s)
-[2026-01-08 14:58:05,963] [INFO] 
-[2026-01-08 14:58:05,963] [INFO] [infrastructure.core.pipeline] 
-[2026-01-08 14:58:05,963] [INFO] [6/7] Output Validation (85% complete)
-[2026-01-08 14:58:05,963] [INFO] [infrastructure.core.pipeline] [6/7] Output Validation (85% complete)
-[2026-01-08 14:58:05,963] [INFO]   Elapsed: 32s | ETA: 5s
-[2026-01-08 14:58:05,963] [INFO] [infrastructure.core.pipeline]   Elapsed: 32s | ETA: 5s
-[2026-01-08 14:58:05,963] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-01-08 14:58:05,963] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-01-08 14:58:05,964] [INFO] [infrastructure.core.logging_utils] Starting: Stage 6: Output Validation
-[2026-01-08 14:58:05,964] [INFO] Running output validation...
-[2026-01-08 14:58:05,964] [INFO] [infrastructure.core.pipeline] Running output validation...
-[2026-01-08 14:58:06,259] [INFO] [infrastructure.core.logging_utils] Completed: Stage 6: Output Validation (0.3s)
-[2026-01-08 14:58:06,259] [INFO] ✓ Stage 6 completed successfully (0.3s)
-[2026-01-08 14:58:06,259] [INFO] [infrastructure.core.pipeline] ✓ Stage 6 completed successfully (0.3s)
-[2026-01-08 14:58:06,260] [INFO] 
-[2026-01-08 14:58:06,260] [INFO] [infrastructure.core.pipeline] 
-[2026-01-08 14:58:06,260] [INFO] [7/7] Copy Outputs (100% complete)
-[2026-01-08 14:58:06,260] [INFO] [infrastructure.core.pipeline] [7/7] Copy Outputs (100% complete)
-[2026-01-08 14:58:06,260] [INFO]   Elapsed: 33s | ETA: 0s
-[2026-01-08 14:58:06,260] [INFO] [infrastructure.core.pipeline]   Elapsed: 33s | ETA: 0s
-[2026-01-08 14:58:06,260] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-01-08 14:58:06,260] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-01-08 14:58:06,260] [INFO] [infrastructure.core.logging_utils] Starting: Stage 7: Copy Outputs
-[2026-01-08 14:58:06,260] [INFO] Running output copying...
-[2026-01-08 14:58:06,260] [INFO] [infrastructure.core.pipeline] Running output copying...
-[2026-01-08 14:58:06,569] [INFO] [infrastructure.core.logging_utils] Completed: Stage 7: Copy Outputs (0.3s)
-[2026-01-08 14:58:06,570] [INFO] ✓ Stage 7 completed successfully (0.3s)
-[2026-01-08 14:58:06,570] [INFO] [infrastructure.core.pipeline] ✓ Stage 7 completed successfully (0.3s)
-[2026-01-08 14:58:06,573] [INFO] [infrastructure.core.logging_utils] Completed: Pipeline execution for code_project (33.5s)
-[2026-01-08 14:58:06,573] [INFO] [infrastructure.reporting] Starting multi-project reporting for 2 projects...
-[2026-01-08 14:58:06,573] [INFO] [infrastructure.reporting] Generating executive summary...
-[2026-01-08 14:58:06,602] [INFO] [infrastructure.reporting] Saving summary reports...
-[2026-01-08 14:58:06,603] [INFO] [infrastructure.reporting] Generating visual dashboards...
-[2026-01-08 14:58:06,603] [INFO] [infrastructure.reporting.dashboard_generator] Generating all dashboard formats...
-[2026-01-08 14:58:06,603] [INFO] [infrastructure.reporting.dashboard_generator] Generating matplotlib dashboard...
-[2026-01-08 14:58:07,238] [INFO] [infrastructure.reporting.dashboard_generator] Saved PNG dashboard: /Users/4d/Documents/GitHub/template/output/executive_summary/png/dashboard.png
-[2026-01-08 14:58:07,534] [INFO] [infrastructure.reporting.dashboard_generator] Saved PDF dashboard: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/dashboard.pdf
-[2026-01-08 14:58:07,534] [INFO] [infrastructure.reporting.dashboard_generator] Generating health score radar chart...
-[2026-01-08 14:58:07,658] [INFO] [infrastructure.reporting.dashboard_generator] Health radar chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/health_scores_radar.png
-[2026-01-08 14:58:07,696] [INFO] [infrastructure.reporting.dashboard_generator] Health radar chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/health_scores_radar.pdf
-[2026-01-08 14:58:07,696] [INFO] [infrastructure.reporting.dashboard_generator] Generating health score comparison chart...
-[2026-01-08 14:58:07,868] [INFO] [infrastructure.reporting.dashboard_generator] Health comparison chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/health_scores_comparison.png
-[2026-01-08 14:58:07,916] [INFO] [infrastructure.reporting.dashboard_generator] Health comparison chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/health_scores_comparison.pdf
-[2026-01-08 14:58:07,916] [INFO] [infrastructure.reporting.dashboard_generator] Generating individual project dashboards...
-[2026-01-08 14:58:08,189] [INFO] [infrastructure.reporting.dashboard_generator] Project dashboard (active_inference_meta_pragmatic PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/project_dashboard_activeinferencemetapragmatic.png
-[2026-01-08 14:58:08,268] [INFO] [infrastructure.reporting.dashboard_generator] Project dashboard (active_inference_meta_pragmatic PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/project_dashboard_activeinferencemetapragmatic.pdf
-[2026-01-08 14:58:08,518] [INFO] [infrastructure.reporting.dashboard_generator] Project dashboard (code_project PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/project_dashboard_codeproject.png
-[2026-01-08 14:58:08,590] [INFO] [infrastructure.reporting.dashboard_generator] Project dashboard (code_project PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/project_dashboard_codeproject.pdf
-[2026-01-08 14:58:08,590] [INFO] [infrastructure.reporting.dashboard_generator] Generating pipeline efficiency analysis chart...
-[2026-01-08 14:58:08,867] [INFO] [infrastructure.reporting.dashboard_generator] Pipeline efficiency chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/pipeline_efficiency.png
-[2026-01-08 14:58:08,944] [INFO] [infrastructure.reporting.dashboard_generator] Pipeline efficiency chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/pipeline_efficiency.pdf
-[2026-01-08 14:58:08,944] [INFO] [infrastructure.reporting.dashboard_generator] Generating pipeline bottlenecks chart...
-[2026-01-08 14:58:09,098] [INFO] [infrastructure.reporting.dashboard_generator] Pipeline bottlenecks chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/pipeline_bottlenecks.png
-[2026-01-08 14:58:09,135] [INFO] [infrastructure.reporting.dashboard_generator] Pipeline bottlenecks chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/pipeline_bottlenecks.pdf
-[2026-01-08 14:58:09,136] [INFO] [infrastructure.reporting.dashboard_generator] Generating output distribution charts...
-[2026-01-08 14:58:09,419] [INFO] [infrastructure.reporting.dashboard_generator] Output distribution chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/output_distribution.png
-[2026-01-08 14:58:09,498] [INFO] [infrastructure.reporting.dashboard_generator] Output distribution chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/output_distribution.pdf
-[2026-01-08 14:58:09,498] [INFO] [infrastructure.reporting.dashboard_generator] Generating output comparison chart...
-[2026-01-08 14:58:09,622] [INFO] [infrastructure.reporting.dashboard_generator] Output comparison chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/output_comparison.png
-[2026-01-08 14:58:09,659] [INFO] [infrastructure.reporting.dashboard_generator] Output comparison chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/output_comparison.pdf
-[2026-01-08 14:58:09,659] [INFO] [infrastructure.reporting.dashboard_generator] Generating codebase complexity chart...
-[2026-01-08 14:58:09,945] [INFO] [infrastructure.reporting.dashboard_generator] Codebase complexity chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/codebase_complexity.png
-[2026-01-08 14:58:10,049] [INFO] [infrastructure.reporting.dashboard_generator] Codebase complexity chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/codebase_complexity.pdf
-[2026-01-08 14:58:10,049] [INFO] [infrastructure.reporting.dashboard_generator] Generating codebase comparison chart...
-[2026-01-08 14:58:10,254] [INFO] [infrastructure.reporting.dashboard_generator] Codebase comparison chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/codebase_comparison.png
-[2026-01-08 14:58:10,316] [INFO] [infrastructure.reporting.dashboard_generator] Codebase comparison chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/codebase_comparison.pdf
-[2026-01-08 14:58:10,368] [INFO] [infrastructure.reporting.dashboard_generator] Generating interactive plotly dashboard...
-[2026-01-08 14:58:10,462] [INFO] [infrastructure.reporting.dashboard_generator] Saved interactive HTML dashboard: /Users/4d/Documents/GitHub/template/output/executive_summary/dashboard.html
-[2026-01-08 14:58:10,462] [INFO] [infrastructure.reporting.dashboard_generator] Generated CSV metrics table: /Users/4d/Documents/GitHub/template/output/executive_summary/csv/project_metrics.csv
-[2026-01-08 14:58:10,462] [INFO] [infrastructure.reporting.dashboard_generator] Generated CSV aggregates table: /Users/4d/Documents/GitHub/template/output/executive_summary/csv/aggregate_metrics.csv
-[2026-01-08 14:58:10,463] [INFO] [infrastructure.reporting.dashboard_generator] Generated CSV health scores table: /Users/4d/Documents/GitHub/template/output/executive_summary/csv/health_scores.csv
-[2026-01-08 14:58:10,463] [INFO] [infrastructure.reporting.dashboard_generator] Detailed project breakdown CSV saved: /Users/4d/Documents/GitHub/template/output/executive_summary/csv/detailed_project_breakdown.csv
-[2026-01-08 14:58:10,463] [INFO] [infrastructure.reporting.dashboard_generator] Comparative analysis CSV saved: /Users/4d/Documents/GitHub/template/output/executive_summary/csv/comparative_analysis.csv
-[2026-01-08 14:58:10,463] [INFO] [infrastructure.reporting.dashboard_generator] Prioritized recommendations CSV saved: /Users/4d/Documents/GitHub/template/output/executive_summary/csv/recommendations_prioritized.csv
-[2026-01-08 14:58:10,463] [INFO] [infrastructure.reporting.manuscript_overview] Generating manuscript overview for active_inference_meta_pragmatic
-[2026-01-08 14:58:10,463] [INFO] [infrastructure.reporting.manuscript_overview] Generating manuscript overview for active_inference_meta_pragmatic
-[2026-01-08 14:58:10,536] [INFO] [infrastructure.reporting.manuscript_overview] Extracting 41 pages from active_inference_meta_pragmatic_combined.pdf
-[2026-01-08 14:58:11,530] [INFO] [infrastructure.reporting.manuscript_overview] Extracted 41 page images
-[2026-01-08 14:58:11,947] [INFO] [infrastructure.reporting.manuscript_overview] Saved PNG overview: /Users/4d/Documents/GitHub/template/output/executive_summary/manuscript_overview_active_inference_meta_pragmatic.png
-[2026-01-08 14:58:12,607] [INFO] [infrastructure.reporting.manuscript_overview] Saved PDF overview: /Users/4d/Documents/GitHub/template/output/executive_summary/manuscript_overview_active_inference_meta_pragmatic.pdf
-[2026-01-08 14:58:12,614] [INFO] [infrastructure.reporting.manuscript_overview] Generated overview files for active_inference_meta_pragmatic: ['manuscript_overview_active_inference_meta_pragmatic.png', 'manuscript_overview_active_inference_meta_pragmatic.pdf']
-[2026-01-08 14:58:12,614] [INFO] [infrastructure.reporting.manuscript_overview] Generating manuscript overview for code_project
-[2026-01-08 14:58:12,614] [INFO] [infrastructure.reporting.manuscript_overview] Generating manuscript overview for code_project
-[2026-01-08 14:58:12,619] [INFO] [infrastructure.reporting.manuscript_overview] Extracting 16 pages from code_project_combined.pdf
-[2026-01-08 14:58:12,999] [INFO] [infrastructure.reporting.manuscript_overview] Extracted 16 page images
-[2026-01-08 14:58:13,197] [INFO] [infrastructure.reporting.manuscript_overview] Saved PNG overview: /Users/4d/Documents/GitHub/template/output/executive_summary/manuscript_overview_code_project.png
-[2026-01-08 14:58:13,441] [INFO] [infrastructure.reporting.manuscript_overview] Saved PDF overview: /Users/4d/Documents/GitHub/template/output/executive_summary/manuscript_overview_code_project.pdf
-[2026-01-08 14:58:13,443] [INFO] [infrastructure.reporting.manuscript_overview] Generated overview files for code_project: ['manuscript_overview_code_project.png', 'manuscript_overview_code_project.pdf']
-[2026-01-08 14:58:13,443] [INFO] [infrastructure.reporting.dashboard_generator] Generated 17 dashboard and data file(s)
-[2026-01-08 14:58:13,443] [INFO] [infrastructure.reporting] Multi-project reporting complete. Generated 19 files:
-[2026-01-08 14:58:13,443] [INFO] [infrastructure.reporting]   JSON: consolidated_report.json
-[2026-01-08 14:58:13,443] [INFO] [infrastructure.reporting]   MARKDOWN: consolidated_report.md
-[2026-01-08 14:58:13,443] [INFO] [infrastructure.reporting]   HTML: dashboard.html
-[2026-01-08 14:58:13,443] [INFO] [infrastructure.reporting]   PNG: codebase_comparison.png
-[2026-01-08 14:58:13,443] [INFO] [infrastructure.reporting]   PDF: codebase_comparison.pdf
-[2026-01-08 14:58:13,443] [INFO] [infrastructure.reporting]   ACTIVEINFERENCEMETAPRAGMATIC_PNG: project_dashboard_activeinferencemetapragmatic.png
-[2026-01-08 14:58:13,443] [INFO] [infrastructure.reporting]   ACTIVEINFERENCEMETAPRAGMATIC_PDF: project_dashboard_activeinferencemetapragmatic.pdf
-[2026-01-08 14:58:13,443] [INFO] [infrastructure.reporting]   CODEPROJECT_PNG: project_dashboard_codeproject.png
-[2026-01-08 14:58:13,443] [INFO] [infrastructure.reporting]   CODEPROJECT_PDF: project_dashboard_codeproject.pdf
-[2026-01-08 14:58:13,443] [INFO] [infrastructure.reporting]   METRICS: project_metrics.csv
-[2026-01-08 14:58:13,443] [INFO] [infrastructure.reporting]   AGGREGATES: aggregate_metrics.csv
-[2026-01-08 14:58:13,443] [INFO] [infrastructure.reporting]   HEALTH: health_scores.csv
-[2026-01-08 14:58:13,443] [INFO] [infrastructure.reporting]   DETAILED_BREAKDOWN_CSV: detailed_project_breakdown.csv
-[2026-01-08 14:58:13,443] [INFO] [infrastructure.reporting]   COMPARATIVE_ANALYSIS_CSV: comparative_analysis.csv
-[2026-01-08 14:58:13,443] [INFO] [infrastructure.reporting]   RECOMMENDATIONS_CSV: recommendations_prioritized.csv
-[2026-01-08 14:58:13,443] [INFO] [infrastructure.reporting]   MANUSCRIPT_OVERVIEW_ACTIVE_INFERENCE_META_PRAGMATIC.PNG: manuscript_overview_active_inference_meta_pragmatic.png
-[2026-01-08 14:58:13,443] [INFO] [infrastructure.reporting]   MANUSCRIPT_OVERVIEW_ACTIVE_INFERENCE_META_PRAGMATIC.PDF: manuscript_overview_active_inference_meta_pragmatic.pdf
-[2026-01-08 14:58:13,443] [INFO] [infrastructure.reporting]   MANUSCRIPT_OVERVIEW_CODE_PROJECT.PNG: manuscript_overview_code_project.png
-[2026-01-08 14:58:13,443] [INFO] [infrastructure.reporting]   MANUSCRIPT_OVERVIEW_CODE_PROJECT.PDF: manuscript_overview_code_project.pdf
+[2026-01-28 06:35:12,867] [INFO] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/code_project/output/logs/pipeline.log
+[2026-01-28 06:35:12,867] [INFO] ✓ Stage 1 completed successfully (0.0s)
+[2026-01-28 06:35:12,867] [INFO] 
+[2026-01-28 06:35:12,867] [INFO] [2/7] Environment Setup (28% complete)
+[2026-01-28 06:35:12,867] [INFO]   Elapsed: 0s | ETA: 0s
+[2026-01-28 06:35:12,867] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-28 06:35:12,867] [INFO] Running environment setup...
+[2026-01-28 06:35:13,732] [INFO] ✓ Stage 2 completed successfully (0.9s)
+[2026-01-28 06:35:13,732] [INFO] Skipping stage: Infrastructure Tests
+[2026-01-28 06:35:13,732] [INFO] 
+[2026-01-28 06:35:13,733] [INFO] [3/7] Project Tests (42% complete)
+[2026-01-28 06:35:13,733] [INFO]   Elapsed: 0s | ETA: 1s
+[2026-01-28 06:35:13,733] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-28 06:35:13,733] [INFO] Running project tests...
+[2026-01-28 06:35:17,861] [INFO] ✓ Stage 3 completed successfully (4.1s)
+[2026-01-28 06:35:17,861] [INFO] 
+[2026-01-28 06:35:17,861] [INFO] [4/7] Project Analysis (57% complete)
+[2026-01-28 06:35:17,861] [INFO]   Elapsed: 5s | ETA: 3s
+[2026-01-28 06:35:17,862] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-28 06:35:17,862] [INFO] Running project analysis...
+[2026-01-28 06:35:22,855] [INFO] ✓ Stage 4 completed successfully (5.0s)
+[2026-01-28 06:35:22,855] [INFO] 
+[2026-01-28 06:35:22,855] [INFO] [5/7] PDF Rendering (71% complete)
+[2026-01-28 06:35:22,855] [INFO]   Elapsed: 9s | ETA: 3s
+[2026-01-28 06:35:22,855] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-28 06:35:22,856] [INFO] Running PDF rendering...
+[2026-01-28 06:35:54,310] [INFO] ✓ Stage 5 completed successfully (31.5s)
+[2026-01-28 06:35:54,311] [INFO] 
+[2026-01-28 06:35:54,311] [INFO] [6/7] Output Validation (85% complete)
+[2026-01-28 06:35:54,311] [INFO]   Elapsed: 41s | ETA: 6s
+[2026-01-28 06:35:54,311] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-28 06:35:54,311] [INFO] Running output validation...
+[2026-01-28 06:35:54,738] [INFO] ✓ Stage 6 completed successfully (0.4s)
+[2026-01-28 06:35:54,738] [INFO] 
+[2026-01-28 06:35:54,738] [INFO] [7/7] Copy Outputs (100% complete)
+[2026-01-28 06:35:54,738] [INFO]   Elapsed: 41s | ETA: 0s
+[2026-01-28 06:35:54,738] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-28 06:35:54,739] [INFO] Running output copying...
+[2026-01-28 06:35:55,113] [INFO] ✓ Stage 7 completed successfully (0.4s)
+[2026-01-28 06:35:55,379] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (JSON) saved: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/pipeline_report.json
+[2026-01-28 06:35:55,379] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (Markdown) saved: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/pipeline_report.md
+[2026-01-28 06:35:55,379] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (HTML) saved: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/pipeline_report.html
+[2026-01-28 06:35:55,380] [INFO] [infrastructure.core.logging_utils] Starting: Pipeline execution for cognitive_integrity/cogsec_multiagent_1_theory
+[2026-01-28 06:35:55,380] [INFO] [infrastructure.core.pipeline] Executing core pipeline for project 'cognitive_integrity/cogsec_multiagent_1_theory'
+[2026-01-28 06:35:55,380] [INFO] [infrastructure.core.pipeline] 
+[2026-01-28 06:35:55,380] [INFO] [infrastructure.core.pipeline] [1/7] Clean Output Directories (14% complete)
+[2026-01-28 06:35:55,380] [INFO] [infrastructure.core.pipeline]   Elapsed: 0s | ETA: 0s
+[2026-01-28 06:35:55,380] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-28 06:35:55,381] [INFO] [infrastructure.core.logging_utils] Starting: Stage 1: Clean Output Directories
+[2026-01-28 06:35:55,381] [INFO] [infrastructure.core.pipeline] Cleaning output directories...
+[2026-01-28 06:35:55,402] [INFO] [infrastructure.core.pipeline] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/cognitive_integrity/cogsec_multiagent_1_theory/output/logs/pipeline.log
+[2026-01-28 06:35:55,402] [INFO] [infrastructure.core.pipeline] ✓ Stage 1 completed successfully (0.0s)
+[2026-01-28 06:35:55,402] [INFO] [infrastructure.core.pipeline] 
+[2026-01-28 06:35:55,402] [INFO] [infrastructure.core.pipeline] [2/7] Environment Setup (28% complete)
+[2026-01-28 06:35:55,403] [INFO] [infrastructure.core.pipeline]   Elapsed: 0s | ETA: 0s
+[2026-01-28 06:35:55,403] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-28 06:35:55,403] [INFO] [infrastructure.core.logging_utils] Starting: Stage 2: Environment Setup
+[2026-01-28 06:35:55,403] [INFO] [infrastructure.core.pipeline] Running environment setup...
+[2026-01-28 06:35:56,034] [INFO] [infrastructure.core.logging_utils] Completed: Stage 2: Environment Setup (0.6s)
+[2026-01-28 06:35:56,034] [INFO] [infrastructure.core.pipeline] ✓ Stage 2 completed successfully (0.6s)
+[2026-01-28 06:35:56,034] [INFO] [infrastructure.core.pipeline] Skipping stage: Infrastructure Tests
+[2026-01-28 06:35:56,034] [INFO] [infrastructure.core.pipeline] 
+[2026-01-28 06:35:56,034] [INFO] [infrastructure.core.pipeline] [3/7] Project Tests (42% complete)
+[2026-01-28 06:35:56,034] [INFO] [infrastructure.core.pipeline]   Elapsed: 0s | ETA: 0s
+[2026-01-28 06:35:56,034] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-28 06:35:56,035] [INFO] [infrastructure.core.logging_utils] Starting: Stage 3: Project Tests
+[2026-01-28 06:35:56,035] [INFO] [infrastructure.core.pipeline] Running project tests...
+[2026-01-28 06:36:13,164] [INFO] [infrastructure.core.logging_utils] Completed: Stage 3: Project Tests (17.1s)
+[2026-01-28 06:36:13,164] [INFO] [infrastructure.core.pipeline] ✓ Stage 3 completed successfully (17.1s)
+[2026-01-28 06:36:13,164] [INFO] [infrastructure.core.pipeline] 
+[2026-01-28 06:36:13,164] [INFO] [infrastructure.core.pipeline] [4/7] Project Analysis (57% complete)
+[2026-01-28 06:36:13,164] [INFO] [infrastructure.core.pipeline]   Elapsed: 17s | ETA: 13s
+[2026-01-28 06:36:13,164] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-28 06:36:13,165] [INFO] [infrastructure.core.logging_utils] Starting: Stage 4: Project Analysis
+[2026-01-28 06:36:13,165] [INFO] [infrastructure.core.pipeline] Running project analysis...
+[2026-01-28 06:36:27,518] [INFO] [infrastructure.core.logging_utils] Completed: Stage 4: Project Analysis (14.4s)
+[2026-01-28 06:36:27,519] [INFO] [infrastructure.core.pipeline] ✓ Stage 4 completed successfully (14.4s)
+[2026-01-28 06:36:27,519] [INFO] [infrastructure.core.pipeline] 
+[2026-01-28 06:36:27,519] [INFO] [infrastructure.core.pipeline] [5/7] PDF Rendering (71% complete)
+[2026-01-28 06:36:27,519] [INFO] [infrastructure.core.pipeline]   Elapsed: 32s | ETA: 12s
+[2026-01-28 06:36:27,519] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-28 06:36:27,520] [INFO] [infrastructure.core.logging_utils] Starting: Stage 5: PDF Rendering
+[2026-01-28 06:36:27,520] [INFO] [infrastructure.core.pipeline] Running PDF rendering...
+[2026-01-28 06:37:15,263] [INFO] [infrastructure.core.logging_utils] Completed: Stage 5: PDF Rendering (47.7s)
+[2026-01-28 06:37:15,263] [INFO] [infrastructure.core.pipeline] ✓ Stage 5 completed successfully (47.7s)
+[2026-01-28 06:37:15,264] [INFO] [infrastructure.core.pipeline] 
+[2026-01-28 06:37:15,264] [INFO] [infrastructure.core.pipeline] [6/7] Output Validation (85% complete)
+[2026-01-28 06:37:15,264] [INFO] [infrastructure.core.pipeline]   Elapsed: 1m 19s | ETA: 13s
+[2026-01-28 06:37:15,264] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-28 06:37:15,266] [INFO] [infrastructure.core.logging_utils] Starting: Stage 6: Output Validation
+[2026-01-28 06:37:15,266] [INFO] [infrastructure.core.pipeline] Running output validation...
+[2026-01-28 06:37:15,687] [INFO] [infrastructure.core.logging_utils] Completed: Stage 6: Output Validation (0.4s)
+[2026-01-28 06:37:15,687] [INFO] [infrastructure.core.pipeline] ✓ Stage 6 completed successfully (0.4s)
+[2026-01-28 06:37:15,687] [INFO] [infrastructure.core.pipeline] 
+[2026-01-28 06:37:15,687] [INFO] [infrastructure.core.pipeline] [7/7] Copy Outputs (100% complete)
+[2026-01-28 06:37:15,687] [INFO] [infrastructure.core.pipeline]   Elapsed: 1m 20s | ETA: 0s
+[2026-01-28 06:37:15,687] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-28 06:37:15,688] [INFO] [infrastructure.core.logging_utils] Starting: Stage 7: Copy Outputs
+[2026-01-28 06:37:15,688] [INFO] [infrastructure.core.pipeline] Running output copying...
+[2026-01-28 06:37:16,094] [INFO] [infrastructure.core.logging_utils] Completed: Stage 7: Copy Outputs (0.4s)
+[2026-01-28 06:37:16,094] [INFO] [infrastructure.core.pipeline] ✓ Stage 7 completed successfully (0.4s)
+[2026-01-28 06:37:16,098] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (JSON) saved: /Users/4d/Documents/GitHub/template/projects/cognitive_integrity/cogsec_multiagent_1_theory/output/reports/pipeline_report.json
+[2026-01-28 06:37:16,098] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (Markdown) saved: /Users/4d/Documents/GitHub/template/projects/cognitive_integrity/cogsec_multiagent_1_theory/output/reports/pipeline_report.md
+[2026-01-28 06:37:16,098] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (HTML) saved: /Users/4d/Documents/GitHub/template/projects/cognitive_integrity/cogsec_multiagent_1_theory/output/reports/pipeline_report.html
+[2026-01-28 06:37:16,098] [INFO] [infrastructure.core.logging_utils] Completed: Pipeline execution for cognitive_integrity/cogsec_multiagent_1_theory (80.7s)
+[2026-01-28 06:37:16,099] [INFO] [infrastructure.core.logging_utils] Starting: Pipeline execution for cognitive_integrity/cogsec_multiagent_2_computational
+[2026-01-28 06:37:16,099] [INFO] [infrastructure.core.pipeline] Executing core pipeline for project 'cognitive_integrity/cogsec_multiagent_2_computational'
+[2026-01-28 06:37:16,100] [INFO] [infrastructure.core.pipeline] 
+[2026-01-28 06:37:16,100] [INFO] [infrastructure.core.pipeline] [1/7] Clean Output Directories (14% complete)
+[2026-01-28 06:37:16,100] [INFO] [infrastructure.core.pipeline]   Elapsed: 0s | ETA: 0s
+[2026-01-28 06:37:16,100] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-28 06:37:16,100] [INFO] [infrastructure.core.logging_utils] Starting: Stage 1: Clean Output Directories
+[2026-01-28 06:37:16,100] [INFO] [infrastructure.core.pipeline] Cleaning output directories...
+[2026-01-28 06:37:16,127] [INFO] [infrastructure.core.pipeline] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/cognitive_integrity/cogsec_multiagent_2_computational/output/logs/pipeline.log
+[2026-01-28 06:37:16,127] [INFO] [infrastructure.core.pipeline] ✓ Stage 1 completed successfully (0.0s)
+[2026-01-28 06:37:16,127] [INFO] [infrastructure.core.pipeline] 
+[2026-01-28 06:37:16,127] [INFO] [infrastructure.core.pipeline] [2/7] Environment Setup (28% complete)
+[2026-01-28 06:37:16,127] [INFO] [infrastructure.core.pipeline]   Elapsed: 0s | ETA: 0s
+[2026-01-28 06:37:16,127] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-28 06:37:16,128] [INFO] [infrastructure.core.logging_utils] Starting: Stage 2: Environment Setup
+[2026-01-28 06:37:16,128] [INFO] [infrastructure.core.pipeline] Running environment setup...
+[2026-01-28 06:37:16,785] [INFO] [infrastructure.core.logging_utils] Completed: Stage 2: Environment Setup (0.7s)
+[2026-01-28 06:37:16,785] [INFO] [infrastructure.core.pipeline] ✓ Stage 2 completed successfully (0.7s)
+[2026-01-28 06:37:16,785] [INFO] [infrastructure.core.pipeline] Skipping stage: Infrastructure Tests
+[2026-01-28 06:37:16,785] [INFO] [infrastructure.core.pipeline] 
+[2026-01-28 06:37:16,785] [INFO] [infrastructure.core.pipeline] [3/7] Project Tests (42% complete)
+[2026-01-28 06:37:16,785] [INFO] [infrastructure.core.pipeline]   Elapsed: 0s | ETA: 0s
+[2026-01-28 06:37:16,785] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-28 06:37:16,786] [INFO] [infrastructure.core.logging_utils] Starting: Stage 3: Project Tests
+[2026-01-28 06:37:16,786] [INFO] [infrastructure.core.pipeline] Running project tests...
+[2026-01-28 06:37:20,089] [INFO] [infrastructure.core.logging_utils] Completed: Stage 3: Project Tests (3.3s)
+[2026-01-28 06:37:20,089] [INFO] [infrastructure.core.pipeline] ✓ Stage 3 completed successfully (3.3s)
+[2026-01-28 06:37:20,090] [INFO] [infrastructure.core.pipeline] 
+[2026-01-28 06:37:20,090] [INFO] [infrastructure.core.pipeline] [4/7] Project Analysis (57% complete)
+[2026-01-28 06:37:20,090] [INFO] [infrastructure.core.pipeline]   Elapsed: 3s | ETA: 2s
+[2026-01-28 06:37:20,090] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-28 06:37:20,090] [INFO] [infrastructure.core.logging_utils] Starting: Stage 4: Project Analysis
+[2026-01-28 06:37:20,091] [INFO] [infrastructure.core.pipeline] Running project analysis...
+[2026-01-28 06:37:30,188] [INFO] [infrastructure.core.logging_utils] Completed: Stage 4: Project Analysis (10.1s)
+[2026-01-28 06:37:30,188] [INFO] [infrastructure.core.pipeline] ✓ Stage 4 completed successfully (10.1s)
+[2026-01-28 06:37:30,189] [INFO] [infrastructure.core.pipeline] 
+[2026-01-28 06:37:30,189] [INFO] [infrastructure.core.pipeline] [5/7] PDF Rendering (71% complete)
+[2026-01-28 06:37:30,189] [INFO] [infrastructure.core.pipeline]   Elapsed: 14s | ETA: 5s
+[2026-01-28 06:37:30,189] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-28 06:37:30,189] [INFO] [infrastructure.core.logging_utils] Starting: Stage 5: PDF Rendering
+[2026-01-28 06:37:30,189] [INFO] [infrastructure.core.pipeline] Running PDF rendering...
+[2026-01-28 06:38:11,631] [INFO] [infrastructure.core.logging_utils] Completed: Stage 5: PDF Rendering (41.4s)
+[2026-01-28 06:38:11,632] [INFO] [infrastructure.core.pipeline] ✓ Stage 5 completed successfully (41.4s)
+[2026-01-28 06:38:11,632] [INFO] [infrastructure.core.pipeline] 
+[2026-01-28 06:38:11,632] [INFO] [infrastructure.core.pipeline] [6/7] Output Validation (85% complete)
+[2026-01-28 06:38:11,632] [INFO] [infrastructure.core.pipeline]   Elapsed: 55s | ETA: 9s
+[2026-01-28 06:38:11,632] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-28 06:38:11,634] [INFO] [infrastructure.core.logging_utils] Starting: Stage 6: Output Validation
+[2026-01-28 06:38:11,634] [INFO] [infrastructure.core.pipeline] Running output validation...
+[2026-01-28 06:38:12,065] [INFO] [infrastructure.core.logging_utils] Completed: Stage 6: Output Validation (0.4s)
+[2026-01-28 06:38:12,066] [INFO] [infrastructure.core.pipeline] ✓ Stage 6 completed successfully (0.4s)
+[2026-01-28 06:38:12,066] [INFO] [infrastructure.core.pipeline] 
+[2026-01-28 06:38:12,066] [INFO] [infrastructure.core.pipeline] [7/7] Copy Outputs (100% complete)
+[2026-01-28 06:38:12,066] [INFO] [infrastructure.core.pipeline]   Elapsed: 55s | ETA: 0s
+[2026-01-28 06:38:12,066] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-28 06:38:12,067] [INFO] [infrastructure.core.logging_utils] Starting: Stage 7: Copy Outputs
+[2026-01-28 06:38:12,067] [INFO] [infrastructure.core.pipeline] Running output copying...
+[2026-01-28 06:38:12,470] [INFO] [infrastructure.core.logging_utils] Completed: Stage 7: Copy Outputs (0.4s)
+[2026-01-28 06:38:12,470] [INFO] [infrastructure.core.pipeline] ✓ Stage 7 completed successfully (0.4s)
+[2026-01-28 06:38:12,474] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (JSON) saved: /Users/4d/Documents/GitHub/template/projects/cognitive_integrity/cogsec_multiagent_2_computational/output/reports/pipeline_report.json
+[2026-01-28 06:38:12,474] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (Markdown) saved: /Users/4d/Documents/GitHub/template/projects/cognitive_integrity/cogsec_multiagent_2_computational/output/reports/pipeline_report.md
+[2026-01-28 06:38:12,475] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (HTML) saved: /Users/4d/Documents/GitHub/template/projects/cognitive_integrity/cogsec_multiagent_2_computational/output/reports/pipeline_report.html
+[2026-01-28 06:38:12,475] [INFO] [infrastructure.core.logging_utils] Completed: Pipeline execution for cognitive_integrity/cogsec_multiagent_2_computational (56.4s)
+[2026-01-28 06:38:12,475] [INFO] [infrastructure.core.logging_utils] Starting: Pipeline execution for cognitive_integrity/cogsec_multiagent_3_practical
+[2026-01-28 06:38:12,476] [INFO] [infrastructure.core.pipeline] Executing core pipeline for project 'cognitive_integrity/cogsec_multiagent_3_practical'
+[2026-01-28 06:38:12,476] [INFO] [infrastructure.core.pipeline] 
+[2026-01-28 06:38:12,476] [INFO] [infrastructure.core.pipeline] [1/7] Clean Output Directories (14% complete)
+[2026-01-28 06:38:12,476] [INFO] [infrastructure.core.pipeline]   Elapsed: 0s | ETA: 0s
+[2026-01-28 06:38:12,476] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-28 06:38:12,477] [INFO] [infrastructure.core.logging_utils] Starting: Stage 1: Clean Output Directories
+[2026-01-28 06:38:12,477] [INFO] [infrastructure.core.pipeline] Cleaning output directories...
+[2026-01-28 06:38:12,487] [INFO] [infrastructure.core.pipeline] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/cognitive_integrity/cogsec_multiagent_3_practical/output/logs/pipeline.log
+[2026-01-28 06:38:12,487] [INFO] [infrastructure.core.pipeline] ✓ Stage 1 completed successfully (0.0s)
+[2026-01-28 06:38:12,488] [INFO] [infrastructure.core.pipeline] 
+[2026-01-28 06:38:12,488] [INFO] [infrastructure.core.pipeline] [2/7] Environment Setup (28% complete)
+[2026-01-28 06:38:12,488] [INFO] [infrastructure.core.pipeline]   Elapsed: 0s | ETA: 0s
+[2026-01-28 06:38:12,488] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-28 06:38:12,488] [INFO] [infrastructure.core.logging_utils] Starting: Stage 2: Environment Setup
+[2026-01-28 06:38:12,488] [INFO] [infrastructure.core.pipeline] Running environment setup...
+[2026-01-28 06:38:13,168] [INFO] [infrastructure.core.logging_utils] Completed: Stage 2: Environment Setup (0.7s)
+[2026-01-28 06:38:13,169] [INFO] [infrastructure.core.pipeline] ✓ Stage 2 completed successfully (0.7s)
+[2026-01-28 06:38:13,169] [INFO] [infrastructure.core.pipeline] Skipping stage: Infrastructure Tests
+[2026-01-28 06:38:13,169] [INFO] [infrastructure.core.pipeline] 
+[2026-01-28 06:38:13,169] [INFO] [infrastructure.core.pipeline] [3/7] Project Tests (42% complete)
+[2026-01-28 06:38:13,169] [INFO] [infrastructure.core.pipeline]   Elapsed: 0s | ETA: 0s
+[2026-01-28 06:38:13,169] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-28 06:38:13,170] [INFO] [infrastructure.core.logging_utils] Starting: Stage 3: Project Tests
+[2026-01-28 06:38:13,170] [INFO] [infrastructure.core.pipeline] Running project tests...
+[2026-01-28 06:38:16,728] [INFO] [infrastructure.core.logging_utils] Completed: Stage 3: Project Tests (3.6s)
+[2026-01-28 06:38:16,729] [INFO] [infrastructure.core.pipeline] ✓ Stage 3 completed successfully (3.6s)
+[2026-01-28 06:38:16,729] [INFO] [infrastructure.core.pipeline] 
+[2026-01-28 06:38:16,729] [INFO] [infrastructure.core.pipeline] [4/7] Project Analysis (57% complete)
+[2026-01-28 06:38:16,729] [INFO] [infrastructure.core.pipeline]   Elapsed: 4s | ETA: 3s
+[2026-01-28 06:38:16,729] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-28 06:38:16,730] [INFO] [infrastructure.core.logging_utils] Starting: Stage 4: Project Analysis
+[2026-01-28 06:38:16,730] [INFO] [infrastructure.core.pipeline] Running project analysis...
+[2026-01-28 06:38:20,281] [INFO] [infrastructure.core.logging_utils] Completed: Stage 4: Project Analysis (3.6s)
+[2026-01-28 06:38:20,281] [INFO] [infrastructure.core.pipeline] ✓ Stage 4 completed successfully (3.6s)
+[2026-01-28 06:38:20,282] [INFO] [infrastructure.core.pipeline] 
+[2026-01-28 06:38:20,282] [INFO] [infrastructure.core.pipeline] [5/7] PDF Rendering (71% complete)
+[2026-01-28 06:38:20,282] [INFO] [infrastructure.core.pipeline]   Elapsed: 7s | ETA: 3s
+[2026-01-28 06:38:20,282] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-28 06:38:20,283] [INFO] [infrastructure.core.logging_utils] Starting: Stage 5: PDF Rendering
+[2026-01-28 06:38:20,283] [INFO] [infrastructure.core.pipeline] Running PDF rendering...
+[2026-01-28 06:38:54,570] [INFO] [infrastructure.core.logging_utils] Completed: Stage 5: PDF Rendering (34.3s)
+[2026-01-28 06:38:54,572] [INFO] [infrastructure.core.pipeline] ✓ Stage 5 completed successfully (34.3s)
+[2026-01-28 06:38:54,572] [INFO] [infrastructure.core.pipeline] 
+[2026-01-28 06:38:54,572] [INFO] [infrastructure.core.pipeline] [6/7] Output Validation (85% complete)
+[2026-01-28 06:38:54,572] [INFO] [infrastructure.core.pipeline]   Elapsed: 42s | ETA: 7s
+[2026-01-28 06:38:54,572] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-28 06:38:54,573] [INFO] [infrastructure.core.logging_utils] Starting: Stage 6: Output Validation
+[2026-01-28 06:38:54,573] [INFO] [infrastructure.core.pipeline] Running output validation...
+[2026-01-28 06:38:55,014] [INFO] [infrastructure.core.logging_utils] Completed: Stage 6: Output Validation (0.4s)
+[2026-01-28 06:38:55,014] [INFO] [infrastructure.core.pipeline] ✓ Stage 6 completed successfully (0.4s)
+[2026-01-28 06:38:55,015] [INFO] [infrastructure.core.pipeline] 
+[2026-01-28 06:38:55,015] [INFO] [infrastructure.core.pipeline] [7/7] Copy Outputs (100% complete)
+[2026-01-28 06:38:55,015] [INFO] [infrastructure.core.pipeline]   Elapsed: 42s | ETA: 0s
+[2026-01-28 06:38:55,015] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-28 06:38:55,016] [INFO] [infrastructure.core.logging_utils] Starting: Stage 7: Copy Outputs
+[2026-01-28 06:38:55,016] [INFO] [infrastructure.core.pipeline] Running output copying...
+[2026-01-28 06:38:55,394] [INFO] [infrastructure.core.logging_utils] Completed: Stage 7: Copy Outputs (0.4s)
+[2026-01-28 06:38:55,394] [INFO] [infrastructure.core.pipeline] ✓ Stage 7 completed successfully (0.4s)
+[2026-01-28 06:38:55,398] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (JSON) saved: /Users/4d/Documents/GitHub/template/projects/cognitive_integrity/cogsec_multiagent_3_practical/output/reports/pipeline_report.json
+[2026-01-28 06:38:55,398] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (Markdown) saved: /Users/4d/Documents/GitHub/template/projects/cognitive_integrity/cogsec_multiagent_3_practical/output/reports/pipeline_report.md
+[2026-01-28 06:38:55,398] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (HTML) saved: /Users/4d/Documents/GitHub/template/projects/cognitive_integrity/cogsec_multiagent_3_practical/output/reports/pipeline_report.html
+[2026-01-28 06:38:55,398] [INFO] [infrastructure.core.logging_utils] Completed: Pipeline execution for cognitive_integrity/cogsec_multiagent_3_practical (42.9s)
+[2026-01-28 06:38:55,399] [INFO] [infrastructure.reporting] Starting multi-project reporting for 4 projects...
+[2026-01-28 06:38:55,399] [INFO] [infrastructure.reporting] Generating executive summary...
+[2026-01-28 06:38:55,399] [INFO] [infrastructure.reporting.executive_reporter] Generating executive summary for 4 project(s)
+[2026-01-28 06:38:55,399] [INFO] [infrastructure.reporting.executive_reporter] Collecting metrics for project: code_project
+[2026-01-28 06:38:55,405] [INFO] [infrastructure.reporting.executive_reporter] Collecting metrics for project: cognitive_integrity/cogsec_multiagent_1_theory
+[2026-01-28 06:38:55,461] [INFO] [infrastructure.reporting.executive_reporter] Collecting metrics for project: cognitive_integrity/cogsec_multiagent_2_computational
+[2026-01-28 06:38:55,486] [INFO] [infrastructure.reporting.executive_reporter] Collecting metrics for project: cognitive_integrity/cogsec_multiagent_3_practical
+[2026-01-28 06:38:55,495] [INFO] [infrastructure.reporting.executive_reporter] Executive summary generated successfully
+[2026-01-28 06:38:55,495] [INFO] [infrastructure.reporting] Saving summary reports...
+[2026-01-28 06:38:55,496] [INFO] [infrastructure.reporting.executive_reporter] Saved JSON report: /Users/4d/Documents/GitHub/template/output/executive_summary/json/consolidated_report.json
+[2026-01-28 06:38:55,496] [INFO] [infrastructure.reporting.executive_reporter] Saved Markdown report: /Users/4d/Documents/GitHub/template/output/executive_summary/md/consolidated_report.md
+[2026-01-28 06:38:55,497] [INFO] [infrastructure.reporting.executive_reporter] Saved HTML report: /Users/4d/Documents/GitHub/template/output/executive_summary/html/consolidated_report.html
+[2026-01-28 06:38:55,497] [INFO] [infrastructure.reporting] Generating visual dashboards...
+[2026-01-28 06:38:55,497] [INFO] [infrastructure.reporting.dashboard_generator] Generating all dashboard formats...
+[2026-01-28 06:38:55,497] [INFO] [infrastructure.reporting.dashboard_generator] Generating matplotlib dashboard...
+[2026-01-28 06:38:56,286] [INFO] [infrastructure.reporting.dashboard_generator] Saved PNG dashboard: /Users/4d/Documents/GitHub/template/output/executive_summary/png/dashboard.png
+[2026-01-28 06:38:56,649] [INFO] [infrastructure.reporting.dashboard_generator] Saved PDF dashboard: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/dashboard.pdf
+[2026-01-28 06:38:56,649] [INFO] [infrastructure.reporting.dashboard_generator] Generating health score radar chart...
+[2026-01-28 06:38:56,806] [INFO] [infrastructure.reporting.dashboard_generator] Health radar chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/health_scores_radar.png
+[2026-01-28 06:38:56,852] [INFO] [infrastructure.reporting.dashboard_generator] Health radar chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/health_scores_radar.pdf
+[2026-01-28 06:38:56,852] [INFO] [infrastructure.reporting.dashboard_generator] Generating health score comparison chart...
+[2026-01-28 06:38:57,031] [INFO] [infrastructure.reporting.dashboard_generator] Health comparison chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/health_scores_comparison.png
+[2026-01-28 06:38:57,091] [INFO] [infrastructure.reporting.dashboard_generator] Health comparison chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/health_scores_comparison.pdf
+[2026-01-28 06:38:57,091] [INFO] [infrastructure.reporting.dashboard_generator] Generating individual project dashboards...
+[2026-01-28 06:38:57,371] [INFO] [infrastructure.reporting.dashboard_generator] Project dashboard (code_project PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/project_dashboard_codeproject.png
+[2026-01-28 06:38:57,458] [INFO] [infrastructure.reporting.dashboard_generator] Project dashboard (code_project PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/project_dashboard_codeproject.pdf
+[2026-01-28 06:38:57,601] [ERROR] [infrastructure.reporting.dashboard_generator] Failed to generate project breakdowns: [Errno 2] No such file or directory: '/Users/4d/Documents/GitHub/template/output/executive_summary/png/project_dashboard_cognitiveintegrity/cogsecmultiagent1theory.png'
+[2026-01-28 06:38:57,604] [INFO] [infrastructure.reporting.dashboard_generator] Generating pipeline efficiency analysis chart...
+[2026-01-28 06:38:57,953] [INFO] [infrastructure.reporting.dashboard_generator] Pipeline efficiency chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/pipeline_efficiency.png
+[2026-01-28 06:38:58,040] [INFO] [infrastructure.reporting.dashboard_generator] Pipeline efficiency chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/pipeline_efficiency.pdf
+[2026-01-28 06:38:58,040] [INFO] [infrastructure.reporting.dashboard_generator] Generating pipeline bottlenecks chart...
+[2026-01-28 06:38:58,207] [INFO] [infrastructure.reporting.dashboard_generator] Pipeline bottlenecks chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/pipeline_bottlenecks.png
+[2026-01-28 06:38:58,246] [INFO] [infrastructure.reporting.dashboard_generator] Pipeline bottlenecks chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/pipeline_bottlenecks.pdf
+[2026-01-28 06:38:58,246] [INFO] [infrastructure.reporting.dashboard_generator] Generating output distribution charts...
+[2026-01-28 06:38:58,620] [INFO] [infrastructure.reporting.dashboard_generator] Output distribution chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/output_distribution.png
+[2026-01-28 06:38:58,718] [INFO] [infrastructure.reporting.dashboard_generator] Output distribution chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/output_distribution.pdf
+[2026-01-28 06:38:58,718] [INFO] [infrastructure.reporting.dashboard_generator] Generating output comparison chart...
+[2026-01-28 06:38:58,882] [INFO] [infrastructure.reporting.dashboard_generator] Output comparison chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/output_comparison.png
+[2026-01-28 06:38:58,931] [INFO] [infrastructure.reporting.dashboard_generator] Output comparison chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/output_comparison.pdf
+[2026-01-28 06:38:58,931] [INFO] [infrastructure.reporting.dashboard_generator] Generating codebase complexity chart...
+[2026-01-28 06:38:59,309] [INFO] [infrastructure.reporting.dashboard_generator] Codebase complexity chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/codebase_complexity.png
+[2026-01-28 06:38:59,415] [INFO] [infrastructure.reporting.dashboard_generator] Codebase complexity chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/codebase_complexity.pdf
+[2026-01-28 06:38:59,415] [INFO] [infrastructure.reporting.dashboard_generator] Generating codebase comparison chart...
+[2026-01-28 06:38:59,684] [INFO] [infrastructure.reporting.dashboard_generator] Codebase comparison chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/codebase_comparison.png
+[2026-01-28 06:38:59,774] [INFO] [infrastructure.reporting.dashboard_generator] Codebase comparison chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/codebase_comparison.pdf
+[2026-01-28 06:38:59,925] [INFO] [infrastructure.reporting.dashboard_generator] Generating interactive plotly dashboard...
+[2026-01-28 06:39:00,307] [INFO] [infrastructure.reporting.dashboard_generator] Saved interactive HTML dashboard: /Users/4d/Documents/GitHub/template/output/executive_summary/dashboard.html
+[2026-01-28 06:39:00,307] [INFO] [infrastructure.reporting.dashboard_generator] Generated CSV metrics table: /Users/4d/Documents/GitHub/template/output/executive_summary/csv/project_metrics.csv
+[2026-01-28 06:39:00,307] [INFO] [infrastructure.reporting.dashboard_generator] Generated CSV aggregates table: /Users/4d/Documents/GitHub/template/output/executive_summary/csv/aggregate_metrics.csv
+[2026-01-28 06:39:00,308] [INFO] [infrastructure.reporting.dashboard_generator] Generated CSV health scores table: /Users/4d/Documents/GitHub/template/output/executive_summary/csv/health_scores.csv
+[2026-01-28 06:39:00,308] [INFO] [infrastructure.reporting.dashboard_generator] Detailed project breakdown CSV saved: /Users/4d/Documents/GitHub/template/output/executive_summary/csv/detailed_project_breakdown.csv
+[2026-01-28 06:39:00,308] [INFO] [infrastructure.reporting.dashboard_generator] Comparative analysis CSV saved: /Users/4d/Documents/GitHub/template/output/executive_summary/csv/comparative_analysis.csv
+[2026-01-28 06:39:00,309] [INFO] [infrastructure.reporting.dashboard_generator] Prioritized recommendations CSV saved: /Users/4d/Documents/GitHub/template/output/executive_summary/csv/recommendations_prioritized.csv
+[2026-01-28 06:39:00,309] [INFO] [infrastructure.reporting.manuscript_overview] Generating manuscript overview for code_project
+[2026-01-28 06:39:00,309] [INFO] [infrastructure.reporting.manuscript_overview] Generating manuscript overview for code_project
+[2026-01-28 06:39:01,041] [INFO] [infrastructure.reporting.manuscript_overview] Extracting 17 pages from code_project_combined.pdf
+[2026-01-28 06:39:01,512] [INFO] [infrastructure.reporting.manuscript_overview] Extracted 17 page images
+[2026-01-28 06:39:01,697] [INFO] [infrastructure.reporting.manuscript_overview] Saved PNG overview: /Users/4d/Documents/GitHub/template/output/executive_summary/manuscript_overview_code_project.png
+[2026-01-28 06:39:01,996] [INFO] [infrastructure.reporting.manuscript_overview] Saved PDF overview: /Users/4d/Documents/GitHub/template/output/executive_summary/manuscript_overview_code_project.pdf
+[2026-01-28 06:39:02,000] [INFO] [infrastructure.reporting.manuscript_overview] Generated overview files for code_project: ['manuscript_overview_code_project.png', 'manuscript_overview_code_project.pdf']
+[2026-01-28 06:39:02,000] [WARNING] [infrastructure.reporting.manuscript_overview] Manuscript PDF not found for project cognitive_integrity/cogsec_multiagent_1_theory, skipping overview generation
+[2026-01-28 06:39:02,001] [WARNING] [infrastructure.reporting.manuscript_overview] Manuscript PDF not found for project cognitive_integrity/cogsec_multiagent_2_computational, skipping overview generation
+[2026-01-28 06:39:02,001] [WARNING] [infrastructure.reporting.manuscript_overview] Manuscript PDF not found for project cognitive_integrity/cogsec_multiagent_3_practical, skipping overview generation
+[2026-01-28 06:39:02,001] [INFO] [infrastructure.reporting.dashboard_generator] Generated 13 dashboard and data file(s)
+[2026-01-28 06:39:02,001] [INFO] [infrastructure.reporting] Multi-project reporting complete. Generated 15 files:
+[2026-01-28 06:39:02,001] [INFO] [infrastructure.reporting]   JSON: consolidated_report.json
+[2026-01-28 06:39:02,001] [INFO] [infrastructure.reporting]   MARKDOWN: consolidated_report.md
+[2026-01-28 06:39:02,001] [INFO] [infrastructure.reporting]   HTML: dashboard.html
+[2026-01-28 06:39:02,001] [INFO] [infrastructure.reporting]   PNG: codebase_comparison.png
+[2026-01-28 06:39:02,001] [INFO] [infrastructure.reporting]   PDF: codebase_comparison.pdf
+[2026-01-28 06:39:02,001] [INFO] [infrastructure.reporting]   CODEPROJECT_PNG: project_dashboard_codeproject.png
+[2026-01-28 06:39:02,001] [INFO] [infrastructure.reporting]   CODEPROJECT_PDF: project_dashboard_codeproject.pdf
+[2026-01-28 06:39:02,001] [INFO] [infrastructure.reporting]   METRICS: project_metrics.csv
+[2026-01-28 06:39:02,001] [INFO] [infrastructure.reporting]   AGGREGATES: aggregate_metrics.csv
+[2026-01-28 06:39:02,001] [INFO] [infrastructure.reporting]   HEALTH: health_scores.csv
+[2026-01-28 06:39:02,001] [INFO] [infrastructure.reporting]   DETAILED_BREAKDOWN_CSV: detailed_project_breakdown.csv
+[2026-01-28 06:39:02,001] [INFO] [infrastructure.reporting]   COMPARATIVE_ANALYSIS_CSV: comparative_analysis.csv
+[2026-01-28 06:39:02,001] [INFO] [infrastructure.reporting]   RECOMMENDATIONS_CSV: recommendations_prioritized.csv
+[2026-01-28 06:39:02,001] [INFO] [infrastructure.reporting]   MANUSCRIPT_OVERVIEW_CODE_PROJECT.PNG: manuscript_overview_code_project.png
+[2026-01-28 06:39:02,001] [INFO] [infrastructure.reporting]   MANUSCRIPT_OVERVIEW_CODE_PROJECT.PDF: manuscript_overview_code_project.pdf
+[2026-01-28 06:39:02,001] [INFO] [infrastructure.reporting.pipeline_reporter] For project code_project, proj_result type: <class 'list'>, len: 7
+[2026-01-28 06:39:02,002] [INFO] [infrastructure.reporting.pipeline_reporter] For project cogsec_multiagent_1_theory, proj_result type: <class 'list'>, len: 0
+[2026-01-28 06:39:02,002] [INFO] [infrastructure.reporting.pipeline_reporter] For project cogsec_multiagent_2_computational, proj_result type: <class 'list'>, len: 0
+[2026-01-28 06:39:02,002] [INFO] [infrastructure.reporting.pipeline_reporter] For project cogsec_multiagent_3_practical, proj_result type: <class 'list'>, len: 0
+[2026-01-28 06:39:02,002] [INFO] [infrastructure.reporting.pipeline_reporter] Multi-project summary saved: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.json
+[2026-01-28 06:39:02,002] [INFO] [infrastructure.reporting.pipeline_reporter] Multi-project summary saved: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.md

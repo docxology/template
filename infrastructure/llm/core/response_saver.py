@@ -1,4 +1,5 @@
 """General-purpose response saving utilities for LLM operations."""
+
 from __future__ import annotations
 
 import json
@@ -15,6 +16,7 @@ logger = get_logger(__name__)
 @dataclass
 class ResponseMetadata:
     """Metadata for a saved LLM response."""
+
     timestamp: str
     model: str
     prompt: str
@@ -52,19 +54,19 @@ def save_response(
     response: str,
     output_path: Path,
     metadata: ResponseMetadata,
-    format: str = "markdown"
+    format: str = "markdown",
 ) -> Path:
     """Save LLM response to file with metadata.
-    
+
     Args:
         response: Response text to save
         output_path: Path to save file (extension may be added based on format)
         metadata: Response metadata
         format: Output format ("markdown", "json", "txt")
-        
+
     Returns:
         Path to saved file
-        
+
     Example:
         >>> metadata = ResponseMetadata(
         ...     timestamp=datetime.now().isoformat(),
@@ -78,14 +80,18 @@ def save_response(
     """
     # Ensure output directory exists
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     # Add extension if not present
     if not output_path.suffix:
         extensions = {"markdown": ".md", "json": ".json", "txt": ".txt"}
         output_path = output_path.with_suffix(extensions.get(format, ".md"))
-    
+
     if format == "markdown":
-        time_str = f"{metadata.generation_time_seconds:.2f}s" if metadata.generation_time_seconds is not None else "N/A"
+        time_str = (
+            f"{metadata.generation_time_seconds:.2f}s"
+            if metadata.generation_time_seconds is not None
+            else "N/A"
+        )
         content = f"""# LLM Response
 
 *Generated on {metadata.timestamp}*
@@ -119,13 +125,13 @@ Prompt: {metadata.prompt}
 Response:
 {response}
 """
-    
+
     output_path.write_text(content, encoding="utf-8")
     logger.info(
         f"Saved response to {output_path} "
         f"({metadata.response_length:,} chars, {metadata.response_tokens_est:,} tokens est.)"
     )
-    
+
     return output_path
 
 
@@ -133,16 +139,16 @@ def save_streaming_response(
     response: str,
     output_path: Path,
     metadata: ResponseMetadata,
-    format: str = "markdown"
+    format: str = "markdown",
 ) -> Path:
     """Save streaming response with streaming-specific metadata.
-    
+
     Args:
         response: Accumulated response text
         output_path: Path to save file
         metadata: Response metadata (should have streaming=True)
         format: Output format
-        
+
     Returns:
         Path to saved file
     """
@@ -153,16 +159,10 @@ def save_streaming_response(
             streaming_info += " (partial response saved)"
     else:
         streaming_info = ""
-    
+
     # Temporarily modify metadata for display
     original_dict = metadata.to_dict()
     if streaming_info:
         original_dict["streaming_info"] = streaming_info
-    
+
     return save_response(response, output_path, metadata, format)
-
-
-
-
-
-

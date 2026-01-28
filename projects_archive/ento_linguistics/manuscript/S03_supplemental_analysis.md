@@ -2,9 +2,9 @@
 
 This section provides detailed analytical results and theoretical extensions that complement the main findings presented in Sections \ref{sec:methodology} and \ref{sec:experimental_results}.
 
-## S3.1 Theoretical Extensions
+## Theoretical Extensions
 
-### S3.1.1 Extended Discourse Analysis Frameworks
+### Extended Discourse Analysis Frameworks
 
 Building on our mixed-methodology approach, we extend the theoretical framework for analyzing scientific discourse beyond the six Ento-Linguistic domains. Our analysis reveals that terminology networks serve as both descriptive tools and constitutive elements of scientific knowledge production.
 
@@ -18,7 +18,7 @@ F(D, T) = \sum_{t \in T} w_t \cdot f_t(D) \cdot c_t
 
 where $D$ represents a domain, $T$ is the terminology set, $w_t$ are term weights, $f_t(D)$ is the framing function for domain $D$, and $c_t$ represents contextual factors.
 
-### S3.1.2 Advanced Ambiguity Classification Systems
+### Advanced Ambiguity Classification Systems
 
 Our ambiguity detection framework extends beyond simple polysemy to include context-dependent meaning shifts that are characteristic of scientific terminology evolution:
 
@@ -31,7 +31,7 @@ Our ambiguity detection framework extends beyond simple polysemy to include cont
 \item **Temporal Ambiguity**: Historical meaning evolution (e.g., "superorganism" from 1970s to present)
 \end{enumerate}
 
-### S3.1.3 Cross-Domain Conceptual Mapping
+### Cross-Domain Conceptual Mapping
 
 We develop advanced conceptual mapping techniques that reveal relationships between domains:
 
@@ -41,9 +41,9 @@ M_{ij} = \frac{1}{|T_i \cap T_j|} \sum_{t \in T_i \cap T_j} s(t, D_i, D_j)
 
 where $M_{ij}$ is the mapping strength between domains $D_i$ and $D_j$, and $s(t, D_i, D_j)$ measures semantic similarity of term $t$ across domains.
 
-## S3.2 Extended Framing Analysis Methods
+## Extended Framing Analysis Methods
 
-### S3.2.1 Anthropomorphic Framing Detection
+### Anthropomorphic Framing Detection
 
 Advanced anthropomorphic framing detection incorporates linguistic and conceptual indicators:
 
@@ -57,7 +57,7 @@ Advanced anthropomorphic framing detection incorporates linguistic and conceptua
 - Emotional attribution (anthropomorphic emotional terms)
 - Cultural bias patterns (Western social norms in biological descriptions)
 
-### S3.2.2 Hierarchical Framing Analysis
+### Hierarchical Framing Analysis
 
 Extended analysis of hierarchical framing reveals nested levels of social structure imposition:
 
@@ -67,9 +67,9 @@ Extended analysis of hierarchical framing reveals nested levels of social struct
 
 **Inter-Colony Hierarchies**: Population-level relationships (territorial dominance, resource competition)
 
-## S3.3 Advanced Network Analysis Techniques
+## Advanced Network Analysis Techniques
 
-### S3.3.1 Temporal Network Evolution
+### Temporal Network Evolution
 
 Analysis of how terminology networks evolve over time reveals conceptual shifts:
 
@@ -85,7 +85,7 @@ where $\delta_e(t)$ and $\delta_v(t)$ represent edge and vertex changes over tim
 - **Conceptual Consolidation**: Strengthening of established relationships
 - **Paradigm Shifts**: Major restructuring events
 
-### S3.3.2 Multi-Scale Network Analysis
+### Multi-Scale Network Analysis
 
 Extending network analysis to multiple scales reveals hierarchical organization:
 
@@ -94,9 +94,9 @@ Extending network analysis to multiple scales reveals hierarchical organization:
 **Cross-Domain Scale**: Relationships between domains
 **Field Scale**: Relationships across the entire entomological terminology network
 
-## S3.4 Extended Validation Frameworks
+## Extended Validation Frameworks
 
-### S3.4.1 Inter-Subjectivity Validation
+### Inter-Subjectivity Validation
 
 Advanced validation incorporates multiple perspectives:
 
@@ -105,7 +105,7 @@ Advanced validation incorporates multiple perspectives:
 **Historical Validation**: Analysis of terminology evolution against known conceptual shifts
 **Cross-Cultural Validation**: Comparison with non-English entomological literature
 
-### S3.4.2 Robustness Testing
+### Robustness Testing
 
 robustness analysis ensures result stability:
 
@@ -114,9 +114,9 @@ robustness analysis ensures result stability:
 **Annotation Consistency**: Agreement across multiple human annotators
 **Temporal Stability**: Consistency across publication periods
 
-## S3.5 Advanced Case Study Analysis
+## Advanced Case Study Analysis
 
-### S3.5.1 Caste Terminology Evolution: 1850-2024
+### Caste Terminology Evolution: 1850-2024
 
 Ultra-longitudinal analysis reveals century-scale conceptual evolution:
 
@@ -130,7 +130,7 @@ Ultra-longitudinal analysis reveals century-scale conceptual evolution:
 
 **Genomic Era (2000-2024)**: Epigenetic and transcriptomic regulation of caste phenotypes
 
-### S3.5.2 Superorganism Concept Evolution
+### Superorganism Concept Evolution
 
 Detailed analysis of the superorganism concept across seven decades:
 
@@ -152,9 +152,9 @@ Detailed analysis of the superorganism concept across seven decades:
 \label{tab:superorganism_concept_evolution}
 \end{table}
 
-## S3.6 Methodological Reflections
+## Methodological Reflections
 
-### S3.6.1 Mixed-Methodology Integration
+### Mixed-Methodology Integration
 
 Our approach successfully integrates qualitative and quantitative methods:
 
@@ -170,7 +170,7 @@ Our approach successfully integrates qualitative and quantitative methods:
 - Temporal trend quantification
 - Validation metric development
 
-### S3.6.2 Limitations and Scope Considerations
+### Limitations and Scope Considerations
 
 **Methodological Limitations**:
 1. **Corpus Scope**: Limited to English-language publications
@@ -184,9 +184,9 @@ Our approach successfully integrates qualitative and quantitative methods:
 3. **Historical Context**: Analysis reflects current perspectives on past work
 4. **Paradigm Dependence**: Results may vary across research traditions
 
-## S3.7 Future Theoretical Directions
+## Future Theoretical Directions
 
-### S3.7.1 Advanced Semantic Analysis
+### Advanced Semantic Analysis
 
 Future work will incorporate advanced semantic techniques:
 
@@ -196,7 +196,7 @@ Future work will incorporate advanced semantic techniques:
 
 **Dynamic Semantic Networks**: Temporal evolution of term meanings and relationships
 
-### S3.7.2 Extended Conceptual Frameworks
+### Extended Conceptual Frameworks
 
 Theoretical extensions will address broader questions:
 
@@ -208,7 +208,7 @@ Theoretical extensions will address broader questions:
 
 **Cultural Epistemology**: How cultural contexts shape scientific language and concepts
 
-### S3.7.3 Practical Applications
+### Practical Applications
 
 Extended applications will include:
 

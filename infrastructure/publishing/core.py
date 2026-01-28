@@ -15,42 +15,30 @@ from __future__ import annotations
 
 import hashlib
 import re
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 # Import from split modules
 from infrastructure.publishing.citations import (
-    generate_citation_bibtex,
-    generate_citation_apa,
-    generate_citation_mla,
-    generate_citations_markdown,
-    format_authors_apa,
-    format_authors_mla,
-    extract_citations_from_markdown,
-)
-from infrastructure.publishing.metadata import (
-    extract_publication_metadata,
-    validate_doi,
-    generate_publication_summary,
-    create_academic_profile_data,
-    generate_publication_metrics,
-    calculate_complexity_score,
-    create_repository_metadata,
-)
-from infrastructure.publishing.platforms import (
-    publish_to_zenodo,
-    prepare_arxiv_submission,
-    create_github_release,
-)
-from infrastructure.publishing.models import (
-    PublicationMetadata,
-    CitationStyle,
-)
+    extract_citations_from_markdown, format_authors_apa, format_authors_mla,
+    generate_citation_apa, generate_citation_bibtex, generate_citation_mla,
+    generate_citations_markdown)
+from infrastructure.publishing.metadata import (calculate_complexity_score,
+                                                create_academic_profile_data,
+                                                create_repository_metadata,
+                                                extract_publication_metadata,
+                                                generate_publication_metrics,
+                                                generate_publication_summary,
+                                                validate_doi)
+from infrastructure.publishing.models import CitationStyle, PublicationMetadata
+from infrastructure.publishing.platforms import (create_github_release,
+                                                 prepare_arxiv_submission,
+                                                 publish_to_zenodo)
 
 
-def calculate_file_hash(file_path: Path, algorithm: str = 'sha256') -> Optional[str]:
+def calculate_file_hash(file_path: Path, algorithm: str = "sha256") -> Optional[str]:
     """Calculate hash of a file for integrity verification.
 
     Args:
@@ -65,7 +53,7 @@ def calculate_file_hash(file_path: Path, algorithm: str = 'sha256') -> Optional[
 
     try:
         hash_func = hashlib.new(algorithm)
-        with open(file_path, 'rb') as f:
+        with open(file_path, "rb") as f:
             while chunk := f.read(8192):
                 hash_func.update(chunk)
         return hash_func.hexdigest()
@@ -73,7 +61,9 @@ def calculate_file_hash(file_path: Path, algorithm: str = 'sha256') -> Optional[
         return None
 
 
-def create_publication_package(output_dir: Path, metadata: PublicationMetadata) -> Dict[str, Any]:
+def create_publication_package(
+    output_dir: Path, metadata: PublicationMetadata
+) -> Dict[str, Any]:
     """Create a publication package with all necessary files.
 
     Args:
@@ -84,28 +74,24 @@ def create_publication_package(output_dir: Path, metadata: PublicationMetadata) 
         Dictionary with package information
     """
     package_info = {
-        'package_name': f"{metadata.title.replace(' ', '_').lower()}",
-        'files_included': [],
-        'metadata': asdict(metadata),
-        'package_hash': '',
-        'created_at': datetime.now().isoformat()
+        "package_name": f"{metadata.title.replace(' ', '_').lower()}",
+        "files_included": [],
+        "metadata": asdict(metadata),
+        "package_hash": "",
+        "created_at": datetime.now().isoformat(),
     }
 
     # Collect files to include
     package_files = []
 
     # PDF files
-    pdf_dir = output_dir / 'pdf'
+    pdf_dir = output_dir / "pdf"
     if pdf_dir.exists():
-        for pdf_file in pdf_dir.glob('*.pdf'):
+        for pdf_file in pdf_dir.glob("*.pdf"):
             package_files.append(pdf_file)
 
     # Source files
-    source_files = [
-        'README.md',
-        'pyproject.toml',
-        'LICENSE'
-    ]
+    source_files = ["README.md", "pyproject.toml", "LICENSE"]
 
     for source_file in source_files:
         file_path = Path(source_file)
@@ -119,11 +105,13 @@ def create_publication_package(output_dir: Path, metadata: PublicationMetadata) 
             file_hash = calculate_file_hash(file_path)
             if file_hash:
                 file_hashes.append(file_hash)
-            package_info['files_included'].append(str(file_path))
+            package_info["files_included"].append(str(file_path))
 
     if file_hashes:
-        combined_hash = ''.join(sorted(file_hashes))
-        package_info['package_hash'] = hashlib.sha256(combined_hash.encode()).hexdigest()
+        combined_hash = "".join(sorted(file_hashes))
+        package_info["package_hash"] = hashlib.sha256(
+            combined_hash.encode()
+        ).hexdigest()
 
     return package_info
 
@@ -214,7 +202,7 @@ def create_submission_checklist(metadata: PublicationMetadata) -> str:
     return checklist
 
 
-def generate_doi_badge(doi: str, style: str = 'zenodo') -> str:
+def generate_doi_badge(doi: str, style: str = "zenodo") -> str:
     """Generate DOI badge markdown.
 
     Args:
@@ -224,11 +212,13 @@ def generate_doi_badge(doi: str, style: str = 'zenodo') -> str:
     Returns:
         Markdown formatted badge
     """
-    if style == 'zenodo':
-        return f"[![DOI](https://zenodo.org/badge/DOI/{doi}.svg)](https://doi.org/{doi})"
-    elif style == 'github':
+    if style == "zenodo":
+        return (
+            f"[![DOI](https://zenodo.org/badge/DOI/{doi}.svg)](https://doi.org/{doi})"
+        )
+    elif style == "github":
         return f"[![DOI](https://img.shields.io/badge/DOI-{doi}-blue.svg)](https://doi.org/{doi})"
-    elif style == 'shields':
+    elif style == "shields":
         return f"[![DOI](https://img.shields.io/badge/DOI-{doi.replace('/', '%2F')}-informational)](https://doi.org/{doi})"
     else:
         return f"**DOI**: [{doi}](https://doi.org/{doi})"
@@ -244,7 +234,7 @@ def create_publication_announcement(metadata: PublicationMetadata) -> str:
         Markdown formatted announcement
     """
     from infrastructure.publishing.citations import generate_citation_apa
-    
+
     announcement = f"""# 🚀 New Publication: {metadata.title}
 
 **Authors**: {', '.join(metadata.authors)}
@@ -286,7 +276,9 @@ def create_publication_announcement(metadata: PublicationMetadata) -> str:
     return announcement
 
 
-def validate_publication_readiness(markdown_files: List[Path], pdf_files: List[Path]) -> Dict[str, Any]:
+def validate_publication_readiness(
+    markdown_files: List[Path], pdf_files: List[Path]
+) -> Dict[str, Any]:
     """Validate that the project is ready for publication.
 
     Args:
@@ -296,62 +288,74 @@ def validate_publication_readiness(markdown_files: List[Path], pdf_files: List[P
     Returns:
         Dictionary with publication readiness assessment
     """
-    from infrastructure.publishing.citations import extract_citations_from_markdown
-    
+    from infrastructure.publishing.citations import \
+        extract_citations_from_markdown
+
     readiness = {
-        'ready_for_publication': True,
-        'completeness_score': 0,
-        'missing_elements': [],
-        'recommendations': []
+        "ready_for_publication": True,
+        "completeness_score": 0,
+        "missing_elements": [],
+        "recommendations": [],
     }
 
     # Check document completeness by reading file content
     all_content = ""
     for md_file in markdown_files:
         try:
-            with open(md_file, 'r', encoding='utf-8') as f:
+            with open(md_file, "r", encoding="utf-8") as f:
                 all_content += f.read()
         except:
             continue
 
-    has_abstract = 'abstract' in all_content.lower()
-    has_introduction = 'introduction' in all_content.lower()
-    has_methodology = 'methodology' in all_content.lower()
-    has_results = 'results' in all_content.lower() or 'experimental' in all_content.lower()
-    has_conclusion = 'conclusion' in all_content.lower()
+    has_abstract = "abstract" in all_content.lower()
+    has_introduction = "introduction" in all_content.lower()
+    has_methodology = "methodology" in all_content.lower()
+    has_results = (
+        "results" in all_content.lower() or "experimental" in all_content.lower()
+    )
+    has_conclusion = "conclusion" in all_content.lower()
 
     score = 0
-    if has_abstract: score += 15
-    if has_introduction: score += 15
-    if has_methodology: score += 20
-    if has_results: score += 20
-    if has_conclusion: score += 15
+    if has_abstract:
+        score += 15
+    if has_introduction:
+        score += 15
+    if has_methodology:
+        score += 20
+    if has_results:
+        score += 20
+    if has_conclusion:
+        score += 15
 
-    readiness['completeness_score'] = score
+    readiness["completeness_score"] = score
 
     if score < 80:
-        readiness['ready_for_publication'] = False
-        readiness['missing_elements'].append("Document structure incomplete")
+        readiness["ready_for_publication"] = False
+        readiness["missing_elements"].append("Document structure incomplete")
 
     # Check PDF generation
     if not pdf_files:
-        readiness['ready_for_publication'] = False
-        readiness['missing_elements'].append("No PDF files generated")
+        readiness["ready_for_publication"] = False
+        readiness["missing_elements"].append("No PDF files generated")
 
     # Check for citations
     citations = extract_citations_from_markdown(markdown_files)
     if not citations:
-        readiness['recommendations'].append("Consider adding citations to related work")
+        readiness["recommendations"].append("Consider adding citations to related work")
 
     # Check for figures
-    figure_count = len(re.findall(r'\\includegraphics', all_content))
+    figure_count = len(re.findall(r"\\includegraphics", all_content))
     if figure_count == 0:
-        readiness['recommendations'].append("Consider adding figures to illustrate key concepts")
+        readiness["recommendations"].append(
+            "Consider adding figures to illustrate key concepts"
+        )
 
     # Final assessment
-    if readiness['ready_for_publication']:
-        readiness['recommendations'].append("Project appears ready for publication!")
+    if readiness["ready_for_publication"]:
+        readiness["recommendations"].append("Project appears ready for publication!")
     else:
-        readiness['recommendations'].append("Address missing elements before publication")
+        readiness["recommendations"].append(
+            "Address missing elements before publication"
+        )
 
     return readiness

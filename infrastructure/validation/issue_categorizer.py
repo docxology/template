@@ -10,22 +10,13 @@ from __future__ import annotations
 import re
 from typing import Dict, List, Union
 
-from infrastructure.validation.doc_models import (
-    LinkIssue,
-    AccuracyIssue,
-    CompletenessGap,
-    QualityIssue
-)
+from infrastructure.validation.doc_models import (AccuracyIssue,
+                                                  CompletenessGap, LinkIssue,
+                                                  QualityIssue)
 from infrastructure.validation.known_exceptions import (
-    is_valid_directory_reference,
-    is_template_pattern,
-    is_code_example,
-    is_mermaid_artifact,
-    is_table_artifact,
-    is_code_block_artifact,
-    is_latex_reference,
-    is_venv_reference,
-)
+    is_code_block_artifact, is_code_example, is_latex_reference,
+    is_mermaid_artifact, is_table_artifact, is_template_pattern,
+    is_valid_directory_reference, is_venv_reference)
 
 # Type alias for any issue type
 Issue = Union[LinkIssue, AccuracyIssue, CompletenessGap, QualityIssue]
@@ -41,16 +32,16 @@ def categorize_by_type(issues: List[Issue]) -> Dict[str, List[Issue]]:
         Dictionary mapping category names to lists of issues
     """
     categories = {
-        'critical': [],
-        'error': [],
-        'warning': [],
-        'info': [],
-        'broken_links': [],
-        'missing_files': [],
-        'invalid_references': [],
-        'code_issues': [],
-        'formatting_issues': [],
-        'false_positives': []
+        "critical": [],
+        "error": [],
+        "warning": [],
+        "info": [],
+        "broken_links": [],
+        "missing_files": [],
+        "invalid_references": [],
+        "code_issues": [],
+        "formatting_issues": [],
+        "false_positives": [],
     }
 
     for issue in issues:
@@ -62,11 +53,11 @@ def categorize_by_type(issues: List[Issue]) -> Dict[str, List[Issue]]:
         issue_type = _get_issue_type(issue)
         # Map issue types to category names
         type_mapping = {
-            'link_issue': 'broken_links',
-            'broken_link': 'broken_links',  # Also map the actual issue_type from LinkIssue
-            'accuracy_issue': 'invalid_references',
-            'quality_issue': 'code_issues',
-            'completeness_gap': 'missing_files'
+            "link_issue": "broken_links",
+            "broken_link": "broken_links",  # Also map the actual issue_type from LinkIssue
+            "accuracy_issue": "invalid_references",
+            "quality_issue": "code_issues",
+            "completeness_gap": "missing_files",
         }
         category_key = type_mapping.get(issue_type, issue_type)
         if category_key in categories:
@@ -74,7 +65,7 @@ def categorize_by_type(issues: List[Issue]) -> Dict[str, List[Issue]]:
 
         # Check for false positives
         if is_false_positive(issue):
-            categories['false_positives'].append(issue)
+            categories["false_positives"].append(issue)
 
     return categories
 
@@ -89,39 +80,60 @@ def assign_severity(issue: Issue) -> str:
         Severity level: 'critical', 'error', 'warning', or 'info'
     """
     # Check explicit severity first (respect user's explicit settings)
-    if hasattr(issue, 'severity'):
+    if hasattr(issue, "severity"):
         severity = issue.severity.lower()
-        if severity == 'error':
-            return 'critical'  # Map error to critical for consistency
-        elif severity in ['critical', 'warning', 'info']:
+        if severity == "error":
+            return "critical"  # Map error to critical for consistency
+        elif severity in ["critical", "warning", "info"]:
             return severity
 
     # Fallback to content-based severity analysis
     issue_text = _get_issue_text(issue).lower()
 
     # Critical issues
-    if any(keyword in issue_text for keyword in [
-        'file not found', 'does not exist', 'critical', 'broken import',
-        'module not found', 'syntax error'
-    ]):
-        return 'critical'
+    if any(
+        keyword in issue_text
+        for keyword in [
+            "file not found",
+            "does not exist",
+            "critical",
+            "broken import",
+            "module not found",
+            "syntax error",
+        ]
+    ):
+        return "critical"
 
     # Error issues
-    if any(keyword in issue_text for keyword in [
-        'invalid reference', 'broken link', 'anchor not found',
-        'missing file', 'path error', 'import error'
-    ]):
-        return 'error'
+    if any(
+        keyword in issue_text
+        for keyword in [
+            "invalid reference",
+            "broken link",
+            "anchor not found",
+            "missing file",
+            "path error",
+            "import error",
+        ]
+    ):
+        return "error"
 
     # Warning issues
-    if any(keyword in issue_text for keyword in [
-        'code block', 'directory structure', 'placeholder',
-        'formatting', 'consistency', 'recommendation'
-    ]):
-        return 'warning'
+    if any(
+        keyword in issue_text
+        for keyword in [
+            "code block",
+            "directory structure",
+            "placeholder",
+            "formatting",
+            "consistency",
+            "recommendation",
+        ]
+    ):
+        return "warning"
 
     # Info issues - minor or informational
-    return 'info'
+    return "info"
 
 
 def is_false_positive(issue: Issue) -> bool:
@@ -134,7 +146,7 @@ def is_false_positive(issue: Issue) -> bool:
         True if issue appears to be a false positive
     """
     issue_text = _get_issue_text(issue).lower()
-    target = _get_issue_target(issue) if hasattr(issue, 'target') else ''
+    target = _get_issue_target(issue) if hasattr(issue, "target") else ""
     target_lower = target.lower()
 
     # Check valid directory references (directories, not files)
@@ -170,35 +182,39 @@ def is_false_positive(issue: Issue) -> bool:
         return True
 
     # Markdown table formatting artifacts (specific patterns)
-    if 'infrastructure/agents.md]' in target_lower or 'infrastructure/readme.md]' in target_lower:
+    if (
+        "infrastructure/agents.md]" in target_lower
+        or "infrastructure/readme.md]" in target_lower
+    ):
         return True
 
     # Check if issue message indicates it's a directory reference
-    if 'file does not exist' in issue_text and target.endswith('/'):
+    if "file does not exist" in issue_text and target.endswith("/"):
         # If target ends with /, it's likely a directory reference, not a file
         return True
-    
+
     # Check for code literals (numbers, quoted strings) - these are code examples, not file paths
     import re
+
     target_clean = target.strip()
-    if re.match(r'^\d+$', target_clean):  # Pure number like "42"
+    if re.match(r"^\d+$", target_clean):  # Pure number like "42"
         return True
     if re.match(r'^"[^"]+"$', target_clean):  # Quoted string like "hello"
         return True
     if re.match(r"^'[^']+'$", target_clean):  # Single-quoted string
         return True
-    
+
     # Check if target is very short and doesn't look like a path
-    if target_clean and len(target_clean) < 3 and '/' not in target_clean:
+    if target_clean and len(target_clean) < 3 and "/" not in target_clean:
         return True
 
     # Check for code block path issues that are formatting artifacts
-    if hasattr(issue, 'issue_type') and issue.issue_type == 'code_block_path':
+    if hasattr(issue, "issue_type") and issue.issue_type == "code_block_path":
         # If the path contains formatting artifacts, it's likely a false positive
         if is_code_block_artifact(target):
             return True
         # If the path is clearly a directory reference in a code block
-        if target.endswith('/') and is_valid_directory_reference(target):
+        if target.endswith("/") and is_valid_directory_reference(target):
             return True
 
     return False
@@ -260,9 +276,24 @@ def prioritize_issues(issues: List[Issue]) -> List[Issue]:
     Returns:
         Sorted list with highest priority issues first
     """
+
     def sort_key(issue: Issue) -> tuple:
+        """Generate a sort key tuple for prioritizing issues.
+
+        Creates a tuple for sorting issues by severity (critical first),
+        then by issue type, then by file path for consistent ordering.
+
+        Args:
+            issue: The issue to generate a sort key for. Can be any issue
+                type (LinkIssue, AccuracyIssue, CompletenessGap, QualityIssue).
+
+        Returns:
+            tuple: A 3-element tuple of (severity_order, issue_type, file_path)
+                where severity_order is an integer (0=critical, 1=error,
+                2=warning, 3=info, 4=unknown).
+        """
         severity = assign_severity(issue)
-        severity_order = {'critical': 0, 'error': 1, 'warning': 2, 'info': 3}
+        severity_order = {"critical": 0, "error": 1, "warning": 2, "info": 3}
         issue_type = _get_issue_type(issue)
 
         return (severity_order.get(severity, 4), issue_type, _get_issue_file(issue))
@@ -280,122 +311,122 @@ def generate_issue_summary(issues: List[Issue]) -> Dict[str, int]:
         Dictionary with summary statistics
     """
     summary = {
-        'total': len(issues),
-        'by_severity': {'critical': 0, 'error': 0, 'warning': 0, 'info': 0},
-        'by_severity_flag': {'red': 0, 'yellow': 0, 'green': 0},
-        'by_type': {},
-        'false_positives': 0
+        "total": len(issues),
+        "by_severity": {"critical": 0, "error": 0, "warning": 0, "info": 0},
+        "by_severity_flag": {"red": 0, "yellow": 0, "green": 0},
+        "by_type": {},
+        "false_positives": 0,
     }
 
     for issue in issues:
         severity = assign_severity(issue)
-        summary['by_severity'][severity] += 1
+        summary["by_severity"][severity] += 1
 
         severity_flag = get_severity_flag(issue)
-        summary['by_severity_flag'][severity_flag] += 1
+        summary["by_severity_flag"][severity_flag] += 1
 
         issue_type = _get_issue_type(issue)
-        summary['by_type'][issue_type] = summary['by_type'].get(issue_type, 0) + 1
+        summary["by_type"][issue_type] = summary["by_type"].get(issue_type, 0) + 1
 
         if is_false_positive(issue):
-            summary['false_positives'] += 1
+            summary["false_positives"] += 1
 
     return summary
 
 
 def _get_issue_text(issue: Issue) -> str:
     """Extract text content from any issue type."""
-    if hasattr(issue, 'issue_message'):
+    if hasattr(issue, "issue_message"):
         return issue.issue_message
-    elif hasattr(issue, 'description'):
+    elif hasattr(issue, "description"):
         return issue.description
-    elif hasattr(issue, 'text'):
+    elif hasattr(issue, "text"):
         return issue.text
     return str(issue)
 
 
 def _get_issue_target(issue: Issue) -> str:
     """Extract target/path from any issue type."""
-    if hasattr(issue, 'target'):
+    if hasattr(issue, "target"):
         return issue.target
     return ""
 
 
 def _get_issue_file(issue: Issue) -> str:
     """Extract file path from any issue type."""
-    if hasattr(issue, 'file'):
+    if hasattr(issue, "file"):
         return issue.file
-    elif hasattr(issue, 'source_file'):
+    elif hasattr(issue, "source_file"):
         return issue.source_file
     return "unknown"
 
 
 def _get_issue_type(issue: Issue) -> str:
     """Extract issue type from any issue type."""
-    if hasattr(issue, 'issue_type'):
+    if hasattr(issue, "issue_type"):
         return issue.issue_type
     elif isinstance(issue, LinkIssue):
-        return 'link_issue'
+        return "link_issue"
     elif isinstance(issue, AccuracyIssue):
-        return 'accuracy_issue'
+        return "accuracy_issue"
     elif isinstance(issue, CompletenessGap):
-        return 'completeness_gap'
+        return "completeness_gap"
     elif isinstance(issue, QualityIssue):
-        return 'quality_issue'
-    return 'unknown'
+        return "quality_issue"
+    return "unknown"
 
 
 def get_severity_flag(issue: Issue) -> str:
     """Get severity flag for an issue: 'red', 'yellow', or 'green'.
-    
+
     Red flags are critical issues that need immediate attention.
     Yellow flags are warnings that should be reviewed.
     Green flags are known exceptions or informational issues.
-    
+
     Args:
         issue: Issue to evaluate
-        
+
     Returns:
         Severity flag: 'red', 'yellow', or 'green'
     """
     # Known exceptions (false positives) are always green
     if is_false_positive(issue):
-        return 'green'
-    
+        return "green"
+
     # Get severity level
     severity = assign_severity(issue)
-    
+
     # Map severity to flags
-    if severity in ['critical', 'error']:
-        return 'red'
-    elif severity == 'warning':
-        return 'yellow'
+    if severity in ["critical", "error"]:
+        return "red"
+    elif severity == "warning":
+        return "yellow"
     else:
-        return 'green'
+        return "green"
 
 
 def is_directory_reference(issue: Issue) -> bool:
     """Check if issue is about a directory reference (which is valid).
-    
+
     Args:
         issue: Issue to evaluate
-        
+
     Returns:
         True if issue is about a valid directory reference
     """
     target = _get_issue_target(issue)
     if not target:
         return False
-    
+
     # Check if target is a directory reference
     if is_valid_directory_reference(target):
         return True
-    
+
     # Check if issue message indicates directory
     issue_text = _get_issue_text(issue).lower()
-    if 'file does not exist' in issue_text and target.endswith('/'):
+    if "file does not exist" in issue_text and target.endswith("/"):
         return True
-    
+
     return False
 
 
@@ -406,22 +437,22 @@ def validate_issue_patterns() -> Dict[str, List[str]]:
         Dictionary mapping issue types to lists of validation patterns
     """
     return {
-        'broken_links': [
-            r'\[([^\]]+)\]\(([^)]+)\)',  # Markdown links
-            r'<a href="([^"]+)">',        # HTML links
+        "broken_links": [
+            r"\[([^\]]+)\]\(([^)]+)\)",  # Markdown links
+            r'<a href="([^"]+)">',  # HTML links
         ],
-        'file_references': [
-            r'`([^`]+)`',                 # Inline code
-            r'```[\s\S]*?```',           # Code blocks
-            r"'([^']+)'",                # Single quotes
-            r'"([^"]+)"',                # Double quotes
+        "file_references": [
+            r"`([^`]+)`",  # Inline code
+            r"```[\s\S]*?```",  # Code blocks
+            r"'([^']+)'",  # Single quotes
+            r'"([^"]+)"',  # Double quotes
         ],
-        'latex_references': [
-            r'\\ref\{([^}]+)\}',          # LaTeX references
-            r'\\eqref\{([^}]+)\}',        # LaTeX equation references
-            r'\\cite\{([^}]+)\}',         # LaTeX citations
+        "latex_references": [
+            r"\\ref\{([^}]+)\}",  # LaTeX references
+            r"\\eqref\{([^}]+)\}",  # LaTeX equation references
+            r"\\cite\{([^}]+)\}",  # LaTeX citations
         ],
-        'anchor_links': [
-            r'#([a-zA-Z][\w-]*)',       # Markdown anchors
-        ]
+        "anchor_links": [
+            r"#([a-zA-Z][\w-]*)",  # Markdown anchors
+        ],
     }

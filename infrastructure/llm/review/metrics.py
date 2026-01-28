@@ -1,4 +1,5 @@
 """Metrics classes and calculations for LLM review generation."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -8,6 +9,7 @@ from typing import Dict
 @dataclass
 class ReviewMetrics:
     """Metrics for a single review generation."""
+
     input_chars: int = 0
     input_words: int = 0
     input_tokens_est: int = 0  # Estimated tokens (~4 chars/token)
@@ -21,6 +23,7 @@ class ReviewMetrics:
 @dataclass
 class ManuscriptMetrics:
     """Metrics for the manuscript input."""
+
     total_chars: int = 0
     total_words: int = 0
     total_tokens_est: int = 0
@@ -31,6 +34,7 @@ class ManuscriptMetrics:
 @dataclass
 class SessionMetrics:
     """Complete metrics for the review session."""
+
     manuscript: ManuscriptMetrics = field(default_factory=ManuscriptMetrics)
     reviews: Dict[str, ReviewMetrics] = field(default_factory=dict)
     total_generation_time: float = 0.0
@@ -42,6 +46,7 @@ class SessionMetrics:
 @dataclass
 class StreamingMetrics:
     """Metrics for streaming response generation."""
+
     chunk_count: int = 0
     total_chars: int = 0
     total_tokens_est: int = 0  # Estimated tokens (~4 chars/token)
@@ -56,21 +61,11 @@ class StreamingMetrics:
 
 def estimate_tokens(text: str) -> int:
     """Estimate token count from text (approximately 4 characters per token).
-    
+
     Args:
         text: Input text
-        
+
     Returns:
         Estimated token count
     """
     return len(text) // 4
-
-
-
-
-
-
-
-
-
-

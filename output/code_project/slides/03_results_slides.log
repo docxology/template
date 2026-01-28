@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  8 JAN 2026 14:57
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  28 JAN 2026 06:35
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1322,27 +1322,27 @@ Package caption Info: End \AtBeginDocument code.
 (/Users/4d/Documents/GitHub/template/projects/code_project/output/slides/03_res
 ults_slides.nav)
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.8961pt on input line 424.
+(Font)              scaled to size 7.8961pt on input line 485.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.64008pt on input line 424.
+(Font)              scaled to size 5.64008pt on input line 485.
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 4
-24.
+85.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 11.28131pt on input line 424.
+(Font)              scaled to size 11.28131pt on input line 485.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.89691pt on input line 424.
+(Font)              scaled to size 7.89691pt on input line 485.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.64066pt on input line 424.
+(Font)              scaled to size 5.64066pt on input line 485.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 11.27914pt on input line 424.
+(Font)              scaled to size 11.27914pt on input line 485.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.8954pt on input line 424.
+(Font)              scaled to size 7.8954pt on input line 485.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.63957pt on input line 424.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 424
+(Font)              scaled to size 5.63957pt on input line 485.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 485
 .
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
@@ -1351,7 +1351,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 424
+LaTeX Font Info:    Trying to load font information for U+msb on input line 485
 .
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -1363,36 +1363,36 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 File: ../figures/convergence_plot.png Graphic file (type bmp)
 <../figures/convergence_plot.png>
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 10.30151pt on input line 424.
+(Font)              scaled to size 10.30151pt on input line 485.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.21106pt on input line 424.
+(Font)              scaled to size 7.21106pt on input line 485.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.15076pt on input line 424.
+(Font)              scaled to size 5.15076pt on input line 485.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 10.30258pt on input line 424.
+(Font)              scaled to size 10.30258pt on input line 485.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.2118pt on input line 424.
+(Font)              scaled to size 7.2118pt on input line 485.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.15129pt on input line 424.
+(Font)              scaled to size 5.15129pt on input line 485.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 10.3006pt on input line 424.
+(Font)              scaled to size 10.3006pt on input line 485.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.21042pt on input line 424.
+(Font)              scaled to size 7.21042pt on input line 485.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.1503pt on input line 424.
+(Font)              scaled to size 5.1503pt on input line 485.
 File: ../figures/step_size_sensitivity.png Graphic file (type bmp)
 <../figures/step_size_sensitivity.png>
 
 Missing character: There is no α (U+03B1) in font [lmsans10-regular]:mapping=te
 x-text;!
 
-Overfull \hbox (7.61992pt too wide) in paragraph at lines 424--424
+Overfull \hbox (7.61992pt too wide) in paragraph at lines 485--485
 []\TU/lmss/m/n/10.95 Converged  
  []
 
 
 LaTeX Warning: Citation `nesterov2013gradient' on page 1 undefined on input lin
-e 424.
+e 485.
 
 File: ../figures/convergence_rate_comparison.png Graphic file (type bmp)
 <../figures/convergence_rate_comparison.png>
@@ -1402,7 +1402,7 @@ File: mt-LatinModernRoman.cfg 2021/02/21 v1.1 microtype config. file: Latin Mod
 ern Roman (RS)
 )
 
-LaTeX Warning: Citation `polyak1964some' on page 1 undefined on input line 424.
+LaTeX Warning: Citation `polyak1964some' on page 1 undefined on input line 485.
 
 
 File: ../figures/algorithm_complexity.png Graphic file (type bmp)
@@ -1412,7 +1412,7 @@ File: ../figures/performance_benchmark.png Graphic file (type bmp)
 File: ../figures/stability_analysis.png Graphic file (type bmp)
 <../figures/stability_analysis.png>
 
-Overfull \vbox (3321.40245pt too high) detected at line 424
+Overfull \vbox (3480.95471pt too high) detected at line 485
  []
 
 
@@ -1444,7 +1444,7 @@ LaTeX Warning: There were undefined references.
 Here is how much of TeX's memory you used:
  31213 strings out of 473832
  631876 string characters out of 5729482
- 1302582 words of memory out of 5000000
+ 1313508 words of memory out of 5000000
  53700 multiletter control sequences out of 15000+600000
  565274 words of font info for 86 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191

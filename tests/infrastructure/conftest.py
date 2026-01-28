@@ -3,9 +3,11 @@
 Provides shared fixtures and utilities for testing infrastructure modules.
 All fixtures use real implementations following the 'no mocks' policy.
 """
+
 import os
-import pytest
 from pathlib import Path
+
+import pytest
 import yaml
 
 # Force headless backend for matplotlib in tests
@@ -20,6 +22,7 @@ TESTS_INFRASTRUCTURE = Path(__file__).parent.resolve()
 # IMPORTANT: Do NOT add tests/infrastructure to sys.path - it would shadow
 # infrastructure.* imports with tests/infrastructure/* packages
 import sys
+
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
@@ -27,6 +30,7 @@ if str(ROOT) not in sys.path:
 # (adding tests/infrastructure to sys.path would cause tests/infrastructure/validation
 # to shadow infrastructure/validation)
 import importlib.util
+
 _helpers_path = TESTS_INFRASTRUCTURE / "_test_helpers.py"
 _spec = importlib.util.spec_from_file_location("_test_helpers", _helpers_path)
 _test_helpers = importlib.util.module_from_spec(_spec)
@@ -48,10 +52,11 @@ cleanup_test_directory = _test_helpers.cleanup_test_directory
 # Path Fixtures
 # =============================================================================
 
+
 @pytest.fixture
 def repo_root() -> Path:
     """Get the repository root directory.
-    
+
     Returns:
         Path to the repository root (where pyproject.toml is located)
     """
@@ -82,28 +87,21 @@ def project_config_structure(tmp_path):
 def sample_project_config():
     """Return sample project configuration data."""
     return {
-        'paper': {
-            'title': 'Test Research Paper',
-            'subtitle': 'A comprehensive study',
-            'version': '1.0'
+        "paper": {
+            "title": "Test Research Paper",
+            "subtitle": "A comprehensive study",
+            "version": "1.0",
         },
-        'authors': [
+        "authors": [
             {
-                'name': 'Dr. Test Author',
-                'orcid': '0000-0000-0000-1234',
-                'email': 'test@example.com',
-                'corresponding': True
+                "name": "Dr. Test Author",
+                "orcid": "0000-0000-0000-1234",
+                "email": "test@example.com",
+                "corresponding": True,
             }
         ],
-        'publication': {
-            'doi': '10.5281/zenodo.12345678'
-        },
-        'llm': {
-            'translations': {
-                'enabled': True,
-                'languages': ['zh', 'hi', 'ru']
-            }
-        }
+        "publication": {"doi": "10.5281/zenodo.12345678"},
+        "llm": {"translations": {"enabled": True, "languages": ["zh", "hi", "ru"]}},
     }
 
 
@@ -116,7 +114,7 @@ def project_config_file(project_config_structure, sample_project_config):
     """
     repo_root, config_file = project_config_structure
 
-    with open(config_file, 'w') as f:
+    with open(config_file, "w") as f:
         yaml.dump(sample_project_config, f)
 
     return config_file
@@ -135,7 +133,17 @@ def output_directory_structure(tmp_path):
     output_dir.mkdir()
 
     # Create standard subdirectories
-    subdirs = ["pdf", "web", "slides", "figures", "data", "reports", "simulations", "llm", "logs"]
+    subdirs = [
+        "pdf",
+        "web",
+        "slides",
+        "figures",
+        "data",
+        "reports",
+        "simulations",
+        "llm",
+        "logs",
+    ]
     for subdir in subdirs:
         (output_dir / subdir).mkdir()
 
@@ -155,6 +163,7 @@ def pdf_file_fixture(tmp_path):
 
     try:
         from reportlab.pdfgen import canvas
+
         c = canvas.Canvas(str(pdf_file))
         c.drawString(100, 750, "Test PDF content for validation testing")
         c.drawString(100, 730, "This is a sample PDF file created for unit tests.")
@@ -162,7 +171,9 @@ def pdf_file_fixture(tmp_path):
         c.save()
     except ImportError:
         # Fallback if reportlab not available - create a fake PDF-like file
-        pdf_file.write_bytes(b"%PDF-1.4\n1 0 obj\n<<\n/Type /Catalog\n/Pages 2 0 R\n>>\nendobj\n2 0 obj\n<<\n/Type /Pages\n/Kids [3 0 R]\n/Count 1\n>>\nendobj\n3 0 obj\n<<\n/Type /Page\n/Parent 2 0 R\n/MediaBox [0 0 612 792]\n/Contents 4 0 R\n>>\nendobj\n4 0 obj\n<<\n/Length 44\n>>\nstream\nBT\n72 720 Td\n/F0 12 Tf\n(Test PDF Content) Tj\nET\nendstream\nendobj\nxref\n0 5\n0000000000 65535 f\n0000000009 00000 n\n0000000058 00000 n\n0000000115 00000 n\n0000000200 00000 n\ntrailer\n<<\n/Size 5\n/Root 1 0 R\n>>\nstartxref\n284\n%%EOF")
+        pdf_file.write_bytes(
+            b"%PDF-1.4\n1 0 obj\n<<\n/Type /Catalog\n/Pages 2 0 R\n>>\nendobj\n2 0 obj\n<<\n/Type /Pages\n/Kids [3 0 R]\n/Count 1\n>>\nendobj\n3 0 obj\n<<\n/Type /Page\n/Parent 2 0 R\n/MediaBox [0 0 612 792]\n/Contents 4 0 R\n>>\nendobj\n4 0 obj\n<<\n/Length 44\n>>\nstream\nBT\n72 720 Td\n/F0 12 Tf\n(Test PDF Content) Tj\nET\nendstream\nendobj\nxref\n0 5\n0000000000 65535 f\n0000000009 00000 n\n0000000058 00000 n\n0000000115 00000 n\n0000000200 00000 n\ntrailer\n<<\n/Size 5\n/Root 1 0 R\n>>\nstartxref\n284\n%%EOF"
+        )
 
     return pdf_file
 
@@ -182,6 +193,7 @@ def output_with_pdf(output_directory_structure, pdf_file_fixture):
 
     return output_dir
 
+
 @pytest.fixture(scope="session")
 def ensure_ollama_for_tests():
     """Ensure Ollama is running and functional for tests.
@@ -195,12 +207,10 @@ def ensure_ollama_for_tests():
     This fixture runs once per test session and ensures all tests
     marked with @pytest.mark.requires_ollama have a working Ollama instance.
     """
-    from infrastructure.llm.utils.ollama import (
-        is_ollama_running,
-        ensure_ollama_ready,
-        get_model_names,
-    )
     from infrastructure.core.logging_utils import get_logger
+    from infrastructure.llm.utils.ollama import (ensure_ollama_ready,
+                                                 get_model_names,
+                                                 is_ollama_running)
 
     logger = get_logger(__name__)
 
@@ -211,9 +221,9 @@ def ensure_ollama_for_tests():
         logger.warning("⚠️  Ollama server is not running - attempting to start...")
         if not ensure_ollama_ready(auto_start=True):
             pytest.fail(
-                "\n" + "="*80 + "\n"
+                "\n" + "=" * 80 + "\n"
                 "❌ CRITICAL: Ollama server cannot be started for tests!\n"
-                "="*80 + "\n"
+                "=" * 80 + "\n"
                 "Tests require a working Ollama installation.\n\n"
                 "Troubleshooting:\n"
                 "  1. Install Ollama: https://ollama.ai\n"
@@ -222,24 +232,26 @@ def ensure_ollama_for_tests():
                 "  4. Check if port 11434 is available: lsof -i :11434\n"
                 "  5. Install at least one model: ollama pull llama3-gradient\n\n"
                 "To skip Ollama tests: pytest -m 'not requires_ollama'\n"
-                "="*80
+                "=" * 80
             )
 
     # Verify Ollama has models available
     models = get_model_names()
     if not models:
         pytest.fail(
-            "\n" + "="*80 + "\n"
+            "\n" + "=" * 80 + "\n"
             "❌ CRITICAL: Ollama server is running but has no models!\n"
-            "="*80 + "\n"
+            "=" * 80 + "\n"
             "Tests require at least one Ollama model to be installed.\n\n"
             "Install a model:\n"
             "  ollama pull llama3-gradient    # Recommended (4.7GB, 256K context)\n"
             "  ollama pull llama3.1:latest     # Alternative (4.7GB, 128K context)\n"
             "  ollama pull gemma2:2b          # Small/fast option (2B params)\n\n"
             "Verify models: ollama list\n"
-            "="*80
+            "=" * 80
         )
 
-    logger.info(f"✓ Ollama ready for tests with {len(models)} model(s): {', '.join(models[:3])}")
+    logger.info(
+        f"✓ Ollama ready for tests with {len(models)} model(s): {', '.join(models[:3])}"
+    )
     return True

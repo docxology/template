@@ -14,57 +14,43 @@ All functions follow the thin orchestrator pattern and maintain
 comprehensive test coverage requirements.
 """
 
-# Import data classes
-from infrastructure.scientific.stability import StabilityTest
-from infrastructure.scientific.benchmarking import BenchmarkResult
-
-# Import stability functions
-from infrastructure.scientific.stability import check_numerical_stability
-
 # Import benchmarking functions
 from infrastructure.scientific.benchmarking import (
-    benchmark_function,
-    generate_performance_report,
-)
-
+    BenchmarkResult, benchmark_function, generate_performance_report)
 # Import documentation functions
 from infrastructure.scientific.documentation import (
-    generate_scientific_documentation,
-    generate_api_documentation,
-)
-
-# Import validation functions
-from infrastructure.scientific.validation import (
-    validate_scientific_implementation,
-    validate_scientific_best_practices,
-    check_research_compliance,
-)
-
+    generate_api_documentation, generate_scientific_documentation)
+# Import stability functions
+# Import data classes
+from infrastructure.scientific.stability import (StabilityTest,
+                                                 check_numerical_stability)
 # Import template functions
 from infrastructure.scientific.templates import (
-    create_scientific_module_template,
-    create_scientific_test_suite,
-    create_scientific_workflow_template,
-)
+    create_scientific_module_template, create_scientific_test_suite,
+    create_scientific_workflow_template)
+# Import validation functions
+from infrastructure.scientific.validation import (
+    check_research_compliance, validate_scientific_best_practices,
+    validate_scientific_implementation)
 
 __all__ = [
     # Data classes
-    'StabilityTest',
-    'BenchmarkResult',
+    "StabilityTest",
+    "BenchmarkResult",
     # Stability
-    'check_numerical_stability',
+    "check_numerical_stability",
     # Benchmarking
-    'benchmark_function',
-    'generate_performance_report',
+    "benchmark_function",
+    "generate_performance_report",
     # Documentation
-    'generate_scientific_documentation',
-    'generate_api_documentation',
+    "generate_scientific_documentation",
+    "generate_api_documentation",
     # Validation
-    'validate_scientific_implementation',
-    'validate_scientific_best_practices',
-    'check_research_compliance',
+    "validate_scientific_implementation",
+    "validate_scientific_best_practices",
+    "check_research_compliance",
     # Templates
-    'create_scientific_module_template',
-    'create_scientific_test_suite',
-    'create_scientific_workflow_template',
+    "create_scientific_module_template",
+    "create_scientific_test_suite",
+    "create_scientific_workflow_template",
 ]

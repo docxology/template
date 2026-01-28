@@ -18,24 +18,31 @@ if str(src_path) not in sys.path:
 # Try to import build modules (may not exist)
 try:
     from infrastructure.build.quality_checker import analyze_document_quality
-    from infrastructure.build.reproducibility import generate_reproducibility_report
+    from infrastructure.build.reproducibility import \
+        generate_reproducibility_report
+
     _BUILD_MODULES_AVAILABLE = True
 except (ImportError, ModuleNotFoundError):
     _BUILD_MODULES_AVAILABLE = False
+
     # Provide stub functions
     def analyze_document_quality(path):
-        return {"status": "skipped", "reason": "infrastructure.build module not available"}
+        return {
+            "status": "skipped",
+            "reason": "infrastructure.build module not available",
+        }
+
     def generate_reproducibility_report(path):
-        return {"status": "skipped", "reason": "infrastructure.build module not available"}
+        return {
+            "status": "skipped",
+            "reason": "infrastructure.build module not available",
+        }
 
-from src.utils.validation import verify_output_integrity, validate_markdown
-from src.utils.reporting import (
-    generate_pipeline_report,
-    save_pipeline_report,
-    get_error_aggregator,
-)
+
 from src.utils.logging import get_logger, log_substep
-
+from src.utils.reporting import (generate_pipeline_report,
+                                 get_error_aggregator, save_pipeline_report)
+from src.utils.validation import validate_markdown, verify_output_integrity
 
 logger = get_logger(__name__)
 
@@ -67,21 +74,28 @@ def main() -> None:
     markdown_issues = {}
     try:
         markdown_issues = validate_markdown(str(args.manuscript_dir), ".")
-        log_substep(f"Markdown validation: {markdown_issues.get('status', 'unknown')}", logger)
+        log_substep(
+            f"Markdown validation: {markdown_issues.get('status', 'unknown')}", logger
+        )
     except Exception as exc:
         error_agg["validation_errors"] = error_agg.get("validation_errors", [])
-        error_agg["validation_errors"].append({
-            "error_type": "validation_error",
-            "message": f"Markdown validation skipped: {exc}",
-            "stage": "quality_report",
-            "severity": "warning",
-        })
+        error_agg["validation_errors"].append(
+            {
+                "error_type": "validation_error",
+                "message": f"Markdown validation skipped: {exc}",
+                "stage": "quality_report",
+                "severity": "warning",
+            }
+        )
 
     # Quality analysis
     quality_metrics = {}
     if not _BUILD_MODULES_AVAILABLE:
         log_substep("Quality metrics: skipped (build modules not available)", logger)
-        quality_metrics = {"status": "skipped", "reason": "infrastructure.build not available"}
+        quality_metrics = {
+            "status": "skipped",
+            "reason": "infrastructure.build not available",
+        }
     else:
         try:
             quality_metrics = analyze_document_quality(args.manuscript_dir)
@@ -112,7 +126,10 @@ def main() -> None:
     reproducibility = {}
     if not _BUILD_MODULES_AVAILABLE:
         log_substep("Reproducibility: skipped (build modules not available)", logger)
-        reproducibility = {"status": "skipped", "reason": "infrastructure.build not available"}
+        reproducibility = {
+            "status": "skipped",
+            "reason": "infrastructure.build not available",
+        }
     else:
         try:
             reproducibility = generate_reproducibility_report(Path("output"))
@@ -149,4 +166,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

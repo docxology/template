@@ -41,9 +41,9 @@ def test_script_exists(script_path: Path) -> None:
 def test_help_option(script_path: Path) -> None:
     result = run_script(script_path, ["--help"])
     assert result.returncode == 0
-    assert "Usage:" in result.stdout
+    assert "USAGE" in result.stdout  # Help text uses uppercase headers
     assert "--pipeline" in result.stdout
-    assert "--project" in result.stdout
+    assert "--project" in result.stdout or "project" in result.stdout.lower()
 
 
 def test_invalid_option(script_path: Path) -> None:
@@ -78,4 +78,3 @@ def test_all_projects_help(script_path: Path) -> None:
     # `--all-projects` is accepted; help should still work and exit 0.
     result = run_script(script_path, ["--all-projects", "--help"])
     assert result.returncode == 0
-

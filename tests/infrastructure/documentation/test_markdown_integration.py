@@ -1,167 +1,153 @@
 """Comprehensive tests for src/markdown_integration.py to ensure 100% coverage."""
+
 from pathlib import Path
 
 import pytest
 
 from infrastructure.documentation.figure_manager import FigureManager
-from infrastructure.documentation.markdown_integration import MarkdownIntegration
+from infrastructure.documentation.markdown_integration import \
+    MarkdownIntegration
 
 
 class TestMarkdownIntegration:
     """Test MarkdownIntegration class."""
-    
+
     def test_initialization(self, tmp_path):
         """Test integration initialization."""
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
         integration = MarkdownIntegration(manuscript_dir=manuscript_dir)
         assert integration.manuscript_dir == manuscript_dir
-    
+
     def test_initialization_default_manuscript_dir(self, tmp_path, monkeypatch):
         """Test initialization with default manuscript directory."""
         monkeypatch.chdir(tmp_path)
         integration = MarkdownIntegration(manuscript_dir=None)
         assert integration.manuscript_dir.name == "manuscript"
-    
+
     def test_detect_sections(self, tmp_path):
         """Test section detection."""
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
         integration = MarkdownIntegration(manuscript_dir=manuscript_dir)
-        
+
         markdown_file = manuscript_dir / "test.md"
         markdown_file.write_text(
-            "# Section 1\n\n"
-            "## Subsection 1.1\n\n"
-            "### Subsubsection 1.1.1\n"
+            "# Section 1\n\n" "## Subsection 1.1\n\n" "### Subsubsection 1.1.1\n"
         )
         sections = integration.detect_sections(markdown_file)
         assert len(sections) == 3
         assert sections[0]["name"] == "Section 1"
         assert sections[0]["level"] == 1
-    
+
     def test_detect_sections_nonexistent_file(self, tmp_path):
         """Test section detection with nonexistent file."""
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
         integration = MarkdownIntegration(manuscript_dir=manuscript_dir)
-        
+
         nonexistent_file = manuscript_dir / "nonexistent.md"
         sections = integration.detect_sections(nonexistent_file)
         assert sections == []
-    
+
     def test_insert_figure_in_section(self, tmp_path):
         """Test inserting figure in section."""
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
         integration = MarkdownIntegration(manuscript_dir=manuscript_dir)
-        
+
         # Register figure
         integration.figure_manager.register_figure(
-            filename="test.png",
-            caption="Test",
-            label="fig:test"
+            filename="test.png", caption="Test", label="fig:test"
         )
-        
+
         markdown_file = manuscript_dir / "test.md"
         markdown_file.write_text("# Results\n\nContent here.")
         result = integration.insert_figure_in_section(
             markdown_file, "fig:test", "Results", position="after"
         )
         assert result is True
-    
+
     def test_generate_table_of_figures(self, tmp_path):
         """Test generating table of figures."""
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
         integration = MarkdownIntegration(manuscript_dir=manuscript_dir)
-        
+
         # Register some figures
         integration.figure_manager.register_figure(
-            filename="fig1.png",
-            caption="Figure 1",
-            label="fig:fig1"
+            filename="fig1.png", caption="Figure 1", label="fig:fig1"
         )
         integration.figure_manager.register_figure(
-            filename="fig2.png",
-            caption="Figure 2",
-            label="fig:fig2"
+            filename="fig2.png", caption="Figure 2", label="fig:fig2"
         )
-        
+
         output_file = integration.generate_table_of_figures()
         assert output_file.exists()
         content = output_file.read_text()
         assert "Table of Figures" in content
         assert "fig:fig1" in content
-    
+
     def test_generate_table_of_figures_with_section(self, tmp_path):
         """Test generating table of figures with section."""
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
         integration = MarkdownIntegration(manuscript_dir=manuscript_dir)
-        
+
         # Register figure with section
         integration.figure_manager.register_figure(
-            filename="fig1.png",
-            caption="Figure 1",
-            label="fig:fig1",
-            section="Results"
+            filename="fig1.png", caption="Figure 1", label="fig:fig1", section="Results"
         )
-        
+
         output_file = integration.generate_table_of_figures()
         content = output_file.read_text()
         assert "Section" in content
         assert "Results" in content
-    
+
     def test_generate_table_of_figures_custom_output(self, tmp_path):
         """Test generating table of figures with custom output file."""
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
         integration = MarkdownIntegration(manuscript_dir=manuscript_dir)
-        
+
         integration.figure_manager.register_figure(
-            filename="fig1.png",
-            caption="Figure 1",
-            label="fig:fig1"
+            filename="fig1.png", caption="Figure 1", label="fig:fig1"
         )
-        
+
         custom_output = tmp_path / "custom_table.md"
         output_file = integration.generate_table_of_figures(output_file=custom_output)
         assert output_file == custom_output
         assert output_file.exists()
-    
+
     def test_update_all_references(self, tmp_path):
         """Test updating all references."""
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
         integration = MarkdownIntegration(manuscript_dir=manuscript_dir)
-        
+
         markdown_file = manuscript_dir / "test.md"
         markdown_file.write_text(
-            "# Test\n\n"
-            "\\begin{figure}[h]\n"
-            "\\label{fig:test}\n"
-            "\\end{figure}\n"
+            "# Test\n\n" "\\begin{figure}[h]\n" "\\label{fig:test}\n" "\\end{figure}\n"
         )
         updated = integration.update_all_references(markdown_file)
         assert updated >= 0
-    
+
     def test_update_all_references_nonexistent_file(self, tmp_path):
         """Test updating references with nonexistent file."""
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
         integration = MarkdownIntegration(manuscript_dir=manuscript_dir)
-        
+
         nonexistent_file = manuscript_dir / "nonexistent.md"
         updated = integration.update_all_references(nonexistent_file)
         assert updated == 0
-    
+
     def test_update_all_references_with_insertion(self, tmp_path):
         """Test updating references with actual insertion."""
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
         integration = MarkdownIntegration(manuscript_dir=manuscript_dir)
-        
+
         markdown_file = manuscript_dir / "test.md"
         # Create content with figure label but no reference
         markdown_file.write_text(
@@ -178,13 +164,13 @@ class TestMarkdownIntegration:
         # Check if reference was inserted
         if updated > 0:
             assert "\\ref{fig:test}" in content
-    
+
     def test_update_all_references_existing_ref(self, tmp_path):
         """Test updating references when reference already exists."""
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
         integration = MarkdownIntegration(manuscript_dir=manuscript_dir)
-        
+
         markdown_file = manuscript_dir / "test.md"
         # Create content with figure label and existing reference
         markdown_file.write_text(
@@ -197,40 +183,37 @@ class TestMarkdownIntegration:
         updated = integration.update_all_references(markdown_file)
         # Should not insert another reference
         assert updated == 0
-    
+
     def test_update_all_references_label_not_found(self, tmp_path):
         """Test updating references when figure label is not found (branch 157->151)."""
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
         integration = MarkdownIntegration(manuscript_dir=manuscript_dir)
-        
+
         # Create markdown file with label but ensure the branch path is tested
         # The method looks for labels using re.findall, then tries to update them
         markdown_file = manuscript_dir / "test.md"
         markdown_file.write_text(
-            "# Test\n\n"
-            "\\begin{figure}[h]\n"
-            "\\label{fig:test}\n"
-            "\\end{figure}\n"
+            "# Test\n\n" "\\begin{figure}[h]\n" "\\label{fig:test}\n" "\\end{figure}\n"
         )
-        
+
         # This tests the normal path where label is found
         updated = integration.update_all_references(markdown_file)
         # Should return >= 0 (number of references added or 0 if none)
         assert updated >= 0
-        
+
         # Now test when file has no figures or labels at all
         empty_markdown = manuscript_dir / "empty.md"
         empty_markdown.write_text("# Test\n\nNo figures here.\n")
         updated = integration.update_all_references(empty_markdown)
         assert updated == 0
-    
+
     def test_update_all_references_no_figure_end(self, tmp_path):
         """Test updating references when figure end is not found."""
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
         integration = MarkdownIntegration(manuscript_dir=manuscript_dir)
-        
+
         markdown_file = manuscript_dir / "test.md"
         # Create content with figure label but no \end{figure}
         markdown_file.write_text(
@@ -242,31 +225,29 @@ class TestMarkdownIntegration:
         updated = integration.update_all_references(markdown_file)
         # Should not insert reference since figure_end == -1
         assert updated == 0
-    
+
     def test_validate_manuscript(self, tmp_path):
         """Test validating manuscript."""
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
         integration = MarkdownIntegration(manuscript_dir=manuscript_dir)
-        
+
         markdown_file = manuscript_dir / "test.md"
         markdown_file.write_text("# Test\n\nContent.")
         results = integration.validate_manuscript()
         assert isinstance(results, dict)
-    
+
     def test_validate_manuscript_with_errors(self, tmp_path):
         """Test validating manuscript with figure errors."""
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
         integration = MarkdownIntegration(manuscript_dir=manuscript_dir)
-        
+
         # Register a figure
         integration.figure_manager.register_figure(
-            filename="test.png",
-            caption="Test",
-            label="fig:test"
+            filename="test.png", caption="Test", label="fig:test"
         )
-        
+
         # Create markdown with reference to nonexistent figure file
         markdown_file = manuscript_dir / "test.md"
         markdown_file.write_text(
@@ -279,24 +260,20 @@ class TestMarkdownIntegration:
         results = integration.validate_manuscript()
         # May or may not have errors depending on validation logic
         assert isinstance(results, dict)
-    
+
     def test_get_figure_statistics(self, tmp_path):
         """Test getting figure statistics."""
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
         integration = MarkdownIntegration(manuscript_dir=manuscript_dir)
-        
+
         # Register figures
         integration.figure_manager.register_figure(
-            filename="fig1.png",
-            caption="Figure 1",
-            label="fig:fig1",
-            section="Results"
+            filename="fig1.png", caption="Figure 1", label="fig:fig1", section="Results"
         )
-        
+
         stats = integration.get_figure_statistics()
         assert "total_figures" in stats
         # May have figures from previous tests, so just check it's at least 1
         assert stats["total_figures"] >= 1
         assert "figures_by_section" in stats
-

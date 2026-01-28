@@ -6,10 +6,12 @@ This file:
 - Keeps imports consistent for both infrastructure and project test suites
 - Provides credential fixtures for external service testing
 """
+
 import os
 import sys
-import pytest
 from pathlib import Path
+
+import pytest
 
 # Force headless backend for matplotlib in tests
 os.environ.setdefault("MPLBACKEND", "Agg")
@@ -36,7 +38,14 @@ if os.path.exists(SRC) and SRC not in sys.path:
 # Add projects/*/src/ to path for project modules (active projects only)
 # Note: Only active projects in projects/ directory are added here.
 # Archived projects in projects_archive/ are not included.
-active_projects = ["code_project", "active_inference_meta_pragmatic", "ento_linguistics"]
+# Projects are discovered dynamically from the projects/ directory.
+active_projects = []
+projects_dir = os.path.join(ROOT, "projects")
+if os.path.exists(projects_dir):
+    for item in os.listdir(projects_dir):
+        item_path = os.path.join(projects_dir, item)
+        if os.path.isdir(item_path) and not item.startswith((".", "_")):
+            active_projects.append(item)
 for project_name in active_projects:
     project_src = os.path.join(ROOT, "projects", project_name, "src")
     if os.path.exists(project_src) and project_src not in sys.path:
@@ -46,6 +55,7 @@ for project_name in active_projects:
 # ============================================================================
 # Pytest Configuration and Markers
 # ============================================================================
+
 
 def pytest_configure(config):
     """Register custom markers for test categorization."""
@@ -73,15 +83,16 @@ def pytest_configure(config):
 # Credential Fixtures
 # ============================================================================
 
+
 @pytest.fixture(scope="session")
 def credential_manager():
     """Provide CredentialManager for tests.
-    
+
     Returns:
         CredentialManager instance configured for testing
     """
     from infrastructure.core.credentials import CredentialManager
-    
+
     # Try to load test credentials config if it exists
     config_file = Path(ROOT) / "test_credentials.yaml"
     return CredentialManager(config_file=config_file if config_file.exists() else None)
@@ -90,51 +101,57 @@ def credential_manager():
 @pytest.fixture(scope="session")
 def zenodo_credentials(credential_manager):
     """Provide Zenodo credentials for tests (sandbox by default).
-    
+
     Returns:
         Dictionary with Zenodo API credentials
-        
+
     Raises:
         pytest.skip: If Zenodo credentials are not available
     """
     if not credential_manager.has_zenodo_credentials(use_sandbox=True):
-        pytest.skip("Zenodo sandbox credentials not available. "
-                   "Set ZENODO_SANDBOX_TOKEN in .env file.")
-    
+        pytest.skip(
+            "Zenodo sandbox credentials not available. "
+            "Set ZENODO_SANDBOX_TOKEN in .env file."
+        )
+
     return credential_manager.get_zenodo_credentials(use_sandbox=True)
 
 
 @pytest.fixture(scope="session")
 def github_credentials(credential_manager):
     """Provide GitHub credentials for tests.
-    
+
     Returns:
         Dictionary with GitHub API credentials
-        
+
     Raises:
         pytest.skip: If GitHub credentials are not available
     """
     if not credential_manager.has_github_credentials():
-        pytest.skip("GitHub credentials not available. "
-                   "Set GITHUB_TOKEN and GITHUB_REPO in .env file.")
-    
+        pytest.skip(
+            "GitHub credentials not available. "
+            "Set GITHUB_TOKEN and GITHUB_REPO in .env file."
+        )
+
     return credential_manager.get_github_credentials()
 
 
 @pytest.fixture(scope="session")
 def arxiv_credentials(credential_manager):
     """Provide arXiv credentials for tests (optional).
-    
+
     Returns:
         Dictionary with arXiv API credentials
-        
+
     Raises:
         pytest.skip: If arXiv credentials are not available
     """
     if not credential_manager.has_arxiv_credentials():
-        pytest.skip("arXiv credentials not available. "
-                   "Set ARXIV_USERNAME and ARXIV_PASSWORD in .env file.")
-    
+        pytest.skip(
+            "arXiv credentials not available. "
+            "Set ARXIV_USERNAME and ARXIV_PASSWORD in .env file."
+        )
+
     return credential_manager.get_arxiv_credentials()
 
 
@@ -151,6 +168,7 @@ def skip_if_no_latex():
 # Test Project Cleanup Fixtures
 # ============================================================================
 
+
 @pytest.fixture(scope="session", autouse=True)
 def cleanup_test_projects():
     """Clean up any test projects created during test execution.
@@ -161,7 +179,7 @@ def cleanup_test_projects():
     yield  # Run tests first
 
     # Cleanup after all tests
-    test_project_names = ['project1', 'project2', 'test', 'test_project']
+    test_project_names = ["project1", "project2", "test", "test_project"]
     projects_dir = Path(__file__).parent.parent / "projects"
 
     for project_name in test_project_names:
@@ -169,5 +187,5 @@ def cleanup_test_projects():
         if project_path.exists():
             print(f"🧹 Removing test project: {project_name}")
             import shutil
-            shutil.rmtree(project_path, ignore_errors=True)
 
+            shutil.rmtree(project_path, ignore_errors=True)

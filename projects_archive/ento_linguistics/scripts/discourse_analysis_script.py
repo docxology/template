@@ -3,23 +3,25 @@
 This script analyzes discourse patterns in entomological literature,
 examining rhetorical strategies, argumentative structures, and narrative frameworks.
 """
+
 from __future__ import annotations
 
+import argparse
+import json
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional, Any
-import json
-import argparse
+from typing import Any, Dict, List, Optional
 
 # Add project src to path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root / "src"))
 
+from concept_visualization import ConceptVisualizer
 from discourse_analysis import DiscourseAnalyzer
 from literature_mining import LiteratureCorpus
-from concept_visualization import ConceptVisualizer
 
 from infrastructure.core.logging_utils import get_logger
+
 # Directory creation handled inline
 
 logger = get_logger(__name__)
@@ -48,10 +50,15 @@ class DiscourseAnalysisScript:
         self.reports_dir.mkdir(parents=True, exist_ok=True)
         self.data_dir.mkdir(parents=True, exist_ok=True)
 
-        logger.info(f"Initialized discourse analysis script with output directory: {self.output_dir}")
+        logger.info(
+            f"Initialized discourse analysis script with output directory: {self.output_dir}"
+        )
 
-    def analyze_discourse(self, corpus_file: Optional[Path] = None,
-                         focus_areas: Optional[List[str]] = None) -> Dict[str, Any]:
+    def analyze_discourse(
+        self,
+        corpus_file: Optional[Path] = None,
+        focus_areas: Optional[List[str]] = None,
+    ) -> Dict[str, Any]:
         """Analyze discourse patterns in literature.
 
         Args:
@@ -69,7 +76,7 @@ class DiscourseAnalysisScript:
 
         if not texts:
             logger.warning("No texts available for discourse analysis")
-            return {'error': 'No texts available'}
+            return {"error": "No texts available"}
 
         # Perform discourse analysis
         analyzer = DiscourseAnalyzer()
@@ -82,16 +89,18 @@ class DiscourseAnalysisScript:
         visualizations = self._generate_discourse_visualizations(profile)
 
         results = {
-            'texts_analyzed': len(texts),
-            'patterns_identified': len(profile.get('patterns', {})),
-            'structures_found': len(profile.get('argumentative_structures', [])),
-            'report_file': report,
-            'visualizations': visualizations,
-            'data_file': str(self.data_dir / "discourse_analysis.json")
+            "texts_analyzed": len(texts),
+            "patterns_identified": len(profile.get("patterns", {})),
+            "structures_found": len(profile.get("argumentative_structures", [])),
+            "report_file": report,
+            "visualizations": visualizations,
+            "data_file": str(self.data_dir / "discourse_analysis.json"),
         }
 
         # Save analysis data
-        analyzer.export_discourse_analysis(profile, str(self.data_dir / "discourse_analysis.json"))
+        analyzer.export_discourse_analysis(
+            profile, str(self.data_dir / "discourse_analysis.json")
+        )
 
         logger.info("Discourse analysis completed")
         return results
@@ -107,8 +116,9 @@ class DiscourseAnalysisScript:
             else:
                 return LiteratureCorpus()
 
-    def _generate_discourse_report(self, profile: Dict[str, Any],
-                                 focus_areas: Optional[List[str]]) -> str:
+    def _generate_discourse_report(
+        self, profile: Dict[str, Any], focus_areas: Optional[List[str]]
+    ) -> str:
         """Generate discourse analysis report.
 
         Args:
@@ -128,7 +138,7 @@ This report analyzes discourse patterns, rhetorical strategies, and argumentativ
 
 """
 
-        summary = profile.get('summary', {})
+        summary = profile.get("summary", {})
         report += f"""- **Texts Analyzed**: {summary.get('total_texts', 0)}
 - **Discourse Patterns**: {summary.get('total_patterns_identified', 0)}
 - **Argumentative Structures**: {summary.get('argumentative_structures_found', 0)}
@@ -138,7 +148,7 @@ This report analyzes discourse patterns, rhetorical strategies, and argumentativ
 ### Identified Patterns
 """
 
-        patterns = profile.get('patterns', {})
+        patterns = profile.get("patterns", {})
         for pattern_name, pattern in patterns.items():
             report += f"""#### {pattern_name.replace('_', ' ').title()}
 - **Frequency**: {pattern.frequency}
@@ -154,12 +164,16 @@ This report analyzes discourse patterns, rhetorical strategies, and argumentativ
 ### Common Argument Patterns
 """
 
-        structures = profile.get('argumentative_structures', [])
+        structures = profile.get("argumentative_structures", [])
         if structures:
             # Group by claim types or patterns
             claim_patterns = {}
             for struct in structures:
-                claim_start = struct.claim[:50] + "..." if len(struct.claim) > 50 else struct.claim
+                claim_start = (
+                    struct.claim[:50] + "..."
+                    if len(struct.claim) > 50
+                    else struct.claim
+                )
                 if claim_start not in claim_patterns:
                     claim_patterns[claim_start] = []
                 claim_patterns[claim_start].append(struct)
@@ -180,7 +194,7 @@ This report analyzes discourse patterns, rhetorical strategies, and argumentativ
 ### Persuasive Techniques Used
 """
 
-        strategies = profile.get('rhetorical_strategies', {})
+        strategies = profile.get("rhetorical_strategies", {})
         for strategy, data in strategies.items():
             report += f"""#### {strategy.replace('_', ' ').title()}
 - **Frequency**: {data.get('frequency', 0)}
@@ -194,7 +208,7 @@ This report analyzes discourse patterns, rhetorical strategies, and argumentativ
 ### Story Patterns in Scientific Writing
 """
 
-        frameworks = profile.get('narrative_frameworks', {})
+        frameworks = profile.get("narrative_frameworks", {})
         for framework, examples in frameworks.items():
             report += f"""#### {framework.replace('_', ' ').title()}
 - **Occurrences**: {len(examples)}
@@ -208,7 +222,7 @@ This report analyzes discourse patterns, rhetorical strategies, and argumentativ
 ### Communication Strategies
 """
 
-        techniques = profile.get('persuasive_techniques', {})
+        techniques = profile.get("persuasive_techniques", {})
         for technique, data in techniques.items():
             report += f"""#### {technique.replace('_', ' ').title()}
 - **Count**: {data.get('count', 0)}
@@ -262,12 +276,14 @@ Analysis results are saved in the following files:
 
         # Save report
         report_file = self.reports_dir / "discourse_analysis_report.md"
-        with open(report_file, 'w', encoding='utf-8') as f:
+        with open(report_file, "w", encoding="utf-8") as f:
             f.write(report)
 
         return str(report_file)
 
-    def _generate_discourse_visualizations(self, profile: Dict[str, Any]) -> Dict[str, str]:
+    def _generate_discourse_visualizations(
+        self, profile: Dict[str, Any]
+    ) -> Dict[str, str]:
         """Generate visualizations for discourse analysis.
 
         Args:
@@ -279,49 +295,59 @@ Analysis results are saved in the following files:
         visualizations = {}
 
         # Rhetorical strategies bar chart
-        strategies = profile.get('rhetorical_strategies', {})
+        strategies = profile.get("rhetorical_strategies", {})
         if strategies:
             import matplotlib.pyplot as plt
 
             fig, ax = plt.subplots(figsize=(10, 6))
 
             strategy_names = list(strategies.keys())
-            frequencies = [data.get('frequency', 0) for data in strategies.values()]
+            frequencies = [data.get("frequency", 0) for data in strategies.values()]
 
             bars = ax.bar(range(len(strategy_names)), frequencies, alpha=0.7)
             ax.set_xticks(range(len(strategy_names)))
-            ax.set_xticklabels([name.replace('_', '\n').title() for name in strategy_names])
-            ax.set_ylabel('Frequency')
-            ax.set_title('Rhetorical Strategies in Entomological Literature')
+            ax.set_xticklabels(
+                [name.replace("_", "\n").title() for name in strategy_names]
+            )
+            ax.set_ylabel("Frequency")
+            ax.set_title("Rhetorical Strategies in Entomological Literature")
 
             plt.tight_layout()
             strategy_file = self.figures_dir / "rhetorical_strategies.png"
-            fig.savefig(strategy_file, dpi=300, bbox_inches='tight')
+            fig.savefig(strategy_file, dpi=300, bbox_inches="tight")
             plt.close(fig)
-            visualizations['rhetorical_strategies'] = str(strategy_file)
+            visualizations["rhetorical_strategies"] = str(strategy_file)
 
         # Persuasive techniques pie chart
-        techniques = profile.get('persuasive_techniques', {})
+        techniques = profile.get("persuasive_techniques", {})
         if techniques:
             fig, ax = plt.subplots(figsize=(8, 8))
 
             technique_names = list(techniques.keys())
-            counts = [data.get('count', 0) for data in techniques.values()]
+            counts = [data.get("count", 0) for data in techniques.values()]
 
             # Filter out zero counts
-            filtered_data = [(name, count) for name, count in zip(technique_names, counts) if count > 0]
+            filtered_data = [
+                (name, count)
+                for name, count in zip(technique_names, counts)
+                if count > 0
+            ]
             if filtered_data:
                 names, values = zip(*filtered_data)
 
-                ax.pie(values, labels=[name.replace('_', ' ').title() for name in names],
-                      autopct='%1.1f%%', startangle=90)
-                ax.set_title('Persuasive Techniques Distribution')
+                ax.pie(
+                    values,
+                    labels=[name.replace("_", " ").title() for name in names],
+                    autopct="%1.1f%%",
+                    startangle=90,
+                )
+                ax.set_title("Persuasive Techniques Distribution")
 
                 plt.tight_layout()
                 technique_file = self.figures_dir / "persuasive_techniques.png"
-                fig.savefig(technique_file, dpi=300, bbox_inches='tight')
+                fig.savefig(technique_file, dpi=300, bbox_inches="tight")
                 plt.close(fig)
-                visualizations['persuasive_techniques'] = str(technique_file)
+                visualizations["persuasive_techniques"] = str(technique_file)
 
         return visualizations
 
@@ -329,20 +355,23 @@ Analysis results are saved in the following files:
 def main() -> None:
     """Main entry point for discourse analysis script."""
     parser = argparse.ArgumentParser(description="Ento-Linguistic Discourse Analysis")
-    parser.add_argument("--corpus-file", type=Path,
-                       help="Path to literature corpus JSON file")
-    parser.add_argument("--output-dir", type=Path,
-                       help="Output directory")
-    parser.add_argument("--focus-areas", nargs='+',
-                       choices=['patterns', 'rhetoric', 'narrative', 'argumentation'],
-                       help="Specific areas to focus analysis on")
+    parser.add_argument(
+        "--corpus-file", type=Path, help="Path to literature corpus JSON file"
+    )
+    parser.add_argument("--output-dir", type=Path, help="Output directory")
+    parser.add_argument(
+        "--focus-areas",
+        nargs="+",
+        choices=["patterns", "rhetoric", "narrative", "argumentation"],
+        help="Specific areas to focus analysis on",
+    )
 
     args = parser.parse_args()
 
     script = DiscourseAnalysisScript(args.output_dir)
     results = script.analyze_discourse(args.corpus_file, args.focus_areas)
 
-    if 'error' not in results:
+    if "error" not in results:
         logger.info("Discourse analysis completed")
         logger.info(f"Texts analyzed: {results.get('texts_analyzed', 0)}")
         logger.info(f"Patterns identified: {results.get('patterns_identified', 0)}")

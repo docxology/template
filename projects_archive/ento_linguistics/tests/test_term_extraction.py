@@ -3,12 +3,13 @@
 This module contains comprehensive tests for terminology extraction functionality
 used in Ento-Linguistic research.
 """
+
 from __future__ import annotations
 
-import pytest
-from typing import List, Dict
+from typing import Dict, List
 
-from src.term_extraction import TerminologyExtractor, Term
+import pytest
+from src.term_extraction import Term, TerminologyExtractor
 from src.text_analysis import TextProcessor
 
 
@@ -21,7 +22,7 @@ class TestTerm:
             text="eusocial",
             lemma="eusocial",
             frequency=15,
-            domains=["behavior_and_identity", "power_and_labor"]
+            domains=["behavior_and_identity", "power_and_labor"],
         )
 
         assert term.text == "eusocial"
@@ -57,18 +58,18 @@ class TestTerm:
             lemma="forage",
             frequency=25,
             domains=["behavior_and_identity"],
-            confidence=0.8
+            confidence=0.8,
         )
         term.add_context("foraging behavior")
 
         data = term.to_dict()
 
-        assert data['text'] == "foraging"
-        assert data['lemma'] == "forage"
-        assert data['frequency'] == 25
-        assert data['domains'] == ["behavior_and_identity"]
-        assert data['contexts'] == ["foraging behavior"]
-        assert data['confidence'] == 0.8
+        assert data["text"] == "foraging"
+        assert data["lemma"] == "forage"
+        assert data["frequency"] == 25
+        assert data["domains"] == ["behavior_and_identity"]
+        assert data["contexts"] == ["foraging behavior"]
+        assert data["confidence"] == 0.8
 
     def test_term_from_dict(self) -> None:
         """Test term deserialization from dictionary."""
@@ -79,7 +80,7 @@ class TestTerm:
             "frequency": 25,
             "contexts": ["foraging behavior"],
             "pos_tags": [],
-            "confidence": 0.8
+            "confidence": 0.8,
         }
 
         term = Term.from_dict(data)
@@ -107,7 +108,7 @@ class TestTerminologyExtractor:
             "Ant colonies exhibit eusocial behavior with complex division of labor.",
             "The queen ant lays eggs while worker ants forage for food resources.",
             "Foraging behavior varies among different ant species and colonies.",
-            "Social insects like ants have evolved sophisticated communication systems."
+            "Social insects like ants have evolved sophisticated communication systems.",
         ]
 
     def test_extractor_initialization(self, extractor: TerminologyExtractor) -> None:
@@ -115,7 +116,9 @@ class TestTerminologyExtractor:
         assert extractor.extracted_terms == {}
         assert extractor.text_processor is not None
 
-    def test_extract_terms_basic(self, extractor: TerminologyExtractor, sample_texts: List[str]) -> None:
+    def test_extract_terms_basic(
+        self, extractor: TerminologyExtractor, sample_texts: List[str]
+    ) -> None:
         """Test basic term extraction."""
         terms = extractor.extract_terms(sample_texts, min_frequency=1)
 
@@ -123,12 +126,14 @@ class TestTerminologyExtractor:
         assert isinstance(terms, dict)
         assert all(isinstance(term, Term) for term in terms.values())
 
-    def test_extract_terms_frequency_filtering(self, extractor: TerminologyExtractor) -> None:
+    def test_extract_terms_frequency_filtering(
+        self, extractor: TerminologyExtractor
+    ) -> None:
         """Test term extraction with frequency filtering."""
         texts = [
             "eusocial colony behavior",  # "eusocial" appears once, "colony" appears once
-            "eusocial colony behavior reproduction", # "eusocial" appears once, "colony" appears once, "behavior" appears once
-            "genetic"         # "genetic" appears 1 time
+            "eusocial colony behavior reproduction",  # "eusocial" appears once, "colony" appears once, "behavior" appears once
+            "genetic",  # "genetic" appears 1 time
         ]
 
         # With min_frequency=2
@@ -137,7 +142,7 @@ class TestTerminologyExtractor:
         # Should include terms that appear >= 2 times and contain scientific vocabulary
         term_texts = [term.text for term in terms.values()]
         assert "eusocial" in term_texts  # appears 2 times, contains scientific word
-        assert "colony" in term_texts    # appears 2 times, contains scientific word
+        assert "colony" in term_texts  # appears 2 times, contains scientific word
         assert "behavior" in term_texts  # appears 2 times, contains scientific word
         assert "genetic" not in term_texts  # appears 1 time
 
@@ -149,7 +154,9 @@ class TestTerminologyExtractor:
         assert "power_and_labor" in extractor.classify_term_domains("caste")
         assert "sex_and_reproduction" in extractor.classify_term_domains("queen")
 
-    def test_domain_classification_unknown_term(self, extractor: TerminologyExtractor) -> None:
+    def test_domain_classification_unknown_term(
+        self, extractor: TerminologyExtractor
+    ) -> None:
         """Test classification of unknown terms."""
         domains = extractor.classify_term_domains("unknown_term_xyz")
 
@@ -171,10 +178,14 @@ class TestTerminologyExtractor:
     def test_context_extraction(self, extractor: TerminologyExtractor) -> None:
         """Test term context extraction."""
         texts = ["The ant colony exhibits complex behavior patterns."]
-        tokens_list = [["the", "ant", "colony", "exhibits", "complex", "behavior", "patterns"]]
+        tokens_list = [
+            ["the", "ant", "colony", "exhibits", "complex", "behavior", "patterns"]
+        ]
 
         term = Term(text="colony", lemma="colony")
-        extractor._extract_term_contexts(term, list(zip(texts, tokens_list)), window_size=3)
+        extractor._extract_term_contexts(
+            term, list(zip(texts, tokens_list)), window_size=3
+        )
 
         assert len(term.contexts) > 0
         assert any("colony" in context for context in term.contexts)
@@ -182,7 +193,12 @@ class TestTerminologyExtractor:
     def test_confidence_calculation(self, extractor: TerminologyExtractor) -> None:
         """Test extraction confidence calculation."""
         # High confidence term
-        term1 = Term(text="eusocial", lemma="eusocial", frequency=10, domains=["behavior_and_identity"])
+        term1 = Term(
+            text="eusocial",
+            lemma="eusocial",
+            frequency=10,
+            domains=["behavior_and_identity"],
+        )
         confidence1 = extractor._calculate_extraction_confidence(term1)
         assert confidence1 > 0.5
 
@@ -191,7 +207,9 @@ class TestTerminologyExtractor:
         confidence2 = extractor._calculate_extraction_confidence(term2)
         assert confidence2 < confidence1
 
-    def test_domain_statistics(self, extractor: TerminologyExtractor, sample_texts: List[str]) -> None:
+    def test_domain_statistics(
+        self, extractor: TerminologyExtractor, sample_texts: List[str]
+    ) -> None:
         """Test domain statistics generation."""
         terms = extractor.extract_terms(sample_texts, min_frequency=1)
         stats = extractor.get_domain_statistics()
@@ -205,15 +223,15 @@ class TestTerminologyExtractor:
 
         for domain in domain_names:
             assert domain in stats
-            assert 'term_count' in stats[domain]
-            assert 'total_frequency' in stats[domain]
+            assert "term_count" in stats[domain]
+            assert "total_frequency" in stats[domain]
 
     def test_cooccurrence_analysis(self, extractor: TerminologyExtractor) -> None:
         """Test term co-occurrence analysis."""
         texts = [
             "ant colony eusocial behavior",
             "colony behavior complex",
-            "eusocial ant complex"
+            "eusocial ant complex",
         ]
 
         cooccurrences = extractor.find_term_cooccurrences("ant", "colony", texts)
@@ -222,16 +240,17 @@ class TestTerminologyExtractor:
 
     def test_cooccurrence_no_matches(self, extractor: TerminologyExtractor) -> None:
         """Test co-occurrence when terms don't appear together."""
-        texts = [
-            "ant behavior",
-            "colony organization"
-        ]
+        texts = ["ant behavior", "colony organization"]
 
-        cooccurrences = extractor.find_term_cooccurrences("ant", "colony", texts, window_size=2)
+        cooccurrences = extractor.find_term_cooccurrences(
+            "ant", "colony", texts, window_size=2
+        )
 
         assert cooccurrences == 0  # Terms don't co-occur within window
 
-    def test_csv_export(self, extractor: TerminologyExtractor, sample_texts: List[str], tmp_path: Path) -> None:
+    def test_csv_export(
+        self, extractor: TerminologyExtractor, sample_texts: List[str], tmp_path: Path
+    ) -> None:
         """Test CSV export functionality."""
         terms = extractor.extract_terms(sample_texts, min_frequency=1)
 
@@ -241,13 +260,13 @@ class TestTerminologyExtractor:
         assert csv_file.exists()
 
         # Check CSV content
-        with open(csv_file, 'r', encoding='utf-8') as f:
+        with open(csv_file, "r", encoding="utf-8") as f:
             content = f.read()
 
-        assert 'term' in content
-        assert 'lemma' in content
-        assert 'domains' in content
-        assert 'frequency' in content
+        assert "term" in content
+        assert "lemma" in content
+        assert "domains" in content
+        assert "frequency" in content
 
     def test_empty_text_handling(self, extractor: TerminologyExtractor) -> None:
         """Test handling of empty text inputs."""
@@ -283,7 +302,7 @@ class TestTerminologyExtractionIntegration:
         return [
             "Ant colonies exhibit eusocial behavior with complex division of labor.",
             "The queen ant lays eggs while worker ants forage for food resources.",
-            "Eusocial insects demonstrate sophisticated social structures and communication."
+            "Eusocial insects demonstrate sophisticated social structures and communication.",
         ]
 
     def test_full_extraction_workflow(self) -> None:
@@ -296,7 +315,7 @@ class TestTerminologyExtractionIntegration:
             "The queen ant reproduces while worker ants forage and care for brood.",
             "Colony-level behaviors emerge from individual ant interactions.",
             "Foraging strategies vary among ant species with different colony sizes.",
-            "Social insects have evolved sophisticated communication and cooperation mechanisms."
+            "Social insects have evolved sophisticated communication and cooperation mechanisms.",
         ]
 
         # Extract terms with lower frequency threshold for integration test
@@ -325,7 +344,7 @@ class TestTerminologyExtractionIntegration:
         texts = [
             "Colony behavior involves social insects like ants.",
             "Ant colonies have queens and workers with different roles.",
-            "Foraging is a colony-level behavior in eusocial insects."
+            "Foraging is a colony-level behavior in eusocial insects.",
         ]
 
         terms = extractor.extract_terms(texts, min_frequency=1)
@@ -378,7 +397,9 @@ class TestTerminologyExtractionIntegration:
             assert terms1[term_text].frequency == terms2[term_text].frequency
 
     @pytest.mark.skip(reason="Test missing extractor fixture in integration class")
-    def test_create_domain_seed_expansion(self, extractor: TerminologyExtractor, sample_texts: List[str]) -> None:
+    def test_create_domain_seed_expansion(
+        self, extractor: TerminologyExtractor, sample_texts: List[str]
+    ) -> None:
         """Test domain seed expansion functionality."""
         from src.term_extraction import create_domain_seed_expansion
 

@@ -6,12 +6,12 @@ No mocks - uses actual system state and temp directories.
 
 import os
 import sys
-import pytest
 from pathlib import Path
-from infrastructure.core.environment import (
-    check_python_version,
-    check_dependencies,
-)
+
+import pytest
+
+from infrastructure.core.environment import (check_dependencies,
+                                             check_python_version)
 
 
 class TestCheckPythonVersion:
@@ -145,6 +145,7 @@ class TestDependencyValidation:
         """Test that numpy can be imported."""
         try:
             import numpy
+
             can_import = True
         except ImportError:
             can_import = False

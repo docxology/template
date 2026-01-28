@@ -6,7 +6,7 @@ The `tests/` directory contains tests for the optimization algorithms in `src/`.
 
 ## Key Concepts
 
-- **data testing**: No mocks, all tests use actual mathematical computations
+- **Real data testing**: No mocks, all tests use actual mathematical computations
 - **Numerical accuracy**: Tests verify mathematical correctness and convergence
 - **Edge case coverage**: Tests handle boundary conditions and error cases
 - **Deterministic results**: Fixed seeds ensure reproducible test outcomes
@@ -207,7 +207,7 @@ pytest tests/ --cov=../src --cov-report=term-missing
 
 - **Deterministic tests**: No random number generation in tests
 - **Numerical stability**: Use appropriate tolerances for floating-point comparisons
-- **coverage**: Test all code paths including error conditions
+- **Comprehensive coverage**: Test all code paths including error conditions
 - **Clear assertions**: Use descriptive assertion messages
 - **Independent tests**: Each test should be runnable in isolation
 

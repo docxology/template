@@ -26,35 +26,27 @@ repo_root = project_root.parent
 sys.path.insert(0, str(project_root / "src"))
 sys.path.insert(0, str(repo_root))  # Add repo root so we can import infrastructure.*
 
-# Infra logging/perf/validation/reporting
-from infrastructure.core.logging_utils import (
-    get_logger,
-    log_substep,
-    log_progress_bar,
-)
-from infrastructure.core.performance import PerformanceMonitor
-from src.utils.reporting import (
-    generate_pipeline_report,
-    save_pipeline_report,
-    get_error_aggregator,
-)
-from src.utils.validation import validate_figure_registry, validate_markdown as validate_markdown_wrapper
-from src.utils.figure_manager import FigureManager
-from infrastructure.documentation.markdown_integration import MarkdownIntegration
-from infrastructure.documentation.image_manager import ImageManager
+from statistics import calculate_descriptive_stats
 
 # Import src/ modules
-from data_generator import generate_time_series, generate_synthetic_data
+from data_generator import generate_synthetic_data, generate_time_series
 from performance import analyze_convergence
-from plots import (
-    plot_line,
-    plot_scatter,
-    plot_bar,
-    plot_convergence,
-    plot_comparison
-)
-from statistics import calculate_descriptive_stats
+from plots import (plot_bar, plot_comparison, plot_convergence, plot_line,
+                   plot_scatter)
+from src.utils.figure_manager import FigureManager
+from src.utils.reporting import (generate_pipeline_report,
+                                 get_error_aggregator, save_pipeline_report)
+from src.utils.validation import validate_figure_registry
+from src.utils.validation import validate_markdown as validate_markdown_wrapper
 from visualization import VisualizationEngine
+
+# Infra logging/perf/validation/reporting
+from infrastructure.core.logging_utils import (get_logger, log_progress_bar,
+                                               log_substep)
+from infrastructure.core.performance import PerformanceMonitor
+from infrastructure.documentation.image_manager import ImageManager
+from infrastructure.documentation.markdown_integration import \
+    MarkdownIntegration
 
 logger = get_logger(__name__)
 
@@ -64,7 +56,14 @@ def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Generate scientific figures with optional stage control."
     )
-    stage_names = ["convergence", "timeseries", "stats", "scatter", "insert", "validate"]
+    stage_names = [
+        "convergence",
+        "timeseries",
+        "stats",
+        "scatter",
+        "insert",
+        "validate",
+    ]
     parser.add_argument(
         "--only",
         nargs="+",
@@ -91,197 +90,201 @@ def _parse_args() -> argparse.Namespace:
 
 def generate_convergence_figure() -> str:
     """Generate convergence analysis figure.
-    
+
     Returns:
         Figure label
     """
     logger.info("Generating convergence figure...")
-    
+
     # Generate convergence data
     iterations = np.arange(1, 101)
     values = 10 * np.exp(-iterations / 20) + np.random.normal(0, 0.1, len(iterations))
-    
+
     # Setup visualization
     engine = VisualizationEngine(output_dir="output/figures")
     fig, ax = engine.create_figure()
-    
+
     # Plot convergence
     plot_convergence(iterations, values, target=0.0, ax=ax)
-    engine.apply_publication_style(ax, "Convergence Analysis", "Iteration", "Value", grid=True)
-    
+    engine.apply_publication_style(
+        ax, "Convergence Analysis", "Iteration", "Value", grid=True
+    )
+
     # Save figure
     saved = engine.save_figure(fig, "convergence_analysis")
     logger.info(f"  Saved: {saved['png']}")
-    
+
     # Register figure
     figure_manager = FigureManager()
     fig_meta = figure_manager.register_figure(
         filename="convergence_analysis.png",
         caption="Convergence behavior of the optimization algorithm showing exponential decay to target value",
         section="experimental_results",
-        generated_by="generate_scientific_figures.py"
+        generated_by="generate_scientific_figures.py",
     )
-    
+
     plt.close(fig)
     return fig_meta.label
 
 
 def generate_time_series_figure() -> str:
     """Generate time series analysis figure.
-    
+
     Returns:
         Figure label
     """
     logger.info("Generating time series figure...")
-    
+
     # Generate time series data
     time, values = generate_time_series(
-        n_points=200,
-        trend="sinusoidal",
-        noise_level=0.15,
-        seed=42
+        n_points=200, trend="sinusoidal", noise_level=0.15, seed=42
     )
-    
+
     # Setup visualization
     engine = VisualizationEngine(output_dir="output/figures")
     fig, ax = engine.create_figure()
-    
+
     # Plot time series
     plot_line(time, values, ax=ax, label="Time Series", color=engine.get_color(0))
-    engine.apply_publication_style(ax, "Time Series Analysis", "Time", "Value", grid=True, legend=True)
-    
+    engine.apply_publication_style(
+        ax, "Time Series Analysis", "Time", "Value", grid=True, legend=True
+    )
+
     # Save figure
     saved = engine.save_figure(fig, "time_series_analysis")
     logger.info(f"  Saved: {saved['png']}")
-    
+
     # Register figure
     figure_manager = FigureManager()
     fig_meta = figure_manager.register_figure(
         filename="time_series_analysis.png",
         caption="Time series data showing sinusoidal trend with added noise",
         section="experimental_results",
-        generated_by="generate_scientific_figures.py"
+        generated_by="generate_scientific_figures.py",
     )
-    
+
     plt.close(fig)
     return fig_meta.label
 
 
 def generate_statistical_comparison_figure() -> str:
     """Generate statistical comparison figure.
-    
+
     Returns:
         Figure label
     """
     logger.info("Generating statistical comparison figure...")
-    
+
     # Generate comparison data
     methods = ["Baseline", "Method A", "Method B", "Method C"]
     metrics = {
         "accuracy": [0.75, 0.85, 0.90, 0.88],
         "precision": [0.72, 0.83, 0.89, 0.87],
-        "recall": [0.78, 0.87, 0.91, 0.89]
+        "recall": [0.78, 0.87, 0.91, 0.89],
     }
-    
+
     # Setup visualization
     engine = VisualizationEngine(output_dir="output/figures")
     fig, ax = engine.create_figure()
-    
+
     # Plot comparison
     plot_comparison(methods, metrics, "accuracy", ax=ax, plot_type="bar")
-    engine.apply_publication_style(ax, "Method Comparison", "Method", "Accuracy", grid=True)
-    
+    engine.apply_publication_style(
+        ax, "Method Comparison", "Method", "Accuracy", grid=True
+    )
+
     # Save figure
     saved = engine.save_figure(fig, "statistical_comparison")
     logger.info(f"  Saved: {saved['png']}")
-    
+
     # Register figure
     figure_manager = FigureManager()
     fig_meta = figure_manager.register_figure(
         filename="statistical_comparison.png",
         caption="Comparison of different methods on accuracy metric",
         section="experimental_results",
-        generated_by="generate_scientific_figures.py"
+        generated_by="generate_scientific_figures.py",
     )
-    
+
     plt.close(fig)
     return fig_meta.label
 
 
 def generate_scatter_plot_figure() -> str:
     """Generate scatter plot figure.
-    
+
     Returns:
         Figure label
     """
     logger.info("Generating scatter plot figure...")
-    
+
     # Generate correlated data
     x = generate_synthetic_data(100, distribution="normal", seed=42)
     y = x + generate_synthetic_data(100, distribution="normal", std=0.3, seed=43)
-    
+
     # Setup visualization
     engine = VisualizationEngine(output_dir="output/figures")
     fig, ax = engine.create_figure()
-    
+
     # Plot scatter
     plot_scatter(x.flatten(), y.flatten(), ax=ax, alpha=0.6, color=engine.get_color(0))
     engine.apply_publication_style(ax, "Correlation Analysis", "X", "Y", grid=True)
-    
+
     # Save figure
     saved = engine.save_figure(fig, "scatter_correlation")
     logger.info(f"  Saved: {saved['png']}")
-    
+
     # Register figure
     figure_manager = FigureManager()
     fig_meta = figure_manager.register_figure(
         filename="scatter_correlation.png",
         caption="Scatter plot showing correlation between two variables",
         section="experimental_results",
-        generated_by="generate_scientific_figures.py"
+        generated_by="generate_scientific_figures.py",
     )
-    
+
     plt.close(fig)
     return fig_meta.label
 
 
 def insert_figures_into_manuscript(figure_labels: list[str]) -> None:
     """Insert figures into manuscript markdown files.
-    
+
     Args:
         figure_labels: List of figure labels to insert
     """
     logger.info("\nInserting figures into manuscript...")
-    
+
     # Setup markdown integration
     # Use project_root/manuscript since we are in project/scripts/
     manuscript_dir = project_root / "manuscript"
     markdown_integration = MarkdownIntegration(manuscript_dir=manuscript_dir)
-    
+
     # Find target markdown file (experimental results section)
     target_file = manuscript_dir / "04_experimental_results.md"
-    
+
     if not target_file.exists():
-        logger.warning(f"  Warning: Target file {target_file} not found, skipping insertion")
+        logger.warning(
+            f"  Warning: Target file {target_file} not found, skipping insertion"
+        )
         return
-    
+
     # Insert each figure
     for label in figure_labels:
         success = markdown_integration.insert_figure_in_section(
-            target_file,
-            label,
-            section_name="Experimental Results",
-            position="after"
+            target_file, label, section_name="Experimental Results", position="after"
         )
         if success:
             logger.info(f"  ✅ Inserted figure: {label}")
         else:
             logger.warning(f"  ⚠️  Failed to insert figure: {label}")
-    
+
     # Update references
     updated = markdown_integration.update_all_references(target_file)
     if updated == 0:
-        logger.info(f"  Reference scan complete: {updated} updates (figures already present or no new references)")
+        logger.info(
+            f"  Reference scan complete: {updated} updates (figures already present or no new references)"
+        )
     else:
         logger.info(f"  Reference scan complete: {updated} reference(s) updated")
 
@@ -293,10 +296,10 @@ def validate_all_figures() -> None:
     # Use project_root/manuscript since we are in project/scripts/
     manuscript_dir = project_root / "manuscript"
     markdown_integration = MarkdownIntegration(manuscript_dir=manuscript_dir)
-    
+
     # Validate manuscript
     validation_results = markdown_integration.validate_manuscript()
-    
+
     if validation_results:
         logger.warning("  ⚠️  Validation issues found:")
         for file_path, errors in validation_results.items():
@@ -305,7 +308,7 @@ def validate_all_figures() -> None:
                 logger.warning(f"      - {label}: {error}")
     else:
         logger.info("  ✅ All figures validated successfully")
-    
+
     # Get statistics
     stats = markdown_integration.get_figure_statistics()
     logger.info(f"  Total figures: {stats['total_figures']}")
@@ -330,7 +333,9 @@ def validate_all_figures() -> None:
             for prob in problems:
                 logger.warning(f"    - {prob}")
         elif validation_result.get("status") == "error":
-            logger.warning(f"  ⚠️  Markdown validation error: {validation_result.get('error', 'Unknown error')}")
+            logger.warning(
+                f"  ⚠️  Markdown validation error: {validation_result.get('error', 'Unknown error')}"
+            )
         else:
             logger.info("  ✅ Markdown references validated")
     except Exception as exc:
@@ -382,7 +387,15 @@ def main() -> None:
     if args.only:
         post_stages = [(n, fn) for n, fn in post_stages if n in args.only]
     if args.resume:
-        post_stages = [(n, fn) for n, fn in post_stages if stage_names.index(n) >= stage_names.index(args.resume)] if post_stages else post_stages
+        post_stages = (
+            [
+                (n, fn)
+                for n, fn in post_stages
+                if stage_names.index(n) >= stage_names.index(args.resume)
+            ]
+            if post_stages
+            else post_stages
+        )
 
     selected_with_post = selected + post_stages
 
@@ -436,7 +449,12 @@ def main() -> None:
                     }
                 )
                 log_substep(f"{name} duration: {metrics.duration:.2f}s", logger)
-                log_progress_bar(current=len(stage_results), total=len(selected_with_post), message=f"{name} complete", logger=logger)
+                log_progress_bar(
+                    current=len(stage_results),
+                    total=len(selected_with_post),
+                    message=f"{name} complete",
+                    logger=logger,
+                )
             logger.info("Completed stage: %s", name)
 
         logger.info(f"\n✅ Generated {len([f for f in figure_labels if f])} figures")
@@ -467,7 +485,8 @@ def main() -> None:
 
 if __name__ == "__main__":
     import matplotlib
-    matplotlib.use('Agg')
-    import matplotlib.pyplot as plt
-    main()
 
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    main()

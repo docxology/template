@@ -5,6 +5,7 @@ extracted from bash scripts into testable Python CLI.
 
 Part of the infrastructure layer (Layer 1) - reusable across all projects.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -12,10 +13,11 @@ import sys
 from pathlib import Path
 from typing import List, Optional
 
-from infrastructure.core.logging_utils import get_logger, setup_logger
-from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor
-from infrastructure.core.multi_project import MultiProjectConfig, MultiProjectOrchestrator
 from infrastructure.core.file_inventory import FileInventoryManager
+from infrastructure.core.logging_utils import get_logger, setup_logger
+from infrastructure.core.multi_project import (MultiProjectConfig,
+                                               MultiProjectOrchestrator)
+from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor
 from infrastructure.core.pipeline_summary import PipelineSummaryGenerator
 from infrastructure.project.discovery import discover_projects
 
@@ -26,131 +28,95 @@ def create_parser() -> argparse.ArgumentParser:
     """Create the main argument parser for core CLI commands."""
     parser = argparse.ArgumentParser(
         description="Core infrastructure CLI for pipeline operations",
-        prog="python -m infrastructure.core.cli"
+        prog="python -m infrastructure.core.cli",
     )
 
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
     # Pipeline execution command
     pipeline_parser = subparsers.add_parser(
-        "pipeline",
-        help="Execute pipeline for a project"
+        "pipeline", help="Execute pipeline for a project"
     )
     pipeline_parser.add_argument(
-        "pipeline_type",
-        choices=["full", "core"],
-        help="Type of pipeline to execute"
+        "pipeline_type", choices=["full", "core"], help="Type of pipeline to execute"
     )
     pipeline_parser.add_argument(
-        "--project",
-        required=True,
-        help="Project name to execute pipeline for"
+        "--project", required=True, help="Project name to execute pipeline for"
     )
     pipeline_parser.add_argument(
-        "--repo-root",
-        type=Path,
-        default=Path.cwd(),
-        help="Repository root directory"
+        "--repo-root", type=Path, default=Path.cwd(), help="Repository root directory"
     )
     pipeline_parser.add_argument(
         "--skip-infra",
         action="store_true",
-        help="Skip infrastructure tests (already run)"
+        help="Skip infrastructure tests (already run)",
     )
     pipeline_parser.add_argument(
-        "--resume",
-        action="store_true",
-        help="Resume pipeline from checkpoint"
+        "--resume", action="store_true", help="Resume pipeline from checkpoint"
     )
 
     # Multi-project execution command
     multi_parser = subparsers.add_parser(
-        "multi-project",
-        help="Execute pipeline across multiple projects"
+        "multi-project", help="Execute pipeline across multiple projects"
     )
     multi_parser.add_argument(
         "execution_type",
         choices=["full", "core", "full-no-infra", "core-no-infra"],
-        help="Type of multi-project execution"
+        help="Type of multi-project execution",
     )
     multi_parser.add_argument(
-        "--repo-root",
-        type=Path,
-        default=Path.cwd(),
-        help="Repository root directory"
+        "--repo-root", type=Path, default=Path.cwd(), help="Repository root directory"
     )
     multi_parser.add_argument(
-        "--projects",
-        nargs="+",
-        help="Specific projects to execute (default: all)"
+        "--projects", nargs="+", help="Specific projects to execute (default: all)"
     )
 
     # File inventory command
     inventory_parser = subparsers.add_parser(
-        "inventory",
-        help="Generate file inventory report"
+        "inventory", help="Generate file inventory report"
     )
     inventory_parser.add_argument(
-        "output_dir",
-        type=Path,
-        help="Output directory to scan"
+        "output_dir", type=Path, help="Output directory to scan"
     )
     inventory_parser.add_argument(
         "--format",
         choices=["text", "json", "html"],
         default="text",
-        help="Output format"
+        help="Output format",
     )
     inventory_parser.add_argument(
-        "--categories",
-        nargs="+",
-        help="Categories to scan (default: all)"
+        "--categories", nargs="+", help="Categories to scan (default: all)"
     )
 
     # Summary command
     summary_parser = subparsers.add_parser(
-        "summary",
-        help="Generate pipeline summary (for testing)"
+        "summary", help="Generate pipeline summary (for testing)"
     )
     summary_parser.add_argument(
-        "--output-dir",
-        type=Path,
-        required=True,
-        help="Output directory"
+        "--output-dir", type=Path, required=True, help="Output directory"
     )
     summary_parser.add_argument(
         "--format",
         choices=["text", "json", "html"],
         default="text",
-        help="Output format"
+        help="Output format",
     )
-    summary_parser.add_argument(
-        "--log-file",
-        type=Path,
-        help="Pipeline log file"
-    )
+    summary_parser.add_argument("--log-file", type=Path, help="Pipeline log file")
     summary_parser.add_argument(
         "--skip-infra",
         action="store_true",
-        help="Whether infrastructure tests were skipped"
+        help="Whether infrastructure tests were skipped",
     )
 
     # Project discovery command
     discover_parser = subparsers.add_parser(
-        "discover",
-        help="Discover available projects"
+        "discover", help="Discover available projects"
     )
     discover_parser.add_argument(
-        "--repo-root",
-        type=Path,
-        default=Path.cwd(),
-        help="Repository root directory"
+        "--repo-root", type=Path, default=Path.cwd(), help="Repository root directory"
     )
     discover_parser.add_argument(
-        "--format",
-        choices=["text", "json"],
-        default="text",
-        help="Output format"
+        "--format", choices=["text", "json"], default="text", help="Output format"
     )
 
     return parser
@@ -198,7 +164,7 @@ def handle_pipeline_command(args: argparse.Namespace) -> int:
         skip_infra=args.skip_infra,
         skip_llm=(args.pipeline_type == "core"),
         resume=args.resume,
-        total_stages=7 if args.pipeline_type == "core" else 9
+        total_stages=7 if args.pipeline_type == "core" else 9,
     )
 
     # Execute pipeline
@@ -214,7 +180,9 @@ def handle_pipeline_command(args: argparse.Namespace) -> int:
         successful_stages = sum(1 for r in results if r.success)
         total_stages = len(results)
 
-        logger.info(f"Pipeline completed: {successful_stages}/{total_stages} stages successful")
+        logger.info(
+            f"Pipeline completed: {successful_stages}/{total_stages} stages successful"
+        )
 
         if all(r.success for r in results):
             logger.info("✅ All pipeline stages completed successfully")
@@ -223,7 +191,9 @@ def handle_pipeline_command(args: argparse.Namespace) -> int:
             logger.error("❌ Some pipeline stages failed")
             for result in results:
                 if not result.success:
-                    logger.error(f"  - Stage {result.stage_num}: {result.stage_name} - {result.error_message}")
+                    logger.error(
+                        f"  - Stage {result.stage_num}: {result.stage_name} - {result.error_message}"
+                    )
             return 1
 
     except Exception as e:
@@ -258,7 +228,9 @@ def handle_multi_project_command(args: argparse.Namespace) -> int:
         logger.error("No projects to execute")
         return 1
 
-    logger.info(f"Found {len(projects)} projects: {', '.join(p.name for p in projects)}")
+    logger.info(
+        f"Found {len(projects)} projects: {', '.join(p.name for p in projects)}"
+    )
 
     # Create multi-project configuration
     run_infra_tests = "no-infra" not in args.execution_type
@@ -269,7 +241,7 @@ def handle_multi_project_command(args: argparse.Namespace) -> int:
         projects=projects,
         run_infra_tests=run_infra_tests,
         run_llm=run_llm,
-        run_executive_report=True
+        run_executive_report=True,
     )
 
     # Execute multi-project pipeline
@@ -321,7 +293,9 @@ def handle_inventory_command(args: argparse.Namespace) -> int:
             logger.info("No files found in output directory")
             return 0
 
-        report = manager.generate_inventory_report(entries, args.format, args.output_dir)
+        report = manager.generate_inventory_report(
+            entries, args.format, args.output_dir
+        )
         print(report)
         return 0
 
@@ -341,6 +315,7 @@ def handle_summary_command(args: argparse.Namespace) -> int:
 
         # Create mock stage results for demonstration
         from infrastructure.core.pipeline import PipelineStageResult
+
         mock_results = [
             PipelineStageResult(1, "Environment Setup", True, 2.5),
             PipelineStageResult(2, "Infrastructure Tests", True, 15.3),
@@ -356,7 +331,7 @@ def handle_summary_command(args: argparse.Namespace) -> int:
             sum(r.duration for r in mock_results),
             args.output_dir,
             args.log_file,
-            args.skip_infra
+            args.skip_infra,
         )
 
         formatted = generator.format_summary(summary, args.format)
@@ -377,6 +352,7 @@ def handle_discover_command(args: argparse.Namespace) -> int:
 
         if args.format == "json":
             import json
+
             project_data = [
                 {
                     "name": p.name,
@@ -386,7 +362,7 @@ def handle_discover_command(args: argparse.Namespace) -> int:
                     "has_scripts": p.has_scripts,
                     "has_manuscript": p.has_manuscript,
                     "metadata": p.metadata,
-                    "is_valid": p.is_valid
+                    "is_valid": p.is_valid,
                 }
                 for p in projects
             ]

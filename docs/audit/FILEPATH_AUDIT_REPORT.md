@@ -4,6 +4,8 @@
 **Files Scanned:** 257
 **Scan Duration:** 0.87 seconds
 
+> **Note (2026-01-28):** The `active_inference_meta_pragmatic` project referenced in this audit has been archived to `projects_archive/`. Issues related to that project are no longer relevant to the active codebase.
+
 ## 📈 Executive Summary
 
 **Total Issues Found:** 329

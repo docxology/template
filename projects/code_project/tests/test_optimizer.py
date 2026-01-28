@@ -3,32 +3,29 @@
 Comprehensive tests covering functionality, edge cases, and numerical accuracy.
 Also tests scientific analysis features when infrastructure is available.
 """
-import time
+
 import json
-import numpy as np
-import pytest
+import time
 from pathlib import Path
 
-from src.optimizer import (
-    quadratic_function,
-    compute_gradient,
-    gradient_descent,
-    OptimizationResult,
-)
+import numpy as np
+import pytest
+from src.optimizer import (OptimizationResult, compute_gradient,
+                           gradient_descent, quadratic_function)
 
 # Try to import scientific analysis functions (graceful fallback)
 try:
     import sys
+
     project_root = Path(__file__).parent.parent
     sys.path.insert(0, str(project_root / "scripts"))
 
-    from optimization_analysis import (
-        run_stability_analysis,
-        run_performance_benchmarking,
-        generate_stability_visualization,
-        generate_benchmark_visualization,
-        generate_analysis_dashboard,
-    )
+    from optimization_analysis import (generate_analysis_dashboard,
+                                       generate_benchmark_visualization,
+                                       generate_stability_visualization,
+                                       run_performance_benchmarking,
+                                       run_stability_analysis)
+
     INFRASTRUCTURE_AVAILABLE = True
 except ImportError:
     INFRASTRUCTURE_AVAILABLE = False
@@ -142,6 +139,7 @@ class TestGradientDescent:
 
     def test_convergence_to_optimum(self):
         """Test that gradient descent converges to known optimum."""
+
         # f(x) = (1/2) x^2 - x, minimum at x = 1, f(1) = -0.5
         def obj_func(x):
             return quadratic_function(x, np.array([[1.0]]), np.array([1.0]))
@@ -155,7 +153,7 @@ class TestGradientDescent:
             gradient_func=grad_func,
             step_size=0.1,
             max_iterations=1000,
-            tolerance=1e-6
+            tolerance=1e-6,
         )
 
         # Should converge to x = 1
@@ -166,8 +164,9 @@ class TestGradientDescent:
 
     def test_max_iterations_reached(self):
         """Test behavior when max iterations reached without convergence."""
+
         def obj_func(x):
-            return x[0]**2  # Never converges to zero
+            return x[0] ** 2  # Never converges to zero
 
         def grad_func(x):
             return np.array([2.0 * x[0]])
@@ -178,7 +177,7 @@ class TestGradientDescent:
             gradient_func=grad_func,
             step_size=0.01,  # Small step size
             max_iterations=10,  # Few iterations
-            tolerance=1e-10  # Tight tolerance
+            tolerance=1e-10,  # Tight tolerance
         )
 
         assert not result.converged
@@ -187,6 +186,7 @@ class TestGradientDescent:
 
     def test_already_converged(self):
         """Test when starting point is already at optimum."""
+
         # Optimum of f(x) = (1/2)x^2 - x is x = 1
         def obj_func(x):
             return quadratic_function(x, np.array([[1.0]]), np.array([1.0]))
@@ -198,7 +198,7 @@ class TestGradientDescent:
             initial_point=np.array([1.0]),
             objective_func=obj_func,
             gradient_func=grad_func,
-            tolerance=1e-6
+            tolerance=1e-6,
         )
 
         assert result.converged
@@ -223,7 +223,7 @@ class TestGradientDescent:
             objective_func=obj_func,
             gradient_func=grad_func,
             step_size=0.1,
-            tolerance=1e-6
+            tolerance=1e-6,
         )
 
         expected_solution = np.array([1.0, 1.0])
@@ -233,8 +233,12 @@ class TestGradientDescent:
 
     def test_parameter_validation(self):
         """Test parameter validation in gradient descent."""
-        def dummy_obj(x): return 0.0
-        def dummy_grad(x): return np.zeros_like(x)
+
+        def dummy_obj(x):
+            return 0.0
+
+        def dummy_grad(x):
+            return np.zeros_like(x)
 
         # Test invalid step size
         with pytest.raises(ValueError, match="step_size must be positive"):
@@ -259,8 +263,12 @@ class TestGradientDescent:
 
     def test_invalid_initial_point(self):
         """Test error handling for invalid initial point."""
-        def dummy_obj(x): return 0.0
-        def dummy_grad(x): return np.zeros_like(x)
+
+        def dummy_obj(x):
+            return 0.0
+
+        def dummy_grad(x):
+            return np.zeros_like(x)
 
         # Test 2D array (should be 1D)
         with pytest.raises(ValueError, match="initial_point must be 1-D array"):
@@ -272,6 +280,7 @@ class TestGradientDescent:
 
     def test_gradient_descent_performance(self):
         """Test gradient descent performance characteristics."""
+
         # Simple quadratic: f(x) = (1/2)x^2 - x, minimum at x=1
         def obj_func(x):
             return quadratic_function(x, np.array([[1.0]]), np.array([1.0]))
@@ -290,7 +299,7 @@ class TestGradientDescent:
                 gradient_func=grad_func,
                 step_size=step_size,
                 tolerance=1e-4,  # Relaxed tolerance for numerical stability
-                max_iterations=1000
+                max_iterations=1000,
             )
             results[step_size] = result
 
@@ -300,7 +309,9 @@ class TestGradientDescent:
             assert result.converged
 
         # Larger step sizes should converge faster
-        assert results[0.2].iterations < results[0.1].iterations < results[0.01].iterations
+        assert (
+            results[0.2].iterations < results[0.1].iterations < results[0.01].iterations
+        )
 
     def test_numerical_stability(self):
         """Test numerical stability with ill-conditioned problems."""
@@ -325,7 +336,7 @@ class TestGradientDescent:
             gradient_func=grad_func,
             step_size=0.01,  # Conservative step size for stability
             tolerance=1e-4,  # Relaxed tolerance for numerical stability
-            max_iterations=10000
+            max_iterations=10000,
         )
 
         np.testing.assert_allclose(result.solution, expected_solution, atol=1e-2)
@@ -344,7 +355,7 @@ class TestOptimizationResult:
             objective_value=-1.5,
             iterations=42,
             converged=True,
-            gradient_norm=1e-8
+            gradient_norm=1e-8,
         )
 
         np.testing.assert_array_equal(result.solution, solution)
@@ -359,6 +370,7 @@ class TestPerformanceBenchmarks:
 
     def test_gradient_descent_timing(self):
         """Benchmark gradient descent execution time."""
+
         def obj_func(x):
             return quadratic_function(x, np.eye(len(x)), np.ones(len(x)))
 
@@ -376,14 +388,14 @@ class TestPerformanceBenchmarks:
                 gradient_func=grad_func,
                 step_size=0.1,
                 tolerance=1e-6,
-                max_iterations=1000
+                max_iterations=1000,
             )
             end_time = time.time()
 
             timing_results[dim] = {
-                'time': end_time - start_time,
-                'iterations': result.iterations,
-                'converged': result.converged
+                "time": end_time - start_time,
+                "iterations": result.iterations,
+                "converged": result.converged,
             }
 
             assert result.converged
@@ -391,7 +403,7 @@ class TestPerformanceBenchmarks:
 
         # All should complete in reasonable time (< 1 second for this simple problem)
         for dim in dimensions:
-            assert timing_results[dim]['time'] < 1.0
+            assert timing_results[dim]["time"] < 1.0
 
     def test_function_evaluation_speed(self):
         """Benchmark function and gradient evaluation speed."""
@@ -421,7 +433,9 @@ class TestPerformanceBenchmarks:
             assert grad_time < 0.001
 
 
-@pytest.mark.skipif(not INFRASTRUCTURE_AVAILABLE, reason="Infrastructure modules not available")
+@pytest.mark.skipif(
+    not INFRASTRUCTURE_AVAILABLE, reason="Infrastructure modules not available"
+)
 class TestStabilityAnalysis:
     """Test numerical stability analysis functions."""
 
@@ -436,7 +450,7 @@ class TestStabilityAnalysis:
             assert result_path.is_file()
 
             # Check JSON content
-            with open(result_path, 'r') as f:
+            with open(result_path, "r") as f:
                 data = json.load(f)
 
             assert "stability_score" in data
@@ -468,7 +482,9 @@ class TestStabilityAnalysis:
             pytest.skip("Stability analysis returned None")
 
 
-@pytest.mark.skipif(not INFRASTRUCTURE_AVAILABLE, reason="Infrastructure modules not available")
+@pytest.mark.skipif(
+    not INFRASTRUCTURE_AVAILABLE, reason="Infrastructure modules not available"
+)
 class TestPerformanceBenchmarking:
     """Test performance benchmarking functions."""
 
@@ -483,7 +499,7 @@ class TestPerformanceBenchmarking:
             assert result_path.is_file()
 
             # Check JSON content
-            with open(result_path, 'r') as f:
+            with open(result_path, "r") as f:
                 data = json.load(f)
 
             assert "execution_time" in data
@@ -515,7 +531,9 @@ class TestPerformanceBenchmarking:
             pytest.skip("Performance benchmarking returned None")
 
 
-@pytest.mark.skipif(not INFRASTRUCTURE_AVAILABLE, reason="Infrastructure modules not available")
+@pytest.mark.skipif(
+    not INFRASTRUCTURE_AVAILABLE, reason="Infrastructure modules not available"
+)
 class TestAnalysisDashboard:
     """Test analysis dashboard generation."""
 
@@ -523,10 +541,14 @@ class TestAnalysisDashboard:
         """Test that analysis dashboard is generated."""
         # Mock optimization results for testing
         mock_results = {
-            0.01: type('MockResult', (), {'converged': False, 'objective_value': -0.4})(),
-            0.05: type('MockResult', (), {'converged': False, 'objective_value': -0.45})(),
-            0.1: type('MockResult', (), {'converged': True, 'objective_value': -0.5})(),
-            0.2: type('MockResult', (), {'converged': True, 'objective_value': -0.5})(),
+            0.01: type(
+                "MockResult", (), {"converged": False, "objective_value": -0.4}
+            )(),
+            0.05: type(
+                "MockResult", (), {"converged": False, "objective_value": -0.45}
+            )(),
+            0.1: type("MockResult", (), {"converged": True, "objective_value": -0.5})(),
+            0.2: type("MockResult", (), {"converged": True, "objective_value": -0.5})(),
         }
 
         # Generate dashboard
@@ -539,7 +561,7 @@ class TestAnalysisDashboard:
             assert dashboard_path.suffix == ".html"
 
             # Check HTML content
-            with open(dashboard_path, 'r', encoding='utf-8') as f:
+            with open(dashboard_path, "r", encoding="utf-8") as f:
                 content = f.read()
 
             assert "<!DOCTYPE html>" in content
@@ -552,10 +574,14 @@ class TestAnalysisDashboard:
         """Test dashboard generation with stability and benchmark data."""
         # Mock optimization results
         mock_results = {
-            0.01: type('MockResult', (), {'converged': False, 'objective_value': -0.4})(),
-            0.05: type('MockResult', (), {'converged': False, 'objective_value': -0.45})(),
-            0.1: type('MockResult', (), {'converged': True, 'objective_value': -0.5})(),
-            0.2: type('MockResult', (), {'converged': True, 'objective_value': -0.5})(),
+            0.01: type(
+                "MockResult", (), {"converged": False, "objective_value": -0.4}
+            )(),
+            0.05: type(
+                "MockResult", (), {"converged": False, "objective_value": -0.45}
+            )(),
+            0.1: type("MockResult", (), {"converged": True, "objective_value": -0.5})(),
+            0.2: type("MockResult", (), {"converged": True, "objective_value": -0.5})(),
         }
 
         # Try to get real analysis data
@@ -564,9 +590,7 @@ class TestAnalysisDashboard:
 
         # Generate dashboard with available data
         dashboard_path = generate_analysis_dashboard(
-            mock_results,
-            stability_path,
-            benchmark_path
+            mock_results, stability_path, benchmark_path
         )
 
         if dashboard_path:
@@ -575,7 +599,7 @@ class TestAnalysisDashboard:
             assert dashboard_path.is_file()
 
             # Check content includes expected sections
-            with open(dashboard_path, 'r', encoding='utf-8') as f:
+            with open(dashboard_path, "r", encoding="utf-8") as f:
                 content = f.read()
 
             assert "Optimization Results" in content
@@ -587,6 +611,3 @@ class TestAnalysisDashboard:
                 assert "Performance Benchmark" in content
         else:
             pytest.skip("Dashboard generation with analysis data returned None")
-
-            # For larger problems, gradient computation involves matrix multiplication
-            # and should take measurable time (though not necessarily slower than function)

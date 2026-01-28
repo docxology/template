@@ -25,8 +25,8 @@ __layer__ = "scientific"
 # Import core classes for convenient access
 from .example import add_numbers, calculate_average
 from .simulation import SimpleSimulation, SimulationBase
-from .visualization import VisualizationEngine
 from .statistics import calculate_descriptive_stats
+from .visualization import VisualizationEngine
 
 __all__ = [
     "example",
@@ -42,4 +42,3 @@ __all__ = [
     "validation",
     "visualization",
 ]
-

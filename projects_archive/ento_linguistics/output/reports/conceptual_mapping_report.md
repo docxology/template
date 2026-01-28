@@ -6,9 +6,9 @@ This report presents the results of conceptual mapping analysis, showing how ter
 
 ## Analysis Summary
 
-- **Terms Extracted**: 118
+- **Terms Extracted**: 0
 - **Concepts Mapped**: 6
-- **Relationships Identified**: 2
+- **Relationships Identified**: 0
 
 ## Concept Map Structure
 
@@ -17,59 +17,49 @@ The following concepts form the foundation of the Ento-Linguistic framework:
 
 #### biological_individuality
 - **Description**: Concepts related to what constitutes a biological individual
-- **Associated Terms**: 6 terms
+- **Associated Terms**: 5 terms
 - **Domains**: unit_of_individuality
-- **Sample Terms**: colony, organism, colony-stimulating, holobiont, individual
+- **Sample Terms**: superorganism, holobiont, individual, colony, organism
 
 #### social_organization
 - **Description**: Principles of social organization and structure
-- **Associated Terms**: 8 terms
+- **Associated Terms**: 4 terms
 - **Domains**: power_and_labor, behavior_and_identity
-- **Sample Terms**: caste, behavior, behavioral, foraging, division of labor
+- **Sample Terms**: hierarchy, specialization, caste, division of labor
 
 #### reproductive_biology
 - **Description**: Reproductive systems and sex determination
-- **Associated Terms**: 5 terms
+- **Associated Terms**: 4 terms
 - **Domains**: sex_and_reproduction
-- **Sample Terms**: reproduction, haplodiploidy, sex determination, parthenogenesis, mating
+- **Sample Terms**: haplodiploidy, parthenogenesis, mating, sex determination
 
 #### kinship_systems
 - **Description**: Genetic and social relatedness structures
-- **Associated Terms**: 5 terms
+- **Associated Terms**: 4 terms
 - **Domains**: kin_and_relatedness
-- **Sample Terms**: altruism, decision-making, kin selection, inclusive fitness, relatedness
+- **Sample Terms**: inclusive fitness, kin selection, relatedness, altruism
 
 #### resource_economics
 - **Description**: Resource allocation and economic principles
-- **Associated Terms**: 6 terms
+- **Associated Terms**: 4 terms
 - **Domains**: economics
-- **Sample Terms**: foraging efficiency, cost-benefit, resource allocation, trade, cost-effective
+- **Sample Terms**: trade, foraging efficiency, resource allocation, cost-benefit
 
 #### behavioral_ecology
 - **Description**: Behavioral adaptations and ecological contexts
-- **Associated Terms**: 10 terms
-- **Domains**: behavior_and_identity, economics
-- **Sample Terms**: fitness, reaction-diffusion, behavior, cost-effective, behavioral
+- **Associated Terms**: 5 terms
+- **Domains**: economics, behavior_and_identity
+- **Sample Terms**: foraging, fitness, adaptation, behavior, optimization
 
 
 ## Concept Relationships
 
 ### Strongest Connections
-.3f.3f.3f.3f
+
 
 ## Terminology-Concept Mapping
 
 ### Most Connected Terms
-- **colony**: Connected to 1 concepts (biological_individuality)
-- **foraging**: Connected to 1 concepts (behavioral_ecology)
-- **behavior**: Connected to 1 concepts (behavioral_ecology)
-- **high-dimensional**: Connected to 0 concepts ()
-- **single-cell**: Connected to 0 concepts ()
-- **held-out**: Connected to 0 concepts ()
-- **genetics**: Connected to 0 concepts ()
-- **model-based**: Connected to 0 concepts ()
-- **reproduction**: Connected to 0 concepts ()
-- **open-source**: Connected to 0 concepts ()
 
 
 ## Domain Analysis

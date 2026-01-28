@@ -3,25 +3,26 @@
 This script orchestrates the complete analysis workflow for Ento-Linguistic research,
 from literature mining through terminology extraction, conceptual mapping, and visualization.
 """
+
 from __future__ import annotations
 
-import sys
-from pathlib import Path
-from typing import Dict, List, Optional, Any
 import json
+import sys
 from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List, Optional
 
 # Add project src to path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root / "src"))
 
-from literature_mining import LiteratureCorpus, mine_entomology_literature
-from text_analysis import TextProcessor
-from term_extraction import TerminologyExtractor
-from conceptual_mapping import ConceptualMapper
-from domain_analysis import DomainAnalyzer
-from discourse_analysis import DiscourseAnalyzer
 from concept_visualization import ConceptVisualizer
+from conceptual_mapping import ConceptualMapper
+from discourse_analysis import DiscourseAnalyzer
+from domain_analysis import DomainAnalyzer
+from literature_mining import LiteratureCorpus, mine_entomology_literature
+from term_extraction import TerminologyExtractor
+from text_analysis import TextProcessor
 
 from infrastructure.core.logging_utils import get_logger
 # Directory creation handled inline
@@ -58,10 +59,13 @@ class LiteratureAnalysisPipeline:
         self.text_processor = TextProcessor()
         self.figure_manager = FigureManager()
 
-        logger.info(f"Initialized analysis pipeline with output directory: {self.output_dir}")
+        logger.info(
+            f"Initialized analysis pipeline with output directory: {self.output_dir}"
+        )
 
-    def run_complete_analysis(self, max_publications: int = 500,
-                            use_cached_data: bool = True) -> Dict[str, Any]:
+    def run_complete_analysis(
+        self, max_publications: int = 500, use_cached_data: bool = True
+    ) -> Dict[str, Any]:
         """Run the complete Ento-Linguistic analysis pipeline.
 
         This method orchestrates the full analysis workflow: literature collection,
@@ -93,64 +97,70 @@ class LiteratureAnalysisPipeline:
         logger.info("Starting complete Ento-Linguistic analysis pipeline")
 
         results = {
-            'pipeline_metadata': {
-                'start_time': start_time.isoformat(),
-                'max_publications': max_publications,
-                'output_directory': str(self.output_dir)
+            "pipeline_metadata": {
+                "start_time": start_time.isoformat(),
+                "max_publications": max_publications,
+                "output_directory": str(self.output_dir),
             },
-            'stages': {}
+            "stages": {},
         }
 
         try:
             # Stage 1: Literature Collection
             logger.info("Stage 1: Literature collection")
             corpus = self._collect_literature(max_publications, use_cached_data)
-            results['stages']['literature_collection'] = {
-                'publications_found': len(corpus.publications),
-                'corpus_file': str(self.data_dir / "literature_corpus.json")
+            results["stages"]["literature_collection"] = {
+                "publications_found": len(corpus.publications),
+                "corpus_file": str(self.data_dir / "literature_corpus.json"),
             }
 
             # Stage 2: Text Processing
             logger.info("Stage 2: Text processing and preprocessing")
             processed_texts = self._process_texts(corpus)
-            results['stages']['text_processing'] = {
-                'texts_processed': len(processed_texts),
-                'total_tokens': sum(len(text.split()) for text in processed_texts)
+            results["stages"]["text_processing"] = {
+                "texts_processed": len(processed_texts),
+                "total_tokens": sum(len(text.split()) for text in processed_texts),
             }
 
             # Stage 3: Terminology Extraction
             logger.info("Stage 3: Terminology extraction")
             terminology = self._extract_terminology(processed_texts)
-            results['stages']['terminology_extraction'] = {
-                'terms_extracted': len(terminology.extracted_terms),
-                'terms_file': str(self.data_dir / "terminology.json"),
-                'csv_export': str(self.data_dir / "terminology.csv")
+            results["stages"]["terminology_extraction"] = {
+                "terms_extracted": len(terminology.extracted_terms),
+                "terms_file": str(self.data_dir / "terminology.json"),
+                "csv_export": str(self.data_dir / "terminology.csv"),
             }
 
             # Stage 4: Conceptual Mapping
             logger.info("Stage 4: Conceptual mapping")
             concept_map = self._create_concept_map(terminology.extracted_terms)
-            results['stages']['conceptual_mapping'] = {
-                'concepts_mapped': len(concept_map.concepts),
-                'relationships_found': len(concept_map.concept_relationships),
-                'concept_map_file': str(self.data_dir / "concept_map.json")
+            results["stages"]["conceptual_mapping"] = {
+                "concepts_mapped": len(concept_map.concepts),
+                "relationships_found": len(concept_map.concept_relationships),
+                "concept_map_file": str(self.data_dir / "concept_map.json"),
             }
 
             # Stage 5: Domain Analysis
             logger.info("Stage 5: Domain-specific analysis")
-            domain_analyses = self._analyze_domains(terminology.extracted_terms, processed_texts)
-            results['stages']['domain_analysis'] = {
-                'domains_analyzed': len(domain_analyses),
-                'domain_report_file': str(self.reports_dir / "domain_analysis_report.md")
+            domain_analyses = self._analyze_domains(
+                terminology.extracted_terms, processed_texts
+            )
+            results["stages"]["domain_analysis"] = {
+                "domains_analyzed": len(domain_analyses),
+                "domain_report_file": str(
+                    self.reports_dir / "domain_analysis_report.md"
+                ),
             }
 
             # Stage 6: Discourse Analysis
             logger.info("Stage 6: Discourse analysis")
             discourse_profile = self._analyze_discourse(processed_texts)
-            results['stages']['discourse_analysis'] = {
-                'patterns_identified': len(discourse_profile.get('patterns', {})),
-                'structures_found': len(discourse_profile.get('argumentative_structures', [])),
-                'discourse_file': str(self.data_dir / "discourse_analysis.json")
+            results["stages"]["discourse_analysis"] = {
+                "patterns_identified": len(discourse_profile.get("patterns", {})),
+                "structures_found": len(
+                    discourse_profile.get("argumentative_structures", [])
+                ),
+                "discourse_file": str(self.data_dir / "discourse_analysis.json"),
             }
 
             # Stage 7: Visualization Generation
@@ -158,27 +168,31 @@ class LiteratureAnalysisPipeline:
             visualizations = self._generate_visualizations(
                 concept_map, terminology.extracted_terms, domain_analyses
             )
-            results['stages']['visualization'] = {
-                'figures_generated': len(visualizations),
-                'visualization_metadata': str(self.data_dir / "visualization_metadata.json")
+            results["stages"]["visualization"] = {
+                "figures_generated": len(visualizations),
+                "visualization_metadata": str(
+                    self.data_dir / "visualization_metadata.json"
+                ),
             }
 
             # Calculate timing
             end_time = datetime.now()
             duration = (end_time - start_time).total_seconds()
 
-            results['pipeline_metadata'].update({
-                'end_time': end_time.isoformat(),
-                'duration_seconds': duration,
-                'status': 'completed'
-            })
+            results["pipeline_metadata"].update(
+                {
+                    "end_time": end_time.isoformat(),
+                    "duration_seconds": duration,
+                    "status": "completed",
+                }
+            )
 
             # Stage 8: Report Generation
             logger.info("Stage 8: Final report generation")
             final_report = self._generate_final_report(results)
-            results['stages']['reporting'] = {
-                'report_file': str(self.reports_dir / "literature_analysis_report.md"),
-                'summary_file': str(self.reports_dir / "analysis_summary.json")
+            results["stages"]["reporting"] = {
+                "report_file": str(self.reports_dir / "literature_analysis_report.md"),
+                "summary_file": str(self.reports_dir / "analysis_summary.json"),
             }
 
             logger.info(f"Pipeline completed successfully in {duration:.1f} seconds")
@@ -186,20 +200,26 @@ class LiteratureAnalysisPipeline:
         except Exception as e:
             end_time = datetime.now()
             duration = (end_time - start_time).total_seconds()
-            results['pipeline_metadata'].update({
-                'end_time': end_time.isoformat(),
-                'duration_seconds': duration,
-                'status': 'failed',
-                'error': str(e)
-            })
+            results["pipeline_metadata"].update(
+                {
+                    "end_time": end_time.isoformat(),
+                    "duration_seconds": duration,
+                    "status": "failed",
+                    "error": str(e),
+                }
+            )
             logger.exception("Pipeline execution failed with exception")
             logger.error(f"Pipeline failed: {e}")
             raise
 
-        logger.debug(f"run_complete_analysis() exit: status={results['pipeline_metadata'].get('status', 'unknown')}")
+        logger.debug(
+            f"run_complete_analysis() exit: status={results['pipeline_metadata'].get('status', 'unknown')}"
+        )
         return results
 
-    def _collect_literature(self, max_publications: int, use_cached: bool) -> LiteratureCorpus:
+    def _collect_literature(
+        self, max_publications: int, use_cached: bool
+    ) -> LiteratureCorpus:
         """Collect entomological literature from PubMed and arXiv.
 
         Args:
@@ -218,23 +238,31 @@ class LiteratureAnalysisPipeline:
         if max_publications <= 0:
             error_msg = f"max_publications must be positive, got {max_publications}"
             logger.error(error_msg)
-            logger.error("Suggestion: Set max_publications to a positive integer (e.g., 500 for moderate collection)")
+            logger.error(
+                "Suggestion: Set max_publications to a positive integer (e.g., 500 for moderate collection)"
+            )
             raise ValueError(error_msg)
 
         if max_publications > 10000:
-            logger.warning(f"max_publications ({max_publications}) is very large, this may take significant time and API calls")
+            logger.warning(
+                f"max_publications ({max_publications}) is very large, this may take significant time and API calls"
+            )
         corpus_file = self.data_dir / "literature_corpus.json"
 
         if use_cached and corpus_file.exists():
             logger.info(f"Loading cached literature corpus from {corpus_file}")
             corpus = LiteratureCorpus.load_from_file(corpus_file)
         else:
-            logger.info(f"Mining new literature corpus (max {max_publications} publications)")
+            logger.info(
+                f"Mining new literature corpus (max {max_publications} publications)"
+            )
             corpus = mine_entomology_literature(max_publications)
 
             # Save corpus
             corpus.save_to_file(corpus_file)
-            logger.info(f"Saved literature corpus with {len(corpus.publications)} publications")
+            logger.info(
+                f"Saved literature corpus with {len(corpus.publications)} publications"
+            )
 
         return corpus
 
@@ -254,7 +282,7 @@ class LiteratureAnalysisPipeline:
             if text.strip():  # Skip empty texts
                 processed = self.text_processor.process_text(text, lemmatize=True)
                 if processed:  # Only keep non-empty processed texts
-                    processed_texts.append(' '.join(processed))
+                    processed_texts.append(" ".join(processed))
 
         logger.info(f"Processed {len(processed_texts)} texts for analysis")
         return processed_texts
@@ -272,9 +300,12 @@ class LiteratureAnalysisPipeline:
         terms = extractor.extract_terms(texts, min_frequency=3)
 
         # Save terminology data
-        terms_data = {term: extractor.extracted_terms[term].to_dict() for term in extractor.extracted_terms}
+        terms_data = {
+            term: extractor.extracted_terms[term].to_dict()
+            for term in extractor.extracted_terms
+        }
         terms_file = self.data_dir / "terminology.json"
-        with open(terms_file, 'w', encoding='utf-8') as f:
+        with open(terms_file, "w", encoding="utf-8") as f:
             json.dump(terms_data, f, indent=2, ensure_ascii=False)
 
         # Export CSV
@@ -303,7 +334,9 @@ class LiteratureAnalysisPipeline:
         logger.info(f"Created concept map with {len(concept_map.concepts)} concepts")
         return concept_map
 
-    def _analyze_domains(self, terms: Dict[str, Any], texts: List[str]) -> Dict[str, Any]:
+    def _analyze_domains(
+        self, terms: Dict[str, Any], texts: List[str]
+    ) -> Dict[str, Any]:
         """Perform domain-specific analysis.
 
         Args:
@@ -326,7 +359,7 @@ class LiteratureAnalysisPipeline:
 
         # Save report
         report_file = self.reports_dir / "domain_analysis_report.md"
-        with open(report_file, 'w', encoding='utf-8') as f:
+        with open(report_file, "w", encoding="utf-8") as f:
             f.write(report_content)
 
         logger.info(f"Completed domain analysis for {len(domain_analyses)} domains")
@@ -351,8 +384,9 @@ class LiteratureAnalysisPipeline:
         logger.info("Completed discourse analysis")
         return profile
 
-    def _generate_visualizations(self, concept_map: Any, terms: Dict[str, Any],
-                               domain_analyses: Dict[str, Any]) -> Dict[str, plt.Figure]:
+    def _generate_visualizations(
+        self, concept_map: Any, terms: Dict[str, Any], domain_analyses: Dict[str, Any]
+    ) -> Dict[str, plt.Figure]:
         """Generate visualizations for analysis results.
 
         Args:
@@ -370,25 +404,25 @@ class LiteratureAnalysisPipeline:
         concept_fig = visualizer.visualize_concept_map(
             concept_map,
             filepath=self.figures_dir / "concept_map.png",
-            title="Ento-Linguistic Concept Map"
+            title="Ento-Linguistic Concept Map",
         )
-        figures['concept_map'] = concept_fig
+        figures["concept_map"] = concept_fig
 
         # Terminology network
         # Create mock relationships for demonstration (would be computed from co-occurrence)
         mock_relationships = {}
         term_list = list(terms.keys())[:20]  # Limit for visualization
         for i, term1 in enumerate(term_list):
-            for term2 in term_list[i+1:i+3]:  # Connect to next 2 terms
+            for term2 in term_list[i + 1 : i + 3]:  # Connect to next 2 terms
                 mock_relationships[(term1, term2)] = 0.5
 
         network_fig = visualizer.visualize_terminology_network(
             list(terms.items()),
             mock_relationships,
-            filepath=self.figures_dir / "terminology_network.png"
+            filepath=self.figures_dir / "terminology_network.png",
         )
-        figures['terminology_network'] = network_fig
-        
+        figures["terminology_network"] = network_fig
+
         # Register terminology network figure
         try:
             self.figure_manager.register_figure(
@@ -396,7 +430,7 @@ class LiteratureAnalysisPipeline:
                 caption="Complete terminology network showing relationships between terms across all Ento-Linguistic domains",
                 label="fig:terminology_network",
                 section="experimental_results",
-                generated_by="literature_analysis_pipeline.py"
+                generated_by="literature_analysis_pipeline.py",
             )
             logger.info("Registered figure: fig:terminology_network")
         except Exception as e:
@@ -409,25 +443,25 @@ class LiteratureAnalysisPipeline:
             for domain_name, analysis in domain_analyses.items():
                 # Handle both DomainAnalysis objects and dicts
                 if isinstance(analysis, dict):
-                    key_terms = analysis.get('key_terms', [])
+                    key_terms = analysis.get("key_terms", [])
                 else:
                     # Assume it's a DomainAnalysis object with key_terms attribute
-                    key_terms = getattr(analysis, 'key_terms', [])
-                
+                    key_terms = getattr(analysis, "key_terms", [])
+
                 domain_stats[domain_name] = {
-                    'term_count': len(key_terms),
-                    'total_frequency': sum(getattr(terms.get(term), 'frequency', 0)
-                                         for term in key_terms),
-                    'avg_confidence': 0.8,  # Mock value
-                    'bridging_terms': set()  # Would be computed
+                    "term_count": len(key_terms),
+                    "total_frequency": sum(
+                        getattr(terms.get(term), "frequency", 0) for term in key_terms
+                    ),
+                    "avg_confidence": 0.8,  # Mock value
+                    "bridging_terms": set(),  # Would be computed
                 }
 
             comparison_fig = visualizer.create_domain_comparison_plot(
-                domain_stats,
-                filepath=self.figures_dir / "domain_comparison.png"
+                domain_stats, filepath=self.figures_dir / "domain_comparison.png"
             )
-            figures['domain_comparison'] = comparison_fig
-            
+            figures["domain_comparison"] = comparison_fig
+
             # Register domain comparison figure
             try:
                 self.figure_manager.register_figure(
@@ -435,7 +469,7 @@ class LiteratureAnalysisPipeline:
                     caption="Domain-specific terminology networks showing unique structural patterns for each Ento-Linguistic domain",
                     label="fig:domain_comparison",
                     section="experimental_results",
-                    generated_by="literature_analysis_pipeline.py"
+                    generated_by="literature_analysis_pipeline.py",
                 )
                 logger.info("Registered figure: fig:domain_comparison")
             except Exception as e:
@@ -443,8 +477,7 @@ class LiteratureAnalysisPipeline:
 
         # Export visualization metadata
         visualizer.export_visualization_metadata(
-            figures,
-            self.data_dir / "visualization_metadata.json"
+            figures, self.data_dir / "visualization_metadata.json"
         )
 
         logger.info(f"Generated {len(figures)} visualizations")
@@ -568,12 +601,12 @@ Analysis framework based on:
 
         # Save report
         report_file = self.reports_dir / "literature_analysis_report.md"
-        with open(report_file, 'w', encoding='utf-8') as f:
+        with open(report_file, "w", encoding="utf-8") as f:
             f.write(report_content)
 
         # Save summary JSON
         summary_file = self.reports_dir / "analysis_summary.json"
-        with open(summary_file, 'w', encoding='utf-8') as f:
+        with open(summary_file, "w", encoding="utf-8") as f:
             json.dump(results, f, indent=2, ensure_ascii=False)
 
         logger.info(f"Generated final report: {report_file}")
@@ -592,41 +625,58 @@ def main() -> None:
     """
     import argparse
 
-    parser = argparse.ArgumentParser(description="Ento-Linguistic Literature Analysis Pipeline")
-    parser.add_argument("--max-publications", type=int, default=500,
-                       help="Maximum number of publications to analyze")
-    parser.add_argument("--output-dir", type=Path,
-                       help="Output directory (default: project output)")
-    parser.add_argument("--no-cache", action="store_true",
-                       help="Force fresh literature collection")
-    parser.add_argument("--verbose", action="store_true",
-                       help="Enable verbose logging")
+    parser = argparse.ArgumentParser(
+        description="Ento-Linguistic Literature Analysis Pipeline"
+    )
+    parser.add_argument(
+        "--max-publications",
+        type=int,
+        default=500,
+        help="Maximum number of publications to analyze",
+    )
+    parser.add_argument(
+        "--output-dir", type=Path, help="Output directory (default: project output)"
+    )
+    parser.add_argument(
+        "--no-cache", action="store_true", help="Force fresh literature collection"
+    )
+    parser.add_argument("--verbose", action="store_true", help="Enable verbose logging")
 
     args = parser.parse_args()
 
     # Configure logging
     if args.verbose:
         import logging
+
         logging.getLogger().setLevel(logging.DEBUG)
 
     # Run pipeline
     pipeline = LiteratureAnalysisPipeline(args.output_dir)
     results = pipeline.run_complete_analysis(
-        max_publications=args.max_publications,
-        use_cached_data=not args.no_cache
+        max_publications=args.max_publications, use_cached_data=not args.no_cache
     )
 
     # Print summary
-    logger.info("\n" + "="*60)
+    logger.info("\n" + "=" * 60)
     logger.info("ENTO-LINGUISTIC ANALYSIS PIPELINE COMPLETED")
-    logger.info("="*60)
-    logger.info(f"Publications analyzed: {results['stages']['literature_collection']['publications_found']}")
-    logger.info(f"Terms extracted: {results['stages']['terminology_extraction']['terms_extracted']}")
-    logger.info(f"Concepts mapped: {results['stages']['conceptual_mapping']['concepts_mapped']}")
-    logger.info(f"Domains analyzed: {results['stages']['domain_analysis']['domains_analyzed']}")
-    logger.info(f"Pipeline execution time: {results['pipeline_metadata']['duration_seconds']:.1f}s")
+    logger.info("=" * 60)
+    logger.info(
+        f"Publications analyzed: {results['stages']['literature_collection']['publications_found']}"
+    )
+    logger.info(
+        f"Terms extracted: {results['stages']['terminology_extraction']['terms_extracted']}"
+    )
+    logger.info(
+        f"Concepts mapped: {results['stages']['conceptual_mapping']['concepts_mapped']}"
+    )
+    logger.info(
+        f"Domains analyzed: {results['stages']['domain_analysis']['domains_analyzed']}"
+    )
+    logger.info(
+        f"Pipeline execution time: {results['pipeline_metadata']['duration_seconds']:.1f}s"
+    )
     logger.info(f"Output directory: {results['pipeline_metadata']['output_directory']}")
-    logger.info("="*60)
+    logger.info("=" * 60)
 
 
 if __name__ == "__main__":

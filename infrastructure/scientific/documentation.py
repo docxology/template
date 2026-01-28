@@ -6,10 +6,11 @@ Provides automatic documentation generation for scientific code:
 - Markdown-formatted scientific documentation
 - Parameter and return value extraction
 """
+
 from __future__ import annotations
 
 import inspect
-from typing import Callable, Any
+from typing import Any, Callable
 
 
 def generate_scientific_documentation(func: Callable) -> str:
@@ -78,7 +79,7 @@ def generate_api_documentation(module: Any) -> str:
     classes = []
 
     for name in dir(module):
-        if name.startswith('_'):
+        if name.startswith("_"):
             continue
 
         obj = getattr(module, name)
@@ -118,5 +119,4 @@ def generate_api_documentation(module: Any) -> str:
             doc.append(f"{docstring}")
             doc.append("")
 
-    return '\n'.join(doc)
-
+    return "\n".join(doc)

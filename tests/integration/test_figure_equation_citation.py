@@ -7,14 +7,15 @@ This test suite validates the complete workflow of:
 - Integration with PDF generation pipeline
 """
 
-import pytest
 import os
-import sys
-import tempfile
 import shutil
 import subprocess
+import sys
+import tempfile
 from pathlib import Path
+
 import numpy as np
+import pytest
 
 
 @pytest.mark.integration
@@ -25,20 +26,23 @@ class TestFigureGeneration:
         """Test that figures are generated with correct paths for markdown referencing."""
         test_root = tmp_path / "fig_test"
         test_root.mkdir()
-        
+
         # Create src/ with example module
         src_dir = test_root / "src"
         src_dir.mkdir()
-        (src_dir / "example.py").write_text('''
+        (src_dir / "example.py").write_text(
+            """
 def add_numbers(a, b): return a + b
 def multiply_numbers(a, b): return a * b
-''')
-        
+"""
+        )
+
         # Create script that generates figure
         scripts_dir = test_root / "scripts"
         scripts_dir.mkdir()
         script = scripts_dir / "test_figure.py"
-        script.write_text('''
+        script.write_text(
+            """
 import os
 import sys
 import matplotlib
@@ -73,13 +77,17 @@ fig.savefig(figure_path, dpi=300, bbox_inches='tight')
 plt.close(fig)
 
 print(f"Generated: {figure_path}")
-''')
-        
+"""
+        )
+
         # Run script
-        result = subprocess.run([
-            sys.executable, str(script)
-        ], cwd=str(test_root), capture_output=True, text=True)
-        
+        result = subprocess.run(
+            [sys.executable, str(script)],
+            cwd=str(test_root),
+            capture_output=True,
+            text=True,
+        )
+
         assert result.returncode == 0
         assert (test_root / "output" / "figures" / "test_figure.png").exists()
         assert "Generated:" in result.stdout
@@ -100,16 +108,16 @@ This section demonstrates figure referencing.
 
 As shown in Figure \ref{fig:test_figure}, the results are clear.
 """
-        
+
         md_file = tmp_path / "test.md"
         md_file.write_text(markdown_content)
-        
+
         # Verify markdown contains proper LaTeX figure syntax
         content = md_file.read_text()
-        assert r'\begin{figure}' in content
-        assert r'\includegraphics' in content
-        assert r'\label{fig:test_figure}' in content
-        assert r'\ref{fig:test_figure}' in content
+        assert r"\begin{figure}" in content
+        assert r"\includegraphics" in content
+        assert r"\label{fig:test_figure}" in content
+        assert r"\ref{fig:test_figure}" in content
 
     def test_multiple_figures_with_unique_labels(self, tmp_path):
         """Test that multiple figures have unique labels."""
@@ -130,17 +138,17 @@ As shown in Figure \ref{fig:test_figure}, the results are clear.
 
 Figure \ref{fig:figure1} shows X, while Figure \ref{fig:figure2} shows Y.
 """
-        
+
         md_file = tmp_path / "test.md"
         md_file.write_text(markdown_content)
-        
+
         content = md_file.read_text()
-        
+
         # Check unique labels
-        assert r'\label{fig:figure1}' in content
-        assert r'\label{fig:figure2}' in content
-        assert r'\ref{fig:figure1}' in content
-        assert r'\ref{fig:figure2}' in content
+        assert r"\label{fig:figure1}" in content
+        assert r"\label{fig:figure2}" in content
+        assert r"\ref{fig:figure1}" in content
+        assert r"\ref{fig:figure2}" in content
 
 
 @pytest.mark.integration
@@ -160,14 +168,14 @@ The optimization problem is defined as:
 
 where $\lambda > 0$ is the regularization parameter.
 """
-        
+
         md_file = tmp_path / "test.md"
         md_file.write_text(markdown_content)
-        
+
         content = md_file.read_text()
-        assert r'\begin{equation}' in content
-        assert r'\label{eq:optimization}' in content
-        assert r'\end{equation}' in content
+        assert r"\begin{equation}" in content
+        assert r"\label{eq:optimization}" in content
+        assert r"\end{equation}" in content
 
     def test_equation_cross_reference(self, tmp_path):
         """Test that equations can be cross-referenced."""
@@ -182,13 +190,13 @@ x_{k+1} = x_k - \alpha \nabla f(x_k)
 
 Equation \eqref{eq:main} shows the gradient descent update rule.
 """
-        
+
         md_file = tmp_path / "test.md"
         md_file.write_text(markdown_content)
-        
+
         content = md_file.read_text()
-        assert r'\eqref{eq:main}' in content
-        assert content.count(r'\eqref{eq:main}') == 2  # Two references (both shown)
+        assert r"\eqref{eq:main}" in content
+        assert content.count(r"\eqref{eq:main}") == 2  # Two references (both shown)
 
     def test_multiple_equations_with_unique_labels(self, tmp_path):
         """Test that multiple equations have unique labels."""
@@ -207,17 +215,17 @@ g(x) = x^3
 
 Combining \eqref{eq:first} and \eqref{eq:second} gives the result.
 """
-        
+
         md_file = tmp_path / "test.md"
         md_file.write_text(markdown_content)
-        
+
         content = md_file.read_text()
-        
+
         # Check unique labels
-        assert r'\label{eq:first}' in content
-        assert r'\label{eq:second}' in content
-        assert r'\eqref{eq:first}' in content
-        assert r'\eqref{eq:second}' in content
+        assert r"\label{eq:first}" in content
+        assert r"\label{eq:second}" in content
+        assert r"\eqref{eq:first}" in content
+        assert r"\eqref{eq:second}" in content
 
     def test_equation_without_label_detected(self, tmp_path):
         """Test that unlabeled equations are detected."""
@@ -229,15 +237,15 @@ This equation is unlabeled:
 x = y + z
 \end{equation}
 """
-        
+
         md_file = tmp_path / "test.md"
         md_file.write_text(markdown_content)
-        
+
         content = md_file.read_text()
-        
+
         # Check equation exists but no label
-        assert r'\begin{equation}' in content
-        assert r'\label{eq:' not in content
+        assert r"\begin{equation}" in content
+        assert r"\label{eq:" not in content
 
 
 @pytest.mark.integration
@@ -254,13 +262,13 @@ the algorithm converges at rate $O(1/k)$.
 
 Jones \cite{jones2024} extended this analysis to the stochastic setting.
 """
-        
+
         md_file = tmp_path / "test.md"
         md_file.write_text(markdown_content)
-        
+
         content = md_file.read_text()
-        assert r'\cite{smith2023}' in content
-        assert r'\cite{jones2024}' in content
+        assert r"\cite{smith2023}" in content
+        assert r"\cite{jones2024}" in content
 
     def test_bibliography_file_structure(self, tmp_path):
         """Test that bibliography files are properly structured."""
@@ -279,16 +287,16 @@ Jones \cite{jones2024} extended this analysis to the stochastic setting.
   year={2024}
 }
 """
-        
+
         bib_file = tmp_path / "references.bib"
         bib_file.write_text(bibtex_content)
-        
+
         content = bib_file.read_text()
-        
-        assert '@article{smith2023' in content
-        assert '@inproceedings{jones2024' in content
-        assert 'title=' in content
-        assert 'author=' in content
+
+        assert "@article{smith2023" in content
+        assert "@inproceedings{jones2024" in content
+        assert "title=" in content
+        assert "author=" in content
 
     def test_multiple_citations_same_sentence(self, tmp_path):
         """Test handling of multiple citations in one sentence."""
@@ -298,12 +306,12 @@ Jones \cite{jones2024} extended this analysis to the stochastic setting.
 Several methods have been proposed \cite{smith2023,jones2024,brown2022}
 for solving this problem.
 """
-        
+
         md_file = tmp_path / "test.md"
         md_file.write_text(markdown_content)
-        
+
         content = md_file.read_text()
-        assert r'\cite{smith2023,jones2024,brown2022}' in content
+        assert r"\cite{smith2023,jones2024,brown2022}" in content
 
 
 @pytest.mark.integration
@@ -353,21 +361,21 @@ Table \ref{tab:performance} summarizes the results.
 | Baseline \cite{baseline2023} | 0.85 | 0.90 |
 
 """
-        
+
         md_file = tmp_path / "04_experimental_results.md"
         md_file.write_text(markdown_content)
-        
+
         content = md_file.read_text()
-        
+
         # Verify all elements present
-        assert r'\label{eq:metric}' in content
-        assert r'\label{eq:performance}' in content
-        assert r'\eqref{eq:metric}' in content
-        assert r'\eqref{eq:performance}' in content
-        assert r'\label{fig:convergence}' in content
-        assert r'\ref{fig:convergence}' in content
-        assert r'\cite{baseline2023}' in content
-        assert r'\cite{smith2023,jones2024}' in content
+        assert r"\label{eq:metric}" in content
+        assert r"\label{eq:performance}" in content
+        assert r"\eqref{eq:metric}" in content
+        assert r"\eqref{eq:performance}" in content
+        assert r"\label{fig:convergence}" in content
+        assert r"\ref{fig:convergence}" in content
+        assert r"\cite{baseline2023}" in content
+        assert r"\cite{smith2023,jones2024}" in content
 
     def test_cross_section_references(self, tmp_path):
         """Test that references work across multiple sections."""
@@ -377,7 +385,7 @@ Table \ref{tab:performance} summarizes the results.
 We present a novel algorithm with convergence rate $O(1/k)$.
 See Section \ref{sec:methodology} for details.
 """
-        
+
         methodology_content = r"""
 # Methodology {#sec:methodology}
 
@@ -389,7 +397,7 @@ x_{k+1} = x_k - \alpha \nabla f(x_k)
 
 Results are shown in Section \ref{sec:results}.
 """
-        
+
         results_content = r"""
 # Results {#sec:results}
 
@@ -402,21 +410,21 @@ yields the convergence shown in Figure \ref{fig:convergence}.
 \label{fig:convergence}
 \end{figure}
 """
-        
+
         (tmp_path / "01_introduction.md").write_text(intro_content)
         (tmp_path / "02_methodology.md").write_text(methodology_content)
         (tmp_path / "03_results.md").write_text(results_content)
-        
+
         # Verify cross-references
         intro = (tmp_path / "01_introduction.md").read_text()
         methodology = (tmp_path / "02_methodology.md").read_text()
         results = (tmp_path / "03_results.md").read_text()
-        
-        assert r'\ref{sec:methodology}' in intro
-        assert r'\ref{sec:results}' in methodology
-        assert r'\ref{sec:methodology}' in results
-        assert r'\eqref{eq:algorithm}' in results
-        assert r'\ref{fig:convergence}' in results
+
+        assert r"\ref{sec:methodology}" in intro
+        assert r"\ref{sec:results}" in methodology
+        assert r"\ref{sec:methodology}" in results
+        assert r"\eqref{eq:algorithm}" in results
+        assert r"\ref{fig:convergence}" in results
 
 
 @pytest.mark.integration
@@ -430,13 +438,13 @@ class TestValidationIntegration:
 
 ![Missing Figure](../output/figures/missing.png)
 """
-        
+
         md_file = tmp_path / "test.md"
         md_file.write_text(markdown_content)
-        
+
         # Figure file does NOT exist
         assert not (tmp_path / "output" / "figures" / "missing.png").exists()
-        
+
         # Validation should detect this (tested in validate_markdown tests)
 
     def test_markdown_validation_detects_missing_equation_labels(self, tmp_path):
@@ -448,15 +456,15 @@ class TestValidationIntegration:
 x = y + z
 \end{equation}
 """
-        
+
         md_file = tmp_path / "test.md"
         md_file.write_text(markdown_content)
-        
+
         content = md_file.read_text()
-        
+
         # Has equation but no label
-        assert r'\begin{equation}' in content
-        assert r'\label{eq:' not in content
+        assert r"\begin{equation}" in content
+        assert r"\label{eq:" not in content
 
     def test_markdown_validation_detects_unresolved_references(self, tmp_path):
         """Test that validation detects unresolved cross-references."""
@@ -465,14 +473,14 @@ x = y + z
 
 See equation \eqref{eq:nonexistent} for details.
 """
-        
+
         md_file = tmp_path / "test.md"
         md_file.write_text(markdown_content)
-        
+
         content = md_file.read_text()
-        
+
         # References equation that doesn't exist
-        assert r'\eqref{eq:nonexistent}' in content
+        assert r"\eqref{eq:nonexistent}" in content
 
 
 @pytest.mark.integration
@@ -492,19 +500,19 @@ class TestPDFGenerationIntegration:
 \label{fig:test}
 \end{figure}
 """
-        
+
         md_file = tmp_path / "test.md"
         md_file.write_text(markdown_content)
-        
+
         # Create dummy figure
         figures_dir = tmp_path / "output" / "figures"
         figures_dir.mkdir(parents=True)
         (figures_dir / "test.png").write_bytes(b"PNG dummy content")
-        
+
         # Verify setup
         assert (figures_dir / "test.png").exists()
         content = md_file.read_text()
-        assert r'\includegraphics' in content
+        assert r"\includegraphics" in content
 
     def test_pdf_resolves_equation_references(self, tmp_path):
         """Test that PDF generation resolves equation references."""
@@ -517,17 +525,16 @@ x = y + z
 
 Equation \eqref{eq:test} shows the relationship.
 """
-        
+
         md_file = tmp_path / "test.md"
         md_file.write_text(markdown_content)
-        
+
         content = md_file.read_text()
-        
+
         # Verify structure for PDF generation
-        assert r'\label{eq:test}' in content
-        assert r'\eqref{eq:test}' in content
+        assert r"\label{eq:test}" in content
+        assert r"\eqref{eq:test}" in content
 
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
-

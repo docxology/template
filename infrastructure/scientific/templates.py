@@ -5,6 +5,7 @@ Provides templates for new scientific modules and workflows:
 - Test suite templates
 - Workflow templates for reproducible research
 """
+
 from __future__ import annotations
 
 
@@ -339,4 +340,3 @@ if __name__ == "__main__":
     main()
 '''
     return template
-

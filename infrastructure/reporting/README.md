@@ -180,7 +180,7 @@ from infrastructure.reporting import generate_executive_summary, save_executive_
 from pathlib import Path
 
 repo_root = Path(".")
-project_names = ["project", "code_project", "prose_project"]
+project_names = ["code_project"]
 
 # Generate cross-project summary
 summary = generate_executive_summary(repo_root, project_names)
@@ -343,10 +343,8 @@ output/executive_summary/
 ├── dashboard.png                  # 9-chart dashboard
 ├── dashboard.pdf                  # Vector graphics for printing
 ├── dashboard.html                 # Interactive charts (Plotly)
-├── manuscript_overview_project.png           # Manuscript page grid (PNG)
-├── manuscript_overview_project.pdf           # Manuscript page grid (PDF)
-├── manuscript_overview_prose_project.png  # Additional projects...
-├── manuscript_overview_code_project.png
+├── manuscript_overview_code_project.png      # Manuscript page grid (PNG)
+├── manuscript_overview_code_project.pdf      # Manuscript page grid (PDF)
 ├── project_metrics.csv           # Detailed project data
 ├── aggregate_metrics.csv         # Cross-project statistics
 └── health_scores.csv             # Health score breakdowns

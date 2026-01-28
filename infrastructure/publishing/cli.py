@@ -8,23 +8,42 @@ import os
 import sys
 from pathlib import Path
 
-from .core import extract_publication_metadata, generate_citation_bibtex
+from infrastructure.core.logging_utils import get_logger
+
 from .api import ZenodoClient
+from .core import extract_publication_metadata, generate_citation_bibtex
+
+logger = get_logger(__name__)
 
 
-def extract_metadata_command(args):
-    """Extract publication metadata."""
+def extract_metadata_command(args: argparse.Namespace) -> None:
+    """Extract and display publication metadata from manuscript files.
+
+    Scans the specified manuscript directory for markdown files and extracts
+    publication metadata including title, authors, abstract, and keywords.
+    Results are printed to stdout.
+
+    Args:
+        args: Argparse namespace containing:
+            - manuscript_dir (str): Path to directory containing markdown files.
+
+    Returns:
+        None. Prints metadata to stdout.
+
+    Raises:
+        SystemExit: If the directory does not exist or contains no markdown files.
+    """
     manuscript_dir = Path(args.manuscript_dir)
 
     if not manuscript_dir.exists():
-        print(f"Error: Directory not found: {manuscript_dir}", file=sys.stderr)
+        logger.error("Directory not found: %s", manuscript_dir)
         sys.exit(1)
 
-    print(f"Extracting metadata from: {manuscript_dir}...")
+    logger.info("Extracting metadata from: %s", manuscript_dir)
     md_files = list(manuscript_dir.glob("*.md"))
 
     if not md_files:
-        print("Error: No markdown files found", file=sys.stderr)
+        logger.error("No markdown files found")
         sys.exit(1)
 
     metadata = extract_publication_metadata(md_files)
@@ -32,21 +51,42 @@ def extract_metadata_command(args):
     print(f"\nMetadata:")
     print(f"Title: {metadata.title}")
     print(f"Authors: {', '.join(metadata.authors)}")
-    print(f"Abstract: {metadata.abstract[:200]}..." if metadata.abstract else "Abstract: N/A")
+    print(
+        f"Abstract: {metadata.abstract[:200]}..."
+        if metadata.abstract
+        else "Abstract: N/A"
+    )
     print(f"Keywords: {', '.join(metadata.keywords)}")
 
 
-def generate_citation_command(args):
-    """Generate citation in specified format."""
+def generate_citation_command(args: argparse.Namespace) -> None:
+    """Generate a formatted citation from manuscript metadata.
+
+    Extracts metadata from manuscript markdown files and generates a citation
+    in the requested format (currently BibTeX only). The citation is printed
+    to stdout for easy copying or redirection.
+
+    Args:
+        args: Argparse namespace containing:
+            - manuscript_dir (str): Path to directory containing markdown files.
+            - format (str): Citation format ('bibtex', 'apa', or 'mla').
+
+    Returns:
+        None. Prints the formatted citation to stdout.
+
+    Raises:
+        SystemExit: If the directory does not exist, contains no markdown files,
+            or if an unsupported format is requested.
+    """
     manuscript_dir = Path(args.manuscript_dir)
 
     if not manuscript_dir.exists():
-        print(f"Error: Directory not found: {manuscript_dir}", file=sys.stderr)
+        logger.error("Directory not found: %s", manuscript_dir)
         sys.exit(1)
 
     md_files = list(manuscript_dir.glob("*.md"))
     if not md_files:
-        print("Error: No markdown files found", file=sys.stderr)
+        logger.error("No markdown files found")
         sys.exit(1)
 
     metadata = extract_publication_metadata(md_files)
@@ -54,31 +94,51 @@ def generate_citation_command(args):
     if args.format == "bibtex":
         citation = generate_citation_bibtex(metadata)
     else:
-        print(f"Error: Unsupported format: {args.format}", file=sys.stderr)
+        logger.error("Unsupported format: %s", args.format)
         sys.exit(1)
 
     print(citation)
 
 
-def publish_zenodo_command(args):
-    """Publish to Zenodo."""
+def publish_zenodo_command(args: argparse.Namespace) -> None:
+    """Upload and publish research outputs to Zenodo.
+
+    Finds all PDF files in the specified output directory and uploads them
+    to Zenodo as a new publication. Requires a valid Zenodo API token either
+    via command-line argument or ZENODO_TOKEN environment variable.
+
+    Args:
+        args: Argparse namespace containing:
+            - output_dir (str): Path to directory containing PDF files to upload.
+            - token (str, optional): Zenodo API token. Falls back to ZENODO_TOKEN env.
+            - title (str, optional): Publication title. Defaults to 'Research Publication'.
+            - authors (str, optional): Comma-separated author names.
+            - description (str, optional): Publication description text.
+
+    Returns:
+        None. Prints the Zenodo record ID on success.
+
+    Raises:
+        SystemExit: If no token is available, directory does not exist,
+            no PDF files are found, or the upload fails.
+    """
     token = args.token or os.getenv("ZENODO_TOKEN")
     if not token:
-        print("Error: ZENODO_TOKEN environment variable not set", file=sys.stderr)
+        logger.error("ZENODO_TOKEN environment variable not set")
         sys.exit(1)
 
     output_dir = Path(args.output_dir)
     if not output_dir.exists():
-        print(f"Error: Directory not found: {output_dir}", file=sys.stderr)
+        logger.error("Directory not found: %s", output_dir)
         sys.exit(1)
 
     # Find PDFs
     pdfs = list(output_dir.glob("**/*.pdf"))
     if not pdfs:
-        print("Error: No PDF files found", file=sys.stderr)
+        logger.error("No PDF files found")
         sys.exit(1)
 
-    print(f"Publishing {len(pdfs)} files to Zenodo...")
+    logger.info("Publishing %d files to Zenodo", len(pdfs))
     client = ZenodoClient()
 
     # Use provided metadata or extract from manuscript
@@ -92,12 +152,25 @@ def publish_zenodo_command(args):
         record_id = client.upload_publication(metadata, pdfs)
         print(f"Published successfully! Record ID: {record_id}")
     except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
+        logger.error("Zenodo upload failed: %s", e)
         sys.exit(1)
 
 
-def main():
-    """Main CLI entry point."""
+def main() -> None:
+    """Main CLI entry point for publishing operations.
+
+    Parses command-line arguments and dispatches to the appropriate
+    subcommand handler. Available commands:
+        - extract-metadata: Extract publication metadata from manuscript files.
+        - generate-citation: Generate citations in various formats.
+        - publish-zenodo: Upload and publish to Zenodo repository.
+
+    Returns:
+        None. Exit code 0 on success, 1 on error.
+
+    Raises:
+        SystemExit: If no command is specified or if the command fails.
+    """
     parser = argparse.ArgumentParser(
         description="Publish research outputs to academic platforms."
     )
@@ -115,14 +188,16 @@ def main():
         "--format",
         choices=["bibtex", "apa", "mla"],
         default="bibtex",
-        help="Citation format"
+        help="Citation format",
     )
     cite_parser.set_defaults(func=generate_citation_command)
 
     # Publish to Zenodo
     zenodo_parser = subparsers.add_parser("publish-zenodo", help="Publish to Zenodo")
     zenodo_parser.add_argument("output_dir", help="Output directory with files")
-    zenodo_parser.add_argument("--token", help="Zenodo API token (or use ZENODO_TOKEN env)")
+    zenodo_parser.add_argument(
+        "--token", help="Zenodo API token (or use ZENODO_TOKEN env)"
+    )
     zenodo_parser.add_argument("--title", help="Publication title")
     zenodo_parser.add_argument("--authors", help="Comma-separated author list")
     zenodo_parser.add_argument("--description", help="Publication description")
@@ -137,10 +212,9 @@ def main():
     try:
         args.func(args)
     except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
+        logger.error("Command failed: %s", e)
         sys.exit(1)
 
 
 if __name__ == "__main__":
     main()
-

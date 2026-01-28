@@ -1,13 +1,15 @@
 """Tests for core CLI interface."""
+
 from __future__ import annotations
 
+import argparse
 import os
-import pytest
-from pathlib import Path
 import subprocess
 import sys
 import tempfile
-import argparse
+from pathlib import Path
+
+import pytest
 
 from infrastructure.core.cli import create_parser, main
 
@@ -21,8 +23,11 @@ class TestCreateParser:
         assert isinstance(parser, argparse.ArgumentParser)
 
         # Test that all expected subcommands exist
-        subcommands = [action.dest for action in parser._subparsers._actions
-                      if hasattr(action, 'dest') and action.dest == 'command']
+        subcommands = [
+            action.dest
+            for action in parser._subparsers._actions
+            if hasattr(action, "dest") and action.dest == "command"
+        ]
         assert len(subcommands) == 1  # Should have command subparser
 
     def test_pipeline_subcommand(self):
@@ -30,11 +35,11 @@ class TestCreateParser:
         parser = create_parser()
 
         # Parse pipeline command
-        args = parser.parse_args(['pipeline', 'full', '--project', 'test'])
+        args = parser.parse_args(["pipeline", "full", "--project", "test"])
 
-        assert args.command == 'pipeline'
-        assert args.pipeline_type == 'full'
-        assert args.project == 'test'
+        assert args.command == "pipeline"
+        assert args.pipeline_type == "full"
+        assert args.project == "test"
         assert args.skip_infra is False
         assert args.resume is False
 
@@ -42,21 +47,21 @@ class TestCreateParser:
         """Test multi-project subcommand arguments."""
         parser = create_parser()
 
-        args = parser.parse_args(['multi-project', 'full'])
+        args = parser.parse_args(["multi-project", "full"])
 
-        assert args.command == 'multi-project'
-        assert args.execution_type == 'full'
+        assert args.command == "multi-project"
+        assert args.execution_type == "full"
         assert args.projects is None
 
     def test_inventory_subcommand(self):
         """Test inventory subcommand arguments."""
         parser = create_parser()
 
-        args = parser.parse_args(['inventory', '/tmp/output'])
+        args = parser.parse_args(["inventory", "/tmp/output"])
 
-        assert args.command == 'inventory'
-        assert args.output_dir == Path('/tmp/output')
-        assert args.format == 'text'
+        assert args.command == "inventory"
+        assert args.output_dir == Path("/tmp/output")
+        assert args.format == "text"
         assert args.categories is None
 
 
@@ -74,19 +79,25 @@ class TestCLISubprocess:
             scripts_dir.mkdir()
 
             script_files = [
-                "00_setup_environment.py", "01_run_tests.py", "02_run_analysis.py",
-                "03_render_pdf.py", "04_validate_output.py", "05_copy_outputs.py"
+                "00_setup_environment.py",
+                "01_run_tests.py",
+                "02_run_analysis.py",
+                "03_render_pdf.py",
+                "04_validate_output.py",
+                "05_copy_outputs.py",
             ]
 
             for script_file in script_files:
                 script_path = scripts_dir / script_file
-                script_path.write_text("""
+                script_path.write_text(
+                    """
 import sys
 import time
 time.sleep(0.01)
 print("Script executed successfully")
 sys.exit(0)
-""")
+"""
+                )
 
             # Create project structure
             project_dir = repo_root / "projects" / "test_project"
@@ -101,28 +112,43 @@ sys.exit(0)
 
             (project_dir / "src" / "__init__.py").write_text("")
             (project_dir / "tests" / "__init__.py").write_text("")
-            (project_dir / "manuscript" / "config.yaml").write_text("""
+            (project_dir / "manuscript" / "config.yaml").write_text(
+                """
 paper:
   title: "Test Project"
 authors:
   - name: "Test Author"
-""")
+"""
+            )
 
             # Test CLI execution via subprocess
             # Need to run from repository directory where infrastructure module is available
             env = os.environ.copy()
-            env["PYTHONPATH"] = str(Path(__file__).parent.parent.parent)  # Add repository root to PYTHONPATH
+            env["PYTHONPATH"] = str(
+                Path(__file__).parent.parent.parent
+            )  # Add repository root to PYTHONPATH
 
-            result = subprocess.run([
-                sys.executable, "-m", "infrastructure.core.cli",
-                "pipeline", "core", "--project", "test_project", "--repo-root", str(repo_root)
-            ], capture_output=True, text=True, env=env)
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    "-m",
+                    "infrastructure.core.cli",
+                    "pipeline",
+                    "core",
+                    "--project",
+                    "test_project",
+                    "--repo-root",
+                    str(repo_root),
+                ],
+                capture_output=True,
+                text=True,
+                env=env,
+            )
 
             assert result.returncode == 0
             # CLI successfully executed scripts - check that scripts were called
             # The stub scripts print "Script executed successfully"
             assert "Script executed successfully" in result.stdout
-
 
     def test_cli_multi_project_command(self):
         """Test multi-project command execution via CLI."""
@@ -135,19 +161,25 @@ authors:
             scripts_dir.mkdir()
 
             script_files = [
-                "00_setup_environment.py", "01_run_tests.py", "02_run_analysis.py",
-                "03_render_pdf.py", "04_validate_output.py", "05_copy_outputs.py"
+                "00_setup_environment.py",
+                "01_run_tests.py",
+                "02_run_analysis.py",
+                "03_render_pdf.py",
+                "04_validate_output.py",
+                "05_copy_outputs.py",
             ]
 
             for script_file in script_files:
                 script_path = scripts_dir / script_file
-                script_path.write_text("""
+                script_path.write_text(
+                    """
 import sys
 import time
 time.sleep(0.01)
 print("Script executed successfully")
 sys.exit(0)
-""")
+"""
+                )
 
             # Create projects
             projects_dir = repo_root / "projects"
@@ -166,22 +198,36 @@ sys.exit(0)
 
                 (project_dir / "src" / "__init__.py").write_text("")
                 (project_dir / "tests" / "__init__.py").write_text("")
-                (project_dir / "manuscript" / "config.yaml").write_text(f"""
+                (project_dir / "manuscript" / "config.yaml").write_text(
+                    f"""
 paper:
   title: "{project_name} Project"
 authors:
   - name: "Test Author"
-""")
+"""
+                )
 
             # Test CLI execution via subprocess
             # Need to run from repository directory where infrastructure module is available
             env = os.environ.copy()
-            env["PYTHONPATH"] = str(Path(__file__).parent.parent.parent)  # Add repository root to PYTHONPATH
+            env["PYTHONPATH"] = str(
+                Path(__file__).parent.parent.parent
+            )  # Add repository root to PYTHONPATH
 
-            result = subprocess.run([
-                sys.executable, "-m", "infrastructure.core.cli",
-                "multi-project", "core", "--repo-root", str(repo_root)
-            ], capture_output=True, text=True, env=env)
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    "-m",
+                    "infrastructure.core.cli",
+                    "multi-project",
+                    "core",
+                    "--repo-root",
+                    str(repo_root),
+                ],
+                capture_output=True,
+                text=True,
+                env=env,
+            )
 
             assert result.returncode == 0
             # CLI successfully executed scripts for multiple projects
@@ -199,10 +245,19 @@ authors:
             test_file.write_bytes(b"fake pdf content")
 
             # Test CLI execution via subprocess
-            result = subprocess.run([
-                sys.executable, "-m", "infrastructure.core.cli",
-                "inventory", str(output_dir), "--format", "text"
-            ], capture_output=True, text=True)
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    "-m",
+                    "infrastructure.core.cli",
+                    "inventory",
+                    str(output_dir),
+                    "--format",
+                    "text",
+                ],
+                capture_output=True,
+                text=True,
+            )
 
             assert result.returncode == 0
             # Inventory command may produce output in different formats
@@ -230,30 +285,45 @@ authors:
             (project_dir / "tests" / "__init__.py").write_text("")
 
             # Test CLI execution via subprocess
-            result = subprocess.run([
-                sys.executable, "-m", "infrastructure.core.cli",
-                "discover", "--repo-root", str(repo_root), "--format", "text"
-            ], capture_output=True, text=True)
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    "-m",
+                    "infrastructure.core.cli",
+                    "discover",
+                    "--repo-root",
+                    str(repo_root),
+                    "--format",
+                    "text",
+                ],
+                capture_output=True,
+                text=True,
+            )
 
             assert result.returncode == 0
             assert "Found 1 projects" in result.stdout
+
 
 class TestMainFunction:
     """Test main CLI function with real subprocess calls."""
 
     def test_main_help(self):
         """Test main function displays help."""
-        result = subprocess.run([
-            sys.executable, "-m", "infrastructure.core.cli", "--help"
-        ], capture_output=True, text=True)
+        result = subprocess.run(
+            [sys.executable, "-m", "infrastructure.core.cli", "--help"],
+            capture_output=True,
+            text=True,
+        )
 
         assert result.returncode == 0
         assert "Core infrastructure CLI" in result.stdout
 
     def test_main_invalid_command(self):
         """Test main function with invalid command."""
-        result = subprocess.run([
-            sys.executable, "-m", "infrastructure.core.cli", "invalid_command"
-        ], capture_output=True, text=True)
+        result = subprocess.run(
+            [sys.executable, "-m", "infrastructure.core.cli", "invalid_command"],
+            capture_output=True,
+            text=True,
+        )
 
         assert result.returncode == 2  # argparse error code

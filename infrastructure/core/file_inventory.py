@@ -5,6 +5,7 @@ from output directories, extracted from the bash run.sh script into testable Pyt
 
 Part of the infrastructure layer (Layer 1) - reusable across all projects.
 """
+
 from __future__ import annotations
 
 import os
@@ -20,6 +21,7 @@ logger = get_logger(__name__)
 @dataclass
 class FileInventoryEntry:
     """Entry in file inventory."""
+
     path: Path
     size: int
     category: str
@@ -36,14 +38,20 @@ class FileInventoryManager:
 
     # Standard output categories to scan
     OUTPUT_CATEGORIES = [
-        "pdf", "figures", "data", "reports", "simulations",
-        "llm", "logs", "web", "slides", "tex"
+        "pdf",
+        "figures",
+        "data",
+        "reports",
+        "simulations",
+        "llm",
+        "logs",
+        "web",
+        "slides",
+        "tex",
     ]
 
     def collect_output_files(
-        self,
-        output_dir: Path,
-        categories: Optional[List[str]] = None
+        self, output_dir: Path, categories: Optional[List[str]] = None
     ) -> List[FileInventoryEntry]:
         """Collect all generated files from output directory.
 
@@ -80,18 +88,22 @@ class FileInventoryManager:
             if file_path.exists() and file_path.is_file():
                 try:
                     stat = file_path.stat()
-                    entries.append(FileInventoryEntry(
-                        path=file_path,
-                        size=stat.st_size,
-                        category=self._guess_category_from_filename(filename),
-                        modified=stat.st_mtime
-                    ))
+                    entries.append(
+                        FileInventoryEntry(
+                            path=file_path,
+                            size=stat.st_size,
+                            category=self._guess_category_from_filename(filename),
+                            modified=stat.st_mtime,
+                        )
+                    )
                 except OSError as e:
                     logger.debug(f"Failed to stat file {file_path}: {e}")
 
         return entries
 
-    def _collect_files_in_directory(self, directory: Path, category: str) -> List[FileInventoryEntry]:
+    def _collect_files_in_directory(
+        self, directory: Path, category: str
+    ) -> List[FileInventoryEntry]:
         """Collect all files in a directory recursively.
 
         Args:
@@ -108,12 +120,14 @@ class FileInventoryManager:
                 if file_path.is_file():
                     try:
                         stat = file_path.stat()
-                        entries.append(FileInventoryEntry(
-                            path=file_path,
-                            size=stat.st_size,
-                            category=category,
-                            modified=stat.st_mtime
-                        ))
+                        entries.append(
+                            FileInventoryEntry(
+                                path=file_path,
+                                size=stat.st_size,
+                                category=category,
+                                modified=stat.st_mtime,
+                            )
+                        )
                     except OSError as e:
                         logger.debug(f"Failed to stat file {file_path}: {e}")
         except OSError as e:
@@ -130,22 +144,22 @@ class FileInventoryManager:
         Returns:
             Guessed category name
         """
-        if filename.endswith('.pdf'):
-            return 'pdf'
-        elif filename.endswith(('.png', '.jpg', '.jpeg', '.svg', '.eps')):
-            return 'figures'
-        elif filename.endswith(('.csv', '.json', '.npy', '.npz')):
-            return 'data'
-        elif 'log' in filename.lower():
-            return 'logs'
+        if filename.endswith(".pdf"):
+            return "pdf"
+        elif filename.endswith((".png", ".jpg", ".jpeg", ".svg", ".eps")):
+            return "figures"
+        elif filename.endswith((".csv", ".json", ".npy", ".npz")):
+            return "data"
+        elif "log" in filename.lower():
+            return "logs"
         else:
-            return 'misc'
+            return "misc"
 
     def generate_inventory_report(
         self,
         entries: List[FileInventoryEntry],
         output_format: str = "text",
-        base_dir: Optional[Path] = None
+        base_dir: Optional[Path] = None,
     ) -> str:
         """Generate inventory report (text, json, or html).
 
@@ -168,9 +182,7 @@ class FileInventoryManager:
             return self._generate_text_report(entries, base_dir)
 
     def _generate_text_report(
-        self,
-        entries: List[FileInventoryEntry],
-        base_dir: Optional[Path] = None
+        self, entries: List[FileInventoryEntry], base_dir: Optional[Path] = None
     ) -> str:
         """Generate text format inventory report.
 
@@ -192,8 +204,18 @@ class FileInventoryManager:
         lines.append("")
 
         # Display order for categories
-        display_order = ["pdf", "figures", "data", "reports", "simulations",
-                        "llm", "logs", "web", "slides", "tex"]
+        display_order = [
+            "pdf",
+            "figures",
+            "data",
+            "reports",
+            "simulations",
+            "llm",
+            "logs",
+            "web",
+            "slides",
+            "tex",
+        ]
 
         for category in display_order:
             if category in category_groups:
@@ -202,8 +224,12 @@ class FileInventoryManager:
                 count = len(category_entries)
 
                 # Use uppercase for known categories, title case for others
-                category_name = category.upper() if category in ["pdf", "tex"] else category.title()
-                lines.append(f"  {category_name} ({count} file(s), {format_file_size(total_size)}):")
+                category_name = (
+                    category.upper() if category in ["pdf", "tex"] else category.title()
+                )
+                lines.append(
+                    f"  {category_name} ({count} file(s), {format_file_size(total_size)}):"
+                )
 
                 # Show first 10 files, then count if more
                 shown_count = 0
@@ -214,7 +240,9 @@ class FileInventoryManager:
                             lines.append(f"    ... and {remaining} more file(s)")
                         break
 
-                    rel_path = entry.path.relative_to(base_dir) if base_dir else entry.path
+                    rel_path = (
+                        entry.path.relative_to(base_dir) if base_dir else entry.path
+                    )
                     lines.append(f"    - {rel_path} ({entry.size_formatted})")
                     shown_count += 1
 
@@ -223,9 +251,7 @@ class FileInventoryManager:
         return "\n".join(lines)
 
     def _generate_json_report(
-        self,
-        entries: List[FileInventoryEntry],
-        base_dir: Optional[Path] = None
+        self, entries: List[FileInventoryEntry], base_dir: Optional[Path] = None
     ) -> str:
         """Generate JSON format inventory report.
 
@@ -247,24 +273,28 @@ class FileInventoryManager:
             result[category] = {
                 "count": len(category_entries),
                 "total_size": sum(entry.size for entry in category_entries),
-                "total_size_formatted": format_file_size(sum(entry.size for entry in category_entries)),
+                "total_size_formatted": format_file_size(
+                    sum(entry.size for entry in category_entries)
+                ),
                 "files": [
                     {
-                        "path": str(entry.path.relative_to(base_dir)) if base_dir else str(entry.path),
+                        "path": (
+                            str(entry.path.relative_to(base_dir))
+                            if base_dir
+                            else str(entry.path)
+                        ),
                         "size": entry.size,
                         "size_formatted": entry.size_formatted,
-                        "modified": entry.modified
+                        "modified": entry.modified,
                     }
                     for entry in sorted(category_entries, key=lambda e: e.path)
-                ]
+                ],
             }
 
         return json.dumps(result, indent=2)
 
     def _generate_html_report(
-        self,
-        entries: List[FileInventoryEntry],
-        base_dir: Optional[Path] = None
+        self, entries: List[FileInventoryEntry], base_dir: Optional[Path] = None
     ) -> str:
         """Generate HTML format inventory report.
 
@@ -286,8 +316,18 @@ class FileInventoryManager:
         html_parts.append("<h3>Generated Files Inventory</h3>")
 
         # Display order for categories
-        display_order = ["pdf", "figures", "data", "reports", "simulations",
-                        "llm", "logs", "web", "slides", "tex"]
+        display_order = [
+            "pdf",
+            "figures",
+            "data",
+            "reports",
+            "simulations",
+            "llm",
+            "logs",
+            "web",
+            "slides",
+            "tex",
+        ]
 
         for category in display_order:
             if category in category_groups:
@@ -296,13 +336,21 @@ class FileInventoryManager:
                 count = len(category_entries)
 
                 # Use uppercase for known categories, title case for others
-                category_name = category.upper() if category in ["pdf", "tex"] else category.title()
-                html_parts.append(f"<h4>{category_name} ({count} file(s), {format_file_size(total_size)})</h4>")
+                category_name = (
+                    category.upper() if category in ["pdf", "tex"] else category.title()
+                )
+                html_parts.append(
+                    f"<h4>{category_name} ({count} file(s), {format_file_size(total_size)})</h4>"
+                )
                 html_parts.append("<ul>")
 
                 for entry in sorted(category_entries, key=lambda e: e.path):
-                    rel_path = entry.path.relative_to(base_dir) if base_dir else entry.path
-                    html_parts.append(f"<li><code>{rel_path}</code> ({entry.size_formatted})</li>")
+                    rel_path = (
+                        entry.path.relative_to(base_dir) if base_dir else entry.path
+                    )
+                    html_parts.append(
+                        f"<li><code>{rel_path}</code> ({entry.size_formatted})</li>"
+                    )
 
                 html_parts.append("</ul>")
 
@@ -310,7 +358,9 @@ class FileInventoryManager:
 
         return "\n".join(html_parts)
 
-    def _group_by_category(self, entries: List[FileInventoryEntry]) -> Dict[str, List[FileInventoryEntry]]:
+    def _group_by_category(
+        self, entries: List[FileInventoryEntry]
+    ) -> Dict[str, List[FileInventoryEntry]]:
         """Group entries by category.
 
         Args:
@@ -347,8 +397,7 @@ def format_file_size(bytes_size: int) -> str:
 
 
 def collect_output_files(
-    output_dir: Path,
-    categories: Optional[List[str]] = None
+    output_dir: Path, categories: Optional[List[str]] = None
 ) -> List[FileInventoryEntry]:
     """Convenience function to collect output files.
 
@@ -366,7 +415,7 @@ def collect_output_files(
 def generate_inventory_report(
     entries: List[FileInventoryEntry],
     output_format: str = "text",
-    base_dir: Optional[Path] = None
+    base_dir: Optional[Path] = None,
 ) -> str:
     """Convenience function to generate inventory report.
 

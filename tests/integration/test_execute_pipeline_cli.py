@@ -41,4 +41,3 @@ def test_execute_pipeline_unknown_stage_is_error(repo_root: Path) -> None:
     assert result.returncode != 0
     combined = (result.stdout or "") + (result.stderr or "")
     assert "Unknown stage" in combined
-

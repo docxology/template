@@ -6,10 +6,12 @@ Provides utilities for testing algorithmic stability across input ranges:
 - Extreme value handling
 - Stability scoring and recommendations
 """
+
 from __future__ import annotations
 
-from typing import List, Any, Callable, Tuple
 from dataclasses import dataclass
+from typing import Any, Callable, List, Tuple
+
 import numpy as np
 
 
@@ -26,8 +28,9 @@ class StabilityTest:
     recommendations: List[str]
 
 
-def check_numerical_stability(func: Callable, test_inputs: List[Any],
-                             tolerance: float = 1e-12) -> StabilityTest:
+def check_numerical_stability(
+    func: Callable, test_inputs: List[Any], tolerance: float = 1e-12
+) -> StabilityTest:
     """Check numerical stability of a function across a range of inputs.
 
     Args:
@@ -46,10 +49,10 @@ def check_numerical_stability(func: Callable, test_inputs: List[Any],
             result = func(test_input)
 
             # Check for NaN, inf, or extreme values
-            if np.isnan(result).any() if hasattr(result, 'any') else np.isnan(result):
+            if np.isnan(result).any() if hasattr(result, "any") else np.isnan(result):
                 behavior = "NaN values detected"
                 score = 0.0
-            elif np.isinf(result).any() if hasattr(result, 'any') else np.isinf(result):
+            elif np.isinf(result).any() if hasattr(result, "any") else np.isinf(result):
                 behavior = "Infinite values detected"
                 score = 0.0
             elif np.abs(result) > 1e10:  # Arbitrary large value threshold
@@ -84,6 +87,5 @@ def check_numerical_stability(func: Callable, test_inputs: List[Any],
         expected_behavior="Stable numerical behavior across input range",
         actual_behavior=f"Stability score: {overall_score:.2f}",
         stability_score=overall_score,
-        recommendations=recommendations
+        recommendations=recommendations,
     )
-

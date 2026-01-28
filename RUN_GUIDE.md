@@ -117,11 +117,11 @@ The template now supports **multiple research projects** in a single repository.
 
 ### Available Projects
 
-The template includes three example projects:
+The template includes the following active project:
 
-- **`project`** - Full-featured research template (default, backward compatible)
-- **`prose_project`** - Manuscript-focused with equations and prose
 - **`code_project`** - Code-focused with analysis pipeline and figures
+
+**Note:** Additional projects can be created following the template structure. Archived projects are preserved in `projects_archive/` for reference but are not actively executed.
 
 ### Multi-Project Commands
 

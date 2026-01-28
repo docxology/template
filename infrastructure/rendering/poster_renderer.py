@@ -1,11 +1,12 @@
 """Scientific poster rendering module."""
+
 from __future__ import annotations
 
 import subprocess
 from pathlib import Path
 
-from infrastructure.core.logging_utils import get_logger
 from infrastructure.core.exceptions import RenderingError
+from infrastructure.core.logging_utils import get_logger
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_utils import compile_latex
 
@@ -23,6 +24,5 @@ class PosterRenderer:
         return compile_latex(
             source_file,
             Path(self.config.poster_dir),
-            compiler=self.config.latex_compiler
+            compiler=self.config.latex_compiler,
         )
-

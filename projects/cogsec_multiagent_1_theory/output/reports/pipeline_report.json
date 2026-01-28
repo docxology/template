@@ -1,0 +1,147 @@
+{
+  "timestamp": "2026-01-28T06:08:21.207226",
+  "total_duration": 0.6133363246917725,
+  "stages": [
+    {
+      "name": "Clean Output Directories",
+      "exit_code": 0,
+      "duration": 0.00929117202758789,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Environment Setup",
+      "exit_code": 1,
+      "duration": 0.6040451526641846,
+      "status": "failed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    }
+  ],
+  "test_results": null,
+  "validation_results": null,
+  "performance_metrics": null,
+  "error_summary": null,
+  "output_statistics": {
+    "directories": {
+      "pdf": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "web": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "slides": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "figures": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "data": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "reports": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "simulations": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "llm": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "logs": {
+        "exists": true,
+        "file_count": 1,
+        "size_mb": "0.00",
+        "total_size_bytes": 764,
+        "largest_files": [
+          {
+            "name": "pipeline.log",
+            "size_mb": "0.00",
+            "path": "logs/pipeline.log"
+          }
+        ],
+        "extensions": {
+          ".log": 1
+        }
+      }
+    },
+    "total_files": 1,
+    "total_size_mb": 0.000728607177734375,
+    "largest_files": [
+      {
+        "name": "pipeline.log",
+        "size_mb": "0.00",
+        "category": "logs",
+        "path": "logs/pipeline.log"
+      }
+    ],
+    "missing_expected_files": [
+      "cogsec_multiagent_1_theory_combined.pdf or project_combined.pdf"
+    ],
+    "file_counts_by_type": {
+      ".log": 1
+    },
+    "sizes_by_category": {
+      "pdf": 0.0,
+      "web": 0.0,
+      "slides": 0.0,
+      "figures": 0.0,
+      "data": 0.0,
+      "reports": 0.0,
+      "simulations": 0.0,
+      "llm": 0.0,
+      "logs": 0.000728607177734375
+    },
+    "pdf_files": 0,
+    "figures": 0,
+    "data_files": 0,
+    "log_file": {
+      "exists": true,
+      "size": 764,
+      "path": "/Users/4d/Documents/GitHub/template/projects/cogsec_multiagent_1_theory/output/logs/pipeline.log"
+    }
+  }
+}

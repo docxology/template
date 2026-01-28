@@ -1,47 +1,93 @@
 Project,Category,Metric,Value,Unit,Description,Health_Impact,Recommended_Range
-active_inference_meta_pragmatic,Manuscript,Total_Words,7324,words,Total words in manuscript sections,High,1000-20000 words
-active_inference_meta_pragmatic,Manuscript,Sections,12,count,Number of manuscript sections,Medium,3-20 sections
-active_inference_meta_pragmatic,Manuscript,Equations,37,count,Mathematical equations in manuscript,Low,0-50 equations
-active_inference_meta_pragmatic,Manuscript,Figures,0,count,Figure references in manuscript,Low,0-20 figures
-active_inference_meta_pragmatic,Manuscript,References,2,count,Citation references,Medium,10-200 references
-active_inference_meta_pragmatic,Codebase,Source_Files,16,files,Python source files,Medium,1-20 files
-active_inference_meta_pragmatic,Codebase,Source_Lines,3639,lines,Lines of source code,Medium,100-5000 lines
-active_inference_meta_pragmatic,Codebase,Methods,131,count,Function/method definitions,Medium,10-500 methods
-active_inference_meta_pragmatic,Codebase,Classes,14,count,Class definitions,Low,0-50 classes
-active_inference_meta_pragmatic,Codebase,Scripts,6,files,Analysis scripts,Low,0-10 scripts
-active_inference_meta_pragmatic,Testing,Test_Files,36,files,Test files discovered,High,1+ files
-active_inference_meta_pragmatic,Testing,Total_Tests,360,tests,Total test cases (-1 = unavailable),High,10-1000 tests
-active_inference_meta_pragmatic,Testing,Coverage_Percent,92.03,percent,Code coverage percentage,High,90-100%
-active_inference_meta_pragmatic,Testing,Execution_Time,0.0,seconds,Test execution time,Low,1-300 seconds
-active_inference_meta_pragmatic,Outputs,PDF_Files,1,files,Generated PDF documents,High,1+ files
-active_inference_meta_pragmatic,Outputs,PDF_Size_MB,4.25,MB,Total PDF file size,Low,0.1-10 MB
-active_inference_meta_pragmatic,Outputs,Figures,34,files,Generated figure files,Medium,0-50 figures
-active_inference_meta_pragmatic,Outputs,Slides,9,files,Generated slide files,Medium,0-20 slide sets
-active_inference_meta_pragmatic,Outputs,Web_Outputs,10,files,Generated web files,Medium,0-20 web files
-active_inference_meta_pragmatic,Pipeline,Total_Duration,78.06343293190002,seconds,Total pipeline execution time,Medium,60-600 seconds
-active_inference_meta_pragmatic,Pipeline,Stages_Passed,7,stages,Pipeline stages completed successfully,High,6 stages
-active_inference_meta_pragmatic,Pipeline,Bottleneck_Stage,PDF Rendering,stage_name,Slowest pipeline stage,Medium,Varies by project
-active_inference_meta_pragmatic,Pipeline,Bottleneck_Duration,64.18328928947449,seconds,Time spent in bottleneck stage,Medium,10-300 seconds
-code_project,Manuscript,Total_Words,3145,words,Total words in manuscript sections,High,1000-20000 words
-code_project,Manuscript,Sections,7,count,Number of manuscript sections,Medium,3-20 sections
+code_project,Manuscript,Total_Words,3425,words,Total words in manuscript sections,High,1000-20000 words
+code_project,Manuscript,Sections,8,count,Number of manuscript sections,Medium,3-20 sections
 code_project,Manuscript,Equations,0,count,Mathematical equations in manuscript,Low,0-50 equations
 code_project,Manuscript,Figures,7,count,Figure references in manuscript,Low,0-20 figures
 code_project,Manuscript,References,6,count,Citation references,Medium,10-200 references
 code_project,Codebase,Source_Files,2,files,Python source files,Medium,1-20 files
-code_project,Codebase,Source_Lines,252,lines,Lines of source code,Medium,100-5000 lines
+code_project,Codebase,Source_Lines,260,lines,Lines of source code,Medium,100-5000 lines
 code_project,Codebase,Methods,3,count,Function/method definitions,Medium,10-500 methods
 code_project,Codebase,Classes,1,count,Class definitions,Low,0-50 classes
 code_project,Codebase,Scripts,2,files,Analysis scripts,Low,0-10 scripts
 code_project,Testing,Test_Files,2,files,Test files discovered,High,1+ files
 code_project,Testing,Total_Tests,28,tests,Total test cases (-1 = unavailable),High,10-1000 tests
-code_project,Testing,Coverage_Percent,94.12,percent,Code coverage percentage,High,90-100%
+code_project,Testing,Coverage_Percent,93.98,percent,Code coverage percentage,High,90-100%
 code_project,Testing,Execution_Time,0.0,seconds,Test execution time,Low,1-300 seconds
 code_project,Outputs,PDF_Files,1,files,Generated PDF documents,High,1+ files
-code_project,Outputs,PDF_Size_MB,0.98,MB,Total PDF file size,Low,0.1-10 MB
+code_project,Outputs,PDF_Size_MB,1.39,MB,Total PDF file size,Low,0.1-10 MB
 code_project,Outputs,Figures,6,files,Generated figure files,Medium,0-50 figures
-code_project,Outputs,Slides,4,files,Generated slide files,Medium,0-20 slide sets
-code_project,Outputs,Web_Outputs,5,files,Generated web files,Medium,0-20 web files
-code_project,Pipeline,Total_Duration,33.51111125946045,seconds,Total pipeline execution time,Medium,60-600 seconds
+code_project,Outputs,Slides,5,files,Generated slide files,Medium,0-20 slide sets
+code_project,Outputs,Web_Outputs,6,files,Generated web files,Medium,0-20 web files
+code_project,Pipeline,Total_Duration,42.25336742401123,seconds,Total pipeline execution time,Medium,60-600 seconds
 code_project,Pipeline,Stages_Passed,7,stages,Pipeline stages completed successfully,High,6 stages
 code_project,Pipeline,Bottleneck_Stage,PDF Rendering,stage_name,Slowest pipeline stage,Medium,Varies by project
-code_project,Pipeline,Bottleneck_Duration,23.819551944732666,seconds,Time spent in bottleneck stage,Medium,10-300 seconds
+code_project,Pipeline,Bottleneck_Duration,31.455225229263306,seconds,Time spent in bottleneck stage,Medium,10-300 seconds
+cognitive_integrity/cogsec_multiagent_1_theory,Manuscript,Total_Words,33306,words,Total words in manuscript sections,High,1000-20000 words
+cognitive_integrity/cogsec_multiagent_1_theory,Manuscript,Sections,15,count,Number of manuscript sections,Medium,3-20 sections
+cognitive_integrity/cogsec_multiagent_1_theory,Manuscript,Equations,0,count,Mathematical equations in manuscript,Low,0-50 equations
+cognitive_integrity/cogsec_multiagent_1_theory,Manuscript,Figures,6,count,Figure references in manuscript,Low,0-20 figures
+cognitive_integrity/cogsec_multiagent_1_theory,Manuscript,References,53,count,Citation references,Medium,10-200 references
+cognitive_integrity/cogsec_multiagent_1_theory,Codebase,Source_Files,30,files,Python source files,Medium,1-20 files
+cognitive_integrity/cogsec_multiagent_1_theory,Codebase,Source_Lines,5984,lines,Lines of source code,Medium,100-5000 lines
+cognitive_integrity/cogsec_multiagent_1_theory,Codebase,Methods,204,count,Function/method definitions,Medium,10-500 methods
+cognitive_integrity/cogsec_multiagent_1_theory,Codebase,Classes,52,count,Class definitions,Low,0-50 classes
+cognitive_integrity/cogsec_multiagent_1_theory,Codebase,Scripts,20,files,Analysis scripts,Low,0-10 scripts
+cognitive_integrity/cogsec_multiagent_1_theory,Testing,Test_Files,21,files,Test files discovered,High,1+ files
+cognitive_integrity/cogsec_multiagent_1_theory,Testing,Total_Tests,219,tests,Total test cases (-1 = unavailable),High,10-1000 tests
+cognitive_integrity/cogsec_multiagent_1_theory,Testing,Coverage_Percent,93.24,percent,Code coverage percentage,High,90-100%
+cognitive_integrity/cogsec_multiagent_1_theory,Testing,Execution_Time,0.0,seconds,Test execution time,Low,1-300 seconds
+cognitive_integrity/cogsec_multiagent_1_theory,Outputs,PDF_Files,1,files,Generated PDF documents,High,1+ files
+cognitive_integrity/cogsec_multiagent_1_theory,Outputs,PDF_Size_MB,0.89,MB,Total PDF file size,Low,0.1-10 MB
+cognitive_integrity/cogsec_multiagent_1_theory,Outputs,Figures,30,files,Generated figure files,Medium,0-50 figures
+cognitive_integrity/cogsec_multiagent_1_theory,Outputs,Slides,14,files,Generated slide files,Medium,0-20 slide sets
+cognitive_integrity/cogsec_multiagent_1_theory,Outputs,Web_Outputs,15,files,Generated web files,Medium,0-20 web files
+cognitive_integrity/cogsec_multiagent_1_theory,Pipeline,Total_Duration,80.71094369888306,seconds,Total pipeline execution time,Medium,60-600 seconds
+cognitive_integrity/cogsec_multiagent_1_theory,Pipeline,Stages_Passed,7,stages,Pipeline stages completed successfully,High,6 stages
+cognitive_integrity/cogsec_multiagent_1_theory,Pipeline,Bottleneck_Stage,PDF Rendering,stage_name,Slowest pipeline stage,Medium,Varies by project
+cognitive_integrity/cogsec_multiagent_1_theory,Pipeline,Bottleneck_Duration,47.74432611465454,seconds,Time spent in bottleneck stage,Medium,10-300 seconds
+cognitive_integrity/cogsec_multiagent_2_computational,Manuscript,Total_Words,16221,words,Total words in manuscript sections,High,1000-20000 words
+cognitive_integrity/cogsec_multiagent_2_computational,Manuscript,Sections,14,count,Number of manuscript sections,Medium,3-20 sections
+cognitive_integrity/cogsec_multiagent_2_computational,Manuscript,Equations,0,count,Mathematical equations in manuscript,Low,0-50 equations
+cognitive_integrity/cogsec_multiagent_2_computational,Manuscript,Figures,8,count,Figure references in manuscript,Low,0-20 figures
+cognitive_integrity/cogsec_multiagent_2_computational,Manuscript,References,4,count,Citation references,Medium,10-200 references
+cognitive_integrity/cogsec_multiagent_2_computational,Codebase,Source_Files,9,files,Python source files,Medium,1-20 files
+cognitive_integrity/cogsec_multiagent_2_computational,Codebase,Source_Lines,2600,lines,Lines of source code,Medium,100-5000 lines
+cognitive_integrity/cogsec_multiagent_2_computational,Codebase,Methods,167,count,Function/method definitions,Medium,10-500 methods
+cognitive_integrity/cogsec_multiagent_2_computational,Codebase,Classes,51,count,Class definitions,Low,0-50 classes
+cognitive_integrity/cogsec_multiagent_2_computational,Codebase,Scripts,19,files,Analysis scripts,Low,0-10 scripts
+cognitive_integrity/cogsec_multiagent_2_computational,Testing,Test_Files,17,files,Test files discovered,High,1+ files
+cognitive_integrity/cogsec_multiagent_2_computational,Testing,Total_Tests,175,tests,Total test cases (-1 = unavailable),High,10-1000 tests
+cognitive_integrity/cogsec_multiagent_2_computational,Testing,Coverage_Percent,91.33,percent,Code coverage percentage,High,90-100%
+cognitive_integrity/cogsec_multiagent_2_computational,Testing,Execution_Time,0.0,seconds,Test execution time,Low,1-300 seconds
+cognitive_integrity/cogsec_multiagent_2_computational,Outputs,PDF_Files,1,files,Generated PDF documents,High,1+ files
+cognitive_integrity/cogsec_multiagent_2_computational,Outputs,PDF_Size_MB,0.47,MB,Total PDF file size,Low,0.1-10 MB
+cognitive_integrity/cogsec_multiagent_2_computational,Outputs,Figures,30,files,Generated figure files,Medium,0-50 figures
+cognitive_integrity/cogsec_multiagent_2_computational,Outputs,Slides,13,files,Generated slide files,Medium,0-20 slide sets
+cognitive_integrity/cogsec_multiagent_2_computational,Outputs,Web_Outputs,14,files,Generated web files,Medium,0-20 web files
+cognitive_integrity/cogsec_multiagent_2_computational,Pipeline,Total_Duration,56.3680739402771,seconds,Total pipeline execution time,Medium,60-600 seconds
+cognitive_integrity/cogsec_multiagent_2_computational,Pipeline,Stages_Passed,7,stages,Pipeline stages completed successfully,High,6 stages
+cognitive_integrity/cogsec_multiagent_2_computational,Pipeline,Bottleneck_Stage,PDF Rendering,stage_name,Slowest pipeline stage,Medium,Varies by project
+cognitive_integrity/cogsec_multiagent_2_computational,Pipeline,Bottleneck_Duration,41.4429669380188,seconds,Time spent in bottleneck stage,Medium,10-300 seconds
+cognitive_integrity/cogsec_multiagent_3_practical,Manuscript,Total_Words,8419,words,Total words in manuscript sections,High,1000-20000 words
+cognitive_integrity/cogsec_multiagent_3_practical,Manuscript,Sections,12,count,Number of manuscript sections,Medium,3-20 sections
+cognitive_integrity/cogsec_multiagent_3_practical,Manuscript,Equations,0,count,Mathematical equations in manuscript,Low,0-50 equations
+cognitive_integrity/cogsec_multiagent_3_practical,Manuscript,Figures,6,count,Figure references in manuscript,Low,0-20 figures
+cognitive_integrity/cogsec_multiagent_3_practical,Manuscript,References,5,count,Citation references,Medium,10-200 references
+cognitive_integrity/cogsec_multiagent_3_practical,Codebase,Source_Files,2,files,Python source files,Medium,1-20 files
+cognitive_integrity/cogsec_multiagent_3_practical,Codebase,Source_Lines,870,lines,Lines of source code,Medium,100-5000 lines
+cognitive_integrity/cogsec_multiagent_3_practical,Codebase,Methods,22,count,Function/method definitions,Medium,10-500 methods
+cognitive_integrity/cogsec_multiagent_3_practical,Codebase,Classes,12,count,Class definitions,Low,0-50 classes
+cognitive_integrity/cogsec_multiagent_3_practical,Codebase,Scripts,7,files,Analysis scripts,Low,0-10 scripts
+cognitive_integrity/cogsec_multiagent_3_practical,Testing,Test_Files,7,files,Test files discovered,High,1+ files
+cognitive_integrity/cogsec_multiagent_3_practical,Testing,Total_Tests,78,tests,Total test cases (-1 = unavailable),High,10-1000 tests
+cognitive_integrity/cogsec_multiagent_3_practical,Testing,Coverage_Percent,100.0,percent,Code coverage percentage,High,90-100%
+cognitive_integrity/cogsec_multiagent_3_practical,Testing,Execution_Time,0.0,seconds,Test execution time,Low,1-300 seconds
+cognitive_integrity/cogsec_multiagent_3_practical,Outputs,PDF_Files,1,files,Generated PDF documents,High,1+ files
+cognitive_integrity/cogsec_multiagent_3_practical,Outputs,PDF_Size_MB,0.27,MB,Total PDF file size,Low,0.1-10 MB
+cognitive_integrity/cogsec_multiagent_3_practical,Outputs,Figures,12,files,Generated figure files,Medium,0-50 figures
+cognitive_integrity/cogsec_multiagent_3_practical,Outputs,Slides,11,files,Generated slide files,Medium,0-20 slide sets
+cognitive_integrity/cogsec_multiagent_3_practical,Outputs,Web_Outputs,12,files,Generated web files,Medium,0-20 web files
+cognitive_integrity/cogsec_multiagent_3_practical,Pipeline,Total_Duration,42.915687799453735,seconds,Total pipeline execution time,Medium,60-600 seconds
+cognitive_integrity/cogsec_multiagent_3_practical,Pipeline,Stages_Passed,7,stages,Pipeline stages completed successfully,High,6 stages
+cognitive_integrity/cogsec_multiagent_3_practical,Pipeline,Bottleneck_Stage,PDF Rendering,stage_name,Slowest pipeline stage,Medium,Varies by project
+cognitive_integrity/cogsec_multiagent_3_practical,Pipeline,Bottleneck_Duration,34.28980875015259,seconds,Time spent in bottleneck stage,Medium,10-300 seconds

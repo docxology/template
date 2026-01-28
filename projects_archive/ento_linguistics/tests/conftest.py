@@ -1,4 +1,5 @@
 """Pytest configuration for project tests."""
+
 import os
 import sys
 
@@ -19,8 +20,8 @@ if INFRASTRUCTURE not in sys.path:
 
 # Configure pytest-httpserver
 try:
-    from pytest_httpserver import HTTPServer
     import pytest
+    from pytest_httpserver import HTTPServer
 
     @pytest.fixture
     def httpserver():
@@ -31,6 +32,7 @@ try:
         server.clear()
         if server.is_running():
             server.stop()
+
 except ImportError:
     # pytest-httpserver not available
     pass

@@ -1,12 +1,14 @@
 """API clients for publishing platforms (Zenodo, arXiv, GitHub)."""
+
 from __future__ import annotations
 
-import os
 import json
-import requests
-from pathlib import Path
-from typing import Dict, Any, Optional, List
+import os
 from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+import requests
 
 from infrastructure.core.exceptions import PublishingError, UploadError
 from infrastructure.core.logging_utils import get_logger
@@ -22,9 +24,31 @@ class ZenodoConfig:
 
     @property
     def api_base_url(self) -> str:
+        """Get the Zenodo API base URL.
+
+        Returns the configured base URL if explicitly set, otherwise returns
+        the appropriate Zenodo API endpoint based on the sandbox setting.
+
+        Returns:
+            str: The base URL for API requests. Either the custom base_url if
+                configured, or 'https://sandbox.zenodo.org/api' for sandbox mode,
+                or 'https://zenodo.org/api' for production mode.
+
+        Example:
+            >>> config = ZenodoConfig(access_token="token", sandbox=True)
+            >>> config.api_base_url
+            'https://sandbox.zenodo.org/api'
+            >>> config = ZenodoConfig(access_token="token", sandbox=False)
+            >>> config.api_base_url
+            'https://zenodo.org/api'
+        """
         if self.base_url:
             return self.base_url
-        return "https://sandbox.zenodo.org/api" if self.sandbox else "https://zenodo.org/api"
+        return (
+            "https://sandbox.zenodo.org/api"
+            if self.sandbox
+            else "https://zenodo.org/api"
+        )
 
 
 class ZenodoClient:
@@ -66,16 +90,15 @@ class ZenodoClient:
 
     def publish(self, deposition_id: str) -> str:
         """Publish deposition.
-        
+
         Returns:
             DOI
         """
         url = f"{self.config.api_base_url}/api/deposit/depositions/{deposition_id}/actions/publish"
-        
+
         try:
             response = requests.post(url, headers=self.headers)
             response.raise_for_status()
             return response.json()["doi"]
         except requests.exceptions.RequestException as e:
             raise PublishingError(f"Publication failed: {e}")
-

@@ -502,7 +502,7 @@ from infrastructure.reporting import generate_executive_summary, save_executive_
 from pathlib import Path
 
 repo_root = Path(".")
-project_names = ["project", "code_project", "prose_project"]
+project_names = ["code_project"]
 
 # Generate summary
 summary = generate_executive_summary(repo_root, project_names)

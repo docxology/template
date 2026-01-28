@@ -1,0 +1,79 @@
+{
+  "model": "smollm2:135m-instruct-q4_K_S",
+  "timestamp": "2026-01-24T13:56:53.122005",
+  "source_pdf": "/Users/4d/Documents/GitHub/template/projects/active_inference_meta_pragmatic/output/pdf/active_inference_meta_pragmatic_combined.pdf",
+  "reviews_generated": [
+    "translation_zh",
+    "translation_hi",
+    "translation_ru"
+  ],
+  "max_input_length": 500000,
+  "manuscript_metrics": {
+    "total_chars": 65751,
+    "total_words": 11499,
+    "total_tokens_est": 16437,
+    "truncated": false,
+    "truncated_chars": 65751
+  },
+  "review_metrics": {
+    "translation_zh": {
+      "input_chars": 65751,
+      "input_words": 11499,
+      "input_tokens_est": 16437,
+      "output_chars": 912,
+      "output_words": 121,
+      "output_tokens_est": 228,
+      "generation_time_seconds": 1.53
+    },
+    "translation_hi": {
+      "input_chars": 65751,
+      "input_words": 11499,
+      "input_tokens_est": 16437,
+      "output_chars": 682,
+      "output_words": 98,
+      "output_tokens_est": 170,
+      "generation_time_seconds": 1.62
+    },
+    "translation_ru": {
+      "input_chars": 65751,
+      "input_words": 11499,
+      "input_tokens_est": 16437,
+      "output_chars": 85852,
+      "output_words": 11874,
+      "output_tokens_est": 21463,
+      "generation_time_seconds": 55.77
+    }
+  },
+  "format_compliance": {
+    "overall_rate": 100.0,
+    "compliant_reviews": 3,
+    "total_reviews": 3,
+    "per_review": {
+      "translation_zh": {
+        "compliant": true,
+        "issues": [],
+        "conversational_phrases": 0
+      },
+      "translation_hi": {
+        "compliant": true,
+        "issues": [],
+        "conversational_phrases": 0
+      },
+      "translation_ru": {
+        "compliant": true,
+        "issues": [],
+        "conversational_phrases": 0
+      }
+    }
+  },
+  "total_generation_time_seconds": 58.92,
+  "config": {
+    "temperature_summary": 0.3,
+    "temperature_review": 0.3,
+    "temperature_suggestions": 0.4,
+    "max_tokens": 16384,
+    "max_tokens_source": "default_config",
+    "timeout_seconds": 600.0,
+    "system_prompt": "manuscript_review"
+  }
+}

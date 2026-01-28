@@ -3,6 +3,7 @@
 This module provides functions for cleaning, copying, and managing
 output directories and files.
 """
+
 from __future__ import annotations
 
 import shutil
@@ -17,15 +18,15 @@ logger = get_logger(__name__)
 
 def clean_output_directory(output_dir: Path) -> bool:
     """Clean top-level output directory before copying.
-    
+
     Args:
         output_dir: Path to top-level output directory
-        
+
     Returns:
         True if cleanup successful, False otherwise
     """
     logger.info("Cleaning output directory...")
-    
+
     if not output_dir.exists():
         logger.info(f"Output directory does not exist, creating: {output_dir}")
         try:
@@ -33,15 +34,19 @@ def clean_output_directory(output_dir: Path) -> bool:
             log_success(f"Created output directory", logger)
             return True
         except PermissionError as e:
-            logger.error(f"Permission denied creating output directory {output_dir}: {e}")
+            logger.error(
+                f"Permission denied creating output directory {output_dir}: {e}"
+            )
             return False
         except OSError as e:
             logger.error(f"OS error creating output directory {output_dir}: {e}")
             return False
         except Exception as e:
-            logger.error(f"Unexpected error creating output directory {output_dir}: {e}")
+            logger.error(
+                f"Unexpected error creating output directory {output_dir}: {e}"
+            )
             return False
-    
+
     # Remove existing contents
     try:
         for item in output_dir.iterdir():
@@ -66,9 +71,7 @@ def clean_output_directory(output_dir: Path) -> bool:
 
 
 def clean_output_directories(
-    repo_root: Path,
-    project_name: str = "project",
-    subdirs: List[str] | None = None
+    repo_root: Path, project_name: str = "project", subdirs: List[str] | None = None
 ) -> None:
     """Clean output directories for a fresh pipeline start.
 
@@ -95,7 +98,17 @@ def clean_output_directories(
     clean_root_output_directory(repo_root, project_names)
 
     if subdirs is None:
-        subdirs = ["pdf", "figures", "data", "reports", "simulations", "slides", "web", "logs", "llm"]
+        subdirs = [
+            "pdf",
+            "figures",
+            "data",
+            "reports",
+            "simulations",
+            "slides",
+            "web",
+            "logs",
+            "llm",
+        ]
 
     output_dirs = [
         repo_root / "projects" / project_name / "output",
@@ -107,13 +120,13 @@ def clean_output_directories(
 
         if output_dir.exists():
             logger.info(f"  Cleaning {relative_path}/...")
-            
+
             # Archive log files before cleanup
             logs_dir = output_dir / "logs"
             if logs_dir.exists():
                 archive_dir = logs_dir / "archive"
                 archive_dir.mkdir(parents=True, exist_ok=True)
-                
+
                 # Archive all .log files
                 log_files = list(logs_dir.glob("*.log"))
                 if log_files:
@@ -121,16 +134,25 @@ def clean_output_directories(
                     archived_count = 0
                     for log_file in log_files:
                         try:
-                            archive_path = archive_dir / f"{log_file.stem}_{timestamp}{log_file.suffix}"
+                            archive_path = (
+                                archive_dir
+                                / f"{log_file.stem}_{timestamp}{log_file.suffix}"
+                            )
                             shutil.copy2(log_file, archive_path)
                             archived_count += 1
-                            logger.debug(f"  Archived log file: {log_file.name} → {archive_path.name}")
+                            logger.debug(
+                                f"  Archived log file: {log_file.name} → {archive_path.name}"
+                            )
                         except Exception as e:
-                            logger.warning(f"  Failed to archive log file {log_file.name}: {e}")
-                    
+                            logger.warning(
+                                f"  Failed to archive log file {log_file.name}: {e}"
+                            )
+
                     if archived_count > 0:
-                        logger.info(f"  Archived {archived_count} log file(s) to logs/archive/")
-            
+                        logger.info(
+                            f"  Archived {archived_count} log file(s) to logs/archive/"
+                        )
+
             # Remove all contents except .checkpoints directory (preserve for pipeline resume)
             for item in output_dir.iterdir():
                 if item.is_dir():
@@ -138,7 +160,9 @@ def clean_output_directories(
                     if item.name != ".checkpoints":
                         shutil.rmtree(item)
                     else:
-                        logger.debug(f"  Preserving {item.name}/ directory for checkpoint resume")
+                        logger.debug(
+                            f"  Preserving {item.name}/ directory for checkpoint resume"
+                        )
                 else:
                     item.unlink()
         else:
@@ -150,7 +174,9 @@ def clean_output_directories(
 
         log_success(f"Cleaned {relative_path}/ (recreated subdirectories)", logger)
 
-    log_success(f"Output directories cleaned for project '{project_name}' - fresh start", logger)
+    log_success(
+        f"Output directories cleaned for project '{project_name}' - fresh start", logger
+    )
 
 
 def clean_root_output_directory(repo_root: Path, project_names: list[str]) -> bool:
@@ -190,10 +216,10 @@ def clean_root_output_directory(repo_root: Path, project_names: list[str]) -> bo
 
                 # Keep special directories that might be needed
                 special_dirs = {
-                    '.gitkeep',
-                    '.gitignore',
-                    'multi_project_summary',  # Multi-project summary reports
-                    'executive_summary',       # Executive reporting outputs
+                    ".gitkeep",
+                    ".gitignore",
+                    "multi_project_summary",  # Multi-project summary reports
+                    "executive_summary",  # Executive reporting outputs
                 }
                 if item_name in special_dirs:
                     kept_items.append(item_name)
@@ -202,8 +228,16 @@ def clean_root_output_directory(repo_root: Path, project_names: list[str]) -> bo
                 # Remove root-level directories that shouldn't exist
                 # These are directories that should only exist within project folders
                 root_level_dirs = {
-                    'data', 'figures', 'pdf', 'web', 'slides',
-                    'reports', 'simulations', 'llm', 'logs', 'tex'
+                    "data",
+                    "figures",
+                    "pdf",
+                    "web",
+                    "slides",
+                    "reports",
+                    "simulations",
+                    "llm",
+                    "logs",
+                    "tex",
                 }
 
                 if item_name in root_level_dirs:
@@ -212,7 +246,9 @@ def clean_root_output_directory(repo_root: Path, project_names: list[str]) -> bo
                     removed_items.append(item_name)
                 else:
                     # Unknown directory - keep it but log it
-                    logger.warning(f"  Unknown directory in output/: {item_name} (keeping)")
+                    logger.warning(
+                        f"  Unknown directory in output/: {item_name} (keeping)"
+                    )
                     kept_items.append(item_name)
 
             else:
@@ -262,7 +298,9 @@ def clean_coverage_files(repo_root: Path, patterns: list[str] | None = None) -> 
         for pattern in patterns:
             if "*" in pattern:
                 # Glob pattern - search for matching files recursively
-                glob_pattern = f"**/{pattern}" if not pattern.startswith("**/") else pattern
+                glob_pattern = (
+                    f"**/{pattern}" if not pattern.startswith("**/") else pattern
+                )
                 for file_path in repo_root.glob(glob_pattern):
                     try:
                         file_path.unlink()
@@ -270,9 +308,13 @@ def clean_coverage_files(repo_root: Path, patterns: list[str] | None = None) -> 
                         logger.debug(f"  Removed: {file_path.relative_to(repo_root)}")
                     except PermissionError:
                         locked_files.append(str(file_path.relative_to(repo_root)))
-                        logger.debug(f"  Skipped (locked): {file_path.relative_to(repo_root)}")
+                        logger.debug(
+                            f"  Skipped (locked): {file_path.relative_to(repo_root)}"
+                        )
                     except OSError as e:
-                        logger.debug(f"  Failed to remove {file_path.relative_to(repo_root)}: {e}")
+                        logger.debug(
+                            f"  Failed to remove {file_path.relative_to(repo_root)}: {e}"
+                        )
             else:
                 # Exact filename
                 file_path = repo_root / pattern
@@ -303,9 +345,7 @@ def clean_coverage_files(repo_root: Path, patterns: list[str] | None = None) -> 
 
 
 def copy_final_deliverables(
-    project_root: Path,
-    output_dir: Path,
-    project_name: str = "project"
+    project_root: Path, output_dir: Path, project_name: str = "project"
 ) -> Dict:
     """Copy all project outputs to top-level output directory.
 
@@ -345,9 +385,9 @@ def copy_final_deliverables(
         }
     """
     logger.info(f"Copying all outputs for project '{project_name}'...")
-    
+
     project_output = project_root / "projects" / project_name / "output"
-    
+
     stats = {
         "pdf_files": 0,
         "web_files": 0,
@@ -362,15 +402,15 @@ def copy_final_deliverables(
         "total_files": 0,
         "errors": [],
     }
-    
+
     files_list = []
-    
+
     if not project_output.exists():
         msg = f"Project output directory not found: {project_output}"
         logger.warning(msg)
         stats["errors"].append(msg)
         return stats
-    
+
     # Recursively copy entire project/output/ directory
     try:
         logger.debug(f"Recursively copying: {project_output} → {output_dir}")
@@ -381,7 +421,7 @@ def copy_final_deliverables(
         logger.error(msg)
         stats["errors"].append(msg)
         return stats
-    
+
     # Collect files in each subdirectory with full paths and sizes
     subdirs = {
         "pdf": "pdf_files",
@@ -394,7 +434,7 @@ def copy_final_deliverables(
         "llm": "llm_files",
         "logs": "logs_files",
     }
-    
+
     for subdir_name, stats_key in subdirs.items():
         subdir = output_dir / subdir_name
         if subdir.exists():
@@ -403,7 +443,7 @@ def copy_final_deliverables(
             file_count = len(file_items)
             stats[stats_key] = file_count
             stats["total_files"] += file_count
-            
+
             # Special validation for logs directory
             if subdir_name == "logs":
                 log_files = [f for f in file_items if f.suffix == ".log"]
@@ -420,30 +460,40 @@ def copy_final_deliverables(
                             if size == 0:
                                 logger.warning(f"  Log file is empty: {log_file.name}")
                             else:
-                                logger.debug(f"  Found log file: {log_file.name} ({size:,} bytes)")
+                                logger.debug(
+                                    f"  Found log file: {log_file.name} ({size:,} bytes)"
+                                )
                         except Exception as e:
-                            logger.warning(f"  Failed to verify log file {log_file.name}: {e}")
-                    logger.info(f"  Found {len(log_files)} log file(s) in {subdir_name}/")
-            
+                            logger.warning(
+                                f"  Failed to verify log file {log_file.name}: {e}"
+                            )
+                    logger.info(
+                        f"  Found {len(log_files)} log file(s) in {subdir_name}/"
+                    )
+
             # Log each file with full path and size
             for file_path in file_items:
                 try:
                     file_size = file_path.stat().st_size
-                    files_list.append({
-                        "path": str(file_path.resolve()),
-                        "size": file_size,
-                        "category": subdir_name,
-                    })
+                    files_list.append(
+                        {
+                            "path": str(file_path.resolve()),
+                            "size": file_size,
+                            "category": subdir_name,
+                        }
+                    )
                     logger.debug(f"  Copied: {file_path.name} ({file_size:,} bytes)")
                 except Exception as e:
                     logger.warning(f"  Failed to get size for {file_path}: {e}")
-            
+
             logger.info(f"  {subdir_name}/: {file_count} file(s)")
-    
+
     # Copy combined PDF to root for convenient access
     # First try project-specific name, then fall back to legacy name
-    combined_pdf_src = output_dir / "pdf" / f"{project_name}_combined.pdf"
-    combined_pdf_dst = output_dir / f"{project_name}_combined.pdf"
+    # Use project basename for file matching (handles nested projects like "cognitive_integrity/cogsec_multiagent_1_theory")
+    project_basename = Path(project_name).name
+    combined_pdf_src = output_dir / "pdf" / f"{project_basename}_combined.pdf"
+    combined_pdf_dst = output_dir / f"{project_basename}_combined.pdf"
 
     if combined_pdf_src.exists():
         # Use project-specific name
@@ -462,11 +512,13 @@ def copy_final_deliverables(
             stats["combined_pdf"] = 1
 
             # Add to files list
-            files_list.append({
-                "path": str(combined_pdf_dst.resolve()),
-                "size": file_size,
-                "category": "pdf",
-            })
+            files_list.append(
+                {
+                    "path": str(combined_pdf_dst.resolve()),
+                    "size": file_size,
+                    "category": "pdf",
+                }
+            )
             logger.info(f"  Root PDF: {combined_pdf_dst} ({file_size:,} bytes)")
         except Exception as e:
             msg = f"Failed to copy combined PDF to root: {e}"
@@ -474,5 +526,5 @@ def copy_final_deliverables(
             stats["errors"].append(msg)
     else:
         logger.debug(f"Combined PDF not found at: {combined_pdf_src}")
-    
+
     return stats

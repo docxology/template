@@ -1,4 +1,5 @@
 """Citation generation functions for academic publishing."""
+
 from __future__ import annotations
 
 import re
@@ -62,8 +63,12 @@ def generate_citation_bibtex(metadata: PublicationMetadata) -> str:
         BibTeX formatted citation
     """
     # Create a simple citation key
-    first_author = metadata.authors[0].replace(' ', '').lower() if metadata.authors else 'unknown'
-    year = metadata.publication_date.split('-')[0] if metadata.publication_date else '2024'
+    first_author = (
+        metadata.authors[0].replace(" ", "").lower() if metadata.authors else "unknown"
+    )
+    year = (
+        metadata.publication_date.split("-")[0] if metadata.publication_date else "2024"
+    )
     citation_key = f"{first_author}{year}"
 
     bibtex = f"""@software{{{citation_key},
@@ -95,7 +100,9 @@ def generate_citation_apa(metadata: PublicationMetadata) -> str:
         APA formatted citation
     """
     authors_text = format_authors_apa(metadata.authors)
-    year = metadata.publication_date.split('-')[0] if metadata.publication_date else '2024'
+    year = (
+        metadata.publication_date.split("-")[0] if metadata.publication_date else "2024"
+    )
 
     citation = f"{authors_text} ({year}). {metadata.title}."
 
@@ -115,7 +122,9 @@ def generate_citation_mla(metadata: PublicationMetadata) -> str:
         MLA formatted citation
     """
     authors_text = format_authors_mla(metadata.authors)
-    year = metadata.publication_date.split('-')[0] if metadata.publication_date else '2024'
+    year = (
+        metadata.publication_date.split("-")[0] if metadata.publication_date else "2024"
+    )
 
     citation = f'{authors_text}. "{metadata.title}." {year}.'
 
@@ -189,15 +198,15 @@ def extract_citations_from_markdown(markdown_files: List[Path]) -> List[str]:
 
     for md_file in markdown_files:
         try:
-            with open(md_file, 'r', encoding='utf-8') as f:
+            with open(md_file, "r", encoding="utf-8") as f:
                 content = f.read()
 
             # Find various citation patterns
             citation_patterns = [
-                r'\\cite\{([^}]+)\}',
-                r'\\[a-z]*cite[a-z]*\{([^}]+)\}',
-                r'\[(\d+)\]',
-                r'\((\d+)\)'
+                r"\\cite\{([^}]+)\}",
+                r"\\[a-z]*cite[a-z]*\{([^}]+)\}",
+                r"\[(\d+)\]",
+                r"\((\d+)\)",
             ]
 
             for pattern in citation_patterns:
@@ -208,4 +217,3 @@ def extract_citations_from_markdown(markdown_files: List[Path]) -> List[str]:
             continue
 
     return sorted(list(citations))
-

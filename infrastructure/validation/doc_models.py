@@ -1,4 +1,5 @@
 """Data models for documentation scanning."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -8,6 +9,7 @@ from typing import Dict, List, Optional
 @dataclass
 class DocumentationFile:
     """Represents a documentation file with metadata."""
+
     path: str
     relative_path: str
     directory: str
@@ -23,6 +25,7 @@ class DocumentationFile:
 @dataclass
 class LinkIssue:
     """Represents a link or reference issue."""
+
     file: str
     line: int
     link_text: str
@@ -35,6 +38,7 @@ class LinkIssue:
 @dataclass
 class AccuracyIssue:
     """Represents an accuracy issue in documentation."""
+
     file: str
     line: int
     issue_type: str
@@ -45,6 +49,7 @@ class AccuracyIssue:
 @dataclass
 class CompletenessGap:
     """Represents a documentation completeness gap."""
+
     category: str
     item: str
     description: str
@@ -54,6 +59,7 @@ class CompletenessGap:
 @dataclass
 class QualityIssue:
     """Represents a documentation quality issue."""
+
     file: str
     line: int
     issue_type: str
@@ -64,6 +70,7 @@ class QualityIssue:
 @dataclass
 class ScanResults:
     """Container for all scan results."""
+
     scan_date: str
     total_files: int = 0
     documentation_files: List[DocumentationFile] = field(default_factory=list)
@@ -73,19 +80,3 @@ class ScanResults:
     quality_issues: List[QualityIssue] = field(default_factory=list)
     improvements_made: List[Dict] = field(default_factory=list)
     statistics: Dict = field(default_factory=dict)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

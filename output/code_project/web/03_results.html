@@ -328,31 +328,44 @@ k \geq \frac{\log(\epsilon)}{\log(\rho)}
 \end{equation}\]</span></p>
 <p>where <span class="math inline">\(\rho = \sqrt{\frac{\kappa -
 1}{\kappa + 1}}\)</span> is the convergence factor .</p>
-<p>For our results, the convergence factors are: - <span
-class="math inline">\(\alpha = 0.01\)</span>: <span
+<p>For our results, the convergence factors are:</p>
+<ul>
+<li><span class="math inline">\(\alpha = 0.01\)</span>: <span
 class="math inline">\(\rho \approx 0.99\)</span>, requiring ~458
-iterations for <span class="math inline">\(\epsilon = 10^{-6}\)</span> -
-<span class="math inline">\(\alpha = 0.05\)</span>: <span
+iterations for <span class="math inline">\(\epsilon =
+10^{-6}\)</span></li>
+<li><span class="math inline">\(\alpha = 0.05\)</span>: <span
 class="math inline">\(\rho \approx 0.95\)</span>, requiring ~87
-iterations for <span class="math inline">\(\epsilon = 10^{-6}\)</span> -
-<span class="math inline">\(\alpha = 0.10\)</span>: <span
+iterations for <span class="math inline">\(\epsilon =
+10^{-6}\)</span></li>
+<li><span class="math inline">\(\alpha = 0.10\)</span>: <span
 class="math inline">\(\rho \approx 0.90\)</span>, requiring ~43
-iterations for <span class="math inline">\(\epsilon = 10^{-6}\)</span> -
-<span class="math inline">\(\alpha = 0.20\)</span>: <span
+iterations for <span class="math inline">\(\epsilon =
+10^{-6}\)</span></li>
+<li><span class="math inline">\(\alpha = 0.20\)</span>: <span
 class="math inline">\(\rho \approx 0.80\)</span>, requiring ~21
 iterations for <span class="math inline">\(\epsilon =
-10^{-6}\)</span></p>
+10^{-6}\)</span></li>
+</ul>
 <h2 id="performance-analysis">Performance Analysis</h2>
 <h3 id="convergence-speed">Convergence Speed</h3>
 <p>The results show a clear trade-off between step size and convergence
-speed: - Small step sizes require more iterations but provide stable
-convergence - Large step sizes converge faster but may be less stable in
-more complex problems</p>
+speed:</p>
+<ul>
+<li>Small step sizes require more iterations but provide stable
+convergence</li>
+<li>Large step sizes converge faster but may be less stable in more
+complex problems</li>
+</ul>
 <h3 id="solution-accuracy">Solution Accuracy</h3>
 <p>All tested step sizes achieved the analytical optimum within
-numerical precision: - Target solution: <span class="math inline">\(x =
-1.0000\)</span> - Target objective: <span class="math inline">\(f(x) =
--0.5000\)</span></p>
+numerical precision:</p>
+<ul>
+<li>Target solution: <span class="math inline">\(x =
+1.0000\)</span></li>
+<li>Target objective: <span class="math inline">\(f(x) =
+-0.5000\)</span></li>
+</ul>
 <p>This demonstrates the algorithm’s ability to solve simple quadratic
 optimization problems reliably.</p>
 <h2 id="algorithm-characteristics">Algorithm Characteristics</h2>
@@ -388,14 +401,20 @@ computational requirements and scalability characteristics of the
 gradient descent implementation.</figcaption>
 </figure>
 <p>The algorithm demonstrates efficient performance for small-scale
-optimization problems: - <strong>Time complexity</strong>: <span
+optimization problems:</p>
+<ul>
+<li><strong>Time complexity</strong>: <span
 class="math inline">\(O(d)\)</span> per iteration for gradient
-computation - <strong>Space complexity</strong>: <span
-class="math inline">\(O(d)\)</span> for storing variables and gradients
-- <strong>Convergence</strong>: Typically <span
+computation</li>
+<li><strong>Space complexity</strong>: <span
+class="math inline">\(O(d)\)</span> for storing variables and
+gradients</li>
+<li><strong>Convergence</strong>: Typically <span
 class="math inline">\(&lt; 20\)</span> iterations for this quadratic
-problem - <strong>Scalability</strong>: Memory-efficient implementation
-suitable for high-dimensional problems</p>
+problem</li>
+<li><strong>Scalability</strong>: Memory-efficient implementation
+suitable for high-dimensional problems</li>
+</ul>
 <h3 id="performance-benchmarking">Performance Benchmarking</h3>
 <p>Figure <span class="math inline">\(\ref{fig:benchmark}\)</span>
 provides detailed performance benchmarking across different problem
@@ -420,22 +439,34 @@ algorithm robustness under different computational conditions and input
 parameter ranges.</figcaption>
 </figure>
 <h3 id="performance-metrics-summary">Performance Metrics Summary</h3>
-<p><strong>Iteration Statistics:</strong> - Minimum iterations: 9 (for
-<span class="math inline">\(\alpha = 0.2\)</span>) - Maximum iterations:
-165 (for <span class="math inline">\(\alpha = 0.01\)</span>) - Average
-convergence: <span class="math inline">\(&lt; 50\)</span> iterations
-across all test cases</p>
-<p><strong>Numerical Accuracy:</strong> - Solution precision: <span
-class="math inline">\(&lt; 10^{-4}\)</span> relative error - Objective
-accuracy: <span class="math inline">\(&lt; 10^{-6}\)</span> absolute
-error - Gradient tolerance: <span class="math inline">\(&lt;
-10^{-6}\)</span> achieved in all cases</p>
+<p><strong>Iteration Statistics:</strong></p>
+<ul>
+<li>Minimum iterations: 9 (for <span class="math inline">\(\alpha =
+0.2\)</span>)</li>
+<li>Maximum iterations: 165 (for <span class="math inline">\(\alpha =
+0.01\)</span>)</li>
+<li>Average convergence: <span class="math inline">\(&lt; 50\)</span>
+iterations across all test cases</li>
+</ul>
+<p><strong>Numerical Accuracy:</strong></p>
+<ul>
+<li>Solution precision: <span class="math inline">\(&lt;
+10^{-4}\)</span> relative error</li>
+<li>Objective accuracy: <span class="math inline">\(&lt;
+10^{-6}\)</span> absolute error</li>
+<li>Gradient tolerance: <span class="math inline">\(&lt;
+10^{-6}\)</span> achieved in all cases</li>
+</ul>
 <h2 id="validation">Validation</h2>
-<p>The implementation was validated through: - <strong>Unit
-tests</strong> covering all core functionality - <strong>Integration
-tests</strong> verifying algorithm convergence - <strong>Numerical
-accuracy</strong> checks against analytical solutions - <strong>Edge
-case handling</strong> for boundary conditions</p>
+<p>The implementation was validated through:</p>
+<ul>
+<li><strong>Unit tests</strong> covering all core functionality</li>
+<li><strong>Integration tests</strong> verifying algorithm
+convergence</li>
+<li><strong>Numerical accuracy</strong> checks against analytical
+solutions</li>
+<li><strong>Edge case handling</strong> for boundary conditions</li>
+</ul>
 <p>All tests pass with 100% coverage, ensuring implementation
 correctness and reliability.</p>
 <h2 id="discussion">Discussion</h2>

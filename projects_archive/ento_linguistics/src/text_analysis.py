@@ -4,24 +4,49 @@ This module provides core text processing functionality for analyzing scientific
 literature in entomology, including tokenization, normalization, and linguistic
 feature extraction.
 """
+
 from __future__ import annotations
 
 import re
 import unicodedata
 from collections import Counter
-from typing import List, Dict, Set, Optional, Tuple, Any
+from typing import Any, Dict, List, Optional, Set, Tuple
+
 import nltk
-from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import sent_tokenize, word_tokenize
 
 # Domain-specific stop words for scientific text
 SCIENTIFIC_STOP_WORDS = {
-    'fig', 'figure', 'table', 'et', 'al', 'etc', 'ie', 'eg', 'vs', 'cf',
-    'respectively', 'however', 'therefore', 'thus', 'although', 'whereas',
-    'furthermore', 'moreover', 'addition', 'similarly', 'consequently',
-    'subsequently', 'accordingly', 'nevertheless', 'nonetheless', 'notwithstanding'
+    "fig",
+    "figure",
+    "table",
+    "et",
+    "al",
+    "etc",
+    "ie",
+    "eg",
+    "vs",
+    "cf",
+    "respectively",
+    "however",
+    "therefore",
+    "thus",
+    "although",
+    "whereas",
+    "furthermore",
+    "moreover",
+    "addition",
+    "similarly",
+    "consequently",
+    "subsequently",
+    "accordingly",
+    "nevertheless",
+    "nonetheless",
+    "notwithstanding",
 }
+
 
 class TextProcessor:
     """Process and normalize scientific text for analysis.
@@ -30,7 +55,9 @@ class TextProcessor:
     ensuring consistent tokenization and normalization across different text sources.
     """
 
-    def __init__(self, language: str = 'english', custom_stop_words: Optional[Set[str]] = None):
+    def __init__(
+        self, language: str = "english", custom_stop_words: Optional[Set[str]] = None
+    ):
         """Initialize text processor.
 
         Args:
@@ -48,9 +75,18 @@ class TextProcessor:
 
         # Scientific terminology that should not be split
         self.scientific_terms = {
-            'superorganism', 'eusocial', 'eusociality', 'hymenoptera',
-            'formicidae', 'myrmicinae', 'ponerinae', 'dorylinae',
-            'phylogenetic', 'ontogenetic', 'phenotypic', 'genotypic'
+            "superorganism",
+            "eusocial",
+            "eusociality",
+            "hymenoptera",
+            "formicidae",
+            "myrmicinae",
+            "ponerinae",
+            "dorylinae",
+            "phylogenetic",
+            "ontogenetic",
+            "phenotypic",
+            "genotypic",
         }
 
     def normalize_text(self, text: str) -> str:
@@ -66,16 +102,16 @@ class TextProcessor:
             return ""
 
         # Unicode normalization
-        text = unicodedata.normalize('NFKC', text)
+        text = unicodedata.normalize("NFKC", text)
 
         # Convert to lowercase
         text = text.lower()
 
         # Remove punctuation (keep alphanumeric, spaces, and hyphens)
-        text = re.sub(r'[^\w\s\-]', '', text)
+        text = re.sub(r"[^\w\s\-]", "", text)
 
         # Remove extra whitespace
-        text = re.sub(r'\s+', ' ', text.strip())
+        text = re.sub(r"\s+", " ", text.strip())
 
         return text
 
@@ -112,8 +148,11 @@ class TextProcessor:
                 merged = False
                 for term in self.scientific_terms:
                     term_words = term.split()
-                    if (i + len(term_words) <= len(tokens) and
-                        [t.lower() for t in tokens[i:i+len(term_words)]] == term_words):
+                    if (
+                        i + len(term_words) <= len(tokens)
+                        and [t.lower() for t in tokens[i : i + len(term_words)]]
+                        == term_words
+                    ):
                         merged_tokens.append(term)
                         i += len(term_words)
                         merged = True
@@ -137,9 +176,9 @@ class TextProcessor:
         clean_tokens = []
         for token in tokens:
             # Remove punctuation from token
-            clean_token = re.sub(r'[^\w\-_]', '', token)
+            clean_token = re.sub(r"[^\w\-_]", "", token)
             # Keep token if it's not empty and contains alphanumeric characters
-            if clean_token and re.search(r'[a-zA-Z0-9]', clean_token):
+            if clean_token and re.search(r"[a-zA-Z0-9]", clean_token):
                 clean_tokens.append(clean_token)
         return clean_tokens
 
@@ -165,7 +204,9 @@ class TextProcessor:
         """
         return [self.lemmatizer.lemmatize(token) for token in tokens]
 
-    def process_text(self, text: str, lemmatize: bool = True, remove_stops: bool = True) -> List[str]:
+    def process_text(
+        self, text: str, lemmatize: bool = True, remove_stops: bool = True
+    ) -> List[str]:
         """Complete text processing pipeline.
 
         Args:
@@ -195,7 +236,9 @@ class TextProcessor:
 
         return tokens
 
-    def extract_ngrams(self, tokens: List[str], n: int = 2, min_freq: int = 1) -> Dict[str, int]:
+    def extract_ngrams(
+        self, tokens: List[str], n: int = 2, min_freq: int = 1
+    ) -> Dict[str, int]:
         """Extract n-grams from token list.
 
         Args:
@@ -208,11 +251,13 @@ class TextProcessor:
         """
         ngrams = []
         for i in range(len(tokens) - n + 1):
-            ngram = ' '.join(tokens[i:i+n])
+            ngram = " ".join(tokens[i : i + n])
             ngrams.append(ngram)
 
         ngram_counts = Counter(ngrams)
-        return {ngram: count for ngram, count in ngram_counts.items() if count >= min_freq}
+        return {
+            ngram: count for ngram, count in ngram_counts.items() if count >= min_freq
+        }
 
     def get_vocabulary_stats(self, texts: List[str]) -> Dict[str, Any]:
         """Compute vocabulary statistics across multiple texts.
@@ -235,12 +280,14 @@ class TextProcessor:
         token_counts = Counter(all_tokens)
 
         return {
-            'total_tokens': len(all_tokens),
-            'unique_tokens': len(vocab),
-            'total_characters': total_chars,
-            'avg_token_length': sum(len(t) for t in all_tokens) / len(all_tokens) if all_tokens else 0,
-            'most_common_tokens': token_counts.most_common(20),
-            'type_token_ratio': len(vocab) / len(all_tokens) if all_tokens else 0
+            "total_tokens": len(all_tokens),
+            "unique_tokens": len(vocab),
+            "total_characters": total_chars,
+            "avg_token_length": (
+                sum(len(t) for t in all_tokens) / len(all_tokens) if all_tokens else 0
+            ),
+            "most_common_tokens": token_counts.most_common(20),
+            "type_token_ratio": len(vocab) / len(all_tokens) if all_tokens else 0,
         }
 
 
@@ -255,24 +302,24 @@ class LinguisticFeatureExtractor:
         """Initialize feature extractor."""
         # Linguistic patterns for different framing types
         self.anthropomorphic_patterns = [
-            r'\b(choose|decide|prefer|select|opt)\b',
-            r'\b(communicate|signal|inform|warn)\b',
-            r'\b(cooperate|compete|negotiate|trade)\b',
-            r'\b(recognize|identify|distinguish|know)\b'
+            r"\b(choose|decide|prefer|select|opt)\b",
+            r"\b(communicate|signal|inform|warn)\b",
+            r"\b(cooperate|compete|negotiate|trade)\b",
+            r"\b(recognize|identify|distinguish|know)\b",
         ]
 
         self.hierarchical_patterns = [
-            r'\b(superior|inferior|dominant|subordinate)\b',
-            r'\b(command|control|authority|obey)\b',
-            r'\b(leader|follower|boss|worker)\b',
-            r'\b(ruler|subject|governor|citizen)\b'
+            r"\b(superior|inferior|dominant|subordinate)\b",
+            r"\b(command|control|authority|obey)\b",
+            r"\b(leader|follower|boss|worker)\b",
+            r"\b(ruler|subject|governor|citizen)\b",
         ]
 
         self.economic_patterns = [
-            r'\b(invest|profit|cost|benefit)\b',
-            r'\b(trade|exchange|transaction|market)\b',
-            r'\b(resource|allocation|distribution|share)\b',
-            r'\b(value|worth|price|commodity)\b'
+            r"\b(invest|profit|cost|benefit)\b",
+            r"\b(trade|exchange|transaction|market)\b",
+            r"\b(resource|allocation|distribution|share)\b",
+            r"\b(value|worth|price|commodity)\b",
         ]
 
     def extract_framing_features(self, text: str) -> Dict[str, int]:
@@ -287,32 +334,38 @@ class LinguisticFeatureExtractor:
         text_lower = text.lower()
 
         features = {
-            'anthropomorphic_terms': 0,
-            'hierarchical_terms': 0,
-            'economic_terms': 0,
-            'total_words': len(text.split())
+            "anthropomorphic_terms": 0,
+            "hierarchical_terms": 0,
+            "economic_terms": 0,
+            "total_words": len(text.split()),
         }
 
         # Count anthropomorphic terms
         for pattern in self.anthropomorphic_patterns:
             matches = re.findall(pattern, text_lower)
-            features['anthropomorphic_terms'] += len(matches)
+            features["anthropomorphic_terms"] += len(matches)
 
         # Count hierarchical terms
         for pattern in self.hierarchical_patterns:
             matches = re.findall(pattern, text_lower)
-            features['hierarchical_terms'] += len(matches)
+            features["hierarchical_terms"] += len(matches)
 
         # Count economic terms
         for pattern in self.economic_patterns:
             matches = re.findall(pattern, text_lower)
-            features['economic_terms'] += len(matches)
+            features["economic_terms"] += len(matches)
 
         # Calculate densities
-        if features['total_words'] > 0:
-            features['anthropomorphic_density'] = features['anthropomorphic_terms'] / features['total_words']
-            features['hierarchical_density'] = features['hierarchical_terms'] / features['total_words']
-            features['economic_density'] = features['economic_terms'] / features['total_words']
+        if features["total_words"] > 0:
+            features["anthropomorphic_density"] = (
+                features["anthropomorphic_terms"] / features["total_words"]
+            )
+            features["hierarchical_density"] = (
+                features["hierarchical_terms"] / features["total_words"]
+            )
+            features["economic_density"] = (
+                features["economic_terms"] / features["total_words"]
+            )
 
         return features
 
@@ -326,35 +379,38 @@ class LinguisticFeatureExtractor:
             Dictionary of terminology patterns
         """
         patterns = {
-            'compound_terms': [],
-            'hyphenated_terms': [],
-            'scientific_abbreviations': [],
-            'latin_terms': []
+            "compound_terms": [],
+            "hyphenated_terms": [],
+            "scientific_abbreviations": [],
+            "latin_terms": [],
         }
 
         # Find compound terms (multiple words)
         for i in range(len(tokens) - 1):
-            if (len(tokens[i]) > 3 and len(tokens[i+1]) > 3 and
-                not tokens[i].endswith('.') and not tokens[i+1].startswith('.')):
+            if (
+                len(tokens[i]) > 3
+                and len(tokens[i + 1]) > 3
+                and not tokens[i].endswith(".")
+                and not tokens[i + 1].startswith(".")
+            ):
                 compound = f"{tokens[i]} {tokens[i+1]}"
-                patterns['compound_terms'].append(compound)
+                patterns["compound_terms"].append(compound)
 
         # Find hyphenated terms
         for token in tokens:
-            if '-' in token and len(token) > 7:  # Likely a compound term
-                patterns['hyphenated_terms'].append(token)
+            if "-" in token and len(token) > 7:  # Likely a compound term
+                patterns["hyphenated_terms"].append(token)
 
         # Find scientific abbreviations (capital letters)
         for token in tokens:
-            if (len(token) >= 2 and token.isupper() and
-                re.match(r'^[A-Z]{2,}$', token)):
-                patterns['scientific_abbreviations'].append(token)
+            if len(token) >= 2 and token.isupper() and re.match(r"^[A-Z]{2,}$", token):
+                patterns["scientific_abbreviations"].append(token)
 
         # Find Latin terms (italicized or specific patterns)
-        latin_indicators = ['spp', 'sp', 'subsp', 'var', 'ssp']
+        latin_indicators = ["spp", "sp", "subsp", "var", "ssp"]
         for token in tokens:
             if any(indicator in token.lower() for indicator in latin_indicators):
-                patterns['latin_terms'].append(token)
+                patterns["latin_terms"].append(token)
 
         return patterns
 
@@ -372,10 +428,10 @@ class LinguisticFeatureExtractor:
 
         if not sentences:
             return {
-                'sentence_count': 0,
-                'avg_sentence_length': 0.0,
-                'complexity_ratio': 0.0,
-                'total_words': len(text.split())
+                "sentence_count": 0,
+                "avg_sentence_length": 0.0,
+                "complexity_ratio": 0.0,
+                "total_words": len(text.split()),
             }
 
         avg_sentence_length = len(words) / len(sentences)
@@ -384,15 +440,20 @@ class LinguisticFeatureExtractor:
         complex_sentences = 0
         for sentence in sentences:
             # Count clauses (approximate)
-            clauses = len(re.findall(r'\b(and|or|but|although|because|while|since|unless)\b', sentence.lower()))
-            if clauses > 0 or ',' in sentence:
+            clauses = len(
+                re.findall(
+                    r"\b(and|or|but|although|because|while|since|unless)\b",
+                    sentence.lower(),
+                )
+            )
+            if clauses > 0 or "," in sentence:
                 complex_sentences += 1
 
         complexity_ratio = complex_sentences / len(sentences) if sentences else 0
 
         return {
-            'sentence_count': len(sentences),
-            'avg_sentence_length': avg_sentence_length,
-            'complexity_ratio': complexity_ratio,
-            'total_words': len(words)
+            "sentence_count": len(sentences),
+            "avg_sentence_length": avg_sentence_length,
+            "complexity_ratio": complexity_ratio,
+            "total_words": len(words),
         }

@@ -1,130 +1,72 @@
 {
-  "timestamp": "2026-01-08T14:58:06.602181",
-  "total_projects": 2,
+  "timestamp": "2026-01-28T06:38:55.495489",
+  "total_projects": 4,
   "aggregate_metrics": {
     "manuscript": {
-      "total_words": 10469,
-      "total_sections": 19,
-      "total_equations": 37,
-      "total_figures": 7,
-      "total_references": 8,
+      "total_words": 61371,
+      "total_sections": 49,
+      "total_equations": 0,
+      "total_figures": 27,
+      "total_references": 68,
       "words_stats": {
-        "min": 3145,
-        "max": 7324,
-        "median": 5234.5,
-        "avg": 5234.5
+        "min": 3425,
+        "max": 33306,
+        "median": 12320.0,
+        "avg": 15342.75
       }
     },
     "codebase": {
-      "total_source_lines": 3891,
-      "total_methods": 134,
-      "total_classes": 15,
-      "total_scripts": 8
+      "total_source_lines": 9714,
+      "total_methods": 396,
+      "total_classes": 116,
+      "total_scripts": 48
     },
     "tests": {
-      "total_tests": 388,
-      "total_passed": 388,
+      "total_tests": 500,
+      "total_passed": 500,
       "total_failed": 0,
-      "average_coverage": 93.075,
+      "average_coverage": 94.6375,
       "coverage_stats": {
-        "min": 92.03,
-        "max": 94.12,
-        "median": 93.075,
-        "avg": 93.075
+        "min": 91.33,
+        "max": 100.0,
+        "median": 93.61,
+        "avg": 94.6375
       },
       "total_execution_time": 0.0,
-      "projects_with_test_data": 2,
-      "total_projects": 2
+      "projects_with_test_data": 4,
+      "total_projects": 4
     },
     "outputs": {
-      "total_pdfs": 2,
-      "total_size_mb": 5.234044075012207,
-      "total_figures": 40,
-      "total_slides": 13,
-      "total_web": 15
+      "total_pdfs": 4,
+      "total_size_mb": 3.0143346786499023,
+      "total_figures": 78,
+      "total_slides": 43,
+      "total_web": 47
     },
     "pipeline": {
-      "total_duration": 111.57454419136047,
-      "average_duration": 55.78727209568024,
+      "total_duration": 222.24807286262512,
+      "average_duration": 55.56201821565628,
       "duration_stats": {
-        "min": 33.51111125946045,
-        "max": 78.06343293190002,
-        "median": 55.78727209568024,
-        "avg": 55.78727209568024
+        "min": 42.25336742401123,
+        "max": 80.71094369888306,
+        "median": 49.64188086986542,
+        "avg": 55.56201821565628
       },
-      "total_stages_passed": 14,
+      "total_stages_passed": 28,
       "total_stages_failed": 0
     }
   },
   "project_metrics": [
     {
-      "name": "active_inference_meta_pragmatic",
-      "manuscript": {
-        "sections": 12,
-        "total_words": 7324,
-        "total_lines": 1380,
-        "markdown_files": [
-          "04_security_implications.md",
-          "05_discussion.md",
-          "99_references.md",
-          "98_symbols_glossary.md",
-          "README.md",
-          "06_acknowledgments.md",
-          "preamble.md",
-          "02_background.md",
-          "03_quadrant_model.md",
-          "AGENTS.md",
-          "01_abstract.md",
-          "07_appendix.md"
-        ],
-        "equations": 37,
-        "figures": 0,
-        "references": 2
-      },
-      "codebase": {
-        "source_files": 16,
-        "source_lines": 3639,
-        "scripts": 6,
-        "script_lines": 1588,
-        "methods": 131,
-        "classes": 14
-      },
-      "tests": {
-        "test_files": 36,
-        "total_tests": 360,
-        "passed": 360,
-        "failed": 0,
-        "skipped": 0,
-        "coverage_percent": 92.03,
-        "execution_time": 0.0
-      },
-      "outputs": {
-        "pdf_files": 1,
-        "pdf_size_mb": 4.250082969665527,
-        "figures": 34,
-        "data_files": 2,
-        "slides": 9,
-        "web_outputs": 10,
-        "total_outputs": 56
-      },
-      "pipeline": {
-        "total_duration": 78.06343293190002,
-        "stages_passed": 7,
-        "stages_failed": 0,
-        "bottleneck_stage": "PDF Rendering",
-        "bottleneck_duration": 64.18328928947449,
-        "bottleneck_percent": 82.21940398837684
-      }
-    },
-    {
       "name": "code_project",
       "manuscript": {
-        "sections": 7,
-        "total_words": 3145,
-        "total_lines": 696,
+        "sections": 8,
+        "total_words": 3425,
+        "total_lines": 739,
         "markdown_files": [
           "03_results.md",
           "01_introduction.md",
+          "00_abstract.md",
           "02_methodology.md",
           "README.md",
           "04_conclusion.md",
@@ -137,9 +79,9 @@
       },
       "codebase": {
         "source_files": 2,
-        "source_lines": 252,
+        "source_lines": 260,
         "scripts": 2,
-        "script_lines": 1060,
+        "script_lines": 1402,
         "methods": 3,
         "classes": 1
       },
@@ -149,58 +91,211 @@
         "passed": 28,
         "failed": 0,
         "skipped": 0,
-        "coverage_percent": 94.12,
+        "coverage_percent": 93.98,
         "execution_time": 0.0
       },
       "outputs": {
         "pdf_files": 1,
-        "pdf_size_mb": 0.9839611053466797,
+        "pdf_size_mb": 1.3917369842529297,
         "figures": 6,
         "data_files": 1,
-        "slides": 4,
-        "web_outputs": 5,
-        "total_outputs": 17
+        "slides": 5,
+        "web_outputs": 6,
+        "total_outputs": 19
       },
       "pipeline": {
-        "total_duration": 33.51111125946045,
+        "total_duration": 42.25336742401123,
         "stages_passed": 7,
         "stages_failed": 0,
         "bottleneck_stage": "PDF Rendering",
-        "bottleneck_duration": 23.819551944732666,
-        "bottleneck_percent": 71.07956450715498
+        "bottleneck_duration": 31.455225229263306,
+        "bottleneck_percent": 74.44430384355192
+      }
+    },
+    {
+      "name": "cognitive_integrity/cogsec_multiagent_1_theory",
+      "manuscript": {
+        "sections": 15,
+        "total_words": 33306,
+        "total_lines": 5176,
+        "markdown_files": [
+          "S02_eusocial_cogsec.md",
+          "S03_notation.md",
+          "00_quote.md",
+          "99_references.md",
+          "03_threat_model.md",
+          "04_formal_framework.md",
+          "08_discussion.md",
+          "06_detection_methods.md",
+          "05_defense_mechanisms.md",
+          "preamble.md",
+          "01_abstract.md",
+          "07_formal_verification.md",
+          "S01_proofs.md",
+          "09_conclusion.md",
+          "02_introduction.md"
+        ],
+        "equations": 0,
+        "figures": 6,
+        "references": 53
+      },
+      "codebase": {
+        "source_files": 30,
+        "source_lines": 5984,
+        "scripts": 20,
+        "script_lines": 214,
+        "methods": 204,
+        "classes": 52
+      },
+      "tests": {
+        "test_files": 21,
+        "total_tests": 219,
+        "passed": 219,
+        "failed": 0,
+        "skipped": 0,
+        "coverage_percent": 93.24,
+        "execution_time": 0.0
+      },
+      "outputs": {
+        "pdf_files": 1,
+        "pdf_size_mb": 0.8884973526000977,
+        "figures": 30,
+        "data_files": 0,
+        "slides": 14,
+        "web_outputs": 15,
+        "total_outputs": 60
+      },
+      "pipeline": {
+        "total_duration": 80.71094369888306,
+        "stages_passed": 7,
+        "stages_failed": 0,
+        "bottleneck_stage": "PDF Rendering",
+        "bottleneck_duration": 47.74432611465454,
+        "bottleneck_percent": 59.154711773386516
+      }
+    },
+    {
+      "name": "cognitive_integrity/cogsec_multiagent_2_computational",
+      "manuscript": {
+        "sections": 14,
+        "total_words": 16221,
+        "total_lines": 3356,
+        "markdown_files": [
+          "06_discussion.md",
+          "99_references.md",
+          "01_introduction.md",
+          "00_abstract.md",
+          "02_methodology.md",
+          "S02_detection_algorithms.md",
+          "S01_notation_reference.md",
+          "S03_benchmark_implementation.md",
+          "03_attack_corpus.md",
+          "04_experimental_setup.md",
+          "S04_model_checking.md",
+          "07_conclusion.md",
+          "preamble.md",
+          "05_results.md"
+        ],
+        "equations": 0,
+        "figures": 8,
+        "references": 4
+      },
+      "codebase": {
+        "source_files": 9,
+        "source_lines": 2600,
+        "scripts": 19,
+        "script_lines": 4309,
+        "methods": 167,
+        "classes": 51
+      },
+      "tests": {
+        "test_files": 17,
+        "total_tests": 175,
+        "passed": 175,
+        "failed": 0,
+        "skipped": 0,
+        "coverage_percent": 91.33,
+        "execution_time": 0.0
+      },
+      "outputs": {
+        "pdf_files": 1,
+        "pdf_size_mb": 0.4670248031616211,
+        "figures": 30,
+        "data_files": 0,
+        "slides": 13,
+        "web_outputs": 14,
+        "total_outputs": 58
+      },
+      "pipeline": {
+        "total_duration": 56.3680739402771,
+        "stages_passed": 7,
+        "stages_failed": 0,
+        "bottleneck_stage": "PDF Rendering",
+        "bottleneck_duration": 41.4429669380188,
+        "bottleneck_percent": 73.52205608786332
+      }
+    },
+    {
+      "name": "cognitive_integrity/cogsec_multiagent_3_practical",
+      "manuscript": {
+        "sections": 12,
+        "total_words": 8419,
+        "total_lines": 1387,
+        "markdown_files": [
+          "08_conclusion.md",
+          "99_references.md",
+          "07_common_pitfalls.md",
+          "06_risk_assessment.md",
+          "01_introduction.md",
+          "00_abstract.md",
+          "04_agent_guidelines.md",
+          "S01_notation_reference.md",
+          "03_human_checklist.md",
+          "preamble.md",
+          "05_deployment.md",
+          "02_operator_posture.md"
+        ],
+        "equations": 0,
+        "figures": 6,
+        "references": 5
+      },
+      "codebase": {
+        "source_files": 2,
+        "source_lines": 870,
+        "scripts": 7,
+        "script_lines": 388,
+        "methods": 22,
+        "classes": 12
+      },
+      "tests": {
+        "test_files": 7,
+        "total_tests": 78,
+        "passed": 78,
+        "failed": 0,
+        "skipped": 0,
+        "coverage_percent": 100.0,
+        "execution_time": 0.0
+      },
+      "outputs": {
+        "pdf_files": 1,
+        "pdf_size_mb": 0.2670755386352539,
+        "figures": 12,
+        "data_files": 0,
+        "slides": 11,
+        "web_outputs": 12,
+        "total_outputs": 36
+      },
+      "pipeline": {
+        "total_duration": 42.915687799453735,
+        "stages_passed": 7,
+        "stages_failed": 0,
+        "bottleneck_stage": "PDF Rendering",
+        "bottleneck_duration": 34.28980875015259,
+        "bottleneck_percent": 79.90040590841716
       }
     }
   ],
   "health_scores": {
-    "active_inference_meta_pragmatic": {
-      "score": 100,
-      "max_score": 100,
-      "percentage": 100.0,
-      "grade": "A",
-      "status": "Excellent",
-      "factors": {
-        "test_coverage": {
-          "score": 40,
-          "grade": "A",
-          "reason": "Excellent coverage \u226590%"
-        },
-        "test_failures": {
-          "score": 30,
-          "grade": "A",
-          "reason": "No test failures"
-        },
-        "manuscript_size": {
-          "score": 20,
-          "grade": "A",
-          "reason": "Comprehensive manuscript (7324 words)"
-        },
-        "outputs": {
-          "score": 10,
-          "grade": "A",
-          "reason": "Rich outputs (54 files)"
-        }
-      }
-    },
     "code_project": {
       "score": 100,
       "max_score": 100,
@@ -221,12 +316,99 @@
         "manuscript_size": {
           "score": 20,
           "grade": "A",
-          "reason": "Comprehensive manuscript (3145 words)"
+          "reason": "Comprehensive manuscript (3425 words)"
         },
         "outputs": {
           "score": 10,
           "grade": "A",
-          "reason": "Rich outputs (16 files)"
+          "reason": "Rich outputs (18 files)"
+        }
+      }
+    },
+    "cognitive_integrity/cogsec_multiagent_1_theory": {
+      "score": 100,
+      "max_score": 100,
+      "percentage": 100.0,
+      "grade": "A",
+      "status": "Excellent",
+      "factors": {
+        "test_coverage": {
+          "score": 40,
+          "grade": "A",
+          "reason": "Excellent coverage \u226590%"
+        },
+        "test_failures": {
+          "score": 30,
+          "grade": "A",
+          "reason": "No test failures"
+        },
+        "manuscript_size": {
+          "score": 20,
+          "grade": "A",
+          "reason": "Comprehensive manuscript (33306 words)"
+        },
+        "outputs": {
+          "score": 10,
+          "grade": "A",
+          "reason": "Rich outputs (60 files)"
+        }
+      }
+    },
+    "cognitive_integrity/cogsec_multiagent_2_computational": {
+      "score": 100,
+      "max_score": 100,
+      "percentage": 100.0,
+      "grade": "A",
+      "status": "Excellent",
+      "factors": {
+        "test_coverage": {
+          "score": 40,
+          "grade": "A",
+          "reason": "Excellent coverage \u226590%"
+        },
+        "test_failures": {
+          "score": 30,
+          "grade": "A",
+          "reason": "No test failures"
+        },
+        "manuscript_size": {
+          "score": 20,
+          "grade": "A",
+          "reason": "Comprehensive manuscript (16221 words)"
+        },
+        "outputs": {
+          "score": 10,
+          "grade": "A",
+          "reason": "Rich outputs (58 files)"
+        }
+      }
+    },
+    "cognitive_integrity/cogsec_multiagent_3_practical": {
+      "score": 100,
+      "max_score": 100,
+      "percentage": 100.0,
+      "grade": "A",
+      "status": "Excellent",
+      "factors": {
+        "test_coverage": {
+          "score": 40,
+          "grade": "A",
+          "reason": "Excellent coverage \u226590%"
+        },
+        "test_failures": {
+          "score": 30,
+          "grade": "A",
+          "reason": "No test failures"
+        },
+        "manuscript_size": {
+          "score": 20,
+          "grade": "A",
+          "reason": "Comprehensive manuscript (8419 words)"
+        },
+        "outputs": {
+          "score": 10,
+          "grade": "A",
+          "reason": "Rich outputs (36 files)"
         }
       }
     }
@@ -234,64 +416,118 @@
   "comparative_tables": {
     "manuscript_comparison": [
       {
-        "project": "active_inference_meta_pragmatic",
-        "words": 7324,
-        "sections": 12,
-        "equations": 37,
-        "figures": 0
-      },
-      {
         "project": "code_project",
-        "words": 3145,
-        "sections": 7,
+        "words": 3425,
+        "sections": 8,
         "equations": 0,
         "figures": 7
+      },
+      {
+        "project": "cognitive_integrity/cogsec_multiagent_1_theory",
+        "words": 33306,
+        "sections": 15,
+        "equations": 0,
+        "figures": 6
+      },
+      {
+        "project": "cognitive_integrity/cogsec_multiagent_2_computational",
+        "words": 16221,
+        "sections": 14,
+        "equations": 0,
+        "figures": 8
+      },
+      {
+        "project": "cognitive_integrity/cogsec_multiagent_3_practical",
+        "words": 8419,
+        "sections": 12,
+        "equations": 0,
+        "figures": 6
       }
     ],
     "test_comparison": [
       {
-        "project": "active_inference_meta_pragmatic",
-        "tests": 360,
-        "passed": 360,
-        "coverage": "92.0%",
-        "time": "0.0s"
-      },
-      {
         "project": "code_project",
         "tests": 28,
         "passed": 28,
-        "coverage": "94.1%",
+        "coverage": "94.0%",
+        "time": "0.0s"
+      },
+      {
+        "project": "cognitive_integrity/cogsec_multiagent_1_theory",
+        "tests": 219,
+        "passed": 219,
+        "coverage": "93.2%",
+        "time": "0.0s"
+      },
+      {
+        "project": "cognitive_integrity/cogsec_multiagent_2_computational",
+        "tests": 175,
+        "passed": 175,
+        "coverage": "91.3%",
+        "time": "0.0s"
+      },
+      {
+        "project": "cognitive_integrity/cogsec_multiagent_3_practical",
+        "tests": 78,
+        "passed": 78,
+        "coverage": "100.0%",
         "time": "0.0s"
       }
     ],
     "output_comparison": [
       {
-        "project": "active_inference_meta_pragmatic",
-        "pdfs": 1,
-        "size_mb": "4.3",
-        "figures": 34,
-        "slides": 9
-      },
-      {
         "project": "code_project",
         "pdfs": 1,
-        "size_mb": "1.0",
+        "size_mb": "1.4",
         "figures": 6,
-        "slides": 4
+        "slides": 5
+      },
+      {
+        "project": "cognitive_integrity/cogsec_multiagent_1_theory",
+        "pdfs": 1,
+        "size_mb": "0.9",
+        "figures": 30,
+        "slides": 14
+      },
+      {
+        "project": "cognitive_integrity/cogsec_multiagent_2_computational",
+        "pdfs": 1,
+        "size_mb": "0.5",
+        "figures": 30,
+        "slides": 13
+      },
+      {
+        "project": "cognitive_integrity/cogsec_multiagent_3_practical",
+        "pdfs": 1,
+        "size_mb": "0.3",
+        "figures": 12,
+        "slides": 11
       }
     ],
     "pipeline_comparison": [
       {
-        "project": "active_inference_meta_pragmatic",
-        "duration": "78s",
+        "project": "code_project",
+        "duration": "42s",
         "bottleneck": "PDF Rendering",
-        "bottleneck_pct": "82%"
+        "bottleneck_pct": "74%"
       },
       {
-        "project": "code_project",
-        "duration": "34s",
+        "project": "cognitive_integrity/cogsec_multiagent_1_theory",
+        "duration": "81s",
         "bottleneck": "PDF Rendering",
-        "bottleneck_pct": "71%"
+        "bottleneck_pct": "59%"
+      },
+      {
+        "project": "cognitive_integrity/cogsec_multiagent_2_computational",
+        "duration": "56s",
+        "bottleneck": "PDF Rendering",
+        "bottleneck_pct": "74%"
+      },
+      {
+        "project": "cognitive_integrity/cogsec_multiagent_3_practical",
+        "duration": "43s",
+        "bottleneck": "PDF Rendering",
+        "bottleneck_pct": "80%"
       }
     ]
   },
@@ -299,8 +535,11 @@
     "\ud83c\udf89 **Portfolio Health**: Excellent overall project health across all metrics.",
     "\u2705 **Test Coverage**: All projects meet or exceed 90% coverage threshold. Maintain this standard with comprehensive test suites.",
     "\u2705 **Test Integrity**: All tests passing across all projects.",
-    "\u23f1\ufe0f **PDF Performance**: active_inference_meta_pragmatic bottleneck in LaTeX compilation. Action: Check for complex equations or large figures. Consider using lighter LaTeX packages or optimizing figure resolution.",
     "\u23f1\ufe0f **PDF Performance**: code_project bottleneck in LaTeX compilation. Action: Check for complex equations or large figures. Consider using lighter LaTeX packages or optimizing figure resolution.",
-    "\ud83d\udcda **Comprehensive Research**: active_inference_meta_pragmatic has extensive manuscript (7,324 words). Consider if other projects could benefit from similar depth."
+    "\u23f1\ufe0f **PDF Performance**: cognitive_integrity/cogsec_multiagent_1_theory bottleneck in LaTeX compilation. Action: Check for complex equations or large figures. Consider using lighter LaTeX packages or optimizing figure resolution.",
+    "\u23f1\ufe0f **PDF Performance**: cognitive_integrity/cogsec_multiagent_2_computational bottleneck in LaTeX compilation. Action: Check for complex equations or large figures. Consider using lighter LaTeX packages or optimizing figure resolution.",
+    "\u23f1\ufe0f **PDF Performance**: cognitive_integrity/cogsec_multiagent_3_practical bottleneck in LaTeX compilation. Action: Check for complex equations or large figures. Consider using lighter LaTeX packages or optimizing figure resolution.",
+    "\ud83c\udfc6 **Best Practice**: cognitive_integrity/cogsec_multiagent_3_practical demonstrates excellent test coverage (100.0%). Action: Study this project's testing approach and apply lessons to other projects.",
+    "\ud83d\udcda **Comprehensive Research**: cognitive_integrity/cogsec_multiagent_1_theory has extensive manuscript (33,306 words). Consider if other projects could benefit from similar depth."
   ]
 }

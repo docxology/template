@@ -6,9 +6,9 @@ All mock-based tests have been removed to comply with No Mocks Policy.
 
 import pytest
 
+from infrastructure.core.exceptions import LLMConnectionError
 from infrastructure.llm.core.client import LLMClient
 from infrastructure.llm.core.config import LLMConfig
-from infrastructure.core.exceptions import LLMConnectionError
 
 
 class TestStreamingBasic:
@@ -38,11 +38,11 @@ class TestStreamingBasic:
 
         # Verify response was added to context
         messages = client.context.get_messages()
-        assistant_messages = [m for m in messages if m.get('role') == 'assistant']
+        assistant_messages = [m for m in messages if m.get("role") == "assistant"]
 
         assert len(assistant_messages) == 1
-        assert isinstance(assistant_messages[0]['content'], str)
-        assert len(assistant_messages[0]['content']) > 0
+        assert isinstance(assistant_messages[0]["content"], str)
+        assert len(assistant_messages[0]["content"]) > 0
 
     def test_stream_short_basic(self, ollama_test_server):
         """Test basic stream_short functionality."""
@@ -124,8 +124,8 @@ class TestStreamingContextManagement:
 
         # Check that context contains both messages
         messages = client.context.get_messages()
-        user_messages = [m for m in messages if m.get('role') == 'user']
-        assistant_messages = [m for m in messages if m.get('role') == 'assistant']
+        user_messages = [m for m in messages if m.get("role") == "user"]
+        assistant_messages = [m for m in messages if m.get("role") == "assistant"]
 
         assert len(user_messages) >= 1
         assert len(assistant_messages) >= 1
@@ -137,6 +137,7 @@ class TestStreamingWithOptions:
     def test_stream_query_with_temperature(self, ollama_test_server):
         """Test streaming with temperature option."""
         from infrastructure.llm.core.config import GenerationOptions
+
         config = LLMConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
@@ -149,6 +150,7 @@ class TestStreamingWithOptions:
     def test_stream_query_with_max_tokens(self, ollama_test_server):
         """Test streaming with max_tokens option."""
         from infrastructure.llm.core.config import GenerationOptions
+
         config = LLMConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)

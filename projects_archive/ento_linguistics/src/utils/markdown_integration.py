@@ -20,16 +20,16 @@ class MarkdownIntegration:
         markdown_file: Path,
         figure_label: str,
         section_name: str,
-        position: str = "after"
+        position: str = "after",
     ) -> bool:
         """Insert figure in specific section.
-        
+
         Args:
             markdown_file: Path to markdown file
             figure_label: Figure label
             section_name: Section name
             position: Position relative to section (before, after)
-            
+
         Returns:
             True if successful
         """
@@ -45,12 +45,11 @@ class ImageManager:
         """Initialize image manager."""
         self.images = {}
 
-    def register_image(self, filename: str, caption: str, alt_text: Optional[str] = None) -> None:
+    def register_image(
+        self, filename: str, caption: str, alt_text: Optional[str] = None
+    ) -> None:
         """Register an image (stub)."""
-        self.images[filename] = {
-            "caption": caption,
-            "alt_text": alt_text
-        }
+        self.images[filename] = {"caption": caption, "alt_text": alt_text}
 
     def get_image_info(self, filename: str) -> Optional[Dict]:
         """Get image information (stub)."""

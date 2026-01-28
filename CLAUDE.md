@@ -6,6 +6,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a research project template with a test-driven development workflow, automated PDF generation, and multi-project support. It uses a two-layer architecture separating generic infrastructure (Layer 1) from project-specific code (Layer 2), following a thin orchestrator pattern.
 
+## Quick Reference
+
+| Task | Command |
+|------|---------|
+| Interactive menu | `./run.sh` |
+| Full pipeline | `./run.sh --pipeline` |
+| Core pipeline (no LLM) | `python3 scripts/execute_pipeline.py --project {name} --core-only` |
+| All tests | `python3 scripts/01_run_tests.py --project {name}` |
+| Single test | `uv run pytest path/to/test.py::test_function -v` |
+| Install deps | `uv sync` |
+
 ## Common Commands
 
 ### Pipeline Execution
@@ -13,7 +24,7 @@ This is a research project template with a test-driven development workflow, aut
 # Interactive menu (recommended)
 ./run.sh
 
-# Full pipeline (9 stages displayed as [1/9] to [9/9]: clean, setup, tests, analysis, render, validate, LLM review, LLM translations, copy)
+# Full pipeline (9 stages: clean, setup, tests, analysis, render, validate, LLM review, LLM translations, copy)
 ./run.sh --pipeline
 
 # Core pipeline only (6 stages: no LLM)
@@ -36,6 +47,11 @@ uv run pytest projects/{project_name}/tests/ --cov=projects/{project_name}/src -
 
 # Run specific test file
 uv run pytest tests/infrastructure/test_specific.py -v
+
+# Run single test function
+uv run pytest tests/infrastructure/test_specific.py::test_function_name -v
+
+# Coverage files are isolated per suite (.coverage.infra, .coverage.project)
 ```
 
 ### Development Tools
@@ -46,6 +62,10 @@ uv sync
 # Workspace management
 uv run python scripts/manage_workspace.py status
 uv run python scripts/manage_workspace.py add <package> --project <name>
+
+# Linting and type checking
+uv run mypy infrastructure/ projects/code_project/src/
+uv run bandit -r infrastructure/
 
 # Validate markdown
 python3 -m infrastructure.validation.cli markdown projects/{project_name}/manuscript/
@@ -68,6 +88,9 @@ python3 scripts/execute_multi_project.py --no-llm
 # List available projects
 python3 -c "from infrastructure.project.discovery import discover_projects; from pathlib import Path; print([p.name for p in discover_projects(Path('.'))])"
 ```
+
+**Active projects:** `code_project`
+**Archived projects:** Located in `projects_archive/` (not executed by pipeline)
 
 ## Architecture
 
@@ -126,6 +149,8 @@ avg = calculate_average(data)  # Use tested method
 
 - **`projects/`** - Active projects (discovered and executed by infrastructure)
 - **`projects_archive/`** - Archived projects (preserved but not executed)
+
+**Current active projects:** `code_project`
 
 To archive: `mv projects/{name}/ projects_archive/{name}/`
 To reactivate: `mv projects_archive/{name}/ projects/{name}/`
@@ -242,6 +267,12 @@ llm:
 - `AUTHOR_NAME` - Override config file author
 - `PROJECT_TITLE` - Override config file title
 - `MPLBACKEND=Agg` - Headless matplotlib (automatically set)
+
+### IDE Integration
+```bash
+# Set Python path for IDE/editor integration
+export PYTHONPATH=".:infrastructure:projects/code_project/src"
+```
 
 ## Development Workflow
 
@@ -405,10 +436,11 @@ python3 scripts/03_render_pdf.py --project {name}
 ## Documentation Resources
 
 - **README.md** - Project overview and quick start
-- **AGENTS.md** - system reference (this complements CLAUDE.md)
+- **AGENTS.md** - System reference (configuration, modules, troubleshooting details)
+- **RUN_GUIDE.md** - Pipeline execution documentation
 - **docs/core/ARCHITECTURE.md** - Detailed architecture guide
 - **docs/core/WORKFLOW.md** - Development workflow details
-- **docs/core/HOW_TO_USE.md** - usage guide (12 skill levels)
+- **docs/core/HOW_TO_USE.md** - Usage guide (12 skill levels)
 - **docs/DOCUMENTATION_INDEX.md** - Index of all 89+ documentation files
 
 ## Important Notes
@@ -417,7 +449,8 @@ python3 scripts/03_render_pdf.py --project {name}
 - Never commit generated outputs to version control
 - Always run tests before committing changes
 - Follow thin orchestrator pattern strictly
-- No mocks allowed in tests
-- Maintain 90%+ test coverage for project code
+- No mocks allowed in tests (use `pytest-httpserver` for HTTP, real files for I/O)
+- Maintain 90%+ test coverage for project code, 60%+ for infrastructure
 - Use `uv` for dependency management (recommended)
 - Pipeline can be resumed from checkpoints with `--resume`
+- Tests timeout after 10 seconds by default (configurable in pyproject.toml)

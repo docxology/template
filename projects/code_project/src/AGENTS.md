@@ -9,7 +9,7 @@ The `src/` directory contains the core mathematical optimization algorithms and 
 - **Mathematical optimization** algorithms for parameter tuning
 - **Reproducible research** with fixed random seeds
 - **Numerical stability** and convergence analysis
-- **Type safety** with type hints
+- **Type safety** with comprehensive type hints
 
 ## Directory Structure
 

@@ -4,17 +4,18 @@ This module provides functionality for analyzing how language structures
 scientific discourse in entomology, examining rhetorical patterns,
 argumentative structures, and narrative frameworks.
 """
+
 from __future__ import annotations
 
 import re
 from collections import Counter, defaultdict
-from typing import List, Dict, Set, Optional, Tuple, Any
 from dataclasses import dataclass, field
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 try:
-    from .text_analysis import TextProcessor, LinguisticFeatureExtractor
+    from .text_analysis import LinguisticFeatureExtractor, TextProcessor
 except ImportError:
-    from text_analysis import TextProcessor, LinguisticFeatureExtractor
+    from text_analysis import LinguisticFeatureExtractor, TextProcessor
 
 
 @dataclass
@@ -28,6 +29,7 @@ class DiscoursePattern:
         domains: Ento-Linguistic domains where this appears
         rhetorical_function: What this pattern accomplishes rhetorically
     """
+
     pattern_type: str
     examples: List[str] = field(default_factory=list)
     frequency: int = 0
@@ -55,6 +57,7 @@ class ArgumentativeStructure:
         qualification: Limits or conditions on the claim
         discourse_markers: Linguistic markers used
     """
+
     claim: str = ""
     evidence: List[str] = field(default_factory=list)
     warrant: str = ""
@@ -72,12 +75,56 @@ class DiscourseAnalyzer:
 
     # Discourse markers for different rhetorical functions
     DISCOURSE_MARKERS = {
-        'causation': ['because', 'since', 'due to', 'as a result', 'therefore', 'thus', 'consequently'],
-        'contrast': ['however', 'although', 'but', 'yet', 'nevertheless', 'whereas', 'despite'],
-        'evidence': ['according to', 'as shown in', 'the data indicate', 'research shows', 'studies demonstrate'],
-        'generalization': ['typically', 'generally', 'usually', 'in general', 'often', 'frequently'],
-        'hedging': ['may', 'might', 'could', 'possibly', 'perhaps', 'likely', 'probably'],
-        'certainty': ['clearly', 'obviously', 'definitely', 'certainly', 'undoubtedly', 'evidently']
+        "causation": [
+            "because",
+            "since",
+            "due to",
+            "as a result",
+            "therefore",
+            "thus",
+            "consequently",
+        ],
+        "contrast": [
+            "however",
+            "although",
+            "but",
+            "yet",
+            "nevertheless",
+            "whereas",
+            "despite",
+        ],
+        "evidence": [
+            "according to",
+            "as shown in",
+            "the data indicate",
+            "research shows",
+            "studies demonstrate",
+        ],
+        "generalization": [
+            "typically",
+            "generally",
+            "usually",
+            "in general",
+            "often",
+            "frequently",
+        ],
+        "hedging": [
+            "may",
+            "might",
+            "could",
+            "possibly",
+            "perhaps",
+            "likely",
+            "probably",
+        ],
+        "certainty": [
+            "clearly",
+            "obviously",
+            "definitely",
+            "certainly",
+            "undoubtedly",
+            "evidently",
+        ],
     }
 
     def __init__(self):
@@ -85,7 +132,9 @@ class DiscourseAnalyzer:
         self.text_processor = TextProcessor()
         self.feature_extractor = LinguisticFeatureExtractor()
 
-    def analyze_discourse_patterns(self, texts: List[str]) -> Dict[str, DiscoursePattern]:
+    def analyze_discourse_patterns(
+        self, texts: List[str]
+    ) -> Dict[str, DiscoursePattern]:
         """Analyze discourse patterns across texts.
 
         Args:
@@ -117,13 +166,13 @@ class DiscourseAnalyzer:
                 if pattern_type not in patterns:
                     patterns[pattern_type] = DiscoursePattern(
                         pattern_type=pattern_type,
-                        rhetorical_function=pattern_data.get('function', '')
+                        rhetorical_function=pattern_data.get("function", ""),
                     )
 
                 pattern = patterns[pattern_type]
-                pattern.add_example(pattern_data.get('example', ''))
-                if 'domain' in pattern_data:
-                    pattern.domains.add(pattern_data['domain'])
+                pattern.add_example(pattern_data.get("example", ""))
+                if "domain" in pattern_data:
+                    pattern.domains.add(pattern_data["domain"])
 
         return patterns
 
@@ -140,59 +189,60 @@ class DiscourseAnalyzer:
 
         # Anthropomorphic framing patterns
         anthropomorphic_matches = re.findall(
-            r'\b(ants?|colony|queen|workers?)\s+(choose|decide|prefer|select|communicate|cooperate|compete)\b',
-            text.lower()
+            r"\b(ants?|colony|queen|workers?)\s+(choose|decide|prefer|select|communicate|cooperate|compete)\b",
+            text.lower(),
         )
 
         if anthropomorphic_matches:
-            patterns['anthropomorphic_framing'] = {
-                'example': f"Found {len(anthropomorphic_matches)} anthropomorphic constructions",
-                'function': 'Imposes human-like agency on insect societies',
-                'domain': 'behavior_and_identity'
+            patterns["anthropomorphic_framing"] = {
+                "example": f"Found {len(anthropomorphic_matches)} anthropomorphic constructions",
+                "function": "Imposes human-like agency on insect societies",
+                "domain": "behavior_and_identity",
             }
 
         # Hierarchical language patterns
         hierarchy_matches = re.findall(
-            r'\b(dominant|subordinate|superior|inferior|control|authority|command)\b',
-            text.lower()
+            r"\b(dominant|subordinate|superior|inferior|control|authority|command)\b",
+            text.lower(),
         )
 
         if hierarchy_matches:
-            patterns['hierarchical_framing'] = {
-                'example': f"Found {len(hierarchy_matches)} hierarchical terms",
-                'function': 'Structures social relationships as human-like hierarchies',
-                'domain': 'power_and_labor'
+            patterns["hierarchical_framing"] = {
+                "example": f"Found {len(hierarchy_matches)} hierarchical terms",
+                "function": "Structures social relationships as human-like hierarchies",
+                "domain": "power_and_labor",
             }
 
         # Economic metaphor patterns
         economic_matches = re.findall(
-            r'\b(cost|benefit|trade|exchange|investment|profit|value)\b',
-            text.lower()
+            r"\b(cost|benefit|trade|exchange|investment|profit|value)\b", text.lower()
         )
 
         if economic_matches:
-            patterns['economic_metaphors'] = {
-                'example': f"Found {len(economic_matches)} economic metaphors",
-                'function': 'Applies market logic to biological processes',
-                'domain': 'economics'
+            patterns["economic_metaphors"] = {
+                "example": f"Found {len(economic_matches)} economic metaphors",
+                "function": "Applies market logic to biological processes",
+                "domain": "economics",
             }
 
         # Scale ambiguity patterns
         scale_patterns = re.findall(
-            r'\b(individual|colony|population|society|group)\s+(behavior|trait|characteristic|property)\b',
-            text.lower()
+            r"\b(individual|colony|population|society|group)\s+(behavior|trait|characteristic|property)\b",
+            text.lower(),
         )
 
         if scale_patterns:
-            patterns['scale_ambiguity'] = {
-                'example': f"Found {len(scale_patterns)} scale-ambiguous constructions",
-                'function': 'Creates confusion about biological levels of analysis',
-                'domain': 'unit_of_individuality'
+            patterns["scale_ambiguity"] = {
+                "example": f"Found {len(scale_patterns)} scale-ambiguous constructions",
+                "function": "Creates confusion about biological levels of analysis",
+                "domain": "unit_of_individuality",
             }
 
         return patterns
 
-    def analyze_argumentative_structures(self, texts: List[str]) -> List[ArgumentativeStructure]:
+    def analyze_argumentative_structures(
+        self, texts: List[str]
+    ) -> List[ArgumentativeStructure]:
         """Analyze argumentative structures in texts.
 
         Args:
@@ -214,7 +264,9 @@ class DiscourseAnalyzer:
 
         return structures
 
-    def _extract_argumentative_structure(self, sentences: List[str]) -> ArgumentativeStructure:
+    def _extract_argumentative_structure(
+        self, sentences: List[str]
+    ) -> ArgumentativeStructure:
         """Extract argumentative structure from sentences.
 
         Args:
@@ -230,19 +282,27 @@ class DiscourseAnalyzer:
             sentence_lower = sentence.lower()
 
             # Look for claim indicators
-            if any(word in sentence_lower for word in ['therefore', 'thus', 'consequently', 'we conclude']):
+            if any(
+                word in sentence_lower
+                for word in ["therefore", "thus", "consequently", "we conclude"]
+            ):
                 structure.claim = sentence.strip()
 
             # Look for evidence indicators
-            elif any(phrase in sentence_lower for phrase in ['research shows', 'studies demonstrate', 'data indicate']):
+            elif any(
+                phrase in sentence_lower
+                for phrase in ["research shows", "studies demonstrate", "data indicate"]
+            ):
                 structure.evidence.append(sentence.strip())
 
             # Look for warrant indicators
-            elif any(word in sentence_lower for word in ['because', 'since', 'due to']):
+            elif any(word in sentence_lower for word in ["because", "since", "due to"]):
                 structure.warrant = sentence.strip()
 
             # Look for qualification indicators
-            elif any(word in sentence_lower for word in ['however', 'although', 'but', 'yet']):
+            elif any(
+                word in sentence_lower for word in ["however", "although", "but", "yet"]
+            ):
                 structure.qualification = sentence.strip()
 
             # Collect discourse markers
@@ -253,7 +313,9 @@ class DiscourseAnalyzer:
 
         return structure
 
-    def analyze_rhetorical_strategies(self, texts: List[str]) -> Dict[str, Dict[str, Any]]:
+    def analyze_rhetorical_strategies(
+        self, texts: List[str]
+    ) -> Dict[str, Dict[str, Any]]:
         """Analyze rhetorical strategies used in texts.
 
         Args:
@@ -263,36 +325,40 @@ class DiscourseAnalyzer:
             Dictionary of rhetorical strategy analysis
         """
         strategies = {
-            'authority': {'frequency': 0, 'examples': []},
-            'analogy': {'frequency': 0, 'examples': []},
-            'generalization': {'frequency': 0, 'examples': []},
-            'anecdotal': {'frequency': 0, 'examples': []}
+            "authority": {"frequency": 0, "examples": []},
+            "analogy": {"frequency": 0, "examples": []},
+            "generalization": {"frequency": 0, "examples": []},
+            "anecdotal": {"frequency": 0, "examples": []},
         }
 
         for text in texts:
             # Authority citations
-            citations = re.findall(r'\(.*?20\d{2}.*?\)', text)
-            strategies['authority']['frequency'] += len(citations)
+            citations = re.findall(r"\(.*?20\d{2}.*?\)", text)
+            strategies["authority"]["frequency"] += len(citations)
             if citations:
-                strategies['authority']['examples'].extend(citations[:2])
+                strategies["authority"]["examples"].extend(citations[:2])
 
             # Analogies
-            analogies = re.findall(r'\blike\s+.*?\bant|ant.*?\blike\s+', text.lower())
-            strategies['analogy']['frequency'] += len(analogies)
+            analogies = re.findall(r"\blike\s+.*?\bant|ant.*?\blike\s+", text.lower())
+            strategies["analogy"]["frequency"] += len(analogies)
             if analogies:
-                strategies['analogy']['examples'].extend(analogies[:2])
+                strategies["analogy"]["examples"].extend(analogies[:2])
 
             # Generalizations
-            generalizations = re.findall(r'\b(all|every|always|never)\s+.*?\bant', text.lower())
-            strategies['generalization']['frequency'] += len(generalizations)
+            generalizations = re.findall(
+                r"\b(all|every|always|never)\s+.*?\bant", text.lower()
+            )
+            strategies["generalization"]["frequency"] += len(generalizations)
             if generalizations:
-                strategies['generalization']['examples'].extend(generalizations[:2])
+                strategies["generalization"]["examples"].extend(generalizations[:2])
 
             # Anecdotal evidence
-            anecdotal = re.findall(r'\b(for\s+example|such\s+as|consider|imagine)\b', text.lower())
-            strategies['anecdotal']['frequency'] += len(anecdotal)
+            anecdotal = re.findall(
+                r"\b(for\s+example|such\s+as|consider|imagine)\b", text.lower()
+            )
+            strategies["anecdotal"]["frequency"] += len(anecdotal)
             if anecdotal:
-                strategies['anecdotal']['examples'].extend(anecdotal[:2])
+                strategies["anecdotal"]["examples"].extend(anecdotal[:2])
 
         return strategies
 
@@ -306,34 +372,47 @@ class DiscourseAnalyzer:
             Dictionary of narrative frameworks and examples
         """
         frameworks = {
-            'progress_narrative': [],
-            'conflict_narrative': [],
-            'discovery_narrative': [],
-            'complexity_narrative': []
+            "progress_narrative": [],
+            "conflict_narrative": [],
+            "discovery_narrative": [],
+            "complexity_narrative": [],
         }
 
         for text in texts:
             text_lower = text.lower()
 
             # Progress narratives (advancement, improvement)
-            if any(word in text_lower for word in ['advance', 'improvement', 'progress', 'development']):
-                frameworks['progress_narrative'].append(text[:100] + '...')
+            if any(
+                word in text_lower
+                for word in ["advance", "improvement", "progress", "development"]
+            ):
+                frameworks["progress_narrative"].append(text[:100] + "...")
 
             # Conflict narratives (struggle, adaptation)
-            if any(word in text_lower for word in ['struggle', 'adaptation', 'conflict', 'competition']):
-                frameworks['conflict_narrative'].append(text[:100] + '...')
+            if any(
+                word in text_lower
+                for word in ["struggle", "adaptation", "conflict", "competition"]
+            ):
+                frameworks["conflict_narrative"].append(text[:100] + "...")
 
             # Discovery narratives (finding, revealing)
-            if any(word in text_lower for word in ['discover', 'reveal', 'find', 'uncover']):
-                frameworks['discovery_narrative'].append(text[:100] + '...')
+            if any(
+                word in text_lower for word in ["discover", "reveal", "find", "uncover"]
+            ):
+                frameworks["discovery_narrative"].append(text[:100] + "...")
 
             # Complexity narratives (complex, sophisticated)
-            if any(word in text_lower for word in ['complex', 'sophisticated', 'intricate', 'elaborate']):
-                frameworks['complexity_narrative'].append(text[:100] + '...')
+            if any(
+                word in text_lower
+                for word in ["complex", "sophisticated", "intricate", "elaborate"]
+            ):
+                frameworks["complexity_narrative"].append(text[:100] + "...")
 
         return frameworks
 
-    def analyze_persuasive_techniques(self, texts: List[str]) -> Dict[str, Dict[str, Any]]:
+    def analyze_persuasive_techniques(
+        self, texts: List[str]
+    ) -> Dict[str, Dict[str, Any]]:
         """Analyze persuasive techniques used in scientific writing.
 
         Args:
@@ -343,29 +422,31 @@ class DiscourseAnalyzer:
             Dictionary of persuasive technique analysis
         """
         techniques = {
-            'rhetorical_questions': {'count': 0, 'examples': []},
-            'metaphorical_language': {'count': 0, 'examples': []},
-            'quantitative_emphasis': {'count': 0, 'examples': []},
-            'authoritative_citations': {'count': 0, 'examples': []}
+            "rhetorical_questions": {"count": 0, "examples": []},
+            "metaphorical_language": {"count": 0, "examples": []},
+            "quantitative_emphasis": {"count": 0, "examples": []},
+            "authoritative_citations": {"count": 0, "examples": []},
         }
 
         for text in texts:
             # Rhetorical questions
-            questions = re.findall(r'\b(how|what|why|when|where)\s+.*?\?', text)
-            techniques['rhetorical_questions']['count'] += len(questions)
-            techniques['rhetorical_questions']['examples'].extend(questions[:3])
+            questions = re.findall(r"\b(how|what|why|when|where)\s+.*?\?", text)
+            techniques["rhetorical_questions"]["count"] += len(questions)
+            techniques["rhetorical_questions"]["examples"].extend(questions[:3])
 
             # Metaphorical language
-            metaphors = re.findall(r'\blike\s+a|as\s+a|similar\s+to\b', text.lower())
-            techniques['metaphorical_language']['count'] += len(metaphors)
+            metaphors = re.findall(r"\blike\s+a|as\s+a|similar\s+to\b", text.lower())
+            techniques["metaphorical_language"]["count"] += len(metaphors)
 
             # Quantitative emphasis
-            quantitative = re.findall(r'\b(\d+(?:\.\d+)?\%|\d+(?:\.\d+)?\s+times?)\b', text)
-            techniques['quantitative_emphasis']['count'] += len(quantitative)
+            quantitative = re.findall(
+                r"\b(\d+(?:\.\d+)?\%|\d+(?:\.\d+)?\s+times?)\b", text
+            )
+            techniques["quantitative_emphasis"]["count"] += len(quantitative)
 
             # Authoritative citations
-            citations = re.findall(r'\(.*?20\d{2}.*?\)', text)
-            techniques['authoritative_citations']['count'] += len(citations)
+            citations = re.findall(r"\(.*?20\d{2}.*?\)", text)
+            techniques["authoritative_citations"]["count"] += len(citations)
 
         return techniques
 
@@ -379,26 +460,35 @@ class DiscourseAnalyzer:
             Comprehensive discourse profile
         """
         profile = {
-            'patterns': self.analyze_discourse_patterns(texts),
-            'argumentative_structures': self.analyze_argumentative_structures(texts),
-            'rhetorical_strategies': self.analyze_rhetorical_strategies(texts),
-            'narrative_frameworks': self.identify_narrative_frameworks(texts),
-            'persuasive_techniques': self.analyze_persuasive_techniques(texts)
+            "patterns": self.analyze_discourse_patterns(texts),
+            "argumentative_structures": self.analyze_argumentative_structures(texts),
+            "rhetorical_strategies": self.analyze_rhetorical_strategies(texts),
+            "narrative_frameworks": self.identify_narrative_frameworks(texts),
+            "persuasive_techniques": self.analyze_persuasive_techniques(texts),
         }
 
         # Add summary statistics
-        profile['summary'] = {
-            'total_texts': len(texts),
-            'avg_text_length': sum(len(text) for text in texts) / len(texts) if texts else 0,
-            'total_patterns_identified': len(profile['patterns']) if profile['patterns'] else 0,
-            'total_pattern_instances': sum(pattern.frequency for pattern in profile['patterns'].values()) if profile['patterns'] else 0,
-            'argumentative_structures_found': len(profile['argumentative_structures'])
+        profile["summary"] = {
+            "total_texts": len(texts),
+            "avg_text_length": (
+                sum(len(text) for text in texts) / len(texts) if texts else 0
+            ),
+            "total_patterns_identified": (
+                len(profile["patterns"]) if profile["patterns"] else 0
+            ),
+            "total_pattern_instances": (
+                sum(pattern.frequency for pattern in profile["patterns"].values())
+                if profile["patterns"]
+                else 0
+            ),
+            "argumentative_structures_found": len(profile["argumentative_structures"]),
         }
 
         return profile
 
-    def compare_discourse_profiles(self, profile1: Dict[str, Any],
-                                 profile2: Dict[str, Any]) -> Dict[str, Any]:
+    def compare_discourse_profiles(
+        self, profile1: Dict[str, Any], profile2: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Compare two discourse profiles.
 
         Args:
@@ -409,30 +499,30 @@ class DiscourseAnalyzer:
             Comparison results
         """
         comparison = {
-            'pattern_differences': {},
-            'rhetorical_differences': {},
-            'structural_differences': {}
+            "pattern_differences": {},
+            "rhetorical_differences": {},
+            "structural_differences": {},
         }
 
         # Compare patterns
-        patterns1 = set(profile1['patterns'].keys())
-        patterns2 = set(profile2['patterns'].keys())
+        patterns1 = set(profile1["patterns"].keys())
+        patterns2 = set(profile2["patterns"].keys())
 
-        comparison['pattern_differences'] = {
-            'unique_to_first': patterns1 - patterns2,
-            'unique_to_second': patterns2 - patterns1,
-            'shared': patterns1 & patterns2
+        comparison["pattern_differences"] = {
+            "unique_to_first": patterns1 - patterns2,
+            "unique_to_second": patterns2 - patterns1,
+            "shared": patterns1 & patterns2,
         }
 
         # Compare rhetorical strategies
-        for strategy in profile1['rhetorical_strategies']:
-            if strategy in profile2['rhetorical_strategies']:
-                freq1 = profile1['rhetorical_strategies'][strategy]['frequency']
-                freq2 = profile2['rhetorical_strategies'][strategy]['frequency']
-                comparison['rhetorical_differences'][strategy] = {
-                    'first': freq1,
-                    'second': freq2,
-                    'ratio': freq2 / freq1 if freq1 > 0 else float('inf')
+        for strategy in profile1["rhetorical_strategies"]:
+            if strategy in profile2["rhetorical_strategies"]:
+                freq1 = profile1["rhetorical_strategies"][strategy]["frequency"]
+                freq2 = profile2["rhetorical_strategies"][strategy]["frequency"]
+                comparison["rhetorical_differences"][strategy] = {
+                    "first": freq1,
+                    "second": freq2,
+                    "ratio": freq2 / freq1 if freq1 > 0 else float("inf"),
                 }
 
         return comparison
@@ -449,35 +539,37 @@ class DiscourseAnalyzer:
         # Convert dataclasses to dictionaries for JSON serialization
         serializable_profile = {}
         for key, value in profile.items():
-            if key == 'patterns':
+            if key == "patterns":
                 serializable_profile[key] = {
                     pattern_type: {
-                        'pattern_type': pattern.pattern_type,
-                        'examples': pattern.examples,
-                        'frequency': pattern.frequency,
-                        'domains': list(pattern.domains),
-                        'rhetorical_function': pattern.rhetorical_function
+                        "pattern_type": pattern.pattern_type,
+                        "examples": pattern.examples,
+                        "frequency": pattern.frequency,
+                        "domains": list(pattern.domains),
+                        "rhetorical_function": pattern.rhetorical_function,
                     }
                     for pattern_type, pattern in value.items()
                 }
-            elif key == 'argumentative_structures':
+            elif key == "argumentative_structures":
                 serializable_profile[key] = [
                     {
-                        'claim': struct.claim,
-                        'evidence': struct.evidence,
-                        'warrant': struct.warrant,
-                        'qualification': struct.qualification,
-                        'discourse_markers': struct.discourse_markers
+                        "claim": struct.claim,
+                        "evidence": struct.evidence,
+                        "warrant": struct.warrant,
+                        "qualification": struct.qualification,
+                        "discourse_markers": struct.discourse_markers,
                     }
                     for struct in value
                 ]
             else:
                 serializable_profile[key] = value
 
-        with open(filepath, 'w', encoding='utf-8') as f:
+        with open(filepath, "w", encoding="utf-8") as f:
             json.dump(serializable_profile, f, indent=2, ensure_ascii=False)
 
-    def quantify_rhetorical_patterns(self, texts: List[str]) -> Dict[str, Dict[str, Any]]:
+    def quantify_rhetorical_patterns(
+        self, texts: List[str]
+    ) -> Dict[str, Dict[str, Any]]:
         """Quantify rhetorical patterns with frequency and effectiveness metrics.
 
         Args:
@@ -491,24 +583,32 @@ class DiscourseAnalyzer:
 
         for pattern_name, pattern_data in patterns.items():
             # Calculate frequency metrics
-            total_occurrences = sum(pattern_data.get('frequency', {}).values())
-            text_coverage = len(pattern_data.get('texts', [])) / len(texts) if texts else 0
+            total_occurrences = sum(pattern_data.get("frequency", {}).values())
+            text_coverage = (
+                len(pattern_data.get("texts", [])) / len(texts) if texts else 0
+            )
 
             # Calculate effectiveness metrics (simplified)
-            effectiveness_score = min(total_occurrences / len(texts), 1.0) if texts else 0
+            effectiveness_score = (
+                min(total_occurrences / len(texts), 1.0) if texts else 0
+            )
 
             quantified_patterns[pattern_name] = {
-                'total_occurrences': total_occurrences,
-                'text_coverage': text_coverage,
-                'effectiveness_score': effectiveness_score,
-                'frequency_distribution': pattern_data.get('frequency', {}),
-                'context_examples': pattern_data.get('examples', [])[:5],  # Limit examples
-                'persuasiveness_rating': self._calculate_persuasiveness(pattern_data)
+                "total_occurrences": total_occurrences,
+                "text_coverage": text_coverage,
+                "effectiveness_score": effectiveness_score,
+                "frequency_distribution": pattern_data.get("frequency", {}),
+                "context_examples": pattern_data.get("examples", [])[
+                    :5
+                ],  # Limit examples
+                "persuasiveness_rating": self._calculate_persuasiveness(pattern_data),
             }
 
         return quantified_patterns
 
-    def score_argumentative_structures(self, texts: List[str]) -> Dict[str, Dict[str, Any]]:
+    def score_argumentative_structures(
+        self, texts: List[str]
+    ) -> Dict[str, Dict[str, Any]]:
         """Score argumentative structures for strength and coherence.
 
         Args:
@@ -524,25 +624,31 @@ class DiscourseAnalyzer:
             # Calculate structure strength
             claim_strength = self._evaluate_claim_strength(structure.claim)
             evidence_quality = self._evaluate_evidence_quality(structure.evidence)
-            reasoning_coherence = self._evaluate_reasoning_coherence(structure.reasoning)
+            reasoning_coherence = self._evaluate_reasoning_coherence(
+                structure.reasoning
+            )
 
-            overall_strength = (claim_strength + evidence_quality + reasoning_coherence) / 3
+            overall_strength = (
+                claim_strength + evidence_quality + reasoning_coherence
+            ) / 3
 
             scored_structures[f"structure_{len(scored_structures)}"] = {
-                'claim': structure.claim,
-                'evidence': structure.evidence,
-                'reasoning': structure.reasoning,
-                'claim_strength': claim_strength,
-                'evidence_quality': evidence_quality,
-                'reasoning_coherence': reasoning_coherence,
-                'overall_strength': overall_strength,
-                'structure_type': structure.structure_type,
-                'confidence_score': self._calculate_structure_confidence(structure)
+                "claim": structure.claim,
+                "evidence": structure.evidence,
+                "reasoning": structure.reasoning,
+                "claim_strength": claim_strength,
+                "evidence_quality": evidence_quality,
+                "reasoning_coherence": reasoning_coherence,
+                "overall_strength": overall_strength,
+                "structure_type": structure.structure_type,
+                "confidence_score": self._calculate_structure_confidence(structure),
             }
 
         return scored_structures
 
-    def analyze_narrative_frequency(self, texts: List[str]) -> Dict[str, Dict[str, Any]]:
+    def analyze_narrative_frequency(
+        self, texts: List[str]
+    ) -> Dict[str, Dict[str, Any]]:
         """Analyze frequency and distribution of narrative frameworks.
 
         Args:
@@ -561,7 +667,11 @@ class DiscourseAnalyzer:
             coverage = frequency / total_texts if total_texts > 0 else 0
 
             # Analyze framework characteristics
-            avg_length = sum(len(text.split()) for text in framework_texts) / frequency if frequency > 0 else 0
+            avg_length = (
+                sum(len(text.split()) for text in framework_texts) / frequency
+                if frequency > 0
+                else 0
+            )
             unique_phrases = set()
             for text in framework_texts:
                 words = text.lower().split()
@@ -569,17 +679,21 @@ class DiscourseAnalyzer:
                     unique_phrases.add(f"{words[i]} {words[i+1]}")
 
             framework_analysis[framework_type] = {
-                'frequency': frequency,
-                'coverage_percentage': coverage * 100,
-                'average_text_length': avg_length,
-                'unique_phrase_count': len(unique_phrases),
-                'examples': framework_texts[:3],  # Limit examples
-                'consistency_score': self._calculate_framework_consistency(framework_texts)
+                "frequency": frequency,
+                "coverage_percentage": coverage * 100,
+                "average_text_length": avg_length,
+                "unique_phrase_count": len(unique_phrases),
+                "examples": framework_texts[:3],  # Limit examples
+                "consistency_score": self._calculate_framework_consistency(
+                    framework_texts
+                ),
             }
 
         return framework_analysis
 
-    def measure_persuasive_effectiveness(self, texts: List[str]) -> Dict[str, Dict[str, Any]]:
+    def measure_persuasive_effectiveness(
+        self, texts: List[str]
+    ) -> Dict[str, Dict[str, Any]]:
         """Measure effectiveness of persuasive techniques.
 
         Args:
@@ -593,24 +707,28 @@ class DiscourseAnalyzer:
 
         for technique_name, technique_data in techniques.items():
             # Calculate effectiveness metrics
-            usage_frequency = technique_data.get('frequency', 0)
-            context_relevance = len(technique_data.get('contexts', []))
+            usage_frequency = technique_data.get("frequency", 0)
+            context_relevance = len(technique_data.get("contexts", []))
 
             # Impact score based on usage and context relevance
             impact_score = min((usage_frequency + context_relevance) / 20, 1.0)
 
             effectiveness_analysis[technique_name] = {
-                'usage_frequency': usage_frequency,
-                'context_relevance': context_relevance,
-                'impact_score': impact_score,
-                'effectiveness_rating': self._rate_technique_effectiveness(technique_data),
-                'success_examples': technique_data.get('examples', [])[:3],
-                'usage_distribution': technique_data.get('distribution', {})
+                "usage_frequency": usage_frequency,
+                "context_relevance": context_relevance,
+                "impact_score": impact_score,
+                "effectiveness_rating": self._rate_technique_effectiveness(
+                    technique_data
+                ),
+                "success_examples": technique_data.get("examples", [])[:3],
+                "usage_distribution": technique_data.get("distribution", {}),
             }
 
         return effectiveness_analysis
 
-    def analyze_term_usage_context(self, terms: List[str], texts: List[str]) -> Dict[str, Dict[str, Any]]:
+    def analyze_term_usage_context(
+        self, terms: List[str], texts: List[str]
+    ) -> Dict[str, Dict[str, Any]]:
         """Analyze context-dependent term usage patterns.
 
         Args:
@@ -628,48 +746,58 @@ class DiscourseAnalyzer:
 
             # Find all contexts where term appears
             for i, text in enumerate(texts):
-                sentences = text.split('.')
+                sentences = text.split(".")
                 for j, sentence in enumerate(sentences):
                     if term.lower() in sentence.lower():
-                        term_contexts.append({
-                            'text_index': i,
-                            'sentence_index': j,
-                            'sentence': sentence.strip(),
-                            'context_type': self._classify_context_type(sentence, term)
-                        })
+                        term_contexts.append(
+                            {
+                                "text_index": i,
+                                "sentence_index": j,
+                                "sentence": sentence.strip(),
+                                "context_type": self._classify_context_type(
+                                    sentence, term
+                                ),
+                            }
+                        )
                         term_positions.append((i, j))
 
             if term_contexts:
                 # Analyze usage patterns
                 context_types = {}
                 for context in term_contexts:
-                    ctx_type = context['context_type']
+                    ctx_type = context["context_type"]
                     context_types[ctx_type] = context_types.get(ctx_type, 0) + 1
 
                 # Calculate context diversity
                 total_contexts = len(term_contexts)
-                context_diversity = len(context_types) / total_contexts if total_contexts > 0 else 0
+                context_diversity = (
+                    len(context_types) / total_contexts if total_contexts > 0 else 0
+                )
 
                 # Analyze positional patterns
                 positions = [pos[1] for pos in term_positions]  # Sentence positions
                 position_distribution = {
-                    'early': sum(1 for pos in positions if pos < 3),
-                    'middle': sum(1 for pos in positions if 3 <= pos < 7),
-                    'late': sum(1 for pos in positions if pos >= 7)
+                    "early": sum(1 for pos in positions if pos < 3),
+                    "middle": sum(1 for pos in positions if 3 <= pos < 7),
+                    "late": sum(1 for pos in positions if pos >= 7),
                 }
 
                 context_analysis[term] = {
-                    'total_occurrences': total_contexts,
-                    'context_diversity': context_diversity,
-                    'context_types': context_types,
-                    'position_distribution': position_distribution,
-                    'usage_consistency': self._calculate_usage_consistency(term_contexts),
-                    'context_examples': term_contexts[:5]  # Limit examples
+                    "total_occurrences": total_contexts,
+                    "context_diversity": context_diversity,
+                    "context_types": context_types,
+                    "position_distribution": position_distribution,
+                    "usage_consistency": self._calculate_usage_consistency(
+                        term_contexts
+                    ),
+                    "context_examples": term_contexts[:5],  # Limit examples
                 }
 
         return context_analysis
 
-    def track_conceptual_shifts(self, texts: List[str], time_periods: Optional[List[str]] = None) -> Dict[str, Dict[str, Any]]:
+    def track_conceptual_shifts(
+        self, texts: List[str], time_periods: Optional[List[str]] = None
+    ) -> Dict[str, Dict[str, Any]]:
         """Track how concepts shift in discourse over time or contexts.
 
         Args:
@@ -710,30 +838,52 @@ class DiscourseAnalyzer:
 
             # Calculate pattern shifts
             pattern_shifts = {}
-            for pattern_name in set(current_patterns.keys()) | set(next_patterns.keys()):
-                current_freq = current_patterns.get(pattern_name, {}).get('total_occurrences', 0)
-                next_freq = next_patterns.get(pattern_name, {}).get('total_occurrences', 0)
+            for pattern_name in set(current_patterns.keys()) | set(
+                next_patterns.keys()
+            ):
+                current_freq = current_patterns.get(pattern_name, {}).get(
+                    "total_occurrences", 0
+                )
+                next_freq = next_patterns.get(pattern_name, {}).get(
+                    "total_occurrences", 0
+                )
 
                 shift_magnitude = abs(next_freq - current_freq)
-                shift_direction = 'increased' if next_freq > current_freq else 'decreased' if next_freq < current_freq else 'stable'
+                shift_direction = (
+                    "increased"
+                    if next_freq > current_freq
+                    else "decreased" if next_freq < current_freq else "stable"
+                )
 
                 pattern_shifts[pattern_name] = {
-                    'from_frequency': current_freq,
-                    'to_frequency': next_freq,
-                    'shift_magnitude': shift_magnitude,
-                    'shift_direction': shift_direction,
-                    'relative_change': (next_freq - current_freq) / current_freq if current_freq > 0 else 0
+                    "from_frequency": current_freq,
+                    "to_frequency": next_freq,
+                    "shift_magnitude": shift_magnitude,
+                    "shift_direction": shift_direction,
+                    "relative_change": (
+                        (next_freq - current_freq) / current_freq
+                        if current_freq > 0
+                        else 0
+                    ),
                 }
 
             shifts[f"{current_period}_to_{next_period}"] = {
-                'pattern_shifts': pattern_shifts,
-                'overall_shift_intensity': sum(shift['shift_magnitude'] for shift in pattern_shifts.values()),
-                'significant_shifts': [name for name, shift in pattern_shifts.items() if shift['shift_magnitude'] > 2]
+                "pattern_shifts": pattern_shifts,
+                "overall_shift_intensity": sum(
+                    shift["shift_magnitude"] for shift in pattern_shifts.values()
+                ),
+                "significant_shifts": [
+                    name
+                    for name, shift in pattern_shifts.items()
+                    if shift["shift_magnitude"] > 2
+                ],
             }
 
         return shifts
 
-    def quantify_framing_effects(self, texts: List[str], framing_concepts: Optional[List[str]] = None) -> Dict[str, Dict[str, Any]]:
+    def quantify_framing_effects(
+        self, texts: List[str], framing_concepts: Optional[List[str]] = None
+    ) -> Dict[str, Dict[str, Any]]:
         """Quantify the impact of framing assumptions on discourse.
 
         Args:
@@ -745,8 +895,12 @@ class DiscourseAnalyzer:
         """
         if framing_concepts is None:
             framing_concepts = [
-                'anthropomorphic', 'mechanistic', 'teleological',
-                'reductionist', 'holistic', 'deterministic'
+                "anthropomorphic",
+                "mechanistic",
+                "teleological",
+                "reductionist",
+                "holistic",
+                "deterministic",
             ]
 
         framing_analysis = {}
@@ -757,26 +911,33 @@ class DiscourseAnalyzer:
             framing_indicators = self._get_framing_indicators(concept)
 
             for text in texts:
-                if any(indicator.lower() in text.lower() for indicator in framing_indicators):
+                if any(
+                    indicator.lower() in text.lower()
+                    for indicator in framing_indicators
+                ):
                     framed_texts.append(text)
 
             if framed_texts:
                 # Analyze framing impact
                 framing_strength = len(framed_texts) / len(texts)
-                consistency_score = self._calculate_framing_consistency(framed_texts, framing_indicators)
+                consistency_score = self._calculate_framing_consistency(
+                    framed_texts, framing_indicators
+                )
 
                 # Analyze downstream effects
                 downstream_patterns = self.analyze_rhetorical_strategies(framed_texts)
-                argumentation_structures = self.analyze_argumentative_structures(framed_texts)
+                argumentation_structures = self.analyze_argumentative_structures(
+                    framed_texts
+                )
 
                 framing_analysis[concept] = {
-                    'framing_strength': framing_strength,
-                    'consistency_score': consistency_score,
-                    'affected_texts': len(framed_texts),
-                    'downstream_rhetorical_patterns': len(downstream_patterns),
-                    'argumentation_structures': len(argumentation_structures),
-                    'framing_indicators_used': framing_indicators,
-                    'impact_score': framing_strength * consistency_score
+                    "framing_strength": framing_strength,
+                    "consistency_score": consistency_score,
+                    "affected_texts": len(framed_texts),
+                    "downstream_rhetorical_patterns": len(downstream_patterns),
+                    "argumentation_structures": len(argumentation_structures),
+                    "framing_indicators_used": framing_indicators,
+                    "impact_score": framing_strength * consistency_score,
                 }
 
         return framing_analysis
@@ -785,8 +946,8 @@ class DiscourseAnalyzer:
 
     def _calculate_persuasiveness(self, pattern_data: Dict[str, Any]) -> float:
         """Calculate persuasiveness rating for a rhetorical pattern."""
-        frequency = sum(pattern_data.get('frequency', {}).values())
-        context_count = len(pattern_data.get('contexts', []))
+        frequency = sum(pattern_data.get("frequency", {}).values())
+        context_count = len(pattern_data.get("contexts", []))
         return min((frequency + context_count) / 10, 1.0)  # Normalized score
 
     def _evaluate_claim_strength(self, claim: str) -> float:
@@ -796,9 +957,11 @@ class DiscourseAnalyzer:
 
         if len(claim.split()) > 5:  # Substantial claims
             score += 0.2
-        if '?' not in claim:  # Declarative rather than interrogative
+        if "?" not in claim:  # Declarative rather than interrogative
             score += 0.1
-        if any(word in claim.lower() for word in ['therefore', 'thus', 'hence']):  # Logical connectors
+        if any(
+            word in claim.lower() for word in ["therefore", "thus", "hence"]
+        ):  # Logical connectors
             score += 0.2
 
         return min(score, 1.0)
@@ -813,7 +976,10 @@ class DiscourseAnalyzer:
             quality = 0.5  # Base quality
             if len(ev.split()) > 10:  # Substantial evidence
                 quality += 0.2
-            if any(word in ev.lower() for word in ['data', 'study', 'research', 'observation']):
+            if any(
+                word in ev.lower()
+                for word in ["data", "study", "research", "observation"]
+            ):
                 quality += 0.3
             total_quality += quality
 
@@ -821,15 +987,26 @@ class DiscourseAnalyzer:
 
     def _evaluate_reasoning_coherence(self, reasoning: str) -> float:
         """Evaluate reasoning coherence."""
-        coherence_indicators = ['because', 'therefore', 'thus', 'hence', 'consequently', 'accordingly']
-        connector_count = sum(1 for indicator in coherence_indicators if indicator in reasoning.lower())
+        coherence_indicators = [
+            "because",
+            "therefore",
+            "thus",
+            "hence",
+            "consequently",
+            "accordingly",
+        ]
+        connector_count = sum(
+            1 for indicator in coherence_indicators if indicator in reasoning.lower()
+        )
 
         base_coherence = 0.3
         coherence_bonus = min(connector_count * 0.1, 0.7)
 
         return min(base_coherence + coherence_bonus, 1.0)
 
-    def _calculate_structure_confidence(self, structure: ArgumentativeStructure) -> float:
+    def _calculate_structure_confidence(
+        self, structure: ArgumentativeStructure
+    ) -> float:
         """Calculate confidence score for argumentative structure."""
         confidence = 0.5
 
@@ -848,11 +1025,15 @@ class DiscourseAnalyzer:
             return 1.0
 
         # Simple consistency based on text similarity
-        avg_length = sum(len(text.split()) for text in framework_texts) / len(framework_texts)
-        length_variance = sum((len(text.split()) - avg_length) ** 2 for text in framework_texts) / len(framework_texts)
+        avg_length = sum(len(text.split()) for text in framework_texts) / len(
+            framework_texts
+        )
+        length_variance = sum(
+            (len(text.split()) - avg_length) ** 2 for text in framework_texts
+        ) / len(framework_texts)
 
         # Lower variance = higher consistency
-        consistency = max(0, 1.0 - (length_variance / (avg_length ** 2)))
+        consistency = max(0, 1.0 - (length_variance / (avg_length**2)))
 
         return consistency
 
@@ -861,20 +1042,20 @@ class DiscourseAnalyzer:
         impact = self._calculate_technique_impact(technique_data)
 
         if impact > 0.8:
-            return 'highly_effective'
+            return "highly_effective"
         elif impact > 0.6:
-            return 'effective'
+            return "effective"
         elif impact > 0.4:
-            return 'moderately_effective'
+            return "moderately_effective"
         elif impact > 0.2:
-            return 'minimally_effective'
+            return "minimally_effective"
         else:
-            return 'ineffective'
+            return "ineffective"
 
     def _calculate_technique_impact(self, technique_data: Dict[str, Any]) -> float:
         """Calculate impact score for persuasive technique."""
-        frequency = technique_data.get('frequency', 0)
-        context_count = len(technique_data.get('contexts', []))
+        frequency = technique_data.get("frequency", 0)
+        context_count = len(technique_data.get("contexts", []))
 
         # Impact based on usage and context relevance
         impact = min((frequency + context_count) / 20, 1.0)
@@ -887,25 +1068,32 @@ class DiscourseAnalyzer:
         term_lower = term.lower()
 
         # Simple classification based on surrounding words
-        if any(word in sentence_lower for word in ['however', 'but', 'although', 'despite']):
-            return 'contrastive'
-        elif any(word in sentence_lower for word in ['because', 'since', 'due to']):
-            return 'causal'
-        elif any(word in sentence_lower for word in ['for example', 'such as', 'including']):
-            return 'exemplifying'
-        elif '?' in sentence:
-            return 'interrogative'
-        elif any(word in sentence_lower for word in ['therefore', 'thus', 'hence', 'consequently']):
-            return 'conclusive'
+        if any(
+            word in sentence_lower for word in ["however", "but", "although", "despite"]
+        ):
+            return "contrastive"
+        elif any(word in sentence_lower for word in ["because", "since", "due to"]):
+            return "causal"
+        elif any(
+            word in sentence_lower for word in ["for example", "such as", "including"]
+        ):
+            return "exemplifying"
+        elif "?" in sentence:
+            return "interrogative"
+        elif any(
+            word in sentence_lower
+            for word in ["therefore", "thus", "hence", "consequently"]
+        ):
+            return "conclusive"
         else:
-            return 'descriptive'
+            return "descriptive"
 
     def _calculate_usage_consistency(self, contexts: List[Dict[str, Any]]) -> float:
         """Calculate consistency of term usage across contexts."""
         if len(contexts) < 2:
             return 1.0
 
-        context_types = [ctx['context_type'] for ctx in contexts]
+        context_types = [ctx["context_type"] for ctx in contexts]
         most_common_type = max(set(context_types), key=context_types.count)
         consistency = context_types.count(most_common_type) / len(context_types)
 
@@ -914,17 +1102,62 @@ class DiscourseAnalyzer:
     def _get_framing_indicators(self, framing_concept: str) -> List[str]:
         """Get indicator words/phrases for a framing concept."""
         indicators = {
-            'anthropomorphic': ['think', 'believe', 'know', 'understand', 'decide', 'choose', 'prefer'],
-            'mechanistic': ['mechanism', 'process', 'system', 'function', 'operate', 'control'],
-            'teleological': ['purpose', 'goal', 'function', 'design', 'adapt', 'optimize'],
-            'reductionist': ['reduce', 'simplify', 'break down', 'component', 'element', 'part'],
-            'holistic': ['whole', 'system', 'integrated', 'complete', 'comprehensive', 'unified'],
-            'deterministic': ['determine', 'cause', 'result', 'predict', 'inevitable', 'necessary']
+            "anthropomorphic": [
+                "think",
+                "believe",
+                "know",
+                "understand",
+                "decide",
+                "choose",
+                "prefer",
+            ],
+            "mechanistic": [
+                "mechanism",
+                "process",
+                "system",
+                "function",
+                "operate",
+                "control",
+            ],
+            "teleological": [
+                "purpose",
+                "goal",
+                "function",
+                "design",
+                "adapt",
+                "optimize",
+            ],
+            "reductionist": [
+                "reduce",
+                "simplify",
+                "break down",
+                "component",
+                "element",
+                "part",
+            ],
+            "holistic": [
+                "whole",
+                "system",
+                "integrated",
+                "complete",
+                "comprehensive",
+                "unified",
+            ],
+            "deterministic": [
+                "determine",
+                "cause",
+                "result",
+                "predict",
+                "inevitable",
+                "necessary",
+            ],
         }
 
         return indicators.get(framing_concept, [])
 
-    def _calculate_framing_consistency(self, framed_texts: List[str], indicators: List[str]) -> float:
+    def _calculate_framing_consistency(
+        self, framed_texts: List[str], indicators: List[str]
+    ) -> float:
         """Calculate consistency of framing usage."""
         if not framed_texts:
             return 0.0
@@ -932,8 +1165,12 @@ class DiscourseAnalyzer:
         total_indicator_usage = 0
         for text in framed_texts:
             text_lower = text.lower()
-            text_indicators = sum(1 for indicator in indicators if indicator in text_lower)
-            total_indicator_usage += min(text_indicators, len(indicators))  # Cap at max indicators
+            text_indicators = sum(
+                1 for indicator in indicators if indicator in text_lower
+            )
+            total_indicator_usage += min(
+                text_indicators, len(indicators)
+            )  # Cap at max indicators
 
         consistency = total_indicator_usage / (len(framed_texts) * len(indicators))
 

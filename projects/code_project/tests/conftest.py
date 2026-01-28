@@ -1,4 +1,5 @@
 """Pytest configuration for code_project tests."""
+
 import os
 import sys
 

@@ -1,6 +1,6 @@
 # Introduction
 
-This small code project demonstrates a-tested numerical optimization implementation with analysis and visualization capabilities. The project showcases the research pipeline from algorithm implementation through testing to result visualization, including automatic title page generation from metadata configuration.
+This small code project demonstrates a fully-tested numerical optimization implementation with analysis and visualization capabilities. The project showcases the research pipeline from algorithm implementation through testing to result visualization, including automatic title page generation from metadata configuration.
 
 ## Research Context
 
@@ -19,7 +19,7 @@ The implementation includes:
 
 - **Gradient descent algorithm** with configurable parameters
 - **Quadratic function test problems** with known analytical solutions
-- **test suite** covering functionality and edge cases
+- **Comprehensive test suite** covering functionality and edge cases
 - **Analysis scripts** that generate convergence plots and performance data
 - **Manuscript integration** with automatically generated figures
 - **Multi-format rendering** supporting PDF, HTML, and presentation slides
@@ -36,6 +36,7 @@ x_{k+1} = x_k - \alpha \nabla f(x_k)
 \end{equation}
 
 where:
+
 - $\alpha > 0$ is the step size (learning rate)
 - $\nabla f(x_k)$ is the gradient of the objective function at iteration $k$
 

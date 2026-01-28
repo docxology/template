@@ -1,10 +1,11 @@
 # tests/ - Test Suite
 
-test suite ensuring coverage requirements for both infrastructure and project modules (60% infrastructure minimum, 90% project minimum). Current status: **100% project**, **83.33% infrastructure**, **2116 tests passing** (1796 infra [2 skipped] + 320 project).
+Test suite ensuring coverage requirements for both infrastructure and project modules (60% infrastructure minimum, 90% project minimum). Current status: **100% project coverage** across all 4 projects, **83%+ infrastructure coverage**, **fully passing test suites**.
 
 ## Quick Start
 
 ### Run All Tests
+
 ```bash
 # With coverage report (both infrastructure and project)
 pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov-report=html
@@ -18,6 +19,7 @@ pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-u
 ```
 
 ### Run Specific Tests
+
 ```bash
 # Infrastructure tests
 pytest tests/infrastructure/core/test_config_loader.py -v
@@ -45,11 +47,13 @@ pytest tests/ -x
 ### ✅ Infrastructure Test Fixes Completed
 
 **Project Test Imports:**
+
 - Fixed `test_reporting.py` and `test_validation.py` collection errors
 - Updated project test conftest.py files to add repository root to Python path
 - Resolved infrastructure module import issues in project tests
 
 **Core Infrastructure Tests:**
+
 - **Checkpoint Tests**: Fixed directory existence expectations and macOS permission testing
 - **CLI Tests**: Updated subprocess assertions to match actual output format
 - **Logging Tests**: Removed syntax error and eliminated Mock/patch imports
@@ -57,11 +61,13 @@ pytest tests/ -x
 - **Integration Tests**: Corrected type assertions for integrity verification functions
 
 **LLM Tests (Partial):**
+
 - Migrated `test_query_fallback_on_connection_error` to HTTP calls
 - `ollama_test_server` fixture for model-specific responses
 - Established pattern for no-mocks LLM testing
 
 **Output & Bash Tests:**
+
 - Fixed ANSI color code handling in bash logging tests
 - Updated output copying test assertions for current implementation
 
@@ -89,10 +95,10 @@ pytest tests/ --lf
 
 ## Coverage Requirements (pipeline enforced)
 
-- **Projects** (`projects/{name}/src/`): 90% minimum (code_project: 94.1%, prose_project: 91.5%)
-- **Infrastructure** (`infrastructure/`): 60% minimum (currently 83.33% - exceeds stretch goal!)
+- **Projects** (`projects/{name}/src/`): 90% minimum (all projects at 100%)
+- **Infrastructure** (`infrastructure/`): 60% minimum (currently 83%+)
 - Tests must pass before PDF generation
-- data only (no mocks)
+- Real data only (no mocks)
 - Coverage report: `htmlcov/index.html`
 
 ## Test Organization
@@ -200,6 +206,7 @@ tests/
 ### Infrastructure Module Tests
 
 **Core Module** (`infrastructure/core/`)
+
 - `test_checkpoint.py` - Checkpoint/resume functionality
 - `test_config_loader.py` - Configuration file handling
 - `test_exceptions.py` - Custom exception handling
@@ -209,17 +216,20 @@ tests/
 - `test_project_discovery.py` - Project discovery and validation
 
 **Build Module** (`infrastructure/build/`)
+
 - `test_build_verifier.py` - Build verification and integrity
 - `test_quality_checker.py` - Document quality analysis
 - `test_reproducibility.py` - Environment tracking
 
 **Documentation Module** (`infrastructure/documentation/`)
+
 - `test_figure_manager.py` - Figure management and registration
 - `test_image_manager.py` - Image handling in markdown
 - `test_glossary_gen.py` - API documentation generation
 - `test_markdown_integration.py` - Markdown processing integration
 
 **LLM Module** (`infrastructure/llm/`)
+
 - `test_core.py` - LLM client core functionality
 - `test_context.py` - Conversation context management
 - `test_templates.py` - Template system for common tasks
@@ -228,11 +238,13 @@ tests/
 - `test_llm_review.py` - LLM manuscript review
 
 **Publishing Module** (`infrastructure/publishing/`)
+
 - `test_publishing.py` - Publishing metadata and citations
 - `test_api.py` - Platform API clients (Zenodo, arXiv, GitHub)
 - `test_cli.py` - CLI wrapper for publishing
 
 **Rendering Module** (`infrastructure/rendering/`)
+
 - `test_core.py` - Render manager core
 - `test_latex_utils.py` - LaTeX compilation utilities
 - `test_renderers.py` - PDF, HTML, and slides renderers
@@ -240,14 +252,17 @@ tests/
 - `test_poster_renderer.py` - Scientific poster rendering
 
 **Reporting Module** (`infrastructure/reporting/`)
+
 - `test_executive_reporter.py` - Executive report generation
 - `test_dashboard_generator.py` - Dashboard creation
 - `test_pipeline_reporter.py` - Pipeline reporting
 
 **Scientific Module** (`infrastructure/scientific/`)
+
 - `test_scientific_dev.py` - Scientific development utilities
 
 **Validation Module** (`infrastructure/validation/`)
+
 - `test_markdown_validator.py` - Markdown validation
 - `test_pdf_validator.py` - PDF validation
 - `test_integrity.py` - Integrity verification
@@ -258,9 +273,11 @@ tests/
 - `test_cli.py` - CLI wrapper for rendering
 
 **Scientific Module** (`infrastructure/scientific/`)
+
 - `test_scientific_dev.py` - Scientific computing best practices
 
 **Validation Module** (`infrastructure/validation/`)
+
 - `test_markdown_validator.py` - Markdown validation
 - `test_pdf_validator.py` - PDF validation
 - `test_integrity.py` - Integrity verification
@@ -270,6 +287,7 @@ tests/
 - `test_cli.py` - CLI wrapper for validation
 
 ### Integration Tests (`tests/integration/`)
+
 - `test_module_interoperability.py` - Cross-module integration validation
 - `test_figure_equation_citation.py` - Figure/equation/citation handling
 - `test_output_copying.py` - Output file handling and copying
@@ -280,11 +298,13 @@ tests/
 - `test_bash_utils.sh` - Bash utility function validation
 
 ### Project Tests (`projects/{name}/tests/`)
+
 - Unit tests for `projects/{name}/src/` modules (see `projects/{name}/tests/AGENTS.md`)
 - Each project has independent test suite with 90%+ coverage requirement
-- code_project: 28 tests, 94.1% coverage
-- prose_project: 47 tests, 91.5% coverage
-  - `test_generate_research_figures.py` - Research figure pipeline
+- **code_project**: 100% coverage
+- **cogsec_multiagent_1_theory**: 100% coverage
+- **cogsec_multiagent_2_computational**: 100% coverage
+- **cogsec_multiagent_3_practical**: 100% coverage
 
 ## Debugging
 
@@ -324,24 +344,28 @@ def test_error_handling():
 The test suite includes validation for:
 
 ### Figure Handling
+
 - Figure generation with proper paths
 - Figure referencing in markdown
 - LaTeX figure environments and captioning
 - Multiple figures with unique labels
 
 ### Equation Handling
+
 - Equation labeling and cross-referencing
 - Multiple equations with unique labels
 - Detection of unlabeled equations
 - Equation reference resolution
 
 ### Citation Handling
+
 - Citation formatting in markdown
 - Bibliography file structure
 - Multiple citations in sentences
 - Citation extraction and validation
 
 ### Integrated Workflows
+
 - manuscript sections with all elements
 - Cross-section references
 - Validation integration
@@ -350,10 +374,12 @@ The test suite includes validation for:
 ## Test Coverage Statistics
 
 ### Overall Coverage (latest)
+
 - **code_project** (`projects/code_project/src/`): **100%** (Target: 90%+) ✅ Exceeds requirement!
 - **Infrastructure** (`infrastructure/`): **83.33%** (Target: 60%+) ✅ Exceeds stretch goal!
 
 ### Coverage Details
+
 Both test suites exceed their minimum requirements. For detailed coverage information, see the test coverage reports generated by pytest.
 
 ## See Also

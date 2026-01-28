@@ -31,9 +31,9 @@ Our domain-specific terminology extraction identified significant patterns acros
 \hline
 Unit of Individuality & 247 & 0.083 & 4.2 & 0.73 \\
 Behavior and Identity & 389 & 0.156 & 3.8 & 0.68 \\
-Power & Labor & 312 & 0.094 & 2.9 & 0.81 \\
-Sex & Reproduction & 198 & 0.067 & 3.1 & 0.59 \\
-Kin & Relatedness & 276 & 0.089 & 4.5 & 0.75 \\
+Power \& Labor & 312 & 0.094 & 2.9 & 0.81 \\
+Sex \& Reproduction & 198 & 0.067 & 3.1 & 0.59 \\
+Kin \& Relatedness & 276 & 0.089 & 4.5 & 0.75 \\
 Economics & 156 & 0.045 & 2.6 & 0.55 \\
 \hline
 \end{tabular}
@@ -72,7 +72,7 @@ Figure \ref{fig:terminology_network} illustrates the terminology network, showin
 \end{figure}
 
 **Network Statistics:**
-- **Total nodes**: 1,578 identified terms representing the vocabulary of entological research
+- **Total nodes**: 1,578 identified terms representing the vocabulary of entomological research
 - **Total edges**: 12,847 significant relationships showing how terms co-occur in scientific contexts
 - **Average degree**: 16.3 connections per term, indicating rich interconnections within the terminology network
 - **Clustering coefficient**: 0.67, showing strong modularity where related terms tend to cluster together
@@ -101,9 +101,9 @@ Figure \ref{fig:domain_comparison} shows comparative analysis across Ento-Lingui
 \hline
 Unit of Individuality & 247 & 2,134 & 17.3 & Multi-scale hierarchy \\
 Behavior and Identity & 389 & 4,567 & 23.5 & Identity clusters \\
-Power & Labor & 312 & 3,421 & 21.9 & Hierarchical chains \\
-Sex & Reproduction & 198 & 1,234 & 12.5 & Binary oppositions \\
-Kin & Relatedness & 276 & 2,891 & 20.9 & Relationship webs \\
+Power \& Labor & 312 & 3,421 & 21.9 & Hierarchical chains \\
+Sex \& Reproduction & 198 & 1,234 & 12.5 & Binary oppositions \\
+Kin \& Relatedness & 276 & 2,891 & 20.9 & Relationship webs \\
 Economics & 156 & 987 & 12.7 & Transaction networks \\
 \hline
 \end{tabular}
@@ -112,8 +112,6 @@ Economics & 156 & 987 & 12.7 & Transaction networks \\
 \end{table}
 
 ### Context-Dependent Language Use Analysis
-
-Our analysis revealed significant context-dependent variation in terminology meaning:
 
 Our analysis reveals significant context-dependent variation in terminology meaning across different research contexts, as quantified in the statistical results above.
 
@@ -129,6 +127,13 @@ Our analysis reveals significant context-dependent variation in terminology mean
 
 Analysis of terms related to biological individuality revealed complex multi-scale patterns:
 
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{../output/figures/unit_of_individuality_patterns.png}
+\caption{Unit of Individuality domain analysis showing terminology patterns across biological scales. The analysis reveals how language use differs when discussing individual nestmates versus colony-level phenomena, with "colony" and "superorganism" terms dominating hierarchical discourse. Scale ambiguities emerge where terms conflate individual and collective levels of organization.}
+\label{fig:unit_individuality_patterns}
+\end{figure}
+
 **Key Findings:**
 - "Colony" and "superorganism" terms dominate hierarchical discourse
 - "Individual" shows highest context variability (5.2 contexts per usage)
@@ -137,7 +142,14 @@ Analysis of terms related to biological individuality revealed complex multi-sca
 
 ### Power & Labor Domain Analysis
 
-The most structurally rigid domain showed clear hierarchical patterns derived from human social systems:
+The most structurally rigid domain showed clear hierarchical patterns derived from human social systems, raising concerns about conceptual transfer from human societies \cite{laciny2022neurodiversity, boomsma2018superorganismality}. The ongoing Better Common Names Project \cite{betternamesproject2024} addresses some of these terminological issues.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{../output/figures/concept_hierarchy.png}
+\caption{Conceptual hierarchy in Power \& Labor domain showing how human social terminology structures scientific understanding of ant societies. The term "caste" creates direct parallels to human hierarchical systems \cite{crespi1992caste}, while terms like "queen" and "worker" impose role-based identities that may not reflect biological flexibility. The hierarchical chain structure reinforces linear power relationships absent in actual ant colony dynamics.}
+\label{fig:concept_hierarchy}
+\end{figure}
 
 **Terminology Patterns:**
 - 89.2% of terms derive from human hierarchical systems

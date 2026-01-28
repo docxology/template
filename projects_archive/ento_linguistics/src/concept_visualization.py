@@ -3,13 +3,15 @@
 This module provides visualization functions for conceptual mappings,
 terminology networks, and domain relationships in Ento-Linguistic research.
 """
+
 from __future__ import annotations
+
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 import matplotlib.pyplot as plt
 import networkx as nx
-from typing import List, Dict, Set, Optional, Tuple, Any
 import numpy as np
-from pathlib import Path
 
 try:
     from .conceptual_mapping import ConceptMap
@@ -26,12 +28,12 @@ class ConceptVisualizer:
 
     # Color scheme for Ento-Linguistic domains
     DOMAIN_COLORS = {
-        'unit_of_individuality': '#1f77b4',  # Blue
-        'behavior_and_identity': '#ff7f0e',  # Orange
-        'power_and_labor': '#2ca02c',       # Green
-        'sex_and_reproduction': '#d62728',  # Red
-        'kin_and_relatedness': '#9467bd',   # Purple
-        'economics': '#8c564b'              # Brown
+        "unit_of_individuality": "#1f77b4",  # Blue
+        "behavior_and_identity": "#ff7f0e",  # Orange
+        "power_and_labor": "#2ca02c",  # Green
+        "sex_and_reproduction": "#d62728",  # Red
+        "kin_and_relatedness": "#9467bd",  # Purple
+        "economics": "#8c564b",  # Brown
     }
 
     def __init__(self, figsize: Tuple[int, int] = (12, 8)):
@@ -41,11 +43,14 @@ class ConceptVisualizer:
             figsize: Default figure size for plots
         """
         self.figsize = figsize
-        plt.style.use('default')  # Use matplotlib default style
+        plt.style.use("default")  # Use matplotlib default style
 
-    def visualize_concept_map(self, concept_map: ConceptMap,
-                            filepath: Optional[Path] = None,
-                            title: str = "Ento-Linguistic Concept Map") -> plt.Figure:
+    def visualize_concept_map(
+        self,
+        concept_map: ConceptMap,
+        filepath: Optional[Path] = None,
+        title: str = "Ento-Linguistic Concept Map",
+    ) -> plt.Figure:
         """Create a network visualization of the concept map.
 
         Args:
@@ -63,9 +68,9 @@ class ConceptVisualizer:
 
         # Add nodes (concepts)
         for concept_name, concept in concept_map.concepts.items():
-            G.add_node(concept_name,
-                      size=len(concept.terms),
-                      domains=list(concept.domains))
+            G.add_node(
+                concept_name, size=len(concept.terms), domains=list(concept.domains)
+            )
 
         # Add edges (relationships)
         for (concept1, concept2), weight in concept_map.concept_relationships.items():
@@ -75,30 +80,32 @@ class ConceptVisualizer:
         pos = nx.spring_layout(G, k=1, iterations=50, seed=42)
 
         # Draw nodes with size based on term count
-        node_sizes = [G.nodes[node]['size'] * 100 + 300 for node in G.nodes()]
+        node_sizes = [G.nodes[node]["size"] * 100 + 300 for node in G.nodes()]
         node_colors = [self._get_concept_color(node, concept_map) for node in G.nodes()]
 
-        nx.draw_networkx_nodes(G, pos, node_size=node_sizes,
-                             node_color=node_colors, alpha=0.7, ax=ax)
+        nx.draw_networkx_nodes(
+            G, pos, node_size=node_sizes, node_color=node_colors, alpha=0.7, ax=ax
+        )
 
         # Draw edges with width based on relationship strength
-        edge_weights = [G.edges[edge]['weight'] * 2 for edge in G.edges()]
-        nx.draw_networkx_edges(G, pos, width=edge_weights,
-                             edge_color='gray', alpha=0.6, ax=ax)
+        edge_weights = [G.edges[edge]["weight"] * 2 for edge in G.edges()]
+        nx.draw_networkx_edges(
+            G, pos, width=edge_weights, edge_color="gray", alpha=0.6, ax=ax
+        )
 
         # Draw labels
-        nx.draw_networkx_labels(G, pos, font_size=10, font_weight='bold', ax=ax)
+        nx.draw_networkx_labels(G, pos, font_size=10, font_weight="bold", ax=ax)
 
         # Add legend
         self._add_domain_legend(ax)
 
-        ax.set_title(title, fontsize=14, fontweight='bold')
-        ax.axis('off')
+        ax.set_title(title, fontsize=14, fontweight="bold")
+        ax.axis("off")
 
         plt.tight_layout()
 
         if filepath:
-            fig.savefig(filepath, dpi=300, bbox_inches='tight')
+            fig.savefig(filepath, dpi=300, bbox_inches="tight")
             plt.close(fig)
 
         return fig
@@ -118,9 +125,9 @@ class ConceptVisualizer:
             if domains:
                 # Use the first domain's color
                 primary_domain = next(iter(domains))
-                return self.DOMAIN_COLORS.get(primary_domain, '#7f7f7f')
+                return self.DOMAIN_COLORS.get(primary_domain, "#7f7f7f")
 
-        return '#7f7f7f'  # Default gray
+        return "#7f7f7f"  # Default gray
 
     def _add_domain_legend(self, ax: plt.Axes) -> None:
         """Add a legend for domain colors.
@@ -130,17 +137,27 @@ class ConceptVisualizer:
         """
         legend_elements = []
         for domain, color in self.DOMAIN_COLORS.items():
-            domain_name = domain.replace('_', ' ').title()
-            legend_elements.append(plt.Rectangle((0,0),1,1, facecolor=color, alpha=0.7,
-                                               label=domain_name))
+            domain_name = domain.replace("_", " ").title()
+            legend_elements.append(
+                plt.Rectangle(
+                    (0, 0), 1, 1, facecolor=color, alpha=0.7, label=domain_name
+                )
+            )
 
-        ax.legend(handles=legend_elements, loc='upper left', bbox_to_anchor=(1.05, 1),
-                 title="Ento-Linguistic Domains")
+        ax.legend(
+            handles=legend_elements,
+            loc="upper left",
+            bbox_to_anchor=(1.05, 1),
+            title="Ento-Linguistic Domains",
+        )
 
-    def visualize_terminology_network(self, terms: Dict[str, Any],
-                                    relationships: Dict[Tuple[str, str], float],
-                                    filepath: Optional[Path] = None,
-                                    title: str = "Terminology Network") -> plt.Figure:
+    def visualize_terminology_network(
+        self,
+        terms: Dict[str, Any],
+        relationships: Dict[Tuple[str, str], float],
+        filepath: Optional[Path] = None,
+        title: str = "Terminology Network",
+    ) -> plt.Figure:
         """Visualize a terminology network.
 
         Args:
@@ -159,13 +176,15 @@ class ConceptVisualizer:
 
         # Add nodes (terms)
         for term_name, term_info in terms:
-            domains = getattr(term_info, 'domains', [])
-            frequency = getattr(term_info, 'frequency', 1)
+            domains = getattr(term_info, "domains", [])
+            frequency = getattr(term_info, "frequency", 1)
 
-            G.add_node(term_name,
-                      domains=domains,
-                      frequency=frequency,
-                      size=min(frequency * 10 + 50, 500))  # Cap size
+            G.add_node(
+                term_name,
+                domains=domains,
+                frequency=frequency,
+                size=min(frequency * 10 + 50, 500),
+            )  # Cap size
 
         # Add edges (relationships)
         for (term1, term2), weight in relationships.items():
@@ -177,32 +196,42 @@ class ConceptVisualizer:
 
         if len(G.nodes()) == 0:
             # No connected terms
-            ax.text(0.5, 0.5, "No connected terms found",
-                   ha='center', va='center', transform=ax.transAxes)
+            ax.text(
+                0.5,
+                0.5,
+                "No connected terms found",
+                ha="center",
+                va="center",
+                transform=ax.transAxes,
+            )
             ax.set_title(title)
-            ax.axis('off')
+            ax.axis("off")
             return fig
 
         # Calculate layout
         pos = nx.spring_layout(G, k=0.5, iterations=50, seed=42)
 
         # Draw nodes
-        node_sizes = [G.nodes[node]['size'] for node in G.nodes()]
+        node_sizes = [G.nodes[node]["size"] for node in G.nodes()]
         node_colors = [self._get_term_color(node, G) for node in G.nodes()]
 
-        nx.draw_networkx_nodes(G, pos, node_size=node_sizes,
-                             node_color=node_colors, alpha=0.7, ax=ax)
+        nx.draw_networkx_nodes(
+            G, pos, node_size=node_sizes, node_color=node_colors, alpha=0.7, ax=ax
+        )
 
         # Draw edges
         if G.edges():
-            edge_weights = [G.edges[edge]['weight'] * 2 for edge in G.edges()]
-            nx.draw_networkx_edges(G, pos, width=edge_weights,
-                                 edge_color='gray', alpha=0.5, ax=ax)
+            edge_weights = [G.edges[edge]["weight"] * 2 for edge in G.edges()]
+            nx.draw_networkx_edges(
+                G, pos, width=edge_weights, edge_color="gray", alpha=0.5, ax=ax
+            )
 
         # Draw labels (only for important terms)
-        important_terms = sorted(G.nodes(),
-                               key=lambda x: G.nodes[x]['frequency'],
-                               reverse=True)[:20]  # Top 20 terms
+        important_terms = sorted(
+            G.nodes(), key=lambda x: G.nodes[x]["frequency"], reverse=True
+        )[
+            :20
+        ]  # Top 20 terms
 
         label_pos = {term: pos[term] for term in important_terms}
         nx.draw_networkx_labels(G, label_pos, font_size=8, ax=ax)
@@ -210,13 +239,13 @@ class ConceptVisualizer:
         # Add legend
         self._add_domain_legend(ax)
 
-        ax.set_title(title, fontsize=14, fontweight='bold')
-        ax.axis('off')
+        ax.set_title(title, fontsize=14, fontweight="bold")
+        ax.axis("off")
 
         plt.tight_layout()
 
         if filepath:
-            fig.savefig(filepath, dpi=300, bbox_inches='tight')
+            fig.savefig(filepath, dpi=300, bbox_inches="tight")
             plt.close(fig)
 
         return fig
@@ -231,16 +260,17 @@ class ConceptVisualizer:
         Returns:
             Color string
         """
-        domains = G.nodes[term].get('domains', [])
+        domains = G.nodes[term].get("domains", [])
         if domains:
             # Use primary domain color
             primary_domain = domains[0]
-            return self.DOMAIN_COLORS.get(primary_domain, '#7f7f7f')
+            return self.DOMAIN_COLORS.get(primary_domain, "#7f7f7f")
 
-        return '#7f7f7f'  # Default gray
+        return "#7f7f7f"  # Default gray
 
-    def create_domain_comparison_plot(self, domain_data: Dict[str, Dict[str, Any]],
-                                    filepath: Optional[Path] = None) -> plt.Figure:
+    def create_domain_comparison_plot(
+        self, domain_data: Dict[str, Dict[str, Any]], filepath: Optional[Path] = None
+    ) -> plt.Figure:
         """Create a comparison plot across domains.
 
         Args:
@@ -251,49 +281,56 @@ class ConceptVisualizer:
             Matplotlib figure object
         """
         fig, axes = plt.subplots(2, 2, figsize=(15, 12))
-        fig.suptitle("Ento-Linguistic Domain Comparison", fontsize=16, fontweight='bold')
+        fig.suptitle(
+            "Ento-Linguistic Domain Comparison", fontsize=16, fontweight="bold"
+        )
 
         domains = list(domain_data.keys())
-        domain_colors = [self.DOMAIN_COLORS.get(domain, '#7f7f7f') for domain in domains]
+        domain_colors = [
+            self.DOMAIN_COLORS.get(domain, "#7f7f7f") for domain in domains
+        ]
 
         # Plot 1: Term counts
-        term_counts = [domain_data[d].get('term_count', 0) for d in domains]
-        axes[0,0].bar(domains, term_counts, color=domain_colors, alpha=0.7)
-        axes[0,0].set_title('Terminology Count by Domain')
-        axes[0,0].set_ylabel('Number of Terms')
-        axes[0,0].tick_params(axis='x', rotation=45)
+        term_counts = [domain_data[d].get("term_count", 0) for d in domains]
+        axes[0, 0].bar(domains, term_counts, color=domain_colors, alpha=0.7)
+        axes[0, 0].set_title("Terminology Count by Domain")
+        axes[0, 0].set_ylabel("Number of Terms")
+        axes[0, 0].tick_params(axis="x", rotation=45)
 
         # Plot 2: Average confidence
-        avg_confidence = [domain_data[d].get('avg_confidence', 0) for d in domains]
-        axes[0,1].bar(domains, avg_confidence, color=domain_colors, alpha=0.7)
-        axes[0,1].set_title('Average Term Confidence by Domain')
-        axes[0,1].set_ylabel('Confidence Score')
-        axes[0,1].tick_params(axis='x', rotation=45)
+        avg_confidence = [domain_data[d].get("avg_confidence", 0) for d in domains]
+        axes[0, 1].bar(domains, avg_confidence, color=domain_colors, alpha=0.7)
+        axes[0, 1].set_title("Average Term Confidence by Domain")
+        axes[0, 1].set_ylabel("Confidence Score")
+        axes[0, 1].tick_params(axis="x", rotation=45)
 
         # Plot 3: Total frequency
-        total_freq = [domain_data[d].get('total_frequency', 0) for d in domains]
-        axes[1,0].bar(domains, total_freq, color=domain_colors, alpha=0.7)
-        axes[1,0].set_title('Total Term Frequency by Domain')
-        axes[1,0].set_ylabel('Total Frequency')
-        axes[1,0].tick_params(axis='x', rotation=45)
+        total_freq = [domain_data[d].get("total_frequency", 0) for d in domains]
+        axes[1, 0].bar(domains, total_freq, color=domain_colors, alpha=0.7)
+        axes[1, 0].set_title("Total Term Frequency by Domain")
+        axes[1, 0].set_ylabel("Total Frequency")
+        axes[1, 0].tick_params(axis="x", rotation=45)
 
         # Plot 4: Bridging terms
-        bridging_counts = [len(domain_data[d].get('bridging_terms', set())) for d in domains]
-        axes[1,1].bar(domains, bridging_counts, color=domain_colors, alpha=0.7)
-        axes[1,1].set_title('Cross-Domain Bridging Terms')
-        axes[1,1].set_ylabel('Number of Bridging Terms')
-        axes[1,1].tick_params(axis='x', rotation=45)
+        bridging_counts = [
+            len(domain_data[d].get("bridging_terms", set())) for d in domains
+        ]
+        axes[1, 1].bar(domains, bridging_counts, color=domain_colors, alpha=0.7)
+        axes[1, 1].set_title("Cross-Domain Bridging Terms")
+        axes[1, 1].set_ylabel("Number of Bridging Terms")
+        axes[1, 1].tick_params(axis="x", rotation=45)
 
         plt.tight_layout()
 
         if filepath:
-            fig.savefig(filepath, dpi=300, bbox_inches='tight')
+            fig.savefig(filepath, dpi=300, bbox_inches="tight")
             plt.close(fig)
 
         return fig
 
-    def visualize_concept_hierarchy(self, concept_hierarchy: Dict[str, Any],
-                                  filepath: Optional[Path] = None) -> plt.Figure:
+    def visualize_concept_hierarchy(
+        self, concept_hierarchy: Dict[str, Any], filepath: Optional[Path] = None
+    ) -> plt.Figure:
         """Visualize concept hierarchy.
 
         Args:
@@ -306,30 +343,38 @@ class ConceptVisualizer:
         fig, ax = plt.subplots(figsize=self.figsize)
 
         # Create hierarchical layout
-        hierarchy_data = concept_hierarchy.get('centrality_scores', {})
-        core_concepts = concept_hierarchy.get('core_concepts', [])
-        peripheral_concepts = concept_hierarchy.get('peripheral_concepts', [])
+        hierarchy_data = concept_hierarchy.get("centrality_scores", {})
+        core_concepts = concept_hierarchy.get("core_concepts", [])
+        peripheral_concepts = concept_hierarchy.get("peripheral_concepts", [])
 
         if not hierarchy_data:
-            ax.text(0.5, 0.5, "No hierarchy data available",
-                   ha='center', va='center', transform=ax.transAxes)
+            ax.text(
+                0.5,
+                0.5,
+                "No hierarchy data available",
+                ha="center",
+                va="center",
+                transform=ax.transAxes,
+            )
             ax.set_title("Concept Hierarchy")
-            ax.axis('off')
+            ax.axis("off")
             return fig
 
         # Sort concepts by centrality
-        sorted_concepts = sorted(hierarchy_data.items(), key=lambda x: x[1], reverse=True)
+        sorted_concepts = sorted(
+            hierarchy_data.items(), key=lambda x: x[1], reverse=True
+        )
         concepts, centrality_scores = zip(*sorted_concepts)
 
         # Color code core vs peripheral
         colors = []
         for concept in concepts:
             if concept in core_concepts:
-                colors.append('#2ca02c')  # Green for core
+                colors.append("#2ca02c")  # Green for core
             elif concept in peripheral_concepts:
-                colors.append('#d62728')  # Red for peripheral
+                colors.append("#d62728")  # Red for peripheral
             else:
-                colors.append('#7f7f7f')  # Gray for others
+                colors.append("#7f7f7f")  # Gray for others
 
         # Create horizontal bar chart
         y_pos = np.arange(len(concepts))
@@ -337,28 +382,32 @@ class ConceptVisualizer:
 
         ax.set_yticks(y_pos)
         ax.set_yticklabels(concepts)
-        ax.set_xlabel('Centrality Score')
-        ax.set_title('Concept Hierarchy by Centrality', fontsize=14, fontweight='bold')
+        ax.set_xlabel("Centrality Score")
+        ax.set_title("Concept Hierarchy by Centrality", fontsize=14, fontweight="bold")
 
         # Add legend
         from matplotlib.patches import Patch
+
         legend_elements = [
-            Patch(facecolor='#2ca02c', alpha=0.7, label='Core Concepts'),
-            Patch(facecolor='#d62728', alpha=0.7, label='Peripheral Concepts'),
-            Patch(facecolor='#7f7f7f', alpha=0.7, label='Other Concepts')
+            Patch(facecolor="#2ca02c", alpha=0.7, label="Core Concepts"),
+            Patch(facecolor="#d62728", alpha=0.7, label="Peripheral Concepts"),
+            Patch(facecolor="#7f7f7f", alpha=0.7, label="Other Concepts"),
         ]
-        ax.legend(handles=legend_elements, loc='lower right')
+        ax.legend(handles=legend_elements, loc="lower right")
 
         plt.tight_layout()
 
         if filepath:
-            fig.savefig(filepath, dpi=300, bbox_inches='tight')
+            fig.savefig(filepath, dpi=300, bbox_inches="tight")
             plt.close(fig)
 
         return fig
 
-    def create_anthropomorphic_analysis_plot(self, anthropomorphic_data: Dict[str, List[str]],
-                                           filepath: Optional[Path] = None) -> plt.Figure:
+    def create_anthropomorphic_analysis_plot(
+        self,
+        anthropomorphic_data: Dict[str, List[str]],
+        filepath: Optional[Path] = None,
+    ) -> plt.Figure:
         """Create visualization of anthropomorphic concepts.
 
         Args:
@@ -371,10 +420,16 @@ class ConceptVisualizer:
         fig, ax = plt.subplots(figsize=self.figsize)
 
         if not anthropomorphic_data:
-            ax.text(0.5, 0.5, "No anthropomorphic data available",
-                   ha='center', va='center', transform=ax.transAxes)
+            ax.text(
+                0.5,
+                0.5,
+                "No anthropomorphic data available",
+                ha="center",
+                va="center",
+                transform=ax.transAxes,
+            )
             ax.set_title("Anthropomorphic Concept Analysis")
-            ax.axis('off')
+            ax.axis("off")
             return fig
 
         # Count terms by category
@@ -382,43 +437,63 @@ class ConceptVisualizer:
         counts = [len(terms) for terms in anthropomorphic_data.values()]
 
         # Create bar chart
-        bars = ax.bar(categories, counts, alpha=0.7, color='#ff7f0e')
+        bars = ax.bar(categories, counts, alpha=0.7, color="#ff7f0e")
 
         # Add value labels on bars
         for bar, count in zip(bars, counts):
             height = bar.get_height()
-            ax.text(bar.get_x() + bar.get_width()/2., height + 0.1,
-                   f'{count}', ha='center', va='bottom')
+            ax.text(
+                bar.get_x() + bar.get_width() / 2.0,
+                height + 0.1,
+                f"{count}",
+                ha="center",
+                va="bottom",
+            )
 
-        ax.set_xlabel('Anthropomorphic Categories')
-        ax.set_ylabel('Number of Terms')
-        ax.set_title('Anthropomorphic Terminology by Category', fontsize=14, fontweight='bold')
-        ax.tick_params(axis='x', rotation=45)
+        ax.set_xlabel("Anthropomorphic Categories")
+        ax.set_ylabel("Number of Terms")
+        ax.set_title(
+            "Anthropomorphic Terminology by Category", fontsize=14, fontweight="bold"
+        )
+        ax.tick_params(axis="x", rotation=45)
 
         # Add sample terms as text
         y_pos = 0.95
-        ax.text(1.05, y_pos, "Sample Terms:", transform=ax.transAxes,
-               fontsize=10, fontweight='bold')
+        ax.text(
+            1.05,
+            y_pos,
+            "Sample Terms:",
+            transform=ax.transAxes,
+            fontsize=10,
+            fontweight="bold",
+        )
         y_pos -= 0.05
 
         for category, terms in anthropomorphic_data.items():
             if terms:
                 sample_terms = terms[:3]  # Show up to 3 examples
                 term_text = f"{category}: {', '.join(sample_terms)}"
-                ax.text(1.05, y_pos, term_text, transform=ax.transAxes,
-                       fontsize=8, wrap=True)
+                ax.text(
+                    1.05,
+                    y_pos,
+                    term_text,
+                    transform=ax.transAxes,
+                    fontsize=8,
+                    wrap=True,
+                )
                 y_pos -= 0.05
 
         plt.tight_layout()
 
         if filepath:
-            fig.savefig(filepath, dpi=300, bbox_inches='tight')
+            fig.savefig(filepath, dpi=300, bbox_inches="tight")
             plt.close(fig)
 
         return fig
 
-    def export_visualization_metadata(self, figures: Dict[str, plt.Figure],
-                                    metadata_file: Path) -> None:
+    def export_visualization_metadata(
+        self, figures: Dict[str, plt.Figure], metadata_file: Path
+    ) -> None:
         """Export metadata about created visualizations.
 
         Args:
@@ -429,30 +504,33 @@ class ConceptVisualizer:
         from datetime import datetime
 
         metadata = {
-            'creation_date': datetime.now().isoformat(),
-            'figures': {},
-            'visualization_settings': {
-                'figsize': self.figsize,
-                'domain_colors': self.DOMAIN_COLORS
-            }
+            "creation_date": datetime.now().isoformat(),
+            "figures": {},
+            "visualization_settings": {
+                "figsize": self.figsize,
+                "domain_colors": self.DOMAIN_COLORS,
+            },
         }
 
         for fig_name, fig in figures.items():
             # Get figure dimensions and other properties
             fig_metadata = {
-                'name': fig_name,
-                'size_inches': fig.get_size_inches().tolist(),
-                'dpi': 300,  # Default DPI for saving
-                'axes_count': len(fig.axes)
+                "name": fig_name,
+                "size_inches": fig.get_size_inches().tolist(),
+                "dpi": 300,  # Default DPI for saving
+                "axes_count": len(fig.axes),
             }
-            metadata['figures'][fig_name] = fig_metadata
+            metadata["figures"][fig_name] = fig_metadata
 
-        with open(metadata_file, 'w', encoding='utf-8') as f:
+        with open(metadata_file, "w", encoding="utf-8") as f:
             json.dump(metadata, f, indent=2, ensure_ascii=False)
 
-    def visualize_term_cooccurrence(self, cooccurrence_matrix: Dict[str, Dict[str, int]],
-                                   filepath: Optional[Path] = None,
-                                   title: str = "Term Co-occurrence Network") -> plt.Figure:
+    def visualize_term_cooccurrence(
+        self,
+        cooccurrence_matrix: Dict[str, Dict[str, int]],
+        filepath: Optional[Path] = None,
+        title: str = "Term Co-occurrence Network",
+    ) -> plt.Figure:
         """Create a network visualization of term co-occurrence patterns.
 
         Args:
@@ -497,23 +575,25 @@ class ConceptVisualizer:
 
         # Draw nodes with size based on degree
         node_sizes = [G.degree(node) * 100 + 300 for node in G.nodes()]
-        node_colors = ['lightblue' for _ in G.nodes()]  # Default color
+        node_colors = ["lightblue" for _ in G.nodes()]  # Default color
 
-        nx.draw_networkx_nodes(G, pos, node_size=node_sizes,
-                             node_color=node_colors, alpha=0.7, ax=ax)
+        nx.draw_networkx_nodes(
+            G, pos, node_size=node_sizes, node_color=node_colors, alpha=0.7, ax=ax
+        )
 
         # Draw edges with width based on co-occurrence strength
-        edge_weights = [G.edges[edge]['weight'] * 0.5 for edge in G.edges()]
-        nx.draw_networkx_edges(G, pos, width=edge_weights,
-                             edge_color='gray', alpha=0.6, ax=ax)
+        edge_weights = [G.edges[edge]["weight"] * 0.5 for edge in G.edges()]
+        nx.draw_networkx_edges(
+            G, pos, width=edge_weights, edge_color="gray", alpha=0.6, ax=ax
+        )
 
         # Draw labels for high-degree nodes only
         high_degree_nodes = [node for node in G.nodes() if G.degree(node) > 2]
         labels = {node: node for node in high_degree_nodes}
-        nx.draw_networkx_labels(G, pos, labels, font_size=8, font_weight='bold', ax=ax)
+        nx.draw_networkx_labels(G, pos, labels, font_size=8, font_weight="bold", ax=ax)
 
-        ax.set_title(title, fontsize=14, fontweight='bold')
-        ax.axis('off')
+        ax.set_title(title, fontsize=14, fontweight="bold")
+        ax.axis("off")
 
         plt.tight_layout()
 
@@ -522,9 +602,12 @@ class ConceptVisualizer:
 
         return fig
 
-    def create_domain_overlap_heatmap(self, domain_overlaps: Dict[str, Dict[str, Any]],
-                                     filepath: Optional[Path] = None,
-                                     title: str = "Domain Term Overlap Heatmap") -> plt.Figure:
+    def create_domain_overlap_heatmap(
+        self,
+        domain_overlaps: Dict[str, Dict[str, Any]],
+        filepath: Optional[Path] = None,
+        title: str = "Domain Term Overlap Heatmap",
+    ) -> plt.Figure:
         """Create a heatmap visualization of term overlap between domains.
 
         Args:
@@ -544,10 +627,10 @@ class ConceptVisualizer:
         domains = set()
 
         for pair in domain_pairs:
-            if '_and_' in pair:
-                d1, d2 = pair.split('_and_')
-            elif '_' in pair and len(pair.split('_')) == 2:
-                d1, d2 = pair.split('_')
+            if "_and_" in pair:
+                d1, d2 = pair.split("_and_")
+            elif "_" in pair and len(pair.split("_")) == 2:
+                d1, d2 = pair.split("_")
             else:
                 continue
             domains.add(d1)
@@ -560,40 +643,41 @@ class ConceptVisualizer:
         overlap_matrix = np.zeros((len(domains), len(domains)))
 
         for pair, data in domain_overlaps.items():
-            if '_and_' in pair:
-                d1, d2 = pair.split('_and_')
-            elif '_' in pair and len(pair.split('_')) == 2:
-                d1, d2 = pair.split('_')
+            if "_and_" in pair:
+                d1, d2 = pair.split("_and_")
+            elif "_" in pair and len(pair.split("_")) == 2:
+                d1, d2 = pair.split("_")
             else:
                 continue
 
             if d1 in domain_to_idx and d2 in domain_to_idx:
-                overlap_pct = data.get('overlap_percentage', 0)
+                overlap_pct = data.get("overlap_percentage", 0)
                 i, j = domain_to_idx[d1], domain_to_idx[d2]
                 overlap_matrix[i, j] = overlap_pct
                 overlap_matrix[j, i] = overlap_pct  # Symmetric
 
         # Create heatmap
-        im = ax.imshow(overlap_matrix, cmap='YlOrRd', aspect='equal')
+        im = ax.imshow(overlap_matrix, cmap="YlOrRd", aspect="equal")
 
         # Add labels
         ax.set_xticks(range(len(domains)))
         ax.set_yticks(range(len(domains)))
-        ax.set_xticklabels(domains, rotation=45, ha='right')
+        ax.set_xticklabels(domains, rotation=45, ha="right")
         ax.set_yticklabels(domains)
 
         # Add colorbar
         cbar = ax.figure.colorbar(im, ax=ax)
-        cbar.ax.set_ylabel('Overlap Percentage', rotation=-90, va="bottom")
+        cbar.ax.set_ylabel("Overlap Percentage", rotation=-90, va="bottom")
 
         # Add text annotations
         for i in range(len(domains)):
             for j in range(len(domains)):
                 if overlap_matrix[i, j] > 0:
-                    text = ax.text(j, i, '.1f',
-                                 ha="center", va="center", color="black", fontsize=8)
+                    text = ax.text(
+                        j, i, ".1f", ha="center", va="center", color="black", fontsize=8
+                    )
 
-        ax.set_title(title, fontsize=14, fontweight='bold')
+        ax.set_title(title, fontsize=14, fontweight="bold")
         plt.tight_layout()
 
         if filepath:
@@ -601,9 +685,12 @@ class ConceptVisualizer:
 
         return fig
 
-    def visualize_concept_evolution(self, evolution_data: Dict[str, Dict[str, Any]],
-                                   filepath: Optional[Path] = None,
-                                   title: str = "Concept Evolution Over Time") -> plt.Figure:
+    def visualize_concept_evolution(
+        self,
+        evolution_data: Dict[str, Dict[str, Any]],
+        filepath: Optional[Path] = None,
+        title: str = "Concept Evolution Over Time",
+    ) -> plt.Figure:
         """Create a temporal visualization of concept evolution.
 
         Args:
@@ -617,7 +704,9 @@ class ConceptVisualizer:
         fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(15, 10))
 
         # Extract data for plotting
-        concepts = list(evolution_data.keys())[:6]  # Limit to 6 concepts for readability
+        concepts = list(evolution_data.keys())[
+            :6
+        ]  # Limit to 6 concepts for readability
         time_points = []
 
         # Collect evolution data
@@ -627,9 +716,9 @@ class ConceptVisualizer:
 
         for concept in concepts:
             data = evolution_data[concept]
-            term_evolution = data.get('term_count_evolution', [])
-            rel_evolution = data.get('relationship_count_evolution', [])
-            stability = data.get('term_stability', [])
+            term_evolution = data.get("term_count_evolution", [])
+            rel_evolution = data.get("relationship_count_evolution", [])
+            stability = data.get("term_stability", [])
 
             if term_evolution:
                 if not time_points:
@@ -640,57 +729,65 @@ class ConceptVisualizer:
 
         if not time_points:
             # Fallback for empty data
-            ax1.text(0.5, 0.5, 'No evolution data available',
-                    transform=ax1.transAxes, ha='center', va='center')
-            ax1.set_title('Term Count Evolution')
-            ax1.axis('off')
+            ax1.text(
+                0.5,
+                0.5,
+                "No evolution data available",
+                transform=ax1.transAxes,
+                ha="center",
+                va="center",
+            )
+            ax1.set_title("Term Count Evolution")
+            ax1.axis("off")
         else:
             # Plot term count evolution
             for i, (concept, counts) in enumerate(zip(concepts, term_counts)):
-                ax1.plot(time_points, counts, marker='o', label=concept, linewidth=2)
+                ax1.plot(time_points, counts, marker="o", label=concept, linewidth=2)
 
-            ax1.set_xlabel('Time Period')
-            ax1.set_ylabel('Term Count')
-            ax1.set_title('Term Count Evolution')
-            ax1.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+            ax1.set_xlabel("Time Period")
+            ax1.set_ylabel("Term Count")
+            ax1.set_title("Term Count Evolution")
+            ax1.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
             ax1.grid(True, alpha=0.3)
 
             # Plot relationship evolution
             for i, (concept, counts) in enumerate(zip(concepts, relationship_counts)):
-                ax2.plot(time_points, counts, marker='s', label=concept, linewidth=2)
+                ax2.plot(time_points, counts, marker="s", label=concept, linewidth=2)
 
-            ax2.set_xlabel('Time Period')
-            ax2.set_ylabel('Relationship Count')
-            ax2.set_title('Relationship Evolution')
-            ax2.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+            ax2.set_xlabel("Time Period")
+            ax2.set_ylabel("Relationship Count")
+            ax2.set_title("Relationship Evolution")
+            ax2.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
             ax2.grid(True, alpha=0.3)
 
             # Plot stability over time
             for i, (concept, stability) in enumerate(zip(concepts, stability_scores)):
-                ax3.plot(time_points, stability, marker='^', label=concept, linewidth=2)
+                ax3.plot(time_points, stability, marker="^", label=concept, linewidth=2)
 
-            ax3.set_xlabel('Time Period')
-            ax3.set_ylabel('Stability Score')
-            ax3.set_title('Term Stability Over Time')
-            ax3.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+            ax3.set_xlabel("Time Period")
+            ax3.set_ylabel("Stability Score")
+            ax3.set_title("Term Stability Over Time")
+            ax3.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
             ax3.grid(True, alpha=0.3)
 
             # Plot growth rates
             growth_rates = []
             concept_names = []
             for concept, data in evolution_data.items():
-                rate = data.get('term_growth_rate', 0)
+                rate = data.get("term_growth_rate", 0)
                 growth_rates.append(rate)
-                concept_names.append(concept[:15] + '...' if len(concept) > 15 else concept)
+                concept_names.append(
+                    concept[:15] + "..." if len(concept) > 15 else concept
+                )
 
             ax4.bar(range(len(growth_rates)), growth_rates)
-            ax4.set_xlabel('Concepts')
-            ax4.set_ylabel('Growth Rate')
-            ax4.set_title('Term Growth Rates')
+            ax4.set_xlabel("Concepts")
+            ax4.set_ylabel("Growth Rate")
+            ax4.set_title("Term Growth Rates")
             ax4.set_xticks(range(len(concept_names)))
-            ax4.set_xticklabels(concept_names, rotation=45, ha='right')
+            ax4.set_xticklabels(concept_names, rotation=45, ha="right")
 
-        plt.suptitle(title, fontsize=16, fontweight='bold')
+        plt.suptitle(title, fontsize=16, fontweight="bold")
         plt.tight_layout()
 
         if filepath:
@@ -698,9 +795,12 @@ class ConceptVisualizer:
 
         return fig
 
-    def create_statistical_summary_plot(self, statistical_data: Dict[str, Dict[str, Any]],
-                                       filepath: Optional[Path] = None,
-                                       title: str = "Statistical Summary") -> plt.Figure:
+    def create_statistical_summary_plot(
+        self,
+        statistical_data: Dict[str, Dict[str, Any]],
+        filepath: Optional[Path] = None,
+        title: str = "Statistical Summary",
+    ) -> plt.Figure:
         """Create a multi-panel statistical summary visualization.
 
         Args:
@@ -716,65 +816,95 @@ class ConceptVisualizer:
         fig, axes = plt.subplots(2, 2, figsize=(15, 10))
 
         # Extract data for different plot types
-        if 'frequency_stats' in statistical_data:
-            freq_data = statistical_data['frequency_stats']
+        if "frequency_stats" in statistical_data:
+            freq_data = statistical_data["frequency_stats"]
 
             # Frequency distribution histogram
-            if 'frequency_distribution' in freq_data:
-                dist_data = freq_data['frequency_distribution']
-                if 'counts' in dist_data and dist_data['counts']:
-                    axes[0, 0].bar(range(len(dist_data['counts'])), dist_data['counts'],
-                                  alpha=0.7, color='skyblue', edgecolor='black')
-                    axes[0, 0].set_xlabel('Frequency Bins')
-                    axes[0, 0].set_ylabel('Count')
-                    axes[0, 0].set_title('Term Frequency Distribution')
+            if "frequency_distribution" in freq_data:
+                dist_data = freq_data["frequency_distribution"]
+                if "counts" in dist_data and dist_data["counts"]:
+                    axes[0, 0].bar(
+                        range(len(dist_data["counts"])),
+                        dist_data["counts"],
+                        alpha=0.7,
+                        color="skyblue",
+                        edgecolor="black",
+                    )
+                    axes[0, 0].set_xlabel("Frequency Bins")
+                    axes[0, 0].set_ylabel("Count")
+                    axes[0, 0].set_title("Term Frequency Distribution")
                     axes[0, 0].grid(True, alpha=0.3)
 
             # Top terms bar chart
-            if 'top_terms' in freq_data and freq_data['top_terms']:
-                terms = [item['term'][:15] + '...' if len(item['term']) > 15 else item['term']
-                        for item in freq_data['top_terms']]
-                frequencies = [item['frequency'] for item in freq_data['top_terms']]
+            if "top_terms" in freq_data and freq_data["top_terms"]:
+                terms = [
+                    (
+                        item["term"][:15] + "..."
+                        if len(item["term"]) > 15
+                        else item["term"]
+                    )
+                    for item in freq_data["top_terms"]
+                ]
+                frequencies = [item["frequency"] for item in freq_data["top_terms"]]
 
-                axes[0, 1].barh(terms, frequencies, color='lightgreen', edgecolor='black')
-                axes[0, 1].set_xlabel('Frequency')
-                axes[0, 1].set_title('Top Terms by Frequency')
+                axes[0, 1].barh(
+                    terms, frequencies, color="lightgreen", edgecolor="black"
+                )
+                axes[0, 1].set_xlabel("Frequency")
+                axes[0, 1].set_title("Top Terms by Frequency")
                 axes[0, 1].grid(True, alpha=0.3)
 
         # Statistical significance plot
-        if 'statistical_significance' in statistical_data:
-            sig_data = statistical_data['statistical_significance']
+        if "statistical_significance" in statistical_data:
+            sig_data = statistical_data["statistical_significance"]
 
-            if 'p_value' in sig_data and 'chi_square_statistic' in sig_data:
+            if "p_value" in sig_data and "chi_square_statistic" in sig_data:
                 # P-value vs significance threshold
-                p_val = sig_data['p_value']
-                threshold = sig_data.get('significance_threshold', 0.05)
-                chi_sq = sig_data['chi_square_statistic']
+                p_val = sig_data["p_value"]
+                threshold = sig_data.get("significance_threshold", 0.05)
+                chi_sq = sig_data["chi_square_statistic"]
 
-                axes[1, 0].bar(['Chi-Square Statistic', 'P-Value Threshold'],
-                             [chi_sq, threshold], color=['orange', 'red'], alpha=0.7)
-                axes[1, 0].axhline(y=p_val, color='blue', linestyle='--',
-                                  label=f'Actual P-Value: {p_val:.4f}')
-                axes[1, 0].set_ylabel('Value')
-                axes[1, 0].set_title('Statistical Significance Analysis')
+                axes[1, 0].bar(
+                    ["Chi-Square Statistic", "P-Value Threshold"],
+                    [chi_sq, threshold],
+                    color=["orange", "red"],
+                    alpha=0.7,
+                )
+                axes[1, 0].axhline(
+                    y=p_val,
+                    color="blue",
+                    linestyle="--",
+                    label=f"Actual P-Value: {p_val:.4f}",
+                )
+                axes[1, 0].set_ylabel("Value")
+                axes[1, 0].set_title("Statistical Significance Analysis")
                 axes[1, 0].legend()
                 axes[1, 0].grid(True, alpha=0.3)
 
         # Ambiguity metrics
-        if 'ambiguity_metrics' in statistical_data and 'domain_metrics' in statistical_data['ambiguity_metrics']:
-            domain_metrics = statistical_data['ambiguity_metrics']['domain_metrics']
+        if (
+            "ambiguity_metrics" in statistical_data
+            and "domain_metrics" in statistical_data["ambiguity_metrics"]
+        ):
+            domain_metrics = statistical_data["ambiguity_metrics"]["domain_metrics"]
 
             if domain_metrics:
-                metrics = ['average_context_diversity', 'average_ambiguity_score', 'max_ambiguity_score']
+                metrics = [
+                    "average_context_diversity",
+                    "average_ambiguity_score",
+                    "max_ambiguity_score",
+                ]
                 values = [domain_metrics.get(metric, 0) for metric in metrics]
 
-                axes[1, 1].bar(metrics, values, color='purple', alpha=0.7, edgecolor='black')
-                axes[1, 1].set_ylabel('Score')
-                axes[1, 1].set_title('Domain Ambiguity Metrics')
-                axes[1, 1].tick_params(axis='x', rotation=45)
+                axes[1, 1].bar(
+                    metrics, values, color="purple", alpha=0.7, edgecolor="black"
+                )
+                axes[1, 1].set_ylabel("Score")
+                axes[1, 1].set_title("Domain Ambiguity Metrics")
+                axes[1, 1].tick_params(axis="x", rotation=45)
                 axes[1, 1].grid(True, alpha=0.3)
 
-        plt.suptitle(title, fontsize=16, fontweight='bold')
+        plt.suptitle(title, fontsize=16, fontweight="bold")
         plt.tight_layout()
 
         if filepath:
@@ -782,9 +912,12 @@ class ConceptVisualizer:
 
         return fig
 
-    def create_interactive_concept_network(self, concept_map: ConceptMap,
-                                          output_dir: Path,
-                                          title: str = "Interactive Concept Network") -> str:
+    def create_interactive_concept_network(
+        self,
+        concept_map: ConceptMap,
+        output_dir: Path,
+        title: str = "Interactive Concept Network",
+    ) -> str:
         """Create an interactive HTML visualization of the concept network.
 
         Args:
@@ -796,8 +929,8 @@ class ConceptVisualizer:
             Path to created HTML file
         """
         try:
-            import plotly.graph_objects as go
             import networkx as nx
+            import plotly.graph_objects as go
         except ImportError:
             # Fallback: create static network and return path to it
             static_fig = self.visualize_concept_map(concept_map, title=title)
@@ -811,10 +944,12 @@ class ConceptVisualizer:
 
         # Add nodes with attributes
         for concept_name, concept in concept_map.concepts.items():
-            G.add_node(concept_name,
-                      size=len(concept.terms),
-                      domains=list(concept.domains),
-                      description=concept.description)
+            G.add_node(
+                concept_name,
+                size=len(concept.terms),
+                domains=list(concept.domains),
+                description=concept.description,
+            )
 
         # Add edges with weights
         for (concept1, concept2), weight in concept_map.concept_relationships.items():
@@ -833,11 +968,13 @@ class ConceptVisualizer:
             edge_z.extend([z0, z1, None])
 
         edge_trace = go.Scatter3d(
-            x=edge_x, y=edge_y, z=edge_z,
-            mode='lines',
-            line=dict(width=2, color='gray'),
-            hoverinfo='none',
-            name='relationships'
+            x=edge_x,
+            y=edge_y,
+            z=edge_z,
+            mode="lines",
+            line=dict(width=2, color="gray"),
+            hoverinfo="none",
+            name="relationships",
         )
 
         # Create node traces
@@ -851,26 +988,30 @@ class ConceptVisualizer:
             node_z.append(z)
 
             # Node information
-            domains = G.nodes[node]['domains']
-            size = G.nodes[node]['size']
-            description = G.nodes[node]['description']
+            domains = G.nodes[node]["domains"]
+            size = G.nodes[node]["size"]
+            description = G.nodes[node]["description"]
 
-            node_text.append(f"Concept: {node}<br>Domains: {', '.join(domains)}<br>Terms: {size}<br>{description}")
+            node_text.append(
+                f"Concept: {node}<br>Domains: {', '.join(domains)}<br>Terms: {size}<br>{description}"
+            )
             node_sizes.append(size * 5 + 20)  # Scale node size
             node_colors.append(self._get_concept_color_3d(node, concept_map))
 
         node_trace = go.Scatter3d(
-            x=node_x, y=node_y, z=node_z,
-            mode='markers',
+            x=node_x,
+            y=node_y,
+            z=node_z,
+            mode="markers",
             marker=dict(
                 size=node_sizes,
                 color=node_colors,
                 opacity=0.8,
-                line=dict(width=2, color='black')
+                line=dict(width=2, color="black"),
             ),
             text=node_text,
-            hoverinfo='text',
-            name='concepts'
+            hoverinfo="text",
+            name="concepts",
         )
 
         # Create figure
@@ -884,7 +1025,7 @@ class ConceptVisualizer:
                 yaxis=dict(showbackground=False),
                 zaxis=dict(showbackground=False),
             ),
-            margin=dict(l=0, r=0, t=40, b=0)
+            margin=dict(l=0, r=0, t=40, b=0),
         )
 
         # Save HTML file
@@ -901,12 +1042,13 @@ class ConceptVisualizer:
             if concept.domains:
                 # Use first domain's color
                 domain = next(iter(concept.domains))
-                return self.DOMAIN_COLORS.get(domain, 'gray')
+                return self.DOMAIN_COLORS.get(domain, "gray")
 
-        return 'gray'
+        return "gray"
 
-    def _create_fallback_cooccurrence_plot(self, cooccurrence_matrix: Dict[str, Dict[str, int]],
-                                         ax: plt.Axes, title: str) -> None:
+    def _create_fallback_cooccurrence_plot(
+        self, cooccurrence_matrix: Dict[str, Dict[str, int]], ax: plt.Axes, title: str
+    ) -> None:
         """Create a fallback co-occurrence visualization without NetworkX."""
         # Simple bar chart of co-occurrence frequencies
         term_pairs = []
@@ -922,9 +1064,11 @@ class ConceptVisualizer:
         sorted_pairs = sorted(zip(frequencies, term_pairs), reverse=True)[:20]  # Top 20
         frequencies, term_pairs = zip(*sorted_pairs)
 
-        ax.barh(range(len(term_pairs)), frequencies, color='lightcoral', edgecolor='black')
+        ax.barh(
+            range(len(term_pairs)), frequencies, color="lightcoral", edgecolor="black"
+        )
         ax.set_yticks(range(len(term_pairs)))
         ax.set_yticklabels(term_pairs, fontsize=8)
-        ax.set_xlabel('Co-occurrence Frequency')
-        ax.set_title(f'{title} (Top 20 Pairs)')
+        ax.set_xlabel("Co-occurrence Frequency")
+        ax.set_title(f"{title} (Top 20 Pairs)")
         ax.grid(True, alpha=0.3)

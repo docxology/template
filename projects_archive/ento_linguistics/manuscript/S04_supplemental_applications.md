@@ -2,9 +2,9 @@
 
 This section presents extended application examples demonstrating the practical utility of the Ento-Linguistic framework across diverse domains, complementing the case studies in Section \ref{sec:experimental_results}.
 
-## S4.1 Biological Sciences Applications
+## Biological Sciences Applications
 
-### S4.1.1 Evolutionary Biology Terminology Analysis
+### Evolutionary Biology Terminology Analysis
 
 Applying Ento-Linguistic methods to evolutionary biology reveals similar patterns of anthropomorphic framing:
 
@@ -20,7 +20,7 @@ Analysis of terms like "altruism," "selfishness," and "cheating" in evolutionary
 - Cross-domain borrowing creates ambiguity in evolutionary explanations
 - Historical evolution of cooperation concepts parallels entomological patterns
 
-### S4.1.2 Neuroscience Language Analysis
+### Neuroscience Language Analysis
 
 Ento-Linguistic methods applied to neuroscience terminology reveal hierarchical framing patterns:
 
@@ -31,9 +31,9 @@ Analysis shows how terms like "hierarchy," "command," and "control" impose socia
 - 78\% of learning terminology employs pedagogical metaphors
 - Scale transitions create ambiguity between neuron, circuit, and system levels
 
-## S4.2 Interdisciplinary Research Applications
+## Interdisciplinary Research Applications
 
-### S4.2.1 Science Education Applications
+### Science Education Applications
 
 Ento-Linguistic analysis provides tools for improving science education:
 
@@ -43,7 +43,7 @@ Ento-Linguistic analysis provides tools for improving science education:
 
 **Textbook Analysis**: Evaluating how scientific texts communicate complex concepts
 
-### S4.2.3 Scientific Communication Training
+### Scientific Communication Training
 
 Developing training programs for researchers based on Ento-Linguistic insights:
 
@@ -53,9 +53,9 @@ Developing training programs for researchers based on Ento-Linguistic insights:
 
 **Peer Review Enhancement**: Using linguistic analysis to improve manuscript clarity
 
-## S4.3 Historical Analysis Applications
+## Historical Analysis Applications
 
-### S4.3.1 Scientific Revolution Analysis
+### Scientific Revolution Analysis
 
 Applying longitudinal terminology analysis to periods of scientific change:
 
@@ -65,7 +65,7 @@ Applying longitudinal terminology analysis to periods of scientific change:
 
 **Genomic Era (2000-present)**: Examining how "-omics" terminology shapes contemporary biology
 
-### S4.3.2 Paradigm Shift Detection
+### Paradigm Shift Detection
 
 Using terminology network analysis to identify paradigm changes:
 
@@ -75,9 +75,9 @@ Using terminology network analysis to identify paradigm changes:
 
 **Conceptual Continuity**: Terms that persist across paradigm changes
 
-## S4.4 Cross-Cultural Applications
+## Cross-Cultural Applications
 
-### S4.4.1 Multilingual Scientific Terminology
+### Multilingual Scientific Terminology
 
 Extending analysis to non-English scientific literature:
 
@@ -87,7 +87,7 @@ Extending analysis to non-English scientific literature:
 
 **Chinese Scientific Terminology**: Examining how traditional concepts influence modern scientific language
 
-### S4.4.2 Cultural Bias in Scientific Language
+### Cultural Bias in Scientific Language
 
 Analyzing how cultural contexts shape scientific terminology:
 
@@ -97,9 +97,9 @@ Analyzing how cultural contexts shape scientific terminology:
 
 **Indigenous Knowledge**: Alternative conceptual frameworks for natural phenomena
 
-## S4.5 Philosophical Applications
+## Philosophical Applications
 
-### S4.5.1 Philosophy of Science Applications
+### Philosophy of Science Applications
 
 Ento-Linguistic analysis contributes to philosophy of science:
 
@@ -109,7 +109,7 @@ Ento-Linguistic analysis contributes to philosophy of science:
 
 **Scientific Realism**: Analysis of how language constitutes scientific objects
 
-### S4.5.2 Metaphor Theory in Science
+### Metaphor Theory in Science
 
 Examining metaphorical language in scientific discourse:
 
@@ -119,9 +119,9 @@ Examining metaphorical language in scientific discourse:
 
 **Metaphor Productivity**: How metaphors generate new research questions
 
-## S4.6 Policy and Ethics Applications
+## Policy and Ethics Applications
 
-### S4.6.1 Research Policy Applications
+### Research Policy Applications
 
 Using terminology analysis for research policy development:
 
@@ -131,7 +131,7 @@ Using terminology analysis for research policy development:
 
 **Research Evaluation**: Assessing the clarity and impact of scientific communication
 
-### S4.6.2 Ethical Implications
+### Ethical Implications
 
 Exploring ethical dimensions of scientific language:
 
@@ -141,9 +141,9 @@ Exploring ethical dimensions of scientific language:
 
 **Responsible Terminology**: Developing ethical guidelines for scientific naming practices
 
-## S4.7 Technological Applications
+## Technological Applications
 
-### S4.7.1 Natural Language Processing Tools
+### Natural Language Processing Tools
 
 Developing NLP tools based on Ento-Linguistic insights:
 
@@ -153,7 +153,7 @@ Developing NLP tools based on Ento-Linguistic insights:
 
 **Cross-Disciplinary Translation**: Automated translation between specialized domains
 
-### S4.7.2 Knowledge Organization Systems
+### Knowledge Organization Systems
 
 Creating better systems for organizing scientific knowledge:
 
@@ -163,9 +163,9 @@ Creating better systems for organizing scientific knowledge:
 
 **Automated Classification**: Using terminology patterns for document classification
 
-## S4.8 Societal Impact Applications
+## Societal Impact Applications
 
-### S4.8.1 Public Understanding of Science
+### Public Understanding of Science
 
 Using Ento-Linguistic methods to improve science communication:
 
@@ -175,7 +175,7 @@ Using Ento-Linguistic methods to improve science communication:
 
 **Science Policy Communication**: Improving communication between scientists and policymakers
 
-### S4.8.2 Environmental Applications
+### Environmental Applications
 
 Applying terminology analysis to environmental science:
 
@@ -185,9 +185,9 @@ Applying terminology analysis to environmental science:
 
 **Ecosystem Concepts**: Understanding how human concepts are applied to natural systems
 
-## S4.9 Methodological Extensions
+## Methodological Extensions
 
-### S4.9.1 Advanced Computational Methods
+### Advanced Computational Methods
 
 Extending computational analysis techniques:
 
@@ -197,7 +197,7 @@ Extending computational analysis techniques:
 
 **Temporal Analysis**: Developing methods for tracking terminology evolution
 
-### S4.9.2 Integration with Other Methods
+### Integration with Other Methods
 
 Combining Ento-Linguistic analysis with complementary approaches:
 
@@ -207,9 +207,9 @@ Combining Ento-Linguistic analysis with complementary approaches:
 
 **Content Analysis Methods**: Combining with qualitative content analysis techniques
 
-## S4.10 Implementation and Adoption
+## Implementation and Adoption
 
-### S4.10.1 Tool Development
+### Tool Development
 
 Creating practical tools for researchers:
 
@@ -219,7 +219,7 @@ Creating practical tools for researchers:
 
 **Educational Resources**: Training materials for terminology awareness
 
-### S4.10.2 Community Building
+### Community Building
 
 Developing communities of practice around terminological awareness:
 
@@ -229,9 +229,9 @@ Developing communities of practice around terminological awareness:
 
 **Standards Development**: Creating guidelines for clear scientific writing
 
-## S4.11 Long-term Vision
+## Long-term Vision
 
-### S4.11.1 Transformative Potential
+### Transformative Potential
 
 The long-term potential of Ento-Linguistic analysis:
 
@@ -241,7 +241,7 @@ The long-term potential of Ento-Linguistic analysis:
 
 **Knowledge Democratization**: Making scientific knowledge more accessible
 
-### S4.11.2 Future Research Directions
+### Future Research Directions
 
 Extending the framework to new domains and applications:
 

@@ -1,8 +1,10 @@
 """Tests for conceptual mapping functionality."""
+
 from __future__ import annotations
 
-import pytest
 from typing import Dict, List, Set
+
+import pytest
 
 try:
     from src.conceptual_mapping import Concept, ConceptMap, ConceptualMapper
@@ -22,7 +24,7 @@ class TestConcept:
             description="A test concept",
             terms={"term1", "term2"},
             domains={"domain1"},
-            confidence=0.8
+            confidence=0.8,
         )
 
         assert concept.name == "test_concept"
@@ -60,14 +62,17 @@ class TestConcept:
             description="A test concept",
             terms={"term1", "term2"},
             domains={"domain1"},
-            confidence=0.8
+            confidence=0.8,
         )
 
         data = concept.to_dict()
 
         assert data["name"] == "test_concept"
         assert data["description"] == "A test concept"
-        assert set(data["terms"]) == {"term1", "term2"}  # Check set equality regardless of order
+        assert set(data["terms"]) == {
+            "term1",
+            "term2",
+        }  # Check set equality regardless of order
         assert data["domains"] == ["domain1"]
         assert data["confidence"] == 0.8
 
@@ -78,7 +83,7 @@ class TestConcept:
             description="A test concept",
             terms={"term1", "term2"},
             domains={"domain1"},
-            confidence=0.8
+            confidence=0.8,
         )
 
         # Test to_dict
@@ -99,8 +104,18 @@ class TestConceptMap:
         """Create a sample concept map for testing."""
         concept_map = ConceptMap()
 
-        concept1 = Concept("colony", "Ant colony concept", {"colony", "nest"}, {"unit_of_individuality"})
-        concept2 = Concept("division_labor", "Division of labor", {"worker", "forager"}, {"behavior_and_identity"})
+        concept1 = Concept(
+            "colony",
+            "Ant colony concept",
+            {"colony", "nest"},
+            {"unit_of_individuality"},
+        )
+        concept2 = Concept(
+            "division_labor",
+            "Division of labor",
+            {"worker", "forager"},
+            {"behavior_and_identity"},
+        )
 
         concept_map.concepts["colony"] = concept1
         concept_map.concepts["division_labor"] = concept2
@@ -130,8 +145,12 @@ class TestConceptMap:
     def test_add_relationship(self, concept_map: ConceptMap) -> None:
         """Test adding relationships between concepts."""
         # Add concepts first
-        concept1 = Concept("colony", "Colony concept", {"colony"}, {"unit_of_individuality"})
-        concept2 = Concept("division_labor", "Division of labor", {"worker"}, {"behavior_and_identity"})
+        concept1 = Concept(
+            "colony", "Colony concept", {"colony"}, {"unit_of_individuality"}
+        )
+        concept2 = Concept(
+            "division_labor", "Division of labor", {"worker"}, {"behavior_and_identity"}
+        )
         concept_map.add_concept(concept1)
         concept_map.add_concept(concept2)
 
@@ -179,8 +198,12 @@ class TestConceptMap:
     def test_find_concept_overlaps(self, concept_map: ConceptMap) -> None:
         """Test finding overlapping terms between concepts."""
         # Add concepts with overlapping terms
-        concept1 = Concept("colony", "Colony concept", {"colony", "queen"}, {"unit_of_individuality"})
-        concept2 = Concept("labor", "Labor concept", {"queen", "worker"}, {"power_and_labor"})
+        concept1 = Concept(
+            "colony", "Colony concept", {"colony", "queen"}, {"unit_of_individuality"}
+        )
+        concept2 = Concept(
+            "labor", "Labor concept", {"queen", "worker"}, {"power_and_labor"}
+        )
         concept_map.add_concept(concept1)
         concept_map.add_concept(concept2)
 
@@ -233,7 +256,9 @@ class TestConceptualMapper:
             assert isinstance(concept_data["domains"], list)
             assert isinstance(concept_data["key_terms"], list)
 
-    def test_build_concept_map(self, mapper: ConceptMapper, sample_terms: Dict[str, Term]) -> None:
+    def test_build_concept_map(
+        self, mapper: ConceptMapper, sample_terms: Dict[str, Term]
+    ) -> None:
         """Test building a concept map from terms."""
         concept_map = mapper.build_concept_map(sample_terms)
 
@@ -244,19 +269,20 @@ class TestConceptualMapper:
         concept_names = set(concept_map.concepts.keys())
         assert len(concept_names) > 0
 
-    def test_map_term_to_concepts(self, mapper: ConceptualMapper, sample_terms: Dict[str, Term]) -> None:
+    def test_map_term_to_concepts(
+        self, mapper: ConceptualMapper, sample_terms: Dict[str, Term]
+    ) -> None:
         """Test mapping individual terms to concepts."""
         term = sample_terms["queen"]
 
         # Initialize base concepts first (this is normally done in build_concept_map)
         for concept_name, concept_data in mapper.BASE_CONCEPTS.items():
             concept = Concept(
-                name=concept_name,
-                description=concept_data['description']
+                name=concept_name, description=concept_data["description"]
             )
-            for domain in concept_data['domains']:
+            for domain in concept_data["domains"]:
                 concept.add_domain(domain)
-            for term_text in concept_data['key_terms']:
+            for term_text in concept_data["key_terms"]:
                 concept.add_term(term_text)
             mapper.concept_map.add_concept(concept)
 
@@ -276,7 +302,9 @@ class TestConceptualMapper:
         # Should have created relationships
         assert isinstance(mapper.concept_map.concept_relationships, dict)
 
-    def test_identify_conceptual_boundaries(self, mapper: ConceptualMapper, sample_terms: Dict[str, Term]) -> None:
+    def test_identify_conceptual_boundaries(
+        self, mapper: ConceptualMapper, sample_terms: Dict[str, Term]
+    ) -> None:
         """Test identifying conceptual boundaries."""
         # First build a concept map with some terms
         mapper.build_concept_map(sample_terms)
@@ -292,10 +320,10 @@ class TestConceptualMapper:
 
         # Check that each boundary entry has the expected structure
         for concept_name, boundary_info in boundaries.items():
-            assert 'bridging_terms' in boundary_info
-            assert 'boundary_strength' in boundary_info
-            assert 'domain_spread' in boundary_info
-            assert 'connected_concepts' in boundary_info
+            assert "bridging_terms" in boundary_info
+            assert "boundary_strength" in boundary_info
+            assert "domain_spread" in boundary_info
+            assert "connected_concepts" in boundary_info
             assert concept_name in mapper.concept_map.concepts
 
     def test_analyze_conceptual_hierarchy(self, mapper: ConceptualMapper) -> None:
@@ -319,7 +347,9 @@ class TestConceptualMapper:
         # Should still have base concepts
         assert len(empty_map.concepts) >= len(mapper.BASE_CONCEPTS)
 
-    def test_concept_map_validation(self, mapper: ConceptMapper, sample_terms: Dict[str, Term]) -> None:
+    def test_concept_map_validation(
+        self, mapper: ConceptMapper, sample_terms: Dict[str, Term]
+    ) -> None:
         """Test validation of concept maps."""
         concept_map = mapper.build_concept_map(sample_terms)
 
@@ -332,9 +362,9 @@ class TestConceptualMapper:
             assert concept.name
             assert concept.description
 
-    def test_export_concept_map_json(self, mapper: ConceptualMapper,
-                                    sample_terms: Dict[str, Term],
-                                    tmp_path: Path) -> None:
+    def test_export_concept_map_json(
+        self, mapper: ConceptualMapper, sample_terms: Dict[str, Term], tmp_path: Path
+    ) -> None:
         """Test JSON export of concept map."""
         concept_map = mapper.build_concept_map(sample_terms)
 
@@ -346,21 +376,22 @@ class TestConceptualMapper:
 
         # Verify JSON content
         import json
-        with open(filepath, 'r') as f:
+
+        with open(filepath, "r") as f:
             data = json.load(f)
 
-        assert 'concepts' in data
-        assert 'term_mappings' in data
-        assert 'relationships' in data
-        assert len(data['concepts']) > 0
+        assert "concepts" in data
+        assert "term_mappings" in data
+        assert "relationships" in data
+        assert len(data["concepts"]) > 0
 
     def test_find_concept_gaps(self, mapper: ConceptualMapper) -> None:
         """Test identification of conceptual gaps."""
         # Test with domain terms that have gaps
         domain_terms = {
-            'unit_of_individuality': ['colony', 'hive', 'swarm'],
-            'behavior_and_identity': ['foraging', 'nursing', 'scouting'],
-            'economics': ['resource_sharing', 'division_of_labor']
+            "unit_of_individuality": ["colony", "hive", "swarm"],
+            "behavior_and_identity": ["foraging", "nursing", "scouting"],
+            "economics": ["resource_sharing", "division_of_labor"],
         }
 
         gaps = mapper.find_concept_gaps(domain_terms)

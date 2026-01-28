@@ -1,11 +1,19 @@
 {
+  "fig:concept_map": {
+    "filename": "conceptual_map.png",
+    "caption": "Conceptual map of the Ento-Linguistic Domains framework showing relationships between key concepts",
+    "label": "fig:concept_map",
+    "section": "introduction",
+    "generated_by": "generate_research_figures.py",
+    "metadata": null
+  },
   "fig:terminology_network": {
     "filename": "terminology_network.png",
     "caption": "Complete terminology network showing relationships between terms across all Ento-Linguistic domains",
     "label": "fig:terminology_network",
     "section": "experimental_results",
     "generated_by": "literature_analysis_pipeline.py",
-    "parameters": null
+    "metadata": null
   },
   "fig:domain_comparison": {
     "filename": "domain_comparison.png",
@@ -13,7 +21,23 @@
     "label": "fig:domain_comparison",
     "section": "experimental_results",
     "generated_by": "generate_domain_figures.py",
-    "parameters": null
+    "metadata": null
+  },
+  "fig:unit_individuality_patterns": {
+    "filename": "unit_of_individuality_patterns.png",
+    "caption": "Key patterns in Unit of Individuality terminology showing superorganism-individual tensions",
+    "label": "fig:unit_individuality_patterns",
+    "section": "experimental_results",
+    "generated_by": "generate_domain_figures.py",
+    "metadata": null
+  },
+  "fig:concept_hierarchy": {
+    "filename": "concept_hierarchy.png",
+    "caption": "Hierarchical concept organization across Ento-Linguistic domains",
+    "label": "fig:concept_hierarchy",
+    "section": "experimental_results",
+    "generated_by": "generate_research_figures.py",
+    "metadata": null
   },
   "fig:cross_domain_relationships": {
     "filename": "domain_comparison.png",
@@ -21,7 +45,7 @@
     "label": "fig:cross_domain_relationships",
     "section": "supplemental_results",
     "generated_by": "generate_domain_figures.py",
-    "parameters": null
+    "metadata": null
   },
   "fig:framing_evolution": {
     "filename": "domain_comparison.png",
@@ -29,7 +53,7 @@
     "label": "fig:framing_evolution",
     "section": "supplemental_results",
     "generated_by": "generate_domain_figures.py",
-    "parameters": null
+    "metadata": null
   },
   "fig:caste_evolution_extended": {
     "filename": "domain_comparison.png",
@@ -37,7 +61,7 @@
     "label": "fig:caste_evolution_extended",
     "section": "supplemental_results",
     "generated_by": "generate_domain_figures.py",
-    "parameters": null
+    "metadata": null
   },
   "fig:unit_individuality_frequencies": {
     "filename": "unit_of_individuality_term_frequencies.png",
@@ -45,7 +69,7 @@
     "label": "fig:unit_individuality_frequencies",
     "section": "supplemental_results",
     "generated_by": "generate_domain_figures.py",
-    "parameters": null
+    "metadata": null
   },
   "fig:unit_individuality_ambiguities": {
     "filename": "unit_of_individuality_ambiguities.png",
@@ -53,7 +77,7 @@
     "label": "fig:unit_individuality_ambiguities",
     "section": "supplemental_results",
     "generated_by": "generate_domain_figures.py",
-    "parameters": null
+    "metadata": null
   },
   "fig:behavior_identity_frequencies": {
     "filename": "behavior_and_identity_term_frequencies.png",
@@ -61,7 +85,7 @@
     "label": "fig:behavior_identity_frequencies",
     "section": "supplemental_results",
     "generated_by": "generate_domain_figures.py",
-    "parameters": null
+    "metadata": null
   },
   "fig:behavior_identity_ambiguities": {
     "filename": "behavior_and_identity_ambiguities.png",
@@ -69,7 +93,7 @@
     "label": "fig:behavior_identity_ambiguities",
     "section": "supplemental_results",
     "generated_by": "generate_domain_figures.py",
-    "parameters": null
+    "metadata": null
   },
   "fig:power_labor_frequencies": {
     "filename": "domain_comparison.png",
@@ -77,7 +101,7 @@
     "label": "fig:power_labor_frequencies",
     "section": "supplemental_results",
     "generated_by": "generate_domain_figures.py",
-    "parameters": null
+    "metadata": null
   },
   "fig:power_labor_ambiguities": {
     "filename": "domain_comparison.png",
@@ -85,7 +109,7 @@
     "label": "fig:power_labor_ambiguities",
     "section": "supplemental_results",
     "generated_by": "generate_domain_figures.py",
-    "parameters": null
+    "metadata": null
   },
   "fig:sex_reproduction_frequencies": {
     "filename": "sex_and_reproduction_term_frequencies.png",
@@ -93,7 +117,7 @@
     "label": "fig:sex_reproduction_frequencies",
     "section": "supplemental_results",
     "generated_by": "generate_domain_figures.py",
-    "parameters": null
+    "metadata": null
   },
   "fig:sex_reproduction_ambiguities": {
     "filename": "sex_and_reproduction_ambiguities.png",
@@ -101,7 +125,7 @@
     "label": "fig:sex_reproduction_ambiguities",
     "section": "supplemental_results",
     "generated_by": "generate_domain_figures.py",
-    "parameters": null
+    "metadata": null
   },
   "fig:kin_relatedness_frequencies": {
     "filename": "kin_and_relatedness_term_frequencies.png",
@@ -109,7 +133,7 @@
     "label": "fig:kin_relatedness_frequencies",
     "section": "supplemental_results",
     "generated_by": "generate_domain_figures.py",
-    "parameters": null
+    "metadata": null
   },
   "fig:kin_relatedness_ambiguities": {
     "filename": "kin_and_relatedness_ambiguities.png",
@@ -117,7 +141,7 @@
     "label": "fig:kin_relatedness_ambiguities",
     "section": "supplemental_results",
     "generated_by": "generate_domain_figures.py",
-    "parameters": null
+    "metadata": null
   },
   "fig:example_figure": {
     "filename": "example_figure.png",
@@ -125,7 +149,7 @@
     "label": "fig:example_figure",
     "section": "examples",
     "generated_by": "example_figure.py",
-    "parameters": null
+    "metadata": null
   },
   "fig:convergence_plot": {
     "filename": "convergence_plot.png",
@@ -133,14 +157,6 @@
     "label": "fig:convergence_plot",
     "section": "examples",
     "generated_by": "generate_research_figures.py",
-    "parameters": null
-  },
-  "fig:scientific_simulation_timeseries": {
-    "filename": "scientific_simulation_timeseries.png",
-    "caption": "Time series data generated for scientific simulation analysis",
-    "label": "fig:scientific_simulation_timeseries",
-    "section": "experimental_results",
-    "generated_by": "scientific_simulation.py",
-    "parameters": null
+    "metadata": null
   }
 }

@@ -4,45 +4,45 @@ Tests for PDF validation module.
 Following TDD principles with NO MOCK METHODS - uses real PDF operations.
 """
 
-import pytest
-from pathlib import Path
 import tempfile
-from reportlab.pdfgen import canvas
+from pathlib import Path
+
+import pytest
 from reportlab.lib.pagesizes import letter
-from infrastructure.validation.pdf_validator import (
-    extract_text_from_pdf,
-    scan_for_issues,
-    extract_first_n_words,
-    validate_pdf_rendering,
-    PDFValidationError,
-)
+from reportlab.pdfgen import canvas
+
+from infrastructure.validation.pdf_validator import (PDFValidationError,
+                                                     extract_first_n_words,
+                                                     extract_text_from_pdf,
+                                                     scan_for_issues,
+                                                     validate_pdf_rendering)
 
 
 @pytest.fixture
 def temp_pdf_with_issues():
     """Create a temporary PDF with rendering issues for testing."""
-    with tempfile.NamedTemporaryFile(mode='w+b', suffix='.pdf', delete=False) as f:
+    with tempfile.NamedTemporaryFile(mode="w+b", suffix=".pdf", delete=False) as f:
         c = canvas.Canvas(f.name, pagesize=letter)
-        
+
         # Page 1: Some reference text (simulating misplaced citations)
         c.drawString(100, 750, "References")
         c.drawString(100, 730, "[1] Smith et al. (2020)")
         c.drawString(100, 710, "[2] Jones et al. (2021)")
         c.showPage()
-        
+
         # Page 2: Title page
         c.drawString(200, 750, "Research Paper Title")
         c.drawString(200, 730, "Author Name")
         c.drawString(200, 710, "October 2025")
         c.showPage()
-        
+
         # Page 3: Content with ?? issues
         c.drawString(100, 750, "Introduction")
         c.drawString(100, 730, "This is section ??")
         c.drawString(100, 710, "Referenced in equation ??")
         c.drawString(100, 690, "See figure ?? for details")
         c.showPage()
-        
+
         c.save()
         yield Path(f.name)
         Path(f.name).unlink()
@@ -51,22 +51,22 @@ def temp_pdf_with_issues():
 @pytest.fixture
 def temp_pdf_clean():
     """Create a clean temporary PDF without issues."""
-    with tempfile.NamedTemporaryFile(mode='w+b', suffix='.pdf', delete=False) as f:
+    with tempfile.NamedTemporaryFile(mode="w+b", suffix=".pdf", delete=False) as f:
         c = canvas.Canvas(f.name, pagesize=letter)
-        
+
         # Page 1: Title page
         c.drawString(200, 750, "Research Paper Title")
         c.drawString(200, 730, "Author Name")
         c.drawString(200, 710, "October 2025")
         c.showPage()
-        
+
         # Page 2: Content
         c.drawString(100, 750, "Introduction")
         c.drawString(100, 730, "This is section 1")
         c.drawString(100, 710, "Referenced in equation 1")
         c.drawString(100, 690, "See figure 1 for details")
         c.showPage()
-        
+
         c.save()
         yield Path(f.name)
         Path(f.name).unlink()
@@ -75,7 +75,7 @@ def temp_pdf_clean():
 def test_extract_text_from_pdf_exists(temp_pdf_clean):
     """Test text extraction from existing PDF."""
     text = extract_text_from_pdf(temp_pdf_clean)
-    
+
     assert isinstance(text, str)
     assert len(text) > 0
     assert "Research Paper Title" in text
@@ -91,7 +91,7 @@ def test_extract_text_from_pdf_nonexistent():
 
 def test_extract_text_from_pdf_invalid_file():
     """Test extraction from invalid PDF file."""
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.pdf', delete=False) as f:
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".pdf", delete=False) as f:
         # Create a larger invalid file (> 1000 bytes) so it passes size validation
         invalid_content = "This is not a PDF file. " * 100  # Creates ~2500 bytes
         f.write(invalid_content)
@@ -108,7 +108,7 @@ def test_scan_for_issues_finds_double_question_marks(temp_pdf_with_issues):
     """Test scanning for ?? markers in PDF."""
     text = extract_text_from_pdf(temp_pdf_with_issues)
     issues = scan_for_issues(text)
-    
+
     assert "unresolved_references" in issues
     assert issues["unresolved_references"] > 0
     assert issues["unresolved_references"] == 3  # Three ?? instances
@@ -118,7 +118,7 @@ def test_scan_for_issues_clean_pdf(temp_pdf_clean):
     """Test scanning clean PDF returns no issues."""
     text = extract_text_from_pdf(temp_pdf_clean)
     issues = scan_for_issues(text)
-    
+
     assert issues["unresolved_references"] == 0
     assert issues["total_issues"] == 0
 
@@ -131,9 +131,9 @@ def test_scan_for_issues_detects_multiple_patterns():
     Error: Compilation failed
     Missing citation: [?]
     """
-    
+
     issues = scan_for_issues(test_text)
-    
+
     assert issues["unresolved_references"] > 0
     assert issues["warnings"] > 0
     assert issues["errors"] > 0
@@ -143,44 +143,44 @@ def test_scan_for_issues_detects_multiple_patterns():
 def test_extract_first_n_words_basic():
     """Test extracting first N words from text."""
     text = "One two three four five six seven eight nine ten"
-    
+
     result = extract_first_n_words(text, 5)
-    
+
     assert result == "One two three four five"
 
 
 def test_extract_first_n_words_with_whitespace():
     """Test extracting words handles extra whitespace."""
     text = "  One   two  \n\n  three   four    five  "
-    
+
     result = extract_first_n_words(text, 3)
-    
+
     assert result == "One two three"
 
 
 def test_extract_first_n_words_less_than_requested():
     """Test extracting words when text has fewer than requested."""
     text = "Only three words"
-    
+
     result = extract_first_n_words(text, 10)
-    
+
     assert result == "Only three words"
 
 
 def test_extract_first_n_words_empty_text():
     """Test extracting from empty text."""
     result = extract_first_n_words("", 10)
-    
+
     assert result == ""
 
 
 def test_decode_pdf_hex_strings_empty_text():
     """Test decoding hex strings with empty text (line 119)."""
     from infrastructure.validation.pdf_validator import decode_pdf_hex_strings
-    
+
     result = decode_pdf_hex_strings("")
     assert result == ""
-    
+
     result = decode_pdf_hex_strings(None)
     assert result == ""
 
@@ -188,7 +188,7 @@ def test_decode_pdf_hex_strings_empty_text():
 def test_decode_pdf_hex_strings_valid():
     """Test decoding valid hex strings."""
     from infrastructure.validation.pdf_validator import decode_pdf_hex_strings
-    
+
     # Valid hex: /x41 = 'A', /x42 = 'B'
     text = "Hello/x41/x42World"
     result = decode_pdf_hex_strings(text)
@@ -197,24 +197,24 @@ def test_decode_pdf_hex_strings_valid():
 
 def test_decode_pdf_hex_strings_invalid_hex():
     """Test decoding hex strings - note on coverage.
-    
+
     Lines 126-127 handle ValueError/OverflowError exceptions in chr(int(hex_code, 16)).
     However, since the regex pattern only matches exactly 2 hex digits ([0-9a-fA-F]{2}),
     the max value is 0xFF (255), which is always valid for chr().
     This is defensive code that cannot be triggered with the current regex.
     """
     from infrastructure.validation.pdf_validator import decode_pdf_hex_strings
-    
+
     # Test with valid hex that decodes correctly
     text = "Hello/x41/x42World"  # /x41='A', /x42='B'
     result = decode_pdf_hex_strings(text)
     assert "AB" in result or "Hello" in result
-    
+
     # Test with hex string that should decode
     text = "Hello/x41World"  # /x41='A'
     result = decode_pdf_hex_strings(text)
     assert isinstance(result, str)
-    
+
     # Test edge cases for hex decoding
     text = "/x00/x7F/xFF"  # Min, mid, max for 2-digit hex
     result = decode_pdf_hex_strings(text)
@@ -223,12 +223,12 @@ def test_decode_pdf_hex_strings_invalid_hex():
 
 def test_decode_hex_match_exception_path():
     """Directly test the exception path in decode_hex_match.
-    
+
     This covers lines 126-127 by directly invoking the inner function.
     Since the regex limits to 2 hex digits, we need to test the inner function directly.
     """
     import re
-    
+
     # Create a modified regex that matches 4 digits to trigger OverflowError
     # This tests the exception handling path that's normally unreachable
     def decode_hex_match_with_validation(match):
@@ -239,13 +239,13 @@ def test_decode_hex_match_exception_path():
             return chr(int(hex_code, 16))
         except (ValueError, OverflowError):
             return match.group(0)  # Return original if decode fails
-    
+
     # Test with a value that would exceed valid Unicode (if regex allowed it)
     # This tests the logic of the exception handler
     text = "/xFFFFFF"  # This would be > 0x10FFFF if regex allowed it
-    
+
     # With 4-digit pattern, test the exception path
-    pattern = re.compile(r'/x([0-9a-fA-F]{6})')
+    pattern = re.compile(r"/x([0-9a-fA-F]{6})")
     result = pattern.sub(decode_hex_match_with_validation, text)
     # Should return original since chr() would fail for values > 0x10FFFF
     assert "/xFFFFFF" in result
@@ -254,29 +254,29 @@ def test_decode_hex_match_exception_path():
 def test_extract_first_n_words_with_punctuation():
     """Test word extraction preserves punctuation."""
     text = "Hello, world! This is a test. Does it work?"
-    
+
     result = extract_first_n_words(text, 6)
-    
+
     assert result == "Hello, world! This is a test."
 
 
 def test_validate_pdf_rendering_with_issues(temp_pdf_with_issues):
     """Test full validation detects issues."""
     report = validate_pdf_rendering(temp_pdf_with_issues, n_words=10)
-    
+
     assert "pdf_path" in report
     assert "issues" in report
     assert "first_words" in report
     assert "summary" in report
-    
+
     # Check issues detected
     assert report["issues"]["unresolved_references"] > 0
     assert report["issues"]["total_issues"] > 0
-    
+
     # Check first words extracted
     assert len(report["first_words"]) > 0
     assert "References" in report["first_words"]
-    
+
     # Check summary
     assert report["summary"]["has_issues"] is True
     assert "word_count" in report["summary"]
@@ -285,7 +285,7 @@ def test_validate_pdf_rendering_with_issues(temp_pdf_with_issues):
 def test_validate_pdf_rendering_clean(temp_pdf_clean):
     """Test validation of clean PDF."""
     report = validate_pdf_rendering(temp_pdf_clean, n_words=10)
-    
+
     assert report["issues"]["total_issues"] == 0
     assert report["summary"]["has_issues"] is False
     assert "Research Paper Title" in report["first_words"]
@@ -294,7 +294,7 @@ def test_validate_pdf_rendering_clean(temp_pdf_clean):
 def test_validate_pdf_rendering_custom_word_count(temp_pdf_clean):
     """Test validation with custom word count."""
     report = validate_pdf_rendering(temp_pdf_clean, n_words=5)
-    
+
     words = report["first_words"].split()
     assert len(words) <= 5
 
@@ -309,7 +309,7 @@ def test_scan_for_issues_structure():
     """Test that scan_for_issues returns expected structure."""
     text = "Sample text with ??"
     issues = scan_for_issues(text)
-    
+
     # Verify structure
     assert isinstance(issues, dict)
     assert "unresolved_references" in issues
@@ -317,7 +317,7 @@ def test_scan_for_issues_structure():
     assert "errors" in issues
     assert "missing_citations" in issues
     assert "total_issues" in issues
-    
+
     # Verify types
     assert isinstance(issues["unresolved_references"], int)
     assert isinstance(issues["warnings"], int)
@@ -329,22 +329,22 @@ def test_scan_for_issues_structure():
 def test_validate_pdf_rendering_report_structure(temp_pdf_clean):
     """Test validation report has expected structure."""
     report = validate_pdf_rendering(temp_pdf_clean)
-    
+
     # Top-level keys
     assert "pdf_path" in report
     assert "issues" in report
     assert "first_words" in report
     assert "summary" in report
-    
+
     # Issues structure
     assert isinstance(report["issues"], dict)
     assert "total_issues" in report["issues"]
-    
+
     # Summary structure
     assert isinstance(report["summary"], dict)
     assert "has_issues" in report["summary"]
     assert "word_count" in report["summary"]
-    
+
     # Types
     assert isinstance(report["pdf_path"], str)
     assert isinstance(report["first_words"], str)
@@ -355,10 +355,10 @@ def test_validate_pdf_rendering_report_structure(temp_pdf_clean):
 def test_extract_first_n_words_deterministic():
     """Test word extraction is deterministic."""
     text = "The quick brown fox jumps over the lazy dog"
-    
+
     result1 = extract_first_n_words(text, 5)
     result2 = extract_first_n_words(text, 5)
-    
+
     assert result1 == result2
     assert result1 == "The quick brown fox jumps"
 
@@ -367,10 +367,10 @@ def test_scan_for_issues_case_sensitive():
     """Test issue scanning is case-appropriate."""
     text_lower = "this has ?? reference"
     text_upper = "THIS HAS ?? REFERENCE"
-    
+
     issues_lower = scan_for_issues(text_lower)
     issues_upper = scan_for_issues(text_upper)
-    
+
     # Both should detect ??
     assert issues_lower["unresolved_references"] == 1
     assert issues_upper["unresolved_references"] == 1
@@ -384,9 +384,9 @@ def test_scan_for_issues_ignores_scientific_error_terms():
     Measurement error: negligible
     Root mean squared error: 0.15
     """
-    
+
     issues = scan_for_issues(text)
-    
+
     # Should not detect scientific "error:" as system errors
     assert issues["errors"] == 0
     assert issues["total_issues"] == 0
@@ -399,10 +399,9 @@ def test_scan_for_issues_detects_real_errors():
     [ERROR] File not found
        Error: Invalid syntax on line 42
     """
-    
+
     issues = scan_for_issues(text)
-    
+
     # Should detect these as real errors
     assert issues["errors"] >= 2  # At least [ERROR] and "Error: C"
     assert issues["total_issues"] > 0
-

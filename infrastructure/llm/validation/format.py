@@ -1,4 +1,5 @@
 """Format compliance checking for LLM output validation."""
+
 from __future__ import annotations
 
 import re
@@ -12,21 +13,21 @@ logger = get_logger(__name__)
 # These patterns detect when the model is not reviewing the actual manuscript
 OFF_TOPIC_PATTERNS_START = [
     # Email/letter formats (must be at start)
-    r"^Re:\s",                        # Email reply format
-    r"^Dear\s",                       # Letter format
-    r"^To:\s",                        # Email header format
-    r"^Subject:\s",                   # Email subject line
-    r"^From:\s",                      # Email from header
+    r"^Re:\s",  # Email reply format
+    r"^Dear\s",  # Letter format
+    r"^To:\s",  # Email header format
+    r"^Subject:\s",  # Email subject line
+    r"^From:\s",  # Email from header
     # Casual greetings at start (inappropriate for formal review)
-    r"^Hi\s",                         # Casual greeting
-    r"^Hello\s",                      # Casual greeting
-    r"^Hey\s",                        # Very casual greeting
-    r"^Hello!",                       # Casual with exclamation
+    r"^Hi\s",  # Casual greeting
+    r"^Hello\s",  # Casual greeting
+    r"^Hey\s",  # Very casual greeting
+    r"^Hello!",  # Casual with exclamation
     # Generic book/guide language at start (indicates hallucinated content)
-    r"^This book is",                 # Generic book intro
-    r"^This guide",                   # Generic guide intro
-    r"^Chapter 1",                    # Chapter numbering (not manuscript)
-    r"^Introduction\s*\n\s*This book", # Book intro pattern
+    r"^This book is",  # Generic book intro
+    r"^This guide",  # Generic guide intro
+    r"^Chapter 1",  # Chapter numbering (not manuscript)
+    r"^Introduction\s*\n\s*This book",  # Book intro pattern
 ]
 
 OFF_TOPIC_PATTERNS_ANYWHERE = [
@@ -46,7 +47,7 @@ OFF_TOPIC_PATTERNS_ANYWHERE = [
     r"I'm happy to help you with",
     r"I'm not sure if I can help",
     # External URLs (indicates external references, not manuscript content)
-    r"https?://[^\s]+",               # Any URL
+    r"https?://[^\s]+",  # Any URL
     # Generic book/guide language (indicates hallucinated content)
     r"this book provides",
     r"this guide explains",
@@ -55,11 +56,11 @@ OFF_TOPIC_PATTERNS_ANYWHERE = [
     r"the book is divided",
     r"this manual",
     # Code-focused responses when expecting prose
-    r"^```python\n",                  # Code block at very start
-    r"import pandas as pd\nimport",   # Multi-import block
-    r"CMakeLists\.txt",               # Build system files
-    r"\.cpp\b",                       # C++ file extensions
-    r"\.hpp\b",                       # C++ header extensions
+    r"^```python\n",  # Code block at very start
+    r"import pandas as pd\nimport",  # Multi-import block
+    r"CMakeLists\.txt",  # Build system files
+    r"\.cpp\b",  # C++ file extensions
+    r"\.hpp\b",  # C++ header extensions
     # User requirement patterns (indicates form/registration confusion)
     r"must be a minimum of \d+ years",
     r"must have a valid email",
@@ -104,10 +105,10 @@ ON_TOPIC_SIGNALS = [
 
 def has_on_topic_signals(text: str) -> bool:
     """Check if response contains clear on-topic indicators.
-    
+
     Args:
         text: Response text to check
-        
+
     Returns:
         True if response has clear manuscript review signals
     """
@@ -122,10 +123,10 @@ def has_on_topic_signals(text: str) -> bool:
 
 def detect_conversational_phrases(text: str) -> List[str]:
     """Detect conversational AI phrases in response text.
-    
+
     Args:
         text: Response text to check
-        
+
     Returns:
         List of conversational phrases found
     """
@@ -142,16 +143,16 @@ def detect_conversational_phrases(text: str) -> List[str]:
 
 def check_format_compliance(response: str) -> Tuple[bool, List[str], Dict[str, Any]]:
     """Check response for format compliance issues.
-    
+
     Simplified validation focusing on structural compliance only.
     Emojis and tables are allowed.
-    
+
     Detects:
     - Conversational AI phrases (unprofessional for formal review)
-    
+
     Args:
         response: The generated review text
-        
+
     Returns:
         Tuple of (is_compliant, list of issues, details dict)
     """
@@ -159,56 +160,46 @@ def check_format_compliance(response: str) -> Tuple[bool, List[str], Dict[str, A
     details: Dict[str, Any] = {
         "conversational_phrases": [],
     }
-    
+
     # Check for conversational phrases (only format check we keep)
     phrases = detect_conversational_phrases(response)
     if phrases:
         details["conversational_phrases"] = phrases[:5]  # Limit to first 5
         # This is a warning, not a hard failure
         issues.append(f"Contains conversational AI phrases: {phrases[0][:30]}...")
-    
+
     is_compliant = len(issues) == 0
     return is_compliant, issues, details
 
 
 def is_off_topic(text: str) -> bool:
     """Check if response contains off-topic indicators.
-    
+
     Uses a two-tier approach:
     1. Check for start-of-response patterns (strict)
     2. Check for anywhere patterns (must be strong signals)
     3. Override if clear on-topic signals are present
-    
+
     Args:
         text: Response text to check
-        
+
     Returns:
         True if response appears off-topic
     """
     # First check for on-topic signals - if present, not off-topic
     if has_on_topic_signals(text):
         return False
-    
+
     text_lower = text.lower().strip()
-    
+
     # Check start-of-response patterns
     for pattern in OFF_TOPIC_PATTERNS_START:
         if re.search(pattern, text_lower[:100], re.IGNORECASE | re.MULTILINE):
             return True
-    
+
     # Check anywhere patterns (must be strong signals)
     for pattern in OFF_TOPIC_PATTERNS_ANYWHERE:
         if re.search(pattern, text_lower, re.IGNORECASE):
             return True
-    
+
     return False
-
-
-
-
-
-
-
-
-
-

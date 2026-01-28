@@ -456,7 +456,7 @@ saved_files = save_pipeline_report(report, Path("output/reports"))
 # Generate multi-project executive report
 exec_report = generate_multi_project_report(
     repo_root=Path("."),
-    project_names=["project", "ento_linguistics"],
+    project_names=["code_project"],
     output_dir=Path("output/executive_summary")
 )
 

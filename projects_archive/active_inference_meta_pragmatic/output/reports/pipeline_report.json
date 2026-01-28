@@ -1,0 +1,418 @@
+{
+  "timestamp": "2026-01-24T13:56:53.910772",
+  "total_duration": 150.10087656974792,
+  "stages": [
+    {
+      "name": "Clean Output Directories",
+      "exit_code": 0,
+      "duration": 0.02235889434814453,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Environment Setup",
+      "exit_code": 0,
+      "duration": 0.9274868965148926,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Project Tests",
+      "exit_code": 0,
+      "duration": 8.353001117706299,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Project Analysis",
+      "exit_code": 0,
+      "duration": 6.2765491008758545,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "PDF Rendering",
+      "exit_code": 0,
+      "duration": 69.58635091781616,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Output Validation",
+      "exit_code": 0,
+      "duration": 0.4127829074859619,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "LLM Scientific Review",
+      "exit_code": 0,
+      "duration": 3.265552043914795,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "LLM Translations",
+      "exit_code": 0,
+      "duration": 60.74299693107605,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Copy Outputs",
+      "exit_code": 0,
+      "duration": 0.5137977600097656,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    }
+  ],
+  "test_results": null,
+  "validation_results": null,
+  "performance_metrics": null,
+  "error_summary": null,
+  "output_statistics": {
+    "directories": {
+      "pdf": {
+        "exists": true,
+        "file_count": 9,
+        "size_mb": "5.19",
+        "total_size_bytes": 5440891,
+        "largest_files": [
+          {
+            "name": "active_inference_meta_pragmatic_combined.pdf",
+            "size_mb": "4.93",
+            "path": "pdf/active_inference_meta_pragmatic_combined.pdf"
+          },
+          {
+            "name": "_combined_manuscript.tex",
+            "size_mb": "0.07",
+            "path": "pdf/_combined_manuscript.tex"
+          },
+          {
+            "name": "_combined_manuscript.log",
+            "size_mb": "0.06",
+            "path": "pdf/_combined_manuscript.log"
+          }
+        ],
+        "extensions": {
+          ".md": 1,
+          ".log": 1,
+          ".aux": 1,
+          ".blg": 1,
+          ".bib": 1,
+          ".tex": 1,
+          ".toc": 1,
+          ".bbl": 1,
+          ".pdf": 1
+        }
+      },
+      "web": {
+        "exists": true,
+        "file_count": 11,
+        "size_mb": "0.26",
+        "total_size_bytes": 271050,
+        "largest_files": [
+          {
+            "name": "index.html",
+            "size_mb": "0.10",
+            "path": "web/index.html"
+          },
+          {
+            "name": "_combined_manuscript.md",
+            "size_mb": "0.06",
+            "path": "web/_combined_manuscript.md"
+          },
+          {
+            "name": "03_quadrant_model.html",
+            "size_mb": "0.02",
+            "path": "web/03_quadrant_model.html"
+          }
+        ],
+        "extensions": {
+          ".html": 10,
+          ".md": 1
+        }
+      },
+      "slides": {
+        "exists": true,
+        "file_count": 65,
+        "size_mb": "5.62",
+        "total_size_bytes": 5890245,
+        "largest_files": [
+          {
+            "name": "02_background_slides.pdf",
+            "size_mb": "2.53",
+            "path": "slides/02_background_slides.pdf"
+          },
+          {
+            "name": "03_quadrant_model_slides.pdf",
+            "size_mb": "2.18",
+            "path": "slides/03_quadrant_model_slides.pdf"
+          },
+          {
+            "name": "04_security_implications_slides.pdf",
+            "size_mb": "0.17",
+            "path": "slides/04_security_implications_slides.pdf"
+          }
+        ],
+        "extensions": {
+          ".nav": 9,
+          ".log": 9,
+          ".snm": 9,
+          ".aux": 9,
+          ".toc": 9,
+          ".tex": 9,
+          ".pdf": 9,
+          ".vrb": 2
+        }
+      },
+      "figures": {
+        "exists": true,
+        "file_count": 35,
+        "size_mb": "5.26",
+        "total_size_bytes": 5515788,
+        "largest_files": [
+          {
+            "name": "quadrant_matrix_enhanced.png",
+            "size_mb": "0.70",
+            "path": "figures/quadrant_matrix_enhanced.png"
+          },
+          {
+            "name": "quadrant_2_metadata_cognitive.png",
+            "size_mb": "0.45",
+            "path": "figures/quadrant_2_metadata_cognitive.png"
+          },
+          {
+            "name": "structure_preservation.png",
+            "size_mb": "0.38",
+            "path": "figures/structure_preservation.png"
+          }
+        ],
+        "extensions": {
+          ".pdf": 17,
+          ".png": 17,
+          ".json": 1
+        }
+      },
+      "data": {
+        "exists": true,
+        "file_count": 2,
+        "size_mb": "0.04",
+        "total_size_bytes": 46124,
+        "largest_files": [
+          {
+            "name": "theoretical_demonstrations.json",
+            "size_mb": "0.04",
+            "path": "data/theoretical_demonstrations.json"
+          },
+          {
+            "name": "demonstration_data.csv",
+            "size_mb": "0.00",
+            "path": "data/demonstration_data.csv"
+          }
+        ],
+        "extensions": {
+          ".csv": 1,
+          ".json": 1
+        }
+      },
+      "reports": {
+        "exists": true,
+        "file_count": 9,
+        "size_mb": "0.07",
+        "total_size_bytes": 68992,
+        "largest_files": [
+          {
+            "name": "final_pipeline_report.json",
+            "size_mb": "0.05",
+            "path": "reports/final_pipeline_report.json"
+          },
+          {
+            "name": "output_statistics.json",
+            "size_mb": "0.01",
+            "path": "reports/output_statistics.json"
+          },
+          {
+            "name": "validation_report.json",
+            "size_mb": "0.00",
+            "path": "reports/validation_report.json"
+          }
+        ],
+        "extensions": {
+          ".json": 6,
+          ".txt": 1,
+          ".md": 2
+        }
+      },
+      "simulations": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "llm": {
+        "exists": true,
+        "file_count": 6,
+        "size_mb": "0.17",
+        "total_size_bytes": 181526,
+        "largest_files": [
+          {
+            "name": "combined_review.md",
+            "size_mb": "0.09",
+            "path": "llm/combined_review.md"
+          },
+          {
+            "name": "translation_ru.md",
+            "size_mb": "0.08",
+            "path": "llm/translation_ru.md"
+          },
+          {
+            "name": "review_metadata.json",
+            "size_mb": "0.00",
+            "path": "llm/review_metadata.json"
+          }
+        ],
+        "extensions": {
+          ".md": 5,
+          ".json": 1
+        }
+      },
+      "logs": {
+        "exists": true,
+        "file_count": 1,
+        "size_mb": "0.00",
+        "total_size_bytes": 4090,
+        "largest_files": [
+          {
+            "name": "pipeline.log",
+            "size_mb": "0.00",
+            "path": "logs/pipeline.log"
+          }
+        ],
+        "extensions": {
+          ".log": 1
+        }
+      }
+    },
+    "total_files": 138,
+    "total_size_mb": 16.611772537231445,
+    "largest_files": [
+      {
+        "name": "active_inference_meta_pragmatic_combined.pdf",
+        "size_mb": "4.93",
+        "category": "pdf",
+        "path": "pdf/active_inference_meta_pragmatic_combined.pdf"
+      },
+      {
+        "name": "02_background_slides.pdf",
+        "size_mb": "2.53",
+        "category": "slides",
+        "path": "slides/02_background_slides.pdf"
+      },
+      {
+        "name": "03_quadrant_model_slides.pdf",
+        "size_mb": "2.18",
+        "category": "slides",
+        "path": "slides/03_quadrant_model_slides.pdf"
+      },
+      {
+        "name": "quadrant_matrix_enhanced.png",
+        "size_mb": "0.70",
+        "category": "figures",
+        "path": "figures/quadrant_matrix_enhanced.png"
+      },
+      {
+        "name": "quadrant_2_metadata_cognitive.png",
+        "size_mb": "0.45",
+        "category": "figures",
+        "path": "figures/quadrant_2_metadata_cognitive.png"
+      },
+      {
+        "name": "structure_preservation.png",
+        "size_mb": "0.38",
+        "category": "figures",
+        "path": "figures/structure_preservation.png"
+      },
+      {
+        "name": "04_security_implications_slides.pdf",
+        "size_mb": "0.17",
+        "category": "slides",
+        "path": "slides/04_security_implications_slides.pdf"
+      },
+      {
+        "name": "index.html",
+        "size_mb": "0.10",
+        "category": "web",
+        "path": "web/index.html"
+      },
+      {
+        "name": "combined_review.md",
+        "size_mb": "0.09",
+        "category": "llm",
+        "path": "llm/combined_review.md"
+      },
+      {
+        "name": "translation_ru.md",
+        "size_mb": "0.08",
+        "category": "llm",
+        "path": "llm/translation_ru.md"
+      }
+    ],
+    "missing_expected_files": [
+      "active_inference_meta_pragmatic_combined.pdf or project_combined.pdf"
+    ],
+    "file_counts_by_type": {
+      ".md": 9,
+      ".log": 11,
+      ".aux": 10,
+      ".blg": 1,
+      ".bib": 1,
+      ".tex": 10,
+      ".toc": 10,
+      ".bbl": 1,
+      ".pdf": 27,
+      ".html": 10,
+      ".nav": 9,
+      ".snm": 9,
+      ".vrb": 2,
+      ".png": 17,
+      ".json": 9,
+      ".csv": 1,
+      ".txt": 1
+    },
+    "sizes_by_category": {
+      "pdf": 5.188838005065918,
+      "web": 0.25849342346191406,
+      "slides": 5.617375373840332,
+      "figures": 5.260265350341797,
+      "data": 0.043987274169921875,
+      "reports": 0.0657958984375,
+      "simulations": 0.0,
+      "llm": 0.17311668395996094,
+      "logs": 0.0039005279541015625
+    },
+    "pdf_files": 9,
+    "figures": 35,
+    "data_files": 2
+  }
+}

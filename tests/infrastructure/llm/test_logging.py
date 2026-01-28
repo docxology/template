@@ -6,31 +6,36 @@ Test Pattern:
     1. Getting the logger with get_logger()
     2. Setting the appropriate log level
     3. Using caplog.at_level() with the logger name to capture logs
-    
+
     Example:
         logger = get_logger("infrastructure.llm.core.client")
         logger.setLevel(logging.INFO)
         with caplog.at_level("INFO", logger="infrastructure.llm.core.client"):
             # Test code
 """
+
 from __future__ import annotations
 
 import json
-# No mock imports needed - using real HTTP server
 
 import pytest
 import requests
 
 from infrastructure.llm.core.client import LLMClient
-from infrastructure.llm.core.config import LLMConfig, GenerationOptions
+from infrastructure.llm.core.config import GenerationOptions, LLMConfig
+
+# No mock imports needed - using real HTTP server
+
+
 
 
 class TestQueryLogging:
     """Test logging for query operations."""
-    
+
     def test_query_logs_start(self, caplog, ollama_test_server):
         """Test query logs start with structured data."""
         import logging
+
         from infrastructure.core.logging_utils import get_logger
 
         # Ensure logger is properly configured for test
@@ -53,17 +58,24 @@ class TestQueryLogging:
             start_record = start_records[0]
             # Check for structured data in LogRecord attributes
             # These should be set by the extra={...} parameter in the logging call
-            has_model = hasattr(start_record, 'model') and getattr(start_record, 'model', None) is not None
-            has_prompt_length = hasattr(start_record, 'prompt_length') and getattr(start_record, 'prompt_length', None) is not None
+            has_model = (
+                hasattr(start_record, "model")
+                and getattr(start_record, "model", None) is not None
+            )
+            has_prompt_length = (
+                hasattr(start_record, "prompt_length")
+                and getattr(start_record, "prompt_length", None) is not None
+            )
             has_structured_data = has_model or has_prompt_length
             assert has_structured_data, (
                 f"Expected structured data (model or prompt_length) in log record. "
                 f"Available attributes: {[a for a in dir(start_record) if not a.startswith('_')]}"
             )
-    
+
     def test_query_logs_completion(self, caplog, ollama_test_server):
         """Test query logs completion with metrics."""
         import logging
+
         from infrastructure.core.logging_utils import get_logger
 
         # Ensure logger is properly configured for test
@@ -81,22 +93,32 @@ class TestQueryLogging:
             assert "Query completed" in caplog.text
             # Check LogRecord attributes for structured data (extra fields)
             # In Python logging, extra={...} fields become attributes on LogRecord
-            completion_records = [r for r in caplog.records if "Query completed" in r.message]
+            completion_records = [
+                r for r in caplog.records if "Query completed" in r.message
+            ]
             assert len(completion_records) > 0, "No 'Query completed' log record found"
             completion_record = completion_records[0]
             # Check for structured data in LogRecord attributes
             # These should be set by the extra={...} parameter in the logging call
-            has_response_length = hasattr(completion_record, 'response_length') and getattr(completion_record, 'response_length', None) is not None
-            has_generation_time = hasattr(completion_record, 'generation_time_seconds') and getattr(completion_record, 'generation_time_seconds', None) is not None
+            has_response_length = (
+                hasattr(completion_record, "response_length")
+                and getattr(completion_record, "response_length", None) is not None
+            )
+            has_generation_time = (
+                hasattr(completion_record, "generation_time_seconds")
+                and getattr(completion_record, "generation_time_seconds", None)
+                is not None
+            )
             has_structured_data = has_response_length or has_generation_time
             assert has_structured_data, (
                 f"Expected structured data (response_length or generation_time_seconds) in log record. "
                 f"Available attributes: {[a for a in dir(completion_record) if not a.startswith('_')]}"
             )
-    
+
     def test_query_logs_context_reset(self, caplog, ollama_test_server):
         """Test query logs context reset."""
         import logging
+
         from infrastructure.core.logging_utils import get_logger
 
         # Ensure loggers are properly configured for test
@@ -120,10 +142,11 @@ class TestQueryLogging:
 
 class TestQueryRawLogging:
     """Test logging for raw query operations."""
-    
+
     def test_query_raw_logs_start(self, caplog, ollama_test_server):
         """Test query_raw logs start."""
         import logging
+
         from infrastructure.core.logging_utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
@@ -141,6 +164,7 @@ class TestQueryRawLogging:
     def test_query_raw_logs_completion(self, caplog, ollama_test_server):
         """Test query_raw logs completion."""
         import logging
+
         from infrastructure.core.logging_utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
@@ -158,10 +182,11 @@ class TestQueryRawLogging:
 
 class TestQueryShortLogging:
     """Test logging for short query operations."""
-    
+
     def test_query_short_logs_start(self, caplog, ollama_test_server):
         """Test query_short logs start."""
         import logging
+
         from infrastructure.core.logging_utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
@@ -175,10 +200,11 @@ class TestQueryShortLogging:
             client.query_short("Test")
 
             assert "Starting short query" in caplog.text
-    
+
     def test_query_short_logs_completion(self, caplog, ollama_test_server):
         """Test query_short logs completion."""
         import logging
+
         from infrastructure.core.logging_utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
@@ -196,10 +222,11 @@ class TestQueryShortLogging:
 
 class TestQueryLongLogging:
     """Test logging for long query operations."""
-    
+
     def test_query_long_logs_start(self, caplog, ollama_test_server):
         """Test query_long logs start."""
         import logging
+
         from infrastructure.core.logging_utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
@@ -213,10 +240,11 @@ class TestQueryLongLogging:
             client.query_long("Test")
 
             assert "Starting long query" in caplog.text
-    
+
     def test_query_long_logs_completion(self, caplog, ollama_test_server):
         """Test query_long logs completion."""
         import logging
+
         from infrastructure.core.logging_utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
@@ -234,10 +262,11 @@ class TestQueryLongLogging:
 
 class TestQueryStructuredLogging:
     """Test logging for structured query operations."""
-    
+
     def test_query_structured_logs_start(self, caplog, ollama_test_server):
         """Test query_structured logs start."""
         import logging
+
         from infrastructure.core.logging_utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
@@ -254,10 +283,11 @@ class TestQueryStructuredLogging:
                 pass  # We expect this to fail due to invalid JSON, but we want to test logging
 
             assert "Starting structured query" in caplog.text
-    
+
     def test_query_structured_logs_completion(self, caplog, ollama_test_server):
         """Test query_structured logs completion."""
         import logging
+
         from infrastructure.core.logging_utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
@@ -273,79 +303,95 @@ class TestQueryStructuredLogging:
             except Exception:
                 pass  # We expect this to fail due to invalid JSON, but we want to test logging
 
-            assert "Structured query completed" in caplog.text or "Structured response is not valid JSON" in caplog.text
+            assert (
+                "Structured query completed" in caplog.text
+                or "Structured response is not valid JSON" in caplog.text
+            )
 
 
 class TestContextLogging:
     """Test logging for context operations."""
-    
+
     def test_context_add_logs(self, caplog):
         """Test context add_message logs."""
         import logging
-        from infrastructure.llm.core.context import ConversationContext
+
         from infrastructure.core.logging_utils import get_logger
-        
+        from infrastructure.llm.core.context import ConversationContext
+
         logger = get_logger("infrastructure.llm.core.context")
         logger.setLevel(logging.DEBUG)
-        
+
         context = ConversationContext(max_tokens=1000)
-        
+
         with caplog.at_level("DEBUG", logger="infrastructure.llm.core.context"):
             context.add_message("user", "Test message")
-            
-            assert "Adding message to context" in caplog.text or "Message added to context" in caplog.text
-    
+
+            assert (
+                "Adding message to context" in caplog.text
+                or "Message added to context" in caplog.text
+            )
+
     def test_context_clear_logs(self, caplog):
         """Test context clear logs."""
         import logging
-        from infrastructure.llm.core.context import ConversationContext
+
         from infrastructure.core.logging_utils import get_logger
-        
+        from infrastructure.llm.core.context import ConversationContext
+
         logger = get_logger("infrastructure.llm.core.context")
         logger.setLevel(logging.INFO)
-        
+
         context = ConversationContext(max_tokens=1000)
         context.add_message("user", "Test")
-        
+
         with caplog.at_level("INFO", logger="infrastructure.llm.core.context"):
             context.clear()
-            
+
             assert "Clearing context" in caplog.text
-    
+
     def test_context_prune_logs(self, caplog):
         """Test context prune logs."""
         import logging
-        from infrastructure.llm.core.context import ConversationContext
+
         from infrastructure.core.logging_utils import get_logger
-        
+        from infrastructure.llm.core.context import ConversationContext
+
         logger = get_logger("infrastructure.llm.core.context")
         logger.setLevel(logging.INFO)
-        
+
         context = ConversationContext(max_tokens=100)  # Small limit
         # Fill context
         for i in range(10):
             context.add_message("user", "Message " + "x" * 50)
-        
+
         with caplog.at_level("INFO", logger="infrastructure.llm.core.context"):
             # Add message that triggers pruning
             context.add_message("user", "New message " + "x" * 50)
-            
-            assert "Pruning context" in caplog.text or "Pruned message" in caplog.text or "Context pruned" in caplog.text
+
+            assert (
+                "Pruning context" in caplog.text
+                or "Pruned message" in caplog.text
+                or "Context pruned" in caplog.text
+            )
 
 
 class TestErrorLogging:
     """Test error logging."""
-    
+
     def test_connection_error_logs(self, caplog):
         """Test connection errors are logged."""
         import logging
+
         from infrastructure.core.logging_utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
         logger.setLevel(logging.ERROR)
 
         # Use an invalid URL to simulate connection error
-        config = LLMConfig(auto_inject_system_prompt=False, base_url="http://invalid-host:9999/")
+        config = LLMConfig(
+            auto_inject_system_prompt=False, base_url="http://invalid-host:9999/"
+        )
         client = LLMClient(config=config)
 
         with caplog.at_level("ERROR", logger="infrastructure.llm.core.client"):
@@ -354,18 +400,25 @@ class TestErrorLogging:
             except Exception:
                 pass
 
-            assert "Connection error" in caplog.text or "Failed to connect" in caplog.text
-    
+            assert (
+                "Connection error" in caplog.text or "Failed to connect" in caplog.text
+            )
+
     def test_timeout_error_logs(self, caplog):
         """Test timeout errors are logged."""
         import logging
+
         from infrastructure.core.logging_utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
         logger.setLevel(logging.ERROR)
 
         # Use a very short timeout to simulate timeout
-        config = LLMConfig(auto_inject_system_prompt=False, timeout=0.001, base_url="http://httpbin.org/delay/1")
+        config = LLMConfig(
+            auto_inject_system_prompt=False,
+            timeout=0.001,
+            base_url="http://httpbin.org/delay/1",
+        )
         client = LLMClient(config=config)
 
         with caplog.at_level("ERROR", logger="infrastructure.llm.core.client"):
@@ -379,10 +432,11 @@ class TestErrorLogging:
 
 class TestLoggingLevels:
     """Test different logging levels."""
-    
+
     def test_debug_logging(self, caplog, ollama_test_server):
         """Test DEBUG level logging."""
         import logging
+
         from infrastructure.core.logging_utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
@@ -397,10 +451,11 @@ class TestLoggingLevels:
 
             # Should have detailed debug logs
             assert len(caplog.records) > 0
-    
+
     def test_info_logging(self, caplog, ollama_test_server):
         """Test INFO level logging."""
         import logging
+
         from infrastructure.core.logging_utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
@@ -414,9 +469,12 @@ class TestLoggingLevels:
             client.query("Test")
 
             # Should have info logs - check both records and text
-            has_info = any("Starting query" in r.message or "Query completed" in r.message
-                          for r in caplog.records) or "Starting query" in caplog.text or "Query completed" in caplog.text
+            has_info = (
+                any(
+                    "Starting query" in r.message or "Query completed" in r.message
+                    for r in caplog.records
+                )
+                or "Starting query" in caplog.text
+                or "Query completed" in caplog.text
+            )
             assert has_info
-
-
-

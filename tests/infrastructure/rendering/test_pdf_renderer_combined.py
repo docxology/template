@@ -6,14 +6,16 @@ Tests cover:
 - Missing figure handling
 - Full combined PDF generation
 """
-import pytest
+
 import tempfile
 from pathlib import Path
+
+import pytest
 import yaml
 
-from infrastructure.rendering.pdf_renderer import PDFRenderer
-from infrastructure.rendering.config import RenderingConfig
 from infrastructure.core.exceptions import RenderingError
+from infrastructure.rendering.config import RenderingConfig
+from infrastructure.rendering.pdf_renderer import PDFRenderer
 
 
 class TestTitlePageGeneration:
@@ -39,83 +41,83 @@ class TestTitlePageGeneration:
     def test_title_page_preamble_single_author(self, renderer, temp_manuscript_dir):
         """Test preamble generation with single author."""
         config = {
-            'paper': {'title': 'Test Paper', 'subtitle': ''},
-            'authors': [{'name': 'Dr. Jane Smith'}],
+            "paper": {"title": "Test Paper", "subtitle": ""},
+            "authors": [{"name": "Dr. Jane Smith"}],
         }
         config_file = temp_manuscript_dir / "config.yaml"
-        with open(config_file, 'w') as f:
+        with open(config_file, "w") as f:
             yaml.dump(config, f)
 
         preamble = renderer._generate_title_page_preamble(temp_manuscript_dir)
 
-        assert r'\title{Test Paper}' in preamble
-        assert r'\author{Dr. Jane Smith}' in preamble
-        assert r'\date{\today}' in preamble
-        assert r'\maketitle' not in preamble  # Should not be in preamble
+        assert r"\title{Test Paper}" in preamble
+        assert r"\author{Dr. Jane Smith}" in preamble
+        assert r"\date{\today}" in preamble
+        assert r"\maketitle" not in preamble  # Should not be in preamble
 
     def test_title_page_preamble_multiple_authors(self, renderer, temp_manuscript_dir):
         """Test preamble generation with multiple authors."""
         config = {
-            'paper': {'title': 'Test Paper'},
-            'authors': [
-                {'name': 'Dr. Jane Smith'},
-                {'name': 'Dr. John Doe'},
+            "paper": {"title": "Test Paper"},
+            "authors": [
+                {"name": "Dr. Jane Smith"},
+                {"name": "Dr. John Doe"},
             ],
         }
         config_file = temp_manuscript_dir / "config.yaml"
-        with open(config_file, 'w') as f:
+        with open(config_file, "w") as f:
             yaml.dump(config, f)
 
         preamble = renderer._generate_title_page_preamble(temp_manuscript_dir)
 
-        assert r'\title{Test Paper}' in preamble
-        assert r'Dr. Jane Smith \and Dr. John Doe' in preamble
+        assert r"\title{Test Paper}" in preamble
+        assert r"Dr. Jane Smith \\and Dr. John Doe" in preamble
 
     def test_title_page_preamble_with_subtitle(self, renderer, temp_manuscript_dir):
         """Test preamble generation with subtitle."""
         config = {
-            'paper': {'title': 'Main Title', 'subtitle': 'A Subtitle'},
-            'authors': [{'name': 'Dr. Jane Smith'}],
+            "paper": {"title": "Main Title", "subtitle": "A Subtitle"},
+            "authors": [{"name": "Dr. Jane Smith"}],
         }
         config_file = temp_manuscript_dir / "config.yaml"
-        with open(config_file, 'w') as f:
+        with open(config_file, "w") as f:
             yaml.dump(config, f)
 
         preamble = renderer._generate_title_page_preamble(temp_manuscript_dir)
 
         # Subtitle should be included with title
-        assert r'\title{Main Title' in preamble
-        assert 'A Subtitle' in preamble
+        assert r"\title{Main Title" in preamble
+        assert "A Subtitle" in preamble
 
     def test_title_page_preamble_with_custom_date(self, renderer, temp_manuscript_dir):
         """Test preamble generation with custom date."""
         config = {
-            'paper': {'title': 'Test Paper', 'date': '2025-01-01'},
-            'authors': [{'name': 'Dr. Jane Smith'}],
+            "paper": {"title": "Test Paper", "date": "2025-01-01"},
+            "authors": [{"name": "Dr. Jane Smith"}],
         }
         config_file = temp_manuscript_dir / "config.yaml"
-        with open(config_file, 'w') as f:
+        with open(config_file, "w") as f:
             yaml.dump(config, f)
 
         preamble = renderer._generate_title_page_preamble(temp_manuscript_dir)
 
-        assert r'\date{2025-01-01}' in preamble
-        assert r'\today' not in preamble
+        assert r"\date{2025-01-01}" in preamble
+        assert r"\today" not in preamble
 
     def test_title_page_body_generates_maketitle(self, renderer, temp_manuscript_dir):
         """Test body generation creates \\maketitle command."""
         config = {
-            'paper': {'title': 'Test Paper'},
-            'authors': [{'name': 'Dr. Jane Smith'}],
+            "paper": {"title": "Test Paper"},
+            "authors": [{"name": "Dr. Jane Smith"}],
         }
         config_file = temp_manuscript_dir / "config.yaml"
-        with open(config_file, 'w') as f:
+        with open(config_file, "w") as f:
             yaml.dump(config, f)
 
         body = renderer._generate_title_page_body(temp_manuscript_dir)
 
-        assert r'\maketitle' in body
-        assert r'\thispagestyle{empty}' in body
+        assert r"\maketitle" in body
+        assert r"\thispagestyle{empty}" in body
 
     def test_title_page_preamble_missing_config(self, renderer, temp_manuscript_dir):
         """Test preamble generation when config.yaml is missing."""
@@ -179,7 +181,9 @@ class TestFigurePathResolution:
         fig_file = figures_dir / "example.png"
         fig_file.write_text("dummy")
 
-        tex_content = r"\includegraphics[width=0.8\textwidth]{../output/figures/example.png}"
+        tex_content = (
+            r"\includegraphics[width=0.8\textwidth]{../output/figures/example.png}"
+        )
         fixed = renderer._fix_figure_paths(tex_content, manuscript_dir, output_dir)
 
         assert "../figures/example.png" in fixed
@@ -260,7 +264,8 @@ class TestCombinedPDFRendering:
                 "# Introduction\n\n"
                 r"\begin{figure}[h]" + "\n"
                 r"\centering" + "\n"
-                r"\includegraphics[width=0.8\textwidth]{../output/figures/example.png}" + "\n"
+                r"\includegraphics[width=0.8\textwidth]{../output/figures/example.png}"
+                + "\n"
                 r"\caption{Test figure}" + "\n"
                 r"\label{fig:test}" + "\n"
                 r"\end{figure}" + "\n"
@@ -271,11 +276,11 @@ class TestCombinedPDFRendering:
 
             # Create config.yaml
             config = {
-                'paper': {'title': 'Integration Test Paper'},
-                'authors': [{'name': 'Test Author'}],
+                "paper": {"title": "Integration Test Paper"},
+                "authors": [{"name": "Test Author"}],
             }
             config_file = manuscript_dir / "config.yaml"
-            with open(config_file, 'w') as f:
+            with open(config_file, "w") as f:
                 yaml.dump(config, f)
 
             # Create sample figure
@@ -297,7 +302,9 @@ class TestCombinedPDFRendering:
         renderer = PDFRenderer(config)
 
         # Generate source files list
-        source_files = sorted([f for f in manuscript_dir.glob("*.md") if f.name[0].isdigit()])
+        source_files = sorted(
+            [f for f in manuscript_dir.glob("*.md") if f.name[0].isdigit()]
+        )
 
         # Create combined markdown
         combined_md = manuscript_dir.parent / "_combined_manuscript.md"
@@ -337,11 +344,11 @@ class TestCombinedPDFRendering:
 
             # Create minimal config
             config_data = {
-                'paper': {'title': 'Test'},
-                'authors': [{'name': 'Author'}],
+                "paper": {"title": "Test"},
+                "authors": [{"name": "Author"}],
             }
             config_file = manuscript_dir / "config.yaml"
-            with open(config_file, 'w') as f:
+            with open(config_file, "w") as f:
                 yaml.dump(config_data, f)
 
             # Get preamble and body commands
@@ -373,7 +380,7 @@ class TestFigureVerification:
             r"\includegraphics{../figures/fig3.pdf}"
         )
 
-        pattern = r'\\includegraphics(?:\[[^\]]*\])?\{([^}]+)\}'
+        pattern = r"\\includegraphics(?:\[[^\]]*\])?\{([^}]+)\}"
         figures = re.findall(pattern, latex_content)
 
         assert len(figures) == 3
@@ -394,25 +401,3 @@ class TestFigureVerification:
             # Check both existing and missing
             assert (figures_dir / "exists.png").exists()
             assert not (figures_dir / "missing.png").exists()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

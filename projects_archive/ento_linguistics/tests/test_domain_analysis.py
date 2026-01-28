@@ -3,12 +3,13 @@
 This module contains comprehensive tests for domain analysis functionality
 used in Ento-Linguistic research.
 """
+
 from __future__ import annotations
 
-import pytest
-from typing import List, Dict, Any
+from typing import Any, Dict, List
 
-from src.domain_analysis import DomainAnalyzer, DomainAnalysis
+import pytest
+from src.domain_analysis import DomainAnalysis, DomainAnalyzer
 from src.term_extraction import Term
 
 
@@ -22,8 +23,14 @@ class TestDomainAnalysis:
             key_terms=["foraging", "behavior", "task"],
             term_patterns={"compound": 5, "multi_word": 3},
             framing_assumptions=["Behavioral categories reflect identities"],
-            ambiguities=[{"term": "forager", "contexts": ["observed", "identity"], "issue": "action vs identity"}],
-            recommendations=["Distinguish behavior from identity"]
+            ambiguities=[
+                {
+                    "term": "forager",
+                    "contexts": ["observed", "identity"],
+                    "issue": "action vs identity",
+                }
+            ],
+            recommendations=["Distinguish behavior from identity"],
         )
 
         assert analysis.domain_name == "behavior_and_identity"
@@ -46,12 +53,39 @@ class TestDomainAnalyzer:
     def sample_terms(self) -> Dict[str, Term]:
         """Create sample terms for testing."""
         return {
-            "colony": Term(text="colony", lemma="colony", frequency=10, domains=["unit_of_individuality"]),
-            "foraging": Term(text="foraging", lemma="forage", frequency=8, domains=["behavior_and_identity"]),
-            "caste": Term(text="caste", lemma="caste", frequency=12, domains=["power_and_labor"]),
-            "queen": Term(text="queen", lemma="queen", frequency=15, domains=["power_and_labor", "sex_and_reproduction"]),
-            "eusocial": Term(text="eusocial", lemma="eusocial", frequency=6, domains=["unit_of_individuality"]),
-            "worker": Term(text="worker", lemma="worker", frequency=9, domains=["behavior_and_identity", "power_and_labor"])
+            "colony": Term(
+                text="colony",
+                lemma="colony",
+                frequency=10,
+                domains=["unit_of_individuality"],
+            ),
+            "foraging": Term(
+                text="foraging",
+                lemma="forage",
+                frequency=8,
+                domains=["behavior_and_identity"],
+            ),
+            "caste": Term(
+                text="caste", lemma="caste", frequency=12, domains=["power_and_labor"]
+            ),
+            "queen": Term(
+                text="queen",
+                lemma="queen",
+                frequency=15,
+                domains=["power_and_labor", "sex_and_reproduction"],
+            ),
+            "eusocial": Term(
+                text="eusocial",
+                lemma="eusocial",
+                frequency=6,
+                domains=["unit_of_individuality"],
+            ),
+            "worker": Term(
+                text="worker",
+                lemma="worker",
+                frequency=9,
+                domains=["behavior_and_identity", "power_and_labor"],
+            ),
         }
 
     @pytest.fixture
@@ -60,7 +94,7 @@ class TestDomainAnalyzer:
         return [
             "Ant colonies exhibit complex social behaviors.",
             "Foraging workers collect food for the colony.",
-            "The queen lays eggs while workers care for brood."
+            "The queen lays eggs while workers care for brood.",
         ]
 
     def test_analyzer_initialization(self, analyzer: DomainAnalyzer) -> None:
@@ -68,13 +102,20 @@ class TestDomainAnalyzer:
         assert analyzer.text_processor is not None
         assert analyzer.feature_extractor is not None
 
-    def test_analyze_individuality_domain(self, analyzer: DomainAnalyzer,
-                                        sample_terms: Dict[str, Term],
-                                        sample_texts: List[str]) -> None:
+    def test_analyze_individuality_domain(
+        self,
+        analyzer: DomainAnalyzer,
+        sample_terms: Dict[str, Term],
+        sample_texts: List[str],
+    ) -> None:
         """Test individuality domain analysis."""
         analysis = analyzer._analyze_individuality_domain(
-            [term for term in sample_terms.values() if "unit_of_individuality" in term.domains],
-            sample_texts
+            [
+                term
+                for term in sample_terms.values()
+                if "unit_of_individuality" in term.domains
+            ],
+            sample_texts,
         )
 
         assert analysis.domain_name == "unit_of_individuality"
@@ -84,71 +125,111 @@ class TestDomainAnalyzer:
         assert len(analysis.recommendations) > 0
         assert isinstance(analysis.conceptual_structure, dict)
 
-    def test_analyze_behavior_domain(self, analyzer: DomainAnalyzer,
-                                   sample_terms: Dict[str, Term],
-                                   sample_texts: List[str]) -> None:
+    def test_analyze_behavior_domain(
+        self,
+        analyzer: DomainAnalyzer,
+        sample_terms: Dict[str, Term],
+        sample_texts: List[str],
+    ) -> None:
         """Test behavior and identity domain analysis."""
         analysis = analyzer._analyze_behavior_domain(
-            [term for term in sample_terms.values() if "behavior_and_identity" in term.domains],
-            sample_texts
+            [
+                term
+                for term in sample_terms.values()
+                if "behavior_and_identity" in term.domains
+            ],
+            sample_texts,
         )
 
         assert analysis.domain_name == "behavior_and_identity"
         assert "foraging" in analysis.key_terms or "worker" in analysis.key_terms
-        assert any("identity" in assumption.lower() for assumption in analysis.framing_assumptions)
+        assert any(
+            "identity" in assumption.lower()
+            for assumption in analysis.framing_assumptions
+        )
 
-    def test_analyze_power_domain(self, analyzer: DomainAnalyzer,
-                                sample_terms: Dict[str, Term],
-                                sample_texts: List[str]) -> None:
+    def test_analyze_power_domain(
+        self,
+        analyzer: DomainAnalyzer,
+        sample_terms: Dict[str, Term],
+        sample_texts: List[str],
+    ) -> None:
         """Test power and labor domain analysis."""
         analysis = analyzer._analyze_power_domain(
-            [term for term in sample_terms.values() if "power_and_labor" in term.domains],
-            sample_texts
+            [
+                term
+                for term in sample_terms.values()
+                if "power_and_labor" in term.domains
+            ],
+            sample_texts,
         )
 
         assert analysis.domain_name == "power_and_labor"
         assert "caste" in analysis.key_terms or "queen" in analysis.key_terms
-        assert any("hierarch" in assumption.lower() for assumption in analysis.framing_assumptions)
+        assert any(
+            "hierarch" in assumption.lower()
+            for assumption in analysis.framing_assumptions
+        )
 
-    def test_analyze_reproduction_domain(self, analyzer: DomainAnalyzer,
-                                       sample_terms: Dict[str, Term],
-                                       sample_texts: List[str]) -> None:
+    def test_analyze_reproduction_domain(
+        self,
+        analyzer: DomainAnalyzer,
+        sample_terms: Dict[str, Term],
+        sample_texts: List[str],
+    ) -> None:
         """Test sex and reproduction domain analysis."""
         analysis = analyzer._analyze_reproduction_domain(
-            [term for term in sample_terms.values() if "sex_and_reproduction" in term.domains],
-            sample_texts
+            [
+                term
+                for term in sample_terms.values()
+                if "sex_and_reproduction" in term.domains
+            ],
+            sample_texts,
         )
 
         assert analysis.domain_name == "sex_and_reproduction"
         assert any("queen" in term for term in analysis.key_terms)
 
-    def test_analyze_kinship_domain(self, analyzer: DomainAnalyzer,
-                                  sample_terms: Dict[str, Term],
-                                  sample_texts: List[str]) -> None:
+    def test_analyze_kinship_domain(
+        self,
+        analyzer: DomainAnalyzer,
+        sample_terms: Dict[str, Term],
+        sample_texts: List[str],
+    ) -> None:
         """Test kin and relatedness domain analysis."""
         # Create a mock term for kinship domain
-        kinship_terms = [Term(text="kin", lemma="kin", frequency=5, domains=["kin_and_relatedness"])]
+        kinship_terms = [
+            Term(text="kin", lemma="kin", frequency=5, domains=["kin_and_relatedness"])
+        ]
 
         analysis = analyzer._analyze_kinship_domain(kinship_terms, sample_texts)
 
         assert analysis.domain_name == "kin_and_relatedness"
         assert len(analysis.framing_assumptions) > 0
 
-    def test_analyze_economics_domain(self, analyzer: DomainAnalyzer,
-                                    sample_terms: Dict[str, Term],
-                                    sample_texts: List[str]) -> None:
+    def test_analyze_economics_domain(
+        self,
+        analyzer: DomainAnalyzer,
+        sample_terms: Dict[str, Term],
+        sample_texts: List[str],
+    ) -> None:
         """Test economics domain analysis."""
         # Create a mock term for economics domain
-        econ_terms = [Term(text="resource", lemma="resource", frequency=7, domains=["economics"])]
+        econ_terms = [
+            Term(text="resource", lemma="resource", frequency=7, domains=["economics"])
+        ]
 
         analysis = analyzer._analyze_economics_domain(econ_terms, sample_texts)
 
         assert analysis.domain_name == "economics"
         assert len(analysis.framing_assumptions) > 0
 
-    def test_analyze_all_domains(self, analyzer: DomainAnalyzer,
-                               sample_terms: Dict[str, Term],
-                               sample_texts: List[str]) -> None:
+    def test_analyze_all_domains(
+        self,
+        analyzer: DomainAnalyzer,
+        sample_terms: Dict[str, Term],
+        sample_texts: List[str],
+    ) -> None:
         """Test analyzing all domains."""
         analyses = analyzer.analyze_all_domains(sample_terms, sample_texts)
 
@@ -164,8 +245,9 @@ class TestDomainAnalyzer:
             assert domain in analyses
             assert analyses[domain].domain_name == domain
 
-    def test_group_terms_by_domain(self, analyzer: DomainAnalyzer,
-                                 sample_terms: Dict[str, Term]) -> None:
+    def test_group_terms_by_domain(
+        self, analyzer: DomainAnalyzer, sample_terms: Dict[str, Term]
+    ) -> None:
         """Test grouping terms by domain."""
         domain_groups = analyzer._group_terms_by_domain(sample_terms)
 
@@ -177,7 +259,9 @@ class TestDomainAnalyzer:
 
         # Check specific domains
         if "unit_of_individuality" in domain_groups:
-            assert any(term.text == "colony" for term in domain_groups["unit_of_individuality"])
+            assert any(
+                term.text == "colony" for term in domain_groups["unit_of_individuality"]
+            )
 
         if "power_and_labor" in domain_groups:
             power_terms = [term.text for term in domain_groups["power_and_labor"]]
@@ -199,7 +283,7 @@ class TestDomainAnalyzer:
             Term(text="eusocial", lemma="eusocial"),
             Term(text="division-of-labor", lemma="division"),
             Term(text="super_organism", lemma="super"),
-            Term(text="colony behavior", lemma="colony")
+            Term(text="colony behavior", lemma="colony"),
         ]
 
         patterns = analyzer._analyze_term_patterns(terms)
@@ -215,7 +299,7 @@ class TestDomainAnalyzer:
             key_terms=["term1", "term2"],
             framing_assumptions=["Assumption 1"],
             ambiguities=[{"term": "term1", "contexts": ["ctx1"], "issue": "Issue 1"}],
-            recommendations=["Recommendation 1"]
+            recommendations=["Recommendation 1"],
         )
 
         report = analyzer.generate_domain_report(analysis)
@@ -232,21 +316,23 @@ class TestDomainAnalyzer:
                 domain_name="domain1",
                 key_terms=["term1", "term2"],
                 framing_assumptions=["Assumption 1", "Shared assumption"],
-                ambiguities=[]
+                ambiguities=[],
             ),
             "domain2": DomainAnalysis(
                 domain_name="domain2",
                 key_terms=["term3", "term4"],
                 framing_assumptions=["Assumption 2", "Shared assumption"],
-                ambiguities=[]
-            )
+                ambiguities=[],
+            ),
         }
 
         comparison = analyzer.compare_domains(analyses)
 
         assert isinstance(comparison, dict)
         assert "shared_assumptions" in comparison
-        assert len(comparison["shared_assumptions"]) >= 1  # Should find shared assumption
+        assert (
+            len(comparison["shared_assumptions"]) >= 1
+        )  # Should find shared assumption
 
     def test_empty_domain_handling(self, analyzer: DomainAnalyzer) -> None:
         """Test handling of domains with no terms."""
@@ -264,18 +350,45 @@ class TestDomainAnalysisIntegration:
 
         # Create comprehensive test data
         terms = [
-            Term(text="colony", lemma="colony", frequency=10, domains=["unit_of_individuality"]),
-            Term(text="eusocial", lemma="eusocial", frequency=8, domains=["unit_of_individuality"]),
-            Term(text="foraging", lemma="forage", frequency=12, domains=["behavior_and_identity"]),
-            Term(text="worker", lemma="worker", frequency=9, domains=["behavior_and_identity", "power_and_labor"]),
-            Term(text="caste", lemma="caste", frequency=15, domains=["power_and_labor"]),
-            Term(text="queen", lemma="queen", frequency=13, domains=["power_and_labor", "sex_and_reproduction"])
+            Term(
+                text="colony",
+                lemma="colony",
+                frequency=10,
+                domains=["unit_of_individuality"],
+            ),
+            Term(
+                text="eusocial",
+                lemma="eusocial",
+                frequency=8,
+                domains=["unit_of_individuality"],
+            ),
+            Term(
+                text="foraging",
+                lemma="forage",
+                frequency=12,
+                domains=["behavior_and_identity"],
+            ),
+            Term(
+                text="worker",
+                lemma="worker",
+                frequency=9,
+                domains=["behavior_and_identity", "power_and_labor"],
+            ),
+            Term(
+                text="caste", lemma="caste", frequency=15, domains=["power_and_labor"]
+            ),
+            Term(
+                text="queen",
+                lemma="queen",
+                frequency=13,
+                domains=["power_and_labor", "sex_and_reproduction"],
+            ),
         ]
 
         texts = [
             "Ant colonies are eusocial superorganisms with complex division of labor.",
             "Workers forage for food while the queen reproduces.",
-            "Caste systems in ants involve morphological and behavioral specialization."
+            "Caste systems in ants involve morphological and behavioral specialization.",
         ]
 
         # Convert to dictionary format expected by analyze_all_domains
@@ -289,7 +402,7 @@ class TestDomainAnalysisIntegration:
 
         # Each analysis should have required components (skip cross-domain key)
         for domain_name, analysis in analyses.items():
-            if domain_name == '_cross_domain':
+            if domain_name == "_cross_domain":
                 continue  # Skip cross-domain analysis which is a dict, not DomainAnalysis
             assert isinstance(analysis, DomainAnalysis)
             assert len(analysis.key_terms) >= 0
@@ -301,10 +414,18 @@ class TestDomainAnalysisIntegration:
         analyzer = DomainAnalyzer()
 
         terms = [
-            Term(text="queen", lemma="queen", frequency=10,
-                 domains=["power_and_labor", "sex_and_reproduction"]),
-            Term(text="worker", lemma="worker", frequency=8,
-                 domains=["behavior_and_identity", "power_and_labor"])
+            Term(
+                text="queen",
+                lemma="queen",
+                frequency=10,
+                domains=["power_and_labor", "sex_and_reproduction"],
+            ),
+            Term(
+                text="worker",
+                lemma="worker",
+                frequency=8,
+                domains=["behavior_and_identity", "power_and_labor"],
+            ),
         ]
 
         texts = ["Queen ants reproduce while worker ants labor."]
@@ -321,7 +442,7 @@ class TestDomainAnalysisIntegration:
 
         # Check that recommendations address complexity (skip cross-domain key)
         for domain_name, analysis in analyses.items():
-            if domain_name == '_cross_domain':
+            if domain_name == "_cross_domain":
                 continue  # Skip cross-domain analysis which is a dict, not DomainAnalysis
             assert len(analysis.recommendations) > 0
 
@@ -331,8 +452,15 @@ class TestDomainAnalysisIntegration:
 
         # Create a complete analysis
         analysis = analyzer._analyze_individuality_domain(
-            [Term(text="colony", lemma="colony", frequency=5, domains=["unit_of_individuality"])],
-            ["Ant colonies behave as superorganisms."]
+            [
+                Term(
+                    text="colony",
+                    lemma="colony",
+                    frequency=5,
+                    domains=["unit_of_individuality"],
+                )
+            ],
+            ["Ant colonies behave as superorganisms."],
         )
 
         report = analyzer.generate_domain_report(analysis)
@@ -362,7 +490,7 @@ class TestDomainAnalysisIntegration:
         domains_to_test = [
             ("unit_of_individuality", analyzer._analyze_individuality_domain),
             ("behavior_and_identity", analyzer._analyze_behavior_domain),
-            ("power_and_labor", analyzer._analyze_power_domain)
+            ("power_and_labor", analyzer._analyze_power_domain),
         ]
 
         for domain_name, analysis_func in domains_to_test:

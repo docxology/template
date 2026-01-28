@@ -2,9 +2,9 @@
 
 This section provides detailed methodological information supplementing Section \ref{sec:methodology}, focusing on the computational implementation of Ento-Linguistic analysis.
 
-## S1.1 Text Processing Pipeline Implementation
+## Text Processing Pipeline Implementation
 
-### S1.1.1 Multi-Stage Text Normalization
+### Multi-Stage Text Normalization
 
 Our text processing pipeline implements systematic normalization to ensure reliable pattern detection:
 
@@ -25,7 +25,7 @@ t & \text{if } t \in \mathcal{T}_{\text{scientific}} \\
 
 where $\mathcal{T}_{\text{scientific}}$ contains curated scientific terminology that should not be further subdivided.
 
-### S1.1.2 Linguistic Preprocessing Pipeline
+### Linguistic Preprocessing Pipeline
 
 The preprocessing pipeline includes:
 
@@ -36,9 +36,9 @@ The preprocessing pipeline includes:
 5. **Stop Word Filtering**: Domain-aware removal of non-informative terms
 6. **Lemmatization**: Reducing words to base forms using scientific dictionaries
 
-## S1.2 Terminology Extraction Algorithms
+## Terminology Extraction Algorithms
 
-### S1.2.1 Domain-Specific Term Identification
+### Domain-Specific Term Identification
 
 Terminology extraction uses a multi-criteria approach combining statistical and linguistic features:
 
@@ -54,7 +54,7 @@ where weights $\alpha, \beta, \gamma$ are calibrated for each Ento-Linguistic do
 - **Semantic Similarity**: Vector similarity to domain seed terms
 - **Contextual Features**: Syntactic patterns characteristic of domain usage
 
-### S1.2.2 Ambiguity Detection Framework
+### Ambiguity Detection Framework
 
 Ambiguity detection identifies terms with context-dependent meanings:
 
@@ -64,9 +64,9 @@ A(t) = \frac{H(\text{contexts}(t))}{\log |\text{contexts}(t)|} \cdot \frac{|\tex
 
 where $H(\text{contexts}(t))$ is the entropy of contextual usage patterns, measuring dispersion across different research contexts.
 
-## S1.3 Network Construction and Analysis
+## Network Construction and Analysis
 
-### S1.3.1 Edge Weight Calculation
+### Edge Weight Calculation
 
 Network edges are weighted using multiple co-occurrence measures:
 
@@ -76,7 +76,7 @@ w(u,v) = \frac{1}{3} \left[ \frac{\text{co-occurrence}(u,v)}{\max(\text{freq}(u)
 
 where co-occurrence is measured within sliding windows, Jaccard similarity captures set overlap, and cosine similarity measures semantic relatedness.
 
-### S1.3.2 Community Detection Algorithms
+### Community Detection Algorithms
 
 We implement multiple community detection approaches:
 
@@ -87,7 +87,7 @@ Q = \frac{1}{2m} \sum_{ij} \left[ A_{ij} - \frac{k_i k_j}{2m} \right] \delta(c_i
 
 **Domain-Aware Clustering**: Communities are constrained to respect Ento-Linguistic domain boundaries while allowing cross-domain bridging terms.
 
-### S1.3.3 Network Validation Metrics
+### Network Validation Metrics
 
 Network quality is assessed using:
 
@@ -97,9 +97,9 @@ V(G) = \alpha \cdot \text{modularity}(G) + \beta \cdot \text{conductance}(G) + \
 
 where domain purity measures the extent to which communities correspond to Ento-Linguistic domains.
 
-## S1.4 Framing Analysis Implementation
+## Framing Analysis Implementation
 
-### S1.4.1 Anthropomorphic Framing Detection
+### Anthropomorphic Framing Detection
 
 Anthropomorphic language is detected through:
 
@@ -114,7 +114,7 @@ A_{\text{anthro}}(t) = \sum_{f \in F_{\text{human}}} \text{similarity}(t, f) \cd
 
 where $F_{\text{human}}$ contains human social concept features and $w_f$ are calibrated weights.
 
-### S1.4.2 Hierarchical Framing Analysis
+### Hierarchical Framing Analysis
 
 Hierarchical structures are identified by:
 
@@ -122,9 +122,9 @@ Hierarchical structures are identified by:
 **Power Dynamic Indicators**: Terms implying authority, control, or submission
 **Organizational Metaphors**: Language drawing from human institutional structures
 
-## S1.5 Validation Framework Implementation
+## Validation Framework Implementation
 
-### S1.5.1 Computational Validation Procedures
+### Computational Validation Procedures
 
 **Terminology Extraction Validation**:
 - **Precision**: Manual verification of extracted terms against expert-curated lists
@@ -136,7 +136,7 @@ Hierarchical structures are identified by:
 - **Domain Correspondence**: Alignment with theoretical domain boundaries
 - **Stability Analysis**: Consistency across subsampling procedures
 
-### S1.5.2 Theoretical Validation Methods
+### Theoretical Validation Methods
 
 **Inter-coder Agreement**: Multiple researchers code ambiguous passages to assess consistency.
 
@@ -144,9 +144,9 @@ Hierarchical structures are identified by:
 
 **Member Checking**: Expert review of interpretations and categorizations.
 
-## S1.6 Implementation Architecture
+## Implementation Architecture
 
-### S1.6.1 Modular Software Design
+### Modular Software Design
 
 The implementation follows a modular architecture:
 
@@ -160,7 +160,7 @@ entolinguistic/
 └── visualization/      # Result visualization
 ```
 
-### S1.6.2 Data Structures and Formats
+### Data Structures and Formats
 
 **Terminology Database**:
 ```python
@@ -184,7 +184,7 @@ class TerminologyNetwork:
     domain_mappings: Dict[str, str]
 ```
 
-### S1.6.3 Performance Optimization
+### Performance Optimization
 
 **Scalability Considerations**:
 - Streaming processing for large corpora
@@ -199,9 +199,9 @@ C(n,m,d) = O(n \log n + m \cdot d + e \cdot \log e)
 
 where $n$ is corpus size, $m$ is extracted terms, $d$ is domains, and $e$ is network edges.
 
-## S1.7 Parameter Calibration and Sensitivity
+## Parameter Calibration and Sensitivity
 
-### S1.7.1 Algorithm Parameters
+### Algorithm Parameters
 
 Critical parameters and their calibration:
 
@@ -221,7 +221,7 @@ Ambiguity Threshold & 0.7 & [0.5, 0.9] & Medium & Manual validation \\
 \label{tab:parameter_calibration}
 \end{table}
 
-### S1.7.2 Sensitivity Analysis Results
+### Sensitivity Analysis Results
 
 Parameter sensitivity testing revealed:
 
@@ -231,9 +231,9 @@ Parameter sensitivity testing revealed:
 
 **Frequency Threshold**: 5 occurrences ensures statistical reliability while maintaining coverage.
 
-## S1.8 Quality Assurance and Reproducibility
+## Quality Assurance and Reproducibility
 
-### S1.8.1 Automated Quality Checks
+### Automated Quality Checks
 
 **Data Quality Validation**:
 - Text encoding verification
@@ -245,7 +245,7 @@ Parameter sensitivity testing revealed:
 - Cross-platform compatibility testing
 - Performance regression monitoring
 
-### S1.8.2 Reproducibility Framework
+### Reproducibility Framework
 
 **Version Control**: All code, data, and parameters are version controlled with DOI minting for long-term access.
 
@@ -253,9 +253,9 @@ Parameter sensitivity testing revealed:
 
 **Documentation**: documentation of all processing steps, parameters, and decisions.
 
-## S1.9 Extensions and Future Methods
+## Extensions and Future Methods
 
-### S1.9.1 Advanced Semantic Analysis
+### Advanced Semantic Analysis
 
 Future extensions include:
 
@@ -265,7 +265,7 @@ Future extensions include:
 
 **Temporal Analysis**: Tracking terminological evolution over time using diachronic methods.
 
-### S1.9.2 Integration with External Resources
+### Integration with External Resources
 
 **Ontology Integration**: Mapping to existing biological ontologies and terminologies.
 

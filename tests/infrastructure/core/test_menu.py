@@ -5,7 +5,9 @@ No mocks - all tests use actual function calls with various inputs.
 """
 
 import pytest
-from infrastructure.core.menu import MenuOption, parse_choice_sequence, format_menu
+
+from infrastructure.core.menu import (MenuOption, format_menu,
+                                      parse_choice_sequence)
 
 
 class TestMenuOption:
@@ -133,10 +135,7 @@ class TestFormatMenu:
 
     def test_many_options(self):
         """Test menu with many options."""
-        options = [
-            MenuOption(key=str(i), label=f"Option {i}")
-            for i in range(1, 10)
-        ]
+        options = [MenuOption(key=str(i), label=f"Option {i}") for i in range(1, 10)]
 
         result = format_menu("Large Menu", options, "big_project")
 

@@ -120,7 +120,7 @@ SELECTED_PROJECT=""
 
 discover_projects() {
     # Discover available projects using Python infrastructure module
-    # Sets PROJECT_LIST array with project names
+    # Sets PROJECT_LIST array with project qualified names (including program prefix for nested projects)
     PROJECT_LIST=()
 
     # Use Python module for project discovery
@@ -134,7 +134,9 @@ from pathlib import Path
 try:
     projects = discover_projects(Path('$REPO_ROOT'))
     for project in projects:
-        print(project.name)
+        # Use qualified_name to include program directory for nested projects
+        # e.g., 'cognitive_integrity/cogsec_multiagent_1_theory' instead of 'cogsec_multiagent_1_theory'
+        print(project.qualified_name)
 except Exception as e:
     print('ERROR:' + str(e), file=sys.stderr)
     sys.exit(1)
@@ -234,45 +236,55 @@ select_project() {
 
 display_menu() {
     clear
-    echo -e "${BOLD}${BLUE}"
-    echo "============================================================"
-    echo "  Manuscript Pipeline - Main Menu"
-    echo "============================================================"
-    echo -e "${NC}"
+
+    # Header with project name
+    echo -e "${BOLD}${BLUE}┌────────────────────────────────────────────────────────────────┐${NC}"
+    echo -e "${BOLD}${BLUE}│${NC}  ${BOLD}📄 MANUSCRIPT PIPELINE${NC}                                        ${BLUE}│${NC}"
+    echo -e "${BOLD}${BLUE}│${NC}  Project: ${CYAN}${CURRENT_PROJECT}${NC}$(printf '%*s' $((42 - ${#CURRENT_PROJECT})) '')${BLUE}│${NC}"
+    echo -e "${BOLD}${BLUE}└────────────────────────────────────────────────────────────────┘${NC}"
     echo
-    echo -e "${BOLD}Project:${NC} $CURRENT_PROJECT"
-    echo -e "${BOLD}Available Operations:${NC}"
+
+    # Core Pipeline Scripts
+    echo -e "${BOLD}⚙️  INDIVIDUAL STAGES${NC}"
+    echo -e "    ${GREEN}0${NC}  Setup Environment          ${CYAN}00_setup_environment.py${NC}"
+    echo -e "    ${GREEN}1${NC}  Run Tests                  ${CYAN}01_run_tests.py${NC}"
+    echo -e "    ${GREEN}2${NC}  Run Analysis               ${CYAN}02_run_analysis.py${NC}"
+    echo -e "    ${GREEN}3${NC}  Render PDF                 ${CYAN}03_render_pdf.py${NC}"
+    echo -e "    ${GREEN}4${NC}  Validate Output            ${CYAN}04_validate_output.py${NC}"
+    echo -e "    ${GREEN}5${NC}  LLM Review                 ${CYAN}06_llm_review.py${NC} ${YELLOW}⚡${NC}"
+    echo -e "    ${GREEN}6${NC}  LLM Translations           ${CYAN}06_llm_review.py${NC} ${YELLOW}⚡${NC}"
     echo
-    echo -e "${BOLD}Core Pipeline Scripts (aligned with script numbering):${NC}"
-    echo "  0. Setup Environment (00_setup_environment.py)"
-    echo "  1. Run Tests (01_run_tests.py - infrastructure + project)"
-    echo "  2. Run Analysis (02_run_analysis.py)"
-    echo "  3. Render PDF (03_render_pdf.py)"
-    echo "  4. Validate Output (04_validate_output.py)"
-    echo -e "  5. LLM Review ${YELLOW}(requires Ollama)${NC} (06_llm_review.py --reviews-only)"
-    echo -e "  6. LLM Translations ${YELLOW}(requires Ollama)${NC} (06_llm_review.py --translations-only)"
+
+    # Orchestration
+    echo -e "${BOLD}🚀 ORCHESTRATION${NC}"
+    echo -e "    ${GREEN}7${NC}  Core Pipeline              ${CYAN}Stages 1-7 (no LLM)${NC}"
+    echo -e "    ${GREEN}8${NC}  Full Pipeline              ${CYAN}All 9 stages${NC}"
+    echo -e "    ${GREEN}9${NC}  Full Pipeline (fast)       ${CYAN}Skip infra tests${NC}"
     echo
-    echo -e "${BOLD}Orchestration:${NC}"
-    echo "  7. Run Core Pipeline (stages 0-7: no LLM)"
-    echo "  8. Run Full Pipeline (9 stages: [1/9] to [9/9])"
-    echo "  9. Run Full Pipeline (skip infrastructure tests)"
+
+    # Multi-Project Operations
+    echo -e "${BOLD}📚 MULTI-PROJECT${NC}"
+    echo -e "    ${GREEN}a${NC}  All projects full          ${CYAN}+infra +LLM +report${NC}"
+    echo -e "    ${GREEN}b${NC}  All projects full (fast)   ${CYAN}-infra +LLM +report${NC}"
+    echo -e "    ${GREEN}c${NC}  All projects core          ${CYAN}+infra -LLM +report${NC}"
+    echo -e "    ${GREEN}d${NC}  All projects core (fast)   ${CYAN}-infra -LLM +report${NC}"
     echo
-echo -e "${BOLD}Multi-Project Operations:${NC}"
-echo "  a. Run all projects - Full pipeline (with infra, with LLM) + Executive Report"
-echo "  b. Run all projects - Full pipeline (no infra, with LLM) + Executive Report"
-echo "  c. Run all projects - Core pipeline (with infra, no LLM) + Executive Report"
-echo "  d. Run all projects - Core pipeline (no infra, no LLM) + Executive Report"
+
+    # Project Management
+    echo -e "${BOLD}📁 PROJECT${NC}"
+    echo -e "    ${GREEN}p${NC}  Change Project             ${GREEN}i${NC}  Show Project Info"
+    echo -e "    ${GREEN}q${NC}  Quit"
     echo
-    echo -e "${BOLD}Project Management:${NC}"
-    echo "  p. Change Project"
-    echo "  i. Show Project Info"
+
+    # Status bar
+    echo -e "${BLUE}────────────────────────────────────────────────────────────────${NC}"
+    local py_version=$($(get_python_cmd) --version 2>&1 | cut -d' ' -f2)
+    local ollama_status="${RED}●${NC}"
+    command -v ollama &>/dev/null && ollama list &>/dev/null 2>&1 && ollama_status="${GREEN}●${NC}"
+    echo -e "  ${CYAN}Python${NC} $py_version  │  ${CYAN}Ollama${NC} $ollama_status  │  ${CYAN}Logs${NC} projects/*/output/logs/"
+    echo -e "${BLUE}────────────────────────────────────────────────────────────────${NC}"
     echo
-    echo -e "${BLUE}============================================================${NC}"
-    echo -e "  Repository: ${CYAN}$REPO_ROOT${NC}"
-    echo -e "  Python: ${CYAN}$($(get_python_cmd) --version 2>&1)${NC}"
-    echo -e "${BLUE}============================================================${NC}"
-    echo
-    echo -e "${CYAN}Tip:${NC} Enter multiple digits to chain steps (e.g., 345 for analysis → render → validate). Comma forms like 3,4,5 work too."
+    echo -e "${CYAN}💡 Tip:${NC} Chain commands: ${GREEN}345${NC} = analyze → render → validate"
 }
 
 # ============================================================================
@@ -282,13 +294,12 @@ echo "  d. Run all projects - Core pipeline (no infra, no LLM) + Executive Repor
 clean_output_directories() {
     # Clean and recreate output directories for fresh pipeline run.
     # Uses the Python infrastructure function that handles multi-project structure correctly.
-    # Removes all files from projects/{project_name}/output/ and output/{project_name}/ directories,
-    # then recreates the standard directory structure.
-    # This ensures no stale files from previous runs interfere with current execution.
-    # Root-level directories in output/ are cleaned to maintain proper organization.
     echo
     echo -e "${YELLOW}[0/9] Clean Output Directories${NC}"
-    echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${GRAY}────────────────────────────────────────────────────────────────${NC}"
+    echo -e "  ${CYAN}Project:${NC} $CURRENT_PROJECT"
+    echo -e "  ${CYAN}Target:${NC}  projects/$CURRENT_PROJECT/output/"
+    echo -e "${GRAY}────────────────────────────────────────────────────────────────${NC}"
 
     # Use Python function that handles multi-project structure correctly
     $(get_python_cmd) -c "
@@ -296,11 +307,8 @@ from infrastructure.core.file_operations import clean_output_directories
 from pathlib import Path
 import sys
 
-# Change to repo root
 repo_root = Path('$REPO_ROOT')
 sys.path.insert(0, str(repo_root))
-
-# Clean directories for current project
 clean_output_directories(repo_root, '$CURRENT_PROJECT')
 "
 
@@ -352,11 +360,101 @@ run_pytest_project() {
 }
 
 # ============================================================================
+# Logging Helpers for Comprehensive File Output
+# ============================================================================
+
+setup_stage_logging() {
+    # Setup logging for individual stage execution.
+    # Creates log directory and sets PIPELINE_LOG_FILE for tee-based logging.
+    # Args:
+    #   $1: project_name
+    #   $2: stage_name (optional, for log file naming)
+    local project_name="${1:-$CURRENT_PROJECT}"
+    local stage_name="${2:-stage}"
+
+    local log_dir="$REPO_ROOT/projects/$project_name/output/logs"
+    mkdir -p "$log_dir" 2>/dev/null || true
+
+    # Use a consistent log file for all stages within a project
+    export PIPELINE_LOG_FILE="$log_dir/pipeline.log"
+
+    # Log session start marker
+    if [[ -n "$PIPELINE_LOG_FILE" ]]; then
+        echo "" >> "$PIPELINE_LOG_FILE"
+        echo "======================================================================" >> "$PIPELINE_LOG_FILE"
+        echo "[$(date '+%Y-%m-%d %H:%M:%S')] Starting: $stage_name" >> "$PIPELINE_LOG_FILE"
+        echo "======================================================================" >> "$PIPELINE_LOG_FILE"
+    fi
+}
+
+setup_multiproject_logging() {
+    # Setup logging for multi-project execution.
+    # Creates consolidated log in output/multi_project_summary/
+    local log_dir="$REPO_ROOT/output/multi_project_summary"
+    mkdir -p "$log_dir" 2>/dev/null || true
+
+    export PIPELINE_LOG_FILE="$log_dir/multi_project_pipeline.log"
+
+    if [[ -n "$PIPELINE_LOG_FILE" ]]; then
+        echo "" >> "$PIPELINE_LOG_FILE"
+        echo "======================================================================" >> "$PIPELINE_LOG_FILE"
+        echo "[$(date '+%Y-%m-%d %H:%M:%S')] Multi-Project Pipeline Started" >> "$PIPELINE_LOG_FILE"
+        echo "======================================================================" >> "$PIPELINE_LOG_FILE"
+    fi
+}
+
+execute_with_logging() {
+    # Execute a Python command with tee-based logging.
+    # Outputs to both terminal and log file simultaneously.
+    # Args:
+    #   $@: Command and arguments to execute
+    local cmd="$@"
+    local exit_code
+
+    if [[ -n "$PIPELINE_LOG_FILE" ]]; then
+        $cmd 2>&1 | tee -a "$PIPELINE_LOG_FILE"
+        exit_code=${PIPESTATUS[0]}
+    else
+        $cmd
+        exit_code=$?
+    fi
+
+    return $exit_code
+}
+
+show_completion_summary() {
+    # Display completion summary with log file location.
+    # Args:
+    #   $1: Exit code (0=success, 1=failure)
+    #   $2: Operation name
+    #   $3: Duration in seconds
+    local exit_code="$1"
+    local operation="${2:-Operation}"
+    local duration="${3:-0}"
+
+    echo
+    echo -e "${BLUE}────────────────────────────────────────────────────────────────${NC}"
+    if [[ $exit_code -eq 0 ]]; then
+        echo -e "  ${GREEN}✓${NC} ${BOLD}$operation completed successfully${NC}"
+    else
+        echo -e "  ${RED}✗${NC} ${BOLD}$operation failed${NC} (exit code: $exit_code)"
+    fi
+    echo -e "  ${CYAN}Duration:${NC} $(format_duration "$duration")"
+    if [[ -n "${PIPELINE_LOG_FILE:-}" ]]; then
+        echo -e "  ${CYAN}Log file:${NC} $PIPELINE_LOG_FILE"
+    fi
+    echo -e "${BLUE}────────────────────────────────────────────────────────────────${NC}"
+}
+
+# ============================================================================
 # Individual Stage Functions
 # ============================================================================
 
 run_setup_environment() {
     local project_name="${1:-$CURRENT_PROJECT}"
+
+    # Setup logging for this stage
+    setup_stage_logging "$project_name" "Environment Setup"
 
     log_stage_with_project 1 "Environment Setup" 9 "$project_name"
     log_project_context "$project_name" "Environment Setup"
@@ -400,35 +498,42 @@ run_setup_environment() {
     done
     echo
 
-    # Execute Python setup script
-    $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" --project "$project_name" --stage setup
+    # Execute Python setup script with logging
+    execute_with_logging $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" --project "$project_name" --stage setup
     return $?
 }
 
 run_all_tests() {
     local project_name="${1:-$CURRENT_PROJECT}"
 
+    # Setup logging for this stage
+    setup_stage_logging "$project_name" "Testing"
+
     log_stage_with_project 2 "Infrastructure Tests" 9 "$project_name"
     log_stage_with_project 3 "Project Tests" 9 "$project_name"
     log_project_context "$project_name" "Testing"
 
-    $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" --project "$project_name" --stage tests
+    execute_with_logging $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" --project "$project_name" --stage tests
     return $?
 }
 
 run_infrastructure_tests() {
+    # Setup logging for infrastructure tests
+    setup_stage_logging "$CURRENT_PROJECT" "Infrastructure Tests"
     log_header "INFRASTRUCTURE TESTS"
 
-    $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" --project "$CURRENT_PROJECT" --stage infra_tests
+    execute_with_logging $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" --project "$CURRENT_PROJECT" --stage infra_tests
     return $?
 }
 
 run_project_tests() {
     local project_name="${1:-$CURRENT_PROJECT}"
 
+    # Setup logging for project tests
+    setup_stage_logging "$project_name" "Project Tests"
     log_header "PROJECT TESTS - Project: $project_name"
 
-    $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" --project "$project_name" --stage project_tests
+    execute_with_logging $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" --project "$project_name" --stage project_tests
     return $?
 }
 
@@ -448,20 +553,24 @@ run_analysis() {
 
 run_analysis_standalone() {
     # Standalone analysis execution (menu option 2)
+    setup_stage_logging "$CURRENT_PROJECT" "Analysis"
     log_header "RUN ANALYSIS (02_run_analysis.py)"
 
-    $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" --project "$CURRENT_PROJECT" --stage analysis
+    execute_with_logging $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" --project "$CURRENT_PROJECT" --stage analysis
     return $?
 }
 
 run_pdf_rendering() {
     local project_name="${1:-$CURRENT_PROJECT}"
 
+    # Setup logging for this stage
+    setup_stage_logging "$project_name" "PDF Rendering"
+
     log_stage_with_project 5 "PDF Rendering" 9 "$project_name"
     log_project_context "$project_name" "PDF Rendering"
 
     log_info "Rendering PDF manuscript..."
-    $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" --project "$project_name" --stage render_pdf
+    execute_with_logging $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" --project "$project_name" --stage render_pdf
     local exit_code=$?
     if [[ $exit_code -eq 0 ]]; then
         log_output_path "PDFs" "projects/$project_name/output/pdf/"
@@ -481,9 +590,10 @@ run_validation() {
 
 run_validation_standalone() {
     # Standalone validation execution (menu option 4)
+    setup_stage_logging "$CURRENT_PROJECT" "Validation"
     log_header "VALIDATE OUTPUT (04_validate_output.py)"
 
-    $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" --project "$CURRENT_PROJECT" --stage validate
+    execute_with_logging $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" --project "$CURRENT_PROJECT" --stage validate
     return $?
 }
 
@@ -512,13 +622,16 @@ run_copy_outputs_standalone() {
 run_llm_scientific_review() {
     local project_name="${1:-$CURRENT_PROJECT}"
 
+    # Setup logging for LLM review (captures Ollama output)
+    setup_stage_logging "$project_name" "LLM Scientific Review"
+
     log_stage_with_project 7 "LLM Scientific Review" 9 "$project_name"
     log_project_context "$project_name" "LLM Scientific Review"
 
     log_info "Running LLM scientific review (requires Ollama)..."
     log_info "Generating: executive summary, quality review, methodology review, improvements"
 
-    $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" --project "$project_name" --stage llm_reviews
+    execute_with_logging $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" --project "$project_name" --stage llm_reviews
     local exit_code=$?
 
     if [[ $exit_code -eq 0 ]]; then
@@ -538,13 +651,16 @@ run_llm_scientific_review() {
 run_llm_translations() {
     local project_name="${1:-$CURRENT_PROJECT}"
 
+    # Setup logging for LLM translations (captures Ollama output)
+    setup_stage_logging "$project_name" "LLM Translations"
+
     log_stage_with_project 8 "LLM Translations" 9 "$project_name"
     log_project_context "$project_name" "LLM Translations"
 
     log_info "Running LLM translations (requires Ollama)..."
     log_info "Generating translations for configured languages (see config.yaml)"
 
-    $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" --project "$project_name" --stage llm_translations
+    execute_with_logging $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" --project "$project_name" --stage llm_translations
     local exit_code=$?
 
     if [[ $exit_code -eq 0 ]]; then
@@ -663,20 +779,24 @@ run_core_pipeline_no_llm() {
     fi
 }
 run_all_projects_full() {
+    # Setup consolidated multi-project logging
+    setup_multiproject_logging
     log_header "RUNNING ALL PROJECTS - FULL PIPELINE (WITH INFRASTRUCTURE TESTS, WITH LLM)"
 
-    # Use Python orchestrator script for multi-project execution
-    $(get_python_cmd) "$REPO_ROOT/scripts/execute_multi_project.py"
+    # Use Python orchestrator script for multi-project execution with logging
+    execute_with_logging $(get_python_cmd) "$REPO_ROOT/scripts/execute_multi_project.py"
 
     # Return the exit code from Python
     return $?
 }
 
 run_all_projects_core() {
+    # Setup consolidated multi-project logging
+    setup_multiproject_logging
     log_header "RUNNING ALL PROJECTS - CORE PIPELINE (WITH INFRASTRUCTURE TESTS, NO LLM)"
 
-    # Use Python orchestrator script for multi-project execution
-    $(get_python_cmd) "$REPO_ROOT/scripts/execute_multi_project.py" --no-llm
+    # Use Python orchestrator script for multi-project execution with logging
+    execute_with_logging $(get_python_cmd) "$REPO_ROOT/scripts/execute_multi_project.py" --no-llm
 
     # Return the exit code from Python
     return $?
@@ -708,54 +828,53 @@ run_non_interactive() {
 # ============================================================================
 
 show_help() {
-    echo "Usage: $0 [OPTIONS]"
     echo
-    echo "Manuscript Pipeline Orchestrator"
+    echo -e "${BOLD}📄 MANUSCRIPT PIPELINE${NC}"
+    echo -e "${BLUE}────────────────────────────────────────────────────────────────${NC}"
     echo
-    echo "Options:"
-    echo "  --help, -h          Show this help message"
+    echo -e "${BOLD}USAGE${NC}"
+    echo "  $0 [OPTIONS]"
+    echo "  $0                     Interactive menu mode"
     echo
-    echo "Core Build Operations:"
-    echo "  --infra-tests       Run infrastructure tests"
-    echo "  --project-tests     Run project tests"
-    echo "  --render-pdf        Render PDF manuscript"
-    echo "  --pipeline          Run full pipeline (tests + analysis + PDF + validate)"
-    echo "  --resume            Resume pipeline from last checkpoint (use with --pipeline)"
+    echo -e "${BOLD}CLI FLAGS${NC}"
+    echo -e "  ${GREEN}--pipeline${NC}            Full pipeline (9 stages)"
+    echo -e "  ${GREEN}--resume${NC}              Resume from checkpoint"
+    echo -e "  ${GREEN}--infra-tests${NC}         Infrastructure tests only"
+    echo -e "  ${GREEN}--project-tests${NC}       Project tests only"
+    echo -e "  ${GREEN}--render-pdf${NC}          PDF rendering only"
+    echo -e "  ${GREEN}--reviews${NC}             LLM scientific review"
+    echo -e "  ${GREEN}--translations${NC}        LLM translations"
+    echo -e "  ${GREEN}--help, -h${NC}            This help message"
     echo
-    echo "LLM Operations (requires Ollama):"
-    echo "  --reviews           Run LLM manuscript review (English)"
-    echo "  --translations      Run LLM translations (multi-language)"
+    echo -e "${BOLD}MENU OPTIONS${NC}"
+    echo -e "  ${CYAN}Individual Stages:${NC}"
+    echo "    0  Setup Environment       4  Validate Output"
+    echo "    1  Run Tests               5  LLM Review"
+    echo "    2  Run Analysis            6  LLM Translations"
+    echo "    3  Render PDF"
     echo
-    echo "Main Menu Options (0-9):"
+    echo -e "  ${CYAN}Orchestration:${NC}"
+    echo "    7  Core Pipeline (no LLM)  9  Full Pipeline (fast)"
+    echo "    8  Full Pipeline (all)"
     echo
-    echo "Core Pipeline Scripts (aligned with script numbering):"
-    echo "  0  Setup Environment (00_setup_environment.py)"
-    echo "  1  Run Tests (01_run_tests.py - infrastructure + project)"
-    echo "  2  Run Analysis (02_run_analysis.py)"
-    echo "  3  Render PDF (03_render_pdf.py)"
-    echo "  4  Validate Output (04_validate_output.py)"
-    echo "  5  LLM Review (requires Ollama) (06_llm_review.py --reviews-only)"
-    echo "  6  LLM Translations (requires Ollama) (06_llm_review.py --translations-only)"
+    echo -e "  ${CYAN}Multi-Project:${NC}"
+    echo "    a  All full (+infra +LLM)  c  All core (+infra -LLM)"
+    echo "    b  All full (-infra +LLM)  d  All core (-infra -LLM)"
     echo
-    echo "Orchestration:"
-    echo "  7  Run Core Pipeline (stages 0-7: no LLM)"
-    echo "  8  Run Full Pipeline (9 stages: [1/9] to [9/9])"
-    echo "  9  Run Full Pipeline (skip infrastructure tests)"
+    echo -e "${BOLD}CHAINING${NC}"
+    echo -e "  Enter digits together: ${GREEN}345${NC} = analyze → render → validate"
+    echo -e "  Or comma-separated:    ${GREEN}3,4,5${NC}"
     echo
-echo "Multi-Project Operations:"
-echo "  a  Run all projects - Full pipeline (with infra, with LLM) + Executive Report"
-echo "  b  Run all projects - Full pipeline (no infra, with LLM) + Executive Report"
-echo "  c  Run all projects - Core pipeline (with infra, no LLM) + Executive Report"
-echo "  d  Run all projects - Core pipeline (no infra, no LLM) + Executive Report"
+    echo -e "${BOLD}LOG LOCATIONS${NC}"
+    echo -e "  Single-project:  ${CYAN}projects/{name}/output/logs/pipeline.log${NC}"
+    echo -e "  Multi-project:   ${CYAN}output/multi_project_summary/multi_project_pipeline.log${NC}"
     echo
-    echo "Examples:"
-    echo "  $0                      # Interactive menu mode"
-    echo "  $0 --pipeline           # Run full pipeline"
-    echo "  $0 --infra-tests         # Run infrastructure tests"
-    echo "  $0 --project-tests       # Run project tests"
-    echo "  $0 --render-pdf          # Render PDF manuscript"
-    echo "  $0 --reviews             # Run LLM manuscript review"
-    echo "  $0 --translations        # Run LLM translations"
+    echo -e "${BOLD}EXAMPLES${NC}"
+    echo "  $0                      Interactive mode"
+    echo "  $0 --pipeline           Full pipeline, current project"
+    echo "  $0 --pipeline --resume  Resume from checkpoint"
+    echo "  $0 8                    Full pipeline (shorthand)"
+    echo "  $0 345                  Chain: analyze → render → validate"
     echo
 }
 
@@ -881,42 +1000,63 @@ handle_menu_choice() {
             ;;
         *)
             log_error "Invalid option: $choice"
-            log_info "Please enter a number between 0 and 9"
+            log_info "Valid options: 0-9, a-d, p, i, q"
             exit_code=1
             ;;
     esac
-    
+
     end_time=$(date +%s)
     duration=$(get_elapsed_time "$start_time" "$end_time")
-    
-    echo
-    log_info "Operation completed in $(format_duration "$duration")"
+
+    # Determine operation name for summary
+    local op_name
+    case "$choice" in
+        0) op_name="Environment Setup" ;;
+        1) op_name="Testing" ;;
+        2) op_name="Analysis" ;;
+        3) op_name="PDF Rendering" ;;
+        4) op_name="Validation" ;;
+        5) op_name="LLM Review" ;;
+        6) op_name="LLM Translations" ;;
+        7) op_name="Core Pipeline" ;;
+        8) op_name="Full Pipeline" ;;
+        9) op_name="Full Pipeline (fast)" ;;
+        *) op_name="Operation" ;;
+    esac
+
+    show_completion_summary "$exit_code" "$op_name" "$duration"
     return $exit_code
 }
 
 run_all_projects() {
+    # Setup consolidated multi-project logging
+    setup_multiproject_logging
     log_header "RUNNING ALL PROJECTS"
 
     # Delegate to Python multi-project orchestrator so infra tests run once.
-    $(get_python_cmd) "$REPO_ROOT/scripts/execute_multi_project.py"
+    execute_with_logging $(get_python_cmd) "$REPO_ROOT/scripts/execute_multi_project.py"
     return $?
 }
 
 run_all_projects_full_no_infra() {
+    # Setup consolidated multi-project logging
+    setup_multiproject_logging
     log_header "RUNNING ALL PROJECTS - FULL PIPELINE (NO INFRASTRUCTURE TESTS, WITH LLM)"
 
-    # Use Python orchestrator script for multi-project execution
-    $(get_python_cmd) "$REPO_ROOT/scripts/execute_multi_project.py" --no-infra-tests
+    # Use Python orchestrator script for multi-project execution with logging
+    execute_with_logging $(get_python_cmd) "$REPO_ROOT/scripts/execute_multi_project.py" --no-infra-tests
 
     # Return the exit code from Python
     return $?
 }
 
 run_all_projects_core_no_infra() {
+    # Setup consolidated multi-project logging
+    setup_multiproject_logging
     log_header "RUNNING ALL PROJECTS - CORE PIPELINE (NO INFRASTRUCTURE TESTS, NO LLM)"
 
-    # Use Python orchestrator script for multi-project execution
-    $(get_python_cmd) "$REPO_ROOT/scripts/execute_multi_project.py" --no-infra-tests --no-llm
+    # Use Python orchestrator script for multi-project execution with logging
+    execute_with_logging $(get_python_cmd) "$REPO_ROOT/scripts/execute_multi_project.py" --no-infra-tests --no-llm
 
     # Return the exit code from Python
     return $?

@@ -6,12 +6,12 @@ security headers, rate limiting, and security monitoring.
 
 import hashlib
 import hmac
+import re
 import secrets
 import time
-from typing import Dict, Any, Optional, List, Callable, Union
 from functools import wraps
 from pathlib import Path
-import re
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from infrastructure.core.logging_utils import get_logger
 
@@ -24,43 +24,39 @@ class SecurityValidator:
     def __init__(self):
         # Maximum sizes for different input types
         self.limits = {
-            'prompt_length': 100000,  # Max LLM prompt length
-            'filename_length': 255,   # Max filename length
-            'path_length': 4096,      # Max path length
-            'content_size': 50 * 1024 * 1024,  # 50MB max content size
+            "prompt_length": 100000,  # Max LLM prompt length
+            "filename_length": 255,  # Max filename length
+            "path_length": 4096,  # Max path length
+            "content_size": 50 * 1024 * 1024,  # 50MB max content size
         }
 
         # Dangerous patterns to block
         self.dangerous_patterns = [
             # System prompt injection
-            r'(?i)system\s*prompt\s*[:=]',
-            r'(?i)ignore\s+previous\s+instructions',
-            r'(?i)override\s+system\s+prompt',
-
+            r"(?i)system\s*prompt\s*[:=]",
+            r"(?i)ignore\s+previous\s+instructions",
+            r"(?i)override\s+system\s+prompt",
             # Code execution attempts
-            r'(?i)exec\(|eval\(|subprocess\.|os\.system',
-            r'(?i)import\s+os|import\s+subprocess',
-
+            r"(?i)exec\(|eval\(|subprocess\.|os\.system",
+            r"(?i)import\s+os|import\s+subprocess",
             # File system access
-            r'(?i)open\(|file\(|pathlib\.|os\.path',
-            r'(?i)read\s+file|write\s+file|delete\s+file',
-
+            r"(?i)open\(|file\(|pathlib\.|os\.path",
+            r"(?i)read\s+file|write\s+file|delete\s+file",
             # Network access
-            r'(?i)requests\.|urllib\.|socket\.|http',
-
+            r"(?i)requests\.|urllib\.|socket\.|http",
             # SQL injection
-            r'(?i)(select|insert|update|delete|drop|create)\s+.*from',
-
+            r"(?i)(select|insert|update|delete|drop|create)\s+.*from",
             # XSS attempts
-            r'<script|<iframe|<object|<embed',
-            r'on\w+\s*=|javascript:|vbscript:',
-
+            r"<script|<iframe|<object|<embed",
+            r"on\w+\s*=|javascript:|vbscript:",
             # LaTeX injection
-            r'\\input|\\include|\\usepackage|\\newcommand',
-            r'\\write|\\read|\\openout|\\openin',
+            r"\\input|\\include|\\usepackage|\\newcommand",
+            r"\\write|\\read|\\openout|\\openin",
         ]
 
-    def validate_llm_input(self, prompt: str, context: Optional[Dict[str, Any]] = None) -> str:
+    def validate_llm_input(
+        self, prompt: str, context: Optional[Dict[str, Any]] = None
+    ) -> str:
         """Validate and sanitize LLM input.
 
         Args:
@@ -76,8 +72,10 @@ class SecurityValidator:
         if not isinstance(prompt, str):
             raise SecurityViolation("Input must be a string")
 
-        if len(prompt) > self.limits['prompt_length']:
-            raise SecurityViolation(f"Prompt too long: {len(prompt)} > {self.limits['prompt_length']}")
+        if len(prompt) > self.limits["prompt_length"]:
+            raise SecurityViolation(
+                f"Prompt too long: {len(prompt)} > {self.limits['prompt_length']}"
+            )
 
         # Check for dangerous patterns
         for pattern in self.dangerous_patterns:
@@ -118,7 +116,7 @@ class SecurityValidator:
             raise SecurityViolation("Invalid path")
 
         # Check path length
-        if len(str(path)) > self.limits['path_length']:
+        if len(str(path)) > self.limits["path_length"]:
             raise SecurityViolation("Path too long")
 
         return resolved
@@ -138,14 +136,14 @@ class SecurityValidator:
         if not filename or not isinstance(filename, str):
             raise SecurityViolation("Invalid filename")
 
-        if len(filename) > self.limits['filename_length']:
+        if len(filename) > self.limits["filename_length"]:
             raise SecurityViolation("Filename too long")
 
         # Remove dangerous characters
-        sanitized = re.sub(r'[<>:"|?*\x00-\x1f\x7f-\x9f]', '_', filename)
+        sanitized = re.sub(r'[<>:"|?*\x00-\x1f\x7f-\x9f]', "_", filename)
 
         # Remove path separators
-        sanitized = re.sub(r'[\/\\]', '_', sanitized)
+        sanitized = re.sub(r"[\/\\]", "_", sanitized)
 
         # Ensure not empty after sanitization
         if not sanitized.strip():
@@ -165,21 +163,24 @@ class SecurityValidator:
         Raises:
             SecurityViolation: If content is too large
         """
-        if len(content) > self.limits['content_size']:
-            raise SecurityViolation(f"Content too large: {len(content)} > {self.limits['content_size']}")
+        if len(content) > self.limits["content_size"]:
+            raise SecurityViolation(
+                f"Content too large: {len(content)} > {self.limits['content_size']}"
+            )
         return content
 
     def _sanitize_html(self, text: str) -> str:
         """Sanitize HTML entities."""
         import html
+
         return html.escape(text, quote=True)
 
     def _normalize_whitespace(self, text: str) -> str:
         """Normalize excessive whitespace."""
         # Replace multiple spaces with single space
-        text = re.sub(r' +', ' ', text)
+        text = re.sub(r" +", " ", text)
         # Replace multiple newlines with double newline
-        text = re.sub(r'\n\s*\n\s*\n+', '\n\n', text)
+        text = re.sub(r"\n\s*\n\s*\n+", "\n\n", text)
         return text.strip()
 
 
@@ -195,25 +196,20 @@ class SecurityHeaders:
         """
         return {
             # Prevent clickjacking
-            'X-Frame-Options': 'DENY',
-            'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'",
-
+            "X-Frame-Options": "DENY",
+            "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'",
             # Prevent MIME sniffing
-            'X-Content-Type-Options': 'nosniff',
-
+            "X-Content-Type-Options": "nosniff",
             # Enable XSS protection
-            'X-XSS-Protection': '1; mode=block',
-
+            "X-XSS-Protection": "1; mode=block",
             # Prevent referrer leakage
-            'Referrer-Policy': 'strict-origin-when-cross-origin',
-
+            "Referrer-Policy": "strict-origin-when-cross-origin",
             # HSTS (if HTTPS is enabled)
             # 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
-
             # Prevent caching of sensitive content
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
-            'Pragma': 'no-cache',
-            'Expires': '0',
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Pragma": "no-cache",
+            "Expires": "0",
         }
 
     @staticmethod
@@ -227,16 +223,16 @@ class SecurityHeaders:
             Dictionary of CORS headers
         """
         headers = {
-            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-            'Access-Control-Max-Age': '86400',  # 24 hours
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type, Authorization",
+            "Access-Control-Max-Age": "86400",  # 24 hours
         }
 
         if origin:
-            headers['Access-Control-Allow-Origin'] = origin
-            headers['Access-Control-Allow-Credentials'] = 'true'
+            headers["Access-Control-Allow-Origin"] = origin
+            headers["Access-Control-Allow-Credentials"] = "true"
         else:
-            headers['Access-Control-Allow-Origin'] = 'null'
+            headers["Access-Control-Allow-Origin"] = "null"
 
         return headers
 
@@ -264,7 +260,8 @@ class RateLimiter:
 
         # Remove old requests outside the window
         self.requests[key] = [
-            timestamp for timestamp in self.requests[key]
+            timestamp
+            for timestamp in self.requests[key]
             if now - timestamp < self.window_seconds
         ]
 
@@ -290,7 +287,8 @@ class RateLimiter:
 
         # Clean old requests
         self.requests[key] = [
-            timestamp for timestamp in self.requests[key]
+            timestamp
+            for timestamp in self.requests[key]
             if now - timestamp < self.window_seconds
         ]
 
@@ -304,8 +302,9 @@ class SecurityMonitor:
         self.events: List[Dict[str, Any]] = []
         self.max_events = 1000
 
-    def log_security_event(self, event_type: str, details: Dict[str, Any],
-                          severity: str = 'info') -> None:
+    def log_security_event(
+        self, event_type: str, details: Dict[str, Any], severity: str = "info"
+    ) -> None:
         """Log a security event.
 
         Args:
@@ -314,24 +313,24 @@ class SecurityMonitor:
             severity: Event severity (info, warning, error, critical)
         """
         event = {
-            'timestamp': time.time(),
-            'type': event_type,
-            'severity': severity,
-            'details': details,
+            "timestamp": time.time(),
+            "type": event_type,
+            "severity": severity,
+            "details": details,
         }
 
         self.events.append(event)
 
         # Keep only recent events
         if len(self.events) > self.max_events:
-            self.events = self.events[-self.max_events:]
+            self.events = self.events[-self.max_events :]
 
         # Log based on severity
-        if severity == 'warning':
+        if severity == "warning":
             logger.warning(f"Security event: {event_type} - {details}")
-        elif severity == 'error':
+        elif severity == "error":
             logger.error(f"Security event: {event_type} - {details}")
-        elif severity == 'critical':
+        elif severity == "critical":
             logger.critical(f"Security event: {event_type} - {details}")
         else:
             logger.info(f"Security event: {event_type} - {details}")
@@ -356,7 +355,7 @@ class SecurityMonitor:
         Returns:
             List of events of specified type
         """
-        return [event for event in self.events if event['type'] == event_type]
+        return [event for event in self.events if event["type"] == event_type]
 
     def get_security_summary(self) -> Dict[str, Any]:
         """Get security summary statistics.
@@ -369,22 +368,23 @@ class SecurityMonitor:
         events_by_severity = {}
 
         for event in self.events:
-            event_type = event['type']
-            severity = event['severity']
+            event_type = event["type"]
+            severity = event["severity"]
 
             events_by_type[event_type] = events_by_type.get(event_type, 0) + 1
             events_by_severity[severity] = events_by_severity.get(severity, 0) + 1
 
         return {
-            'total_events': total_events,
-            'events_by_type': events_by_type,
-            'events_by_severity': events_by_severity,
-            'most_recent_event': self.events[-1] if self.events else None,
+            "total_events": total_events,
+            "events_by_type": events_by_type,
+            "events_by_severity": events_by_severity,
+            "most_recent_event": self.events[-1] if self.events else None,
         }
 
 
 class SecurityViolation(Exception):
     """Exception raised for security violations."""
+
     pass
 
 
@@ -427,24 +427,55 @@ def rate_limit(max_requests: int = 100, window_seconds: int = 60):
         max_requests: Maximum requests per window
         window_seconds: Time window in seconds
     """
+
     def decorator(func: Callable) -> Callable:
+        """Wrap the target function with rate limiting.
+
+        Args:
+            func: The function to be decorated with rate limiting.
+
+        Returns:
+            Callable: Wrapped function that enforces rate limits.
+        """
         limiter = RateLimiter(max_requests, window_seconds)
 
         @wraps(func)
         def wrapper(*args, **kwargs):
+            """Execute the wrapped function with rate limit enforcement.
+
+            Checks if the function call is within rate limits before
+            execution. Logs security events when limits are exceeded.
+
+            Args:
+                *args: Positional arguments passed to the wrapped function.
+                **kwargs: Keyword arguments passed to the wrapped function.
+
+            Returns:
+                The return value from the wrapped function.
+
+            Raises:
+                SecurityViolation: If the rate limit has been exceeded
+                    for this function.
+            """
             # Use function name as rate limit key (could be enhanced with user ID/IP)
             key = f"{func.__module__}.{func.__name__}"
 
             if not limiter.is_allowed(key):
                 remaining = limiter.get_remaining_requests(key)
                 _security_monitor.log_security_event(
-                    'rate_limit_exceeded',
-                    {'function': f"{func.__module__}.{func.__name__}", 'remaining': remaining},
-                    'warning'
+                    "rate_limit_exceeded",
+                    {
+                        "function": f"{func.__module__}.{func.__name__}",
+                        "remaining": remaining,
+                    },
+                    "warning",
                 )
-                raise SecurityViolation(f"Rate limit exceeded. {remaining} requests remaining.")
+                raise SecurityViolation(
+                    f"Rate limit exceeded. {remaining} requests remaining."
+                )
 
             return func(*args, **kwargs)
 
         return wrapper
+
     return decorator

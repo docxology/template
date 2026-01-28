@@ -1,31 +1,464 @@
 {
-  "dual-channel": {
-    "text": "dual-channel",
-    "lemma": "dual-channel",
+  "δ_textrmmi": {
+    "text": "δ_textrmmi",
+    "lemma": "δ_textrmmi",
     "domains": [],
-    "frequency": 3,
+    "frequency": 4,
     "contexts": [
-      "dcaf-net **dual-channel** attentive fusion network",
-      "training paper proposes **dual-channel** attentive fusion network",
-      "stroke patient first **dual-channel** adaptive channel attention"
+      "δ_textrmmp mutual information **δ_textrmmi** obtained considering system",
+      "group interaction source **δ_textrmmi** exhibit higher propensity",
+      "show significant value **δ_textrmmi** investigating additive effect",
+      "arterial pressure δ_textrmmp **δ_textrmmi** assessing diastolic pressure"
     ],
     "pos_tags": [],
     "confidence": 0.4
   },
-  "three-dimensional": {
-    "text": "three-dimensional",
-    "lemma": "three-dimensional",
+  "protein-protein": {
+    "text": "protein-protein",
+    "lemma": "protein-protein",
     "domains": [],
-    "frequency": 8,
+    "frequency": 3,
     "contexts": [
-      "included detailed reconstruction **three-dimensional** plant structure derived",
-      "embryonic stem cell **three-dimensional** culture system system",
-      "platform demonstrate quantitative **three-dimensional** imaging ms2-labeled transcription",
-      "secondary structure sensitive **three-dimensional** topological feature implement",
-      "system form complex **three-dimensional** structure collective behavior"
+      "dynamics-inspired structure hallucination **protein-protein** interaction modeling fang",
+      "stan z li **protein-protein** interaction ppi represents",
+      "achieves roc-auc 093 **protein-protein** binding site prediction"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "d-ribose-5-phosphate": {
+    "text": "d-ribose-5-phosphate",
+    "lemma": "d-ribose-5-phosphate",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "ribose phosphorylation forming **d-ribose-5-phosphate** inside **d-ribose-5-phosphate** molecule",
+      "forming **d-ribose-5-phosphate** inside **d-ribose-5-phosphate** molecule cross membrane",
+      "evolution structure conversion **d-ribose-5-phosphate** complex functional molecule"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "p_r": {
+    "text": "p_r",
+    "lemma": "p_r",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "pearson correlation coefficient **p_r** 0375 rmse 2712",
+      "sequence-only baseline model **p_r** 0512 rmse 2445",
+      "obtained structure-based model **p_r** 0481 rmse 2488"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "cross-dataset": {
+    "text": "cross-dataset",
+    "lemma": "cross-dataset",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "separability enabling strong **cross-dataset** generalization evaluate method",
+      "dataset well bidirectional **cross-dataset** experiment training one",
+      "intra-dataset robustness excellent **cross-dataset** generalization demonstrate method"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "b_1": {
+    "text": "b_1",
+    "lemma": "b_1",
+    "domains": [],
+    "frequency": 4,
+    "contexts": [
+      "tree balance implication **b_1** index mareike fischer",
+      "question concerning well-known **b_1** balance index particular",
+      "tree shape maximize **b_1** index two case",
+      "value index finally **b_1** index induced so-called"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "game-theoretic": {
+    "text": "game-theoretic",
+    "lemma": "game-theoretic",
+    "domains": [],
+    "frequency": 4,
+    "contexts": [
+      "oscillatory regime **game-theoretic** model mosquito population",
+      "poorly understood introduce **game-theoretic** model fraction household",
+      "game theory coincides **game-theoretic** concept nash equilibrium",
+      "replicator dynamic evolutionary **game-theoretic** characterization limit cycle"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "end-to-end": {
+    "text": "end-to-end",
+    "lemma": "end-to-end",
+    "domains": [],
+    "frequency": 5,
+    "contexts": [
+      "classification tracking-derived feature **end-to-end** deep learning architecture",
+      "demonstrate prism practical **end-to-end** workflow bridge language-based",
+      "calibration timing precision **end-to-end** integration required reproducible",
+      "paper present novel **end-to-end** computational framework bridge",
+      "learning introduce diffeomorph **end-to-end** differentiable framework learning"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "cross-modal": {
+    "text": "cross-modal",
+    "lemma": "cross-modal",
+    "domains": [],
+    "frequency": 4,
+    "contexts": [
+      "address challenge propose **cross-modal** deep learning framework",
+      "gating module bgm **cross-modal** supervised contrastive learning",
+      "multiscale **cross-modal** mapping molecular pathologic",
+      "dccd-ccrcc highest layer **cross-modal** mapping transferred molecular"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "state-of-the-art": {
+    "text": "state-of-the-art",
+    "lemma": "state-of-the-art",
+    "domains": [],
+    "frequency": 18,
+    "contexts": [
+      "ensure interoperability data **state-of-the-art** harmonisation approach based",
+      "existing approach based **state-of-the-art** combat along distributed",
+      "feature sheaflapnet achieves **state-of-the-art** performance across diverse",
+      "deep learning currently **state-of-the-art** brain tumor segmentation",
+      "problem increasingly difficult **state-of-the-art** model use thousand"
+    ],
+    "pos_tags": [],
+    "confidence": 0.6
+  },
+  "birth-death": {
+    "text": "birth-death",
+    "lemma": "birth-death",
+    "domains": [],
+    "frequency": 7,
+    "contexts": [
+      "multiscale modelling **birth-death** process tom kimpson",
+      "tractable time-inhomogeneous linear **birth-death** process structure yield",
+      "process capture stochastic **birth-death** dynamic structured population",
+      "substantially spatial moran **birth-death** bd moran death-birth",
+      "mixed **birth-death** death-birth updating structured"
     ],
     "pos_tags": [],
     "confidence": 0.5
+  },
+  "c_1": {
+    "text": "c_1",
+    "lemma": "c_1",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "beginequation mathcale_mathrmmetell p_0 **c_1** δmathcala_ell c_2 int_0tellt-ell_02dt",
+      "duration loading p_0 **c_1** c_2 constant determined",
+      "meaningful coefficient p_0 **c_1** c_2 mean linear"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "open-source": {
+    "text": "open-source",
+    "lemma": "open-source",
+    "domains": [],
+    "frequency": 11,
+    "contexts": [
+      "ecgomics systematic paradigm **open-source** platform multidimensional deconstruction",
+      "**open-source** computational framework immersed",
+      "work present novel **open-source** immersed fsi framework",
+      "address critical need **open-source** immersed fsi software",
+      "validation using predominantly **open-source** library bone geometry"
+    ],
+    "pos_tags": [],
+    "confidence": 0.6
+  },
+  "steady-state": {
+    "text": "steady-state",
+    "lemma": "steady-state",
+    "domains": [],
+    "frequency": 4,
+    "contexts": [
+      "flux distribution within **steady-state** subspace operation corresponds",
+      "orthogonal projection enforces **steady-state** assumption introduce extension",
+      "flux data predicting **steady-state** flux readily available",
+      "poorly captured classical **steady-state** dose-response analysis paper"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "high-confidence": {
+    "text": "high-confidence",
+    "lemma": "high-confidence",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "identify compact set **high-confidence** predictor pain mental",
+      "million association pinpoint **high-confidence** target chemist agent",
+      "molecular docking identified **high-confidence** candidate ligand l1"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "c_2": {
+    "text": "c_2",
+    "lemma": "c_2",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "p_0 c_1 δmathcala_ell **c_2** int_0tellt-ell_02dt oell-ell_0_linfty3 endequation",
+      "loading p_0 c_1 **c_2** constant determined local",
+      "coefficient p_0 c_1 **c_2** mean linear regression"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "μμ_c": {
+    "text": "μμ_c",
+    "lemma": "μμ_c",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "mutation rate μ_c12n **μμ_c** exactly uniform probability",
+      "allele2 πk1n1 k0dotsn **μμ_c** diversity low stationary",
+      "dominated one allele **μμ_c** hand diversity high"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "real-world": {
+    "text": "real-world",
+    "lemma": "real-world",
+    "domains": [],
+    "frequency": 8,
+    "contexts": [
+      "theoretical discovery decentralized **real-world** health management ensuring",
+      "evaluated using new **real-world** dataset comprised 720",
+      "method using two **real-world** application aid clinical",
+      "enzyme kinetics predictor **real-world** enzyme engineering application",
+      "adversarial network cgan **real-world** measurement randomized crossover"
+    ],
+    "pos_tags": [],
+    "confidence": 0.5
+  },
+  "time-varying": {
+    "text": "time-varying",
+    "lemma": "time-varying",
+    "domains": [],
+    "frequency": 7,
+    "contexts": [
+      "non-critical transition linearised **time-varying** dynamic application epidemic",
+      "comparable wa test **time-varying** recurrent event rate",
+      "situation process corresponds **time-varying** vaccination rate susceptible",
+      "phase space cast **time-varying** gardner volume theory",
+      "transient response elicited **time-varying** stimulus overshoot biphasic"
+    ],
+    "pos_tags": [],
+    "confidence": 0.5
+  },
+  "r_0": {
+    "text": "r_0",
+    "lemma": "r_0",
+    "domains": [],
+    "frequency": 6,
+    "contexts": [
+      "basic reproduction number **r_0** establish local stability",
+      "stability disease-free equilibrium **r_0** 1 analytical result",
+      "constant reproduction number **r_0** optimal response infectious",
+      "basic reproduction number **r_0** satisfies **r_0** 1",
+      "number **r_0** satisfies **r_0** 1 gas fixed"
+    ],
+    "pos_tags": [],
+    "confidence": 0.5
+  },
+  "p_c": {
+    "text": "p_c",
+    "lemma": "p_c",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "1 critical value **p_c** proliferation advantageous disadvantageous",
+      "depending whether p **p_c** p **p_c** clarify",
+      "p **p_c** p **p_c** clarify role symmetry"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "beta-coalescents": {
+    "text": "beta-coalescents",
+    "lemma": "beta-coalescents",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "range 0 2 **beta-coalescents** may incomplete due",
+      "**beta-coalescents** sample size large"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "phylogenetic": {
+    "text": "phylogenetic",
+    "lemma": "phylogenetic",
+    "domains": [],
+    "frequency": 16,
+    "contexts": [
+      "laboratory survival across **phylogenetic** lineage riskas hl",
+      "model consists rooted **phylogenetic** tree three leaf",
+      "used example infer **phylogenetic** tree tumor evolution",
+      "ambiguity many different **phylogenetic** tree explain observed",
+      "duchene ruriko yoshida **phylogenetic** tree provide fundamental"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "low-cost": {
+    "text": "low-cost",
+    "lemma": "low-cost",
+    "domains": [
+      "economics"
+    ],
+    "frequency": 3,
+    "contexts": [
+      "lotus **low-cost** time-lapse automated imaging",
+      "cost-effective intervention identify **low-cost** priority area across",
+      "solid foundation generalizable **low-cost** phenotyping"
+    ],
+    "pos_tags": [],
+    "confidence": 0.7999999999999999
+  },
+  "learning-based": {
+    "text": "learning-based",
+    "lemma": "learning-based",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "comparative evaluation deep **learning-based** who-informed approach sperm",
+      "engineeringhowever existing deep **learning-based** enzyme-substrate interaction esi",
+      "paper present deep **learning-based** solution automating bee"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "x-ray": {
+    "text": "x-ray",
+    "lemma": "x-ray",
+    "domains": [],
+    "frequency": 9,
+    "contexts": [
+      "first step expansion **x-ray** microscopy achieving contrast",
+      "rapid tomographic technique **x-ray** microscopy potential drastically",
+      "expanded tissue using **x-ray** microscopy herein present",
+      "featuring first demonstration **x-ray** microscopy reconstruction cell",
+      "imaging using laboratory **x-ray** microscope emphasize great"
+    ],
+    "pos_tags": [],
+    "confidence": 0.5
+  },
+  "multi-objective": {
+    "text": "multi-objective",
+    "lemma": "multi-objective",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "morphogenesis approach biological **multi-objective** optimality maxime lucas",
+      "biological architecture approaching **multi-objective** optimality arise simple",
+      "metaheuristic algorithm well **multi-objective** optimization programming assembles"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "out-of-distribution": {
+    "text": "out-of-distribution",
+    "lemma": "out-of-distribution",
+    "domains": [
+      "economics"
+    ],
+    "frequency": 4,
+    "contexts": [
+      "representation learning boost **out-of-distribution** generalization enzymatic kinetic",
+      "performance degradation sequence-divergent **out-of-distribution** ood case limiting",
+      "**out-of-distribution** detection molecular complex",
+      "data performance degrades **out-of-distribution** ood input reliable"
+    ],
+    "pos_tags": [],
+    "confidence": 0.7999999999999999
+  },
+  "cross-validation": {
+    "text": "cross-validation",
+    "lemma": "cross-validation",
+    "domains": [],
+    "frequency": 4,
+    "contexts": [
+      "evaluate method five-fold **cross-validation** afdb cpsc2021 dataset",
+      "rigorous grouped 3-fold **cross-validation** unseen subjectsresultsthe model",
+      "network leave-one-complex-out loco **cross-validation** used assess framework",
+      "rigorous grouped 3-fold **cross-validation** unseen subject result"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "evolutionary": {
+    "text": "evolutionary",
+    "lemma": "evolutionary",
+    "domains": [],
+    "frequency": 43,
+    "contexts": [
+      "álvarez study chorhendysnir2006 **evolutionary** model consists rooted",
+      "cantor jc69 molecular **evolutionary** model molecular clock",
+      "immigration turnover ecology **evolutionary** science long debated",
+      "useful information reversible **evolutionary** process irreversible **evolutionary**",
+      "**evolutionary** process irreversible **evolutionary** accumulation model iain"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "mosquito-borne": {
+    "text": "mosquito-borne",
+    "lemma": "mosquito-borne",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "kottegoda lucas stolerman **mosquito-borne** disease remain major",
+      "lee smith recent **mosquito-borne** outbreak revealed vulnerability",
+      "culex population mitigating **mosquito-borne** disease risk weather-driven"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "next-generation": {
+    "text": "next-generation",
+    "lemma": "next-generation",
+    "domains": [],
+    "frequency": 5,
+    "contexts": [
+      "**next-generation** short-read sequencing reveals",
+      "transmission rate using **next-generation** matrix method derive",
+      "target rational design **next-generation** antibacterial agent",
+      "structural health monitoring **next-generation** bio-additive manufacturing workflow",
+      "number determined using **next-generation** matrix method numerical"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "epithelial-mesenchymal": {
+    "text": "epithelial-mesenchymal",
+    "lemma": "epithelial-mesenchymal",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "peli3-mediating **epithelial-mesenchymal** transition correlate radiation",
+      "fgf17-fgfr4 axis mediating **epithelial-mesenchymal** transition kong q",
+      "cell carcinoma inducing **epithelial-mesenchymal** transition inhibiting apoptosis"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
   },
   "good-turing": {
     "text": "good-turing",
@@ -55,55 +488,364 @@
     "pos_tags": [],
     "confidence": 0.4
   },
-  "p_0": {
-    "text": "p_0",
-    "lemma": "p_0",
+  "cross-sectional": {
+    "text": "cross-sectional",
+    "lemma": "cross-sectional",
     "domains": [],
     "frequency": 3,
     "contexts": [
-      "form beginequation mathcale_mathrmmetell **p_0** c_1 δmathcala_ell c_2",
-      "endequation duration loading **p_0** c_1 c_2 constant",
-      "physically meaningful coefficient **p_0** c_1 c_2 mean"
+      "differ hiv status **cross-sectional** analysis yoon h",
+      "united kingdom finding **cross-sectional** survey smith l",
+      "existing model fundamentally **cross-sectional** capture change time"
     ],
     "pos_tags": [],
     "confidence": 0.4
   },
-  "patient-specific": {
-    "text": "patient-specific",
-    "lemma": "patient-specific",
+  "λ_ea": {
+    "text": "λ_ea",
+    "lemma": "λ_ea",
     "domains": [],
     "frequency": 3,
     "contexts": [
-      "framework bridge gap **patient-specific** transcriptomics de novo",
-      "dysfunction analysis exposed **patient-specific** epithelial heterogeneity stratification",
-      "brain geometry reconstructed **patient-specific** mri dti data"
+      "estimating extinction threshold **λ_ea** result revealed consistent",
+      "result revealed consistent **λ_ea** relationship largely independent",
+      "geometry except smallest **λ_ea** relationship obeyed universal"
     ],
     "pos_tags": [],
     "confidence": 0.4
   },
-  "held-out": {
-    "text": "held-out",
-    "lemma": "held-out",
+  "c-index": {
+    "text": "c-index",
+    "lemma": "c-index",
     "domains": [],
     "frequency": 3,
     "contexts": [
-      "pf-ode likelihood identify **held-out** family ood correlate",
-      "765 macro f1 **held-out** test set 21",
-      "natural artificial classification **held-out** subject split contrast"
+      "model achieving improved **c-index** 074 pm 002",
+      "established prognostic variable **c-index** 080 capturing subtle",
+      "compared ptnm staging **c-index** 068-069 044-058 insight"
     ],
     "pos_tags": [],
     "confidence": 0.4
   },
-  "domain-specific": {
-    "text": "domain-specific",
-    "lemma": "domain-specific",
+  "dual-channel": {
+    "text": "dual-channel",
+    "lemma": "dual-channel",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "dcaf-net **dual-channel** attentive fusion network",
+      "training paper proposes **dual-channel** attentive fusion network",
+      "stroke patient first **dual-channel** adaptive channel attention"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "time-lapse": {
+    "text": "time-lapse",
+    "lemma": "time-lapse",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "lotus low-cost **time-lapse** automated imaging system",
+      "computer vision method **time-lapse** microscopy raffaella fiamma",
+      "canopy-movement feature rgb **time-lapse** imaging evaluating methodological"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "d-ribose": {
+    "text": "d-ribose",
+    "lemma": "d-ribose",
     "domains": [],
     "frequency": 4,
     "contexts": [
-      "data outperforming open-source **domain-specific** counterpart 20 accuracy",
-      "llama2 accuracy especially **domain-specific** strain information included",
-      "advance mechanistic interpretability **domain-specific** protein language model",
-      "clinical ontology enrich **domain-specific** knowledge generated clinical"
+      "life homochiral based **d-ribose** derivative phospholipid membrane",
+      "membrane high permeability **d-ribose** combined ribose interaction",
+      "substantially favoring buildup **d-ribose** l-ribose liposome fusion",
+      "eventually dna inherit **d-ribose** chirality"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "age-": {
+    "text": "age-",
+    "lemma": "age-",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "lifespan taking account **age-** sex-specific survivorship interbirth",
+      "burden male developed **age-** gender-stratified spatially heterogeneous",
+      "volumetric deformation drive **age-** size-related difference fem-augmented"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "genetics": {
+    "text": "genetics",
+    "lemma": "genetics",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "recombination graph population **genetics** important theoretical tool",
+      "population model used **genetics** fabio c c",
+      "extensively used population **genetics** except certain degenerate"
+    ],
+    "pos_tags": [],
+    "confidence": 0.2
+  },
+  "short-term": {
+    "text": "short-term",
+    "lemma": "short-term",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "pigment change early **short-term** contaminant exposure may",
+      "dual coupling mechanism **short-term** 05 25 long-term",
+      "cnn attention-based long **short-term** memory attention-lstm layer"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "cross-subject": {
+    "text": "cross-subject",
+    "lemma": "cross-subject",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "history propagation dependency **cross-subject** knee contact stress",
+      "driver prediction uncertainty **cross-subject** knee contact mechanic",
+      "topology-aware meshgraphnet regarding **cross-subject** neuromuscular control pattern"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "video-based": {
+    "text": "video-based",
+    "lemma": "video-based",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "bioprinted construct using **video-based** vibration analysis md",
+      "bioprinted construct using **video-based** vibration analysis ear-shaped",
+      "overall work demonstrates **video-based** vibrometry powerful approach"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "dcaf-net": {
+    "text": "dcaf-net",
+    "lemma": "dcaf-net",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "**dcaf-net** dual-channel attentive fusion",
+      "attentive fusion network **dcaf-net** synergistically integrates pre-movement",
+      "subject demonstrate effectiveness **dcaf-net** achieved prediction accuracy"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "high-throughput": {
+    "text": "high-throughput",
+    "lemma": "high-throughput",
+    "domains": [],
+    "frequency": 6,
+    "contexts": [
+      "chip velvet transfer **high-throughput** primary screening antibiotic-producing",
+      "web platform facilitates **high-throughput** analysis via precision",
+      "insight sensor data **high-throughput** phenotyping platform",
+      "volumetric imaging support **high-throughput** operation developed unified",
+      "cohort become available **high-throughput** omic study number"
+    ],
+    "pos_tags": [],
+    "confidence": 0.5
+  },
+  "in-line": {
+    "text": "in-line",
+    "lemma": "in-line",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "via lens-free digital **in-line** holographic microscopy j",
+      "using lens-free digital **in-line** holographic microscopy dlhm",
+      "conventional optical digital **in-line** holographic microscopy dihm"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "interval-censored": {
+    "text": "interval-censored",
+    "lemma": "interval-censored",
+    "domains": [],
+    "frequency": 4,
+    "contexts": [
+      "semiparametric estimation glms **interval-censored** covariates via augmented",
+      "guadalupe gómez melis **interval-censored** covariates frequently encountered",
+      "estimation regression model **interval-censored** covariates remains methodologically",
+      "turnbulls nonparametric estimator **interval-censored** data prove gelc"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "high-risk": {
+    "text": "high-risk",
+    "lemma": "high-risk",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "fidelity peak-stress capture **high-risk** localization compared purely",
+      "within msi-high tumour **high-risk** route cdx2hnf4a loss",
+      "higher spatial overlap **high-risk** region indicates mgn"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "information-theoretical": {
+    "text": "information-theoretical",
+    "lemma": "information-theoretical",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "extend framework using **information-theoretical** measure elucidate underlying",
+      "capture information flow **information-theoretical** analysis reveals maternal-fetal",
+      "study explore additional **information-theoretical** conditional approach resolve"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "fed-combat": {
+    "text": "fed-combat",
+    "lemma": "fed-combat",
+    "domains": [],
+    "frequency": 5,
+    "contexts": [
+      "**fed-combat** generalized federated framework",
+      "challenge paper present **fed-combat** federated framework batch",
+      "harmonization decentralized data **fed-combat** enables preservation nonlinear",
+      "account demonstrate effectiveness **fed-combat** comprehensive panel existing",
+      "show federated setting **fed-combat** harmonization exhibit comparable"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "self-organization": {
+    "text": "self-organization",
+    "lemma": "self-organization",
+    "domains": [],
+    "frequency": 6,
+    "contexts": [
+      "influence pigment cell **self-organization** using continuum reaction-diffusion-advection",
+      "gardner volume **self-organization** minimal model complex",
+      "rudolf hanel study **self-organization** minimally nonlinear model",
+      "piotr szymczak abiotic **self-organization** biological mechanism put",
+      "structure understand geological **self-organization** order differentiate biological"
+    ],
+    "pos_tags": [],
+    "confidence": 0.5
+  },
+  "selection": {
+    "text": "selection",
+    "lemma": "selection",
+    "domains": [],
+    "frequency": 39,
+    "contexts": [
+      "simulation group **selection** model fog",
+      "habitat **selection** three gull specie",
+      "community dynamic frequency-dependent **selection** find persistent diversity",
+      "maintained selectively measure **selection** 104-fold range abundance",
+      "model transition aggregated **selection** frequency hazard ratio"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "foraging": {
+    "text": "foraging",
+    "lemma": "foraging",
+    "domains": [
+      "behavior_and_identity"
+    ],
+    "frequency": 5,
+    "contexts": [
+      "sex difference **foraging** ecology chick rearing",
+      "metagenetic assessment pollen **foraging** appalachian bombus affinis",
+      "scale-dependent **foraging** behaviour habitat association",
+      "**foraging** benefit promote fitness",
+      "varying rate strength **foraging** skill acquisition typical"
+    ],
+    "pos_tags": [],
+    "confidence": 0.6
+  },
+  "cost-effective": {
+    "text": "cost-effective",
+    "lemma": "cost-effective",
+    "domains": [
+      "economics"
+    ],
+    "frequency": 3,
+    "contexts": [
+      "area high potential **cost-effective** intervention identify low-cost",
+      "scale ecological countermeasure **cost-effective** strategy reducing emergence",
+      "deep learning technique **cost-effective** lensless digital holographic"
+    ],
+    "pos_tags": [],
+    "confidence": 0.7999999999999999
+  },
+  "behavior": {
+    "text": "behavior",
+    "lemma": "behavior",
+    "domains": [
+      "behavior_and_identity"
+    ],
+    "frequency": 31,
+    "contexts": [
+      "trim63 promotes malignant **behavior** melanoma cell ubiquitination",
+      "progression via modulating **behavior** tumor cell m2",
+      "suppresses proliferative migratory **behavior** hela cell modulating",
+      "9 promotes malignant **behavior** immune evasion glioblastoma",
+      "bee apis mellifera **behavior** physiology walsh em"
+    ],
+    "pos_tags": [],
+    "confidence": 0.7999999999999999
+  },
+  "multi-agent": {
+    "text": "multi-agent",
+    "lemma": "multi-agent",
+    "domains": [],
+    "frequency": 5,
+    "contexts": [
+      "single reasoning model **multi-agent** workflow across constrained",
+      "discovery orchestrated knowledge-driven **multi-agent** team user-guided therapeutic",
+      "introduce orchestra human-in-the-loop **multi-agent** platform unifies biology",
+      "robotics programmable matter **multi-agent** learning introduce diffeomorph",
+      "implemented structbioreasoner scalable **multi-agent** system designing biologics"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "evolution": {
+    "text": "evolution",
+    "lemma": "evolution",
+    "domains": [],
+    "frequency": 34,
+    "contexts": [
+      "morphogenesis amniote preceded **evolution** corpus callosum noji",
+      "body associated cognitive **evolution** heliconius butterfly hodge",
+      "role microorganism flavor **evolution** prepared aquatic food",
+      "hypothesis influential account **evolution** menopause human theory",
+      "two theory ground **evolution** menopause biparental care"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "long-time": {
+    "text": "long-time",
+    "lemma": "long-time",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "become exponentially small **long-time** limit using standard",
+      "effect genealogy-based inhomogeneity **long-time** behavior process **long-time**",
+      "**long-time** behavior process **long-time** asymptotics independent mathematical"
     ],
     "pos_tags": [],
     "confidence": 0.4
@@ -122,208 +864,107 @@
     "pos_tags": [],
     "confidence": 0.4
   },
-  "evolutionary": {
-    "text": "evolutionary",
-    "lemma": "evolutionary",
-    "domains": [],
-    "frequency": 34,
+  "decision-making": {
+    "text": "decision-making",
+    "lemma": "decision-making",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 5,
     "contexts": [
-      "deep **evolutionary** conservation sex-determining locus",
-      "offset benefit analyze **evolutionary** game model integrates",
-      "alld player persist **evolutionary** shield preventing invasion",
-      "es population cornerstone **evolutionary** game theory coincides",
-      "parallel dynamical formulation **evolutionary** game theory particularly"
+      "nsclc essential clinical **decision-making** drug development tumor",
+      "influence spontaneous household **decision-making** dynamic mosquito population",
+      "mechanism lambda phage **decision-making** eugenio simao biological",
+      "information processing cellular **decision-making**",
+      "modeling explore alternative **decision-making** ensuring sustainable ecosystem"
     ],
     "pos_tags": [],
-    "confidence": 0.4
-  },
-  "eco-evolutionary": {
-    "text": "eco-evolutionary",
-    "lemma": "eco-evolutionary",
-    "domains": [],
-    "frequency": 6,
-    "contexts": [
-      "delayed reward demographic **eco-evolutionary** game dynamic impact",
-      "paper extend demographic **eco-evolutionary** game approach based",
-      "stochastic fluctuation **eco-evolutionary** game dynamic environmental",
-      "liu building upon **eco-evolutionary** game dynamic framework",
-      "corresponding deterministic model **eco-evolutionary** game variance converges"
-    ],
-    "pos_tags": [],
-    "confidence": 0.5
+    "confidence": 0.7999999999999999
   },
   "single-cell": {
     "text": "single-cell",
     "lemma": "single-cell",
     "domains": [],
-    "frequency": 15,
+    "frequency": 10,
     "contexts": [
-      "**single-cell** omics investigating effect",
-      "**single-cell** profiling reveals lineage-specific",
+      "model integrating fluctuating **single-cell** growth rate size-dependent",
+      "size control quantifier **single-cell** growth rate inferred",
       "preprocessing integration method **single-cell** genomics ali anaissi",
       "braytee jie hua **single-cell** data analysis potential",
       "disease-associated molecular change **single-cell** level advanced **single-cell**"
     ],
     "pos_tags": [],
-    "confidence": 0.6
+    "confidence": 0.5
   },
-  "fine-tuning": {
-    "text": "fine-tuning",
-    "lemma": "fine-tuning",
+  "single-objective": {
+    "text": "single-objective",
+    "lemma": "single-objective",
     "domains": [],
     "frequency": 3,
     "contexts": [
-      "laboratory mll dataset **fine-tuning** dinov3 using low-rank",
-      "class utilizing parameter-efficient **fine-tuning** 8 trainable parameter",
-      "distillation mad parameter-efficient **fine-tuning** peft validate platform"
+      "integrated quantitative **single-objective** light-sheet microscope subcellular",
+      "stability minimal phototoxicity **single-objective** light-sheet approach based",
+      "robust quantitatively calibrated **single-objective** light-sheet platform transcription"
     ],
     "pos_tags": [],
     "confidence": 0.4
   },
-  "semi-supervised": {
-    "text": "semi-supervised",
-    "lemma": "semi-supervised",
-    "domains": [],
-    "frequency": 5,
-    "contexts": [
-      "**semi-supervised** inf-net framework ct-based",
-      "research present ct-driven **semi-supervised** framework utilizing inf-net",
-      "labeled slice contrast **semi-supervised** variant achieves score",
-      "cad system proposed **semi-supervised** inf-net framework improves",
-      "wastewater rna surveillance **semi-supervised** learning approach temporal"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "short-term": {
-    "text": "short-term",
-    "lemma": "short-term",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "dual coupling mechanism **short-term** 05 25 long-term",
-      "cnn attention-based long **short-term** memory attention-lstm layer",
-      "generate fast nowcasts **short-term** forecast inform public"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "real-time": {
-    "text": "real-time",
-    "lemma": "real-time",
-    "domains": [],
-    "frequency": 5,
-    "contexts": [
-      "surrogate model promise **real-time** assessment suffer critical",
-      "intelligence browser-based tool **real-time** spatial analysis artificial",
-      "descriptive ai agent **real-time** workflow mcp file",
-      "cell culture bioprocessing **real-time** batch process monitoring",
-      "utility n-sub-epidemic framework **real-time** outbreak forecasting using"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "spef-phixer": {
-    "text": "spef-phixer",
-    "lemma": "spef-phixer",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "spatially-extended flow phixer **spef-phixer** spatially extended varphi-mixing",
-      "causal inference developed **spef-phixer** spatially extended phi-mixing",
-      "regulatory flow conclusion **spef-phixer** extract spatially coherent"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "whole-brain": {
-    "text": "whole-brain",
-    "lemma": "whole-brain",
+  "multi-omics": {
+    "text": "multi-omics",
+    "lemma": "multi-omics",
     "domains": [],
     "frequency": 4,
     "contexts": [
-      "neural computation existing **whole-brain** connectome model drosophila",
-      "steady-state theory build **whole-brain** visual function profile",
-      "visual input feature **whole-brain** connectome topology us",
-      "profile-behavior framework offering **whole-brain** quantitative tool study"
+      "fine-mapping near-isogenic line **multi-omics** network reconstruction genome",
+      "learning data-scarce coral **multi-omics** sam victor vertical",
+      "multi-laboratory collaboration distributed **multi-omics** datasets without sharing",
+      "ccrcc subtype defined **multi-omics** analysis associated adverse"
     ],
     "pos_tags": [],
     "confidence": 0.4
   },
-  "foraging": {
-    "text": "foraging",
-    "lemma": "foraging",
-    "domains": [
-      "behavior_and_identity"
-    ],
-    "frequency": 8,
-    "contexts": [
-      "freely **foraging** macaque value information",
-      "biomolecules suggest learned **foraging** strategy extinct cave",
-      "gull **foraging** highly urbanized area",
-      "chemotaxis strategy enhance **foraging** range motility-restricted bacteria",
-      "prefrontal cortex naturalistic **foraging** jeong jh choi"
-    ],
-    "pos_tags": [],
-    "confidence": 0.7000000000000001
-  },
-  "pf-ode": {
-    "text": "pf-ode",
-    "lemma": "pf-ode",
+  "ai-driven": {
+    "text": "ai-driven",
+    "lemma": "ai-driven",
     "domains": [],
     "frequency": 3,
     "contexts": [
-      "self-consistent probability-flow ode **pf-ode** produce per-sample log-likelihoods",
-      "protein family training **pf-ode** likelihood identify held-out",
-      "likelihood show multi-scale **pf-ode** trajectory statistic including"
+      "stable condition contrast **ai-driven** clinical system learn",
+      "mathematical language evaluating **ai-driven** clinical system continual",
+      "emerging synthetic consortium **ai-driven** framework enhances scalability"
     ],
     "pos_tags": [],
     "confidence": 0.4
   },
-  "multi-scale": {
-    "text": "multi-scale",
-    "lemma": "multi-scale",
+  "beta-coalescent": {
+    "text": "beta-coalescent",
+    "lemma": "beta-coalescent",
     "domains": [],
-    "frequency": 8,
+    "frequency": 5,
     "contexts": [
-      "**multi-scale** graph autoregressive modeling",
-      "interpretability analysis confirms **multi-scale** causal serialization effectively",
-      "investigate discrepancy applied **multi-scale** computational framework integrates",
-      "scalar likelihood show **multi-scale** pf-ode trajectory statistic",
-      "epitope discovery via **multi-scale** prediction antigen presentation"
+      "result skewness parameter **beta-coalescent** range 0 2",
+      "combining result parameter **beta-coalescent** range 0 2",
+      "kingman coalescent incomplete **beta-coalescent** complete **beta-coalescent** argue",
+      "incomplete **beta-coalescent** complete **beta-coalescent** argue applying upper",
+      "site-frequency spectrum limit **beta-coalescent** site frequency spectrum"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "three-dimensional": {
+    "text": "three-dimensional",
+    "lemma": "three-dimensional",
+    "domains": [],
+    "frequency": 7,
+    "contexts": [
+      "**three-dimensional** volumetric reconstruction native",
+      "included detailed reconstruction **three-dimensional** plant structure derived",
+      "embryonic stem cell **three-dimensional** culture system system",
+      "platform demonstrate quantitative **three-dimensional** imaging ms2-labeled transcription",
+      "secondary structure sensitive **three-dimensional** topological feature implement"
     ],
     "pos_tags": [],
     "confidence": 0.5
-  },
-  "n-sub-epidemic": {
-    "text": "n-sub-epidemic",
-    "lemma": "n-sub-epidemic",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "regression slr prophet **n-sub-epidemic** framework top-ranked weighted-ensemble",
-      "prediction interval coverage **n-sub-epidemic** unweighted ensemble outperformed",
-      "strategy demonstrate utility **n-sub-epidemic** framework real-time outbreak"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "behavior": {
-    "text": "behavior",
-    "lemma": "behavior",
-    "domains": [
-      "behavior_and_identity"
-    ],
-    "frequency": 31,
-    "contexts": [
-      "impairs maternal caregiving **behavior** rat role gabaarα1",
-      "related host finding **behavior** scleroderma sichuanensis mastoi",
-      "cooperative **behavior** weaver ant build",
-      "intensity modulates locomotor **behavior** predation different color",
-      "control effect hygienic **behavior** apis mellifera ristanić"
-    ],
-    "pos_tags": [],
-    "confidence": 0.7999999999999999
   },
   "population-level": {
     "text": "population-level",
@@ -331,27 +972,139 @@
     "domains": [],
     "frequency": 3,
     "contexts": [
+      "successfully described individual **population-level** marker kinetics revealing",
       "three pseudo-biodiversity effect **population-level** effect independence effect",
-      "effect arithmetic effect **population-level** effect related temporal",
-      "preference allowing single-neuron **population-level** blockade simulation replacing"
+      "effect arithmetic effect **population-level** effect related temporal"
     ],
     "pos_tags": [],
     "confidence": 0.4
   },
-  "colony-stimulating": {
-    "text": "colony-stimulating",
-    "lemma": "colony-stimulating",
-    "domains": [
-      "unit_of_individuality"
-    ],
-    "frequency": 3,
+  "high-dimensional": {
+    "text": "high-dimensional",
+    "lemma": "high-dimensional",
+    "domains": [],
+    "frequency": 5,
     "contexts": [
-      "granulocyte **colony-stimulating** factor treatment woman",
-      "successful treatment granulocyte **colony-stimulating** factor-related aortitis prostate",
-      "recombinant human granulocyte **colony-stimulating** factor advanced lung"
+      "genotype-phenotype map re-examine **high-dimensional** sequence space shape",
+      "f w peeters **high-dimensional** time series phenotypic",
+      "enrichment combination using **high-dimensional** penalized log-linear model",
+      "resulting formulation reduces **high-dimensional** grn dynamic effective",
+      "prior enhance bo **high-dimensional** feature costly in-context"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "high-fidelity": {
+    "text": "high-fidelity",
+    "lemma": "high-fidelity",
+    "domains": [],
+    "frequency": 5,
+    "contexts": [
+      "label-free approach provides **high-fidelity** morphological characterization nanometric",
+      "precision parameter configuration **high-fidelity** data ingestion 12-lead",
+      "antibodydesignbfn **high-fidelity** fixed-backbone antibody design",
+      "robust mathematical framework **high-fidelity** antibody designcode model",
+      "cgm data compression **high-fidelity** reconstruction clara bender"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "long-term": {
+    "text": "long-term",
+    "lemma": "long-term",
+    "domains": [],
+    "frequency": 5,
+    "contexts": [
+      "modeling **long-term** occupancy trend indiana",
+      "make possible distinguish **long-term** trend seasonal interannual",
+      "fast volumetric acquisition **long-term** stability minimal phototoxicity",
+      "short-term 05 25 **long-term** 25 5 time",
+      "disruption raising concern **long-term** sustainability island biodiversity"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "reproduction": {
+    "text": "reproduction",
+    "lemma": "reproduction",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 24,
+    "contexts": [
+      "outweigh benefit continued **reproduction** kuhle 2007 proposed",
+      "could averted ceasing **reproduction** midlife receiving energy",
+      "equilibrium derive basic **reproduction** number model conduct",
+      "evolving according sweepstakes **reproduction** bjarki eldon recruitment",
+      "ecology evolution sweepstakes **reproduction** heavy right-tailed offspring"
     ],
     "pos_tags": [],
     "confidence": 0.7999999999999999
+  },
+  "non-invasive": {
+    "text": "non-invasive",
+    "lemma": "non-invasive",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "**non-invasive** method profiling gut",
+      "evanescent wave serve **non-invasive** tool probe mechanical",
+      "soft nature making **non-invasive** straightforward structural evaluation"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "gbm-idhwt": {
+    "text": "gbm-idhwt",
+    "lemma": "gbm-idhwt",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "homeyer glioblastoma idh-wildtype **gbm-idhwt** common malignant brain",
+      "component integrated diagnosis **gbm-idhwt** artificial intelligence ai",
+      "dataset comprised 720 **gbm-idhwt** case three hospital"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "multi-step": {
+    "text": "multi-step",
+    "lemma": "multi-step",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "stochastic **multi-step** cell size homeostasis",
+      "division implement stochastic **multi-step** adder model cell",
+      "generalized framework connecting **multi-step** adder mechanism proliferation"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "dual-model": {
+    "text": "dual-model",
+    "lemma": "dual-model",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "**dual-model** framework chikv transmission",
+      "yang study construct **dual-model** framework integrating ordinary",
+      "comparison providing novel **dual-model** framework vector-borne disease"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "evidence-based": {
+    "text": "evidence-based",
+    "lemma": "evidence-based",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "**evidence-based** agiho guideline update",
+      "polypharmacological property generates **evidence-based** food-therapeutic prediction bridging",
+      "stochastic search programmable **evidence-based** engineering discipline"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
   },
   "non-dilemmatic": {
     "text": "non-dilemmatic",
@@ -366,30 +1119,321 @@
     "pos_tags": [],
     "confidence": 0.4
   },
-  "selection": {
-    "text": "selection",
-    "lemma": "selection",
+  "non-ad": {
+    "text": "non-ad",
+    "lemma": "non-ad",
     "domains": [],
-    "frequency": 30,
+    "frequency": 3,
     "contexts": [
-      "contrast social sexual **selection** roughgarden j",
-      "framework modelling frequency-dependent **selection** time well known",
-      "constitutive metrology evolution **selection** physical scale causation",
-      "saliency guided feature **selection** biologically motivated prior",
-      "significance domain-aware feature **selection** yield stable top-feature"
+      "approach distinguish atad **non-ad** cognitive impairment using",
+      "184 atad 235 **non-ad** 685 cognitively normal",
+      "perform multiple atad **non-ad** classification experiment using"
     ],
     "pos_tags": [],
     "confidence": 0.4
   },
-  "video-based": {
-    "text": "video-based",
-    "lemma": "video-based",
+  "p_0": {
+    "text": "p_0",
+    "lemma": "p_0",
     "domains": [],
     "frequency": 3,
     "contexts": [
-      "bioprinted construct using **video-based** vibration analysis md",
-      "bioprinted construct using **video-based** vibration analysis ear-shaped",
-      "overall work demonstrates **video-based** vibrometry powerful approach"
+      "form beginequation mathcale_mathrmmetell **p_0** c_1 δmathcala_ell c_2",
+      "endequation duration loading **p_0** c_1 c_2 constant",
+      "physically meaningful coefficient **p_0** c_1 c_2 mean"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "sequence-based": {
+    "text": "sequence-based",
+    "lemma": "sequence-based",
+    "domains": [],
+    "frequency": 4,
+    "contexts": [
+      "model generally outperform **sequence-based** method order overcome",
+      "jointly supervise training **sequence-based** student network guidance",
+      "close performance gap **sequence-based** structure-based model larger",
+      "transferring structural knowledge **sequence-based** predictor source code"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "early-stage": {
+    "text": "early-stage",
+    "lemma": "early-stage",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "microscopy herein present **early-stage** report featuring first",
+      "confidence architecture formalizes **early-stage** inference phased interpretation",
+      "adverse outcome even **early-stage** disease establish hierarchical"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "agent-based": {
+    "text": "agent-based",
+    "lemma": "agent-based",
+    "domains": [],
+    "frequency": 7,
+    "contexts": [
+      "high-resolution **agent-based** model improve fundamental",
+      "multi-cellular behavior particular **agent-based** cell-based model consider",
+      "understood using stochastic **agent-based** model sociodemographics metropolitan",
+      "**agent-based** modelling approach investigate",
+      "spatially heterogeneous epidemiological **agent-based** model focused specifically"
+    ],
+    "pos_tags": [],
+    "confidence": 0.5
+  },
+  "evolutionarily": {
+    "text": "evolutionarily",
+    "lemma": "evolutionarily",
+    "domains": [],
+    "frequency": 4,
+    "contexts": [
+      "oscillatory **evolutionarily** stable state limit",
+      "sagar chakraborty idea **evolutionarily** stable state es",
+      "site even rigid **evolutionarily** constrained extreme constraint",
+      "shmt structurally stable **evolutionarily** restricted enzyme whose"
+    ],
+    "pos_tags": [],
+    "confidence": 0.2
+  },
+  "information-theoretic": {
+    "text": "information-theoretic",
+    "lemma": "information-theoretic",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "hierarchical preemption novel **information-theoretic** control mechanism lambda",
+      "via nonlinear prediction **information-theoretic** tool chiara barà",
+      "hob clearly identified **information-theoretic** measure prediction measure"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "sage-fm": {
+    "text": "sage-fm",
+    "lemma": "sage-fm",
+    "domains": [],
+    "frequency": 5,
+    "contexts": [
+      "**sage-fm** lightweight interpretable spatial",
+      "regulatory relationship introduce **sage-fm** lightweight spatial transcriptomics",
+      "spanning 15 organ **sage-fm** learns spatially coherent",
+      "005 embeddings generated **sage-fm** outperform mofa existing",
+      "preservation biological heterogeneity **sage-fm** generalizes downstream task"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "δ_textrmmp": {
+    "text": "δ_textrmmp",
+    "lemma": "δ_textrmmp",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "excess mutual predictability **δ_textrmmp** mutual information δ_textrmmi",
+      "dynamic system show **δ_textrmmp** tends vanish target",
+      "mean arterial pressure **δ_textrmmp** δ_textrmmi assessing diastolic"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "epigenetic": {
+    "text": "epigenetic",
+    "lemma": "epigenetic",
+    "domains": [],
+    "frequency": 4,
+    "contexts": [
+      "cell modulating aberrant **epigenetic** mark writer eraser",
+      "**epigenetic** control reprogramming-induced potential",
+      "network grns incorporating **epigenetic** modification building hopfield",
+      "gene regulatory dynamic **epigenetic** control offering new"
+    ],
+    "pos_tags": [],
+    "confidence": 0.2
+  },
+  "continuous-time": {
+    "text": "continuous-time",
+    "lemma": "continuous-time",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "environment main result **continuous-time** beta poisson-dirichlet coalescents",
+      "rate main result **continuous-time** coalescents either kingman",
+      "data distribution enabling **continuous-time** fully differentiable generative"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "pf-ode": {
+    "text": "pf-ode",
+    "lemma": "pf-ode",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "self-consistent probability-flow ode **pf-ode** produce per-sample log-likelihoods",
+      "protein family training **pf-ode** likelihood identify held-out",
+      "likelihood show multi-scale **pf-ode** trajectory statistic including"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "non-small": {
+    "text": "non-small",
+    "lemma": "non-small",
+    "domains": [],
+    "frequency": 6,
+    "contexts": [
+      "correlate radiation sensitivity **non-small** cell lung cancer",
+      "promote malignant progression **non-small** cell lung cancer",
+      "overcomes gefitinib resistance **non-small** cell lung cancer",
+      "metabolic reprogramming driving **non-small** cell lung cancer",
+      "predicting overall survival **non-small** cell lung cancer"
+    ],
+    "pos_tags": [],
+    "confidence": 0.5
+  },
+  "death-birth": {
+    "text": "death-birth",
+    "lemma": "death-birth",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "birth-death bd moran **death-birth** db fkpp dynamic",
+      "mixed birth-death **death-birth** updating structured population",
+      "standard update rule **death-birth** db birth-death bd"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "large-deviation": {
+    "text": "large-deviation",
+    "lemma": "large-deviation",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "explore connection evolution **large-deviation** theory study evolutionary",
+      "selection amount realizing **large-deviation** dynamic non-interacting random",
+      "studied using toolbox **large-deviation** theory finally show"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "genetic": {
+    "text": "genetic",
+    "lemma": "genetic",
+    "domains": [],
+    "frequency": 17,
+    "contexts": [
+      "individual form low-tech **genetic** control gould j",
+      "knowledge graph integrating **genetic** target biological pathway",
+      "qian guo-wei wei **genetic** mutation frequently disrupt",
+      "**genetic** developmental enigma rhizome",
+      "diverse plant lineage **genetic** developmental regulation rhizome"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "open-ended": {
+    "text": "open-ended",
+    "lemma": "open-ended",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "workflow across constrained **open-ended** prompting paradigm resulting",
+      "characterizing **open-ended** evolution undecidability mechanism",
+      "model sustain genuinely **open-ended** evolution oee continual"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "non-linear": {
+    "text": "non-linear",
+    "lemma": "non-linear",
+    "domains": [],
+    "frequency": 5,
+    "contexts": [
+      "account either linear **non-linear** bias batch effect",
+      "a0 sequentially added **non-linear** descriptor a1 irrigation-context",
+      "hcc every configuration **non-linear** contextual enrichment a1-a2",
+      "fail capture intrinsic **non-linear** dynamic posture-dependent dependency",
+      "riemannian metric reveal **non-linear** inverted-u pattern varying"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "poisson-dirichlet": {
+    "text": "poisson-dirichlet",
+    "lemma": "poisson-dirichlet",
+    "domains": [],
+    "frequency": 4,
+    "contexts": [
+      "result continuous-time beta **poisson-dirichlet** coalescents combining result",
+      "specific family beta- **poisson-dirichlet** coalescents combining result",
+      "via quasi-conjugacy two-parameter **poisson-dirichlet** hidden markov model",
+      "latent process two-parameter **poisson-dirichlet** diffusion observation arise"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "multi-modal": {
+    "text": "multi-modal",
+    "lemma": "multi-modal",
+    "domains": [],
+    "frequency": 3,
+    "contexts": [
+      "mri volume 240times240times155 **multi-modal** scan reduced four",
+      "transformer-based **multi-modal** temporal embeddings explainable",
+      "u-net architecture innovation **multi-modal** processing ensemble strategy"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "disease-free": {
+    "text": "disease-free",
+    "lemma": "disease-free",
+    "domains": [],
+    "frequency": 6,
+    "contexts": [
+      "establish local stability **disease-free** equilibrium r_0 1",
+      "backward bifurcation bistability **disease-free** endemic state hopf-induced",
+      "confirm transition among **disease-free** endemic periodic regime",
+      "boundedness solution established **disease-free** endemic equilibrium analytically",
+      "condition stability endemic **disease-free** equilibrium numerical simulation"
+    ],
+    "pos_tags": [],
+    "confidence": 0.5
+  },
+  "non-monotonic": {
+    "text": "non-monotonic",
+    "lemma": "non-monotonic",
+    "domains": [],
+    "frequency": 5,
+    "contexts": [
+      "recurrent mechanism generating **non-monotonic** adaptive response across",
+      "branch-and-bound model selection **non-monotonic** criterion including aic",
+      "branch-and-bound algorithm tailored **non-monotonic** function demonstrate approach",
+      "time increasing decreasing **non-monotonic** prove nearly unweighted",
+      "epidemiological outcome show **non-monotonic** relationship infectivity highlighting"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "data-driven": {
+    "text": "data-driven",
+    "lemma": "data-driven",
+    "domains": [],
+    "frequency": 5,
+    "contexts": [
+      "expert-defined morphological rule **data-driven** latent representation effectively",
+      "enhance stability deployability **data-driven** enzyme kinetics predictor",
+      "showcase domain knowledge **data-driven** approach combined increase",
+      "cam first mine **data-driven** connection-aware motif serializes",
+      "integrating spatial risk **data-driven** spatial transcriptomic signature"
     ],
     "pos_tags": [],
     "confidence": 0.4
@@ -409,866 +1453,48 @@
     "pos_tags": [],
     "confidence": 0.4
   },
-  "cold-start": {
-    "text": "cold-start",
-    "lemma": "cold-start",
+  "mean-field": {
+    "text": "mean-field",
+    "lemma": "mean-field",
     "domains": [],
     "frequency": 3,
     "contexts": [
-      "bayesian confidence architecture **cold-start** personal health analytics",
-      "system face persistent **cold-start** dilemma user expect",
-      "demonstrate superior adaptability **cold-start** scenario additionally identify"
+      "using deterministic stochastic **mean-field** approximation characterize condition",
+      "behavior occur confirm **mean-field** prediction using individual-based",
+      "behaviour occurs fluctuation **mean-field** general stochastic system"
     ],
     "pos_tags": [],
     "confidence": 0.4
   },
-  "chain-of-thought": {
-    "text": "chain-of-thought",
-    "lemma": "chain-of-thought",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "underscoring critical role **chain-of-thought** reasoning capability protein-specific",
-      "ontology knowledge graph **chain-of-thought** prompting using gpt-4",
-      "one investigate usage **chain-of-thought** cot prompt engineering"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "s_1": {
-    "text": "s_1",
-    "lemma": "s_1",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "yu given sequence **s_1** n letter drawn",
-      "history generated s_2 **s_1** modern sequence aligners",
-      "rate substitution-only channel **s_1** assumed uniformly random"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "genome-wide": {
-    "text": "genome-wide",
-    "lemma": "genome-wide",
-    "domains": [],
-    "frequency": 4,
-    "contexts": [
-      "insight hereditary alpha-tryptasemia **genome-wide** association study hymenoptera",
-      "optimization-based phenotype randomization **genome-wide** association study differential",
-      "neel hyunghoon cho **genome-wide** association study gwas",
-      "releasing complete set **genome-wide** association statistic privacy"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "ai-driven": {
-    "text": "ai-driven",
-    "lemma": "ai-driven",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "stable condition contrast **ai-driven** clinical system learn",
-      "mathematical language evaluating **ai-driven** clinical system continual",
-      "emerging synthetic consortium **ai-driven** framework enhances scalability"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "seed-chain-extend": {
-    "text": "seed-chain-extend",
-    "lemma": "seed-chain-extend",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "channel average-case analysis **seed-chain-extend** spencer gibson yun",
-      "task many employ **seed-chain-extend** heuristic k-mer seed",
-      "deletion indels yet **seed-chain-extend** remains effective paper"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "disease-free": {
-    "text": "disease-free",
-    "lemma": "disease-free",
-    "domains": [],
-    "frequency": 4,
-    "contexts": [
-      "case report 12-year **disease-free** survival nakazono",
-      "boundedness solution established **disease-free** endemic equilibrium analytically",
-      "condition stability endemic **disease-free** equilibrium numerical simulation",
-      "1 gas equilibrium **disease-free** theorem subsumes large"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "dual-model": {
-    "text": "dual-model",
-    "lemma": "dual-model",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "**dual-model** framework chikv transmission",
-      "yang study construct **dual-model** framework integrating ordinary",
-      "comparison providing novel **dual-model** framework vector-borne disease"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "gpt-4": {
-    "text": "gpt-4",
-    "lemma": "gpt-4",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "chain-of-thought prompting using **gpt-4** ivan makohon mohamad",
-      "test dataset using **gpt-4** result show outperformed",
-      "large language model **gpt-4** vision allows ai"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "δ_textrmmp": {
-    "text": "δ_textrmmp",
-    "lemma": "δ_textrmmp",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "excess mutual predictability **δ_textrmmp** mutual information δ_textrmmi",
-      "dynamic system show **δ_textrmmp** tends vanish target",
-      "mean arterial pressure **δ_textrmmp** δ_textrmmi assessing diastolic"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "multi-omics": {
-    "text": "multi-omics",
-    "lemma": "multi-omics",
-    "domains": [],
-    "frequency": 6,
-    "contexts": [
-      "pan-cancer **multi-omics** analysis reveal diagnostic",
-      "magnolol liver cancer **multi-omics** study integrating computational",
-      "learning data-scarce coral **multi-omics** sam victor vertical",
-      "multi-laboratory collaboration distributed **multi-omics** datasets without sharing",
-      "ccrcc subtype defined **multi-omics** analysis associated adverse"
-    ],
-    "pos_tags": [],
-    "confidence": 0.5
-  },
-  "reaction-diffusion": {
-    "text": "reaction-diffusion",
-    "lemma": "reaction-diffusion",
-    "domains": [],
-    "frequency": 4,
-    "contexts": [
-      "dynamic structured population **reaction-diffusion** equation like fisher-kolmogorov-petrovsky-piskunov",
-      "adaptation time-varying environment **reaction-diffusion** model olivier rivoire",
-      "reproduction within stochastic **reaction-diffusion** dynamic framework model",
-      "hypothesis using two-species **reaction-diffusion** model plant-pollinator system"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "non-linear": {
-    "text": "non-linear",
-    "lemma": "non-linear",
-    "domains": [],
-    "frequency": 4,
-    "contexts": [
-      "a0 sequentially added **non-linear** descriptor a1 irrigation-context",
-      "hcc every configuration **non-linear** contextual enrichment a1-a2",
-      "fail capture intrinsic **non-linear** dynamic posture-dependent dependency",
-      "riemannian metric reveal **non-linear** inverted-u pattern varying"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "bio-inspired": {
-    "text": "bio-inspired",
-    "lemma": "bio-inspired",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "dual vision transformer **bio-inspired** optimization explainable keratoconus",
-      "**bio-inspired** nacre-like glass flakepolymer",
-      "**bio-inspired** rigid helical network"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "information-theoretic": {
-    "text": "information-theoretic",
-    "lemma": "information-theoretic",
-    "domains": [],
-    "frequency": 4,
-    "contexts": [
-      "hierarchical preemption novel **information-theoretic** control mechanism lambda",
-      "via nonlinear prediction **information-theoretic** tool chiara barà",
-      "hob clearly identified **information-theoretic** measure prediction measure",
-      "controlled setting employ **information-theoretic** measure assess informativeness"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "cost-effective": {
-    "text": "cost-effective",
-    "lemma": "cost-effective",
-    "domains": [
-      "economics"
-    ],
-    "frequency": 5,
-    "contexts": [
-      "design provides scalable **cost-effective** solution pcr workflow",
-      "deep learning technique **cost-effective** lensless digital holographic",
-      "severity mitigation tends **cost-effective** option severe disease",
-      "low elimination tends **cost-effective** r_0 high use",
-      "threshold elimination becomes **cost-effective** mitigation conclude proposed"
-    ],
-    "pos_tags": [],
-    "confidence": 0.7999999999999999
-  },
-  "g-csf": {
-    "text": "g-csf",
-    "lemma": "g-csf",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "fourth fifth day **g-csf** treatment unrelated donor",
-      "dna-based delivery **g-csf** durable efficacious approach",
-      "**g-csf** promotes h3k27ac-modified klf5"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "δ_textrmmi": {
-    "text": "δ_textrmmi",
-    "lemma": "δ_textrmmi",
-    "domains": [],
-    "frequency": 4,
-    "contexts": [
-      "δ_textrmmp mutual information **δ_textrmmi** obtained considering system",
-      "group interaction source **δ_textrmmi** exhibit higher propensity",
-      "show significant value **δ_textrmmi** investigating additive effect",
-      "arterial pressure δ_textrmmp **δ_textrmmi** assessing diastolic pressure"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "data-driven": {
-    "text": "data-driven",
-    "lemma": "data-driven",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "cam first mine **data-driven** connection-aware motif serializes",
-      "integrating spatial risk **data-driven** spatial transcriptomic signature",
-      "summarises resilience indicator **data-driven** tool detecting resilience"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "fixed-topology": {
-    "text": "fixed-topology",
-    "lemma": "fixed-topology",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "assess impact various **fixed-topology** strategy phylogenetic phylodynamic",
-      "bayesian joint inference **fixed-topology** strategy including conditioning",
-      "model largely robust **fixed-topology** assumption parameter depend"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "real-world": {
-    "text": "real-world",
-    "lemma": "real-world",
-    "domains": [],
-    "frequency": 13,
-    "contexts": [
-      "adversarial network cgan **real-world** measurement randomized crossover",
-      "per profile validation **real-world** data confirmed trend",
-      "game social context **real-world** agent may participate",
-      "score 58246 mixing **real-world** synthetic data 10",
-      "2020 anchor framework **real-world** case study find"
-    ],
-    "pos_tags": [],
-    "confidence": 0.6
-  },
-  "long-time": {
-    "text": "long-time",
-    "lemma": "long-time",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "become exponentially small **long-time** limit using standard",
-      "effect genealogy-based inhomogeneity **long-time** behavior process **long-time**",
-      "**long-time** behavior process **long-time** asymptotics independent mathematical"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "self-supervised": {
-    "text": "self-supervised",
-    "lemma": "self-supervised",
-    "domains": [],
-    "frequency": 4,
-    "contexts": [
-      "set odor molecule **self-supervised** learning capability vae",
-      "**self-supervised** learning molecular graph",
-      "veronika thost tengfei **self-supervised** learning ssl play",
-      "k cody bumgardner **self-supervised** learning ssl leverage"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "c_2": {
-    "text": "c_2",
-    "lemma": "c_2",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "p_0 c_1 δmathcala_ell **c_2** int_0tellt-ell_02dt oell-ell_0_linfty3 endequation",
-      "loading p_0 c_1 **c_2** constant determined local",
-      "coefficient p_0 c_1 **c_2** mean linear regression"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "inf-net": {
-    "text": "inf-net",
-    "lemma": "inf-net",
-    "domains": [],
-    "frequency": 4,
-    "contexts": [
-      "semi-supervised **inf-net** framework ct-based lung",
-      "semi-supervised framework utilizing **inf-net** architecture enhance lung",
-      "dataset indicate supervised **inf-net** attains score 0825",
-      "system proposed semi-supervised **inf-net** framework improves ct-based"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "colony": {
-    "text": "colony",
-    "lemma": "colony",
-    "domains": [
-      "unit_of_individuality"
-    ],
-    "frequency": 10,
-    "contexts": [
-      "factor healthy cynomolgus **colony** non-human primate eye",
-      "ridley turtle mass-nesting **colony** mexican pacific labastida-estrada",
-      "improved artificial bee **colony** algorithm path relinking",
-      "island honey bee **colony** sánchez-aroca muñoz la",
-      "based improved ant **colony** optimization algorithm r-tree"
-    ],
-    "pos_tags": [],
-    "confidence": 0.7000000000000001
-  },
-  "structure-based": {
-    "text": "structure-based",
-    "lemma": "structure-based",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "structure limit performance **structure-based** machine learning model",
-      "2445 kcalmol obtained **structure-based** model p_r 0481",
-      "performance gap sequence-based **structure-based** model larger datasets"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "phylogenetic": {
-    "text": "phylogenetic",
-    "lemma": "phylogenetic",
-    "domains": [],
-    "frequency": 25,
-    "contexts": [
-      "used example infer **phylogenetic** tree tumor evolution",
-      "ambiguity many different **phylogenetic** tree explain observed",
-      "duchene ruriko yoshida **phylogenetic** tree provide fundamental",
-      "speyer sturmfels coincides **phylogenetic** tree space paper",
-      "interface algebraic geometry **phylogenetic** inference"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "time-dependent": {
-    "text": "time-dependent",
-    "lemma": "time-dependent",
-    "domains": [],
-    "frequency": 5,
-    "contexts": [
-      "combining transport driven **time-dependent** mutation rate logistic",
-      "highlight extension method **time-dependent** relaxing system focus",
-      "capture reshapes observed **time-dependent** statistic molecular count",
-      "connectivity remain valid **time-dependent** kinetic rate",
-      "reaction exhibiting adaptation **time-dependent** influx reactant adaptation"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "r_0": {
-    "text": "r_0",
-    "lemma": "r_0",
-    "domains": [],
-    "frequency": 6,
-    "contexts": [
-      "constant reproduction number **r_0** optimal response infectious",
-      "basic reproduction number **r_0** satisfies **r_0** 1",
-      "number **r_0** satisfies **r_0** 1 gas fixed",
-      "disease prevalence alternatively **r_0** le 1 gas",
-      "basic reproduction number **r_0** relatively low elimination"
-    ],
-    "pos_tags": [],
-    "confidence": 0.5
-  },
-  "single-objective": {
-    "text": "single-objective",
-    "lemma": "single-objective",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "integrated quantitative **single-objective** light-sheet microscope subcellular",
-      "stability minimal phototoxicity **single-objective** light-sheet approach based",
-      "robust quantitatively calibrated **single-objective** light-sheet platform transcription"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "open-source": {
-    "text": "open-source",
-    "lemma": "open-source",
+  "patient-specific": {
+    "text": "patient-specific",
+    "lemma": "patient-specific",
     "domains": [],
     "frequency": 8,
     "contexts": [
-      "validation using predominantly **open-source** library bone geometry",
-      "mesh solved using **open-source** mfem library algorithm",
-      "modeling achieved using **open-source** tool providing robust",
-      "anatomy morphodepot applies **open-source** development model 3d",
-      "model cornerstone modern **open-source** software development collaborative"
+      "informed image registration **patient-specific** aortic valve strain",
+      "disease progression accurate **patient-specific** characterization valve geometry",
+      "valve motion complex **patient-specific** feature address challenge",
+      "tracking biomechanical assessment **patient-specific** valve geometry 4d",
+      "clinically relevant insight **patient-specific** av deformation supporting"
     ],
     "pos_tags": [],
     "confidence": 0.5
   },
-  "non-monotonic": {
-    "text": "non-monotonic",
-    "lemma": "non-monotonic",
+  "multi-scale": {
+    "text": "multi-scale",
+    "lemma": "multi-scale",
     "domains": [],
     "frequency": 7,
     "contexts": [
-      "recurrent mechanism generating **non-monotonic** adaptive response across",
-      "branch-and-bound model selection **non-monotonic** criterion including aic",
-      "branch-and-bound algorithm tailored **non-monotonic** function demonstrate approach",
-      "time increasing decreasing **non-monotonic** prove nearly unweighted",
-      "epidemiological outcome show **non-monotonic** relationship infectivity highlighting"
+      "**multi-scale** graph autoregressive modeling",
+      "interpretability analysis confirms **multi-scale** causal serialization effectively",
+      "investigate discrepancy applied **multi-scale** computational framework integrates",
+      "scalar likelihood show **multi-scale** pf-ode trajectory statistic",
+      "epitope discovery via **multi-scale** prediction antigen presentation"
     ],
     "pos_tags": [],
     "confidence": 0.5
-  },
-  "sequence-based": {
-    "text": "sequence-based",
-    "lemma": "sequence-based",
-    "domains": [],
-    "frequency": 5,
-    "contexts": [
-      "model generally outperform **sequence-based** method order overcome",
-      "jointly supervise training **sequence-based** student network guidance",
-      "close performance gap **sequence-based** structure-based model larger",
-      "transferring structural knowledge **sequence-based** predictor source code",
-      "model plms transformed **sequence-based** protein analysis yet"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "long-term": {
-    "text": "long-term",
-    "lemma": "long-term",
-    "domains": [],
-    "frequency": 10,
-    "contexts": [
-      "**long-term** preservation bacteria washed",
-      "**long-term** nrf2-driven microglial repopulation",
-      "pathogenic potential soil **long-term** cultivated apple orchard",
-      "**long-term** presence emerging pathogen",
-      "fast volumetric acquisition **long-term** stability minimal phototoxicity"
-    ],
-    "pos_tags": [],
-    "confidence": 0.5
-  },
-  "end-to-end": {
-    "text": "end-to-end",
-    "lemma": "end-to-end",
-    "domains": [],
-    "frequency": 4,
-    "contexts": [
-      "calibration timing precision **end-to-end** integration required reproducible",
-      "paper present novel **end-to-end** computational framework bridge",
-      "learning introduce diffeomorph **end-to-end** differentiable framework learning",
-      "inductive sensor enabling **end-to-end** experimental validation dedicated"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "multi-agent": {
-    "text": "multi-agent",
-    "lemma": "multi-agent",
-    "domains": [],
-    "frequency": 4,
-    "contexts": [
-      "discovery orchestrated knowledge-driven **multi-agent** team user-guided therapeutic",
-      "introduce orchestra human-in-the-loop **multi-agent** platform unifies biology",
-      "robotics programmable matter **multi-agent** learning introduce diffeomorph",
-      "implemented structbioreasoner scalable **multi-agent** system designing biologics"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "self-organization": {
-    "text": "self-organization",
-    "lemma": "self-organization",
-    "domains": [],
-    "frequency": 7,
-    "contexts": [
-      "gardner volume **self-organization** minimal model complex",
-      "rudolf hanel study **self-organization** minimally nonlinear model",
-      "piotr szymczak abiotic **self-organization** biological mechanism put",
-      "structure understand geological **self-organization** order differentiate biological",
-      "biological activity geological **self-organization** fundamental understanding origin"
-    ],
-    "pos_tags": [],
-    "confidence": 0.5
-  },
-  "multi-step": {
-    "text": "multi-step",
-    "lemma": "multi-step",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "stochastic **multi-step** cell size homeostasis",
-      "division implement stochastic **multi-step** adder model cell",
-      "generalized framework connecting **multi-step** adder mechanism proliferation"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "decision-making": {
-    "text": "decision-making",
-    "lemma": "decision-making",
-    "domains": [
-      "kin_and_relatedness"
-    ],
-    "frequency": 6,
-    "contexts": [
-      "mechanism lambda phage **decision-making** eugenio simao biological",
-      "information processing cellular **decision-making**",
-      "modeling explore alternative **decision-making** ensuring sustainable ecosystem",
-      "heterogeneity factor relevant **decision-making**",
-      "architecture explainable medical **decision-making** built upon model"
-    ],
-    "pos_tags": [],
-    "confidence": 0.9
-  },
-  "cross-validation": {
-    "text": "cross-validation",
-    "lemma": "cross-validation",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "network leave-one-complex-out loco **cross-validation** used assess framework",
-      "rigorous grouped 3-fold **cross-validation** unseen subject result",
-      "classifier evaluated participant-wise **cross-validation** result proposed sequence"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "s-eps": {
-    "text": "s-eps",
-    "lemma": "s-eps",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "equal power sampling **s-eps** framework phylogenetic-free bias-correcting",
-      "source-sink dynamic applying **s-eps** 66 million sars-cov-2",
-      "importance genetic surveillance **s-eps** offering enhanced capability"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "high-resolution": {
-    "text": "high-resolution",
-    "lemma": "high-resolution",
-    "domains": [],
-    "frequency": 5,
-    "contexts": [
-      "pazner zohar yosibash **high-resolution** voxel-based micro-finite element",
-      "introduce asubee first **high-resolution** dataset specifically designed",
-      "ld robustly applied **high-resolution** haploid genome human",
-      "ct advanced modality **high-resolution** peripheral quantitative ct",
-      "biomechanically relevant feature **high-resolution** bone image offering"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "sars-cov-2": {
-    "text": "sars-cov-2",
-    "lemma": "sars-cov-2",
-    "domains": [],
-    "frequency": 5,
-    "contexts": [
-      "asymptotic approach application **sars-cov-2** protease inhibition demonstrates",
-      "dna biomarkers derived **sars-cov-2** statistically significant difference",
-      "global circulation pathway **sars-cov-2** variant site-based mutation",
-      "wang genetic evolution **sars-cov-2** caused recurring epidemic",
-      "s-eps 66 million **sars-cov-2** genome march 2020"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "non-equilibrium": {
-    "text": "non-equilibrium",
-    "lemma": "non-equilibrium",
-    "domains": [],
-    "frequency": 4,
-    "contexts": [
-      "dynamical system theory **non-equilibrium** thermodynamics evolutionary dynamic",
-      "co-existing stable solution **non-equilibrium** attractor possible model",
-      "universally applicable measure **non-equilibrium** behavior particularly system",
-      "detail large class **non-equilibrium** steady state highlight"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "time-varying": {
-    "text": "time-varying",
-    "lemma": "time-varying",
-    "domains": [],
-    "frequency": 8,
-    "contexts": [
-      "comparable wa test **time-varying** recurrent event rate",
-      "situation process corresponds **time-varying** vaccination rate susceptible",
-      "phase space cast **time-varying** gardner volume theory",
-      "transient response elicited **time-varying** stimulus overshoot biphasic",
-      "recovering interpretable pattern **time-varying** heterozygosity"
-    ],
-    "pos_tags": [],
-    "confidence": 0.5
-  },
-  "micro-ct": {
-    "text": "micro-ct",
-    "lemma": "micro-ct",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "bone model based **micro-ct** scan shani martinez-weissberg",
-      "specie khirtharia inflata **micro-ct** scan investigation virtual",
-      "estimate bone strength **micro-ct** surrogate advanced imaging"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "large-scale": {
-    "text": "large-scale",
-    "lemma": "large-scale",
-    "domains": [],
-    "frequency": 8,
-    "contexts": [
-      "computational framework integrates **large-scale** sequence analysis 1000",
-      "comprehensive μfe framework **large-scale** biomechanical analysis intact",
-      "library algorithm designed **large-scale** linear elasticity system",
-      "scale result demonstrate **large-scale** experimentally informed μfe",
-      "human error particularly **large-scale** study paper present"
-    ],
-    "pos_tags": [],
-    "confidence": 0.5
-  },
-  "covid-19": {
-    "text": "covid-19",
-    "lemma": "covid-19",
-    "domains": [],
-    "frequency": 13,
-    "contexts": [
-      "zealand elimination response **covid-19** pandemic 2020 anchor",
-      "find parameter estimate **covid-19** new zealand put",
-      "cumulative number death **covid-19** epidemic china work",
-      "global pandemic recent **covid-19** crisis highlight need",
-      "**covid-19** forecasting u wastewater"
-    ],
-    "pos_tags": [],
-    "confidence": 0.6
-  },
-  "multi-path": {
-    "text": "multi-path",
-    "lemma": "multi-path",
-    "domains": [],
-    "frequency": 4,
-    "contexts": [
-      "function profile via **multi-path** aggregation reveal neuron-level",
-      "neuronal response introduce **multi-path** aggregation mpa framework",
-      "signal quality inspired **multi-path** propagation model conventional",
-      "namely molecule delay **multi-path** spread show metric"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "reproduction": {
-    "text": "reproduction",
-    "lemma": "reproduction",
-    "domains": [
-      "sex_and_reproduction"
-    ],
-    "frequency": 10,
-    "contexts": [
-      "analytically derived basic **reproduction** number determined using",
-      "peak value error **reproduction** number analysis revealed",
-      "ode1390 pn effective **reproduction** number decreasing intervention",
-      "first assuming constant **reproduction** number r_0 optimal",
-      "bd individual chosen **reproduction** proportional fitness offspring"
-    ],
-    "pos_tags": [],
-    "confidence": 0.7000000000000001
-  },
-  "p_r": {
-    "text": "p_r",
-    "lemma": "p_r",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "pearson correlation coefficient **p_r** 0375 rmse 2712",
-      "sequence-only baseline model **p_r** 0512 rmse 2445",
-      "obtained structure-based model **p_r** 0481 rmse 2488"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "mamba-based": {
-    "text": "mamba-based",
-    "lemma": "mamba-based",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "oxygen flow using **mamba-based** deep learning approach",
-      "objective present evaluate **mamba-based** deep-learning model diagnosis",
-      "data anne one **mamba-based** deep learning model"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "information-theoretical": {
-    "text": "information-theoretical",
-    "lemma": "information-theoretical",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "extend framework using **information-theoretical** measure elucidate underlying",
-      "capture information flow **information-theoretical** analysis reveals maternal-fetal",
-      "study explore additional **information-theoretical** conditional approach resolve"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "δmathcala_ell": {
-    "text": "δmathcala_ell",
-    "lemma": "δmathcala_ell",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "concept textbfdeviation absement **δmathcala_ell** defined time integral",
-      "mathcale_mathrmmetell p_0 c_1 **δmathcala_ell** c_2 int_0tellt-ell_02dt oell-ell_0_linfty3",
-      "system deviation absement **δmathcala_ell** textbfunique first-order sufficient"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "high-dimensional": {
-    "text": "high-dimensional",
-    "lemma": "high-dimensional",
-    "domains": [],
-    "frequency": 5,
-    "contexts": [
-      "resulting formulation reduces **high-dimensional** grn dynamic effective",
-      "prior enhance bo **high-dimensional** feature costly in-context",
-      "state following possibly **high-dimensional** langevin equation discus",
-      "heterogeneous process condition **high-dimensional** sensory input study",
-      "remains challenging process **high-dimensional** transient behavior vary"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "λ_ea": {
-    "text": "λ_ea",
-    "lemma": "λ_ea",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "estimating extinction threshold **λ_ea** result revealed consistent",
-      "result revealed consistent **λ_ea** relationship largely independent",
-      "geometry except smallest **λ_ea** relationship obeyed universal"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "mcp-ai": {
-    "text": "mcp-ai",
-    "lemma": "mcp-ai",
-    "domains": [],
-    "frequency": 6,
-    "contexts": [
-      "**mcp-ai** protocol-driven intelligence framework",
-      "clinical application known **mcp-ai** integration allows intelligent",
-      "become urgent present **mcp-ai** novel architecture explainable",
-      "prompt-based ai system **mcp-ai** support adaptive longitudinal",
-      "across care setting **mcp-ai** validated two use"
-    ],
-    "pos_tags": [],
-    "confidence": 0.5
-  },
-  "agent-based": {
-    "text": "agent-based",
-    "lemma": "agent-based",
-    "domains": [],
-    "frequency": 5,
-    "contexts": [
-      "developed spatially explicit **agent-based** model empty site",
-      "shape using differentiable **agent-based** simulation seong ho",
-      "environmental autocorrelation evolutionary **agent-based** model confirms bistability",
-      "care setting australia **agent-based** model study haley",
-      "heslop study present **agent-based** model abm developed"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "genetic": {
-    "text": "genetic",
-    "lemma": "genetic",
-    "domains": [],
-    "frequency": 15,
-    "contexts": [
-      "formation ghost bat **genetic** geographic morphological driver",
-      "happens complex network **genetic** regulation metabolic reaction",
-      "application include social **genetic** data aggregate clustering",
-      "landscape provides insight **genetic** regulatory structure influence",
-      "align intuition inference **genetic** data tool enabling"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "high-risk": {
-    "text": "high-risk",
-    "lemma": "high-risk",
-    "domains": [],
-    "frequency": 5,
-    "contexts": [
-      "pathway metabolic vulnerability **high-risk** md stem cell",
-      "within msi-high tumour **high-risk** route cdx2hnf4a loss",
-      "higher spatial overlap **high-risk** region indicates mgn",
-      "analysis revealed clustering **high-risk** contact structured daily",
-      "infection control strategy **high-risk** enclosed environment"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
   },
   "pr-msmat": {
     "text": "pr-msmat",
@@ -1283,168 +1509,17 @@
     "pos_tags": [],
     "confidence": 0.4
   },
-  "evolution": {
-    "text": "evolution",
-    "lemma": "evolution",
-    "domains": [],
-    "frequency": 31,
-    "contexts": [
-      "expansion underlie genome **evolution** stingless bee de",
-      "**evolution** bee insight omic",
-      "**evolution** plastic dispersal stable",
-      "dispersal hence allow **evolution** plastic dispersal strategy",
-      "show using approach **evolution** dispersal complex landscape"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "level-1": {
-    "text": "level-1",
-    "lemma": "level-1",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "phylogenetic tree binary **level-1** normal network paper",
-      "length sufficient reconstruct **level-1** phylogenetic network martin",
-      "required reconstruct binary **level-1** semi-directed phylogenetic network"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "model-based": {
-    "text": "model-based",
-    "lemma": "model-based",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "report large language **model-based** narrative explanation agentic",
-      "evolutionary model contrast **model-based** inference recently proposed",
-      "analysis reference recognize **model-based** approximation result highlight"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "multi-objective": {
-    "text": "multi-objective",
-    "lemma": "multi-objective",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "morphogenesis approach biological **multi-objective** optimality maxime lucas",
-      "biological architecture approaching **multi-objective** optimality arise simple",
-      "metaheuristic algorithm well **multi-objective** optimization programming assembles"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "next-generation": {
-    "text": "next-generation",
-    "lemma": "next-generation",
-    "domains": [],
-    "frequency": 4,
-    "contexts": [
-      "**next-generation** polydopamine nanocoatings advancing",
-      "target rational design **next-generation** antibacterial agent",
-      "structural health monitoring **next-generation** bio-additive manufacturing workflow",
-      "number determined using **next-generation** matrix method numerical"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "non-local": {
-    "text": "non-local",
-    "lemma": "non-local",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "mgn effectively captured **non-local** force-transmission pathway unique",
-      "plant-pollinator system incorporates **non-local** plant competition local",
-      "analysis determine condition **non-local** competition trigger vegetation"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "birth-death": {
-    "text": "birth-death",
-    "lemma": "birth-death",
+  "triple-negative": {
+    "text": "triple-negative",
+    "lemma": "triple-negative",
     "domains": [],
     "frequency": 5,
     "contexts": [
-      "process capture stochastic **birth-death** dynamic structured population",
-      "substantially spatial moran **birth-death** bd moran death-birth",
-      "mixed **birth-death** death-birth updating structured",
-      "rule death-birth db **birth-death** bd db individual",
-      "moran process finite-population **birth-death** process replicator equation"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "d-ribose": {
-    "text": "d-ribose",
-    "lemma": "d-ribose",
-    "domains": [],
-    "frequency": 4,
-    "contexts": [
-      "life homochiral based **d-ribose** derivative phospholipid membrane",
-      "membrane high permeability **d-ribose** combined ribose interaction",
-      "substantially favoring buildup **d-ribose** l-ribose liposome fusion",
-      "eventually dna inherit **d-ribose** chirality"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "evolutionarily": {
-    "text": "evolutionarily",
-    "lemma": "evolutionarily",
-    "domains": [],
-    "frequency": 4,
-    "contexts": [
-      "oscillatory **evolutionarily** stable state limit",
-      "sagar chakraborty idea **evolutionarily** stable state es",
-      "site even rigid **evolutionarily** constrained extreme constraint",
-      "shmt structurally stable **evolutionarily** restricted enzyme whose"
-    ],
-    "pos_tags": [],
-    "confidence": 0.2
-  },
-  "epigenetic": {
-    "text": "epigenetic",
-    "lemma": "epigenetic",
-    "domains": [],
-    "frequency": 4,
-    "contexts": [
-      "identification **epigenetic** monotherapy candidate taxane-resistant",
-      "**epigenetic** control reprogramming-induced potential",
-      "network grns incorporating **epigenetic** modification building hopfield",
-      "gene regulatory dynamic **epigenetic** control offering new"
-    ],
-    "pos_tags": [],
-    "confidence": 0.2
-  },
-  "coarse-grained": {
-    "text": "coarse-grained",
-    "lemma": "coarse-grained",
-    "domains": [],
-    "frequency": 7,
-    "contexts": [
-      "tree search incorporating **coarse-grained** llm-based clustering substantially",
-      "entropy production fluctuating **coarse-grained** trajectory udo seifert",
-      "infer entropy production **coarse-grained** observation time series",
-      "bound entropy production **coarse-grained** data major approach",
-      "approach rely observation **coarse-grained** state fluctuating current"
-    ],
-    "pos_tags": [],
-    "confidence": 0.5
-  },
-  "c_1": {
-    "text": "c_1",
-    "lemma": "c_1",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "beginequation mathcale_mathrmmetell p_0 **c_1** δmathcala_ell c_2 int_0tellt-ell_02dt",
-      "duration loading p_0 **c_1** c_2 constant determined",
-      "meaningful coefficient p_0 **c_1** c_2 mean linear"
+      "potential therapeutic target **triple-negative** breast cancer cell",
+      "shaping malignant phenotype **triple-negative** breast cancer wang",
+      "type prmts inhibitor **triple-negative** breast cancer treatment",
+      "identifying therapeutic target **triple-negative** breast cancer using",
+      "gbadamosi helen moore **triple-negative** breast cancer tnbc"
     ],
     "pos_tags": [],
     "confidence": 0.4
@@ -1462,56 +1537,47 @@
     "pos_tags": [],
     "confidence": 0.4
   },
-  "arc_pft": {
-    "text": "arc_pft",
-    "lemma": "arc_pft",
+  "high-resolution": {
+    "text": "high-resolution",
+    "lemma": "high-resolution",
     "domains": [],
-    "frequency": 3,
+    "frequency": 5,
     "contexts": [
-      "set equation called **arc_pft** surpassing predictive performance",
-      "height waist circumference **arc_pft** decreased mean absolute",
-      "biobank 24 nhanes **arc_pft** also reduced vulnerability"
+      "**high-resolution** agent-based model improve",
+      "ever present new **high-resolution** 1 km map",
+      "hushem model trained **high-resolution** sperm morphology image",
+      "pazner zohar yosibash **high-resolution** voxel-based micro-finite element",
+      "introduce asubee first **high-resolution** dataset specifically designed"
     ],
     "pos_tags": [],
     "confidence": 0.4
   },
-  "high-throughput": {
-    "text": "high-throughput",
-    "lemma": "high-throughput",
-    "domains": [],
-    "frequency": 6,
+  "colony": {
+    "text": "colony",
+    "lemma": "colony",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 18,
     "contexts": [
-      "protocol **high-throughput** drug screening 384-well",
-      "dna data storage **high-throughput** diagnostics distributed laboratory",
-      "volumetric imaging support **high-throughput** operation developed unified",
-      "cohort become available **high-throughput** omic study number",
-      "affinity maturation lineage **high-throughput** repertoire sequencing data"
+      "spatio-temporal analysis microbial **colony** biofilm development sakai",
+      "random forest bee **colony** optimization boufarh r",
+      "automatic **colony** cell counting method",
+      "culturable cell small **colony** variant antibiotic insusceptibility",
+      "fixation associated microcystis **colony** promotes harmful cyanobacterial"
     ],
     "pos_tags": [],
-    "confidence": 0.5
+    "confidence": 0.7999999999999999
   },
-  "genetics": {
-    "text": "genetics",
-    "lemma": "genetics",
+  "δmathcala_ell": {
+    "text": "δmathcala_ell",
+    "lemma": "δmathcala_ell",
     "domains": [],
     "frequency": 3,
     "contexts": [
-      "population model used **genetics** fabio c c",
-      "extensively used population **genetics** except certain degenerate",
-      "foundational molecular population **genetics** problem including interpreting"
-    ],
-    "pos_tags": [],
-    "confidence": 0.2
-  },
-  "model-free": {
-    "text": "model-free",
-    "lemma": "model-free",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "measure computed using **model-free** method based nonlinear",
-      "several inequality yield **model-free** lower bound entropy",
-      "inference recently proposed **model-free** convolutional transformer network"
+      "concept textbfdeviation absement **δmathcala_ell** defined time integral",
+      "mathcale_mathrmmetell p_0 c_1 **δmathcala_ell** c_2 int_0tellt-ell_02dt oell-ell_0_linfty3",
+      "system deviation absement **δmathcala_ell** textbfunique first-order sufficient"
     ],
     "pos_tags": [],
     "confidence": 0.4
@@ -1522,56 +1588,16 @@
     "domains": [
       "behavior_and_identity"
     ],
-    "frequency": 10,
+    "frequency": 11,
     "contexts": [
-      "**behavioral** epileptic phenotype chd2-related",
-      "mutation consider complexity **behavioral** dynamic vaccination address",
-      "vaccinated compartment state **behavioral** level employ evolutionary",
-      "couple epidemic vaccination **behavioral** process microscopic markov",
-      "rise positive ecological **behavioral** response challenging notion"
+      "**behavioral** divergence generalist specialist",
+      "channel fails reduce **behavioral** biological marker acute",
+      "activity influenced external **behavioral** factor reveal subtle",
+      "contact network individual-level **behavioral** data incorporating clustering",
+      "mutation consider complexity **behavioral** dynamic vaccination address"
     ],
     "pos_tags": [],
-    "confidence": 0.7000000000000001
-  },
-  "hd-tdcs": {
-    "text": "hd-tdcs",
-    "lemma": "hd-tdcs",
-    "domains": [],
-    "frequency": 4,
-    "contexts": [
-      "personalized optimization pediatric **hd-tdcs** dose consistency target",
-      "direct current stimulation **hd-tdcs** dosing child remains",
-      "variation show dense **hd-tdcs** solution admit sparse",
-      "principled framework pediatric **hd-tdcs** planning explicitly account"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "high-fidelity": {
-    "text": "high-fidelity",
-    "lemma": "high-fidelity",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "cgm data compression **high-fidelity** reconstruction clara bender",
-      "**high-fidelity** robotic pcr amplification",
-      "type approach integrates **high-fidelity** particle-based simulation model"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "dcaf-net": {
-    "text": "dcaf-net",
-    "lemma": "dcaf-net",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "**dcaf-net** dual-channel attentive fusion",
-      "attentive fusion network **dcaf-net** synergistically integrates pre-movement",
-      "subject demonstrate effectiveness **dcaf-net** achieved prediction accuracy"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
+    "confidence": 0.7999999999999999
   },
   "trade-off": {
     "text": "trade-off",
@@ -1579,70 +1605,43 @@
     "domains": [
       "economics"
     ],
-    "frequency": 6,
+    "frequency": 5,
     "contexts": [
+      "size finally derive **trade-off** population-growth-rate gain division-size",
       "pareto front optimal **trade-off** lie close fungal",
       "muhammad naveed akhtar **trade-off** predictive accuracy data",
       "nature favored term **trade-off** energetic cost redundancy",
-      "infection mitigation optimizing **trade-off** mitigation infection cost",
-      "strategy may require **trade-off** made health impact"
+      "infection mitigation optimizing **trade-off** mitigation infection cost"
     ],
     "pos_tags": [],
-    "confidence": 0.9
+    "confidence": 0.7999999999999999
   },
-  "state-of-the-art": {
-    "text": "state-of-the-art",
-    "lemma": "state-of-the-art",
+  "structure-based": {
+    "text": "structure-based",
+    "lemma": "structure-based",
     "domains": [],
-    "frequency": 9,
+    "frequency": 3,
     "contexts": [
-      "cam sequence achieves **state-of-the-art** performance moleculenet activity-cliff",
-      "prediction outperforming several **state-of-the-art** method use directional",
-      "demonstrate syncraft outperforms **state-of-the-art** baseline generating synthesizable",
-      "sage find even **state-of-the-art** gfms like esm2",
-      "critically assess current **state-of-the-art** analyzing hype examining"
+      "structure limit performance **structure-based** machine learning model",
+      "2445 kcalmol obtained **structure-based** model p_r 0481",
+      "performance gap sequence-based **structure-based** model larger datasets"
+    ],
+    "pos_tags": [],
+    "confidence": 0.4
+  },
+  "large-scale": {
+    "text": "large-scale",
+    "lemma": "large-scale",
+    "domains": [],
+    "frequency": 6,
+    "contexts": [
+      "aware foundation model **large-scale** spatial transcriptomics",
+      "computational framework integrates **large-scale** sequence analysis 1000",
+      "comprehensive μfe framework **large-scale** biomechanical analysis intact",
+      "library algorithm designed **large-scale** linear elasticity system",
+      "scale result demonstrate **large-scale** experimentally informed μfe"
     ],
     "pos_tags": [],
     "confidence": 0.5
-  },
-  "d-ribose-5-phosphate": {
-    "text": "d-ribose-5-phosphate",
-    "lemma": "d-ribose-5-phosphate",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "ribose phosphorylation forming **d-ribose-5-phosphate** inside **d-ribose-5-phosphate** molecule",
-      "forming **d-ribose-5-phosphate** inside **d-ribose-5-phosphate** molecule cross membrane",
-      "evolution structure conversion **d-ribose-5-phosphate** complex functional molecule"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "early-stage": {
-    "text": "early-stage",
-    "lemma": "early-stage",
-    "domains": [],
-    "frequency": 4,
-    "contexts": [
-      "postoperative adjuvant chemotherapy **early-stage** upper gastric cancer",
-      "efficient resuscitation **early-stage** viable non-culturable cell",
-      "confidence architecture formalizes **early-stage** inference phased interpretation",
-      "adverse outcome even **early-stage** disease establish hierarchical"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
-  },
-  "death-birth": {
-    "text": "death-birth",
-    "lemma": "death-birth",
-    "domains": [],
-    "frequency": 3,
-    "contexts": [
-      "birth-death bd moran **death-birth** db fkpp dynamic",
-      "mixed birth-death **death-birth** updating structured population",
-      "standard update rule **death-birth** db birth-death bd"
-    ],
-    "pos_tags": [],
-    "confidence": 0.4
   }
 }

@@ -1,8 +1,12 @@
 """Tests for manuscript logging."""
-import pytest
+
 from pathlib import Path
-from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
+
+import pytest
+
 from infrastructure.core.logging_utils import get_logger
+from infrastructure.rendering.manuscript_discovery import \
+    discover_manuscript_files
 
 
 def test_all_filenames_logged(tmp_path, caplog):
@@ -39,7 +43,9 @@ def test_no_hardcoded_warnings(tmp_path, caplog):
 
     log_text = caplog.text
     assert "Missing expected" not in log_text
-    assert "⚠️" not in log_text or "Figures directory" in log_text  # Only figures warning allowed
+    assert (
+        "⚠️" not in log_text or "Figures directory" in log_text
+    )  # Only figures warning allowed
 
 
 def test_categorization_logged(tmp_path, caplog):
@@ -51,7 +57,7 @@ def test_categorization_logged(tmp_path, caplog):
         "01_intro.md": "Main",
         "S01_supp.md": "Supplemental",
         "98_glossary.md": "Glossary",
-        "99_refs.md": "References"
+        "99_refs.md": "References",
     }
 
     for fname in files:
@@ -124,11 +130,11 @@ def test_mixed_file_types(tmp_path, caplog):
         "98_glossary.md",
         "99_refs.md",
         "preamble.tex",
-        "config.yaml"  # Should be excluded
+        "config.yaml",  # Should be excluded
     ]
 
     for fname in files:
-        content = f"# {fname}" if fname.endswith('.md') else f"% {fname}"
+        content = f"# {fname}" if fname.endswith(".md") else f"% {fname}"
         (manuscript_dir / fname).write_text(content)
 
     result = discover_manuscript_files(manuscript_dir)

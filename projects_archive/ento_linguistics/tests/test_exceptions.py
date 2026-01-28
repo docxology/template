@@ -1,12 +1,14 @@
 """Tests for custom exceptions and utilities."""
 
-import os
 import logging
-import pytest
+import os
 from pathlib import Path
+
+import pytest
 from src.utils.exceptions import ValidationError
-from src.utils.logging import get_logger, log_substep, log_progress_bar, log_stage
-from src.utils.markdown_integration import MarkdownIntegration, ImageManager
+from src.utils.logging import (get_logger, log_progress_bar, log_stage,
+                               log_substep)
+from src.utils.markdown_integration import ImageManager, MarkdownIntegration
 
 
 class TestValidationError:
@@ -61,30 +63,30 @@ class TestLogging:
     def test_get_logger_with_level(self, monkeypatch):
         """Test logger with different log levels."""
         # Test DEBUG level
-        monkeypatch.setenv('LOG_LEVEL', '0')
+        monkeypatch.setenv("LOG_LEVEL", "0")
         logger = get_logger("test_debug")
         assert logger.level == logging.DEBUG
 
         # Test INFO level (default)
-        monkeypatch.setenv('LOG_LEVEL', '1')
+        monkeypatch.setenv("LOG_LEVEL", "1")
         logger = get_logger("test_info")
         assert logger.level == logging.INFO
 
         # Test WARNING level
-        monkeypatch.setenv('LOG_LEVEL', '2')
+        monkeypatch.setenv("LOG_LEVEL", "2")
         logger = get_logger("test_warning")
         assert logger.level == logging.WARNING
 
         # Test ERROR level
-        monkeypatch.setenv('LOG_LEVEL', '3')
+        monkeypatch.setenv("LOG_LEVEL", "3")
         logger = get_logger("test_error")
         assert logger.level == logging.ERROR
 
     def test_get_logger_default_level(self):
         """Test logger with default level when env var not set."""
         # Remove LOG_LEVEL if it exists
-        if 'LOG_LEVEL' in os.environ:
-            del os.environ['LOG_LEVEL']
+        if "LOG_LEVEL" in os.environ:
+            del os.environ["LOG_LEVEL"]
 
         logger = get_logger("test_default")
         assert logger.level == logging.INFO
@@ -161,7 +163,9 @@ class TestMarkdownIntegration:
         test_file = manuscript_dir / "test.md"
         test_file.write_text("# Test\n\nSome content")
 
-        result = integration.insert_figure_in_section(test_file, "fig:test", "introduction")
+        result = integration.insert_figure_in_section(
+            test_file, "fig:test", "introduction"
+        )
         assert result is False  # Stub implementation returns False
 
 

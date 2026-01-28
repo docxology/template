@@ -22,22 +22,22 @@ The solution lies not in avoidance, but in embracing the challenge: we should re
 
 Our analysis centers on six key Ento-Linguistic domains where language use can be particularly ambiguous, assumptive, or inappropriate:
 
-### 1. Unit of Individuality
+### Unit of Individuality
 What constitutes an "ant"—the nestmate, the colony, or something else? This domain encompasses debates about biological individuality, from individual nestmates to super-organismal colony concepts, examining how terminology influences research at different scales of analysis.
 
-### 2. Behavior and Identity
+### Behavior and Identity
 How do behavioral descriptions create identity assumptions? When an ant is observed carrying a seed, is it meaningfully described as "foraging," and does this make it "a forager"? This domain examines how behavioral language creates categorical identities that may not reflect biological reality.
 
-### 3. Power & Labor
+### Power & Labor
 What social structures do terms like "caste," "queen," "worker," and "slave" impose on ant societies? This domain investigates how terminology derived from human hierarchical systems shapes scientific understanding of ant social organization.
 
-### 4. Sex & Reproduction
+### Sex & Reproduction
 How do sex/gender concepts from human societies influence entomological research? Terms like "sex determination" and "sex differentiation" carry implicit assumptions about binary gender systems that may not map cleanly to ant reproductive biology.
 
-### 5. Kin and Relatedness
+### Kin and Relatedness
 What constitutes "kin" in ant societies, and how are different forms of relatedness (genetic, epigenetic, chemical, spatial) conceptualized? This domain examines how human kinship terminology influences understanding of ant social relationships.
 
-### 6. Economics
+### Economics
 How do economic concepts structure understanding of resource allocation and trade in ant societies? This domain investigates how human economic terminology shapes analysis of ant foraging, resource distribution, and colony-level resource management.
 
 ## Research Approach
@@ -60,6 +60,13 @@ The manuscript develops this analysis through several interconnected sections:
 ## Example Analysis: Terminology Network Visualization
 
 Computational analysis reveals structural patterns in scientific terminology that influence research discourse. Our network analysis demonstrates how terms cluster around conceptual domains and create networks of meaning that shape scientific understanding, as further detailed in Section \ref{sec:experimental_results}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{../output/figures/concept_map.png}
+\caption{Conceptual map of Ento-Linguistic domains showing relationships between terminology networks. The six domains (Unit of Individuality, Behavior and Identity, Power \& Labor, Sex \& Reproduction, Kin \& Relatedness, and Economics) form interconnected clusters with cross-domain influences. Central hub terms like "colony," "caste," and "individual" connect multiple domains, demonstrating how specific terminological choices propagate across the scientific discourse of entomology.}
+\label{fig:concept_map}
+\end{figure}
 
 ## Data and Analysis Framework
 

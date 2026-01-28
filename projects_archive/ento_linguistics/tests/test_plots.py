@@ -1,25 +1,18 @@
 """Comprehensive tests for src/plots.py to ensure 100% coverage."""
+
 import matplotlib
-matplotlib.use('Agg')
+
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pytest
-
-from plots import (
-    plot_bar,
-    plot_comparison,
-    plot_contour,
-    plot_convergence,
-    plot_heatmap,
-    plot_line,
-    plot_scatter,
-    plot_3d_surface
-)
+from plots import (plot_3d_surface, plot_bar, plot_comparison, plot_contour,
+                   plot_convergence, plot_heatmap, plot_line, plot_scatter)
 
 
 class TestPlotLine:
     """Test line plot function."""
-    
+
     def test_basic_line_plot(self):
         """Test basic line plot."""
         x = np.array([1, 2, 3, 4, 5])
@@ -27,7 +20,7 @@ class TestPlotLine:
         ax = plot_line(x, y)
         assert ax is not None
         plt.close(ax.figure)
-    
+
     def test_line_plot_with_label(self):
         """Test line plot with label."""
         x = np.array([1, 2, 3])
@@ -35,7 +28,7 @@ class TestPlotLine:
         ax = plot_line(x, y, label="Test Line")
         assert ax is not None
         plt.close(ax.figure)
-    
+
     def test_line_plot_with_existing_axes(self):
         """Test line plot on existing axes."""
         fig, ax = plt.subplots()
@@ -48,7 +41,7 @@ class TestPlotLine:
 
 class TestPlotScatter:
     """Test scatter plot function."""
-    
+
     def test_basic_scatter_plot(self):
         """Test basic scatter plot."""
         x = np.array([1, 2, 3, 4, 5])
@@ -56,7 +49,7 @@ class TestPlotScatter:
         ax = plot_scatter(x, y)
         assert ax is not None
         plt.close(ax.figure)
-    
+
     def test_scatter_with_color_and_size(self):
         """Test scatter plot with color and size."""
         x = np.array([1, 2, 3])
@@ -64,7 +57,7 @@ class TestPlotScatter:
         ax = plot_scatter(x, y, color="red", size=50, alpha=0.5)
         assert ax is not None
         plt.close(ax.figure)
-    
+
     def test_scatter_with_label(self):
         """Test scatter plot with label."""
         x = np.array([1, 2, 3])
@@ -72,7 +65,7 @@ class TestPlotScatter:
         ax = plot_scatter(x, y, label="Scatter Data")
         assert ax is not None
         plt.close(ax.figure)
-    
+
     def test_scatter_with_existing_axes(self):
         """Test scatter plot on existing axes."""
         fig, ax = plt.subplots()
@@ -85,7 +78,7 @@ class TestPlotScatter:
 
 class TestPlotBar:
     """Test bar chart function."""
-    
+
     def test_basic_bar_chart(self):
         """Test basic bar chart."""
         categories = ["A", "B", "C"]
@@ -93,7 +86,7 @@ class TestPlotBar:
         ax = plot_bar(categories, values)
         assert ax is not None
         plt.close(ax.figure)
-    
+
     def test_bar_chart_with_color(self):
         """Test bar chart with color."""
         categories = ["A", "B", "C"]
@@ -105,7 +98,7 @@ class TestPlotBar:
 
 class TestPlotConvergence:
     """Test convergence plot function."""
-    
+
     def test_convergence_plot(self):
         """Test convergence plot."""
         iterations = np.array([1, 2, 3, 4, 5])
@@ -113,7 +106,7 @@ class TestPlotConvergence:
         ax = plot_convergence(iterations, values, target=0.0)
         assert ax is not None
         plt.close(ax.figure)
-    
+
     def test_convergence_plot_without_target(self):
         """Test convergence plot without target."""
         iterations = np.array([1, 2, 3, 4, 5])
@@ -121,7 +114,7 @@ class TestPlotConvergence:
         ax = plot_convergence(iterations, values)
         assert ax is not None
         plt.close(ax.figure)
-    
+
     def test_convergence_plot_with_existing_axes(self):
         """Test convergence plot with existing axes."""
         fig, ax = plt.subplots()
@@ -134,7 +127,7 @@ class TestPlotConvergence:
 
 class TestPlotComparison:
     """Test comparison plot function."""
-    
+
     def test_comparison_bar_plot(self):
         """Test comparison bar plot."""
         methods = ["A", "B", "C"]
@@ -142,7 +135,7 @@ class TestPlotComparison:
         ax = plot_comparison(methods, metrics, "accuracy", plot_type="bar")
         assert ax is not None
         plt.close(ax.figure)
-    
+
     def test_comparison_line_plot(self):
         """Test comparison line plot."""
         methods = ["A", "B", "C"]
@@ -150,7 +143,7 @@ class TestPlotComparison:
         ax = plot_comparison(methods, metrics, "accuracy", plot_type="line")
         assert ax is not None
         plt.close(ax.figure)
-    
+
     def test_comparison_with_existing_axes(self):
         """Test comparison plot on existing axes."""
         fig, ax = plt.subplots()
@@ -159,7 +152,7 @@ class TestPlotComparison:
         result_ax = plot_comparison(methods, metrics, "accuracy", ax=ax)
         assert result_ax == ax
         plt.close(fig)
-    
+
     def test_comparison_missing_metric(self):
         """Test comparison plot with missing metric."""
         methods = ["A", "B", "C"]
@@ -177,7 +170,7 @@ class TestPlotComparison:
 
 class TestPlotContour:
     """Test contour plot function."""
-    
+
     def test_contour_plot(self):
         """Test contour plot."""
         x = np.linspace(-5, 5, 50)
@@ -187,7 +180,7 @@ class TestPlotContour:
         ax = plot_contour(X, Y, Z)
         assert ax is not None
         plt.close(ax.figure)
-    
+
     def test_contour_filled(self):
         """Test filled contour plot."""
         x = np.linspace(-5, 5, 50)
@@ -197,7 +190,7 @@ class TestPlotContour:
         ax = plot_contour(X, Y, Z, filled=True)
         assert ax is not None
         plt.close(ax.figure)
-    
+
     def test_contour_not_filled(self):
         """Test unfilled contour plot."""
         x = np.linspace(-5, 5, 50)
@@ -207,7 +200,7 @@ class TestPlotContour:
         ax = plot_contour(X, Y, Z, filled=False)
         assert ax is not None
         plt.close(ax.figure)
-    
+
     def test_contour_with_existing_axes(self):
         """Test contour plot on existing axes."""
         fig, ax = plt.subplots()
@@ -222,14 +215,14 @@ class TestPlotContour:
 
 class TestPlotHeatmap:
     """Test heatmap plot function."""
-    
+
     def test_basic_heatmap(self):
         """Test basic heatmap."""
         data = np.random.rand(5, 5)
         ax = plot_heatmap(data)
         assert ax is not None
         plt.close(ax.figure)
-    
+
     def test_heatmap_with_labels(self):
         """Test heatmap with row and column labels."""
         data = np.random.rand(3, 4)
@@ -238,14 +231,14 @@ class TestPlotHeatmap:
         ax = plot_heatmap(data, row_labels=row_labels, col_labels=col_labels)
         assert ax is not None
         plt.close(ax.figure)
-    
+
     def test_heatmap_without_colorbar(self):
         """Test heatmap without colorbar."""
         data = np.random.rand(5, 5)
         ax = plot_heatmap(data, colorbar=False)
         assert ax is not None
         plt.close(ax.figure)
-    
+
     def test_heatmap_with_existing_axes(self):
         """Test heatmap on existing axes."""
         fig, ax = plt.subplots()
@@ -257,7 +250,7 @@ class TestPlotHeatmap:
 
 class TestPlot3DSurface:
     """Test 3D surface plot function."""
-    
+
     def test_3d_surface_plot(self):
         """Test 3D surface plot."""
         x = np.linspace(-5, 5, 30)
@@ -267,12 +260,13 @@ class TestPlot3DSurface:
         ax = plot_3d_surface(X, Y, Z)
         assert ax is not None
         plt.close(ax.figure.figure)
-    
+
     def test_3d_surface_with_existing_axes(self):
         """Test 3D surface plot on existing axes."""
         from mpl_toolkits.mplot3d import Axes3D
+
         fig = plt.figure()
-        ax = fig.add_subplot(111, projection='3d')
+        ax = fig.add_subplot(111, projection="3d")
         x = np.linspace(-5, 5, 20)
         y = np.linspace(-5, 5, 20)
         X, Y = np.meshgrid(x, y)

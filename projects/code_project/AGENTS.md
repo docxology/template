@@ -6,43 +6,40 @@
 
 A research project exemplifying mathematical optimization algorithms with rigorous implementation, extensive testing, and publication-quality analysis. This project demonstrates the template's full capabilities for computational research, including automated figure generation, reproducible results, and professional manuscript production.
 
-## Key Features
-
-- **Optimization Framework**: Gradient descent algorithms with convergence analysis
-- **Publication-Quality Visualizations**: Automated figure generation with proper labeling
-- **Rigorous Mathematical Analysis**: Theoretical convergence proofs and performance bounds
-- **Testing**: 96%+ test coverage with edge cases and performance benchmarks
-- **Professional Manuscript**: LaTeX-rendered PDF with cross-references and citations
-
 ## Key Features & Capabilities
 
 ### Mathematical Optimization
+
 - **Gradient Descent Implementation**: Full algorithm with convergence analysis
 - **Theoretical Convergence Bounds**: Rigorous mathematical analysis of convergence rates
 - **Numerical Stability**: Robust implementation with proper error handling
-- **Performance Characterization**: benchmarking and timing analysis
+- **Performance Characterization**: Comprehensive benchmarking and timing analysis
 
 ### Research Quality Assurance
+
 - **96%+ Test Coverage**: Extensive unit tests with edge cases and performance benchmarks
 - **Deterministic Algorithms**: Reproducible results with fixed random seeds
-- **Documentation**: type hints, docstrings, and examples
+- **Documentation**: Complete type hints, docstrings, and examples
 - **Parameter Validation**: Robust input checking and error handling
 
 ### Publication-Ready Output
+
 - **Professional Visualizations**: Automated figure generation with proper labeling and styling
 - **Manuscript with Cross-References**: LaTeX-rendered PDF with equation numbering and citations
 - **Automated Analysis Pipeline**: Script-driven data generation and visualization
 - **Executive Reporting**: Multi-project comparative analysis capabilities
 
 ### Scientific Validation & Analysis
+
 - **Numerical Stability Assessment**: Automated stability testing across input ranges
 - **Performance Benchmarking**: Execution time and memory usage analysis
-- **Reporting Dashboard**: HTML reports with analysis metrics
+- **Reporting Dashboard**: Interactive HTML reports with analysis metrics
 - **Progress Tracking**: Real-time monitoring with visual progress indicators
 - **Performance Monitoring**: Resource usage tracking during analysis
 
 ### Infrastructure Integration
-- **Advanced Error Handling**: exception handling with recovery suggestions
+
+- **Advanced Error Handling**: Comprehensive exception handling with recovery suggestions
 - **Structured Logging**: Infrastructure-backed logging with operation timing and context
 - **Publishing Tools Integration**: Automated citation generation and publication metadata extraction
 - **Context Manager Performance Monitoring**: Proper resource usage tracking with detailed metrics
@@ -140,6 +137,7 @@ pytest tests/ --cov=src --cov-report=html
 ### optimizer.py
 
 #### Optimizer (class)
+
 ```python
 class Optimizer:
     """Mathematical optimization algorithms with reproducible results."""
@@ -166,6 +164,7 @@ class Optimizer:
 ```
 
 #### quadratic_function (function)
+
 ```python
 def quadratic_function(x: np.ndarray) -> float:
     """Simple quadratic test function.
@@ -181,6 +180,7 @@ def quadratic_function(x: np.ndarray) -> float:
 ### optimization_analysis.py
 
 #### run_analysis (function)
+
 ```python
 def run_analysis() -> Dict[str, Any]:
     """Run optimization analysis pipeline.
@@ -191,6 +191,7 @@ def run_analysis() -> Dict[str, Any]:
 ```
 
 #### generate_figures (function)
+
 ```python
 def generate_figures(results: Dict[str, Any]) -> List[str]:
     """Generate analysis figures.
@@ -206,6 +207,7 @@ def generate_figures(results: Dict[str, Any]) -> List[str]:
 #### Scientific Analysis Functions
 
 ##### run_stability_analysis (function)
+
 ```python
 def run_stability_analysis() -> Optional[str]:
     """Assess numerical stability of optimization algorithms.
@@ -216,6 +218,7 @@ def run_stability_analysis() -> Optional[str]:
 ```
 
 ##### run_performance_benchmarking (function)
+
 ```python
 def run_performance_benchmarking() -> Optional[str]:
     """Benchmark gradient descent performance across different inputs.
@@ -226,6 +229,7 @@ def run_performance_benchmarking() -> Optional[str]:
 ```
 
 ##### generate_stability_visualization (function)
+
 ```python
 def generate_stability_visualization(stability_path: Optional[str]) -> Optional[str]:
     """Generate visualization of stability analysis results.
@@ -239,6 +243,7 @@ def generate_stability_visualization(stability_path: Optional[str]) -> Optional[
 ```
 
 ##### generate_benchmark_visualization (function)
+
 ```python
 def generate_benchmark_visualization(benchmark_path: Optional[str]) -> Optional[str]:
     """Generate visualization of benchmark results.
@@ -252,6 +257,7 @@ def generate_benchmark_visualization(benchmark_path: Optional[str]) -> Optional[
 ```
 
 ##### generate_analysis_dashboard (function)
+
 ```python
 def generate_analysis_dashboard(
     results: Dict[str, Any],
@@ -283,34 +289,40 @@ def generate_analysis_dashboard(
 This project complies with the template's development standards defined in `.cursorrules/`.
 
 ### ✅ **Testing Standards Compliance**
+
 - **90%+ coverage**: Achieves 96.49% test coverage (exceeds 90% requirement)
-- **data only**: All tests use computations, no mocks
-- **integration**: Tests cover algorithm convergence, stability analysis, and performance benchmarking
+- **Real data only**: All tests use computations, no mocks
+- **Full integration**: Tests cover algorithm convergence, stability analysis, and performance benchmarking
 - **Deterministic results**: Fixed seeds ensure reproducible test outcomes
 - **Scientific validation**: Includes numerical stability and performance testing
 
 ### ✅ **Documentation Standards Compliance**
-- **AGENTS.md + README.md**: technical documentation in each directory
+
+- **AGENTS.md + README.md**: Complete technical documentation in each directory
 - **Type hints**: All public APIs have type annotations
-- **Docstrings**: docstrings with examples for all functions
+- **Docstrings**: Comprehensive docstrings with examples for all functions
 - **Cross-references**: Links between related documentation sections
 
 ### ✅ **Type Hints Standards Compliance**
-- **annotations**: All public functions have type hints
+
+- **Full annotations**: All public functions have type hints
 - **Generic types**: Uses `List`, `Dict`, `Optional`, `Callable` appropriately
 - **Consistent patterns**: Follows template conventions throughout
 
 ### ✅ **Error Handling Standards Compliance**
+
 - **Custom exceptions**: Uses infrastructure exception hierarchy when available
 - **Context preservation**: Exception chaining with `from` keyword
 - **Informative messages**: Clear error messages with actionable guidance
 
 ### ✅ **Logging Standards Compliance**
+
 - **Unified logging**: Uses `infrastructure.core.logging_utils.get_logger(__name__)`
 - **Appropriate levels**: DEBUG, INFO, WARNING, ERROR as appropriate
 - **Context-rich messages**: Includes relevant context in log messages
 
 ### ✅ **Code Style Standards Compliance**
+
 - **Black formatting**: 88-character line limits, consistent formatting
 - **Descriptive names**: Clear variable and function names
 - **Import organization**: Standard library, third-party, local imports properly organized
@@ -349,6 +361,7 @@ print(f"Memory used: {performance_metrics.resource_usage.memory_mb:.1f}MB")
 ```
 
 **Generated Output:**
+
 ```
 Performance Summary:
 Duration: 2.45s
@@ -410,6 +423,7 @@ print(citations['mla'])     # MLA format
 ```
 
 **Generated Citations:**
+
 ```
 @misc{optimization_analysis,
   title={Optimization Algorithm Performance Analysis},
@@ -433,6 +447,7 @@ with ProgressBar(total=4, desc="Step sizes") as progress:
 ```
 
 **Console Output:**
+
 ```
 Step sizes: 100%|██████████████████| 4/4 [00:02<00:00, 1.85it/s]
 ```
@@ -447,6 +462,6 @@ Step sizes: 100%|██████████████████| 4/4 [00
 ## See Also
 
 - [Root AGENTS.md](../../AGENTS.md) - template documentation
-- [projects/active_inference_meta_pragmatic/](../active_inference_meta_pragmatic/AGENTS.md) - Active inference research example
-- [projects/ento_linguistics/](../ento_linguistics/AGENTS.md) - Ento-linguistic research example
+- [projects/cogsec_multiagent_1_theory/](../cogsec_multiagent_1_theory/AGENTS.md) - CIF formal foundations
+- [projects/cogsec_multiagent_2_computational/](../cogsec_multiagent_2_computational/AGENTS.md) - CIF computational validation
 - [infrastructure/scientific/](../../infrastructure/scientific/AGENTS.md) - Scientific utilities

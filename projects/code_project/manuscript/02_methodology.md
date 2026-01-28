@@ -13,16 +13,16 @@ The core algorithm implements the following iterative procedure for unconstraine
 **Output:** Approximate solution $x^* \approx \arg\min f(x)$
 
 **Algorithm 1: Gradient Descent**
-```
-Initialize: k ← 0, x_0 ∈ ℝ^d
-While k < N_max do:
-    Compute gradient: ∇f(x_k)
-    Check convergence: if ||∇f(x_k)||_2 < ε then
-        Return x_k as approximate solution
-    Update: x_{k+1} ← x_k - α ∇f(x_k)
-    Increment: k ← k + 1
-Return x_k (maximum iterations reached)
-```
+
+> **Input:** Initial point $x_0$, step size $\alpha$, tolerance $\epsilon$, max iterations $N_{\max}$
+>
+> 1. Initialize $k \leftarrow 0$
+> 2. **While** $k < N_{\max}$ **do:**
+>    - Compute gradient $g_k = \nabla f(x_k)$
+>    - **If** $\|g_k\|_2 < \epsilon$ **then return** $x_k$ *(converged)*
+>    - Update: $x_{k+1} \leftarrow x_k - \alpha \cdot g_k$
+>    - $k \leftarrow k + 1$
+> 3. **Return** $x_k$ *(max iterations reached)*
 
 The algorithm follows the fundamental principle of steepest descent, moving in the direction of the negative gradient to minimize the objective function $f: \mathbb{R}^d \rightarrow \mathbb{R}$ \cite{cauchy1847methode}.
 
@@ -36,6 +36,7 @@ f(x) = \frac{1}{2} x^T A x - b^T x
 \end{equation}
 
 where:
+
 - $A$ is a positive definite matrix
 - $b$ is the linear term vector
 - The gradient is: $\nabla f(x) = A x - b$
@@ -94,6 +95,7 @@ For our test problem with $\lambda_{\min} = \lambda_{\max} = 1$, this gives $\al
 ### Complexity Analysis
 
 The computational complexity per iteration is:
+
 - **Time complexity**: $O(n)$ for gradient computation
 - **Space complexity**: $O(n)$ for storing variables
 
@@ -113,12 +115,14 @@ We investigate the effect of different step sizes on convergence:
 ### Convergence Criteria
 
 The algorithm terminates when:
+
 - Gradient norm falls below tolerance: $||\nabla f(x)|| < \epsilon$
 - Maximum iterations reached: $k = N$
 
 ### Performance Metrics
 
 We track:
+
 - **Solution accuracy**: Distance to analytical optimum
 - **Convergence speed**: Number of iterations to convergence
 - **Objective value**: Function value at final solution
@@ -145,7 +149,7 @@ Input validation ensures algorithmic reliability:
 
 ### Testing Strategy and Validation
 
-test suite covers multiple dimensions:
+The comprehensive test suite covers multiple dimensions:
 
 - **Functional correctness**: Analytical gradient verification against finite differences
 - **Convergence behavior**: Multiple step sizes and tolerance levels
@@ -160,6 +164,7 @@ The research template supports advanced LaTeX customization through optional pre
 ## Analysis Pipeline
 
 The analysis script automatically:
+
 1. Runs optimization experiments with different parameters
 2. Collects convergence trajectories
 3. Generates publication-quality plots

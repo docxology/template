@@ -5,12 +5,11 @@ from textwrap import dedent
 
 import pytest
 
-from infrastructure.documentation.glossary_gen import (
-    build_api_index,
-    generate_markdown_table,
-    inject_between_markers,
-)
-from infrastructure.documentation.glossary_gen import _first_sentence  # type: ignore
+from infrastructure.documentation.glossary_gen import \
+    _first_sentence  # type: ignore
+from infrastructure.documentation.glossary_gen import (build_api_index,
+                                                       generate_markdown_table,
+                                                       inject_between_markers)
 
 
 def write(path: str, content: str) -> None:
@@ -87,7 +86,7 @@ def test_generate_markdown_table_includes_all_entries(tmp_path):
     src_dir = tmp_path / "src"
     write(
         src_dir.as_posix() + "/m.py",
-        "def f():\n    \"\"\"do x\"\"\"\n    return 0\n",
+        'def f():\n    """do x"""\n    return 0\n',
     )
     entries = build_api_index(src_dir.as_posix())
     table = generate_markdown_table(entries)

@@ -4,15 +4,14 @@ Tests the infrastructure.project module for discovering, validating,
 and extracting metadata from projects in the projects/ directory.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
-import pytest
+
 from pathlib import Path
 
-from infrastructure.project.discovery import (
-    discover_projects,
-    validate_project_structure,
-    get_project_metadata,
-    ProjectInfo,
-)
+import pytest
+
+from infrastructure.project.discovery import (ProjectInfo, discover_projects,
+                                              get_project_metadata,
+                                              validate_project_structure)
 
 
 class TestValidateProjectStructure:
@@ -26,7 +25,9 @@ class TestValidateProjectStructure:
         (project_dir / "tests").mkdir()
         (project_dir / "src" / "__init__.py").write_text("")
         (project_dir / "tests" / "__init__.py").write_text("")
-        (project_dir / "tests" / "test_example.py").write_text("def test_example(): pass")
+        (project_dir / "tests" / "test_example.py").write_text(
+            "def test_example(): pass"
+        )
 
         is_valid, message = validate_project_structure(project_dir)
         assert is_valid is True
@@ -232,7 +233,7 @@ class TestProjectInfo:
             has_tests=True,
             has_scripts=False,
             has_manuscript=True,
-            metadata=metadata
+            metadata=metadata,
         )
 
         assert info.name == "test"
@@ -254,7 +255,7 @@ class TestProjectInfo:
             has_tests=True,
             has_scripts=False,
             has_manuscript=False,
-            metadata={}
+            metadata={},
         )
         assert valid_info.is_valid is True
 
@@ -266,7 +267,7 @@ class TestProjectInfo:
             has_tests=True,
             has_scripts=False,
             has_manuscript=False,
-            metadata={}
+            metadata={},
         )
         assert invalid_info.is_valid is False
 
@@ -278,6 +279,6 @@ class TestProjectInfo:
             has_tests=False,
             has_scripts=False,
             has_manuscript=False,
-            metadata={}
+            metadata={},
         )
         assert invalid_info2.is_valid is False

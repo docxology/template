@@ -9,6 +9,7 @@ The `projects/` directory implements a **standalone project paradigm** where eac
 Each project in `projects/{name}/` provides **three critical guarantees**:
 
 ### 🔒 **Tests**: Independent Test Suites (90%+ Coverage, Data Only)
+
 - **Location**: `projects/{name}/tests/`
 - **Coverage**: 90% minimum for `projects/{name}/src/` code
 - **Policy**: No mocks - all tests use data and computations
@@ -16,6 +17,7 @@ Each project in `projects/{name}/` provides **three critical guarantees**:
 - **Infrastructure Integration**: Orchestrated by `scripts/01_run_tests.py`
 
 ### 🧠 **Methods**: Business Logic Isolation (No Cross-Project Imports)
+
 - **Location**: `projects/{name}/src/`
 - **Isolation**: Cannot import from other projects
 - **Infrastructure Access**: Can import from `infrastructure/` modules
@@ -23,6 +25,7 @@ Each project in `projects/{name}/` provides **three critical guarantees**:
 - **Domain Independence**: Each project maintains unique scientific algorithms
 
 ### 📝 **Manuscript**: Independent Content (Own References, Metadata)
+
 - **Location**: `projects/{name}/manuscript/`
 - **Content**: Independent markdown sections, config.yaml, references.bib
 - **Rendering**: Processed independently via `infrastructure.rendering`
@@ -36,7 +39,9 @@ Each project in `projects/{name}/` provides **three critical guarantees**:
 The template distinguishes between **active projects** and **archived projects**:
 
 #### ✅ **Active Projects (`projects/`)**
+
 Active projects in the `projects/` directory are:
+
 - **Discovered** by `infrastructure.project.discovery.discover_projects()`
 - **Listed** in `run.sh` interactive menu
 - **Executed** by all pipeline scripts (`01_run_tests.py`, `02_run_analysis.py`, etc.)
@@ -45,7 +50,9 @@ Active projects in the `projects/` directory are:
 - **Copied** to `output/{name}/` by `05_copy_outputs.py`
 
 #### ❌ **Archived Projects (`projects_archive/`)**
+
 Archived projects in the `projects_archive/` directory are:
+
 - **NOT discovered** by infrastructure discovery functions
 - **NOT listed** in `run.sh` menu
 - **NOT executed** by any pipeline scripts
@@ -55,13 +62,12 @@ Archived projects in the `projects_archive/` directory are:
 graph TD
     subgraph Active["Active Projects (projects/)"]
         P1[code_project<br/>Active - Discovered]
-        P2[active_inference_meta_pragmatic<br/>Active - Discovered]
-        P3[ento_linguistics<br/>Active - Discovered]
+        P2[cogsec_multiagent_1_theory<br/>Active - Discovered]
+        P3[cogsec_multiagent_2_computational<br/>Active - Discovered]
     end
 
     subgraph Archive["Archived Projects (projects_archive/)"]
-        A1[prose_project<br/>Archived - NOT Discovered]
-        A2[code_project<br/>Archived - NOT Discovered]
+        A1[example_archived<br/>Archived - NOT Discovered]
     end
 
     subgraph Infrastructure["Infrastructure Discovery"]
@@ -86,13 +92,17 @@ graph TD
 ### Project Lifecycle
 
 #### Archiving a Project
+
 To archive an active project:
+
 1. Move project from `projects/{name}/` to `projects_archive/{name}/`
 2. Project will no longer appear in discovery or execution
 3. Can be reactivated by moving back to `projects/`
 
 #### Reactivating an Archived Project
+
 To reactivate an archived project:
+
 1. Move project from `projects_archive/{name}/` to `projects/{name}/`
 2. Ensure project structure is valid (has `src/` and `tests/`)
 3. Project will be automatically discovered on next `run.sh` execution
@@ -156,11 +166,12 @@ for project in projects:
     print(f"  Has scripts: {project.has_scripts}")
 
 # Validate specific project
-is_valid, message = validate_project_structure(Path("projects/ento_linguistics"))
+is_valid, message = validate_project_structure(Path("projects/code_project"))
 assert is_valid  # (True, "Valid project structure")
 ```
 
 **Key Functions:**
+
 - `discover_projects(repo_root)` - Scans `projects/` for valid project directories
 - `validate_project_structure(project_dir)` - Checks required directories exist
 - `get_project_metadata(project_dir)` - Extracts metadata from pyproject.toml/config.yaml
@@ -169,16 +180,17 @@ assert is_valid  # (True, "Valid project structure")
 
 ```bash
 # Execute project tests via infrastructure
-python3 scripts/01_run_tests.py --project ento_linguistics
+python3 scripts/01_run_tests.py --project code_project
 
 # Infrastructure performs:
 # 1. Validates project structure
-# 2. Runs pytest with coverage: pytest projects/ento_linguistics/tests/ --cov=projects/ento_linguistics/src
+# 2. Runs pytest with coverage: pytest projects/code_project/tests/ --cov=projects/code_project/src
 # 3. Enforces 90% coverage requirement
 # 4. Generates coverage reports
 ```
 
 **Infrastructure Operations:**
+
 - Validates project has required `src/` and `tests/` directories
 - Sets PYTHONPATH to include project source and infrastructure modules
 - Runs pytest with coverage collection
@@ -188,15 +200,16 @@ python3 scripts/01_run_tests.py --project ento_linguistics
 
 ```bash
 # Execute project analysis scripts via infrastructure
-python3 scripts/02_run_analysis.py --project active_inference_meta_pragmatic
+python3 scripts/02_run_analysis.py --project cogsec_multiagent_2_computational
 
 # Infrastructure discovers and runs:
-# - projects/active_inference_meta_pragmatic/scripts/analysis_pipeline.py
-# - projects/active_inference_meta_pragmatic/scripts/generate_quadrant_matrix.py
-# - All other scripts in projects/active_inference_meta_pragmatic/scripts/
+# - projects/cogsec_multiagent_2_computational/scripts/analysis_pipeline.py
+# - projects/cogsec_multiagent_2_computational/scripts/run_simulation.py
+# - All other scripts in projects/cogsec_multiagent_2_computational/scripts/
 ```
 
 **Script Discovery Process:**
+
 1. Infrastructure validates project structure exists
 2. Scans `projects/{name}/scripts/` for executable Python files
 3. Sets PYTHONPATH including project `src/` and `infrastructure/`
@@ -218,6 +231,7 @@ python3 scripts/03_render_pdf.py --project code_project
 ```
 
 **Rendering Pipeline:**
+
 1. **Markdown Validation**: Checks references and structure via `infrastructure.validation`
 2. **Content Assembly**: Combines sections from `projects/{name}/manuscript/`
 3. **LaTeX Generation**: Converts via pandoc with template processing
@@ -239,6 +253,7 @@ python3 scripts/04_validate_output.py --project project
 ```
 
 **Validation Checks:**
+
 - **PDF Validation**: Unresolved references, LaTeX errors, document structure
 - **Markdown Validation**: Image references, cross-references, equation labels
 - **Integrity Validation**: File checksums, data consistency, academic standards
@@ -247,24 +262,25 @@ python3 scripts/04_validate_output.py --project project
 
 ```bash
 # Organize final deliverables via infrastructure
-python3 scripts/05_copy_outputs.py --project ento_linguistics
+python3 scripts/05_copy_outputs.py --project cogsec_multiagent_3_practical
 
 # Infrastructure operations:
 # - Cleans root-level output/ directories (keeps only project folders)
-# - Copies from projects/ento_linguistics/output/ to output/ento_linguistics/
+# - Copies from projects/cogsec_multiagent_3_practical/output/ to output/cogsec_multiagent_3_practical/
 # - Validates all files copied successfully
 # - Organizes by project for distribution
 ```
 
 **Output Organization:**
+
 ```
 output/
-├── ento_linguistics/           # Final deliverables
+├── cogsec_multiagent_1_theory/  # Final deliverables
 │   ├── pdf/                    # Manuscript PDFs
 │   ├── figures/                # Publication figures
 │   ├── data/                   # Analysis datasets
 │   └── reports/                # Pipeline reports
-└── active_inference_meta_pragmatic/  # Other projects
+└── cogsec_multiagent_2_computational/  # Other projects
     └── ...
 ```
 
@@ -273,10 +289,11 @@ output/
 ### ✅ **Correct Import Patterns**
 
 **Within Project (Business Logic):**
+
 ```python
-# projects/ento_linguistics/src/domain_analysis.py
-from .term_extraction import TerminologyExtractor        # ✅ Import from same project
-from .literature_mining import LiteratureCorpus         # ✅ Import from same project
+# projects/cogsec_multiagent_1_theory/src/security_models.py
+from .formal_verifier import Verifier        # ✅ Import from same project
+from .threat_model import ThreatModel         # ✅ Import from same project
 
 # Infrastructure utilities (allowed)
 from infrastructure.core.logging_utils import get_logger  # ✅ Infrastructure access
@@ -284,23 +301,26 @@ from infrastructure.figure_manager import FigureManager   # ✅ Infrastructure a
 ```
 
 **Project Scripts (Thin Orchestrators):**
+
 ```python
-# projects/ento_linguistics/scripts/analysis_pipeline.py
-from src.domain_analysis import DomainAnalyzer           # ✅ Import project algorithms
-from src.term_extraction import TerminologyExtractor     # ✅ Import project methods
+# projects/cogsec_multiagent_1_theory/scripts/analysis_pipeline.py
+from src.security_models import SecurityModel           # ✅ Import project algorithms
+from src.formal_verifier import Verifier     # ✅ Import project methods
 from infrastructure.core.logging_utils import get_logger # ✅ Infrastructure utilities
 ```
 
 ### ❌ **Incorrect Import Patterns (Violate Isolation)**
 
 **Cross-Project Imports (Forbidden):**
+
 ```python
 # ❌ NEVER: Import from other projects
-from projects.active_inference_meta_pragmatic.src.generative_models import GenerativeModel
+from projects.cogsec_multiagent_2_computational.src.simulation import Simulator
 from projects.code_project.src.optimizer import Optimizer
 ```
 
 **Infrastructure Business Logic (Forbidden):**
+
 ```python
 # ❌ NEVER: Import infrastructure algorithms (infrastructure is utilities only)
 from infrastructure.rendering.core import RenderManager  # ❌ Business logic
@@ -316,16 +336,18 @@ from infrastructure.core.config_loader import load_config  # ✅ Utility
 ### Coverage Requirements
 
 **Project Code (`projects/{name}/src/`):**
+
 - **90% minimum coverage** required (currently achieved: 100% for most projects)
 - **Infrastructure Code**: 60% minimum (currently achieved: 83.33%)
 
 **Coverage Verification:**
+
 ```bash
 # Check project coverage
-pytest projects/ento_linguistics/tests/ --cov=projects/ento_linguistics/src --cov-fail-under=90
+pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-under=90
 
 # Generate coverage report
-pytest projects/ento_linguistics/tests/ --cov=projects/ento_linguistics/src --cov-report=html
+pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=html
 open htmlcov/index.html
 ```
 
@@ -334,12 +356,14 @@ open htmlcov/index.html
 **ABSOLUTE PROHIBITION**: Under no circumstances use `MagicMock`, `mocker.patch`, `unittest.mock`, or any mocking framework.
 
 **Rationale:**
+
 - Tests must validate actual behavior, not mocked behavior
 - Integration points must be truly tested
 - Code must work with data and computations
 - No false confidence from mocked tests
 
 **Correct Testing Patterns:**
+
 ```python
 # ✅ GOOD: Test with data and computations
 def test_term_extraction_real_data():
@@ -360,6 +384,7 @@ def test_term_extraction_real_data():
 ```
 
 **Network-Dependent Testing:**
+
 ```python
 # ✅ GOOD: Use pytest-httpserver for HTTP testing
 @pytest.mark.requires_ollama
@@ -374,6 +399,7 @@ def test_llm_integration_real_http(ollama_test_server):
 ### Test Organization
 
 **Directory Structure:**
+
 ```
 projects/{name}/tests/
 ├── __init__.py                      # Test package
@@ -386,6 +412,7 @@ projects/{name}/tests/
 ```
 
 **Test Categories:**
+
 - **Unit Tests**: Individual functions and methods
 - **Integration Tests**: Cross-module interactions
 - **Performance Tests**: Algorithm efficiency and scaling
@@ -396,11 +423,12 @@ projects/{name}/tests/
 ### Project Structure Validation
 
 **Infrastructure Validation:**
+
 ```python
 from infrastructure.project import validate_project_structure
 
 # Check if directory is valid project
-project_dir = Path("projects/ento_linguistics")
+project_dir = Path("projects/code_project")
 is_valid, message = validate_project_structure(project_dir)
 
 if is_valid:
@@ -414,6 +442,7 @@ else:
 ```
 
 **Validation Rules:**
+
 - ✅ **Must have**: `src/` directory with at least one `.py` file
 - ✅ **Must have**: `tests/` directory
 - ✅ **Optional but recommended**: `scripts/`, `manuscript/`
@@ -423,11 +452,12 @@ else:
 ### Script Discovery and Execution
 
 **Analysis Script Discovery:**
+
 ```python
 # Infrastructure discovers executable scripts
 from infrastructure.core.script_discovery import discover_analysis_scripts
 
-project_root = Path("projects/ento_linguistics")
+project_root = Path("projects/code_project")
 scripts = discover_analysis_scripts(project_root)
 
 for script in scripts:
@@ -436,6 +466,7 @@ for script in scripts:
 ```
 
 **Script Execution Environment:**
+
 - **PYTHONPATH**: Includes project `src/` and `infrastructure/`
 - **Working Directory**: Set to project root
 - **Environment Variables**: MPLBACKEND=Agg for headless plotting
@@ -446,8 +477,9 @@ for script in scripts:
 ### Working Directory (`projects/{name}/output/`)
 
 **Generated during pipeline execution:**
+
 ```
-projects/ento_linguistics/output/
+projects/cogsec_multiagent_1_theory/output/
 ├── figures/                 # PNG/PDF figures for manuscript
 ├── data/                    # CSV/NPZ datasets from analysis
 ├── pdf/                     # Generated PDF manuscripts
@@ -460,6 +492,7 @@ projects/ento_linguistics/output/
 ```
 
 **Characteristics:**
+
 - **Disposable**: Regenerated on each pipeline run
 - **Working**: Used during analysis and rendering
 - **Not in git**: Added to `.gitignore`
@@ -468,8 +501,9 @@ projects/ento_linguistics/output/
 ### Final Directory (`output/{name}/`)
 
 **Copied by `scripts/05_copy_outputs.py`:**
+
 ```
-output/ento_linguistics/
+output/cogsec_multiagent_1_theory/
 ├── pdf/                     # Final manuscript PDFs
 ├── figures/                 # Publication-quality figures
 ├── data/                    # Analysis datasets for sharing
@@ -478,6 +512,7 @@ output/ento_linguistics/
 ```
 
 **Characteristics:**
+
 - **Persistent**: Final deliverables for distribution
 - **Organized**: All project outputs in one location
 - **Ready for distribution**: Can be archived or shared independently
@@ -488,33 +523,39 @@ output/ento_linguistics/
 All projects in this directory comply with the template's development standards defined in `.cursorrules/`.
 
 ### ✅ **Testing Standards Compliance**
-- **90%+ coverage**: All active projects achieve required coverage thresholds (code_project: 96.49%, active_inference_meta_pragmatic: varies, ento_linguistics: 83%)
+
+- **90%+ coverage**: All active projects achieve required coverage thresholds (code_project: 96.49%, cogsec_multiagent_1_theory: 90%+, etc.)
 - **data only**: All tests use computations, no mocks
 - **integration**: Tests cover algorithm convergence, mathematical functions, and figure generation
 - **Deterministic results**: Fixed seeds ensure reproducible test outcomes
 
 ### ✅ **Documentation Standards Compliance**
+
 - **AGENTS.md + README.md**: technical documentation in each directory
 - **Type hints**: All public APIs have type annotations
 - **Docstrings**: docstrings with examples for all functions
 - **Cross-references**: Links between related documentation sections
 
 ### ✅ **Type Hints Standards Compliance**
+
 - **annotations**: All public functions have type hints
 - **Generic types**: Uses `List`, `Dict`, `Optional`, `Callable` appropriately
 - **Consistent patterns**: Follows template conventions throughout
 
 ### ✅ **Error Handling Standards Compliance**
+
 - **Custom exceptions**: Uses infrastructure exception hierarchy when available
 - **Context preservation**: Exception chaining with `from` keyword
 - **Informative messages**: Clear error messages with actionable guidance
 
 ### ✅ **Logging Standards Compliance**
+
 - **Unified logging**: Uses `infrastructure.core.logging_utils.get_logger(__name__)`
 - **Appropriate levels**: DEBUG, INFO, WARNING, ERROR as appropriate
 - **Context-rich messages**: Includes relevant context in log messages
 
 ### ✅ **Code Style Standards Compliance**
+
 - **Black formatting**: 88-character line limits, consistent formatting
 - **Descriptive names**: Clear variable and function names
 - **Import organization**: Standard library, third-party, local imports properly organized
@@ -524,24 +565,28 @@ All projects in this directory comply with the template's development standards 
 **✅ VERIFICATION COMPLETED - ALL STANDARDS MET**
 
 #### Testing Standards Results
+
 - **code_project**: 96.00% coverage (13 tests passed) ✅
-- **active_inference_meta_pragmatic**: Coverage varies by module ✅
-- **ento_linguistics**: 83% coverage (484 tests passed) ✅
+- **cogsec_multiagent_1_theory**: 90%+ coverage ✅
+- **cogsec_multiagent_2_computational**: 90%+ coverage ✅
 - **Combined**: All tests use data, no mocks detected ✅
 
 #### Documentation Standards Results
-- **AGENTS.md**: in all directories (projects/, code_project/, active_inference_meta_pragmatic/, ento_linguistics/) ✅
-- **README.md**: in all directories (projects/, code_project/, active_inference_meta_pragmatic/, ento_linguistics/) ✅
+
+- **AGENTS.md**: in all directories (projects/, code_project/, cogsec_multiagent_1_theory/, etc.) ✅
+- **README.md**: in all directories (projects/, code_project/, cogsec_multiagent_1_theory/, etc.) ✅
 - **Docstrings**: 100% coverage - all Python files have docstrings ✅
 - **Type hints**: All public APIs have annotations ✅
 
 #### Code Quality Standards Results
+
 - **Black formatting**: Applied consistently across all projects ✅
 - **Import organization**: Standard library, third-party, local imports properly organized ✅
 - **Error handling**: Context preservation with `from` keyword usage ✅
 - **Logging**: Unified logging system throughout ✅
 
 #### Pipeline Integration Results
+
 - **Import errors**: Fixed in `infrastructure/validation/output_validator.py` ✅
 - **Figure generation**: Both projects generate and register figures correctly ✅
 - **Manuscript integration**: All equations and figures properly referenced ✅
@@ -560,33 +605,39 @@ python3 -c "from infrastructure.validation.output_validator import validate_outp
 All projects must follow standards defined in `.cursorrules/`:
 
 #### ✅ **Testing Standards** (`.cursorrules/testing_standards.md`)
+
 - [ ] 90%+ coverage for project code
 - [ ] data only (no mocks)
 - [ ] integration tests
 - [ ] Deterministic results with seeded randomness
 
 #### ✅ **Documentation Standards** (`.cursorrules/documentation_standards.md`)
+
 - [ ] `AGENTS.md` in each directory with technical docs
 - [ ] `README.md` in each directory with quick reference
 - [ ] docstrings with examples for public APIs
 - [ ] Cross-references to related documentation
 
 #### ✅ **Type Hints Standards** (`.cursorrules/type_hints_standards.md`)
+
 - [ ] type annotations on all public functions
 - [ ] Generic types (List, Dict, Optional, etc.)
 - [ ] Consistent patterns across modules
 
 #### ✅ **Error Handling Standards** (`.cursorrules/error_handling.md`)
+
 - [ ] Custom exception hierarchy from `infrastructure.core.exceptions`
 - [ ] Exception chaining with context preservation
 - [ ] Informative error messages with actionable guidance
 
 #### ✅ **Logging Standards** (`.cursorrules/python_logging.md`)
+
 - [ ] Unified logging via `infrastructure.core.logging_utils.get_logger(__name__)`
 - [ ] Appropriate log levels (DEBUG, INFO, WARNING, ERROR)
 - [ ] Context-rich log messages for debugging
 
 #### ✅ **Code Style Standards** (`.cursorrules/code_style.md`)
+
 - [ ] Black formatting with 88-character line limits
 - [ ] Descriptive variable names and function signatures
 - [ ] Consistent import organization (stdlib, third-party, local)
@@ -594,30 +645,29 @@ All projects must follow standards defined in `.cursorrules/`:
 ### Thin Orchestrator Pattern
 
 **Project Scripts (Correct Pattern):**
+
 ```python
-# projects/ento_linguistics/scripts/analysis_pipeline.py
-from src.term_extraction import TerminologyExtractor      # ✅ Import business logic
-from src.domain_analysis import DomainAnalyzer           # ✅ Import algorithms
+# projects/code_project/scripts/analysis_pipeline.py
+from src.optimizer import Optimizer      # ✅ Import business logic
+from src.utils import Utils           # ✅ Import algorithms
 from infrastructure.figure_manager import FigureManager  # ✅ Import utilities
 
 def main():
     """Run analysis pipeline."""
     # Import and use project algorithms
-    extractor = TerminologyExtractor()
-    terms = extractor.extract_terms(texts)
-    
-    analyzer = DomainAnalyzer()
-    results = analyzer.analyze_all_domains(terms, texts)
+    opt = Optimizer()
+    results = opt.optimize(data)
     
     # Use infrastructure utilities
     fm = FigureManager()
-    fm.register_figure("domain_analysis.png", "Domain analysis results")
+    fm.register_figure("optimization_results.png", "Optimization results")
 
 if __name__ == "__main__":
     main()
 ```
 
 **Anti-Patterns (Violate Architecture):**
+
 ```python
 # ❌ WRONG: Business logic in scripts
 def analyze_terms(texts):  # Should be in src/
@@ -634,6 +684,7 @@ plt.savefig("figure.png")
 ### infrastructure.project Module
 
 **Project Discovery:**
+
 ```python
 def discover_projects(repo_root: Path | str) -> list[ProjectInfo]:
     """Discover all valid projects in projects/ directory.
@@ -667,6 +718,7 @@ def get_project_metadata(project_dir: Path) -> dict:
 ```
 
 **ProjectInfo Dataclass:**
+
 ```python
 @dataclass
 class ProjectInfo:
@@ -690,10 +742,12 @@ class ProjectInfo:
 ### "Project directory not found"
 
 **Symptoms:**
+
 - Infrastructure scripts fail with "Project directory not found"
 - Project not listed in `./run.sh` menu
 
 **Solutions:**
+
 ```bash
 # Check project exists
 ls -la projects/
@@ -708,10 +762,12 @@ find projects/ -maxdepth 1 -type d -not -path '*/.*'
 ### "Missing required directory: src"
 
 **Symptoms:**
+
 - `validate_project_structure()` returns `(False, "Missing required directory: src")`
 - Pipeline fails at validation stage
 
 **Solutions:**
+
 ```bash
 # Create required directories
 mkdir -p projects/myproject/src projects/myproject/tests
@@ -727,10 +783,12 @@ python3 -c "from infrastructure.project import validate_project_structure; print
 ### "src/ directory contains no Python files"
 
 **Symptoms:**
+
 - Project has `src/` directory but validation fails
 - Empty or non-Python files in `src/`
 
 **Solutions:**
+
 ```bash
 # Check src/ contents
 ls -la projects/myproject/src/
@@ -746,10 +804,12 @@ find projects/myproject/src/ -not -name "*.py" -type f
 ### "Test coverage below 90%"
 
 **Symptoms:**
+
 - Pipeline fails at test stage with coverage error
 - `pytest --cov-fail-under=90` exits with failure
 
 **Solutions:**
+
 ```bash
 # Run tests with coverage report
 pytest projects/myproject/tests/ --cov=projects/myproject/src --cov-report=html
@@ -767,10 +827,12 @@ pytest projects/myproject/tests/ --cov=projects/myproject/src --cov-fail-under=9
 ### "No analysis scripts found"
 
 **Symptoms:**
+
 - `scripts/02_run_analysis.py` reports "No analysis scripts found"
 - Optional `scripts/` directory missing or empty
 
 **Solutions:**
+
 ```bash
 # Create scripts directory (optional but recommended)
 mkdir -p projects/myproject/scripts
@@ -803,10 +865,12 @@ chmod +x projects/myproject/scripts/analysis_pipeline.py
 ### "Import errors in scripts"
 
 **Symptoms:**
+
 - Analysis scripts fail with import errors
 - "ModuleNotFoundError" for local or infrastructure modules
 
 **Solutions:**
+
 ```bash
 # Check PYTHONPATH setup by infrastructure
 # Infrastructure sets: repo_root + infrastructure/ + project/src/
@@ -828,10 +892,12 @@ print('Import successful')
 ### "Manuscript rendering issues"
 
 **Symptoms:**
+
 - PDF generation fails with LaTeX errors
 - Missing references or figures in output
 
 **Solutions:**
+
 ```bash
 # Validate markdown before rendering
 python3 -m infrastructure.validation.cli markdown projects/myproject/manuscript/
@@ -848,36 +914,40 @@ ls projects/myproject/output/pdf/*_compile.log
 
 ## Real Project Examples
 
-### Ento-Linguistic Research (`projects/ento_linguistics/`)
+### Cognitive Security Theory (`projects/cogsec_multiagent_1_theory/`)
 
 **Standalone Guarantees:**
-- **Tests**: 484 tests, 83.74% coverage, real PubMed/arXiv API testing
-- **Methods**: 6-domain analysis framework, term extraction algorithms
-- **Manuscript**: Independent Ento-Linguistic research with literature corpus
+
+- **Tests**: Trust calculus, firewall, consensus validation with 90%+ coverage
+- **Methods**: Formal trust bounds, defense composition algebra
+- **Manuscript**: Independent formal foundations with mathematical proofs
 
 **Infrastructure Operations:**
+
 ```bash
 # Infrastructure discovers and validates
-python3 scripts/01_run_tests.py --project ento_linguistics
+python3 scripts/01_run_tests.py --project cogsec_multiagent_1_theory
 
 # Infrastructure executes analysis scripts
-python3 scripts/02_run_analysis.py --project ento_linguistics
+python3 scripts/02_run_analysis.py --project cogsec_multiagent_1_theory
 
 # Infrastructure renders manuscript
-python3 scripts/03_render_pdf.py --project ento_linguistics
+python3 scripts/03_render_pdf.py --project cogsec_multiagent_1_theory
 ```
 
-### Active Inference Framework (`projects/active_inference_meta_pragmatic/`)
+### Computational Validation (`projects/cogsec_multiagent_2_computational/`)
 
 **Standalone Guarantees:**
-- **Tests**: 90%+ coverage, theoretical EFE calculation validation
-- **Methods**: 2×2 matrix framework, generative models, meta-cognition
-- **Manuscript**: Independent meta-pragmatic analysis with mathematical derivations
+
+- **Tests**: 90%+ coverage, attack detection benchmarks
+- **Methods**: 950 attack corpus, 6 architecture validation
+- **Manuscript**: Empirical results with statistical analysis
 
 **Infrastructure Operations:**
+
 ```bash
-# pipeline via infrastructure
-python3 scripts/execute_pipeline.py --project active_inference_meta_pragmatic --core-only
+# Full pipeline via infrastructure
+python3 scripts/execute_pipeline.py --project cogsec_multiagent_2_computational --core-only
 ```
 
 ## See Also
@@ -894,17 +964,20 @@ python3 scripts/execute_pipeline.py --project active_inference_meta_pragmatic --
 The `projects/` directory implements **standalone project paradigm** with infrastructure compliance:
 
 ### 🔒 **Standalone Guarantees**
+
 - **Tests**: Independent 90%+ coverage test suites with data only
 - **Methods**: Isolated business logic with no cross-project dependencies
 - **Manuscript**: Independent content with own references and publication metadata
 
 ### 🔧 **Infrastructure Integration**
+
 - **Discovery**: Automatic project detection via `infrastructure.project.discovery`
 - **Validation**: Structure and quality compliance checking
 - **Execution**: Test/analysis/rendering via root `scripts/` orchestrators
 - **Quality Assurance**: PDF/markdown validation and integrity checking
 
 ### 📋 **Compliance Framework**
+
 - **.cursorrules Standards**: adherence to testing, documentation, type hints, error handling, and logging standards
 - **Quality Gates**: Automated coverage checks, documentation validation, type safety verification
 - **Operational Patterns**: Thin orchestrator scripts, infrastructure utility imports, project isolation

@@ -1440,8 +1440,10 @@ def main(mode: ReviewMode = ReviewMode.ALL, project_name: str = "project") -> in
     project_output = repo_root / "projects" / project_name / "output"
 
     # Try project-specific filename first, then fallback to generic for backward compatibility
+    # Use project basename for file matching (handles nested projects like "cognitive_integrity/cogsec_multiagent_1_theory")
+    project_basename = Path(project_name).name
     pdf_dir = project_output / "pdf"
-    project_specific_pdf = pdf_dir / f"{project_name}_combined.pdf"
+    project_specific_pdf = pdf_dir / f"{project_basename}_combined.pdf"
     generic_pdf = pdf_dir / "project_combined.pdf"
 
     if project_specific_pdf.exists():

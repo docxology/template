@@ -2,9 +2,9 @@
 
 This section provides additional experimental results that complement the computational analysis presented in Section \ref{sec:experimental_results}.
 
-## S2.1 Extended Domain-Specific Analyses
+## Extended Domain-Specific Analyses
 
-### S2.1.1 Additional Terminology Extraction Results
+### Additional Terminology Extraction Results
 
 Our analysis identified additional terminology patterns across the six Ento-Linguistic domains:
 
@@ -26,7 +26,7 @@ Economics & 45 & 2 & 67 & Resource metaphors \\
 \label{tab:extended_terminology}
 \end{table}
 
-### S2.1.2 Sub-Domain Analysis
+### Sub-Domain Analysis
 
 Each major domain contains distinct sub-domains with characteristic terminology patterns:
 
@@ -40,9 +40,9 @@ Each major domain contains distinct sub-domains with characteristic terminology 
 - Age-related roles (temporal polyethism)
 - Context-dependent flexibility (task switching)
 
-## S2.2 Extended Network Analysis Results
+## Extended Network Analysis Results
 
-### S2.2.1 Network Structural Properties
+### Network Structural Properties
 
 Extended analysis of terminology networks reveals additional structural patterns:
 
@@ -63,7 +63,7 @@ Small World Coefficient & 2.1 & 2.3 & 1.8 & 1.9 & 1.7 \\
 \label{tab:extended_network_properties}
 \end{table}
 
-### S2.2.2 Cross-Domain Relationship Analysis
+### Cross-Domain Relationship Analysis
 
 Analysis of relationships between domains reveals conceptual bridges:
 
@@ -79,9 +79,9 @@ Analysis of relationships between domains reveals conceptual bridges:
 - Unit of Individuality ↔ Kin & Relatedness (social structure foundations)
 - Economics ↔ Power & Labor (resource distribution hierarchies)
 
-## S2.3 Extended Framing Analysis
+## Extended Framing Analysis
 
-### S2.3.1 Framing Prevalence Across Domains
+### Framing Prevalence Across Domains
 
 Extended analysis of framing assumptions reveals domain-specific patterns:
 
@@ -103,7 +103,7 @@ Biological & 87.6 & 93.1 & 78.9 & 95.4 & 72.3 \\
 \label{tab:domain_framing_prevalence}
 \end{table}
 
-### S2.3.2 Framing Evolution Over Time
+### Framing Evolution Over Time
 
 Analysis of framing patterns across publication decades:
 
@@ -119,9 +119,9 @@ Analysis of framing patterns across publication decades:
 - Economic framing increased from 15\% (1970s) to 65\% (2020s)
 - Hierarchical framing remained stable at ~50\% across decades
 
-## S2.4 Extended Case Studies
+## Extended Case Studies
 
-### S2.4.1 Caste Terminology Evolution: 1970-2024
+### Caste Terminology Evolution: 1970-2024
 
 Longitudinal analysis reveals changing conceptual frameworks:
 
@@ -137,7 +137,7 @@ Longitudinal analysis reveals changing conceptual frameworks:
 - **1990s-2000s**: Transition to task-based understanding (67\% traditional caste)
 - **2010s-2024**: Recognition of plasticity and individual variation (34\% traditional caste)
 
-### S2.4.2 Superorganism Debate: Conceptual Evolution
+### Superorganism Debate: Conceptual Evolution
 
 Extended analysis of superorganism terminology evolution:
 
@@ -158,9 +158,9 @@ Extended analysis of superorganism terminology evolution:
 \label{tab:superorganism_evolution}
 \end{table}
 
-## S2.5 Extended Statistical Validation
+## Extended Statistical Validation
 
-### S2.5.1 Inter-annotator Agreement Results
+### Inter-annotator Agreement Results
 
 validation across multiple annotators:
 
@@ -179,7 +179,7 @@ Percentage Agreement & 91.3\% & 87.6\% & 84.2\% \\
 \label{tab:inter_annotator_agreement}
 \end{table}
 
-### S2.5.2 Bootstrap Validation Results
+### Bootstrap Validation Results
 
 Stability analysis across 1000 bootstrap samples:
 
@@ -188,9 +188,9 @@ Stability analysis across 1000 bootstrap samples:
 - **Network structure**: 88.9\% stability (SD = 4.1\%)
 - **Framing identification**: 86.4\% stability (SD = 4.8\%)
 
-## S2.6 Additional Domain-Specific Figures
+## Additional Domain-Specific Figures
 
-### S2.6.1 Domain-Specific Visualizations
+### Domain-Specific Visualizations
 
 Extended visualizations for each domain provide deeper insights:
 

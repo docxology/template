@@ -3,39 +3,50 @@
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+
 # Lazy imports to avoid import issues during test collection
 def _get_infra_validate_markdown():
     # Ensure infrastructure is available
     _ensure_infrastructure_path()
     from infrastructure.validation.markdown_validator import validate_markdown
+
     return validate_markdown
+
 
 def _get_infra_verify_output_integrity():
     # Ensure infrastructure is available
     _ensure_infrastructure_path()
     from infrastructure.validation.integrity import verify_output_integrity
+
     return verify_output_integrity
+
 
 def _get_infra_validate_pdf_rendering():
     # Ensure infrastructure is available
     _ensure_infrastructure_path()
     from infrastructure.validation.pdf_validator import validate_pdf_rendering
+
     return validate_pdf_rendering
+
 
 def _get_infra_validate_figure_registry():
     # Ensure infrastructure is available
     _ensure_infrastructure_path()
-    from infrastructure.validation.figure_validator import validate_figure_registry
+    from infrastructure.validation.figure_validator import \
+        validate_figure_registry
+
     return validate_figure_registry
+
 
 def _ensure_infrastructure_path():
     """Ensure the infrastructure module is available in sys.path."""
-    import sys
     import os
+    import sys
 
     # Check if infrastructure is already available
     try:
         import infrastructure
+
         return
     except ImportError:
         pass
@@ -63,25 +74,22 @@ def validate_markdown(markdown_path: str, strict: bool = False) -> Dict[str, Any
         # Infrastructure function requires both markdown_dir and repo_root
         repo_root = Path(".").resolve()  # Current directory as repo root
         infra_validate_markdown = _get_infra_validate_markdown()
-        problems, exit_code = infra_validate_markdown(Path(markdown_path), repo_root, strict=strict)
+        problems, exit_code = infra_validate_markdown(
+            Path(markdown_path), repo_root, strict=strict
+        )
         return {
             "status": "validated" if exit_code == 0 else "issues_found",
             "issues": problems,
-            "summary": {
-                "total_issues": len(problems),
-                "exit_code": exit_code
-            },
-            "path": markdown_path
+            "summary": {"total_issues": len(problems), "exit_code": exit_code},
+            "path": markdown_path,
         }
     except Exception as e:
-        return {
-            "status": "error",
-            "error": str(e),
-            "path": markdown_path
-        }
+        return {"status": "error", "error": str(e), "path": markdown_path}
 
 
-def validate_figure_registry(registry_path: Path, manuscript_dir: Path) -> Dict[str, Any]:
+def validate_figure_registry(
+    registry_path: Path, manuscript_dir: Path
+) -> Dict[str, Any]:
     """Validate figure registry using infrastructure validation.
 
     Args:
@@ -98,18 +106,10 @@ def validate_figure_registry(registry_path: Path, manuscript_dir: Path) -> Dict[
             "status": "validated" if success else "issues_found",
             "success": success,
             "issues": issues,
-            "summary": {
-                "total_issues": len(issues),
-                "validated": success
-            }
+            "summary": {"total_issues": len(issues), "validated": success},
         }
     except Exception as e:
-        return {
-            "status": "error",
-            "error": str(e),
-            "success": False,
-            "issues": []
-        }
+        return {"status": "error", "error": str(e), "success": False, "issues": []}
 
 
 def verify_output_integrity(output_path: Path) -> Dict[str, Any]:
@@ -128,14 +128,10 @@ def verify_output_integrity(output_path: Path) -> Dict[str, Any]:
             "status": "validated" if results["status"] == "passed" else "issues_found",
             "issues": results.get("issues", []),
             "summary": results.get("summary", ""),
-            "path": str(output_path)
+            "path": str(output_path),
         }
     except Exception as e:
-        return {
-            "status": "error",
-            "error": str(e),
-            "path": str(output_path)
-        }
+        return {"status": "error", "error": str(e), "path": str(output_path)}
 
 
 def validate_pdf_rendering(pdf_path: str) -> Dict[str, Any]:
@@ -154,14 +150,10 @@ def validate_pdf_rendering(pdf_path: str) -> Dict[str, Any]:
             "status": "validated" if not results.get("issues") else "issues_found",
             "issues": results.get("issues", []),
             "warnings": results.get("warnings", []),
-            "path": pdf_path
+            "path": pdf_path,
         }
     except Exception as e:
-        return {
-            "status": "error",
-            "error": str(e),
-            "path": pdf_path
-        }
+        return {"status": "error", "error": str(e), "path": pdf_path}
 
 
 class IntegrityReport:

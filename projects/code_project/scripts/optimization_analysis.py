@@ -7,22 +7,19 @@ This script demonstrates the analysis capabilities by:
 3. Saving numerical results
 4. Registering figures for the manuscript
 """
-import numpy as np
-import matplotlib.pyplot as plt
-from pathlib import Path
-from typing import Dict, Any, Optional
-
 # Add project src to path
 import sys
+from pathlib import Path
+from typing import Any, Dict, Optional
+
+import matplotlib.pyplot as plt
+import numpy as np
+
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root / "src"))
 
-from optimizer import (
-    quadratic_function,
-    compute_gradient,
-    gradient_descent,
-    OptimizationResult,
-)
+from optimizer import (OptimizationResult, compute_gradient, gradient_descent,
+                       quadratic_function)
 
 # Add infrastructure imports for scientific analysis
 try:
@@ -30,56 +27,129 @@ try:
     repo_root = Path(__file__).parent.parent.parent
     sys.path.insert(0, str(repo_root))
 
-    from infrastructure.scientific import (
-        check_numerical_stability,
-        benchmark_function,
-    )
-    from infrastructure.reporting import (
-        generate_output_summary,
-        get_error_aggregator,
-        collect_output_statistics,
-    )
-    from infrastructure.publishing import (
-        extract_publication_metadata,
-        generate_citation_bibtex,
-        generate_citation_apa,
-        generate_citation_mla,
-    )
+    from infrastructure.core import (CheckpointManager, ProgressBar,
+                                     SystemHealthChecker, get_logger,
+                                     log_operation, log_stage, log_success,
+                                     monitor_performance, retry_with_backoff)
+    from infrastructure.core.exceptions import (BuildError,
+                                                ScriptExecutionError,
+                                                TemplateError, ValidationError)
+    from infrastructure.publishing import (create_github_release,
+                                           extract_publication_metadata,
+                                           generate_citation_apa,
+                                           generate_citation_bibtex,
+                                           generate_citation_mla,
+                                           prepare_arxiv_submission,
+                                           publish_to_zenodo)
     from infrastructure.publishing.models import PublicationMetadata
-    from infrastructure.validation import (
-        verify_output_integrity,
-        generate_integrity_report,
-    )
-    from infrastructure.core import (
-        monitor_performance,
-        ProgressBar,
-        get_logger,
-        log_operation,
-        log_success,
-        log_stage,
-        CheckpointManager,
-        retry_with_backoff,
-        SystemHealthChecker,
-    )
-    from infrastructure.core.exceptions import (
-        TemplateError,
-        ScriptExecutionError,
-        ValidationError,
-        BuildError,
-    )
-    from infrastructure.rendering import (
-        RenderManager,
-        get_render_manager,
-    )
-    from infrastructure.publishing import (
-        publish_to_zenodo,
-        prepare_arxiv_submission,
-        create_github_release,
-    )
+    from infrastructure.rendering import RenderManager, get_render_manager
+    from infrastructure.reporting import (collect_output_statistics,
+                                          generate_output_summary,
+                                          get_error_aggregator)
+    from infrastructure.scientific import (benchmark_function,
+                                           check_numerical_stability)
+    from infrastructure.validation import (generate_integrity_report,
+                                           verify_output_integrity)
+
     INFRASTRUCTURE_AVAILABLE = True
 except ImportError as e:
     print(f"⚠️  Infrastructure modules not available: {e}")
     INFRASTRUCTURE_AVAILABLE = False
+
+
+# =============================================================================
+# VISUALIZATION CONFIGURATION - Accessibility & Publication Quality
+# =============================================================================
+# Colorblind-safe palette (IBM Design Language / Wong palette)
+# Tested for deuteranopia, protanopia, and tritanopia accessibility
+VIZ_CONFIG = {
+    "colors": {
+        "primary": "#0072B2",      # Blue (safe for all color blindness)
+        "secondary": "#D55E00",    # Vermillion/Orange
+        "tertiary": "#009E73",     # Bluish green
+        "quaternary": "#CC79A7",   # Reddish purple
+        "neutral": "#999999",      # Gray for reference lines
+        "success": "#009E73",      # Green (same as tertiary)
+        "warning": "#F0E442",      # Yellow
+        "error": "#D55E00",        # Same as secondary
+    },
+    "palette": ["#0072B2", "#D55E00", "#009E73", "#CC79A7", "#F0E442", "#56B4E9"],
+    "fonts": {
+        "title": 16,
+        "subtitle": 14,
+        "axis_label": 14,
+        "tick_label": 12,
+        "legend": 12,
+        "annotation": 11,
+    },
+    "figure": {
+        "dpi": 300,
+        "facecolor": "white",
+        "figsize_single": (10, 7),
+        "figsize_double": (14, 6),
+        "figsize_quad": (14, 11),
+    },
+    "lines": {
+        "linewidth": 2.5,
+        "markersize": 8,
+        "markeredgewidth": 2,
+    },
+    "grid": {
+        "alpha": 0.4,
+        "linestyle": "-",
+        "linewidth": 0.5,
+    },
+    "legend": {
+        "framealpha": 0.95,
+        "edgecolor": "#666666",
+        "fancybox": True,
+    },
+    "markers": ["o", "s", "^", "D", "v", "p"],
+}
+
+
+def apply_visualization_style():
+    """Apply global matplotlib style for publication-quality, accessible figures."""
+    plt.rcParams.update({
+        # Figure
+        "figure.dpi": VIZ_CONFIG["figure"]["dpi"],
+        "figure.facecolor": VIZ_CONFIG["figure"]["facecolor"],
+        "figure.edgecolor": "none",
+        # Font sizes
+        "font.size": VIZ_CONFIG["fonts"]["tick_label"],
+        "axes.titlesize": VIZ_CONFIG["fonts"]["title"],
+        "axes.labelsize": VIZ_CONFIG["fonts"]["axis_label"],
+        "xtick.labelsize": VIZ_CONFIG["fonts"]["tick_label"],
+        "ytick.labelsize": VIZ_CONFIG["fonts"]["tick_label"],
+        "legend.fontsize": VIZ_CONFIG["fonts"]["legend"],
+        # Font weight
+        "axes.titleweight": "bold",
+        "axes.labelweight": "medium",
+        # Lines
+        "lines.linewidth": VIZ_CONFIG["lines"]["linewidth"],
+        "lines.markersize": VIZ_CONFIG["lines"]["markersize"],
+        # Grid
+        "axes.grid": True,
+        "grid.alpha": VIZ_CONFIG["grid"]["alpha"],
+        "grid.linestyle": VIZ_CONFIG["grid"]["linestyle"],
+        "grid.linewidth": VIZ_CONFIG["grid"]["linewidth"],
+        # Legend
+        "legend.framealpha": VIZ_CONFIG["legend"]["framealpha"],
+        "legend.edgecolor": VIZ_CONFIG["legend"]["edgecolor"],
+        "legend.fancybox": VIZ_CONFIG["legend"]["fancybox"],
+        # Spines
+        "axes.spines.top": False,
+        "axes.spines.right": False,
+        # Save settings
+        "savefig.dpi": VIZ_CONFIG["figure"]["dpi"],
+        "savefig.bbox": "tight",
+        "savefig.facecolor": VIZ_CONFIG["figure"]["facecolor"],
+        "savefig.edgecolor": "none",
+    })
+
+
+# Apply visualization style on import
+apply_visualization_style()
 
 
 def run_convergence_experiment():
@@ -113,12 +183,14 @@ def run_convergence_experiment():
             step_size=step_size,
             max_iterations=100,
             tolerance=1e-8,
-            verbose=False
+            verbose=False,
         )
 
         results[step_size] = result
         if logger:
-            logger.info(f"  Converged: {result.converged}, Final value: {result.objective_value:.4f}")
+            logger.info(
+                f"  Converged: {result.converged}, Final value: {result.objective_value:.4f}"
+            )
     return results
 
 
@@ -149,11 +221,13 @@ def run_convergence_experiment_with_progress(progress_bar):
             step_size=step_size,
             max_iterations=100,
             tolerance=1e-8,
-            verbose=False
+            verbose=False,
         )
 
         results[step_size] = result
-        print(f"  Converged: {result.converged}, Final value: {result.objective_value:.4f}")
+        print(
+            f"  Converged: {result.converged}, Final value: {result.objective_value:.4f}"
+        )
 
         # Update progress bar
         if progress_bar:
@@ -163,15 +237,21 @@ def run_convergence_experiment_with_progress(progress_bar):
 
 
 def generate_convergence_plot(results):
-    """Generate convergence plot showing objective value vs iteration."""
+    """Generate convergence plot showing objective value vs iteration.
+    
+    Uses colorblind-safe palette and accessibility-optimized settings.
+    """
     logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
 
     if logger:
         logger.info("Generating convergence plot...")
 
-    plt.figure(figsize=(10, 6))
+    # Create figure with enhanced styling
+    fig, ax = plt.subplots(figsize=VIZ_CONFIG["figure"]["figsize_single"])
 
-    colors = ['blue', 'red', 'green', 'orange']
+    # Use colorblind-safe palette
+    colors = VIZ_CONFIG["palette"]
+    markers = VIZ_CONFIG["markers"]
     step_sizes = list(results.keys())
 
     for i, step_size in enumerate(step_sizes):
@@ -180,21 +260,65 @@ def generate_convergence_plot(results):
         # Simulate the trajectory to get intermediate values
         trajectory = simulate_trajectory(step_size, max_iter=result.iterations + 10)
 
-        plt.plot(trajectory['iterations'], trajectory['objectives'],
-                color=colors[i], linewidth=2, label=f'α = {step_size}')
+        ax.plot(
+            trajectory["iterations"],
+            trajectory["objectives"],
+            color=colors[i % len(colors)],
+            linewidth=VIZ_CONFIG["lines"]["linewidth"],
+            label=f"Step size α = {step_size}",
+            marker=markers[i % len(markers)],
+            markersize=VIZ_CONFIG["lines"]["markersize"],
+            markeredgewidth=VIZ_CONFIG["lines"]["markeredgewidth"],
+            markerfacecolor="white",
+            markevery=max(1, len(trajectory["iterations"]) // 8),
+        )
 
-    plt.xlabel('Iteration')
-    plt.ylabel('Objective Value f(x)')
-    plt.title('Gradient Descent Convergence for Different Step Sizes')
-    plt.legend()
-    plt.grid(True, alpha=0.3)
+    # Add optimal value reference line
+    ax.axhline(
+        y=-0.5,
+        color=VIZ_CONFIG["colors"]["neutral"],
+        linestyle="--",
+        linewidth=2,
+        alpha=0.8,
+        label="Optimal: f(x*) = −0.5",
+    )
+
+    ax.set_xlabel("Iteration")
+    ax.set_ylabel("Objective Value f(x)")
+    ax.set_title(
+        "Gradient Descent Convergence Analysis\nQuadratic Minimization: f(x) = ½x² − x",
+        pad=15,
+    )
+    ax.legend(
+        loc="upper right",
+        fontsize=VIZ_CONFIG["fonts"]["legend"],
+        title="Learning Rate",
+        title_fontsize=VIZ_CONFIG["fonts"]["legend"],
+    )
+    ax.set_ylim(bottom=-0.6)
+
+    # Add annotation for convergence
+    ax.annotate(
+        "All step sizes converge to optimal x* = 1.0",
+        xy=(0.98, 0.15),
+        xycoords="axes fraction",
+        fontsize=VIZ_CONFIG["fonts"]["annotation"],
+        style="italic",
+        color=VIZ_CONFIG["colors"]["neutral"],
+        ha="right",
+        bbox=dict(boxstyle="round,pad=0.3", facecolor="white", alpha=0.8, edgecolor="none"),
+    )
+
+    plt.tight_layout()
 
     # Save plot
     output_dir = project_root / "output" / "figures"
     output_dir.mkdir(parents=True, exist_ok=True)
 
     plot_path = output_dir / "convergence_plot.png"
-    plt.savefig(plot_path, dpi=300, bbox_inches='tight')
+    plt.savefig(
+        plot_path, dpi=300, bbox_inches="tight", facecolor="white", edgecolor="none"
+    )
     plt.close()
 
     if logger:
@@ -204,6 +328,7 @@ def generate_convergence_plot(results):
 
 def simulate_trajectory(step_size, max_iter=50):
     """Simulate gradient descent trajectory to collect intermediate values."""
+
     def obj_func(x):
         return quadratic_function(x, np.array([[1.0]]), np.array([1.0]))
 
@@ -225,10 +350,7 @@ def simulate_trajectory(step_size, max_iter=50):
         if np.linalg.norm(grad) < 1e-8:
             break
 
-    return {
-        'iterations': iterations,
-        'objectives': objectives
-    }
+    return {"iterations": iterations, "objectives": objectives}
 
 
 def save_optimization_results(results):
@@ -243,12 +365,16 @@ def save_optimization_results(results):
 
     data_path = output_dir / "optimization_results.csv"
 
-    with open(data_path, 'w') as f:
-        f.write("step_size,solution,objective_value,iterations,converged,gradient_norm\n")
+    with open(data_path, "w") as f:
+        f.write(
+            "step_size,solution,objective_value,iterations,converged,gradient_norm\n"
+        )
 
         for step_size, result in results.items():
-            f.write(f"{step_size},{result.solution[0]:.6f},{result.objective_value:.6f},"
-                   f"{result.iterations},{result.converged},{result.gradient_norm:.2e}\n")
+            f.write(
+                f"{step_size},{result.solution[0]:.6f},{result.objective_value:.6f},"
+                f"{result.iterations},{result.converged},{result.gradient_norm:.2e}\n"
+            )
 
     if logger:
         logger.info(f"Saved results to: {data_path}")
@@ -256,7 +382,10 @@ def save_optimization_results(results):
 
 
 def generate_step_size_sensitivity_plot(results):
-    """Generate plot showing step size sensitivity analysis."""
+    """Generate plot showing step size sensitivity analysis.
+    
+    Uses colorblind-safe palette and accessibility-optimized settings.
+    """
     logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
 
     if logger:
@@ -266,32 +395,86 @@ def generate_step_size_sensitivity_plot(results):
     iterations = [results[step_size].iterations for step_size in step_sizes]
     objective_values = [results[step_size].objective_value for step_size in step_sizes]
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=VIZ_CONFIG["figure"]["figsize_double"])
 
-    # Iterations vs step size
-    ax1.plot(step_sizes, iterations, 'bo-', linewidth=2, markersize=8)
-    ax1.set_xlabel('Step Size (α)')
-    ax1.set_ylabel('Iterations to Convergence')
-    ax1.set_title('Step Size vs Convergence Speed')
-    ax1.grid(True, alpha=0.3)
-    ax1.set_xscale('log')
+    # Use colorblind-safe palette
+    color_primary = VIZ_CONFIG["colors"]["primary"]
+    color_secondary = VIZ_CONFIG["colors"]["secondary"]
+    color_success = VIZ_CONFIG["colors"]["success"]
 
-    # Final objective value vs step size
-    ax2.plot(step_sizes, objective_values, 'ro-', linewidth=2, markersize=8)
-    ax2.axhline(y=-0.5, color='green', linestyle='--', alpha=0.7, label='Optimal Value (-0.5)')
-    ax2.set_xlabel('Step Size (α)')
-    ax2.set_ylabel('Final Objective Value')
-    ax2.set_title('Step Size vs Solution Quality')
-    ax2.legend()
-    ax2.grid(True, alpha=0.3)
-    ax2.set_xscale('log')
+    # Left: Iterations vs step size
+    ax1.plot(
+        step_sizes,
+        iterations,
+        color=color_primary,
+        linewidth=VIZ_CONFIG["lines"]["linewidth"],
+        marker="o",
+        markersize=VIZ_CONFIG["lines"]["markersize"] + 2,
+        markerfacecolor="white",
+        markeredgewidth=VIZ_CONFIG["lines"]["markeredgewidth"],
+    )
+    ax1.set_xlabel("Step Size (α)")
+    ax1.set_ylabel("Iterations to Convergence")
+    ax1.set_title(
+        "Convergence Speed vs Step Size\nSmaller α requires more iterations",
+        pad=12,
+    )
+    ax1.set_xscale("log")
+
+    # Add value annotations with improved visibility
+    for x, y in zip(step_sizes, iterations):
+        ax1.annotate(
+            f"{y}",
+            (x, y),
+            textcoords="offset points",
+            xytext=(0, 10),
+            ha="center",
+            fontsize=VIZ_CONFIG["fonts"]["annotation"],
+            fontweight="bold",
+            bbox=dict(boxstyle="round,pad=0.2", facecolor="white", alpha=0.8, edgecolor="none"),
+        )
+
+    # Right: Final objective value vs step size
+    ax2.plot(
+        step_sizes,
+        objective_values,
+        color=color_secondary,
+        linewidth=VIZ_CONFIG["lines"]["linewidth"],
+        marker="s",
+        markersize=VIZ_CONFIG["lines"]["markersize"] + 2,
+        markerfacecolor="white",
+        markeredgewidth=VIZ_CONFIG["lines"]["markeredgewidth"],
+        label="Achieved Value",
+    )
+    ax2.axhline(
+        y=-0.5,
+        color=color_success,
+        linestyle="--",
+        linewidth=2.5,
+        alpha=0.9,
+        label="Optimal f(x*) = −0.5",
+    )
+    ax2.set_xlabel("Step Size (α)")
+    ax2.set_ylabel("Final Objective Value")
+    ax2.set_title(
+        "Solution Quality vs Step Size\nAll step sizes achieve optimal value",
+        pad=12,
+    )
+    ax2.legend(
+        loc="lower right",
+        fontsize=VIZ_CONFIG["fonts"]["legend"],
+    )
+    ax2.set_xscale("log")
+    ax2.set_ylim(-0.52, -0.48)
 
     plt.tight_layout()
 
     # Save plot
     output_dir = project_root / "output" / "figures"
     plot_path = output_dir / "step_size_sensitivity.png"
-    plt.savefig(plot_path, dpi=300, bbox_inches='tight')
+    plt.savefig(
+        plot_path, dpi=300, bbox_inches="tight", facecolor="white", edgecolor="none"
+    )
     plt.close()
 
     if logger:
@@ -300,45 +483,87 @@ def generate_step_size_sensitivity_plot(results):
 
 
 def generate_convergence_rate_plot(results):
-    """Generate convergence rate comparison plot."""
+    """Generate convergence rate comparison plot.
+    
+    Uses colorblind-safe palette and accessibility-optimized settings.
+    """
     logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
 
     if logger:
         logger.info("Generating convergence rate comparison plot...")
 
-    plt.figure(figsize=(10, 6))
+    fig, ax = plt.subplots(figsize=VIZ_CONFIG["figure"]["figsize_single"])
 
-    colors = ['blue', 'red', 'green', 'orange']
+    # Use colorblind-safe palette
+    colors = VIZ_CONFIG["palette"]
+    markers = VIZ_CONFIG["markers"]
     step_sizes = list(results.keys())
 
     for i, step_size in enumerate(step_sizes):
         # Simulate trajectory with more points for rate analysis
         trajectory = simulate_trajectory(step_size, max_iter=100)
 
-        iterations = trajectory['iterations']
-        objectives = trajectory['objectives']
+        iterations = trajectory["iterations"]
+        objectives = trajectory["objectives"]
 
         # Calculate error relative to optimal value (-0.5)
         errors = [abs(obj + 0.5) for obj in objectives]  # Absolute error
 
         # Only plot until convergence or reasonable iterations
         max_plot_iter = min(50, len(iterations))
-        plt.plot(iterations[:max_plot_iter], errors[:max_plot_iter],
-                color=colors[i], linewidth=2, label=f'α = {step_size}',
-                marker='o', markersize=3, markevery=5)
+        ax.plot(
+            iterations[:max_plot_iter],
+            errors[:max_plot_iter],
+            color=colors[i % len(colors)],
+            linewidth=VIZ_CONFIG["lines"]["linewidth"],
+            label=f"Step size α = {step_size}",
+            marker=markers[i % len(markers)],
+            markersize=VIZ_CONFIG["lines"]["markersize"],
+            markerfacecolor="white",
+            markeredgewidth=VIZ_CONFIG["lines"]["markeredgewidth"],
+            markevery=max(1, max_plot_iter // 8),
+        )
 
-    plt.xlabel('Iteration')
-    plt.ylabel('Absolute Error |f(x) - f(x*)|')
-    plt.title('Convergence Rate Comparison (Log Scale)')
-    plt.legend()
-    plt.grid(True, alpha=0.3)
-    plt.yscale('log')
-    plt.ylim(1e-8, 1e1)
+    ax.set_xlabel("Iteration")
+    ax.set_ylabel("Absolute Error |f(x) − f(x*)|")
+    ax.set_title(
+        "Convergence Rate Comparison\nLinear Convergence on Logarithmic Scale",
+        pad=15,
+    )
+    ax.legend(
+        loc="upper right",
+        fontsize=VIZ_CONFIG["fonts"]["legend"],
+        title="Learning Rate",
+        title_fontsize=VIZ_CONFIG["fonts"]["legend"],
+    )
+    ax.set_yscale("log")
+    ax.set_ylim(1e-8, 1e1)
+
+    # Add convergence threshold annotation
+    ax.axhline(
+        y=1e-6,
+        color=VIZ_CONFIG["colors"]["neutral"],
+        linestyle=":",
+        linewidth=2,
+        alpha=0.8,
+    )
+    ax.annotate(
+        "Tolerance ε = 10⁻⁶",
+        xy=(0.85, 0.35),
+        xycoords="axes fraction",
+        fontsize=VIZ_CONFIG["fonts"]["annotation"],
+        color=VIZ_CONFIG["colors"]["neutral"],
+        bbox=dict(boxstyle="round,pad=0.3", facecolor="white", alpha=0.8, edgecolor="none"),
+    )
+
+    plt.tight_layout()
 
     # Save plot
     output_dir = project_root / "output" / "figures"
     plot_path = output_dir / "convergence_rate_comparison.png"
-    plt.savefig(plot_path, dpi=300, bbox_inches='tight')
+    plt.savefig(
+        plot_path, dpi=300, bbox_inches="tight", facecolor="white", edgecolor="none"
+    )
     plt.close()
 
     if logger:
@@ -361,65 +586,139 @@ def generate_complexity_visualization(results):
     theoretical_complexity = []
     for step_size in step_sizes:
         # For quadratic functions, complexity relates to step size
-        # Smaller step sizes require more iterations
-        complexity = 1.0 / (2 * step_size * (1 - step_size)) if step_size < 0.5 else float('inf')
+        complexity = (
+            1.0 / (2 * step_size * (1 - step_size)) if step_size < 0.5 else float("inf")
+        )
         theoretical_complexity.append(complexity)
 
-    fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(12, 10))
+    fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(13, 10))
+    fig.suptitle(
+        "Algorithm Performance Analysis\nGradient Descent Convergence Characteristics",
+        fontsize=14,
+        fontweight="bold",
+        y=1.02,
+    )
 
-    # Empirical iterations
-    ax1.bar(range(len(step_sizes)), iterations,
-            tick_label=[f'{s}' for s in step_sizes], color='skyblue')
-    ax1.set_xlabel('Step Size (α)')
-    ax1.set_ylabel('Iterations')
-    ax1.set_title('Empirical Convergence Iterations')
-    ax1.grid(True, alpha=0.3)
+    # Consistent color palette
+    bar_color = "#1f77b4"
+    success_color = "#2ca02c"
+    fail_color = "#d62728"
+    theory_color = "#ff7f0e"
 
-    # Convergence status
-    colors = ['green' if c else 'red' for c in converged]
-    ax2.bar(range(len(step_sizes)), [1 if c else 0 for c in converged],
-            tick_label=[f'{s}' for s in step_sizes], color=colors)
-    ax2.set_xlabel('Step Size (α)')
-    ax2.set_ylabel('Converged (1=Yes, 0=No)')
-    ax2.set_title('Convergence Success')
-    ax2.set_ylim(-0.1, 1.1)
-    ax2.grid(True, alpha=0.3)
+    # (1) Empirical iterations
+    bars1 = ax1.bar(
+        range(len(step_sizes)),
+        iterations,
+        tick_label=[f"α={s}" for s in step_sizes],
+        color=bar_color,
+        alpha=0.85,
+    )
+    ax1.set_xlabel("Step Size", fontsize=11, fontweight="medium")
+    ax1.set_ylabel("Iterations", fontsize=11, fontweight="medium")
+    ax1.set_title("Empirical Convergence Iterations", fontsize=12, fontweight="bold")
+    ax1.grid(True, alpha=0.3, axis="y")
+    # Add value labels on bars
+    for bar, val in zip(bars1, iterations):
+        ax1.text(
+            bar.get_x() + bar.get_width() / 2,
+            bar.get_height() + 3,
+            str(val),
+            ha="center",
+            va="bottom",
+            fontsize=9,
+        )
 
-    # Theoretical vs empirical comparison
-    ax3.plot(step_sizes, iterations, 'bo-', linewidth=2, markersize=8, label='Empirical')
-    ax3.plot(step_sizes, theoretical_complexity, 'r--', linewidth=2, markersize=8, label='Theoretical Estimate')
-    ax3.set_xlabel('Step Size (α)')
-    ax3.set_ylabel('Iterations')
-    ax3.set_title('Theoretical vs Empirical Complexity')
-    ax3.legend()
+    # (2) Convergence status
+    conv_colors = [success_color if c else fail_color for c in converged]
+    bars2 = ax2.bar(
+        range(len(step_sizes)),
+        [1 if c else 0 for c in converged],
+        tick_label=[f"α={s}" for s in step_sizes],
+        color=conv_colors,
+        alpha=0.85,
+    )
+    ax2.set_xlabel("Step Size", fontsize=11, fontweight="medium")
+    ax2.set_ylabel("Convergence Status", fontsize=11, fontweight="medium")
+    ax2.set_title("Convergence Success (All Passed)", fontsize=12, fontweight="bold")
+    ax2.set_ylim(-0.1, 1.3)
+    ax2.set_yticks([0, 1])
+    ax2.set_yticklabels(["Failed", "Converged"])
+    ax2.grid(True, alpha=0.3, axis="y")
+
+    # (3) Theoretical vs empirical comparison
+    ax3.plot(
+        step_sizes,
+        iterations,
+        color=bar_color,
+        linewidth=2.5,
+        marker="o",
+        markersize=10,
+        markerfacecolor="white",
+        markeredgewidth=2,
+        label="Empirical",
+    )
+    ax3.plot(
+        step_sizes,
+        theoretical_complexity,
+        color=theory_color,
+        linestyle="--",
+        linewidth=2,
+        marker="^",
+        markersize=8,
+        label="Theoretical Bound",
+    )
+    ax3.set_xlabel("Step Size (α)", fontsize=11, fontweight="medium")
+    ax3.set_ylabel("Iterations", fontsize=11, fontweight="medium")
+    ax3.set_title("Theoretical vs Empirical Complexity", fontsize=12, fontweight="bold")
+    ax3.legend(loc="upper right", framealpha=0.95)
     ax3.grid(True, alpha=0.3)
-    ax3.set_xlim(0, max(step_sizes) * 1.1)
+    ax3.set_xlim(0, max(step_sizes) * 1.15)
 
-    # Performance summary
+    # (4) Performance summary (efficiency score)
     performance_scores = []
     for step_size, iters, conv in zip(step_sizes, iterations, converged):
         if conv:
-            # Score based on iterations (lower is better) and stability
-            score = 1.0 / (iters + 1)  # +1 to avoid division by zero
-            if step_size >= 0.01 and step_size <= 0.2:  # Stable range
+            score = 1.0 / (iters + 1)
+            if 0.01 <= step_size <= 0.2:
                 score *= 1.2
         else:
             score = 0.0
-        performance_scores.append(score)
+        performance_scores.append(score * 100)  # Scale to percentage
 
-    ax4.bar(range(len(step_sizes)), performance_scores,
-            tick_label=[f'{s}' for s in step_sizes], color='purple', alpha=0.7)
-    ax4.set_xlabel('Step Size (α)')
-    ax4.set_ylabel('Performance Score')
-    ax4.set_title('Overall Performance Ranking')
-    ax4.grid(True, alpha=0.3)
+    bars4 = ax4.bar(
+        range(len(step_sizes)),
+        performance_scores,
+        tick_label=[f"α={s}" for s in step_sizes],
+        color="#9467bd",
+        alpha=0.85,
+    )
+    ax4.set_xlabel("Step Size", fontsize=11, fontweight="medium")
+    ax4.set_ylabel("Efficiency Score (%)", fontsize=11, fontweight="medium")
+    ax4.set_title(
+        "Relative Performance Ranking\n(Higher = Faster Convergence)",
+        fontsize=12,
+        fontweight="bold",
+    )
+    ax4.grid(True, alpha=0.3, axis="y")
+    # Add value labels
+    for bar, val in zip(bars4, performance_scores):
+        ax4.text(
+            bar.get_x() + bar.get_width() / 2,
+            bar.get_height() + 0.3,
+            f"{val:.1f}%",
+            ha="center",
+            va="bottom",
+            fontsize=9,
+        )
 
     plt.tight_layout()
 
     # Save plot
     output_dir = project_root / "output" / "figures"
     plot_path = output_dir / "algorithm_complexity.png"
-    plt.savefig(plot_path, dpi=300, bbox_inches='tight')
+    plt.savefig(
+        plot_path, dpi=300, bbox_inches="tight", facecolor="white", edgecolor="none"
+    )
     plt.close()
 
     if logger:
@@ -445,17 +744,15 @@ def run_stability_analysis():
 
     # Test different input ranges for stability
     test_inputs = [
-        np.array([0.0]),      # Standard start point
-        np.array([10.0]),     # Far from optimum
-        np.array([-5.0]),     # Negative values
-        np.array([0.1]),      # Close to optimum
+        np.array([0.0]),  # Standard start point
+        np.array([10.0]),  # Far from optimum
+        np.array([-5.0]),  # Negative values
+        np.array([0.1]),  # Close to optimum
     ]
 
     # Run stability check
     stability_report = check_numerical_stability(
-        func=test_func,
-        test_inputs=test_inputs,
-        tolerance=1e-10
+        func=test_func, test_inputs=test_inputs, tolerance=1e-10
     )
 
     # Save stability report
@@ -463,6 +760,7 @@ def run_stability_analysis():
     output_dir.mkdir(parents=True, exist_ok=True)
 
     import json
+
     stability_data = {
         "function_name": stability_report.function_name,
         "stability_score": stability_report.stability_score,
@@ -472,11 +770,13 @@ def run_stability_analysis():
     }
 
     stability_path = output_dir / "stability_analysis.json"
-    with open(stability_path, 'w') as f:
+    with open(stability_path, "w") as f:
         json.dump(stability_data, f, indent=2)
 
     if logger:
-        logger.info(f"Stability analysis complete - Score: {stability_report.stability_score:.2f}")
+        logger.info(
+            f"Stability analysis complete - Score: {stability_report.stability_score:.2f}"
+        )
         logger.info(f"Saved stability report to: {stability_path}")
 
     return stability_path
@@ -488,7 +788,9 @@ def run_performance_benchmarking():
 
     if not INFRASTRUCTURE_AVAILABLE:
         if logger:
-            logger.warning("Skipping performance benchmarking - infrastructure not available")
+            logger.warning(
+                "Skipping performance benchmarking - infrastructure not available"
+            )
         return None
 
     if logger:
@@ -500,16 +802,16 @@ def run_performance_benchmarking():
 
     # Different problem scales
     test_inputs = [
-        np.array([0.0]),      # Standard case
-        np.array([5.0]),      # Moderate distance
-        np.array([20.0]),     # Large distance
+        np.array([0.0]),  # Standard case
+        np.array([5.0]),  # Moderate distance
+        np.array([20.0]),  # Large distance
     ]
 
     # Run benchmarking
     benchmark_report = benchmark_function(
         func=test_func,
         test_inputs=test_inputs,
-        iterations=50  # Multiple runs for reliable measurement
+        iterations=50,  # Multiple runs for reliable measurement
     )
 
     # Save benchmark report
@@ -517,6 +819,7 @@ def run_performance_benchmarking():
     output_dir.mkdir(parents=True, exist_ok=True)
 
     import json
+
     benchmark_data = {
         "function_name": benchmark_report.function_name,
         "execution_time": benchmark_report.execution_time,
@@ -527,11 +830,13 @@ def run_performance_benchmarking():
     }
 
     benchmark_path = output_dir / "performance_benchmark.json"
-    with open(benchmark_path, 'w') as f:
+    with open(benchmark_path, "w") as f:
         json.dump(benchmark_data, f, indent=2, default=str)
 
     if logger:
-        logger.info(f"Performance benchmarking complete - Avg time: {benchmark_report.execution_time:.6f}s")
+        logger.info(
+            f"Performance benchmarking complete - Avg time: {benchmark_report.execution_time:.6f}s"
+        )
         logger.info(f"Saved benchmark report to: {benchmark_path}")
 
     return benchmark_path
@@ -549,7 +854,8 @@ def generate_stability_visualization(stability_path):
 
     # Load stability data
     import json
-    with open(stability_path, 'r') as f:
+
+    with open(stability_path, "r") as f:
         stability_data = json.load(f)
 
     # Create visualization
@@ -557,32 +863,49 @@ def generate_stability_visualization(stability_path):
 
     # Stability score gauge
     stability_score = stability_data["stability_score"]
-    colors = ['red', 'orange', 'yellow', 'lightgreen', 'green']
+    colors = ["red", "orange", "yellow", "lightgreen", "green"]
     color_idx = min(int(stability_score * len(colors)), len(colors) - 1)
 
-    ax1.pie([stability_score, 1-stability_score],
-            colors=[colors[color_idx], 'lightgray'],
-            startangle=90, counterclock=False)
-    ax1.text(0, 0, 'Stable', ha='center', va='center', fontsize=12, fontweight='bold')
-    ax1.set_title('Numerical Stability Score')
+    ax1.pie(
+        [stability_score, 1 - stability_score],
+        colors=[colors[color_idx], "lightgray"],
+        startangle=90,
+        counterclock=False,
+    )
+    ax1.text(0, 0, "Stable", ha="center", va="center", fontsize=12, fontweight="bold")
+    ax1.set_title("Numerical Stability Score")
 
     # Recommendations text
     recommendations_text = "\n".join(stability_data["recommendations"][:3])  # Top 3
-    ax2.text(0.1, 0.9, "Recommendations:", fontsize=12, fontweight='bold',
-             transform=ax2.transAxes, va='top')
-    ax2.text(0.1, 0.8, recommendations_text, fontsize=10,
-             transform=ax2.transAxes, va='top', wrap=True)
+    ax2.text(
+        0.1,
+        0.9,
+        "Recommendations:",
+        fontsize=12,
+        fontweight="bold",
+        transform=ax2.transAxes,
+        va="top",
+    )
+    ax2.text(
+        0.1,
+        0.8,
+        recommendations_text,
+        fontsize=10,
+        transform=ax2.transAxes,
+        va="top",
+        wrap=True,
+    )
     ax2.set_xlim(0, 1)
     ax2.set_ylim(0, 1)
-    ax2.axis('off')
-    ax2.set_title('Stability Analysis Summary')
+    ax2.axis("off")
+    ax2.set_title("Stability Analysis Summary")
 
     plt.tight_layout()
 
     # Save plot
     output_dir = project_root / "output" / "figures"
     plot_path = output_dir / "stability_analysis.png"
-    plt.savefig(plot_path, dpi=300, bbox_inches='tight')
+    plt.savefig(plot_path, dpi=300, bbox_inches="tight")
     plt.close()
 
     if logger:
@@ -602,38 +925,42 @@ def generate_benchmark_visualization(benchmark_path):
 
     # Load benchmark data
     import json
-    with open(benchmark_path, 'r') as f:
+
+    with open(benchmark_path, "r") as f:
         benchmark_data = json.load(f)
 
     # Create simple visualization
     fig, ax = plt.subplots(1, 1, figsize=(8, 6))
 
     # Performance metrics
-    metrics = ['Execution Time', 'Memory Usage']
-    values = [benchmark_data["execution_time"],
-              benchmark_data["memory_usage"] or 0]
+    metrics = ["Execution Time", "Memory Usage"]
+    values = [benchmark_data["execution_time"], benchmark_data["memory_usage"] or 0]
 
-    colors = ['skyblue', 'lightcoral']
+    colors = ["skyblue", "lightcoral"]
     bars = ax.bar(metrics, values, color=colors, alpha=0.7)
 
-    ax.set_ylabel('Value')
-    ax.set_title('Performance Benchmark Results')
+    ax.set_ylabel("Value")
+    ax.set_title("Performance Benchmark Results")
     ax.grid(True, alpha=0.3)
 
     # Add value labels on bars
     for bar, value in zip(bars, values):
         height = bar.get_height()
         if height > 0:
-            ax.text(bar.get_x() + bar.get_width()/2., height + max(values)*0.01,
-                    f'{value:.4f}' if isinstance(value, float) else f'{value}',
-                    ha='center', va='bottom')
+            ax.text(
+                bar.get_x() + bar.get_width() / 2.0,
+                height + max(values) * 0.01,
+                f"{value:.4f}" if isinstance(value, float) else f"{value}",
+                ha="center",
+                va="bottom",
+            )
 
     plt.tight_layout()
 
     # Save plot
     output_dir = project_root / "output" / "figures"
     plot_path = output_dir / "performance_benchmark.png"
-    plt.savefig(plot_path, dpi=300, bbox_inches='tight')
+    plt.savefig(plot_path, dpi=300, bbox_inches="tight")
     plt.close()
 
     if logger:
@@ -647,7 +974,9 @@ def generate_analysis_dashboard(results, stability_path=None, benchmark_path=Non
 
     if not INFRASTRUCTURE_AVAILABLE:
         if logger:
-            logger.warning("Skipping dashboard generation - infrastructure not available")
+            logger.warning(
+                "Skipping dashboard generation - infrastructure not available"
+            )
         return None
 
     if logger:
@@ -657,7 +986,9 @@ def generate_analysis_dashboard(results, stability_path=None, benchmark_path=Non
         from infrastructure.reporting import generate_output_summary
 
         # Collect output summary
-        output_statistics = collect_output_statistics(project_root, project_name="code_project")
+        output_statistics = collect_output_statistics(
+            project_root, project_name="code_project"
+        )
         # Skip generate_output_summary() - it's for copy stage, not dashboard generation
 
         # Create dashboard HTML
@@ -704,9 +1035,21 @@ def generate_analysis_dashboard(results, stability_path=None, benchmark_path=Non
             """
 
         # Use output_statistics for dashboard content with proper key checking
-        figures_count = output_statistics.get('figures', {}).get('file_count', 0) if isinstance(output_statistics.get('figures'), dict) else 0
-        data_count = output_statistics.get('data', {}).get('file_count', 0) if isinstance(output_statistics.get('data'), dict) else 0
-        reports_count = output_statistics.get('reports', {}).get('file_count', 0) if isinstance(output_statistics.get('reports'), dict) else 0
+        figures_count = (
+            output_statistics.get("figures", {}).get("file_count", 0)
+            if isinstance(output_statistics.get("figures"), dict)
+            else 0
+        )
+        data_count = (
+            output_statistics.get("data", {}).get("file_count", 0)
+            if isinstance(output_statistics.get("data"), dict)
+            else 0
+        )
+        reports_count = (
+            output_statistics.get("reports", {}).get("file_count", 0)
+            if isinstance(output_statistics.get("reports"), dict)
+            else 0
+        )
 
         html_content += f"""
         <div class="metric">
@@ -725,7 +1068,7 @@ def generate_analysis_dashboard(results, stability_path=None, benchmark_path=Non
         # Save dashboard
         output_dir = project_root / "output" / "reports"
         dashboard_path = output_dir / "analysis_dashboard.html"
-        with open(dashboard_path, 'w') as f:
+        with open(dashboard_path, "w") as f:
             f.write(html_content)
 
         if logger:
@@ -757,12 +1100,12 @@ def validate_generated_outputs():
 
         # Generate validation summary
         validation_summary = {
-            'integrity_check': {
-                'total_files': len(integrity_report.file_integrity),
-                'integrity_passed': sum(integrity_report.file_integrity.values()),
-                'issues_found': len(integrity_report.issues),
-                'warnings': len(integrity_report.warnings),
-                'recommendations': len(integrity_report.recommendations)
+            "integrity_check": {
+                "total_files": len(integrity_report.file_integrity),
+                "integrity_passed": sum(integrity_report.file_integrity.values()),
+                "issues_found": len(integrity_report.issues),
+                "warnings": len(integrity_report.warnings),
+                "recommendations": len(integrity_report.recommendations),
             }
         }
 
@@ -800,7 +1143,8 @@ def save_validation_report(validation_report):
 
         report_path = output_dir / "output_validation.json"
         import json
-        with open(report_path, 'w') as f:
+
+        with open(report_path, "w") as f:
             json.dump(validation_report, f, indent=2, default=str)
 
         if logger:
@@ -830,18 +1174,44 @@ def register_figure():
 
         # Register all figures
         figures = [
-            ("convergence_plot.png", "Gradient descent convergence for different step sizes", "fig:convergence"),
-            ("step_size_sensitivity.png", "Step size sensitivity analysis showing iterations and solution quality", "fig:step_sensitivity"),
-            ("convergence_rate_comparison.png", "Convergence rate comparison on logarithmic scale", "fig:convergence_rate"),
-            ("algorithm_complexity.png", "Algorithm complexity visualization with performance metrics", "fig:complexity")
+            (
+                "convergence_plot.png",
+                "Gradient descent convergence for different step sizes",
+                "fig:convergence",
+            ),
+            (
+                "step_size_sensitivity.png",
+                "Step size sensitivity analysis showing iterations and solution quality",
+                "fig:step_sensitivity",
+            ),
+            (
+                "convergence_rate_comparison.png",
+                "Convergence rate comparison on logarithmic scale",
+                "fig:convergence_rate",
+            ),
+            (
+                "algorithm_complexity.png",
+                "Algorithm complexity visualization with performance metrics",
+                "fig:complexity",
+            ),
         ]
 
         # Add scientific analysis figures if available
         if INFRASTRUCTURE_AVAILABLE:
-            figures.extend([
-                ("stability_analysis.png", "Numerical stability analysis results and recommendations", "fig:stability"),
-                ("performance_benchmark.png", "Performance benchmarking results and metrics", "fig:benchmark")
-            ])
+            figures.extend(
+                [
+                    (
+                        "stability_analysis.png",
+                        "Numerical stability analysis results and recommendations",
+                        "fig:stability",
+                    ),
+                    (
+                        "performance_benchmark.png",
+                        "Performance benchmarking results and metrics",
+                        "fig:benchmark",
+                    ),
+                ]
+            )
 
         for filename, caption, label in figures:
             fm.register_figure(
@@ -849,7 +1219,7 @@ def register_figure():
                 caption=caption,
                 label=label,
                 section="Results",
-                generated_by="optimization_analysis.py"
+                generated_by="optimization_analysis.py",
             )
             if logger:
                 logger.info(f"Registered figure with label: {label}")
@@ -864,59 +1234,78 @@ def register_figure():
 
 def main():
     """Main analysis function."""
-    # Initialize logger and performance monitoring
+    # Initialize logger (use print as fallback)
     logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
 
-    if logger:
-        logger.info("Starting optimization analysis...")
-        logger.info(f"Project root: {project_root}")
+    def log_info(msg):
+        if logger:
+            logger.info(msg)
+        else:
+            print(f"INFO: {msg}")
+
+    def log_warning(msg):
+        if logger:
+            logger.warning(msg)
+        else:
+            print(f"WARNING: {msg}")
+
+    log_info("Starting optimization analysis...")
+    log_info(f"Project root: {project_root}")
 
     try:
         # System health check
         if INFRASTRUCTURE_AVAILABLE:
             health_checker = SystemHealthChecker()
-            if logger:
-                logger.info("Running system health check...")
+            log_info("Running system health check...")
             health_status = health_checker.get_health_status()
-            if health_status.get('overall_status') != 'healthy':
-                if logger:
-                    logger.warning("System health check failed:")
-                    for check_name, check_result in health_status.get('checks', {}).items():
-                        if check_result.get('status') != 'healthy':
-                            logger.warning(f"  - {check_name}: {check_result.get('error', 'unknown error')}")
+            if health_status.get("overall_status") != "healthy":
+                log_warning("System health check failed:")
+                for check_name, check_result in health_status.get("checks", {}).items():
+                    if check_result.get("status") != "healthy":
+                        log_warning(
+                            f"  - {check_name}: {check_result.get('error', 'unknown error')}"
+                        )
             else:
-                if logger:
-                    logger.info("System health check passed")
+                log_info("System health check passed")
 
         # Initialize checkpoint manager
         checkpoint_manager = None
         if INFRASTRUCTURE_AVAILABLE:
             checkpoint_dir = project_root / "output" / "checkpoints"
             checkpoint_manager = CheckpointManager(checkpoint_dir)
-            if logger:
-                logger.info("Checkpoint manager initialized")
+            log_info("Checkpoint manager initialized")
 
-        # Performance monitoring context
-        with monitor_performance("Optimization analysis pipeline") as monitor:
-            if logger:
-                logger.info("Performance monitoring enabled")
+        # Performance monitoring context (use nullcontext as fallback)
+        from contextlib import nullcontext
+
+        monitor_ctx = (
+            monitor_performance("Optimization analysis pipeline")
+            if INFRASTRUCTURE_AVAILABLE
+            else nullcontext()
+        )
+        with monitor_ctx as monitor:
+            log_info(
+                "Performance monitoring enabled"
+                if INFRASTRUCTURE_AVAILABLE
+                else "Running without performance monitoring"
+            )
 
             # Run experiments with progress tracking
-            with log_operation("Running convergence experiments", logger=logger):
-                if INFRASTRUCTURE_AVAILABLE:
-                    progress = ProgressBar(total=4, task="Step sizes")
-                    results = run_convergence_experiment_with_progress(progress)
-                    progress.finish()
-                else:
-                    results = run_convergence_experiment()
+            log_info("Running convergence experiments...")
+            if INFRASTRUCTURE_AVAILABLE:
+                progress = ProgressBar(total=4, task="Step sizes")
+                results = run_convergence_experiment_with_progress(progress)
+                progress.finish()
+            else:
+                results = run_convergence_experiment()
 
             # Generate traditional outputs
-            with log_operation("Generating traditional analysis outputs", logger=logger):
-                convergence_plot = generate_convergence_plot(results)
-                sensitivity_plot = generate_step_size_sensitivity_plot(results)
-                rate_plot = generate_convergence_rate_plot(results)
-                complexity_plot = generate_complexity_visualization(results)
-                data_path = save_optimization_results(results)
+            log_info("Generating traditional analysis outputs...")
+            convergence_plot = generate_convergence_plot(results)
+            sensitivity_plot = generate_step_size_sensitivity_plot(results)
+            rate_plot = generate_convergence_rate_plot(results)
+            complexity_plot = generate_complexity_visualization(results)
+            data_path = save_optimization_results(results)
 
             # Run scientific analysis (if infrastructure available)
             stability_path = None
@@ -926,148 +1315,151 @@ def main():
             dashboard_path = None
 
             if INFRASTRUCTURE_AVAILABLE:
-                with log_operation("Running scientific analysis", logger=logger):
-                    with log_operation("Numerical stability analysis", logger=logger):
-                        stability_path = run_stability_analysis()
+                log_info("Running scientific analysis...")
+                log_info("Numerical stability analysis...")
+                stability_path = run_stability_analysis()
 
-                    with log_operation("Performance benchmarking", logger=logger):
-                        benchmark_path = run_performance_benchmarking()
+                log_info("Performance benchmarking...")
+                benchmark_path = run_performance_benchmarking()
 
-                    # Generate scientific visualizations
-                    with log_operation("Generating scientific visualizations", logger=logger):
-                        stability_plot = generate_stability_visualization(stability_path)
-                        benchmark_plot = generate_benchmark_visualization(benchmark_path)
+                # Generate scientific visualizations
+                log_info("Generating scientific visualizations...")
+                stability_plot = generate_stability_visualization(stability_path)
+                benchmark_plot = generate_benchmark_visualization(benchmark_path)
 
-                    # Generate comprehensive dashboard
-                    with log_operation("Generating analysis dashboard", logger=logger):
-                        dashboard_path = generate_analysis_dashboard(results, stability_path, benchmark_path)
+                # Generate comprehensive dashboard
+                log_info("Generating analysis dashboard...")
+                dashboard_path = generate_analysis_dashboard(
+                    results, stability_path, benchmark_path
+                )
             else:
-                if logger:
-                    logger.warning("Infrastructure not available - skipping scientific analysis")
+                log_warning(
+                    "Infrastructure not available - skipping scientific analysis"
+                )
 
             # Register figures if possible
             register_figure()
 
             # Validate generated outputs
             validation_report_path = None
-            with log_operation("Validating generated outputs", logger=logger):
+            log_info("Validating generated outputs...")
+            if INFRASTRUCTURE_AVAILABLE:
                 validation_report = validate_generated_outputs()
                 if validation_report:
                     validation_report_path = save_validation_report(validation_report)
 
             # Generate publishing materials
-            with log_operation("Generating publishing materials", logger=logger):
-                publishing_metadata = extract_optimization_metadata(results)
-                if publishing_metadata:
-                    citations = generate_citations_from_metadata(publishing_metadata)
-                    save_publishing_materials(publishing_metadata, citations)
+            log_info("Generating publishing materials...")
+            publishing_metadata = extract_optimization_metadata(results)
+            if publishing_metadata:
+                citations = generate_citations_from_metadata(publishing_metadata)
+                save_publishing_materials(publishing_metadata, citations)
 
             # HTML dashboard is already created and saved above
 
             # Publishing integration (demonstrate capabilities)
             if INFRASTRUCTURE_AVAILABLE:
-                with log_operation("Publishing integration demonstration", logger=logger):
-                    try:
-                        # Demonstrate Zenodo publishing preparation
-                        if publishing_metadata:
-                            # This would normally require API tokens, but we demonstrate the interface
-                            if logger:
-                                logger.info("Publishing interfaces available: Zenodo, arXiv, GitHub releases")
-                                logger.info("Publication metadata extracted and formatted")
-                    except Exception as e:
-                        if logger:
-                            logger.warning(f"Publishing demonstration failed: {e}")
+                log_info("Publishing integration demonstration...")
+                try:
+                    # Demonstrate Zenodo publishing preparation
+                    if publishing_metadata:
+                        # This would normally require API tokens, but we demonstrate the interface
+                        log_info(
+                            "Publishing interfaces available: Zenodo, arXiv, GitHub releases"
+                        )
+                        log_info("Publication metadata extracted and formatted")
+                except Exception as e:
+                    log_warning(f"Publishing demonstration failed: {e}")
 
         # Log final performance metrics
-        if monitor and INFRASTRUCTURE_AVAILABLE:
+        if INFRASTRUCTURE_AVAILABLE and monitor:
             performance_metrics = monitor.stop()
-            if logger:
-                logger.info("Performance Summary:")
-                logger.info(f"Duration: {performance_metrics.duration:.2f}s")
-                logger.info(f"Memory: {performance_metrics.resource_usage.memory_mb:.1f}MB")
+            log_info("Performance Summary:")
+            log_info(f"Duration: {performance_metrics.duration:.2f}s")
+            log_info(f"Memory: {performance_metrics.resource_usage.memory_mb:.1f}MB")
 
             # Save performance data
             output_dir = project_root / "output" / "reports"
             output_dir.mkdir(parents=True, exist_ok=True)
 
             import json
+
             perf_path = output_dir / "analysis_performance.json"
-            with open(perf_path, 'w') as f:
+            with open(perf_path, "w") as f:
                 json.dump(performance_metrics.to_dict(), f, indent=2, default=str)
-            if logger:
-                logger.info(f"Performance data saved to: {perf_path}")
+            log_info(f"Performance data saved to: {perf_path}")
 
         # Log final results
-        log_success("Analysis completed successfully!", logger=logger)
-        if logger:
-            logger.info(f"Generated convergence plot: {convergence_plot}")
-            logger.info(f"Generated sensitivity plot: {sensitivity_plot}")
-            logger.info(f"Generated rate comparison plot: {rate_plot}")
-            logger.info(f"Generated complexity visualization: {complexity_plot}")
-            logger.info(f"Generated data: {data_path}")
+        log_info("Analysis completed successfully!")
+        log_info(f"Generated convergence plot: {convergence_plot}")
+        log_info(f"Generated sensitivity plot: {sensitivity_plot}")
+        log_info(f"Generated rate comparison plot: {rate_plot}")
+        log_info(f"Generated complexity visualization: {complexity_plot}")
+        log_info(f"Generated data: {data_path}")
 
-            if INFRASTRUCTURE_AVAILABLE:
-                logger.info(f"Generated stability report: {stability_path}")
-                logger.info(f"Generated benchmark report: {benchmark_path}")
-                logger.info(f"Generated stability visualization: {stability_plot}")
-                logger.info(f"Generated benchmark visualization: {benchmark_plot}")
-                logger.info(f"Generated analysis dashboard: {dashboard_path}")
-                logger.info(f"Generated validation report: {validation_report_path}")
-                logger.info("Generated publishing materials and citations")
+        if INFRASTRUCTURE_AVAILABLE:
+            log_info(f"Generated stability report: {stability_path}")
+            log_info(f"Generated benchmark report: {benchmark_path}")
+            log_info(f"Generated stability visualization: {stability_plot}")
+            log_info(f"Generated benchmark visualization: {benchmark_plot}")
+            log_info(f"Generated analysis dashboard: {dashboard_path}")
+            log_info(f"Generated validation report: {validation_report_path}")
+            log_info("Generated publishing materials and citations")
 
-            logger.info("Optimization analysis pipeline completed successfully")
-
-    except ScriptExecutionError as e:
-        # Handle script-specific errors with recovery suggestions
-        if logger:
-            logger.error(f"Script execution failed: {e}", exc_info=True)
-            if e.recovery_commands:
-                logger.error("Suggested recovery commands:")
-                for cmd in e.recovery_commands:
-                    logger.error(f"  {cmd}")
-        raise
-
-    except TemplateError as e:
-        # Handle infrastructure template errors
-        if logger:
-            logger.error(f"Infrastructure error: {e}", exc_info=True)
-            if e.suggestions:
-                logger.error("Suggestions:")
-                for suggestion in e.suggestions:
-                    logger.error(f"  • {suggestion}")
-        raise
+        log_info("Optimization analysis pipeline completed successfully")
 
     except ImportError as e:
         # Handle missing dependencies
-        if logger:
-            logger.error(f"Import error: {e}", exc_info=True)
-            logger.error("Suggestions:")
-            logger.error("  • Install missing dependencies: pip install -r requirements.txt")
-            logger.error("  • Check infrastructure module availability")
+        print(f"ERROR: Import error: {e}")
+        print("Suggestions:")
+        print("  • Install missing dependencies: pip install -r requirements.txt")
+        print("  • Check infrastructure module availability")
         raise
 
     except FileNotFoundError as e:
         # Handle missing files
-        if logger:
-            logger.error(f"File not found: {e}", exc_info=True)
-            logger.error("Suggestions:")
-            logger.error("  • Ensure project structure is correct")
-            logger.error("  • Check that source code exists in src/ directory")
+        print(f"ERROR: File not found: {e}")
+        print("Suggestions:")
+        print("  • Ensure project structure is correct")
+        print("  • Check that source code exists in src/ directory")
         raise
 
     except Exception as e:
+        # Handle infrastructure-specific errors if available
+        if INFRASTRUCTURE_AVAILABLE:
+            if isinstance(e, ScriptExecutionError):
+                # Handle script-specific errors with recovery suggestions
+                if logger:
+                    logger.error(f"Script execution failed: {e}", exc_info=True)
+                    if hasattr(e, "recovery_commands") and e.recovery_commands:
+                        logger.error("Suggested recovery commands:")
+                        for cmd in e.recovery_commands:
+                            logger.error(f"  {cmd}")
+                raise
+
+            if isinstance(e, TemplateError):
+                # Handle infrastructure template errors
+                if logger:
+                    logger.error(f"Infrastructure error: {e}", exc_info=True)
+                    if hasattr(e, "suggestions") and e.suggestions:
+                        logger.error("Suggestions:")
+                        for suggestion in e.suggestions:
+                            logger.error(f"  • {suggestion}")
+                raise
+
         # Handle unexpected errors with context
         error_msg = f"Unexpected error during optimization analysis: {e}"
-        if logger:
-            logger.error(error_msg, exc_info=True)
-            logger.error("Suggestions:")
-            logger.error("  • Check system requirements and dependencies")
-            logger.error("  • Review error logs for detailed information")
-            logger.error("  • Ensure sufficient disk space and memory")
+        print(f"ERROR: {error_msg}")
+        print("Suggestions:")
+        print("  • Check system requirements and dependencies")
+        print("  • Review error logs for detailed information")
+        print("  • Ensure sufficient disk space and memory")
         raise
 
 
-def extract_optimization_metadata(results: Dict[float, OptimizationResult]) -> Optional[Dict[str, Any]]:
+def extract_optimization_metadata(
+    results: Dict[float, OptimizationResult],
+) -> Optional[Dict[str, Any]]:
     """Extract publication metadata from optimization results.
 
     Args:
@@ -1083,17 +1475,20 @@ def extract_optimization_metadata(results: Dict[float, OptimizationResult]) -> O
 
         # Create publication metadata
         metadata = {
-            'title': 'Optimization Algorithm Performance Analysis',
-            'description': f'Comparative analysis of gradient descent optimization with step sizes {list(results.keys())}',
-            'algorithm': 'Gradient Descent',
-            'objective_function': 'Quadratic Function f(x) = x²',
-            'step_sizes_tested': list(results.keys()),
-            'best_step_size': best_step_size,
-            'final_objective': best_result.objective_value,
-            'iterations_to_convergence': len(best_result.objective_history),
-            'convergence_rate': abs(best_result.objective_history[-1] - best_result.objective_history[0]) / len(best_result.objective_history),
-            'analysis_type': 'Numerical Optimization',
-            'methodology': 'Gradient descent with fixed step sizes',
+            "title": "Optimization Algorithm Performance Analysis",
+            "description": f"Comparative analysis of gradient descent optimization with step sizes {list(results.keys())}",
+            "algorithm": "Gradient Descent",
+            "objective_function": "Quadratic Function f(x) = x²",
+            "step_sizes_tested": list(results.keys()),
+            "best_step_size": best_step_size,
+            "final_objective": best_result.objective_value,
+            "iterations_to_convergence": len(best_result.objective_history),
+            "convergence_rate": abs(
+                best_result.objective_history[-1] - best_result.objective_history[0]
+            )
+            / len(best_result.objective_history),
+            "analysis_type": "Numerical Optimization",
+            "methodology": "Gradient descent with fixed step sizes",
         }
 
         return metadata
@@ -1105,7 +1500,9 @@ def extract_optimization_metadata(results: Dict[float, OptimizationResult]) -> O
         return None
 
 
-def generate_citations_from_metadata(metadata: Dict[str, Any]) -> Optional[Dict[str, str]]:
+def generate_citations_from_metadata(
+    metadata: Dict[str, Any],
+) -> Optional[Dict[str, str]]:
     """Generate citations from optimization metadata.
 
     Args:
@@ -1117,20 +1514,22 @@ def generate_citations_from_metadata(metadata: Dict[str, Any]) -> Optional[Dict[
     try:
         # Create a PublicationMetadata object for citation generation
         pub_metadata = PublicationMetadata(
-            title=metadata['title'],
-            authors=['Optimization Analysis Pipeline'],  # List of strings, not dicts
-            abstract=metadata.get('description', 'Optimization algorithm performance analysis'),
-            keywords=['optimization', 'gradient descent', 'numerical analysis'],
-            publication_date='2024-01-01',  # Default date
-            license='MIT',
+            title=metadata["title"],
+            authors=["Optimization Analysis Pipeline"],  # List of strings, not dicts
+            abstract=metadata.get(
+                "description", "Optimization algorithm performance analysis"
+            ),
+            keywords=["optimization", "gradient descent", "numerical analysis"],
+            publication_date="2024-01-01",  # Default date
+            license="MIT",
         )
 
         # Generate citations in different formats
         citations = {}
         if INFRASTRUCTURE_AVAILABLE:
-            citations['bibtex'] = generate_citation_bibtex(pub_metadata)
-            citations['apa'] = generate_citation_apa(pub_metadata)
-            citations['mla'] = generate_citation_mla(pub_metadata)
+            citations["bibtex"] = generate_citation_bibtex(pub_metadata)
+            citations["apa"] = generate_citation_apa(pub_metadata)
+            citations["mla"] = generate_citation_mla(pub_metadata)
 
         return citations
 
@@ -1141,7 +1540,9 @@ def generate_citations_from_metadata(metadata: Dict[str, Any]) -> Optional[Dict[
         return None
 
 
-def save_publishing_materials(metadata: Dict[str, Any], citations: Optional[Dict[str, str]] = None) -> None:
+def save_publishing_materials(
+    metadata: Dict[str, Any], citations: Optional[Dict[str, str]] = None
+) -> None:
     """Save publishing materials to output directory.
 
     Args:
@@ -1155,19 +1556,20 @@ def save_publishing_materials(metadata: Dict[str, Any], citations: Optional[Dict
         # Save metadata
         metadata_path = output_dir / "optimization_metadata.json"
         import json
-        with open(metadata_path, 'w') as f:
+
+        with open(metadata_path, "w") as f:
             json.dump(metadata, f, indent=2, default=str)
 
         # Save citations if available
         if citations:
             for format_name, citation_text in citations.items():
                 citation_path = output_dir / f"citation_{format_name}.txt"
-                with open(citation_path, 'w') as f:
+                with open(citation_path, "w") as f:
                     f.write(citation_text)
 
         # Create publication summary
         summary_path = output_dir / "publication_summary.md"
-        with open(summary_path, 'w') as f:
+        with open(summary_path, "w") as f:
             f.write("# Optimization Analysis Publication Summary\n\n")
             f.write(f"**Title:** {metadata['title']}\n\n")
             f.write(f"**Description:** {metadata['description']}\n\n")

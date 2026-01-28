@@ -74,7 +74,7 @@ Many "broken" references are actually:
    - Action: Verify anchor IDs exist in target files
 
 3. **Outdated project references**: References to archived or non-existent projects
-   - Example: References to `projects/prose_project/` which may not exist
+   - Example: References to archived projects in `projects_archive/`
    - Action: Update or remove outdated references
 
 ### Recommendations

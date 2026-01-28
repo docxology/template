@@ -1,6 +1,34 @@
 # Ento-Linguistic Domain Analysis Report
 
-Analysis performed on 2026-01-08T10:11:51.740025
+Analysis performed on 2026-01-24T13:59:18.616454
+
+
+# Economics Domain Analysis
+
+## Key Terms
+low-cost, out-of-distribution, cost-effective, trade-off
+
+## Term Patterns
+- compound: 4
+
+## Framing Assumptions
+- Colony economics mirror human market systems
+- Resource allocation follows market principles
+- Costs and benefits analogous to human economics
+- Optimization implies conscious decision-making
+
+## Ambiguities Identified
+- **trade**: Biological exchange vs economic metaphor (contexts: resource exchange, trophallaxis, metaphorical usage)
+- **cost**: Multiple types of costs conflated (contexts: energetic expenditure, risk, opportunity cost)
+
+## Recommendations
+- Specify type of resource allocation mechanism
+- Use 'resource exchange' rather than 'trade'
+- Specify cost type (energetic, risk, opportunity)
+- Avoid assuming conscious economic decision-making
+
+
+---
 
 
 # Behavior And Identity Domain Analysis
@@ -26,62 +54,6 @@ foraging, behavior, behavioral
 - Specify whether roles are fixed or plastic
 - Use 'behavioral specialization' rather than 'caste identity'
 - Avoid assuming heritability of behavioral roles
-
-
----
-
-
-# Unit Of Individuality Domain Analysis
-
-## Key Terms
-colony-stimulating, colony
-
-## Term Patterns
-- compound: 1
-
-## Framing Assumptions
-- Individuality exists on a single biological scale
-- Colony-level traits are emergent rather than individual
-- Superorganism concept implies loss of individual agency
-- Nestmate recognition defines individual boundaries
-
-## Ambiguities Identified
-- **colony**: Shifts meaning across biological scales (contexts: reproductive unit, behavioral entity, ecological unit)
-- **individual**: Multiple biological scales of individuality (contexts: nestmate, colony member, genetic individual)
-
-## Recommendations
-- Specify biological scale when using individuality terms
-- Distinguish between genetic, physiological, and social individuality
-- Use 'colony-level' vs 'individual-level' traits explicitly
-- Avoid assuming single scale of biological organization
-
-
----
-
-
-# Economics Domain Analysis
-
-## Key Terms
-cost-effective, trade-off
-
-## Term Patterns
-- compound: 2
-
-## Framing Assumptions
-- Colony economics mirror human market systems
-- Resource allocation follows market principles
-- Costs and benefits analogous to human economics
-- Optimization implies conscious decision-making
-
-## Ambiguities Identified
-- **trade**: Biological exchange vs economic metaphor (contexts: resource exchange, trophallaxis, metaphorical usage)
-- **cost**: Multiple types of costs conflated (contexts: energetic expenditure, risk, opportunity cost)
-
-## Recommendations
-- Specify type of resource allocation mechanism
-- Use 'resource exchange' rather than 'trade'
-- Specify cost type (energetic, risk, opportunity)
-- Avoid assuming conscious economic decision-making
 
 
 ---
@@ -138,6 +110,34 @@ reproduction
 - Use 'reproductive female' vs 'morphological female'
 - Avoid assuming binary sex determination
 - Specify reproductive strategy explicitly
+
+
+---
+
+
+# Unit Of Individuality Domain Analysis
+
+## Key Terms
+colony
+
+## Term Patterns
+
+
+## Framing Assumptions
+- Individuality exists on a single biological scale
+- Colony-level traits are emergent rather than individual
+- Superorganism concept implies loss of individual agency
+- Nestmate recognition defines individual boundaries
+
+## Ambiguities Identified
+- **colony**: Shifts meaning across biological scales (contexts: reproductive unit, behavioral entity, ecological unit)
+- **individual**: Multiple biological scales of individuality (contexts: nestmate, colony member, genetic individual)
+
+## Recommendations
+- Specify biological scale when using individuality terms
+- Distinguish between genetic, physiological, and social individuality
+- Use 'colony-level' vs 'individual-level' traits explicitly
+- Avoid assuming single scale of biological organization
 
 
 ---

@@ -2,9 +2,9 @@
 
 This appendix provides additional technical details supporting the Ento-Linguistic analysis presented in the main manuscript.
 
-## A. Text Processing Implementation Details
+## Text Processing Implementation Details
 
-### A.1 Linguistic Preprocessing Pipeline
+### Linguistic Preprocessing Pipeline
 
 Our text processing pipeline implements systematic normalization to ensure reliable pattern detection across diverse scientific writing styles:
 
@@ -25,7 +25,7 @@ where each transformation step preserves semantic content while standardizing li
 
 where $\mathcal{T}_{\text{domain}}$ contains curated entomological terminology that should not be further subdivided.
 
-### A.2 Linguistic Feature Extraction
+### Linguistic Feature Extraction
 
 Our feature extraction combines multiple linguistic indicators:
 
@@ -35,9 +35,9 @@ Our feature extraction combines multiple linguistic indicators:
 
 **Discourse Features**: Rhetorical markers, argumentative structures, and citation patterns that indicate research traditions.
 
-## B. Terminology Extraction Algorithms
+## Terminology Extraction Algorithms
 
-### B.1 Domain-Specific Term Identification
+### Domain-Specific Term Identification
 
 Terminology extraction uses a multi-criteria scoring function:
 
@@ -53,7 +53,7 @@ where $d$ represents the Ento-Linguistic domain and weights $w_1, w_2, w_3$ are 
 C(t, d) = \frac{|\text{contexts}(t, d)|}{\sum_{d' \in D} |\text{contexts}(t, d')|}
 \end{equation}
 
-### B.2 Ambiguity Detection Framework
+### Ambiguity Detection Framework
 
 Ambiguity detection combines statistical and linguistic indicators:
 
@@ -63,9 +63,9 @@ A(t) = \alpha \cdot H(\text{contexts}(t)) + \beta \cdot \text{semantic_variance}
 
 where $H(\text{contexts}(t))$ is the entropy of contextual usage patterns.
 
-## C. Network Construction and Analysis
+## Network Construction and Analysis
 
-### C.1 Edge Weight Calculation
+### Edge Weight Calculation
 
 Network edges are weighted using multiple co-occurrence measures:
 
@@ -77,7 +77,7 @@ w(u,v) = \frac{1}{3} \left[ \frac{\text{co-occurrence}(u,v)}{\max(\text{freq}(u)
 
 **Semantic Similarity**: Uses domain-specific embeddings trained on entomological literature.
 
-### C.2 Community Detection Algorithms
+### Community Detection Algorithms
 
 We implement multiple community detection approaches for robust network partitioning:
 
@@ -89,7 +89,7 @@ Q = \frac{1}{2m} \sum_{ij} \left[ A_{ij} - \frac{k_i k_j}{2m} \right] \delta(c_i
 
 **Domain-Aware Clustering**: Incorporates Ento-Linguistic domain knowledge to ensure communities respect conceptual boundaries.
 
-### C.3 Network Validation Metrics
+### Network Validation Metrics
 
 Network quality is assessed using validation:
 
@@ -99,9 +99,9 @@ V(G) = \lambda_1 \cdot \text{modularity}(G) + \lambda_2 \cdot \text{domain_purit
 
 where domain purity measures alignment with Ento-Linguistic domain structure.
 
-## D. Framing Analysis Implementation
+## Framing Analysis Implementation
 
-### D.1 Anthropomorphic Framing Detection
+### Anthropomorphic Framing Detection
 
 Anthropomorphic language is detected through multiple indicators:
 
@@ -117,7 +117,7 @@ Anthropomorphic language is detected through multiple indicators:
 A_{\text{anthro}}(t) = \sum_{f \in F_{\text{human}}} \text{similarity}(t, f) \cdot w_f
 \end{equation}
 
-### D.2 Hierarchical Framing Analysis
+### Hierarchical Framing Analysis
 
 Hierarchical structures are identified through:
 
@@ -127,9 +127,9 @@ Hierarchical structures are identified through:
 
 **Organizational Metaphors**: Language drawing from human institutional and hierarchical systems.
 
-## E. Validation and Quality Assurance
+## Validation and Quality Assurance
 
-### E.1 Inter-annotator Agreement Procedures
+### Inter-annotator Agreement Procedures
 
 Terminology validation uses multiple annotators:
 
@@ -139,7 +139,7 @@ Terminology validation uses multiple annotators:
 
 **Bootstrap Validation**: Assesses stability of classifications across subsampling.
 
-### E.2 Statistical Validation Framework
+### Statistical Validation Framework
 
 All analyses include rigorous statistical validation:
 
@@ -153,7 +153,7 @@ All analyses include rigorous statistical validation:
 - **Domain Correspondence**: Alignment with theoretical domain boundaries
 - **Stability Analysis**: Consistency across subsampling procedures
 
-### E.3 Corpus and Data Validation
+### Corpus and Data Validation
 
 **Corpus Integrity Checks**:
 - Text encoding verification
@@ -167,9 +167,9 @@ All analyses include rigorous statistical validation:
 - Memory usage monitoring
 - Performance regression detection
 
-## F. Computational Environment and Reproducibility
+## Computational Environment and Reproducibility
 
-### F.1 Software Dependencies
+### Software Dependencies
 
 Analysis conducted using the following software stack:
 
@@ -181,7 +181,7 @@ Analysis conducted using the following software stack:
 - **matplotlib**: 3.7+ for visualization
 - **jupyter**: 1.0+ for interactive analysis
 
-### F.2 Hardware Specifications
+### Hardware Specifications
 
 Computational resources used:
 
@@ -190,7 +190,7 @@ Computational resources used:
 - **Storage**: 2TB NVMe SSD for data processing
 - **OS**: Ubuntu 22.04 LTS
 
-### F.3 Reproducibility Framework
+### Reproducibility Framework
 
 **Version Control**: All code, data, and parameters tracked with git.
 
@@ -200,9 +200,9 @@ Computational resources used:
 
 **Random Seed Management**: All stochastic operations use fixed seeds for deterministic results.
 
-## G. Extended Mathematical Formulations
+## Extended Mathematical Formulations
 
-### G.1 Conceptual Mapping Framework
+### Conceptual Mapping Framework
 
 The conceptual mapping algorithm formalizes term relationships:
 
@@ -212,7 +212,7 @@ M(t_i, t_j) = \frac{1}{k} \sum_{c=1}^k \text{similarity}(\vec{t_i}^{(c)}, \vec{t
 
 where $k$ represents the number of contextual embeddings and $\vec{t}^{(c)}$ is the embedding in context $c$.
 
-### G.2 Discourse Pattern Recognition
+### Discourse Pattern Recognition
 
 Discourse pattern detection uses sequence modeling:
 

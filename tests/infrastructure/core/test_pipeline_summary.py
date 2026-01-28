@@ -1,19 +1,18 @@
 """Tests for pipeline summary generation."""
+
 from __future__ import annotations
 
 import json
-import pytest
-from pathlib import Path
 import tempfile
 from pathlib import Path
 
-from infrastructure.core.pipeline_summary import (
-    PipelineSummary,
-    PipelineSummaryGenerator,
-    generate_pipeline_summary
-)
-from infrastructure.core.pipeline import PipelineStageResult
+import pytest
+
 from infrastructure.core.file_inventory import FileInventoryEntry
+from infrastructure.core.pipeline import PipelineStageResult
+from infrastructure.core.pipeline_summary import (PipelineSummary,
+                                                  PipelineSummaryGenerator,
+                                                  generate_pipeline_summary)
 
 
 class TestPipelineSummary:
@@ -38,7 +37,7 @@ class TestPipelineSummary:
             failed_stages=[],
             inventory=inventory,
             log_file=Path("/tmp/pipeline.log"),
-            skip_infra=False
+            skip_infra=False,
         )
 
         assert summary.total_duration == 15.0
@@ -57,8 +56,8 @@ class TestPipelineSummaryGenerator:
     def test_initialization(self):
         """Test generator initialization."""
         generator = PipelineSummaryGenerator()
-        assert hasattr(generator, 'file_inventory_manager')
-        assert hasattr(generator, 'generate_summary')
+        assert hasattr(generator, "file_inventory_manager")
+        assert hasattr(generator, "generate_summary")
 
     def test_generate_summary_complete(self):
         """Test generating complete summary."""
@@ -66,7 +65,9 @@ class TestPipelineSummaryGenerator:
             PipelineStageResult(1, "Setup", True, 2.0),
             PipelineStageResult(2, "Tests", True, 15.0),
             PipelineStageResult(3, "Analysis", True, 8.0),
-            PipelineStageResult(4, "Render", False, 5.0, exit_code=1, error_message="Failed"),
+            PipelineStageResult(
+                4, "Render", False, 5.0, exit_code=1, error_message="Failed"
+            ),
         ]
 
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -81,13 +82,15 @@ class TestPipelineSummaryGenerator:
                 total_duration=30.0,
                 output_dir=output_dir,
                 log_file=log_file,
-                skip_infra=False
+                skip_infra=False,
             )
 
             assert summary.total_duration == 30.0
             assert len(summary.stage_results) == 4
             assert summary.slowest_stage.stage_name == "Tests"  # 15.0s
-            assert summary.fastest_stage.stage_name == "Analysis"  # 8.0s (fastest among stages 2-4)
+            assert (
+                summary.fastest_stage.stage_name == "Analysis"
+            )  # 8.0s (fastest among stages 2-4)
             assert len(summary.failed_stages) == 1
             assert summary.failed_stages[0].stage_name == "Render"
             assert summary.log_file.exists()  # Should be the temp log file we created
@@ -105,9 +108,7 @@ class TestPipelineSummaryGenerator:
 
             generator = PipelineSummaryGenerator()
             summary = generator.generate_summary(
-                stage_results=stage_results,
-                total_duration=5.0,
-                output_dir=output_dir
+                stage_results=stage_results, total_duration=5.0, output_dir=output_dir
             )
 
             assert summary.slowest_stage is None
@@ -199,7 +200,7 @@ class TestPipelineSummaryGenerator:
             fastest_stage=stage_results[0],
             failed_stages=[],
             inventory=[],
-            log_file=Path("/tmp/log.txt")
+            log_file=Path("/tmp/log.txt"),
         )
 
         generator = PipelineSummaryGenerator()
@@ -225,7 +226,7 @@ class TestPipelineSummaryGenerator:
             slowest_stage=stage_results[0],
             fastest_stage=None,
             failed_stages=[],
-            inventory=[]
+            inventory=[],
         )
 
         generator = PipelineSummaryGenerator()
@@ -249,7 +250,7 @@ class TestPipelineSummaryGenerator:
             slowest_stage=stage_results[0],
             fastest_stage=None,
             failed_stages=[],
-            inventory=[]
+            inventory=[],
         )
 
         generator = PipelineSummaryGenerator()
@@ -323,8 +324,12 @@ class TestConvenienceFunction:
         """Test generate_pipeline_summary convenience function."""
         # Create real pipeline stage results (not checkpoint StageResult)
         stage_results = [
-            PipelineStageResult(stage_num=1, stage_name="Setup", success=True, duration=2.0),
-            PipelineStageResult(stage_num=2, stage_name="Tests", success=True, duration=5.0)
+            PipelineStageResult(
+                stage_num=1, stage_name="Setup", success=True, duration=2.0
+            ),
+            PipelineStageResult(
+                stage_num=2, stage_name="Tests", success=True, duration=5.0
+            ),
         ]
 
         with tempfile.TemporaryDirectory() as tmp_dir:

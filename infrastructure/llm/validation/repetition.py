@@ -1,8 +1,9 @@
 """Repetition detection functions for LLM output validation."""
+
 from __future__ import annotations
 
-import re
 import math
+import re
 from collections import Counter
 from typing import Dict, List, Tuple
 
@@ -13,19 +14,19 @@ logger = get_logger(__name__)
 
 def _normalize_for_comparison(text: str) -> str:
     """Normalize text for comparison by removing whitespace variations.
-    
+
     Args:
         text: Text to normalize
-        
+
     Returns:
         Normalized text for comparison
     """
     # Remove extra whitespace
-    normalized = re.sub(r'\s+', ' ', text.strip().lower())
+    normalized = re.sub(r"\s+", " ", text.strip().lower())
     # Remove common markdown formatting
-    normalized = re.sub(r'[#*_`\[\]()]', '', normalized)
+    normalized = re.sub(r"[#*_`\[\]()]", "", normalized)
     # Remove numbers (often vary in repetitive content)
-    normalized = re.sub(r'\d+', 'N', normalized)
+    normalized = re.sub(r"\d+", "N", normalized)
     return normalized
 
 
@@ -61,8 +62,8 @@ def _tfidf_cosine_similarity(text1: str, text2: str) -> float:
 
     # Cosine similarity
     dot_product = sum(vec1[word] * vec2[word] for word in all_words)
-    norm1 = math.sqrt(sum(val ** 2 for val in vec1.values()))
-    norm2 = math.sqrt(sum(val ** 2 for val in vec2.values()))
+    norm1 = math.sqrt(sum(val**2 for val in vec1.values()))
+    norm2 = math.sqrt(sum(val**2 for val in vec2.values()))
 
     if norm1 == 0 or norm2 == 0:
         return 0.0
@@ -72,10 +73,11 @@ def _tfidf_cosine_similarity(text1: str, text2: str) -> float:
 
 def _sequence_similarity(text1: str, text2: str) -> float:
     """Calculate sequence-based similarity using n-gram overlap."""
+
     def get_ngrams(text: str, n: int = 3):
         """Get n-grams from text."""
         words = text.split()
-        return [' '.join(words[i:i+n]) for i in range(len(words) - n + 1)]
+        return [" ".join(words[i : i + n]) for i in range(len(words) - n + 1)]
 
     ngrams1 = set(get_ngrams(text1, 3))
     ngrams2 = set(get_ngrams(text2, 3))
@@ -125,40 +127,42 @@ def _calculate_similarity(text1: str, text2: str, method: str = "hybrid") -> flo
 
 def calculate_unique_content_ratio(text: str, chunk_size: int = 200) -> float:
     """Calculate ratio of unique content in text.
-    
+
     Args:
         text: Text to analyze
         chunk_size: Size of chunks to compare
-        
+
     Returns:
         Ratio of unique content (0.0-1.0)
     """
     if not text or len(text) < chunk_size * 2:
         return 1.0
-    
+
     # First try splitting by paragraphs/sections (double newlines)
     # This is better for detecting repeated sections
-    paragraphs = [p.strip() for p in text.split('\n\n') if len(p.strip()) >= chunk_size // 2]
-    
+    paragraphs = [
+        p.strip() for p in text.split("\n\n") if len(p.strip()) >= chunk_size // 2
+    ]
+
     if len(paragraphs) >= 2:
         # Use paragraphs as chunks if we have enough
         chunks = paragraphs
     else:
         # Fall back to fixed-size chunks
-        chunks = [text[i:i+chunk_size] for i in range(0, len(text), chunk_size)]
-    
+        chunks = [text[i : i + chunk_size] for i in range(0, len(text), chunk_size)]
+
     if len(chunks) < 2:
         return 1.0
-    
+
     # Count unique chunks using normalized comparison
     normalized_chunks = [_normalize_for_comparison(c) for c in chunks]
     unique_chunks = set()
-    
+
     for normalized in normalized_chunks:
         # Use first 200 chars as key for comparison
         key = normalized[:200] if len(normalized) > 200 else normalized
         unique_chunks.add(key)
-    
+
     return len(unique_chunks) / len(chunks) if chunks else 1.0
 
 
@@ -187,10 +191,10 @@ def detect_repetition(
 
     # Split by common section markers with better pattern matching
     section_patterns = [
-        r'\n### ',  # H3 headers
-        r'\n## ',   # H2 headers
-        r'\n# ',    # H1 headers
-        r'\n\n\n',  # Triple newlines (section breaks)
+        r"\n### ",  # H3 headers
+        r"\n## ",  # H2 headers
+        r"\n# ",  # H1 headers
+        r"\n\n\n",  # Triple newlines (section breaks)
     ]
 
     # Try each pattern to find the best split
@@ -203,7 +207,9 @@ def detect_repetition(
 
     # Fallback: split by double newlines (paragraphs)
     if len(chunks) < 2:
-        chunks = [p.strip() for p in text.split('\n\n') if len(p.strip()) >= min_chunk_size]
+        chunks = [
+            p.strip() for p in text.split("\n\n") if len(p.strip()) >= min_chunk_size
+        ]
 
     if len(chunks) < 2:
         return False, [], 1.0
@@ -230,18 +236,20 @@ def detect_repetition(
     for i in range(len(normalized_chunks)):
         for j in range(i + 1, len(normalized_chunks)):
             similarity = _calculate_similarity(
-                normalized_chunks[i],
-                normalized_chunks[j],
-                method=similarity_method
+                normalized_chunks[i], normalized_chunks[j], method=similarity_method
             )
             if similarity >= similarity_threshold:
                 if chunks[j] not in duplicates:
-                    duplicates.append(chunks[j][:100] + "..." if len(chunks[j]) > 100 else chunks[j])
+                    duplicates.append(
+                        chunks[j][:100] + "..." if len(chunks[j]) > 100 else chunks[j]
+                    )
 
     # Calculate unique content ratio
     # For better detection, also check content without headers
-    content_only = re.sub(r'^#{1,6}\s+[^\n]+\n?', '', text, flags=re.MULTILINE)
-    unique_ratio = calculate_unique_content_ratio(content_only if content_only.strip() else text)
+    content_only = re.sub(r"^#{1,6}\s+[^\n]+\n?", "", text, flags=re.MULTILINE)
+    unique_ratio = calculate_unique_content_ratio(
+        content_only if content_only.strip() else text
+    )
 
     has_repetition = len(duplicates) > 0 or unique_ratio < 0.7
 
@@ -252,10 +260,10 @@ def _deduplicate_paragraphs(
     text: str,
     max_repetitions: int,
     similarity_threshold: float,
-    min_content_preservation: float
+    min_content_preservation: float,
 ) -> str:
     """Deduplicate at paragraph level with semantic similarity."""
-    paragraphs = text.split('\n\n')
+    paragraphs = text.split("\n\n")
     if len(paragraphs) < 3:
         return text
 
@@ -292,7 +300,7 @@ def _deduplicate_paragraphs(
         else:
             removed_count += 1
 
-    result = '\n\n'.join(result_paragraphs)
+    result = "\n\n".join(result_paragraphs)
 
     # Content preservation check
     if len(result) / original_length < min_content_preservation:
@@ -316,7 +324,7 @@ def deduplicate_sections(
     max_repetitions: int = 2,
     mode: str = "conservative",
     similarity_threshold: float = 0.85,
-    min_content_preservation: float = 0.7
+    min_content_preservation: float = 0.7,
 ) -> str:
     """Remove repeated sections from LLM output with improved semantic detection.
 
@@ -348,7 +356,7 @@ def deduplicate_sections(
     # balanced uses provided values
 
     # Split by section headers (## or ###) with better pattern matching
-    section_pattern = r'(^|\n)(#{2,3}\s+[^\n]+(?:\n|$))'
+    section_pattern = r"(^|\n)(#{2,3}\s+[^\n]+(?:\n|$))"
     parts = re.split(section_pattern, text)
 
     if len(parts) < 3:
@@ -367,7 +375,7 @@ def deduplicate_sections(
         part = parts[i]
 
         # Check if this is a header
-        if re.match(r'#{2,3}\s+', part.strip()):
+        if re.match(r"#{2,3}\s+", part.strip()):
             # Get header and content (expanded window)
             header = part
             content = parts[i + 1] if i + 1 < len(parts) else ""
@@ -381,7 +389,9 @@ def deduplicate_sections(
             duplicate_key = None
 
             for existing_key, existing_data in seen_sections.items():
-                similarity = _calculate_similarity(normalized, existing_key, method="hybrid")
+                similarity = _calculate_similarity(
+                    normalized, existing_key, method="hybrid"
+                )
                 if similarity >= similarity_threshold:
                     existing_data["count"] += 1
                     if existing_data["count"] >= max_repetitions:
@@ -408,7 +418,7 @@ def deduplicate_sections(
             result_parts.append(part)
             i += 1
 
-    result = ''.join(result_parts)
+    result = "".join(result_parts)
 
     # Apply content preservation rule
     if len(result) / original_length < min_content_preservation:
@@ -419,9 +429,11 @@ def deduplicate_sections(
         )
         # Fallback to more conservative deduplication
         return deduplicate_sections(
-            text, max_repetitions=max_repetitions + 1,
-            mode="conservative", similarity_threshold=0.95,
-            min_content_preservation=0.8
+            text,
+            max_repetitions=max_repetitions + 1,
+            mode="conservative",
+            similarity_threshold=0.95,
+            min_content_preservation=0.8,
         )
 
     if removed_count > 0:
@@ -432,4 +444,3 @@ def deduplicate_sections(
         )
 
     return result
-

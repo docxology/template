@@ -21,15 +21,9 @@ try:
     sys.path.insert(0, str(repo_root))
 
     try:
-        from infrastructure.documentation import (
-            generate_glossary,
-        )
-        from infrastructure.core import (
-            get_logger,
-            log_operation,
-            log_success,
-            ProgressBar,
-        )
+        from infrastructure.core import (ProgressBar, get_logger,
+                                         log_operation, log_success)
+        from infrastructure.documentation import generate_glossary
     except ImportError:
         # Fallback when infrastructure is not available
         generate_glossary = None
@@ -39,13 +33,17 @@ try:
         ProgressBar = lambda *args, **kwargs: nullcontext()
 
         class nullcontext:
-            def __enter__(self): return self
-            def __exit__(self, *args): pass
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *args):
+                pass
+
     INFRASTRUCTURE_AVAILABLE = True
 except ImportError as e:
     # Initialize logger after potential import failure
     try:
-        logger = get_logger(__name__) if 'get_logger' in globals() else None
+        logger = get_logger(__name__) if "get_logger" in globals() else None
         if logger:
             logger.warning(f"Infrastructure modules not available: {e}")
     except:
@@ -74,7 +72,7 @@ def generate_api_documentation():
                 glossary_path = generate_glossary(
                     source_dirs=[project_root / "src"],
                     output_dir=output_dir,
-                    min_frequency=2
+                    min_frequency=2,
                 )
             except Exception as e:
                 if logger:
@@ -86,12 +84,8 @@ def generate_api_documentation():
         api_ref_path = output_dir / "api_reference.md"
 
         # Get functions from optimizer module
-        from optimizer import (
-            quadratic_function,
-            compute_gradient,
-            gradient_descent,
-            OptimizationResult,
-        )
+        from optimizer import (OptimizationResult, compute_gradient,
+                               gradient_descent, quadratic_function)
 
         api_content = """# Code Project API Reference
 
@@ -178,12 +172,12 @@ else:
 ```
 """
 
-        with open(api_ref_path, 'w') as f:
+        with open(api_ref_path, "w") as f:
             f.write(api_content)
 
         documentation_files = {
-            'api_reference': str(api_ref_path),
-            'glossary': str(glossary_path) if glossary_path else None,
+            "api_reference": str(api_ref_path),
+            "glossary": str(glossary_path) if glossary_path else None,
         }
 
         if logger:
@@ -216,7 +210,7 @@ def generate_code_quality_report():
             source_dirs=src_dirs,
             output_dir=output_dir,
             include_metrics=True,
-            include_coverage=True
+            include_coverage=True,
         )
 
         if logger:
@@ -252,7 +246,9 @@ def main():
                 logger.info("API documentation generation completed successfully!")
         else:
             if logger:
-                logger.error("API documentation generation failed - check error messages above")
+                logger.error(
+                    "API documentation generation failed - check error messages above"
+                )
             return 1  # Exit with error code
 
     except Exception as e:

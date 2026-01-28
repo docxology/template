@@ -3,13 +3,14 @@
 This module contains comprehensive tests for the text analysis functionality
 used in Ento-Linguistic research.
 """
+
 from __future__ import annotations
 
-import pytest
 from pathlib import Path
 from typing import List
 
-from src.text_analysis import TextProcessor, LinguisticFeatureExtractor
+import pytest
+from src.text_analysis import LinguisticFeatureExtractor, TextProcessor
 
 
 class TestTextProcessor:
@@ -46,7 +47,9 @@ class TestTextProcessor:
         assert processor.normalize_text("") == ""
         assert processor.normalize_text("   \n\t   ") == ""
 
-    def test_sentence_tokenization(self, processor: TextProcessor, sample_text: str) -> None:
+    def test_sentence_tokenization(
+        self, processor: TextProcessor, sample_text: str
+    ) -> None:
         """Test sentence tokenization."""
         sentences = processor.tokenize_sentences(sample_text)
 
@@ -126,7 +129,7 @@ class TestTextProcessor:
         assert all(token.islower() for token in processed)
 
         # Should not contain punctuation or stop words
-        assert not any(char in ' '.join(processed) for char in '!@#$%^&*()')
+        assert not any(char in " ".join(processed) for char in "!@#$%^&*()")
 
     def test_ngram_extraction(self, processor: TextProcessor) -> None:
         """Test n-gram extraction functionality."""
@@ -134,29 +137,31 @@ class TestTextProcessor:
         bigrams = processor.extract_ngrams(tokens, n=2)
 
         assert len(bigrams) > 0
-        assert ("ant", "colony") in [' '.join(k) for k in bigrams.keys()] or "ant colony" in bigrams
+        assert ("ant", "colony") in [
+            " ".join(k) for k in bigrams.keys()
+        ] or "ant colony" in bigrams
 
     def test_vocabulary_statistics(self, processor: TextProcessor) -> None:
         """Test vocabulary statistics computation."""
         texts = [
             "Ant colonies are eusocial insects.",
             "Worker ants forage for food.",
-            "Queen ants lay eggs in the colony."
+            "Queen ants lay eggs in the colony.",
         ]
 
         stats = processor.get_vocabulary_stats(texts)
 
-        assert 'total_tokens' in stats
-        assert 'unique_tokens' in stats
-        assert 'type_token_ratio' in stats
-        assert 'most_common_tokens' in stats
+        assert "total_tokens" in stats
+        assert "unique_tokens" in stats
+        assert "type_token_ratio" in stats
+        assert "most_common_tokens" in stats
 
-        assert stats['total_tokens'] > 0
-        assert stats['unique_tokens'] > 0
-        assert stats['type_token_ratio'] > 0
+        assert stats["total_tokens"] > 0
+        assert stats["unique_tokens"] > 0
+        assert stats["type_token_ratio"] > 0
 
         # Type-token ratio should be reasonable
-        assert 0.1 < stats['type_token_ratio'] < 1.0
+        assert 0.1 < stats["type_token_ratio"] < 1.0
 
 
 class TestLinguisticFeatureExtractor:
@@ -167,90 +172,113 @@ class TestLinguisticFeatureExtractor:
         """Create a LinguisticFeatureExtractor instance."""
         return LinguisticFeatureExtractor()
 
-    def test_anthropomorphic_feature_extraction(self, extractor: LinguisticFeatureExtractor) -> None:
+    def test_anthropomorphic_feature_extraction(
+        self, extractor: LinguisticFeatureExtractor
+    ) -> None:
         """Test extraction of anthropomorphic linguistic features."""
         text = "Ants choose to cooperate with their colony members. The colony decides how to allocate resources."
 
         features = extractor.extract_framing_features(text)
 
-        assert 'anthropomorphic_terms' in features
-        assert 'total_words' in features
-        assert features['anthropomorphic_terms'] > 0
-        assert 'anthropomorphic_density' in features
+        assert "anthropomorphic_terms" in features
+        assert "total_words" in features
+        assert features["anthropomorphic_terms"] > 0
+        assert "anthropomorphic_density" in features
 
-    def test_hierarchical_feature_extraction(self, extractor: LinguisticFeatureExtractor) -> None:
+    def test_hierarchical_feature_extraction(
+        self, extractor: LinguisticFeatureExtractor
+    ) -> None:
         """Test extraction of hierarchical linguistic features."""
         text = "The queen dominates the colony hierarchy. Workers submit to the dominant female."
 
         features = extractor.extract_framing_features(text)
 
-        assert 'hierarchical_terms' in features
-        assert features['hierarchical_terms'] > 0
+        assert "hierarchical_terms" in features
+        assert features["hierarchical_terms"] > 0
 
-    def test_economic_feature_extraction(self, extractor: LinguisticFeatureExtractor) -> None:
+    def test_economic_feature_extraction(
+        self, extractor: LinguisticFeatureExtractor
+    ) -> None:
         """Test extraction of economic linguistic features."""
-        text = "Ants trade resources with colony members. They invest in the common good."
+        text = (
+            "Ants trade resources with colony members. They invest in the common good."
+        )
 
         features = extractor.extract_framing_features(text)
 
-        assert 'economic_terms' in features
-        assert features['economic_terms'] > 0
+        assert "economic_terms" in features
+        assert features["economic_terms"] > 0
 
-    def test_terminology_pattern_detection(self, extractor: LinguisticFeatureExtractor) -> None:
+    def test_terminology_pattern_detection(
+        self, extractor: LinguisticFeatureExtractor
+    ) -> None:
         """Test detection of terminology patterns."""
-        tokens = ["eusocial", "insect", "division-of-labor", "super_organism", "colony", "ant"]
+        tokens = [
+            "eusocial",
+            "insect",
+            "division-of-labor",
+            "super_organism",
+            "colony",
+            "ant",
+        ]
 
         patterns = extractor.detect_terminology_patterns(tokens)
 
-        assert 'compound_terms' in patterns
-        assert 'hyphenated_terms' in patterns
+        assert "compound_terms" in patterns
+        assert "hyphenated_terms" in patterns
 
         # Should detect hyphenated and underscore terms
-        assert len(patterns['hyphenated_terms']) > 0
-        assert any('division-of-labor' in term for term in patterns['hyphenated_terms'])
+        assert len(patterns["hyphenated_terms"]) > 0
+        assert any("division-of-labor" in term for term in patterns["hyphenated_terms"])
 
-    def test_sentence_complexity_analysis(self, extractor: LinguisticFeatureExtractor) -> None:
+    def test_sentence_complexity_analysis(
+        self, extractor: LinguisticFeatureExtractor
+    ) -> None:
         """Test sentence complexity analysis."""
         text = "Ant colonies are complex. They exhibit division of labor, which involves many different tasks and requires sophisticated communication between individuals."
 
         complexity = extractor.analyze_sentence_complexity(text)
 
-        assert 'sentence_count' in complexity
-        assert 'avg_sentence_length' in complexity
-        assert 'complexity_ratio' in complexity
-        assert 'total_words' in complexity
+        assert "sentence_count" in complexity
+        assert "avg_sentence_length" in complexity
+        assert "complexity_ratio" in complexity
+        assert "total_words" in complexity
 
-        assert complexity['sentence_count'] == 2
-        assert complexity['total_words'] > 0
-        assert 0 <= complexity['complexity_ratio'] <= 1
+        assert complexity["sentence_count"] == 2
+        assert complexity["total_words"] > 0
+        assert 0 <= complexity["complexity_ratio"] <= 1
 
     def test_empty_text_handling(self, extractor: LinguisticFeatureExtractor) -> None:
         """Test handling of empty or minimal text."""
         features = extractor.extract_framing_features("")
-        assert features['total_words'] == 0
-        assert features['anthropomorphic_terms'] == 0
+        assert features["total_words"] == 0
+        assert features["anthropomorphic_terms"] == 0
 
         complexity = extractor.analyze_sentence_complexity("")
-        assert complexity['sentence_count'] == 0
-        assert complexity['total_words'] == 0
+        assert complexity["sentence_count"] == 0
+        assert complexity["total_words"] == 0
 
-    def test_feature_density_calculation(self, extractor: LinguisticFeatureExtractor) -> None:
+    def test_feature_density_calculation(
+        self, extractor: LinguisticFeatureExtractor
+    ) -> None:
         """Test that feature densities are calculated correctly."""
-        text = "Ants choose to cooperate. The colony decides. Workers submit to hierarchy."
+        text = (
+            "Ants choose to cooperate. The colony decides. Workers submit to hierarchy."
+        )
 
         features = extractor.extract_framing_features(text)
 
         # Should have density calculations
-        assert 'anthropomorphic_density' in features
-        assert 'hierarchical_density' in features
-        assert 'economic_density' in features
+        assert "anthropomorphic_density" in features
+        assert "hierarchical_density" in features
+        assert "economic_density" in features
 
         # Densities should be reasonable
-        total_words = features['total_words']
+        total_words = features["total_words"]
         if total_words > 0:
-            assert 0 <= features['anthropomorphic_density'] <= 1
-            assert 0 <= features['hierarchical_density'] <= 1
-            assert 0 <= features['economic_density'] <= 1
+            assert 0 <= features["anthropomorphic_density"] <= 1
+            assert 0 <= features["hierarchical_density"] <= 1
+            assert 0 <= features["economic_density"] <= 1
 
 
 class TestTextAnalysisIntegration:
@@ -276,7 +304,7 @@ class TestTextAnalysisIntegration:
         assert isinstance(patterns, dict)
 
         # Features should be based on the processed text
-        assert features['total_words'] > 0
+        assert features["total_words"] > 0
 
     def test_real_entomological_text_processing(self) -> None:
         """Test processing of real entomological text."""
@@ -295,12 +323,14 @@ class TestTextAnalysisIntegration:
 
         # Should extract meaningful terms
         assert len(tokens) > 0
-        assert any(term in tokens for term in ['eusociality', 'colony', 'queen', 'worker'])
+        assert any(
+            term in tokens for term in ["eusociality", "colony", "queen", "worker"]
+        )
 
         # Should not contain stop words or punctuation
-        assert 'the' not in tokens
-        assert 'a' not in tokens
-        assert not any(char in ' '.join(tokens) for char in '.,!?')
+        assert "the" not in tokens
+        assert "a" not in tokens
+        assert not any(char in " ".join(tokens) for char in ".,!?")
 
     def test_feature_extraction_consistency(self) -> None:
         """Test that feature extraction is consistent across similar texts."""
@@ -313,8 +343,8 @@ class TestTextAnalysisIntegration:
         features2 = extractor.extract_framing_features(text2)
 
         # Both should detect anthropomorphic language
-        assert features1['anthropomorphic_terms'] > 0
-        assert features2['anthropomorphic_terms'] > 0
+        assert features1["anthropomorphic_terms"] > 0
+        assert features2["anthropomorphic_terms"] > 0
 
         # Word counts should be similar
-        assert abs(features1['total_words'] - features2['total_words']) <= 2
+        assert abs(features1["total_words"] - features2["total_words"]) <= 2

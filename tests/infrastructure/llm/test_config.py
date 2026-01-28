@@ -1,6 +1,8 @@
 """Tests for infrastructure.llm.config module."""
-import pytest
+
 from pathlib import Path
+
+import pytest
 
 from infrastructure.llm.core.config import LLMConfig
 
@@ -23,7 +25,9 @@ class TestLLMConfig:
         assert config.default_model == "gemma3:4b"
         assert config.temperature == 0.7
         assert config.max_tokens == 2048
-        assert config.context_window == 131072  # 128K context window (supports gemma3:4b)
+        assert (
+            config.context_window == 131072
+        )  # 128K context window (supports gemma3:4b)
 
     def test_config_custom_values(self):
         """Test config with custom values."""
@@ -31,7 +35,7 @@ class TestLLMConfig:
             base_url="http://custom:11434",
             default_model="mistral",
             temperature=0.3,
-            max_tokens=512
+            max_tokens=512,
         )
         assert config.base_url == "http://custom:11434"
         assert config.default_model == "mistral"
@@ -54,7 +58,7 @@ class TestLLMConfig:
         # Valid temperatures
         config_low = LLMConfig(temperature=0.0)
         assert config_low.temperature == 0.0
-        
+
         config_high = LLMConfig(temperature=2.0)
         assert config_high.temperature == 2.0
 
@@ -67,7 +71,7 @@ class TestLLMConfig:
         """Test timeout configuration."""
         config = LLMConfig()
         assert config.timeout > 0
-        
+
         config_custom = LLMConfig(timeout=30.0)
         assert config_custom.timeout == 30.0
 
@@ -76,4 +80,3 @@ class TestLLMConfig:
         config = LLMConfig.from_env()
         assert config is not None
         assert isinstance(config, LLMConfig)
-

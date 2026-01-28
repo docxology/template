@@ -85,14 +85,44 @@ infrastructure/llm/
 
 ## Configuration
 
-Set environment variables for Ollama connection:
+### Model Selection
+
+The default model is **`gemma3:4b`** - a reliable model with good quality (~30 tokens/sec).
+
+**Override for quality reviews:**
+```bash
+export OLLAMA_MODEL="gemma3:4b"       # Good quality, medium speed
+export OLLAMA_MODEL="llama3-gradient"  # Best quality, slower
+```
+
+**Speed Tiers (approximate on Apple Silicon):**
+
+| Model | Size | Speed | Use Case |
+|-------|------|-------|----------|
+| `smollm2` | 102 MB | ~100+ tok/s | Fast testing |
+| `deepcoder:1.5b` | 1.1 GB | ~70 tok/s | Quick iterations |
+| `gemma2:2b` | 1.4 GB | ~50 tok/s | Good balance |
+| `gemma3:4b` | 3.3 GB | ~30 tok/s | Quality reviews (default) |
+| `llama3-gradient` | 4.7 GB | ~15 tok/s | Best quality, 256K context |
+
+### Environment Variables
 
 ```bash
-export OLLAMA_HOST="http://localhost:11434"
-export OLLAMA_MODEL="gemma3:4b"
-export LLM_TEMPERATURE="0.7"
-export LLM_MAX_TOKENS="2048"
+# Model selection
+export OLLAMA_MODEL="gemma3:4b"        # Override default model
+export OLLAMA_HOST="http://localhost:11434"  # Ollama server URL
+
+# Generation parameters
+export LLM_TEMPERATURE="0.7"           # Response creativity (0.0-1.0)
+export LLM_MAX_TOKENS="2048"            # Max response length
+export LLM_LONG_MAX_TOKENS="16384"      # For long reviews/translations
+export LLM_CONTEXT_WINDOW="131072"      # Context window size
+
+# Timeout and monitoring
+export LLM_TIMEOUT="60"                 # Request timeout (seconds)
+export LLM_REVIEW_TIMEOUT="300"         # Review stage timeout
 ```
+
 
 ## Usage Examples
 

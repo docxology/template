@@ -3,12 +3,13 @@
 This module provides functionality for extracting, classifying, and analyzing
 terminology used in entomological research, with focus on the six Ento-Linguistic domains.
 """
+
 from __future__ import annotations
 
 import re
 from collections import Counter, defaultdict
-from typing import List, Dict, Set, Optional, Tuple, Any
 from dataclasses import dataclass, field
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 try:
     from .text_analysis import TextProcessor
@@ -29,6 +30,7 @@ class Term:
         pos_tags: Part-of-speech tags for the term
         confidence: Extraction confidence score
     """
+
     text: str
     lemma: str
     domains: List[str] = field(default_factory=list)
@@ -49,17 +51,17 @@ class Term:
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for serialization."""
         return {
-            'text': self.text,
-            'lemma': self.lemma,
-            'domains': self.domains,
-            'frequency': self.frequency,
-            'contexts': self.contexts,
-            'pos_tags': self.pos_tags,
-            'confidence': self.confidence
+            "text": self.text,
+            "lemma": self.lemma,
+            "domains": self.domains,
+            "frequency": self.frequency,
+            "contexts": self.contexts,
+            "pos_tags": self.pos_tags,
+            "confidence": self.confidence,
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'Term':
+    def from_dict(cls, data: Dict[str, Any]) -> "Term":
         """Create from dictionary."""
         return cls(**data)
 
@@ -73,43 +75,100 @@ class TerminologyExtractor:
 
     # Ento-Linguistic domain definitions with seed terms
     DOMAIN_SEEDS = {
-        'unit_of_individuality': {
-            'ant', 'nestmate', 'colony', 'superorganism', 'eusocial',
-            'individual', 'collective', 'organism', 'holobiont', 'symbiont'
+        "unit_of_individuality": {
+            "ant",
+            "nestmate",
+            "colony",
+            "superorganism",
+            "eusocial",
+            "individual",
+            "collective",
+            "organism",
+            "holobiont",
+            "symbiont",
         },
-        'behavior_and_identity': {
-            'foraging', 'forager', 'worker', 'soldier', 'reproductive',
-            'behavior', 'task', 'role', 'specialization', 'division of labor',
-            'caste', 'polymorphism', 'behavioral repertoire'
+        "behavior_and_identity": {
+            "foraging",
+            "forager",
+            "worker",
+            "soldier",
+            "reproductive",
+            "behavior",
+            "task",
+            "role",
+            "specialization",
+            "division of labor",
+            "caste",
+            "polymorphism",
+            "behavioral repertoire",
         },
-        'power_and_labor': {
-            'caste', 'queen', 'worker', 'slave', 'parasite', 'host',
-            'dominant', 'subordinate', 'hierarchy', 'control', 'authority',
-            'exploitation', 'coercion', 'reproduction control'
+        "power_and_labor": {
+            "caste",
+            "queen",
+            "worker",
+            "slave",
+            "parasite",
+            "host",
+            "dominant",
+            "subordinate",
+            "hierarchy",
+            "control",
+            "authority",
+            "exploitation",
+            "coercion",
+            "reproduction control",
         },
-        'sex_and_reproduction': {
-            'sex determination', 'sex differentiation', 'haplodiploidy',
-            'diploid', 'haploid', 'gyne', 'male', 'female', 'reproduction',
-            'mating', 'fertilization', 'parthenogenesis', 'queen'
+        "sex_and_reproduction": {
+            "sex determination",
+            "sex differentiation",
+            "haplodiploidy",
+            "diploid",
+            "haploid",
+            "gyne",
+            "male",
+            "female",
+            "reproduction",
+            "mating",
+            "fertilization",
+            "parthenogenesis",
+            "queen",
         },
-        'kin_and_relatedness': {
-            'kin', 'relatedness', 'genetic relatedness', 'kin selection',
-            'inclusive fitness', 'altruism', 'cooperation', 'family',
-            'sibship', 'colony kin structure', 'relatedness coefficient'
+        "kin_and_relatedness": {
+            "kin",
+            "relatedness",
+            "genetic relatedness",
+            "kin selection",
+            "inclusive fitness",
+            "altruism",
+            "cooperation",
+            "family",
+            "sibship",
+            "colony kin structure",
+            "relatedness coefficient",
         },
-        'economics': {
-            'resource', 'allocation', 'distribution', 'sharing', 'trade',
-            'exchange', 'cost', 'benefit', 'investment', 'foraging efficiency',
-            'resource economics', 'colony economy', 'optimal foraging'
-        }
+        "economics": {
+            "resource",
+            "allocation",
+            "distribution",
+            "sharing",
+            "trade",
+            "exchange",
+            "cost",
+            "benefit",
+            "investment",
+            "foraging efficiency",
+            "resource economics",
+            "colony economy",
+            "optimal foraging",
+        },
     }
 
     # Linguistic patterns for term extraction
     TERM_PATTERNS = [
-        r'\b[a-z]+_[a-z]+\b',  # Underscore compounds
-        r'\b[a-z]+-[a-z]+\b',  # Hyphenated compounds
-        r'\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+)+\b',  # Multi-word proper nouns
-        r'\b[a-z]{4,}(?:\s+[a-z]{3,})+',  # Multi-word technical terms
+        r"\b[a-z]+_[a-z]+\b",  # Underscore compounds
+        r"\b[a-z]+-[a-z]+\b",  # Hyphenated compounds
+        r"\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+)+\b",  # Multi-word proper nouns
+        r"\b[a-z]{4,}(?:\s+[a-z]{3,})+",  # Multi-word technical terms
     ]
 
     def __init__(self, text_processor: Optional[TextProcessor] = None):
@@ -121,7 +180,9 @@ class TerminologyExtractor:
         self.text_processor = text_processor or TextProcessor()
         self.extracted_terms: Dict[str, Term] = {}
 
-    def extract_terms(self, texts: List[str], min_frequency: int = 3) -> Dict[str, Term]:
+    def extract_terms(
+        self, texts: List[str], min_frequency: int = 3
+    ) -> Dict[str, Term]:
         """Extract terminology from a collection of texts.
 
         Args:
@@ -166,24 +227,23 @@ class TerminologyExtractor:
 
         # Extract candidate terms (filter by frequency first for efficiency)
         candidate_terms = {
-            token for token, count in term_counts.items()
+            token
+            for token, count in term_counts.items()
             if count >= min_frequency and self._is_candidate_term(token)
         }
 
         # Create Term objects for candidates
         for candidate in candidate_terms:
             lemma = self.text_processor.lemmatize_tokens([candidate])[0]
-            term = Term(
-                text=candidate,
-                lemma=lemma,
-                frequency=term_counts[candidate]
-            )
+            term = Term(text=candidate, lemma=lemma, frequency=term_counts[candidate])
 
             # Classify domains
             term.domains = self.classify_term_domains(candidate)
 
             # Extract contexts using position information
-            self._extract_term_contexts_efficient(term, text_contexts, token_positions[candidate], window_size=3)
+            self._extract_term_contexts_efficient(
+                term, text_contexts, token_positions[candidate], window_size=3
+            )
 
             # Calculate confidence
             term.confidence = self._calculate_extraction_confidence(term)
@@ -215,16 +275,24 @@ class TerminologyExtractor:
                 return True
 
         # Check for domain-specific characteristics
-        if '_' in token or '-' in token:
+        if "_" in token or "-" in token:
             return True
 
         # Check for compound words (CamelCase or multi-word)
-        if re.match(r'[A-Z][a-z]+[A-Z]', token):  # CamelCase
+        if re.match(r"[A-Z][a-z]+[A-Z]", token):  # CamelCase
             return True
 
         # Multi-word terms with scientific vocabulary
-        scientific_words = {'eusocial', 'colony', 'behavior', 'foraging',
-                          'reproduction', 'selection', 'evolution', 'genetic'}
+        scientific_words = {
+            "eusocial",
+            "colony",
+            "behavior",
+            "foraging",
+            "reproduction",
+            "selection",
+            "evolution",
+            "genetic",
+        }
 
         if any(word in token.lower() for word in scientific_words):
             return True
@@ -250,7 +318,7 @@ class TerminologyExtractor:
                 continue
 
             # Fuzzy matching for compound terms
-            term_words = set(term_lower.replace('_', ' ').replace('-', ' ').split())
+            term_words = set(term_lower.replace("_", " ").replace("-", " ").split())
             if term_words & seeds:  # Any overlap
                 domains.append(domain)
 
@@ -272,33 +340,50 @@ class TerminologyExtractor:
         domains = []
 
         # Individuality patterns
-        if any(word in term for word in ['individual', 'collective', 'organism', 'unit']):
-            domains.append('unit_of_individuality')
+        if any(
+            word in term for word in ["individual", "collective", "organism", "unit"]
+        ):
+            domains.append("unit_of_individuality")
 
         # Behavior patterns
-        if any(word in term for word in ['behavior', 'task', 'role', 'foraging', 'specialization']):
-            domains.append('behavior_and_identity')
+        if any(
+            word in term
+            for word in ["behavior", "task", "role", "foraging", "specialization"]
+        ):
+            domains.append("behavior_and_identity")
 
         # Power patterns
-        if any(word in term for word in ['caste', 'hierarchy', 'control', 'dominant', 'subordinate']):
-            domains.append('power_and_labor')
+        if any(
+            word in term
+            for word in ["caste", "hierarchy", "control", "dominant", "subordinate"]
+        ):
+            domains.append("power_and_labor")
 
         # Reproduction patterns
-        if any(word in term for word in ['sex', 'reproduction', 'mating', 'fertilization']):
-            domains.append('sex_and_reproduction')
+        if any(
+            word in term for word in ["sex", "reproduction", "mating", "fertilization"]
+        ):
+            domains.append("sex_and_reproduction")
 
         # Kin patterns
-        if any(word in term for word in ['kin', 'relatedness', 'family', 'altruism']):
-            domains.append('kin_and_relatedness')
+        if any(word in term for word in ["kin", "relatedness", "family", "altruism"]):
+            domains.append("kin_and_relatedness")
 
         # Economic patterns
-        if any(word in term for word in ['resource', 'allocation', 'cost', 'benefit', 'trade']):
-            domains.append('economics')
+        if any(
+            word in term
+            for word in ["resource", "allocation", "cost", "benefit", "trade"]
+        ):
+            domains.append("economics")
 
         return domains
 
-    def _extract_term_contexts(self, term: Term, text_contexts: List[Tuple[str, List[str]]],
-                              window_size: int = 3) -> None:
+    def _extract_term_contexts(
+        self,
+        term: Term,
+        text_contexts: List[Tuple[str, List[str]]],
+        window_size: int = 3,
+    ) -> None:
         """Extract contextual usage examples for a term.
 
         Args:
@@ -313,13 +398,10 @@ class TerminologyExtractor:
                     start = max(0, i - window_size)
                     end = min(len(tokens), i + window_size + 1)
                     context_tokens = tokens[start:end]
-                    context = ' '.join(context_tokens)
+                    context = " ".join(context_tokens)
 
                     # Highlight the term
-                    highlighted_context = context.replace(
-                        term.text,
-                        f"**{term.text}**"
-                    )
+                    highlighted_context = context.replace(term.text, f"**{term.text}**")
 
                     term.add_context(highlighted_context)
 
@@ -327,10 +409,13 @@ class TerminologyExtractor:
                     if len(term.contexts) >= 5:
                         break
 
-    def _extract_term_contexts_efficient(self, term: Term,
-                                       text_contexts: List[Tuple[str, List[str]]],
-                                       positions: List[Tuple[int, int]],
-                                       window_size: int = 3) -> None:
+    def _extract_term_contexts_efficient(
+        self,
+        term: Term,
+        text_contexts: List[Tuple[str, List[str]]],
+        positions: List[Tuple[int, int]],
+        window_size: int = 3,
+    ) -> None:
         """Extract contextual usage examples for a term using pre-computed positions.
 
         Args:
@@ -346,13 +431,10 @@ class TerminologyExtractor:
             start = max(0, token_pos - window_size)
             end = min(len(tokens), token_pos + window_size + 1)
             context_tokens = tokens[start:end]
-            context = ' '.join(context_tokens)
+            context = " ".join(context_tokens)
 
             # Highlight the term
-            highlighted_context = context.replace(
-                term.text,
-                f"**{term.text}**"
-            )
+            highlighted_context = context.replace(term.text, f"**{term.text}**")
 
             term.add_context(highlighted_context)
 
@@ -384,7 +466,7 @@ class TerminologyExtractor:
             confidence += 0.1
 
         # Linguistic pattern confidence
-        if any(pattern in term.text for pattern in ['_', '-', ' ']):
+        if any(pattern in term.text for pattern in ["_", "-", " "]):
             confidence += 0.2
 
         # Context availability
@@ -399,29 +481,32 @@ class TerminologyExtractor:
         Returns:
             Dictionary with domain statistics
         """
-        domain_stats = defaultdict(lambda: {
-            'term_count': 0,
-            'total_frequency': 0,
-            'avg_confidence': 0.0,
-            'terms': []
-        })
+        domain_stats = defaultdict(
+            lambda: {
+                "term_count": 0,
+                "total_frequency": 0,
+                "avg_confidence": 0.0,
+                "terms": [],
+            }
+        )
 
         for term in self.extracted_terms.values():
             for domain in term.domains:
-                domain_stats[domain]['term_count'] += 1
-                domain_stats[domain]['total_frequency'] += term.frequency
-                domain_stats[domain]['avg_confidence'] += term.confidence
-                domain_stats[domain]['terms'].append(term.text)
+                domain_stats[domain]["term_count"] += 1
+                domain_stats[domain]["total_frequency"] += term.frequency
+                domain_stats[domain]["avg_confidence"] += term.confidence
+                domain_stats[domain]["terms"].append(term.text)
 
         # Calculate averages
         for stats in domain_stats.values():
-            if stats['term_count'] > 0:
-                stats['avg_confidence'] /= stats['term_count']
+            if stats["term_count"] > 0:
+                stats["avg_confidence"] /= stats["term_count"]
 
         return dict(domain_stats)
 
-    def find_term_cooccurrences(self, term1: str, term2: str,
-                               texts: List[str], window_size: int = 10) -> int:
+    def find_term_cooccurrences(
+        self, term1: str, term2: str, texts: List[str], window_size: int = 10
+    ) -> int:
         """Find co-occurrence frequency of two terms.
 
         Args:
@@ -459,24 +544,36 @@ class TerminologyExtractor:
         """
         import csv
 
-        with open(filepath, 'w', newline='', encoding='utf-8') as csvfile:
-            fieldnames = ['term', 'lemma', 'domains', 'frequency', 'confidence', 'contexts']
+        with open(filepath, "w", newline="", encoding="utf-8") as csvfile:
+            fieldnames = [
+                "term",
+                "lemma",
+                "domains",
+                "frequency",
+                "confidence",
+                "contexts",
+            ]
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
             writer.writeheader()
             for term in self.extracted_terms.values():
-                writer.writerow({
-                    'term': term.text,
-                    'lemma': term.lemma,
-                    'domains': ';'.join(term.domains),
-                    'frequency': term.frequency,
-                    'confidence': term.confidence,
-                    'contexts': '|'.join(term.contexts[:3])  # Limit contexts for CSV
-                })
+                writer.writerow(
+                    {
+                        "term": term.text,
+                        "lemma": term.lemma,
+                        "domains": ";".join(term.domains),
+                        "frequency": term.frequency,
+                        "confidence": term.confidence,
+                        "contexts": "|".join(
+                            term.contexts[:3]
+                        ),  # Limit contexts for CSV
+                    }
+                )
 
 
-def create_domain_seed_expansion(extractor: TerminologyExtractor,
-                               corpus_terms: Dict[str, Term]) -> Dict[str, Set[str]]:
+def create_domain_seed_expansion(
+    extractor: TerminologyExtractor, corpus_terms: Dict[str, Term]
+) -> Dict[str, Set[str]]:
     """Expand domain seed terms using corpus analysis.
 
     Args:
@@ -492,7 +589,9 @@ def create_domain_seed_expansion(extractor: TerminologyExtractor,
         expanded_seeds[domain] = set(original_seeds)
 
         # Find corpus terms in this domain
-        domain_terms = [term for term in corpus_terms.values() if domain in term.domains]
+        domain_terms = [
+            term for term in corpus_terms.values() if domain in term.domains
+        ]
 
         # Add high-confidence, high-frequency terms
         for term in domain_terms:

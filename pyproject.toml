@@ -45,17 +45,20 @@ dependencies = [
   "pillow>=10.0.0",
   "reportlab>=4.0.0",
   "plotly>=5.0.0",  # Interactive dashboard generation
+  "scipy>=1.10.0",  # Scientific computing (active_inference project)
+  "pandas>=2.0.0",  # Data analysis (active_inference project)
+  "seaborn>=0.13.0", # Visualization library (cogsec projects)
 ]
 
 [project.scripts]
 # Development workflow scripts (run with: uv run <script-name>)
-test = "pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov=projects/prose_project/src --cov-report=html --cov-fail-under=70"
+test = "pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov-report=html --cov-fail-under=70"
 test-infra = "pytest tests/infrastructure/ --cov=infrastructure --cov-report=term-missing --cov-report=html --cov-report=json --cov-fail-under=60 --tb=short -m 'not requires_ollama' --ignore=tests/infrastructure/core/test_module_interoperability.py"
-test-project = "pytest projects/code_project/tests/ projects/prose_project/tests/ --cov=projects/code_project/src --cov=projects/prose_project/src --cov-report=term-missing --cov-report=html --cov-report=json --cov-fail-under=90 --tb=short"
-lint = "mypy infrastructure/ projects/code_project/src/ projects/prose_project/src/"
-security = "bandit -r infrastructure/ projects/code_project/src/ projects/prose_project/src/"
-format = "black infrastructure/ projects/code_project/src/ projects/prose_project/src/"
-type-check = "mypy --strict infrastructure/ projects/code_project/src/ projects/prose_project/src/"
+test-project = "pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=term-missing --cov-report=html --cov-report=json --cov-fail-under=90 --tb=short"
+lint = "mypy infrastructure/ projects/code_project/src/"
+security = "bandit -r infrastructure/ projects/code_project/src/"
+format = "black infrastructure/ projects/code_project/src/"
+type-check = "mypy --strict infrastructure/ projects/code_project/src/"
 
 [dependency-groups]
 # Development dependencies (replaces deprecated tool.uv.dev-dependencies)
@@ -77,19 +80,24 @@ package = false  # This is not a distributable package
 
 [tool.uv.workspace]
 # Workspace configuration for multi-project support
+# Supports both standalone projects and nested projects within program directories
 members = [
-    "projects/prose_project",
-    "projects/code_project"
+    "projects/code_project",
+    "projects/cognitive_integrity/cogsec_multiagent_1_theory",
+    "projects/cognitive_integrity/cogsec_multiagent_2_computational",
+    "projects/cognitive_integrity/cogsec_multiagent_3_practical"
 ]
 exclude = [
     "projects/*/output",
+    "projects/*/*/output",
     "output"
 ]
 
+
 [tool.pytest.ini_options]
 # Pytest configuration (consolidated from pytest.ini)
-pythonpath = [".", "infrastructure", "projects/code_project/src", "projects/prose_project/src"]
-testpaths = ["tests", "projects/code_project/tests", "projects/prose_project/tests"]
+pythonpath = [".", "infrastructure", "projects/code_project/src"]
+testpaths = ["tests", "projects/code_project/tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
@@ -123,7 +131,7 @@ filterwarnings = [
 #   - Infrastructure tests: --cov-datafile=.coverage.infra
 #   - Project tests: --cov-datafile=.coverage.project
 branch = true
-source = ["infrastructure", "projects/code_project/src", "projects/prose_project/src"]
+source = ["infrastructure", "projects/code_project/src"]
 omit = [
     "*/tests/*",
     "*/test_*",

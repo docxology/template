@@ -10,6 +10,10 @@ import os
 import sys
 from typing import Tuple
 
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
+
 
 def _repo_root() -> str:
     return os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -57,9 +61,12 @@ def main() -> int:
     # Add repo root to path so infrastructure can be imported
     sys.path.insert(0, repo)
     try:
-        from infrastructure.documentation.glossary_gen import build_api_index, generate_markdown_table, inject_between_markers  # type: ignore
+        from infrastructure.documentation.glossary_gen import (  # type: ignore
+            build_api_index, generate_markdown_table, inject_between_markers)
     except Exception as exc:
-        print(f"Failed to import glossary_gen from infrastructure/documentation/: {exc}")
+        logger.error(
+            "Failed to import glossary_gen from infrastructure/documentation/: %s", exc
+        )
         return 1
 
     with open(glossary_md, "r", encoding="utf-8") as fh:
@@ -74,9 +81,9 @@ def main() -> int:
     if new_text != text:
         with open(glossary_md, "w", encoding="utf-8") as fh:
             fh.write(new_text)
-        print(f"Updated glossary: {glossary_md}")
+        logger.info("Updated glossary: %s", glossary_md)
     else:
-        print("Glossary up-to-date")
+        logger.info("Glossary up-to-date")
     return 0
 
 

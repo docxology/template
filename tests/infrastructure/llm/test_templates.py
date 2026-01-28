@@ -1,12 +1,10 @@
 import pytest
-from infrastructure.llm.templates import (
-    get_template,
-    LLMTemplateError,
-    SummarizeAbstract,
-    ManuscriptTranslationAbstract,
-    TRANSLATION_LANGUAGES,
-    REVIEW_MIN_WORDS,
-)
+
+from infrastructure.llm.templates import (REVIEW_MIN_WORDS,
+                                          TRANSLATION_LANGUAGES,
+                                          LLMTemplateError,
+                                          ManuscriptTranslationAbstract,
+                                          SummarizeAbstract, get_template)
 
 
 class TestGetTemplate:
@@ -47,8 +45,10 @@ class TestManuscriptTranslationAbstract:
     def test_render_with_language(self):
         """Test template renders correctly with target language."""
         tmpl = ManuscriptTranslationAbstract()
-        result = tmpl.render(text="Sample manuscript text", target_language="Chinese (Simplified)")
-        
+        result = tmpl.render(
+            text="Sample manuscript text", target_language="Chinese (Simplified)"
+        )
+
         assert "Sample manuscript text" in result
         assert "Chinese (Simplified)" in result
         assert "MANUSCRIPT BEGIN" in result
@@ -58,7 +58,7 @@ class TestManuscriptTranslationAbstract:
     def test_render_with_different_languages(self):
         """Test template works with all supported languages."""
         tmpl = ManuscriptTranslationAbstract()
-        
+
         for lang_code, lang_name in TRANSLATION_LANGUAGES.items():
             result = tmpl.render(text="Test content", target_language=lang_name)
             assert lang_name in result
@@ -80,7 +80,7 @@ class TestManuscriptTranslationAbstract:
         """Test template contains required structure elements."""
         tmpl = ManuscriptTranslationAbstract()
         result = tmpl.render(text="Content", target_language="Russian")
-        
+
         # Check required instruction elements
         assert "MANUSCRIPT BEGIN" in result
         assert "MANUSCRIPT END" in result
@@ -151,4 +151,3 @@ def test_render_missing_var():
     tmpl = SummarizeAbstract()
     with pytest.raises(LLMTemplateError):
         tmpl.render()  # Missing 'text'
-

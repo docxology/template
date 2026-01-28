@@ -6,9 +6,10 @@ including DOI validation, citation generation, and metadata handling.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-import pytest
-from pathlib import Path
 import json
+from pathlib import Path
+
+import pytest
 
 # Import the module to test
 from infrastructure import publishing
@@ -20,7 +21,8 @@ class TestPublicationMetadata:
     def test_extract_publication_metadata_complete_document(self, tmp_path):
         """Test metadata extraction from complete document."""
         md_file = tmp_path / "test.md"
-        md_file.write_text("""
+        md_file.write_text(
+            """
         # Advanced Optimization Framework
 
         **Dr. Jane Smith, Dr. John Doe**
@@ -36,7 +38,8 @@ class TestPublicationMetadata:
         # Abstract
 
         This research presents a novel optimization framework.
-        """)
+        """
+        )
 
         metadata = publishing.extract_publication_metadata([md_file])
 
@@ -56,7 +59,10 @@ class TestPublicationMetadata:
 
         assert metadata.title == "Simple Title"
         assert metadata.authors == ["Template Author"]  # Default
-        assert metadata.abstract == "A comprehensive template for research projects with test-driven development and automated PDF generation."  # Default
+        assert (
+            metadata.abstract
+            == "A comprehensive template for research projects with test-driven development and automated PDF generation."
+        )  # Default
 
 
 class TestDOIValidation:
@@ -67,7 +73,7 @@ class TestDOIValidation:
         valid_dois = [
             "10.5281/zenodo.12345678",
             "10.1000/182.2024.001",
-            "10.1038/s41586-018-0658-2"
+            "10.1038/s41586-018-0658-2",
         ]
 
         for doi in valid_dois:
@@ -79,7 +85,7 @@ class TestDOIValidation:
             "",
             "invalid-doi",
             "doi:10.5281/zenodo.12345678",
-            "10.5281/zenodo.12345678/extra"
+            "10.5281/zenodo.12345678/extra",
         ]
 
         for doi in invalid_dois:
@@ -95,7 +101,7 @@ class TestCitationGeneration:
             title="Test Paper",
             authors=["Dr. Jane Smith", "Dr. John Doe"],
             abstract="Test abstract",
-            keywords=["test", "research"]
+            keywords=["test", "research"],
         )
 
         bibtex = publishing.generate_citation_bibtex(metadata)
@@ -112,7 +118,7 @@ class TestCitationGeneration:
             authors=["Dr. Jane Smith", "Dr. John Doe"],
             abstract="Test abstract for APA citation",
             keywords=["test", "research"],
-            publication_date="2024-10-22"
+            publication_date="2024-10-22",
         )
 
         apa = publishing.generate_citation_apa(metadata)
@@ -128,7 +134,7 @@ class TestCitationGeneration:
             title="Test Paper",
             authors=["Dr. Jane Smith", "Dr. John Doe"],
             abstract="Test abstract for MLA citation",
-            keywords=["test", "research"]
+            keywords=["test", "research"],
         )
 
         mla = publishing.generate_citation_mla(metadata)
@@ -148,7 +154,7 @@ class TestCitationMarkdown:
             authors=["Dr. Jane Smith"],
             abstract="Test abstract",
             keywords=["test"],
-            doi="10.5281/zenodo.12345678"
+            doi="10.5281/zenodo.12345678",
         )
 
         markdown = publishing.generate_citations_markdown(metadata)
@@ -177,15 +183,15 @@ class TestPublicationPackage:
             title="Test Paper",
             authors=["Dr. Jane Smith"],
             abstract="Test abstract",
-            keywords=["test", "research"]
+            keywords=["test", "research"],
         )
 
         package_info = publishing.create_publication_package(tmp_path, metadata)
 
-        assert package_info['package_name'] != ""
-        assert 'files_included' in package_info
-        assert 'metadata' in package_info
-        assert 'package_hash' in package_info
+        assert package_info["package_name"] != ""
+        assert "files_included" in package_info
+        assert "metadata" in package_info
+        assert "package_hash" in package_info
 
 
 class TestSubmissionChecklist:
@@ -197,7 +203,7 @@ class TestSubmissionChecklist:
             title="Test Paper",
             authors=["Dr. Jane Smith"],
             abstract="Test abstract",
-            keywords=["test", "research"]
+            keywords=["test", "research"],
         )
 
         checklist = publishing.create_submission_checklist(metadata)
@@ -215,11 +221,13 @@ class TestCitationExtraction:
     def test_extract_citations_from_markdown(self, tmp_path):
         """Test extraction of citations from markdown files."""
         md_file = tmp_path / "test.md"
-        md_file.write_text("""
+        md_file.write_text(
+            """
         See related work \\cite{smith2023} and \\cite{johnson2024}.
 
         Also referenced in [1] and (2).
-        """)
+        """
+        )
 
         citations = publishing.extract_citations_from_markdown([md_file])
 
@@ -239,7 +247,7 @@ class TestPublicationSummary:
             authors=["Dr. Jane Smith"],
             abstract="This is a test abstract for the research paper.",
             keywords=["test", "research"],
-            doi="10.5281/zenodo.12345678"
+            doi="10.5281/zenodo.12345678",
         )
 
         summary = publishing.generate_publication_summary(metadata)
@@ -260,15 +268,15 @@ class TestAcademicProfile:
             authors=["Dr. Jane Smith"],
             abstract="Test abstract",
             keywords=["test"],
-            doi="10.5281/zenodo.12345678"
+            doi="10.5281/zenodo.12345678",
         )
 
         profile_data = publishing.create_academic_profile_data(metadata)
 
-        assert profile_data['title'] == metadata.title
-        assert profile_data['authors'] == metadata.authors
-        assert 'identifiers' in profile_data
-        assert profile_data['identifiers'][0]['type'] == 'doi'
+        assert profile_data["title"] == metadata.title
+        assert profile_data["authors"] == metadata.authors
+        assert "identifiers" in profile_data
+        assert profile_data["identifiers"][0]["type"] == "doi"
 
 
 class TestPublicationReadiness:
@@ -277,7 +285,8 @@ class TestPublicationReadiness:
     def test_validate_publication_readiness_complete(self, tmp_path):
         """Test validation of complete publication-ready document."""
         md_file = tmp_path / "complete.md"
-        md_file.write_text("""
+        md_file.write_text(
+            """
         # Abstract
         Research summary.
 
@@ -297,15 +306,16 @@ class TestPublicationReadiness:
         Summary.
 
         References: [1], [2], [3]
-        """)
+        """
+        )
 
         pdf_file = tmp_path / "test.pdf"
         pdf_file.write_text("PDF content")
 
         readiness = publishing.validate_publication_readiness([md_file], [pdf_file])
 
-        assert readiness['ready_for_publication'] == True
-        assert readiness['completeness_score'] == 85.0
+        assert readiness["ready_for_publication"] == True
+        assert readiness["completeness_score"] == 85.0
 
     def test_validate_publication_readiness_incomplete(self, tmp_path):
         """Test validation of incomplete document."""
@@ -314,8 +324,8 @@ class TestPublicationReadiness:
 
         readiness = publishing.validate_publication_readiness([md_file], [])
 
-        assert readiness['ready_for_publication'] == False
-        assert readiness['completeness_score'] < 50
+        assert readiness["ready_for_publication"] == False
+        assert readiness["completeness_score"] < 50
 
 
 class TestPublicationMetrics:
@@ -327,16 +337,22 @@ class TestPublicationMetrics:
             title="A Very Long Title for Testing Publication Metrics and Analysis",
             authors=["Dr. Jane Smith", "Dr. John Doe", "Dr. Alice Johnson"],
             abstract="This is a comprehensive abstract that provides detailed information about the research methodology, experimental setup, results analysis, and conclusions drawn from the study. It includes multiple sentences to adequately test the metrics calculation functionality.",
-            keywords=["optimization", "machine learning", "algorithms", "research", "analysis"]
+            keywords=[
+                "optimization",
+                "machine learning",
+                "algorithms",
+                "research",
+                "analysis",
+            ],
         )
 
         metrics = publishing.generate_publication_metrics(metadata)
 
-        assert metrics['title_length'] == len(metadata.title)
-        assert metrics['abstract_length'] == len(metadata.abstract)
-        assert metrics['author_count'] == 3
-        assert metrics['keyword_count'] == 5
-        assert metrics['reading_time_minutes'] >= 1
+        assert metrics["title_length"] == len(metadata.title)
+        assert metrics["abstract_length"] == len(metadata.abstract)
+        assert metrics["author_count"] == 3
+        assert metrics["keyword_count"] == 5
+        assert metrics["reading_time_minutes"] >= 1
 
 
 class TestComplexityScoring:
@@ -348,7 +364,7 @@ class TestComplexityScoring:
             title="Simple Title",
             authors=["Author"],
             abstract="Short abstract",
-            keywords=["test"]
+            keywords=["test"],
         )
 
         score = publishing.calculate_complexity_score(metadata)
@@ -359,13 +375,27 @@ class TestComplexityScoring:
         """Test complexity scoring for complex publication."""
         metadata = publishing.PublicationMetadata(
             title="A Very Long and Complex Title for Testing Publication Complexity Analysis",
-            authors=["Dr. Jane Smith", "Dr. John Doe", "Dr. Alice Johnson", "Dr. Bob Wilson"],
+            authors=[
+                "Dr. Jane Smith",
+                "Dr. John Doe",
+                "Dr. Alice Johnson",
+                "Dr. Bob Wilson",
+            ],
             abstract="This is a very long and detailed abstract that includes comprehensive information about the research methodology, experimental setup, data analysis techniques, statistical methods, computational algorithms, performance evaluation metrics, and detailed conclusions drawn from extensive experimental validation across multiple datasets and evaluation scenarios. The research presents novel approaches to solving complex optimization problems through advanced machine learning techniques, incorporating deep neural networks, reinforcement learning algorithms, and ensemble methods. Our experimental framework encompasses extensive hyperparameter tuning, cross-validation procedures, and rigorous statistical significance testing to ensure robust and reproducible results.",
-            keywords=["optimization", "machine learning", "algorithms", "research", "analysis", "computation", "statistics", "validation"],
+            keywords=[
+                "optimization",
+                "machine learning",
+                "algorithms",
+                "research",
+                "analysis",
+                "computation",
+                "statistics",
+                "validation",
+            ],
             doi="10.5281/zenodo.12345678",
             journal="Journal of Machine Learning Research",
             publisher="ML Research Press",
-            publication_date="2024-10-22"
+            publication_date="2024-10-22",
         )
 
         score = publishing.calculate_complexity_score(metadata)
@@ -383,17 +413,17 @@ class TestRepositoryMetadata:
             authors=["Dr. Jane Smith"],
             abstract="Test abstract",
             keywords=["test"],
-            repository_url="https://github.com/user/repo"
+            repository_url="https://github.com/user/repo",
         )
 
         metadata_json = publishing.create_repository_metadata(metadata)
 
         data = json.loads(metadata_json)
 
-        assert data['@type'] == 'SoftwareSourceCode'
-        assert data['name'] == metadata.title
-        assert data['author'][0]['name'] == metadata.authors[0]
-        assert data['keywords'] == metadata.keywords
+        assert data["@type"] == "SoftwareSourceCode"
+        assert data["name"] == metadata.title
+        assert data["author"][0]["name"] == metadata.authors[0]
+        assert data["keywords"] == metadata.keywords
 
 
 class TestEdgeCases:
@@ -416,7 +446,7 @@ class TestEdgeCases:
             title="Test Paper",
             authors=["Author"],
             abstract="Abstract",
-            keywords=["test"]
+            keywords=["test"],
         )
 
         markdown = publishing.generate_citations_markdown(metadata)
@@ -451,7 +481,9 @@ class TestEdgeCases:
 
         metadata = publishing.extract_publication_metadata([md_file])
         # Should skip template content
-        assert metadata.title == "Research Project Template"  # Default, template content skipped
+        assert (
+            metadata.title == "Research Project Template"
+        )  # Default, template content skipped
 
     def test_extract_publication_metadata_author_with_title(self, tmp_path):
         """Test metadata extraction with author containing title."""
@@ -481,15 +513,12 @@ class TestEdgeCases:
     def test_create_publication_package_no_pdf_dir(self, tmp_path):
         """Test publication package creation without PDF directory."""
         metadata = publishing.PublicationMetadata(
-            title="Test",
-            authors=["Author"],
-            abstract="Abstract",
-            keywords=["test"]
+            title="Test", authors=["Author"], abstract="Abstract", keywords=["test"]
         )
 
         package_info = publishing.create_publication_package(tmp_path, metadata)
-        assert 'package_hash' in package_info
-        assert len(package_info['files_included']) >= 0
+        assert "package_hash" in package_info
+        assert len(package_info["files_included"]) >= 0
 
     def test_create_publication_package_with_pdfs(self, tmp_path):
         """Test publication package creation with PDFs."""
@@ -498,14 +527,11 @@ class TestEdgeCases:
         (pdf_dir / "paper.pdf").write_text("PDF content")
 
         metadata = publishing.PublicationMetadata(
-            title="Test",
-            authors=["Author"],
-            abstract="Abstract",
-            keywords=["test"]
+            title="Test", authors=["Author"], abstract="Abstract", keywords=["test"]
         )
 
         package_info = publishing.create_publication_package(tmp_path, metadata)
-        assert any("paper.pdf" in f for f in package_info['files_included'])
+        assert any("paper.pdf" in f for f in package_info["files_included"])
 
     def test_create_publication_package_hash_exception(self, tmp_path):
         """Test publication package creation with hash exception."""
@@ -514,42 +540,39 @@ class TestEdgeCases:
         (pdf_dir / "paper.pdf").write_text("PDF content")
 
         metadata = publishing.PublicationMetadata(
-            title="Test",
-            authors=["Author"],
-            abstract="Abstract",
-            keywords=["test"]
+            title="Test", authors=["Author"], abstract="Abstract", keywords=["test"]
         )
 
         # Use real hash calculation
         package_info = publishing.create_publication_package(tmp_path, metadata)
         # Should have package_hash (may be None or a hash string)
-        assert 'package_hash' in package_info
+        assert "package_hash" in package_info
 
     def test_generate_doi_badge_zenodo(self):
         """Test DOI badge generation with zenodo style."""
         doi = "10.5281/zenodo.12345678"
-        badge = publishing.generate_doi_badge(doi, style='zenodo')
+        badge = publishing.generate_doi_badge(doi, style="zenodo")
         assert "zenodo.org/badge/DOI" in badge
         assert doi in badge
 
     def test_generate_doi_badge_github(self):
         """Test DOI badge generation with github style."""
         doi = "10.5281/zenodo.12345678"
-        badge = publishing.generate_doi_badge(doi, style='github')
+        badge = publishing.generate_doi_badge(doi, style="github")
         assert "img.shields.io" in badge
         assert doi in badge
 
     def test_generate_doi_badge_shields(self):
         """Test DOI badge generation with shields style."""
         doi = "10.5281/zenodo.12345678"
-        badge = publishing.generate_doi_badge(doi, style='shields')
+        badge = publishing.generate_doi_badge(doi, style="shields")
         assert "shields.io" in badge
-        assert doi.replace('/', '%2F') in badge
+        assert doi.replace("/", "%2F") in badge
 
     def test_generate_doi_badge_default(self):
         """Test DOI badge generation with default style."""
         doi = "10.5281/zenodo.12345678"
-        badge = publishing.generate_doi_badge(doi, style='unknown')
+        badge = publishing.generate_doi_badge(doi, style="unknown")
         assert "DOI" in badge
         assert doi in badge
 
@@ -560,7 +583,7 @@ class TestEdgeCases:
             authors=["Dr. Jane Smith"],
             abstract="Test abstract",
             keywords=["test"],
-            doi="10.5281/zenodo.12345678"
+            doi="10.5281/zenodo.12345678",
         )
 
         announcement = publishing.create_publication_announcement(metadata)
@@ -575,7 +598,7 @@ class TestEdgeCases:
             authors=["Author"],
             abstract="Abstract",
             keywords=["test"],
-            repository_url="https://github.com/user/repo"
+            repository_url="https://github.com/user/repo",
         )
 
         announcement = publishing.create_publication_announcement(metadata)
@@ -588,7 +611,7 @@ class TestEdgeCases:
             title="Test Paper",
             authors=["Author"],
             abstract="Abstract",
-            keywords=["test"]
+            keywords=["test"],
         )
 
         announcement = publishing.create_publication_announcement(metadata)
@@ -601,8 +624,8 @@ class TestEdgeCases:
         md_file.write_text("# Test\n\nJust some content.")
 
         readiness = publishing.validate_publication_readiness([md_file], [])
-        assert readiness['ready_for_publication'] == False
-        assert readiness['completeness_score'] < 100
+        assert readiness["ready_for_publication"] == False
+        assert readiness["completeness_score"] < 100
 
     def test_validate_publication_readiness_no_pdfs(self, tmp_path):
         """Test publication readiness validation without PDFs."""
@@ -610,7 +633,7 @@ class TestEdgeCases:
         md_file.write_text("# Test\n\n# Abstract\n\nAbstract text.")
 
         readiness = publishing.validate_publication_readiness([md_file], [])
-        assert readiness['ready_for_publication'] == False
+        assert readiness["ready_for_publication"] == False
 
     def test_generate_publication_metrics_complex(self):
         """Test publication metrics for complex publication."""
@@ -618,13 +641,13 @@ class TestEdgeCases:
             title="A Very Long Title",
             authors=["Author 1", "Author 2", "Author 3", "Author 4"],
             abstract="A very long abstract " * 20,
-            keywords=["kw1", "kw2", "kw3", "kw4", "kw5", "kw6"]
+            keywords=["kw1", "kw2", "kw3", "kw4", "kw5", "kw6"],
         )
 
         metrics = publishing.generate_publication_metrics(metadata)
-        assert metrics['author_count'] == 4
-        assert metrics['keyword_count'] == 6
-        assert metrics['reading_time_minutes'] > 0
+        assert metrics["author_count"] == 4
+        assert metrics["keyword_count"] == 6
+        assert metrics["reading_time_minutes"] > 0
 
     def test_create_academic_profile_data_with_doi(self):
         """Test academic profile data creation with DOI."""
@@ -633,14 +656,14 @@ class TestEdgeCases:
             authors=["Author"],
             abstract="Abstract",
             keywords=["test"],
-            doi="10.5281/zenodo.12345678"
+            doi="10.5281/zenodo.12345678",
         )
 
         profile_data = publishing.create_academic_profile_data(metadata)
-        
-        assert 'identifiers' in profile_data
-        assert profile_data['identifiers'][0]['type'] == 'doi'
-        assert profile_data['identifiers'][0]['value'] == metadata.doi
+
+        assert "identifiers" in profile_data
+        assert profile_data["identifiers"][0]["type"] == "doi"
+        assert profile_data["identifiers"][0]["value"] == metadata.doi
 
     def test_create_academic_profile_data_software_type(self):
         """Test academic profile data with software type."""
@@ -648,12 +671,12 @@ class TestEdgeCases:
             title="Research Project Template",
             authors=["Author"],
             abstract="Abstract",
-            keywords=["test"]
+            keywords=["test"],
         )
 
         profile_data = publishing.create_academic_profile_data(metadata)
-        
-        assert profile_data['publication_type'] == 'software'
+
+        assert profile_data["publication_type"] == "software"
 
     def test_create_academic_profile_data_article_type(self):
         """Test academic profile data with article type."""
@@ -661,12 +684,12 @@ class TestEdgeCases:
             title="Novel Algorithm for Optimization",
             authors=["Author"],
             abstract="Abstract",
-            keywords=["test"]
+            keywords=["test"],
         )
 
         profile_data = publishing.create_academic_profile_data(metadata)
-        
-        assert profile_data['publication_type'] == 'article'
+
+        assert profile_data["publication_type"] == "article"
 
 
 class TestDissemination:
@@ -677,45 +700,45 @@ class TestDissemination:
     @pytest.mark.requires_credentials
     def test_publish_to_zenodo(self, tmp_path, zenodo_credentials):
         """Test Zenodo publication workflow with real API calls.
-        
+
         This test creates a real deposition on Zenodo sandbox, uploads a file,
         and then deletes the deposition for cleanup.
         """
         from infrastructure.publishing.api import ZenodoClient
-        
+
         # Create test PDF file
         file_path = tmp_path / "test_paper.pdf"
         file_path.write_text("%PDF-1.4\nTest PDF content for Zenodo upload test")
-        
+
         # Initialize Zenodo client with real credentials
         client = ZenodoClient(
             access_token=zenodo_credentials["token"],
-            use_sandbox=zenodo_credentials["use_sandbox"]
+            use_sandbox=zenodo_credentials["use_sandbox"],
         )
-        
+
         # Test metadata
         metadata = publishing.PublicationMetadata(
             title="Test Publication for Automated Testing",
             authors=["Test Author"],
             abstract="This is a test publication created by automated tests. It will be deleted automatically.",
-            keywords=["test", "automated"]
+            keywords=["test", "automated"],
         )
-        
+
         deposition_id = None
         try:
             # 1. Create deposition
             deposition_id = client.create_deposition(metadata)
             assert deposition_id is not None
             assert isinstance(deposition_id, str)
-            
+
             # 2. Upload file
             client.upload_file(deposition_id, str(file_path))
-            
+
             # 3. Publish (on sandbox, this is safe)
             doi = client.publish(deposition_id)
             assert doi is not None
             assert doi.startswith("10.5281/zenodo.")
-            
+
         finally:
             # Cleanup: Delete the test deposition
             if deposition_id:
@@ -723,7 +746,9 @@ class TestDissemination:
                     client.delete_deposition(deposition_id)
                 except Exception as e:
                     # Log but don't fail test if cleanup fails
-                    print(f"Warning: Failed to delete test deposition {deposition_id}: {e}")
+                    print(
+                        f"Warning: Failed to delete test deposition {deposition_id}: {e}"
+                    )
 
     def test_prepare_arxiv_submission(self, tmp_path):
         """Test arXiv submission preparation."""
@@ -732,31 +757,31 @@ class TestDissemination:
         output_dir.mkdir()
         pdf_dir = output_dir / "pdf"
         pdf_dir.mkdir()
-        
+
         # Mock manuscript directory
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
         (manuscript_dir / "main.tex").touch()
         (manuscript_dir / "ref.bib").touch()
         (manuscript_dir / "ignored.txt").touch()
-        
+
         # Mock bbl file
         (pdf_dir / "Test_Paper.bbl").touch()
-        
+
         # Hack to handle parent directory resolution in test
         # The function uses output_dir.parent / "manuscript"
         # In this test, output_dir is tmp_path/output, so parent is tmp_path.
         # manuscript_dir is tmp_path/manuscript. So it works.
-        
+
         metadata = publishing.PublicationMetadata(
             title="Test Paper",
             authors=["Author"],
             abstract="Abstract",
-            keywords=["key"]
+            keywords=["key"],
         )
-        
+
         tar_path = publishing.prepare_arxiv_submission(output_dir, metadata)
-        
+
         assert tar_path.exists()
         assert tar_path.name.endswith(".tar.gz")
 
@@ -765,34 +790,39 @@ class TestDissemination:
     @pytest.mark.requires_credentials
     def test_create_github_release_alt(self, tmp_path, github_credentials):
         """Test GitHub release creation with real API calls (alternative test).
-        
+
         This is an additional test for GitHub release functionality.
         """
-        import requests
         import time
-        
+
+        import requests
+
         # Create test artifact
         asset = tmp_path / "asset.pdf"
         asset.write_text("%PDF-1.4\nTest asset for GitHub release")
-        
+
         # Generate unique tag
         tag = f"test-alt-{int(time.time())}"
-        
+
         release_id = None
         try:
             url = publishing.create_github_release(
-                tag, "Test Release Alt", "Test Description", 
-                [asset], github_credentials["token"], github_credentials["repository"]
+                tag,
+                "Test Release Alt",
+                "Test Description",
+                [asset],
+                github_credentials["token"],
+                github_credentials["repository"],
             )
-            
+
             assert url is not None
             assert "github.com" in url
-            
+
             # Get release ID for cleanup
             api_url = f"{github_credentials['api_url']}/repos/{github_credentials['repository']}/releases/tags/{tag}"
             headers = {
                 "Authorization": f"token {github_credentials['token']}",
-                "Accept": "application/vnd.github.v3+json"
+                "Accept": "application/vnd.github.v3+json",
             }
             response = requests.get(api_url, headers=headers)
             if response.status_code == 200:

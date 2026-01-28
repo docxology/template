@@ -16,10 +16,10 @@ from __future__ import annotations
 
 import argparse
 import os
-import sys
 import subprocess
+import sys
 from pathlib import Path
-from typing import List, Tuple, Dict, Any, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 # Ensure src/ and repo root are on path
 project_root = Path(__file__).parent.parent
@@ -28,17 +28,10 @@ sys.path.insert(0, str(project_root / "src"))
 sys.path.insert(0, str(repo_root))
 
 # Local logging
-from src.utils.logging import (
-    get_logger,
-    log_stage,
-    log_substep,
-    log_progress_bar,
-)
-from src.utils.reporting import (
-    generate_pipeline_report,
-    save_pipeline_report,
-    get_error_aggregator,
-)
+from src.utils.logging import (get_logger, log_progress_bar, log_stage,
+                               log_substep)
+from src.utils.reporting import (generate_pipeline_report,
+                                 get_error_aggregator, save_pipeline_report)
 from src.utils.validation import verify_output_integrity
 
 logger = get_logger(__name__)
@@ -62,7 +55,7 @@ Examples:
 
   # Run with custom corpus
   python3 scripts/analysis_pipeline.py --corpus-file /path/to/corpus.json
-        """
+        """,
     )
 
     # Define analysis stages
@@ -73,7 +66,7 @@ Examples:
         "domain_analysis",
         "discourse_analysis",
         "visualization",
-        "reporting"
+        "reporting",
     ]
 
     parser.add_argument(
@@ -106,15 +99,21 @@ Examples:
 
     return parser.parse_args(), stage_names
 
+
 # Import infrastructure modules
 from infrastructure.documentation.figure_manager import FigureManager
+
 # Directory creation handled inline
 
 logger.info("Ento-Linguistic Analysis Pipeline initialized")
 
 
-def run_analysis_stage(stage_name: str, corpus_file: Optional[Path] = None,
-                      output_dir: Optional[Path] = None, dry_run: bool = False) -> bool:
+def run_analysis_stage(
+    stage_name: str,
+    corpus_file: Optional[Path] = None,
+    output_dir: Optional[Path] = None,
+    dry_run: bool = False,
+) -> bool:
     """Run a specific Ento-Linguistic analysis stage.
 
     Args:
@@ -133,33 +132,33 @@ def run_analysis_stage(stage_name: str, corpus_file: Optional[Path] = None,
         >>> success = run_analysis_stage("literature_mining", dry_run=True)
         >>> print(f"Stage would {'succeed' if success else 'fail'}")
     """
-    logger.debug(f"run_analysis_stage() entry: stage_name={stage_name}, corpus_file={corpus_file}, output_dir={output_dir}, dry_run={dry_run}")
+    logger.debug(
+        f"run_analysis_stage() entry: stage_name={stage_name}, corpus_file={corpus_file}, output_dir={output_dir}, dry_run={dry_run}"
+    )
 
     script_commands = {
         "literature_mining": [
-            sys.executable, "scripts/literature_analysis_pipeline.py",
-            "--max-publications", "500"
+            sys.executable,
+            "scripts/literature_analysis_pipeline.py",
+            "--max-publications",
+            "500",
         ],
         "terminology_extraction": [
-            sys.executable, "scripts/literature_analysis_pipeline.py",
-            "--max-publications", "500"
+            sys.executable,
+            "scripts/literature_analysis_pipeline.py",
+            "--max-publications",
+            "500",
         ],
-        "conceptual_mapping": [
-            sys.executable, "scripts/conceptual_mapping_script.py"
-        ],
-        "domain_analysis": [
-            sys.executable, "scripts/domain_analysis_script.py", "all"
-        ],
-        "discourse_analysis": [
-            sys.executable, "scripts/discourse_analysis_script.py"
-        ],
-        "visualization": [
-            sys.executable, "scripts/generate_domain_figures.py", "all"
-        ],
+        "conceptual_mapping": [sys.executable, "scripts/conceptual_mapping_script.py"],
+        "domain_analysis": [sys.executable, "scripts/domain_analysis_script.py", "all"],
+        "discourse_analysis": [sys.executable, "scripts/discourse_analysis_script.py"],
+        "visualization": [sys.executable, "scripts/generate_domain_figures.py", "all"],
         "reporting": [
-            sys.executable, "scripts/literature_analysis_pipeline.py",
-            "--max-publications", "500"
-        ]
+            sys.executable,
+            "scripts/literature_analysis_pipeline.py",
+            "--max-publications",
+            "500",
+        ],
     }
 
     # Validate inputs
@@ -167,13 +166,19 @@ def run_analysis_stage(stage_name: str, corpus_file: Optional[Path] = None,
         error_msg = f"Unknown stage: {stage_name}"
         logger.error(error_msg)
         logger.error(f"Available stages: {list(script_commands.keys())}")
-        logger.error("Suggestion: Use one of the available stage names, or 'all' to run all stages")
+        logger.error(
+            "Suggestion: Use one of the available stage names, or 'all' to run all stages"
+        )
         return False
 
     command = script_commands[stage_name]
 
     # Add corpus file if specified
-    if corpus_file and stage_name in ["literature_mining", "terminology_extraction", "conceptual_mapping"]:
+    if corpus_file and stage_name in [
+        "literature_mining",
+        "terminology_extraction",
+        "conceptual_mapping",
+    ]:
         command.extend(["--corpus-file", str(corpus_file)])
 
     # Add output directory if specified
@@ -187,19 +192,25 @@ def run_analysis_stage(stage_name: str, corpus_file: Optional[Path] = None,
 
     try:
         log_substep(f"Running {stage_name} stage", logger)
-        result = subprocess.run(command, cwd=project_root, capture_output=True, text=True)
+        result = subprocess.run(
+            command, cwd=project_root, capture_output=True, text=True
+        )
 
         if result.returncode == 0:
             log_substep(f"✅ {stage_name} completed successfully", logger)
             if result.stdout:
                 logger.info(f"Output: {result.stdout.strip()}")
-            logger.debug(f"run_analysis_stage() exit: success, returncode={result.returncode}")
+            logger.debug(
+                f"run_analysis_stage() exit: success, returncode={result.returncode}"
+            )
             return True
         else:
             log_substep(f"❌ {stage_name} failed with code {result.returncode}", logger)
             if result.stderr:
                 logger.error(f"Error: {result.stderr.strip()}")
-            logger.debug(f"run_analysis_stage() exit: failure, returncode={result.returncode}")
+            logger.debug(
+                f"run_analysis_stage() exit: failure, returncode={result.returncode}"
+            )
             return False
 
     except Exception as e:
@@ -246,7 +257,7 @@ def main() -> None:
             stage,
             corpus_file=args.corpus_file,
             output_dir=output_dir,
-            dry_run=args.dry_run
+            dry_run=args.dry_run,
         )
 
         results[stage] = "success" if success else "failed"
@@ -284,4 +295,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

@@ -5,6 +5,7 @@ extracted from the bash run.sh script into testable Python code.
 
 Part of the infrastructure layer (Layer 1) - reusable across all projects.
 """
+
 from __future__ import annotations
 
 import logging
@@ -15,9 +16,12 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Optional
 
-from infrastructure.core.logging_utils import get_logger, log_operation, log_stage_with_eta, setup_logger
 from infrastructure.core.checkpoint import CheckpointManager, StageResult
-from infrastructure.core.environment import get_python_command, get_subprocess_env
+from infrastructure.core.environment import (get_python_command,
+                                             get_subprocess_env)
+from infrastructure.core.logging_utils import (get_logger, log_operation,
+                                               log_stage_with_eta,
+                                               setup_logger)
 
 logger = get_logger(__name__)
 
@@ -25,6 +29,7 @@ logger = get_logger(__name__)
 @dataclass
 class PipelineConfig:
     """Configuration for pipeline execution."""
+
     project_name: str
     repo_root: Path
     clean: bool = True
@@ -37,6 +42,7 @@ class PipelineConfig:
 @dataclass
 class PipelineStageResult:
     """Result from a pipeline stage execution."""
+
     stage_num: int
     stage_name: str
     success: bool
@@ -60,59 +66,64 @@ class PipelineExecutor:
         """
         self.config = config
         self.checkpoint_manager = CheckpointManager(project_name=config.project_name)
-        
+
         # Define log file path (will be created by _setup_log_file_handler)
-        log_dir = config.repo_root / 'projects' / config.project_name / 'output' / 'logs'
-        log_file = log_dir / 'pipeline.log'
+        log_dir = (
+            config.repo_root / "projects" / config.project_name / "output" / "logs"
+        )
+        log_file = log_dir / "pipeline.log"
         self.log_file = log_file  # Store for later access
         self._log_handler: logging.FileHandler | None = None  # Track our file handler
-        
+
         # Set up log file handler initially
         # NOTE: This will be called again after clean stage to recreate the log file
         self._setup_log_file_handler()
 
     def _setup_log_file_handler(self) -> None:
         """Set up or recreate the log file handler.
-        
+
         Creates the log directory and file, and adds a file handler to the root
         logger. This method is idempotent - it removes any existing handler for
         this log file before creating a new one.
-        
+
         This is called both during initialization and after the clean stage runs,
         since the clean stage may delete the log file.
         """
         # Ensure log directory exists
         self.log_file.parent.mkdir(parents=True, exist_ok=True)
-        
+
         # Set up logger for this module
         setup_logger(__name__, log_file=self.log_file)
-        
+
         # Get root logger
         root_logger = logging.getLogger()
-        
+
         # Remove any existing file handler for this log file
         handlers_to_remove = [
-            h for h in root_logger.handlers
-            if isinstance(h, logging.FileHandler) and 
-               hasattr(h, 'baseFilename') and 
-               Path(h.baseFilename).resolve() == self.log_file.resolve()
+            h
+            for h in root_logger.handlers
+            if isinstance(h, logging.FileHandler)
+            and hasattr(h, "baseFilename")
+            and Path(h.baseFilename).resolve() == self.log_file.resolve()
         ]
         for handler in handlers_to_remove:
             handler.close()
             root_logger.removeHandler(handler)
             logger.debug(f"Removed existing log file handler: {handler.baseFilename}")
-        
+
         # Also track and close our own handler if it exists
         if self._log_handler is not None:
             try:
                 self._log_handler.close()
             except Exception:
                 pass
-        
+
         # Create new file handler
         self._log_handler = logging.FileHandler(self.log_file)
         # File logs without emojis, include logger name for context
-        file_formatter = logging.Formatter('[%(asctime)s] [%(levelname)s] [%(name)s] %(message)s')
+        file_formatter = logging.Formatter(
+            "[%(asctime)s] [%(levelname)s] [%(name)s] %(message)s"
+        )
         self._log_handler.setFormatter(file_formatter)
         root_logger.addHandler(self._log_handler)
         logger.debug(f"Set up log file handler: {self.log_file}")
@@ -130,15 +141,31 @@ class PipelineExecutor:
 
         stages: list[tuple] = []
         # Stage 0 (conceptually): clean output dirs unless resuming or disabled
-        stages.append(("Clean Output Directories", self._run_clean_outputs, (not self.config.clean) or self.config.resume))
+        stages.append(
+            (
+                "Clean Output Directories",
+                self._run_clean_outputs,
+                (not self.config.clean) or self.config.resume,
+            )
+        )
         stages.append(("Environment Setup", self._run_setup_environment))
-        stages.append(("Infrastructure Tests", self._run_infrastructure_tests, self.config.skip_infra))
+        stages.append(
+            (
+                "Infrastructure Tests",
+                self._run_infrastructure_tests,
+                self.config.skip_infra,
+            )
+        )
         stages.append(("Project Tests", self._run_project_tests))
         stages.append(("Project Analysis", self._run_analysis))
         stages.append(("PDF Rendering", self._run_pdf_rendering))
         stages.append(("Output Validation", self._run_validation))
-        stages.append(("LLM Scientific Review", self._run_llm_review, self.config.skip_llm))
-        stages.append(("LLM Translations", self._run_llm_translations, self.config.skip_llm))
+        stages.append(
+            ("LLM Scientific Review", self._run_llm_review, self.config.skip_llm)
+        )
+        stages.append(
+            ("LLM Translations", self._run_llm_translations, self.config.skip_llm)
+        )
         stages.append(("Copy Outputs", self._run_copy_outputs))
         return self._execute_pipeline(stages)
 
@@ -154,9 +181,21 @@ class PipelineExecutor:
             return self._resume_pipeline()
 
         stages: list[tuple] = []
-        stages.append(("Clean Output Directories", self._run_clean_outputs, (not self.config.clean) or self.config.resume))
+        stages.append(
+            (
+                "Clean Output Directories",
+                self._run_clean_outputs,
+                (not self.config.clean) or self.config.resume,
+            )
+        )
         stages.append(("Environment Setup", self._run_setup_environment))
-        stages.append(("Infrastructure Tests", self._run_infrastructure_tests, self.config.skip_infra))
+        stages.append(
+            (
+                "Infrastructure Tests",
+                self._run_infrastructure_tests,
+                self.config.skip_infra,
+            )
+        )
         stages.append(("Project Tests", self._run_project_tests))
         stages.append(("Project Analysis", self._run_analysis))
         stages.append(("PDF Rendering", self._run_pdf_rendering))
@@ -187,11 +226,15 @@ class PipelineExecutor:
                 continue
 
             executed_stage_num += 1
-            result = self._execute_stage(executed_stage_num, stage_name, stage_func, pipeline_start)
+            result = self._execute_stage(
+                executed_stage_num, stage_name, stage_func, pipeline_start
+            )
             results.append(result)
 
             if not result.success:
-                logger.error(f"Pipeline failed at stage {executed_stage_num}: {stage_name}")
+                logger.error(
+                    f"Pipeline failed at stage {executed_stage_num}: {stage_name}"
+                )
                 break
 
             # Save checkpoint after successful executed stage
@@ -204,7 +247,7 @@ class PipelineExecutor:
         stage_num: int,
         stage_name: str,
         stage_func: Callable[[], bool],
-        pipeline_start: Optional[float] = None
+        pipeline_start: Optional[float] = None,
     ) -> PipelineStageResult:
         """Execute single pipeline stage with timing and error handling.
 
@@ -220,7 +263,9 @@ class PipelineExecutor:
 
         # Use enhanced stage logging with ETA if pipeline start time available
         if pipeline_start is not None:
-            log_stage_with_eta(stage_num, self.config.total_stages, stage_name, pipeline_start, logger)
+            log_stage_with_eta(
+                stage_num, self.config.total_stages, stage_name, pipeline_start, logger
+            )
         else:
             logger.info(f"Stage {stage_num}: {stage_name}")
 
@@ -231,12 +276,14 @@ class PipelineExecutor:
             duration = time.time() - start_time
 
             if success:
-                logger.info(f"✓ Stage {stage_num} completed successfully ({duration:.1f}s)")
+                logger.info(
+                    f"✓ Stage {stage_num} completed successfully ({duration:.1f}s)"
+                )
                 return PipelineStageResult(
                     stage_num=stage_num,
                     stage_name=stage_name,
                     success=True,
-                    duration=duration
+                    duration=duration,
                 )
             else:
                 logger.error(f"✗ Stage {stage_num} failed")
@@ -245,7 +292,7 @@ class PipelineExecutor:
                     stage_name=stage_name,
                     success=False,
                     duration=duration,
-                    exit_code=1
+                    exit_code=1,
                 )
 
         except Exception as e:
@@ -257,7 +304,7 @@ class PipelineExecutor:
                 success=False,
                 duration=duration,
                 exit_code=1,
-                error_message=str(e)
+                error_message=str(e),
             )
 
     def _resume_pipeline(self) -> list[PipelineStageResult]:
@@ -275,7 +322,11 @@ class PipelineExecutor:
             original_resume = self.config.resume
             self.config.resume = False
             try:
-                return self.execute_full_pipeline() if not self.config.skip_llm else self.execute_core_pipeline()
+                return (
+                    self.execute_full_pipeline()
+                    if not self.config.skip_llm
+                    else self.execute_core_pipeline()
+                )
             finally:
                 self.config.resume = original_resume
 
@@ -285,15 +336,27 @@ class PipelineExecutor:
             original_resume = self.config.resume
             self.config.resume = False
             try:
-                return self.execute_full_pipeline() if not self.config.skip_llm else self.execute_core_pipeline()
+                return (
+                    self.execute_full_pipeline()
+                    if not self.config.skip_llm
+                    else self.execute_core_pipeline()
+                )
             finally:
                 self.config.resume = original_resume
 
         # Rebuild stage list based on configured pipeline type
         stages: list[tuple] = []
-        stages.append(("Clean Output Directories", self._run_clean_outputs, True))  # never re-run on resume
+        stages.append(
+            ("Clean Output Directories", self._run_clean_outputs, True)
+        )  # never re-run on resume
         stages.append(("Environment Setup", self._run_setup_environment))
-        stages.append(("Infrastructure Tests", self._run_infrastructure_tests, self.config.skip_infra))
+        stages.append(
+            (
+                "Infrastructure Tests",
+                self._run_infrastructure_tests,
+                self.config.skip_infra,
+            )
+        )
         stages.append(("Project Tests", self._run_project_tests))
         stages.append(("Project Analysis", self._run_analysis))
         stages.append(("PDF Rendering", self._run_pdf_rendering))
@@ -326,7 +389,10 @@ class PipelineExecutor:
             if skip_condition:
                 continue
 
-            if completed_idx < len(completed_names) and stage_name == completed_names[completed_idx]:
+            if (
+                completed_idx < len(completed_names)
+                and stage_name == completed_names[completed_idx]
+            ):
                 completed_idx += 1
                 continue
 
@@ -339,11 +405,17 @@ class PipelineExecutor:
             original_resume = self.config.resume
             self.config.resume = False
             try:
-                return self.execute_full_pipeline() if not self.config.skip_llm else self.execute_core_pipeline()
+                return (
+                    self.execute_full_pipeline()
+                    if not self.config.skip_llm
+                    else self.execute_core_pipeline()
+                )
             finally:
                 self.config.resume = original_resume
 
-        logger.info(f"Resuming from stage {len(resumed_results) + 1} ({len(remaining)} stage(s) remaining)")
+        logger.info(
+            f"Resuming from stage {len(resumed_results) + 1} ({len(remaining)} stage(s) remaining)"
+        )
 
         # Execute remaining stages, continuing checkpoint numbering from prior completed count
         pipeline_start = checkpoint.pipeline_start_time
@@ -356,30 +428,31 @@ class PipelineExecutor:
                 continue
 
             executed_stage_num += 1
-            result = self._execute_stage(executed_stage_num, stage_name, stage_func, pipeline_start)
+            result = self._execute_stage(
+                executed_stage_num, stage_name, stage_func, pipeline_start
+            )
             # Handle exit code 2 (skip) as success for LLM stages
-            if hasattr(result, 'exit_code') and result.exit_code == 2:
+            if hasattr(result, "exit_code") and result.exit_code == 2:
                 # Exit code 2 means "skipped successfully" (e.g., no LLM languages configured)
                 result = PipelineStageResult(
                     stage_num=result.stage_num,
                     stage_name=result.stage_name,
                     success=True,  # Treat skip as success
                     duration=result.duration,
-                    exit_code=2  # Preserve original exit code for reporting
+                    exit_code=2,  # Preserve original exit code for reporting
                 )
             resumed_results.append(result)
             if not result.success:
-                logger.error(f"Pipeline failed at stage {executed_stage_num}: {stage_name}")
+                logger.error(
+                    f"Pipeline failed at stage {executed_stage_num}: {stage_name}"
+                )
                 break
             self._save_checkpoint(pipeline_start, executed_stage_num, resumed_results)
 
         return resumed_results
 
     def _save_checkpoint(
-        self,
-        pipeline_start: float,
-        last_stage: int,
-        results: list[PipelineStageResult]
+        self, pipeline_start: float, last_stage: int, results: list[PipelineStageResult]
     ) -> None:
         """Save pipeline checkpoint.
 
@@ -395,7 +468,7 @@ class PipelineExecutor:
                 exit_code=r.exit_code,
                 duration=r.duration,
                 timestamp=time.strftime("%Y-%m-%d %H:%M:%S"),
-                completed=r.success
+                completed=r.success,
             )
             for r in results
         ]
@@ -404,7 +477,7 @@ class PipelineExecutor:
             pipeline_start_time=pipeline_start,
             last_stage_completed=last_stage,
             stage_results=checkpoint_results,
-            total_stages=self.config.total_stages
+            total_stages=self.config.total_stages,
         )
 
     # Stage execution methods - these will call the actual scripts/commands
@@ -413,95 +486,130 @@ class PipelineExecutor:
 
     def _run_clean_outputs(self) -> bool:
         """Clean output directories for a fresh run.
-        
+
         After cleaning, recreates the log file handler since clean_output_directories
         may have deleted the log file.
         """
-        from infrastructure.core.file_operations import clean_output_directories
+        from infrastructure.core.file_operations import \
+            clean_output_directories
 
         logger.info("Cleaning output directories...")
         clean_output_directories(self.config.repo_root, self.config.project_name)
-        
+
         # Recreate log file handler after clean deleted the log directory
         # This ensures logs for subsequent stages are captured
         self._setup_log_file_handler()
         logger.info(f"Recreated pipeline log file: {self.log_file}")
-        
+
         return True
 
     def _run_setup_environment(self) -> bool:
         """Run environment setup."""
         logger.info("Running environment setup...")
-        return self._run_script("00_setup_environment.py", "--project", self.config.project_name)
+        return self._run_script(
+            "00_setup_environment.py", "--project", self.config.project_name
+        )
 
     def _run_infrastructure_tests(self) -> bool:
         """Run infrastructure tests."""
         logger.info("Running infrastructure tests...")
         # Provide a project name for report output location; infra tests themselves should not depend on project src.
-        return self._run_script("01_run_tests.py", "--infra-only", "--project", self.config.project_name)
+        return self._run_script(
+            "01_run_tests.py", "--infra-only", "--project", self.config.project_name
+        )
 
     def _run_project_tests(self) -> bool:
         """Run project tests."""
         logger.info("Running project tests...")
-        return self._run_script("01_run_tests.py", "--project-only", "--project", self.config.project_name)
+        return self._run_script(
+            "01_run_tests.py", "--project-only", "--project", self.config.project_name
+        )
 
     def _run_analysis(self) -> bool:
         """Run project analysis."""
         logger.info("Running project analysis...")
-        return self._run_script("02_run_analysis.py", "--project", self.config.project_name)
+        return self._run_script(
+            "02_run_analysis.py", "--project", self.config.project_name
+        )
 
     def _run_pdf_rendering(self) -> bool:
         """Run PDF rendering."""
         logger.info("Running PDF rendering...")
-        return self._run_script("03_render_pdf.py", "--project", self.config.project_name)
+        return self._run_script(
+            "03_render_pdf.py", "--project", self.config.project_name
+        )
 
     def _run_validation(self) -> bool:
         """Run output validation."""
         logger.info("Running output validation...")
-        return self._run_script("04_validate_output.py", "--project", self.config.project_name)
+        return self._run_script(
+            "04_validate_output.py", "--project", self.config.project_name
+        )
 
     def _run_llm_review(self) -> bool:
-        """Run LLM scientific review."""
+        """Run LLM scientific review.
+
+        Uses allow_skip_code=True to treat exit code 2 (Ollama not available) as success.
+        """
         logger.info("Running LLM scientific review...")
-        return self._run_script("06_llm_review.py", "--reviews-only", "--project", self.config.project_name)
+        return self._run_script(
+            "06_llm_review.py",
+            "--reviews-only",
+            "--project",
+            self.config.project_name,
+            allow_skip_code=True,
+        )
 
     def _run_llm_translations(self) -> bool:
-        """Run LLM translations."""
+        """Run LLM translations.
+
+        Uses allow_skip_code=True to treat exit code 2 (no languages configured or Ollama unavailable) as success.
+        """
         logger.info("Running LLM translations...")
-        return self._run_script("06_llm_review.py", "--translations-only", "--project", self.config.project_name)
+        return self._run_script(
+            "06_llm_review.py",
+            "--translations-only",
+            "--project",
+            self.config.project_name,
+            allow_skip_code=True,
+        )
 
     def _run_copy_outputs(self) -> bool:
         """Run output copying."""
         logger.info("Running output copying...")
-        
+
         # Flush log handlers before copying to ensure log file is written
         log_verified = self._flush_log_handlers()
         if not log_verified:
-            logger.warning("Log file not verified before copy - may be missing or empty")
-        
-        return self._run_script("05_copy_outputs.py", "--project", self.config.project_name)
+            logger.warning(
+                "Log file not verified before copy - may be missing or empty"
+            )
+
+        return self._run_script(
+            "05_copy_outputs.py", "--project", self.config.project_name
+        )
 
     def _flush_log_handlers(self) -> bool:
         """Flush all log handlers and verify log file exists with content.
-        
+
         Returns:
             True if log file exists and has content, False otherwise
         """
         import logging
-        
+
         # Flush all file handlers
         root_logger = logging.getLogger()
         for handler in root_logger.handlers:
             if isinstance(handler, logging.FileHandler):
                 handler.flush()
-        
+
         # Also flush module-specific loggers
         for logger_name in logging.Logger.manager.loggerDict:
             logger_obj = logging.getLogger(logger_name)
             for handler in logger_obj.handlers:
                 if isinstance(handler, logging.FileHandler):
                     handler.flush()
-        
+
         # Verify log file exists and has content
         if self.log_file.exists():
             try:
@@ -519,15 +627,18 @@ class PipelineExecutor:
             logger.warning(f"Log file not found: {self.log_file}")
             return False
 
-    def _run_script(self, script_name: str, *args: str) -> bool:
+    def _run_script(
+        self, script_name: str, *args: str, allow_skip_code: bool = False
+    ) -> bool:
         """Run a script with given arguments.
 
         Args:
             script_name: Name of script in scripts/ directory
             *args: Arguments to pass to script
+            allow_skip_code: If True, treat exit code 2 as success (graceful skip)
 
         Returns:
-            True if script succeeded, False otherwise
+            True if script succeeded (or skipped gracefully if allow_skip_code=True), False otherwise
         """
         script_path = self.config.repo_root / "scripts" / script_name
 
@@ -541,8 +652,13 @@ class PipelineExecutor:
         env.setdefault("PROJECT_ROOT", str(self.config.repo_root))
 
         # Ensure project src is on PYTHONPATH for stage scripts that import project code.
-        project_src = self.config.repo_root / "projects" / self.config.project_name / "src"
-        pythonpath_parts = [str(self.config.repo_root), str(self.config.repo_root / "infrastructure")]
+        project_src = (
+            self.config.repo_root / "projects" / self.config.project_name / "src"
+        )
+        pythonpath_parts = [
+            str(self.config.repo_root),
+            str(self.config.repo_root / "infrastructure"),
+        ]
         if project_src.exists():
             pythonpath_parts.append(str(project_src))
         existing = env.get("PYTHONPATH")
@@ -552,8 +668,20 @@ class PipelineExecutor:
 
         try:
             # Stream subprocess output to console for long-running stages; still capture exit code.
-            result = subprocess.run(cmd, cwd=self.config.repo_root, env=env, check=False)
-            return result.returncode == 0
+            result = subprocess.run(
+                cmd, cwd=self.config.repo_root, env=env, check=False
+            )
+
+            # Exit code 0 = success
+            if result.returncode == 0:
+                return True
+
+            # Exit code 2 = graceful skip (e.g., Ollama not available)
+            if allow_skip_code and result.returncode == 2:
+                logger.info(f"Stage skipped gracefully (exit code 2): {script_name}")
+                return True
+
+            return False
         except Exception as e:
             logger.error(f"Failed to run script {script_name}: {e}")
             return False

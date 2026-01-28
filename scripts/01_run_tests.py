@@ -38,6 +38,7 @@ from infrastructure.reporting.test_reporter import (
     generate_test_report,
     save_test_report as save_test_report_to_files,
 )
+from infrastructure.core.environment import get_python_command, check_uv_available
 
 # Set up logger for this module
 logger = get_logger(__name__)
@@ -50,8 +51,9 @@ def _check_cov_datafile_support() -> bool:
         True if --cov-datafile is supported, False otherwise
     """
     try:
+        cmd = get_python_command() + ["-m", "pytest", "--help"]
         result = subprocess.run(
-            ["uv", "run", "pytest", "--help"],
+            cmd,
             capture_output=True, text=True, timeout=10
         )
         return "--cov-datafile" in result.stdout
@@ -457,13 +459,12 @@ def run_infrastructure_tests(repo_root: Path, project_name: str = "project", qui
     else:
         logger.info(f"Filters applied: include all tests (including Ollama-dependent), exclude integration tests")
 
-    # Build pytest command for infrastructure tests using uv run pytest
+    # Build pytest command using get_python_command() which handles uv fallback
     # Conditionally skip requires_ollama tests based on include_ollama_tests parameter
     # Include infrastructure tests and integration tests (excluding network-dependent ones)
     # Warnings are controlled by pyproject.toml (--disable-warnings + filterwarnings)
-    cmd = [
-        "uv",
-        "run",
+    cmd = get_python_command() + [
+        "-m",
         "pytest",
         str(repo_root / "tests" / "infrastructure"),
         str(repo_root / "tests" / "integration"),
@@ -782,17 +783,28 @@ def run_project_tests(repo_root: Path, project_name: str = "project", quiet: boo
     logger.info(f"Coverage target: projects/{project_name}/src (90% minimum)")
     logger.info(f"Filters applied: exclude integration tests")
 
-    # Build pytest command for project tests using uv run pytest from project directory
+    # Build pytest command using get_python_command() which handles uv fallback
     # This ensures the project's pyproject.toml pytest configuration is used
     # Warnings are controlled by pyproject.toml (--disable-warnings + filterwarnings)
-    cmd = [
-        "uv",
-        "run",
-        "--project=" + str(project_root),
-        "pytest",
-        "tests",
-        f"--cov=src",
-    ]
+    if check_uv_available():
+        # Use uv run with project flag
+        cmd = [
+            "uv",
+            "run",
+            "--project=" + str(project_root),
+            "python", "-m", "pytest",
+            "tests",
+            f"--cov=src",
+        ]
+    else:
+        # Fallback to direct execution
+        cmd = [
+            sys.executable,
+            "-m",
+            "pytest",
+            "tests",
+            f"--cov=src",
+        ]
 
     # Set up environment - running from project directory so paths are relative
     env = os.environ.copy()

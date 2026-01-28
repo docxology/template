@@ -9,19 +9,15 @@ Test Pattern:
     to set the appropriate log level for the test.
 """
 
-import pytest
-import time
 import sys
+import time
 from io import StringIO
 
+import pytest
+
 from infrastructure.core.logging_progress import (
-    calculate_eta,
-    calculate_eta_ema,
-    calculate_eta_with_confidence,
-    log_progress_bar,
-    Spinner,
-    log_with_spinner,
-)
+    Spinner, calculate_eta, calculate_eta_ema, calculate_eta_with_confidence,
+    log_progress_bar, log_with_spinner)
 
 
 class TestCalculateEta:
@@ -97,9 +93,13 @@ class TestCalculateEtaEma:
     def test_calculate_eta_ema_alpha_parameter(self):
         """Test EMA ETA with different alpha values."""
         previous_eta = 80.0
-        eta_low_alpha = calculate_eta_ema(30.0, 3, 10, previous_eta=previous_eta, alpha=0.1)
-        eta_high_alpha = calculate_eta_ema(30.0, 3, 10, previous_eta=previous_eta, alpha=0.9)
-        
+        eta_low_alpha = calculate_eta_ema(
+            30.0, 3, 10, previous_eta=previous_eta, alpha=0.1
+        )
+        eta_high_alpha = calculate_eta_ema(
+            30.0, 3, 10, previous_eta=previous_eta, alpha=0.9
+        )
+
         # Higher alpha should be closer to linear estimate
         linear_eta = calculate_eta(30.0, 3, 10)
         assert abs(eta_high_alpha - linear_eta) < abs(eta_low_alpha - linear_eta)
@@ -117,7 +117,7 @@ class TestCalculateEtaWithConfidence:
     def test_calculate_eta_with_confidence_basic(self):
         """Test basic confidence interval calculation."""
         optimistic, realistic, pessimistic = calculate_eta_with_confidence(30.0, 3, 10)
-        
+
         assert optimistic is not None
         assert realistic is not None
         assert pessimistic is not None
@@ -129,7 +129,7 @@ class TestCalculateEtaWithConfidence:
         optimistic, realistic, pessimistic = calculate_eta_with_confidence(
             30.0, 3, 10, item_durations=item_durations
         )
-        
+
         # 7 remaining items
         # Optimistic: 8.0 * 7 = 56.0
         # Realistic: 10.0 * 7 = 70.0
@@ -141,7 +141,7 @@ class TestCalculateEtaWithConfidence:
     def test_calculate_eta_with_confidence_zero_completed(self):
         """Test confidence intervals with zero completed items."""
         optimistic, realistic, pessimistic = calculate_eta_with_confidence(30.0, 0, 10)
-        
+
         assert optimistic is None
         assert realistic is None
         assert pessimistic is None
@@ -149,7 +149,7 @@ class TestCalculateEtaWithConfidence:
     def test_calculate_eta_with_confidence_completed_equals_total(self):
         """Test confidence intervals when all items are completed."""
         optimistic, realistic, pessimistic = calculate_eta_with_confidence(30.0, 10, 10)
-        
+
         assert optimistic == 0.0
         assert realistic == 0.0
         assert pessimistic == 0.0
@@ -159,7 +159,7 @@ class TestCalculateEtaWithConfidence:
         optimistic, realistic, pessimistic = calculate_eta_with_confidence(
             30.0, 3, 10, item_durations=[]
         )
-        
+
         # Should fall back to linear calculation with adjustments
         assert optimistic is not None
         assert realistic is not None
@@ -174,7 +174,7 @@ class TestLogProgressBar:
         """Test basic progress bar logging."""
         with caplog.at_level("INFO"):
             log_progress_bar(3, 10, "Processing")
-        
+
         # Check that output was created
         assert "Processing" in caplog.text
         assert "%" in caplog.text or "3/10" in caplog.text
@@ -183,28 +183,28 @@ class TestLogProgressBar:
         """Test progress bar with zero total."""
         with caplog.at_level("INFO"):
             log_progress_bar(0, 0, "Processing")
-        
+
         assert "0/0" in caplog.text or "0%" in caplog.text
 
     def test_log_progress_bar_complete(self, caplog):
         """Test progress bar at 100%."""
         with caplog.at_level("INFO"):
             log_progress_bar(10, 10, "Processing")
-        
+
         assert "100%" in caplog.text or "10/10" in caplog.text
 
     def test_log_progress_bar_custom_message(self, caplog):
         """Test progress bar with custom message."""
         with caplog.at_level("INFO"):
             log_progress_bar(5, 10, "Custom message")
-        
+
         assert "Custom message" in caplog.text
 
     def test_log_progress_bar_custom_width(self, caplog):
         """Test progress bar with custom width."""
         with caplog.at_level("INFO"):
             log_progress_bar(5, 10, "Processing", bar_width=20)
-        
+
         # Should still output successfully
         assert "Processing" in caplog.text
 
@@ -215,7 +215,7 @@ class TestSpinner:
     def test_spinner_initialization(self):
         """Test spinner initialization."""
         spinner = Spinner("Test message")
-        
+
         assert spinner.message == "Test message"
         assert spinner.delay == 0.1
         assert spinner.thread is None
@@ -224,10 +224,10 @@ class TestSpinner:
         """Test spinner start on non-TTY stream."""
         stream = StringIO()
         stream.isatty = lambda: False
-        
+
         spinner = Spinner("Test message", stream=stream)
         spinner.start()
-        
+
         # Should write message once for non-TTY
         output = stream.getvalue()
         assert "Test message" in output
@@ -235,7 +235,7 @@ class TestSpinner:
     def test_spinner_stop_without_start(self):
         """Test stopping spinner that was never started."""
         spinner = Spinner("Test message")
-        
+
         # Should not raise error
         spinner.stop()
 
@@ -243,10 +243,10 @@ class TestSpinner:
         """Test spinner as context manager."""
         stream = StringIO()
         stream.isatty = lambda: False
-        
+
         with Spinner("Test message", stream=stream) as spinner:
             assert spinner is not None
-        
+
         # Should have written message
         output = stream.getvalue()
         assert "Test message" in output
@@ -255,11 +255,11 @@ class TestSpinner:
         """Test stopping spinner with final message."""
         stream = StringIO()
         stream.isatty = lambda: False
-        
+
         spinner = Spinner("Test message", stream=stream)
         spinner.start()
         spinner.stop("Done!")
-        
+
         output = stream.getvalue()
         assert "Done!" in output
 
@@ -284,12 +284,10 @@ class TestLogWithSpinner:
     def test_log_with_spinner_with_logger(self, caplog):
         """Test spinner with logger for final message."""
         import logging
+
         logger = logging.getLogger("test")
 
         # Use real spinner with logger
         with log_with_spinner("Loading...", logger=logger):
             pass
         # Test passes if no exceptions are raised
-
-
-

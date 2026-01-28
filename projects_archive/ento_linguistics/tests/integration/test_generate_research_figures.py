@@ -1,14 +1,14 @@
 """Comprehensive tests for the generate_research_figures.py script to ensure 100% coverage."""
 
 import os
-import sys
-import tempfile
 import shutil
 import subprocess
+import sys
+import tempfile
 from pathlib import Path
 
-import pytest
 import numpy as np
+import pytest
 
 
 class TestGenerateResearchFiguresScript:
@@ -16,13 +16,25 @@ class TestGenerateResearchFiguresScript:
 
     def test_script_exists_and_executable(self):
         """Test that the generate_research_figures.py script exists."""
-        script_path = os.path.join(os.path.dirname(__file__), '..', '..', 'scripts', 'generate_research_figures.py')
+        script_path = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "..",
+            "scripts",
+            "generate_research_figures.py",
+        )
         assert os.path.exists(script_path)
 
     def test_script_has_shebang(self):
         """Test that script has proper Python shebang."""
-        script_path = os.path.join(os.path.dirname(__file__), '..', '..', 'scripts', 'generate_research_figures.py')
-        with open(script_path, 'r') as f:
+        script_path = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "..",
+            "scripts",
+            "generate_research_figures.py",
+        )
+        with open(script_path, "r") as f:
             first_line = f.readline().strip()
             assert first_line == "#!/usr/bin/env python3"
 
@@ -30,7 +42,8 @@ class TestGenerateResearchFiguresScript:
         """Test _ensure_src_on_path function adds src/ to sys.path."""
         # Create a test script with the function
         test_script = tmp_path / "test_research_figures.py"
-        test_script.write_text("""
+        test_script.write_text(
+            """
 import os
 import sys
 
@@ -55,15 +68,19 @@ def main():
 
 if __name__ == "__main__":
     main()
-""")
+"""
+        )
 
         # Test that it adds src/ to path
         original_path = sys.path.copy()
         try:
             # Execute the function in a subprocess to test it properly
-            result = subprocess.run([
-                sys.executable, str(test_script)
-            ], cwd=str(tmp_path), capture_output=True, text=True)
+            result = subprocess.run(
+                [sys.executable, str(test_script)],
+                cwd=str(tmp_path),
+                capture_output=True,
+                text=True,
+            )
 
             assert result.returncode == 0
             # The function should execute without error
@@ -74,7 +91,8 @@ if __name__ == "__main__":
         """Test _setup_directories function creates proper directory structure."""
         # Create a test script with the function
         test_script = tmp_path / "test_setup.py"
-        test_script.write_text("""
+        test_script.write_text(
+            """
 import os
 
 def _setup_directories():
@@ -97,12 +115,16 @@ def main():
 
 if __name__ == "__main__":
     main()
-""")
+"""
+        )
 
         # Test directory creation
-        result = subprocess.run([
-            sys.executable, str(test_script)
-        ], cwd=str(tmp_path), capture_output=True, text=True)
+        result = subprocess.run(
+            [sys.executable, str(test_script)],
+            cwd=str(tmp_path),
+            capture_output=True,
+            text=True,
+        )
 
         assert result.returncode == 0
         assert "Output:" in result.stdout
@@ -119,15 +141,18 @@ if __name__ == "__main__":
         project_dir = test_root / "project"
         src_dir = project_dir / "src"
         src_dir.mkdir(parents=True)
-        (src_dir / "example.py").write_text('''
+        (src_dir / "example.py").write_text(
+            """
 def add_numbers(a, b): return a + b
 def multiply_numbers(a, b): return a * b
 def calculate_average(numbers): return sum(numbers) / len(numbers) if numbers else None
-''')
+"""
+        )
 
         # Create a test script that calls the function
         test_script = project_dir / "test_convergence.py"
-        test_script.write_text("""
+        test_script.write_text(
+            """
 import os
 import sys
 
@@ -213,12 +238,16 @@ def main():
 
 if __name__ == "__main__":
     main()
-""")
+"""
+        )
 
         # Run the test script
-        result = subprocess.run([
-            sys.executable, str(test_script)
-        ], cwd=str(project_dir), capture_output=True, text=True)
+        result = subprocess.run(
+            [sys.executable, str(test_script)],
+            cwd=str(project_dir),
+            capture_output=True,
+            text=True,
+        )
 
         # Debug: Log stdout and stderr if the script failed
         if result.returncode != 0:
@@ -238,11 +267,11 @@ if __name__ == "__main__":
 
         # Check data file content
         data = np.load(data_path)
-        assert 'iterations' in data
-        assert 'our_method' in data
-        assert 'baseline' in data
-        assert 'our_avg' in data
-        assert 'base_avg' in data
+        assert "iterations" in data
+        assert "our_method" in data
+        assert "baseline" in data
+        assert "our_avg" in data
+        assert "base_avg" in data
 
     def test_experimental_setup_generation(self, tmp_path):
         """Test experimental_setup function generates proper output."""
@@ -252,14 +281,17 @@ if __name__ == "__main__":
 
         src_dir = test_root / "src"
         src_dir.mkdir()
-        (src_dir / "example.py").write_text('''
+        (src_dir / "example.py").write_text(
+            """
 def is_even(n): return n % 2 == 0
 def is_odd(n): return not is_even(n)
-''')
+"""
+        )
 
         # Create a test script that calls the function
         test_script = test_root / "test_setup.py"
-        test_script.write_text("""
+        test_script.write_text(
+            """
 import os
 import sys
 
@@ -335,12 +367,16 @@ def main():
 
 if __name__ == "__main__":
     main()
-""")
+"""
+        )
 
         # Run the test script
-        result = subprocess.run([
-            sys.executable, str(test_script)
-        ], cwd=str(test_root), capture_output=True, text=True)
+        result = subprocess.run(
+            [sys.executable, str(test_script)],
+            cwd=str(test_root),
+            capture_output=True,
+            text=True,
+        )
 
         # Should succeed
         assert result.returncode == 0
@@ -360,7 +396,8 @@ if __name__ == "__main__":
 
         src_dir = test_root / "src"
         src_dir.mkdir()
-        (src_dir / "example.py").write_text('''
+        (src_dir / "example.py").write_text(
+            """
 def add_numbers(a, b): return a + b
 def multiply_numbers(a, b): return a * b
 def calculate_average(numbers): return sum(numbers) / len(numbers) if numbers else None
@@ -368,27 +405,40 @@ def find_maximum(numbers): return max(numbers) if numbers else None
 def find_minimum(numbers): return min(numbers) if numbers else None
 def is_even(n): return n % 2 == 0
 def is_odd(n): return not is_even(n)
-''')
+"""
+        )
 
-        script_path = os.path.join(os.path.dirname(__file__), '..', '..', 'scripts', 'generate_research_figures.py')
+        script_path = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "..",
+            "scripts",
+            "generate_research_figures.py",
+        )
         test_script = test_root / "scripts" / "generate_research_figures.py"
         test_script.parent.mkdir()
         shutil.copy2(script_path, test_script)
 
         # Run the script with proper PYTHONPATH for infrastructure modules
-        repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+        repo_root = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "..", "..", "..")
+        )
         env = os.environ.copy()
-        env['PYTHONPATH'] = f"{repo_root}:{env.get('PYTHONPATH', '')}"
+        env["PYTHONPATH"] = f"{repo_root}:{env.get('PYTHONPATH', '')}"
 
         # Run the script with proper PYTHONPATH
         env = os.environ.copy()
         repo_root = str(Path(__file__).parent.parent.parent.parent.parent)  # template/
         project_src = str(Path(__file__).parent.parent.parent / "src")
-        env['PYTHONPATH'] = f"{repo_root}:{project_src}:{env.get('PYTHONPATH', '')}"
+        env["PYTHONPATH"] = f"{repo_root}:{project_src}:{env.get('PYTHONPATH', '')}"
 
-        result = subprocess.run([
-            sys.executable, str(test_script)
-        ], cwd=str(test_root), capture_output=True, text=True, env=env)
+        result = subprocess.run(
+            [sys.executable, str(test_script)],
+            cwd=str(test_root),
+            capture_output=True,
+            text=True,
+            env=env,
+        )
 
         # Should succeed
         assert result.returncode == 0
@@ -399,21 +449,24 @@ def is_odd(n): return not is_even(n)
         assert "research figures" in combined_output
 
         # Check that multiple figures were generated
-        figure_count = combined_output.count("convergence_plot.png") + \
-                      combined_output.count("experimental_setup.png") + \
-                      combined_output.count("data_structure.png") + \
-                      combined_output.count("step_size_analysis.png") + \
-                      combined_output.count("scalability_analysis.png") + \
-                      combined_output.count("ablation_study.png") + \
-                      combined_output.count("hyperparameter_sensitivity.png") + \
-                      combined_output.count("image_classification_results.png") + \
-                      combined_output.count("recommendation_scalability.png")
+        figure_count = (
+            combined_output.count("convergence_plot.png")
+            + combined_output.count("experimental_setup.png")
+            + combined_output.count("data_structure.png")
+            + combined_output.count("step_size_analysis.png")
+            + combined_output.count("scalability_analysis.png")
+            + combined_output.count("ablation_study.png")
+            + combined_output.count("hyperparameter_sensitivity.png")
+            + combined_output.count("image_classification_results.png")
+            + combined_output.count("recommendation_scalability.png")
+        )
 
         assert figure_count >= 9  # Should generate at least 9 figures
 
         # Check that data tables were generated
-        table_count = combined_output.count("dataset_summary.csv") + \
-                     combined_output.count("performance_comparison.csv")
+        table_count = combined_output.count(
+            "dataset_summary.csv"
+        ) + combined_output.count("performance_comparison.csv")
 
         assert table_count >= 2  # Should generate at least 2 tables
 
@@ -438,7 +491,8 @@ def is_odd(n): return not is_even(n)
 
         src_dir = test_root / "src"
         src_dir.mkdir()
-        (src_dir / "example.py").write_text('''
+        (src_dir / "example.py").write_text(
+            """
 def add_numbers(a, b): return a + b
 def multiply_numbers(a, b): return a * b
 def calculate_average(numbers): return sum(numbers) / len(numbers) if numbers else None
@@ -446,27 +500,40 @@ def find_maximum(numbers): return max(numbers) if numbers else None
 def find_minimum(numbers): return min(numbers) if numbers else None
 def is_even(n): return n % 2 == 0
 def is_odd(n): return not is_even(n)
-''')
+"""
+        )
 
-        script_path = os.path.join(os.path.dirname(__file__), '..', '..', 'scripts', 'generate_research_figures.py')
+        script_path = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "..",
+            "scripts",
+            "generate_research_figures.py",
+        )
         test_script = test_root / "scripts" / "generate_research_figures.py"
         test_script.parent.mkdir()
         shutil.copy2(script_path, test_script)
 
         # Run the script with proper PYTHONPATH for infrastructure modules
-        repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+        repo_root = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "..", "..", "..")
+        )
         env = os.environ.copy()
-        env['PYTHONPATH'] = f"{repo_root}:{env.get('PYTHONPATH', '')}"
+        env["PYTHONPATH"] = f"{repo_root}:{env.get('PYTHONPATH', '')}"
 
         # Run the script with proper PYTHONPATH
         env = os.environ.copy()
         repo_root = str(Path(__file__).parent.parent.parent.parent.parent)  # template/
         project_src = str(Path(__file__).parent.parent.parent / "src")
-        env['PYTHONPATH'] = f"{repo_root}:{project_src}:{env.get('PYTHONPATH', '')}"
+        env["PYTHONPATH"] = f"{repo_root}:{project_src}:{env.get('PYTHONPATH', '')}"
 
-        result = subprocess.run([
-            sys.executable, str(test_script)
-        ], cwd=str(test_root), capture_output=True, text=True, env=env)
+        result = subprocess.run(
+            [sys.executable, str(test_script)],
+            cwd=str(test_root),
+            capture_output=True,
+            text=True,
+            env=env,
+        )
 
         # Should succeed
         assert result.returncode == 0
@@ -477,21 +544,24 @@ def is_odd(n): return not is_even(n)
         assert "research figures" in combined_output
 
         # Check that multiple figures were generated
-        figure_count = combined_output.count("convergence_plot.png") + \
-                      combined_output.count("experimental_setup.png") + \
-                      combined_output.count("data_structure.png") + \
-                      combined_output.count("step_size_analysis.png") + \
-                      combined_output.count("scalability_analysis.png") + \
-                      combined_output.count("ablation_study.png") + \
-                      combined_output.count("hyperparameter_sensitivity.png") + \
-                      combined_output.count("image_classification_results.png") + \
-                      combined_output.count("recommendation_scalability.png")
+        figure_count = (
+            combined_output.count("convergence_plot.png")
+            + combined_output.count("experimental_setup.png")
+            + combined_output.count("data_structure.png")
+            + combined_output.count("step_size_analysis.png")
+            + combined_output.count("scalability_analysis.png")
+            + combined_output.count("ablation_study.png")
+            + combined_output.count("hyperparameter_sensitivity.png")
+            + combined_output.count("image_classification_results.png")
+            + combined_output.count("recommendation_scalability.png")
+        )
 
         assert figure_count >= 9  # Should generate at least 9 figures
 
         # Check that data tables were generated
-        table_count = combined_output.count("dataset_summary.csv") + \
-                     combined_output.count("performance_comparison.csv")
+        table_count = combined_output.count(
+            "dataset_summary.csv"
+        ) + combined_output.count("performance_comparison.csv")
 
         assert table_count >= 2  # Should generate at least 2 tables
 
@@ -506,36 +576,53 @@ def is_odd(n): return not is_even(n)
 
         src_dir = test_root / "src"
         src_dir.mkdir()
-        (src_dir / "example.py").write_text('''
+        (src_dir / "example.py").write_text(
+            """
 # This file has a syntax error
 def broken_function(
     return 1
-''')
+"""
+        )
 
-        script_path = os.path.join(os.path.dirname(__file__), '..', '..', 'scripts', 'generate_research_figures.py')
+        script_path = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "..",
+            "scripts",
+            "generate_research_figures.py",
+        )
         test_script = test_root / "scripts" / "generate_research_figures.py"
         test_script.parent.mkdir()
         shutil.copy2(script_path, test_script)
 
         # Run the script with proper PYTHONPATH for infrastructure modules
-        repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+        repo_root = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "..", "..", "..")
+        )
         env = os.environ.copy()
-        env['PYTHONPATH'] = f"{repo_root}:{env.get('PYTHONPATH', '')}"
+        env["PYTHONPATH"] = f"{repo_root}:{env.get('PYTHONPATH', '')}"
 
         # Run the script with proper PYTHONPATH
         env = os.environ.copy()
         repo_root = str(Path(__file__).parent.parent.parent.parent.parent)  # template/
         project_src = str(Path(__file__).parent.parent.parent / "src")
-        env['PYTHONPATH'] = f"{repo_root}:{project_src}:{env.get('PYTHONPATH', '')}"
+        env["PYTHONPATH"] = f"{repo_root}:{project_src}:{env.get('PYTHONPATH', '')}"
 
-        result = subprocess.run([
-            sys.executable, str(test_script)
-        ], cwd=str(test_root), capture_output=True, text=True, env=env)
+        result = subprocess.run(
+            [sys.executable, str(test_script)],
+            cwd=str(test_root),
+            capture_output=True,
+            text=True,
+            env=env,
+        )
 
         # Should handle import errors gracefully and continue
         assert result.returncode == 0  # Script handles errors gracefully
         combined_output = result.stdout + result.stderr
-        assert "❌ Failed to import from src/example.py" in combined_output or "SyntaxError" in combined_output
+        assert (
+            "❌ Failed to import from src/example.py" in combined_output
+            or "SyntaxError" in combined_output
+        )
 
     def test_main_function_matplotlib_backend_setting(self, tmp_path):
         """Test that main function properly sets matplotlib backend."""
@@ -545,31 +632,45 @@ def broken_function(
 
         src_dir = test_root / "src"
         src_dir.mkdir()
-        (src_dir / "example.py").write_text('''
+        (src_dir / "example.py").write_text(
+            """
 def add_numbers(a, b): return a + b
 def multiply_numbers(a, b): return a * b
 def calculate_average(numbers): return sum(numbers) / len(numbers) if numbers else None
-''')
+"""
+        )
 
-        script_path = os.path.join(os.path.dirname(__file__), '..', '..', 'scripts', 'generate_research_figures.py')
+        script_path = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "..",
+            "scripts",
+            "generate_research_figures.py",
+        )
         test_script = test_root / "scripts" / "generate_research_figures.py"
         test_script.parent.mkdir()
         shutil.copy2(script_path, test_script)
 
         # Run the script with proper PYTHONPATH for infrastructure modules
-        repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+        repo_root = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "..", "..", "..")
+        )
         env = os.environ.copy()
-        env['PYTHONPATH'] = f"{repo_root}:{env.get('PYTHONPATH', '')}"
+        env["PYTHONPATH"] = f"{repo_root}:{env.get('PYTHONPATH', '')}"
 
         # Run the script with proper PYTHONPATH
         env = os.environ.copy()
         repo_root = str(Path(__file__).parent.parent.parent.parent.parent)  # template/
         project_src = str(Path(__file__).parent.parent.parent / "src")
-        env['PYTHONPATH'] = f"{repo_root}:{project_src}:{env.get('PYTHONPATH', '')}"
+        env["PYTHONPATH"] = f"{repo_root}:{project_src}:{env.get('PYTHONPATH', '')}"
 
-        result = subprocess.run([
-            sys.executable, str(test_script)
-        ], cwd=str(test_root), capture_output=True, text=True, env=env)
+        result = subprocess.run(
+            [sys.executable, str(test_script)],
+            cwd=str(test_root),
+            capture_output=True,
+            text=True,
+            env=env,
+        )
 
         # Should succeed
         assert result.returncode == 0
@@ -584,29 +685,47 @@ def calculate_average(numbers): return sum(numbers) / len(numbers) if numbers el
 
         src_dir = test_root / "src"
         src_dir.mkdir()
-        (src_dir / "example.py").write_text('''
+        (src_dir / "example.py").write_text(
+            """
 def add_numbers(a, b): return a + b
 def multiply_numbers(a, b): return a * b
 def calculate_average(numbers): return sum(numbers) / len(numbers) if numbers else None
-''')
+"""
+        )
 
-        script_path = os.path.join(os.path.dirname(__file__), '..', '..', 'scripts', 'generate_research_figures.py')
+        script_path = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "..",
+            "scripts",
+            "generate_research_figures.py",
+        )
         test_script = test_root / "scripts" / "generate_research_figures.py"
         test_script.parent.mkdir()
         shutil.copy2(script_path, test_script)
 
         # Run script twice with proper PYTHONPATH for infrastructure modules
-        repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+        repo_root = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "..", "..", "..")
+        )
         env = os.environ.copy()
-        env['PYTHONPATH'] = f"{repo_root}:{env.get('PYTHONPATH', '')}"
+        env["PYTHONPATH"] = f"{repo_root}:{env.get('PYTHONPATH', '')}"
 
-        result1 = subprocess.run([
-            sys.executable, str(test_script)
-        ], cwd=str(test_root), capture_output=True, text=True, env=env)
+        result1 = subprocess.run(
+            [sys.executable, str(test_script)],
+            cwd=str(test_root),
+            capture_output=True,
+            text=True,
+            env=env,
+        )
 
-        result2 = subprocess.run([
-            sys.executable, str(test_script)
-        ], cwd=str(test_root), capture_output=True, text=True, env=env)
+        result2 = subprocess.run(
+            [sys.executable, str(test_script)],
+            cwd=str(test_root),
+            capture_output=True,
+            text=True,
+            env=env,
+        )
 
         # Both should succeed
         assert result1.returncode == 0
@@ -619,9 +738,9 @@ def calculate_average(numbers): return sum(numbers) / len(numbers) if numbers el
         data2 = np.load(data_path)
 
         # Should be identical
-        np.testing.assert_array_equal(data1['iterations'], data2['iterations'])
-        np.testing.assert_array_equal(data1['our_method'], data2['our_method'])
-        np.testing.assert_array_equal(data1['baseline'], data2['baseline'])
+        np.testing.assert_array_equal(data1["iterations"], data2["iterations"])
+        np.testing.assert_array_equal(data1["our_method"], data2["our_method"])
+        np.testing.assert_array_equal(data1["baseline"], data2["baseline"])
 
 
 if __name__ == "__main__":

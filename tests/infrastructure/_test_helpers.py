@@ -1,6 +1,6 @@
 """Helper utilities for infrastructure layer tests.
 
-NOTE: This module is named with underscore prefix (_test_helpers.py) to 
+NOTE: This module is named with underscore prefix (_test_helpers.py) to
 indicate it's NOT a test file but a helper module providing reusable
 functions for test setup and data creation.
 
@@ -19,12 +19,20 @@ Available helpers:
 - create_test_figure_files: Create sample figure files
 - cleanup_test_directory: Clean up test directories
 """
+
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any, Dict
+
+import contextlib
 import yaml
+import pytest
+import requests
+from infrastructure.core.exceptions import LLMConnectionError
 
 
-def create_project_config_structure(repo_root: Path, project_name: str = "project") -> Path:
+def create_project_config_structure(
+    repo_root: Path, project_name: str = "project"
+) -> Path:
     """Create a standard project config structure.
 
     Args:
@@ -48,28 +56,21 @@ def create_sample_config_data() -> Dict[str, Any]:
         Dictionary with sample config data
     """
     return {
-        'paper': {
-            'title': 'Test Research Paper',
-            'subtitle': 'A comprehensive study',
-            'version': '1.0'
+        "paper": {
+            "title": "Test Research Paper",
+            "subtitle": "A comprehensive study",
+            "version": "1.0",
         },
-        'authors': [
+        "authors": [
             {
-                'name': 'Dr. Test Author',
-                'orcid': '0000-0000-0000-1234',
-                'email': 'test@example.com',
-                'corresponding': True
+                "name": "Dr. Test Author",
+                "orcid": "0000-0000-0000-1234",
+                "email": "test@example.com",
+                "corresponding": True,
             }
         ],
-        'publication': {
-            'doi': '10.5281/zenodo.12345678'
-        },
-        'llm': {
-            'translations': {
-                'enabled': True,
-                'languages': ['zh', 'hi', 'ru']
-            }
-        }
+        "publication": {"doi": "10.5281/zenodo.12345678"},
+        "llm": {"translations": {"enabled": True, "languages": ["zh", "hi", "ru"]}},
     }
 
 
@@ -80,7 +81,7 @@ def write_config_file(config_file: Path, config_data: Dict[str, Any]) -> None:
         config_file: Path to config file to create
         config_data: Configuration data to write
     """
-    with open(config_file, 'w') as f:
+    with open(config_file, "w") as f:
         yaml.dump(config_data, f)
 
 
@@ -91,12 +92,24 @@ def create_output_directory_structure(output_dir: Path) -> None:
         output_dir: Output directory to create structure in
     """
     # Create standard subdirectories
-    subdirs = ["pdf", "web", "slides", "figures", "data", "reports", "simulations", "llm", "logs"]
+    subdirs = [
+        "pdf",
+        "web",
+        "slides",
+        "figures",
+        "data",
+        "reports",
+        "simulations",
+        "llm",
+        "logs",
+    ]
     for subdir in subdirs:
         (output_dir / subdir).mkdir(exist_ok=True)
 
 
-def create_pdf_file(pdf_path: Path, content: str = "Test PDF content", size_kb: int = 100) -> None:
+def create_pdf_file(
+    pdf_path: Path, content: str = "Test PDF content", size_kb: int = 100
+) -> None:
     """Create a PDF file for testing.
 
     Uses reportlab if available, otherwise creates a minimal PDF-like file.
@@ -107,17 +120,17 @@ def create_pdf_file(pdf_path: Path, content: str = "Test PDF content", size_kb: 
         size_kb: Approximate size of the PDF file in KB
     """
     try:
-        from reportlab.pdfgen import canvas
         from reportlab.lib.pagesizes import letter
+        from reportlab.pdfgen import canvas
 
         c = canvas.Canvas(str(pdf_path), pagesize=letter)
 
         # Add multiple pages to reach desired size
         lines_per_page = 50
-        lines = content.split('\n') if '\n' in content else [content] * (size_kb * 10)
+        lines = content.split("\n") if "\n" in content else [content] * (size_kb * 10)
 
         for i in range(0, len(lines), lines_per_page):
-            page_lines = lines[i:i + lines_per_page]
+            page_lines = lines[i : i + lines_per_page]
             c.drawString(72, 750, f"Page {i // lines_per_page + 1}")
             y = 720
             for line in page_lines:
@@ -180,7 +193,9 @@ startxref
         pdf_path.write_text(pdf_content)
 
 
-def create_output_with_pdf(output_dir: Path, pdf_name: str = "project_combined.pdf") -> Path:
+def create_output_with_pdf(
+    output_dir: Path, pdf_name: str = "project_combined.pdf"
+) -> Path:
     """Create output directory with a PDF file in the pdf/ subdirectory.
 
     Args:
@@ -240,7 +255,7 @@ def create_test_figure_files(figures_dir: Path) -> Dict[str, Path]:
     files = {}
 
     # Create PNG-like files (minimal valid PNG header)
-    png_header = b'\x89PNG\r\n\x1a\n' + b'\x00' * 100  # Minimal PNG-like content
+    png_header = b"\x89PNG\r\n\x1a\n" + b"\x00" * 100  # Minimal PNG-like content
 
     figures = ["figure1.png", "figure2.png", "plot.png"]
     for fig_name in figures:
@@ -258,5 +273,27 @@ def cleanup_test_directory(test_dir: Path) -> None:
         test_dir: Directory to clean up
     """
     import shutil
+
     if test_dir.exists():
         shutil.rmtree(test_dir, ignore_errors=True)
+
+
+@contextlib.contextmanager
+def safe_network_test(service_name: str = "External service"):
+    """Context manager to safely run network-dependent tests.
+
+    Catches common connection errors and skips the test instead of failing.
+    Desgined for integration tests that depend on local services (Ollama, etc.)
+    that might not always be running.
+
+    Args:
+        service_name: Name of the service for the skip message
+
+    Usage:
+        with safe_network_test("Ollama"):
+            response = client.query("test")
+    """
+    try:
+        yield
+    except (LLMConnectionError, requests.exceptions.RequestException, ConnectionError) as e:
+        pytest.skip(f"{service_name} connection issue: {e}")

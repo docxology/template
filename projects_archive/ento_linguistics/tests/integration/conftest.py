@@ -1,4 +1,5 @@
 """Pytest configuration for integration tests."""
+
 import os
 import sys
 
@@ -14,4 +15,3 @@ if SRC not in sys.path:
     sys.path.insert(0, SRC)
 if REPO_ROOT not in sys.path:
     sys.path.insert(0, REPO_ROOT)  # For infrastructure.* imports
-

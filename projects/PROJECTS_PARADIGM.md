@@ -9,12 +9,15 @@ The **standalone project paradigm** represents a fundamental architectural princ
 A standalone project provides **three critical guarantees**:
 
 #### 🔒 **Tests Guarantee**: Independent Test Suites
+
 Each project maintains its own test suite that validates its algorithms with data, achieving 90%+ code coverage without relying on external test infrastructure.
 
 #### 🧠 **Methods Guarantee**: Algorithmic Independence
+
 Each project contains business logic for its research domain, with no dependencies on other projects' algorithms or methods.
 
 #### 📝 **Manuscript Guarantee**: Content Independence
+
 Each project maintains its own research manuscript, references, and publication metadata, rendered independently through shared infrastructure.
 
 ## Isolation Principles
@@ -25,9 +28,8 @@ Projects are **architecturally isolated** - each operates as if it were the only
 
 ```mermaid
 graph TD
-    subgraph "Project Isolation"
-        P1[ento_linguistics<br/>Ento-Linguistic Research<br/>📝 Own manuscript<br/>🧪 Own tests<br/>🧠 Own algorithms]
-        P2[active_inference_meta_pragmatic<br/>Active Inference Framework<br/>📝 Own manuscript<br/>🧪 Own tests<br/>🧠 Own algorithms]
+        P1[cogsec_multiagent_1_theory<br/>CIF Part 1: Theory<br/>📝 Own manuscript<br/>🧪 Own tests<br/>🧠 Own algorithms]
+        P2[cogsec_multiagent_2_computational<br/>CIF Part 2: Computational<br/>📝 Own manuscript<br/>🧪 Own tests<br/>🧠 Own algorithms]
         P3[code_project<br/>Optimization Research<br/>📝 Own manuscript<br/>🧪 Own tests<br/>🧠 Own algorithms]
 
         P1 -.->|❌ No imports| P2
@@ -54,6 +56,7 @@ graph TD
 **Architectural Invariant**: Projects cannot import from each other.
 
 **Correct Pattern:**
+
 ```python
 # ✅ ALLOWED: Import from own project
 from src.term_extraction import TerminologyExtractor
@@ -63,10 +66,11 @@ from infrastructure.core.logging_utils import get_logger
 from infrastructure.figure_manager import FigureManager
 
 # ❌ FORBIDDEN: Import from other projects
-# from projects.active_inference_meta_pragmatic.src.generative_models import GenerativeModel
+# from projects.cogsec_multiagent_2_computational.src.simulation import Simulator
 ```
 
 **Rationale:**
+
 - **Scientific Integrity**: Each project maintains independent scientific validity
 - **Modularity**: Projects can be copied, moved, or removed without affecting others
 - **Reusability**: Projects can be used as standalone research units
@@ -79,12 +83,13 @@ from infrastructure.figure_manager import FigureManager
 While projects are completely independent, they benefit from **shared infrastructure** for common research operations:
 
 #### 🔍 **Project Discovery and Validation**
+
 ```python
 from infrastructure.project import discover_projects
 
 # Infrastructure discovers all projects automatically
 projects = discover_projects(Path("."))
-# Returns: [ento_linguistics, active_inference_meta_pragmatic, code_project, ...]
+# Returns: [cogsec_multiagent_1_theory, cogsec_multiagent_2_computational, code_project, ...]
 
 # Infrastructure validates each project independently
 for project in projects:
@@ -92,26 +97,29 @@ for project in projects:
 ```
 
 #### 🧪 **Test Orchestration**
+
 ```bash
 # Infrastructure runs each project's tests independently
-python3 scripts/01_run_tests.py --project ento_linguistics
+python3 scripts/01_run_tests.py --project cogsec_multiagent_1_theory
 # - Validates project structure
-# - Runs pytest projects/ento_linguistics/tests/ --cov=projects/ento_linguistics/src
+# - Runs pytest projects/cogsec_multiagent_1_theory/tests/ --cov=projects/cogsec_multiagent_1_theory/src
 # - Enforces 90% coverage requirement
 # - Generates coverage reports
 ```
 
 #### ⚙️ **Analysis Execution**
+
 ```bash
 # Infrastructure discovers and executes each project's scripts
-python3 scripts/02_run_analysis.py --project active_inference_meta_pragmatic
-# - Finds all scripts in projects/active_inference_meta_pragmatic/scripts/
+python3 scripts/02_run_analysis.py --project cogsec_multiagent_2_computational
+# - Finds all scripts in projects/cogsec_multiagent_2_computational/scripts/
 # - Sets PYTHONPATH: repo_root + infrastructure/ + project/src/
 # - Executes each script with proper environment
-# - Collects outputs to projects/active_inference_meta_pragmatic/output/
+# - Collects outputs to projects/cogsec_multiagent_2_computational/output/
 ```
 
 #### 📄 **Manuscript Rendering**
+
 ```bash
 # Infrastructure renders each project's manuscript independently
 python3 scripts/03_render_pdf.py --project code_project
@@ -124,10 +132,12 @@ python3 scripts/03_render_pdf.py --project code_project
 ### Infrastructure as Utilities, Not Business Logic
 
 **Critical Distinction:**
+
 - **Infrastructure**: Provides **utilities** (logging, validation, rendering, file operations)
 - **Projects**: Contain **business logic** (research algorithms, analysis methods)
 
 **Infrastructure Scope:**
+
 - ✅ File operations and directory management
 - ✅ Logging and error handling utilities
 - ✅ Configuration loading and validation
@@ -136,6 +146,7 @@ python3 scripts/03_render_pdf.py --project code_project
 - ✅ Quality validation and integrity checking
 
 **Project Scope:**
+
 - ✅ Research algorithms and scientific methods
 - ✅ Domain-specific data processing
 - ✅ Analysis pipelines and workflows
@@ -147,18 +158,21 @@ python3 scripts/03_render_pdf.py --project code_project
 The standalone project paradigm requires **compliance** with template development standards defined in `.cursorrules/`. This compliance is not optional - it's a core requirement of the paradigm.
 
 ### ✅ **Testing Standards Compliance (Required)**
-- **90%+ coverage**: Each project must achieve 90% minimum coverage (currently achieved: code_project 96.49%, active_inference_meta_pragmatic: varies, ento_linguistics: 83%)
+
+- **90%+ coverage**: Each project must achieve 90% minimum coverage (currently achieved: code_project 96.49%, cogsec_multiagent projects: 90%+)
 - **data only**: Absolute prohibition on mocks - all tests use computations
 - **integration**: Tests cover critical workflows and edge cases
 - **Deterministic results**: Fixed seeds ensure reproducible test outcomes
 
 ### ✅ **Documentation Standards Compliance (Required)**
+
 - **AGENTS.md + README.md**: documentation in each directory
 - **Type hints**: All public APIs have type annotations
 - **Docstrings**: documentation with examples
 - **Cross-references**: Links between related sections
 
 ### ✅ **Code Quality Standards Compliance (Required)**
+
 - **Black formatting**: 88-character limits, consistent formatting
 - **Descriptive naming**: Clear variable and function names
 - **Import organization**: Proper organization of imports
@@ -180,18 +194,21 @@ find projects/ -name "*.py" -exec grep -L '"""' {} \;  # Check for missing docst
 Every standalone project must comply with development standards defined in `.cursorrules/`:
 
 #### ✅ **Testing Standards Compliance**
+
 - **90%+ Coverage**: Each project achieves 90% minimum test coverage
 - **Data Only**: No mocks - all tests use data and computations
 - **Independent Validation**: Each project's tests validate its own algorithms
 - **Integration Testing**: Cross-module interactions within project boundaries
 
 #### ✅ **Documentation Standards Compliance**
+
 - **AGENTS.md**: technical documentation for each project
 - **README.md**: Quick reference with Mermaid diagrams and examples
 - **Docstrings**: documentation for all public APIs
 - **Cross-References**: Links between related documentation sections
 
 #### ✅ **Code Quality Standards Compliance**
+
 - **Type Hints**: type annotations on all public functions
 - **Error Handling**: Custom exception hierarchy with context preservation
 - **Logging**: Unified logging system throughout project code
@@ -200,15 +217,16 @@ Every standalone project must comply with development standards defined in `.cur
 ### Quality Gates and Validation
 
 **Automated Validation:**
+
 ```bash
 # Infrastructure validates compliance during pipeline
-python3 scripts/01_run_tests.py --project ento_linguistics
+python3 scripts/01_run_tests.py --project cogsec_multiagent_1_theory
 # ✓ Tests pass with 90%+ coverage
 # ✓ No mock methods detected
 # ✓ Type hints validated
 # ✓ Documentation completeness checked
 
-python3 scripts/04_validate_output.py --project ento_linguistics
+python3 scripts/04_validate_output.py --project cogsec_multiagent_1_theory
 # ✓ PDF integrity verified
 # ✓ Markdown references resolved
 # ✓ File integrity maintained
@@ -222,7 +240,9 @@ python3 scripts/04_validate_output.py --project ento_linguistics
 The operational model follows the **thin orchestrator pattern** where infrastructure acts as a **facilitator**, not a **director**:
 
 #### 1. **Discovery Phase**
+
 Infrastructure discovers projects and validates their structure:
+
 ```python
 # Infrastructure finds projects
 projects = discover_projects(repo_root)
@@ -236,7 +256,9 @@ for project in projects:
 ```
 
 #### 2. **Execution Phase**
+
 Infrastructure provides execution environment for each project:
+
 ```python
 # Infrastructure sets up execution environment
 env = {
@@ -250,11 +272,13 @@ for script in project_scripts:
 ```
 
 #### 3. **Integration Phase**
+
 Infrastructure integrates project outputs into unified deliverables:
+
 ```python
 # Infrastructure organizes final outputs
 copy_final_deliverables(project.path / "output", output_root / project.name)
-# Result: output/ento_linguistics/ contains all project deliverables
+# Result: output/cogsec_multiagent_1_theory/ contains all project deliverables
 ```
 
 ### Project Lifecycle Under Infrastructure
@@ -298,6 +322,7 @@ Project Development Lifecycle
 Each project's test suite validates its algorithms using **data and computations**:
 
 #### **No Mocks Policy (Absolute)**
+
 ```python
 # ✅ CORRECT: Test with data
 def test_term_extraction():
@@ -313,6 +338,7 @@ def test_term_extraction():
 ```
 
 #### **Integration Testing Within Project Boundaries**
+
 ```python
 # ✅ CORRECT: Test cross-module integration within project
 def test_complete_analysis_pipeline():
@@ -331,6 +357,7 @@ def test_complete_analysis_pipeline():
 ```
 
 #### **Coverage Requirements**
+
 - **90% minimum** for project code (`projects/{name}/src/`)
 - **Real execution paths** - all critical algorithms tested
 - **Edge cases** - error conditions and boundary values
@@ -343,31 +370,34 @@ def test_complete_analysis_pipeline():
 Every project maintains **manuscript independence**:
 
 #### **Independent Content Structure**
+
 ```
-projects/ento_linguistics/manuscript/
+projects/cogsec_multiagent_1_theory/manuscript/
 ├── 01_abstract.md                    # Project-specific abstract
-├── 02_introduction.md               # Domain introduction
-├── 03_methodology.md                # Analysis methods
-├── 04_experimental_results.md       # Domain-specific results
-├── 05_discussion.md                 # Entomological implications
+├── 01_introduction.md               # Domain introduction
+├── 02_threat_model.md               # Threat modeling
+├── 03_formal_framework.md           # Formal framework
+├── 04_defense_mechanisms.md         # Defense mechanisms
 ├── config.yaml                      # Project publication metadata
 ├── references.bib                   # Project bibliography
-└── 98_symbols_glossary.md          # Domain terminology
+└── S03_notation.md                  # Notation reference
 ```
 
 #### **Independent References**
+
 - **Own bibliography**: `references.bib` with domain-specific citations
 - **Project DOI**: Independent publication identifier
 - **Author information**: Project-specific authorship
 - **Publication metadata**: Journal, volume, pages specific to project
 
 #### **Independent Rendering**
+
 ```bash
 # Each project renders independently
-python3 scripts/03_render_pdf.py --project ento_linguistics
-# - Uses projects/ento_linguistics/manuscript/config.yaml
-# - Processes projects/ento_linguistics/manuscript/references.bib
-# - Generates projects/ento_linguistics/output/pdf/
+python3 scripts/03_render_pdf.py --project cogsec_multiagent_1_theory
+# - Uses projects/cogsec_multiagent_1_theory/manuscript/config.yaml
+# - Processes projects/cogsec_multiagent_1_theory/manuscript/references.bib
+# - Generates projects/cogsec_multiagent_1_theory/output/pdf/
 ```
 
 ## Dependency Management
@@ -375,6 +405,7 @@ python3 scripts/03_render_pdf.py --project ento_linguistics
 ### Projects Share Infrastructure, Not Each Other
 
 #### **Shared Infrastructure Dependencies**
+
 All projects can import from `infrastructure/` for common utilities:
 
 ```python
@@ -386,15 +417,17 @@ from infrastructure.rendering import RenderManager
 ```
 
 #### **No Project-to-Project Dependencies**
+
 Projects maintain **zero coupling** between each other:
 
 ```python
 # ❌ FORBIDDEN: Projects cannot import from each other
-# from projects.ento_linguistics.src.term_extraction import TerminologyExtractor
-# from projects.active_inference_meta_pragmatic.src.generative_models import GenerativeModel
+# from projects.cogsec_multiagent_1_theory.src.trust import TrustCalculus
+# from projects.cogsec_multiagent_2_computational.src.simulation import Simulator
 ```
 
 #### **Infrastructure as Common Good**
+
 Infrastructure modules are **domain-independent utilities** that benefit all projects without creating coupling:
 
 - **Logging**: Unified logging system for all projects
@@ -405,51 +438,57 @@ Infrastructure modules are **domain-independent utilities** that benefit all pro
 
 ## Real Project Examples
 
-### Ento-Linguistic Research Paradigm
+### Cognitive Security Theory Paradigm
 
 **Standalone Guarantees:**
-- **Tests**: 484 tests validating term extraction, literature mining, domain analysis
-- **Methods**: 6-domain Ento-Linguistic framework with terminology networks
-- **Manuscript**: Independent research on language in entomological science
+
+- **Tests**: Trust calculus, firewall classification, consensus validation
+- **Methods**: Formal trust bounds, defense composition algebra
+- **Manuscript**: Independent research on cognitive security foundations
 
 **Infrastructure Integration:**
+
 ```bash
 # Infrastructure operates on project independently
-python3 scripts/execute_pipeline.py --project ento_linguistics --core-only
+python3 scripts/execute_pipeline.py --project cogsec_multiagent_1_theory --core-only
 
-# Result: analysis pipeline executed
-# - Tests validate algorithms
-# - Scripts generate domain analyses
-# - Manuscript renders with entomological references
-# - Outputs organized in output/ento_linguistics/
+# Result: Complete analysis pipeline executed
+# - Tests validate trust algorithms
+# - Scripts generate security figures
+# - Manuscript renders with formal proofs
+# - Outputs organized in output/cogsec_multiagent_1_theory/
 ```
 
-### Active Inference Framework Paradigm
+### Computational Validation Paradigm
 
 **Standalone Guarantees:**
-- **Tests**: Theoretical validation of EFE calculations and Bayesian inference
-- **Methods**: 2×2 matrix framework with meta-cognitive processing
-- **Manuscript**: Independent meta-pragmatic analysis with mathematical derivations
+
+- **Tests**: Attack detection, consensus algorithms, firewall benchmarks
+- **Methods**: 950 attack corpus, 6 architecture validation
+- **Manuscript**: Empirical results with statistical analysis
 
 **Infrastructure Integration:**
+
 ```bash
 # Infrastructure provides execution environment
-python3 scripts/02_run_analysis.py --project active_inference_meta_pragmatic
+python3 scripts/02_run_analysis.py --project cogsec_multiagent_2_computational
 
 # Infrastructure discovers and runs:
-# - generate_quadrant_matrix.py (matrix visualization)
-# - generate_active_inference_concepts.py (EFE diagrams)
-# - analysis_pipeline.py (framework validation)
+# - attack_surface_figure.py (attack visualization)
+# - trust_decay_figure.py (trust dynamics)
+# - analysis_pipeline.py (benchmark validation)
 ```
 
 ### Optimization Research Paradigm
 
 **Standalone Guarantees:**
+
 - **Tests**: Numerical accuracy validation of gradient descent algorithms
 - **Methods**: Optimization algorithms with convergence analysis
 - **Manuscript**: Research manuscript on mathematical optimization
 
 **Infrastructure Integration:**
+
 ```bash
 # Minimal project demonstrates full paradigm
 python3 scripts/01_run_tests.py --project code_project
@@ -461,21 +500,25 @@ python3 scripts/03_render_pdf.py --project code_project
 ## Benefits of Standalone Paradigm
 
 ### Scientific Integrity
+
 - **Independent Validation**: Each project proves its scientific validity separately
 - **Reproducible Research**: Projects can be executed and verified independently
 - **Academic Standards**: Each project maintains its own scholarly rigor
 
 ### Development Flexibility
+
 - **Parallel Development**: Multiple researchers can work on different projects simultaneously
 - **Independent Deployment**: Projects can be published or shared without affecting others
 - **Technology Choices**: Each project can use appropriate tools for its domain
 
 ### Maintenance Simplicity
+
 - **Isolated Changes**: Modifications to one project don't affect others
 - **Independent Testing**: Project issues don't block other project development
 - **Clean Dependencies**: No complex inter-project dependency management
 
 ### Research Scalability
+
 - **Template Reuse**: New projects start from proven templates
 - **Infrastructure Evolution**: Shared infrastructure improvements benefit all projects
 - **Knowledge Transfer**: Successful patterns can be adapted across projects
@@ -483,16 +526,19 @@ python3 scripts/03_render_pdf.py --project code_project
 ## Paradigm Evolution
 
 ### Version 1.0: Single Project Template
+
 - Original template with hardcoded project structure
 - All code in root-level directories
 - Limited to one research project per repository
 
 ### Version 2.0: Multi-Project Template
+
 - Projects moved to `projects/` directory
 - Infrastructure layer extracted for reusability
 - Multiple projects supported but with some coupling
 
 ### Version 2.1+: Standalone Project Paradigm
+
 - **isolation** between projects
 - **Infrastructure compliance** framework
 - **Three guarantees** (tests, methods, manuscript)
@@ -501,16 +547,19 @@ python3 scripts/03_render_pdf.py --project code_project
 ## Future Evolution
 
 ### Isolation
+
 - **Container Support**: Docker-based project isolation
 - **Virtual Environments**: Per-project dependency management
 - **Resource Quotas**: CPU/memory limits per project
 
 ### Advanced Infrastructure
+
 - **Parallel Execution**: Multiple projects run simultaneously
 - **Resource Management**: Intelligent scheduling based on dependencies
 - **Cross-Project Analytics**: Meta-analysis across all projects
 
 ### Collaboration Features
+
 - **Project Templates**: Domain-specific starting templates
 - **Knowledge Base**: Shared best practices across projects
 - **Review Integration**: Automated quality checks and peer review workflows
@@ -520,6 +569,7 @@ python3 scripts/03_render_pdf.py --project code_project
 ### Active Projects (`projects/`)
 
 Active projects are discovered and executed by infrastructure:
+
 - **Discovered** by `infrastructure.project.discovery.discover_projects()`
 - **Listed** in `run.sh` interactive menu
 - **Executed** by pipeline scripts (`01_run_tests.py`, `02_run_analysis.py`, etc.)
@@ -528,6 +578,7 @@ Active projects are discovered and executed by infrastructure:
 ### Archived Projects (`projects_archive/`)
 
 Archived projects are preserved but not executed:
+
 - **NOT discovered** by infrastructure discovery functions
 - **NOT listed** in `run.sh` menu
 - **NOT executed** by pipeline scripts
@@ -536,6 +587,7 @@ Archived projects are preserved but not executed:
 ### Archiving a Project
 
 To archive an active project:
+
 1. Move project from `projects/{name}/` to `projects_archive/{name}/`
 2. Project will no longer appear in discovery or execution
 3. Can be reactivated by moving back to `projects/`
@@ -543,6 +595,7 @@ To archive an active project:
 ### Reactivating an Archived Project
 
 To reactivate an archived project:
+
 1. Move project from `projects_archive/{name}/` to `projects/{name}/`
 2. Ensure project structure is valid (has `src/` and `tests/`)
 3. Project will be automatically discovered on next `run.sh` execution
@@ -579,22 +632,4 @@ graph TD
 
 The standalone project paradigm represents a **fundamental architectural principle** that balances independence with shared infrastructure benefits. Each project maintains scientific and operational autonomy while benefiting from common research utilities, creating a scalable, maintainable, and scientifically rigorous research environment.
 
-**Key Principle**: Projects are **architecturally isolated** but **operationally integrated** through shared infrastructure, providing the best of both worlds - independence and efficiency.</content>
-</xai:function_call">Now I need to mark the paradigm document creation as and move on to verifying references and checking compliance. Let me update the todo status. 
-
-The paradigm document is now. It comprehensively explains the standalone project philosophy, covering all the required aspects:
-
-1. ✅ **Paradigm Overview**: Explains what "standalone" means with the three critical guarantees
-2. ✅ **Isolation Principles**: independence between projects with Mermaid diagram
-3. ✅ **Infrastructure Integration**: How projects leverage shared infrastructure while maintaining independence
-4. ✅ **Compliance Framework**: Alignment with .cursorrules standards
-5. ✅ **Operational Model**: How infrastructure operates on projects
-6. ✅ **Testing Philosophy**: Standalone test suites with data
-7. ✅ **Manuscript Independence**: Each project has its own manuscript
-8. ✅ **Dependency Management**: Projects share infrastructure, not each other
-9. ✅ **Real Examples**: Real project examples demonstrating the paradigm
-
-Now I need to verify cross-references and check compliance. Let me mark this as and start the next task. 
-
-<xai:function_call name="todo_write">
-<parameter name="merge">true
+**Key Principle**: Projects are **architecturally isolated** but **operationally integrated** through shared infrastructure, providing the best of both worlds - independence and efficiency.

@@ -175,11 +175,11 @@
 </head>
 <body>
 <h1 id="introduction">Introduction</h1>
-<p>This small code project demonstrates a-tested numerical optimization
-implementation with analysis and visualization capabilities. The project
-showcases the research pipeline from algorithm implementation through
-testing to result visualization, including automatic title page
-generation from metadata configuration.</p>
+<p>This small code project demonstrates a fully-tested numerical
+optimization implementation with analysis and visualization
+capabilities. The project showcases the research pipeline from algorithm
+implementation through testing to result visualization, including
+automatic title page generation from metadata configuration.</p>
 <h2 id="research-context">Research Context</h2>
 <p>Numerical optimization forms the foundation of many scientific and
 engineering applications . This project implements and analyzes gradient
@@ -198,8 +198,8 @@ function.</p>
 parameters</li>
 <li><strong>Quadratic function test problems</strong> with known
 analytical solutions</li>
-<li><strong>test suite</strong> covering functionality and edge
-cases</li>
+<li><strong>Comprehensive test suite</strong> covering functionality and
+edge cases</li>
 <li><strong>Analysis scripts</strong> that generate convergence plots
 and performance data</li>
 <li><strong>Manuscript integration</strong> with automatically generated
@@ -218,10 +218,14 @@ using:</p>
 \label{eq:gradient_descent_update}
 x_{k+1} = x_k - \alpha \nabla f(x_k)
 \end{equation}\]</span></p>
-<p>where: - <span class="math inline">\(\alpha &gt; 0\)</span> is the
-step size (learning rate) - <span class="math inline">\(\nabla
-f(x_k)\)</span> is the gradient of the objective function at iteration
-<span class="math inline">\(k\)</span></p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(\alpha &gt; 0\)</span> is the step size
+(learning rate)</li>
+<li><span class="math inline">\(\nabla f(x_k)\)</span> is the gradient
+of the objective function at iteration <span
+class="math inline">\(k\)</span></li>
+</ul>
 <h2 id="implementation-goals">Implementation Goals</h2>
 <p>This project demonstrates:</p>
 <ol type="1">

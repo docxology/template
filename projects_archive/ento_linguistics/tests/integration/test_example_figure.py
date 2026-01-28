@@ -1,14 +1,14 @@
 """Comprehensive tests for the example_figure.py script to ensure 100% coverage."""
 
 import os
-import sys
-import tempfile
 import shutil
 import subprocess
+import sys
+import tempfile
 from pathlib import Path
 
-import pytest
 import numpy as np
+import pytest
 
 
 class TestExampleFigureScript:
@@ -16,13 +16,17 @@ class TestExampleFigureScript:
 
     def test_script_exists_and_executable(self):
         """Test that the example_figure.py script exists."""
-        script_path = os.path.join(os.path.dirname(__file__), '..', '..', 'scripts', 'example_figure.py')
+        script_path = os.path.join(
+            os.path.dirname(__file__), "..", "..", "scripts", "example_figure.py"
+        )
         assert os.path.exists(script_path)
 
     def test_script_has_shebang(self):
         """Test that script has proper Python shebang."""
-        script_path = os.path.join(os.path.dirname(__file__), '..', '..', 'scripts', 'example_figure.py')
-        with open(script_path, 'r') as f:
+        script_path = os.path.join(
+            os.path.dirname(__file__), "..", "..", "scripts", "example_figure.py"
+        )
+        with open(script_path, "r") as f:
             first_line = f.readline().strip()
             assert first_line == "#!/usr/bin/env python3"
 
@@ -30,7 +34,8 @@ class TestExampleFigureScript:
         """Test _ensure_src_on_path function adds src/ to sys.path."""
         # Create a test script with the function
         test_script = tmp_path / "test_example_figure.py"
-        test_script.write_text("""
+        test_script.write_text(
+            """
 import os
 import sys
 
@@ -46,15 +51,19 @@ def main():
 
 if __name__ == "__main__":
     main()
-""")
+"""
+        )
 
         # Test that it adds src/ to path
         original_path = sys.path.copy()
         try:
             # Execute the function in a subprocess to test it properly
-            result = subprocess.run([
-                sys.executable, str(test_script)
-            ], cwd=str(tmp_path), capture_output=True, text=True)
+            result = subprocess.run(
+                [sys.executable, str(test_script)],
+                cwd=str(tmp_path),
+                capture_output=True,
+                text=True,
+            )
 
             assert result.returncode == 0
             # The function should execute without error
@@ -64,7 +73,9 @@ if __name__ == "__main__":
     def test_main_function_imports_from_src(self, tmp_path):
         """Test main function successfully imports from src/ modules."""
         # Create a temporary copy of the script for testing
-        script_path = os.path.join(os.path.dirname(__file__), '..', '..', 'scripts', 'example_figure.py')
+        script_path = os.path.join(
+            os.path.dirname(__file__), "..", "..", "scripts", "example_figure.py"
+        )
 
         # Create test environment
         test_root = tmp_path / "test_project"
@@ -79,14 +90,16 @@ if __name__ == "__main__":
         utils_dir = src_dir / "utils"
         utils_dir.mkdir()
         (utils_dir / "__init__.py").write_text("")
-        (utils_dir / "logging.py").write_text("""
+        (utils_dir / "logging.py").write_text(
+            """
 def get_logger(name):
     import logging
     return logging.getLogger(name)
-""")
+"""
+        )
 
         # Create example.py
-        example_content = '''
+        example_content = """
 def add_numbers(a, b):
     return a + b
 
@@ -107,7 +120,7 @@ def find_minimum(numbers):
     if not numbers:
         return None
     return min(numbers)
-'''
+"""
         (src_dir / "example.py").write_text(example_content)
 
         # Copy script to test directory and modify it for testing
@@ -119,18 +132,24 @@ def find_minimum(numbers):
         env = os.environ.copy()
         repo_root = str(Path(__file__).parent.parent.parent.parent.parent)  # template/
         project_src = str(Path(__file__).parent.parent.parent / "src")
-        env['PYTHONPATH'] = f"{repo_root}:{project_src}:{env.get('PYTHONPATH', '')}"
+        env["PYTHONPATH"] = f"{repo_root}:{project_src}:{env.get('PYTHONPATH', '')}"
 
-        result = subprocess.run([
-            sys.executable, str(test_script)
-        ], cwd=str(test_root), capture_output=True, text=True, env=env)
+        result = subprocess.run(
+            [sys.executable, str(test_script)],
+            cwd=str(test_root),
+            capture_output=True,
+            text=True,
+            env=env,
+        )
 
         # Should succeed (exit code 0)
         assert result.returncode == 0
 
         # Check that it successfully imported from src/
         combined_output = result.stdout + result.stderr
-        assert "✅ Successfully imported functions from src/example.py" in combined_output
+        assert (
+            "✅ Successfully imported functions from src/example.py" in combined_output
+        )
 
         # Check that it generated outputs
         assert "✅ Generated example figure" in combined_output
@@ -152,23 +171,30 @@ def find_minimum(numbers):
         test_root = tmp_path / "test_project_no_src"
         test_root.mkdir()
 
-        script_path = os.path.join(os.path.dirname(__file__), '..', '..', 'scripts', 'example_figure.py')
+        script_path = os.path.join(
+            os.path.dirname(__file__), "..", "..", "scripts", "example_figure.py"
+        )
         test_script = test_root / "scripts" / "example_figure.py"
         test_script.parent.mkdir()
         shutil.copy2(script_path, test_script)
 
         # Run the script - should handle import errors gracefully
-        result = subprocess.run([
-            sys.executable, str(test_script)
-        ], cwd=str(test_root), capture_output=True, text=True)
+        result = subprocess.run(
+            [sys.executable, str(test_script)],
+            cwd=str(test_root),
+            capture_output=True,
+            text=True,
+        )
 
         # Should handle import errors gracefully and continue
         assert result.returncode == 0  # Script handles errors gracefully
         # The script should either succeed (with _ensure_src_on_path) or fail gracefully
         # Either way, it should not crash
         combined_output = result.stdout + result.stderr
-        assert "✅ Successfully imported functions from src/example.py" in combined_output or \
-               "❌ Failed to import from src/example.py" in combined_output
+        assert (
+            "✅ Successfully imported functions from src/example.py" in combined_output
+            or "❌ Failed to import from src/example.py" in combined_output
+        )
 
     def test_main_function_src_integration_demonstrated(self, tmp_path):
         """Test that src/ functions are actually used in data processing."""
@@ -189,7 +215,7 @@ def find_minimum(numbers):
         (utils_dir / "__init__.py").write_text("")
 
         # Create example.py with tracking
-        example_content = '''
+        example_content = """
 call_count = {"add": 0, "multiply": 0, "average": 0, "max": 0, "min": 0}
 
 def add_numbers(a, b):
@@ -217,7 +243,7 @@ def find_minimum(numbers):
     if not numbers:
         return None
     return min(numbers)
-'''
+"""
         (src_dir / "example.py").write_text(example_content)
 
         # Create utils/logging.py for the script to import
@@ -242,17 +268,23 @@ def get_logger(name: str) -> logging.Logger:
         (utils_dir / "logging.py").write_text(logging_content)
 
         # Copy script
-        script_path = os.path.join(os.path.dirname(__file__), '..', '..', 'scripts', 'example_figure.py')
+        script_path = os.path.join(
+            os.path.dirname(__file__), "..", "..", "scripts", "example_figure.py"
+        )
         test_script = test_root / "scripts" / "example_figure.py"
         test_script.parent.mkdir()
         shutil.copy2(script_path, test_script)
 
         # Run the script
         env = os.environ.copy()
-        env['PYTHONPATH'] = f"{test_root}:{test_root}/src:{env.get('PYTHONPATH', '')}"
-        result = subprocess.run([
-            sys.executable, str(test_script)
-        ], cwd=str(test_root), capture_output=True, text=True, env=env)
+        env["PYTHONPATH"] = f"{test_root}:{test_root}/src:{env.get('PYTHONPATH', '')}"
+        result = subprocess.run(
+            [sys.executable, str(test_script)],
+            cwd=str(test_root),
+            capture_output=True,
+            text=True,
+            env=env,
+        )
 
         # Should succeed
         assert result.returncode == 0
@@ -274,23 +306,30 @@ def get_logger(name: str) -> logging.Logger:
         # Copy src/ and script
         src_dir = test_root / "src"
         src_dir.mkdir()
-        (src_dir / "example.py").write_text('''
+        (src_dir / "example.py").write_text(
+            """
 def add_numbers(a, b): return a + b
 def multiply_numbers(a, b): return a * b
 def calculate_average(numbers): return sum(numbers) / len(numbers) if numbers else None
 def find_maximum(numbers): return max(numbers) if numbers else None
 def find_minimum(numbers): return min(numbers) if numbers else None
-''')
+"""
+        )
 
-        script_path = os.path.join(os.path.dirname(__file__), '..', '..', 'scripts', 'example_figure.py')
+        script_path = os.path.join(
+            os.path.dirname(__file__), "..", "..", "scripts", "example_figure.py"
+        )
         test_script = test_root / "scripts" / "example_figure.py"
         test_script.parent.mkdir()
         shutil.copy2(script_path, test_script)
 
         # Run script
-        result = subprocess.run([
-            sys.executable, str(test_script)
-        ], cwd=str(test_root), capture_output=True, text=True)
+        result = subprocess.run(
+            [sys.executable, str(test_script)],
+            cwd=str(test_root),
+            capture_output=True,
+            text=True,
+        )
 
         # Check output structure
         output_dir = test_root / "output"
@@ -309,23 +348,30 @@ def find_minimum(numbers): return min(numbers) if numbers else None
         # Setup minimal environment
         src_dir = test_root / "src"
         src_dir.mkdir()
-        (src_dir / "example.py").write_text('''
+        (src_dir / "example.py").write_text(
+            """
 def add_numbers(a, b): return a + b
 def multiply_numbers(a, b): return a * b
 def calculate_average(numbers): return sum(numbers) / len(numbers) if numbers else None
 def find_maximum(numbers): return max(numbers) if numbers else None
 def find_minimum(numbers): return min(numbers) if numbers else None
-''')
+"""
+        )
 
-        script_path = os.path.join(os.path.dirname(__file__), '..', '..', 'scripts', 'example_figure.py')
+        script_path = os.path.join(
+            os.path.dirname(__file__), "..", "..", "scripts", "example_figure.py"
+        )
         test_script = test_root / "scripts" / "example_figure.py"
         test_script.parent.mkdir()
         shutil.copy2(script_path, test_script)
 
         # Run script
-        result = subprocess.run([
-            sys.executable, str(test_script)
-        ], cwd=str(test_root), capture_output=True, text=True)
+        result = subprocess.run(
+            [sys.executable, str(test_script)],
+            cwd=str(test_root),
+            capture_output=True,
+            text=True,
+        )
 
         # Check that PNG file exists and has content
         figure_path = test_root / "output" / "figures" / "example_figure.png"
@@ -342,23 +388,30 @@ def find_minimum(numbers): return min(numbers) if numbers else None
         # Setup minimal environment
         src_dir = test_root / "src"
         src_dir.mkdir()
-        (src_dir / "example.py").write_text('''
+        (src_dir / "example.py").write_text(
+            """
 def add_numbers(a, b): return a + b
 def multiply_numbers(a, b): return a * b
 def calculate_average(numbers): return sum(numbers) / len(numbers) if numbers else None
 def find_maximum(numbers): return max(numbers) if numbers else None
 def find_minimum(numbers): return min(numbers) if numbers else None
-''')
+"""
+        )
 
-        script_path = os.path.join(os.path.dirname(__file__), '..', '..', 'scripts', 'example_figure.py')
+        script_path = os.path.join(
+            os.path.dirname(__file__), "..", "..", "scripts", "example_figure.py"
+        )
         test_script = test_root / "scripts" / "example_figure.py"
         test_script.parent.mkdir()
         shutil.copy2(script_path, test_script)
 
         # Run script
-        result = subprocess.run([
-            sys.executable, str(test_script)
-        ], cwd=str(test_root), capture_output=True, text=True)
+        result = subprocess.run(
+            [sys.executable, str(test_script)],
+            cwd=str(test_root),
+            capture_output=True,
+            text=True,
+        )
 
         # Check NPZ file
         npz_path = test_root / "output" / "data" / "example_data.npz"
@@ -366,24 +419,24 @@ def find_minimum(numbers): return min(numbers) if numbers else None
 
         # Load and verify contents
         data = np.load(npz_path)
-        assert 'x' in data
-        assert 'y' in data
-        assert 'y_processed' in data
-        assert 'avg_y' in data
-        assert 'max_y' in data
-        assert 'min_y' in data
+        assert "x" in data
+        assert "y" in data
+        assert "y_processed" in data
+        assert "avg_y" in data
+        assert "max_y" in data
+        assert "min_y" in data
 
         # Check that arrays have expected shapes
-        assert len(data['x']) == 100  # From linspace(0, 10, 100)
-        assert len(data['y']) == 100
-        assert len(data['y_processed']) == 100
+        assert len(data["x"]) == 100  # From linspace(0, 10, 100)
+        assert len(data["y"]) == 100
+        assert len(data["y_processed"]) == 100
 
         # Check CSV file
         csv_path = test_root / "output" / "data" / "example_data.csv"
         assert csv_path.exists()
 
         # Read and verify CSV structure
-        with open(csv_path, 'r') as f:
+        with open(csv_path, "r") as f:
             lines = f.readlines()
             assert lines[0].strip() == "x,y,y_processed"
             assert len(lines) == 101  # Header + 100 data points
@@ -396,27 +449,37 @@ def find_minimum(numbers): return min(numbers) if numbers else None
         # Setup minimal environment
         src_dir = test_root / "src"
         src_dir.mkdir()
-        (src_dir / "example.py").write_text('''
+        (src_dir / "example.py").write_text(
+            """
 def add_numbers(a, b): return a + b
 def multiply_numbers(a, b): return a * b
 def calculate_average(numbers): return sum(numbers) / len(numbers) if numbers else None
 def find_maximum(numbers): return max(numbers) if numbers else None
 def find_minimum(numbers): return min(numbers) if numbers else None
-''')
+"""
+        )
 
-        script_path = os.path.join(os.path.dirname(__file__), '..', '..', 'scripts', 'example_figure.py')
+        script_path = os.path.join(
+            os.path.dirname(__file__), "..", "..", "scripts", "example_figure.py"
+        )
         test_script = test_root / "scripts" / "example_figure.py"
         test_script.parent.mkdir()
         shutil.copy2(script_path, test_script)
 
         # Run script twice
-        result1 = subprocess.run([
-            sys.executable, str(test_script)
-        ], cwd=str(test_root), capture_output=True, text=True)
+        result1 = subprocess.run(
+            [sys.executable, str(test_script)],
+            cwd=str(test_root),
+            capture_output=True,
+            text=True,
+        )
 
-        result2 = subprocess.run([
-            sys.executable, str(test_script)
-        ], cwd=str(test_root), capture_output=True, text=True)
+        result2 = subprocess.run(
+            [sys.executable, str(test_script)],
+            cwd=str(test_root),
+            capture_output=True,
+            text=True,
+        )
 
         # Both should succeed
         assert result1.returncode == 0
@@ -430,9 +493,9 @@ def find_minimum(numbers): return min(numbers) if numbers else None
         data2 = np.load(npz_path)
 
         # Should be identical (numpy arrays should be exactly equal)
-        np.testing.assert_array_equal(data1['x'], data2['x'])
-        np.testing.assert_array_equal(data1['y'], data2['y'])
-        np.testing.assert_array_equal(data1['y_processed'], data2['y_processed'])
+        np.testing.assert_array_equal(data1["x"], data2["x"])
+        np.testing.assert_array_equal(data1["y"], data2["y"])
+        np.testing.assert_array_equal(data1["y_processed"], data2["y_processed"])
 
     def test_main_function_error_handling(self, tmp_path):
         """Test that script handles errors gracefully."""
@@ -448,7 +511,8 @@ def find_minimum(numbers): return min(numbers) if numbers else None
         utils_dir.mkdir()
         (src_dir / "__init__.py").write_text("")
         (utils_dir / "__init__.py").write_text("")
-        (utils_dir / "logging.py").write_text('''
+        (utils_dir / "logging.py").write_text(
+            '''
 import logging
 import sys
 from pathlib import Path
@@ -465,32 +529,43 @@ def get_logger(name: str) -> logging.Logger:
         logger.addHandler(handler)
         logger.setLevel(logging.INFO)
     return logger
-''')
+'''
+        )
 
-        (src_dir / "example.py").write_text('''
+        (src_dir / "example.py").write_text(
+            """
 # This file has a syntax error
 def broken_function(
     return 1
-''')
+"""
+        )
 
-        script_path = os.path.join(os.path.dirname(__file__), '..', '..', 'scripts', 'example_figure.py')
+        script_path = os.path.join(
+            os.path.dirname(__file__), "..", "..", "scripts", "example_figure.py"
+        )
         test_script = test_root / "scripts" / "example_figure.py"
         test_script.parent.mkdir()
         shutil.copy2(script_path, test_script)
 
         # Run script - should handle import error gracefully
         env = os.environ.copy()
-        env['PYTHONPATH'] = f"{test_root}:{test_root}/src:{env.get('PYTHONPATH', '')}"
-        result = subprocess.run([
-            sys.executable, str(test_script)
-        ], cwd=str(test_root), capture_output=True, text=True, env=env)
+        env["PYTHONPATH"] = f"{test_root}:{test_root}/src:{env.get('PYTHONPATH', '')}"
+        result = subprocess.run(
+            [sys.executable, str(test_script)],
+            cwd=str(test_root),
+            capture_output=True,
+            text=True,
+            env=env,
+        )
 
         # Should handle import error gracefully and continue
         assert result.returncode == 0  # Script handles errors gracefully
         # Either import error or syntax error should be reported
-        assert ("❌ Failed to import from src/example.py" in result.stdout or
-                "SyntaxError" in result.stderr or
-                "❌ Failed to import from src/example.py" in result.stdout)
+        assert (
+            "❌ Failed to import from src/example.py" in result.stdout
+            or "SyntaxError" in result.stderr
+            or "❌ Failed to import from src/example.py" in result.stdout
+        )
 
     def test_main_function_matplotlib_backend_setting(self, tmp_path):
         """Test that script properly sets matplotlib backend."""
@@ -500,23 +575,30 @@ def broken_function(
         # Setup minimal environment
         src_dir = test_root / "src"
         src_dir.mkdir()
-        (src_dir / "example.py").write_text('''
+        (src_dir / "example.py").write_text(
+            """
 def add_numbers(a, b): return a + b
 def multiply_numbers(a, b): return a * b
 def calculate_average(numbers): return sum(numbers) / len(numbers) if numbers else None
 def find_maximum(numbers): return max(numbers) if numbers else None
 def find_minimum(numbers): return min(numbers) if numbers else None
-''')
+"""
+        )
 
-        script_path = os.path.join(os.path.dirname(__file__), '..', '..', 'scripts', 'example_figure.py')
+        script_path = os.path.join(
+            os.path.dirname(__file__), "..", "..", "scripts", "example_figure.py"
+        )
         test_script = test_root / "scripts" / "example_figure.py"
         test_script.parent.mkdir()
         shutil.copy2(script_path, test_script)
 
         # Run script and check that it sets backend
-        result = subprocess.run([
-            sys.executable, str(test_script)
-        ], cwd=str(test_root), capture_output=True, text=True)
+        result = subprocess.run(
+            [sys.executable, str(test_script)],
+            cwd=str(test_root),
+            capture_output=True,
+            text=True,
+        )
 
         # Should succeed
         assert result.returncode == 0

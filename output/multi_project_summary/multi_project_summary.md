@@ -1,37 +1,54 @@
 # Multi-Project Execution Summary
 
-**Generated:** 2026-01-08T14:58:13.444466
+**Generated:** 2026-01-28T06:39:02.001932
 
 ## Overview
 
-- **Total Projects:** 2
-- **Successful:** 2
+- **Total Projects:** 4
+- **Successful:** 4
 - **Failed:** 0
-- **Total Duration:** 503.9s
-
-- **Infrastructure Tests:** 385.3s
+- **Total Duration:** 229.1s
 
 ## Project Results
 
-### ✅ active_inference_meta_pragmatic
-- **Status:** Success
-- **Duration:** 78.1s
-- **Stages Completed:** 7
-
 ### ✅ code_project
 - **Status:** Success
-- **Duration:** 33.5s
+- **Duration:** 42.3s
 - **Stages Completed:** 7
+
+### ❌ cogsec_multiagent_1_theory
+- **Status:** Failed
+- **Duration:** 0.0s
+- **Stages Completed:** 0
+- **Errors:**
+  - Unknown result format
+
+### ❌ cogsec_multiagent_2_computational
+- **Status:** Failed
+- **Duration:** 0.0s
+- **Stages Completed:** 0
+- **Errors:**
+  - Unknown result format
+
+### ❌ cogsec_multiagent_3_practical
+- **Status:** Failed
+- **Duration:** 0.0s
+- **Stages Completed:** 0
+- **Errors:**
+  - Unknown result format
 
 ## Performance Analysis
 
-- **Slowest Project:** active_inference_meta_pragmatic
+- **Slowest Project:** code_project
 - **Fastest Project:** code_project
-- **Average Duration:** 55.8s
-- **Total Pipeline Time:** 111.6s
+- **Average Duration:** 42.3s
+- **Total Pipeline Time:** 42.3s
 
 ## Error Summary
 
-- **Total Errors:** 0
+- **Total Errors:** 3
 
 **Errors by Project:**
+- cogsec_multiagent_1_theory: 1 error(s)
+- cogsec_multiagent_2_computational: 1 error(s)
+- cogsec_multiagent_3_practical: 1 error(s)

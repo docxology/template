@@ -1,57 +1,57 @@
 {
-  "pipeline_start_time": 1767913053.056833,
+  "pipeline_start_time": 1769610912.8575392,
   "last_stage_completed": 7,
   "stage_results": [
     {
       "name": "Clean Output Directories",
       "exit_code": 0,
-      "duration": 0.010730981826782227,
-      "timestamp": "2026-01-08 14:58:06",
+      "duration": 0.009884834289550781,
+      "timestamp": "2026-01-28 06:35:55",
       "completed": true
     },
     {
       "name": "Environment Setup",
       "exit_code": 0,
-      "duration": 0.5610790252685547,
-      "timestamp": "2026-01-08 14:58:06",
+      "duration": 0.8647818565368652,
+      "timestamp": "2026-01-28 06:35:55",
       "completed": true
     },
     {
       "name": "Project Tests",
       "exit_code": 0,
-      "duration": 4.767409086227417,
-      "timestamp": "2026-01-08 14:58:06",
+      "duration": 4.128535985946655,
+      "timestamp": "2026-01-28 06:35:55",
       "completed": true
     },
     {
       "name": "Project Analysis",
       "exit_code": 0,
-      "duration": 3.746250867843628,
-      "timestamp": "2026-01-08 14:58:06",
+      "duration": 4.993401765823364,
+      "timestamp": "2026-01-28 06:35:55",
       "completed": true
     },
     {
       "name": "PDF Rendering",
       "exit_code": 0,
-      "duration": 23.819551944732666,
-      "timestamp": "2026-01-08 14:58:06",
+      "duration": 31.455225229263306,
+      "timestamp": "2026-01-28 06:35:55",
       "completed": true
     },
     {
       "name": "Output Validation",
       "exit_code": 0,
-      "duration": 0.2960832118988037,
-      "timestamp": "2026-01-08 14:58:06",
+      "duration": 0.42675185203552246,
+      "timestamp": "2026-01-28 06:35:55",
       "completed": true
     },
     {
       "name": "Copy Outputs",
       "exit_code": 0,
-      "duration": 0.31000614166259766,
-      "timestamp": "2026-01-08 14:58:06",
+      "duration": 0.3747859001159668,
+      "timestamp": "2026-01-28 06:35:55",
       "completed": true
     }
   ],
   "total_stages": 7,
-  "checkpoint_time": 1767913086.5702028
+  "checkpoint_time": 1769610955.113458
 }

@@ -1,20 +1,18 @@
 """Tests for infrastructure.llm.validation module."""
-import pytest
+
 import json
-from infrastructure.llm.validation import (
-    OutputValidator,
-    detect_repetition,
-    deduplicate_sections,
-    is_off_topic,
-    has_on_topic_signals,
-    detect_conversational_phrases,
-    check_format_compliance,
-)
-from infrastructure.llm.validation.repetition import (
-    calculate_unique_content_ratio,
-    _calculate_similarity,
-)
+
+import pytest
+
 from infrastructure.core.exceptions import ValidationError
+from infrastructure.llm.validation import (OutputValidator,
+                                           check_format_compliance,
+                                           deduplicate_sections,
+                                           detect_conversational_phrases,
+                                           detect_repetition,
+                                           has_on_topic_signals, is_off_topic)
+from infrastructure.llm.validation.repetition import (
+    _calculate_similarity, calculate_unique_content_ratio)
 
 
 class TestJSONValidation:
@@ -29,7 +27,7 @@ class TestJSONValidation:
 
     def test_validate_markdown_wrapped_json(self):
         """Test JSON wrapped in markdown code blocks."""
-        markdown_json = "```json\n{\"key\": \"value\"}\n```"
+        markdown_json = '```json\n{"key": "value"}\n```'
         result = OutputValidator.validate_json(markdown_json)
         assert result["key"] == "value"
 
@@ -123,17 +121,14 @@ class TestStructureValidation:
         """Test validation of required fields."""
         schema = {
             "type": "object",
-            "properties": {
-                "name": {"type": "string"},
-                "age": {"type": "integer"}
-            },
-            "required": ["name"]
+            "properties": {"name": {"type": "string"}, "age": {"type": "integer"}},
+            "required": ["name"],
         }
-        
+
         # Valid: has required field
         data = {"name": "John", "age": 30}
         assert OutputValidator.validate_structure(data, schema) is True
-        
+
         # Invalid: missing required field
         data_missing = {"age": 30}
         with pytest.raises(ValidationError):
@@ -143,16 +138,13 @@ class TestStructureValidation:
         """Test type validation in structure."""
         schema = {
             "type": "object",
-            "properties": {
-                "name": {"type": "string"},
-                "count": {"type": "integer"}
-            }
+            "properties": {"name": {"type": "string"}, "count": {"type": "integer"}},
         }
-        
+
         # Valid types
         data = {"name": "test", "count": 5}
         assert OutputValidator.validate_structure(data, schema) is True
-        
+
         # Invalid: wrong type for count
         data_wrong_type = {"name": "test", "count": "five"}
         with pytest.raises(ValidationError):
@@ -232,9 +224,10 @@ class TestCompleteValidation:
         """Test structured mode comprehensive validation."""
         content = '{"key": "value"}'
         schema = {"type": "object", "properties": {"key": {"type": "string"}}}
-        assert OutputValidator.validate_complete(
-            content, mode="structured", schema=schema
-        ) is True
+        assert (
+            OutputValidator.validate_complete(content, mode="structured", schema=schema)
+            is True
+        )
 
     def test_validate_complete_empty_content(self):
         """Test empty content validation."""
@@ -245,9 +238,7 @@ class TestCompleteValidation:
         """Test invalid structured content."""
         with pytest.raises(ValidationError):
             OutputValidator.validate_complete(
-                "Not JSON",
-                mode="structured",
-                schema={"type": "object"}
+                "Not JSON", mode="structured", schema={"type": "object"}
             )
 
 
@@ -256,17 +247,17 @@ class TestJSONValidationEdgeCases:
 
     def test_validate_generic_code_block(self):
         """Test JSON wrapped in generic code blocks (not ```json).
-        
+
         Covers line 25: code block extraction without explicit json tag.
         """
         # Code block without 'json' tag
-        generic_block = "```\n{\"key\": \"value\"}\n```"
+        generic_block = '```\n{"key": "value"}\n```'
         result = OutputValidator.validate_json(generic_block)
         assert result["key"] == "value"
 
     def test_validate_code_block_with_text_before(self):
         """Test code block with surrounding text."""
-        content = "Here is the JSON:\n```\n{\"result\": true}\n```\nEnd."
+        content = 'Here is the JSON:\n```\n{"result": true}\n```\nEnd.'
         result = OutputValidator.validate_json(content)
         assert result["result"] is True
 
@@ -278,7 +269,7 @@ class TestJSONValidationEdgeCases:
 
     def test_validate_json_array(self):
         """Test JSON array validation."""
-        json_array = '[1, 2, 3]'
+        json_array = "[1, 2, 3]"
         result = OutputValidator.validate_json(json_array)
         assert result == [1, 2, 3]
 
@@ -288,15 +279,13 @@ class TestTypeCheckingEdgeCases:
 
     def test_check_unknown_type(self):
         """Test _check_type with unknown type returns True.
-        
+
         Covers line 116: unknown type handling.
         """
         # Unknown type should return True (permissive)
         schema = {
             "type": "object",
-            "properties": {
-                "field": {"type": "unknowntype"}  # Unknown type
-            }
+            "properties": {"field": {"type": "unknowntype"}},  # Unknown type
         }
         data = {"field": "any value"}
         # Should pass because unknown types are permissive
@@ -306,9 +295,7 @@ class TestTypeCheckingEdgeCases:
         """Test type checking with null type in schema."""
         schema = {
             "type": "object",
-            "properties": {
-                "field": {"type": "null"}  # Not in type_map
-            }
+            "properties": {"field": {"type": "null"}},  # Not in type_map
         }
         data = {"field": None}
         # Should pass because "null" is unknown type
@@ -316,15 +303,10 @@ class TestTypeCheckingEdgeCases:
 
     def test_check_type_boolean(self):
         """Test boolean type checking."""
-        schema = {
-            "type": "object",
-            "properties": {
-                "flag": {"type": "boolean"}
-            }
-        }
+        schema = {"type": "object", "properties": {"flag": {"type": "boolean"}}}
         data = {"flag": True}
         assert OutputValidator.validate_structure(data, schema) is True
-        
+
         # Wrong type
         data_wrong = {"flag": "true"}  # String, not boolean
         with pytest.raises(ValidationError):
@@ -332,12 +314,7 @@ class TestTypeCheckingEdgeCases:
 
     def test_check_type_number(self):
         """Test number type checking (int and float)."""
-        schema = {
-            "type": "object",
-            "properties": {
-                "value": {"type": "number"}
-            }
-        }
+        schema = {"type": "object", "properties": {"value": {"type": "number"}}}
         # Int is a number
         assert OutputValidator.validate_structure({"value": 42}, schema) is True
         # Float is a number
@@ -345,27 +322,20 @@ class TestTypeCheckingEdgeCases:
 
     def test_check_type_array(self):
         """Test array type checking."""
-        schema = {
-            "type": "object",
-            "properties": {
-                "items": {"type": "array"}
-            }
-        }
+        schema = {"type": "object", "properties": {"items": {"type": "array"}}}
         assert OutputValidator.validate_structure({"items": [1, 2, 3]}, schema) is True
-        
+
         # Wrong type
         with pytest.raises(ValidationError):
             OutputValidator.validate_structure({"items": "not an array"}, schema)
 
     def test_check_type_object(self):
         """Test object type checking."""
-        schema = {
-            "type": "object",
-            "properties": {
-                "data": {"type": "object"}
-            }
-        }
-        assert OutputValidator.validate_structure({"data": {"nested": True}}, schema) is True
+        schema = {"type": "object", "properties": {"data": {"type": "object"}}}
+        assert (
+            OutputValidator.validate_structure({"data": {"nested": True}}, schema)
+            is True
+        )
 
 
 class TestCompleteValidationEdgeCases:
@@ -373,7 +343,7 @@ class TestCompleteValidationEdgeCases:
 
     def test_validate_complete_with_formatting_issues(self):
         """Test validate_complete logs warning for formatting issues.
-        
+
         Covers line 166: warning logging for formatting issues.
         """
         # Content with double spaces (formatting issue)
@@ -451,6 +421,7 @@ class TestFormattingValidationEdgeCases:
 # Repetition Detection Tests
 # =============================================================================
 
+
 class TestRepetitionDetection:
     """Test repetition detection functions."""
 
@@ -474,7 +445,10 @@ This is the third section with yet another unique topic C.
     def test_detect_repetition_with_repetition(self):
         """Test that repeated content is detected."""
         # Create text with repeated sections
-        repeated_section = "This is repeated content about machine learning and optimization methods. " * 5
+        repeated_section = (
+            "This is repeated content about machine learning and optimization methods. "
+            * 5
+        )
         text = f"""
 ## Section 1
 {repeated_section}
@@ -515,7 +489,9 @@ This section provides an introduction to machine learning algorithms and their a
 ## Introduction
 This part discusses machine learning methods and their use in analyzing scientific data.
 """
-        has_rep, duplicates, unique_ratio = detect_repetition(text, similarity_threshold=0.8)
+        has_rep, duplicates, unique_ratio = detect_repetition(
+            text, similarity_threshold=0.8
+        )
         # Should not detect as repetition despite similar topics
         assert has_rep is False
         assert unique_ratio >= 0.8
@@ -586,7 +562,13 @@ This describes the methods in detail with comprehensive information about algori
 ## Results
 These are the comprehensive results with detailed analysis, statistical significance, and interpretation of findings.
 """
-        result = deduplicate_sections(text, max_repetitions=1, mode="aggressive", similarity_threshold=0.7, min_content_preservation=0.5)
+        result = deduplicate_sections(
+            text,
+            max_repetitions=1,
+            mode="aggressive",
+            similarity_threshold=0.7,
+            min_content_preservation=0.5,
+        )
         # With sufficient unique content, deduplication should work
         assert result.count("## Methods") <= 2  # Original + max_repetitions
 
@@ -627,7 +609,13 @@ This is a repeated paragraph about machine learning algorithms and their applica
 
 Final paragraph with unique conclusions.
 """
-        result = deduplicate_sections(text, max_repetitions=1, mode="aggressive", similarity_threshold=0.7, min_content_preservation=0.4)
+        result = deduplicate_sections(
+            text,
+            max_repetitions=1,
+            mode="aggressive",
+            similarity_threshold=0.7,
+            min_content_preservation=0.4,
+        )
         # Should have fewer "repeated paragraph" occurrences in aggressive mode
         assert result.count("repeated paragraph") <= 2
 
@@ -665,7 +653,13 @@ This is identical content that should be deduplicated in aggressive mode with de
 ## Results
 This is a substantial results section with detailed findings and analysis.
 """
-        result = deduplicate_sections(text, mode="aggressive", max_repetitions=1, similarity_threshold=0.9, min_content_preservation=0.5)
+        result = deduplicate_sections(
+            text,
+            mode="aggressive",
+            max_repetitions=1,
+            similarity_threshold=0.9,
+            min_content_preservation=0.5,
+        )
         # Should remove duplicates more aggressively for identical content
         assert result.count("## Methods") <= 2
         # Should preserve other sections
@@ -695,7 +689,7 @@ This is also unique content to preserve.
             text,
             mode="aggressive",
             similarity_threshold=0.7,
-            min_content_preservation=0.8
+            min_content_preservation=0.8,
         )
         # Should preserve at least 80% of content due to preservation limit
         preservation_ratio = len(result) / len(text)
@@ -807,6 +801,7 @@ Introduction text.
 # =============================================================================
 # Review Quality Validation Tests
 # =============================================================================
+
 
 class TestOffTopicDetection:
     """Test off-topic detection functions."""

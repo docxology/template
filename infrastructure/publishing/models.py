@@ -1,4 +1,5 @@
 """Data models for academic publishing."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -31,19 +32,3 @@ class CitationStyle:
     name: str
     format_string: str
     example: str
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -51,7 +51,7 @@ class PerformanceMetrics:
             "memory_delta_mb": self.memory_delta,
             "cpu_time_seconds": self.cpu_time,
             "function_calls": self.function_calls,
-            "timestamp": self.timestamp
+            "timestamp": self.timestamp,
         }
 
 
@@ -84,7 +84,7 @@ class PerformanceMonitor:
             metrics = PerformanceMetrics(
                 operation_name=operation_name,
                 execution_time=execution_time,
-                cpu_time=cpu_time
+                cpu_time=cpu_time,
             )
 
             if track_memory:
@@ -123,7 +123,7 @@ class PerformanceMonitor:
 
             # Generate statistics
             stats = pstats.Stats(profiler)
-            stats.sort_stats('cumulative')
+            stats.sort_stats("cumulative")
 
             # Log top 10 most time-consuming functions
             logger.info(f"Profile results for {func.__name__}:")
@@ -135,7 +135,7 @@ class PerformanceMonitor:
         *args,
         iterations: int = 5,
         warmup_iterations: int = 2,
-        **kwargs
+        **kwargs,
     ) -> Dict[str, Union[float, List[float]]]:
         """Benchmark function performance over multiple iterations.
 
@@ -162,13 +162,15 @@ class PerformanceMonitor:
 
             execution_time = end_time - start_time
             execution_times.append(execution_time)
-            logger.debug(".4f")
+            logger.debug(f"Iteration {i + 1}: {execution_time:.4f}s")
 
         # Calculate statistics
         avg_time = sum(execution_times) / len(execution_times)
         min_time = min(execution_times)
         max_time = max(execution_times)
-        std_dev = (sum((t - avg_time) ** 2 for t in execution_times) / len(execution_times)) ** 0.5
+        std_dev = (
+            sum((t - avg_time) ** 2 for t in execution_times) / len(execution_times)
+        ) ** 0.5
 
         benchmark_results = {
             "function_name": func.__name__,
@@ -177,13 +179,13 @@ class PerformanceMonitor:
             "min_time": min_time,
             "max_time": max_time,
             "std_dev": std_dev,
-            "all_times": execution_times
+            "all_times": execution_times,
         }
 
         logger.info(
             f"Benchmark: {func.__name__} - "
-            ".4f"
-            ".4f"
+            f"avg: {avg_time:.4f}s, "
+            f"std: {std_dev:.4f}s"
         )
 
         return benchmark_results
@@ -223,17 +225,22 @@ class PerformanceMonitor:
         if self.metrics_history:
             total_time = sum(m.execution_time for m in self.metrics_history)
             avg_time = total_time / len(self.metrics_history)
-            max_memory = max((m.memory_peak for m in self.metrics_history if m.memory_peak), default=None)
+            max_memory = max(
+                (m.memory_peak for m in self.metrics_history if m.memory_peak),
+                default=None,
+            )
 
-            report_lines.extend([
-                ".3f",
-                ".3f",
-                f"- Peak memory usage: {max_memory or 'N/A'} MB",
-                "",
-                "## Recent Operations",
-                "| Operation | Time (s) | Peak Memory (MB) |",
-                "|-----------|----------|------------------|"
-            ])
+            report_lines.extend(
+                [
+                    f"- Total execution time: {total_time:.3f}s",
+                    f"- Average execution time: {avg_time:.3f}s",
+                    f"- Peak memory usage: {max_memory or 'N/A'} MB",
+                    "",
+                    "## Recent Operations",
+                    "| Operation | Time (s) | Peak Memory (MB) |",
+                    "|-----------|----------|------------------|",
+                ]
+            )
 
             for metric in self.metrics_history[-10:]:  # Last 10 operations
                 report_lines.append(
@@ -266,9 +273,30 @@ def monitor_performance(operation_name: str, track_memory: bool = True):
     Returns:
         Decorated function
     """
+
     def decorator(func):
+        """Wrap the target function with performance monitoring.
+
+        Args:
+            func: The function to be decorated with monitoring.
+
+        Returns:
+            Callable: Wrapped function that monitors performance metrics.
+        """
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
+            """Execute the wrapped function with performance monitoring.
+
+            Monitors execution time, memory usage (if enabled), and logs
+            performance metrics upon completion.
+
+            Args:
+                *args: Positional arguments passed to the wrapped function.
+                **kwargs: Keyword arguments passed to the wrapped function.
+
+            Returns:
+                The return value from the wrapped function.
+            """
             monitor = get_performance_monitor()
             op_name = operation_name or f"{func.__module__}.{func.__qualname__}"
 
@@ -276,11 +304,14 @@ def monitor_performance(operation_name: str, track_memory: bool = True):
                 return func(*args, **kwargs)
 
         return wrapper
+
     return decorator
 
 
 # Convenience functions for common use cases
-def benchmark_llm_query(client, prompt: str, iterations: int = 3) -> Dict[str, Union[float, List[float]]]:
+def benchmark_llm_query(
+    client, prompt: str, iterations: int = 3
+) -> Dict[str, Union[float, List[float]]]:
     """Benchmark LLM query performance.
 
     Args:
@@ -318,8 +349,8 @@ def profile_memory_usage(func: Callable, *args, **kwargs) -> Dict[str, Any]:
         return {
             "execution_time": execution_time,
             "memory_current": current // (1024 * 1024),  # MB
-            "memory_peak": peak // (1024 * 1024),        # MB
-            "result": result
+            "memory_peak": peak // (1024 * 1024),  # MB
+            "result": result,
         }
     finally:
         tracemalloc.stop()
@@ -331,7 +362,9 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description="Performance monitoring and profiling")
-    parser.add_argument("--report", action="store_true", help="Generate performance report")
+    parser.add_argument(
+        "--report", action="store_true", help="Generate performance report"
+    )
     parser.add_argument("--clear", action="store_true", help="Clear metrics history")
 
     args = parser.parse_args()
@@ -348,10 +381,7 @@ def main():
 
 
 def benchmark_function(
-    func: Callable,
-    *args,
-    iterations: int = 5,
-    **kwargs
+    func: Callable, *args, iterations: int = 5, **kwargs
 ) -> Dict[str, Union[float, List[float]]]:
     """
     Convenience function to benchmark a function using PerformanceMonitor.

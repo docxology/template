@@ -5,8 +5,10 @@ No mocks - uses actual environment variables and temp files.
 """
 
 import os
-import pytest
 from pathlib import Path
+
+import pytest
+
 from infrastructure.core.credentials import CredentialManager
 
 
@@ -36,12 +38,14 @@ class TestCredentialManagerInit:
     def test_init_with_yaml_config(self, tmp_path):
         """Test initialization with valid YAML config."""
         config_file = tmp_path / "config.yaml"
-        config_file.write_text("""
+        config_file.write_text(
+            """
 zenodo:
   token: test_token
 github:
   token: gh_token
-""")
+"""
+        )
         manager = CredentialManager(config_file=config_file)
 
         assert manager.config["zenodo"]["token"] == "test_token"
@@ -67,11 +71,13 @@ class TestSubstituteEnvVars:
         monkeypatch.setenv("NESTED_VAR", "nested_value")
 
         config_file = tmp_path / "config.yaml"
-        config_file.write_text("""
+        config_file.write_text(
+            """
 outer:
   inner:
     value: ${NESTED_VAR}
-""")
+"""
+        )
         manager = CredentialManager(config_file=config_file)
 
         assert manager.config["outer"]["inner"]["value"] == "nested_value"
@@ -81,11 +87,13 @@ outer:
         monkeypatch.setenv("LIST_VAR", "list_value")
 
         config_file = tmp_path / "config.yaml"
-        config_file.write_text("""
+        config_file.write_text(
+            """
 items:
   - ${LIST_VAR}
   - static_value
-""")
+"""
+        )
         manager = CredentialManager(config_file=config_file)
 
         assert manager.config["items"][0] == "list_value"
@@ -104,12 +112,14 @@ items:
     def test_non_string_values_unchanged(self, tmp_path):
         """Test that non-string values pass through unchanged."""
         config_file = tmp_path / "config.yaml"
-        config_file.write_text("""
+        config_file.write_text(
+            """
 integer: 42
 float: 3.14
 boolean: true
 null_value: null
-""")
+"""
+        )
         manager = CredentialManager(config_file=config_file)
 
         assert manager.config["integer"] == 42
@@ -133,10 +143,12 @@ class TestGetCredential:
     def test_get_from_config(self, tmp_path):
         """Test getting credential from config file."""
         config_file = tmp_path / "config.yaml"
-        config_file.write_text("""
+        config_file.write_text(
+            """
 test:
   credential: config_value
-""")
+"""
+        )
         manager = CredentialManager(config_file=config_file)
         value = manager._get_credential("test.credential")
 
@@ -299,11 +311,13 @@ class TestCredentialManagerIntegration:
 
         # Create config file with additional settings
         config_file = tmp_path / "credentials.yaml"
-        config_file.write_text("""
+        config_file.write_text(
+            """
 settings:
   timeout: 30
   retry_count: 3
-""")
+"""
+        )
 
         # Initialize manager
         manager = CredentialManager(config_file=config_file)
@@ -320,9 +334,11 @@ settings:
         """Test loading credentials from .env file."""
         # Create .env file
         env_file = tmp_path / ".env"
-        env_file.write_text("""
+        env_file.write_text(
+            """
 TEST_FROM_ENV_FILE=env_file_value
-""")
+"""
+        )
 
         # Note: dotenv may or may not be available
         manager = CredentialManager(env_file=env_file)

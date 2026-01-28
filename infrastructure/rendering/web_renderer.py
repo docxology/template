@@ -1,12 +1,13 @@
 """Web/HTML rendering module."""
+
 from __future__ import annotations
 
 import subprocess
 from pathlib import Path
 from typing import List
 
-from infrastructure.core.logging_utils import get_logger
 from infrastructure.core.exceptions import RenderingError
+from infrastructure.core.logging_utils import get_logger
 from infrastructure.rendering.config import RenderingConfig
 
 logger = get_logger(__name__)
@@ -22,31 +23,38 @@ class WebRenderer:
         """Render markdown to HTML."""
         output_dir = Path(self.config.web_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
-        
+
         output_file = output_dir / f"{source_file.stem}.html"
-        
+
         cmd = [
             self.config.pandoc_path,
             str(source_file),
-            "-t", "html5",
-            "-o", str(output_file),
+            "-t",
+            "html5",
+            "-o",
+            str(output_file),
             "--standalone",
-            "--mathjax"
+            "--mathjax",
         ]
-        
+
         logger.info(f"Generating HTML from {source_file}")
-        
+
         try:
             subprocess.run(cmd, check=True, capture_output=True, text=True)
             return output_file
-            
+
         except subprocess.CalledProcessError as e:
             raise RenderingError(
                 f"Failed to render HTML: {e.stderr}",
-                context={"source": str(source_file)}
+                context={"source": str(source_file)},
             )
 
-    def render_combined(self, source_files: List[Path], manuscript_dir: Path, project_name: str = "project") -> Path:
+    def render_combined(
+        self,
+        source_files: List[Path],
+        manuscript_dir: Path,
+        project_name: str = "project",
+    ) -> Path:
         """Render multiple markdown files as a combined HTML document.
 
         Combines all source files, applies CSS styling, and generates a single index.html
@@ -63,17 +71,19 @@ class WebRenderer:
         Raises:
             RenderingError: If combination or rendering fails
         """
-        logger.info("\n" + "="*60)
+        logger.info("\n" + "=" * 60)
         logger.info("COMBINED HTML RENDERING")
-        logger.info("="*60)
+        logger.info("=" * 60)
         logger.info(f"Combining {len(source_files)} section(s):")
         for i, md_file in enumerate(source_files, 1):
             size_kb = md_file.stat().st_size / 1024
-            logger.info(f"  [{i:>2}/{len(source_files)}] {md_file.name:<40} ({size_kb:>6.1f} KB)")
+            logger.info(
+                f"  [{i:>2}/{len(source_files)}] {md_file.name:<40} ({size_kb:>6.1f} KB)"
+            )
 
         total_size_kb = sum(f.stat().st_size for f in source_files) / 1024
         logger.info(f"  {'Total input size:':<48} ({total_size_kb:>6.1f} KB)")
-        logger.info("="*60 + "\n")
+        logger.info("=" * 60 + "\n")
 
         output_dir = Path(self.config.web_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
@@ -88,8 +98,10 @@ class WebRenderer:
         # Combine markdown files
         combined_md = output_dir / "_combined_manuscript.md"
         combined_content = self._combine_markdown_files(source_files)
-        combined_md.write_text(combined_content, encoding='utf-8')
-        logger.debug(f"Combined markdown written to: {combined_md} ({len(combined_content)} characters)")
+        combined_md.write_text(combined_content, encoding="utf-8")
+        logger.debug(
+            f"Combined markdown written to: {combined_md} ({len(combined_content)} characters)"
+        )
 
         # Build pandoc command for HTML conversion
         figures_dir = manuscript_dir.parent / "output" / "figures"
@@ -98,8 +110,10 @@ class WebRenderer:
         cmd = [
             self.config.pandoc_path,
             str(combined_md),
-            "-t", "html5",
-            "-o", str(output_file),
+            "-t",
+            "html5",
+            "-o",
+            str(output_file),
             "--standalone",
             "--mathjax",
             "--toc",
@@ -140,8 +154,8 @@ class WebRenderer:
                 suggestions=[
                     "Verify all markdown files are valid",
                     "Check for special characters or encoding issues",
-                    f"Review Pandoc command: {' '.join(cmd)}"
-                ]
+                    f"Review Pandoc command: {' '.join(cmd)}",
+                ],
             )
 
         # Embed CSS styling in the generated HTML
@@ -169,15 +183,15 @@ class WebRenderer:
         for i, md_file in enumerate(source_files):
             try:
                 # Read with explicit UTF-8 encoding and error handling
-                content = md_file.read_text(encoding='utf-8', errors='strict')
+                content = md_file.read_text(encoding="utf-8", errors="strict")
 
                 # Validate file ends with newline for proper spacing
-                if not content.endswith('\n'):
-                    content += '\n'
+                if not content.endswith("\n"):
+                    content += "\n"
 
                 # Strip trailing whitespace from each file to avoid double newlines
                 # But preserve a single trailing newline
-                content = content.rstrip() + '\n'
+                content = content.rstrip() + "\n"
 
                 # Add file content
                 combined_parts.append(content)
@@ -194,13 +208,13 @@ class WebRenderer:
                         "file": str(md_file),
                         "error": str(e),
                         "position": i + 1,
-                        "total_files": len(source_files)
+                        "total_files": len(source_files),
                     },
                     suggestions=[
                         f"Check file encoding: {md_file}",
                         "Ensure file is UTF-8 encoded",
-                        "Remove any non-UTF-8 characters from the file"
-                    ]
+                        "Remove any non-UTF-8 characters from the file",
+                    ],
                 )
             except Exception as e:
                 raise RenderingError(
@@ -209,20 +223,20 @@ class WebRenderer:
                         "file": str(md_file),
                         "error": str(e),
                         "position": i + 1,
-                        "total_files": len(source_files)
+                        "total_files": len(source_files),
                     },
                     suggestions=[
                         f"Verify file exists and is readable: {md_file}",
                         "Check file permissions",
-                        "Ensure file is valid markdown"
-                    ]
+                        "Ensure file is valid markdown",
+                    ],
                 )
 
         # Join with newlines, ensuring proper spacing
         combined = "\n\n".join(combined_parts)
 
         # Ensure the combined content starts cleanly (no leading whitespace issues)
-        combined = combined.lstrip('\n\r')
+        combined = combined.lstrip("\n\r")
 
         # Validate that the combined markdown is not empty
         if not combined.strip():
@@ -230,16 +244,16 @@ class WebRenderer:
                 "Combined markdown is empty",
                 context={
                     "source_files": [str(f) for f in source_files],
-                    "file_count": len(source_files)
+                    "file_count": len(source_files),
                 },
                 suggestions=[
                     "Verify that all source markdown files contain content",
-                    "Check file permissions and encoding"
-                ]
+                    "Check file permissions and encoding",
+                ],
             )
 
         # Remove BOM if present (UTF-8 BOM is \ufeff)
-        if combined.startswith('\ufeff'):
+        if combined.startswith("\ufeff"):
             logger.warning("Removing UTF-8 BOM from combined markdown")
             combined = combined[1:]
 
@@ -257,30 +271,34 @@ class WebRenderer:
             # Read CSS file
             css_file = Path(__file__).parent / "ide_style.css"
             if not css_file.exists():
-                logger.warning(f"CSS file not found: {css_file}, skipping CSS embedding")
+                logger.warning(
+                    f"CSS file not found: {css_file}, skipping CSS embedding"
+                )
                 return
 
-            css_content = css_file.read_text(encoding='utf-8')
+            css_content = css_file.read_text(encoding="utf-8")
 
             # Read HTML file
-            html_content = html_file.read_text(encoding='utf-8')
+            html_content = html_file.read_text(encoding="utf-8")
 
             # Find </head> tag and insert CSS before it
-            if '</head>' in html_content:
+            if "</head>" in html_content:
                 # Create style tag with CSS content
-                style_tag = f'\n<style>\n{css_content}\n</style>\n'
-                html_content = html_content.replace('</head>', style_tag + '</head>')
+                style_tag = f"\n<style>\n{css_content}\n</style>\n"
+                html_content = html_content.replace("</head>", style_tag + "</head>")
             else:
                 # If no </head> tag, try to find <head> and insert after it
-                if '<head>' in html_content:
-                    style_tag = f'<head>\n<style>\n{css_content}\n</style>\n'
-                    html_content = html_content.replace('<head>', style_tag, 1)
+                if "<head>" in html_content:
+                    style_tag = f"<head>\n<style>\n{css_content}\n</style>\n"
+                    html_content = html_content.replace("<head>", style_tag, 1)
                 else:
-                    logger.warning("Could not find <head> tag in HTML, CSS not embedded")
+                    logger.warning(
+                        "Could not find <head> tag in HTML, CSS not embedded"
+                    )
                     return
 
             # Write modified HTML back
-            html_file.write_text(html_content, encoding='utf-8')
+            html_file.write_text(html_content, encoding="utf-8")
             logger.debug(f"Embedded CSS from {css_file.name} into {html_file.name}")
 
         except Exception as e:

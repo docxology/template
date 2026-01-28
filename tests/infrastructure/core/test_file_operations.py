@@ -5,15 +5,14 @@ cleaning output directories and copying final deliverables.
 """
 
 import shutil
-from pathlib import Path
-import pytest
 import tempfile
+from pathlib import Path
 
-from infrastructure.core.file_operations import (
-    clean_output_directory,
-    clean_output_directories,
-    copy_final_deliverables,
-)
+import pytest
+
+from infrastructure.core.file_operations import (clean_output_directories,
+                                                 clean_output_directory,
+                                                 copy_final_deliverables)
 
 
 class TestCleanOutputDirectory:
@@ -23,15 +22,15 @@ class TestCleanOutputDirectory:
         """Test cleaning directory with existing files."""
         output_dir = tmp_path / "output"
         output_dir.mkdir()
-        
+
         # Create some files and subdirectories
         (output_dir / "file1.txt").write_text("content1")
         (output_dir / "file2.txt").write_text("content2")
         (output_dir / "subdir").mkdir()
         (output_dir / "subdir" / "file3.txt").write_text("content3")
-        
+
         result = clean_output_directory(output_dir)
-        
+
         assert result is True
         assert output_dir.exists()
         assert len(list(output_dir.iterdir())) == 0
@@ -40,9 +39,9 @@ class TestCleanOutputDirectory:
         """Test cleaning an empty directory."""
         output_dir = tmp_path / "output"
         output_dir.mkdir()
-        
+
         result = clean_output_directory(output_dir)
-        
+
         assert result is True
         assert output_dir.exists()
         assert len(list(output_dir.iterdir())) == 0
@@ -50,10 +49,10 @@ class TestCleanOutputDirectory:
     def test_create_nonexistent_directory(self, tmp_path):
         """Test creating directory when it doesn't exist."""
         output_dir = tmp_path / "new_output"
-        
+
         assert not output_dir.exists()
         result = clean_output_directory(output_dir)
-        
+
         assert result is True
         assert output_dir.exists()
         assert output_dir.is_dir()
@@ -62,16 +61,18 @@ class TestCleanOutputDirectory:
         """Test cleaning directory with deeply nested structure."""
         output_dir = tmp_path / "output"
         output_dir.mkdir()
-        
+
         # Create nested structure
         (output_dir / "level1").mkdir()
         (output_dir / "level1" / "level2").mkdir()
         (output_dir / "level1" / "level2" / "level3").mkdir()
-        (output_dir / "level1" / "level2" / "level3" / "deep_file.txt").write_text("deep")
+        (output_dir / "level1" / "level2" / "level3" / "deep_file.txt").write_text(
+            "deep"
+        )
         (output_dir / "file.txt").write_text("root")
-        
+
         result = clean_output_directory(output_dir)
-        
+
         assert result is True
         assert output_dir.exists()
         assert len(list(output_dir.iterdir())) == 0
@@ -138,7 +139,7 @@ class TestCleanOutputDirectories:
         """Test cleaning with default subdirectory list."""
         repo_root = tmp_path / "repo"
         repo_root.mkdir()
-        
+
         # Create projects/project/output and output/project directories with content
         project_output = repo_root / "projects" / "project" / "output"
         project_output.mkdir(parents=True)
@@ -151,7 +152,16 @@ class TestCleanOutputDirectories:
         clean_output_directories(repo_root, project_name="project")
 
         # Check that default subdirs were created
-        default_subdirs = ["pdf", "figures", "data", "reports", "simulations", "slides", "web", "logs"]
+        default_subdirs = [
+            "pdf",
+            "figures",
+            "data",
+            "reports",
+            "simulations",
+            "slides",
+            "web",
+            "logs",
+        ]
         for subdir in default_subdirs:
             assert (project_output / subdir).exists()
             assert (top_output / subdir).exists()
@@ -164,14 +174,16 @@ class TestCleanOutputDirectories:
         """Test cleaning with custom subdirectory list."""
         repo_root = tmp_path / "repo"
         repo_root.mkdir()
-        
+
         project_output = repo_root / "projects" / "project" / "output"
         project_output.mkdir(parents=True)
         top_output = repo_root / "output" / "project"
         top_output.mkdir(parents=True)
 
         custom_subdirs = ["custom1", "custom2", "custom3"]
-        clean_output_directories(repo_root, project_name="project", subdirs=custom_subdirs)
+        clean_output_directories(
+            repo_root, project_name="project", subdirs=custom_subdirs
+        )
 
         # Check that custom subdirs were created
         for subdir in custom_subdirs:
@@ -185,7 +197,7 @@ class TestCleanOutputDirectories:
         """Test that missing directories are created."""
         repo_root = tmp_path / "repo"
         repo_root.mkdir()
-        
+
         # Don't create projects/project/output or output/project directories
         clean_output_directories(repo_root, project_name="project")
 
@@ -199,7 +211,7 @@ class TestCleanOutputDirectories:
         """Test that existing content is removed before recreating subdirs."""
         repo_root = tmp_path / "repo"
         repo_root.mkdir()
-        
+
         project_output = repo_root / "projects" / "project" / "output"
         project_output.mkdir(parents=True)
 
@@ -221,7 +233,7 @@ class TestCleanOutputDirectories:
         """Test cleaning with empty subdirectory list."""
         repo_root = tmp_path / "repo"
         repo_root.mkdir()
-        
+
         project_output = repo_root / "projects" / "project" / "output"
         project_output.mkdir(parents=True)
         (project_output / "file.txt").write_text("content")
@@ -240,7 +252,7 @@ class TestCopyFinalDeliverables:
         """Test copying with complete project output structure."""
         project_root = tmp_path / "repo"
         project_root.mkdir()
-        
+
         project_output = project_root / "projects" / "project" / "output"
         project_output.mkdir(parents=True)
 
@@ -258,16 +270,18 @@ class TestCopyFinalDeliverables:
         output_dir = tmp_path / "final_output" / "project"
         output_dir.mkdir(parents=True)
 
-        stats = copy_final_deliverables(project_root, output_dir, project_name="project")
-        
+        stats = copy_final_deliverables(
+            project_root, output_dir, project_name="project"
+        )
+
         # Check files were copied
         assert (output_dir / "pdf" / "document.pdf").exists()
         assert (output_dir / "figures" / "plot.png").exists()
         assert (output_dir / "data" / "results.csv").exists()
-        
+
         # Check combined PDF was copied to root
         assert (output_dir / "project_combined.pdf").exists()
-        
+
         # Check stats
         assert stats["pdf_files"] >= 2
         assert stats["figures_files"] >= 1
@@ -280,12 +294,12 @@ class TestCopyFinalDeliverables:
         """Test copying when project output doesn't exist."""
         project_root = tmp_path / "repo"
         project_root.mkdir()
-        
+
         output_dir = tmp_path / "final_output"
         output_dir.mkdir()
-        
+
         stats = copy_final_deliverables(project_root, output_dir)
-        
+
         # Should return error in stats
         assert len(stats["errors"]) > 0
         assert "not found" in stats["errors"][0].lower()
@@ -295,7 +309,7 @@ class TestCopyFinalDeliverables:
         """Test that all file types are counted correctly."""
         project_root = tmp_path / "repo"
         project_root.mkdir()
-        
+
         project_output = project_root / "projects" / "project" / "output"
         project_output.mkdir(parents=True)
 
@@ -320,8 +334,10 @@ class TestCopyFinalDeliverables:
         output_dir = tmp_path / "final_output" / "project"
         output_dir.mkdir(parents=True)
 
-        stats = copy_final_deliverables(project_root, output_dir, project_name="project")
-        
+        stats = copy_final_deliverables(
+            project_root, output_dir, project_name="project"
+        )
+
         # Check counts
         assert stats["pdf_files"] >= 2
         assert stats["web_files"] >= 2
@@ -337,7 +353,7 @@ class TestCopyFinalDeliverables:
         """Test copying when combined PDF doesn't exist."""
         project_root = tmp_path / "repo"
         project_root.mkdir()
-        
+
         project_output = project_root / "projects" / "project" / "output"
         project_output.mkdir(parents=True)
 
@@ -348,8 +364,10 @@ class TestCopyFinalDeliverables:
         output_dir = tmp_path / "final_output" / "project"
         output_dir.mkdir(parents=True)
 
-        stats = copy_final_deliverables(project_root, output_dir, project_name="project")
-        
+        stats = copy_final_deliverables(
+            project_root, output_dir, project_name="project"
+        )
+
         # Combined PDF should not be copied
         assert not (output_dir / "project_combined.pdf").exists()
         assert stats["combined_pdf"] == 0
@@ -359,7 +377,7 @@ class TestCopyFinalDeliverables:
         """Test that nested directory structure is preserved."""
         project_root = tmp_path / "repo"
         project_root.mkdir()
-        
+
         project_output = project_root / "projects" / "project" / "output"
         project_output.mkdir(parents=True)
 
@@ -371,12 +389,14 @@ class TestCopyFinalDeliverables:
         output_dir = tmp_path / "final_output" / "project"
         output_dir.mkdir(parents=True)
 
-        stats = copy_final_deliverables(project_root, output_dir, project_name="project")
-        
+        stats = copy_final_deliverables(
+            project_root, output_dir, project_name="project"
+        )
+
         # Check nested structure preserved
         assert (output_dir / "pdf" / "subdir" / "nested.pdf").exists()
         assert (output_dir / "pdf" / "top.pdf").exists()
-        
+
         # Check file content preserved
         assert (output_dir / "pdf" / "subdir" / "nested.pdf").read_text() == "nested"
         assert (output_dir / "pdf" / "top.pdf").read_text() == "top"
@@ -385,7 +405,7 @@ class TestCopyFinalDeliverables:
         """Test copying when output directory already has content."""
         project_root = tmp_path / "repo"
         project_root.mkdir()
-        
+
         project_output = project_root / "projects" / "project" / "output"
         project_output.mkdir(parents=True)
         (project_output / "pdf").mkdir()
@@ -395,8 +415,10 @@ class TestCopyFinalDeliverables:
         output_dir.mkdir(parents=True)
         (output_dir / "old_file.txt").write_text("old")
 
-        stats = copy_final_deliverables(project_root, output_dir, project_name="project")
-        
+        stats = copy_final_deliverables(
+            project_root, output_dir, project_name="project"
+        )
+
         # New files should be present
         assert (output_dir / "pdf" / "new.pdf").exists()
         # Old files may or may not be present (depends on copytree behavior)
@@ -406,7 +428,7 @@ class TestCopyFinalDeliverables:
         """Test that file count statistics are accurate."""
         project_root = tmp_path / "repo"
         project_root.mkdir()
-        
+
         project_output = project_root / "projects" / "project" / "output"
         project_output.mkdir(parents=True)
 
@@ -422,8 +444,10 @@ class TestCopyFinalDeliverables:
         output_dir = tmp_path / "final_output" / "project"
         output_dir.mkdir(parents=True)
 
-        stats = copy_final_deliverables(project_root, output_dir, project_name="project")
-        
+        stats = copy_final_deliverables(
+            project_root, output_dir, project_name="project"
+        )
+
         # Verify counts match
         assert stats["pdf_files"] == 5
         assert stats["figures_files"] == 3
@@ -446,10 +470,14 @@ class TestCopyFinalDeliverables:
         output_dir.mkdir(parents=True)
 
         # Normal case should work
-        stats = copy_final_deliverables(project_root, output_dir, project_name="project")
+        stats = copy_final_deliverables(
+            project_root, output_dir, project_name="project"
+        )
 
         # Should complete successfully
-        assert len(stats["errors"]) == 0 or all("not found" not in err.lower() for err in stats["errors"])
+        assert len(stats["errors"]) == 0 or all(
+            "not found" not in err.lower() for err in stats["errors"]
+        )
 
 
 class TestCleanCoverageFiles:
@@ -466,6 +494,7 @@ class TestCleanCoverageFiles:
 
         # Import and call function
         from infrastructure.core.file_operations import clean_coverage_files
+
         result = clean_coverage_files(tmp_path)
 
         assert result is True
@@ -484,6 +513,7 @@ class TestCleanCoverageFiles:
         (tmp_path / "other_file.txt").write_text("other data")
 
         from infrastructure.core.file_operations import clean_coverage_files
+
         result = clean_coverage_files(tmp_path, patterns=["custom_coverage.db"])
 
         assert result is True
@@ -504,6 +534,7 @@ class TestCleanCoverageFiles:
         coverage_file.chmod(0o444)  # Read-only
 
         from infrastructure.core.file_operations import clean_coverage_files
+
         result = clean_coverage_files(tmp_path)
 
         # Should still succeed even with locked file
@@ -515,6 +546,7 @@ class TestCleanCoverageFiles:
     def test_clean_coverage_files_no_files(self, tmp_path):
         """Test cleaning when no coverage files exist."""
         from infrastructure.core.file_operations import clean_coverage_files
+
         result = clean_coverage_files(tmp_path)
 
         assert result is True
@@ -529,7 +561,10 @@ class TestCleanCoverageFiles:
         (tmp_path / "coverage_002.json").write_text("json2")
 
         from infrastructure.core.file_operations import clean_coverage_files
-        result = clean_coverage_files(tmp_path, patterns=[".coverage*", "coverage_*.json"])
+
+        result = clean_coverage_files(
+            tmp_path, patterns=[".coverage*", "coverage_*.json"]
+        )
 
         assert result is True
 
@@ -545,6 +580,7 @@ class TestCleanCoverageFiles:
         (tmp_path / ".coverage").write_text("data")
 
         from infrastructure.core.file_operations import clean_coverage_files
+
         result = clean_coverage_files(tmp_path, patterns=[])
 
         assert result is True
@@ -560,10 +596,10 @@ class TestCleanCoverageFiles:
         (subdir / ".coverage").write_text("subdir coverage")
 
         from infrastructure.core.file_operations import clean_coverage_files
+
         result = clean_coverage_files(tmp_path)
 
         assert result is True
 
         # File in subdirectory should be removed
         assert not (subdir / ".coverage").exists()
-

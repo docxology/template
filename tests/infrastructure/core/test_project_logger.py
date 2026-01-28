@@ -1,7 +1,10 @@
 """Tests for ProjectLogger and standardized logging interface."""
 
 import pytest
-from infrastructure.core.logging_utils import ProjectLogger, get_project_logger, setup_project_logging
+
+from infrastructure.core.logging_utils import (ProjectLogger,
+                                               get_project_logger,
+                                               setup_project_logging)
 
 
 class TestProjectLogger:
@@ -12,9 +15,9 @@ class TestProjectLogger:
         log = ProjectLogger("test_logger")
 
         assert log._logger.name == "test_logger"
-        assert hasattr(log, 'info')
-        assert hasattr(log, 'debug')
-        assert hasattr(log, 'success')
+        assert hasattr(log, "info")
+        assert hasattr(log, "debug")
+        assert hasattr(log, "success")
 
     def test_project_logger_methods(self):
         """Test ProjectLogger method calls don't raise exceptions."""

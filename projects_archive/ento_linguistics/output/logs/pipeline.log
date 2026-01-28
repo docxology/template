@@ -1,0 +1,159 @@
+[2026-01-24 13:57:59,728] [INFO] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/ento_linguistics/output/logs/pipeline.log
+[2026-01-24 13:57:59,728] [INFO] [infrastructure.core.pipeline] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/ento_linguistics/output/logs/pipeline.log
+[2026-01-24 13:57:59,728] [INFO] ✓ Stage 1 completed successfully (0.0s)
+[2026-01-24 13:57:59,728] [INFO] [infrastructure.core.pipeline] ✓ Stage 1 completed successfully (0.0s)
+[2026-01-24 13:57:59,729] [INFO] 
+[2026-01-24 13:57:59,729] [INFO] [infrastructure.core.pipeline] 
+[2026-01-24 13:57:59,729] [INFO] [2/9] Environment Setup (22% complete)
+[2026-01-24 13:57:59,729] [INFO] [infrastructure.core.pipeline] [2/9] Environment Setup (22% complete)
+[2026-01-24 13:57:59,729] [INFO]   Elapsed: 0s | ETA: 0s
+[2026-01-24 13:57:59,729] [INFO] [infrastructure.core.pipeline]   Elapsed: 0s | ETA: 0s
+[2026-01-24 13:57:59,729] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-24 13:57:59,729] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-24 13:57:59,729] [INFO] [infrastructure.core.logging_utils] Starting: Stage 2: Environment Setup
+[2026-01-24 13:57:59,729] [INFO] Running environment setup...
+[2026-01-24 13:57:59,729] [INFO] [infrastructure.core.pipeline] Running environment setup...
+[2026-01-24 13:58:00,453] [INFO] [infrastructure.core.logging_utils] Completed: Stage 2: Environment Setup (0.7s)
+[2026-01-24 13:58:00,454] [INFO] ✓ Stage 2 completed successfully (0.7s)
+[2026-01-24 13:58:00,454] [INFO] [infrastructure.core.pipeline] ✓ Stage 2 completed successfully (0.7s)
+[2026-01-24 13:58:00,454] [INFO] Skipping stage: Infrastructure Tests
+[2026-01-24 13:58:00,454] [INFO] [infrastructure.core.pipeline] Skipping stage: Infrastructure Tests
+[2026-01-24 13:58:00,454] [INFO] 
+[2026-01-24 13:58:00,454] [INFO] [infrastructure.core.pipeline] 
+[2026-01-24 13:58:00,454] [INFO] [3/9] Project Tests (33% complete)
+[2026-01-24 13:58:00,454] [INFO] [infrastructure.core.pipeline] [3/9] Project Tests (33% complete)
+[2026-01-24 13:58:00,454] [INFO]   Elapsed: 0s | ETA: 1s
+[2026-01-24 13:58:00,454] [INFO] [infrastructure.core.pipeline]   Elapsed: 0s | ETA: 1s
+[2026-01-24 13:58:00,454] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-24 13:58:00,454] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-24 13:58:00,455] [INFO] [infrastructure.core.logging_utils] Starting: Stage 3: Project Tests
+[2026-01-24 13:58:00,455] [INFO] Running project tests...
+[2026-01-24 13:58:00,455] [INFO] [infrastructure.core.pipeline] Running project tests...
+[2026-01-24 13:58:51,008] [INFO] [infrastructure.core.logging_utils] Completed: Stage 3: Project Tests (50.6s)
+[2026-01-24 13:58:51,008] [INFO] ✓ Stage 3 completed successfully (50.6s)
+[2026-01-24 13:58:51,008] [INFO] [infrastructure.core.pipeline] ✓ Stage 3 completed successfully (50.6s)
+[2026-01-24 13:58:51,009] [INFO] 
+[2026-01-24 13:58:51,009] [INFO] [infrastructure.core.pipeline] 
+[2026-01-24 13:58:51,009] [INFO] [4/9] Project Analysis (44% complete)
+[2026-01-24 13:58:51,009] [INFO] [infrastructure.core.pipeline] [4/9] Project Analysis (44% complete)
+[2026-01-24 13:58:51,009] [INFO]   Elapsed: 51s | ETA: 1m 4s
+[2026-01-24 13:58:51,009] [INFO] [infrastructure.core.pipeline]   Elapsed: 51s | ETA: 1m 4s
+[2026-01-24 13:58:51,009] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-24 13:58:51,009] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-01-24 13:58:51,010] [INFO] [infrastructure.core.logging_utils] Starting: Stage 4: Project Analysis
+[2026-01-24 13:58:51,010] [INFO] Running project analysis...
+[2026-01-24 13:58:51,010] [INFO] [infrastructure.core.pipeline] Running project analysis...
+[2026-01-24 13:59:19,897] [INFO] [infrastructure.core.logging_utils] Completed: Stage 4: Project Analysis (28.9s)
+[2026-01-24 13:59:19,897] [ERROR] ✗ Stage 4 failed
+[2026-01-24 13:59:19,897] [ERROR] [infrastructure.core.pipeline] ✗ Stage 4 failed
+[2026-01-24 13:59:19,897] [ERROR] Pipeline failed at stage 4: Project Analysis
+[2026-01-24 13:59:19,897] [ERROR] [infrastructure.core.pipeline] Pipeline failed at stage 4: Project Analysis
+[2026-01-24 13:59:19,899] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (JSON) saved: /Users/4d/Documents/GitHub/template/projects/ento_linguistics/output/reports/pipeline_report.json
+[2026-01-24 13:59:19,899] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (Markdown) saved: /Users/4d/Documents/GitHub/template/projects/ento_linguistics/output/reports/pipeline_report.md
+[2026-01-24 13:59:19,899] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (HTML) saved: /Users/4d/Documents/GitHub/template/projects/ento_linguistics/output/reports/pipeline_report.html
+[2026-01-24 13:59:19,899] [INFO] [infrastructure.core.logging_utils] Completed: Pipeline execution for ento_linguistics (80.2s)
+[2026-01-24 13:59:19,900] [INFO] [infrastructure.reporting] Starting multi-project reporting for 4 projects...
+[2026-01-24 13:59:19,900] [INFO] [infrastructure.reporting] Generating executive summary...
+[2026-01-24 13:59:19,900] [INFO] [infrastructure.reporting.executive_reporter] Generating executive summary for 4 project(s)
+[2026-01-24 13:59:19,900] [INFO] [infrastructure.reporting.executive_reporter] Collecting metrics for project: active_inference_meta_pragmatic
+[2026-01-24 13:59:19,927] [INFO] [infrastructure.reporting.executive_reporter] Collecting metrics for project: code_project
+[2026-01-24 13:59:19,930] [INFO] [infrastructure.reporting.executive_reporter] Collecting metrics for project: cogsec_multiagent
+[2026-01-24 13:59:19,959] [INFO] [infrastructure.reporting.executive_reporter] Collecting metrics for project: ento_linguistics
+[2026-01-24 13:59:20,016] [INFO] [infrastructure.reporting.executive_reporter] Executive summary generated successfully
+[2026-01-24 13:59:20,016] [INFO] [infrastructure.reporting] Saving summary reports...
+[2026-01-24 13:59:20,017] [INFO] [infrastructure.reporting.executive_reporter] Saved JSON report: /Users/4d/Documents/GitHub/template/output/executive_summary/json/consolidated_report.json
+[2026-01-24 13:59:20,018] [INFO] [infrastructure.reporting.executive_reporter] Saved Markdown report: /Users/4d/Documents/GitHub/template/output/executive_summary/md/consolidated_report.md
+[2026-01-24 13:59:20,021] [INFO] [infrastructure.reporting.executive_reporter] Saved HTML report: /Users/4d/Documents/GitHub/template/output/executive_summary/html/consolidated_report.html
+[2026-01-24 13:59:20,021] [INFO] [infrastructure.reporting] Generating visual dashboards...
+[2026-01-24 13:59:20,021] [INFO] [infrastructure.reporting.dashboard_generator] Generating all dashboard formats...
+[2026-01-24 13:59:20,021] [INFO] [infrastructure.reporting.dashboard_generator] Generating matplotlib dashboard...
+[2026-01-24 13:59:20,730] [INFO] [infrastructure.reporting.dashboard_generator] Saved PNG dashboard: /Users/4d/Documents/GitHub/template/output/executive_summary/png/dashboard.png
+[2026-01-24 13:59:21,078] [INFO] [infrastructure.reporting.dashboard_generator] Saved PDF dashboard: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/dashboard.pdf
+[2026-01-24 13:59:21,078] [INFO] [infrastructure.reporting.dashboard_generator] Generating health score radar chart...
+[2026-01-24 13:59:21,212] [INFO] [infrastructure.reporting.dashboard_generator] Health radar chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/health_scores_radar.png
+[2026-01-24 13:59:21,254] [INFO] [infrastructure.reporting.dashboard_generator] Health radar chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/health_scores_radar.pdf
+[2026-01-24 13:59:21,254] [INFO] [infrastructure.reporting.dashboard_generator] Generating health score comparison chart...
+[2026-01-24 13:59:21,426] [INFO] [infrastructure.reporting.dashboard_generator] Health comparison chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/health_scores_comparison.png
+[2026-01-24 13:59:21,480] [INFO] [infrastructure.reporting.dashboard_generator] Health comparison chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/health_scores_comparison.pdf
+[2026-01-24 13:59:21,480] [INFO] [infrastructure.reporting.dashboard_generator] Generating individual project dashboards...
+[2026-01-24 13:59:21,745] [INFO] [infrastructure.reporting.dashboard_generator] Project dashboard (active_inference_meta_pragmatic PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/project_dashboard_activeinferencemetapragmatic.png
+[2026-01-24 13:59:21,822] [INFO] [infrastructure.reporting.dashboard_generator] Project dashboard (active_inference_meta_pragmatic PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/project_dashboard_activeinferencemetapragmatic.pdf
+[2026-01-24 13:59:22,082] [INFO] [infrastructure.reporting.dashboard_generator] Project dashboard (code_project PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/project_dashboard_codeproject.png
+[2026-01-24 13:59:22,157] [INFO] [infrastructure.reporting.dashboard_generator] Project dashboard (code_project PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/project_dashboard_codeproject.pdf
+[2026-01-24 13:59:22,412] [INFO] [infrastructure.reporting.dashboard_generator] Project dashboard (cogsec_multiagent PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/project_dashboard_cogsecmultiagent.png
+[2026-01-24 13:59:22,500] [INFO] [infrastructure.reporting.dashboard_generator] Project dashboard (cogsec_multiagent PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/project_dashboard_cogsecmultiagent.pdf
+[2026-01-24 13:59:22,796] [INFO] [infrastructure.reporting.dashboard_generator] Project dashboard (ento_linguistics PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/project_dashboard_entolinguistics.png
+[2026-01-24 13:59:22,887] [INFO] [infrastructure.reporting.dashboard_generator] Project dashboard (ento_linguistics PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/project_dashboard_entolinguistics.pdf
+[2026-01-24 13:59:22,888] [INFO] [infrastructure.reporting.dashboard_generator] Generating pipeline efficiency analysis chart...
+[2026-01-24 13:59:23,192] [INFO] [infrastructure.reporting.dashboard_generator] Pipeline efficiency chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/pipeline_efficiency.png
+[2026-01-24 13:59:23,283] [INFO] [infrastructure.reporting.dashboard_generator] Pipeline efficiency chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/pipeline_efficiency.pdf
+[2026-01-24 13:59:23,283] [INFO] [infrastructure.reporting.dashboard_generator] Generating pipeline bottlenecks chart...
+[2026-01-24 13:59:23,455] [INFO] [infrastructure.reporting.dashboard_generator] Pipeline bottlenecks chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/pipeline_bottlenecks.png
+[2026-01-24 13:59:23,501] [INFO] [infrastructure.reporting.dashboard_generator] Pipeline bottlenecks chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/pipeline_bottlenecks.pdf
+[2026-01-24 13:59:23,501] [INFO] [infrastructure.reporting.dashboard_generator] Generating output distribution charts...
+[2026-01-24 13:59:23,797] [INFO] [infrastructure.reporting.dashboard_generator] Output distribution chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/output_distribution.png
+[2026-01-24 13:59:23,878] [INFO] [infrastructure.reporting.dashboard_generator] Output distribution chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/output_distribution.pdf
+[2026-01-24 13:59:23,878] [INFO] [infrastructure.reporting.dashboard_generator] Generating output comparison chart...
+[2026-01-24 13:59:24,011] [INFO] [infrastructure.reporting.dashboard_generator] Output comparison chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/output_comparison.png
+[2026-01-24 13:59:24,051] [INFO] [infrastructure.reporting.dashboard_generator] Output comparison chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/output_comparison.pdf
+[2026-01-24 13:59:24,051] [INFO] [infrastructure.reporting.dashboard_generator] Generating codebase complexity chart...
+[2026-01-24 13:59:24,369] [INFO] [infrastructure.reporting.dashboard_generator] Codebase complexity chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/codebase_complexity.png
+[2026-01-24 13:59:24,467] [INFO] [infrastructure.reporting.dashboard_generator] Codebase complexity chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/codebase_complexity.pdf
+[2026-01-24 13:59:24,467] [INFO] [infrastructure.reporting.dashboard_generator] Generating codebase comparison chart...
+[2026-01-24 13:59:24,739] [INFO] [infrastructure.reporting.dashboard_generator] Codebase comparison chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/codebase_comparison.png
+[2026-01-24 13:59:24,819] [INFO] [infrastructure.reporting.dashboard_generator] Codebase comparison chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/codebase_comparison.pdf
+[2026-01-24 13:59:24,852] [INFO] [infrastructure.reporting.dashboard_generator] Generating interactive plotly dashboard...
+[2026-01-24 13:59:24,949] [INFO] [infrastructure.reporting.dashboard_generator] Saved interactive HTML dashboard: /Users/4d/Documents/GitHub/template/output/executive_summary/dashboard.html
+[2026-01-24 13:59:24,949] [INFO] [infrastructure.reporting.dashboard_generator] Generated CSV metrics table: /Users/4d/Documents/GitHub/template/output/executive_summary/csv/project_metrics.csv
+[2026-01-24 13:59:24,949] [INFO] [infrastructure.reporting.dashboard_generator] Generated CSV aggregates table: /Users/4d/Documents/GitHub/template/output/executive_summary/csv/aggregate_metrics.csv
+[2026-01-24 13:59:24,950] [INFO] [infrastructure.reporting.dashboard_generator] Generated CSV health scores table: /Users/4d/Documents/GitHub/template/output/executive_summary/csv/health_scores.csv
+[2026-01-24 13:59:24,950] [INFO] [infrastructure.reporting.dashboard_generator] Detailed project breakdown CSV saved: /Users/4d/Documents/GitHub/template/output/executive_summary/csv/detailed_project_breakdown.csv
+[2026-01-24 13:59:24,950] [INFO] [infrastructure.reporting.dashboard_generator] Comparative analysis CSV saved: /Users/4d/Documents/GitHub/template/output/executive_summary/csv/comparative_analysis.csv
+[2026-01-24 13:59:24,950] [INFO] [infrastructure.reporting.dashboard_generator] Prioritized recommendations CSV saved: /Users/4d/Documents/GitHub/template/output/executive_summary/csv/recommendations_prioritized.csv
+[2026-01-24 13:59:24,950] [INFO] [infrastructure.reporting.manuscript_overview] Generating manuscript overview for active_inference_meta_pragmatic
+[2026-01-24 13:59:24,950] [INFO] [infrastructure.reporting.manuscript_overview] Generating manuscript overview for active_inference_meta_pragmatic
+[2026-01-24 13:59:25,009] [INFO] [infrastructure.reporting.manuscript_overview] Extracting 44 pages from active_inference_meta_pragmatic_combined.pdf
+[2026-01-24 13:59:26,142] [INFO] [infrastructure.reporting.manuscript_overview] Extracted 44 page images
+[2026-01-24 13:59:26,590] [INFO] [infrastructure.reporting.manuscript_overview] Saved PNG overview: /Users/4d/Documents/GitHub/template/output/executive_summary/manuscript_overview_active_inference_meta_pragmatic.png
+[2026-01-24 13:59:27,294] [INFO] [infrastructure.reporting.manuscript_overview] Saved PDF overview: /Users/4d/Documents/GitHub/template/output/executive_summary/manuscript_overview_active_inference_meta_pragmatic.pdf
+[2026-01-24 13:59:27,302] [INFO] [infrastructure.reporting.manuscript_overview] Generated overview files for active_inference_meta_pragmatic: ['manuscript_overview_active_inference_meta_pragmatic.png', 'manuscript_overview_active_inference_meta_pragmatic.pdf']
+[2026-01-24 13:59:27,302] [INFO] [infrastructure.reporting.manuscript_overview] Generating manuscript overview for code_project
+[2026-01-24 13:59:27,302] [INFO] [infrastructure.reporting.manuscript_overview] Generating manuscript overview for code_project
+[2026-01-24 13:59:27,308] [INFO] [infrastructure.reporting.manuscript_overview] Extracting 17 pages from code_project_combined.pdf
+[2026-01-24 13:59:27,698] [INFO] [infrastructure.reporting.manuscript_overview] Extracted 17 page images
+[2026-01-24 13:59:27,873] [INFO] [infrastructure.reporting.manuscript_overview] Saved PNG overview: /Users/4d/Documents/GitHub/template/output/executive_summary/manuscript_overview_code_project.png
+[2026-01-24 13:59:28,166] [INFO] [infrastructure.reporting.manuscript_overview] Saved PDF overview: /Users/4d/Documents/GitHub/template/output/executive_summary/manuscript_overview_code_project.pdf
+[2026-01-24 13:59:28,168] [INFO] [infrastructure.reporting.manuscript_overview] Generated overview files for code_project: ['manuscript_overview_code_project.png', 'manuscript_overview_code_project.pdf']
+[2026-01-24 13:59:28,168] [WARNING] [infrastructure.reporting.manuscript_overview] Manuscript PDF not found for project cogsec_multiagent, skipping overview generation
+[2026-01-24 13:59:28,168] [WARNING] [infrastructure.reporting.manuscript_overview] Manuscript PDF not found for project ento_linguistics, skipping overview generation
+[2026-01-24 13:59:28,168] [INFO] [infrastructure.reporting.dashboard_generator] Generated 21 dashboard and data file(s)
+[2026-01-24 13:59:28,168] [INFO] [infrastructure.reporting] Multi-project reporting complete. Generated 23 files:
+[2026-01-24 13:59:28,168] [INFO] [infrastructure.reporting]   JSON: consolidated_report.json
+[2026-01-24 13:59:28,168] [INFO] [infrastructure.reporting]   MARKDOWN: consolidated_report.md
+[2026-01-24 13:59:28,168] [INFO] [infrastructure.reporting]   HTML: dashboard.html
+[2026-01-24 13:59:28,168] [INFO] [infrastructure.reporting]   PNG: codebase_comparison.png
+[2026-01-24 13:59:28,168] [INFO] [infrastructure.reporting]   PDF: codebase_comparison.pdf
+[2026-01-24 13:59:28,168] [INFO] [infrastructure.reporting]   ACTIVEINFERENCEMETAPRAGMATIC_PNG: project_dashboard_activeinferencemetapragmatic.png
+[2026-01-24 13:59:28,168] [INFO] [infrastructure.reporting]   ACTIVEINFERENCEMETAPRAGMATIC_PDF: project_dashboard_activeinferencemetapragmatic.pdf
+[2026-01-24 13:59:28,168] [INFO] [infrastructure.reporting]   CODEPROJECT_PNG: project_dashboard_codeproject.png
+[2026-01-24 13:59:28,168] [INFO] [infrastructure.reporting]   CODEPROJECT_PDF: project_dashboard_codeproject.pdf
+[2026-01-24 13:59:28,168] [INFO] [infrastructure.reporting]   COGSECMULTIAGENT_PNG: project_dashboard_cogsecmultiagent.png
+[2026-01-24 13:59:28,168] [INFO] [infrastructure.reporting]   COGSECMULTIAGENT_PDF: project_dashboard_cogsecmultiagent.pdf
+[2026-01-24 13:59:28,168] [INFO] [infrastructure.reporting]   ENTOLINGUISTICS_PNG: project_dashboard_entolinguistics.png
+[2026-01-24 13:59:28,168] [INFO] [infrastructure.reporting]   ENTOLINGUISTICS_PDF: project_dashboard_entolinguistics.pdf
+[2026-01-24 13:59:28,168] [INFO] [infrastructure.reporting]   METRICS: project_metrics.csv
+[2026-01-24 13:59:28,168] [INFO] [infrastructure.reporting]   AGGREGATES: aggregate_metrics.csv
+[2026-01-24 13:59:28,168] [INFO] [infrastructure.reporting]   HEALTH: health_scores.csv
+[2026-01-24 13:59:28,168] [INFO] [infrastructure.reporting]   DETAILED_BREAKDOWN_CSV: detailed_project_breakdown.csv
+[2026-01-24 13:59:28,169] [INFO] [infrastructure.reporting]   COMPARATIVE_ANALYSIS_CSV: comparative_analysis.csv
+[2026-01-24 13:59:28,169] [INFO] [infrastructure.reporting]   RECOMMENDATIONS_CSV: recommendations_prioritized.csv
+[2026-01-24 13:59:28,169] [INFO] [infrastructure.reporting]   MANUSCRIPT_OVERVIEW_ACTIVE_INFERENCE_META_PRAGMATIC.PNG: manuscript_overview_active_inference_meta_pragmatic.png
+[2026-01-24 13:59:28,169] [INFO] [infrastructure.reporting]   MANUSCRIPT_OVERVIEW_ACTIVE_INFERENCE_META_PRAGMATIC.PDF: manuscript_overview_active_inference_meta_pragmatic.pdf
+[2026-01-24 13:59:28,169] [INFO] [infrastructure.reporting]   MANUSCRIPT_OVERVIEW_CODE_PROJECT.PNG: manuscript_overview_code_project.png
+[2026-01-24 13:59:28,169] [INFO] [infrastructure.reporting]   MANUSCRIPT_OVERVIEW_CODE_PROJECT.PDF: manuscript_overview_code_project.pdf
+[2026-01-24 13:59:28,169] [INFO] [infrastructure.reporting.pipeline_reporter] For project active_inference_meta_pragmatic, proj_result type: <class 'list'>, len: 9
+[2026-01-24 13:59:28,169] [INFO] [infrastructure.reporting.pipeline_reporter] For project code_project, proj_result type: <class 'list'>, len: 9
+[2026-01-24 13:59:28,169] [INFO] [infrastructure.reporting.pipeline_reporter] For project cogsec_multiagent, proj_result type: <class 'list'>, len: 4
+[2026-01-24 13:59:28,169] [INFO] [infrastructure.reporting.pipeline_reporter] For project ento_linguistics, proj_result type: <class 'list'>, len: 4
+[2026-01-24 13:59:28,169] [INFO] [infrastructure.reporting.pipeline_reporter] Multi-project summary saved: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.json
+[2026-01-24 13:59:28,170] [INFO] [infrastructure.reporting.pipeline_reporter] Multi-project summary saved: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.md

@@ -269,14 +269,23 @@ k \geq \frac{\log(\epsilon)}{\log(\rho)}
 where \(\rho = \sqrt{\frac{\kappa - 1}{\kappa + 1}}\) is the convergence
 factor \cite{polyak1964some}.
 
-For our results, the convergence factors are: - \(\alpha = 0.01\):
-\(\rho \approx 0.99\), requiring \textasciitilde458 iterations for
-\(\epsilon = 10^{-6}\) - \(\alpha = 0.05\): \(\rho \approx 0.95\),
-requiring \textasciitilde87 iterations for \(\epsilon = 10^{-6}\) -
-\(\alpha = 0.10\): \(\rho \approx 0.90\), requiring \textasciitilde43
-iterations for \(\epsilon = 10^{-6}\) - \(\alpha = 0.20\):
-\(\rho \approx 0.80\), requiring \textasciitilde21 iterations for
-\(\epsilon = 10^{-6}\)
+For our results, the convergence factors are:
+
+\begin{itemize}
+\tightlist
+\item
+  \(\alpha = 0.01\): \(\rho \approx 0.99\), requiring \textasciitilde458
+  iterations for \(\epsilon = 10^{-6}\)
+\item
+  \(\alpha = 0.05\): \(\rho \approx 0.95\), requiring \textasciitilde87
+  iterations for \(\epsilon = 10^{-6}\)
+\item
+  \(\alpha = 0.10\): \(\rho \approx 0.90\), requiring \textasciitilde43
+  iterations for \(\epsilon = 10^{-6}\)
+\item
+  \(\alpha = 0.20\): \(\rho \approx 0.80\), requiring \textasciitilde21
+  iterations for \(\epsilon = 10^{-6}\)
+\end{itemize}
 \end{block}
 \end{block}
 
@@ -285,16 +294,31 @@ iterations for \(\epsilon = 10^{-6}\) - \(\alpha = 0.20\):
 \begin{block}{Convergence Speed}
 \protect\phantomsection\label{convergence-speed}
 The results show a clear trade-off between step size and convergence
-speed: - Small step sizes require more iterations but provide stable
-convergence - Large step sizes converge faster but may be less stable in
-more complex problems
+speed:
+
+\begin{itemize}
+\tightlist
+\item
+  Small step sizes require more iterations but provide stable
+  convergence
+\item
+  Large step sizes converge faster but may be less stable in more
+  complex problems
+\end{itemize}
 \end{block}
 
 \begin{block}{Solution Accuracy}
 \protect\phantomsection\label{solution-accuracy}
 All tested step sizes achieved the analytical optimum within numerical
-precision: - Target solution: \(x = 1.0000\) - Target objective:
-\(f(x) = -0.5000\)
+precision:
+
+\begin{itemize}
+\tightlist
+\item
+  Target solution: \(x = 1.0000\)
+\item
+  Target objective: \(f(x) = -0.5000\)
+\end{itemize}
 
 This demonstrates the algorithm's ability to solve simple quadratic
 optimization problems reliably.
@@ -351,11 +375,23 @@ implementation.}\label{fig:complexity}
 \end{figure}
 
 The algorithm demonstrates efficient performance for small-scale
-optimization problems: - \textbf{Time complexity}: \(O(d)\) per
-iteration for gradient computation - \textbf{Space complexity}: \(O(d)\)
-for storing variables and gradients - \textbf{Convergence}: Typically
-\(< 20\) iterations for this quadratic problem - \textbf{Scalability}:
-Memory-efficient implementation suitable for high-dimensional problems
+optimization problems:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Time complexity}: \(O(d)\) per iteration for gradient
+  computation
+\item
+  \textbf{Space complexity}: \(O(d)\) for storing variables and
+  gradients
+\item
+  \textbf{Convergence}: Typically \(< 20\) iterations for this quadratic
+  problem
+\item
+  \textbf{Scalability}: Memory-efficient implementation suitable for
+  high-dimensional problems
+\end{itemize}
 \end{block}
 
 \begin{block}{Performance Benchmarking}
@@ -389,22 +425,47 @@ ranges.}\label{fig:stability}
 
 \begin{block}{Performance Metrics Summary}
 \protect\phantomsection\label{performance-metrics-summary}
-\textbf{Iteration Statistics:} - Minimum iterations: 9 (for
-\(\alpha = 0.2\)) - Maximum iterations: 165 (for \(\alpha = 0.01\)) -
-Average convergence: \(< 50\) iterations across all test cases
+\textbf{Iteration Statistics:}
 
-\textbf{Numerical Accuracy:} - Solution precision: \(< 10^{-4}\)
-relative error - Objective accuracy: \(< 10^{-6}\) absolute error -
-Gradient tolerance: \(< 10^{-6}\) achieved in all cases
+\begin{itemize}
+\tightlist
+\item
+  Minimum iterations: 9 (for \(\alpha = 0.2\))
+\item
+  Maximum iterations: 165 (for \(\alpha = 0.01\))
+\item
+  Average convergence: \(< 50\) iterations across all test cases
+\end{itemize}
+
+\textbf{Numerical Accuracy:}
+
+\begin{itemize}
+\tightlist
+\item
+  Solution precision: \(< 10^{-4}\) relative error
+\item
+  Objective accuracy: \(< 10^{-6}\) absolute error
+\item
+  Gradient tolerance: \(< 10^{-6}\) achieved in all cases
+\end{itemize}
 \end{block}
 \end{block}
 
 \begin{block}{Validation}
 \protect\phantomsection\label{validation}
-The implementation was validated through: - \textbf{Unit tests} covering
-all core functionality - \textbf{Integration tests} verifying algorithm
-convergence - \textbf{Numerical accuracy} checks against analytical
-solutions - \textbf{Edge case handling} for boundary conditions
+The implementation was validated through:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Unit tests} covering all core functionality
+\item
+  \textbf{Integration tests} verifying algorithm convergence
+\item
+  \textbf{Numerical accuracy} checks against analytical solutions
+\item
+  \textbf{Edge case handling} for boundary conditions
+\end{itemize}
 
 All tests pass with 100\% coverage, ensuring implementation correctness
 and reliability.

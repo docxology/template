@@ -26,11 +26,13 @@ if ROOT not in sys.path:
 # Add projects/*/src for project-specific imports (active projects only)
 # Note: Only active projects in projects/ directory are added here.
 # Archived projects in projects_archive/ are not included.
-active_projects = ["code_project", "active_inference_meta_pragmatic", "ento_linguistics"]
-for project_name in active_projects:
-    project_src = os.path.join(ROOT, "projects", project_name, "src")
-    if os.path.exists(project_src) and project_src not in sys.path:
-        sys.path.insert(1, project_src)
+# Discovery is dynamic - all directories in projects/ with a src/ subdirectory are included.
+projects_dir = os.path.join(ROOT, "projects")
+if os.path.isdir(projects_dir):
+    for project_name in os.listdir(projects_dir):
+        project_src = os.path.join(projects_dir, project_name, "src")
+        if os.path.isdir(project_src) and project_src not in sys.path:
+            sys.path.insert(1, project_src)
 
 # Force headless backend for all matplotlib usage
 os.environ.setdefault("MPLBACKEND", "Agg")

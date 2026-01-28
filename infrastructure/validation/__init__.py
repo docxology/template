@@ -14,41 +14,23 @@ Modules:
     repo_scanner: Repository-wide accuracy and completeness scanning
 """
 
-from .pdf_validator import validate_pdf_rendering, extract_text_from_pdf, scan_for_issues
-from .markdown_validator import (
-    validate_markdown,
-    find_markdown_files,
-    validate_images,
-    validate_refs,
-    validate_math,
-)
-from .integrity import (
-    verify_file_integrity,
-    verify_cross_references,
-    verify_data_consistency,
-    verify_academic_standards,
-    verify_output_integrity,
-    generate_integrity_report,
-)
+from .audit_orchestrator import generate_audit_report, run_comprehensive_audit
 from .figure_validator import validate_figure_registry
-from .output_validator import (
-    validate_copied_outputs,
-    validate_output_structure,
-)
+from .integrity import (generate_integrity_report, verify_academic_standards,
+                        verify_cross_references, verify_data_consistency,
+                        verify_file_integrity, verify_output_integrity)
+from .issue_categorizer import (assign_severity, categorize_by_type,
+                                filter_false_positives, generate_issue_summary,
+                                group_related_issues, is_false_positive,
+                                prioritize_issues)
 from .link_validator import LinkValidator
-from .audit_orchestrator import (
-    run_comprehensive_audit,
-    generate_audit_report,
-)
-from .issue_categorizer import (
-    categorize_by_type,
-    assign_severity,
-    is_false_positive,
-    filter_false_positives,
-    group_related_issues,
-    prioritize_issues,
-    generate_issue_summary,
-)
+from .markdown_validator import (find_markdown_files, validate_images,
+                                 validate_markdown, validate_math,
+                                 validate_refs)
+from .output_validator import (validate_copied_outputs,
+                               validate_output_structure)
+from .pdf_validator import (extract_text_from_pdf, scan_for_issues,
+                            validate_pdf_rendering)
 
 __all__ = [
     "validate_pdf_rendering",
@@ -81,4 +63,3 @@ __all__ = [
     "prioritize_issues",
     "generate_issue_summary",
 ]
-

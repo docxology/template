@@ -6,9 +6,9 @@ All mock-based tests have been removed to comply with No Mocks Policy.
 
 import pytest
 
+from infrastructure.core.exceptions import LLMConnectionError
 from infrastructure.llm.core.client import LLMClient
 from infrastructure.llm.core.config import LLMConfig
-from infrastructure.core.exceptions import LLMConnectionError
 
 
 class TestFallbackModel:
@@ -20,7 +20,7 @@ class TestFallbackModel:
         config = LLMConfig(
             default_model="primary-model",
             fallback_models=["fallback1", "fallback2"],
-            auto_inject_system_prompt=False
+            auto_inject_system_prompt=False,
         )
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config)
@@ -55,7 +55,7 @@ class TestQueryStructuredJsonParsing:
         schema = {
             "type": "object",
             "properties": {"name": {"type": "string"}},
-            "required": ["name"]
+            "required": ["name"],
         }
 
         # The test server returns valid JSON when "test structured" is in the prompt
@@ -94,10 +94,10 @@ class TestStreamQuery:
 
         # Check context
         messages = client.context.get_messages()
-        assistant_messages = [m for m in messages if m.get('role') == 'assistant']
+        assistant_messages = [m for m in messages if m.get("role") == "assistant"]
 
         assert len(assistant_messages) == 1
-        assert assistant_messages[0]['content'] == "Test response"
+        assert assistant_messages[0]["content"] == "Test response"
 
     def test_stream_query_connection_error(self, ollama_test_server):
         """Test stream_query handles connection errors."""

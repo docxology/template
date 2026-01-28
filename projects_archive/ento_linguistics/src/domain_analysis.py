@@ -4,21 +4,22 @@ This module provides specialized analysis functions for each of the six
 Ento-Linguistic domains, examining how terminology structures understanding
 within specific conceptual areas.
 """
+
 from __future__ import annotations
 
 import re
 from collections import Counter, defaultdict
-from typing import List, Dict, Set, Optional, Tuple, Any
 from dataclasses import dataclass, field
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 import numpy as np
 
 try:
     from .term_extraction import Term
-    from .text_analysis import TextProcessor, LinguisticFeatureExtractor
+    from .text_analysis import LinguisticFeatureExtractor, TextProcessor
 except ImportError:
     from term_extraction import Term
-    from text_analysis import TextProcessor, LinguisticFeatureExtractor
+    from text_analysis import LinguisticFeatureExtractor, TextProcessor
 
 
 @dataclass
@@ -40,6 +41,7 @@ class DomainAnalysis:
         conceptual_metrics: Quantitative metrics for conceptual structure
         statistical_significance: Statistical significance of term patterns
     """
+
     domain_name: str
     key_terms: List[str] = field(default_factory=list)
     term_patterns: Dict[str, int] = field(default_factory=dict)
@@ -67,8 +69,9 @@ class DomainAnalyzer:
         self.text_processor = TextProcessor()
         self.feature_extractor = LinguisticFeatureExtractor()
 
-    def analyze_all_domains(self, terms: Dict[str, Term],
-                          texts: List[str]) -> Dict[str, DomainAnalysis]:
+    def analyze_all_domains(
+        self, terms: Dict[str, Term], texts: List[str]
+    ) -> Dict[str, DomainAnalysis]:
         """Analyze all six Ento-Linguistic domains.
 
         Args:
@@ -96,12 +99,12 @@ class DomainAnalyzer:
 
         # Analyze each domain
         domain_methods = {
-            'unit_of_individuality': self._analyze_individuality_domain,
-            'behavior_and_identity': self._analyze_behavior_domain,
-            'power_and_labor': self._analyze_power_domain,
-            'sex_and_reproduction': self._analyze_reproduction_domain,
-            'kin_and_relatedness': self._analyze_kinship_domain,
-            'economics': self._analyze_economics_domain
+            "unit_of_individuality": self._analyze_individuality_domain,
+            "behavior_and_identity": self._analyze_behavior_domain,
+            "power_and_labor": self._analyze_power_domain,
+            "sex_and_reproduction": self._analyze_reproduction_domain,
+            "kin_and_relatedness": self._analyze_kinship_domain,
+            "economics": self._analyze_economics_domain,
         }
 
         for domain_name, terms_list in domain_terms.items():
@@ -109,26 +112,34 @@ class DomainAnalyzer:
                 analysis = domain_methods[domain_name](terms_list, texts)
 
                 # Add statistical analysis
-                analysis.frequency_stats = self.analyze_term_frequency_distribution(terms_list, texts)
-                analysis.cooccurrence_analysis = self.analyze_term_cooccurrence(terms_list, texts)
-                analysis.ambiguity_metrics = self.quantify_ambiguity_metrics(terms_list, texts)
+                analysis.frequency_stats = self.analyze_term_frequency_distribution(
+                    terms_list, texts
+                )
+                analysis.cooccurrence_analysis = self.analyze_term_cooccurrence(
+                    terms_list, texts
+                )
+                analysis.ambiguity_metrics = self.quantify_ambiguity_metrics(
+                    terms_list, texts
+                )
                 analysis.confidence_scores = self.generate_confidence_scores(
                     analysis.framing_assumptions, terms_list, texts
                 )
                 analysis.conceptual_metrics = self.quantify_conceptual_structure(
                     analysis.conceptual_structure, terms_list
                 )
-                analysis.statistical_significance = self.calculate_statistical_significance(
-                    analysis.term_patterns
+                analysis.statistical_significance = (
+                    self.calculate_statistical_significance(analysis.term_patterns)
                 )
 
                 domain_analyses[domain_name] = analysis
 
         # Add cross-domain analysis
         if len(domain_analyses) > 1:
-            cross_domain_analysis = self.analyze_cross_domain_overlap(domain_terms, terms)
+            cross_domain_analysis = self.analyze_cross_domain_overlap(
+                domain_terms, terms
+            )
             # Store in a special key
-            domain_analyses['_cross_domain'] = cross_domain_analysis
+            domain_analyses["_cross_domain"] = cross_domain_analysis
 
         return domain_analyses
 
@@ -149,8 +160,9 @@ class DomainAnalyzer:
 
         return dict(domain_groups)
 
-    def _analyze_individuality_domain(self, terms: List[Term],
-                                    texts: List[str]) -> DomainAnalysis:
+    def _analyze_individuality_domain(
+        self, terms: List[Term], texts: List[str]
+    ) -> DomainAnalysis:
         """Analyze the Unit of Individuality domain.
 
         Args:
@@ -160,7 +172,7 @@ class DomainAnalyzer:
         Returns:
             Domain analysis results
         """
-        analysis = DomainAnalysis(domain_name='unit_of_individuality')
+        analysis = DomainAnalysis(domain_name="unit_of_individuality")
 
         # Key terms analysis
         term_texts = [term.text for term in terms]
@@ -174,28 +186,32 @@ class DomainAnalyzer:
             "Individuality exists on a single biological scale",
             "Colony-level traits are emergent rather than individual",
             "Superorganism concept implies loss of individual agency",
-            "Nestmate recognition defines individual boundaries"
+            "Nestmate recognition defines individual boundaries",
         ]
 
         # Conceptual structure
         analysis.conceptual_structure = {
-            'scale_hierarchy': ['gene', 'cell', 'organism', 'colony', 'population'],
-            'individuality_types': ['genetic', 'physiological', 'behavioral', 'social'],
-            'boundary_concepts': ['recognition', 'kinship', 'cooperation', 'conflict']
+            "scale_hierarchy": ["gene", "cell", "organism", "colony", "population"],
+            "individuality_types": ["genetic", "physiological", "behavioral", "social"],
+            "boundary_concepts": ["recognition", "kinship", "cooperation", "conflict"],
         }
 
         # Ambiguities
         analysis.ambiguities = [
             {
-                'term': 'colony',
-                'contexts': ['reproductive unit', 'behavioral entity', 'ecological unit'],
-                'issue': 'Shifts meaning across biological scales'
+                "term": "colony",
+                "contexts": [
+                    "reproductive unit",
+                    "behavioral entity",
+                    "ecological unit",
+                ],
+                "issue": "Shifts meaning across biological scales",
             },
             {
-                'term': 'individual',
-                'contexts': ['nestmate', 'colony member', 'genetic individual'],
-                'issue': 'Multiple biological scales of individuality'
-            }
+                "term": "individual",
+                "contexts": ["nestmate", "colony member", "genetic individual"],
+                "issue": "Multiple biological scales of individuality",
+            },
         ]
 
         # Recommendations
@@ -203,13 +219,14 @@ class DomainAnalyzer:
             "Specify biological scale when using individuality terms",
             "Distinguish between genetic, physiological, and social individuality",
             "Use 'colony-level' vs 'individual-level' traits explicitly",
-            "Avoid assuming single scale of biological organization"
+            "Avoid assuming single scale of biological organization",
         ]
 
         return analysis
 
-    def _analyze_behavior_domain(self, terms: List[Term],
-                               texts: List[str]) -> DomainAnalysis:
+    def _analyze_behavior_domain(
+        self, terms: List[Term], texts: List[str]
+    ) -> DomainAnalysis:
         """Analyze the Behavior and Identity domain.
 
         Args:
@@ -219,7 +236,7 @@ class DomainAnalyzer:
         Returns:
             Domain analysis results
         """
-        analysis = DomainAnalysis(domain_name='behavior_and_identity')
+        analysis = DomainAnalysis(domain_name="behavior_and_identity")
 
         # Key terms
         term_texts = [term.text for term in terms]
@@ -233,28 +250,36 @@ class DomainAnalyzer:
             "Behavioral categories reflect discrete identities",
             "Task performance defines individual identity",
             "Behavioral specialization is fixed and heritable",
-            "Foraging behavior indicates specialized role"
+            "Foraging behavior indicates specialized role",
         ]
 
         # Conceptual structure
         analysis.conceptual_structure = {
-            'identity_types': ['task-based', 'age-based', 'size-based', 'genetic'],
-            'behavior_categories': ['foraging', 'nursing', 'defense', 'reproduction'],
-            'plasticity_concepts': ['developmental', 'environmental', 'social']
+            "identity_types": ["task-based", "age-based", "size-based", "genetic"],
+            "behavior_categories": ["foraging", "nursing", "defense", "reproduction"],
+            "plasticity_concepts": ["developmental", "environmental", "social"],
         }
 
         # Ambiguities
         analysis.ambiguities = [
             {
-                'term': 'forager',
-                'contexts': ['observed carrying food', 'genetically predisposed', 'temporarily assigned'],
-                'issue': 'Identity vs behavior vs observation'
+                "term": "forager",
+                "contexts": [
+                    "observed carrying food",
+                    "genetically predisposed",
+                    "temporarily assigned",
+                ],
+                "issue": "Identity vs behavior vs observation",
             },
             {
-                'term': 'worker',
-                'contexts': ['sterile female', 'non-reproductive adult', 'task-performing individual'],
-                'issue': 'Reproductive status vs behavioral role'
-            }
+                "term": "worker",
+                "contexts": [
+                    "sterile female",
+                    "non-reproductive adult",
+                    "task-performing individual",
+                ],
+                "issue": "Reproductive status vs behavioral role",
+            },
         ]
 
         # Recommendations
@@ -262,13 +287,14 @@ class DomainAnalyzer:
             "Distinguish between behavioral observations and identities",
             "Specify whether roles are fixed or plastic",
             "Use 'behavioral specialization' rather than 'caste identity'",
-            "Avoid assuming heritability of behavioral roles"
+            "Avoid assuming heritability of behavioral roles",
         ]
 
         return analysis
 
-    def _analyze_power_domain(self, terms: List[Term],
-                            texts: List[str]) -> DomainAnalysis:
+    def _analyze_power_domain(
+        self, terms: List[Term], texts: List[str]
+    ) -> DomainAnalysis:
         """Analyze the Power & Labor domain.
 
         Args:
@@ -278,7 +304,7 @@ class DomainAnalyzer:
         Returns:
             Domain analysis results
         """
-        analysis = DomainAnalysis(domain_name='power_and_labor')
+        analysis = DomainAnalysis(domain_name="power_and_labor")
 
         # Key terms
         term_texts = [term.text for term in terms]
@@ -292,28 +318,36 @@ class DomainAnalyzer:
             "Social organization mirrors human hierarchical structures",
             "Power relationships are analogous to human societies",
             "Labor division reflects inherent inequalities",
-            "Queen dominance implies worker subordination"
+            "Queen dominance implies worker subordination",
         ]
 
         # Conceptual structure
         analysis.conceptual_structure = {
-            'power_types': ['reproductive', 'behavioral', 'resource', 'spatial'],
-            'hierarchy_levels': ['queen', 'major workers', 'minor workers', 'soldiers'],
-            'control_mechanisms': ['chemical', 'behavioral', 'physical', 'genetic']
+            "power_types": ["reproductive", "behavioral", "resource", "spatial"],
+            "hierarchy_levels": ["queen", "major workers", "minor workers", "soldiers"],
+            "control_mechanisms": ["chemical", "behavioral", "physical", "genetic"],
         }
 
         # Ambiguities
         analysis.ambiguities = [
             {
-                'term': 'caste',
-                'contexts': ['morphological difference', 'behavioral role', 'social status'],
-                'issue': 'Biological vs social category'
+                "term": "caste",
+                "contexts": [
+                    "morphological difference",
+                    "behavioral role",
+                    "social status",
+                ],
+                "issue": "Biological vs social category",
             },
             {
-                'term': 'slave',
-                'contexts': ['captured worker', 'social parasite', 'metaphorical usage'],
-                'issue': 'Biological relationship vs human analogy'
-            }
+                "term": "slave",
+                "contexts": [
+                    "captured worker",
+                    "social parasite",
+                    "metaphorical usage",
+                ],
+                "issue": "Biological relationship vs human analogy",
+            },
         ]
 
         # Recommendations
@@ -321,13 +355,14 @@ class DomainAnalyzer:
             "Use 'morphological caste' or 'behavioral caste' explicitly",
             "Avoid human social terms like 'slave' and 'parasite'",
             "Specify mechanisms of social control",
-            "Use 'reproductive skew' rather than 'queen dominance'"
+            "Use 'reproductive skew' rather than 'queen dominance'",
         ]
 
         return analysis
 
-    def _analyze_reproduction_domain(self, terms: List[Term],
-                                   texts: List[str]) -> DomainAnalysis:
+    def _analyze_reproduction_domain(
+        self, terms: List[Term], texts: List[str]
+    ) -> DomainAnalysis:
         """Analyze the Sex & Reproduction domain.
 
         Args:
@@ -337,7 +372,7 @@ class DomainAnalyzer:
         Returns:
             Domain analysis results
         """
-        analysis = DomainAnalysis(domain_name='sex_and_reproduction')
+        analysis = DomainAnalysis(domain_name="sex_and_reproduction")
 
         # Key terms
         term_texts = [term.text for term in terms]
@@ -351,28 +386,46 @@ class DomainAnalyzer:
             "Sex determination follows binary human model",
             "Reproductive roles determine social status",
             "Mating systems analogous to human relationships",
-            "Parental investment follows human patterns"
+            "Parental investment follows human patterns",
         ]
 
         # Conceptual structure
         analysis.conceptual_structure = {
-            'sex_systems': ['haplodiploidy', 'environmental sex determination', 'genetic sex determination'],
-            'reproductive_strategies': ['monogamy', 'polygyny', 'polyandry', 'clonal reproduction'],
-            'mating_systems': ['monogyny', 'polygyny', 'pleometrosis', 'secondary monogyny']
+            "sex_systems": [
+                "haplodiploidy",
+                "environmental sex determination",
+                "genetic sex determination",
+            ],
+            "reproductive_strategies": [
+                "monogamy",
+                "polygyny",
+                "polyandry",
+                "clonal reproduction",
+            ],
+            "mating_systems": [
+                "monogyny",
+                "polygyny",
+                "pleometrosis",
+                "secondary monogyny",
+            ],
         }
 
         # Ambiguities
         analysis.ambiguities = [
             {
-                'term': 'sex determination',
-                'contexts': ['chromosomal', 'environmental', 'social'],
-                'issue': 'Multiple mechanisms conflated'
+                "term": "sex determination",
+                "contexts": ["chromosomal", "environmental", "social"],
+                "issue": "Multiple mechanisms conflated",
             },
             {
-                'term': 'female',
-                'contexts': ['reproductive queen', 'sterile worker', 'developmental stage'],
-                'issue': 'Reproductive capacity vs morphological sex'
-            }
+                "term": "female",
+                "contexts": [
+                    "reproductive queen",
+                    "sterile worker",
+                    "developmental stage",
+                ],
+                "issue": "Reproductive capacity vs morphological sex",
+            },
         ]
 
         # Recommendations
@@ -380,13 +433,14 @@ class DomainAnalyzer:
             "Specify mechanism of sex determination",
             "Use 'reproductive female' vs 'morphological female'",
             "Avoid assuming binary sex determination",
-            "Specify reproductive strategy explicitly"
+            "Specify reproductive strategy explicitly",
         ]
 
         return analysis
 
-    def _analyze_kinship_domain(self, terms: List[Term],
-                              texts: List[str]) -> DomainAnalysis:
+    def _analyze_kinship_domain(
+        self, terms: List[Term], texts: List[str]
+    ) -> DomainAnalysis:
         """Analyze the Kin & Relatedness domain.
 
         Args:
@@ -396,7 +450,7 @@ class DomainAnalyzer:
         Returns:
             Domain analysis results
         """
-        analysis = DomainAnalysis(domain_name='kin_and_relatedness')
+        analysis = DomainAnalysis(domain_name="kin_and_relatedness")
 
         # Key terms
         term_texts = [term.text for term in terms]
@@ -410,28 +464,42 @@ class DomainAnalyzer:
             "Kinship follows human family structures",
             "Relatedness is primarily genetic",
             "Kin recognition requires genetic similarity",
-            "Family relationships mirror human patterns"
+            "Family relationships mirror human patterns",
         ]
 
         # Conceptual structure
         analysis.conceptual_structure = {
-            'relatedness_types': ['genetic', 'phenotypic', 'environmental', 'social'],
-            'kinship_mechanisms': ['recognition', 'discrimination', 'cooperation', 'conflict'],
-            'relatedness_measures': ['coefficient', 'distance', 'similarity', 'correlation']
+            "relatedness_types": ["genetic", "phenotypic", "environmental", "social"],
+            "kinship_mechanisms": [
+                "recognition",
+                "discrimination",
+                "cooperation",
+                "conflict",
+            ],
+            "relatedness_measures": [
+                "coefficient",
+                "distance",
+                "similarity",
+                "correlation",
+            ],
         }
 
         # Ambiguities
         analysis.ambiguities = [
             {
-                'term': 'kin',
-                'contexts': ['genetic relatives', 'social affiliates', 'colony members'],
-                'issue': 'Genetic vs social kinship'
+                "term": "kin",
+                "contexts": [
+                    "genetic relatives",
+                    "social affiliates",
+                    "colony members",
+                ],
+                "issue": "Genetic vs social kinship",
             },
             {
-                'term': 'family',
-                'contexts': ['nuclear family', 'colony kin group', 'mating pair'],
-                'issue': 'Human family structures vs insect groupings'
-            }
+                "term": "family",
+                "contexts": ["nuclear family", "colony kin group", "mating pair"],
+                "issue": "Human family structures vs insect groupings",
+            },
         ]
 
         # Recommendations
@@ -439,13 +507,14 @@ class DomainAnalyzer:
             "Specify type of relatedness (genetic, social, environmental)",
             "Use 'relatedness coefficient' for genetic measures",
             "Avoid 'family' for insect groupings",
-            "Specify mechanisms of kin recognition"
+            "Specify mechanisms of kin recognition",
         ]
 
         return analysis
 
-    def _analyze_economics_domain(self, terms: List[Term],
-                                texts: List[str]) -> DomainAnalysis:
+    def _analyze_economics_domain(
+        self, terms: List[Term], texts: List[str]
+    ) -> DomainAnalysis:
         """Analyze the Economics domain.
 
         Args:
@@ -455,7 +524,7 @@ class DomainAnalyzer:
         Returns:
             Domain analysis results
         """
-        analysis = DomainAnalysis(domain_name='economics')
+        analysis = DomainAnalysis(domain_name="economics")
 
         # Key terms
         term_texts = [term.text for term in terms]
@@ -469,28 +538,38 @@ class DomainAnalyzer:
             "Colony economics mirror human market systems",
             "Resource allocation follows market principles",
             "Costs and benefits analogous to human economics",
-            "Optimization implies conscious decision-making"
+            "Optimization implies conscious decision-making",
         ]
 
         # Conceptual structure
         analysis.conceptual_structure = {
-            'resource_types': ['food', 'space', 'information', 'social capital'],
-            'allocation_mechanisms': ['competition', 'cooperation', 'division of labor', 'storage'],
-            'economic_measures': ['efficiency', 'productivity', 'cost-benefit', 'optimization']
+            "resource_types": ["food", "space", "information", "social capital"],
+            "allocation_mechanisms": [
+                "competition",
+                "cooperation",
+                "division of labor",
+                "storage",
+            ],
+            "economic_measures": [
+                "efficiency",
+                "productivity",
+                "cost-benefit",
+                "optimization",
+            ],
         }
 
         # Ambiguities
         analysis.ambiguities = [
             {
-                'term': 'trade',
-                'contexts': ['resource exchange', 'trophallaxis', 'metaphorical usage'],
-                'issue': 'Biological exchange vs economic metaphor'
+                "term": "trade",
+                "contexts": ["resource exchange", "trophallaxis", "metaphorical usage"],
+                "issue": "Biological exchange vs economic metaphor",
             },
             {
-                'term': 'cost',
-                'contexts': ['energetic expenditure', 'risk', 'opportunity cost'],
-                'issue': 'Multiple types of costs conflated'
-            }
+                "term": "cost",
+                "contexts": ["energetic expenditure", "risk", "opportunity cost"],
+                "issue": "Multiple types of costs conflated",
+            },
         ]
 
         # Recommendations
@@ -498,7 +577,7 @@ class DomainAnalyzer:
             "Specify type of resource allocation mechanism",
             "Use 'resource exchange' rather than 'trade'",
             "Specify cost type (energetic, risk, opportunity)",
-            "Avoid assuming conscious economic decision-making"
+            "Avoid assuming conscious economic decision-making",
         ]
 
         return analysis
@@ -529,24 +608,24 @@ class DomainAnalyzer:
 
         for term in terms:
             # Compound words
-            if '_' in term.text or '-' in term.text:
-                patterns['compound'] += 1
+            if "_" in term.text or "-" in term.text:
+                patterns["compound"] += 1
 
             # Multi-word terms
-            if ' ' in term.text:
-                patterns['multi_word'] += 1
+            if " " in term.text:
+                patterns["multi_word"] += 1
 
             # Capitalized terms
             if term.text[0].isupper():
-                patterns['capitalized'] += 1
+                patterns["capitalized"] += 1
 
             # Scientific abbreviations
-            if re.match(r'^[A-Z]{2,}$', term.text):
-                patterns['abbreviation'] += 1
+            if re.match(r"^[A-Z]{2,}$", term.text):
+                patterns["abbreviation"] += 1
 
             # Number-containing terms
             if any(char.isdigit() for char in term.text):
-                patterns['numeric'] += 1
+                patterns["numeric"] += 1
 
         return dict(patterns)
 
@@ -561,12 +640,12 @@ class DomainAnalyzer:
         """
         # Handle both dict and DomainAnalysis object inputs
         if isinstance(analysis, dict):
-            domain_name = analysis.get('domain_name', 'unknown')
-            key_terms = analysis.get('key_terms', [])
-            term_patterns = analysis.get('term_patterns', {})
-            framing_assumptions = analysis.get('framing_assumptions', [])
-            ambiguities = analysis.get('ambiguities', [])
-            recommendations = analysis.get('recommendations', [])
+            domain_name = analysis.get("domain_name", "unknown")
+            key_terms = analysis.get("key_terms", [])
+            term_patterns = analysis.get("term_patterns", {})
+            framing_assumptions = analysis.get("framing_assumptions", [])
+            ambiguities = analysis.get("ambiguities", [])
+            recommendations = analysis.get("recommendations", [])
         else:
             # DomainAnalysis object
             domain_name = analysis.domain_name
@@ -575,7 +654,7 @@ class DomainAnalyzer:
             framing_assumptions = analysis.framing_assumptions
             ambiguities = analysis.ambiguities
             recommendations = analysis.recommendations
-        
+
         report = f"""
 # {domain_name.replace('_', ' ').title()} Domain Analysis
 
@@ -606,14 +685,18 @@ class DomainAnalyzer:
             Comparison results
         """
         comparison = {
-            'domain_sizes': {name: len(analysis.key_terms) for name, analysis in analyses.items()},
-            'shared_assumptions': self._find_shared_assumptions(analyses),
-            'cross_domain_ambiguities': self._find_cross_domain_issues(analyses)
+            "domain_sizes": {
+                name: len(analysis.key_terms) for name, analysis in analyses.items()
+            },
+            "shared_assumptions": self._find_shared_assumptions(analyses),
+            "cross_domain_ambiguities": self._find_cross_domain_issues(analyses),
         }
 
         return comparison
 
-    def _find_shared_assumptions(self, analyses: Dict[str, DomainAnalysis]) -> List[str]:
+    def _find_shared_assumptions(
+        self, analyses: Dict[str, DomainAnalysis]
+    ) -> List[str]:
         """Find assumptions shared across domains.
 
         Args:
@@ -627,11 +710,15 @@ class DomainAnalyzer:
             all_assumptions.extend(analysis.framing_assumptions)
 
         assumption_counts = Counter(all_assumptions)
-        shared = [assumption for assumption, count in assumption_counts.items() if count > 1]
+        shared = [
+            assumption for assumption, count in assumption_counts.items() if count > 1
+        ]
 
         return shared
 
-    def _find_cross_domain_issues(self, analyses: Dict[str, DomainAnalysis]) -> List[Dict[str, Any]]:
+    def _find_cross_domain_issues(
+        self, analyses: Dict[str, DomainAnalysis]
+    ) -> List[Dict[str, Any]]:
         """Find issues that span multiple domains.
 
         Args:
@@ -644,16 +731,21 @@ class DomainAnalyzer:
         # with conflicting meanings - simplified implementation
         cross_domain_issues = [
             {
-                'issue': 'Anthropomorphic framing across domains',
-                'affected_domains': ['power_and_labor', 'behavior_and_identity', 'economics'],
-                'description': 'Human social concepts applied to insect societies'
+                "issue": "Anthropomorphic framing across domains",
+                "affected_domains": [
+                    "power_and_labor",
+                    "behavior_and_identity",
+                    "economics",
+                ],
+                "description": "Human social concepts applied to insect societies",
             }
         ]
 
         return cross_domain_issues
 
-    def analyze_term_frequency_distribution(self, terms: List[Term],
-                                          texts: List[str]) -> Dict[str, Any]:
+    def analyze_term_frequency_distribution(
+        self, terms: List[Term], texts: List[str]
+    ) -> Dict[str, Any]:
         """Analyze term frequency distributions within domains.
 
         Args:
@@ -664,6 +756,7 @@ class DomainAnalyzer:
             Statistical analysis of term frequencies
         """
         from collections import Counter
+
         import numpy as np
 
         # Extract term frequencies
@@ -673,34 +766,38 @@ class DomainAnalyzer:
         # Basic statistics
         if term_freqs:
             stats = {
-                'mean_frequency': np.mean(term_freqs),
-                'median_frequency': np.median(term_freqs),
-                'std_frequency': np.std(term_freqs),
-                'min_frequency': min(term_freqs),
-                'max_frequency': max(term_freqs),
-                'total_occurrences': sum(term_freqs),
-                'unique_terms': len(term_freqs)
+                "mean_frequency": np.mean(term_freqs),
+                "median_frequency": np.median(term_freqs),
+                "std_frequency": np.std(term_freqs),
+                "min_frequency": min(term_freqs),
+                "max_frequency": max(term_freqs),
+                "total_occurrences": sum(term_freqs),
+                "unique_terms": len(term_freqs),
             }
 
             # Frequency distribution
-            hist, bin_edges = np.histogram(term_freqs, bins='auto')
-            stats['frequency_distribution'] = {
-                'bins': bin_edges.tolist(),
-                'counts': hist.tolist()
+            hist, bin_edges = np.histogram(term_freqs, bins="auto")
+            stats["frequency_distribution"] = {
+                "bins": bin_edges.tolist(),
+                "counts": hist.tolist(),
             }
 
             # Most frequent terms
-            sorted_terms = sorted(zip(term_texts, term_freqs), key=lambda x: x[1], reverse=True)
-            stats['top_terms'] = [{'term': term, 'frequency': freq} for term, freq in sorted_terms[:10]]
+            sorted_terms = sorted(
+                zip(term_texts, term_freqs), key=lambda x: x[1], reverse=True
+            )
+            stats["top_terms"] = [
+                {"term": term, "frequency": freq} for term, freq in sorted_terms[:10]
+            ]
 
         else:
-            stats = {'error': 'No terms provided for analysis'}
+            stats = {"error": "No terms provided for analysis"}
 
         return stats
 
-    def analyze_term_cooccurrence(self, terms: List[Term],
-                                texts: List[str],
-                                window_size: int = 50) -> Dict[str, Any]:
+    def analyze_term_cooccurrence(
+        self, terms: List[Term], texts: List[str], window_size: int = 50
+    ) -> Dict[str, Any]:
         """Analyze co-occurrence patterns between terms.
 
         Args:
@@ -712,6 +809,7 @@ class DomainAnalyzer:
             Co-occurrence analysis results
         """
         from collections import defaultdict
+
         import numpy as np
 
         term_texts = [term.text.lower() for term in terms]
@@ -738,17 +836,22 @@ class DomainAnalyzer:
             cooccurrence_dict[term1] = dict(cooccurs)
 
         # Calculate co-occurrence statistics
-        total_cooccurrences = sum(sum(counts.values()) for counts in cooccurrence_matrix.values())
+        total_cooccurrences = sum(
+            sum(counts.values()) for counts in cooccurrence_matrix.values()
+        )
 
         return {
-            'cooccurrence_matrix': cooccurrence_dict,
-            'total_cooccurrences': total_cooccurrences,
-            'unique_term_pairs': len(cooccurrence_dict),
-            'average_cooccurrences_per_term': total_cooccurrences / len(term_texts) if term_texts else 0
+            "cooccurrence_matrix": cooccurrence_dict,
+            "total_cooccurrences": total_cooccurrences,
+            "unique_term_pairs": len(cooccurrence_dict),
+            "average_cooccurrences_per_term": (
+                total_cooccurrences / len(term_texts) if term_texts else 0
+            ),
         }
 
-    def quantify_ambiguity_metrics(self, terms: List[Term],
-                                 texts: List[str]) -> Dict[str, Any]:
+    def quantify_ambiguity_metrics(
+        self, terms: List[Term], texts: List[str]
+    ) -> Dict[str, Any]:
         """Quantify ambiguity metrics for terms in the domain.
 
         Args:
@@ -758,8 +861,8 @@ class DomainAnalyzer:
         Returns:
             Ambiguity quantification metrics
         """
-        from collections import defaultdict
         import re
+        from collections import defaultdict
 
         ambiguity_scores = {}
         context_counts = defaultdict(lambda: defaultdict(int))
@@ -771,7 +874,7 @@ class DomainAnalyzer:
             # Find contexts where term appears
             for text in texts:
                 # Simple context extraction around term
-                sentences = re.split(r'[.!?]+', text)
+                sentences = re.split(r"[.!?]+", text)
                 for sentence in sentences:
                     if term_text in sentence.lower():
                         # Extract context (simplified)
@@ -782,42 +885,54 @@ class DomainAnalyzer:
                 # Context diversity (unique contexts / total contexts)
                 unique_contexts = len(set(contexts))
                 total_contexts = len(contexts)
-                context_diversity = unique_contexts / total_contexts if total_contexts > 0 else 0
+                context_diversity = (
+                    unique_contexts / total_contexts if total_contexts > 0 else 0
+                )
 
                 # Context length variation
                 context_lengths = [len(ctx.split()) for ctx in contexts]
                 length_variation = np.std(context_lengths) if context_lengths else 0
 
                 ambiguity_scores[term_text] = {
-                    'total_occurrences': total_contexts,
-                    'unique_contexts': unique_contexts,
-                    'context_diversity': context_diversity,
-                    'context_length_variation': length_variation,
-                    'ambiguity_score': context_diversity * length_variation  # Combined metric
+                    "total_occurrences": total_contexts,
+                    "unique_contexts": unique_contexts,
+                    "context_diversity": context_diversity,
+                    "context_length_variation": length_variation,
+                    "ambiguity_score": context_diversity
+                    * length_variation,  # Combined metric
                 }
 
         # Overall domain ambiguity metrics
         if ambiguity_scores:
             domain_scores = list(ambiguity_scores.values())
             overall_metrics = {
-                'average_context_diversity': np.mean([s['context_diversity'] for s in domain_scores]),
-                'average_ambiguity_score': np.mean([s['ambiguity_score'] for s in domain_scores]),
-                'max_ambiguity_score': max([s['ambiguity_score'] for s in domain_scores]),
-                'highly_ambiguous_terms': [
-                    term for term, score in ambiguity_scores.items()
-                    if score['ambiguity_score'] > np.mean([s['ambiguity_score'] for s in domain_scores])
-                ]
+                "average_context_diversity": np.mean(
+                    [s["context_diversity"] for s in domain_scores]
+                ),
+                "average_ambiguity_score": np.mean(
+                    [s["ambiguity_score"] for s in domain_scores]
+                ),
+                "max_ambiguity_score": max(
+                    [s["ambiguity_score"] for s in domain_scores]
+                ),
+                "highly_ambiguous_terms": [
+                    term
+                    for term, score in ambiguity_scores.items()
+                    if score["ambiguity_score"]
+                    > np.mean([s["ambiguity_score"] for s in domain_scores])
+                ],
             }
         else:
-            overall_metrics = {'error': 'No terms found for ambiguity analysis'}
+            overall_metrics = {"error": "No terms found for ambiguity analysis"}
 
         return {
-            'term_ambiguity_scores': ambiguity_scores,
-            'domain_metrics': overall_metrics
+            "term_ambiguity_scores": ambiguity_scores,
+            "domain_metrics": overall_metrics,
         }
 
-    def analyze_cross_domain_overlap(self, domain_terms: Dict[str, List[Term]],
-                                   all_terms: Dict[str, Term]) -> Dict[str, Any]:
+    def analyze_cross_domain_overlap(
+        self, domain_terms: Dict[str, List[Term]], all_terms: Dict[str, Term]
+    ) -> Dict[str, Any]:
         """Analyze overlap between terms across different domains.
 
         Args:
@@ -832,7 +947,7 @@ class DomainAnalyzer:
         # Build term-to-domains mapping
         term_domains = defaultdict(set)
         for term_text, term_obj in all_terms.items():
-            if hasattr(term_obj, 'domains') and term_obj.domains:
+            if hasattr(term_obj, "domains") and term_obj.domains:
                 term_domains[term_text] = set(term_obj.domains)
 
         # Calculate overlap statistics
@@ -852,31 +967,49 @@ class DomainAnalyzer:
                             shared_terms.append(term_text)
 
                     overlap_stats[pair_key] = {
-                        'shared_terms': shared_terms,
-                        'shared_count': len(shared_terms),
-                        'domain1_total': len(domain_terms[domain1]),
-                        'domain2_total': len(domain_terms[domain2]),
-                        'overlap_percentage': (
-                            len(shared_terms) /
-                            min(len(domain_terms[domain1]), len(domain_terms[domain2]))
-                        ) * 100 if min(len(domain_terms[domain1]), len(domain_terms[domain2])) > 0 else 0
+                        "shared_terms": shared_terms,
+                        "shared_count": len(shared_terms),
+                        "domain1_total": len(domain_terms[domain1]),
+                        "domain2_total": len(domain_terms[domain2]),
+                        "overlap_percentage": (
+                            (
+                                len(shared_terms)
+                                / min(
+                                    len(domain_terms[domain1]),
+                                    len(domain_terms[domain2]),
+                                )
+                            )
+                            * 100
+                            if min(
+                                len(domain_terms[domain1]), len(domain_terms[domain2])
+                            )
+                            > 0
+                            else 0
+                        ),
                     }
 
         # Overall statistics
         all_shared_terms = set()
         for stats in overlap_stats.values():
-            all_shared_terms.update(stats['shared_terms'])
+            all_shared_terms.update(stats["shared_terms"])
 
         return {
-            'domain_pair_overlaps': dict(overlap_stats),
-            'total_unique_shared_terms': len(all_shared_terms),
-            'average_overlap_percentage': np.mean([
-                stats['overlap_percentage'] for stats in overlap_stats.values()
-            ]) if overlap_stats else 0
+            "domain_pair_overlaps": dict(overlap_stats),
+            "total_unique_shared_terms": len(all_shared_terms),
+            "average_overlap_percentage": (
+                np.mean(
+                    [stats["overlap_percentage"] for stats in overlap_stats.values()]
+                )
+                if overlap_stats
+                else 0
+            ),
         }
 
-    def calculate_statistical_significance(self, term_patterns: Dict[str, int],
-                                         expected_patterns: Optional[Dict[str, float]] = None) -> Dict[str, Any]:
+    def calculate_statistical_significance(
+        self,
+        term_patterns: Dict[str, int],
+        expected_patterns: Optional[Dict[str, float]] = None,
+    ) -> Dict[str, Any]:
         """Calculate statistical significance for term patterns.
 
         Args:
@@ -886,44 +1019,51 @@ class DomainAnalyzer:
         Returns:
             Statistical significance analysis
         """
-        from scipy import stats
         import numpy as np
+        from scipy import stats
 
         if not term_patterns:
-            return {'error': 'No patterns provided'}
+            return {"error": "No patterns provided"}
 
         # If no expected patterns, use uniform distribution
         if expected_patterns is None:
             total_patterns = sum(term_patterns.values())
-            expected_patterns = {pattern: total_patterns / len(term_patterns)
-                               for pattern in term_patterns.keys()}
+            expected_patterns = {
+                pattern: total_patterns / len(term_patterns)
+                for pattern in term_patterns.keys()
+            }
 
         # Chi-square test for pattern significance
         observed = list(term_patterns.values())
-        expected = [expected_patterns.get(pattern, 0) for pattern in term_patterns.keys()]
+        expected = [
+            expected_patterns.get(pattern, 0) for pattern in term_patterns.keys()
+        ]
 
         try:
             chi2_stat, p_value = stats.chisquare(observed, expected)
-            significant_patterns = [pattern for pattern, freq in term_patterns.items()
-                                  if freq > expected_patterns.get(pattern, 0)]
+            significant_patterns = [
+                pattern
+                for pattern, freq in term_patterns.items()
+                if freq > expected_patterns.get(pattern, 0)
+            ]
 
             return {
-                'chi_square_statistic': chi2_stat,
-                'p_value': p_value,
-                'significant_patterns': significant_patterns,
-                'significance_threshold': 0.05,
-                'is_significant': p_value < 0.05,
-                'effect_size': chi2_stat / sum(observed)  # Cramer's V approximation
+                "chi_square_statistic": chi2_stat,
+                "p_value": p_value,
+                "significant_patterns": significant_patterns,
+                "significance_threshold": 0.05,
+                "is_significant": p_value < 0.05,
+                "effect_size": chi2_stat / sum(observed),  # Cramer's V approximation
             }
         except Exception as e:
             return {
-                'error': f'Statistical analysis failed: {str(e)}',
-                'observed_patterns': term_patterns
+                "error": f"Statistical analysis failed: {str(e)}",
+                "observed_patterns": term_patterns,
             }
 
-    def generate_confidence_scores(self, framing_assumptions: List[str],
-                                 terms: List[Term],
-                                 texts: List[str]) -> Dict[str, float]:
+    def generate_confidence_scores(
+        self, framing_assumptions: List[str], terms: List[Term], texts: List[str]
+    ) -> Dict[str, float]:
         """Generate confidence scores for framing assumptions.
 
         Args:
@@ -954,8 +1094,9 @@ class DomainAnalyzer:
 
         return confidence_scores
 
-    def quantify_conceptual_structure(self, conceptual_structure: Dict[str, Any],
-                                    terms: List[Term]) -> Dict[str, Any]:
+    def quantify_conceptual_structure(
+        self, conceptual_structure: Dict[str, Any], terms: List[Term]
+    ) -> Dict[str, Any]:
         """Quantify conceptual structure metrics.
 
         Args:
@@ -975,13 +1116,18 @@ class DomainAnalyzer:
             elif isinstance(value, dict):
                 total_concepts += len(value)
 
-        metrics['total_concepts'] = total_concepts
-        metrics['terms_per_concept'] = len(terms) / total_concepts if total_concepts > 0 else 0
+        metrics["total_concepts"] = total_concepts
+        metrics["terms_per_concept"] = (
+            len(terms) / total_concepts if total_concepts > 0 else 0
+        )
 
         # Concept diversity - number of different concept types
-        concept_types = sum(1 for value in conceptual_structure.values()
-                          if isinstance(value, (list, dict)))
-        metrics['concept_types'] = concept_types
+        concept_types = sum(
+            1
+            for value in conceptual_structure.values()
+            if isinstance(value, (list, dict))
+        )
+        metrics["concept_types"] = concept_types
 
         # Structural complexity - nested levels
         def calculate_depth(obj, current_depth=0):
@@ -992,7 +1138,9 @@ class DomainAnalyzer:
             else:
                 return current_depth
 
-        metrics['structural_depth'] = calculate_depth(conceptual_structure)
-        metrics['structural_complexity_score'] = concept_types * metrics['structural_depth']
+        metrics["structural_depth"] = calculate_depth(conceptual_structure)
+        metrics["structural_complexity_score"] = (
+            concept_types * metrics["structural_depth"]
+        )
 
         return metrics

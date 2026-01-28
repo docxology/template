@@ -20,35 +20,20 @@ __layer__ = "infrastructure"
 # Import commonly-used items for convenient access
 try:
     # Core
-    from .core import (
-        get_logger, setup_logger, log_operation, log_timing,
-        get_project_logger, setup_project_logging, ProjectLogger,
-        TemplateError, ConfigurationError, ValidationError, BuildError,
-        load_config
-    )
-    # Validation
-    from .validation import (
-        validate_pdf_rendering,
-        validate_markdown,
-        verify_output_integrity
-    )
+    from .core import (BuildError, ConfigurationError, ProjectLogger,
+                       TemplateError, ValidationError, get_logger,
+                       get_project_logger, load_config, log_operation,
+                       log_timing, setup_logger, setup_project_logging)
     # Documentation
-    from .documentation import (
-        FigureManager,
-        ImageManager,
-        MarkdownIntegration
-    )
+    from .documentation import FigureManager, ImageManager, MarkdownIntegration
     # Publishing
-    from .publishing import (
-        extract_publication_metadata,
-        generate_citation_bibtex,
-        publish_to_zenodo
-    )
+    from .publishing import (extract_publication_metadata,
+                             generate_citation_bibtex, publish_to_zenodo)
     # Reporting
-    from .reporting import (
-        generate_pipeline_report,
-        get_error_aggregator
-    )
+    from .reporting import generate_pipeline_report, get_error_aggregator
+    # Validation
+    from .validation import (validate_markdown, validate_pdf_rendering,
+                             verify_output_integrity)
 except ImportError:
     # Graceful fallback if imports fail
     pass
@@ -92,4 +77,3 @@ __all__ = [
     "generate_pipeline_report",
     "get_error_aggregator",
 ]
-

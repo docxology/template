@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generate comprehensive test summary report for the full repository test suite.
 
-This script aggregates test results from infrastructure, code_project, and prose_project
+This script aggregates test results from infrastructure and active project
 tests to create a comprehensive summary report.
 """
 from __future__ import annotations
@@ -16,7 +16,7 @@ def load_test_results(project_name: str) -> Dict[str, Any]:
     """Load test results from a project's output directory.
 
     Args:
-        project_name: Name of the project (e.g., 'code_project', 'prose_project')
+        project_name: Name of the project (e.g., 'code_project')
 
     Returns:
         Dictionary containing test results, or empty dict if not found
@@ -107,6 +107,23 @@ def load_infrastructure_results() -> Dict[str, Any]:
     return {}
 
 
+def discover_active_projects() -> list:
+    """Discover active projects from the projects/ directory.
+
+    Returns:
+        List of active project names
+    """
+    projects_dir = Path("projects")
+    if not projects_dir.exists():
+        return []
+
+    projects = []
+    for item in projects_dir.iterdir():
+        if item.is_dir() and not item.name.startswith((".", "_", "__")):
+            projects.append(item.name)
+    return sorted(projects)
+
+
 def generate_summary_report() -> Dict[str, Any]:
     """Generate comprehensive test summary report.
 
@@ -115,29 +132,26 @@ def generate_summary_report() -> Dict[str, Any]:
     """
     timestamp = datetime.now().isoformat()
 
+    # Discover active projects dynamically
+    active_projects = discover_active_projects()
+
     # Load results from all test suites
     infra_results = load_infrastructure_results()
-    code_results = load_test_results('code_project')
-    prose_results = load_test_results('prose_project')
+
+    # Load project results dynamically
+    project_results = {}
+    for project_name in active_projects:
+        project_results[project_name] = load_test_results(project_name)
 
     # Calculate totals
-    total_passed = (
-        infra_results.get('passed', 0) +
-        code_results.get('passed', 0) +
-        prose_results.get('passed', 0)
-    )
+    total_passed = infra_results.get('passed', 0)
+    total_failed = infra_results.get('failed', 0)
+    total_skipped = infra_results.get('skipped', 0)
 
-    total_failed = (
-        infra_results.get('failed', 0) +
-        code_results.get('failed', 0) +
-        prose_results.get('failed', 0)
-    )
-
-    total_skipped = (
-        infra_results.get('skipped', 0) +
-        code_results.get('skipped', 0) +
-        prose_results.get('skipped', 0)
-    )
+    for results in project_results.values():
+        total_passed += results.get('passed', 0)
+        total_failed += results.get('failed', 0)
+        total_skipped += results.get('skipped', 0)
 
     total_tests = total_passed + total_failed + total_skipped
 
@@ -145,35 +159,33 @@ def generate_summary_report() -> Dict[str, Any]:
     infra_coverage = infra_results.get('coverage_percent', 0)
     infra_lines = infra_results.get('total_lines', 0)
 
-    code_coverage = code_results.get('coverage_percent', 0)
-    code_lines = code_results.get('total_lines', 0)
+    total_lines = infra_lines
+    weighted_sum = infra_coverage * infra_lines
 
-    prose_coverage = prose_results.get('coverage_percent', 0)
-    prose_lines = prose_results.get('total_lines', 0)
-
-    total_lines = infra_lines + code_lines + prose_lines
+    for results in project_results.values():
+        proj_coverage = results.get('coverage_percent', 0)
+        proj_lines = results.get('total_lines', 0)
+        total_lines += proj_lines
+        weighted_sum += proj_coverage * proj_lines
 
     if total_lines > 0:
-        weighted_coverage = (
-            (infra_coverage * infra_lines +
-             code_coverage * code_lines +
-             prose_coverage * prose_lines) / total_lines
-        )
+        weighted_coverage = weighted_sum / total_lines
     else:
         weighted_coverage = 0
 
     # Calculate execution times
     infra_duration = infra_results.get('duration_seconds', 0)
-    code_duration = code_results.get('duration_seconds', 0)
-    prose_duration = prose_results.get('duration_seconds', 0)
-    total_duration = infra_duration + code_duration + prose_duration
+    total_duration = infra_duration
+
+    for results in project_results.values():
+        total_duration += results.get('duration_seconds', 0)
 
     # Determine overall success
-    overall_success = (
-        infra_results.get('exit_code', 1) == 0 and
-        code_results.get('exit_code', 1) == 0 and
-        prose_results.get('exit_code', 1) == 0
-    )
+    overall_success = infra_results.get('exit_code', 1) == 0
+    for results in project_results.values():
+        if results.get('exit_code', 1) != 0:
+            overall_success = False
+            break
 
     # Create summary report
     report = {
@@ -205,33 +217,7 @@ def generate_summary_report() -> Dict[str, Any]:
             'meets_threshold': infra_coverage >= 60.0,
         },
 
-        'code_project': {
-            'passed': code_results.get('passed', 0),
-            'failed': code_results.get('failed', 0),
-            'skipped': code_results.get('skipped', 0),
-            'warnings': code_results.get('warnings', 0),
-            'coverage_percent': code_coverage,
-            'total_lines': code_results.get('total_lines', 0),
-            'covered_lines': code_results.get('covered_lines', 0),
-            'missing_lines': code_results.get('missing_lines', 0),
-            'duration_seconds': code_duration,
-            'exit_code': code_results.get('exit_code', 1),
-            'meets_threshold': code_coverage >= 90.0,
-        },
-
-        'prose_project': {
-            'passed': prose_results.get('passed', 0),
-            'failed': prose_results.get('failed', 0),
-            'skipped': prose_results.get('skipped', 0),
-            'warnings': prose_results.get('warnings', 0),
-            'coverage_percent': prose_coverage,
-            'total_lines': prose_results.get('total_lines', 0),
-            'covered_lines': prose_results.get('covered_lines', 0),
-            'missing_lines': prose_results.get('missing_lines', 0),
-            'duration_seconds': prose_duration,
-            'exit_code': prose_results.get('exit_code', 1),
-            'meets_threshold': prose_coverage >= 90.0,
-        },
+        'projects': {},
 
         'metadata': {
             'test_run_type': 'all_test_types_included',
@@ -241,19 +227,35 @@ def generate_summary_report() -> Dict[str, Any]:
             'ollama_tests_included': True,
             'ollama_server_available': True,  # Based on successful test execution
             'test_command': 'scripts/01_run_tests.py --include-slow --include-ollama-tests --verbose',
+            'active_projects': active_projects,
         },
 
         'files_generated': [
             'test_results_summary.json',
             'test_results_summary.md',
             'coverage_infra.json',
-            'coverage_project.json (code_project)',
-            'coverage_project.json (prose_project)',
             'htmlcov/index.html (infrastructure)',
-            'htmlcov/index.html (code_project)',
-            'htmlcov/index.html (prose_project)',
         ],
     }
+
+    # Add per-project results dynamically
+    for project_name, results in project_results.items():
+        proj_coverage = results.get('coverage_percent', 0)
+        report['projects'][project_name] = {
+            'passed': results.get('passed', 0),
+            'failed': results.get('failed', 0),
+            'skipped': results.get('skipped', 0),
+            'warnings': results.get('warnings', 0),
+            'coverage_percent': proj_coverage,
+            'total_lines': results.get('total_lines', 0),
+            'covered_lines': results.get('covered_lines', 0),
+            'missing_lines': results.get('missing_lines', 0),
+            'duration_seconds': results.get('duration_seconds', 0),
+            'exit_code': results.get('exit_code', 1),
+            'meets_threshold': proj_coverage >= 90.0,
+        }
+        report['files_generated'].append(f'coverage_project.json ({project_name})')
+        report['files_generated'].append(f'htmlcov/index.html ({project_name})')
 
     return report
 
@@ -273,7 +275,7 @@ def generate_markdown_report(data: Dict[str, Any]) -> str:
     lines.append("")
     lines.append(f"**Date**: {data['timestamp']}")
     lines.append(f"**Test Type**: {data['test_type']}")
-    lines.append(f"**Overall Status**: {'✅ PASSED' if data['overall_success'] else '❌ FAILED'}")
+    lines.append(f"**Overall Status**: {'PASSED' if data['overall_success'] else 'FAILED'}")
     lines.append("")
 
     # Summary section
@@ -293,53 +295,44 @@ def generate_markdown_report(data: Dict[str, Any]) -> str:
     lines.append("## Infrastructure Tests")
     lines.append("")
     infra = data['infrastructure']
-    status = "✅ PASSED" if infra['exit_code'] == 0 else "❌ FAILED"
+    status = "PASSED" if infra['exit_code'] == 0 else "FAILED"
     lines.append(f"**Status**: {status}")
     lines.append(f"**Tests**: {infra['passed']:,} passed, {infra['failed']:,} failed, {infra['skipped']:,} skipped")
     if infra['warnings'] > 0:
         lines.append(f"**Warnings**: {infra['warnings']:,}")
-    lines.append(f"**Coverage**: {infra['coverage_percent']:.1f}% ({'✅ meets' if infra['meets_threshold'] else '❌ below'} 60% threshold)")
+    lines.append(f"**Coverage**: {infra['coverage_percent']:.1f}% ({'meets' if infra['meets_threshold'] else 'below'} 60% threshold)")
     lines.append(f"**Lines**: {infra['covered_lines']:,}/{infra['total_lines']:,} covered")
     lines.append(f"**Duration**: {infra['duration_seconds']:.1f}s")
     lines.append("")
 
-    # Code project results
-    lines.append("## Code Project Tests")
-    lines.append("")
-    code = data['code_project']
-    status = "✅ PASSED" if code['exit_code'] == 0 else "❌ FAILED"
-    lines.append(f"**Status**: {status}")
-    lines.append(f"**Tests**: {code['passed']:,} passed, {code['failed']:,} failed, {code['skipped']:,} skipped")
-    if code['warnings'] > 0:
-        lines.append(f"**Warnings**: {code['warnings']:,}")
-    lines.append(f"**Coverage**: {code['coverage_percent']:.1f}% ({'✅ meets' if code['meets_threshold'] else '❌ below'} 90% threshold)")
-    lines.append(f"**Lines**: {code['covered_lines']:,}/{code['total_lines']:,} covered")
-    lines.append(f"**Duration**: {code['duration_seconds']:.1f}s")
-    lines.append("")
-
-    # Prose project results
-    lines.append("## Prose Project Tests")
-    lines.append("")
-    prose = data['prose_project']
-    status = "✅ PASSED" if prose['exit_code'] == 0 else "❌ FAILED"
-    lines.append(f"**Status**: {status}")
-    lines.append(f"**Tests**: {prose['passed']:,} passed, {prose['failed']:,} failed, {prose['skipped']:,} skipped")
-    if prose['warnings'] > 0:
-        lines.append(f"**Warnings**: {prose['warnings']:,}")
-    lines.append(f"**Coverage**: {prose['coverage_percent']:.1f}% ({'✅ meets' if prose['meets_threshold'] else '❌ below'} 90% threshold)")
-    lines.append(f"**Lines**: {prose['covered_lines']:,}/{prose['total_lines']:,} covered")
-    lines.append(f"**Duration**: {prose['duration_seconds']:.1f}s")
-    lines.append("")
+    # Project results (dynamic)
+    projects = data.get('projects', {})
+    for project_name, proj_data in sorted(projects.items()):
+        # Format project name for display (convert underscores to spaces, title case)
+        display_name = project_name.replace('_', ' ').title()
+        lines.append(f"## {display_name} Tests")
+        lines.append("")
+        status = "PASSED" if proj_data['exit_code'] == 0 else "FAILED"
+        lines.append(f"**Status**: {status}")
+        lines.append(f"**Tests**: {proj_data['passed']:,} passed, {proj_data['failed']:,} failed, {proj_data['skipped']:,} skipped")
+        if proj_data['warnings'] > 0:
+            lines.append(f"**Warnings**: {proj_data['warnings']:,}")
+        lines.append(f"**Coverage**: {proj_data['coverage_percent']:.1f}% ({'meets' if proj_data['meets_threshold'] else 'below'} 90% threshold)")
+        lines.append(f"**Lines**: {proj_data['covered_lines']:,}/{proj_data['total_lines']:,} covered")
+        lines.append(f"**Duration**: {proj_data['duration_seconds']:.1f}s")
+        lines.append("")
 
     # Metadata
     lines.append("## Test Configuration")
     lines.append("")
     meta = data['metadata']
-    lines.append(f"- **Infrastructure Tests**: {'✅ Included' if meta['infrastructure_tests_included'] else '❌ Excluded'}")
-    lines.append(f"- **Integration Tests**: {'✅ Included' if meta['integration_tests_included'] else '❌ Excluded'}")
-    lines.append(f"- **Slow Tests**: {'✅ Included' if meta['slow_tests_included'] else '❌ Excluded'}")
-    lines.append(f"- **Ollama Tests**: {'✅ Included' if meta['ollama_tests_included'] else '❌ Excluded'}")
-    lines.append(f"- **Ollama Server**: {'✅ Available' if meta['ollama_server_available'] else '❌ Unavailable'}")
+    lines.append(f"- **Infrastructure Tests**: {'Included' if meta['infrastructure_tests_included'] else 'Excluded'}")
+    lines.append(f"- **Integration Tests**: {'Included' if meta['integration_tests_included'] else 'Excluded'}")
+    lines.append(f"- **Slow Tests**: {'Included' if meta['slow_tests_included'] else 'Excluded'}")
+    lines.append(f"- **Ollama Tests**: {'Included' if meta['ollama_tests_included'] else 'Excluded'}")
+    lines.append(f"- **Ollama Server**: {'Available' if meta['ollama_server_available'] else 'Unavailable'}")
+    if 'active_projects' in meta:
+        lines.append(f"- **Active Projects**: {', '.join(meta['active_projects'])}")
     lines.append("")
 
     # Files generated
@@ -380,21 +373,22 @@ def main():
     # Print summary to console
     summary = report_data['summary']
     infra = report_data['infrastructure']
-    code = report_data['code_project']
-    prose = report_data['prose_project']
+    projects = report_data.get('projects', {})
 
     print("\n" + "="*80)
     print("FULL REPOSITORY TEST SUITE SUMMARY")
     print("="*80)
-    print(f"Overall Status: {'✅ PASSED' if report_data['overall_success'] else '❌ FAILED'}")
+    print(f"Overall Status: {'PASSED' if report_data['overall_success'] else 'FAILED'}")
     print(f"Total Tests: {summary['total_tests']:,} ({summary['pass_rate']:.1f}% pass rate)")
     print(f"Total Duration: {summary['total_duration_seconds']:.1f}s")
     print(f"Weighted Coverage: {summary['weighted_coverage_percent']:.1f}%")
     print()
     print("Suite Breakdown:")
-    print(f"  Infrastructure: {infra['passed']:,} passed ({infra['coverage_percent']:.1f}% coverage)")
-    print(f"  Code Project:   {code['passed']:,} passed ({code['coverage_percent']:.1f}% coverage)")
-    print(f"  Prose Project:  {prose['passed']:,} passed ({prose['coverage_percent']:.1f}% coverage)")
+    print(f"  Infrastructure:          {infra['passed']:,} passed ({infra['coverage_percent']:.1f}% coverage)")
+    for project_name, proj_data in sorted(projects.items()):
+        # Truncate long project names for display
+        display_name = project_name[:20] + "..." if len(project_name) > 23 else project_name
+        print(f"  {display_name:<24} {proj_data['passed']:,} passed ({proj_data['coverage_percent']:.1f}% coverage)")
     print("="*80)
 
     return 0

@@ -7,69 +7,73 @@ import argparse
 import sys
 from pathlib import Path
 
+from infrastructure.core.logging_utils import get_logger
+
 from .core import RenderManager
 
+logger = get_logger(__name__)
 
-def render_pdf_command(args):
+
+def render_pdf_command(args: argparse.Namespace) -> None:
     """Handle PDF rendering."""
     manager = RenderManager()
     source = Path(args.source)
 
     if not source.exists():
-        print(f"Error: Source file not found: {source}", file=sys.stderr)
+        logger.error("Source file not found: %s", source)
         sys.exit(1)
 
-    print(f"Rendering PDF: {source}...")
+    logger.info("Rendering PDF: %s", source)
     output = manager.render_pdf(source)
     print(f"Generated: {output}")
 
 
-def render_all_command(args):
+def render_all_command(args: argparse.Namespace) -> None:
     """Handle rendering all formats."""
     manager = RenderManager()
     source = Path(args.source)
 
     if not source.exists():
-        print(f"Error: Source file not found: {source}", file=sys.stderr)
+        logger.error("Source file not found: %s", source)
         sys.exit(1)
 
-    print(f"Rendering all formats: {source}...")
+    logger.info("Rendering all formats: %s", source)
     outputs = manager.render_all(source)
 
     for output in outputs:
         print(f"Generated: {output}")
 
 
-def render_slides_command(args):
+def render_slides_command(args: argparse.Namespace) -> None:
     """Handle slide rendering."""
     manager = RenderManager()
     source = Path(args.source)
 
     if not source.exists():
-        print(f"Error: Source file not found: {source}", file=sys.stderr)
+        logger.error("Source file not found: %s", source)
         sys.exit(1)
 
     fmt = args.format or "beamer"
-    print(f"Rendering slides ({fmt}): {source}...")
+    logger.info("Rendering slides (%s): %s", fmt, source)
     output = manager.render_slides(source, format=fmt)
     print(f"Generated: {output}")
 
 
-def render_web_command(args):
+def render_web_command(args: argparse.Namespace) -> None:
     """Handle web output rendering."""
     manager = RenderManager()
     source = Path(args.source)
 
     if not source.exists():
-        print(f"Error: Source file not found: {source}", file=sys.stderr)
+        logger.error("Source file not found: %s", source)
         sys.exit(1)
 
-    print(f"Rendering web output: {source}...")
+    logger.info("Rendering web output: %s", source)
     output = manager.render_web(source)
     print(f"Generated: {output}")
 
 
-def main():
+def main() -> None:
     """Main CLI entry point."""
     parser = argparse.ArgumentParser(
         description="Render documents in multiple formats (PDF, HTML, slides)."
@@ -93,7 +97,7 @@ def main():
         "--format",
         choices=["beamer", "revealjs"],
         default="beamer",
-        help="Output format"
+        help="Output format",
     )
     slides_parser.set_defaults(func=render_slides_command)
 
@@ -111,10 +115,9 @@ def main():
     try:
         args.func(args)
     except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
+        logger.error("Error: %s", e)
         sys.exit(1)
 
 
 if __name__ == "__main__":
     main()
-

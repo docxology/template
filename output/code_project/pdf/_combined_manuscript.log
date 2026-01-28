@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  8 JAN 2026 14:58
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  28 JAN 2026 06:35
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -917,46 +917,61 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
-(./_combined_manuscript.toc
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.0pt on input line 2.
+(Font)              scaled to size 7.0pt on input line 109.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.0pt on input line 2.
+(Font)              scaled to size 5.0pt on input line 109.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 10.00092pt on input line 2.
+(Font)              scaled to size 10.00092pt on input line 109.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.00064pt on input line 2.
+(Font)              scaled to size 7.00064pt on input line 109.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.00046pt on input line 2.
+(Font)              scaled to size 5.00046pt on input line 109.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 9.99893pt on input line 2.
+(Font)              scaled to size 9.99893pt on input line 109.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 6.99925pt on input line 2.
+(Font)              scaled to size 6.99925pt on input line 109.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 4.99947pt on input line 2.
+(Font)              scaled to size 4.99947pt on input line 109.
 
 
 [1
 
-])
-\tf@toc=\write3
-\openout3 = `_combined_manuscript.toc'.
-
-
+]
 
 [2]
 
 [3]
-Missing character: There is no ∈ (U+2208) in font [lmmono10-regular]:!
-Missing character: There is no ℝ (U+211D) in font [lmmono10-regular]:!
-Missing character: There is no ∇ (U+2207) in font [lmmono10-regular]:!
-Missing character: There is no ∇ (U+2207) in font [lmmono10-regular]:!
-Missing character: There is no ε (U+03B5) in font [lmmono10-regular]:!
-Missing character: There is no α (U+03B1) in font [lmmono10-regular]:!
-Missing character: There is no ∇ (U+2207) in font [lmmono10-regular]:!
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.254 \(
+        \epsilon\), max iterations \(N_{\max}\)
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
 
 
 [4]
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.354 \(
+        \alpha = \frac{2}{\lambda_{\min} + \lambda_{\max}}\), yielding
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
 
 [5]
 
@@ -971,6 +986,22 @@ File: ../figures/convergence_plot.png Graphic file (type bmp)
 File: ../figures/step_size_sensitivity.png Graphic file (type bmp)
 <../figures/step_size_sensitivity.png>
 
+! Missing $ inserted.
+<inserted text> 
+                $
+l.583 convergence speed with stability.}
+                                        \label{fig:step_sensitivity}
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.583 convergence speed with stability.}
+                                        \label{fig:step_sensitivity}
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
 Missing character: There is no α (U+03B1) in font [lmroman10-regular]:mapping=t
 ex-text;!
 
@@ -981,39 +1012,39 @@ File: ../figures/convergence_rate_comparison.png Graphic file (type bmp)
 
 
 [10]
-File: ../figures/algorithm_complexity.png Graphic file (type bmp)
-<../figures/algorithm_complexity.png>
-
 
 [11]
+File: ../figures/algorithm_complexity.png Graphic file (type bmp)
+<../figures/algorithm_complexity.png>
 File: ../figures/performance_benchmark.png Graphic file (type bmp)
 <../figures/performance_benchmark.png>
-
-
-[12]
 File: ../figures/stability_analysis.png Graphic file (type bmp)
 <../figures/stability_analysis.png>
 
+
+[12]
 
 [13]
 
 [14]
 
-[15] (./_combined_manuscript.bbl)
+[15]
 
-[16] (./_combined_manuscript.aux)
+[16] (./_combined_manuscript.bbl)
+
+[17] (./_combined_manuscript.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 19607 strings out of 473832
- 358228 string characters out of 5729482
- 934945 words of memory out of 5000000
+ 19606 strings out of 473832
+ 358156 string characters out of 5729482
+ 932254 words of memory out of 5000000
  42396 multiletter control sequences out of 15000+600000
- 565272 words of font info for 87 fonts, out of 8000000 for 9000
+ 565280 words of font info for 88 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  90i,7n,114p,1017b,540s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on _combined_manuscript.pdf (16 pages).
+Output written on _combined_manuscript.pdf (17 pages).

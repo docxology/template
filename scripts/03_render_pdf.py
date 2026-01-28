@@ -281,16 +281,13 @@ def run_render_pipeline(project_name: str = "project") -> int:
             logger.warning("  This is an unexpected error - please report this issue")
             # Don't fail the entire pipeline for combined PDF generation
         
-        # If combined PDF generation failed but individual PDFs were generated, note that
-        if rendered_count > 0:
-            logger.info(f"ℹ️  Note: {rendered_count} individual PDF file(s) were generated successfully despite combined PDF failure.")
-        
         # Generate combined HTML from all markdown files
         try:
             logger.info("\n" + "="*60)
             logger.info("Generating combined HTML manuscript...")
             combined_html = manager.render_combined_web(md_files, manuscript_dir, project_name)
-            logger.info(f"✅ Generated combined HTML: {combined_html.name}")
+            # Note: web_renderer.py already logs success message
+
             
         except RenderingError as re:
             logger.warning(f"⚠️  Rendering error generating combined HTML: {re.message}")
@@ -339,11 +336,14 @@ def generate_rendering_summary(project_name: str = "project") -> dict:
         "total_size_kb": 0
     }
 
+    # Use project basename for file matching (handles nested projects like "cognitive_integrity/cogsec_multiagent_1_theory")
+    project_basename = Path(project_name).name
+    
     # Collect individual PDFs
     pdf_dir = output_dir / "pdf"
     if pdf_dir.exists():
         for pdf in sorted(pdf_dir.glob("*.pdf")):
-            if pdf.name != f"{project_name}_combined.pdf":
+            if pdf.name != f"{project_basename}_combined.pdf":
                 size_kb = pdf.stat().st_size / 1024
                 summary["individual_pdfs"].append({
                     "name": pdf.name,
@@ -352,7 +352,7 @@ def generate_rendering_summary(project_name: str = "project") -> dict:
                 summary["total_size_kb"] += size_kb
 
     # Check combined PDF
-    combined_pdf = pdf_dir / f"{project_name}_combined.pdf"
+    combined_pdf = pdf_dir / f"{project_basename}_combined.pdf"
     if combined_pdf.exists():
         size_kb = combined_pdf.stat().st_size / 1024
         summary["combined_pdf"] = {
@@ -500,7 +500,9 @@ def verify_pdf_outputs(project_name: str = "project") -> bool:
         return False
     
     pdf_files = list(pdf_dir.glob("*.pdf"))
-    combined_pdf = pdf_dir / f"{project_name}_combined.pdf"
+    # Use project basename for file matching (handles nested projects)
+    project_basename = Path(project_name).name
+    combined_pdf = pdf_dir / f"{project_basename}_combined.pdf"
     
     if pdf_files:
         log_success(f"Generated {len(pdf_files)} PDF file(s)", logger)

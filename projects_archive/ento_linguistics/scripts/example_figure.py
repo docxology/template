@@ -20,13 +20,14 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 def _setup_paths() -> None:
     """Set up Python paths for src/ and infrastructure modules."""
     # Check if PYTHONPATH has been set (e.g., by test environment)
-    pythonpath = os.environ.get('PYTHONPATH', '')
+    pythonpath = os.environ.get("PYTHONPATH", "")
     if pythonpath:
         # Add PYTHONPATH entries to sys.path if not already there
-        for path in pythonpath.split(':'):
+        for path in pythonpath.split(":"):
             if path and path not in sys.path:
                 sys.path.insert(0, path)
 
@@ -50,7 +51,10 @@ def _setup_paths() -> None:
 
     # Try to find repo root (may not exist in test environments)
     repo_root = os.path.dirname(project_root)
-    if os.path.exists(os.path.join(repo_root, "infrastructure")) and repo_root not in sys.path:
+    if (
+        os.path.exists(os.path.join(repo_root, "infrastructure"))
+        and repo_root not in sys.path
+    ):
         sys.path.insert(0, repo_root)
 
 
@@ -62,22 +66,36 @@ def main() -> None:
     # Set up paths dynamically based on execution context
     _setup_paths()
 
-    # Import logger after path setup
-    from src.utils.logging import get_logger
-    logger = get_logger(__name__)
+    # Import logger after path setup - with graceful fallback
+    try:
+        from src.utils.logging import get_logger
+
+        logger = get_logger(__name__)
+    except ImportError:
+        # Fallback to standard logging if src.utils.logging not available
+        import logging
+
+        logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+        logger = logging.getLogger(__name__)
 
     # Import scientific modules from src/
     try:
-        from example import add_numbers, multiply_numbers, calculate_average, find_maximum, find_minimum
+        from example import (add_numbers, calculate_average, find_maximum,
+                             find_minimum, multiply_numbers)
+
         logger.info("✅ Successfully imported functions from src/example.py")
-        print("✅ Successfully imported functions from src/example.py")  # Also print for test capture
-    except (ImportError, SyntaxError) as e:
+        print(
+            "✅ Successfully imported functions from src/example.py"
+        )  # Also print for test capture
+    except (ImportError, SyntaxError, ModuleNotFoundError) as e:
         logger.error(f"❌ Failed to import from src/example.py: {e}")
+        print(f"❌ Failed to import from src/example.py: {e}")
         return
-    
+
     # Import project-specific modules (if they exist)
     try:
-        from paths import get_output_dir, get_data_dir, get_figure_dir
+        from paths import get_data_dir, get_figure_dir, get_output_dir
+
         output_dir = get_output_dir()
         data_dir = get_data_dir()
         figure_dir = get_figure_dir()
@@ -87,14 +105,14 @@ def main() -> None:
         output_dir = os.path.join(repo_root, "output")
         data_dir = os.path.join(output_dir, "data")
         figure_dir = os.path.join(output_dir, "figures")
-        
+
         # Create directories if they don't exist
         os.makedirs(data_dir, exist_ok=True)
         os.makedirs(figure_dir, exist_ok=True)
-    
+
     # Generate example data using src/ functions
     x = np.linspace(0, 10, 100)
-    
+
     # Use src/ functions to process the data
     y_values = []
     for xi in x:
@@ -102,79 +120,96 @@ def main() -> None:
         base = add_numbers(xi, 1.0)  # Add 1 to each x value
         scaled = multiply_numbers(base, 0.5)  # Scale by 0.5
         y_values.append(scaled)
-    
+
     y = np.array(y_values)
-    
+
     # Apply additional processing using src/ functions
-    y_processed = y * np.sin(x) * np.exp(-x/5)
-    
+    y_processed = y * np.sin(x) * np.exp(-x / 5)
+
     # Use src/ functions to analyze the data
     avg_y = calculate_average(y_processed.tolist())
     max_y = find_maximum(y_processed.tolist())
     min_y = find_minimum(y_processed.tolist())
-    
+
     logger.info(f"Data analysis using src/ functions:")
     logger.info(f"  Average: {avg_y:.6f}")
     logger.info(f"  Maximum: {max_y:.6f}")
     logger.info(f"  Minimum: {min_y:.6f}")
-    
+
     # Create figure
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
-    
+
     # Left subplot: Original data
-    ax1.plot(x, y, 'b-', linewidth=2, label='Processed Data')
-    ax1.set_xlabel('X')
-    ax1.set_ylabel('Y')
-    ax1.set_title('Data Processing with src/ Functions')
+    ax1.plot(x, y, "b-", linewidth=2, label="Processed Data")
+    ax1.set_xlabel("X")
+    ax1.set_ylabel("Y")
+    ax1.set_title("Data Processing with src/ Functions")
     ax1.legend()
     ax1.grid(True, alpha=0.3)
-    
+
     # Right subplot: Final result
-    ax2.plot(x, y_processed, 'r-', linewidth=2, label='Final Result')
-    ax2.set_xlabel('X')
-    ax2.set_ylabel('Y')
-    ax2.set_title('Example Project Figure')
+    ax2.plot(x, y_processed, "r-", linewidth=2, label="Final Result")
+    ax2.set_xlabel("X")
+    ax2.set_ylabel("Y")
+    ax2.set_title("Example Project Figure")
     ax2.legend()
     ax2.grid(True, alpha=0.3)
-    
+
     # Add statistics as text
-    ax2.text(0.05, 0.95, f'Avg: {avg_y:.3f}\nMax: {max_y:.3f}\nMin: {min_y:.3f}', 
-              transform=ax2.transAxes, verticalalignment='top',
-              bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
-    
+    ax2.text(
+        0.05,
+        0.95,
+        f"Avg: {avg_y:.3f}\nMax: {max_y:.3f}\nMin: {min_y:.3f}",
+        transform=ax2.transAxes,
+        verticalalignment="top",
+        bbox=dict(boxstyle="round", facecolor="wheat", alpha=0.5),
+    )
+
     plt.tight_layout()
-    
+
     # Save figure
     figure_path = os.path.join(figure_dir, "example_figure.png")
-    fig.savefig(figure_path, dpi=300, bbox_inches='tight')
+    fig.savefig(figure_path, dpi=300, bbox_inches="tight")
     plt.close(fig)
-    
+
     # Register figure with FigureManager for cross-referencing
     try:
         from infrastructure.documentation.figure_manager import FigureManager
-        fm = FigureManager(registry_file=os.path.join(figure_dir, "figure_registry.json"))
+
+        fm = FigureManager(
+            registry_file=os.path.join(figure_dir, "figure_registry.json")
+        )
         fm.register_figure(
             filename="example_figure.png",
             caption="Example project figure showing data processing with src/ functions",
             label="fig:example_figure",
             section="introduction",
-            generated_by="example_figure.py"
+            generated_by="example_figure.py",
         )
         logger.info(f"  Registered figure: fig:example_figure")
     except ImportError as e:
-        logger.warning(f"  ⚠️  Could not register figure (FigureManager not available): {e}")
-    
+        logger.warning(
+            f"  ⚠️  Could not register figure (FigureManager not available): {e}"
+        )
+
     # Save data
     data_path = os.path.join(data_dir, "example_data.npz")
-    np.savez(data_path, x=x, y=y, y_processed=y_processed, 
-              avg_y=avg_y, max_y=max_y, min_y=min_y)
-    
+    np.savez(
+        data_path,
+        x=x,
+        y=y,
+        y_processed=y_processed,
+        avg_y=avg_y,
+        max_y=max_y,
+        min_y=min_y,
+    )
+
     csv_path = os.path.join(data_dir, "example_data.csv")
-    with open(csv_path, 'w') as f:
+    with open(csv_path, "w") as f:
         f.write("x,y,y_processed\n")
         for xi, yi, ypi in zip(x, y, y_processed):
             f.write(f"{xi:.6f},{yi:.6f},{ypi:.6f}\n")
-    
+
     # Print generated paths (this is what the render system captures)
     print(f"Generated: {figure_path}")
     print(f"Generated: {data_path}")

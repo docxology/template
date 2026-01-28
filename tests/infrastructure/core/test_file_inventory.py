@@ -1,18 +1,18 @@
 """Tests for file inventory and collection utilities."""
+
 from __future__ import annotations
 
 import json
-import pytest
-from pathlib import Path
 import tempfile
+from pathlib import Path
 
-from infrastructure.core.file_inventory import (
-    FileInventoryManager,
-    FileInventoryEntry,
-    format_file_size,
-    collect_output_files,
-    generate_inventory_report
-)
+import pytest
+
+from infrastructure.core.file_inventory import (FileInventoryEntry,
+                                                FileInventoryManager,
+                                                collect_output_files,
+                                                format_file_size,
+                                                generate_inventory_report)
 
 
 class TestFileInventoryEntry:
@@ -22,10 +22,7 @@ class TestFileInventoryEntry:
         """Test entry creation and properties."""
         path = Path("/tmp/test.pdf")
         entry = FileInventoryEntry(
-            path=path,
-            size=1024,
-            category="pdf",
-            modified=1234567890.0
+            path=path, size=1024, category="pdf", modified=1234567890.0
         )
 
         assert entry.path == path
@@ -46,10 +43,7 @@ class TestFileInventoryEntry:
 
         for size, expected in test_cases:
             entry = FileInventoryEntry(
-                path=Path("/tmp/test"),
-                size=size,
-                category="test",
-                modified=0
+                path=Path("/tmp/test"), size=size, category="test", modified=0
             )
             assert entry.size_formatted == expected
 
@@ -87,8 +81,16 @@ class TestFileInventoryManager:
         """Test manager initialization."""
         manager = FileInventoryManager()
         assert manager.OUTPUT_CATEGORIES == [
-            "pdf", "figures", "data", "reports", "simulations",
-            "llm", "logs", "web", "slides", "tex"
+            "pdf",
+            "figures",
+            "data",
+            "reports",
+            "simulations",
+            "llm",
+            "logs",
+            "web",
+            "slides",
+            "tex",
         ]
 
     def test_collect_output_files_empty_directory(self):
@@ -166,7 +168,9 @@ class TestFileInventoryManager:
         """Test generating text format inventory report."""
         entries = [
             FileInventoryEntry(Path("/tmp/pdf/doc.pdf"), 1024, "pdf", 1234567890),
-            FileInventoryEntry(Path("/tmp/figures/plot.png"), 2048, "figures", 1234567891),
+            FileInventoryEntry(
+                Path("/tmp/figures/plot.png"), 2048, "figures", 1234567891
+            ),
             FileInventoryEntry(Path("/tmp/data/results.csv"), 512, "data", 1234567892),
         ]
 
@@ -229,7 +233,9 @@ class TestFileInventoryManager:
         entries = [
             FileInventoryEntry(Path("/tmp/pdf/doc1.pdf"), 1024, "pdf", 1234567890),
             FileInventoryEntry(Path("/tmp/pdf/doc2.pdf"), 2048, "pdf", 1234567891),
-            FileInventoryEntry(Path("/tmp/figures/plot.png"), 512, "figures", 1234567892),
+            FileInventoryEntry(
+                Path("/tmp/figures/plot.png"), 512, "figures", 1234567892
+            ),
         ]
 
         manager = FileInventoryManager()

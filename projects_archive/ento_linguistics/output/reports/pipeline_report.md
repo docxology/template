@@ -1,14 +1,14 @@
 # Pipeline Execution Report
 
-**Generated:** 2026-01-08T10:12:45.545778
-**Total Duration:** 2m 29s
+**Generated:** 2026-01-24T13:59:19.899028
+**Total Duration:** 1m 20s
 
 ## Summary
 
-- **Stages Executed:** 7
-- **Stages Passed:** 7
-- **Stages Failed:** 0
-- **Success Rate:** 100.0%
+- **Stages Executed:** 4
+- **Stages Passed:** 3
+- **Stages Failed:** 1
+- **Success Rate:** 75.0%
 
 ## Stage Results
 
@@ -16,14 +16,11 @@
 |-------|--------|----------|-----------|
 | Clean Output Directories | ✅ passed | 0s | 0 |
 | Environment Setup | ✅ passed | 0s | 0 |
-| Project Tests | ✅ passed | 38s | 0 |
-| Project Analysis | ✅ passed | 58s | 0 |
-| PDF Rendering | ✅ passed | 51s | 0 |
-| Output Validation | ✅ passed | 0s | 0 |
-| Copy Outputs | ✅ passed | 0s | 0 |
+| Project Tests | ✅ passed | 50s | 0 |
+| Project Analysis | ❌ failed | 28s | 1 |
 
 ## Output Statistics
 
-- **PDF Files:** 9
-- **Figures:** 40
+- **PDF Files:** 0
+- **Figures:** 15
 - **Data Files:** 12

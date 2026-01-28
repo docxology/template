@@ -16,9 +16,27 @@ readonly RED='\033[0;31m'
 readonly GREEN='\033[0;32m'
 readonly YELLOW='\033[1;33m'
 readonly BLUE='\033[0;34m'
+readonly MAGENTA='\033[0;35m'
 readonly CYAN='\033[0;36m'
+readonly WHITE='\033[1;37m'
+readonly GRAY='\033[0;90m'
 readonly BOLD='\033[1m'
+readonly DIM='\033[2m'
+readonly UNDERLINE='\033[4m'
 readonly NC='\033[0m' # No Color
+
+# Unicode box-drawing characters
+readonly BOX_H='─'
+readonly BOX_V='│'
+readonly BOX_TL='┌'
+readonly BOX_TR='┐'
+readonly BOX_BL='└'
+readonly BOX_BR='┘'
+readonly BOX_T='┬'
+readonly BOX_B='┴'
+readonly BOX_L='├'
+readonly BOX_R='┤'
+readonly BOX_X='┼'
 
 # Get script directory and repo root
 # When sourced, BASH_SOURCE[1] is the script that sourced this file
@@ -43,9 +61,13 @@ export PROJECT_ROOT="$REPO_ROOT"
 
 log_header() {
     local message="$1"
-    echo -e "${BLUE}════════════════════════════════════════════════════════════════${NC}"
-    echo -e "${BLUE}  ${message}${NC}"
-    echo -e "${BLUE}════════════════════════════════════════════════════════════════${NC}"
+    local width=66
+    local msg_len=${#message}
+    local padding=$(( (width - msg_len - 2) / 2 ))
+    echo
+    echo -e "${BLUE}${BOX_TL}$(printf '%*s' $width '' | tr ' ' "${BOX_H}")${BOX_TR}${NC}"
+    echo -e "${BLUE}${BOX_V}${NC}$(printf '%*s' $padding '')${BOLD}${message}${NC}$(printf '%*s' $((width - padding - msg_len)) '')${BLUE}${BOX_V}${NC}"
+    echo -e "${BLUE}${BOX_BL}$(printf '%*s' $width '' | tr ' ' "${BOX_H}")${BOX_BR}${NC}"
 }
 
 log_stage() {

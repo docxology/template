@@ -1,4 +1,5 @@
 """Research task templates for LLM operations."""
+
 from __future__ import annotations
 
 from typing import Optional
@@ -8,6 +9,7 @@ from infrastructure.llm.templates.base import ResearchTemplate
 
 class SummarizeAbstract(ResearchTemplate):
     """Template for summarizing abstracts."""
+
     template_str = (
         "Please summarize the following abstract in 3-5 bullet points, "
         "highlighting the main contribution, methodology, and results:\n\n"
@@ -17,6 +19,7 @@ class SummarizeAbstract(ResearchTemplate):
 
 class LiteratureReview(ResearchTemplate):
     """Template for generating literature reviews."""
+
     template_str = (
         "Based on the following paper summaries, write a cohesive "
         "literature review paragraph:\n\n"
@@ -26,6 +29,7 @@ class LiteratureReview(ResearchTemplate):
 
 class CodeDocumentation(ResearchTemplate):
     """Template for documenting code."""
+
     template_str = (
         "Generate a Python docstring for the following code, "
         "including Args, Returns, and Raises sections:\n\n"
@@ -35,6 +39,7 @@ class CodeDocumentation(ResearchTemplate):
 
 class DataInterpretation(ResearchTemplate):
     """Template for interpreting data."""
+
     template_str = (
         "Analyze the following data statistics and provide "
         "a scientific interpretation of the trends:\n\n"
@@ -50,6 +55,7 @@ class PaperSummarization(ResearchTemplate):
     Emphasizes extracting key information accurately and substantively.
     Supports domain-specific variants for better context-aware summarization.
     """
+
     template_str = """=== PAPER CONTENT ===
 
 Title: ${title}
@@ -188,7 +194,7 @@ ${reference_info}
    - Avoid surface-level descriptions: Instead of "the method uses optimization", say "the method uses gradient descent with learning rate 0.001 and momentum 0.9, optimizing the loss function L = ..."
 
 Begin your summary now. Remember: NO repeated sections, NO repeated paragraphs, extract SPECIFIC claims with CONCRETE details, include TECHNICAL DEPTH (equations, algorithms, experimental details), and accurately report the number of references. Aim for 600-1000 words of comprehensive technical content:"""
-    
+
     def render(
         self,
         title: str,
@@ -199,10 +205,10 @@ Begin your summary now. Remember: NO repeated sections, NO repeated paragraphs, 
         domain: Optional[str] = None,
         domain_instructions: Optional[str] = None,
         reference_count: Optional[int] = None,
-        references_section_found: bool = False
+        references_section_found: bool = False,
     ) -> str:
         """Render template with optional domain-specific instructions and reference info.
-        
+
         Args:
             title: Paper title.
             authors: Author names.
@@ -213,25 +219,25 @@ Begin your summary now. Remember: NO repeated sections, NO repeated paragraphs, 
             domain_instructions: Domain-specific instructions.
             reference_count: Number of references detected (if available).
             references_section_found: Whether references section was found.
-            
+
         Returns:
             Rendered prompt string.
         """
         domain_info = ""
         if domain:
             domain_info = f"Detected Domain: {domain}\n"
-        
+
         domain_instructions_text = domain_instructions or (
             "   - For PHYSICS papers: Highlight specific equations, experimental parameters, energy scales, detection methods, and statistical significance\n"
             "   - For COMPUTER SCIENCE papers: Detail algorithms, complexity analysis, dataset characteristics, performance metrics, and comparisons\n"
             "   - For BIOLOGY papers: Include species, sample sizes, statistical methods, biological mechanisms, and experimental conditions\n"
             "   - For MATHEMATICS papers: Cover theorems, proofs, mathematical objects, computational complexity, and theoretical implications"
         )
-        
+
         # Build reference info text
         if reference_count is not None and reference_count > 0:
             reference_info = f"   - DETECTED: The paper contains approximately {reference_count} references (based on citation numbering [1], [2], etc.)\n"
-            reference_info += f"   - You MUST report this in your summary: \"The paper cites {reference_count} references\" or similar\n"
+            reference_info += f'   - You MUST report this in your summary: "The paper cites {reference_count} references" or similar\n'
         elif references_section_found:
             reference_info = "   - DETECTED: A References/Bibliography section was found in the paper, but exact count could not be determined\n"
             reference_info += "   - You should search the paper text for the References section and count the entries\n"
@@ -239,28 +245,80 @@ Begin your summary now. Remember: NO repeated sections, NO repeated paragraphs, 
             reference_info = "   - No references section was automatically detected, but you should still check the entire paper text\n"
             reference_info += "   - Look for sections titled 'References', 'Bibliography', or 'Works Cited'\n"
             reference_info += "   - Only claim 'no references' if you have verified the entire paper text contains no such section\n"
-        
+
         # Extract key terms from title for topic validation
         import re
+
         # Extract significant words from title (3+ characters, not common stop words)
-        stop_words = {'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'from', 'as', 'is', 'was', 'are', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'should', 'could', 'may', 'might', 'must', 'can', 'this', 'that', 'these', 'those'}
-        title_words = re.findall(r'\b[a-zA-Z]{3,}\b', title.lower())
-        key_terms = [word for word in title_words if word not in stop_words][:10]  # Top 10 key terms
-        key_terms_text = ", ".join(key_terms) if key_terms else "key terms from the title"
-        
+        stop_words = {
+            "the",
+            "a",
+            "an",
+            "and",
+            "or",
+            "but",
+            "in",
+            "on",
+            "at",
+            "to",
+            "for",
+            "of",
+            "with",
+            "by",
+            "from",
+            "as",
+            "is",
+            "was",
+            "are",
+            "were",
+            "be",
+            "been",
+            "being",
+            "have",
+            "has",
+            "had",
+            "do",
+            "does",
+            "did",
+            "will",
+            "would",
+            "should",
+            "could",
+            "may",
+            "might",
+            "must",
+            "can",
+            "this",
+            "that",
+            "these",
+            "those",
+        }
+        title_words = re.findall(r"\b[a-zA-Z]{3,}\b", title.lower())
+        key_terms = [word for word in title_words if word not in stop_words][
+            :10
+        ]  # Top 10 key terms
+        key_terms_text = (
+            ", ".join(key_terms) if key_terms else "key terms from the title"
+        )
+
         # Replace template variables
-        prompt = self.template_str.replace("${domain_info}", domain_info).replace(
-            "${domain_instructions}", domain_instructions_text
-        ).replace("${reference_info}", reference_info).replace("${title}", title).replace(
-            "${authors}", authors
-        ).replace("${year}", year).replace("${source}", source).replace("${text}", text)
-        
+        prompt = (
+            self.template_str.replace("${domain_info}", domain_info)
+            .replace("${domain_instructions}", domain_instructions_text)
+            .replace("${reference_info}", reference_info)
+            .replace("${title}", title)
+            .replace("${authors}", authors)
+            .replace("${year}", year)
+            .replace("${source}", source)
+            .replace("${text}", text)
+        )
+
         # Add key terms hint to topic validation section
         prompt = prompt.replace(
             "Extract 5-10 key terms from the paper title and abstract",
-            f"Extract 5-10 key terms from the paper title and abstract (example key terms from title: {key_terms_text})"
+            f"Extract 5-10 key terms from the paper title and abstract (example key terms from title: {key_terms_text})",
         )
-        
+
         return prompt
 
 
@@ -270,6 +328,7 @@ class LiteratureReviewSynthesis(ResearchTemplate):
     Generates a structured literature review that identifies themes, compares approaches,
     and highlights key findings across multiple papers.
     """
+
     template_str = """=== PAPER SUMMARIES ===
 
 ${summaries}
@@ -297,6 +356,7 @@ class ScienceCommunicationNarrative(ResearchTemplate):
     Transforms technical research findings into engaging, understandable narratives
     for different audiences (general public, students, etc.).
     """
+
     template_str = """=== RESEARCH PAPERS ===
 
 ${papers}
@@ -327,6 +387,7 @@ class ComparativeAnalysis(ResearchTemplate):
     Provides structured comparison of methods, results, datasets, or other aspects
     across multiple papers in the same research area.
     """
+
     template_str = """=== PAPERS FOR COMPARISON ===
 
 ${papers}
@@ -354,6 +415,7 @@ class ResearchGapIdentification(ResearchTemplate):
     Analyzes a set of papers to identify unanswered questions, methodological gaps,
     and areas needing further research.
     """
+
     template_str = """=== LITERATURE FOR GAP ANALYSIS ===
 
 ${papers}
@@ -381,6 +443,7 @@ class CitationNetworkAnalysis(ResearchTemplate):
     Examines how papers reference and build upon each other, identifying
     key works, research trajectories, and intellectual connections.
     """
+
     template_str = """=== PAPERS FOR NETWORK ANALYSIS ===
 
 ${papers}
@@ -400,4 +463,3 @@ REQUIREMENTS:
 8. Use network concepts (hubs, clusters, bridges) where appropriate
 
 Begin your citation network analysis:"""
-

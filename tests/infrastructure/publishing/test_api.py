@@ -2,6 +2,7 @@
 
 Follows No Mocks Policy - all tests use real data and real execution.
 """
+
 import pytest
 
 from infrastructure.publishing import api
@@ -40,4 +41,3 @@ class TestPublishingAPI:
     def test_api_retry_logic(self):
         """Test API retry logic."""
         assert api is not None
-

@@ -109,16 +109,33 @@ unconstrained optimization:
 
 \textbf{Algorithm 1: Gradient Descent}
 
-\begin{verbatim}
-Initialize: k ← 0, x_0 ∈ ℝ^d
-While k < N_max do:
-    Compute gradient: ∇f(x_k)
-    Check convergence: if ||∇f(x_k)||_2 < ε then
-        Return x_k as approximate solution
-    Update: x_{k+1} ← x_k - α ∇f(x_k)
-    Increment: k ← k + 1
-Return x_k (maximum iterations reached)
-\end{verbatim}
+\begin{quote}
+\textbf{Input:} Initial point \(x_0\), step size \(\alpha\), tolerance
+\(\epsilon\), max iterations \(N_{\max}\)
+
+\begin{enumerate}
+\tightlist
+\item
+  Initialize \(k \leftarrow 0\)
+\item
+  \textbf{While} \(k < N_{\max}\) \textbf{do:}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Compute gradient \(g_k = \nabla f(x_k)\)
+  \item
+    \textbf{If} \(\|g_k\|_2 < \epsilon\) \textbf{then return} \(x_k\)
+    \emph{(converged)}
+  \item
+    Update: \(x_{k+1} \leftarrow x_k - \alpha \cdot g_k\)
+  \item
+    \(k \leftarrow k + 1\)
+  \end{itemize}
+\item
+  \textbf{Return} \(x_k\) \emph{(max iterations reached)}
+\end{enumerate}
+\end{quote}
 
 The algorithm follows the fundamental principle of steepest descent,
 moving in the direction of the negative gradient to minimize the
@@ -135,8 +152,17 @@ We use quadratic functions of the form:
 f(x) = \frac{1}{2} x^T A x - b^T x
 \end{equation}
 
-where: - \(A\) is a positive definite matrix - \(b\) is the linear term
-vector - The gradient is: \(\nabla f(x) = A x - b\)
+where:
+
+\begin{itemize}
+\tightlist
+\item
+  \(A\) is a positive definite matrix
+\item
+  \(b\) is the linear term vector
+\item
+  The gradient is: \(\nabla f(x) = A x - b\)
+\end{itemize}
 
 For the simple case \(A = I\) and \(b = 1\), we have:
 
@@ -205,9 +231,15 @@ gives \(\alpha = 1\).
 
 \begin{block}{Complexity Analysis}
 \protect\phantomsection\label{complexity-analysis}
-The computational complexity per iteration is: - \textbf{Time
-complexity}: \(O(n)\) for gradient computation - \textbf{Space
-complexity}: \(O(n)\) for storing variables
+The computational complexity per iteration is:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Time complexity}: \(O(n)\) for gradient computation
+\item
+  \textbf{Space complexity}: \(O(n)\) for storing variables
+\end{itemize}
 
 Total complexity for convergence:
 \(O\left(n \cdot \log\left(\frac{1}{\epsilon}\right)\right)\)
@@ -235,15 +267,30 @@ We investigate the effect of different step sizes on convergence:
 
 \begin{block}{Convergence Criteria}
 \protect\phantomsection\label{convergence-criteria}
-The algorithm terminates when: - Gradient norm falls below tolerance:
-\(||\nabla f(x)|| < \epsilon\) - Maximum iterations reached: \(k = N\)
+The algorithm terminates when:
+
+\begin{itemize}
+\tightlist
+\item
+  Gradient norm falls below tolerance: \(||\nabla f(x)|| < \epsilon\)
+\item
+  Maximum iterations reached: \(k = N\)
+\end{itemize}
 \end{block}
 
 \begin{block}{Performance Metrics}
 \protect\phantomsection\label{performance-metrics}
-We track: - \textbf{Solution accuracy}: Distance to analytical optimum -
-\textbf{Convergence speed}: Number of iterations to convergence -
-\textbf{Objective value}: Function value at final solution
+We track:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Solution accuracy}: Distance to analytical optimum
+\item
+  \textbf{Convergence speed}: Number of iterations to convergence
+\item
+  \textbf{Objective value}: Function value at final solution
+\end{itemize}
 \end{block}
 \end{block}
 
@@ -292,7 +339,7 @@ Input validation ensures algorithmic reliability:
 
 \begin{block}{Testing Strategy and Validation}
 \protect\phantomsection\label{testing-strategy-and-validation}
-test suite covers multiple dimensions:
+The comprehensive test suite covers multiple dimensions:
 
 \begin{itemize}
 \tightlist
@@ -328,10 +375,21 @@ formatting.
 
 \begin{block}{Analysis Pipeline}
 \protect\phantomsection\label{analysis-pipeline}
-The analysis script automatically: 1. Runs optimization experiments with
-different parameters 2. Collects convergence trajectories 3. Generates
-publication-quality plots 4. Saves numerical results to CSV files 5.
-Registers figures for manuscript integration
+The analysis script automatically:
+
+\begin{enumerate}
+\tightlist
+\item
+  Runs optimization experiments with different parameters
+\item
+  Collects convergence trajectories
+\item
+  Generates publication-quality plots
+\item
+  Saves numerical results to CSV files
+\item
+  Registers figures for manuscript integration
+\end{enumerate}
 
 This automated approach ensures reproducible research and consistent
 result generation.

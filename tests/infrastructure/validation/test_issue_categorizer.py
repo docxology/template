@@ -3,21 +3,13 @@
 
 import pytest
 
+from infrastructure.validation.doc_models import (AccuracyIssue,
+                                                  CompletenessGap, LinkIssue,
+                                                  QualityIssue)
 from infrastructure.validation.issue_categorizer import (
-    categorize_by_type,
-    assign_severity,
-    is_false_positive,
-    filter_false_positives,
-    group_related_issues,
-    prioritize_issues,
-    generate_issue_summary,
-)
-from infrastructure.validation.doc_models import (
-    LinkIssue,
-    AccuracyIssue,
-    CompletenessGap,
-    QualityIssue
-)
+    assign_severity, categorize_by_type, filter_false_positives,
+    generate_issue_summary, group_related_issues, is_false_positive,
+    prioritize_issues)
 
 
 class TestIssueCategorizer:
@@ -27,10 +19,10 @@ class TestIssueCategorizer:
         """Test categorization with empty issue list."""
         result = categorize_by_type([])
         assert isinstance(result, dict)
-        assert 'critical' in result
-        assert 'error' in result
-        assert 'warning' in result
-        assert 'info' in result
+        assert "critical" in result
+        assert "error" in result
+        assert "warning" in result
+        assert "info" in result
 
     def test_categorize_by_type_mixed_issues(self):
         """Test categorization with mixed issue types."""
@@ -42,30 +34,32 @@ class TestIssueCategorizer:
                 target="missing.md",
                 issue_type="broken_link",
                 issue_message="File not found",
-                severity="error"
+                severity="error",
             ),
             AccuracyIssue(
                 file="doc.md",
                 line=1,
                 issue_type="accuracy",
                 issue_message="Inaccurate information",
-                severity="warning"
+                severity="warning",
             ),
             QualityIssue(
                 file="readme.md",
                 line=1,
                 issue_type="formatting",
                 issue_message="Poor formatting",
-                severity="info"
-            )
+                severity="info",
+            ),
         ]
 
         result = categorize_by_type(issues)
 
-        assert len(result['critical']) == 1  # Link issue (severity='error' -> 'critical')
-        assert len(result['warning']) == 1  # Accuracy issue
-        assert len(result['info']) == 1  # Quality issue
-        assert len(result['broken_links']) == 1  # Link issue type maps to broken_links
+        assert (
+            len(result["critical"]) == 1
+        )  # Link issue (severity='error' -> 'critical')
+        assert len(result["warning"]) == 1  # Accuracy issue
+        assert len(result["info"]) == 1  # Quality issue
+        assert len(result["broken_links"]) == 1  # Link issue type maps to broken_links
 
     def test_assign_severity_critical(self):
         """Test critical severity assignment."""
@@ -76,7 +70,7 @@ class TestIssueCategorizer:
             target="missing.md",
             issue_type="broken_link",
             issue_message="File not found",
-            severity="error"
+            severity="error",
         )
 
         severity = assign_severity(critical_issue)
@@ -84,6 +78,7 @@ class TestIssueCategorizer:
 
     def test_assign_severity_error(self):
         """Test error severity assignment."""
+
         # Create issue without explicit severity to test content-based logic
         class TestIssue:
             def __init__(self):
@@ -96,6 +91,7 @@ class TestIssueCategorizer:
 
     def test_assign_severity_warning(self):
         """Test warning severity assignment."""
+
         # Create issue without explicit severity to test content-based logic
         class TestIssue:
             def __init__(self):
@@ -113,7 +109,7 @@ class TestIssueCategorizer:
             line=1,
             issue_type="minor",
             issue_message="Minor style issue",  # Avoid 'formatting' keyword
-            severity="info"
+            severity="info",
         )
 
         severity = assign_severity(info_issue)
@@ -128,7 +124,7 @@ class TestIssueCategorizer:
             target="generic\nnode",
             issue_type="broken_link",
             issue_message="Invalid link",
-            severity="error"
+            severity="error",
         )
 
         assert is_false_positive(mermaid_issue) is True
@@ -140,7 +136,7 @@ class TestIssueCategorizer:
             line=1,
             issue_type="reference",
             issue_message="\\ref{fig:example} not found",
-            severity="error"
+            severity="error",
         )
 
         assert is_false_positive(latex_issue) is True
@@ -152,7 +148,7 @@ class TestIssueCategorizer:
             line=1,
             issue_type="path",
             issue_message="example.com not found",
-            severity="error"
+            severity="error",
         )
 
         assert is_false_positive(code_issue) is True
@@ -166,7 +162,7 @@ class TestIssueCategorizer:
             target="{placeholder}",
             issue_type="broken_link",
             issue_message="Template placeholder",
-            severity="error"
+            severity="error",
         )
 
         assert is_false_positive(template_issue) is True
@@ -178,7 +174,7 @@ class TestIssueCategorizer:
             line=1,
             issue_type="path",
             issue_message=".venv/lib/python not found",
-            severity="error"
+            severity="error",
         )
 
         assert is_false_positive(venv_issue) is True
@@ -192,7 +188,7 @@ class TestIssueCategorizer:
             target="docs/missing.md",
             issue_type="broken_link",
             issue_message="File docs/missing.md does not exist",
-            severity="error"
+            severity="error",
         )
 
         assert is_false_positive(real_issue) is False
@@ -200,9 +196,31 @@ class TestIssueCategorizer:
     def test_filter_false_positives(self):
         """Test filtering false positives from issue list."""
         issues = [
-            LinkIssue(file="test.md", line=1, link_text="link", target="generic\nnode", issue_type="broken_link", issue_message="Mermaid artifact", severity="error"),
-            LinkIssue(file="readme.md", line=1, link_text="link", target="docs/missing.md", issue_type="broken_link", issue_message="Real missing file", severity="error"),
-            QualityIssue(file="manuscript.md", line=1, issue_type="reference", issue_message="\\ref{fig:example}", severity="error")
+            LinkIssue(
+                file="test.md",
+                line=1,
+                link_text="link",
+                target="generic\nnode",
+                issue_type="broken_link",
+                issue_message="Mermaid artifact",
+                severity="error",
+            ),
+            LinkIssue(
+                file="readme.md",
+                line=1,
+                link_text="link",
+                target="docs/missing.md",
+                issue_type="broken_link",
+                issue_message="Real missing file",
+                severity="error",
+            ),
+            QualityIssue(
+                file="manuscript.md",
+                line=1,
+                issue_type="reference",
+                issue_message="\\ref{fig:example}",
+                severity="error",
+            ),
         ]
 
         filtered = filter_false_positives(issues)
@@ -219,9 +237,29 @@ class TestIssueCategorizer:
     def test_group_related_issues_same_file(self):
         """Test grouping issues from same file."""
         issues = [
-            QualityIssue(file="readme.md", line=10, issue_type="formatting", issue_message="Issue 1", severity="info"),
-            QualityIssue(file="readme.md", line=20, issue_type="formatting", issue_message="Issue 2", severity="info"),
-            LinkIssue(file="readme.md", line=1, link_text="link", target="missing.md", issue_type="broken_link", issue_message="Issue 3", severity="error")
+            QualityIssue(
+                file="readme.md",
+                line=10,
+                issue_type="formatting",
+                issue_message="Issue 1",
+                severity="info",
+            ),
+            QualityIssue(
+                file="readme.md",
+                line=20,
+                issue_type="formatting",
+                issue_message="Issue 2",
+                severity="info",
+            ),
+            LinkIssue(
+                file="readme.md",
+                line=1,
+                link_text="link",
+                target="missing.md",
+                issue_type="broken_link",
+                issue_message="Issue 3",
+                severity="error",
+            ),
         ]
 
         groups = group_related_issues(issues)
@@ -234,9 +272,29 @@ class TestIssueCategorizer:
     def test_prioritize_issues(self):
         """Test issue prioritization by severity."""
         issues = [
-            QualityIssue(file="test.md", line=1, issue_type="minor", issue_message="Info issue", severity="info"),
-            QualityIssue(file="test.md", line=1, issue_type="formatting", issue_message="Warning issue", severity="warning"),
-            LinkIssue(file="test.md", line=1, link_text="link", target="missing.md", issue_type="broken_link", issue_message="Critical issue", severity="error")
+            QualityIssue(
+                file="test.md",
+                line=1,
+                issue_type="minor",
+                issue_message="Info issue",
+                severity="info",
+            ),
+            QualityIssue(
+                file="test.md",
+                line=1,
+                issue_type="formatting",
+                issue_message="Warning issue",
+                severity="warning",
+            ),
+            LinkIssue(
+                file="test.md",
+                line=1,
+                link_text="link",
+                target="missing.md",
+                issue_type="broken_link",
+                issue_message="Critical issue",
+                severity="error",
+            ),
         ]
 
         prioritized = prioritize_issues(issues)
@@ -249,31 +307,67 @@ class TestIssueCategorizer:
     def test_generate_issue_summary(self):
         """Test issue summary generation."""
         issues = [
-            LinkIssue(file="test.md", line=1, link_text="link", target="missing.md", issue_type="broken_link", issue_message="Critical", severity="error"),
-            QualityIssue(file="test.md", line=1, issue_type="formatting", issue_message="Warning", severity="warning"),
-            QualityIssue(file="test.md", line=1, issue_type="minor", issue_message="Info", severity="info")
+            LinkIssue(
+                file="test.md",
+                line=1,
+                link_text="link",
+                target="missing.md",
+                issue_type="broken_link",
+                issue_message="Critical",
+                severity="error",
+            ),
+            QualityIssue(
+                file="test.md",
+                line=1,
+                issue_type="formatting",
+                issue_message="Warning",
+                severity="warning",
+            ),
+            QualityIssue(
+                file="test.md",
+                line=1,
+                issue_type="minor",
+                issue_message="Info",
+                severity="info",
+            ),
         ]
 
         summary = generate_issue_summary(issues)
 
-        assert summary['total'] == 3
-        assert summary['by_severity']['critical'] == 1  # Link issue -> critical
-        assert summary['by_severity']['error'] == 0
-        assert summary['by_severity']['warning'] == 1
-        assert summary['by_severity']['info'] == 1
-        assert summary['false_positives'] == 0  # No false positives in this set
+        assert summary["total"] == 3
+        assert summary["by_severity"]["critical"] == 1  # Link issue -> critical
+        assert summary["by_severity"]["error"] == 0
+        assert summary["by_severity"]["warning"] == 1
+        assert summary["by_severity"]["info"] == 1
+        assert summary["false_positives"] == 0  # No false positives in this set
 
     def test_generate_issue_summary_with_false_positives(self):
         """Test issue summary with false positives."""
         issues = [
-            LinkIssue(file="test.md", line=1, link_text="link", target="generic\nnode", issue_type="broken_link", issue_message="Mermaid", severity="error"),
-            LinkIssue(file="test.md", line=1, link_text="link", target="missing.md", issue_type="broken_link", issue_message="Real issue", severity="error")
+            LinkIssue(
+                file="test.md",
+                line=1,
+                link_text="link",
+                target="generic\nnode",
+                issue_type="broken_link",
+                issue_message="Mermaid",
+                severity="error",
+            ),
+            LinkIssue(
+                file="test.md",
+                line=1,
+                link_text="link",
+                target="missing.md",
+                issue_type="broken_link",
+                issue_message="Real issue",
+                severity="error",
+            ),
         ]
 
         summary = generate_issue_summary(issues)
 
-        assert summary['total'] == 2
-        assert summary['false_positives'] == 1
+        assert summary["total"] == 2
+        assert summary["false_positives"] == 1
 
     def test_issue_text_extraction(self):
         """Test text extraction from different issue types."""
@@ -286,16 +380,13 @@ class TestIssueCategorizer:
             link_text="link",
             target="missing.md",
             issue_type="broken_link",
-            issue_message="File not found"
+            issue_message="File not found",
         )
         assert _get_issue_text(link_issue) == "File not found"
 
         # Test QualityIssue without issue_message
         quality_issue = QualityIssue(
-            file="test.md",
-            line=1,
-            issue_type="formatting",
-            issue_message="Poor format"
+            file="test.md", line=1, issue_type="formatting", issue_message="Poor format"
         )
         assert _get_issue_text(quality_issue) == "Poor format"
 

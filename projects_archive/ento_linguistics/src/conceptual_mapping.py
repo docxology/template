@@ -3,12 +3,13 @@
 This module provides functionality for mapping terminology to concepts,
 identifying conceptual overlaps, and analyzing how terms structure scientific understanding.
 """
+
 from __future__ import annotations
 
 import re
-from collections import defaultdict, Counter
-from typing import List, Dict, Set, Optional, Tuple, Any
+from collections import Counter, defaultdict
 from dataclasses import dataclass, field
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 try:
     from .term_extraction import Term
@@ -29,6 +30,7 @@ class Concept:
         child_concepts: Lower-level concepts under this one
         confidence: Mapping confidence score
     """
+
     name: str
     description: str
     terms: Set[str] = field(default_factory=set)
@@ -56,13 +58,13 @@ class Concept:
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for serialization."""
         return {
-            'name': self.name,
-            'description': self.description,
-            'terms': list(self.terms),
-            'domains': list(self.domains),
-            'parent_concepts': list(self.parent_concepts),
-            'child_concepts': list(self.child_concepts),
-            'confidence': self.confidence
+            "name": self.name,
+            "description": self.description,
+            "terms": list(self.terms),
+            "domains": list(self.domains),
+            "parent_concepts": list(self.parent_concepts),
+            "child_concepts": list(self.child_concepts),
+            "confidence": self.confidence,
         }
 
 
@@ -75,8 +77,11 @@ class ConceptMap:
         term_to_concepts: Mapping from terms to their concepts
         concept_relationships: Edges between concepts with weights
     """
+
     concepts: Dict[str, Concept] = field(default_factory=dict)
-    term_to_concepts: Dict[str, Set[str]] = field(default_factory=lambda: defaultdict(set))
+    term_to_concepts: Dict[str, Set[str]] = field(
+        default_factory=lambda: defaultdict(set)
+    )
     concept_relationships: Dict[Tuple[str, str], float] = field(default_factory=dict)
 
     def add_concept(self, concept: Concept) -> None:
@@ -154,7 +159,7 @@ class ConceptMap:
 
         concept_names = list(self.concepts.keys())
         for i, concept1 in enumerate(concept_names):
-            for concept2 in concept_names[i+1:]:
+            for concept2 in concept_names[i + 1 :]:
                 terms1 = self.get_concept_terms(concept1)
                 terms2 = self.get_concept_terms(concept2)
 
@@ -165,7 +170,9 @@ class ConceptMap:
 
         return overlaps
 
-    def get_concept_clusters(self, similarity_threshold: float = 0.3) -> Dict[str, List[str]]:
+    def get_concept_clusters(
+        self, similarity_threshold: float = 0.3
+    ) -> Dict[str, List[str]]:
         """Get concept clusters using the mapper's clustering method.
 
         Args:
@@ -214,36 +221,63 @@ class ConceptualMapper:
 
     # Base conceptual framework for Ento-Linguistic analysis
     BASE_CONCEPTS = {
-        'biological_individuality': {
-            'description': 'Concepts related to what constitutes a biological individual',
-            'domains': ['unit_of_individuality'],
-            'key_terms': ['organism', 'individual', 'colony', 'superorganism', 'holobiont']
+        "biological_individuality": {
+            "description": "Concepts related to what constitutes a biological individual",
+            "domains": ["unit_of_individuality"],
+            "key_terms": [
+                "organism",
+                "individual",
+                "colony",
+                "superorganism",
+                "holobiont",
+            ],
         },
-        'social_organization': {
-            'description': 'Principles of social organization and structure',
-            'domains': ['power_and_labor', 'behavior_and_identity'],
-            'key_terms': ['caste', 'hierarchy', 'division of labor', 'specialization']
+        "social_organization": {
+            "description": "Principles of social organization and structure",
+            "domains": ["power_and_labor", "behavior_and_identity"],
+            "key_terms": ["caste", "hierarchy", "division of labor", "specialization"],
         },
-        'reproductive_biology': {
-            'description': 'Reproductive systems and sex determination',
-            'domains': ['sex_and_reproduction'],
-            'key_terms': ['haplodiploidy', 'sex determination', 'parthenogenesis', 'mating']
+        "reproductive_biology": {
+            "description": "Reproductive systems and sex determination",
+            "domains": ["sex_and_reproduction"],
+            "key_terms": [
+                "haplodiploidy",
+                "sex determination",
+                "parthenogenesis",
+                "mating",
+            ],
         },
-        'kinship_systems': {
-            'description': 'Genetic and social relatedness structures',
-            'domains': ['kin_and_relatedness'],
-            'key_terms': ['relatedness', 'kin selection', 'inclusive fitness', 'altruism']
+        "kinship_systems": {
+            "description": "Genetic and social relatedness structures",
+            "domains": ["kin_and_relatedness"],
+            "key_terms": [
+                "relatedness",
+                "kin selection",
+                "inclusive fitness",
+                "altruism",
+            ],
         },
-        'resource_economics': {
-            'description': 'Resource allocation and economic principles',
-            'domains': ['economics'],
-            'key_terms': ['resource allocation', 'foraging efficiency', 'cost-benefit', 'trade']
+        "resource_economics": {
+            "description": "Resource allocation and economic principles",
+            "domains": ["economics"],
+            "key_terms": [
+                "resource allocation",
+                "foraging efficiency",
+                "cost-benefit",
+                "trade",
+            ],
         },
-        'behavioral_ecology': {
-            'description': 'Behavioral adaptations and ecological contexts',
-            'domains': ['behavior_and_identity', 'economics'],
-            'key_terms': ['foraging', 'behavior', 'adaptation', 'optimization', 'fitness']
-        }
+        "behavioral_ecology": {
+            "description": "Behavioral adaptations and ecological contexts",
+            "domains": ["behavior_and_identity", "economics"],
+            "key_terms": [
+                "foraging",
+                "behavior",
+                "adaptation",
+                "optimization",
+                "fitness",
+            ],
+        },
     }
 
     def __init__(self):
@@ -271,16 +305,15 @@ class ConceptualMapper:
         # Initialize base concepts
         for concept_name, concept_data in self.BASE_CONCEPTS.items():
             concept = Concept(
-                name=concept_name,
-                description=concept_data['description']
+                name=concept_name, description=concept_data["description"]
             )
 
             # Add domains
-            for domain in concept_data['domains']:
+            for domain in concept_data["domains"]:
                 concept.add_domain(domain)
 
             # Add initial key terms
-            for term in concept_data['key_terms']:
+            for term in concept_data["key_terms"]:
                 concept.add_term(term)
 
             self.concept_map.add_concept(concept)
@@ -302,21 +335,20 @@ class ConceptualMapper:
         """
         # Direct domain-based mapping
         for domain in term.domains:
-            if domain == 'unit_of_individuality':
-                self._add_term_to_concept(term.text, 'biological_individuality')
-            elif domain in ['power_and_labor', 'behavior_and_identity']:
-                self._add_term_to_concept(term.text, 'social_organization')
-            elif domain == 'sex_and_reproduction':
-                self._add_term_to_concept(term.text, 'reproductive_biology')
-            elif domain == 'kin_and_relatedness':
-                self._add_term_to_concept(term.text, 'kinship_systems')
-            elif domain == 'economics':
-                self._add_term_to_concept(term.text, 'resource_economics')
+            if domain == "unit_of_individuality":
+                self._add_term_to_concept(term.text, "biological_individuality")
+            elif domain in ["power_and_labor", "behavior_and_identity"]:
+                self._add_term_to_concept(term.text, "social_organization")
+            elif domain == "sex_and_reproduction":
+                self._add_term_to_concept(term.text, "reproductive_biology")
+            elif domain == "kin_and_relatedness":
+                self._add_term_to_concept(term.text, "kinship_systems")
+            elif domain == "economics":
+                self._add_term_to_concept(term.text, "resource_economics")
 
         # Cross-domain mapping for behavioral ecology
-        if ('behavior_and_identity' in term.domains or
-            'economics' in term.domains):
-            self._add_term_to_concept(term.text, 'behavioral_ecology')
+        if "behavior_and_identity" in term.domains or "economics" in term.domains:
+            self._add_term_to_concept(term.text, "behavioral_ecology")
 
         # Semantic pattern-based mapping
         self._semantic_concept_mapping(term)
@@ -332,7 +364,7 @@ class ConceptualMapper:
             # Create new concept if it doesn't exist
             concept = Concept(
                 name=concept_name,
-                description=f"Concept derived from term mapping: {concept_name}"
+                description=f"Concept derived from term mapping: {concept_name}",
             )
             self.concept_map.add_concept(concept)
 
@@ -347,28 +379,35 @@ class ConceptualMapper:
         term_lower = term.text.lower()
 
         # Individuality concepts
-        if any(word in term_lower for word in ['unit', 'entity', 'organism', 'individual']):
-            self._add_term_to_concept(term.text, 'biological_individuality')
+        if any(
+            word in term_lower for word in ["unit", "entity", "organism", "individual"]
+        ):
+            self._add_term_to_concept(term.text, "biological_individuality")
 
         # Social concepts
-        if any(word in term_lower for word in ['social', 'group', 'collective', 'society']):
-            self._add_term_to_concept(term.text, 'social_organization')
+        if any(
+            word in term_lower for word in ["social", "group", "collective", "society"]
+        ):
+            self._add_term_to_concept(term.text, "social_organization")
 
         # Reproductive concepts
-        if any(word in term_lower for word in ['reproduce', 'mating', 'fertil', 'egg']):
-            self._add_term_to_concept(term.text, 'reproductive_biology')
+        if any(word in term_lower for word in ["reproduce", "mating", "fertil", "egg"]):
+            self._add_term_to_concept(term.text, "reproductive_biology")
 
         # Kinship concepts
-        if any(word in term_lower for word in ['kin', 'relative', 'family', 'sib']):
-            self._add_term_to_concept(term.text, 'kinship_systems')
+        if any(word in term_lower for word in ["kin", "relative", "family", "sib"]):
+            self._add_term_to_concept(term.text, "kinship_systems")
 
         # Economic concepts
-        if any(word in term_lower for word in ['resource', 'cost', 'benefit', 'value']):
-            self._add_term_to_concept(term.text, 'resource_economics')
+        if any(word in term_lower for word in ["resource", "cost", "benefit", "value"]):
+            self._add_term_to_concept(term.text, "resource_economics")
 
         # Behavioral concepts
-        if any(word in term_lower for word in ['behavior', 'action', 'response', 'adaptation']):
-            self._add_term_to_concept(term.text, 'behavioral_ecology')
+        if any(
+            word in term_lower
+            for word in ["behavior", "action", "response", "adaptation"]
+        ):
+            self._add_term_to_concept(term.text, "behavioral_ecology")
 
     def _build_concept_relationships(self) -> None:
         """Build relationships between concepts based on term overlaps."""
@@ -378,7 +417,7 @@ class ConceptualMapper:
             # Relationship strength based on overlap size
             overlap_ratio = len(overlapping_terms) / min(
                 len(self.concept_map.get_concept_terms(concept1)),
-                len(self.concept_map.get_concept_terms(concept2))
+                len(self.concept_map.get_concept_terms(concept2)),
             )
 
             self.concept_map.add_relationship(concept1, concept2, overlap_ratio)
@@ -400,13 +439,15 @@ class ConceptualMapper:
                     bridging_terms.add(term)
 
             # Calculate boundary strength
-            boundary_strength = len(bridging_terms) / len(concept.terms) if concept.terms else 0
+            boundary_strength = (
+                len(bridging_terms) / len(concept.terms) if concept.terms else 0
+            )
 
             boundaries[concept_name] = {
-                'bridging_terms': bridging_terms,
-                'boundary_strength': boundary_strength,
-                'domain_spread': len(concept.domains),
-                'connected_concepts': self._get_connected_concepts(concept_name)
+                "bridging_terms": bridging_terms,
+                "boundary_strength": boundary_strength,
+                "domain_spread": len(concept.domains),
+                "connected_concepts": self._get_connected_concepts(concept_name),
             }
 
         return boundaries
@@ -445,17 +486,21 @@ class ConceptualMapper:
         centrality_values = list(centrality.values())
         if centrality_values:
             centrality_threshold = sum(centrality_values) / len(centrality_values)
-            core_concepts = [c for c, cent in centrality.items() if cent > centrality_threshold]
-            peripheral_concepts = [c for c, cent in centrality.items() if cent <= centrality_threshold]
+            core_concepts = [
+                c for c, cent in centrality.items() if cent > centrality_threshold
+            ]
+            peripheral_concepts = [
+                c for c, cent in centrality.items() if cent <= centrality_threshold
+            ]
         else:
             core_concepts = []
             peripheral_concepts = []
 
         return {
-            'centrality_scores': centrality,
-            'core_concepts': core_concepts,
-            'peripheral_concepts': peripheral_concepts,
-            'hierarchy_depth': self._calculate_hierarchy_depth()
+            "centrality_scores": centrality,
+            "core_concepts": core_concepts,
+            "peripheral_concepts": peripheral_concepts,
+            "hierarchy_depth": self._calculate_hierarchy_depth(),
         }
 
     def _calculate_hierarchy_depth(self) -> int:
@@ -482,11 +527,11 @@ class ConceptualMapper:
             Dictionary mapping concept types to term lists
         """
         anthropomorphic_indicators = {
-            'agency': ['choose', 'decide', 'prefer', 'select', 'opt'],
-            'communication': ['communicate', 'signal', 'inform', 'warn'],
-            'social_contract': ['cooperate', 'compete', 'negotiate', 'trade'],
-            'cognition': ['recognize', 'identify', 'distinguish', 'know'],
-            'hierarchy': ['superior', 'inferior', 'dominant', 'subordinate']
+            "agency": ["choose", "decide", "prefer", "select", "opt"],
+            "communication": ["communicate", "signal", "inform", "warn"],
+            "social_contract": ["cooperate", "compete", "negotiate", "trade"],
+            "cognition": ["recognize", "identify", "distinguish", "know"],
+            "hierarchy": ["superior", "inferior", "dominant", "subordinate"],
         }
 
         detected = defaultdict(list)
@@ -513,26 +558,33 @@ class ConceptualMapper:
         for name, concept in self.concept_map.concepts.items():
             concept_dict = concept.to_dict()
             # Convert sets to lists
-            if 'terms' in concept_dict:
-                concept_dict['terms'] = list(concept_dict['terms'])
-            if 'domains' in concept_dict:
-                concept_dict['domains'] = list(concept_dict['domains'])
+            if "terms" in concept_dict:
+                concept_dict["terms"] = list(concept_dict["terms"])
+            if "domains" in concept_dict:
+                concept_dict["domains"] = list(concept_dict["domains"])
             concepts_data[name] = concept_dict
 
         # Convert defaultdict of sets to dict of lists
-        term_mappings = {term: list(concepts) for term, concepts in self.concept_map.term_to_concepts.items()}
-
-        data = {
-            'concepts': concepts_data,
-            'term_mappings': term_mappings,
-            'relationships': [{'concepts': list(k), 'weight': v}
-                            for k, v in self.concept_map.concept_relationships.items()]
+        term_mappings = {
+            term: list(concepts)
+            for term, concepts in self.concept_map.term_to_concepts.items()
         }
 
-        with open(filepath, 'w', encoding='utf-8') as f:
+        data = {
+            "concepts": concepts_data,
+            "term_mappings": term_mappings,
+            "relationships": [
+                {"concepts": list(k), "weight": v}
+                for k, v in self.concept_map.concept_relationships.items()
+            ],
+        }
+
+        with open(filepath, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
 
-    def find_concept_gaps(self, domain_terms: Dict[str, List[str]]) -> Dict[str, List[str]]:
+    def find_concept_gaps(
+        self, domain_terms: Dict[str, List[str]]
+    ) -> Dict[str, List[str]]:
         """Identify conceptual gaps where domains lack corresponding concepts.
 
         Args:
@@ -561,7 +613,9 @@ class ConceptualMapper:
 
         return gaps
 
-    def calculate_concept_similarity(self, concept1: Concept, concept2: Concept) -> float:
+    def calculate_concept_similarity(
+        self, concept1: Concept, concept2: Concept
+    ) -> float:
         """Calculate semantic similarity between two concepts.
 
         Args:
@@ -589,7 +643,9 @@ class ConceptualMapper:
 
         return min(jaccard_similarity + domain_bonus, 1.0)
 
-    def analyze_concept_centrality(self, concept_map: ConceptMap) -> Dict[str, Dict[str, float]]:
+    def analyze_concept_centrality(
+        self, concept_map: ConceptMap
+    ) -> Dict[str, Dict[str, float]]:
         """Analyze centrality metrics for concepts in the map.
 
         Args:
@@ -607,8 +663,10 @@ class ConceptualMapper:
             # Fallback without networkx
             for concept_name in concept_map.concepts:
                 centrality_metrics[concept_name] = {
-                    'degree_centrality': len(concept_map.get_connected_concepts(concept_name)),
-                    'term_count': len(concept_map.get_concept_terms(concept_name))
+                    "degree_centrality": len(
+                        concept_map.get_connected_concepts(concept_name)
+                    ),
+                    "term_count": len(concept_map.get_concept_terms(concept_name)),
                 }
             return centrality_metrics
 
@@ -621,29 +679,35 @@ class ConceptualMapper:
 
         # Calculate centrality measures
         degree_centrality = nx.degree_centrality(G)
-        betweenness_centrality = nx.betweenness_centrality(G, weight='weight')
+        betweenness_centrality = nx.betweenness_centrality(G, weight="weight")
         closeness_centrality = nx.closeness_centrality(G)
 
         # Eigenvector centrality (with fallback for disconnected graphs)
         try:
-            eigenvector_centrality = nx.eigenvector_centrality(G, weight='weight', max_iter=1000)
+            eigenvector_centrality = nx.eigenvector_centrality(
+                G, weight="weight", max_iter=1000
+            )
         except (nx.PowerIterationFailedConvergence, nx.NetworkXException):
             eigenvector_centrality = {node: 0.0 for node in G.nodes()}
 
         # Combine metrics
         for concept_name in concept_map.concepts:
             centrality_metrics[concept_name] = {
-                'degree_centrality': degree_centrality.get(concept_name, 0),
-                'betweenness_centrality': betweenness_centrality.get(concept_name, 0),
-                'closeness_centrality': closeness_centrality.get(concept_name, 0),
-                'eigenvector_centrality': eigenvector_centrality.get(concept_name, 0),
-                'term_count': len(concept_map.get_concept_terms(concept_name)),
-                'relationship_count': len(concept_map.get_connected_concepts(concept_name))
+                "degree_centrality": degree_centrality.get(concept_name, 0),
+                "betweenness_centrality": betweenness_centrality.get(concept_name, 0),
+                "closeness_centrality": closeness_centrality.get(concept_name, 0),
+                "eigenvector_centrality": eigenvector_centrality.get(concept_name, 0),
+                "term_count": len(concept_map.get_concept_terms(concept_name)),
+                "relationship_count": len(
+                    concept_map.get_connected_concepts(concept_name)
+                ),
             }
 
         return centrality_metrics
 
-    def quantify_relationship_strength(self, concept_map: ConceptMap) -> Dict[Tuple[str, str], Dict[str, Any]]:
+    def quantify_relationship_strength(
+        self, concept_map: ConceptMap
+    ) -> Dict[Tuple[str, str], Dict[str, Any]]:
         """Quantify the strength of relationships between concepts.
 
         Args:
@@ -654,7 +718,10 @@ class ConceptualMapper:
         """
         relationship_metrics = {}
 
-        for (concept1, concept2), base_weight in concept_map.concept_relationships.items():
+        for (
+            concept1,
+            concept2,
+        ), base_weight in concept_map.concept_relationships.items():
             c1 = concept_map.concepts[concept1]
             c2 = concept_map.concepts[concept2]
 
@@ -669,34 +736,38 @@ class ConceptualMapper:
 
             # Hierarchical relationship (parent-child)
             is_parent_child = (
-                concept2 in c1.child_concepts or
-                concept1 in c2.child_concepts or
-                concept2 in c1.parent_concepts or
-                concept1 in c2.parent_concepts
+                concept2 in c1.child_concepts
+                or concept1 in c2.child_concepts
+                or concept2 in c1.parent_concepts
+                or concept1 in c2.parent_concepts
             )
 
             # Combined strength score
             strength_score = (
-                base_weight * 0.4 +
-                term_overlap_ratio * 0.3 +
-                domain_overlap_ratio * 0.2 +
-                (0.1 if is_parent_child else 0)
+                base_weight * 0.4
+                + term_overlap_ratio * 0.3
+                + domain_overlap_ratio * 0.2
+                + (0.1 if is_parent_child else 0)
             )
 
             relationship_metrics[(concept1, concept2)] = {
-                'base_weight': base_weight,
-                'term_overlap': term_overlap,
-                'term_overlap_ratio': term_overlap_ratio,
-                'domain_overlap': domain_overlap,
-                'domain_overlap_ratio': domain_overlap_ratio,
-                'is_hierarchical': is_parent_child,
-                'strength_score': strength_score,
-                'relationship_type': 'hierarchical' if is_parent_child else 'associative'
+                "base_weight": base_weight,
+                "term_overlap": term_overlap,
+                "term_overlap_ratio": term_overlap_ratio,
+                "domain_overlap": domain_overlap,
+                "domain_overlap_ratio": domain_overlap_ratio,
+                "is_hierarchical": is_parent_child,
+                "strength_score": strength_score,
+                "relationship_type": (
+                    "hierarchical" if is_parent_child else "associative"
+                ),
             }
 
         return relationship_metrics
 
-    def identify_cross_domain_bridges(self, concept_map: ConceptMap) -> Dict[str, Dict[str, Any]]:
+    def identify_cross_domain_bridges(
+        self, concept_map: ConceptMap
+    ) -> Dict[str, Dict[str, Any]]:
         """Identify concepts that bridge multiple domains.
 
         Args:
@@ -721,25 +792,30 @@ class ConceptualMapper:
                         cross_domain_connections += 1
 
                 bridge_concepts[concept_name] = {
-                    'bridged_domains': list(concept.domains),
-                    'domain_count': len(concept.domains),
-                    'total_connections': total_connections,
-                    'cross_domain_connections': cross_domain_connections,
-                    'bridging_efficiency': cross_domain_connections / total_connections if total_connections > 0 else 0,
-                    'terms': list(concept.terms)
+                    "bridged_domains": list(concept.domains),
+                    "domain_count": len(concept.domains),
+                    "total_connections": total_connections,
+                    "cross_domain_connections": cross_domain_connections,
+                    "bridging_efficiency": (
+                        cross_domain_connections / total_connections
+                        if total_connections > 0
+                        else 0
+                    ),
+                    "terms": list(concept.terms),
                 }
 
         # Sort by bridging efficiency
         sorted_bridges = sorted(
             bridge_concepts.items(),
-            key=lambda x: x[1]['bridging_efficiency'],
-            reverse=True
+            key=lambda x: x[1]["bridging_efficiency"],
+            reverse=True,
         )
 
         return dict(sorted_bridges)
 
-    def track_concept_evolution(self, concept_map: ConceptMap,
-                               historical_maps: List[ConceptMap]) -> Dict[str, Dict[str, Any]]:
+    def track_concept_evolution(
+        self, concept_map: ConceptMap, historical_maps: List[ConceptMap]
+    ) -> Dict[str, Dict[str, Any]]:
         """Track how concepts evolve over time/iterations.
 
         Args:
@@ -753,72 +829,89 @@ class ConceptualMapper:
 
         for concept_name in concept_map.concepts:
             evolution = {
-                'term_count_evolution': [],
-                'relationship_count_evolution': [],
-                'domain_stability': [],
-                'term_stability': []
+                "term_count_evolution": [],
+                "relationship_count_evolution": [],
+                "domain_stability": [],
+                "term_stability": [],
             }
 
             # Current state
             current_concept = concept_map.concepts[concept_name]
             current_terms = current_concept.terms.copy()
-            current_relationships = len(concept_map.get_connected_concepts(concept_name))
+            current_relationships = len(
+                concept_map.get_connected_concepts(concept_name)
+            )
             current_domains = current_concept.domains.copy()
 
-            evolution['term_count_evolution'].append(len(current_terms))
-            evolution['relationship_count_evolution'].append(current_relationships)
-            evolution['domain_stability'].append(1.0)  # Current state is 100% stable
-            evolution['term_stability'].append(1.0)
+            evolution["term_count_evolution"].append(len(current_terms))
+            evolution["relationship_count_evolution"].append(current_relationships)
+            evolution["domain_stability"].append(1.0)  # Current state is 100% stable
+            evolution["term_stability"].append(1.0)
 
             # Compare with historical maps
             for historical_map in historical_maps:
                 if concept_name in historical_map.concepts:
                     hist_concept = historical_map.concepts[concept_name]
                     hist_terms = hist_concept.terms
-                    hist_relationships = len(historical_map.get_connected_concepts(concept_name))
+                    hist_relationships = len(
+                        historical_map.get_connected_concepts(concept_name)
+                    )
                     hist_domains = hist_concept.domains
 
                     # Term evolution
                     term_intersection = len(current_terms & hist_terms)
                     term_union = len(current_terms | hist_terms)
-                    term_stability = term_intersection / term_union if term_union > 0 else 0
+                    term_stability = (
+                        term_intersection / term_union if term_union > 0 else 0
+                    )
 
                     # Domain stability
                     domain_intersection = len(current_domains & hist_domains)
                     domain_union = len(current_domains | hist_domains)
-                    domain_stability = domain_intersection / domain_union if domain_union > 0 else 0
+                    domain_stability = (
+                        domain_intersection / domain_union if domain_union > 0 else 0
+                    )
 
-                    evolution['term_count_evolution'].append(len(hist_terms))
-                    evolution['relationship_count_evolution'].append(hist_relationships)
-                    evolution['domain_stability'].append(domain_stability)
-                    evolution['term_stability'].append(term_stability)
+                    evolution["term_count_evolution"].append(len(hist_terms))
+                    evolution["relationship_count_evolution"].append(hist_relationships)
+                    evolution["domain_stability"].append(domain_stability)
+                    evolution["term_stability"].append(term_stability)
                 else:
                     # Concept didn't exist in historical map
-                    evolution['term_count_evolution'].append(0)
-                    evolution['relationship_count_evolution'].append(0)
-                    evolution['domain_stability'].append(0.0)
-                    evolution['term_stability'].append(0.0)
+                    evolution["term_count_evolution"].append(0)
+                    evolution["relationship_count_evolution"].append(0)
+                    evolution["domain_stability"].append(0.0)
+                    evolution["term_stability"].append(0.0)
 
             # Calculate evolution trends
-            evolution['term_growth_rate'] = (
-                len(current_terms) - evolution['term_count_evolution'][-1]
-            ) / len(historical_maps) if historical_maps else 0
+            evolution["term_growth_rate"] = (
+                (len(current_terms) - evolution["term_count_evolution"][-1])
+                / len(historical_maps)
+                if historical_maps
+                else 0
+            )
 
-            evolution['relationship_growth_rate'] = (
-                current_relationships - evolution['relationship_count_evolution'][-1]
-            ) / len(historical_maps) if historical_maps else 0
+            evolution["relationship_growth_rate"] = (
+                (current_relationships - evolution["relationship_count_evolution"][-1])
+                / len(historical_maps)
+                if historical_maps
+                else 0
+            )
 
-            evolution['average_stability'] = {
-                'terms': sum(evolution['term_stability']) / len(evolution['term_stability']),
-                'domains': sum(evolution['domain_stability']) / len(evolution['domain_stability'])
+            evolution["average_stability"] = {
+                "terms": sum(evolution["term_stability"])
+                / len(evolution["term_stability"]),
+                "domains": sum(evolution["domain_stability"])
+                / len(evolution["domain_stability"]),
             }
 
             evolution_metrics[concept_name] = evolution
 
         return evolution_metrics
 
-    def cluster_concepts(self, concept_map: ConceptMap,
-                        similarity_threshold: float = 0.3) -> Dict[str, List[str]]:
+    def cluster_concepts(
+        self, concept_map: ConceptMap, similarity_threshold: float = 0.3
+    ) -> Dict[str, List[str]]:
         """Cluster similar concepts using hierarchical clustering.
 
         Args:
@@ -829,7 +922,7 @@ class ConceptualMapper:
             Dictionary mapping cluster labels to concept lists
         """
         try:
-            from scipy.cluster.hierarchy import linkage, fcluster
+            from scipy.cluster.hierarchy import fcluster, linkage
             from scipy.spatial.distance import pdist
         except ImportError:
             # Fallback: simple similarity-based clustering
@@ -838,7 +931,7 @@ class ConceptualMapper:
         concept_names = list(concept_map.concepts.keys())
 
         if len(concept_names) < 2:
-            return {'cluster_0': concept_names}
+            return {"cluster_0": concept_names}
 
         # Calculate similarity matrix
         similarity_matrix = []
@@ -859,13 +952,15 @@ class ConceptualMapper:
 
         # Perform hierarchical clustering
         try:
-            linkage_matrix = linkage(distance_matrix, method='ward')
-            cluster_labels = fcluster(linkage_matrix, similarity_threshold, criterion='distance')
+            linkage_matrix = linkage(distance_matrix, method="ward")
+            cluster_labels = fcluster(
+                linkage_matrix, similarity_threshold, criterion="distance"
+            )
 
             # Group concepts by cluster
             clusters = {}
             for concept_name, cluster_id in zip(concept_names, cluster_labels):
-                cluster_key = f'cluster_{cluster_id}'
+                cluster_key = f"cluster_{cluster_id}"
                 if cluster_key not in clusters:
                     clusters[cluster_key] = []
                 clusters[cluster_key].append(concept_name)
@@ -876,8 +971,9 @@ class ConceptualMapper:
             # Fallback to simple clustering
             return self._simple_similarity_clustering(concept_map, similarity_threshold)
 
-    def _simple_similarity_clustering(self, concept_map: ConceptMap,
-                                    similarity_threshold: float) -> Dict[str, List[str]]:
+    def _simple_similarity_clustering(
+        self, concept_map: ConceptMap, similarity_threshold: float
+    ) -> Dict[str, List[str]]:
         """Simple similarity-based clustering fallback.
 
         Args:
@@ -900,7 +996,7 @@ class ConceptualMapper:
                 first_concept = cluster_concepts[0]
                 similarity = self.calculate_concept_similarity(
                     concept_map.concepts[concept_name],
-                    concept_map.concepts[first_concept]
+                    concept_map.concepts[first_concept],
                 )
 
                 if similarity >= similarity_threshold:
@@ -910,7 +1006,7 @@ class ConceptualMapper:
 
             # Create new cluster if not assigned
             if not assigned:
-                clusters[f'cluster_{cluster_id}'] = [concept_name]
+                clusters[f"cluster_{cluster_id}"] = [concept_name]
                 cluster_id += 1
 
         return clusters

@@ -1,3 +1,5 @@
 Project,Overall_Score,Overall_Percentage,Overall_Grade,Overall_Status,Test_Coverage_Score,Test_Coverage_Grade,Test_Failures_Score,Test_Failures_Grade,Manuscript_Size_Score,Manuscript_Size_Grade,Outputs_Score,Outputs_Grade
-active_inference_meta_pragmatic,100,100.0,A,Excellent,40,A,30,A,20,A,10,A
 code_project,100,100.0,A,Excellent,40,A,30,A,20,A,10,A
+cognitive_integrity/cogsec_multiagent_1_theory,100,100.0,A,Excellent,40,A,30,A,20,A,10,A
+cognitive_integrity/cogsec_multiagent_2_computational,100,100.0,A,Excellent,40,A,30,A,20,A,10,A
+cognitive_integrity/cogsec_multiagent_3_practical,100,100.0,A,Excellent,40,A,30,A,20,A,10,A

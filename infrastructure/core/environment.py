@@ -32,6 +32,7 @@ Usage Patterns:
     sync_ok, msg = validate_uv_sync_result(repo_root)
     missing_dirs = validate_directory_structure(repo_root, "my_project")
 """
+
 from __future__ import annotations
 
 import os
@@ -48,49 +49,51 @@ logger = get_logger(__name__)
 
 def check_python_version() -> bool:
     """Verify Python 3.8+ is available.
-    
+
     Returns:
         True if Python version is 3.8 or higher, False otherwise
     """
     logger.info("Checking Python version...")
     version_info = sys.version_info
     version_str = f"{version_info.major}.{version_info.minor}.{version_info.micro}"
-    
+
     if version_info.major < 3 or (version_info.major == 3 and version_info.minor < 8):
         logger.error(f"Python 3.8+ required, found {version_str}")
         return False
-    
+
     log_success(f"Python {version_str} available", logger)
     return True
 
 
-def check_dependencies(required_packages: List[str] | None = None) -> Tuple[bool, List[str]]:
+def check_dependencies(
+    required_packages: List[str] | None = None,
+) -> Tuple[bool, List[str]]:
     """Verify required packages are installed.
-    
+
     Args:
         required_packages: List of package names to check. If None, uses default list.
-        
+
     Returns:
         Tuple of (all_present, missing_packages)
     """
     logger.info("Checking dependencies...")
-    
+
     if required_packages is None:
         # Core required packages (must be present)
         required_packages = [
-            'numpy',
-            'matplotlib',
-            'pytest',
-            'requests',
+            "numpy",
+            "matplotlib",
+            "pytest",
+            "requests",
         ]
         # Optional packages (nice to have but not critical)
-        optional_packages = ['scipy']
+        optional_packages = ["scipy"]
     else:
         optional_packages = []
-    
+
     missing_packages = []
     optional_missing = []
-    
+
     for package in required_packages:
         try:
             __import__(package)
@@ -98,7 +101,7 @@ def check_dependencies(required_packages: List[str] | None = None) -> Tuple[bool
         except ImportError:
             logger.error(f"Package '{package}' not found")
             missing_packages.append(package)
-    
+
     # Check optional packages - warn but don't fail
     for package in optional_packages:
         try:
@@ -107,11 +110,11 @@ def check_dependencies(required_packages: List[str] | None = None) -> Tuple[bool
         except ImportError:
             logger.warning(f"Package '{package}' not found (optional)")
             optional_missing.append(package)
-    
+
     if optional_missing:
         logger.info(f"Optional packages missing: {', '.join(optional_missing)}")
         logger.info("These are not critical but recommended for full functionality")
-    
+
     return len(missing_packages) == 0, missing_packages
 
 
@@ -139,30 +142,34 @@ def install_missing_packages(packages: List[str]) -> bool:
         ...     print("Installation failed - check uv availability")
     """
     logger.info(f"Installing {len(packages)} missing package(s) with uv...")
-    
+
     # Check if uv is available
-    if not shutil.which('uv'):
+    if not shutil.which("uv"):
         logger.error("uv package manager not found - cannot auto-install dependencies")
         logger.error("Install uv with: pip install uv")
         logger.error("Or install packages manually: pip install " + " ".join(packages))
         return False
-    
+
     try:
         # Use uv add to properly manage dependencies through pyproject.toml
         # First add to pyproject.toml, then sync
         for package in packages:
-            add_cmd = ['uv', 'add', package]
+            add_cmd = ["uv", "add", package]
             logger.info(f"Adding to pyproject.toml: {' '.join(add_cmd)}")
-            add_result = subprocess.run(add_cmd, check=False, capture_output=True, text=True)
+            add_result = subprocess.run(
+                add_cmd, check=False, capture_output=True, text=True
+            )
             if add_result.returncode != 0:
-                logger.warning(f"Failed to add {package} to pyproject.toml: {add_result.stderr}")
+                logger.warning(
+                    f"Failed to add {package} to pyproject.toml: {add_result.stderr}"
+                )
 
         # Then sync to install all dependencies
-        cmd = ['uv', 'sync']
+        cmd = ["uv", "sync"]
         logger.info(f"Syncing dependencies: {' '.join(cmd)}")
 
         result = subprocess.run(cmd, check=False)
-        
+
         if result.returncode == 0:
             # Verify installation
             logger.info("Verifying installation...")
@@ -174,7 +181,7 @@ def install_missing_packages(packages: List[str]) -> bool:
                 except ImportError:
                     logger.error(f"Package '{package}' installation failed")
                     all_installed = False
-            
+
             return all_installed
         else:
             logger.error(f"uv installation failed (exit code: {result.returncode})")
@@ -186,22 +193,22 @@ def install_missing_packages(packages: List[str]) -> bool:
 
 def check_build_tools(required_tools: dict[str, str] | None = None) -> bool:
     """Verify build tools are available.
-    
+
     Args:
         required_tools: Dictionary mapping tool names to descriptions.
                        If None, uses default tools.
-        
+
     Returns:
         True if all tools are available, False otherwise
     """
     logger.info("Checking build tools...")
-    
+
     if required_tools is None:
         required_tools = {
-            'pandoc': 'Document conversion',
-            'xelatex': 'LaTeX compilation',
+            "pandoc": "Document conversion",
+            "xelatex": "LaTeX compilation",
         }
-    
+
     all_present = True
     for tool, purpose in required_tools.items():
         if shutil.which(tool):
@@ -209,11 +216,13 @@ def check_build_tools(required_tools: dict[str, str] | None = None) -> bool:
         else:
             logger.error(f"'{tool}' not found ({purpose})")
             all_present = False
-    
+
     return all_present
 
 
-def setup_directories(repo_root: Path, project_name: str = "project", directories: List[str] | None = None) -> bool:
+def setup_directories(
+    repo_root: Path, project_name: str = "project", directories: List[str] | None = None
+) -> bool:
     """Create required directory structure.
 
     Args:
@@ -230,28 +239,28 @@ def setup_directories(repo_root: Path, project_name: str = "project", directorie
     if directories is None:
         # For multi-project, create both repo-level and project-level directories
         directories = [
-            f'output/{project_name}',
-            f'output/{project_name}/figures',
-            f'output/{project_name}/data',
-            f'output/{project_name}/tex',
-            f'output/{project_name}/pdf',
-            f'output/{project_name}/logs',
-            f'output/{project_name}/reports',
-            f'output/{project_name}/simulations',
-            f'output/{project_name}/slides',
-            f'output/{project_name}/web',
-            f'output/{project_name}/llm',
-            f'projects/{project_name}/output',
-            f'projects/{project_name}/output/figures',
-            f'projects/{project_name}/output/data',
-            f'projects/{project_name}/output/pdf',
-            f'projects/{project_name}/output/tex',
-            f'projects/{project_name}/output/logs',
-            f'projects/{project_name}/output/reports',
-            f'projects/{project_name}/output/simulations',
-            f'projects/{project_name}/output/slides',
-            f'projects/{project_name}/output/web',
-            f'projects/{project_name}/output/llm',
+            f"output/{project_name}",
+            f"output/{project_name}/figures",
+            f"output/{project_name}/data",
+            f"output/{project_name}/tex",
+            f"output/{project_name}/pdf",
+            f"output/{project_name}/logs",
+            f"output/{project_name}/reports",
+            f"output/{project_name}/simulations",
+            f"output/{project_name}/slides",
+            f"output/{project_name}/web",
+            f"output/{project_name}/llm",
+            f"projects/{project_name}/output",
+            f"projects/{project_name}/output/figures",
+            f"projects/{project_name}/output/data",
+            f"projects/{project_name}/output/pdf",
+            f"projects/{project_name}/output/tex",
+            f"projects/{project_name}/output/logs",
+            f"projects/{project_name}/output/reports",
+            f"projects/{project_name}/output/simulations",
+            f"projects/{project_name}/output/slides",
+            f"projects/{project_name}/output/web",
+            f"projects/{project_name}/output/llm",
         ]
 
     try:
@@ -282,7 +291,9 @@ def check_uv_available() -> bool:
         ...     print("Falling back to pip - consider installing uv")
     """
     try:
-        result = subprocess.run(['uv', '--version'], capture_output=True, text=True, check=False)
+        result = subprocess.run(
+            ["uv", "--version"], capture_output=True, text=True, check=False
+        )
         return result.returncode == 0
     except (FileNotFoundError, subprocess.SubprocessError):
         return False
@@ -306,7 +317,7 @@ def get_python_command() -> list[str]:
         >>> result = subprocess.run(cmd + ['-c', 'print("hello")'], ...)
     """
     if check_uv_available():
-        return ['uv', 'run', 'python']
+        return ["uv", "run", "python"]
     else:
         return [sys.executable]
 
@@ -330,8 +341,8 @@ def get_subprocess_env(base_env: dict = None) -> dict:
     """
     env = dict(base_env or os.environ)
     # Unset VIRTUAL_ENV when using uv to avoid warnings about absolute paths
-    if check_uv_available() and 'VIRTUAL_ENV' in env:
-        env.pop('VIRTUAL_ENV', None)
+    if check_uv_available() and "VIRTUAL_ENV" in env:
+        env.pop("VIRTUAL_ENV", None)
     return env
 
 
@@ -353,17 +364,17 @@ def verify_source_structure(repo_root: Path, project_name: str = "project") -> b
 
     # Core components (required for template operation)
     required_dirs = [
-        'infrastructure',      # Generic tools (build_verifier, figure_manager, etc.)
-        f'projects/{project_name}',  # Project directory
-        f'projects/{project_name}/src',     # Source code
-        f'projects/{project_name}/tests',   # Tests
+        "infrastructure",  # Generic tools (build_verifier, figure_manager, etc.)
+        f"projects/{project_name}",  # Project directory
+        f"projects/{project_name}/src",  # Source code
+        f"projects/{project_name}/tests",  # Tests
     ]
 
     optional_dirs = [
-        'scripts',             # Optional: orchestration scripts
-        'tests',               # Optional: infrastructure tests
-        f'projects/{project_name}/scripts',   # Optional: project scripts
-        f'projects/{project_name}/manuscript', # Optional: manuscript
+        "scripts",  # Optional: orchestration scripts
+        "tests",  # Optional: infrastructure tests
+        f"projects/{project_name}/scripts",  # Optional: project scripts
+        f"projects/{project_name}/manuscript",  # Optional: manuscript
     ]
 
     all_present = True
@@ -410,15 +421,15 @@ def set_environment_variables(repo_root: Path) -> bool:
 
     try:
         # Set matplotlib backend for headless operation
-        os.environ['MPLBACKEND'] = 'Agg'
+        os.environ["MPLBACKEND"] = "Agg"
         log_success("MPLBACKEND=Agg", logger)
 
         # Ensure UTF-8 encoding
-        os.environ['PYTHONIOENCODING'] = 'utf-8'
+        os.environ["PYTHONIOENCODING"] = "utf-8"
         log_success("PYTHONIOENCODING=utf-8", logger)
 
         # Set project root in environment
-        os.environ['PROJECT_ROOT'] = str(repo_root)
+        os.environ["PROJECT_ROOT"] = str(repo_root)
         log_success(f"PROJECT_ROOT={repo_root}", logger)
 
         return True
@@ -460,7 +471,9 @@ def validate_uv_sync_result(repo_root: Path) -> tuple[bool, str]:
     return True, "uv sync completed successfully"
 
 
-def validate_directory_structure(repo_root: Path, project_name: str = "project") -> list[str]:
+def validate_directory_structure(
+    repo_root: Path, project_name: str = "project"
+) -> list[str]:
     """Validate that required directory structure exists.
 
     Checks for the presence of all directories created by setup_directories().
@@ -481,28 +494,28 @@ def validate_directory_structure(repo_root: Path, project_name: str = "project")
         ...     print("All directories present")
     """
     required_dirs = [
-        f'output/{project_name}',
-        f'output/{project_name}/figures',
-        f'output/{project_name}/data',
-        f'output/{project_name}/tex',
-        f'output/{project_name}/pdf',
-        f'output/{project_name}/logs',
-        f'output/{project_name}/reports',
-        f'output/{project_name}/simulations',
-        f'output/{project_name}/slides',
-        f'output/{project_name}/web',
-        f'output/{project_name}/llm',
-        f'projects/{project_name}/output',
-        f'projects/{project_name}/output/figures',
-        f'projects/{project_name}/output/data',
-        f'projects/{project_name}/output/pdf',
-        f'projects/{project_name}/output/tex',
-        f'projects/{project_name}/output/logs',
-        f'projects/{project_name}/output/reports',
-        f'projects/{project_name}/output/simulations',
-        f'projects/{project_name}/output/slides',
-        f'projects/{project_name}/output/web',
-        f'projects/{project_name}/output/llm',
+        f"output/{project_name}",
+        f"output/{project_name}/figures",
+        f"output/{project_name}/data",
+        f"output/{project_name}/tex",
+        f"output/{project_name}/pdf",
+        f"output/{project_name}/logs",
+        f"output/{project_name}/reports",
+        f"output/{project_name}/simulations",
+        f"output/{project_name}/slides",
+        f"output/{project_name}/web",
+        f"output/{project_name}/llm",
+        f"projects/{project_name}/output",
+        f"projects/{project_name}/output/figures",
+        f"projects/{project_name}/output/data",
+        f"projects/{project_name}/output/pdf",
+        f"projects/{project_name}/output/tex",
+        f"projects/{project_name}/output/logs",
+        f"projects/{project_name}/output/reports",
+        f"projects/{project_name}/output/simulations",
+        f"projects/{project_name}/output/slides",
+        f"projects/{project_name}/output/web",
+        f"projects/{project_name}/output/llm",
     ]
 
     missing = []
@@ -512,19 +525,3 @@ def validate_directory_structure(repo_root: Path, project_name: str = "project")
             missing.append(dir_path)
 
     return missing
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

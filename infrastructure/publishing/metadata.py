@@ -1,4 +1,5 @@
 """Metadata extraction and management functions for academic publishing."""
+
 from __future__ import annotations
 
 import re
@@ -23,24 +24,26 @@ def extract_publication_metadata(markdown_files: List[Path]) -> PublicationMetad
         authors=["Template Author"],
         abstract="A comprehensive template for research projects with test-driven development and automated PDF generation.",
         keywords=["research", "template", "academic", "scientific"],
-        license="Apache-2.0"
+        license="Apache-2.0",
     )
 
     # Read content from the first markdown file (to avoid conflicts with template files)
     combined_content = ""
     if markdown_files:
         try:
-            with open(markdown_files[0], 'r', encoding='utf-8') as f:
+            with open(markdown_files[0], "r", encoding="utf-8") as f:
                 content = f.read()
 
             # Only use this content if it contains actual research content (not template content)
-            if "Research Project Template" not in content and ("#" in content or "**" in content):
+            if "Research Project Template" not in content and (
+                "#" in content or "**" in content
+            ):
                 combined_content = content
         except Exception:
             combined_content = ""
 
     # Extract title (first # header)
-    title_match = re.search(r'^#\s*(.+)$', combined_content, re.MULTILINE)
+    title_match = re.search(r"^#\s*(.+)$", combined_content, re.MULTILINE)
     if title_match:
         extracted_title = title_match.group(1).strip()
         # Always update the title if we find one
@@ -49,11 +52,11 @@ def extract_publication_metadata(markdown_files: List[Path]) -> PublicationMetad
 
     # Extract authors from various patterns
     author_patterns = [
-        r'Authors?:\s*(.+)$',
-        r'By:\s*(.+)$',
-        r'Author:\s*(.+)$',
-        r'\*\*([^*]+)\*\*',  # Bold text pattern
-        r'^\s*\*\*([^*]+)\*\*\s*$'  # Bold text on its own line
+        r"Authors?:\s*(.+)$",
+        r"By:\s*(.+)$",
+        r"Author:\s*(.+)$",
+        r"\*\*([^*]+)\*\*",  # Bold text pattern
+        r"^\s*\*\*([^*]+)\*\*\s*$",  # Bold text on its own line
     ]
 
     for pattern in author_patterns:
@@ -61,38 +64,39 @@ def extract_publication_metadata(markdown_files: List[Path]) -> PublicationMetad
         if match:
             authors_text = match.group(1).strip()
             # Check if this looks like author names (contains common title indicators)
-            if any(title in authors_text.lower() for title in ['dr.', 'prof.', 'phd', 'ms.', 'mr.', 'mrs.']):
-                metadata.authors = [a.strip() for a in authors_text.split(',')]
+            if any(
+                title in authors_text.lower()
+                for title in ["dr.", "prof.", "phd", "ms.", "mr.", "mrs."]
+            ):
+                metadata.authors = [a.strip() for a in authors_text.split(",")]
                 break
 
     # Extract abstract
-    abstract_match = re.search(r'##?\s*Abstract\s*(.+?)(?=\n##|\n#|\Z)', combined_content, re.DOTALL | re.IGNORECASE)
+    abstract_match = re.search(
+        r"##?\s*Abstract\s*(.+?)(?=\n##|\n#|\Z)",
+        combined_content,
+        re.DOTALL | re.IGNORECASE,
+    )
     if abstract_match:
         metadata.abstract = abstract_match.group(1).strip()
 
     # Extract keywords
-    keyword_patterns = [
-        r'Keywords?:\s*(.+)$',
-        r'Key words?:\s*(.+)$'
-    ]
+    keyword_patterns = [r"Keywords?:\s*(.+)$", r"Key words?:\s*(.+)$"]
 
     for pattern in keyword_patterns:
         match = re.search(pattern, combined_content, re.IGNORECASE | re.MULTILINE)
         if match:
             keywords_text = match.group(1).strip()
-            metadata.keywords = [k.strip() for k in keywords_text.split(',')]
+            metadata.keywords = [k.strip() for k in keywords_text.split(",")]
             break
 
     # Extract DOI if present
-    doi_match = re.search(r'DOI:\s*([^\s]+)', combined_content, re.IGNORECASE)
+    doi_match = re.search(r"DOI:\s*([^\s]+)", combined_content, re.IGNORECASE)
     if doi_match:
         metadata.doi = doi_match.group(1).strip()
 
     # Extract journal/conference info
-    journal_patterns = [
-        r'Journal:\s*(.+)$',
-        r'Published in:\s*(.+)$'
-    ]
+    journal_patterns = [r"Journal:\s*(.+)$", r"Published in:\s*(.+)$"]
 
     for pattern in journal_patterns:
         match = re.search(pattern, combined_content, re.IGNORECASE | re.MULTILINE)
@@ -100,10 +104,7 @@ def extract_publication_metadata(markdown_files: List[Path]) -> PublicationMetad
             metadata.journal = match.group(1).strip()
             break
 
-    conference_patterns = [
-        r'Conference:\s*(.+)$',
-        r'Proceedings of:\s*(.+)$'
-    ]
+    conference_patterns = [r"Conference:\s*(.+)$", r"Proceedings of:\s*(.+)$"]
 
     for pattern in conference_patterns:
         match = re.search(pattern, combined_content, re.IGNORECASE | re.MULTILINE)
@@ -127,12 +128,12 @@ def validate_doi(doi: str) -> bool:
         return False
 
     # Basic DOI format validation
-    doi_pattern = r'^10\.\d{4,9}/[-._;()/:A-Z0-9]+$'
+    doi_pattern = r"^10\.\d{4,9}/[-._;()/:A-Z0-9]+$"
     if not re.match(doi_pattern, doi, re.IGNORECASE):
         return False
 
     # Check for invalid patterns
-    if doi.endswith('/extra') or 'doi:' in doi.lower() or not doi.strip():
+    if doi.endswith("/extra") or "doi:" in doi.lower() or not doi.strip():
         return False
 
     # DOI is valid if format matches
@@ -149,7 +150,7 @@ def generate_publication_summary(metadata: PublicationMetadata) -> str:
         Markdown formatted publication summary
     """
     from infrastructure.publishing.citations import generate_citation_apa
-    
+
     summary = f"""## 📚 Publication Information
 
 **Title**: {metadata.title}
@@ -187,22 +188,26 @@ def create_academic_profile_data(metadata: PublicationMetadata) -> Dict[str, Any
         Dictionary with academic profile data
     """
     profile_data = {
-        'title': metadata.title,
-        'authors': metadata.authors,
-        'abstract': metadata.abstract,
-        'keywords': metadata.keywords,
-        'publication_type': 'software' if 'template' in metadata.title.lower() else 'article',
-        'license': metadata.license,
-        'repository_url': metadata.repository_url,
-        'publication_date': metadata.publication_date
+        "title": metadata.title,
+        "authors": metadata.authors,
+        "abstract": metadata.abstract,
+        "keywords": metadata.keywords,
+        "publication_type": (
+            "software" if "template" in metadata.title.lower() else "article"
+        ),
+        "license": metadata.license,
+        "repository_url": metadata.repository_url,
+        "publication_date": metadata.publication_date,
     }
 
     if metadata.doi:
-        profile_data['identifiers'] = [{
-            'type': 'doi',
-            'value': metadata.doi,
-            'url': f"https://doi.org/{metadata.doi}"
-        }]
+        profile_data["identifiers"] = [
+            {
+                "type": "doi",
+                "value": metadata.doi,
+                "url": f"https://doi.org/{metadata.doi}",
+            }
+        ]
 
     return profile_data
 
@@ -217,7 +222,7 @@ def generate_publication_metrics(metadata: PublicationMetadata) -> Dict[str, Any
         Dictionary with publication metrics
     """
     from infrastructure.publishing.metadata import calculate_complexity_score
-    
+
     # Calculate various metrics
     title_length = len(metadata.title)
     abstract_length = len(metadata.abstract)
@@ -229,16 +234,18 @@ def generate_publication_metrics(metadata: PublicationMetadata) -> Dict[str, Any
     reading_time_minutes = max(1, abstract_words // 200)  # 200 words per minute
 
     metrics = {
-        'title_length': title_length,
-        'abstract_length': abstract_length,
-        'abstract_word_count': abstract_words,
-        'author_count': author_count,
-        'keyword_count': keyword_count,
-        'reading_time_minutes': reading_time_minutes,
-        'license_type': metadata.license,
-        'has_doi': bool(metadata.doi),
-        'publication_type': 'software' if 'template' in metadata.title.lower() else 'article',
-        'complexity_score': calculate_complexity_score(metadata)
+        "title_length": title_length,
+        "abstract_length": abstract_length,
+        "abstract_word_count": abstract_words,
+        "author_count": author_count,
+        "keyword_count": keyword_count,
+        "reading_time_minutes": reading_time_minutes,
+        "license_type": metadata.license,
+        "has_doi": bool(metadata.doi),
+        "publication_type": (
+            "software" if "template" in metadata.title.lower() else "article"
+        ),
+        "complexity_score": calculate_complexity_score(metadata),
     }
 
     return metrics
@@ -322,17 +329,17 @@ def create_repository_metadata(metadata: PublicationMetadata) -> str:
         JSON formatted repository metadata
     """
     import json
-    
+
     # Convert authors array to expected format with 'author' key
     author_list = [{"name": author} for author in metadata.authors]
-    
+
     repo_metadata = {
         "@type": "SoftwareSourceCode",
         "name": metadata.title,
         "description": metadata.abstract[:200],
         "keywords": metadata.keywords,
         "license": metadata.license,
-        "author": author_list
+        "author": author_list,
     }
 
     if metadata.repository_url:
@@ -342,4 +349,3 @@ def create_repository_metadata(metadata: PublicationMetadata) -> str:
         repo_metadata["identifier"] = f"https://doi.org/{metadata.doi}"
 
     return json.dumps(repo_metadata, indent=2)
-

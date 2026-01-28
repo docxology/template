@@ -7,6 +7,7 @@ The `tests/` directory ensures **test coverage** for all modules (90% project mi
 ## Testing Philosophy
 
 ### Test-Driven Development (TDD)
+
 1. Write tests first
 2. Implement functionality in `projects/{name}/src/` (project-specific) or `infrastructure/` (reusable)
 3. Run tests until they pass
@@ -17,6 +18,7 @@ The `tests/` directory ensures **test coverage** for all modules (90% project mi
 **🔄 CURRENT STATUS: MAJOR PROGRESS** - Significant infrastructure test fixes completed, LLM tests partially migrated to HTTP calls.
 
 **✅ COMPLETED FIXES:**
+
 - **Project Test Imports**: Fixed `test_reporting.py` and `test_validation.py` import errors by updating conftest.py to add repository root to Python path
 - **Checkpoint Tests**: Fixed directory existence expectations and permission testing for macOS compatibility
 - **CLI Tests**: Updated subprocess test assertions to match actual output format and handle PYTHONPATH requirements
@@ -27,10 +29,12 @@ The `tests/` directory ensures **test coverage** for all modules (90% project mi
 - **Output Copying Tests**: Updated missing file handling assertions to match current implementation labels
 
 **🔄 LLM TESTS (PARTIALLY):**
+
 - **✅ Fallback Logic**: Successfully migrated `test_query_fallback_on_connection_error` to use HTTP calls with test server
 - **⏳ Remaining**: 32 additional LLM tests need server modifications for edge cases (structured JSON parsing, streaming, model discovery, etc.)
 
 **⏳ REMAINING PHASES:**
+
 - LLM test migration (HTTP testing with pytest-httpserver)
 - Publishing module tests (Zenodo/arXiv/GitHub integration)
 - Validation & Rendering (CLI and file operations)
@@ -41,18 +45,21 @@ The `tests/` directory ensures **test coverage** for all modules (90% project mi
 **See `MOCK_ELIMINATION_GUIDE.md`** for systematic elimination plan.
 
 This is a fundamental testing principle that ensures:
+
 - Tests validate actual behavior, not mocked behavior
 - Integration points are truly tested
 - Code is tested in realistic conditions
 - No false confidence from mocked tests
 
 **ABSOLUTELY FORBIDDEN:**
+
 - `MagicMock()`, `mocker.patch()`, `unittest.mock`
 - Any form of dependency injection for testing
 - Mocking external services or APIs
 - Creating fake test data instead of data
 
 **ALWAYS USE REAL OPERATIONS:**
+
 - data and computations
 - Create temporary directories/files for testing
 - Use deterministic seeds for reproducibility
@@ -61,6 +68,7 @@ This is a fundamental testing principle that ensures:
 ### Implementation Examples
 
 **LLM Testing with pytest-httpserver:**
+
 ```python
 @pytest.fixture(scope="session")
 def ollama_test_server():
@@ -80,6 +88,7 @@ def test_llm_query(ollama_test_server):
 ```
 
 **CLI Testing with Subprocess:**
+
 ```python
 def test_cli_validation(tmp_path):
     # Create test file
@@ -98,6 +107,7 @@ def test_cli_validation(tmp_path):
 ```
 
 **PDF Processing with Files:**
+
 ```python
 def test_pdf_extraction(tmp_path):
     # Create PDF
@@ -112,7 +122,9 @@ def test_pdf_extraction(tmp_path):
 ```
 
 ### Network-Dependent Modules
+
 For modules requiring external services (LLM, Literature, Publishing):
+
 - **Pure logic tests**: Test configuration, validation, context management without network
 - **Integration tests**: Mark with `@pytest.mark.requires_ollama` (or similar)
 - **Skip gracefully**: Tests auto-skip when service unavailable
@@ -120,6 +132,7 @@ For modules requiring external services (LLM, Literature, Publishing):
 - Skip integration tests with: `pytest -m "not requires_ollama"`
 
 ### Coverage Requirements
+
 - All projects/{name}/src/ modules must meet 90% minimum coverage (currently 100% - coverage!)
 - Infrastructure modules must meet 60% minimum coverage (currently 83.33% - exceeds stretch goal!)
 - Tests must pass before PDF generation proceeds
@@ -232,6 +245,7 @@ tests/
 ## conftest.py
 
 Configures test environment:
+
 ```python
 """Pytest configuration for template infrastructure tests."""
 import os
@@ -261,22 +275,24 @@ if os.path.exists(SRC) and SRC not in sys.path:
 
 # Add project src/ directories to path for project modules
 # Projects are discovered dynamically, so we add both known projects
-for project_name in ["code_project", "prose_project"]:
+for project_name in ["code_project", "code_project"]:
     project_src = os.path.join(ROOT, "projects", project_name, "src")
     if os.path.exists(project_src) and project_src not in sys.path:
     sys.path.insert(0, PROJECT_SRC)
 ```
 
 This allows tests to import directly:
+
 ```python
 from infrastructure.core.config_loader import load_config  # Infrastructure imports
 from projects.code_project.src.optimizer import optimize  # code_project imports
-from projects.prose_project.src.visualization import plot_function  # prose_project imports
+from projects.code_project.src.visualization import plot_function  # code_project imports
 ```
 
 ## Test Categories
 
 ### Infrastructure Module Tests
+
 Test individual infrastructure modules in `tests/infrastructure/`:
   
 - **Core Module** (`tests/infrastructure/core/`)
@@ -300,14 +316,18 @@ Test individual infrastructure modules in `tests/infrastructure/`:
   - `test_repo_scanner.py` - Repository scanning and validation
 
 ### Project Module Tests
+
 Test project-specific code in `projects/{name}/tests/`:
+
 - Unit tests for `projects/{name}/src/` modules (see `projects/{name}/tests/AGENTS.md`)
 - Each project has independent test suite with 90%+ coverage requirement
 - code_project: 28 tests, 94.1% coverage
-- prose_project: 47 tests, 91.5% coverage
+- code_project: 47 tests, 91.5% coverage
 
 ### Integration Tests
+
 Test cross-module interactions in `tests/integration/`:
+
 - `test_edge_cases_and_error_paths.py` - Edge cases and error handling
 - `test_figure_equation_citation.py` - Figure/equation/citation handling
 - `test_module_interoperability.py` - Cross-module integration validation (no mocks policy)
@@ -316,27 +336,29 @@ Test cross-module interactions in `tests/integration/`:
 ## Running Tests
 
 ### All Tests with Coverage
+
 ```bash
 # Using pytest directly (both infrastructure and project)
-pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov=projects/prose_project/src --cov-report=term-missing --cov-report=html
+pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov=projects/code_project/src --cov-report=term-missing --cov-report=html
 
 # Using uv
-uv run pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov=projects/prose_project/src --cov-report=html
+uv run pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov=projects/code_project/src --cov-report=html
 
 # Verify coverage requirements
 pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=60
 pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-under=90
-pytest projects/prose_project/tests/ --cov=projects/prose_project/src --cov-fail-under=90
+pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-under=90
 ```
 
 ### Specific Tests
+
 ```bash
 # Infrastructure tests
 pytest tests/infrastructure/core/test_config_loader.py -v
 
 # Project tests
 pytest projects/code_project/tests/ -v
-pytest projects/prose_project/tests/ -v
+pytest projects/code_project/tests/ -v
 
 # Integration tests
 pytest tests/integration/test_module_interoperability.py -v
@@ -346,27 +368,30 @@ pytest tests/ -k "test_config" -v
 ```
 
 ### Coverage Reports
+
 ```bash
 # Terminal report with missing lines
-pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov=projects/prose_project/src --cov-report=term-missing
+pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov=projects/code_project/src --cov-report=term-missing
 
 # HTML report (opens in browser)
-pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov=projects/prose_project/src --cov-report=html
+pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov=projects/code_project/src --cov-report=html
 open htmlcov/index.html
 
 # Separate reports
 pytest tests/infrastructure/ --cov=infrastructure --cov-report=html --cov-fail-under=60
 pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=html --cov-fail-under=90
-pytest projects/prose_project/tests/ --cov=projects/prose_project/src --cov-report=html --cov-fail-under=90
+pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=html --cov-fail-under=90
 ```
 
 ### Coverage Snapshot (latest)
+
 - code_project: **94.1%** (exceeds 90% target!)
-- prose_project: **91.5%** (exceeds 90% target!)
+- code_project: **91.5%** (exceeds 90% target!)
 - Infrastructure: **83.33%** (exceeds 60% target by 39%!)
-- Total tests: **2118** (1796 infrastructure [2 skipped], 320 project)
+- Total tests: **2150+** (infrastructure + project)
 
 Skip Ollama-dependent suites when needed:
+
 ```bash
 pytest tests/ -m "not requires_ollama"
 ```
@@ -384,11 +409,13 @@ Tests use pytest markers to indicate dependencies:
 - `requires_credentials`: general marker for any external service credentials
 
 **Skip tests without credentials:**
+
 ```bash
 pytest tests/ -m "not requires_credentials"
 ```
 
 **Run only specific service tests:**
+
 ```bash
 pytest tests/ -m requires_zenodo
 pytest tests/ -m requires_github
@@ -399,6 +426,7 @@ pytest tests/ -m requires_github
 ## Writing Tests
 
 ### Test Structure
+
 ```python
 """Tests for infrastructure/module_name.py or projects/{name}/src/module_name.py"""
 import pytest
@@ -406,7 +434,7 @@ from infrastructure.module_name import function_to_test
 # or
 from projects.code_project.src.module_name import function_to_test
 # or
-from projects.prose_project.src.module_name import function_to_test
+from projects.code_project.src.module_name import function_to_test
 
 class TestFunctionName:
     """Test suite for function_to_test."""
@@ -428,6 +456,7 @@ class TestFunctionName:
 ```
 
 ### Fixtures for Temporary Files
+
 ```python
 def test_with_temp_file(tmp_path):
     """Use pytest's tmp_path fixture."""
@@ -442,6 +471,7 @@ def test_with_temp_file(tmp_path):
 ```
 
 ### Parametrized Tests
+
 ```python
 @pytest.mark.parametrize("input,expected", [
     (1, 2),
@@ -451,6 +481,19 @@ def test_with_temp_file(tmp_path):
 def test_double(input, expected):
     """Test doubling with multiple inputs."""
     assert double(input) == expected
+
+### Network Resilience
+For integration tests that depend on external services (like Ollama) that might be offline, use the `safe_network_test` context manager from `tests.infrastructure._test_helpers`:
+
+```python
+from tests.infrastructure._test_helpers import safe_network_test
+
+def test_integration(client):
+    with safe_network_test("Service Name"):
+        response = client.query("test")
+        assert response
+```
+
 ```
 
 ## Test Coverage Details
@@ -459,7 +502,7 @@ def test_double(input, expected):
 
 **Project Modules** (`projects/{name}/src/`):
 - **code_project**: **94.1%** (Target: 90%+) ✅ Exceeds requirement!
-- **prose_project**: **91.5%** (Target: 90%+) ✅ Exceeds requirement!
+- **code_project**: **91.5%** (Target: 90%+) ✅ Exceeds requirement!
 - test coverage ensures research code reliability
 
 **Infrastructure Modules** (`infrastructure/`): **83.33%** (Target: 60%+)
@@ -473,7 +516,7 @@ def test_double(input, expected):
 ```toml
 [tool.coverage.run]
 branch = true
-source = ["infrastructure", "projects/code_project/src", "projects/prose_project/src"]
+source = ["infrastructure", "projects/code_project/src", "projects/code_project/src"]
 
 [tool.coverage.report]
 fail_under = 70  # Global fallback; individual runs use 60% (infra) and 90% (project)
@@ -484,6 +527,7 @@ precision = 2
 ## Debugging Test Failures
 
 ### Verbose Output
+
 ```bash
 pytest tests/ -v  # Verbose test names
 pytest tests/ -vv  # Very verbose with diffs
@@ -491,18 +535,21 @@ pytest tests/ -s  # Show print statements
 ```
 
 ### Stop on First Failure
+
 ```bash
 pytest tests/ -x  # Stop on first failure
 pytest tests/ --maxfail=3  # Stop after 3 failures
 ```
 
 ### Run Failed Tests Only
+
 ```bash
 pytest tests/ --lf  # Run last failed
 pytest tests/ --ff  # Run failed first, then others
 ```
 
 ### Debugging with PDB
+
 ```python
 def test_something():
     """Test with debugging."""
@@ -514,6 +561,7 @@ def test_something():
 ## Best Practices
 
 ### Do's
+
 - ✅ Test all public APIs
 - ✅ Use data and computations
 - ✅ Test edge cases and error conditions
@@ -523,6 +571,7 @@ def test_something():
 - ✅ Document what each test validates
 
 ### Don'ts
+
 - ❌ Use mock methods (test real behavior)
 - ❌ Use MagicMock, mocker.patch, or unittest.mock
 - ❌ Skip tests to fix coverage
@@ -535,7 +584,9 @@ def test_something():
 ## Integration with Build System
 
 ### Automatic Execution
+
 `scripts/01_run_tests.py` (orchestrated by `scripts/run_all.py`) automatically:
+
 1. **Runs infrastructure tests** with 60% coverage requirement
 2. **Runs project tests** with 90% coverage requirement
 3. **Fails build** if tests don't pass or coverage requirements not met
@@ -543,17 +594,19 @@ def test_something():
 5. **Validates integration** between components
 
 ### Pre-commit Checks
+
 Before committing code:
+
 ```bash
 # Run all tests with coverage
-pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov=projects/prose_project/src --cov-report=html
+pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov=projects/code_project/src --cov-report=html
 
 # Verify infrastructure coverage (60% minimum)
 pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=60
 
 # Verify project coverage (90% minimum)
 pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-under=90
-pytest projects/prose_project/tests/ --cov=projects/prose_project/src --cov-fail-under=90
+pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-under=90
 
 # Check coverage report
 open htmlcov/index.html
@@ -562,6 +615,7 @@ open htmlcov/index.html
 ## Adding Tests
 
 ### Checklist
+
 1. Determine if code is project-specific (`projects/{name}/src/`) or infrastructure (`infrastructure/`)
 2. Create test file in appropriate location (`projects/{name}/tests/` or `tests/infrastructure/`)
 3. Import functions to test from correct module path
@@ -571,6 +625,7 @@ open htmlcov/index.html
 7. Update this documentation if needed
 
 ### Template
+
 ```python
 """Tests for infrastructure/new_module.py or projects/{name}/src/new_module.py"""
 import pytest
@@ -578,7 +633,7 @@ from infrastructure.new_module import new_function
 # or
 from projects.code_project.src.new_module import new_function
 # or
-from projects.prose_project.src.new_module import new_function
+from projects.code_project.src.new_module import new_function
 
 
 class TestNewFunction:
@@ -613,12 +668,14 @@ def test_integration_with_other_modules():
 Tests that require external service credentials (Zenodo, GitHub, arXiv) will automatically skip if credentials are not configured. To run these tests:
 
 1. Copy credential templates:
+
    ```bash
    cp .env.example .env
    cp test_credentials.yaml.example test_credentials.yaml
    ```
 
 2. Add your credentials to `.env`:
+
    ```bash
    ZENODO_SANDBOX_TOKEN=your_token
    GITHUB_TOKEN=your_token
@@ -626,6 +683,7 @@ Tests that require external service credentials (Zenodo, GitHub, arXiv) will aut
    ```
 
 3. Run tests (credential-dependent tests will run if configured):
+
    ```bash
    pytest tests/
    ```
@@ -641,6 +699,7 @@ The test suite provides credential fixtures via `tests/conftest.py`:
 - `skip_if_no_latex` - Skip if LaTeX not installed
 
 **Example usage:**
+
 ```python
 @pytest.mark.requires_zenodo
 @pytest.mark.requires_network
@@ -665,11 +724,7 @@ See **[docs/TESTING_WITH_CREDENTIALS.md](../docs/development/TESTING_WITH_CREDEN
 - [`conftest.py`](conftest.py) - Test configuration and fixtures
 - [`../infrastructure/AGENTS.md`](../infrastructure/AGENTS.md) - Infrastructure module documentation
 - [`../projects/code_project/src/AGENTS.md`](../projects/code_project/src/AGENTS.md) - code_project module documentation
-- [`../projects/prose_project/src/AGENTS.md`](../projects/prose_project/src/AGENTS.md) - prose_project module documentation
+- [`../projects/code_project/src/AGENTS.md`](../projects/code_project/src/AGENTS.md) - code_project module documentation
 - [`../AGENTS.md`](../AGENTS.md) - System documentation
 - [`../docs/WORKFLOW.md`](../docs/WORKFLOW.md) - Development workflow
 - [`../docs/development/TESTING_WITH_CREDENTIALS.md`](../docs/development/TESTING_WITH_CREDENTIALS.md) - Credential configuration guide
-
-
-
-

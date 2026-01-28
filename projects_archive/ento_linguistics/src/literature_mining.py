@@ -3,18 +3,19 @@
 This module provides functionality for collecting, processing, and analyzing
 scientific literature related to entomology and ant biology.
 """
+
 from __future__ import annotations
 
 import json
 import re
 import time
-from pathlib import Path
-from typing import List, Dict, Set, Optional, Tuple, Any, Iterator
-from dataclasses import dataclass, asdict
-from urllib.request import urlopen, Request
-from urllib.error import URLError, HTTPError
-from urllib.parse import urlencode, quote
 import xml.etree.ElementTree as ET
+from dataclasses import asdict, dataclass
+from pathlib import Path
+from typing import Any, Dict, Iterator, List, Optional, Set, Tuple
+from urllib.error import HTTPError, URLError
+from urllib.parse import quote, urlencode
+from urllib.request import Request, urlopen
 
 try:
     from .text_analysis import TextProcessor
@@ -37,6 +38,7 @@ class Publication:
         keywords: List of keywords
         full_text: Full text if available
     """
+
     title: str
     authors: List[str]
     abstract: Optional[str] = None
@@ -56,7 +58,7 @@ class Publication:
         return asdict(self)
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'Publication':
+    def from_dict(cls, data: Dict[str, Any]) -> "Publication":
         """Create from dictionary."""
         return cls(**data)
 
@@ -92,18 +94,18 @@ class LiteratureCorpus:
             filepath: Path to save file
         """
         data = {
-            'publications': [pub.to_dict() for pub in self.publications],
-            'metadata': {
-                'total_publications': len(self.publications),
-                'creation_date': time.time()
-            }
+            "publications": [pub.to_dict() for pub in self.publications],
+            "metadata": {
+                "total_publications": len(self.publications),
+                "creation_date": time.time(),
+            },
         }
 
-        with open(filepath, 'w', encoding='utf-8') as f:
+        with open(filepath, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
 
     @classmethod
-    def load_from_file(cls, filepath: Path) -> 'LiteratureCorpus':
+    def load_from_file(cls, filepath: Path) -> "LiteratureCorpus":
         """Load corpus from JSON file.
 
         Args:
@@ -112,10 +114,12 @@ class LiteratureCorpus:
         Returns:
             Loaded corpus
         """
-        with open(filepath, 'r', encoding='utf-8') as f:
+        with open(filepath, "r", encoding="utf-8") as f:
             data = json.load(f)
 
-        publications = [Publication.from_dict(pub_data) for pub_data in data['publications']]
+        publications = [
+            Publication.from_dict(pub_data) for pub_data in data["publications"]
+        ]
         return cls(publications)
 
     def get_text_corpus(self) -> List[str]:
@@ -138,11 +142,11 @@ class LiteratureCorpus:
                 text_parts.append(pub.full_text)
 
             if text_parts:
-                texts.append(' '.join(text_parts))
+                texts.append(" ".join(text_parts))
 
         return texts
 
-    def search_publications(self, query: str, field: str = 'all') -> List[Publication]:
+    def search_publications(self, query: str, field: str = "all") -> List[Publication]:
         """Search publications by text query.
 
         Args:
@@ -156,18 +160,20 @@ class LiteratureCorpus:
         matches = []
 
         for pub in self.publications:
-            if field == 'title' or field == 'all':
+            if field == "title" or field == "all":
                 if pub.title and query_lower in pub.title.lower():
                     matches.append(pub)
                     continue
 
-            if field == 'abstract' or field == 'all':
+            if field == "abstract" or field == "all":
                 if pub.abstract and query_lower in pub.abstract.lower():
                     matches.append(pub)
                     continue
 
-            if field == 'authors' or field == 'all':
-                if pub.authors and any(query_lower in author.lower() for author in pub.authors):
+            if field == "authors" or field == "all":
+                if pub.authors and any(
+                    query_lower in author.lower() for author in pub.authors
+                ):
                     matches.append(pub)
                     continue
 
@@ -186,13 +192,17 @@ class LiteratureCorpus:
 
         total_pubs = len(self.publications)
         return {
-            'total_publications': total_pubs,
-            'date_range': (min(years), max(years)) if years else None,
-            'unique_journals': len(set(journals)),
-            'publications_with_abstract': has_abstract,
-            'publications_with_full_text': has_full_text,
-            'avg_title_length': sum(len(pub.title or '') for pub in self.publications) / total_pubs if total_pubs > 0 else 0,
-            'total_keywords': sum(len(pub.keywords) for pub in self.publications)
+            "total_publications": total_pubs,
+            "date_range": (min(years), max(years)) if years else None,
+            "unique_journals": len(set(journals)),
+            "publications_with_abstract": has_abstract,
+            "publications_with_full_text": has_full_text,
+            "avg_title_length": (
+                sum(len(pub.title or "") for pub in self.publications) / total_pubs
+                if total_pubs > 0
+                else 0
+            ),
+            "total_keywords": sum(len(pub.keywords) for pub in self.publications),
         }
 
 
@@ -246,22 +256,24 @@ class PubMedMiner:
 
         # Construct search URL with proper URL encoding
         params = {
-            'db': 'pubmed',
-            'term': query,
-            'retmax': min(max_results, 10000),  # API limit
-            'retmode': 'json'
+            "db": "pubmed",
+            "term": query,
+            "retmax": min(max_results, 10000),  # API limit
+            "retmode": "json",
         }
         search_url = f"{self.BASE_URL}esearch.fcgi?{urlencode(params)}"
 
         try:
-            with urlopen(Request(search_url, headers={'User-Agent': 'Python-EntoLinguistic'})) as response:
+            with urlopen(
+                Request(search_url, headers={"User-Agent": "Python-EntoLinguistic"})
+            ) as response:
                 if response.status != 200:
                     print(f"PubMed API returned status {response.status}")
                     return []
 
-                data = json.loads(response.read().decode('utf-8'))
+                data = json.loads(response.read().decode("utf-8"))
 
-            pmids = data.get('esearchresult', {}).get('idlist', [])
+            pmids = data.get("esearchresult", {}).get("idlist", [])
             if not isinstance(pmids, list):
                 print(f"Unexpected PubMed response format: {type(pmids)}")
                 return []
@@ -306,7 +318,7 @@ class PubMedMiner:
         # Process in batches to avoid API limits
         batch_size = 20
         for i in range(0, len(pmids), batch_size):
-            batch_pmids = pmids[i:i+batch_size]
+            batch_pmids = pmids[i : i + batch_size]
 
             # Fetch summaries
             publications.extend(self._fetch_batch_summaries(batch_pmids))
@@ -328,20 +340,21 @@ class PubMedMiner:
         if not pmids:
             return []
 
-        id_str = ','.join(pmids)
+        id_str = ",".join(pmids)
         summary_url = (
-            f"{self.BASE_URL}esummary.fcgi?"
-            f"db=pubmed&id={id_str}&retmode=json"
+            f"{self.BASE_URL}esummary.fcgi?" f"db=pubmed&id={id_str}&retmode=json"
         )
 
         try:
-            with urlopen(Request(summary_url, headers={'User-Agent': 'Python-EntoLinguistic'})) as response:
-                data = json.loads(response.read().decode('utf-8'))
+            with urlopen(
+                Request(summary_url, headers={"User-Agent": "Python-EntoLinguistic"})
+            ) as response:
+                data = json.loads(response.read().decode("utf-8"))
 
             publications = []
             for pmid in pmids:
-                if pmid in data.get('result', {}):
-                    pub_data = data['result'][pmid]
+                if pmid in data.get("result", {}):
+                    pub_data = data["result"][pmid]
                     publication = self._parse_pubmed_summary(pub_data)
                     if publication:
                         publications.append(publication)
@@ -363,42 +376,46 @@ class PubMedMiner:
         """
         try:
             # Extract basic information
-            title = data.get('title', '')
+            title = data.get("title", "")
             if not title:
                 return None
 
             # Parse authors
             authors = []
-            author_list = data.get('authors', [])
+            author_list = data.get("authors", [])
             if author_list:
                 for author in author_list:
-                    name = author.get('name', '')
+                    name = author.get("name", "")
                     if name:
                         authors.append(name)
 
             # Extract other fields
-            abstract = data.get('abstract', '')
-            doi = data.get('elocationid', '') if 'DOI:' in str(data.get('elocationid', '')) else None
-            if doi and doi.startswith('DOI: '):
+            abstract = data.get("abstract", "")
+            doi = (
+                data.get("elocationid", "")
+                if "DOI:" in str(data.get("elocationid", ""))
+                else None
+            )
+            if doi and doi.startswith("DOI: "):
                 doi = doi[5:]
 
             year = None
-            pubdate = data.get('pubdate', '')
+            pubdate = data.get("pubdate", "")
             if pubdate:
-                year_match = re.search(r'\b(19|20)\d{2}\b', pubdate)
+                year_match = re.search(r"\b(19|20)\d{2}\b", pubdate)
                 if year_match:
                     year = int(year_match.group())
 
-            journal = data.get('fulljournalname', data.get('source', ''))
+            journal = data.get("fulljournalname", data.get("source", ""))
 
             return Publication(
                 title=title,
                 authors=authors,
                 abstract=abstract if abstract else None,
                 doi=doi,
-                pmid=data.get('uid'),
+                pmid=data.get("uid"),
                 year=year,
-                journal=journal
+                journal=journal,
             )
 
         except Exception as e:
@@ -435,17 +452,19 @@ class ArXivMiner:
         )
 
         try:
-            with urlopen(Request(search_url, headers={'User-Agent': 'Python-EntoLinguistic'})) as response:
-                content = response.read().decode('utf-8')
+            with urlopen(
+                Request(search_url, headers={"User-Agent": "Python-EntoLinguistic"})
+            ) as response:
+                content = response.read().decode("utf-8")
 
             # Parse XML response
             root = ET.fromstring(content)
             publications = []
 
             # Namespace for arXiv XML
-            ns = {'arxiv': 'http://www.w3.org/2005/Atom'}
+            ns = {"arxiv": "http://www.w3.org/2005/Atom"}
 
-            for entry in root.findall('arxiv:entry', ns):
+            for entry in root.findall("arxiv:entry", ns):
                 publication = self._parse_arxiv_entry(entry, ns)
                 if publication:
                     publications.append(publication)
@@ -456,7 +475,9 @@ class ArXivMiner:
             print(f"Error searching arXiv: {e}")
             return []
 
-    def _parse_arxiv_entry(self, entry: ET.Element, ns: Dict[str, str]) -> Optional[Publication]:
+    def _parse_arxiv_entry(
+        self, entry: ET.Element, ns: Dict[str, str]
+    ) -> Optional[Publication]:
         """Parse arXiv entry into Publication object.
 
         Args:
@@ -468,21 +489,21 @@ class ArXivMiner:
         """
         try:
             # Extract title
-            title_elem = entry.find('arxiv:title', ns)
+            title_elem = entry.find("arxiv:title", ns)
             title = title_elem.text.strip() if title_elem is not None else ""
             if not title:
                 return None
 
             # Extract authors
             authors = []
-            author_elements = entry.findall('arxiv:author', ns)
+            author_elements = entry.findall("arxiv:author", ns)
             for author_elem in author_elements:
-                name_elem = author_elem.find('arxiv:name', ns)
+                name_elem = author_elem.find("arxiv:name", ns)
                 if name_elem is not None:
                     authors.append(name_elem.text.strip())
 
             # Extract abstract
-            summary_elem = entry.find('arxiv:summary', ns)
+            summary_elem = entry.find("arxiv:summary", ns)
             abstract = summary_elem.text.strip() if summary_elem is not None else None
 
             # Extract DOI if available
@@ -493,10 +514,10 @@ class ArXivMiner:
 
             # Extract publication date
             year = None
-            published_elem = entry.find('arxiv:published', ns)
+            published_elem = entry.find("arxiv:published", ns)
             if published_elem is not None:
                 date_str = published_elem.text.strip()
-                year_match = re.search(r'\b(19|20)\d{2}\b', date_str)
+                year_match = re.search(r"\b(19|20)\d{2}\b", date_str)
                 if year_match:
                     year = int(year_match.group())
 
@@ -506,7 +527,7 @@ class ArXivMiner:
                 abstract=abstract,
                 doi=doi,
                 year=year,
-                journal="arXiv"
+                journal="arXiv",
             )
 
         except Exception as e:
@@ -522,12 +543,19 @@ def create_entomology_query() -> str:
     """
     # Focus on ants and social insects
     terms = [
-        "ants", "Formicidae", "Hymenoptera",
-        "eusocial", "eusociality", "social insects",
-        "colony", "nest", "foraging", "division of labor"
+        "ants",
+        "Formicidae",
+        "Hymenoptera",
+        "eusocial",
+        "eusociality",
+        "social insects",
+        "colony",
+        "nest",
+        "foraging",
+        "division of labor",
     ]
 
-    return ' OR '.join(f'"{term}"' for term in terms) + ' AND (English[Language])'
+    return " OR ".join(f'"{term}"' for term in terms) + " AND (English[Language])"
 
 
 def mine_entomology_literature(max_results: int = 1000) -> LiteratureCorpus:
@@ -550,7 +578,7 @@ def mine_entomology_literature(max_results: int = 1000) -> LiteratureCorpus:
     print(f"Found {len(pmids)} PubMed results")
 
     if pmids:
-        publications = pubmed_miner.fetch_publications(pmids[:max_results//2])
+        publications = pubmed_miner.fetch_publications(pmids[: max_results // 2])
         for pub in publications:
             corpus.add_publication(pub)
 
@@ -559,11 +587,18 @@ def mine_entomology_literature(max_results: int = 1000) -> LiteratureCorpus:
     arxiv_query = "cat:q-bio.PE OR cat:q-bio.QM"  # Quantitative biology categories
 
     print("Searching arXiv...")
-    arxiv_pubs = arxiv_miner.search(arxiv_query, max_results=max_results//2)
+    arxiv_pubs = arxiv_miner.search(arxiv_query, max_results=max_results // 2)
     print(f"Found {len(arxiv_pubs)} arXiv results")
 
     # Filter for entomology-related papers
-    entomology_keywords = {'ant', 'ants', 'formicidae', 'eusocial', 'colony', 'social insect'}
+    entomology_keywords = {
+        "ant",
+        "ants",
+        "formicidae",
+        "eusocial",
+        "colony",
+        "social insect",
+    }
     filtered_arxiv = []
     for pub in arxiv_pubs:
         text = f"{pub.title} {pub.abstract or ''}".lower()

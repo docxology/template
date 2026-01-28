@@ -5,17 +5,15 @@ and error handling scenarios.
 """
 
 import json
+import shutil
+import tempfile
 import time
 from pathlib import Path
-import pytest
-import tempfile
-import shutil
 
-from infrastructure.core.checkpoint import (
-    CheckpointManager,
-    PipelineCheckpoint,
-    StageResult,
-)
+import pytest
+
+from infrastructure.core.checkpoint import (CheckpointManager,
+                                            PipelineCheckpoint, StageResult)
 
 
 class TestStageResult:
@@ -28,9 +26,9 @@ class TestStageResult:
             exit_code=0,
             duration=1.5,
             timestamp="2024-01-01 12:00:00",
-            completed=True
+            completed=True,
         )
-        
+
         assert result.name == "test_stage"
         assert result.exit_code == 0
         assert result.duration == 1.5
@@ -40,12 +38,9 @@ class TestStageResult:
     def test_stage_result_default_completed(self):
         """Test StageResult with default completed value."""
         result = StageResult(
-            name="test",
-            exit_code=0,
-            duration=1.0,
-            timestamp="2024-01-01 12:00:00"
+            name="test", exit_code=0, duration=1.0, timestamp="2024-01-01 12:00:00"
         )
-        
+
         assert result.completed is True  # Default value
 
 
@@ -59,18 +54,18 @@ class TestPipelineCheckpoint:
                 name="stage_1",
                 exit_code=0,
                 duration=1.0,
-                timestamp="2024-01-01 12:00:00"
+                timestamp="2024-01-01 12:00:00",
             )
         ]
-        
+
         checkpoint = PipelineCheckpoint(
             pipeline_start_time=1000.0,
             last_stage_completed=1,
             stage_results=stage_results,
             total_stages=5,
-            checkpoint_time=1001.0
+            checkpoint_time=1001.0,
         )
-        
+
         assert checkpoint.pipeline_start_time == 1000.0
         assert checkpoint.last_stage_completed == 1
         assert len(checkpoint.stage_results) == 1
@@ -84,51 +79,51 @@ class TestPipelineCheckpoint:
                 name="stage_1",
                 exit_code=0,
                 duration=1.0,
-                timestamp="2024-01-01 12:00:00"
+                timestamp="2024-01-01 12:00:00",
             )
         ]
-        
+
         checkpoint = PipelineCheckpoint(
             pipeline_start_time=1000.0,
             last_stage_completed=1,
             stage_results=stage_results,
             total_stages=5,
-            checkpoint_time=1001.0
+            checkpoint_time=1001.0,
         )
-        
+
         data = checkpoint.to_dict()
-        
+
         assert isinstance(data, dict)
-        assert data['pipeline_start_time'] == 1000.0
-        assert data['last_stage_completed'] == 1
-        assert len(data['stage_results']) == 1
-        assert data['total_stages'] == 5
-        assert data['checkpoint_time'] == 1001.0
+        assert data["pipeline_start_time"] == 1000.0
+        assert data["last_stage_completed"] == 1
+        assert len(data["stage_results"]) == 1
+        assert data["total_stages"] == 5
+        assert data["checkpoint_time"] == 1001.0
 
     def test_checkpoint_from_dict(self):
         """Test creating checkpoint from dictionary."""
         data = {
-            'pipeline_start_time': 1000.0,
-            'last_stage_completed': 1,
-            'stage_results': [
+            "pipeline_start_time": 1000.0,
+            "last_stage_completed": 1,
+            "stage_results": [
                 {
-                    'name': 'stage_1',
-                    'exit_code': 0,
-                    'duration': 1.0,
-                    'timestamp': '2024-01-01 12:00:00',
-                    'completed': True
+                    "name": "stage_1",
+                    "exit_code": 0,
+                    "duration": 1.0,
+                    "timestamp": "2024-01-01 12:00:00",
+                    "completed": True,
                 }
             ],
-            'total_stages': 5,
-            'checkpoint_time': 1001.0
+            "total_stages": 5,
+            "checkpoint_time": 1001.0,
         }
-        
+
         checkpoint = PipelineCheckpoint.from_dict(data)
-        
+
         assert checkpoint.pipeline_start_time == 1000.0
         assert checkpoint.last_stage_completed == 1
         assert len(checkpoint.stage_results) == 1
-        assert checkpoint.stage_results[0].name == 'stage_1'
+        assert checkpoint.stage_results[0].name == "stage_1"
         assert checkpoint.total_stages == 5
         assert checkpoint.checkpoint_time == 1001.0
 
@@ -139,28 +134,28 @@ class TestPipelineCheckpoint:
                 name="stage_1",
                 exit_code=0,
                 duration=1.0,
-                timestamp="2024-01-01 12:00:00"
+                timestamp="2024-01-01 12:00:00",
             ),
             StageResult(
                 name="stage_2",
                 exit_code=0,
                 duration=2.0,
-                timestamp="2024-01-01 12:01:00"
-            )
+                timestamp="2024-01-01 12:01:00",
+            ),
         ]
-        
+
         original = PipelineCheckpoint(
             pipeline_start_time=1000.0,
             last_stage_completed=2,
             stage_results=stage_results,
             total_stages=5,
-            checkpoint_time=1003.0
+            checkpoint_time=1003.0,
         )
-        
+
         # Convert to dict and back
         data = original.to_dict()
         restored = PipelineCheckpoint.from_dict(data)
-        
+
         assert restored.pipeline_start_time == original.pipeline_start_time
         assert restored.last_stage_completed == original.last_stage_completed
         assert len(restored.stage_results) == len(original.stage_results)
@@ -197,61 +192,61 @@ class TestCheckpointManager:
         with tempfile.TemporaryDirectory() as tmpdir:
             checkpoint_dir = Path(tmpdir) / "checkpoints"
             manager = CheckpointManager(checkpoint_dir=checkpoint_dir)
-            
+
             stage_results = [
                 StageResult(
                     name="stage_1",
                     exit_code=0,
                     duration=1.0,
-                    timestamp="2024-01-01 12:00:00"
+                    timestamp="2024-01-01 12:00:00",
                 )
             ]
-            
+
             manager.save_checkpoint(
                 pipeline_start_time=1000.0,
                 last_stage_completed=1,
                 stage_results=stage_results,
-                total_stages=5
+                total_stages=5,
             )
-            
+
             assert manager.checkpoint_file.exists()
-            
+
             # Verify file contents
-            with open(manager.checkpoint_file, 'r') as f:
+            with open(manager.checkpoint_file, "r") as f:
                 data = json.load(f)
-            
-            assert data['pipeline_start_time'] == 1000.0
-            assert data['last_stage_completed'] == 1
-            assert len(data['stage_results']) == 1
-            assert data['total_stages'] == 5
-            assert 'checkpoint_time' in data
+
+            assert data["pipeline_start_time"] == 1000.0
+            assert data["last_stage_completed"] == 1
+            assert len(data["stage_results"]) == 1
+            assert data["total_stages"] == 5
+            assert "checkpoint_time" in data
 
     def test_load_checkpoint_exists(self):
         """Test loading an existing checkpoint."""
         with tempfile.TemporaryDirectory() as tmpdir:
             checkpoint_dir = Path(tmpdir) / "checkpoints"
             manager = CheckpointManager(checkpoint_dir=checkpoint_dir)
-            
+
             # Save a checkpoint first
             stage_results = [
                 StageResult(
                     name="stage_1",
                     exit_code=0,
                     duration=1.0,
-                    timestamp="2024-01-01 12:00:00"
+                    timestamp="2024-01-01 12:00:00",
                 )
             ]
-            
+
             manager.save_checkpoint(
                 pipeline_start_time=1000.0,
                 last_stage_completed=1,
                 stage_results=stage_results,
-                total_stages=5
+                total_stages=5,
             )
-            
+
             # Load it back
             checkpoint = manager.load_checkpoint()
-            
+
             assert checkpoint is not None
             assert checkpoint.pipeline_start_time == 1000.0
             assert checkpoint.last_stage_completed == 1
@@ -263,9 +258,9 @@ class TestCheckpointManager:
         with tempfile.TemporaryDirectory() as tmpdir:
             checkpoint_dir = Path(tmpdir) / "checkpoints"
             manager = CheckpointManager(checkpoint_dir=checkpoint_dir)
-            
+
             checkpoint = manager.load_checkpoint()
-            
+
             assert checkpoint is None
 
     def test_load_checkpoint_corrupted(self):
@@ -273,14 +268,14 @@ class TestCheckpointManager:
         with tempfile.TemporaryDirectory() as tmpdir:
             checkpoint_dir = Path(tmpdir) / "checkpoints"
             manager = CheckpointManager(checkpoint_dir=checkpoint_dir)
-            
+
             # Create a corrupted checkpoint file
             manager.checkpoint_file.parent.mkdir(parents=True, exist_ok=True)
             manager.checkpoint_file.write_text("invalid json content {")
-            
+
             # Should return None and log warning
             checkpoint = manager.load_checkpoint()
-            
+
             assert checkpoint is None
 
     def test_clear_checkpoint(self):
@@ -288,29 +283,29 @@ class TestCheckpointManager:
         with tempfile.TemporaryDirectory() as tmpdir:
             checkpoint_dir = Path(tmpdir) / "checkpoints"
             manager = CheckpointManager(checkpoint_dir=checkpoint_dir)
-            
+
             # Save a checkpoint
             stage_results = [
                 StageResult(
                     name="stage_1",
                     exit_code=0,
                     duration=1.0,
-                    timestamp="2024-01-01 12:00:00"
+                    timestamp="2024-01-01 12:00:00",
                 )
             ]
-            
+
             manager.save_checkpoint(
                 pipeline_start_time=1000.0,
                 last_stage_completed=1,
                 stage_results=stage_results,
-                total_stages=5
+                total_stages=5,
             )
-            
+
             assert manager.checkpoint_file.exists()
-            
+
             # Clear it
             manager.clear_checkpoint()
-            
+
             assert not manager.checkpoint_file.exists()
 
     def test_clear_checkpoint_not_exists(self):
@@ -318,7 +313,7 @@ class TestCheckpointManager:
         with tempfile.TemporaryDirectory() as tmpdir:
             checkpoint_dir = Path(tmpdir) / "checkpoints"
             manager = CheckpointManager(checkpoint_dir=checkpoint_dir)
-            
+
             # Should not raise error
             manager.clear_checkpoint()
 
@@ -327,24 +322,24 @@ class TestCheckpointManager:
         with tempfile.TemporaryDirectory() as tmpdir:
             checkpoint_dir = Path(tmpdir) / "checkpoints"
             manager = CheckpointManager(checkpoint_dir=checkpoint_dir)
-            
+
             # Save a checkpoint
             stage_results = [
                 StageResult(
                     name="stage_1",
                     exit_code=0,
                     duration=1.0,
-                    timestamp="2024-01-01 12:00:00"
+                    timestamp="2024-01-01 12:00:00",
                 )
             ]
-            
+
             manager.save_checkpoint(
                 pipeline_start_time=1000.0,
                 last_stage_completed=1,
                 stage_results=stage_results,
-                total_stages=5
+                total_stages=5,
             )
-            
+
             assert manager.checkpoint_exists() is True
 
     def test_checkpoint_exists_false(self):
@@ -352,7 +347,7 @@ class TestCheckpointManager:
         with tempfile.TemporaryDirectory() as tmpdir:
             checkpoint_dir = Path(tmpdir) / "checkpoints"
             manager = CheckpointManager(checkpoint_dir=checkpoint_dir)
-            
+
             assert manager.checkpoint_exists() is False
 
     def test_checkpoint_exists_corrupted(self):
@@ -360,11 +355,11 @@ class TestCheckpointManager:
         with tempfile.TemporaryDirectory() as tmpdir:
             checkpoint_dir = Path(tmpdir) / "checkpoints"
             manager = CheckpointManager(checkpoint_dir=checkpoint_dir)
-            
+
             # Create corrupted file
             manager.checkpoint_file.parent.mkdir(parents=True, exist_ok=True)
             manager.checkpoint_file.write_text("invalid json")
-            
+
             assert manager.checkpoint_exists() is False
 
     def test_save_checkpoint_multiple_stages(self):
@@ -372,37 +367,37 @@ class TestCheckpointManager:
         with tempfile.TemporaryDirectory() as tmpdir:
             checkpoint_dir = Path(tmpdir) / "checkpoints"
             manager = CheckpointManager(checkpoint_dir=checkpoint_dir)
-            
+
             stage_results = [
                 StageResult(
                     name="stage_1",
                     exit_code=0,
                     duration=1.0,
-                    timestamp="2024-01-01 12:00:00"
+                    timestamp="2024-01-01 12:00:00",
                 ),
                 StageResult(
                     name="stage_2",
                     exit_code=0,
                     duration=2.0,
-                    timestamp="2024-01-01 12:01:00"
+                    timestamp="2024-01-01 12:01:00",
                 ),
                 StageResult(
                     name="stage_3",
                     exit_code=0,
                     duration=1.5,
-                    timestamp="2024-01-01 12:02:00"
-                )
+                    timestamp="2024-01-01 12:02:00",
+                ),
             ]
-            
+
             manager.save_checkpoint(
                 pipeline_start_time=1000.0,
                 last_stage_completed=3,
                 stage_results=stage_results,
-                total_stages=5
+                total_stages=5,
             )
-            
+
             checkpoint = manager.load_checkpoint()
-            
+
             assert checkpoint is not None
             assert len(checkpoint.stage_results) == 3
             assert checkpoint.last_stage_completed == 3
@@ -416,41 +411,24 @@ class TestCheckpointManager:
             # Create directory first, then make it read-only to cause save failure
             manager._ensure_checkpoint_dir()
             checkpoint_dir.chmod(0o444)
-            
+
             try:
                 stage_results = [
                     StageResult(
                         name="stage_1",
                         exit_code=0,
                         duration=1.0,
-                        timestamp="2024-01-01 12:00:00"
+                        timestamp="2024-01-01 12:00:00",
                     )
                 ]
-                
+
                 # Should not raise exception, just log warning
                 manager.save_checkpoint(
                     pipeline_start_time=1000.0,
                     last_stage_completed=1,
                     stage_results=stage_results,
-                    total_stages=5
+                    total_stages=5,
                 )
             finally:
                 # Restore permissions
                 checkpoint_dir.chmod(0o755)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

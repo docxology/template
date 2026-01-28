@@ -35,15 +35,18 @@ Example infrastructure integration:
     logger.info(f"Benchmark: {benchmark['mean_time']:.4f}s avg")
     ```
 """
+
 from __future__ import annotations
 
-import numpy as np
 from dataclasses import dataclass
 from typing import Callable, Optional
+
+import numpy as np
 
 # Add logging support
 try:
     from infrastructure.core.logging_utils import get_logger
+
     logger = get_logger(__name__)
     LOGGING_AVAILABLE = True
 except ImportError:
@@ -74,6 +77,7 @@ class OptimizationResult:
         ...     if result.objective_history:
         ...         print(f"Initial objective: {result.objective_history[0]:.6f}")
     """
+
     solution: np.ndarray
     objective_value: float
     iterations: int
@@ -82,7 +86,9 @@ class OptimizationResult:
     objective_history: Optional[list[float]] = None
 
 
-def quadratic_function(x: np.ndarray, A: Optional[np.ndarray] = None, b: Optional[np.ndarray] = None) -> float:
+def quadratic_function(
+    x: np.ndarray, A: Optional[np.ndarray] = None, b: Optional[np.ndarray] = None
+) -> float:
     """Evaluate quadratic objective function f(x) = (1/2) x^T A x - b^T x.
 
     This function implements a general quadratic minimization problem where A is the
@@ -135,7 +141,9 @@ def quadratic_function(x: np.ndarray, A: Optional[np.ndarray] = None, b: Optiona
     return quadratic_term - linear_term
 
 
-def compute_gradient(x: np.ndarray, A: Optional[np.ndarray] = None, b: Optional[np.ndarray] = None) -> np.ndarray:
+def compute_gradient(
+    x: np.ndarray, A: Optional[np.ndarray] = None, b: Optional[np.ndarray] = None
+) -> np.ndarray:
     """Compute analytical gradient of quadratic function ∇f(x) = A x - b.
 
     For the quadratic function f(x) = (1/2) x^T A x - b^T x, the gradient is
@@ -181,7 +189,7 @@ def gradient_descent(
     max_iterations: int = 1000,
     tolerance: float = 1e-6,
     step_size: float = 0.01,
-    verbose: bool = False
+    verbose: bool = False,
 ) -> OptimizationResult:
     """Perform gradient descent optimization with fixed step size.
 
@@ -268,12 +276,16 @@ def gradient_descent(
         if verbose and iteration % 100 == 0:
             obj_val = objective_func(x)
             if LOGGING_AVAILABLE and logger:
-                logger.info(f"Iteration {iteration}: x={x}, f(x)={obj_val:.6f}, ||∇f||={grad_norm:.6f}")
+                logger.info(
+                    f"Iteration {iteration}: x={x}, f(x)={obj_val:.6f}, ||∇f||={grad_norm:.6f}"
+                )
 
         if grad_norm < tolerance:
             converged = True
             if LOGGING_AVAILABLE and logger:
-                logger.debug(f"Converged at iteration {iteration} with ||∇f||={grad_norm:.2e}")
+                logger.debug(
+                    f"Converged at iteration {iteration} with ||∇f||={grad_norm:.2e}"
+                )
             break
 
         # Update: x = x - step_size * ∇f(x)
@@ -288,9 +300,13 @@ def gradient_descent(
 
     if LOGGING_AVAILABLE and logger:
         if converged:
-            logger.info(f"Gradient descent converged in {iteration} iterations, final f(x)={final_obj_value:.6f}")
+            logger.info(
+                f"Gradient descent converged in {iteration} iterations, final f(x)={final_obj_value:.6f}"
+            )
         else:
-            logger.warning(f"Gradient descent did not converge within {max_iterations} iterations, final f(x)={final_obj_value:.6f}")
+            logger.warning(
+                f"Gradient descent did not converge within {max_iterations} iterations, final f(x)={final_obj_value:.6f}"
+            )
 
     return OptimizationResult(
         solution=x,
@@ -298,5 +314,5 @@ def gradient_descent(
         iterations=iteration,
         converged=converged,
         gradient_norm=final_grad_norm,
-        objective_history=objective_history
+        objective_history=objective_history,
     )

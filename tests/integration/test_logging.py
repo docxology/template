@@ -7,12 +7,13 @@ they produce correct output, handle ANSI codes properly, and write to files
 correctly.
 """
 
-import pytest
+import os
+import re
 import subprocess
 import tempfile
-import os
 from pathlib import Path
-import re
+
+import pytest
 
 
 class TestBashLogging:
@@ -39,7 +40,7 @@ class TestBashLogging:
             cwd=cwd,
             env=full_env,
             capture_output=True,
-            text=True
+            text=True,
         )
         return result
 
@@ -87,11 +88,12 @@ class TestBashLogging:
         result = self.run_bash_command(command)
 
         assert result.returncode == 0
-        lines = result.stdout.strip().split('\n')
+        lines = result.stdout.strip().split("\n")
         assert len(lines) >= 3
-        assert "════════════════════════════════════════════════════════════════" in lines[0]
+        # Box drawing uses ┌─────┐ for top border and └─────┘ for bottom
+        assert "┌" in lines[0] and "─" in lines[0] and "┐" in lines[0]
         assert "Test Header" in lines[1]
-        assert "════════════════════════════════════════════════════════════════" in lines[2]
+        assert "└" in lines[2] and "─" in lines[2] and "┘" in lines[2]
 
     def test_format_duration_seconds(self, bash_utils_path):
         """Test format_duration with seconds only."""
@@ -253,7 +255,10 @@ class TestBashLogging:
 
         assert result.returncode == 0
         assert "[2/5] Test Stage (40% complete)" in result.stdout
-        assert "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" in result.stdout
+        assert (
+            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            in result.stdout
+        )
 
     def test_log_stage_start_format(self, bash_utils_path):
         """Test log_stage_start produces correct format."""
@@ -310,7 +315,7 @@ class TestBashLogging:
 
         assert result.returncode == 0
         # Strip ANSI codes before comparison since log output includes color codes
-        stripped_output = result.stdout.replace('\x1b[0;32m', '').replace('\x1b[0m', '')
+        stripped_output = result.stdout.replace("\x1b[0;32m", "").replace("\x1b[0m", "")
         # The current implementation doesn't include timestamps, but we can test
         # that the basic format works
         assert "✓ Test message" in stripped_output
@@ -328,7 +333,9 @@ class TestBashLogging:
 
     def test_log_with_context_no_context(self, bash_utils_path):
         """Test log_with_context function without context."""
-        command = f"source {bash_utils_path} && log_with_context 'WARN' 'Warning message'"
+        command = (
+            f"source {bash_utils_path} && log_with_context 'WARN' 'Warning message'"
+        )
         result = self.run_bash_command(command)
 
         assert result.returncode == 0
@@ -407,18 +414,25 @@ class TestBashLogging:
 
     def test_log_stage_progress(self, bash_utils_path):
         """Test log_stage_progress function."""
-        command = f"source {bash_utils_path} && log_stage_progress 2 'Test Stage' 5 1000 1005"
+        command = (
+            f"source {bash_utils_path} && log_stage_progress 2 'Test Stage' 5 1000 1005"
+        )
         result = self.run_bash_command(command)
 
         assert result.returncode == 0
         assert "[2/5] Test Stage (40% complete)" in result.stdout
-        assert "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" in result.stdout
+        assert (
+            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            in result.stdout
+        )
         # The stage elapsed time may not appear if the calculation doesn't work in the test environment
         # Just check that the basic progress logging works
 
     def test_log_stage_progress_no_stage_time(self, bash_utils_path):
         """Test log_stage_progress function without stage start time."""
-        command = f"source {bash_utils_path} && log_stage_progress 2 'Test Stage' 5 1000"
+        command = (
+            f"source {bash_utils_path} && log_stage_progress 2 'Test Stage' 5 1000"
+        )
         result = self.run_bash_command(command)
 
         assert result.returncode == 0

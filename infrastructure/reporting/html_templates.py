@@ -2,6 +2,7 @@
 
 Provides reusable HTML templates for various report types.
 """
+
 from __future__ import annotations
 
 from typing import Any, Dict
@@ -9,7 +10,7 @@ from typing import Any, Dict
 
 def get_base_html_template() -> str:
     """Get base HTML template with styles.
-    
+
     Returns:
         Base HTML template string
     """
@@ -151,10 +152,10 @@ def get_base_html_template() -> str:
 
 def render_summary_cards(cards: list[Dict[str, Any]]) -> str:
     """Render summary cards HTML.
-    
+
     Args:
         cards: List of card dictionaries with 'title' and 'value'
-        
+
     Returns:
         HTML string for summary cards
     """
@@ -171,40 +172,24 @@ def render_summary_cards(cards: list[Dict[str, Any]]) -> str:
 
 def render_table(headers: list[str], rows: list[list[str]]) -> str:
     """Render HTML table.
-    
+
     Args:
         headers: List of header names
         rows: List of row data (each row is a list of cell values)
-        
+
     Returns:
         HTML string for table
     """
-    html = '<table>\n    <thead>\n        <tr>\n'
+    html = "<table>\n    <thead>\n        <tr>\n"
     for header in headers:
         html += f"            <th>{header}</th>\n"
     html += "        </tr>\n    </thead>\n    <tbody>\n"
-    
+
     for row in rows:
         html += "        <tr>\n"
         for cell in row:
             html += f"            <td>{cell}</td>\n"
         html += "        </tr>\n"
-    
+
     html += "    </tbody>\n</table>"
     return html
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

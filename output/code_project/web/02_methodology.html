@@ -189,14 +189,30 @@ unconstrained optimization:</p>
 <p><strong>Output:</strong> Approximate solution <span
 class="math inline">\(x^* \approx \arg\min f(x)\)</span></p>
 <p><strong>Algorithm 1: Gradient Descent</strong></p>
-<pre><code>Initialize: k ← 0, x_0 ∈ ℝ^d
-While k &lt; N_max do:
-    Compute gradient: ∇f(x_k)
-    Check convergence: if ||∇f(x_k)||_2 &lt; ε then
-        Return x_k as approximate solution
-    Update: x_{k+1} ← x_k - α ∇f(x_k)
-    Increment: k ← k + 1
-Return x_k (maximum iterations reached)</code></pre>
+<blockquote>
+<p><strong>Input:</strong> Initial point <span
+class="math inline">\(x_0\)</span>, step size <span
+class="math inline">\(\alpha\)</span>, tolerance <span
+class="math inline">\(\epsilon\)</span>, max iterations <span
+class="math inline">\(N_{\max}\)</span></p>
+<ol type="1">
+<li>Initialize <span class="math inline">\(k \leftarrow 0\)</span></li>
+<li><strong>While</strong> <span class="math inline">\(k &lt;
+N_{\max}\)</span> <strong>do:</strong>
+<ul>
+<li>Compute gradient <span class="math inline">\(g_k = \nabla
+f(x_k)\)</span></li>
+<li><strong>If</strong> <span class="math inline">\(\|g_k\|_2 &lt;
+\epsilon\)</span> <strong>then return</strong> <span
+class="math inline">\(x_k\)</span> <em>(converged)</em></li>
+<li>Update: <span class="math inline">\(x_{k+1} \leftarrow x_k - \alpha
+\cdot g_k\)</span></li>
+<li><span class="math inline">\(k \leftarrow k + 1\)</span></li>
+</ul></li>
+<li><strong>Return</strong> <span class="math inline">\(x_k\)</span>
+<em>(max iterations reached)</em></li>
+</ol>
+</blockquote>
 <p>The algorithm follows the fundamental principle of steepest descent,
 moving in the direction of the negative gradient to minimize the
 objective function <span class="math inline">\(f: \mathbb{R}^d
@@ -208,10 +224,15 @@ Minimization</h3>
 \label{eq:quadratic_objective}
 f(x) = \frac{1}{2} x^T A x - b^T x
 \end{equation}\]</span></p>
-<p>where: - <span class="math inline">\(A\)</span> is a positive
-definite matrix - <span class="math inline">\(b\)</span> is the linear
-term vector - The gradient is: <span class="math inline">\(\nabla f(x) =
-A x - b\)</span></p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(A\)</span> is a positive definite
+matrix</li>
+<li><span class="math inline">\(b\)</span> is the linear term
+vector</li>
+<li>The gradient is: <span class="math inline">\(\nabla f(x) = A x -
+b\)</span></li>
+</ul>
 <p>For the simple case <span class="math inline">\(A = I\)</span> and
 <span class="math inline">\(b = 1\)</span>, we have:</p>
 <p><span class="math display">\[\begin{equation}
@@ -267,10 +288,13 @@ class="math inline">\(\rho = \frac{\kappa - 1}{\kappa + 1}\)</span>.</p>
 = \lambda_{\max} = 1\)</span>, this gives <span
 class="math inline">\(\alpha = 1\)</span>.</p>
 <h3 id="complexity-analysis">Complexity Analysis</h3>
-<p>The computational complexity per iteration is: - <strong>Time
-complexity</strong>: <span class="math inline">\(O(n)\)</span> for
-gradient computation - <strong>Space complexity</strong>: <span
-class="math inline">\(O(n)\)</span> for storing variables</p>
+<p>The computational complexity per iteration is:</p>
+<ul>
+<li><strong>Time complexity</strong>: <span
+class="math inline">\(O(n)\)</span> for gradient computation</li>
+<li><strong>Space complexity</strong>: <span
+class="math inline">\(O(n)\)</span> for storing variables</li>
+</ul>
 <p>Total complexity for convergence: <span
 class="math inline">\(O\left(n \cdot
 \log\left(\frac{1}{\epsilon}\right)\right)\)</span></p>
@@ -286,15 +310,23 @@ class="math inline">\(O\left(n \cdot
 aggressive)</li>
 </ul>
 <h3 id="convergence-criteria">Convergence Criteria</h3>
-<p>The algorithm terminates when: - Gradient norm falls below tolerance:
-<span class="math inline">\(||\nabla f(x)|| &lt; \epsilon\)</span> -
-Maximum iterations reached: <span class="math inline">\(k =
-N\)</span></p>
+<p>The algorithm terminates when:</p>
+<ul>
+<li>Gradient norm falls below tolerance: <span
+class="math inline">\(||\nabla f(x)|| &lt; \epsilon\)</span></li>
+<li>Maximum iterations reached: <span class="math inline">\(k =
+N\)</span></li>
+</ul>
 <h3 id="performance-metrics">Performance Metrics</h3>
-<p>We track: - <strong>Solution accuracy</strong>: Distance to
-analytical optimum - <strong>Convergence speed</strong>: Number of
-iterations to convergence - <strong>Objective value</strong>: Function
-value at final solution</p>
+<p>We track:</p>
+<ul>
+<li><strong>Solution accuracy</strong>: Distance to analytical
+optimum</li>
+<li><strong>Convergence speed</strong>: Number of iterations to
+convergence</li>
+<li><strong>Objective value</strong>: Function value at final
+solution</li>
+</ul>
 <h2 id="implementation-details">Implementation Details</h2>
 <h3 id="numerical-stability-considerations">Numerical Stability
 Considerations</h3>
@@ -327,7 +359,7 @@ values</li>
 </ul>
 <h3 id="testing-strategy-and-validation">Testing Strategy and
 Validation</h3>
-<p>test suite covers multiple dimensions:</p>
+<p>The comprehensive test suite covers multiple dimensions:</p>
 <ul>
 <li><strong>Functional correctness</strong>: Analytical gradient
 verification against finite differences</li>
@@ -351,10 +383,14 @@ inclusion) are loaded automatically, while allowing researchers to add
 specialized packages for mathematical notation, bibliography styles, or
 document formatting.</p>
 <h2 id="analysis-pipeline">Analysis Pipeline</h2>
-<p>The analysis script automatically: 1. Runs optimization experiments
-with different parameters 2. Collects convergence trajectories 3.
-Generates publication-quality plots 4. Saves numerical results to CSV
-files 5. Registers figures for manuscript integration</p>
+<p>The analysis script automatically:</p>
+<ol type="1">
+<li>Runs optimization experiments with different parameters</li>
+<li>Collects convergence trajectories</li>
+<li>Generates publication-quality plots</li>
+<li>Saves numerical results to CSV files</li>
+<li>Registers figures for manuscript integration</li>
+</ol>
 <p>This automated approach ensures reproducible research and consistent
 result generation.</p>
 </body>

@@ -6,10 +6,11 @@ including file integrity, cross-reference validation, and data consistency.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-import pytest
 import json
 import tempfile
 from pathlib import Path
+
+import pytest
 
 # Import the module to test
 import infrastructure.validation.integrity as integrity
@@ -90,7 +91,8 @@ class TestCrossReferenceVerification:
     def test_verify_cross_references_complete_document(self, tmp_path):
         """Test cross-reference verification with complete document."""
         md_file = tmp_path / "test.md"
-        md_file.write_text("""
+        md_file.write_text(
+            """
         # Introduction {#sec:intro}
 
         See Section \\ref{sec:methodology}.
@@ -109,26 +111,29 @@ class TestCrossReferenceVerification:
         \\caption{Example figure}
         \\label{fig:example}
         \\end{figure}
-        """)
+        """
+        )
 
         integrity_status = integrity.verify_cross_references([md_file])
 
-        assert integrity_status['equations'] == True
-        assert integrity_status['figures'] == True
-        assert integrity_status['sections'] == True
+        assert integrity_status["equations"] == True
+        assert integrity_status["figures"] == True
+        assert integrity_status["sections"] == True
 
     def test_verify_cross_references_missing_labels(self, tmp_path):
         """Test cross-reference verification with missing labels."""
         md_file = tmp_path / "test.md"
-        md_file.write_text("""
+        md_file.write_text(
+            """
         # Introduction {#sec:intro}
 
         See Section \\ref{sec:missing}.
-        """)
+        """
+        )
 
         integrity_status = integrity.verify_cross_references([md_file])
 
-        assert integrity_status['sections'] == False
+        assert integrity_status["sections"] == False
 
 
 class TestDataConsistency:
@@ -141,8 +146,8 @@ class TestDataConsistency:
 
         consistency = integrity.verify_data_consistency([json_file])
 
-        assert consistency['file_readable'] == True
-        assert consistency['data_integrity'] == True
+        assert consistency["file_readable"] == True
+        assert consistency["data_integrity"] == True
 
     def test_verify_data_consistency_invalid_json(self, tmp_path):
         """Test data consistency for invalid JSON."""
@@ -151,7 +156,7 @@ class TestDataConsistency:
 
         consistency = integrity.verify_data_consistency([json_file])
 
-        assert consistency['data_integrity'] == False
+        assert consistency["data_integrity"] == False
 
     def test_verify_data_consistency_csv(self, tmp_path):
         """Test data consistency for CSV."""
@@ -160,8 +165,8 @@ class TestDataConsistency:
 
         consistency = integrity.verify_data_consistency([csv_file])
 
-        assert consistency['file_readable'] == True
-        assert consistency['data_integrity'] == True
+        assert consistency["file_readable"] == True
+        assert consistency["data_integrity"] == True
 
 
 class TestAcademicStandards:
@@ -170,7 +175,8 @@ class TestAcademicStandards:
     def test_verify_academic_standards_complete(self, tmp_path):
         """Test academic standards for complete document."""
         md_file = tmp_path / "complete.md"
-        md_file.write_text("""
+        md_file.write_text(
+            """
         # Abstract
         Research summary here.
 
@@ -190,17 +196,18 @@ class TestAcademicStandards:
         Summary.
 
         References: [1], [2], [3]
-        """)
+        """
+        )
 
         standards = integrity.verify_academic_standards([md_file])
 
-        assert standards['has_abstract'] == True
-        assert standards['has_introduction'] == True
-        assert standards['has_methodology'] == True
-        assert standards['has_results'] == True
-        assert standards['has_discussion'] == True
-        assert standards['has_conclusion'] == True
-        assert standards['proper_citations'] == True
+        assert standards["has_abstract"] == True
+        assert standards["has_introduction"] == True
+        assert standards["has_methodology"] == True
+        assert standards["has_results"] == True
+        assert standards["has_discussion"] == True
+        assert standards["has_conclusion"] == True
+        assert standards["proper_citations"] == True
 
     def test_verify_academic_standards_minimal(self, tmp_path):
         """Test academic standards for minimal document."""
@@ -209,13 +216,13 @@ class TestAcademicStandards:
 
         standards = integrity.verify_academic_standards([md_file])
 
-        assert standards['has_abstract'] == False
-        assert standards['has_introduction'] == False
-        assert standards['has_methodology'] == False
-        assert standards['has_results'] == False
-        assert standards['has_discussion'] == False
-        assert standards['has_conclusion'] == False
-        assert standards['proper_citations'] == False
+        assert standards["has_abstract"] == False
+        assert standards["has_introduction"] == False
+        assert standards["has_methodology"] == False
+        assert standards["has_results"] == False
+        assert standards["has_discussion"] == False
+        assert standards["has_conclusion"] == False
+        assert standards["proper_citations"] == False
 
 
 class TestIntegrityReport:
@@ -269,26 +276,23 @@ class TestBuildArtifacts:
         (figures_dir / "example_figure.png").write_text("image content")
 
         expected_files = {
-            'pdf': ['01_abstract.pdf', '02_introduction.pdf', '03_methodology.pdf'],
-            'figures': ['example_figure.png']
+            "pdf": ["01_abstract.pdf", "02_introduction.pdf", "03_methodology.pdf"],
+            "figures": ["example_figure.png"],
         }
 
         validation = integrity.validate_build_artifacts(tmp_path, expected_files)
 
-        assert validation['missing_files'] == ['03_methodology.pdf']
-        assert validation['validation_passed'] == False
+        assert validation["missing_files"] == ["03_methodology.pdf"]
+        assert validation["validation_passed"] == False
 
     def test_validate_build_artifacts_empty(self, tmp_path):
         """Test validation of empty build artifacts."""
-        expected_files = {
-            'pdf': ['01_abstract.pdf'],
-            'figures': ['example_figure.png']
-        }
+        expected_files = {"pdf": ["01_abstract.pdf"], "figures": ["example_figure.png"]}
 
         validation = integrity.validate_build_artifacts(tmp_path, expected_files)
 
-        assert len(validation['missing_files']) > 0
-        assert validation['validation_passed'] == False
+        assert len(validation["missing_files"]) > 0
+        assert validation["validation_passed"] == False
 
 
 class TestFilePermissions:
@@ -298,9 +302,9 @@ class TestFilePermissions:
         """Test permission check for readable directory."""
         permissions = integrity.check_file_permissions(tmp_path)
 
-        assert permissions['readable'] == True
-        assert permissions['writable'] == True
-        assert len(permissions['issues']) == 0
+        assert permissions["readable"] == True
+        assert permissions["writable"] == True
+        assert len(permissions["issues"]) == 0
 
     def test_check_file_permissions_nonexistent_directory(self, tmp_path):
         """Test permission check for nonexistent directory."""
@@ -308,8 +312,8 @@ class TestFilePermissions:
 
         permissions = integrity.check_file_permissions(nonexistent)
 
-        assert permissions['readable'] == False
-        assert len(permissions['issues']) > 0
+        assert permissions["readable"] == False
+        assert len(permissions["issues"]) > 0
 
 
 class TestOutputCompleteness:
@@ -318,40 +322,69 @@ class TestOutputCompleteness:
     def test_verify_output_completeness_complete(self, tmp_path):
         """Test completeness verification for complete outputs."""
         # Create all expected directories and files
-        for category in ['pdf', 'tex', 'data', 'figures']:
+        for category in ["pdf", "tex", "data", "figures"]:
             category_dir = tmp_path / category
             category_dir.mkdir()
 
         # Create all expected files in each category
-        for pdf in ['01_abstract.pdf', '02_introduction.pdf', '03_methodology.pdf',
-                   '04_experimental_results.pdf', '05_discussion.pdf', '06_conclusion.pdf',
-                   '07_references.pdf', '10_symbols_glossary.pdf', 'project_combined.pdf']:
+        for pdf in [
+            "01_abstract.pdf",
+            "02_introduction.pdf",
+            "03_methodology.pdf",
+            "04_experimental_results.pdf",
+            "05_discussion.pdf",
+            "06_conclusion.pdf",
+            "07_references.pdf",
+            "10_symbols_glossary.pdf",
+            "project_combined.pdf",
+        ]:
             (tmp_path / "pdf" / pdf).write_text("PDF")
 
-        for tex in ['01_abstract.tex', '02_introduction.tex', '03_methodology.tex',
-                   '04_experimental_results.tex', '05_discussion.tex', '06_conclusion.tex',
-                   '07_references.tex', '10_symbols_glossary.tex', 'project_combined.tex']:
+        for tex in [
+            "01_abstract.tex",
+            "02_introduction.tex",
+            "03_methodology.tex",
+            "04_experimental_results.tex",
+            "05_discussion.tex",
+            "06_conclusion.tex",
+            "07_references.tex",
+            "10_symbols_glossary.tex",
+            "project_combined.tex",
+        ]:
             (tmp_path / "tex" / tex).write_text("LaTeX")
 
-        for data in ['convergence_data.npz', 'dataset_summary.csv', 'example_data.csv',
-                    'example_data.npz', 'performance_comparison.csv']:
+        for data in [
+            "convergence_data.npz",
+            "dataset_summary.csv",
+            "example_data.csv",
+            "example_data.npz",
+            "performance_comparison.csv",
+        ]:
             (tmp_path / "data" / data).write_text("data")
 
-        for fig in ['ablation_study.png', 'convergence_plot.png', 'data_structure.png',
-                   'example_figure.png', 'experimental_setup.png', 'hyperparameter_sensitivity.png',
-                   'image_classification_results.png', 'recommendation_scalability.png',
-                   'scalability_analysis.png', 'step_size_analysis.png']:
+        for fig in [
+            "ablation_study.png",
+            "convergence_plot.png",
+            "data_structure.png",
+            "example_figure.png",
+            "experimental_setup.png",
+            "hyperparameter_sensitivity.png",
+            "image_classification_results.png",
+            "recommendation_scalability.png",
+            "scalability_analysis.png",
+            "step_size_analysis.png",
+        ]:
             (tmp_path / "figures" / fig).write_text("image")
 
         (tmp_path / "project_combined.html").write_text("HTML")
 
         completeness = integrity.verify_output_completeness(tmp_path)
 
-        assert completeness['pdf_complete'] == True
-        assert completeness['figures_complete'] == True
-        assert completeness['data_complete'] == True
-        assert completeness['latex_complete'] == True
-        assert completeness['html_complete'] == True
+        assert completeness["pdf_complete"] == True
+        assert completeness["figures_complete"] == True
+        assert completeness["data_complete"] == True
+        assert completeness["latex_complete"] == True
+        assert completeness["html_complete"] == True
 
     def test_verify_output_completeness_incomplete(self, tmp_path):
         """Test completeness verification for incomplete outputs."""
@@ -360,10 +393,10 @@ class TestOutputCompleteness:
 
         completeness = integrity.verify_output_completeness(tmp_path)
 
-        assert completeness['figures_complete'] == False
-        assert completeness['data_complete'] == False
-        assert completeness['latex_complete'] == False
-        assert completeness['html_complete'] == False
+        assert completeness["figures_complete"] == False
+        assert completeness["data_complete"] == False
+        assert completeness["latex_complete"] == False
+        assert completeness["html_complete"] == False
 
 
 class TestIntegrityManifest:
@@ -373,9 +406,9 @@ class TestIntegrityManifest:
         """Test manifest creation for empty directory."""
         manifest = integrity.create_integrity_manifest(tmp_path)
 
-        assert manifest['file_count'] == 0
-        assert manifest['total_size'] == 0
-        assert len(manifest['file_hashes']) == 0
+        assert manifest["file_count"] == 0
+        assert manifest["total_size"] == 0
+        assert len(manifest["file_hashes"]) == 0
 
     def test_create_integrity_manifest_with_files(self, tmp_path):
         """Test manifest creation with files."""
@@ -384,9 +417,9 @@ class TestIntegrityManifest:
 
         manifest = integrity.create_integrity_manifest(tmp_path)
 
-        assert manifest['file_count'] == 1
-        assert manifest['total_size'] == len("Hello, World!")
-        assert 'test.txt' in manifest['file_hashes']
+        assert manifest["file_count"] == 1
+        assert manifest["total_size"] == len("Hello, World!")
+        assert "test.txt" in manifest["file_hashes"]
 
     def test_save_and_load_integrity_manifest(self, tmp_path):
         """Test saving and loading integrity manifests."""
@@ -399,7 +432,7 @@ class TestIntegrityManifest:
         loaded_manifest = integrity.load_integrity_manifest(manifest_path)
 
         assert loaded_manifest is not None
-        assert loaded_manifest['file_count'] == original_manifest['file_count']
+        assert loaded_manifest["file_count"] == original_manifest["file_count"]
 
     def test_load_integrity_manifest_nonexistent(self):
         """Test loading nonexistent manifest."""
@@ -424,9 +457,9 @@ class TestIntegrityVerification:
 
         verification = integrity.verify_integrity_against_manifest(manifest1, manifest2)
 
-        assert verification['files_changed'] == 0
-        assert verification['files_added'] == 0
-        assert verification['files_removed'] == 0
+        assert verification["files_changed"] == 0
+        assert verification["files_added"] == 0
+        assert verification["files_removed"] == 0
 
     def test_verify_integrity_against_manifest_modified_file(self, tmp_path):
         """Test verification with modified file."""
@@ -441,7 +474,7 @@ class TestIntegrityVerification:
 
         verification = integrity.verify_integrity_against_manifest(manifest1, manifest2)
 
-        assert verification['files_changed'] == 1
+        assert verification["files_changed"] == 1
 
 
 class TestReportGeneration:
@@ -452,10 +485,10 @@ class TestReportGeneration:
         from infrastructure.validation.integrity import IntegrityReport
 
         report = IntegrityReport()
-        report.file_integrity = {'file1.pdf': True, 'file2.pdf': False}
-        report.cross_reference_integrity = {'equations': True, 'figures': False}
-        report.data_consistency = {'file_readable': True}
-        report.academic_standards = {'has_abstract': True}
+        report.file_integrity = {"file1.pdf": True, "file2.pdf": False}
+        report.cross_reference_integrity = {"equations": True, "figures": False}
+        report.data_consistency = {"file_readable": True}
+        report.academic_standards = {"has_abstract": True}
         report.issues = ["Missing file", "Broken reference"]
         report.warnings = ["Academic standard warning"]
 
@@ -486,8 +519,8 @@ class TestEdgeCases:
         """Test data consistency with empty file list."""
         consistency = integrity.verify_data_consistency([])
 
-        assert consistency['file_readable'] == True
-        assert consistency['data_integrity'] == True
+        assert consistency["file_readable"] == True
+        assert consistency["data_integrity"] == True
 
     def test_verify_file_integrity_exception(self, tmp_path):
         """Test file integrity verification with real execution."""
@@ -524,49 +557,51 @@ class TestEdgeCases:
         """Test data consistency with missing file."""
         nonexistent = tmp_path / "missing.csv"
         consistency = integrity.verify_data_consistency([nonexistent])
-        
-        assert consistency['file_readable'] == False
+
+        assert consistency["file_readable"] == False
 
     def test_verify_data_consistency_invalid_csv(self, tmp_path):
         """Test data consistency with invalid CSV."""
         invalid_csv = tmp_path / "invalid.csv"
         invalid_csv.write_text("no commas or tabs")
-        
+
         consistency = integrity.verify_data_consistency([invalid_csv])
-        assert consistency['data_integrity'] == False
+        assert consistency["data_integrity"] == False
 
     def test_verify_data_consistency_numpy_file(self, tmp_path):
         """Test data consistency with NumPy file."""
         import numpy as np
+
         # Use .npy file which has shape attribute, not .npz
         npy_file = tmp_path / "data.npy"
         np.save(npy_file, np.array([1, 2, 3]))
-        
+
         consistency = integrity.verify_data_consistency([npy_file])
         # The code checks hasattr(data, 'shape'), which works for .npy but not .npz
         # .npz files return dict-like objects without shape
-        assert consistency['data_integrity'] == True
+        assert consistency["data_integrity"] == True
 
     def test_verify_data_consistency_pickle_file(self, tmp_path):
         """Test data consistency with pickle file."""
         import pickle
+
         pkl_file = tmp_path / "data.pkl"
-        with open(pkl_file, 'wb') as f:
-            pickle.dump({'key': 'value'}, f)
-        
+        with open(pkl_file, "wb") as f:
+            pickle.dump({"key": "value"}, f)
+
         # The code uses pickle.load() but pickle is not imported in integrity.py
         # This will raise NameError, which is caught and sets data_integrity to False
         # This tests the exception handling path (line 193-194)
         consistency = integrity.verify_data_consistency([pkl_file])
-        assert consistency['data_integrity'] == False  # Exception is caught
+        assert consistency["data_integrity"] == False  # Exception is caught
 
     def test_verify_data_consistency_exception(self, tmp_path):
         """Test data consistency with exception."""
         test_file = tmp_path / "test.json"
         test_file.write_text("invalid json")
-        
+
         consistency = integrity.verify_data_consistency([test_file])
-        assert consistency['data_integrity'] == False
+        assert consistency["data_integrity"] == False
 
     def test_verify_academic_standards_exception(self, tmp_path):
         """Test academic standards verification with real execution."""
@@ -583,23 +618,23 @@ class TestEdgeCases:
         pdf_file = tmp_path / "pdf" / "test.pdf"
         pdf_file.parent.mkdir()
         pdf_file.write_text("PDF content")
-        
+
         md_file = tmp_path / "test.md"
         md_file.write_text("# Test")
-        
+
         # verify_output_integrity takes output_dir, not file lists
         report = integrity.verify_output_integrity(tmp_path)
-        
+
         assert isinstance(report, integrity.IntegrityReport)
-        assert hasattr(report, 'file_integrity')
+        assert hasattr(report, "file_integrity")
 
     def test_verify_output_integrity_cross_ref_failures(self, tmp_path):
         """Test output integrity with cross-reference failures."""
         md_file = tmp_path / "test.md"
         md_file.write_text("# Test\n\n\\ref{sec:nonexistent}")
-        
+
         report = integrity.verify_output_integrity(tmp_path)
-        
+
         if not all(report.cross_reference_integrity.values()):
             assert any("Cross-reference integrity" in issue for issue in report.issues)
             assert report.overall_integrity == False
@@ -608,9 +643,9 @@ class TestEdgeCases:
         """Test output integrity with data consistency failures."""
         data_file = tmp_path / "invalid.json"
         data_file.write_text("invalid json")
-        
+
         report = integrity.verify_output_integrity(tmp_path)
-        
+
         if not all(report.data_consistency.values()):
             assert any("Data consistency" in issue for issue in report.issues)
 
@@ -618,9 +653,9 @@ class TestEdgeCases:
         """Test output integrity with missing academic standards."""
         md_file = tmp_path / "test.md"
         md_file.write_text("# Test\n\nNo abstract or introduction.")
-        
+
         report = integrity.verify_output_integrity(tmp_path)
-        
+
         missing = [k for k, v in report.academic_standards.items() if not v]
         if missing:
             assert len(report.warnings) > 0
@@ -630,9 +665,9 @@ class TestEdgeCases:
         """Test output integrity generates recommendations."""
         md_file = tmp_path / "test.md"
         md_file.write_text("# Test")
-        
+
         report = integrity.verify_output_integrity(tmp_path)
-        
+
         if not report.overall_integrity:
             assert len(report.recommendations) > 0
             assert any("Fix integrity issues" in r for r in report.recommendations)
@@ -640,32 +675,32 @@ class TestEdgeCases:
     def test_generate_integrity_report_with_warnings(self):
         """Test integrity report generation with warnings."""
         from infrastructure.validation.integrity import IntegrityReport
-        
+
         report = IntegrityReport()
-        report.file_integrity = {'file1.pdf': True}
-        report.cross_reference_integrity = {'equations': True}
-        report.data_consistency = {'file_readable': True}
-        report.academic_standards = {'has_abstract': False}
+        report.file_integrity = {"file1.pdf": True}
+        report.cross_reference_integrity = {"equations": True}
+        report.data_consistency = {"file_readable": True}
+        report.academic_standards = {"has_abstract": False}
         report.warnings = ["Missing abstract"]
-        
+
         report_text = integrity.generate_integrity_report(report)
-        
+
         assert "Warnings:" in report_text
         assert "Missing abstract" in report_text
 
     def test_generate_integrity_report_with_recommendations(self):
         """Test integrity report generation with recommendations."""
         from infrastructure.validation.integrity import IntegrityReport
-        
+
         report = IntegrityReport()
-        report.file_integrity = {'file1.pdf': True}
-        report.cross_reference_integrity = {'equations': True}
-        report.data_consistency = {'file_readable': True}
-        report.academic_standards = {'has_abstract': True}
+        report.file_integrity = {"file1.pdf": True}
+        report.cross_reference_integrity = {"equations": True}
+        report.data_consistency = {"file_readable": True}
+        report.academic_standards = {"has_abstract": True}
         report.recommendations = ["Add more figures"]
-        
+
         report_text = integrity.generate_integrity_report(report)
-        
+
         assert "Recommendations:" in report_text
         assert "Add more figures" in report_text
 
@@ -675,8 +710,8 @@ class TestEdgeCases:
         permissions = integrity.check_file_permissions(tmp_path)
         # Should return permissions dictionary
         assert isinstance(permissions, dict)
-        assert 'writable' in permissions
-        assert 'readable' in permissions
+        assert "writable" in permissions
+        assert "readable" in permissions
 
     def test_verify_output_permissions_read_fail(self, tmp_path):
         """Test output permissions with real execution."""
@@ -684,19 +719,19 @@ class TestEdgeCases:
         permissions = integrity.check_file_permissions(tmp_path)
         # Should return permissions dictionary
         assert isinstance(permissions, dict)
-        assert 'readable' in permissions
-        assert 'writable' in permissions
+        assert "readable" in permissions
+        assert "writable" in permissions
 
     def test_verify_output_completeness_missing_pdf(self, tmp_path):
         """Test output completeness with missing PDF."""
         pdf_dir = tmp_path / "pdf"
         pdf_dir.mkdir()
         # Don't create expected PDFs
-        
+
         completeness = integrity.verify_output_completeness(tmp_path)
-        
-        assert completeness['pdf_complete'] == False
-        assert len(completeness['missing_outputs']) > 0
+
+        assert completeness["pdf_complete"] == False
+        assert len(completeness["missing_outputs"]) > 0
 
     def test_verify_output_completeness_empty_pdf(self, tmp_path):
         """Test output completeness with empty PDF."""
@@ -704,29 +739,31 @@ class TestEdgeCases:
         pdf_dir.mkdir()
         empty_pdf = pdf_dir / "01_abstract.pdf"
         empty_pdf.write_text("")  # Empty file
-        
+
         completeness = integrity.verify_output_completeness(tmp_path)
-        
-        assert completeness['pdf_complete'] == False
-        assert any("Empty PDF" in out for out in completeness['incomplete_outputs'])
+
+        assert completeness["pdf_complete"] == False
+        assert any("Empty PDF" in out for out in completeness["incomplete_outputs"])
 
     def test_verify_output_completeness_missing_figures_dir(self, tmp_path):
         """Test output completeness with missing figures directory."""
         completeness = integrity.verify_output_completeness(tmp_path)
-        
-        assert completeness['figures_complete'] == False
-        assert any("Figures directory" in out for out in completeness['missing_outputs'])
+
+        assert completeness["figures_complete"] == False
+        assert any(
+            "Figures directory" in out for out in completeness["missing_outputs"]
+        )
 
     def test_verify_output_completeness_missing_figure(self, tmp_path):
         """Test output completeness with missing figure."""
         figures_dir = tmp_path / "figures"
         figures_dir.mkdir()
         # Don't create all expected figures
-        
+
         completeness = integrity.verify_output_completeness(tmp_path)
-        
-        assert completeness['figures_complete'] == False
-        assert any("Figure:" in out for out in completeness['missing_outputs'])
+
+        assert completeness["figures_complete"] == False
+        assert any("Figure:" in out for out in completeness["missing_outputs"])
 
     def test_verify_output_completeness_small_figure(self, tmp_path):
         """Test output completeness with very small figure."""
@@ -734,28 +771,28 @@ class TestEdgeCases:
         figures_dir.mkdir()
         small_fig = figures_dir / "example_figure.png"
         small_fig.write_text("x" * 500)  # Very small file
-        
+
         completeness = integrity.verify_output_completeness(tmp_path)
-        
-        assert any("Small figure" in out for out in completeness['incomplete_outputs'])
+
+        assert any("Small figure" in out for out in completeness["incomplete_outputs"])
 
     def test_verify_output_completeness_missing_data_dir(self, tmp_path):
         """Test output completeness with missing data directory."""
         completeness = integrity.verify_output_completeness(tmp_path)
-        
-        assert completeness['data_complete'] == False
-        assert any("Data directory" in out for out in completeness['missing_outputs'])
+
+        assert completeness["data_complete"] == False
+        assert any("Data directory" in out for out in completeness["missing_outputs"])
 
     def test_verify_output_completeness_missing_data_file(self, tmp_path):
         """Test output completeness with missing data file."""
         data_dir = tmp_path / "data"
         data_dir.mkdir()
         # Don't create all expected data files
-        
+
         completeness = integrity.verify_output_completeness(tmp_path)
-        
-        assert completeness['data_complete'] == False
-        assert any("Data:" in out for out in completeness['missing_outputs'])
+
+        assert completeness["data_complete"] == False
+        assert any("Data:" in out for out in completeness["missing_outputs"])
 
     def test_verify_output_completeness_empty_data_file(self, tmp_path):
         """Test output completeness with empty data file."""
@@ -763,34 +800,34 @@ class TestEdgeCases:
         data_dir.mkdir()
         empty_data = data_dir / "example_data.csv"
         empty_data.write_text("")  # Empty file
-        
+
         completeness = integrity.verify_output_completeness(tmp_path)
-        
-        assert completeness['data_complete'] == False
-        assert any("Empty data" in out for out in completeness['incomplete_outputs'])
+
+        assert completeness["data_complete"] == False
+        assert any("Empty data" in out for out in completeness["incomplete_outputs"])
 
     def test_verify_output_completeness_missing_tex_dir(self, tmp_path):
         """Test output completeness with missing tex directory."""
         completeness = integrity.verify_output_completeness(tmp_path)
-        
-        assert completeness['latex_complete'] == False
-        assert any("LaTeX directory" in out for out in completeness['missing_outputs'])
+
+        assert completeness["latex_complete"] == False
+        assert any("LaTeX directory" in out for out in completeness["missing_outputs"])
 
     def test_verify_output_completeness_missing_html(self, tmp_path):
         """Test output completeness with missing HTML."""
         completeness = integrity.verify_output_completeness(tmp_path)
-        
-        assert completeness['html_complete'] == False
-        assert any("HTML" in out for out in completeness['missing_outputs'])
+
+        assert completeness["html_complete"] == False
+        assert any("HTML" in out for out in completeness["missing_outputs"])
 
     def test_load_integrity_manifest_invalid_json(self, tmp_path):
         """Test loading invalid JSON manifest."""
         manifest_path = tmp_path / "invalid.json"
         manifest_path.write_text("invalid json")
-        
+
         manifest = integrity.load_integrity_manifest(manifest_path)
         assert manifest is None
-    
+
     def test_verify_output_completeness_missing_tex_file(self, tmp_path):
         """Test output completeness with missing tex file (covers lines 613-614)."""
         tex_dir = tmp_path / "tex"
@@ -798,12 +835,12 @@ class TestEdgeCases:
         # Create some but not all expected tex files
         (tex_dir / "01_abstract.tex").write_text("\\section{Abstract}")
         # Missing other expected files like 02_introduction.tex
-        
+
         completeness = integrity.verify_output_completeness(tmp_path)
-        
-        assert completeness['latex_complete'] == False
-        assert any("LaTeX:" in out for out in completeness['missing_outputs'])
-    
+
+        assert completeness["latex_complete"] == False
+        assert any("LaTeX:" in out for out in completeness["missing_outputs"])
+
     def test_verify_output_completeness_empty_tex_file(self, tmp_path):
         """Test output completeness with empty tex file (covers lines 616-617)."""
         tex_dir = tmp_path / "tex"
@@ -811,22 +848,22 @@ class TestEdgeCases:
         # Create an empty tex file
         empty_tex = tex_dir / "01_abstract.tex"
         empty_tex.write_text("")  # Empty file
-        
+
         completeness = integrity.verify_output_completeness(tmp_path)
-        
-        assert completeness['latex_complete'] == False
-        assert any("Empty LaTeX" in out for out in completeness['incomplete_outputs'])
-    
+
+        assert completeness["latex_complete"] == False
+        assert any("Empty LaTeX" in out for out in completeness["incomplete_outputs"])
+
     def test_verify_output_completeness_empty_html(self, tmp_path):
         """Test output completeness with empty HTML file (covers lines 625-626)."""
         html_file = tmp_path / "project_combined.html"
         html_file.write_text("")  # Empty file
-        
+
         completeness = integrity.verify_output_completeness(tmp_path)
-        
-        assert completeness['html_complete'] == False
-        assert any("Empty HTML" in out for out in completeness['incomplete_outputs'])
-    
+
+        assert completeness["html_complete"] == False
+        assert any("Empty HTML" in out for out in completeness["incomplete_outputs"])
+
     def test_create_integrity_manifest_with_subdirectories(self, tmp_path):
         """Test manifest creation with subdirectories (covers lines 670-671)."""
         # Create nested directory structure
@@ -834,37 +871,37 @@ class TestEdgeCases:
         subdir2 = tmp_path / "subdir2"
         subdir1.mkdir()
         subdir2.mkdir()
-        
+
         # Create files in each subdirectory
         (subdir1 / "file1.txt").write_text("Content 1")
         (subdir2 / "file2.txt").write_text("Content 2")
         (subdir2 / "file3.txt").write_text("Content 3")
-        
+
         manifest = integrity.create_integrity_manifest(tmp_path)
-        
+
         # Should have directory structure entries
-        assert 'subdir1' in manifest['directory_structure']
-        assert 'subdir2' in manifest['directory_structure']
-        assert manifest['directory_structure']['subdir1']['file_count'] == 1
-        assert manifest['directory_structure']['subdir2']['file_count'] == 2
+        assert "subdir1" in manifest["directory_structure"]
+        assert "subdir2" in manifest["directory_structure"]
+        assert manifest["directory_structure"]["subdir1"]["file_count"] == 1
+        assert manifest["directory_structure"]["subdir2"]["file_count"] == 2
 
     def test_verify_integrity_against_manifest_added_file(self, tmp_path):
         """Test integrity verification with added file."""
         test_file1 = tmp_path / "file1.txt"
         test_file1.write_text("Content 1")
-        
+
         manifest1 = integrity.create_integrity_manifest(tmp_path)
-        
+
         test_file2 = tmp_path / "file2.txt"
         test_file2.write_text("Content 2")
-        
+
         manifest2 = integrity.create_integrity_manifest(tmp_path)
-        
+
         verification = integrity.verify_integrity_against_manifest(manifest2, manifest1)
-        
-        assert verification['files_added'] > 0
-        assert 'file2.txt' in verification['details']
-        assert verification['details']['file2.txt'] == 'added'
+
+        assert verification["files_added"] > 0
+        assert "file2.txt" in verification["details"]
+        assert verification["details"]["file2.txt"] == "added"
 
     def test_verify_integrity_against_manifest_removed_file(self, tmp_path):
         """Test integrity verification with removed file."""
@@ -872,18 +909,18 @@ class TestEdgeCases:
         test_file1.write_text("Content 1")
         test_file2 = tmp_path / "file2.txt"
         test_file2.write_text("Content 2")
-        
+
         manifest1 = integrity.create_integrity_manifest(tmp_path)
-        
+
         test_file2.unlink()
-        
+
         manifest2 = integrity.create_integrity_manifest(tmp_path)
-        
+
         verification = integrity.verify_integrity_against_manifest(manifest2, manifest1)
-        
-        assert verification['files_removed'] > 0
-        assert 'file2.txt' in verification['details']
-        assert verification['details']['file2.txt'] == 'removed'
+
+        assert verification["files_removed"] > 0
+        assert "file2.txt" in verification["details"]
+        assert verification["details"]["file2.txt"] == "removed"
 
 
 if __name__ == "__main__":

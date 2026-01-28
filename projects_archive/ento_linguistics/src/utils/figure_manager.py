@@ -2,21 +2,23 @@
 
 This module provides basic figure registration functionality.
 """
+
 import json
+from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Dict, Optional, Any
-from dataclasses import dataclass, asdict
+from typing import Any, Dict, Optional
 
 
 @dataclass
 class FigureMetadata:
     """Metadata for a registered figure."""
+
     filename: str
     caption: str
     label: Optional[str] = None
     section: Optional[str] = None
     generated_by: Optional[str] = None
-    parameters: Optional[Dict[str, Any]] = None
+    metadata: Optional[Dict[str, Any]] = None
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary."""
@@ -47,7 +49,7 @@ class FigureManager:
         label: Optional[str] = None,
         section: Optional[str] = None,
         generated_by: Optional[str] = None,
-        **kwargs
+        **kwargs,
     ) -> FigureMetadata:
         """Register a figure.
 
@@ -74,7 +76,7 @@ class FigureManager:
             label=label,
             section=section,
             generated_by=generated_by,
-            parameters=kwargs if kwargs else None
+            metadata=kwargs if kwargs else None,
         )
 
         # Register
@@ -98,7 +100,7 @@ class FigureManager:
         """Load figure registry from file."""
         if self.registry_file.exists():
             try:
-                with open(self.registry_file, 'r') as f:
+                with open(self.registry_file, "r") as f:
                     data = json.load(f)
                     for label, fig_data in data.items():
                         self.figures[label] = FigureMetadata(**fig_data)
@@ -109,5 +111,5 @@ class FigureManager:
     def _save_registry(self) -> None:
         """Save figure registry to file."""
         data = {label: fig.to_dict() for label, fig in self.figures.items()}
-        with open(self.registry_file, 'w') as f:
+        with open(self.registry_file, "w") as f:
             json.dump(data, f, indent=2, default=str)

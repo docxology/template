@@ -71,7 +71,9 @@ def verify_project_completion(repo_root: Path, project_name: str) -> bool:
         logger.debug(f"Project '{project_name}' has test results")
 
     # Check for manuscript PDF (indicates PDF generation completed)
-    manuscript_pdf = output_dir / "pdf" / f"{project_name}_combined.pdf"
+    # Use project basename for the filename (handles nested projects like "cognitive_integrity/cogsec_multiagent_1_theory")
+    project_basename = Path(project_name).name
+    manuscript_pdf = output_dir / "pdf" / f"{project_basename}_combined.pdf"
     if not manuscript_pdf.exists():
         logger.warning(f"Project '{project_name}' missing combined PDF - may indicate incomplete pipeline")
         return False
@@ -119,7 +121,7 @@ def main() -> int:
         
         logger.info(f"Found {len(projects)} projects:")
         for project in projects:
-            logger.info(f"  • {project.name}")
+            logger.info(f"  • {project.qualified_name}")
         
         # Verify each project has completed successfully
         log_substep("Verifying project completion...", logger)
@@ -127,12 +129,13 @@ def main() -> int:
         incomplete_projects = []
         
         for project in projects:
-            if verify_project_completion(repo_root, project.name):
-                completed_projects.append(project.name)
-                logger.info(f"  ✓ {project.name}")
+            # Use qualified_name for path construction (handles nested projects)
+            if verify_project_completion(repo_root, project.qualified_name):
+                completed_projects.append(project.qualified_name)
+                logger.info(f"  ✓ {project.qualified_name}")
             else:
-                incomplete_projects.append(project.name)
-                logger.warning(f"  ✗ {project.name} (incomplete)")
+                incomplete_projects.append(project.qualified_name)
+                logger.warning(f"  ✗ {project.qualified_name} (incomplete)")
         
         if not completed_projects:
             logger.error("No projects have completed the pipeline successfully")

@@ -9,10 +9,10 @@ paper:
 
 # Author information
 authors:
-  - name: "Ento-Linguistic Research Collective"
-    orcid: "0000-0000-0000-0000"
-    email: "entolinguistic.research@university.edu"
-    affiliation: "Department of Philosophy, University of Science"  # Research institution
+  - name: "Daniel Ari Friedman"
+    orcid: "0000-0001-6232-9096"
+    email: "daniel@activeinference.institute"
+    affiliation: "Active Inference Institute"  # Research institution
     corresponding: true  # Mark corresponding author
 
 # Optional: Additional authors

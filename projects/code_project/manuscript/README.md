@@ -7,12 +7,15 @@ Research manuscript sections in markdown format for PDF generation.
 This project includes the following sections:
 
 ### Main Sections
+
+- `00_abstract.md` (~1.5 KB) - Research abstract with key contributions
 - `01_introduction.md` (~2 KB) - Introduction and motivation
-- `02_methodology.md` (~3 KB) - Research methods and approach
-- `03_results.md` (~4 KB) - Experimental results and findings
-- `04_conclusion.md` (~2 KB) - Conclusions and future work
+- `02_methodology.md` (~6 KB) - Mathematical methods and algorithms
+- `03_results.md` (~8 KB) - Experimental results with figures and tables
+- `04_conclusion.md` (~3 KB) - Conclusions and future work
 
 ### Supporting Files
+
 - `references.bib` - Bibliography entries in BibTeX format
 
 ## Rendering Process
@@ -49,6 +52,7 @@ open ../../output/pdf/project_combined.pdf
 ## Common Commands
 
 ### Edit Sections
+
 ```bash
 vim 01_abstract.md       # Research summary
 vim 02_methodology.md    # Mathematical methods
@@ -57,11 +61,13 @@ vim 04_conclusion.md     # Summary and conclusions
 ```
 
 ### Generate PDF
+
 ```bash
 python3 ../../scripts/03_render_pdf.py
 ```
 
 ### Validate Content
+
 ```bash
 python3 -m infrastructure.validation.cli markdown .
 ```
@@ -70,13 +76,14 @@ python3 -m infrastructure.validation.cli markdown .
 
 ```mermaid
 graph TD
-    A[01_abstract.md] --> B[Research Overview]
-    C[02_methodology.md] --> D[Mathematical Framework]
-    E[03_results.md] --> F[Experimental Results]
-    G[04_conclusion.md] --> H[Summary & Future Work]
+    A[00_abstract.md] --> B[Research Abstract]
+    C[01_introduction.md] --> D[Motivation & Overview]
+    E[02_methodology.md] --> F[Mathematical Framework]
+    G[03_results.md] --> H[Experimental Results]
+    I[04_conclusion.md] --> J[Summary & Future Work]
 
-    I[references.bib] --> J[Citations]
-    K[figures/] --> L[Generated Figures]
+    K[references.bib] --> L[Citations]
+    M[config.yaml] --> N[Metadata]
 ```
 
 ## More Information

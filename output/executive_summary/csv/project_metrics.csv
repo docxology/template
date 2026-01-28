@@ -1,3 +1,5 @@
 Project,Health_Score,Health_Grade,Manuscript_Words,Manuscript_Sections,Manuscript_Equations,Manuscript_Figures,Test_Total,Test_Passed,Test_Failed,Test_Coverage_Pct,Test_Execution_Time,Pipeline_Duration,Pipeline_Stages_Passed,Pipeline_Bottleneck_Stage,Pipeline_Bottleneck_Duration,Output_PDFs,Output_PDF_Size_MB,Output_Figures,Output_Slides,Output_Web,Output_Total
-active_inference_meta_pragmatic,100.0,A,7324,12,37,0,360,360,0,92.03,0.0,78.06343293190002,7,PDF Rendering,64.18328928947449,1,4.250082969665527,34,9,10,56
-code_project,100.0,A,3145,7,0,7,28,28,0,94.12,0.0,33.51111125946045,7,PDF Rendering,23.819551944732666,1,0.9839611053466797,6,4,5,17
+code_project,100.0,A,3425,8,0,7,28,28,0,93.98,0.0,42.25336742401123,7,PDF Rendering,31.455225229263306,1,1.3917369842529297,6,5,6,19
+cognitive_integrity/cogsec_multiagent_1_theory,100.0,A,33306,15,0,6,219,219,0,93.24,0.0,80.71094369888306,7,PDF Rendering,47.74432611465454,1,0.8884973526000977,30,14,15,60
+cognitive_integrity/cogsec_multiagent_2_computational,100.0,A,16221,14,0,8,175,175,0,91.33,0.0,56.3680739402771,7,PDF Rendering,41.4429669380188,1,0.4670248031616211,30,13,14,58
+cognitive_integrity/cogsec_multiagent_3_practical,100.0,A,8419,12,0,6,78,78,0,100.0,0.0,42.915687799453735,7,PDF Rendering,34.28980875015259,1,0.2670755386352539,12,11,12,36

@@ -10,7 +10,7 @@ import argparse
 import json
 import re
 import sys
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import List, Tuple
 
@@ -22,7 +22,9 @@ if str(repo_root) not in sys.path:
 if str(src_path) not in sys.path:
     sys.path.insert(0, str(src_path))
 
-from src.utils.validation import validate_markdown, validate_pdf_rendering, verify_output_integrity
+from src.utils.validation import (validate_markdown, validate_pdf_rendering,
+                                  verify_output_integrity)
+
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
@@ -30,11 +32,17 @@ logger = get_logger(__name__)
 # Try to import build module (may not exist)
 try:
     from infrastructure.build.quality_checker import analyze_document_quality
+
     _BUILD_MODULE_AVAILABLE = True
 except (ImportError, ModuleNotFoundError):
     _BUILD_MODULE_AVAILABLE = False
+
     def analyze_document_quality(path):
-        return {"status": "skipped", "reason": "infrastructure.build module not available"}
+        return {
+            "status": "skipped",
+            "reason": "infrastructure.build module not available",
+        }
+
 
 FIGURE_PATTERN = re.compile(r"\\includegraphics[^{}]*\{([^}]+)\}")
 GLOSSARY_BEGIN = "<!-- BEGIN: AUTO-API-GLOSSARY -->"
@@ -80,11 +88,17 @@ def run_checks(manuscript_dir: Path) -> CheckResult:
             missing_figs.append(f"{md_file.name}: {ref}")
 
     glossary_path = manuscript_dir / "98_symbols_glossary.md"
-    glossary_text = glossary_path.read_text(encoding="utf-8") if glossary_path.exists() else ""
-    missing_glossary = not (GLOSSARY_BEGIN in glossary_text and GLOSSARY_END in glossary_text)
+    glossary_text = (
+        glossary_path.read_text(encoding="utf-8") if glossary_path.exists() else ""
+    )
+    missing_glossary = not (
+        GLOSSARY_BEGIN in glossary_text and GLOSSARY_END in glossary_text
+    )
 
     references_path = manuscript_dir / "99_references.md"
-    references_text = references_path.read_text(encoding="utf-8") if references_path.exists() else ""
+    references_text = (
+        references_path.read_text(encoding="utf-8") if references_path.exists() else ""
+    )
     missing_references_block = "\\bibliography{references}" not in references_text
 
     return CheckResult(
@@ -153,7 +167,9 @@ def main() -> None:
     if args.json:
         payload = asdict(result)
         payload["validation_messages"] = validation_messages
-        print(json.dumps(payload, indent=2))  # Keep JSON output as-is for machine consumption
+        print(
+            json.dumps(payload, indent=2)
+        )  # Keep JSON output as-is for machine consumption
     else:
         logger.info(f"Manuscript dir: {args.manuscript_dir}")
         if result.missing_figures:
@@ -181,4 +197,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

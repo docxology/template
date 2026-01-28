@@ -5,9 +5,7 @@ from pathlib import Path
 import pytest
 
 from infrastructure.reporting.output_reporter import (
-    collect_output_statistics,
-    generate_output_summary,
-)
+    collect_output_statistics, generate_output_summary)
 
 
 def _create_file(path: Path, size: int = 10) -> None:
@@ -57,7 +55,11 @@ def test_generate_output_summary_runs_without_errors() -> None:
         }
     }
 
-    generate_output_summary(output_dir=Path("output"), stats=stats, structure_validation=structure_validation)
+    generate_output_summary(
+        output_dir=Path("output"),
+        stats=stats,
+        structure_validation=structure_validation,
+    )
     # No assertions needed; success is lack of exceptions
 
 
@@ -116,7 +118,7 @@ def test_collect_output_statistics_empty_directories(tmp_path: Path) -> None:
     (repo_root / "project" / "output" / "pdf").mkdir(parents=True, exist_ok=True)
     (repo_root / "project" / "output" / "figures").mkdir(parents=True, exist_ok=True)
     (repo_root / "project" / "output" / "data").mkdir(parents=True, exist_ok=True)
-    
+
     stats = collect_output_statistics(repo_root, "project")
     assert stats["directories"]["pdf"]["file_count"] == 0
     assert stats["directories"]["figures"]["file_count"] == 0
@@ -137,4 +139,3 @@ def test_collect_output_statistics_size_calculation(tmp_path: Path) -> None:
     stats = collect_output_statistics(repo_root, "project")
     assert stats["directories"]["pdf"]["file_count"] == 1
     assert stats["total_size_mb"] >= 1.0
-

@@ -21,12 +21,11 @@ Usage:
     organizer.copy_combined_pdfs(repo_root, output_dir)
 """
 
+import shutil
+from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 from typing import Dict, List, Optional, Set
-import shutil
-import logging
-from dataclasses import dataclass
 
 from infrastructure.core.logging_utils import get_logger
 
@@ -71,6 +70,7 @@ class OrganizationResult:
         error_files: Number of files that couldn't be organized
         created_dirs: Number of directories created
     """
+
     moved_files: int = 0
     skipped_files: int = 0
     error_files: int = 0
@@ -102,7 +102,7 @@ class OutputOrganizer:
         if not file_path.suffix:
             return None
 
-        extension = file_path.suffix.lower().lstrip('.')
+        extension = file_path.suffix.lower().lstrip(".")
 
         for file_type in FileType:
             if file_type.extension == extension:
@@ -122,7 +122,9 @@ class OutputOrganizer:
         """
         return file_type.subdirectory
 
-    def get_output_path(self, file_path: Path, output_dir: Path, file_type: FileType) -> Path:
+    def get_output_path(
+        self, file_path: Path, output_dir: Path, file_type: FileType
+    ) -> Path:
         """
         Get the organized output path for a file.
 
@@ -190,11 +192,16 @@ class OutputOrganizer:
             if len(relative_path.parts) > 1:  # File is in a subdirectory
                 parent_dir = relative_path.parts[0]
                 # Check if it's in one of our organized subdirectories
-                if parent_dir in {ft.subdirectory for ft in FileType} or parent_dir == "combined_pdfs":
+                if (
+                    parent_dir in {ft.subdirectory for ft in FileType}
+                    or parent_dir == "combined_pdfs"
+                ):
                     # Check if it's in the correct subdirectory for its type
                     file_type = self.detect_file_type(file_path)
                     if file_type is not None and parent_dir == file_type.subdirectory:
-                        self.logger.debug(f"File already in correct location: {file_path}")
+                        self.logger.debug(
+                            f"File already in correct location: {file_path}"
+                        )
                         result.skipped_files += 1
                         continue
                     elif parent_dir == "combined_pdfs":
@@ -205,7 +212,9 @@ class OutputOrganizer:
             file_type = self.detect_file_type(file_path)
 
             if file_type is None:
-                self.logger.warning(f"Skipping file with unknown extension: {file_path}")
+                self.logger.warning(
+                    f"Skipping file with unknown extension: {file_path}"
+                )
                 result.error_files += 1
                 continue
 
@@ -214,13 +223,17 @@ class OutputOrganizer:
 
             try:
                 shutil.move(str(file_path), str(target_path))
-                self.logger.info(f"Moved {file_path.name} -> {target_path.relative_to(directory)}")
+                self.logger.info(
+                    f"Moved {file_path.name} -> {target_path.relative_to(directory)}"
+                )
                 result.moved_files += 1
             except Exception as e:
                 self.logger.error(f"Failed to move {file_path}: {e}")
                 result.error_files += 1
 
-        self.logger.info(f"Organization complete: {result.moved_files} moved, {result.skipped_files} skipped, {result.error_files} errors")
+        self.logger.info(
+            f"Organization complete: {result.moved_files} moved, {result.skipped_files} skipped, {result.error_files} errors"
+        )
         return result
 
     def copy_combined_pdfs(self, repo_root: Path, target_dir: Path) -> int:
@@ -244,7 +257,9 @@ class OutputOrganizer:
         output_projects_dir = repo_root / "output"
 
         if not output_projects_dir.exists():
-            self.logger.warning(f"Output projects directory not found: {output_projects_dir}")
+            self.logger.warning(
+                f"Output projects directory not found: {output_projects_dir}"
+            )
             return 0
 
         # Find all project directories in output/
@@ -263,7 +278,9 @@ class OutputOrganizer:
                 except Exception as e:
                     self.logger.error(f"Failed to copy {combined_pdf}: {e}")
             else:
-                self.logger.debug(f"No combined PDF found for project: {project_dir.name}")
+                self.logger.debug(
+                    f"No combined PDF found for project: {project_dir.name}"
+                )
 
         self.logger.info(f"Copied {copied_count} combined PDF files")
         return copied_count
