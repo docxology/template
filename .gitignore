@@ -72,3 +72,6 @@ Thumbs.db
 
 # Test artifacts
 invalid/
+
+# Separate repositories (managed independently)
+projects/cognitive_integrity/
