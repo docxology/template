@@ -5,7 +5,7 @@ OUTPUT STATISTICS REPORT
 Output Directory: /Users/4d/Documents/GitHub/template/output/code_project
 
 Total Files: 69
-Total Size: 4.69 MB
+Total Size: 4.70 MB
 
 Files by Category:
   • pdf: 8 files (1.50 MB)

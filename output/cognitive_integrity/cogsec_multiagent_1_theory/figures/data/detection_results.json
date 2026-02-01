@@ -1,0 +1,37 @@
+{
+  "defense_configurations": [
+    {
+      "name": "Baseline",
+      "detection_rates": {
+        "prompt_injection": 0.0,
+        "trust_exploitation": 0.0
+      },
+      "false_positive_rate": 0.0,
+      "latency_overhead_pct": 0,
+      "memory_overhead_mb": 0
+    },
+    {
+      "name": "Firewall Only",
+      "detection_rates": {
+        "prompt_injection": 0.0,
+        "trust_exploitation": 0.0
+      },
+      "false_positive_rate": 0.12,
+      "latency_overhead_pct": 8,
+      "memory_overhead_mb": 12
+    },
+    {
+      "name": "Full CIF",
+      "detection_rates": {
+        "prompt_injection": 0.0,
+        "trust_exploitation": 0.0
+      },
+      "false_positive_rate": 0.06,
+      "latency_overhead_pct": 23,
+      "memory_overhead_mb": 67
+    }
+  ],
+  "metadata": {
+    "timestamp": "2026-02-01T14:07:19.697835"
+  }
+}

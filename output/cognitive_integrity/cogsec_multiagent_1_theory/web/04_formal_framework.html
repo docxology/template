@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>04_formal_framework</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="sec:formal-framework">Cognitive Integrity Framework: Trust
+Calculus and Detection Bounds</h1>
+<p>This section presents the formal foundations of the Cognitive
+Integrity Framework (CIF). We define the system model (), cognitive
+state representation (), integrity properties (), trust calculus (), and
+information-theoretic detection bounds ().</p>
+<h2 id="sec:system-model">System Model</h2>
+
+<h2 id="sec:cognitive-state">Cognitive State</h2>
+<p><em>Intuitively, an agent’s cognitive state captures everything it
+believes, wants, intends, and remembers at a given moment. This formal
+representation enables precise reasoning about how attacks manipulate
+agent reasoning.</em></p>
+<h3 id="state-transition-semantics">State Transition Semantics</h3>
+<p><em>The following transition rules formalize how agent states evolve.
+Each rule has the form “if preconditions hold (above the line), then
+this transition occurs (below the line).” Readers may skim the
+mathematical details on first reading, returning for precision when
+needed.</em></p>
+<p>The transition rules are defined as follows:</p>
+<p><strong>Rule T-Receive</strong> (Message Reception): <span
+class="math display">\[\begin{equation}
+\label{eq:rule-receive}
+\frac{m \in \text{channel}(a_j, a_i) \quad \mathcal{F}(m) =
+\textsc{accept}}{(\sigma_i, \text{inbox}_i)
+\xrightarrow{\textsc{receive}} (\sigma_i, \text{inbox}_i \cup \{m\})}
+\end{equation}\]</span></p>
+<p><strong>Rule T-Reject</strong> (Message Rejection): <span
+class="math display">\[\begin{equation}
+\label{eq:rule-reject}
+\frac{m \in \text{channel}(a_j, a_i) \quad \mathcal{F}(m) \in
+\{\textsc{reject}, \textsc{quarantine}\}}{(\sigma_i, \text{inbox}_i)
+\xrightarrow{\textsc{receive}} (\sigma_i, \text{inbox}_i)}
+\end{equation}\]</span></p>
+<p><strong>Rule T-Update</strong> (Belief Update): <span
+class="math display">\[\begin{equation}
+\label{eq:rule-update}
+\frac{m \in \text{inbox}_i \quad e = \text{extract}(m) \quad s =
+\text{source}(m)}{\mathcal{B}_i^t \xrightarrow{\textsc{update}}
+\mathcal{B}_i^{t+1} = \text{BayesUpdate}(\mathcal{B}*i^t, e,
+\mathcal{T}*{i \to s})}
+\end{equation}\]</span></p>
+<p><strong>Rule T-Act</strong> (Action Execution): <span
+class="math display">\[\begin{equation}
+\label{eq:rule-act}
+\frac{a \in \mathcal{I}*i \quad \mathcal{P}*{\text{eff}}(a_i, a) = 1
+\quad \text{precond}(a, \mathcal{S}^t)}{(\sigma_i, \mathcal{S}^t)
+\xrightarrow{\textsc{act}} (\sigma_i&#39;, \text{effect}(a,
+\mathcal{S}^t))}
+\end{equation}\]</span></p>
+<p><strong>Rule T-Communicate</strong> (Message Sending): <span
+class="math display">\[\begin{equation}
+\label{eq:rule-comm}
+\frac{\mathcal{C}(a_i, a_j) = 1 \quad m =
+\text{compose}(\sigma_i)}{(\sigma_i, \text{channel}(a_i, a_j))
+\xrightarrow{\textsc{comm}} (\sigma_i, \text{channel}(a_i, a_j) \cup
+\{m\})}
+\end{equation}\]</span></p>
+<h2 id="sec:integrity-properties">Integrity Properties</h2>
+<p>We define four core integrity properties that CIF aims to
+preserve.</p>
+<h2 id="sec:trust-calculus">Trust Calculus</h2>
+<h3 id="sec:trust-motivation">Motivation: Why Bounded Trust Matters</h3>
+<p>Before presenting the formal trust calculus, we motivate its design
+through concrete scenarios that illustrate why naive trust models fail
+in multiagent systems.</p>
+<p>. Consider an adversary with low direct trust who seeks to influence
+a high-value agent. In a naive trust model, the adversary could:</p>
+<p>This is —converting low-trust origin into high-trust delivery through
+intermediaries. Without bounded delegation, the adversarial content
+arrives at the target with the intermediary’s trust score, not the
+adversary’s.</p>
+<p>. In peer-to-peer multiagent architectures, agents form trust
+relationships bidirectionally. Without constraints, circular trust
+relationships can amplify trust scores:</p>
+<p>If trust flows around this cycle, naive aggregation could yield trust
+scores exceeding initial values. Our trust algebra prevents this through
+the <span class="math inline">\(\delta^d\)</span> decay bound.</p>
+<p>. Modern agentic systems exhibit deep delegation chains. Consider
+Claude Code processing a user request:</p>
+<p>At depth 5, should the orchestrator trust StackOverflow content with
+the same confidence as direct user input? Our trust calculus says no:
+with <span class="math inline">\(\delta = 0.9\)</span>, trust at depth 5
+is at most <span class="math inline">\(0.9^5 \approx
+0.59\)</span>—sufficient for low-stakes decisions but automatically
+triggering review for high-stakes actions.</p>
+<p>. When a vision model processes an image and reports ``this diagram
+shows system architecture,’’ how should a code generation agent weight
+this claim? Cross-modality trust introduces additional
+considerations:</p>
+<p>Our framework addresses this through modality-adjusted base trust:
+<span class="math inline">\(T_{\text{base}}^{\text{vision}} = \eta \cdot
+T_{\text{base}}^{\text{text}}\)</span> where <span
+class="math inline">\(\eta &lt; 1\)</span> reflects elevated adversarial
+risk in visual modalities.</p>
+<h3 id="formal-trust-model">Formal Trust Model</h3>
+<p> visualizes the trust relationships in a representative multiagent
+operator. Edge weights represent trust scores <span
+class="math inline">\(\mathcal{T}_{i \to j}\)</span>, with thicker edges
+indicating higher trust. The network topology illustrates how trust
+propagates through delegation chains and highlights potential attack
+surfaces for trust manipulation attacks (<span
+class="math inline">\(\Omega_4\)</span>).</p>
+<h3 id="trust-computation">Trust Computation</h3>
+
+<h3 id="trust-algebra">Trust Algebra</h3>
+<p><em>The trust algebra provides the mathematical foundation for
+combining trust scores. The key insight is that trust through
+intermediaries (delegation, <span
+class="math inline">\(\otimes\)</span>) uses the minimum-then-decay
+rule, while trust from multiple sources (aggregation, <span
+class="math inline">\(\oplus\)</span>) uses the maximum. This prevents
+both trust laundering and artificial inflation.</em></p>
+<p><em>The following theorem is the central security guarantee of the
+trust calculus: it establishes that trust cannot be “laundered” through
+delegation chains. No matter how an adversary routes content through
+trusted intermediaries, each hop reduces effective trust by factor <span
+class="math inline">\(\delta\)</span>.</em></p>
+<p> visualizes the exponential decay of trust across delegation depth
+for various decay factors <span class="math inline">\(\delta\)</span>,
+demonstrating how the bounded delegation mechanism () prevents trust
+amplification.</p>
+<p> presents the complete trust calculus mechanics across four panels.
+Panel A demonstrates the trust decay function <span
+class="math inline">\(\mathcal{T}(a \to c) \leq \delta^d \cdot
+\mathcal{T}(a \to b)\)</span> for decay factors <span
+class="math inline">\(\delta \in \{0.8, 0.85, 0.9, 0.95\}\)</span>,
+showing how trust falls below threshold <span class="math inline">\(\tau
+= 0.5\)</span> at different delegation depths. Panel B formalizes the
+trust update mechanism <span class="math inline">\(\mathcal{T}&#39;(a
+\to b) = \alpha \cdot \mathcal{T}(a \to b) + \beta \cdot \text{outcome}
++ \gamma \cdot \text{consensus}\)</span> where <span
+class="math inline">\(\alpha + \beta + \gamma = 1\)</span>, integrating
+historical trust, outcome verification, and peer consensus. Panel C
+illustrates a bounded delegation chain (Theorem~<span
+class="math inline">\(\ref{thm:trust-bounded}\)</span>): starting from
+<span class="math inline">\(\mathcal{T}(A \to B) = 1.0\)</span> with
+<span class="math inline">\(\delta = 0.9\)</span>, trust decays through
+agents B, C, D to E with <span class="math inline">\(\mathcal{T}(A \to
+E) = 0.9^4 \times 1.0 = 0.66\)</span>. Panel D demonstrates trust
+laundering prevention: a malicious agent M with <span
+class="math inline">\(\mathcal{T}(M \to T) = 0.3\)</span> attempting to
+exploit trusted intermediary T with <span
+class="math inline">\(\mathcal{T}(T \to V) = 0.9\)</span> cannot achieve
+sufficient delegated trust since <span
+class="math inline">\(\mathcal{T}(M \to V) \leq 0.9 \times 0.3 = 0.27
+&lt; \tau\)</span>, blocking the attack.</p>
+<h3 id="sec:cross-modality-trust">Cross-Modality Trust</h3>
+<p>When agents operate across modalities—processing text, code, images,
+audio, and structured data—trust must account for modality-specific
+reliability and attack susceptibility.</p>
+<p>This ensures that trust degradation compounds across both delegation
+depth and modality transitions, preventing adversaries from laundering
+low-trust content through modality boundaries.</p>
+<h3 id="sec:federated-trust">Federated Trust</h3>
+<p>In enterprise deployments, multiagent systems increasingly span
+organizational boundaries. A financial services orchestrator might
+delegate to a risk assessment system from one vendor, a compliance
+checker from another, and market data feeds from multiple providers.
+addresses how to reason about trust across these boundaries.</p>
+<p>This two-stage model captures realistic trust reasoning: an
+organization might trust a vendor (domain trust) differently than
+individual agents within that vendor (agent trust).</p>
+<p>Federated trust introduces additional challenges that remain open
+research problems:</p>
+<h3 id="sec:belief-update-rules">Belief Update Semantics</h3>
+<p><strong>Rule B-Direct</strong> (Direct Evidence): <span
+class="math display">\[\begin{equation}
+\label{eq:rule-direct}
+\frac{e = \langle \phi, c, s, \pi \rangle \quad V(\pi) = 1 \quad
+\mathcal{T}*{i \to s} \geq
+\tau*{\text{trust}}}{\mathcal{B}_i^{t+1}(\phi) =
+\text{BayesUpdate}(\mathcal{B}*i^t(\phi), c \cdot \mathcal{T}*{i \to
+s})}
+\end{equation}\]</span></p>
+<p><strong>Rule B-Corroboration</strong> (Multiple Sources): <span
+class="math display">\[\begin{equation}
+\label{eq:rule-corroboration}
+\frac{\{e_j\}*{j=1}^k: \forall j.\, e_j = \langle \phi, c_j, s_j, \pi_j
+\rangle \quad |\{s_j\}| \geq \kappa}{\mathcal{B}*i^{t+1}(\phi) = 1 -
+\prod*{j=1}^{k}(1 - c_j \cdot \mathcal{T}*{i \to s_j})}
+\end{equation}\]</span></p>
+<h3 id="sec:sandbox-rules">Sandboxed Belief Model</h3>
+<p><strong>Rule S-Sandbox</strong> (Enter Sandbox): <span
+class="math display">\[\begin{equation}
+\label{eq:rule-sandbox}
+\frac{e = \langle \phi, c, s, \pi \rangle \quad (\mathcal{T}*{i \to s}
+&lt; \tau*{\text{trust}} \lor V(\pi) = 0)}{\mathcal{B}*{\text{prov}}
+\gets \mathcal{B}*{\text{prov}} \cup \{(\phi, c, s, \pi, \text{TTL})\}}
+\end{equation}\]</span></p>
+<p><strong>Rule S-Promote</strong> (Sandbox Promotion): <span
+class="math display">\[\begin{equation}
+\label{eq:rule-promote}
+\frac{(\phi, \ldots) \in \mathcal{B}*{\text{prov}} \quad V(\pi) = 1
+\quad \text{Consistent}(\mathcal{B}*{\text{ver}} \cup \{\phi\}) \quad
+|\text{Corr}(\phi)| \geq \kappa}{\mathcal{B}*{\text{ver}} \gets
+\mathcal{B}*{\text{ver}} \cup \{\phi\}; \quad \mathcal{B}*{\text{prov}}
+\gets \mathcal{B}*{\text{prov}} \setminus \{(\phi, \ldots)\}}
+\end{equation}\]</span></p>
+<p><strong>Rule S-Expire</strong> (Sandbox Expiry): <span
+class="math display">\[\begin{equation}
+\label{eq:rule-expire}
+\frac{(\phi, c, s, \pi, \text{TTL}) \in \mathcal{B}*{\text{prov}} \quad
+\text{TTL} \leq 0}{\mathcal{B}*{\text{prov}} \gets
+\mathcal{B}_{\text{prov}} \setminus \{(\phi, c, s, \pi, \text{TTL})\}}
+\end{equation}\]</span></p>
+<p>Promotion requires: (1) provenance verification <span
+class="math inline">\(V(\pi) = 1\)</span>, (2) consistency with verified
+beliefs, and (3) corroboration threshold <span
+class="math inline">\(\kappa\)</span>.</p>
+<h2 id="sec:detection-bounds">Information-Theoretic Detection
+Bounds</h2>
+<p><em>Having established the trust calculus (how agents reason about
+each other) and belief update semantics (how agents incorporate
+information), we now turn to fundamental limits on attack detection.
+This section establishes fundamental limits on what any detection system
+can achieve. Like Shannon’s channel capacity in communications, these
+bounds are not limitations of specific mechanisms but mathematical
+constraints on what is possible.</em></p>
+<p><em>The following theorem captures the fundamental tradeoff facing
+attackers: high-impact attacks are easier to detect, while stealthy
+attacks have limited effect. This is not a limitation of our defenses—it
+is a mathematical constraint that any attack must satisfy.</em></p>
+<p> presents the layered CIF architecture with architectural defenses
+(left), runtime defenses (center), and coordination mechanism (right).
+expands this to show data flow, attack interception points, and defense
+composition.</p>
+<p> provides a detailed view of the complete CIF architecture, including
+all component formulas and their interactions. The defense layer
+implements the cognitive firewall with threshold <span
+class="math inline">\(\tau_f = 0.5\)</span>, the belief sandbox with
+promotion function <span class="math inline">\(\gamma\)</span>, and
+behavioral invariants constraining intentions <span
+class="math inline">\(\mathcal{I} \subseteq \text{permitted}\)</span>.
+The detection layer specifies anomaly scoring <span
+class="math inline">\(\sigma(\Delta b) &gt; \tau_d\)</span>, tripwire
+verification <span class="math inline">\(c_i \in \mathcal{B}?\)</span>,
+and provenance tracking <span class="math inline">\(P: \mathcal{B} \to
+\text{sources}\)</span>. The coordination layer encodes the trust
+calculus <span class="math inline">\(\mathcal{T}: \mathcal{A} \times
+\mathcal{A} \to [0,1]\)</span> with <span
+class="math inline">\(\delta\)</span>-bounded decay, k-of-n quorum
+protocols, and Byzantine fault tolerance (<span class="math inline">\(n
+\geq 3f + 1\)</span>). For empirical validation of detection rates and
+performance overhead, see Part 2 of this series.</p>
+</body>
+</html>

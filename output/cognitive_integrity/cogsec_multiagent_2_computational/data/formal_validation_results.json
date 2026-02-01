@@ -1,0 +1,133 @@
+[
+  {
+    "theorem_id": "3.1",
+    "name": "Trust delegation decay bound",
+    "status": "passed",
+    "evidence": "All 10000 samples satisfy T <= delta^d (max violation: 0.000000)",
+    "details": {
+      "delta": 0.85,
+      "max_depth": 10,
+      "n_trials": 1000,
+      "total_samples": 10000,
+      "violations": 0,
+      "max_violation": 0.0
+    }
+  },
+  {
+    "theorem_id": "3.1",
+    "name": "Trust delegation decay bound",
+    "status": "passed",
+    "evidence": "All 10000 samples satisfy T <= delta^d (max violation: 0.000000)",
+    "details": {
+      "delta": 0.85,
+      "max_depth": 10,
+      "n_trials": 1000,
+      "total_samples": 10000,
+      "violations": 0,
+      "max_violation": 0.0
+    }
+  },
+  {
+    "theorem_id": "3.1b",
+    "name": "Series Composition Detection",
+    "status": "passed",
+    "evidence": "Series composition P_miss = prod(1-r_i) validated across 1000 trials (max error: 0.0055, violations: 0)",
+    "details": {
+      "n_trials": 1000,
+      "n_modules": 5,
+      "violations": 0,
+      "max_error": 0.005517484268822814
+    }
+  },
+  {
+    "theorem_id": "3.2",
+    "name": "Parallel Composition Detection",
+    "status": "passed",
+    "evidence": "Parallel composition rate >= max(r_i) validated across 1000 trials (violations: 0)",
+    "details": {
+      "n_trials": 1000,
+      "violations": 0
+    }
+  },
+  {
+    "theorem_id": "3.1b",
+    "name": "Series Composition Detection",
+    "status": "passed",
+    "evidence": "Series composition P_miss = prod(1-r_i) validated across 1000 trials (max error: 0.0055, violations: 0)",
+    "details": {
+      "n_trials": 1000,
+      "n_modules": 5,
+      "violations": 0,
+      "max_error": 0.005517484268822814
+    }
+  },
+  {
+    "theorem_id": "3.2",
+    "name": "Parallel Composition Detection",
+    "status": "passed",
+    "evidence": "Parallel composition rate >= max(r_i) validated across 1000 trials (violations: 0)",
+    "details": {
+      "n_trials": 1000,
+      "violations": 0
+    }
+  },
+  {
+    "theorem_id": "3.3",
+    "name": "Composition Associativity",
+    "status": "passed",
+    "evidence": "Composition is associative: max error 1.11e-16 across 100 trials",
+    "details": {
+      "n_trials": 100,
+      "max_error": 1.1102230246251565e-16
+    }
+  },
+  {
+    "theorem_id": "3.3",
+    "name": "Composition Associativity",
+    "status": "passed",
+    "evidence": "Composition is associative: max error 1.11e-16 across 100 trials",
+    "details": {
+      "n_trials": 100,
+      "max_error": 1.1102230246251565e-16
+    }
+  },
+  {
+    "theorem_id": "4",
+    "name": "Stealth-Impact Tradeoff",
+    "status": "passed",
+    "evidence": "All 500 successful attacks satisfy I*S <= 1.00 (max product: 0.9593). 0 attacks detected due to bound violation.",
+    "details": {
+      "c_channel": 1.0,
+      "n_trials": 500,
+      "n_detected": 0,
+      "max_product": 0.9593309404613264
+    }
+  },
+  {
+    "theorem_id": "5.3",
+    "name": "Byzantine Fault Tolerance",
+    "status": "passed",
+    "evidence": "Byzantine consensus correct in 100.0% of valid (n>=3f+1) cases (135/135). Invalid cases showed 188/297 failures.",
+    "details": {
+      "tests_run": 432,
+      "valid_correct": 135,
+      "valid_total": 135,
+      "valid_success_rate": 1.0,
+      "invalid_failures": 188,
+      "invalid_total": 297
+    }
+  },
+  {
+    "theorem_id": "6",
+    "name": "CIF Latency Overhead Bound",
+    "status": "passed",
+    "evidence": "Mean overhead 10.3% <= 23% target (p95: 19.0%, max: 22.9%)",
+    "details": {
+      "mean_overhead": 0.10263252852759315,
+      "p95_overhead": 0.18968927227196672,
+      "max_overhead": 0.22920090556755796,
+      "target": 0.23,
+      "n_trials": 100
+    }
+  }
+]

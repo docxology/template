@@ -1,0 +1,222 @@
+\frametitle{Benchmark Implementation Guidelines}
+\protect\phantomsection\label{sec:benchmark-implementation}
+This supplementary section provides implementation guidance for colony
+cognitive security benchmarks introduced in Part 1, Section S05.
+
+\begin{block}{Hardware Specifications}
+\protect\phantomsection\label{sec:hardware-specs}
+All benchmarks reported in this paper were executed on the following
+hardware:
+
+\begin{table}[htbp]
+\centering
+\caption{Benchmark hardware configuration.}
+\label{tab:hardware-specs}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Component & Specification \\
+\midrule
+CPU & AMD EPYC 7763 (64 cores, 128 threads) \\
+RAM & 256 GB DDR4-3200 \\
+Storage & 2 TB NVMe SSD \\
+Network & 25 Gbps Ethernet \\
+OS & Ubuntu 22.04 LTS \\
+Python & 3.11.5 \\
+PyTorch & 2.1.0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Reproducibility}: Results may vary on different hardware
+configurations. For consistent benchmarking, we recommend using cloud
+instances with similar specifications (e.g., AWS \texttt{c6a.16xlarge}
+or GCP \texttt{n2-standard-64}).
+\end{block}
+
+\begin{block}{Reproducibility Checklist}
+\protect\phantomsection\label{sec:reproducibility}
+To reproduce the experimental results in this paper:
+
+\begin{enumerate}
+\item \textbf{Clone repository}: \texttt{git clone <https://github.com/docxology/cognitive\_integrity}>
+\item \textbf{Set random seed}: All experiments use seed 42 by default
+\item \textbf{Install dependencies}: \texttt{uv sync} (see \texttt{pyproject.toml})
+\item \textbf{Download attack corpus}: Request access via repository issue tracker
+\item \textbf{Run experiments}: \texttt{python -m scripts.run\_full\_evaluation}
+\item \textbf{Verify results}: Compare against expected outputs in \texttt{tests/golden/}
+\end{enumerate}
+
+\textbf{Expected runtime}: Full evaluation suite requires approximately
+4 hours on the reference hardware.
+\end{block}
+
+\begin{block}{Test Environment Specification}
+\protect\phantomsection\label{sec:test-environment}
+Colony CogSec benchmarks require test environments that support:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Scalable agent populations} ---
+  \(n \in \{10, 50, 100, 500, 1000\}\)
+\item
+  \textbf{Configurable stigmergic substrates} --- Shared memory, message
+  queues, artifact stores
+\item
+  \textbf{Instrumented communication channels} --- Full message logging
+  with timestamps
+\item
+  \textbf{Controllable adversary injection} --- Precise Sybil insertion
+  and signal poisoning
+\item
+  \textbf{Collective function measurement} --- Aggregate outcome metrics
+  beyond individual agent states
+\end{enumerate}
+
+\begin{table}[htbp]
+\centering
+\caption{Recommended colony CogSec benchmark configurations.}
+\label{tab:benchmark-configs}
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+\textbf{Benchmark} & \textbf{Min $n$} & \textbf{Stigmergy} & \textbf{Adversary} & \textbf{Duration} & \textbf{Metrics} \\
+\midrule
+Recruitment Poisoning & 20 & Required & $\Omega_2$ & 100 steps & Diversion rate \\
+Sybil Infiltration & 50 & Optional & $\Omega_4$ & 500 steps & Trust ceiling \\
+Quorum Manipulation & 30 & Optional & $\Omega_3$ & 200 steps & Quorum corruption \\
+Belief Cascade & 100 & Optional & $\Omega_2$ & 300 steps & Penetration rate \\
+Emergent Misalignment & 50 & Required & None & 1000 steps & Goal deviation \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{block}
+
+\begin{block}{Metrics Framework}
+\protect\phantomsection\label{sec:metrics-framework}
+The \emph{Colony CogSec Scorecard} integrates individual and collective
+metrics:
+
+\begin{definition}[Colony CogSec Score]
+\label{def:cogsec-score-impl}
+The *Colony CogSec Score* (CCS) is:
+\begin{equation}
+\label{eq:ccs-impl}
+\text{CCS} = w_1 \cdot \text{DR}_c + w_2 \cdot (1 - \text{FPR}_c) + w_3 \cdot \text{Resilience} + w_4 \cdot \text{Recovery}
+\end{equation}
+where:
+\begin{align}
+\text{DR}_c &= \text{Colony-level detection rate} \\
+\text{FPR}_c &= \text{Colony-level false positive rate} \\
+\text{Resilience} &= \frac{\mathcal{F}_c(\text{under attack})}{\mathcal{F}*c(\text{baseline})} \\
+\text{Recovery} &= \frac{1}{t*{\text{recovery}}} \text{ (normalized)}
+\end{align}
+with weights $w_i$ summing to 1.
+\end{definition}
+\end{block}
+
+\begin{block}{Implementation Reference}
+\protect\phantomsection\label{implementation-reference}
+\begin{block}{Python Environment Setup}
+\protect\phantomsection\label{python-environment-setup}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Create benchmark environment}
+\ExtensionTok{python} \AttributeTok{{-}m}\NormalTok{ venv cogsec{-}bench}
+\BuiltInTok{source}\NormalTok{ cogsec{-}bench/bin/activate}
+
+\CommentTok{\# Install dependencies}
+\ExtensionTok{pip}\NormalTok{ install numpy scipy networkx redis kafka{-}python}
+
+\CommentTok{\# Run benchmark suite}
+\ExtensionTok{python} \AttributeTok{{-}m}\NormalTok{ cogsec.benchmarks.colony }\AttributeTok{{-}{-}config}\NormalTok{ colony\_configs.yaml}
+\end{Highlighting}
+\end{Shaded}
+\end{block}
+
+\begin{block}{Benchmark Runner}
+\protect\phantomsection\label{benchmark-runner}
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{from}\NormalTok{ cogsec.benchmarks }\ImportTok{import}\NormalTok{ ColonyBenchmark}
+
+\CommentTok{\# Configure benchmark}
+\NormalTok{config }\OperatorTok{=}\NormalTok{ \{}
+    \StringTok{"n\_agents"}\NormalTok{: }\DecValTok{100}\NormalTok{,}
+    \StringTok{"stigmergy"}\NormalTok{: }\StringTok{"redis"}\NormalTok{,}
+    \StringTok{"adversary\_class"}\NormalTok{: }\StringTok{"omega\_2"}\NormalTok{,}
+    \StringTok{"duration\_steps"}\NormalTok{: }\DecValTok{300}\NormalTok{,}
+\NormalTok{\}}
+
+\CommentTok{\# Run recruitment poisoning benchmark}
+\NormalTok{benchmark }\OperatorTok{=}\NormalTok{ ColonyBenchmark(}\StringTok{"recruitment\_poisoning"}\NormalTok{, config)}
+\NormalTok{results }\OperatorTok{=}\NormalTok{ benchmark.run()}
+
+\CommentTok{\# Compute Colony CogSec Score}
+\NormalTok{ccs }\OperatorTok{=}\NormalTok{ benchmark.compute\_ccs(}
+\NormalTok{    weights}\OperatorTok{=}\NormalTok{[}\FloatTok{0.3}\NormalTok{, }\FloatTok{0.2}\NormalTok{, }\FloatTok{0.3}\NormalTok{, }\FloatTok{0.2}\NormalTok{]}
+\NormalTok{)}
+\BuiltInTok{print}\NormalTok{(}\SpecialStringTok{f"Colony CogSec Score: }\SpecialCharTok{\{}\NormalTok{ccs}\SpecialCharTok{:.3f\}}\SpecialStringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\end{block}
+
+\begin{block}{Stigmergic Substrate Configuration}
+\protect\phantomsection\label{stigmergic-substrate-configuration}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# stigmergy\_config.yaml}
+\FunctionTok{substrate}\KeywordTok{:}
+\AttributeTok{  }\FunctionTok{type}\KeywordTok{:}\AttributeTok{ redis}\CommentTok{  \# or: kafka, filesystem, memory}
+\AttributeTok{  }\FunctionTok{connection}\KeywordTok{:}
+\AttributeTok{    }\FunctionTok{host}\KeywordTok{:}\AttributeTok{ localhost}
+\AttributeTok{    }\FunctionTok{port}\KeywordTok{:}\AttributeTok{ }\DecValTok{6379}
+\AttributeTok{  }
+\AttributeTok{  }\FunctionTok{markers}\KeywordTok{:}
+\AttributeTok{    }\KeywordTok{{-}}\AttributeTok{ }\FunctionTok{name}\KeywordTok{:}\AttributeTok{ recruitment}
+\AttributeTok{      }\FunctionTok{decay\_rate}\KeywordTok{:}\AttributeTok{ }\FloatTok{0.1}\CommentTok{  \# per step}
+\AttributeTok{      }\FunctionTok{max\_intensity}\KeywordTok{:}\AttributeTok{ }\FloatTok{1.0}
+\AttributeTok{    }\KeywordTok{{-}}\AttributeTok{ }\FunctionTok{name}\KeywordTok{:}\AttributeTok{ alarm}
+\AttributeTok{      }\FunctionTok{decay\_rate}\KeywordTok{:}\AttributeTok{ }\FloatTok{0.5}
+\AttributeTok{      }\FunctionTok{propagation}\KeywordTok{:}\AttributeTok{ broadcast}
+
+\AttributeTok{  }\FunctionTok{logging}\KeywordTok{:}
+\AttributeTok{    }\FunctionTok{enabled}\KeywordTok{:}\AttributeTok{ }\CharTok{true}
+\AttributeTok{    }\FunctionTok{path}\KeywordTok{:}\AttributeTok{ ./logs/stigmergy/}
+\AttributeTok{    }\FunctionTok{include\_timestamps}\KeywordTok{:}\AttributeTok{ }\CharTok{true}
+\end{Highlighting}
+\end{Shaded}
+\end{block}
+\end{block}
+
+\begin{block}{Integration with CIF Test Suite}
+\protect\phantomsection\label{integration-with-cif-test-suite}
+The colony benchmarks integrate with the main CIF test suite:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{from}\NormalTok{ cogsec.testing }\ImportTok{import}\NormalTok{ CIFTestSuite}
+
+\NormalTok{suite }\OperatorTok{=}\NormalTok{ CIFTestSuite(}
+\NormalTok{    project}\OperatorTok{=}\StringTok{"cogsec\_multiagent\_2\_computational"}
+\NormalTok{)}
+
+\CommentTok{\# Run individual agent tests}
+\NormalTok{suite.run\_agent\_tests()}
+
+\CommentTok{\# Run colony benchmarks}
+\NormalTok{suite.run\_colony\_benchmarks(}
+\NormalTok{    benchmarks}\OperatorTok{=}\NormalTok{[}\StringTok{"recruitment\_poisoning"}\NormalTok{, }\StringTok{"sybil\_infiltration"}\NormalTok{]}
+\NormalTok{)}
+
+\CommentTok{\# Generate combined report}
+\NormalTok{suite.generate\_report(output}\OperatorTok{=}\StringTok{"./reports/cif\_full.pdf"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\end{block}
+
+\begin{block}{Summary}
+\protect\phantomsection\label{summary}
+This implementation guide enables reproduction of colony CogSec
+benchmark results. For formal definitions and theoretical foundations,
+see Part 1, Supplementary Section S05.
+\end{block}

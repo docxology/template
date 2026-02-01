@@ -1,0 +1,465 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\newpage
+\end{frame}
+
+\begin{frame}{Discussion: Theoretical Implications, Limitations, and
+Future Directions}
+\protect\phantomsection\label{sec:discussion}
+This section examines the theoretical implications of the Cognitive
+Integrity Framework (\cref{sec:theoretical-implications}), formal
+limitations and boundary conditions (\cref{sec:limitations}),
+relationship to prior work (\cref{sec:related-work}), governance
+implications (\cref{sec:governance}), and future research directions
+(\cref{sec:future-directions}).
+
+\begin{block}{Theoretical Implications}
+\protect\phantomsection\label{sec:theoretical-implications}
+\begin{block}{Why Composable Defenses Are Necessary}
+\protect\phantomsection\label{why-composable-defenses-are-necessary}
+The defense composition algebra (\cref{thm:series-detection},
+\cref{thm:parallel-detection}) formalizes a principle implicit in
+security practice: layered defenses provide multiplicative rather than
+additive protection. Each defense mechanism addresses a distinct attack
+surface:
+
+\begin{table}[htbp]
+\centering
+\caption{Defense mechanisms and their target attack surfaces.}
+\label{tab:defense-surfaces}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Defense Layer & Target Attack Surface \\
+\midrule
+Cognitive Firewall & Input-based injection \\
+Belief Sandbox & Unverified content propagation \\
+Tripwires & Belief manipulation \\
+Trust Calculus & Delegation abuse \\
+Byzantine Consensus & Coordination attacks \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The orthogonality of these surfaces explains why no single mechanism
+suffices: an attack that bypasses input filtering may still violate
+behavioral invariants; an attack that evades pattern matching may still
+trigger belief drift detection.
+
+Empirical ablation studies in Part 2 (\S\{5.6\}) validate this
+theoretical prediction: removing the Cognitive Firewall causes the
+largest detection rate drop (\(-13\%\)), followed by Tripwires
+(\(-9\%\)) and Provenance Tracking (\(-7\%\)). No individual mechanism
+provides comparable detection rates to the full ensemble---confirming
+the multiplicative composition theorem (\cref{thm:series-detection}).
+\end{block}
+
+\begin{block}{The Trust Boundedness Guarantee}
+\protect\phantomsection\label{the-trust-boundedness-guarantee}
+The bounded trust theorem (\cref{thm:trust-bounded}) represents a
+structural guarantee against trust amplification attacks. Unlike
+detection-based defenses that may be evaded by novel attacks, the
+\(\delta^d\) decay bound is algebraic: it holds for any attack type, any
+adversary capability, and any delegation chain length. This makes it a
+\emph{formal} rather than \emph{empirical} security property.
+
+The decay factor \(\delta \in [0, 1)\) creates a tradeoff:
+
+\begin{itemize}
+\tightlist
+\item
+  Lower \(\delta\): Stronger security, limited delegation utility
+\item
+  Higher \(\delta\): More delegation flexibility, weaker bounds
+\end{itemize}
+
+Organizations must calibrate this tradeoff based on their threat model
+(\cref{sec:operator-posture} in Part 3).
+\end{block}
+
+\begin{block}{Information-Theoretic Detection Limits}
+\protect\phantomsection\label{information-theoretic-detection-limits}
+The stealth-impact fundamental limit (\cref{thm:stealth-impact})
+establishes that certain attacks are \emph{provably} undetectable
+without unacceptable false positive rates. This is not a limitation of
+our specific mechanisms but a fundamental bound analogous to Shannon's
+channel capacity---some attacks simply cannot be detected without
+additional information.
+
+This has practical implications: security architectures should not
+promise detection of all possible attacks. Instead, they should
+characterize the detection boundary and provide containment for attacks
+that cross it.
+\end{block}
+
+\begin{block}{Architecture-Specific Vulnerability Patterns}
+\protect\phantomsection\label{architecture-specific-vulnerability-patterns}
+The formal framework reveals why different multiagent architectures
+exhibit different vulnerability profiles:
+
+\begin{table}[htbp]
+\centering
+\caption{Theoretical vulnerability analysis by architecture type.}
+\label{tab:architecture-theory}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Architecture & Theoretical Vulnerability & Formal Mitigation \\
+\midrule
+Hierarchical & Single point of trust concentration & Byzantine-tolerant orchestrator \\
+Peer-to-peer & Uniform trust enables lateral movement & Trust decay on delegation \\
+Role-based & Logical (not cryptographic) boundaries & Attestation per role transition \\
+State machine & State integrity assumption & State hash verification \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+These are structural properties of the architectures themselves, not
+implementation-specific weaknesses.
+\end{block}
+\end{block}
+
+\begin{block}{Formal Limitations}
+\protect\phantomsection\label{sec:limitations}
+\begin{block}{Assumption Dependencies}
+\protect\phantomsection\label{assumption-dependencies}
+The formal guarantees of CIF depend on specific assumptions. Violation
+of these assumptions degrades or eliminates security properties:
+
+\begin{table}[htbp]
+\centering
+\caption{Impact of assumption violations on formal guarantees.}
+\label{tab:assumption-violations}
+\begin{tabular}{@{}lp{5cm}@{}}
+\toprule
+Assumption & Guarantee Impacted \\
+\midrule
+Honest orchestrator & $\Omega_5$ attacks succeed; systemic compromise possible \\
+$n \geq 3f+1$ agents & Byzantine consensus fails (\cref{thm:byzantine-req}) \\
+Authenticated channels & $\Omega_4$ coordination attacks expand \\
+Known attack patterns & Zero-day evasion possible \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{block}
+
+\begin{block}{Scalability Constraints}
+\protect\phantomsection\label{scalability-constraints}
+The formal framework imposes scaling limitations:
+
+\begin{align}
+\label{eq:memory-scaling}
+M_{\text{trust}} &= O(n^2) \\
+\label{eq:consensus-scaling}
+L_{\text{consensus}} &= O(n^2)
+\end{align}
+
+The quadratic trust matrix (\cref{eq:memory-scaling}) limits practical
+deployment to systems with moderate agent counts. Sparse trust
+representations or hierarchical trust structures may enable scaling to
+larger systems.
+
+Consensus latency (\cref{eq:consensus-scaling}) suggests that Byzantine
+consensus should be reserved for critical decisions rather than applied
+universally.
+\end{block}
+
+\begin{block}{Inherent Detection Gaps}
+\protect\phantomsection\label{inherent-detection-gaps}
+Certain attack types are formally difficult to detect:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Semantic equivalence}: Attacks preserving meaning while
+  changing syntax evade pattern-based detection
+\item
+  \textbf{Progressive drift}: Sub-threshold changes that accumulate over
+  time (\cref{eq:progressive-drift})
+\item
+  \textbf{Orchestrator compromise}: Outside the
+  \(\Omega_1\)--\(\Omega_4\) threat model
+\end{itemize}
+
+These are not implementation failures but formal limitations of the
+detection paradigm.
+\end{block}
+\end{block}
+
+\begin{block}{Relationship to Prior Work}
+\protect\phantomsection\label{sec:related-work}
+CIF builds on and extends several research traditions:
+
+\textbf{Byzantine Fault Tolerance}: Classical BFT (PBFT, etc.) assumes
+crash or arbitrary faults. CIF extends this to cognitive
+manipulation---agents that appear functional but hold corrupted beliefs.
+
+\textbf{Trust Management Systems}: Prior systems (PolicyMaker, SPKI,
+etc.) focus on authorization decisions. CIF addresses continuous trust
+evolution with provable decay bounds.
+
+\textbf{AI Safety and Alignment}: Constitutional AI and similar
+approaches address single-agent alignment. CIF extends these concepts to
+multi-agent coordination integrity.
+
+\textbf{Prompt Injection Defenses}: Existing defenses focus on
+single-agent scenarios. CIF addresses the propagation and amplification
+of attacks across agent networks.
+
+\textbf{Cognitive Science and Active Inference}: The Active Inference
+framework \cite{david2021aic} provides a complementary perspective from
+cognitive science, modeling agents as entities that minimize prediction
+error through continuous perception-action loops. The Active Inference
+Conflict (AIC) model extends classical decision frameworks like OODA
+loops (Observe-Orient-Decide-Act) by situating conflict as a multiscale
+process of communication, trust, and relationship management---themes
+that directly inform CIF's trust calculus. AIC's treatment of BOLTS
+components (Business, Operations, Legal, Technical, Social) also informs
+our analysis of cyberphysical cognitive systems where cognitive security
+spans multiple operational domains. Critically, the Active Inference
+perspective illuminates why belief manipulation attacks are particularly
+dangerous: agents minimizing variational free energy will actively seek
+information confirming their current beliefs, creating self-reinforcing
+loops when those beliefs are corrupted. CIF's tripwire mechanism
+interrupts this by detecting when prediction error patterns deviate from
+baseline, analogous to detecting abnormal precision weighting in
+cognitive systems.
+
+\textbf{Pattern Languages for Cognitive Security}: The COGSEC ATLAS
+\cite{cogsecatlas2023} provides a practitioner-oriented complement to
+CIF's formal approach, cataloging 995 cognitive security patterns
+organized by type (Vulnerability, Exploit, Remedy, Practice,
+Accelerator, Moderator, Condition). Where CIF provides provable
+guarantees and formal composition rules, the Atlas offers an
+empirically-grounded taxonomy of observed attack patterns and defensive
+practices---such as the Devil's Advocate and Key Assumptions Check
+techniques for countering groupthink and confirmation bias. The
+hierarchical parent-child structure of Atlas patterns maps naturally
+onto CIF's adversary class hierarchy, suggesting opportunities for
+formal verification of pattern-based defenses using the mechanisms
+described in \cref{sec:defense-mechanisms}.
+
+The novel contribution is the integration of these concerns into a
+unified formal framework with composable guarantees.
+\end{block}
+
+\begin{block}{Governance and Policy Implications}
+\protect\phantomsection\label{sec:governance}
+\begin{block}{The Regulatory Gap}
+\protect\phantomsection\label{the-regulatory-gap}
+Current AI regulation lacks cognitive security provisions:
+
+\begin{table}[htbp]
+\centering
+\caption{Regulatory gaps for cognitive security.}
+\label{tab:regulatory-gaps}
+\begin{tabular}{@{}lp{4cm}p{4cm}@{}}
+\toprule
+Regulation & Current Focus & Cognitive Security Gap \\
+\midrule
+EU AI Act & Risk classification, transparency & No inter-agent trust requirements \\
+NIST AI RMF & Risk management lifecycle & Limited multiagent-specific guidance \\
+ISO 42001 & AI management systems & Process-focused, not cognitive-state focused \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{block}
+
+\begin{block}{Recommendations for Policy}
+\protect\phantomsection\label{recommendations-for-policy}
+We propose that regulators consider:
+
+\begin{enumerate}
+\item \textbf{Cognitive Security Audits}: Mandatory assessment of inter-agent trust mechanisms for high-risk deployments
+\item \textbf{Transparency Requirements}: Disclosure of trust hierarchies and delegation policies
+\item \textbf{Incident Reporting}: New category for cognitive attacks
+\item \textbf{Certification Pathways}: Industry certification for cognitive security practices
+\end{enumerate}
+\end{block}
+\end{block}
+
+\begin{block}{Future Theoretical Directions}
+\protect\phantomsection\label{sec:future-directions}
+\begin{block}{Adaptive Defense Theory}
+\protect\phantomsection\label{adaptive-defense-theory}
+The detection degradation problem suggests a need for adaptive defenses.
+Formal treatment as a game-theoretic equilibrium:
+
+\begin{equation}
+\label{eq:adaptive-defense}
+\pi^{*}*{\text{defense}} = \argmax*{\pi} \mathbb{E}\left[\sum_t \gamma^t r(s_t, a_t)\right]
+\end{equation}
+
+requires solving the partial observability problem---defenders cannot
+directly observe attacker intent.
+\end{block}
+
+\begin{block}{Cross-System Trust Federation}
+\protect\phantomsection\label{cross-system-trust-federation}
+Extending trust calculus across organizational boundaries:
+
+\begin{equation}
+\label{eq:cross-system-trust}
+\mathcal{T}*{i \to j}^{\text{cross}} = f(\mathcal{T}*{\text{local}}, \mathcal{T}*{\text{reputation}}, \mathcal{T}*{\text{attestation}})
+\end{equation}
+
+The primary challenge is trust calibration---mapping heterogeneous trust
+semantics across systems with different threat models.
+\end{block}
+
+\begin{block}{Emergent Behavior Security}
+\protect\phantomsection\label{emergent-behavior-security}
+As multiagent systems scale, emergent collective behaviors become
+security-relevant. Open questions include:
+
+\begin{itemize}
+\item Formal characterization of beneficial vs. malicious emergence
+\item Detection of emergent coordination patterns indicating compromise
+\item Sandboxing that preserves beneficial emergence while constraining malicious emergence
+\end{itemize}
+
+The colony cognitive security perspective developed in
+\cref{sec:eusocial-cogsec} provides initial formal foundations for these
+questions.
+\end{block}
+
+\begin{block}{Long-Horizon Agent Security}
+\protect\phantomsection\label{long-horizon-agent-security}
+Agents operating over extended time horizons (days, weeks, months) face
+additional challenges:
+
+\begin{itemize}
+\item \textbf{Memory integrity}: Verification of accumulated knowledge
+\item \textbf{Goal stability}: Distinguishing legitimate evolution from adversarial drift
+\item \textbf{Temporal consistency}: Decisions consistent with historical context
+\end{itemize}
+
+The trust calculus extends naturally to temporal trust:
+\(\mathcal{T}^{t} = \mathcal{T}^{t-1} \cdot \delta_{\text{time}}\) where
+\(\delta_{\text{time}}\) encodes trust decay over time.
+\end{block}
+
+\begin{block}{The Cognitive Security Research Agenda}
+\protect\phantomsection\label{the-cognitive-security-research-agenda}
+We propose a research agenda organized by time horizon:
+
+\textbf{Near-term (1--2 years)}:
+
+\begin{itemize}
+\item Standardized formal verification benchmarks
+\item Integration of CIF mechanisms into production frameworks
+\item Theoretical analysis of real-world attack patterns
+\end{itemize}
+
+\textbf{Medium-term (2--5 years)}:
+
+\begin{itemize}
+\item Game-theoretic foundations for adaptive defenses
+\item Cross-organizational trust federation protocols
+\item Hardware-backed cognitive security guarantees
+\end{itemize}
+
+\textbf{Long-term (5+ years)}:
+
+\begin{itemize}
+\item Formal verification of emergent agent behavior
+\item Self-healing cognitive security systems
+\item Integration with broader AI safety theory
+\end{itemize}
+
+The formal foundations established in this work---bounded trust,
+composable defenses, information-theoretic limits---provide a stable
+basis for this evolving research program.
+\end{block}
+\end{block}
+\end{frame}
+
+\end{document}

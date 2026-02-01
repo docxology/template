@@ -1,0 +1,349 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\newpage
+\end{frame}
+
+\section{References}\label{sec:references}
+
+\begin{frame}{Foundational Works}
+\protect\phantomsection\label{foundational-works}
+\begin{enumerate}
+\item
+  Lamport, L., Shostak, R., \& Pease, M. (1982). The Byzantine Generals
+  Problem. \emph{ACM Transactions on Programming Languages and Systems},
+  4(3), 382-401.
+\item
+  Dwork, C., Lynch, N., \& Stockmeyer, L. (1988). Consensus in the
+  Presence of Partial Synchrony. \emph{Journal of the ACM}, 35(2),
+  288-323.
+\item
+  Jøsang, A., Ismail, R., \& Boyd, C. (2007). A Survey of Trust and
+  Reputation Systems for Online Service Provision. \emph{Decision
+  Support Systems}, 43(2), 618-644.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Prompt Injection and LLM Security}
+\protect\phantomsection\label{prompt-injection-and-llm-security}
+\begin{enumerate}
+\item
+  Qi, X., et al.~(2024). Visual Adversarial Examples Jailbreak Aligned
+  Large Language Models. \emph{AAAI 2024}, 38(19), 21527-21536.
+\item
+  Perez, F., \& Ribeiro, I. (2023). Ignore This Title and HackAPrompt:
+  Exposing Systemic Vulnerabilities of LLMs. \emph{EMNLP 2023}.
+\item
+  Greshake, K., et al.~(2023). Not What You've Signed Up For:
+  Compromising Real-World LLM-Integrated Applications with Indirect
+  Prompt Injection. \emph{ACM AISec 2023}, 79-90.
+\item
+  Liu, Y., et al.~(2023). Prompt Injection Attack Against LLM-Integrated
+  Applications. \emph{arXiv:2306.05499}.
+\item
+  Zou, A., et al.~(2023). Universal and Transferable Adversarial Attacks
+  on Aligned Language Models. \emph{arXiv:2307.15043}.
+\item
+  Wei, A., Haghtalab, N., \& Steinhardt, J. (2023). Jailbroken: How Does
+  LLM Safety Training Fail? \emph{NeurIPS 2023}.
+\item
+  Shayegani, E., et al.~(2023). Survey of Vulnerabilities in Large
+  Language Models Revealed by Adversarial Attacks.
+  \emph{arXiv:2310.10844}.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Constitutional AI and Alignment}
+\protect\phantomsection\label{constitutional-ai-and-alignment}
+\begin{enumerate}
+\item
+  Bai, Y., et al.~(2022). Constitutional AI: Harmlessness from AI
+  Feedback. \emph{arXiv:2212.08073}.
+\item
+  Askell, A., et al.~(2021). A General Language Assistant as a
+  Laboratory for Alignment. \emph{arXiv:2112.00861}.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Multiagent Systems}
+\protect\phantomsection\label{multiagent-systems}
+\begin{enumerate}
+\item
+  Wooldridge, M. (2009). \emph{An Introduction to Multiagent Systems}
+  (2nd ed.). John Wiley \& Sons.
+\item
+  Shoham, Y., \& Leyton-Brown, K. (2008). \emph{Multiagent Systems:
+  Algorithmic, Game-Theoretic, and Logical Foundations}. Cambridge
+  University Press.
+\item
+  Hong, S., et al.~(2023). MetaGPT: Meta Programming for Multi-Agent
+  Collaborative Framework. \emph{arXiv:2308.00352}.
+\item
+  Wu, Q., et al.~(2023). AutoGen: Enabling Next-Gen LLM Applications via
+  Multi-Agent Conversation. \emph{arXiv:2308.08155}.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Trust in Distributed Systems}
+\protect\phantomsection\label{trust-in-distributed-systems}
+\begin{enumerate}
+\item
+  Marsh, S. P. (1994). Formalising Trust as a Computational Concept.
+  \emph{PhD Thesis, University of Stirling}.
+\item
+  Gambetta, D. (1988). Can We Trust Trust? In \emph{Trust: Making and
+  Breaking Cooperative Relations}, 213-237.
+\item
+  Sabater, J., \& Sierra, C. (2005). Review on Computational Trust and
+  Reputation Models. \emph{Artificial Intelligence Review}, 24(1),
+  33-60.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Adversarial ML}
+\protect\phantomsection\label{adversarial-ml}
+\begin{enumerate}
+\item
+  Goodfellow, I. J., Shlens, J., \& Szegedy, C. (2015). Explaining and
+  Harnessing Adversarial Examples. \emph{ICLR 2015}.
+\item
+  Carlini, N., \& Wagner, D. (2017). Towards Evaluating the Robustness
+  of Neural Networks. \emph{IEEE S\&P 2017}, 39-57.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Formal Verification}
+\protect\phantomsection\label{formal-verification}
+\begin{enumerate}
+\item
+  Clarke, E. M., Grumberg, O., \& Peled, D. A. (1999). \emph{Model
+  Checking}. MIT Press.
+\item
+  Alur, R. (2015). \emph{Principles of Cyber-Physical Systems}. MIT
+  Press.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Cognitive Security}
+\protect\phantomsection\label{cognitive-security}
+\begin{enumerate}
+\item
+  Waltzman, R. (2017). The Weaponization of Information: The Need for
+  Cognitive Security. \emph{RAND Corporation}.
+\item
+  Beskow, D. M., \& Carley, K. M. (2019). Social Cybersecurity: An
+  Emerging National Security Requirement. \emph{Military Review}, 99(2),
+  117.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Agent Frameworks}
+\protect\phantomsection\label{agent-frameworks}
+\begin{enumerate}
+\item
+  LangChain. (2023). LangGraph: Build Stateful Multi-Actor Applications.
+  \emph{Documentation}.
+\item
+  CrewAI. (2024). Framework for Orchestrating Role-Playing, Autonomous
+  AI Agents.
+\item
+  Anthropic. (2024). Claude Code: AI-Powered Software Engineering.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{2025 Agentic AI Security}
+\protect\phantomsection\label{agentic-ai-security}
+\begin{enumerate}
+\item
+  OWASP Foundation. (2025). OWASP Top 10 for LLM Applications 2025.
+\item
+  OWASP GenAI Security Project. (2025). OWASP Top 10 for Agentic
+  Applications 2026.
+\item
+  Chen, W., Zhang, Y., \& Liu, J. (2025). A Multi-Agent LLM Defense
+  Pipeline Against Prompt Injection Attacks. \emph{arXiv:2509.14285}.
+\item
+  Jo, Y., Kim, S., \& Park, J. (2025). Byzantine-Robust Decentralized
+  Coordination of LLM Agents. \emph{arXiv:2507.14928}.
+\item
+  Wang, H., Li, X., \& Chen, Y. (2025). Rethinking the Reliability of
+  Multi-agent System: A Perspective from Byzantine Fault Tolerance.
+  \emph{arXiv:2511.10400}.
+\item
+  Debenedetti, E., Zhang, J., \& Carlini, N. (2025). Adaptive Attacks
+  Break Defenses Against Indirect Prompt Injection Attacks on LLM
+  Agents. \emph{NAACL 2025 Findings}.
+\item
+  Li, Z., Wang, T., \& Zhang, L. (2025). Prompt Injection Attack to Tool
+  Selection in LLM Agents. \emph{arXiv:2504.19793}.
+\item
+  Cloud Security Alliance. (2025). Cognitive Degradation Resilience for
+  Agentic AI.
+\item
+  Chen, X., Liu, Y., \& Wang, Z. (2025). AI Agents Under Threat: A
+  Survey of Key Security Challenges and Future Pathways. \emph{ACM
+  Computing Surveys}.
+\item
+  Microsoft Security Response Center. (2025). How Microsoft Defends
+  Against Indirect Prompt Injection Attacks. \emph{MSRC Blog}.
+\item
+  OpenAI. (2025). Understanding Prompt Injections: A Frontier Security
+  Challenge. \emph{OpenAI Research}.
+\item
+  Garcia, M., Thompson, D., \& Lee, S. (2025). Trust Dynamics in
+  Strategic Coopetition: Computational Foundations for Requirements
+  Engineering in Multi-Agent Systems. \emph{arXiv:2510.24909}.
+\item
+  Sun, Y., Zhang, W., \& Chen, H. (2025). A Taxonomy of Hierarchical
+  Multi-Agent Systems: Design Patterns, Coordination Mechanisms, and
+  Industrial Applications. \emph{arXiv:2508.12683}.
+\item
+  Rodriguez, C., Kim, J., \& Patel, A. (2025). Prompt Injection Attacks
+  in Large Language Models and AI Agent Systems: A Comprehensive Review.
+  \emph{Information}, 17(1), 54.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Red Teaming and Benchmarks}
+\protect\phantomsection\label{red-teaming-and-benchmarks}
+\begin{enumerate}
+\item
+  Perez, E., et al.~(2023). Discovering Language Model Behaviors with
+  Model-Written Evaluations. \emph{ACL 2023 Findings}.
+\item
+  Mazeika, M., et al.~(2024). HarmBench: A Standardized Evaluation
+  Framework for Automated Red Teaming and Robust Refusal. \emph{ICML
+  2024}.
+\item
+  Chao, P., et al.~(2024). JailbreakBench: An Open Robustness Benchmark
+  for Jailbreaking Large Language Models. \emph{arXiv:2404.01318}.
+\item
+  Sun, L., et al.~(2024). TrustLLM: Trustworthiness in Large Language
+  Models. \emph{arXiv:2401.05561}.
+\item
+  Liu, X., et al.~(2023). AgentBench: Evaluating LLMs as Agents.
+  \emph{arXiv:2308.03688}.
+\item
+  Mialon, G., et al.~(2023). GAIA: A Benchmark for General AI
+  Assistants. \emph{arXiv:2311.12983}.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Eusocial Intelligence and Swarm Systems}
+\protect\phantomsection\label{eusocial-intelligence-and-swarm-systems}
+\begin{enumerate}
+\item
+  Wilson, E. O. (1971). \emph{The Insect Societies}. Belknap Press of
+  Harvard University Press.
+\item
+  Grassé, P.-P. (1959). La reconstruction du nid et les coordinations
+  interindividuelles chez Bellicositermes natalensis et Cubitermes sp.
+  La théorie de la stigmergie. \emph{Insectes Sociaux}, 6(1), 41-80.
+\item
+  Bonabeau, E., Dorigo, M., \& Theraulaz, G. (1999). \emph{Swarm
+  Intelligence: From Natural to Artificial Systems}. Oxford University
+  Press.
+\item
+  Lenoir, A., D'Ettorre, P., Errard, C., \& Hefetz, A. (2001). Chemical
+  Ecology and Social Parasitism in Ants. \emph{Annual Review of
+  Entomology}, 46, 573-599.
+\item
+  Seeley, T. D. (2010). \emph{Honeybee Democracy}. Princeton University
+  Press.
+\item
+  Kilner, R. M., \& Langmore, N. E. (2011). Cuckoos Versus Hosts in
+  Insects and Birds: Adaptations, Counter-adaptations and Outcomes.
+  \emph{Biological Reviews}, 86, 836-852.
+\end{enumerate}
+\end{frame}
+
+\end{document}

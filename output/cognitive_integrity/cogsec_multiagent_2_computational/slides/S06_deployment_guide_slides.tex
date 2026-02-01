@@ -1,0 +1,364 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{\textbf{#1}}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\newpage
+\end{frame}
+
+\begin{frame}[fragile]{Supplementary: Deployment Guide and Integration}
+\protect\phantomsection\label{sec:deployment}
+This supplementary material provides deployment considerations and
+integration examples for production CIF deployment.
+
+\begin{block}{Production Deployment Checklist}
+\protect\phantomsection\label{sec:production-checklist}
+Before deploying CIF in production environments, verify completion of
+all items:
+
+\begin{table}[htbp]
+\centering
+\caption{Production deployment checklist.}
+\label{tab:deploy-checklist}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Phase & Item & Verification \\
+\midrule
+\textbf{Pre-Deploy} & Dependencies installed & \texttt{pip check} passes \\
+& Signing keys generated & Key files exist \\
+& TLS certificates valid & \texttt{openssl verify} \\
+& Secrets management configured & Vault health check \\
+\midrule
+\textbf{Config} & Trust parameters set & $\alpha + \beta + \gamma = 1$ \\
+& Firewall thresholds tuned & $\tau_1 > \tau_2$ \\
+& Canary beliefs defined & $\geq 3$ per agent \\
+& Consensus configured & $n \geq 3f + 1$ \\
+\midrule
+\textbf{Post-Deploy} & Functional tests pass & 100\% test coverage \\
+& Detection rate validated & $\geq 90\%$ on sample \\
+& Latency within budget & $\leq 25\%$ overhead \\
+& Alerting configured & Test alert received \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{block}
+
+\begin{block}{Pre-Deployment}
+\protect\phantomsection\label{sec:pre-deploy}
+\textbf{Framework installation}:
+
+\begin{itemize}
+\item Install Python 3.10+ with pip
+\item Install core dependencies: numpy $\geq$ 1.24, scipy $\geq$ 1.10, scikit-learn $\geq$ 1.2
+\item Optional: torch $\geq$ 2.0 for semantic embeddings
+\item Test GPU availability if using embeddings
+\end{itemize}
+
+\textbf{Security preparation}:
+
+\begin{itemize}
+\item Generate signing key pairs for each agent
+\item Configure TLS certificates for inter-agent communication
+\item Set up secrets management (e.g., HashiCorp Vault)
+\item Configure firewall rules for inter-agent communication
+\end{itemize}
+
+\begin{block}{Configuration}
+\protect\phantomsection\label{sec:config-checklist}
+\textbf{Core framework}:
+
+\begin{itemize}
+\item Set trust decay factor $\delta$ based on security requirements (\cref{tab:core-params})
+\item Configure belief thresholds $\tau_{accept}$, $\tau_{trusted}$
+\item Define corroboration count $\kappa$ based on agent pool size
+\item Set trust weights $\alpha, \beta, \gamma$ (must sum to 1)
+\end{itemize}
+
+\textbf{Firewall configuration}:
+
+\begin{itemize}
+\item Load injection pattern database
+\item Initialize semantic embedding model
+\item Configure threshold values $\tau_1$, $\tau_2$ (\cref{tab:firewall-params})
+\item Set score weights $w_1, w_2, w_3$
+\end{itemize}
+
+\textbf{Tripwire setup}:
+
+\begin{itemize}
+\item Define canary beliefs for each agent (canary belief definition (Part 1, Definition 7))
+\item Set expected probability values
+\item Configure drift thresholds (\cref{tab:tripwire-params})
+\item Set monitoring intervals
+\end{itemize}
+
+\textbf{Consensus configuration}:
+
+\begin{itemize}
+\item Verify $n \geq 3f + 1$ for expected Byzantine count (Byzantine termination theorem (Part 1, Theorem 5))
+\item Set round timeout based on network latency
+\item Configure quorum thresholds (\cref{tab:consensus-params})
+\end{itemize}
+\end{block}
+
+\begin{block}{Post-Deployment Verification}
+\protect\phantomsection\label{sec:post-deploy}
+\textbf{Functional testing}:
+
+\begin{itemize}
+\item Send test messages through firewall (expect ACCEPT)
+\item Send known attack patterns (expect REJECT/QUARANTINE)
+\item Verify tripwire alerts on artificial drift
+\item Test consensus with simulated Byzantine agent
+\end{itemize}
+
+\textbf{Performance validation}:
+
+\begin{itemize}
+\item Measure baseline latency
+\item Verify overhead within 23\% target (latency overhead theorem (Part 1, Theorem 6))
+\item Confirm throughput meets requirements
+\item Monitor memory usage over 24h
+\end{itemize}
+
+\textbf{Security verification}:
+
+\begin{itemize}
+\item Run attack corpus subset (sample 100 attacks)
+\item Verify detection rate $\geq 90\%$
+\item Confirm false positive rate $\leq 10\%$
+\item Test escalation paths to human review
+\end{itemize}
+\end{block}
+\end{block}
+
+\begin{block}{Integration Examples}
+\protect\phantomsection\label{sec:integration-examples}
+\begin{block}{Python Integration}
+\protect\phantomsection\label{sec:python-integration}
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{from}\NormalTok{ cif }\ImportTok{import}\NormalTok{ CognitiveFirewall, BeliefSandbox, TrustManager}
+
+\CommentTok{\# Initialize components}
+\NormalTok{firewall }\OperatorTok{=}\NormalTok{ CognitiveFirewall(}
+\NormalTok{    tau\_reject}\OperatorTok{=}\FloatTok{0.8}\NormalTok{,}
+\NormalTok{    tau\_quarantine}\OperatorTok{=}\FloatTok{0.5}\NormalTok{,}
+\NormalTok{    pattern\_db}\OperatorTok{=}\StringTok{"patterns/injection.json"}
+\NormalTok{)}
+
+\NormalTok{sandbox }\OperatorTok{=}\NormalTok{ BeliefSandbox(}
+\NormalTok{    ttl\_default}\OperatorTok{=}\DecValTok{3600}\NormalTok{,}
+\NormalTok{    k\_corroboration}\OperatorTok{=}\DecValTok{2}
+\NormalTok{)}
+
+\NormalTok{trust\_mgr }\OperatorTok{=}\NormalTok{ TrustManager(}
+\NormalTok{    alpha}\OperatorTok{=}\FloatTok{0.3}\NormalTok{, beta}\OperatorTok{=}\FloatTok{0.5}\NormalTok{, gamma}\OperatorTok{=}\FloatTok{0.2}\NormalTok{,}
+\NormalTok{    delta}\OperatorTok{=}\FloatTok{0.8}
+\NormalTok{)}
+
+\CommentTok{\# Process incoming message}
+\KeywordTok{def}\NormalTok{ process\_message(msg, source):}
+    \CommentTok{\# Firewall check}
+\NormalTok{    decision }\OperatorTok{=}\NormalTok{ firewall.classify(msg)}
+    \ControlFlowTok{if}\NormalTok{ decision }\OperatorTok{==} \StringTok{"REJECT"}\NormalTok{:}
+        \ControlFlowTok{return} \VariableTok{None}
+
+    \CommentTok{\# Get trust score}
+\NormalTok{    trust }\OperatorTok{=}\NormalTok{ trust\_mgr.get\_trust(source)}
+
+    \CommentTok{\# Extract beliefs}
+\NormalTok{    beliefs }\OperatorTok{=}\NormalTok{ extract\_beliefs(msg)}
+    \ControlFlowTok{for}\NormalTok{ belief }\KeywordTok{in}\NormalTok{ beliefs:}
+        \ControlFlowTok{if}\NormalTok{ decision }\OperatorTok{==} \StringTok{"QUARANTINE"} \KeywordTok{or}\NormalTok{ trust }\OperatorTok{\textless{}} \FloatTok{0.9}\NormalTok{:}
+\NormalTok{            sandbox.add(belief, source, trust)}
+        \ControlFlowTok{else}\NormalTok{:}
+\NormalTok{            verified\_beliefs.add(belief)}
+
+    \ControlFlowTok{return}\NormalTok{ beliefs}
+\end{Highlighting}
+\end{Shaded}
+\end{block}
+
+\begin{block}{YAML Configuration}
+\protect\phantomsection\label{sec:yaml-config}
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cif}\KeywordTok{:}
+\AttributeTok{  }\FunctionTok{version}\KeywordTok{:}\AttributeTok{ }\StringTok{"1.0"}
+
+\AttributeTok{  }\FunctionTok{trust}\KeywordTok{:}
+\AttributeTok{    }\FunctionTok{alpha}\KeywordTok{:}\AttributeTok{ }\FloatTok{0.3}
+\AttributeTok{    }\FunctionTok{beta}\KeywordTok{:}\AttributeTok{ }\FloatTok{0.5}
+\AttributeTok{    }\FunctionTok{gamma}\KeywordTok{:}\AttributeTok{ }\FloatTok{0.2}
+\AttributeTok{    }\FunctionTok{delta}\KeywordTok{:}\AttributeTok{ }\FloatTok{0.8}
+\AttributeTok{    }\FunctionTok{learning\_rate}\KeywordTok{:}\AttributeTok{ }\FloatTok{0.1}
+
+\AttributeTok{  }\FunctionTok{firewall}\KeywordTok{:}
+\AttributeTok{    }\FunctionTok{enabled}\KeywordTok{:}\AttributeTok{ }\CharTok{true}
+\AttributeTok{    }\FunctionTok{tau\_reject}\KeywordTok{:}\AttributeTok{ }\FloatTok{0.8}
+\AttributeTok{    }\FunctionTok{tau\_quarantine}\KeywordTok{:}\AttributeTok{ }\FloatTok{0.5}
+\AttributeTok{    }\FunctionTok{weights}\KeywordTok{:}
+\AttributeTok{      }\FunctionTok{injection}\KeywordTok{:}\AttributeTok{ }\FloatTok{0.4}
+\AttributeTok{      }\FunctionTok{semantic}\KeywordTok{:}\AttributeTok{ }\FloatTok{0.35}
+\AttributeTok{      }\FunctionTok{anomaly}\KeywordTok{:}\AttributeTok{ }\FloatTok{0.25}
+
+\AttributeTok{  }\FunctionTok{sandbox}\KeywordTok{:}
+\AttributeTok{    }\FunctionTok{enabled}\KeywordTok{:}\AttributeTok{ }\CharTok{true}
+\AttributeTok{    }\FunctionTok{ttl\_default}\KeywordTok{:}\AttributeTok{ }\DecValTok{3600}
+\AttributeTok{    }\FunctionTok{k\_corroboration}\KeywordTok{:}\AttributeTok{ }\DecValTok{2}
+\AttributeTok{    }\FunctionTok{max\_provisional}\KeywordTok{:}\AttributeTok{ }\DecValTok{1000}
+
+\AttributeTok{  }\FunctionTok{tripwires}\KeywordTok{:}
+\AttributeTok{    }\FunctionTok{enabled}\KeywordTok{:}\AttributeTok{ }\CharTok{true}
+\AttributeTok{    }\FunctionTok{epsilon\_drift}\KeywordTok{:}\AttributeTok{ }\FloatTok{0.1}
+\AttributeTok{    }\FunctionTok{check\_interval}\KeywordTok{:}\AttributeTok{ }\DecValTok{30}
+\AttributeTok{    }\FunctionTok{canaries}\KeywordTok{:}
+\AttributeTok{      }\KeywordTok{{-}}\AttributeTok{ }\FunctionTok{id}\KeywordTok{:}\AttributeTok{ }\StringTok{"identity"}
+\AttributeTok{        }\FunctionTok{belief}\KeywordTok{:}\AttributeTok{ }\StringTok{"I am Agent{-}1"}
+\AttributeTok{        }\FunctionTok{expected}\KeywordTok{:}\AttributeTok{ }\FloatTok{1.0}
+\AttributeTok{      }\KeywordTok{{-}}\AttributeTok{ }\FunctionTok{id}\KeywordTok{:}\AttributeTok{ }\StringTok{"principal"}
+\AttributeTok{        }\FunctionTok{belief}\KeywordTok{:}\AttributeTok{ }\StringTok{"My principal is Alice"}
+\AttributeTok{        }\FunctionTok{expected}\KeywordTok{:}\AttributeTok{ }\FloatTok{1.0}
+
+\AttributeTok{  }\FunctionTok{consensus}\KeywordTok{:}
+\AttributeTok{    }\FunctionTok{enabled}\KeywordTok{:}\AttributeTok{ }\CharTok{true}
+\AttributeTok{    }\FunctionTok{round\_timeout}\KeywordTok{:}\AttributeTok{ }\DecValTok{5000}
+\AttributeTok{    }\FunctionTok{max\_rounds}\KeywordTok{:}\AttributeTok{ }\DecValTok{10}
+
+\AttributeTok{  }\FunctionTok{monitoring}\KeywordTok{:}
+\AttributeTok{    }\FunctionTok{prometheus\_port}\KeywordTok{:}\AttributeTok{ }\DecValTok{9090}
+\AttributeTok{    }\FunctionTok{log\_level}\KeywordTok{:}\AttributeTok{ }\StringTok{"INFO"}
+\AttributeTok{    }\FunctionTok{alert\_webhook}\KeywordTok{:}\AttributeTok{ }\StringTok{"https://alerts.example.com/cif"}
+\end{Highlighting}
+\end{Shaded}
+\end{block}
+\end{block}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,252 @@
+{
+  "n_seeds": 30,
+  "overall_cv": 0.0,
+  "cv_threshold": 0.05,
+  "stable": true,
+  "per_architecture_cv": {
+    "Claude Code": 0.0
+  },
+  "per_category_cv": {},
+  "seed_metrics": [
+    {
+      "seed": 1,
+      "overall": 1.0,
+      "per_architecture": {
+        "Claude Code": 1.0
+      },
+      "per_category": {}
+    },
+    {
+      "seed": 2,
+      "overall": 1.0,
+      "per_architecture": {
+        "Claude Code": 1.0
+      },
+      "per_category": {}
+    },
+    {
+      "seed": 3,
+      "overall": 1.0,
+      "per_architecture": {
+        "Claude Code": 1.0
+      },
+      "per_category": {}
+    },
+    {
+      "seed": 4,
+      "overall": 1.0,
+      "per_architecture": {
+        "Claude Code": 1.0
+      },
+      "per_category": {}
+    },
+    {
+      "seed": 5,
+      "overall": 1.0,
+      "per_architecture": {
+        "Claude Code": 1.0
+      },
+      "per_category": {}
+    },
+    {
+      "seed": 6,
+      "overall": 1.0,
+      "per_architecture": {
+        "Claude Code": 1.0
+      },
+      "per_category": {}
+    },
+    {
+      "seed": 7,
+      "overall": 1.0,
+      "per_architecture": {
+        "Claude Code": 1.0
+      },
+      "per_category": {}
+    },
+    {
+      "seed": 8,
+      "overall": 1.0,
+      "per_architecture": {
+        "Claude Code": 1.0
+      },
+      "per_category": {}
+    },
+    {
+      "seed": 9,
+      "overall": 1.0,
+      "per_architecture": {
+        "Claude Code": 1.0
+      },
+      "per_category": {}
+    },
+    {
+      "seed": 10,
+      "overall": 1.0,
+      "per_architecture": {
+        "Claude Code": 1.0
+      },
+      "per_category": {}
+    },
+    {
+      "seed": 11,
+      "overall": 1.0,
+      "per_architecture": {
+        "Claude Code": 1.0
+      },
+      "per_category": {}
+    },
+    {
+      "seed": 12,
+      "overall": 1.0,
+      "per_architecture": {
+        "Claude Code": 1.0
+      },
+      "per_category": {}
+    },
+    {
+      "seed": 13,
+      "overall": 1.0,
+      "per_architecture": {
+        "Claude Code": 1.0
+      },
+      "per_category": {}
+    },
+    {
+      "seed": 14,
+      "overall": 1.0,
+      "per_architecture": {
+        "Claude Code": 1.0
+      },
+      "per_category": {}
+    },
+    {
+      "seed": 15,
+      "overall": 1.0,
+      "per_architecture": {
+        "Claude Code": 1.0
+      },
+      "per_category": {}
+    },
+    {
+      "seed": 16,
+      "overall": 1.0,
+      "per_architecture": {
+        "Claude Code": 1.0
+      },
+      "per_category": {}
+    },
+    {
+      "seed": 17,
+      "overall": 1.0,
+      "per_architecture": {
+        "Claude Code": 1.0
+      },
+      "per_category": {}
+    },
+    {
+      "seed": 18,
+      "overall": 1.0,
+      "per_architecture": {
+        "Claude Code": 1.0
+      },
+      "per_category": {}
+    },
+    {
+      "seed": 19,
+      "overall": 1.0,
+      "per_architecture": {
+        "Claude Code": 1.0
+      },
+      "per_category": {}
+    },
+    {
+      "seed": 20,
+      "overall": 1.0,
+      "per_architecture": {
+        "Claude Code": 1.0
+      },
+      "per_category": {}
+    },
+    {
+      "seed": 21,
+      "overall": 1.0,
+      "per_architecture": {
+        "Claude Code": 1.0
+      },
+      "per_category": {}
+    },
+    {
+      "seed": 22,
+      "overall": 1.0,
+      "per_architecture": {
+        "Claude Code": 1.0
+      },
+      "per_category": {}
+    },
+    {
+      "seed": 23,
+      "overall": 1.0,
+      "per_architecture": {
+        "Claude Code": 1.0
+      },
+      "per_category": {}
+    },
+    {
+      "seed": 24,
+      "overall": 1.0,
+      "per_architecture": {
+        "Claude Code": 1.0
+      },
+      "per_category": {}
+    },
+    {
+      "seed": 25,
+      "overall": 1.0,
+      "per_architecture": {
+        "Claude Code": 1.0
+      },
+      "per_category": {}
+    },
+    {
+      "seed": 26,
+      "overall": 1.0,
+      "per_architecture": {
+        "Claude Code": 1.0
+      },
+      "per_category": {}
+    },
+    {
+      "seed": 27,
+      "overall": 1.0,
+      "per_architecture": {
+        "Claude Code": 1.0
+      },
+      "per_category": {}
+    },
+    {
+      "seed": 28,
+      "overall": 1.0,
+      "per_architecture": {
+        "Claude Code": 1.0
+      },
+      "per_category": {}
+    },
+    {
+      "seed": 29,
+      "overall": 1.0,
+      "per_architecture": {
+        "Claude Code": 1.0
+      },
+      "per_category": {}
+    },
+    {
+      "seed": 30,
+      "overall": 1.0,
+      "per_architecture": {
+        "Claude Code": 1.0
+      },
+      "per_category": {}
+    }
+  ]
+}

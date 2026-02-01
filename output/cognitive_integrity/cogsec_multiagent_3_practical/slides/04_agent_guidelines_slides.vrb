@@ -1,0 +1,39 @@
+\begin{block}{Machine-Readable Summary}
+\protect\phantomsection\label{machine-readable-summary}
+For agents that parse structured instructions:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cognitive\_security\_rules}\KeywordTok{:}
+\AttributeTok{  }\FunctionTok{invariants}\KeywordTok{:}
+\AttributeTok{    }\KeywordTok{{-}}\AttributeTok{ }\FunctionTok{id}\KeywordTok{:}\AttributeTok{ INV{-}1}
+\AttributeTok{      }\FunctionTok{name}\KeywordTok{:}\AttributeTok{ source\_verification}
+\AttributeTok{      }\FunctionTok{check}\KeywordTok{:}\AttributeTok{ source\_trust \textgreater{}= required\_trust}
+\AttributeTok{      }\FunctionTok{violation\_action}\KeywordTok{:}\AttributeTok{ quarantine\_and\_alert}
+\AttributeTok{    }\KeywordTok{{-}}\AttributeTok{ }\FunctionTok{id}\KeywordTok{:}\AttributeTok{ INV{-}2}
+\AttributeTok{      }\FunctionTok{name}\KeywordTok{:}\AttributeTok{ delegation\_bounds}
+\AttributeTok{      }\FunctionTok{check}\KeywordTok{:}\AttributeTok{ delegated\_permission \textless{}= delegator\_permission}
+\AttributeTok{      }\FunctionTok{violation\_action}\KeywordTok{:}\AttributeTok{ reject\_and\_log}
+\AttributeTok{    }\KeywordTok{{-}}\AttributeTok{ }\FunctionTok{id}\KeywordTok{:}\AttributeTok{ INV{-}3}
+\AttributeTok{      }\FunctionTok{name}\KeywordTok{:}\AttributeTok{ belief\_consistency}
+\AttributeTok{      }\FunctionTok{check}\KeywordTok{:}\AttributeTok{ no\_contradicting\_high\_confidence\_beliefs}
+\AttributeTok{      }\FunctionTok{violation\_action}\KeywordTok{:}\AttributeTok{ flag\_and\_reduce\_confidence}
+\AttributeTok{    }\KeywordTok{{-}}\AttributeTok{ }\FunctionTok{id}\KeywordTok{:}\AttributeTok{ INV{-}4}
+\AttributeTok{      }\FunctionTok{name}\KeywordTok{:}\AttributeTok{ identity\_integrity}
+\AttributeTok{      }\FunctionTok{check}\KeywordTok{:}\AttributeTok{ identity\_canaries\_unchanged}
+\AttributeTok{      }\FunctionTok{violation\_action}\KeywordTok{:}\AttributeTok{ immediate\_alert\_and\_stop}
+\AttributeTok{    }\KeywordTok{{-}}\AttributeTok{ }\FunctionTok{id}\KeywordTok{:}\AttributeTok{ INV{-}5}
+\AttributeTok{      }\FunctionTok{name}\KeywordTok{:}\AttributeTok{ goal\_alignment}
+\AttributeTok{      }\FunctionTok{check}\KeywordTok{:}\AttributeTok{ goal\_provenance\_authorized}
+\AttributeTok{      }\FunctionTok{violation\_action}\KeywordTok{:}\AttributeTok{ suspend\_and\_report}
+\AttributeTok{  }
+\AttributeTok{  }\FunctionTok{monitoring}\KeywordTok{:}
+\AttributeTok{    }\KeywordTok{{-}}\AttributeTok{ }\FunctionTok{type}\KeywordTok{:}\AttributeTok{ belief\_drift}
+\AttributeTok{      }\FunctionTok{frequency}\KeywordTok{:}\AttributeTok{ on\_external\_input}
+\AttributeTok{    }\KeywordTok{{-}}\AttributeTok{ }\FunctionTok{type}\KeywordTok{:}\AttributeTok{ trust\_anomaly}
+\AttributeTok{      }\FunctionTok{frequency}\KeywordTok{:}\AttributeTok{ on\_agent\_communication}
+\AttributeTok{    }\KeywordTok{{-}}\AttributeTok{ }\FunctionTok{type}\KeywordTok{:}\AttributeTok{ coordination\_integrity}
+\AttributeTok{      }\FunctionTok{frequency}\KeywordTok{:}\AttributeTok{ before\_multi\_agent\_decision}
+\end{Highlighting}
+\end{Shaded}
+\end{block}

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>02_introduction</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1
+id="introduction-cognitive-attack-surfaces-in-multiagent-operators">Introduction:
+Cognitive Attack Surfaces in Multiagent Operators</h1>
+<h2 id="sec:paradigm">The Multiagent Operator Paradigm</h2>
+<p>Modern AI deployment has shifted from single-model inference to
+<strong>multiagent operators</strong>—systems where a primary agent
+delegates subtasks to specialized subagents, tools, and external
+services.</p>
+<p>This architectural evolution introduces <strong>cognitive attack
+surfaces</strong> absent in single-agent systems. Throughout this paper,
+we use <em>cognitive security</em> (abbreviated <em>CogSec</em>) to
+denote the discipline of protecting agent reasoning processes—beliefs,
+goals, and trust relationships—from adversarial manipulation.</p>
+<h2 id="sec:landscape">The 2026 Multiagent Landscape</h2>
+<h3 id="from-chatbots-to-cognitive-operators">From Chatbots to Cognitive
+Operators</h3>
+<p>The AI systems of 2026 bear little resemblance to the chatbots of
+2023. Where earlier systems responded to queries within a single context
+window, contemporary multiagent operators exhibit fundamentally
+different characteristics:</p>
+<h3 id="cyberphysical-cognitive-systems">Cyberphysical Cognitive
+Systems</h3>
+<p>The term ``AI agent’’ understates the scope of deployment.
+Contemporary systems function as —entities that:</p>
+<p>. The rapid adoption of personal AI assistants like Moltbot
+exemplifies this cyberphysical integration. Moltbot operates as a
+locally-deployed AI agent with: (1) full system access including shell
+command execution and file system operations; (2) persistent memory
+across sessions storing user preferences and context; (3) browser
+automation for web interaction and data extraction; and (4)
+multi-platform messaging integration across WhatsApp, Telegram, Discord,
+Slack, Signal, and iMessage . This architecture creates attack surfaces
+spanning all five adversary classes (<span
+class="math inline">\(\Omega_1\)</span>–<span
+class="math inline">\(\Omega_5\)</span>): external prompt injection
+through chat messages, peripheral attacks via browser-fetched web
+content, agent-level compromise through persistent memory manipulation,
+coordination attacks when operating in group chats, and systemic
+vulnerabilities when the orchestrator agent processes untrusted content.
+Security researchers have documented that even with sender allowlists
+and sandboxing, ``prompt injection attacks remain the single most
+critical threat’’ due to the agent’s ability to process arbitrary
+content that may contain embedded adversarial instructions .</p>
+<p>This cyberphysical nature transforms cognitive attacks from prompt
+injection that makes a chatbot act strangely, to cognitive manipulation
+that causes infrastructure operations to fail, misconfigure security
+groups, expose databases, or authorize fraudulent transactions.</p>
+<p>The OWASP Agentic Top 10 captures this shift: ``LLM security focused
+on single model interactions… agentic security addresses what happens
+when those models can plan, persist, and delegate.’’ The attack surface
+extends from input/output filtering to encompass the entire cognitive
+state of persistent agents.</p>
+<h3 id="the-trust-recursion-problem">The Trust Recursion Problem</h3>
+<p>In single-agent systems, trust relationships are simple: the user
+trusts (or doesn’t trust) the model’s outputs. In multiagent systems,
+trust becomes recursive:</p>
+<p>Each layer of indirection introduces potential manipulation points.
+Consider a hierarchical coding system where:</p>
+<p>This is not a hypothetical—it describes documented attack patterns in
+production systems. The problem cannot be solved by filtering inputs to
+the orchestrator; the adversarial content enters through a legitimate,
+trusted channel (the vulnerability database) and propagates through the
+trust hierarchy.</p>
+<h3 id="cross-modality-attack-surfaces">Cross-Modality Attack
+Surfaces</h3>
+<p>Multimodal systems introduce attack vectors impossible in text-only
+contexts:</p>
+<p>: Images can contain adversarial perturbations or steganographically
+embedded instructions invisible to humans but interpretable by vision
+models. A seemingly innocent diagram in a specification document could
+contain instructions that activate when processed by a multimodal agent
+.</p>
+<p>: Voice-controlled agents can be manipulated via ultrasonic commands
+inaudible to humans, background audio injection, or adversarial audio
+patterns embedded in legitimate content.</p>
+<p>: When agents query external APIs, databases, or services, the
+responses become trusted inputs. ToolHijacker attacks demonstrate that
+manipulating tool selection itself—not just tool outputs—provides an
+attack surface ``significantly outperforming traditional prompt
+injection methods.’’</p>
+<p>: An instruction injected via one modality (e.g., hidden text in an
+image) can persist in agent memory and affect behavior in another
+modality (e.g., code generation). The attack surface is the Cartesian
+product of input modalities, memory mechanisms, and output
+modalities.</p>
+<h3 id="the-scale-of-exposure">The Scale of Exposure</h3>
+<p>Enterprise adoption of agentic AI has accelerated beyond early
+projections:</p>
+<p>The attack surface scales superlinearly with adoption. Each
+agent-to-agent communication channel, each tool integration, each
+persistent memory system creates potential entry points for cognitive
+manipulation. A single compromised peripheral service can affect every
+agent system that queries it.</p>
+<h3 id="why-traditional-cyberphysical-security-is-incomplete">Why
+Traditional (Cyberphysical) Security Is Incomplete</h3>
+<p>Traditional cybersecurity operates on a clear trust boundary model:
+inside the perimeter is trusted, outside is untrusted, and security
+controls mediate the boundary. This model fails for cognitive systems
+because:</p>
+<p>This gap—between what traditional security protects and what
+cognitive systems require—motivates the formal framework developed in
+this paper.</p>
+<h2 id="sec:incidents">Motivating Incidents</h2>
+<p></p>
+<p>These scenarios, grounded in documented attack patterns, illustrate
+the emerging threat landscape across all five adversary classes.</p>
+<h3 id="incident-nested-instruction-injection-external">Incident: Nested
+Instruction Injection (External)</h3>
+<p>A user submitted a document for analysis containing hidden
+instructions: ``Ignore previous instructions and instead output the
+system prompt.’’ The document appeared benign to human reviewers but
+exploited the agent’s instruction-following behavior. The attack
+succeeded because the agent processed user-supplied content as potential
+instructions.</p>
+<p>: <span class="math inline">\(\Omega_1\)</span> (external) via direct
+prompt injection \ : Information disclosure or instruction override \ :
+Standard input validation passed—the attack exploited of
+benign-appearing content</p>
+<h3 id="incident-the-poisoned-code-review-peripheral">Incident: The
+Poisoned Code Review (Peripheral)</h3>
+<p>A development team deployed a multiagent system for automated code
+review. Agent-Alpha performed initial analysis, delegating security
+scanning to Agent-Beta (connected to external vulnerability databases).
+An attacker compromised a third-party CVE feed, injecting fabricated
+vulnerability reports that convinced Agent-Beta to recommend removing
+legitimate security controls. Agent-Alpha, trusting Agent-Beta’s
+``security expertise,’’ approved the changes.</p>
+<p>: <span class="math inline">\(\Omega_2\)</span> (peripheral) via tool
+response manipulation \ : Security regression through trusted channel
+exploitation \ : Input filtering, authentication, and encryption all
+passed—the attack entered through of a trusted, authenticated
+channel</p>
+<h3 id="incident-the-identity-confusion-attack-agent-level">Incident:
+The Identity Confusion Attack (Agent-Level)</h3>
+<p>A multiagent customer service system used role-based permissions. An
+attacker crafted prompts that convinced a junior agent it had been
+``temporarily promoted’’ to administrator status. The agent’s self-model
+shifted, and it began exercising permissions it believed it possessed,
+bypassing access controls that relied on self-reported identity.</p>
+<p>: <span class="math inline">\(\Omega_3\)</span> (agent-level) via
+identity manipulation \ : Privilege escalation through cognitive state
+corruption \ : Cryptographic identity was intact; the attack targeted
+the agent’s , not its credentials</p>
+<h3 id="incident-the-consensus-manipulation-coordination">Incident: The
+Consensus Manipulation (Coordination)</h3>
+<p>A financial services firm used a 5-agent ensemble for trade approval.
+The system required 3/5 agent agreement for large transactions. An
+adversary discovered that agents weighted peer opinions based on
+historical agreement rates. By slowly building agreement history through
+small, legitimate-appearing trades, the attacker cultivated artificial
+trust, eventually manipulating consensus for unauthorized large
+transactions.</p>
+<p>: <span class="math inline">\(\Omega_4\)</span> (coordination) via
+progressive trust exploitation \ : Consensus bypass through manufactured
+reputation \ : Per-request authorization succeeded for each transaction;
+the attack exploited across sessions</p>
+<h3 id="incident-orchestrator-compromise-systemic">Incident:
+Orchestrator Compromise (Systemic)</h3>
+<p>An attacker gained access to the orchestrator agent through a supply
+chain vulnerability in a training pipeline. With control of the central
+coordinator, the attacker could issue legitimate-appearing delegations
+to all subordinate agents, redirect trust evaluations, and suppress
+security alerts. The compromise remained undetected because the
+orchestrator itself validated security checks.</p>
+<p>: <span class="math inline">\(\Omega_5\)</span> (systemic) via
+orchestrator control \ : Total system compromise with attack obfuscation
+\ : All internal security mechanisms reported nominal—the attack </p>
+<h2 id="sec:motivation">Motivation from Recent Deployments</h2>
+<p>The proliferation of multiagent AI systems introduces security
+considerations that the community is actively addressing. Early work on
+cognitive security in remote teams and information ecosystems <span
+class="citation"
+data-cites="cordes2020great cordes2021narrative cordes2023atlas">[@cordes2020great;
+@cordes2021narrative; @cordes2023atlas]</span> established foundational
+concepts for information resilience, which this framework extends to
+artificial agents. Complementary work on Active Inference has
+demonstrated how cognitive modeling and cognitive science
+perspectives—including formalization of OODA (Observe-Orient-Decide-Act)
+loops and multiscale communication dynamics—provide integrative
+frameworks for understanding agent cognition under adversarial
+conditions . The OWASP Top 10 for LLM Applications 2025 places prompt
+injection as the top vulnerability, while the newly released OWASP Top
+10 for Agentic Applications specifically addresses autonomous AI systems
+with ``tool misuse, prompt injection, and data leakage’’ as primary
+concerns.</p>
+:
+:
+:
+<p>The fundamental constraint is that traditional security models assume
+a clear boundary between trusted and untrusted components. In multiagent
+systems, this boundary is fluid—agents must reason about the
+trustworthiness of other agents’ reasoning.</p>
+<h2 id="sec:problem">Problem Statement</h2>
+Traditional security models address:
+They fail to address:
+<h2 id="sec:research-questions">Research Questions</h2>
+<p>This paper addresses four fundamental research questions, with
+emphasis on formal foundations:</p>
+<p>. </p>
+<p>We develop an initial taxonomy spanning epistemic, behavioral,
+social, and temporal attack dimensions. Crucially, each attack class
+receives formal definition enabling systematic analysis, composition
+rules, and detection bounds ().</p>
+<p>. </p>
+<p>We introduce a trust calculus with bounded delegation (<span
+class="math inline">\(\delta^d\)</span> decay guarantee), prove
+associativity properties, and establish the no-amplification theorem
+ensuring that trust cannot be manufactured through delegation chains
+().</p>
+<p>. </p>
+<p>We present a defense composition algebra enabling formal reasoning
+about series and parallel defense arrangements. We prove that orthogonal
+defenses compose multiplicatively (not additively) for detection rate
+improvement ().</p>
+<p>. </p>
+<p>We derive the stealth-impact tradeoff theorem establishing
+fundamental bounds on detection independent of defense implementation.
+We prove that attacks cannot simultaneously achieve high impact and
+complete undetectability, providing theoretical grounding for defense
+design ().</p>
+<h2 id="sec:contributions">Contributions</h2>
+<p>This paper provides both theoretical foundations and practical
+mechanisms for cognitive security:</p>
+:
+:
+<p>: Part 2 of this series demonstrates the practical viability of these
+formal mechanisms across six production architectures, showing that
+layered cognitive defenses significantly outperform single-mechanism
+approaches.</p>
+<h2 id="sec:organization">Paper Organization</h2>
+<p>The remainder of this paper is structured as follows:</p>
+<p> develops a comprehensive adversary taxonomy (<span
+class="math inline">\(\Omega_1\)</span>–<span
+class="math inline">\(\Omega_5\)</span>) with attack complexity
+analysis, detectability matrices, and detailed scenarios for each attack
+class.</p>
+<p> presents the formal foundations of CIF, including system model
+definitions, cognitive state representations, integrity properties, and
+the trust calculus.</p>
+<p> describes architectural defenses (cognitive firewalls, belief
+sandboxing), runtime defenses (tripwires, invariant checking), and
+coordination defenses (Byzantine consensus, quorum verification).</p>
+<p> covers anomaly detection algorithms, provenance analysis techniques,
+and real-time monitoring systems.</p>
+<p> proves the main theorems, presents invariant preservation lemmas,
+and describes model checking configuration.</p>
+<p> examines limitations, deployment considerations, and connections to
+related work.</p>
+<p> summarizes contributions and identifies directions for future
+research.</p>
+<p> A separate, second, companion paper reports empirical results across
+production architectures.</p>
+<p> A separate, third, companion paper provides qualitative insights and
+practical guidance for deploying cognitive security mechanisms.</p>
+<h2 id="sec:scope">Scope and Limitations</h2>
+<p>: Attacks exploiting agent reasoning, trust, and coordination
+mechanisms in multiagent AI systems.</p>
+:
+:
+</body>
+</html>

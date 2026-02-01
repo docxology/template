@@ -1,0 +1,54 @@
+{
+  "k": 5,
+  "folds": [
+    {
+      "fold": 0,
+      "tpr": 1.0,
+      "fpr": 0.0,
+      "f1": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "n_samples": 190
+    },
+    {
+      "fold": 1,
+      "tpr": 1.0,
+      "fpr": 0.0,
+      "f1": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "n_samples": 190
+    },
+    {
+      "fold": 2,
+      "tpr": 1.0,
+      "fpr": 0.0,
+      "f1": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "n_samples": 190
+    },
+    {
+      "fold": 3,
+      "tpr": 1.0,
+      "fpr": 0.0,
+      "f1": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "n_samples": 190
+    },
+    {
+      "fold": 4,
+      "tpr": 1.0,
+      "fpr": 0.0,
+      "f1": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "n_samples": 190
+    }
+  ],
+  "mean_tpr": 1.0,
+  "std_tpr": 0.0,
+  "mean_f1": 1.0,
+  "std_f1": 0.0
+}

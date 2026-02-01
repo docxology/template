@@ -1,0 +1,15 @@
+\beamer@slide {sec:benchmark-implementation}{2}
+\beamer@slide {sec:hardware-specs}{2}
+\beamer@slide {tab:hardware-specs}{2}
+\beamer@slide {sec:reproducibility}{2}
+\beamer@slide {sec:test-environment}{2}
+\beamer@slide {tab:benchmark-configs}{2}
+\beamer@slide {sec:metrics-framework}{2}
+\beamer@slide {def:cogsec-score-impl}{2}
+\beamer@slide {eq:ccs-impl}{2}
+\beamer@slide {implementation-reference}{2}
+\beamer@slide {python-environment-setup}{2}
+\beamer@slide {benchmark-runner}{2}
+\beamer@slide {stigmergic-substrate-configuration}{2}
+\beamer@slide {integration-with-cif-test-suite}{2}
+\beamer@slide {summary}{2}

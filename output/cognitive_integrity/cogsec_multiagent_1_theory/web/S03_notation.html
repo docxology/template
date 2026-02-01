@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>S03_notation</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="sec:notation-reference">Supplementary: Notation Reference</h1>
+<p>This supplement provides a comprehensive reference for the
+mathematical notation used throughout the Cognitive Integrity Framework
+(CIF) manuscript, including the eusocial and colony cognitive security
+extensions. Symbols are organized by domain, with cross-references to
+their formal definitions in the main text and supplements.</p>
+<h2 id="adversary-model-notation">Adversary Model Notation</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Symbol</th>
+<th style="text-align: left;">Meaning</th>
+<th style="text-align: left;">Defined In</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\Omega_k\)</span></td>
+<td style="text-align: left;">Adversary class <span
+class="math inline">\(k\)</span> (e.g., <span
+class="math inline">\(\Omega_1\)</span> = External, <span
+class="math inline">\(\Omega_5\)</span> = Systemic)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{R}\)</span></td>
+<td style="text-align: left;">Attack resource tuple <span
+class="math inline">\(\langle R_C, R_K, R_A, R_P, R_{Co}
+\rangle\)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(R_C\)</span></td>
+<td style="text-align: left;">Computational resources (FLOPS-hours)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(R_K\)</span></td>
+<td style="text-align: left;">Knowledge resources (system
+understanding)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(R_A\)</span></td>
+<td style="text-align: left;">Access resources (available channels)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(R_P\)</span></td>
+<td style="text-align: left;">Persistence resources (temporal
+presence)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(R_{Co}\)</span></td>
+<td style="text-align: left;">Coordination resources (multi-party
+synchronization)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(D_{\text{score}}\)</span></td>
+<td style="text-align: left;">Detectability score of an attack</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{C}_{\text{adv}}\)</span></td>
+<td style="text-align: left;">Adversarial capability set</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{A}_{\text{BIM}}\)</span></td>
+<td style="text-align: left;">Belief injection/manipulation attack
+class</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{A}_{\text{BI}}\)</span></td>
+<td style="text-align: left;">Belief injection attack</td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<h2 id="system-model-notation">System Model Notation</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Symbol</th>
+<th style="text-align: left;">Meaning</th>
+<th style="text-align: left;">Defined In</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{O}\)</span></td>
+<td style="text-align: left;">Multiagent operator tuple <span
+class="math inline">\(\langle \mathcal{A}, \mathcal{C}, \mathcal{S},
+\mathcal{P}, \Gamma \rangle\)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{A}\)</span></td>
+<td style="text-align: left;">Set of agents <span
+class="math inline">\(\{a_1, \ldots, a_n\}\)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(a_i\)</span></td>
+<td style="text-align: left;">Individual agent <span
+class="math inline">\(i\)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(n\)</span></td>
+<td style="text-align: left;">Number of agents</td>
+<td style="text-align: left;">Throughout</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{C}\)</span></td>
+<td style="text-align: left;">Communication adjacency matrix</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{S}\)</span></td>
+<td style="text-align: left;">Shared global state</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{P}\)</span></td>
+<td style="text-align: left;">Permission mapping</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\Gamma\)</span></td>
+<td style="text-align: left;">Coordination protocol</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\sigma_i\)</span></td>
+<td style="text-align: left;">Cognitive state of agent <span
+class="math inline">\(a_i\)</span>: <span class="math inline">\(\langle
+\mathcal{B}_i, \mathcal{G}_i, \mathcal{I}_i, \mathcal{H}_i
+\rangle\)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{B}_i\)</span></td>
+<td style="text-align: left;">Belief distribution of agent <span
+class="math inline">\(a_i\)</span>: <span class="math inline">\(\Phi \to
+[0,1]\)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{G}_i\)</span></td>
+<td style="text-align: left;">Goal set of agent <span
+class="math inline">\(a_i\)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{I}_i\)</span></td>
+<td style="text-align: left;">Intention set (committed actions)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{H}_i\)</span></td>
+<td style="text-align: left;">Interaction history</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(S^t\)</span></td>
+<td style="text-align: left;">Global system state at time <span
+class="math inline">\(t\)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\sigma_i^t\)</span></td>
+<td style="text-align: left;">Cognitive state of agent <span
+class="math inline">\(i\)</span> at time <span
+class="math inline">\(t\)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\Phi\)</span></td>
+<td style="text-align: left;">Set of propositions</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="math inline">\(\phi,
+\psi\)</span></td>
+<td style="text-align: left;">Individual propositions</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{M}\)</span></td>
+<td style="text-align: left;">Message space</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(m\)</span></td>
+<td style="text-align: left;">Individual message</td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<h2 id="trust-calculus-notation">Trust Calculus Notation</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Symbol</th>
+<th style="text-align: left;">Meaning</th>
+<th style="text-align: left;">Defined In</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><span class="math inline">\(\mathcal{T}_{i
+\to j}\)</span></td>
+<td style="text-align: left;">Trust score from agent <span
+class="math inline">\(i\)</span> to agent <span
+class="math inline">\(j\)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{T}_{\text{base}}\)</span> / <span
+class="math inline">\(T_{\text{base}}\)</span></td>
+<td style="text-align: left;">Base architectural trust (role-based)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{T}_{\text{rep}}\)</span> / <span
+class="math inline">\(T_{\text{rep}}\)</span></td>
+<td style="text-align: left;">Reputation trust (historical
+accuracy)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{T}_{\text{ctx}}\)</span> / <span
+class="math inline">\(T_{\text{ctx}}\)</span></td>
+<td style="text-align: left;">Contextual trust (task-specific)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="math inline">\(\alpha, \beta,
+\gamma\)</span></td>
+<td style="text-align: left;">Trust component weights (<span
+class="math inline">\(\alpha + \beta + \gamma = 1\)</span>)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\delta\)</span></td>
+<td style="text-align: left;">Trust decay factor (<span
+class="math inline">\(\delta \in (0, 1)\)</span>)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(d\)</span></td>
+<td style="text-align: left;">Delegation depth</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{T}^{\text{del}}\)</span></td>
+<td style="text-align: left;">Delegated trust value</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{T}^{\text{path}}\)</span></td>
+<td style="text-align: left;">Path trust value</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\eta_m\)</span></td>
+<td style="text-align: left;">Modality reliability factor</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\eta\)</span></td>
+<td style="text-align: left;">Learning rate (reputation update)</td>
+<td style="text-align: left;">Trust configuration</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\rho\)</span></td>
+<td style="text-align: left;">Penalty factor (failure penalty
+multiplier)</td>
+<td style="text-align: left;">Trust configuration</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\otimes\)</span></td>
+<td style="text-align: left;">Trust delegation operator</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\oplus\)</span></td>
+<td style="text-align: left;">Trust aggregation operator</td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<h2 id="defense-mechanism-notation">Defense Mechanism Notation</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Symbol</th>
+<th style="text-align: left;">Meaning</th>
+<th style="text-align: left;">Defined In</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{F}(m)\)</span></td>
+<td style="text-align: left;">Cognitive firewall classification
+function</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(D_{\text{inj}}\)</span></td>
+<td style="text-align: left;">Injection detection score</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(D_{\text{sus}}\)</span></td>
+<td style="text-align: left;">Suspicious content score</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\tau_1\)</span></td>
+<td style="text-align: left;">Firewall reject threshold</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\tau_2\)</span></td>
+<td style="text-align: left;">Firewall quarantine threshold</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{B}_{\text{verified}}\)</span></td>
+<td style="text-align: left;">Set of verified beliefs</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{B}_{\text{provisional}}\)</span></td>
+<td style="text-align: left;">Set of provisional (sandboxed)
+beliefs</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\pi(\phi)\)</span></td>
+<td style="text-align: left;">Provenance chain for belief <span
+class="math inline">\(\phi\)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(V(\pi)\)</span></td>
+<td style="text-align: left;">Provenance verification function</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{W}\)</span></td>
+<td style="text-align: left;">Set of canary beliefs (tripwires)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\omega_j\)</span></td>
+<td style="text-align: left;">Individual canary belief</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(p_j^{\text{exp}}\)</span></td>
+<td style="text-align: left;">Expected probability for canary <span
+class="math inline">\(j\)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\epsilon_{\text{drift}}\)</span></td>
+<td style="text-align: left;">Drift detection threshold</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{I}_{\text{inv}}\)</span></td>
+<td style="text-align: left;">Set of behavioral invariants</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(I_k\)</span></td>
+<td style="text-align: left;">Individual invariant predicate</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\kappa\)</span></td>
+<td style="text-align: left;">Corroboration threshold</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\text{TTL}\)</span></td>
+<td style="text-align: left;">Time-to-live for provisional beliefs</td>
+<td style="text-align: left;">Sandbox configuration</td>
+</tr>
+</tbody>
+</table>
+<h2 id="detection-analysis-notation">Detection &amp; Analysis
+Notation</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Symbol</th>
+<th style="text-align: left;">Meaning</th>
+<th style="text-align: left;">Defined In</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(S_{\text{drift}}\)</span></td>
+<td style="text-align: left;">Drift score (belief change magnitude)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(D_{\text{KL}}\)</span></td>
+<td style="text-align: left;">Kullback-Leibler divergence (drift
+detection)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(w\)</span></td>
+<td style="text-align: left;">Sliding window size</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\lambda\)</span></td>
+<td style="text-align: left;">Max delta weight in drift scoring</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(S_{\text{dev}}\)</span></td>
+<td style="text-align: left;">Behavioral deviation score</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(f_k\)</span></td>
+<td style="text-align: left;">Feature extractor function</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="math inline">\(\mu_k,
+\sigma_k\)</span></td>
+<td style="text-align: left;">Feature mean and standard deviation</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\text{AUC}\)</span></td>
+<td style="text-align: left;">Area Under the ROC Curve</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\text{TPR}(\tau)\)</span></td>
+<td style="text-align: left;">True Positive Rate at threshold <span
+class="math inline">\(\tau\)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\text{FPR}(\tau)\)</span></td>
+<td style="text-align: left;">False Positive Rate at threshold <span
+class="math inline">\(\tau\)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\text{FNR}(\tau)\)</span></td>
+<td style="text-align: left;">False Negative Rate at threshold <span
+class="math inline">\(\tau\)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(S_{\text{fused}}\)</span></td>
+<td style="text-align: left;">Fused detector score</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(D_{\text{fused}}\)</span></td>
+<td style="text-align: left;">Fused detector decision</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\text{taint}(\phi)\)</span></td>
+<td style="text-align: left;">Provenance tags for belief <span
+class="math inline">\(\phi\)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<h2 id="consensus-coordination-notation">Consensus &amp; Coordination
+Notation</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Symbol</th>
+<th style="text-align: left;">Meaning</th>
+<th style="text-align: left;">Defined In</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q\)</span></td>
+<td style="text-align: left;">Quorum threshold for consensus</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(f\)</span></td>
+<td style="text-align: left;">Maximum number of Byzantine/compromised
+agents</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{B}_{\text{consensus}}\)</span></td>
+<td style="text-align: left;">Consensus belief function</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{D}\)</span></td>
+<td style="text-align: left;">Set of defense mechanisms</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="math inline">\(\mathcal{D}_1
+\circ \mathcal{D}_2\)</span></td>
+<td style="text-align: left;">Series defense composition</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="math inline">\(\mathcal{D}_1
+\parallel \mathcal{D}_2\)</span></td>
+<td style="text-align: left;">Parallel defense composition</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(P_{\text{detect}}\)</span></td>
+<td style="text-align: left;">Detection probability</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(r_f\)</span></td>
+<td style="text-align: left;">Firewall detection rate</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(r_s\)</span></td>
+<td style="text-align: left;">Sandbox verification rate</td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<h2 id="cost-performance-notation">Cost &amp; Performance Notation</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Symbol</th>
+<th style="text-align: left;">Meaning</th>
+<th style="text-align: left;">Defined In</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(C_{\text{total}}\)</span></td>
+<td style="text-align: left;">Total defense cost</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(C_{\text{compute}}\)</span></td>
+<td style="text-align: left;">Computational cost</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(C_{\text{latency}}\)</span></td>
+<td style="text-align: left;">Latency cost</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(C_{\text{fp}}\)</span></td>
+<td style="text-align: left;">False positive cost</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="math inline">\(C_{\text{FP}},
+C_{\text{FN}}\)</span></td>
+<td style="text-align: left;">Cost of false positive / false
+negative</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(B_{\text{total}}\)</span></td>
+<td style="text-align: left;">Total defense benefit</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(L_{\text{CIF}}\)</span></td>
+<td style="text-align: left;">CIF latency overhead</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(L_d\)</span></td>
+<td style="text-align: left;">Latency of defense <span
+class="math inline">\(d\)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(L_{\max}\)</span></td>
+<td style="text-align: left;">Maximum allowed latency</td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<h2 id="information-complexity-notation">Information &amp; Complexity
+Notation</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Symbol</th>
+<th style="text-align: left;">Meaning</th>
+<th style="text-align: left;">Defined In</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(H(\mathcal{A})\)</span></td>
+<td style="text-align: left;">Entropy of attack <span
+class="math inline">\(\mathcal{A}\)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="math inline">\(I(D;
+\mathcal{A})\)</span></td>
+<td style="text-align: left;">Mutual information between detector and
+attack</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(C_{\text{channel}}\)</span></td>
+<td style="text-align: left;">Channel capacity</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(O(\cdot)\)</span></td>
+<td style="text-align: left;">Big-O complexity bound</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(S_{\text{total}}\)</span></td>
+<td style="text-align: left;">Total space complexity</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(T_{\text{msg}}\)</span></td>
+<td style="text-align: left;">Per-message processing time</td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<h2 id="stigmergic-colony-notation-supplementary">Stigmergic &amp;
+Colony Notation (Supplementary)</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Symbol</th>
+<th style="text-align: left;">Meaning</th>
+<th style="text-align: left;">Defined In</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{O}_\Sigma\)</span></td>
+<td style="text-align: left;">Stigmergic operator tuple</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{E}\)</span></td>
+<td style="text-align: left;">Environmental state (markers/signals)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\Sigma\)</span></td>
+<td style="text-align: left;">Stigmergic update function</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{L}\)</span></td>
+<td style="text-align: left;">Set of locations</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{M}\)</span></td>
+<td style="text-align: left;">Set of marker types</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{N}\)</span></td>
+<td style="text-align: left;">Cyberphysical niche</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{F}_c\)</span></td>
+<td style="text-align: left;">Emergent collective function</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{T}_c\)</span></td>
+<td style="text-align: left;">Colonial trust function
+(environment-mediated)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="math inline">\(\rho(m, l,
+t)\)</span></td>
+<td style="text-align: left;">Signal reliability at location <span
+class="math inline">\(l\)</span> for marker <span
+class="math inline">\(m\)</span> at time <span
+class="math inline">\(t\)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\lambda\)</span></td>
+<td style="text-align: left;">Temporal decay constant (colonial
+trust)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(Q_\alpha\)</span></td>
+<td style="text-align: left;">Cognitive quorum function for action <span
+class="math inline">\(\alpha\)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{A}_e\)</span></td>
+<td style="text-align: left;">Emergent attack</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\text{CCS}\)</span></td>
+<td style="text-align: left;">Colony CogSec Score</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\text{DR}_c\)</span></td>
+<td style="text-align: left;">Colony-level detection rate</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\text{FPR}_c\)</span></td>
+<td style="text-align: left;">Colony-level false positive rate</td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<h2 id="general-mathematical-notation">General Mathematical
+Notation</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Symbol</th>
+<th style="text-align: left;">Meaning</th>
+<th style="text-align: left;">Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(P(\cdot)\)</span></td>
+<td style="text-align: left;">Probability measure</td>
+<td style="text-align: left;">Throughout</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathbb{1}[\cdot]\)</span></td>
+<td style="text-align: left;">Indicator function</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\tau\)</span></td>
+<td style="text-align: left;">Generic threshold parameter</td>
+<td style="text-align: left;">Throughout</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\epsilon\)</span></td>
+<td style="text-align: left;">Small constant (error rate,
+deviation)</td>
+<td style="text-align: left;">Throughout</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(t\)</span></td>
+<td style="text-align: left;">Time index</td>
+<td style="text-align: left;">Throughout</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\models\)</span></td>
+<td style="text-align: left;">Satisfaction relation (state satisfies
+predicate)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\vdash\)</span></td>
+<td style="text-align: left;">Logical entailment</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\bot\)</span></td>
+<td style="text-align: left;">Logical contradiction</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\perp\)</span></td>
+<td style="text-align: left;">Undecided / undefined</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\checkmark\)</span></td>
+<td style="text-align: left;">Verification passed</td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<h2 id="ctl-temporal-logic-notation-formal-verification">CTL Temporal
+Logic Notation (Formal Verification)</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Symbol</th>
+<th style="text-align: left;">Meaning</th>
+<th style="text-align: left;">Defined In</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(AG\)</span></td>
+<td style="text-align: left;">“Always globally” (CTL operator)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(AF\)</span></td>
+<td style="text-align: left;">“Always eventually” (CTL operator)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(EX\)</span></td>
+<td style="text-align: left;">“Exists next” (CTL operator)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\Rightarrow\)</span></td>
+<td style="text-align: left;">Logical implication</td>
+<td style="text-align: left;">Throughout</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\leftrightarrow\)</span></td>
+<td style="text-align: left;">Logical biconditional</td>
+<td style="text-align: left;">Throughout</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

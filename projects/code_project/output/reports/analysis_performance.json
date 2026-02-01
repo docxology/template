@@ -1,9 +1,9 @@
 {
-  "duration": 1.16615891456604,
+  "duration": 1.1746199131011963,
   "resource_usage": {
     "cpu_percent": 0.0,
-    "memory_mb": 319.390625,
-    "peak_memory_mb": 84.34375,
+    "memory_mb": 318.296875,
+    "peak_memory_mb": 84.265625,
     "io_read_mb": 0.0,
     "io_write_mb": 0.0
   },

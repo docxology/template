@@ -1,0 +1,136 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}{Abstract}
+\protect\phantomsection\label{abstract}
+Multiagent AI systems introduce cognitive attack surfaces absent in
+single-model inference. When agents delegate to agents, forming beliefs
+about beliefs through recursive trust hierarchies, manipulation of
+reasoning processes---rather than mere data corruption---becomes a
+primary security concern. This paper presents the Cognitive Integrity
+Framework (CIF), providing formal foundations for cognitive security in
+multiagent operators. We develop four interconnected theoretical
+contributions: a Trust Calculus with bounded delegation (exponential
+\(\delta^d\) decay) that prevents trust amplification through delegation
+chains; a Defense Composition Algebra with series and parallel
+composition theorems establishing multiplicative detection bounds;
+Information-Theoretic Limits relating stealth constraints to maximum
+attack impact through a fundamental stealth-impact tradeoff; and a
+formal Adversary Hierarchy (\(\Omega_1\)--\(\Omega_5\)) characterizing
+external, peripheral, agent-level, coordination, and systemic threats
+with increasing capability and decreasing detectability. The framework
+provides complete coverage of the OWASP Top 10 for Agentic Applications
+through formal threat models grounded in cognitive state manipulation
+rather than traditional input/output filtering.
+
+CIF bridges classical security concepts with the cognitive requirements
+of agentic systems. We extend Byzantine fault tolerance to cognitive
+manipulation---agents that appear functional but hold corrupted
+beliefs---and adapt trust management systems to continuous trust
+evolution with provable decay bounds. The framework formalizes five
+architectural defense mechanisms (cognitive firewalls, belief
+sandboxing, behavioral tripwires, provenance tracking, Byzantine
+consensus) with composition rules enabling formal reasoning about
+layered security. Technical foundations include: operational semantics
+for message passing and trust updates; invariants for belief integrity,
+goal preservation, and trust boundedness; model checking configurations
+for safety property verification; and a complete notation system for
+attack parameterization, defense specification, and cognitive state
+representation. This is Part 1 of a three-part series: Part 1 (this
+paper, DOI: 10.5281/zenodo.18364119) presents formal foundations and
+theoretical analysis; Part 2 (DOI: 10.5281/zenodo.18364128) provides
+computational validation and implementation; Part 3 (DOI:
+10.5281/zenodo.18364130) offers practical deployment guidance. The
+framework will continue to be developed and versioned at
+\url{https://github.com/docxology/cognitive_integrity/}.
+\end{frame}
+
+\end{document}

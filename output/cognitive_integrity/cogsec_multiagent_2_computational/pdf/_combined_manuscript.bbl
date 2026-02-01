@@ -1,0 +1,36 @@
+\begin{thebibliography}{4}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Chen et~al.(2025)Chen, Zhang, and Liu]{multiagent2025defense}
+Wei Chen, Yifei Zhang, and Jing Liu.
+\newblock A multi-agent {LLM} defense pipeline against prompt injection
+  attacks.
+\newblock \emph{arXiv preprint arXiv:2509.14285}, 2025.
+\newblock 94\% detection accuracy with multi-agent architecture.
+
+\bibitem[Debenedetti et~al.(2025)Debenedetti, Zhang, and
+  Carlini]{adaptive2025attacks}
+Edoardo Debenedetti, Jie Zhang, and Nicholas Carlini.
+\newblock Adaptive attacks break defenses against indirect prompt injection
+  attacks on {LLM} agents.
+\newblock In \emph{Findings of the Association for Computational Linguistics:
+  NAACL 2025}, 2025.
+\newblock Attack success rate $>$90\% against 12 published defenses.
+
+\bibitem[Li et~al.(2025)Li, Wang, and Zhang]{toolhijacker2025}
+Zhengyu Li, Tao Wang, and Lei Zhang.
+\newblock Prompt injection attack to tool selection in {LLM} agents.
+\newblock \emph{arXiv preprint arXiv:2504.19793}, 2025.
+
+\bibitem[Wang et~al.(2025)Wang, Li, and Chen]{cpwbft2025}
+Haoran Wang, Xiaoming Li, and Yu~Chen.
+\newblock Rethinking the reliability of multi-agent system: A perspective from
+  {B}yzantine fault tolerance.
+\newblock \emph{arXiv preprint arXiv:2511.10400}, 2025.
+\newblock +85.71\% Byzantine Fault Tolerance Improvement with CP-WBFT.
+
+\end{thebibliography}

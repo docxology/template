@@ -1,0 +1,169 @@
+\frametitle{Framework Configuration Reference}
+\protect\phantomsection\label{sec:config-params}
+This section documents configuration parameters for all CIF defense
+components. For algorithm pseudocode, see \cref{sec:methodology}.
+Sensitivity analysis quantifying parameter impact is provided in
+\cref{sec:sensitivity}.
+
+\begin{quote}
+\textbf{Reproducibility}: Default values were determined via
+\texttt{scripts/run\_sensitivity\_analysis.py} →
+\texttt{output/data/sensitivity\_results.json}. Optimal ranges are
+validated across all six architecture types.
+\end{quote}
+
+\begin{block}{Core Framework Parameters}
+\protect\phantomsection\label{sec:core-params}
+\begin{table}[htbp]
+\centering
+\caption{Core framework configuration parameters.}
+\label{tab:core-params}
+\begin{tabular}{@{}lllll@{}}
+\toprule
+Parameter & Symbol & Default & Range & Description \\
+\midrule
+Trust decay factor & $\delta$ & 0.8 & $(0, 1)$ & Per-hop trust attenuation \\
+Acceptance threshold & $\tau_{accept}$ & 0.7 & $(0, 1)$ & Minimum belief confidence \\
+Trusted source threshold & $\tau_{trusted}$ & 0.9 & $(0, 1)$ & Direct promotion threshold \\
+Corroboration count & $\kappa$ & 2 & $[1, n-1]$ & Required confirmations \\
+Consistency threshold & $\tau$ & 0.8 & $(0, 1)$ & Contradiction detection \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{block}
+
+\begin{block}{Trust Calculus Parameters}
+\protect\phantomsection\label{sec:trust-params}
+\begin{table}[htbp]
+\centering
+\caption{Trust calculus configuration parameters.}
+\label{tab:trust-params}
+\begin{tabular}{@{}lllll@{}}
+\toprule
+Parameter & Symbol & Default & Range & Description \\
+\midrule
+Base trust weight & $\alpha$ & 0.3 & $[0, 1]$ & Architectural trust weight \\
+Reputation weight & $\beta$ & 0.5 & $[0, 1]$ & Historical accuracy weight \\
+Context weight & $\gamma$ & 0.2 & $[0, 1]$ & Task-specific weight \\
+Learning rate & $\eta$ & 0.1 & $(0, 1)$ & Reputation update rate \\
+Penalty factor & $\rho$ & 2.0 & $[1, 5]$ & Failure penalty multiplier \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Constraint}: \(\alpha + \beta + \gamma = 1\) (see Part 1,
+Equation 5).
+\end{block}
+
+\begin{block}{Firewall Parameters}
+\protect\phantomsection\label{sec:firewall-params}
+\begin{table}[htbp]
+\centering
+\caption{Cognitive firewall configuration parameters.}
+\label{tab:firewall-params}
+\begin{tabular}{@{}lllll@{}}
+\toprule
+Parameter & Symbol & Default & Range & Description \\
+\midrule
+Reject threshold & $\tau_1$ & 0.8 & $(0, 1)$ & Immediate rejection \\
+Quarantine threshold & $\tau_2$ & 0.5 & $(0, 1)$ & Sandbox routing \\
+Injection weight & $w_1$ & 0.4 & $[0, 1]$ & Pattern match weight \\
+Semantic weight & $w_2$ & 0.35 & $[0, 1]$ & Embedding similarity weight \\
+Anomaly weight & $w_3$ & 0.25 & $[0, 1]$ & Isolation forest weight \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{block}
+
+\begin{block}{Sandbox Parameters}
+\protect\phantomsection\label{sec:sandbox-params}
+\begin{table}[htbp]
+\centering
+\caption{Belief sandbox configuration parameters.}
+\label{tab:sandbox-params}
+\begin{tabular}{@{}lllll@{}}
+\toprule
+Parameter & Symbol & Default & Range & Description \\
+\midrule
+Default TTL & $TTL_{default}$ & 3600s & $[60, 86400]$ & Seconds before expiry \\
+Check interval & $\tau_{check}$ & 60s & $[10, 600]$ & Verification frequency \\
+Max provisional & $N_{max}$ & 1000 & $[100, 10000]$ & Memory limit \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{block}
+
+\begin{block}{Tripwire Parameters}
+\protect\phantomsection\label{sec:tripwire-params}
+\begin{table}[htbp]
+\centering
+\caption{Cognitive tripwire configuration parameters.}
+\label{tab:tripwire-params}
+\begin{tabular}{@{}lllll@{}}
+\toprule
+Parameter & Symbol & Default & Range & Description \\
+\midrule
+Drift epsilon & $\epsilon_{drift}$ & 0.1 & $(0, 0.5)$ & Alert threshold \\
+Critical epsilon & $\epsilon_{critical}$ & 0.05 & $(0, 0.2)$ & Critical alert threshold \\
+Warning epsilon & $\epsilon_{warning}$ & 0.08 & $(0, 0.3)$ & Warning threshold \\
+Check interval & $\tau_{tripwire}$ & 30s & $[5, 300]$ & Monitoring frequency \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{block}
+
+\begin{block}{Drift Detection Parameters}
+\protect\phantomsection\label{sec:drift-params}
+\begin{table}[htbp]
+\centering
+\caption{Drift detection configuration parameters.}
+\label{tab:drift-params}
+\begin{tabular}{@{}lllll@{}}
+\toprule
+Parameter & Symbol & Default & Range & Description \\
+\midrule
+Window size & $w$ & 100 & $[10, 1000]$ & Historical samples \\
+KL threshold & $\theta_{drift}$ & 0.5 & $(0, 2)$ & Alert threshold \\
+Max delta weight & $\lambda$ & 0.3 & $[0, 1]$ & Sudden change weight \\
+Smoothing factor & $\alpha_{ema}$ & 0.1 & $(0, 1)$ & EMA decay \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{block}
+
+\begin{block}{Consensus Parameters}
+\protect\phantomsection\label{sec:consensus-params}
+\begin{table}[htbp]
+\centering
+\caption{Byzantine consensus configuration parameters.}
+\label{tab:consensus-params}
+\begin{tabular}{@{}lllll@{}}
+\toprule
+Parameter & Symbol & Default & Range & Description \\
+\midrule
+Round timeout & $T_{round}$ & 5000ms & $[1000, 30000]$ & Message collection window \\
+Max rounds & $R_{max}$ & 10 & $[3, 50]$ & Termination limit \\
+Quorum fraction & $q$ & 2/3 & $(0.5, 1)$ & Agreement threshold \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{block}
+
+\begin{block}{Deployment Profiles}
+\protect\phantomsection\label{sec:tuning-profiles}
+\begin{table}[htbp]
+\centering
+\caption{Recommended configuration profiles by deployment scenario.}
+\label{tab:tuning-profiles}
+\begin{tabular}{@{}lp{10cm}@{}}
+\toprule
+Scenario & Recommended Configuration \\
+\midrule
+High security & $\tau_1 = 0.6$, $\epsilon_{drift} = 0.05$, $\kappa = 3$ \\
+Low latency & $\tau_1 = 0.9$, $w = 50$, $T_{round} = 2000$ \\
+High throughput & $N_{max} = 5000$, $\tau_{check} = 120$, disable sandbox \\
+Byzantine-heavy & $\delta = 0.6$, $R_{max} = 20$, $q = 0.75$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{block}

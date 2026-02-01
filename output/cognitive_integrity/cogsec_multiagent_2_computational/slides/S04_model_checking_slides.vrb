@@ -1,0 +1,204 @@
+\frametitle{Appendix: Model Checking Tool Configurations}
+\protect\phantomsection\label{sec:model-checking-tools}
+This supplementary section provides executable configurations for formal
+verification tools referenced in Section 7 of Part 1 (Theoretical
+Foundations). These configurations implement the state space
+definitions, temporal properties, and safety invariants formally
+specified in Part 1.
+
+\begin{quote}
+\textbf{Cross-Reference:} For theoretical foundations including state
+space definitions (Definition 1, Section 4 of Part 1) and temporal
+property specifications (CTL/LTL formulas), see Part 1: Theoretical
+Foundations, Section 7.
+\end{quote}
+
+\begin{block}{NuSMV Configuration}
+\protect\phantomsection\label{sec:nusmv-config}
+NuSMV is a symbolic model checker supporting CTL and LTL specifications.
+The following configuration models the CIF trust dynamics and belief
+integrity properties.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{MODULE main}
+\NormalTok{VAR}
+\NormalTok{  {-}{-} Agent states}
+\NormalTok{  agents: array 0..N{-}1 of agent;}
+\NormalTok{  {-}{-} Trust matrix}
+\NormalTok{  trust: array 0..N{-}1 of array 0..N{-}1 of 0..100;}
+\NormalTok{  {-}{-} Global state}
+\NormalTok{  consensus\_belief: \{none, phi, not\_phi\};}
+\NormalTok{  attack\_active: boolean;}
+
+\NormalTok{DEFINE}
+\NormalTok{  {-}{-} Belief integrity: no agent has compromised verified beliefs}
+\NormalTok{  belief\_integrity := AG (}
+\NormalTok{    forall (i : 0..N{-}1) :}
+\NormalTok{      !agents[i].verified\_compromised}
+\NormalTok{  );}
+
+\NormalTok{  {-}{-} Trust bounded: delegated trust \textless{}= min of chain}
+\NormalTok{  trust\_bounded := AG (}
+\NormalTok{    forall (i, j, k : 0..N{-}1) :}
+\NormalTok{      delegated\_trust(i, j, k) \textless{}= min(trust[i][j], trust[j][k])}
+\NormalTok{  );}
+
+\NormalTok{  {-}{-} No deadlock: system always has enabled transition}
+\NormalTok{  no\_deadlock := AG (EX TRUE);}
+
+\NormalTok{  {-}{-} Eventual detection: attacks eventually detected}
+\NormalTok{  eventual\_detection := AG (}
+\NormalTok{    attack\_active {-}\textgreater{} AF (attack\_detected)}
+\NormalTok{  );}
+
+\NormalTok{SPEC belief\_integrity;}
+\NormalTok{SPEC trust\_bounded;}
+\NormalTok{SPEC no\_deadlock;}
+\NormalTok{SPEC eventual\_detection;}
+\end{Highlighting}
+\end{Shaded}
+\end{block}
+
+\begin{block}{SPIN Configuration}
+\protect\phantomsection\label{sec:spin-config}
+SPIN (Simple Promela INterpreter) verifies LTL properties over Promela
+models. The following configuration implements Byzantine-tolerant
+consensus and trust decay.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\#define N 5           // Number of agents}
+\NormalTok{\#define F 1           // Byzantine threshold}
+\NormalTok{\#define TAU 70        // Trust threshold (0{-}100)}
+\NormalTok{\#define DELTA 90      // Decay factor (0{-}100, represents 0.9)}
+\NormalTok{\#define MAX\_BELIEFS 100}
+
+\NormalTok{typedef Agent \{}
+\NormalTok{  byte beliefs[MAX\_BELIEFS];}
+\NormalTok{  byte trust[N];}
+\NormalTok{  bool compromised;}
+\NormalTok{\}}
+
+\NormalTok{Agent agents[N];}
+\NormalTok{bool attack\_active = false;}
+\NormalTok{bool attack\_detected = false;}
+
+\NormalTok{// Trust delegation with decay}
+\NormalTok{inline delegated\_trust(i, j, k, result) \{}
+\NormalTok{  byte t1 = agents[i].trust[j];}
+\NormalTok{  byte t2 = agents[j].trust[k];}
+\NormalTok{  byte min\_t = (t1 \textless{} t2) ? t1 : t2;}
+\NormalTok{  result = (min\_t * DELTA) / 100;}
+\NormalTok{\}}
+
+\NormalTok{// Byzantine consensus}
+\NormalTok{inline consensus(phi, result) \{}
+\NormalTok{  byte count = 0;}
+\NormalTok{  byte i;}
+\NormalTok{  for (i : 0 .. N{-}1) \{}
+\NormalTok{    if (agents[i].beliefs[phi] \textgreater{} TAU) \{}
+\NormalTok{      count++;}
+\NormalTok{    \}}
+\NormalTok{  \}}
+\NormalTok{  result = (count \textgreater{} (2*N)/3);}
+\NormalTok{\}}
+
+\NormalTok{// Safety property: trust never amplified}
+\NormalTok{ltl trust\_no\_amplify \{}
+\NormalTok{  [] (forall (i, j, k : 0..N{-}1) :}
+\NormalTok{    delegated\_trust(i,j,k) \textless{}= min(trust[i][j], trust[j][k]))}
+\NormalTok{\}}
+
+\NormalTok{// Liveness: attacks eventually detected}
+\NormalTok{ltl attack\_detection \{}
+\NormalTok{  [] (attack\_active {-}\textgreater{} \textless{}\textgreater{} attack\_detected)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{block}
+
+\begin{block}{TLA+ Configuration}
+\protect\phantomsection\label{sec:tla-config}
+TLA+ (Temporal Logic of Actions) enables specification of concurrent
+systems with rich invariant checking. The following module formalizes
+CIF properties.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-} }\KeywordTok{MODULE}\NormalTok{ CIF {-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\KeywordTok{EXTENDS}\NormalTok{ Naturals, Sequences, FiniteSets}
+
+\KeywordTok{CONSTANTS}\NormalTok{ N,           }\CommentTok{\textbackslash{}* Number of agents}
+\NormalTok{          F,           }\CommentTok{\textbackslash{}* Byzantine threshold}
+\NormalTok{          DELTA,       }\CommentTok{\textbackslash{}* Trust decay factor (0{-}1)}
+\NormalTok{          TAU          }\CommentTok{\textbackslash{}* Trust threshold}
+
+\KeywordTok{VARIABLES}\NormalTok{ beliefs,     }\CommentTok{\textbackslash{}* beliefs[i][phi] = confidence}
+\NormalTok{          trust,       }\CommentTok{\textbackslash{}* trust[i][j] = trust value}
+\NormalTok{          consensus,   }\CommentTok{\textbackslash{}* Current consensus state}
+\NormalTok{          attack       }\CommentTok{\textbackslash{}* Attack state}
+
+\NormalTok{TypeInvariant ==}
+\NormalTok{  /\textbackslash{} beliefs \textbackslash{}in [}\DecValTok{1}\NormalTok{..N {-}\textgreater{} [PROPOSITIONS {-}\textgreater{} [}\DecValTok{0}\NormalTok{..}\DecValTok{100}\NormalTok{]]]}
+\NormalTok{  /\textbackslash{} trust \textbackslash{}in [}\DecValTok{1}\NormalTok{..N {-}\textgreater{} [}\DecValTok{1}\NormalTok{..N {-}\textgreater{} [}\DecValTok{0}\NormalTok{..}\DecValTok{100}\NormalTok{]]]}
+\NormalTok{  /\textbackslash{} consensus \textbackslash{}in [PROPOSITIONS {-}\textgreater{} \{}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\StringTok{"none"}\NormalTok{\}]}
+\NormalTok{  /\textbackslash{} attack \textbackslash{}in BOOLEAN}
+
+\CommentTok{\textbackslash{}* Trust delegation with decay}
+\NormalTok{DelegatedTrust(i, j, k) ==}
+  \KeywordTok{LET}\NormalTok{ t1 == trust[i][j]}
+\NormalTok{      t2 == trust[j][k]}
+\NormalTok{      min\_t == }\KeywordTok{IF}\NormalTok{ t1 \textless{} t2 }\KeywordTok{THEN}\NormalTok{ t1 }\KeywordTok{ELSE}\NormalTok{ t2}
+  \KeywordTok{IN}\NormalTok{ (min\_t * DELTA)}
+
+\CommentTok{\textbackslash{}* Safety: Trust never amplified through delegation}
+\NormalTok{TrustBounded ==}
+\NormalTok{  \textbackslash{}A i, j, k \textbackslash{}in }\DecValTok{1}\NormalTok{..N :}
+\NormalTok{    DelegatedTrust(i, j, k) \textless{}= MIN(trust[i][j], trust[j][k])}
+
+\CommentTok{\textbackslash{}* Safety: Consensus beliefs not compromised}
+\NormalTok{ConsensusIntegrity ==}
+\NormalTok{  \textbackslash{}A phi \textbackslash{}in PROPOSITIONS :}
+\NormalTok{    consensus[phi] = }\DecValTok{1}\NormalTok{ =\textgreater{}}
+\NormalTok{      Cardinality(\{i \textbackslash{}in }\DecValTok{1}\NormalTok{..N : beliefs[i][phi] \textgreater{} TAU\}) \textgreater{} (}\DecValTok{2}\NormalTok{*N) \textbackslash{}div }\DecValTok{3}
+
+\CommentTok{\textbackslash{}* Liveness: Attacks eventually detected}
+\NormalTok{AttackDetection ==}
+\NormalTok{  attack =\textgreater{} \textless{}\textgreater{}(detected)}
+
+\CommentTok{\textbackslash{}* Full specification}
+\NormalTok{Spec == Init /\textbackslash{} [][Next]\_vars /\textbackslash{} Fairness}
+
+\KeywordTok{THEOREM}\NormalTok{ Spec =\textgreater{} []TypeInvariant}
+\KeywordTok{THEOREM}\NormalTok{ Spec =\textgreater{} []TrustBounded}
+\KeywordTok{THEOREM}\NormalTok{ Spec =\textgreater{} []ConsensusIntegrity}
+\NormalTok{=============================================================================}
+\end{Highlighting}
+\end{Shaded}
+\end{block}
+
+\begin{block}{Verification Parameters}
+\protect\phantomsection\label{sec:verification-params}
+The following parameters configure model checking execution. Values are
+chosen to balance verification completeness against computational
+feasibility.
+
+\begin{table}[htbp]
+\centering
+\caption{Model checking configuration parameters.}
+\label{tab:verification-config}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Parameter & Value & Rationale \\
+\midrule
+$N$ (agents) & 5--10 & Representative of production \\
+$F$ (Byzantine) & $\lfloor (N-1)/3 \rfloor$ & Maximum tolerable \\
+$|\Phi|$ (propositions) & 100 & Typical belief set \\
+$d$ (provenance depth) & 5 & Typical delegation depth \\
+State bound & $10^8$ & Memory limit \\
+Time limit & 24 hours & Verification budget \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{block}

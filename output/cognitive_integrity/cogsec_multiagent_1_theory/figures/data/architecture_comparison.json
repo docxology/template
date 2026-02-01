@@ -1,0 +1,38 @@
+[
+  {
+    "system": "Claude Code",
+    "baseline": 0.45,
+    "cif": 0.97,
+    "improvement": 115.6
+  },
+  {
+    "system": "AutoGPT",
+    "baseline": 0.38,
+    "cif": 0.94,
+    "improvement": 147.4
+  },
+  {
+    "system": "CrewAI",
+    "baseline": 0.42,
+    "cif": 0.96,
+    "improvement": 128.6
+  },
+  {
+    "system": "LangGraph",
+    "baseline": 0.51,
+    "cif": 0.98,
+    "improvement": 92.2
+  },
+  {
+    "system": "MetaGPT",
+    "baseline": 0.47,
+    "cif": 0.95,
+    "improvement": 102.1
+  },
+  {
+    "system": "Camel",
+    "baseline": 0.33,
+    "cif": 0.92,
+    "improvement": 178.8
+  }
+]

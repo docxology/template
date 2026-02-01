@@ -1,0 +1,62 @@
+\begin{thebibliography}{7}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[{COGSEC Collaborative}(2024)]{cogsec2024atlas}
+{COGSEC Collaborative}.
+\newblock {COGSEC ATLAS}: A framework for cognitive security research.
+\newblock Research Initiative, 2024.
+\newblock URL \url{https://cogsec.org}.
+\newblock Multi-institutional cognitive security research consortium.
+
+\bibitem[Debenedetti et~al.(2025)Debenedetti, Zhang, and
+  Carlini]{adaptive2025attacks}
+Edoardo Debenedetti, Jie Zhang, and Nicholas Carlini.
+\newblock Adaptive attacks break defenses against indirect prompt injection
+  attacks on {LLM} agents.
+\newblock In \emph{Findings of the Association for Computational Linguistics:
+  NAACL 2025}, 2025.
+\newblock Attack success rate $>$90\% against 12 published defenses.
+
+\bibitem[Friedman(2024)]{friedman2024cogsec}
+Daniel~Ari Friedman.
+\newblock Cognitive security: Protecting cognitive processes in human and
+  machine systems.
+\newblock Active Inference Institute Research, 2024.
+\newblock URL
+  \url{https://cognitivesecurity.us/@daniel-ari-friedman/website/cognitive-security-32}.
+\newblock Foundational work on cognitive security as applied to AI systems.
+
+\bibitem[Hong et~al.(2023)Hong, Zhuge, Chen, Zheng, Cheng, Zhang, Wang, Wang,
+  Yau, Lin, et~al.]{hong2023metagpt}
+Sirui Hong, Mingchen Zhuge, Jonathan Chen, Xiawu Zheng, Yuheng Cheng, Ceyao
+  Zhang, Jinlin Wang, Zili Wang, Steven Ka~Shing Yau, Zijuan Lin, et~al.
+\newblock {MetaGPT}: Meta programming for multi-agent collaborative framework.
+\newblock \emph{arXiv preprint arXiv:2308.00352}, 2023.
+
+\bibitem[{OWASP GenAI Security Project}(2025)]{owasp2025agentic}
+{OWASP GenAI Security Project}.
+\newblock {OWASP} top 10 for agentic applications 2026.
+\newblock Security Standard, 2025.
+\newblock URL
+  \url{https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/}.
+\newblock Released December 2025.
+
+\bibitem[Waltzman(2017)]{waltzman2017weaponization}
+Rand Waltzman.
+\newblock The weaponization of information: The need for cognitive security.
+\newblock Testimony, RAND Corporation, 2017.
+\newblock CT-473.
+
+\bibitem[Wu et~al.(2023)Wu, Bansal, Zhang, Wu, Li, Zhu, Jiang, Zhang, Zhang,
+  Liu, et~al.]{wu2023autogen}
+Qingyun Wu, Gagan Bansal, Jieyu Zhang, Yiran Wu, Beibin Li, Erkang Zhu,
+  Li~Jiang, Xiaoyun Zhang, Shaokun Zhang, Jiale Liu, et~al.
+\newblock {AutoGen}: Enabling next-gen {LLM} applications via multi-agent
+  conversation.
+\newblock \emph{arXiv preprint arXiv:2308.08155}, 2023.
+
+\end{thebibliography}

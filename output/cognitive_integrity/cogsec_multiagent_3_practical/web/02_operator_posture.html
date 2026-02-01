@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>02_operator_posture</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="sec:operator-posture">Cognitive Security Operator Posture</h1>
+<h2 id="overview">Overview</h2>
+<p><strong>Cognitive Security Operator Posture</strong> describes the
+mindset, capabilities, and operational practices required when deploying
+multiagent AI systems in environments where adversarial manipulation is
+a realistic threat. The core observation motivating this framework is
+that multiagent systems introduce attack surfaces that traditional
+security measures—firewalls, access controls, encryption—cannot
+address.</p>
+<p>In single-agent systems, security focuses primarily on input
+validation (preventing malicious prompts from reaching the model),
+output filtering (ensuring generated content meets safety criteria), and
+access control (managing who can invoke the agent and what resources it
+can access). These remain necessary but become insufficient when agents
+communicate with each other. The multiagent setting introduces
+qualitatively new concerns:</p>
+<ul>
+<li><p><strong>Belief propagation</strong>: An agent forms beliefs based
+on information from other agents. If one agent is compromised or
+manipulated, those corrupted beliefs can propagate through the network,
+infecting previously secure agents without any direct attack on
+them.</p></li>
+<li><p><strong>Trust amplification</strong>: Delegation relationships
+can inadvertently launder trust. A low-trust agent might influence a
+medium-trust agent, which then influences a high-trust agent, enabling
+capabilities that the original attacker should never have
+accessed.</p></li>
+<li><p><strong>Coordination manipulation</strong>: Collective decisions
+that appear robust (because multiple agents agree) may be vulnerable to
+strategic attacks that manipulate the coordination mechanism
+itself—timing attacks, sybil attacks, or quorum manipulation.</p></li>
+</ul>
+<p>These concerns require operators to adopt a distinct mental model.
+Traditional security treats the system as a collection of components
+with well-defined interfaces; the goal is to protect each interface.
+Cognitive security treats the system as a reasoning network with
+emergent beliefs and behaviors; the goal is to maintain the integrity of
+that reasoning despite adversarial influence.</p>
+<p>This section provides an assessment framework for evaluating
+cognitive security posture. Subsequent sections translate assessment
+results into specific recommendations.</p>
+<h2 id="the-five-pillars-of-cognitive-security-posture">The Five Pillars
+of Cognitive Security Posture</h2>
+<p>Cognitive security posture rests on five interconnected pillars.
+Weakness in any pillar creates opportunities for attackers; strength
+across all five provides defense in depth. Figure <span
+class="math inline">\(\ref{fig:posture-radar}\)</span> provides a visual
+assessment framework for evaluating organizational posture across all
+five dimensions.</p>
+<figure id="fig:posture-radar">
+<embed src="figures/posture_radar.pdf" style="width:85.0%" />
+<figcaption aria-hidden="true">Five Pillars Security Posture Assessment.
+This radar chart visualizes an organization’s cognitive security posture
+across the five CIF pillars: Cognitive Firewall (F), Belief Sandbox (W),
+Identity Tripwire (T), Behavioral Invariants (I), and Epistemic
+Provenance (P). The concentric rings represent maturity levels from
+minimal (25%) through standard (50%), elevated (75%), to maximum (90%).
+The example assessment shows strong invariant enforcement (90%) but
+weaker provenance tracking (55%), indicating a prioritization
+opportunity.</figcaption>
+</figure>
+<h3 id="pillar-1-trust-boundary-awareness">Pillar 1: Trust Boundary
+Awareness</h3>
+<blockquote>
+<p><strong>Theoretical Foundation</strong>: This pillar implements Part
+1’s Trust Calculus (Section 3), which formalizes trust relationships as
+scored values <span class="math inline">\(\mathcal{T}_{i \to j} \in [0,
+1]\)</span> with bounded delegation (Theorem 3.1: Trust
+Boundedness).</p>
+</blockquote>
+<p>Every multiagent system embodies implicit trust assumptions—beliefs
+about which agents, channels, and data sources can be relied upon for
+accurate information. These assumptions are often undocumented,
+inherited from development environments where trust was universal, or
+derived from optimistic assessments of adversary capabilities.</p>
+<p>Trust boundary awareness requires making these assumptions explicit
+and then subjecting them to adversarial analysis. Common trust
+relationships in multiagent architectures include:</p>
+<ul>
+<li><p><strong>Orchestrator-worker trust</strong>: The orchestrator
+typically trusts that worker agents will execute instructions faithfully
+and report results accurately. An attacker who compromises a worker can
+exploit this trust to influence orchestrator decisions.</p></li>
+<li><p><strong>Agent-tool trust</strong>: Agents trust that external
+tools (code execution, web retrieval, database queries) return accurate
+results. Tool poisoning attacks exploit this trust by corrupting the
+tool’s outputs before they reach the agent.</p></li>
+<li><p><strong>Inter-agent communication trust</strong>: Agents
+receiving messages from other agents typically trust the sender’s
+identity and the message’s authenticity. Without cryptographic
+verification, these properties are assumptions rather than
+guarantees.</p></li>
+<li><p><strong>Shared state trust</strong>: When agents coordinate
+through shared state (caches, queues, databases, or file systems), each
+agent trusts that the state has not been manipulated by adversaries.
+This is particularly dangerous because the attack surface is large and
+modifications may be difficult to attribute.</p></li>
+</ul>
+<p><strong>Assessment questions for trust boundary
+awareness</strong>:</p>
+<ol type="1">
+<li>Have you documented all trust relationships in your architecture,
+including implicit assumptions?</li>
+<li>For each trust assumption, what would happen if it were violated?
+Could an attacker escalate privileges, corrupt beliefs, or damage
+high-value assets?</li>
+<li>How would you detect a trust violation? Do you have monitoring in
+place, or would violations be invisible until damage manifests?</li>
+<li>What mechanisms limit damage from trust exploitation? Can a
+compromised trust relationship cascade through the system, or is blast
+radius contained?</li>
+</ol>
+<p>Organizations with strong trust boundary awareness maintain living
+documentation of trust relationships, review them during architecture
+changes, and design systems so that no single trust violation enables
+catastrophic outcomes.</p>
+<h3 id="pillar-2-belief-provenance">Pillar 2: Belief Provenance</h3>
+<blockquote>
+<p><strong>Theoretical Foundation</strong>: This pillar implements Part
+1’s Cognitive State Representation (Definition 2.2), which models agent
+beliefs as <span class="math inline">\(\mathcal{B}_i\)</span> with
+associated provenance metadata <span class="math inline">\(\pi\)</span>,
+and the Provenance Verifiability property (Property 2.3).</p>
+</blockquote>
+<p>Agents form beliefs based on inputs—prompts, tool outputs, messages
+from other agents, and observations of shared state. In multiagent
+systems, beliefs propagate: Agent A forms a belief from a tool output,
+communicates that belief to Agent B in a summary, and Agent B
+incorporates the summary into its reasoning about what actions to
+recommend.</p>
+<p>This propagation is essential to multiagent cooperation but creates
+provenance challenges. By the time a belief influences a critical
+decision, it may have passed through multiple agents, been summarized,
+combined with other information, and reformulated. The original
+evidence—and its trustworthiness—becomes obscured.</p>
+<p>Belief provenance tracking addresses this by maintaining metadata
+about the origins and transformations of information as it flows through
+the system. Key questions include:</p>
+<p><strong>Assessment questions for belief provenance</strong>:</p>
+<ol type="1">
+<li>Can you trace the origin of any belief an agent holds? Given a
+statement an agent makes or an action it takes, can you identify the
+inputs that led to that conclusion?</li>
+<li>How trustworthy is each upstream source? Do you distinguish between
+beliefs derived from verified databases, unverified web content, user
+assertions, and other agent outputs?</li>
+<li>Could an adversary have influenced the belief chain? What would an
+attack path look like, and would your monitoring detect it?</li>
+<li>Do you discount multi-hop information appropriately? Beliefs that
+have passed through multiple summarization steps should carry less
+weight than direct observations.</li>
+</ol>
+<p>Organizations with strong belief provenance implement structured
+information passing (rather than free-form summaries), maintain
+provenance metadata through agent interactions, and train agents to
+distinguish evidence quality in their reasoning.</p>
+<h3 id="pillar-3-delegation-hygiene">Pillar 3: Delegation Hygiene</h3>
+<p>Delegation is the mechanism by which one agent assigns tasks to
+another. It amplifies capabilities—a supervising agent can accomplish
+more by delegating subtasks than by performing everything itself—but
+this amplification creates security risks if not properly bounded.</p>
+<p>The fundamental problem is that delegation can launder provenance and
+amplify trust. Consider this attack pattern:</p>
+<ol type="1">
+<li>An attacker compromises a low-trust agent (perhaps through prompt
+injection in an external data source that agent processes).</li>
+<li>The compromised agent sends a plausible-seeming request to a
+medium-trust agent.</li>
+<li>The medium-trust agent, finding the request reasonable, incorporates
+it into a task and delegates to a high-trust agent.</li>
+<li>The high-trust agent, receiving the task from a trusted delegate,
+executes actions that the original attacker should never have been able
+to trigger.</li>
+</ol>
+<p>This “trust laundering” attack exploits the fact that delegation
+implicitly transfers trust from the delegating agent to the delegated
+task. Without explicit bounds, this transfer is unlimited.</p>
+<p><strong>Assessment questions for delegation hygiene</strong>:</p>
+<ol type="1">
+<li>Do you implement trust decay across delegation hops? The trust
+associated with information or requests should diminish as they pass
+through intermediaries, limiting the depth to which attacks can
+propagate.</li>
+<li>Is there a maximum delegation depth? Can an agent delegate to an
+agent that delegates to another agent indefinitely, or is recursion
+bounded?</li>
+<li>Can delegated authority exceed direct authority? If Agent A can only
+perform read operations, can it delegate a write operation to Agent B?
+Sound systems prevent such escalation.</li>
+<li>Do you verify delegation chains? Can you audit who originated a
+delegated task and what transformations occurred along the way?</li>
+</ol>
+<p>The delegation decay parameter δ (formalized in Part 1, Definition
+3.2) provides a quantitative mechanism for bounding delegation. With δ =
+0.7, trust drops by 30% at each hop; after four hops, trust has decayed
+to 24% of its original value, limiting the impact of trust
+laundering.</p>
+<h3 id="pillar-4-coordination-integrity">Pillar 4: Coordination
+Integrity</h3>
+<blockquote>
+<p><strong>Theoretical Foundation</strong>: This pillar implements Part
+1’s Byzantine Agreement Requirement (Theorem 5.3), which guarantees that
+all honest agents agree when <span class="math inline">\(n \geq 3f +
+1\)</span> agents exist and at most <span
+class="math inline">\(f\)</span> are Byzantine.</p>
+</blockquote>
+<p>Multi-agent decision-making introduces coordination attack surfaces
+that do not exist in single-agent systems. When agents vote, reach
+consensus, or aggregate their outputs, the coordination mechanism itself
+becomes a target.</p>
+<p>Common coordination attacks include (evaluated empirically in Part 2,
+finding them to be the most resilient to detection):</p>
+<ul>
+<li><p><strong>Sybil attacks</strong>: An adversary creates multiple
+fake agents (or compromises multiple legitimate agents) to gain
+disproportionate influence in consensus processes. If quorum requires
+three agreements, an attacker controlling two sybil identities needs
+only one additional compromised agent.</p></li>
+<li><p><strong>Strategic timing</strong>: Consensus protocols often have
+timing windows. An attacker might delay legitimate agent messages while
+ensuring their compromised messages arrive first, shaping the
+information available when decisions are made.</p></li>
+<li><p><strong>Quorum manipulation</strong>: Rather than compromising
+agents, an attacker might prevent legitimate agents from participating
+(denial of service), artificially achieving quorum with fewer honest
+agents.</p></li>
+<li><p><strong>Outcome manipulation</strong>: In voting or aggregation
+schemes, strategic manipulation of input values can skew outcomes even
+when the attacker controls a minority of agents.</p></li>
+</ul>
+<p><strong>Assessment questions for coordination integrity</strong>:</p>
+<ol type="1">
+<li>Do critical decisions require Byzantine-tolerant consensus?
+Protocols that tolerate up to f failures require n ≥ 3f + 1 agents,
+ensuring honest majority even with substantial compromise.</li>
+<li>Is agent identity verified before counting votes? Can an attacker
+trivially create additional voting agents, or is identity bound to
+verified credentials?</li>
+<li>Do quorum requirements account for potential adversaries? If you
+assume 10% of agents might be compromised, is your quorum threshold set
+accordingly?</li>
+<li>Are coordination protocols time-bounded appropriately? Can an
+attacker delay messages to manipulate outcomes, or do timeouts prevent
+such attacks?</li>
+</ol>
+<h3 id="pillar-5-continuous-monitoring-and-adaptation">Pillar 5:
+Continuous Monitoring and Adaptation</h3>
+<blockquote>
+<p><strong>Theoretical Foundation</strong>: This pillar implements Part
+1’s Drift Detection (Definition 6.1) and Detection Bounds (Theorem 6.2),
+which establish the information-theoretic limits of detecting
+progressive manipulation attacks.</p>
+</blockquote>
+<p>Unlike traditional security, where defenses can be static once
+properly configured, cognitive security requires continuous monitoring
+and adaptation. The threat landscape evolves rapidly, agents learn and
+change behavior over time, and adversaries adapt to observed
+defenses.</p>
+<p><strong>Assessment questions for continuous monitoring</strong>:</p>
+<ol type="1">
+<li>Do you monitor cognitive integrity metrics continuously? Metrics
+such as belief consistency, trust relationship stability, and delegation
+patterns should be tracked over time.</li>
+<li>Can you detect drift from baseline behavior? Gradual manipulation
+that stays below individual-event thresholds may be visible as aggregate
+drift.</li>
+<li>Do you have incident response procedures for cognitive attacks? When
+manipulation is detected, do your teams know how to contain,
+investigate, and remediate?</li>
+<li>Do you conduct regular adversarial testing? Red team exercises that
+specifically target cognitive attack surfaces reveal gaps that
+theoretical analysis misses.</li>
+</ol>
+<hr />
+<h2 id="maturity-assessment">Maturity Assessment</h2>
+<p>Rate your organization on each dimension (1 = no practice, 5 =
+mature):</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 27%" />
+<col style="width: 8%" />
+<col style="width: 8%" />
+<col style="width: 8%" />
+<col style="width: 8%" />
+<col style="width: 8%" />
+</colgroup>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Question</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Trust Mapping</td>
+<td>Are trust assumptions documented and reviewed?</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Detection</td>
+<td>Could you detect belief manipulation in production?</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Bounding</td>
+<td>Do delegation limits prevent trust amplification?</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Consensus</td>
+<td>Are collective decisions manipulation-resistant?</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Monitoring</td>
+<td>Is cognitive integrity monitored continuously?</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Response</td>
+<td>Do you have cognitive attack response procedures?</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Total: ___ / 30</strong></p>
+<p><strong>Interpretation</strong>:</p>
+<ul>
+<li><strong>24-30 (Proactive)</strong>: Strong posture. Maintain
+vigilance and pursue continuous improvement. Share your practices with
+the community.</li>
+<li><strong>18-23 (Managed)</strong>: Solid foundation with identified
+gaps. Prioritize addressing the lowest-scoring dimensions.</li>
+<li><strong>12-17 (Developing)</strong>: Basic awareness established.
+Systematic improvement program needed; consider external
+assessment.</li>
+<li><strong>Below 12 (Reactive)</strong>: Significant risk exposure.
+Begin immediately with trust mapping and basic monitoring.</li>
+</ul>
+<hr />
+<h2 id="operational-capabilities-checklist">Operational Capabilities
+Checklist</h2>
+<p>Organizations deploying multiagent systems should implement these
+capabilities:</p>
+<table>
+<colgroup>
+<col style="width: 26%" />
+<col style="width: 19%" />
+<col style="width: 54%" />
+</colgroup>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Purpose</th>
+<th>Implementation Guidance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Stigmergic Audit Trail</strong></td>
+<td>Track modifications to shared state with attribution</td>
+<td>Log all writes to shared caches, queues, and files with agent ID,
+timestamp, and operation context</td>
+</tr>
+<tr>
+<td><strong>Quorum Gates</strong></td>
+<td>Require multi-agent agreement for consequential actions</td>
+<td>Implement voting or approval workflows for high-risk operations;
+configure thresholds based on risk profile</td>
+</tr>
+<tr>
+<td><strong>Collective Anomaly Detection</strong></td>
+<td>Identify coordinated attacks or emergent pathology</td>
+<td>Monitor aggregate metrics (success rates, latencies, output
+distributions) alongside individual agent health</td>
+</tr>
+<tr>
+<td><strong>Sybil Resistance</strong></td>
+<td>Prevent fake agent injection</td>
+<td>Bind agent identity to verified credentials; rate-limit new agent
+integration; require human approval for capability grants</td>
+</tr>
+<tr>
+<td><strong>Belief Provenance Tracking</strong></td>
+<td>Maintain information origin chains</td>
+<td>Structured message formats with provenance metadata; trust scores
+that decay through hops</td>
+</tr>
+<tr>
+<td><strong>Resilience Testing</strong></td>
+<td>Validate recovery from adversarial conditions</td>
+<td>Regular injection of faulty or adversarial agents in staging; chaos
+engineering for cognitive systems</td>
+</tr>
+<tr>
+<td><strong>Incident Response Playbooks</strong></td>
+<td>Enable rapid response to detected attacks</td>
+<td>Documented procedures for cognitive attack containment,
+investigation, and remediation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="design-principles-for-cognitive-security">Design Principles for
+Cognitive Security</h2>
+<p>These principles should guide architectural decisions:</p>
+<p><strong>Principle 1: Stigmergic Hygiene</strong> Treat shared state
+as an attack surface requiring scrutiny equivalent to direct
+communication channels. Environment-mediated coordination (caches,
+queues, file systems, databases) is often less protected than
+agent-to-agent messages, making it an attractive attack vector.</p>
+<p><strong>Principle 2: Quorum for Consequential Actions</strong>
+High-impact collective actions require explicit quorum approval. A
+single compromised agent should never be able to trigger irreversible
+harm. Design systems so that consequential actions require agreement
+from multiple agents operating on independent information.</p>
+<p><strong>Principle 3: Emergent Behavior Monitoring</strong> Monitor
+collective metrics alongside individual agent health. Pathological
+emergent behavior may manifest as normal individual agent behavior—only
+the aggregate pattern reveals the problem. Watch for belief convergence,
+coordination anomalies, and output distribution shifts.</p>
+<p><strong>Principle 4: Trust Localization</strong> Trust should be
+specific rather than general. An agent trusted to summarize documents
+should not automatically be trusted to execute code. Design permission
+models with minimal necessary trust, and verify that trust cannot be
+transferred to unintended contexts.</p>
+<p><strong>Principle 5: Defense Composability</strong> Layer defenses so
+that failure of any single mechanism does not enable successful attack.
+The defense composition theorems in Part 1 demonstrate that
+appropriately designed layers provide multiplicative protection;
+implement this principle through architectural separation and
+independent verification.</p>
+<hr />
+<h2 id="next-steps">Next Steps</h2>
+<p>The assessment results from this section should guide your reading of
+subsequent sections:</p>
+<ul>
+<li><strong>If trust mapping scored low</strong>: Focus on <strong>Human
+Checklist</strong> (Section 3) for systematic deployment guidance.</li>
+<li><strong>If detection scored low</strong>: Review <strong>Agent
+Guidelines</strong> (Section 4) for cognitive tripwire
+implementations.</li>
+<li><strong>If bounding scored low</strong>: Study <strong>Deployment
+Considerations</strong> (Section 5) for delegation parameter
+configuration.</li>
+<li><strong>If consensus or monitoring scored low</strong>: <strong>Risk
+Assessment</strong> (Section 6) provides threat modeling methodology for
+identifying gaps.</li>
+<li><strong>If you identified specific anti-patterns</strong>:
+<strong>Common Pitfalls</strong> (Section 7) catalogs known failure
+modes with mitigations.</li>
+</ul>
+</body>
+</html>

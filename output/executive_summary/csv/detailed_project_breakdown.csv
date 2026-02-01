@@ -18,10 +18,10 @@ code_project,Outputs,PDF_Size_MB,1.39,MB,Total PDF file size,Low,0.1-10 MB
 code_project,Outputs,Figures,6,files,Generated figure files,Medium,0-50 figures
 code_project,Outputs,Slides,5,files,Generated slide files,Medium,0-20 slide sets
 code_project,Outputs,Web_Outputs,6,files,Generated web files,Medium,0-20 web files
-code_project,Pipeline,Total_Duration,42.25336742401123,seconds,Total pipeline execution time,Medium,60-600 seconds
+code_project,Pipeline,Total_Duration,40.27070093154907,seconds,Total pipeline execution time,Medium,60-600 seconds
 code_project,Pipeline,Stages_Passed,7,stages,Pipeline stages completed successfully,High,6 stages
 code_project,Pipeline,Bottleneck_Stage,PDF Rendering,stage_name,Slowest pipeline stage,Medium,Varies by project
-code_project,Pipeline,Bottleneck_Duration,31.455225229263306,seconds,Time spent in bottleneck stage,Medium,10-300 seconds
+code_project,Pipeline,Bottleneck_Duration,30.846439361572266,seconds,Time spent in bottleneck stage,Medium,10-300 seconds
 cognitive_integrity/cogsec_multiagent_1_theory,Manuscript,Total_Words,33306,words,Total words in manuscript sections,High,1000-20000 words
 cognitive_integrity/cogsec_multiagent_1_theory,Manuscript,Sections,15,count,Number of manuscript sections,Medium,3-20 sections
 cognitive_integrity/cogsec_multiagent_1_theory,Manuscript,Equations,0,count,Mathematical equations in manuscript,Low,0-50 equations
@@ -41,53 +41,53 @@ cognitive_integrity/cogsec_multiagent_1_theory,Outputs,PDF_Size_MB,0.89,MB,Total
 cognitive_integrity/cogsec_multiagent_1_theory,Outputs,Figures,30,files,Generated figure files,Medium,0-50 figures
 cognitive_integrity/cogsec_multiagent_1_theory,Outputs,Slides,14,files,Generated slide files,Medium,0-20 slide sets
 cognitive_integrity/cogsec_multiagent_1_theory,Outputs,Web_Outputs,15,files,Generated web files,Medium,0-20 web files
-cognitive_integrity/cogsec_multiagent_1_theory,Pipeline,Total_Duration,80.71094369888306,seconds,Total pipeline execution time,Medium,60-600 seconds
+cognitive_integrity/cogsec_multiagent_1_theory,Pipeline,Total_Duration,84.06672239303589,seconds,Total pipeline execution time,Medium,60-600 seconds
 cognitive_integrity/cogsec_multiagent_1_theory,Pipeline,Stages_Passed,7,stages,Pipeline stages completed successfully,High,6 stages
 cognitive_integrity/cogsec_multiagent_1_theory,Pipeline,Bottleneck_Stage,PDF Rendering,stage_name,Slowest pipeline stage,Medium,Varies by project
-cognitive_integrity/cogsec_multiagent_1_theory,Pipeline,Bottleneck_Duration,47.74432611465454,seconds,Time spent in bottleneck stage,Medium,10-300 seconds
-cognitive_integrity/cogsec_multiagent_2_computational,Manuscript,Total_Words,16221,words,Total words in manuscript sections,High,1000-20000 words
-cognitive_integrity/cogsec_multiagent_2_computational,Manuscript,Sections,14,count,Number of manuscript sections,Medium,3-20 sections
+cognitive_integrity/cogsec_multiagent_1_theory,Pipeline,Bottleneck_Duration,48.517749309539795,seconds,Time spent in bottleneck stage,Medium,10-300 seconds
+cognitive_integrity/cogsec_multiagent_2_computational,Manuscript,Total_Words,20166,words,Total words in manuscript sections,High,1000-20000 words
+cognitive_integrity/cogsec_multiagent_2_computational,Manuscript,Sections,22,count,Number of manuscript sections,Medium,3-20 sections
 cognitive_integrity/cogsec_multiagent_2_computational,Manuscript,Equations,0,count,Mathematical equations in manuscript,Low,0-50 equations
 cognitive_integrity/cogsec_multiagent_2_computational,Manuscript,Figures,8,count,Figure references in manuscript,Low,0-20 figures
-cognitive_integrity/cogsec_multiagent_2_computational,Manuscript,References,4,count,Citation references,Medium,10-200 references
-cognitive_integrity/cogsec_multiagent_2_computational,Codebase,Source_Files,9,files,Python source files,Medium,1-20 files
-cognitive_integrity/cogsec_multiagent_2_computational,Codebase,Source_Lines,2600,lines,Lines of source code,Medium,100-5000 lines
-cognitive_integrity/cogsec_multiagent_2_computational,Codebase,Methods,167,count,Function/method definitions,Medium,10-500 methods
-cognitive_integrity/cogsec_multiagent_2_computational,Codebase,Classes,51,count,Class definitions,Low,0-50 classes
-cognitive_integrity/cogsec_multiagent_2_computational,Codebase,Scripts,19,files,Analysis scripts,Low,0-10 scripts
-cognitive_integrity/cogsec_multiagent_2_computational,Testing,Test_Files,17,files,Test files discovered,High,1+ files
-cognitive_integrity/cogsec_multiagent_2_computational,Testing,Total_Tests,175,tests,Total test cases (-1 = unavailable),High,10-1000 tests
-cognitive_integrity/cogsec_multiagent_2_computational,Testing,Coverage_Percent,91.33,percent,Code coverage percentage,High,90-100%
+cognitive_integrity/cogsec_multiagent_2_computational,Manuscript,References,8,count,Citation references,Medium,10-200 references
+cognitive_integrity/cogsec_multiagent_2_computational,Codebase,Source_Files,118,files,Python source files,Medium,1-20 files
+cognitive_integrity/cogsec_multiagent_2_computational,Codebase,Source_Lines,15470,lines,Lines of source code,Medium,100-5000 lines
+cognitive_integrity/cogsec_multiagent_2_computational,Codebase,Methods,566,count,Function/method definitions,Medium,10-500 methods
+cognitive_integrity/cogsec_multiagent_2_computational,Codebase,Classes,143,count,Class definitions,Low,0-50 classes
+cognitive_integrity/cogsec_multiagent_2_computational,Codebase,Scripts,21,files,Analysis scripts,Low,0-10 scripts
+cognitive_integrity/cogsec_multiagent_2_computational,Testing,Test_Files,19,files,Test files discovered,High,1+ files
+cognitive_integrity/cogsec_multiagent_2_computational,Testing,Total_Tests,191,tests,Total test cases (-1 = unavailable),High,10-1000 tests
+cognitive_integrity/cogsec_multiagent_2_computational,Testing,Coverage_Percent,0.0,percent,Code coverage percentage,High,90-100%
 cognitive_integrity/cogsec_multiagent_2_computational,Testing,Execution_Time,0.0,seconds,Test execution time,Low,1-300 seconds
 cognitive_integrity/cogsec_multiagent_2_computational,Outputs,PDF_Files,1,files,Generated PDF documents,High,1+ files
-cognitive_integrity/cogsec_multiagent_2_computational,Outputs,PDF_Size_MB,0.47,MB,Total PDF file size,Low,0.1-10 MB
-cognitive_integrity/cogsec_multiagent_2_computational,Outputs,Figures,30,files,Generated figure files,Medium,0-50 figures
-cognitive_integrity/cogsec_multiagent_2_computational,Outputs,Slides,13,files,Generated slide files,Medium,0-20 slide sets
-cognitive_integrity/cogsec_multiagent_2_computational,Outputs,Web_Outputs,14,files,Generated web files,Medium,0-20 web files
-cognitive_integrity/cogsec_multiagent_2_computational,Pipeline,Total_Duration,56.3680739402771,seconds,Total pipeline execution time,Medium,60-600 seconds
+cognitive_integrity/cogsec_multiagent_2_computational,Outputs,PDF_Size_MB,0.58,MB,Total PDF file size,Low,0.1-10 MB
+cognitive_integrity/cogsec_multiagent_2_computational,Outputs,Figures,16,files,Generated figure files,Medium,0-50 figures
+cognitive_integrity/cogsec_multiagent_2_computational,Outputs,Slides,21,files,Generated slide files,Medium,0-20 slide sets
+cognitive_integrity/cogsec_multiagent_2_computational,Outputs,Web_Outputs,22,files,Generated web files,Medium,0-20 web files
+cognitive_integrity/cogsec_multiagent_2_computational,Pipeline,Total_Duration,78.32654905319214,seconds,Total pipeline execution time,Medium,60-600 seconds
 cognitive_integrity/cogsec_multiagent_2_computational,Pipeline,Stages_Passed,7,stages,Pipeline stages completed successfully,High,6 stages
 cognitive_integrity/cogsec_multiagent_2_computational,Pipeline,Bottleneck_Stage,PDF Rendering,stage_name,Slowest pipeline stage,Medium,Varies by project
-cognitive_integrity/cogsec_multiagent_2_computational,Pipeline,Bottleneck_Duration,41.4429669380188,seconds,Time spent in bottleneck stage,Medium,10-300 seconds
+cognitive_integrity/cogsec_multiagent_2_computational,Pipeline,Bottleneck_Duration,59.71198797225952,seconds,Time spent in bottleneck stage,Medium,10-300 seconds
 cognitive_integrity/cogsec_multiagent_3_practical,Manuscript,Total_Words,8419,words,Total words in manuscript sections,High,1000-20000 words
 cognitive_integrity/cogsec_multiagent_3_practical,Manuscript,Sections,12,count,Number of manuscript sections,Medium,3-20 sections
 cognitive_integrity/cogsec_multiagent_3_practical,Manuscript,Equations,0,count,Mathematical equations in manuscript,Low,0-50 equations
 cognitive_integrity/cogsec_multiagent_3_practical,Manuscript,Figures,6,count,Figure references in manuscript,Low,0-20 figures
 cognitive_integrity/cogsec_multiagent_3_practical,Manuscript,References,5,count,Citation references,Medium,10-200 references
-cognitive_integrity/cogsec_multiagent_3_practical,Codebase,Source_Files,2,files,Python source files,Medium,1-20 files
-cognitive_integrity/cogsec_multiagent_3_practical,Codebase,Source_Lines,870,lines,Lines of source code,Medium,100-5000 lines
-cognitive_integrity/cogsec_multiagent_3_practical,Codebase,Methods,22,count,Function/method definitions,Medium,10-500 methods
-cognitive_integrity/cogsec_multiagent_3_practical,Codebase,Classes,12,count,Class definitions,Low,0-50 classes
+cognitive_integrity/cogsec_multiagent_3_practical,Codebase,Source_Files,8,files,Python source files,Medium,1-20 files
+cognitive_integrity/cogsec_multiagent_3_practical,Codebase,Source_Lines,5339,lines,Lines of source code,Medium,100-5000 lines
+cognitive_integrity/cogsec_multiagent_3_practical,Codebase,Methods,157,count,Function/method definitions,Medium,10-500 methods
+cognitive_integrity/cogsec_multiagent_3_practical,Codebase,Classes,88,count,Class definitions,Low,0-50 classes
 cognitive_integrity/cogsec_multiagent_3_practical,Codebase,Scripts,7,files,Analysis scripts,Low,0-10 scripts
-cognitive_integrity/cogsec_multiagent_3_practical,Testing,Test_Files,7,files,Test files discovered,High,1+ files
-cognitive_integrity/cogsec_multiagent_3_practical,Testing,Total_Tests,78,tests,Total test cases (-1 = unavailable),High,10-1000 tests
-cognitive_integrity/cogsec_multiagent_3_practical,Testing,Coverage_Percent,100.0,percent,Code coverage percentage,High,90-100%
+cognitive_integrity/cogsec_multiagent_3_practical,Testing,Test_Files,78,files,Test files discovered,High,1+ files
+cognitive_integrity/cogsec_multiagent_3_practical,Testing,Total_Tests,789,tests,Total test cases (-1 = unavailable),High,10-1000 tests
+cognitive_integrity/cogsec_multiagent_3_practical,Testing,Coverage_Percent,99.7,percent,Code coverage percentage,High,90-100%
 cognitive_integrity/cogsec_multiagent_3_practical,Testing,Execution_Time,0.0,seconds,Test execution time,Low,1-300 seconds
 cognitive_integrity/cogsec_multiagent_3_practical,Outputs,PDF_Files,1,files,Generated PDF documents,High,1+ files
 cognitive_integrity/cogsec_multiagent_3_practical,Outputs,PDF_Size_MB,0.27,MB,Total PDF file size,Low,0.1-10 MB
 cognitive_integrity/cogsec_multiagent_3_practical,Outputs,Figures,12,files,Generated figure files,Medium,0-50 figures
 cognitive_integrity/cogsec_multiagent_3_practical,Outputs,Slides,11,files,Generated slide files,Medium,0-20 slide sets
 cognitive_integrity/cogsec_multiagent_3_practical,Outputs,Web_Outputs,12,files,Generated web files,Medium,0-20 web files
-cognitive_integrity/cogsec_multiagent_3_practical,Pipeline,Total_Duration,42.915687799453735,seconds,Total pipeline execution time,Medium,60-600 seconds
+cognitive_integrity/cogsec_multiagent_3_practical,Pipeline,Total_Duration,44.095824241638184,seconds,Total pipeline execution time,Medium,60-600 seconds
 cognitive_integrity/cogsec_multiagent_3_practical,Pipeline,Stages_Passed,7,stages,Pipeline stages completed successfully,High,6 stages
 cognitive_integrity/cogsec_multiagent_3_practical,Pipeline,Bottleneck_Stage,PDF Rendering,stage_name,Slowest pipeline stage,Medium,Varies by project
-cognitive_integrity/cogsec_multiagent_3_practical,Pipeline,Bottleneck_Duration,34.28980875015259,seconds,Time spent in bottleneck stage,Medium,10-300 seconds
+cognitive_integrity/cogsec_multiagent_3_practical,Pipeline,Bottleneck_Duration,34.35182189941406,seconds,Time spent in bottleneck stage,Medium,10-300 seconds

@@ -1,0 +1,202 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\newpage
+\end{frame}
+
+\section{Conclusion}\label{sec:conclusion}
+
+\begin{frame}{Summary of Practical Guidance}
+\protect\phantomsection\label{summary-of-practical-guidance}
+This paper translated the Cognitive Integrity Framework (CIF) from
+formal theory and empirical validation into actionable guidance for
+practitioners. Our key contributions include:
+
+\textbf{Operator Posture Framework}: The four pillars---trust boundary
+awareness, belief provenance consciousness, delegation hygiene, and
+coordination integrity---provide a conceptual foundation for cognitive
+security readiness assessment.
+
+\textbf{Human-Actionable Checklists}: Step-by-step guidance for
+pre-deployment, operational monitoring, and incident response enables
+practitioners to implement cognitive security systematically.
+
+\textbf{Agent-Readable Guidelines}: Machine-parseable security rules
+enable AI agents to participate in their own cognitive security,
+implementing continuous self-monitoring and threat response.
+
+\textbf{Deployment Considerations}: Risk-profile-based configuration
+guidance and architecture-specific recommendations enable appropriate
+security posture calibration.
+
+\textbf{Risk Assessment Methodology}: Systematic threat modeling for
+cognitive attack surfaces helps organizations prioritize security
+investments.
+
+\textbf{Common Pitfalls Catalog}: Documented anti-patterns with concrete
+mitigations help practitioners avoid known failure modes.
+\end{frame}
+
+\begin{frame}{Path Forward}
+\protect\phantomsection\label{path-forward}
+Cognitive security for multiagent operators remains an emerging
+discipline. As these systems become ubiquitous in enterprise and
+consumer contexts, the guidance in this paper represents a starting
+point rather than an endpoint.
+
+Organizations adopting multiagent AI should:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Assess current posture} using the four-pillar framework
+\item
+  \textbf{Implement appropriate defenses} based on risk profile
+\item
+  \textbf{Monitor continuously} using the operational checklists
+\item
+  \textbf{Prepare for incidents} with documented response procedures
+\item
+  \textbf{Iterate and improve} as the threat landscape evolves
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Paper Series Integration}
+\protect\phantomsection\label{paper-series-integration}
+This practical guidance builds on and integrates with:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Part 1 (Formal Foundations)}: Provides the theoretical basis
+  for all recommendations
+\item
+  \textbf{Part 2 (Computational Validation)}: Demonstrates that these
+  mechanisms work in practice
+\end{itemize}
+
+Together, the three papers provide a complete framework: formal
+foundations establishing what cognitive security means, empirical
+validation proving that mechanisms work, and practical guidance enabling
+deployment.
+\end{frame}
+
+\begin{frame}{Final Recommendations}
+\protect\phantomsection\label{final-recommendations}
+For organizations deploying multiagent AI today:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Start with awareness}: Recognize that cognitive attack
+  surfaces exist
+\item
+  \textbf{Map trust assumptions}: Know where trust is assumed
+  vs.~verified
+\item
+  \textbf{Implement bounded delegation}: Trust should decay with depth
+\item
+  \textbf{Deploy layered defense}: No single mechanism provides adequate
+  protection
+\item
+  \textbf{Monitor continuously}: Cognitive integrity requires ongoing
+  vigilance
+\item
+  \textbf{Prepare for attacks}: Incidents will occur; readiness
+  determines impact
+\end{enumerate}
+
+The cognitive security posture you adopt today will determine your
+resilience to the attacks of tomorrow.
+\end{frame}
+
+\end{document}

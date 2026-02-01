@@ -1,0 +1,26 @@
+{
+  "full_cif": {
+    "detection": 0.94,
+    "delta": 0.0
+  },
+  "minus_firewall": {
+    "detection": 0.81,
+    "delta": -0.13
+  },
+  "minus_sandbox": {
+    "detection": 0.88,
+    "delta": -0.06
+  },
+  "minus_tripwires": {
+    "detection": 0.85,
+    "delta": -0.09
+  },
+  "minus_invariants": {
+    "detection": 0.89,
+    "delta": -0.05
+  },
+  "minus_trust_decay": {
+    "detection": 0.91,
+    "delta": -0.03
+  }
+}

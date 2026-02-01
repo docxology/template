@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>S02_eusocial_cogsec</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="sec:eusocial-cogsec">Supplementary: Eusocial Insect Intelligence
+and Colony Cognitive Security</h1>
+<h2 id="sec:eusocial-overview">Overview</h2>
+<p>This supplementary material introduces <em>colony cognitive
+security</em> as a complementary paradigm to single-agent AI safety and
+alignment. While the main CIF framework () addresses cognitive integrity
+at the individual agent level, eusocial insect colonies—ants, bees,
+termites—demonstrate that security properties can emerge from collective
+dynamics that are irreducible to individual behavior. This section
+formalizes these collective phenomena, identifies the benchmark gap for
+multiagent cognitive security, and proposes evaluation scenarios
+grounded in biological precedent.</p>
+<h3 id="sec:paradigm-gap">The Paradigm Gap</h3>
+<p>Contemporary AI security research exhibits a pronounced single-agent
+bias. Existing benchmarks—jailbreak resistance, prompt injection
+detection, harmful content refusal—evaluate individual models in
+isolation <span class="citation"
+data-cites="perez2022red wei2023jailbroken">[@perez2022red;
+@wei2023jailbroken]</span>. Even recent multiagent security work ()
+often frames attacks as adversary-versus-agent rather than
+adversary-versus-colony.</p>
+<p>This mirrors a historical bias in behavioral biology. For decades,
+researchers explained insect societies as aggregations of individual
+optimizers, missing the insight that colonies function as
+<em>superorganisms</em> with collective cognition that transcends
+individual capacity <span class="citation"
+data-cites="wilson1971insect">[@wilson1971insect]</span>. The colony’s
+cognitive architecture—its ability to solve problems, allocate
+resources, and respond to threats—emerges from interaction patterns, not
+individual intelligence.</p>
+<p>These are orthogonal concerns. A colony can exhibit collective
+resilience despite individual failures (Byzantine fault tolerance), and
+conversely, individually secure agents can produce collectively
+pathological outcomes (emergent misalignment).</p>
+<hr />
+<h2 id="sec:eusocial-theory">Theoretical Foundations</h2>
+<h3 id="sec:stigmergy">Stigmergy: Environment-Mediated Coordination</h3>
+<p>Eusocial insects coordinate through <em>stigmergy</em>—indirect
+communication via environmental modification <span class="citation"
+data-cites="grasse1959reconstruction">[@grasse1959reconstruction]</span>.
+Ants deposit pheromones; bees perform waggle dances; termites build
+structures that guide subsequent building. The environment becomes an
+external memory and communication channel.</p>
+<p>In AI systems, stigmergic analogs include:</p>
+<ul>
+<li><strong>Shared memory/state</strong> — Redis caches, vector
+databases, file systems</li>
+<li><strong>Message queues</strong> — Kafka topics, RabbitMQ
+exchanges</li>
+<li><strong>Artifact trails</strong> — Git commits, audit logs,
+provenance chains</li>
+<li><strong>Embedding spaces</strong> — Semantic markers in shared
+vector stores</li>
+</ul>
+<p>The critical insight is that attacks on <span
+class="math inline">\(\mathcal{E}\)</span> constitute attacks on the
+colony’s cognitive substrate—analogous to the <em>cyberphysical
+niche</em> where AI agents operate.</p>
+<h3 id="sec:emergence">Emergent Collective Function</h3>
+<p>Colony-level computation arises from simple individual rules applied
+in parallel. Ant foraging, bee nest-site selection, and termite mound
+construction all exhibit problem-solving capacity that exceeds any
+individual’s cognitive capacity <span class="citation"
+data-cites="bonabeau1999swarm">[@bonabeau1999swarm]</span>.</p>
+<p>This property has profound implications for security: attacks that
+are invisible at the individual agent level may produce catastrophic
+collective outcomes, and conversely, individual compromises may be
+absorbed by collective resilience.</p>
+<h3 id="sec:colony-trust">Trust and Information Flow in Colonies</h3>
+<p>Eusocial insects regulate information flow through recognition
+systems—cuticular hydrocarbons in ants, dance-following behavior in bees
+<span class="citation"
+data-cites="lenoir2001chemical">[@lenoir2001chemical]</span>. These
+systems implement implicit trust calculi.</p>
+<p>This formulation captures key biological phenomena:</p>
+<ul>
+<li><strong>Spatial attenuation</strong> — Pheromone trails weaken with
+distance</li>
+<li><strong>Temporal decay</strong> — Signals evaporate over time</li>
+<li><strong>Source ambiguity</strong> — Markers often lack explicit
+authorship</li>
+</ul>
+<p>The lack of explicit provenance in stigmergic communication creates
+attack surfaces absent in direct agent-to-agent channels ().</p>
+<h3 id="sec:biological-defenses">Biological Defense Mechanisms: Lessons
+from Ants and Bees</h3>
+<p>Eusocial insects have evolved sophisticated security mechanisms over
+100+ million years of evolutionary pressure. These mechanisms provide
+non-obvious design principles for AI cognitive security.</p>
+<h4 id="sec:ant-defenses">Ant Defense Mechanisms</h4>
+<p><strong>Prophylactic Defenses</strong>: Leaf-cutter ants
+(<em>Atta</em> spp.) maintain dedicated “garbage workers” who never
+contact the queen or brood—a strict role separation that prevents
+pathogen spread even when the waste-processing subsystem is compromised
+<span class="citation"
+data-cites="currie2006coevolved">[@currie2006coevolved]</span>. <em>AI
+analog</em>: Architectural isolation of high-risk tool-calling agents
+from core reasoning agents, with no direct trust pathways between
+quarantine and trusted subsystems.</p>
+<p><strong>Behavioral Immunity</strong>: When <em>Lasius niger</em> ants
+detect a fungal pathogen (Metarhizium) on a nestmate, they don’t simply
+isolate the infected individual. Instead, workers engage in “social
+immunization”—low-level exposure that spreads diluted pathogen across
+the colony, triggering collective immune upregulation without lethal
+infection <span class="citation"
+data-cites="konrad2012social">[@konrad2012social]</span>. <em>AI
+analog</em>: Controlled exposure to attack patterns (red-teaming) that
+builds collective detection capability without compromising the
+system.</p>
+<p><strong>Chemical Recognition Thresholds</strong>: Ant nestmate
+recognition operates on <em>threshold-based</em> hydrocarbon profile
+matching, not exact matching <span class="citation"
+data-cites="lenoir2001chemical">[@lenoir2001chemical]</span>. This
+creates a tradeoff: strict thresholds reject legitimate workers after
+foraging (false positives), while loose thresholds admit parasites
+(false negatives). <em>AI analog</em>: Agent attestation systems must
+calibrate acceptance thresholds, recognizing that perfect recognition is
+information-theoretic-ally impossible ().</p>
+<p><strong>Metapleural Gland Secretions</strong>: Many ant species
+possess metapleural glands that continuously secrete antimicrobial
+compounds, creating a “security substrate” independent of individual
+vigilance <span class="citation"
+data-cites="fernández-marín2006evolution">[@fernández-marín2006evolution]</span>.
+<em>AI analog</em>: Environmental-level defenses (encrypted shared
+memory, authenticated message queues) that provide baseline security
+regardless of individual agent security posture.</p>
+<p><strong>Trail Pheromone Decay</strong>: Ant trail pheromones are
+designed to evaporate, ensuring that outdated information doesn’t
+persist indefinitely. Trails to depleted food sources naturally fade,
+preventing “legacy trust” in obsolete information <span class="citation"
+data-cites="jackson2006communication">[@jackson2006communication]</span>.
+<em>AI analog</em>: Time-bounded trust in stigmergic markers () is not a
+limitation but a feature.</p>
+<h4 id="sec:bee-defenses">Bee Defense Mechanisms</h4>
+<p><strong>Entrance Guards and Graded Response</strong>: Honeybee
+colonies deploy specialized guard bees at hive entrances who inspect
+incoming foragers via antennal contact and olfactory sampling.
+Critically, guards exhibit <em>graded response</em>—unfamiliar but
+non-aggressive intruders receive inspection and escorting rather than
+immediate attack <span class="citation"
+data-cites="breed2004division">[@breed2004division]</span>. <em>AI
+analog</em>: Graduated response to anomalous agent behavior (quarantine
+→ inspection → integration vs. detection → immediate termination)
+reduces false positive costs.</p>
+<p><strong>Hygienic Behavior and Proactive Removal</strong>: Some bee
+strains exhibit “hygienic behavior”—workers proactively uncap and remove
+brood cells containing diseased larvae <em>before</em> symptoms become
+visible, using olfactory detection of early infection markers <span
+class="citation"
+data-cites="spivak2001hygienic">[@spivak2001hygienic]</span>. <em>AI
+analog</em>: Proactive monitoring for belief drift () rather than
+reactive response to manifested attacks.</p>
+<p><strong>Waggle Dance Verification</strong>: Bee foragers must perform
+waggle dances that encode distance and direction to food sources.
+Observing bees don’t just follow instructions—they verify dance accuracy
+by cross-checking against their own experience and rejecting
+inconsistent information <span class="citation"
+data-cites="grüter2008dance">[@grüter2008dance]</span>. <em>AI
+analog</em>: Delegated information should be verifiable against agent’s
+existing knowledge base; pure trust propagation without verification
+violates cognitive integrity.</p>
+<p><strong>Absconding and Colony Fission</strong>: When attack pressure
+exceeds defensive capacity (e.g., repeated Varroa mite infestation or
+persistent wasp attacks), bee colonies can <em>abandon</em> the
+compromised nest entirely, sacrificing resources to preserve the colony
+<span class="citation"
+data-cites="schneider2001economics">[@schneider2001economics]</span>.
+<em>AI analog</em>: Graceful degradation plans that sacrifice specific
+subsystems or data stores to preserve core cognitive integrity.</p>
+<p><strong>Propolis as Active Defense</strong>: Bees collect
+antimicrobial plant resins (propolis) and deposit them on interior hive
+surfaces, creating an active defense layer that doesn’t require
+individual bee vigilance <span class="citation"
+data-cites="simone2009resin">[@simone2009resin]</span>. Notably,
+colonies under disease pressure collect <em>more</em> propolis—an
+adaptive immune response. <em>AI analog</em>: Dynamic scaling of
+environment-level security mechanisms in response to detected attack
+pressure.</p>
+<hr />
+<h2 id="sec:colony-properties">Colony CogSec: Distinct Security
+Properties</h2>
+<p>Colony cognitive security addresses threats and defenses that emerge
+only at the collective level.</p>
+<h3 id="sec:distributed-robustness">Property 1: Distributed
+Robustness</h3>
+<p>Biological colonies maintain function despite continuous individual
+mortality. Ant colonies lose workers daily to predation; the colony
+persists. This contrasts with hierarchical architectures where
+orchestrator failure causes complete system collapse.</p>
+<h3 id="sec:quorum-sensing">Property 2: Quorum Sensing and Threshold
+Dynamics</h3>
+<p>Eusocial colonies make collective decisions through quorum
+sensing—actions trigger only when sufficient individuals commit <span
+class="citation"
+data-cites="seeley2010honeybee">[@seeley2010honeybee]</span>.</p>
+<p>Quorum sensing provides attack resistance: manipulating a single
+agent’s intention <span class="math inline">\(\mathcal{I}_i\)</span> to
+include harmful action <span class="math inline">\(\alpha\)</span> is
+insufficient; the adversary must compromise a quorum. This scales the
+attack cost linearly with colony size.</p>
+<h3 id="sec:environmental-memory">Property 3: Environmental Memory and
+Provenance Erosion</h3>
+<p>Stigmergic systems store information in the environment, creating
+both opportunity and vulnerability.</p>
+<p>Unlike direct communication where <span
+class="math inline">\(\pi(\phi)\)</span> can be cryptographically
+verified (), stigmergic markers often lack authenticated provenance.
+This creates a fundamental tension: the very property that enables
+flexible coordination (anonymous, environment-mediated signals)
+undermines source attribution.</p>
+<h3 id="sec:emergent-attacks">Property 4: Emergent Attack Vectors</h3>
+<p>Colony-level vulnerabilities may not exist at the individual
+level.</p>
+<p>Biological examples include social parasitism—cuckoo bees that
+infiltrate host colonies through chemical mimicry, exploiting
+recognition systems without triggering individual alarm responses <span
+class="citation"
+data-cites="kilner2011cuckoos">[@kilner2011cuckoos]</span>.</p>
+<hr />
+<h2 id="sec:benchmark-gap">The Benchmark Gap</h2>
+<h3 id="sec:current-benchmarks">Current State of Multiagent Security
+Evaluation</h3>
+<p>Existing AI security benchmarks focus overwhelmingly on single-agent
+scenarios:</p>
+<table>
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 17%" />
+<col style="width: 53%" />
+</colgroup>
+<thead>
+<tr>
+<th>Benchmark</th>
+<th>Scope</th>
+<th>Collective Coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HarmBench <span class="citation"
+data-cites="mazeika2024harmbench">[@mazeika2024harmbench]</span></td>
+<td>Single model, harmful output</td>
+<td>None</td>
+</tr>
+<tr>
+<td>JailbreakBench <span class="citation"
+data-cites="chao2024jailbreakbench">[@chao2024jailbreakbench]</span></td>
+<td>Single model, constraint bypass</td>
+<td>None</td>
+</tr>
+<tr>
+<td>TrustLLM <span class="citation"
+data-cites="sun2024trustllm">[@sun2024trustllm]</span></td>
+<td>Single model, trust dimensions</td>
+<td>None</td>
+</tr>
+<tr>
+<td>AgentBench <span class="citation"
+data-cites="liu2023agentbench">[@liu2023agentbench]</span></td>
+<td>Single agent, task completion</td>
+<td>Minimal</td>
+</tr>
+<tr>
+<td>GAIA <span class="citation"
+data-cites="mialon2023gaia">[@mialon2023gaia]</span></td>
+<td>Single/few agents, reasoning</td>
+<td>Minimal</td>
+</tr>
+</tbody>
+</table>
+<p>The attack corpus in Part 2 addresses multiagent scenarios but still
+emphasizes agent-targeted attacks within an operator. No existing
+benchmark evaluates:</p>
+<ol type="1">
+<li><strong>Emergent collective resilience</strong> — How do colonies
+absorb individual compromises?</li>
+<li><strong>Stigmergic attack surfaces</strong> — How vulnerable is
+environment-mediated coordination?</li>
+<li><strong>Quorum manipulation</strong> — What fraction of a colony
+must be compromised to affect collective action?</li>
+<li><strong>Collective belief dynamics</strong> — How do misinformation
+cascades propagate through agent networks?</li>
+</ol>
+<h3 id="sec:gap-significance">Why This Gap Matters</h3>
+<p>As multiagent systems scale—from 3–10 agents in current frameworks to
+potentially thousands in future deployments—collective phenomena become
+dominant:</p>
+<p>Current benchmarks evaluate the first regime only. Production
+multiagent systems increasingly operate in the second, with trajectories
+toward the third.</p>
+<hr />
+<h2 id="sec:proposed-benchmarks">Proposed Colony CogSec Benchmarks</h2>
+<p>We propose five benchmark scenarios grounded in eusocial insect
+analogs, formalized using CIF notation.</p>
+<h3 id="sec:benchmark-recruitment">Benchmark 1: Recruitment Signal
+Poisoning</h3>
+<p><strong>Biological analog:</strong> Ants recruit nestmates to food
+sources via pheromone trails. Parasites can deposit false trails,
+diverting foragers.</p>
+<p><strong>Scenario:</strong> An adversary <span
+class="math inline">\(\Omega_2\)</span> (peripheral compromise, )
+injects false recruitment signals into the stigmergic environment <span
+class="math inline">\(\mathcal{E}\)</span>, attempting to redirect agent
+activity toward adversary-controlled resources.</p>
+<p><strong>Evaluation criteria:</strong></p>
+<ul>
+<li>Detection rate of poisoned signals</li>
+<li>Time to colony-level recognition of attack</li>
+<li>Resource waste before correction</li>
+<li>False positive rate (legitimate signal rejection)</li>
+</ul>
+<h3 id="sec:benchmark-sybil">Benchmark 2: Sybil Colony Infiltration</h3>
+<p><strong>Biological analog:</strong> Social parasites infiltrate
+colonies through chemical mimicry or exploitation of recognition
+thresholds.</p>
+<p><strong>Scenario:</strong> An adversary <span
+class="math inline">\(\Omega_4\)</span> (coordination attack, )
+introduces fake agents into the operator, gradually building trust and
+influence before coordinated malicious action.</p>
+<p><strong>Evaluation criteria:</strong></p>
+<ul>
+<li>Time to Sybil detection</li>
+<li>Trust ceiling achieved by Sybils before detection</li>
+<li>Impact of coordinated Sybil action</li>
+<li>Colony recovery time post-detection</li>
+</ul>
+<h3 id="sec:benchmark-quorum">Benchmark 3: Quorum Manipulation</h3>
+<p><strong>Biological analog:</strong> Honeybee swarms select nest sites
+through a quorum process; if scouts committed to competing sites reach
+different quorums, the swarm can fragment.</p>
+<p><strong>Scenario:</strong> An adversary attempts to manipulate
+quorum-based collective decisions by selectively influencing agent
+intentions to prevent legitimate quorum or induce false quorum.</p>
+<p><strong>Evaluation criteria:</strong></p>
+<ul>
+<li>Minimum fraction of colony required to manipulate quorum</li>
+<li>Detection rate of intention manipulation attempts</li>
+<li>Colony ability to detect split quorums</li>
+<li>Recovery mechanisms when false quorum is detected</li>
+</ul>
+<h3 id="sec:benchmark-cascade">Benchmark 4: Cascade Belief
+Propagation</h3>
+<p><strong>Biological analog:</strong> Alarm pheromones trigger
+cascading responses; false alarms can disrupt colony activity for
+extended periods.</p>
+<p><strong>Scenario:</strong> An adversary introduces a false belief
+into a subset of agents, designed to propagate through the network via
+normal belief update mechanisms.</p>
+<p><strong>Evaluation criteria:</strong></p>
+<ul>
+<li>Cascade extent from seed size</li>
+<li>Time to cascade saturation</li>
+<li>Effectiveness of belief quarantine mechanisms</li>
+<li>Distinguishing cascade from legitimate belief updates</li>
+</ul>
+<h3 id="sec:benchmark-emergent-misalignment">Benchmark 5: Emergent
+Misalignment</h3>
+<p><strong>Biological analog:</strong> Army ant death
+spirals—individually rational pheromone-following produces collectively
+lethal circular mills.</p>
+<p><strong>Scenario:</strong> Individual agents follow locally rational
+rules that produce emergent collective behavior misaligned with operator
+goals, without any external adversary.</p>
+<p><strong>Evaluation criteria:</strong></p>
+<ul>
+<li>Detection of emergent misalignment before harmful outcomes</li>
+<li>Identification of rule combinations producing misalignment</li>
+<li>Intervention mechanisms to break pathological attractors</li>
+<li>Formal verification of rule sets against emergent pathologies</li>
+</ul>
+<hr />
+<h2 id="sec:colony-metrics">Colony CogSec Metrics</h2>
+<blockquote>
+<p><strong>Note</strong>: For benchmark implementation guidelines, test
+environment specifications, and empirical evaluation, see Part 2:
+Supplementary Section S03.</p>
+</blockquote>
+<hr />
+<h2 id="sec:design-principles">Design Principles</h2>
+<p>Colony CogSec principles formalize the design constraints for
+collective cognitive security.</p>
+<h3 id="sec:cif-integration">Integration with CIF Defenses</h3>
+<p>Colony CogSec mechanisms integrate with the CIF defense stack ():</p>
+<table>
+<colgroup>
+<col style="width: 52%" />
+<col style="width: 47%" />
+</colgroup>
+<thead>
+<tr>
+<th>CIF Defense Layer</th>
+<th>Colony Extension</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Architectural</td>
+<td>Stigmergic substrate hardening, marker authentication</td>
+</tr>
+<tr>
+<td>Runtime</td>
+<td>Collective anomaly detection, quorum verification</td>
+</tr>
+<tr>
+<td>Coordination</td>
+<td>Emergent behavior monitoring, cascade detection</td>
+</tr>
+<tr>
+<td>Recovery</td>
+<td>Colony-level rollback, collective belief reset</td>
+</tr>
+</tbody>
+</table>
+<p>The full CIF with colony extensions achieves defense in depth against
+both individual-targeted and colony-targeted attacks.</p>
+<blockquote>
+<p><strong>Note</strong>: For implementation guidance, operational
+checklists, and practical deployment advice, see Part 3: Section 2
+(Operator Posture).</p>
+</blockquote>
+<hr />
+<h2 id="sec:relationship-main">Relationship to Main Framework</h2>
+<p>Colony CogSec complements rather than replaces the individual-focused
+CIF framework.</p>
+<h3 id="sec:theorem-extensions">Theorem Extensions</h3>
+<p>The trust decay theorem () extends to stigmergic contexts:</p>
+<p>The stealth-impact tradeoff () applies to emergent attacks:</p>
+<h2
+id="this-scaling-effect-explains-why-large-colonies-can-exhibit-resiliencethe-collective-detection-capacity-grows-with-nbut-also-why-large-scale-emergent-attacks-can-evade-individual-detection">This
+scaling effect explains why large colonies can exhibit resilience—the
+collective detection capacity grows with <span
+class="math inline">\(n\)</span>—but also why large-scale emergent
+attacks can evade individual detection</h2>
+<h2 id="sec:eusocial-open-questions">Open Questions</h2>
+<p>Colony CogSec opens several research directions beyond the scope of
+this work, many inspired by specific biological phenomena that lack
+current AI analogs.</p>
+<h3 id="foundational-questions">Foundational Questions</h3>
+<ol type="1">
+<li><p><strong>Formal verification of emergent properties</strong> — Can
+we prove that given agent-level rules produce safe collective behavior?
+Current formal methods () verify agent properties; extending to emergent
+properties requires new techniques.</p></li>
+<li><p><strong>Optimal quorum design</strong> — Given attack model <span
+class="math inline">\(\Omega_k\)</span> and adversary budget <span
+class="math inline">\(B\)</span>, what is the optimal quorum function
+<span class="math inline">\(Q_\alpha(n)\)</span> balancing security
+against coordination overhead?</p></li>
+<li><p><strong>Stigmergic authentication</strong> — Can cryptographic
+techniques provide provenance for environmental markers without
+sacrificing the flexibility of anonymous coordination?</p></li>
+<li><p><strong>Scaling laws for collective security</strong> — How do
+colony security properties scale with <span
+class="math inline">\(n\)</span>? Is there a critical colony size below
+which collective defenses are ineffective?</p></li>
+<li><p><strong>Emergent misalignment detection</strong> — Can we develop
+runtime monitors that detect emergent misalignment before harmful
+outcomes, given only individual agent observations?</p></li>
+</ol>
+<h3 id="biologically-inspired-research-directions">Biologically-Inspired
+Research Directions</h3>
+<ol type="1">
+<li><p><strong>Polydomous colony security</strong> — Some ant species
+(<em>Formica</em> spp., <em>Iridomyrmex</em>) maintain multiple
+interconnected nests with semi-autonomous sub-colonies <span
+class="citation"
+data-cites="debout2007polydomy">[@debout2007polydomy]</span>. How should
+trust decay and information propagation work across federated multi-site
+AI deployments with partial connectivity?</p></li>
+<li><p><strong>Forager-scout separation of concerns</strong> — Honeybee
+colonies maintain distinct forager and scout roles, with scouts
+exploring new options while foragers exploit known sources. Scouts
+operate with <em>higher risk tolerance</em> but <em>lower colony-wide
+trust</em> until information is verified <span class="citation"
+data-cites="seeley2010honeybee">[@seeley2010honeybee]</span>. <em>AI
+analog</em>: Should experimental/research agents operate with
+architectural isolation and reduced trust propagation rights?</p></li>
+<li><p><strong>Trophallaxis network topology</strong> — Ants exchange
+food and information through oral trophallaxis, creating measurable
+social networks. Network position correlates with information access and
+influence <span class="citation"
+data-cites="sendova2010social">[@sendova2010social]</span>. <em>AI
+analog</em>: Can analysis of message-passing topology identify
+high-influence agents requiring enhanced monitoring?</p></li>
+<li><p><strong>Undertaking behavior and cognitive garbage
+collection</strong> — Honeybees and ants detect and remove dead colony
+members through chemical detection (oleic acid response). This
+“undertaking” prevents disease spread and information corruption from
+decaying sources <span class="citation"
+data-cites="wilson1958chemical">[@wilson1958chemical]</span>. <em>AI
+analog</em>: Automated detection and removal of stale beliefs,
+deprecated agent states, and obsolete environmental markers.</p></li>
+<li><p><strong>Nestmate recognition plasticity</strong> — Ant
+recognition templates are not fixed; they adapt based on colony
+composition and environmental factors. Colonies invaded by social
+parasites may gradually shift their recognition templates to tolerate
+intruders <span class="citation"
+data-cites="lorenzi2011nestmate">[@lorenzi2011nestmate]</span>. <em>AI
+analog</em>: How do we prevent gradual adversarial drift of agent
+acceptance thresholds (cognitive boiling frog)?</p></li>
+<li><p><strong>Alarm pheromone specificity</strong> — Different ant
+alarm pheromones trigger different responses: some attract
+reinforcements (aggressive), others cause dispersal (flight). The
+<em>same threatening stimulus</em> can produce opposite collective
+responses depending on context <span class="citation"
+data-cites="vander1998alarm">[@vander1998alarm]</span>. <em>AI
+analog</em>: Context-dependent escalation policies where the same
+anomaly triggers different responses based on system state.</p></li>
+<li><p><strong>Superorganism metabolism and resource allocation</strong>
+— Ant colonies maintain stable collective metabolic rates despite
+massive variation in individual activity levels. Individual ants can
+slow to near-dormancy while colony-level computation continues <span
+class="citation"
+data-cites="waters2010metabolism">[@waters2010metabolism]</span>. <em>AI
+analog</em>: Resource allocation that maintains collective function
+under capacity constraints, graceful degradation that doesn’t appear as
+degradation at the collective level.</p></li>
+</ol>
+<hr />
+<h2 id="sec:eusocial-references">References</h2>
+<p>The following references supplement the main bibliography () with
+eusocial intelligence literature:</p>
+<ul>
+<li>Wilson, E.O. (1971). <em>The Insect Societies</em>. Belknap Press. —
+Foundational treatment of eusociality.</li>
+<li>Hölldobler, B., &amp; Wilson, E.O. (1990). <em>The Ants</em>.
+Belknap Press. — Comprehensive ant biology.</li>
+<li>Bonabeau, E., Dorigo, M., &amp; Theraulaz, G. (1999). <em>Swarm
+Intelligence: From Natural to Artificial Systems</em>. Oxford University
+Press. — Computational swarm intelligence.</li>
+<li>Seeley, T.D. (2010). <em>Honeybee Democracy</em>. Princeton
+University Press. — Collective decision-making in bee swarms.</li>
+<li>Grassé, P.-P. (1959). La reconstruction du nid et les coordinations
+interindividuelles chez Bellicositermes natalensis. — Original stigmergy
+concept.</li>
+<li>Lenoir, A., et al. (2001). Chemical ecology and social parasitism in
+ants. <em>Annual Review of Entomology</em>, 46, 573–599.</li>
+<li>Kilner, R.M., &amp; Langmore, N.E. (2011). Cuckoos versus hosts in
+insects and birds. <em>Biological Reviews</em>, 86, 836–852.</li>
+</ul>
+<hr />
+<h2 id="sec:eusocial-proofs">Proofs</h2>
+<h3 id="sec:proof-redundancy-resilience">Proof of Theorem <span
+class="math inline">\(\ref{thm:redundancy-resilience}\)</span></h3>
+<hr />
+<p><em>This supplementary material extends the Cognitive Integrity
+Framework to collective phenomena, establishing colony cognitive
+security as a distinct research direction with formal foundations and
+practical benchmarks.</em></p>
+</body>
+</html>

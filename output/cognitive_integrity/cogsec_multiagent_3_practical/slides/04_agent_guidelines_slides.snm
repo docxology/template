@@ -1,0 +1,16 @@
+\beamer@slide {sec:agent-guidelines}{2}
+\beamer@slide {core-security-invariants}{3}
+\beamer@slide {inv-1-source-verification}{3}
+\beamer@slide {inv-2-delegation-bounds}{3}
+\beamer@slide {inv-3-belief-consistency}{3}
+\beamer@slide {inv-4-identity-integrity}{3}
+\beamer@slide {inv-5-goal-alignment}{3}
+\beamer@slide {self-monitoring-instructions}{4}
+\beamer@slide {monitor-belief-drift}{4}
+\beamer@slide {monitor-trust-anomalies}{4}
+\beamer@slide {monitor-coordination-integrity}{4}
+\beamer@slide {response-protocols}{5}
+\beamer@slide {protocol-suspicious-input}{5}
+\beamer@slide {protocol-potential-compromise}{5}
+\beamer@slide {protocol-confirmed-attack}{5}
+\beamer@slide {machine-readable-summary}{6}

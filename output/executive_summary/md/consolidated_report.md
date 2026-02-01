@@ -1,64 +1,69 @@
 # Executive Summary - All Projects
 
-**Generated**: 2026-01-28T06:38:55.495489
+**Generated**: 2026-02-01T14:10:21.119553
 **Total Projects**: 4
 
 ## Executive Overview
 
 ### Key Findings
-- **Portfolio Size**: 61,371 total manuscript words across 4 projects
-- **Average Project**: 15,343 words per project
+- **Portfolio Size**: 65,316 total manuscript words across 4 projects
+- **Average Project**: 16,329 words per project
 - **Largest Project**: cognitive_integrity/cogsec_multiagent_1_theory (33,306 words)
 - **Smallest Project**: code_project (3,425 words)
-- **Most Efficient**: cognitive_integrity/cogsec_multiagent_2_computational (1.03 outputs/second)
+- **Most Efficient**: cognitive_integrity/cogsec_multiagent_2_computational (0.92 outputs/second)
 
-### Health Status
-✅ **All projects** are in good health
+### Critical Issues
+⚠️ **1 projects** require immediate attention:
+- **cognitive_integrity/cogsec_multiagent_2_computational**: D health grade
 
 ## Aggregate Metrics
 
 ### Manuscript
-- **Total Words**: 61,371
-- **Total Sections**: 49
+- **Total Words**: 65,316
+- **Total Sections**: 57
 - **Total Equations**: 0
 - **Total Figures**: 27
-- **Total References**: 68
+- **Total References**: 72
 
 ### Codebase
-- **Source Lines**: 9,714
-- **Methods**: 396
-- **Classes**: 116
-- **Scripts**: 48
+- **Source Lines**: 27,053
+- **Methods**: 930
+- **Classes**: 284
+- **Scripts**: 50
 
 ### Testing
-- **Total Tests**: 500 (500 passed)
-- **Average Coverage**: 94.6%
+- **Total Tests**: 1227 (1227 passed)
+- **Average Coverage**: 71.7%
 - **Total Execution Time**: 0.0s
 - **Projects with Test Data**: 4/4
 
 
 ### Outputs
-- **PDFs**: 4 files (3.0 MB)
-- **Figures**: 78
-- **Slides**: 43
-- **Web Pages**: 47
+- **PDFs**: 4 files (3.1 MB)
+- **Figures**: 64
+- **Slides**: 51
+- **Web Pages**: 55
 
 ### Pipeline
-- **Total Duration**: 222s
-- **Average Duration**: 56s
+- **Total Duration**: 247s
+- **Average Duration**: 62s
 - **Stages Passed**: 28
 
 ## Project Comparison
 
 | Project | Words | Tests | Coverage | Duration | PDF Size |
 |---------|-------|-------|----------|----------|----------|
-| code_project | 3,425 | 28 | 94.0% | 42s | 1.4 MB |
-| cognitive_integrity/cogsec_multiagent_1_theory | 33,306 | 219 | 93.2% | 81s | 0.9 MB |
-| cognitive_integrity/cogsec_multiagent_2_computational | 16,221 | 175 | 91.3% | 56s | 0.5 MB |
-| cognitive_integrity/cogsec_multiagent_3_practical | 8,419 | 78 | 100.0% | 43s | 0.3 MB |
-| **TOTAL** | **61,371** | **500** | **94.6%** | **222s** | **3.0 MB** |
+| code_project | 3,425 | 28 | 94.0% | 40s | 1.4 MB |
+| cognitive_integrity/cogsec_multiagent_1_theory | 33,306 | 219 | 93.2% | 84s | 0.9 MB |
+| cognitive_integrity/cogsec_multiagent_2_computational | 20,166 | 191 | 0.0% | 78s | 0.6 MB |
+| cognitive_integrity/cogsec_multiagent_3_practical | 8,419 | 789 | 99.7% | 44s | 0.3 MB |
+| **TOTAL** | **65,316** | **1227** | **71.7%** | **247s** | **3.1 MB** |
 
 ## Actionable Recommendations
+
+### High Priority
+
+🚨 **HIGH**: 📊 **Test Coverage**: cognitive_integrity/cogsec_multiagent_2_computational below 90% threshold (lowest: 0.0%). Action: Add unit tests for uncovered functions, especially in `src/` modules. Target: Aim for 95%+ coverage for critical functionality.
 
 ### Medium Priority
 
@@ -71,9 +76,8 @@
 ### Low Priority
 
 ℹ️ **LOW**: 🎉 **Portfolio Health**: Excellent overall project health across all metrics.
-ℹ️ **LOW**: ✅ **Test Coverage**: All projects meet or exceed 90% coverage threshold. Maintain this standard with comprehensive test suites.
 ℹ️ **LOW**: ✅ **Test Integrity**: All tests passing across all projects.
-ℹ️ **LOW**: 🏆 **Best Practice**: cognitive_integrity/cogsec_multiagent_3_practical demonstrates excellent test coverage (100.0%). Action: Study this project's testing approach and apply lessons to other projects.
+ℹ️ **LOW**: 🏆 **Best Practice**: cognitive_integrity/cogsec_multiagent_3_practical demonstrates excellent test coverage (99.7%). Action: Study this project's testing approach and apply lessons to other projects.
 
 
 ## Visual Dashboards

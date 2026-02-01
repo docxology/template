@@ -1,0 +1,368 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\newpage
+\end{frame}
+
+\begin{frame}{Detection Algorithms}
+\protect\phantomsection\label{sec:detection-algorithms}
+This supplementary section presents detection algorithm implementations
+for the cognitive attack detection methods defined in Part 1. These
+algorithms operationalize the formal definitions from Part 1, Section 5
+into executable procedures.
+
+\begin{block}{ROC Analysis Algorithms}
+\protect\phantomsection\label{roc-analysis-algorithms}
+\begin{block}{Algorithm 1: ROC Curve Construction}
+\protect\phantomsection\label{algorithm-1-roc-curve-construction}
+\begin{algorithm}
+\caption{ROC Curve Construction}
+\label{alg:roc-construction}
+\begin{algorithmic}[1]
+\Require Detector $D$, attack samples $X_{\text{attack}}$, benign samples $X_{\text{benign}}$, threshold count $n$
+\Ensure ROC curve, AUC, optimal threshold $\tau^*$
+\State Compute scores: $S_{\text{attack}} \gets [D(x) : x \in X_{\text{attack}}]$
+\State Compute scores: $S_{\text{benign}} \gets [D(x) : x \in X_{\text{benign}}]$
+\State Generate thresholds: $T \gets \text{linspace}(\min(S), \max(S), n)$
+\For{each $\tau \in T$}
+    \State $\text{TPR}[\tau] \gets |S_{\text{attack}} > \tau| / |X_{\text{attack}}|$
+    \State $\text{FPR}[\tau] \gets |S_{\text{benign}} > \tau| / |X_{\text{benign}}|$
+\EndFor
+\State $\text{AUC} \gets \int \text{TPR} \, d(\text{FPR})$ \Comment{Trapezoidal integration}
+\State $\tau^* \gets \argmax_\tau (\text{TPR}[\tau] - \text{FPR}[\tau])$ \Comment{Youden's J}
+\State \Return $(\text{ROC}, \text{AUC}, \tau^*)$
+\end{algorithmic}
+\end{algorithm}
+\end{block}
+\end{block}
+
+\begin{block}{Detector Performance Results}
+\protect\phantomsection\label{detector-performance-results}
+\begin{table}[htbp]
+\centering
+\caption{Detector performance comparison via ROC metrics.}
+\label{tab:detector-roc}
+\begin{tabular}{@{}llllll@{}}
+\toprule
+Detector & AUC & Optimal $\tau$ & TPR@1\%FPR & TPR@5\%FPR \\
+\midrule
+Drift Score & 0.87 & 0.42 & 0.61 & 0.78 \\
+Deviation Score & 0.82 & 0.55 & 0.52 & 0.71 \\
+Provenance Check & 0.91 & 0.38 & 0.74 & 0.86 \\
+Firewall & 0.85 & 0.60 & 0.58 & 0.75 \\
+Tripwire & 0.79 & 0.45 & 0.48 & 0.65 \\
+Ensemble & \textbf{0.94} & 0.35 & \textbf{0.82} & \textbf{0.91} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Empirical AUC with 95\% confidence intervals.}
+\label{tab:auc-ci}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Detector & AUC & 95\% CI \\
+\midrule
+Drift Score & 0.87 & [0.84, 0.90] \\
+Ensemble & 0.94 & [0.92, 0.96] \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{block}
+
+\begin{block}{Multi-Detector Fusion Algorithm}
+\protect\phantomsection\label{multi-detector-fusion-algorithm}
+\begin{algorithm}
+\caption{Multi-Detector Fusion}
+\label{alg:fusion}
+\begin{algorithmic}[1]
+\Require Detectors $[D_1, \ldots, D_k]$, training data $(X, y)$, fusion type
+\Ensure Fusion function $f_{\text{fused}}$, threshold $\tau_{\text{fused}}$
+\State Generate scores: $S \gets [[D_i(x) : x \in X] : D_i \in \text{detectors}]^T$
+\If{fusion\_type = ``weighted''}
+    \State $w \gets \text{LinearRegression}(S, y).\text{coef}$
+    \State $w \gets \text{softmax}(w)$
+    \State $f_{\text{fused}} \gets \lambda s: w \cdot s$
+\ElsIf{fusion\_type = ``voting''}
+    \State $(\tau^*, q^*) \gets \argmax_{\tau,q} \text{accuracy}(S, y, \tau, q)$
+    \State $f_{\text{fused}} \gets \lambda s: \sum_i \mathbb{1}[s_i > \tau_i^*] \geq q^*$
+\ElsIf{fusion\_type = ``learned''}
+    \State Train MLP: $\theta^* \gets \argmin_\theta \mathcal{L}(S, y; \theta)$
+    \State $f_{\text{fused}} \gets \lambda s: \text{MLP}(s; \theta^*)$
+\EndIf
+\State Calibrate $\tau_{\text{fused}}$ on validation set
+\State \Return $(f_{\text{fused}}, \tau_{\text{fused}})$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{table}[htbp]
+\centering
+\caption{Fusion strategy performance comparison.}
+\label{tab:fusion-performance}
+\begin{tabular}{@{}lllll@{}}
+\toprule
+Fusion Strategy & AUC & FPR@90\%TPR & Latency \\
+\midrule
+Best Single (Provenance) & 0.91 & 8.2\% & 15ms \\
+Weighted Average & 0.93 & 5.4\% & 25ms \\
+Majority Voting & 0.92 & 6.1\% & 20ms \\
+Learned (MLP) & \textbf{0.94} & \textbf{4.2\%} & 30ms \\
+Learned (Attention) & \textbf{0.95} & \textbf{3.8\%} & 45ms \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{block}
+
+\begin{block}{Online Detection Algorithm}
+\protect\phantomsection\label{online-detection-algorithm}
+\begin{algorithm}
+\caption{Online Detection Loop}
+\label{alg:online-detection}
+\begin{algorithmic}[1]
+\Require Message stream, window size $w$, threshold $\theta$
+\State Initialize: $\text{window} \gets \text{CircularBuffer}(w)$
+\State Initialize: $\text{stats} \gets \text{OnlineStatistics}()$
+\Loop \Comment{For each message $m$ in stream}
+    \State $\text{features} \gets \text{extract}(m)$
+    \State $\text{stats}.\text{update}(\text{features})$
+    \State $z \gets (\text{features} - \text{stats}.\text{mean}) / \text{stats}.\text{std}$
+    \State $\text{score} \gets \|z\|$
+    \If{$\text{score} > \theta$}
+        \State $\text{emit\_alert}(m, \text{score})$
+        \State \textbf{yield} \textsc{quarantine}
+    \Else
+        \State \textbf{yield} \textsc{accept}
+    \EndIf
+    \State $\text{window}.\text{push}(\text{features})$
+\EndLoop
+\end{algorithmic}
+\end{algorithm}
+\end{block}
+
+\begin{block}{Batch Detection Algorithm}
+\protect\phantomsection\label{batch-detection-algorithm}
+\begin{algorithm}
+\caption{Batch Detection Analysis}
+\label{alg:batch-detection}
+\begin{algorithmic}[1]
+\Require Full interaction history $H$, detectors $[D_1, \ldots, D_k]$
+\Ensure Anomalies, attack patterns, optimal thresholds
+\State $\text{features} \gets \text{extract\_all}(H)$
+\State $\text{patterns} \gets \text{analyze\_sessions}(H)$
+\State $\text{anomalies} \gets \text{detect\_anomalies}(\text{patterns})$
+\For{each detector $D_i$}
+    \State $\text{scores}[D_i] \gets D_i.\text{batch\_score}(\text{features})$
+\EndFor
+\State $\text{attack\_patterns} \gets \text{mine\_patterns}(H, \text{scores})$
+\State $\tau^* \gets \text{optimize\_thresholds}(\text{scores}, \text{labels})$
+\State \Return $(\text{anomalies}, \text{attack\_patterns}, \tau^*)$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{table}[htbp]
+\centering
+\caption{Hybrid configuration trade-off analysis.}
+\label{tab:hybrid-tradeoffs}
+\begin{tabular}{@{}llll@{}}
+\toprule
+Configuration & Detection Rate & Latency & Cost \\
+\midrule
+Online Only & 87\% & 10ms & Low \\
+Batch Only & 94\% & N/A (forensic) & Medium \\
+Hybrid (hourly batch) & 92\% & 10ms + lag & Medium \\
+Hybrid (continuous) & \textbf{94\%} & 10ms & High \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{block}
+
+\begin{block}{False Positive Mitigation Results}
+\protect\phantomsection\label{false-positive-mitigation-results}
+\begin{table}[htbp]
+\centering
+\caption{False positive root causes and mitigation strategies.}
+\label{tab:fp-root-causes}
+\begin{tabular}{@{}lllp{3cm}@{}}
+\toprule
+Cause & Frequency & Impact & Mitigation \\
+\midrule
+Benign novelty & 35\% & High & Incremental learning \\
+Threshold drift & 25\% & Medium & Adaptive thresholds \\
+Feature noise & 20\% & Low & Smoothing \\
+Label errors & 10\% & High & Label audit \\
+Distribution shift & 10\% & High & Domain adaptation \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{block}
+
+\begin{block}{Baseline Update Algorithm}
+\protect\phantomsection\label{baseline-update-algorithm}
+\begin{algorithm}
+\caption{Online Baseline Update}
+\label{alg:baseline-update}
+\begin{algorithmic}[1]
+\Require Alert, feedback $\in \{\text{FP}, \text{TP}\}$, learning rate $\eta$
+\If{feedback = FP}
+    \State $\mu \gets (1-\eta) \cdot \mu + \eta \cdot \text{alert.features}$
+    \State $\sigma^2 \gets (1-\eta) \cdot \sigma^2 + \eta \cdot (\text{alert.features} - \mu)^2$
+    \If{$\text{fp\_count} > \text{fp\_threshold}$}
+        \State $\theta \gets \theta \cdot (1 + \Delta)$ \Comment{Raise threshold}
+    \EndIf
+\Else \Comment{feedback = TP}
+    \State $\text{attack\_patterns}.\text{add}(\text{alert.pattern})$
+    \If{$\text{tp\_count} > \text{tp\_threshold}$}
+        \State $\theta \gets \theta \cdot (1 - \Delta)$ \Comment{Lower threshold}
+    \EndIf
+\EndIf
+\end{algorithmic}
+\end{algorithm}
+
+\begin{table}[htbp]
+\centering
+\caption{False positive mitigation strategy effectiveness.}
+\label{tab:fp-mitigation-results}
+\begin{tabular}{@{}llll@{}}
+\toprule
+Strategy & FPR Reduction & TPR Impact & Complexity \\
+\midrule
+Baseline & -- & -- & -- \\
+Confirmation Cascade & $-60\%$ & $-5\%$ & Medium \\
+Temporal Smoothing & $-40\%$ & $-3\%$ & Low \\
+Contextual Whitelist & $-50\%$ & $-2\%$ & Medium \\
+Incremental Learning & $-45\%$ & $+2\%$ & High \\
+Cost-Sensitive & $-30\%$ & Variable & Low \\
+\textbf{Combined} & $\mathbf{-75\%}$ & $\mathbf{-8\%}$ & High \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{block}
+
+\begin{block}{Sliding Window Monitoring Algorithm}
+\protect\phantomsection\label{sliding-window-monitoring-algorithm}
+\begin{algorithm}
+\caption{Sliding Window Monitoring}
+\label{alg:sliding-window}
+\begin{algorithmic}[1]
+\Require Monitoring period $\tau$, window size $w$, threshold $\theta$
+\Loop \Comment{Every $\tau$ units}
+    \State Collect cognitive state snapshot $\sigma_i^t$
+    \For{each feature $k$}
+        \State $\mu[k] \gets \alpha \cdot \mu[k] + (1-\alpha) \cdot f_k(\sigma_i^t)$
+        \State $\sigma^2[k] \gets \alpha \cdot \sigma^2[k] + (1-\alpha) \cdot (f_k(\sigma_i^t) - \mu[k])^2$
+    \EndFor
+    \State Compute anomaly scores
+    \If{any score $> \theta$}
+        \State Log alert with context
+        \State Trigger response protocol
+    \EndIf
+    \State Prune data older than $w$
+\EndLoop
+\end{algorithmic}
+\end{algorithm}
+\end{block}
+
+\begin{block}{Summary}
+\protect\phantomsection\label{summary}
+These algorithms implement the detection methodology defined in Part 1,
+providing: - ROC curve construction and analysis procedures -
+Multi-detector fusion strategies - Online and batch detection
+architectures - False positive mitigation techniques - Real-time
+monitoring loops
+
+For formal definitions and theoretical foundations, see Part 1, Section
+5.
+\end{block}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,16 @@
+\beamer@slide {sec:extended-ablation}{2}
+\beamer@slide {sec:component-removal}{2}
+\beamer@slide {fig:ablation-study}{2}
+\beamer@slide {tab:component-removal}{2}
+\beamer@slide {sec:minimal-config}{2}
+\beamer@slide {tab:minimal-configs}{2}
+\beamer@slide {sec:synergy}{2}
+\beamer@slide {tab:synergy}{2}
+\beamer@slide {sec:agent-scaling}{2}
+\beamer@slide {tab:agent-scaling}{2}
+\beamer@slide {sec:regression}{2}
+\beamer@slide {tab:detection-regression}{2}
+\beamer@slide {tab:memory-regression}{2}
+\beamer@slide {sec:volume-scaling}{2}
+\beamer@slide {tab:volume-scaling}{2}
+\beamer@slide {sec:ablation-summary}{2}

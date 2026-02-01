@@ -1,0 +1,358 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\newpage
+\end{frame}
+
+\begin{frame}{Attack Corpus: Methodology and Ethical Considerations}
+\protect\phantomsection\label{sec:attack-methodology}
+This section documents the attack generation methodology, effectiveness
+analysis, ethical considerations, and data availability.
+
+\begin{block}{Attack Generation Methodology}
+\protect\phantomsection\label{sec:generation-methodology}
+\begin{block}{Synthetic Attack Generation}
+\protect\phantomsection\label{sec:synthetic-generation}
+\textbf{Process}:
+
+\begin{enumerate}
+\item \textbf{Template Creation}: Define attack structure templates for each category
+\item \textbf{Parameter Variation}: Systematically vary attack parameters
+\item \textbf{Constraint Satisfaction}: Ensure attacks satisfy category definitions
+\item \textbf{Deduplication}: Remove semantically equivalent attacks
+\item \textbf{Validation}: Human review of generated attacks
+\end{enumerate}
+
+\begin{table}[htbp]
+\centering
+\caption{Generation method statistics.}
+\label{tab:generation-stats}
+\begin{tabular}{@{}llll@{}}
+\toprule
+Method & Attacks & Success Rate & Novelty Score \\
+\midrule
+Template instantiation & 120 & 68\% & 0.3 \\
+LLM-assisted mutation & 50 & 75\% & 0.7 \\
+Adversarial optimization & 30 & 82\% & 0.9 \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{block}
+
+\begin{block}{Red Team Exercise Protocol}
+\protect\phantomsection\label{sec:red-team}
+\textbf{Participants}: 8 security researchers (2--10 years experience)
+
+\textbf{Duration}: 4 weeks
+
+\textbf{Methodology}:
+
+\begin{enumerate}
+\item \textbf{Week 1}: Familiarization with target architectures
+\item \textbf{Week 2}: Independent attack development
+\item \textbf{Week 3}: Cross-team attack validation
+\item \textbf{Week 4}: Documentation and categorization
+\end{enumerate}
+\end{block}
+
+\begin{block}{Quality Assurance}
+\protect\phantomsection\label{sec:qa}
+\begin{table}[htbp]
+\centering
+\caption{Attack validation criteria.}
+\label{tab:validation-criteria}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Criterion & Requirement \\
+\midrule
+Executability & Attack can be delivered to target \\
+Measurability & Success/failure unambiguously determinable \\
+Reproducibility & Attack produces consistent results \\
+Category alignment & Attack matches labeled category \\
+Non-trivial & Attack not detected by simple heuristics \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Validation Process}:
+
+\begin{enumerate}
+\item Two independent reviewers per attack
+\item Disagreements resolved by third reviewer
+\item Inter-rater reliability: Cohen's $\kappa = 0.84$
+\end{enumerate}
+\end{block}
+\end{block}
+
+\begin{block}{Attack Effectiveness Analysis}
+\protect\phantomsection\label{sec:effectiveness-analysis}
+\begin{block}{Success Rate by Defense Configuration}
+\protect\phantomsection\label{sec:success-by-defense}
+\begin{table}[htbp]
+\centering
+\caption{Attack success rate by defense configuration.}
+\label{tab:success-by-defense}
+\begin{tabular}{@{}lllll@{}}
+\toprule
+Configuration & Prompt Inj. & Trust Expl. & Belief Manip. & Coord. \\
+\midrule
+No defense & 78\% & 72\% & 69\% & 61\% \\
+Firewall only & 15\% & 38\% & 29\% & 42\% \\
+Sandbox only & 35\% & 25\% & 31\% & 55\% \\
+Tripwires only & 22\% & 18\% & 8\% & 48\% \\
+Full CIF & 4\% & 9\% & 7\% & 11\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{block}
+
+\begin{block}{Attack Sophistication Correlation}
+\protect\phantomsection\label{sec:sophistication-corr}
+\begin{equation}
+\label{eq:sophistication-correlation}
+r_{sophistication, success} = 0.67 \quad (p < 0.001)
+\end{equation}
+
+More sophisticated attacks have higher baseline success but show similar
+detection rates under CIF, suggesting defense robustness.
+\end{block}
+
+\begin{block}{Temporal Analysis}
+\protect\phantomsection\label{sec:temporal-analysis}
+\begin{table}[htbp]
+\centering
+\caption{Detection rate by attack age.}
+\label{tab:attack-age}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Attack Age & Detection Rate \\
+\midrule
+$<$ 6 months & 91\% \\
+6--12 months & 94\% \\
+$>$ 12 months & 96\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Older attacks detected at higher rates due to pattern database
+inclusion.
+\end{block}
+\end{block}
+
+\begin{block}{Ethical Considerations}
+\protect\phantomsection\label{sec:ethical-considerations}
+\begin{block}{Responsible Disclosure}
+\protect\phantomsection\label{sec:responsible-disclosure}
+All novel attack vectors discovered during this research were:
+
+\begin{enumerate}
+\item \textbf{Reported}: Communicated to affected framework maintainers
+\item \textbf{Embargoed}: 90-day disclosure window before publication
+\item \textbf{Mitigated}: Defenses provided alongside vulnerability reports
+\end{enumerate}
+
+\begin{table}[htbp]
+\centering
+\caption{Disclosure timeline.}
+\label{tab:disclosure-timeline}
+\begin{tabular}{@{}llll@{}}
+\toprule
+Framework & Report Date & Response & Mitigation Status \\
+\midrule
+Framework A & 2024-01-15 & Acknowledged & Patched \\
+Framework B & 2024-01-22 & Acknowledged & In progress \\
+Framework C & 2024-02-01 & No response & Public disclosure \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{block}
+
+\begin{block}{Dual-Use Considerations}
+\protect\phantomsection\label{sec:dual-use}
+\textbf{Risk Assessment}: The attack corpus represents a dual-use
+resource that could enable both defensive research and malicious
+exploitation. We address this through:
+
+\begin{enumerate}
+\item \textbf{Sanitization}: All published examples are non-functional
+\item \textbf{Partial Disclosure}: Full corpus available only to verified researchers
+\item \textbf{Access Controls}: Request-based access with institutional verification
+\item \textbf{Usage Tracking}: Audit log of corpus access
+\end{enumerate}
+
+\begin{table}[htbp]
+\centering
+\caption{Access control hierarchy.}
+\label{tab:access-hierarchy}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Level & Access & Verification \\
+\midrule
+Public & Sanitized examples (this document) & None \\
+Researcher & Template structures & Institutional affiliation \\
+Full access & Complete corpus & IRB approval + NDA \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{block}
+
+\begin{block}{Human Subjects}
+\protect\phantomsection\label{sec:human-subjects}
+This research did not involve human subjects experimentation. All
+attacks were tested against:
+
+\begin{itemize}
+\item Synthetic agent configurations
+\item Sandboxed environments
+\item No production systems with real users
+\end{itemize}
+\end{block}
+
+\begin{block}{Research Ethics Approval}
+\protect\phantomsection\label{sec:ethics-approval}
+This research was reviewed and determined to be exempt from IRB
+oversight as it did not involve human subjects. The board determined
+that:
+
+\begin{enumerate}
+\item No human subjects were involved
+\item Dual-use risks were adequately mitigated
+\item Responsible disclosure practices were followed
+\end{enumerate}
+\end{block}
+\end{block}
+
+\begin{block}{Data Availability}
+\protect\phantomsection\label{sec:data-availability}
+\begin{block}{Public Resources}
+\protect\phantomsection\label{sec:public-resources}
+\begin{itemize}
+\item Sanitized attack examples: This supplementary material
+\item Detection patterns: Available in paper repository
+\item Defense implementations: Open-source release pending
+\end{itemize}
+\end{block}
+
+\begin{block}{Restricted Resources}
+\protect\phantomsection\label{sec:restricted-resources}
+\begin{itemize}
+\item Full attack corpus: Available upon request
+\item Red team exercise data: Institution members only
+\item Unpublished vulnerabilities: Covered by disclosure agreements
+\end{itemize}
+\end{block}
+
+\begin{block}{Access Request Process}
+\protect\phantomsection\label{sec:access-request}
+Researchers wishing to access the full attack corpus must:
+
+\begin{enumerate}
+\item Submit institutional affiliation verification
+\item Provide IRB approval or exemption letter
+\item Sign data use agreement
+\item Agree to responsible use terms
+\end{enumerate}
+\end{block}
+\end{block}
+
+\begin{block}{References}
+\protect\phantomsection\label{sec:corpus-references}
+{[}1{]} JailbreakBench: An Open Benchmark for Jailbreaking Large
+Language Models
+
+{[}2{]} PromptInject: A Dataset for Prompt Injection Attacks
+
+{[}3{]} TensorTrust: Interpretable and Accurate Prompt Injection Defense
+\end{block}
+\end{frame}
+
+\end{document}

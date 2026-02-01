@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>03_attack_corpus</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h1 id="sec:attack-corpus">Attack Corpus: Statistics and Taxonomy</h1>
+<p>This supplementary material provides corpus overview (), detailed
+statistics (), example attacks by category (), generation methodology
+(), effectiveness analysis (), and ethical considerations ().</p>
+<h2 id="sec:corpus-overview">Corpus Overview</h2>
+<p>The attack corpus used for experimental validation comprises 950
+unique attack instances across four primary categories. This
+supplementary material provides detailed statistics, sanitized examples,
+generation methodology, and ethical considerations.</p>
+<blockquote>
+<p><strong>Implementation</strong>: The corpus is programmatically
+generated using <code>src/attacks/corpus.py</code> with deterministic
+seeding (default <code>seed=42</code>). Run
+<code>python -m src.attacks.corpus</code> to regenerate the
+<code>corpus.json</code> file. Attack templates are defined in
+<code>src/attacks/templates.py</code>, which validates payload structure
+against category definitions.</p>
+</blockquote>
+<h2 id="sec:corpus-stats">Full Attack Corpus Statistics</h2>
+<figure id="fig:comprehensive-taxonomy">
+<embed src="figures/comprehensive_taxonomy.pdf" style="width:95.0%" />
+<figcaption aria-hidden="true">Cognitive Attack Taxonomy. Hierarchical
+visualization of the 950-attack corpus organized by primary category
+(Prompt Injection, Trust Exploitation, Belief Manipulation, Coordination
+Attacks) and subcategory. Node size indicates attack count; color
+intensity indicates baseline success rate. The taxonomy reveals that
+prompt injection dominates in volume (500 attacks) while coordination
+attacks show highest baseline success against undefended
+systems.</figcaption>
+</figure>
+<p>The attack taxonomy () organizes all 950 attacks into four primary
+categories with distinct subcategories.</p>
+<h3 id="sec:category-breakdown">Category Breakdown</h3>
+
+<h3 id="sec:injection-subcats">Prompt Injection Subcategories</h3>
+<p>: Attacks embedded directly in user input attempting to override
+system instructions.</p>
+<p>: Attacks injected through external data sources (web content, API
+responses, documents).</p>
+<p>: Multi-layer attacks where outer content masks inner malicious
+payloads.</p>
+<h3 id="sec:trust-subcats">Trust Exploitation Subcategories</h3>
+
+<h3 id="sec:belief-subcats">Belief Manipulation Subcategories</h3>
+
+<h3 id="sec:coord-subcats">Coordination Attack Subcategories</h3>
+
+<h3 id="sec:source-stats">Detailed Statistics by Source</h3>
+
+<h3 id="sec:complexity-dist">Complexity Distribution</h3>
+
+<h3 id="sec:target-dist">Target Distribution</h3>
+<figure id="fig:attack-surface">
+<embed src="figures/attack_surface.pdf" style="width:90.0%" />
+<figcaption aria-hidden="true">Attack Surface Map. Visualization of
+cognitive attack entry points in multiagent systems. The diagram shows
+five primary attack surfaces: User Input (direct injection), Tool
+Outputs (indirect injection), Agent Communication (trust exploitation),
+Persistent Memory (belief poisoning), and External Triggers (timing
+attacks). Line thickness indicates attack frequency in our corpus; node
+color indicates CIF detection efficacy at each surface.</figcaption>
+</figure>
+<p>The attack surface map () illustrates the primary entry points
+exploited by attacks in our corpus, with CIF providing strongest
+detection at the user input surface and weakest at external
+triggers.</p>
+</body>
+</html>

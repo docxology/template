@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>07_common_pitfalls</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="sec:common-pitfalls">Common Pitfalls</h1>
+<p>This section documents anti-patterns observed in multiagent
+deployments. Each entry describes the pattern, its consequences, and
+specific mitigations. Figure <span
+class="math inline">\(\ref{fig:pitfall-severity}\)</span> ranks these
+pitfalls by severity to guide remediation prioritization.</p>
+<figure id="fig:pitfall-severity">
+<embed src="figures/pitfall_severity.pdf" style="width:90.0%" />
+<figcaption aria-hidden="true">Common Deployment Pitfalls by Severity.
+This chart ranks the eight most common cognitive security anti-patterns
+by severity (scale 1-5). The two most critical pitfalls—Implicit Trust
+in Outputs and Missing Input Validation—both relate to failing to treat
+agent communications and external content as potentially adversarial.
+Colors indicate pitfall category: red (security), orange (operational),
+blue (design). Address critical (5) and high (4) severity items before
+production deployment.</figcaption>
+</figure>
+<hr />
+<h2 id="pitfall-1-implicit-trust">Pitfall 1: Implicit Trust</h2>
+<p><strong>Pattern</strong>: Treating all inter-agent communication as
+trusted by default.</p>
+<p><strong>Indicators</strong>: - No source verification on agent
+messages - All agents have equal authority regardless of role -
+Delegation without bounds or decay</p>
+<p><strong>Consequences</strong>: - Single compromised agent influences
+entire system - Trust amplification attacks succeed (see Part 1, Section
+3.4) - No containment of adversarial content</p>
+<p><strong>Mitigation</strong>: 1. Implement explicit trust scoring on
+inter-agent channels 2. Require minimum trust thresholds for
+consequential actions 3. Apply delegation decay (δ &lt; 1 per hop) 4.
+Verify source on every inter-agent message</p>
+<hr />
+<h2 id="pitfall-2-security-as-afterthought">Pitfall 2: Security as
+Afterthought</h2>
+<p><strong>Pattern</strong>: Adding cognitive security after
+architecture is finalized.</p>
+<p><strong>Indicators</strong>: - Security checks only at external
+interfaces - Core agent logic has no security awareness - Belief
+provenance untracked</p>
+<p><strong>Consequences</strong>: - Bypass opportunities at integration
+points - Performance overhead from external security layers - Incomplete
+attack surface coverage</p>
+<p><strong>Mitigation</strong>: 1. Design cognitive security into
+architecture from the start 2. Embed trust checks in delegation logic 3.
+Build provenance tracking into belief management 4. Include security
+constraints in agent system prompts</p>
+<hr />
+<h2 id="pitfall-3-uncalibrated-thresholds">Pitfall 3: Uncalibrated
+Thresholds</h2>
+<p><strong>Pattern</strong>: Setting security thresholds without
+understanding tradeoffs.</p>
+<p><strong>Indicators</strong>: - Thresholds copied from examples
+without adjustment - Same thresholds for all contexts - No testing
+against representative attacks</p>
+<p><strong>Consequences</strong>: - Too strict: high false positive
+rate, user friction - Too permissive: attacks succeed undetected -
+Settings mismatched to actual risk profile</p>
+<p><strong>Mitigation</strong>: 1. Assess risk profile before
+configuring (see Section 6) 2. Test thresholds against representative
+attack samples (Part 2 corpus) 3. Monitor false positive/negative rates
+in production 4. Adjust based on operational feedback</p>
+<hr />
+<h2 id="pitfall-4-individual-only-security">Pitfall 4: Individual-Only
+Security</h2>
+<p><strong>Pattern</strong>: Focusing on single-agent security while
+ignoring multi-agent attack surfaces.</p>
+<p><strong>Indicators</strong>: - No consensus mechanism for critical
+decisions - Agent count changes without verification - No Sybil
+resistance</p>
+<p><strong>Consequences</strong>: - Fake agents influence collective
+decisions - Consensus manipulation - Coordination failures masked as
+normal disagreement</p>
+<p><strong>Mitigation</strong>: 1. Implement Byzantine consensus for
+critical collective decisions 2. Require agent authentication before
+vote counting 3. Monitor for unusual coordination patterns 4. Apply
+quorum requirements assuming adversarial presence</p>
+<p>Part 1, Section 4.5 formalizes Byzantine consensus requirements.</p>
+<hr />
+<h2 id="pitfall-5-static-tripwires">Pitfall 5: Static Tripwires</h2>
+<p><strong>Pattern</strong>: Deploying canary tripwires once without
+rotation.</p>
+<p><strong>Indicators</strong>: - Same canary values since deployment -
+No rotation schedule - Predictable canary locations</p>
+<p><strong>Consequences</strong>: - Sophisticated adversaries learn to
+avoid canaries - Effectiveness degrades over time - False confidence in
+detection coverage</p>
+<p><strong>Mitigation</strong>: 1. Implement automated canary rotation
+2. Vary placement across agents and belief categories 3. Monitor canary
+check patterns, not just modifications 4. Include non-obvious
+canaries</p>
+<hr />
+<h2 id="pitfall-6-ignoring-progressive-drift">Pitfall 6: Ignoring
+Progressive Drift</h2>
+<p><strong>Pattern</strong>: Only alerting on large, sudden belief
+changes.</p>
+<p><strong>Indicators</strong>: - High threshold for drift alerts - No
+long-term drift tracking - Static baseline</p>
+<p><strong>Consequences</strong>: - Sub-threshold changes accumulate
+undetected - Beliefs slowly corrupted - Significant deviation without
+alert</p>
+<p><strong>Mitigation</strong>: 1. Use sliding window drift detection 2.
+Track cumulative drift, not just per-update delta 3. Periodic baseline
+comparison 4. Alert on trend as well as absolute magnitude</p>
+<p>Part 1, Definition 5.1 formalizes drift scoring.</p>
+<hr />
+<h2 id="pitfall-7-insufficient-logging">Pitfall 7: Insufficient
+Logging</h2>
+<p><strong>Pattern</strong>: Retaining insufficient information for
+post-incident analysis.</p>
+<p><strong>Indicators</strong>: - Only final decisions logged - No
+belief state history - Inter-agent messages disposed after
+processing</p>
+<p><strong>Consequences</strong>: - Cannot reconstruct attack path -
+Cannot identify injection point - Cannot assess full impact scope</p>
+<p><strong>Mitigation</strong>: 1. Log all belief updates with
+provenance tags 2. Retain inter-agent message history 3. Periodic
+cognitive state snapshots 4. Structured logging for causal analysis</p>
+<hr />
+<h2 id="pitfall-8-single-orchestrator-reliance">Pitfall 8:
+Single-Orchestrator Reliance</h2>
+<p><strong>Pattern</strong>: Relying entirely on orchestrator integrity
+without backup.</p>
+<p><strong>Indicators</strong>: - Single orchestrator for entire system
+- No orchestrator monitoring - Workers unconditionally trust
+orchestrator</p>
+<p><strong>Consequences</strong>: - Orchestrator compromise = total
+system compromise - No recovery path - Complete trust inversion attack
+possible (see Part 1, Section 2.3)</p>
+<p><strong>Mitigation</strong>: 1. Consider multi-orchestrator
+architectures for critical decisions 2. Monitor orchestrator behavior
+with same rigor as agents 3. Workers verify orchestrator identity on
+critical commands 4. Implement orchestrator-specific tripwires</p>
+<hr />
+<h2 id="summary-checklist">Summary Checklist</h2>
+<table>
+<thead>
+<tr>
+<th>Pitfall</th>
+<th>Assessment</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Implicit trust</td>
+<td>Trust scoring implemented?</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Security afterthought</td>
+<td>Security in initial architecture?</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Uncalibrated thresholds</td>
+<td>Thresholds tested against attacks?</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Individual-only security</td>
+<td>Byzantine consensus deployed?</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Static tripwires</td>
+<td>Canary rotation scheduled?</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Ignoring drift</td>
+<td>Progressive drift monitoring?</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Insufficient logging</td>
+<td>Full belief history retained?</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Single orchestrator</td>
+<td>Orchestrator monitored?</td>
+<td>☐</td>
+</tr>
+</tbody>
+</table>
+<p>Address unchecked items before production deployment.</p>
+</body>
+</html>

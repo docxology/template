@@ -1,0 +1,214 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\vspace*{2cm}
+
+\begin{center}
+\begin{minipage}{0.7\textwidth}
+\centering
+\Large\itshape
+``The difference between theory and practice\\[0.3em]
+is larger in practice than in theory.''
+\vspace{1em}
+
+\normalsize\upshape
+--- Jan van de Snepscheut, Computer Scientist
+\end{minipage}
+\end{center}
+
+\vspace{2cm}
+\end{frame}
+
+\begin{frame}{Abstract}
+\protect\phantomsection\label{abstract}
+As multiagent AI systems transition from research prototypes to
+production infrastructure, their security properties remain largely
+unvalidated. While formal security frameworks promise principled
+protection, a persistent gap exists between theoretical guarantees and
+empirical evidence: \emph{do these defenses actually work against real
+attacks?} This paper bridges that gap through comprehensive
+computational validation of the \textbf{Cognitive Integrity Framework
+(CIF)} introduced in Part 1.
+
+We implement the complete CIF defense suite---cognitive firewalls,
+belief sandboxes, trust calculus with bounded delegation, identity
+tripwires, and Byzantine-tolerant consensus---and evaluate performance
+using \textbf{architecture-aware simulation} across topological models
+of six production multiagent systems, with a novel corpus of 950
+cognitive attacks.
+
+\begin{block}{Contributions}
+\protect\phantomsection\label{contributions}
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Attack Corpus}: 950 cognitive attacks across four categories
+  (prompt injection, trust exploitation, belief manipulation,
+  coordination attacks), with full reproducibility via deterministic
+  generation
+\item
+  \textbf{Architecture Modeling}: Topological abstractions of Claude
+  Code, AutoGPT, CrewAI, LangGraph, MetaGPT, and Camel---capturing trust
+  matrices, communication patterns, and attack surface characteristics
+  of hierarchical, autonomous, role-based, graph-based, SOP-driven, and
+  debate architectures
+\item
+  \textbf{Simulated Detection Performance}: 94\% overall detection rate
+  with layered defenses (range: 87--98\% by attack type); 20--25\%
+  latency overhead acceptable for security-critical contexts
+\item
+  \textbf{Statistical Rigor}: Significance testing (\(p < 0.0001\) for
+  primary hypotheses), large effect sizes (Cohen's \(d > 1.0\)),
+  confidence intervals, ablation studies, and scalability benchmarks to
+  100 agents
+\end{itemize}
+\end{block}
+
+\begin{block}{Key Findings}
+\protect\phantomsection\label{key-findings}
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Composition is Essential}: No individual defense achieves
+  acceptable protection alone; layered composition yields multiplicative
+  detection improvement consistent with Part 1's theoretical predictions
+  (Theorem 3.2)
+\item
+  \textbf{Trust Decay Prevents Amplification}: The bounded delegation
+  mechanism (\(\delta^d\) decay) successfully prevented trust laundering
+  across all tested architectures---a structural guarantee independent
+  of attacker sophistication
+\item
+  \textbf{Architecture Determines Vulnerability Profile}: Peer-to-peer
+  systems show the largest relative improvement from CIF deployment
+  (+422\% integrity preservation under multi-vector attack), confirming
+  the lateral movement analysis from Part 1
+\end{enumerate}
+\end{block}
+
+\begin{block}{Implications for Practitioners}
+\protect\phantomsection\label{implications-for-practitioners}
+These results establish that CIF provides \emph{practical, deployable
+protection} for production multiagent systems. Organizations deploying
+AI agents should: (1) configure all CIF components for security-critical
+workloads, (2) calibrate parameters to their specific architecture using
+the sensitivity analysis in Section 5, and (3) expect 20--25\% latency
+overhead as the cost of validated security.
+
+All notation follows definitions from Part 1 (Supplementary Section
+S03). Complete source code is available at:
+\textbf{\url{https://github.com/docxology/cognitive_integrity}}
+\end{block}
+
+\begin{block}{Paper Series}
+\protect\phantomsection\label{paper-series}
+\textbf{DOI}: 10.5281/zenodo.18364128
+
+This is Part 2 of the \emph{Cognitive Security for Multiagent Operators}
+series:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Part 1} (DOI: 10.5281/zenodo.18364119): Formal foundations and
+  theoretical analysis
+\item
+  \textbf{Part 2} (this paper): Computational validation and
+  implementation
+\item
+  \textbf{Part 3} (DOI: 10.5281/zenodo.18364130): Practical deployment
+  guidance
+\end{itemize}
+\end{block}
+\end{frame}
+
+\end{document}

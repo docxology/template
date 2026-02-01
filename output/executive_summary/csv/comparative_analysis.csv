@@ -1,21 +1,21 @@
 Project,Metric_Category,Metric_Name,Value,Unit,Rank,Percentile,vs_Average,Performance_Rating
-code_project,Manuscript,Total_Words,3425,words,4,0.0%,-77.7%,Poor
-code_project,Manuscript,Sections,8,count,4,0.0%,-34.7%,Poor
-code_project,Codebase,Source_Lines,260,lines,4,0.0%,-89.3%,Poor
-code_project,Pipeline,Duration,42.25336742401123,seconds,1,100.0%,-24.0%,Poor
-code_project,Outputs,Total_Files,19,files,4,0.0%,-56.1%,Poor
-cognitive_integrity/cogsec_multiagent_1_theory,Manuscript,Total_Words,33306,words,1,100.0%,+117.1%,Excellent
-cognitive_integrity/cogsec_multiagent_1_theory,Manuscript,Sections,15,count,1,100.0%,+22.4%,Excellent
-cognitive_integrity/cogsec_multiagent_1_theory,Codebase,Source_Lines,5984,lines,1,100.0%,+146.4%,Excellent
-cognitive_integrity/cogsec_multiagent_1_theory,Pipeline,Duration,80.71094369888306,seconds,4,0.0%,+45.3%,Excellent
-cognitive_integrity/cogsec_multiagent_1_theory,Outputs,Total_Files,60,files,1,100.0%,+38.7%,Excellent
-cognitive_integrity/cogsec_multiagent_2_computational,Manuscript,Total_Words,16221,words,2,66.7%,+5.7%,Good
-cognitive_integrity/cogsec_multiagent_2_computational,Manuscript,Sections,14,count,2,66.7%,+14.3%,Good
-cognitive_integrity/cogsec_multiagent_2_computational,Codebase,Source_Lines,2600,lines,2,66.7%,+7.1%,Good
-cognitive_integrity/cogsec_multiagent_2_computational,Pipeline,Duration,56.3680739402771,seconds,3,33.3%,+1.5%,Good
-cognitive_integrity/cogsec_multiagent_2_computational,Outputs,Total_Files,58,files,2,66.7%,+34.1%,Good
-cognitive_integrity/cogsec_multiagent_3_practical,Manuscript,Total_Words,8419,words,3,33.3%,-45.1%,Below Average
-cognitive_integrity/cogsec_multiagent_3_practical,Manuscript,Sections,12,count,3,33.3%,-2.0%,Below Average
-cognitive_integrity/cogsec_multiagent_3_practical,Codebase,Source_Lines,870,lines,3,33.3%,-64.2%,Below Average
-cognitive_integrity/cogsec_multiagent_3_practical,Pipeline,Duration,42.915687799453735,seconds,2,66.7%,-22.8%,Below Average
-cognitive_integrity/cogsec_multiagent_3_practical,Outputs,Total_Files,36,files,3,33.3%,-16.8%,Below Average
+code_project,Manuscript,Total_Words,3425,words,4,0.0%,-79.0%,Poor
+code_project,Manuscript,Sections,8,count,4,0.0%,-43.9%,Poor
+code_project,Codebase,Source_Lines,260,lines,4,0.0%,-96.2%,Poor
+code_project,Pipeline,Duration,40.27070093154907,seconds,1,100.0%,-34.7%,Poor
+code_project,Outputs,Total_Files,19,files,4,0.0%,-59.4%,Poor
+cognitive_integrity/cogsec_multiagent_1_theory,Manuscript,Total_Words,33306,words,1,100.0%,+104.0%,Excellent
+cognitive_integrity/cogsec_multiagent_1_theory,Manuscript,Sections,15,count,2,66.7%,+5.3%,Good
+cognitive_integrity/cogsec_multiagent_1_theory,Codebase,Source_Lines,5984,lines,2,66.7%,-11.5%,Good
+cognitive_integrity/cogsec_multiagent_1_theory,Pipeline,Duration,84.06672239303589,seconds,4,0.0%,+36.3%,Excellent
+cognitive_integrity/cogsec_multiagent_1_theory,Outputs,Total_Files,60,files,2,66.7%,+28.3%,Good
+cognitive_integrity/cogsec_multiagent_2_computational,Manuscript,Total_Words,20166,words,2,66.7%,+23.5%,Good
+cognitive_integrity/cogsec_multiagent_2_computational,Manuscript,Sections,22,count,1,100.0%,+54.4%,Excellent
+cognitive_integrity/cogsec_multiagent_2_computational,Codebase,Source_Lines,15470,lines,1,100.0%,+128.7%,Excellent
+cognitive_integrity/cogsec_multiagent_2_computational,Pipeline,Duration,78.32654905319214,seconds,3,33.3%,+27.0%,Good
+cognitive_integrity/cogsec_multiagent_2_computational,Outputs,Total_Files,72,files,1,100.0%,+54.0%,Excellent
+cognitive_integrity/cogsec_multiagent_3_practical,Manuscript,Total_Words,8419,words,3,33.3%,-48.4%,Below Average
+cognitive_integrity/cogsec_multiagent_3_practical,Manuscript,Sections,12,count,3,33.3%,-15.8%,Below Average
+cognitive_integrity/cogsec_multiagent_3_practical,Codebase,Source_Lines,5339,lines,3,33.3%,-21.1%,Below Average
+cognitive_integrity/cogsec_multiagent_3_practical,Pipeline,Duration,44.095824241638184,seconds,2,66.7%,-28.5%,Below Average
+cognitive_integrity/cogsec_multiagent_3_practical,Outputs,Total_Files,36,files,3,33.3%,-23.0%,Below Average
