@@ -1,6 +1,6 @@
 # Test Results Summary
 
-Generated: 2026-02-01T14:06:18.461861
+Generated: 2026-02-04T11:10:38.563215
 
 ## Infrastructure Tests
 
@@ -13,7 +13,7 @@ Generated: 2026-02-01T14:06:18.461861
 - Passed: 28
 - Failed: 0
 - Skipped: 0
-- Coverage: 93.98%
+- Coverage: 91.06%
 
 ## Summary
 

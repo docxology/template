@@ -153,10 +153,10 @@ prompt = composer.compose_prompt('manuscript_reviews', {
 
 ```bash
 # Run all LLM tests
-pytest tests/infrastructure/llm/ -v
+pytest tests/infra_tests/llm/ -v
 
 # Skip Ollama-dependent tests
-pytest tests/infrastructure/llm/ -m "not requires_ollama" -v
+pytest tests/infra_tests/llm/ -m "not requires_ollama" -v
 ```
 
 ## See Also

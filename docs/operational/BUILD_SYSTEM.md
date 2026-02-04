@@ -38,7 +38,7 @@ The template provides **two pipeline orchestrators** with different scope and st
 
 ### Core Pipeline: Python Orchestrator (`execute_pipeline.py`)
 
-**6 stages, no LLM dependencies required:**
+**8 stages, no LLM dependencies required:**
 
 ```mermaid
 flowchart TD
@@ -77,7 +77,7 @@ flowchart TD
 
 ### Extended Pipeline: Interactive Orchestrator (`./run.sh --pipeline`)
 
-**9 stages displayed as [1/9] to [9/9], includes optional LLM features:**
+**10 stages displayed as [1/10] to [10/10], includes optional LLM features:**
 - Stage 1: Clean Output Directories
 - Stage 2: Environment Setup
 - Stage 3: Infrastructure Tests (may be skipped)
@@ -401,7 +401,7 @@ build_combined() {
 
 ### Current Pipeline Architecture
 
-**Pipeline:** 6-stage Python orchestrator system
+**Pipeline:** 8-stage Python orchestrator system
 
 **Stages:**
 - **Stage 00**: Environment setup & validation (`scripts/00_setup_environment.py`)
@@ -413,7 +413,7 @@ build_combined() {
 
 **Usage:**
 ```bash
-# Run pipeline (all 6 stages)
+# Run pipeline (all 8 stages)
 python3 scripts/execute_pipeline.py --core-only
 
 # Or use unified interactive menu
@@ -502,7 +502,7 @@ python3 scripts/05_copy_outputs.py       # Stage 05
 To verify everything works on your system:
 
 ```bash
-# 1. Run pipeline (all 6 stages)
+# 1. Run pipeline (all 8 stages)
 python3 scripts/execute_pipeline.py --core-only
 
 # Or use unified interactive menu
@@ -577,6 +577,6 @@ The build system is **production-ready** and performs excellently:
 
 ---
 
-**Build Version:** v2.0 (6-stage core pipeline: stages 00-05, with optional stages 8-9 for LLM review and translations)  
+**Build Version:** v2.0 (8-stage core pipeline: stages 00-07, with optional stages 8-9 for LLM review and translations)  
 **Status:** ✅ **APPROVED FOR PRODUCTION USE**
 

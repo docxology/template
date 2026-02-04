@@ -1,7 +1,7 @@
 # 🧠 PAI.md - Tests Context
 
 ## 📍 Purpose
-This directory contains **Infrastructure Tests** (`tests/infrastructure/`). Project-specific tests live in `projects/{name}/tests/`.
+This directory contains **Infrastructure Tests** (`tests/infra_tests/`). Project-specific tests live in `projects/{name}/tests/`.
 
 ## 🛡️ Testing Standards
 - **Zero Mocks**: Real filesystem operations (via `tmp_path`), real network calls (via local fixtures), or deterministic inputs.

@@ -13,7 +13,7 @@
 - **Two-Layer Architecture**: Layer 1 (Infrastructure) and Layer 2 (Project)
 - **Version**: v2.0 (current system version)
 - **Test Coverage**: 90% minimum for project code, 60% minimum for infrastructure code
-- **Build Pipeline**: 6-stage automated pipeline (00-05) or 10-stage extended pipeline (0-9)
+- **Build Pipeline**: 8-stage automated pipeline (00-07) or 10-stage extended pipeline (0-9)
 
 ---
 
@@ -37,7 +37,7 @@ Testing metric ensuring all conditional branches (if/else, switch cases) are exe
 **See**: [Test Coverage](#test-coverage)
 
 ### Build Pipeline
-Automated sequence of operations that validates tests, runs scripts, generates documentation, and builds PDFs. Orchestrated by `scripts/execute_pipeline.py` (6-stage pipeline).
+Automated sequence of operations that validates tests, runs scripts, generates documentation, and builds PDFs. Orchestrated by `scripts/execute_pipeline.py` (8-stage pipeline).
 
 **Stages**: Tests → Scripts → Validation → Glossary → Individual PDFs → Combined PDF
 

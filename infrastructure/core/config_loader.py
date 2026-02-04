@@ -304,7 +304,12 @@ def get_testing_config(repo_root: Path | str) -> Dict[str, Any]:
     """Get testing configuration from config.yaml.
 
     Reads the testing section from config.yaml and returns
-    configuration values for test failure tolerance.
+    configuration values for test failure tolerance and coverage thresholds.
+
+    Configuration priority (highest to lowest):
+    1. Environment variables (e.g., INFRA_COVERAGE_THRESHOLD)
+    2. Config file (project/manuscript/config.yaml)
+    3. Default values
 
     Args:
         repo_root: Root directory of the repository
@@ -314,21 +319,35 @@ def get_testing_config(repo_root: Path | str) -> Dict[str, Any]:
         - max_test_failures: Maximum acceptable test failures (default: 0)
         - max_infra_test_failures: Maximum acceptable infrastructure test failures (default: 0)
         - max_project_test_failures: Maximum acceptable project test failures (default: 0)
+        - infra_coverage_threshold: Minimum infrastructure coverage % (default: 60)
+        - project_coverage_threshold: Minimum project coverage % (default: 90)
         Returns empty dict if config file not found or testing section missing
     """
-    config_path = find_config_file(repo_root)
-    if not config_path:
-        return {}
-
-    config = load_config(config_path)
-    if not config:
-        return {}
-
-    testing_config = config.get("testing", {})
-    if not testing_config:
-        return {}
+    # Default values
+    defaults = {
+        "infra_coverage_threshold": 60,
+        "project_coverage_threshold": 90,
+    }
 
     result: Dict[str, Any] = {}
+
+    # Priority 1: Check environment variables first
+    if env_infra := os.environ.get("INFRA_COVERAGE_THRESHOLD"):
+        try:
+            result["infra_coverage_threshold"] = int(env_infra)
+        except (ValueError, TypeError):
+            pass
+
+    if env_project := os.environ.get("PROJECT_COVERAGE_THRESHOLD"):
+        try:
+            result["project_coverage_threshold"] = int(env_project)
+        except (ValueError, TypeError):
+            pass
+
+    # Priority 2: Load from config file
+    config_path = find_config_file(repo_root)
+    config = load_config(config_path) if config_path else None
+    testing_config = config.get("testing", {}) if config else {}
 
     # Read max_test_failures (general/default)
     if "max_test_failures" in testing_config:
@@ -355,4 +374,29 @@ def get_testing_config(repo_root: Path | str) -> Dict[str, Any]:
         except (ValueError, TypeError):
             pass  # Invalid value, skip
 
+    # Read coverage thresholds from config (if not already set by env vars)
+    if "infra_coverage_threshold" not in result:
+        if "infra_coverage_threshold" in testing_config:
+            try:
+                result["infra_coverage_threshold"] = int(
+                    testing_config["infra_coverage_threshold"]
+                )
+            except (ValueError, TypeError):
+                pass
+
+    if "project_coverage_threshold" not in result:
+        if "project_coverage_threshold" in testing_config:
+            try:
+                result["project_coverage_threshold"] = int(
+                    testing_config["project_coverage_threshold"]
+                )
+            except (ValueError, TypeError):
+                pass
+
+    # Priority 3: Apply defaults for any missing values
+    for key, default_val in defaults.items():
+        if key not in result:
+            result[key] = default_val
+
     return result
+

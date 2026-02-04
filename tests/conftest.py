@@ -19,21 +19,31 @@ os.environ.setdefault("MPLBACKEND", "Agg")
 # Add paths for imports
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
-# Add ROOT to path so we can import infrastructure as a package
-# Ensure ROOT is FIRST in path to avoid shadowing by tests/infrastructure
-if ROOT in sys.path:
-    sys.path.remove(ROOT)
-sys.path.insert(0, ROOT)
-
 # Remove tests/ directory from path if present to prevent shadowing
 TESTS_DIR = os.path.join(ROOT, "tests")
 if TESTS_DIR in sys.path:
     sys.path.remove(TESTS_DIR)
 
+# Add ROOT to path so we can import infrastructure as a package
+# Ensure ROOT is FIRST in path to avoid shadowing by tests/infra_tests
+if ROOT in sys.path:
+    sys.path.remove(ROOT)
+sys.path.insert(0, ROOT)
+
+# CRITICAL: Import and cache the real infrastructure module NOW
+# before pytest discovers tests/infra_tests which would shadow it
+import infrastructure as _real_infra  # noqa: E402
+sys.modules['infrastructure'] = _real_infra
+
+# Also cache core submodule
+from infrastructure import core as _real_core  # noqa: E402
+sys.modules['infrastructure.core'] = _real_core
+
 # Add src/ to path for scientific modules (if it exists)
 SRC = os.path.join(ROOT, "src")
 if os.path.exists(SRC) and SRC not in sys.path:
     sys.path.insert(0, SRC)
+
 
 # Add projects/*/src/ to path for project modules (active projects only)
 # Note: Only active projects in projects/ directory are added here.

@@ -147,11 +147,11 @@ print(f"Server healthy: {health['healthy']}")
 
 ```bash
 # Test core functionality (no Ollama required)
-pytest tests/infrastructure/llm/test_config.py -v
-pytest tests/infrastructure/llm/test_context.py -v
+pytest tests/infra_tests/llm/test_config.py -v
+pytest tests/infra_tests/llm/test_context.py -v
 
 # Test with Ollama (requires running server)
-pytest tests/infrastructure/llm/test_core.py -m requires_ollama -v
+pytest tests/infra_tests/llm/test_core.py -m requires_ollama -v
 ```
 
 ## Performance Considerations

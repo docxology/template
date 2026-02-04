@@ -499,7 +499,7 @@ markdown = generate_markdown_table(entries)
 
 Run documentation tests with:
 ```bash
-pytest tests/infrastructure/test_documentation/
+pytest tests/infra_tests/test_documentation/
 ```
 
 ## Configuration

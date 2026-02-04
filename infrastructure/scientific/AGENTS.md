@@ -116,7 +116,7 @@ template = create_scientific_module_template("my_algorithm")
 
 Run scientific tests with:
 ```bash
-pytest tests/infrastructure/test_scientific/
+pytest tests/infra_tests/test_scientific/
 ```
 
 ## Configuration

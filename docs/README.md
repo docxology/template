@@ -14,7 +14,7 @@ The `docs/` directory contains project documentation organized by purpose and au
 graph TD
     subgraph EntryPoints["📖 Entry Points"]
         README[README.md<br/>Project Overview<br/>Quick Start]
-        DOC_INDEX[DOCUMENTATION_INDEX.md<br/>Index<br/>All 89 Files]
+        DOC_INDEX[DOCUMENTATION_INDEX.md<br/>Index<br/>All 105 Files]
         HOW_TO[core/HOW_TO_USE.md<br/>Usage Guide<br/>12 Skill Levels]
     end
 
@@ -122,12 +122,14 @@ Documentation is organized into modular subdirectories:
 ## Quick Navigation
 
 ### New Users Start Here
+
 1. [`../README.md`](../README.md) - Project overview
 2. [`core/HOW_TO_USE.md`](core/HOW_TO_USE.md) - usage guide
 3. [`guides/GETTING_STARTED.md`](guides/GETTING_STARTED.md) - Getting started (Levels 1-3)
 4. [`reference/FAQ.md`](reference/FAQ.md) - Common questions
 
 ### Developers Start Here
+
 1. [`core/ARCHITECTURE.md`](core/ARCHITECTURE.md) - System design
 2. [`architecture/THIN_ORCHESTRATOR_SUMMARY.md`](architecture/THIN_ORCHESTRATOR_SUMMARY.md) - Architecture pattern
 3. [`core/WORKFLOW.md`](core/WORKFLOW.md) - Development process
@@ -160,4 +162,3 @@ Development standards are defined in the `.cursorrules/` directory. Start with:
 - [`DOCUMENTATION_INDEX.md`](DOCUMENTATION_INDEX.md) - index
 - [`prompts/README.md`](prompts/README.md) - AI prompt templates for development
 - [`../AGENTS.md`](../AGENTS.md) - System documentation
-

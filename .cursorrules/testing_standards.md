@@ -56,7 +56,7 @@ tests/
 For each infrastructure module:
 
 ```
-tests/infrastructure/test_<module>/
+tests/infra_tests/test_<module>/
 ├── __init__.py
 ├── conftest.py                  # Fixtures: sample data, temp files
 ├── test_core.py                 # Core functionality
@@ -387,10 +387,10 @@ def logger_fixture(caplog):
 python3 -m pytest tests/
 
 # Run specific test file
-python3 -m pytest tests/infrastructure/test_core/test_basic.py
+python3 -m pytest tests/infra_tests/test_core/test_basic.py
 
 # Run specific test function
-python3 -m pytest tests/infrastructure/test_core/test_basic.py::test_validation_passes
+python3 -m pytest tests/infra_tests/test_core/test_basic.py::test_validation_passes
 
 # Run with verbose output
 python3 -m pytest tests/ -v

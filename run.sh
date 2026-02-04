@@ -321,7 +321,7 @@ clean_output_directories(repo_root, '$CURRENT_PROJECT')
 
 run_pytest_infrastructure() {
     # Execute infrastructure tests with coverage requirements.
-    # Runs pytest on tests/infrastructure/ with 60% coverage threshold.
+    # Runs pytest on tests/infra_tests/ with 60% coverage threshold.
     # Skips requires_ollama tests by default.
     # Returns: 0 on success, 1 on failure
     cd "$REPO_ROOT"
@@ -329,7 +329,7 @@ run_pytest_infrastructure() {
     log_info "Running infrastructure module tests..."
     log_info "(Skipping LLM integration tests - run separately with: pytest -m requires_ollama)"
     
-    $(get_pytest_cmd) tests/infrastructure/ \
+    $(get_pytest_cmd) tests/infra_tests/ \
         --ignore=tests/integration/test_module_interoperability.py \
         -m "not requires_ollama" \
         --cov=infrastructure \
@@ -509,10 +509,11 @@ run_all_tests() {
     # Setup logging for this stage
     setup_stage_logging "$project_name" "Testing"
 
-    log_stage_with_project 2 "Infrastructure Tests" 9 "$project_name"
-    log_stage_with_project 3 "Project Tests" 9 "$project_name"
+    # Show combined test stage - run_tests.py handles infra+project sequentially with verbose logging
+    log_stage_with_project 2 "Run Tests (Infrastructure + Project)" 9 "$project_name"
     log_project_context "$project_name" "Testing"
 
+    # Run with verbose logging via the test runner
     execute_with_logging $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" --project "$project_name" --stage tests
     return $?
 }

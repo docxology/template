@@ -14,7 +14,7 @@ Files by Category:
   • figures: 7 files (1.31 MB)
   • data: 1 files (0.00 MB)
   • reports: 9 files (0.01 MB)
-  • logs: 1 files (0.00 MB)
+  • logs: 1 files (0.01 MB)
 
 Largest Files:
   • code_project_combined.pdf: 1.39 MB (pdf)

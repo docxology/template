@@ -56,7 +56,7 @@ dependencies = [
 [project.scripts]
 # Development workflow scripts (run with: uv run <script-name>)
 test = "pytest tests/ --cov=infrastructure --cov=projects/project/src --cov-report=html"
-test-infra = "pytest tests/infrastructure/ --cov=infrastructure --cov-report=html"
+test-infra = "pytest tests/infra_tests/ --cov=infrastructure --cov-report=html"
 test-project = "pytest projects/project/tests/ --cov=projects/project/src --cov-report=html"
 
 [dependency-groups]

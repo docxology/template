@@ -3,7 +3,7 @@
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](docs/operational/BUILD_SYSTEM.md)
 [![Test Coverage](https://img.shields.io/badge/coverage-100%25%20project%20|%2083.33%25%20infra-brightgreen)](docs/operational/BUILD_SYSTEM.md)
 [![Tests](https://img.shields.io/badge/tests-3025%20passing%20(100%25)-brightgreen)](docs/operational/BUILD_SYSTEM.md)
-[![Documentation](https://img.shields.io/badge/docs-86%2B%20files-blue)](docs/DOCUMENTATION_INDEX.md)
+[![Documentation](https://img.shields.io/badge/docs-105%2B%20files-blue)](docs/DOCUMENTATION_INDEX.md)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16903352.svg)](https://doi.org/10.5281/zenodo.16903352)
 
 > **Template Repository** - Click "Use this template" to create a research project with this structure
@@ -110,7 +110,6 @@ flowchart TD
 | 2 | **[docs/development/CODE_OF_CONDUCT.md](docs/development/CODE_OF_CONDUCT.md)** | Community standards |
 | 3 | **[docs/development/ROADMAP.md](docs/development/ROADMAP.md)** | Future plans |
 | 4 | **[docs/development/SECURITY.md](docs/development/SECURITY.md)** | Security practices |
-| 5 | **[docs/development/CONTRIBUTING.md](docs/development/CONTRIBUTING.md)** | How to contribute |
 
 **Recent improvements:** See **[docs/operational/BUILD_SYSTEM.md](docs/operational/BUILD_SYSTEM.md)**
 
@@ -132,7 +131,7 @@ flowchart TD
 
 **📚 [Documentation Index](docs/DOCUMENTATION_INDEX.md)** | **📖 [Documentation Guide](docs/AGENTS.md)** | **🔍 [Quick Reference](docs/README.md)**
 
-The template includes **86+ documentation files** organized in the `docs/` directory. Use the visual map below to navigate:
+The template includes **105+ documentation files** organized in the `docs/` directory. Use the visual map below to navigate:
 
 ```mermaid
 graph TB
@@ -273,6 +272,7 @@ graph TB
 The template includes an active example project:
 
 - **`projects/code_project/`** - Code-focused with analysis pipeline
+- **`projects/blake_active_inference/`** - Active inference research project
 
 **Note:** Archived projects are preserved in `projects_archive/` for reference but are not actively executed.
 
@@ -323,6 +323,7 @@ Projects in `projects_archive/` are **preserved but not executed**:
 **Current Active Projects:**
 
 - `code_project/` - Optimization algorithms research
+- `blake_active_inference/` - Active inference research project
 
 **To archive a project:** `mv projects/{name}/ projects_archive/{name}/`
 **To reactivate:** `mv projects_archive/{name}/ projects/{name}/`
@@ -347,7 +348,7 @@ Projects in `projects_archive/` are **preserved but not executed**:
 # Or run full 10-stage manuscript pipeline directly (includes optional LLM review)
 ./run.sh --pipeline
 
-# Alternative: Core 6-stage pipeline (no LLM dependencies)
+# Alternative: Core 8-stage pipeline (no LLM dependencies)
 python3 scripts/execute_pipeline.py --core-only
 
 # Run tests with coverage (infrastructure + project)
@@ -371,7 +372,7 @@ graph LR
     end
 
     subgraph Documentation["📚 Documentation"]
-        DOCS[86+ documentation files\nComprehensive coverage]
+        DOCS[105+ documentation files\nComprehensive coverage]
         CROSS[Cross-referencing\nAll links validated]
         EXAMPLES[Examples\nMultiple use cases]
     end
@@ -397,7 +398,7 @@ graph LR
 - **Build Time**: 84 seconds (with full test suite) - [Performance Analysis](docs/operational/BUILD_SYSTEM.md#-detailed-performance-analysis)
 - **Tests Passing**: 3025 tests (2569 infrastructure [5 skipped] + 456 project) - [Test Report](docs/operational/BUILD_SYSTEM.md#-detailed-performance-analysis)
 - **PDFs Generated**: 14 (all sections) - [Output Summary](docs/operational/BUILD_SYSTEM.md#-generated-files)
-- **Documentation**: 86+ files - [Documentation Index](docs/DOCUMENTATION_INDEX.md)
+- **Documentation**: 105+ files - [Documentation Index](docs/DOCUMENTATION_INDEX.md)
 
 ## 🎓 Skill-Based Learning Paths
 
@@ -469,7 +470,7 @@ The project follows a **two-layer architecture** with clear separation of concer
 graph TB
     subgraph L1["🔧 Layer 1: Infrastructure (Generic, Reusable)"]
         INFRA[infrastructure/\nGeneric tools\nBuild and validation\n📖 infrastructure/AGENTS.md]
-        INFRA_SCRIPTS[scripts/\nEntry point orchestrators\n6-stage core or 10-stage extended\n📖 scripts/AGENTS.md]
+        INFRA_SCRIPTS[scripts/\nEntry point orchestrators\n8-stage core or 10-stage extended\n📖 scripts/AGENTS.md]
         TESTS[tests/\nTest suite\nComprehensive coverage\n📖 tests/AGENTS.md]
     end
 
@@ -863,10 +864,10 @@ pip install -e .
 # Interactive menu (recommended) - routes to manuscript operations
 ./run.sh
 
-# Or run full 9-stage manuscript pipeline directly (displayed as [1/9] to [9/9], includes optional LLM)
+# Or run full 10-stage manuscript pipeline directly (displayed as [1/10] to [10/10], includes optional LLM)
 ./run.sh --pipeline
 
-# Alternative: Core 6-stage pipeline (stages 00-05, no LLM dependencies)
+# Alternative: Core 8-stage pipeline (stages 00-05, no LLM dependencies)
 python3 scripts/execute_pipeline.py --core-only
 
 # Or run stages individually (using generic entry point orchestrators)
@@ -880,9 +881,9 @@ python3 scripts/05_copy_outputs.py           # Copy final deliverables
 
 **Pipeline Entry Points:**
 
-- **`./run.sh`**: Main entry point - Interactive menu or extended pipeline (9 stages displayed as [1/9] to [9/9]) with optional LLM review and translations
-- **`./run.sh --pipeline`**: 9 stages displayed as [1/9] to [9/9] - Extended pipeline with optional LLM review and translations
-- **`python3 scripts/execute_pipeline.py --core-only`**: 6 stages (00-05) - Core pipeline only, no LLM dependencies
+- **`./run.sh`**: Main entry point - Interactive menu or extended pipeline (10 stages displayed as [1/10] to [10/10]) with optional LLM review and translations
+- **`./run.sh --pipeline`**: 10 stages displayed as [1/10] to [10/10] - Extended pipeline with optional LLM review and translations
+- **`python3 scripts/execute_pipeline.py --core-only`**: 8 stages (00-05) - Core pipeline only, no LLM dependencies
 
 **See [How To Use Guide](docs/core/HOW_TO_USE.md) for setup instructions at all skill levels.**
 
@@ -1030,15 +1031,15 @@ The system enforces test coverage using TDD principles:
 python3 scripts/01_run_tests.py
 
 # Or run manually with coverage reports
-pytest tests/infrastructure/ --cov=infrastructure --cov-report=html
+pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
 pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=html
 
 # Generate detailed coverage report with missing lines
-pytest tests/infrastructure/ --cov=infrastructure --cov-report=term-missing
+pytest tests/infra_tests/ --cov=infrastructure --cov-report=term-missing
 pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=term-missing
 
 # Verify coverage requirements (infrastructure modules)
-pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=60
+pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
 ```
 
 **Test Requirements (Infrastructure Layer - Layer 1):**
@@ -1105,20 +1106,20 @@ The template provides **two main entry points** for pipeline operations:
 
 ### Entry Point 2: Extended Pipeline (`./run.sh --pipeline`)
 
-**9-stage pipeline** (displayed as [1/9] to [9/9]) with optional LLM review:
+**10-stage pipeline** (displayed as [1/10] to [10/10]) with optional LLM review:
 
 ```mermaid
 flowchart TD
-    START([./run.sh --pipeline]) --> STAGE1[Stage 1: Clean Output Directories\n[1/9]]
-    STAGE1 --> STAGE2[Stage 2: Environment Setup\n[2/9]]
-    STAGE2 --> STAGE3[Stage 3: Infrastructure Tests\n[3/9]\n60%+ coverage required]
-    STAGE3 --> STAGE4[Stage 4: Project Tests\n[4/9]\n90%+ coverage required]
-    STAGE4 --> STAGE5[Stage 5: Project Analysis\n[5/9]\nExecute projects/{name}/scripts/]
-    STAGE5 --> STAGE6[Stage 6: PDF Rendering\n[6/9]\nGenerate manuscript PDFs]
-    STAGE6 --> STAGE7[Stage 7: Output Validation\n[7/9]\nQuality checks]
-    STAGE7 --> STAGE8[Stage 8: LLM Scientific Review\n[8/9]\nOptional, requires Ollama]
-    STAGE8 --> STAGE9[Stage 9: LLM Translations\n[9/9]\nOptional, requires Ollama]
-    STAGE9 --> STAGE10[Stage 10: Copy Outputs\nFinal deliverables]
+    START([./run.sh --pipeline]) --> STAGE1[Stage 1: Clean Output Directories\n[1/10]]
+    STAGE1 --> STAGE2[Stage 2: Environment Setup\n[2/10]]
+    STAGE2 --> STAGE3[Stage 3: Infrastructure Tests\n[3/10]\n60%+ coverage required]
+    STAGE3 --> STAGE4[Stage 4: Project Tests\n[4/10]\n90%+ coverage required]
+    STAGE4 --> STAGE5[Stage 5: Project Analysis\n[5/10]\nExecute projects/{name}/scripts/]
+    STAGE5 --> STAGE6[Stage 6: PDF Rendering\n[6/10]\nGenerate manuscript PDFs]
+    STAGE6 --> STAGE7[Stage 7: Output Validation\n[7/10]\nQuality checks]
+    STAGE7 --> STAGE8[Stage 8: LLM Scientific Review\n[8/10]\nOptional, requires Ollama]
+    STAGE8 --> STAGE9[Stage 9: LLM Translations\n[9/10]\nOptional, requires Ollama]
+    STAGE9 --> STAGE10[Stage 10: Copy Outputs\n[10/10]\nFinal deliverables]
     STAGE10 --> SUCCESS[✅ Build\n~84s core + LLM time]
 
     STAGE2 -->|Fail| FAIL[❌ Pipeline Failed]
@@ -1146,7 +1147,7 @@ flowchart TD
 
 ### Entry Point 2: Core Pipeline (`python3 scripts/execute_pipeline.py --core-only`)
 
-**6-stage core pipeline** (stages 00-05) without LLM dependencies:
+**8-stage core pipeline** (stages 00-05) without LLM dependencies:
 
 | Stage | Script | Purpose |
 |-------|--------|---------|
@@ -1159,7 +1160,7 @@ flowchart TD
 
 **Stage Numbering:**
 
-- `./run.sh`: 9 stages displayed as [1/9] to [9/9] in logs (Clean Output Directories through Copy Outputs)
+- `./run.sh`: 10 stages displayed as [1/10] to [10/10] in logs (Clean Output Directories through Copy Outputs)
 - `execute_pipeline.py --core-only`: Core pipeline stages (no LLM stages)
 
 **See [RUN_GUIDE.md](RUN_GUIDE.md) for pipeline documentation.**

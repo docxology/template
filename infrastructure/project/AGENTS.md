@@ -352,11 +352,11 @@ projects = discover_projects(repo_root)
 
 ## Testing
 
-The module includes tests in `tests/infrastructure/test_project_discovery.py`:
+The module includes tests in `tests/infra_tests/test_project_discovery.py`:
 
 ```bash
 # Run project discovery tests
-python3 -m pytest tests/infrastructure/test_project_discovery.py -v
+python3 -m pytest tests/infra_tests/test_project_discovery.py -v
 
 # Expected tests:
 # test_discover_projects - Finds all valid projects

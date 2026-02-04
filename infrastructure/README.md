@@ -306,10 +306,10 @@ Infrastructure modules maintain **83.33% test coverage** (exceeds 60% requiremen
 
 ```bash
 # Test all infrastructure
-pytest tests/infrastructure/ --cov=infrastructure --cov-report=term-missing
+pytest tests/infra_tests/ --cov=infrastructure --cov-report=term-missing
 
 # Test specific module
-pytest tests/infrastructure/core/ -v
+pytest tests/infra_tests/core/ -v
 ```
 
 ## Architecture Principles
@@ -361,5 +361,5 @@ infrastructure/new_module/
 ## See Also
 
 - [AGENTS.md](AGENTS.md) - infrastructure documentation
-- [../tests/infrastructure/](../tests/infrastructure/) - Infrastructure test suite
+- [../tests/infra_tests/](../tests/infra_tests/) - Infrastructure test suite
 - [../scripts/](../scripts/) - Orchestration scripts

@@ -22,9 +22,9 @@ logger = get_logger(__name__)
 _STAGE_TO_SCRIPT: dict[str, list[str]] = {
     "clean": ["scripts/00_setup_environment.py"],  # setup script also validates dirs; clean is handled in PipelineExecutor
     "setup": ["scripts/00_setup_environment.py"],
-    "infra_tests": ["scripts/01_run_tests.py", "--infra-only"],
-    "project_tests": ["scripts/01_run_tests.py", "--project-only"],
-    "tests": ["scripts/01_run_tests.py"],
+    "infra_tests": ["scripts/01_run_tests.py", "--infra-only", "--verbose"],
+    "project_tests": ["scripts/01_run_tests.py", "--project-only", "--verbose"],
+    "tests": ["scripts/01_run_tests.py", "--verbose"],
     "analysis": ["scripts/02_run_analysis.py"],
     "render_pdf": ["scripts/03_render_pdf.py"],
     "validate": ["scripts/04_validate_output.py"],

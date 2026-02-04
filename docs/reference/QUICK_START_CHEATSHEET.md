@@ -197,7 +197,7 @@ Reference it: \ref{fig:my_figure}
 2. **Use thin orchestrator pattern**: Scripts import from `src/`
 3. **Coverage requirements**: 90% minimum for project code, 60% for infrastructure
 4. **Run pipeline**: `python3 scripts/execute_pipeline.py --core-only` executes all stages
-5. **Pipeline stages**: 6 stages (00-05) from setup to final deliverables
+5. **Pipeline stages**: 8 stages (00-05) from setup to final deliverables
 6. **Read build logs**: Check `project/output/pdf/*_compile.log` for errors
 7. **Individual stages**: Run `python3 scripts/XX_stage_name.py` for specific stages
 8. **CI/CD friendly**: Pipeline scripts support automated builds

@@ -155,7 +155,7 @@ export GITHUB_TOKEN="your-token"
 ## Testing
 
 ```bash
-pytest tests/infrastructure/test_publishing/
+pytest tests/infra_tests/test_publishing/
 ```
 
 For detailed documentation, see [AGENTS.md](AGENTS.md).

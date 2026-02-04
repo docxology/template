@@ -119,10 +119,10 @@ export GLOSSARY_SECTION=98
 
 ```bash
 # Test glossary generation
-pytest tests/infrastructure/test_documentation.py -k glossary -v
+pytest tests/infra_tests/test_documentation.py -k glossary -v
 
 # Test manuscript integration
-pytest tests/infrastructure/test_manuscript_integration.py -v
+pytest tests/infra_tests/test_manuscript_integration.py -v
 ```
 
 ## Troubleshooting

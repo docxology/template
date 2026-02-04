@@ -114,7 +114,7 @@ python3 infrastructure/scientific/scientific_dev.py
 ## Testing
 
 ```bash
-pytest tests/infrastructure/test_scientific/
+pytest tests/infra_tests/test_scientific/
 ```
 
 For detailed documentation, see [AGENTS.md](AGENTS.md).

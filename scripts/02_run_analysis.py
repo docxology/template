@@ -75,11 +75,16 @@ def run_analysis_script(script_path: Path, repo_root: Path, project_name: str = 
     ])
     env["PYTHONPATH"] = pythonpath
     
+    # Set PROJECT_ROOT env var for scripts that need to find resources relative to project
+    env["PROJECT_DIR"] = str(project_root)
+    
     try:
         with log_operation(f"Execute {script_path.name}", logger):
+            # Run from repo_root to prevent uv from creating project-local venvs
+            # Scripts use PROJECT_DIR env var and PYTHONPATH for project-relative paths
             result = subprocess.run(
                 cmd,
-                cwd=str(project_root),
+                cwd=str(repo_root),
                 capture_output=False,
                 check=False,
                 env=env

@@ -44,7 +44,7 @@
 
 3. **Generate the PDF**
    ```bash
-   # Run pipeline (all 6 stages)
+   # Run pipeline (all 8 stages)
    python3 scripts/execute_pipeline.py --core-only
    ```
 
@@ -536,7 +536,7 @@ def test_process_negative():
 
 1. **Run pipeline (recommended)**
    ```bash
-   # Standard build - executes all 6 stages (00-05)
+   # Standard build - executes all 8 stages (00-05)
    python3 scripts/execute_pipeline.py --core-only
    
    # Or use unified interactive menu
@@ -566,7 +566,7 @@ def test_process_negative():
    open project/output/pdf/project_combined.pdf
    ```
 
-**Build Pipeline Stages** (6 stages total):
+**Build Pipeline Stages** (8 stages total):
 1. **Stage 00**: Environment setup & validation (~1s)
 2. **Stage 01**: Run tests with coverage (~27s)
 3. **Stage 02**: Execute analysis scripts (~2s)
@@ -711,7 +711,7 @@ def test_process_negative():
 
 5. **Run build**
    ```bash
-   # Standard build - executes all 6 stages
+   # Standard build - executes all 8 stages
    python3 scripts/execute_pipeline.py --core-only
    
    # Or use unified interactive menu

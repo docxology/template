@@ -35,7 +35,7 @@ This directory contains development standards, coding guidelines, and best pract
 - Domain-independent tools
 - Reusable across projects
 - 60% minimum test coverage (currently 83.33% - exceeds stretch goal!)
-- Tests: `tests/infrastructure/`
+- Tests: `tests/infra_tests/`
 
 **Layer 2: Project** (Specific, customizable)
 - Location: `projects/{name}/src/` (project-specific code)
@@ -65,7 +65,7 @@ The template provides **two pipeline orchestrators** with different scope:
 
 **Interactive Menu (`./run.sh`)**
 - **Use for**: Full pipeline with optional LLM stages
-- **Stages**: 0-9 (stage 0 cleanup, stages 1-9 displayed as [1/9] to [9/9])
+- **Stages**: 0-9 (stage 0 cleanup, stages 1-10 displayed as [1/10] to [10/10])
 - **Features**: Interactive menu, literature search, LLM reviews, translations
 - **When to use**: builds, LLM features needed
 

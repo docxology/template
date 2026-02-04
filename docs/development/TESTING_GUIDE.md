@@ -21,7 +21,7 @@ python3 scripts/01_run_tests.py --verbose
 python3 scripts/01_run_tests.py --include-slow
 
 # Run specific test suite
-pytest tests/infrastructure/ -v
+pytest tests/infra_tests/ -v
 
 # Run with coverage report
 pytest tests/ --cov=src --cov-report=html

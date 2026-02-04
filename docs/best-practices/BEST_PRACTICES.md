@@ -11,7 +11,8 @@ This document consolidates best practices from across all documentation, providi
 ### Directory Structure
 
 **Follow the established structure:**
-```
+
+```text
 project/
 ├── src/              # Business logic (comprehensively tested)
 ├── tests/            # Test suite (90% project, 60% infra minimum)
@@ -23,6 +24,7 @@ project/
 ```
 
 **Best Practices:**
+
 - Keep `src/` focused on business logic
 - Use `scripts/` only for orchestration
 - Maintain clear separation of concerns
@@ -31,12 +33,14 @@ project/
 ### Module Organization
 
 **Organize modules logically:**
+
 - Group related functionality
 - Use clear naming conventions
 - Maintain single responsibility
 - Keep modules focused and cohesive
 
 **Example:**
+
 ```python
 # Good: Clear module purpose
 # src/statistics.py - Statistical functions
@@ -50,6 +54,7 @@ project/
 ### Import Patterns
 
 **Use consistent import patterns:**
+
 ```python
 # Standard library
 import os
@@ -67,6 +72,7 @@ from example import add_numbers, calculate_average
 ```
 
 **Best Practices:**
+
 - Group imports: stdlib, third-party, local
 - Use absolute imports when possible
 - Avoid circular dependencies
@@ -77,6 +83,7 @@ from example import add_numbers, calculate_average
 ### Test Coverage
 
 **Maintain coverage:**
+
 - **Project code**: 90% minimum (currently achieving 100% - coverage!)
 - **Infrastructure**: 60% minimum (currently achieving 83.33% - exceeds stretch goal!)
 - Test all critical code paths
@@ -84,6 +91,7 @@ from example import add_numbers, calculate_average
 - Test error handling
 
 **Coverage Requirements:**
+
 ```bash
 # Run with coverage
 uv run pytest tests/ --cov=src --cov-report=term-missing
@@ -95,7 +103,8 @@ uv run pytest tests/ --cov=src --cov-report=term-missing
 ### Test Organization
 
 **Organize tests by module:**
-```
+
+```text
 tests/
 ├── test_example.py
 ├── test_integrity.py
@@ -104,6 +113,7 @@ tests/
 ```
 
 **Best Practices:**
+
 - One test file per module
 - Clear test names: `test_function_name_scenario`
 - Use fixtures for setup
@@ -112,12 +122,14 @@ tests/
 ### Test-Driven Development
 
 **Follow TDD workflow:**
+
 1. Write test first (RED)
 2. Implement minimal code (GREEN)
 3. Refactor (REFACTOR)
 4. Repeat
 
 **Benefits:**
+
 - Ensures code works before writing
 - Drives good design
 - Provides documentation
@@ -126,6 +138,7 @@ tests/
 ### Data Testing
 
 **Use data, not mocks:**
+
 ```python
 # Good: data
 def test_calculate_average():
@@ -141,6 +154,7 @@ def test_calculate_average(mock_func):
 ```
 
 **Best Practices:**
+
 - Use deterministic test data
 - Set fixed random seeds
 - Create realistic test cases
@@ -151,6 +165,7 @@ def test_calculate_average(mock_func):
 ### Code Documentation
 
 **Document all public APIs:**
+
 ```python
 def calculate_statistics(data: List[float]) -> Dict[str, float]:
     """Calculate descriptive statistics for data.
@@ -178,6 +193,7 @@ def calculate_statistics(data: List[float]) -> Dict[str, float]:
 ```
 
 **Best Practices:**
+
 - Use docstrings for all functions
 - Include parameter descriptions
 - Document return values
@@ -187,12 +203,14 @@ def calculate_statistics(data: List[float]) -> Dict[str, float]:
 ### Documentation Maintenance
 
 **Keep documentation current:**
+
 - Update docs when code changes
 - Sync examples with implementation
 - Review documentation regularly
 - Remove outdated information
 
 **Documentation Standards:**
+
 - Clear and concise
 - Accurate and current
 - coverage
@@ -203,6 +221,7 @@ def calculate_statistics(data: List[float]) -> Dict[str, float]:
 ### Build Pipeline
 
 **Follow the established pipeline:**
+
 1. Clean outputs
 2. Run tests (verify coverage requirements met)
 3. Execute scripts
@@ -212,6 +231,7 @@ def calculate_statistics(data: List[float]) -> Dict[str, float]:
 7. Validate outputs
 
 **Best Practices:**
+
 - Run full pipeline before commits
 - Fix issues immediately
 - Keep build times reasonable
@@ -220,6 +240,7 @@ def calculate_statistics(data: List[float]) -> Dict[str, float]:
 ### Build Optimization
 
 **Optimize build performance:**
+
 - Use parallel execution
 - Enable caching
 - Skip unnecessary steps
@@ -230,12 +251,14 @@ def calculate_statistics(data: List[float]) -> Dict[str, float]:
 ### Build Validation
 
 **Validate builds:**
+
 - Check test coverage
 - Verify outputs
 - Validate PDFs
 - Check integrity
 
 **Automation:**
+
 ```bash
 # Automated validation
 python3 scripts/execute_pipeline.py --core-only
@@ -249,6 +272,7 @@ python3 scripts/04_validate_output.py
 ### Code Review
 
 **Review checklist:**
+
 - [ ] Code follows style guidelines
 - [ ] Tests pass with required coverage (90% project, 60% infra)
 - [ ] Documentation updated
@@ -258,6 +282,7 @@ python3 scripts/04_validate_output.py
 ### Communication
 
 **Best Practices:**
+
 - Clear commit messages
 - Descriptive pull requests
 - Respond to feedback
@@ -267,6 +292,7 @@ python3 scripts/04_validate_output.py
 ### Contribution Process
 
 **Follow contribution guidelines:**
+
 1. Fork repository
 2. Create feature branch
 3. Make changes
@@ -281,6 +307,7 @@ python3 scripts/04_validate_output.py
 ### Git Workflow
 
 **Use consistent workflow:**
+
 ```bash
 # Feature development
 git checkout -b feature/new-feature
@@ -296,6 +323,7 @@ git push origin fix/issue-description
 ```
 
 **Best Practices:**
+
 - Use descriptive branch names
 - Write clear commit messages
 - Keep commits focused
@@ -304,7 +332,8 @@ git push origin fix/issue-description
 ### Commit Messages
 
 **Follow conventional commits:**
-```
+
+```text
 feat: add feature
 fix: resolve bug
 docs: update documentation
@@ -315,6 +344,7 @@ chore: maintenance tasks
 ```
 
 **Best Practices:**
+
 - Use present tense
 - Be specific and clear
 - Reference issues when applicable
@@ -323,6 +353,7 @@ chore: maintenance tasks
 ### Branching Strategy
 
 **Use feature branches:**
+
 - `main` - Production-ready code
 - `develop` - Integration branch
 - `feature/*` - features
@@ -334,6 +365,7 @@ chore: maintenance tasks
 ### Dependency Management
 
 **Keep dependencies updated:**
+
 ```bash
 # Regular updates
 uv sync --upgrade
@@ -343,6 +375,7 @@ uv audit
 ```
 
 **Best Practices:**
+
 - Update regularly
 - Review dependency changes
 - Use version constraints
@@ -351,12 +384,14 @@ uv audit
 ### Secrets Management
 
 **Never commit secrets:**
+
 - Use environment variables
 - Store secrets securely
 - Use `.gitignore` for sensitive files
 - Rotate secrets regularly
 
 **Configuration:**
+
 ```bash
 # Use environment variables
 export AUTHOR_EMAIL="user@example.com"
@@ -369,6 +404,7 @@ export AUTHOR_ORCID="0000-0000-0000-0000"
 ### Access Control
 
 **Limit access appropriately:**
+
 - Use least privilege principle
 - Review access regularly
 - Use secure authentication
@@ -379,6 +415,7 @@ export AUTHOR_ORCID="0000-0000-0000-0000"
 ### Script Requirements
 
 **Scripts MUST:**
+
 - Import from `src/` modules
 - Use `src/` methods for computation
 - Handle only I/O, visualization, orchestration
@@ -386,12 +423,14 @@ export AUTHOR_ORCID="0000-0000-0000-0000"
 - Print output paths
 
 **Scripts MUST NOT:**
+
 - Implement mathematical algorithms
 - Duplicate business logic
 - Contain complex computations
 - Define new data structures
 
 **Example:**
+
 ```python
 # Good: Thin orchestrator
 from example import calculate_average
@@ -407,6 +446,7 @@ def calculate_average(data):
 ### Integration Patterns
 
 **Proper integration:**
+
 ```python
 # Ensure src/ on path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
@@ -426,6 +466,7 @@ save_output(result, output_path)
 ### Code Performance
 
 **Optimize critical paths:**
+
 - Profile before optimizing
 - Focus on bottlenecks
 - Use appropriate data structures
@@ -434,6 +475,7 @@ save_output(result, output_path)
 ### Build Performance
 
 **Optimize build times:**
+
 - Use parallel execution
 - Enable caching
 - Skip unnecessary steps
@@ -446,6 +488,7 @@ save_output(result, output_path)
 ### Code Quality
 
 **Maintain high standards:**
+
 - Follow PEP 8 style
 - Use type hints
 - Write clear code
@@ -454,6 +497,7 @@ save_output(result, output_path)
 ### Testing Quality
 
 **testing:**
+
 - Coverage requirements: 90% project, 60% infrastructure
 - Test edge cases
 - Test error paths
@@ -462,6 +506,7 @@ save_output(result, output_path)
 ### Documentation Quality
 
 **High-quality documentation:**
+
 - Accurate and current
 - Clear and concise
 - coverage
@@ -469,25 +514,28 @@ save_output(result, output_path)
 
 ## Anti-Patterns to Avoid
 
-### Code Organization
+### Code Organization Anti-Patterns
 
 **Avoid:**
+
 - Business logic in scripts
 - Duplicated code
 - Mixed concerns
 - Circular dependencies
 
-### Testing
+### Testing Anti-Patterns
 
 **Avoid:**
+
 - Mocking everything
 - Missing edge cases
 - Incomplete coverage
 - Brittle tests
 
-### Documentation
+### Documentation Anti-Patterns
 
 **Avoid:**
+
 - Outdated information
 - Unclear explanations
 - Missing examples
@@ -498,8 +546,9 @@ save_output(result, output_path)
 Key best practices:
 
 1. **Code Organization** - Clear structure, separation of concerns
-2. **Testing** - coverage, data, TDD
-3. **Documentation** - Current, accurate, 4. **Build System** - Automated, validated, optimized
+2. **Testing** - Full coverage, real data, TDD
+3. **Documentation** - Current, accurate, comprehensive
+4. **Build System** - Automated, validated, optimized
 5. **Collaboration** - Clear communication, code review
 6. **Version Control** - Consistent workflow, clear commits
 7. **Security** - Updated dependencies, secure secrets
@@ -508,6 +557,7 @@ Key best practices:
 10. **Quality** - High standards throughout
 
 For detailed guidance, see:
+
 - [Architecture](../core/ARCHITECTURE.md) - System design
 - [Workflow](../core/WORKFLOW.md) - Development process
 - [Thin Orchestrator Summary](../architecture/THIN_ORCHESTRATOR_SUMMARY.md) - Pattern details
@@ -516,9 +566,8 @@ For detailed guidance, see:
 ---
 
 **Related Documentation:**
+
 - [Getting Started](../guides/GETTING_STARTED.md) - Basic practices
 - [Testing and Reproducibility](../guides/TESTING_AND_REPRODUCIBILITY.md) - Advanced practices
 - [Workflow](../core/WORKFLOW.md) - Development workflow
 - [Contributing](../development/CONTRIBUTING.md) - Contribution practices
-
-

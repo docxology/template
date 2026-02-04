@@ -4,8 +4,8 @@
 
 The Research Project Template provides **two main entry points** for pipeline operations:
 
-1. **`run.sh`** - Main entry point for manuscript pipeline operations (9 stages displayed as [1/9] to [9/9])
-2. **`python3 scripts/execute_pipeline.py --core-only`** - Core 6-stage pipeline without LLM features
+1. **`run.sh`** - Main entry point for manuscript pipeline operations (10 stages displayed as [1/10] to [10/10])
+2. **`python3 scripts/execute_pipeline.py --core-only`** - Core 8-stage pipeline without LLM features
 
 ## 🏗️ Thin Orchestration Architecture
 
@@ -165,7 +165,7 @@ Core Pipeline Scripts (aligned with script numbering):
 
 Orchestration:
   7. Run Core Pipeline (stages 0-7: no LLM)
-  8. Run Full Pipeline (9 stages: [1/9] to [9/9])
+  8. Run Full Pipeline (10 stages: [1/10] to [10/10])
   9. Run Full Pipeline (skip infrastructure tests)
 ============================================================
 ```
@@ -182,7 +182,7 @@ Verifies the environment is ready for the pipeline.
 
 #### Option 1: Run Tests
 Executes the test suite with coverage validation.
-- Runs infrastructure tests (`tests/infrastructure/`) with 60%+ coverage threshold
+- Runs infrastructure tests (`tests/infra_tests/`) with 60%+ coverage threshold
 - Runs project tests (`project/tests/`) with 90%+ coverage threshold
 - Generates HTML coverage reports for both suites
 - Generates structured test reports (JSON, Markdown)
@@ -235,12 +235,12 @@ Executes the core pipeline (stages 0-6) without LLM features.
 - Suitable for CI/CD environments
 
 #### Option 8: Run Full Pipeline
-Executes the 9-stage build pipeline (displayed as [1/9] to [9/9]):
+Executes the 10-stage build pipeline (displayed as [1/10] to [10/10]):
 - Includes all core stages plus LLM review and translations
 - manuscript generation with AI assistance
 - Automatic checkpointing and resume capability
 
-**Note**: The pipeline stages are displayed as [1/9] to [9/9] in progress logs. Clean Output Directories is stage 1.
+**Note**: The pipeline stages are displayed as [1/10] to [10/10] in progress logs. Clean Output Directories is stage 1.
 
 #### Option 9: Run Full Pipeline (skip infrastructure tests)
 Executes the full pipeline but skips infrastructure tests.
@@ -263,7 +263,7 @@ Generates multi-language technical abstract translations.
 **Requires**: Running Ollama server and translation configuration in `config.yaml`.
 
 #### Option 8: Run Full Pipeline
-Executes the 9-stage build pipeline (displayed as [1/9] to [9/9]):
+Executes the 10-stage build pipeline (displayed as [1/10] to [10/10]):
 
 | Stage | Name | Purpose |
 |-------|------|---------|
@@ -278,7 +278,7 @@ Executes the 9-stage build pipeline (displayed as [1/9] to [9/9]):
 | 9 | LLM Translations | Multi-language technical abstract generation (optional, requires Ollama) |
 | 10 | Copy Outputs | Copy deliverables to top-level output/ |
 
-**Note**: The pipeline stages are displayed as [1/9] to [9/9] in progress logs. Clean Output Directories is stage 1.
+**Note**: The pipeline stages are displayed as [1/10] to [10/10] in progress logs. Clean Output Directories is stage 1.
 
 **Generated Outputs**:
 - Coverage reports: `htmlcov/`
@@ -294,7 +294,7 @@ Executes the 9-stage build pipeline (displayed as [1/9] to [9/9]):
 
 ```bash
 # Core Build Operations
-./run.sh --pipeline          # Run pipeline (9 stages displayed as [1/9] to [9/9], includes LLM)
+./run.sh --pipeline          # Run pipeline (10 stages displayed as [1/10] to [10/10], includes LLM)
 ./run.sh --pipeline --resume # Resume from last checkpoint
 ./run.sh --infra-tests        # Run infrastructure tests only
 ./run.sh --project-tests      # Run project tests only
@@ -313,12 +313,12 @@ Executes the 9-stage build pipeline (displayed as [1/9] to [9/9]):
 For programmatic access or CI/CD integration, use the Python orchestrator:
 
 ```bash
-# Core pipeline (6 stages) - Python orchestrator
+# Core pipeline (8 stages) - Python orchestrator
 python3 scripts/execute_pipeline.py --core-only
 ```
 
 **Features**:
-- 6-stage core pipeline (stages 00-05)
+- 8-stage core pipeline (stages 00-05)
 - No LLM dependencies required
 - Suitable for automated environments
 - Zero-padded stage numbering (Python convention)
@@ -341,8 +341,8 @@ python3 scripts/execute_pipeline.py --core-only
 | Entry Point | Pipeline Stages | LLM Support | Use Case |
 |-------------|----------------|--------------|----------|
 | `./run.sh` | Main entry point | Optional | Interactive menu or manuscript pipeline with LLM |
-| `./run.sh --pipeline` | 9 stages ([1/9] to [9/9]) | Optional | Manuscript pipeline with LLM |
-| `python3 scripts/execute_pipeline.py --core-only` | 6 stages (00-05) | None | Core pipeline, CI/CD automation |
+| `./run.sh --pipeline` | 10 stages ([1/10] to [10/10]) | Optional | Manuscript pipeline with LLM |
+| `python3 scripts/execute_pipeline.py --core-only` | 8 stages (00-05) | None | Core pipeline, CI/CD automation |
 
 ## Usage Examples
 

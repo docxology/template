@@ -13,7 +13,7 @@ Our vision is to create the **most and user-friendly research project template**
 - **Testing Framework**: test coverage requirements (90% project, 60% infrastructure) with pytest
 - **PDF Generation**: Automated markdown to PDF pipeline with Pandoc + LaTeX
 - **Documentation**: guides and examples (68 documentation files)
-- **Build System**: Automated 6-stage pipeline (setup, tests, analysis, PDF, validation, copy outputs)
+- **Build System**: Automated 8-stage pipeline (setup, tests, analysis, PDF, validation, copy outputs)
 - **GitHub Integration**: Templates, guidelines, and community standards
 - **Advanced Modules**: Literature Search, LLM Integration, Rendering System, Publishing API
 - **Environment Management**: Matplotlib auto-configuration, optional dependency handling, test failure tolerance

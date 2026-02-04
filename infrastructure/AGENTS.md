@@ -643,13 +643,13 @@ python3 -m infrastructure.publishing.cli create-release v1.0 output/ $GITHUB_TOK
 
 ```bash
 # All infrastructure tests
-pytest tests/infrastructure/ -v
+pytest tests/infra_tests/ -v
 
 # Specific module
-pytest tests/infrastructure/test_validation/ -v
+pytest tests/infra_tests/test_validation/ -v
 
 # With coverage
-pytest tests/infrastructure/ --cov=infrastructure --cov-report=html
+pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
 ```
 
 ### Coverage Status

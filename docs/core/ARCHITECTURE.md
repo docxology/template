@@ -450,7 +450,7 @@ The architecture enforces a **thin orchestrator pattern** where:
 - **`project/src/`** contains ALL business logic, algorithms, and mathematical implementations
 - **`project/scripts/`** are lightweight wrappers that import and use `project/src/` methods
 - **`proje../../tests/`** ensures coverage of `project/src/` functionality
-- **`scripts/execute_pipeline.py`** orchestrates the entire 6-stage pipeline
+- **`scripts/execute_pipeline.py`** orchestrates the entire 8-stage pipeline
 
 This ensures:
 - **Maintainability**: Single source of truth for business logic

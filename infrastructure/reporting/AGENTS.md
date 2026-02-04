@@ -999,10 +999,10 @@ The reporting module has test coverage:
 
 ```bash
 # Run reporting module tests
-pytest tests/infrastructure/reporting/ -v
+pytest tests/infra_tests/reporting/ -v
 
 # With coverage
-pytest tests/infrastructure/reporting/ --cov=infrastructure.reporting
+pytest tests/infra_tests/reporting/ --cov=infrastructure.reporting
 ```
 
 ## See Also

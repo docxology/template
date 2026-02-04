@@ -1,5 +1,0 @@
-Project,Health_Score,Health_Grade,Manuscript_Words,Manuscript_Sections,Manuscript_Equations,Manuscript_Figures,Test_Total,Test_Passed,Test_Failed,Test_Coverage_Pct,Test_Execution_Time,Pipeline_Duration,Pipeline_Stages_Passed,Pipeline_Bottleneck_Stage,Pipeline_Bottleneck_Duration,Output_PDFs,Output_PDF_Size_MB,Output_Figures,Output_Slides,Output_Web,Output_Total
-code_project,100.0,A,3425,8,0,7,28,28,0,93.98,0.0,40.27070093154907,7,PDF Rendering,30.846439361572266,1,1.3919363021850586,6,5,6,19
-cognitive_integrity/cogsec_multiagent_1_theory,100.0,A,33306,15,0,6,219,219,0,93.24,0.0,84.06672239303589,7,PDF Rendering,48.517749309539795,1,0.8884916305541992,30,14,15,60
-cognitive_integrity/cogsec_multiagent_2_computational,60.0,D,20166,22,0,8,191,191,0,0.0,0.0,78.32654905319214,7,PDF Rendering,59.71198797225952,1,0.5847940444946289,16,21,22,72
-cognitive_integrity/cogsec_multiagent_3_practical,100.0,A,8419,12,0,6,789,789,0,99.7,0.0,44.095824241638184,7,PDF Rendering,34.35182189941406,1,0.2670774459838867,12,11,12,36

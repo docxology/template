@@ -172,10 +172,10 @@ The project module includes tests:
 
 ```bash
 # Test project discovery functionality
-pytest tests/infrastructure/test_project_discovery.py -v
+pytest tests/infra_tests/test_project_discovery.py -v
 
 # Test with real project structures
-pytest tests/infrastructure/test_project_discovery.py::test_discover_projects -v
+pytest tests/infra_tests/test_project_discovery.py::test_discover_projects -v
 ```
 
 ## Error Handling

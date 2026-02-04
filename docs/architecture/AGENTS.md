@@ -152,7 +152,7 @@ project/
 ### Testing Architecture
 
 **Test Organization:**
-- `tests/infrastructure/` mirrors `infrastructure/` structure
+- `tests/infra_tests/` mirrors `infrastructure/` structure
 - `projects/{name}/tests/` mirrors `projects/{name}/src/` structure
 - Integration tests in `tests/integration/`
 - 100% coverage requirement for project code
@@ -252,7 +252,7 @@ cat docs/architecture/DECISION_TREE.md
 1. **Create module directory**: `infrastructure/new_module/`
 2. **Implement core logic**: `infrastructure/new_module/core.py`
 3. **Add CLI interface**: `infrastructure/new_module/cli.py` (optional)
-4. **Write tests**: `tests/infrastructure/test_new_module/`
+4. **Write tests**: `tests/infra_tests/test_new_module/`
 5. **Document functionality**: `infrastructure/new_module/AGENTS.md`
 6. **Update system docs**: Modify root `AGENTS.md` and architecture docs
 

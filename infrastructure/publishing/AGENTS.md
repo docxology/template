@@ -71,7 +71,7 @@ url = create_github_release(
 
 Run publishing tests with:
 ```bash
-pytest tests/infrastructure/test_publishing/
+pytest tests/infra_tests/test_publishing/
 ```
 
 ## Configuration

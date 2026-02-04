@@ -7,9 +7,14 @@ tests to create a comprehensive summary report.
 from __future__ import annotations
 
 import json
+import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any
+
+# Add infrastructure to path for config loading
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from infrastructure.core.config_loader import get_testing_config
 
 
 def load_test_results(project_name: str) -> Dict[str, Any]:
@@ -214,7 +219,7 @@ def generate_summary_report() -> Dict[str, Any]:
             'missing_lines': infra_results.get('missing_lines', 0),
             'duration_seconds': infra_duration,
             'exit_code': infra_results.get('exit_code', 1),
-            'meets_threshold': infra_coverage >= 60.0,
+            'meets_threshold': infra_coverage >= get_testing_config(Path.cwd()).get('infra_coverage_threshold', 60),
         },
 
         'projects': {},
@@ -252,7 +257,7 @@ def generate_summary_report() -> Dict[str, Any]:
             'missing_lines': results.get('missing_lines', 0),
             'duration_seconds': results.get('duration_seconds', 0),
             'exit_code': results.get('exit_code', 1),
-            'meets_threshold': proj_coverage >= 90.0,
+            'meets_threshold': proj_coverage >= get_testing_config(Path.cwd()).get('project_coverage_threshold', 90),
         }
         report['files_generated'].append(f'coverage_project.json ({project_name})')
         report['files_generated'].append(f'htmlcov/index.html ({project_name})')

@@ -258,7 +258,7 @@ os.environ.setdefault("MPLBACKEND", "Agg")
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 # Add ROOT to path so we can import infrastructure as a package
-# Ensure ROOT is FIRST in path to avoid shadowing by tests/infrastructure
+# Ensure ROOT is FIRST in path to avoid shadowing by tests/infra_tests
 if ROOT in sys.path:
     sys.path.remove(ROOT)
 sys.path.insert(0, ROOT)
@@ -293,9 +293,9 @@ from projects.code_project.src.visualization import plot_function  # code_projec
 
 ### Infrastructure Module Tests
 
-Test individual infrastructure modules in `tests/infrastructure/`:
+Test individual infrastructure modules in `tests/infra_tests/`:
   
-- **Core Module** (`tests/infrastructure/core/`)
+- **Core Module** (`tests/infra_tests/core/`)
   - `test_config_loader.py` - Configuration file handling
   - `test_exceptions.py` - Custom exception handling
   - `test_logging_utils.py` - Logging utilities
@@ -303,13 +303,13 @@ Test individual infrastructure modules in `tests/infrastructure/`:
   - `test_progress.py` - Progress tracking
   - `test_retry.py` - Retry mechanisms
 
-- **Documentation Module** (`tests/infrastructure/documentation/`)
+- **Documentation Module** (`tests/infra_tests/documentation/`)
   - `test_figure_manager.py` - Figure management and registration
   - `test_image_manager.py` - Image handling in markdown
   - `test_glossary_gen.py` - API documentation generation
   - `test_markdown_integration.py` - Markdown processing integration
 
-- **Validation Module** (`tests/infrastructure/validation/`)
+- **Validation Module** (`tests/infra_tests/validation/`)
   - `test_markdown_validator.py` - Markdown validation
   - `test_pdf_validator.py` - PDF validation
   - `test_integrity.py` - Integrity verification
@@ -345,7 +345,7 @@ pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov=project
 uv run pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov=projects/code_project/src --cov-report=html
 
 # Verify coverage requirements
-pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=60
+pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
 pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-under=90
 pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-under=90
 ```
@@ -354,7 +354,7 @@ pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-u
 
 ```bash
 # Infrastructure tests
-pytest tests/infrastructure/core/test_config_loader.py -v
+pytest tests/infra_tests/core/test_config_loader.py -v
 
 # Project tests
 pytest projects/code_project/tests/ -v
@@ -378,7 +378,7 @@ pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov=project
 open htmlcov/index.html
 
 # Separate reports
-pytest tests/infrastructure/ --cov=infrastructure --cov-report=html --cov-fail-under=60
+pytest tests/infra_tests/ --cov=infrastructure --cov-report=html --cov-fail-under=60
 pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=html --cov-fail-under=90
 pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=html --cov-fail-under=90
 ```
@@ -602,7 +602,7 @@ Before committing code:
 pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov=projects/code_project/src --cov-report=html
 
 # Verify infrastructure coverage (60% minimum)
-pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=60
+pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
 
 # Verify project coverage (90% minimum)
 pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-under=90
@@ -617,7 +617,7 @@ open htmlcov/index.html
 ### Checklist
 
 1. Determine if code is project-specific (`projects/{name}/src/`) or infrastructure (`infrastructure/`)
-2. Create test file in appropriate location (`projects/{name}/tests/` or `tests/infrastructure/`)
+2. Create test file in appropriate location (`projects/{name}/tests/` or `tests/infra_tests/`)
 3. Import functions to test from correct module path
 4. Write test cases using data (no mocks)
 5. Ensure coverage requirements met (90% project, 60% infrastructure)

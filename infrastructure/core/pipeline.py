@@ -36,7 +36,7 @@ class PipelineConfig:
     skip_infra: bool = False
     skip_llm: bool = False
     resume: bool = False
-    total_stages: int = 9
+    total_stages: int = 10
 
 
 @dataclass
@@ -515,14 +515,14 @@ class PipelineExecutor:
         logger.info("Running infrastructure tests...")
         # Provide a project name for report output location; infra tests themselves should not depend on project src.
         return self._run_script(
-            "01_run_tests.py", "--infra-only", "--project", self.config.project_name
+            "01_run_tests.py", "--infra-only", "--verbose", "--project", self.config.project_name
         )
 
     def _run_project_tests(self) -> bool:
         """Run project tests."""
         logger.info("Running project tests...")
         return self._run_script(
-            "01_run_tests.py", "--project-only", "--project", self.config.project_name
+            "01_run_tests.py", "--project-only", "--verbose", "--project", self.config.project_name
         )
 
     def _run_analysis(self) -> bool:

@@ -225,7 +225,7 @@ The thin orchestrator pattern has been successfully implemented, establishing a 
 - **`projects/{name}/tests/`** validates all projects/{name}/src/ functionality
 
 **Master Orchestrator:**
-- **`scripts/execute_pipeline.py`** orchestrates the 6-stage pipeline
+- **`scripts/execute_pipeline.py`** orchestrates the 8-stage pipeline
 
 This architecture ensures:
 - **Maintainability**: Single source of truth for business logic (infrastructure/ for generic, projects/{name}/src/ for project-specific)

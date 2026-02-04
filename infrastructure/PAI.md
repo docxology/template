@@ -11,5 +11,5 @@ This directory contains the **Layer 1** generic tools that power the research te
 
 ## 🤖 Agent Guidelines
 - **Import Rules**: Can import from standard libs. **Cannot** import from `projects/` (prevents circular dependency).
-- **Testing**: Must be tested in `tests/infrastructure/`.
+- **Testing**: Must be tested in `tests/infra_tests/`.
 - **Modifications**: Changes here affect ALL projects. Exercise caution.

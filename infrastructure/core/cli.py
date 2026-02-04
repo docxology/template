@@ -164,7 +164,7 @@ def handle_pipeline_command(args: argparse.Namespace) -> int:
         skip_infra=args.skip_infra,
         skip_llm=(args.pipeline_type == "core"),
         resume=args.resume,
-        total_stages=7 if args.pipeline_type == "core" else 9,
+        total_stages=8 if args.pipeline_type == "core" else 10,
     )
 
     # Execute pipeline

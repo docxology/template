@@ -537,15 +537,15 @@ validation:
 
 ```bash
 # Run all validation tests
-pytest tests/infrastructure/test_validation/ -v
+pytest tests/infra_tests/test_validation/ -v
 
 # Test specific validator
-pytest tests/infrastructure/test_validation/test_pdf_validator.py -v
-pytest tests/infrastructure/test_validation/test_markdown_validator.py -v
-pytest tests/infrastructure/test_validation/test_integrity.py -v
+pytest tests/infra_tests/test_validation/test_pdf_validator.py -v
+pytest tests/infra_tests/test_validation/test_markdown_validator.py -v
+pytest tests/infra_tests/test_validation/test_integrity.py -v
 
 # Test with coverage
-pytest tests/infrastructure/test_validation/ --cov=infrastructure.validation --cov-report=html
+pytest tests/infra_tests/test_validation/ --cov=infrastructure.validation --cov-report=html
 
 # Integration tests
 pytest tests/integration/test_validation_pipeline.py -v

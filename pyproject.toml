@@ -53,7 +53,7 @@ dependencies = [
 [project.scripts]
 # Development workflow scripts (run with: uv run <script-name>)
 test = "pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov-report=html --cov-fail-under=70"
-test-infra = "pytest tests/infrastructure/ --cov=infrastructure --cov-report=term-missing --cov-report=html --cov-report=json --cov-fail-under=60 --tb=short -m 'not requires_ollama' --ignore=tests/infrastructure/core/test_module_interoperability.py"
+test-infra = "pytest tests/infra_tests/ --cov=infrastructure --cov-report=term-missing --cov-report=html --cov-report=json --cov-fail-under=60 --tb=short -m 'not requires_ollama' --ignore=tests/infra_tests/core/test_module_interoperability.py"
 test-project = "pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=term-missing --cov-report=html --cov-report=json --cov-fail-under=90 --tb=short"
 lint = "mypy infrastructure/ projects/code_project/src/"
 security = "bandit -r infrastructure/ projects/code_project/src/"

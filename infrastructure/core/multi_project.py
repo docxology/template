@@ -161,7 +161,7 @@ class MultiProjectOrchestrator:
                         repo_root=self.config.repo_root,
                         skip_infra=True,  # Always skip infra tests for individual projects in multi-project mode
                         skip_llm=not run_llm,
-                        total_stages=9 if run_llm else 7,
+                        total_stages=10 if run_llm else 8,
                     )
 
                     # Execute pipeline

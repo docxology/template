@@ -512,17 +512,17 @@ mi = MarkdownIntegration(
 
 ```bash
 # Run all documentation tests
-pytest tests/infrastructure/test_documentation/ -v
+pytest tests/infra_tests/test_documentation/ -v
 
 # Test specific components
-pytest tests/infrastructure/test_documentation/test_figure_manager.py -v
-pytest tests/infrastructure/test_documentation/test_glossary_gen.py -v
+pytest tests/infra_tests/test_documentation/test_figure_manager.py -v
+pytest tests/infra_tests/test_documentation/test_glossary_gen.py -v
 
 # Integration tests
 pytest tests/integration/test_documentation_pipeline.py -v
 
 # With coverage
-pytest tests/infrastructure/test_documentation/ --cov=infrastructure.documentation --cov-report=html
+pytest tests/infra_tests/test_documentation/ --cov=infrastructure.documentation --cov-report=html
 ```
 
 ## Performance Considerations
@@ -687,7 +687,7 @@ This script automatically scans `projects/{name}/src/` for public APIs and updat
 ## Testing
 
 ```bash
-pytest tests/infrastructure/test_documentation/
+pytest tests/infra_tests/test_documentation/
 ```
 
 For detailed documentation, see [AGENTS.md](AGENTS.md).

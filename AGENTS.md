@@ -24,7 +24,7 @@ This document provides documentation for the Research Project Template system, e
 **Layer 1: Infrastructure (Generic - Reusable)**
 
 - `infrastructure/` - Generic build/validation tools (reusable across projects)
-- `scripts/` - Entry point orchestrators (two pipeline options: 6-stage core or 10-stage extended)
+- `scripts/` - Entry point orchestrators (two pipeline options: 8-stage core or 10-stage extended)
 - `tests/` - Infrastructure and integration tests
 
 **Layer 2: Projects (Project-Specific - Customizable)**
@@ -82,6 +82,7 @@ The template now supports **multiple independent projects** within a single repo
 **Example Projects:**
 
 - `projects/code_project/` - Code-focused with analysis pipeline
+- `projects/blake_active_inference/` - Active inference research project
 
 **Note:** Archived projects are preserved in `projects_archive/` for reference but are not actively executed.
 
@@ -399,7 +400,7 @@ The template provides **three entry points** for pipeline execution:
 # Interactive menu with manuscript operations
 ./run.sh
 
-# Non-interactive: Extended pipeline (9 stages displayed as [1/9] to [9/9]) with optional LLM review
+# Non-interactive: Extended pipeline (10 stages displayed as [1/10] to [10/10]) with optional LLM review
 ./run.sh --pipeline
 ```
 
@@ -412,13 +413,13 @@ python3 scripts/execute_pipeline.py --project code_project --core-only
 
 **Entry Point Comparison**
 
-- **`./run.sh`**: Main entry point - Interactive menu or extended pipeline (9 stages), includes optional LLM review stages. Stages are displayed as [1/9] to [9/9] in logs.
-- **`./run.sh --pipeline`**: 9 stages, includes optional LLM review stages. Stages are displayed as [1/9] to [9/9] in logs.
+- **`./run.sh`**: Main entry point - Interactive menu or extended pipeline (10 stages), includes optional LLM review stages. Stages are displayed as [1/10] to [10/10] in logs.
+- **`./run.sh --pipeline`**: 10 stages, includes optional LLM review stages. Stages are displayed as [1/10] to [10/10] in logs.
 - **`python3 scripts/execute_pipeline.py --core-only`**: Core pipeline only (no LLM).
 
 ### Pipeline Stages
 
-**Full Pipeline Stages** (displayed as [1/9] to [9/9] in logs):
+**Full Pipeline Stages** (displayed as [1/10] to [10/10] in logs):
 
 1. **Clean Output Directories** - Clean working and final output directories
 2. **Environment Setup** - Verify system requirements and dependencies
@@ -442,7 +443,7 @@ python3 scripts/execute_pipeline.py --project code_project --core-only
 
 **Stage Numbering:**
 
-- `./run.sh`: 9 stages displayed as [1/9] to [9/9] in progress logs
+- `./run.sh`: 10 stages displayed as [1/10] to [10/10] in progress logs
 - `scripts/execute_pipeline.py`: Core vs full pipeline is selected by flags (no fixed stage numbering in filenames)
 
 ### Manual Execution Options
@@ -533,7 +534,7 @@ python3 -m infrastructure.validation.cli markdown projects/code_project/manuscri
 python3 scripts/01_run_tests.py --project code_project
 
 # Or run manually with coverage reports
-python3 -m pytest tests/infrastructure/ --cov=infrastructure --cov-report=html
+python3 -m pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
 python3 -m pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=html
 ```
 
@@ -672,7 +673,7 @@ python3 scripts/01_run_tests.py
 python3 -m pytest projects/code_project/tests/test_example.py -v
 
 # Infrastructure tests with coverage
-python3 -m pytest tests/infrastructure/ --cov=infrastructure --cov-report=html
+python3 -m pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
 
 # Project tests with coverage
 python3 -m pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=html
@@ -982,7 +983,7 @@ python3 -m infrastructure.validation.cli pdf output/code_project/pdf/
 python3 scripts/01_run_tests.py
 
 # Or run individually with coverage reports
-python3 -m pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=49
+python3 -m pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=49
 python3 -m pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-under=70
 ```
 
@@ -1255,7 +1256,7 @@ See [`docs/operational/CHECKPOINT_RESUME.md`](docs/operational/CHECKPOINT_RESUME
 - ✅ Zero mock methods - all tests use data and HTTP calls
 - ✅ All .cursorrules standards implemented
 - ✅ compliance with thin orchestrator pattern
-- ✅ Production-ready build pipeline (6-stage core, 10-stage extended)
+- ✅ Production-ready build pipeline (8-stage core, 10-stage extended)
 - ✅ Reproducible outputs (deterministic with fixed seeds)
 - ✅ Graceful degradation for optional features
 - ✅ Multi-project support (projects/{name}/ structure)

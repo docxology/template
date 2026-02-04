@@ -24,10 +24,10 @@ This is a research project template with a test-driven development workflow, aut
 # Interactive menu (recommended)
 ./run.sh
 
-# Full pipeline (9 stages: clean, setup, tests, analysis, render, validate, LLM review, LLM translations, copy)
+# Full pipeline (10 stages: clean, setup, infra tests, project tests, analysis, render, validate, LLM review, LLM translations, copy)
 ./run.sh --pipeline
 
-# Core pipeline only (6 stages: no LLM)
+# Core pipeline only (8 stages: no LLM)
 python3 scripts/execute_pipeline.py --project {project_name} --core-only
 
 # Resume from checkpoint
@@ -40,16 +40,16 @@ python3 scripts/execute_pipeline.py --project {project_name} --core-only
 python3 scripts/01_run_tests.py --project {project_name}
 
 # Infrastructure tests only (60% coverage minimum)
-uv run pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=60
+uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
 
 # Project tests only (90% coverage minimum)
 uv run pytest projects/{project_name}/tests/ --cov=projects/{project_name}/src --cov-fail-under=90
 
 # Run specific test file
-uv run pytest tests/infrastructure/test_specific.py -v
+uv run pytest tests/infra_tests/test_specific.py -v
 
 # Run single test function
-uv run pytest tests/infrastructure/test_specific.py::test_function_name -v
+uv run pytest tests/infra_tests/test_specific.py::test_function_name -v
 
 # Coverage files are isolated per suite (.coverage.infra, .coverage.project)
 ```
@@ -89,7 +89,7 @@ python3 scripts/execute_multi_project.py --no-llm
 python3 -c "from infrastructure.project.discovery import discover_projects; from pathlib import Path; print([p.name for p in discover_projects(Path('.'))])"
 ```
 
-**Active projects:** `code_project`
+**Active projects:** `code_project`, `blake_active_inference`
 **Archived projects:** Located in `projects_archive/` (not executed by pipeline)
 
 ## Architecture
@@ -150,7 +150,7 @@ avg = calculate_average(data)  # Use tested method
 - **`projects/`** - Active projects (discovered and executed by infrastructure)
 - **`projects_archive/`** - Archived projects (preserved but not executed)
 
-**Current active projects:** `code_project`
+**Current active projects:** `code_project`, `blake_active_inference`
 
 To archive: `mv projects/{name}/ projects_archive/{name}/`
 To reactivate: `mv projects_archive/{name}/ projects/{name}/`
@@ -190,19 +190,21 @@ output/
 
 ## Pipeline Stages
 
-### Core Pipeline (Stages 1-7)
-1. **Setup Environment** - Validate dependencies, discover projects (not shown in progress)
-2. **Infrastructure Tests** - Run infrastructure test suite (may be skipped, not shown in progress)
-3. **Run Tests** - Project test suite (90% coverage minimum)
-4. **Run Analysis** - Execute `projects/{name}/scripts/` to generate figures/data
-5. **Render PDF** - Convert markdown to professional PDFs
-6. **Validate Output** - Quality checks on PDFs and content
-7. **Copy Outputs** - Copy final deliverables to `output/<name>/`
+### Core Pipeline (8 stages)
+1. **Clean Output Directories** - Remove previous outputs for a fresh run
+2. **Setup Environment** - Validate dependencies, discover projects
+3. **Infrastructure Tests** - Run infrastructure test suite (may be skipped)
+4. **Project Tests** - Project test suite (90% coverage minimum)
+5. **Run Analysis** - Execute `projects/{name}/scripts/` to generate figures/data
+6. **Render PDF** - Convert markdown to professional PDFs
+7. **Validate Output** - Quality checks on PDFs and content
+8. **Copy Outputs** - Copy final deliverables to `output/<name>/`
 
-### Extended Pipeline (Stages 8-10, Optional)
-8. **LLM Scientific Review** - Requires Ollama (executive summary, quality review, methodology review, improvement suggestions)
-9. **LLM Translations** - Multi-language abstract translations (configure in `config.yaml`)
-10. **Executive Report** - Cross-project metrics and dashboards (multi-project mode only)
+### Extended Pipeline (Stages 9-10, Optional)
+9. **LLM Scientific Review** - Requires Ollama (executive summary, quality review, methodology review, improvement suggestions)
+10. **LLM Translations** - Multi-language abstract translations (configure in `config.yaml`)
+
+**Note:** Executive Report (cross-project metrics and dashboards) runs automatically in multi-project mode when 2+ projects are executed.
 
 ## Testing Requirements
 
@@ -227,11 +229,11 @@ output/
 python3 scripts/01_run_tests.py --project {project_name}
 
 # With coverage report
-uv run pytest tests/infrastructure/ --cov=infrastructure --cov-report=html
+uv run pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
 uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-report=html
 
 # Specific test
-uv run pytest tests/infrastructure/test_specific.py::test_function -v
+uv run pytest tests/infra_tests/test_specific.py::test_function -v
 ```
 
 ## Configuration
@@ -277,7 +279,7 @@ export PYTHONPATH=".:infrastructure:projects/code_project/src"
 ## Development Workflow
 
 ### Adding Features
-1. Write tests first (TDD) in `projects/{name}/tests/` or `tests/infrastructure/`
+1. Write tests first (TDD) in `projects/{name}/tests/` or `tests/infra_tests/`
 2. Implement in `projects/{name}/src/` or `infrastructure/`
 3. Ensure coverage requirements met
 4. Update documentation if needed

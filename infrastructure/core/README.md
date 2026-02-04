@@ -457,7 +457,7 @@ export NO_EMOJI=1
 ## Testing
 
 ```bash
-pytest tests/infrastructure/test_core/
+pytest tests/infra_tests/test_core/
 ```
 
 For detailed documentation, see [AGENTS.md](AGENTS.md).

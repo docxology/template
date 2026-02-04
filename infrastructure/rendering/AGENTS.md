@@ -889,7 +889,7 @@ If you see warnings about missing figures:
 
 Run tests with:
 ```bash
-pytest tests/infrastructure/rendering/test_pdf_renderer_combined.py -v
+pytest tests/infra_tests/rendering/test_pdf_renderer_combined.py -v
 ```
 
 ### Test Coverage

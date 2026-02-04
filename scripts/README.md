@@ -57,14 +57,14 @@ Core Pipeline Scripts:
   6. LLM Translations (requires Ollama)
 
 Orchestration:
-  8. Run Full Pipeline (9 stages: [1/9] to [9/9])
+  8. Run Full Pipeline (10 stages: [1/10] to [10/10])
 ============================================================
 ```
 
 **Non-Interactive Mode:**
 ```bash
 # Core Build Operations
-./run.sh --pipeline          # Extended pipeline (9 stages displayed as [1/9] to [9/9], includes LLM)
+./run.sh --pipeline          # Extended pipeline (10 stages displayed as [1/10] to [10/10], includes LLM)
 ./run.sh --pipeline --resume # Resume from last checkpoint
 ./run.sh --infra-tests       # Run infrastructure tests only
 ./run.sh --project-tests     # Run project tests only
@@ -97,7 +97,7 @@ python3 scripts/execute_multi_project.py --no-llm
 ```mermaid
 flowchart TD
     subgraph EntryPoints["Entry Points"]
-        RUNSH[./run.sh<br/>Interactive Menu<br/>9-stage pipeline]
+        RUNSH[./run.sh<br/>Interactive Menu<br/>10-stage pipeline]
         PYTHON[execute_pipeline.py<br/>Programmatic<br/>Core pipeline]
         MULTI[execute_multi_project.py<br/>Multi-project<br/>Cross-project execution]
     end
@@ -171,7 +171,7 @@ Additional stages available in the interactive orchestrator:
 | 9 | `06_llm_review.py` | LLM Translations (optional, requires Ollama) |
 
 **Stage Numbering:**
-- `./run.sh`: 9 stages displayed as [1/9] to [9/9] in logs (Clean Output Directories, Environment Setup, Infrastructure Tests, Project Tests, Project Analysis, PDF Rendering, Output Validation, LLM Scientific Review, LLM Translations, Copy Outputs)
+- `./run.sh`: 10 stages displayed as [1/10] to [10/10] in logs (Clean Output Directories, Environment Setup, Infrastructure Tests, Project Tests, Project Analysis, PDF Rendering, Output Validation, Copy Outputs, LLM Scientific Review, LLM Translations)
 - `scripts/execute_pipeline.py`: core vs full pipeline is selected by flags (no fixed stage numbering in filenames)
 
 ## Running Individual Stages
@@ -219,7 +219,7 @@ The pipeline automatically generates reports in `projects/{name}/output/reports/
 - Validates directory structure
 
 ### Stage 01: Run Tests
-- Executes infrastructure tests (`tests/infrastructure/`) with 60%+ coverage threshold
+- Executes infrastructure tests (`tests/infra_tests/`) with 60%+ coverage threshold
 - Executes project tests (`projects/{name}/tests/`) with 90%+ coverage threshold
 - Supports quiet mode (`--quiet` or `-q`) to suppress individual test names
 - Supports verbose mode (`--verbose` or `-v`) to show all test names

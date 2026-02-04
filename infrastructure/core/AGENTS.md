@@ -3748,7 +3748,7 @@ print(summary)
 
 Run core tests with:
 ```bash
-pytest tests/infrastructure/test_core/
+pytest tests/infra_tests/test_core/
 ```
 
 ## Configuration

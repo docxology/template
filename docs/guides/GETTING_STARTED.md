@@ -76,7 +76,7 @@ uv sync
 ### Step 3: Generate Your First PDF
 
 ```bash
-# Generate everything (runs all 6 pipeline stages)
+# Generate everything (runs all 8 pipeline stages)
 python3 scripts/execute_pipeline.py --core-only
 
 # Or use unified interactive menu
@@ -172,7 +172,7 @@ manuscript/
 
 1. **Run pipeline**
    ```bash
-   # Runs all 6 stages including cleanup
+   # Runs all 8 stages including cleanup
    python3 scripts/execute_pipeline.py --core-only
    
    # Or use unified interactive menu

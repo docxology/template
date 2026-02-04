@@ -20,7 +20,7 @@ The generic project template implements a **unified test-driven development para
 - **Tests** validate all functionality with coverage (60% infra, 90% project minimum)
 - **Scripts** are **thin orchestrators** that import and use `src/` methods
 - **Documentation** references code and displays generated outputs
-- **`scripts/execute_pipeline.py`** orchestrates the entire 6-stage pipeline
+- **`scripts/execute_pipeline.py`** orchestrates the entire 8-stage pipeline
 
 ## Workflow Diagram
 
@@ -75,7 +75,7 @@ graph TB
 
 ## How the Pipeline Orchestrator Works with Markdown and Code
 
-The `scripts/execute_pipeline.py` orchestrator (or `./run.sh --pipeline`) executes 6 stages sequentially, ensuring coherence between all components:
+The `scripts/execute_pipeline.py` orchestrator (or `./run.sh --pipeline`) executes 8 stages sequentially, ensuring coherence between all components:
 
 ### 1. Code Validation Phase
 - **Runs all generation scripts** - This validates that `src/` code works correctly
@@ -167,14 +167,14 @@ python3 -m infrastructure.validation.cli markdown project/manuscript/
 ### 3. Integration Phase
 
 ```bash
-# Run the pipeline (all 6 stages)
+# Run the pipeline (all 8 stages)
 python3 scripts/execute_pipeline.py --core-only
 
 # Or use unified interactive menu
 ./run.sh
 ```
 
-The pipeline orchestrator executes 6 stages:
+The pipeline orchestrator executes 8 stages:
 - **Stage 00**: Environment setup & validation
 - **Stage 01**: Run tests with coverage (validates src/ code works)
 - **Stage 02**: Execute analysis scripts (generates figures and data)
@@ -346,7 +346,7 @@ The workflow enforces a **thin orchestrator pattern** where:
 - **`src/`** contains ALL business logic, algorithms, and mathematical implementations
 - **`scripts/`** are lightweight wrappers that import and use `src/` methods
 - **`tests/`** ensures coverage of all functionality
-- **`scripts/execute_pipeline.py`** orchestrates the entire 6-stage pipeline
+- **`scripts/execute_pipeline.py`** orchestrates the entire 8-stage pipeline
 
 This ensures:
 - **Maintainability**: Single source of truth for business logic

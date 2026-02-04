@@ -622,23 +622,23 @@ print(f"Peak memory: {monitor.resource_usage.peak_memory_mb:.1f} MB")
 
 ```bash
 # Run all rendering tests
-pytest tests/infrastructure/rendering/ -v
+pytest tests/infra_tests/rendering/ -v
 
 # Test specific components
-pytest tests/infrastructure/rendering/test_pdf_renderer_combined.py -v
-pytest tests/infrastructure/rendering/test_latex_package_validator.py -v
+pytest tests/infra_tests/rendering/test_pdf_renderer_combined.py -v
+pytest tests/infra_tests/rendering/test_latex_package_validator.py -v
 
 # Test with different LaTeX configurations
-pytest tests/infrastructure/rendering/test_pdf_renderer_fixes.py -v
+pytest tests/infra_tests/rendering/test_pdf_renderer_fixes.py -v
 
 # Integration tests
 pytest tests/integration/test_rendering_pipeline.py -v
 
 # Performance benchmarking
-pytest tests/infrastructure/rendering/test_performance.py -v
+pytest tests/infra_tests/rendering/test_performance.py -v
 
 # Coverage analysis
-pytest tests/infrastructure/rendering/ --cov=infrastructure.rendering --cov-report=html
+pytest tests/infra_tests/rendering/ --cov=infrastructure.rendering --cov-report=html
 ```
 
 ## Troubleshooting Guide
@@ -884,15 +884,15 @@ For function signatures and API documentation, see [`AGENTS.md`](AGENTS.md).
 
 ```bash
 # Run all rendering tests
-pytest tests/infrastructure/rendering/ -v
+pytest tests/infra_tests/rendering/ -v
 
 # Run combined PDF tests specifically
-pytest tests/infrastructure/rendering/test_pdf_renderer_combined.py -v
+pytest tests/infra_tests/rendering/test_pdf_renderer_combined.py -v
 
 # Run bibliography and figure fix tests
-pytest tests/infrastructure/rendering/test_pdf_renderer_fixes.py -v
+pytest tests/infra_tests/rendering/test_pdf_renderer_fixes.py -v
 
 # Run with coverage
-pytest tests/infrastructure/rendering/ --cov=infrastructure.rendering
+pytest tests/infra_tests/rendering/ --cov=infrastructure.rendering
 ```
 

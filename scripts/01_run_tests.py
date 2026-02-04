@@ -445,13 +445,17 @@ def run_infrastructure_tests(repo_root: Path, project_name: str = "project", qui
     # Clean coverage files to prevent database corruption
     clean_coverage_files(repo_root)
 
-    log_substep("Running infrastructure tests (60% coverage threshold)...")
+    # Get coverage threshold from config
+    testing_config = get_testing_config(repo_root)
+    infra_threshold = testing_config.get("infra_coverage_threshold", 60)
+
+    log_substep(f"Running infrastructure tests ({infra_threshold}% coverage threshold)...")
     if not include_ollama_tests:
         log_substep("(Skipping LLM integration tests - run separately with: pytest -m requires_ollama)")
     logger.info(f"Infrastructure tests started at {time.strftime('%H:%M:%S', time.localtime(start_time))}")
 
     # Log test discovery and configuration
-    test_path = repo_root / "tests" / "infrastructure"
+    test_path = repo_root / "tests" / "infra_tests"
     logger.info(f"Test path: {test_path}")
     logger.info(f"Coverage target: infrastructure (60% minimum)")
     if not include_ollama_tests:
@@ -466,7 +470,7 @@ def run_infrastructure_tests(repo_root: Path, project_name: str = "project", qui
     cmd = get_python_command() + [
         "-m",
         "pytest",
-        str(repo_root / "tests" / "infrastructure"),
+        str(repo_root / "tests" / "infra_tests"),
         str(repo_root / "tests" / "integration"),
         # test_coverage_completion.py removed - coverage completion is now handled by test runners
         "--ignore=" + str(repo_root / "tests" / "integration" / "test_module_interoperability.py"),
@@ -491,7 +495,7 @@ def run_infrastructure_tests(repo_root: Path, project_name: str = "project", qui
         "--cov-report=term-missing",
         "--cov-report=html",
         "--cov-report=json:coverage_infra.json",
-        "--cov-fail-under=0",
+        f"--cov-fail-under={infra_threshold}",
         "--tb=short",
     ])
 
@@ -772,7 +776,11 @@ def run_project_tests(repo_root: Path, project_name: str = "project", quiet: boo
     # Clean coverage files to prevent database corruption
     clean_coverage_files(repo_root)
 
-    log_substep(f"Running project tests for '{project_name}' (90% coverage threshold)...")
+    # Get coverage threshold from config
+    testing_config = get_testing_config(repo_root)
+    project_threshold = testing_config.get("project_coverage_threshold", 90)
+
+    log_substep(f"Running project tests for '{project_name}' ({project_threshold}% coverage threshold)...")
     logger.info(f"Project tests started at {time.strftime('%H:%M:%S', time.localtime(start_time))}")
 
     project_root = repo_root / "projects" / project_name
@@ -780,21 +788,23 @@ def run_project_tests(repo_root: Path, project_name: str = "project", quiet: boo
     # Log test discovery and configuration
     test_path = project_root / "tests"
     logger.info(f"Test path: {test_path}")
-    logger.info(f"Coverage target: projects/{project_name}/src (90% minimum)")
+    logger.info(f"Coverage target: projects/{project_name}/src ({project_threshold}% minimum)")
     logger.info(f"Filters applied: exclude integration tests")
 
     # Build pytest command using get_python_command() which handles uv fallback
-    # This ensures the project's pyproject.toml pytest configuration is used
-    # Warnings are controlled by pyproject.toml (--disable-warnings + filterwarnings)
+    # Run from repo root using the template's unified virtual environment
+    # Use absolute paths for test directory and coverage source
+    test_dir = f"projects/{project_name}/tests"
+    cov_source = f"projects/{project_name}/src"
+    
     if check_uv_available():
-        # Use uv run with project flag
+        # Use uv run from repo root (do NOT use --project flag as it creates project venvs)
         cmd = [
             "uv",
             "run",
-            "--project=" + str(project_root),
             "python", "-m", "pytest",
-            "tests",
-            f"--cov=src",
+            test_dir,
+            f"--cov={cov_source}",
         ]
     else:
         # Fallback to direct execution
@@ -802,8 +812,8 @@ def run_project_tests(repo_root: Path, project_name: str = "project", quiet: boo
             sys.executable,
             "-m",
             "pytest",
-            "tests",
-            f"--cov=src",
+            test_dir,
+            f"--cov={cov_source}",
         ]
 
     # Set up environment - running from project directory so paths are relative
@@ -820,7 +830,7 @@ def run_project_tests(repo_root: Path, project_name: str = "project", quiet: boo
         "--cov-report=term-missing",
         "--cov-report=html",
         "--cov-report=json:coverage_project.json",
-        "--cov-fail-under=70",
+        f"--cov-fail-under={project_threshold}",
         "--tb=short",
     ])
 
@@ -902,7 +912,7 @@ def run_project_tests(repo_root: Path, project_name: str = "project", quiet: boo
         while retry_count <= max_retries:
             try:
                 with log_with_spinner(f"Running project tests for '{project_name}'", logger):
-                    exit_code, stdout_text, stderr_text = _run_pytest_stream(cmd, project_root, env, quiet)
+                    exit_code, stdout_text, stderr_text = _run_pytest_stream(cmd, repo_root, env, quiet)
                 break  # Success, exit retry loop
 
             except subprocess.SubprocessError as e:
@@ -1251,17 +1261,17 @@ def report_results(
         if has_coverage_errors:
             print("    - Coverage database corruption: files automatically cleaned and retried")
             print("    - If errors persist: rm -f .coverage* coverage_*.json && rerun tests")
-            print("    - To skip coverage temporarily: pytest --no-cov tests/infrastructure/")
+            print("    - To skip coverage temporarily: pytest --no-cov tests/infra_tests/")
             print("    - Coverage isolation: infrastructure and project tests use separate data files")
 
         if has_timeout_errors:
             print("    - Timeout issues: increase with --timeout=60 or PYTEST_TIMEOUT=60")
-            print("    - Identify slow tests: pytest --durations=10 tests/infrastructure/")
-            print("    - Skip slow tests: pytest -m 'not slow' tests/infrastructure/")
+            print("    - Identify slow tests: pytest --durations=10 tests/infra_tests/")
+            print("    - Skip slow tests: pytest -m 'not slow' tests/infra_tests/")
 
         # General debugging suggestions
-        print("    - Run individual failing tests: pytest tests/infrastructure/<test_file> -v")
-        print("    - Debug with full traceback: pytest tests/infrastructure/<test_file> -s --tb=long")
+        print("    - Run individual failing tests: pytest tests/infra_tests/<test_file> -v")
+        print("    - Debug with full traceback: pytest tests/infra_tests/<test_file> -s --tb=long")
         print("    - Run infrastructure tests only: python3 scripts/01_run_tests.py --infrastructure-only")
         print("    - Check test environment: python3 scripts/00_setup_environment.py")
 

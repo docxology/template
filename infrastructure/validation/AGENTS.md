@@ -1565,7 +1565,7 @@ def generate_issue_summary(issues: List[Issue]) -> Dict[str, int]:
 
 Run validation tests with:
 ```bash
-pytest tests/infrastructure/test_validation/
+pytest tests/infra_tests/test_validation/
 ```
 
 ## Configuration

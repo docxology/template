@@ -75,3 +75,4 @@ invalid/
 
 # Separate repositories (managed independently)
 projects/cognitive_integrity/
+/projects_archive

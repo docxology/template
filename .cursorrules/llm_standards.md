@@ -435,16 +435,16 @@ class TestLLMIntegration:
 
 ```bash
 # Pure logic tests only (fast, no Ollama required)
-pytest tests/infrastructure/llm/ -m "not requires_ollama" -v
+pytest tests/infra_tests/llm/ -m "not requires_ollama" -v
 
 # All tests (requires running Ollama)
-pytest tests/infrastructure/llm/ -v
+pytest tests/infra_tests/llm/ -v
 
 # Integration tests only
-pytest tests/infrastructure/llm/ -m requires_ollama -v
+pytest tests/infra_tests/llm/ -m requires_ollama -v
 
 # With coverage
-pytest tests/infrastructure/llm/ --cov=infrastructure/llm --cov-report=html
+pytest tests/infra_tests/llm/ --cov=infrastructure/llm --cov-report=html
 ```
 
 ## Streaming Patterns

@@ -14,7 +14,7 @@ pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov-report=
 uv run pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov-report=html
 
 # Verify coverage requirements
-pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=60
+pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
 pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-under=90
 ```
 
@@ -22,7 +22,7 @@ pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-u
 
 ```bash
 # Infrastructure tests
-pytest tests/infrastructure/core/test_config_loader.py -v
+pytest tests/infra_tests/core/test_config_loader.py -v
 
 # Project tests
 pytest projects/code_project/tests/ -v
@@ -108,7 +108,7 @@ graph TD
     subgraph TestStructure["Test Suite Structure"]
         ROOT[tests/<br/>Root configuration<br/>conftest.py]
 
-        INFRA[tests/infrastructure/<br/>Module-specific tests<br/>Mirrors infrastructure/]
+        INFRA[tests/infra_tests/<br/>Module-specific tests<br/>Mirrors infrastructure/]
 
         INTEGRATION[tests/integration/<br/>Cross-module tests<br/>End-to-end workflows]
 

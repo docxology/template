@@ -151,7 +151,7 @@ fm.register_figure(
 graph TB
     subgraph L1["LAYER 1: INFRASTRUCTURE<br/>(Build orchestration, validation, document management)"]
         subgraph SCRIPTS["Pipeline Orchestrators"]
-            RUN_ALL[execute_pipeline.py<br/>6-stage pipeline]
+            RUN_ALL[execute_pipeline.py<br/>8-stage pipeline]
             SCRIPT_LIST[scripts/*.py<br/>- 00_setup_environment.py<br/>- 01_run_tests.py<br/>- 02_run_analysis.py<br/>- 03_render_pdf.py<br/>- 04_validate_output.py<br/>- 05_copy_outputs.py]
         end
         
@@ -608,7 +608,7 @@ If you have an old project with flat src/, migrating to the two-layer structure:
    - Build verification is handled by the validation module
 
 4. **Update tests:**
-   - Infrastructure tests → tests/infrastructure/
+   - Infrastructure tests → tests/infra_tests/
    - Project tests → projects/{name}/tests/
    - Update conftest.py if needed
 
