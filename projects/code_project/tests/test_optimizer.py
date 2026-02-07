@@ -611,3 +611,230 @@ class TestAnalysisDashboard:
                 assert "Performance Benchmark" in content
         else:
             pytest.skip("Dashboard generation with analysis data returned None")
+
+
+class TestLoggingBranches:
+    """Test logging branch coverage in gradient_descent.
+
+    These tests exercise the LOGGING_AVAILABLE code paths by temporarily
+    enabling the module-level flag with a real Python logger. No mocks —
+    uses actual logging infrastructure.
+    """
+
+    def _enable_logging(self):
+        """Temporarily enable logging in the optimizer module."""
+        import logging
+        import src.optimizer as opt_module
+
+        original_flag = opt_module.LOGGING_AVAILABLE
+        original_logger = getattr(opt_module, "logger", None)
+
+        real_logger = logging.getLogger("test.optimizer")
+        real_logger.setLevel(logging.DEBUG)
+
+        opt_module.LOGGING_AVAILABLE = True
+        opt_module.logger = real_logger
+
+        return opt_module, original_flag, original_logger
+
+    def _restore_logging(self, opt_module, original_flag, original_logger):
+        """Restore original logging state."""
+        opt_module.LOGGING_AVAILABLE = original_flag
+        if original_logger is not None:
+            opt_module.logger = original_logger
+        elif hasattr(opt_module, "logger"):
+            del opt_module.logger
+
+    def test_logging_on_convergence(self):
+        """Exercise logging paths when optimizer converges."""
+        opt_module, orig_flag, orig_logger = self._enable_logging()
+
+        try:
+            def obj_func(x):
+                return quadratic_function(x, np.array([[1.0]]), np.array([1.0]))
+
+            def grad_func(x):
+                return compute_gradient(x, np.array([[1.0]]), np.array([1.0]))
+
+            result = gradient_descent(
+                initial_point=np.array([0.0]),
+                objective_func=obj_func,
+                gradient_func=grad_func,
+                step_size=0.1,
+                tolerance=1e-6,
+            )
+
+            assert result.converged
+            assert np.isclose(result.solution[0], 1.0, atol=1e-4)
+        finally:
+            self._restore_logging(opt_module, orig_flag, orig_logger)
+
+    def test_logging_on_non_convergence(self):
+        """Exercise warning log path when optimizer does not converge."""
+        opt_module, orig_flag, orig_logger = self._enable_logging()
+
+        try:
+            def obj_func(x):
+                return x[0] ** 2
+
+            def grad_func(x):
+                return np.array([2.0 * x[0]])
+
+            result = gradient_descent(
+                initial_point=np.array([10.0]),
+                objective_func=obj_func,
+                gradient_func=grad_func,
+                step_size=0.01,
+                max_iterations=5,
+                tolerance=1e-10,
+            )
+
+            assert not result.converged
+        finally:
+            self._restore_logging(opt_module, orig_flag, orig_logger)
+
+    def test_verbose_logging_at_iteration_100(self):
+        """Exercise verbose logging path that fires every 100 iterations."""
+        opt_module, orig_flag, orig_logger = self._enable_logging()
+
+        try:
+            def obj_func(x):
+                return x[0] ** 2
+
+            def grad_func(x):
+                return np.array([2.0 * x[0]])
+
+            result = gradient_descent(
+                initial_point=np.array([10.0]),
+                objective_func=obj_func,
+                gradient_func=grad_func,
+                step_size=0.001,
+                max_iterations=150,
+                tolerance=1e-20,
+                verbose=True,
+            )
+
+            # Should reach iteration 100+ to hit the verbose log path
+            assert result.iterations >= 100
+        finally:
+            self._restore_logging(opt_module, orig_flag, orig_logger)
+
+    def test_convergence_with_logging_disabled(self):
+        """Exercise all LOGGING_AVAILABLE=False branches (skip-logging paths).
+
+        Covers the False branches of every `if LOGGING_AVAILABLE and logger:`
+        conditional in gradient_descent (lines 269->272, 278->283, 285->289,
+        301->311).
+        """
+        import src.optimizer as opt_module
+
+        original_flag = opt_module.LOGGING_AVAILABLE
+        opt_module.LOGGING_AVAILABLE = False
+
+        try:
+            result = gradient_descent(
+                initial_point=np.array([0.0]),
+                objective_func=lambda x: quadratic_function(
+                    x, np.array([[1.0]]), np.array([1.0])
+                ),
+                gradient_func=lambda x: compute_gradient(
+                    x, np.array([[1.0]]), np.array([1.0])
+                ),
+                step_size=0.1,
+                tolerance=1e-6,
+                verbose=True,
+            )
+
+            assert result.converged
+            assert np.isclose(result.solution[0], 1.0, atol=1e-4)
+        finally:
+            opt_module.LOGGING_AVAILABLE = original_flag
+
+    def test_non_convergence_with_logging_disabled(self):
+        """Exercise non-convergent path with LOGGING_AVAILABLE=False.
+
+        Ensures the `else` branch at line 301->311 (non-convergence warning
+        skip) is also covered when logging is disabled.
+        """
+        import src.optimizer as opt_module
+
+        original_flag = opt_module.LOGGING_AVAILABLE
+        opt_module.LOGGING_AVAILABLE = False
+
+        try:
+            result = gradient_descent(
+                initial_point=np.array([10.0]),
+                objective_func=lambda x: x[0] ** 2,
+                gradient_func=lambda x: np.array([2.0 * x[0]]),
+                step_size=0.01,
+                max_iterations=5,
+                tolerance=1e-10,
+            )
+
+            assert not result.converged
+        finally:
+            opt_module.LOGGING_AVAILABLE = original_flag
+
+
+class TestImportFallback:
+    """Test the ImportError fallback path for infrastructure logging.
+
+    Covers lines 52-53 in optimizer.py where LOGGING_AVAILABLE is set
+    to False when infrastructure is not importable.
+    """
+
+    def test_import_error_fallback(self):
+        """Force the ImportError path by reloading with blocked import.
+
+        Uses real import machinery (no mocks) — temporarily removes the
+        infrastructure module from sys.modules and blocks it via a custom
+        finder, then reloads the optimizer module to exercise the except
+        ImportError branch (lines 52-53).
+        """
+        import importlib
+        import importlib.abc
+        import importlib.machinery
+        import sys
+        import src.optimizer as opt_module
+
+        # Save original state
+        original_logging_available = opt_module.LOGGING_AVAILABLE
+
+        # Collect infrastructure modules to temporarily hide
+        infra_keys = [
+            k for k in list(sys.modules.keys())
+            if k.startswith("infrastructure")
+        ]
+        saved_modules = {k: sys.modules.pop(k) for k in infra_keys}
+
+        # Modern MetaPathFinder that blocks infrastructure imports
+        class InfrastructureBlocker(importlib.abc.MetaPathFinder):
+            """Prevents infrastructure imports during reload."""
+
+            def find_spec(self, fullname, path, target=None):
+                if fullname.startswith("infrastructure"):
+                    # Return a spec that will fail to load
+                    raise ImportError(
+                        f"Blocked for test: {fullname}"
+                    )
+                return None
+
+        blocker = InfrastructureBlocker()
+        sys.meta_path.insert(0, blocker)
+        importlib.invalidate_caches()
+
+        try:
+            # Reload optimizer — will hit the except ImportError branch
+            importlib.reload(opt_module)
+
+            # Verify the fallback path was taken
+            assert opt_module.LOGGING_AVAILABLE is False
+        finally:
+            # Restore everything
+            sys.meta_path.remove(blocker)
+            sys.modules.update(saved_modules)
+            importlib.invalidate_caches()
+
+            # Reload again to restore original state
+            importlib.reload(opt_module)
+            opt_module.LOGGING_AVAILABLE = original_logging_available

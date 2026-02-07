@@ -17,6 +17,9 @@ This project includes the following sections:
 ### Supporting Files
 
 - `references.bib` - Bibliography entries in BibTeX format
+- `config.yaml` - Manuscript metadata and rendering configuration
+- `config.yaml.example` - Configuration template for new projects
+- `preamble.md` - LaTeX preamble with package imports
 
 ## Rendering Process
 
@@ -54,7 +57,7 @@ open ../../output/pdf/project_combined.pdf
 ### Edit Sections
 
 ```bash
-vim 01_abstract.md       # Research summary
+vim 00_abstract.md        # Research summary
 vim 02_methodology.md    # Mathematical methods
 vim 03_results.md        # Experimental results
 vim 04_conclusion.md     # Summary and conclusions
@@ -84,6 +87,7 @@ graph TD
 
     K[references.bib] --> L[Citations]
     M[config.yaml] --> N[Metadata]
+    O[preamble.md] --> P[LaTeX Packages]
 ```
 
 ## More Information

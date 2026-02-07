@@ -7,6 +7,14 @@
     "generated_by": "generate_quadrant_matrix.py",
     "parameters": null
   },
+  "fig:quadrant_matrix_enhanced": {
+    "filename": "quadrant_matrix_enhanced.png",
+    "caption": "Enhanced 2\u00d72 Quadrant Framework with detailed descriptions and examples",
+    "label": "fig:quadrant_matrix_enhanced",
+    "section": "methodology",
+    "generated_by": "generate_quadrant_matrix.py",
+    "parameters": null
+  },
   "fig:efe_decomposition": {
     "filename": "efe_decomposition.png",
     "caption": "Expected Free Energy decomposition into epistemic and pragmatic components",
@@ -101,14 +109,6 @@
     "label": "fig:quadrant_4_metadata_metacognitive",
     "section": "experimental_results",
     "generated_by": "generate_quadrant_examples.py",
-    "parameters": null
-  },
-  "fig:quadrant_matrix_enhanced": {
-    "filename": "quadrant_matrix_enhanced.png",
-    "caption": "Enhanced 2\u00d72 Quadrant Framework with detailed descriptions and examples",
-    "label": "fig:quadrant_matrix_enhanced",
-    "section": "methodology",
-    "generated_by": "generate_quadrant_matrix.py",
     "parameters": null
   }
 }

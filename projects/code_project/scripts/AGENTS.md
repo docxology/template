@@ -16,6 +16,7 @@ The `scripts/` directory contains thin orchestrators that demonstrate proper int
 ```
 scripts/
 ├── optimization_analysis.py    # Main analysis pipeline
+├── generate_api_docs.py       # API documentation generator
 ├── AGENTS.md                  # This technical documentation
 └── README.md                  # Quick reference
 ```
@@ -38,6 +39,7 @@ python3 scripts/optimization_analysis.py
 ```
 
 This script:
+
 1. Runs optimization experiments with different step sizes (with progress tracking)
 2. Generates convergence plots and analysis visualizations
 3. Saves numerical results to CSV and analysis data
@@ -74,14 +76,14 @@ Scripts use hardcoded parameters for reproducibility:
 
 ## Testing
 
-Scripts are tested through integration tests:
+Scripts are tested through the project test suite:
 
 ```bash
-# Run integration tests
-pytest ../tests/integration/ -v
+# Run all project tests (includes script integration tests)
+pytest ../tests/ -v
 
-# Test script outputs exist
-pytest ../tests/integration/test_generate_research_figures.py
+# Run specific analysis tests
+pytest ../tests/test_optimizer.py -k "TestStabilityAnalysis or TestPerformanceBenchmarking or TestAnalysisDashboard" -v
 ```
 
 ## API Reference
@@ -89,6 +91,7 @@ pytest ../tests/integration/test_generate_research_figures.py
 ### optimization_analysis.py
 
 #### run_convergence_experiment (function)
+
 ```python
 def run_convergence_experiment() -> Dict[float, OptimizationResult]:
     """Run gradient descent with different step sizes and track convergence.
@@ -99,6 +102,7 @@ def run_convergence_experiment() -> Dict[float, OptimizationResult]:
 ```
 
 #### generate_convergence_plot (function)
+
 ```python
 def generate_convergence_plot(results: Dict[float, OptimizationResult]) -> Path:
     """Generate convergence plot showing objective value vs iteration.
@@ -112,6 +116,7 @@ def generate_convergence_plot(results: Dict[float, OptimizationResult]) -> Path:
 ```
 
 #### simulate_trajectory (function)
+
 ```python
 def simulate_trajectory(step_size: float, max_iter: int = 50) -> Dict[str, List]:
     """Simulate gradient descent trajectory to collect intermediate values.
@@ -126,6 +131,7 @@ def simulate_trajectory(step_size: float, max_iter: int = 50) -> Dict[str, List]
 ```
 
 #### save_optimization_results (function)
+
 ```python
 def save_optimization_results(results: Dict[float, OptimizationResult]) -> Path:
     """Save optimization results to CSV file.
@@ -139,6 +145,7 @@ def save_optimization_results(results: Dict[float, OptimizationResult]) -> Path:
 ```
 
 #### register_figure (function)
+
 ```python
 def register_figure() -> None:
     """Register the generated figure for manuscript reference.
@@ -151,6 +158,7 @@ def register_figure() -> None:
 #### Scientific Analysis Functions
 
 ##### run_stability_analysis (function)
+
 ```python
 def run_stability_analysis() -> Optional[str]:
     """Assess numerical stability of optimization algorithms.
@@ -161,6 +169,7 @@ def run_stability_analysis() -> Optional[str]:
 ```
 
 ##### run_performance_benchmarking (function)
+
 ```python
 def run_performance_benchmarking() -> Optional[str]:
     """Benchmark gradient descent performance across different inputs.
@@ -171,6 +180,7 @@ def run_performance_benchmarking() -> Optional[str]:
 ```
 
 ##### generate_stability_visualization (function)
+
 ```python
 def generate_stability_visualization(stability_path: Optional[str]) -> Optional[str]:
     """Generate visualization of stability analysis results.
@@ -184,6 +194,7 @@ def generate_stability_visualization(stability_path: Optional[str]) -> Optional[
 ```
 
 ##### generate_benchmark_visualization (function)
+
 ```python
 def generate_benchmark_visualization(benchmark_path: Optional[str]) -> Optional[str]:
     """Generate visualization of benchmark results.
@@ -197,6 +208,7 @@ def generate_benchmark_visualization(benchmark_path: Optional[str]) -> Optional[
 ```
 
 ##### generate_analysis_dashboard (function)
+
 ```python
 def generate_analysis_dashboard(
     results: Dict[str, Any],
@@ -216,6 +228,7 @@ def generate_analysis_dashboard(
 ```
 
 #### main (function)
+
 ```python
 def main() -> None:
     """Main analysis function.
@@ -321,6 +334,7 @@ log_success("Analysis completed successfully!", logger=logger)
 ### Debug Tips
 
 Add debug output to scripts:
+
 ```python
 import logging
 logging.basicConfig(level=logging.DEBUG)

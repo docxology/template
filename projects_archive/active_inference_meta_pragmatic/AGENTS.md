@@ -5,12 +5,14 @@
 This project implements Active Inference as a meta-(pragmatic/epistemic) methodology using a modular architecture with local utilities.
 
 ### Layer 1: Local Utilities
+
 - **Logging Framework**: Simple logging with `utils.logging`
 - **Validation System**: Local validation with `utils.exceptions`
 - **Figure Management**: Automated figure registration and cross-referencing
 - **Rendering Pipeline**: LaTeX/PDF generation with manuscript processing
 
 ### Layer 2: Domain Implementation (Project-Specific)
+
 - **Theoretical Models**: Active Inference, Free Energy Principle, Meta-Cognition
 - **Quadrant Framework**: 2×2 matrix implementation for cognitive analysis
 - **Generative Models**: A, B, C, D matrix implementations with validation
@@ -19,8 +21,10 @@ This project implements Active Inference as a meta-(pragmatic/epistemic) methodo
 ## Core Modules
 
 ### Active Inference Framework (`src/active_inference.py`)
+
 **Purpose**: Core Active Inference implementation with EFE calculations
 **Key Classes**:
+
 - `ActiveInferenceFramework`: Main framework with generative model integration
 **Key Methods**:
 - `calculate_expected_free_energy()`: EFE computation with epistemic/pragmatic decomposition
@@ -29,8 +33,10 @@ This project implements Active Inference as a meta-(pragmatic/epistemic) methodo
 **Validation**: Theoretical correctness against EFE mathematics
 
 ### Free Energy Principle (`src/free_energy_principle.py`)
+
 **Purpose**: FEP implementation for system boundary analysis and structure preservation
 **Key Classes**:
+
 - `FreeEnergyPrinciple`: FEP framework with system state modeling
 **Key Methods**:
 - `calculate_free_energy()`: Variational free energy computation
@@ -39,8 +45,10 @@ This project implements Active Inference as a meta-(pragmatic/epistemic) methodo
 **Validation**: Free energy minimization and system boundary correctness
 
 ### Quadrant Framework (`src/quadrant_framework.py`)
+
 **Purpose**: 2×2 matrix framework for systematic cognitive process analysis
 **Key Classes**:
+
 - `QuadrantFramework`: Framework management and quadrant definitions
 **Key Methods**:
 - `analyze_processing_level()`: Data/cognitive level assessment
@@ -49,8 +57,10 @@ This project implements Active Inference as a meta-(pragmatic/epistemic) methodo
 **Validation**: Quadrant consistency and transition logic
 
 ### Generative Models (`src/generative_models.py`)
+
 **Purpose**: Probabilistic generative model implementations (A, B, C, D matrices)
 **Key Classes**:
+
 - `GenerativeModel`: generative model with matrix validation
 **Key Methods**:
 - `predict_observations()`: Forward prediction P(o|s)
@@ -60,8 +70,10 @@ This project implements Active Inference as a meta-(pragmatic/epistemic) methodo
 **Validation**: Matrix compatibility and probabilistic correctness
 
 ### Meta-Cognition (`src/meta_cognition.py`)
+
 **Purpose**: Meta-cognitive monitoring and self-reflective processing
 **Key Classes**:
+
 - `MetaCognitiveSystem`: Meta-cognitive monitoring and control
 **Key Methods**:
 - `assess_inference_confidence()`: Confidence evaluation with entropy analysis
@@ -71,8 +83,10 @@ This project implements Active Inference as a meta-(pragmatic/epistemic) methodo
 **Validation**: Confidence calculation accuracy and adaptation stability
 
 ### Modeler Perspective (`src/modeler_perspective.py`)
+
 **Purpose**: Dual role analysis of modeler as architect and subject
 **Key Classes**:
+
 - `ModelerPerspective`: Framework specification and self-reflection
 **Key Methods**:
 - `specify_epistemic_framework()`: Epistemic boundary definition
@@ -81,12 +95,59 @@ This project implements Active Inference as a meta-(pragmatic/epistemic) methodo
 - `synthesize_meta_theoretical_perspective()`: meta-theory synthesis
 **Validation**: Framework consistency and recursive logic
 
+### Data Generator (`src/data_generator.py`)
+
+**Purpose**: Synthetic data generation for demonstrations and testing
+**Key Classes**:
+
+- `DataGenerator`: Controlled data generation with reproducible seeding
+**Key Methods**:
+- `generate_time_series()`: Synthetic time series with configurable trends and seasonality
+- `generate_categorical_observations()`: Categorical observation generation
+- `generate_state_sequences()`: Hidden state sequence generation (Markov, random)
+- `generate_observation_matrix()`: Observation likelihood matrix A generation
+- `generate_transition_matrix()`: State transition matrix B generation
+- `generate_preference_vector()`: Preference vector C generation
+- `generate_synthetic_dataset()`: Classification dataset generation
+**Validation**: Probabilistic correctness and statistical properties
+
+### Statistical Analysis (`src/statistical_analysis.py`)
+
+**Purpose**: Statistical testing, regression, and hypothesis validation
+**Key Classes**:
+
+- `StatisticalAnalyzer`: Statistical analysis toolkit with configurable significance
+**Key Methods**:
+- `calculate_descriptive_stats()`: Comprehensive descriptive statistics
+- `calculate_correlation()`: Pearson, Spearman, and Kendall correlation
+- `calculate_confidence_interval()`: Confidence intervals for means
+- `anova_test()`: One-way ANOVA testing
+- `perform_t_test()`: Independent and paired t-tests with effect sizes
+- `analyze_algorithm_performance()`: Comparative algorithm analysis
+**Validation**: Statistical correctness and interpretation accuracy
+
+### Validation Framework (`src/validation.py`)
+
+**Purpose**: Theoretical correctness verification and numerical stability checking
+**Key Classes**:
+
+- `ValidationFramework`: Comprehensive validation with configurable tolerance
+**Key Methods**:
+- `validate_probability_distribution()`: Distribution validity checking
+- `validate_generative_model()`: Generative model structure validation (A, B, C, D)
+- `validate_theoretical_correctness()`: Algorithm correctness against expectations
+- `validate_algorithm_performance()`: Performance against requirements
+- `create_validation_report()`: Comprehensive multi-validation reporting
+**Validation**: Self-validating with recursive correctness checks
+
 ## Analysis Scripts
 
 ### Thin Orchestrator Pattern
+
 All scripts follow the thin orchestrator pattern: import business logic from `src/` modules, handle I/O and coordination only.
 
 ### Pipeline Scripts
+
 - `analysis_pipeline.py`: workflow orchestration (6 stages)
 - `generate_quadrant_matrix.py`: Quadrant visualization with detailed annotations
 - `generate_active_inference_concepts.py`: Core concept visualizations (EFE, perception-action loop, generative models)
@@ -94,6 +155,7 @@ All scripts follow the thin orchestrator pattern: import business logic from `sr
 - `generate_quadrant_examples.py`: Quadrant-specific examples with mathematical demonstrations
 
 ### Script Architecture
+
 ```python
 # Standard pattern for all analysis scripts
 from utils.logging import get_logger
@@ -108,18 +170,21 @@ from utils.figure_manager import FigureManager
 ## Testing Framework
 
 ### Test Organization
+
 - **Unit Tests**: Individual function/method validation
 - **Integration Tests**: Cross-module interaction validation
 - **Theoretical Tests**: Mathematical correctness validation
 - **Validation Tests**: Framework compliance checking
 
 ### Coverage Requirements
+
 - **Project Code**: 90% minimum coverage (currently 91.44% achieved)
 - **Utilities**: Local utilities with basic functionality
 - **No Mocks Policy**: All tests use data and computations
 - **Theoretical Validation**: Mathematics correctness verification
 
 ### Test Categories
+
 - `test_active_inference.py`: Core EFE and policy selection
 - `test_free_energy_principle.py`: FEP calculations and system boundaries
 - `test_quadrant_framework.py`: Matrix framework and transitions
@@ -130,17 +195,20 @@ from utils.figure_manager import FigureManager
 ## Manuscript Structure
 
 ### Section Organization
+
 - **01-09**: Main manuscript sections with theoretical development
 - **S01-S03**: Supplemental materials with extended methods and results
 - **98-99**: Reference sections (glossary and bibliography)
 
 ### Cross-Reference System
+
 - `\\ref{sec:methodology}`: Section references
 - `\\ref{fig:quadrant_matrix}`: Figure references
 - `\\eqref{eq:efe}`: Equation references
 - `\\cite{friston2010free}`: Citation references
 
 ### Rendering Pipeline
+
 1. **Markdown Combination**: Individual sections merged into single document
 2. **Cross-Reference Resolution**: All references validated and linked
 3. **LaTeX Generation**: Mathematical notation and formatting applied
@@ -151,6 +219,7 @@ from utils.figure_manager import FigureManager
 ## Quality Assurance
 
 ### Validation Checks
+
 - **Theoretical Correctness**: Mathematical derivations validated
 - **Numerical Stability**: Edge cases and numerical issues detected
 - **Cross-Reference Integrity**: All references resolve correctly
@@ -158,6 +227,7 @@ from utils.figure_manager import FigureManager
 - **Code Quality**: Type hints, docstrings, and style compliance
 
 ### Performance Benchmarks
+
 - **Runtime**: EFE calculation < 50ms for typical models
 - **Memory**: < 10MB for analysis pipeline
 - **Scalability**: Handles models up to 1000+ states
@@ -166,18 +236,21 @@ from utils.figure_manager import FigureManager
 ## Extension Points
 
 ### Adding New Quadrants
+
 1. Extend `QuadrantFramework` class with new quadrant definitions
 2. Add transition logic in `demonstrate_quadrant_transitions()`
 3. Create corresponding visualization methods
 4. Update manuscript sections with new analysis
 
 ### Integrating New Theories
+
 1. Create module in `src/` following established patterns
 2. Add tests with 90%+ coverage
 3. Integrate with existing visualization framework
 4. Update manuscript with theoretical integration
 
 ### Scaling Improvements
+
 1. Implement sparse matrix representations for large models
 2. Add parallel computation for ensemble methods
 3. Develop hierarchical optimization for meta-level processing
@@ -186,12 +259,14 @@ from utils.figure_manager import FigureManager
 ## Dependencies
 
 ### Core Dependencies
+
 - **numpy**: Numerical computations and matrix operations
 - **scipy**: Statistical functions and optimization
 - **matplotlib**: Visualization and plotting
 - **pytest**: Testing framework with coverage reporting
 
 ### Local Dependencies
+
 - **utils.logging**: Simple logging utilities
 - **utils.exceptions**: Basic exception handling
 - **utils.figure_manager**: Figure registration and management
@@ -200,6 +275,7 @@ from utils.figure_manager import FigureManager
 ## Development Workflow
 
 ### Adding Features
+
 1. Implement in appropriate `src/` module with type hints and docstrings
 2. Add tests achieving 90%+ coverage
 3. Update visualization scripts if needed
@@ -208,6 +284,7 @@ from utils.figure_manager import FigureManager
 6. Validate system functionality
 
 ### Code Quality Standards
+
 - **Type Hints**: All public APIs must have type annotations
 - **Documentation**: Google-style docstrings with theoretical context
 - **Testing**: test suite with data (no mocks)
@@ -215,6 +292,7 @@ from utils.figure_manager import FigureManager
 - **Imports**: Absolute imports with proper module organization
 
 ### Validation Pipeline
+
 1. **Unit Tests**: Individual component validation
 2. **Integration Tests**: Cross-module interaction verification
 3. **Theoretical Validation**: Mathematical correctness checking

@@ -108,16 +108,17 @@ Documentation is organized into modular subdirectories:
 
 | Directory | Purpose | Key Files |
 |-----------|---------|-----------|
-| [`core/`](core/) | Essential documentation | core/HOW_TO_USE.md, core/ARCHITECTURE.md, core/WORKFLOW.md |
+| [`core/`](core/) | Essential documentation | HOW_TO_USE.md, ARCHITECTURE.md, WORKFLOW.md |
 | [`guides/`](guides/) | Usage guides by skill level | GETTING_STARTED.md, FIGURES_AND_ANALYSIS.md, TESTING_AND_REPRODUCIBILITY.md, EXTENDING_AND_AUTOMATION.md |
-| [`architecture/`](architecture/) | Architecture documentation | TWO_LAYER_ARCHITECTURE.md, THIN_ORCHESTRATOR_SUMMARY.md |
-| [`usage/`](usage/) | Usage examples and patterns | EXAMPLES.md, MARKDOWN_TEMPLATE_GUIDE.md, VISUALIZATION_GUIDE.md |
-| [`operational/`](operational/) | Operational workflows | BUILD_SYSTEM.md, TROUBLESHOOTING_GUIDE.md, CONFIGURATION.md |
-| [`reference/`](reference/) | Reference materials | API_REFERENCE.md, FAQ.md, GLOSSARY.md, QUICK_START_CHEATSHEET.md |
-| [`modules/`](modules/) | Modules | MODULES_GUIDE.md, SCIENTIFIC_SIMULATION_GUIDE.md |
-| [`development/`](development/) | Development & contribution | CONTRIBUTING.md, TESTING_GUIDE.md, CODE_OF_CONDUCT.md |
-| [`best-practices/`](best-practices/) | Best practices | BEST_PRACTICES.md, VERSION_CONTROL.md, MIGRATION_GUIDE.md |
-| [`prompts/`](prompts/) | AI prompt templates | manuscript_creation.md, code_development.md, test_creation.md |
+| [`architecture/`](architecture/) | Architecture documentation | TWO_LAYER_ARCHITECTURE.md, THIN_ORCHESTRATOR_SUMMARY.md, DECISION_TREE.md |
+| [`usage/`](usage/) | Usage examples and patterns | EXAMPLES.md, MARKDOWN_TEMPLATE_GUIDE.md, VISUALIZATION_GUIDE.md, IMAGE_MANAGEMENT.md |
+| [`operational/`](operational/) | Operational workflows | BUILD_SYSTEM.md, REPORTING_GUIDE.md, TROUBLESHOOTING_GUIDE.md, CONFIGURATION.md + `logging/`, `troubleshooting/` |
+| [`reference/`](reference/) | Reference materials | API_REFERENCE.md, FAQ.md, GLOSSARY.md, QUICK_START_CHEATSHEET.md, COMMON_WORKFLOWS.md |
+| [`modules/`](modules/) | Module documentation | MODULES_GUIDE.md, SCIENTIFIC_SIMULATION_GUIDE.md, PDF_VALIDATION.md + `guides/` (7 per-module guides) |
+| [`development/`](development/) | Development & contribution | CONTRIBUTING.md, TESTING_GUIDE.md, CODE_OF_CONDUCT.md, COVERAGE_GAPS.md |
+| [`best-practices/`](best-practices/) | Best practices | BEST_PRACTICES.md, VERSION_CONTROL.md, MIGRATION_GUIDE.md, MULTI_PROJECT_MANAGEMENT.md |
+| [`prompts/`](prompts/) | AI prompt templates | manuscript_creation.md, code_development.md, test_creation.md, comprehensive_assessment.md |
+| [`audit/`](audit/) | Audit reports | DOCUMENTATION_REVIEW_REPORT.md, DOCUMENTATION_REVIEW_SUMMARY.md, FILEPATH_AUDIT_REPORT.md |
 
 ## Quick Navigation
 

@@ -4,24 +4,24 @@ This directory contains multiple **standalone research projects**, each with ind
 
 ## Exemplar Projects Showcase
 
-This directory contains **four exemplar projects** demonstrating the template's full capabilities:
+This directory contains **two active projects** demonstrating the template's full capabilities:
 
 ### 🚀 **code_project**: Computational Research Exemplar
 
-A optimization research project featuring:
+An optimization research project featuring:
 
 - **Advanced Algorithms**: Full gradient descent implementation with convergence analysis
 - **Publication-Quality Output**: Professional LaTeX manuscript with cross-references
-- **Rigorous Testing**: 96%+ test coverage with performance benchmarks
+- **Rigorous Testing**: 100% test coverage with performance benchmarks
 - **Automated Analysis**: Script-driven figure generation and data visualization
 
-### 🔐 **Cognitive Security Framework** (3-Part Series)
+### 🎨 **blake_active_inference**: Interdisciplinary Manuscript Exemplar
 
-A comprehensive cognitive security research series:
+A manuscript-focused research project exploring Active Inference through William Blake's epistemology:
 
-- **cogsec_multiagent_1_theory**: Formal foundations and theoretical analysis (DOI: 10.5281/zenodo.18364119)
-- **cogsec_multiagent_2_computational**: Computational validation and implementation (DOI: 10.5281/zenodo.18364128)
-- **cogsec_multiagent_3_practical**: Practical deployment guidance (DOI: 10.5281/zenodo.18364130)
+- **29-Section Manuscript**: Comprehensive academic paper with synthesis mappings
+- **Publication Pipeline**: Full rendering with figures and bibliography
+- **Show-Not-Tell Methodology**: Demonstrates research template for theory-heavy projects
 
 **Note:** Archived projects are preserved in `projects_archive/` for reference but are not actively executed.
 
@@ -85,28 +85,24 @@ mv projects_archive/myproject projects/myproject
 
 # Project will be automatically discovered on next run.sh execution
 
-| `code_project/` | Minimal optimization algorithms research | ✅ Active |
-| `cogsec_multiagent_1_theory/` | CIF Part 1: Formal foundations | ✅ Active |
-| `cogsec_multiagent_2_computational/` | CIF Part 2: Computational validation | ✅ Active |
-| `cogsec_multiagent_3_practical/` | CIF Part 3: Practical guidance | ✅ Active |
+| `code_project/` | Optimization algorithms research | ✅ Active |
+| `blake_active_inference/` | Blake × Active Inference manuscript | ✅ Active |
 
-**Archived projects** are available in `projects_archive/` for historical reference.
+**Archived projects** are available in `projects_archive/` for historical reference (e.g., `cognitive_integrity`, `ento_linguistics`, `active_inference_meta_pragmatic`, `medical_ai`).
 
 ```mermaid
 graph TD
     subgraph projects["projects/ - Multi-Project Container"]
-        CIF1[cogsec_multiagent_1_theory/<br/>CIF Part 1: Theory<br/>Formal foundations]
-        CIF2[cogsec_multiagent_2_computational/<br/>CIF Part 2: Computational<br/>Empirical validation]
         CODE[code_project/<br/>Optimization Research<br/>Gradient descent algorithms]
-        CIF3[cogsec_multiagent_3_practical/<br/>CIF Part 3: Practical<br/>Deployment guidance]
+        BLAKE[blake_active_inference/<br/>Interdisciplinary Manuscript<br/>Blake × Active Inference]
         CUSTOM[your_project/<br/>Custom research<br/>Your algorithms here]
 
-        CIF1 --> CIF1_SRC[src/<br/>Trust calculus,<br/>Firewall,<br/>Consensus]
-        CIF1 --> CIF1_TESTS[tests/<br/>Unit & integration tests<br/>90% coverage]
-        CIF1 --> CIF1_SCRIPTS[scripts/<br/>Figure generation<br/>18 scripts]
-        CIF1 --> CIF1_MANUSCRIPT[manuscript/<br/>Formal theory<br/>Proofs & notation]
-        CIF1 --> CIF1_OUTPUT[output/<br/>Generated figures<br/>Disposable]
-        CIF1 --> CIF1_CONFIG[pyproject.toml<br/>Project metadata]
+        CODE --> CODE_SRC[src/<br/>optimizer.py<br/>gradient_descent]
+        CODE -->CODE_TESTS[tests/<br/>34 tests<br/>100% coverage]
+        CODE --> CODE_SCRIPTS[scripts/<br/>Analysis pipeline<br/>API documentation]
+        CODE --> CODE_MANUSCRIPT[manuscript/<br/>Research paper<br/>Equations & figures]
+        CODE --> CODE_OUTPUT[output/<br/>Generated figures<br/>Disposable]
+        CODE --> CODE_CONFIG[pyproject.toml<br/>Project metadata]
     end
 
     subgraph Infrastructure["🔧 Shared Infrastructure"]
@@ -122,26 +118,25 @@ graph TD
         CURSORRULES[infrastructure_modules.md<br/>testing_standards.md<br/>documentation_standards.md]
     end
 
-    ENTO -->|Validated by| VALIDATION
-    ENTO -->|Rendered by| RENDERING
-    ENTO -->|Reported by| REPORTING
-    ENTO -->|Discovered by| SCRIPTS_ROOT
+    CODE -->|Validated by| VALIDATION
+    CODE -->|Rendered by| RENDERING
+    CODE -->|Reported by| REPORTING
+    CODE -->|Discovered by| SCRIPTS_ROOT
 
-    ENTO_SRC -->|Imports from| INFRA
-    ENTO_SCRIPTS -->|Imports from| INFRA
-    ENTO_SCRIPTS -->|Orchestrated by| SCRIPTS_ROOT
+    CODE_SRC -->|Imports from| INFRA
+    CODE_SCRIPTS -->|Imports from| INFRA
+    CODE_SCRIPTS -->|Orchestrated by| SCRIPTS_ROOT
 
-    ENTO -->|Complies with| STANDARDS
+    CODE -->|Complies with| STANDARDS
     STANDARDS --> CURSORRULES
 
-    ENTO_MANUSCRIPT -->|Rendered to| ENTO_OUTPUT
-    ENTO_OUTPUT -->|Copied to| OUTPUT_ROOT
+    CODE_MANUSCRIPT -->|Rendered to| CODE_OUTPUT
 
     classDef project fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
     classDef infra fill:#fff3e0,stroke:#e65100,stroke-width:2px
     classDef compliance fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
 
-    class ENTO,ENTO_SRC,ENTO_TESTS,ENTO_SCRIPTS,ENTO_MANUSCRIPT,ENTO_OUTPUT,ENTO_CONFIG project
+    class CODE,CODE_SRC,CODE_TESTS,CODE_SCRIPTS,CODE_MANUSCRIPT,CODE_OUTPUT,CODE_CONFIG,BLAKE project
     class INFRA,SCRIPTS_ROOT,VALIDATION,RENDERING,REPORTING infra
     class STANDARDS,CURSORRULES compliance
 ```
@@ -156,10 +151,10 @@ Each project is **operated upon** by infrastructure modules while maintaining in
 from infrastructure.project import discover_projects, validate_project_structure
 
 # Automatically discovers all valid projects
-projects = discover_projects(Path("."))  # Finds cogsec_multiagent_1_theory, code_project, etc.
+projects = discover_projects(Path("."))  # Finds code_project, blake_active_inference, etc.
 
 # Validates project structure
-is_valid, message = validate_project_structure(Path("projects/cogsec_multiagent_1_theory"))
+is_valid, message = validate_project_structure(Path("projects/code_project"))
 # Returns: (True, "Valid project structure")
 ```
 
@@ -177,12 +172,11 @@ python3 scripts/01_run_tests.py --project code_project
 
 ```python
 # Discovers and executes project scripts
-python3 scripts/02_run_analysis.py --project cogsec_multiagent_2_computational
+python3 scripts/02_run_analysis.py --project code_project
 
 # Infrastructure finds and runs:
-# projects/cogsec_multiagent_2_computational/scripts/analysis_pipeline.py
-# projects/cogsec_multiagent_1_theory/scripts/generate_figures.py
-# etc.
+# projects/code_project/scripts/optimization_analysis.py
+# projects/code_project/scripts/generate_api_docs.py
 ```
 
 ### 📄 **PDF Rendering** (`scripts/03_render_pdf.py`)
@@ -208,9 +202,9 @@ python3 scripts/04_validate_output.py --project project
 
 ```python
 # Organizes final deliverables
-python3 scripts/05_copy_outputs.py --project cogsec_multiagent_3_practical
+python3 scripts/05_copy_outputs.py --project blake_active_inference
 
-# Copies from projects/cogsec_multiagent_3_practical/output/ to output/cogsec_multiagent_3_practical/
+# Copies from projects/blake_active_inference/output/ to output/blake_active_inference/
 ```
 
 ## Project Isolation Principles
@@ -297,20 +291,16 @@ Each project follows this structure:
 312: │   ├── manuscript/       # Research manuscript
 313: │   ├── output/           # Generated outputs (not in git)
 314: │   └── pyproject.toml    # Project configuration
-315: ├── cogsec_multiagent_1_theory/     # CIF Part 1: Theory
+315: ├── blake_active_inference/  # Blake × Active Inference manuscript
 316: │   ├── src/
 317: │   ├── tests/
 318: │   ├── scripts/
 319: │   ├── manuscript/
 320: │   └── pyproject.toml
-321: ├── cogsec_multiagent_2_computational/  # CIF Part 2: Computational
+321: ├── myresearch/           # Custom project 1
 322: │   └── ...
-323: ├── cogsec_multiagent_3_practical/      # CIF Part 3: Practical
-324: │   └── ...
-325: ├── myresearch/           # Custom project 1
-326: │   └── ...
-327: └── experiment2/          # Custom project 2
-328:     └── ...
+323: └── experiment2/          # Custom project 2
+324:     └── ...
 ```
 
 ## Creating a New Project
@@ -488,10 +478,7 @@ output/
 │   ├── pdf/
 │   ├── figures/
 │   └── ...
-├── cogsec_multiagent_1_theory/  # CIF Part 1
-│   ├── pdf/
-│   └── ...
-├── cogsec_multiagent_2_computational/  # CIF Part 2
+├── blake_active_inference/  # Blake × Active Inference
 │   ├── pdf/
 │   └── ...
 └── your_project/      # Your custom research project
@@ -591,61 +578,38 @@ Available projects are automatically discovered - use `--project {name}` to spec
 
 ## Real Project Examples
 
-### 🔐 **Cognitive Security Framework** (`cogsec_multiagent_1_theory/`)
-
-Comprehensive cognitive security research series:
-
-**Standalone Guarantees:**
-
-- **Tests**: 90%+ coverage, formal verification of security theories
-- **Methods**: Formal models, game theoretic analysis, and simulation in `src/`
-- **Manuscript**: Independent analysis of multiagent security properties
-
-**Infrastructure Operations:**
-
-```bash
-# Infrastructure discovers and validates project
-python3 -c "from infrastructure.project import validate_project_structure; print(validate_project_structure(Path('projects/cogsec_multiagent_1_theory')))"
-
-# Infrastructure runs project tests
-python3 scripts/01_run_tests.py --project cogsec_multiagent_1_theory
-
-# Infrastructure executes analysis scripts
-python3 scripts/02_run_analysis.py --project cogsec_multiagent_1_theory
-```
-
-### 🧠 **Computational Validation** (`cogsec_multiagent_2_computational/`)
-
-Computational implementation and simulation of the framework:
-
-**Standalone Guarantees:**
-
-- **Tests**: 90%+ coverage, validation of simulation dynamics
-- **Methods**: Agent-based modeling, attack surface simulation in `src/`
-- **Manuscript**: Computational analysis and results verification
-
-**Infrastructure Operations:**
-
-```bash
-# Infrastructure executes analysis scripts
-python3 scripts/02_run_analysis.py --project cogsec_multiagent_2_computational
-```
-
 ### ⚙️ **Optimization Research** (`projects/code_project/`)
 
-Minimal project demonstrating gradient descent algorithms:
+Project demonstrating gradient descent algorithms:
 
 **Standalone Guarantees:**
 
-- **Tests**: Unit tests for optimization algorithms with convergence validation
+- **Tests**: 34 tests for optimization algorithms with convergence and stability validation
 - **Methods**: Gradient descent implementation in `src/optimizer.py`
-- **Manuscript**: Basic research manuscript with algorithm description
+- **Manuscript**: Research manuscript with algorithm description and analysis
 
 **Infrastructure Operations:**
 
 ```bash
 # pipeline execution
 python3 scripts/execute_pipeline.py --project code_project --core-only
+```
+
+### 🎨 **Blake Active Inference** (`projects/blake_active_inference/`)
+
+Interdisciplinary manuscript mapping William Blake's epistemology to Active Inference:
+
+**Standalone Guarantees:**
+
+- **Tests**: Validation of manuscript content and rendering pipeline
+- **Methods**: Synthesis mapping and correspondence analysis in `src/`
+- **Manuscript**: 29-section academic paper with extended analysis
+
+**Infrastructure Operations:**
+
+```bash
+# Render manuscript via infrastructure
+python3 scripts/03_render_pdf.py --project blake_active_inference
 ```
 
 ## Creating New Projects
@@ -694,8 +658,8 @@ vim manuscript/02_methodology.md
 ### Method 3: Manuscript-Focused Research
 
 ```bash
-# Use cogsec_multiagent_1_theory as template for manuscript-heavy research
-cp -r projects/cogsec_multiagent_1_theory projects/literature_review
+# Use blake_active_inference as template for manuscript-heavy research
+cp -r projects/blake_active_inference projects/literature_review
 cd projects/literature_review
 
 # Focus on manuscript content with equations
@@ -907,9 +871,8 @@ The `projects/` directory implements a **standalone project paradigm** with infr
 
 ### 🎯 **Real Examples**
 
-- **cogsec_multiagent_1_theory**: CIF Part 1 (formal foundations, trust calculus)
-- **cogsec_multiagent_2_computational**: CIF Part 2 (empirical validation, benchmarks)
-- **code_project**: Optimization algorithms (minimal template)
+- **blake_active_inference**: Blake × Active Inference (interdisciplinary manuscript)
+- **code_project**: Optimization algorithms (computational research template)
 
 **Note:** Archived projects are preserved in `projects_archive/` for reference.
 

@@ -65,6 +65,7 @@ Development standards are documented in the `.cursorrules/` directory:
 - **[`.cursorrules/manuscript_style.md`](../.cursorrules/manuscript_style.md)** - Manuscript formatting and style standards
 - **[`.cursorrules/reporting.md`](../.cursorrules/reporting.md)** - Reporting module standards and outputs
 - **[`.cursorrules/refactoring.md`](../.cursorrules/refactoring.md)** - Refactoring and modularization standards
+- **[`.cursorrules/folder_structure.md`](../.cursorrules/folder_structure.md)** - Folder structure and organization standards
 
 **Note**: Use `.cursorrules/` files as quick reference during development. Corresponding `docs/` files provide guides.
 
@@ -99,6 +100,7 @@ Development standards are documented in the `.cursorrules/` directory:
 ### **Technical Implementation**
 
 - **[`docs/modules/PDF_VALIDATION.md`](modules/PDF_VALIDATION.md)** - PDF validation system documentation
+- **[`docs/operational/REPORTING_GUIDE.md`](operational/REPORTING_GUIDE.md)** - Reporting system guide and report interpretation
 
 ## 📝 **Usage Guides**
 
@@ -114,6 +116,7 @@ Development standards are documented in the `.cursorrules/` directory:
 - **[`docs/guides/FIGURES_AND_ANALYSIS.md`](guides/FIGURES_AND_ANALYSIS.md)** - Intermediate usage guide (Levels 4-6)
 - **[`docs/guides/TESTING_AND_REPRODUCIBILITY.md`](guides/TESTING_AND_REPRODUCIBILITY.md)** - Advanced usage guide (Levels 7-9)
 - **[`docs/guides/EXTENDING_AND_AUTOMATION.md`](guides/EXTENDING_AND_AUTOMATION.md)** - Expert usage guide (Levels 10-12)
+- **[`docs/guides/INTERMEDIATE_USAGE.md`](guides/INTERMEDIATE_USAGE.md)** - Backward-compatible redirect to Figures and Analysis
 
 ### **Advanced Usage**
 
@@ -147,6 +150,16 @@ Development standards are documented in the `.cursorrules/` directory:
 - **[`docs/modules/MODULES_GUIDE.md`](modules/MODULES_GUIDE.md)** - Guide for all 7 modules
 - **[`docs/reference/API_REFERENCE.md`](reference/API_REFERENCE.md)** - API documentation for all src/ modules
 
+### **Per-Module Guides** (`modules/guides/`)
+
+- **[`docs/modules/guides/INTEGRITY_MODULE.md`](modules/guides/INTEGRITY_MODULE.md)** - Integrity module guide
+- **[`docs/modules/guides/LITERATURE_MODULE.md`](modules/guides/LITERATURE_MODULE.md)** - Literature module guide
+- **[`docs/modules/guides/LLM_MODULE.md`](modules/guides/LLM_MODULE.md)** - LLM module guide
+- **[`docs/modules/guides/PUBLISHING_MODULE.md`](modules/guides/PUBLISHING_MODULE.md)** - Publishing module guide
+- **[`docs/modules/guides/RENDERING_MODULE.md`](modules/guides/RENDERING_MODULE.md)** - Rendering module guide
+- **[`docs/modules/guides/REPORTING_MODULE.md`](modules/guides/REPORTING_MODULE.md)** - Reporting module guide
+- **[`docs/modules/guides/SCIENTIFIC_MODULE.md`](modules/guides/SCIENTIFIC_MODULE.md)** - Scientific module guide
+
 ## ⚙️ **Operational Guides**
 
 ### **Dependency & Build Management**
@@ -163,6 +176,10 @@ Development standards are documented in the `.cursorrules/` directory:
 
 - **[`../RUN_GUIDE.md`](../RUN_GUIDE.md)** - pipeline orchestration guide (run.sh)
 
+### **Reporting**
+
+- **[`docs/operational/REPORTING_GUIDE.md`](operational/REPORTING_GUIDE.md)** - Reporting system and report interpretation guide
+
 ### **Troubleshooting & Support**
 
 - **[`docs/operational/TROUBLESHOOTING_GUIDE.md`](operational/TROUBLESHOOTING_GUIDE.md)** - troubleshooting guide
@@ -174,6 +191,20 @@ Development standards are documented in the `.cursorrules/` directory:
 - **[`docs/development/TESTING_GUIDE.md`](development/TESTING_GUIDE.md)** - Testing framework guide
 - **[`docs/development/TESTING_WITH_CREDENTIALS.md`](development/TESTING_WITH_CREDENTIALS.md)** - Testing with external service credentials
 - **[`docs/operational/CONFIGURATION.md`](operational/CONFIGURATION.md)** - Configuration system guide
+
+### **Logging Guides** (`operational/logging/`)
+
+- **[`docs/operational/logging/BASH_LOGGING.md`](operational/logging/BASH_LOGGING.md)** - Bash logging patterns
+- **[`docs/operational/logging/PYTHON_LOGGING.md`](operational/logging/PYTHON_LOGGING.md)** - Python logging patterns
+- **[`docs/operational/logging/LOGGING_PATTERNS.md`](operational/logging/LOGGING_PATTERNS.md)** - Cross-language logging patterns
+
+### **Troubleshooting Guides** (`operational/troubleshooting/`)
+
+- **[`docs/operational/troubleshooting/BUILD_TOOLS.md`](operational/troubleshooting/BUILD_TOOLS.md)** - Build tool troubleshooting
+- **[`docs/operational/troubleshooting/COMMON_ERRORS.md`](operational/troubleshooting/COMMON_ERRORS.md)** - Common error patterns and fixes
+- **[`docs/operational/troubleshooting/ENVIRONMENT_SETUP.md`](operational/troubleshooting/ENVIRONMENT_SETUP.md)** - Environment setup troubleshooting
+- **[`docs/operational/troubleshooting/RECOVERY_PROCEDURES.md`](operational/troubleshooting/RECOVERY_PROCEDURES.md)** - Recovery procedures
+- **[`docs/operational/troubleshooting/TEST_FAILURES.md`](operational/troubleshooting/TEST_FAILURES.md)** - Test failure troubleshooting
 
 ## 📚 **Reference Materials**
 
@@ -210,6 +241,7 @@ Development standards are documented in the `.cursorrules/` directory:
 - **[`docs/prompts/documentation_creation.md`](prompts/documentation_creation.md)** - AGENTS.md and README.md creation
 - **[`docs/prompts/infrastructure_module.md`](prompts/infrastructure_module.md)** - Generic infrastructure module development
 - **[`docs/prompts/validation_quality.md`](prompts/validation_quality.md)** - Quality assurance and validation procedures
+- **[`docs/prompts/comprehensive_assessment.md`](prompts/comprehensive_assessment.md)** - Comprehensive assessment and review procedures
 
 ## 📁 **File Organization**
 
@@ -223,25 +255,30 @@ docs/
 │
 ├── core/                               # Essential documentation
 │   ├── README.md                       # Core docs overview
+│   ├── AGENTS.md                       # Core docs technical guide
 │   ├── HOW_TO_USE.md                   # usage guide
 │   ├── ARCHITECTURE.md                 # System design
 │   └── WORKFLOW.md                     # Development workflow
 │
 ├── guides/                             # Usage guides by skill level
 │   ├── README.md                       # Guides overview
+│   ├── AGENTS.md                       # Guides technical guide
 │   ├── GETTING_STARTED.md              # Levels 1-3
-│   ├── FIGURES_AND_ANALYSIS.md           # Levels 4-6
-│   ├── TESTING_AND_REPRODUCIBILITY.md               # Levels 7-9
-│   └── EXTENDING_AND_AUTOMATION.md                 # Levels 10-12
+│   ├── FIGURES_AND_ANALYSIS.md         # Levels 4-6
+│   ├── INTERMEDIATE_USAGE.md           # Redirect to Figures and Analysis
+│   ├── TESTING_AND_REPRODUCIBILITY.md  # Levels 7-9
+│   └── EXTENDING_AND_AUTOMATION.md     # Levels 10-12
 │
 ├── architecture/                       # Architecture documentation
 │   ├── README.md                       # Architecture overview
+│   ├── AGENTS.md                       # Architecture technical guide
 │   ├── TWO_LAYER_ARCHITECTURE.md       # architecture guide
 │   ├── THIN_ORCHESTRATOR_SUMMARY.md    # Pattern implementation
 │   └── DECISION_TREE.md                # Code placement decisions
 │
 ├── usage/                              # Usage examples and patterns
 │   ├── README.md                       # Usage docs overview
+│   ├── AGENTS.md                       # Usage technical guide
 │   ├── EXAMPLES.md                     # Basic examples
 │   ├── EXAMPLES_SHOWCASE.md            # Real-world examples
 │   ├── TEMPLATE_DESCRIPTION.md         # Template overview
@@ -252,19 +289,34 @@ docs/
 │
 ├── operational/                        # Operational workflows
 │   ├── README.md                       # Operational docs overview
+│   ├── AGENTS.md                       # Operational technical guide
 │   ├── BUILD_SYSTEM.md                 # Build system reference
 │   ├── CI_CD_INTEGRATION.md            # CI/CD setup
 │   ├── DEPENDENCY_MANAGEMENT.md        # Package management
-│   ├── PERFORMANCE_OPTIMIZATION.md      # Performance tuning
+│   ├── PERFORMANCE_OPTIMIZATION.md     # Performance tuning
 │   ├── CONFIGURATION.md                # Configuration guide
 │   ├── CHECKPOINT_RESUME.md            # Checkpoint system
+│   ├── REPORTING_GUIDE.md              # Reporting system guide
 │   ├── TROUBLESHOOTING_GUIDE.md        # Troubleshooting
-│   ├── LLM_REVIEW_TROUBLESHOOTING.md    # LLM-specific issues
+│   ├── LLM_REVIEW_TROUBLESHOOTING.md   # LLM-specific issues
 │   ├── ERROR_HANDLING_GUIDE.md         # Error patterns
-│   └── LOGGING_GUIDE.md                # Logging system
+│   ├── LOGGING_GUIDE.md                # Logging system
+│   ├── logging/                        # Detailed logging guides
+│   │   ├── README.md                   # Logging overview
+│   │   ├── BASH_LOGGING.md             # Bash logging patterns
+│   │   ├── PYTHON_LOGGING.md           # Python logging patterns
+│   │   └── LOGGING_PATTERNS.md         # Cross-language patterns
+│   └── troubleshooting/                # Detailed troubleshooting
+│       ├── README.md                   # Troubleshooting overview
+│       ├── BUILD_TOOLS.md              # Build tool issues
+│       ├── COMMON_ERRORS.md            # Common error patterns
+│       ├── ENVIRONMENT_SETUP.md        # Environment setup
+│       ├── RECOVERY_PROCEDURES.md      # Recovery procedures
+│       └── TEST_FAILURES.md            # Test failure guides
 │
 ├── reference/                          # Reference materials
 │   ├── README.md                       # Reference docs overview
+│   ├── AGENTS.md                       # Reference technical guide
 │   ├── API_REFERENCE.md                # API docs
 │   ├── GLOSSARY.md                     # Terms and definitions
 │   ├── FAQ.md                          # Common questions
@@ -274,27 +326,59 @@ docs/
 │
 ├── modules/                            # Advanced modules
 │   ├── README.md                       # Modules overview
-│   ├── MODULES_GUIDE.md       # Modules guide
+│   ├── AGENTS.md                       # Modules technical guide
+│   ├── MODULES_GUIDE.md                # Modules guide
 │   ├── SCIENTIFIC_SIMULATION_GUIDE.md  # Simulation system
-│   └── PDF_VALIDATION.md               # PDF validation
+│   ├── PDF_VALIDATION.md               # PDF validation
+│   └── guides/                         # Per-module guides
+│       ├── README.md                   # Module guides overview
+│       ├── INTEGRITY_MODULE.md         # Integrity module
+│       ├── LITERATURE_MODULE.md        # Literature module
+│       ├── LLM_MODULE.md              # LLM module
+│       ├── PUBLISHING_MODULE.md        # Publishing module
+│       ├── RENDERING_MODULE.md         # Rendering module
+│       ├── REPORTING_MODULE.md         # Reporting module
+│       └── SCIENTIFIC_MODULE.md        # Scientific module
 │
 ├── development/                        # Development & contribution
 │   ├── README.md                       # Development docs overview
+│   ├── AGENTS.md                       # Development technical guide
 │   ├── CONTRIBUTING.md                 # Contribution guide
-│   ├── CODE_OF_CONDUCT.md             # Community standards
+│   ├── CODE_OF_CONDUCT.md              # Community standards
 │   ├── SECURITY.md                     # Security policy
 │   ├── ROADMAP.md                      # Future plans
 │   ├── TESTING_GUIDE.md                # Testing framework
 │   ├── TESTING_WITH_CREDENTIALS.md     # Credential testing
 │   └── COVERAGE_GAPS.md                # Coverage analysis
 │
-└── best-practices/                     # Best practices
-    ├── README.md                       # Best practices overview
-    ├── BEST_PRACTICES.md               # Consolidated practices
-    ├── VERSION_CONTROL.md              # Git workflows
-    ├── MULTI_PROJECT_MANAGEMENT.md     # Multi-project setup
-    ├── MIGRATION_GUIDE.md              # Migration from other templates
-    └── BACKUP_RECOVERY.md              # Backup strategies
+├── best-practices/                     # Best practices
+│   ├── README.md                       # Best practices overview
+│   ├── AGENTS.md                       # Best practices technical guide
+│   ├── BEST_PRACTICES.md               # Consolidated practices
+│   ├── VERSION_CONTROL.md              # Git workflows
+│   ├── MULTI_PROJECT_MANAGEMENT.md     # Multi-project setup
+│   ├── MIGRATION_GUIDE.md              # Migration from other templates
+│   └── BACKUP_RECOVERY.md              # Backup strategies
+│
+├── prompts/                            # AI prompt templates
+│   ├── README.md                       # Prompts overview
+│   ├── AGENTS.md                       # Prompts technical guide
+│   ├── manuscript_creation.md          # Manuscript creation
+│   ├── code_development.md             # Code development
+│   ├── test_creation.md                # Test creation
+│   ├── feature_addition.md             # Feature addition
+│   ├── refactoring.md                  # Refactoring
+│   ├── documentation_creation.md       # Documentation creation
+│   ├── infrastructure_module.md        # Infrastructure modules
+│   ├── validation_quality.md           # Validation and QA
+│   └── comprehensive_assessment.md     # Assessment and review
+│
+└── audit/                              # Audit reports
+    ├── README.md                       # Audit overview
+    ├── AGENTS.md                       # Audit technical guide
+    ├── DOCUMENTATION_REVIEW_REPORT.md  # Documentation review
+    ├── DOCUMENTATION_REVIEW_SUMMARY.md # Review summary
+    └── FILEPATH_AUDIT_REPORT.md        # Filepath audit
 ```
 
 ### **Documentation Categories**
@@ -307,11 +391,11 @@ docs/
 | **Usage** | `usage/` | Usage examples and patterns (EXAMPLES.md, MARKDOWN_TEMPLATE_GUIDE.md, VISUALIZATION_GUIDE.md) |
 | **Development** | `development/` | Contributing and future development (CONTRIBUTING.md, CODE_OF_CONDUCT.md, ROADMAP.md, TESTING_GUIDE.md) |
 | **Reference** | `reference/` | Quick reference and sharing content (FAQ.md, API_REFERENCE.md, GLOSSARY.md, QUICK_START_CHEATSHEET.md) |
-| **Modules** | `modules/` | Module documentation (MODULES_GUIDE.md, SCIENTIFIC_SIMULATION_GUIDE.md, PDF_VALIDATION.md) |
-| **Operational** | `operational/` | Operational workflows and guides (BUILD_SYSTEM.md, TROUBLESHOOTING_GUIDE.md, CONFIGURATION.md) |
+| **Modules** | `modules/` | Module documentation (MODULES_GUIDE.md, SCIENTIFIC_SIMULATION_GUIDE.md, PDF_VALIDATION.md, guides/) |
+| **Operational** | `operational/` | Operational workflows and guides (BUILD_SYSTEM.md, REPORTING_GUIDE.md, TROUBLESHOOTING_GUIDE.md, CONFIGURATION.md, logging/, troubleshooting/) |
 | **Best Practices** | `best-practices/` | Best practices and project management (BEST_PRACTICES.md, VERSION_CONTROL.md, MIGRATION_GUIDE.md) |
-| **AI Prompts** | `prompts/` | AI prompt templates for development tasks (manuscript_creation.md, code_development.md, test_creation.md) |
-| **Audit** | `audit/` | Audit reports and validation findings (DOCUMENTATION_REVIEW_REPORT.md, FILEPATH_AUDIT_REPORT.md) |
+| **AI Prompts** | `prompts/` | AI prompt templates for development tasks (manuscript_creation.md, code_development.md, test_creation.md, comprehensive_assessment.md) |
+| **Audit** | `audit/` | Audit reports and validation findings (DOCUMENTATION_REVIEW_REPORT.md, DOCUMENTATION_REVIEW_SUMMARY.md, FILEPATH_AUDIT_REPORT.md) |
 
 ## 🔗 **Cross-Referencing System**
 
@@ -365,7 +449,7 @@ All documentation files include cross-references:
 
 ### **Documentation Completeness**
 
-- ✅ **105 documentation files** covering all aspects (including root-level guides)
+- ✅ **105 documentation files** across 14 directories covering all aspects (including root-level guides)
 - ✅ **cross-referencing** system
 - ✅ **Real-world examples** and showcase projects
 - ✅ **Technical implementation** details

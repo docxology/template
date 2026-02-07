@@ -72,8 +72,15 @@ def map_section_to_file(section: str) -> Path:
     manuscript_dir = project_root / "manuscript"
 
     section_mapping = {
+        "abstract": "01_abstract.md",
+        "background": "02_background.md",
         "methodology": "03_quadrant_model.md",
+        "quadrant_model": "03_quadrant_model.md",
+        "security": "04_security_implications.md",
+        "security_implications": "04_security_implications.md",
         "experimental_results": "04_security_implications.md",
+        "discussion": "05_discussion.md",
+        "appendix": "07_appendix.md",
     }
 
     filename = section_mapping.get(
@@ -313,7 +320,7 @@ def insert_figure_directly(
 
 \\begin{{figure}}[h]
 \\centering
-\\includegraphics[width={width}\\textwidth]{{../output/figures/{filename}}}
+\\includegraphics[width={width}]{{../output/figures/{filename}}}
 \\caption{{{caption}}}
 \\label{{{figure_label}}}
 \\end{{figure}}

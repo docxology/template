@@ -2,7 +2,7 @@
 
 > **Advanced infrastructure modules** documentation
 
-**Quick Reference:** [Modules Guide](MODULES_GUIDE.md) | [Scientific Simulation](SCIENTIFIC_SIMULATION_GUIDE.md) | [PDF Validation](PDF_VALIDATION.md)
+**Quick Reference:** [Modules Guide](MODULES_GUIDE.md) | [Scientific Simulation](SCIENTIFIC_SIMULATION_GUIDE.md) | [PDF Validation](PDF_VALIDATION.md) | [Per-Module Guides](guides/)
 
 ## Purpose
 
@@ -16,15 +16,30 @@ The `modules/` directory contains documentation for the advanced infrastructure 
 | [`SCIENTIFIC_SIMULATION_GUIDE.md`](SCIENTIFIC_SIMULATION_GUIDE.md) | Scientific simulation and analysis system | Researchers |
 | [`PDF_VALIDATION.md`](PDF_VALIDATION.md) | PDF validation system documentation | Developers |
 
+### Per-Module Guides (`guides/`)
+
+| Module | Guide | Focus |
+|--------|-------|-------|
+| Integrity | [`guides/INTEGRITY_MODULE.md`](guides/INTEGRITY_MODULE.md) | File integrity, cross-reference validation |
+| Literature | [`guides/LITERATURE_MODULE.md`](guides/LITERATURE_MODULE.md) | Literature search, reference management |
+| LLM | [`guides/LLM_MODULE.md`](guides/LLM_MODULE.md) | Ollama integration, research templates |
+| Publishing | [`guides/PUBLISHING_MODULE.md`](guides/PUBLISHING_MODULE.md) | DOI validation, citation generation |
+| Rendering | [`guides/RENDERING_MODULE.md`](guides/RENDERING_MODULE.md) | PDF, slides, web output |
+| Reporting | [`guides/REPORTING_MODULE.md`](guides/REPORTING_MODULE.md) | Pipeline reports, error aggregation |
+| Scientific | [`guides/SCIENTIFIC_MODULE.md`](guides/SCIENTIFIC_MODULE.md) | Numerical stability, benchmarking |
+
 ## Quick Navigation
 
 ### Understanding Advanced Modules
+
 → Read **[Modules Guide](MODULES_GUIDE.md)** - Modules guide
 
 ### Scientific Computing
+
 → Study **[Scientific Simulation Guide](SCIENTIFIC_SIMULATION_GUIDE.md)** - Simulation system
 
 ### PDF Quality
+
 → Reference **[PDF Validation](PDF_VALIDATION.md)** - Validation system
 
 ## Available Modules
@@ -47,8 +62,3 @@ The `modules/` directory contains documentation for the advanced infrastructure 
 
 - [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - documentation index
 - [`../README.md`](../README.md) - Documentation hub overview
-
-
-
-
-

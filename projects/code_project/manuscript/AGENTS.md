@@ -21,6 +21,7 @@ manuscript/
 ├── 03_results.md                # Experimental results and analysis
 ├── 04_conclusion.md             # Summary and future directions
 ├── config.yaml                  # Manuscript configuration
+├── config.yaml.example          # Configuration template for new projects
 ├── preamble.md                  # LaTeX preamble customization
 ├── references.bib               # Bibliography in BibTeX format
 ├── AGENTS.md                    # This technical documentation
@@ -83,9 +84,20 @@ python3 -m infrastructure.validation.cli integrity ../../output/
 
 ### Manuscript Sections
 
-#### 01_abstract.md
+#### 00_abstract.md
 
 Research abstract with key contributions and findings.
+
+#### 01_introduction.md
+
+Introduction, research context, and project overview.
+
+**Content:**
+
+- Optimization problem formulation
+- Key components overview
+- Algorithm overview and update rule
+- Implementation goals
 
 #### 02_methodology.md
 

@@ -54,13 +54,13 @@ class VisualizationEngine:
         if self.style == "publication":
             plt.rcParams.update(
                 {
-                    "font.size": 10,
+                    "font.size": 16,
                     "font.family": "serif",
-                    "axes.labelsize": 10,
-                    "axes.titlesize": 12,
-                    "xtick.labelsize": 9,
-                    "ytick.labelsize": 9,
-                    "legend.fontsize": 9,
+                    "axes.labelsize": 16,
+                    "axes.titlesize": 18,
+                    "xtick.labelsize": 14,
+                    "ytick.labelsize": 14,
+                    "legend.fontsize": 14,
                     "figure.dpi": 300,
                     "savefig.dpi": 300,
                     "savefig.bbox": "tight",
@@ -277,7 +277,7 @@ class VisualizationEngine:
             f"{quadrants['bottom_left']['id']}\n{quadrants['bottom_left']['name']}",
             ha="center",
             va="center",
-            fontsize=12,
+            fontsize=16,
             fontweight="bold",
         )
 
@@ -298,7 +298,7 @@ class VisualizationEngine:
             f"{quadrants['bottom_right']['id']}\n{quadrants['bottom_right']['name']}",
             ha="center",
             va="center",
-            fontsize=12,
+            fontsize=16,
             fontweight="bold",
         )
 
@@ -314,7 +314,7 @@ class VisualizationEngine:
             f"{quadrants['top_left']['id']}\n{quadrants['top_left']['name']}",
             ha="center",
             va="center",
-            fontsize=12,
+            fontsize=16,
             fontweight="bold",
         )
 
@@ -335,7 +335,7 @@ class VisualizationEngine:
             f"{quadrants['top_right']['id']}\n{quadrants['top_right']['name']}",
             ha="center",
             va="center",
-            fontsize=12,
+            fontsize=16,
             fontweight="bold",
         )
 
@@ -347,7 +347,7 @@ class VisualizationEngine:
             ha="center",
             va="center",
             rotation=90,
-            fontsize=14,
+            fontsize=16,
             fontweight="bold",
         )
         ax.text(
@@ -357,7 +357,7 @@ class VisualizationEngine:
             ha="center",
             va="center",
             rotation=90,
-            fontsize=14,
+            fontsize=16,
             fontweight="bold",
         )
 
@@ -367,7 +367,7 @@ class VisualizationEngine:
             x_axis_labels[0],
             ha="center",
             va="center",
-            fontsize=14,
+            fontsize=16,
             fontweight="bold",
         )
         ax.text(
@@ -376,14 +376,14 @@ class VisualizationEngine:
             x_axis_labels[1],
             ha="center",
             va="center",
-            fontsize=14,
+            fontsize=16,
             fontweight="bold",
         )
 
         # Add main title
         ax.set_title(
             title + ("\n" + subtitle if subtitle else ""),
-            fontsize=16,
+            fontsize=18,
             fontweight="bold",
             pad=20,
         )
@@ -444,7 +444,7 @@ class VisualizationEngine:
                 matrix["name"],
                 ha="center",
                 va="center",
-                fontsize=10,
+                fontsize=14,
                 fontweight="bold",
                 color="white",
             )
@@ -477,13 +477,13 @@ class VisualizationEngine:
                     label,
                     ha="center",
                     va="center",
-                    fontsize=8,
+                    fontsize=14,
                 )
 
         # Add title and description
         ax.set_title(
             "Generative Model Structure (A, B, C, D Matrices)",
-            fontsize=14,
+            fontsize=18,
             fontweight="bold",
             pad=20,
         )
@@ -501,7 +501,7 @@ class VisualizationEngine:
             explanation,
             ha="center",
             va="center",
-            fontsize=9,
+            fontsize=14,
             style="italic",
             bbox=dict(boxstyle="round,pad=0.3", facecolor="lightgray", alpha=0.5),
         )
@@ -551,7 +551,7 @@ class VisualizationEngine:
                 process["name"],
                 ha="center",
                 va="center",
-                fontsize=8,
+                fontsize=14,
                 fontweight="bold",
                 color="white",
             )
@@ -592,14 +592,14 @@ class VisualizationEngine:
             "Feedback Loop:\nAdaptive Control",
             ha="center",
             va="center",
-            fontsize=9,
+            fontsize=14,
             color="red",
             fontweight="bold",
         )
 
         # Add title
         ax.set_title(
-            "Meta-Cognitive Process Flow", fontsize=14, fontweight="bold", pad=20
+            "Meta-Cognitive Process Flow", fontsize=18, fontweight="bold", pad=20
         )
 
         # Set limits and remove axes
@@ -648,7 +648,7 @@ class VisualizationEngine:
             "Internal\nStates",
             ha="center",
             va="center",
-            fontsize=12,
+            fontsize=16,
             fontweight="bold",
         )
 
@@ -669,7 +669,7 @@ class VisualizationEngine:
             "Sensory\nStates",
             ha="center",
             va="center",
-            fontsize=10,
+            fontsize=16,
             fontweight="bold",
         )
 
@@ -690,7 +690,7 @@ class VisualizationEngine:
             "Active\nStates",
             ha="center",
             va="center",
-            fontsize=10,
+            fontsize=16,
             fontweight="bold",
         )
 
@@ -711,7 +711,7 @@ class VisualizationEngine:
             "External\nStates",
             ha="center",
             va="center",
-            fontsize=10,
+            fontsize=16,
             fontweight="bold",
         )
 
@@ -733,7 +733,7 @@ class VisualizationEngine:
             "Markov Blanket",
             ha="center",
             va="center",
-            fontsize=12,
+            fontsize=16,
             fontweight="bold",
             color="black",
         )
@@ -779,7 +779,7 @@ class VisualizationEngine:
         # Add title and description
         ax.set_title(
             "Free Energy Principle: System Boundaries and Markov Blanket",
-            fontsize=14,
+            fontsize=18,
             fontweight="bold",
             pad=20,
         )
@@ -795,7 +795,7 @@ class VisualizationEngine:
             explanation,
             ha="center",
             va="center",
-            fontsize=9,
+            fontsize=14,
             style="italic",
             bbox=dict(boxstyle="round,pad=0.3", facecolor="lightgray", alpha=0.5),
         )

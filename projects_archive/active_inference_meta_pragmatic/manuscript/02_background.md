@@ -1,6 +1,6 @@
 # Background and Theoretical Foundations {#sec:background}
 
-Active Inference represents a paradigm shift in our understanding of cognition, perception, and action. Originating from the Free Energy Principle [@friston2010free], Active Inference provides a unified mathematical formalism for understanding biological agents as systems that minimize variational free energy through perception and action. Recent advances have extended Active Inference to scale-free formulations [@friston2025scalefree] and variational planning [@champion2025efeplanning], while metacognitive architectures [@metamind2025; @sofai2025] have demonstrated the practical applicability of these principles to AI systems. This section establishes the theoretical foundations that enable Active Inference to operate as a meta-theoretical methodology—specifying the frameworks within which cognition occurs.
+Active Inference represents a paradigm shift in our understanding of cognition, perception, and action. Originating from the Free Energy Principle [@friston2010free], Active Inference provides a unified mathematical formalism for understanding biological agents as systems that minimize variational free energy through perception and action (see Figure \ref{fig:active_inference_concepts}). Recent advances have extended Active Inference to scale-free formulations [@friston2025scalefree] and variational planning [@champion2025efeplanning], while metacognitive architectures [@metamind2025; @sofai2025] have demonstrated the practical applicability of these principles to AI systems. This section establishes the theoretical foundations that enable Active Inference to operate as a meta-theoretical methodology—specifying the frameworks within which cognition occurs.
 
 \begin{figure}[h]
 \centering
@@ -11,7 +11,7 @@ Active Inference represents a paradigm shift in our understanding of cognition, 
 
 ## The Free Energy Principle {#sec:fep_foundation}
 
-The Free Energy Principle (FEP) defines a "thing" as a system that maintains its structure over time through free energy minimization. This principle applies across multiple scales of organization:
+The Free Energy Principle (FEP) defines a "thing" as a system that maintains its structure over time through free energy minimization (Figure \ref{fig:fep_visualization}). This principle applies across multiple scales of organization:
 
 \begin{figure}[h]
 \centering
@@ -20,7 +20,7 @@ The Free Energy Principle (FEP) defines a "thing" as a system that maintains its
 \label{fig:fep_visualization}
 \end{figure}
 
-**Physical Level:** Boundary maintenance through Markov blankets—systems maintain physical structure by minimizing thermodynamic free energy, creating boundaries that separate internal from external states.
+**Physical Level:** Boundary maintenance through Markov blankets—systems maintain physical structure by minimizing thermodynamic free energy, creating boundaries that separate internal from external states (Figure \ref{fig:fep_system_boundaries}).
 
 **Cognitive Level:** Belief updating through Expected Free Energy (EFE) minimization—cognitive agents maintain accurate world models by minimizing expected free energy, updating beliefs through Bayesian inference while selecting actions that reduce uncertainty.
 
@@ -36,6 +36,7 @@ The Free Energy Principle (FEP) defines a "thing" as a system that maintains its
 ### Variational Free Energy
 
 The Variational Free Energy bounds the surprise:
+
 ```{=latex}
 \begin{equation}
 \mathcal{F}[q] = \mathbb{E}_{q(s)}[\log q(s) - \log p(s,o)]
@@ -44,6 +45,7 @@ The Variational Free Energy bounds the surprise:
 ```
 
 Systems self-organize by minimizing free energy:
+
 ```{=latex}
 \begin{equation}
 \dot{\phi} = -\frac{\partial \mathcal{F}}{\partial \phi}
@@ -76,6 +78,7 @@ The Expected Free Energy (EFE) combines epistemic and pragmatic components in a 
 The EFE decomposes into two fundamental terms:
 
 **Epistemic Value (Information Gain):**
+
 ```{=latex}
 \begin{equation}
 H[Q(\pi)] = \mathbb{E}_{q(s_\tau)}[\log q(s_\tau) - \log p(s_\tau \mid \pi)]
@@ -86,6 +89,7 @@ H[Q(\pi)] = \mathbb{E}_{q(s_\tau)}[\log q(s_\tau) - \log p(s_\tau \mid \pi)]
 This term (Equation \eqref{eq:epistemic_component}) is minimized when executing policy $\pi$ reduces uncertainty about hidden states.
 
 **Pragmatic Value (Goal Achievement):**
+
 ```{=latex}
 \begin{equation}
 G(\pi) = \mathbb{E}_{q(o_\tau)}[\log p(o_\tau \mid s_\tau) + \log p(s_\tau) - \log q(s_\tau)]
@@ -120,6 +124,7 @@ Active Inference agents operate through generative models defined by four core m
 ### Matrix A: Observation Likelihoods
 
 Defines how hidden states generate observations:
+
 ```{=latex}
 \begin{equation}
 A = [a_{ij}] \quad a_{ij} = P(o_i \mid s_j)
@@ -128,6 +133,7 @@ A = [a_{ij}] \quad a_{ij} = P(o_i \mid s_j)
 ```
 
 **Properties:**
+
 - Each column sums to 1 (valid probability distribution)
 - Rows represent observation modalities
 - Columns represent hidden state conditions
@@ -136,6 +142,7 @@ A = [a_{ij}] \quad a_{ij} = P(o_i \mid s_j)
 ### Matrix B: State Transitions
 
 Defines how actions influence state changes:
+
 ```{=latex}
 \begin{equation}
 B = [b_{ijk}] \quad b_{ijk} = P(s_j \mid s_i, a_k)
@@ -148,6 +155,7 @@ B = [b_{ijk}] \quad b_{ijk} = P(s_j \mid s_i, a_k)
 ### Matrix C: Preferences
 
 Defines desired outcomes (the pragmatic landscape):
+
 ```{=latex}
 \begin{equation}
 C = [c_i] \quad c_i = \log P(o_i)
@@ -156,6 +164,7 @@ C = [c_i] \quad c_i = \log P(o_i)
 ```
 
 **Interpretation:**
+
 - Positive values: preferred observations
 - Negative values: avoided observations
 - Magnitude indicates strength of preference
@@ -163,6 +172,7 @@ C = [c_i] \quad c_i = \log P(o_i)
 ### Matrix D: Prior Beliefs
 
 Defines initial state beliefs:
+
 ```{=latex}
 \begin{equation}
 D = [d_i] \quad d_i = P(s_i)
@@ -209,12 +219,14 @@ Beyond epistemic specification, Active Inference supports meta-pragmatic modelin
 The structure reveals the dual role of the Active Inference modeler:
 
 **As Architect:**
+
 - Specifies epistemic frameworks ($A$, $B$, $D$ matrices)
 - Defines pragmatic landscapes ($C$ matrix)
 - Designs cognitive architectures
 - Establishes boundary conditions for cognition
 
 **As Subject:**
+
 - Uses Active Inference to understand their own cognition
 - Applies meta-epistemic principles to knowledge acquisition
 - Employs meta-pragmatic frameworks for decision-making
@@ -235,4 +247,3 @@ This dual role creates a recursive relationship where the tools used to model ot
 \caption{Free Energy Principle as the bridge between physics and cognition domains. The same mathematical principle—variational free energy minimization—applies across multiple scales: physical systems, biological systems, cognitive systems, and meta-cognitive systems. This unification enables understanding of intelligence as a natural extension of physical principles.}
 \label{fig:physics_cognition_bridge}
 \end{figure}
-

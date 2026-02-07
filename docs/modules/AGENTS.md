@@ -12,7 +12,16 @@ docs/modules/
 ├── MODULES_GUIDE.md       # Guide to all 7 modules
 ├── PDF_VALIDATION.md               # PDF validation system documentation
 ├── README.md                       # Quick reference for modules
-└── SCIENTIFIC_SIMULATION_GUIDE.md  # Scientific simulation system guide
+├── SCIENTIFIC_SIMULATION_GUIDE.md  # Scientific simulation system guide
+└── guides/                         # Per-module documentation
+    ├── README.md
+    ├── INTEGRITY_MODULE.md
+    ├── LITERATURE_MODULE.md
+    ├── LLM_MODULE.md
+    ├── PUBLISHING_MODULE.md
+    ├── RENDERING_MODULE.md
+    ├── REPORTING_MODULE.md
+    └── SCIENTIFIC_MODULE.md
 ```
 
 ## Key Documentation Files
@@ -22,6 +31,7 @@ docs/modules/
 **guide covering all seven advanced modules:**
 
 **Module Categories:**
+
 - **Validation**: PDF, Markdown, and integrity validation
 - **Documentation**: Figure management and API glossary generation
 - **Rendering**: Multi-format output generation (PDF, HTML, slides)
@@ -31,6 +41,7 @@ docs/modules/
 - **Reporting**: Pipeline reporting and error aggregation
 
 **Integration Patterns:**
+
 - Module interoperability and data flow
 - CLI integration and command-line usage
 - Configuration management across modules
@@ -41,6 +52,7 @@ docs/modules/
 **PDF validation system documentation:**
 
 **Validation Capabilities:**
+
 - Text extraction and content analysis
 - Unresolved reference detection (`??`)
 - Missing citation identification (`[?]`)
@@ -48,6 +60,7 @@ docs/modules/
 - Document structure validation
 
 **Usage Examples:**
+
 ```bash
 # Validate generated PDF
 python3 -m infrastructure.validation.cli pdf output/pdf/project_combined.pdf
@@ -60,6 +73,7 @@ python3 -m infrastructure.validation.cli pdf output/pdf/01_abstract.pdf
 ```
 
 **Validation Checks:**
+
 - Cross-reference integrity
 - Citation completeness
 - Mathematical notation rendering
@@ -71,12 +85,14 @@ python3 -m infrastructure.validation.cli pdf output/pdf/01_abstract.pdf
 **Guide for scientific computing and simulation modules:**
 
 **Simulation Capabilities:**
+
 - Numerical stability analysis
 - Performance benchmarking
 - Algorithm validation
 - Computational reproducibility
 
 **Best Practices:**
+
 - Numerical precision management
 - Performance optimization techniques
 - Reproducibility assurance
@@ -87,6 +103,7 @@ python3 -m infrastructure.validation.cli pdf output/pdf/01_abstract.pdf
 ### Module Design Principles
 
 **Standardized Module Structure:**
+
 ```python
 # Each advanced module follows this pattern
 module/
@@ -104,12 +121,14 @@ module/
 **Module Categories:**
 
 **1. Infrastructure Modules:**
+
 - Generic, reusable across projects
 - Domain-independent functionality
 - 60%+ test coverage requirement
 - Can be copied to other research projects
 
 **2. Specialized Modules:**
+
 - Research-specific functionality
 - Domain-aware features
 - 90%+ test coverage requirement
@@ -118,6 +137,7 @@ module/
 ### Module Integration
 
 **Thin Orchestrator Pattern:**
+
 ```python
 # Scripts coordinate, modules implement
 from infrastructure.validation import validate_pdf_rendering
@@ -153,6 +173,7 @@ def generate_complete_output():
 ### API Documentation
 
 **Function Documentation:**
+
 ```python
 def validate_pdf_rendering(pdf_path: Path, strict: bool = False) -> ValidationResult:
     """Validate rendered PDF for quality and completeness.
@@ -186,6 +207,7 @@ def validate_pdf_rendering(pdf_path: Path, strict: bool = False) -> ValidationRe
 ```
 
 **Class Documentation:**
+
 ```python
 class PDFValidator:
     """PDF validation system for research documents.
@@ -212,6 +234,7 @@ class PDFValidator:
 ### Usage Examples
 
 **Module Usage:**
+
 ```python
 # 1. PDF Validation
 from infrastructure.validation import validate_pdf_rendering
@@ -254,11 +277,13 @@ print(f"Published with DOI: {doi}")
 ### Test Coverage Requirements
 
 **Module-Specific Coverage:**
+
 - **Infrastructure modules**: 60% minimum coverage
 - **Project modules**: 90% minimum coverage
 - **Critical paths**: 100% coverage requirement
 
 **Test Categories:**
+
 ```python
 class TestPDFValidation:
     """PDF validation testing."""
@@ -296,6 +321,7 @@ class TestPDFValidation:
 ### Integration Testing
 
 **Cross-Module Testing:**
+
 ```python
 def test_complete_research_pipeline():
     """Test integration of multiple modules in research pipeline."""
@@ -327,18 +353,21 @@ def test_complete_research_pipeline():
 ### Regular Maintenance Tasks
 
 **Weekly Maintenance:**
+
 - Run module test suites
 - Check for dependency updates
 - Review error logs and reports
 - Validate example code in documentation
 
 **Monthly Maintenance:**
+
 - Update module documentation
 - Review and update dependencies
 - Performance benchmark updates
 - Security vulnerability assessment
 
 **Quarterly Maintenance:**
+
 - Major version compatibility testing
 - Architecture review and improvements
 - Feature usage analysis
@@ -347,6 +376,7 @@ def test_complete_research_pipeline():
 ### Module Evolution
 
 **Adding Modules:**
+
 1. **Design Phase**: Define module scope and interfaces
 2. **Implementation**: Create core functionality with tests
 3. **Integration**: Add CLI interface and configuration
@@ -355,6 +385,7 @@ def test_complete_research_pipeline():
 6. **Release**: Integrate into main pipeline
 
 **Module Enhancement:**
+
 1. **Assessment**: Identify improvement opportunities
 2. **Planning**: Design enhancements with backward compatibility
 3. **Implementation**: Add features with tests
@@ -366,6 +397,7 @@ def test_complete_research_pipeline():
 ### Module Performance Optimization
 
 **Efficient Algorithms:**
+
 ```python
 class OptimizedPDFValidator:
     """PDF validator with performance optimizations."""
@@ -399,12 +431,14 @@ class OptimizedPDFValidator:
 ### Resource Management
 
 **Memory Optimization:**
+
 - Stream processing for large files
 - Cache management and cleanup
 - Memory-efficient data structures
 - Garbage collection optimization
 
 **CPU Optimization:**
+
 - Parallel processing where applicable
 - Algorithm complexity optimization
 - Caching for expensive operations
@@ -415,6 +449,7 @@ class OptimizedPDFValidator:
 ### Secure Module Design
 
 **Input Validation:**
+
 ```python
 def validate_pdf_securely(pdf_path: Path) -> ValidationResult:
     """Validate PDF with security considerations."""
@@ -440,6 +475,7 @@ def validate_pdf_securely(pdf_path: Path) -> ValidationResult:
 ```
 
 **Credential Handling:**
+
 ```python
 class SecurePublisher:
     """Publishing client with secure credential management."""
@@ -463,6 +499,7 @@ class SecurePublisher:
 ### Common Module Issues
 
 **Import Errors:**
+
 ```bash
 # Check module installation
 python3 -c "import infrastructure.validation; print('Module imported successfully')"
@@ -475,6 +512,7 @@ python3 -c "import sys; print(sys.path)"
 ```
 
 **Performance Issues:**
+
 ```bash
 # Profile module execution
 python3 -m cProfile -s cumulative script_using_module.py
@@ -491,6 +529,7 @@ print(f'Memory: {psutil.virtual_memory().percent}%')
 ```
 
 **Configuration Problems:**
+
 ```bash
 # Validate configuration
 python3 -c "
@@ -506,12 +545,14 @@ print(f'Keys: {list(config.keys())}')
 ### Planned Enhancements
 
 **Module Categories:**
+
 - **Collaboration**: Multi-researcher workflow support
 - **Data Management**: Research data versioning and sharing
 - **Visualization**: Advanced plotting and dashboard creation
 - **Automation**: Research workflow orchestration
 
 **Module Improvements:**
+
 - LLM integration capabilities
 - Improved rendering format support
 - Extended publishing platform coverage
@@ -520,6 +561,7 @@ print(f'Keys: {list(config.keys())}')
 ### Community Contributions
 
 **Module Contribution Process:**
+
 1. **Proposal**: Submit module idea with use case justification
 2. **Design Review**: Architecture and interface design review
 3. **Implementation**: Develop with testing
@@ -529,11 +571,13 @@ print(f'Keys: {list(config.keys())}')
 ## See Also
 
 **Module Documentation:**
+
 - [`MODULES_GUIDE.md`](MODULES_GUIDE.md) - Module guide
 - [`PDF_VALIDATION.md`](PDF_VALIDATION.md) - PDF validation system
 - [`SCIENTIFIC_SIMULATION_GUIDE.md`](SCIENTIFIC_SIMULATION_GUIDE.md) - Scientific simulation guide
 
 **System Documentation:**
+
 - [`../AGENTS.md`](../AGENTS.md) - system overview
 - [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - Documentation index
 - [`../../infrastructure/AGENTS.md`](../../infrastructure/AGENTS.md) - Infrastructure modules

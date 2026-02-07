@@ -6,38 +6,36 @@ This directory contains the research manuscript for "Active Inference as a Meta-
 
 ## File Structure
 
-### Main Sections (01-09)
-- `01_abstract.md` - Research overview and key contributions
-- `02_introduction.md` - Motivation, background, and research questions
-- `03_methodology.md` - Core $2 \times 2$ framework and theoretical development
-- `04_experimental_results.md` - Quadrant demonstrations and validation
-- `05_discussion.md` - Theoretical implications and interpretations
-- `06_conclusion.md` - Summary, contributions, and future directions
-- `08_acknowledgments.md` - Funding and acknowledgments
-- `09_appendix.md` - Technical details and extended derivations
+### Main Sections (01-07)
 
-### Supplemental Sections (S01-S03)
-- `S01_supplemental_methods.md` - Extended methodological details
-- `S02_supplemental_results.md` - Additional examples and analysis
-- `S03_supplemental_analysis.md` - Advanced theoretical analysis
+- `01_abstract.md` - Research overview and key contributions
+- `02_background.md` - FEP foundations, EFE formulation, generative models, meta-aspects
+- `03_quadrant_model.md` - Core 2×2 framework with Q1–Q4 demonstrations
+- `04_security_implications.md` - Cognitive security, AI safety, defense strategies
+- `05_discussion.md` - Theoretical contributions, implications, limitations, conclusions
+- `06_acknowledgments.md` - Credits and acknowledgments
+- `07_appendix.md` - Mathematical foundations, algorithms, benchmarks
 
 ### Reference Sections (98-99)
+
 - `98_symbols_glossary.md` - Mathematical notation and symbols
-- `99_references.bib` - Bibliography in BibTeX format
+- `99_references.md` - Bibliography references
 
 ### Configuration Files
+
 - `config.yaml` - Paper metadata and rendering configuration
 - `preamble.md` - LaTeX preamble customizations
+- `references.bib` - BibTeX bibliography
 
 ## Section Numbering Convention
 
-- **01-09**: Main manuscript sections
-- **S01-S99**: Supplemental sections
+- **01-07**: Main manuscript sections
 - **98-99**: Reference and glossary sections
 
 ## Cross-Reference System
 
 The manuscript uses LaTeX-style cross-references:
+
 - `\\ref{sec:methodology}` - Section references
 - `\\ref{fig:quadrant_matrix}` - Figure references
 - `\\eqref{eq:efe}` - Equation references
@@ -46,6 +44,7 @@ The manuscript uses LaTeX-style cross-references:
 ## Rendering Pipeline
 
 The manuscript can be processed through standard rendering pipelines:
+
 1. Markdown files combined into single document
 2. Cross-references resolved
 3. LaTeX generated with proper formatting
@@ -63,6 +62,7 @@ The manuscript can be processed through standard rendering pipelines:
 ## Maintenance
 
 When modifying the manuscript:
+
 1. Update cross-references if section numbers change
 2. Register new figures with the figure manager
 3. Update bibliography for new citations

@@ -39,8 +39,21 @@ metadata:
 
 # LLM Review Settings
 llm:
+  reviews:
+    enabled: false  # Set to true to enable LLM-powered reviews
+    types:
+      - executive_summary  # Default: single review
+      # Uncomment to enable additional reviews:
+      # - quality_review
+      # - methodology_review
+      # - improvement_suggestions
   translations:
     enabled: false  # Set to true to enable translations
+    languages:
+      - zh  # Default: Chinese Simplified
+      # Uncomment to enable additional languages:
+      # - hi  # Hindi
+      # - ru  # Russian
 
 # Testing Configuration
 testing:

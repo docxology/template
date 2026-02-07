@@ -27,6 +27,7 @@ This directory contains expertly crafted prompt templates that leverage the exte
 | [`infrastructure_module.md`](infrastructure_module.md) | Develop infrastructure modules | Generic utilities reusable across projects |
 | [`documentation_creation.md`](documentation_creation.md) | Create documentation | Writing AGENTS.md and README.md files |
 | [`validation_quality.md`](validation_quality.md) | Validation and quality assurance | Ensuring output quality and compliance |
+| [`comprehensive_assessment.md`](comprehensive_assessment.md) | Comprehensive assessment and review | Full code, docs, and manuscript assessment |
 
 ## Quick Navigation Map
 
@@ -42,6 +43,7 @@ graph TD
         FA[feature_addition.md<br/>Add features<br/>architecture-compliant]
         REF[refactoring.md<br/>Refactor code<br/>clean break approach]
         VAL[validation_quality.md<br/>Quality assurance<br/>and validation]
+        CA[comprehensive_assessment.md<br/>Full assessment<br/>code, docs, manuscript]
     end
 
     subgraph Infrastructure["🏗️ Infrastructure Development"]
@@ -69,6 +71,7 @@ graph TD
 ### 1. Choose the Right Prompt
 
 Select the prompt that matches your task:
+
 - **Creating new research?** → `manuscript_creation.md`
 - **Adding code to existing project?** → `code_development.md`
 - **Testing new functionality?** → `test_creation.md`
@@ -77,6 +80,7 @@ Select the prompt that matches your task:
 ### 2. Customize the Prompt
 
 Each prompt contains:
+
 - **Context**: What documentation it leverages
 - **Template**: Copy-and-customize prompt text
 - **Requirements**: Checklist of compliance items
@@ -85,6 +89,7 @@ Each prompt contains:
 ### 3. Provide Specific Input
 
 When using prompts, provide:
+
 - **Clear objectives** for what you want to create
 - **Specific constraints** or requirements
 - **Context about the project** (if extending existing work)
@@ -93,6 +98,7 @@ When using prompts, provide:
 ### 4. Validate Output
 
 After generation, validate against:
+
 - **Standards compliance** (check against `.cursorrules/`)
 - **Architecture alignment** (two-layer, thin orchestrator)
 - **Testing requirements** (coverage, no mocks)
@@ -161,16 +167,19 @@ cat docs/prompts/validation_quality.md
 ## See Also
 
 ### Related Documentation
+
 - [`AGENTS.md`](AGENTS.md) - Technical documentation for all prompts
 - [`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md) - System design principles
 - [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow
 - [`../README.md`](../README.md) - documentation hub
 
 ### Project Documentation
+
 - [`../../projects/code_project/AGENTS.md`](../../projects/code_project/AGENTS.md) - Code project documentation
 - [`../../projects/AGENTS.md`](../../projects/AGENTS.md) - Multi-project management guide
 
 ### Standards Reference
+
 - [`../../.cursorrules/README.md`](../../.cursorrules/README.md) - Development standards overview
 - [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Testing requirements
 - [`../../.cursorrules/infrastructure_modules.md`](../../.cursorrules/infrastructure_modules.md) - Infrastructure development

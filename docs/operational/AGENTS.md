@@ -19,7 +19,20 @@ docs/operational/
 ├── LOGGING_GUIDE.md                # Logging system usage and configuration
 ├── PERFORMANCE_OPTIMIZATION.md     # Performance tuning and optimization
 ├── README.md                       # Quick reference for operational docs
-└── TROUBLESHOOTING_GUIDE.md        # troubleshooting guide
+├── REPORTING_GUIDE.md              # Reporting system guide
+├── TROUBLESHOOTING_GUIDE.md        # troubleshooting guide
+├── logging/                        # Detailed logging guides
+│   ├── README.md
+│   ├── BASH_LOGGING.md
+│   ├── PYTHON_LOGGING.md
+│   └── LOGGING_PATTERNS.md
+└── troubleshooting/                # Topic-specific troubleshooting
+    ├── README.md
+    ├── BUILD_TOOLS.md
+    ├── COMMON_ERRORS.md
+    ├── ENVIRONMENT_SETUP.md
+    ├── RECOVERY_PROCEDURES.md
+    └── TEST_FAILURES.md
 ```
 
 ## Key Documentation Files
@@ -29,6 +42,7 @@ docs/operational/
 **build pipeline documentation:**
 
 **Pipeline Stages:**
+
 - Environment setup and validation
 - Test execution and coverage analysis
 - Analysis script execution
@@ -37,6 +51,7 @@ docs/operational/
 - Final deliverable copying
 
 **Execution Modes:**
+
 - pipeline execution
 - Individual stage execution
 - Resume from checkpoint
@@ -47,11 +62,13 @@ docs/operational/
 **Configuration management and customization:**
 
 **Configuration Sources:**
+
 - YAML configuration files (`project/manuscript/config.yaml`)
 - Environment variables (highest priority)
 - Default values (fallback)
 
 **Configuration Areas:**
+
 - Project metadata (title, author, affiliations)
 - Build settings (output formats, quality thresholds)
 - External service credentials (API tokens, endpoints)
@@ -62,12 +79,14 @@ docs/operational/
 **problem-solving guide:**
 
 **Common Issues:**
+
 - Build failures and compilation errors
 - Dependency installation problems
 - Configuration validation errors
 - Output generation failures
 
 **Diagnostic Procedures:**
+
 - Log analysis techniques
 - System state inspection
 - Error message interpretation
@@ -78,12 +97,14 @@ docs/operational/
 **System performance tuning and optimization:**
 
 **Performance Areas:**
+
 - Build pipeline optimization
 - Memory usage management
 - CPU utilization improvement
 - I/O operation efficiency
 
 **Optimization Techniques:**
+
 - Parallel processing configuration
 - Caching strategy implementation
 - Resource limit management
@@ -94,6 +115,7 @@ docs/operational/
 ### Daily Operations
 
 **Standard Workflow:**
+
 ```bash
 # 1. Environment check
 python3 scripts/00_setup_environment.py
@@ -115,6 +137,7 @@ python3 scripts/05_copy_outputs.py
 ```
 
 **Health Monitoring:**
+
 ```bash
 # Check system status
 python3 -c "
@@ -130,6 +153,7 @@ for component, info in status.items():
 **Regular Maintenance Tasks:**
 
 **Weekly:**
+
 ```bash
 # Update dependencies
 uv lock --upgrade
@@ -145,6 +169,7 @@ grep "ERROR\|WARNING" output/logs/*.log | tail -20
 ```
 
 **Monthly:**
+
 ```bash
 # Full system backup
 tar -czf "backup_$(date +%Y%m%d).tar.gz" \
@@ -162,6 +187,7 @@ python3 scripts/02_run_analysis.py --benchmark
 ### Configuration Management
 
 **Configuration Best Practices:**
+
 ```yaml
 # project/manuscript/config.yaml
 paper:
@@ -191,6 +217,7 @@ services:
 ```
 
 **Environment Variables:**
+
 ```bash
 # Essential variables
 export LOG_LEVEL=1                    # 0=DEBUG, 1=INFO, 2=WARN, 3=ERROR
@@ -210,12 +237,14 @@ export GITHUB_TOKEN="your-github-token"
 ### Error Handling and Recovery
 
 **Error Classification:**
+
 - **Configuration Errors**: Invalid settings or missing files
 - **Dependency Errors**: Missing packages or version conflicts
 - **Build Errors**: Compilation failures or resource issues
 - **Validation Errors**: Quality check failures
 
 **Recovery Procedures:**
+
 ```bash
 # Configuration error recovery
 python3 -c "
@@ -244,6 +273,7 @@ python3 scripts/04_validate_output.py --verbose
 ### Environment Setup
 
 **Development Environment:**
+
 ```bash
 # Python environment
 python3 -m venv research_env
@@ -257,6 +287,7 @@ python3 -c "import infrastructure; print('Installation successful')"
 ```
 
 **Production Environment:**
+
 ```bash
 # System dependencies (Ubuntu/Debian)
 sudo apt-get update
@@ -270,6 +301,7 @@ python3 --version
 ### Monitoring and Alerting
 
 **System Monitoring:**
+
 ```python
 # Performance monitoring
 from infrastructure.core import PerformanceMonitor
@@ -283,6 +315,7 @@ print(f"Peak memory: {monitor.get_memory_peak() / 1024 / 1024:.1f}MB")
 ```
 
 **Log Analysis:**
+
 ```bash
 # Recent errors
 grep "ERROR" output/logs/*.log | tail -10
@@ -297,6 +330,7 @@ grep "Memory\|CPU" output/logs/*.log | tail -10
 ### Backup and Recovery
 
 **Backup Strategy:**
+
 ```bash
 # Source code backup
 git bundle create "repo-$(date +%Y%m%d).bundle" --all
@@ -313,6 +347,7 @@ tar -czf "data-$(date +%Y%m%d).tar.gz" \
 ```
 
 **Recovery Procedures:**
+
 ```bash
 # Repository recovery
 git clone repo-20241227.bundle recovery-repo
@@ -331,6 +366,7 @@ python3 scripts/03_render_pdf.py
 ### Performance Monitoring
 
 **Build Performance Tracking:**
+
 ```python
 import time
 from infrastructure.core import PerformanceMonitor
@@ -382,6 +418,7 @@ class BuildProfiler:
 ```
 
 **Performance Optimization:**
+
 ```bash
 # Parallel processing configuration
 export MAX_PARALLEL_SUMMARIES=4
@@ -398,6 +435,7 @@ export OUTPUT_BUFFER_SIZE="64MB"
 ### Resource Management
 
 **Memory Management:**
+
 ```python
 # Monitor memory usage
 import psutil
@@ -429,6 +467,7 @@ if resources['memory']['percent'] > 80:
 ```
 
 **Disk Space Management:**
+
 ```bash
 # Check disk usage
 df -h .
@@ -448,7 +487,9 @@ find output/logs/ -name "*.log" -mtime +7 -exec gzip {} \;
 ### Systematic Problem Solving
 
 **Diagnostic Framework:**
+
 1. **Reproduce the Issue**
+
    ```bash
    # Create minimal test case
    mkdir test_case && cd test_case
@@ -457,6 +498,7 @@ find output/logs/ -name "*.log" -mtime +7 -exec gzip {} \;
    ```
 
 2. **Gather Information**
+
    ```bash
    # System information
    uname -a
@@ -468,6 +510,7 @@ find output/logs/ -name "*.log" -mtime +7 -exec gzip {} \;
    ```
 
 3. **Isolate the Problem**
+
    ```bash
    # Test individual components
    python3 -c "from infrastructure.core import load_config; print('Config loads')"
@@ -475,6 +518,7 @@ find output/logs/ -name "*.log" -mtime +7 -exec gzip {} \;
    ```
 
 4. **Apply Fix and Test**
+
    ```bash
    # Implement fix
    vim fixed_file.py
@@ -487,6 +531,7 @@ find output/logs/ -name "*.log" -mtime +7 -exec gzip {} \;
 ### Common Issues and Solutions
 
 **LaTeX Compilation Failures:**
+
 ```bash
 # Check LaTeX installation
 which xelatex
@@ -501,6 +546,7 @@ xelatex --interaction=nonstopmode test.tex
 ```
 
 **Memory Issues:**
+
 ```bash
 # Check system memory
 free -h
@@ -517,6 +563,7 @@ print(f'Memory usage: {psutil.virtual_memory().percent}%')
 ```
 
 **Network Issues:**
+
 ```bash
 # Test connectivity
 curl -I https://api.semanticscholar.org/
@@ -534,6 +581,7 @@ export REQUEST_TIMEOUT=30
 ### Secure Configuration
 
 **Credential Management:**
+
 ```python
 # Secure credential handling
 from infrastructure.core.credentials import CredentialManager
@@ -550,6 +598,7 @@ if token:
 ```
 
 **Environment Security:**
+
 ```bash
 # Secure environment setup
 export ZENODO_TOKEN="$(cat ~/.zenodo_token)"
@@ -569,6 +618,7 @@ else:
 ### Security Monitoring
 
 **Vulnerability Scanning:**
+
 ```bash
 # Python package security
 safety check
@@ -587,12 +637,14 @@ find . -name "*.py" -exec python3 -m py_compile {} \;
 ### Operational Metrics
 
 **Key Performance Indicators:**
+
 - Build success rate (>95%)
 - Average build time (<30 minutes)
 - Test coverage maintenance (>90% project, >60% infrastructure)
 - Mean time to resolution for issues (<24 hours)
 
 **Monitoring Dashboard:**
+
 ```python
 class OperationalDashboard:
     """Monitor system operational metrics."""
@@ -621,12 +673,14 @@ class OperationalDashboard:
 ### Process Optimization
 
 **Workflow Improvements:**
+
 - Automate repetitive tasks
 - Implement parallel processing where beneficial
 - Optimize resource utilization
 - Streamline deployment processes
 
 **Feedback Integration:**
+
 - Monitor user-reported issues
 - Track feature usage patterns
 - Collect performance feedback
@@ -635,12 +689,14 @@ class OperationalDashboard:
 ## See Also
 
 **Operational Documentation:**
+
 - [`BUILD_SYSTEM.md`](BUILD_SYSTEM.md) - Build pipeline details
 - [`TROUBLESHOOTING_GUIDE.md`](TROUBLESHOOTING_GUIDE.md) - Problem-solving guide
 - [`PERFORMANCE_OPTIMIZATION.md`](PERFORMANCE_OPTIMIZATION.md) - Performance tuning
 - [`CONFIGURATION.md`](CONFIGURATION.md) - Configuration management
 
 **System Documentation:**
+
 - [`../AGENTS.md`](../AGENTS.md) - system overview
 - [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - Documentation index
 - [`../../AGENTS.md`](../../AGENTS.md) - Root system documentation

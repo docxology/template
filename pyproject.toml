@@ -48,6 +48,7 @@ dependencies = [
   "scipy>=1.10.0",  # Scientific computing (active_inference project)
   "pandas>=2.0.0",  # Data analysis (active_inference project)
   "seaborn>=0.13.0", # Visualization library (cogsec projects)
+  "ollama>=0.6.1",
 ]
 
 [project.scripts]

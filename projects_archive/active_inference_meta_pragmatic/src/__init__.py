@@ -11,6 +11,10 @@ Modules:
 - generative_models: Generative model structures (A, B, C, D matrices)
 - meta_cognition: Meta-cognitive concepts and reflective processing
 - modeler_perspective: Dual role of modeler as architect and subject
+- data_generator: Synthetic data generation for demonstrations and testing
+- statistical_analysis: Statistical testing, regression, and hypothesis validation
+- validation: Framework validation suite and correctness checking
+- visualization: Publication-quality plotting and figure generation
 """
 
 __version__ = "1.0.0"

@@ -52,8 +52,16 @@ Documentation is organized into modular subdirectories by purpose and audience:
 | File | Purpose | Audience |
 |------|---------|----------|
 | `operational/BUILD_SYSTEM.md` | Build pipeline and execution details | Developers |
-| `operational/TROUBLESHOOTING_GUIDE.md` | troubleshooting | All users |
+| `operational/CI_CD_INTEGRATION.md` | CI/CD setup and GitHub Actions | Developers |
+| `operational/DEPENDENCY_MANAGEMENT.md` | Package management with uv | Developers |
+| `operational/PERFORMANCE_OPTIMIZATION.md` | Build time optimization and caching | Developers |
 | `operational/CONFIGURATION.md` | Configuration system guide | All users |
+| `operational/CHECKPOINT_RESUME.md` | Checkpoint and resume system | Developers |
+| `operational/REPORTING_GUIDE.md` | Reporting system and report interpretation | Developers |
+| `operational/TROUBLESHOOTING_GUIDE.md` | troubleshooting | All users |
+| `operational/LLM_REVIEW_TROUBLESHOOTING.md` | LLM-specific troubleshooting | Developers |
+| `operational/ERROR_HANDLING_GUIDE.md` | Error handling patterns | Developers |
+| `operational/LOGGING_GUIDE.md` | Logging system guide | Developers |
 
 ### Reference Materials (`reference/`)
 
@@ -74,6 +82,36 @@ Documentation is organized into modular subdirectories by purpose and audience:
 | `modules/PDF_VALIDATION.md` | PDF validation documentation | Developers |
 | `modules/SCIENTIFIC_SIMULATION_GUIDE.md` | Scientific simulation system | Researchers |
 
+### Per-Module Guides (`modules/guides/`)
+
+| File | Purpose | Audience |
+|------|---------|----------|
+| `modules/guides/INTEGRITY_MODULE.md` | Integrity module guide | Developers |
+| `modules/guides/LITERATURE_MODULE.md` | Literature module guide | Developers |
+| `modules/guides/LLM_MODULE.md` | LLM module guide | Developers |
+| `modules/guides/PUBLISHING_MODULE.md` | Publishing module guide | Developers |
+| `modules/guides/RENDERING_MODULE.md` | Rendering module guide | Developers |
+| `modules/guides/REPORTING_MODULE.md` | Reporting module guide | Developers |
+| `modules/guides/SCIENTIFIC_MODULE.md` | Scientific module guide | Developers |
+
+### Logging Guides (`operational/logging/`)
+
+| File | Purpose | Audience |
+|------|---------|----------|
+| `operational/logging/BASH_LOGGING.md` | Bash logging patterns | Developers |
+| `operational/logging/PYTHON_LOGGING.md` | Python logging patterns | Developers |
+| `operational/logging/LOGGING_PATTERNS.md` | Cross-language logging patterns | Developers |
+
+### Troubleshooting Guides (`operational/troubleshooting/`)
+
+| File | Purpose | Audience |
+|------|---------|----------|
+| `operational/troubleshooting/BUILD_TOOLS.md` | Build tool troubleshooting | Developers |
+| `operational/troubleshooting/COMMON_ERRORS.md` | Common error patterns and fixes | All users |
+| `operational/troubleshooting/ENVIRONMENT_SETUP.md` | Environment setup issues | All users |
+| `operational/troubleshooting/RECOVERY_PROCEDURES.md` | Recovery procedures | Developers |
+| `operational/troubleshooting/TEST_FAILURES.md` | Test failure troubleshooting | Developers |
+
 ### Development & Contribution (`development/`)
 
 | File | Purpose | Audience |
@@ -83,6 +121,8 @@ Documentation is organized into modular subdirectories by purpose and audience:
 | `development/SECURITY.md` | Security policies and reporting | All users |
 | `development/ROADMAP.md` | Future development plans | Maintainers, contributors |
 | `development/TESTING_GUIDE.md` | Testing framework guide | Developers |
+| `development/TESTING_WITH_CREDENTIALS.md` | Testing with external service credentials | Developers |
+| `development/COVERAGE_GAPS.md` | Test coverage gap analysis | Developers |
 
 ### Best Practices (`best-practices/`)
 
@@ -91,7 +131,20 @@ Documentation is organized into modular subdirectories by purpose and audience:
 | `best-practices/BEST_PRACTICES.md` | Consolidated best practices | All users |
 | `best-practices/VERSION_CONTROL.md` | Git workflows and best practices | Developers |
 | `best-practices/MIGRATION_GUIDE.md` | Migration from other templates | Developers |
+| `best-practices/MULTI_PROJECT_MANAGEMENT.md` | Managing multiple projects | Developers |
 | `best-practices/BACKUP_RECOVERY.md` | Backup strategies and recovery | All users |
+
+### Usage Examples (`usage/`)
+
+| File | Purpose | Audience |
+|------|---------|----------|
+| `usage/TEMPLATE_DESCRIPTION.md` | Template overview and features | New users |
+| `usage/EXAMPLES.md` | Usage examples and patterns | All users |
+| `usage/EXAMPLES_SHOWCASE.md` | Real-world usage examples | Advanced users |
+| `usage/MARKDOWN_TEMPLATE_GUIDE.md` | Markdown authoring guide | Content creators |
+| `usage/MANUSCRIPT_NUMBERING_SYSTEM.md` | Manuscript section numbering system | Content creators |
+| `usage/IMAGE_MANAGEMENT.md` | Image insertion, captioning, and cross-referencing | Content creators |
+| `usage/VISUALIZATION_GUIDE.md` | Visualization system for publication-quality figures | Researchers |
 
 ### AI Prompt Templates (`prompts/`)
 
@@ -107,6 +160,7 @@ Documentation is organized into modular subdirectories by purpose and audience:
 | `prompts/documentation_creation.md` | AGENTS.md and README.md creation | Technical writers |
 | `prompts/infrastructure_module.md` | Generic infrastructure module development | Architects |
 | `prompts/validation_quality.md` | Quality assurance and validation | QA engineers |
+| `prompts/comprehensive_assessment.md` | Comprehensive assessment and review | QA engineers |
 
 ## Development Rules
 
@@ -128,13 +182,18 @@ The `.cursorrules/` directory contains modular development rules that complement
 | [`../../.cursorrules/git_workflow.md`](../../.cursorrules/git_workflow.md) | Git workflow and commit standards |
 | [`../../.cursorrules/api_design.md`](../../.cursorrules/api_design.md) | API design and interface standards |
 | [`../../.cursorrules/manuscript_style.md`](../../.cursorrules/manuscript_style.md) | Manuscript formatting and style standards |
+| [`../../.cursorrules/reporting.md`](../../.cursorrules/reporting.md) | Reporting module standards and outputs |
+| [`../../.cursorrules/refactoring.md`](../../.cursorrules/refactoring.md) | Refactoring and modularization standards |
+| [`../../.cursorrules/folder_structure.md`](../../.cursorrules/folder_structure.md) | Folder structure and organization standards |
 
 **Quick Access**: Use `.cursorrules/` files for rule reference during development; consult `docs/` files for guides.
 
 ## Documentation Philosophy
 
 ### Show, Don't Tell
+
 Documentation should demonstrate through examples rather than lengthy explanations:
+
 - ✅ Code examples with clear outcomes
 - ✅ Command sequences with expected results
 - ✅ Diagrams and visual aids
@@ -142,13 +201,16 @@ Documentation should demonstrate through examples rather than lengthy explanatio
 - ❌ Theoretical explanations without practical use
 
 ### Layered Information
+
 - **README.md**: Quick start, essential links
 - **core/HOW_TO_USE.md**: Step-by-step usage
 - **AGENTS.md**: technical reference
 - **Specialized docs**: Deep dives into specific topics (organized by subdirectory)
 
 ### Keep Current
+
 Documentation must stay synchronized with code:
+
 - Update docs when changing features
 - Validate examples regularly
 - Review docs during code review
@@ -157,23 +219,27 @@ Documentation must stay synchronized with code:
 ## When to Update Which Docs
 
 ### Adding a Feature
+
 1. Update `development/ROADMAP.md` (remove from planned)
 2. Update `core/HOW_TO_USE.md` (usage instructions)
 3. Update relevant `AGENTS.md` (technical details)
 4. Add example to `usage/EXAMPLES.md`
 
 ### Changing Architecture
+
 1. Update `core/ARCHITECTURE.md` (design changes)
 2. Update `architecture/THIN_ORCHESTRATOR_SUMMARY.md` (if pattern affected)
 3. Update `core/WORKFLOW.md` (if workflow changes)
 4. Update root `AGENTS.md` (system overview)
 
 ### Bug Fixes
+
 1. Update `reference/FAQ.md` (if commonly encountered)
 2. Update `operational/TROUBLESHOOTING_GUIDE.md` troubleshooting sections
 3. Add preventive guidance if relevant
 
 ### Deprecating Features
+
 1. Mark as deprecated in `development/ROADMAP.md`
 2. Update `core/HOW_TO_USE.md` (migration guide)
 3. Update `development/CONTRIBUTING.md` (don't use deprecated features)
@@ -182,12 +248,14 @@ Documentation must stay synchronized with code:
 ## Documentation Style Guide
 
 ### Headings
+
 - Use ATX-style headings (`#`, `##`, `###`)
 - One `#` per document (document title)
 - Hierarchical structure (don't skip levels)
 - Descriptive, not clever
 
 ### Code Blocks
+
 ```markdown
 # Always specify language
 ```bash
@@ -198,6 +266,7 @@ command --with-flags
 def example():
     return "formatted"
 ```
+
 ```
 
 ### Links
@@ -213,19 +282,23 @@ See https://pandoc.org/MANUAL.html
 ```
 
 ### Lists
+
 - Use `-` for unordered lists
 - Use `1.` for ordered lists (auto-numbering)
 - Indent sublists with 2 spaces
 - Blank line before and after lists
 
 ### Emphasis
+
 - **Bold** for UI elements, commands, file names
 - *Italic* for emphasis, terms being defined
 - `Code` for inline code, file paths, functions
 - > Blockquotes for important notes
 
 ### Examples
+
 Always include, runnable examples:
+
 ```bash
 # Bad: Incomplete example
 pytest tests/
@@ -238,6 +311,7 @@ $ pytest tests/ --cov=src
 ## Documentation Maintenance
 
 ### Regular Reviews
+
 - Quarterly review of all docs
 - Validate all links work
 - Run all code examples
@@ -245,12 +319,14 @@ $ pytest tests/ --cov=src
 - Check for outdated screenshots
 
 ### Version Control
+
 - Document changes in commit messages
 - Use semantic versioning for doc updates
 - Tag major documentation releases
 - Maintain changelog for docs
 
 ### Quality Checks
+
 ```bash
 # Check markdown syntax
 markdownlint docs/*.md
@@ -265,6 +341,7 @@ aspell check docs/*.md
 ## File Relationships
 
 ### Documentation Flow
+
 ```
 README.md → core/HOW_TO_USE.md → core/ARCHITECTURE.md
     ↓            ↓                      ↓
@@ -272,6 +349,7 @@ usage/EXAMPLES.md  core/WORKFLOW.md    Technical Docs
 ```
 
 ### Cross-References
+
 - **core/HOW_TO_USE.md** references:
   - usage/EXAMPLES.md (usage examples)
   - core/ARCHITECTURE.md (design understanding)
@@ -293,6 +371,7 @@ usage/EXAMPLES.md  core/WORKFLOW.md    Technical Docs
 ## Contributing to Documentation
 
 ### Adding New Documentation
+
 1. Determine appropriate file or create new one
 2. Follow style guide
 3. Add to DOCUMENTATION_INDEX.md
@@ -300,6 +379,7 @@ usage/EXAMPLES.md  core/WORKFLOW.md    Technical Docs
 5. Update this AGENTS.md
 
 ### Improving Existing Documentation
+
 1. Identify unclear sections
 2. Add examples or clarifications
 3. Test all code examples
@@ -307,6 +387,7 @@ usage/EXAMPLES.md  core/WORKFLOW.md    Technical Docs
 5. Submit with clear description of improvements
 
 ### Documentation Checklist
+
 - [ ] Clear purpose stated at the top
 - [ ] Examples are and runnable
 - [ ] Links use relative paths for internal docs
@@ -320,7 +401,9 @@ usage/EXAMPLES.md  core/WORKFLOW.md    Technical Docs
 ## Special Files
 
 ### COPYPASTA.md
+
 Reusable documentation snippets:
+
 - Common command sequences
 - Standard explanations
 - Installation instructions
@@ -328,7 +411,9 @@ Reusable documentation snippets:
 - Reduces duplication across docs
 
 ### DOCUMENTATION_INDEX.md
+
 Master index of all documentation:
+
 - Organized by category
 - Links to all docs
 - Brief description of each
@@ -337,18 +422,21 @@ Master index of all documentation:
 ## Quick Navigation
 
 ### For New Users
+
 1. Start with `../README.md` (project overview)
 2. Read `core/HOW_TO_USE.md` (guide)
 3. Review `usage/EXAMPLES.md` (usage patterns)
 4. Check `reference/FAQ.md` (common questions)
 
 ### For Developers
+
 1. Review `core/ARCHITECTURE.md` (system design)
 2. Read `architecture/THIN_ORCHESTRATOR_SUMMARY.md` (pattern)
 3. Follow `core/WORKFLOW.md` (development process)
 4. Check `development/CONTRIBUTING.md` (contribution guide)
 
 ### For Advanced Users
+
 1. Deep dive into `core/ARCHITECTURE.md`
 2. Review `modules/PDF_VALIDATION.md`
 3. Study `usage/EXAMPLES_SHOWCASE.md`
@@ -360,4 +448,3 @@ Master index of all documentation:
 - [`core/HOW_TO_USE.md`](core/HOW_TO_USE.md) - usage guide
 - [`../AGENTS.md`](../AGENTS.md) - Root system documentation
 - [`../README.md`](../README.md) - Project overview
-

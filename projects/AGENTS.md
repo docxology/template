@@ -62,12 +62,12 @@ Archived projects in the `projects_archive/` directory are:
 graph TD
     subgraph Active["Active Projects (projects/)"]
         P1[code_project<br/>Active - Discovered]
-        P2[cogsec_multiagent_1_theory<br/>Active - Discovered]
-        P3[cogsec_multiagent_2_computational<br/>Active - Discovered]
+        P2[blake_active_inference<br/>Active - Discovered]
     end
 
     subgraph Archive["Archived Projects (projects_archive/)"]
-        A1[example_archived<br/>Archived - NOT Discovered]
+        A1[cognitive_integrity<br/>Archived - NOT Discovered]
+        A2[ento_linguistics<br/>Archived - NOT Discovered]
     end
 
     subgraph Infrastructure["Infrastructure Discovery"]
@@ -78,7 +78,6 @@ graph TD
 
     P1 -->|Discovered| DISCOVER
     P2 -->|Discovered| DISCOVER
-    P3 -->|Discovered| DISCOVER
     A1 -.->|NOT Scanned| DISCOVER
     A2 -.->|NOT Scanned| DISCOVER
 
@@ -86,7 +85,6 @@ graph TD
     RUNSH -->|Selected Project| PIPELINE
     PIPELINE -->|Executes| P1
     PIPELINE -->|Executes| P2
-    PIPELINE -->|Executes| P3
 ```
 
 ### Project Lifecycle
@@ -200,12 +198,11 @@ python3 scripts/01_run_tests.py --project code_project
 
 ```bash
 # Execute project analysis scripts via infrastructure
-python3 scripts/02_run_analysis.py --project cogsec_multiagent_2_computational
+python3 scripts/02_run_analysis.py --project code_project
 
 # Infrastructure discovers and runs:
-# - projects/cogsec_multiagent_2_computational/scripts/analysis_pipeline.py
-# - projects/cogsec_multiagent_2_computational/scripts/run_simulation.py
-# - All other scripts in projects/cogsec_multiagent_2_computational/scripts/
+# - projects/code_project/scripts/optimization_analysis.py
+# - projects/code_project/scripts/generate_api_docs.py
 ```
 
 **Script Discovery Process:**
@@ -262,11 +259,11 @@ python3 scripts/04_validate_output.py --project project
 
 ```bash
 # Organize final deliverables via infrastructure
-python3 scripts/05_copy_outputs.py --project cogsec_multiagent_3_practical
+python3 scripts/05_copy_outputs.py --project blake_active_inference
 
 # Infrastructure operations:
 # - Cleans root-level output/ directories (keeps only project folders)
-# - Copies from projects/cogsec_multiagent_3_practical/output/ to output/cogsec_multiagent_3_practical/
+# - Copies from projects/blake_active_inference/output/ to output/blake_active_inference/
 # - Validates all files copied successfully
 # - Organizes by project for distribution
 ```
@@ -275,12 +272,12 @@ python3 scripts/05_copy_outputs.py --project cogsec_multiagent_3_practical
 
 ```
 output/
-├── cogsec_multiagent_1_theory/  # Final deliverables
+├── code_project/               # Final deliverables
 │   ├── pdf/                    # Manuscript PDFs
 │   ├── figures/                # Publication figures
 │   ├── data/                   # Analysis datasets
 │   └── reports/                # Pipeline reports
-└── cogsec_multiagent_2_computational/  # Other projects
+└── blake_active_inference/      # Other projects
     └── ...
 ```
 
@@ -291,9 +288,9 @@ output/
 **Within Project (Business Logic):**
 
 ```python
-# projects/cogsec_multiagent_1_theory/src/security_models.py
-from .formal_verifier import Verifier        # ✅ Import from same project
-from .threat_model import ThreatModel         # ✅ Import from same project
+# projects/code_project/src/optimizer.py
+from .optimizer import gradient_descent           # ✅ Import from same project
+from .optimizer import OptimizationResult          # ✅ Import from same project
 
 # Infrastructure utilities (allowed)
 from infrastructure.core.logging_utils import get_logger  # ✅ Infrastructure access
@@ -303,9 +300,9 @@ from infrastructure.figure_manager import FigureManager   # ✅ Infrastructure a
 **Project Scripts (Thin Orchestrators):**
 
 ```python
-# projects/cogsec_multiagent_1_theory/scripts/analysis_pipeline.py
-from src.security_models import SecurityModel           # ✅ Import project algorithms
-from src.formal_verifier import Verifier     # ✅ Import project methods
+# projects/code_project/scripts/optimization_analysis.py
+from src.optimizer import gradient_descent           # ✅ Import project algorithms
+from src.optimizer import quadratic_function          # ✅ Import project methods
 from infrastructure.core.logging_utils import get_logger # ✅ Infrastructure utilities
 ```
 
@@ -315,8 +312,8 @@ from infrastructure.core.logging_utils import get_logger # ✅ Infrastructure ut
 
 ```python
 # ❌ NEVER: Import from other projects
-from projects.cogsec_multiagent_2_computational.src.simulation import Simulator
-from projects.code_project.src.optimizer import Optimizer
+from projects.blake_active_inference.src.synthesis import SynthesisMapper
+from projects.code_project.src.optimizer import gradient_descent
 ```
 
 **Infrastructure Business Logic (Forbidden):**
@@ -337,7 +334,8 @@ from infrastructure.core.config_loader import load_config  # ✅ Utility
 
 **Project Code (`projects/{name}/src/`):**
 
-- **90% minimum coverage** required (currently achieved: 100% for most projects)
+- **90%+ coverage**: All active projects achieve required coverage thresholds (code_project: 100%, blake_active_inference: 90%+)
+- **data only**: All tests use computations, no mocks
 - **Infrastructure Code**: 60% minimum (currently achieved: 83.33%)
 
 **Coverage Verification:**
@@ -479,7 +477,7 @@ for script in scripts:
 **Generated during pipeline execution:**
 
 ```
-projects/cogsec_multiagent_1_theory/output/
+projects/code_project/output/
 ├── figures/                 # PNG/PDF figures for manuscript
 ├── data/                    # CSV/NPZ datasets from analysis
 ├── pdf/                     # Generated PDF manuscripts
@@ -503,7 +501,7 @@ projects/cogsec_multiagent_1_theory/output/
 **Copied by `scripts/05_copy_outputs.py`:**
 
 ```
-output/cogsec_multiagent_1_theory/
+output/code_project/
 ├── pdf/                     # Final manuscript PDFs
 ├── figures/                 # Publication-quality figures
 ├── data/                    # Analysis datasets for sharing
@@ -524,7 +522,7 @@ All projects in this directory comply with the template's development standards 
 
 ### ✅ **Testing Standards Compliance**
 
-- **90%+ coverage**: All active projects achieve required coverage thresholds (code_project: 96.49%, cogsec_multiagent_1_theory: 90%+, etc.)
+- **90%+ coverage**: All active projects achieve required coverage thresholds (code_project: 100%, blake_active_inference: 90%+)
 - **data only**: All tests use computations, no mocks
 - **integration**: Tests cover algorithm convergence, mathematical functions, and figure generation
 - **Deterministic results**: Fixed seeds ensure reproducible test outcomes
@@ -566,15 +564,14 @@ All projects in this directory comply with the template's development standards 
 
 #### Testing Standards Results
 
-- **code_project**: 96.00% coverage (13 tests passed) ✅
-- **cogsec_multiagent_1_theory**: 90%+ coverage ✅
-- **cogsec_multiagent_2_computational**: 90%+ coverage ✅
+- **code_project**: 100% coverage (34 tests passed) ✅
+- **blake_active_inference**: 90%+ coverage ✅
 - **Combined**: All tests use data, no mocks detected ✅
 
 #### Documentation Standards Results
 
-- **AGENTS.md**: in all directories (projects/, code_project/, cogsec_multiagent_1_theory/, etc.) ✅
-- **README.md**: in all directories (projects/, code_project/, cogsec_multiagent_1_theory/, etc.) ✅
+- **AGENTS.md**: in all directories (projects/, code_project/, blake_active_inference/, etc.) ✅
+- **README.md**: in all directories (projects/, code_project/, blake_active_inference/, etc.) ✅
 - **Docstrings**: 100% coverage - all Python files have docstrings ✅
 - **Type hints**: All public APIs have annotations ✅
 
@@ -914,7 +911,7 @@ ls projects/myproject/output/pdf/*_compile.log
 
 ## Real Project Examples
 
-### Cognitive Security Theory (`projects/cogsec_multiagent_1_theory/`)
+### Cognitive Security Theory (`projects_archive/cognitive_integrity/`)
 
 **Standalone Guarantees:**
 
@@ -922,32 +919,36 @@ ls projects/myproject/output/pdf/*_compile.log
 - **Methods**: Formal trust bounds, defense composition algebra
 - **Manuscript**: Independent formal foundations with mathematical proofs
 
-**Infrastructure Operations:**
+**Note:** This project has been archived. Reactivate by moving from `projects_archive/` to `projects/`.
 
-```bash
-# Infrastructure discovers and validates
-python3 scripts/01_run_tests.py --project cogsec_multiagent_1_theory
-
-# Infrastructure executes analysis scripts
-python3 scripts/02_run_analysis.py --project cogsec_multiagent_1_theory
-
-# Infrastructure renders manuscript
-python3 scripts/03_render_pdf.py --project cogsec_multiagent_1_theory
-```
-
-### Computational Validation (`projects/cogsec_multiagent_2_computational/`)
+### Optimization Research (`projects/code_project/`)
 
 **Standalone Guarantees:**
 
-- **Tests**: 90%+ coverage, attack detection benchmarks
-- **Methods**: 950 attack corpus, 6 architecture validation
-- **Manuscript**: Empirical results with statistical analysis
+- **Tests**: 100% coverage, 34 tests covering convergence and stability
+- **Methods**: Gradient descent implementation in `src/optimizer.py`
+- **Manuscript**: Research paper on mathematical optimization
 
 **Infrastructure Operations:**
 
 ```bash
-# Full pipeline via infrastructure
-python3 scripts/execute_pipeline.py --project cogsec_multiagent_2_computational --core-only
+python3 scripts/01_run_tests.py --project code_project
+python3 scripts/02_run_analysis.py --project code_project
+python3 scripts/03_render_pdf.py --project code_project
+```
+
+### Blake Active Inference (`projects/blake_active_inference/`)
+
+**Standalone Guarantees:**
+
+- **Tests**: Manuscript rendering and content validation
+- **Methods**: Synthesis mapping and correspondence analysis
+- **Manuscript**: 29-section academic paper
+
+**Infrastructure Operations:**
+
+```bash
+python3 scripts/03_render_pdf.py --project blake_active_inference
 ```
 
 ## See Also

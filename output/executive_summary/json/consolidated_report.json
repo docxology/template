@@ -1,0 +1,323 @@
+{
+  "timestamp": "2026-02-06T16:07:21.413903",
+  "total_projects": 2,
+  "aggregate_metrics": {
+    "manuscript": {
+      "total_words": 19775,
+      "total_sections": 35,
+      "total_equations": 0,
+      "total_figures": 15,
+      "total_references": 166,
+      "words_stats": {
+        "min": 3425,
+        "max": 16350,
+        "median": 9887.5,
+        "avg": 9887.5
+      }
+    },
+    "codebase": {
+      "total_source_lines": 1074,
+      "total_methods": 14,
+      "total_classes": 1,
+      "total_scripts": 3
+    },
+    "tests": {
+      "total_tests": 81,
+      "total_passed": 75,
+      "total_failed": 0,
+      "average_coverage": 93.74274099883857,
+      "coverage_stats": {
+        "min": 91.0569105691057,
+        "max": 96.42857142857143,
+        "median": 93.74274099883857,
+        "avg": 93.74274099883857
+      },
+      "total_execution_time": 0.0,
+      "projects_with_test_data": 2,
+      "total_projects": 2
+    },
+    "outputs": {
+      "total_pdfs": 2,
+      "total_size_mb": 4.337571144104004,
+      "total_figures": 14,
+      "total_slides": 29,
+      "total_web": 31
+    },
+    "pipeline": {
+      "total_duration": 116.93009376525879,
+      "average_duration": 58.465046882629395,
+      "duration_stats": {
+        "min": 36.83868193626404,
+        "max": 80.09141182899475,
+        "median": 58.465046882629395,
+        "avg": 58.465046882629395
+      },
+      "total_stages_passed": 14,
+      "total_stages_failed": 0
+    }
+  },
+  "project_metrics": [
+    {
+      "name": "blake_active_inference",
+      "manuscript": {
+        "sections": 27,
+        "total_words": 16350,
+        "total_lines": 2029,
+        "markdown_files": [
+          "05e_time.md",
+          "05b_vision.md",
+          "04_blake_vision_theory.md",
+          "02a_related_work.md",
+          "03_theoretical_foundations.md",
+          "04f_prophetic_mode.md",
+          "00_preamble.md",
+          "04b_fourfold_vision.md",
+          "05_synthesis.md",
+          "README.md",
+          "04e_infinity_finite.md",
+          "07_conclusion.md",
+          "05h_collectives.md",
+          "06_implications.md",
+          "05g_action.md",
+          "05c_states.md",
+          "04d_imagination.md",
+          "preamble.md",
+          "05a_boundary.md",
+          "05d_imagination.md",
+          "04a_doors.md",
+          "AGENTS.md",
+          "05f_space.md",
+          "01_abstract.md",
+          "04c_newtons_sleep.md",
+          "02_introduction.md",
+          "05i_zoas.md"
+        ],
+        "equations": 0,
+        "figures": 8,
+        "references": 160
+      },
+      "codebase": {
+        "source_files": 2,
+        "source_lines": 814,
+        "scripts": 1,
+        "script_lines": 36,
+        "methods": 11,
+        "classes": 0
+      },
+      "tests": {
+        "test_files": 5,
+        "total_tests": 53,
+        "passed": 47,
+        "failed": 0,
+        "skipped": 6,
+        "coverage_percent": 96.42857142857143,
+        "execution_time": 0.0
+      },
+      "outputs": {
+        "pdf_files": 1,
+        "pdf_size_mb": 2.942744255065918,
+        "figures": 8,
+        "data_files": 0,
+        "slides": 24,
+        "web_outputs": 25,
+        "total_outputs": 58
+      },
+      "pipeline": {
+        "total_duration": 80.09141182899475,
+        "stages_passed": 7,
+        "stages_failed": 0,
+        "bottleneck_stage": "PDF Rendering",
+        "bottleneck_duration": 70.74190211296082,
+        "bottleneck_percent": 88.32645161007235
+      }
+    },
+    {
+      "name": "code_project",
+      "manuscript": {
+        "sections": 8,
+        "total_words": 3425,
+        "total_lines": 739,
+        "markdown_files": [
+          "03_results.md",
+          "01_introduction.md",
+          "00_abstract.md",
+          "02_methodology.md",
+          "README.md",
+          "04_conclusion.md",
+          "preamble.md",
+          "AGENTS.md"
+        ],
+        "equations": 0,
+        "figures": 7,
+        "references": 6
+      },
+      "codebase": {
+        "source_files": 2,
+        "source_lines": 260,
+        "scripts": 2,
+        "script_lines": 1402,
+        "methods": 3,
+        "classes": 1
+      },
+      "tests": {
+        "test_files": 2,
+        "total_tests": 28,
+        "passed": 28,
+        "failed": 0,
+        "skipped": 0,
+        "coverage_percent": 91.0569105691057,
+        "execution_time": 0.0
+      },
+      "outputs": {
+        "pdf_files": 1,
+        "pdf_size_mb": 1.394826889038086,
+        "figures": 6,
+        "data_files": 1,
+        "slides": 5,
+        "web_outputs": 6,
+        "total_outputs": 19
+      },
+      "pipeline": {
+        "total_duration": 36.83868193626404,
+        "stages_passed": 7,
+        "stages_failed": 0,
+        "bottleneck_stage": "PDF Rendering",
+        "bottleneck_duration": 27.36804485321045,
+        "bottleneck_percent": 74.29159626438566
+      }
+    }
+  ],
+  "health_scores": {
+    "blake_active_inference": {
+      "score": 100,
+      "max_score": 100,
+      "percentage": 100.0,
+      "grade": "A",
+      "status": "Excellent",
+      "factors": {
+        "test_coverage": {
+          "score": 40,
+          "grade": "A",
+          "reason": "Excellent coverage \u226590%"
+        },
+        "test_failures": {
+          "score": 30,
+          "grade": "A",
+          "reason": "No test failures"
+        },
+        "manuscript_size": {
+          "score": 20,
+          "grade": "A",
+          "reason": "Comprehensive manuscript (16350 words)"
+        },
+        "outputs": {
+          "score": 10,
+          "grade": "A",
+          "reason": "Rich outputs (58 files)"
+        }
+      }
+    },
+    "code_project": {
+      "score": 100,
+      "max_score": 100,
+      "percentage": 100.0,
+      "grade": "A",
+      "status": "Excellent",
+      "factors": {
+        "test_coverage": {
+          "score": 40,
+          "grade": "A",
+          "reason": "Excellent coverage \u226590%"
+        },
+        "test_failures": {
+          "score": 30,
+          "grade": "A",
+          "reason": "No test failures"
+        },
+        "manuscript_size": {
+          "score": 20,
+          "grade": "A",
+          "reason": "Comprehensive manuscript (3425 words)"
+        },
+        "outputs": {
+          "score": 10,
+          "grade": "A",
+          "reason": "Rich outputs (18 files)"
+        }
+      }
+    }
+  },
+  "comparative_tables": {
+    "manuscript_comparison": [
+      {
+        "project": "blake_active_inference",
+        "words": 16350,
+        "sections": 27,
+        "equations": 0,
+        "figures": 8
+      },
+      {
+        "project": "code_project",
+        "words": 3425,
+        "sections": 8,
+        "equations": 0,
+        "figures": 7
+      }
+    ],
+    "test_comparison": [
+      {
+        "project": "blake_active_inference",
+        "tests": 53,
+        "passed": 47,
+        "coverage": "96.4%",
+        "time": "0.0s"
+      },
+      {
+        "project": "code_project",
+        "tests": 28,
+        "passed": 28,
+        "coverage": "91.1%",
+        "time": "0.0s"
+      }
+    ],
+    "output_comparison": [
+      {
+        "project": "blake_active_inference",
+        "pdfs": 1,
+        "size_mb": "2.9",
+        "figures": 8,
+        "slides": 24
+      },
+      {
+        "project": "code_project",
+        "pdfs": 1,
+        "size_mb": "1.4",
+        "figures": 6,
+        "slides": 5
+      }
+    ],
+    "pipeline_comparison": [
+      {
+        "project": "blake_active_inference",
+        "duration": "80s",
+        "bottleneck": "PDF Rendering",
+        "bottleneck_pct": "88%"
+      },
+      {
+        "project": "code_project",
+        "duration": "37s",
+        "bottleneck": "PDF Rendering",
+        "bottleneck_pct": "74%"
+      }
+    ]
+  },
+  "recommendations": [
+    "\ud83c\udf89 **Portfolio Health**: Excellent overall project health across all metrics.",
+    "\u2705 **Test Coverage**: All projects meet or exceed 90% coverage threshold. Maintain this standard with comprehensive test suites.",
+    "\u2705 **Test Integrity**: All tests passing across all projects.",
+    "\u23f1\ufe0f **PDF Performance**: blake_active_inference bottleneck in LaTeX compilation. Action: Check for complex equations or large figures. Consider using lighter LaTeX packages or optimizing figure resolution.",
+    "\u23f1\ufe0f **PDF Performance**: code_project bottleneck in LaTeX compilation. Action: Check for complex equations or large figures. Consider using lighter LaTeX packages or optimizing figure resolution.",
+    "\ud83c\udfc6 **Best Practice**: blake_active_inference demonstrates excellent test coverage (96.4%). Action: Study this project's testing approach and apply lessons to other projects.",
+    "\ud83d\udcda **Comprehensive Research**: blake_active_inference has extensive manuscript (16,350 words). Consider if other projects could benefit from similar depth."
+  ]
+}

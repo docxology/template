@@ -17,7 +17,7 @@ pytest -k "TestGradientDescent" -v
 
 ## Key Features
 
-- **data testing** (no mocks)
+- **Real data testing** (no mocks)
 - **Numerical accuracy validation**
 - **Edge case coverage**
 - **Deterministic results**
@@ -25,6 +25,7 @@ pytest -k "TestGradientDescent" -v
 ## Common Commands
 
 ### Run Tests
+
 ```bash
 pytest . -v              # Verbose output
 pytest . -k "gradient"   # Filter by name
@@ -32,6 +33,7 @@ pytest . --tb=short      # Shorter tracebacks
 ```
 
 ### Coverage
+
 ```bash
 pytest . --cov=../src --cov-report=html
 open htmlcov/index.html

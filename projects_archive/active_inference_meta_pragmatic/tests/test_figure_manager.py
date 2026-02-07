@@ -68,9 +68,10 @@ class TestFigureManager:
     def test_initialization_default(self):
         """Test FigureManager initialization with default registry file."""
         with TemporaryDirectory() as tmpdir:
-            manager = FigureManager()
+            registry_path = Path(tmpdir) / "figure_registry.json"
+            manager = FigureManager(registry_file=registry_path)
 
-            assert manager.registry_file == Path("output/figures/figure_registry.json")
+            assert manager.registry_file == registry_path
             assert isinstance(manager.figures, dict)
             assert len(manager.figures) == 0
 

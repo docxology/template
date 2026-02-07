@@ -747,6 +747,13 @@ class PDFRenderer:
         # Read and process LaTeX content
         tex_content = combined_tex.read_text()
 
+        # Fix lmodern conflict with xelatex (causes run-on words)
+        # The lmodern package relies on T1 font encoding which can conflict with 
+        # XeLaTeX's font handling, leading to missing spaces between words.
+        if "\\usepackage{lmodern}" in tex_content:
+            tex_content = tex_content.replace("\\usepackage{lmodern}", "% \\usepackage{lmodern}")
+            logger.info("✓ Disabled lmodern package to prevent XeLaTeX font conflicts")
+
         # Fix broken math delimiters from Pandoc conversion
         try:
             tex_content = self._fix_math_delimiters(tex_content)
@@ -1329,7 +1336,13 @@ class PDFRenderer:
         """
         # Pattern to match \includegraphics with or without options
         # Handles both \includegraphics{path} and \includegraphics[options]{path}
+        # Note: This basic pattern may miss \pandocbounded with nested braces in alt={}
         pattern = r"\\includegraphics(?:\[[^\]]*\])?\{([^}]+)\}"
+        
+        # Additional pattern for \pandocbounded{\includegraphics[...]{path}}
+        # This handles the complex case where options contain nested braces (alt={...})
+        # We'll use a fallback string replacement after regex for any missed paths
+        pandocbounded_pattern = r"](\{\.\.\/output\/figures\/[^}]+\.png\})\}"
 
         figures_dir = manuscript_dir.parent / "output" / "figures"
         fixed_count = 0
@@ -1437,6 +1450,15 @@ class PDFRenderer:
 
         # Apply path fixes
         tex_content = re.sub(pattern, fix_path, tex_content)
+
+        # Fallback: Simple string replacement for paths the regex missed
+        # This handles \pandocbounded{\includegraphics[...,alt={...}]{../output/figures/xxx.png}}
+        # where nested braces in options break the regex pattern
+        remaining_old_paths = tex_content.count("../output/figures/")
+        if remaining_old_paths > 0:
+            tex_content = tex_content.replace("../output/figures/", "../figures/")
+            fixed_count += remaining_old_paths
+            logger.info(f"✓ Fixed {remaining_old_paths} additional figure path(s) via fallback")
 
         if fixed_count > 0:
             logger.info(f"✓ Fixed {fixed_count} figure path(s)")

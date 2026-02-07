@@ -17,7 +17,7 @@ A research project exemplifying mathematical optimization algorithms with rigoro
 
 ### Research Quality Assurance
 
-- **96%+ Test Coverage**: Extensive unit tests with edge cases and performance benchmarks
+- **100% Test Coverage**: 34 tests covering edge cases, stability analysis, and performance benchmarks
 - **Deterministic Algorithms**: Reproducible results with fixed random seeds
 - **Documentation**: Complete type hints, docstrings, and examples
 - **Parameter Validation**: Robust input checking and error handling
@@ -56,6 +56,7 @@ projects/code_project/
 │   └── README.md          # Quick reference
 ├── scripts/                # Analysis workflows
 │   ├── optimization_analysis.py  # Main analysis script
+│   ├── generate_api_docs.py # API documentation generator
 │   ├── AGENTS.md          # Script documentation
 │   └── README.md          # Quick reference
 ├── tests/                  # Test suite
@@ -64,11 +65,17 @@ projects/code_project/
 │   ├── AGENTS.md          # Test documentation
 │   └── README.md          # Quick reference
 ├── manuscript/             # Research content
+│   ├── 00_abstract.md     # Abstract
 │   ├── 01_introduction.md
 │   ├── 02_methodology.md
 │   ├── 03_results.md
 │   ├── 04_conclusion.md
-│   └── references.bib
+│   ├── config.yaml         # Publication metadata
+│   ├── config.yaml.example # Example configuration
+│   ├── preamble.md         # LaTeX preamble
+│   ├── references.bib      # Bibliography
+│   ├── AGENTS.md           # Manuscript documentation
+│   └── README.md           # Manuscript quick reference
 └── pyproject.toml          # Project configuration
 ```
 
@@ -81,24 +88,27 @@ This project follows the template's standard structure and uses the root-level `
 ### Basic Optimization
 
 ```python
-from src.optimizer import Optimizer
+from src.optimizer import gradient_descent, quadratic_function, compute_gradient
+import numpy as np
 
-# Create optimizer with default parameters
-opt = Optimizer()
-
-# Run optimization
-result = opt.optimize(quadratic_function, bounds=[-5, 5])
-print(f"Optimal value: {result['x']}, Function value: {result['fun']}")
+# Run gradient descent
+result = gradient_descent(
+    initial_point=np.array([5.0]),
+    objective_func=quadratic_function,
+    gradient_func=compute_gradient,
+    step_size=0.1,
+    tolerance=1e-6
+)
+print(f"Solution: {result.solution}, Converged: {result.converged}")
+print(f"Iterations: {result.iterations}, Final objective: {result.objective_value}")
 ```
 
 ### Analysis Pipeline
 
-```python
-from scripts.optimization_analysis import run_analysis
-
-# Execute analysis pipeline
-results = run_analysis()
-# Generates figures and data in output/ directory
+```bash
+# Execute the full analysis pipeline
+python3 scripts/optimization_analysis.py
+# Generates figures, data, reports, and dashboard in output/
 ```
 
 ### Scientific Analysis Features
@@ -136,73 +146,91 @@ pytest tests/ --cov=src --cov-report=html
 
 ### optimizer.py
 
-#### Optimizer (class)
+#### OptimizationResult (dataclass)
 
 ```python
-class Optimizer:
-    """Mathematical optimization algorithms with reproducible results."""
-
-    def __init__(self, method: str = "L-BFGS-B", seed: int = 42):
-        """Initialize optimizer.
-
-        Args:
-            method: Optimization method to use
-            seed: Random seed for reproducibility
-        """
-
-    def optimize(self, func: Callable, bounds: List[float], x0: Optional[np.ndarray] = None) -> Dict[str, Any]:
-        """Run optimization.
-
-        Args:
-            func: Objective function to minimize
-            bounds: Parameter bounds [min, max]
-            x0: Initial guess
-
-        Returns:
-            Dictionary with optimization results
-        """
+@dataclass
+class OptimizationResult:
+    """Container for optimization algorithm results."""
+    solution: np.ndarray          # Optimal point found
+    objective_value: float        # Function value at solution
+    iterations: int               # Number of iterations performed
+    converged: bool               # Whether algorithm converged
+    gradient_norm: float          # Final gradient norm
+    objective_history: Optional[list[float]] = None  # Objective values per iteration
 ```
 
 #### quadratic_function (function)
 
 ```python
-def quadratic_function(x: np.ndarray) -> float:
-    """Simple quadratic test function.
+def quadratic_function(
+    x: np.ndarray,
+    A: Optional[np.ndarray] = None,
+    b: Optional[np.ndarray] = None
+) -> float:
+    """Evaluate quadratic objective f(x) = (1/2) x^T A x - b^T x.
 
     Args:
         x: Input parameter array
+        A: Quadratic coefficient matrix (defaults to identity)
+        b: Linear term vector (defaults to ones)
 
     Returns:
         Function value
     """
 ```
 
-### optimization_analysis.py
-
-#### run_analysis (function)
+#### compute_gradient (function)
 
 ```python
-def run_analysis() -> Dict[str, Any]:
-    """Run optimization analysis pipeline.
-
-    Returns:
-        Dictionary with analysis results
-    """
-```
-
-#### generate_figures (function)
-
-```python
-def generate_figures(results: Dict[str, Any]) -> List[str]:
-    """Generate analysis figures.
+def compute_gradient(
+    x: np.ndarray,
+    A: Optional[np.ndarray] = None,
+    b: Optional[np.ndarray] = None
+) -> np.ndarray:
+    """Compute analytical gradient ∇f(x) = Ax - b.
 
     Args:
-        results: Analysis results from run_analysis()
+        x: Input parameter array
+        A: Quadratic coefficient matrix (defaults to identity)
+        b: Linear term vector (defaults to ones)
 
     Returns:
-        List of generated figure paths
+        Gradient vector
     """
 ```
+
+#### gradient_descent (function)
+
+```python
+def gradient_descent(
+    initial_point: np.ndarray,
+    objective_func: Callable[[np.ndarray], float],
+    gradient_func: Callable[[np.ndarray], np.ndarray],
+    max_iterations: int = 1000,
+    tolerance: float = 1e-6,
+    step_size: float = 0.01,
+    verbose: bool = False,
+) -> OptimizationResult:
+    """Perform gradient descent optimization with fixed step size.
+
+    Args:
+        initial_point: Starting point for optimization
+        objective_func: Objective function to minimize
+        gradient_func: Gradient function
+        max_iterations: Maximum number of iterations
+        tolerance: Convergence tolerance on gradient norm
+        step_size: Fixed step size (learning rate)
+        verbose: Enable verbose logging
+
+    Returns:
+        OptimizationResult with solution and diagnostics
+    """
+```
+
+### optimization_analysis.py
+
+The main analysis script (`scripts/optimization_analysis.py`) is a thin orchestrator that runs the full pipeline via its `main()` function. Key internal functions:
 
 #### Scientific Analysis Functions
 
@@ -290,7 +318,7 @@ This project complies with the template's development standards defined in `.cur
 
 ### ✅ **Testing Standards Compliance**
 
-- **90%+ coverage**: Achieves 96.49% test coverage (exceeds 90% requirement)
+- **90%+ coverage**: Achieves 100% test coverage with 34 tests (exceeds 90% requirement)
 - **Real data only**: All tests use computations, no mocks
 - **Full integration**: Tests cover algorithm convergence, stability analysis, and performance benchmarking
 - **Deterministic results**: Fixed seeds ensure reproducible test outcomes
@@ -461,7 +489,6 @@ Step sizes: 100%|██████████████████| 4/4 [00
 
 ## See Also
 
-- [Root AGENTS.md](../../AGENTS.md) - template documentation
-- [projects/cogsec_multiagent_1_theory/](../cogsec_multiagent_1_theory/AGENTS.md) - CIF formal foundations
-- [projects/cogsec_multiagent_2_computational/](../cogsec_multiagent_2_computational/AGENTS.md) - CIF computational validation
+- [Root AGENTS.md](../../AGENTS.md) - Template documentation
+- [projects/blake_active_inference/](../blake_active_inference/AGENTS.md) - Blake Active Inference manuscript project
 - [infrastructure/scientific/](../../infrastructure/scientific/AGENTS.md) - Scientific utilities

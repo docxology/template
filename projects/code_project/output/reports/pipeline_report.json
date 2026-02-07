@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-02-04T11:11:13.661739",
-  "total_duration": 40.35199284553528,
+  "timestamp": "2026-02-06T16:07:21.398441",
+  "total_duration": 36.83868193626404,
   "stages": [
     {
       "name": "Clean Output Directories",
       "exit_code": 0,
-      "duration": 0.02069997787475586,
+      "duration": 0.014307022094726562,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -14,7 +14,7 @@
     {
       "name": "Environment Setup",
       "exit_code": 0,
-      "duration": 0.6640338897705078,
+      "duration": 0.6416850090026855,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -23,7 +23,7 @@
     {
       "name": "Project Tests",
       "exit_code": 0,
-      "duration": 4.710352897644043,
+      "duration": 4.332510948181152,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -32,7 +32,7 @@
     {
       "name": "Project Analysis",
       "exit_code": 0,
-      "duration": 4.61552619934082,
+      "duration": 3.8909928798675537,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -41,7 +41,7 @@
     {
       "name": "PDF Rendering",
       "exit_code": 0,
-      "duration": 29.679723739624023,
+      "duration": 27.36804485321045,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -50,7 +50,7 @@
     {
       "name": "Output Validation",
       "exit_code": 0,
-      "duration": 0.32035398483276367,
+      "duration": 0.2842700481414795,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -59,7 +59,7 @@
     {
       "name": "Copy Outputs",
       "exit_code": 0,
-      "duration": 0.34130215644836426,
+      "duration": 0.3068711757659912,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -75,8 +75,8 @@
       "pdf": {
         "exists": true,
         "file_count": 8,
-        "size_mb": "1.50",
-        "total_size_bytes": 1576738,
+        "size_mb": "1.51",
+        "total_size_bytes": 1579645,
         "largest_files": [
           {
             "name": "code_project_combined.pdf",
@@ -136,11 +136,11 @@
         "exists": true,
         "file_count": 36,
         "size_mb": "1.75",
-        "total_size_bytes": 1835668,
+        "total_size_bytes": 1838583,
         "largest_files": [
           {
             "name": "03_results_slides.pdf",
-            "size_mb": "1.33",
+            "size_mb": "1.34",
             "path": "slides/03_results_slides.pdf"
           },
           {
@@ -168,8 +168,8 @@
       "figures": {
         "exists": true,
         "file_count": 7,
-        "size_mb": "1.31",
-        "total_size_bytes": 1378622,
+        "size_mb": "1.32",
+        "total_size_bytes": 1381490,
         "largest_files": [
           {
             "name": "algorithm_complexity.png",
@@ -212,7 +212,7 @@
         "exists": true,
         "file_count": 11,
         "size_mb": "0.02",
-        "total_size_bytes": 16136,
+        "total_size_bytes": 16135,
         "largest_files": [
           {
             "name": "output_statistics.json",
@@ -257,7 +257,7 @@
         "exists": true,
         "file_count": 1,
         "size_mb": "0.01",
-        "total_size_bytes": 8704,
+        "total_size_bytes": 8702,
         "largest_files": [
           {
             "name": "pipeline.log",
@@ -271,7 +271,7 @@
       }
     },
     "total_files": 71,
-    "total_size_mb": 4.708605766296387,
+    "total_size_mb": 4.716890335083008,
     "largest_files": [
       {
         "name": "code_project_combined.pdf",
@@ -281,7 +281,7 @@
       },
       {
         "name": "03_results_slides.pdf",
-        "size_mb": "1.33",
+        "size_mb": "1.34",
         "category": "slides",
         "path": "slides/03_results_slides.pdf"
       },
@@ -357,15 +357,15 @@
       ".txt": 1
     },
     "sizes_by_category": {
-      "pdf": 1.5036945343017578,
+      "pdf": 1.5064668655395508,
       "web": 0.11560916900634766,
-      "slides": 1.7506294250488281,
-      "figures": 1.3147563934326172,
+      "slides": 1.7534093856811523,
+      "figures": 1.3174915313720703,
       "data": 0.0002269744873046875,
-      "reports": 0.01538848876953125,
+      "reports": 0.015387535095214844,
       "simulations": 0.0,
       "llm": 0.0,
-      "logs": 0.00830078125
+      "logs": 0.008298873901367188
     },
     "pdf_files": 8,
     "figures": 7,

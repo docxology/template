@@ -1,8 +1,8 @@
 {
   "function_name": "test_func",
-  "execution_time": 2.3244391195476054e-06,
-  "memory_usage": 317.859375,
+  "execution_time": 3.288606530986726e-06,
+  "memory_usage": 179.640625,
   "iterations": 50,
-  "result_summary": "Avg time: 0.000002s, Avg memory: 317.9MB",
-  "timestamp": "2026-02-04 11:10:42"
+  "result_summary": "Avg time: 0.000003s, Avg memory: 179.6MB",
+  "timestamp": "2026-02-07 14:46:50"
 }

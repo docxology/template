@@ -8,11 +8,11 @@ This directory contains generated audit reports from repository-wide validation 
 
 ## Contents
 
-- **FILEPATH_AUDIT_REPORT.md** - filepath and reference audit report
-  - Link validation issues
-  - Quality issues
-  - File existence checks
-  - Cross-reference validation
+| File | Purpose | Audience |
+|------|---------|----------|
+| [`FILEPATH_AUDIT_REPORT.md`](FILEPATH_AUDIT_REPORT.md) | Filepath and reference audit report | Developers |
+| [`DOCUMENTATION_REVIEW_REPORT.md`](DOCUMENTATION_REVIEW_REPORT.md) | Documentation completeness review report | All users |
+| [`DOCUMENTATION_REVIEW_SUMMARY.md`](DOCUMENTATION_REVIEW_SUMMARY.md) | Documentation review executive summary | All users |
 
 ## Usage
 
@@ -29,6 +29,7 @@ cat docs/audit/FILEPATH_AUDIT_REPORT.md
 ## Report Structure
 
 Audit reports typically include:
+
 - Executive summary with issue counts
 - Link validation issues (broken references, missing files)
 - Quality issues (documentation gaps, formatting problems)

@@ -28,13 +28,10 @@ Projects are **architecturally isolated** - each operates as if it were the only
 
 ```mermaid
 graph TD
-        P1[cogsec_multiagent_1_theory<br/>CIF Part 1: Theory<br/>📝 Own manuscript<br/>🧪 Own tests<br/>🧠 Own algorithms]
-        P2[cogsec_multiagent_2_computational<br/>CIF Part 2: Computational<br/>📝 Own manuscript<br/>🧪 Own tests<br/>🧠 Own algorithms]
-        P3[code_project<br/>Optimization Research<br/>📝 Own manuscript<br/>🧪 Own tests<br/>🧠 Own algorithms]
+        P1[code_project<br/>Optimization Research<br/>📝 Own manuscript<br/>🧪 Own tests<br/>🧠 Own algorithms]
+        P2[blake_active_inference<br/>Blake × Active Inference<br/>📝 Own manuscript<br/>🧪 Own tests<br/>🧠 Own analysis]
 
         P1 -.->|❌ No imports| P2
-        P1 -.->|❌ No imports| P3
-        P2 -.->|❌ No imports| P3
     end
 
     subgraph "Shared Infrastructure Access"
@@ -66,7 +63,7 @@ from infrastructure.core.logging_utils import get_logger
 from infrastructure.figure_manager import FigureManager
 
 # ❌ FORBIDDEN: Import from other projects
-# from projects.cogsec_multiagent_2_computational.src.simulation import Simulator
+# from projects.blake_active_inference.src.synthesis import SynthesisMapper
 ```
 
 **Rationale:**
@@ -89,7 +86,7 @@ from infrastructure.project import discover_projects
 
 # Infrastructure discovers all projects automatically
 projects = discover_projects(Path("."))
-# Returns: [cogsec_multiagent_1_theory, cogsec_multiagent_2_computational, code_project, ...]
+# Returns: [code_project, blake_active_inference, ...]
 
 # Infrastructure validates each project independently
 for project in projects:
@@ -100,9 +97,9 @@ for project in projects:
 
 ```bash
 # Infrastructure runs each project's tests independently
-python3 scripts/01_run_tests.py --project cogsec_multiagent_1_theory
+python3 scripts/01_run_tests.py --project code_project
 # - Validates project structure
-# - Runs pytest projects/cogsec_multiagent_1_theory/tests/ --cov=projects/cogsec_multiagent_1_theory/src
+# - Runs pytest projects/code_project/tests/ --cov=projects/code_project/src
 # - Enforces 90% coverage requirement
 # - Generates coverage reports
 ```
@@ -111,11 +108,11 @@ python3 scripts/01_run_tests.py --project cogsec_multiagent_1_theory
 
 ```bash
 # Infrastructure discovers and executes each project's scripts
-python3 scripts/02_run_analysis.py --project cogsec_multiagent_2_computational
-# - Finds all scripts in projects/cogsec_multiagent_2_computational/scripts/
+python3 scripts/02_run_analysis.py --project code_project
+# - Finds all scripts in projects/code_project/scripts/
 # - Sets PYTHONPATH: repo_root + infrastructure/ + project/src/
 # - Executes each script with proper environment
-# - Collects outputs to projects/cogsec_multiagent_2_computational/output/
+# - Collects outputs to projects/code_project/output/
 ```
 
 #### 📄 **Manuscript Rendering**
@@ -159,7 +156,7 @@ The standalone project paradigm requires **compliance** with template developmen
 
 ### ✅ **Testing Standards Compliance (Required)**
 
-- **90%+ coverage**: Each project must achieve 90% minimum coverage (currently achieved: code_project 96.49%, cogsec_multiagent projects: 90%+)
+- **90%+ coverage**: Each project must achieve 90% minimum coverage (currently achieved: code_project 100%, blake_active_inference: 90%+)
 - **data only**: Absolute prohibition on mocks - all tests use computations
 - **integration**: Tests cover critical workflows and edge cases
 - **Deterministic results**: Fixed seeds ensure reproducible test outcomes
@@ -220,13 +217,13 @@ Every standalone project must comply with development standards defined in `.cur
 
 ```bash
 # Infrastructure validates compliance during pipeline
-python3 scripts/01_run_tests.py --project cogsec_multiagent_1_theory
+python3 scripts/01_run_tests.py --project code_project
 # ✓ Tests pass with 90%+ coverage
 # ✓ No mock methods detected
 # ✓ Type hints validated
 # ✓ Documentation completeness checked
 
-python3 scripts/04_validate_output.py --project cogsec_multiagent_1_theory
+python3 scripts/04_validate_output.py --project code_project
 # ✓ PDF integrity verified
 # ✓ Markdown references resolved
 # ✓ File integrity maintained
@@ -278,7 +275,7 @@ Infrastructure integrates project outputs into unified deliverables:
 ```python
 # Infrastructure organizes final outputs
 copy_final_deliverables(project.path / "output", output_root / project.name)
-# Result: output/cogsec_multiagent_1_theory/ contains all project deliverables
+# Result: output/code_project/ contains all project deliverables
 ```
 
 ### Project Lifecycle Under Infrastructure
@@ -372,15 +369,16 @@ Every project maintains **manuscript independence**:
 #### **Independent Content Structure**
 
 ```
-projects/cogsec_multiagent_1_theory/manuscript/
-├── 01_abstract.md                    # Project-specific abstract
+projects/code_project/manuscript/
+├── 00_abstract.md                    # Project-specific abstract
 ├── 01_introduction.md               # Domain introduction
-├── 02_threat_model.md               # Threat modeling
-├── 03_formal_framework.md           # Formal framework
-├── 04_defense_mechanisms.md         # Defense mechanisms
+├── 02_methodology.md                # Methodology
+├── 03_results.md                    # Results and analysis
+├── 04_conclusion.md                 # Conclusion
 ├── config.yaml                      # Project publication metadata
-├── references.bib                   # Project bibliography
-└── S03_notation.md                  # Notation reference
+├── config.yaml.example              # Example configuration
+├── preamble.md                      # LaTeX preamble
+└── references.bib                   # Project bibliography
 ```
 
 #### **Independent References**
@@ -394,10 +392,10 @@ projects/cogsec_multiagent_1_theory/manuscript/
 
 ```bash
 # Each project renders independently
-python3 scripts/03_render_pdf.py --project cogsec_multiagent_1_theory
-# - Uses projects/cogsec_multiagent_1_theory/manuscript/config.yaml
-# - Processes projects/cogsec_multiagent_1_theory/manuscript/references.bib
-# - Generates projects/cogsec_multiagent_1_theory/output/pdf/
+python3 scripts/03_render_pdf.py --project code_project
+# - Uses projects/code_project/manuscript/config.yaml
+# - Processes projects/code_project/manuscript/references.bib
+# - Generates projects/code_project/output/pdf/
 ```
 
 ## Dependency Management
@@ -422,8 +420,8 @@ Projects maintain **zero coupling** between each other:
 
 ```python
 # ❌ FORBIDDEN: Projects cannot import from each other
-# from projects.cogsec_multiagent_1_theory.src.trust import TrustCalculus
-# from projects.cogsec_multiagent_2_computational.src.simulation import Simulator
+# from projects.code_project.src.optimizer import gradient_descent
+# from projects.blake_active_inference.src.synthesis import SynthesisMapper
 ```
 
 #### **Infrastructure as Common Good**
@@ -438,63 +436,44 @@ Infrastructure modules are **domain-independent utilities** that benefit all pro
 
 ## Real Project Examples
 
-### Cognitive Security Theory Paradigm
+### Optimization Research Paradigm
 
 **Standalone Guarantees:**
 
-- **Tests**: Trust calculus, firewall classification, consensus validation
-- **Methods**: Formal trust bounds, defense composition algebra
-- **Manuscript**: Independent research on cognitive security foundations
+- **Tests**: 34 tests, 100% coverage, convergence and stability validation
+- **Methods**: Gradient descent with fixed step size in `src/optimizer.py`
+- **Manuscript**: Research paper on mathematical optimization
 
 **Infrastructure Integration:**
 
 ```bash
 # Infrastructure operates on project independently
-python3 scripts/execute_pipeline.py --project cogsec_multiagent_1_theory --core-only
+python3 scripts/execute_pipeline.py --project code_project --core-only
 
 # Result: Complete analysis pipeline executed
-# - Tests validate trust algorithms
-# - Scripts generate security figures
-# - Manuscript renders with formal proofs
-# - Outputs organized in output/cogsec_multiagent_1_theory/
+# - Tests validate optimization algorithms
+# - Scripts generate analysis figures
+# - Manuscript renders with equations
+# - Outputs organized in output/code_project/
 ```
 
-### Computational Validation Paradigm
+### Blake Active Inference Paradigm
 
 **Standalone Guarantees:**
 
-- **Tests**: Attack detection, consensus algorithms, firewall benchmarks
-- **Methods**: 950 attack corpus, 6 architecture validation
-- **Manuscript**: Empirical results with statistical analysis
+- **Tests**: Manuscript rendering and content validation
+- **Methods**: Synthesis mapping and correspondence analysis
+- **Manuscript**: 29-section research paper on Blake × Active Inference
 
 **Infrastructure Integration:**
 
 ```bash
-# Infrastructure provides execution environment
-python3 scripts/02_run_analysis.py --project cogsec_multiagent_2_computational
+# Infrastructure renders manuscript
+python3 scripts/03_render_pdf.py --project blake_active_inference
 
 # Infrastructure discovers and runs:
-# - attack_surface_figure.py (attack visualization)
-# - trust_decay_figure.py (trust dynamics)
-# - analysis_pipeline.py (benchmark validation)
-```
-
-### Optimization Research Paradigm
-
-**Standalone Guarantees:**
-
-- **Tests**: Numerical accuracy validation of gradient descent algorithms
-- **Methods**: Optimization algorithms with convergence analysis
-- **Manuscript**: Research manuscript on mathematical optimization
-
-**Infrastructure Integration:**
-
-```bash
-# Minimal project demonstrates full paradigm
-python3 scripts/01_run_tests.py --project code_project
-python3 scripts/03_render_pdf.py --project code_project
-
-# Infrastructure validates and renders independently
+# - Manuscript sections rendered to PDF
+# - Figures processed and embedded
 ```
 
 ## Benefits of Standalone Paradigm

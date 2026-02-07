@@ -1,6 +1,6 @@
-# Small Code Project - Quick Reference
+# Code Project — Optimization Research Exemplar
 
-Minimal research project demonstrating optimization algorithms with automated figure generation.
+Research project demonstrating optimization algorithms with automated figure generation and publication-quality output.
 
 ## Quick Start
 
@@ -28,18 +28,23 @@ ls -la output/
 ## Common Commands
 
 ### Run Analysis
+
 ```bash
 python3 scripts/optimization_analysis.py
 ```
+
 Generates convergence plots, performs scientific validation, creates dashboard, and saves all results.
 
 ### Run Tests
+
 ```bash
 pytest tests/ -v
 ```
+
 Tests optimization algorithms and numerical accuracy.
 
 ### View Results
+
 ```bash
 open output/figures/convergence_plot.png
 cat output/data/optimization_results.csv
@@ -54,6 +59,9 @@ graph TD
     A --> D[Generate Figures]
     A --> E[Export Data]
     A --> F[Create Dashboard]
+
+    AA[scripts/generate_api_docs.py] --> AB[API Documentation]
+    AA --> AC[Code Quality Report]
 
     B --> G[Gradient Descent]
     B --> H[Quadratic Functions]
@@ -78,7 +86,7 @@ graph TD
 
 ✅ **Fully compliant** with template development standards:
 
-- **Testing**: 96.49% coverage, real data only, no mocks
+- **Testing**: 100% coverage (34 tests), real data only, no mocks
 - **Documentation**: AGENTS.md + README.md in each directory
 - **Type Safety**: Full type hints on all public APIs
 - **Code Quality**: Black formatting, descriptive naming, proper imports

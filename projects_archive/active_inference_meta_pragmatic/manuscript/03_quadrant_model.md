@@ -1,16 +1,18 @@
 # The 2×2 Quadrant Model {#sec:quadrant_model}
 
-The $2 \times 2$ matrix structure organizes Active Inference as a meta-pragmatic and meta-epistemic methodology. Cognitive processing varies along two dimensions: Data/Meta-Data and Cognitive/Meta-Cognitive, yielding four quadrants. Each quadrant represents a distinct combination of processing level and data type and employs specific mathematical formulations.
+The $2 \times 2$ matrix structure organizes Active Inference as a meta-pragmatic and meta-epistemic methodology (Figure \ref{fig:quadrant_matrix}). Cognitive processing varies along two dimensions: Data/Meta-Data and Cognitive/Meta-Cognitive, yielding four quadrants. Each quadrant represents a distinct combination of processing level and data type and employs specific mathematical formulations.
 
 ## Quadrant Structure Overview {#sec:quadrant_overview}
 
-To systematically analyze Active Inference's meta-level contributions, we introduce a framework with axes of Data/Meta-Data and Cognitive/Meta-Cognitive processing.
+To systematically analyze Active Inference's meta-level contributions, we introduce a framework with axes of Data/Meta-Data and Cognitive/Meta-Cognitive processing (see Figure \ref{fig:quadrant_matrix_enhanced} for an enhanced view).
 
 **Data vs Meta-Data (X-axis):**
+
 - **Data:** Raw sensory inputs and immediate cognitive processing
 - **Meta-Data:** Information about data processing (confidence scores, timestamps, reliability metrics, processing provenance)
 
 **Cognitive vs Meta-Cognitive (Y-axis):**
+
 - **Cognitive:** Direct processing and transformation of information
 - **Meta-Cognitive:** Processing about processing; self-reflection, monitoring, and control of cognitive processes
 
@@ -52,11 +54,13 @@ Where $G(\pi)$ represents pragmatic value (goal achievement) and $H[Q(\pi)]$ rep
 Consider a simple agent navigating a two-state environment:
 
 **Generative Model Specification:**
+
 - States: $s_1$ = "too cold", $s_2$ = "too hot"
 - Observations: $o_1$ = "cold sensor", $o_2$ = "hot sensor"
 - Actions: $a_1$ = "heat", $a_2$ = "cool"
 
 **Matrix Specifications:**
+
 ```{=latex}
 \begin{equation}
 A = \begin{pmatrix} 0.9 & 0.1 \\ 0.1 & 0.9 \end{pmatrix} \quad C = \begin{pmatrix} 2.0 \\ -2.0 \end{pmatrix} \quad D = \begin{pmatrix} 0.5 \\ 0.5 \end{pmatrix}
@@ -68,6 +72,7 @@ A = \begin{pmatrix} 0.9 & 0.1 \\ 0.1 & 0.9 \end{pmatrix} \quad C = \begin{pmatri
 For current observation $o_1$ (cold sensor):
 
 **Posterior Inference:**
+
 ```{=latex}
 \begin{equation}
 q(s) \propto A[:,o_1] \odot D = \begin{pmatrix} 0.45 \\ 0.05 \end{pmatrix}
@@ -76,6 +81,7 @@ q(s) \propto A[:,o_1] \odot D = \begin{pmatrix} 0.45 \\ 0.05 \end{pmatrix}
 ```
 
 **Policy Evaluation:**
+
 - Policy $\pi_1$ (heat): $\mathcal{F}(\pi_1) = 0.23$
 - Policy $\pi_2$ (cool): $\mathcal{F}(\pi_2) = 1.45$
 
@@ -99,6 +105,7 @@ q(s) \propto A[:,o_1] \odot D = \begin{pmatrix} 0.45 \\ 0.05 \end{pmatrix}
 ### Mathematical Formulation
 
 Extended EFE with meta-data weighting:
+
 ```{=latex}
 \begin{equation}
 \mathcal{F}(\pi) = w_e \cdot H[Q(\pi)] + w_p \cdot G(\pi) + w_m \cdot M(\pi)
@@ -107,6 +114,7 @@ Extended EFE with meta-data weighting:
 ```
 
 Where:
+
 - $M(\pi)$ represents meta-data derived utility
 - $w_e$ is the epistemic weight
 - $w_p$ is the pragmatic weight
@@ -117,11 +125,13 @@ Where:
 Extend Quadrant 1 with confidence scores and temporal meta-data:
 
 **Meta-Data Structure:**
+
 - Confidence scores: $c(t) \in [0,1]$ for each observation
 - Temporal stamps: $\tau(t)$ for sequencing
 - Reliability metrics: $r(t)$ based on sensor quality
 
 **Confidence-Weighted Inference:**
+
 ```{=latex}
 \begin{equation}
 q(s \mid t) = \frac{c(t) \cdot A[:,o_t] \odot q(s \mid t-1)}{Z}
@@ -151,6 +161,7 @@ Where $Z$ is a normalization constant. When $c(t)$ is high, the observation stro
 ### Mathematical Formulation
 
 Hierarchical EFE with self-assessment:
+
 ```{=latex}
 \begin{equation}
 \mathcal{F}(\pi) = \mathcal{F}_{primary}(\pi) + \lambda \cdot \mathcal{F}_{meta}(\pi)
@@ -161,6 +172,7 @@ Hierarchical EFE with self-assessment:
 Where $\mathcal{F}_{meta}$ evaluates the quality of primary processing and $\lambda$ controls meta-cognitive influence.
 
 **Confidence Assessment Function:**
+
 ```{=latex}
 \begin{equation}
 confidence(q, o) = \frac{1}{1 + \exp(-\alpha \cdot (H[q] - H_{expected}))}
@@ -169,6 +181,7 @@ confidence(q, o) = \frac{1}{1 + \exp(-\alpha \cdot (H[q] - H_{expected}))}
 ```
 
 **Adaptive Strategy Selection:**
+
 ```{=latex}
 \begin{equation}
 \pi^*(o, c) = \arg\min_{\pi \in \Pi} \mathcal{F}(\pi) + \lambda(c) \cdot \mathcal{R}(\pi)
@@ -177,12 +190,14 @@ confidence(q, o) = \frac{1}{1 + \exp(-\alpha \cdot (H[q] - H_{expected}))}
 ```
 
 Where:
+
 - $\lambda(c)$ increases with low confidence
 - $\mathcal{R}(\pi)$ penalizes complex strategies when confidence is low
 
 ### Demonstration: Adaptive Strategy Selection
 
 **Confidence Trajectory Example:**
+
 ```
 Time:     0    1    2    3    4    5
 Conf:   0.9  0.8  0.3  0.2  0.7  0.9
@@ -210,6 +225,7 @@ At times 0-1, high confidence allows standard processing. At times 2-3, confiden
 ### Mathematical Formulation
 
 Multi-level hierarchical optimization:
+
 ```{=latex}
 \begin{equation}
 \min_{\Theta} \mathcal{F}(\pi; \Theta) + \mathcal{R}(\Theta)
@@ -220,6 +236,7 @@ Multi-level hierarchical optimization:
 Where $\Theta$ represents framework parameters and $\mathcal{R}(\Theta)$ is a regularization term ensuring framework coherence.
 
 **Higher-Order Optimization:**
+
 ```{=latex}
 \begin{equation}
 \Theta^* = \arg\max_{\Theta} \mathbb{E}[U(c, e, \kappa \mid \Theta)]
@@ -228,6 +245,7 @@ Where $\Theta$ represents framework parameters and $\mathcal{R}(\Theta)$ is a re
 ```
 
 Where:
+
 - $\bar{c}$ = average confidence
 - $e(\sigma)$ = strategy effectiveness
 - $\kappa$ = framework coherence
@@ -235,6 +253,7 @@ Where:
 ### Demonstration: Framework Parameter Optimization
 
 **Performance Analysis:**
+
 ```
 Framework Parameter | Current | Optimized | Improvement
 Confidence Threshold | 0.7    | 0.65     | +12%
@@ -271,6 +290,7 @@ All quadrants operate simultaneously in Active Inference systems, creating a mul
 ### Dynamic Balance
 
 The relative influence of each quadrant adapts based on context:
+
 - **Routine Conditions:** Quadrant 1 dominates with efficient processing
 - **Uncertainty:** Quadrant 2 increases meta-data weighting
 - **Errors:** Quadrant 3 triggers self-reflection and strategy adjustment
@@ -279,6 +299,7 @@ The relative influence of each quadrant adapts based on context:
 ### Emergent Properties
 
 The integration produces meta-level cognitive capabilities:
+
 1. **Self-Awareness:** Quadrant 3 enables monitoring of cognitive processes
 2. **Adaptability:** Quadrant 4 allows framework evolution
 3. **Robustness:** Multiple processing levels provide failure resilience
@@ -291,6 +312,7 @@ The integration produces meta-level cognitive capabilities:
 ### Theoretical Consistency
 
 The quadrant structure maintains consistency with Active Inference principles:
+
 - **Free Energy Principle:** All quadrants minimize variational free energy at their respective levels
 - **Generative Models:** Each quadrant utilizes $A$, $B$, $C$, $D$ matrices appropriately
 - **Hierarchical Processing:** Quadrants represent increasing levels of abstraction
@@ -298,6 +320,7 @@ The quadrant structure maintains consistency with Active Inference principles:
 ### Mathematical Rigor
 
 All formulations are grounded in established Active Inference theory:
+
 - EFE formulations follow standard derivations
 - Meta-data integration uses probabilistic weighting
 - Meta-cognitive control employs hierarchical optimization
@@ -306,7 +329,7 @@ All formulations are grounded in established Active Inference theory:
 ### Conceptual Clarity
 
 The structure provides clear distinctions:
+
 - **Data vs Meta-Data:** Raw inputs vs quality information
 - **Cognitive vs Meta-Cognitive:** Direct processing vs self-reflection
 - **Quadrant Boundaries:** Clear categorization enabling systematic analysis
-

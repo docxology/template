@@ -1,0 +1,3 @@
+Project,Overall_Score,Overall_Percentage,Overall_Grade,Overall_Status,Test_Coverage_Score,Test_Coverage_Grade,Test_Failures_Score,Test_Failures_Grade,Manuscript_Size_Score,Manuscript_Size_Grade,Outputs_Score,Outputs_Grade
+blake_active_inference,100,100.0,A,Excellent,40,A,30,A,20,A,10,A
+code_project,100,100.0,A,Excellent,40,A,30,A,20,A,10,A

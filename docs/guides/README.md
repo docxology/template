@@ -16,10 +16,12 @@ The `guides/` directory contains skill-level specific usage guides that progress
 | [`FIGURES_AND_ANALYSIS.md`](FIGURES_AND_ANALYSIS.md) | Figures and analysis guide (Levels 4-6) | Intermediate |
 | [`TESTING_AND_REPRODUCIBILITY.md`](TESTING_AND_REPRODUCIBILITY.md) | Testing and reproducibility guide (Levels 7-9) | Advanced |
 | [`EXTENDING_AND_AUTOMATION.md`](EXTENDING_AND_AUTOMATION.md) | Extending and automation guide (Levels 10-12) | Expert |
+| [`INTERMEDIATE_USAGE.md`](INTERMEDIATE_USAGE.md) | Backward-compatible redirect to Figures and Analysis | Intermediate |
 
 ## Learning Path
 
 ### Learning Journey
+
 1. **[Getting Started](GETTING_STARTED.md)** - Write your first document (Levels 1-3)
 2. **[Figures and Analysis](FIGURES_AND_ANALYSIS.md)** - Add figures and automation (Levels 4-6)
 3. **[Testing and Reproducibility](TESTING_AND_REPRODUCIBILITY.md)** - Test-driven development and reproducibility (Levels 7-9)
@@ -28,15 +30,19 @@ The `guides/` directory contains skill-level specific usage guides that progress
 ## Quick Navigation
 
 ### New to the Template?
+
 → Start with **[Getting Started](GETTING_STARTED.md)**
 
 ### Ready for Automation?
+
 → Read **[Figures and Analysis](FIGURES_AND_ANALYSIS.md)**
 
 ### Want Test-Driven Development?
+
 → Study **[Testing and Reproducibility](TESTING_AND_REPRODUCIBILITY.md)**
 
 ### Building Custom Systems?
+
 → Master **[Extending and Automation](EXTENDING_AND_AUTOMATION.md)**
 
 ## Related Documentation
@@ -50,8 +56,3 @@ The `guides/` directory contains skill-level specific usage guides that progress
 
 - [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - documentation index
 - [`../README.md`](../README.md) - Documentation hub overview
-
-
-
-
-

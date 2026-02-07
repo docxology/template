@@ -159,6 +159,7 @@ pytest ../tests/ --cov=. --cov-report=html
 ### optimizer.py
 
 #### OptimizationResult (dataclass)
+
 ```python
 @dataclass
 class OptimizationResult:
@@ -170,10 +171,12 @@ class OptimizationResult:
         iterations: int - Number of iterations performed
         converged: bool - Whether convergence criteria were met
         gradient_norm: float - Final gradient norm
+        objective_history: Optional[list[float]] - Objective values at each iteration
     """
 ```
 
 #### quadratic_function (function)
+
 ```python
 def quadratic_function(
     x: np.ndarray,
@@ -196,6 +199,7 @@ def quadratic_function(
 ```
 
 #### compute_gradient (function)
+
 ```python
 def compute_gradient(
     x: np.ndarray,
@@ -215,6 +219,7 @@ def compute_gradient(
 ```
 
 #### gradient_descent (function)
+
 ```python
 def gradient_descent(
     initial_point: np.ndarray,
@@ -252,6 +257,7 @@ def gradient_descent(
 ### Debug Tips
 
 Enable verbose output to monitor optimization progress:
+
 ```python
 result = gradient_descent(..., verbose=True)
 ```

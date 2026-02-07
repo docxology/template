@@ -2,7 +2,7 @@
 
 > **Build system, CI/CD, configuration, and troubleshooting** guides
 
-**Quick Reference:** [Build System](BUILD_SYSTEM.md) | [Troubleshooting](TROUBLESHOOTING_GUIDE.md) | [Configuration](CONFIGURATION.md)
+**Quick Reference:** [Build System](BUILD_SYSTEM.md) | [Troubleshooting](TROUBLESHOOTING_GUIDE.md) | [Configuration](CONFIGURATION.md) | [Reporting](REPORTING_GUIDE.md)
 
 ## Purpose
 
@@ -22,23 +22,40 @@ The `operational/` directory contains documentation for operating, configuring, 
 | [`LLM_REVIEW_TROUBLESHOOTING.md`](LLM_REVIEW_TROUBLESHOOTING.md) | LLM-specific troubleshooting | Advanced users |
 | [`ERROR_HANDLING_GUIDE.md`](ERROR_HANDLING_GUIDE.md) | Error handling patterns | Developers |
 | [`LOGGING_GUIDE.md`](LOGGING_GUIDE.md) | Logging system guide | Developers |
+| [`REPORTING_GUIDE.md`](REPORTING_GUIDE.md) | Reporting system and report interpretation | Developers |
+
+### Subdirectories
+
+| Directory | Purpose | Key Files |
+|-----------|---------|----------|
+| [`logging/`](logging/) | Detailed logging guides | BASH_LOGGING.md, PYTHON_LOGGING.md, LOGGING_PATTERNS.md |
+| [`troubleshooting/`](troubleshooting/) | Topic-specific troubleshooting | BUILD_TOOLS.md, COMMON_ERRORS.md, ENVIRONMENT_SETUP.md, RECOVERY_PROCEDURES.md, TEST_FAILURES.md |
 
 ## Quick Navigation
 
 ### Building and Running
+
 → Read **[Build System](BUILD_SYSTEM.md)** - Build pipeline reference
 
 ### Setting Up CI/CD
+
 → Follow **[CI/CD Integration](CI_CD_INTEGRATION.md)** - GitHub Actions setup
 
 ### Configuring the System
+
 → Use **[Configuration](CONFIGURATION.md)** - Configuration guide
 
 ### Troubleshooting Issues
+
 → Check **[Troubleshooting Guide](TROUBLESHOOTING_GUIDE.md)** - Common issues
 
 ### Optimizing Performance
+
 → Study **[Performance Optimization](PERFORMANCE_OPTIMIZATION.md)** - Tuning guide
+
+### Understanding Reports
+
+→ Review **[Reporting Guide](REPORTING_GUIDE.md)** - Report types and interpretation
 
 ## Related Documentation
 
@@ -50,8 +67,3 @@ The `operational/` directory contains documentation for operating, configuring, 
 
 - [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - documentation index
 - [`../README.md`](../README.md) - Documentation hub overview
-
-
-
-
-

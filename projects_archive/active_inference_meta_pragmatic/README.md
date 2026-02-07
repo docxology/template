@@ -12,17 +12,20 @@ This project demonstrates that Active Inference operates not just as a theory of
 ## Key Features
 
 ### 🧠 Meta-Level Framework
+
 - **Meta-Pragmatic**: Specify pragmatic frameworks beyond simple rewards
 - **Meta-Epistemic**: Define epistemic boundaries and knowledge architectures
 - **2×2 Matrix Analysis**: Systematic framework for cognitive process analysis
 
 ### 🎯 Four Quadrants of Cognition
+
 - **Q1**: Data Processing (Cognitive) - Basic EFE computation
 - **Q2**: Meta-Data Organization (Cognitive) - processing with meta-information
 - **Q3**: Reflective Processing (Meta-Cognitive) - Self-monitoring and adaptation
 - **Q4**: Higher-Order Reasoning (Meta-Cognitive) - Framework-level optimization
 
 ### 🔬 Implementation
+
 - **Theoretical Models**: Free Energy Principle, generative models, meta-cognition
 - **Visualization Suite**: 8+ figures demonstrating key concepts
 - **Testing**: Core functionality tested with theoretical validation
@@ -71,7 +74,7 @@ python scripts/analysis_pipeline.py --stages 1,2,3
 
 ## Project Structure
 
-```
+```text
 active_inference_meta_pragmatic/
 ├── src/                          # Core implementation
 │   ├── active_inference.py       # Main Active Inference framework
@@ -80,27 +83,34 @@ active_inference_meta_pragmatic/
 │   ├── generative_models.py      # A, B, C, D matrix models
 │   ├── meta_cognition.py         # Meta-cognitive processing
 │   ├── modeler_perspective.py    # Meta-level analysis
+│   ├── data_generator.py         # Synthetic data generation
+│   ├── statistical_analysis.py   # Statistical testing and analysis
+│   ├── validation.py             # Framework validation suite
 │   └── visualization.py          # Plotting utilities
-├── tests/                        # test suite
-│   ├── test_*.py                 # Unit and integration tests
+├── tests/                        # Test suite (360 tests)
+│   └── test_*.py                 # Unit and integration tests
 ├── scripts/                      # Analysis workflows
-│   ├── analysis_pipeline.py      # pipeline
+│   ├── analysis_pipeline.py      # 6-stage pipeline orchestrator
 │   ├── generate_*.py             # Visualization scripts
+│   └── insert_all_figures.py     # Manuscript figure integration
 ├── manuscript/                   # Research paper
-│   ├── 01_abstract.md           # Abstract
-│   ├── 02_introduction.md       # Introduction
-│   ├── 03_methodology.md        # Methods
-│   ├── 04_experimental_results.md # Results
-│   ├── 05_discussion.md         # Discussion
-│   ├── 06_conclusion.md         # Conclusion
-│   ├── S01_supplemental_methods.md # Extended methods
-│   ├── S02_supplemental_results.md # Additional results
-│   └── 99_references.bib        # Bibliography
-├── output/                      # Generated outputs
-│   ├── figures/                 # Visualizations
-│   ├── data/                    # Analysis data
-│   └── reports/                 # Pipeline reports
-└── pyproject.toml               # Project configuration
+│   ├── 01_abstract.md            # Abstract
+│   ├── 02_background.md          # FEP, EFE, generative models
+│   ├── 03_quadrant_model.md      # 2×2 framework with Q1–Q4
+│   ├── 04_security_implications.md # Cognitive security and AI safety
+│   ├── 05_discussion.md          # Implications and conclusions
+│   ├── 06_acknowledgments.md     # Acknowledgments
+│   ├── 07_appendix.md            # Technical details
+│   ├── 98_symbols_glossary.md    # Mathematical notation
+│   ├── 99_references.md          # Bibliography references
+│   ├── config.yaml               # Paper metadata
+│   ├── preamble.md               # LaTeX preamble
+│   └── references.bib            # BibTeX bibliography
+├── output/                       # Generated outputs
+│   ├── figures/                  # Visualizations
+│   ├── data/                     # Analysis data
+│   └── reports/                  # Pipeline reports
+└── pyproject.toml                # Project configuration
 ```
 
 ## Theoretical Foundation
@@ -124,18 +134,21 @@ Active Inference is revealed as a meta-(pragmatic/epistemic) methodology through
 ## Research Contributions
 
 ### Theoretical
+
 - Meta-level interpretation of Active Inference
 - 2×2 matrix framework for cognitive analysis
 - Integration with Free Energy Principle
 - Recursive modeler perspective
 
 ### Methodological
+
 - generative model implementations
 - Meta-cognitive monitoring systems
 - Framework optimization algorithms
 - Theoretical validation suite
 
 ### Practical
+
 - Visualization tools for complex concepts
 - Reproducible research pipeline
 - Educational framework for cognitive science
@@ -144,16 +157,21 @@ Active Inference is revealed as a meta-(pragmatic/epistemic) methodology through
 ## Validation Results
 
 ### Theoretical Correctness
+
 - ✅ EFE calculations match mathematical derivations
 - ✅ Free energy minimization follows FEP principles
 - ✅ Bayesian inference properly implemented
 - ✅ Meta-cognitive operations theoretically sound
 
 ### Implementation Quality
+
 - ✅ Core functionality tested and validated
 - ✅ Numerical stability verified for key operations
 - ✅ Error handling with proper validation
-- ✅ Type hints and documentation ### Research Standards
+- ✅ Type hints and documentation
+
+### Research Standards
+
 - ✅ manuscript with cross-references
 - ✅ bibliography
 - ✅ Mathematical notation standardized
@@ -162,18 +180,21 @@ Active Inference is revealed as a meta-(pragmatic/epistemic) methodology through
 ## Applications
 
 ### Cognitive Science
+
 - Understanding meta-cognitive development
 - Analyzing cognitive security vulnerabilities
 - Designing educational interventions
 - Modeling cultural cognitive frameworks
 
 ### Artificial Intelligence
+
 - Meta-learning system development
 - Value alignment frameworks
 - Self-improving AI architectures
 - Robust AI safety mechanisms
 
 ### Neuroscience
+
 - Meta-cognitive brain mechanisms
 - Higher-order cognitive processes
 - Consciousness and self-awareness
