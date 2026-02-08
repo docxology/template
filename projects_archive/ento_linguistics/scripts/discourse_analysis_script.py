@@ -20,7 +20,7 @@ from concept_visualization import ConceptVisualizer
 from discourse_analysis import DiscourseAnalyzer
 from literature_mining import LiteratureCorpus
 
-from infrastructure.core.logging_utils import get_logger
+from utils.logging import get_logger
 
 # Directory creation handled inline
 

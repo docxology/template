@@ -100,8 +100,8 @@ Examples:
     return parser.parse_args(), stage_names
 
 
-# Import infrastructure modules
-from infrastructure.documentation.figure_manager import FigureManager
+# Import local utilities
+from src.utils.figure_manager import FigureManager
 
 # Directory creation handled inline
 

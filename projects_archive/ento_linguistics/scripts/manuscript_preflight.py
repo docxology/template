@@ -25,7 +25,7 @@ if str(src_path) not in sys.path:
 from src.utils.validation import (validate_markdown, validate_pdf_rendering,
                                   verify_output_integrity)
 
-from infrastructure.core.logging_utils import get_logger
+from src.utils.logging import get_logger
 
 logger = get_logger(__name__)
 

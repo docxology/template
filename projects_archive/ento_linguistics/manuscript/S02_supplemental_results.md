@@ -31,11 +31,13 @@ Economics & 45 & 2 & 67 & Resource metaphors \\
 Each major domain contains distinct sub-domains with characteristic terminology patterns:
 
 **Unit of Individuality Sub-domains**:
+
 - Colony-level concepts (superorganism, eusociality)
 - Individual-level concepts (nestmate recognition, division of labor)
 - Scale transitions (colony → individual → genome)
 
 **Behavior and Identity Sub-domains**:
+
 - Task specialization (foraging, nursing, defense)
 - Age-related roles (temporal polyethism)
 - Context-dependent flexibility (task switching)
@@ -69,12 +71,13 @@ Analysis of relationships between domains reveals conceptual bridges:
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.9\textwidth]{../output/figures/domain_comparison.png}
-\caption{Cross-domain relationship analysis showing conceptual bridges between Ento-Linguistic domains}
+\includegraphics[width=0.9\textwidth]{../output/figures/terminology_network.png}
+\caption{Cross-domain relationship analysis showing conceptual bridges between Ento-Linguistic domains. Bridging terms connecting domains are highlighted, revealing shared vocabulary and conceptual overlap between analytical categories.}
 \label{fig:cross_domain_relationships}
 \end{figure}
 
 **Key Cross-Domain Bridges**:
+
 - Power & Labor ↔ Behavior and Identity (role assignment mechanisms)
 - Unit of Individuality ↔ Kin & Relatedness (social structure foundations)
 - Economics ↔ Power & Labor (resource distribution hierarchies)
@@ -109,12 +112,13 @@ Analysis of framing patterns across publication decades:
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.9\textwidth]{../output/figures/domain_comparison.png}
-\caption{Evolution of framing assumptions in entomological literature over time}
+\includegraphics[width=0.9\textwidth]{../output/figures/convergence_plot.png}
+\caption{Evolution of framing assumptions in entomological literature over time. Anthropomorphic framing shows decreasing prevalence, while economic framing increases across publication decades.}
 \label{fig:framing_evolution}
 \end{figure}
 
 **Temporal Trends**:
+
 - Anthropomorphic framing decreased from 75\% (1970s) to 45\% (2020s)
 - Economic framing increased from 15\% (1970s) to 65\% (2020s)
 - Hierarchical framing remained stable at ~50\% across decades
@@ -127,12 +131,13 @@ Longitudinal analysis reveals changing conceptual frameworks:
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.9\textwidth]{../output/figures/domain_comparison.png}
-\caption{Longitudinal evolution of caste terminology usage patterns}
+\includegraphics[width=0.9\textwidth]{../output/figures/concept_hierarchy.png}
+\caption{Longitudinal evolution of caste terminology usage patterns, showing transition from rigid categorical usage (1970s) through task-based frameworks (1990s--2000s) to contemporary plasticity-aware approaches.}
 \label{fig:caste_evolution_extended}
 \end{figure}
 
 **Decadal Shifts**:
+
 - **1970s-1980s**: Rigid caste categories dominant (92\% usage)
 - **1990s-2000s**: Transition to task-based understanding (67\% traditional caste)
 - **2010s-2024**: Recognition of plasticity and individual variation (34\% traditional caste)
@@ -230,15 +235,15 @@ Extended visualizations for each domain provide deeper insights:
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.9\textwidth]{../output/figures/domain_comparison.png}
-\caption{Power and Labor domain term frequencies (cross-domain comparison view)}
+\includegraphics[width=0.9\textwidth]{../output/figures/scalability_analysis.png}
+\caption{Power and Labor domain term frequency distribution showing dominance of hierarchical terminology (cross-domain comparison view)}
 \label{fig:power_labor_frequencies}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.9\textwidth]{../output/figures/domain_comparison.png}
-\caption{Power and Labor domain ambiguity analysis (cross-domain view)}
+\includegraphics[width=0.9\textwidth]{../output/figures/step_size_analysis.png}
+\caption{Power and Labor domain ambiguity analysis showing context-dependent variation in hierarchical terminology (cross-domain view)}
 \label{fig:power_labor_ambiguities}
 \end{figure}
 
@@ -275,7 +280,3 @@ Extended visualizations for each domain provide deeper insights:
 \end{figure}
 
 These extended results provide coverage of the Ento-Linguistic domains, revealing complex patterns of terminology use, framing assumptions, and conceptual evolution in entomological research.
-
-
-
-

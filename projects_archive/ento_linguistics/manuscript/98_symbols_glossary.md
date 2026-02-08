@@ -1,73 +1,51 @@
-# API Symbols Glossary {#sec:glossary}
+# Symbols and Notation Glossary {#sec:glossary}
 
-This glossary is auto-generated from the public API in `src/` modules.
+This glossary defines the mathematical notation and domain-specific terminology used throughout the manuscript.
 
-<!-- BEGIN: AUTO-API-GLOSSARY -->
-| Module | Name | Kind | Summary |
-|---|---|---|---|
-| `data_generator` | `generate_classification_dataset` | function | Generate classification dataset. |
-| `data_generator` | `generate_correlated_data` | function | Generate correlated multivariate data. |
-| `data_generator` | `generate_synthetic_data` | function | Generate synthetic data with specified distribution. |
-| `data_generator` | `generate_time_series` | function | Generate time series data. |
-| `data_generator` | `inject_noise` | function | Inject noise into data. |
-| `data_generator` | `validate_data` | function | Validate data quality. |
-| `data_processing` | `clean_data` | function | Clean data by removing or filling invalid values. |
-| `data_processing` | `create_validation_pipeline` | function | Create a data validation pipeline. |
-| `data_processing` | `detect_outliers` | function | Detect outliers in data. |
-| `data_processing` | `extract_features` | function | Extract features from data. |
-| `data_processing` | `normalize_data` | function | Normalize data using specified method. |
-| `data_processing` | `remove_outliers` | function | Remove outliers from data. |
-| `data_processing` | `standardize_data` | function | Standardize data to zero mean and unit variance. |
-| `data_processing` | `transform_data` | function | Apply transformation to data. |
-| `example` | `add_numbers` | function | Add two numbers together. |
-| `example` | `calculate_average` | function | Calculate the average of a list of numbers. |
-| `example` | `find_maximum` | function | Find the maximum value in a list of numbers. |
-| `example` | `find_minimum` | function | Find the minimum value in a list of numbers. |
-| `example` | `is_even` | function | Check if a number is even. |
-| `example` | `is_odd` | function | Check if a number is odd. |
-| `example` | `multiply_numbers` | function | Multiply two numbers together. |
-| `metrics` | `CustomMetric` | class | Framework for custom metrics. |
-| `metrics` | `calculate_accuracy` | function | Calculate accuracy for classification. |
-| `metrics` | `calculate_all_metrics` | function | Calculate all applicable metrics. |
-| `metrics` | `calculate_convergence_metrics` | function | Calculate convergence metrics. |
-| `metrics` | `calculate_effect_size` | function | Calculate effect size (Cohen's d). |
-| `metrics` | `calculate_p_value_approximation` | function | Approximate p-value from test statistic. |
-| `metrics` | `calculate_precision_recall_f1` | function | Calculate precision, recall, and F1 score. |
-| `metrics` | `calculate_psnr` | function | Calculate Peak Signal-to-Noise Ratio (PSNR). |
-| `metrics` | `calculate_snr` | function | Calculate Signal-to-Noise Ratio (SNR). |
-| `metrics` | `calculate_ssim` | function | Calculate Structural Similarity Index (SSIM). |
-| `parameters` | `ParameterConstraint` | class | Constraint for parameter validation. |
-| `parameters` | `ParameterSet` | class | A set of parameters with validation. |
-| `parameters` | `ParameterSweep` | class | Configuration for parameter sweeps. |
-| `performance` | `ConvergenceMetrics` | class | Metrics for convergence analysis. |
-| `performance` | `ScalabilityMetrics` | class | Metrics for scalability analysis. |
-| `performance` | `analyze_convergence` | function | Analyze convergence of a sequence. |
-| `performance` | `analyze_scalability` | function | Analyze scalability of an algorithm. |
-| `performance` | `benchmark_comparison` | function | Compare multiple methods on benchmarks. |
-| `performance` | `calculate_efficiency` | function | Calculate efficiency (speedup / resource_ratio). |
-| `performance` | `calculate_speedup` | function | Calculate speedup relative to baseline. |
-| `performance` | `check_statistical_significance` | function | Test statistical significance between two groups. |
-| `plots` | `plot_3d_surface` | function | Create a 3D surface plot. |
-| `plots` | `plot_bar` | function | Create a bar chart. |
-| `plots` | `plot_comparison` | function | Plot comparison of methods. |
-| `plots` | `plot_contour` | function | Create a contour plot. |
-| `plots` | `plot_convergence` | function | Plot convergence curve. |
-| `plots` | `plot_heatmap` | function | Create a heatmap. |
-| `plots` | `plot_line` | function | Create a line plot. |
-| `plots` | `plot_scatter` | function | Create a scatter plot. |
-| `reporting` | `ReportGenerator` | class | Generate reports from simulation and analysis results. |
-| `simulation` | `SimpleSimulation` | class | Simple example simulation for testing. |
-| `simulation` | `SimulationBase` | class | Base class for scientific simulations. |
-| `simulation` | `SimulationState` | class | Represents the state of a simulation run. |
-| `statistics` | `DescriptiveStats` | class | Descriptive statistics for a dataset. |
-| `statistics` | `anova_test` | function | Perform one-way ANOVA test. |
-| `statistics` | `calculate_confidence_interval` | function | Calculate confidence interval for mean. |
-| `statistics` | `calculate_correlation` | function | Calculate correlation between two variables. |
-| `statistics` | `calculate_descriptive_stats` | function | Calculate descriptive statistics. |
-| `statistics` | `fit_distribution` | function | Fit a distribution to data. |
-| `statistics` | `t_test` | function | Perform t-test. |
-| `validation` | `ValidationFramework` | class | Framework for validating simulation and analysis results. |
-| `validation` | `ValidationResult` | class | Result of a validation check. |
-| `visualization` | `VisualizationEngine` | class | Engine for generating publication-quality figures. |
-| `visualization` | `create_multi_panel_figure` | function | Create a multi-panel figure. |
-<!-- END: AUTO-API-GLOSSARY -->
+## Mathematical Notation
+
+| Symbol | Description | First Use |
+|--------|------------|-----------|
+| $T$ | Raw text corpus (collection of scientific documents) | Eq. \ref{eq:text_processing} |
+| $T_{\text{normalized}}$ | Text after normalization preprocessing | Eq. \ref{eq:text_processing} |
+| $T_{\text{tokenized}}$ | Text after domain-aware tokenization | Eq. \ref{eq:text_processing} |
+| $T_{\text{lemmatized}}$ | Text after lemmatization | Eq. \ref{eq:text_processing} |
+| $\mathcal{T}_d$ | Set of terms classified in domain $d$ | Eq. \ref{eq:term_extraction} |
+| $\theta$ | Relevance threshold for term inclusion | Eq. \ref{eq:term_extraction} |
+| $G = (V, E)$ | Terminology network (graph with vertices and edges) | Eq. \ref{eq:network_construction} |
+| $\phi$ | Relationship threshold for edge inclusion | Eq. \ref{eq:network_construction} |
+| $w(u,v)$ | Edge weight between terms $u$ and $v$ | Eq. \ref{eq:network_edge_weight} |
+| $n$ | Corpus size (total words or documents) | Eq. \ref{eq:computational_complexity} |
+| $m$ | Number of identified terms after extraction | Eq. \ref{eq:computational_complexity} |
+| $d$ | Number of Ento-Linguistic domains (fixed at 6) | Eq. \ref{eq:computational_complexity} |
+
+## Ento-Linguistic Domain Abbreviations
+
+| Domain | Abbreviation | Description |
+|--------|-------------|-------------|
+| Unit of Individuality | UI | Terminology related to biological individuality and scale |
+| Behavior and Identity | BI | Language linking behaviors to categorical identities |
+| Power \& Labor | PL | Terms derived from human hierarchical systems |
+| Sex \& Reproduction | SR | Sex/gender concepts applied to insect biology |
+| Kin \& Relatedness | KR | Kinship terminology and relatedness concepts |
+| Economics | EC | Economic metaphors for resource allocation |
+
+## Key Metrics
+
+| Metric | Definition | Range |
+|--------|-----------|-------|
+| Context Variability | Average number of distinct usage contexts per term | $[1, \infty)$ |
+| Ambiguity Score | Proportion of usages where term meaning is context-dependent | $[0, 1]$ |
+| Clustering Coefficient | Fraction of possible triangles through a node that exist | $[0, 1]$ |
+| Betweenness Centrality | Fraction of shortest paths passing through a node | $[0, 1]$ |
+| Modularity | Strength of network division into domain communities | $[-0.5, 1]$ |
+
+## Framing Categories
+
+| Framing Type | Definition |
+|-------------|------------|
+| Anthropomorphic | Application of human attributes or social concepts to insect phenomena |
+| Hierarchical | Imposition of power-based ordering on biological organization |
+| Economic | Use of market, trade, or resource-investment language for biological processes |
+| Kinship-based | Application of human family/relatedness concepts |
+| Technological | Use of mechanistic or engineering metaphors |

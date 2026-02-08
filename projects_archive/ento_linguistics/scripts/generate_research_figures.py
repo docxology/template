@@ -666,7 +666,7 @@ def _register_figures_with_manager(figures: List[str], figure_dir: str) -> None:
     try:
         import os
 
-        from infrastructure.documentation import FigureManager
+        from src.utils.figure_manager import FigureManager
 
         # FigureManager uses registry_file parameter, not output_dir
         registry_file = os.path.join(figure_dir, "figure_registry.json")

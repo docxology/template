@@ -3,9 +3,11 @@
 This file contains LaTeX preamble commands that will be inserted at the beginning of each generated document.
 
 **BasicTeX Compatibility**: All packages listed below are available in BasicTeX 2025 after running:
+
 ```bash
 sudo tlmgr install multirow cleveref doi newunicodechar
 ```
+
 (Note: `bm` and `subcaption` are already included in BasicTeX as part of the `tools` and `caption` packages)
 
 ```latex
@@ -87,10 +89,10 @@ sudo tlmgr install multirow cleveref doi newunicodechar
     bookmarks=true,
     bookmarksnumbered=true,
     bookmarkstype=toc,
-    pdftitle={Research Project Template},
-    pdfauthor={Template Author},
-    pdfsubject={Academic Research},
-    pdfkeywords={research, template, academic, LaTeX},
+    pdftitle={Ento-Linguistic Domains: Language, Ambiguity, and Scientific Communication in Entomology},
+    pdfauthor={Daniel Ari Friedman},
+    pdfsubject={Scientific Terminology Analysis in Entomology},
+    pdfkeywords={entomology, scientific terminology, discourse analysis, anthropomorphism, language, ant biology},
     pdfcreator={render_pdf.sh},
     pdfproducer={XeLaTeX}
 }

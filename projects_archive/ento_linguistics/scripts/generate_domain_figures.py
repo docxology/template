@@ -21,8 +21,8 @@ from domain_analysis import DomainAnalyzer
 from literature_mining import LiteratureCorpus
 from term_extraction import TerminologyExtractor
 
-from infrastructure.core.logging_utils import get_logger
-from infrastructure.documentation.figure_manager import FigureManager
+from utils.logging import get_logger
+from utils.figure_manager import FigureManager
 
 logger = get_logger(__name__)
 

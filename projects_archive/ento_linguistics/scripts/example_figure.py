@@ -174,7 +174,7 @@ def main() -> None:
 
     # Register figure with FigureManager for cross-referencing
     try:
-        from infrastructure.documentation.figure_manager import FigureManager
+        from src.utils.figure_manager import FigureManager
 
         fm = FigureManager(
             registry_file=os.path.join(figure_dir, "figure_registry.json")

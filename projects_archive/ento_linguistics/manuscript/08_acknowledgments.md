@@ -29,7 +29,7 @@ This research builds upon open-source software tools and publicly available data
 
 ## Feedback and Review
 
-We are grateful to the anonymous reviewers whose constructive feedback significantly improved this manuscript, particularly regarding the theoretical framework for understanding constitutive effects of scientific language.
+We are grateful to the colleagues who provided pre-submission feedback on this manuscript, particularly regarding the theoretical framework for understanding constitutive effects of scientific language and the design of the mixed-methodology approach.
 
 ## Institutional Support
 
@@ -38,4 +38,3 @@ This research was conducted with the support of the University research infrastr
 ---
 
 *All errors and omissions remain the sole responsibility of the authors.*
-

@@ -2,7 +2,7 @@
 
 ## Theoretical Implications of Language as Constitutive in Scientific Practice
 
-The computational analysis presented in Section \ref{sec:experimental_results} reveals profound theoretical implications for understanding how language actively constitutes scientific knowledge rather than merely representing it. Our findings demonstrate that terminology networks in entomology are not neutral descriptive tools, but active frameworks that shape research questions, methodological choices, and interpretive possibilities.
+The computational analysis presented in Section \ref{sec:experimental_results} reveals that terminology networks in entomology function not as neutral descriptive tools, but as constitutive frameworks that actively shape research questions, methodological choices, and interpretive possibilities. This finding aligns with Foucault's \cite{foucault1972archaeology} analysis of how discursive formations constrain what can be said and thought within a field, and extends Lakoff and Johnson's \cite{lakoff1980metaphors} demonstration that metaphorical structures pervade reasoning to the specific domain of scientific insect research.
 
 ### The Constitutive Role of Scientific Language
 
@@ -44,7 +44,7 @@ Our work extends several established frameworks for analyzing scientific languag
 
 **Ethnoscience and Folk Taxonomies**: The categorical structures imposed by entomological terminology parallel ethnoscientific classifications, where cultural categories shape perception of natural phenomena \cite{berlin1992}.
 
-**Language Ideology**: Our analysis of framing assumptions reveals how language ideologies in science privilege certain ways of knowing while marginalizing others.
+**Language Ideology**: Our analysis of framing assumptions connects to Keller's \cite{keller1995language} argument that language ideologies in science privilege certain ways of knowing while marginalizing others. The prevalence of hierarchical framing in the Power \& Labor domain illustrates how deeply embedded these ideologies can be.
 
 ## Implications for Scientific Communication
 
@@ -74,7 +74,7 @@ Based on our analysis, we offer concrete recommendations for improving terminolo
 
 **1. Terminological Awareness**: Researchers should maintain conscious awareness of the conceptual frameworks embedded in scientific terminology, particularly when terms carry implicit assumptions about social structure or individuality.
 
-**2. Alternative Terminology**: When established terms create confusion or inappropriate framings, researchers should consider developing or adopting clearer alternatives. For example, replacing "slave" with "worker" in ant literature represents an improvement in communicative clarity.
+**2. Alternative Terminology**: When established terms create confusion or inappropriate framings, researchers should consider developing or adopting clearer alternatives. Recent community efforts such as the ESA Better Common Names Project \cite{betternamesproject2024} and Herbers' \cite{herbers2007} call for racially conscious language reform provide models for systematic terminology revision.
 
 **3. Cross-Domain Translation**: Researchers working across disciplines should be prepared to translate concepts between different terminological frameworks, recognizing that terms may carry different meanings in different contexts.
 
@@ -144,6 +144,8 @@ Our analysis suggests that language use should be considered in research evaluat
 
 **Peer Review Frameworks**: Integrate language analysis into peer review processes to improve scientific communication quality.
 
+These directions are developed further in the conclusion (Section \ref{sec:conclusion}), where we propose concrete meta-standards for scientific communication.
+
 ## Meta-Standards for Scientific Communication
 
 Our work establishes foundations for meta-standards that scientific communities can use to evaluate and improve their communication practices:
@@ -158,4 +160,4 @@ Our work establishes foundations for meta-standards that scientific communities 
 
 ## Conclusion
 
-The Ento-Linguistic analysis reveals that scientific language is not a transparent medium for representing biological reality, but an active constituent of scientific knowledge. Terminology networks shape research questions, methodological choices, and interpretive frameworks in ways that are often invisible to practitioners. By making these constitutive effects visible, our work provides a foundation for more conscious and responsible scientific communication practices. The ethical imperative for clear communication in value-aligned scientific communities calls for active terminological stewardship and the development of meta-standards for evaluating language use in research. Future work should extend these insights across disciplines while developing practical tools for improving scientific discourse.
+The Ento-Linguistic analysis reveals that scientific language is not a transparent medium for representing biological reality, but an active constituent of scientific knowledge. Terminology networks shape research questions, methodological choices, and interpretive frameworks in ways that are often invisible to practitioners. By making these constitutive effects visible, our work provides a foundation for more conscious and responsible scientific communication practices—a foundation that the conclusion develops into concrete forward-looking proposals.

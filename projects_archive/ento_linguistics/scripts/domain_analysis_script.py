@@ -22,9 +22,9 @@ from domain_analysis import DomainAnalysis, DomainAnalyzer
 from literature_mining import LiteratureCorpus
 from term_extraction import TerminologyExtractor
 
-from infrastructure.core.logging_utils import get_logger
+from utils.logging import get_logger
 # Directory creation handled inline
-from infrastructure.documentation.figure_manager import FigureManager
+from utils.figure_manager import FigureManager
 
 logger = get_logger(__name__)
 

@@ -40,13 +40,18 @@ from src.utils.validation import validate_figure_registry
 from src.utils.validation import validate_markdown as validate_markdown_wrapper
 from visualization import VisualizationEngine
 
-# Infra logging/perf/validation/reporting
-from infrastructure.core.logging_utils import (get_logger, log_progress_bar,
-                                               log_substep)
-from infrastructure.core.performance import PerformanceMonitor
-from infrastructure.documentation.image_manager import ImageManager
-from infrastructure.documentation.markdown_integration import \
-    MarkdownIntegration
+# Infra logging uses local utilities
+from src.utils.logging import get_logger, log_progress_bar, log_substep
+
+# Optional infrastructure imports - graceful fallback if not available
+try:
+    from infrastructure.core.performance import PerformanceMonitor
+    from infrastructure.documentation.image_manager import ImageManager
+    from infrastructure.documentation.markdown_integration import \
+        MarkdownIntegration
+    _INFRA_AVAILABLE = True
+except ImportError:
+    _INFRA_AVAILABLE = False
 
 logger = get_logger(__name__)
 
