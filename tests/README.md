@@ -172,7 +172,7 @@ graph TD
     class PROJECT project
 ```
 
-```
+```text
 tests/
 ├── conftest.py                          # Root test configuration
 │

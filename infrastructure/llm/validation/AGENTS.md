@@ -6,7 +6,7 @@ The `infrastructure/llm/validation/` directory contains validation utilities for
 
 ## Directory Structure
 
-```
+```text
 infrastructure/llm/validation/
 ├── AGENTS.md               # This technical documentation
 ├── __init__.py            # Package exports
@@ -450,7 +450,7 @@ def test_markdown_format_validator():
     validator = MarkdownFormatValidator()
 
     # Valid markdown
-    valid_content = "# Header\n\nSome content with [link](url)."
+    valid_content = "# Header\n\nSome content with a sample link."
     result = validator.validate(valid_content)
     assert result.passed
 
@@ -672,7 +672,7 @@ def process_validation_result(result: ValidationResult) -> ValidationAction:
 from infrastructure.llm.validation import MarkdownFormatValidator
 
 validator = MarkdownFormatValidator()
-content = "# Header\n\nSome content with [link](url)."
+content = "# Header\n\nSome content with a sample link."
 result = validator.validate(content)
 
 if result.passed:
@@ -681,7 +681,7 @@ else:
     print(f"Validation issues: {result.issues}")
 ```
 
-### Validation
+### Comprehensive Validation
 
 **Multi-Validator Assessment:**
 
@@ -699,7 +699,7 @@ print(f"Highest severity: {result.highest_severity}")
 print(f"Total issues: {len(result.all_issues)}")
 ```
 
-### LLM Response Validation
+### LLM Response Validation Example
 
 **Post-Generation Quality Check:**
 
@@ -720,7 +720,7 @@ else:
 
 ## Configuration
 
-### Validation Configuration
+### Custom Validation Settings
 
 **Custom Validation Settings:**
 
@@ -844,4 +844,4 @@ result = validator.validate(content, context)
 **System Documentation:**
 
 - [`../../../AGENTS.md`](../../../AGENTS.md) - system overview
-- [`../../../docs/operational/VALIDATION_GUIDE.md`](../../../docs/operational/VALIDATION_GUIDE.md) - Validation usage guide
+- [`../../../docs/development/TESTING_GUIDE.md`](../../../docs/development/TESTING_GUIDE.md) - Testing and validation guide

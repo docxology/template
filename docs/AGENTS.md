@@ -15,7 +15,7 @@ Documentation is organized into modular subdirectories by purpose and audience:
 ### Core Documentation (`core/`)
 
 | File | Purpose | Audience |
-|------|---------|----------|
+| ------ | --------- | ---------- |
 | `core/HOW_TO_USE.md` | usage guide from basic to advanced | New users, developers |
 | `core/ARCHITECTURE.md` | System design and structure | Developers, architects |
 | `core/WORKFLOW.md` | Development workflow and best practices | Developers |
@@ -23,7 +23,7 @@ Documentation is organized into modular subdirectories by purpose and audience:
 ### Usage Guides (`guides/`)
 
 | File | Purpose | Audience |
-|------|---------|----------|
+| ------ | --------- | ---------- |
 | `guides/GETTING_STARTED.md` | Basic usage guide (Levels 1-3) | Beginners |
 | `guides/FIGURES_AND_ANALYSIS.md` | Intermediate usage (Levels 4-6) | Intermediate users |
 | `guides/TESTING_AND_REPRODUCIBILITY.md` | Advanced usage (Levels 7-9) | Advanced users |
@@ -32,7 +32,7 @@ Documentation is organized into modular subdirectories by purpose and audience:
 ### Architecture Documentation (`architecture/`)
 
 | File | Purpose | Audience |
-|------|---------|----------|
+| ------ | --------- | ---------- |
 | `architecture/TWO_LAYER_ARCHITECTURE.md` | two-layer architecture guide | Developers, architects |
 | `architecture/THIN_ORCHESTRATOR_SUMMARY.md` | Architecture pattern details | Developers |
 | `architecture/DECISION_TREE.md` | Code placement decisions | Developers |
@@ -40,7 +40,7 @@ Documentation is organized into modular subdirectories by purpose and audience:
 ### Usage Examples (`usage/`)
 
 | File | Purpose | Audience |
-|------|---------|----------|
+| ------ | --------- | ---------- |
 | `usage/TEMPLATE_DESCRIPTION.md` | Template overview and features | New users |
 | `usage/EXAMPLES.md` | Usage examples and patterns | All users |
 | `usage/EXAMPLES_SHOWCASE.md` | Real-world usage examples | Advanced users |
@@ -50,7 +50,7 @@ Documentation is organized into modular subdirectories by purpose and audience:
 ### Operational Guides (`operational/`)
 
 | File | Purpose | Audience |
-|------|---------|----------|
+| ------ | --------- | ---------- |
 | `operational/BUILD_SYSTEM.md` | Build pipeline and execution details | Developers |
 | `operational/CI_CD_INTEGRATION.md` | CI/CD setup and GitHub Actions | Developers |
 | `operational/DEPENDENCY_MANAGEMENT.md` | Package management with uv | Developers |
@@ -66,7 +66,7 @@ Documentation is organized into modular subdirectories by purpose and audience:
 ### Reference Materials (`reference/`)
 
 | File | Purpose | Audience |
-|------|---------|----------|
+| ------ | --------- | ---------- |
 | `reference/FAQ.md` | Frequently asked questions | All users |
 | `reference/API_REFERENCE.md` | API documentation | Developers |
 | `reference/GLOSSARY.md` | Terms and definitions | All users |
@@ -77,7 +77,7 @@ Documentation is organized into modular subdirectories by purpose and audience:
 ### Advanced Modules (`modules/`)
 
 | File | Purpose | Audience |
-|------|---------|----------|
+| ------ | --------- | ---------- |
 | `modules/MODULES_GUIDE.md` | Guide for all 7 modules | Developers |
 | `modules/PDF_VALIDATION.md` | PDF validation documentation | Developers |
 | `modules/SCIENTIFIC_SIMULATION_GUIDE.md` | Scientific simulation system | Researchers |
@@ -85,7 +85,7 @@ Documentation is organized into modular subdirectories by purpose and audience:
 ### Per-Module Guides (`modules/guides/`)
 
 | File | Purpose | Audience |
-|------|---------|----------|
+| ------ | --------- | ---------- |
 | `modules/guides/INTEGRITY_MODULE.md` | Integrity module guide | Developers |
 | `modules/guides/LITERATURE_MODULE.md` | Literature module guide | Developers |
 | `modules/guides/LLM_MODULE.md` | LLM module guide | Developers |
@@ -97,7 +97,7 @@ Documentation is organized into modular subdirectories by purpose and audience:
 ### Logging Guides (`operational/logging/`)
 
 | File | Purpose | Audience |
-|------|---------|----------|
+| ------ | --------- | ---------- |
 | `operational/logging/BASH_LOGGING.md` | Bash logging patterns | Developers |
 | `operational/logging/PYTHON_LOGGING.md` | Python logging patterns | Developers |
 | `operational/logging/LOGGING_PATTERNS.md` | Cross-language logging patterns | Developers |
@@ -105,7 +105,7 @@ Documentation is organized into modular subdirectories by purpose and audience:
 ### Troubleshooting Guides (`operational/troubleshooting/`)
 
 | File | Purpose | Audience |
-|------|---------|----------|
+| ------ | --------- | ---------- |
 | `operational/troubleshooting/BUILD_TOOLS.md` | Build tool troubleshooting | Developers |
 | `operational/troubleshooting/COMMON_ERRORS.md` | Common error patterns and fixes | All users |
 | `operational/troubleshooting/ENVIRONMENT_SETUP.md` | Environment setup issues | All users |
@@ -115,7 +115,7 @@ Documentation is organized into modular subdirectories by purpose and audience:
 ### Development & Contribution (`development/`)
 
 | File | Purpose | Audience |
-|------|---------|----------|
+| ------ | --------- | ---------- |
 | `development/CONTRIBUTING.md` | How to contribute to the project | Contributors |
 | `development/CODE_OF_CONDUCT.md` | Community guidelines | All participants |
 | `development/SECURITY.md` | Security policies and reporting | All users |
@@ -127,17 +127,17 @@ Documentation is organized into modular subdirectories by purpose and audience:
 ### Best Practices (`best-practices/`)
 
 | File | Purpose | Audience |
-|------|---------|----------|
+| ------ | --------- | ---------- |
 | `best-practices/BEST_PRACTICES.md` | Consolidated best practices | All users |
 | `best-practices/VERSION_CONTROL.md` | Git workflows and best practices | Developers |
 | `best-practices/MIGRATION_GUIDE.md` | Migration from other templates | Developers |
 | `best-practices/MULTI_PROJECT_MANAGEMENT.md` | Managing multiple projects | Developers |
 | `best-practices/BACKUP_RECOVERY.md` | Backup strategies and recovery | All users |
 
-### Usage Examples (`usage/`)
+### Usage Guides — Complete Reference (`usage/`)
 
 | File | Purpose | Audience |
-|------|---------|----------|
+| ------ | --------- | ---------- |
 | `usage/TEMPLATE_DESCRIPTION.md` | Template overview and features | New users |
 | `usage/EXAMPLES.md` | Usage examples and patterns | All users |
 | `usage/EXAMPLES_SHOWCASE.md` | Real-world usage examples | Advanced users |
@@ -149,7 +149,7 @@ Documentation is organized into modular subdirectories by purpose and audience:
 ### AI Prompt Templates (`prompts/`)
 
 | File | Purpose | Audience |
-|------|---------|----------|
+| ------ | --------- | ---------- |
 | `prompts/README.md` | Quick reference guide for all prompts | All users |
 | `prompts/AGENTS.md` | Technical documentation for prompt templates | Developers |
 | `prompts/manuscript_creation.md` | manuscript creation from research description | Researchers |
@@ -167,7 +167,7 @@ Documentation is organized into modular subdirectories by purpose and audience:
 The `.cursorrules/` directory contains modular development rules that complement this documentation. Each rule file covers specific development standards:
 
 | Rule Module | Focus Area |
-|-------------|-----------|
+| ------------- | ----------- |
 | [`../.cursorrules/AGENTS.md`](../.cursorrules/AGENTS.md) | Overview and navigation guide |
 | [`../.cursorrules/README.md`](../.cursorrules/README.md) | Quick reference and patterns |
 | [`../.cursorrules/error_handling.md`](../.cursorrules/error_handling.md) | Exception handling patterns |
@@ -267,7 +267,7 @@ def example():
     return "formatted"
 ```
 
-```
+```text
 
 ### Links
 ```markdown
@@ -342,7 +342,7 @@ aspell check docs/*.md
 
 ### Documentation Flow
 
-```
+```text
 README.md → core/HOW_TO_USE.md → core/ARCHITECTURE.md
     ↓            ↓                      ↓
 usage/EXAMPLES.md  core/WORKFLOW.md    Technical Docs

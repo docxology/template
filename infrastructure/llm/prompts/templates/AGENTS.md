@@ -6,7 +6,7 @@ The `infrastructure/llm/prompts/templates/` directory contains, pre-built prompt
 
 ## Directory Structure
 
-```
+```text
 infrastructure/llm/prompts/templates/
 ├── AGENTS.md                       # This technical documentation
 ├── manuscript_reviews.json         # manuscript review template

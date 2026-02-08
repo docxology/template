@@ -44,7 +44,7 @@ This routes directly to the manuscript pipeline operations menu.
 
 This presents a menu with manuscript operations:
 
-```
+```text
 ============================================================
   Manuscript Pipeline - Main Menu
 ============================================================
@@ -331,7 +331,7 @@ See [`docs/operational/CHECKPOINT_RESUME.md`](../docs/operational/CHECKPOINT_RES
 
 Analysis scripts belong in `projects/{name}/scripts/`:
 
-```
+```text
 project/scripts/
 ├── analysis_pipeline.py     # Project-specific analysis
 ├── example_figure.py        # Project-specific figures
@@ -521,7 +521,7 @@ flowchart TD
 - **Project Code** (`project/`) implements domain-specific logic
 - **Outputs** are generated and validated throughout the pipeline
 
-```
+```text
 Main Entry Point (run.sh):
   → Interactive Menu → Choose Manuscript Operations
 
@@ -584,7 +584,7 @@ projects/{name}/scripts/ (Project-Specific)
   ├─ analysis_pipeline.py → Your analysis
   └─ example_figure.py → Your figures
 
-```
+```text
 
 ## Shared Utilities
 

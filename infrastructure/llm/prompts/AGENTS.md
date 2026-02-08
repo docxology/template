@@ -6,7 +6,7 @@ The `infrastructure/llm/prompts/` directory contains the prompt engineering syst
 
 ## Directory Structure
 
-```
+```text
 infrastructure/llm/prompts/
 ├── AGENTS.md               # This technical documentation
 ├── __init__.py            # Package exports

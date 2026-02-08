@@ -6,7 +6,7 @@ The `infrastructure/llm/prompts/compositions/` directory contains pre-built prom
 
 ## Directory Structure
 
-```
+```text
 infrastructure/llm/prompts/compositions/
 ├── AGENTS.md                       # This technical documentation
 └── retry_prompts.json             # Error recovery and format enforcement prompts

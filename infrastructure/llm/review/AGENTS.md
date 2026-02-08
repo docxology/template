@@ -6,7 +6,7 @@ The `infrastructure/llm/review/` directory contains the manuscript review system
 
 ## Directory Structure
 
-```
+```text
 infrastructure/llm/review/
 ├── AGENTS.md               # This technical documentation
 ├── __init__.py            # Package exports

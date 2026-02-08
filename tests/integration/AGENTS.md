@@ -17,7 +17,7 @@ Integration tests complement unit tests by validating:
 
 ## Directory Structure
 
-```
+```text
 tests/integration/
 ├── conftest.py                          # Integration test configuration (expanded)
 ├── test_bash_utils.sh                   # Bash utility function tests

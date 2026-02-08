@@ -6,7 +6,7 @@ The `infrastructure/llm/templates/` directory contains specialized template clas
 
 ## Directory Structure
 
-```
+```text
 infrastructure/llm/templates/
 ├── AGENTS.md               # This technical documentation
 ├── __init__.py            # Package exports

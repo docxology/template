@@ -6,7 +6,7 @@ The `infrastructure/llm/cli/` directory contains the command-line interface for 
 
 ## Directory Structure
 
-```
+```text
 infrastructure/llm/cli/
 ├── AGENTS.md               # This technical documentation
 ├── __init__.py            # Package initialization

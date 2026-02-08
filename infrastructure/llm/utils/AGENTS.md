@@ -6,7 +6,7 @@ The `infrastructure/llm/utils/` directory contains utility functions for Ollama 
 
 ## Directory Structure
 
-```
+```text
 infrastructure/llm/utils/
 ├── AGENTS.md               # This technical documentation
 ├── __init__.py            # Package exports

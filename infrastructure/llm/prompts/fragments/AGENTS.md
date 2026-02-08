@@ -6,7 +6,7 @@ The `infrastructure/llm/prompts/fragments/` directory contains reusable prompt c
 
 ## Directory Structure
 
-```
+```text
 infrastructure/llm/prompts/fragments/
 ├── AGENTS.md                       # This technical documentation
 ├── content_requirements.json       # Quality and completeness standards
@@ -453,7 +453,7 @@ def load_fragment_safely(self, name: str) -> str:
         return f"[Error loading fragment '{name}']"
 ```
 
-### Fragment Validation
+### Fragment Content Validation
 
 **Content Validation:**
 

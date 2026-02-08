@@ -6,7 +6,7 @@ The `infrastructure/project/manuscript/` directory contains utilities for manusc
 
 ## Directory Structure
 
-```
+```text
 infrastructure/project/manuscript/
 ├── AGENTS.md                     # This technical documentation
 └── 98_symbols_glossary.md       # Auto-generated API symbols glossary

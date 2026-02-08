@@ -143,7 +143,7 @@ For modules requiring external services (LLM, Literature, Publishing):
 
 Tests are organized to mirror `infrastructure/` module structure. Note: Multiple test files with suffixes like `_coverage`, `_full`, `_comprehensive` exist to achieve test coverage across different scenarios and edge cases. These files are intentionally split rather than consolidated to ensure thorough validation of complex functionality:
 
-```
+```text
 tests/
 ├── conftest.py                          # Root test configuration and fixtures
 │   ├── core/                            # Core utilities tests
@@ -494,7 +494,7 @@ def test_integration(client):
         assert response
 ```
 
-```
+```text
 
 ## Test Coverage Details
 

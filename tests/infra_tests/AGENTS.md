@@ -10,7 +10,7 @@ The `tests/infra_tests/` directory contains tests for the reusable infrastructur
 
 ## Directory Structure
 
-```
+```text
 tests/infra_tests/
 ├── conftest.py                      # Shared test configuration and fixtures
 ├── _test_helpers.py                 # Test utility functions (underscore = not a test file)
