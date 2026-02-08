@@ -25,6 +25,7 @@ infrastructure/llm/templates/
 #### Template Base Class
 
 **Abstract Template Interface:**
+
 ```python
 class BaseTemplate(ABC):
     """Abstract base class for LLM templates."""
@@ -63,6 +64,7 @@ class BaseTemplate(ABC):
 #### Template Configuration
 
 **Configuration Management:**
+
 ```python
 @dataclass
 class TemplateConfig:
@@ -94,6 +96,7 @@ class TemplateConfig:
 #### Input Validation Helpers
 
 **Content Validation:**
+
 ```python
 def validate_content_length(content: str, min_length: int = 10,
                           max_length: int = 100000) -> None:
@@ -130,6 +133,7 @@ def validate_research_content(content: str) -> List[str]:
 #### Response Processing Helpers
 
 **Result Formatting:**
+
 ```python
 def format_template_result(content: Any, template_name: str,
                           metadata: Dict[str, Any] = None) -> TemplateResult:
@@ -172,6 +176,7 @@ def extract_structured_response(response: str, expected_fields: List[str]) -> Di
 #### Manuscript Review Template
 
 **Review Generation:**
+
 ```python
 class ManuscriptReviewTemplate(BaseTemplate):
     """Template for generating manuscript reviews."""
@@ -216,6 +221,7 @@ class ManuscriptReviewTemplate(BaseTemplate):
 #### Manuscript Summary Template
 
 **Executive Summary Generation:**
+
 ```python
 class ManuscriptSummaryTemplate(BaseTemplate):
     """Template for generating manuscript summaries."""
@@ -249,6 +255,7 @@ class ManuscriptSummaryTemplate(BaseTemplate):
 #### Research Question Refinement Template
 
 **Question Development and Refinement:**
+
 ```python
 class ResearchQuestionTemplate(BaseTemplate):
     """Template for refining research questions."""
@@ -276,6 +283,7 @@ class ResearchQuestionTemplate(BaseTemplate):
 #### Methodology Review Template
 
 **Methodological Evaluation:**
+
 ```python
 class MethodologyReviewTemplate(BaseTemplate):
     """Template for reviewing research methodologies."""
@@ -301,6 +309,7 @@ class MethodologyReviewTemplate(BaseTemplate):
 ### Template Result Structure
 
 **Standardized Result Format:**
+
 ```python
 @dataclass
 class TemplateResult:
@@ -319,11 +328,13 @@ class TemplateResult:
 ### Template Categories
 
 **Manuscript Templates:**
+
 - **ManuscriptReviewTemplate**: manuscript evaluation
 - **ManuscriptSummaryTemplate**: Executive and technical summaries
 - **ManuscriptOutlineTemplate**: Structure and organization review
 
 **Research Templates:**
+
 - **ResearchQuestionTemplate**: Question development and refinement
 - **MethodologyReviewTemplate**: Methodological evaluation and feedback
 - **LiteratureReviewTemplate**: Literature synthesis and gap analysis
@@ -333,6 +344,7 @@ class TemplateResult:
 ### Template Factory Pattern
 
 **Dynamic Template Instantiation:**
+
 ```python
 class TemplateFactory:
     """Factory for creating template instances."""
@@ -359,6 +371,7 @@ class TemplateFactory:
 ### Template Pipeline Integration
 
 **Workflow Integration:**
+
 ```python
 # Integration with scripts/06_llm_review.py
 from infrastructure.llm.templates import TemplateFactory
@@ -392,6 +405,7 @@ def generate_manuscript_review(manuscript_path: Path) -> None:
 ### Template Testing Framework
 
 **Base Template Tests:**
+
 ```python
 def test_base_template_interface():
     """Test base template interface compliance."""
@@ -412,6 +426,7 @@ def test_base_template_interface():
 ```
 
 **Manuscript Template Tests:**
+
 ```python
 def test_manuscript_review_template():
     """Test manuscript review template functionality."""
@@ -442,6 +457,7 @@ def test_manuscript_review_template():
 ### Integration Testing
 
 **End-to-End Template Testing:**
+
 ```python
 def test_template_pipeline_integration():
     """Test template pipeline."""
@@ -471,6 +487,7 @@ def test_template_pipeline_integration():
 ### Template Optimization
 
 **Efficient Template Execution:**
+
 ```python
 def apply_with_performance_tracking(self, **kwargs) -> TemplateResult:
     """Apply template with performance monitoring."""
@@ -499,6 +516,7 @@ def apply_with_performance_tracking(self, **kwargs) -> TemplateResult:
 ### Caching and Reuse
 
 **Template Result Caching:**
+
 ```python
 class TemplateCache:
     """Cache template results for performance."""
@@ -526,6 +544,7 @@ class TemplateCache:
 ### Template-Specific Errors
 
 **Error Management:**
+
 ```python
 class TemplateError(Exception):
     """Base exception for template errors."""
@@ -578,6 +597,7 @@ def apply_with_error_handling(self, **kwargs) -> TemplateResult:
 ### Basic Template Usage
 
 **Manuscript Review:**
+
 ```python
 from infrastructure.llm.templates import ManuscriptReviewTemplate
 from infrastructure.llm.core import LLMClient
@@ -599,6 +619,7 @@ print(f"Review: {result.content['overall_assessment']}")
 ### Advanced Template Configuration
 
 **Custom Configuration:**
+
 ```python
 from infrastructure.llm.templates.base import TemplateConfig
 
@@ -617,6 +638,7 @@ template = ManuscriptReviewTemplate(client, config)
 ### Template Factory Usage
 
 **Dynamic Template Creation:**
+
 ```python
 from infrastructure.llm.templates import TemplateFactory
 
@@ -634,6 +656,7 @@ summary_result = summary_template.apply(manuscript=text)
 ### Template Configuration Options
 
 **Global Template Settings:**
+
 ```bash
 # Template behavior settings
 export LLM_TEMPLATE_MAX_TOKENS=4096
@@ -652,6 +675,7 @@ export LLM_TEMPLATE_CACHE_SIZE=50
 ### Template-Specific Configuration
 
 **Manuscript Template Settings:**
+
 ```python
 # Manuscript-specific configuration
 manuscript_config = TemplateConfig(
@@ -667,12 +691,14 @@ manuscript_config = TemplateConfig(
 ### Advanced Template Features
 
 **Planned Improvements:**
+
 - **Template Composition**: Combine multiple templates in workflows
 - **Template Versioning**: Version management and migration
 - **Template Metrics**: Performance tracking and optimization
 - **Template Learning**: Adaptive template improvement
 
 **Integration Features:**
+
 - **IDE Integration**: Direct template application in editors
 - **Batch Processing**: Process multiple documents with templates
 - **Template Chains**: Sequential template application pipelines
@@ -683,6 +709,7 @@ manuscript_config = TemplateConfig(
 ### Common Template Issues
 
 **Input Validation Failures:**
+
 ```python
 # Check input requirements
 template = ManuscriptReviewTemplate(client)
@@ -695,6 +722,7 @@ except TemplateValidationError as e:
 ```
 
 **LLM Response Issues:**
+
 ```python
 # Check LLM client configuration
 client = LLMClient()
@@ -711,6 +739,7 @@ if not available_models:
 ```
 
 **Performance Issues:**
+
 ```python
 # Monitor template performance
 import time
@@ -728,6 +757,7 @@ if result.processing_time and result.processing_time > 30:
 ### Debug Template Execution
 
 **Verbose Template Logging:**
+
 ```python
 # Enable debug logging
 import logging
@@ -744,10 +774,12 @@ result = template.apply(manuscript=text)
 ## See Also
 
 **Related Documentation:**
+
 - [`../core/AGENTS.md`](../core/AGENTS.md) - LLM core functionality
 - [`../prompts/AGENTS.md`](../prompts/AGENTS.md) - Prompt engineering system
 - [`../review/AGENTS.md`](../review/AGENTS.md) - Review generation
 
 **System Documentation:**
-- [`../../../../AGENTS.md`](../../../../AGENTS.md) - system overview
-- [`../../../../../docs/usage/MANUSCRIPT_NUMBERING_SYSTEM.md`](../../../../../docs/usage/MANUSCRIPT_NUMBERING_SYSTEM.md) - Manuscript handling guide
+
+- [`../../../AGENTS.md`](../../../AGENTS.md) - system overview
+- [`../../../docs/usage/MANUSCRIPT_NUMBERING_SYSTEM.md`](../../../docs/usage/MANUSCRIPT_NUMBERING_SYSTEM.md) - Manuscript handling guide

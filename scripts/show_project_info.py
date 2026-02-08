@@ -137,7 +137,7 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description="Display project information")
-    parser.add_argument("--project", default="code_project", help="Project name")
+    parser.add_argument("--project", default="project", help="Project name")
 
     args = parser.parse_args()
 

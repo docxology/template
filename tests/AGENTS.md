@@ -726,5 +726,5 @@ See **[docs/TESTING_WITH_CREDENTIALS.md](../docs/development/TESTING_WITH_CREDEN
 - [`../projects/code_project/src/AGENTS.md`](../projects/code_project/src/AGENTS.md) - code_project module documentation
 - [`../projects/code_project/src/AGENTS.md`](../projects/code_project/src/AGENTS.md) - code_project module documentation
 - [`../AGENTS.md`](../AGENTS.md) - System documentation
-- [`../docs/WORKFLOW.md`](../docs/WORKFLOW.md) - Development workflow
+- [`../docs/core/WORKFLOW.md`](../docs/core/WORKFLOW.md) - Development workflow
 - [`../docs/development/TESTING_WITH_CREDENTIALS.md`](../docs/development/TESTING_WITH_CREDENTIALS.md) - Credential configuration guide

@@ -172,5 +172,5 @@ graph TD
 ## See Also
 
 - [AGENTS.md](AGENTS.md) - test documentation
-- [../../infrastructure/rendering/README.md](../../infrastructure/rendering/README.md) - Rendering module overview
+- [../../../infrastructure/rendering/README.md](../../../infrastructure/rendering/README.md) - Rendering module overview
 - [../../../tests/README.md](../../../tests/README.md) - Test suite overview

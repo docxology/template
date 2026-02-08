@@ -51,7 +51,7 @@ pytest tests/infra_tests/llm/ -m requires_ollama -v
 ## See Also
 
 - [`AGENTS.md`](AGENTS.md) - LLM test documentation
-- [`../../infrastructure/llm/README.md`](../../infrastructure/llm/README.md) - LLM module overview
+- [`../../../infrastructure/llm/README.md`](../../../infrastructure/llm/README.md) - LLM module overview
 
 
 

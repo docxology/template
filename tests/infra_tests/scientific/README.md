@@ -113,5 +113,5 @@ graph TD
 ## See Also
 
 - [AGENTS.md](AGENTS.md) - test documentation
-- [../../infrastructure/scientific/README.md](../../infrastructure/scientific/README.md) - Scientific module overview
+- [../../../infrastructure/scientific/README.md](../../../infrastructure/scientific/README.md) - Scientific module overview
 - [../../../tests/README.md](../../../tests/README.md) - Test suite overview

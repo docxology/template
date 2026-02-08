@@ -153,5 +153,5 @@ graph TD
 ## See Also
 
 - [AGENTS.md](AGENTS.md) - test documentation
-- [../../infrastructure/validation/README.md](../../infrastructure/validation/README.md) - Validation module overview
+- [../../../infrastructure/validation/README.md](../../../infrastructure/validation/README.md) - Validation module overview
 - [../../../tests/README.md](../../../tests/README.md) - Test suite overview

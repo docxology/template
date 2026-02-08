@@ -35,6 +35,7 @@ infrastructure/llm/prompts/
 #### Prompt Composer Engine
 
 **Modular Prompt Assembly:**
+
 ```python
 class PromptComposer:
     """Assembles prompts from modular components."""
@@ -66,6 +67,7 @@ class PromptComposer:
 ```
 
 **Template Loading and Processing:**
+
 ```python
 def _load_template(self, template_name: str) -> Dict[str, Any]:
     """Load template configuration from templates directory."""
@@ -86,6 +88,7 @@ def _load_template(self, template_name: str) -> Dict[str, Any]:
 #### Fragment Integration
 
 **Dynamic Fragment Insertion:**
+
 ```python
 def _apply_fragments(self, prompt_parts: List[str], context: Dict[str, Any]) -> List[str]:
     """Apply fragment insertions based on context."""
@@ -111,6 +114,7 @@ def _apply_fragments(self, prompt_parts: List[str], context: Dict[str, Any]) -> 
 #### Variable Substitution
 
 **Advanced Variable Processing:**
+
 ```python
 def _substitute_variables(self, template_parts: List[str],
                          variables: Dict[str, Any]) -> List[str]:
@@ -140,6 +144,7 @@ def _substitute_variables(self, template_parts: List[str],
 #### Template Management
 
 **Template Discovery and Loading:**
+
 ```python
 class PromptLoader:
     """Loads and validates prompt templates and fragments."""
@@ -193,6 +198,7 @@ class PromptLoader:
 #### Template Validation
 
 **Template Validation:**
+
 ```python
 def validate_template(self, template: Dict[str, Any]) -> None:
     """Validate template structure and content."""
@@ -225,6 +231,7 @@ def validate_template(self, template: Dict[str, Any]) -> None:
 #### Content Requirements (`fragments/content_requirements.json`)
 
 **Quality and completeness requirements:**
+
 ```json
 {
   "content": "Ensure your response demonstrates:\n- Deep understanding of the subject matter\n- Clear and logical reasoning\n- Evidence-based conclusions\n- Appropriate level of technical detail\n- coverage of key aspects\n- Balanced perspective on limitations and assumptions"
@@ -234,6 +241,7 @@ def validate_template(self, template: Dict[str, Any]) -> None:
 #### Format Requirements (`fragments/format_requirements.json`)
 
 **Output structure and formatting standards:**
+
 ```json
 {
   "content": "Format your response using:\n- Clear section headers and subheaders\n- Bullet points for lists and key items\n- Numbered steps for procedures\n- Code blocks for technical content\n- Tables for comparative data\n- Consistent terminology and notation"
@@ -243,6 +251,7 @@ def validate_template(self, template: Dict[str, Any]) -> None:
 #### System Prompts (`fragments/system_prompts.json`)
 
 **Role definition and behavioral guidelines:**
+
 ```json
 {
   "content": "You are an expert research assistant specializing in academic writing and scientific analysis. Your responses should be:\n- Accurate and evidence-based\n- Clear and accessible to educated readers\n- Methodologically sound\n- Ethically responsible\n- Critically thoughtful"
@@ -254,6 +263,7 @@ def validate_template(self, template: Dict[str, Any]) -> None:
 ### Template-Based Review Generation
 
 **Review Template Usage:**
+
 ```python
 from infrastructure.llm.prompts import PromptComposer
 
@@ -278,6 +288,7 @@ response = client.query_structured(review_prompt, schema=review_schema)
 ### Summarization Template Usage
 
 **Paper Summarization:**
+
 ```python
 # Compose paper summarization prompt
 summarization_vars = {
@@ -297,11 +308,13 @@ summary = client.query(summary_prompt, options=GenerationOptions(max_tokens=600)
 ### Fragment Types
 
 **System-Level Fragments:**
+
 - **system_prompts**: Define AI role and behavioral guidelines
 - **content_requirements**: Quality and completeness standards
 - **format_requirements**: Output structure specifications
 
 **Task-Specific Fragments:**
+
 - **section_structures**: Document organization templates
 - **validation_hints**: Input validation guidance
 - **token_budget_awareness**: Token usage optimization
@@ -309,6 +322,7 @@ summary = client.query(summary_prompt, options=GenerationOptions(max_tokens=600)
 ### Fragment Composition Rules
 
 **Fragment Assembly Logic:**
+
 ```python
 def _compose_fragments(self, fragment_names: List[str]) -> str:
     """Compose multiple fragments with proper separation."""
@@ -332,6 +346,7 @@ def _compose_fragments(self, fragment_names: List[str]) -> str:
 ### Template Schema
 
 **Standard Template Format:**
+
 ```json
 {
   "name": "manuscript_reviews",
@@ -380,6 +395,7 @@ def _compose_fragments(self, fragment_names: List[str]) -> str:
 ### Template Validation Testing
 
 **Template Structure Tests:**
+
 ```python
 def test_template_validation():
     """Test template loading and validation."""
@@ -414,6 +430,7 @@ def test_fragment_loading():
 ### Composition Testing
 
 **Prompt Assembly Tests:**
+
 ```python
 def test_prompt_composition():
     """Test prompt composition workflow."""
@@ -439,6 +456,7 @@ def test_prompt_composition():
 ```
 
 **Variable Substitution Tests:**
+
 ```python
 def test_variable_substitution():
     """Test variable substitution in templates."""
@@ -460,6 +478,7 @@ def test_variable_substitution():
 ### Template Caching
 
 **Efficient Template Loading:**
+
 ```python
 def _get_cached_template(self, name: str) -> Dict[str, Any]:
     """Get template from cache or load from disk."""
@@ -471,6 +490,7 @@ def _get_cached_template(self, name: str) -> Dict[str, Any]:
 ```
 
 **Fragment Caching:**
+
 ```python
 def _get_cached_fragment(self, name: str) -> str:
     """Get fragment from cache or load from disk."""
@@ -484,6 +504,7 @@ def _get_cached_fragment(self, name: str) -> str:
 ### Token Optimization
 
 **Prompt Size Management:**
+
 ```python
 def _optimize_prompt_size(self, prompt: str, max_tokens: int = None) -> str:
     """Optimize prompt size for token limits."""
@@ -506,6 +527,7 @@ def _optimize_prompt_size(self, prompt: str, max_tokens: int = None) -> str:
 ### Template Validation Errors
 
 **Validation:**
+
 ```python
 def _validate_template_structure(self, template: Dict[str, Any]) -> None:
     """Validate template structure."""
@@ -532,6 +554,7 @@ def _validate_template_structure(self, template: Dict[str, Any]) -> None:
 ### Fragment Loading Errors
 
 **Robust Fragment Handling:**
+
 ```python
 def _load_fragment_safely(self, name: str) -> str:
     """Load fragment with error handling."""
@@ -554,6 +577,7 @@ def _load_fragment_safely(self, name: str) -> str:
 ### Basic Template Usage
 
 **Simple Prompt Composition:**
+
 ```python
 from infrastructure.llm.prompts import PromptComposer
 
@@ -571,6 +595,7 @@ prompt = composer.compose_prompt('manuscript_reviews', variables)
 ### Advanced Composition
 
 **Custom Fragment Integration:**
+
 ```python
 # Load specific fragments
 composer = PromptComposer()
@@ -588,6 +613,7 @@ prompt = composer.compose_prompt('custom_analysis', variables)
 ### Template Development
 
 **Creating New Templates:**
+
 ```python
 # Template creation workflow
 template_data = {
@@ -615,6 +641,7 @@ with open('templates/custom_review.json', 'w') as f:
 ### Directory Configuration
 
 **Custom Prompt Directories:**
+
 ```python
 # Use custom prompt directory
 composer = PromptComposer(prompts_dir=Path('/custom/prompts'))
@@ -627,6 +654,7 @@ os.environ['LLM_PROMPTS_DIR'] = '/custom/prompts'
 ### Template Search Paths
 
 **Multiple Template Sources:**
+
 ```python
 def _find_template_path(self, name: str) -> Path:
     """Find template in configured search paths."""
@@ -650,12 +678,14 @@ def _find_template_path(self, name: str) -> Path:
 ### Advanced Features
 
 **Planned Improvements:**
+
 - **Template Inheritance**: Base templates with overrides
 - **Dynamic Fragment Selection**: Context-aware fragment insertion
 - **Template Versioning**: Version management and migration
 - **Performance Profiling**: Template composition timing analysis
 
 **Integration Features:**
+
 - **Hot Reloading**: Runtime template updates without restart
 - **Template Marketplace**: Shared template repository
 - **Collaborative Editing**: Multi-user template development
@@ -666,6 +696,7 @@ def _find_template_path(self, name: str) -> Path:
 ### Common Template Issues
 
 **Template Not Found:**
+
 ```python
 # Check template directory
 prompts_dir = Path(__file__).parent
@@ -680,6 +711,7 @@ print(f"Template exists: {template_path.exists()}")
 ```
 
 **Fragment Loading Errors:**
+
 ```python
 # Check fragment structure
 import json
@@ -693,6 +725,7 @@ assert 'content' in fragment, "Fragment missing 'content' field"
 ```
 
 **Variable Substitution Issues:**
+
 ```python
 # Debug variable substitution
 template_parts = ["Review: {content}", "Type: {review_type}"]
@@ -710,6 +743,7 @@ except Exception as e:
 ### Performance Debugging
 
 **Composition Timing:**
+
 ```python
 import time
 
@@ -724,10 +758,12 @@ print(f"Prompt length: {len(prompt)} characters")
 ## See Also
 
 **Related Documentation:**
+
 - [`../core/AGENTS.md`](../core/AGENTS.md) - LLM core functionality
 - [`../templates/AGENTS.md`](../templates/AGENTS.md) - Template system
 - [`../review/AGENTS.md`](../review/AGENTS.md) - Review generation
 
 **System Documentation:**
+
 - [`../../../AGENTS.md`](../../../AGENTS.md) - system overview
-- [`../../../../../docs/development/CONTRIBUTING.md`](../../../../../docs/development/CONTRIBUTING.md) - Template development guide
+- [`../../../docs/development/CONTRIBUTING.md`](../../../docs/development/CONTRIBUTING.md) - Template development guide

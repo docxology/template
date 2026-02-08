@@ -45,7 +45,7 @@ def main() -> int:
                 test_results = json.load(f)
             logger.info("Loaded test results")
 
-        # Create mock stage results (simplified - could be enhanced to track actual stages)
+        # Create placeholder stage results (simplified - could be enhanced to track actual stages)
         stage_results = [
             {"name": "setup", "exit_code": 0, "duration": 1.0},
             {"name": "tests", "exit_code": 0, "duration": 10.0},

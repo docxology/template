@@ -1,0 +1,35 @@
+{
+  "fig:test": {
+    "figure_id": "figure_021",
+    "filename": "test.png",
+    "caption": "Test",
+    "label": "fig:test",
+    "section": null,
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": null,
+    "metadata": {}
+  },
+  "fig:fig1": {
+    "figure_id": "figure_022",
+    "filename": "fig1.png",
+    "caption": "Figure 1",
+    "label": "fig:fig1",
+    "section": "Results",
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": null,
+    "metadata": {}
+  },
+  "fig:fig2": {
+    "figure_id": "figure_018",
+    "filename": "fig2.png",
+    "caption": "Figure 2",
+    "label": "fig:fig2",
+    "section": null,
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": null,
+    "metadata": {}
+  }
+}

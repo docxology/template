@@ -126,5 +126,5 @@ graph TD
 ## See Also
 
 - [AGENTS.md](AGENTS.md) - test documentation
-- [../../infrastructure/reporting/README.md](../../infrastructure/reporting/README.md) - Reporting module overview
+- [../../../infrastructure/reporting/README.md](../../../infrastructure/reporting/README.md) - Reporting module overview
 - [../../../tests/README.md](../../../tests/README.md) - Test suite overview

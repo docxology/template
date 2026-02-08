@@ -152,6 +152,7 @@ tests/infra_tests/
 The `conftest.py` file provides shared pytest fixtures for common test setup patterns:
 
 #### Project Configuration Fixtures
+
 ```python
 @pytest.fixture
 def project_config_structure(tmp_path):
@@ -167,6 +168,7 @@ def project_config_file(project_config_structure, sample_project_config):
 ```
 
 #### Output Structure Fixtures
+
 ```python
 @pytest.fixture
 def output_directory_structure(tmp_path):
@@ -186,6 +188,7 @@ def output_with_pdf(output_directory_structure, pdf_file_fixture):
 The `_test_helpers.py` module provides helper functions for creating test data:
 
 #### Configuration Helpers
+
 ```python
 def create_project_config_structure(repo_root: Path, project_name: str = "project") -> Path:
     """Create projects/{project_name}/manuscript/config.yaml structure"""
@@ -198,6 +201,7 @@ def write_config_file(config_file: Path, config_data: Dict[str, Any]) -> None:
 ```
 
 #### Output Structure Helpers
+
 ```python
 def create_output_directory_structure(output_dir: Path) -> None:
     """Create pdf/, web/, slides/, figures/, data/, etc. subdirectories"""
@@ -210,6 +214,7 @@ def create_output_with_pdf(output_dir: Path, pdf_name: str = "project_combined.p
 ```
 
 #### Content Creation Helpers
+
 ```python
 def create_test_manuscript_files(manuscript_dir: Path) -> Dict[str, Path]:
     """Create sample 01_abstract.md, 02_introduction.md, etc."""
@@ -224,6 +229,7 @@ def cleanup_test_directory(test_dir: Path) -> None:
 ### Usage Examples
 
 #### Testing Configuration Loading
+
 ```python
 def test_config_loading(project_config_file):
     """Test config loading with file structure"""
@@ -232,6 +238,7 @@ def test_config_loading(project_config_file):
 ```
 
 #### Testing Output Validation
+
 ```python
 def test_output_validation(output_with_pdf):
     """Test output validation with proper PDF location"""
@@ -240,6 +247,7 @@ def test_output_validation(output_with_pdf):
 ```
 
 #### Testing with Custom Config
+
 ```python
 def test_custom_config(tmp_path):
     """Test with custom configuration"""
@@ -621,6 +629,7 @@ def test_publish_to_zenodo(zenodo_credentials):
 ```
 
 **Available markers:**
+
 - `requires_zenodo` - Zenodo API credentials needed
 - `requires_github` - GitHub API credentials needed
 - `requires_arxiv` - arXiv API credentials needed (optional)
@@ -629,6 +638,7 @@ def test_publish_to_zenodo(zenodo_credentials):
 - `requires_ollama` - Ollama service needed
 
 **Run tests selectively:**
+
 ```bash
 # Skip all credential-dependent tests
 pytest tests/infra_tests/ -m "not requires_credentials"
@@ -643,11 +653,13 @@ pytest tests/infra_tests/ -m "not requires_latex"
 ### Credential Configuration
 
 1. Create `.env` file from template:
+
    ```bash
    cp .env.example .env
    ```
 
 2. Add credentials:
+
    ```bash
    ZENODO_SANDBOX_TOKEN=your_sandbox_token
    GITHUB_TOKEN=your_github_token
@@ -655,6 +667,7 @@ pytest tests/infra_tests/ -m "not requires_latex"
    ```
 
 3. Run tests (credential tests auto-skip if not configured):
+
    ```bash
    pytest tests/infra_tests/
    ```
@@ -670,7 +683,7 @@ Tests automatically clean up test artifacts:
 - **Files**: Temporary files cleaned by pytest fixtures
 - **PDFs**: Downloaded files in temp directories
 
-### For modules requiring external services:
+### For modules requiring external services
 
 ```python
 @pytest.mark.requires_ollama
@@ -866,6 +879,7 @@ def test_llm_prompt_formatting():
 ### Common Test Issues
 
 **Import Errors:**
+
 ```bash
 # Ensure infrastructure is on path
 cd /path/to/repo
@@ -873,6 +887,7 @@ PYTHONPATH=. pytest tests/infra_tests/test_core.py
 ```
 
 **Network Test Failures:**
+
 ```bash
 # Check service availability
 curl http://localhost:11434/api/tags  # Ollama
@@ -882,6 +897,7 @@ pytest tests/infra_tests/ -m "not requires_ollama"
 ```
 
 **Coverage Issues:**
+
 ```bash
 # Show uncovered lines
 pytest tests/infra_tests/ --cov=infrastructure --cov-report=term-missing
@@ -937,7 +953,6 @@ pytest tests/infra_tests/ --durations=10
 ## See Also
 
 - [`README.md`](README.md) - Quick reference guide
-- [`../../project/tests/AGENTS.md`](../../project/tests/AGENTS.md) - Project test documentation
-- [`../../docs/TESTING_GUIDE.md`](../../docs/TESTING_GUIDE.md) - Testing best practices
+- [`../AGENTS.md`](../AGENTS.md) - Test suite documentation
+- [`../../docs/development/TESTING_GUIDE.md`](../../docs/development/TESTING_GUIDE.md) - Testing best practices
 - [`../../infrastructure/AGENTS.md`](../../infrastructure/AGENTS.md) - Infrastructure module overview
-

@@ -238,5 +238,5 @@ graph TD
 ## See Also
 
 - [AGENTS.md](AGENTS.md) - test documentation
-- [../../infrastructure/core/README.md](../../infrastructure/core/README.md) - Core module overview
+- [../../../infrastructure/core/README.md](../../../infrastructure/core/README.md) - Core module overview
 - [../../../tests/README.md](../../../tests/README.md) - Test suite overview

@@ -19,12 +19,14 @@ infrastructure/project/manuscript/
 **Auto-generated technical appendix for research manuscripts:**
 
 **Purpose:**
+
 - Document public APIs from `project/src/` modules
 - Provide technical reference for research implementations
 - Generate function and class documentation
 - Integrate seamlessly into manuscript as Section 98
 
 **Content Structure:**
+
 ```markdown
 # API Symbols Glossary
 
@@ -40,6 +42,7 @@ This glossary is auto-generated from the public API in `src/`.
 ```
 
 **Generation Process:**
+
 1. **AST Analysis**: Parse Python source files in `project/src/`
 2. **Symbol Extraction**: Identify functions, classes, and methods
 3. **Documentation Mining**: Extract docstrings and type hints
@@ -93,6 +96,7 @@ def validate_manuscript_glossary():
 ### Manual Usage
 
 **Command-Line Generation:**
+
 ```bash
 # Generate glossary manually
 python3 -m infrastructure.documentation.cli generate-api project/src/
@@ -102,6 +106,7 @@ python3 -m infrastructure.validation.cli markdown project/manuscript/
 ```
 
 **Programmatic Usage:**
+
 ```python
 from infrastructure.documentation.glossary_gen import generate_api_glossary
 
@@ -118,6 +123,7 @@ with open('project/manuscript/98_symbols_glossary.md', 'w') as f:
 ### AST-Based Analysis
 
 **Symbol Extraction Process:**
+
 ```python
 import ast
 from typing import List, Dict, Any
@@ -160,6 +166,7 @@ def extract_symbol_info(node: ast.AST, file_path: Path) -> Dict[str, Any]:
 ### Documentation Generation
 
 **Markdown Table Generation:**
+
 ```python
 def generate_glossary_table(symbols: List[Dict[str, Any]]) -> str:
     """Generate markdown table from symbol information."""
@@ -191,6 +198,7 @@ def generate_glossary_table(symbols: List[Dict[str, Any]]) -> str:
 ### Integration Markers
 
 **Manuscript Integration:**
+
 ```markdown
 # API Symbols Glossary
 
@@ -204,6 +212,7 @@ This glossary is auto-generated from the public API in `src/`.
 ```
 
 **Update Process:**
+
 ```python
 def update_manuscript_glossary(glossary_file: Path, new_content: str):
     """Update glossary section in manuscript."""
@@ -235,6 +244,7 @@ def update_manuscript_glossary(glossary_file: Path, new_content: str):
 ### Environment Variables
 
 **Manuscript Configuration:**
+
 ```bash
 # Author information
 export AUTHOR_NAME="Dr. Jane Smith"
@@ -249,6 +259,7 @@ export PROJECT_VERSION="1.0"
 ### Build Configuration
 
 **Integration Settings:**
+
 ```yaml
 # project/manuscript/config.yaml
 manuscript:
@@ -267,6 +278,7 @@ build:
 ### Integration Testing
 
 **Glossary Generation Tests:**
+
 ```python
 def test_glossary_generation():
     """Test API glossary generation from source code."""
@@ -289,6 +301,7 @@ def test_glossary_generation():
 ```
 
 **Manuscript Integration Tests:**
+
 ```python
 def test_manuscript_integration():
     """Test glossary integration into manuscript."""
@@ -312,6 +325,7 @@ def test_manuscript_integration():
 ### Validation Testing
 
 **Cross-Reference Validation:**
+
 ```python
 def test_glossary_cross_references():
     """Test cross-reference validation in generated glossary."""
@@ -334,6 +348,7 @@ def test_glossary_cross_references():
 ### Basic Usage
 
 **Automatic Generation:**
+
 ```bash
 # Generate glossary during build
 python3 scripts/03_render_pdf.py
@@ -343,6 +358,7 @@ python3 scripts/03_render_pdf.py
 ```
 
 **Manual Generation:**
+
 ```python
 from infrastructure.documentation.glossary_gen import generate_api_glossary
 
@@ -357,6 +373,7 @@ with open('docs/api_reference.md', 'w') as f:
 ### Advanced Usage
 
 **Filtered Generation:**
+
 ```python
 # Generate glossary with filters
 glossary = generate_api_glossary(
@@ -368,6 +385,7 @@ glossary = generate_api_glossary(
 ```
 
 **Custom Formatting:**
+
 ```python
 # Generate with custom formatting
 glossary = generate_api_glossary(
@@ -383,6 +401,7 @@ glossary = generate_api_glossary(
 ### Required Modules
 
 **Core Dependencies:**
+
 - `infrastructure.documentation.glossary_gen` - Core glossary generation
 - `infrastructure.documentation.markdown_integration` - Manuscript integration
 - `infrastructure.core.file_operations` - File handling utilities
@@ -390,11 +409,13 @@ glossary = generate_api_glossary(
 ### External Dependencies
 
 **Built-in Modules:**
+
 - `ast` - Python AST parsing
 - `pathlib` - Path handling
 - `typing` - Type annotations
 
 **Optional Dependencies:**
+
 - `markdown` - markdown processing
 - `pygments` - Syntax highlighting for code examples
 
@@ -403,6 +424,7 @@ glossary = generate_api_glossary(
 ### Common Issues
 
 **Empty Glossary Generation:**
+
 ```bash
 # Check source directory exists and has Python files
 ls -la project/src/
@@ -415,6 +437,7 @@ python3 -c "import project.src.module_name"
 ```
 
 **Integration Failures:**
+
 ```bash
 # Verify manuscript file exists
 ls -la project/manuscript/98_symbols_glossary.md
@@ -427,6 +450,7 @@ grep -n "AUTO-API-GLOSSARY" project/manuscript/98_symbols_glossary.md
 ```
 
 **Markdown Validation Errors:**
+
 ```bash
 # Check generated markdown syntax
 python3 -m infrastructure.validation.cli markdown project/manuscript/
@@ -443,6 +467,7 @@ print('Markdown syntax valid')
 ### Debug Commands
 
 **Verbose Generation:**
+
 ```bash
 # Enable debug logging
 LOG_LEVEL=0 python3 -m infrastructure.documentation.cli generate-api project/src/
@@ -458,6 +483,7 @@ for symbol in symbols[:3]:
 ```
 
 **Validation Debug:**
+
 ```bash
 # Test manuscript integration
 python3 -c "
@@ -473,12 +499,14 @@ print('Integration test passed')
 ### Generation Optimization
 
 **Efficient AST Processing:**
+
 - Single-pass parsing of source files
 - Lazy loading of large modules
 - Caching of parsed AST trees
 - Parallel processing for multiple files
 
 **Memory Management:**
+
 - Streaming processing for large codebases
 - Garbage collection of intermediate results
 - Limited caching to prevent memory leaks
@@ -486,6 +514,7 @@ print('Integration test passed')
 ### Integration Performance
 
 **Build Pipeline Integration:**
+
 - Incremental glossary updates (only when source changes)
 - Parallel execution with other build steps
 - Resource limiting to prevent build bottlenecks
@@ -496,18 +525,21 @@ print('Integration test passed')
 ### Planned Features
 
 **Documentation:**
+
 - Interactive HTML glossary generation
 - API usage examples in glossary
 - Cross-reference linking between symbols
 - Version history tracking for symbols
 
 **Advanced Analysis:**
+
 - Dependency graph generation
 - Code complexity metrics
 - Test coverage integration
 - Performance profiling data
 
 **Integration Improvements:**
+
 - IDE integration for symbol lookup
 - Documentation server for live updates
 - Multi-format output (JSON, XML, PDF)
@@ -516,11 +548,12 @@ print('Integration test passed')
 ## See Also
 
 **Related Documentation:**
-- [`../documentation/AGENTS.md`](../documentation/AGENTS.md) - Documentation module details
-- [`../../project/src/AGENTS.md`](../../project/src/AGENTS.md) - Source code documentation
-- [`../../scripts/AGENTS.md`](../../scripts/AGENTS.md) - Build pipeline documentation
+
+- [`../../documentation/AGENTS.md`](../../documentation/AGENTS.md) - Documentation module details
+- [`../../../scripts/AGENTS.md`](../../../scripts/AGENTS.md) - Build pipeline documentation
 
 **System Integration:**
+
 - [`../../AGENTS.md`](../../AGENTS.md) - system overview
-- [`../../docs/core/ARCHITECTURE.md`](../../docs/core/ARCHITECTURE.md) - System architecture
-- [`../../docs/operational/BUILD_SYSTEM.md`](../../docs/operational/BUILD_SYSTEM.md) - Build system details
+- [`../../../docs/core/ARCHITECTURE.md`](../../../docs/core/ARCHITECTURE.md) - System architecture
+- [`../../../docs/operational/BUILD_SYSTEM.md`](../../../docs/operational/BUILD_SYSTEM.md) - Build system details

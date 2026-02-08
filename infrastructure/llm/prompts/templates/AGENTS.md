@@ -18,6 +18,7 @@ infrastructure/llm/prompts/templates/
 ### Template Format
 
 **Standard JSON Template Structure:**
+
 ```json
 {
   "name": "template_name",
@@ -129,6 +130,7 @@ infrastructure/llm/prompts/templates/
 ```
 
 **Review Types Supported:**
+
 - **Comprehensive**: Full evaluation covering all aspects
 - **Technical**: Focus on methodology and technical accuracy
 - **Editorial**: Emphasis on writing quality and clarity
@@ -218,6 +220,7 @@ infrastructure/llm/prompts/templates/
 ```
 
 **Summarization Features:**
+
 - **Adaptive Length**: Configurable summary length limits
 - **Focus Areas**: Customizable emphasis on different aspects
 - **Audience Targeting**: Adjust technical level for different readers
@@ -228,6 +231,7 @@ infrastructure/llm/prompts/templates/
 ### Basic Template Application
 
 **Using Manuscript Review Template:**
+
 ```python
 from infrastructure.llm.prompts import PromptComposer
 
@@ -252,6 +256,7 @@ review_response = client.query(review_prompt)
 ### Advanced Template Configuration
 
 **Custom Summarization:**
+
 ```python
 # Advanced summarization configuration
 variables = {
@@ -272,6 +277,7 @@ summary = client.query(summary_prompt, options=GenerationOptions(max_tokens=400)
 ### Creating New Templates
 
 **Template Creation Workflow:**
+
 ```python
 def create_research_template(name: str, description: str, variables: dict, parts: list) -> dict:
     """Create a new research prompt template."""
@@ -295,6 +301,7 @@ def create_research_template(name: str, description: str, variables: dict, parts
 ```
 
 **Template Categories:**
+
 - **Analysis**: Code analysis, data interpretation, statistical review
 - **Generation**: Content creation, documentation, examples
 - **Review**: Quality assessment, peer review, evaluation
@@ -304,6 +311,7 @@ def create_research_template(name: str, description: str, variables: dict, parts
 ### Template Validation
 
 **Template Quality Checks:**
+
 ```python
 def validate_template_quality(template: dict) -> List[str]:
     """Validate template structure and quality."""
@@ -340,6 +348,7 @@ def validate_template_quality(template: dict) -> List[str]:
 ### Template Discovery
 
 **Automatic Template Loading:**
+
 ```python
 def discover_available_templates(self) -> List[str]:
     """Discover all available templates."""
@@ -362,6 +371,7 @@ def discover_available_templates(self) -> List[str]:
 ### Template Metadata Management
 
 **Template Information Retrieval:**
+
 ```python
 def get_template_info(self, name: str) -> Dict[str, Any]:
     """Get template information."""
@@ -385,6 +395,7 @@ def get_template_info(self, name: str) -> Dict[str, Any]:
 ### Template Validation Testing
 
 **Template Tests:**
+
 ```python
 def test_template_validation():
     """Test all templates load and validate correctly."""
@@ -424,6 +435,7 @@ def test_template_validation():
 ### Composition Testing
 
 **Template Composition Tests:**
+
 ```python
 def test_template_composition():
     """Test template composition with various inputs."""
@@ -449,6 +461,7 @@ def test_template_composition():
 ### Performance Testing
 
 **Template Performance Benchmarks:**
+
 ```python
 def benchmark_template_composition():
     """Benchmark template composition performance."""
@@ -482,6 +495,7 @@ def benchmark_template_composition():
 ### Template Loading Errors
 
 **Robust Template Loading:**
+
 ```python
 def load_template_safely(self, name: str) -> Optional[Dict[str, Any]]:
     """Load template with error handling."""
@@ -505,6 +519,7 @@ def load_template_safely(self, name: str) -> Optional[Dict[str, Any]]:
 ### Variable Validation
 
 **Input Variable Validation:**
+
 ```python
 def validate_template_variables(self, template_name: str, variables: Dict[str, Any]) -> List[str]:
     """Validate provided variables against template requirements."""
@@ -535,6 +550,7 @@ def validate_template_variables(self, template_name: str, variables: Dict[str, A
 ### Template Extension
 
 **Adding Template Variants:**
+
 ```python
 def create_template_variant(base_template: str, modifications: Dict[str, Any]) -> dict:
     """Create a variant of an existing template."""
@@ -559,6 +575,7 @@ def create_template_variant(base_template: str, modifications: Dict[str, Any]) -
 ### Domain-Specific Templates
 
 **Specialized Research Templates:**
+
 ```python
 RESEARCH_DOMAIN_TEMPLATES = {
     'machine_learning': {
@@ -593,6 +610,7 @@ RESEARCH_DOMAIN_TEMPLATES = {
 ### Template Version Management
 
 **Version Tracking and Updates:**
+
 ```python
 def update_template_version(self, name: str, changes: Dict[str, Any]) -> None:
     """Update template with version tracking."""
@@ -616,6 +634,7 @@ def update_template_version(self, name: str, changes: Dict[str, Any]) -> None:
 ### Template Quality Assurance
 
 **Regular Template Audits:**
+
 ```python
 def audit_templates(self) -> Dict[str, List[str]]:
     """Audit all templates for quality and consistency."""
@@ -639,10 +658,12 @@ def audit_templates(self) -> Dict[str, List[str]]:
 ## See Also
 
 **Related Documentation:**
+
 - [`../AGENTS.md`](../AGENTS.md) - Prompts module overview
 - [`../fragments/AGENTS.md`](../fragments/AGENTS.md) - Fragment components
 - [`../composer.py`](../composer.py) - Composition logic
 
 **System Documentation:**
+
 - [`../../../../AGENTS.md`](../../../../AGENTS.md) - system overview
-- [`../../../../../docs/usage/MARKDOWN_TEMPLATE_GUIDE.md`](../../../../../docs/usage/MARKDOWN_TEMPLATE_GUIDE.md) - Template usage guide
+- [`../../../../docs/usage/MARKDOWN_TEMPLATE_GUIDE.md`](../../../../docs/usage/MARKDOWN_TEMPLATE_GUIDE.md) - Template usage guide

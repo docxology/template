@@ -21,6 +21,7 @@ infrastructure/llm/prompts/compositions/
 #### Off-Topic Reinforcement
 
 **Content Relevance Enforcement:**
+
 ```json
 {
   "off_topic_reinforcement": {
@@ -33,6 +34,7 @@ infrastructure/llm/prompts/compositions/
 **Purpose:** Prevents LLM from generating generic or off-topic responses by explicitly reinforcing the requirement to analyze the provided manuscript content.
 
 **Usage Context:**
+
 - When LLM generates hypothetical scenarios instead of analyzing provided text
 - For ensuring responses are grounded in the actual manuscript content
 - To maintain focus on the specific document being reviewed
@@ -40,6 +42,7 @@ infrastructure/llm/prompts/compositions/
 #### Format Enforcement Compositions
 
 **Executive Summary Format:**
+
 ```json
 {
   "format_enforcement": {
@@ -54,6 +57,7 @@ infrastructure/llm/prompts/compositions/
 **Purpose:** Ensures consistent structure and formatting in LLM responses by specifying required markdown headers.
 
 **Structured Output Requirements:**
+
 - **## Overview**: High-level summary of the content
 - **## Key Contributions**: Main contributions and innovations
 - **## Methodology Summary**: Approach and methods used
@@ -63,6 +67,7 @@ infrastructure/llm/prompts/compositions/
 #### Quality Review Format
 
 **Scoring and Assessment Structure:**
+
 ```json
 {
   "quality_review": {
@@ -75,6 +80,7 @@ infrastructure/llm/prompts/compositions/
 **Purpose:** Standardizes quality assessment format across all reviews by requiring explicit scoring.
 
 **Scoring Guidelines:**
+
 - **Score Range**: 1-5 scale (1 = poor, 5 = excellent)
 - **Format**: Bold markdown with clear score indication
 - **Consistency**: Applied uniformly across all quality dimensions
@@ -82,6 +88,7 @@ infrastructure/llm/prompts/compositions/
 #### Methodology Review Format
 
 **Structured Methodology Analysis:**
+
 ```json
 {
   "methodology_review": {
@@ -94,6 +101,7 @@ infrastructure/llm/prompts/compositions/
 **Purpose:** Ensures methodology evaluation with section coverage.
 
 **Required Sections:**
+
 - Research design and approach
 - Data collection methods
 - Analysis techniques
@@ -103,6 +111,7 @@ infrastructure/llm/prompts/compositions/
 #### Improvement Suggestions Format
 
 **Structured Recommendations:**
+
 ```json
 {
   "improvement_suggestions": {
@@ -115,6 +124,7 @@ infrastructure/llm/prompts/compositions/
 **Purpose:** Provides clear, actionable improvement guidance with context.
 
 **Suggestion Structure:**
+
 - **WHAT**: Specific issue or area needing improvement
 - **WHY**: Importance and impact of addressing the issue
 - **HOW**: Concrete steps or approaches to implement the improvement
@@ -124,6 +134,7 @@ infrastructure/llm/prompts/compositions/
 ### Composition Structure
 
 **Standard Composition Format:**
+
 ```json
 {
   "composition_name": {
@@ -142,11 +153,13 @@ infrastructure/llm/prompts/compositions/
 ### Composition Categories
 
 **Retry Compositions:**
+
 - **off_topic_reinforcement**: Content relevance correction
 - **format_enforcement**: Structure and formatting fixes
 - **quality_review**: Assessment standardization
 
 **Enhancement Compositions:**
+
 - **methodology_review**: Technical evaluation structure
 - **improvement_suggestions**: Recommendation formatting
 - **validation_enforcement**: Input validation requirements
@@ -156,6 +169,7 @@ infrastructure/llm/prompts/compositions/
 ### Composition Application
 
 **Dynamic Composition Injection:**
+
 ```python
 class PromptEnhancer:
     """Applies compositions to improve prompt effectiveness."""
@@ -188,6 +202,7 @@ class PromptEnhancer:
 ### Context-Aware Application
 
 **Conditional Composition Application:**
+
 ```python
 def _should_apply_composition(self, composition: Dict[str, Any],
                              context: Dict[str, Any]) -> bool:
@@ -213,6 +228,7 @@ def _should_apply_composition(self, composition: Dict[str, Any],
 ### Error Recovery Application
 
 **Off-Topic Response Correction:**
+
 ```python
 # When LLM generates off-topic response
 enhancer = PromptEnhancer()
@@ -235,6 +251,7 @@ assert "Do NOT generate hypothetical content" in corrected_prompt
 ### Format Enforcement
 
 **Structure Standardization:**
+
 ```python
 # Ensure consistent executive summary format
 base_prompt = "Summarize this research paper comprehensively..."
@@ -253,6 +270,7 @@ assert "## Methodology Summary" in enhanced_prompt
 ### Quality Review Enhancement
 
 **Scoring Standardization:**
+
 ```python
 # Add scoring requirements to review prompts
 review_prompt = "Evaluate the quality of this methodology..."
@@ -271,6 +289,7 @@ assert "**Score: [1-5]**" in enhanced_prompt
 ### Composition Validation
 
 **Structure and Content Testing:**
+
 ```python
 def test_composition_loading():
     """Test composition loading and validation."""
@@ -304,6 +323,7 @@ def test_composition_application():
 ### Integration Testing
 
 **End-to-End Composition Testing:**
+
 ```python
 def test_composition_pipeline():
     """Test composition enhancement pipeline."""
@@ -354,6 +374,7 @@ class CompositionCache:
 ### Selective Application
 
 **Performance-Optimized Application:**
+
 ```python
 def apply_compositions_selectively(self, prompt: str,
                                   context: Dict[str, Any],
@@ -385,6 +406,7 @@ def apply_compositions_selectively(self, prompt: str,
 ### Composition Loading Errors
 
 **Robust Composition Handling:**
+
 ```python
 def load_composition_safely(self, name: str) -> Optional[Dict[str, Any]]:
     """Load composition with error handling."""
@@ -408,6 +430,7 @@ def load_composition_safely(self, name: str) -> Optional[Dict[str, Any]]:
 ### Application Failure Handling
 
 **Graceful Degradation:**
+
 ```python
 def apply_composition_safe(self, prompt: str, composition_name: str) -> str:
     """Apply composition with fallback to original prompt."""
@@ -425,6 +448,7 @@ def apply_composition_safe(self, prompt: str, composition_name: str) -> str:
 ### Adding New Compositions
 
 **Composition Creation Workflow:**
+
 ```python
 def create_composition(name: str, content: str, category: str,
                       trigger_conditions: List[str] = None) -> Dict[str, Any]:
@@ -448,6 +472,7 @@ def create_composition(name: str, content: str, category: str,
 ### Composition Categories Extension
 
 **Domain-Specific Compositions:**
+
 ```python
 SPECIALIZED_COMPOSITIONS = {
     'clinical_trials': {
@@ -478,6 +503,7 @@ SPECIALIZED_COMPOSITIONS = {
 ### Composition Updates
 
 **Version Management:**
+
 ```python
 def update_composition_version(self, name: str, new_content: str) -> None:
     """Update composition with version tracking."""
@@ -501,6 +527,7 @@ def update_composition_version(self, name: str, new_content: str) -> None:
 ### Composition Quality Assurance
 
 **Regular Audits:**
+
 ```python
 def audit_compositions(self) -> Dict[str, List[str]]:
     """Audit all compositions for quality and effectiveness."""
@@ -526,6 +553,7 @@ def audit_compositions(self) -> Dict[str, List[str]]:
 ### LLM Review Enhancement
 
 **Review Quality Improvement:**
+
 ```python
 # Enhance review prompts with compositions
 from infrastructure.llm.review.generator import ReviewGenerator
@@ -554,6 +582,7 @@ class EnhancedReviewGenerator(ReviewGenerator):
 ### Template Composition Integration
 
 **Template Enhancement:**
+
 ```python
 # Integrate compositions into template system
 from infrastructure.llm.prompts.composer import PromptComposer
@@ -583,10 +612,12 @@ class EnhancedPromptComposer(PromptComposer):
 ## See Also
 
 **Related Documentation:**
+
 - [`../AGENTS.md`](../AGENTS.md) - Prompts module overview
 - [`../fragments/AGENTS.md`](../fragments/AGENTS.md) - Fragment components
 - [`../templates/AGENTS.md`](../templates/AGENTS.md) - Template system
 
 **System Documentation:**
+
 - [`../../../../AGENTS.md`](../../../../AGENTS.md) - system overview
-- [`../../../../../docs/operational/LLM_REVIEW_TROUBLESHOOTING.md`](../../../../../docs/operational/LLM_REVIEW_TROUBLESHOOTING.md) - LLM troubleshooting guide
+- [`../../../../docs/operational/LLM_REVIEW_TROUBLESHOOTING.md`](../../../../docs/operational/LLM_REVIEW_TROUBLESHOOTING.md) - LLM troubleshooting guide

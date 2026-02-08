@@ -156,18 +156,6 @@ def verify_outputs_exist(project_name: str = "project") -> tuple[bool, dict]:
                     logger.warning(f"    ... and {len(issues) - 3} more")
     
     return structure_valid, detailed_validation
-    
-    all_exist = True
-    for dir_path in required_dirs:
-        if dir_path.exists():
-            file_count = len(list(dir_path.glob("*")))
-            log_success(f"Directory exists: {dir_path.name} ({file_count} file(s))", logger)
-        else:
-            logger.error(f"Directory missing: {dir_path.name}")
-            all_exist = False
-    
-    return all_exist
-
 
 
 

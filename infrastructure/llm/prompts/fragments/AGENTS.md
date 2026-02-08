@@ -30,6 +30,7 @@ infrastructure/llm/prompts/fragments/
 ```
 
 **Usage in Templates:**
+
 ```json
 {
   "parts": [
@@ -56,6 +57,7 @@ infrastructure/llm/prompts/fragments/
 ```
 
 **Application Areas:**
+
 - Research analysis and evaluation
 - Technical documentation review
 - Scientific manuscript assessment
@@ -72,6 +74,7 @@ infrastructure/llm/prompts/fragments/
 ```
 
 **Supported Output Formats:**
+
 - Markdown with proper heading hierarchy
 - Structured JSON for programmatic processing
 - HTML for web presentation
@@ -88,6 +91,7 @@ infrastructure/llm/prompts/fragments/
 ```
 
 **Content Type Templates:**
+
 - **Research Papers**: Abstract, Introduction, Methods, Results, Discussion, Conclusion
 - **Reviews**: Summary, Strengths, Weaknesses, Recommendations
 - **Technical Documentation**: Overview, Installation, Usage, API Reference, Examples
@@ -104,6 +108,7 @@ infrastructure/llm/prompts/fragments/
 ```
 
 **Optimization Strategies:**
+
 - **Prioritization**: Most important content first
 - **Conciseness**: Eliminate redundancy and verbosity
 - **Structure**: Hierarchical organization for efficient reading
@@ -120,6 +125,7 @@ infrastructure/llm/prompts/fragments/
 ```
 
 **Validation Areas:**
+
 - **Content Relevance**: Input matches task requirements
 - **Data Completeness**: Sufficient information for analysis
 - **Quality Assessment**: Reliability and accuracy of data
@@ -130,6 +136,7 @@ infrastructure/llm/prompts/fragments/
 ### Fragment Format
 
 **Standard JSON Structure:**
+
 ```json
 {
   "name": "fragment_name",
@@ -148,31 +155,37 @@ infrastructure/llm/prompts/fragments/
 ### Fragment Categories
 
 **System-Level Fragments:**
+
 - Define AI behavior and role
 - Set interaction context and expectations
 - Establish communication standards
 
 **Content Fragments:**
+
 - Specify quality requirements
 - Define completeness standards
 - Set accuracy and relevance criteria
 
 **Format Fragments:**
+
 - Control output structure
 - Define presentation standards
 - Specify formatting conventions
 
 **Structural Fragments:**
+
 - Provide organizational templates
 - Define section hierarchies
 - Establish document frameworks
 
 **Optimization Fragments:**
+
 - Guide token usage efficiency
 - Optimize response length and clarity
 - Balance completeness with conciseness
 
 **Validation Fragments:**
+
 - Define input quality standards
 - Guide error handling approaches
 - Establish validation procedures
@@ -182,6 +195,7 @@ infrastructure/llm/prompts/fragments/
 ### Fragment Loading
 
 **Dynamic Fragment Loading:**
+
 ```python
 def load_fragment(self, name: str) -> str:
     """Load fragment content by name."""
@@ -197,6 +211,7 @@ def load_fragment(self, name: str) -> str:
 ### Fragment Substitution
 
 **Template Variable Replacement:**
+
 ```python
 def substitute_fragments(self, template_text: str) -> str:
     """Replace fragment placeholders with content."""
@@ -218,6 +233,7 @@ def substitute_fragments(self, template_text: str) -> str:
 ### Basic Fragment Usage
 
 **Simple Fragment Insertion:**
+
 ```python
 from infrastructure.llm.prompts.composer import PromptComposer
 
@@ -242,6 +258,7 @@ prompt = composer.compose_from_template(template, {'content': manuscript})
 ### Conditional Fragment Application
 
 **Context-Aware Fragment Selection:**
+
 ```python
 def select_fragments_for_task(task_type: str) -> List[str]:
     """Select appropriate fragments based on task type."""
@@ -261,6 +278,7 @@ def select_fragments_for_task(task_type: str) -> List[str]:
 ### Custom Fragment Creation
 
 **Creating New Fragments:**
+
 ```python
 def create_custom_fragment(name: str, content: str, category: str) -> None:
     """Create a new reusable fragment."""
@@ -287,6 +305,7 @@ def create_custom_fragment(name: str, content: str, category: str) -> None:
 ### Fragment Validation
 
 **Content Validation Tests:**
+
 ```python
 def test_fragment_content():
     """Test fragment content loading and validation."""
@@ -311,6 +330,7 @@ def test_fragment_content():
 ```
 
 **Fragment Substitution Tests:**
+
 ```python
 def test_fragment_substitution():
     """Test fragment placeholder substitution."""
@@ -331,6 +351,7 @@ def test_fragment_substitution():
 ### Integration Testing
 
 **End-to-End Fragment Testing:**
+
 ```python
 def test_fragment_integration():
     """Test fragments work correctly in prompts."""
@@ -363,6 +384,7 @@ def test_fragment_integration():
 ### Fragment Caching
 
 **Efficient Fragment Loading:**
+
 ```python
 class FragmentCache:
     """Cache loaded fragments for performance."""
@@ -386,6 +408,7 @@ class FragmentCache:
 ### Memory Management
 
 **Large Fragment Handling:**
+
 ```python
 def load_fragment_efficiently(self, name: str) -> str:
     """Load fragments with memory considerations."""
@@ -409,6 +432,7 @@ def load_fragment_efficiently(self, name: str) -> str:
 ### Fragment Loading Errors
 
 **Robust Error Recovery:**
+
 ```python
 def load_fragment_safely(self, name: str) -> str:
     """Load fragment with error handling."""
@@ -432,6 +456,7 @@ def load_fragment_safely(self, name: str) -> str:
 ### Fragment Validation
 
 **Content Validation:**
+
 ```python
 def validate_fragment(self, name: str) -> List[str]:
     """Validate fragment structure and content."""
@@ -469,6 +494,7 @@ def validate_fragment(self, name: str) -> List[str]:
 ### Adding New Fragments
 
 **Fragment Creation Workflow:**
+
 ```python
 def create_fragment_template(name: str, category: str, description: str) -> dict:
     """Create a template for new fragments."""
@@ -490,6 +516,7 @@ def create_fragment_template(name: str, category: str, description: str) -> dict
 ### Fragment Categories Extension
 
 **Custom Categories:**
+
 ```python
 CUSTOM_FRAGMENT_CATEGORIES = {
     'domain_specific': 'Domain-specific knowledge and terminology',
@@ -505,6 +532,7 @@ CUSTOM_FRAGMENT_CATEGORIES = {
 ### Fragment Updates
 
 **Version Management:**
+
 ```python
 def update_fragment_version(self, name: str, new_version: str) -> None:
     """Update fragment version for change tracking."""
@@ -523,6 +551,7 @@ def update_fragment_version(self, name: str, new_version: str) -> None:
 ### Fragment Audit
 
 **Regular Maintenance Checks:**
+
 ```python
 def audit_fragments(self) -> Dict[str, List[str]]:
     """Audit all fragments for issues."""
@@ -542,10 +571,12 @@ def audit_fragments(self) -> Dict[str, List[str]]:
 ## See Also
 
 **Related Documentation:**
+
 - [`../AGENTS.md`](../AGENTS.md) - Prompts module overview
 - [`../composer.py`](../composer.py) - Prompt composition logic
 - [`../../templates/AGENTS.md`](../../templates/AGENTS.md) - Template system
 
 **System Documentation:**
+
 - [`../../../../AGENTS.md`](../../../../AGENTS.md) - system overview
-- [`../../../../../docs/development/CONTRIBUTING.md`](../../../../../docs/development/CONTRIBUTING.md) - Development guide
+- [`../../../../docs/development/CONTRIBUTING.md`](../../../../docs/development/CONTRIBUTING.md) - Development guide

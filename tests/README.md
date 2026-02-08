@@ -388,4 +388,4 @@ Both test suites exceed their minimum requirements. For detailed coverage inform
 - [`conftest.py`](conftest.py) - Test configuration
 - [`../infrastructure/README.md`](../infrastructure/README.md) - Infrastructure modules being tested
 - [`../projects/code_project/src/README.md`](../projects/code_project/src/README.md) - code_project modules
-- [`../docs/WORKFLOW.md`](../docs/WORKFLOW.md) - Development workflow
+- [`../docs/core/WORKFLOW.md`](../docs/core/WORKFLOW.md) - Development workflow

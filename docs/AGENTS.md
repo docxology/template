@@ -168,23 +168,23 @@ The `.cursorrules/` directory contains modular development rules that complement
 
 | Rule Module | Focus Area |
 |-------------|-----------|
-| [`../../.cursorrules/AGENTS.md`](../../.cursorrules/AGENTS.md) | Overview and navigation guide |
-| [`../../.cursorrules/README.md`](../../.cursorrules/README.md) | Quick reference and patterns |
-| [`../../.cursorrules/error_handling.md`](../../.cursorrules/error_handling.md) | Exception handling patterns |
-| [`../../.cursorrules/security.md`](../../.cursorrules/security.md) | Security standards and guidelines |
-| [`../../.cursorrules/python_logging.md`](../../.cursorrules/python_logging.md) | Logging standards and best practices |
-| [`../../.cursorrules/infrastructure_modules.md`](../../.cursorrules/infrastructure_modules.md) | Infrastructure module development |
-| [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) | Testing patterns and coverage standards |
-| [`../../.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md) | AGENTS.md and README.md writing guide |
-| [`../../.cursorrules/type_hints_standards.md`](../../.cursorrules/type_hints_standards.md) | Type annotation patterns |
-| [`../../.cursorrules/llm_standards.md`](../../.cursorrules/llm_standards.md) | LLM/Ollama integration patterns |
-| [`../../.cursorrules/code_style.md`](../../.cursorrules/code_style.md) | Code formatting and style standards |
-| [`../../.cursorrules/git_workflow.md`](../../.cursorrules/git_workflow.md) | Git workflow and commit standards |
-| [`../../.cursorrules/api_design.md`](../../.cursorrules/api_design.md) | API design and interface standards |
-| [`../../.cursorrules/manuscript_style.md`](../../.cursorrules/manuscript_style.md) | Manuscript formatting and style standards |
-| [`../../.cursorrules/reporting.md`](../../.cursorrules/reporting.md) | Reporting module standards and outputs |
-| [`../../.cursorrules/refactoring.md`](../../.cursorrules/refactoring.md) | Refactoring and modularization standards |
-| [`../../.cursorrules/folder_structure.md`](../../.cursorrules/folder_structure.md) | Folder structure and organization standards |
+| [`../.cursorrules/AGENTS.md`](../.cursorrules/AGENTS.md) | Overview and navigation guide |
+| [`../.cursorrules/README.md`](../.cursorrules/README.md) | Quick reference and patterns |
+| [`../.cursorrules/error_handling.md`](../.cursorrules/error_handling.md) | Exception handling patterns |
+| [`../.cursorrules/security.md`](../.cursorrules/security.md) | Security standards and guidelines |
+| [`../.cursorrules/python_logging.md`](../.cursorrules/python_logging.md) | Logging standards and best practices |
+| [`../.cursorrules/infrastructure_modules.md`](../.cursorrules/infrastructure_modules.md) | Infrastructure module development |
+| [`../.cursorrules/testing_standards.md`](../.cursorrules/testing_standards.md) | Testing patterns and coverage standards |
+| [`../.cursorrules/documentation_standards.md`](../.cursorrules/documentation_standards.md) | AGENTS.md and README.md writing guide |
+| [`../.cursorrules/type_hints_standards.md`](../.cursorrules/type_hints_standards.md) | Type annotation patterns |
+| [`../.cursorrules/llm_standards.md`](../.cursorrules/llm_standards.md) | LLM/Ollama integration patterns |
+| [`../.cursorrules/code_style.md`](../.cursorrules/code_style.md) | Code formatting and style standards |
+| [`../.cursorrules/git_workflow.md`](../.cursorrules/git_workflow.md) | Git workflow and commit standards |
+| [`../.cursorrules/api_design.md`](../.cursorrules/api_design.md) | API design and interface standards |
+| [`../.cursorrules/manuscript_style.md`](../.cursorrules/manuscript_style.md) | Manuscript formatting and style standards |
+| [`../.cursorrules/reporting.md`](../.cursorrules/reporting.md) | Reporting module standards and outputs |
+| [`../.cursorrules/refactoring.md`](../.cursorrules/refactoring.md) | Refactoring and modularization standards |
+| [`../.cursorrules/folder_structure.md`](../.cursorrules/folder_structure.md) | Folder structure and organization standards |
 
 **Quick Access**: Use `.cursorrules/` files for rule reference during development; consult `docs/` files for guides.
 
@@ -272,7 +272,7 @@ def example():
 ### Links
 ```markdown
 # Internal links (relative paths)
-See [../core/ARCHITECTURE.md](../core/ARCHITECTURE.md) for details.
+See [core/ARCHITECTURE.md](core/ARCHITECTURE.md) for details.
 
 # External links (descriptive text)
 Check the [Pandoc Manual](https://pandoc.org/MANUAL.html).

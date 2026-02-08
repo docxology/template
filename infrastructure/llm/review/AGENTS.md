@@ -24,6 +24,7 @@ infrastructure/llm/review/
 #### Review Generation Engine
 
 **Review Creation:**
+
 ```python
 class ReviewGenerator:
     """Generates manuscript reviews using LLM."""
@@ -51,6 +52,7 @@ class ReviewGenerator:
 ```
 
 **Review Types:**
+
 ```python
 REVIEW_TYPES = {
     "comprehensive": "Full review covering all aspects",
@@ -64,6 +66,7 @@ REVIEW_TYPES = {
 #### Structured Review Process
 
 **Multi-Stage Analysis:**
+
 ```python
 def _generate_structured_review(self, manuscript: str) -> Dict[str, Any]:
     """Generate review using structured prompts."""
@@ -94,6 +97,7 @@ def _generate_structured_review(self, manuscript: str) -> Dict[str, Any]:
 ```
 
 **Content Structure Analysis:**
+
 ```python
 def _analyze_content_structure(self, manuscript: str) -> Dict[str, Any]:
     """Analyze manuscript structure and organization."""
@@ -125,6 +129,7 @@ def _analyze_content_structure(self, manuscript: str) -> Dict[str, Any]:
 #### Review Storage and Retrieval
 
 **File-Based Review Management:**
+
 ```python
 class ReviewIO:
     """Handles review input/output operations."""
@@ -154,6 +159,7 @@ class ReviewIO:
 #### Review Formatting
 
 **Markdown Review Reports:**
+
 ```python
 def _save_markdown_review(self, review: ReviewResult, output_path: Path) -> None:
     """Generate markdown review report."""
@@ -205,6 +211,7 @@ def _save_markdown_review(self, review: ReviewResult, output_path: Path) -> None
 #### Review Quality Assessment
 
 **Scoring Algorithms:**
+
 ```python
 class ReviewMetrics:
     """Calculate and analyze review quality metrics."""
@@ -238,6 +245,7 @@ class ReviewMetrics:
 #### Manuscript Quality Scoring
 
 **Quality Assessment:**
+
 ```python
 def assess_manuscript_quality(self, manuscript: str, review: ReviewResult) -> QualityReport:
     """Assess overall manuscript quality based on review."""
@@ -272,6 +280,7 @@ def assess_manuscript_quality(self, manuscript: str, review: ReviewResult) -> Qu
 ### Review Workflow Integration
 
 **End-to-End Review Process:**
+
 ```python
 # Integration with scripts/06_llm_review.py
 from infrastructure.llm.review import ReviewGenerator, ReviewIO
@@ -307,6 +316,7 @@ def perform_manuscript_review(manuscript_path: Path) -> None:
 ### Quality Assurance Integration
 
 **Review Validation:**
+
 ```python
 def validate_review_quality(review: ReviewResult) -> ValidationResult:
     """Validate that generated review meets quality standards."""
@@ -338,6 +348,7 @@ def validate_review_quality(review: ReviewResult) -> ValidationResult:
 ### Review Configuration
 
 **Customizable Review Parameters:**
+
 ```python
 @dataclass
 class ReviewConfig:
@@ -365,6 +376,7 @@ class ReviewConfig:
 ### Environment Configuration
 
 **Runtime Configuration:**
+
 ```bash
 # Review generation settings
 export LLM_REVIEW_MAX_CONTENT_LENGTH=50000
@@ -384,6 +396,7 @@ export LLM_REVIEW_DETAILED_FEEDBACK=true
 ### Review Generation Testing
 
 **Mock-Based Testing:**
+
 ```python
 def test_review_generation():
     """Test review generation with mocked LLM responses."""
@@ -409,6 +422,7 @@ def test_review_generation():
 ```
 
 **Integration Testing:**
+
 ```python
 def test_complete_review_workflow():
     """Test end-to-end review workflow."""
@@ -442,6 +456,7 @@ def test_complete_review_workflow():
 ### Quality Metrics Testing
 
 **Metrics Validation:**
+
 ```python
 def test_review_metrics_calculation():
     """Test review quality metrics calculation."""
@@ -470,6 +485,7 @@ def test_review_metrics_calculation():
 ### Basic Review Generation
 
 **Simple Review:**
+
 ```python
 from infrastructure.llm.review import ReviewGenerator
 from infrastructure.llm.core import LLMClient
@@ -489,6 +505,7 @@ print(f"Key recommendations: {review.recommendations[:3]}")
 ### Advanced Review with Custom Configuration
 
 **Customized Review:**
+
 ```python
 from infrastructure.llm.review import ReviewGenerator, ReviewConfig
 
@@ -512,6 +529,7 @@ print(f"Technical quality: {review.technical_quality}")
 ### Review Export and Reporting
 
 **Multiple Format Export:**
+
 ```python
 from infrastructure.llm.review import ReviewIO
 
@@ -528,6 +546,7 @@ io_handler.save_review(review, Path("manuscript_review"))
 ### Quality Assessment
 
 **Manuscript Quality Evaluation:**
+
 ```python
 from infrastructure.llm.review.metrics import ReviewMetrics
 
@@ -544,12 +563,14 @@ print(f"Priority improvements: {quality_report.priority_improvements}")
 ### Efficient Review Generation
 
 **Content Optimization:**
+
 - Limit analysis to reasonable content lengths
 - Prioritize key sections for detailed analysis
 - Use streaming for large manuscript processing
 - Cache intermediate results when possible
 
 **LLM Usage Optimization:**
+
 - Batch related analysis tasks
 - Use appropriate model sizes for different review types
 - Implement review result caching
@@ -558,6 +579,7 @@ print(f"Priority improvements: {quality_report.priority_improvements}")
 ### Resource Management
 
 **Memory Usage:**
+
 - Process manuscripts in chunks for large documents
 - Clean up intermediate analysis results
 - Use streaming responses for long reviews
@@ -568,6 +590,7 @@ print(f"Priority improvements: {quality_report.priority_improvements}")
 ### Review Generation Errors
 
 **Robust Error Recovery:**
+
 ```python
 def generate_review_safely(self, manuscript: str) -> ReviewResult:
     """Generate review with error handling."""
@@ -601,6 +624,7 @@ def generate_review_safely(self, manuscript: str) -> ReviewResult:
 ### Command-Line Review Interface
 
 **Script Integration (`scripts/06_llm_review.py`):**
+
 ```bash
 # Generate review
 python3 scripts/06_llm_review.py --review manuscript.md
@@ -620,12 +644,14 @@ python3 scripts/06_llm_review.py --review --formats json,md,html manuscript.md
 ### Advanced Review Features
 
 **Planned Improvements:**
+
 - **Peer Review Simulation**: Multiple reviewer perspectives
 - **Collaborative Review**: Multi-user review workflows
 - **Review History Tracking**: Version comparison and improvement tracking
 - **Automated Follow-up**: Review response and revision analysis
 
 **Integration Enhancements:**
+
 - **IDE Integration**: Direct editor integration for reviews
 - **Version Control Integration**: Git-based review workflows
 - **Publication Integration**: Pre-submission review validation
@@ -636,6 +662,7 @@ python3 scripts/06_llm_review.py --review --formats json,md,html manuscript.md
 ### Common Review Issues
 
 **LLM Connection Problems:**
+
 ```python
 # Check LLM availability
 from infrastructure.llm.core import LLMClient
@@ -645,6 +672,7 @@ if not client.check_connection():
 ```
 
 **Manuscript Format Issues:**
+
 ```python
 # Validate manuscript format
 from infrastructure.validation import validate_markdown
@@ -656,6 +684,7 @@ if issues:
 ```
 
 **Review Quality Issues:**
+
 ```python
 # Validate review completeness
 from infrastructure.llm.review.metrics import ReviewMetrics
@@ -671,6 +700,7 @@ if quality_score < 7.0:
 ### Performance Optimization
 
 **Large Manuscript Handling:**
+
 ```python
 # For very large manuscripts, use chunked processing
 def review_large_manuscript(manuscript: str, chunk_size: int = 10000):
@@ -691,10 +721,12 @@ def review_large_manuscript(manuscript: str, chunk_size: int = 10000):
 ## See Also
 
 **Related Documentation:**
+
 - [`../core/AGENTS.md`](../core/AGENTS.md) - LLM core functionality
 - [`../templates/AGENTS.md`](../templates/AGENTS.md) - Template system
 - [`../AGENTS.md`](../AGENTS.md) - LLM module overview
 
 **System Documentation:**
+
 - [`../../../AGENTS.md`](../../../AGENTS.md) - system overview
-- [`../../../../docs/operational/LLM_REVIEW_TROUBLESHOOTING.md`](../../../../docs/operational/LLM_REVIEW_TROUBLESHOOTING.md) - LLM review troubleshooting
+- [`../../../docs/operational/LLM_REVIEW_TROUBLESHOOTING.md`](../../../docs/operational/LLM_REVIEW_TROUBLESHOOTING.md) - LLM review troubleshooting

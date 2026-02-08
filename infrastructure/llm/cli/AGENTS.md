@@ -544,4 +544,4 @@ python3 -m infrastructure.llm.cli query "Generate a Python docstring for this fu
 **System Documentation:**
 - [`../../../AGENTS.md`](../../../AGENTS.md) - LLM module overview
 - [`../../../infrastructure/core/AGENTS.md`](../../../infrastructure/core/AGENTS.md) - Core infrastructure
-- [`../../../../docs/operational/LLM_REVIEW_TROUBLESHOOTING.md`](../../../../docs/operational/LLM_REVIEW_TROUBLESHOOTING.md) - LLM troubleshooting guide
+- [`../../../docs/operational/LLM_REVIEW_TROUBLESHOOTING.md`](../../../docs/operational/LLM_REVIEW_TROUBLESHOOTING.md) - LLM troubleshooting guide

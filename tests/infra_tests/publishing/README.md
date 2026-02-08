@@ -191,5 +191,5 @@ graph TD
 ## See Also
 
 - [AGENTS.md](AGENTS.md) - test documentation
-- [../../infrastructure/publishing/README.md](../../infrastructure/publishing/README.md) - Publishing module overview
+- [../../../infrastructure/publishing/README.md](../../../infrastructure/publishing/README.md) - Publishing module overview
 - [../../../tests/README.md](../../../tests/README.md) - Test suite overview

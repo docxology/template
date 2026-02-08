@@ -5,6 +5,7 @@ Generic entry point orchestrators for template pipeline. Work with any project s
 ## Overview
 
 Root-level scripts are **generic orchestrators** that:
+
 - Coordinate build pipeline stages
 - Discover and invoke `projects/{name}/scripts/`
 - Handle I/O and orchestration
@@ -27,6 +28,7 @@ The template provides **two entry points** for manuscript operations:
 This routes directly to the manuscript pipeline operations menu.
 
 **Non-Interactive Mode:**
+
 ```bash
 ./run.sh [options]  # Pass options to manuscript operations
 ./run.sh --help    # Show help
@@ -62,6 +64,7 @@ Orchestration:
 ```
 
 **Non-Interactive Mode:**
+
 ```bash
 # Core Build Operations
 ./run.sh --pipeline          # Extended pipeline (10 stages displayed as [1/10] to [10/10], includes LLM)
@@ -90,6 +93,7 @@ python3 scripts/execute_multi_project.py --no-llm
 ```
 
 **Notes:**
+
 - Checkpoint/resume support is available via `scripts/execute_pipeline.py --resume`.
 
 ## Pipeline Architecture
@@ -171,6 +175,7 @@ Additional stages available in the interactive orchestrator:
 | 9 | `06_llm_review.py` | LLM Translations (optional, requires Ollama) |
 
 **Stage Numbering:**
+
 - `./run.sh`: 10 stages displayed as [1/10] to [10/10] in logs (Clean Output Directories, Environment Setup, Infrastructure Tests, Project Tests, Project Analysis, PDF Rendering, Output Validation, Copy Outputs, LLM Scientific Review, LLM Translations)
 - `scripts/execute_pipeline.py`: core vs full pipeline is selected by flags (no fixed stage numbering in filenames)
 
@@ -213,12 +218,14 @@ The pipeline automatically generates reports in `projects/{name}/output/reports/
 ## Entry Points
 
 ### Stage 00: Setup Environment
+
 - Checks Python version
 - Verifies dependencies
 - Confirms build tools (pandoc, xelatex)
 - Validates directory structure
 
 ### Stage 01: Run Tests
+
 - Executes infrastructure tests (`tests/infra_tests/`) with 60%+ coverage threshold
 - Executes project tests (`projects/{name}/tests/`) with 90%+ coverage threshold
 - Supports quiet mode (`--quiet` or `-q`) to suppress individual test names
@@ -227,18 +234,21 @@ The pipeline automatically generates reports in `projects/{name}/output/reports/
 - Generic - does not implement tests
 
 ### Stage 02: Run Analysis
+
 - **Discovers** `projects/{name}/scripts/`
 - **Executes** each script in order
 - Generic orchestrator (not analysis)
 - Works with ANY project
 
 ### Stage 03: Render PDF
+
 - Processes `projects/{name}/manuscript/` markdown
 - Converts to LaTeX via pandoc
 - Compiles to PDF via xelatex
 - Generic - does not implement rendering
 
 ### Stage 04: Validate Output
+
 - Checks generated PDFs for issues
 - Validates markdown references
 - Checks figure integrity
@@ -247,6 +257,7 @@ The pipeline automatically generates reports in `projects/{name}/output/reports/
 - Generic validation
 
 ### Stage 05: Copy Outputs
+
 - Cleans top-level `output/` directory
 - Copies combined PDF manuscript
 - Copies all presentation slides (PDF)
@@ -254,6 +265,7 @@ The pipeline automatically generates reports in `projects/{name}/output/reports/
 - Validates all files copied
 
 ### Executive Report Generation (Multi-Project Only)
+
 - Discovers all projects in repository
 - Collects metrics across all projects
 - Generates cross-project comparisons and recommendations
@@ -262,13 +274,13 @@ The pipeline automatically generates reports in `projects/{name}/output/reports/
 - Requires 2+ projects (designed for multi-project comparisons)
 
 ### Stage 8: LLM Scientific Review (Optional)
+
 - Checks Ollama availability
 - Extracts full text from combined PDF
 - Generates four types of reviews with detailed metrics
 - Uses improved progress indicators (spinner, streaming progress) for better feedback
 - Saves reviews to `output/llm/` with generation stats
 - **Requires**: Running Ollama server with at least one model
-
 
 ## Checkpoint and Resume
 
@@ -293,6 +305,7 @@ python3 scripts/execute_pipeline.py --project code_project --core-only --resume
 ### Checkpoint Validation
 
 The system validates checkpoints before resuming:
+
 - File existence and format validation
 - Stage count consistency checks
 - Integrity verification (all completed stages have exit code 0)
@@ -312,7 +325,7 @@ cat projects/code_project/output/.checkpoints/pipeline_checkpoint.json | python3
 rm -f projects/code_project/output/.checkpoints/pipeline_checkpoint.json
 ```
 
-See [`docs/CHECKPOINT_RESUME.md`](../docs/CHECKPOINT_RESUME.md) for documentation.
+See [`docs/operational/CHECKPOINT_RESUME.md`](../docs/operational/CHECKPOINT_RESUME.md) for documentation.
 
 ## Project-Specific Scripts
 
@@ -326,6 +339,7 @@ project/scripts/
 ```
 
 These scripts:
+
 - Import from `projects/{name}/src/` (computation)
 - Import from `infrastructure/` (utilities)
 - Are discovered and executed by `02_run_analysis.py`
@@ -492,6 +506,7 @@ flowchart TD
 ```
 
 **Execution Flow:**
+
 1. **Entry Points** → Choose interactive (`run.sh`) or programmatic (`execute_pipeline.py`)
 2. **Environment Setup** → Validate system requirements and dependencies
 3. **Test Execution** → Run test suites (infrastructure + project)
@@ -501,6 +516,7 @@ flowchart TD
 7. **Output Delivery** → Copy final deliverables to accessible locations
 
 **Key Relationships:**
+
 - **Generic Orchestrators** (`scripts/`) coordinate pipeline stages
 - **Project Code** (`project/`) implements domain-specific logic
 - **Outputs** are generated and validated throughout the pipeline
@@ -554,6 +570,7 @@ Menu Option 8 (--pipeline) → Full Pipeline:
 ## Architecture Diagram
 
 ```
+
 scripts/ (Generic Entry Points)
   ├─ 00_setup_environment.py → Check environment
   ├─ 01_run_tests.py → Run tests
@@ -566,6 +583,7 @@ scripts/ (Generic Entry Points)
 projects/{name}/scripts/ (Project-Specific)
   ├─ analysis_pipeline.py → Your analysis
   └─ example_figure.py → Your figures
+
 ```
 
 ## Shared Utilities
@@ -592,5 +610,5 @@ Root entry points work with **ANY** project following this structure.
 - [`AGENTS.md`](AGENTS.md) - documentation
 - [`../RUN_GUIDE.md`](../RUN_GUIDE.md) - Unified runner guide
 - [`projects/code_project/scripts/README.md`](../projects/code_project/scripts/README.md) - Project scripts guide
-- [`../docs/THIN_ORCHESTRATOR_SUMMARY.md`](../docs/THIN_ORCHESTRATOR_SUMMARY.md) - Pattern details
+- [`../docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md`](../docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md) - Pattern details
 - [`../AGENTS.md`](../AGENTS.md) - system documentation

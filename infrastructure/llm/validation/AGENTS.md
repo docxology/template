@@ -25,6 +25,7 @@ infrastructure/llm/validation/
 #### Validation Base Classes
 
 **Abstract Validator Interface:**
+
 ```python
 class BaseValidator(ABC):
     """Abstract base class for all validators."""
@@ -50,6 +51,7 @@ class BaseValidator(ABC):
 ```
 
 **Validation Result Structure:**
+
 ```python
 @dataclass
 class ValidationResult:
@@ -82,6 +84,7 @@ class ValidationResult:
 #### Validation Configuration
 
 **Configurable Validation Parameters:**
+
 ```python
 @dataclass
 class ValidationConfig:
@@ -111,6 +114,7 @@ class ValidationConfig:
 #### Markdown Format Validator
 
 **Markdown Structure Validation:**
+
 ```python
 class MarkdownFormatValidator(BaseValidator):
     """Validate markdown format compliance and structure."""
@@ -158,6 +162,7 @@ class MarkdownFormatValidator(BaseValidator):
 #### Academic Format Validator
 
 **Academic Writing Standards:**
+
 ```python
 class AcademicFormatValidator(BaseValidator):
     """Validate academic writing format and conventions."""
@@ -190,6 +195,7 @@ class AcademicFormatValidator(BaseValidator):
 #### Repetition Detector
 
 **Advanced Repetition Analysis:**
+
 ```python
 class RepetitionDetector(BaseValidator):
     """Detect content repetition and redundancy."""
@@ -237,6 +243,7 @@ class RepetitionDetector(BaseValidator):
 #### Semantic Similarity Detection
 
 **Meaning-Based Repetition:**
+
 ```python
 class SemanticRepetitionDetector(BaseValidator):
     """Detect semantic repetition using similarity analysis."""
@@ -268,6 +275,7 @@ class SemanticRepetitionDetector(BaseValidator):
 #### Document Structure Validator
 
 **Structure Analysis:**
+
 ```python
 class DocumentStructureValidator(BaseValidator):
     """Validate document structure and organization."""
@@ -318,6 +326,7 @@ class DocumentStructureValidator(BaseValidator):
 #### Content Flow Validator
 
 **Logical Flow and Coherence:**
+
 ```python
 class ContentFlowValidator(BaseValidator):
     """Validate content flow and logical coherence."""
@@ -348,6 +357,7 @@ class ContentFlowValidator(BaseValidator):
 ### Composite Validation System
 
 **Multi-Validator Orchestration:**
+
 ```python
 class ValidationOrchestrator:
     """Orchestrate multiple validators for validation."""
@@ -397,6 +407,7 @@ class ValidationOrchestrator:
 ### LLM Response Validation
 
 **Post-Generation Validation:**
+
 ```python
 # Integration with LLM core
 from infrastructure.llm.core import LLMClient
@@ -431,6 +442,7 @@ class ValidatingLLMClient(LLMClient):
 ### Validator Testing
 
 **Individual Validator Tests:**
+
 ```python
 def test_markdown_format_validator():
     """Test markdown format validation."""
@@ -450,6 +462,7 @@ def test_markdown_format_validator():
 ```
 
 **Repetition Detection Tests:**
+
 ```python
 def test_repetition_detector():
     """Test repetition detection."""
@@ -471,6 +484,7 @@ def test_repetition_detector():
 ### Integration Testing
 
 **Validation Tests:**
+
 ```python
 def test_validation_orchestrator():
     """Test validation orchestration."""
@@ -512,6 +526,7 @@ def test_validation_orchestrator():
 ### Efficient Validation
 
 **Optimized Validation Strategies:**
+
 ```python
 class CachingValidator(BaseValidator):
     """Validator with result caching for performance."""
@@ -546,6 +561,7 @@ class CachingValidator(BaseValidator):
 ### Parallel Validation
 
 **Concurrent Validation Processing:**
+
 ```python
 import concurrent.futures
 
@@ -595,6 +611,7 @@ class ParallelValidationOrchestrator(ValidationOrchestrator):
 ### Validation Failure Handling
 
 **Robust Error Recovery:**
+
 ```python
 def validate_with_error_handling(self, content: str,
                                 context: Dict[str, Any] = None) -> ValidationResult:
@@ -623,6 +640,7 @@ def validate_with_error_handling(self, content: str,
 ### Validation Result Processing
 
 **Result Interpretation and Action:**
+
 ```python
 def process_validation_result(result: ValidationResult) -> ValidationAction:
     """Process validation result and determine action."""
@@ -649,6 +667,7 @@ def process_validation_result(result: ValidationResult) -> ValidationAction:
 ### Basic Validation
 
 **Simple Content Validation:**
+
 ```python
 from infrastructure.llm.validation import MarkdownFormatValidator
 
@@ -665,6 +684,7 @@ else:
 ### Validation
 
 **Multi-Validator Assessment:**
+
 ```python
 from infrastructure.llm.validation import ValidationOrchestrator
 
@@ -682,6 +702,7 @@ print(f"Total issues: {len(result.all_issues)}")
 ### LLM Response Validation
 
 **Post-Generation Quality Check:**
+
 ```python
 from infrastructure.llm.validation import ValidatingLLMClient
 
@@ -702,6 +723,7 @@ else:
 ### Validation Configuration
 
 **Custom Validation Settings:**
+
 ```python
 from infrastructure.llm.validation.core import ValidationConfig
 
@@ -721,6 +743,7 @@ validator = MarkdownFormatValidator(config)
 ### Environment Configuration
 
 **Runtime Validation Settings:**
+
 ```bash
 # Validation behavior
 export LLM_VALIDATION_STRICT_MODE=false
@@ -741,12 +764,14 @@ export LLM_VALIDATION_CACHE_RESULTS=true
 ### Advanced Validation Features
 
 **Planned Improvements:**
+
 - **Machine Learning-Based Validation**: ML models for content quality assessment
 - **Domain-Specific Validators**: Specialized validators for different research fields
 - **Real-time Validation**: Streaming validation during content generation
 - **Collaborative Validation**: Multi-user validation workflows
 
 **Integration Features:**
+
 - **IDE Integration**: Real-time validation in text editors
 - **API Integration**: Validation as a service for external tools
 - **Batch Validation**: Process multiple documents efficiently
@@ -757,6 +782,7 @@ export LLM_VALIDATION_CACHE_RESULTS=true
 ### Common Validation Issues
 
 **False Positives:**
+
 ```python
 # Adjust validation sensitivity
 config = ValidationConfig(
@@ -768,6 +794,7 @@ validator = RepetitionDetector(config)
 ```
 
 **Performance Issues:**
+
 ```python
 # Optimize for performance
 config = ValidationConfig(
@@ -780,6 +807,7 @@ orchestrator = ParallelValidationOrchestrator()  # Use parallel processing
 ```
 
 **Configuration Issues:**
+
 ```python
 # Validate configuration
 try:
@@ -792,6 +820,7 @@ except ValueError as e:
 ### Debug Validation
 
 **Verbose Validation Logging:**
+
 ```python
 import logging
 logging.basicConfig(level=logging.DEBUG)
@@ -807,10 +836,12 @@ result = validator.validate(content, context)
 ## See Also
 
 **Related Documentation:**
+
 - [`../core/AGENTS.md`](../core/AGENTS.md) - LLM core functionality
 - [`../templates/AGENTS.md`](../templates/AGENTS.md) - Template system
 - [`../review/AGENTS.md`](../review/AGENTS.md) - Review generation
 
 **System Documentation:**
-- [`../../../../AGENTS.md`](../../../../AGENTS.md) - system overview
-- [`../../../../../docs/operational/VALIDATION_GUIDE.md`](../../../../../../docs/operational/VALIDATION_GUIDE.md) - Validation usage guide
+
+- [`../../../AGENTS.md`](../../../AGENTS.md) - system overview
+- [`../../../docs/operational/VALIDATION_GUIDE.md`](../../../docs/operational/VALIDATION_GUIDE.md) - Validation usage guide

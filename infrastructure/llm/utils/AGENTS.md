@@ -22,6 +22,7 @@ infrastructure/llm/utils/
 #### Server Status Checking
 
 **Connection Health Monitoring:**
+
 ```python
 def is_ollama_running(base_url: str = "http://localhost:11434", timeout: float = 2.0) -> bool:
     """Check if Ollama server is running and responding.
@@ -39,6 +40,7 @@ def is_ollama_running(base_url: str = "http://localhost:11434", timeout: float =
 ```
 
 **Detailed Health Assessment:**
+
 ```python
 def check_ollama_health(base_url: str = "http://localhost:11434",
                        timeout: float = 5.0) -> Dict[str, Any]:
@@ -62,6 +64,7 @@ def check_ollama_health(base_url: str = "http://localhost:11434",
 #### Model Discovery and Selection
 
 **Available Model Listing:**
+
 ```python
 def get_available_models(base_url: str = "http://localhost:11434",
                         timeout: float = 10.0) -> List[Dict[str, Any]]:
@@ -80,6 +83,7 @@ def get_available_models(base_url: str = "http://localhost:11434",
 ```
 
 **Intelligent Model Selection:**
+
 ```python
 def select_best_model(base_url: str = "http://localhost:11434",
                      preferences: Optional[List[str]] = None,
@@ -100,6 +104,7 @@ def select_best_model(base_url: str = "http://localhost:11434",
 ```
 
 **Model Preferences Hierarchy:**
+
 ```python
 DEFAULT_MODEL_PREFERENCES = [
     "llama3-gradient:latest",  # Large context (256K), reliable, no thinking mode issues
@@ -116,6 +121,7 @@ DEFAULT_MODEL_PREFERENCES = [
 #### Model Preloading and Management
 
 **Model Preloading with Retry:**
+
 ```python
 def preload_model(model_name: str, base_url: str = "http://localhost:11434",
                  timeout: float = 300.0, max_retries: int = 2) -> Tuple[bool, Optional[str]]:
@@ -136,6 +142,7 @@ def preload_model(model_name: str, base_url: str = "http://localhost:11434",
 ```
 
 **Model Information Retrieval:**
+
 ```python
 def get_model_info(model_name: str, base_url: str = "http://localhost:11434",
                   timeout: float = 10.0) -> Optional[Dict[str, Any]]:
@@ -160,6 +167,7 @@ def get_model_info(model_name: str, base_url: str = "http://localhost:11434",
 #### Server Management
 
 **Server Startup (macOS/Linux):**
+
 ```python
 def start_ollama_server(wait_for_ready: bool = True,
                         timeout: float = 30.0) -> bool:
@@ -178,6 +186,7 @@ def start_ollama_server(wait_for_ready: bool = True,
 ```
 
 **Server Status:**
+
 ```python
 def get_server_status(base_url: str = "http://localhost:11434",
                       timeout: float = 5.0) -> Dict[str, Any]:
@@ -203,6 +212,7 @@ def get_server_status(base_url: str = "http://localhost:11434",
 ### Connection Health Monitoring
 
 **LLMClient Integration:**
+
 ```python
 # Used by LLMClient for connection verification
 from infrastructure.llm.utils.ollama import is_ollama_running, select_best_model
@@ -222,6 +232,7 @@ class LLMClient:
 ### CLI Interface Support
 
 **Command-Line Model Discovery:**
+
 ```python
 # Used by infrastructure/llm/cli/main.py
 from infrastructure.llm.utils.ollama import get_available_models, select_best_model
@@ -253,6 +264,7 @@ def models_command(args):
 ### Utility Function Testing
 
 **Server Status Testing:**
+
 ```python
 def test_ollama_server_check():
     """Test Ollama server connectivity checking."""
@@ -267,6 +279,7 @@ def test_ollama_server_check():
 ```
 
 **Model Selection Testing:**
+
 ```python
 def test_model_selection():
     """Test intelligent model selection."""
@@ -287,6 +300,7 @@ def test_model_selection():
 ```
 
 **Model Preloading Testing:**
+
 ```python
 def test_model_preloading():
     """Test model preloading functionality."""
@@ -306,6 +320,7 @@ def test_model_preloading():
 ### Integration Testing
 
 **End-to-End Utility Testing:**
+
 ```python
 def test_complete_ollama_workflow():
     """Test Ollama server interaction workflow."""
@@ -340,12 +355,14 @@ def test_complete_ollama_workflow():
 ### Efficient Operations
 
 **Quick Health Checks:**
+
 - Short timeouts for connectivity tests (2-5 seconds)
 - Lightweight API calls for status checks
 - Cached results where appropriate
 - Non-blocking operations for CLI usage
 
 **Optimized Model Discovery:**
+
 - Single API call to retrieve all models
 - Local preference matching without additional requests
 - Lazy loading of detailed model information
@@ -354,12 +371,14 @@ def test_complete_ollama_workflow():
 ### Resource Management
 
 **Server Interaction Limits:**
+
 - Reasonable timeouts to prevent hanging
 - Exponential backoff for retries
 - Connection pooling for multiple requests
 - Automatic cleanup of failed connections
 
 **Memory Efficiency:**
+
 - Streaming responses for large model lists
 - Minimal data structures for model information
 - Garbage collection of temporary results
@@ -370,6 +389,7 @@ def test_complete_ollama_workflow():
 ### Robust Error Recovery
 
 **Network Error Handling:**
+
 ```python
 def _handle_network_errors(func):
     """Decorator for robust network error handling."""
@@ -392,6 +412,7 @@ def _handle_network_errors(func):
 ```
 
 **Graceful Degradation:**
+
 - Return None/sensible defaults on failures
 - Log errors without crashing calling code
 - Provide fallback behaviors when possible
@@ -400,6 +421,7 @@ def _handle_network_errors(func):
 ### Logging Integration
 
 **Logging:**
+
 ```python
 # Debug level for detailed operations
 logger.debug(f"Checking Ollama server at {base_url}")
@@ -419,6 +441,7 @@ logger.error(f"Failed to connect to Ollama server: {error}")
 ### Environment Integration
 
 **Configurable Base URL:**
+
 ```bash
 # Default Ollama server
 export OLLAMA_HOST="http://localhost:11434"
@@ -428,6 +451,7 @@ export OLLAMA_HOST="http://ollama.company.com:8080"
 ```
 
 **Timeout Configuration:**
+
 ```python
 # Function parameters allow customization
 models = get_available_models(timeout=30.0)  # Longer timeout for slow networks
@@ -437,6 +461,7 @@ health = check_ollama_health(timeout=10.0)   # Health checks can be more patient
 ### Model Preferences
 
 **Custom Model Preferences:**
+
 ```python
 # Override default preferences
 custom_preferences = [
@@ -454,6 +479,7 @@ best_model = select_best_model(preferences=custom_preferences)
 ### Basic Server Management
 
 **Health Monitoring:**
+
 ```python
 from infrastructure.llm.utils.ollama import is_ollama_running, check_ollama_health
 
@@ -472,6 +498,7 @@ print(f"Available models: {len(health.get('models', []))}")
 ### Model Selection and Management
 
 **Intelligent Model Selection:**
+
 ```python
 from infrastructure.llm.utils.ollama import select_best_model, get_available_models
 
@@ -488,6 +515,7 @@ else:
 ```
 
 **Model Preloading:**
+
 ```python
 from infrastructure.llm.utils.ollama import preload_model
 
@@ -503,6 +531,7 @@ else:
 ### Server Management
 
 **Server Status Monitoring:**
+
 ```python
 from infrastructure.llm.utils.ollama import get_server_status
 
@@ -520,6 +549,7 @@ if 'system' in status:
 ### Integration with LLM Client
 
 **Seamless Integration:**
+
 ```python
 from infrastructure.llm.core import LLMClient
 from infrastructure.llm.utils.ollama import select_best_model, is_ollama_running
@@ -543,6 +573,7 @@ response = client.query("Explain quantum computing")
 ### Common Issues
 
 **Server Connection Problems:**
+
 ```bash
 # Check if Ollama is installed
 which ollama
@@ -555,6 +586,7 @@ ollama serve
 ```
 
 **Model Availability Issues:**
+
 ```bash
 # List installed models
 ollama list
@@ -567,6 +599,7 @@ ollama ps
 ```
 
 **Timeout Issues:**
+
 ```python
 # Increase timeout for slow connections
 models = get_available_models(timeout=30.0)
@@ -576,6 +609,7 @@ health = check_ollama_health(timeout=15.0)
 ### Debug Information
 
 **Verbose Logging:**
+
 ```python
 import logging
 logging.basicConfig(level=logging.DEBUG)
@@ -586,6 +620,7 @@ models = get_available_models()  # Will show detailed debug logs
 ```
 
 **Diagnostic Function:**
+
 ```python
 def diagnose_ollama_setup():
     """Ollama setup diagnosis."""
@@ -621,18 +656,21 @@ def diagnose_ollama_setup():
 ### Planned Improvements
 
 **Server Management:**
+
 - **Automatic Server Restart**: Detect and restart crashed servers
 - **Load Balancing**: Distribute requests across multiple Ollama instances
 - **Model Auto-Update**: Automatically pull latest model versions
 - **Resource Monitoring**: Track and report server resource usage
 
 **Advanced Model Management:**
+
 - **Model Performance Profiling**: Benchmark models for specific tasks
 - **Dynamic Model Selection**: Choose models based on task requirements
 - **Model Health Monitoring**: Detect and handle model loading failures
 - **Custom Model Registry**: Support for private/custom models
 
 **Network Resilience:**
+
 - **Connection Pooling**: Reuse connections for better performance
 - **Retry Strategies**: Intelligent retry with exponential backoff
 - **Offline Mode**: Graceful degradation when server unavailable
@@ -641,10 +679,12 @@ def diagnose_ollama_setup():
 ## See Also
 
 **Related Documentation:**
+
 - [`../core/AGENTS.md`](../core/AGENTS.md) - LLM core functionality
 - [`../cli/AGENTS.md`](../cli/AGENTS.md) - CLI interface
 - [`../templates/AGENTS.md`](../templates/AGENTS.md) - Template system
 
 **System Documentation:**
+
 - [`../../../AGENTS.md`](../../../AGENTS.md) - LLM module overview
-- [`../../../../docs/operational/LLM_REVIEW_TROUBLESHOOTING.md`](../../../../docs/operational/LLM_REVIEW_TROUBLESHOOTING.md) - LLM troubleshooting guide
+- [`../../../docs/operational/LLM_REVIEW_TROUBLESHOOTING.md`](../../../docs/operational/LLM_REVIEW_TROUBLESHOOTING.md) - LLM troubleshooting guide
