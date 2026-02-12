@@ -127,11 +127,13 @@ Hierarchical structures are identified by:
 ### Computational Validation Procedures
 
 **Terminology Extraction Validation**:
+
 - **Precision**: Manual verification of extracted terms against expert-curated lists
 - **Recall**: Coverage assessment against domain glossaries
 - **Domain Accuracy**: Correct classification into Ento-Linguistic domains
 
 **Network Validation**:
+
 - **Structural Validity**: Comparison against null models
 - **Domain Correspondence**: Alignment with theoretical domain boundaries
 - **Stability Analysis**: Consistency across subsampling procedures
@@ -148,45 +150,64 @@ Hierarchical structures are identified by:
 
 ### Modular Software Design
 
-The implementation follows a modular architecture:
+The implementation follows a modular architecture organized under the `src/` package:
 
-```
-entolinguistic/
-├── text_processing/     # Text normalization and tokenization
-├── terminology/         # Term extraction and classification
-├── networks/           # Graph construction and analysis
-├── framing/            # Framing analysis algorithms
-├── validation/         # Validation and quality assurance
-└── visualization/      # Result visualization
+```text
+src/
+├── analysis/           # Core analytical modules
+│   ├── text_analysis.py        # TextProcessor, LinguisticFeatureExtractor
+│   ├── term_extraction.py      # TerminologyExtractor, Term dataclass
+│   ├── domain_analysis.py      # DomainAnalyzer, DomainAnalysis dataclass
+│   ├── conceptual_mapping.py   # ConceptualMapper, concept graph construction
+│   ├── discourse_analysis.py   # DiscourseAnalyzer, framing detection
+│   ├── statistics.py           # Statistical validation utilities
+│   └── performance.py          # Performance benchmarking
+├── core/               # Shared infrastructure and utilities
+├── data/               # Domain seed data and corpus resources
+├── pipeline/           # End-to-end orchestration
+└── visualization/      # ConceptVisualizer, VisualizationEngine
 ```
 
 ### Data Structures and Formats
 
-**Terminology Database**:
+**Term Representation** (from `src/analysis/term_extraction.py`):
+
 ```python
 @dataclass
-class TerminologyEntry:
-    term: str
-    domains: List[str]
-    contexts: List[str]
-    frequencies: Dict[str, int]
-    ambiguities: List[str]
-    framings: List[str]
+class Term:
+    text: str               # The term text
+    lemma: str              # Lemmatized form
+    domains: List[str]      # Ento-Linguistic domains
+    frequency: int          # Total frequency across corpus
+    contexts: List[str]     # Contextual usage examples
+    pos_tags: List[str]     # Part-of-speech tags
+    confidence: float       # Extraction confidence score
 ```
 
-**Network Representation**:
+**Domain Analysis Results** (from `src/analysis/domain_analysis.py`):
+
 ```python
 @dataclass
-class TerminologyNetwork:
-    nodes: Dict[str, TerminologyEntry]
-    edges: Dict[Tuple[str, str], float]
-    communities: Dict[str, List[str]]
-    domain_mappings: Dict[str, str]
+class DomainAnalysis:
+    domain_name: str
+    key_terms: List[str]                        # Most important terms
+    term_patterns: Dict[str, int]               # Linguistic pattern counts
+    framing_assumptions: List[str]              # Identified framings
+    conceptual_structure: Dict[str, Any]        # Concept organization
+    ambiguities: List[Dict[str, Any]]           # Ambiguity contexts
+    recommendations: List[str]                  # Communication suggestions
+    frequency_stats: Dict[str, Any]             # Term frequency analysis
+    cooccurrence_analysis: Dict[str, Any]       # Co-occurrence patterns
+    ambiguity_metrics: Dict[str, Any]           # Quantified ambiguity
+    confidence_scores: Dict[str, float]         # Framing confidence
+    conceptual_metrics: Dict[str, Any]          # Conceptual structure metrics
+    statistical_significance: Dict[str, Any]    # Significance results
 ```
 
 ### Performance Optimization
 
 **Scalability Considerations**:
+
 - Streaming processing for large corpora
 - Incremental network updates
 - Parallel processing for independent analyses
@@ -211,9 +232,9 @@ Critical parameters and their calibration:
 \hline
 \textbf{Parameter} & \textbf{Default} & \textbf{Range} & \textbf{Impact} & \textbf{Calibration Method} \\
 \hline
-Window Size & 50 & [20, 100] & High & Cross-validation \\
+Co-occurrence Window & 10 & [5, 50] & High & Cross-validation \\
 Similarity Threshold & 0.3 & [0.1, 0.8] & High & Domain expert review \\
-Minimum Frequency & 5 & [1, 50] & Medium & Statistical significance \\
+Minimum Frequency & 3 & [1, 50] & Medium & Statistical significance \\
 Ambiguity Threshold & 0.7 & [0.5, 0.9] & Medium & Manual validation \\
 \hline
 \end{tabular}
@@ -225,56 +246,87 @@ Ambiguity Threshold & 0.7 & [0.5, 0.9] & Medium & Manual validation \\
 
 Parameter sensitivity testing revealed:
 
-**Window Size**: Optimal at 50 words; smaller windows miss long-range relationships, larger windows introduce noise.
+**Co-occurrence Window**: Default of 10 words for co-occurrence analysis balances sensitivity with specificity; context extraction uses a narrower 3-word window for precise usage examples.
 
 **Similarity Threshold**: 0.3 provides balance between precision and recall; lower values increase false positives, higher values miss subtle relationships.
 
-**Frequency Threshold**: 5 occurrences ensures statistical reliability while maintaining coverage.
+**Frequency Threshold**: Default of 3 occurrences ensures statistical reliability while maintaining coverage for smaller corpora.
 
 ## Quality Assurance and Reproducibility
 
 ### Automated Quality Checks
 
 **Data Quality Validation**:
+
 - Text encoding verification
 - Corpus completeness checks
 - Metadata consistency validation
 
 **Algorithmic Validation**:
+
 - Deterministic output verification
 - Cross-platform compatibility testing
 - Performance regression monitoring
 
 ### Reproducibility Framework
 
-**Version Control**: All code, data, and parameters are version controlled with DOI minting for long-term access.
+**Version Control**: All code, data, and parameters are version controlled via Git for reproducibility and traceability.
 
-**Containerization**: Analysis environments are containerized for exact reproducibility.
+**Environment Management**: Analysis environments are managed using `uv` with pinned dependencies in `pyproject.toml` for reproducible installations.
 
-**Documentation**: documentation of all processing steps, parameters, and decisions.
+**Documentation**: Comprehensive documentation of all processing steps, parameters, and decisions.
 
-## Extensions and Future Methods
+**Software Dependencies**: Analysis conducted using Python 3.10+, NLTK 3.8+ (tokenization/text processing), NetworkX 3.2+ (network construction), scikit-learn 1.3+ (statistical validation), pandas 2.0+ (data manipulation), matplotlib 3.7+ and seaborn 0.13+ (visualization), NumPy 1.24+ and SciPy 1.10+ (numerical computation).
 
-### Advanced Semantic Analysis
+## Extended Mathematical Formulations
 
-Future extensions include:
+### Conceptual Mapping Framework
 
-**Transformer-based Embeddings**: Using contextual language models for more sophisticated semantic analysis.
+The conceptual mapping algorithm formalizes term relationships across contexts:
 
-**Multilingual Extensions**: Cross-language terminology mapping and comparison.
+\begin{equation}\label{eq:concept_mapping}
+M(t_i, t_j) = \frac{1}{k} \sum_{c=1}^k \text{similarity}(\vec{t_i}^{(c)}, \vec{t_j}^{(c)})
+\end{equation}
 
-**Temporal Analysis**: Tracking terminological evolution over time using diachronic methods.
+where $k$ represents the number of contextual embeddings and $\vec{t}^{(c)}$ is the embedding of a term in context $c$.
 
-### Integration with External Resources
+### Discourse Pattern Recognition
 
-**Ontology Integration**: Mapping to existing biological ontologies and terminologies.
+Discourse pattern detection uses sequence modeling:
 
-**Citation Network Analysis**: Integrating citation patterns with terminology usage.
+\begin{equation}\label{eq:discourse_patterns}
+P(d|t_1, \dots, t_n) = \prod_{i=1}^n P(t_i|t_{i-1}, d) \cdot P(d)
+\end{equation}
 
-**Author Network Analysis**: Examining how terminology use correlates with research communities.
+where $d$ represents discourse patterns and $t_i$ are sequential terms.
+
+## Performance and Scalability
+
+### Computational Complexity
+
+The pipeline's overall time complexity is:
+
+\begin{equation}\label{eq:computational_complexity}
+C(n,m) = O(n \log n + m \cdot d)
+\end{equation}
+
+where $n$ is the corpus size (total words or documents), $m$ is the number of extracted terms, and $d = 6$ is the fixed number of Ento-Linguistic domains. The $n \log n$ term covers text preprocessing and tokenization; $m \cdot d$ represents domain classification and per-domain analysis.
+
+### Memory and Resource Management
+
+**Streaming Processing**: Documents are processed incrementally so that the full corpus need not reside in memory simultaneously.
+
+**Incremental Network Construction**: Edge weights and community structure update incrementally as new documents are added, ensuring that network analysis scales linearly with additional data.
+
+**Parallel Processing**: Because domain analyses are independent, they can be distributed across multiple cores or machines without inter-process synchronization.
+
+### Automated Quality Gates
+
+The following gates run automatically at each pipeline stage:
+
+1. **Text Processing Validation**: Round-trip verification and comparison against manually processed subsets ensure preprocessing preserves semantic integrity.
+2. **Terminology Validation**: Extracted terms are cross-referenced against expert-curated seed lists and published entomological glossaries.
+3. **Network Validation**: Constructed networks are compared against null models (random networks with preserved degree distributions) to confirm that observed structure is statistically meaningful.
+4. **Theoretical Validation**: Decision criteria and interpretation chains are documented at each analytical stage to maintain conceptual coherence.
 
 This detailed methodological framework ensures rigorous, reproducible Ento-Linguistic analysis while maintaining flexibility for methodological refinement and extension.
-
-
-
-

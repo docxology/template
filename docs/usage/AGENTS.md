@@ -9,19 +9,19 @@ The `docs/usage/` directory contains practical usage examples, templates, and gu
 ```
 docs/usage/
 ├── AGENTS.md                       # This technical documentation
-├── EXAMPLES_SHOWCASE.md            # Real-world usage examples
-├── EXAMPLES.md                     # Usage examples and patterns
-├── IMAGE_MANAGEMENT.md             # Image handling and integration
-├── MANUSCRIPT_NUMBERING_SYSTEM.md  # Section numbering conventions
-├── MARKDOWN_TEMPLATE_GUIDE.md      # Markdown authoring guide
+├── examples-showcase.md            # Real-world usage examples
+├── examples.md                     # Usage examples and patterns
+├── image-management.md             # Image handling and integration
+├── manuscript-numbering-system.md  # Section numbering conventions
+├── markdown-template-guide.md      # Markdown authoring guide
 ├── README.md                       # Quick reference for usage docs
-├── TEMPLATE_DESCRIPTION.md         # Template features overview
-└── VISUALIZATION_GUIDE.md          # Data visualization techniques
+├── template-description.md         # Template features overview
+└── visualization-guide.md          # Data visualization techniques
 ```
 
 ## Key Documentation Files
 
-### Examples Showcase (`EXAMPLES_SHOWCASE.md`)
+### Examples Showcase (`examples-showcase.md`)
 
 **Real-world research project examples:**
 
@@ -37,7 +37,7 @@ docs/usage/
 - Analysis workflow demonstrations
 - Output generation examples
 
-### Usage Examples (`EXAMPLES.md`)
+### Usage Examples (`examples.md`)
 
 **Practical examples for common tasks:**
 
@@ -53,7 +53,7 @@ docs/usage/
 - External tool integration
 - Performance optimization examples
 
-### Template Description (`TEMPLATE_DESCRIPTION.md`)
+### Template Description (`template-description.md`)
 
 **feature overview:**
 
@@ -69,7 +69,7 @@ docs/usage/
 - Validation and quality checks
 - Performance optimization tools
 
-### Markdown Template Guide (`MARKDOWN_TEMPLATE_GUIDE.md`)
+### Markdown Template Guide (`markdown-template-guide.md`)
 
 **Manuscript authoring best practices:**
 
@@ -85,7 +85,7 @@ docs/usage/
 - Mathematical notation
 - Code block formatting
 
-### Manuscript Numbering System (`MANUSCRIPT_NUMBERING_SYSTEM.md`)
+### Manuscript Numbering System (`manuscript-numbering-system.md`)
 
 **Section numbering conventions and standards:**
 
@@ -587,12 +587,12 @@ visualizer.create_performance_comparison(results, 'output/figures/model_comparis
 ## See Also
 
 **Usage Documentation:**
-- [`EXAMPLES.md`](EXAMPLES.md) - General usage examples
-- [`EXAMPLES_SHOWCASE.md`](EXAMPLES_SHOWCASE.md) - Real-world showcases
-- [`TEMPLATE_DESCRIPTION.md`](TEMPLATE_DESCRIPTION.md) - Feature overview
-- [`MARKDOWN_TEMPLATE_GUIDE.md`](MARKDOWN_TEMPLATE_GUIDE.md) - Authoring guide
+- [`examples.md`](examples.md) - General usage examples
+- [`examples-showcase.md`](examples-showcase.md) - Real-world showcases
+- [`template-description.md`](template-description.md) - Feature overview
+- [`markdown-template-guide.md`](markdown-template-guide.md) - Authoring guide
 
 **System Documentation:**
 - [`../AGENTS.md`](../AGENTS.md) - system overview
-- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - Documentation index
+- [`../documentation-index.md`](../documentation-index.md) - Documentation index
 - [`../../AGENTS.md`](../../AGENTS.md) - Root system documentation

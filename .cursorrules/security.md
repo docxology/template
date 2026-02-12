@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide covers **development security standards** for the Research Project Template. These are the security practices developers must follow when writing code, in contrast to the security policy documented in `docs/SECURITY.md`.
+This guide covers **development security standards** for the Research Project Template. These are the security practices developers must follow when writing code, in contrast to the security policy documented in `docs/security.md`.
 
 ## Input Validation Patterns
 
@@ -520,11 +520,11 @@ pytest -m integration  # Slower integration tests
 
 ## See Also
 
-- [docs/SECURITY.md](../docs/development/SECURITY.md) - Security policy and vulnerability reporting
-- [docs/BEST_PRACTICES.md](../docs/best-practices/BEST_PRACTICES.md) - Security best practices section
+- [docs/security.md](../docs/development/security.md) - Security policy and vulnerability reporting
+- [docs/best-practices.md](../docs/best-practices/best-practices.md) - Security best practices section
 - [error_handling.md](error_handling.md) - Secure error handling patterns
 - [testing_standards.md](testing_standards.md) - Security testing patterns
 
 ---
 
-**Note**: This document focuses on development security practices. For security policy, vulnerability reporting, and security updates, see [docs/SECURITY.md](../docs/development/SECURITY.md).
+**Note**: This document focuses on development security practices. For security policy, vulnerability reporting, and security updates, see [docs/security.md](../docs/development/security.md).

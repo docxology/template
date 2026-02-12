@@ -1,0 +1,45 @@
+[project]
+name = "blake_active_inference"
+version = "1.0.0"
+description = "The Doors of Perception are the Threshold of Prediction: Active Inference and William Blake's Theory of Seeing"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "CC-BY-NC-ND-4.0"
+
+authors = [
+    {name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}
+]
+
+keywords = [
+    "active inference",
+    "william blake",
+    "free energy principle",
+    "predictive processing",
+    "perception",
+    "philosophy of mind",
+    "cognitive science",
+    "romanticism"
+]
+
+dependencies = [
+    "numpy>=1.21.0",
+    "matplotlib>=3.5.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --tb=short"
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["tests/*"]
+
+[tool.coverage.report]
+fail_under = 90

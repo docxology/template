@@ -1,0 +1,54 @@
+# Blake Active Inference Paper Configuration
+# Publication metadata for manuscript rendering
+
+paper:
+  title: "The Doors of Perception are the Threshold of Prediction"
+  subtitle: "Active Inference and William Blake's Theory of Seeing"
+  version: "1.0"
+  date: "February 12, 2026"
+
+authors:
+  - name: "Daniel Ari Friedman"
+    orcid: "0000-0001-6232-9096"
+    email: "daniel@activeinference.institute"
+    affiliation: "Active Inference Institute"
+    corresponding: true
+
+publication:
+  doi: "10.5281/zenodo.18600041"
+  journal: "Zenodo Preprints"
+  volume: "1"
+  pages: "1-N"
+  year: "2026"
+
+keywords:
+  - "active inference"
+  - "William Blake"
+  - "free energy principle"
+  - "predictive processing"
+  - "perception"
+  - "philosophy of mind"
+  - "Romanticism"
+  - "cognitive science"
+  - "Markov blanket"
+  - "generative model"
+
+metadata:
+  license: "CC-BY-NC-ND-4.0"
+  language: "en"
+  abstract_word_limit: 300
+
+# LLM Review Settings
+llm:
+  reviews:
+    enabled: true
+    types:
+      - executive_summary
+  translations:
+    enabled: false
+
+# Testing Configuration
+testing:
+  max_test_failures: 0
+  max_infra_test_failures: 0
+  max_project_test_failures: 0

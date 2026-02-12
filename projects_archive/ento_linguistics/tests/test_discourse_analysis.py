@@ -9,7 +9,7 @@ from __future__ import annotations
 from typing import Dict, List
 
 import pytest
-from src.discourse_analysis import (ArgumentativeStructure, DiscourseAnalyzer,
+from src.analysis.discourse_analysis import (ArgumentativeStructure, DiscourseAnalyzer,
                                     DiscoursePattern)
 
 

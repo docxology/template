@@ -1,12 +1,4 @@
 {
-  "fig:concept_map": {
-    "filename": "conceptual_map.png",
-    "caption": "Conceptual map of the Ento-Linguistic Domains framework showing relationships between key concepts",
-    "label": "fig:concept_map",
-    "section": "introduction",
-    "generated_by": "generate_research_figures.py",
-    "metadata": null
-  },
   "fig:terminology_network": {
     "filename": "terminology_network.png",
     "caption": "Complete terminology network showing relationships between terms across all Ento-Linguistic domains",
@@ -17,10 +9,138 @@
   },
   "fig:domain_comparison": {
     "filename": "domain_comparison.png",
-    "caption": "Domain-specific terminology networks showing unique structural patterns for each Ento-Linguistic domain",
+    "caption": "Cross-domain comparison of entomological term frequencies",
     "label": "fig:domain_comparison",
-    "section": "experimental_results",
+    "section": "results",
+    "generated_by": "generate_research_figures.py",
+    "metadata": null
+  },
+  "fig:power_labor_frequencies": {
+    "filename": "domain_comparison.png",
+    "caption": "Power and Labor domain term frequencies (cross-domain comparison view)",
+    "label": "fig:power_labor_frequencies",
+    "section": "supplemental_results",
     "generated_by": "generate_domain_figures.py",
+    "metadata": null
+  },
+  "fig:power_labor_ambiguities": {
+    "filename": "domain_comparison.png",
+    "caption": "Power and Labor domain ambiguity analysis (cross-domain view)",
+    "label": "fig:power_labor_ambiguities",
+    "section": "supplemental_results",
+    "generated_by": "generate_domain_figures.py",
+    "metadata": null
+  },
+  "fig:unit_individuality_frequencies": {
+    "filename": "unit_of_individuality_term_frequencies.png",
+    "caption": "Term frequency distribution in Unit of Individuality domain",
+    "label": "fig:unit_individuality_frequencies",
+    "section": "supplemental_results",
+    "generated_by": "generate_domain_figures.py",
+    "metadata": null
+  },
+  "fig:unit_individuality_ambiguities": {
+    "filename": "unit_of_individuality_ambiguities.png",
+    "caption": "Ambiguity patterns in Unit of Individuality terminology",
+    "label": "fig:unit_individuality_ambiguities",
+    "section": "supplemental_results",
+    "generated_by": "generate_domain_figures.py",
+    "metadata": null
+  },
+  "fig:behavior_identity_frequencies": {
+    "filename": "behavior_and_identity_term_frequencies.png",
+    "caption": "Behavioral terminology frequency distribution",
+    "label": "fig:behavior_identity_frequencies",
+    "section": "supplemental_results",
+    "generated_by": "generate_domain_figures.py",
+    "metadata": null
+  },
+  "fig:behavior_identity_ambiguities": {
+    "filename": "behavior_and_identity_ambiguities.png",
+    "caption": "Identity-related ambiguity patterns",
+    "label": "fig:behavior_identity_ambiguities",
+    "section": "supplemental_results",
+    "generated_by": "generate_domain_figures.py",
+    "metadata": null
+  },
+  "fig:sex_reproduction_frequencies": {
+    "filename": "sex_and_reproduction_term_frequencies.png",
+    "caption": "Reproductive terminology frequency distribution",
+    "label": "fig:sex_reproduction_frequencies",
+    "section": "supplemental_results",
+    "generated_by": "generate_domain_figures.py",
+    "metadata": null
+  },
+  "fig:sex_reproduction_ambiguities": {
+    "filename": "sex_and_reproduction_ambiguities.png",
+    "caption": "Reproductive terminology ambiguity patterns",
+    "label": "fig:sex_reproduction_ambiguities",
+    "section": "supplemental_results",
+    "generated_by": "generate_domain_figures.py",
+    "metadata": null
+  },
+  "fig:kin_relatedness_frequencies": {
+    "filename": "kin_and_relatedness_term_frequencies.png",
+    "caption": "Kinship terminology frequency distribution",
+    "label": "fig:kin_relatedness_frequencies",
+    "section": "supplemental_results",
+    "generated_by": "generate_domain_figures.py",
+    "metadata": null
+  },
+  "fig:kin_relatedness_ambiguities": {
+    "filename": "kin_and_relatedness_ambiguities.png",
+    "caption": "Kinship terminology ambiguity patterns",
+    "label": "fig:kin_relatedness_ambiguities",
+    "section": "supplemental_results",
+    "generated_by": "generate_domain_figures.py",
+    "metadata": null
+  },
+  "fig:economics_frequencies": {
+    "filename": "economics_term_frequencies.png",
+    "caption": "Term frequency distribution for Economics domain",
+    "label": "fig:economics_frequencies",
+    "section": "supplemental_results",
+    "generated_by": "generate_domain_figures.py",
+    "metadata": null
+  },
+  "fig:economics_ambiguities": {
+    "filename": "economics_ambiguities.png",
+    "caption": "Ambiguity patterns in Economics domain",
+    "label": "fig:economics_ambiguities",
+    "section": "supplemental_results",
+    "generated_by": "generate_domain_figures.py",
+    "metadata": null
+  },
+  "fig:example_figure": {
+    "filename": "example_figure.png",
+    "caption": "Example figure demonstrating the figure management system",
+    "label": "fig:example_figure",
+    "section": "examples",
+    "generated_by": "example_figure.py",
+    "metadata": null
+  },
+  "fig:concept_map": {
+    "filename": "conceptual_map.png",
+    "caption": "Conceptual map of the Ento-Linguistic Domains framework showing relationships between key concepts",
+    "label": "fig:concept_map",
+    "section": "introduction",
+    "generated_by": "generate_research_figures.py",
+    "metadata": null
+  },
+  "fig:domain_overlap": {
+    "filename": "domain_overlap_heatmap.png",
+    "caption": "Domain Term Overlap Heatmap",
+    "label": "fig:domain_overlap",
+    "section": "experimental_results",
+    "generated_by": null,
+    "metadata": null
+  },
+  "fig:anthropomorphic": {
+    "filename": "anthropomorphic_framing.png",
+    "caption": "Anthropomorphic Framing Analysis",
+    "label": "fig:anthropomorphic",
+    "section": "discussion",
+    "generated_by": null,
     "metadata": null
   },
   "fig:unit_individuality_patterns": {
@@ -59,118 +179,6 @@
     "filename": "domain_comparison.png",
     "caption": "Longitudinal evolution of caste terminology usage patterns",
     "label": "fig:caste_evolution_extended",
-    "section": "supplemental_results",
-    "generated_by": "generate_domain_figures.py",
-    "metadata": null
-  },
-  "fig:unit_individuality_frequencies": {
-    "filename": "unit_of_individuality_term_frequencies.png",
-    "caption": "Term frequency distribution for Unit Of Individuality domain",
-    "label": "fig:unit_individuality_frequencies",
-    "section": "supplemental_results",
-    "generated_by": "generate_domain_figures.py",
-    "metadata": null
-  },
-  "fig:unit_individuality_ambiguities": {
-    "filename": "unit_of_individuality_ambiguities.png",
-    "caption": "Ambiguity patterns in Unit Of Individuality domain",
-    "label": "fig:unit_individuality_ambiguities",
-    "section": "supplemental_results",
-    "generated_by": "generate_domain_figures.py",
-    "metadata": null
-  },
-  "fig:behavior_identity_frequencies": {
-    "filename": "behavior_and_identity_term_frequencies.png",
-    "caption": "Term frequency distribution for Behavior And Identity domain",
-    "label": "fig:behavior_identity_frequencies",
-    "section": "supplemental_results",
-    "generated_by": "generate_domain_figures.py",
-    "metadata": null
-  },
-  "fig:behavior_identity_ambiguities": {
-    "filename": "behavior_and_identity_ambiguities.png",
-    "caption": "Ambiguity patterns in Behavior And Identity domain",
-    "label": "fig:behavior_identity_ambiguities",
-    "section": "supplemental_results",
-    "generated_by": "generate_domain_figures.py",
-    "metadata": null
-  },
-  "fig:power_labor_frequencies": {
-    "filename": "domain_comparison.png",
-    "caption": "Power and Labor domain term frequencies (cross-domain comparison view)",
-    "label": "fig:power_labor_frequencies",
-    "section": "supplemental_results",
-    "generated_by": "generate_domain_figures.py",
-    "metadata": null
-  },
-  "fig:power_labor_ambiguities": {
-    "filename": "domain_comparison.png",
-    "caption": "Power and Labor domain ambiguity analysis (cross-domain view)",
-    "label": "fig:power_labor_ambiguities",
-    "section": "supplemental_results",
-    "generated_by": "generate_domain_figures.py",
-    "metadata": null
-  },
-  "fig:sex_reproduction_frequencies": {
-    "filename": "sex_and_reproduction_term_frequencies.png",
-    "caption": "Term frequency distribution for Sex And Reproduction domain",
-    "label": "fig:sex_reproduction_frequencies",
-    "section": "supplemental_results",
-    "generated_by": "generate_domain_figures.py",
-    "metadata": null
-  },
-  "fig:sex_reproduction_ambiguities": {
-    "filename": "sex_and_reproduction_ambiguities.png",
-    "caption": "Ambiguity patterns in Sex And Reproduction domain",
-    "label": "fig:sex_reproduction_ambiguities",
-    "section": "supplemental_results",
-    "generated_by": "generate_domain_figures.py",
-    "metadata": null
-  },
-  "fig:kin_relatedness_frequencies": {
-    "filename": "kin_and_relatedness_term_frequencies.png",
-    "caption": "Term frequency distribution for Kin And Relatedness domain",
-    "label": "fig:kin_relatedness_frequencies",
-    "section": "supplemental_results",
-    "generated_by": "generate_domain_figures.py",
-    "metadata": null
-  },
-  "fig:kin_relatedness_ambiguities": {
-    "filename": "kin_and_relatedness_ambiguities.png",
-    "caption": "Ambiguity patterns in Kin And Relatedness domain",
-    "label": "fig:kin_relatedness_ambiguities",
-    "section": "supplemental_results",
-    "generated_by": "generate_domain_figures.py",
-    "metadata": null
-  },
-  "fig:example_figure": {
-    "filename": "example_figure.png",
-    "caption": "Example figure demonstrating the figure management system",
-    "label": "fig:example_figure",
-    "section": "examples",
-    "generated_by": "example_figure.py",
-    "metadata": null
-  },
-  "fig:convergence_plot": {
-    "filename": "convergence_plot.png",
-    "caption": "Convergence analysis showing algorithm performance",
-    "label": "fig:convergence_plot",
-    "section": "examples",
-    "generated_by": "generate_research_figures.py",
-    "metadata": null
-  },
-  "fig:economics_frequencies": {
-    "filename": "economics_term_frequencies.png",
-    "caption": "Term frequency distribution for Economics domain",
-    "label": "fig:economics_frequencies",
-    "section": "supplemental_results",
-    "generated_by": "generate_domain_figures.py",
-    "metadata": null
-  },
-  "fig:economics_ambiguities": {
-    "filename": "economics_ambiguities.png",
-    "caption": "Ambiguity patterns in Economics domain",
-    "label": "fig:economics_ambiguities",
     "section": "supplemental_results",
     "generated_by": "generate_domain_figures.py",
     "metadata": null

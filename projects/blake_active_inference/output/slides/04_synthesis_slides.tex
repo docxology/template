@@ -1,0 +1,195 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+\usepackage{caption}
+% Make caption package work with longtable
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}{Synthesis: Eight Themes of Vision}
+\protect\phantomsection\label{synthesis}
+Hold your hand in front of your face. The boundary between your skin and
+the surrounding air is your Markov blanket---the statistical interface
+through which all inference flows. Blake called this the ``door of
+perception.'' Two names for the same structure, separated by two
+centuries of intellectual history.
+
+In what follows, we trace eight such structural identities between
+Blake's prophetic vision and the Active Inference framework, each
+demonstrated through specific perceptual scenarios that ground abstract
+formalism in lived experience. Each theme begins with Blake's fire---his
+phenomenological observation, expressed in the language of prophecy and
+illuminated printing---and then traces its mathematical shadow in the
+equations, architectures, and dynamics of computational neuroscience.
+The correspondences are not approximate analogies but precise structural
+mappings: shared topology (the Markov blanket as Blake's door), shared
+dynamics (free energy minimization as the cleansing of perception),
+shared architecture (hierarchical generative models as fourfold vision),
+and shared pathology (prior dominance as Newton's sleep). Figure
+\ref{fig:atlas} provides an overview of these eight thematic
+correspondences arranged as a visual atlas.
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Thematic Atlas. Eight structural correspondences between Blake's prophetic vision (left column) and Active Inference formalism (right column), connected by bidirectional arcs indicating the nature of each mapping. Themes span boundary topology (Doors/Markov Blanket), processing hierarchy (Fourfold Vision/Hierarchical Models), cognitive rigidity (Newton's Sleep/Prior Dominance), agent identity (Imagination/Generative Model), temporal depth (Eternity in Hour/Temporal Horizons), spatial inference (World in Grain/Scale Invariance), optimization (Cleansing/Free Energy Minimization), and collective coordination with modular cognition (Jerusalem \& Zoas/Shared \& Factorized Models). Color-coding groups related themes; each correspondence is developed in a dedicated subsection below.}]{../figures/fig0_thematic_atlas.png}}
+\caption{\textbf{Thematic Atlas.} Eight structural correspondences
+between Blake's prophetic vision (left column) and Active Inference
+formalism (right column), connected by bidirectional arcs indicating the
+nature of each mapping. Themes span boundary topology (Doors/Markov
+Blanket), processing hierarchy (Fourfold Vision/Hierarchical Models),
+cognitive rigidity (Newton's Sleep/Prior Dominance), agent identity
+(Imagination/Generative Model), temporal depth (Eternity in
+Hour/Temporal Horizons), spatial inference (World in Grain/Scale
+Invariance), optimization (Cleansing/Free Energy Minimization), and
+collective coordination with modular cognition (Jerusalem \& Zoas/Shared
+\& Factorized Models). Color-coding groups related themes; each
+correspondence is developed in a dedicated subsection
+below.}\label{fig:atlas}
+\end{figure}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2121}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2121}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2727}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3030}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Theme
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Blake
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Friston
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Identity
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\href{04a_boundary.md}{Boundary} & Doors of Perception & Markov Blanket
+& Interface topology \\
+\href{04b_vision.md}{Vision} & Fourfold Vision & Hierarchical Model &
+Processing depth \\
+\href{04c_states.md}{States} & Newton's Sleep & Prior Dominance &
+Cognitive rigidity \\
+\href{04d_imagination.md}{Imagination} & Human Existence & Generative
+Model & Agent identity \\
+\href{04e_time.md}{Time} & Eternity in Hour & Temporal Horizons &
+Prediction depth \\
+\href{04f_space.md}{Space} & World in Grain & Spatial Hierarchy &
+Evidence integration \\
+\href{04g_action.md}{Action} & Cleansing & Free Energy Minimization &
+Optimization \\
+\href{04h_collectives.md}{Collectives} & Building Jerusalem / Four
+Mighty Ones & Shared \& Factorized Models & Multi-agent coordination \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{frame}
+
+\end{document}

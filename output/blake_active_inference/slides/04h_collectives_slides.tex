@@ -1,0 +1,757 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+\usepackage{caption}
+% Make caption package work with longtable
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}{Collectives: Shared Generative Models}
+\protect\phantomsection\label{collectives}
+\begin{quote}
+\emph{``I will not cease from Mental Fight,}\\
+\emph{Nor shall my Sword sleep in my hand:}\\
+\emph{Till we have built Jerusalem,}\\
+\emph{In England's green \& pleasant Land.''}
+
+--- \emph{Milton}, Preface {[}@blake1804milton{]}
+\end{quote}
+
+\begin{block}{Shared Generative Models}
+\protect\phantomsection\label{shared-generative-models}
+Blake's vision extends beyond individual perception to \emph{collective
+awakening}. Jerusalem is not merely personal enlightenment but a shared
+visionary capacity---a coordinated mode of seeing that transcends the
+individual.
+
+Active Inference extends naturally to multi-agent systems:
+
+\begin{quote}
+``Generalized synchronization {[}emerges{]} as a mathematical image of
+communication that enables two Bayesian brains to entrain each other
+and, effectively, share the same dynamical narrative.''
+
+--- {[}@friston2015duet{]}
+\end{quote}
+
+\begin{quote}
+``Human agents learn the shared habits, norms, and expectations of their
+culture through immersive participation in patterned cultural practices
+that selectively pattern attention and behaviour.''
+
+--- {[}@veissiere2020thinking{]}
+\end{quote}
+
+This is TTOM---Thinking Through Other Minds---the mechanism of
+collective awakening.
+
+\textbf{Multi-agent coordination:}
+
+\begin{equation}\label{eq:multi_agent}
+p(o, \theta) = \prod_{i=1}^{N} p(o_i | \theta_i) \cdot p(\theta_i | \theta_{\text{shared}}) \cdot p(\theta_{\text{shared}})
+\end{equation}
+
+Multiple agents share a common prior \(\theta_{\text{shared}}\)
+(Equation \ref{eq:multi_agent})---the cultural generative model that
+enables coordinated perception and action. Figure \ref{fig:jerusalem}
+illustrates this multi-agent architecture.
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Building Jerusalem: Collective Generative Models. Three individual agents, each bounded by its own Markov blanket, contribute to and draw from a shared generative model (``Jerusalem,'' \textbackslash theta\_\{\textbackslash text\{shared\}\}). The ``Mental Fight'' zone represents the active process of model-building and coordination through which individual inference aligns with collective priors (Equation ).}]{../figures/fig7_collective_jerusalem.png}}
+\caption{Building Jerusalem: Collective Generative Models. Three
+individual agents, each bounded by its own Markov blanket, contribute to
+and draw from a shared generative model (``Jerusalem,''
+\(\theta_{\text{shared}}\)). The ``Mental Fight'' zone represents the
+active process of model-building and coordination through which
+individual inference aligns with collective priors (Equation
+\ref{eq:multi_agent}).}\label{fig:jerusalem}
+\end{figure}
+
+Each individual agent remains bounded by its own Markov blanket
+(Equation \ref{eq:conditional_independence}), but the shared prior
+aligns their inference.
+
+Blake's most radical claim about the collective nature of identity
+appears in \emph{Milton}:
+
+\begin{quote}
+\emph{``We are not Individuals but States: Combinations of
+Individuals''}
+
+--- \emph{Milton}, Plate 32 {[}@blake1804milton{]}
+\end{quote}
+
+This is not merely the claim that agents share priors---it is the deeper
+assertion that \emph{individual identity itself} is a collective
+phenomenon. A ``Combination of Individuals'' is a factorization of
+agency: what appears to be a single self is in fact a composition of
+shared model components, cultural priors, and socially entrained
+precision weightings. The shared prior \(\theta_{\text{shared}}\) in
+Equation \ref{eq:multi_agent} is not external to individuals but
+\emph{constitutive} of them---the individual \(\theta_i\) cannot be
+separated from the collective without remainder. Blake's ``States'' are
+thus collective attractors in the multi-agent generative model:
+configurations that groups of agents fall into together, and that
+``Change'' (dissolve, reconfigure) when the collective model is revised.
+``Satan \& Adam are States Created into Twenty-seven Churches''---not
+individuals who happened to organize churches, but \emph{model
+configurations that manifest as institutional structures}.
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+Component & Symbol & Blake's Image \\
+\midrule\noalign{}
+\endhead
+Individual models & \(\theta_i\) & Each perceiver \\
+Shared prior & \(\theta_{\text{shared}}\) & Jerusalem \\
+Collective action & \(a_{\text{collective}}\) & ``Mental Fight'' \\
+Coordinated perception & \(o_{\text{aligned}}\) & Shared vision \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+
+\begin{block}{The Mental Fight}
+\protect\phantomsection\label{the-mental-fight}
+Blake's ``Mental Fight'' is model-building at civilizational scale:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Education} shapes the generative models of the young
+\item
+  \textbf{Art} restructures perception through alternative priors
+\item
+  \textbf{Contemplative practice} adjusts precision weighting
+\item
+  \textbf{Cultural production} creates shared predictive structures
+\end{itemize}
+
+\begin{quote}
+\emph{``The Nature of my Work is Visionary or Imaginative; it is an
+Endeavour to Restore what the Ancients called the Golden Age.''}
+
+--- \emph{Vision of the Last Judgment} {[}@blake1810judgment{]}
+\end{quote}
+
+The Golden Age is not historical but \emph{perceptual}---a state where
+collective generative models enable richer inference.
+\end{block}
+
+\begin{block}{Coordinated Inference}
+\protect\phantomsection\label{coordinated-inference}
+Active Inference extends naturally to multi-agent systems
+{[}@friston2019markov{]}. Ramstead, Badcock, and Friston formalize this
+extension through nested Markov blankets: blankets within blankets,
+individuals within communities within cultures, each scale operating as
+an autonomous inference system while coupling to the scales above and
+below {[}@ramstead2018answering{]}. When agents share priors, they:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Align predictions} --- Expectations converge across the
+  collective
+\item
+  \textbf{Coordinate action} --- Behavior becomes mutually
+  intelligible\\
+\item
+  \textbf{Distribute computation} --- Complex inference divides across
+  agents
+\item
+  \textbf{Accumulate evidence} --- Collective learning exceeds
+  individual capacity
+\end{enumerate}
+
+Blake's Jerusalem is precisely this: a shared generative model enabling
+coordinated cleansing of perception. The doors open not one by one, but
+together.
+
+\begin{quote}
+\emph{``Mutual Forgiveness of each Vice---Such are the Gates of
+Paradise.''}
+
+--- \emph{For the Sexes: The Gates of Paradise} {[}@blake1988complete{]}
+\end{quote}
+
+Paradise requires \emph{mutual} forgiveness---collective precision
+adjustment where agents release rigid priors toward one another. The
+gates open through shared model revision.
+
+Blake's collective vision finds its fullest expression in
+\emph{Jerusalem}:
+
+\begin{quote}
+\emph{``This is Jerusalem in every Man\emph{ }A Tent \& Tabernacle of
+Mutual Forgiveness.''}
+
+--- \emph{Jerusalem}, Plate 54 {[}@blake1804jerusalem{]}
+\end{quote}
+
+\begin{quote}
+\emph{``O lovely Emanation of Albion Awake and overspread all Nations as
+in Ancient Time\emph{ }For lo! the Night of Death is past and the
+Eternal Day\emph{ }Appears upon our Hills.''}
+
+--- \emph{Jerusalem}, Plate 97 {[}@blake1804jerusalem{]}
+\end{quote}
+
+The awakening is collective---Albion (England/humanity) awakens as a
+unified agent.
+\end{block}
+
+\begin{block}{From Single to Collective Vision}
+\protect\phantomsection\label{from-single-to-collective-vision}
+The fourfold hierarchy applies not only to individuals but to societies:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+Level & Individual & Collective \\
+\midrule\noalign{}
+\endhead
+\textbf{Single} & Mechanical perception & Industrial society \\
+\textbf{Twofold} & Emotional engagement & Artistic communities \\
+\textbf{Threefold} & Imaginative vision & Cultural movements \\
+\textbf{Fourfold} & Integrated awareness & Jerusalem \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+Blake's critique of ``dark Satanic Mills'' is computational: industrial
+modernity imposes shallow, prior-dominated generative models on the
+collective. Building Jerusalem means reconstructing shared priors to
+enable deeper inference.
+
+\begin{quote}
+\emph{``England! awake! awake! awake!}\\
+\emph{Jerusalem thy Sister calls!{\kern0pt}``}
+
+--- \emph{Jerusalem}, Plate 77 {[}@blake1804jerusalem{]}
+\end{quote}
+
+The awakening is collective. The sister calls to the nation. The doors
+of perception---once cleansed---reveal not isolated infinity but
+\emph{shared} infinity. The prophet's vision becomes the people's sight.
+\end{block}
+
+\begin{block}{Fall into Division and Resurrection to Unity}
+\protect\phantomsection\label{fall-into-division-and-resurrection-to-unity}
+Blake frames the cosmic narrative as multi-agent decomposition and
+re-coordination:
+
+\begin{quote}
+\emph{``Sing His fall into Division \& his Resurrection to Unity''}
+
+--- \emph{Vala, or The Four Zoas}, Night the First
+{[}@blake1797fourzoas{]}
+\end{quote}
+
+``Division'' = factorization into separate agents, each with its own
+Markov blanket and generative model. ``Unity'' = re-coordination into a
+shared generative model (Jerusalem). The Fall is not moral failure but
+\emph{factorization}---the breaking apart of an integrated system into
+competing subsystems.
+
+Resurrection is the inverse: the re-establishment of shared priors that
+enable coordinated inference across agents.
+\end{block}
+
+\begin{block}{The Eternal Man Is Risen}
+\protect\phantomsection\label{the-eternal-man-is-risen}
+The achievement of collective coordination:
+
+\begin{quote}
+\emph{``Rise from the dews of death for the Eternal Man is Risen''}
+
+--- \emph{Vala, or The Four Zoas}, Night the Ninth
+{[}@blake1797fourzoas{]}
+\end{quote}
+
+``Eternal Man'' (Albion) = the multi-agent system as unified entity.
+When the Four Zoas are re-integrated, Albion rises---not as the sum of
+parts but as the emergent coordination that parts enable.
+\end{block}
+
+\begin{block}{Human Harvest}
+\protect\phantomsection\label{human-harvest}
+Collective free energy minimization under stress:
+
+\begin{quote}
+\emph{``In pain the human harvest wavd in horrible groans of woe''}
+
+--- \emph{Vala, or The Four Zoas} {[}@blake1797fourzoas{]}
+\end{quote}
+
+``Harvest'' = coordinated action across agents. ``Pain'' = high free
+energy state. The collective strives toward lower free energy, but the
+process is not painless---coordination requires the adjustment of
+individual models to shared constraints.
+\end{block}
+
+\begin{block}{The Four Zoas: Factorized Collective Mind}
+\protect\phantomsection\label{zoas}
+Blake's most systematic account of multi-agent cognition appears in his
+unfinished epic \emph{Vala, or The Four Zoas}. The Four Zoas---Urizen,
+Urthona (fallen as Los), Luvah (fallen as Orc), and Tharmas---represent
+not merely allegorical faculties but a \emph{factorized generative
+model} where independent components must coordinate to achieve unified
+inference.
+
+\begin{quote}
+\emph{``Four Mighty Ones are in every Man; a Perfect Unity / Cannot
+Exist but from the Universal Brotherhood of Eden''}
+
+--- \emph{Vala, or The Four Zoas}, Night the First
+{[}@blake1797fourzoas{]}
+\end{quote}
+
+In Active Inference terms, factorization enables tractable computation:
+
+\textbf{Factorized model:}
+
+\begin{equation}\label{eq:factorized_model}
+p(o, \theta) = p(o | \theta_U, \theta_L, \theta_{Lv}, \theta_T) \cdot p(\theta_U) \cdot p(\theta_L) \cdot p(\theta_{Lv}) \cdot p(\theta_T)
+\end{equation}
+
+where subscripts denote the four Zoas' contributions to the joint model.
+This extends the general hierarchical factorization (Equation
+\ref{eq:hierarchical_model}) into a multi-component architecture. Figure
+\ref{fig:zoas} illustrates the compass-rose arrangement of the four
+Zoas.
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={The Four Zoas: A Factorized Model of Mind. The four Zoas occupy cardinal positions---Urizen (South, reason/likelihood), Urthona/Los (North, imagination/prior), Luvah/Orc (East, passion/precision), and Tharmas (West, body/interoception)---around a central hub of unified inference. Coordination arcs connect adjacent Zoas; failure modes (prior dominance, model collapse, affective flooding, dissociation) appear when any single component tyrannizes. ``Perfect Unity'' requires the ``Universal Brotherhood'' of all four modes (Equation ).}]{../figures/fig5_four_zoas.png}}
+\caption{The Four Zoas: A Factorized Model of Mind. The four Zoas occupy
+cardinal positions---Urizen (South, reason/likelihood), Urthona/Los
+(North, imagination/prior), Luvah/Orc (East, passion/precision), and
+Tharmas (West, body/interoception)---around a central hub of unified
+inference. Coordination arcs connect adjacent Zoas; failure modes (prior
+dominance, model collapse, affective flooding, dissociation) appear when
+any single component tyrannizes. ``Perfect Unity'' requires the
+``Universal Brotherhood'' of all four modes (Equation
+\ref{eq:factorized_model}).}\label{fig:zoas}
+\end{figure}
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={William Blake, Milton a Poem, Plate 32 (c.~1804--1811). The four Zoas in their cosmic arrangement---the mythological source for the factorized model above. Blake depicts the fourfold division and interdependence of the faculties through characteristic visual symbolism. Relief etching with hand coloring. Courtesy of the William Blake Archive {[}@blake1804milton{]}.}]{../output/figures/the_four_zoas_egg_color.jpg}}
+\caption{William Blake, \emph{Milton a Poem}, Plate 32 (c.~1804--1811).
+The four Zoas in their cosmic arrangement---the mythological source for
+the factorized model above. Blake depicts the fourfold division and
+interdependence of the faculties through characteristic visual
+symbolism. Relief etching with hand coloring. Courtesy of the William
+Blake Archive {[}@blake1804milton{]}.}\label{fig:zoas_plate}
+\end{figure}
+
+\begin{block}{The Four Components}
+\protect\phantomsection\label{the-four-components}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.0962}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2115}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1538}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2692}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2692}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Zoa
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Direction
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Domain
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+AIF Function
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Failure Mode
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\textbf{Urizen} & South & Reason, Law & Likelihood \(p(o\|\theta)\) &
+Prior dominance (Newton's sleep) \\
+\textbf{Urthona/Los} & North & Imagination, Prophecy & Prior structure
+\(p(\theta)\) & Model collapse (despair) \\
+\textbf{Luvah/Orc} & East & Passion, Emotion & Precision \(\pi\) &
+Affective flooding (chaos) \\
+\textbf{Tharmas} & West & Body, Instinct & Interoception & Dissociation
+(abstraction) \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+
+\begin{block}{Urizen: The Likelihood Function}
+\protect\phantomsection\label{urizen-the-likelihood-function}
+\begin{quote}
+\emph{``And his Soul sicken'd! he curs'd / Both sons \& daughters; for
+he saw / That no flesh nor spirit could keep / His iron laws one
+moment.''}
+
+--- \emph{The Book of Urizen}, Plate 23 {[}@blake1794urizen{]}
+\end{quote}
+
+Urizen represents the rational processing of evidence---the likelihood
+function that evaluates how well observations fit hypotheses. His ``iron
+laws'' are the regularities that structure prediction. But when Urizen
+dominates, the system becomes rigid: prior-locked, unable to revise.
+
+Urizen's failure is \emph{over-precision of priors}:
+\(\pi_{\text{prior}} \to \infty\). The laws become tyrannical because
+they cannot update.
+\end{block}
+
+\begin{block}{Urthona/Los: Prior Structure}
+\protect\phantomsection\label{urthonalos-prior-structure}
+\begin{quote}
+\emph{``Los built the Walls of Golgonooza against the stirring battle''}
+
+--- \emph{Jerusalem}, Plate 12 {[}@blake1804jerusalem{]}
+\end{quote}
+
+Urthona (unfallen) / Los (fallen) represents the creative
+imagination---the prior structure that makes inference possible. Los
+``builds'' Golgonooza, the city of art, which IS the generative model's
+architecture.
+
+Without Urthona/Los, there is no hypothesis space. The prior structure
+defines what can be believed, what states are even conceivable. Los's
+labor at the furnaces is the continuous work of model construction.
+
+Los's failure is \emph{model collapse}: when imagination fails, the
+prior structure dissolves, leaving no framework for inference. This is
+despair---the inability to conceive alternatives.
+\end{block}
+
+\begin{block}{Luvah/Orc: Precision Weighting}
+\protect\phantomsection\label{luvahorc-precision-weighting}
+\begin{quote}
+\emph{``Luvah is France, the Victim of the Spectres of Albion''}
+
+--- \emph{Jerusalem}, Plate 66 {[}@blake1804jerusalem{]}
+\end{quote}
+
+Luvah (unfallen) / Orc (fallen) represents passion, emotion,
+desire---the precision weighting that determines what matters, what
+receives attention. Luvah controls the ``chariots of the morning''---the
+affective salience that drives engagement.
+
+Precision weighting is not merely attention but \emph{care}: what the
+system treats as important, what prediction errors warrant response.
+
+Luvah's failure is \emph{affective flooding}: when emotion dominates,
+precision weights become extreme, the system oscillates chaotically,
+unable to maintain stable inference. Orc's revolutionary fire burns
+without discrimination.
+\end{block}
+
+\begin{block}{Tharmas: Interoceptive Inference}
+\protect\phantomsection\label{tharmas-interoceptive-inference}
+Blake's symbolic system assigns each Zoa to a distinct domain: Tharmas
+governs the vegetal (bodily/sensory) world, Luvah the world of
+sensations and emotion, Urizen the world of reason, and Urthona the
+world of imagination. These correspondences pervade \emph{The Four Zoas}
+though Blake expresses them through narrative action rather than
+explicit formula.
+
+Tharmas represents embodiment---the ``vegetal'' instinctual life,
+interoceptive inference about the body's state. Blake dramatizes
+Tharmas's devastation when separated from the other Zoas:
+
+\begin{quote}
+\emph{``Tharmas groand among his Clouds / Weeping, then silent
+thundering he burst the bounds of Destiny / And shook the heavens with
+wrath''}
+
+--- \emph{Vala, or The Four Zoas}, Night the Third
+{[}@blake1797fourzoas{]}
+\end{quote}
+
+Tharmas is often described as the most damaged of the Zoas, reduced to
+helpless weeping in the sea of time and space---the body in distress
+when severed from imagination, reason, and affect.
+
+Seth's interoceptive inference framework formalizes this Blakean
+insight: the self is constituted not merely by exteroceptive prediction
+but by the body's ongoing inference about its own visceral states
+{[}@seth2013interoceptive{]}. Tharmas IS interoceptive inference---the
+felt sense of aliveness that grounds all other cognitive modes in
+biological reality. Without Tharmas, the model floats free of
+embodiment---pure abstraction without survival relevance.
+
+Tharmas's failure is \emph{dissociation}: when embodiment is severed,
+inference loses its anchor in biological viability. The system can
+reason but cannot feel, can think but cannot care.
+\end{block}
+
+\begin{block}{Coordination and Pathology}
+\protect\phantomsection\label{coordination-and-pathology}
+The Four Zoas must coordinate for healthy inference:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Urizen + Los}: Reason and imagination must balance---priors
+  that can update, regularities that can revise
+\item
+  \textbf{Luvah + Tharmas}: Emotion and embodiment must align---what
+  matters must connect to survival
+\item
+  \textbf{All Four}: The complete agent requires all four modes
+  operating in ``Universal Brotherhood''
+\end{itemize}
+
+Pathology arises from \emph{imbalance}:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+Dominant Zoa & Condition & Clinical Parallel \\
+\midrule\noalign{}
+\endhead
+Urizen alone & Rigid rationalism & Obsessive-compulsive patterns \\
+Luvah alone & Affective chaos & Borderline dysregulation \\
+Los alone & Dissociated fantasy & Schizotypal withdrawal \\
+Tharmas alone & Instinctual flooding & Panic, somatic fixation \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+
+\begin{block}{The Unfallen State}
+\protect\phantomsection\label{the-unfallen-state}
+\begin{quote}
+\emph{``they gave to it a Space \& namd the Space Ulro''}
+
+--- \emph{Vala, or The Four Zoas}, Night the First
+{[}@blake1797fourzoas, E303{]}
+\end{quote}
+
+Before the Fall, the Zoas did not have separate spaces---they
+coordinated seamlessly within a unified model. The Fall is precisely the
+factorization into competing subsystems, each claiming territory.
+
+Redemption is re-coordination: not the dominance of one Zoa but the
+restoration of ``Universal Brotherhood''---a shared generative model
+where each component contributes its proper inference without
+tyrannizing the others.
+\end{block}
+
+\begin{block}{Implications for Active Inference}
+\protect\phantomsection\label{implications-for-active-inference}
+Blake's Four Zoas anticipate the insight that complex inference requires
+factorization, but factorization introduces coordination problems. The
+multi-agent mind must:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Maintain distinct components} --- Each Zoa has its proper
+  function
+\item
+  \textbf{Coordinate across components} --- Shared priors enable unified
+  behavior
+\item
+  \textbf{Prevent dominance} --- No single factor should monopolize
+  inference
+\item
+  \textbf{Ground in embodiment} --- Tharmas anchors the system in
+  biological reality
+\end{enumerate}
+
+The Zoas are not personality types but \emph{inference
+modes}---different aspects of the generative model that must harmonize
+for cleansed perception.
+\end{block}
+
+\begin{block}{The Mean-Field Approximation}
+\protect\phantomsection\label{the-mean-field-approximation}
+Blake's factorization prefigures the \textbf{mean-field approximation}
+in variational inference. When exact inference is intractable, we
+approximate the true posterior by assuming independence between factors:
+
+\textbf{Mean-field factorization:}
+
+\begin{equation}\label{eq:mean_field}
+q(\theta) \approx q(\theta_U) \cdot q(\theta_L) \cdot q(\theta_{Lv}) \cdot q(\theta_T)
+\end{equation}
+
+This factorization enables tractable computation but introduces
+\textbf{coordination costs}---precisely Blake's diagnosis that the Zoas'
+separation produces suffering. The ``torments'' arise because mean-field
+assumes independence where correlation should exist. Full variational
+inference would preserve correlations; the factorized approximation
+trades accuracy for tractability.
+
+Blake's vision of ``Eternal Brotherhood'' corresponds to structured
+variational families that preserve key correlations while remaining
+tractable. The goal is not to eliminate factorization but to coordinate
+the factors---each Zoa maintaining its function while communicating with
+the others.
+
+\begin{quote}
+\emph{``And they conversed together in Visionary forms dramatic which
+bright / Redounded from their Tongues in thunderous majesty, in Visions
+/ In new Expanses''}
+
+--- \emph{Jerusalem}, Plate 98 {[}@blake1804jerusalem{]}
+\end{quote}
+
+When the Zoas converse---when the model's components communicate---new
+expanses open. This is the fourfold vision realized: not single-track
+inference but multi-modal coordination, each perspective enriching the
+others.
+
+\begin{quote}
+\textbf{Demonstration: The Stadium Wave}
+
+Sixty thousand spectators rise and sit in sequence, producing a
+traveling wave that circles the stadium in seconds. No one coordinates
+the wave; no conductor signals the timing. Each individual infers from
+their neighbors' actions when to rise---a local prediction, locally
+tested, locally corrected. Yet the global pattern emerges: a coherent
+wave far larger than any individual's perceptual horizon. This is
+Blake's ``Jerusalem'' in miniature: a collective structure that
+transcends individual agency while depending entirely upon it. The
+shared generative model is not held in any single mind but distributed
+across the blanket boundaries of thousands of coupled agents, each
+minimizing their own surprise by predicting their neighbors and acting
+accordingly. When the wave coheres, it feels like something
+\emph{beyond} the individuals---an emergent collective agency that Blake
+would recognize as the Eternal Man arising.
+\end{quote}
+\end{block}
+\end{block}
+
+\begin{block}{Jerusalem as Cultural Niche}
+\protect\phantomsection\label{jerusalem-as-cultural-niche}
+Veissière and colleagues' framework of ``Thinking Through Other Minds''
+{[}@veissiere2020thinking{]} illuminates a final dimension of Blake's
+Jerusalem: the city is not merely a shared generative model but a
+\emph{cultural niche}---an environment of shared priors, affordances,
+and epistemic resources constructed and maintained through collective
+inference. Culture, in this view, is not a static repository of
+information passed down through generations but a living system of
+shared expectations, jointly calibrated through what Active Inference
+calls epistemic foraging and what Blake calls ``Mental Fight.'' The
+laborers of Golgonooza are not merely building a model; they are
+constructing the \emph{conditions} under which future inference can
+occur---the affordance landscape that will shape subsequent generations'
+priors. Jerusalem, once built, becomes the niche within which new minds
+are enculturated, new Zoas coordinated, new visions made possible. The
+social construction of reality is, in the deepest sense, the
+collaborative construction of a shared generative model---and Blake's
+prophetic vision of this process anticipates by two centuries the formal
+framework that now makes it computationally precise.
+\end{block}
+\end{frame}
+
+\end{document}

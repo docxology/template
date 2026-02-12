@@ -9,35 +9,35 @@ The `docs/operational/` directory contains operational procedures, configuration
 ```
 docs/operational/
 ├── AGENTS.md                       # This technical documentation
-├── BUILD_SYSTEM.md                 # Build pipeline and execution details
-├── CHECKPOINT_RESUME.md            # Checkpoint and resume functionality
-├── CI_CD_INTEGRATION.md            # Continuous integration setup
-├── CONFIGURATION.md                # Configuration system guide
-├── DEPENDENCY_MANAGEMENT.md        # Dependency management procedures
-├── ERROR_HANDLING_GUIDE.md         # Error handling and debugging
-├── LLM_REVIEW_TROUBLESHOOTING.md   # LLM review system troubleshooting
-├── LOGGING_GUIDE.md                # Logging system usage and configuration
-├── PERFORMANCE_OPTIMIZATION.md     # Performance tuning and optimization
+├── build-system.md                 # Build pipeline and execution details
+├── checkpoint-resume.md            # Checkpoint and resume functionality
+├── ci-cd-integration.md            # Continuous integration setup
+├── configuration.md                # Configuration system guide
+├── dependency-management.md        # Dependency management procedures
+├── error-handling-guide.md         # Error handling and debugging
+├── llm-review-troubleshooting.md   # LLM review system troubleshooting
+├── logging-guide.md                # Logging system usage and configuration
+├── performance-optimization.md     # Performance tuning and optimization
 ├── README.md                       # Quick reference for operational docs
-├── REPORTING_GUIDE.md              # Reporting system guide
-├── TROUBLESHOOTING_GUIDE.md        # troubleshooting guide
+├── reporting-guide.md              # Reporting system guide
+├── troubleshooting-guide.md        # troubleshooting guide
 ├── logging/                        # Detailed logging guides
 │   ├── README.md
-│   ├── BASH_LOGGING.md
-│   ├── PYTHON_LOGGING.md
-│   └── LOGGING_PATTERNS.md
+│   ├── bash-logging.md
+│   ├── python-logging.md
+│   └── logging-patterns.md
 └── troubleshooting/                # Topic-specific troubleshooting
     ├── README.md
-    ├── BUILD_TOOLS.md
-    ├── COMMON_ERRORS.md
-    ├── ENVIRONMENT_SETUP.md
-    ├── RECOVERY_PROCEDURES.md
-    └── TEST_FAILURES.md
+    ├── build-tools.md
+    ├── common-errors.md
+    ├── environment-setup.md
+    ├── recovery-procedures.md
+    └── test-failures.md
 ```
 
 ## Key Documentation Files
 
-### Build System (`BUILD_SYSTEM.md`)
+### Build System (`build-system.md`)
 
 **build pipeline documentation:**
 
@@ -57,7 +57,7 @@ docs/operational/
 - Resume from checkpoint
 - Clean rebuild options
 
-### Configuration System (`CONFIGURATION.md`)
+### Configuration System (`configuration.md`)
 
 **Configuration management and customization:**
 
@@ -74,7 +74,7 @@ docs/operational/
 - External service credentials (API tokens, endpoints)
 - System preferences (logging levels, performance settings)
 
-### Troubleshooting Guide (`TROUBLESHOOTING_GUIDE.md`)
+### Troubleshooting Guide (`troubleshooting-guide.md`)
 
 **problem-solving guide:**
 
@@ -92,7 +92,7 @@ docs/operational/
 - Error message interpretation
 - Recovery and workaround procedures
 
-### Performance Optimization (`PERFORMANCE_OPTIMIZATION.md`)
+### Performance Optimization (`performance-optimization.md`)
 
 **System performance tuning and optimization:**
 
@@ -342,7 +342,7 @@ tar -czf "data-$(date +%Y%m%d).tar.gz" \
     --exclude=".pytest_cache" \
     project/manuscript/ \
     project/src/ \
-    proje../../tests/ \
+    projects/{name}/tests/ \
     project/scripts/
 ```
 
@@ -690,13 +690,13 @@ class OperationalDashboard:
 
 **Operational Documentation:**
 
-- [`BUILD_SYSTEM.md`](BUILD_SYSTEM.md) - Build pipeline details
-- [`TROUBLESHOOTING_GUIDE.md`](TROUBLESHOOTING_GUIDE.md) - Problem-solving guide
-- [`PERFORMANCE_OPTIMIZATION.md`](PERFORMANCE_OPTIMIZATION.md) - Performance tuning
-- [`CONFIGURATION.md`](CONFIGURATION.md) - Configuration management
+- [`build-system.md`](build-system.md) - Build pipeline details
+- [`troubleshooting-guide.md`](troubleshooting-guide.md) - Problem-solving guide
+- [`performance-optimization.md`](performance-optimization.md) - Performance tuning
+- [`configuration.md`](configuration.md) - Configuration management
 
 **System Documentation:**
 
 - [`../AGENTS.md`](../AGENTS.md) - system overview
-- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - Documentation index
+- [`../documentation-index.md`](../documentation-index.md) - Documentation index
 - [`../../AGENTS.md`](../../AGENTS.md) - Root system documentation

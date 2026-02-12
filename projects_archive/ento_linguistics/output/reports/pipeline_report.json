@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-01-24T13:59:19.899028",
-  "total_duration": 80.20137214660645,
+  "timestamp": "2026-02-11T10:24:56.809934",
+  "total_duration": 294.3444218635559,
   "stages": [
     {
       "name": "Clean Output Directories",
       "exit_code": 0,
-      "duration": 0.03400301933288574,
+      "duration": 0.036441802978515625,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -14,7 +14,7 @@
     {
       "name": "Environment Setup",
       "exit_code": 0,
-      "duration": 0.7251720428466797,
+      "duration": 0.8624491691589355,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -23,7 +23,7 @@
     {
       "name": "Project Tests",
       "exit_code": 0,
-      "duration": 50.55417609214783,
+      "duration": 136.76834082603455,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -31,9 +31,36 @@
     },
     {
       "name": "Project Analysis",
-      "exit_code": 1,
-      "duration": 28.888020992279053,
-      "status": "failed",
+      "exit_code": 0,
+      "duration": 85.17719912528992,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "PDF Rendering",
+      "exit_code": 0,
+      "duration": 70.57246112823486,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Output Validation",
+      "exit_code": 0,
+      "duration": 0.4377729892730713,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Copy Outputs",
+      "exit_code": 0,
+      "duration": 0.48975682258605957,
+      "status": "passed",
       "output_files": [],
       "errors": [],
       "warnings": []
@@ -47,125 +74,187 @@
     "directories": {
       "pdf": {
         "exists": true,
-        "file_count": 0,
-        "size_mb": "0.00",
-        "total_size_bytes": 0,
-        "largest_files": [],
-        "extensions": {}
-      },
-      "web": {
-        "exists": true,
-        "file_count": 0,
-        "size_mb": "0.00",
-        "total_size_bytes": 0,
-        "largest_files": [],
-        "extensions": {}
-      },
-      "slides": {
-        "exists": true,
-        "file_count": 0,
-        "size_mb": "0.00",
-        "total_size_bytes": 0,
-        "largest_files": [],
-        "extensions": {}
-      },
-      "figures": {
-        "exists": true,
-        "file_count": 15,
-        "size_mb": "2.63",
-        "total_size_bytes": 2757873,
+        "file_count": 8,
+        "size_mb": "3.41",
+        "total_size_bytes": 3570660,
         "largest_files": [
           {
-            "name": "domain_comparison.png",
-            "size_mb": "0.41",
-            "path": "figures/domain_comparison.png"
+            "name": "ento_linguistics_combined.pdf",
+            "size_mb": "2.96",
+            "path": "pdf/ento_linguistics_combined.pdf"
           },
           {
-            "name": "step_size_analysis.png",
-            "size_mb": "0.35",
-            "path": "figures/step_size_analysis.png"
+            "name": "_combined_manuscript.log",
+            "size_mb": "0.14",
+            "path": "pdf/_combined_manuscript.log"
           },
           {
-            "name": "terminology_network.png",
-            "size_mb": "0.31",
-            "path": "figures/terminology_network.png"
+            "name": "_combined_manuscript.tex",
+            "size_mb": "0.12",
+            "path": "pdf/_combined_manuscript.tex"
           }
         ],
         "extensions": {
-          ".png": 14,
+          ".md": 1,
+          ".log": 1,
+          ".aux": 1,
+          ".blg": 1,
+          ".bib": 1,
+          ".pdf": 1,
+          ".tex": 1,
+          ".bbl": 1
+        }
+      },
+      "web": {
+        "exists": true,
+        "file_count": 16,
+        "size_mb": "0.39",
+        "total_size_bytes": 411302,
+        "largest_files": [
+          {
+            "name": "index.html",
+            "size_mb": "0.14",
+            "path": "web/index.html"
+          },
+          {
+            "name": "_combined_manuscript.md",
+            "size_mb": "0.10",
+            "path": "web/_combined_manuscript.md"
+          },
+          {
+            "name": "S01_supplemental_methods.html",
+            "size_mb": "0.03",
+            "path": "web/S01_supplemental_methods.html"
+          }
+        ],
+        "extensions": {
+          ".md": 1,
+          ".html": 15
+        }
+      },
+      "slides": {
+        "exists": true,
+        "file_count": 101,
+        "size_mb": "4.16",
+        "total_size_bytes": 4362471,
+        "largest_files": [
+          {
+            "name": "S02_supplemental_results_slides.pdf",
+            "size_mb": "1.70",
+            "path": "slides/S02_supplemental_results_slides.pdf"
+          },
+          {
+            "name": "04_experimental_results_slides.pdf",
+            "size_mb": "0.90",
+            "path": "slides/04_experimental_results_slides.pdf"
+          },
+          {
+            "name": "02_introduction_slides.pdf",
+            "size_mb": "0.23",
+            "path": "slides/02_introduction_slides.pdf"
+          }
+        ],
+        "extensions": {
+          ".nav": 14,
+          ".pdf": 14,
+          ".toc": 14,
+          ".tex": 14,
+          ".log": 14,
+          ".aux": 14,
+          ".snm": 14,
+          ".vrb": 3
+        }
+      },
+      "figures": {
+        "exists": true,
+        "file_count": 28,
+        "size_mb": "3.44",
+        "total_size_bytes": 3606452,
+        "largest_files": [
+          {
+            "name": "domain_comparison.png",
+            "size_mb": "0.47",
+            "path": "figures/domain_comparison.png"
+          },
+          {
+            "name": "anthropomorphic_framing.png",
+            "size_mb": "0.25",
+            "path": "figures/anthropomorphic_framing.png"
+          },
+          {
+            "name": "unit_of_individuality_network.png",
+            "size_mb": "0.22",
+            "path": "figures/unit_of_individuality_network.png"
+          }
+        ],
+        "extensions": {
+          ".png": 27,
           ".json": 1
         }
       },
       "data": {
         "exists": true,
-        "file_count": 12,
+        "file_count": 13,
         "size_mb": "0.58",
-        "total_size_bytes": 607379,
+        "total_size_bytes": 604141,
         "largest_files": [
           {
             "name": "literature_corpus.json",
-            "size_mb": "0.45",
+            "size_mb": "0.43",
             "path": "data/literature_corpus.json"
           },
           {
             "name": "terminology.json",
-            "size_mb": "0.05",
+            "size_mb": "0.06",
             "path": "data/terminology.json"
           },
           {
-            "name": "discourse_analysis.json",
-            "size_mb": "0.04",
-            "path": "data/discourse_analysis.json"
+            "name": "terminology.csv",
+            "size_mb": "0.03",
+            "path": "data/terminology.csv"
           }
         ],
         "extensions": {
-          ".json": 6,
-          ".npz": 2,
-          ".csv": 4
+          ".json": 10,
+          ".npz": 1,
+          ".csv": 2
         }
       },
       "reports": {
         "exists": true,
-        "file_count": 7,
-        "size_mb": "0.02",
-        "total_size_bytes": 18595,
+        "file_count": 18,
+        "size_mb": "0.06",
+        "total_size_bytes": 65457,
         "largest_files": [
           {
-            "name": "literature_analysis_report.md",
-            "size_mb": "0.00",
-            "path": "reports/literature_analysis_report.md"
+            "name": "output_statistics.json",
+            "size_mb": "0.01",
+            "path": "reports/output_statistics.json"
           },
           {
-            "name": "domain_analysis_report.md",
-            "size_mb": "0.00",
-            "path": "reports/domain_analysis_report.md"
+            "name": "kin_and_relatedness_analysis_report.md",
+            "size_mb": "0.01",
+            "path": "reports/kin_and_relatedness_analysis_report.md"
           },
           {
-            "name": "conceptual_mapping_report.md",
-            "size_mb": "0.00",
-            "path": "reports/conceptual_mapping_report.md"
+            "name": "economics_analysis_report.md",
+            "size_mb": "0.01",
+            "path": "reports/economics_analysis_report.md"
           }
         ],
         "extensions": {
-          ".md": 5,
-          ".json": 2
+          ".json": 4,
+          ".md": 13,
+          ".txt": 1
         }
       },
       "simulations": {
         "exists": true,
-        "file_count": 1,
+        "file_count": 0,
         "size_mb": "0.00",
-        "total_size_bytes": 264,
-        "largest_files": [
-          {
-            "name": "checkpoint_000000.json",
-            "size_mb": "0.00",
-            "path": "simulations/checkpoint_000000.json"
-          }
-        ],
-        "extensions": {
-          ".json": 1
-        }
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
       },
       "llm": {
         "exists": true,
@@ -178,12 +267,12 @@
       "logs": {
         "exists": true,
         "file_count": 1,
-        "size_mb": "0.00",
-        "total_size_bytes": 4858,
+        "size_mb": "0.01",
+        "total_size_bytes": 8771,
         "largest_files": [
           {
             "name": "pipeline.log",
-            "size_mb": "0.00",
+            "size_mb": "0.01",
             "path": "logs/pipeline.log"
           }
         ],
@@ -192,94 +281,106 @@
         }
       }
     },
-    "total_files": 36,
-    "total_size_mb": 3.2319726943969727,
+    "total_files": 185,
+    "total_size_mb": 12.044195175170898,
     "largest_files": [
       {
-        "name": "literature_corpus.json",
-        "size_mb": "0.45",
-        "category": "data",
-        "path": "data/literature_corpus.json"
+        "name": "ento_linguistics_combined.pdf",
+        "size_mb": "2.96",
+        "category": "pdf",
+        "path": "pdf/ento_linguistics_combined.pdf"
+      },
+      {
+        "name": "S02_supplemental_results_slides.pdf",
+        "size_mb": "1.70",
+        "category": "slides",
+        "path": "slides/S02_supplemental_results_slides.pdf"
+      },
+      {
+        "name": "04_experimental_results_slides.pdf",
+        "size_mb": "0.90",
+        "category": "slides",
+        "path": "slides/04_experimental_results_slides.pdf"
       },
       {
         "name": "domain_comparison.png",
-        "size_mb": "0.41",
+        "size_mb": "0.47",
         "category": "figures",
         "path": "figures/domain_comparison.png"
       },
       {
-        "name": "step_size_analysis.png",
-        "size_mb": "0.35",
-        "category": "figures",
-        "path": "figures/step_size_analysis.png"
-      },
-      {
-        "name": "terminology_network.png",
-        "size_mb": "0.31",
-        "category": "figures",
-        "path": "figures/terminology_network.png"
-      },
-      {
-        "name": "terminology.json",
-        "size_mb": "0.05",
+        "name": "literature_corpus.json",
+        "size_mb": "0.43",
         "category": "data",
-        "path": "data/terminology.json"
+        "path": "data/literature_corpus.json"
       },
       {
-        "name": "discourse_analysis.json",
-        "size_mb": "0.04",
-        "category": "data",
-        "path": "data/discourse_analysis.json"
+        "name": "anthropomorphic_framing.png",
+        "size_mb": "0.25",
+        "category": "figures",
+        "path": "figures/anthropomorphic_framing.png"
       },
       {
-        "name": "literature_analysis_report.md",
-        "size_mb": "0.00",
-        "category": "reports",
-        "path": "reports/literature_analysis_report.md"
+        "name": "02_introduction_slides.pdf",
+        "size_mb": "0.23",
+        "category": "slides",
+        "path": "slides/02_introduction_slides.pdf"
       },
       {
-        "name": "domain_analysis_report.md",
-        "size_mb": "0.00",
-        "category": "reports",
-        "path": "reports/domain_analysis_report.md"
+        "name": "unit_of_individuality_network.png",
+        "size_mb": "0.22",
+        "category": "figures",
+        "path": "figures/unit_of_individuality_network.png"
       },
       {
-        "name": "conceptual_mapping_report.md",
-        "size_mb": "0.00",
-        "category": "reports",
-        "path": "reports/conceptual_mapping_report.md"
+        "name": "_combined_manuscript.log",
+        "size_mb": "0.14",
+        "category": "pdf",
+        "path": "pdf/_combined_manuscript.log"
       },
       {
-        "name": "checkpoint_000000.json",
-        "size_mb": "0.00",
-        "category": "simulations",
-        "path": "simulations/checkpoint_000000.json"
+        "name": "index.html",
+        "size_mb": "0.14",
+        "category": "web",
+        "path": "web/index.html"
       }
     ],
     "missing_expected_files": [
       "ento_linguistics_combined.pdf or project_combined.pdf"
     ],
     "file_counts_by_type": {
-      ".png": 14,
-      ".json": 10,
-      ".npz": 2,
-      ".csv": 4,
-      ".md": 5,
-      ".log": 1
+      ".md": 15,
+      ".log": 16,
+      ".aux": 15,
+      ".blg": 1,
+      ".bib": 1,
+      ".pdf": 15,
+      ".tex": 15,
+      ".bbl": 1,
+      ".html": 15,
+      ".nav": 14,
+      ".toc": 14,
+      ".snm": 14,
+      ".vrb": 3,
+      ".png": 27,
+      ".json": 15,
+      ".npz": 1,
+      ".csv": 2,
+      ".txt": 1
     },
     "sizes_by_category": {
-      "pdf": 0.0,
-      "web": 0.0,
-      "slides": 0.0,
-      "figures": 2.630112648010254,
-      "data": 0.5792417526245117,
-      "reports": 0.01773357391357422,
-      "simulations": 0.00025177001953125,
+      "pdf": 3.4052467346191406,
+      "web": 0.39224815368652344,
+      "slides": 4.16037654876709,
+      "figures": 3.439380645751953,
+      "data": 0.5761537551879883,
+      "reports": 0.062424659729003906,
+      "simulations": 0.0,
       "llm": 0.0,
-      "logs": 0.0046329498291015625
+      "logs": 0.008364677429199219
     },
-    "pdf_files": 0,
-    "figures": 15,
-    "data_files": 12
+    "pdf_files": 8,
+    "figures": 28,
+    "data_files": 13
   }
 }

@@ -36,6 +36,14 @@ from utils.markdown_integration import MarkdownIntegration
 
 logger = get_logger(__name__)
 
+# Infrastructure integration (optional)
+try:
+    from infrastructure.core import get_logger as infra_get_logger
+    from infrastructure.documentation.figure_manager import FigureManager as InfraFigureManager
+    INFRASTRUCTURE_AVAILABLE = True
+except ImportError:
+    INFRASTRUCTURE_AVAILABLE = False
+
 
 def load_figure_registry() -> Dict[str, Dict]:
     """Load the figure registry from JSON file.

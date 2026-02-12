@@ -8,7 +8,7 @@ Active Inference's quadrant structure provides a systematic way to analyze cogni
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.8\textwidth]{../output/figures/meta_cognition_diagram.png}
+\includegraphics[width=0.8\textwidth]{../figures/meta_level_concepts.png}
 \caption{Meta-cognitive processing architecture showing the hierarchical relationship between cognitive and meta-cognitive levels. Meta-cognition monitors and regulates lower-level cognitive processes, enabling self-reflection, confidence assessment, and adaptive strategy selection. In the context of cognitive security, each meta-cognitive level represents both a potential vulnerability (if compromised) and a defensive capability (if properly secured). Higher-order meta-cognition (Quadrant 4) can detect attacks on lower levels.}
 \label{fig:meta_cognition_diagram}
 \end{figure}
@@ -33,11 +33,13 @@ Manipulation of confidence assessment mechanisms can undermine meta-cognitive co
 **False Confidence Calibration:** Adversaries provide feedback that systematically miscalibrates confidence assessments, causing agents to over-trust or under-trust their inferences.
 
 **Induced Over/Under-Confidence:** By manipulating confidence assessment inputs, attackers can cause agents to:
+
 - Become overly conservative when exploration is needed
 - Become overconfident when caution is warranted
 - Switch strategies inappropriately
 
 **Meta-Cognitive Hijacking:** Direct manipulation of meta-cognitive control parameters:
+
 ```{=latex}
 \begin{equation}
 \{\lambda, \alpha, \beta, \gamma\} \rightarrow \{\lambda', \alpha', \beta', \gamma'\}
@@ -52,6 +54,7 @@ Where corrupted parameters $\lambda'$, $\alpha'$, $\beta'$, $\gamma'$ redirect c
 Framework-level manipulation targets the fundamental cognitive architecture:
 
 **Epistemic Framework Subversion:** Altering matrices $A$, $B$, or $D$ through learning or external influence can fundamentally change what an agent believes is knowable:
+
 ```{=latex}
 \begin{equation}
 A_{true} \rightarrow A_{corrupted}: \text{perception of reality distorted}
@@ -60,6 +63,7 @@ A_{true} \rightarrow A_{corrupted}: \text{perception of reality distorted}
 ```
 
 **Pragmatic Landscape Alteration:** Modifying matrix $C$ changes what the agent values:
+
 ```{=latex}
 \begin{equation}
 C_{original} \rightarrow C_{corrupted}: \text{goal structure compromised}
@@ -74,14 +78,17 @@ This potentially redirects all goal-directed behavior without the agent's awaren
 ### Attack Vector Analysis
 
 **Gradual vs. Sudden Attacks:**
+
 - Gradual: Slow parameter drift below detection threshold
 - Sudden: Rapid framework changes triggering immediate adaptation
 
 **External vs. Internal:**
+
 - External: Environmental manipulation of observations
 - Internal: Direct parameter injection through learning mechanisms
 
 **Targeted vs. Systemic:**
+
 - Targeted: Specific quadrant or parameter manipulation
 - Systemic: Cascading attacks affecting multiple levels
 
@@ -101,6 +108,7 @@ validation(c) = |accuracy_{predicted}(c) - accuracy_{actual}|
 ```
 
 **Defense Mechanisms:**
+
 - Cross-validation of confidence with actual performance
 - Detection of miscalibration patterns
 - Anomaly detection for confidence trajectories
@@ -118,6 +126,7 @@ integrity(\Theta) = \|\Theta_t - \Theta_{baseline}\| < \epsilon
 ```
 
 **Defense Mechanisms:**
+
 - Monitoring framework parameters for unexpected changes
 - Detecting drift in matrices $A$, $B$, $C$, $D$
 - Regularization terms $\mathcal{R}(\Theta)$ penalizing inconsistent specifications
@@ -128,6 +137,7 @@ integrity(\Theta) = \|\Theta_t - \Theta_{baseline}\| < \epsilon
 Higher-order checking of meta-level processes:
 
 **Three-Layer Validation:**
+
 1. **Level 1:** Validate primary inference processes
 2. **Level 2:** Validate meta-cognitive monitoring itself
 3. **Level 3:** Validate framework integrity checking
@@ -151,6 +161,7 @@ The framework provides principled approaches to AI safety challenges:
 ### Value Specification through Matrix C
 
 Active Inference enables precise value specification:
+
 ```{=latex}
 \begin{equation}
 C_{safe} = \text{specification of safe preferences}
@@ -159,6 +170,7 @@ C_{safe} = \text{specification of safe preferences}
 ```
 
 **Advantages over reward functions:**
+
 - Multi-dimensional preference landscapes
 - Trade-off specification between competing values
 - Ethical considerations directly encoded
@@ -169,6 +181,7 @@ C_{safe} = \text{specification of safe preferences}
 Clear limits on what AI systems can know and assume:
 
 **Bounded Epistemic Frameworks:**
+
 - Matrix $A$ specifications limit observation reliability assumptions
 - Matrix $D$ priors constrain initial state assumptions
 - Matrix $B$ causal models bound action effect assumptions
@@ -178,6 +191,7 @@ Clear limits on what AI systems can know and assume:
 Protection against value drift and epistemic corruption:
 
 **Meta-Monitoring Requirements:**
+
 - Self-watchful AI systems monitoring their own frameworks
 - Anomaly detection for framework parameter changes
 - Rollback capabilities for detected corruption
@@ -186,6 +200,7 @@ Protection against value drift and epistemic corruption:
 ### Alignment through Framework Specification
 
 The meta-pragmatic aspect enables principled alignment:
+
 1. **Value Learning:** Systems develop value structures through matrix $C$ optimization
 2. **Epistemic Constraints:** Matrix $A$, $B$, $D$ specifications limit inference scope
 3. **Meta-Cognitive Oversight:** Quadrant 3 monitoring ensures alignment maintenance
@@ -198,11 +213,13 @@ The meta-pragmatic aspect enables principled alignment:
 The framework reveals meta-level manipulation of public belief systems:
 
 **Epistemic Attacks on Societies:**
+
 - Systematic manipulation of information quality (meta-data)
 - Undermining confidence in legitimate information sources
 - Framework-level attacks on shared epistemological foundations
 
 **Defense Implications:**
+
 - Education in meta-cognitive awareness
 - Institutional meta-data verification
 - Collective framework integrity monitoring
@@ -212,11 +229,13 @@ The framework reveals meta-level manipulation of public belief systems:
 Development of curricula building meta-cognitive resilience:
 
 **Training Quadrant 3 Skills:**
+
 - Self-monitoring and confidence assessment
 - Strategy adaptation under uncertainty
 - Meta-cognitive awareness
 
 **Training Quadrant 4 Skills:**
+
 - Framework evaluation and critique
 - Epistemic framework comparison
 - Value system analysis
@@ -226,11 +245,13 @@ Development of curricula building meta-cognitive resilience:
 Protection of group-level cognitive processes:
 
 **Shared Framework Protection:**
+
 - Collective monitoring of epistemic drift
 - Group-level confidence calibration
 - Democratic framework governance
 
 **Institutional Safeguards:**
+
 - Verification of information sources
 - Meta-data authenticity standards
 - Framework change transparency
@@ -240,6 +261,7 @@ Protection of group-level cognitive processes:
 ### Manipulation Risks
 
 Meta-level cognition raises concerns about:
+
 - Potential for sophisticated cognitive manipulation
 - Exploitation of framework vulnerabilities
 - Asymmetric knowledge advantages
@@ -247,6 +269,7 @@ Meta-level cognition raises concerns about:
 ### Responsibility in Framework Design
 
 Designers of cognitive systems bear responsibility for:
+
 - Secure framework specifications
 - Robust defense mechanisms
 - Transparent vulnerability disclosure
@@ -254,7 +277,7 @@ Designers of cognitive systems bear responsibility for:
 ### Self-Determination
 
 Protection of individual and collective:
+
 - Epistemic autonomy: freedom to form beliefs
 - Pragmatic autonomy: freedom to set values
 - Meta-cognitive autonomy: freedom to adapt frameworks
-

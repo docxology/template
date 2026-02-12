@@ -729,4 +729,4 @@ def review_large_manuscript(manuscript: str, chunk_size: int = 10000):
 **System Documentation:**
 
 - [`../../../AGENTS.md`](../../../AGENTS.md) - system overview
-- [`../../../docs/operational/LLM_REVIEW_TROUBLESHOOTING.md`](../../../docs/operational/LLM_REVIEW_TROUBLESHOOTING.md) - LLM review troubleshooting
+- [`../../../docs/operational/llm-review-troubleshooting.md`](../../../docs/operational/llm-review-troubleshooting.md) - LLM review troubleshooting

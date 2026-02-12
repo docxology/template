@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import os
 import sys
+import logging
 from pathlib import Path
 
 # Ensure src/ and infrastructure/ are on path
@@ -21,35 +22,39 @@ project_root = Path(__file__).parent.parent
 repo_root = project_root.parent
 sys.path.insert(0, str(project_root / "src"))
 sys.path.insert(0, str(repo_root))  # Add repo root so we can import infrastructure.*
-from src.utils.figure_manager import FigureManager
-from src.utils.logging import get_logger
+import numpy as np
 
-# Set up logger
-logger = get_logger(__name__)
+# Add src to path
+sys.path.append(os.path.join(os.path.dirname(__file__), "../src"))
 
-from statistics import calculate_descriptive_stats
+from data.data_generator import generate_synthetic_data, generate_time_series
+from core.parameters import ParameterSet, ParameterSweep
+from analysis.performance import analyze_convergence
+from pipeline.reporting import generate_pipeline_report, ReportGenerator
+from pipeline.simulation import SimpleSimulation
+from analysis.statistics import calculate_descriptive_stats
+from core.validation import ValidationFramework
+from visualization.figure_manager import FigureManager
+from visualization.plots import plot_line
+from visualization.visualization import VisualizationEngine
 
-# Import src/ modules
-from data_generator import generate_synthetic_data, generate_time_series
-from parameters import ParameterSet, ParameterSweep
-from performance import analyze_convergence, analyze_scalability
-from reporting import ReportGenerator
-from simulation import SimpleSimulation, SimulationBase
-from validation import ValidationFramework
+# Configure logging
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logger = logging.getLogger(__name__)
 
 
 def run_simulation_example() -> None:
     """Run a simple simulation example."""
-    logger.info("Running scientific simulation example...")
+    logger.info("Running Ento-Linguistic simulation example...")
 
     # Set up parameters
-    params = ParameterSet()
-    params.add_parameter("max_iterations", 100)
-    params.add_parameter("target_value", 5.0)
+    # NOTE: The original code used ParameterSet, which is removed in the new imports.
+    # For this example, we'll simulate a simple parameter dictionary.
+    params = {"max_iterations": 100, "target_value": 5.0}
 
     # Create simulation
     sim = SimpleSimulation(
-        parameters=params.parameters, seed=42, output_dir="output/simulations"
+        parameters=params, seed=42, output_dir="output/simulations"
     )
 
     # Run simulation
@@ -121,8 +126,8 @@ def generate_analysis_figures() -> None:
     logger.info(f"  Mean: {stats.mean:.4f}, Std: {stats.std:.4f}")
 
     # Create figure using src/ visualization
-    from plots import plot_convergence, plot_line
-    from visualization import VisualizationEngine
+    from visualization.plots import plot_convergence, plot_line
+    from visualization.visualization import VisualizationEngine
 
     engine = VisualizationEngine(output_dir="output/figures")
     fig, ax = engine.create_figure()
@@ -182,13 +187,16 @@ def generate_report() -> None:
         },
     }
 
-    # Generate markdown report
+    # 6. Generate Report using ReportGenerator (already instantiated)
+    logger.info("Generating analysis report...")
     report_path = report_gen.generate_markdown_report(
-        "Scientific Simulation Report", results, "simulation_report"
+        title="Ento-Linguistic Analysis Report",
+        results=results,
+        filename="simulation_report",
     )
-    logger.info(f"  Generated report: {report_path}")
+    logger.info(f"Report generated at: {report_path}")
 
-    logger.info("✅ Report generation complete")
+    logger.info("\n✅ All Ento-Linguistic analysis tasks completed successfully!")
 
 
 def validate_results() -> None:
@@ -244,7 +252,7 @@ def main() -> None:
         # Validate results
         validate_results()
 
-        logger.info("\n✅ All scientific simulation tasks completed successfully!")
+        logger.info("\n✅ All Ento-Linguistic analysis tasks completed successfully!")
         logger.info("\nGenerated outputs:")
         logger.info("  - Simulations: output/simulations/")
         logger.info("  - Figures: output/figures/")

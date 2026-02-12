@@ -1,0 +1,537 @@
+# 📖 Glossary of Terms
+
+> **Definitions** of key concepts and terminology
+
+**Quick Reference:** [Cheatsheet](../reference/quick-start-cheatsheet.md) | [FAQ](../reference/faq.md) | [Guide](../core/how-to-use.md)
+
+---
+
+## Terminology Standards
+
+**Preferred Terms (as of v2.0):**
+
+- **Thin Orchestrator Pattern**: Core architectural principle (capitalized when referring to the pattern name, lowercase in prose)
+- **Two-Layer Architecture**: Layer 1 (Infrastructure) and Layer 2 (Project)
+- **Version**: v2.0 (current system version)
+- **Test Coverage**: 90% minimum for project code, 60% minimum for infrastructure code
+- **Build Pipeline**: 8-stage automated pipeline (00-07) or 10-stage extended pipeline (0-9)
+
+---
+
+## A
+
+### AGENTS.md
+
+technical documentation files found in each directory. Contains detailed information for developers and advanced users. Complemented by README.md files for quick reference.
+
+**See**: [Directory Documentation](#directory-documentation)
+
+### Architecture Pattern
+
+The overall system design that enforces separation of concerns between business logic (`src/`), tests, scripts, and documentation.
+
+**See**: [../core/architecture.md](../core/architecture.md) | [Thin Orchestrator Pattern](#thin-orchestrator-pattern)
+
+## B
+
+### Branch Coverage
+
+Testing metric ensuring all conditional branches (if/else, switch cases) are executed during tests. Required to be 100% for all `src/` code.
+
+**See**: [Test Coverage](#test-coverage)
+
+### Build Pipeline
+
+Automated sequence of operations that validates tests, runs scripts, generates documentation, and builds PDFs. Orchestrated by `scripts/execute_pipeline.py` (8-stage pipeline).
+
+**Stages**: Tests → Scripts → Validation → Glossary → Individual PDFs → Combined PDF
+
+**See**: [build-system.md](../operational/build-system.md)
+
+### Business Logic
+
+Core algorithms, mathematical functions, and computational methods. Must reside in `src/` directory with test coverage. Scripts should never implement business logic.
+
+**See**: [Thin Orchestrator Pattern](#thin-orchestrator-pattern)
+
+## C
+
+### Combined PDF
+
+Single PDF document containing all manuscript sections in proper order. Generated from individual section PDFs by the build pipeline.
+
+**File**: `output/project_combined.pdf` (top-level, copied by stage 5)
+
+**See**: [PDF Generation](#pdf-generation)
+
+### Coverage Requirement
+
+test coverage required: 90% minimum for project code, 60% minimum for infrastructure. Enforced by build pipeline before PDF generation.
+
+**Check**: `pytest tests/ --cov=src --cov-report=term-missing`
+
+**See**: [Test Coverage](#test-coverage)
+
+### Cross-Reference
+
+Internal link between document parts (sections, equations, figures, tables) using LaTeX `\ref{}` and `\eqref{}` commands.
+
+**Examples**:
+
+- Section: `\ref{sec:methodology}`
+- Equation: `\eqref{eq:objective}`
+- Figure: `\ref{fig:plot}`
+
+**See**: [markdown-template-guide.md](../usage/markdown-template-guide.md)
+
+## D
+
+### Directory Documentation
+
+Each major directory contains two documentation files:
+
+- **AGENTS.md**: technical reference
+- **README.md**: Quick reference and navigation
+
+**Directories**: `src/`, `tests/`, `scripts/`, `manuscript/`, `docs/`
+
+### DOI (Digital Object Identifier)
+
+Persistent identifier for academic publications. Optional configuration for the template.
+
+**Set**: `export DOI="10.5281/zenodo.12345678"`
+
+**See**: [Project Metadata](#project-metadata)
+
+## E
+
+### Equation Environment
+
+LaTeX structure for numbered mathematical equations with labels for cross-referencing.
+
+**Syntax**:
+
+```latex
+\begin{equation}\label{eq:name}
+f(x) = x^2
+\end{equation}
+```
+
+**Reference**: `\eqref{eq:name}`
+
+**See**: [markdown-template-guide.md](../usage/markdown-template-guide.md)
+
+## F
+
+### Figure Generation
+
+Process of creating visual outputs from data using scripts that follow the thin orchestrator pattern. Figures saved to `output/figures/`.
+
+**Pattern**: Script imports from `src/` → Uses tested methods → Handles visualization → Saves output
+
+**See**: [Thin Orchestrator Pattern](#thin-orchestrator-pattern)
+
+## G
+
+### Glossary
+
+Auto-generated API reference from `src/` code. Updated automatically during build pipeline.
+
+**File**: `manuscript/98_symbols_glossary.md`
+
+**Generation**: `python3 -m infrastructure.documentation.generate_glossary_cli` (or integrated into build pipeline Stage 03)
+
+### Guard Clause
+
+Programming pattern that handles error conditions first, reducing nesting. Preferred style in this template.
+
+**Example**:
+
+```python
+def process(value):
+    if value is None:  # Guard clause
+        return default
+    # Main logic here
+```
+
+## H
+
+### Headless Plotting
+
+Running matplotlib without display server using `MPLBACKEND=Agg`. Required for CI/CD and automated builds.
+
+**Set**: `export MPLBACKEND=Agg`
+
+## I
+
+### Individual PDF
+
+Single PDF file generated for each manuscript section. Allows focused review of specific sections.
+
+**Location**: `output/pdf/01_abstract.pdf`, `output/pdf/02_introduction.pdf`, etc.
+
+**See**: [PDF Generation](#pdf-generation)
+
+### Integration Test
+
+Test that validates interaction between multiple components. Ensures scripts can import and use `src/` methods correctly.
+
+**Example**: Testing that figure generation scripts successfully import and use `src/` functions
+
+**See**: [Testing](#testing)
+
+## L
+
+### LaTeX Preamble
+
+Document setup and styling configuration loaded before content. Defines packages, fonts, colors, and formatting.
+
+**File**: `manuscript/preamble.md`
+
+**Location**: [`code_project/manuscript/preamble.md`](../../projects/code_project/manuscript/preamble.md)
+
+## M
+
+### Manifest
+
+List of generated files collected during build pipeline. Used to verify all expected outputs were created.
+
+**Collected from**: Script stdout when they print output paths
+
+### Manuscript
+
+Research document composed of numbered sections in `manuscript/` directory. Converted to PDFs during build.
+
+**Sections**: 01-09 (main), S01-S99 (supplemental), 98 (glossary), 99 (references)
+
+**See**: [manuscript-numbering-system.md](../usage/manuscript-numbering-system.md)
+
+### Markdown Validation
+
+Automated checking of markdown files for broken references, missing images, invalid links, and syntax errors.
+
+**Command**: `python3 -m infrastructure.validation.cli markdown project/manuscript/`
+
+**See**: [markdown-template-guide.md](../usage/markdown-template-guide.md)
+
+### Mock Method
+
+**ABSOLUTELY PROHIBITED**: Fake implementation of function for testing purposes. **STRICTLY FORBIDDEN** in this template - all tests must use data and real methods only.
+
+**Philosophy**: Test actual behavior, not mocked behavior. Mocking undermines test reliability and integration validation.
+
+**See**: [Testing](#testing)
+
+## O
+
+### Orchestrator
+
+Script that coordinates operations by importing and using methods from `src/`. Should not contain business logic.
+
+**See**: [Thin Orchestrator Pattern](#thin-orchestrator-pattern)
+
+### ORCID (Open Researcher and Contributor ID)
+
+Unique persistent identifier for researchers. Optional configuration for the template.
+
+**Format**: `0000-0001-2345-6789`
+
+**Set**: `export AUTHOR_ORCID="0000-0001-2345-6789"`
+
+### Output Directory
+
+Location where all generated files are placed. **All files are disposable** and can be regenerated.
+
+**Location**: `output/`
+
+**Subdirectories**: `pdf/`, `figures/`, `data/`, `tex/`
+
+## P
+
+### Pandoc
+
+Universal document converter used to transform markdown to LaTeX and PDF. Required system dependency.
+
+**Install**: `brew install pandoc` (macOS) or `apt-get install pandoc` (Ubuntu)
+
+**See**: [Prerequisites](#prerequisites)
+
+### PDF Generation
+
+Process of converting markdown sources to professional PDF documents using Pandoc and XeLaTeX.
+
+**Pipeline**: Markdown → Pandoc → LaTeX → XeLaTeX → PDF
+
+**Time**: ~84 seconds for rebuild (without optional LLM review)
+
+**See**: [build-system.md](../operational/build-system.md)
+
+### PDF Validation
+
+Automated checking of generated PDFs for rendering issues, unresolved references, and structural problems.
+
+**Command**: `python3 scripts/04_validate_output.py` or `python3 -m infrastructure.validation.cli pdf <path>`
+
+**Checks**: Unresolved references (??), missing citations, warnings, errors
+
+**See**: [pdf-validation.md](../modules/pdf-validation.md)
+
+### Prerequisites
+
+Required system dependencies and software that must be installed before using the template.
+
+**System**: pandoc, texlive-xetex, fonts
+**Python**: uv or pip, python 3.9+
+
+**See**: [getting-started.md](../guides/getting-started.md) | [README.md](../README.md)
+
+### Project Metadata
+
+Configuration information (author, title, DOI, etc.) applied to generated documents via environment variables.
+
+**Variables**:
+
+- `AUTHOR_NAME`
+- `AUTHOR_EMAIL`
+- `AUTHOR_ORCID`
+- `PROJECT_TITLE`
+- `DOI`
+
+**See**: [Configuration System](../AGENTS.md#configuration-system)
+
+## R
+
+### Reference System
+
+LaTeX-based cross-referencing that automatically numbers and links sections, equations, figures, and tables.
+
+**Types**:
+
+- Sections: `\ref{sec:name}`
+- Equations: `\eqref{eq:name}`
+- Figures: `\ref{fig:name}`
+- Tables: `\ref{tab:name}`
+
+**See**: [Cross-Reference](#cross-reference)
+
+### Render Pipeline
+
+Another name for [Build Pipeline](#build-pipeline). The sequence from tests to final PDF.
+
+**Script**: `python3 scripts/execute_pipeline.py --core-only`
+
+### Reproducibility
+
+Ability to regenerate exact same results from source. Ensured through deterministic RNG seeds, fixed dependencies, and testing.
+
+**Tools**: Version locking, seed fixing, environment capture
+
+**See**: [infrastructure/validation/integrity.py](../../infrastructure/validation/integrity.py)
+
+## S
+
+### Script
+
+Python file in `scripts/` directory that orchestrates operations. Must follow thin orchestrator pattern.
+
+**Rules**:
+
+- Import from `src/`
+- Use `src/` methods for computation
+- Handle only I/O, visualization, orchestration
+- Print output paths
+
+**See**: [Thin Orchestrator Pattern](#thin-orchestrator-pattern)
+
+### Section Label
+
+Unique identifier for manuscript section used in cross-references.
+
+**Format**: `{#sec:section_name}`
+
+**Example**: `# Introduction {#sec:introduction}`
+
+**See**: [Cross-Reference](#cross-reference)
+
+### Source Code
+
+Core business logic residing in `src/` directory. Must have test coverage.
+
+**Requirements**:
+
+- Type hints on public APIs
+- Docstrings on all functions
+- No circular imports
+- test coverage
+
+**See**: [infrastructure/AGENTS.md](../../infrastructure/AGENTS.md), [code_project/src/AGENTS.md](../../projects/code_project/src/AGENTS.md)
+
+### Statement Coverage
+
+Testing metric ensuring every line of code is executed during tests. Required to be 100% for all `src/` code.
+
+**Check**: Look for lines marked `>>>>>` in coverage report
+
+**See**: [Test Coverage](#test-coverage)
+
+### Supplemental Section
+
+Additional manuscript content numbered S01-S99. Appears after main sections but before glossary.
+
+**Example**: `S01_supplemental_methods.md`
+
+**See**: [manuscript-numbering-system.md](../usage/manuscript-numbering-system.md)
+
+## T
+
+### TDD (Test-Driven Development)
+
+Development methodology where tests are written before implementation code.
+
+**Workflow**: Write test → Run (fails) → Implement → Run (passes) → Refactor
+
+**See**: [../core/workflow.md](../core/workflow.md) | [../core/how-to-use.md](../core/how-to-use.md)
+
+### Template Repository
+
+GitHub repository type that can be used to create new repositories with same structure. This template is a template repository.
+
+**Use**: Click "Use this template" button on GitHub
+
+### Test Coverage
+
+Percentage of code executed during test runs. This template requires 90% minimum coverage for project code and 60% minimum for infrastructure.
+
+**Types**:
+
+- Statement coverage (every line)
+- Branch coverage (every conditional)
+
+**Command**: `pytest tests/ --cov=src --cov-report=term-missing`
+
+**See**: [Testing](#testing)
+
+### Test Suite
+
+Collection of all test files in `tests/` directory. Ensures all functionality works correctly.
+
+**Status**: 2118 tests total (1796 infra [2 skipped] + 320 project, all passing)
+
+**Run**: `pytest tests/`
+
+**See**: [tests/AGENTS.md](../../tests/AGENTS.md)
+
+### Testing
+
+Process of validating code correctness through automated test cases. **ABSOLUTE PROHIBITION**: No mocks allowed - all tests must use data and computations only.
+
+**Requirements**:
+
+- 90% minimum for project code (currently 100% - coverage!)
+- 60% minimum for infrastructure (currently 83.33% - exceeds stretch goal!)
+- data (no mocks)
+- Deterministic results
+- All tests must pass
+
+### Thin Orchestrator Pattern
+
+Core architectural principle where scripts are lightweight wrappers that import and use `src/` methods.
+
+**Principles**:
+
+- ALL business logic in `src/`
+- Scripts only orchestrate
+- test coverage of `src/`
+- Clear separation of concerns
+
+**Benefits**: Maintainability, testability, reusability, clarity
+
+**See**: [thin-orchestrator-summary.md](../architecture/thin-orchestrator-summary.md)
+
+## U
+
+### Unit Test
+
+Test that validates a single function or method in isolation. Forms the foundation of the test suite.
+
+**Example**:
+
+```python
+def test_add_numbers():
+    result = add_numbers(2, 3)
+    assert result == 5
+```
+
+**See**: [Testing](#testing)
+
+### uv
+
+Fast Python package manager used as default for this template. Alternative to pip.
+
+**Commands**:
+
+- `uv sync` - Install dependencies
+- `uv run pytest` - Run tests
+
+**Install**: `pip install uv`
+
+## V
+
+### Validation
+
+Automated checking of various aspects: tests, markdown, PDFs, coverage, etc.
+
+**Types**:
+
+- Test validation (pytest)
+- Markdown validation (validate_markdown.py)
+- PDF validation (scripts/04_validate_output.py)
+- Coverage validation (pyproject.toml `[tool.coverage.*]`)
+
+**See**: [Build Pipeline](#build-pipeline)
+
+## X
+
+### XeLaTeX
+
+LaTeX engine that supports Unicode and modern fonts. Used for PDF generation.
+
+**Required**: Part of texlive-xetex package
+
+**Install**: `brew install --cask mactex` (macOS)
+
+**See**: [Prerequisites](#prerequisites)
+
+## Acronyms & Abbreviations
+
+| Term | Full Name | Description |
+|------|-----------|-------------|
+| API | Application Programming Interface | Public functions/methods in `src/` |
+| CI/CD | Continuous Integration/Deployment | Automated build and test systems |
+| CSV | Comma-Separated Values | Data file format |
+| DOI | Digital Object Identifier | Persistent publication identifier |
+| HTML | HyperText Markup Language | Web page format |
+| I/O | Input/Output | Reading/writing files and data |
+| LaTeX | (Lamport TeX) | Document preparation system |
+| NPZ | NumPy Zipped | Compressed numpy array format |
+| ORCID | Open Researcher and Contributor ID | Researcher identifier |
+| PDF | Portable Document Format | Final output format |
+| PNG | Portable Network Graphics | Image file format |
+| RNG | Random Number Generator | Source of randomness |
+| TDD | Test-Driven Development | Write tests before code |
+| TOC | Table of Contents | Document navigation aid |
+| UI | User Interface | Visual elements users interact with |
+| UX | User Experience | Overall user interaction quality |
+
+## Related Documentation
+
+- **[Quick Start Cheatsheet](../reference/quick-start-cheatsheet.md)** - Essential commands
+- **[Common Workflows](../reference/common-workflows.md)** - Step-by-step recipes
+- **[FAQ](../reference/faq.md)** - Frequently asked questions
+- **[Guide](../core/how-to-use.md)** - All skill levels
+- **[Architecture](../core/architecture.md)** - System design
+- **[Documentation Index](../documentation-index.md)** - All documentation
+
+---
+
+**Can't find a term?** Check the **[FAQ](../reference/faq.md)** or **[Documentation Index](../documentation-index.md)**

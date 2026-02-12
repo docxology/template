@@ -2,7 +2,7 @@
 
 import numpy as np
 import pytest
-from data_generator import (generate_classification_dataset,
+from src.data.data_generator import (generate_classification_dataset,
                             generate_correlated_data, generate_synthetic_data,
                             generate_time_series, inject_noise, validate_data)
 

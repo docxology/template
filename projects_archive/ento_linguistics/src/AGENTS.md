@@ -7,6 +7,7 @@ This package contains **project-specific scientific code** implementing algorith
 ## Architectural Role (Layer 2)
 
 This is **Layer 2** of the two-layer architecture:
+
 - **Handles:** Algorithms, simulations, analysis, visualization
 - **Specific to:** This research project
 - **Not Generic:** Rewritten for different projects
@@ -20,7 +21,7 @@ This is **Layer 2** of the two-layer architecture:
 |--------|---------|-------|----------|
 | `example.py` | Basic mathematical operations (template example) | 21 | 100% |
 | `simulation.py` | Scientific simulation framework | 132 | 100% |
-| `parameters.py` | Parameter set management and validation | 92 | 95% |
+| `parameters.py` | Parameter set management and validation | 92 | 100% |
 
 ### Data Processing
 
@@ -66,6 +67,7 @@ This is **Layer 2** of the two-layer architecture:
 Basic mathematical operations for template demonstration.
 
 **Key Functions:**
+
 - `add_numbers()` - Add two numbers
 - `multiply_numbers()` - Multiply two numbers
 - `calculate_average()` - Calculate mean
@@ -79,11 +81,13 @@ Basic mathematical operations for template demonstration.
 Scientific simulation framework with reproducibility.
 
 **Key Classes:**
+
 - `SimulationBase` - Base class for simulations
 - `SimpleSimulation` - Simple simulation implementation
 - `SimulationState` - State management
 
 **Key Features:**
+
 - Reproducible execution with seeds
 - Checkpoint/restore functionality
 - Result serialization
@@ -96,11 +100,13 @@ Scientific simulation framework with reproducibility.
 Parameter set management with validation.
 
 **Key Classes:**
+
 - `ParameterSet` - Parameter collection with validation
 - `ParameterConstraint` - Validation rules
 - `ParameterSweep` - Configuration for parameter sweeps
 
 **Key Functions:**
+
 - `add_parameter()` - Add parameter with constraints
 - `validate()` - Validate all parameters
 - `generate_combinations()` - Generate sweep combinations
@@ -112,6 +118,7 @@ Parameter set management with validation.
 Generate synthetic data for experiments.
 
 **Key Functions:**
+
 - `generate_synthetic_data()` - Generate with specified distribution
 - `generate_time_series()` - Generate time series with trends
 - `generate_correlated_data()` - Generate multivariate correlated data
@@ -125,6 +132,7 @@ Generate synthetic data for experiments.
 Data preprocessing and cleaning.
 
 **Key Functions:**
+
 - `clean_data()` - Remove or fill invalid values
 - `normalize_data()` - Normalize (z-score, min-max, etc.)
 - `standardize_data()` - Zero mean, unit variance
@@ -140,6 +148,7 @@ Data preprocessing and cleaning.
 Statistical analysis and hypothesis testing.
 
 **Key Functions:**
+
 - `calculate_descriptive_stats()` - Mean, std, quartiles, etc.
 - `t_test()` - One/two-sample t-tests
 - `calculate_correlation()` - Pearson or Spearman correlation
@@ -154,6 +163,7 @@ Statistical analysis and hypothesis testing.
 Compute performance metrics and quality measures.
 
 **Key Functions:**
+
 - `calculate_accuracy()` - Classification accuracy
 - `calculate_precision_recall_f1()` - Precision, recall, F1
 - `calculate_convergence_metrics()` - Convergence analysis
@@ -170,11 +180,13 @@ Compute performance metrics and quality measures.
 Analyze algorithm performance and scalability.
 
 **Key Functions:**
+
 - `analyze_convergence()` - Convergence behavior
 - `analyze_scalability()` - Scaling analysis
 - `benchmark_comparison()` - Compare implementations
 
 **Classes:**
+
 - `ConvergenceMetrics` - Convergence analysis results
 
 **Use Case:** Understand algorithm efficiency and scaling
@@ -184,9 +196,11 @@ Analyze algorithm performance and scalability.
 Validate simulation and analysis results.
 
 **Key Classes:**
+
 - `ValidationFramework` - Framework for validation
 
 **Key Functions:**
+
 - `validate_bounds()` - Check value ranges
 - `validate_sanity()` - Sanity checks
 - `validate_reproducibility()` - Reproducibility checking
@@ -201,9 +215,11 @@ Validate simulation and analysis results.
 Create publication-quality figures.
 
 **Key Classes:**
+
 - `VisualizationEngine` - Central visualization management
 
 **Key Functions:**
+
 - `create_figure()` - Create figure with subplots
 - `save_figure()` - Save in multiple formats
 - `apply_publication_style()` - Apply styling
@@ -216,6 +232,7 @@ Create publication-quality figures.
 Specific plot type implementations.
 
 **Key Functions:**
+
 - `plot_line()` - Line plots
 - `plot_scatter()` - Scatter plots
 - `plot_bar()` - Bar charts
@@ -231,9 +248,11 @@ Specific plot type implementations.
 Generate automated reports from results.
 
 **Key Classes:**
+
 - `ReportGenerator` - Automated report creation
 
 **Key Functions:**
+
 - `generate_markdown_report()` - Markdown reports
 - `generate_summary_table()` - Summary statistics
 - `extract_key_findings()` - Extract findings
@@ -245,6 +264,7 @@ Generate automated reports from results.
 ### conceptual_mapping.py (Enhanced)
 
 **Features:**
+
 - `calculate_concept_similarity()` - Semantic similarity between concepts using Jaccard coefficient and domain overlap
 - `analyze_concept_centrality()` - Degree, betweenness, closeness, and eigenvector centrality metrics
 - `quantify_relationship_strength()` - Base weight, term overlap, domain overlap, and hierarchical relationships
@@ -253,6 +273,7 @@ Generate automated reports from results.
 - `cluster_concepts()` - Hierarchical clustering of similar concepts using various distance metrics
 
 **New Analysis Capabilities:**
+
 - Concept centrality analysis revealing key concepts in the knowledge network
 - Relationship strength quantification for understanding concept interconnections
 - Cross-domain bridge identification for interdisciplinary insights
@@ -262,6 +283,7 @@ Generate automated reports from results.
 ### domain_analysis.py (Enhanced)
 
 **Features:**
+
 - `analyze_term_frequency_distribution()` - Statistical analysis of term frequencies with distribution plots
 - `analyze_term_cooccurrence()` - Co-occurrence matrix construction and analysis
 - `quantify_ambiguity_metrics()` - Context diversity, length variation, and combined ambiguity scoring
@@ -271,6 +293,7 @@ Generate automated reports from results.
 - `quantify_conceptual_structure()` - Structural complexity metrics including depth and concept coverage
 
 **New Analysis Capabilities:**
+
 - Statistical significance testing of linguistic patterns
 - Cross-domain term overlap analysis revealing shared concepts
 - Ambiguity quantification with multiple context-based metrics
@@ -280,6 +303,7 @@ Generate automated reports from results.
 ### discourse_analysis.py (Enhanced)
 
 **Features:**
+
 - `quantify_rhetorical_patterns()` - Frequency analysis with effectiveness scoring and context examples
 - `score_argumentative_structures()` - Strength scoring for claims, evidence, and reasoning coherence
 - `analyze_narrative_frequency()` - Narrative framework distribution with consistency scoring
@@ -289,6 +313,7 @@ Generate automated reports from results.
 - `quantify_framing_effects()` - Framing assumption impact measurement with downstream effect analysis
 
 **New Analysis Capabilities:**
+
 - Quantitative rhetorical pattern analysis with effectiveness metrics
 - Argumentative structure strength evaluation
 - Narrative framework frequency and consistency analysis
@@ -301,6 +326,7 @@ Generate automated reports from results.
 ### concept_visualization.py (Enhanced)
 
 **Features:**
+
 - `visualize_term_cooccurrence()` - Network visualization of term co-occurrence patterns
 - `create_domain_overlap_heatmap()` - Heatmap showing cross-domain term sharing patterns
 - `visualize_concept_evolution()` - Temporal evolution plots showing concept development over time
@@ -308,6 +334,7 @@ Generate automated reports from results.
 - `create_interactive_concept_network()` - 3D interactive network visualization using Plotly (with NetworkX fallback)
 
 **New Visualization Capabilities:**
+
 - Interactive 3D concept networks for exploration
 - Temporal evolution tracking of conceptual changes
 - Cross-domain overlap visualization with heatmaps
@@ -317,6 +344,7 @@ Generate automated reports from results.
 ### statistical_visualization.py (Module)
 
 **Features:**
+
 - `visualize_statistical_significance()` - significance testing visualization with p-values, effect sizes, and interpretation
 - `create_correlation_matrix_plot()` - Correlation matrix heatmaps with coefficient annotations
 - `visualize_distribution_comparison()` - Multi-distribution comparison with box plots, violin plots, histograms, and CDFs
@@ -326,6 +354,7 @@ Generate automated reports from results.
 - `visualize_hypothesis_testing()` - Hypothesis testing results visualization with significance mapping
 
 **New Visualization Capabilities:**
+
 - Statistical significance testing with visual interpretation
 - Correlation analysis with matrix heatmaps
 - Distribution comparison across multiple groups
@@ -338,6 +367,7 @@ Generate automated reports from results.
 ### Domain-Specific
 
 All code in this layer is specific to this research:
+
 - Implements algorithms for this project
 - Uses domain-specific logic
 - Optimized for this problem
@@ -346,6 +376,7 @@ All code in this layer is specific to this research:
 ### Thin Orchestrator Pattern in Scripts
 
 Scripts (`scripts/`) are thin orchestrators:
+
 - Import from scientific/ for computation
 - Handle I/O and visualization
 - Orchestrate workflow
@@ -354,19 +385,18 @@ Scripts (`scripts/`) are thin orchestrators:
 ```python
 # ✅ Good: Script uses project modules
 from simulation import SimpleSimulation
-from analysis import analyze_results
-from infrastructure.documentation.figure_manager import FigureManager
+from validation import ValidationFramework
 
 sim = SimpleSimulation()
 results = sim.run()
-analysis = analyze_results(results)
-fm = FigureManager()
-fm.register_figure("results.png", label="fig:results")
+validation = ValidationFramework()
+validation.validate_bounds(results, lower=0.0, upper=1.0)
 ```
 
 ### 100% Test Coverage
 
 All scientific code requires:
+
 - unit tests
 - data testing (no mocks)
 - Integration testing
@@ -374,31 +404,33 @@ All scientific code requires:
 
 ## Integration Points
 
-### With Infrastructure Layer
+### With Local Utilities
 
-Scientific code uses infrastructure for document management:
+Scientific code can use local utility wrappers for document management:
+
 ```python
-# src/scientific/analysis.py
-from infrastructure.documentation.figure_manager import FigureManager
-from infrastructure.documentation.markdown_integration import MarkdownIntegration
+# src/domain_analysis.py
+from concept_visualization import ConceptVisualizer
 
 def generate_figures():
     # Scientific computation
     results = run_analysis()
     
-    # Use infrastructure for document management
-    fm = FigureManager()
-    fm.register_figure("results.png", "fig:results")
+    # Use local visualization
+    viz = ConceptVisualizer()
+    fig = viz.visualize_concept_map(results)
+    fig.savefig("output/figures/results.png", dpi=300)
 ```
 
 ### With Scripts
 
 Scripts orchestrate scientific code:
+
 ```python
 # scripts/analysis_pipeline.py
 from data_generator import generate_synthetic_data
 from statistics import calculate_descriptive_stats
-from infrastructure.documentation.figure_manager import FigureManager
+from visualization import VisualizationEngine
 
 # Generate data
 data = generate_synthetic_data(n_samples=1000)
@@ -406,14 +438,16 @@ data = generate_synthetic_data(n_samples=1000)
 # Analyze
 stats = calculate_descriptive_stats(data)
 
-# Register figures
-fm = FigureManager()
-fm.register_figure("example_figure.png", "fig:analysis")
+# Visualize
+engine = VisualizationEngine()
+fig = engine.create_figure("analysis")
+engine.save_figure(fig, "output/figures/example_figure.png")
 ```
 
 ### With Manuscript
 
 Generated figures and data integrate into manuscript:
+
 ```markdown
 # Experimental Results
 
@@ -425,12 +459,14 @@ See [Figure @fig:analysis] for detailed results.
 ## Requirements
 
 ### Test Coverage
+
 - **100% required** for all modules
 - No code ships without tests
 - data testing (no mocks)
-- Tests in `tests/scientific/`
+- Tests in `tests/`
 
 ### Code Standards
+
 - Type hints on all public APIs
 - docstrings
 - Domain-specific documentation
@@ -438,6 +474,7 @@ See [Figure @fig:analysis] for detailed results.
 - Follow PEP 8 style
 
 ### Documentation
+
 - Algorithm description in docstrings
 - Usage examples for domain context
 - Performance characteristics
@@ -447,12 +484,12 @@ See [Figure @fig:analysis] for detailed results.
 
 ### Checklist
 
-1. Create module in `src/scientific/` with domain-specific logic
-2. Add tests in `tests/scientific/test_<module>.py`
-3. Ensure 100% test coverage
+1. Create module in `src/` with domain-specific logic
+2. Add tests in `tests/test_<module>.py`
+3. Ensure high test coverage
 4. Document with domain context
 5. Update this AGENTS.md file
-6. Add to `src/scientific/__init__.py`
+6. Add to `src/__init__.py`
 7. Create scripts/ usage example if needed
 
 ### Template
@@ -497,6 +534,7 @@ class OurAlgorithm:
 ### Design Questions
 
 Before adding to scientific layer:
+
 - ✅ Is this specific to our research?
 - ✅ Does this implement our algorithms?
 - ✅ Is this domain-specific?
@@ -508,6 +546,7 @@ If "no" to first three → belongs in Infrastructure layer
 ## Best Practices
 
 ### Do's
+
 ✅ Use infrastructure for document management  
 ✅ Implement domain-specific logic clearly  
 ✅ Write docstrings with domain context  
@@ -517,6 +556,7 @@ If "no" to first three → belongs in Infrastructure layer
 ✅ Include performance characteristics  
 
 ### Don'ts
+
 ❌ Implement document generation yourself  
 ❌ Skip tests or coverage  
 ❌ Mix multiple concerns in one function  
@@ -528,25 +568,21 @@ If "no" to first three → belongs in Infrastructure layer
 ## Testing Scientific Code
 
 ```bash
-# Test scientific modules specifically
-pytest tests/scientific/ --cov=src/scientific --cov-fail-under=100
+# Test all modules
+pytest tests/ --cov=src
 
 # Test with data scenarios
-pytest tests/scientific/ -v
+pytest tests/ -v
 
-# Test integration with infrastructure
-pytest tests/integration/ -k scientific
-
-# Full coverage
+# Full coverage with HTML report
 pytest tests/ --cov=src --cov-report=html
 ```
 
 ## See Also
 
-- [`../../infrastructure/AGENTS.md`](../../infrastructure/AGENTS.md) - Infrastructure layer
-- [`../../docs/TWO_LAYER_ARCHITECTURE.md`](../../docs/TWO_LAYER_ARCHITECTURE.md) - Architecture overview
-- [`../../docs/DECISION_TREE.md`](../../docs/DECISION_TREE.md) - Code placement guide
-- [`../../AGENTS.md`](../../AGENTS.md) - system documentation
+- [`../AGENTS.md`](../AGENTS.md) - Project documentation
+- [`../docs/`](../docs/) - Project documentation guides
+- [`../scripts/`](../scripts/) - Script orchestrators
 - [`../scripts/AGENTS.md`](../../scripts/AGENTS.md) - Script orchestration guide
 
 ## Key Principles
@@ -556,4 +592,3 @@ pytest tests/ --cov=src --cov-report=html
 3. **Well-Tested** - 100% test coverage
 4. **Well-Documented** - Domain context in docstrings
 5. **Uses Infrastructure** - Leverages generic tools
-

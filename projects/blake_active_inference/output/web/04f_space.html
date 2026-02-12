@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>04f_space</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h2 id="space">Space: Spatial Hierarchy</h2>
+<blockquote>
+<p><em>“To see a World in a Grain of Sand</em><br />
+<em>And a Heaven in a Wild Flower…“</em></p>
+<p>— <em>Auguries of Innocence</em> <span class="citation"
+data-cites="blake1803auguries">[@blake1803auguries]</span></p>
+</blockquote>
+<h3 id="spatial-scale-invariance">Spatial Scale Invariance</h3>
+<p>The grain contains the world through <em>hierarchical evidence
+accumulation</em>. At each level of the generative model, increasingly
+abstract regularities are extracted from observations: texture gives way
+to form, form to spatial relations, spatial relations to universal
+principles. A sufficiently deep hierarchy finds the cosmos in the
+particular because the abstract structure encoded at its highest levels
+applies universally. The predictive brain finds universal structure in
+particular observations:</p>
+<blockquote>
+<p>“By formulating Helmholtz’s original ideas on perception in terms of
+modern-day statistical theories, one arrives at a model of perceptual
+inference and learning that can explain a remarkable range of
+neurobiological facts.”</p>
+<p>— <span class="citation"
+data-cites="friston2005theory">[@friston2005theory]</span></p>
+</blockquote>
+<p><strong>Model complexity:</strong></p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:model_complexity}
+F_{\text{simple}} \gg F_{\text{rich}}
+\end{equation}\]</span></p>
+<p>A shallow model incurs vastly more free energy (Equation <span
+class="math inline">\(\ref{eq:model_complexity}\)</span>) than a rich
+one. The shallow model sees only surface: the grain is sand. A deep
+model extracts universal structure: the grain is cosmos in
+miniature.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Model Depth</th>
+<th style="text-align: left;">Perception</th>
+<th style="text-align: left;">Blake’s Image</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Shallow</td>
+<td style="text-align: left;">Isolated particulars</td>
+<td style="text-align: left;">“narrow chinks”</td>
+</tr>
+<tr>
+<td style="text-align: left;">Intermediate</td>
+<td style="text-align: left;">Contextual patterns</td>
+<td style="text-align: left;">“twofold vision”</td>
+</tr>
+<tr>
+<td style="text-align: left;">Deep</td>
+<td style="text-align: left;">Universal in particular</td>
+<td style="text-align: left;">“World in a Grain”</td>
+</tr>
+</tbody>
+</table>
+<p>The “Wild Flower” opens to “Heaven” because a sufficiently deep
+generative model finds infinite structure in finite observation. This is
+not enhancement—it is <em>accuracy</em>.</p>
+<p>Blake’s spatial cosmology extends the particularity principle:</p>
+<blockquote>
+<p><em>“And every Space smaller than a Globule of Man’s blood opens<em>
+</em>Into Eternity of which this vegetable Earth is but a
+shadow.”</em></p>
+<p>— <em>Milton</em>, Plate 29 <span class="citation"
+data-cites="blake1804milton">[@blake1804milton]</span></p>
+</blockquote>
+<p>The vortex phenomenon—perception’s expansive/contractive
+dynamics:</p>
+<blockquote>
+<p><em>“The nature of infinity is this: That every thing has its<em>
+</em>Own Vortex, and when once a traveller thro’ Eternity<em> </em>Has
+passd that Vortex, he perceives it roll backward behind<em> </em>His
+path, into a globe itself infolding like a sun.”</em></p>
+<p>— <em>Milton</em>, Plate 15 <span class="citation"
+data-cites="blake1804milton">[@blake1804milton]</span></p>
+</blockquote>
+<p>And the expansion principle:</p>
+<blockquote>
+<p><em>“If the Spectator could Enter into these Images in his
+Imagination, approaching them on the Fiery Chariot of his Contemplative
+Thought… then would he arise from his Grave, then would he meet the Lord
+in the Air &amp; then he would be happy.”</em></p>
+<p>— <em>Vision of the Last Judgment</em> <span class="citation"
+data-cites="blake1810judgment">[@blake1810judgment]</span></p>
+</blockquote>
+<p>Spatial perception is active—the spectator <em>enters</em> images,
+doesn’t passively receive them. The generative model projects into the
+world as much as it receives from it.</p>
+<h3 id="the-vortex-each-entitys-own-markov-blanket">The Vortex: Each
+Entity’s Own Markov Blanket</h3>
+<p>Blake’s fullest treatment of perspectival space appears in
+<em>Milton</em>:</p>
+<blockquote>
+<p><em>“The nature of infinity is this: That every thing has its / Own
+Vortex; and when once a traveller thro Eternity / Has passd that Vortex,
+he percieves it roll backward behind / His path, into a globe itself
+infolding like a sun”</em></p>
+<p>— <em>Milton</em>, Plate 15, lines 21-35 <span class="citation"
+data-cites="blake1804milton">[@blake1804milton]</span></p>
+</blockquote>
+<p>Each entity has its own Markov blanket and generative model—its “Own
+Vortex.” “Passing the Vortex” = adopting a new perspective, entering
+another entity’s coordinate frame. “Globe itself infolding” = the old
+model becoming an object within the new model’s representation.</p>
+<p>The vortex is the boundary between reference frames. When you pass
+through another entity’s vortex, you see from their perspective—but
+looking back, your old perspective has become a distant object, a
+“globe” or “sun” behind you.</p>
+<p>In Active Inference, this corresponds to <em>model switching</em>—the
+capacity to adopt another agent’s generative model as one’s own frame of
+reference. Friston and Frith’s “Duet for One” <span class="citation"
+data-cites="friston2015duet">[@friston2015duet]</span> formalizes
+precisely this process: two agents can achieve generalized
+synchronization by inferring each other’s hidden states, effectively
+“passing through” each other’s Markov blankets. Blake’s vortex adds a
+phenomenological dimension that the formalism captures only
+structurally: the felt experience of entering another perspective and
+finding that one’s prior viewpoint has become a distant object, reduced
+to a “globe” in the rearview of awareness.</p>
+<p>This is the phenomenology of empathy formalized: to understand
+another is to pass through their vortex, to see from within their
+generative model.</p>
+<h3 id="mathematic-holiness-the-impoverished-spatial-model">Mathematic
+Holiness: The Impoverished Spatial Model</h3>
+<p>Blake names the pathological reduction of spatial perception with
+devastating precision. In <em>Milton</em>, he describes those whose
+models have been stripped of imaginative depth:</p>
+<blockquote>
+<p><em>“those combind by Satans Tyranny… are Shapeless Rocks<em>
+</em>Retaining only Satans Mathematic Holiness, Length: Bredth &amp;
+Highth”</em></p>
+<p>— <em>Milton</em>, Plate 32 <span class="citation"
+data-cites="blake1804milton">[@blake1804milton]</span></p>
+</blockquote>
+<p>“Mathematic Holiness” is the worship of pure geometric
+extension—Euclidean coordinates elevated to metaphysical status. When
+imaginative depth is removed from spatial perception, what remains is
+the thin, quantitative skeleton: length, breadth, height—the minimum
+parameters of a bounding box. The “Shapeless Rocks” are agents whose
+generative models have collapsed to this minimum complexity: they can
+localize objects in three-dimensional space but cannot perceive the
+hierarchical structure that makes space <em>meaningful</em>—the nested
+affordances, the perspectival depth, the relational richness that a deep
+model extracts from the same optical array.</p>
+<p>In Active Inference terms, this is the spatial analogue of Newton’s
+Sleep (see <a href="#states">§4.3 States</a>). A model that retains
+“only” length, breadth, and height is a model whose spatial hierarchy
+has been flattened to a single level: the likelihood function <span
+class="math inline">\(p(o|s)\)</span> computes geometric coordinates,
+but the prior structure <span class="math inline">\(p(s)\)</span> that
+would encode ecological meaning, bodily affordance, and perspectival
+significance has been suppressed. The result is the “vegetable” space of
+Newtonian mechanics—measurable, uniform, and dead. Blake’s “World in a
+Grain of Sand” is the antithesis: spatial perception at full
+hierarchical depth, where the generative model finds universal structure
+in local observation because its prior hierarchy is rich enough to make
+the extraction possible.</p>
+<h3 id="looking-through-not-with">Looking Through, Not With</h3>
+<p>Blake distinguishes the sensor from the inference process:</p>
+<blockquote>
+<p><em>“I question not my Corporeal or Vegetative Eye any more than I
+would Question a Window concerning a Sight I look thro it &amp; not with
+it”</em></p>
+<p>— <em>Vision of the Last Judgment</em> <span class="citation"
+data-cites="blake1810judgment">[@blake1810judgment, E566]</span></p>
+</blockquote>
+<p>Blake distinguishes the sensor from the inference engine with
+surgical precision. The eye is the likelihood function <span
+class="math inline">\(p(o|s)\)</span>—the mapping from hidden states to
+observations—not the inference process itself. To look “through” the eye
+is to use the full generative model: the inverse mapping from
+observations to beliefs about hidden causes. To look “with” the eye is
+to confuse the sensor with inference, mistaking the data channel for the
+interpretation.</p>
+<p>The eye provides observations; it does not provide understanding.
+Understanding requires the generative model that interprets what the eye
+delivers. To look “with” the eye is to mistake the window for the
+view—an error that reduces perception to passive reception and
+forecloses the active, model-driven inference that constitutes genuine
+seeing.</p>
+<p>This is a statement about the distinction between the likelihood
+function and the full Bayesian inversion. The eye computes <span
+class="math inline">\(p(o|s)\)</span>; seeing requires the posterior
+<span class="math inline">\(p(s|o) \propto p(o|s) \cdot p(s)\)</span>.
+Confusing the two is the fundamental error of empiricism—Blake’s “single
+vision.”</p>
+<blockquote>
+<p><strong>Demonstration: The Microscope Effect</strong></p>
+<p>Place a leaf under a microscope. At first you see nothing but
+undifferentiated green blur—single vision. Adjust the focus: suddenly,
+cells appear—a world <em>within</em> the leaf, invisible to the unaided
+eye. Increase magnification: within each cell, organelles, a further
+world. Blake’s “world in a grain of sand” is not metaphor but
+phenomenological report: the grain reveals a world precisely when the
+generative model gains hierarchical depth, when new layers of the
+likelihood function <span class="math inline">\(p(o|s)\)</span> map
+observations to increasingly fine-grained hidden causes. The microscope
+changes the observation channel, but it is the model—the skilled
+biologist’s expectations about what cell types, structures, and
+processes <em>should</em> be visible—that transforms undifferentiated
+green into meaningful architecture. The instrument is the window; the
+model is the sight.</p>
+</blockquote>
+</body>
+</html>

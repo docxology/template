@@ -6,12 +6,12 @@ This report compares terminology patterns, ambiguities, and communication challe
 
 | Domain | Terms Analyzed | Key Ambiguities | Recommendations |
 |--------|----------------|-----------------|-----------------|
-| Unit Of Individuality | 0 | 0 | 0 |
-| Behavior And Identity | 0 | 0 | 0 |
-| Power And Labor | 0 | 0 | 0 |
-| Sex And Reproduction | 0 | 0 | 0 |
-| Kin And Relatedness | 0 | 0 | 0 |
-| Economics | 0 | 0 | 0 |
+| Unit Of Individuality | 7 | 2 | 4 |
+| Behavior And Identity | 5 | 2 | 4 |
+| Power And Labor | 2 | 2 | 4 |
+| Sex And Reproduction | 3 | 2 | 4 |
+| Kin And Relatedness | 16 | 2 | 4 |
+| Economics | 11 | 2 | 4 |
 
 
 ## Cross-Domain Patterns

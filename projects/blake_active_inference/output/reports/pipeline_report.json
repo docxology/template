@@ -1,0 +1,367 @@
+{
+  "timestamp": "2026-02-12T13:18:54.090905",
+  "total_duration": 74.83576822280884,
+  "stages": [
+    {
+      "name": "Clean Output Directories",
+      "exit_code": 0,
+      "duration": 0.0189359188079834,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Environment Setup",
+      "exit_code": 0,
+      "duration": 1.0703210830688477,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Project Tests",
+      "exit_code": 0,
+      "duration": 9.64297604560852,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Project Analysis",
+      "exit_code": 0,
+      "duration": 2.0900650024414062,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "PDF Rendering",
+      "exit_code": 0,
+      "duration": 61.12445020675659,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Output Validation",
+      "exit_code": 0,
+      "duration": 0.4619128704071045,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Copy Outputs",
+      "exit_code": 0,
+      "duration": 0.4271070957183838,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    }
+  ],
+  "test_results": null,
+  "validation_results": null,
+  "performance_metrics": null,
+  "error_summary": null,
+  "output_statistics": {
+    "directories": {
+      "pdf": {
+        "exists": true,
+        "file_count": 9,
+        "size_mb": "4.54",
+        "total_size_bytes": 4758962,
+        "largest_files": [
+          {
+            "name": "blake_active_inference_combined.pdf",
+            "size_mb": "4.06",
+            "path": "pdf/blake_active_inference_combined.pdf"
+          },
+          {
+            "name": "_combined_manuscript.tex",
+            "size_mb": "0.17",
+            "path": "pdf/_combined_manuscript.tex"
+          },
+          {
+            "name": "_combined_manuscript.md",
+            "size_mb": "0.14",
+            "path": "pdf/_combined_manuscript.md"
+          }
+        ],
+        "extensions": {
+          ".md": 1,
+          ".log": 1,
+          ".aux": 1,
+          ".blg": 1,
+          ".bib": 1,
+          ".tex": 1,
+          ".toc": 1,
+          ".pdf": 1,
+          ".bbl": 1
+        }
+      },
+      "web": {
+        "exists": true,
+        "file_count": 18,
+        "size_mb": "0.63",
+        "total_size_bytes": 656365,
+        "largest_files": [
+          {
+            "name": "index.html",
+            "size_mb": "0.23",
+            "path": "web/index.html"
+          },
+          {
+            "name": "_combined_manuscript.md",
+            "size_mb": "0.14",
+            "path": "web/_combined_manuscript.md"
+          },
+          {
+            "name": "04h_collectives.html",
+            "size_mb": "0.03",
+            "path": "web/04h_collectives.html"
+          }
+        ],
+        "extensions": {
+          ".md": 1,
+          ".html": 17
+        }
+      },
+      "slides": {
+        "exists": true,
+        "file_count": 113,
+        "size_mb": "2.52",
+        "total_size_bytes": 2643607,
+        "largest_files": [
+          {
+            "name": "04h_collectives_slides.pdf",
+            "size_mb": "0.83",
+            "path": "slides/04h_collectives_slides.pdf"
+          },
+          {
+            "name": "04_synthesis_slides.pdf",
+            "size_mb": "0.33",
+            "path": "slides/04_synthesis_slides.pdf"
+          },
+          {
+            "name": "04h_collectives_slides.log",
+            "size_mb": "0.06",
+            "path": "slides/04h_collectives_slides.log"
+          }
+        ],
+        "extensions": {
+          ".log": 16,
+          ".nav": 16,
+          ".aux": 16,
+          ".pdf": 16,
+          ".snm": 16,
+          ".toc": 16,
+          ".tex": 16,
+          ".vrb": 1
+        }
+      },
+      "figures": {
+        "exists": true,
+        "file_count": 11,
+        "size_mb": "3.82",
+        "total_size_bytes": 4005239,
+        "largest_files": [
+          {
+            "name": "the_four_zoas_egg_color.jpg",
+            "size_mb": "0.62",
+            "path": "figures/the_four_zoas_egg_color.jpg"
+          },
+          {
+            "name": "fig5_four_zoas.png",
+            "size_mb": "0.49",
+            "path": "figures/fig5_four_zoas.png"
+          },
+          {
+            "name": "fig3_perception_action_cycle.png",
+            "size_mb": "0.49",
+            "path": "figures/fig3_perception_action_cycle.png"
+          }
+        ],
+        "extensions": {
+          ".png": 8,
+          ".jpg": 2,
+          ".json": 1
+        }
+      },
+      "data": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "reports": {
+        "exists": true,
+        "file_count": 6,
+        "size_mb": "0.01",
+        "total_size_bytes": 14297,
+        "largest_files": [
+          {
+            "name": "output_statistics.json",
+            "size_mb": "0.01",
+            "path": "reports/output_statistics.json"
+          },
+          {
+            "name": "validation_report.json",
+            "size_mb": "0.01",
+            "path": "reports/validation_report.json"
+          },
+          {
+            "name": "output_statistics.txt",
+            "size_mb": "0.00",
+            "path": "reports/output_statistics.txt"
+          }
+        ],
+        "extensions": {
+          ".json": 3,
+          ".txt": 1,
+          ".md": 2
+        }
+      },
+      "simulations": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "llm": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "logs": {
+        "exists": true,
+        "file_count": 1,
+        "size_mb": "0.00",
+        "total_size_bytes": 3120,
+        "largest_files": [
+          {
+            "name": "pipeline.log",
+            "size_mb": "0.00",
+            "path": "logs/pipeline.log"
+          }
+        ],
+        "extensions": {
+          ".log": 1
+        }
+      }
+    },
+    "total_files": 158,
+    "total_size_mb": 11.521902084350586,
+    "largest_files": [
+      {
+        "name": "blake_active_inference_combined.pdf",
+        "size_mb": "4.06",
+        "category": "pdf",
+        "path": "pdf/blake_active_inference_combined.pdf"
+      },
+      {
+        "name": "04h_collectives_slides.pdf",
+        "size_mb": "0.83",
+        "category": "slides",
+        "path": "slides/04h_collectives_slides.pdf"
+      },
+      {
+        "name": "the_four_zoas_egg_color.jpg",
+        "size_mb": "0.62",
+        "category": "figures",
+        "path": "figures/the_four_zoas_egg_color.jpg"
+      },
+      {
+        "name": "fig5_four_zoas.png",
+        "size_mb": "0.49",
+        "category": "figures",
+        "path": "figures/fig5_four_zoas.png"
+      },
+      {
+        "name": "fig3_perception_action_cycle.png",
+        "size_mb": "0.49",
+        "category": "figures",
+        "path": "figures/fig3_perception_action_cycle.png"
+      },
+      {
+        "name": "04_synthesis_slides.pdf",
+        "size_mb": "0.33",
+        "category": "slides",
+        "path": "slides/04_synthesis_slides.pdf"
+      },
+      {
+        "name": "index.html",
+        "size_mb": "0.23",
+        "category": "web",
+        "path": "web/index.html"
+      },
+      {
+        "name": "_combined_manuscript.tex",
+        "size_mb": "0.17",
+        "category": "pdf",
+        "path": "pdf/_combined_manuscript.tex"
+      },
+      {
+        "name": "_combined_manuscript.md",
+        "size_mb": "0.14",
+        "category": "pdf",
+        "path": "pdf/_combined_manuscript.md"
+      },
+      {
+        "name": "_combined_manuscript.md",
+        "size_mb": "0.14",
+        "category": "web",
+        "path": "web/_combined_manuscript.md"
+      }
+    ],
+    "missing_expected_files": [
+      "blake_active_inference_combined.pdf or project_combined.pdf"
+    ],
+    "file_counts_by_type": {
+      ".md": 4,
+      ".log": 18,
+      ".aux": 17,
+      ".blg": 1,
+      ".bib": 1,
+      ".tex": 17,
+      ".toc": 17,
+      ".pdf": 17,
+      ".bbl": 1,
+      ".html": 17,
+      ".nav": 16,
+      ".snm": 16,
+      ".vrb": 1,
+      ".png": 8,
+      ".jpg": 2,
+      ".json": 4,
+      ".txt": 1
+    },
+    "sizes_by_category": {
+      "pdf": 4.53849983215332,
+      "web": 0.6259584426879883,
+      "slides": 2.5211400985717773,
+      "figures": 3.8196935653686523,
+      "data": 0.0,
+      "reports": 0.013634681701660156,
+      "simulations": 0.0,
+      "llm": 0.0,
+      "logs": 0.0029754638671875
+    },
+    "pdf_files": 9,
+    "figures": 11,
+    "data_files": 0
+  }
+}

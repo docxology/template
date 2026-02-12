@@ -14,18 +14,18 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import List, Tuple
 
-# Ensure infrastructure/ and src/ are on path BEFORE imports
-repo_root = Path(__file__).resolve().parents[2]
-src_path = Path(__file__).resolve().parent / "src"
-if str(repo_root) not in sys.path:
-    sys.path.insert(0, str(repo_root))
-if str(src_path) not in sys.path:
-    sys.path.insert(0, str(src_path))
+# Ensure src/ is at the FRONT of sys.path so project core/ isn't shadowed
+# by infrastructure/core/ when PYTHONPATH includes infrastructure/
+project_root = Path(__file__).resolve().parent.parent
+src_path = str(project_root / "src")
+if src_path in sys.path:
+    sys.path.remove(src_path)
+sys.path.insert(0, src_path)
 
-from src.utils.validation import (validate_markdown, validate_pdf_rendering,
-                                  verify_output_integrity)
+from core.validation_utils import (validate_markdown, validate_pdf_rendering,
+                               verify_output_integrity)
 
-from src.utils.logging import get_logger
+from core.logging import get_logger
 
 logger = get_logger(__name__)
 

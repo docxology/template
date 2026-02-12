@@ -112,10 +112,10 @@ All prompts reference and require compliance with:
 
 | Standard | Focus | Prompts Using |
 |----------|-------|---------------|
-| [`../.cursorrules/testing_standards.md`](../.cursorrules/testing_standards.md) | No mocks, coverage requirements | All prompts |
-| [`../.cursorrules/code_style.md`](../.cursorrules/code_style.md) | Black formatting, type hints | Code prompts |
-| [`../.cursorrules/api_design.md`](../.cursorrules/api_design.md) | Function signatures, parameters | Code prompts |
-| [`../.cursorrules/documentation_standards.md`](../.cursorrules/documentation_standards.md) | AGENTS.md, README.md structure | Documentation prompts |
+| [`testing_standards.md`](../../.cursorrules/testing_standards.md) | No mocks, coverage requirements | All prompts |
+| [`code_style.md`](../../.cursorrules/code_style.md) | Black formatting, type hints | Code prompts |
+| [`api_design.md`](../../.cursorrules/api_design.md) | Function signatures, parameters | Code prompts |
+| [`documentation_standards.md`](../../.cursorrules/documentation_standards.md) | AGENTS.md, README.md structure | Documentation prompts |
 
 ### Architecture Principles
 
@@ -169,8 +169,8 @@ cat docs/prompts/validation_quality.md
 ### Related Documentation
 
 - [`AGENTS.md`](AGENTS.md) - Technical documentation for all prompts
-- [`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md) - System design principles
-- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow
+- [`../core/architecture.md`](../core/architecture.md) - System design principles
+- [`../core/workflow.md`](../core/workflow.md) - Development workflow
 - [`../README.md`](../README.md) - documentation hub
 
 ### Project Documentation

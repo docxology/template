@@ -9,26 +9,25 @@ The `docs/modules/` directory contains detailed documentation for the advanced m
 ```
 docs/modules/
 ├── AGENTS.md                       # This technical documentation
-├── MODULES_GUIDE.md       # Guide to all 7 modules
-├── PDF_VALIDATION.md               # PDF validation system documentation
+├── modules-guide.md                # Guide for infrastructure modules
+├── pdf-validation.md               # PDF validation system documentation
 ├── README.md                       # Quick reference for modules
-├── SCIENTIFIC_SIMULATION_GUIDE.md  # Scientific simulation system guide
+├── scientific-simulation-guide.md  # Scientific simulation system guide
 └── guides/                         # Per-module documentation
     ├── README.md
-    ├── INTEGRITY_MODULE.md
-    ├── LITERATURE_MODULE.md
-    ├── LLM_MODULE.md
-    ├── PUBLISHING_MODULE.md
-    ├── RENDERING_MODULE.md
-    ├── REPORTING_MODULE.md
-    └── SCIENTIFIC_MODULE.md
+    ├── integrity-module.md
+    ├── llm-module.md
+    ├── publishing-module.md
+    ├── rendering-module.md
+    ├── reporting-module.md
+    └── scientific-module.md
 ```
 
 ## Key Documentation Files
 
-### Modules Guide (`MODULES_GUIDE.md`)
+### Modules Guide (`modules-guide.md`)
 
-**guide covering all seven advanced modules:**
+**guide covering all nine infrastructure modules:**
 
 **Module Categories:**
 
@@ -47,7 +46,7 @@ docs/modules/
 - Configuration management across modules
 - Error handling and logging integration
 
-### PDF Validation (`PDF_VALIDATION.md`)
+### PDF Validation (`pdf-validation.md`)
 
 **PDF validation system documentation:**
 
@@ -80,7 +79,7 @@ python3 -m infrastructure.validation.cli pdf output/pdf/01_abstract.pdf
 - Figure and table placement
 - Document metadata accuracy
 
-### Scientific Simulation Guide (`SCIENTIFIC_SIMULATION_GUIDE.md`)
+### Scientific Simulation Guide (`scientific-simulation-guide.md`)
 
 **Guide for scientific computing and simulation modules:**
 
@@ -572,12 +571,12 @@ print(f'Keys: {list(config.keys())}')
 
 **Module Documentation:**
 
-- [`MODULES_GUIDE.md`](MODULES_GUIDE.md) - Module guide
-- [`PDF_VALIDATION.md`](PDF_VALIDATION.md) - PDF validation system
-- [`SCIENTIFIC_SIMULATION_GUIDE.md`](SCIENTIFIC_SIMULATION_GUIDE.md) - Scientific simulation guide
+- [`modules-guide.md`](modules-guide.md) - Module guide
+- [`pdf-validation.md`](pdf-validation.md) - PDF validation system
+- [`scientific-simulation-guide.md`](scientific-simulation-guide.md) - Scientific simulation guide
 
 **System Documentation:**
 
 - [`../AGENTS.md`](../AGENTS.md) - system overview
-- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - Documentation index
+- [`../documentation-index.md`](../documentation-index.md) - Documentation index
 - [`../../infrastructure/AGENTS.md`](../../infrastructure/AGENTS.md) - Infrastructure modules

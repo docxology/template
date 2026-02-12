@@ -1,0 +1,419 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}{Implications: The Wider Fields}
+\protect\phantomsection\label{implications}
+\emph{The doors open onto wider fields.}
+
+\begin{block}{Philosophy of Mind}
+\protect\phantomsection\label{philosophy-of-mind}
+\begin{block}{The Romantic Computational Mind}
+\protect\phantomsection\label{the-romantic-computational-mind}
+The foregoing synthesis raises fundamental questions for philosophy of
+mind, cognitive science, and how we understand the relationship between
+artistic and scientific knowledge. If Blake's phenomenological
+observations and Friston's mathematical framework describe the same
+cognitive architecture, then the Romantic tradition is not
+anti-cognitive but proto-computational---articulating in the language of
+vision what neuroscience would later formalize.
+
+Blake's ``As a man is, so he sees'' is not merely prescient metaphor; it
+is a precise statement of the Active Inference thesis that perception is
+model-dependent inference. The convergence suggests that
+phenomenological observation and formal modeling approach the same
+cognitive reality from different directions, each illuminating what the
+other cannot express. Against McGinn's ``mysterianism''---the claim that
+consciousness constitutes an irresolvable problem for human cognition
+{[}@mcginn2004consciousness{]}---the Blake--Active Inference synthesis
+suggests a third way: neither reductive explanation nor mysterian
+agnosticism, but phenomenological-formal complementarity, where
+visionary description and mathematical formalism illuminate different
+facets of the same cognitive architecture.
+\end{block}
+
+\begin{block}{Consciousness as Hierarchical Depth}
+\protect\phantomsection\label{consciousness-as-hierarchical-depth}
+Blake's fourfold hierarchy (Figure \ref{fig:fourfold}) implies degrees
+of awareness. Single vision is diminished consciousness. Fourfold vision
+is full integration.
+
+If cleansed perception = optimized free energy minimization (Equation
+\ref{eq:cleansing}), then consciousness correlates with well-calibrated
+generative models. The dimness of Newton's sleep is computational: poor
+precision weighting (Equation \ref{eq:prior_dominance}) produces
+impoverished inference, collapsing the prediction error signal (Equation
+\ref{eq:prediction_error}). Conversely, expanded consciousness
+corresponds to deeper hierarchical models that compress more temporal
+structure (Equation \ref{eq:temporal_hierarchy}) and richer spatial
+detail (Equation \ref{eq:model_complexity}) into unified awareness.
+\end{block}
+\end{block}
+
+\begin{block}{Cognitive Science}
+\protect\phantomsection\label{cognitive-science}
+\begin{block}{Predictions}
+\protect\phantomsection\label{predictions}
+Three empirical implications follow from the Blake--Active Inference
+correspondence:
+
+\begin{enumerate}
+\item
+  \textbf{Expert perception} --- If fourfold vision reflects
+  hierarchical depth, then artists and naturalists should exhibit richer
+  hierarchical representations than novices. Studies of perceptual
+  expertise in visual art {[}@chamberlain2013perceptual{]} already
+  document enhanced configural processing in trained observers,
+  consistent with deeper generative models.
+\item
+  \textbf{Precision modulation} --- Contemplative practices that adjust
+  precision weighting should alter perceptual content in predictable
+  ways. Meditation traditions emphasizing open monitoring (reduced prior
+  precision) versus focused attention (increased sensory precision)
+  provide natural experimental conditions for testing Blake's claim that
+  perception varies with the ``Organs of Perception.''
+\item
+  \textbf{Psychedelic states} --- Substances that alter precision
+  constraints should produce Blake-like perception of infinite detail.
+  The ALBUS framework {[}@safron2025albus{]}, extending the earlier
+  REBUS model {[}@carthartharris2019rebus{]}, formalizes this
+  prediction: psychedelics can both relax and strengthen beliefs,
+  reshaping the balance between prior expectations and sensory
+  evidence---precisely the ``cleansing'' Blake described.
+\end{enumerate}
+\end{block}
+
+\begin{block}{Neural Correlates}
+\protect\phantomsection\label{neural-correlates}
+The contrast between ``guinea sun'' and ``Heavenly Host'' implies
+differentiated processing. Neuroimaging could investigate whether
+aesthetic transport exhibits relaxed prior precision and enhanced
+sensory processing.
+\end{block}
+\end{block}
+
+\begin{block}{Creativity}
+\protect\phantomsection\label{creativity}
+\begin{block}{The Artist as Model-Builder}
+\protect\phantomsection\label{the-artist-as-model-builder}
+If imagination = generative model, then creativity = model construction.
+
+Blake's illuminated books---integrating poetry, image, and
+print---instantiate this claim. Each work offers a generative model to
+the viewer, restructuring their perception.
+\end{block}
+
+\begin{block}{Aesthetic Free Energy}
+\protect\phantomsection\label{aesthetic-free-energy}
+Great art offers models that resolve more free energy (Equation
+\ref{eq:free_energy}) than ordinary perception---making more sense of
+more experience.
+
+\begin{quote}
+\emph{``To the eyes of the man of imagination, nature is imagination
+itself.''}
+
+--- Blake {[}@blake1810judgment{]}
+\end{quote}
+
+The developed perceiver experiences nature as already structured. The
+generative model meets itself in the world.
+\end{block}
+\end{block}
+
+\begin{block}{Transpersonal Experience}
+\protect\phantomsection\label{transpersonal-experience}
+\begin{block}{Mystical Perception}
+\protect\phantomsection\label{mystical-perception}
+Blake's visions---``the Innumerable company of the Heavenly
+Host''---admit computational interpretation: extreme precision
+relaxation allowing radical belief update.
+
+Mysticism on this account is not separate reality but \emph{profound
+model revision}. The doors swing so wide that habitual priors dissolve.
+\end{block}
+
+\begin{block}{Building Jerusalem}
+\protect\phantomsection\label{jerusalem}
+Blake's vision of Jerusalem as collective awakening maps directly onto
+the multi-agent framework: Jerusalem = shared generative model (Equation
+\ref{eq:multi_agent}) = collective prior enabling coordinated
+perception. The Mental Fight---the tireless labor of
+model-building---operates at civilizational scale, reshaping shared
+priors through education, art, contemplative practice, and cultural
+production.
+\end{block}
+\end{block}
+
+\begin{block}{Counter-Arguments}
+\protect\phantomsection\label{counter-arguments}
+Four objections deserve explicit engagement:
+
+\textbf{The Overfitting Objection.} Any sufficiently general
+mathematical framework can be mapped onto any sufficiently general
+philosophy; the Blake--Active Inference correspondence may reflect the
+breadth of both systems rather than genuine structural alignment. We
+concede that generality increases the risk of spurious correspondence.
+However, the specificity of our mappings---not merely ``Blake values
+perception'' but ``Blake's fourfold hierarchy structurally mirrors the
+factorization of hierarchical generative models''---resists this charge.
+The correspondences are not one-to-one between vague themes but between
+precise structural features: boundary topology, precision dynamics,
+temporal depth, multi-agent factorization.
+
+\textbf{The Anachronism Objection.} Blake intended no Active Inference
+meanings; reading them into his work is historical projection. This
+objection applies to all retrospective intellectual history. We do not
+claim that Blake \emph{intended} to describe Markov blankets. We claim
+that the phenomenological structures he observed and articulated in his
+prophetic poetry exhibit formal properties that Active Inference
+independently identifies. Convergent description does not require shared
+intention---Darwin and Wallace converged on natural selection without
+coordination.
+
+\textbf{The Formalization Objection.} Poetry resists equations;
+translating Blake's visionary language into mathematical notation
+inevitably loses what makes it meaningful. We agree that the translation
+is lossy. The formal apparatus captures structural relations---topology,
+dynamics, factorization---but not the affective, aesthetic, and
+spiritual dimensions of Blake's work. The equations are not replacements
+for the poetry but supplements: making explicit what the poetry implies
+about the architecture of perception. The two languages illuminate
+different aspects of the same cognitive reality.
+
+\textbf{The Selectivity Objection.} The paper cherry-picks favorable
+passages while ignoring Blake's many statements that resist
+computational interpretation---his antinomianism, his mythological
+personifications, his explicit hostility to ``Newton's Particles of
+light.'' We acknowledge selection. Our eight themes represent the
+strongest structural correspondences, not the totality of Blake's
+thought. Blake's anti-Newtonian polemic, far from undermining our
+thesis, \emph{supports} it: his critique targets precisely the ``single
+vision'' (shallow, prior-locked inference) that Active Inference
+identifies as pathological. The correspondence holds not despite Blake's
+hostility to mechanism but \emph{because} of it.
+
+\textbf{The Presentism Objection.} The most subtle risk is that we are
+committing ``presentism''---reading modern scientific concepts back into
+a historical figure whose intellectual context was radically different.
+Blake's sources were Swedenborg, Boehme, and the Book of Ezekiel, not
+Helmholtz or Bayes. We take this objection seriously. Our claim is not
+causal (that Blake influenced neuroscience) but \emph{structural} (that
+his phenomenological observations and the formal framework converge on
+the same cognitive architecture). The defense against presentism is
+specificity: vague analogies between ``Romanticism'' and ``creativity''
+would indeed be presentist, but precise mappings between Blake's
+fourfold hierarchy and the factorization of hierarchical generative
+models resist this charge precisely because they are falsifiable. If the
+structural correspondences broke down under scrutiny---if Blake's
+categories did not map onto computationally distinct operations---the
+project would fail. That they hold is evidence of convergent insight,
+not anachronistic projection.
+\end{block}
+
+\begin{block}{Limitations}
+\protect\phantomsection\label{limitations}
+\textbf{Scope.} This paper treats Blake's perceptual philosophy through
+the lens of a single formal framework. Other formalisms---enactivism,
+dynamical systems theory, integrated information theory---might
+illuminate different aspects of Blake's vision. The Active Inference
+lens is not exhaustive.
+
+\textbf{Empirical standing.} The predictions generated in §5.2 remain
+untested. While the ALBUS framework (extending the earlier REBUS model)
+provides some indirect support for the psychedelic prediction, and
+expertise studies align with the hierarchical depth prediction, no
+experiment has been designed to test the Blake--Active Inference
+correspondence directly. Future work should operationalize specific
+predictions---for example, measuring hierarchical model depth in
+experienced contemplatives versus novices using computational
+phenotyping.
+
+\textbf{Translation fidelity.} The Erdman edition provides our textual
+authority, but Blake's composite art---where image, text, and color form
+a unified expression---resists reduction to quotation. Our analysis
+necessarily privileges the verbal component of works that Blake designed
+as visual-verbal wholes. The illuminated books demand a richer formalism
+than equations alone can provide.
+
+\textbf{Historical context.} Blake's religious commitments---his
+unorthodox Christianity, his engagement with Swedenborg and Boehme, his
+prophetic self-understanding---provide the matrix within which his
+perceptual philosophy developed. Abstracting his insights into secular
+computational language risks stripping away the very context that gave
+them meaning. We proceed with awareness that translation always
+transforms.
+\end{block}
+
+\begin{block}{Contemporary Applications}
+\protect\phantomsection\label{contemporary-applications}
+The Blake-Active Inference synthesis is not merely historical---it
+illuminates contemporary challenges at the intersection of artificial
+intelligence, mental health, and embodied robotics. In each domain,
+Blake's phenomenological vocabulary provides intuitive access to formal
+mechanisms that would otherwise remain opaque.
+
+\begin{block}{AI Consciousness and Machine Imagination}
+\protect\phantomsection\label{ai-consciousness-and-machine-imagination}
+Blake's claim that ``Imagination is Human Existence Itself'' speaks
+directly to contemporary debates about machine consciousness. If the
+self \emph{is} the generative model, what of artificial generative
+models? Blake's framework suggests consciousness requires not merely
+prediction but \emph{creative} model-building---the capacity to ``Create
+a System'' rather than merely optimize within one. Furthermore, his Four
+Zoas (Equation \ref{eq:factorized_model}) suggest consciousness requires
+embodiment (Tharmas) and affective grounding (Luvah)---dimensions absent
+from current AI systems.
+\end{block}
+
+\begin{block}{Mental Health Interventions}
+\protect\phantomsection\label{mental-health-interventions}
+The synthesis illuminates mechanisms underlying several therapeutic
+modalities:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Psychedelic therapy}: The ALBUS framework formalizes Blake's
+  ``door cleansing'' as precision modulation---encompassing both the
+  relaxation of rigid beliefs and the strengthening of therapeutic
+  insights---explaining therapeutic effects through prior restructuring.
+\item
+  \textbf{Cognitive-behavioral therapy}: CBT operates through prior
+  revision---identifying and restructuring the ``mind-forg'd manacles''
+  of automatic thoughts.
+\item
+  \textbf{Contemplative practice}: Meditation traditions cultivate what
+  Blake called ``flexible senses''---the capacity to modulate precision
+  dynamically rather than remaining locked in prior-dominated inference.
+\item
+  \textbf{Narrative therapy}: Blake's distinction between ``States'' and
+  ``Identities'' anticipates the therapeutic move from fixed trait
+  identification to fluid state recognition.
+\end{itemize}
+\end{block}
+
+\begin{block}{Embodied AI and Multi-Agent Coordination}
+\protect\phantomsection\label{embodied-ai-and-multi-agent-coordination}
+Active Inference robotics embodies Blake's perception-action
+unity---artificial agents that perceive \emph{through} acting, not
+merely before acting. Blake's ``Energy is Eternal Delight'' provides a
+phenomenological gloss on the utility-free motivation of free energy
+minimization: agents seek not pleasure but self-evidence.
+
+Multi-agent robotic coordination---swarm robotics, collaborative
+manipulation---instantiates ``Building Jerusalem'' at the material
+level: shared generative models enabling collective action without
+centralized control. Blake's vision of ``Universal Brotherhood'' among
+the Zoas maps onto the coordination problem in multi-agent systems: how
+can diverse inference modes harmonize without homogenization?
+\end{block}
+
+\begin{block}{Emerging Field Convergence}
+\protect\phantomsection\label{emerging-field-convergence}
+This synthesis sits at the intersection of two rapidly converging
+fields: predictive processing approaches to aesthetics
+{[}@vandecruys2024order{]} and cognitive approaches to Romanticism
+{[}@savarese2020romanticism{]}. The convergence is not
+coincidental---both fields independently arrived at the same fundamental
+question: how does the brain's predictive architecture shape creative
+experience? The Phil Trans B 2024 theme issue demonstrates that the
+neuroscience community now takes aesthetic prediction error seriously as
+a research program. Simultaneously, literary scholars increasingly
+recognize that the Romantic poets were sophisticated theorists of mind,
+not naïve pre-scientific mystics. Our contribution bridges these fields
+by providing what neither has yet achieved: a formal, equation-level
+mapping between a specific historical poet's cognitive phenomenology and
+the mathematical apparatus of contemporary computational neuroscience.
+\end{block}
+\end{block}
+\end{frame}
+
+\end{document}

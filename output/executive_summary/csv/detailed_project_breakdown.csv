@@ -1,28 +1,28 @@
 Project,Category,Metric,Value,Unit,Description,Health_Impact,Recommended_Range
-blake_active_inference,Manuscript,Total_Words,16350,words,Total words in manuscript sections,High,1000-20000 words
-blake_active_inference,Manuscript,Sections,27,count,Number of manuscript sections,Medium,3-20 sections
-blake_active_inference,Manuscript,Equations,0,count,Mathematical equations in manuscript,Low,0-50 equations
-blake_active_inference,Manuscript,Figures,8,count,Figure references in manuscript,Low,0-20 figures
-blake_active_inference,Manuscript,References,160,count,Citation references,Medium,10-200 references
+blake_active_inference,Manuscript,Total_Words,20911,words,Total words in manuscript sections,High,1000-20000 words
+blake_active_inference,Manuscript,Sections,19,count,Number of manuscript sections,Medium,3-20 sections
+blake_active_inference,Manuscript,Equations,1,count,Mathematical equations in manuscript,Low,0-50 equations
+blake_active_inference,Manuscript,Figures,9,count,Figure references in manuscript,Low,0-20 figures
+blake_active_inference,Manuscript,References,175,count,Citation references,Medium,10-200 references
 blake_active_inference,Codebase,Source_Files,2,files,Python source files,Medium,1-20 files
-blake_active_inference,Codebase,Source_Lines,814,lines,Lines of source code,Medium,100-5000 lines
+blake_active_inference,Codebase,Source_Lines,832,lines,Lines of source code,Medium,100-5000 lines
 blake_active_inference,Codebase,Methods,11,count,Function/method definitions,Medium,10-500 methods
 blake_active_inference,Codebase,Classes,0,count,Class definitions,Low,0-50 classes
 blake_active_inference,Codebase,Scripts,1,files,Analysis scripts,Low,0-10 scripts
 blake_active_inference,Testing,Test_Files,5,files,Test files discovered,High,1+ files
-blake_active_inference,Testing,Total_Tests,53,tests,Total test cases (-1 = unavailable),High,10-1000 tests
-blake_active_inference,Testing,Coverage_Percent,96.42857142857143,percent,Code coverage percentage,High,90-100%
+blake_active_inference,Testing,Total_Tests,52,tests,Total test cases (-1 = unavailable),High,10-1000 tests
+blake_active_inference,Testing,Coverage_Percent,95.82309582309583,percent,Code coverage percentage,High,90-100%
 blake_active_inference,Testing,Execution_Time,0.0,seconds,Test execution time,Low,1-300 seconds
 blake_active_inference,Outputs,PDF_Files,1,files,Generated PDF documents,High,1+ files
-blake_active_inference,Outputs,PDF_Size_MB,2.94,MB,Total PDF file size,Low,0.1-10 MB
+blake_active_inference,Outputs,PDF_Size_MB,4.06,MB,Total PDF file size,Low,0.1-10 MB
 blake_active_inference,Outputs,Figures,8,files,Generated figure files,Medium,0-50 figures
-blake_active_inference,Outputs,Slides,24,files,Generated slide files,Medium,0-20 slide sets
-blake_active_inference,Outputs,Web_Outputs,25,files,Generated web files,Medium,0-20 web files
-blake_active_inference,Pipeline,Total_Duration,80.09141182899475,seconds,Total pipeline execution time,Medium,60-600 seconds
+blake_active_inference,Outputs,Slides,16,files,Generated slide files,Medium,0-20 slide sets
+blake_active_inference,Outputs,Web_Outputs,17,files,Generated web files,Medium,0-20 web files
+blake_active_inference,Pipeline,Total_Duration,74.83576822280884,seconds,Total pipeline execution time,Medium,60-600 seconds
 blake_active_inference,Pipeline,Stages_Passed,7,stages,Pipeline stages completed successfully,High,6 stages
 blake_active_inference,Pipeline,Bottleneck_Stage,PDF Rendering,stage_name,Slowest pipeline stage,Medium,Varies by project
-blake_active_inference,Pipeline,Bottleneck_Duration,70.74190211296082,seconds,Time spent in bottleneck stage,Medium,10-300 seconds
-code_project,Manuscript,Total_Words,3425,words,Total words in manuscript sections,High,1000-20000 words
+blake_active_inference,Pipeline,Bottleneck_Duration,61.12445020675659,seconds,Time spent in bottleneck stage,Medium,10-300 seconds
+code_project,Manuscript,Total_Words,3720,words,Total words in manuscript sections,High,1000-20000 words
 code_project,Manuscript,Sections,8,count,Number of manuscript sections,Medium,3-20 sections
 code_project,Manuscript,Equations,0,count,Mathematical equations in manuscript,Low,0-50 equations
 code_project,Manuscript,Figures,7,count,Figure references in manuscript,Low,0-20 figures
@@ -32,16 +32,16 @@ code_project,Codebase,Source_Lines,260,lines,Lines of source code,Medium,100-500
 code_project,Codebase,Methods,3,count,Function/method definitions,Medium,10-500 methods
 code_project,Codebase,Classes,1,count,Class definitions,Low,0-50 classes
 code_project,Codebase,Scripts,2,files,Analysis scripts,Low,0-10 scripts
-code_project,Testing,Test_Files,2,files,Test files discovered,High,1+ files
-code_project,Testing,Total_Tests,28,tests,Total test cases (-1 = unavailable),High,10-1000 tests
-code_project,Testing,Coverage_Percent,91.0569105691057,percent,Code coverage percentage,High,90-100%
+code_project,Testing,Test_Files,3,files,Test files discovered,High,1+ files
+code_project,Testing,Total_Tests,34,tests,Total test cases (-1 = unavailable),High,10-1000 tests
+code_project,Testing,Coverage_Percent,100.0,percent,Code coverage percentage,High,90-100%
 code_project,Testing,Execution_Time,0.0,seconds,Test execution time,Low,1-300 seconds
 code_project,Outputs,PDF_Files,1,files,Generated PDF documents,High,1+ files
-code_project,Outputs,PDF_Size_MB,1.39,MB,Total PDF file size,Low,0.1-10 MB
+code_project,Outputs,PDF_Size_MB,1.40,MB,Total PDF file size,Low,0.1-10 MB
 code_project,Outputs,Figures,6,files,Generated figure files,Medium,0-50 figures
 code_project,Outputs,Slides,5,files,Generated slide files,Medium,0-20 slide sets
 code_project,Outputs,Web_Outputs,6,files,Generated web files,Medium,0-20 web files
-code_project,Pipeline,Total_Duration,36.83868193626404,seconds,Total pipeline execution time,Medium,60-600 seconds
+code_project,Pipeline,Total_Duration,40.191489458084106,seconds,Total pipeline execution time,Medium,60-600 seconds
 code_project,Pipeline,Stages_Passed,7,stages,Pipeline stages completed successfully,High,6 stages
 code_project,Pipeline,Bottleneck_Stage,PDF Rendering,stage_name,Slowest pipeline stage,Medium,Varies by project
-code_project,Pipeline,Bottleneck_Duration,27.36804485321045,seconds,Time spent in bottleneck stage,Medium,10-300 seconds
+code_project,Pipeline,Bottleneck_Duration,28.901002883911133,seconds,Time spent in bottleneck stage,Medium,10-300 seconds

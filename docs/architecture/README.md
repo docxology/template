@@ -2,7 +2,7 @@
 
 > **System design and implementation** details
 
-**Quick Reference:** [Two-Layer Architecture](TWO_LAYER_ARCHITECTURE.md) | [Thin Orchestrator](THIN_ORCHESTRATOR_SUMMARY.md) | [Decision Tree](DECISION_TREE.md)
+**Quick Reference:** [Two-Layer Architecture](two-layer-architecture.md) | [Thin Orchestrator](thin-orchestrator-summary.md) | [Decision Tree](decision-tree.md)
 
 ## Purpose
 
@@ -12,29 +12,29 @@ The `architecture/` directory contains detailed documentation about the system a
 
 | File | Purpose | Audience |
 |------|---------|----------|
-| [`TWO_LAYER_ARCHITECTURE.md`](TWO_LAYER_ARCHITECTURE.md) | two-layer architecture guide | Developers, architects |
-| [`THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md) | Thin orchestrator pattern implementation | Developers |
-| [`DECISION_TREE.md`](DECISION_TREE.md) | Decision tree for code placement | Developers |
+| [`two-layer-architecture.md`](two-layer-architecture.md) | two-layer architecture guide | Developers, architects |
+| [`thin-orchestrator-summary.md`](thin-orchestrator-summary.md) | Thin orchestrator pattern implementation | Developers |
+| [`decision-tree.md`](decision-tree.md) | Decision tree for code placement | Developers |
 
 ## Quick Navigation
 
 ### Understanding the Architecture
-1. Read [`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md) - System overview
-2. Study [`TWO_LAYER_ARCHITECTURE.md`](TWO_LAYER_ARCHITECTURE.md) - architecture guide
-3. Learn [`THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md) - Pattern details
+1. Read [`../core/architecture.md`](../core/architecture.md) - System overview
+2. Study [`two-layer-architecture.md`](two-layer-architecture.md) - architecture guide
+3. Learn [`thin-orchestrator-summary.md`](thin-orchestrator-summary.md) - Pattern details
 
 ### Making Design Decisions
-→ Use [`DECISION_TREE.md`](DECISION_TREE.md) - Code placement guide
+→ Use [`decision-tree.md`](decision-tree.md) - Code placement guide
 
 ## Related Documentation
 
-- **[`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md)** - System architecture overview
-- **[`../core/WORKFLOW.md`](../core/WORKFLOW.md)** - Development workflow
+- **[`../core/architecture.md`](../core/architecture.md)** - System architecture overview
+- **[`../core/workflow.md`](../core/workflow.md)** - Development workflow
 - **[`../development/`](../development/)** - Development and contribution guides
 
 ## See Also
 
-- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - documentation index
+- [`../documentation-index.md`](../documentation-index.md) - documentation index
 - [`../README.md`](../README.md) - Documentation hub overview
 
 

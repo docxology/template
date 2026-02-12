@@ -1,49 +1,47 @@
 #!/usr/bin/env python3
 """Generate comprehensive research figures for the manuscript.
 
-This script demonstrates how to create multiple figures that are referenced
-in the markdown files, showing proper figure generation, labeling, and
-cross-referencing capabilities.
-
-IMPORTANT: This script demonstrates integration with src/ modules by using
-the mathematical functions from example.py to process data for the figures.
+This script runs the full Ento-Linguistic analysis pipeline using real
+src/ modules to produce publication-quality figures referenced in the
+manuscript. It builds a synthetic entomological corpus, extracts terminology,
+constructs concept maps and terminology networks, and generates all figures
+from computed data.
 """
 from __future__ import annotations
 
+import json
 import os
 import sys
 from pathlib import Path
+from typing import Any, Dict, List, Tuple
 
-# Ensure src/ and infrastructure/ are on Python path FIRST (BEFORE infrastructure imports)
+# ── Path setup ────────────────────────────────────────────────────────
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 repo_root = os.path.abspath(os.path.join(project_root, ".."))
 src_path = os.path.join(project_root, "src")
-if src_path not in sys.path:
-    sys.path.insert(0, src_path)
-if repo_root not in sys.path:
-    sys.path.insert(0, repo_root)
+for p in (project_root, src_path, repo_root):
+    if p not in sys.path:
+        sys.path.insert(0, p)
 
-from typing import List, Tuple
+os.environ.setdefault("MPLBACKEND", "Agg")
 
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Import logger with graceful fallback
+# ── Logging ───────────────────────────────────────────────────────────
 try:
-    from src.utils.logging import get_logger
-
+    from src.core.logging import get_logger
     logger = get_logger(__name__)
 except ImportError:
     import logging
-
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
     logger = logging.getLogger(__name__)
 
-# Import local validation modules (fallback if infrastructure not available)
+# ── Infrastructure validation (optional) ──────────────────────────────
 try:
-    from src.utils.validation import (validate_figure_registry,
-                                      verify_output_integrity)
-
+    from src.core.validation import validate_figure_registry, verify_output_integrity
     INFRASTRUCTURE_AVAILABLE = True
 except ImportError:
     INFRASTRUCTURE_AVAILABLE = False
@@ -51,677 +49,545 @@ except ImportError:
     verify_output_integrity = None
 
 
-def _ensure_src_on_path() -> None:
-    """Ensure src/ and infrastructure/ are on Python path for imports."""
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    project_root = os.path.dirname(script_dir)  # Go up one level from scripts/
-    repo_root = os.path.dirname(project_root)  # Go up one level from project/
+# ═══════════════════════════════════════════════════════════════════════
+#  Synthetic Corpus Builder
+# ═══════════════════════════════════════════════════════════════════════
 
-    # Add infrastructure/ directory (at repo root level)
-    infra_path = os.path.join(repo_root, "infrastructure")
-    if infra_path not in sys.path:
-        sys.path.insert(0, infra_path)
-
-    # Add src/ directory (at project level)
-    src_path = os.path.join(project_root, "src")
-    if src_path not in sys.path:
-        sys.path.insert(0, src_path)
-
-    # Add repo root for any other imports
-    if repo_root not in sys.path:
-        sys.path.insert(0, repo_root)
+SYNTHETIC_ABSTRACTS: List[str] = [
+    # Unit of Individuality
+    (
+        "The colony as a superorganism: collective decision-making in ant societies. "
+        "We examine how the concept of individuality applies when nestmates cooperate "
+        "as a single organism. The superorganism framework treats the colony as the "
+        "fundamental unit of selection, yet individual nestmates retain behavioural "
+        "plasticity. Eusocial insect colonies blur the boundary between organism and "
+        "collective, raising questions about how biological individuality should be "
+        "defined. Our analysis of Atta cephalotes reveals symbiont integration at "
+        "the holobiont level, complicating simple definitions of the individual ant."
+    ),
+    # Behavior and Identity
+    (
+        "Task specialization and behavioural plasticty in Camponotus floridanus. "
+        "Workers termed 'foragers' exhibit flexible task switching, challenging "
+        "categorical role assignments. We tracked 500 individually-marked workers "
+        "over 60 days, finding that 38% of ants labelled as 'soldiers' engaged in "
+        "foraging behaviour regularly. The division of labor is not fixed: role "
+        "assignment reflects probabilistic response thresholds rather than stable "
+        "identities. Behaviour labels like 'nurse' and 'forager' create the "
+        "impression of permanent castes when the reality is fluid task allocation."
+    ),
+    # Power & Labor
+    (
+        "Caste determination and reproductive hierarchies in Solenopsis invicta. "
+        "The terms 'queen' and 'worker' import human social hierarchies into ant "
+        "biology. We analyze how 'caste' terminology, borrowed from human stratification "
+        "systems, frames ant social organization as a rigid hierarchy. Dominance "
+        "interactions between reproductive and non-reproductive nestmates are routinely "
+        "described using 'slave' and 'master' metaphors. The power structure of the "
+        "colony is better understood through resource allocation models than through "
+        "analogies to human feudal systems. Terms like 'soldier caste' impose military "
+        "hierarchy onto defensive specialization."
+    ),
+    # Sex & Reproduction
+    (
+        "Sex determination and reproductive biology in Hymenoptera. Haplodiploidy "
+        "creates fundamentally different patterns of relatedness and sex allocation. "
+        "The terms 'sex determination' and 'sex differentiation' carry implicit "
+        "assumptions about binary sex systems derived from mammalian biology. "
+        "In ants, reproductive females (queens) and males (drones) follow different "
+        "developmental pathways controlled by ploidy and epigenetic regulation. "
+        "Worker reproduction occurs in queenless colonies, complicating the "
+        "strict queen/worker reproductive dichotomy."
+    ),
+    # Kin & Relatedness
+    (
+        "Kin recognition and nestmate discrimination in Linepithema humile. "
+        "Chemical profiles mediate colony identity, with cuticular hydrocarbons "
+        "functioning as recognition cues. Genetic relatedness under haplodiploidy "
+        "creates asymmetric kin coefficients: sisters share 75% of genes while "
+        "brothers share only 25%. Kin selection theory, originally developed for "
+        "bilateral diploid organisms, requires modification when applied to "
+        "haplodiploid social insect societies. Colony fusion events challenge "
+        "the assumption that kin relatedness exclusively drives cooperative behaviour."
+    ),
+    # Economics
+    (
+        "Resource allocation and foraging optimization in Pogonomyrmex barbatus. "
+        "Economic models of ant foraging describe colonies as efficient resource "
+        "markets, with investment in trail infrastructure and trade-offs between "
+        "exploration and exploitation. Seed harvesting involves collective decisions "
+        "about resource allocation that parallel portfolio optimization in human "
+        "economics. The metaphor of 'markets' and 'trade' applied to ant resource "
+        "distribution imposes assumptions about rational agency that may not apply "
+        "to stimulus-response foraging systems."
+    ),
+    # Cross-domain: Individuality + Power
+    (
+        "Superorganism theory and the dissolution of individual agency in leaf-cutter "
+        "ant colonies. When colonies are treated as organisms, the agency of individual "
+        "workers is dissolved into the collective. The superorganism concept conflates "
+        "colony-level coordination with individual-level decision-making, while caste "
+        "terminology imposes hierarchical structure on emergent self-organization. "
+        "Division of labor among Acromyrmex workers arises from simple behavioral rules, "
+        "not from top-down caste assignments by a 'ruling queen'."
+    ),
+    # Cross-domain: Behavior + Kinship
+    (
+        "Altruism, kin selection, and helper behaviour in social insect colonies. "
+        "Hamilton's rule provides a framework for understanding cooperative behaviour "
+        "among genetic relatives. Workers 'sacrifice' reproduction, described in "
+        "anthropomorphic terms of 'altruism' and 'selflessness'. These kinship "
+        "concepts, derived from human familial structures, frame helping behaviour "
+        "as conscious moral choices rather than evolved strategies shaped by "
+        "inclusive fitness. The 'selfish gene' framing further layers economic "
+        "metaphor onto genetic processes."
+    ),
+    # Cross-domain: Economics + Power
+    (
+        "Colony investment strategies and worker allocation in army ants. "
+        "The colony allocates workers to foraging, defense, and brood care through "
+        "probabilistic mechanisms. Economic language of 'investment', 'returns', and "
+        "'efficiency' structures analysis of colony resource decisions. Soldier "
+        "production is framed as 'military expenditure', while forager allocation "
+        "is described as 'labour market dynamics'. These economic framings treat "
+        "colonies as rational utility-maximizing agents, obscuring the mechanistic "
+        "basis of collective behaviour."
+    ),
+    # Additional domain coverage
+    (
+        "Communication networks and information transfer in Formica rufa. "
+        "Pheromone trails create stigmergic communication channels that coordinate "
+        "foraging. The colony processes information through distributed networks "
+        "without central control. Terms like 'recruitment' and 'trail communication' "
+        "borrow from human organizational language. The relationship between individual "
+        "ant behaviour and colony-level patterns exemplifies how terminology at "
+        "different scales of biological organization creates conceptual confusion "
+        "about the unit of individuality and collective cognition."
+    ),
+]
 
 
 def _setup_directories() -> Tuple[str, str, str]:
-    """Setup output directories and return paths."""
-    repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    output_dir = os.path.join(repo_root, "output")
+    """Set up output directories and return paths."""
+    output_dir = os.path.join(project_root, "output")
     data_dir = os.path.join(output_dir, "data")
     figure_dir = os.path.join(output_dir, "figures")
-
     os.makedirs(data_dir, exist_ok=True)
     os.makedirs(figure_dir, exist_ok=True)
-
     return output_dir, data_dir, figure_dir
 
 
-def generate_convergence_plot(figure_dir: str, data_dir: str) -> str:
-    """Generate convergence analysis plot using src/ functions."""
-    # Import src/ functions for data processing
-    try:
-        from example import add_numbers, calculate_average, multiply_numbers
+# ═══════════════════════════════════════════════════════════════════════
+#  Analysis Pipeline
+# ═══════════════════════════════════════════════════════════════════════
 
-        logger.info("✅ Using src/ functions for convergence plot")
-    except (ImportError, SyntaxError) as e:
-        logger.error(f"❌ Failed to import from src/example.py: {e}")
-        return ""
+def run_analysis_pipeline(texts: List[str]) -> Dict[str, Any]:
+    """Run the complete Ento-Linguistic analysis pipeline on a text corpus.
 
-    # Generate synthetic convergence data
-    iterations = np.arange(1, 101)
+    Uses real analysis modules from src/ to extract terms, build concept maps,
+    analyze domains, and compute co-occurrence networks.
 
-    # Use src/ functions to process the data
-    our_method_raw = 2.0 * np.exp(-0.1 * iterations) + 0.1
-    baseline_raw = 1.5 * np.exp(-0.05 * iterations) + 0.2
+    Args:
+        texts: List of text strings (abstracts) to analyze
 
-    # Apply src/ functions to demonstrate integration
-    our_method_list: List[float] = []
-    baseline_list: List[float] = []
-    for i, (our_val, base_val) in enumerate(zip(our_method_raw, baseline_raw)):
-        # Use add_numbers and multiply_numbers from src/
-        our_processed = add_numbers(our_val, 0.0)  # Identity operation
-        base_processed = multiply_numbers(base_val, 1.0)  # Identity operation
-        our_method_list.append(our_processed)
-        baseline_list.append(base_processed)
+    Returns:
+        Dictionary with all analysis results
+    """
+    from src.analysis.text_analysis import TextProcessor
+    from src.analysis.term_extraction import TerminologyExtractor
+    from src.analysis.conceptual_mapping import ConceptualMapper
+    from src.analysis.domain_analysis import DomainAnalyzer
 
-    our_method = np.array(our_method_list)
-    baseline = np.array(baseline_list)
+    results: Dict[str, Any] = {}
 
-    # Calculate statistics using src/ functions
-    our_avg = calculate_average(our_method.tolist())
-    base_avg = calculate_average(baseline.tolist())
+    # ── Step 1: Text Processing ───────────────────────────────────────
+    logger.info("Step 1/4: Processing text corpus...")
+    processor = TextProcessor()
+    results["corpus_stats"] = processor.get_vocabulary_stats(texts)
+    logger.info(f"  Corpus: {len(texts)} documents, "
+                f"{results['corpus_stats'].get('total_tokens', '?')} tokens")
 
-    logger.info(f"Convergence analysis using src/ functions:")
-    logger.info(f"  Our method average: {our_avg:.6f}")
-    logger.info(f"  Baseline average: {base_avg:.6f}")
+    # ── Step 2: Terminology Extraction ────────────────────────────────
+    logger.info("Step 2/4: Extracting terminology...")
+    extractor = TerminologyExtractor(text_processor=processor)
+    terms = extractor.extract_terms(texts, min_frequency=1)
+    results["terms"] = terms
+    results["domain_seed_stats"] = extractor.get_domain_statistics()
+    logger.info(f"  Extracted {len(terms)} terms across "
+                f"{len(results['domain_seed_stats'])} domains")
 
-    fig, ax = plt.subplots(figsize=(10, 6))
-    ax.semilogy(iterations, our_method, "b-", linewidth=2, label="Our Method")
-    ax.semilogy(iterations, baseline, "r--", linewidth=2, label="Baseline")
-    ax.set_xlabel("Iteration")
-    ax.set_ylabel("Objective Value")
-    ax.set_title("Algorithm Convergence Comparison")
-    ax.legend()
-    ax.grid(True, alpha=0.3)
+    # ── Step 3: Concept Mapping ───────────────────────────────────────
+    logger.info("Step 3/4: Building concept map...")
+    mapper = ConceptualMapper()
+    concept_map = mapper.build_concept_map(terms)
+    results["concept_map"] = concept_map
+    logger.info(f"  {len(concept_map.concepts)} concepts, "
+                f"{len(concept_map.concept_relationships)} relationships")
 
-    # Add statistics as text
-    ax.text(
-        0.05,
-        0.95,
-        f"Our Method Avg: {our_avg:.3f}\nBaseline Avg: {base_avg:.3f}",
-        transform=ax.transAxes,
-        verticalalignment="top",
-        bbox=dict(boxstyle="round", facecolor="lightblue", alpha=0.7),
+    # ── Step 4: Domain Analysis ───────────────────────────────────────
+    logger.info("Step 4/4: Analyzing domains...")
+    analyzer = DomainAnalyzer()
+    domain_analyses = analyzer.analyze_all_domains(terms, texts)
+    results["domain_analyses"] = domain_analyses
+
+    # Build domain data summary for visualization
+    domain_data: Dict[str, Dict[str, Any]] = {}
+    for domain_name, analysis in domain_analyses.items():
+        if domain_name.startswith("_"):
+            continue  # Skip cross-domain meta-analysis
+        domain_data[domain_name] = {
+            "term_count": len(analysis.key_terms) if hasattr(analysis, "key_terms") else 0,
+            "avg_confidence": (
+                np.mean(list(analysis.confidence_scores.values()))
+                if hasattr(analysis, "confidence_scores") and analysis.confidence_scores
+                else 0.0
+            ),
+            "total_frequency": sum(
+                t.frequency for t in terms.values()
+                if domain_name in getattr(t, "domains", [])
+            ),
+            "bridging_terms": set(),  # Populated below
+            "ambiguity_metrics": (
+                analysis.ambiguity_metrics
+                if hasattr(analysis, "ambiguity_metrics")
+                else {}
+            ),
+            # Scalar ambiguity score for visualization
+            "ambiguity_score": (
+                analysis.ambiguity_metrics.get("domain_metrics", {}).get(
+                    "average_ambiguity_score",
+                    analysis.ambiguity_metrics.get("domain_metrics", {}).get(
+                        "average_context_diversity", 0.0
+                    ),
+                )
+                if hasattr(analysis, "ambiguity_metrics") and analysis.ambiguity_metrics
+                else 0.0
+            ),
+        }
+
+    # Find bridging terms (terms in multiple domains)
+    for term_text, term_obj in terms.items():
+        if len(term_obj.domains) > 1:
+            for d in term_obj.domains:
+                if d in domain_data:
+                    domain_data[d]["bridging_terms"].add(term_text)
+
+    results["domain_data"] = domain_data
+
+    # Build co-occurrence relationships for the terminology network
+    relationships: Dict[Tuple[str, str], float] = {}
+    for (c1, c2), weight in concept_map.concept_relationships.items():
+        relationships[(c1, c2)] = weight
+
+    # Also build term-level co-occurrence from the extracted terms
+    term_items = list(terms.items())
+    for i, (t1_name, t1) in enumerate(term_items):
+        for j in range(i + 1, min(i + 30, len(term_items))):
+            t2_name, t2 = term_items[j]
+            # Compute co-occurrence based on shared domains
+            shared_domains = set(t1.domains) & set(t2.domains)
+            if shared_domains:
+                weight = len(shared_domains) / max(len(t1.domains), len(t2.domains), 1)
+                if weight > 0.1:
+                    relationships[(t1_name, t2_name)] = weight
+
+    results["relationships"] = relationships
+
+    return results
+
+
+# ═══════════════════════════════════════════════════════════════════════
+#  Figure Generation
+# ═══════════════════════════════════════════════════════════════════════
+
+def generate_concept_map(results: Dict[str, Any], figure_dir: str) -> str:
+    """Generate concept_map.png using ConceptVisualizer.
+
+    Args:
+        results: Analysis pipeline results
+        figure_dir: Output directory for figures
+
+    Returns:
+        Path to generated figure
+    """
+    from src.visualization.concept_visualization import ConceptVisualizer
+
+    concept_map = results["concept_map"]
+    filepath = Path(figure_dir) / "concept_map.png"
+
+    viz = ConceptVisualizer(figsize=(14, 10))
+    viz.visualize_concept_map(
+        concept_map,
+        filepath=filepath,
+        title="Ento-Linguistic Concept Map:\nDomain Relationships and Terminology Networks",
     )
 
-    # Save figure
-    figure_path = os.path.join(figure_dir, "convergence_plot.png")
-    fig.savefig(figure_path, dpi=300, bbox_inches="tight")
-    plt.close(fig)
+    logger.info(f"  ✅ concept_map.png ({filepath.stat().st_size / 1024:.1f} KB)")
+    return str(filepath)
 
-    # Save data
-    data_path = os.path.join(data_dir, "convergence_data.npz")
-    np.savez(
-        data_path,
-        iterations=iterations,
-        our_method=our_method,
-        baseline=baseline,
-        our_avg=our_avg,
-        base_avg=base_avg,
+
+def generate_terminology_network(results: Dict[str, Any], figure_dir: str) -> str:
+    """Generate terminology_network.png using ConceptVisualizer.
+
+    Args:
+        results: Analysis pipeline results
+        figure_dir: Output directory for figures
+
+    Returns:
+        Path to generated figure
+    """
+    from src.visualization.concept_visualization import ConceptVisualizer
+
+    terms = results["terms"]
+    relationships = results["relationships"]
+    filepath = Path(figure_dir) / "terminology_network.png"
+
+    viz = ConceptVisualizer(figsize=(16, 12))
+    viz.visualize_terminology_network(
+        terms=list(terms.items()),
+        relationships=relationships,
+        filepath=filepath,
+        title="Ento-Linguistic Terminology Network:\nCo-occurrence and Domain Clustering",
     )
 
-    logger.info(f"Generated: {figure_path}")
-    return figure_path
-
-
-def generate_experimental_setup(figure_dir: str, data_dir: str) -> str:
-    """Generate experimental setup diagram."""
-    # Import src/ functions for validation
-    try:
-        from example import is_even, is_odd
-
-        logger.info("✅ Using src/ functions for experimental setup validation")
-
-        # Demonstrate src/ function usage
-        num_components = 3
-        logger.info(f"Number of components: {num_components}")
-        logger.info(f"  Is even: {is_even(num_components)}")
-        logger.info(f"  Is odd: {is_odd(num_components)}")
-    except (ImportError, SyntaxError) as e:
-        logger.error(f"❌ Failed to import from src/example.py: {e}")
-
-    fig, ax = plt.subplots(figsize=(12, 8))
-
-    # Create a simple flowchart-like diagram
-    components = [
-        "Data\nPreprocessing",
-        "Algorithm\nExecution",
-        "Performance\nEvaluation",
-    ]
-    x_positions = [2, 6, 10]
-    y_positions = [4, 4, 4]
-
-    for i, (comp, x, y) in enumerate(zip(components, x_positions, y_positions)):
-        # Draw boxes
-        rect = plt.Rectangle(
-            (x - 1, y - 0.5),
-            2,
-            1,
-            facecolor="lightblue",
-            edgecolor="black",
-            linewidth=2,
-        )
-        ax.add_patch(rect)
-        ax.text(x, y, comp, ha="center", va="center", fontsize=10, fontweight="bold")
-
-        # Draw arrows
-        if i < len(components) - 1:
-            ax.arrow(
-                x + 1,
-                y,
-                1.5,
-                0,
-                head_width=0.2,
-                head_length=0.2,
-                fc="black",
-                ec="black",
-                linewidth=2,
-            )
-
-    ax.set_xlim(0, 12)
-    ax.set_ylim(0, 8)
-    ax.set_title("Experimental Pipeline", fontsize=14, fontweight="bold")
-    ax.axis("off")
-
-    figure_path = os.path.join(figure_dir, "experimental_setup.png")
-    fig.savefig(figure_path, dpi=300, bbox_inches="tight")
-    plt.close(fig)
-
-    logger.info(f"Generated: {figure_path}")
-    return figure_path
-
-
-def generate_data_structure_plot(figure_dir: str, data_dir: str) -> str:
-    """Generate data structure visualization."""
-    try:
-        from example import find_maximum, find_minimum
-
-        logger.info("✅ Using src/ functions for data structure visualization")
-
-        # Demonstrate data structure efficiency
-        sizes = [100, 1000, 10000, 100000]
-        operations = ["Search", "Insert", "Delete"]
-
-        # Generate synthetic performance data
-        performance_data = {}
-        for size in sizes:
-            performance_data[size] = {}
-            for op in operations:
-                # Simulate different algorithmic complexities
-                if op == "Search":
-                    performance_data[size][op] = size * np.log(size)  # O(n log n)
-                elif op == "Insert":
-                    performance_data[size][op] = size  # O(n)
-                else:  # Delete
-                    performance_data[size][op] = size * 0.5  # O(n/2)
-
-        fig, ax = plt.subplots(figsize=(10, 6))
-
-        for op in operations:
-            values = [performance_data[size][op] for size in sizes]
-            ax.loglog(sizes, values, marker="o", linewidth=2, label=op)
-
-        ax.set_xlabel("Problem Size (n)")
-        ax.set_ylabel("Operations")
-        ax.set_title("Algorithmic Complexity Comparison")
-        ax.legend()
-        ax.grid(True, alpha=0.3)
-
-        figure_path = os.path.join(figure_dir, "data_structure.png")
-        fig.savefig(figure_path, dpi=300, bbox_inches="tight")
-        plt.close(fig)
-
-        logger.info(f"Generated: {figure_path}")
-        return figure_path
-
-    except (ImportError, SyntaxError) as e:
-        logger.error(f"❌ Failed to import from src/example.py: {e}")
-        return ""
-
-
-def generate_step_size_analysis(figure_dir: str, data_dir: str) -> str:
-    """Generate step size sensitivity analysis."""
-    try:
-        from example import calculate_average
-
-        logger.info("✅ Using src/ functions for step size analysis")
-
-        # Generate step size sensitivity data
-        step_sizes = [0.001, 0.01, 0.1, 1.0]
-        iterations = np.arange(1, 51)
-
-        fig, ax = plt.subplots(figsize=(10, 6))
-
-        for step_size in step_sizes:
-            # Simulate convergence with different step sizes
-            convergence = 1.0 / (1.0 + step_size * iterations) + 0.1 * np.random.randn(
-                len(iterations)
-            )
-            convergence = np.maximum(convergence, 0.01)  # Ensure positive values
-
-            ax.semilogy(
-                iterations, convergence, linewidth=2, label=f"Step Size: {step_size}"
-            )
-
-        ax.set_xlabel("Iteration")
-        ax.set_ylabel("Objective Value")
-        ax.set_title("Step Size Sensitivity Analysis")
-        ax.legend()
-        ax.grid(True, alpha=0.3)
-
-        figure_path = os.path.join(figure_dir, "step_size_analysis.png")
-        fig.savefig(figure_path, dpi=300, bbox_inches="tight")
-        plt.close(fig)
-
-        logger.info(f"Generated: {figure_path}")
-        return figure_path
-
-    except (ImportError, SyntaxError) as e:
-        logger.error(f"❌ Failed to import from src/example.py: {e}")
-        return ""
-
-
-def generate_scalability_analysis(figure_dir: str, data_dir: str) -> str:
-    """Generate scalability analysis plot."""
-    try:
-        from example import calculate_average, multiply_numbers
-
-        logger.info("✅ Using src/ functions for scalability analysis")
-
-        # Generate scalability data
-        problem_sizes = [100, 1000, 10000, 100000]
-        algorithms = ["Our Method", "Baseline A", "Baseline B"]
-
-        fig, ax = plt.subplots(figsize=(10, 6))
-
-        for alg in algorithms:
-            times = []
-            for size in problem_sizes:
-                # Simulate different complexity behaviors
-                if alg == "Our Method":
-                    time = size * np.log(size)  # O(n log n)
-                elif alg == "Baseline A":
-                    time = size * size  # O(n²)
-                else:  # Baseline B
-                    time = size * size * size  # O(n³)
-
-                # Use src/ functions to process the timing data
-                processed_time = multiply_numbers(time, 1.0)  # Identity operation
-                times.append(processed_time)
-
-            ax.loglog(problem_sizes, times, marker="o", linewidth=2, label=alg)
-
-        ax.set_xlabel("Problem Size (n)")
-        ax.set_ylabel("Computation Time")
-        ax.set_title("Scalability Analysis: Algorithm Comparison")
-        ax.legend()
-        ax.grid(True, alpha=0.3)
-
-        figure_path = os.path.join(figure_dir, "scalability_analysis.png")
-        fig.savefig(figure_path, dpi=300, bbox_inches="tight")
-        plt.close(fig)
-
-        logger.info(f"Generated: {figure_path}")
-        return figure_path
-
-    except (ImportError, SyntaxError) as e:
-        logger.error(f"❌ Failed to import from src/example.py: {e}")
-        return ""
-
-
-def generate_dataset_summary_table(data_dir: str) -> str:
-    """Generate dataset summary table as CSV."""
-    try:
-        from example import calculate_average, find_maximum, find_minimum
-
-        logger.info("✅ Using src/ functions for dataset analysis")
-
-        # Generate synthetic dataset characteristics
-        datasets = [
-            {"name": "Small Convex", "size": 100, "type": "Convex", "features": 10},
-            {"name": "Medium Convex", "size": 1000, "type": "Convex", "features": 50},
-            {"name": "Large Convex", "size": 10000, "type": "Convex", "features": 100},
-            {
-                "name": "Small Non-convex",
-                "size": 100,
-                "type": "Non-convex",
-                "features": 10,
-            },
-            {
-                "name": "Medium Non-convex",
-                "size": 1000,
-                "type": "Non-convex",
-                "features": 50,
-            },
-        ]
-
-        # Add computed statistics using src/ functions
-        for dataset in datasets:
-            # Generate synthetic data for each dataset
-            data_points = np.random.randn(dataset["size"])
-            dataset["avg_value"] = calculate_average(data_points.tolist())
-            dataset["max_value"] = find_maximum(data_points.tolist())
-            dataset["min_value"] = find_minimum(data_points.tolist())
-
-        # Save as CSV
-        csv_path = os.path.join(data_dir, "dataset_summary.csv")
-        with open(csv_path, "w") as f:
-            f.write("Dataset,Size,Type,Features,Avg_Value,Max_Value,Min_Value\n")
-            for dataset in datasets:
-                f.write(
-                    f"{dataset['name']},{dataset['size']},{dataset['type']},{dataset['features']},{dataset['avg_value']:.3f},{dataset['max_value']:.3f},{dataset['min_value']:.3f}\n"
-                )
-
-        print(f"Generated: {csv_path}")
-        return csv_path
-
-    except (ImportError, SyntaxError) as e:
-        logger.error(f"❌ Failed to import from src/example.py: {e}")
-        return ""
-
-
-def generate_performance_comparison_table(data_dir: str) -> str:
-    """Generate performance comparison table as CSV."""
-    try:
-        from example import calculate_average
-
-        logger.info("✅ Using src/ functions for performance analysis")
-
-        # Generate synthetic performance data
-        methods = ["Our Method", "Gradient Descent", "Adam", "L-BFGS"]
-        metrics = ["Convergence Rate", "Memory Usage", "Success Rate"]
-
-        # Create comparison data
-        performance_data = {}
-        for method in methods:
-            performance_data[method] = {}
-            for metric in metrics:
-                if metric == "Convergence Rate":
-                    if method == "Our Method":
-                        performance_data[method][metric] = 0.85  # ρ ≈ 0.85
-                    else:
-                        performance_data[method][metric] = 0.90  # Slower convergence
-                elif metric == "Memory Usage":
-                    if method == "Our Method":
-                        performance_data[method][metric] = "O(n)"  # Linear
-                    else:
-                        performance_data[method][metric] = "O(n²)"  # Quadratic
-                else:  # Success Rate
-                    if method == "Our Method":
-                        performance_data[method][metric] = 94.3  # %
-                    else:
-                        performance_data[method][metric] = 85.0  # %
-
-        # Save as CSV
-        csv_path = os.path.join(data_dir, "performance_comparison.csv")
-        with open(csv_path, "w") as f:
-            f.write("Method,Convergence_Rate,Memory_Usage,Success_Rate\n")
-            for method in methods:
-                f.write(
-                    f"{method},{performance_data[method]['Convergence Rate']},{performance_data[method]['Memory Usage']},{performance_data[method]['Success Rate']}\n"
-                )
-
-        print(f"Generated: {csv_path}")
-        return csv_path
-
-    except (ImportError, SyntaxError) as e:
-        logger.error(f"❌ Failed to import from src/example.py: {e}")
-        return ""
-
-
-def generate_ablation_study(figure_dir: str, data_dir: str) -> str:
-    """Generate ablation study plot."""
-    try:
-        from example import add_numbers, multiply_numbers
-
-        logger.info("✅ Using src/ functions for ablation study")
-
-        # Components to ablate
-        components = [
-            "Regularization",
-            "Adaptive Step Size",
-            "Momentum",
-            "All Combined",
-        ]
-        performance = [0.7, 0.75, 0.8, 0.95]  # Normalized performance
-
-        fig, ax = plt.subplots(figsize=(10, 6))
-
-        bars = ax.bar(
-            components,
-            performance,
-            color=["lightcoral", "lightblue", "lightgreen", "gold"],
-        )
-        ax.set_ylabel("Relative Performance")
-        ax.set_title("Ablation Study: Component Contributions")
-        ax.set_ylim(0, 1.1)
-
-        # Add value labels on bars
-        for bar, perf in zip(bars, performance):
-            height = bar.get_height()
-            ax.text(
-                bar.get_x() + bar.get_width() / 2.0,
-                height + 0.01,
-                f"{perf:.2f}",
-                ha="center",
-                va="bottom",
-            )
-
-        figure_path = os.path.join(figure_dir, "ablation_study.png")
-        fig.savefig(figure_path, dpi=300, bbox_inches="tight")
-        plt.close(fig)
-
-        logger.info(f"Generated: {figure_path}")
-        return figure_path
-
-    except (ImportError, SyntaxError) as e:
-        logger.error(f"❌ Failed to import from src/example.py: {e}")
-        return ""
-
-
-def generate_hyperparameter_sensitivity(figure_dir: str, data_dir: str) -> str:
-    """Generate hyperparameter sensitivity analysis."""
-    try:
-        from example import calculate_average
-
-        logger.info("✅ Using src/ functions for hyperparameter analysis")
-
-        # Generate sensitivity data
-        learning_rates = [0.001, 0.01, 0.1, 1.0]
-        momentum_values = [0.0, 0.5, 0.9, 0.99]
-
-        # Create a grid of parameter combinations
-        performance_grid = np.zeros((len(learning_rates), len(momentum_values)))
-
-        for i, lr in enumerate(learning_rates):
-            for j, mom in enumerate(momentum_values):
-                # Simulate performance as function of parameters
-                performance = 1.0 / (1.0 + lr * (1.0 - mom)) + 0.1 * np.random.rand()
-                performance_grid[i, j] = min(performance, 1.0)
-
-        fig, ax = plt.subplots(figsize=(10, 8))
-
-        im = ax.imshow(
-            performance_grid,
-            cmap="viridis",
-            aspect="auto",
-            extent=[
-                min(momentum_values),
-                max(momentum_values),
-                min(learning_rates),
-                max(learning_rates),
-            ],
-        )
-
-        ax.set_xlabel("Momentum Coefficient")
-        ax.set_ylabel("Learning Rate")
-        ax.set_title("Hyperparameter Sensitivity Analysis")
-        plt.colorbar(im, ax=ax, label="Performance")
-
-        # Add contour lines
-        cs = ax.contour(performance_grid, levels=5, colors="white", alpha=0.7)
-        ax.clabel(cs, inline=True, fontsize=8)
-
-        figure_path = os.path.join(figure_dir, "hyperparameter_sensitivity.png")
-        fig.savefig(figure_path, dpi=300, bbox_inches="tight")
-        plt.close(fig)
-
-        logger.info(f"Generated: {figure_path}")
-        return figure_path
-
-    except (ImportError, SyntaxError) as e:
-        logger.error(f"❌ Failed to import from src/example.py: {e}")
-        return ""
-
-
-def generate_image_classification_results(figure_dir: str, data_dir: str) -> str:
-    """Generate image classification results plot."""
-    try:
-        from example import calculate_average
-
-        logger.info("✅ Using src/ functions for image classification analysis")
-
-        # Simulate training curves for different optimizers
-        epochs = np.arange(1, 101)
-        methods = ["Our Method", "SGD", "Adam", "RMSprop"]
-
-        fig, ax = plt.subplots(figsize=(10, 6))
-
-        for method in methods:
-            # Generate synthetic training curves
-            if method == "Our Method":
-                accuracy = 0.95 - 0.3 * np.exp(-epochs / 20)  # Fast convergence
-            elif method == "SGD":
-                accuracy = 0.90 - 0.25 * np.exp(-epochs / 30)  # Slower convergence
-            elif method == "Adam":
-                accuracy = 0.92 - 0.28 * np.exp(-epochs / 25)  # Medium convergence
-            else:  # RMSprop
-                accuracy = 0.91 - 0.26 * np.exp(-epochs / 28)  # Medium convergence
-
-            ax.plot(epochs, accuracy, linewidth=2, label=method)
-
-        ax.set_xlabel("Epoch")
-        ax.set_ylabel("Accuracy")
-        ax.set_title("Image Classification Training Curves")
-        ax.legend()
-        ax.grid(True, alpha=0.3)
-        ax.set_ylim(0.5, 1.0)
-
-        figure_path = os.path.join(figure_dir, "image_classification_results.png")
-        fig.savefig(figure_path, dpi=300, bbox_inches="tight")
-        plt.close(fig)
-
-        logger.info(f"Generated: {figure_path}")
-        return figure_path
-
-    except (ImportError, SyntaxError) as e:
-        logger.error(f"❌ Failed to import from src/example.py: {e}")
-        return ""
-
-
-def generate_recommendation_scalability(figure_dir: str, data_dir: str) -> str:
-    """Generate recommendation system scalability plot."""
-    try:
-        from example import multiply_numbers
-
-        logger.info("✅ Using src/ functions for recommendation scalability")
-
-        # Generate scalability data for recommendation systems
-        user_counts = [1000, 10000, 100000, 1000000]
-        item_counts = [100, 1000, 10000, 100000]
-
-        fig, ax = plt.subplots(figsize=(10, 6))
-
-        for items in item_counts:
-            times = []
-            for users in user_counts:
-                # Simulate recommendation computation time
-                time = users * items * 0.001  # Simplified model
-                processed_time = multiply_numbers(time, 1.0)  # Use src/ function
-                times.append(processed_time)
-
-            ax.loglog(
-                user_counts, times, marker="o", linewidth=2, label=f"{items} items"
-            )
-
-        ax.set_xlabel("Number of Users")
-        ax.set_ylabel("Computation Time (s)")
-        ax.set_title("Recommendation System Scalability")
-        ax.legend(title="Items")
-        ax.grid(True, alpha=0.3)
-
-        figure_path = os.path.join(figure_dir, "recommendation_scalability.png")
-        fig.savefig(figure_path, dpi=300, bbox_inches="tight")
-        plt.close(fig)
-
-        logger.info(f"Generated: {figure_path}")
-        return figure_path
-
-    except (ImportError, SyntaxError) as e:
-        logger.error(f"❌ Failed to import from src/example.py: {e}")
-        return ""
-
+    logger.info(f"  ✅ terminology_network.png ({filepath.stat().st_size / 1024:.1f} KB)")
+    return str(filepath)
+
+
+def generate_domain_comparison(results: Dict[str, Any], figure_dir: str) -> str:
+    """Generate domain_comparison.png using ConceptVisualizer.
+
+    Args:
+        results: Analysis pipeline results
+        figure_dir: Output directory for figures
+
+    Returns:
+        Path to generated figure
+    """
+    from src.visualization.concept_visualization import ConceptVisualizer
+
+    domain_data = results["domain_data"]
+    filepath = Path(figure_dir) / "domain_comparison.png"
+
+    viz = ConceptVisualizer(figsize=(15, 12))
+    viz.create_domain_comparison_plot(
+        domain_data=domain_data,
+        filepath=filepath,
+    )
+
+    logger.info(f"  ✅ domain_comparison.png ({filepath.stat().st_size / 1024:.1f} KB)")
+    return str(filepath)
+
+
+def generate_domain_overlap_heatmap(results: Dict[str, Any], figure_dir: str) -> str:
+    """Generate domain_overlap_heatmap.png showing cross-domain term sharing.
+
+    Args:
+        results: Analysis pipeline results
+        figure_dir: Output directory for figures
+
+    Returns:
+        Path to generated figure
+    """
+    from src.visualization.concept_visualization import ConceptVisualizer
+
+    terms = results["terms"]
+    filepath = Path(figure_dir) / "domain_overlap_heatmap.png"
+
+    # Build overlap matrix from terms
+    domain_names = sorted({d for t in terms.values() for d in t.domains})
+
+    # Short names for key construction (avoid _ parsing issues)
+    short = {d: d.replace("_and_", "&").replace("_", "") for d in domain_names}
+
+    overlaps: Dict[str, Dict[str, Any]] = {}
+    for d1 in domain_names:
+        terms_d1 = {t for t, obj in terms.items() if d1 in obj.domains}
+        for d2 in domain_names:
+            terms_d2 = {t for t, obj in terms.items() if d2 in obj.domains}
+            shared = terms_d1 & terms_d2
+            total = len(terms_d1 | terms_d2) if terms_d1 | terms_d2 else 1
+            key = f"{short[d1]}_and_{short[d2]}"
+            overlaps[key] = {
+                "overlap_percentage": (len(shared) / total) * 100 if d1 != d2 else 100,
+                "overlap_count": len(shared),
+                "shared_terms": list(shared)[:10],
+            }
+
+    viz = ConceptVisualizer(figsize=(12, 10))
+    viz.create_domain_overlap_heatmap(
+        domain_overlaps=overlaps,
+        filepath=filepath,
+        title="Cross-Domain Term Overlap in Ento-Linguistic Analysis",
+    )
+
+    logger.info(f"  ✅ domain_overlap_heatmap.png ({filepath.stat().st_size / 1024:.1f} KB)")
+    return str(filepath)
+
+
+def generate_anthropomorphic_analysis(results: Dict[str, Any], figure_dir: str) -> str:
+    """Generate anthropomorphic_framing.png showing human-derived terminology.
+
+    Args:
+        results: Analysis pipeline results
+        figure_dir: Output directory for figures
+
+    Returns:
+        Path to generated figure
+    """
+    from src.visualization.concept_visualization import ConceptVisualizer
+
+    filepath = Path(figure_dir) / "anthropomorphic_framing.png"
+
+    # Curated anthropomorphic concepts organized by category
+    anthropomorphic_data: Dict[str, List[str]] = {
+        "Hierarchical Terms": [
+            "queen", "king", "worker", "soldier", "slave",
+            "master", "caste", "rank", "dominance", "subordinate",
+        ],
+        "Economic Metaphors": [
+            "investment", "trade", "market", "efficiency",
+            "resource allocation", "returns", "expenditure",
+        ],
+        "Kinship Language": [
+            "mother", "sister", "daughter", "family",
+            "kin", "altruism", "selflessness",
+        ],
+        "Identity Labels": [
+            "forager", "nurse", "guard", "scout",
+            "recruit", "specialist", "generalist",
+        ],
+        "Agency Attribution": [
+            "decides", "chooses", "communicates", "signals",
+            "cooperates", "competes", "sacrifices",
+        ],
+    }
+
+    viz = ConceptVisualizer(figsize=(14, 10))
+    viz.create_anthropomorphic_analysis_plot(
+        anthropomorphic_data=anthropomorphic_data,
+        filepath=filepath,
+    )
+
+    logger.info(f"  ✅ anthropomorphic_framing.png ({filepath.stat().st_size / 1024:.1f} KB)")
+    return str(filepath)
+
+
+def save_analysis_data(results: Dict[str, Any], data_dir: str) -> List[str]:
+    """Save analysis results as data files.
+
+    Args:
+        results: Analysis pipeline results
+        data_dir: Output directory for data files
+
+    Returns:
+        List of saved file paths
+    """
+    saved = []
+
+    # Save corpus statistics
+    corpus_stats_path = os.path.join(data_dir, "corpus_statistics.json")
+    with open(corpus_stats_path, "w") as f:
+        json.dump(results["corpus_stats"], f, indent=2, default=str)
+    saved.append(corpus_stats_path)
+
+    # Save domain statistics
+    domain_stats = {}
+    for domain_name, data in results["domain_data"].items():
+        domain_stats[domain_name] = {
+            "term_count": data["term_count"],
+            "avg_confidence": float(data["avg_confidence"]),
+            "total_frequency": data["total_frequency"],
+            "bridging_term_count": len(data["bridging_terms"]),
+            "bridging_terms": list(data["bridging_terms"]),
+        }
+    domain_stats_path = os.path.join(data_dir, "domain_statistics.json")
+    with open(domain_stats_path, "w") as f:
+        json.dump(domain_stats, f, indent=2, default=str)
+    saved.append(domain_stats_path)
+
+    # Save extracted terms summary
+    terms_summary = {}
+    for term_text, term_obj in results["terms"].items():
+        terms_summary[term_text] = {
+            "lemma": term_obj.lemma,
+            "domains": term_obj.domains,
+            "frequency": term_obj.frequency,
+            "confidence": term_obj.confidence,
+            "n_contexts": len(term_obj.contexts),
+        }
+    terms_path = os.path.join(data_dir, "extracted_terms.json")
+    with open(terms_path, "w") as f:
+        json.dump(terms_summary, f, indent=2, default=str)
+    saved.append(terms_path)
+
+    # Save concept map summary
+    concept_summary = {
+        "n_concepts": len(results["concept_map"].concepts),
+        "n_relationships": len(results["concept_map"].concept_relationships),
+        "concepts": {
+            name: {
+                "description": c.description,
+                "n_terms": len(c.terms),
+                "domains": list(c.domains),
+                "confidence": c.confidence,
+            }
+            for name, c in results["concept_map"].concepts.items()
+        },
+    }
+    concept_path = os.path.join(data_dir, "concept_map_summary.json")
+    with open(concept_path, "w") as f:
+        json.dump(concept_summary, f, indent=2, default=str)
+    saved.append(concept_path)
+
+    logger.info(f"\n📊 Saved {len(saved)} data files to {data_dir}")
+    for s in saved:
+        logger.info(f"   - {os.path.basename(s)}")
+
+    return saved
+
+
+# ═══════════════════════════════════════════════════════════════════════
+#  Figure Registry
+# ═══════════════════════════════════════════════════════════════════════
 
 def _register_figures_with_manager(figures: List[str], figure_dir: str) -> None:
     """Register generated figures with FigureManager for cross-referencing."""
     try:
-        import os
+        from src.visualization.figure_manager import FigureManager
 
-        from src.utils.figure_manager import FigureManager
-
-        # FigureManager uses registry_file parameter, not output_dir
         registry_file = os.path.join(figure_dir, "figure_registry.json")
         fm = FigureManager(registry_file=registry_file)
 
-        # Define figure metadata for registration
         figure_metadata = {
-            "convergence_plot.png": {
-                "label": "fig:convergence_plot",
-                "caption": "Algorithm convergence comparison showing our method vs baseline",
+            "concept_map.png": {
+                "label": "fig:concept_map",
+                "caption": "Ento-Linguistic Concept Map",
+                "section": "introduction",
+            },
+            "terminology_network.png": {
+                "label": "fig:terminology_network",
+                "caption": "Terminology Network with Domain Clustering",
                 "section": "experimental_results",
             },
-            "experimental_setup.png": {
-                "label": "fig:experimental_setup",
-                "caption": "Experimental pipeline showing data flow through processing stages",
-                "section": "methodology",
-            },
-            "data_structure.png": {
-                "label": "fig:data_structure",
-                "caption": "Algorithmic complexity comparison for different operations",
-                "section": "methodology",
-            },
-            "step_size_analysis.png": {
-                "label": "fig:step_size_analysis",
-                "caption": "Step size sensitivity analysis showing impact on convergence",
+            "domain_comparison.png": {
+                "label": "fig:domain_comparison",
+                "caption": "Cross-Domain Terminology Comparison",
                 "section": "experimental_results",
             },
-            "scalability_analysis.png": {
-                "label": "fig:scalability_analysis",
-                "caption": "Scalability analysis comparing algorithm performance across problem sizes",
+            "domain_overlap_heatmap.png": {
+                "label": "fig:domain_overlap",
+                "caption": "Domain Term Overlap Heatmap",
                 "section": "experimental_results",
             },
-            "ablation_study.png": {
-                "label": "fig:ablation_study",
-                "caption": "Ablation study showing contribution of each component",
-                "section": "experimental_results",
-            },
-            "hyperparameter_sensitivity.png": {
-                "label": "fig:hyperparameter_sensitivity",
-                "caption": "Hyperparameter sensitivity analysis for learning rate and momentum",
-                "section": "experimental_results",
-            },
-            "image_classification_results.png": {
-                "label": "fig:image_classification_results",
-                "caption": "Image classification training curves comparing optimization methods",
-                "section": "experimental_results",
-            },
-            "recommendation_scalability.png": {
-                "label": "fig:recommendation_scalability",
-                "caption": "Recommendation system scalability with varying users and items",
-                "section": "experimental_results",
+            "anthropomorphic_framing.png": {
+                "label": "fig:anthropomorphic",
+                "caption": "Anthropomorphic Framing Analysis",
+                "section": "discussion",
             },
         }
 
-        registered_count = 0
+        registered = 0
         for fig_path in figures:
             filename = os.path.basename(fig_path)
             if filename in figure_metadata:
@@ -732,95 +598,97 @@ def _register_figures_with_manager(figures: List[str], figure_dir: str) -> None:
                     label=meta["label"],
                     section=meta["section"],
                 )
-                registered_count += 1
+                registered += 1
 
-        # Note: FigureManager auto-saves on each register_figure() call
-        logger.info(f"\n✅ Registered {registered_count} figures with FigureManager")
+        logger.info(f"✅ Registered {registered} figures with FigureManager")
 
     except ImportError:
-        logger.warning("\n⚠️  FigureManager not available, skipping figure registration")
+        logger.warning("⚠️  FigureManager not available, skipping registration")
     except Exception as e:
-        logger.warning(f"\n⚠️  Could not register figures: {e}")
+        logger.warning(f"⚠️  Could not register figures: {e}")
 
+
+# ═══════════════════════════════════════════════════════════════════════
+#  Main Entry Point
+# ═══════════════════════════════════════════════════════════════════════
 
 def main() -> None:
-    """Generate all research figures and tables using src/ modules."""
-    os.environ.setdefault("MPLBACKEND", "Agg")
-    _ensure_src_on_path()
-
+    """Generate all research figures and data using the real analysis pipeline."""
     output_dir, data_dir, figure_dir = _setup_directories()
 
-    logger.info("Generating research figures using src/ modules...")
+    logger.info("=" * 70)
+    logger.info("  Ento-Linguistic Research Figure Generation Pipeline")
+    logger.info("=" * 70)
+    logger.info(f"  Output: {output_dir}")
+    logger.info(f"  Corpus: {len(SYNTHETIC_ABSTRACTS)} synthetic abstracts")
+    logger.info("")
 
-    # Generate all figures
-    figures = [
-        generate_convergence_plot(figure_dir, data_dir),
-        generate_experimental_setup(figure_dir, data_dir),
-        generate_data_structure_plot(figure_dir, data_dir),
-        generate_step_size_analysis(figure_dir, data_dir),
-        generate_scalability_analysis(figure_dir, data_dir),
-        generate_ablation_study(figure_dir, data_dir),
-        generate_hyperparameter_sensitivity(figure_dir, data_dir),
-        generate_image_classification_results(figure_dir, data_dir),
-        generate_recommendation_scalability(figure_dir, data_dir),
-    ]
+    # ── Run analysis pipeline ─────────────────────────────────────────
+    logger.info("▶ Running analysis pipeline...")
+    results = run_analysis_pipeline(SYNTHETIC_ABSTRACTS)
+    logger.info("")
 
-    # Generate tables
-    tables = [
-        generate_dataset_summary_table(data_dir),
-        generate_performance_comparison_table(data_dir),
-    ]
+    # ── Generate figures ──────────────────────────────────────────────
+    logger.info("▶ Generating figures...")
+    figures = []
 
-    # Filter out any empty results
-    figures = [f for f in figures if f]
-    tables = [t for t in tables if t]
+    fig_path = generate_concept_map(results, figure_dir)
+    if fig_path:
+        figures.append(fig_path)
 
-    logger.info(f"\n✅ Generated {len(figures)} research figures:")
-    for fig in figures:
-        logger.info(f"   - {os.path.basename(fig)}")
+    fig_path = generate_terminology_network(results, figure_dir)
+    if fig_path:
+        figures.append(fig_path)
 
-    logger.info(f"\n✅ Generated {len(tables)} data tables:")
-    for table in tables:
-        logger.info(f"   - {os.path.basename(table)}")
+    fig_path = generate_domain_comparison(results, figure_dir)
+    if fig_path:
+        figures.append(fig_path)
 
-    # Register figures with FigureManager for cross-referencing
+    fig_path = generate_domain_overlap_heatmap(results, figure_dir)
+    if fig_path:
+        figures.append(fig_path)
+
+    fig_path = generate_anthropomorphic_analysis(results, figure_dir)
+    if fig_path:
+        figures.append(fig_path)
+
+    logger.info("")
+
+    # ── Save data ─────────────────────────────────────────────────────
+    data_files = save_analysis_data(results, data_dir)
+
+    # ── Register figures ──────────────────────────────────────────────
     _register_figures_with_manager(figures, figure_dir)
 
-    logger.info(f"\n📁 All outputs saved to: {output_dir}")
-    logger.info(f"   Figures: {figure_dir}")
-    logger.info(f"   Data: {data_dir}")
+    # ── Summary ───────────────────────────────────────────────────────
+    logger.info("")
+    logger.info("=" * 70)
+    logger.info(f"  ✅ Generated {len(figures)} research figures")
+    for fig in figures:
+        logger.info(f"     - {os.path.basename(fig)}")
+    logger.info(f"  ✅ Saved {len(data_files)} data files")
+    logger.info(f"  📁 All outputs: {output_dir}")
+    logger.info("=" * 70)
 
-    logger.info(f"\n🔗 Integration with src/ modules demonstrated:")
-    logger.info(f"   - Mathematical functions from example.py used for data processing")
-    logger.info(f"   - Statistical analysis using src/ functions")
-    logger.info(f"   - Proper error handling for missing imports")
-    # Also print for test capture
+    # Also print for subprocess test capture
     print("Integration with src/ modules demonstrated")
 
-    # Lightweight integrity/validation checks (if infrastructure available)
+    # ── Validation (if infrastructure available) ──────────────────────
     if INFRASTRUCTURE_AVAILABLE and validate_figure_registry:
         try:
             registry_path = Path(figure_dir) / "figure_registry.json"
-            manuscript_dir = Path(repo_root) / "manuscript"
+            manuscript_dir = Path(project_root) / "manuscript"
             validate_figure_registry(registry_path, manuscript_dir)
             logger.info("✅ Figure registry validation passed")
         except Exception as exc:
             logger.warning(f"⚠️  Figure registry validation warning: {exc}")
-    else:
-        logger.info(
-            "ℹ️  Infrastructure not available - skipping figure registry validation"
-        )
 
     if INFRASTRUCTURE_AVAILABLE and verify_output_integrity:
         try:
-            integrity_report = verify_output_integrity(Path(output_dir))
+            verify_output_integrity(Path(output_dir))
             logger.info("✅ Output integrity check passed")
         except Exception as exc:
             logger.warning(f"⚠️  Output integrity warning: {exc}")
-    else:
-        logger.info("ℹ️  Infrastructure not available - skipping output integrity check")
-
-    # Note: verify_build_artifacts function not available - skipping build artifact verification
 
 
 if __name__ == "__main__":

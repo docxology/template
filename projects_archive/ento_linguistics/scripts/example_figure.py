@@ -46,6 +46,8 @@ def _setup_paths() -> None:
 
     # Only add paths if they're not already there, and don't remove existing paths
     # This allows environment variables like PYTHONPATH to take precedence
+    if project_root not in sys.path:
+        sys.path.insert(0, project_root)
     if src_path not in sys.path:
         sys.path.insert(0, src_path)
 
@@ -68,11 +70,11 @@ def main() -> None:
 
     # Import logger after path setup - with graceful fallback
     try:
-        from src.utils.logging import get_logger
+        from src.core.logging import get_logger
 
         logger = get_logger(__name__)
     except ImportError:
-        # Fallback to standard logging if src.utils.logging not available
+        # Fallback to standard logging if src.core.logging not available
         import logging
 
         logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
@@ -80,7 +82,7 @@ def main() -> None:
 
     # Import scientific modules from src/
     try:
-        from example import (add_numbers, calculate_average, find_maximum,
+        from src.core.example import (add_numbers, calculate_average, find_maximum,
                              find_minimum, multiply_numbers)
 
         logger.info("✅ Successfully imported functions from src/example.py")
@@ -174,7 +176,7 @@ def main() -> None:
 
     # Register figure with FigureManager for cross-referencing
     try:
-        from src.utils.figure_manager import FigureManager
+        from src.visualization.figure_manager import FigureManager
 
         fm = FigureManager(
             registry_file=os.path.join(figure_dir, "figure_registry.json")

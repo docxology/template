@@ -555,5 +555,5 @@ print('Integration test passed')
 **System Integration:**
 
 - [`../../AGENTS.md`](../../AGENTS.md) - system overview
-- [`../../../docs/core/ARCHITECTURE.md`](../../../docs/core/ARCHITECTURE.md) - System architecture
-- [`../../../docs/operational/BUILD_SYSTEM.md`](../../../docs/operational/BUILD_SYSTEM.md) - Build system details
+- [`../../../docs/core/architecture.md`](../../../docs/core/architecture.md) - System architecture
+- [`../../../docs/operational/build-system.md`](../../../docs/operational/build-system.md) - Build system details

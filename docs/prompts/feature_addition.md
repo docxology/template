@@ -8,8 +8,8 @@ Add features to the Research Project Template while maintaining full architectur
 
 This prompt ensures features integrate properly with the existing system:
 
-- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow
-- [`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md) - Architecture principles
+- [`../core/workflow.md`](../core/workflow.md) - Development workflow
+- [`../core/architecture.md`](../core/architecture.md) - Architecture principles
 - [`../../.cursorrules/`](../../.cursorrules/) directory - All development standards
 
 ## Prompt Template
@@ -508,7 +508,7 @@ FeatureError (base exception)
 ## See Also
 
 - [`README.md`](README.md) - Quick reference and usage examples
-- [`../../core/ARCHITECTURE.md`](../../core/ARCHITECTURE.md) - Architecture integration details
+- [`../../core/architecture.md`](../../core/architecture.md) - Architecture integration details
 - [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Testing requirements
 - [`../../.cursorrules/api_design.md`](../../.cursorrules/api_design.md) - API design standards
 ```
@@ -596,7 +596,7 @@ def benchmark_feature():
 
 ## Standards Compliance Checklist
 
-### Architecture Standards ([`../../docs/core/ARCHITECTURE.md`](../../docs/core/ARCHITECTURE.md))
+### Architecture Standards ([`../../docs/core/architecture.md`](../../docs/core/architecture.md))
 - [ ] Two-layer architecture compliance
 - [ ] Thin orchestrator pattern implementation
 - [ ] Correct layer placement (infrastructure vs project)
@@ -640,7 +640,7 @@ LAYER: infrastructure
 
 ## Related Documentation
 
-- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow
-- [`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md) - Architecture principles
+- [`../core/workflow.md`](../core/workflow.md) - Development workflow
+- [`../core/architecture.md`](../core/architecture.md) - Architecture principles
 - [`../../.cursorrules/`](../../.cursorrules/) - All development standards
 ```

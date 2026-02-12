@@ -9,8 +9,8 @@ from __future__ import annotations
 from typing import Any, Dict, List
 
 import pytest
-from src.domain_analysis import DomainAnalysis, DomainAnalyzer
-from src.term_extraction import Term
+from src.analysis.domain_analysis import DomainAnalysis, DomainAnalyzer
+from src.analysis.term_extraction import Term
 
 
 class TestDomainAnalysis:

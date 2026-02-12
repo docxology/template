@@ -2,7 +2,7 @@
 
 > **Documentation hub** for the Research Project Template
 
-**Quick Reference:** [Documentation Index](DOCUMENTATION_INDEX.md) | [How To Use](core/HOW_TO_USE.md) | [Architecture](core/ARCHITECTURE.md) | [FAQ](reference/FAQ.md)
+**Quick Reference:** [Documentation Index](documentation-index.md) | [How To Use](core/how-to-use.md) | [Architecture](core/architecture.md) | [FAQ](reference/faq.md)
 
 ## Purpose
 
@@ -16,135 +16,122 @@ Documentation is organized into modular subdirectories by purpose and audience:
 
 | File | Purpose | Audience |
 | ------ | --------- | ---------- |
-| `core/HOW_TO_USE.md` | usage guide from basic to advanced | New users, developers |
-| `core/ARCHITECTURE.md` | System design and structure | Developers, architects |
-| `core/WORKFLOW.md` | Development workflow and best practices | Developers |
+| `core/how-to-use.md` | usage guide from basic to advanced | New users, developers |
+| `core/architecture.md` | System design and structure | Developers, architects |
+| `core/workflow.md` | Development workflow and best practices | Developers |
 
 ### Usage Guides (`guides/`)
 
 | File | Purpose | Audience |
 | ------ | --------- | ---------- |
-| `guides/GETTING_STARTED.md` | Basic usage guide (Levels 1-3) | Beginners |
-| `guides/FIGURES_AND_ANALYSIS.md` | Intermediate usage (Levels 4-6) | Intermediate users |
-| `guides/TESTING_AND_REPRODUCIBILITY.md` | Advanced usage (Levels 7-9) | Advanced users |
-| `guides/EXTENDING_AND_AUTOMATION.md` | Expert usage (Levels 10-12) | Expert users |
+| `guides/getting-started.md` | Basic usage guide (Levels 1-3) | Beginners |
+| `guides/figures-and-analysis.md` | Intermediate usage (Levels 4-6) | Intermediate users |
+| `guides/testing-and-reproducibility.md` | Advanced usage (Levels 7-9) | Advanced users |
+| `guides/extending-and-automation.md` | Expert usage (Levels 10-12) | Expert users |
 
 ### Architecture Documentation (`architecture/`)
 
 | File | Purpose | Audience |
 | ------ | --------- | ---------- |
-| `architecture/TWO_LAYER_ARCHITECTURE.md` | two-layer architecture guide | Developers, architects |
-| `architecture/THIN_ORCHESTRATOR_SUMMARY.md` | Architecture pattern details | Developers |
-| `architecture/DECISION_TREE.md` | Code placement decisions | Developers |
+| `architecture/two-layer-architecture.md` | two-layer architecture guide | Developers, architects |
+| `architecture/thin-orchestrator-summary.md` | Architecture pattern details | Developers |
+| `architecture/decision-tree.md` | Code placement decisions | Developers |
 
 ### Usage Examples (`usage/`)
 
 | File | Purpose | Audience |
 | ------ | --------- | ---------- |
-| `usage/TEMPLATE_DESCRIPTION.md` | Template overview and features | New users |
-| `usage/EXAMPLES.md` | Usage examples and patterns | All users |
-| `usage/EXAMPLES_SHOWCASE.md` | Real-world usage examples | Advanced users |
-| `usage/MARKDOWN_TEMPLATE_GUIDE.md` | Markdown authoring guide | Content creators |
-| `usage/MANUSCRIPT_NUMBERING_SYSTEM.md` | Manuscript section numbering system | Content creators |
+| `usage/template-description.md` | Template overview and features | New users |
+| `usage/examples.md` | Usage examples and patterns | All users |
+| `usage/examples-showcase.md` | Real-world usage examples | Advanced users |
+| `usage/markdown-template-guide.md` | Markdown authoring guide | Content creators |
+| `usage/manuscript-numbering-system.md` | Manuscript section numbering system | Content creators |
 
 ### Operational Guides (`operational/`)
 
 | File | Purpose | Audience |
 | ------ | --------- | ---------- |
-| `operational/BUILD_SYSTEM.md` | Build pipeline and execution details | Developers |
-| `operational/CI_CD_INTEGRATION.md` | CI/CD setup and GitHub Actions | Developers |
-| `operational/DEPENDENCY_MANAGEMENT.md` | Package management with uv | Developers |
-| `operational/PERFORMANCE_OPTIMIZATION.md` | Build time optimization and caching | Developers |
-| `operational/CONFIGURATION.md` | Configuration system guide | All users |
-| `operational/CHECKPOINT_RESUME.md` | Checkpoint and resume system | Developers |
-| `operational/REPORTING_GUIDE.md` | Reporting system and report interpretation | Developers |
-| `operational/TROUBLESHOOTING_GUIDE.md` | troubleshooting | All users |
-| `operational/LLM_REVIEW_TROUBLESHOOTING.md` | LLM-specific troubleshooting | Developers |
-| `operational/ERROR_HANDLING_GUIDE.md` | Error handling patterns | Developers |
-| `operational/LOGGING_GUIDE.md` | Logging system guide | Developers |
+| `operational/build-system.md` | Build pipeline and execution details | Developers |
+| `operational/ci-cd-integration.md` | CI/CD setup and GitHub Actions | Developers |
+| `operational/dependency-management.md` | Package management with uv | Developers |
+| `operational/performance-optimization.md` | Build time optimization and caching | Developers |
+| `operational/configuration.md` | Configuration system guide | All users |
+| `operational/checkpoint-resume.md` | Checkpoint and resume system | Developers |
+| `operational/reporting-guide.md` | Reporting system and report interpretation | Developers |
+| `operational/troubleshooting-guide.md` | troubleshooting | All users |
+| `operational/llm-review-troubleshooting.md` | LLM-specific troubleshooting | Developers |
+| `operational/error-handling-guide.md` | Error handling patterns | Developers |
+| `operational/logging-guide.md` | Logging system guide | Developers |
 
 ### Reference Materials (`reference/`)
 
 | File | Purpose | Audience |
 | ------ | --------- | ---------- |
-| `reference/FAQ.md` | Frequently asked questions | All users |
-| `reference/API_REFERENCE.md` | API documentation | Developers |
-| `reference/GLOSSARY.md` | Terms and definitions | All users |
-| `reference/QUICK_START_CHEATSHEET.md` | Essential commands reference | All users |
-| `reference/COMMON_WORKFLOWS.md` | Step-by-step workflow recipes | All users |
-| `reference/COPYPASTA.md` | Reusable documentation snippets | Documentation writers |
+| `reference/faq.md` | Frequently asked questions | All users |
+| `reference/api-reference.md` | API documentation | Developers |
+| `reference/glossary.md` | Terms and definitions | All users |
+| `reference/quick-start-cheatsheet.md` | Essential commands reference | All users |
+| `reference/common-workflows.md` | Step-by-step workflow recipes | All users |
+| `reference/copypasta.md` | Reusable documentation snippets | Documentation writers |
 
 ### Advanced Modules (`modules/`)
 
 | File | Purpose | Audience |
 | ------ | --------- | ---------- |
-| `modules/MODULES_GUIDE.md` | Guide for all 7 modules | Developers |
-| `modules/PDF_VALIDATION.md` | PDF validation documentation | Developers |
-| `modules/SCIENTIFIC_SIMULATION_GUIDE.md` | Scientific simulation system | Researchers |
+| `modules/modules-guide.md` | Guide for all 9 infrastructure modules | Developers |
+| `modules/pdf-validation.md` | PDF validation documentation | Developers |
+| `modules/scientific-simulation-guide.md` | Scientific simulation system | Researchers |
 
 ### Per-Module Guides (`modules/guides/`)
 
 | File | Purpose | Audience |
 | ------ | --------- | ---------- |
-| `modules/guides/INTEGRITY_MODULE.md` | Integrity module guide | Developers |
-| `modules/guides/LITERATURE_MODULE.md` | Literature module guide | Developers |
-| `modules/guides/LLM_MODULE.md` | LLM module guide | Developers |
-| `modules/guides/PUBLISHING_MODULE.md` | Publishing module guide | Developers |
-| `modules/guides/RENDERING_MODULE.md` | Rendering module guide | Developers |
-| `modules/guides/REPORTING_MODULE.md` | Reporting module guide | Developers |
-| `modules/guides/SCIENTIFIC_MODULE.md` | Scientific module guide | Developers |
+| `modules/guides/integrity-module.md` | Integrity module guide | Developers |
+| `modules/guides/llm-module.md` | LLM module guide | Developers |
+| `modules/guides/publishing-module.md` | Publishing module guide | Developers |
+| `modules/guides/rendering-module.md` | Rendering module guide | Developers |
+| `modules/guides/reporting-module.md` | Reporting module guide | Developers |
+| `modules/guides/scientific-module.md` | Scientific module guide | Developers |
 
 ### Logging Guides (`operational/logging/`)
 
 | File | Purpose | Audience |
 | ------ | --------- | ---------- |
-| `operational/logging/BASH_LOGGING.md` | Bash logging patterns | Developers |
-| `operational/logging/PYTHON_LOGGING.md` | Python logging patterns | Developers |
-| `operational/logging/LOGGING_PATTERNS.md` | Cross-language logging patterns | Developers |
+| `operational/logging/bash-logging.md` | Bash logging patterns | Developers |
+| `operational/logging/python-logging.md` | Python logging patterns | Developers |
+| `operational/logging/logging-patterns.md` | Cross-language logging patterns | Developers |
 
 ### Troubleshooting Guides (`operational/troubleshooting/`)
 
 | File | Purpose | Audience |
 | ------ | --------- | ---------- |
-| `operational/troubleshooting/BUILD_TOOLS.md` | Build tool troubleshooting | Developers |
-| `operational/troubleshooting/COMMON_ERRORS.md` | Common error patterns and fixes | All users |
-| `operational/troubleshooting/ENVIRONMENT_SETUP.md` | Environment setup issues | All users |
-| `operational/troubleshooting/RECOVERY_PROCEDURES.md` | Recovery procedures | Developers |
-| `operational/troubleshooting/TEST_FAILURES.md` | Test failure troubleshooting | Developers |
+| `operational/troubleshooting/build-tools.md` | Build tool troubleshooting | Developers |
+| `operational/troubleshooting/common-errors.md` | Common error patterns and fixes | All users |
+| `operational/troubleshooting/environment-setup.md` | Environment setup issues | All users |
+| `operational/troubleshooting/recovery-procedures.md` | Recovery procedures | Developers |
+| `operational/troubleshooting/test-failures.md` | Test failure troubleshooting | Developers |
 
 ### Development & Contribution (`development/`)
 
 | File | Purpose | Audience |
 | ------ | --------- | ---------- |
-| `development/CONTRIBUTING.md` | How to contribute to the project | Contributors |
-| `development/CODE_OF_CONDUCT.md` | Community guidelines | All participants |
-| `development/SECURITY.md` | Security policies and reporting | All users |
-| `development/ROADMAP.md` | Future development plans | Maintainers, contributors |
-| `development/TESTING_GUIDE.md` | Testing framework guide | Developers |
-| `development/TESTING_WITH_CREDENTIALS.md` | Testing with external service credentials | Developers |
-| `development/COVERAGE_GAPS.md` | Test coverage gap analysis | Developers |
+| `development/contributing.md` | How to contribute to the project | Contributors |
+| `development/code-of-conduct.md` | Community guidelines | All participants |
+| `development/security.md` | Security policies and reporting | All users |
+| `development/roadmap.md` | Future development plans | Maintainers, contributors |
+| `development/testing-guide.md` | Testing framework guide | Developers |
+| `development/testing-with-credentials.md` | Testing with external service credentials | Developers |
+| `development/coverage-gaps.md` | Test coverage gap analysis | Developers |
 
 ### Best Practices (`best-practices/`)
 
 | File | Purpose | Audience |
 | ------ | --------- | ---------- |
-| `best-practices/BEST_PRACTICES.md` | Consolidated best practices | All users |
-| `best-practices/VERSION_CONTROL.md` | Git workflows and best practices | Developers |
-| `best-practices/MIGRATION_GUIDE.md` | Migration from other templates | Developers |
-| `best-practices/MULTI_PROJECT_MANAGEMENT.md` | Managing multiple projects | Developers |
-| `best-practices/BACKUP_RECOVERY.md` | Backup strategies and recovery | All users |
-
-### Usage Guides — Complete Reference (`usage/`)
-
-| File | Purpose | Audience |
-| ------ | --------- | ---------- |
-| `usage/TEMPLATE_DESCRIPTION.md` | Template overview and features | New users |
-| `usage/EXAMPLES.md` | Usage examples and patterns | All users |
-| `usage/EXAMPLES_SHOWCASE.md` | Real-world usage examples | Advanced users |
-| `usage/MARKDOWN_TEMPLATE_GUIDE.md` | Markdown authoring guide | Content creators |
-| `usage/MANUSCRIPT_NUMBERING_SYSTEM.md` | Manuscript section numbering system | Content creators |
-| `usage/IMAGE_MANAGEMENT.md` | Image insertion, captioning, and cross-referencing | Content creators |
-| `usage/VISUALIZATION_GUIDE.md` | Visualization system for publication-quality figures | Researchers |
+| `best-practices/best-practices.md` | Consolidated best practices | All users |
+| `best-practices/version-control.md` | Git workflows and best practices | Developers |
+| `best-practices/migration-guide.md` | Migration from other templates | Developers |
+| `best-practices/multi-project-management.md` | Managing multiple projects | Developers |
+| `best-practices/backup-recovery.md` | Backup strategies and recovery | All users |
 
 ### AI Prompt Templates (`prompts/`)
 
@@ -203,7 +190,7 @@ Documentation should demonstrate through examples rather than lengthy explanatio
 ### Layered Information
 
 - **README.md**: Quick start, essential links
-- **core/HOW_TO_USE.md**: Step-by-step usage
+- **core/how-to-use.md**: Step-by-step usage
 - **AGENTS.md**: technical reference
 - **Specialized docs**: Deep dives into specific topics (organized by subdirectory)
 
@@ -220,30 +207,30 @@ Documentation must stay synchronized with code:
 
 ### Adding a Feature
 
-1. Update `development/ROADMAP.md` (remove from planned)
-2. Update `core/HOW_TO_USE.md` (usage instructions)
+1. Update `development/roadmap.md` (remove from planned)
+2. Update `core/how-to-use.md` (usage instructions)
 3. Update relevant `AGENTS.md` (technical details)
-4. Add example to `usage/EXAMPLES.md`
+4. Add example to `usage/examples.md`
 
 ### Changing Architecture
 
-1. Update `core/ARCHITECTURE.md` (design changes)
-2. Update `architecture/THIN_ORCHESTRATOR_SUMMARY.md` (if pattern affected)
-3. Update `core/WORKFLOW.md` (if workflow changes)
+1. Update `core/architecture.md` (design changes)
+2. Update `architecture/thin-orchestrator-summary.md` (if pattern affected)
+3. Update `core/workflow.md` (if workflow changes)
 4. Update root `AGENTS.md` (system overview)
 
 ### Bug Fixes
 
-1. Update `reference/FAQ.md` (if commonly encountered)
-2. Update `operational/TROUBLESHOOTING_GUIDE.md` troubleshooting sections
+1. Update `reference/faq.md` (if commonly encountered)
+2. Update `operational/troubleshooting-guide.md` troubleshooting sections
 3. Add preventive guidance if relevant
 
 ### Deprecating Features
 
-1. Mark as deprecated in `development/ROADMAP.md`
-2. Update `core/HOW_TO_USE.md` (migration guide)
-3. Update `development/CONTRIBUTING.md` (don't use deprecated features)
-4. Remove examples from `usage/EXAMPLES.md`
+1. Mark as deprecated in `development/roadmap.md`
+2. Update `core/how-to-use.md` (migration guide)
+3. Update `development/contributing.md` (don't use deprecated features)
+4. Remove examples from `usage/examples.md`
 
 ## Documentation Style Guide
 
@@ -272,7 +259,7 @@ def example():
 ### Links
 ```markdown
 # Internal links (relative paths)
-See [core/ARCHITECTURE.md](core/ARCHITECTURE.md) for details.
+See [core/architecture.md](core/architecture.md) for details.
 
 # External links (descriptive text)
 Check the [Pandoc Manual](https://pandoc.org/MANUAL.html).
@@ -343,29 +330,29 @@ aspell check docs/*.md
 ### Documentation Flow
 
 ```text
-README.md → core/HOW_TO_USE.md → core/ARCHITECTURE.md
+README.md → core/how-to-use.md → core/architecture.md
     ↓            ↓                      ↓
-usage/EXAMPLES.md  core/WORKFLOW.md    Technical Docs
+usage/examples.md  core/workflow.md    Technical Docs
 ```
 
 ### Cross-References
 
-- **core/HOW_TO_USE.md** references:
-  - usage/EXAMPLES.md (usage examples)
-  - core/ARCHITECTURE.md (design understanding)
-  - core/WORKFLOW.md (development process)
-  - reference/FAQ.md (troubleshooting)
+- **core/how-to-use.md** references:
+  - usage/examples.md (usage examples)
+  - core/architecture.md (design understanding)
+  - core/workflow.md (development process)
+  - reference/faq.md (troubleshooting)
 
-- **core/ARCHITECTURE.md** references:
-  - architecture/TWO_LAYER_ARCHITECTURE.md (architecture guide)
-  - architecture/THIN_ORCHESTRATOR_SUMMARY.md (pattern details)
-  - core/WORKFLOW.md (how to work with architecture)
+- **core/architecture.md** references:
+  - architecture/two-layer-architecture.md (architecture guide)
+  - architecture/thin-orchestrator-summary.md (pattern details)
+  - core/workflow.md (how to work with architecture)
   - ../../infrastructure/AGENTS.md (infrastructure implementation details)
   - ../../projects/code_project/src/AGENTS.md (project implementation details)
 
-- **core/WORKFLOW.md** references:
-  - development/CONTRIBUTING.md (contribution process)
-  - core/ARCHITECTURE.md (understanding structure)
+- **core/workflow.md** references:
+  - development/contributing.md (contribution process)
+  - core/architecture.md (understanding structure)
   - ../../tests/AGENTS.md (testing approach)
 
 ## Contributing to Documentation
@@ -374,7 +361,7 @@ usage/EXAMPLES.md  core/WORKFLOW.md    Technical Docs
 
 1. Determine appropriate file or create new one
 2. Follow style guide
-3. Add to DOCUMENTATION_INDEX.md
+3. Add to documentation-index.md
 4. Cross-reference from related docs
 5. Update this AGENTS.md
 
@@ -395,12 +382,12 @@ usage/EXAMPLES.md  core/WORKFLOW.md    Technical Docs
 - [ ] Headings are hierarchical
 - [ ] No bare URLs (use link text)
 - [ ] Spell-checked
-- [ ] Added to DOCUMENTATION_INDEX.md
+- [ ] Added to documentation-index.md
 - [ ] Cross-referenced from related docs
 
 ## Special Files
 
-### COPYPASTA.md
+### copypasta.md
 
 Reusable documentation snippets:
 
@@ -410,7 +397,7 @@ Reusable documentation snippets:
 - Troubleshooting steps
 - Reduces duplication across docs
 
-### DOCUMENTATION_INDEX.md
+### documentation-index.md
 
 Master index of all documentation:
 
@@ -424,27 +411,27 @@ Master index of all documentation:
 ### For New Users
 
 1. Start with `../README.md` (project overview)
-2. Read `core/HOW_TO_USE.md` (guide)
-3. Review `usage/EXAMPLES.md` (usage patterns)
-4. Check `reference/FAQ.md` (common questions)
+2. Read `core/how-to-use.md` (guide)
+3. Review `usage/examples.md` (usage patterns)
+4. Check `reference/faq.md` (common questions)
 
 ### For Developers
 
-1. Review `core/ARCHITECTURE.md` (system design)
-2. Read `architecture/THIN_ORCHESTRATOR_SUMMARY.md` (pattern)
-3. Follow `core/WORKFLOW.md` (development process)
-4. Check `development/CONTRIBUTING.md` (contribution guide)
+1. Review `core/architecture.md` (system design)
+2. Read `architecture/thin-orchestrator-summary.md` (pattern)
+3. Follow `core/workflow.md` (development process)
+4. Check `development/contributing.md` (contribution guide)
 
 ### For Advanced Users
 
-1. Deep dive into `core/ARCHITECTURE.md`
-2. Review `modules/PDF_VALIDATION.md`
-3. Study `usage/EXAMPLES_SHOWCASE.md`
-4. Explore `development/ROADMAP.md` (future features)
+1. Deep dive into `core/architecture.md`
+2. Review `modules/pdf-validation.md`
+3. Study `usage/examples-showcase.md`
+4. Explore `development/roadmap.md` (future features)
 
 ## See Also
 
-- [`DOCUMENTATION_INDEX.md`](DOCUMENTATION_INDEX.md) - documentation index
-- [`core/HOW_TO_USE.md`](core/HOW_TO_USE.md) - usage guide
+- [`documentation-index.md`](documentation-index.md) - documentation index
+- [`core/how-to-use.md`](core/how-to-use.md) - usage guide
 - [`../AGENTS.md`](../AGENTS.md) - Root system documentation
 - [`../README.md`](../README.md) - Project overview

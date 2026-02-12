@@ -88,7 +88,7 @@ mv projects_archive/myproject projects/myproject
 | `code_project/` | Optimization algorithms research | ✅ Active |
 | `blake_active_inference/` | Blake × Active Inference manuscript | ✅ Active |
 
-**Archived projects** are available in `projects_archive/` for historical reference (e.g., `cognitive_integrity`, `ento_linguistics`, `active_inference_meta_pragmatic`, `medical_ai`).
+**Archived projects** are available in `projects_archive/` for historical reference (e.g., `cognitive_integrity`, `active_inference_meta_pragmatic`, `medical_ai`).
 
 ```mermaid
 graph TD

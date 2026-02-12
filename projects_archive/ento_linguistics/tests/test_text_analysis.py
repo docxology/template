@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import List
 
 import pytest
-from src.text_analysis import LinguisticFeatureExtractor, TextProcessor
+from src.analysis.text_analysis import LinguisticFeatureExtractor, TextProcessor
 
 
 class TestTextProcessor:

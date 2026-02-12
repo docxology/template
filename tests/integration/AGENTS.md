@@ -667,6 +667,6 @@ When integration tests fail:
 
 - [`README.md`](README.md) - Quick reference guide
 - [`../../tests/AGENTS.md`](../../tests/AGENTS.md) - test suite documentation
-- [`../../docs/development/TESTING_GUIDE.md`](../../docs/development/TESTING_GUIDE.md) - Testing best practices
+- [`../../docs/development/testing-guide.md`](../../docs/development/testing-guide.md) - Testing best practices
 - [`../../scripts/AGENTS.md`](../../scripts/AGENTS.md) - Build pipeline documentation
 

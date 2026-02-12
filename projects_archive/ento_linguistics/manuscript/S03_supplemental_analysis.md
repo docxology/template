@@ -48,11 +48,13 @@ where $M_{ij}$ is the mapping strength between domains $D_i$ and $D_j$, and $s(t
 Advanced anthropomorphic framing detection incorporates linguistic and conceptual indicators:
 
 **Linguistic Indicators**:
+
 - Pronominalization (use of "it" vs. "she/he" for colonies)
 - Agency attribution (active vs. passive voice patterns)
 - Intentionality markers (words implying purpose or planning)
 
 **Conceptual Indicators**:
+
 - Social structure projections (human hierarchies onto insect societies)
 - Emotional attribution (anthropomorphic emotional terms)
 - Cultural bias patterns (Western social norms in biological descriptions)
@@ -80,6 +82,7 @@ Analysis of how terminology networks evolve over time reveals conceptual shifts:
 where $\delta_e(t)$ and $\delta_v(t)$ represent edge and vertex changes over time periods.
 
 **Key Evolutionary Patterns**:
+
 - **Network Growth**: Addition of new terms and relationships
 - **Structural Rearrangements**: Changes in network topology
 - **Conceptual Consolidation**: Strengthening of established relationships
@@ -107,7 +110,7 @@ Advanced validation incorporates multiple perspectives:
 
 ### Robustness Testing
 
-robustness analysis ensures result stability:
+Robustness analysis ensures result stability:
 
 **Subsampling Stability**: Performance across different corpus subsets
 **Parameter Sensitivity**: Robustness to algorithmic parameter variations
@@ -128,7 +131,7 @@ Ultra-longitudinal analysis reveals century-scale conceptual evolution:
 
 **Molecular Biology Era (1950-1999)**: Gene expression and hormonal control of caste differentiation
 
-**Genomic Era (2000-2024)**: Epigenetic and transcriptomic regulation of caste phenotypes
+**Genomic Era (2000-2024)**: Epigenetic and transcriptomic regulation of caste phenotypes \cite{chandra2021epigenetics}, accompanied by calls to broaden conceptions of sociality beyond traditional eusocial models \cite{sociable2025}.
 
 ### Superorganism Concept Evolution
 
@@ -159,66 +162,17 @@ Detailed analysis of the superorganism concept across seven decades:
 Our approach successfully integrates qualitative and quantitative methods:
 
 **Qualitative Contributions**:
+
 - Theoretical framework development
 - Conceptual category identification
 - Historical context analysis
 - Cross-domain relationship mapping
 
 **Quantitative Contributions**:
+
 - Statistical pattern identification
 - Network structure analysis
 - Temporal trend quantification
 - Validation metric development
 
-### Limitations and Scope Considerations
-
-**Methodological Limitations**:
-1. **Corpus Scope**: Limited to English-language publications
-2. **Temporal Resolution**: Decade-level rather than year-level analysis
-3. **Domain Boundaries**: Some concepts span multiple domains
-4. **Annotation Scalability**: Human validation limits analysis scope
-
-**Theoretical Scope**:
-1. **Cultural Bias**: Western scientific traditions dominate the corpus
-2. **Disciplinary Boundaries**: Entomological focus may miss broader patterns
-3. **Historical Context**: Analysis reflects current perspectives on past work
-4. **Paradigm Dependence**: Results may vary across research traditions
-
-## Future Theoretical Directions
-
-### Advanced Semantic Analysis
-
-Future work will incorporate advanced semantic techniques:
-
-**Transformer-Based Embeddings**: Contextual language models for more sophisticated semantic analysis
-
-**Multilingual Extensions**: Cross-language terminology mapping and comparison
-
-**Dynamic Semantic Networks**: Temporal evolution of term meanings and relationships
-
-### Extended Conceptual Frameworks
-
-Theoretical extensions will address broader questions:
-
-**Constitutive Linguistics**: How scientific language creates research objects and relationships
-
-**Interdisciplinary Translation**: Mechanisms for translating concepts across disciplinary boundaries
-
-**Knowledge Representation**: Formal ontologies for scientific terminology networks
-
-**Cultural Epistemology**: How cultural contexts shape scientific language and concepts
-
-### Practical Applications
-
-Extended applications will include:
-
-**Terminology Standards**: Development of evidence-based guidelines for scientific communication
-
-**Educational Interventions**: Training programs for researchers on terminological awareness
-
-**Peer Review Tools**: Automated assistance for evaluating terminological clarity
-
-**Cross-Disciplinary Bridges**: Tools for facilitating interdisciplinary communication
-
-This extended analytical framework provides theoretical and methodological foundations for understanding the constitutive role of language in scientific practice, with particular focus on the complex interplay between speech and thought in entomological research.
-
+For a discussion of methodological limitations and scope considerations, see Section \ref{sec:discussion}. Future research directions, including advanced semantic analysis (transformer-based embeddings, multilingual extensions) and practical applications (terminology standards, peer review tools), are discussed in Section \ref{sec:conclusion}.

@@ -1,43 +1,30 @@
 # Conclusion {#sec:conclusion}
 
-## Summary of Contributions
+This work establishes Ento-Linguistic analysis as a methodology for examining how scientific language constitutes—rather than merely represents—knowledge about ant biology. Through computational analysis of terminology networks across six domains (Unit of Individuality, Behavior and Identity, Power \& Labor, Sex \& Reproduction, Kin \& Relatedness, and Economics), we demonstrate that entomological terminology carries systematic patterns of ambiguity, anthropomorphic framing, and conceptual structure that actively shape research practice. The accompanying open-source computational pipeline—implementing automated term extraction, co-occurrence network construction, and ambiguity scoring—provides a reproducible toolkit for extending this analysis to new corpora and domains.
 
-This work establishes Ento-Linguistic analysis as a methodology for examining how scientific language constitutes—rather than merely represents—knowledge about ant biology. Through computational analysis of terminology networks across six domains (Unit of Individuality, Behavior and Identity, Power \& Labor, Sex \& Reproduction, Kin \& Relatedness, and Economics), we demonstrate that entomological terminology carries systematic patterns of ambiguity, anthropomorphic framing, and conceptual structure that actively shape research practice.
+## Core Contributions
 
-## Key Findings
+The work makes three primary contributions. First, the six-domain analytical framework provides a comprehensive, reproducible architecture for examining how language shapes scientific understanding in entomology and, by extension, in other fields where human social concepts are projected onto non-human systems. Second, the computational pipeline demonstrates that large-scale, quantitative analysis of scientific discourse is both feasible and revealing—exposing structural patterns that qualitative analysis alone cannot detect. Third, the CACE meta-standards, defined in Section \ref{sec:methodology}, offer a practical evaluation framework:
 
-Three core findings emerge from this analysis:
+- **Clarity**: stable, non-ambiguous definitions across scales
+- **Appropriateness**: metaphors apt for the biological phenomenon
+- **Consistency**: uniform usage within and across the field
+- **Evolvability**: robustness to new empirical discoveries
 
-**First**, terminology networks in entomology form coherent conceptual communities with strong domain clustering (clustering coefficient 0.67), hierarchical bridging terms, and context-dependent meanings affecting approximately three-quarters of analyzed terminology. These are not merely lexical patterns—they represent conceptual structures that constrain research questions and interpretive possibilities.
-
-**Second**, the six Ento-Linguistic domains exhibit distinct terminological architectures. The Power \& Labor domain shows the highest ambiguity (0.81) and strongest anthropomorphic framing, where terms derived from human social hierarchies impose assumptions about ant colony organization \cite{herbers2007, crespi1992caste}. The Behavior and Identity domain reveals how transient actions are linguistically transformed into categorical identities, potentially obscuring the behavioral plasticity documented in contemporary research \cite{ravary2007, gordon2010}.
-
-**Third**, the entanglement of speech and thought in scientific practice creates invisible constraints on inquiry \cite{whorf1956, foucault1972archaeology}. Researchers working within established terminological frameworks may not recognize how those frameworks shape what questions they ask, what methods they consider natural, and what interpretations they favor.
-
-## Toward Meta-Standards for Scientific Communication
-
-Building on the analytical findings and discussion, we propose four meta-standards for scientific terminology stewardship:
-
-1. **Clarity**: Terminology should maximize understanding while minimizing unnecessary ambiguity. Terms that conflate distinct biological phenomena (e.g., "individuality" across nestmate and colony scales) should be disambiguated.
-
-2. **Appropriateness**: Language should be appropriate to the biological phenomena being described. Terms importing human social structures—particularly hierarchical, racial, or gendered frameworks—should be critically evaluated and replaced where they distort understanding \cite{herbers2006, laciny2022neurodiversity, betternamesproject2024}.
-
-3. **Consistency**: Within research communities, identical terms should carry identical meanings. The high context variability documented across domains (2.6 to 4.5 contexts per term) represents a concrete target for community-level standardization efforts.
-
-4. **Evolvability**: Communication standards should include mechanisms for controlled terminological evolution as scientific understanding develops, avoiding both premature ossification and chaotic proliferation of alternatives.
+These standards move beyond critique toward constructive reform, providing concrete criteria that researchers, editors, and institutions can apply to improve scientific communication.
 
 ## Future Directions
 
-Several extensions of this work would significantly advance understanding of scientific discourse:
+Several avenues emerge for extending this work.
 
-**Multilingual analysis** represents the most immediate priority. Comparing how, for example, the German term *Staaten* ("states") versus the English "colony" shapes research on social insect organization could reveal how linguistic structure itself—not just individual terms—influences scientific understanding across language communities.
+**Multilingual and Cross-Cultural Analysis.** Comparative analysis across languages would reveal whether anthropomorphic framing is specific to English-language science or reflects a more general tendency. Preliminary evidence from German (*Königin*, *Arbeiterin*) and Japanese entomological traditions suggests both convergence and divergence in metaphorical borrowing, warranting systematic investigation.
 
-**Longitudinal tracking** of terminological evolution would connect language change to theoretical change. The historical arc from Wheeler's \cite{wheeler1911} "superorganism" through mid-century skepticism to contemporary superorganism theory \cite{wilson2008superorganism} presents a natural case study for how terminology and theory co-evolve.
+**Longitudinal Terminology Tracking.** Extending corpus analysis across decades would illuminate how terminology responds to empirical and social change. Do genomic discoveries erode the dominance of "caste" vocabulary? Does institutional reform (e.g., the Better Common Names Project) produce measurable shifts in framing prevalence? Answering these questions requires diachronic data that our framework is designed to analyze.
 
-**Interactive terminology tools**, built on the computational infrastructure developed here, could provide researchers with real-time feedback on term appropriateness and suggest clearer alternatives drawn from the analytical database.
+**Educational and Editorial Tools.** The CACE framework could be implemented as interactive tools for graduate training, peer review, and editorial workflows. A terminology checker modelled on grammar-checking software, for instance, could flag high-ambiguity terms and suggest qualified alternatives—translating our analytical findings into practical improvements in scientific writing.
 
-**Comparative disciplinary analysis** applying Ento-Linguistic methods across fields—neuroscience, ecology, microbiology—would test whether the patterns documented here reflect general properties of scientific language or domain-specific features of entomological discourse.
+**Cross-Disciplinary Extension.** The Ento-Linguistic framework is not specific to entomology. Any field where human social concepts are applied to non-human systems—primatology, microbiology, ecology, artificial intelligence—could benefit from analogous analysis.
 
-## Final Reflection
+## Closing Remarks
 
-The entanglement of speech and thought in scientific practice creates both challenges and opportunities. The challenge lies in recognizing how established terminology creates invisible constraints on inquiry. The opportunity lies in developing the analytical tools and community standards to exercise conscious terminological stewardship—ensuring that scientific language serves the phenomena it describes, rather than the historical conditions of its origin.
+The entanglement of speech and thought in scientific practice is neither accidental nor inconsequential. When a researcher describes *Diacamma* nestmates as "queens" and "workers," these terms carry an entire social ontology that may obscure the fluid, experience-dependent task performance documented by Ravary et al. \cite{ravary2007}. Replacing "queen" with "primary reproductive" is not merely cosmetic—it is a step toward aligning scientific language with biological reality. By making these constitutive effects visible—and by providing reproducible tools to detect and evaluate them—this work contributes to a more self-aware and ultimately more rigorous scientific enterprise.

@@ -15,7 +15,7 @@ Standardized Git workflow ensures clean history, easy collaboration, and reliabl
 
 ```bash
 # ✅ GOOD: Descriptive feature branches
-git checkout -b feature/add-literature-search
+git checkout -b feature/add-reporting-dashboard
 git checkout -b feature/improve-pdf-validation
 git checkout -b bugfix/fix-rendering-crash
 
@@ -27,7 +27,7 @@ git checkout -b update
 
 ### Branch Naming Convention
 
-```
+```text
 <type>/<description>
 
 Types:
@@ -45,7 +45,7 @@ Types:
 
 ### Commit Message Format
 
-```
+```text
 <type>(<scope>): <description>
 
 [optional body]
@@ -57,7 +57,7 @@ Types:
 
 | Type | Description | Example |
 |------|-------------|---------|
-| `feat` | feature | `feat(literature): add arXiv search support` |
+| `feat` | feature | `feat(reporting): add HTML dashboard output` |
 | `fix` | Bug fix | `fix(pdf): resolve rendering crash on empty sections` |
 | `docs` | Documentation | `docs(api): update LLM integration guide` |
 | `style` | Code style | `style(core): format imports with isort` |
@@ -71,7 +71,7 @@ Types:
 ### Scopes
 
 - **infrastructure** - Infrastructure modules
-- **literature** - Literature search functionality
+- **reporting** - Reporting and dashboard generation
 - **llm** - LLM integration
 - **rendering** - Document rendering
 - **validation** - Quality validation
@@ -85,7 +85,7 @@ Types:
 
 ```bash
 # ✅ GOOD: Clear, descriptive commits
-feat(literature): add Semantic Scholar API integration
+feat(reporting): add executive summary generation
 
 - Implement Semantic Scholar source adapter
 - Add rate limiting for API calls
@@ -124,18 +124,21 @@ BREAKING CHANGE: ValidationError now requires context parameter
 ### Commit Message Guidelines
 
 #### Subject Line
+
 - **Limit to 50 characters**
 - **Start with lowercase** (except proper nouns)
 - **No period** at the end
 - **Imperative mood** ("add" not "added")
 
 #### Body (Optional)
+
 - **Separate from subject** with blank line
 - **Explain what and why**, not how
 - **Wrap at 72 characters**
 - **Use bullet points** for lists
 
 #### Footer (Optional)
+
 - **Breaking changes**: `BREAKING CHANGE: description`
 - **Issue references**: `Closes #123`, `Fixes #456`
 - **Co-authors**: `Co-authored-by: Name <email>`
@@ -429,6 +432,7 @@ Configure branch protection:
 ### Common Git Issues
 
 **Merge Conflicts:**
+
 ```bash
 # Abort merge
 git merge --abort
@@ -443,6 +447,7 @@ git rebase --continue
 ```
 
 **Lost Commits:**
+
 ```bash
 # Find lost commits
 git reflog
@@ -452,6 +457,7 @@ git checkout <commit-hash>
 ```
 
 **Large Files:**
+
 ```bash
 # Remove large files from history
 git filter-branch --tree-filter 'rm -f large-file.dat' HEAD
@@ -467,5 +473,5 @@ git lfs track "*.pdf"
 - [testing_standards.md](testing_standards.md) - Testing patterns and coverage
 - [infrastructure_modules.md](infrastructure_modules.md) - Module development standards
 - [documentation_standards.md](documentation_standards.md) - Documentation writing guide
-- [../docs/best-practices/VERSION_CONTROL.md](../docs/best-practices/VERSION_CONTROL.md) - Version control best practices
-- [../docs/operational/CI_CD_INTEGRATION.md](../docs/operational/CI_CD_INTEGRATION.md) - CI/CD integration guide
+- [../docs/best-practices/version-control.md](../docs/best-practices/version-control.md) - Version control best practices
+- [../docs/operational/ci-cd-integration.md](../docs/operational/ci-cd-integration.md) - CI/CD integration guide

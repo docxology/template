@@ -5,7 +5,7 @@
 The Research Project Template provides **two main entry points** for pipeline operations:
 
 1. **`run.sh`** - Main entry point for manuscript pipeline operations (10 stages displayed as [1/10] to [10/10])
-2. **`python3 scripts/execute_pipeline.py --core-only`** - Core 8-stage pipeline without LLM features
+2. **`uv run scripts/execute_pipeline.py --core-only`** - Core 8-stage pipeline without LLM features
 
 ## 🏗️ Thin Orchestration Architecture
 
@@ -36,17 +36,20 @@ The Research Project Template follows a **thin orchestrator pattern** where all 
 ### Key Principles
 
 **Layer 1: Entry Points (Thin Orchestrators)**
+
 - **`run.sh`**: Bash menu system that delegates to Python orchestrators
 - **`execute_pipeline.py`**: Python pipeline coordinator using `PipelineExecutor`
 - **`execute_multi_project.py`**: Multi-project orchestration using `MultiProjectOrchestrator`
 - **Purpose**: User interface and high-level coordination only
 
 **Layer 2: Stage Scripts (Thin Orchestrators)**
+
 - **`scripts/00-07_*.py`**: Import from `infrastructure/` for business logic
 - **`projects/{name}/scripts/*.py`**: Import from `projects/{name}/src/` for business logic
 - **Purpose**: Stage-specific coordination and I/O handling
 
 **Layer 3: Business Logic (Actual Implementation)**
+
 - **`infrastructure/`**: Generic, reusable algorithms and utilities
 - **`projects/{name}/src/`**: Project-specific scientific code and analysis
 - **Purpose**: All computational logic and algorithms
@@ -83,6 +86,7 @@ graph TD
 ### Examples
 
 **✅ CORRECT: Thin Orchestrator Pattern**
+
 ```python
 # scripts/03_render_pdf.py (orchestrator)
 from infrastructure.rendering import RenderManager
@@ -94,6 +98,7 @@ def run_render_pipeline():
 ```
 
 **❌ INCORRECT: Violates Architecture**
+
 ```python
 # scripts/03_render_pdf.py (WRONG - implements logic)
 def render_pdf_to_tex(content):
@@ -136,7 +141,7 @@ The template includes the following active project:
 ./run.sh --all-projects --pipeline
 
 # Alternative orchestrator (all projects)
-python3 scripts/execute_multi_project.py
+uv run scripts/execute_multi_project.py
 ```
 
 ## Entry Point 1: Manuscript Operations (`run.sh`)
@@ -173,7 +178,9 @@ Orchestration:
 ### Manuscript Menu Options
 
 #### Option 0: Setup Environment
+
 Verifies the environment is ready for the pipeline.
+
 - Checks Python version (requires >=3.10)
 - Verifies dependencies are installed
 - Confirms build tools (pandoc, xelatex) are available
@@ -181,7 +188,9 @@ Verifies the environment is ready for the pipeline.
 - Sets up environment variables
 
 #### Option 1: Run Tests
+
 Executes the test suite with coverage validation.
+
 - Runs infrastructure tests (`tests/infra_tests/`) with 60%+ coverage threshold
 - Runs project tests (`project/tests/`) with 90%+ coverage threshold
 - Generates HTML coverage reports for both suites
@@ -190,13 +199,17 @@ Executes the test suite with coverage validation.
 **Coverage Reports**: `htmlcov/index.html`
 
 #### Option 2: Run Analysis
+
 Executes project analysis scripts with progress tracking.
+
 - Discovers scripts in `project/scripts/`
 - Executes each script in order with progress tracking
 - Collects outputs to `project/output/`
 
 #### Option 3: Render PDF
+
 Generates manuscript PDFs with progress tracking.
+
 - Processes `project/manuscript/` markdown files
 - Converts to LaTeX via pandoc
 - Compiles to PDF via xelatex
@@ -205,14 +218,18 @@ Generates manuscript PDFs with progress tracking.
 **Output**: `project/output/pdf/`
 
 #### Option 4: Validate Output
+
 Validates build quality with reporting.
+
 - Checks generated PDFs for issues
 - Validates markdown references
 - Checks figure integrity
 - Generates validation reports (JSON, Markdown)
 
 #### Option 5: LLM Review
+
 Generates AI-powered manuscript reviews using local Ollama LLM.
+
 - Checks Ollama availability and selects best model
 - Extracts full text from combined PDF manuscript
 - Generates executive summary, quality review, methodology review, and improvement suggestions
@@ -221,7 +238,9 @@ Generates AI-powered manuscript reviews using local Ollama LLM.
 **Requires**: Running Ollama server with at least one model installed. Skips gracefully if unavailable.
 
 #### Option 6: LLM Translations
+
 Generates multi-language technical abstract translations.
+
 - Translates abstract to configured languages (see `project/manuscript/config.yaml`)
 - Uses local Ollama LLM for translation
 - Saves translations to `project/output/llm/`
@@ -229,13 +248,17 @@ Generates multi-language technical abstract translations.
 **Requires**: Running Ollama server and translation configuration in `config.yaml`.
 
 #### Option 7: Run Core Pipeline
+
 Executes the core pipeline (stages 0-6) without LLM features.
+
 - Runs all core stages: Setup → Tests → Analysis → PDF → Validate
 - Stops on first failure with clear error messages
 - Suitable for CI/CD environments
 
 #### Option 8: Run Full Pipeline
+
 Executes the 10-stage build pipeline (displayed as [1/10] to [10/10]):
+
 - Includes all core stages plus LLM review and translations
 - manuscript generation with AI assistance
 - Automatic checkpointing and resume capability
@@ -243,7 +266,9 @@ Executes the 10-stage build pipeline (displayed as [1/10] to [10/10]):
 **Note**: The pipeline stages are displayed as [1/10] to [10/10] in progress logs. Clean Output Directories is stage 1.
 
 #### Option 9: Run Full Pipeline (skip infrastructure tests)
+
 Executes the full pipeline but skips infrastructure tests.
+
 - Useful for multi-project execution where infrastructure tests may have already passed
 - Runs project tests only to save time in development workflows
 Generates AI-powered manuscript reviews using local Ollama LLM.
@@ -255,7 +280,9 @@ Generates AI-powered manuscript reviews using local Ollama LLM.
 **Requires**: Running Ollama server with at least one model installed. Skips gracefully if unavailable.
 
 #### Option 7: LLM Translations
+
 Generates multi-language technical abstract translations.
+
 - Translates abstract to configured languages (see `project/manuscript/config.yaml`)
 - Uses local Ollama LLM for translation
 - Saves translations to `project/output/llm/`
@@ -263,6 +290,7 @@ Generates multi-language technical abstract translations.
 **Requires**: Running Ollama server and translation configuration in `config.yaml`.
 
 #### Option 8: Run Full Pipeline
+
 Executes the 10-stage build pipeline (displayed as [1/10] to [10/10]):
 
 | Stage | Name | Purpose |
@@ -281,6 +309,7 @@ Executes the 10-stage build pipeline (displayed as [1/10] to [10/10]):
 **Note**: The pipeline stages are displayed as [1/10] to [10/10] in progress logs. Clean Output Directories is stage 1.
 
 **Generated Outputs**:
+
 - Coverage reports: `htmlcov/`
 - PDF files: `project/output/pdf/`
 - Figures: `project/output/figures/`
@@ -314,15 +343,16 @@ For programmatic access or CI/CD integration, use the Python orchestrator:
 
 ```bash
 # Core pipeline (8 stages) - Python orchestrator
-python3 scripts/execute_pipeline.py --core-only
+uv run scripts/execute_pipeline.py --core-only
 ```
 
 **Features**:
+
 - 8-stage core pipeline (stages 00-05)
 - No LLM dependencies required
 - Suitable for automated environments
 - Zero-padded stage numbering (Python convention)
-- Checkpoint/resume support: `python3 scripts/execute_pipeline.py --core-only --resume`
+- Checkpoint/resume support: `uv run scripts/execute_pipeline.py --core-only --resume`
 
 ### Core Pipeline Stages + Executive Reporting
 
@@ -342,7 +372,7 @@ python3 scripts/execute_pipeline.py --core-only
 |-------------|----------------|--------------|----------|
 | `./run.sh` | Main entry point | Optional | Interactive menu or manuscript pipeline with LLM |
 | `./run.sh --pipeline` | 10 stages ([1/10] to [10/10]) | Optional | Manuscript pipeline with LLM |
-| `python3 scripts/execute_pipeline.py --core-only` | 8 stages (00-05) | None | Core pipeline, CI/CD automation |
+| `uv run scripts/execute_pipeline.py --core-only` | 8 stages (00-05) | None | Core pipeline, CI/CD automation |
 
 ## Usage Examples
 
@@ -368,7 +398,7 @@ python3 scripts/execute_pipeline.py --core-only
 
 
 # Run core pipeline (Python)
-python3 scripts/execute_pipeline.py --core-only
+uv run scripts/execute_pipeline.py --core-only
 ```
 
 ### Individual Stage Execution
@@ -376,16 +406,16 @@ python3 scripts/execute_pipeline.py --core-only
 Individual stages can also be run directly via Python:
 
 ```bash
-python3 scripts/00_setup_environment.py  # Setup environment
-python3 scripts/01_run_tests.py          # Run tests only
-python3 scripts/01_run_tests.py --verbose  # Run tests with verbose output
-python3 scripts/02_run_analysis.py       # Run project scripts
-python3 scripts/03_render_pdf.py         # Render PDFs only
-python3 scripts/04_validate_output.py    # Validate outputs only
-python3 scripts/05_copy_outputs.py       # Copy final deliverables
-python3 scripts/06_llm_review.py         # LLM manuscript review
-python3 scripts/06_llm_review.py --reviews-only     # Reviews only
-python3 scripts/06_llm_review.py --translations-only # Translations only
+uv run scripts/00_setup_environment.py  # Setup environment
+uv run scripts/01_run_tests.py          # Run tests only
+uv run scripts/01_run_tests.py --verbose  # Run tests with verbose output
+uv run scripts/02_run_analysis.py       # Run project scripts
+uv run scripts/03_render_pdf.py         # Render PDFs only
+uv run scripts/04_validate_output.py    # Validate outputs only
+uv run scripts/05_copy_outputs.py       # Copy final deliverables
+uv run scripts/06_llm_review.py         # LLM manuscript review
+uv run scripts/06_llm_review.py --reviews-only     # Reviews only
+uv run scripts/06_llm_review.py --translations-only # Translations only
 ```
 
 ## Exit Codes
@@ -397,10 +427,12 @@ python3 scripts/06_llm_review.py --translations-only # Translations only
 ## Environment Variables
 
 The scripts automatically set:
+
 - `PROJECT_ROOT`: Repository root directory
 - `PYTHONPATH`: Includes root, infrastructure, and project/src
 
 You can override by setting before running:
+
 ```bash
 export LOG_LEVEL=0  # Enable debug logging
 ./run.sh --pipeline
@@ -417,12 +449,14 @@ export LOG_LEVEL=0  # Enable debug logging
 ## Error Handling
 
 The scripts use strict error handling:
+
 - Stops immediately on first failure
 - Provides clear error messages
 - Shows which stage/operation failed
 - Returns to menu after each operation (interactive mode)
 
 **Example error output**:
+
 ```
 ✗ Infrastructure tests failed
 
@@ -436,6 +470,7 @@ Press Enter to return to menu...
 ### "Permission denied: ./run.sh"
 
 Make the script executable:
+
 ```bash
 chmod +x run.sh
 ```
@@ -451,6 +486,7 @@ Check `pyproject.toml` `[tool.coverage.report]` for coverage thresholds. Increas
 ### PDF rendering fails
 
 Ensure pandoc and xelatex are installed:
+
 ```bash
 # macOS
 brew install pandoc
@@ -463,6 +499,7 @@ sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended
 ### LLM review fails or skips
 
 Ensure Ollama is running:
+
 ```bash
 # Start Ollama server
 ollama serve
@@ -476,5 +513,5 @@ ollama pull llama3-gradient
 - [`scripts/README.md`](scripts/README.md) - Stage orchestrators documentation
 - [`scripts/AGENTS.md`](scripts/AGENTS.md) - scripts documentation
 - [`AGENTS.md`](AGENTS.md) - system documentation
-- [`docs/core/WORKFLOW.md`](docs/core/WORKFLOW.md) - Development workflow
-- [`docs/operational/BUILD_SYSTEM.md`](docs/operational/BUILD_SYSTEM.md) - Detailed build system reference
+- [`docs/core/workflow.md`](docs/core/workflow.md) - Development workflow
+- [`docs/operational/build-system.md`](docs/operational/build-system.md) - Detailed build system reference

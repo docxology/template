@@ -17,14 +17,14 @@ from typing import Any, Dict, List, Optional
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root / "src"))
 
-from concept_visualization import ConceptVisualizer
-from domain_analysis import DomainAnalysis, DomainAnalyzer
-from literature_mining import LiteratureCorpus
-from term_extraction import TerminologyExtractor
+from visualization.concept_visualization import ConceptVisualizer
+from analysis.domain_analysis import DomainAnalysis, DomainAnalyzer
+from data.literature_mining import LiteratureCorpus
+from analysis.term_extraction import TerminologyExtractor
 
-from utils.logging import get_logger
+from core.logging import get_logger
 # Directory creation handled inline
-from utils.figure_manager import FigureManager
+from visualization.figure_manager import FigureManager
 
 logger = get_logger(__name__)
 

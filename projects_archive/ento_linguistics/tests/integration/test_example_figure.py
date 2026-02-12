@@ -83,14 +83,19 @@ if __name__ == "__main__":
 
         # Create minimal src structure for testing
         src_dir = test_root / "src"
-        src_dir.mkdir()
+        src_dir.mkdir(); (src_dir / "__init__.py").write_text("")
+        
+        # Create core package
+        core_dir = src_dir / "core"
+        core_dir.mkdir()
+        (core_dir / "__init__.py").write_text("")
         (src_dir / "__init__.py").write_text("")
 
         # Create utils directory with logging
-        utils_dir = src_dir / "utils"
-        utils_dir.mkdir()
-        (utils_dir / "__init__.py").write_text("")
-        (utils_dir / "logging.py").write_text(
+        # utils_dir replaced
+        # utils_dir.mkdir() removed
+        # init removed
+        (core_dir / "logging.py").write_text(
             """
 def get_logger(name):
     import logging
@@ -121,7 +126,7 @@ def find_minimum(numbers):
         return None
     return min(numbers)
 """
-        (src_dir / "example.py").write_text(example_content)
+        (core_dir / "example.py").write_text(example_content)
 
         # Copy script to test directory and modify it for testing
         test_script = test_root / "scripts" / "example_figure.py"
@@ -204,15 +209,20 @@ def find_minimum(numbers):
 
         # Copy src/ directory
         src_dir = test_root / "src"
-        src_dir.mkdir()
+        src_dir.mkdir(); (src_dir / "__init__.py").write_text("")
+        
+        # Create core package
+        core_dir = src_dir / "core"
+        core_dir.mkdir()
+        (core_dir / "__init__.py").write_text("")
 
         # Create utils subdirectory
-        utils_dir = src_dir / "utils"
-        utils_dir.mkdir()
+        # utils_dir replaced
+        # utils_dir.mkdir() removed
 
         # Create __init__.py files to make src/ a proper Python package
         (src_dir / "__init__.py").write_text("")
-        (utils_dir / "__init__.py").write_text("")
+        # init removed
 
         # Create example.py with tracking
         example_content = """
@@ -244,7 +254,7 @@ def find_minimum(numbers):
         return None
     return min(numbers)
 """
-        (src_dir / "example.py").write_text(example_content)
+        (core_dir / "example.py").write_text(example_content)
 
         # Create utils/logging.py for the script to import
         logging_content = '''
@@ -265,7 +275,7 @@ def get_logger(name: str) -> logging.Logger:
         logger.setLevel(logging.INFO)
     return logger
 '''
-        (utils_dir / "logging.py").write_text(logging_content)
+        (core_dir / "logging.py").write_text(logging_content)
 
         # Copy script
         script_path = os.path.join(
@@ -305,8 +315,13 @@ def get_logger(name: str) -> logging.Logger:
 
         # Copy src/ and script
         src_dir = test_root / "src"
-        src_dir.mkdir()
-        (src_dir / "example.py").write_text(
+        src_dir.mkdir(); (src_dir / "__init__.py").write_text("")
+        
+        # Create core package
+        core_dir = src_dir / "core"
+        core_dir.mkdir()
+        (core_dir / "__init__.py").write_text("")
+        (core_dir / "example.py").write_text(
             """
 def add_numbers(a, b): return a + b
 def multiply_numbers(a, b): return a * b
@@ -347,8 +362,13 @@ def find_minimum(numbers): return min(numbers) if numbers else None
 
         # Setup minimal environment
         src_dir = test_root / "src"
-        src_dir.mkdir()
-        (src_dir / "example.py").write_text(
+        src_dir.mkdir(); (src_dir / "__init__.py").write_text("")
+        
+        # Create core package
+        core_dir = src_dir / "core"
+        core_dir.mkdir()
+        (core_dir / "__init__.py").write_text("")
+        (core_dir / "example.py").write_text(
             """
 def add_numbers(a, b): return a + b
 def multiply_numbers(a, b): return a * b
@@ -387,8 +407,13 @@ def find_minimum(numbers): return min(numbers) if numbers else None
 
         # Setup minimal environment
         src_dir = test_root / "src"
-        src_dir.mkdir()
-        (src_dir / "example.py").write_text(
+        src_dir.mkdir(); (src_dir / "__init__.py").write_text("")
+        
+        # Create core package
+        core_dir = src_dir / "core"
+        core_dir.mkdir()
+        (core_dir / "__init__.py").write_text("")
+        (core_dir / "example.py").write_text(
             """
 def add_numbers(a, b): return a + b
 def multiply_numbers(a, b): return a * b
@@ -448,8 +473,13 @@ def find_minimum(numbers): return min(numbers) if numbers else None
 
         # Setup minimal environment
         src_dir = test_root / "src"
-        src_dir.mkdir()
-        (src_dir / "example.py").write_text(
+        src_dir.mkdir(); (src_dir / "__init__.py").write_text("")
+        
+        # Create core package
+        core_dir = src_dir / "core"
+        core_dir.mkdir()
+        (core_dir / "__init__.py").write_text("")
+        (core_dir / "example.py").write_text(
             """
 def add_numbers(a, b): return a + b
 def multiply_numbers(a, b): return a * b
@@ -504,14 +534,19 @@ def find_minimum(numbers): return min(numbers) if numbers else None
         test_root.mkdir()
 
         src_dir = test_root / "src"
-        src_dir.mkdir()
+        src_dir.mkdir(); (src_dir / "__init__.py").write_text("")
+        
+        # Create core package
+        core_dir = src_dir / "core"
+        core_dir.mkdir()
+        (core_dir / "__init__.py").write_text("")
 
         # Create utils subdirectory and __init__.py files (needed for logging import)
-        utils_dir = src_dir / "utils"
-        utils_dir.mkdir()
+        # utils_dir replaced
+        # utils_dir.mkdir() removed
         (src_dir / "__init__.py").write_text("")
-        (utils_dir / "__init__.py").write_text("")
-        (utils_dir / "logging.py").write_text(
+        # init removed
+        (core_dir / "logging.py").write_text(
             '''
 import logging
 import sys
@@ -532,7 +567,7 @@ def get_logger(name: str) -> logging.Logger:
 '''
         )
 
-        (src_dir / "example.py").write_text(
+        (core_dir / "example.py").write_text(
             """
 # This file has a syntax error
 def broken_function(
@@ -574,8 +609,13 @@ def broken_function(
 
         # Setup minimal environment
         src_dir = test_root / "src"
-        src_dir.mkdir()
-        (src_dir / "example.py").write_text(
+        src_dir.mkdir(); (src_dir / "__init__.py").write_text("")
+        
+        # Create core package
+        core_dir = src_dir / "core"
+        core_dir.mkdir()
+        (core_dir / "__init__.py").write_text("")
+        (core_dir / "example.py").write_text(
             """
 def add_numbers(a, b): return a + b
 def multiply_numbers(a, b): return a * b

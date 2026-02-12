@@ -23,8 +23,8 @@ pytest tests/infra_tests/ -m "not requires_ollama"
 # Core utilities
 pytest tests/infra_tests/core/ -v
 
-# Literature search
-pytest tests/infra_tests/literature/ -v
+# Reporting
+pytest tests/infra_tests/reporting/ -v
 
 # Validation system
 pytest tests/infra_tests/validation/ -v
@@ -40,19 +40,22 @@ pytest tests/infra_tests/validation/ -v
 ## Test Categories
 
 ### Core Infrastructure
-- `core/` - Configuration, logging, exceptions
-- `build/` - Build verification and quality checking
+
+- `core/` - Configuration, logging, exceptions, file operations, credentials, security
 - `documentation/` - Figure and API documentation management
+- `project/` - Project discovery and orchestration
 
 ### Research Tools
-- `literature/` - Academic literature search and management
+
 - `llm/` - Local LLM integration for research assistance
 - `rendering/` - Multi-format document rendering
+- `scientific/` - Scientific computing utilities
 
 ### Publishing & Validation
+
 - `publishing/` - Academic publishing workflows
 - `validation/` - Quality assurance and validation
-- `scientific/` - Scientific computing utilities
+- `reporting/` - Pipeline reporting and error aggregation
 
 ## Testing Philosophy
 
@@ -64,4 +67,3 @@ pytest tests/infra_tests/validation/ -v
 
 - [`AGENTS.md`](AGENTS.md) - documentation
 - [`../../infrastructure/README.md`](../../infrastructure/README.md) - Module overview
-

@@ -4,6 +4,7 @@ This module provides basic figure registration functionality.
 """
 
 import json
+import os
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Dict, Optional
@@ -35,7 +36,16 @@ class FigureManager:
             registry_file: Path to figure registry file
         """
         if registry_file is None:
-            registry_file = "output/figures/figure_registry.json"
+            # Resolve relative to project root, not cwd
+            # Pipeline sets PROJECT_DIR; standalone uses file ancestry
+            project_dir = os.environ.get("PROJECT_DIR")
+            if project_dir:
+                registry_file = str(Path(project_dir) / "output" / "figures" / "figure_registry.json")
+            else:
+                # src/utils/figure_manager.py → project root
+                registry_file = str(
+                    Path(__file__).resolve().parent.parent.parent / "output" / "figures" / "figure_registry.json"
+                )
 
         self.registry_file = Path(registry_file)
         self.registry_file.parent.mkdir(parents=True, exist_ok=True)

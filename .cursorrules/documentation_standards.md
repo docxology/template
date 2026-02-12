@@ -407,7 +407,7 @@ See [../AGENTS.md](../AGENTS.md) for overview
 
 - [Related Module](../infrastructure/AGENTS.md) - Infrastructure documentation
 - [External Resource](https://example.com) - External documentation
-- [Configuration Guide](CONFIGURATION.md) - Configuration documentation
+- [Configuration Guide](configuration.md) - Configuration documentation
 ```
 
 ## Format Standards
@@ -537,13 +537,7 @@ Before committing documentation:
 
 - [testing_standards.md](testing_standards.md) - Document tests properly
 - [type_hints_standards.md](type_hints_standards.md) - Type hint documentation
-- [../docs/DOCUMENTATION_INDEX.md](../docs/DOCUMENTATION_INDEX.md) - documentation index
+- [../docs/documentation-index.md](../docs/documentation-index.md) - documentation index
 - [../docs/AGENTS.md](../docs/AGENTS.md) - Main project documentation
 - [../AGENTS.md](../AGENTS.md) - Root documentation
-- [../docs/core/ARCHITECTURE.md](../docs/core/ARCHITECTURE.md) - System architecture
-
-
-
-
-
-
+- [../docs/core/architecture.md](../docs/core/architecture.md) - System architecture

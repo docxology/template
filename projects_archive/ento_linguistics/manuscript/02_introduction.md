@@ -6,86 +6,45 @@ Speech and thought are inextricably entangled, a relationship recognized by ling
 
 ## Motivation: Clear Communication as Ethical Imperative
 
-Given the value-aligned nature of scientific communication, where researchers communicate with present and future colleagues on their "best behavior," there is compelling motivation to examine how language shapes scientific understanding. As Keller \cite{keller1995language} has argued, the language of science is not merely descriptive but constitutive—it actively structures research questions, methodological approaches, and interpretive frameworks. Lakoff and Johnson \cite{lakoff1980metaphors} demonstrated more broadly that metaphorical structures pervade human thought and reasoning; in science, these metaphors can become invisible yet powerful shapers of inquiry.
+Scientific communication is value-aligned: researchers communicate with present and future colleagues on their "best behavior." This makes it both natural and urgent to examine how language shapes understanding. As Keller \cite{keller1995language} has argued, the language of science is not merely descriptive but constitutive—it structures research questions, methodological approaches, and interpretive frameworks. Lakoff and Johnson \cite{lakoff1980metaphors} demonstrated more broadly that metaphorical structures pervade human reasoning; in science, these metaphors can become invisible yet powerful shapers of inquiry.
 
-The consequential imperative is that the present moment represents an optimal opportunity to examine and improve scientific language use. Rather than perpetuating potentially problematic terminology, researchers bear an ethical responsibility to critically examine how language influences scientific practice and knowledge production. Recent initiatives such as the Entomological Society of America's Better Common Names Project \cite{betternamesproject2024} and scholarly critiques of anthropomorphic terminology in social insect research \cite{herbers2007, laciny2022neurodiversity} demonstrate growing recognition of this imperative.
+The present moment is an optimal window for such examination. Rather than perpetuating potentially problematic terminology, researchers bear an ethical responsibility to critically assess how language influences scientific practice and knowledge production. Recent initiatives—the Entomological Society of America's Better Common Names Project \cite{betternamesproject2024}, scholarly critiques of anthropomorphic terminology in social insect research \cite{herbers2007, laciny2022neurodiversity}—demonstrate growing recognition of this imperative.
+
+A paradigmatic example is the debate over "slave-making ants." Herbers \cite{herbers2006} argued that the term "slave" applied to obligate social parasitism naturalizes a human institution of profound moral weight while obscuring the underlying biology: the parasite species exploits the brood-care behaviour of its host, a process better described as "social parasitism" or "dulosis." The subsequent shift in major journals toward neutral terminology—"host," "parasite," "dulotic"—demonstrates that reform is achievable without sacrificing scientific precision \cite{herbers2007}. This case also illustrates a general principle: once a metaphor is challenged, the replacement term often reveals biological mechanisms that the original metaphor had concealed.
 
 ## The Challenge of Terminological Reform
 
-A common objection to improving scientific language is that changing terminology creates disconnection from existing literature, making it difficult to locate relevant research. If entomologists abandon terms like "caste" or "slave," how would researchers identify papers on task performance or social parasitism in ants?
+A common objection to improving scientific language is that changing terminology creates disconnection from existing literature. If entomologists abandon terms like "caste" or "slave," how would researchers locate papers on task performance or social parasitism?
 
-This objection, however, inadvertently strengthens the case for reform. If we continue using potentially problematic terminology merely for convenience, we perpetuate and compound existing conceptual distortions rather than addressing them \cite{herbers2006}. The appropriate response is not to maintain the status quo but to actively work toward clearer communication while developing the necessary infrastructure for literature synthesis.
-
-The solution lies in embracing this challenge systematically: restructuring information from existing literature (including original data and documents where possible) and establishing new meta-standards for scientific communication. This task represents an opportunity to set standards for how scientific communities care about their literature, their research communities, and the systems they study.
+This objection, however, inadvertently strengthens the case for reform. Retaining problematic terminology for convenience perpetuates and compounds conceptual distortions rather than addressing them \cite{herbers2006}. The appropriate response is to work systematically toward clearer communication while developing the necessary infrastructure for literature synthesis—restructuring information from existing sources and establishing new meta-standards for scientific discourse.
 
 ## Ento-Linguistic Domains: A Framework for Analysis
 
-Our analysis centers on six key Ento-Linguistic domains where language use can be particularly ambiguous, assumptive, or inappropriate:
+We organize our analysis around six domains where entomological language creates ambiguity or imports unjustified assumptions. Each domain isolates a distinct category of terminological friction between human conceptual frameworks and ant biology.
 
-### Unit of Individuality
+**Unit of Individuality.** What counts as an "individual" in ant biology? Terms like "colony," "superorganism," and "individual" operate across multiple biological scales—genomic, organismal, colonial—without consistent usage, creating systematic ambiguity about the unit of analysis \cite{wilson2008superorganism}.
 
-What constitutes an "ant"—the nestmate, the colony, or something else? This domain encompasses debates about biological individuality, from individual nestmates to super-organismal colony concepts \cite{wheeler1911, wilson2008superorganism}, examining how terminology influences research at different scales of analysis.
+**Behavior and Identity.** Task-specific descriptions routinely become categorical identities: an ant observed foraging becomes a "forager," transforming a transient activity into a fixed role. This linguistic move obscures the behavioral plasticity documented across ant species \cite{ravary2007, gordon2010}.
 
-### Behavior and Identity
+**Power \& Labor.** Terms like "queen," "worker," and "caste" import human social hierarchies into ant biology, imposing assumptions about authority and subordination that may not reflect the distributed, flexible organization of actual colonies \cite{herbers2007, laciny2022neurodiversity}.
 
-How do behavioral descriptions create identity assumptions? When an ant is observed carrying a seed, is it meaningfully described as "foraging," and does this make it "a forager"? This domain examines how behavioral language creates categorical identities that may not reflect the biological fluidity documented by recent research \cite{ravary2007}.
+**Sex \& Reproduction.** Terms like "sex determination" and "sex differentiation" carry implicit assumptions about binary systems that may not map onto ant reproductive biology, where haplodiploidy creates fundamentally different patterns \cite{chandra2021epigenetics}.
 
-### Power \& Labor
+**Kin \& Relatedness.** Human kinship terminology, grounded in bilateral relatedness, influences understanding of ant social relationships structured by haplodiploidy and colony-level recognition cues. This domain examines how concepts like "sister," "mother," and "family" create friction when applied to asymmetric relatedness coefficients.
 
-What social structures do terms like "caste," "queen," "worker," and "slave" impose on ant societies? This domain investigates how terminology derived from human hierarchical systems shapes scientific understanding of ant social organization \cite{crespi1992caste, boomsma2018superorganismality}.
-
-### Sex \& Reproduction
-
-How do sex/gender concepts from human societies influence entomological research? Terms like "sex determination" and "sex differentiation" carry implicit assumptions about binary systems that may not map cleanly to ant reproductive biology, where haplodiploidy creates fundamentally different patterns \cite{chandra2021epigenetics}.
-
-### Kin and Relatedness
-
-What constitutes "kin" in ant societies, and how are different forms of relatedness (genetic, epigenetic, chemical, spatial) conceptualized? This domain examines how human kinship terminology, grounded in bilateral relatedness, influences understanding of ant social relationships structured by haplodiploidy and colony-level recognition cues.
-
-### Economics
-
-How do economic concepts structure understanding of resource allocation and trade in ant societies? This domain investigates how human economic terminology—markets, trade, investment—shapes analysis of ant foraging, resource distribution, and colony-level resource management.
+**Economics.** Economic metaphors—markets, trade, investment—shape analysis of ant foraging, resource distribution, and colony-level resource management. This domain investigates how such terminology constrains biological interpretation by imposing transactional frameworks.
 
 ## Research Approach
 
-This work employs a mixed-methodology framework combining computational text analysis with theoretical discourse examination. We systematically map terminology networks, identify context-dependent language use, and develop recommendations for clearer scientific communication. The computational component processes entomological literature to identify statistical patterns in language use, while the theoretical component, informed by Foucault's archaeological method of discourse analysis \cite{foucault1972archaeology}, examines how these patterns reflect deeper conceptual structures.
+This work employs a mixed-methodology framework combining computational text analysis with theoretical discourse examination. The computational component processes a curated literature corpus using automated term extraction, co-occurrence network construction, and ambiguity scoring to identify statistical patterns in language use. The theoretical component, informed by Foucault's archaeological method \cite{foucault1972archaeology} and conceptual metaphor theory \cite{lakoff1980metaphors}, examines how these patterns reflect deeper conceptual structures. All data and analysis code are reproducible and available for validation and extension.
 
-## Manuscript Organization
+## Terminology Network Visualization
 
-The manuscript develops this analysis through several interconnected sections:
-
-1. **Abstract** (Section \ref{sec:abstract}): Overview of Ento-Linguistic research and key contributions
-2. **Introduction** (Section \ref{sec:introduction}): Speech/thought entanglement and research motivation
-3. **Methodology** (Section \ref{sec:methodology}): Mixed-methodological framework for Ento-Linguistic analysis
-4. **Experimental Results** (Section \ref{sec:experimental_results}): Computational analysis of terminology networks
-5. **Discussion** (Section \ref{sec:discussion}): Theoretical implications for scientific communication
-6. **Conclusion** (Section \ref{sec:conclusion}): Future directions and meta-standards for clear communication
-7. **Supplemental Materials**: Extended analyses, case studies, and methodological details
-8. **References** (Section \ref{sec:references}): Bibliography and cited works
-
-## Example Analysis: Terminology Network Visualization
-
-Computational analysis reveals structural patterns in scientific terminology that influence research discourse. Our network analysis demonstrates how terms cluster around conceptual domains and create networks of meaning that shape scientific understanding, as further detailed in Section \ref{sec:experimental_results}.
+To illustrate the framework's output, Figure \ref{fig:concept_map} shows how terms cluster around the six Ento-Linguistic domains and form cross-domain networks of meaning; detailed quantitative analysis follows in Section \ref{sec:experimental_results}.
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\textwidth]{../output/figures/concept_map.png}
-\caption{Conceptual map of Ento-Linguistic domains showing relationships between terminology networks. The six domains (Unit of Individuality, Behavior and Identity, Power \& Labor, Sex \& Reproduction, Kin \& Relatedness, and Economics) form interconnected clusters with cross-domain influences. Central hub terms like ``colony,''``caste,'' and ``individual'' connect multiple domains, demonstrating how specific terminological choices propagate across the scientific discourse of entomology.}
+\caption{Conceptual map of Ento-Linguistic domains showing relationships between terminology networks. Each node represents an extracted concept; node size is proportional to term frequency in the corpus and node colour encodes the primary domain assignment. Edges connect co-occurring concepts, with thickness reflecting co-occurrence strength. The six domains form interconnected clusters; central hub terms such as ``colony,''``caste,'' and ``individual'' bridge multiple domains, demonstrating how specific terminological choices propagate across the scientific discourse of entomology.}
 \label{fig:concept_map}
 \end{figure}
-
-## Data and Analysis Framework
-
-Our analysis framework integrates multiple data sources and methodological approaches:
-
-- **Literature Corpus**: Scientific publications on ant biology and behavior
-- **Terminology Database**: Curated collection of Ento-Linguistic terms with usage contexts
-- **Computational Analysis**: Text mining, network analysis, and pattern detection
-- **Theoretical Examination**: Discourse analysis informed by Foucault \cite{foucault1972archaeology} and conceptual metaphor theory \cite{lakoff1980metaphors}
-- **Visualization**: Network visualizations and domain-specific analyses
-
-All data and analysis code are reproducible and available for validation and extension.
-
-## Implications for Scientific Practice
-
-This work has broader implications for how scientists communicate across disciplines. By examining language use in entomology—a field with rich descriptive traditions and complex social systems—we develop principles applicable to scientific communication generally. The goal is not merely to critique existing practice but to establish foundations for clearer, more precise scientific discourse that better serves research communities and the phenomena they study.

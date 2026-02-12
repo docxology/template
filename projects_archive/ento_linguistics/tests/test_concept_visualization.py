@@ -23,10 +23,10 @@ except ImportError:
 if NETWORKX_AVAILABLE:
     try:
         from src.concept_visualization import ConceptVisualizer
-        from src.conceptual_mapping import Concept, ConceptMap
+        from src.analysis.conceptual_mapping import Concept, ConceptMap
     except ImportError:
-        from concept_visualization import ConceptVisualizer
-        from conceptual_mapping import Concept, ConceptMap
+        from src.visualization.concept_visualization import ConceptVisualizer
+        from src.analysis.conceptual_mapping import Concept, ConceptMap
 else:
     ConceptVisualizer = None
     ConceptMap = None

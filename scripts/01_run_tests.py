@@ -798,11 +798,10 @@ def run_project_tests(repo_root: Path, project_name: str = "project", quiet: boo
     cov_source = f"projects/{project_name}/src"
     
     if check_uv_available():
-        # Use uv run from repo root (do NOT use --project flag as it creates project venvs)
-        cmd = [
-            "uv",
-            "run",
-            "python", "-m", "pytest",
+        # Use sys.executable from repo root (venv is already activated by uv run ./run.sh)
+        # Do NOT use 'uv run python' - it adds ~300s overhead per invocation
+        cmd = get_python_command() + [
+            "-m", "pytest",
             test_dir,
             f"--cov={cov_source}",
         ]

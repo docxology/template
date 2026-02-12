@@ -20,6 +20,7 @@ This folder can be copied as a unit to start new research in scientific discours
 **Ento-Linguistic Analysis**: Systematic investigation of how terminology in entomological research creates conceptual frameworks, framing assumptions, and communication challenges.
 
 **Six Core Domains**:
+
 1. **Unit of Individuality** - What constitutes an "ant" (nestmate, colony, superorganism)?
 2. **Behavior and Identity** - How behavioral descriptions create categorical identities?
 3. **Power & Labor** - What hierarchical structures do terms like "caste" and "queen" impose?
@@ -49,7 +50,8 @@ src/
 ```
 
 **Requirements:**
-- 90% minimum test coverage (currently achieving 95%+ coverage)
+
+- 90% minimum test coverage
 - Type hints on all public APIs
 - docstrings with examples
 - Real literature data testing (no mocks)
@@ -65,6 +67,7 @@ test suite validating all Ento-Linguistic analysis code:
 - **Performance tests** - Validate algorithms
 
 **Running tests:**
+
 ```bash
 pytest tests/ --cov=src
 pytest tests/ --cov=src --cov-report=html
@@ -85,6 +88,7 @@ scripts/
 ```
 
 **Analysis Workflow:**
+
 1. **Literature Mining**: Collect entomological publications from PubMed/arXiv
 2. **Text Processing**: Normalize and tokenize scientific texts
 3. **Terminology Extraction**: Identify domain-specific terms with context
@@ -94,6 +98,7 @@ scripts/
 7. **Visualization**: Generate publication-quality figures and networks
 
 **Pattern:**
+
 1. Import analysis modules from src/
 2. Process literature corpora with text analysis functions
 3. Generate conceptual mappings and domain analyses
@@ -141,6 +146,7 @@ These files are regenerated on each build and can be deleted safely.
 ### 1. Literature Collection and Text Processing
 
 **Step 1: Collect Entomological Literature**
+
 ```python
 # scripts/literature_analysis_pipeline.py
 from literature_mining import LiteratureCorpus, mine_entomology_literature
@@ -151,6 +157,7 @@ corpus.save_to_file("output/data/literature_corpus.json")
 ```
 
 **Step 2: Process and Analyze Texts**
+
 ```python
 # src/text_analysis.py
 from text_analysis import TextProcessor
@@ -166,6 +173,7 @@ for text in texts:
 ```
 
 **Step 3: Extract Terminology**
+
 ```python
 # src/term_extraction.py
 from term_extraction import TerminologyExtractor
@@ -180,6 +188,7 @@ for term_text, term_obj in terms.items():
 ```
 
 **Step 4: Build Conceptual Maps**
+
 ```python
 # src/conceptual_mapping.py
 from conceptual_mapping import ConceptualMapper
@@ -193,6 +202,7 @@ hierarchy = concept_map.analyze_conceptual_hierarchy()
 ```
 
 **Step 5: Analyze Domains**
+
 ```python
 # src/domain_analysis.py
 from domain_analysis import DomainAnalyzer
@@ -208,6 +218,7 @@ for domain_name, analysis in domain_analyses.items():
 ```
 
 **Step 6: Create Visualizations**
+
 ```python
 # src/concept_visualization.py
 from concept_visualization import ConceptVisualizer
@@ -231,18 +242,13 @@ Scripts generate figures that are integrated into the manuscript:
 ```python
 # scripts/generate_results.py
 from plots import plot_convergence
-from infrastructure.documentation import FigureManager
 
 fig = plot_convergence(results)
-fm = FigureManager()
-fm.register_figure(
-    filename="results.png",
-    caption="Convergence results visualization",
-    label="fig:results"
-)
+fig.savefig("output/figures/results.png", dpi=300, bbox_inches="tight")
 ```
 
 Figures are automatically referenced:
+
 ```markdown
 See [Figure @fig:results] for detailed results.
 ```
@@ -250,16 +256,19 @@ See [Figure @fig:results] for detailed results.
 ### 3. Build Manuscript
 
 From template root:
+
 ```bash
 python3 scripts/03_render_pdf.py
 ```
 
 Or use the full pipeline:
+
 ```bash
 python3 scripts/execute_pipeline.py --core-only
 ```
 
 This:
+
 1. Runs all project tests
 2. Executes all scripts
 3. Generates all figures
@@ -289,7 +298,8 @@ This:
 
 ### Visualization
 
-- **visualization.py** - Publication-quality figure generation
+- **concept_visualization.py** - Concept network and domain visualizations
+- **statistical_visualization.py** - Statistical analysis visualizations
 - **plots.py** - Specific plot type implementations
 
 ## Testing
@@ -341,6 +351,7 @@ open htmlcov/index.html
 ### Code Quality
 
 ✅ **Do:**
+
 - Write clear, documented code
 - Use type hints
 - Test everything thoroughly
@@ -348,6 +359,7 @@ open htmlcov/index.html
 - Handle errors gracefully
 
 ❌ **Don't:**
+
 - Skip tests or coverage
 - Use mocks (test real behavior)
 - Leave undocumented code
@@ -357,6 +369,7 @@ open htmlcov/index.html
 ### Testing
 
 ✅ **Do:**
+
 - Write tests first (TDD)
 - Test data
 - Cover edge cases
@@ -364,6 +377,7 @@ open htmlcov/index.html
 - Maintain coverage requirements
 
 ❌ **Don't:**
+
 - Use mocks
 - Skip error tests
 - Leave untested code
@@ -373,6 +387,7 @@ open htmlcov/index.html
 ### Scripts
 
 ✅ **Do:**
+
 - Import from src/
 - Orchestrate workflows
 - Generate figures/tables
@@ -380,6 +395,7 @@ open htmlcov/index.html
 - Provide clear output
 
 ❌ **Don't:**
+
 - Implement algorithms in scripts
 - Duplicate src/ logic
 - Skip error handling
@@ -411,6 +427,7 @@ python3 scripts/03_render_pdf.py
 ```
 
 Or use the full pipeline:
+
 ```bash
 python3 scripts/execute_pipeline.py --core-only
 ```
@@ -431,38 +448,24 @@ This uses the template's build system while your project code remains in `projec
 - scripts/ - Build pipeline orchestrators
 - infrastructure/ - Generic validation tools
 
-## System Status: OPERATIONAL (v2.4)
+## System Status: OPERATIONAL
 
 **All systems confirmed functional:**
-- ✅ Test suite (481 tests passing, 7 skipped integration tests, 67.13% coverage)
-- ✅ Package API testing (test_package_imports.py validates __init__.py)
-- ✅ Script execution (all analysis scripts operational with bug fixes)
-- ✅ Markdown validation (all references resolved, no warnings)
-- ✅ PDF generation (individual sections, combined manuscript, HTML output)
+
+- ✅ Test suite (785 tests, run with `uv run pytest tests/ --cov=src`)
+- ✅ Script execution (all analysis scripts operational)
+- ✅ Markdown validation (all references resolved)
+- ✅ PDF generation (individual sections, combined manuscript)
 - ✅ Cross-reference system (citations, equations, figures resolved)
-- ✅ Configuration system (YAML config + environment variables)
-- ✅ Output validation (figures, data files, reports validated)
-- ✅ Documentation (guides, .cursorrules standards, practical examples)
-- ✅ Multi-project architecture (projects/{name}/ structure)
-- ✅ URL encoding in PubMed searches (improved robustness)
-- ✅ rendering error handling (graceful degradation)
-- ✅ input validation across all core methods
-- ✅ Improved error messages with actionable suggestions
-- ✅ manuscript clarity with detailed explanations
-- ✅ Additional test coverage for validation framework methods
-- ✅ PubMed search result caching for improved performance
-- ✅ **NEW:** Advanced statistical analysis capabilities
-- ✅ **NEW:** domain analysis with quantitative metrics
-- ✅ **NEW:** Sophisticated concept mapping with centrality analysis
-- ✅ **NEW:** discourse analysis with rhetorical metrics
-- ✅ **NEW:** Advanced visualization suite (interactive networks, temporal evolution)
-- ✅ **NEW:** Statistical visualization module with significance testing
-- ✅ **NEW:** Cross-domain analysis and overlap detection
-- ✅ **FIXED:** Critical script bugs and import errors resolved
-- ✅ **FIXED:** Stub implementations replaced with infrastructure integration
-
-
-
-
-
-
+- ✅ Configuration system (YAML config)
+- ✅ Output validation (figures, data files, reports)
+- ✅ Input validation across all core methods
+- ✅ URL encoding in PubMed searches
+- ✅ PubMed search result caching
+- ✅ Advanced statistical analysis capabilities
+- ✅ Domain analysis with quantitative metrics
+- ✅ Concept mapping with centrality analysis
+- ✅ Discourse analysis with rhetorical metrics
+- ✅ Advanced visualization suite (interactive networks, temporal evolution)
+- ✅ Statistical visualization module with significance testing
+- ✅ Cross-domain analysis and overlap detection

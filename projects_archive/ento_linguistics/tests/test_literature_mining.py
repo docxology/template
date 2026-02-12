@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Dict, List
 
 import pytest
-from src.literature_mining import (ArXivMiner, LiteratureCorpus, Publication,
+from src.data.literature_mining import (ArXivMiner, LiteratureCorpus, Publication,
                                    PubMedMiner)
 
 
@@ -526,7 +526,7 @@ class TestLiteratureMiningIntegration:
 
     def test_create_entomology_query(self) -> None:
         """Test entomology query creation."""
-        from src.literature_mining import create_entomology_query
+        from src.data.literature_mining import create_entomology_query
 
         query = create_entomology_query()
 
@@ -540,7 +540,7 @@ class TestLiteratureMiningIntegration:
 
     def test_mine_entomology_literature(self) -> None:
         """Test the complete entomology literature mining workflow."""
-        from src.literature_mining import (LiteratureCorpus,
+        from src.data.literature_mining import (LiteratureCorpus,
                                            mine_entomology_literature)
 
         # This test is primarily for code coverage - the actual mining

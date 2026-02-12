@@ -31,17 +31,18 @@ This directory contains development standards, coding guidelines, and best pract
 ### 1. Two-Layer Architecture
 
 **Layer 1: Infrastructure** (Generic, reusable)
+
 - Location: `infrastructure/` (root level)
 - Domain-independent tools
 - Reusable across projects
-- 60% minimum test coverage (currently 83.33% - exceeds stretch goal!)
-- Tests: `tests/infra_tests/`
+- 60% minimum test coverage required (currently 83.33% achieved - exceeds stretch goal!)
 
 **Layer 2: Project** (Specific, customizable)
+
 - Location: `projects/{name}/src/` (project-specific code)
 - Research-specific code
-- Uses infrastructure utilities
-- 90% minimum test coverage (currently 100% - coverage!)
+- Uses generic infrastructure utilities
+- 90% minimum test coverage required (currently 100% achieved)
 - Tests: `projects/{name}/tests/`
 - Scripts: `projects/{name}/scripts/` (thin orchestrators)
 
@@ -64,14 +65,16 @@ This directory contains development standards, coding guidelines, and best pract
 The template provides **two pipeline orchestrators** with different scope:
 
 **Interactive Menu (`./run.sh`)**
+
 - **Use for**: Full pipeline with optional LLM stages
-- **Stages**: 0-9 (stage 0 cleanup, stages 1-10 displayed as [1/10] to [10/10])
-- **Features**: Interactive menu, literature search, LLM reviews, translations
+- **Stages**: 0-9 (stage 0 cleanup, stages 1-9 displayed as [1/9] to [9/9])
+- **Features**: Interactive menu, research templates, LLM reviews, translations
 - **When to use**: builds, LLM features needed
 
 **Python Orchestrator (`python3 scripts/run_all.py`)**
+
 - **Use for**: Core pipeline only, programmatic execution
-- **Stages**: 00-05 (zero-padded Python convention)
+- **Stages**: 00-07 (zero-padded Python convention)
 - **Features**: Minimal dependencies, fast execution
 - **When to use**: Automated environments, no LLM requirements
 
@@ -81,11 +84,11 @@ The template provides **two pipeline orchestrators** with different scope:
 
 1. **Start here**: Read [AGENTS.md](AGENTS.md) (this file) for overview
 2. **Pick your task** - Read the appropriate guide:
-   - **Writing code**: [error_handling.md](error_handling.md), [python_logging.md](python_logging.md), [type_hints_standards.md](type_hints_standards.md)
-   - **Creating modules**: [infrastructure_modules.md](infrastructure_modules.md), [testing_standards.md](testing_standards.md)
-   - **Writing docs**: [documentation_standards.md](documentation_standards.md)
-   - **Writing manuscripts**: [manuscript_style.md](manuscript_style.md)
-   - **Writing tests**: [testing_standards.md](testing_standards.md)
+    - **Writing code**: [error_handling.md](error_handling.md), [python_logging.md](python_logging.md), [type_hints_standards.md](type_hints_standards.md)
+    - **Creating modules**: [infrastructure_modules.md](infrastructure_modules.md), [testing_standards.md](testing_standards.md)
+    - **Writing docs**: [documentation_standards.md](documentation_standards.md)
+    - **Writing manuscripts**: [manuscript_style.md](manuscript_style.md)
+    - **Writing tests**: [testing_standards.md](testing_standards.md)
 3. **Follow the standards** - Apply the patterns and examples from the guide
 4. **Cross-reference** - See "See Also" sections for related guides
 
@@ -127,12 +130,14 @@ The template provides **two pipeline orchestrators** with different scope:
 See [error_handling.md](error_handling.md)
 
 **Key Points**:
+
 - Use custom exception hierarchy from `infrastructure/core/exceptions.py`
 - Always chain exceptions with `from`
 - Provide context in exceptions
 - Log before raising critical errors
 
 **Example**:
+
 ```python
 from infrastructure.core.exceptions import ValidationError
 
@@ -147,12 +152,14 @@ except ValueError as e:
 See [python_logging.md](python_logging.md)
 
 **Key Points**:
+
 - Use `infrastructure.core.logging_utils.get_logger(__name__)`
 - Log at appropriate levels (DEBUG, INFO, WARNING, ERROR, CRITICAL)
 - Include context in log messages
 - Use structured logging where possible
 
 **Example**:
+
 ```python
 from infrastructure.core.logging_utils import get_logger
 
@@ -165,8 +172,9 @@ logger.info(f"Processing {count} items")
 See [infrastructure_modules.md](infrastructure_modules.md)
 
 **Key Points**:
+
 - Generic and domain-independent only
-- 60% minimum test coverage required (currently 61.48% achieved)
+- 60% minimum test coverage required (currently 83.33% achieved)
 - AGENTS.md + README.md
 - Public API in `__init__.py`
 - Type hints on all functions
@@ -175,7 +183,8 @@ See [infrastructure_modules.md](infrastructure_modules.md)
 - Use unified logging from `core.logging_utils`
 
 **Structure**:
-```
+
+```text
 infrastructure/<module>/
 ├── __init__.py           # Public API
 ├── core.py              # Core logic
@@ -186,6 +195,7 @@ infrastructure/<module>/
 ```
 
 **Related Documentation:**
+
 - [../infrastructure/AGENTS.md](../infrastructure/AGENTS.md) - Module organization
 - [infrastructure_modules.md](infrastructure_modules.md) - Development standards
 - [error_handling.md](error_handling.md) - Exception patterns
@@ -196,6 +206,7 @@ infrastructure/<module>/
 See [manuscript_style.md](manuscript_style.md)
 
 **Key Points**:
+
 - Use equation environment for display math (not `$$`)
 - Always label figures, tables, and equations
 - Use descriptive labels (e.g., `fig:convergence_plot`, `eq:objective`)
@@ -204,6 +215,7 @@ See [manuscript_style.md](manuscript_style.md)
 - Use relative paths for figures: `../output/figures/`
 
 **Example**:
+
 ```markdown
 \begin{equation}
 \label{eq:objective}
@@ -214,9 +226,10 @@ As shown in \eqref{eq:objective}, the objective function...
 ```
 
 **Related Documentation:**
+
 - [manuscript_style.md](manuscript_style.md) - manuscript formatting guide
 - [../projects/code_project/manuscript/AGENTS.md](../projects/code_project/manuscript/AGENTS.md) - Manuscript documentation
-- [../docs/usage/MARKDOWN_TEMPLATE_GUIDE.md](../docs/usage/MARKDOWN_TEMPLATE_GUIDE.md) - Markdown guide
+- [../docs/usage/markdown-template-guide.md](../docs/usage/markdown-template-guide.md) - Markdown guide
 
 ## Testing Standards
 
@@ -228,7 +241,7 @@ As shown in \eqref{eq:objective}, the objective function...
 
 ### Test Organization
 
-```
+```text
 tests/
 ├── infrastructure/      # Infrastructure tests
 │   └── test_<module>/
@@ -254,21 +267,22 @@ tests/
 Every directory must have:
 
 1. **AGENTS.md** - documentation
-   - Purpose and architecture
-   - Usage examples
-   - Configuration options
-   - Testing instructions
-   - Best practices
+    - Purpose and architecture
+    - Usage examples
+    - Configuration options
+    - Testing instructions
+    - Best practices
 
 2. **README.md** - Quick reference
-   - Quick start
-   - Key features
-   - Common commands
-   - Links to detailed docs
+    - Quick start
+    - Key features
+    - Common commands
+    - Links to detailed docs
 
 ### Code Documentation
 
 **Module docstrings**:
+
 ```python
 """Module description.
 
@@ -277,6 +291,7 @@ Detailed explanation of module purpose and contents.
 ```
 
 **Function docstrings**:
+
 ```python
 def function(arg: str) -> str:
     """One-line summary.
@@ -360,18 +375,18 @@ except SpecificError as e:
 
 ### Project Structure
 
-```
+```text
 template/
 ├── infrastructure/         # [LAYER 1] Generic tools (root level)
-│   ├── build/             # Build & reproducibility
-│   ├── core/              # Core utilities
-│   ├── validation/        # Validation tools
-│   ├── documentation/     # Documentation tools
-│   ├── publishing/        # Publishing tools
-│   ├── literature/        # Literature search
-│   ├── llm/               # LLM integration
-│   ├── rendering/         # Multi-format rendering
-│   └── scientific/        # Scientific dev tools
+│   ├── core/              # Core utilities (logging, config, exceptions)
+│   ├── documentation/     # Documentation tools (figures, glossary)
+│   ├── llm/               # LLM integration & research templates
+│   ├── project/           # Project discovery & orchestration
+│   ├── publishing/        # Publishing tools (DOI, citations)
+│   ├── rendering/         # Multi-format rendering (PDF, HTML, slides)
+│   ├── reporting/         # Pipeline reporting & error aggregation
+│   ├── scientific/        # Scientific dev tools (benchmarking)
+│   └── validation/        # Validation & integrity checking
 ├── projects/             # [LAYER 2] Research projects
 │   ├── {name}/           # [LAYER 2] Research code
 │   │   ├── src/           # Project-specific algorithms
@@ -456,28 +471,28 @@ The .cursorrules standards align with and support the main documentation:
 |---|---|---|
 | System Design | [AGENTS.md](AGENTS.md) | [Root AGENTS.md](../AGENTS.md) |
 | Documentation Structure | [folder_structure.md](folder_structure.md) | [Root AGENTS.md](../AGENTS.md) |
-| Architecture | [AGENTS.md](AGENTS.md) | [docs/ARCHITECTURE.md](../docs/core/ARCHITECTURE.md) |
+| Architecture | [AGENTS.md](AGENTS.md) | [docs/architecture.md](../docs/core/architecture.md) |
 | Infrastructure | [infrastructure_modules.md](infrastructure_modules.md) | [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) |
-| Error Handling | [error_handling.md](error_handling.md) | [docs/TROUBLESHOOTING_GUIDE.md](../docs/operational/TROUBLESHOOTING_GUIDE.md) |
-| Security | [security.md](security.md) | [docs/SECURITY.md](../docs/development/SECURITY.md) |
-| Logging | [python_logging.md](python_logging.md) | [docs/LOGGING_GUIDE.md](../docs/operational/LOGGING_GUIDE.md) |
+| Error Handling | [error_handling.md](error_handling.md) | [docs/troubleshooting-guide.md](../docs/operational/troubleshooting-guide.md) |
+| Security | [security.md](security.md) | [docs/security.md](../docs/development/security.md) |
+| Logging | [python_logging.md](python_logging.md) | [docs/logging-guide.md](../docs/operational/logging-guide.md) |
 | Testing | [testing_standards.md](testing_standards.md) | [tests/AGENTS.md](../tests/AGENTS.md) |
-| Code Style | [code_style.md](code_style.md) | [docs/BEST_PRACTICES.md](../docs/best-practices/BEST_PRACTICES.md) |
-| Git Workflow | [git_workflow.md](git_workflow.md) | [docs/VERSION_CONTROL.md](../docs/best-practices/VERSION_CONTROL.md) |
-| API Design | [api_design.md](api_design.md) | [docs/ARCHITECTURE.md](../docs/core/ARCHITECTURE.md) |
-| Reporting | [reporting.md](reporting.md) | [docs/MODULES_GUIDE.md](../docs/modules/MODULES_GUIDE.md) |
-| Documentation | [documentation_standards.md](documentation_standards.md) | [docs/WORKFLOW.md](../docs/core/WORKFLOW.md) |
-| Type Safety | [type_hints_standards.md](type_hints_standards.md) | [docs/ARCHITECTURE.md](../docs/core/ARCHITECTURE.md) |
+| Code Style | [code_style.md](code_style.md) | [docs/best-practices.md](../docs/best-practices/best-practices.md) |
+| Git Workflow | [git_workflow.md](git_workflow.md) | [docs/version-control.md](../docs/best-practices/version-control.md) |
+| API Design | [api_design.md](api_design.md) | [docs/architecture.md](../docs/core/architecture.md) |
+| Reporting | [reporting.md](reporting.md) | [docs/modules-guide.md](../docs/modules/modules-guide.md) |
+| Documentation | [documentation_standards.md](documentation_standards.md) | [docs/workflow.md](../docs/core/workflow.md) |
+| Type Safety | [type_hints_standards.md](type_hints_standards.md) | [docs/architecture.md](../docs/core/architecture.md) |
 | LLM Integration | [llm_standards.md](llm_standards.md) | [infrastructure/llm/AGENTS.md](../infrastructure/llm/AGENTS.md) |
 | Manuscript Writing | [manuscript_style.md](manuscript_style.md) | [code_project/manuscript/AGENTS.md](../projects/code_project/manuscript/AGENTS.md) |
-| Refactoring | [refactoring.md](refactoring.md) | [docs/BEST_PRACTICES.md](../docs/best-practices/BEST_PRACTICES.md) |
+| Refactoring | [refactoring.md](refactoring.md) | [docs/best-practices.md](../docs/best-practices/best-practices.md) |
 
 ## Cross-Reference Guide
 
 **For Architecture Decisions:**
 → Check [AGENTS.md](AGENTS.md) for decision criteria  
-→ Read [../docs/core/ARCHITECTURE.md](../docs/core/ARCHITECTURE.md) for full architectural overview  
-→ Consult [../docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md](../docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md) for pattern details
+→ Read [../docs/core/architecture.md](../docs/core/architecture.md) for full architectural overview  
+→ Consult [../docs/architecture/thin-orchestrator-summary.md](../docs/architecture/thin-orchestrator-summary.md) for pattern details
 
 **For Infrastructure Development:**
 → Check [infrastructure_modules.md](infrastructure_modules.md) for standards  
@@ -486,8 +501,8 @@ The .cursorrules standards align with and support the main documentation:
 
 **For Code Quality:**
 → Check [error_handling.md](error_handling.md) and [python_logging.md](python_logging.md)  
-→ Read [../docs/best-practices/BEST_PRACTICES.md](../docs/best-practices/BEST_PRACTICES.md) for practices  
-→ See [../docs/operational/ERROR_HANDLING_GUIDE.md](../docs/operational/ERROR_HANDLING_GUIDE.md) for detailed patterns
+→ Read [../docs/best-practices/best-practices.md](../docs/best-practices/best-practices.md) for practices  
+→ See [../docs/operational/error-handling-guide.md](../docs/operational/error-handling-guide.md) for detailed patterns
 
 ## Quick Navigation Guide
 
@@ -509,14 +524,16 @@ The .cursorrules standards align with and support the main documentation:
 | Writing manuscripts | [manuscript_style.md](manuscript_style.md) | [code_project/manuscript/AGENTS.md](../projects/code_project/manuscript/AGENTS.md) for manuscript structure |
 | Adding type hints | [type_hints_standards.md](type_hints_standards.md) | [documentation_standards.md](documentation_standards.md) for docstrings |
 | Using LLM/Ollama | [llm_standards.md](llm_standards.md) | [infrastructure_modules.md](infrastructure_modules.md) for module patterns |
-| Generating reports | [reporting.md](reporting.md) | [docs/MODULES_GUIDE.md](../docs/modules/MODULES_GUIDE.md) for module details |
+| Generating reports | [reporting.md](reporting.md) | [docs/modules-guide.md](../docs/modules/modules-guide.md) for module details |
 
 ### By File Size & Detail Level
 
 **Quick Reference (< 100 lines)**
+
 - [README.md](README.md) - Fast patterns lookup
 
 **Medium Details (100-300 lines)**
+
 - [error_handling.md](error_handling.md) - Exception patterns
 - [python_logging.md](python_logging.md) - Logging standards
 - [type_hints_standards.md](type_hints_standards.md) - Type annotation patterns
@@ -524,6 +541,7 @@ The .cursorrules standards align with and support the main documentation:
 - [git_workflow.md](git_workflow.md) - Git workflow standards
 
 **Guides (300-600 lines)**
+
 - [api_design.md](api_design.md) - API design standards
 - [testing_standards.md](testing_standards.md) - testing guide
 - [infrastructure_modules.md](infrastructure_modules.md) - Module development guide
@@ -532,6 +550,7 @@ The .cursorrules standards align with and support the main documentation:
 - [manuscript_style.md](manuscript_style.md) - Manuscript formatting and style guide
 
 **System Overview (400+ lines)**
+
 - [AGENTS.md](AGENTS.md) - This file - system overview
 
 ## Maintenance
@@ -560,19 +579,22 @@ When creating a new .cursorrules file:
 ## See Also
 
 **Development Standards:**
+
 - [`README.md`](README.md) - Quick reference guide
 - [`../AGENTS.md`](../AGENTS.md) - system documentation
 - [`../infrastructure/AGENTS.md`](../infrastructure/AGENTS.md) - Infrastructure layer documentation
 - [`../projects/AGENTS.md`](../projects/AGENTS.md) - Projects layer documentation
 
 **Related Documentation:**
-- [`../docs/core/ARCHITECTURE.md`](../docs/core/ARCHITECTURE.md) - System architecture overview
-- [`../docs/core/WORKFLOW.md`](../docs/core/WORKFLOW.md) - Development workflow
+
+- [`../docs/core/architecture.md`](../docs/core/architecture.md) - System architecture overview
+- [`../docs/core/workflow.md`](../docs/core/workflow.md) - Development workflow
 - [`../tests/AGENTS.md`](../tests/AGENTS.md) - Testing philosophy and guide
 
 ---
 
-**Version**: 2.4.0
-**Last Updated**: 2025-12-03
-**Status**: All 13 guideline files and cross-referenced
-**Maintainer**: Template Team
+**Version**: 2.5.0  
+**Last Updated**: 2026-02-11  
+**Files**: 17 (AGENTS.md + README.md + 15 guideline files)  
+**Status**: All 15 guideline files cross-referenced  
+**Updates**: All development rules and standards synchronized with docs/

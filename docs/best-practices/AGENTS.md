@@ -9,17 +9,17 @@ The `docs/best-practices/` directory contains guides for effective use of the Re
 ```
 docs/best-practices/
 ├── AGENTS.md                       # This technical documentation
-├── BACKUP_RECOVERY.md              # Backup and recovery strategies
-├── BEST_PRACTICES.md               # Consolidated best practices guide
-├── MIGRATION_GUIDE.md              # Migration from other templates
-├── MULTI_PROJECT_MANAGEMENT.md     # Managing multiple research projects
+├── backup-recovery.md              # Backup and recovery strategies
+├── best-practices.md               # Consolidated best practices guide
+├── migration-guide.md              # Migration from other templates
+├── multi-project-management.md     # Managing multiple research projects
 ├── README.md                       # Quick reference and navigation
-└── VERSION_CONTROL.md              # Git workflows and best practices
+└── version-control.md              # Git workflows and best practices
 ```
 
 ## Key Documentation Files
 
-### Best Practices Overview (`BEST_PRACTICES.md`)
+### Best Practices Overview (`best-practices.md`)
 
 **guide covering all aspects of effective template usage:**
 
@@ -41,7 +41,7 @@ docs/best-practices/
 - Troubleshooting methodologies
 - Maintenance and update procedures
 
-### Version Control (`VERSION_CONTROL.md`)
+### Version Control (`version-control.md`)
 
 **Git workflow best practices specifically tailored for research projects:**
 
@@ -63,7 +63,7 @@ docs/best-practices/
 - Conflict resolution strategies
 - Repository organization
 
-### Backup and Recovery (`BACKUP_RECOVERY.md`)
+### Backup and Recovery (`backup-recovery.md`)
 
 **backup strategies and disaster recovery procedures:**
 
@@ -85,7 +85,7 @@ docs/best-practices/
 - Backup integrity verification
 - Recovery time objectives
 
-### Multi-Project Management (`MULTI_PROJECT_MANAGEMENT.md`)
+### Multi-Project Management (`multi-project-management.md`)
 
 **Strategies for managing multiple research projects simultaneously:**
 
@@ -107,7 +107,7 @@ docs/best-practices/
 - Dependency management
 - Template evolution management
 
-### Migration Guide (`MIGRATION_GUIDE.md`)
+### Migration Guide (`migration-guide.md`)
 
 **Step-by-step guide for migrating from other research templates or systems:**
 
@@ -440,11 +440,11 @@ logger.info(f"Analysis completed in {monitor.get_duration('analysis_pipeline'):.
 ## See Also
 
 **Related Documentation:**
-- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow details
-- [`../development/CONTRIBUTING.md`](../development/CONTRIBUTING.md) - Contribution guidelines
-- [`../operational/PERFORMANCE_OPTIMIZATION.md`](../operational/PERFORMANCE_OPTIMIZATION.md) - Performance optimization guide
+- [`../core/workflow.md`](../core/workflow.md) - Development workflow details
+- [`../development/contributing.md`](../development/contributing.md) - Contribution guidelines
+- [`../operational/performance-optimization.md`](../operational/performance-optimization.md) - Performance optimization guide
 
 **System Documentation:**
 - [`../AGENTS.md`](../AGENTS.md) - system overview
-- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - Documentation index
+- [`../documentation-index.md`](../documentation-index.md) - Documentation index
 - [`../../AGENTS.md`](../../AGENTS.md) - Root system documentation

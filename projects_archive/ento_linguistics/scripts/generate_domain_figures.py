@@ -16,13 +16,13 @@ from typing import Any, Dict, List, Optional
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root / "src"))
 
-from concept_visualization import ConceptVisualizer
-from domain_analysis import DomainAnalyzer
-from literature_mining import LiteratureCorpus
-from term_extraction import TerminologyExtractor
+from visualization.concept_visualization import ConceptVisualizer
+from analysis.domain_analysis import DomainAnalyzer
+from data.literature_mining import LiteratureCorpus
+from analysis.term_extraction import TerminologyExtractor
 
-from utils.logging import get_logger
-from utils.figure_manager import FigureManager
+from core.logging import get_logger
+from visualization.figure_manager import FigureManager
 
 logger = get_logger(__name__)
 
@@ -266,11 +266,15 @@ class DomainFigureGenerator:
         terms, term_objects = zip(*sorted_terms)
         frequencies = [obj.frequency for obj in term_objects]
 
+        # Use gradient colormap for visual richness
+        import matplotlib.cm as cm
+        cmap = cm.get_cmap("viridis", len(terms))
+        bar_colors = [cmap(i / max(len(terms) - 1, 1)) for i in range(len(terms))]
         bars = ax.bar(
             range(len(terms)),
             frequencies,
-            alpha=0.7,
-            color=self.visualizer.DOMAIN_COLORS.get(domain_name, "#7f7f7f"),
+            alpha=0.85,
+            color=bar_colors,
         )
 
         ax.set_xticks(range(len(terms)))
@@ -293,9 +297,7 @@ class DomainFigureGenerator:
             )
 
         plt.tight_layout()
-        # Use shorter name for power_and_labor to match manuscript references
-        filename_base = domain_name.replace("power_and_labor", "power_labor")
-        filename = f"{filename_base}_term_frequencies.png"
+        filename = f"{domain_name}_term_frequencies.png"
         filepath = self.figures_dir / filename
         fig.savefig(filepath, dpi=300, bbox_inches="tight")
         plt.close(fig)
@@ -338,11 +340,15 @@ class DomainFigureGenerator:
         terms = [amb["term"] for amb in ambiguities]
         context_counts = [len(amb["contexts"]) for amb in ambiguities]
 
+        # Use gradient colormap for visual richness
+        import matplotlib.cm as cm
+        cmap = cm.get_cmap("plasma", len(terms))
+        bar_colors = [cmap(i / max(len(terms) - 1, 1)) for i in range(len(terms))]
         bars = ax.bar(
             range(len(terms)),
             context_counts,
-            alpha=0.7,
-            color=self.visualizer.DOMAIN_COLORS.get(domain_name, "#7f7f7f"),
+            alpha=0.85,
+            color=bar_colors,
         )
 
         ax.set_xticks(range(len(terms)))
@@ -353,9 +359,7 @@ class DomainFigureGenerator:
         )
 
         plt.tight_layout()
-        # Use shorter name for power_and_labor to match manuscript references
-        filename_base = domain_name.replace("power_and_labor", "power_labor")
-        filename = f"{filename_base}_ambiguities.png"
+        filename = f"{domain_name}_ambiguities.png"
         filepath = self.figures_dir / filename
         fig.savefig(filepath, dpi=300, bbox_inches="tight")
         plt.close(fig)
@@ -393,20 +397,41 @@ class DomainFigureGenerator:
         if not term_patterns:
             return None
 
-        fig, ax = plt.subplots(figsize=(8, 8))
-
         patterns = list(term_patterns.keys())
         counts = list(term_patterns.values())
 
-        ax.pie(
-            counts,
-            labels=[p.title() for p in patterns],
-            autopct="%1.1f%%",
-            startangle=90,
-        )
-        ax.set_title(
-            f'Term Pattern Distribution - {domain_name.replace("_", " ").title()}'
-        )
+        # Use domain palette colors for pie wedges
+        palette = list(self.visualizer.DOMAIN_COLORS.values())
+        wedge_colors = [palette[i % len(palette)] for i in range(len(patterns))]
+
+        if len(patterns) <= 1:
+            # Single-pattern case: bar chart is more informative than trivial 100% pie
+            fig, ax = plt.subplots(figsize=(8, 6))
+            ax.bar(
+                [p.title() for p in patterns],
+                counts,
+                alpha=0.85,
+                color=wedge_colors[:len(patterns)],
+            )
+            ax.set_ylabel("Count")
+            ax.set_title(
+                f'Term Pattern Counts - {domain_name.replace("_", " ").title()}'
+            )
+            # Add value labels on bars
+            for i, (p, c) in enumerate(zip(patterns, counts)):
+                ax.text(i, c + max(counts) * 0.02, str(c), ha="center", fontsize=10)
+        else:
+            fig, ax = plt.subplots(figsize=(8, 8))
+            ax.pie(
+                counts,
+                labels=[p.title() for p in patterns],
+                autopct="%1.1f%%",
+                startangle=90,
+                colors=wedge_colors,
+            )
+            ax.set_title(
+                f'Term Pattern Distribution - {domain_name.replace("_", " ").title()}'
+            )
 
         plt.tight_layout()
         filename = f"{domain_name}_patterns.png"

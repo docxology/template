@@ -681,4 +681,4 @@ except:
 
 **Testing Standards:**
 - [`../../../.cursorrules/testing_standards.md`](../../../.cursorrules/testing_standards.md) - Testing standards
-- [`../../../docs/development/TESTING_GUIDE.md`](../../../docs/development/TESTING_GUIDE.md) - Testing guide
+- [`../../../docs/development/testing-guide.md`](../../../docs/development/testing-guide.md) - Testing guide

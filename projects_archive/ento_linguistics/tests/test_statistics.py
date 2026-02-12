@@ -9,7 +9,7 @@ import pytest
 # Add project src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from src.statistics import (DescriptiveStats, anova_test,
+from src.analysis.statistics import (DescriptiveStats, anova_test,
                             calculate_confidence_interval,
                             calculate_correlation, calculate_descriptive_stats,
                             fit_distribution, t_test)

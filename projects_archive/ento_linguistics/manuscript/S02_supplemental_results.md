@@ -1,6 +1,8 @@
 # Supplemental Results {#sec:supplemental_results}
 
-This section provides additional experimental results that complement the computational analysis presented in Section \ref{sec:experimental_results}.
+*Note: Values presented in this section are illustrative outputs from the Ento-Linguistic framework applied to synthetic data. They demonstrate the framework's analytical output format and should not be cited as empirical findings.*
+
+This section provides additional illustrative results that complement the computational analysis presented in Section \ref{sec:experimental_results}.
 
 ## Extended Domain-Specific Analyses
 
@@ -22,7 +24,7 @@ Kin & Relatedness & 76 & 5 & 145 & Relationship complexity \\
 Economics & 45 & 2 & 67 & Resource metaphors \\
 \hline
 \end{tabular}
-\caption{Extended terminology extraction results showing sub-domains and cross-domain relationships}
+\caption{Extended illustrative terminology extraction results showing sub-domains and cross-domain relationships}
 \label{tab:extended_terminology}
 \end{table}
 
@@ -61,7 +63,7 @@ Network Diameter & 8 & 7 & 9 & 10 & 8 \\
 Small World Coefficient & 2.1 & 2.3 & 1.8 & 1.9 & 1.7 \\
 \hline
 \end{tabular}
-\caption{Extended network structural properties across all Ento-Linguistic domains}
+\caption{Illustrative extended network structural properties across all Ento-Linguistic domains}
 \label{tab:extended_network_properties}
 \end{table}
 
@@ -71,8 +73,8 @@ Analysis of relationships between domains reveals conceptual bridges:
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.9\textwidth]{../output/figures/terminology_network.png}
-\caption{Cross-domain relationship analysis showing conceptual bridges between Ento-Linguistic domains. Bridging terms connecting domains are highlighted, revealing shared vocabulary and conceptual overlap between analytical categories.}
+\includegraphics[width=0.9\textwidth]{../output/figures/domain_overlap_heatmap.png}
+\caption{Domain overlap heatmap showing the proportion of shared terminology between each pair of Ento-Linguistic domains. Darker cells indicate higher overlap; the Power \& Labor / Economics pair shows the strongest cross-domain sharing (0.34), while Unit of Individuality / Sex \& Reproduction shows the weakest (0.08). Off-diagonal asymmetry reflects directional borrowing patterns.}
 \label{fig:cross_domain_relationships}
 \end{figure}
 
@@ -102,7 +104,7 @@ Technological & 12.4 & 28.7 & 15.6 & 9.8 & 45.2 \\
 Biological & 87.6 & 93.1 & 78.9 & 95.4 & 72.3 \\
 \hline
 \end{tabular}
-\caption{Framing prevalence across individual Ento-Linguistic domains}
+\caption{Illustrative framing prevalence across individual Ento-Linguistic domains}
 \label{tab:domain_framing_prevalence}
 \end{table}
 
@@ -112,8 +114,8 @@ Analysis of framing patterns across publication decades:
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.9\textwidth]{../output/figures/convergence_plot.png}
-\caption{Evolution of framing assumptions in entomological literature over time. Anthropomorphic framing shows decreasing prevalence, while economic framing increases across publication decades.}
+\includegraphics[width=0.9\textwidth]{../output/figures/anthropomorphic_framing.png}
+\caption{Anthropomorphic framing prevalence across Ento-Linguistic domains over five decades (1970s–2020s). Anthropomorphic framing decreased overall from 75\% to 45\%, while economic framing rose from 15\% to 65\%. Hierarchical framing remained stable at approximately 50\%. Domain-level trajectories diverge: Power \& Labor shows the steepest decline in anthropomorphism, consistent with the "slave" terminology reform documented in Section \ref{sec:discussion}.}
 \label{fig:framing_evolution}
 \end{figure}
 
@@ -131,8 +133,8 @@ Longitudinal analysis reveals changing conceptual frameworks:
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.9\textwidth]{../output/figures/concept_hierarchy.png}
-\caption{Longitudinal evolution of caste terminology usage patterns, showing transition from rigid categorical usage (1970s) through task-based frameworks (1990s--2000s) to contemporary plasticity-aware approaches.}
+\includegraphics[width=0.9\textwidth]{../output/figures/kin_and_relatedness_patterns.png}
+\caption{Caste terminology evolution over five decades (1970s–2020s), showing the transition from rigid morphological caste categories (92\% usage in 1970s) to task-based and plasticity-aware terminology (34\% traditional caste by 2020s). The network restructuring aligns with molecular and epigenetic redefinitions of caste \cite{heinze2017molecular, chandra2021epigenetics}.}
 \label{fig:caste_evolution_extended}
 \end{figure}
 
@@ -159,7 +161,7 @@ Extended analysis of superorganism terminology evolution:
 2010-2024 & 18.3 & 61.5 & 20.2 & Multi-scale individuality frameworks \\
 \hline
 \end{tabular}
-\caption{Evolution of superorganism debate terminology across decades}
+\caption{Illustrative evolution of superorganism debate terminology across decades}
 \label{tab:superorganism_evolution}
 \end{table}
 
@@ -167,7 +169,7 @@ Extended analysis of superorganism terminology evolution:
 
 ### Inter-annotator Agreement Results
 
-validation across multiple annotators:
+Validation across multiple annotators:
 
 \begin{table}[h]
 \centering
@@ -180,18 +182,18 @@ Fleiss' Kappa & 0.85 & 0.80 & 0.76 \\
 Percentage Agreement & 91.3\% & 87.6\% & 84.2\% \\
 \hline
 \end{tabular}
-\caption{Inter-annotator agreement results for key analysis components}
+\caption{Illustrative validation targets: inter-annotator agreement metrics for key analysis components}
 \label{tab:inter_annotator_agreement}
 \end{table}
 
-### Bootstrap Validation Results
+### Bootstrap Validation Design
 
-Stability analysis across 1000 bootstrap samples:
+The framework includes stability analysis via bootstrap resampling (configurable, default 1,000 samples):
 
-- **Terminology extraction**: 94.3\% stability (SD = 2.1\%)
-- **Domain classification**: 91.7\% stability (SD = 3.2\%)
-- **Network structure**: 88.9\% stability (SD = 4.1\%)
-- **Framing identification**: 86.4\% stability (SD = 4.8\%)
+- **Terminology extraction**: Stability of term classification across resampled subsets
+- **Domain classification**: Consistency of domain assignment under perturbation
+- **Network structure**: Robustness of community detection to data variation
+- **Framing identification**: Reliability of framing type detection
 
 ## Additional Domain-Specific Figures
 
@@ -204,14 +206,14 @@ Extended visualizations for each domain provide deeper insights:
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\textwidth]{../output/figures/unit_of_individuality_term_frequencies.png}
-\caption{Term frequency distribution in Unit of Individuality domain}
+\caption{Term frequency distribution in the Unit of Individuality domain, showing relative prevalence of terms such as colony, superorganism, nestmate, and organism that operate across multiple biological scales. Generated by the TerminologyExtractor pipeline from the analyzed corpus.}
 \label{fig:unit_individuality_frequencies}
 \end{figure}
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\textwidth]{../output/figures/unit_of_individuality_ambiguities.png}
-\caption{Ambiguity patterns in Unit of Individuality terminology}
+\caption{Cross-domain membership analysis for Unit of Individuality terms, where higher counts indicate terms appearing in multiple Ento-Linguistic domains. Terms like ``colony'' bridge individuality and power frameworks, creating systematic scale ambiguity.}
 \label{fig:unit_individuality_ambiguities}
 \end{figure}
 
@@ -220,14 +222,14 @@ Extended visualizations for each domain provide deeper insights:
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\textwidth]{../output/figures/behavior_and_identity_term_frequencies.png}
-\caption{Behavioral terminology frequency distribution}
+\caption{Behavioral terminology frequency distribution in the Behavior and Identity domain, showing how terms like ``foraging,''``worker,'' and ``soldier'' create categorical role identities from fluid behavioral processes. Data extracted by the domain analysis pipeline.}
 \label{fig:behavior_identity_frequencies}
 \end{figure}
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\textwidth]{../output/figures/behavior_and_identity_ambiguities.png}
-\caption{Identity-related ambiguity patterns}
+\caption{Ambiguity analysis for Behavior and Identity domain terminology, illustrating how behavioral labels carry context-dependent meanings across research traditions. Terms with high cross-domain membership (e.g., ``worker'') demonstrate framing overlap between behavioral and power domains.}
 \label{fig:behavior_identity_ambiguities}
 \end{figure}
 
@@ -235,15 +237,15 @@ Extended visualizations for each domain provide deeper insights:
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.9\textwidth]{../output/figures/scalability_analysis.png}
-\caption{Power and Labor domain term frequency distribution showing dominance of hierarchical terminology (cross-domain comparison view)}
+\includegraphics[width=0.9\textwidth]{../output/figures/power_and_labor_term_frequencies.png}
+\caption{Term frequency distribution in the Power \& Labor domain, showing the relative prevalence of key terms such as division-of-labor, worker, queen, and dominance in the analyzed corpus}
 \label{fig:power_labor_frequencies}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.9\textwidth]{../output/figures/step_size_analysis.png}
-\caption{Power and Labor domain ambiguity analysis showing context-dependent variation in hierarchical terminology (cross-domain view)}
+\includegraphics[width=0.9\textwidth]{../output/figures/power_and_labor_ambiguities.png}
+\caption{Ambiguity analysis for Power \& Labor domain terminology, showing the number of distinct contextual meanings for key terms such as worker, queen, and caste}
 \label{fig:power_labor_ambiguities}
 \end{figure}
 
@@ -252,14 +254,14 @@ Extended visualizations for each domain provide deeper insights:
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\textwidth]{../output/figures/sex_and_reproduction_term_frequencies.png}
-\caption{Reproductive terminology frequency distribution}
+\caption{Reproductive terminology frequency distribution in the Sex \& Reproduction domain, showing prevalence of terms such as ``reproduction,''``haplodiploidy,'' ``queen,'' and``diploid'' that carry implicit assumptions about binary sex systems derived from mammalian biology.}
 \label{fig:sex_reproduction_frequencies}
 \end{figure}
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\textwidth]{../output/figures/sex_and_reproduction_ambiguities.png}
-\caption{Reproductive terminology ambiguity patterns}
+\caption{Ambiguity patterns in Sex \& Reproduction domain terminology. Terms such as ``sex,''``reproductive,'' and ``mating'' exhibit high contextual ambiguity because they import binary-sex assumptions derived from mammalian biology into haplodiploid systems where reproductive roles, ploidy, and sex determination follow fundamentally different rules.}
 \label{fig:sex_reproduction_ambiguities}
 \end{figure}
 
@@ -268,15 +270,31 @@ Extended visualizations for each domain provide deeper insights:
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\textwidth]{../output/figures/kin_and_relatedness_term_frequencies.png}
-\caption{Kinship terminology frequency distribution}
+\caption{Kinship terminology frequency distribution in the Kin \& Relatedness domain, showing prevalence of terms such as ``kin,''``relatedness,'' ``sister,'' and``inclusive fitness.'' The dominance of Hamilton's rule-adjacent vocabulary reflects the outsized influence of kin-selection theory on how relatedness is conceptualized, often at the expense of alternative frameworks such as multilevel selection.}
 \label{fig:kin_relatedness_frequencies}
 \end{figure}
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\textwidth]{../output/figures/kin_and_relatedness_ambiguities.png}
-\caption{Kinship terminology ambiguity patterns}
+\caption{Ambiguity patterns in Kin \& Relatedness domain terminology, showing how kinship concepts grounded in bilateral diploid relatedness create systematic ambiguity when applied to haplodiploid kin structures with asymmetric relatedness coefficients.}
 \label{fig:kin_relatedness_ambiguities}
 \end{figure}
 
-These extended results provide coverage of the Ento-Linguistic domains, revealing complex patterns of terminology use, framing assumptions, and conceptual evolution in entomological research.
+**Economics Domain**:
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{../output/figures/economics_term_frequencies.png}
+\caption{Term frequency distribution in the Economics domain, showing the prevalence of terms such as ``cost,''``benefit,'' ``investment,''``trade-off,'' and ``resource allocation.'' Economic metaphors are among the most pervasive yet least recognized framings in entomological research, importing assumptions of rational optimization from microeconomics.}
+\label{fig:economics_frequencies}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{../output/figures/economics_ambiguities.png}
+\caption{Ambiguity patterns in Economics domain terminology. Terms like ``cost'' exhibit high contextual ambiguity because they conflate energetic expenditure (a measurable physiological quantity) with adaptive cost (a fitness concept requiring population-level inference), creating systematic confusion between proximate and ultimate levels of explanation.}
+\label{fig:economics_ambiguities}
+\end{figure}
+
+These extended illustrative results demonstrate the framework's capacity for comprehensive coverage of all six Ento-Linguistic domains, revealing the types of terminology use, framing assumptions, and conceptual evolution patterns the pipeline is designed to detect in entomological research.

@@ -1,7 +1,7 @@
 # Ento-Linguistic Literature Analysis Report
 
-**Analysis Date:** 2026-01-24T13:59:19.216812
-**Duration:** 18.9 seconds
+**Analysis Date:** 2026-02-11T10:23:41.138789
+**Duration:** 2.3 seconds
 
 ## Executive Summary
 
@@ -10,12 +10,12 @@ This report presents the results of a comprehensive Ento-Linguistic analysis of 
 ## Analysis Overview
 
 ### Literature Corpus
-- **Publications Analyzed:** 430
-- **Text Processing:** 430 texts processed
-- **Total Tokens:** 33,315
+- **Publications Analyzed:** 420
+- **Text Processing:** 420 texts processed
+- **Total Tokens:** 31,344
 
 ### Terminology Extraction
-- **Terms Identified:** 117
+- **Terms Identified:** 138
 - **Domains Covered:** 6 Ento-Linguistic domains
 - **Extraction Method:** Linguistic pattern recognition with domain-specific filtering
 
@@ -30,7 +30,7 @@ This report presents the results of a comprehensive Ento-Linguistic analysis of 
 - **Recommendations:** Clearer communication guidelines developed
 
 ### Discourse Analysis
-- **Patterns Identified:** 2
+- **Patterns Identified:** 3
 - **Argumentative Structures:** 1
 - **Rhetorical Strategies:** Anthropomorphic, hierarchical, and economic framing patterns
 

@@ -16,10 +16,10 @@
 
 ### BIBTEX
 
-@software{optimizationanalysispipeline2024,
+@software{optimizationanalysispipeline2026,
   author = {Optimization Analysis Pipeline},
   title = {Optimization Algorithm Performance Analysis},
-  year = {2024},
+  year = {2026},
   publisher = {Self-published},
   url = {},
   license = {MIT},
@@ -30,9 +30,9 @@
 
 ### APA
 
-Optimization Analysis Pipeline (2024). Optimization Algorithm Performance Analysis.
+Optimization Analysis Pipeline (2026). Optimization Algorithm Performance Analysis.
 
 ### MLA
 
-Optimization Analysis Pipeline. "Optimization Algorithm Performance Analysis." 2024.
+Optimization Analysis Pipeline. "Optimization Algorithm Performance Analysis." 2026.
 

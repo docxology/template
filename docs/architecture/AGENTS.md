@@ -9,15 +9,15 @@ The `docs/architecture/` directory contains documentation of the Research Projec
 ```
 docs/architecture/
 ├── AGENTS.md                    # This technical documentation
-├── DECISION_TREE.md            # Code placement decision guide
+├── decision-tree.md            # Code placement decision guide
 ├── README.md                   # Quick reference and navigation
-├── THIN_ORCHESTRATOR_SUMMARY.md # Thin orchestrator pattern details
-└── TWO_LAYER_ARCHITECTURE.md   # architecture specification
+├── thin-orchestrator-summary.md # Thin orchestrator pattern details
+└── two-layer-architecture.md   # architecture specification
 ```
 
 ## Key Documentation Files
 
-### Two-Layer Architecture (`TWO_LAYER_ARCHITECTURE.md`)
+### Two-Layer Architecture (`two-layer-architecture.md`)
 
 **architecture specification covering:**
 - **Layer 1 (Infrastructure)**: Generic, reusable build/validation tools
@@ -32,7 +32,7 @@ docs/architecture/
 - Thin orchestrator pattern for clean separation of concerns
 - Modular design enabling independent development and testing
 
-### Thin Orchestrator Pattern (`THIN_ORCHESTRATOR_SUMMARY.md`)
+### Thin Orchestrator Pattern (`thin-orchestrator-summary.md`)
 
 **Detailed implementation of the thin orchestrator architectural pattern:**
 
@@ -48,7 +48,7 @@ docs/architecture/
 - Infrastructure scripts import from `infrastructure/` modules
 - All orchestration is thin: minimal logic, maximum delegation
 
-### Decision Tree (`DECISION_TREE.md`)
+### Decision Tree (`decision-tree.md`)
 
 **Practical guide for code placement decisions:**
 
@@ -214,23 +214,23 @@ llm:
 
 ```bash
 # Start with system overview
-cat docs/core/ARCHITECTURE.md
+cat docs/core/architecture.md
 
 # Understand layer separation
-cat docs/architecture/TWO_LAYER_ARCHITECTURE.md
+cat docs/architecture/two-layer-architecture.md
 
 # Learn orchestrator pattern
-cat docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md
+cat docs/architecture/thin-orchestrator-summary.md
 
 # Make code placement decisions
-cat docs/architecture/DECISION_TREE.md
+cat docs/architecture/decision-tree.md
 ```
 
 ### Development Workflow
 
 ```bash
 # 1. Understand where code belongs
-# Use DECISION_TREE.md to determine placement
+# Use decision-tree.md to determine placement
 
 # 2. Implement business logic
 # Place in appropriate module (infrastructure/ or projects/{name}/src/)
@@ -271,8 +271,8 @@ cat docs/architecture/DECISION_TREE.md
 **Symptom**: Code placement confusion, circular imports
 
 **Diagnosis:**
-- Review `DECISION_TREE.md` for placement guidance
-- Check `THIN_ORCHESTRATOR_SUMMARY.md` for pattern compliance
+- Review `decision-tree.md` for placement guidance
+- Check `thin-orchestrator-summary.md` for pattern compliance
 - Examine import structure for violations
 
 **Resolution:**
@@ -316,7 +316,7 @@ cat docs/architecture/DECISION_TREE.md
 - Continuous integration testing validation
 
 **Evolution Process:**
-- Document architecture changes in `TWO_LAYER_ARCHITECTURE.md`
+- Document architecture changes in `two-layer-architecture.md`
 - Update decision trees for new patterns
 - Maintain backward compatibility
 - Communicate changes through documentation updates
@@ -324,12 +324,12 @@ cat docs/architecture/DECISION_TREE.md
 ## See Also
 
 **Related Documentation:**
-- [`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md) - System architecture overview
-- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow
+- [`../core/architecture.md`](../core/architecture.md) - System architecture overview
+- [`../core/workflow.md`](../core/workflow.md) - Development workflow
 - [`../../infrastructure/AGENTS.md`](../../infrastructure/AGENTS.md) - Infrastructure implementation
 - [`../../projects/code_project/src/AGENTS.md`](../../projects/code_project/src/AGENTS.md) - Code project implementation
 
 **System Documentation:**
 - [`../../AGENTS.md`](../../AGENTS.md) - system overview
-- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - Documentation index
+- [`../documentation-index.md`](../documentation-index.md) - Documentation index
 - [`../../README.md`](../../README.md) - Project overview

@@ -9,18 +9,18 @@ The `docs/reference/` directory contains reference materials, quick lookups, and
 ```
 docs/reference/
 ├── AGENTS.md                       # This technical documentation
-├── API_REFERENCE.md                # API documentation
-├── ../reference/COMMON_WORKFLOWS.md             # Step-by-step workflow recipes
-├── COPYPASTA.md                    # Reusable documentation snippets
-├── FAQ.md                          # Frequently asked questions
-├── GLOSSARY.md                     # Terms and definitions
-├── QUICK_START_CHEATSHEET.md       # Essential commands reference
+├── api-reference.md                # API documentation
+├── ../reference/common-workflows.md             # Step-by-step workflow recipes
+├── copypasta.md                    # Reusable documentation snippets
+├── faq.md                          # Frequently asked questions
+├── glossary.md                     # Terms and definitions
+├── quick-start-cheatsheet.md       # Essential commands reference
 └── README.md                       # Quick reference overview
 ```
 
 ## Key Documentation Files
 
-### API Reference (`API_REFERENCE.md`)
+### API Reference (`api-reference.md`)
 
 **API documentation for all modules:**
 
@@ -36,7 +36,7 @@ docs/reference/
 - Visualization functions
 - Custom research workflows
 
-### Common Workflows (`../reference/COMMON_WORKFLOWS.md`)
+### Common Workflows (`../reference/common-workflows.md`)
 
 **Step-by-step recipes for frequent tasks:**
 
@@ -52,7 +52,7 @@ docs/reference/
 - Performance monitoring and optimization
 - Troubleshooting common issues
 
-### FAQ (`FAQ.md`)
+### FAQ (`faq.md`)
 
 **Frequently asked questions organized by category:**
 
@@ -71,7 +71,7 @@ docs/reference/
 - Performance issues and optimization
 - Integration problems and workarounds
 
-### Glossary (`GLOSSARY.md`)
+### Glossary (`glossary.md`)
 
 **Terminology and concept definitions:**
 
@@ -86,7 +86,7 @@ docs/reference/
 - API glossary generation
 - Publishing platform terms
 
-### Quick Start Cheatsheet (`QUICK_START_CHEATSHEET.md`)
+### Quick Start Cheatsheet (`quick-start-cheatsheet.md`)
 
 **Essential commands and quick references:**
 
@@ -119,7 +119,7 @@ export ZENODO_TOKEN="your-zenodo-token"
 export OLLAMA_HOST="http://localhost:11434"
 ```
 
-### Copypasta (`COPYPASTA.md`)
+### Copypasta (`copypasta.md`)
 
 **Reusable documentation snippets and templates:**
 
@@ -233,13 +233,13 @@ python3 scripts/03_render_pdf.py --config custom.yaml
 **Validation Procedures:**
 ```bash
 # Validate all commands in cheatsheet
-./validate_cheatsheet_commands.sh docs/reference/QUICK_START_CHEATSHEET.md
+./validate_cheatsheet_commands.sh docs/reference/quick-start-cheatsheet.md
 
 # Check FAQ answers accuracy
-./validate_faq_answers.sh docs/reference/FAQ.md
+./validate_faq_answers.sh docs/reference/faq.md
 
 # Test API reference examples
-python3 validate_api_examples.py docs/reference/API_REFERENCE.md
+python3 validate_api_examples.py docs/reference/api-reference.md
 ```
 
 ### User Feedback Integration
@@ -262,7 +262,7 @@ python3 validate_api_examples.py docs/reference/API_REFERENCE.md
 
 **Progressive Information Access:**
 ```
-QUICK_START_CHEATSHEET.md → ../reference/COMMON_WORKFLOWS.md → FAQ.md
+quick-start-cheatsheet.md → ../reference/common-workflows.md → faq.md
           ↓                        ↓
     Immediate Actions       Step-by-Step Guides    Problem Solving
 ```
@@ -280,10 +280,10 @@ QUICK_START_CHEATSHEET.md → ../reference/COMMON_WORKFLOWS.md → FAQ.md
 ```markdown
 ## Related Information
 
-- **Setup**: See [`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md)
-- **Troubleshooting**: See [`../operational/TROUBLESHOOTING_GUIDE.md`](../operational/TROUBLESHOOTING_GUIDE.md)
-- **Configuration**: See [`../operational/CONFIGURATION.md`](../operational/CONFIGURATION.md)
-- **API Details**: See [`API_REFERENCE.md`](API_REFERENCE.md)
+- **Setup**: See [`../core/how-to-use.md`](../core/how-to-use.md)
+- **Troubleshooting**: See [`../operational/troubleshooting-guide.md`](../operational/troubleshooting-guide.md)
+- **Configuration**: See [`../operational/configuration.md`](../operational/configuration.md)
+- **API Details**: See [`api-reference.md`](api-reference.md)
 ```
 
 **External Resources:**
@@ -309,7 +309,7 @@ QUICK_START_CHEATSHEET.md → ../reference/COMMON_WORKFLOWS.md → FAQ.md
 **Example Testing:**
 ```bash
 # Test cheatsheet commands
-for cmd in $(grep "^\`\`\`bash" QUICK_START_CHEATSHEET.md | sed 's/```bash//'); do
+for cmd in $(grep "^\`\`\`bash" quick-start-cheatsheet.md | sed 's/```bash//'); do
     echo "Testing: $cmd"
     eval "$cmd --dry-run" 2>/dev/null || echo "Command failed: $cmd"
 done
@@ -492,12 +492,12 @@ llm:
 ## See Also
 
 **Reference Documentation:**
-- [`QUICK_START_CHEATSHEET.md`](QUICK_START_CHEATSHEET.md) - Essential commands
-- [`../reference/COMMON_WORKFLOWS.md`](../reference/COMMON_WORKFLOWS.md) - Step-by-step procedures
-- [`FAQ.md`](FAQ.md) - Problem-solving answers
-- [`API_REFERENCE.md`](API_REFERENCE.md) - Technical API details
+- [`quick-start-cheatsheet.md`](quick-start-cheatsheet.md) - Essential commands
+- [`../reference/common-workflows.md`](../reference/common-workflows.md) - Step-by-step procedures
+- [`faq.md`](faq.md) - Problem-solving answers
+- [`api-reference.md`](api-reference.md) - Technical API details
 
 **System Documentation:**
 - [`../AGENTS.md`](../AGENTS.md) - system overview
-- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - Documentation index
+- [`../documentation-index.md`](../documentation-index.md) - Documentation index
 - [`../../AGENTS.md`](../../AGENTS.md) - Root system documentation

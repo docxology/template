@@ -2,7 +2,7 @@
 
 > **Practical examples and usage patterns** for the template
 
-**Quick Reference:** [Examples](EXAMPLES.md) | [Examples Showcase](EXAMPLES_SHOWCASE.md) | [Markdown Guide](MARKDOWN_TEMPLATE_GUIDE.md)
+**Quick Reference:** [Examples](examples.md) | [Examples Showcase](examples-showcase.md) | [Markdown Guide](markdown-template-guide.md)
 
 ## Purpose
 
@@ -12,40 +12,40 @@ The `usage/` directory contains practical examples, usage patterns, and guides f
 
 | File | Purpose | Audience |
 |------|---------|----------|
-| [`EXAMPLES.md`](EXAMPLES.md) | Basic usage examples and patterns | All users |
-| [`EXAMPLES_SHOWCASE.md`](EXAMPLES_SHOWCASE.md) | Real-world usage examples | Advanced users |
-| [`TEMPLATE_DESCRIPTION.md`](TEMPLATE_DESCRIPTION.md) | Template overview and features | New users |
-| [`MARKDOWN_TEMPLATE_GUIDE.md`](MARKDOWN_TEMPLATE_GUIDE.md) | Markdown authoring guide | Content creators |
-| [`MANUSCRIPT_NUMBERING_SYSTEM.md`](MANUSCRIPT_NUMBERING_SYSTEM.md) | Manuscript section numbering | Content creators |
-| [`IMAGE_MANAGEMENT.md`](IMAGE_MANAGEMENT.md) | Image insertion and cross-referencing | Content creators |
-| [`VISUALIZATION_GUIDE.md`](VISUALIZATION_GUIDE.md) | Visualization system guide | Developers |
+| [`examples.md`](examples.md) | Basic usage examples and patterns | All users |
+| [`examples-showcase.md`](examples-showcase.md) | Real-world usage examples | Advanced users |
+| [`template-description.md`](template-description.md) | Template overview and features | New users |
+| [`markdown-template-guide.md`](markdown-template-guide.md) | Markdown authoring guide | Content creators |
+| [`manuscript-numbering-system.md`](manuscript-numbering-system.md) | Manuscript section numbering | Content creators |
+| [`image-management.md`](image-management.md) | Image insertion and cross-referencing | Content creators |
+| [`visualization-guide.md`](visualization-guide.md) | Visualization system guide | Developers |
 
 ## Quick Navigation
 
 ### Getting Started with Examples
-→ Read **[Examples](EXAMPLES.md)** - Basic usage patterns
+→ Read **[Examples](examples.md)** - Basic usage patterns
 
 ### Real-World Applications
-→ Study **[Examples Showcase](EXAMPLES_SHOWCASE.md)** - Advanced examples
+→ Study **[Examples Showcase](examples-showcase.md)** - Advanced examples
 
 ### Writing Content
-→ Follow **[Markdown Template Guide](MARKDOWN_TEMPLATE_GUIDE.md)** - Authoring guide
+→ Follow **[Markdown Template Guide](markdown-template-guide.md)** - Authoring guide
 
 ### Managing Images
-→ Use **[Image Management](IMAGE_MANAGEMENT.md)** - Image handling
+→ Use **[Image Management](image-management.md)** - Image handling
 
 ### Creating Visualizations
-→ Reference **[Visualization Guide](VISUALIZATION_GUIDE.md)** - Figure generation
+→ Reference **[Visualization Guide](visualization-guide.md)** - Figure generation
 
 ## Related Documentation
 
 - **[`../guides/`](../guides/)** - Skill-level specific guides
-- **[`../reference/COMMON_WORKFLOWS.md`](../reference/COMMON_WORKFLOWS.md)** - Step-by-step recipes
-- **[`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md)** - usage guide
+- **[`../reference/common-workflows.md`](../reference/common-workflows.md)** - Step-by-step recipes
+- **[`../core/how-to-use.md`](../core/how-to-use.md)** - usage guide
 
 ## See Also
 
-- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - documentation index
+- [`../documentation-index.md`](../documentation-index.md) - documentation index
 - [`../README.md`](../README.md) - Documentation hub overview
 
 

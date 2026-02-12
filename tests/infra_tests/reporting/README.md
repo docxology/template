@@ -27,20 +27,22 @@ pytest tests/infra_tests/reporting/test_error_aggregator.py -v
 ```
 
 **Test Coverage:**
+
 - Error collection
 - Aggregation logic
 - Error categorization
 - Report generation
 
-### Pipeline Report Tests (`test_pipeline_report.py`)
+### Pipeline Reporter Tests (`test_pipeline_reporter.py`)
 
 Pipeline report generation:
 
 ```bash
-pytest tests/infra_tests/reporting/test_pipeline_report.py -v
+pytest tests/infra_tests/reporting/test_pipeline_reporter.py -v
 ```
 
 **Test Coverage:**
+
 - Report structure
 - Stage result aggregation
 - Performance metrics
@@ -63,8 +65,18 @@ End-to-end reporting workflows:
 
 ```bash
 # Full reporting pipeline
-pytest tests/infra_tests/reporting/test_pipeline_report.py::test_full_pipeline -v
+pytest tests/infra_tests/reporting/test_pipeline_reporter.py -v
 ```
+
+### Additional Test Modules
+
+- **`test_dashboard_generator.py`** - Dashboard generation
+- **`test_executive_reporter.py`** - Executive reporting
+- **`test_html_templates.py`** - HTML template rendering
+- **`test_manuscript_overview.py`** - Manuscript overview reports
+- **`test_output_organizer.py`** - Output organization
+- **`test_output_reporter.py`** - Output reporting
+- **`test_test_reporter.py`** - Test result reporting
 
 ## Common Test Patterns
 

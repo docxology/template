@@ -302,12 +302,14 @@ def check_uv_available() -> bool:
 def get_python_command() -> list[str]:
     """Get the appropriate Python command for subprocess execution.
 
-    Returns the optimal Python command based on available tools:
-    - ['uv', 'run', 'python'] if uv is available (preferred for managed environments)
-    - [sys.executable] otherwise (uses current Python interpreter)
+    Always uses sys.executable to run subprocesses with the current Python
+    interpreter. This is the correct approach because:
 
-    This ensures consistent Python execution across different environments and
-    respects uv-managed virtual environments when available.
+    1. When run via `uv run ./run.sh`, the venv is already activated and
+       sys.executable points to the correct uv-managed interpreter.
+    2. Using `uv run python` for each subprocess adds massive overhead
+       (~300s per invocation) due to environment resolution/syncing.
+    3. sys.executable is always valid and avoids redundant environment setup.
 
     Returns:
         List of command arguments suitable for subprocess.run()
@@ -316,10 +318,7 @@ def get_python_command() -> list[str]:
         >>> cmd = get_python_command()
         >>> result = subprocess.run(cmd + ['-c', 'print("hello")'], ...)
     """
-    if check_uv_available():
-        return ["uv", "run", "python"]
-    else:
-        return [sys.executable]
+    return [sys.executable]
 
 
 def get_subprocess_env(base_env: dict = None) -> dict:

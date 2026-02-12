@@ -8,7 +8,7 @@ The `infrastructure/` directory contains **reusable, generic build and validatio
 
 ### Subfolder Organization
 
-```
+```text
 infrastructure/<module>/
 ├── __init__.py           # Public API exports
 ├── AGENTS.md            # documentation
@@ -31,7 +31,7 @@ infrastructure/<module>/
 
 ### Test Organization
 
-```
+```text
 tests/infra_tests/test_<module>/
 ├── __init__.py
 ├── conftest.py          # Shared fixtures
@@ -53,13 +53,13 @@ tests/infra_tests/test_<module>/
 
 ```python
 # Good: Import from infrastructure package
-from infrastructure.literature import LiteratureSearch
+from infrastructure.reporting import generate_pipeline_report
 from infrastructure.llm import LLMClient
 from infrastructure.rendering import RenderManager
 from infrastructure.reporting import generate_pipeline_report, get_error_aggregator
 
 # Bad: Relative imports outside package
-from ..literature import LiteratureSearch  # DON'T
+from ..reporting import generate_pipeline_report  # DON'T
 ```
 
 ### Exception Handling
@@ -67,15 +67,15 @@ from ..literature import LiteratureSearch  # DON'T
 ```python
 # Good: Use infrastructure exceptions
 from infrastructure.core.exceptions import (
-    LiteratureSearchError, 
+    ReportingError, 
     LLMConnectionError,
     RenderingError
 )
 
 # Good: Raise with context
-raise LiteratureSearchError(
-    "API request failed",
-    context={"source": "arxiv", "query": query}
+raise ReportingError(
+    "Report generation failed",
+    context={"format": "html", "stage": stage_name}
 )
 ```
 
@@ -93,12 +93,12 @@ logger.info(f"Processing {count} items")
 
 ## Module-Specific Guidelines
 
-### Literature Module
+### Documentation Module
 
-- **Multi-source**: Support multiple academic databases
-- **Rate limiting**: Respect API rate limits automatically
-- **Caching**: Cache responses where possible
-- **Deduplication**: Merge results from multiple sources
+- **Standards enforcement**: Validate AGENTS.md and README.md structure
+- **Cross-referencing**: Check internal link integrity
+- **Template generation**: Auto-generate documentation scaffolds
+- **Coverage tracking**: Monitor documentation completeness
 
 ### LLM Module
 
@@ -133,7 +133,7 @@ logger.info(f"Processing {count} items")
 
 ### Environment Variables
 
-- Prefix with module name: `LITERATURE_API_KEY`
+- Prefix with module name: `REPORTING_OUTPUT_DIR`
 - Document in module README.md
 - Provide sensible defaults
 
@@ -176,7 +176,7 @@ class ModuleConfig:
 
 ```python
 # Good
-raise LiteratureSearchError("Query failed")
+raise ReportingError("Report generation failed")
 
 # Bad
 raise Exception("Query failed")
@@ -188,7 +188,7 @@ raise Exception("Query failed")
 try:
     api_call()
 except RequestException as e:
-    raise LiteratureSearchError("API failed") from e
+    raise ReportingError("Report generation failed") from e
 ```
 
 ## Documentation Requirements
@@ -244,8 +244,9 @@ Infrastructure modules are integrated into the build pipeline through:
 5. **Validation** (`scripts/04_validate_output.py`) - Quality assurance
 
 **Pipeline Entry Points**: Two orchestrators available:
+
 - `./run.sh --pipeline`: 10 stages (0-9) with optional LLM stages (stage 0 cleanup, stages 1-9 tracked)
-- `python3 scripts/run_all.py`: 8-stage core pipeline (00-05) only
+- `python3 scripts/run_all.py`: 8-stage core pipeline (00-07) only
 
 Update these scripts to discover and use new infrastructure modules as needed.
 
@@ -258,7 +259,7 @@ Before committing:
 - [ ] AGENTS.md - [ ] README.md written
 - [ ] Type hints on all public APIs
 - [ ] Docstrings on all functions
-- [ ] infrastructure/__init__.py updated
+- [ ] infrastructure/**init**.py updated
 - [ ] infrastructure/AGENTS.md updated
 - [ ] No linter errors
 - [ ] Wrapper script created (if needed)
@@ -285,7 +286,7 @@ Before committing:
 
 ### Module Structure
 
-```
+```text
 infrastructure/example_module/
 ├── __init__.py           # Public API exports
 ├── core.py              # Core functionality
@@ -295,7 +296,7 @@ infrastructure/example_module/
 └── README.md            # Quick reference
 ```
 
-### __init__.py Example
+### **init**.py Example
 
 ```python
 """Example module - brief description.
@@ -465,7 +466,7 @@ Before merging a new infrastructure module:
 - [ ] Configuration documented
 - [ ] CLI interface working (if applicable)
 - [ ] No imports from project-specific code
-- [ ] infrastructure/__init__.py updated
+- [ ] infrastructure/**init**.py updated
 - [ ] infrastructure/AGENTS.md updated
 - [ ] Tests pass locally
 - [ ] No linter errors
@@ -473,12 +474,11 @@ Before merging a new infrastructure module:
 ## References
 
 - [Infrastructure AGENTS.md](../infrastructure/AGENTS.md) - Module organization
-- [Modules Guide](../docs/modules/MODULES_GUIDE.md) - guide to all advanced modules
-- [API Reference](../docs/reference/API_REFERENCE.md) - API documentation for all modules
-- [Two-Layer Architecture](../docs/architecture/TWO_LAYER_ARCHITECTURE.md) - Architecture explanation
+- [Modules Guide](../docs/modules/modules-guide.md) - guide to all advanced modules
+- [API Reference](../docs/reference/api-reference.md) - API documentation for all modules
+- [Two-Layer Architecture](../docs/architecture/two-layer-architecture.md) - Architecture explanation
 - [Testing Guide](testing_standards.md) - Testing infrastructure code
 - [Error Handling Guide](error_handling.md) - Exception patterns
 - [Logging Guide](python_logging.md) - Logging standards
 - [Documentation Guide](documentation_standards.md) - Writing module docs
 - [Type Hints Guide](type_hints_standards.md) - Type annotation patterns
-

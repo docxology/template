@@ -166,7 +166,7 @@ Additional documentation files should only be added when:
 | File | Purpose | When to Use |
 |------|---------|-------------|
 | `CHANGELOG.md` | Version history, migration notes | Versioned infrastructure modules |
-| `EXAMPLES.md` | Extended usage examples | Complex modules with many use cases |
+| `examples.md` | Extended usage examples | Complex modules with many use cases |
 | `TROUBLESHOOTING.md` | Detailed troubleshooting | Error-prone modules (LLM, rendering) |
 | `API.md` | API reference | Large public-facing modules |
 | `DESIGN.md` | Design decisions, rationale | Complex architectural decisions |

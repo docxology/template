@@ -325,7 +325,7 @@ cat projects/code_project/output/.checkpoints/pipeline_checkpoint.json | python3
 rm -f projects/code_project/output/.checkpoints/pipeline_checkpoint.json
 ```
 
-See [`docs/operational/CHECKPOINT_RESUME.md`](../docs/operational/CHECKPOINT_RESUME.md) for documentation.
+See [`docs/operational/checkpoint-resume.md`](../docs/operational/checkpoint-resume.md) for documentation.
 
 ## Project-Specific Scripts
 
@@ -610,5 +610,5 @@ Root entry points work with **ANY** project following this structure.
 - [`AGENTS.md`](AGENTS.md) - documentation
 - [`../RUN_GUIDE.md`](../RUN_GUIDE.md) - Unified runner guide
 - [`projects/code_project/scripts/README.md`](../projects/code_project/scripts/README.md) - Project scripts guide
-- [`../docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md`](../docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md) - Pattern details
+- [`../docs/architecture/thin-orchestrator-summary.md`](../docs/architecture/thin-orchestrator-summary.md) - Pattern details
 - [`../AGENTS.md`](../AGENTS.md) - system documentation

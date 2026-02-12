@@ -9,8 +9,8 @@ from __future__ import annotations
 from typing import Dict, List
 
 import pytest
-from src.term_extraction import Term, TerminologyExtractor
-from src.text_analysis import TextProcessor
+from src.analysis.term_extraction import Term, TerminologyExtractor
+from src.analysis.text_analysis import TextProcessor
 
 
 class TestTerm:
@@ -401,7 +401,7 @@ class TestTerminologyExtractionIntegration:
         self, extractor: TerminologyExtractor, sample_texts: List[str]
     ) -> None:
         """Test domain seed expansion functionality."""
-        from src.term_extraction import create_domain_seed_expansion
+        from src.analysis.term_extraction import create_domain_seed_expansion
 
         # Extract some terms first
         terms = extractor.extract_terms(sample_texts, min_frequency=1)

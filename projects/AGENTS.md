@@ -67,7 +67,6 @@ graph TD
 
     subgraph Archive["Archived Projects (projects_archive/)"]
         A1[cognitive_integrity<br/>Archived - NOT Discovered]
-        A2[ento_linguistics<br/>Archived - NOT Discovered]
     end
 
     subgraph Infrastructure["Infrastructure Discovery"]
@@ -79,7 +78,6 @@ graph TD
     P1 -->|Discovered| DISCOVER
     P2 -->|Discovered| DISCOVER
     A1 -.->|NOT Scanned| DISCOVER
-    A2 -.->|NOT Scanned| DISCOVER
 
     DISCOVER -->|Active Projects| RUNSH
     RUNSH -->|Selected Project| PIPELINE

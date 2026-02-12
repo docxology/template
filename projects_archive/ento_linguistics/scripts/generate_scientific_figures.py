@@ -26,22 +26,22 @@ repo_root = project_root.parent
 sys.path.insert(0, str(project_root / "src"))
 sys.path.insert(0, str(repo_root))  # Add repo root so we can import infrastructure.*
 
-from statistics import calculate_descriptive_stats
+from analysis.statistics import calculate_descriptive_stats
 
 # Import src/ modules
-from data_generator import generate_synthetic_data, generate_time_series
-from performance import analyze_convergence
-from plots import (plot_bar, plot_comparison, plot_convergence, plot_line,
+from data.data_generator import generate_synthetic_data, generate_time_series
+from analysis.performance import analyze_convergence
+from visualization.plots import (plot_bar, plot_comparison, plot_convergence, plot_line,
                    plot_scatter)
-from src.utils.figure_manager import FigureManager
-from src.utils.reporting import (generate_pipeline_report,
-                                 get_error_aggregator, save_pipeline_report)
-from src.utils.validation import validate_figure_registry
-from src.utils.validation import validate_markdown as validate_markdown_wrapper
-from visualization import VisualizationEngine
+from visualization.figure_manager import FigureManager
+from pipeline.reporting import (generate_pipeline_report,
+                              get_error_aggregator, save_pipeline_report)
+from core.validation_utils import validate_figure_registry
+from core.validation_utils import validate_markdown as validate_markdown_wrapper
+from visualization.visualization import VisualizationEngine
 
 # Infra logging uses local utilities
-from src.utils.logging import get_logger, log_progress_bar, log_substep
+from core.logging import get_logger, log_progress_bar, log_substep
 
 # Optional infrastructure imports - graceful fallback if not available
 try:
@@ -52,6 +52,20 @@ try:
     _INFRA_AVAILABLE = True
 except ImportError:
     _INFRA_AVAILABLE = False
+
+    class _StubMetrics:
+        """Stub metrics for when infrastructure is not available."""
+        duration = 0.0
+        class resource_usage:
+            @staticmethod
+            def to_dict():
+                return {}
+
+    class PerformanceMonitor:
+        """Stub PerformanceMonitor for when infrastructure is not available."""
+        def start(self): pass
+        def update_memory(self): pass
+        def stop(self): return _StubMetrics()
 
 logger = get_logger(__name__)
 
@@ -260,6 +274,10 @@ def insert_figures_into_manuscript(figure_labels: list[str]) -> None:
     """
     logger.info("\nInserting figures into manuscript...")
 
+    if not _INFRA_AVAILABLE:
+        logger.warning("  MarkdownIntegration not available (infrastructure not installed) - skipping insertion")
+        return
+
     # Setup markdown integration
     # Use project_root/manuscript since we are in project/scripts/
     manuscript_dir = project_root / "manuscript"
@@ -300,24 +318,28 @@ def validate_all_figures() -> None:
 
     # Use project_root/manuscript since we are in project/scripts/
     manuscript_dir = project_root / "manuscript"
-    markdown_integration = MarkdownIntegration(manuscript_dir=manuscript_dir)
 
-    # Validate manuscript
-    validation_results = markdown_integration.validate_manuscript()
+    if _INFRA_AVAILABLE:
+        markdown_integration = MarkdownIntegration(manuscript_dir=manuscript_dir)
 
-    if validation_results:
-        logger.warning("  ⚠️  Validation issues found:")
-        for file_path, errors in validation_results.items():
-            logger.warning(f"    {file_path}:")
-            for label, error in errors:
-                logger.warning(f"      - {label}: {error}")
+        # Validate manuscript
+        validation_results = markdown_integration.validate_manuscript()
+
+        if validation_results:
+            logger.warning("  ⚠️  Validation issues found:")
+            for file_path, errors in validation_results.items():
+                logger.warning(f"    {file_path}:")
+                for label, error in errors:
+                    logger.warning(f"      - {label}: {error}")
+        else:
+            logger.info("  ✅ All figures validated successfully")
+
+        # Get statistics
+        stats = markdown_integration.get_figure_statistics()
+        logger.info(f"  Total figures: {stats['total_figures']}")
+        logger.info(f"  Figures by section: {stats['figures_by_section']}")
     else:
-        logger.info("  ✅ All figures validated successfully")
-
-    # Get statistics
-    stats = markdown_integration.get_figure_statistics()
-    logger.info(f"  Total figures: {stats['total_figures']}")
-    logger.info(f"  Figures by section: {stats['figures_by_section']}")
+        logger.warning("  MarkdownIntegration not available - skipping manuscript figure validation")
 
     # Validate registry if present
     registry_path = Path("output/figures/figure_registry.json")
@@ -457,7 +479,7 @@ def main() -> None:
                 log_progress_bar(
                     current=len(stage_results),
                     total=len(selected_with_post),
-                    message=f"{name} complete",
+                    task=f"{name} complete",
                     logger=logger,
                 )
             logger.info("Completed stage: %s", name)

@@ -31,7 +31,7 @@ python3 -m pytest project/tests/ --cov=project/src --cov-fail-under=90
 
 ### Directory Structure
 
-```
+```text
 tests/
 ├── __init__.py                      # Makes tests a package
 ├── conftest.py                      # Shared fixtures
@@ -55,7 +55,7 @@ tests/
 
 For each infrastructure module:
 
-```
+```text
 tests/infra_tests/test_<module>/
 ├── __init__.py
 ├── conftest.py                  # Fixtures: sample data, temp files
@@ -86,7 +86,7 @@ def test_validation_passes():
 
 ### Network-Dependent Modules
 
-For modules requiring external services (LLM, Literature, Publishing APIs):
+For modules requiring external services (LLM, Publishing APIs):
 
 1. **Pure Logic Tests**: Test configuration, validation, data handling without network
 2. **Integration Tests**: Mark with `@pytest.mark.requires_ollama` (or similar marker)
@@ -505,11 +505,7 @@ Before committing tests:
 
 - [error_handling.md](error_handling.md) - Exception patterns for tests
 - [documentation_standards.md](documentation_standards.md) - Documenting tests
-- [../docs/guides/TESTING_AND_REPRODUCIBILITY.md](../docs/guides/TESTING_AND_REPRODUCIBILITY.md) - Test-driven development guide
-- [../docs/development/TESTING_GUIDE.md](../docs/development/TESTING_GUIDE.md) - Testing best practices
+- [../docs/guides/testing-and-reproducibility.md](../docs/guides/testing-and-reproducibility.md) - Test-driven development guide
+- [../docs/development/testing-guide.md](../docs/development/testing-guide.md) - Testing best practices
 - [../tests/AGENTS.md](../tests/AGENTS.md) - Test framework setup
 - [pytest Documentation](https://docs.pytest.org/)
-
-
-
-

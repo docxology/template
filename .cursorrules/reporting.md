@@ -66,7 +66,3 @@ report = generate_pipeline_report(
 )
 report.save_markdown("output/reports/pipeline.md")
 ```
-
-
-
-

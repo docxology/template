@@ -2,7 +2,7 @@
 
 > **Quick reference, API docs, glossary, and FAQs**
 
-**Quick Reference:** [API Reference](API_REFERENCE.md) | [FAQ](FAQ.md) | [Glossary](GLOSSARY.md) | [Quick Start Cheatsheet](QUICK_START_CHEATSHEET.md)
+**Quick Reference:** [API Reference](api-reference.md) | [FAQ](faq.md) | [Glossary](glossary.md) | [Quick Start Cheatsheet](quick-start-cheatsheet.md)
 
 ## Purpose
 
@@ -12,42 +12,42 @@ The `reference/` directory contains quick reference materials, API documentation
 
 | File | Purpose | Audience |
 |------|---------|----------|
-| [`API_REFERENCE.md`](API_REFERENCE.md) | API documentation | Developers |
-| [`GLOSSARY.md`](GLOSSARY.md) | Terms and definitions | All users |
-| [`FAQ.md`](FAQ.md) | Frequently asked questions | All users |
-| [`QUICK_START_CHEATSHEET.md`](QUICK_START_CHEATSHEET.md) | Essential commands reference | All users |
-| [`COMMON_WORKFLOWS.md`](COMMON_WORKFLOWS.md) | Step-by-step workflow recipes | All users |
-| [`COPYPASTA.md`](COPYPASTA.md) | Ready-to-use sharing content | All users |
+| [`api-reference.md`](api-reference.md) | API documentation | Developers |
+| [`glossary.md`](glossary.md) | Terms and definitions | All users |
+| [`faq.md`](faq.md) | Frequently asked questions | All users |
+| [`quick-start-cheatsheet.md`](quick-start-cheatsheet.md) | Essential commands reference | All users |
+| [`common-workflows.md`](common-workflows.md) | Step-by-step workflow recipes | All users |
+| [`copypasta.md`](copypasta.md) | Ready-to-use sharing content | All users |
 
 ## Quick Navigation
 
 ### Need Quick Answers?
 
-→ Check **[FAQ](FAQ.md)** - Common questions
+→ Check **[FAQ](faq.md)** - Common questions
 
 ### Looking for a Command?
 
-→ Use **[Quick Start Cheatsheet](QUICK_START_CHEATSHEET.md)** - Essential commands
+→ Use **[Quick Start Cheatsheet](quick-start-cheatsheet.md)** - Essential commands
 
 ### Need API Details?
 
-→ Reference **[API Reference](API_REFERENCE.md)** - API docs
+→ Reference **[API Reference](api-reference.md)** - API docs
 
 ### Understanding Terms?
 
-→ Consult **[Glossary](GLOSSARY.md)** - Definitions
+→ Consult **[Glossary](glossary.md)** - Definitions
 
 ### Following a Workflow?
 
-→ Use **[Common Workflows](../reference/COMMON_WORKFLOWS.md)** - Step-by-step recipes
+→ Use **[Common Workflows](../reference/common-workflows.md)** - Step-by-step recipes
 
 ## Related Documentation
 
-- **[`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md)** - usage guide
+- **[`../core/how-to-use.md`](../core/how-to-use.md)** - usage guide
 - **[`../guides/`](../guides/)** - Skill-level specific guides
-- **[`../operational/TROUBLESHOOTING_GUIDE.md`](../operational/TROUBLESHOOTING_GUIDE.md)** - Troubleshooting
+- **[`../operational/troubleshooting-guide.md`](../operational/troubleshooting-guide.md)** - Troubleshooting
 
 ## See Also
 
-- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - documentation index
+- [`../documentation-index.md`](../documentation-index.md) - documentation index
 - [`../README.md`](../README.md) - Documentation hub overview

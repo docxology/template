@@ -2,7 +2,7 @@
 
 > **Advanced infrastructure modules** documentation
 
-**Quick Reference:** [Modules Guide](MODULES_GUIDE.md) | [Scientific Simulation](SCIENTIFIC_SIMULATION_GUIDE.md) | [PDF Validation](PDF_VALIDATION.md) | [Per-Module Guides](guides/)
+**Quick Reference:** [Modules Guide](modules-guide.md) | [Scientific Simulation](scientific-simulation-guide.md) | [PDF Validation](pdf-validation.md) | [Per-Module Guides](guides/)
 
 ## Purpose
 
@@ -12,53 +12,51 @@ The `modules/` directory contains documentation for the advanced infrastructure 
 
 | File | Purpose | Audience |
 |------|---------|----------|
-| [`MODULES_GUIDE.md`](MODULES_GUIDE.md) | Guide for all 7 modules | Developers |
-| [`SCIENTIFIC_SIMULATION_GUIDE.md`](SCIENTIFIC_SIMULATION_GUIDE.md) | Scientific simulation and analysis system | Researchers |
-| [`PDF_VALIDATION.md`](PDF_VALIDATION.md) | PDF validation system documentation | Developers |
+| [`modules-guide.md`](modules-guide.md) | Guide for infrastructure modules | Developers |
+| [`scientific-simulation-guide.md`](scientific-simulation-guide.md) | Scientific simulation and analysis system | Researchers |
+| [`pdf-validation.md`](pdf-validation.md) | PDF validation system documentation | Developers |
 
 ### Per-Module Guides (`guides/`)
 
 | Module | Guide | Focus |
 |--------|-------|-------|
-| Integrity | [`guides/INTEGRITY_MODULE.md`](guides/INTEGRITY_MODULE.md) | File integrity, cross-reference validation |
-| Literature | [`guides/LITERATURE_MODULE.md`](guides/LITERATURE_MODULE.md) | Literature search, reference management |
-| LLM | [`guides/LLM_MODULE.md`](guides/LLM_MODULE.md) | Ollama integration, research templates |
-| Publishing | [`guides/PUBLISHING_MODULE.md`](guides/PUBLISHING_MODULE.md) | DOI validation, citation generation |
-| Rendering | [`guides/RENDERING_MODULE.md`](guides/RENDERING_MODULE.md) | PDF, slides, web output |
-| Reporting | [`guides/REPORTING_MODULE.md`](guides/REPORTING_MODULE.md) | Pipeline reports, error aggregation |
-| Scientific | [`guides/SCIENTIFIC_MODULE.md`](guides/SCIENTIFIC_MODULE.md) | Numerical stability, benchmarking |
+| Integrity | [`guides/integrity-module.md`](guides/integrity-module.md) | File integrity, cross-reference validation |
+| LLM | [`guides/llm-module.md`](guides/llm-module.md) | Ollama integration, research templates |
+| Publishing | [`guides/publishing-module.md`](guides/publishing-module.md) | DOI validation, citation generation |
+| Rendering | [`guides/rendering-module.md`](guides/rendering-module.md) | PDF, slides, web output |
+| Reporting | [`guides/reporting-module.md`](guides/reporting-module.md) | Pipeline reports, error aggregation |
+| Scientific | [`guides/scientific-module.md`](guides/scientific-module.md) | Numerical stability, benchmarking |
 
 ## Quick Navigation
 
 ### Understanding Advanced Modules
 
-→ Read **[Modules Guide](MODULES_GUIDE.md)** - Modules guide
+→ Read **[Modules Guide](modules-guide.md)** - Modules guide
 
 ### Scientific Computing
 
-→ Study **[Scientific Simulation Guide](SCIENTIFIC_SIMULATION_GUIDE.md)** - Simulation system
+→ Study **[Scientific Simulation Guide](scientific-simulation-guide.md)** - Simulation system
 
 ### PDF Quality
 
-→ Reference **[PDF Validation](PDF_VALIDATION.md)** - Validation system
+→ Reference **[PDF Validation](pdf-validation.md)** - Validation system
 
 ## Available Modules
 
 1. **Integrity** - Output verification and cross-reference validation
 2. **Publishing** - Academic publishing workflows (DOI, citations)
 3. **Scientific Dev** - Research best practices (stability, benchmarking)
-4. **Literature Search** - Academic literature management
-5. **LLM Integration** - Local LLM assistance for research
-6. **Rendering System** - Multi-format output generation
-7. **Reporting** - Pipeline reporting and error aggregation
+4. **LLM Integration** - Local LLM assistance for research
+5. **Rendering System** - Multi-format output generation
+6. **Reporting** - Pipeline reporting and error aggregation
 
 ## Related Documentation
 
-- **[`../reference/API_REFERENCE.md`](../reference/API_REFERENCE.md)** - API documentation
-- **[`../operational/BUILD_SYSTEM.md`](../operational/BUILD_SYSTEM.md)** - Build system integration
-- **[`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md)** - System architecture
+- **[`../reference/api-reference.md`](../reference/api-reference.md)** - API documentation
+- **[`../operational/build-system.md`](../operational/build-system.md)** - Build system integration
+- **[`../core/architecture.md`](../core/architecture.md)** - System architecture
 
 ## See Also
 
-- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - documentation index
+- [`../documentation-index.md`](../documentation-index.md) - documentation index
 - [`../README.md`](../README.md) - Documentation hub overview

@@ -782,4 +782,4 @@ result = template.apply(manuscript=text)
 **System Documentation:**
 
 - [`../../../AGENTS.md`](../../../AGENTS.md) - system overview
-- [`../../../docs/usage/MANUSCRIPT_NUMBERING_SYSTEM.md`](../../../docs/usage/MANUSCRIPT_NUMBERING_SYSTEM.md) - Manuscript handling guide
+- [`../../../docs/usage/manuscript-numbering-system.md`](../../../docs/usage/manuscript-numbering-system.md) - Manuscript handling guide

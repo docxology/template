@@ -3,7 +3,7 @@
 import json
 
 import pytest
-from simulation import SimpleSimulation, SimulationBase, SimulationState
+from src.pipeline.simulation import SimpleSimulation, SimulationBase, SimulationState
 
 
 class AbstractMethodsCoverageHelper(SimulationBase):

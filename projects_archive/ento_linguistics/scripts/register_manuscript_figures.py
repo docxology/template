@@ -18,7 +18,7 @@ sys.path.insert(0, str(repo_root))
 # Use simple logging as fallback
 import logging
 
-from utils.figure_manager import FigureManager
+from visualization.figure_manager import FigureManager
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(name)s - %(message)s")
 logger = logging.getLogger(__name__)
@@ -181,10 +181,10 @@ def register_all_manuscript_figures() -> None:
             "generated_by": "example_figure.py",
         },
         {
-            "filename": "convergence_plot.png",
-            "caption": "Convergence analysis showing algorithm performance",
-            "label": "fig:convergence_plot",
-            "section": "examples",
+            "filename": "domain_comparison.png",
+            "caption": "Cross-domain comparison of entomological term frequencies",
+            "label": "fig:domain_comparison",
+            "section": "results",
             "generated_by": "generate_research_figures.py",
         },
     ]

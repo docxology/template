@@ -844,4 +844,4 @@ result = validator.validate(content, context)
 **System Documentation:**
 
 - [`../../../AGENTS.md`](../../../AGENTS.md) - system overview
-- [`../../../docs/development/TESTING_GUIDE.md`](../../../docs/development/TESTING_GUIDE.md) - Testing and validation guide
+- [`../../../docs/development/testing-guide.md`](../../../docs/development/testing-guide.md) - Testing and validation guide

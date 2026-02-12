@@ -16,7 +16,7 @@ The audit directory serves as a repository for:
 
 ## File Types
 
-### FILEPATH_AUDIT_REPORT.md
+### filepath-audit-report.md
 
 audit report containing:
 
@@ -25,7 +25,7 @@ audit report containing:
 - **Executive Summary**: Issue counts by category
 - **Detailed Findings**: Line-by-line issue reports with file paths
 
-### DOCUMENTATION_REVIEW_REPORT.md
+### documentation-review-report.md
 
 Documentation completeness review report containing:
 
@@ -33,7 +33,7 @@ Documentation completeness review report containing:
 - **Content Quality**: Review of documentation accuracy and depth
 - **Cross-Reference Integrity**: Validation of internal links
 
-### DOCUMENTATION_REVIEW_SUMMARY.md
+### documentation-review-summary.md
 
 Executive summary of documentation review:
 
@@ -90,6 +90,6 @@ Audit reports integrate with:
 
 ## See Also
 
-- [`../operational/TROUBLESHOOTING_GUIDE.md`](../operational/TROUBLESHOOTING_GUIDE.md) - Troubleshooting guide
-- [`../reference/FAQ.md`](../reference/FAQ.md) - Common questions
+- [`../operational/troubleshooting-guide.md`](../operational/troubleshooting-guide.md) - Troubleshooting guide
+- [`../reference/faq.md`](../reference/faq.md) - Common questions
 - [`../../infrastructure/validation/AGENTS.md`](../../infrastructure/validation/AGENTS.md) - Validation module documentation

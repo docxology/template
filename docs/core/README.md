@@ -2,7 +2,7 @@
 
 > **Essential documentation** for all users
 
-**Quick Reference:** [How To Use](../core/HOW_TO_USE.md) | [Architecture](../core/ARCHITECTURE.md) | [Workflow](../core/WORKFLOW.md) | [Documentation Index](../DOCUMENTATION_INDEX.md)
+**Quick Reference:** [How To Use](../core/how-to-use.md) | [Architecture](../core/architecture.md) | [Workflow](../core/workflow.md) | [Documentation Index](../documentation-index.md)
 
 ## Purpose
 
@@ -12,21 +12,21 @@ The `core/` directory contains the essential documentation that all users should
 
 | File | Purpose | Audience |
 |------|---------|----------|
-| [`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md) | usage guide from basic to advanced (all 12 levels) | New users, developers |
-| [`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md) | System design and structure overview | Developers, architects |
-| [`../core/WORKFLOW.md`](../core/WORKFLOW.md) | Development workflow and best practices | Developers |
+| [`../core/how-to-use.md`](../core/how-to-use.md) | usage guide from basic to advanced (all 12 levels) | New users, developers |
+| [`../core/architecture.md`](../core/architecture.md) | System design and structure overview | Developers, architects |
+| [`../core/workflow.md`](../core/workflow.md) | Development workflow and best practices | Developers |
 
 ## Quick Navigation
 
 ### For New Users
-1. Start with [`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md) - usage guide
-2. Review [`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md) - Understand system design
-3. Follow [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Learn development process
+1. Start with [`../core/how-to-use.md`](../core/how-to-use.md) - usage guide
+2. Review [`../core/architecture.md`](../core/architecture.md) - Understand system design
+3. Follow [`../core/workflow.md`](../core/workflow.md) - Learn development process
 
 ### For Developers
-1. Read [`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md) - System design overview
-2. Study [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development process
-3. Reference [`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md) - Usage patterns
+1. Read [`../core/architecture.md`](../core/architecture.md) - System design overview
+2. Study [`../core/workflow.md`](../core/workflow.md) - Development process
+3. Reference [`../core/how-to-use.md`](../core/how-to-use.md) - Usage patterns
 
 ## Related Documentation
 
@@ -37,7 +37,7 @@ The `core/` directory contains the essential documentation that all users should
 
 ## See Also
 
-- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - documentation index
+- [`../documentation-index.md`](../documentation-index.md) - documentation index
 - [`../README.md`](../README.md) - Documentation hub overview
 - [`../AGENTS.md`](../AGENTS.md) - Documentation organization guide
 

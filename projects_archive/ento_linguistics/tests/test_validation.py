@@ -9,7 +9,7 @@ import pytest
 # Add project src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from src.validation import ValidationFramework, ValidationResult
+from src.core.validation import ValidationFramework, ValidationResult
 
 
 class TestValidationResult:

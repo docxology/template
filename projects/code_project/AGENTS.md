@@ -490,5 +490,5 @@ Step sizes: 100%|██████████████████| 4/4 [00
 ## See Also
 
 - [Root AGENTS.md](../../AGENTS.md) - Template documentation
-- [projects/blake_active_inference/](../blake_active_inference/AGENTS.md) - Blake Active Inference manuscript project
+- [projects/blake_active_inference/](../blake_active_inference/AGENTS.md) - Blake Active Inference research project
 - [infrastructure/scientific/](../../infrastructure/scientific/AGENTS.md) - Scientific utilities

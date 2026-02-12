@@ -9,10 +9,10 @@ The `docs/guides/` directory contains progressive usage guides organized by skil
 ```
 docs/guides/
 ├── AGENTS.md                   # This technical documentation
-├── TESTING_AND_REPRODUCIBILITY.md           # Testing and reproducibility patterns (Levels 7-9)
-├── EXTENDING_AND_AUTOMATION.md             # Extending and automation techniques (Levels 10-12)
-├── GETTING_STARTED.md          # Basic usage guide (Levels 1-3)
-├── FIGURES_AND_ANALYSIS.md       # Figures and analysis (Levels 4-6)
+├── testing-and-reproducibility.md           # Testing and reproducibility patterns (Levels 7-9)
+├── extending-and-automation.md             # Extending and automation techniques (Levels 10-12)
+├── getting-started.md          # Basic usage guide (Levels 1-3)
+├── figures-and-analysis.md       # Figures and analysis (Levels 4-6)
 ├── README.md                   # Quick reference for guides
 ```
 
@@ -95,7 +95,7 @@ python3 scripts/03_render_pdf.py
 
 **Runnable Code Examples:**
 ```python
-# working example from GETTING_STARTED.md
+# working example from getting-started.md
 from infrastructure.core import load_config
 
 # Load your project configuration
@@ -112,7 +112,7 @@ print(f"Author: {config.get('author_name', 'Researcher')}")
 
 **Command Sequences:**
 ```bash
-# workflow from FIGURES_AND_ANALYSIS.md
+# workflow from figures-and-analysis.md
 # 1. Set up environment
 python3 scripts/00_setup_environment.py
 
@@ -204,7 +204,7 @@ SUCCESS: PDF generated at output/code_project/pdf/code_project_combined.pdf
 ./validate_guide_examples.sh docs/guides/
 
 # Check example output accuracy
-python3 validate_examples.py docs/guides/GETTING_STARTED.md
+python3 validate_examples.py docs/guides/getting-started.md
 
 # Lint markdown formatting
 markdownlint docs/guides/*.md
@@ -419,9 +419,9 @@ project/
 
 **Guide Hierarchy:**
 ```
-GETTING_STARTED.md → FIGURES_AND_ANALYSIS.md → TESTING_AND_REPRODUCIBILITY.md → EXTENDING_AND_AUTOMATION.md
+getting-started.md → figures-and-analysis.md → testing-and-reproducibility.md → extending-and-automation.md
        ↓                      ↓                       ↓                      ↓
-   core/HOW_TO_USE.md → operational/ guides → development/ guides → architecture/
+   core/how-to-use.md → operational/ guides → development/ guides → architecture/
 ```
 
 **Cross-References:**
@@ -439,7 +439,7 @@ GETTING_STARTED.md → FIGURES_AND_ANALYSIS.md → TESTING_AND_REPRODUCIBILITY.m
 - Archive outdated content appropriately
 
 **Related Documentation Links:**
-- [`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md) - usage guide
+- [`../core/how-to-use.md`](../core/how-to-use.md) - usage guide
 - [`../operational/`](../operational/) - Operational procedures
 - [`../reference/`](../reference/) - Reference materials
 - [`../development/`](../development/) - Development guides
@@ -447,12 +447,12 @@ GETTING_STARTED.md → FIGURES_AND_ANALYSIS.md → TESTING_AND_REPRODUCIBILITY.m
 ## See Also
 
 **Guide Navigation:**
-- [`GETTING_STARTED.md`](GETTING_STARTED.md) - Basic usage guide
-- [`FIGURES_AND_ANALYSIS.md`](FIGURES_AND_ANALYSIS.md) - Intermediate features
-- [`TESTING_AND_REPRODUCIBILITY.md`](TESTING_AND_REPRODUCIBILITY.md) - Advanced techniques
-- [`EXTENDING_AND_AUTOMATION.md`](EXTENDING_AND_AUTOMATION.md) - Expert-level usage
+- [`getting-started.md`](getting-started.md) - Basic usage guide
+- [`figures-and-analysis.md`](figures-and-analysis.md) - Intermediate features
+- [`testing-and-reproducibility.md`](testing-and-reproducibility.md) - Advanced techniques
+- [`extending-and-automation.md`](extending-and-automation.md) - Expert-level usage
 
 **System Documentation:**
 - [`../AGENTS.md`](../AGENTS.md) - system overview
-- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - Documentation index
+- [`../documentation-index.md`](../documentation-index.md) - Documentation index
 - [`../../AGENTS.md`](../../AGENTS.md) - Root system documentation

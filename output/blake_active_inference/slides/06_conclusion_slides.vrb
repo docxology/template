@@ -1,0 +1,30 @@
+\frametitle{Future Directions}
+\protect\phantomsection\label{future-directions}
+Three research programs emerge from this synthesis:
+
+\begin{enumerate}
+\item
+  \textbf{Computational modeling of fourfold vision.} Using tools such
+  as \texttt{pymdp} (the standard Python implementation of Active
+  Inference {[}@heins2022pymdp{]}), one could construct hierarchical
+  generative models of varying depth and test whether the
+  phenomenological differences Blake describes between single, twofold,
+  threefold, and fourfold vision correspond to quantifiable differences
+  in model evidence, prediction error profile, and temporal horizon.
+\item
+  \textbf{Cross-cultural precision modulation.} If Blake's ``cleansing''
+  maps to precision rebalancing, then contemplative practices across
+  traditions---Zen kōan study, Sufi \emph{dhikr}, Buddhist
+  \emph{vipassanā}, psychedelic-assisted therapy---may achieve analogous
+  effects through culturally specific means. Comparative studies using
+  the Active Inference framework could identify shared computational
+  mechanisms beneath surface diversity.
+\item
+  \textbf{Neuroaesthetic experiments.} Blake's illuminated plates could
+  be used as stimuli in fMRI and EEG studies designed to test whether
+  viewing visionary art modulates precision weighting in ways consistent
+  with the ALBUS framework---specifically, whether exposure to Blake's
+  composite imagery alters the balance between high-level priors and
+  sensory precision, producing measurable shifts toward ``cleansed
+  perception.''
+\end{enumerate}

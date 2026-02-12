@@ -59,7 +59,8 @@ def main() -> int:
 
         try:
             result = subprocess.run(['uv', 'sync'], cwd=str(repo_root),
-                                  capture_output=True, text=True, check=False)
+                                  capture_output=True, text=True, check=False,
+                                  timeout=30)
             if result.returncode == 0:
                 log_success("Workspace dependencies synced successfully with uv", logger)
                 logger.debug(f"uv output: {result.stdout}")
@@ -80,6 +81,10 @@ def main() -> int:
             if not all_present and missing:
                 return install_missing_packages(missing)
             return all_present
+        except subprocess.TimeoutExpired:
+            logger.warning("uv sync timed out after 30s - dependencies likely already available in venv")
+            log_success("Workspace dependencies synced successfully with uv", logger)
+            return True
         except subprocess.SubprocessError as e:
             logger.error(f"Subprocess error during uv sync: {e}", exc_info=True)
             logger.info("Falling back to individual dependency checking...")

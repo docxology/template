@@ -9,81 +9,91 @@ The `docs/core/` directory contains the fundamental documentation that explains 
 ```
 docs/core/
 ├── AGENTS.md                   # This technical documentation
-├── ARCHITECTURE.md             # System design and structure
-├── HOW_TO_USE.md               # usage guide
+├── architecture.md             # System design and structure
+├── how-to-use.md               # usage guide
 ├── README.md                   # Quick reference
-└── WORKFLOW.md                 # Development workflow
+└── workflow.md                 # Development workflow
 ```
 
 ## Key Documentation Files
 
-### How To Use (`HOW_TO_USE.md`)
+### How To Use (`how-to-use.md`)
 
 **Comprehensive, step-by-step guide for using the Research Project Template:**
 
 **Getting Started:**
+
 - Initial setup and configuration
 - Environment preparation
 - Basic project structure understanding
 - First manuscript generation
 
 **Core Workflows:**
+
 - Writing and organizing research content
 - Running analysis scripts
 - Generating outputs (PDF, HTML, slides)
 - Validation and quality assurance
 
 **Advanced Usage:**
+
 - Custom configuration options
 - Extending project functionality
 - Integration with external tools
 - Performance optimization techniques
 
 **Troubleshooting:**
+
 - Common issues and solutions
 - Debug procedures
 - Log analysis techniques
 - Recovery from failures
 
-### Architecture (`ARCHITECTURE.md`)
+### Architecture (`architecture.md`)
 
 **System design and structural overview:**
 
 **Two-Layer Architecture:**
+
 - Infrastructure layer (generic, reusable)
 - Project layer (domain-specific, customizable)
 - Separation principles and responsibilities
 - Inter-layer communication patterns
 
 **Thin Orchestrator Pattern:**
+
 - Business logic placement rules
 - Orchestration vs implementation distinction
 - Script design principles
 - Pattern enforcement mechanisms
 
 **Component Relationships:**
+
 - Module dependencies and interactions
 - Data flow patterns
 - Configuration management
 - Error handling architecture
 
-### Workflow (`WORKFLOW.md`)
+### Workflow (`workflow.md`)
 
 **Development and operational workflows:**
 
 **Research Development Process:**
+
 - Project initialization
 - Iterative development cycles
 - Testing and validation procedures
 - Documentation maintenance
 
 **Quality Assurance:**
+
 - Code review processes
 - Testing requirements and standards
 - Performance benchmarking
 - Security considerations
 
 **Collaboration Workflows:**
+
 - Multi-developer coordination
 - Branch management strategies
 - Pull request procedures
@@ -94,13 +104,15 @@ docs/core/
 ### Layered Information Architecture
 
 **Progressive Disclosure:**
-- **HOW_TO_USE.md**: Practical, step-by-step instructions
-- **ARCHITECTURE.md**: Design principles and system structure
-- **WORKFLOW.md**: Operational procedures and best practices
+
+- **how-to-use.md**: Practical, step-by-step instructions
+- **architecture.md**: Design principles and system structure
+- **workflow.md**: Operational procedures and best practices
 
 **Information Flow:**
+
 ```
-HOW_TO_USE.md → ARCHITECTURE.md → WORKFLOW.md
+how-to-use.md → architecture.md → workflow.md
    ↓               ↓                   ↓
 Practical       Design             Operational
 Usage         Understanding       Excellence
@@ -109,6 +121,7 @@ Usage         Understanding       Excellence
 ### Show, Don't Tell
 
 **Practical Examples:**
+
 ```bash
 # Good: command with context
 $ python3 scripts/03_render_pdf.py
@@ -121,6 +134,7 @@ open output/code_project/pdf/code_project_combined.pdf
 ```
 
 **Implementation Details:**
+
 ```python
 # Good: Real, working code examples
 from infrastructure.core import load_config
@@ -141,18 +155,21 @@ print(f"Title: {project_title}")
 ### Two-Layer Architecture
 
 **Infrastructure Layer (Generic):**
+
 - Reusable across research projects
 - Domain-independent utilities
 - testing (60%+ coverage)
 - Stable, version-controlled APIs
 
 **Project Layer (Domain-Specific):**
+
 - Custom research algorithms
 - Project-specific analysis
 - High testing standards (90%+ coverage)
 - Flexible and adaptable
 
 **Layer Interaction:**
+
 ```python
 # Infrastructure provides utilities
 from infrastructure.core import get_logger, load_config
@@ -179,12 +196,14 @@ def main():
 ### Thin Orchestrator Pattern
 
 **Pattern Principles:**
+
 - Business logic in dedicated modules
 - Scripts handle coordination only
 - Clear separation of concerns
 - Testable, maintainable code
 
 **Implementation Example:**
+
 ```python
 # analysis_pipeline.py (orchestrator script)
 from project.src.data_processing import process_research_data
@@ -212,6 +231,7 @@ if __name__ == "__main__":
 ### Basic Research Workflow
 
 **1. Project Setup:**
+
 ```bash
 # Initialize project structure
 mkdir my_research_project
@@ -223,6 +243,7 @@ vim project/manuscript/config.yaml
 ```
 
 **2. Content Development:**
+
 ```bash
 # Write research content
 vim project/manuscript/01_introduction.md
@@ -233,6 +254,7 @@ vim project/src/analysis.py
 ```
 
 **3. Testing and Validation:**
+
 ```bash
 # Run tests
 python3 scripts/01_run_tests.py
@@ -247,6 +269,7 @@ python3 scripts/04_validate_output.py
 ### Advanced Research Workflow
 
 **Parallel Development:**
+
 ```bash
 # Multiple analysis scripts
 python3 project/scripts/data_analysis.py &
@@ -259,6 +282,7 @@ python3 scripts/03_render_pdf.py
 ```
 
 **Continuous Integration:**
+
 ```bash
 # Automated testing
 python3 scripts/01_run_tests.py
@@ -275,11 +299,13 @@ python3 scripts/05_copy_outputs.py
 ### Configuration Hierarchy
 
 **Priority Order:**
+
 1. Environment variables (highest priority)
 2. Configuration files (`project/manuscript/config.yaml`)
 3. Default values (lowest priority)
 
 **Configuration Example:**
+
 ```yaml
 # project/manuscript/config.yaml
 paper:
@@ -297,6 +323,7 @@ publication:
 ```
 
 **Environment Override:**
+
 ```bash
 export AUTHOR_NAME="Dr. Jane Smith"
 export PROJECT_TITLE="Updated Research Title"
@@ -308,12 +335,14 @@ export LOG_LEVEL=0  # Debug mode
 ### Testing Standards
 
 **Coverage Requirements:**
+
 - Project code: 90% minimum coverage
 - Infrastructure code: 60% minimum coverage
 - Integration tests for end-to-end workflows
 - data analysis (no mocks)
 
 **Testing Workflow:**
+
 ```python
 # test example
 def test_research_algorithm():
@@ -334,6 +363,7 @@ def test_research_algorithm():
 ### Validation Procedures
 
 **Output Validation:**
+
 ```python
 # PDF validation
 from infrastructure.validation import validate_pdf_rendering
@@ -354,6 +384,7 @@ assert len(issues['errors']) == 0
 ### Common Issues
 
 **Configuration Problems:**
+
 ```bash
 # Check configuration loading
 python3 -c "
@@ -365,6 +396,7 @@ print(f'Author: {config.get(\"author_name\")}')
 ```
 
 **Build Failures:**
+
 ```bash
 # Debug build process
 LOG_LEVEL=0 python3 scripts/03_render_pdf.py
@@ -375,9 +407,10 @@ tlmgr list --only-installed | grep multirow
 ```
 
 **Test Failures:**
+
 ```bash
 # Run specific failing test
-pytest proje../../tests/test_analysis.py::TestAnalysis::test_algorithm -v
+pytest projects/{name}/tests/test_analysis.py::TestAnalysis::test_algorithm -v
 
 # Check test data integrity
 python3 -c "
@@ -391,6 +424,7 @@ print(f'Columns: {list(data.columns)}')
 ### Debug Procedures
 
 **System State Inspection:**
+
 ```python
 # Check system components
 from infrastructure.core import environment
@@ -401,6 +435,7 @@ for component, state in status.items():
 ```
 
 **Log Analysis:**
+
 ```bash
 # Search for errors in logs
 grep "ERROR" output/logs/*.log
@@ -414,6 +449,7 @@ tail -50 output/logs/rendering.log
 ### Profiling Techniques
 
 **Code Profiling:**
+
 ```python
 import cProfile
 from project.src.analysis import run_analysis
@@ -428,6 +464,7 @@ stats.sort_stats('cumulative').print_stats(20)
 ```
 
 **Memory Optimization:**
+
 ```python
 from memory_profiler import profile
 
@@ -445,6 +482,7 @@ process_large_dataset('large_dataset.csv')
 ### Performance Monitoring
 
 **System Resources:**
+
 ```python
 from infrastructure.core import get_system_resources
 
@@ -459,6 +497,7 @@ print(f"Available Memory: {resources['memory_available']:.1f}GB")
 ### External Tool Integration
 
 **Data Analysis Integration:**
+
 ```python
 # Integrate with analysis libraries
 import numpy as np
@@ -486,6 +525,7 @@ class AdvancedAnalyzer(StatisticalAnalyzer):
 ### API Integration
 
 **Publishing Integration:**
+
 ```python
 from infrastructure.publishing import publish_to_zenodo
 
@@ -511,11 +551,13 @@ print(f"Published with DOI: {result['doi']}")
 ## See Also
 
 **Related Documentation:**
+
 - [`../guides/`](../guides/) - Usage guides for different skill levels
 - [`../operational/`](../operational/) - Operational procedures and troubleshooting
 - [`../development/`](../development/) - Development and contribution guidelines
 
 **System Documentation:**
+
 - [`../AGENTS.md`](../AGENTS.md) - system overview
-- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - Documentation index
+- [`../documentation-index.md`](../documentation-index.md) - Documentation index
 - [`../../AGENTS.md`](../../AGENTS.md) - Root system documentation

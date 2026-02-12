@@ -969,10 +969,10 @@ python3 -m infrastructure.validation.cli pdf output/code_project/pdf/
 
 ### Quick Reference
 
-- **General Troubleshooting**: [`docs/operational/TROUBLESHOOTING_GUIDE.md`](docs/operational/TROUBLESHOOTING_GUIDE.md)
-- **LLM Review Issues**: [`docs/operational/LLM_REVIEW_TROUBLESHOOTING.md`](docs/operational/LLM_REVIEW_TROUBLESHOOTING.md)
-- **Checkpoint/Resume**: [`docs/operational/CHECKPOINT_RESUME.md`](docs/operational/CHECKPOINT_RESUME.md)
-- **Performance Issues**: [`docs/operational/PERFORMANCE_OPTIMIZATION.md`](docs/operational/PERFORMANCE_OPTIMIZATION.md)
+- **General Troubleshooting**: [`docs/operational/troubleshooting-guide.md`](docs/operational/troubleshooting-guide.md)
+- **LLM Review Issues**: [`docs/operational/llm-review-troubleshooting.md`](docs/operational/llm-review-troubleshooting.md)
+- **Checkpoint/Resume**: [`docs/operational/checkpoint-resume.md`](docs/operational/checkpoint-resume.md)
+- **Performance Issues**: [`docs/operational/performance-optimization.md`](docs/operational/performance-optimization.md)
 
 ### Common Issues
 
@@ -1142,7 +1142,7 @@ python3 -c "from pathlib import Path; from infrastructure.core.file_operations i
 - **Performance Monitoring**: Automatic bottleneck detection in pipeline summary
 - **Resource Tracking**: Memory and CPU usage reporting (when enabled)
 
-See [`docs/operational/PERFORMANCE_OPTIMIZATION.md`](docs/operational/PERFORMANCE_OPTIMIZATION.md) for optimization guide.
+See [`docs/operational/performance-optimization.md`](docs/operational/performance-optimization.md) for optimization guide.
 
 ### Checkpoint and Resume
 
@@ -1165,16 +1165,16 @@ python3 scripts/execute_pipeline.py --project code_project --core-only
 - Graceful handling of corrupted checkpoints
 - Preserves pipeline start time and stage durations
 
-See [`docs/operational/CHECKPOINT_RESUME.md`](docs/operational/CHECKPOINT_RESUME.md) for documentation.
+See [`docs/operational/checkpoint-resume.md`](docs/operational/checkpoint-resume.md) for documentation.
 
 ## 📚 References
 
 ### Internal Documentation
 
 - [`README.md`](README.md) - Project overview and quick start
-- [`docs/core/HOW_TO_USE.md`](docs/core/HOW_TO_USE.md) - Usage guide
-- [`docs/core/ARCHITECTURE.md`](docs/core/ARCHITECTURE.md) - System design details
-- [`docs/core/WORKFLOW.md`](docs/core/WORKFLOW.md) - Development workflow
+- [`docs/core/how-to-use.md`](docs/core/how-to-use.md) - Usage guide
+- [`docs/core/architecture.md`](docs/core/architecture.md) - System design details
+- [`docs/core/workflow.md`](docs/core/workflow.md) - Development workflow
 - [`projects/README.md`](projects/README.md) - Multi-project management guide
 
 ### External Resources

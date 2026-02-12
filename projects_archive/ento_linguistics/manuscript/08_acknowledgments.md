@@ -1,39 +1,23 @@
 # Acknowledgments {#sec:acknowledgments}
 
-We gratefully acknowledge the contributions of many individuals and institutions that made this research possible.
+We gratefully acknowledge the contributions of individuals and institutions that made this research possible.
 
-## Funding
+## Institutional Support
 
-This work was supported by internal research funding from the Department of Philosophy and the interdisciplinary Center for Science and Technology Studies. No external funding was received for this research.
-
-## Computing Resources
-
-Computational resources were provided by the University Research Computing Center, enabling the large-scale text analysis experiments reported in Section \ref{sec:experimental_results}.
+This work was conducted at the Active Inference Institute. We thank the Institute for providing the research environment and collaborative infrastructure that supported the development of the Ento-Linguistic framework.
 
 ## Collaborations
 
-We thank our collaborators for valuable discussions and feedback throughout the development of this work:
-
-- The Entomology Department for access to historical literature collections
-- The Computational Linguistics Laboratory for methodological guidance
-- The Science Communication Research Group for theoretical frameworks
+We thank colleagues and collaborators for valuable discussions and feedback throughout the development of this work, particularly regarding the theoretical framework for understanding constitutive effects of scientific language and the design of the mixed-methodology approach.
 
 ## Data and Software
 
 This research builds upon open-source software tools and publicly available datasets. We acknowledge:
 
 - Python scientific computing stack (NumPy, SciPy, Matplotlib, NetworkX)
-- Natural Language Toolkit (NLTK) and spaCy for text processing
+- Natural Language Toolkit (NLTK) for text processing and scikit-learn for validation
 - LaTeX and Pandoc for document preparation
-- PubMed and arXiv for access to scientific literature
-
-## Feedback and Review
-
-We are grateful to the colleagues who provided pre-submission feedback on this manuscript, particularly regarding the theoretical framework for understanding constitutive effects of scientific language and the design of the mixed-methodology approach.
-
-## Institutional Support
-
-This research was conducted with the support of the University research infrastructure, providing access to digital library resources and academic computing facilities essential to this work.
+- Published entomological literature informing the domain terminology seeds
 
 ---
 

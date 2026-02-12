@@ -2,7 +2,7 @@
 
 > **Best practices, workflows, and project management** guides
 
-**Quick Reference:** [Best Practices](BEST_PRACTICES.md) | [Version Control](VERSION_CONTROL.md) | [Multi-Project Management](MULTI_PROJECT_MANAGEMENT.md)
+**Quick Reference:** [Best Practices](best-practices.md) | [Version Control](version-control.md) | [Multi-Project Management](multi-project-management.md)
 
 ## Purpose
 
@@ -12,38 +12,38 @@ The `best-practices/` directory contains consolidated best practices, project ma
 
 | File | Purpose | Audience |
 |------|---------|----------|
-| [`BEST_PRACTICES.md`](BEST_PRACTICES.md) | Consolidated best practices compilation | All users |
-| [`VERSION_CONTROL.md`](VERSION_CONTROL.md) | Git workflows and version control | Developers |
-| [`MULTI_PROJECT_MANAGEMENT.md`](MULTI_PROJECT_MANAGEMENT.md) | Managing multiple projects | Developers |
-| [`MIGRATION_GUIDE.md`](MIGRATION_GUIDE.md) | Migration from other templates | Developers |
-| [`BACKUP_RECOVERY.md`](BACKUP_RECOVERY.md) | Backup strategies and recovery | All users |
+| [`best-practices.md`](best-practices.md) | Consolidated best practices compilation | All users |
+| [`version-control.md`](version-control.md) | Git workflows and version control | Developers |
+| [`multi-project-management.md`](multi-project-management.md) | Managing multiple projects | Developers |
+| [`migration-guide.md`](migration-guide.md) | Migration from other templates | Developers |
+| [`backup-recovery.md`](backup-recovery.md) | Backup strategies and recovery | All users |
 
 ## Quick Navigation
 
 ### Learning Best Practices
-→ Read **[Best Practices](BEST_PRACTICES.md)** - Consolidated practices
+→ Read **[Best Practices](best-practices.md)** - Consolidated practices
 
 ### Git Workflows
-→ Follow **[Version Control](VERSION_CONTROL.md)** - Git best practices
+→ Follow **[Version Control](version-control.md)** - Git best practices
 
 ### Managing Multiple Projects
-→ Use **[Multi-Project Management](MULTI_PROJECT_MANAGEMENT.md)** - Multi-project setup
+→ Use **[Multi-Project Management](multi-project-management.md)** - Multi-project setup
 
 ### Migrating from Another Template
-→ Follow **[Migration Guide](MIGRATION_GUIDE.md)** - Step-by-step migration
+→ Follow **[Migration Guide](migration-guide.md)** - Step-by-step migration
 
 ### Backup and Recovery
-→ Review **[Backup Recovery](BACKUP_RECOVERY.md)** - Backup strategies
+→ Review **[Backup Recovery](backup-recovery.md)** - Backup strategies
 
 ## Related Documentation
 
-- **[`../core/WORKFLOW.md`](../core/WORKFLOW.md)** - Development workflow
-- **[`../development/CONTRIBUTING.md`](../development/CONTRIBUTING.md)** - Contribution guidelines
-- **[`../operational/CONFIGURATION.md`](../operational/CONFIGURATION.md)** - Configuration guide
+- **[`../core/workflow.md`](../core/workflow.md)** - Development workflow
+- **[`../development/contributing.md`](../development/contributing.md)** - Contribution guidelines
+- **[`../operational/configuration.md`](../operational/configuration.md)** - Configuration guide
 
 ## See Also
 
-- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - documentation index
+- [`../documentation-index.md`](../documentation-index.md) - documentation index
 - [`../README.md`](../README.md) - Documentation hub overview
 
 

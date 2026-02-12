@@ -766,4 +766,4 @@ print(f"Prompt length: {len(prompt)} characters")
 **System Documentation:**
 
 - [`../../../AGENTS.md`](../../../AGENTS.md) - system overview
-- [`../../../docs/development/CONTRIBUTING.md`](../../../docs/development/CONTRIBUTING.md) - Template development guide
+- [`../../../docs/development/contributing.md`](../../../docs/development/contributing.md) - Template development guide

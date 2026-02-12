@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>02_introduction</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h1 id="introduction">Introduction: The Threshold</h1>
+<blockquote>
+<p><em>“If the doors of perception were cleansed every thing would
+appear to man as it is: infinite. For man has closed himself up, till he
+sees all things thro’ narrow chinks of his cavern.”</em></p>
+<p>— Blake, <em>Marriage of Heaven and Hell</em>, Plate 14 <span
+class="citation"
+data-cites="blake1790marriage">[@blake1790marriage]</span></p>
+</blockquote>
+<h2 id="threshold">The Threshold</h2>
+<p>Between perceiver and perceived lies a boundary. Blake called it a
+door. In causal inference, that boundary may be called a blanket. The
+exoteric syntax differs; the esoteric semantics does not.</p>
+<p>William Blake (1757–1827) composed his prophetic works during the
+consolidation of Newtonian mechanism—the reduction of cosmos to
+clockwork, of vision to optics, of mind to matter arranged <span
+class="citation" data-cites="raine1968blake">[@raine1968blake]</span>.
+His response was not retreat into mysticism but a vigorous
+<em>expansion</em>: a fourfold epistemology that could contain Newton’s
+single vision while transcending it.</p>
+<p>The Active Inference framework, developed by a growing community of
+researchers worldwide, offers a formal complement to Blake’s insights.
+The free energy principle formalizes how self-organizing systems
+maintain existence by minimizing prediction error <span class="citation"
+data-cites="friston2010free">[@friston2010free]</span>. Perception and
+action unite in a single imperative—to reduce the gap between
+expectation and evidence.</p>
+<p>This paper explores how Blake’s intuitions and Active Inference’s
+equations resonate. The former prophesied; the latter formalizes. We do
+not claim that Blake was a proto-Bayesian statistician, nor that Active
+Inference is a “Blakean” science, but rather that both systems grapple
+with the same fundamental problem: how a bounded agent maintains its
+existence and makes sense of an infinite world. We offer a <em>synthetic
+juxtapositional intelligence</em>—placing the poet’s vision alongside
+the physicist’s variables to reveal the structural identity of their
+insights.</p>
+<p>The spirit of this enterprise owes something to Hesse’s <em>Glass
+Bead Game</em>: an abstract synthesis of all arts and sciences, where
+the player discovers hidden affinities between seemingly unrelated
+disciplines <span class="citation"
+data-cites="hesse1943glass">[@hesse1943glass]</span>. Like Hesse’s
+Castalian scholars, we do not seek to reduce one tradition to the other,
+but to illuminate the structural resonances that emerge when both are
+held in the same contemplative field.</p>
+<p>This synthesis arrives at a moment of convergence. On one side,
+predictive processing and active inference are being applied with
+increasing sophistication to aesthetics and literary engagement—most
+notably in the 2024 <em>Philosophical Transactions of the Royal Society
+B</em> theme issue on art and predictive processing <span
+class="citation"
+data-cites="vandecruys2024order">[@vandecruys2024order]</span>, and in
+Kukkonen’s work modeling literary experience through prediction error
+<span class="citation"
+data-cites="kukkonen2020probability">[@kukkonen2020probability]</span>.
+On the other, cognitive approaches to Romanticism are deepening:
+Savarese’s <em>Romanticism’s Other Minds</em> <span class="citation"
+data-cites="savarese2020romanticism">[@savarese2020romanticism]</span>
+reveals a “prehistory of cognitive approaches to literature” within the
+Romantic tradition itself. Our paper sits at the intersection of these
+two currents, offering what neither can alone: the formal mathematics
+that makes the poetic claim testable, and the phenomenological richness
+that makes the formalism legible.</p>
+<h2 id="correspondences">The Correspondences</h2>
+<p>Eight thematic correspondences anchor our synthesis (see <a
+href="#tbl-themes">Thematic Atlas</a>):</p>
+<table id="tbl-themes">
+<caption>Thematic Atlas: Structural correspondences between Blake’s
+visionary phenomenology and Active Inference.</caption>
+<thead>
+<tr>
+<th style="text-align: left;">Theme</th>
+<th style="text-align: left;">Blake’s Term</th>
+<th style="text-align: left;">Active Inference Term</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Boundary</strong></td>
+<td style="text-align: left;">Doors of Perception</td>
+<td style="text-align: left;">Markov Blanket</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Vision</strong></td>
+<td style="text-align: left;">Fourfold Vision</td>
+<td style="text-align: left;">Hierarchical Processing</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>States</strong></td>
+<td style="text-align: left;">Newton’s Sleep</td>
+<td style="text-align: left;">Prior Dominance</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Imagination</strong></td>
+<td style="text-align: left;">Human Existence</td>
+<td style="text-align: left;">Generative Model</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Time</strong></td>
+<td style="text-align: left;">Eternity in an Hour</td>
+<td style="text-align: left;">Temporal Horizons</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Space</strong></td>
+<td style="text-align: left;">World in a Grain of Sand</td>
+<td style="text-align: left;">Spatial Inference</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Action</strong></td>
+<td style="text-align: left;">Cleansing</td>
+<td style="text-align: left;">Free Energy Minimization</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Collectives</strong></td>
+<td style="text-align: left;">Building Jerusalem</td>
+<td style="text-align: left;">Shared Generative Models</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><em>“May God us keep / From Single vision &amp; Newton’s
+sleep!”</em></p>
+<p>— Blake, Letter to Butts, November 1802 <span class="citation"
+data-cites="blake1802butts">[@blake1802butts]</span></p>
+</blockquote>
+<h2 id="method">Method</h2>
+<p>We proceed now through three main movements:</p>
+<ul>
+<li><strong>§2</strong>: Related scholarship: Blake and cognition,
+Romanticism and neuroscience, situating our contribution</li>
+<li><strong>§3</strong>: Theoretical Foundations: free energy, Markov
+blankets, precision</li>
+<li><strong>§4</strong>: Synthesis: eight themed correspondences with
+equations and figures</li>
+</ul>
+<p>Each theme in our synthesis (<a href="#tbl-themes">Thematic
+Atlas</a>) begins with Blake’s fire, then traces its mathematical
+shadow. The conclusion (<a href="#implications">§5–6</a>) draws
+implications for philosophy of mind, cognitive science, and creativity,
+while engaging counter-arguments and acknowledging limitations.</p>
+</body>
+</html>

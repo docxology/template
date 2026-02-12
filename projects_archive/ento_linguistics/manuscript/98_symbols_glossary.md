@@ -49,3 +49,25 @@ This glossary defines the mathematical notation and domain-specific terminology 
 | Economic | Use of market, trade, or resource-investment language for biological processes |
 | Kinship-based | Application of human family/relatedness concepts |
 | Technological | Use of mechanistic or engineering metaphors |
+
+## Supplemental Symbols
+
+| Symbol | Description | First Use |
+|--------|------------|-----------|
+| $S(t)$ | Term extraction score combining TF-IDF, domain relevance, and linguistic features | Eq. \ref{eq:term_extraction_score} |
+| $A(t)$ | Ambiguity score based on contextual entropy and meaning dispersion | Eq. \ref{eq:ambiguity_score} |
+| $F(D, T)$ | Discursive framing network function for domain $D$ and term set $T$ | Eq. \ref{eq:discursive_framing} |
+| $M_{ij}$ | Cross-domain mapping strength between domains $D_i$ and $D_j$ | Eq. \ref{eq:cross_domain_mapping} |
+| $\Delta G(t)$ | Temporal network evolution (graph change over time) | Eq. \ref{eq:temporal_network_evolution} |
+
+## Pipeline Modules
+
+| Module | File | Function |
+|--------|------|----------|
+| Text Processing | `src/text_analysis.py` | Tokenization, normalization, feature extraction |
+| Term Extraction | `src/term_extraction.py` | Domain-aware terminology identification |
+| Domain Analysis | `src/domain_analysis.py` | Per-domain framing and ambiguity analysis |
+| Conceptual Mapping | `src/conceptual_mapping.py` | Cross-domain concept graph construction |
+| Discourse Analysis | `src/discourse_analysis.py` | Framing detection and classification |
+| Statistics | `src/statistics.py` | Statistical validation utilities |
+| Visualization | `src/concept_visualization.py` | Network and domain-specific figure generation |

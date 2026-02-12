@@ -16,17 +16,17 @@ from typing import Any, Dict, List, Optional
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root / "src"))
 
-from concept_visualization import ConceptVisualizer
-from conceptual_mapping import ConceptualMapper
-from discourse_analysis import DiscourseAnalyzer
-from domain_analysis import DomainAnalyzer
-from literature_mining import LiteratureCorpus, mine_entomology_literature
-from term_extraction import TerminologyExtractor
-from text_analysis import TextProcessor
+from visualization.concept_visualization import ConceptVisualizer
+from analysis.conceptual_mapping import ConceptualMapper
+from analysis.discourse_analysis import DiscourseAnalyzer
+from analysis.domain_analysis import DomainAnalyzer
+from data.literature_mining import LiteratureCorpus, mine_entomology_literature
+from analysis.term_extraction import TerminologyExtractor
+from analysis.text_analysis import TextProcessor
 
-from utils.logging import get_logger
+from core.logging import get_logger
 # Directory creation handled inline
-from utils.figure_manager import FigureManager
+from visualization.figure_manager import FigureManager
 
 logger = get_logger(__name__)
 
@@ -408,17 +408,23 @@ class LiteratureAnalysisPipeline:
         )
         figures["concept_map"] = concept_fig
 
-        # Terminology network
-        # Create mock relationships for demonstration (would be computed from co-occurrence)
-        mock_relationships = {}
-        term_list = list(terms.keys())[:20]  # Limit for visualization
-        for i, term1 in enumerate(term_list):
-            for term2 in term_list[i + 1 : i + 3]:  # Connect to next 2 terms
-                mock_relationships[(term1, term2)] = 0.5
+        # Terminology network — compute relationships from shared domains
+        import numpy as np
+        co_occurrence = {}
+        term_list = list(terms.items())[:30]  # Limit for visualization
+        for i, (t1_name, t1_obj) in enumerate(term_list):
+            for j in range(i + 1, len(term_list)):
+                t2_name, t2_obj = term_list[j]
+                shared = set(t1_obj.domains) & set(t2_obj.domains)
+                if shared:
+                    union_size = len(set(t1_obj.domains) | set(t2_obj.domains))
+                    weight = len(shared) / union_size if union_size else 0.0
+                    if weight > 0.2:
+                        co_occurrence[(t1_name, t2_name)] = weight
 
         network_fig = visualizer.visualize_terminology_network(
             list(terms.items()),
-            mock_relationships,
+            co_occurrence,
             filepath=self.figures_dir / "terminology_network.png",
         )
         figures["terminology_network"] = network_fig
@@ -438,23 +444,52 @@ class LiteratureAnalysisPipeline:
 
         # Domain comparison
         if domain_analyses:
-            # Extract domain statistics
+            # Extract domain statistics from real analysis objects
             domain_stats = {}
             for domain_name, analysis in domain_analyses.items():
                 # Handle both DomainAnalysis objects and dicts
                 if isinstance(analysis, dict):
                     key_terms = analysis.get("key_terms", [])
+                    confidence_scores = analysis.get("confidence_scores", {})
+                    ambiguity_metrics = analysis.get("ambiguity_metrics", {})
                 else:
-                    # Assume it's a DomainAnalysis object with key_terms attribute
                     key_terms = getattr(analysis, "key_terms", [])
+                    confidence_scores = getattr(analysis, "confidence_scores", {})
+                    ambiguity_metrics = getattr(analysis, "ambiguity_metrics", {})
+
+                # Compute real average confidence from analysis scores
+                if confidence_scores:
+                    avg_conf = float(np.mean(list(confidence_scores.values())))
+                else:
+                    avg_conf = 0.0
+
+                # Compute real ambiguity score from ambiguity metrics
+                ambiguity_score = (
+                    ambiguity_metrics.get("domain_metrics", {}).get(
+                        "average_ambiguity_score",
+                        ambiguity_metrics.get("domain_metrics", {}).get(
+                            "average_context_diversity", 0.0
+                        ),
+                    )
+                    if ambiguity_metrics
+                    else 0.0
+                )
+
+                # Find bridging terms (terms in multiple domains)
+                bridging = set()
+                for term_text in key_terms:
+                    term_obj = terms.get(term_text)
+                    if term_obj and len(term_obj.domains) > 1:
+                        bridging.add(term_text)
 
                 domain_stats[domain_name] = {
                     "term_count": len(key_terms),
                     "total_frequency": sum(
                         getattr(terms.get(term), "frequency", 0) for term in key_terms
                     ),
-                    "avg_confidence": 0.8,  # Mock value
-                    "bridging_terms": set(),  # Would be computed
+                    "avg_confidence": avg_conf,
+                    "bridging_terms": bridging,
+                    "ambiguity_score": ambiguity_score,
                 }
 
             comparison_fig = visualizer.create_domain_comparison_plot(

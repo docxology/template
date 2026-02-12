@@ -666,4 +666,4 @@ def audit_templates(self) -> Dict[str, List[str]]:
 **System Documentation:**
 
 - [`../../../../AGENTS.md`](../../../../AGENTS.md) - system overview
-- [`../../../../docs/usage/MARKDOWN_TEMPLATE_GUIDE.md`](../../../../docs/usage/MARKDOWN_TEMPLATE_GUIDE.md) - Template usage guide
+- [`../../../../docs/usage/markdown-template-guide.md`](../../../../docs/usage/markdown-template-guide.md) - Template usage guide

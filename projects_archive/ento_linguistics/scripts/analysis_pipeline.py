@@ -28,11 +28,11 @@ sys.path.insert(0, str(project_root / "src"))
 sys.path.insert(0, str(repo_root))
 
 # Local logging
-from src.utils.logging import (get_logger, log_progress_bar, log_stage,
-                               log_substep)
-from src.utils.reporting import (generate_pipeline_report,
-                                 get_error_aggregator, save_pipeline_report)
-from src.utils.validation import verify_output_integrity
+from core.logging import (get_logger, log_progress_bar, log_stage,
+                           log_substep)
+from pipeline.reporting import (generate_pipeline_report,
+                              get_error_aggregator, save_pipeline_report)
+from core.validation_utils import verify_output_integrity
 
 logger = get_logger(__name__)
 
@@ -101,7 +101,7 @@ Examples:
 
 
 # Import local utilities
-from src.utils.figure_manager import FigureManager
+from visualization.figure_manager import FigureManager
 
 # Directory creation handled inline
 

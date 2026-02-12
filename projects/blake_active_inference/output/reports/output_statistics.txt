@@ -1,0 +1,38 @@
+
+OUTPUT STATISTICS REPORT
+============================================================
+
+Output Directory: /Users/4d/Documents/GitHub/template/output/blake_active_inference
+
+Total Files: 156
+Total Size: 11.51 MB
+
+Files by Category:
+  • pdf: 9 files (4.54 MB)
+  • web: 18 files (0.63 MB)
+  • slides: 113 files (2.52 MB)
+  • figures: 11 files (3.82 MB)
+  • reports: 4 files (0.01 MB)
+  • logs: 1 files (0.00 MB)
+
+Largest Files:
+  • blake_active_inference_combined.pdf: 4.06 MB (pdf)
+  • 04h_collectives_slides.pdf: 0.83 MB (slides)
+  • the_four_zoas_egg_color.jpg: 0.62 MB (figures)
+  • fig5_four_zoas.png: 0.49 MB (figures)
+  • fig3_perception_action_cycle.png: 0.49 MB (figures)
+
+Missing Expected Files:
+  ⚠  blake_active_inference_combined.pdf or project_combined.pdf
+
+File Types:
+  • .log: 18 file(s)
+  • .aux: 17 file(s)
+  • .tex: 17 file(s)
+  • .toc: 17 file(s)
+  • .pdf: 17 file(s)
+  • .html: 17 file(s)
+  • .nav: 16 file(s)
+  • .snm: 16 file(s)
+  • .png: 8 file(s)
+  • .md: 4 file(s)

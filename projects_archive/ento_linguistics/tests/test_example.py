@@ -1,7 +1,7 @@
 """Comprehensive tests for the example module to ensure 100% coverage."""
 
 import pytest
-from example import (add_numbers, calculate_average, find_maximum,
+from src.core.example import (add_numbers, calculate_average, find_maximum,
                      find_minimum, is_even, is_odd, multiply_numbers)
 
 

@@ -33,12 +33,14 @@ When modularizing or restructuring:
 **Maximum file length**: 600 lines (excluding docstrings)
 
 **When to split a file**:
+
 - Multiple independent classes/functions that could be separate modules
 - Mixed concerns that would benefit from separation
 - File exceeds 600 lines of actual code
 
 **How to split**:
-```
+
+```text
 old_module.py (835 lines)
   ↓
 new_structure/
@@ -52,12 +54,14 @@ new_structure/
 ### Import Updates
 
 **Before refactoring**, search for all imports:
+
 ```bash
 grep -r "from old_module import" .
 grep -r "import old_module" .
 ```
 
 **After refactoring**, update all imports:
+
 - Infrastructure modules
 - Test files
 - Scripts
@@ -66,6 +70,7 @@ grep -r "import old_module" .
 ### Documentation Updates
 
 Update in this order:
+
 1. Module docstrings in files
 2. `__init__.py` exports with clear API
 3. `AGENTS.md` with new architecture
@@ -82,6 +87,7 @@ Update in this order:
 ### Example: Modularizing a Large File
 
 **Bad** (backward compatibility approach):
+
 ```python
 # old_api.py
 import warnings
@@ -91,6 +97,7 @@ warnings.warn("Use new_module instead", DeprecationWarning)
 ```
 
 **Good** (clean break approach):
+
 ```python
 # Delete old_api.py completely
 # Update all imports:
@@ -145,4 +152,3 @@ Before marking refactoring:
 5. **Documentation**: Documentation stays current
 6. **Testing**: Tests reflect actual usage
 7. **Simplicity**: Codebase easier to understand
-

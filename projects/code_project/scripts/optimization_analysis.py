@@ -599,11 +599,11 @@ def generate_complexity_visualization(results):
         y=1.02,
     )
 
-    # Consistent color palette
-    bar_color = "#1f77b4"
-    success_color = "#2ca02c"
-    fail_color = "#d62728"
-    theory_color = "#ff7f0e"
+    # Use VIZ_CONFIG colorblind-safe palette
+    bar_color = VIZ_CONFIG["colors"]["primary"]
+    success_color = VIZ_CONFIG["colors"]["success"]
+    fail_color = VIZ_CONFIG["colors"]["error"]
+    theory_color = VIZ_CONFIG["colors"]["secondary"]
 
     # (1) Empirical iterations
     bars1 = ax1.bar(
@@ -689,7 +689,7 @@ def generate_complexity_visualization(results):
         range(len(step_sizes)),
         performance_scores,
         tick_label=[f"α={s}" for s in step_sizes],
-        color="#9467bd",
+        color=VIZ_CONFIG["colors"]["quaternary"],
         alpha=0.85,
     )
     ax4.set_xlabel("Step Size", fontsize=11, fontweight="medium")
@@ -863,17 +863,23 @@ def generate_stability_visualization(stability_path):
 
     # Stability score gauge
     stability_score = stability_data["stability_score"]
-    colors = ["red", "orange", "yellow", "lightgreen", "green"]
+    colors = [
+        VIZ_CONFIG["colors"]["error"],
+        VIZ_CONFIG["colors"]["secondary"],
+        VIZ_CONFIG["colors"]["warning"],
+        VIZ_CONFIG["colors"]["tertiary"],
+        VIZ_CONFIG["colors"]["success"],
+    ]
     color_idx = min(int(stability_score * len(colors)), len(colors) - 1)
 
     ax1.pie(
         [stability_score, 1 - stability_score],
-        colors=[colors[color_idx], "lightgray"],
+        colors=[colors[color_idx], VIZ_CONFIG["colors"]["neutral"]],
         startangle=90,
         counterclock=False,
     )
-    ax1.text(0, 0, "Stable", ha="center", va="center", fontsize=12, fontweight="bold")
-    ax1.set_title("Numerical Stability Score")
+    ax1.text(0, 0, "Stable", ha="center", va="center", fontsize=VIZ_CONFIG["fonts"]["tick_label"], fontweight="bold")
+    ax1.set_title("Numerical Stability Score", fontsize=VIZ_CONFIG["fonts"]["title"])
 
     # Recommendations text
     recommendations_text = "\n".join(stability_data["recommendations"][:3])  # Top 3
@@ -881,7 +887,7 @@ def generate_stability_visualization(stability_path):
         0.1,
         0.9,
         "Recommendations:",
-        fontsize=12,
+        fontsize=VIZ_CONFIG["fonts"]["tick_label"],
         fontweight="bold",
         transform=ax2.transAxes,
         va="top",
@@ -890,7 +896,7 @@ def generate_stability_visualization(stability_path):
         0.1,
         0.8,
         recommendations_text,
-        fontsize=10,
+        fontsize=VIZ_CONFIG["fonts"]["annotation"],
         transform=ax2.transAxes,
         va="top",
         wrap=True,
@@ -936,7 +942,7 @@ def generate_benchmark_visualization(benchmark_path):
     metrics = ["Execution Time", "Memory Usage"]
     values = [benchmark_data["execution_time"], benchmark_data["memory_usage"] or 0]
 
-    colors = ["skyblue", "lightcoral"]
+    colors = [VIZ_CONFIG["colors"]["primary"], VIZ_CONFIG["colors"]["secondary"]]
     bars = ax.bar(metrics, values, color=colors, alpha=0.7)
 
     ax.set_ylabel("Value")
@@ -1249,7 +1255,8 @@ def main():
         else:
             print(f"WARNING: {msg}")
 
-    log_info("Starting optimization analysis...")
+    if INFRASTRUCTURE_AVAILABLE:
+        log_success("Starting optimization analysis pipeline", logger=logger)
     log_info(f"Project root: {project_root}")
 
     try:
@@ -1390,7 +1397,6 @@ def main():
             log_info(f"Performance data saved to: {perf_path}")
 
         # Log final results
-        log_info("Analysis completed successfully!")
         log_info(f"Generated convergence plot: {convergence_plot}")
         log_info(f"Generated sensitivity plot: {sensitivity_plot}")
         log_info(f"Generated rate comparison plot: {rate_plot}")
@@ -1406,7 +1412,10 @@ def main():
             log_info(f"Generated validation report: {validation_report_path}")
             log_info("Generated publishing materials and citations")
 
-        log_info("Optimization analysis pipeline completed successfully")
+        if INFRASTRUCTURE_AVAILABLE:
+            log_success("Optimization analysis pipeline completed successfully", logger=logger)
+        else:
+            log_info("Optimization analysis pipeline completed successfully")
 
     except ImportError as e:
         # Handle missing dependencies
@@ -1520,7 +1529,7 @@ def generate_citations_from_metadata(
                 "description", "Optimization algorithm performance analysis"
             ),
             keywords=["optimization", "gradient descent", "numerical analysis"],
-            publication_date="2024-01-01",  # Default date
+            publication_date="2026-01-01",  # Default date
             license="MIT",
         )
 

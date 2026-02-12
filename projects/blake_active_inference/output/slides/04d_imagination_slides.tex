@@ -1,0 +1,310 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}{Imagination: The Generative Model}
+\protect\phantomsection\label{imagination-synthesis}
+\begin{quote}
+\emph{``Man is All Imagination God is Man \& exists in us \& we in
+him''}
+
+--- Annotations to Berkeley's \emph{Siris} {[}@blake1820berkeley{]}
+\end{quote}
+
+\begin{block}{The Generative Model as Self}
+\protect\phantomsection\label{the-generative-model-as-self}
+Blake's claim is radical and recursive: not merely that imagination
+constitutes human existence, but that the relationship between agent and
+model is one of mutual entailment---``exists in us \& we in him.'' The
+generative model does not belong to an agent; the generative model
+\emph{is} the agent. Active Inference formalizes this:
+
+\begin{quote}
+``Consciousness is nothing more than inference about my future; namely,
+the self-evidencing consequences of what I could do.''
+
+--- {[}@friston2018self{]}
+\end{quote}
+
+The self as process, not entity:
+
+\begin{quote}
+``The self is the result of an ongoing predictive process within a
+generative model that is centered onto the organism.''
+
+--- {[}@limanowski2013minimal{]}
+\end{quote}
+
+And the body as probabilistically ``most likely to be me'':
+
+\begin{quote}
+``One's own body is the one which has the highest probability of being
+`me' as other objects are probabilistically less likely to evoke the
+same sensory inputs.''
+
+--- {[}@apps2014free{]}
+\end{quote}
+
+\textbf{Agent identity:}
+
+\begin{equation}\label{eq:agent_identity}
+\text{Self} \equiv p(o, \theta)
+\end{equation}
+
+The generative model defines:
+
+\begin{itemize}
+\tightlist
+\item
+  What counts as inside/outside (blanket structure)
+\item
+  What states are expected (prior beliefs)
+\item
+  What observations mean (likelihood mapping)
+\item
+  What actions are available (policy repertoire)
+\end{itemize}
+
+Without model, no agent. The self \emph{is} the generative model
+(Equation \ref{eq:agent_identity}), bounded by its Markov blanket
+(Equation \ref{eq:conditional_independence}). Seth's ``cybernetic
+Bayesian brain'' makes this explicit: selfhood arises from the brain's
+predictive model of its own body, a ``controlled hallucination''
+grounded in interoceptive and proprioceptive inference
+{[}@seth2014cybernetic{]}. Blake saw this two centuries earlier: ``As a
+man is, so he sees.'' The internal structure determines external
+appearance.
+
+\begin{quote}
+\textbf{Demonstration: Who Is Seeing?}
+
+Close your eyes. Imagine a red rose---its color, curve, scent.
+
+Now ask: \emph{who} is imagining? You might answer ``I am.'' But look
+closer. The generative model that produces ``rose'' \emph{is} the entity
+doing the imagining. There is no homunculus watching the mental screen;
+the screen is the seer.
+
+Blake: ``Man is All Imagination God is Man \& exists in us \& we in
+him.''
+
+The recursive ``in us / we in him'' captures the autopoietic loop: the
+model models itself modeling. No agent exists beneath the model. The
+model \emph{is} the agent.
+\end{quote}
+
+Blake's embodied vision:
+
+\begin{quote}
+\emph{``The Eternal Body of Man is The Imagination, that is, God
+himself, The Divine Body.''}
+
+--- Annotation to Laocoon {[}@blake1826laocoon{]}
+\end{quote}
+
+\begin{quote}
+\emph{``Mental Things are alone Real; what is call'd Corporeal Nobody
+knows of its Dwelling Place; it is in Fallacy \& its Existence an
+Imposture.''}
+
+--- \emph{Vision of the Last Judgment} {[}@blake1810judgment{]}
+\end{quote}
+
+And the constitutive claim:
+
+\begin{quote}
+\emph{``As a man is, so he sees. As the Eye is formed, such are its
+Powers.''}
+
+--- Letter to Dr.~Trusler, 23 August 1799 {[}@blake1799trusler{]}
+\end{quote}
+
+The generative model shapes what can be perceived. The ``formed Eye'' is
+the structure of inference itself.
+
+\begin{quote}
+\emph{``The world of imagination is the world of eternity.''}
+
+--- \emph{Vision of the Last Judgment} {[}@blake1810judgment{]}
+\end{quote}
+\end{block}
+
+\begin{block}{Man Is All Imagination: Autopoiesis and Self-Modeling}
+\protect\phantomsection\label{man-is-all-imagination-autopoiesis-and-self-modeling}
+The recursive structure of Blake's epigraph above---``exists in us \& we
+in him''---is autopoiesis: the agent IS its generative model. ``God in
+us'' = our model of world. ``We in him'' = we are part of what the model
+represents. The nested embedding describes Markov blankets within Markov
+blankets---the recursive self-modeling that constitutes agency.
+
+There is no man ``underneath'' imagination; imagination is what man
+\emph{is}. The generative model doesn't belong to an agent---the
+generative model IS the agent.
+\end{block}
+
+\begin{block}{Mental Things Alone Real}
+\protect\phantomsection\label{mental-things-alone-real}
+Blake extends this to a full phenomenological idealism. His declaration
+that ``Mental Things are alone Real'' and that the ``Corporeal'' is ``in
+Fallacy \& its Existence an Imposture'' (\emph{Vision of the Last
+Judgment} {[}@blake1810judgment{]}) maps directly onto the epistemic
+structure of Active Inference: internal states (beliefs) are all we
+access. External states are inferred, never directly known.
+``Corporeal'' = external states beyond the Markov blanket. We have no
+direct access to the world-in-itself; only to our model's predictions
+about it. What we call ``corporeal'' is a posit of inference, not an
+immediate given.
+
+This is not solipsism but epistemic humility: acknowledging that all our
+knowledge is model-mediated.
+\end{block}
+
+\begin{block}{Knowledge by Perception, Not Deduction}
+\protect\phantomsection\label{knowledge-by-perception-not-deduction}
+Blake distinguishes parallel inference from serial reasoning:
+
+\begin{quote}
+\emph{``Knowledge is not by deduction but Immediate by Perception or
+Sense at once Christ addresses himself to the Man not to his Reason''}
+
+--- Annotations to Berkeley's \emph{Siris} {[}@blake1820berkeley{]}
+\end{quote}
+
+Perception as parallel inference, not serial deduction. Posterior
+beliefs emerge from free energy minimization directly---not through
+step-by-step logical chains but through the simultaneous settling of the
+entire generative model. ``Christ addresses himself to the Man'' = the
+world speaks to the whole agent, not just the reasoning faculty.
+
+This anticipates the Active Inference insight that perception is not a
+conclusion of reasoning but an immediate update of the entire belief
+distribution.
+\end{block}
+
+\begin{block}{Innate Ideas as Structural Priors}
+\protect\phantomsection\label{innate-ideas-as-structural-priors}
+Against empiricist doctrine, Blake insists on innate structure:
+
+\begin{quote}
+\emph{``The Man who says that we have No Innate Ideas must be a Fool \&
+Knave\ldots{} Knowledge of Ideal Beauty is Not to be Acquired It is Born
+with us''}
+
+--- Annotations to Reynolds' Discourses {[}@blake1808reynolds{]}
+\end{quote}
+
+Structural priors are architectural, not learned. ``Innate Ideas'' = the
+priors that make inference possible. They cannot be ``acquired'' because
+they define the hypothesis space within which acquisition occurs.
+Without prior structure, there is nothing to update---no model to
+receive evidence.
+\end{block}
+
+\begin{block}{Imagination as Epistemic Foraging}
+\protect\phantomsection\label{imagination-as-epistemic-foraging}
+If imagination is human existence---if the self \emph{is} the generative
+model---then what Blake calls ``creative vision'' amounts to a specific
+computational strategy: \emph{epistemic foraging} through counterfactual
+model-space. Rather than passively receiving data, the imaginative agent
+actively explores hypothetical configurations of its own generative
+model, testing alternatives that minimize expected free energy over long
+horizons {[}@veissiere2020thinking{]}. This is niche construction at the
+cognitive level: the imagination does not merely adapt to the world as
+found but actively reshapes the model-space within which future
+inference occurs. Blake's insistence that ``What is now proved was once
+only imagin'd'' is, in Active Inference terms, the claim that today's
+priors were yesterday's epistemic actions---imaginative explorations
+that became entrained belief structures. The artist, the prophet, the
+visionary is thus not an escapist but an \emph{epistemic pioneer},
+foraging at the frontier of model-space.
+\end{block}
+\end{frame}
+
+\end{document}

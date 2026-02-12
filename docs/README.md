@@ -2,7 +2,7 @@
 
 > **Documentation hub** for the Research Project Template
 
-**Quick Reference:** [Documentation Index](DOCUMENTATION_INDEX.md) | [How To Use](core/HOW_TO_USE.md) | [Architecture](core/ARCHITECTURE.md) | [FAQ](reference/FAQ.md)
+**Quick Reference:** [Documentation Index](documentation-index.md) | [How To Use](core/how-to-use.md) | [Architecture](core/architecture.md) | [FAQ](reference/faq.md)
 
 ## Purpose
 
@@ -14,46 +14,46 @@ The `docs/` directory contains project documentation organized by purpose and au
 graph TD
     subgraph EntryPoints["📖 Entry Points"]
         README[README.md<br/>Project Overview<br/>Quick Start]
-        DOC_INDEX[DOCUMENTATION_INDEX.md<br/>Index<br/>All 105 Files]
-        HOW_TO[core/HOW_TO_USE.md<br/>Usage Guide<br/>12 Skill Levels]
+        DOC_INDEX[documentation-index.md<br/>Index<br/>All Docs Files]
+        HOW_TO[core/how-to-use.md<br/>Usage Guide<br/>12 Skill Levels]
     end
 
     subgraph CoreDocs["📚 Core Documentation"]
-        ARCH[core/ARCHITECTURE.md<br/>System Design]
-        WORKFLOW[core/WORKFLOW.md<br/>Development Process]
+        ARCH[core/architecture.md<br/>System Design]
+        WORKFLOW[core/workflow.md<br/>Development Process]
         RULES[../.cursorrules/README.md<br/>Development Standards]
     end
 
     subgraph SkillLevels["🎓 Skill-Based Learning"]
-        L1[guides/GETTING_STARTED.md<br/>Levels 1-3: Beginner]
-        L2[guides/FIGURES_AND_ANALYSIS.md<br/>Levels 4-6: Intermediate]
-        L3[guides/TESTING_AND_REPRODUCIBILITY.md<br/>Levels 7-9: Advanced]
-        L4[guides/EXTENDING_AND_AUTOMATION.md<br/>Levels 10-12: Expert]
+        L1[guides/getting-started.md<br/>Levels 1-3: Beginner]
+        L2[guides/figures-and-analysis.md<br/>Levels 4-6: Intermediate]
+        L3[guides/testing-and-reproducibility.md<br/>Levels 7-9: Advanced]
+        L4[guides/extending-and-automation.md<br/>Levels 10-12: Expert]
     end
 
     subgraph Operational["⚙️ Operational"]
-        BUILD[operational/BUILD_SYSTEM.md<br/>Build Pipeline]
-        TROUBLESHOOT[operational/TROUBLESHOOTING_GUIDE.md<br/>Fix Issues]
-        CONFIG[operational/CONFIGURATION.md<br/>Setup & Config]
+        BUILD[operational/build-system.md<br/>Build Pipeline]
+        TROUBLESHOOT[operational/troubleshooting-guide.md<br/>Fix Issues]
+        CONFIG[operational/configuration.md<br/>Setup & Config]
     end
 
     subgraph Reference["📑 Reference"]
-        FAQ[reference/FAQ.md<br/>Common Questions]
-        CHEATSHEET[reference/QUICK_START_CHEATSHEET.md<br/>Command Reference]
-        API[reference/API_REFERENCE.md<br/>API Docs]
+        FAQ[reference/faq.md<br/>Common Questions]
+        CHEATSHEET[reference/quick-start-cheatsheet.md<br/>Command Reference]
+        API[reference/api-reference.md<br/>API Docs]
     end
 
     subgraph Usage["📝 Usage & Examples"]
-        EXAMPLES[usage/EXAMPLES.md<br/>Usage Patterns]
-        MARKDOWN[usage/MARKDOWN_TEMPLATE_GUIDE.md<br/>Writing Guide]
-        VISUAL[usage/VISUALIZATION_GUIDE.md<br/>Figures & Plots]
+        EXAMPLES[usage/examples.md<br/>Usage Patterns]
+        MARKDOWN[usage/markdown-template-guide.md<br/>Writing Guide]
+        VISUAL[usage/visualization-guide.md<br/>Figures & Plots]
     end
 
     subgraph Advanced["🔬 Advanced Topics"]
-        MODULES[modules/MODULES_GUIDE.md<br/>7 Modules]
-        ARCH_DOCS[architecture/TWO_LAYER_ARCHITECTURE.md<br/>System Architecture]
-        BEST_PRACTICES[best-practices/BEST_PRACTICES.md<br/>Best Practices]
-        PROMPTS[prompts/README.md<br/>AI Prompt Templates<br/>10 Expert Prompts]
+        MODULES[modules/modules-guide.md<br/>9 Modules]
+        ARCH_DOCS[architecture/two-layer-architecture.md<br/>System Architecture]
+        BEST_PRACTICES[best-practices/best-practices.md<br/>Best Practices]
+        PROMPTS[prompts/README.md<br/>AI Prompt Templates<br/>9 Expert Prompts]
     end
 
     README --> DOC_INDEX
@@ -108,33 +108,33 @@ Documentation is organized into modular subdirectories:
 
 | Directory | Purpose | Key Files |
 |-----------|---------|-----------|
-| [`core/`](core/) | Essential documentation | HOW_TO_USE.md, ARCHITECTURE.md, WORKFLOW.md |
-| [`guides/`](guides/) | Usage guides by skill level | GETTING_STARTED.md, FIGURES_AND_ANALYSIS.md, TESTING_AND_REPRODUCIBILITY.md, EXTENDING_AND_AUTOMATION.md |
-| [`architecture/`](architecture/) | Architecture documentation | TWO_LAYER_ARCHITECTURE.md, THIN_ORCHESTRATOR_SUMMARY.md, DECISION_TREE.md |
-| [`usage/`](usage/) | Usage examples and patterns | EXAMPLES.md, MARKDOWN_TEMPLATE_GUIDE.md, VISUALIZATION_GUIDE.md, IMAGE_MANAGEMENT.md |
-| [`operational/`](operational/) | Operational workflows | BUILD_SYSTEM.md, REPORTING_GUIDE.md, TROUBLESHOOTING_GUIDE.md, CONFIGURATION.md + `logging/`, `troubleshooting/` |
-| [`reference/`](reference/) | Reference materials | API_REFERENCE.md, FAQ.md, GLOSSARY.md, QUICK_START_CHEATSHEET.md, COMMON_WORKFLOWS.md |
-| [`modules/`](modules/) | Module documentation | MODULES_GUIDE.md, SCIENTIFIC_SIMULATION_GUIDE.md, PDF_VALIDATION.md + `guides/` (7 per-module guides) |
-| [`development/`](development/) | Development & contribution | CONTRIBUTING.md, TESTING_GUIDE.md, CODE_OF_CONDUCT.md, COVERAGE_GAPS.md |
-| [`best-practices/`](best-practices/) | Best practices | BEST_PRACTICES.md, VERSION_CONTROL.md, MIGRATION_GUIDE.md, MULTI_PROJECT_MANAGEMENT.md |
+| [`core/`](core/) | Essential documentation | how-to-use.md, architecture.md, workflow.md |
+| [`guides/`](guides/) | Usage guides by skill level | getting-started.md, figures-and-analysis.md, testing-and-reproducibility.md, extending-and-automation.md |
+| [`architecture/`](architecture/) | Architecture documentation | two-layer-architecture.md, thin-orchestrator-summary.md, decision-tree.md |
+| [`usage/`](usage/) | Usage examples and patterns | examples.md, markdown-template-guide.md, visualization-guide.md, image-management.md |
+| [`operational/`](operational/) | Operational workflows | build-system.md, reporting-guide.md, troubleshooting-guide.md, configuration.md + `logging/`, `troubleshooting/` |
+| [`reference/`](reference/) | Reference materials | api-reference.md, faq.md, glossary.md, quick-start-cheatsheet.md, common-workflows.md |
+| [`modules/`](modules/) | Module documentation | modules-guide.md, scientific-simulation-guide.md, pdf-validation.md + `guides/` (7 per-module guides) |
+| [`development/`](development/) | Development & contribution | contributing.md, testing-guide.md, code-of-conduct.md, coverage-gaps.md |
+| [`best-practices/`](best-practices/) | Best practices | best-practices.md, version-control.md, migration-guide.md, multi-project-management.md |
 | [`prompts/`](prompts/) | AI prompt templates | manuscript_creation.md, code_development.md, test_creation.md, comprehensive_assessment.md |
-| [`audit/`](audit/) | Audit reports | DOCUMENTATION_REVIEW_REPORT.md, DOCUMENTATION_REVIEW_SUMMARY.md, FILEPATH_AUDIT_REPORT.md |
+| [`audit/`](audit/) | Audit reports | documentation-review-report.md, documentation-review-summary.md, filepath-audit-report.md |
 
 ## Quick Navigation
 
 ### New Users Start Here
 
 1. [`../README.md`](../README.md) - Project overview
-2. [`core/HOW_TO_USE.md`](core/HOW_TO_USE.md) - usage guide
-3. [`guides/GETTING_STARTED.md`](guides/GETTING_STARTED.md) - Getting started (Levels 1-3)
-4. [`reference/FAQ.md`](reference/FAQ.md) - Common questions
+2. [`core/how-to-use.md`](core/how-to-use.md) - usage guide
+3. [`guides/getting-started.md`](guides/getting-started.md) - Getting started (Levels 1-3)
+4. [`reference/faq.md`](reference/faq.md) - Common questions
 
 ### Developers Start Here
 
-1. [`core/ARCHITECTURE.md`](core/ARCHITECTURE.md) - System design
-2. [`architecture/THIN_ORCHESTRATOR_SUMMARY.md`](architecture/THIN_ORCHESTRATOR_SUMMARY.md) - Architecture pattern
-3. [`core/WORKFLOW.md`](core/WORKFLOW.md) - Development process
-4. [`development/CONTRIBUTING.md`](development/CONTRIBUTING.md) - How to contribute
+1. [`core/architecture.md`](core/architecture.md) - System design
+2. [`architecture/thin-orchestrator-summary.md`](architecture/thin-orchestrator-summary.md) - Architecture pattern
+3. [`core/workflow.md`](core/workflow.md) - Development process
+4. [`development/contributing.md`](development/contributing.md) - How to contribute
 5. [`../.cursorrules/README.md`](../.cursorrules/README.md) - Development rules
 
 ## Development Rules Quick Access
@@ -144,22 +144,22 @@ Development standards are defined in the `.cursorrules/` directory. Start with:
 - [`../.cursorrules/README.md`](../.cursorrules/README.md) - Quick reference and patterns
 - [`../.cursorrules/AGENTS.md`](../.cursorrules/AGENTS.md) - development standards
 - [`../.cursorrules/testing_standards.md`](../.cursorrules/testing_standards.md) - Testing patterns and coverage
-- See [`DOCUMENTATION_INDEX.md`](DOCUMENTATION_INDEX.md) for rules reference
+- See [`documentation-index.md`](documentation-index.md) for rules reference
 
 ## Quick Links
 
 | Need | Document |
 |------|----------|
-| Get started | [`core/HOW_TO_USE.md`](core/HOW_TO_USE.md) |
-| Understand design | [`core/ARCHITECTURE.md`](core/ARCHITECTURE.md) |
-| See examples | [`usage/EXAMPLES.md`](usage/EXAMPLES.md) |
-| Find answers | [`reference/FAQ.md`](reference/FAQ.md) |
-| Contribute | [`development/CONTRIBUTING.md`](development/CONTRIBUTING.md) |
-| Report security issue | [`development/SECURITY.md`](development/SECURITY.md) |
+| Get started | [`core/how-to-use.md`](core/how-to-use.md) |
+| Understand design | [`core/architecture.md`](core/architecture.md) |
+| See examples | [`usage/examples.md`](usage/examples.md) |
+| Find answers | [`reference/faq.md`](reference/faq.md) |
+| Contribute | [`development/contributing.md`](development/contributing.md) |
+| Report security issue | [`development/security.md`](development/security.md) |
 
 ## See Also
 
 - [`AGENTS.md`](AGENTS.md) - Detailed documentation guide
-- [`DOCUMENTATION_INDEX.md`](DOCUMENTATION_INDEX.md) - index
+- [`documentation-index.md`](documentation-index.md) - index
 - [`prompts/README.md`](prompts/README.md) - AI prompt templates for development
 - [`../AGENTS.md`](../AGENTS.md) - System documentation

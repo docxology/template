@@ -964,7 +964,7 @@ class PipelineReport:
             'priority': 'high',
             'issue': '1 test failure(s)',
             'actions': [...],
-            'documentation': 'docs/TESTING_GUIDE.md',
+            'documentation': 'docs/testing-guide.md',
         },
     ],
 }
@@ -1010,7 +1010,7 @@ pytest tests/infra_tests/reporting/ --cov=infrastructure.reporting
 - [`README.md`](README.md) - Quick reference guide
 - [`../README.md`](../README.md) - Infrastructure layer overview
 - [`../AGENTS.md`](../AGENTS.md) - infrastructure documentation
-- [`../../docs/modules/MODULES_GUIDE.md`](../../docs/modules/MODULES_GUIDE.md) - Modules guide
+- [`../../docs/modules/modules-guide.md`](../../docs/modules/modules-guide.md) - Modules guide
 
 
 

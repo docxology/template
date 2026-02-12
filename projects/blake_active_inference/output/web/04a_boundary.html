@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>04a_boundary</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h2 id="boundary">Boundary: The Doors of Perception</h2>
+<blockquote>
+<p><em>“The cherub with his flaming sword is hereby commanded to leave
+his guard at the tree of life, and when he does, the whole creation will
+be consumed and appear infinite and holy, whereas it now appears finite
+and corrupt.”</em></p>
+<p>— <em>Marriage of Heaven and Hell</em>, Plate 14 <span
+class="citation"
+data-cites="blake1790marriage">[@blake1790marriage]</span></p>
+</blockquote>
+<h3 id="the-markov-blanket">The Markov Blanket</h3>
+<p>The cherub’s flaming sword is the guardian of a boundary—the
+partition between accessible and inaccessible states. Blake’s “door” is
+Friston’s <em>boundary</em>—the statistical partition separating
+internal from external states:</p>
+<blockquote>
+<p>“The Markov blanket defines what is inside vs. outside any autonomous
+system—the statistical partition separating internal from external
+states.”</p>
+<p>— Kirchhoff et al. (2018) <span class="citation"
+data-cites="kirchhoff2018markov">[@kirchhoff2018markov]</span></p>
+</blockquote>
+<p>This IS Blake’s “door”—the boundary that mediates all contact between
+self and world. The blanket is constitutive, not optional.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Blanket Component</th>
+<th style="text-align: left;">Symbol</th>
+<th style="text-align: left;">Blake’s Image</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">External states</td>
+<td style="text-align: left;"><span
+class="math inline">\(\eta\)</span></td>
+<td style="text-align: left;">“the Infinite” beyond</td>
+</tr>
+<tr>
+<td style="text-align: left;">Sensory states</td>
+<td style="text-align: left;"><span
+class="math inline">\(s\)</span></td>
+<td style="text-align: left;">Inflow through doors</td>
+</tr>
+<tr>
+<td style="text-align: left;">Active states</td>
+<td style="text-align: left;"><span
+class="math inline">\(a\)</span></td>
+<td style="text-align: left;">Outflow through doors</td>
+</tr>
+<tr>
+<td style="text-align: left;">Internal states</td>
+<td style="text-align: left;"><span
+class="math inline">\(\mu\)</span></td>
+<td style="text-align: left;">The perceiver in the “cavern”</td>
+</tr>
+<tr>
+<td style="text-align: left;">Blanket</td>
+<td style="text-align: left;"><span
+class="math inline">\(B\)</span></td>
+<td style="text-align: left;">“The doors of perception”</td>
+</tr>
+</tbody>
+</table>
+<p>This conditional independence structure (Equation <span
+class="math inline">\(\ref{eq:conditional_independence}\)</span>) means
+that the blanket mediates all contact. Internal states access external
+states <em>only</em> through the interface. The doors are not
+optional—they are constitutive.</p>
+<p>Blake’s “cavern” is not metaphor but <em>phenomenology</em>: the
+subjective space of one whose doors are narrowed. The “chinks” are the
+impoverished sensory channels of a rigid generative model.</p>
+<p>Blake articulated this boundary condition repeatedly. The bounded
+itself produces suffering:</p>
+<blockquote>
+<p><em>“The Bounded is loathed by its possessor. The same dull round,
+even of a Universe, would soon become a Mill with complicated
+wheels.”</em></p>
+<p>— <em>There is No Natural Religion</em>, Series B <span
+class="citation"
+data-cites="blake1788natural">[@blake1788natural]</span></p>
+</blockquote>
+<p>Yet energy is the fundamental currency crossing the boundary:</p>
+<blockquote>
+<p><em>“Energy is the only life and is from the Body and Reason is the
+bound or outward circumference of Energy. Energy is Eternal
+Delight.”</em></p>
+<p>— <em>Marriage of Heaven and Hell</em>, Plate 4 <span
+class="citation"
+data-cites="blake1790marriage">[@blake1790marriage]</span></p>
+</blockquote>
+<p>Blake identifies Reason as the “bound”—the circumference or blanket
+edge that delimits the system. Energy, by contrast, is the vital flow
+that crosses this boundary. From this distinction follows his
+foundational claim about the nature of perception:</p>
+<blockquote>
+<p><em>“Man’s Perceptions are not bounded by Organs of Perception; he
+perceives more than Sense (tho’ ever so acute) can discover.”</em></p>
+<p>— <em>There is No Natural Religion</em>, Series B <span
+class="citation"
+data-cites="blake1788natural">[@blake1788natural]</span></p>
+</blockquote>
+<p>The Markov blanket is necessary but not sufficient. The door
+mediates; cleansing transforms how it mediates. Figure <span
+class="math inline">\(\ref{fig:doors}\)</span> illustrates this
+statistical boundary and its Blakean phenomenology.</p>
+<blockquote>
+<p><strong>Demonstration: The Sunrise</strong></p>
+<p>Blake famously contrasted two ways of seeing the sun:</p>
+<p><em>“When the sun rises, do you not see a round disk of fire somewhat
+like a guinea? O no, no, I see an Innumerable company of the Heavenly
+Host crying, ‘Holy, Holy, Holy.’”</em></p>
+<p>Both observers share the same Markov blanket—the same sensory
+channels, the same visual cortex. What differs is how the door
+mediates:</p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 40%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Component</th>
+<th style="text-align: left;">Friend’s Experience</th>
+<th style="text-align: left;">Blake’s Experience</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Sensory states</strong> (<span
+class="math inline">\(s\)</span>)</td>
+<td style="text-align: left;">Photons → “round, golden, ~30°
+altitude”</td>
+<td style="text-align: left;">Same photons → rich associative
+cascade</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Internal states</strong> (<span
+class="math inline">\(\mu\)</span>)</td>
+<td style="text-align: left;">Minimal categorical prediction: “sun”</td>
+<td style="text-align: left;">Full generative model: cosmic meaning</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Active states</strong> (<span
+class="math inline">\(a\)</span>)</td>
+<td style="text-align: left;">Glance, categorize, move on</td>
+<td style="text-align: left;">Sustained attention, devotional
+engagement</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Same door. Different cleansing.</strong> The friend’s
+perception is not wrong—but it is shallow. Blake’s perception engages
+deeper layers of the generative model. Both are valid inferences; one
+draws on vastly more model depth.</p>
+</blockquote>
+<h3 id="boundary-constitution-naming-creates-separation">Boundary
+Constitution: Naming Creates Separation</h3>
+<p>Blake understood that boundaries are <em>constituted</em>, not given.
+The act of naming creates the inside/outside distinction:</p>
+<blockquote>
+<p><em>“they gave to it a Space &amp; namd the Space Ulro”</em></p>
+<p>— <em>Vala, or The Four Zoas</em>, Night the First <span
+class="citation" data-cites="blake1797fourzoas">[@blake1797fourzoas,
+E303]</span></p>
+</blockquote>
+<p>The Markov blanket is not discovered but <em>constituted</em>.
+“Naming the Space” IS boundary formation. Ulro—Blake’s realm of
+materialist limitation—comes into being through the act of
+partition.</p>
+<h3 id="the-abyss-as-kl-divergence">The Abyss as KL-Divergence</h3>
+<p>When Urizen separates from Ahania (his emanation, his feminine
+counterpart), Blake describes the resulting gap in terms that directly
+anticipate information-theoretic distance:</p>
+<blockquote>
+<p><em>“Ahania (so name his parted soul)… how wide the Abyss Between
+Ahania and thee!”</em></p>
+<p>— <em>The Book of Ahania</em>, Chapter III <span class="citation"
+data-cites="blake1795ahania">[@blake1795ahania]</span></p>
+</blockquote>
+<p>This “Abyss” evokes information-theoretic distance—the separation
+between states that should be unified. Blake’s mythic language of
+partition anticipates what Active Inference formalizes as divergence
+between distributions. The “parted soul” represents a split generative
+model; the wider the Abyss, the greater the separation.</p>
+<h3 id="forged-boundaries">Forged Boundaries</h3>
+<p>The blanket is not simply given and absolute, but
+<em>constructed</em>:</p>
+<blockquote>
+<p><em>“He forg’d nets of iron around”</em></p>
+<p>— <em>The Book of Ahania</em> <span class="citation"
+data-cites="blake1795ahania">[@blake1795ahania]</span></p>
+</blockquote>
+<p>“Forging” emphasizes the active construction and identification of
+boundary conditions. The Markov blanket is manufactured materially and
+mentally. This has profound implications: what is forged can be
+reforged, and what is identified can be mis- and re-identified.</p>
+<h3 id="body-as-blanket-interface">Body as Blanket Interface</h3>
+<p>Blake’s most direct statement of embodied cognition anticipates the
+blanket formalism:</p>
+<blockquote>
+<p><em>“Man has no Body distinct from his Soul for that calld Body is a
+portion of Soul discernd by the five Senses, the chief inlets of Soul in
+this age”</em></p>
+<p>— <em>Marriage of Heaven and Hell</em>, Plate 4 <span
+class="citation"
+data-cites="blake1790marriage">[@blake1790marriage]</span></p>
+</blockquote>
+<p>“Inlets” = sensory states <span class="math inline">\(s\)</span>. The
+body IS how mind interfaces with world—not a separate substance but the
+blanket itself. No ontological separation exists; only the functional
+partition of the blanket.</p>
+<h3 id="imaginations-outline-vs.-natures-dissolution">Imagination’s
+Outline vs. Nature’s Dissolution</h3>
+<p>Blake’s late work makes explicit the distinction between raw data and
+model structure:</p>
+<blockquote>
+<p><em>“Nature has no Outline: but Imagination has. Nature has no Tune:
+but Imagination has. Nature has no Supernatural &amp; dissolves:
+Imagination is Eternity”</em></p>
+<p>— <em>The Ghost of Abel</em>, Plate 1 <span class="citation"
+data-cites="blake1822abel">[@blake1822abel]</span></p>
+</blockquote>
+<p>Nature (observations <span class="math inline">\(o\)</span>) is
+unstructured flow. Imagination (the generative model <span
+class="math inline">\(p(o, \theta)\)</span>) provides boundaries, form,
+temporal structure (“Tune”). The model is more real than the data
+because it is what makes data <em>intelligible</em>. Without the model’s
+outline, perception dissolves into chaos.</p>
+<h3
+id="contemporary-resonance-from-blake-through-huxley-to-albus">Contemporary
+Resonance: From Blake Through Huxley to ALBUS</h3>
+<p>The lineage from Blake’s “Doors” to contemporary neuroscience runs
+through a single remarkable chain. Aldous Huxley borrowed Blake’s phrase
+for <em>The Doors of Perception</em> <span class="citation"
+data-cites="huxley1954doors">[@huxley1954doors]</span>, proposing that
+the brain operates as a “reducing valve” filtering the totality of
+experience into manageable form. Carhart-Harris and Friston’s REBUS
+model <span class="citation"
+data-cites="carthartharris2019rebus">[@carthartharris2019rebus]</span>
+formalized this intuition by showing that psychedelics relax the
+precision of high-level priors. Safron and colleagues’ ALBUS framework
+<span class="citation"
+data-cites="safron2025albus">[@safron2025albus]</span> now extends this
+account: psychedelics do not merely relax beliefs (REBUS) but can also
+strengthen them (SEBUS), producing a richer taxonomy of altered
+states—from the dissolution of rigid priors to the intensification of
+meaning-making. The result encompasses Blake’s “cleansing”—not the
+destruction of the boundary but the recalibration of its precision
+weighting, allowing prediction error to propagate more freely up the
+hierarchy. What Blake described as seeing “every thing… as it is:
+infinite” corresponds to a state of altered prior dynamics where sensory
+evidence reshapes inference rather than being suppressed by entrenched
+expectations. This is not metaphor: it is the same computational
+operation described in different vocabularies across three
+centuries.</p>
+<figure id="fig:doors">
+<img src="../output/figures/fig1_doors_of_perception.png"
+alt="The Doors of Perception as Markov Blanket. The statistical boundary (B = \{s, a\}) partitions external states \eta (“the Infinite”) from internal states \mu (“the Cavern”) through two complementary channels: sensory states s mediating world-to-self flow (observation, perception) and active states a mediating self-to-world flow (action, decision). This implements Blake’s phenomenology from The Marriage of Heaven and Hell, Plate 14: “If the doors of perception were cleansed every thing would appear to man as it is, Infinite. For man has closed himself up, till he sees all things thro’ narrow chinks of his cavern” [@blake1790marriage]. The blanket is constitutive—not an optional filter but the necessary interface through which all inference occurs. Cleansing the doors corresponds to optimizing the model’s precision weighting (Equation ), not to eliminating the boundary itself." />
+<figcaption aria-hidden="true"><strong>The Doors of Perception as Markov
+Blanket.</strong> The statistical boundary (<span
+class="math inline">\(B = \{s, a\}\)</span>) partitions external states
+<span class="math inline">\(\eta\)</span> (“the Infinite”) from internal
+states <span class="math inline">\(\mu\)</span> (“the Cavern”) through
+two complementary channels: sensory states <span
+class="math inline">\(s\)</span> mediating world-to-self flow
+(observation, perception) and active states <span
+class="math inline">\(a\)</span> mediating self-to-world flow (action,
+decision). This implements Blake’s phenomenology from <em>The Marriage
+of Heaven and Hell</em>, Plate 14: “If the doors of perception were
+cleansed every thing would appear to man as it is, Infinite. For man has
+closed himself up, till he sees all things thro’ narrow chinks of his
+cavern” <span class="citation"
+data-cites="blake1790marriage">[@blake1790marriage]</span>. The blanket
+is constitutive—not an optional filter but the necessary interface
+through which all inference occurs. Cleansing the doors corresponds to
+optimizing the model’s precision weighting (Equation <span
+class="math inline">\(\ref{eq:conditional_independence}\)</span>), not
+to eliminating the boundary itself.</figcaption>
+</figure>
+</body>
+</html>

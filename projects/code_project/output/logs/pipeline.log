@@ -1,185 +1,185 @@
-[2026-02-06 16:06:44,569] [INFO] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/code_project/output/logs/pipeline.log
-[2026-02-06 16:06:44,569] [INFO] [infrastructure.core.pipeline] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/code_project/output/logs/pipeline.log
-[2026-02-06 16:06:44,569] [INFO] ✓ Stage 1 completed successfully (0.0s)
-[2026-02-06 16:06:44,569] [INFO] [infrastructure.core.pipeline] ✓ Stage 1 completed successfully (0.0s)
-[2026-02-06 16:06:44,570] [INFO] 
-[2026-02-06 16:06:44,570] [INFO] [infrastructure.core.pipeline] 
-[2026-02-06 16:06:44,570] [INFO] [2/8] Environment Setup (25% complete)
-[2026-02-06 16:06:44,570] [INFO] [infrastructure.core.pipeline] [2/8] Environment Setup (25% complete)
-[2026-02-06 16:06:44,570] [INFO]   Elapsed: 0s | ETA: 0s
-[2026-02-06 16:06:44,570] [INFO] [infrastructure.core.pipeline]   Elapsed: 0s | ETA: 0s
-[2026-02-06 16:06:44,570] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-02-06 16:06:44,570] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-02-06 16:06:44,570] [INFO] [infrastructure.core.logging_utils] Starting: Stage 2: Environment Setup
-[2026-02-06 16:06:44,570] [INFO] Running environment setup...
-[2026-02-06 16:06:44,570] [INFO] [infrastructure.core.pipeline] Running environment setup...
-[2026-02-06 16:06:45,211] [INFO] [infrastructure.core.logging_utils] Completed: Stage 2: Environment Setup (0.6s)
-[2026-02-06 16:06:45,211] [INFO] ✓ Stage 2 completed successfully (0.6s)
-[2026-02-06 16:06:45,211] [INFO] [infrastructure.core.pipeline] ✓ Stage 2 completed successfully (0.6s)
-[2026-02-06 16:06:45,212] [INFO] Skipping stage: Infrastructure Tests
-[2026-02-06 16:06:45,212] [INFO] [infrastructure.core.pipeline] Skipping stage: Infrastructure Tests
-[2026-02-06 16:06:45,212] [INFO] 
-[2026-02-06 16:06:45,212] [INFO] [infrastructure.core.pipeline] 
-[2026-02-06 16:06:45,212] [INFO] [3/8] Project Tests (37% complete)
-[2026-02-06 16:06:45,212] [INFO] [infrastructure.core.pipeline] [3/8] Project Tests (37% complete)
-[2026-02-06 16:06:45,212] [INFO]   Elapsed: 0s | ETA: 1s
-[2026-02-06 16:06:45,212] [INFO] [infrastructure.core.pipeline]   Elapsed: 0s | ETA: 1s
-[2026-02-06 16:06:45,212] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-02-06 16:06:45,212] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-02-06 16:06:45,212] [INFO] [infrastructure.core.logging_utils] Starting: Stage 3: Project Tests
-[2026-02-06 16:06:45,212] [INFO] Running project tests...
-[2026-02-06 16:06:45,212] [INFO] [infrastructure.core.pipeline] Running project tests...
-[2026-02-06 16:06:49,544] [INFO] [infrastructure.core.logging_utils] Completed: Stage 3: Project Tests (4.3s)
-[2026-02-06 16:06:49,544] [INFO] ✓ Stage 3 completed successfully (4.3s)
-[2026-02-06 16:06:49,544] [INFO] [infrastructure.core.pipeline] ✓ Stage 3 completed successfully (4.3s)
-[2026-02-06 16:06:49,545] [INFO] 
-[2026-02-06 16:06:49,545] [INFO] [infrastructure.core.pipeline] 
-[2026-02-06 16:06:49,545] [INFO] [4/8] Project Analysis (50% complete)
-[2026-02-06 16:06:49,545] [INFO] [infrastructure.core.pipeline] [4/8] Project Analysis (50% complete)
-[2026-02-06 16:06:49,545] [INFO]   Elapsed: 4s | ETA: 4s
-[2026-02-06 16:06:49,545] [INFO] [infrastructure.core.pipeline]   Elapsed: 4s | ETA: 4s
-[2026-02-06 16:06:49,545] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-02-06 16:06:49,545] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-02-06 16:06:49,545] [INFO] [infrastructure.core.logging_utils] Starting: Stage 4: Project Analysis
-[2026-02-06 16:06:49,545] [INFO] Running project analysis...
-[2026-02-06 16:06:49,545] [INFO] [infrastructure.core.pipeline] Running project analysis...
-[2026-02-06 16:06:53,435] [INFO] [infrastructure.core.logging_utils] Completed: Stage 4: Project Analysis (3.9s)
-[2026-02-06 16:06:53,436] [INFO] ✓ Stage 4 completed successfully (3.9s)
-[2026-02-06 16:06:53,436] [INFO] [infrastructure.core.pipeline] ✓ Stage 4 completed successfully (3.9s)
-[2026-02-06 16:06:53,436] [INFO] 
-[2026-02-06 16:06:53,436] [INFO] [infrastructure.core.pipeline] 
-[2026-02-06 16:06:53,436] [INFO] [5/8] PDF Rendering (62% complete)
-[2026-02-06 16:06:53,436] [INFO] [infrastructure.core.pipeline] [5/8] PDF Rendering (62% complete)
-[2026-02-06 16:06:53,436] [INFO]   Elapsed: 8s | ETA: 5s
-[2026-02-06 16:06:53,436] [INFO] [infrastructure.core.pipeline]   Elapsed: 8s | ETA: 5s
-[2026-02-06 16:06:53,436] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-02-06 16:06:53,436] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-02-06 16:06:53,437] [INFO] [infrastructure.core.logging_utils] Starting: Stage 5: PDF Rendering
-[2026-02-06 16:06:53,437] [INFO] Running PDF rendering...
-[2026-02-06 16:06:53,437] [INFO] [infrastructure.core.pipeline] Running PDF rendering...
-[2026-02-06 16:07:20,804] [INFO] [infrastructure.core.logging_utils] Completed: Stage 5: PDF Rendering (27.4s)
-[2026-02-06 16:07:20,804] [INFO] ✓ Stage 5 completed successfully (27.4s)
-[2026-02-06 16:07:20,804] [INFO] [infrastructure.core.pipeline] ✓ Stage 5 completed successfully (27.4s)
-[2026-02-06 16:07:20,804] [INFO] 
-[2026-02-06 16:07:20,804] [INFO] [infrastructure.core.pipeline] 
-[2026-02-06 16:07:20,804] [INFO] [6/8] Output Validation (75% complete)
-[2026-02-06 16:07:20,804] [INFO] [infrastructure.core.pipeline] [6/8] Output Validation (75% complete)
-[2026-02-06 16:07:20,804] [INFO]   Elapsed: 36s | ETA: 12s
-[2026-02-06 16:07:20,804] [INFO] [infrastructure.core.pipeline]   Elapsed: 36s | ETA: 12s
-[2026-02-06 16:07:20,804] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-02-06 16:07:20,804] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-02-06 16:07:20,805] [INFO] [infrastructure.core.logging_utils] Starting: Stage 6: Output Validation
-[2026-02-06 16:07:20,805] [INFO] Running output validation...
-[2026-02-06 16:07:20,805] [INFO] [infrastructure.core.pipeline] Running output validation...
-[2026-02-06 16:07:21,089] [INFO] [infrastructure.core.logging_utils] Completed: Stage 6: Output Validation (0.3s)
-[2026-02-06 16:07:21,089] [INFO] ✓ Stage 6 completed successfully (0.3s)
-[2026-02-06 16:07:21,089] [INFO] [infrastructure.core.pipeline] ✓ Stage 6 completed successfully (0.3s)
-[2026-02-06 16:07:21,089] [INFO] 
-[2026-02-06 16:07:21,089] [INFO] [infrastructure.core.pipeline] 
-[2026-02-06 16:07:21,089] [INFO] [7/8] Copy Outputs (87% complete)
-[2026-02-06 16:07:21,089] [INFO] [infrastructure.core.pipeline] [7/8] Copy Outputs (87% complete)
-[2026-02-06 16:07:21,089] [INFO]   Elapsed: 36s | ETA: 5s
-[2026-02-06 16:07:21,089] [INFO] [infrastructure.core.pipeline]   Elapsed: 36s | ETA: 5s
-[2026-02-06 16:07:21,089] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-02-06 16:07:21,089] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-02-06 16:07:21,090] [INFO] [infrastructure.core.logging_utils] Starting: Stage 7: Copy Outputs
-[2026-02-06 16:07:21,090] [INFO] Running output copying...
-[2026-02-06 16:07:21,090] [INFO] [infrastructure.core.pipeline] Running output copying...
-[2026-02-06 16:07:21,396] [INFO] [infrastructure.core.logging_utils] Completed: Stage 7: Copy Outputs (0.3s)
-[2026-02-06 16:07:21,396] [INFO] ✓ Stage 7 completed successfully (0.3s)
-[2026-02-06 16:07:21,396] [INFO] [infrastructure.core.pipeline] ✓ Stage 7 completed successfully (0.3s)
-[2026-02-06 16:07:21,398] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (JSON) saved: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/pipeline_report.json
-[2026-02-06 16:07:21,398] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (Markdown) saved: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/pipeline_report.md
-[2026-02-06 16:07:21,399] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (HTML) saved: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/pipeline_report.html
-[2026-02-06 16:07:21,399] [INFO] [infrastructure.core.logging_utils] Completed: Pipeline execution for code_project (36.8s)
-[2026-02-06 16:07:21,399] [INFO] [infrastructure.reporting] Starting multi-project reporting for 2 projects...
-[2026-02-06 16:07:21,399] [INFO] [infrastructure.reporting] Generating executive summary...
-[2026-02-06 16:07:21,400] [INFO] [infrastructure.reporting.executive_reporter] Generating executive summary for 2 project(s)
-[2026-02-06 16:07:21,400] [INFO] [infrastructure.reporting.executive_reporter] Collecting metrics for project: blake_active_inference
-[2026-02-06 16:07:21,411] [INFO] [infrastructure.reporting.executive_reporter] Collecting metrics for project: code_project
-[2026-02-06 16:07:21,413] [INFO] [infrastructure.reporting.executive_reporter] Executive summary generated successfully
-[2026-02-06 16:07:21,413] [INFO] [infrastructure.reporting] Saving summary reports...
-[2026-02-06 16:07:21,414] [INFO] [infrastructure.reporting.executive_reporter] Saved JSON report: /Users/4d/Documents/GitHub/template/output/executive_summary/json/consolidated_report.json
-[2026-02-06 16:07:21,414] [INFO] [infrastructure.reporting.executive_reporter] Saved Markdown report: /Users/4d/Documents/GitHub/template/output/executive_summary/md/consolidated_report.md
-[2026-02-06 16:07:21,415] [INFO] [infrastructure.reporting.executive_reporter] Saved HTML report: /Users/4d/Documents/GitHub/template/output/executive_summary/html/consolidated_report.html
-[2026-02-06 16:07:21,415] [INFO] [infrastructure.reporting] Generating visual dashboards...
-[2026-02-06 16:07:21,415] [INFO] [infrastructure.reporting.dashboard_generator] Generating all dashboard formats...
-[2026-02-06 16:07:21,415] [INFO] [infrastructure.reporting.dashboard_generator] Generating matplotlib dashboard...
-[2026-02-06 16:07:21,995] [INFO] [infrastructure.reporting.dashboard_generator] Saved PNG dashboard: /Users/4d/Documents/GitHub/template/output/executive_summary/png/dashboard.png
-[2026-02-06 16:07:22,262] [INFO] [infrastructure.reporting.dashboard_generator] Saved PDF dashboard: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/dashboard.pdf
-[2026-02-06 16:07:22,263] [INFO] [infrastructure.reporting.dashboard_generator] Generating health score radar chart...
-[2026-02-06 16:07:22,384] [INFO] [infrastructure.reporting.dashboard_generator] Health radar chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/health_scores_radar.png
-[2026-02-06 16:07:22,418] [INFO] [infrastructure.reporting.dashboard_generator] Health radar chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/health_scores_radar.pdf
-[2026-02-06 16:07:22,418] [INFO] [infrastructure.reporting.dashboard_generator] Generating health score comparison chart...
-[2026-02-06 16:07:22,568] [INFO] [infrastructure.reporting.dashboard_generator] Health comparison chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/health_scores_comparison.png
-[2026-02-06 16:07:22,613] [INFO] [infrastructure.reporting.dashboard_generator] Health comparison chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/health_scores_comparison.pdf
-[2026-02-06 16:07:22,613] [INFO] [infrastructure.reporting.dashboard_generator] Generating individual project dashboards...
-[2026-02-06 16:07:22,871] [INFO] [infrastructure.reporting.dashboard_generator] Project dashboard (blake_active_inference PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/project_dashboard_blakeactiveinference.png
-[2026-02-06 16:07:22,944] [INFO] [infrastructure.reporting.dashboard_generator] Project dashboard (blake_active_inference PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/project_dashboard_blakeactiveinference.pdf
-[2026-02-06 16:07:23,188] [INFO] [infrastructure.reporting.dashboard_generator] Project dashboard (code_project PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/project_dashboard_codeproject.png
-[2026-02-06 16:07:23,258] [INFO] [infrastructure.reporting.dashboard_generator] Project dashboard (code_project PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/project_dashboard_codeproject.pdf
-[2026-02-06 16:07:23,258] [INFO] [infrastructure.reporting.dashboard_generator] Generating pipeline efficiency analysis chart...
-[2026-02-06 16:07:23,521] [INFO] [infrastructure.reporting.dashboard_generator] Pipeline efficiency chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/pipeline_efficiency.png
-[2026-02-06 16:07:23,593] [INFO] [infrastructure.reporting.dashboard_generator] Pipeline efficiency chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/pipeline_efficiency.pdf
-[2026-02-06 16:07:23,593] [INFO] [infrastructure.reporting.dashboard_generator] Generating pipeline bottlenecks chart...
-[2026-02-06 16:07:23,746] [INFO] [infrastructure.reporting.dashboard_generator] Pipeline bottlenecks chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/pipeline_bottlenecks.png
-[2026-02-06 16:07:23,786] [INFO] [infrastructure.reporting.dashboard_generator] Pipeline bottlenecks chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/pipeline_bottlenecks.pdf
-[2026-02-06 16:07:23,786] [INFO] [infrastructure.reporting.dashboard_generator] Generating output distribution charts...
-[2026-02-06 16:07:24,045] [INFO] [infrastructure.reporting.dashboard_generator] Output distribution chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/output_distribution.png
-[2026-02-06 16:07:24,117] [INFO] [infrastructure.reporting.dashboard_generator] Output distribution chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/output_distribution.pdf
-[2026-02-06 16:07:24,118] [INFO] [infrastructure.reporting.dashboard_generator] Generating output comparison chart...
-[2026-02-06 16:07:24,232] [INFO] [infrastructure.reporting.dashboard_generator] Output comparison chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/output_comparison.png
-[2026-02-06 16:07:24,265] [INFO] [infrastructure.reporting.dashboard_generator] Output comparison chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/output_comparison.pdf
-[2026-02-06 16:07:24,265] [INFO] [infrastructure.reporting.dashboard_generator] Generating codebase complexity chart...
-[2026-02-06 16:07:24,536] [INFO] [infrastructure.reporting.dashboard_generator] Codebase complexity chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/codebase_complexity.png
-[2026-02-06 16:07:24,618] [INFO] [infrastructure.reporting.dashboard_generator] Codebase complexity chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/codebase_complexity.pdf
-[2026-02-06 16:07:24,618] [INFO] [infrastructure.reporting.dashboard_generator] Generating codebase comparison chart...
-[2026-02-06 16:07:24,838] [INFO] [infrastructure.reporting.dashboard_generator] Codebase comparison chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/codebase_comparison.png
-[2026-02-06 16:07:24,895] [INFO] [infrastructure.reporting.dashboard_generator] Codebase comparison chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/codebase_comparison.pdf
-[2026-02-06 16:07:24,926] [INFO] [infrastructure.reporting.dashboard_generator] Generating interactive plotly dashboard...
-[2026-02-06 16:07:25,015] [INFO] [infrastructure.reporting.dashboard_generator] Saved interactive HTML dashboard: /Users/4d/Documents/GitHub/template/output/executive_summary/dashboard.html
-[2026-02-06 16:07:25,015] [INFO] [infrastructure.reporting.dashboard_generator] Generated CSV metrics table: /Users/4d/Documents/GitHub/template/output/executive_summary/csv/project_metrics.csv
-[2026-02-06 16:07:25,015] [INFO] [infrastructure.reporting.dashboard_generator] Generated CSV aggregates table: /Users/4d/Documents/GitHub/template/output/executive_summary/csv/aggregate_metrics.csv
-[2026-02-06 16:07:25,015] [INFO] [infrastructure.reporting.dashboard_generator] Generated CSV health scores table: /Users/4d/Documents/GitHub/template/output/executive_summary/csv/health_scores.csv
-[2026-02-06 16:07:25,016] [INFO] [infrastructure.reporting.dashboard_generator] Detailed project breakdown CSV saved: /Users/4d/Documents/GitHub/template/output/executive_summary/csv/detailed_project_breakdown.csv
-[2026-02-06 16:07:25,016] [INFO] [infrastructure.reporting.dashboard_generator] Comparative analysis CSV saved: /Users/4d/Documents/GitHub/template/output/executive_summary/csv/comparative_analysis.csv
-[2026-02-06 16:07:25,016] [INFO] [infrastructure.reporting.dashboard_generator] Prioritized recommendations CSV saved: /Users/4d/Documents/GitHub/template/output/executive_summary/csv/recommendations_prioritized.csv
-[2026-02-06 16:07:25,016] [INFO] [infrastructure.reporting.manuscript_overview] Generating manuscript overview for blake_active_inference
-[2026-02-06 16:07:25,016] [INFO] [infrastructure.reporting.manuscript_overview] Generating manuscript overview for blake_active_inference
-[2026-02-06 16:07:25,075] [INFO] [infrastructure.reporting.manuscript_overview] Extracting 66 pages from blake_active_inference_combined.pdf
-[2026-02-06 16:07:26,808] [INFO] [infrastructure.reporting.manuscript_overview] Extracted 66 page images
-[2026-02-06 16:07:27,439] [INFO] [infrastructure.reporting.manuscript_overview] Saved PNG overview: /Users/4d/Documents/GitHub/template/output/executive_summary/manuscript_overview_blake_active_inference.png
-[2026-02-06 16:07:28,547] [INFO] [infrastructure.reporting.manuscript_overview] Saved PDF overview: /Users/4d/Documents/GitHub/template/output/executive_summary/manuscript_overview_blake_active_inference.pdf
-[2026-02-06 16:07:28,556] [INFO] [infrastructure.reporting.manuscript_overview] Generated overview files for blake_active_inference: ['manuscript_overview_blake_active_inference.png', 'manuscript_overview_blake_active_inference.pdf']
-[2026-02-06 16:07:28,557] [INFO] [infrastructure.reporting.manuscript_overview] Generating manuscript overview for code_project
-[2026-02-06 16:07:28,557] [INFO] [infrastructure.reporting.manuscript_overview] Generating manuscript overview for code_project
-[2026-02-06 16:07:28,560] [INFO] [infrastructure.reporting.manuscript_overview] Extracting 17 pages from code_project_combined.pdf
-[2026-02-06 16:07:28,923] [INFO] [infrastructure.reporting.manuscript_overview] Extracted 17 page images
-[2026-02-06 16:07:29,090] [INFO] [infrastructure.reporting.manuscript_overview] Saved PNG overview: /Users/4d/Documents/GitHub/template/output/executive_summary/manuscript_overview_code_project.png
-[2026-02-06 16:07:29,364] [INFO] [infrastructure.reporting.manuscript_overview] Saved PDF overview: /Users/4d/Documents/GitHub/template/output/executive_summary/manuscript_overview_code_project.pdf
-[2026-02-06 16:07:29,367] [INFO] [infrastructure.reporting.manuscript_overview] Generated overview files for code_project: ['manuscript_overview_code_project.png', 'manuscript_overview_code_project.pdf']
-[2026-02-06 16:07:29,367] [INFO] [infrastructure.reporting.dashboard_generator] Generated 17 dashboard and data file(s)
-[2026-02-06 16:07:29,367] [INFO] [infrastructure.reporting] Multi-project reporting complete. Generated 19 files:
-[2026-02-06 16:07:29,367] [INFO] [infrastructure.reporting]   JSON: consolidated_report.json
-[2026-02-06 16:07:29,367] [INFO] [infrastructure.reporting]   MARKDOWN: consolidated_report.md
-[2026-02-06 16:07:29,367] [INFO] [infrastructure.reporting]   HTML: dashboard.html
-[2026-02-06 16:07:29,367] [INFO] [infrastructure.reporting]   PNG: codebase_comparison.png
-[2026-02-06 16:07:29,367] [INFO] [infrastructure.reporting]   PDF: codebase_comparison.pdf
-[2026-02-06 16:07:29,367] [INFO] [infrastructure.reporting]   BLAKEACTIVEINFERENCE_PNG: project_dashboard_blakeactiveinference.png
-[2026-02-06 16:07:29,367] [INFO] [infrastructure.reporting]   BLAKEACTIVEINFERENCE_PDF: project_dashboard_blakeactiveinference.pdf
-[2026-02-06 16:07:29,367] [INFO] [infrastructure.reporting]   CODEPROJECT_PNG: project_dashboard_codeproject.png
-[2026-02-06 16:07:29,367] [INFO] [infrastructure.reporting]   CODEPROJECT_PDF: project_dashboard_codeproject.pdf
-[2026-02-06 16:07:29,367] [INFO] [infrastructure.reporting]   METRICS: project_metrics.csv
-[2026-02-06 16:07:29,367] [INFO] [infrastructure.reporting]   AGGREGATES: aggregate_metrics.csv
-[2026-02-06 16:07:29,367] [INFO] [infrastructure.reporting]   HEALTH: health_scores.csv
-[2026-02-06 16:07:29,367] [INFO] [infrastructure.reporting]   DETAILED_BREAKDOWN_CSV: detailed_project_breakdown.csv
-[2026-02-06 16:07:29,367] [INFO] [infrastructure.reporting]   COMPARATIVE_ANALYSIS_CSV: comparative_analysis.csv
-[2026-02-06 16:07:29,367] [INFO] [infrastructure.reporting]   RECOMMENDATIONS_CSV: recommendations_prioritized.csv
-[2026-02-06 16:07:29,367] [INFO] [infrastructure.reporting]   MANUSCRIPT_OVERVIEW_BLAKE_ACTIVE_INFERENCE.PNG: manuscript_overview_blake_active_inference.png
-[2026-02-06 16:07:29,367] [INFO] [infrastructure.reporting]   MANUSCRIPT_OVERVIEW_BLAKE_ACTIVE_INFERENCE.PDF: manuscript_overview_blake_active_inference.pdf
-[2026-02-06 16:07:29,367] [INFO] [infrastructure.reporting]   MANUSCRIPT_OVERVIEW_CODE_PROJECT.PNG: manuscript_overview_code_project.png
-[2026-02-06 16:07:29,367] [INFO] [infrastructure.reporting]   MANUSCRIPT_OVERVIEW_CODE_PROJECT.PDF: manuscript_overview_code_project.pdf
-[2026-02-06 16:07:29,367] [INFO] [infrastructure.reporting.pipeline_reporter] For project blake_active_inference, proj_result type: <class 'list'>, len: 7
-[2026-02-06 16:07:29,367] [INFO] [infrastructure.reporting.pipeline_reporter] For project code_project, proj_result type: <class 'list'>, len: 7
-[2026-02-06 16:07:29,367] [INFO] [infrastructure.reporting.pipeline_reporter] Multi-project summary saved: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.json
-[2026-02-06 16:07:29,368] [INFO] [infrastructure.reporting.pipeline_reporter] Multi-project summary saved: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.md
+[2026-02-12 13:18:54,105] [INFO] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/code_project/output/logs/pipeline.log
+[2026-02-12 13:18:54,105] [INFO] [infrastructure.core.pipeline] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/code_project/output/logs/pipeline.log
+[2026-02-12 13:18:54,105] [INFO] ✓ Stage 1 completed successfully (0.0s)
+[2026-02-12 13:18:54,105] [INFO] [infrastructure.core.pipeline] ✓ Stage 1 completed successfully (0.0s)
+[2026-02-12 13:18:54,105] [INFO] 
+[2026-02-12 13:18:54,105] [INFO] [infrastructure.core.pipeline] 
+[2026-02-12 13:18:54,105] [INFO] [2/8] Environment Setup (25% complete)
+[2026-02-12 13:18:54,105] [INFO] [infrastructure.core.pipeline] [2/8] Environment Setup (25% complete)
+[2026-02-12 13:18:54,105] [INFO]   Elapsed: 0s | ETA: 0s
+[2026-02-12 13:18:54,105] [INFO] [infrastructure.core.pipeline]   Elapsed: 0s | ETA: 0s
+[2026-02-12 13:18:54,105] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-02-12 13:18:54,105] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-02-12 13:18:54,105] [INFO] [infrastructure.core.logging_utils] Starting: Stage 2: Environment Setup
+[2026-02-12 13:18:54,106] [INFO] Running environment setup...
+[2026-02-12 13:18:54,106] [INFO] [infrastructure.core.pipeline] Running environment setup...
+[2026-02-12 13:18:54,797] [INFO] [infrastructure.core.logging_utils] Completed: Stage 2: Environment Setup (0.7s)
+[2026-02-12 13:18:54,797] [INFO] ✓ Stage 2 completed successfully (0.7s)
+[2026-02-12 13:18:54,797] [INFO] [infrastructure.core.pipeline] ✓ Stage 2 completed successfully (0.7s)
+[2026-02-12 13:18:54,797] [INFO] Skipping stage: Infrastructure Tests
+[2026-02-12 13:18:54,797] [INFO] [infrastructure.core.pipeline] Skipping stage: Infrastructure Tests
+[2026-02-12 13:18:54,797] [INFO] 
+[2026-02-12 13:18:54,797] [INFO] [infrastructure.core.pipeline] 
+[2026-02-12 13:18:54,797] [INFO] [3/8] Project Tests (37% complete)
+[2026-02-12 13:18:54,797] [INFO] [infrastructure.core.pipeline] [3/8] Project Tests (37% complete)
+[2026-02-12 13:18:54,797] [INFO]   Elapsed: 0s | ETA: 1s
+[2026-02-12 13:18:54,797] [INFO] [infrastructure.core.pipeline]   Elapsed: 0s | ETA: 1s
+[2026-02-12 13:18:54,797] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-02-12 13:18:54,797] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-02-12 13:18:54,798] [INFO] [infrastructure.core.logging_utils] Starting: Stage 3: Project Tests
+[2026-02-12 13:18:54,798] [INFO] Running project tests...
+[2026-02-12 13:18:54,798] [INFO] [infrastructure.core.pipeline] Running project tests...
+[2026-02-12 13:19:00,426] [INFO] [infrastructure.core.logging_utils] Completed: Stage 3: Project Tests (5.6s)
+[2026-02-12 13:19:00,426] [INFO] ✓ Stage 3 completed successfully (5.6s)
+[2026-02-12 13:19:00,426] [INFO] [infrastructure.core.pipeline] ✓ Stage 3 completed successfully (5.6s)
+[2026-02-12 13:19:00,427] [INFO] 
+[2026-02-12 13:19:00,427] [INFO] [infrastructure.core.pipeline] 
+[2026-02-12 13:19:00,427] [INFO] [4/8] Project Analysis (50% complete)
+[2026-02-12 13:19:00,427] [INFO] [infrastructure.core.pipeline] [4/8] Project Analysis (50% complete)
+[2026-02-12 13:19:00,427] [INFO]   Elapsed: 6s | ETA: 6s
+[2026-02-12 13:19:00,427] [INFO] [infrastructure.core.pipeline]   Elapsed: 6s | ETA: 6s
+[2026-02-12 13:19:00,427] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-02-12 13:19:00,427] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-02-12 13:19:00,427] [INFO] [infrastructure.core.logging_utils] Starting: Stage 4: Project Analysis
+[2026-02-12 13:19:00,427] [INFO] Running project analysis...
+[2026-02-12 13:19:00,427] [INFO] [infrastructure.core.pipeline] Running project analysis...
+[2026-02-12 13:19:04,587] [INFO] [infrastructure.core.logging_utils] Completed: Stage 4: Project Analysis (4.2s)
+[2026-02-12 13:19:04,587] [INFO] ✓ Stage 4 completed successfully (4.2s)
+[2026-02-12 13:19:04,587] [INFO] [infrastructure.core.pipeline] ✓ Stage 4 completed successfully (4.2s)
+[2026-02-12 13:19:04,588] [INFO] 
+[2026-02-12 13:19:04,588] [INFO] [infrastructure.core.pipeline] 
+[2026-02-12 13:19:04,588] [INFO] [5/8] PDF Rendering (62% complete)
+[2026-02-12 13:19:04,588] [INFO] [infrastructure.core.pipeline] [5/8] PDF Rendering (62% complete)
+[2026-02-12 13:19:04,588] [INFO]   Elapsed: 10s | ETA: 6s
+[2026-02-12 13:19:04,588] [INFO] [infrastructure.core.pipeline]   Elapsed: 10s | ETA: 6s
+[2026-02-12 13:19:04,588] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-02-12 13:19:04,588] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-02-12 13:19:04,588] [INFO] [infrastructure.core.logging_utils] Starting: Stage 5: PDF Rendering
+[2026-02-12 13:19:04,589] [INFO] Running PDF rendering...
+[2026-02-12 13:19:04,589] [INFO] [infrastructure.core.pipeline] Running PDF rendering...
+[2026-02-12 13:19:33,488] [INFO] [infrastructure.core.logging_utils] Completed: Stage 5: PDF Rendering (28.9s)
+[2026-02-12 13:19:33,489] [INFO] ✓ Stage 5 completed successfully (28.9s)
+[2026-02-12 13:19:33,489] [INFO] [infrastructure.core.pipeline] ✓ Stage 5 completed successfully (28.9s)
+[2026-02-12 13:19:33,489] [INFO] 
+[2026-02-12 13:19:33,489] [INFO] [infrastructure.core.pipeline] 
+[2026-02-12 13:19:33,489] [INFO] [6/8] Output Validation (75% complete)
+[2026-02-12 13:19:33,489] [INFO] [infrastructure.core.pipeline] [6/8] Output Validation (75% complete)
+[2026-02-12 13:19:33,489] [INFO]   Elapsed: 39s | ETA: 13s
+[2026-02-12 13:19:33,489] [INFO] [infrastructure.core.pipeline]   Elapsed: 39s | ETA: 13s
+[2026-02-12 13:19:33,489] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-02-12 13:19:33,489] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-02-12 13:19:33,490] [INFO] [infrastructure.core.logging_utils] Starting: Stage 6: Output Validation
+[2026-02-12 13:19:33,490] [INFO] Running output validation...
+[2026-02-12 13:19:33,490] [INFO] [infrastructure.core.pipeline] Running output validation...
+[2026-02-12 13:19:33,878] [INFO] [infrastructure.core.logging_utils] Completed: Stage 6: Output Validation (0.4s)
+[2026-02-12 13:19:33,878] [INFO] ✓ Stage 6 completed successfully (0.4s)
+[2026-02-12 13:19:33,878] [INFO] [infrastructure.core.pipeline] ✓ Stage 6 completed successfully (0.4s)
+[2026-02-12 13:19:33,879] [INFO] 
+[2026-02-12 13:19:33,879] [INFO] [infrastructure.core.pipeline] 
+[2026-02-12 13:19:33,879] [INFO] [7/8] Copy Outputs (87% complete)
+[2026-02-12 13:19:33,879] [INFO] [infrastructure.core.pipeline] [7/8] Copy Outputs (87% complete)
+[2026-02-12 13:19:33,879] [INFO]   Elapsed: 39s | ETA: 5s
+[2026-02-12 13:19:33,879] [INFO] [infrastructure.core.pipeline]   Elapsed: 39s | ETA: 5s
+[2026-02-12 13:19:33,879] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-02-12 13:19:33,879] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-02-12 13:19:33,879] [INFO] [infrastructure.core.logging_utils] Starting: Stage 7: Copy Outputs
+[2026-02-12 13:19:33,879] [INFO] Running output copying...
+[2026-02-12 13:19:33,879] [INFO] [infrastructure.core.pipeline] Running output copying...
+[2026-02-12 13:19:34,286] [INFO] [infrastructure.core.logging_utils] Completed: Stage 7: Copy Outputs (0.4s)
+[2026-02-12 13:19:34,286] [INFO] ✓ Stage 7 completed successfully (0.4s)
+[2026-02-12 13:19:34,286] [INFO] [infrastructure.core.pipeline] ✓ Stage 7 completed successfully (0.4s)
+[2026-02-12 13:19:34,289] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (JSON) saved: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/pipeline_report.json
+[2026-02-12 13:19:34,289] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (Markdown) saved: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/pipeline_report.md
+[2026-02-12 13:19:34,289] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (HTML) saved: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/pipeline_report.html
+[2026-02-12 13:19:34,289] [INFO] [infrastructure.core.logging_utils] Completed: Pipeline execution for code_project (40.2s)
+[2026-02-12 13:19:34,290] [INFO] [infrastructure.reporting] Starting multi-project reporting for 2 projects...
+[2026-02-12 13:19:34,290] [INFO] [infrastructure.reporting] Generating executive summary...
+[2026-02-12 13:19:34,290] [INFO] [infrastructure.reporting.executive_reporter] Generating executive summary for 2 project(s)
+[2026-02-12 13:19:34,290] [INFO] [infrastructure.reporting.executive_reporter] Collecting metrics for project: blake_active_inference
+[2026-02-12 13:19:34,306] [INFO] [infrastructure.reporting.executive_reporter] Collecting metrics for project: code_project
+[2026-02-12 13:19:34,310] [INFO] [infrastructure.reporting.executive_reporter] Executive summary generated successfully
+[2026-02-12 13:19:34,311] [INFO] [infrastructure.reporting] Saving summary reports...
+[2026-02-12 13:19:34,311] [INFO] [infrastructure.reporting.executive_reporter] Saved JSON report: /Users/4d/Documents/GitHub/template/output/executive_summary/json/consolidated_report.json
+[2026-02-12 13:19:34,311] [INFO] [infrastructure.reporting.executive_reporter] Saved Markdown report: /Users/4d/Documents/GitHub/template/output/executive_summary/md/consolidated_report.md
+[2026-02-12 13:19:34,312] [INFO] [infrastructure.reporting.executive_reporter] Saved HTML report: /Users/4d/Documents/GitHub/template/output/executive_summary/html/consolidated_report.html
+[2026-02-12 13:19:34,312] [INFO] [infrastructure.reporting] Generating visual dashboards...
+[2026-02-12 13:19:34,312] [INFO] [infrastructure.reporting.dashboard_generator] Generating all dashboard formats...
+[2026-02-12 13:19:34,312] [INFO] [infrastructure.reporting.dashboard_generator] Generating matplotlib dashboard...
+[2026-02-12 13:19:35,095] [INFO] [infrastructure.reporting.dashboard_generator] Saved PNG dashboard: /Users/4d/Documents/GitHub/template/output/executive_summary/png/dashboard.png
+[2026-02-12 13:19:35,414] [INFO] [infrastructure.reporting.dashboard_generator] Saved PDF dashboard: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/dashboard.pdf
+[2026-02-12 13:19:35,414] [INFO] [infrastructure.reporting.dashboard_generator] Generating health score radar chart...
+[2026-02-12 13:19:35,560] [INFO] [infrastructure.reporting.dashboard_generator] Health radar chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/health_scores_radar.png
+[2026-02-12 13:19:35,602] [INFO] [infrastructure.reporting.dashboard_generator] Health radar chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/health_scores_radar.pdf
+[2026-02-12 13:19:35,602] [INFO] [infrastructure.reporting.dashboard_generator] Generating health score comparison chart...
+[2026-02-12 13:19:35,801] [INFO] [infrastructure.reporting.dashboard_generator] Health comparison chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/health_scores_comparison.png
+[2026-02-12 13:19:35,853] [INFO] [infrastructure.reporting.dashboard_generator] Health comparison chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/health_scores_comparison.pdf
+[2026-02-12 13:19:35,853] [INFO] [infrastructure.reporting.dashboard_generator] Generating individual project dashboards...
+[2026-02-12 13:19:36,165] [INFO] [infrastructure.reporting.dashboard_generator] Project dashboard (blake_active_inference PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/project_dashboard_blakeactiveinference.png
+[2026-02-12 13:19:36,253] [INFO] [infrastructure.reporting.dashboard_generator] Project dashboard (blake_active_inference PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/project_dashboard_blakeactiveinference.pdf
+[2026-02-12 13:19:36,548] [INFO] [infrastructure.reporting.dashboard_generator] Project dashboard (code_project PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/project_dashboard_codeproject.png
+[2026-02-12 13:19:36,630] [INFO] [infrastructure.reporting.dashboard_generator] Project dashboard (code_project PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/project_dashboard_codeproject.pdf
+[2026-02-12 13:19:36,630] [INFO] [infrastructure.reporting.dashboard_generator] Generating pipeline efficiency analysis chart...
+[2026-02-12 13:19:36,948] [INFO] [infrastructure.reporting.dashboard_generator] Pipeline efficiency chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/pipeline_efficiency.png
+[2026-02-12 13:19:37,027] [INFO] [infrastructure.reporting.dashboard_generator] Pipeline efficiency chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/pipeline_efficiency.pdf
+[2026-02-12 13:19:37,027] [INFO] [infrastructure.reporting.dashboard_generator] Generating pipeline bottlenecks chart...
+[2026-02-12 13:19:37,224] [INFO] [infrastructure.reporting.dashboard_generator] Pipeline bottlenecks chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/pipeline_bottlenecks.png
+[2026-02-12 13:19:37,268] [INFO] [infrastructure.reporting.dashboard_generator] Pipeline bottlenecks chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/pipeline_bottlenecks.pdf
+[2026-02-12 13:19:37,268] [INFO] [infrastructure.reporting.dashboard_generator] Generating output distribution charts...
+[2026-02-12 13:19:37,596] [INFO] [infrastructure.reporting.dashboard_generator] Output distribution chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/output_distribution.png
+[2026-02-12 13:19:37,684] [INFO] [infrastructure.reporting.dashboard_generator] Output distribution chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/output_distribution.pdf
+[2026-02-12 13:19:37,684] [INFO] [infrastructure.reporting.dashboard_generator] Generating output comparison chart...
+[2026-02-12 13:19:37,830] [INFO] [infrastructure.reporting.dashboard_generator] Output comparison chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/output_comparison.png
+[2026-02-12 13:19:37,871] [INFO] [infrastructure.reporting.dashboard_generator] Output comparison chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/output_comparison.pdf
+[2026-02-12 13:19:37,871] [INFO] [infrastructure.reporting.dashboard_generator] Generating codebase complexity chart...
+[2026-02-12 13:19:38,208] [INFO] [infrastructure.reporting.dashboard_generator] Codebase complexity chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/codebase_complexity.png
+[2026-02-12 13:19:38,304] [INFO] [infrastructure.reporting.dashboard_generator] Codebase complexity chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/codebase_complexity.pdf
+[2026-02-12 13:19:38,304] [INFO] [infrastructure.reporting.dashboard_generator] Generating codebase comparison chart...
+[2026-02-12 13:19:38,565] [INFO] [infrastructure.reporting.dashboard_generator] Codebase comparison chart (PNG) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/png/codebase_comparison.png
+[2026-02-12 13:19:38,638] [INFO] [infrastructure.reporting.dashboard_generator] Codebase comparison chart (PDF) saved: /Users/4d/Documents/GitHub/template/output/executive_summary/pdf/codebase_comparison.pdf
+[2026-02-12 13:19:38,680] [INFO] [infrastructure.reporting.dashboard_generator] Generating interactive plotly dashboard...
+[2026-02-12 13:19:38,791] [INFO] [infrastructure.reporting.dashboard_generator] Saved interactive HTML dashboard: /Users/4d/Documents/GitHub/template/output/executive_summary/dashboard.html
+[2026-02-12 13:19:38,791] [INFO] [infrastructure.reporting.dashboard_generator] Generated CSV metrics table: /Users/4d/Documents/GitHub/template/output/executive_summary/csv/project_metrics.csv
+[2026-02-12 13:19:38,791] [INFO] [infrastructure.reporting.dashboard_generator] Generated CSV aggregates table: /Users/4d/Documents/GitHub/template/output/executive_summary/csv/aggregate_metrics.csv
+[2026-02-12 13:19:38,792] [INFO] [infrastructure.reporting.dashboard_generator] Generated CSV health scores table: /Users/4d/Documents/GitHub/template/output/executive_summary/csv/health_scores.csv
+[2026-02-12 13:19:38,792] [INFO] [infrastructure.reporting.dashboard_generator] Detailed project breakdown CSV saved: /Users/4d/Documents/GitHub/template/output/executive_summary/csv/detailed_project_breakdown.csv
+[2026-02-12 13:19:38,792] [INFO] [infrastructure.reporting.dashboard_generator] Comparative analysis CSV saved: /Users/4d/Documents/GitHub/template/output/executive_summary/csv/comparative_analysis.csv
+[2026-02-12 13:19:38,792] [INFO] [infrastructure.reporting.dashboard_generator] Prioritized recommendations CSV saved: /Users/4d/Documents/GitHub/template/output/executive_summary/csv/recommendations_prioritized.csv
+[2026-02-12 13:19:38,792] [INFO] [infrastructure.reporting.manuscript_overview] Generating manuscript overview for blake_active_inference
+[2026-02-12 13:19:38,792] [INFO] [infrastructure.reporting.manuscript_overview] Generating manuscript overview for blake_active_inference
+[2026-02-12 13:19:38,875] [INFO] [infrastructure.reporting.manuscript_overview] Extracting 64 pages from blake_active_inference_combined.pdf
+[2026-02-12 13:19:38,876] [WARNING] [infrastructure.reporting.manuscript_overview] Advanced rendering failed, falling back to simple rendering: reportlab and PIL required for advanced rendering
+[2026-02-12 13:19:41,783] [INFO] [infrastructure.reporting.manuscript_overview] Extracted 64 page images
+[2026-02-12 13:19:44,551] [INFO] [infrastructure.reporting.manuscript_overview] Saved PNG overview: /Users/4d/Documents/GitHub/template/output/executive_summary/manuscript_overview_blake_active_inference.png
+[2026-02-12 13:19:44,552] [WARNING] [infrastructure.reporting.manuscript_overview] Failed to save PDF overview: reportlab required for PDF output
+[2026-02-12 13:19:44,581] [INFO] [infrastructure.reporting.manuscript_overview] Generated overview files for blake_active_inference: ['manuscript_overview_blake_active_inference.png']
+[2026-02-12 13:19:44,581] [INFO] [infrastructure.reporting.manuscript_overview] Generating manuscript overview for code_project
+[2026-02-12 13:19:44,581] [INFO] [infrastructure.reporting.manuscript_overview] Generating manuscript overview for code_project
+[2026-02-12 13:19:44,587] [INFO] [infrastructure.reporting.manuscript_overview] Extracting 19 pages from code_project_combined.pdf
+[2026-02-12 13:19:44,587] [WARNING] [infrastructure.reporting.manuscript_overview] Advanced rendering failed, falling back to simple rendering: reportlab and PIL required for advanced rendering
+[2026-02-12 13:19:45,085] [INFO] [infrastructure.reporting.manuscript_overview] Extracted 19 page images
+[2026-02-12 13:19:45,743] [INFO] [infrastructure.reporting.manuscript_overview] Saved PNG overview: /Users/4d/Documents/GitHub/template/output/executive_summary/manuscript_overview_code_project.png
+[2026-02-12 13:19:45,744] [WARNING] [infrastructure.reporting.manuscript_overview] Failed to save PDF overview: reportlab required for PDF output
+[2026-02-12 13:19:45,744] [INFO] [infrastructure.reporting.manuscript_overview] Generated overview files for code_project: ['manuscript_overview_code_project.png']
+[2026-02-12 13:19:45,744] [INFO] [infrastructure.reporting.dashboard_generator] Generated 15 dashboard and data file(s)
+[2026-02-12 13:19:45,744] [INFO] [infrastructure.reporting] Multi-project reporting complete. Generated 17 files:
+[2026-02-12 13:19:45,744] [INFO] [infrastructure.reporting]   JSON: consolidated_report.json
+[2026-02-12 13:19:45,744] [INFO] [infrastructure.reporting]   MARKDOWN: consolidated_report.md
+[2026-02-12 13:19:45,744] [INFO] [infrastructure.reporting]   HTML: dashboard.html
+[2026-02-12 13:19:45,744] [INFO] [infrastructure.reporting]   PNG: codebase_comparison.png
+[2026-02-12 13:19:45,744] [INFO] [infrastructure.reporting]   PDF: codebase_comparison.pdf
+[2026-02-12 13:19:45,744] [INFO] [infrastructure.reporting]   BLAKEACTIVEINFERENCE_PNG: project_dashboard_blakeactiveinference.png
+[2026-02-12 13:19:45,744] [INFO] [infrastructure.reporting]   BLAKEACTIVEINFERENCE_PDF: project_dashboard_blakeactiveinference.pdf
+[2026-02-12 13:19:45,744] [INFO] [infrastructure.reporting]   CODEPROJECT_PNG: project_dashboard_codeproject.png
+[2026-02-12 13:19:45,744] [INFO] [infrastructure.reporting]   CODEPROJECT_PDF: project_dashboard_codeproject.pdf
+[2026-02-12 13:19:45,744] [INFO] [infrastructure.reporting]   METRICS: project_metrics.csv
+[2026-02-12 13:19:45,744] [INFO] [infrastructure.reporting]   AGGREGATES: aggregate_metrics.csv
+[2026-02-12 13:19:45,744] [INFO] [infrastructure.reporting]   HEALTH: health_scores.csv
+[2026-02-12 13:19:45,744] [INFO] [infrastructure.reporting]   DETAILED_BREAKDOWN_CSV: detailed_project_breakdown.csv
+[2026-02-12 13:19:45,744] [INFO] [infrastructure.reporting]   COMPARATIVE_ANALYSIS_CSV: comparative_analysis.csv
+[2026-02-12 13:19:45,744] [INFO] [infrastructure.reporting]   RECOMMENDATIONS_CSV: recommendations_prioritized.csv
+[2026-02-12 13:19:45,744] [INFO] [infrastructure.reporting]   MANUSCRIPT_OVERVIEW_BLAKE_ACTIVE_INFERENCE.PNG: manuscript_overview_blake_active_inference.png
+[2026-02-12 13:19:45,745] [INFO] [infrastructure.reporting]   MANUSCRIPT_OVERVIEW_CODE_PROJECT.PNG: manuscript_overview_code_project.png
+[2026-02-12 13:19:45,745] [INFO] [infrastructure.reporting.pipeline_reporter] For project blake_active_inference, proj_result type: <class 'list'>, len: 7
+[2026-02-12 13:19:45,745] [INFO] [infrastructure.reporting.pipeline_reporter] For project code_project, proj_result type: <class 'list'>, len: 7
+[2026-02-12 13:19:45,745] [INFO] [infrastructure.reporting.pipeline_reporter] Multi-project summary saved: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.json
+[2026-02-12 13:19:45,745] [INFO] [infrastructure.reporting.pipeline_reporter] Multi-project summary saved: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.md

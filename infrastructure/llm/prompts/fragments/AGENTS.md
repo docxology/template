@@ -579,4 +579,4 @@ def audit_fragments(self) -> Dict[str, List[str]]:
 **System Documentation:**
 
 - [`../../../../AGENTS.md`](../../../../AGENTS.md) - system overview
-- [`../../../../docs/development/CONTRIBUTING.md`](../../../../docs/development/CONTRIBUTING.md) - Development guide
+- [`../../../../docs/development/contributing.md`](../../../../docs/development/contributing.md) - Development guide

@@ -15,15 +15,16 @@ class TestPackageLevelImports:
     def test_core_function_imports(self) -> None:
         """Test that core functions are accessible from package level."""
         # Import from package level (tests __init__.py)
-        from src import add_numbers, calculate_average
+        from src.core.example import add_numbers, calculate_average
 
         # Verify functions work
         assert add_numbers(2, 3) == 5
         assert calculate_average([1, 2, 3]) == 2.0
 
     def test_class_imports(self) -> None:
-        """Test that core classes are accessible from package level."""
-        from src import SimpleSimulation, SimulationBase, VisualizationEngine
+        """Test that core classes are accessible from explicit subpackage imports."""
+        from src.pipeline.simulation import SimpleSimulation, SimulationBase
+        from src.visualization.visualization import VisualizationEngine
 
         # Verify classes exist and can be instantiated
         assert SimpleSimulation is not None
@@ -35,9 +36,9 @@ class TestPackageLevelImports:
         assert engine is not None
 
     def test_statistics_imports(self) -> None:
-        """Test that statistics functions are accessible from package level."""
+        """Test that statistics functions are accessible from explicit subpackage imports."""
         import numpy as np
-        from src import calculate_descriptive_stats
+        from src.analysis.statistics import calculate_descriptive_stats
 
         # Test statistics function
         data = np.array([1.0, 2.0, 3.0, 4.0, 5.0])
@@ -60,31 +61,25 @@ class TestPackageLevelImports:
         assert pkg.__layer__ == "scientific"
 
     def test_package_all_exports(self) -> None:
-        """Test that __all__ is properly defined and includes expected modules."""
+        """Test that __all__ is properly defined with subpackage names."""
         import src as pkg
 
         # Verify __all__ exists
         assert hasattr(pkg, "__all__")
         assert isinstance(pkg.__all__, list)
 
-        # Verify expected modules are in __all__
-        expected_modules = [
-            "example",
-            "simulation",
-            "statistics",
-            "data_generator",
-            "data_processing",
-            "metrics",
-            "parameters",
-            "performance",
-            "plots",
-            "reporting",
-            "validation",
+        # Verify expected subpackages are in __all__
+        # (lazy loading: only subpackage names, not individual modules)
+        expected_subpackages = [
+            "analysis",
             "visualization",
+            "data",
+            "core",
+            "pipeline",
         ]
 
-        for module in expected_modules:
-            assert module in pkg.__all__, f"Module '{module}' not in __all__"
+        for subpkg in expected_subpackages:
+            assert subpkg in pkg.__all__, f"Subpackage '{subpkg}' not in __all__"
 
     def test_package_imports_without_errors(self) -> None:
         """Test that importing package doesn't produce import errors."""
@@ -101,7 +96,7 @@ class TestPackageLevelImports:
 
         assert pkg.__doc__ is not None
         assert "scientific" in pkg.__doc__.lower()
-        assert "layer" in pkg.__doc__.lower()
+        assert "source" in pkg.__doc__.lower()
 
     def test_import_error_fallback(self) -> None:
         """Test that ImportError fallback doesn't break package loading.

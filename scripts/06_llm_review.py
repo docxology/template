@@ -1477,7 +1477,9 @@ def main(mode: ReviewMode = ReviewMode.ALL, project_name: str = "project") -> in
         
         if not text:
             logger.error("Cannot generate reviews without manuscript text")
-            return 1
+            logger.warning("  Skipping LLM review - manuscript text extraction failed")
+            logger.info("  Install pypdf for PDF text extraction: pip install pypdf")
+            return 2  # Graceful skip, not failure
         
         # Step 3: Initialize LLM client with manuscript review configuration
         log_stage("Initializing LLM client...")

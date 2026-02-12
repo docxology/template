@@ -802,10 +802,24 @@ class PDFRenderer:
             if begin_doc_idx > 0:
                 # Build combined preamble content
                 combined_preamble = ""
+                # Insert defaults (config.yaml) first, but checking for duplicates
+                if title_page_preamble:
+                    # Filter out commands that would overwrite existing Pandoc-generated metadata
+                    lines = title_page_preamble.split('\n')
+                    filtered_lines = []
+                    for line in lines:
+                        # We want to inject our formatted metadata even if Pandoc generated some.
+                        # Since we append to combined_preamble which is inserted before \begin{document}
+                        # (likely after Pandoc's preamble), our definitions should take precedence or at least exist.
+                        # For \author and \date, redefinition is standard.
+                        filtered_lines.append(line)
+                    
+                    if filtered_lines:
+                        combined_preamble += "\n".join(filtered_lines) + "\n\n"
+
+                # Insert overrides (preamble.md) second
                 if preamble_content:
                     combined_preamble += preamble_content + "\n\n"
-                if title_page_preamble:
-                    combined_preamble += title_page_preamble + "\n\n"
 
                 # Insert before \begin{document}
                 tex_content = (
@@ -819,16 +833,20 @@ class PDFRenderer:
 
         # Insert title page body commands AFTER \begin{document}
         if title_page_body:
-            begin_doc_idx = tex_content.find("\\begin{document}")
-            if begin_doc_idx > 0:
-                # Find position right after \begin{document}
-                end_of_begin_doc = tex_content.find("\n", begin_doc_idx) + 1
-                if end_of_begin_doc > begin_doc_idx:
-                    # Insert \maketitle and formatting after \begin{document}
-                    tex_content = (
-                        tex_content[:end_of_begin_doc]
-                        + "\n"
-                        + title_page_body
+            # Check if \maketitle is already present (e.g. from Pandoc)
+            if "\\maketitle" in tex_content:
+                logger.debug("✓ \\maketitle already present in LaTeX content (skipping injection)")
+            else:
+                begin_doc_idx = tex_content.find("\\begin{document}")
+                if begin_doc_idx > 0:
+                    # Find position right after \begin{document}
+                    end_of_begin_doc = tex_content.find("\n", begin_doc_idx) + 1
+                    if end_of_begin_doc > begin_doc_idx:
+                        # Insert \maketitle and formatting after \begin{document}
+                        tex_content = (
+                            tex_content[:end_of_begin_doc]
+                            + "\n"
+                            + title_page_body
                         + "\n\n"
                         + tex_content[end_of_begin_doc:]
                     )
@@ -1697,7 +1715,7 @@ class PDFRenderer:
             title = paper.get("title", "Research Paper")
             subtitle = paper.get("subtitle", "")
             date = paper.get("date", "")
-            doi = paper.get("doi", "")
+            doi = config.get("publication", {}).get("doi", "")
 
             # Build preamble commands (must be before \begin{document})
             preamble_lines = [
@@ -1719,33 +1737,43 @@ class PDFRenderer:
                     
                     # Add affiliation if present
                     if "affiliation" in author:
-                        parts.append(f"\\\\{author['affiliation']}")
+                        parts.append(f"\\\\\\footnotesize{{{author['affiliation']}}}")
                     
                     # Add email if present
                     if "email" in author:
-                        parts.append(f"\\\\\\texttt{{{author['email']}}}")
+                        parts.append(f"\\\\\\footnotesize{{\\texttt{{{author['email']}}}}}")
                     
                     # Add ORCID if present (with hyperlink)
                     if "orcid" in author:
                         orcid = author["orcid"]
-                        parts.append(f"\\\\\\href{{https://orcid.org/{orcid}}}{{ORCID: {orcid}}}")
+                        parts.append(f"\\\\\\footnotesize{{\\href{{https://orcid.org/{orcid}}}{{ORCID: {orcid}}}}}")
                     
                     # Join all parts for this author
                     author_block = "".join(parts)
                     author_blocks.append(author_block)
                 
                 if author_blocks:
+                    # Use standard \and for multiple authors, but tight formatting within each
                     author_str = " \\\\and ".join(author_blocks)
-                    # Add DOI after author info if present
+                    
+                    # Add DOI and Date to the author block for tight vertical layout
+                    extras = []
                     if doi:
-                        author_str += f"\\\\[1em]\\href{{https://doi.org/{doi}}}{{DOI: {doi}}}"
+                        extras.append(f"\\href{{https://doi.org/{doi}}}{{DOI: {doi}}}")
+                    
+                    if date:
+                        extras.append(date)
+
+                    if extras:
+                        # Add extras with small vertical space and small font
+                        author_str += " \\\\ " + " \\\\ ".join([f"\\footnotesize{{{e}}}" for e in extras])
+
                     preamble_lines.append(f"\\author{{{author_str}}}")
 
-            # Add date if specified, otherwise use \today
-            if date:
-                preamble_lines.append(f"\\date{{{date}}}")
-            else:
-                preamble_lines.append("\\date{\\today}")
+            # Note: We do NOT add a separate \date{} command here.
+            # The date is included in the \author block above for tight spacing.
+            # The \date{} command in 00_preamble.md (if present) will be used for the image.
+            # If 00_preamble.md is missing, \date{} will be empty (standard behavior).
 
             logger.debug(
                 f"Generated title page preamble with {len(preamble_lines)} commands"

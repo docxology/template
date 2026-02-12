@@ -2,7 +2,7 @@
 
 import numpy as np
 import pytest
-from metrics import (CustomMetric, calculate_accuracy, calculate_all_metrics,
+from src.core.metrics import (CustomMetric, calculate_accuracy, calculate_all_metrics,
                      calculate_convergence_metrics, calculate_effect_size,
                      calculate_p_value_approximation,
                      calculate_precision_recall_f1, calculate_psnr,

@@ -83,16 +83,19 @@ graph TD
 This rendering system supports **BasicTeX**, a minimal TeX distribution (~100 MB instead of full MacTeX's ~4 GB).
 
 **Required packages** (some require installation):
+
 ```bash
 sudo tlmgr update --self
 sudo tlmgr install multirow cleveref doi newunicodechar
 ```
 
 **Already included in BasicTeX**:
+
 - Core packages: `amsmath`, `graphicx`, `hyperref`, `natbib`
 - Table enhancement: `bm` (part of `tools`), `subcaption` (part of `caption`)
 
 **Pre-flight validation**:
+
 ```bash
 # Validate packages before rendering
 python3 -m infrastructure.rendering.latex_package_validator
@@ -102,6 +105,7 @@ python3 scripts/03_render_pdf.py
 ```
 
 **Common issues**:
+
 - **"File *.sty not found"**: Install missing package via `tlmgr`
 - **No kpsewhich found**: Install BasicTeX or MacTeX
 - **Permission denied**: Use `sudo` for tlmgr commands
@@ -109,6 +113,7 @@ python3 scripts/03_render_pdf.py
 ### Full MacTeX (Installation)
 
 For a installation with all packages, install **MacTeX**:
+
 ```bash
 brew install --cask mactex
 ```
@@ -144,6 +149,16 @@ authors:
     email: "your@email.edu"
     affiliation: "Your Institution"
     corresponding: true
+
+publication:
+  doi: "10.5281/zenodo.XXXXXXX"  # DOI goes here, NOT in 'paper' section
+  journal: "Zenodo Preprints"
+  year: "2026"
+
+# CAUTION: If you create a 'manuscript/preamble.md' with \date{}, \title{}, or \author{} commands,
+# they will OVERRIDE these configuration values in the final PDF.
+```
+
 ```
 
 ### Add Bibliography and Citations
@@ -185,6 +200,7 @@ Reference in text: Figure \ref{fig:your_figure}
 **Important**: The rendering system automatically ensures `\usepackage{graphicx}` is included in the LaTeX preamble. This package is required for `\includegraphics` commands. If not in your custom preamble (`manuscript/preamble.md`), it will be added automatically during compilation.
 
 **Note**: Figure paths are automatically corrected during rendering. The system handles:
+
 - Path normalization for various formats (`../output/figures/`, `output/figures/`, etc.)
 - Unicode characters in filenames
 - Missing figure warnings (compilation continues gracefully, but logs the issue)
@@ -648,6 +664,7 @@ pytest tests/infra_tests/rendering/ --cov=infrastructure.rendering --cov-report=
 **Problem**: "File not found" errors for packages
 
 **Solutions**:
+
 ```bash
 # Check which packages are available
 python3 -m infrastructure.rendering.latex_package_validator
@@ -662,6 +679,7 @@ kpsewhich multirow.sty
 **Problem**: Compilation hangs or takes too long
 
 **Solutions**:
+
 - Reduce `max_compilation_passes` in configuration
 - Check for infinite loops in cross-references
 - Validate manuscript structure before compilation
@@ -672,6 +690,7 @@ kpsewhich multirow.sty
 **Problem**: Figures not appearing despite existing files
 
 **Debug Steps**:
+
 ```bash
 # Check figure discovery
 python3 -c "
@@ -687,6 +706,7 @@ grep "includegraphics" output/pdf/_combined_manuscript.tex
 **Problem**: Unicode filenames cause issues
 
 **Solutions**:
+
 - Ensure proper UTF-8 encoding in figure filenames
 - Use NFC normalization for composed characters
 - Test with ASCII-only names first
@@ -696,6 +716,7 @@ grep "includegraphics" output/pdf/_combined_manuscript.tex
 **Problem**: Citations appear as `[?]` in output
 
 **Debug Steps**:
+
 ```bash
 # Check bibliography file
 ls -la manuscript/references.bib
@@ -715,6 +736,7 @@ tail -20 output/pdf/_combined_manuscript.blg
 **Problem**: Large manuscripts cause memory issues
 
 **Solutions**:
+
 - Split large manuscripts into smaller sections
 - Use streaming compilation for very large documents
 - Increase system memory or use swap space
@@ -723,6 +745,7 @@ tail -20 output/pdf/_combined_manuscript.blg
 **Problem**: Slow compilation times
 
 **Solutions**:
+
 - Use SSD storage for temporary files
 - Pre-load frequently used LaTeX packages
 - Use parallel compilation for multiple documents
@@ -812,9 +835,11 @@ For function signatures and API documentation, see [`AGENTS.md`](AGENTS.md).
 **Cause**: Bibliography not processed or citation keys don't match.
 
 **Solutions**:
+
 1. Verify `references.bib` file exists in `manuscript/` directory
 2. Check citation keys in markdown match `@` entries in `.bib` file
 3. Ensure bibliography is formatted correctly:
+
    ```bibtex
    @article{smith2024,
      title={Title},
@@ -822,6 +847,7 @@ For function signatures and API documentation, see [`AGENTS.md`](AGENTS.md).
      year={2024}
    }
    ```
+
 4. Run full build: `python3 scripts/execute_pipeline.py --core-only`
 
 ### Figures not appearing in PDF
@@ -829,43 +855,54 @@ For function signatures and API documentation, see [`AGENTS.md`](AGENTS.md).
 **Cause**: Missing `graphicx` package, incorrect file paths, or missing figure files.
 
 **Solutions**:
+
 1. **Verify graphicx package is loaded** (the system should add it automatically):
+
    ```bash
    grep "usepackage{graphicx}" project/output/pdf/_combined_manuscript.tex
    ```
+
    If missing, ensure `manuscript/preamble.md` contains `\usepackage{graphicx}` or check build logs.
 
 2. **Generate missing figures**:
+
    ```bash
    python3 scripts/02_run_analysis.py
    ```
 
 3. **Verify figures are in correct location**:
+
    ```bash
    ls -la project/output/figures/ | grep -E "\.png|\.pdf|\.jpg"
    ```
 
 4. **Check figure paths in markdown** are correct:
+
    ```bash
    grep -r "includegraphics" project/manuscript/ | head -5
    ```
+
    Should be: `\includegraphics{../output/figures/name.png}`
 
 5. **Check filename matches exactly** (case-sensitive):
+
    ```bash
    ls project/output/figures/ | grep "your_figure"
    ```
 
 6. **Check LaTeX compilation log** for graphics-specific errors:
+
    ```bash
    tail -150 project/output/pdf/_combined_manuscript.log | grep -i "graphic\|Error"
    ```
+
    Look for:
    - "File not found" (figure file doesn't exist)
    - "Undefined control sequence" (graphicx package missing)
    - "Cannot find" (file path problem)
 
 7. **For Unicode filenames**, ensure proper encoding:
+
    ```bash
    file project/output/figures/your_figure.png
    ```
@@ -875,6 +912,7 @@ For function signatures and API documentation, see [`AGENTS.md`](AGENTS.md).
 **Cause**: Missing LaTeX packages or invalid markup.
 
 **Solutions**:
+
 1. Check preamble in `manuscript/preamble.md` for required packages
 2. Verify all LaTeX commands are valid (use `\ref{}`, not `\ref {}`)
 3. Ensure all `\label{}` commands exist for referenced items
@@ -895,4 +933,3 @@ pytest tests/infra_tests/rendering/test_pdf_renderer_fixes.py -v
 # Run with coverage
 pytest tests/infra_tests/rendering/ --cov=infrastructure.rendering
 ```
-

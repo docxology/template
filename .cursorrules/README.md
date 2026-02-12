@@ -5,10 +5,12 @@ Development standards and coding guidelines for the Research Project Template.
 ## Files
 
 ### Main Documents
+
 - **AGENTS.md** - overview and navigation (start here)
 - **README.md** - This file (quick reference)
 
 ### Development Standards
+
 - **error_handling.md** - Exception handling patterns
 - **python_logging.md** - Logging standards and best practices
 - **infrastructure_modules.md** - Infrastructure module development guide
@@ -22,7 +24,7 @@ Development standards and coding guidelines for the Research Project Template.
 - **api_design.md** - API design and interface standards
 - **manuscript_style.md** - Manuscript formatting and style standards
 - **reporting.md** - Reporting module standards and outputs
-- **refactoring.md** - **NEW**: Refactoring and modularization standards (clean break approach)
+- **refactoring.md** - Refactoring and modularization standards (clean break approach)
 
 ## Key Principles
 
@@ -226,9 +228,12 @@ Before commit:
 - [ ] All tests pass
 - [ ] No linter errors
 - [ ] Docs updated
-- [ ] Type hints ## Navigation Tips
+- [ ] Type hints on all public APIs
+
+## Navigation Tips
 
 **Pick your task:**
+
 - Writing code → [type_hints_standards.md](type_hints_standards.md)
 - Handling errors → [error_handling.md](error_handling.md)
 - Writing secure code → [security.md](security.md)
@@ -244,5 +249,5 @@ Before commit:
 - See [AGENTS.md](AGENTS.md) for documentation and navigation guide
 - See [Quick Navigation Guide](AGENTS.md#quick-navigation-guide) for activity-based guidance
 - See [../docs/AGENTS.md](../docs/AGENTS.md) for main project documentation
-- See [../docs/core/HOW_TO_USE.md](../docs/core/HOW_TO_USE.md) for usage guide
-- See [../docs/development/SECURITY.md](../docs/development/SECURITY.md) for security policy
+- See [../docs/core/how-to-use.md](../docs/core/how-to-use.md) for usage guide
+- See [../docs/development/security.md](../docs/development/security.md) for security policy

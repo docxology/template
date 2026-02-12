@@ -52,6 +52,13 @@ from infrastructure.core.logging_utils import log_substep
 from infrastructure.core.performance import StagePerformanceTracker
 from infrastructure.reporting.error_aggregator import get_error_aggregator
 
+# Extended infrastructure imports
+try:
+    from infrastructure.core import CheckpointManager
+    CHECKPOINT_AVAILABLE = True
+except ImportError:
+    CHECKPOINT_AVAILABLE = False
+
 logger = get_logger(__name__)
 
 
@@ -144,6 +151,18 @@ def main() -> None:
     error_aggregator = get_error_aggregator()
     figure_manager = FigureManager()
 
+    # Initialize CheckpointManager if available
+    checkpoint_manager = None
+    if CHECKPOINT_AVAILABLE:
+        try:
+            checkpoint_manager = CheckpointManager(
+                checkpoint_dir=str(output_dir / ".checkpoints"),
+                project_name="active_inference_meta_pragmatic",
+            )
+            logger.info("CheckpointManager initialized for pipeline recovery")
+        except Exception as e:
+            logger.warning(f"CheckpointManager initialization failed: {e}")
+
     # Pipeline results storage
     pipeline_results = {
         "stages_completed": [],
@@ -188,6 +207,16 @@ def main() -> None:
             pipeline_results[f"stage_{stage_num}_result"] = stage_result
 
             perf_monitor.end_stage(f"stage_{stage_num}", 0)  # 0 = success
+
+            # Save checkpoint after each stage
+            if checkpoint_manager is not None:
+                try:
+                    checkpoint_manager.save_checkpoint(
+                        stage_name=f"stage_{stage_num}",
+                        data={"completed": True, "stage_name": stage_name},
+                    )
+                except Exception:
+                    pass
 
             # Progress update
             completed = len(

@@ -4,19 +4,19 @@ Active Inference represents a paradigm shift in our understanding of cognition, 
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.8\textwidth]{../output/figures/active_inference_concepts.png}
+![Active Inference Concepts](../figures/perception_action_loop.png)
 \caption{Core concepts in Active Inference showing the relationship between perception, action, and free energy minimization. Active Inference unifies perception (inferring hidden states from observations) and action (selecting behaviors that minimize expected free energy) within a single mathematical framework. The agent maintains a generative model of the world and updates beliefs through Bayesian inference while selecting actions that reduce uncertainty and achieve preferred outcomes.}
 \label{fig:active_inference_concepts}
 \end{figure}
 
-## The Free Energy Principle {#sec:fep_foundation}
+## The Free Energy Principle
 
-The Free Energy Principle (FEP) defines a "thing" as a system that maintains its structure over time through free energy minimization (Figure \ref{fig:fep_visualization}). This principle applies across multiple scales of organization:
+The Free Energy Principle (FEP) provides the mathematical foundation for this behavior. This principle applies across multiple scales of organization:
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.8\textwidth]{../output/figures/fep_visualization.png}
-\caption{Visualization of the Free Energy Principle showing how systems minimize variational free energy $\mathcal{F}[q]$ to maintain their structure and resist entropy. The FEP provides a unifying framework across physical, biological, and cognitive systems—all can be understood as minimizing a bound on surprise through perception (updating beliefs) and action (changing the environment). This universality enables Active Inference to bridge thermodynamics, neuroscience, and cognitive science within a single mathematical formalism.}
+\includegraphics[width=0.8\textwidth]{../figures/fep_system_boundaries.png}
+\caption{The Free Energy Principle applied to system boundaries. The Markov Blanket separates internal states from external states, mediating their interaction through sensory and active states. This boundary condition is essential for the maintenance of autopoietic organization and identity.}
 \label{fig:fep_visualization}
 \end{figure}
 

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>04e_time</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h2 id="time">Time: Temporal Horizons</h2>
+<blockquote>
+<p><em>“I see the Past, Present &amp; Future, existing all at
+once</em><br />
+<em>Before me.”</em></p>
+<p>— <em>Jerusalem</em>, Plate 15 <span class="citation"
+data-cites="blake1804jerusalem">[@blake1804jerusalem]</span></p>
+</blockquote>
+<h3 id="temporal-horizons">Temporal Horizons</h3>
+<p>“Eternity in an hour” is not mysticism—it is <em>deep temporal
+modeling</em>. In Active Inference, agents construct hierarchical
+generative models that encode predictions at progressively longer time
+scales, from millisecond sensory fluctuations to narratives spanning
+years. The deeper the hierarchy, the wider the temporal horizon the
+agent can integrate into present awareness. Blake’s compression of
+eternity into an hour describes exactly this capacity. Active Inference
+agents maintain predictions across multiple time scales:</p>
+<blockquote>
+<p>“The lowest level of this hierarchy corresponds to fast fluctuations
+associated with sensory processing, whereas the highest levels encode
+slow contextual changes in the environment.”</p>
+<p>— <span class="citation"
+data-cites="kiebel2008hierarchy">[@kiebel2008hierarchy]</span></p>
+</blockquote>
+<blockquote>
+<p>“Slowly changing neuronal states can encode the paths or trajectories
+of faster sensory states.”</p>
+<p>— <span class="citation"
+data-cites="friston2017deep">[@friston2017deep]</span></p>
+</blockquote>
+<p><strong>Temporal hierarchy:</strong></p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:temporal_hierarchy}
+p(o_{1:T}, \theta) = \prod_{t=1}^{T} p(o_t | \theta_t) \cdot p(\theta_t
+| \theta_{t-1})
+\end{equation}\]</span></p>
+<p>The deeper the temporal model (Equation <span
+class="math inline">\(\ref{eq:temporal_hierarchy}\)</span>), the longer
+the horizon of prediction. An impoverished model predicts only the
+immediate. A rich model extends to <em>aeonic</em> time. Figure <span
+class="math inline">\(\ref{fig:temporal}\)</span> illustrates this
+hierarchy of temporal scales.</p>
+<figure id="fig:temporal">
+<img src="../output/figures/fig6_temporal_horizons.png"
+alt="Temporal Horizons of Inference. Four stacked trapezoid bands, widening from bottom to top, represent increasing temporal depth in the hierarchical generative model (Equation ). Fast (red, milliseconds): sensory processing—the immediate registration of prediction errors. Mid (steel blue, seconds to minutes): emotional integration—affective states that modulate precision weighting across brief episodes. Slow (purple, hours to years): narrative construction—the autobiographical and cultural models that contextualize experience. Deep/Aeonic (gold, lifetimes to eternity): the deepest temporal priors encoding civilizational and transpersonal patterns. The vertical arrow indicates increasing temporal depth. Blake’s compression of temporal scales—“Every Time less than a pulsation of the artery / Is equal in its period &amp; value to Six Thousand Years” (Milton, Plate 29 [@blake1804milton])—describes the hierarchical nesting where each level encodes trajectories of the level below, and “Eternity is in love with the productions of time” (Marriage of Heaven and Hell, Proverbs of Hell [@blake1790marriage])." />
+<figcaption aria-hidden="true"><strong>Temporal Horizons of
+Inference.</strong> Four stacked trapezoid bands, widening from bottom
+to top, represent increasing temporal depth in the hierarchical
+generative model (Equation <span
+class="math inline">\(\ref{eq:temporal_hierarchy}\)</span>).
+<strong>Fast</strong> (red, milliseconds): sensory processing—the
+immediate registration of prediction errors. <strong>Mid</strong> (steel
+blue, seconds to minutes): emotional integration—affective states that
+modulate precision weighting across brief episodes.
+<strong>Slow</strong> (purple, hours to years): narrative
+construction—the autobiographical and cultural models that contextualize
+experience. <strong>Deep/Aeonic</strong> (gold, lifetimes to eternity):
+the deepest temporal priors encoding civilizational and transpersonal
+patterns. The vertical arrow indicates increasing temporal depth.
+Blake’s compression of temporal scales—“Every Time less than a pulsation
+of the artery / Is equal in its period &amp; value to Six Thousand
+Years” (<em>Milton</em>, Plate 29 <span class="citation"
+data-cites="blake1804milton">[@blake1804milton]</span>)—describes the
+hierarchical nesting where each level encodes trajectories of the level
+below, and “Eternity is in love with the productions of time”
+(<em>Marriage of Heaven and Hell</em>, Proverbs of Hell <span
+class="citation"
+data-cites="blake1790marriage">[@blake1790marriage]</span>).</figcaption>
+</figure>
+<p>Blake’s “Eternity” is not timelessness but <em>trans-temporal
+integration</em>—the capacity to hold all moments within the present
+perception. The hour contains eternity because the model reaches across
+all scales.</p>
+<p>In <em>Milton</em>, Blake provides temporal metrics:</p>
+<blockquote>
+<p><em>“Every Time less than a pulsation of the artery<em> </em>Is equal
+in its period &amp; value to Six Thousand Years,<em> </em>For in this
+Period the Poet’s Work is Done, and all the Great<em> </em>Events of
+Time start forth &amp; are conceiv’d in such a Period,<em> </em>Within a
+Moment, a Pulsation of the Artery.”</em></p>
+<p>— <em>Milton</em>, Plate 29 <span class="citation"
+data-cites="blake1804milton">[@blake1804milton]</span></p>
+</blockquote>
+<p>A pulsation equals six thousand years—the prophetic compression of
+temporal scale. And the relationship is not opposition but love:</p>
+<blockquote>
+<p><em>“Eternity is in love with the productions of time.”</em></p>
+<p>— <em>Marriage of Heaven and Hell</em>, Proverbs of Hell <span
+class="citation"
+data-cites="blake1790marriage">[@blake1790marriage]</span></p>
+</blockquote>
+<p>The eternal reaches toward the temporal particular. Deep temporal
+models don’t transcend time but <em>integrate</em> it—holding the
+trajectory of moments within present awareness.</p>
+<h3 id="the-temporal-architecture-of-los">The Temporal Architecture of
+Los</h3>
+<p>But Blake does not stop at compression. In the lines immediately
+preceding the “pulsation” climax, he constructs the most extraordinary
+precursor to hierarchical temporal modeling in all of literature:</p>
+<blockquote>
+<p><em>“But others of the Sons of Los build Moments &amp; Minutes &amp;
+Hours<em> </em>And Days &amp; Months &amp; Years &amp; Ages &amp;
+Periods; wondrous buildings<em> </em>And every Moment has a Couch of
+gold for soft repose,<em> </em>(A Moment equals a pulsation of the
+artery),<em> </em>And between every two Moments stands a Daughter of
+Beulah<em> </em>To feed the Sleepers on their Couches with maternal
+care.<em> </em>And every Minute has an azure Tent with silken Veils.<em>
+</em>And every Hour has a bright golden Gate carved with skill.<em>
+</em>And every Day &amp; Night, has Walls of brass &amp; Gates of
+adamant,<em> </em>Shining like precious stones &amp; ornamented with
+appropriate signs:<em> </em>And every Month, a silver paved Terrace
+builded high:<em> </em>And every Year, invulnerable Barriers with high
+Towers.<em> </em>And every Age is Moated deep with Bridges of silver
+&amp; gold.<em> </em>And every Seven Ages is Incircled with a Flaming
+Fire.”</em></p>
+<p>— <em>Milton</em>, Plate 28 <span class="citation"
+data-cites="blake1804milton">[@blake1804milton]</span></p>
+</blockquote>
+<p>This is a hierarchical generative model of temporal experience,
+described two centuries before the formal mathematics. Each timescale
+has distinct <em>architectural properties</em>—distinct structure,
+material, and boundary conditions:</p>
+<table>
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 33%" />
+<col style="width: 41%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Temporal Scale</th>
+<th style="text-align: left;">Blake’s Architecture</th>
+<th style="text-align: left;">Active Inference Analogue</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Moment (pulse)</td>
+<td style="text-align: left;">Couch of gold</td>
+<td style="text-align: left;">Fast sensory states: soft, immediate,
+precious</td>
+</tr>
+<tr>
+<td style="text-align: left;">Minute</td>
+<td style="text-align: left;">Azure Tent, silken Veils</td>
+<td style="text-align: left;">Short-term precision: flexible,
+semi-transparent</td>
+</tr>
+<tr>
+<td style="text-align: left;">Hour</td>
+<td style="text-align: left;">Golden Gate, carved</td>
+<td style="text-align: left;">Attentional boundaries: structured,
+deliberate</td>
+</tr>
+<tr>
+<td style="text-align: left;">Day/Night</td>
+<td style="text-align: left;">Brass Walls, adamant Gates</td>
+<td style="text-align: left;">Circadian priors: rigid, durable</td>
+</tr>
+<tr>
+<td style="text-align: left;">Month</td>
+<td style="text-align: left;">Silver Terrace, builded high</td>
+<td style="text-align: left;">Seasonal/contextual priors: elevated
+perspective</td>
+</tr>
+<tr>
+<td style="text-align: left;">Year</td>
+<td style="text-align: left;">Invulnerable Barriers, high Towers</td>
+<td style="text-align: left;">Biographical priors: strongly
+defended</td>
+</tr>
+<tr>
+<td style="text-align: left;">Age</td>
+<td style="text-align: left;">Moated deep, Bridges of silver &amp;
+gold</td>
+<td style="text-align: left;">Cultural priors: deep separation, costly
+access</td>
+</tr>
+<tr>
+<td style="text-align: left;">Seven Ages</td>
+<td style="text-align: left;">Flaming Fire</td>
+<td style="text-align: left;">Civilizational priors: ultimate
+boundary</td>
+</tr>
+</tbody>
+</table>
+<p>The ascending material solidity—from gold couches to flaming
+fire—mirrors the increasing precision and decreasing update rate of
+deeper temporal levels. A “Couch” yields to the body; a “Flaming Fire”
+does not. The Sons of Los <em>build</em> these structures actively:
+temporal experience is not passively received but constructed through
+inference. And the “Daughter of Beulah” standing between each two
+Moments, feeding “the Sleepers on their Couches with maternal care,” is
+the precision-weighting mechanism that mediates between adjacent
+temporal levels—ensuring smooth transitions and preventing catastrophic
+discontinuity.</p>
+<h3 id="drawing-out-to-seven-thousand-years">Drawing Out to Seven
+Thousand Years</h3>
+<p>Blake describes the active construction of temporal depth through the
+figure of Eno, an ancient prophetess:</p>
+<blockquote>
+<p><em>“[Eno] drew it out to Seven thousand years with much care &amp;
+affliction”</em></p>
+<p>— <em>Vala, or The Four Zoas</em>, Night the First <span
+class="citation" data-cites="blake1797fourzoas">[@blake1797fourzoas,
+E300]</span></p>
+</blockquote>
+<p>The model’s temporal horizon can be extended—“drawn out”—but not
+without cost. Blake’s “care &amp; affliction” captures the computational
+expense of deep temporal models: maintaining predictions across long
+horizons demands sustained precision allocation and imposes metabolic
+cost on the system. The model does not naturally reach across millennia
+without deliberate cultivation of the hierarchical structure that makes
+such depth possible.</p>
+<p>Seven thousand years echoes the Biblical span of human history—Eno’s
+work is to hold the entire trajectory of human time within present
+awareness.</p>
+<h3 id="eternity-obliterated">Eternity Obliterated</h3>
+<p>The collapse of temporal depth is catastrophic:</p>
+<blockquote>
+<p><em>“Till like a dream Eternity was obliterated &amp; erasd”</em></p>
+<p>— <em>The Song of Los</em>, Plate 3 <span class="citation"
+data-cites="blake1795songlos">[@blake1795songlos]</span></p>
+</blockquote>
+<p>Deep temporal models (Eternity) compressed to shallow prediction
+(dream-like immediate present). When the temporal horizon collapses,
+what remains is reactive, stimulus-bound perception—the “dream” state of
+shallow inference.</p>
+<p>This describes the Fall as temporal impoverishment: from aeonic
+awareness to moment-to-moment reaction.</p>
+<h3 id="drunk-with-the-wine-of-ages">Drunk with the Wine of Ages</h3>
+<p>But temporal integration has limits:</p>
+<blockquote>
+<p><em>“drunk with the wine of ages”</em></p>
+<p>— <em>Vala, or The Four Zoas</em>, Night the Ninth <span
+class="citation"
+data-cites="blake1797fourzoas">[@blake1797fourzoas]</span></p>
+</blockquote>
+<p>Over-accumulation of historical evidence (“wine of ages”) impairs
+present inference. The temporal model can become so saturated with past
+that it loses responsiveness to present. This is the opposite failure
+mode: not temporal collapse but temporal rigidity—being so weighted by
+history that current observation cannot update the model.</p>
+<p>In Active Inference terms, this corresponds to an over-fitted
+temporal model whose deep priors have accumulated excessive precision.
+When <span class="math inline">\(\pi_{\text{prior}}\)</span> at the
+slowest temporal scales grows unboundedly, the agent becomes captive to
+historical regularities and cannot accommodate novel evidence. The
+system is “drunk”—its inference is dominated by the accumulated weight
+of temporal priors rather than responsive to present sensory input.
+Blake thus identifies both failure modes of temporal modeling: too
+shallow (“Eternity obliterated”) and too deep (“drunk with the wine of
+ages”).</p>
+<blockquote>
+<p><strong>Demonstration: The Déjà Vu Moment</strong></p>
+<p>You walk into an unfamiliar room and feel, with absolute conviction,
+that you have been here before. The moment is uncanny precisely because
+two temporal scales are colliding: your shallow present-moment model
+(novel room, first visit) contradicts a deeper temporal pattern-match
+(this configuration of light, shape, and atmosphere resonates with a
+prior encoded at longer timescales). In Active Inference terms, déjà vu
+arises when a slow-timescale prior generates a strong top-down
+prediction that the current observation is <em>familiar</em>, while the
+fast-timescale model correctly registers <em>novelty</em>. The eerie
+sensation is the prediction error between hierarchical temporal
+levels—Blake’s “Eternity in an hour” experienced as perceptual vertigo.
+Temporal depth is not abstract: it is the felt layering of past within
+present.</p>
+</blockquote>
+</body>
+</html>

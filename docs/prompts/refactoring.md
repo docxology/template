@@ -9,7 +9,7 @@ Refactor existing code following the clean break approach, ensuring improved mai
 This prompt enforces the clean break refactoring approach and leverages refactoring standards:
 
 - [`../../.cursorrules/code_style.md`](../../.cursorrules/code_style.md) - Code quality and style standards
-- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow and refactoring
+- [`../core/workflow.md`](../core/workflow.md) - Development workflow and refactoring
 - [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Testing during refactoring
 
 ## Prompt Template
@@ -579,6 +579,6 @@ REFACTORING GOAL: Separate concerns into validator, transformer, and orchestrato
 ## Related Documentation
 
 - [`../../.cursorrules/code_style.md`](../../.cursorrules/code_style.md) - Code quality and style standards
-- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow and refactoring
+- [`../core/workflow.md`](../core/workflow.md) - Development workflow and refactoring
 - [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Testing during refactoring
 ```

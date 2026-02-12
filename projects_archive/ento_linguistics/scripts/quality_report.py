@@ -7,13 +7,13 @@ import json
 import sys
 from pathlib import Path
 
-# Ensure repository root and src/ are importable
-repo_root = Path(__file__).resolve().parents[2]
-src_path = Path(__file__).resolve().parent / "src"
-if str(repo_root) not in sys.path:
-    sys.path.insert(0, str(repo_root))
-if str(src_path) not in sys.path:
-    sys.path.insert(0, str(src_path))
+# Ensure src/ is at the FRONT of sys.path so project core/ isn't shadowed
+# by infrastructure/core/ when PYTHONPATH includes infrastructure/
+project_root = Path(__file__).resolve().parent.parent
+src_path = str(project_root / "src")
+if src_path in sys.path:
+    sys.path.remove(src_path)
+sys.path.insert(0, src_path)
 
 # Try to import build modules (may not exist)
 try:
@@ -39,10 +39,10 @@ except (ImportError, ModuleNotFoundError):
         }
 
 
-from src.utils.logging import get_logger, log_substep
-from src.utils.reporting import (generate_pipeline_report,
-                                 get_error_aggregator, save_pipeline_report)
-from src.utils.validation import validate_markdown, verify_output_integrity
+from core.logging import get_logger, log_substep
+from pipeline.reporting import (generate_pipeline_report,
+                              get_error_aggregator, save_pipeline_report)
+from core.validation_utils import validate_markdown, verify_output_integrity
 
 logger = get_logger(__name__)
 

@@ -524,4 +524,4 @@ Add to GitHub Actions workflow:
 - [error_handling.md](error_handling.md) - Exception handling patterns
 - [python_logging.md](python_logging.md) - Logging standards
 - [infrastructure_modules.md](infrastructure_modules.md) - Module development standards
-- [../docs/best-practices/BEST_PRACTICES.md](../docs/best-practices/BEST_PRACTICES.md) - Code quality best practices
+- [../docs/best-practices/best-practices.md](../docs/best-practices/best-practices.md) - Code quality best practices

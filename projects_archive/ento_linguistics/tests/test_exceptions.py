@@ -5,10 +5,10 @@ import os
 from pathlib import Path
 
 import pytest
-from src.utils.exceptions import ValidationError
-from src.utils.logging import (get_logger, log_progress_bar, log_stage,
+from src.core.exceptions import ValidationError
+from src.core.logging import (get_logger, log_progress_bar, log_stage,
                                log_substep)
-from src.utils.markdown_integration import ImageManager, MarkdownIntegration
+from src.core.markdown_integration import ImageManager, MarkdownIntegration
 
 
 class TestValidationError:

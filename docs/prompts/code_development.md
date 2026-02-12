@@ -9,9 +9,9 @@ Develop standards-compliant code for the Research Project Template, ensuring ful
 This prompt leverages development standards to create production-ready code:
 
 - [`../../.cursorrules/`](../../.cursorrules/) directory - All development standards
-- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow
+- [`../core/workflow.md`](../core/workflow.md) - Development workflow
 - [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Standards compliance
-- [`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md) - Architecture principles
+- [`../core/architecture.md`](../core/architecture.md) - Architecture principles
 
 ## Prompt Template
 
@@ -311,9 +311,9 @@ projects/research/src/
 - [ ] Cross-references between documents ([`../../.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md))
 
 ### Architecture Standards
-- [ ] Two-layer architecture compliance ([`../../docs/core/ARCHITECTURE.md`](../../docs/core/ARCHITECTURE.md))
-- [ ] Thin orchestrator pattern ([`../../docs/core/ARCHITECTURE.md`](../../docs/core/ARCHITECTURE.md))
-- [ ] Module organization correctness ([`../../docs/core/ARCHITECTURE.md`](../../docs/core/ARCHITECTURE.md))
+- [ ] Two-layer architecture compliance ([`../../docs/core/architecture.md`](../../docs/core/architecture.md))
+- [ ] Thin orchestrator pattern ([`../../docs/core/architecture.md`](../../docs/core/architecture.md))
+- [ ] Module organization correctness ([`../../docs/core/architecture.md`](../../docs/core/architecture.md))
 
 ## Example Usage
 
@@ -333,7 +333,7 @@ LAYER: project
 ## Related Documentation
 
 - [`../../.cursorrules/README.md`](../../.cursorrules/README.md) - development standards overview
-- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow guide
+- [`../core/workflow.md`](../core/workflow.md) - Development workflow guide
 - [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Standards compliance
-- [`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md) - Architecture principles
+- [`../core/architecture.md`](../core/architecture.md) - Architecture principles
 ```

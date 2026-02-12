@@ -1,54 +1,99 @@
-# Validation Guide
+# Validation Guide — Ento-Linguistics
 
-This guide summarizes the validation pipeline and quality gates used in the project.
+Validation pipeline and quality gates for the Ento-Linguistic Domains project.
 
-## Preflight
-- `python3 project/scripts/manuscript_preflight.py --strict`
-  - Checks figure existence from manuscript references
-  - Ensures glossary markers and bibliography commands are present
-  - Emits JSON for CI when `--json` is used
+## Quick Validation
 
-## Markdown & PDF
-- `python3 -m infrastructure.validation.cli markdown project/manuscript/ --strict`
-- `python3 -m infrastructure.validation.cli pdf project/output/pdf/`
-- Detects unresolved references, missing citations, equation/anchor issues.
+```bash
+# Run all validations in sequence
+uv run pytest tests/ -x -q && \
+uv run python scripts/manuscript_preflight.py --strict && \
+echo "All validations passed"
+```
 
-## Figures
-- `validate_figure_registry output/figures/figure_registry.json` ensures registered figures match outputs.
-- `MarkdownIntegration.validate_manuscript()` scans figure anchors and sections.
+## Test Suite
 
-## Output Integrity
-- `verify_output_integrity output/` checks hashes, structure, and cross-references of generated artifacts.
+```bash
+# Full suite (778 tests, ~77s)
+uv run pytest tests/ -x -q
 
-## Quality Metrics
-- `analyze_document_quality(project/manuscript)` reports readability and structural metrics.
-- `project/scripts/quality_report.py` aggregates markdown issues, integrity, and reproducibility.
+# Specific module
+uv run pytest tests/test_term_extraction.py -v
 
-## Reproducibility
-- `generate_reproducibility_report output/` captures environment/dependency snapshots.
+# With coverage report
+uv run pytest tests/ --cov=src --cov-report=html
+```
+
+## Manuscript Preflight
+
+```bash
+# Strict mode — fail on any missing figure or reference
+uv run python scripts/manuscript_preflight.py --strict
+
+# JSON output for CI
+uv run python scripts/manuscript_preflight.py --json
+```
+
+Checks performed:
+
+- All `\includegraphics` paths resolve to existing files in `output/figures/`
+- All `\ref{fig:...}` labels have matching `\label{fig:...}` definitions
+- Glossary markers (`<!-- BEGIN: AUTO-API-GLOSSARY -->`) are present in `98_symbols_glossary.md`
+- Bibliography command (`\bibliography{references}`) is present in `99_references.md`
+
+## Figure Validation
+
+```bash
+# Regenerate all 5 main research figures
+uv run python scripts/generate_research_figures.py
+
+# Verify figure registry
+cat output/figures/figure_registry.json
+
+# Check per-domain figures
+uv run python scripts/generate_domain_figures.py
+```
+
+Expected main figures:
+
+| Figure | File | Min Size |
+|--------|------|----------|
+| Concept map | `output/figures/concept_map.png` | > 100 KB |
+| Terminology network | `output/figures/terminology_network.png` | > 200 KB |
+| Domain comparison | `output/figures/domain_comparison.png` | > 200 KB |
+| Domain overlap heatmap | `output/figures/domain_overlap_heatmap.png` | > 100 KB |
+| Anthropomorphic framing | `output/figures/anthropomorphic_framing.png` | > 100 KB |
+
+## Quality Report
+
+```bash
+# Readability, integrity, and reproducibility snapshot
+uv run python scripts/quality_report.py
+```
+
+## Pre-Commit Validation
+
+Before committing, verify:
+
+1. **Tests pass**: `uv run pytest tests/ -x -q`
+2. **Figures current**: Check `output/figures/` timestamps match latest code changes
+3. **Preflight clean**: `uv run python scripts/manuscript_preflight.py --strict`
+4. **No mock data**: All figure data computed from real analysis (Jaccard co-occurrence, real confidence scores)
 
 ## CI Recommendations
-- Run preflight + markdown validation on PRs.
-- Fail on missing figures or bibliography blocks; warn on readability deltas.
-- Persist `project/output/reports/` artifacts for inspection (JSON/HTML/Markdown).
 
-*See [`.cursorrules/testing_standards.md`](../../../.cursorrules/testing_standards.md) for testing patterns, [`.cursorrules/error_handling.md`](../../../.cursorrules/error_handling.md) for error handling patterns, and [`.cursorrules/infrastructure_modules.md`](../../../.cursorrules/infrastructure_modules.md) for infrastructure validation standards.*
+```bash
+# Minimum CI pipeline
+uv run pytest tests/ -x -q
+uv run python scripts/manuscript_preflight.py --strict --json
+```
+
+- Fail on any test failure or preflight error
+- Warn on figure size regressions (file sizes dropping below expected minimums)
+- Persist `output/reports/` artifacts for inspection
 
 ## See Also
 
-**Development Standards:**
-- [`.cursorrules/testing_standards.md`](../../../.cursorrules/testing_standards.md) - Testing patterns and coverage standards
-- [`.cursorrules/error_handling.md`](../../../.cursorrules/error_handling.md) - Error handling and exception patterns
-- [`.cursorrules/infrastructure_modules.md`](../../../.cursorrules/infrastructure_modules.md) - Infrastructure module development standards
-
-**Project Documentation:**
-- [`AGENTS.md`](AGENTS.md) - project documentation
-- [`README.md`](README.md) - Quick reference
-
-**Template Documentation:**
-- [`../../docs/operational/TROUBLESHOOTING_GUIDE.md`](../../docs/operational/TROUBLESHOOTING_GUIDE.md) - error handling guide
-- [`../../infrastructure/validation/AGENTS.md`](../../infrastructure/validation/AGENTS.md) - Validation infrastructure documentation
-
-
-
-
+- [development_workflow.md](development_workflow.md) — Environment setup and commands
+- [standards_compliance.md](standards_compliance.md) — Current quality metrics
+- [testing_expansion_plan.md](testing_expansion_plan.md) — Test coverage roadmap

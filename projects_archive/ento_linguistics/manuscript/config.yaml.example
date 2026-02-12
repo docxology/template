@@ -11,10 +11,10 @@
 
 paper:
   # Main paper title (required for PDF generation)
-  title: "Novel Optimization Framework for Machine Learning"
+  title: "Ento-Linguistic Domains: Language, Ambiguity, and Scientific Communication in Entomology"
   
   # Optional subtitle (appears below main title)
-  subtitle: "A Comprehensive Approach to Large-Scale Problems"
+  subtitle: "How Terminology Networks Shape Understanding of Ant Biology"
   
   # Paper version (for tracking revisions)
   version: "1.0"
@@ -29,7 +29,7 @@ authors:
   - name: "Dr. Jane Smith"
     orcid: "0000-0000-0000-1234"  # ORCID identifier
     email: "jane.smith@university.edu"
-    affiliation: "Department of Computer Science, University of Example"
+    affiliation: "Department of Entomology, University of Example"
     corresponding: true  # Mark as corresponding author
 
   # Additional authors (uncomment and modify as needed)
@@ -52,7 +52,7 @@ publication:
   doi: ""
   
   # Journal or conference name
-  journal: "Journal of Example Research"
+  journal: "Journal of Insect Behavior"
   
   # Journal volume
   volume: "42"
@@ -65,11 +65,11 @@ publication:
 
 # Keywords for metadata and searchability
 keywords:
-  - "optimization"
-  - "machine learning"
-  - "convex optimization"
-  - "adaptive algorithms"
-  - "large-scale problems"
+  - "entomology"
+  - "scientific terminology"
+  - "discourse analysis"
+  - "language and science"
+  - "ant biology"
 
 # Additional metadata
 metadata:

@@ -504,32 +504,27 @@ check_uv() {
 
 # Get Python command with uv fallback
 get_python_cmd() {
-    # Returns the command array to use for Python execution
-    # Prefers "uv run python" if uv is available, falls back to "python3"
-    if check_uv; then
-        echo "uv run python"
-    else
-        echo "python3"
-    fi
+    # Returns the command to use for Python execution.
+    # Always uses python3 directly. When run.sh is launched via "uv run ./run.sh",
+    # the venv is already activated — wrapping every subprocess in another "uv run"
+    # adds ~300s overhead per invocation due to environment resolution.
+    echo "python3"
 }
 
-# Get pytest command with uv fallback
+# Get pytest command
 get_pytest_cmd() {
-    # Returns the command array to use for pytest execution
-    # Prefers "uv run python -m pytest" if uv is available, falls back to "python3 -m pytest"
-    if check_uv; then
-        echo "uv run python -m pytest"
-    else
-        echo "python3 -m pytest"
-    fi
+    # Returns the command to use for pytest execution.
+    # Always uses python3 -m pytest directly. The venv is already activated
+    # when run.sh is launched via "uv run ./run.sh".
+    echo "python3 -m pytest"
 }
 
 # Log uv availability status
 log_uv_status() {
     if check_uv; then
-        log_info "uv package manager detected - using uv run for consistent environments"
+        log_info "uv package manager detected - venv managed by uv"
     else
-        log_warning "uv package manager not found - falling back to direct python3 execution"
+        log_warning "uv package manager not found - using system python3"
         log_info "For better dependency management, install uv: https://github.com/astral-sh/uv"
     fi
 }

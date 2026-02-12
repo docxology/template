@@ -205,12 +205,9 @@ package = false
         assert len(cmd) > 0
         assert all(isinstance(part, str) for part in cmd)
 
-        # If uv is available, should use uv run python
-        if check_uv_available():
-            assert cmd == ["uv", "run", "python"]
-        else:
-            # Should use current Python executable
-            assert cmd == [sys.executable]
+        # Should always use sys.executable (not uv run python)
+        # The venv is already activated by uv run ./run.sh
+        assert cmd == [sys.executable]
 
     def test_source_structure_verification(self, tmp_path):
         """Test real source structure verification."""

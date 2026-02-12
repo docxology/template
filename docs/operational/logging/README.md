@@ -6,9 +6,9 @@
 
 | Topic | Guide | Description |
 |-------|-------|-------------|
-| 🐍 **Python** | [PYTHON_LOGGING.md](PYTHON_LOGGING.md) | Python logging system |
-| 🐚 **Bash** | [BASH_LOGGING.md](BASH_LOGGING.md) | Shell script logging |
-| 📋 **Patterns** | [LOGGING_PATTERNS.md](LOGGING_PATTERNS.md) | Best practices, progress, troubleshooting |
+| 🐍 **Python** | [python-logging.md](python-logging.md) | Python logging system |
+| 🐚 **Bash** | [bash-logging.md](bash-logging.md) | Shell script logging |
+| 📋 **Patterns** | [logging-patterns.md](logging-patterns.md) | Best practices, progress, troubleshooting |
 
 ## Quick Start
 
@@ -29,6 +29,6 @@ log_success "Operation completed"
 
 ## See Also
 
-- [Main Logging Guide](../LOGGING_GUIDE.md) - Overview
-- [Error Handling Guide](../ERROR_HANDLING_GUIDE.md) - Exception usage
-- [Troubleshooting](../TROUBLESHOOTING_GUIDE.md) - Common issues
+- [Main Logging Guide](../logging-guide.md) - Overview
+- [Error Handling Guide](../error-handling-guide.md) - Exception usage
+- [Troubleshooting](../troubleshooting-guide.md) - Common issues

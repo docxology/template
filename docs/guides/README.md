@@ -2,7 +2,7 @@
 
 > **Progressive learning guides** from beginner to expert
 
-**Quick Reference:** [Getting Started](GETTING_STARTED.md) | [Figures and Analysis](FIGURES_AND_ANALYSIS.md) | [Testing and Reproducibility](TESTING_AND_REPRODUCIBILITY.md) | [Extending and Automation](EXTENDING_AND_AUTOMATION.md)
+**Quick Reference:** [Getting Started](getting-started.md) | [Figures and Analysis](figures-and-analysis.md) | [Testing and Reproducibility](testing-and-reproducibility.md) | [Extending and Automation](extending-and-automation.md)
 
 ## Purpose
 
@@ -12,47 +12,47 @@ The `guides/` directory contains skill-level specific usage guides that progress
 
 | File | Purpose | Skill Level |
 |------|---------|-------------|
-| [`GETTING_STARTED.md`](GETTING_STARTED.md) | Basic usage guide (Levels 1-3) | Beginner |
-| [`FIGURES_AND_ANALYSIS.md`](FIGURES_AND_ANALYSIS.md) | Figures and analysis guide (Levels 4-6) | Intermediate |
-| [`TESTING_AND_REPRODUCIBILITY.md`](TESTING_AND_REPRODUCIBILITY.md) | Testing and reproducibility guide (Levels 7-9) | Advanced |
-| [`EXTENDING_AND_AUTOMATION.md`](EXTENDING_AND_AUTOMATION.md) | Extending and automation guide (Levels 10-12) | Expert |
-| [`INTERMEDIATE_USAGE.md`](INTERMEDIATE_USAGE.md) | Backward-compatible redirect to Figures and Analysis | Intermediate |
+| [`getting-started.md`](getting-started.md) | Basic usage guide (Levels 1-3) | Beginner |
+| [`figures-and-analysis.md`](figures-and-analysis.md) | Figures and analysis guide (Levels 4-6) | Intermediate |
+| [`testing-and-reproducibility.md`](testing-and-reproducibility.md) | Testing and reproducibility guide (Levels 7-9) | Advanced |
+| [`extending-and-automation.md`](extending-and-automation.md) | Extending and automation guide (Levels 10-12) | Expert |
+| [`intermediate-usage.md`](intermediate-usage.md) | Backward-compatible redirect to Figures and Analysis | Intermediate |
 
 ## Learning Path
 
 ### Learning Journey
 
-1. **[Getting Started](GETTING_STARTED.md)** - Write your first document (Levels 1-3)
-2. **[Figures and Analysis](FIGURES_AND_ANALYSIS.md)** - Add figures and automation (Levels 4-6)
-3. **[Testing and Reproducibility](TESTING_AND_REPRODUCIBILITY.md)** - Test-driven development and reproducibility (Levels 7-9)
-4. **[Extending and Automation](EXTENDING_AND_AUTOMATION.md)** - Extending and automation (Levels 10-12)
+1. **[Getting Started](getting-started.md)** - Write your first document (Levels 1-3)
+2. **[Figures and Analysis](figures-and-analysis.md)** - Add figures and automation (Levels 4-6)
+3. **[Testing and Reproducibility](testing-and-reproducibility.md)** - Test-driven development and reproducibility (Levels 7-9)
+4. **[Extending and Automation](extending-and-automation.md)** - Extending and automation (Levels 10-12)
 
 ## Quick Navigation
 
 ### New to the Template?
 
-→ Start with **[Getting Started](GETTING_STARTED.md)**
+→ Start with **[Getting Started](getting-started.md)**
 
 ### Ready for Automation?
 
-→ Read **[Figures and Analysis](FIGURES_AND_ANALYSIS.md)**
+→ Read **[Figures and Analysis](figures-and-analysis.md)**
 
 ### Want Test-Driven Development?
 
-→ Study **[Testing and Reproducibility](TESTING_AND_REPRODUCIBILITY.md)**
+→ Study **[Testing and Reproducibility](testing-and-reproducibility.md)**
 
 ### Building Custom Systems?
 
-→ Master **[Extending and Automation](EXTENDING_AND_AUTOMATION.md)**
+→ Master **[Extending and Automation](extending-and-automation.md)**
 
 ## Related Documentation
 
-- **[`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md)** - usage guide (navigation hub)
+- **[`../core/how-to-use.md`](../core/how-to-use.md)** - usage guide (navigation hub)
 - **[`../usage/`](../usage/)** - Usage examples and patterns
-- **[`../reference/COMMON_WORKFLOWS.md`](../reference/COMMON_WORKFLOWS.md)** - Step-by-step recipes
-- **[`../reference/QUICK_START_CHEATSHEET.md`](../reference/QUICK_START_CHEATSHEET.md)** - Quick reference
+- **[`../reference/common-workflows.md`](../reference/common-workflows.md)** - Step-by-step recipes
+- **[`../reference/quick-start-cheatsheet.md`](../reference/quick-start-cheatsheet.md)** - Quick reference
 
 ## See Also
 
-- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - documentation index
+- [`../documentation-index.md`](../documentation-index.md) - documentation index
 - [`../README.md`](../README.md) - Documentation hub overview

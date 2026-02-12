@@ -7,11 +7,11 @@ from typing import Dict, List, Set
 import pytest
 
 try:
-    from src.conceptual_mapping import Concept, ConceptMap, ConceptualMapper
-    from src.term_extraction import Term
+    from src.analysis.conceptual_mapping import Concept, ConceptMap, ConceptualMapper
+    from src.analysis.term_extraction import Term
 except ImportError:
-    from conceptual_mapping import Concept, ConceptMap, ConceptualMapper
-    from term_extraction import Term
+    from src.analysis.conceptual_mapping import Concept, ConceptMap, ConceptualMapper
+    from src.analysis.term_extraction import Term
 
 
 class TestConcept:

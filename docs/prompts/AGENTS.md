@@ -87,7 +87,7 @@ Links to relevant docs
 **Documentation Leveraged:**
 - [`../../.cursorrules/manuscript_style.md`](../../.cursorrules/manuscript_style.md) - Section numbering, cross-references, equation formatting
 - [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Testing and standards compliance
-- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Research workflow integration
+- [`../core/workflow.md`](../core/workflow.md) - Research workflow integration
 
 **Key Requirements Enforced:**
 - Section numbering system (01-09, S01-S0N, 98-99)
@@ -112,7 +112,7 @@ Links to relevant docs
 
 **Documentation Leveraged:**
 - [`../../.cursorrules/`](../../.cursorrules/) directory - All development standards
-- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow
+- [`../core/workflow.md`](../core/workflow.md) - Development workflow
 - [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Standards compliance
 
 **Key Requirements Enforced:**
@@ -138,7 +138,7 @@ Links to relevant docs
 
 **Documentation Leveraged:**
 - [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Testing standards and no-mocks policy
-- [`../development/TESTING_GUIDE.md`](../development/TESTING_GUIDE.md) - Testing expansion strategy
+- [`../development/testing-guide.md`](../development/testing-guide.md) - Testing expansion strategy
 
 **Key Requirements Enforced:**
 - **No Mocks Policy:** data testing only (pytest-httpserver for HTTP)
@@ -162,7 +162,7 @@ Links to relevant docs
 
 **Documentation Leveraged:**
 - [`../../.cursorrules/code_style.md`](../../.cursorrules/code_style.md) - Code quality standards
-- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow and refactoring
+- [`../core/workflow.md`](../core/workflow.md) - Development workflow and refactoring
 
 **Key Requirements Enforced:**
 - **Clean Break Approach:** No backward compatibility, full migration
@@ -185,8 +185,8 @@ Links to relevant docs
 - **Output:** feature implementation with all supporting elements
 
 **Documentation Leveraged:**
-- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow
-- [`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md) - Architecture principles
+- [`../core/workflow.md`](../core/workflow.md) - Development workflow
+- [`../core/architecture.md`](../core/architecture.md) - Architecture principles
 - [`../../.cursorrules/infrastructure_modules.md`](../../.cursorrules/infrastructure_modules.md) - Module development standards
 
 **Key Requirements Enforced:**
@@ -235,7 +235,7 @@ Links to relevant docs
 
 **Documentation Leveraged:**
 - [`../../.cursorrules/infrastructure_modules.md`](../../.cursorrules/infrastructure_modules.md) - Infrastructure development standards
-- [`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md) - Infrastructure layer architecture
+- [`../core/architecture.md`](../core/architecture.md) - Infrastructure layer architecture
 
 **Key Requirements Enforced:**
 - **Generic Focus:** Reusable across research projects, domain-independent
@@ -396,8 +396,8 @@ prompt_validation:
 
 ### Related Documentation
 - [`README.md`](README.md) - Quick reference guide
-- [`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md) - System design principles
-- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow
+- [`../core/architecture.md`](../core/architecture.md) - System design principles
+- [`../core/workflow.md`](../core/workflow.md) - Development workflow
 
 ### Standards Reference
 - [`../../.cursorrules/README.md`](../../.cursorrules/README.md) - Development standards overview
@@ -406,7 +406,7 @@ prompt_validation:
 
 ### Project Documentation
 - [`../../projects/code_project/AGENTS.md`](../../projects/code_project/AGENTS.md) - Code project documentation
-- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow guide
+- [`../core/workflow.md`](../core/workflow.md) - Development workflow guide
 - [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Standards compliance
 
 ---

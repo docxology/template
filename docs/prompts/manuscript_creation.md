@@ -10,8 +10,8 @@ This prompt leverages extensive project documentation to create manuscripts that
 
 - [`../../.cursorrules/manuscript_style.md`](../../.cursorrules/manuscript_style.md) - Section numbering, cross-references, equations, figures
 - [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Standards compliance
-- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Research workflow integration
-- [`../usage/MARKDOWN_TEMPLATE_GUIDE.md`](../usage/MARKDOWN_TEMPLATE_GUIDE.md) - Markdown authoring guide
+- [`../core/workflow.md`](../core/workflow.md) - Research workflow integration
+- [`../usage/markdown-template-guide.md`](../usage/markdown-template-guide.md) - Markdown authoring guide
 
 ## Prompt Template
 

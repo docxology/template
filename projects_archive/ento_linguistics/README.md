@@ -1,10 +1,11 @@
-# Ento-Linguistic Research Project, self-contained research project examining how language shapes scientific understanding in entomology through systematic analysis of terminology networks across six Ento-Linguistic domains.
+# Ento-Linguistic Research Project, self-contained research project examining how language shapes scientific understanding in entomology through systematic analysis of terminology networks across six Ento-Linguistic domains
 
 ## Research Overview
 
 This project investigates the entanglement of speech and thought in entomological research by analyzing how scientific terminology creates conceptual frameworks, framing assumptions, and communication patterns that influence research practice.
 
 **Six Core Domains:**
+
 1. **Unit of Individuality** - Ant vs. colony vs. superorganism
 2. **Behavior and Identity** - Foraging behavior vs. forager identity
 3. **Power & Labor** - Caste, queen, worker terminology structures
@@ -15,9 +16,9 @@ This project investigates the entanglement of speech and thought in entomologica
 ## Project Structure
 
 ```
-project/
+./
 ├── src/                    # Ento-Linguistic analysis algorithms
-├── tests/                  # test suite (90%+ coverage)
+├── tests/                  # Test suite (785 tests)
 ├── scripts/                # Analysis pipelines and workflows
 ├── manuscript/             # Research manuscript on language in entomology
 ├── docs/                   # Analysis documentation and guidelines
@@ -27,25 +28,27 @@ project/
 ## Quick Start
 
 ### Install Dependencies
+
 ```bash
-cd project
 pip install -e .
 # or with uv:
 uv sync
 ```
 
 ### Run Tests
+
 ```bash
 pytest tests/ --cov=src
 ```
 
 ### Run Analysis Scripts
+
 ```bash
-python3 project/scripts/example_figure.py
 python3 scripts/analysis_pipeline.py
 ```
 
 ### Build Manuscript
+
 ```bash
 cd ..
 python3 scripts/03_render_pdf.py
@@ -53,7 +56,7 @@ python3 scripts/03_render_pdf.py
 
 ## Recent Improvements (v2.4)
 
-- **Test Suite**: 484 tests passing (83.81% coverage) with HTTP testing using pytest-httpserver
+- **Test Suite**: 785 tests passing with HTTP testing using pytest-httpserver
 - **Performance Optimizations**: O(n) complexity improvements in term extraction algorithms
 - **Input Validation**: validation across all core methods with informative error messages
 - **Robust Error Handling**: Graceful degradation in processing and utility components
@@ -72,21 +75,23 @@ python3 scripts/03_render_pdf.py
 - **Bug Fixes**: Resolved critical script errors, import issues, and API mismatches
 
 ## Refactor & Extension Quickstart
-- Read `project/docs/refactor_playbook.md` for the safe-change checklist.
-- See `project/docs/refactor_hotspots.md` for current dependency hotspots.
+
+- Read `docs/refactor_playbook.md` for the safe-change checklist and dependency hotspots.
 - Use script CLIs with `--dry-run` to verify wiring (`scripts/analysis_pipeline.py`, `scripts/generate_scientific_figures.py`).
-- Run `project/scripts/manuscript_preflight.py --strict` before rendering PDFs to catch missing assets.
+- Run `scripts/manuscript_preflight.py --strict` before rendering PDFs to catch missing assets.
 - Add new logic in `src/`, keep `scripts/` thin, and extend tests alongside changes.
 
 ## Scientific Contributions
 
 **Ento-Linguistic Analysis Framework:**
+
 - **Six-domain taxonomy** for analyzing terminology in entomological research
 - **Mixed-methodology approach** combining computational text analysis with theoretical discourse examination
 - **Terminology network analysis** revealing structural patterns in scientific language
 - **Domain-specific insights** into how language shapes scientific understanding
 
 **Key Domains Analyzed:**
+
 1. **Unit of Individuality** - Biological vs. social individuality concepts
 2. **Behavior and Identity** - How behavioral descriptions create categorical identities
 3. **Power & Labor** - Hierarchical terminology in social insect research
@@ -97,18 +102,21 @@ python3 scripts/03_render_pdf.py
 ## Reproducibility & Data Availability
 
 **Reproducible Analysis:**
+
 - All computational methods include seeded randomness for deterministic results
-- codebase with test suite (83.81% coverage)
+- codebase with test suite (785 tests)
 - Detailed documentation of algorithms and methodological choices
 - Version-controlled environment specifications
 
 **Data Sources:**
+
 - PubMed API integration for real-time literature access
 - arXiv API for preprint literature
 - Cached search results to minimize redundant API calls
 - Structured corpus management with serialization support
 
 **Code Availability:**
+
 - Python implementation with type hints
 - Modular architecture supporting extension and reuse
 - error handling and input validation
@@ -116,7 +124,7 @@ python3 scripts/03_render_pdf.py
 
 ## Features
 
-- **Test coverage** - test suite with data testing (484 tests passing, 22 skipped, 83.74% coverage)
+- **Test coverage** - test suite with data testing (785 tests passing)
 - **Modular design** - Clean separation of concerns with 15+ specialized modules including new statistical analysis
 - **HTTP testing** - Uses pytest-httpserver for genuine PubMed/arXiv API interactions (no mocks)
 - **Performance optimized** - Efficient algorithms with O(n) complexity improvements and single-pass processing
@@ -153,7 +161,7 @@ graph TB
     end
 
     subgraph Pipeline["Build Pipeline"]
-        TEST_RUN[Test<br/>Coverage 100%]
+        TEST_RUN[Test<br/>Coverage]
         ANALYSIS_RUN[Analysis<br/>Execute scripts/]
         RENDER_RUN[Render<br/>PDF generation]
         VALIDATE_RUN[Validate<br/>Quality checks]
@@ -189,6 +197,7 @@ graph TB
 ## Quick Usage Examples
 
 ### Basic Term Extraction
+
 ```python
 from src.term_extraction import TerminologyExtractor
 
@@ -206,6 +215,7 @@ for term_name, term_obj in terms.items():
 ```
 
 ### Literature Mining
+
 ```python
 from src.literature_mining import PubMedMiner, LiteratureCorpus
 
@@ -223,6 +233,7 @@ print(f"Corpus contains {stats['total_publications']} publications")
 ```
 
 ### Domain Analysis
+
 ```python
 from src.domain_analysis import DomainAnalyzer
 from src.term_extraction import TerminologyExtractor
@@ -243,6 +254,7 @@ for domain_name, analysis in domain_analyses.items():
 ## Project Layout
 
 ### src/
+
 Scientific code implementing algorithms, data processing, analysis, and visualization.
 
 - `term_extraction.py` - Terminology extraction with domain classification
@@ -254,14 +266,16 @@ Scientific code implementing algorithms, data processing, analysis, and visualiz
 - ... and more specialized modules
 
 ### tests/
-test suite covering src/ modules (78%+ coverage).
+
+test suite covering src/ modules.
 
 - data testing (no mocks)
 - Integration tests
 - Performance validation
-- 460+ tests passing
+- 785 tests passing
 
 ### scripts/
+
 Thin orchestrators that use src/ modules.
 
 - Import from src/
@@ -269,6 +283,7 @@ Thin orchestrators that use src/ modules.
 - Generate outputs
 
 ### manuscript/
+
 Research manuscript in Markdown format.
 
 - Individual sections
@@ -306,23 +321,25 @@ open htmlcov/index.html
 
 ### Quality Validation
 
-- Preflight: `python3 project/scripts/manuscript_preflight.py --strict`
-- Quality report: `python3 project/scripts/quality_report.py`
+- Preflight: `python3 scripts/manuscript_preflight.py --strict`
+- Quality report: `python3 scripts/quality_report.py`
 - Markdown/PDF: Use local validation utilities
 - Outputs: Use local integrity checking utilities
 
 ## Deployment
 
 ### Standalone Use
-Copy `project/` to any location to use independently:
+
+Copy this project to any location to use independently:
 
 ```bash
-cp -r project/ /path/to/my_research
+cp -r . /path/to/my_research
 cd /path/to/my_research
 pytest tests/ --cov=src
 ```
 
 ### Standalone Operation
+
 This project is designed to work as a standalone research project:
 
 ```bash
@@ -351,12 +368,9 @@ See `pyproject.toml` for dependencies.
 - [`scripts/README.md`](scripts/README.md) - Analysis scripts guide
 - [`tests/README.md`](tests/README.md) - Test suite overview
 - [`manuscript/README.md`](manuscript/README.md) - Manuscript guide
-- [`../../AGENTS.md`](../../AGENTS.md) - system documentation
+- [`../../AGENTS.md`](../../AGENTS.md) - Template system documentation
 - Local utilities in `src/utils/` - Local utility modules
 
 ## License
 
 See LICENSE file in project root.
-
-
-

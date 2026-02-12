@@ -721,5 +721,5 @@ Planned additions:
 
 **System Documentation:**
 - [`../AGENTS.md`](../AGENTS.md) - system documentation
-- [`../docs/core/ARCHITECTURE.md`](../docs/core/ARCHITECTURE.md) - System architecture overview
-- [`../docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md`](../docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md) - Orchestrator pattern details
+- [`../docs/core/architecture.md`](../docs/core/architecture.md) - System architecture overview
+- [`../docs/architecture/thin-orchestrator-summary.md`](../docs/architecture/thin-orchestrator-summary.md) - Orchestrator pattern details

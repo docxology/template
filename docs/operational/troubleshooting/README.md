@@ -6,29 +6,29 @@
 
 | Issue Type | Guide | Description |
 |------------|-------|-------------|
-| 🔧 **Environment** | [ENVIRONMENT_SETUP.md](ENVIRONMENT_SETUP.md) | Python, uv, dependencies, matplotlib |
-| 🏗️ **Build Tools** | [BUILD_TOOLS.md](BUILD_TOOLS.md) | pandoc, LaTeX, PDF generation |
-| 🧪 **Tests** | [TEST_FAILURES.md](TEST_FAILURES.md) | pytest, coverage, debugging |
-| ❌ **Errors** | [COMMON_ERRORS.md](COMMON_ERRORS.md) | Error message quick reference |
-| 🔄 **Recovery** | [RECOVERY_PROCEDURES.md](RECOVERY_PROCEDURES.md) | Reset, backup, partial recovery |
+| 🔧 **Environment** | [environment-setup.md](environment-setup.md) | Python, uv, dependencies, matplotlib |
+| 🏗️ **Build Tools** | [build-tools.md](build-tools.md) | pandoc, LaTeX, PDF generation |
+| 🧪 **Tests** | [test-failures.md](test-failures.md) | pytest, coverage, debugging |
+| ❌ **Errors** | [common-errors.md](common-errors.md) | Error message quick reference |
+| 🔄 **Recovery** | [recovery-procedures.md](recovery-procedures.md) | Reset, backup, partial recovery |
 
 ## Error → Guide Lookup
 
 | Error Message | Guide |
 |---------------|-------|
-| `ModuleNotFoundError` | [Environment](ENVIRONMENT_SETUP.md) |
-| `uv sync failed` | [Environment](ENVIRONMENT_SETUP.md) |
-| `MPLBACKEND` issues | [Environment](ENVIRONMENT_SETUP.md) |
-| `pandoc: command not found` | [Build Tools](BUILD_TOOLS.md) |
-| `xelatex: command not found` | [Build Tools](BUILD_TOOLS.md) |
-| `LaTeX Error: File not found` | [Build Tools](BUILD_TOOLS.md) |
-| `AssertionError` | [Test Failures](TEST_FAILURES.md) |
-| `Coverage below threshold` | [Test Failures](TEST_FAILURES.md) |
-| `Permission denied` | [Common Errors](COMMON_ERRORS.md) |
-| `No such file` | [Common Errors](COMMON_ERRORS.md) |
+| `ModuleNotFoundError` | [Environment](environment-setup.md) |
+| `uv sync failed` | [Environment](environment-setup.md) |
+| `MPLBACKEND` issues | [Environment](environment-setup.md) |
+| `pandoc: command not found` | [Build Tools](build-tools.md) |
+| `xelatex: command not found` | [Build Tools](build-tools.md) |
+| `LaTeX Error: File not found` | [Build Tools](build-tools.md) |
+| `AssertionError` | [Test Failures](test-failures.md) |
+| `Coverage below threshold` | [Test Failures](test-failures.md) |
+| `Permission denied` | [Common Errors](common-errors.md) |
+| `No such file` | [Common Errors](common-errors.md) |
 
 ## See Also
 
-- [Main Troubleshooting Guide](../TROUBLESHOOTING_GUIDE.md) - Overview and quick reference
-- [FAQ](../../reference/FAQ.md) - Common questions
-- [Build System](../BUILD_SYSTEM.md) - Build pipeline details
+- [Main Troubleshooting Guide](../troubleshooting-guide.md) - Overview and quick reference
+- [FAQ](../../reference/faq.md) - Common questions
+- [Build System](../build-system.md) - Build pipeline details

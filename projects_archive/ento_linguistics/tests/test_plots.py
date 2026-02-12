@@ -6,7 +6,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pytest
-from plots import (plot_3d_surface, plot_bar, plot_comparison, plot_contour,
+from src.visualization.plots import (plot_3d_surface, plot_bar, plot_comparison, plot_contour,
                    plot_convergence, plot_heatmap, plot_line, plot_scatter)
 
 

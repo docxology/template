@@ -9,19 +9,19 @@ The `docs/development/` directory contains documentation for contributors and ma
 ```
 docs/development/
 ├── AGENTS.md                       # This technical documentation
-├── CODE_OF_CONDUCT.md              # Community guidelines and standards
-├── CONTRIBUTING.md                 # How to contribute to the project
-├── COVERAGE_GAPS.md                # Test coverage analysis and improvement plans
+├── code-of-conduct.md              # Community guidelines and standards
+├── contributing.md                 # How to contribute to the project
+├── coverage-gaps.md                # Test coverage analysis and improvement plans
 ├── README.md                       # Quick reference for contributors
-├── ROADMAP.md                      # Future development plans and priorities
-├── SECURITY.md                     # Security policies and reporting procedures
-├── TESTING_GUIDE.md                # testing framework guide
-└── TESTING_WITH_CREDENTIALS.md     # Testing with external service credentials
+├── roadmap.md                      # Future development plans and priorities
+├── security.md                     # Security policies and reporting procedures
+├── testing-guide.md                # testing framework guide
+└── testing-with-credentials.md     # Testing with external service credentials
 ```
 
 ## Key Documentation Files
 
-### Contributing Guide (`CONTRIBUTING.md`)
+### Contributing Guide (`contributing.md`)
 
 **guide for project contributors:**
 
@@ -43,7 +43,7 @@ docs/development/
 - Testing requirements and best practices
 - Commit message conventions
 
-### Testing Guide (`TESTING_GUIDE.md`)
+### Testing Guide (`testing-guide.md`)
 
 **testing framework documentation:**
 
@@ -65,7 +65,7 @@ docs/development/
 - Test fixture management
 - Parallel test execution
 
-### Code of Conduct (`CODE_OF_CONDUCT.md`)
+### Code of Conduct (`code-of-conduct.md`)
 
 **Community standards and behavioral guidelines:**
 
@@ -81,7 +81,7 @@ docs/development/
 - Reporting procedures for violations
 - Enforcement and appeal processes
 
-### Security Policy (`SECURITY.md`)
+### Security Policy (`security.md`)
 
 **Security vulnerability handling and reporting:**
 
@@ -97,7 +97,7 @@ docs/development/
 - Access control and authentication
 - Incident response procedures
 
-### Roadmap (`ROADMAP.md`)
+### Roadmap (`roadmap.md`)
 
 **Future development planning and prioritization:**
 
@@ -113,7 +113,7 @@ docs/development/
 - Performance improvement initiatives
 - Security enhancement roadmaps
 
-### Coverage Gaps (`COVERAGE_GAPS.md`)
+### Coverage Gaps (`coverage-gaps.md`)
 
 **Test coverage analysis and improvement strategies:**
 
@@ -564,11 +564,11 @@ Brief description of changes
 ## See Also
 
 **Related Documentation:**
-- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow details
+- [`../core/workflow.md`](../core/workflow.md) - Development workflow details
 - [`../best-practices/`](../best-practices/) - Best practices and standards
 - [`../operational/`](../operational/) - Operational procedures
 
 **System Documentation:**
 - [`../AGENTS.md`](../AGENTS.md) - system overview
-- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - Documentation index
+- [`../documentation-index.md`](../documentation-index.md) - Documentation index
 - [`../../AGENTS.md`](../../AGENTS.md) - Root system documentation

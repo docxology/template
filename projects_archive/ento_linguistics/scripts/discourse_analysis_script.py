@@ -16,11 +16,11 @@ from typing import Any, Dict, List, Optional
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root / "src"))
 
-from concept_visualization import ConceptVisualizer
-from discourse_analysis import DiscourseAnalyzer
-from literature_mining import LiteratureCorpus
+from visualization.concept_visualization import ConceptVisualizer
+from analysis.discourse_analysis import DiscourseAnalyzer
+from data.literature_mining import LiteratureCorpus
 
-from utils.logging import get_logger
+from core.logging import get_logger
 
 # Directory creation handled inline
 

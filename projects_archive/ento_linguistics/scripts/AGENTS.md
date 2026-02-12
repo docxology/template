@@ -18,6 +18,7 @@ The `.gitkeep` file has no effect on the build system or script execution.
 ## Thin Orchestrator Pattern
 
 ### Core Principle
+
 **All business logic lives in `src/`, scripts handle orchestration only.**
 
 ```
@@ -40,6 +41,7 @@ The `.gitkeep` file has no effect on the build system or script execution.
 ```
 
 ### What Scripts Do
+
 ✅ **Import** methods from `src/` modules  
 ✅ **Orchestrate** data flow and execution  
 ✅ **Generate** visualizations and outputs  
@@ -48,6 +50,7 @@ The `.gitkeep` file has no effect on the build system or script execution.
 ✅ **Demonstrate** integration patterns  
 
 ### What Scripts Don't Do
+
 ❌ **Implement** mathematical algorithms (use `src/`)  
 ❌ **Duplicate** business logic (import from `src/`)  
 ❌ **Contain** complex computations (delegate to `src/`)  
@@ -56,9 +59,11 @@ The `.gitkeep` file has no effect on the build system or script execution.
 ## Current Scripts
 
 ### example_figure.py
+
 **Purpose**: Basic integration example demonstrating simple `src/` usage
 
 **src/ Methods Used**:
+
 - `add_numbers()` - Basic arithmetic
 - `multiply_numbers()` - Scaling operations  
 - `calculate_average()` - Statistical analysis
@@ -66,6 +71,7 @@ The `.gitkeep` file has no effect on the build system or script execution.
 - `find_minimum()` - Data analysis
 
 **What It Generates**:
+
 - `output/figures/example_figure.png` - Two-panel visualization
 - `output/data/example_data.csv` - Processed data
 - `output/data/example_data.npz` - NumPy array data
@@ -73,16 +79,19 @@ The `.gitkeep` file has no effect on the build system or script execution.
 **Key Pattern**: Shows how to import multiple functions from one module and compose them.
 
 ### generate_research_figures.py
+
 **Purpose**: Advanced integration example showing complex figure generation
 
 **src/ Methods Used**:
+
 - `add_numbers()` - Data validation
 - `multiply_numbers()` - Data processing
 - `calculate_average()` - Statistical analysis
 - `is_even()`, `is_odd()` - Validation logic
 
 **What It Generates**:
-- `output/figures/convergence_plot.png` - Convergence analysis
+
+- `output/figures/domain_comparison.png` - Domain comparison analysis
 - `output/figures/experimental_setup.png` - Setup diagram
 - `output/figures/data_structure.png` - Data visualization
 - `output/figures/scalability_analysis.png` - Performance plots
@@ -98,9 +107,11 @@ The `.gitkeep` file has no effect on the build system or script execution.
 **Key Pattern**: Shows how to generate multiple related figures using the same `src/` methods.
 
 ### analysis_pipeline.py
+
 **Purpose**: Statistical analysis workflow demonstrating data analysis
 
 **src/ Methods Used**:
+
 - `generate_classification_dataset()`, `generate_synthetic_data()` - Data generation
 - `normalize_data()`, `detect_outliers()`, `clean_data()` - Data processing
 - `calculate_accuracy()`, `calculate_precision_recall_f1()`, `calculate_all_metrics()` - Metrics
@@ -111,6 +122,7 @@ The `.gitkeep` file has no effect on the build system or script execution.
 - `FigureManager`, `ReportGenerator` - Figure and report management
 
 **What It Generates**:
+
 - `output/figures/analysis_comparison.png` - Statistical comparison plots
 - `output/figures/scatter_correlation.png` - Correlation scatter plots
 - `output/figures/statistical_comparison.png` - Statistical test results
@@ -119,9 +131,11 @@ The `.gitkeep` file has no effect on the build system or script execution.
 **Key Pattern**: Demonstrates workflow from data generation through analysis to reporting.
 
 ### scientific_simulation.py
+
 **Purpose**: Simulation framework demonstration with parameter management
 
 **src/ Methods Used**:
+
 - `generate_time_series()`, `generate_synthetic_data()` - Data generation
 - `ParameterSet`, `ParameterSweep` - Parameter management
 - `SimpleSimulation`, `SimulationBase` - Simulation framework
@@ -132,6 +146,7 @@ The `.gitkeep` file has no effect on the build system or script execution.
 - `FigureManager` - Figure management
 
 **What It Generates**:
+
 - `output/simulations/simulation_results.json` - Simulation results
 - `output/simulations/simulation_state.npz` - Simulation state
 - `output/figures/scientific_simulation_timeseries.png` - Time series visualization
@@ -140,9 +155,11 @@ The `.gitkeep` file has no effect on the build system or script execution.
 **Key Pattern**: Shows how to set up and run simulations with proper parameter management and result tracking.
 
 ### generate_scientific_figures.py
+
 **Purpose**: Automated scientific figure generation with markdown integration
 
 **src/ Methods Used**:
+
 - `generate_time_series()`, `generate_synthetic_data()` - Data generation
 - `FigureManager` - Figure management
 - `ImageManager` - Image insertion
@@ -153,6 +170,7 @@ The `.gitkeep` file has no effect on the build system or script execution.
 - `VisualizationEngine` - Visualization engine
 
 **What It Generates**:
+
 - `output/figures/convergence_analysis.png` - Convergence analysis figure
 - `output/figures/time_series_analysis.png` - Time series analysis
 - Automatically inserts figures into markdown files with captions
@@ -235,6 +253,7 @@ if __name__ == "__main__":
 ## Import Pattern
 
 ### Step 1: Add src/ and repo root to Path
+
 ```python
 def _ensure_paths() -> None:
     """Ensure src/ and infrastructure/ are importable."""
@@ -250,6 +269,7 @@ _ensure_paths()
 ```
 
 ### Step 2: Import with Error Handling
+
 ```python
 try:
     from example import add_numbers, calculate_average
@@ -262,6 +282,7 @@ except ImportError as e:
 ```
 
 ### Step 3: Use Imported Methods
+
 ```python
 # Instead of implementing:
 # result = sum(data) / len(data)  # ❌ Don't do this
@@ -273,6 +294,7 @@ result = calculate_average(data)  # ✅ Do this
 ## Integration Examples
 
 ### Data Processing
+
 ```python
 # ❌ BAD: Implementing logic in script
 def process_data(values):
@@ -290,6 +312,7 @@ def process_data(values):
 ```
 
 ### Statistical Analysis
+
 ```python
 # ❌ BAD: Implementing statistics
 avg = sum(data) / len(data)
@@ -303,6 +326,7 @@ maximum = find_maximum(data)
 ```
 
 ### Validation
+
 ```python
 # ❌ BAD: Implementing validation
 is_valid = len(data) % 2 == 0
@@ -316,11 +340,13 @@ is_valid = is_even(len(data))
 ## Testing Scripts
 
 Scripts are tested through:
+
 1. **Unit tests** in `tests/test_example_figure.py` and `tests/test_generate_research_figures.py`
 2. **Integration tests** in `tests/test_integration_pipeline.py`
 3. **Execution tests** during `render_pdf.sh`
 
 ### Test Structure
+
 ```python
 """Tests for scripts/example_figure.py"""
 import pytest
@@ -338,6 +364,7 @@ def test_script_imports_src_modules():
 ## Error Handling
 
 ### Import Errors
+
 ```python
 try:
     from example import add_numbers
@@ -350,6 +377,7 @@ except ImportError as e:
 ```
 
 ### Computation Errors
+
 ```python
 try:
     result = calculate_average(data)
@@ -360,6 +388,7 @@ except ValueError as e:
 ```
 
 ### File I/O Errors
+
 ```python
 try:
     fig.savefig(output_path, dpi=300, bbox_inches="tight")
@@ -372,6 +401,7 @@ except OSError as e:
 ## Adding New Scripts
 
 ### Checklist
+
 - [ ] Script imports from `src/` modules
 - [ ] Uses `src/` methods for all computation
 - [ ] Handles only I/O, visualization, orchestration
@@ -384,6 +414,7 @@ except OSError as e:
 - [ ] Documented with clear docstring
 
 ### Development Process
+
 1. **Identify needed functionality** - what does script need to do?
 2. **Check if src/ has it** - look in `src/` modules
 3. **If missing, add to src/ first** - implement and test in `src/`
@@ -394,7 +425,9 @@ except OSError as e:
 ## Integration with Build System
 
 ### Automatic Execution
+
 `render_pdf.sh` automatically:
+
 1. Runs all tests (validates `src/` works)
 2. Executes all `*.py` files in `scripts/`
 3. Captures output paths
@@ -402,11 +435,12 @@ except OSError as e:
 5. Fails build if any script fails
 
 ### Output Structure
+
 ```
 output/
 ├── figures/     # PNG files from scripts
 │   ├── example_figure.png
-│   ├── convergence_plot.png
+│   ├── domain_comparison.png
 │   └── ...
 ├── data/        # CSV, NPZ files from scripts
 │   ├── example_data.csv
@@ -419,6 +453,7 @@ output/
 ## Best Practices
 
 ### Do's
+
 ✅ Import extensively from `src/` modules  
 ✅ Use descriptive variable names  
 ✅ Handle errors gracefully  
@@ -428,6 +463,7 @@ output/
 ✅ Document what src/ methods are used  
 
 ### Don'ts
+
 ❌ Implement algorithms (add to `src/` instead)  
 ❌ Duplicate logic from `src/`  
 ❌ Skip error handling  
@@ -442,7 +478,3 @@ output/
 - [`../tests/AGENTS.md`](../tests/AGENTS.md) - Testing scripts
 - [`../../docs/THIN_ORCHESTRATOR_SUMMARY.md`](../../docs/THIN_ORCHESTRATOR_SUMMARY.md) - Pattern details
 - [`../AGENTS.md`](../AGENTS.md) - system documentation
-
-
-
-

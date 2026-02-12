@@ -421,7 +421,7 @@ pytest tests/ -m requires_zenodo
 pytest tests/ -m requires_github
 ```
 
-**See [docs/TESTING_WITH_CREDENTIALS.md](../docs/development/TESTING_WITH_CREDENTIALS.md) for credential setup.**
+**See [docs/testing-with-credentials.md](../docs/development/testing-with-credentials.md) for credential setup.**
 
 ## Writing Tests
 
@@ -717,7 +717,7 @@ def test_publish_to_zenodo(zenodo_credentials, tmp_path):
 - Tests automatically clean up artifacts (depositions, releases)
 - Tokens should have minimum required scopes
 
-See **[docs/TESTING_WITH_CREDENTIALS.md](../docs/development/TESTING_WITH_CREDENTIALS.md)** for setup guide.
+See **[docs/testing-with-credentials.md](../docs/development/testing-with-credentials.md)** for setup guide.
 
 ## See Also
 
@@ -726,5 +726,5 @@ See **[docs/TESTING_WITH_CREDENTIALS.md](../docs/development/TESTING_WITH_CREDEN
 - [`../projects/code_project/src/AGENTS.md`](../projects/code_project/src/AGENTS.md) - code_project module documentation
 - [`../projects/code_project/src/AGENTS.md`](../projects/code_project/src/AGENTS.md) - code_project module documentation
 - [`../AGENTS.md`](../AGENTS.md) - System documentation
-- [`../docs/core/WORKFLOW.md`](../docs/core/WORKFLOW.md) - Development workflow
-- [`../docs/development/TESTING_WITH_CREDENTIALS.md`](../docs/development/TESTING_WITH_CREDENTIALS.md) - Credential configuration guide
+- [`../docs/core/workflow.md`](../docs/core/workflow.md) - Development workflow
+- [`../docs/development/testing-with-credentials.md`](../docs/development/testing-with-credentials.md) - Credential configuration guide

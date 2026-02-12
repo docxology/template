@@ -620,4 +620,4 @@ class EnhancedPromptComposer(PromptComposer):
 **System Documentation:**
 
 - [`../../../../AGENTS.md`](../../../../AGENTS.md) - system overview
-- [`../../../../docs/operational/LLM_REVIEW_TROUBLESHOOTING.md`](../../../../docs/operational/LLM_REVIEW_TROUBLESHOOTING.md) - LLM troubleshooting guide
+- [`../../../../docs/operational/llm-review-troubleshooting.md`](../../../../docs/operational/llm-review-troubleshooting.md) - LLM troubleshooting guide

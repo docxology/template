@@ -440,10 +440,10 @@ python3 scripts/03_render_pdf.py --project {name}
 - **README.md** - Project overview and quick start
 - **AGENTS.md** - System reference (configuration, modules, troubleshooting details)
 - **RUN_GUIDE.md** - Pipeline execution documentation
-- **docs/core/ARCHITECTURE.md** - Detailed architecture guide
-- **docs/core/WORKFLOW.md** - Development workflow details
-- **docs/core/HOW_TO_USE.md** - Usage guide (12 skill levels)
-- **docs/DOCUMENTATION_INDEX.md** - Index of all 89+ documentation files
+- **docs/core/architecture.md** - Detailed architecture guide
+- **docs/core/workflow.md** - Development workflow details
+- **docs/core/how-to-use.md** - Usage guide (12 skill levels)
+- **docs/documentation-index.md** - Index of all 89+ documentation files
 
 ## Important Notes
 

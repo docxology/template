@@ -257,7 +257,7 @@ graph TD
 See [`../module/AGENTS.md`](../module/AGENTS.md) for module details.
 
 # Link to related documentation
-See [`../../docs/core/ARCHITECTURE.md`](../../docs/core/ARCHITECTURE.md) for architecture information.
+See [`../../docs/core/architecture.md`](../../docs/core/architecture.md) for architecture information.
 
 # Link to standards
 See [`../../../.cursorrules/testing_standards.md`](../../../.cursorrules/testing_standards.md) for testing requirements.
