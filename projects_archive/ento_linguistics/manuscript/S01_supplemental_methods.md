@@ -9,7 +9,7 @@ This section provides detailed methodological information supplementing Section 
 Our text processing pipeline implements systematic normalization to ensure reliable pattern detection:
 
 \begin{equation}\label{eq:text_normalization}
-T_{\text{normalized}} = \text{lowercase}(\text{strip_punct}(\text{unicode_normalize}(T)))
+T_{\text{normalized}} = \text{lowercase}(\text{strip\_punct}(\text{unicode\_normalize}(T)))
 \end{equation}
 
 where $T$ represents raw text input and each transformation step standardizes linguistic variation while preserving semantic content.
@@ -43,7 +43,7 @@ The preprocessing pipeline includes:
 Terminology extraction uses a multi-criteria approach combining statistical and linguistic features:
 
 \begin{equation}\label{eq:term_extraction_score}
-S(t) = \alpha \cdot \text{TF-IDF}(t) + \beta \cdot \text{domain_relevance}(t) + \gamma \cdot \text{linguistic_features}(t)
+S(t) = \alpha \cdot \text{TF-IDF}(t) + \beta \cdot \text{domain\_relevance}(t) + \gamma \cdot \text{linguistic\_features}(t)
 \end{equation}
 
 where weights $\alpha, \beta, \gamma$ are calibrated for each Ento-Linguistic domain.
@@ -92,7 +92,7 @@ Q = \frac{1}{2m} \sum_{ij} \left[ A_{ij} - \frac{k_i k_j}{2m} \right] \delta(c_i
 Network quality is assessed using:
 
 \begin{equation}\label{eq:network_validation}
-V(G) = \alpha \cdot \text{modularity}(G) + \beta \cdot \text{conductance}(G) + \gamma \cdot \text{domain_purity}(G)
+V(G) = \alpha \cdot \text{modularity}(G) + \beta \cdot \text{conductance}(G) + \gamma \cdot \text{domain\_purity}(G)
 \end{equation}
 
 where domain purity measures the extent to which communities correspond to Ento-Linguistic domains.
@@ -152,27 +152,27 @@ Hierarchical structures are identified by:
 
 The implementation follows a modular architecture organized under the `src/` package:
 
-```text
+```
 src/
-├── analysis/           # Core analytical modules
-│   ├── text_analysis.py        # TextProcessor, LinguisticFeatureExtractor
-│   ├── term_extraction.py      # TerminologyExtractor, Term dataclass
-│   ├── domain_analysis.py      # DomainAnalyzer, DomainAnalysis dataclass
-│   ├── conceptual_mapping.py   # ConceptualMapper, concept graph construction
-│   ├── discourse_analysis.py   # DiscourseAnalyzer, framing detection
-│   ├── statistics.py           # Statistical validation utilities
-│   └── performance.py          # Performance benchmarking
-├── core/               # Shared infrastructure and utilities
-├── data/               # Domain seed data and corpus resources
-├── pipeline/           # End-to-end orchestration
-└── visualization/      # ConceptVisualizer, VisualizationEngine
+|-- analysis/           # Core analytical modules
+|   |-- text_analysis.py        # TextProcessor, LinguisticFeatureExtractor
+|   |-- term_extraction.py      # TerminologyExtractor, Term dataclass
+|   |-- domain_analysis.py      # DomainAnalyzer, DomainAnalysis dataclass
+|   |-- conceptual_mapping.py   # ConceptualMapper, concept graph construction
+|   |-- discourse_analysis.py   # DiscourseAnalyzer, framing detection
+|   |-- statistics.py           # Statistical validation utilities
+|   `-- performance.py          # Performance benchmarking
+|-- core/               # Shared infrastructure and utilities
+|-- data/               # Domain seed data and corpus resources
+|-- pipeline/           # End-to-end orchestration
+`-- visualization/      # ConceptVisualizer, VisualizationEngine
 ```
 
 ### Data Structures and Formats
 
 **Term Representation** (from `src/analysis/term_extraction.py`):
 
-```python
+```
 @dataclass
 class Term:
     text: str               # The term text
@@ -186,7 +186,7 @@ class Term:
 
 **Domain Analysis Results** (from `src/analysis/domain_analysis.py`):
 
-```python
+```
 @dataclass
 class DomainAnalysis:
     domain_name: str
@@ -304,13 +304,7 @@ where $d$ represents discourse patterns and $t_i$ are sequential terms.
 
 ### Computational Complexity
 
-The pipeline's overall time complexity is:
-
-\begin{equation}\label{eq:computational_complexity}
-C(n,m) = O(n \log n + m \cdot d)
-\end{equation}
-
-where $n$ is the corpus size (total words or documents), $m$ is the number of extracted terms, and $d = 6$ is the fixed number of Ento-Linguistic domains. The $n \log n$ term covers text preprocessing and tokenization; $m \cdot d$ represents domain classification and per-domain analysis.
+The pipeline's overall time complexity is defined in Eq. \ref{eq:method_complexity}, where $n$ is the corpus size (total words or documents), $m$ is the number of extracted terms, and $d = 6$ is the fixed number of Ento-Linguistic domains. The $n \log n$ term covers text preprocessing and tokenization; $m \cdot d$ represents domain classification and per-domain analysis.
 
 ### Memory and Resource Management
 

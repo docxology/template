@@ -49,7 +49,7 @@ if os.path.exists(SRC) and SRC not in sys.path:
 # Note: Only active projects in projects/ directory are added here.
 # Archived projects in projects_archive/ are not included.
 # Projects are discovered dynamically from the projects/ directory.
-# Supports both top-level projects (projects/code_project/src/) and nested/program-grouped
+# Supports both top-level projects (projects/act_inf_metaanalysis/src/) and nested/program-grouped
 # projects (projects/cognitive_integrity/cogsec_multiagent_1_theory/src/).
 active_projects = []
 projects_dir = os.path.join(ROOT, "projects")

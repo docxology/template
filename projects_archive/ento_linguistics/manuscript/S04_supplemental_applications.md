@@ -12,7 +12,7 @@ Applying Ento-Linguistic methods to evolutionary biology reveals similar pattern
 
 The pipeline invocation follows the standard orchestration pattern:
 
-```python
+```
 from src.analysis.term_extraction import TerminologyExtractor
 from src.analysis.domain_analysis import DomainAnalyzer
 
@@ -75,6 +75,18 @@ Ento-Linguistic analysis provides tools for improving science education through 
 ### Policy and Ethics
 
 Terminology analysis supports research policy development—from identifying emerging research areas through terminological patterns to facilitating interdisciplinary collaboration. Ethical applications include promoting inclusive language that avoids cultural bias, ensuring transparent communication that serves research goals, and developing responsible guidelines for scientific naming practices \cite{betternamesproject2024}.
+
+### Decolonizing Entomological Curricula
+
+A critical application of the Ento-Linguistic framework involves the decolonization of curriculum materials. Our analysis of the Power \& Labor domain reveals that standard textbook descriptions of ant colonies frequently rely on "settler science" metaphors—conquest, slavery, and colonial expansion—that were explicitly cultivated during the imperial era to naturalize colonial projects \cite{mavhunga2018transient}.
+
+**Curriculum Audit Protocol**: We propose a `CurriculumAuditor` module that scans educational texts for three specific colonial narrative tropes:
+
+1. **The Civilizing Mission**: Framing "advanced" eusocial insects as superior to "primitive" solitary species, mirroring colonial development narratives.
+2. **The Frontier Myth**: Describing territory expansion as "manifest destiny" or "empty land" colonization, ignoring competitive exclusion or incumbent species.
+3. **The Plantation Model**: Describing fungus-farming ants solely through the lens of industrial agriculture and labor management, obscuring symbiotic complexity.
+
+By identifying these tropes, educators can reframe lessons to emphasize ecological integration, symbiosis, and diverse social strategies, moving away from narratives that implicitly validate colonial ideologies \cite{laciny2024terminology}.
 
 ## Future Directions
 

@@ -9,7 +9,7 @@ from __future__ import annotations
 from typing import Dict, List
 
 import pytest
-from src.analysis.discourse_analysis import (ArgumentativeStructure, DiscourseAnalyzer,
+from analysis.discourse_analysis import (ArgumentativeStructure, DiscourseAnalyzer,
                                     DiscoursePattern)
 
 
@@ -224,7 +224,6 @@ class TestDiscourseAnalyzer:
         # Should handle empty input gracefully
         assert len(profile) >= 0
 
-    @pytest.mark.skip(reason="Test has issues with profile creation - needs debugging")
     def test_compare_discourse_profiles(
         self, analyzer: DiscourseAnalyzer, sample_texts: List[str]
     ) -> None:
@@ -238,7 +237,6 @@ class TestDiscourseAnalyzer:
         # Should contain comparison results
         assert len(comparison) >= 0
 
-    @pytest.mark.skip(reason="Test has issues with profile creation - needs debugging")
     def test_export_discourse_analysis(
         self, analyzer: DiscourseAnalyzer, sample_texts: List[str], tmp_path
     ) -> None:
@@ -348,13 +346,10 @@ class TestDiscourseAnalysisIntegration:
             "The data clearly shows complex social structures in colonies.",
         ]
 
-        # Run complete analysis
         profile = analyzer.create_discourse_profile(texts)
 
         assert isinstance(profile, dict)
         assert len(profile) > 0
-
-        # Should contain integrated results
         assert "patterns" in profile or "structures" in profile
 
     def test_discourse_analysis_consistency(self) -> None:
@@ -367,7 +362,6 @@ class TestDiscourseAnalysisIntegration:
         profile1 = analyzer1.create_discourse_profile(texts)
         profile2 = analyzer2.create_discourse_profile(texts)
 
-        # Should produce consistent results
         assert isinstance(profile1, dict)
         assert isinstance(profile2, dict)
         assert len(profile1) == len(profile2)
@@ -385,14 +379,12 @@ class TestDiscourseAnalysisIntegration:
         comparison = analyzer.compare_discourse_profiles(profile1, profile2)
 
         assert isinstance(comparison, dict)
-        # Comparison should highlight differences
         assert len(comparison) >= 0
 
     def test_large_text_corpus_handling(self) -> None:
         """Test handling of larger text corpora."""
         analyzer = DiscourseAnalyzer()
 
-        # Create a larger corpus
         texts = [
             f"Ant behavior pattern {i}: cooperation because survival."
             for i in range(10)
@@ -401,10 +393,8 @@ class TestDiscourseAnalysisIntegration:
         profile = analyzer.create_discourse_profile(texts)
 
         assert isinstance(profile, dict)
-        # Should handle larger corpora without issues
         assert len(profile) > 0
 
-    @pytest.mark.skip(reason="Test has issues with profile creation - needs debugging")
     def test_export_discourse_analysis(
         self, analyzer: DiscourseAnalyzer, sample_texts: List[str], tmp_path
     ) -> None:
@@ -417,9 +407,337 @@ class TestDiscourseAnalysisIntegration:
         assert filepath.exists()
         assert filepath.stat().st_size > 0
 
-        # Verify it's valid JSON
         import json
 
         with open(filepath, "r") as f:
             data = json.load(f)
         assert isinstance(data, dict)
+
+
+# --- Quantitative analysis tests (merged from expanded tests) ---
+
+
+@pytest.fixture
+def rich_texts():
+    """Create rich sample texts with discourse markers and framing language."""
+    return [
+        "The queen bee therefore orchestrates the colony's division of labor. "
+        "However, worker bees demonstrate remarkable autonomy in foraging decisions. "
+        "Furthermore, the evidence shows that pheromone signaling shapes colony behavior. "
+        "This suggests that ant colonies function as superorganisms with emergent intelligence. "
+        "Moreover, recent studies indicate that insect communication is more complex than previously assumed. "
+        "In conclusion, these findings support the hypothesis that social insects exhibit collective cognition.",
+        "Studies demonstrate that honeybee dance language communicates precise spatial information. "
+        "Similarly, ant trail pheromones create self-organizing networks. "
+        "Nevertheless, the mechanistic basis of these behaviors remains poorly understood. "
+        "The results indicate that colony-level optimization emerges from simple individual rules. "
+        "Specifically, each worker responds to local signals without global knowledge. "
+        "Consequently, the swarm intelligence paradigm has transformed our understanding of insect societies.",
+        "The data confirm that termite mounds regulate temperature through architectural design. "
+        "In contrast, wasp nests rely on behavioral thermoregulation by workers. "
+        "These observations imply that different insect lineages evolved convergent solutions. "
+        "The evidence suggests that natural selection has shaped collective building instincts. "
+        "Additionally, the holistic framework reveals interconnections between insect behavior and ecology. "
+        "Thus, an anthropomorphic interpretation of insect intelligence may obscure biological mechanisms.",
+    ]
+
+
+class TestQuantifyRhetoricalPatterns:
+    """Tests for quantify_rhetorical_patterns method."""
+
+    @pytest.fixture
+    def analyzer(self) -> DiscourseAnalyzer:
+        return DiscourseAnalyzer()
+
+    def test_basic_quantification(self, analyzer, rich_texts):
+        result = analyzer.quantify_rhetorical_patterns(rich_texts)
+        assert isinstance(result, dict)
+        for key, val in result.items():
+            assert "total_occurrences" in val
+            assert "text_coverage" in val
+            assert "effectiveness_score" in val
+            assert "persuasiveness_rating" in val
+
+    def test_effectiveness_score_bounded(self, analyzer, rich_texts):
+        result = analyzer.quantify_rhetorical_patterns(rich_texts)
+        for key, val in result.items():
+            assert 0 <= val["effectiveness_score"] <= 1.0
+            assert 0 <= val["persuasiveness_rating"] <= 1.0
+
+    def test_empty_texts(self, analyzer):
+        result = analyzer.quantify_rhetorical_patterns([])
+        assert isinstance(result, dict)
+
+
+class TestScoreArgumentativeStructures:
+    """Tests for score_argumentative_structures method."""
+
+    @pytest.fixture
+    def analyzer(self) -> DiscourseAnalyzer:
+        return DiscourseAnalyzer()
+
+    def test_basic_scoring(self, analyzer, rich_texts):
+        result = analyzer.score_argumentative_structures(rich_texts)
+        assert isinstance(result, dict)
+        for key, val in result.items():
+            assert "claim_strength" in val
+            assert "evidence_quality" in val
+            assert "reasoning_coherence" in val
+            assert "overall_strength" in val
+            assert "confidence_score" in val
+
+    def test_overall_strength_is_average(self, analyzer, rich_texts):
+        result = analyzer.score_argumentative_structures(rich_texts)
+        for key, val in result.items():
+            expected = (val["claim_strength"] + val["evidence_quality"] + val["reasoning_coherence"]) / 3
+            assert abs(val["overall_strength"] - expected) < 0.001
+
+    def test_scores_bounded(self, analyzer, rich_texts):
+        result = analyzer.score_argumentative_structures(rich_texts)
+        for key, val in result.items():
+            assert 0 <= val["claim_strength"] <= 1.0
+            assert 0 <= val["evidence_quality"] <= 1.0
+            assert 0 <= val["reasoning_coherence"] <= 1.0
+
+
+class TestAnalyzeNarrativeFrequency:
+    """Tests for analyze_narrative_frequency method."""
+
+    @pytest.fixture
+    def analyzer(self) -> DiscourseAnalyzer:
+        return DiscourseAnalyzer()
+
+    def test_basic_analysis(self, analyzer, rich_texts):
+        result = analyzer.analyze_narrative_frequency(rich_texts)
+        assert isinstance(result, dict)
+        for key, val in result.items():
+            assert "frequency" in val
+            assert "coverage_percentage" in val
+            assert "average_text_length" in val
+            assert "unique_phrase_count" in val
+            assert "consistency_score" in val
+
+    def test_coverage_bounded(self, analyzer, rich_texts):
+        result = analyzer.analyze_narrative_frequency(rich_texts)
+        for key, val in result.items():
+            assert 0 <= val["coverage_percentage"] <= 100
+
+    def test_examples_limited(self, analyzer, rich_texts):
+        result = analyzer.analyze_narrative_frequency(rich_texts)
+        for key, val in result.items():
+            assert len(val.get("examples", [])) <= 3
+
+
+class TestMeasurePersuasiveEffectiveness:
+    """Tests for measure_persuasive_effectiveness method."""
+
+    @pytest.fixture
+    def analyzer(self) -> DiscourseAnalyzer:
+        return DiscourseAnalyzer()
+
+    def test_basic_measurement(self, analyzer, rich_texts):
+        result = analyzer.measure_persuasive_effectiveness(rich_texts)
+        assert isinstance(result, dict)
+        for key, val in result.items():
+            assert "usage_frequency" in val
+            assert "context_relevance" in val
+            assert "impact_score" in val
+            assert "effectiveness_rating" in val
+
+    def test_impact_bounded(self, analyzer, rich_texts):
+        result = analyzer.measure_persuasive_effectiveness(rich_texts)
+        for key, val in result.items():
+            assert 0 <= val["impact_score"] <= 1.0
+
+
+class TestAnalyzeTermUsageContext:
+    """Tests for analyze_term_usage_context method."""
+
+    @pytest.fixture
+    def analyzer(self) -> DiscourseAnalyzer:
+        return DiscourseAnalyzer()
+
+    def test_basic_context_analysis(self, analyzer, rich_texts):
+        terms = ["colony", "worker", "behavior"]
+        result = analyzer.analyze_term_usage_context(terms, rich_texts)
+        assert isinstance(result, dict)
+        if result:
+            for term, data in result.items():
+                assert "total_occurrences" in data
+                assert "context_diversity" in data
+                assert "context_types" in data
+                assert "position_distribution" in data
+                assert "usage_consistency" in data
+
+    def test_nonexistent_term(self, analyzer, rich_texts):
+        result = analyzer.analyze_term_usage_context(["zzzznonexistent"], rich_texts)
+        assert isinstance(result, dict)
+        assert "zzzznonexistent" not in result
+
+    def test_position_distribution_keys(self, analyzer, rich_texts):
+        result = analyzer.analyze_term_usage_context(["colony"], rich_texts)
+        if "colony" in result:
+            pos = result["colony"]["position_distribution"]
+            assert "early" in pos
+            assert "middle" in pos
+            assert "late" in pos
+
+    def test_context_examples_limited(self, analyzer, rich_texts):
+        result = analyzer.analyze_term_usage_context(["the"], rich_texts)
+        if "the" in result:
+            assert len(result["the"].get("context_examples", [])) <= 5
+
+
+class TestTrackConceptualShifts:
+    """Tests for track_conceptual_shifts method."""
+
+    @pytest.fixture
+    def analyzer(self) -> DiscourseAnalyzer:
+        return DiscourseAnalyzer()
+
+    def test_basic_tracking(self, analyzer, rich_texts):
+        time_periods = ["period_a", "period_b", "period_c"]
+        result = analyzer.track_conceptual_shifts(rich_texts, time_periods=time_periods)
+        assert isinstance(result, dict)
+        assert len(result) == 2
+
+    def test_without_time_periods(self, analyzer, rich_texts):
+        result = analyzer.track_conceptual_shifts(rich_texts)
+        assert isinstance(result, dict)
+
+    def test_shift_structure(self, analyzer, rich_texts):
+        result = analyzer.track_conceptual_shifts(rich_texts)
+        for key, shift_data in result.items():
+            assert "pattern_shifts" in shift_data
+            assert "overall_shift_intensity" in shift_data
+            assert "significant_shifts" in shift_data
+
+    def test_mismatched_periods_raises(self, analyzer, rich_texts):
+        with pytest.raises(ValueError):
+            analyzer.track_conceptual_shifts(rich_texts, time_periods=["a", "b"])
+
+    def test_single_text_no_shifts(self, analyzer):
+        result = analyzer.track_conceptual_shifts(["The bee colony thrives."])
+        assert isinstance(result, dict)
+        assert len(result) == 0
+
+
+class TestQuantifyFramingEffects:
+    """Tests for quantify_framing_effects method."""
+
+    @pytest.fixture
+    def analyzer(self) -> DiscourseAnalyzer:
+        return DiscourseAnalyzer()
+
+    def test_default_framing_concepts(self, analyzer, rich_texts):
+        result = analyzer.quantify_framing_effects(rich_texts)
+        assert isinstance(result, dict)
+
+    def test_custom_framing_concepts(self, analyzer, rich_texts):
+        result = analyzer.quantify_framing_effects(
+            rich_texts, framing_concepts=["anthropomorphic", "mechanistic"]
+        )
+        assert isinstance(result, dict)
+
+    def test_framing_structure(self, analyzer, rich_texts):
+        result = analyzer.quantify_framing_effects(rich_texts)
+        for concept, data in result.items():
+            assert "framing_strength" in data
+            assert "consistency_score" in data
+            assert "affected_texts" in data
+            assert "impact_score" in data
+
+    def test_framing_strength_bounded(self, analyzer, rich_texts):
+        result = analyzer.quantify_framing_effects(rich_texts)
+        for concept, data in result.items():
+            assert 0 <= data["framing_strength"] <= 1.0
+
+
+class TestPrivateHelpers:
+    """Tests for private helper methods of DiscourseAnalyzer."""
+
+    @pytest.fixture
+    def analyzer(self) -> DiscourseAnalyzer:
+        return DiscourseAnalyzer()
+
+    def test_calculate_persuasiveness(self, analyzer):
+        data = {"frequency": {"a": 3, "b": 2}, "contexts": ["c1", "c2", "c3"]}
+        result = analyzer._calculate_persuasiveness(data)
+        assert 0 <= result <= 1.0
+
+    def test_evaluate_claim_strength_short(self, analyzer):
+        result = analyzer._evaluate_claim_strength("Bees fly")
+        assert 0 <= result <= 1.0
+
+    def test_evaluate_claim_strength_with_connector(self, analyzer):
+        result = analyzer._evaluate_claim_strength(
+            "Therefore the colony adapts to changes in environment"
+        )
+        assert result > 0.5
+
+    def test_evaluate_claim_strength_question(self, analyzer):
+        result = analyzer._evaluate_claim_strength("Do bees communicate?")
+        assert result <= 0.8
+
+    def test_evaluate_evidence_quality(self, analyzer):
+        evidence = ["Studies show that bees use dance", "Data confirms the hypothesis"]
+        result = analyzer._evaluate_evidence_quality(evidence)
+        assert 0 <= result <= 1.0
+
+    def test_evaluate_evidence_quality_empty(self, analyzer):
+        result = analyzer._evaluate_evidence_quality([])
+        assert 0 <= result <= 1.0
+
+    def test_evaluate_reasoning_coherence(self, analyzer):
+        reasoning = "Therefore, these results indicate that bee communication is complex"
+        result = analyzer._evaluate_reasoning_coherence(reasoning)
+        assert 0 <= result <= 1.0
+
+    def test_calculate_structure_confidence(self, analyzer):
+        structure = ArgumentativeStructure(
+            claim="Bees are intelligent",
+            evidence=["Studies show", "Data confirms"],
+            warrant="Therefore bees exhibit complex behaviors",
+        )
+        result = analyzer._calculate_structure_confidence(structure)
+        assert 0 <= result <= 1.0
+
+    def test_calculate_framework_consistency(self, analyzer):
+        texts = ["The queen controls the colony", "The queen manages the hive"]
+        result = analyzer._calculate_framework_consistency(texts)
+        assert 0 <= result <= 1.0
+
+    def test_rate_technique_effectiveness(self, analyzer):
+        data = {"frequency": 5, "contexts": ["ctx1", "ctx2"]}
+        result = analyzer._rate_technique_effectiveness(data)
+        assert isinstance(result, str) or isinstance(result, (int, float))
+
+    def test_calculate_technique_impact(self, analyzer):
+        data = {"frequency": 5, "contexts": ["ctx1"]}
+        result = analyzer._calculate_technique_impact(data)
+        assert isinstance(result, (int, float))
+
+    def test_classify_context_type(self, analyzer):
+        sentence = "The experiment demonstrates that bees communicate"
+        result = analyzer._classify_context_type(sentence, "bees")
+        assert isinstance(result, str)
+
+    def test_calculate_usage_consistency(self, analyzer):
+        contexts = [
+            {"context_type": "definition"},
+            {"context_type": "definition"},
+            {"context_type": "example"},
+        ]
+        result = analyzer._calculate_usage_consistency(contexts)
+        assert 0 <= result <= 1.0
+
+    def test_get_framing_indicators(self, analyzer):
+        result = analyzer._get_framing_indicators("anthropomorphic")
+        assert isinstance(result, list)
+        assert len(result) > 0
+
+    def test_calculate_framing_consistency(self, analyzer):
+        texts = ["The queen decides what to do", "Workers choose their tasks"]
+        indicators = ["decides", "choose", "wants"]
+        result = analyzer._calculate_framing_consistency(texts, indicators)
+        assert 0 <= result <= 1.0

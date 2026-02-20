@@ -10,7 +10,7 @@ This prompt leverages the documentation standards to create professional documen
 
 - [`../../.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md) - Documentation writing standards
 - [`../AGENTS.md`](../AGENTS.md) - Documentation organization guide
-- [`../../projects/code_project/AGENTS.md`](../../projects/code_project/AGENTS.md) - Project documentation example
+- [`../../projects/act_inf_metaanalysis/AGENTS.md`](../../projects/act_inf_metaanalysis/AGENTS.md) - Project documentation example
 
 ## Prompt Template
 
@@ -368,6 +368,6 @@ TARGET PATH: infrastructure/data_quality/
 
 - [`../../.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md) - Documentation writing standards
 - [`../AGENTS.md`](../AGENTS.md) - Documentation organization guide
-- [`../../projects/code_project/AGENTS.md`](../../projects/code_project/AGENTS.md) - Project documentation example
+- [`../../projects/act_inf_metaanalysis/AGENTS.md`](../../projects/act_inf_metaanalysis/AGENTS.md) - Project documentation example
 - [`../../README.md`](../../README.md) - README.md standards example
 ```

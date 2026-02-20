@@ -52,8 +52,37 @@ def run_render_pipeline(project_name: str = "project") -> int:
     
     repo_root = Path(__file__).parent.parent
     project_root = repo_root / "projects" / project_name
-    manuscript_dir = project_root / "manuscript"
     
+    # Render from output/manuscript if variables have been injected there
+    injected_dir = project_root / "output" / "manuscript"
+    if injected_dir.exists() and any(injected_dir.glob("*.md")):
+        manuscript_dir = injected_dir
+        logger.info(f"Rendering from injected manuscript directory: {manuscript_dir}")
+    else:
+        manuscript_dir = project_root / "manuscript"
+    
+    # Check for project-specific render override script
+    override_script = project_root / "scripts" / "_render_pdf_override.py"
+    if override_script.exists():
+        logger.info(f"⚡ Found custom render override: {override_script.name}")
+        logger.info("Transferring control to project-specific renderer...")
+        
+        from infrastructure.core.environment import get_python_command
+        import subprocess
+        
+        cmd = get_python_command() + [str(override_script)]
+        try:
+            result = subprocess.run(cmd, cwd=str(project_root), check=False)
+            if result.returncode == 0:
+                log_success("Custom PDF rendering completed successfully", logger)
+                return 0
+            else:
+                logger.error(f"Custom PDF rendering failed (exit code {result.returncode})")
+                return result.returncode
+        except Exception as e:
+            logger.error(f"Failed to execute custom renderer: {e}")
+            return 1
+
     # Pre-flight: Validate LaTeX packages
     logger.info("Running pre-flight LaTeX package validation...")
     try:

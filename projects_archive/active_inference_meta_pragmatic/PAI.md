@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This project explores **Active Inference** principles applied to meta-pragmatic analysis — how agents reason about and optimize their own reasoning processes. It implements a 2×2 quadrant model (Data/Meta-Data × Cognitive/Meta-Cognitive) alongside core Active Inference computations (EFE, generative models, meta-cognition).
+This project explores **Active Inference** principles applied to meta-pragmatic analysis --- how agents reason about and optimize their own reasoning processes. It implements a 2x2 quadrant model (Data/Meta-Data x Cognitive/Meta-Cognitive) alongside core Active Inference computations (EFE, generative models, meta-cognition). The manuscript comprises 13 sections with 52 bibliography entries spanning Active Inference, meta-cognition, predictive processing, AI safety, cognitive security, and information theory.
 
 ## Architecture Overview
 
@@ -13,25 +13,27 @@ graph TD
     A --> D[QuadrantFramework]
     D --> E[MetaCognitiveSystem]
     D --> F[ModelerPerspective]
+    D --> K[CognitiveSecurityAnalyzer]
     G[DataGenerator] --> H[StatisticalAnalysis]
     H --> I[Validation]
     C --> J[Visualization]
 ```
 
-### Source Modules (10)
+### Source Modules (11 modules in 4 subpackages + utils)
 
-| Module | Purpose |
-| ------ | ------- |
-| `active_inference.py` | Core EFE calculations and policy selection |
-| `free_energy_principle.py` | FEP system boundary analysis and structure preservation |
-| `quadrant_framework.py` | 2×2 matrix cognitive process analysis |
-| `generative_models.py` | A, B, C, D matrix implementations |
-| `meta_cognition.py` | Confidence assessment and adaptive control |
-| `modeler_perspective.py` | Dual role analysis (architect and subject) |
-| `data_generator.py` | Synthetic data generation for demonstrations |
-| `statistical_analysis.py` | Statistical testing, regression, hypothesis validation |
-| `validation.py` | Framework validation suite |
-| `visualization.py` | Publication-quality plotting |
+| Subpackage | Module | Purpose |
+| ---------- | ------ | ------- |
+| `core/` | `active_inference.py` | Core EFE calculations and policy selection |
+| `core/` | `free_energy_principle.py` | FEP system boundary analysis and structure preservation |
+| `core/` | `generative_models.py` | A, B, C, D matrix implementations |
+| `framework/` | `quadrant_framework.py` | 2×2 matrix cognitive process analysis |
+| `framework/` | `meta_cognition.py` | Confidence assessment and adaptive control |
+| `framework/` | `modeler_perspective.py` | Dual role analysis (architect and subject) |
+| `framework/` | `cognitive_security.py` | Attack surface analysis, anomaly detection, framework integrity |
+| `analysis/` | `data_generator.py` | Synthetic data generation for demonstrations |
+| `analysis/` | `statistical_analysis.py` | Statistical testing, regression, hypothesis validation |
+| `analysis/` | `validation.py` | Framework validation suite |
+| `visualization/` | `visualization.py` | Publication-quality plotting |
 
 ## PAI Integration Points
 
@@ -63,13 +65,13 @@ The quadrant model provides structure for PAI agent cognition:
 
 ```bash
 # Install
-pip install -e .
+uv sync  # or: pip install -e .
 
-# Run all 360 tests
-python -m pytest tests/ --tb=short -q
+# Run tests (~17 test files, 95%+ coverage target)
+uv run pytest tests/ --tb=short -q
 
-# Run with coverage (90% minimum threshold)
-python -m pytest tests/ --cov=src --cov-report=term
+# Run with coverage
+uv run pytest tests/ --cov=src --cov-report=term
 ```
 
 ## Dependencies
@@ -83,6 +85,15 @@ python -m pytest tests/ --cov=src --cov-report=term
 | psutil ≥5.9 | System resource monitoring |
 | pytest ≥7.4 | Testing framework (dev) |
 | pytest-cov ≥4.1 | Coverage reporting (dev) |
+
+## Documentation (4 files in doc/)
+
+| Document | Description |
+|----------|-------------|
+| `doc/architecture.md` | System architecture, module dependencies, data flow, design decisions |
+| `doc/api_reference.md` | Comprehensive API reference with class/method signatures |
+| `doc/theoretical_primer.md` | Accessible introduction to Active Inference and the 2x2 framework |
+| `doc/quickstart.md` | 5-minute getting-started guide |
 
 ## Agent Guidelines
 

@@ -10,7 +10,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pytest
-from src.visualization.visualization import VisualizationEngine, create_multi_panel_figure
+from visualization.visualization import VisualizationEngine, create_multi_panel_figure
 
 
 class TestVisualizationEngine:

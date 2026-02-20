@@ -1,6 +1,6 @@
 # Conclusion {#sec:conclusion}
 
-This work establishes Ento-Linguistic analysis as a methodology for examining how scientific language constitutes—rather than merely represents—knowledge about ant biology. Through computational analysis of terminology networks across six domains (Unit of Individuality, Behavior and Identity, Power \& Labor, Sex \& Reproduction, Kin \& Relatedness, and Economics), we demonstrate that entomological terminology carries systematic patterns of ambiguity, anthropomorphic framing, and conceptual structure that actively shape research practice. The accompanying open-source computational pipeline—implementing automated term extraction, co-occurrence network construction, and ambiguity scoring—provides a reproducible toolkit for extending this analysis to new corpora and domains.
+This work establishes Ento-Linguistic analysis as a methodology for examining how scientific language constitutes—rather than merely represents—knowledge about ant biology. Through computational analysis of terminology networks across **3,253 publications** and six domains (Unit of Individuality, Behavior and Identity, Power \& Labor, Sex \& Reproduction, Kin \& Relatedness, and Economics), we demonstrate that entomological terminology carries systematic patterns of ambiguity, anthropomorphic framing, and conceptual structure that actively shape research practice. The accompanying open-source computational pipeline—implementing automated term extraction, co-occurrence network construction, and ambiguity scoring—provides a reproducible toolkit for extending this analysis to new corpora and domains.
 
 ## Core Contributions
 
@@ -11,7 +11,7 @@ The work makes three primary contributions. First, the six-domain analytical fra
 - **Consistency**: uniform usage within and across the field
 - **Evolvability**: robustness to new empirical discoveries
 
-These standards move beyond critique toward constructive reform, providing concrete criteria that researchers, editors, and institutions can apply to improve scientific communication.
+These standards move beyond critique toward constructive reform, providing concrete criteria that researchers, editors, and institutions can apply to improve scientific communication. The practical value of such reform is demonstrated by the *Active Inferants* framework \cite{friedman2021active}, which achieves empirically adequate models of ant colony foraging precisely by adopting terminology aligned with the underlying stigmergic mechanism rather than anthropomorphic hierarchy.
 
 ## Future Directions
 
@@ -23,8 +23,8 @@ Several avenues emerge for extending this work.
 
 **Educational and Editorial Tools.** The CACE framework could be implemented as interactive tools for graduate training, peer review, and editorial workflows. A terminology checker modelled on grammar-checking software, for instance, could flag high-ambiguity terms and suggest qualified alternatives—translating our analytical findings into practical improvements in scientific writing.
 
-**Cross-Disciplinary Extension.** The Ento-Linguistic framework is not specific to entomology. Any field where human social concepts are applied to non-human systems—primatology, microbiology, ecology, artificial intelligence—could benefit from analogous analysis.
+**Cross-Disciplinary Extension.** The Ento-Linguistic framework is not specific to entomology. Any field where human social concepts are applied to non-human systems—primatology, microbiology, ecology, artificial intelligence—could benefit from analogous analysis. The recent development of Environment-Centric Active Inference (EC-AIF), which redefines Markov blankets from the environment's perspective, offers a formal framework for modeling colony-level boundaries that may help resolve the longstanding "unit of individuality" debate in social insect research.
 
 ## Closing Remarks
 
-The entanglement of speech and thought in scientific practice is neither accidental nor inconsequential. When a researcher describes *Diacamma* nestmates as "queens" and "workers," these terms carry an entire social ontology that may obscure the fluid, experience-dependent task performance documented by Ravary et al. \cite{ravary2007}. Replacing "queen" with "primary reproductive" is not merely cosmetic—it is a step toward aligning scientific language with biological reality. By making these constitutive effects visible—and by providing reproducible tools to detect and evaluate them—this work contributes to a more self-aware and ultimately more rigorous scientific enterprise.
+The entanglement of speech and thought in scientific practice is neither accidental nor inconsequential. When a researcher describes *Diacamma* nestmates as "queens" and "workers," these terms carry an entire social ontology that may obscure the fluid, experience-dependent task performance documented by \citet{ravary2007}. Replacing "queen" with "primary reproductive" is not merely cosmetic—it is an act of **model repair**. By aligning our linguistic priors with the physics of distributed systems, we reduce the **variational free energy** of our scientific explanations. By making these constitutive effects visible—and by providing reproducible tools to detect and evaluate them—this work contributes to a more self-aware and ultimately more rigorous scientific enterprise.

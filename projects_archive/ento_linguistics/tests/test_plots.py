@@ -6,8 +6,10 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pytest
-from src.visualization.plots import (plot_3d_surface, plot_bar, plot_comparison, plot_contour,
-                   plot_convergence, plot_heatmap, plot_line, plot_scatter)
+from visualization.plots import (plot_3d_surface, plot_bar, plot_comparison, plot_contour,
+                   plot_convergence, plot_heatmap, plot_line, plot_scatter,
+                   plot_term_frequency, plot_domain_distribution,
+                   plot_concept_network)
 
 
 class TestPlotLine:
@@ -272,5 +274,86 @@ class TestPlot3DSurface:
         X, Y = np.meshgrid(x, y)
         Z = np.sin(np.sqrt(X**2 + Y**2))
         result_ax = plot_3d_surface(X, Y, Z, ax=ax)
+        assert result_ax == ax
+        plt.close(fig)
+
+
+class TestPlotTermFrequencies:
+    """Test term frequency plot function."""
+
+    def test_term_frequencies_with_objects(self):
+        """Test plotting term frequencies from objects with .frequency."""
+        from analysis.term_extraction import Term
+
+        terms = {
+            "colony": Term(text="colony", lemma="colony", domains=["behavioral"], frequency=15),
+            "worker": Term(text="worker", lemma="worker", domains=["behavioral"], frequency=10),
+            "queen": Term(text="queen", lemma="queen", domains=["behavioral"], frequency=8),
+        }
+        ax = plot_term_frequency(terms, top_n=3)
+        assert ax is not None
+        plt.close(ax.figure)
+
+    def test_term_frequencies_with_dicts(self):
+        """Test plotting term frequencies from dict-style terms."""
+        terms = {
+            "colony": {"frequency": 15},
+            "worker": {"frequency": 10},
+            "queen": {"frequency": 8},
+            "drone": {"frequency": 3},
+        }
+        ax = plot_term_frequency(terms, top_n=2)
+        assert ax is not None
+        plt.close(ax.figure)
+
+    def test_term_frequencies_with_existing_axes(self):
+        """Test term frequency plot on existing axes."""
+        fig, ax = plt.subplots()
+        terms = {
+            "colony": {"frequency": 15},
+            "worker": {"frequency": 10},
+        }
+        result_ax = plot_term_frequency(terms, ax=ax)
+        assert result_ax == ax
+        plt.close(fig)
+
+
+class TestPlotDomainDistribution:
+    """Test domain distribution plot function."""
+
+    def test_basic_domain_distribution(self):
+        """Test basic domain distribution."""
+        domain_counts = {
+            "behavioral": 45,
+            "chemical": 30,
+            "morphological": 20,
+            "ecological": 15,
+        }
+        ax = plot_domain_distribution(domain_counts)
+        assert ax is not None
+        plt.close(ax.figure)
+
+    def test_domain_distribution_with_axes(self):
+        """Test domain distribution on existing axes."""
+        fig, ax = plt.subplots()
+        domain_counts = {"behavioral": 10, "chemical": 5}
+        result_ax = plot_domain_distribution(domain_counts, ax=ax)
+        assert result_ax == ax
+        plt.close(fig)
+
+
+class TestPlotConceptNetwork:
+    """Test concept network plot function."""
+
+    def test_concept_network_stub(self):
+        """Test concept network placeholder."""
+        ax = plot_concept_network({"concepts": {}})
+        assert ax is not None
+        plt.close(ax.figure)
+
+    def test_concept_network_with_axes(self):
+        """Test concept network on existing axes."""
+        fig, ax = plt.subplots()
+        result_ax = plot_concept_network({"concepts": {}}, ax=ax)
         assert result_ax == ax
         plt.close(fig)

@@ -275,7 +275,7 @@ if os.path.exists(SRC) and SRC not in sys.path:
 
 # Add project src/ directories to path for project modules
 # Projects are discovered dynamically, so we add both known projects
-for project_name in ["code_project", "code_project"]:
+for project_name in ["act_inf_metaanalysis"]:
     project_src = os.path.join(ROOT, "projects", project_name, "src")
     if os.path.exists(project_src) and project_src not in sys.path:
     sys.path.insert(0, PROJECT_SRC)
@@ -285,8 +285,7 @@ This allows tests to import directly:
 
 ```python
 from infrastructure.core.config_loader import load_config  # Infrastructure imports
-from projects.code_project.src.optimizer import optimize  # code_project imports
-from projects.code_project.src.visualization import plot_function  # code_project imports
+from projects.act_inf_metaanalysis.src.literature import corpus  # Project imports
 ```
 
 ## Test Categories
@@ -321,8 +320,7 @@ Test project-specific code in `projects/{name}/tests/`:
 
 - Unit tests for `projects/{name}/src/` modules (see `projects/{name}/tests/AGENTS.md`)
 - Each project has independent test suite with 90%+ coverage requirement
-- code_project: 28 tests, 94.1% coverage
-- code_project: 47 tests, 91.5% coverage
+- act_inf_metaanalysis: 444 tests, 96.1% coverage
 
 ### Integration Tests
 
@@ -339,15 +337,14 @@ Test cross-module interactions in `tests/integration/`:
 
 ```bash
 # Using pytest directly (both infrastructure and project)
-pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov=projects/code_project/src --cov-report=term-missing --cov-report=html
+pytest tests/ --cov=infrastructure --cov=projects/act_inf_metaanalysis/src --cov-report=term-missing --cov-report=html
 
 # Using uv
-uv run pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov=projects/code_project/src --cov-report=html
+uv run pytest tests/ --cov=infrastructure --cov=projects/act_inf_metaanalysis/src --cov-report=html
 
 # Verify coverage requirements
 pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
-pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-under=90
-pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-under=90
+pytest projects/act_inf_metaanalysis/tests/ --cov=projects/act_inf_metaanalysis/src --cov-fail-under=90
 ```
 
 ### Specific Tests
@@ -357,8 +354,7 @@ pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-u
 pytest tests/infra_tests/core/test_config_loader.py -v
 
 # Project tests
-pytest projects/code_project/tests/ -v
-pytest projects/code_project/tests/ -v
+pytest projects/{name}/tests/ -v
 
 # Integration tests
 pytest tests/integration/test_module_interoperability.py -v
@@ -371,22 +367,20 @@ pytest tests/ -k "test_config" -v
 
 ```bash
 # Terminal report with missing lines
-pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov=projects/code_project/src --cov-report=term-missing
+pytest tests/ --cov=infrastructure --cov=projects/{name}/src --cov-report=term-missing
 
 # HTML report (opens in browser)
-pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov=projects/code_project/src --cov-report=html
+pytest tests/ --cov=infrastructure --cov=projects/{name}/src --cov-report=html
 open htmlcov/index.html
 
 # Separate reports
 pytest tests/infra_tests/ --cov=infrastructure --cov-report=html --cov-fail-under=60
-pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=html --cov-fail-under=90
-pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=html --cov-fail-under=90
+pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-report=html --cov-fail-under=90
 ```
 
 ### Coverage Snapshot (latest)
 
-- code_project: **94.1%** (exceeds 90% target!)
-- code_project: **91.5%** (exceeds 90% target!)
+- act_inf_metaanalysis: **96.1%** (exceeds 90% target!)
 - Infrastructure: **83.33%** (exceeds 60% target by 39%!)
 - Total tests: **2150+** (infrastructure + project)
 
@@ -432,9 +426,7 @@ pytest tests/ -m requires_github
 import pytest
 from infrastructure.module_name import function_to_test
 # or
-from projects.code_project.src.module_name import function_to_test
-# or
-from projects.code_project.src.module_name import function_to_test
+from projects.{name}.src.module_name import function_to_test
 
 class TestFunctionName:
     """Test suite for function_to_test."""
@@ -501,8 +493,7 @@ def test_integration(client):
 ### Current Coverage Status
 
 **Project Modules** (`projects/{name}/src/`):
-- **code_project**: **94.1%** (Target: 90%+) ✅ Exceeds requirement!
-- **code_project**: **91.5%** (Target: 90%+) ✅ Exceeds requirement!
+- **act_inf_metaanalysis**: **96.1%** (Target: 90%+) ✅ Exceeds requirement!
 - test coverage ensures research code reliability
 
 **Infrastructure Modules** (`infrastructure/`): **83.33%** (Target: 60%+)
@@ -516,7 +507,7 @@ def test_integration(client):
 ```toml
 [tool.coverage.run]
 branch = true
-source = ["infrastructure", "projects/code_project/src", "projects/code_project/src"]
+source = ["infrastructure", "projects/act_inf_metaanalysis/src"]
 
 [tool.coverage.report]
 fail_under = 70  # Global fallback; individual runs use 60% (infra) and 90% (project)
@@ -599,14 +590,13 @@ Before committing code:
 
 ```bash
 # Run all tests with coverage
-pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov=projects/code_project/src --cov-report=html
+pytest tests/ --cov=infrastructure --cov=projects/{name}/src --cov-report=html
 
 # Verify infrastructure coverage (60% minimum)
 pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
 
 # Verify project coverage (90% minimum)
-pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-under=90
-pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-under=90
+pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-under=90
 
 # Check coverage report
 open htmlcov/index.html
@@ -631,9 +621,7 @@ open htmlcov/index.html
 import pytest
 from infrastructure.new_module import new_function
 # or
-from projects.code_project.src.new_module import new_function
-# or
-from projects.code_project.src.new_module import new_function
+from projects.{name}.src.new_module import new_function
 
 
 class TestNewFunction:
@@ -723,8 +711,7 @@ See **[docs/testing-with-credentials.md](../docs/development/testing-with-creden
 
 - [`conftest.py`](conftest.py) - Test configuration and fixtures
 - [`../infrastructure/AGENTS.md`](../infrastructure/AGENTS.md) - Infrastructure module documentation
-- [`../projects/code_project/src/AGENTS.md`](../projects/code_project/src/AGENTS.md) - code_project module documentation
-- [`../projects/code_project/src/AGENTS.md`](../projects/code_project/src/AGENTS.md) - code_project module documentation
+- [`../projects/act_inf_metaanalysis/AGENTS.md`](../projects/act_inf_metaanalysis/AGENTS.md) - act_inf_metaanalysis project documentation
 - [`../AGENTS.md`](../AGENTS.md) - System documentation
 - [`../docs/core/workflow.md`](../docs/core/workflow.md) - Development workflow
 - [`../docs/development/testing-with-credentials.md`](../docs/development/testing-with-credentials.md) - Credential configuration guide

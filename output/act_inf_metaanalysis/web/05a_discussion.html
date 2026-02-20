@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>05a_discussion</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h1
+id="discussion-implications-and-community-recommendations">Discussion:
+Implications and Community Recommendations </h1>
+<h2 id="tactical-and-strategic-priorities">Tactical and Strategic
+Priorities</h2>
+<h3 id="demand-rigorous-reporting-metadata">Demand Rigorous Reporting
+Metadata</h3>
+<p>Papers must systematically report DOIs, ORCIDs, and explicit
+hypothesis commitments. To prevent fragmented citation subgraphs,
+submitted preprints must rigorously forward-link to their definitive
+published versions. Our extraction pipeline prioritizes the DOI as the
+apex canonical identifier; failing that, deduplication cascades to arXiv
+IDs, Semantic Scholar IDs, and OpenAlex IDs. Systemic DOI adoption
+fundamentally solves the cross-source mismatch barrier, enabling
+high-resolution evidence mapping.</p>
+<h3 id="deploy-open-knowledge-graph-infrastructure">Deploy Open
+Knowledge Graph Infrastructure</h3>
+<p>We advocate the deployment of a federated nanopublication server
+architecture to house community-contributed assertions, birthing an
+uninterrupted, living literature review that seamlessly updates as
+adjacent work publishes. Interlocking this pipeline with the Active
+Inference Institute’s operational Knowledge-Engineering infrastructure
+would furnish the standardized semantic vocabulary necessary for
+flawless cross-study comparison.</p>
+<h3 id="standardize-the-ontological-lexicon">Standardize the Ontological
+Lexicon</h3>
+<p>Immediate future extraction cycles must structurally align assertion
+predicates against the formally curated Active Inference Ontology.
+Enforcing shared ontological primitives across disparate studies will
+dramatically accelerate the direct mathematical aggregation of evidence
+spanning siloed research enclaves, actualizing the ultimate
+interoperability goal mapped by Knight et al. .</p>
+<h2 id="empirical-and-theoretical-imperatives">Empirical and Theoretical
+Imperatives</h2>
+<h3 id="architect-unified-performance-benchmarks">Architect Unified
+Performance Benchmarks</h3>
+<p>The computational tools domain (B) suffers from a critical absence of
+standardized performance benchmarks preventing raw comparative
+evaluation against deep reinforcement learning architectures.
+Formalizing baseline metrics analogous to standard RL environments
+(e.g., OpenAI Gym) is the mandatory prerequisite catalyst for
+transitioning theoretical propositions into hardened applied
+systems.</p>
+<h3 id="aggressively-fund-empirical-validation">Aggressively Fund
+Empirical Validation</h3>
+<p>Biology (C5) and Language (C3) possess profound theoretical
+reservoirs but mathematically starved empirical foundations. Direct
+financial and operational investment in targeted experiments validating
+structural FEP mechanics—such as isolating morphogenesis strictly as
+Bayesian inference—promises to multiply the aggregate evidence base far
+faster than further purely theoretical iterations alone.</p>
+<h2 id="open-questions">Open Questions</h2>
+<p>This meta-analysis surfaces questions warranting dedicated
+investigation:</p>
+<ul>
+<li><strong>Classifier calibration:</strong> What proportion of A1
+papers would be reclassified under embedding-based or expert-annotated
+schemes?</li>
+<li><strong>Scoring sensitivity:</strong> How sensitive are hypothesis
+scores to the choice of weighting function? Would square-root or linear
+weights qualitatively change the evidence landscape?</li>
+<li><strong>Model sensitivity:</strong> How much do hypothesis scores
+vary across different LLM models? Are some hypotheses more robust to
+model choice than others?</li>
+<li><strong>Domain boundaries:</strong> Do domain boundaries stabilize
+as the field matures, or continue to shift? Is the 8-category (A/B/C)
+taxonomy optimal?</li>
+<li><strong>Cross-hypothesis evidence:</strong> When a neuroscience (C1)
+paper supports predictive coding, does this constitute evidence for
+scalability? How should cross-hypothesis evidence be handled?</li>
+<li><strong>Temporal dynamics:</strong> Do hypotheses follow predictable
+lifecycles (emergence → rapid support → contestation → resolution), and
+can these patterns inform research prioritization?</li>
+</ul>
+</body>
+</html>

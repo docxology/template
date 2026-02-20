@@ -41,6 +41,7 @@ This project includes the following sections:
 - `04_experimental_results.md` (~8.7 KB) - Performance evaluation and validation
 - `05_discussion.md` (~4.3 KB) - Theoretical implications and comparisons
 - `06_conclusion.md` (~2.1 KB) - Summary and future work
+- `07_related_work.md` (~2.5 KB) - Literature review and positioning
 - `08_acknowledgments.md` (~0.8 KB) - Funding and acknowledgments
 
 ### Supplemental Materials
@@ -82,6 +83,7 @@ View detailed rendering logs to see which sections were included.
 - `04_experimental_results.md` - Performance evaluation
 - `05_discussion.md` - Theoretical implications
 - `06_conclusion.md` - Summary and future work
+- `07_related_work.md` - Literature review and positioning
 - `08_acknowledgments.md` - Funding and acknowledgments
 
 ### Supplemental Sections (S01-S0N)

@@ -258,8 +258,8 @@ except Exception as e:
 **View logs:**
 
 ```bash
-cat output/code_project/logs/pipeline.log
-grep -i error output/code_project/logs/pipeline.log
+cat output/{project_name}/logs/pipeline.log
+grep -i error output/{project_name}/logs/pipeline.log
 ```
 
 ---

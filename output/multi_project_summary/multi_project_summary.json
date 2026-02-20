@@ -1,35 +1,28 @@
 {
-  "timestamp": "2026-02-12T13:19:45.745357",
-  "total_projects": 2,
-  "successful_projects": 2,
+  "timestamp": "2026-02-20T12:28:29.098478",
+  "total_projects": 1,
+  "successful_projects": 1,
   "failed_projects": 0,
-  "total_duration": 126.78923678398132,
+  "total_duration": 137.9809808731079,
   "infra_test_duration": 0.0,
   "projects": {
-    "blake_active_inference": {
+    "act_inf_metaanalysis": {
       "success": true,
-      "duration": 74.83576822280884,
-      "stages_completed": 7,
-      "errors": []
-    },
-    "code_project": {
-      "success": true,
-      "duration": 40.191489458084106,
+      "duration": 137.77921152114868,
       "stages_completed": 7,
       "errors": []
     }
   },
   "performance_analysis": {
-    "slowest_project": "blake_active_inference",
-    "fastest_project": "code_project",
-    "average_duration": 57.51362884044647,
-    "total_pipeline_time": 115.02725768089294
+    "slowest_project": "act_inf_metaanalysis",
+    "fastest_project": "act_inf_metaanalysis",
+    "average_duration": 137.77921152114868,
+    "total_pipeline_time": 137.77921152114868
   },
   "error_aggregation": {
     "total_errors": 0,
     "errors_by_project": {
-      "blake_active_inference": 0,
-      "code_project": 0
+      "act_inf_metaanalysis": 0
     }
   },
   "recommendations": []

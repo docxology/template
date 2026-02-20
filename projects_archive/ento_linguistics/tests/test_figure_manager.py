@@ -5,7 +5,7 @@ import tempfile
 from pathlib import Path
 
 import pytest
-from src.visualization.figure_manager import FigureManager, FigureMetadata
+from visualization.figure_manager import FigureManager, FigureMetadata
 
 
 class TestFigureMetadata:

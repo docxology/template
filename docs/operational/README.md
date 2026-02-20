@@ -12,6 +12,7 @@ The `operational/` directory contains documentation for operating, configuring, 
 
 | File | Purpose | Audience |
 |------|---------|----------|
+| [`build-history.md`](build-history.md) | Build history and changelog | Developers |
 | [`build-system.md`](build-system.md) | build system reference | Developers |
 | [`ci-cd-integration.md`](ci-cd-integration.md) | CI/CD integration guide | Developers |
 | [`dependency-management.md`](dependency-management.md) | Package management guide | Developers |

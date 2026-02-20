@@ -1,0 +1,55 @@
+This is BibTeX, Version 0.99d (TeX Live 2025)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: _combined_manuscript.aux
+The style file: plainnat.bst
+Illegal, another \bibstyle command---line 541 of file _combined_manuscript.aux
+ : \bibstyle
+ :          {plainnat}
+I'm skipping whatever remains of this command
+Database file #1: references.bib
+Warning--entry type for "rdflib2023" isn't style-file defined
+--line 302 of file references.bib
+Warning--entry type for "ollama2024" isn't style-file defined
+--line 363 of file references.bib
+You've used 38 entries,
+            2773 wiz_defined-function locations,
+            843 strings with 12509 characters,
+and the built_in function-call counts, 18643 in all, are:
+= -- 1638
+> -- 1261
+< -- 17
++ -- 428
+- -- 390
+* -- 1593
+:= -- 2972
+add.period$ -- 142
+call.type$ -- 38
+change.case$ -- 235
+chr.to.int$ -- 38
+cite$ -- 76
+duplicate$ -- 770
+empty$ -- 1390
+format.name$ -- 436
+if$ -- 3827
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 36
+newline$ -- 226
+num.names$ -- 152
+pop$ -- 439
+preamble$ -- 1
+purify$ -- 199
+quote$ -- 0
+skip$ -- 614
+stack$ -- 0
+substring$ -- 564
+swap$ -- 53
+text.length$ -- 2
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 408
+warning$ -- 0
+while$ -- 153
+width$ -- 0
+write$ -- 543
+(There was 1 error message)

@@ -3,7 +3,9 @@
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/)
 
-A implementation of Active Inference as a meta-(pragmatic/epistemic) methodology, featuring a 2×2 matrix framework for analyzing cognitive processes across multiple levels of abstraction.
+**Status**: Archived / Research Complete
+
+An implementation of Active Inference as a meta-(pragmatic/epistemic) methodology, featuring a 2×2 matrix framework for analyzing cognitive processes across multiple levels of abstraction.
 
 ## Overview
 
@@ -11,25 +13,26 @@ This project demonstrates that Active Inference operates not just as a theory of
 
 ## Key Features
 
-### 🧠 Meta-Level Framework
+### Meta-Level Framework
 
 - **Meta-Pragmatic**: Specify pragmatic frameworks beyond simple rewards
 - **Meta-Epistemic**: Define epistemic boundaries and knowledge architectures
-- **2×2 Matrix Analysis**: Systematic framework for cognitive process analysis
+- **2x2 Matrix Analysis**: Systematic framework for cognitive process analysis
 
-### 🎯 Four Quadrants of Cognition
+### Four Quadrants of Cognition
 
 - **Q1**: Data Processing (Cognitive) - Basic EFE computation
 - **Q2**: Meta-Data Organization (Cognitive) - processing with meta-information
 - **Q3**: Reflective Processing (Meta-Cognitive) - Self-monitoring and adaptation
 - **Q4**: Higher-Order Reasoning (Meta-Cognitive) - Framework-level optimization
 
-### 🔬 Implementation
+### Implementation
 
 - **Theoretical Models**: Free Energy Principle, generative models, meta-cognition
 - **Visualization Suite**: 8+ figures demonstrating key concepts
-- **Testing**: Core functionality tested with theoretical validation
-- **Research Manuscript**: paper with mathematical derivations
+- **Testing**: ~17 test files, 95%+ coverage target, no mocks
+- **Source Modules**: 11 modules across 4 subpackages (core, framework, analysis, visualization) + utils
+- **Research Manuscript**: 13-section paper with 52 bibliography entries
 
 ## Quick Start
 
@@ -76,42 +79,63 @@ python scripts/analysis_pipeline.py --stages 1,2,3
 
 ```text
 active_inference_meta_pragmatic/
-├── src/                          # Core implementation
-│   ├── active_inference.py       # Main Active Inference framework
-│   ├── free_energy_principle.py  # FEP implementations
-│   ├── quadrant_framework.py     # 2×2 matrix framework
-│   ├── generative_models.py      # A, B, C, D matrix models
-│   ├── meta_cognition.py         # Meta-cognitive processing
-│   ├── modeler_perspective.py    # Meta-level analysis
-│   ├── data_generator.py         # Synthetic data generation
-│   ├── statistical_analysis.py   # Statistical testing and analysis
-│   ├── validation.py             # Framework validation suite
-│   └── visualization.py          # Plotting utilities
-├── tests/                        # Test suite (360 tests)
+├── src/                          # Core implementation (11 modules, 4 subpackages)
+│   ├── core/                     # Foundational implementations
+│   │   ├── active_inference.py   # EFE calculations, policy selection, perception
+│   │   ├── free_energy_principle.py  # FEP, Markov blankets, structure preservation
+│   │   └── generative_models.py  # A, B, C, D matrix models
+│   ├── framework/                # Higher-level conceptual frameworks
+│   │   ├── quadrant_framework.py # 2×2 matrix framework
+│   │   ├── meta_cognition.py     # Meta-cognitive monitoring and control
+│   │   ├── modeler_perspective.py # Meta-level analysis (architect/subject)
+│   │   └── cognitive_security.py # Threat modeling and anomaly detection
+│   ├── analysis/                 # Data and validation tools
+│   │   ├── data_generator.py     # Synthetic data generation
+│   │   ├── statistical_analysis.py # Statistical testing and analysis
+│   │   └── validation.py         # Framework validation suite
+│   └── visualization/            # Plotting
+│       └── visualization.py      # Publication-quality figures
+├── tests/                        # Test suite (~17 test files, 95%+ coverage)
 │   └── test_*.py                 # Unit and integration tests
 ├── scripts/                      # Analysis workflows
 │   ├── analysis_pipeline.py      # 6-stage pipeline orchestrator
 │   ├── generate_*.py             # Visualization scripts
 │   └── insert_all_figures.py     # Manuscript figure integration
-├── manuscript/                   # Research paper
-│   ├── 01_abstract.md            # Abstract
-│   ├── 02_background.md          # FEP, EFE, generative models
-│   ├── 03_quadrant_model.md      # 2×2 framework with Q1–Q4
-│   ├── 04_security_implications.md # Cognitive security and AI safety
-│   ├── 05_discussion.md          # Implications and conclusions
-│   ├── 06_acknowledgments.md     # Acknowledgments
-│   ├── 07_appendix.md            # Technical details
-│   ├── 98_symbols_glossary.md    # Mathematical notation
+├── manuscript/                   # Research paper (13 sections)
+│   ├── 01_abstract.md            # Abstract with keywords
+│   ├── 02_introduction.md        # Motivation, contributions, paper organization
+│   ├── 03_related_work.md        # Active Inference, meta-cognition, predictive processing, AI safety, cognitive security
+│   ├── 04_background.md          # FEP, EFE, generative models, meta-aspects
+│   ├── 05_methodology.md         # Theoretical approach and computational validation
+│   ├── 06_quadrant_model.md      # 2x2 framework with Q1-Q4
+│   ├── 07_security_implications.md # Threat model, cognitive security, AI safety
+│   ├── 08_discussion.md          # Theoretical contributions and limitations
+│   ├── 09_conclusion.md          # Summary, insights, future directions
+│   ├── 10_acknowledgments.md     # Acknowledgments
+│   ├── 11_appendix.md            # Mathematical derivations, algorithms, benchmarks
+│   ├── 98_symbols_glossary.md    # Mathematical notation and glossary
 │   ├── 99_references.md          # Bibliography references
 │   ├── config.yaml               # Paper metadata
 │   ├── preamble.md               # LaTeX preamble
-│   └── references.bib            # BibTeX bibliography
+│   └── references.bib            # BibTeX bibliography (52 entries)
+├── doc/                          # Documentation
+│   ├── architecture.md           # System architecture and design decisions
+│   ├── api_reference.md          # Comprehensive API reference
+│   ├── theoretical_primer.md     # Accessible introduction to Active Inference
+│   └── quickstart.md             # 5-minute getting-started guide
 ├── output/                       # Generated outputs
 │   ├── figures/                  # Visualizations
 │   ├── data/                     # Analysis data
 │   └── reports/                  # Pipeline reports
 └── pyproject.toml                # Project configuration
 ```
+
+## Documentation
+
+- [Quickstart Guide](doc/quickstart.md) -- Get running in 5 minutes
+- [Theoretical Primer](doc/theoretical_primer.md) -- Accessible introduction to Active Inference and the 2x2 framework
+- [API Reference](doc/api_reference.md) -- Comprehensive class and method documentation
+- [Architecture](doc/architecture.md) -- System design, module dependencies, data flow
 
 ## Theoretical Foundation
 
@@ -172,10 +196,10 @@ Active Inference is revealed as a meta-(pragmatic/epistemic) methodology through
 
 ### Research Standards
 
-- ✅ manuscript with cross-references
-- ✅ bibliography
-- ✅ Mathematical notation standardized
-- ✅ Figures properly integrated
+- 13-section manuscript with cross-references
+- 52-entry bibliography spanning 6 research traditions
+- Mathematical notation standardized (symbols glossary)
+- Figures properly integrated with LaTeX labels
 
 ## Applications
 
@@ -205,10 +229,10 @@ Active Inference is revealed as a meta-(pragmatic/epistemic) methodology through
 If you use this work, please cite:
 
 ```bibtex
-@misc{friedman2025active,
+@misc{friedman2026active,
   title={Active Inference as a Meta-(Pragmatic/Epistemic) Method},
   author={Friedman, Daniel},
-  year={2025},
+  year={2026},
   note={Active Inference Meta-Pragmatic Framework Implementation}
 }
 ```

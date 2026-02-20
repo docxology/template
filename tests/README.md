@@ -8,14 +8,14 @@ Test suite ensuring coverage requirements for both infrastructure and project mo
 
 ```bash
 # With coverage report (both infrastructure and project)
-pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov-report=html
+pytest tests/ --cov=infrastructure --cov=projects/{name}/src --cov-report=html
 
 # Using uv
-uv run pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov-report=html
+uv run pytest tests/ --cov=infrastructure --cov=projects/{name}/src --cov-report=html
 
 # Verify coverage requirements
 pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
-pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-under=90
+pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-under=90
 ```
 
 ### Run Specific Tests
@@ -25,7 +25,7 @@ pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-u
 pytest tests/infra_tests/core/test_config_loader.py -v
 
 # Project tests
-pytest projects/code_project/tests/ -v
+pytest projects/{name}/tests/ -v
 
 # Integration tests
 pytest tests/integration/test_module_interoperability.py -v
@@ -301,10 +301,7 @@ tests/
 
 - Unit tests for `projects/{name}/src/` modules (see `projects/{name}/tests/AGENTS.md`)
 - Each project has independent test suite with 90%+ coverage requirement
-- **code_project**: 100% coverage
-- **cogsec_multiagent_1_theory**: 100% coverage
-- **cogsec_multiagent_2_computational**: 100% coverage
-- **cogsec_multiagent_3_practical**: 100% coverage
+- **act_inf_metaanalysis**: 96.1% coverage
 
 ## Debugging
 
@@ -375,7 +372,7 @@ The test suite includes validation for:
 
 ### Overall Coverage (latest)
 
-- **code_project** (`projects/code_project/src/`): **100%** (Target: 90%+) ✅ Exceeds requirement!
+- **act_inf_metaanalysis** (`projects/act_inf_metaanalysis/src/`): **96.1%** (Target: 90%+) ✅ Exceeds requirement!
 - **Infrastructure** (`infrastructure/`): **83.33%** (Target: 60%+) ✅ Exceeds stretch goal!
 
 ### Coverage Details
@@ -387,5 +384,5 @@ Both test suites exceed their minimum requirements. For detailed coverage inform
 - [`AGENTS.md`](AGENTS.md) - Detailed testing guide
 - [`conftest.py`](conftest.py) - Test configuration
 - [`../infrastructure/README.md`](../infrastructure/README.md) - Infrastructure modules being tested
-- [`../projects/code_project/src/README.md`](../projects/code_project/src/README.md) - code_project modules
+- [`../projects/act_inf_metaanalysis/README.md`](../projects/act_inf_metaanalysis/README.md) - act_inf_metaanalysis project
 - [`../docs/core/workflow.md`](../docs/core/workflow.md) - Development workflow

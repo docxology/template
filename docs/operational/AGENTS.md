@@ -9,6 +9,7 @@ The `docs/operational/` directory contains operational procedures, configuration
 ```
 docs/operational/
 ├── AGENTS.md                       # This technical documentation
+├── build-history.md                # Build history and changelog
 ├── build-system.md                 # Build pipeline and execution details
 ├── checkpoint-resume.md            # Checkpoint and resume functionality
 ├── ci-cd-integration.md            # Continuous integration setup

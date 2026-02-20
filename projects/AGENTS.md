@@ -61,12 +61,12 @@ Archived projects in the `projects_archive/` directory are:
 ```mermaid
 graph TD
     subgraph Active["Active Projects (projects/)"]
-        P1[code_project<br/>Active - Discovered]
-        P2[blake_active_inference<br/>Active - Discovered]
+        P1[act_inf_metaanalysis<br/>Active - Discovered]
     end
 
     subgraph Archive["Archived Projects (projects_archive/)"]
-        A1[cognitive_integrity<br/>Archived - NOT Discovered]
+        A1[code_project<br/>Archived - NOT Discovered]
+        A2[blake_active_inference<br/>Archived - NOT Discovered]
     end
 
     subgraph Infrastructure["Infrastructure Discovery"]
@@ -76,13 +76,12 @@ graph TD
     end
 
     P1 -->|Discovered| DISCOVER
-    P2 -->|Discovered| DISCOVER
     A1 -.->|NOT Scanned| DISCOVER
+    A2 -.->|NOT Scanned| DISCOVER
 
     DISCOVER -->|Active Projects| RUNSH
     RUNSH -->|Selected Project| PIPELINE
     PIPELINE -->|Executes| P1
-    PIPELINE -->|Executes| P2
 ```
 
 ### Project Lifecycle
@@ -162,7 +161,7 @@ for project in projects:
     print(f"  Has scripts: {project.has_scripts}")
 
 # Validate specific project
-is_valid, message = validate_project_structure(Path("projects/code_project"))
+is_valid, message = validate_project_structure(Path("projects/act_inf_metaanalysis"))
 assert is_valid  # (True, "Valid project structure")
 ```
 
@@ -176,11 +175,11 @@ assert is_valid  # (True, "Valid project structure")
 
 ```bash
 # Execute project tests via infrastructure
-python3 scripts/01_run_tests.py --project code_project
+python3 scripts/01_run_tests.py --project {name}
 
 # Infrastructure performs:
 # 1. Validates project structure
-# 2. Runs pytest with coverage: pytest projects/code_project/tests/ --cov=projects/code_project/src
+# 2. Runs pytest with coverage: pytest projects/{name}/tests/ --cov=projects/{name}/src
 # 3. Enforces 90% coverage requirement
 # 4. Generates coverage reports
 ```
@@ -196,11 +195,11 @@ python3 scripts/01_run_tests.py --project code_project
 
 ```bash
 # Execute project analysis scripts via infrastructure
-python3 scripts/02_run_analysis.py --project code_project
+python3 scripts/02_run_analysis.py --project {name}
 
 # Infrastructure discovers and runs:
-# - projects/code_project/scripts/optimization_analysis.py
-# - projects/code_project/scripts/generate_api_docs.py
+# - projects/{name}/scripts/analysis_pipeline.py
+# - projects/{name}/scripts/generate_figures.py
 ```
 
 **Script Discovery Process:**
@@ -215,7 +214,7 @@ python3 scripts/02_run_analysis.py --project code_project
 
 ```bash
 # Render project manuscript via infrastructure
-python3 scripts/03_render_pdf.py --project code_project
+python3 scripts/03_render_pdf.py --project {name}
 
 # Infrastructure processes:
 # - Validates markdown references and structure
@@ -257,11 +256,11 @@ python3 scripts/04_validate_output.py --project project
 
 ```bash
 # Organize final deliverables via infrastructure
-python3 scripts/05_copy_outputs.py --project blake_active_inference
+python3 scripts/05_copy_outputs.py --project {name}
 
 # Infrastructure operations:
 # - Cleans root-level output/ directories (keeps only project folders)
-# - Copies from projects/blake_active_inference/output/ to output/blake_active_inference/
+# - Copies from projects/{name}/output/ to output/{name}/
 # - Validates all files copied successfully
 # - Organizes by project for distribution
 ```
@@ -270,12 +269,12 @@ python3 scripts/05_copy_outputs.py --project blake_active_inference
 
 ```
 output/
-├── code_project/               # Final deliverables
+├── act_inf_metaanalysis/       # Final deliverables
 │   ├── pdf/                    # Manuscript PDFs
 │   ├── figures/                # Publication figures
 │   ├── data/                   # Analysis datasets
 │   └── reports/                # Pipeline reports
-└── blake_active_inference/      # Other projects
+└── your_project/               # Other projects
     └── ...
 ```
 
@@ -286,9 +285,9 @@ output/
 **Within Project (Business Logic):**
 
 ```python
-# projects/code_project/src/optimizer.py
-from .optimizer import gradient_descent           # ✅ Import from same project
-from .optimizer import OptimizationResult          # ✅ Import from same project
+# projects/{name}/src/my_module.py
+from .my_module import my_algorithm               # ✅ Import from same project
+from .my_module import AnalysisResult              # ✅ Import from same project
 
 # Infrastructure utilities (allowed)
 from infrastructure.core.logging_utils import get_logger  # ✅ Infrastructure access
@@ -298,9 +297,9 @@ from infrastructure.figure_manager import FigureManager   # ✅ Infrastructure a
 **Project Scripts (Thin Orchestrators):**
 
 ```python
-# projects/code_project/scripts/optimization_analysis.py
-from src.optimizer import gradient_descent           # ✅ Import project algorithms
-from src.optimizer import quadratic_function          # ✅ Import project methods
+# projects/{name}/scripts/analysis_pipeline.py
+from src.my_module import my_algorithm               # ✅ Import project algorithms
+from src.my_module import helper_function             # ✅ Import project methods
 from infrastructure.core.logging_utils import get_logger # ✅ Infrastructure utilities
 ```
 
@@ -310,8 +309,8 @@ from infrastructure.core.logging_utils import get_logger # ✅ Infrastructure ut
 
 ```python
 # ❌ NEVER: Import from other projects
-from projects.blake_active_inference.src.synthesis import SynthesisMapper
-from projects.code_project.src.optimizer import gradient_descent
+from projects.other_project.src.module import SomeClass
+from projects.another_project.src.module import some_function
 ```
 
 **Infrastructure Business Logic (Forbidden):**
@@ -332,7 +331,7 @@ from infrastructure.core.config_loader import load_config  # ✅ Utility
 
 **Project Code (`projects/{name}/src/`):**
 
-- **90%+ coverage**: All active projects achieve required coverage thresholds (code_project: 100%, blake_active_inference: 90%+)
+- **90%+ coverage**: All active projects achieve required coverage thresholds
 - **data only**: All tests use computations, no mocks
 - **Infrastructure Code**: 60% minimum (currently achieved: 83.33%)
 
@@ -340,10 +339,10 @@ from infrastructure.core.config_loader import load_config  # ✅ Utility
 
 ```bash
 # Check project coverage
-pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-under=90
+pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-under=90
 
 # Generate coverage report
-pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=html
+pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-report=html
 open htmlcov/index.html
 ```
 
@@ -424,7 +423,7 @@ projects/{name}/tests/
 from infrastructure.project import validate_project_structure
 
 # Check if directory is valid project
-project_dir = Path("projects/code_project")
+project_dir = Path("projects/{name}")
 is_valid, message = validate_project_structure(project_dir)
 
 if is_valid:
@@ -453,7 +452,7 @@ else:
 # Infrastructure discovers executable scripts
 from infrastructure.core.script_discovery import discover_analysis_scripts
 
-project_root = Path("projects/code_project")
+project_root = Path("projects/{name}")
 scripts = discover_analysis_scripts(project_root)
 
 for script in scripts:
@@ -475,7 +474,7 @@ for script in scripts:
 **Generated during pipeline execution:**
 
 ```
-projects/code_project/output/
+projects/{name}/output/
 ├── figures/                 # PNG/PDF figures for manuscript
 ├── data/                    # CSV/NPZ datasets from analysis
 ├── pdf/                     # Generated PDF manuscripts
@@ -499,7 +498,7 @@ projects/code_project/output/
 **Copied by `scripts/05_copy_outputs.py`:**
 
 ```
-output/code_project/
+output/{name}/
 ├── pdf/                     # Final manuscript PDFs
 ├── figures/                 # Publication-quality figures
 ├── data/                    # Analysis datasets for sharing
@@ -520,7 +519,7 @@ All projects in this directory comply with the template's development standards 
 
 ### ✅ **Testing Standards Compliance**
 
-- **90%+ coverage**: All active projects achieve required coverage thresholds (code_project: 100%, blake_active_inference: 90%+)
+- **90%+ coverage**: All active projects achieve required coverage thresholds
 - **data only**: All tests use computations, no mocks
 - **integration**: Tests cover algorithm convergence, mathematical functions, and figure generation
 - **Deterministic results**: Fixed seeds ensure reproducible test outcomes
@@ -562,14 +561,13 @@ All projects in this directory comply with the template's development standards 
 
 #### Testing Standards Results
 
-- **code_project**: 100% coverage (34 tests passed) ✅
-- **blake_active_inference**: 90%+ coverage ✅
+- **act_inf_metaanalysis**: Meets coverage requirements ✅
 - **Combined**: All tests use data, no mocks detected ✅
 
 #### Documentation Standards Results
 
-- **AGENTS.md**: in all directories (projects/, code_project/, blake_active_inference/, etc.) ✅
-- **README.md**: in all directories (projects/, code_project/, blake_active_inference/, etc.) ✅
+- **AGENTS.md**: in all directories ✅
+- **README.md**: in all directories ✅
 - **Docstrings**: 100% coverage - all Python files have docstrings ✅
 - **Type hints**: All public APIs have annotations ✅
 
@@ -642,20 +640,20 @@ All projects must follow standards defined in `.cursorrules/`:
 **Project Scripts (Correct Pattern):**
 
 ```python
-# projects/code_project/scripts/analysis_pipeline.py
-from src.optimizer import Optimizer      # ✅ Import business logic
-from src.utils import Utils           # ✅ Import algorithms
+# projects/{name}/scripts/analysis_pipeline.py
+from src.my_module import MyAnalyzer     # ✅ Import business logic
+from src.utils import Utils              # ✅ Import algorithms
 from infrastructure.figure_manager import FigureManager  # ✅ Import utilities
 
 def main():
     """Run analysis pipeline."""
     # Import and use project algorithms
-    opt = Optimizer()
-    results = opt.optimize(data)
+    analyzer = MyAnalyzer()
+    results = analyzer.analyze(data)
     
     # Use infrastructure utilities
     fm = FigureManager()
-    fm.register_figure("optimization_results.png", "Optimization results")
+    fm.register_figure("analysis_results.png", "Analysis results")
 
 if __name__ == "__main__":
     main()
@@ -919,34 +917,20 @@ ls projects/myproject/output/pdf/*_compile.log
 
 **Note:** This project has been archived. Reactivate by moving from `projects_archive/` to `projects/`.
 
-### Optimization Research (`projects/code_project/`)
+### Active Inference Meta-Analysis (`projects/act_inf_metaanalysis/`)
 
 **Standalone Guarantees:**
 
-- **Tests**: 100% coverage, 34 tests covering convergence and stability
-- **Methods**: Gradient descent implementation in `src/optimizer.py`
-- **Manuscript**: Research paper on mathematical optimization
+- **Tests**: Test suite validating analysis algorithms
+- **Methods**: Meta-analysis implementation in `src/`
+- **Manuscript**: Research manuscript with analysis and figures
 
 **Infrastructure Operations:**
 
 ```bash
-python3 scripts/01_run_tests.py --project code_project
-python3 scripts/02_run_analysis.py --project code_project
-python3 scripts/03_render_pdf.py --project code_project
-```
-
-### Blake Active Inference (`projects/blake_active_inference/`)
-
-**Standalone Guarantees:**
-
-- **Tests**: Manuscript rendering and content validation
-- **Methods**: Synthesis mapping and correspondence analysis
-- **Manuscript**: 29-section academic paper
-
-**Infrastructure Operations:**
-
-```bash
-python3 scripts/03_render_pdf.py --project blake_active_inference
+python3 scripts/01_run_tests.py --project act_inf_metaanalysis
+python3 scripts/02_run_analysis.py --project act_inf_metaanalysis
+python3 scripts/03_render_pdf.py --project act_inf_metaanalysis
 ```
 
 ## See Also

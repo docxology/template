@@ -1,0 +1,168 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+\usepackage{caption}
+% Make caption package work with longtable
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}{Citation Network Topology \label{sec:citation_network}}
+\protect\phantomsection\label{citation-network-topology}
+The intra-corpus citation network provides a structural view of how
+Active Inference research is organized, identifying influential hub
+papers, community structure, and patterns of citation isolation.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.9\textwidth]{../figures/citation_network.png}
+\caption{Intra-corpus citation network ($N = 1208$ nodes, 2{,}780 edges). Node size reflects PageRank and HITS centrality scores \citep{kleinberg1999authoritative}; highly cited foundational papers serve as nexus points connecting sub-domains.}
+\label{fig:citation_network}
+\end{figure}
+
+\begin{block}{Network Density and Degree Distribution}
+\protect\phantomsection\label{network-density-and-degree-distribution}
+The intra-corpus citation network contains 1208 nodes and 2\{,\}780
+edges, with a density of 0.19\% and 700 connected components. The
+average in-degree of \(\approx 2.3\) indicates that most papers receive
+few intra-corpus citations, consistent with the field's rapid expansion:
+the majority of recent papers have not yet accumulated citations within
+the corpus. Only 6.1\% of all references (2\{,\}780 of 45\{,\}716)
+resolve to other papers within the corpus, reflecting cross-source
+identifier mismatches and the field's engagement with a broad external
+literature base. Community detection identifies clusters via the Louvain
+algorithm \citep{blondel2008louvain}.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.7\textwidth]{../figures/degree_distribution.png}
+\caption{In-degree distribution of the citation network. The power-law tail is characteristic of citation networks, with a small number of highly cited hubs.}
+\label{fig:degree_distribution}
+\end{figure}
+\end{block}
+
+\begin{block}{Connected Components and Citation Isolation}
+\protect\phantomsection\label{connected-components-and-citation-isolation}
+The high number of connected components (700 out of 1208 nodes) reveals
+that much of the corpus consists of citation-isolated papers---works
+that neither cite nor are cited by other papers in the collection. This
+is partially an artifact of cross-source identifier mismatches, but it
+also reflects the field's pattern of papers engaging with the FEP
+literature conceptually without building explicit citation chains.
+PageRank analysis identifies highly influential papers, predominantly
+Friston's foundational work \citep{friston2010free} and the AIF textbook
+\citep{parr2022active}, which serve as nexus points linking otherwise
+disconnected subgraphs.
+\end{block}
+
+\begin{block}{Network Summary}
+\protect\phantomsection\label{network-summary}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Metric & Value \\
+\midrule\noalign{}
+\endhead
+Nodes & 1208 \\
+Edges & 2\{,\}780 \\
+Reference resolution rate & 6.1\% (2\{,\}780 / 45\{,\}716) \\
+Connected components & 700 \\
+Network density & 0.19\% \\
+Mean in-degree & \(\approx\) 2.3 \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+\end{frame}
+
+\end{document}

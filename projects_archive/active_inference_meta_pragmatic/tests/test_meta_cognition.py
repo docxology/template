@@ -6,10 +6,10 @@ attention allocation, strategy evaluation, and self-reflective capabilities.
 
 import numpy as np
 import pytest
-from src.meta_cognition import (MetaCognitiveSystem,
-                                demonstrate_meta_cognitive_processes,
-                                demonstrate_thinking_about_thinking)
-from src.validation import ValidationFramework
+from src.framework.meta_cognition import (MetaCognitiveSystem,
+                                          demonstrate_meta_cognitive_processes,
+                                          demonstrate_thinking_about_thinking)
+from src.analysis.validation import ValidationFramework
 
 
 class TestMetaCognitiveSystem:
@@ -129,7 +129,7 @@ class TestMetaCognitiveSystem:
         assert "confidence_score" in result  # Should still produce a result
 
         # Empty available resources - should raise ValidationError
-        from utils.exceptions import ValidationError
+        from src.utils.exceptions import ValidationError
 
         with pytest.raises(ValidationError):
             meta_system.adjust_attention_allocation({"confidence_score": 0.5}, {})

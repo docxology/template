@@ -6,10 +6,10 @@ inference, prediction, and modeler specifications.
 
 import numpy as np
 import pytest
-from src.generative_models import (GenerativeModel,
-                                   create_simple_generative_model,
-                                   demonstrate_generative_model_concepts)
-from src.validation import ValidationFramework
+from src.core.generative_models import (GenerativeModel,
+                                        create_simple_generative_model,
+                                        demonstrate_generative_model_concepts)
+from src.analysis.validation import ValidationFramework
 
 
 class TestGenerativeModel:
@@ -440,3 +440,99 @@ class TestEdgeCases:
         posterior = uniform_model.perform_inference(observation)
 
         assert np.allclose(posterior, D)  # Should return prior
+
+
+class TestGenerativeModelValidationCoverage:
+    """Additional tests for validation error branches in GenerativeModel."""
+
+    def test_D_not_1d_raises(self):
+        """Test that non-1D D matrix raises ValidationError."""
+        from src.utils.exceptions import ValidationError
+
+        A = np.array([[0.8, 0.2], [0.2, 0.8]])
+        B = np.zeros((2, 2, 1))
+        B[:, :, 0] = np.eye(2)
+        C = np.array([1.0, -1.0])
+        D = np.array([[0.5, 0.5]])  # 2D instead of 1D
+
+        with pytest.raises(ValidationError, match="1-dimensional"):
+            GenerativeModel(A, B, C, D)
+
+    def test_C_not_1d_raises(self):
+        """Test that non-1D C matrix raises ValidationError."""
+        from src.utils.exceptions import ValidationError
+
+        A = np.array([[0.8, 0.2], [0.2, 0.8]])
+        B = np.zeros((2, 2, 1))
+        B[:, :, 0] = np.eye(2)
+        C = np.array([[1.0, -1.0]])  # 2D instead of 1D
+        D = np.array([0.5, 0.5])
+
+        with pytest.raises(ValidationError, match="1-dimensional"):
+            GenerativeModel(A, B, C, D)
+
+    def test_C_length_mismatch_raises(self):
+        """Test that C length not matching A rows raises ValidationError."""
+        from src.utils.exceptions import ValidationError
+
+        A = np.array([[0.8, 0.2], [0.2, 0.8]])
+        B = np.zeros((2, 2, 1))
+        B[:, :, 0] = np.eye(2)
+        C = np.array([1.0, -1.0, 0.0])  # 3 elements but A has 2 rows
+        D = np.array([0.5, 0.5])
+
+        with pytest.raises(ValidationError, match="C matrix length"):
+            GenerativeModel(A, B, C, D)
+
+    def test_B_shape_mismatch_raises(self):
+        """Test that B with wrong state dimensions raises ValidationError."""
+        from src.utils.exceptions import ValidationError
+
+        A = np.array([[0.8, 0.2], [0.2, 0.8]])
+        B = np.zeros((3, 3, 1))  # 3x3 but should be 2x2
+        B[:, :, 0] = np.eye(3)
+        C = np.array([1.0, -1.0])
+        D = np.array([0.5, 0.5])
+
+        with pytest.raises(ValidationError, match="B matrix"):
+            GenerativeModel(A, B, C, D)
+
+    def test_predict_observations_with_distribution(self):
+        """Test predict_observations with a state distribution."""
+        model = create_simple_generative_model()
+        state_dist = np.array([0.6, 0.4])  # 2 states
+        prediction = model.predict_observations(state_dist)
+        assert len(prediction) == model.n_observations
+        assert np.isclose(prediction.sum(), 1.0)
+
+    def test_predict_state_transition_with_distribution(self):
+        """Test predict_state_transition with a state distribution."""
+        model = create_simple_generative_model()
+        state_dist = np.array([0.6, 0.4])  # 2 states
+        transition = model.predict_state_transition(state_dist, 0)
+        assert len(transition) == model.n_states
+        assert np.isclose(transition.sum(), 1.0)
+
+    def test_calculate_preference_likelihood_distribution(self):
+        """Test calculate_preference_likelihood with observation distribution."""
+        model = create_simple_generative_model()
+        obs_dist = np.array([0.6, 0.4])  # 2 observations
+        pref = model.calculate_preference_likelihood(obs_dist)
+        assert isinstance(pref, float)
+        assert pref > 0
+
+    def test_calculate_preference_likelihood_index(self):
+        """Test calculate_preference_likelihood with observation index."""
+        model = create_simple_generative_model()
+        pref = model.calculate_preference_likelihood(0)
+        assert isinstance(pref, float)
+        assert pref > 0
+
+    def test_perform_inference_with_prior(self):
+        """Test perform_inference with explicit prior beliefs."""
+        model = create_simple_generative_model()
+        observation = np.array([0.8, 0.2])  # 2 observations
+        prior = np.array([0.6, 0.4])  # 2 states
+        posterior = model.perform_inference(observation, prior_beliefs=prior)
+        assert len(posterior) == model.n_states
+        assert np.isclose(posterior.sum(), 1.0)

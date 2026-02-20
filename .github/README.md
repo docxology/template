@@ -62,17 +62,18 @@ export CI=true
 export GITHUB_ACTIONS=true
 
 # Run linting (matches CI)
-uv run ruff check project/ --select ALL
-uv run ruff format --check project/
+uvx ruff check infrastructure/ projects/act_inf_metaanalysis/src/
+uvx ruff format --check infrastructure/ projects/act_inf_metaanalysis/src/
 
 # Run tests with coverage (matches CI)
-uv run pytest tests/ --cov=infrastructure --cov=project/src
+uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
+uv run pytest projects/act_inf_metaanalysis/tests/ --cov=projects/act_inf_metaanalysis/src --cov-fail-under=90
 ```
 
 ## Key Features
 
 ### Continuous Integration
-- **Automated testing** across Python versions (3.10, 3.11)
+- **Automated testing** across Python versions (3.10, 3.11, 3.12)
 - **Code quality checks** with Ruff linting and formatting
 - **Coverage validation** (60% infrastructure, 90% project minimum)
 - **Multi-platform support** (Ubuntu latest)
@@ -102,24 +103,46 @@ on:
 
 ### Pipeline Jobs
 
-#### Code Quality (Lint)
-- **Python Version:** 3.10
-- **Scope:** `project/` directory
-- **Tools:** Ruff (linting + formatting)
+#### Lint & Type Check (`lint`)
+- **Python Version:** 3.12
+- **Scope:** `infrastructure/` and `projects/act_inf_metaanalysis/src/`
+- **Tools:** Ruff (linting + formatting), mypy (type checking)
 - **Duration:** ~30 seconds
 
-#### Testing (Tests)
-- **Python Versions:** 3.10, 3.11 (matrix)
-- **Scope:** All tests with coverage
-- **Coverage:** Infrastructure (60%+), Project (90%+)
+#### Infrastructure Tests (`test-infra`)
+- **Python Versions:** 3.10, 3.11, 3.12 (matrix)
+- **Scope:** `tests/infra_tests/` with 60% coverage minimum
 - **Duration:** ~2-3 minutes per version
+
+#### Project Tests (`test-project`)
+- **Python Versions:** 3.10, 3.11, 3.12 (matrix)
+- **Scope:** `projects/act_inf_metaanalysis/tests/` with 90% coverage minimum
+- **Duration:** ~2-3 minutes per version
+
+#### Validate Manuscripts (`validate`)
+- **Python Version:** 3.12
+- **Scope:** Manuscript markdown validation and project import verification
+- **Depends on:** `lint`
+
+#### Security Scan (`security`)
+- **Python Version:** 3.12
+- **Scope:** Dependency audit (`pip-audit`) and code scan (`bandit`)
+- **Depends on:** `lint`
+
+#### Performance Check (`performance`)
+- **Python Version:** 3.12
+- **Scope:** Import time benchmarks (must complete under 5 seconds)
+- **Depends on:** `test-infra`, `test-project`
 
 ### Status Checks
 ```bash
 # Required status checks for main branch
-- lint (Python 3.10)
-- tests (Python 3.10)
-- tests (Python 3.11)
+- lint (Python 3.12)
+- test-infra (Python 3.10, 3.11, 3.12)
+- test-project (Python 3.10, 3.11, 3.12)
+- validate
+- security
+- performance
 ```
 
 ## Branch Protection
@@ -129,8 +152,15 @@ on:
 # GitHub Branch Protection Rules
 required_status_checks:
   - lint
-  - tests (3.10)
-  - tests (3.11)
+  - test-infra (3.10)
+  - test-infra (3.11)
+  - test-infra (3.12)
+  - test-project (3.10)
+  - test-project (3.11)
+  - test-project (3.12)
+  - validate
+  - security
+  - performance
 
 required_pull_request_reviews:
   required_approving_review_count: 1
@@ -266,9 +296,8 @@ gh workflow run --list
 #### Linting Failures
 ```bash
 # Fix locally first
-cd project
-uv run ruff check . --fix
-uv run ruff format .
+uvx ruff check infrastructure/ projects/act_inf_metaanalysis/src/ --fix
+uvx ruff format infrastructure/ projects/act_inf_metaanalysis/src/
 
 # Commit fixes
 git add .
@@ -277,17 +306,24 @@ git commit -m "fix: linting issues"
 
 #### Test Failures
 ```bash
-# Run tests locally
-uv run pytest tests/ -v
+# Run infrastructure tests locally
+uv run pytest tests/infra_tests/ -v
+
+# Run project tests locally
+uv run pytest projects/act_inf_metaanalysis/tests/ -v
 
 # Debug specific test
-uv run pytest tests/test_specific.py::TestClass::test_method -s
+uv run pytest tests/infra_tests/test_specific.py::TestClass::test_method -s
 ```
 
 #### Coverage Issues
 ```bash
-# Check coverage locally
-uv run pytest tests/ --cov=infrastructure --cov=project/src --cov-report=html
+# Check infrastructure coverage locally
+uv run pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
+open htmlcov/index.html
+
+# Check project coverage locally
+uv run pytest projects/act_inf_metaanalysis/tests/ --cov=projects/act_inf_metaanalysis/src --cov-report=html
 open htmlcov/index.html
 ```
 
@@ -301,11 +337,11 @@ open htmlcov/index.html
 
 ### Security Scanning
 ```yaml
-# Future: Security scanning (planned)
-- name: Security audit
-  run: |
-    uv run safety check
-    uv run bandit -r src/
+# Active in CI security job
+- name: Dependency audit
+  run: uv run pip-audit
+- name: Code security scan
+  run: uv run bandit -r infrastructure/ projects/act_inf_metaanalysis/src/
 ```
 
 ## Monitoring

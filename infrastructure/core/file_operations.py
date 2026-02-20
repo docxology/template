@@ -154,6 +154,9 @@ def clean_output_directories(
                         )
 
             # Remove all contents except .checkpoints directory (preserve for pipeline resume)
+            # We also preserve corpus.jsonl and nanopublications.jsonl to allow incremental processing
+            preserved_files = {"corpus.jsonl", "nanopublications.jsonl"}
+            
             for item in output_dir.iterdir():
                 if item.is_dir():
                     # Preserve .checkpoints directory to maintain pipeline resume capability
@@ -164,7 +167,10 @@ def clean_output_directories(
                             f"  Preserving {item.name}/ directory for checkpoint resume"
                         )
                 else:
-                    item.unlink()
+                    if item.name not in preserved_files:
+                        item.unlink()
+                    else:
+                        logger.debug(f"  Preserving file for incremental processing: {item.name}")
         else:
             logger.info(f"  Creating {relative_path}/...")
 

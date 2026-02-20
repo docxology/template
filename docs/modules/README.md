@@ -43,12 +43,15 @@ The `modules/` directory contains documentation for the advanced infrastructure 
 
 ## Available Modules
 
-1. **Integrity** - Output verification and cross-reference validation
-2. **Publishing** - Academic publishing workflows (DOI, citations)
-3. **Scientific Dev** - Research best practices (stability, benchmarking)
-4. **LLM Integration** - Local LLM assistance for research
-5. **Rendering System** - Multi-format output generation
-6. **Reporting** - Pipeline reporting and error aggregation
+1. **Core** - Shared utilities (logging, config, exceptions)
+2. **Documentation** - Doc generation (figure management, API glossary)
+3. **Validation** - Output verification and cross-reference validation
+4. **Publishing** - Academic publishing workflows (DOI, citations)
+5. **Scientific** - Research best practices (numerical stability, benchmarking)
+6. **LLM Integration** - Local LLM assistance for research
+7. **Rendering** - Multi-format output generation (PDF, slides, web)
+8. **Reporting** - Pipeline reporting and error aggregation
+9. **Project** - Project discovery and multi-project orchestration
 
 ## Related Documentation
 

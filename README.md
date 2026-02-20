@@ -233,7 +233,7 @@ This template now supports **multiple research projects** in a single repository
 graph TB
     subgraph Repository["📁 Repository"]
         subgraph Projects["projects/"]
-            P1[code_project/<br/>Code-focused research]
+            P1[act_inf_metaanalysis/<br/>Active Inference meta-analysis]
             PN[your_project/<br/>Your research]
         end
 
@@ -244,7 +244,7 @@ graph TB
         end
 
         subgraph Output["📤 Final Deliverables"]
-            OUT1[output/code_project/<br/>Code project outputs]
+            OUT1[output/act_inf_metaanalysis/<br/>Meta-analysis outputs]
             OUTN[output/your_project/<br/>Your deliverables]
         end
     end
@@ -269,10 +269,9 @@ graph TB
 
 ### Example Projects
 
-The template includes an active example project:
+The template includes one active project:
 
-- **`projects/code_project/`** - Code-focused with analysis pipeline
-- **`projects/blake_active_inference/`** - Active inference research project
+- **`projects/act_inf_metaanalysis/`** - Active Inference meta-analysis research project
 
 **Note:** Archived projects are preserved in `projects_archive/` for reference but are not actively executed.
 
@@ -283,7 +282,7 @@ The template includes an active example project:
 ./run.sh
 
 # Run specific project
-./run.sh --project code_project --pipeline
+./run.sh --project act_inf_metaanalysis --pipeline
 
 # Run all projects sequentially
 ./run.sh --all-projects --pipeline
@@ -322,8 +321,7 @@ Projects in `projects_archive/` are **preserved but not executed**:
 
 **Current Active Projects:**
 
-- `code_project/` - Optimization algorithms research
-- `blake_active_inference/` - Active inference research project
+- `act_inf_metaanalysis/` - Active Inference meta-analysis research
 
 **To archive a project:** `mv projects/{name}/ projects_archive/{name}/`
 **To reactivate:** `mv projects_archive/{name}/ projects/{name}/`
@@ -475,9 +473,9 @@ graph TB
     end
 
     subgraph L2["🔬 Layer 2: Project-Specific (Customizable)"]
-        SRC[projects/code_project/src/\nScientific algorithms\n100% tested\n📖 projects/code_project/src/AGENTS.md]
-        SCRIPTS[projects/code_project/scripts/\nAnalysis scripts\nThin orchestrators\n📖 projects/code_project/scripts/AGENTS.md]
-        PROJECT_TESTS[projects/code_project/tests/\nProject test suite\n📖 projects/code_project/tests/AGENTS.md]
+        SRC[projects/{name}/src/\nScientific algorithms\n100% tested]
+        SCRIPTS[projects/{name}/scripts/\nAnalysis scripts\nThin orchestrators]
+        PROJECT_TESTS[projects/{name}/tests/\nProject test suite]
     end
 
     subgraph DOCS["📚 Documentation Hub"]
@@ -485,7 +483,7 @@ graph TB
     end
 
     subgraph CONTENT["📝 Content & Output"]
-        MANUSCRIPT[projects/code_project/manuscript/\nResearch sections\nGenerate PDFs\n📖 projects/code_project/manuscript/AGENTS.md]
+        MANUSCRIPT[projects/{name}/manuscript/\nResearch sections\nGenerate PDFs]
         OUTPUT[output/\nGenerated files\nPDFs, figures, data\nAll files disposable]
     end
 
@@ -593,9 +591,9 @@ graph TD
     end
 
     subgraph ProjectLayer["Project Layer"]
-        PROJECT_SRC[projects/code_project/src/\nResearch algorithms\nDomain-specific logic]
-        PROJECT_SCRIPTS[projects/code_project/scripts/\nAnalysis workflows\nThin orchestrators]
-        PROJECT_MANUSCRIPT[projects/code_project/manuscript/\nResearch content\nMarkdown sections]
+        PROJECT_SRC[projects/{name}/src/\nResearch algorithms\nDomain-specific logic]
+        PROJECT_SCRIPTS[projects/{name}/scripts/\nAnalysis workflows\nThin orchestrators]
+        PROJECT_MANUSCRIPT[projects/{name}/manuscript/\nResearch content\nMarkdown sections]
     end
 
     EXCEPTIONS --> InfrastructureModules
@@ -623,8 +621,8 @@ graph TD
 flowchart TD
     subgraph Input["📥 Input Data"]
         SOURCE_CODE[Source Code\nprojects/{name}/src/*.py\nAlgorithm implementations]
-        ANALYSIS_SCRIPTS[Analysis Scripts\nprojects/code_project/scripts/*.py\nWorkflow orchestrators]
-        MANUSCRIPT_FILES[Manuscript Files\nprojects/code_project/manuscript/*.md\nResearch content]
+        ANALYSIS_SCRIPTS[Analysis Scripts\nprojects/{name}/scripts/*.py\nWorkflow orchestrators]
+        MANUSCRIPT_FILES[Manuscript Files\nprojects/{name}/manuscript/*.md\nResearch content]
         CONFIG_FILES[Configuration\nconfig.yaml\nRuntime parameters]
     end
 
@@ -673,7 +671,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     subgraph Sources["Configuration Sources"]
-        YAML_FILE[config.yaml\nprojects/code_project/manuscript/config.yaml\nVersion-controlled settings]
+        YAML_FILE[config.yaml\nprojects/{name}/manuscript/config.yaml\nVersion-controlled settings]
         ENV_VARS[Environment Variables\nAUTHOR_NAME, PROJECT_TITLE\nRuntime overrides]
         DEFAULTS[Default Values\nTemplate defaults\nFallback values]
     end
@@ -719,10 +717,10 @@ flowchart TD
 | **`infrastructure/`** | Generic build/validation tools (Layer 1) | [infrastructure/AGENTS.md](infrastructure/AGENTS.md) |
 | **`scripts/`** | Entry point orchestrators | [scripts/AGENTS.md](scripts/AGENTS.md) |
 | **`tests/`** | Infrastructure test suite | [tests/AGENTS.md](tests/AGENTS.md) |
-| **`projects/code_project/src/`** | Project-specific scientific code (Layer 2) | [projects/code_project/src/AGENTS.md](projects/code_project/src/AGENTS.md) |
-| **`projects/code_project/tests/`** | Project test suite | [projects/code_project/tests/AGENTS.md](projects/code_project/tests/AGENTS.md) |
+| **`projects/{name}/src/`** | Project-specific scientific code (Layer 2) | Per-project `AGENTS.md` |
+| **`projects/{name}/tests/`** | Project test suite | Per-project `AGENTS.md` |
 | **`docs/`** | **Documentation hub (89 guides)** | **[docs/documentation-index.md](docs/documentation-index.md)** |
-| **`projects/code_project/manuscript/`** | Research manuscript sections | [projects/code_project/manuscript/AGENTS.md](projects/code_project/manuscript/AGENTS.md) |
+| **`projects/{name}/manuscript/`** | Research manuscript sections | Per-project `AGENTS.md` |
 | **`output/`** | Generated outputs (disposable) | Regenerated by build pipeline |
 
 **📚 Explore Documentation:** See **[docs/documentation-index.md](docs/documentation-index.md)** for documentation structure
@@ -1010,7 +1008,7 @@ if __name__ == "__main__":
 
 ### Manuscript Structure
 
-**[Manuscript guide](projects/code_project/manuscript/AGENTS.md)** | **[Numbering system](docs/usage/manuscript-numbering-system.md)**
+**[Numbering system](docs/usage/manuscript-numbering-system.md)**
 
 - `preamble.md` - LaTeX preamble and styling (see archived projects for examples)
 - `01_abstract.md` through `06_conclusion.md` - Main sections
@@ -1032,11 +1030,11 @@ python3 scripts/01_run_tests.py
 
 # Or run manually with coverage reports
 pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
-pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=html
+pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-report=html
 
 # Generate detailed coverage report with missing lines
 pytest tests/infra_tests/ --cov=infrastructure --cov-report=term-missing
-pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=term-missing
+pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-report=term-missing
 
 # Verify coverage requirements (infrastructure modules)
 pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
@@ -1216,12 +1214,9 @@ flowchart TD
 - **[tests/README.md](tests/README.md)** - Testing quick reference
 - **[scripts/AGENTS.md](scripts/AGENTS.md)** - Entry point orchestrators documentation
 - **[scripts/README.md](scripts/README.md)** - Entry points quick reference
-- **[projects/code_project/src/AGENTS.md](projects/code_project/src/AGENTS.md)** - Project code documentation
-- **[projects/code_project/src/README.md](projects/code_project/src/README.md)** - Project code quick reference
-- **[projects/code_project/scripts/AGENTS.md](projects/code_project/scripts/AGENTS.md)** - Project scripts documentation
-- **[projects/code_project/scripts/README.md](projects/code_project/scripts/README.md)** - Project scripts quick reference
-- **[projects/code_project/manuscript/AGENTS.md](projects/code_project/manuscript/AGENTS.md)** - Manuscript structure guide
-- **[projects/code_project/manuscript/README.md](projects/code_project/manuscript/README.md)** - Manuscript quick reference
+- **`projects/{name}/src/AGENTS.md`** - Project code documentation (per-project)
+- **`projects/{name}/scripts/AGENTS.md`** - Project scripts documentation (per-project)
+- **`projects/{name}/manuscript/AGENTS.md`** - Manuscript structure guide (per-project)
 - **[docs/AGENTS.md](docs/AGENTS.md)** - Documentation organization guide
 - **[docs/README.md](docs/README.md)** - Documentation quick reference
 

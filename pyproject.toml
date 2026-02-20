@@ -49,18 +49,21 @@ dependencies = [
   "pandas>=2.0.0",  # Data analysis (active_inference project)
   "seaborn>=0.13.0", # Visualization library (cogsec projects)
   "networkx>=3.0",   # Graph/network analysis (ento_linguistics domain networks)
+  "rdflib>=7.0.0",   # RDF knowledge graphs (act_inf_metaanalysis)
   "ollama>=0.6.1",
+  "scikit-learn>=1.7.2",
+  "wordcloud>=1.9.0",  # Word cloud visualizations (act_inf_metaanalysis)
 ]
 
 [project.scripts]
 # Development workflow scripts (run with: uv run <script-name>)
-test = "pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov-report=html --cov-fail-under=70"
+test = "pytest tests/ --cov=infrastructure --cov=projects/act_inf_metaanalysis/src --cov-report=html --cov-fail-under=70"
 test-infra = "pytest tests/infra_tests/ --cov=infrastructure --cov-report=term-missing --cov-report=html --cov-report=json --cov-fail-under=60 --tb=short -m 'not requires_ollama' --ignore=tests/infra_tests/core/test_module_interoperability.py"
-test-project = "pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=term-missing --cov-report=html --cov-report=json --cov-fail-under=90 --tb=short"
-lint = "mypy infrastructure/ projects/code_project/src/"
-security = "bandit -r infrastructure/ projects/code_project/src/"
-format = "black infrastructure/ projects/code_project/src/"
-type-check = "mypy --strict infrastructure/ projects/code_project/src/"
+test-project = "pytest projects/act_inf_metaanalysis/tests/ --cov=projects/act_inf_metaanalysis/src --cov-report=term-missing --cov-report=html --cov-report=json --cov-fail-under=90 --tb=short"
+lint = "mypy infrastructure/ projects/act_inf_metaanalysis/src/"
+security = "bandit -r infrastructure/ projects/act_inf_metaanalysis/src/"
+format = "black infrastructure/ projects/act_inf_metaanalysis/src/"
+type-check = "mypy --strict infrastructure/ projects/act_inf_metaanalysis/src/"
 
 [dependency-groups]
 # Development dependencies (replaces deprecated tool.uv.dev-dependencies)
@@ -70,7 +73,7 @@ dev = [
     "pytest-httpserver>=1.0.8",  # Local HTTP test server for no-mocks policy
     "pytest-timeout>=2.0",  # Test timeout plugin to prevent hanging tests
     "mypy>=1.17.1",
-    "safety>=3.0.0",
+    "pip-audit>=2.0.0",
     "bandit>=1.7.0",
     "pytest-asyncio>=1.3.0",
     "iniconfig>=2.3.0",
@@ -85,11 +88,7 @@ package = false  # This is not a distributable package
 # Workspace configuration for multi-project support
 # Supports both standalone projects and nested projects within program directories
 members = [
-    "projects/code_project",
-    "projects/ento_linguistics",
-    "projects/cognitive_integrity/cogsec_multiagent_1_theory",
-    "projects/cognitive_integrity/cogsec_multiagent_2_computational",
-    "projects/cognitive_integrity/cogsec_multiagent_3_practical"
+    "projects/act_inf_metaanalysis",
 ]
 exclude = [
     "projects/*/output",
@@ -100,8 +99,8 @@ exclude = [
 
 [tool.pytest.ini_options]
 # Pytest configuration (consolidated from pytest.ini)
-pythonpath = [".", "infrastructure", "projects/code_project/src"]
-testpaths = ["tests", "projects/code_project/tests"]
+pythonpath = [".", "infrastructure", "projects/act_inf_metaanalysis/src"]
+testpaths = ["tests", "projects/act_inf_metaanalysis/tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
@@ -135,7 +134,7 @@ filterwarnings = [
 #   - Infrastructure tests: --cov-datafile=.coverage.infra
 #   - Project tests: --cov-datafile=.coverage.project
 branch = true
-source = ["infrastructure", "projects/code_project/src"]
+source = ["infrastructure", "projects/act_inf_metaanalysis/src"]
 omit = [
     "*/tests/*",
     "*/test_*",

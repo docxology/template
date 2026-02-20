@@ -38,34 +38,66 @@ concurrency:
 
 **Pipeline Jobs:**
 
-#### 1. Lint Job
+#### 1. Lint & Type Check (`lint`)
 **Code Quality Enforcement:**
-- **Python Version:** 3.10
+- **Python Version:** 3.12
 - **Dependencies:** uv for package management
 - **Linting:** Ruff for code style and formatting
-- **Scope:** Project directory (`project/`)
+- **Type Checking:** mypy for type safety
+- **Scope:** `infrastructure/` and `projects/act_inf_metaanalysis/src/`
 
 **Steps:**
 1. **Checkout:** Get repository code
-2. **Setup Python:** Install Python 3.10
-3. **Install uv:** Package manager for dependencies
+2. **Setup uv:** Package manager with caching
+3. **Setup Python:** Install Python 3.12
 4. **Sync Dependencies:** Install project dependencies
 5. **Ruff Lint:** Check code style and quality
 6. **Ruff Format:** Verify code formatting
+7. **Type Checking:** mypy validation
 
-#### 2. Test Job
-**Cross-Version Testing:**
-- **Python Versions:** 3.10, 3.11
+#### 2. Infrastructure Tests (`test-infra`)
+**Cross-Version Infrastructure Testing:**
+- **Python Versions:** 3.10, 3.11, 3.12
 - **Matrix Strategy:** Test against multiple Python versions
 - **Fail-Fast:** false (run all combinations)
+- **Coverage:** 60% minimum for `infrastructure/`
 
 **Steps:**
 1. **Checkout:** Get repository code
-2. **Setup Python:** Install specified Python version
-3. **Install uv:** Package manager setup
-4. **Sync Dependencies:** Install test dependencies
-5. **Run Tests:** Execute test suite with coverage
-6. **Upload Coverage:** Send coverage to codecov
+2. **Setup uv:** Package manager with caching
+3. **Setup Python:** Install specified Python version
+4. **Sync Dependencies:** Install dependencies
+5. **Run Infrastructure Tests:** Execute `tests/infra_tests/` with coverage
+
+#### 3. Project Tests (`test-project`)
+**Cross-Version Project Testing:**
+- **Python Versions:** 3.10, 3.11, 3.12
+- **Matrix Strategy:** Test against multiple Python versions
+- **Fail-Fast:** false (run all combinations)
+- **Coverage:** 90% minimum for `projects/act_inf_metaanalysis/src/`
+
+**Steps:**
+1. **Checkout:** Get repository code
+2. **Setup uv:** Package manager with caching
+3. **Setup Python:** Install specified Python version
+4. **Sync Dependencies:** Install dependencies
+5. **Run Project Tests:** Execute `projects/act_inf_metaanalysis/tests/` with coverage
+
+#### 4. Validate Manuscripts (`validate`)
+**Manuscript Quality Assurance (depends on `lint`):**
+- **Python Version:** 3.12
+- **Validates:** Manuscript markdown and project imports
+
+#### 5. Security Scan (`security`)
+**Security Auditing (depends on `lint`):**
+- **Python Version:** 3.12
+- **Dependency Audit:** `pip-audit` (continue on error)
+- **Code Scan:** `bandit` on `infrastructure/` and `projects/act_inf_metaanalysis/src/`
+
+#### 6. Performance Check (`performance`)
+**Import Benchmarking (depends on `test-infra`, `test-project`):**
+- **Python Version:** 3.12
+- **Threshold:** Import time must be under 5 seconds
 
 ### Quality Gates
 

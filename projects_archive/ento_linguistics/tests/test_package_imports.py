@@ -15,7 +15,7 @@ class TestPackageLevelImports:
     def test_core_function_imports(self) -> None:
         """Test that core functions are accessible from package level."""
         # Import from package level (tests __init__.py)
-        from src.core.example import add_numbers, calculate_average
+        from core.example import add_numbers, calculate_average
 
         # Verify functions work
         assert add_numbers(2, 3) == 5
@@ -23,8 +23,8 @@ class TestPackageLevelImports:
 
     def test_class_imports(self) -> None:
         """Test that core classes are accessible from explicit subpackage imports."""
-        from src.pipeline.simulation import SimpleSimulation, SimulationBase
-        from src.visualization.visualization import VisualizationEngine
+        from pipeline.simulation import SimpleSimulation, SimulationBase
+        from visualization.visualization import VisualizationEngine
 
         # Verify classes exist and can be instantiated
         assert SimpleSimulation is not None
@@ -38,7 +38,7 @@ class TestPackageLevelImports:
     def test_statistics_imports(self) -> None:
         """Test that statistics functions are accessible from explicit subpackage imports."""
         import numpy as np
-        from src.analysis.statistics import calculate_descriptive_stats
+        from analysis.statistics import calculate_descriptive_stats
 
         # Test statistics function
         data = np.array([1.0, 2.0, 3.0, 4.0, 5.0])

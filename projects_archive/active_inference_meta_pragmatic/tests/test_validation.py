@@ -6,9 +6,9 @@ methods are thoroughly tested with real data and no mocks.
 
 import numpy as np
 import pytest
-from src.validation import (ValidationFramework,
-                            demonstrate_validation_framework)
-from utils.exceptions import ValidationError
+from src.analysis.validation import (ValidationFramework,
+                                     demonstrate_validation_framework)
+from src.utils.exceptions import ValidationError
 
 
 class TestValidationFramework:

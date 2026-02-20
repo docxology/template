@@ -4,7 +4,7 @@ Active Inference represents a paradigm shift in our understanding of cognition, 
 
 \begin{figure}[h]
 \centering
-![Active Inference Concepts](../figures/perception_action_loop.png)
+![Active Inference Concepts](../output/figures/perception_action_loop.png)
 \caption{Core concepts in Active Inference showing the relationship between perception, action, and free energy minimization. Active Inference unifies perception (inferring hidden states from observations) and action (selecting behaviors that minimize expected free energy) within a single mathematical framework. The agent maintains a generative model of the world and updates beliefs through Bayesian inference while selecting actions that reduce uncertainty and achieve preferred outcomes.}
 \label{fig:active_inference_concepts}
 \end{figure}
@@ -15,7 +15,7 @@ The Free Energy Principle (FEP) provides the mathematical foundation for this be
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.8\textwidth]{../figures/fep_system_boundaries.png}
+\includegraphics[width=0.8\textwidth]{../output/figures/fep_system_boundaries.png}
 \caption{The Free Energy Principle applied to system boundaries. The Markov Blanket separates internal states from external states, mediating their interaction through sensory and active states. This boundary condition is essential for the maintenance of autopoietic organization and identity.}
 \label{fig:fep_visualization}
 \end{figure}

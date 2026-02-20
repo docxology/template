@@ -2,7 +2,7 @@
 
 import numpy as np
 import pytest
-from src.data.data_processing import (clean_data, create_validation_pipeline,
+from data.data_processing import (clean_data, create_validation_pipeline,
                              detect_outliers, extract_features, normalize_data,
                              remove_outliers, standardize_data, transform_data)
 

@@ -5,7 +5,7 @@ import tempfile
 from pathlib import Path
 
 import pytest
-from src.core.parameters import ParameterConstraint, ParameterSet, ParameterSweep
+from core.parameters import ParameterConstraint, ParameterSet, ParameterSweep
 
 
 class TestParameterConstraint:

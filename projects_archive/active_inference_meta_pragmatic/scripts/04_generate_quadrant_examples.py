@@ -25,10 +25,10 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root / "src"))
 
 # Import src/ modules
-from active_inference import ActiveInferenceFramework
-from data_generator import generate_time_series
-from generative_models import create_simple_generative_model
-from meta_cognition import MetaCognitiveSystem
+from core.active_inference import ActiveInferenceFramework
+from analysis.data_generator import generate_time_series
+from core.generative_models import create_simple_generative_model
+from framework.meta_cognition import MetaCognitiveSystem
 from utils.figure_manager import FigureManager
 # Local imports
 from utils.logging import get_logger

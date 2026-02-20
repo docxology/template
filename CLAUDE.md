@@ -64,7 +64,7 @@ uv run python scripts/manage_workspace.py status
 uv run python scripts/manage_workspace.py add <package> --project <name>
 
 # Linting and type checking
-uv run mypy infrastructure/ projects/code_project/src/
+uv run mypy infrastructure/ projects/act_inf_metaanalysis/src/
 uv run bandit -r infrastructure/
 
 # Validate markdown
@@ -89,7 +89,7 @@ python3 scripts/execute_multi_project.py --no-llm
 python3 -c "from infrastructure.project.discovery import discover_projects; from pathlib import Path; print([p.name for p in discover_projects(Path('.'))])"
 ```
 
-**Active projects:** `code_project`, `blake_active_inference`
+**Active projects:** `act_inf_metaanalysis`
 **Archived projects:** Located in `projects_archive/` (not executed by pipeline)
 
 ## Architecture
@@ -125,7 +125,7 @@ def calculate_average(data):
     return sum(data) / len(data)
 
 # GOOD: Script imports from src/
-from projects.code_project.src.statistics import calculate_average
+from projects.my_project.src.statistics import calculate_average
 
 data = [1, 2, 3, 4, 5]
 avg = calculate_average(data)  # Use tested method
@@ -150,7 +150,7 @@ avg = calculate_average(data)  # Use tested method
 - **`projects/`** - Active projects (discovered and executed by infrastructure)
 - **`projects_archive/`** - Archived projects (preserved but not executed)
 
-**Current active projects:** `code_project`, `blake_active_inference`
+**Current active projects:** `act_inf_metaanalysis`
 
 To archive: `mv projects/{name}/ projects_archive/{name}/`
 To reactivate: `mv projects_archive/{name}/ projects/{name}/`
@@ -273,7 +273,7 @@ llm:
 ### IDE Integration
 ```bash
 # Set Python path for IDE/editor integration
-export PYTHONPATH=".:infrastructure:projects/code_project/src"
+export PYTHONPATH=".:infrastructure:projects/act_inf_metaanalysis/src"
 ```
 
 ## Development Workflow
@@ -293,7 +293,7 @@ touch projects/my_project/src/__init__.py
 touch projects/my_project/tests/__init__.py
 
 # Copy config template
-cp projects/code_project/manuscript/config.yaml projects/my_project/manuscript/
+cp projects/act_inf_metaanalysis/manuscript/config.yaml projects/my_project/manuscript/
 
 # Create pyproject.toml (see existing projects for template)
 

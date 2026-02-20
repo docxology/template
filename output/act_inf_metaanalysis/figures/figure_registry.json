@@ -1,0 +1,178 @@
+{
+  "fig:field_summary": {
+    "figure_id": "figure_000",
+    "filename": "field_summary.png",
+    "caption": "High-level overview of retrieved literature and subfield counts.",
+    "label": "fig:field_summary",
+    "section": null,
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "04_generate_figures.py",
+    "metadata": {}
+  },
+  "fig:subfield_distribution": {
+    "figure_id": "figure_001",
+    "filename": "subfield_distribution.png",
+    "caption": "Distribution of distinct subfields identified in the literature.",
+    "label": "fig:subfield_distribution",
+    "section": null,
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "04_generate_figures.py",
+    "metadata": {}
+  },
+  "fig:growth_curve": {
+    "figure_id": "figure_002",
+    "filename": "growth_curve.png",
+    "caption": "Annual and cumulative growth of publications over time.",
+    "label": "fig:growth_curve",
+    "section": null,
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "04_generate_figures.py",
+    "metadata": {}
+  },
+  "fig:subfield_timeline": {
+    "figure_id": "figure_003",
+    "filename": "subfield_timeline.png",
+    "caption": "Temporal evolution of publications by subfield.",
+    "label": "fig:subfield_timeline",
+    "section": null,
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "04_generate_figures.py",
+    "metadata": {}
+  },
+  "fig:citation_network": {
+    "figure_id": "figure_004",
+    "filename": "citation_network.png",
+    "caption": "Citation network demonstrating connections between top papers.",
+    "label": "fig:citation_network",
+    "section": null,
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "04_generate_figures.py",
+    "metadata": {}
+  },
+  "fig:degree_distribution": {
+    "figure_id": "figure_005",
+    "filename": "degree_distribution.png",
+    "caption": "Degree distribution of nodes within the citation network.",
+    "label": "fig:degree_distribution",
+    "section": null,
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "04_generate_figures.py",
+    "metadata": {}
+  },
+  "fig:hypothesis_dashboard": {
+    "figure_id": "figure_006",
+    "filename": "hypothesis_dashboard.png",
+    "caption": "Dashboard showing evidence scores for proposed hypotheses.",
+    "label": "fig:hypothesis_dashboard",
+    "section": null,
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "04_generate_figures.py",
+    "metadata": {}
+  },
+  "fig:evidence_timeline": {
+    "figure_id": "figure_007",
+    "filename": "evidence_timeline.png",
+    "caption": "Timeline of evidence score accumulation for each hypothesis.",
+    "label": "fig:evidence_timeline",
+    "section": null,
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "04_generate_figures.py",
+    "metadata": {}
+  },
+  "fig:word_cloud": {
+    "figure_id": "figure_008",
+    "filename": "word_cloud.png",
+    "caption": "Word cloud of salient terms appearing in abstract text.",
+    "label": "fig:word_cloud",
+    "section": null,
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "04_generate_figures.py",
+    "metadata": {}
+  },
+  "fig:topic_term_bars": {
+    "figure_id": "figure_009",
+    "filename": "topic_term_bars.png",
+    "caption": "Top terms and corresponding weights per discovered topic.",
+    "label": "fig:topic_term_bars",
+    "section": null,
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "04_generate_figures.py",
+    "metadata": {}
+  },
+  "fig:pca_embeddings": {
+    "figure_id": "figure_010",
+    "filename": "pca_embeddings.png",
+    "caption": "PCA plot of TF-IDF vectors highlighting document clusters.",
+    "label": "fig:pca_embeddings",
+    "section": null,
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "04_generate_figures.py",
+    "metadata": {}
+  },
+  "fig:term_heatmap": {
+    "figure_id": "figure_011",
+    "filename": "term_heatmap.png",
+    "caption": "Heatmap of dominant TF-IDF terms across analyzed documents.",
+    "label": "fig:term_heatmap",
+    "section": null,
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "04_generate_figures.py",
+    "metadata": {}
+  },
+  "fig:dendrogram": {
+    "figure_id": "figure_012",
+    "filename": "dendrogram.png",
+    "caption": "Hierarchical clustering dendrogram showing document similarity.",
+    "label": "fig:dendrogram",
+    "section": null,
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "04_generate_figures.py",
+    "metadata": {}
+  },
+  "fig:cooccurrence_matrix": {
+    "figure_id": "figure_013",
+    "filename": "cooccurrence_matrix.png",
+    "caption": "Co-occurrence matrix for significant terms.",
+    "label": "fig:cooccurrence_matrix",
+    "section": null,
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "04_generate_figures.py",
+    "metadata": {}
+  },
+  "fig:assertion_breakdown": {
+    "figure_id": "figure_014",
+    "filename": "assertion_breakdown.png",
+    "caption": "Breakdown of nanopublication assertion types by hypothesis.",
+    "label": "fig:assertion_breakdown",
+    "section": null,
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "04_generate_figures.py",
+    "metadata": {}
+  },
+  "fig:assertion_summary": {
+    "figure_id": "figure_015",
+    "filename": "assertion_summary.png",
+    "caption": "Summary of total extracted nanopublication assertions.",
+    "label": "fig:assertion_summary",
+    "section": null,
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "04_generate_figures.py",
+    "metadata": {}
+  }
+}

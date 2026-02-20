@@ -21,7 +21,7 @@ def load_test_results(project_name: str) -> Dict[str, Any]:
     """Load test results from a project's output directory.
 
     Args:
-        project_name: Name of the project (e.g., 'code_project')
+        project_name: Name of the project (e.g., 'act_inf_metaanalysis')
 
     Returns:
         Dictionary containing test results, or empty dict if not found

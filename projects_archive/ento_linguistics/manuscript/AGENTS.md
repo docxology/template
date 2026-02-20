@@ -16,6 +16,7 @@ The `manuscript/` directory contains research manuscript sections in markdown fo
 | `04_experimental_results.md` | Performance evaluation and validation | ✅ |
 | `05_discussion.md` | Theoretical implications and comparisons | ✅ |
 | `06_conclusion.md` | Summary and future directions | ✅ |
+| `07_related_work.md` | Literature review and positioning | ✅ |
 | `08_acknowledgments.md` | Funding, collaborators, and acknowledgments | ✅ |
 
 | **Supplemental Sections** | | |
@@ -217,6 +218,8 @@ As shown in \ref{fig:terminology_network}...
 - `sex_and_reproduction_ambiguities.png` - Ambiguity patterns (Sex & Reproduction)
 - `kin_and_relatedness_term_frequencies.png` - Term frequencies (Kin & Relatedness)
 - `kin_and_relatedness_ambiguities.png` - Ambiguity patterns (Kin & Relatedness)
+- `economics_term_frequencies.png` - Term frequencies (Economics)
+- `economics_ambiguities.png` - Ambiguity patterns (Economics)
 
 **Figure Registry:**
 
@@ -358,7 +361,7 @@ vim manuscript/S01_supplemental_methods.md
 
 If adding new figures, create script in `scripts/`:
 
-```python
+```
 # scripts/my_figure.py
 from example import calculate_average
 # ... generate figure ...

@@ -1,0 +1,357 @@
+# Active Inference Meta-Analysis Configuration
+# Probabilistic Knowledge Graphs Applied to Active Inference
+
+paper:
+  title: "Probabilistic Knowledge Graphs Applied to Active Inference"
+  subtitle: "A Computational Meta-Analysis of the Active Inference Literature"
+  version: "1.0"
+  date: "" # Auto-generated
+
+authors:
+  - name: "Daniel Friedman"
+    email: "daniel@activeinference.institute"
+    affiliation: "Active Inference Institute"
+    corresponding: true
+  - name: "Joel Dietz"
+    email: "joel@dietz.com"
+    affiliation: "Independent Researcher"
+
+publication:
+  doi: ""
+  journal: ""
+  volume: ""
+  pages: ""
+  year: "2026"
+
+keywords:
+  - "active inference"
+  - "free energy principle"
+  - "knowledge graphs"
+  - "nanopublications"
+  - "meta-analysis"
+  - "probabilistic modeling"
+  - "literature analysis"
+  - "computational psychiatry"
+  - "bibliometrics"
+  - "hypothesis scoring"
+  - "LLM extraction"
+
+search:
+  query: '"active inference" "free energy principle"'
+  max_results: 1000
+  resume: true
+  clear_corpus: false
+  arxiv_queries:
+    - 'all:"active inference"'
+    - 'all:"free energy principle"'
+    - 'all:"predictive coding" AND all:"free energy"'
+    - 'all:"expected free energy"'
+    - 'all:"variational free energy" AND all:"inference"'
+
+knowledge_graph:
+  resume: true
+  checkpoint_interval: 50
+  checkpoint_path: "output/nanopublications.jsonl"
+  clear_assertions: false
+  max_papers: null
+
+metadata:
+  license: "CC-BY-4.0"
+  language: "en"
+  repository: "" # URL for open-source code release
+
+llm:
+  reviews:
+    enabled: true
+    types:
+      - executive_summary
+  translations:
+    enabled: true
+    languages:
+      - zh
+
+pipeline_stages:
+  - name: literature_search
+    script: 01_literature_search.py
+    inputs: []
+    outputs:
+      - output/corpus.jsonl
+    description: "Query arXiv, Semantic Scholar, OpenAlex; merge and deduplicate"
+
+  - name: meta_analysis
+    script: 02_meta_analysis_pipeline.py
+    inputs:
+      - output/corpus.jsonl
+    outputs:
+      - output/subfield_classification.json
+      - output/subfield_timeline.json
+      - output/temporal_analysis.json
+      - output/tfidf_data.json
+      - output/topics.json
+      - output/citation_network.json
+      - output/citation_graph.gml
+    description: "Classify subfields, compute temporal metrics, TF-IDF, NMF, citation network"
+
+  - name: knowledge_graph
+    script: 03_build_knowledge_graph.py
+    inputs:
+      - output/corpus.jsonl
+    outputs:
+      - output/nanopublications.jsonl
+      - output/hypothesis_scores.json
+      - output/hypothesis_trends.json
+      - output/assertion_summary.json
+    description: "Extract LLM-based assertions, build KG, score hypotheses, compute temporal trends"
+
+  - name: figure_generation
+    script: 04_generate_figures.py
+    inputs:
+      - output/subfield_classification.json
+      - output/subfield_timeline.json
+      - output/temporal_analysis.json
+      - output/tfidf_data.json
+      - output/topics.json
+      - output/citation_network.json
+      - output/hypothesis_scores.json
+      - output/hypothesis_trends.json
+      - output/assertion_summary.json
+    outputs:
+      - output/figures/field_summary.png
+      - output/figures/subfield_distribution.png
+      - output/figures/growth_curve.png
+      - output/figures/subfield_timeline.png
+      - output/figures/citation_network.png
+      - output/figures/degree_distribution.png
+      - output/figures/hypothesis_dashboard.png
+      - output/figures/evidence_timeline.png
+      - output/figures/word_cloud.png
+      - output/figures/pca_embeddings.png
+      - output/figures/term_heatmap.png
+      - output/figures/dendrogram.png
+      - output/figures/topic_term_bars.png
+      - output/figures/cooccurrence_matrix.png
+      - output/figures/assertion_breakdown.png
+      - output/figures/assertion_summary.png
+    description: "Render all publication-ready visualizations from analysis JSON outputs"
+
+  - name: inject_variables
+    script: 05_inject_variables.py
+    inputs:
+      - output/corpus.jsonl
+      - output/temporal_analysis.json
+      - output/subfield_classification.json
+      - output/assertion_summary.json
+      - output/hypothesis_scores.json
+      - output/citation_network.json
+    outputs:
+      - manuscript/00_abstract.md
+      - manuscript/01_introduction.md
+      - manuscript/02_methodology.md
+      - manuscript/03_field_overview.md
+      - manuscript/03a_subfield_analyses.md
+      - manuscript/03b_text_analytics.md
+      - manuscript/03c_citation_network.md
+      - manuscript/04_tooling.md
+      - manuscript/04b_hypothesis_results.md
+      - manuscript/05_conclusion.md
+    description: "Compute dynamic variables from pipeline outputs and inject them into manuscript Markdown templates"
+
+testing:
+  max_test_failures: 0
+  max_infra_test_failures: 0
+  max_project_test_failures: 0
+
+llm_extraction:
+  model: "gemma3:4b"
+  base_url: "http://localhost:11434"
+  temperature: 0.1
+  max_tokens: 2048
+  timeout_seconds: 120
+  max_retries: 3
+
+hypothesis_definitions:
+  H1:
+    name: "FEP Universality"
+    description: "The Free Energy Principle applies universally to all self-organizing systems"
+    scope: "theoretical"
+  H2:
+    name: "AIF Optimality"
+    description: "Active Inference agents achieve optimal decision-making under uncertainty"
+    scope: "computational"
+  H3:
+    name: "Markov Blanket Realism"
+    description: "Markov blankets correspond to real physical boundaries"
+    scope: "philosophical"
+  H4:
+    name: "Predictive Coding"
+    description: "Cortical hierarchies minimize prediction errors via predictive coding"
+    scope: "empirical"
+  H5:
+    name: "Scalability"
+    description: "Active Inference scales to complex, high-dimensional environments"
+    scope: "computational"
+  H6:
+    name: "Clinical Utility"
+    description: "Active Inference provides clinically useful models of psychiatric conditions"
+    scope: "applied"
+  H7:
+    name: "Morphogenesis"
+    description: "The FEP explains morphogenetic and developmental processes"
+    scope: "biological"
+  H8:
+    name: "Language AIF"
+    description: "Active Inference provides a viable framework for language processing"
+    scope: "applied"
+
+subfield_keywords:
+  # A: Core Theory
+  # Priority 3: Formal theory (any paper with mathematical formalism)
+  A1_formal:
+    - "category theory"
+    - "information geometry"
+    - "bayesian mechanics"
+    - "markov blanket"
+    - "stochastic"
+    - "langevin"
+    - "gauge theory"
+    - "path integral"
+    - "differential equation"
+    - "dynamical system"
+    - "fixed point"
+    - "convergence"
+    - "ergodic"
+    - "manifold"
+    - "theorem"
+    - "proof"
+    - "lemma"
+    - "corollary"
+    - "derivation"
+    - "formalism"
+    - "formulation"
+    - "variational inference"
+    - "variational bound"
+    - "kl divergence"
+    - "kullback-leibler"
+    - "elbo"
+    - "laplace approximation"
+    - "mean field"
+    - "message passing"
+    - "belief propagation"
+    - "partition function"
+    - "hamiltonian"
+    - "lagrangian"
+    - "fokker-planck"
+    - "posterior"
+    - "prior"
+    - "likelihood"
+    - "exponential family"
+    - "state space model"
+    - "equation"
+    - "matrix"
+    - "eigenvalue"
+    - "jacobian"
+    - "optimization"
+    - "objective function"
+  # Priority 4: Qualitative philosophy (catch-all for prose-based FEP/AIF)
+  A2_philosophy:
+    - "phenomenology"
+    - "epistemology"
+    - "ontology"
+    - "enactivism"
+    - "4e cognition"
+    - "embodied cognition"
+    - "extended mind"
+    - "predictive processing"
+    - "bayesian brain"
+    - "ecological psychology"
+    - "affordance"
+    - "niche construction"
+    - "consciousness"
+    - "qualia"
+    - "intentionality"
+    - "emergence"
+    - "self-organization"
+    - "agency"
+    - "free energy principle"
+    - "active inference"
+    - "generative model"
+  # B: Tools & Translation (Priority 2)
+  B_tools:
+    - "deep active inference"
+    - "scaling"
+    - "neural network"
+    - "amortized"
+    - "planning"
+    - "reinforcement learning"
+    - "benchmark"
+    - "implementation"
+    - "library"
+    - "software"
+    - "framework"
+    - "toolkit"
+    - "algorithm"
+    - "gymnasium"
+  # C: Domains of Application (Priority 1 — most specific)
+  C1_neuroscience:
+    - "cortical"
+    - "neural"
+    - "fMRI"
+    - "EEG"
+    - "neuroimaging"
+    - "synaptic"
+    - "dopamine"
+    - "spiking"
+    - "hippocampal"
+    - "prefrontal"
+    - "basal ganglia"
+    - "electrophysiology"
+    - "neuron"
+  C2_robotics:
+    - "robot"
+    - "embodied"
+    - "motor control"
+    - "proprioception"
+    - "sensorimotor"
+    - "navigation"
+    - "manipulation"
+    - "actuator"
+    - "simulator"
+    - "control loop"
+  C3_language:
+    - "language"
+    - "speech"
+    - "linguistic"
+    - "pragmatics"
+    - "semantic"
+    - "natural language"
+    - "syntax"
+    - "discourse"
+    - "transformer"
+    - "large language model"
+  C4_psychiatry:
+    - "schizophrenia"
+    - "depression"
+    - "psychiatric"
+    - "clinical"
+    - "psychosis"
+    - "computational psychiatry"
+    - "disorder"
+    - "diagnosis"
+    - "symptom"
+    - "therapy"
+    - "mental health"
+    - "addiction"
+  C5_biology:
+    - "morphogenesis"
+    - "cellular"
+    - "evolution"
+    - "organism"
+    - "cell"
+    - "biological"
+    - "developmental"
+    - "gene"
+    - "protein"
+    - "metabolism"
+    - "homeostasis"
+    - "phenotype"
+    - "adaptation"

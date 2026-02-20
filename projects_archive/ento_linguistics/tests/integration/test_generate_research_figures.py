@@ -21,7 +21,7 @@ class TestGenerateResearchFiguresScript:
             "..",
             "..",
             "scripts",
-            "generate_research_figures.py",
+            "02_generate_figures.py",
         )
         assert os.path.exists(script_path)
 
@@ -32,7 +32,7 @@ class TestGenerateResearchFiguresScript:
             "..",
             "..",
             "scripts",
-            "generate_research_figures.py",
+            "02_generate_figures.py",
         )
         with open(script_path, "r") as f:
             first_line = f.readline().strip()
@@ -440,9 +440,9 @@ if __name__ == "__main__":
             "..",
             "..",
             "scripts",
-            "generate_research_figures.py",
+            "02_generate_figures.py",
         )
-        test_script = test_root / "scripts" / "generate_research_figures.py"
+        test_script = test_root / "scripts" / "02_generate_figures.py"
         test_script.parent.mkdir()
         shutil.copy2(script_path, test_script)
 
@@ -450,8 +450,9 @@ if __name__ == "__main__":
         # so src.analysis, src.visualization etc. are importable
         project_root = str(Path(__file__).parent.parent.parent)  # ento_linguistics/
         repo_root = str(Path(__file__).parent.parent.parent.parent.parent)  # template/
+        src_path = os.path.join(project_root, "src")
         env = os.environ.copy()
-        env["PYTHONPATH"] = f"{project_root}:{repo_root}:{env.get('PYTHONPATH', '')}"
+        env["PYTHONPATH"] = f"{src_path}:{project_root}:{repo_root}:{env.get('PYTHONPATH', '')}"
 
         result = subprocess.run(
             [sys.executable, str(test_script)],
@@ -489,17 +490,18 @@ if __name__ == "__main__":
         # Copy script
         script_path = os.path.join(
             os.path.dirname(__file__), "..", "..",
-            "scripts", "generate_research_figures.py",
+            "scripts", "02_generate_figures.py",
         )
-        test_script = test_root / "scripts" / "generate_research_figures.py"
+        test_script = test_root / "scripts" / "02_generate_figures.py"
         test_script.parent.mkdir()
         shutil.copy2(script_path, test_script)
 
         # Include real project src/ for analysis imports
         project_root = str(Path(__file__).parent.parent.parent)
         repo_root = str(Path(__file__).parent.parent.parent.parent.parent)
+        src_path = os.path.join(project_root, "src")
         env = os.environ.copy()
-        env["PYTHONPATH"] = f"{project_root}:{repo_root}:{env.get('PYTHONPATH', '')}"
+        env["PYTHONPATH"] = f"{src_path}:{project_root}:{repo_root}:{env.get('PYTHONPATH', '')}"
 
         result = subprocess.run(
             [sys.executable, str(test_script)],
@@ -525,9 +527,9 @@ if __name__ == "__main__":
 
         script_path = os.path.join(
             os.path.dirname(__file__), "..", "..",
-            "scripts", "generate_research_figures.py",
+            "scripts", "02_generate_figures.py",
         )
-        test_script = test_root / "scripts" / "generate_research_figures.py"
+        test_script = test_root / "scripts" / "02_generate_figures.py"
         test_script.parent.mkdir()
         shutil.copy2(script_path, test_script)
 
@@ -555,16 +557,17 @@ if __name__ == "__main__":
 
         script_path = os.path.join(
             os.path.dirname(__file__), "..", "..",
-            "scripts", "generate_research_figures.py",
+            "scripts", "02_generate_figures.py",
         )
-        test_script = test_root / "scripts" / "generate_research_figures.py"
+        test_script = test_root / "scripts" / "02_generate_figures.py"
         test_script.parent.mkdir()
         shutil.copy2(script_path, test_script)
 
         project_root = str(Path(__file__).parent.parent.parent)
         repo_root = str(Path(__file__).parent.parent.parent.parent.parent)
+        src_path = os.path.join(project_root, "src")
         env = os.environ.copy()
-        env["PYTHONPATH"] = f"{project_root}:{repo_root}:{env.get('PYTHONPATH', '')}"
+        env["PYTHONPATH"] = f"{src_path}:{project_root}:{repo_root}:{env.get('PYTHONPATH', '')}"
 
         result = subprocess.run(
             [sys.executable, str(test_script)],
@@ -584,16 +587,17 @@ if __name__ == "__main__":
 
         script_path = os.path.join(
             os.path.dirname(__file__), "..", "..",
-            "scripts", "generate_research_figures.py",
+            "scripts", "02_generate_figures.py",
         )
-        test_script = test_root / "scripts" / "generate_research_figures.py"
+        test_script = test_root / "scripts" / "02_generate_figures.py"
         test_script.parent.mkdir()
         shutil.copy2(script_path, test_script)
 
         project_root = str(Path(__file__).parent.parent.parent)
         repo_root = str(Path(__file__).parent.parent.parent.parent.parent)
+        src_path = os.path.join(project_root, "src")
         env = os.environ.copy()
-        env["PYTHONPATH"] = f"{project_root}:{repo_root}:{env.get('PYTHONPATH', '')}"
+        env["PYTHONPATH"] = f"{src_path}:{project_root}:{repo_root}:{env.get('PYTHONPATH', '')}"
 
         result1 = subprocess.run(
             [sys.executable, str(test_script)],

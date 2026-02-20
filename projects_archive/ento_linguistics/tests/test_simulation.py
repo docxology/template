@@ -7,7 +7,7 @@ from pathlib import Path
 
 import numpy as np
 import pytest
-from src.pipeline.simulation import SimpleSimulation, SimulationBase, SimulationState
+from pipeline.simulation import SimpleSimulation, SimulationBase, SimulationState
 
 
 class TestSimulationState:

@@ -9,8 +9,8 @@ from __future__ import annotations
 from typing import Any, Dict, List
 
 import pytest
-from src.analysis.domain_analysis import DomainAnalysis, DomainAnalyzer
-from src.analysis.term_extraction import Term
+from analysis.domain_analysis import DomainAnalysis, DomainAnalyzer
+from analysis.term_extraction import Term
 
 
 class TestDomainAnalysis:
@@ -90,12 +90,18 @@ class TestDomainAnalyzer:
 
     @pytest.fixture
     def sample_texts(self) -> List[str]:
-        """Sample texts for context analysis."""
-        return [
-            "Ant colonies exhibit complex social behaviors.",
-            "Foraging workers collect food for the colony.",
-            "The queen lays eggs while workers care for brood.",
-        ]
+        """Sample texts from real corpus for context analysis."""
+        from data.loader import DataLoader
+        try:
+            loader = DataLoader()
+            return loader.load_corpus("corpus/abstracts.json")[:3]
+        except (FileNotFoundError, ImportError):
+            # Fallback for CI environments if data not found, but using realistic text
+            return [
+                "The colony as a superorganism: collective decision-making in ant societies.",
+                "Task specialization and behavioural plasticity in Camponotus floridanus.",
+                "Caste determination and reproductive hierarchies in Solenopsis invicta.",
+            ]
 
     def test_analyzer_initialization(self, analyzer: DomainAnalyzer) -> None:
         """Test analyzer initialization."""
@@ -501,3 +507,51 @@ class TestDomainAnalysisIntegration:
                 assert len(recommendation) > 10  # Should be detailed
                 # Note: Not all recommendations need to contain domain keywords,
                 # they just need to be relevant to the domain's analysis
+
+
+class TestQuantifyAmbiguityDelegation:
+    """Test that quantify_ambiguity_metrics delegates to semantic_entropy module."""
+
+    def test_quantify_ambiguity_delegates_to_semantic_entropy(self) -> None:
+        """Verify delegation uses canonical module and 2.0 threshold."""
+        from analysis.semantic_entropy import HIGH_ENTROPY_THRESHOLD
+
+        analyzer = DomainAnalyzer()
+        terms = [
+            Term(text="colony", lemma="colony", frequency=10, domains=["unit_of_individuality"]),
+            Term(text="caste", lemma="caste", frequency=12, domains=["power_and_labor"]),
+        ]
+        texts = [
+            "The colony acts as a superorganism in collective behavior.",
+            "Colony structure determines resource allocation patterns.",
+            "The colony exhibits emergent properties beyond individual ants.",
+            "Colony defense depends on coordinated responses.",
+            "Each colony has unique chemical signatures.",
+            "Colony size influences foraging strategies.",
+        ]
+
+        result = analyzer.quantify_ambiguity_metrics(terms, texts)
+
+        assert "term_ambiguity_scores" in result
+        assert "domain_metrics" in result
+
+        # Verify threshold aligns with canonical module (2.0, not 1.0)
+        assert HIGH_ENTROPY_THRESHOLD == 2.0
+
+        # Check that results contain expected fields from SemanticEntropyResult
+        for term_text, score in result["term_ambiguity_scores"].items():
+            assert "entropy_bits" in score
+            assert "is_high_entropy" in score
+            assert isinstance(score["entropy_bits"], float)
+            assert isinstance(score["is_high_entropy"], bool)
+
+    def test_quantify_ambiguity_sparse_data_fallback(self) -> None:
+        """Verify sparse data (< 5 contexts) returns zero entropy."""
+        analyzer = DomainAnalyzer()
+        terms = [Term(text="rare_term", lemma="rare", frequency=1, domains=["economics"])]
+        texts = ["A single mention of rare_term."]
+
+        result = analyzer.quantify_ambiguity_metrics(terms, texts)
+        score = result["term_ambiguity_scores"].get("rare_term", {})
+        assert score.get("entropy_bits", -1) == 0.0
+        assert score.get("is_high_entropy") is False

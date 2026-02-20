@@ -6,9 +6,9 @@ processing level analysis, transitions, and visualization data generation.
 
 import numpy as np
 import pytest
-from src.quadrant_framework import (QuadrantFramework,
-                                    demonstrate_quadrant_framework)
-from src.validation import ValidationFramework
+from src.framework.quadrant_framework import (QuadrantFramework,
+                                               demonstrate_quadrant_framework)
+from src.analysis.validation import ValidationFramework
 
 
 class TestQuadrantFramework:

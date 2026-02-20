@@ -228,7 +228,7 @@ As shown in \eqref{eq:objective}, the objective function...
 **Related Documentation:**
 
 - [manuscript_style.md](manuscript_style.md) - manuscript formatting guide
-- [../projects/code_project/manuscript/AGENTS.md](../projects/code_project/manuscript/AGENTS.md) - Manuscript documentation
+- [../projects/act_inf_metaanalysis/manuscript/](../projects/act_inf_metaanalysis/manuscript/) - Manuscript content
 - [../docs/usage/markdown-template-guide.md](../docs/usage/markdown-template-guide.md) - Markdown guide
 
 ## Testing Standards
@@ -484,7 +484,7 @@ The .cursorrules standards align with and support the main documentation:
 | Documentation | [documentation_standards.md](documentation_standards.md) | [docs/workflow.md](../docs/core/workflow.md) |
 | Type Safety | [type_hints_standards.md](type_hints_standards.md) | [docs/architecture.md](../docs/core/architecture.md) |
 | LLM Integration | [llm_standards.md](llm_standards.md) | [infrastructure/llm/AGENTS.md](../infrastructure/llm/AGENTS.md) |
-| Manuscript Writing | [manuscript_style.md](manuscript_style.md) | [code_project/manuscript/AGENTS.md](../projects/code_project/manuscript/AGENTS.md) |
+| Manuscript Writing | [manuscript_style.md](manuscript_style.md) | [act_inf_metaanalysis/manuscript/](../projects/act_inf_metaanalysis/manuscript/) |
 | Refactoring | [refactoring.md](refactoring.md) | [docs/best-practices.md](../docs/best-practices/best-practices.md) |
 
 ## Cross-Reference Guide
@@ -521,7 +521,7 @@ The .cursorrules standards align with and support the main documentation:
 | Writing tests | [testing_standards.md](testing_standards.md) | [error_handling.md](error_handling.md) for error testing |
 | Creating modules | [infrastructure_modules.md](infrastructure_modules.md) | All of the above standards |
 | Writing docs | [documentation_standards.md](documentation_standards.md) | Specific guide for your doc type |
-| Writing manuscripts | [manuscript_style.md](manuscript_style.md) | [code_project/manuscript/AGENTS.md](../projects/code_project/manuscript/AGENTS.md) for manuscript structure |
+| Writing manuscripts | [manuscript_style.md](manuscript_style.md) | [act_inf_metaanalysis/manuscript/](../projects/act_inf_metaanalysis/manuscript/) for manuscript structure |
 | Adding type hints | [type_hints_standards.md](type_hints_standards.md) | [documentation_standards.md](documentation_standards.md) for docstrings |
 | Using LLM/Ollama | [llm_standards.md](llm_standards.md) | [infrastructure_modules.md](infrastructure_modules.md) for module patterns |
 | Generating reports | [reporting.md](reporting.md) | [docs/modules-guide.md](../docs/modules/modules-guide.md) for module details |

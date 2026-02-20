@@ -1,3 +1,0 @@
-Project,Health_Score,Health_Grade,Manuscript_Words,Manuscript_Sections,Manuscript_Equations,Manuscript_Figures,Test_Total,Test_Passed,Test_Failed,Test_Coverage_Pct,Test_Execution_Time,Pipeline_Duration,Pipeline_Stages_Passed,Pipeline_Bottleneck_Stage,Pipeline_Bottleneck_Duration,Output_PDFs,Output_PDF_Size_MB,Output_Figures,Output_Slides,Output_Web,Output_Total
-blake_active_inference,100.0,A,20911,19,1,9,52,46,0,95.82309582309583,0.0,74.83576822280884,7,PDF Rendering,61.12445020675659,1,4.062609672546387,8,16,17,42
-code_project,100.0,A,3720,8,0,7,34,34,0,100.0,0.0,40.191489458084106,7,PDF Rendering,28.901002883911133,1,1.4029970169067383,6,5,6,19

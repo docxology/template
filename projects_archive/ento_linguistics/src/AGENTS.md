@@ -1,594 +1,129 @@
-# Scientific Layer - Project-Specific Algorithms and Analysis
+# src/ - Ento-Linguistic Analysis Code
 
 ## Purpose
 
-This package contains **project-specific scientific code** implementing algorithms, data processing, analysis, and visualization for this research. These modules form the computational core of the project.
-
-## Architectural Role (Layer 2)
-
-This is **Layer 2** of the two-layer architecture:
-
-- **Handles:** Algorithms, simulations, analysis, visualization
-- **Specific to:** This research project
-- **Not Generic:** Rewritten for different projects
-- **Tests:** Must achieve 100% coverage with data
-
-## Module Organization
-
-### Core Algorithms & Simulation
-
-| Module | Purpose | Lines | Coverage |
-|--------|---------|-------|----------|
-| `example.py` | Basic mathematical operations (template example) | 21 | 100% |
-| `simulation.py` | Scientific simulation framework | 132 | 100% |
-| `parameters.py` | Parameter set management and validation | 92 | 100% |
-
-### Data Processing
-
-| Module | Purpose | Lines | Coverage |
-|--------|---------|-------|----------|
-| `data_generator.py` | Synthetic data generation for experiments | 107 | 100% |
-| `data_processing.py` | Data preprocessing, cleaning, normalization | 137 | 100% |
-| `statistics.py` | Statistical analysis and hypothesis testing | 79 | 96% |
-
-### Analysis & Performance
-
-| Module | Purpose | Lines | Coverage |
-|--------|---------|-------|----------|
-| `metrics.py` | Performance metrics and quality measures | 96 | 100% |
-| `performance.py` | Convergence and scalability analysis | 108 | 100% |
-| `validation.py` | Result validation and anomaly detection | 93 | 100% |
-
-### Linguistic Analysis (v2.4)
-
-| Module | Purpose | Lines | Coverage |
-|--------|---------|-------|----------|
-| `text_analysis.py` | Text processing and linguistic feature extraction | 142 | 100% |
-| `literature_mining.py` | Scientific literature collection and processing | 198 | 100% |
-| `term_extraction.py` | Terminology extraction and domain classification | 167 | 100% |
-| `conceptual_mapping.py` | **ENHANCED** Concept mapping with similarity & centrality analysis | 521 | 100% |
-| `domain_analysis.py` | **ENHANCED** Domain analysis with statistical metrics | 600+ | 100% |
-| `discourse_analysis.py` | **ENHANCED** Discourse analysis with quantitative metrics | 480+ | 100% |
-
-### Visualization & Reporting (v2.4)
-
-| Module | Purpose | Lines | Coverage |
-|--------|---------|-------|----------|
-| `visualization.py` | Publication-quality figure generation | 68 | 100% |
-| `plots.py` | Plot type implementations | 84 | 100% |
-| `reporting.py` | Automated report generation | 149 | 100% |
-| `concept_visualization.py` | **ENHANCED** Advanced concept visualization (interactive, temporal) | 450+ | 100% |
-| `statistical_visualization.py` | **NEW** Statistical analysis visualization suite | 400+ | 100% |
-
-## Module Descriptions
-
-### example.py
-
-Basic mathematical operations for template demonstration.
-
-**Key Functions:**
-
-- `add_numbers()` - Add two numbers
-- `multiply_numbers()` - Multiply two numbers
-- `calculate_average()` - Calculate mean
-- `find_maximum()` / `find_minimum()` - Find extrema
-- `is_even()` / `is_odd()` - Number properties
-
-**Purpose:** Template example showing basic patterns
-
-### simulation.py
-
-Scientific simulation framework with reproducibility.
-
-**Key Classes:**
-
-- `SimulationBase` - Base class for simulations
-- `SimpleSimulation` - Simple simulation implementation
-- `SimulationState` - State management
-
-**Key Features:**
-
-- Reproducible execution with seeds
-- Checkpoint/restore functionality
-- Result serialization
-- State tracking
-
-**Use Case:** Run reproducible scientific simulations
-
-### parameters.py
-
-Parameter set management with validation.
-
-**Key Classes:**
-
-- `ParameterSet` - Parameter collection with validation
-- `ParameterConstraint` - Validation rules
-- `ParameterSweep` - Configuration for parameter sweeps
-
-**Key Functions:**
-
-- `add_parameter()` - Add parameter with constraints
-- `validate()` - Validate all parameters
-- `generate_combinations()` - Generate sweep combinations
-
-**Use Case:** Manage and sweep over simulation parameters
-
-### data_generator.py
-
-Generate synthetic data for experiments.
-
-**Key Functions:**
-
-- `generate_synthetic_data()` - Generate with specified distribution
-- `generate_time_series()` - Generate time series with trends
-- `generate_correlated_data()` - Generate multivariate correlated data
-- `inject_noise()` - Add noise to data
-- `generate_classification_dataset()` - Generate classification data
-
-**Use Case:** Create reproducible synthetic test data
-
-### data_processing.py
-
-Data preprocessing and cleaning.
-
-**Key Functions:**
-
-- `clean_data()` - Remove or fill invalid values
-- `normalize_data()` - Normalize (z-score, min-max, etc.)
-- `standardize_data()` - Zero mean, unit variance
-- `detect_outliers()` - Find anomalies (IQR, z-score)
-- `remove_outliers()` - Remove problematic data
-- `extract_features()` - Statistical feature extraction
-- `transform_data()` - Apply transformations (log, sqrt, etc.)
-
-**Use Case:** Prepare raw data for analysis
-
-### statistics.py
-
-Statistical analysis and hypothesis testing.
-
-**Key Functions:**
-
-- `calculate_descriptive_stats()` - Mean, std, quartiles, etc.
-- `t_test()` - One/two-sample t-tests
-- `calculate_correlation()` - Pearson or Spearman correlation
-- `calculate_confidence_interval()` - Confidence intervals
-- `fit_distribution()` - Fit distributions to data
-- `anova_test()` - One-way ANOVA
-
-**Use Case:** Perform statistical analysis on results
-
-### metrics.py
-
-Compute performance metrics and quality measures.
-
-**Key Functions:**
-
-- `calculate_accuracy()` - Classification accuracy
-- `calculate_precision_recall_f1()` - Precision, recall, F1
-- `calculate_convergence_metrics()` - Convergence analysis
-- `calculate_snr()` - Signal-to-Noise Ratio
-- `calculate_psnr()` - Peak SNR
-- `calculate_ssim()` - Structural Similarity
-- `calculate_effect_size()` - Cohen's d
-- `calculate_all_metrics()` - metrics
-
-**Use Case:** Evaluate algorithm performance
-
-### performance.py
-
-Analyze algorithm performance and scalability.
-
-**Key Functions:**
-
-- `analyze_convergence()` - Convergence behavior
-- `analyze_scalability()` - Scaling analysis
-- `benchmark_comparison()` - Compare implementations
-
-**Classes:**
-
-- `ConvergenceMetrics` - Convergence analysis results
-
-**Use Case:** Understand algorithm efficiency and scaling
-
-### validation.py
-
-Validate simulation and analysis results.
-
-**Key Classes:**
-
-- `ValidationFramework` - Framework for validation
-
-**Key Functions:**
-
-- `validate_bounds()` - Check value ranges
-- `validate_sanity()` - Sanity checks
-- `validate_reproducibility()` - Reproducibility checking
-- `detect_anomalies()` - Find anomalous results
-- `validate_quality_metrics()` - Quality validation
-- `generate_validation_report()` - Validation summary
-
-**Use Case:** Verify result correctness and quality
-
-### visualization.py
-
-Create publication-quality figures.
-
-**Key Classes:**
-
-- `VisualizationEngine` - Central visualization management
-
-**Key Functions:**
-
-- `create_figure()` - Create figure with subplots
-- `save_figure()` - Save in multiple formats
-- `apply_publication_style()` - Apply styling
-- `create_multi_panel_figure()` - Multi-panel figures
-
-**Use Case:** Generate figures for publication
-
-### plots.py
-
-Specific plot type implementations.
-
-**Key Functions:**
-
-- `plot_line()` - Line plots
-- `plot_scatter()` - Scatter plots
-- `plot_bar()` - Bar charts
-- `plot_heatmap()` - Heatmaps
-- `plot_contour()` - Contour plots
-- `plot_convergence()` - Convergence curves
-- `plot_comparison()` - Comparison plots
-
-**Use Case:** Create specific plot types
-
-### reporting.py
-
-Generate automated reports from results.
-
-**Key Classes:**
-
-- `ReportGenerator` - Automated report creation
-
-**Key Functions:**
-
-- `generate_markdown_report()` - Markdown reports
-- `generate_summary_table()` - Summary statistics
-- `extract_key_findings()` - Extract findings
-
-**Use Case:** Create automated result reports
-
-## Linguistic Analysis Modules (v2.4)
-
-### conceptual_mapping.py (Enhanced)
-
-**Features:**
-
-- `calculate_concept_similarity()` - Semantic similarity between concepts using Jaccard coefficient and domain overlap
-- `analyze_concept_centrality()` - Degree, betweenness, closeness, and eigenvector centrality metrics
-- `quantify_relationship_strength()` - Base weight, term overlap, domain overlap, and hierarchical relationships
-- `identify_cross_domain_bridges()` - Concepts that connect multiple domains with bridging efficiency scores
-- `track_concept_evolution()` - Historical evolution of concepts over time/iterations
-- `cluster_concepts()` - Hierarchical clustering of similar concepts using various distance metrics
-
-**New Analysis Capabilities:**
-
-- Concept centrality analysis revealing key concepts in the knowledge network
-- Relationship strength quantification for understanding concept interconnections
-- Cross-domain bridge identification for interdisciplinary insights
-- Temporal concept evolution tracking for longitudinal analysis
-- Automated concept clustering for knowledge organization
-
-### domain_analysis.py (Enhanced)
-
-**Features:**
-
-- `analyze_term_frequency_distribution()` - Statistical analysis of term frequencies with distribution plots
-- `analyze_term_cooccurrence()` - Co-occurrence matrix construction and analysis
-- `quantify_ambiguity_metrics()` - Context diversity, length variation, and combined ambiguity scoring
-- `analyze_cross_domain_overlap()` - Term sharing analysis between domains with overlap percentages
-- `calculate_statistical_significance()` - Chi-square tests for term pattern significance
-- `generate_confidence_scores()` - Confidence scoring for framing assumptions based on supporting evidence
-- `quantify_conceptual_structure()` - Structural complexity metrics including depth and concept coverage
-
-**New Analysis Capabilities:**
-
-- Statistical significance testing of linguistic patterns
-- Cross-domain term overlap analysis revealing shared concepts
-- Ambiguity quantification with multiple context-based metrics
-- Confidence scoring for theoretical framing assumptions
-- Quantitative assessment of conceptual structure complexity
-
-### discourse_analysis.py (Enhanced)
-
-**Features:**
-
-- `quantify_rhetorical_patterns()` - Frequency analysis with effectiveness scoring and context examples
-- `score_argumentative_structures()` - Strength scoring for claims, evidence, and reasoning coherence
-- `analyze_narrative_frequency()` - Narrative framework distribution with consistency scoring
-- `measure_persuasive_effectiveness()` - Persuasive technique impact assessment with success metrics
-- `analyze_term_usage_context()` - Context-dependent term usage patterns with consistency analysis
-- `track_conceptual_shifts()` - Temporal evolution of conceptual patterns with shift magnitude tracking
-- `quantify_framing_effects()` - Framing assumption impact measurement with downstream effect analysis
-
-**New Analysis Capabilities:**
-
-- Quantitative rhetorical pattern analysis with effectiveness metrics
-- Argumentative structure strength evaluation
-- Narrative framework frequency and consistency analysis
-- Persuasive technique effectiveness measurement
-- Conceptual shift tracking over time
-- Framing effect quantification and impact assessment
-
-## Visualization Modules (v2.4)
-
-### concept_visualization.py (Enhanced)
-
-**Features:**
-
-- `visualize_term_cooccurrence()` - Network visualization of term co-occurrence patterns
-- `create_domain_overlap_heatmap()` - Heatmap showing cross-domain term sharing patterns
-- `visualize_concept_evolution()` - Temporal evolution plots showing concept development over time
-- `create_statistical_summary_plot()` - Multi-panel statistical summary with frequency distributions, significance tests, and ambiguity metrics
-- `create_interactive_concept_network()` - 3D interactive network visualization using Plotly (with NetworkX fallback)
-
-**New Visualization Capabilities:**
-
-- Interactive 3D concept networks for exploration
-- Temporal evolution tracking of conceptual changes
-- Cross-domain overlap visualization with heatmaps
-- statistical summary dashboards
-- Co-occurrence network analysis with customizable layouts
-
-### statistical_visualization.py (Module)
-
-**Features:**
-
-- `visualize_statistical_significance()` - significance testing visualization with p-values, effect sizes, and interpretation
-- `create_correlation_matrix_plot()` - Correlation matrix heatmaps with coefficient annotations
-- `visualize_distribution_comparison()` - Multi-distribution comparison with box plots, violin plots, histograms, and CDFs
-- `visualize_effect_sizes()` - Effect size analysis with Cohen's d interpretation zones and confidence intervals
-- `plot_confidence_intervals()` - Confidence interval plots with significance indicators
-- `create_statistical_dashboard()` - Multi-panel statistical dashboard combining multiple analysis types
-- `visualize_hypothesis_testing()` - Hypothesis testing results visualization with significance mapping
-
-**New Visualization Capabilities:**
-
-- Statistical significance testing with visual interpretation
-- Correlation analysis with matrix heatmaps
-- Distribution comparison across multiple groups
-- Effect size visualization with statistical interpretation
-- Confidence interval analysis with significance testing
-- statistical dashboards for research reporting
-
-## Design Principles
-
-### Domain-Specific
-
-All code in this layer is specific to this research:
-
-- Implements algorithms for this project
-- Uses domain-specific logic
-- Optimized for this problem
-- Tailored analysis and visualization
-
-### Thin Orchestrator Pattern in Scripts
-
-Scripts (`scripts/`) are thin orchestrators:
-
-- Import from scientific/ for computation
-- Handle I/O and visualization
-- Orchestrate workflow
-- Don't implement algorithms
-
-```python
-# ✅ Good: Script uses project modules
-from simulation import SimpleSimulation
-from validation import ValidationFramework
-
-sim = SimpleSimulation()
-results = sim.run()
-validation = ValidationFramework()
-validation.validate_bounds(results, lower=0.0, upper=1.0)
+This package contains **project-specific scientific code** implementing algorithms, data processing, analysis, and visualization for the Ento-Linguistic research project. Code is organized into five subdirectory packages.
+
+## Directory Structure
+
+```
+src/
+├── __init__.py
+├── analysis/                   # Text analysis, NLP, domain analysis
+│   ├── cace_scoring.py              # CACE scoring framework
+│   ├── conceptual_mapping.py        # Concept mapping and network construction
+│   ├── discourse_analysis.py        # Discourse pattern and rhetorical analysis
+│   ├── discourse_patterns.py        # Discourse pattern detection
+│   ├── domain_analysis.py           # Domain-specific analysis (six domains)
+│   ├── performance.py               # Convergence and scalability analysis
+│   ├── persuasive_analysis.py       # Persuasive technique analysis
+│   ├── rhetorical_analysis.py       # Rhetorical structure analysis
+│   ├── semantic_entropy.py          # Semantic entropy computation
+│   ├── statistics.py                # Statistical analysis of language patterns
+│   ├── term_extraction.py           # Terminology extraction and domain classification
+│   └── text_analysis.py             # Text processing and linguistic feature extraction
+├── core/                       # Core utilities, validation, metrics
+│   ├── example.py                   # Template example with basic operations
+│   ├── exceptions.py                # Custom exception classes
+│   ├── logging.py                   # Logging utilities
+│   ├── markdown_integration.py      # Markdown integration helpers
+│   ├── metrics.py                   # Performance metrics and quality measures
+│   ├── parameters.py                # Parameter set management and validation
+│   ├── validation.py                # Result validation and quality assurance
+│   └── validation_utils.py          # Validation utility functions
+├── data/                       # Data loading, generation, literature mining
+│   ├── data_generator.py            # Synthetic data generation
+│   ├── data_processing.py           # Preprocessing, cleaning, normalization
+│   ├── literature_mining.py         # Scientific literature collection (PubMed)
+│   └── loader.py                    # Data loading utilities
+├── pipeline/                   # Simulation and reporting
+│   ├── reporting.py                 # Automated report generation
+│   └── simulation.py               # Scientific simulation framework
+└── visualization/              # Visualization and figure generation
+    ├── concept_visualization.py     # Concept network and domain visualizations
+    ├── figure_manager.py            # Figure registry and management
+    ├── plots.py                     # Plot type implementations
+    ├── statistical_visualization.py # Statistical analysis visualizations
+    └── visualization.py             # Publication-quality figure generation
 ```
 
-### 100% Test Coverage
+## Package Descriptions
 
-All scientific code requires:
+### analysis/
 
-- unit tests
-- data testing (no mocks)
-- Integration testing
-- Reproducible results
+The core NLP and domain analysis package. Key modules:
 
-## Integration Points
+- **term_extraction.py** - Extracts domain-specific terminology from entomological texts with confidence scoring and domain classification
+- **domain_analysis.py** - Analyzes terminology patterns within each of the six Ento-Linguistic domains (frequency distributions, co-occurrence, ambiguity metrics, cross-domain overlap)
+- **conceptual_mapping.py** - Builds concept networks with similarity analysis, centrality metrics, cross-domain bridge identification, and hierarchical clustering
+- **discourse_analysis.py** - Quantitative rhetorical pattern analysis, argumentative structure scoring, framing effect measurement
+- **text_analysis.py** - Text processing and linguistic feature extraction
+- **statistics.py** - Statistical analysis and hypothesis testing for language patterns
+- **semantic_entropy.py** - Semantic entropy computation for measuring terminological uncertainty
+- **cace_scoring.py** - CACE (Conceptual Adequacy and Communicative Effectiveness) scoring
+- **performance.py** - Convergence and scalability analysis
 
-### With Local Utilities
+### core/
 
-Scientific code can use local utility wrappers for document management:
+Foundational utilities:
+
+- **metrics.py** - Performance metrics (accuracy, precision/recall/F1, convergence, SNR, effect size)
+- **parameters.py** - Parameter set management with validation and sweep generation
+- **validation.py** - Result validation framework (bounds, sanity, reproducibility, anomaly detection)
+- **validation_utils.py** - Validation helper functions
+- **example.py** - Template example (add, multiply, average, min/max)
+- **exceptions.py** - Custom exception hierarchy
+- **logging.py** - Logging configuration
+- **markdown_integration.py** - Markdown document helpers
+
+### data/
+
+Data handling and generation:
+
+- **literature_mining.py** - Scientific literature collection from PubMed with caching and search result processing
+- **data_processing.py** - Data preprocessing (cleaning, normalization, outlier detection, feature extraction)
+- **data_generator.py** - Synthetic data generation for experiments
+- **loader.py** - Data loading utilities
+
+### pipeline/
+
+Orchestration support:
+
+- **reporting.py** - Automated report generation (markdown reports, summary tables, key findings extraction)
+- **simulation.py** - Scientific simulation framework with reproducibility (checkpoint/restore, state tracking)
+
+### visualization/
+
+All figure generation:
+
+- **concept_visualization.py** - Advanced concept visualization (co-occurrence networks, domain overlap heatmaps, temporal evolution, interactive 3D networks, statistical summaries)
+- **statistical_visualization.py** - Statistical visualization (significance testing, correlation matrices, distribution comparison, effect sizes, confidence intervals, dashboards)
+- **plots.py** - Standard plot types (line, scatter, bar, heatmap, contour, convergence, comparison)
+- **visualization.py** - Publication-quality figure engine (multi-panel figures, styling)
+- **figure_manager.py** - Figure registry and cross-reference management
+
+## Import Patterns
+
+Modules are imported via their package path:
 
 ```python
-# src/domain_analysis.py
-from concept_visualization import ConceptVisualizer
-
-def generate_figures():
-    # Scientific computation
-    results = run_analysis()
-    
-    # Use local visualization
-    viz = ConceptVisualizer()
-    fig = viz.visualize_concept_map(results)
-    fig.savefig("output/figures/results.png", dpi=300)
-```
-
-### With Scripts
-
-Scripts orchestrate scientific code:
-
-```python
-# scripts/analysis_pipeline.py
-from data_generator import generate_synthetic_data
-from statistics import calculate_descriptive_stats
-from visualization import VisualizationEngine
-
-# Generate data
-data = generate_synthetic_data(n_samples=1000)
-
-# Analyze
-stats = calculate_descriptive_stats(data)
-
-# Visualize
-engine = VisualizationEngine()
-fig = engine.create_figure("analysis")
-engine.save_figure(fig, "output/figures/example_figure.png")
-```
-
-### With Manuscript
-
-Generated figures and data integrate into manuscript:
-
-```markdown
-# Experimental Results
-
-![Analysis Results](../output/figures/example_figure.png){fig:analysis width=0.8}
-
-See [Figure @fig:analysis] for detailed results.
+from analysis.term_extraction import TerminologyExtractor
+from analysis.domain_analysis import DomainAnalyzer
+from core.metrics import calculate_accuracy
+from data.literature_mining import LiteratureCorpus
+from visualization.concept_visualization import ConceptVisualizer
 ```
 
 ## Requirements
 
-### Test Coverage
-
-- **100% required** for all modules
-- No code ships without tests
-- data testing (no mocks)
-- Tests in `tests/`
-
-### Code Standards
-
+- 90% minimum test coverage
 - Type hints on all public APIs
-- docstrings
-- Domain-specific documentation
-- Clear error messages
-- Follow PEP 8 style
-
-### Documentation
-
-- Algorithm description in docstrings
-- Usage examples for domain context
-- Performance characteristics
-- Validation methodology
-
-## Adding New Scientific Modules
-
-### Checklist
-
-1. Create module in `src/` with domain-specific logic
-2. Add tests in `tests/test_<module>.py`
-3. Ensure high test coverage
-4. Document with domain context
-5. Update this AGENTS.md file
-6. Add to `src/__init__.py`
-7. Create scripts/ usage example if needed
-
-### Template
-
-```python
-"""Module description for our research problem.
-
-This module implements [specific algorithm/analysis] for [our research].
-"""
-from __future__ import annotations
-
-from typing import List, Optional, Dict, Any
-import numpy as np
-
-
-class OurAlgorithm:
-    """Implementation of our specific algorithm.
-    
-    This is domain-specific to our research project.
-    """
-    
-    def __init__(self, parameter: float) -> None:
-        """Initialize algorithm with parameters.
-        
-        Args:
-            parameter: Domain-specific parameter
-        """
-        self.parameter = parameter
-    
-    def run(self, data: np.ndarray) -> np.ndarray:
-        """Run algorithm on data.
-        
-        Args:
-            data: Input data for our algorithm
-            
-        Returns:
-            Processed results
-        """
-        pass
-```
-
-### Design Questions
-
-Before adding to scientific layer:
-
-- ✅ Is this specific to our research?
-- ✅ Does this implement our algorithms?
-- ✅ Is this domain-specific?
-- ❌ Would other projects use this?
-- ❌ Is this generic build infrastructure?
-
-If "no" to first three → belongs in Infrastructure layer
-
-## Best Practices
-
-### Do's
-
-✅ Use infrastructure for document management  
-✅ Implement domain-specific logic clearly  
-✅ Write docstrings with domain context  
-✅ Test with data and realistic scenarios  
-✅ Document algorithms and mathematical concepts  
-✅ Export to scripts as thin orchestrators  
-✅ Include performance characteristics  
-
-### Don'ts
-
-❌ Implement document generation yourself  
-❌ Skip tests or coverage  
-❌ Mix multiple concerns in one function  
-❌ Assume generic use beyond this project  
-❌ Skip error handling  
-❌ Duplicate code from infrastructure layer  
-❌ Put infrastructure concerns in scientific code  
-
-## Testing Scientific Code
-
-```bash
-# Test all modules
-pytest tests/ --cov=src
-
-# Test with data scenarios
-pytest tests/ -v
-
-# Full coverage with HTML report
-pytest tests/ --cov=src --cov-report=html
-```
+- Docstrings with domain context
+- Real data testing (no mocks)
+- Deterministic outputs with fixed seeds
 
 ## See Also
 
+- [`../scripts/AGENTS.md`](../scripts/AGENTS.md) - Script orchestrators
+- [`../tests/`](../tests/) - Test suite
 - [`../AGENTS.md`](../AGENTS.md) - Project documentation
-- [`../docs/`](../docs/) - Project documentation guides
-- [`../scripts/`](../scripts/) - Script orchestrators
-- [`../scripts/AGENTS.md`](../../scripts/AGENTS.md) - Script orchestration guide
-
-## Key Principles
-
-1. **Domain-Specific** - Unique to this research project
-2. **Algorithm-Focused** - Implements our methods
-3. **Well-Tested** - 100% test coverage
-4. **Well-Documented** - Domain context in docstrings
-5. **Uses Infrastructure** - Leverages generic tools

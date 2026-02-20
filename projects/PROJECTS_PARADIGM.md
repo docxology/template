@@ -28,8 +28,8 @@ Projects are **architecturally isolated** - each operates as if it were the only
 
 ```mermaid
 graph TD
-        P1[code_project<br/>Optimization Research<br/>📝 Own manuscript<br/>🧪 Own tests<br/>🧠 Own algorithms]
-        P2[blake_active_inference<br/>Blake × Active Inference<br/>📝 Own manuscript<br/>🧪 Own tests<br/>🧠 Own analysis]
+        P1[act_inf_metaanalysis<br/>Active Inference Meta-Analysis<br/>📝 Own manuscript<br/>🧪 Own tests<br/>🧠 Own algorithms]
+        P2[your_project<br/>Your Research<br/>📝 Own manuscript<br/>🧪 Own tests<br/>🧠 Own algorithms]
 
         P1 -.->|❌ No imports| P2
     end
@@ -63,7 +63,7 @@ from infrastructure.core.logging_utils import get_logger
 from infrastructure.figure_manager import FigureManager
 
 # ❌ FORBIDDEN: Import from other projects
-# from projects.blake_active_inference.src.synthesis import SynthesisMapper
+# from projects.other_project.src.module import SomeClass
 ```
 
 **Rationale:**
@@ -86,7 +86,7 @@ from infrastructure.project import discover_projects
 
 # Infrastructure discovers all projects automatically
 projects = discover_projects(Path("."))
-# Returns: [code_project, blake_active_inference, ...]
+# Returns: [act_inf_metaanalysis, ...]
 
 # Infrastructure validates each project independently
 for project in projects:
@@ -97,9 +97,9 @@ for project in projects:
 
 ```bash
 # Infrastructure runs each project's tests independently
-python3 scripts/01_run_tests.py --project code_project
+python3 scripts/01_run_tests.py --project {name}
 # - Validates project structure
-# - Runs pytest projects/code_project/tests/ --cov=projects/code_project/src
+# - Runs pytest projects/{name}/tests/ --cov=projects/{name}/src
 # - Enforces 90% coverage requirement
 # - Generates coverage reports
 ```
@@ -108,19 +108,19 @@ python3 scripts/01_run_tests.py --project code_project
 
 ```bash
 # Infrastructure discovers and executes each project's scripts
-python3 scripts/02_run_analysis.py --project code_project
-# - Finds all scripts in projects/code_project/scripts/
+python3 scripts/02_run_analysis.py --project {name}
+# - Finds all scripts in projects/{name}/scripts/
 # - Sets PYTHONPATH: repo_root + infrastructure/ + project/src/
 # - Executes each script with proper environment
-# - Collects outputs to projects/code_project/output/
+# - Collects outputs to projects/{name}/output/
 ```
 
 #### 📄 **Manuscript Rendering**
 
 ```bash
 # Infrastructure renders each project's manuscript independently
-python3 scripts/03_render_pdf.py --project code_project
-# - Validates markdown in projects/code_project/manuscript/
+python3 scripts/03_render_pdf.py --project {name}
+# - Validates markdown in projects/{name}/manuscript/
 # - Combines sections using project-specific config.yaml
 # - Generates LaTeX with project-specific references.bib
 # - Compiles PDF with project-specific figures
@@ -156,7 +156,7 @@ The standalone project paradigm requires **compliance** with template developmen
 
 ### ✅ **Testing Standards Compliance (Required)**
 
-- **90%+ coverage**: Each project must achieve 90% minimum coverage (currently achieved: code_project 100%, blake_active_inference: 90%+)
+- **90%+ coverage**: Each project must achieve 90% minimum coverage
 - **data only**: Absolute prohibition on mocks - all tests use computations
 - **integration**: Tests cover critical workflows and edge cases
 - **Deterministic results**: Fixed seeds ensure reproducible test outcomes
@@ -217,13 +217,13 @@ Every standalone project must comply with development standards defined in `.cur
 
 ```bash
 # Infrastructure validates compliance during pipeline
-python3 scripts/01_run_tests.py --project code_project
+python3 scripts/01_run_tests.py --project {name}
 # ✓ Tests pass with 90%+ coverage
 # ✓ No mock methods detected
 # ✓ Type hints validated
 # ✓ Documentation completeness checked
 
-python3 scripts/04_validate_output.py --project code_project
+python3 scripts/04_validate_output.py --project {name}
 # ✓ PDF integrity verified
 # ✓ Markdown references resolved
 # ✓ File integrity maintained
@@ -275,7 +275,7 @@ Infrastructure integrates project outputs into unified deliverables:
 ```python
 # Infrastructure organizes final outputs
 copy_final_deliverables(project.path / "output", output_root / project.name)
-# Result: output/code_project/ contains all project deliverables
+# Result: output/{name}/ contains all project deliverables
 ```
 
 ### Project Lifecycle Under Infrastructure
@@ -369,7 +369,7 @@ Every project maintains **manuscript independence**:
 #### **Independent Content Structure**
 
 ```
-projects/code_project/manuscript/
+projects/{name}/manuscript/
 ├── 00_abstract.md                    # Project-specific abstract
 ├── 01_introduction.md               # Domain introduction
 ├── 02_methodology.md                # Methodology
@@ -392,10 +392,10 @@ projects/code_project/manuscript/
 
 ```bash
 # Each project renders independently
-python3 scripts/03_render_pdf.py --project code_project
-# - Uses projects/code_project/manuscript/config.yaml
-# - Processes projects/code_project/manuscript/references.bib
-# - Generates projects/code_project/output/pdf/
+python3 scripts/03_render_pdf.py --project {name}
+# - Uses projects/{name}/manuscript/config.yaml
+# - Processes projects/{name}/manuscript/references.bib
+# - Generates projects/{name}/output/pdf/
 ```
 
 ## Dependency Management
@@ -420,8 +420,8 @@ Projects maintain **zero coupling** between each other:
 
 ```python
 # ❌ FORBIDDEN: Projects cannot import from each other
-# from projects.code_project.src.optimizer import gradient_descent
-# from projects.blake_active_inference.src.synthesis import SynthesisMapper
+# from projects.another_project.src.module import some_function
+# from projects.other_project.src.module import SomeClass
 ```
 
 #### **Infrastructure as Common Good**
@@ -434,46 +434,27 @@ Infrastructure modules are **domain-independent utilities** that benefit all pro
 - **Rendering**: Shared PDF generation with project-specific customization
 - **File Operations**: Common utilities for output management
 
-## Real Project Examples
+## Real Project Example
 
-### Optimization Research Paradigm
+### Active Inference Meta-Analysis Paradigm
 
 **Standalone Guarantees:**
 
-- **Tests**: 34 tests, 100% coverage, convergence and stability validation
-- **Methods**: Gradient descent with fixed step size in `src/optimizer.py`
-- **Manuscript**: Research paper on mathematical optimization
+- **Tests**: Test suite validating analysis algorithms
+- **Methods**: Meta-analysis implementation in `src/`
+- **Manuscript**: Research manuscript with analysis and figures
 
 **Infrastructure Integration:**
 
 ```bash
 # Infrastructure operates on project independently
-python3 scripts/execute_pipeline.py --project code_project --core-only
+python3 scripts/execute_pipeline.py --project act_inf_metaanalysis --core-only
 
 # Result: Complete analysis pipeline executed
-# - Tests validate optimization algorithms
+# - Tests validate analysis algorithms
 # - Scripts generate analysis figures
 # - Manuscript renders with equations
-# - Outputs organized in output/code_project/
-```
-
-### Blake Active Inference Paradigm
-
-**Standalone Guarantees:**
-
-- **Tests**: Manuscript rendering and content validation
-- **Methods**: Synthesis mapping and correspondence analysis
-- **Manuscript**: 29-section research paper on Blake × Active Inference
-
-**Infrastructure Integration:**
-
-```bash
-# Infrastructure renders manuscript
-python3 scripts/03_render_pdf.py --project blake_active_inference
-
-# Infrastructure discovers and runs:
-# - Manuscript sections rendered to PDF
-# - Figures processed and embedded
+# - Outputs organized in output/act_inf_metaanalysis/
 ```
 
 ## Benefits of Standalone Paradigm

@@ -1,0 +1,133 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}{Abstract}
+\protect\phantomsection\label{abstract}
+The Free Energy Principle (FEP) and Active Inference have expanded
+rapidly across neuroscience, robotics, biology, and formal mathematics.
+However, the field lacks systematic methods for tracking which of its
+central theoretical claims are well-supported, contested, or merely
+assumed. Building on the systematic literature analysis of Knight,
+Cordes, and Friedman \citep{knight2022fep}---which pioneered manual
+annotation paired with ontology-based analysis at the scale of hundreds
+of papers---we present a computational meta-analysis framework that
+automates and scales this approach. Our pipeline retrieves literature
+from arXiv, Semantic Scholar, and OpenAlex, deduplicating records via a
+canonical identifier hierarchy. It classifies papers into a three-tier
+taxonomy spanning eight categories: A (Core Theory), B (Tools \&
+Translation), and C (Application Domains). To transcend keyword
+matching, an LLM-powered extraction system evaluates each abstract
+against eight core hypotheses, producing structured nanopublications
+with directionality, confidence scores, and natural-language reasoning.
+These nanopublications populate an RDF-compatible knowledge graph
+evaluated by a citation-weighted evidence scoring function.
+
+Applied to a corpus of \(N = 1208\) papers (spanning 1972--2026), the
+framework details a field dominated by core theory (Domain A) but
+actively diversifying into tools development (Domain B) and specific
+applications (Domain C), notably neuroscience, robotics, and
+computational psychiatry. Non-negative matrix factorization identifies
+five latent topics that cross-cut the keyword domain taxonomy, while
+citation network analysis reveals a sparse yet structured graph
+(2\{,\}780 intra-corpus edges, 6.1\% reference resolution) anchored by
+pronounced hub papers. By demonstrating that automated LLM-driven
+assertion extraction can generate scalable, queryable representations of
+scientific evidence, this work provides a robust architectural
+foundation for \emph{living literature reviews}---continuously updated
+knowledge graphs that track the trajectory of theoretical consensus
+across rapidly evolving fields, within Active Inference and beyond.
+
+\textbf{Keywords:} Active Inference, Free Energy Principle,
+meta-analysis, knowledge graph, nanopublications, bibliometrics,
+hypothesis scoring, LLM extraction, computational neuroscience
+\end{frame}
+
+\end{document}

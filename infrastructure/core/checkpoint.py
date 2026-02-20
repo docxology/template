@@ -213,7 +213,7 @@ class CheckpointManager:
                 )
 
             # Validate stage results consistency
-            if len(checkpoint.stage_results) != checkpoint.last_stage_completed + 1:
+            if len(checkpoint.stage_results) != checkpoint.last_stage_completed:
                 return (
                     False,
                     f"Checkpoint inconsistency: {len(checkpoint.stage_results)} stage results but last_stage_completed={checkpoint.last_stage_completed} - checkpoint corrupted",

@@ -2,18 +2,15 @@
 
 ## Overview
 
-This is a, self-contained research project examining the entanglement of speech and thought in entomology. The project investigates how language shapes scientific understanding of ant biology through systematic analysis of terminology networks across six Ento-Linguistic domains.
+This is a self-contained research project examining the entanglement of speech and thought in entomology. The project investigates how language shapes scientific understanding of ant biology through systematic analysis of terminology networks across six Ento-Linguistic domains.
 
 Everything needed for the research is in this folder:
 
 - **src/** - Ento-Linguistic analysis algorithms and text processing
-- **tests/** - test suite (90%+ coverage)
+- **tests/** - Test suite (90%+ coverage)
 - **scripts/** - Analysis workflows and pipelines
 - **manuscript/** - Research manuscript on language in entomology
-- **docs/** - Project documentation and guidelines
 - **output/** - Generated analyses, figures, data, and PDFs
-
-This folder can be copied as a unit to start new research in scientific discourse analysis.
 
 ## Research Focus
 
@@ -30,36 +27,67 @@ This folder can be copied as a unit to start new research in scientific discours
 
 ## Architecture
 
-### Ento-Linguistic Analysis Code (src/)
+### Source Code (src/)
 
-Specialized Python implementations for text analysis and conceptual mapping:
+Organized into five subdirectory packages:
 
 ```
 src/
-├── text_analysis.py         # Text processing and linguistic feature extraction
-├── literature_mining.py     # Scientific literature collection and processing
-├── term_extraction.py       # Terminology extraction and domain classification
-├── conceptual_mapping.py    # Concept mapping and network construction
-├── domain_analysis.py       # Domain-specific analysis across six areas
-├── discourse_analysis.py    # Discourse pattern and rhetorical analysis
-├── concept_visualization.py # Visualization of conceptual networks
-├── literature_visualization.py # Literature analysis visualizations
-├── statistics.py            # Statistical analysis of language patterns
-├── validation.py            # Result validation and quality assurance
-└── reporting.py             # Analysis report generation
+├── __init__.py
+├── analysis/              # Text analysis, NLP, and domain-specific modules
+│   ├── __init__.py
+│   ├── cace_scoring.py         # CACE scoring framework
+│   ├── conceptual_mapping.py   # Concept mapping and network construction
+│   ├── discourse_analysis.py   # Discourse pattern and rhetorical analysis
+│   ├── discourse_patterns.py   # Discourse pattern detection
+│   ├── domain_analysis.py      # Domain-specific analysis across six areas
+│   ├── performance.py          # Convergence and scalability analysis
+│   ├── persuasive_analysis.py  # Persuasive technique analysis
+│   ├── rhetorical_analysis.py  # Rhetorical structure analysis
+│   ├── semantic_entropy.py     # Semantic entropy computation
+│   ├── statistics.py           # Statistical analysis of language patterns
+│   ├── term_extraction.py      # Terminology extraction and domain classification
+│   └── text_analysis.py        # Text processing and linguistic feature extraction
+├── core/                  # Core utilities, validation, metrics
+│   ├── __init__.py
+│   ├── example.py              # Template example with basic operations
+│   ├── exceptions.py           # Custom exception classes
+│   ├── logging.py              # Logging utilities
+│   ├── markdown_integration.py # Markdown integration helpers
+│   ├── metrics.py              # Performance metrics and quality measures
+│   ├── parameters.py           # Parameter set management and validation
+│   ├── validation.py           # Result validation and quality assurance
+│   └── validation_utils.py     # Validation utility functions
+├── data/                  # Data loading, generation, and literature mining
+│   ├── __init__.py
+│   ├── data_generator.py       # Synthetic data generation
+│   ├── data_processing.py      # Preprocessing, cleaning, normalization
+│   ├── literature_mining.py    # Scientific literature collection and processing
+│   └── loader.py               # Data loading utilities
+├── pipeline/              # Simulation and reporting infrastructure
+│   ├── __init__.py
+│   ├── reporting.py            # Automated report generation
+│   └── simulation.py           # Scientific simulation framework
+└── visualization/         # All visualization and figure generation
+    ├── __init__.py
+    ├── concept_visualization.py    # Concept network and domain visualizations
+    ├── figure_manager.py           # Figure registry and management
+    ├── plots.py                    # Plot type implementations
+    ├── statistical_visualization.py # Statistical analysis visualizations
+    └── visualization.py            # Publication-quality figure generation
 ```
 
 **Requirements:**
 
 - 90% minimum test coverage
 - Type hints on all public APIs
-- docstrings with examples
+- Docstrings with examples
 - Real literature data testing (no mocks)
 - Reproducible text analysis pipelines
 
 ### Analysis Tests (tests/)
 
-test suite validating all Ento-Linguistic analysis code:
+Test suite validating all Ento-Linguistic analysis code:
 
 - **90% minimum coverage required** - All critical analysis paths tested
 - **Real literature testing** - Use actual entomological texts, not mocks
@@ -75,35 +103,30 @@ pytest tests/ --cov=src --cov-report=html
 
 ### Analysis Scripts (scripts/)
 
-Thin orchestrators for Ento-Linguistic analysis workflows:
+Two active scripts plus archived helpers:
 
 ```
 scripts/
-├── literature_analysis_pipeline.py    # literature mining and analysis
-├── domain_analysis_script.py          # Domain-specific terminology analysis
-├── conceptual_mapping_script.py       # Concept mapping and network generation
-├── discourse_analysis_script.py       # Discourse pattern analysis
-├── generate_domain_figures.py         # Domain-specific figure generation
-└── analysis_pipeline.py               # Main orchestrator for all stages
+├── 01_build_corpus.py            # Build literature corpus from sources
+├── 02_generate_figures.py        # Generate all manuscript figures
+├── _analysis_pipeline.py         # (inactive) Main orchestrator
+├── _conceptual_mapping_script.py # (inactive) Concept mapping generation
+├── _convert_corpus.py            # (inactive) Corpus format conversion
+├── _discourse_analysis_script.py # (inactive) Discourse pattern analysis
+├── _domain_analysis_script.py    # (inactive) Domain terminology analysis
+├── _example_figure.py            # (inactive) Example figure generation
+├── _generate_domain_figures.py   # (inactive) Domain figure generation
+├── _generate_missing_figures.py  # (inactive) Missing figure generation
+├── _generate_scientific_figures.py # (inactive) Scientific figure generation
+├── _literature_analysis_pipeline.py # (inactive) Literature mining pipeline
+├── _manuscript_preflight.py      # (inactive) Manuscript validation
+├── _quality_report.py            # (inactive) Quality metrics report
+├── _register_manuscript_figures.py # (inactive) Figure registry updates
+├── _render_pdf_override.py       # (inactive) Custom PDF rendering
+└── _scientific_simulation.py     # (inactive) Simulation workflows
 ```
 
-**Analysis Workflow:**
-
-1. **Literature Mining**: Collect entomological publications from PubMed/arXiv
-2. **Text Processing**: Normalize and tokenize scientific texts
-3. **Terminology Extraction**: Identify domain-specific terms with context
-4. **Conceptual Mapping**: Build networks of term relationships
-5. **Domain Analysis**: Examine patterns within each of six domains
-6. **Discourse Analysis**: Identify rhetorical strategies and framing
-7. **Visualization**: Generate publication-quality figures and networks
-
-**Pattern:**
-
-1. Import analysis modules from src/
-2. Process literature corpora with text analysis functions
-3. Generate conceptual mappings and domain analyses
-4. Create visualizations and reports
-5. Use infrastructure modules for logging, validation, and figure management
+Active scripts (`01_`, `02_` prefixed) are executed by the pipeline. Scripts prefixed with `_` are inactive helpers preserved for reference.
 
 ### Manuscript (manuscript/)
 
@@ -111,19 +134,25 @@ Ento-Linguistic research content in Markdown:
 
 ```
 manuscript/
-├── 01_abstract.md                     # Research overview and contributions
-├── 02_introduction.md                 # Speech/thought entanglement motivation
-├── 03_methodology.md                  # Mixed-methodology framework
-├── 04_experimental_results.md         # Computational analysis results
-├── 05_discussion.md                   # Theoretical implications
-├── 06_conclusion.md                   # Future directions and recommendations
-├── S01_supplemental_methods.md        # Detailed computational methods
-├── S02_supplemental_results.md        # Extended domain analyses
-├── S03_supplemental_analysis.md       # Theoretical frameworks
-├── S04_supplemental_applications.md   # Case studies and examples
-├── 98_symbols_glossary.md             # Terminology glossary
-├── 99_references.bib                  # Bibliography
-└── config.yaml                        # Publication metadata
+├── 01_abstract.md                # Research overview and contributions
+├── 02_introduction.md            # Speech/thought entanglement motivation
+├── 03_methodology.md             # Mixed-methodology framework
+├── 04_experimental_results.md    # Computational analysis results
+├── 05_discussion.md              # Theoretical implications
+├── 06_conclusion.md              # Future directions and recommendations
+├── 07_related_work.md            # Literature review and positioning
+├── 08_acknowledgments.md         # Funding and acknowledgments
+├── S01_supplemental_methods.md   # Detailed computational methods
+├── S02_supplemental_results.md   # Extended domain analyses
+├── S03_supplemental_analysis.md  # Theoretical frameworks
+├── S04_supplemental_applications.md # Case studies and examples
+├── 98_symbols_glossary.md        # Terminology glossary
+├── 99_references.md              # Bibliography
+├── references.bib                # BibTeX bibliography database
+├── config.yaml                   # Publication metadata
+├── config.yaml.example           # Configuration template
+├── preamble.md                   # LaTeX preamble (markdown wrapped)
+└── preamble.tex                  # LaTeX preamble (raw)
 ```
 
 ### Output (output/)
@@ -132,128 +161,38 @@ Generated results (disposable):
 
 ```
 output/
-├── figures/                 # PNG/PDF figures
-├── data/                    # CSV/NPZ data files
-├── pdf/                     # Generated PDFs
-├── latex_temp/              # LaTeX temporary files
-└── reports/                 # Generated reports
+├── figures/           # PNG figures
+├── logs/              # Pipeline logs
+├── reports/           # Generated reports
+├── .checkpoints/      # Pipeline checkpoint state
+└── pdf/               # Generated PDFs (when rendered)
 ```
 
 These files are regenerated on each build and can be deleted safely.
 
-## Ento-Linguistic Analysis Workflow
+## Testing
 
-### 1. Literature Collection and Text Processing
+### Running Tests
 
-**Step 1: Collect Entomological Literature**
+```bash
+# All tests with coverage
+pytest tests/ --cov=src --cov-fail-under=90
 
-```python
-# scripts/literature_analysis_pipeline.py
-from literature_mining import LiteratureCorpus, mine_entomology_literature
+# Specific test file
+pytest tests/test_module_name.py -v
 
-# Mine literature from PubMed and arXiv
-corpus = mine_entomology_literature(max_results=1000)
-corpus.save_to_file("output/data/literature_corpus.json")
+# Generate HTML coverage report
+pytest tests/ --cov=src --cov-report=html
 ```
 
-**Step 2: Process and Analyze Texts**
+### Test Rules
 
-```python
-# src/text_analysis.py
-from text_analysis import TextProcessor
+- Write tests first (TDD)
+- Test with real data (no mocks)
+- Cover edge cases
+- Maintain 90%+ coverage
 
-processor = TextProcessor()
-texts = corpus.get_text_corpus()
-
-# Process texts for analysis
-processed_texts = []
-for text in texts:
-    tokens = processor.process_text(text, lemmatize=True)
-    processed_texts.append(' '.join(tokens))
-```
-
-**Step 3: Extract Terminology**
-
-```python
-# src/term_extraction.py
-from term_extraction import TerminologyExtractor
-
-extractor = TerminologyExtractor()
-terms = extractor.extract_terms(processed_texts, min_frequency=3)
-
-# Classify terms by Ento-Linguistic domain
-for term_text, term_obj in terms.items():
-    domains = extractor.classify_term_domains(term_text)
-    term_obj.domains = domains
-```
-
-**Step 4: Build Conceptual Maps**
-
-```python
-# src/conceptual_mapping.py
-from conceptual_mapping import ConceptualMapper
-
-mapper = ConceptualMapper()
-concept_map = mapper.build_concept_map(list(terms.items()))
-
-# Identify conceptual overlaps and relationships
-overlaps = concept_map.find_concept_overlaps()
-hierarchy = concept_map.analyze_conceptual_hierarchy()
-```
-
-**Step 5: Analyze Domains**
-
-```python
-# src/domain_analysis.py
-from domain_analysis import DomainAnalyzer
-
-analyzer = DomainAnalyzer()
-domain_analyses = analyzer.analyze_all_domains(list(terms.items()), processed_texts)
-
-# Generate domain-specific reports
-for domain_name, analysis in domain_analyses.items():
-    report = analyzer.generate_domain_report(analysis)
-    with open(f"output/reports/{domain_name}_analysis.md", 'w') as f:
-        f.write(report)
-```
-
-**Step 6: Create Visualizations**
-
-```python
-# src/concept_visualization.py
-from concept_visualization import ConceptVisualizer
-
-visualizer = ConceptVisualizer()
-
-# Generate concept network
-concept_fig = visualizer.visualize_concept_map(concept_map)
-concept_fig.savefig("output/figures/concept_map.png")
-
-# Create domain comparison
-domain_data = {}  # Prepare domain statistics
-comparison_fig = visualizer.create_domain_comparison_plot(domain_data)
-comparison_fig.savefig("output/figures/domain_comparison.png")
-```
-
-### 2. Generate Figures
-
-Scripts generate figures that are integrated into the manuscript:
-
-```python
-# scripts/generate_results.py
-from plots import plot_convergence
-
-fig = plot_convergence(results)
-fig.savefig("output/figures/results.png", dpi=300, bbox_inches="tight")
-```
-
-Figures are automatically referenced:
-
-```markdown
-See [Figure @fig:results] for detailed results.
-```
-
-### 3. Build Manuscript
+## Building the Manuscript
 
 From template root:
 
@@ -267,205 +206,10 @@ Or use the full pipeline:
 python3 scripts/execute_pipeline.py --core-only
 ```
 
-This:
-
-1. Runs all project tests
-2. Executes all scripts
-3. Generates all figures
-4. Builds manuscript PDFs
-5. Validates quality
-
-## Module Guide
-
-### Core Modules
-
-- **example.py** - Template example with basic operations
-- **simulation.py** - Scientific simulation framework with reproducibility
-- **parameters.py** - Parameter set management and validation
-
-### Data Processing
-
-- **data_generator.py** - Generate synthetic data for experiments
-- **data_processing.py** - Preprocessing, cleaning, normalization
-- **statistics.py** - Statistical analysis and hypothesis testing
-
-### Analysis & Reporting
-
-- **metrics.py** - Performance metrics and quality measures
-- **performance.py** - Convergence and scalability analysis
-- **validation.py** - Result validation and anomaly detection
-- **reporting.py** - Automated report generation
-
-### Visualization
-
-- **concept_visualization.py** - Concept network and domain visualizations
-- **statistical_visualization.py** - Statistical analysis visualizations
-- **plots.py** - Specific plot type implementations
-
-## Testing
-
-### Test Structure
-
-```python
-"""Tests for src/module_name.py"""
-import pytest
-from module_name import function_to_test
-
-class TestFunctionName:
-    """Test suite for function_to_test."""
-    
-    def test_basic_functionality(self):
-        """Test basic usage."""
-        result = function_to_test(test_data)
-        assert result is not None
-    
-    def test_edge_cases(self):
-        """Test edge case handling."""
-        assert function_to_test(empty_data) is None
-    
-    def test_error_handling(self):
-        """Test error conditions."""
-        with pytest.raises(ValueError):
-            function_to_test(invalid_data)
-```
-
-### Running Tests
-
-```bash
-# All tests with coverage
-pytest tests/ --cov=src --cov-fail-under=100
-
-# Specific test file
-pytest tests/test_module_name.py -v
-
-# Specific test class/function
-pytest tests/test_module_name.py::TestClass::test_function -v
-
-# Generate HTML coverage report
-pytest tests/ --cov=src --cov-report=html
-open htmlcov/index.html
-```
-
-## Best Practices
-
-### Code Quality
-
-✅ **Do:**
-
-- Write clear, documented code
-- Use type hints
-- Test everything thoroughly
-- Document algorithms
-- Handle errors gracefully
-
-❌ **Don't:**
-
-- Skip tests or coverage
-- Use mocks (test real behavior)
-- Leave undocumented code
-- Hardcode values
-- Ignore edge cases
-
-### Testing
-
-✅ **Do:**
-
-- Write tests first (TDD)
-- Test data
-- Cover edge cases
-- Test error handling
-- Maintain coverage requirements
-
-❌ **Don't:**
-
-- Use mocks
-- Skip error tests
-- Leave untested code
-- Test implementation details
-- Accept low coverage
-
-### Scripts
-
-✅ **Do:**
-
-- Import from src/
-- Orchestrate workflows
-- Generate figures/tables
-- Handle I/O
-- Provide clear output
-
-❌ **Don't:**
-
-- Implement algorithms in scripts
-- Duplicate src/ logic
-- Skip error handling
-- Hardcode paths
-- Mix computation and orchestration
-
-## Deployment
-
-### Standalone Project
-
-Copy this folder to use independently:
-
-```bash
-cp -r /path/to/template/project /path/to/my_research
-cd /path/to/my_research
-pytest tests/ --cov=src
-python3 scripts/analysis_pipeline.py
-```
-
-The project works completely independently - no template infrastructure needed.
-
-### Integration with Template
-
-To build the manuscript with template infrastructure:
-
-```bash
-cd /path/to/template
-python3 scripts/03_render_pdf.py
-```
-
-Or use the full pipeline:
-
-```bash
-python3 scripts/execute_pipeline.py --core-only
-```
-
-This uses the template's build system while your project code remains in `project/`.
-
-## Documentation
-
-- This file (AGENTS.md) - Architecture and guidelines
-- README.md - Quick start and overview
-- docs/ - Additional documentation
-- Docstrings - In-code documentation
-
 ## See Also
 
 - Root AGENTS.md - Template architecture
 - Root README.md - Template overview
-- scripts/ - Build pipeline orchestrators
-- infrastructure/ - Generic validation tools
-
-## System Status: OPERATIONAL
-
-**All systems confirmed functional:**
-
-- ✅ Test suite (785 tests, run with `uv run pytest tests/ --cov=src`)
-- ✅ Script execution (all analysis scripts operational)
-- ✅ Markdown validation (all references resolved)
-- ✅ PDF generation (individual sections, combined manuscript)
-- ✅ Cross-reference system (citations, equations, figures resolved)
-- ✅ Configuration system (YAML config)
-- ✅ Output validation (figures, data files, reports)
-- ✅ Input validation across all core methods
-- ✅ URL encoding in PubMed searches
-- ✅ PubMed search result caching
-- ✅ Advanced statistical analysis capabilities
-- ✅ Domain analysis with quantitative metrics
-- ✅ Concept mapping with centrality analysis
-- ✅ Discourse analysis with rhetorical metrics
-- ✅ Advanced visualization suite (interactive networks, temporal evolution)
-- ✅ Statistical visualization module with significance testing
-- ✅ Cross-domain analysis and overlap detection
+- scripts/AGENTS.md - Script documentation
+- src/AGENTS.md - Source code documentation
+- manuscript/AGENTS.md - Manuscript documentation

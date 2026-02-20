@@ -51,6 +51,7 @@ Documentation is organized into modular subdirectories by purpose and audience:
 
 | File | Purpose | Audience |
 | ------ | --------- | ---------- |
+| `operational/build-history.md` | Build history and changelog | Developers |
 | `operational/build-system.md` | Build pipeline and execution details | Developers |
 | `operational/ci-cd-integration.md` | CI/CD setup and GitHub Actions | Developers |
 | `operational/dependency-management.md` | Package management with uv | Developers |
@@ -348,7 +349,7 @@ usage/examples.md  core/workflow.md    Technical Docs
   - architecture/thin-orchestrator-summary.md (pattern details)
   - core/workflow.md (how to work with architecture)
   - ../../infrastructure/AGENTS.md (infrastructure implementation details)
-  - ../../projects/code_project/src/AGENTS.md (project implementation details)
+  - ../../projects/act_inf_metaanalysis/src/AGENTS.md (project implementation details)
 
 - **core/workflow.md** references:
   - development/contributing.md (contribution process)

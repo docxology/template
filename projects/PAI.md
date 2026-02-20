@@ -13,4 +13,4 @@ This directory contains the **Layer 2** domain-specific research projects. Each 
 ## 🤖 Agent Guidelines
 - **Isolation**: Projects should not import from each other.
 - **Infrastructure Usage**: Projects can and should import from `infrastructure/`.
-- **Creation**: To create a new project, copy `projects/code_project/` as a template.
+- **Creation**: To create a new project, copy an existing project under `projects/` as a template.

@@ -21,8 +21,8 @@ if TYPE_CHECKING:
 
 import numpy as np
 from numpy.typing import NDArray
-from utils.exceptions import ValidationError
-from utils.logging import get_logger
+from ..utils.exceptions import ValidationError
+from ..utils.logging import get_logger
 
 logger = get_logger(__name__)
 

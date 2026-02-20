@@ -7,12 +7,12 @@ Conduct a assessment and review of all methods, tests, documentation, sections, 
 ## Assessment Scope
 
 ### 1. Test Suite Analysis
-**Current Status**: ✅ All tests passing, 83.33% infrastructure coverage (exceeds 60% requirement), code_project coverage exceeds 90% requirement
+**Current Status**: ✅ All tests passing, 83.33% infrastructure coverage (exceeds 60% requirement), act_inf_metaanalysis coverage exceeds 90% requirement
 
 **Completed Actions**:
-- ✅ All project tests passing (code_project: 28/28)
+- ✅ All project tests passing (act_inf_metaanalysis)
 - ✅ Infrastructure test coverage: 83.33% (exceeds 60% minimum by 39%)
-- ✅ Project test coverage: code_project 94.1% (exceeds 90% minimum)
+- ✅ Project test coverage: act_inf_metaanalysis (exceeds 90% minimum)
 - ✅ No mock methods - all tests use data and computations
 - ✅ Deterministic test results with fixed seeds
 
@@ -54,7 +54,7 @@ Conduct a assessment and review of all methods, tests, documentation, sections, 
 - `scripts/` - Orchestrator scripts and pipeline stages
 - `tests/` - Test suite architecture and coverage requirements
 - `projects/` - Multi-project management
-- `projects/{name}/` - research unit (e.g., code_project)
+- `projects/{name}/` - research unit (e.g., act_inf_metaanalysis)
 - `projects/{name}/src/` - Scientific algorithms
 - `projects/{name}/tests/` - Project validation
 - `projects/{name}/scripts/` - Analysis workflows
@@ -155,13 +155,13 @@ Conduct a assessment and review of all methods, tests, documentation, sections, 
 python3 scripts/01_run_tests.py --project project
 
 # Manuscript validation
-python3 -m infrastructure.validation.cli markdown projects/code_project/manuscript/
+python3 -m infrastructure.validation.cli markdown projects/{project_name}/manuscript/
 
 # Output integrity
-python3 -m infrastructure.validation.cli integrity projects/code_project/output/
+python3 -m infrastructure.validation.cli integrity projects/{project_name}/output/
 
 # Cross-reference checking
-python3 -m infrastructure.validation.cli refs projects/code_project/manuscript/
+python3 -m infrastructure.validation.cli refs projects/{project_name}/manuscript/
 ```
 
 ### 2. Manual Code Review
@@ -187,7 +187,7 @@ python3 -m infrastructure.validation.cli refs projects/code_project/manuscript/
 
 ### Test Coverage Targets
 - **Infrastructure**: ≥60% coverage (currently 83.33% - exceeds requirement by 39%)
-- **Project Code**: ≥90% coverage (code_project: 94.1% - exceeds requirement)
+- **Project Code**: ≥90% coverage (act_inf_metaanalysis - exceeds requirement)
 - **Integration Tests**: workflow coverage (21/21 tests passing)
 - **Error Paths**: Exception handling validation
 

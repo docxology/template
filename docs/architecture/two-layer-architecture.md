@@ -696,8 +696,8 @@ grep -r "import projects\." infrastructure/
 
 - [infrastructure/AGENTS.md](../../infrastructure/AGENTS.md) - Infrastructure layer documentation
 - [infrastructure/README.md](../../infrastructure/README.md) - Infrastructure quick reference
-- [code_project/src/AGENTS.md](../../projects/code_project/src/AGENTS.md) - Project layer documentation
-- [code_project/src/README.md](../../projects/code_project/src/README.md) - Project quick reference
+- [act_inf_metaanalysis/src/AGENTS.md](../../projects/act_inf_metaanalysis/src/AGENTS.md) - Project layer documentation
+- [act_inf_metaanalysis/src/README.md](../../projects/act_inf_metaanalysis/src/README.md) - Project quick reference
 
 ### System Documentation
 

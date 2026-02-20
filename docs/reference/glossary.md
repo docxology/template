@@ -188,7 +188,7 @@ Document setup and styling configuration loaded before content. Defines packages
 
 **File**: `manuscript/preamble.md`
 
-**Location**: [`code_project/manuscript/preamble.md`](../../projects/code_project/manuscript/preamble.md)
+**Location**: [`act_inf_metaanalysis/manuscript/preamble.md`](../../projects/act_inf_metaanalysis/manuscript/preamble.md)
 
 ## M
 
@@ -364,7 +364,7 @@ Core business logic residing in `src/` directory. Must have test coverage.
 - No circular imports
 - test coverage
 
-**See**: [infrastructure/AGENTS.md](../../infrastructure/AGENTS.md), [code_project/src/AGENTS.md](../../projects/code_project/src/AGENTS.md)
+**See**: [infrastructure/AGENTS.md](../../infrastructure/AGENTS.md), [act_inf_metaanalysis/src/AGENTS.md](../../projects/act_inf_metaanalysis/src/AGENTS.md)
 
 ### Statement Coverage
 

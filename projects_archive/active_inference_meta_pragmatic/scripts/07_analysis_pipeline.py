@@ -32,20 +32,20 @@ sys.path.insert(0, str(repo_root))
 sys.path.insert(0, str(project_root / "src"))
 
 # Import src/ modules
-from active_inference import demonstrate_active_inference_concepts
-from data_generator import generate_synthetic_data, generate_time_series
-from free_energy_principle import demonstrate_fep_concepts
-from generative_models import (create_simple_generative_model,
-                               demonstrate_generative_model_concepts)
-from meta_cognition import demonstrate_meta_cognitive_processes
-from modeler_perspective import demonstrate_modeler_perspective
-from quadrant_framework import demonstrate_quadrant_framework
-from statistical_analysis import calculate_descriptive_stats
+from core.active_inference import demonstrate_active_inference_concepts
+from analysis.data_generator import generate_synthetic_data, generate_time_series
+from core.free_energy_principle import demonstrate_fep_concepts
+from core.generative_models import (create_simple_generative_model,
+                                    demonstrate_generative_model_concepts)
+from framework.meta_cognition import demonstrate_meta_cognitive_processes
+from framework.modeler_perspective import demonstrate_modeler_perspective
+from framework.quadrant_framework import demonstrate_quadrant_framework
+from analysis.statistical_analysis import calculate_descriptive_stats
 from utils.exceptions import ValidationError
 from utils.figure_manager import FigureManager
 # Local imports
 from utils.logging import get_logger
-from validation import ValidationFramework
+from analysis.validation import ValidationFramework
 
 from infrastructure.core.logging_utils import log_substep
 # Infrastructure imports
@@ -401,7 +401,7 @@ def execute_visualization_generation(
     try:
         # Generate quadrant matrix visualization
         log_substep("Quadrant Matrix Diagram")
-        from quadrant_framework import QuadrantFramework
+        from framework.quadrant_framework import QuadrantFramework
 
         quadrant_framework = QuadrantFramework()
         matrix_data = quadrant_framework.create_quadrant_matrix_visualization()

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>04_tooling</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1
+id="tooling-and-infrastructure-software-ecosystem-knowledge-graph-deployment-and-quality-assurance">Tooling
+and Infrastructure: Software Ecosystem, Knowledge Graph Deployment, and
+Quality Assurance </h1>
+<p>The practical utility of a computational meta-analysis depends on
+robust tooling at each pipeline stage: assertion extraction, modeling
+and simulation, knowledge graph infrastructure, and quality
+assurance.</p>
+<h2 id="llm-based-assertion-extraction">LLM-Based Assertion
+Extraction</h2>
+<p>Extracting structured assertions from unstructured text is the most
+labor-intensive component of knowledge graph construction. Manual
+annotation produces high-quality results but does not scale to corpora
+of thousands of papers—a constraint demonstrated by Knight et al. ,
+whose systematic literature analysis of FEP and Active Inference
+publications required manual coding of structural, visual, and
+mathematical features for hundreds of annotated papers. We implement a
+hybrid approach: LLMs perform initial extraction, with human review for
+validation and correction.</p>
+<p>Our extraction pipeline deploys a locally hosted LLM through Ollama .
+Each paper’s abstract is assessed against the eight hypothesis
+definitions in a structured prompt requesting a JSON array of
+assessments. Unlike keyword matching, which detects only topical terms,
+the LLM evaluates the <em>semantic relationship</em> between a paper’s
+claims and each hypothesis. Papers critiquing the FEP correctly receive
+“contradicts” assessments for FEP Universality (H1), while methodology
+tutorials receive “neutral” assessments reflecting their pedagogical
+character. Detailed prompt engineering, schemas, and failure modes are
+documented in the supplementary extraction pipeline (see ).</p>
+<!-- See 04a_extraction_pipeline.md for detailed pipeline documentation -->
+<h2 id="software-ecosystem">Software Ecosystem</h2>
+<p>The Active Inference community has developed several specialized
+software tools, though the ecosystem remains highly fragmented—no single
+package spans the full spectrum from theoretical simulation to empirical
+data analysis:</p>
+<p><strong>pymdp.</strong> The pymdp library provides a Python
+implementation of active inference for discrete state-space POMDPs,
+supporting message passing on factor graphs, policy inference via
+expected free energy, and hierarchical generative models. It has become
+the standard entry point for algorithm development.</p>
+<p><strong>SPM.</strong> The SPM package (Wellcome Centre for Human
+Neuroimaging) includes MATLAB implementations of Dynamic Causal Modeling
+and variational Bayesian inference under the FEP. It remains the
+reference implementation for neuroimaging applications.</p>
+<p><strong>RxInfer.jl.</strong> RxInfer is a Julia package for reactive
+message-passing-based Bayesian inference, supporting real-time and
+streaming inference suitable for robotics and online learning. The
+release of version 4.0.0 in early 2025 substantially enhanced its
+probabilistic programming framework, introducing projected constraints
+and adaptive qualities specifically optimized for dynamic streams of
+data and autonomous systems.</p>
+<h3 id="comparative-feature-matrix">Comparative Feature Matrix</h3>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Feature</th>
+<th>pymdp</th>
+<th>SPM</th>
+<th>RxInfer.jl</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Language</strong></td>
+<td>Python</td>
+<td>MATLAB</td>
+<td>Julia</td>
+</tr>
+<tr>
+<td><strong>State Spaces</strong></td>
+<td>Discrete</td>
+<td>Discrete + Continuous</td>
+<td>Continuous (factor graphs)</td>
+</tr>
+<tr>
+<td><strong>Inference</strong></td>
+<td>Message passing</td>
+<td>Variational Bayes</td>
+<td>Reactive message passing</td>
+</tr>
+<tr>
+<td><strong>Deep AIF</strong></td>
+<td>Partial</td>
+<td>No</td>
+<td>Via custom factors</td>
+</tr>
+<tr>
+<td><strong>Real-time</strong></td>
+<td>No</td>
+<td>No</td>
+<td>Yes (streaming)</td>
+</tr>
+<tr>
+<td><strong>Hierarchical</strong></td>
+<td>Yes</td>
+<td>Yes (DCM)</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><strong>License</strong></td>
+<td>MIT</td>
+<td>GPL</td>
+<td>MIT</td>
+</tr>
+<tr>
+<td><strong>Primary Use</strong></td>
+<td>Research prototyping</td>
+<td>Neuroimaging</td>
+<td>Robotics / online learning</td>
+</tr>
+</tbody>
+</table>
+<p>The complementary strengths across these packages reveal a
+structurally fragmented ecosystem: <code>pymdp</code> provides an
+accessible, Python-native entry point for discrete prototyping;
+<code>SPM</code> remains the clinical gold standard for continuous
+neuroimaging; and <code>RxInfer.jl</code> addresses the real-time
+constraints of embedded robotics. The absence of a unified, cross-regime
+computational infrastructure represents both a critical operational
+bottleneck and a major opportunity for framework unification.</p>
+<h2 id="knowledge-graph-infrastructure">Knowledge Graph
+Infrastructure</h2>
+<p>Our knowledge graph uses an RDF-compatible schema deployable on
+standard semantic web infrastructure. The engineering trade-offs among
+the three deployment options are straightforward:</p>
+<p><strong>Nanopublication servers</strong> provide decentralized,
+content-addressed storage. Our current JSON Lines implementation
+prioritizes simplicity; the schema supports migration to the
+nanopublication network for public deployment.</p>
+<p><strong>RDF stores</strong> (e.g., Apache Jena Fuseki, Blazegraph,
+Oxigraph) enable SPARQL queries such as “find all papers supporting
+hypothesis H published after 2020 in the neuroscience domain (C1).” The
+cost is operational overhead and query latency.</p>
+<p><strong>Property graph databases</strong> (e.g., Neo4j) prioritize
+traversal performance for path queries and community detection, at the
+expense of semantic web compatibility.</p>
+<p>The namespace <code>http://activeinference.org/ontology/</code>
+ensures integration with external ontologies and linked data
+resources.</p>
+<h2 id="multi-level-quality-assurance">Multi-Level Quality
+Assurance</h2>
+<p>Quality assurance operates at four levels.</p>
+<h3 id="assertion-level-validation">Assertion-Level Validation</h3>
+<p>Assertions below a configurable confidence threshold (default 0.5)
+are flagged for review. Inter-annotator agreement (<span
+class="math inline">\(\kappa\)</span>) is computed when multiple
+annotators assess the same paper.</p>
+<h3 id="graph-level-consistency-checks">Graph-Level Consistency
+Checks</h3>
+<p>Consistency checks verify that all nodes link to valid targets and no
+orphan nodes exist. Coverage metrics track the proportion of annotated
+papers.</p>
+<h3 id="score-level-unit-testing">Score-Level Unit Testing</h3>
+<p>Hypothesis scoring is validated through unit tests with synthetic
+data verifying boundary conditions (all-support → +1, all-contradict →
+−1, balanced → 0). Sensitivity analysis varies confidence thresholds and
+citation weighting.</p>
+<h3 id="pipeline-level-test-coverage">Pipeline-Level Test Coverage</h3>
+<p>Test-driven development enforces 90% minimum code coverage on project
+modules and 60% on shared infrastructure, with real data and computation
+(no mocking).</p>
+<h3 id="quality-thresholds">Quality Thresholds</h3>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Metric</th>
+<th>Threshold</th>
+<th>On Failure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Assertion</td>
+<td>Confidence</td>
+<td><span class="math inline">\(\geq 0.5\)</span></td>
+<td>Flag for review</td>
+</tr>
+<tr>
+<td>Assertion</td>
+<td>Inter-annotator <span class="math inline">\(\kappa\)</span></td>
+<td><span class="math inline">\(\geq 0.6\)</span></td>
+<td>Re-annotate</td>
+</tr>
+<tr>
+<td>Graph</td>
+<td>Orphan node ratio</td>
+<td><span class="math inline">\(= 0\)</span></td>
+<td>Reject build</td>
+</tr>
+<tr>
+<td>Graph</td>
+<td>Corpus coverage</td>
+<td><span class="math inline">\(\geq 80\%\)</span></td>
+<td>Warning</td>
+</tr>
+<tr>
+<td>Score</td>
+<td>Boundary tests</td>
+<td>All pass</td>
+<td>Block release</td>
+</tr>
+<tr>
+<td>Pipeline</td>
+<td>Code coverage</td>
+<td><span class="math inline">\(\geq 90\%\)</span></td>
+<td>Block merge</td>
+</tr>
+<tr>
+<td>Pipeline</td>
+<td>Test pass rate</td>
+<td><span class="math inline">\(100\%\)</span></td>
+<td>Block release</td>
+</tr>
+</tbody>
+</table>
+<p>The hypothesis evidence results, temporal dynamics of evidence
+accumulation, and assertion analysis are presented in the dedicated
+hypothesis results section (see ).</p>
+</body>
+</html>

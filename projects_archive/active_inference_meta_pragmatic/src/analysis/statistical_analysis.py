@@ -13,8 +13,8 @@ from typing import Dict, List, Optional, Tuple, Union
 import numpy as np
 from numpy.typing import NDArray
 from scipy import stats
-from utils.exceptions import ValidationError
-from utils.logging import get_logger
+from ..utils.exceptions import ValidationError
+from ..utils.logging import get_logger
 
 logger = get_logger(__name__)
 

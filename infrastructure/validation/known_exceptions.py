@@ -118,7 +118,7 @@ def is_valid_directory_reference(target: str) -> bool:
                 return True
 
     # Dynamically check for project directories
-    # This handles references like "projects/code_project/" without hardcoding
+    # This handles references like "projects/act_inf_metaanalysis/" without hardcoding
     if target_clean.startswith("projects/") and target_clean.endswith("/"):
         # Extract project name from path
         parts = target_clean.rstrip("/").split("/")

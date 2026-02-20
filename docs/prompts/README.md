@@ -175,7 +175,7 @@ cat docs/prompts/validation_quality.md
 
 ### Project Documentation
 
-- [`../../projects/code_project/AGENTS.md`](../../projects/code_project/AGENTS.md) - Code project documentation
+- [`../../projects/act_inf_metaanalysis/AGENTS.md`](../../projects/act_inf_metaanalysis/AGENTS.md) - Active project documentation
 - [`../../projects/AGENTS.md`](../../projects/AGENTS.md) - Multi-project management guide
 
 ### Standards Reference

@@ -2,7 +2,7 @@
 
 import numpy as np
 import pytest
-from src.analysis.performance import (analyze_convergence, analyze_scalability,
+from analysis.performance import (analyze_convergence, analyze_scalability,
                          benchmark_comparison, calculate_efficiency,
                          calculate_speedup)
 
@@ -130,7 +130,7 @@ class TestStatisticalSignificance:
 
     def test_check_statistical_significance(self):
         """Test statistical significance."""
-        from src.analysis.performance import check_statistical_significance
+        from analysis.performance import check_statistical_significance
 
         group1 = np.array([1, 2, 3, 4, 5])
         group2 = np.array([2, 3, 4, 5, 6])
@@ -203,14 +203,14 @@ class TestStatisticalSignificance:
 
     def test_estimate_complexity_single_size(self):
         """Test complexity estimation with single size."""
-        from src.analysis.performance import _estimate_complexity
+        from analysis.performance import _estimate_complexity
 
         complexity = _estimate_complexity([10], [0.1])
         assert complexity == "unknown"
 
     def test_estimate_complexity_linear(self):
         """Test complexity estimation for linear."""
-        from src.analysis.performance import _estimate_complexity
+        from analysis.performance import _estimate_complexity
 
         sizes = [10, 20, 30, 40, 50]
         times = [0.1, 0.2, 0.3, 0.4, 0.5]
@@ -219,7 +219,7 @@ class TestStatisticalSignificance:
 
     def test_estimate_complexity_quadratic(self):
         """Test complexity estimation for quadratic."""
-        from src.analysis.performance import _estimate_complexity
+        from analysis.performance import _estimate_complexity
 
         sizes = [10, 20, 30, 40, 50]
         times = [0.1, 0.4, 0.9, 1.6, 2.5]
@@ -228,7 +228,7 @@ class TestStatisticalSignificance:
 
     def test_estimate_complexity_constant(self):
         """Test complexity estimation for constant."""
-        from src.analysis.performance import _estimate_complexity
+        from analysis.performance import _estimate_complexity
 
         sizes = [10, 20, 30, 40, 50]
         times = [0.1, 0.1, 0.1, 0.1, 0.1]
@@ -237,7 +237,7 @@ class TestStatisticalSignificance:
 
     def test_estimate_complexity_quadratic(self):
         """Test complexity estimation for quadratic O(n^2) (line 202)."""
-        from src.analysis.performance import _estimate_complexity
+        from analysis.performance import _estimate_complexity
 
         sizes = [10, 20, 30, 40, 50]
         times = [0.1, 0.4, 0.9, 1.6, 2.5]  # Quadratic: time ~ size^2
@@ -246,7 +246,7 @@ class TestStatisticalSignificance:
 
     def test_estimate_complexity_cubic(self):
         """Test complexity estimation for cubic O(n^3) (line 203)."""
-        from src.analysis.performance import _estimate_complexity
+        from analysis.performance import _estimate_complexity
 
         sizes = [10, 20, 30, 40, 50]
         times = [0.1, 0.8, 2.7, 6.4, 12.5]  # Cubic: time ~ size^3
@@ -256,7 +256,7 @@ class TestStatisticalSignificance:
     def test_estimate_complexity_nlogn(self):
         """Test complexity estimation for O(n log n) (line 205)."""
         import numpy as np
-        from src.analysis.performance import _estimate_complexity
+        from analysis.performance import _estimate_complexity
 
         sizes = [10, 20, 30, 40, 50]
         # The code checks if exponent is close to np.log(2) ≈ 0.693
@@ -267,7 +267,7 @@ class TestStatisticalSignificance:
 
     def test_estimate_complexity_other(self):
         """Test complexity estimation for other exponent (line 207)."""
-        from src.analysis.performance import _estimate_complexity
+        from analysis.performance import _estimate_complexity
 
         sizes = [10, 20, 30, 40, 50]
         # Custom exponent (e.g., 1.5)

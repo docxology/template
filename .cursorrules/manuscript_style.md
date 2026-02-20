@@ -1032,8 +1032,8 @@ the iterative algorithm described in Section \ref{sec:algorithm}.
 
 ## See Also
 
-- [code_project/manuscript/AGENTS.md](../projects/code_project/manuscript/AGENTS.md) - manuscript documentation
-- [code_project/manuscript/README.md](../projects/code_project/manuscript/README.md) - Quick reference for manuscript
+- [act_inf_metaanalysis/manuscript/](../projects/act_inf_metaanalysis/manuscript/) - manuscript documentation
+- [act_inf_metaanalysis/manuscript/](../projects/act_inf_metaanalysis/manuscript/) - Manuscript content
 - [docs/markdown-template-guide.md](../docs/usage/markdown-template-guide.md) - Markdown and cross-referencing guide
 - [docs/manuscript-numbering-system.md](../docs/usage/manuscript-numbering-system.md) - Section numbering system
 - [code_style.md](code_style.md) - Code formatting standards

@@ -8,7 +8,7 @@ Active Inference's quadrant structure provides a systematic way to analyze cogni
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.8\textwidth]{../figures/meta_level_concepts.png}
+\includegraphics[width=0.8\textwidth]{../output/figures/meta_level_concepts.png}
 \caption{Meta-cognitive processing architecture showing the hierarchical relationship between cognitive and meta-cognitive levels. Meta-cognition monitors and regulates lower-level cognitive processes, enabling self-reflection, confidence assessment, and adaptive strategy selection. In the context of cognitive security, each meta-cognitive level represents both a potential vulnerability (if compromised) and a defensive capability (if properly secured). Higher-order meta-cognition (Quadrant 4) can detect attacks on lower levels.}
 \label{fig:meta_cognition_diagram}
 \end{figure}
@@ -92,6 +92,62 @@ This potentially redirects all goal-directed behavior without the agent's awaren
 - Targeted: Specific quadrant or parameter manipulation
 - Systemic: Cascading attacks affecting multiple levels
 
+## Formal Threat Model {#sec:threat_model}
+
+We formalize the cognitive security threat model using the quadrant structure. Let $\mathcal{M} = (A, B, C, D)$ denote the complete generative model and $\Theta = (\lambda, \alpha, \beta, \gamma)$ the meta-cognitive parameters. An adversary $\mathcal{A}$ with access level $\ell \in \{1,2,3,4\}$ corresponding to quadrant targets can execute attacks of the form:
+
+```{=latex}
+\begin{equation}
+\mathcal{A}_\ell: (\mathcal{M}, \Theta) \rightarrow (\mathcal{M}', \Theta') \quad \text{s.t. } \|\mathcal{M}' - \mathcal{M}\| + \|\Theta' - \Theta\| \leq \delta_\ell
+\label{eq:threat_model}
+\end{equation}
+```
+
+The budget $\delta_\ell$ constrains attack magnitude, reflecting the principle that higher-quadrant attacks require greater adversarial capability but produce more fundamental compromise.
+
+### Threat Severity Hierarchy
+
+| Access Level | Target | Required Capability | Detectability | Reversibility |
+|:---:|--------|-------------------|:---:|:---:|
+| $\ell = 1$ | Observations $o_t$ | Environmental access | High | Easy |
+| $\ell = 2$ | Meta-data $\{c(t), r(t)\}$ | Channel compromise | Medium | Moderate |
+| $\ell = 3$ | Parameters $\Theta$ | Model access | Low | Difficult |
+| $\ell = 4$ | Model $\mathcal{M}$ | Architecture access | Very low | Very difficult |
+
+This hierarchy reveals an inverse relationship between detectability and impact: Q1 attacks are easily detected but limited in scope, while Q4 attacks are difficult to detect but can compromise the entire cognitive architecture.
+
+### Real-World Attack Mapping
+
+The quadrant threat model maps onto documented information operations and cognitive manipulation campaigns:
+
+**Q1---Observation manipulation.** Deepfake media and manipulated imagery inject false observations into agents' sensory streams. This corresponds to corrupting the data processed under the $A$ matrix, causing posterior beliefs $q(s)$ to diverge from ground truth.
+
+**Q2---Meta-data falsification.** Coordinated inauthentic behavior on social platforms [@woolley2016political] fabricates engagement metrics, follower counts, and source credibility signals. These are meta-data attacks: the underlying content may be accurate, but its perceived reliability ($c(t)$, $r(t)$) is artificially inflated or deflated, distorting confidence-weighted inference (Equation \eqref{eq:confidence_weighted_inference}).
+
+**Q3---Confidence manipulation.** Information disorder campaigns [@wardle2017information] do not merely inject false claims but systematically undermine confidence in legitimate information sources. The "firehose of falsehood" strategy operates at Q3 by overwhelming meta-cognitive monitoring: agents cannot calibrate confidence when the base rate of reliable information drops below the detection threshold $\gamma$. This corresponds to hijacking the confidence assessment function (Equation \eqref{eq:confidence_assessment}).
+
+**Q4---Framework subversion.** Epistemic tribalism and filter bubbles [@benkler2018network] represent Q4 attacks on shared generative models. When communities adopt incompatible $A$ matrices (different mappings from evidence to belief), they construct incommensurable epistemic frameworks. The "regimes of expectations" described by @constant2019regimes show how cultural affordances shape the very generative models through which agents interpret the world, making framework-level manipulation a societal-scale threat.
+
+### Cascading Attack Dynamics
+
+Quadrant attacks can cascade upward. A sustained Q1 campaign (false observations) can corrupt Q2 meta-data (eroding confidence calibration), which in turn destabilizes Q3 monitoring (agents cannot distinguish reliable from unreliable strategies), ultimately enabling Q4 framework drift (agents adopt corrupted generative models as normative). This cascading dynamic explains why information warfare campaigns combine multiple attack vectors simultaneously rather than targeting a single processing level.
+
+### Comparison: Active Inference Cognitive Defense vs. Traditional Cybersecurity
+
+The quadrant framework offers a cognitive defense paradigm that extends beyond the scope of traditional information security:
+
+| Dimension | Traditional Cybersecurity | Active Inference Cognitive Defense |
+|-----------|--------------------------|-----------------------------------|
+| **Threat model** | Technical exploits, unauthorized access | Cognitive manipulation, belief distortion, value corruption |
+| **Attack surface** | Network perimeters, software vulnerabilities | Information channels (Q1), meta-data streams (Q2), confidence mechanisms (Q3), framework parameters (Q4) |
+| **Defense paradigm** | Perimeter security, access control | Multi-level cognitive monitoring across all four quadrants |
+| **Detection method** | Signature matching, behavioral anomaly detection | Confidence calibration (Q3), framework integrity checking (Q4), recursive validation |
+| **Protected assets** | Data confidentiality, integrity, availability | Epistemic autonomy ($A$, $B$, $D$), pragmatic autonomy ($C$), framework coherence ($\Theta$) |
+| **Adaptation** | Patch management, rule updates | Self-monitoring (Q3), framework evolution (Q4) |
+| **Scope** | Individual systems, networks | Individual cognition, collective sense-making, institutional epistemics |
+
+The key advantage of the Active Inference approach is its capacity for *recursive self-defense*: meta-cognitive monitoring (Q3) can detect attacks on lower quadrants, while framework integrity checking (Q4) can detect attacks on meta-cognitive mechanisms themselves. This recursive property has no direct analogue in traditional cybersecurity, which relies on external monitoring rather than self-reflective integrity verification.
+
 ## Defense Strategies {#sec:defense_strategies}
 
 The framework suggests defense approaches operating at multiple levels, with higher-level defenses providing more fundamental protection.
@@ -156,11 +212,11 @@ This recursive structure ensures that each security layer is itself protected by
 
 ## AI Safety and Value Alignment {#sec:ai_safety}
 
-The framework provides principled approaches to AI safety challenges:
+The framework provides principled approaches to AI safety challenges that address concrete problems identified in the alignment literature [@amodei2016concrete; @russell2019human; @gabriel2020artificial].
 
 ### Value Specification through Matrix C
 
-Active Inference enables precise value specification:
+Active Inference enables precise value specification through the preference prior $C$, offering a structured alternative to scalar reward functions [@ngo2022alignment]:
 
 ```{=latex}
 \begin{equation}
@@ -169,12 +225,12 @@ C_{safe} = \text{specification of safe preferences}
 \end{equation}
 ```
 
-**Advantages over reward functions:**
+**Advantages over reward functions** [@russell2019human]:
 
-- Multi-dimensional preference landscapes
-- Trade-off specification between competing values
-- Ethical considerations directly encoded
-- Value hierarchies with priority structures
+- Multi-dimensional preference landscapes rather than scalar rewards
+- Trade-off specification between competing values (safety vs. capability)
+- Ethical considerations directly encoded in the generative model
+- Value hierarchies with priority structures inspectable by designers
 
 ### Epistemic Boundary Protection
 
@@ -188,14 +244,14 @@ Clear limits on what AI systems can know and assume:
 
 ### Framework Integrity for AI Systems
 
-Protection against value drift and epistemic corruption:
+Protection against value drift and epistemic corruption is essential for advanced AI systems, where unconstrained framework optimization could lead to instrumental convergence on undesirable goals [@bostrom2014superintelligence]:
 
 **Meta-Monitoring Requirements:**
 
-- Self-watchful AI systems monitoring their own frameworks
-- Anomaly detection for framework parameter changes
-- Rollback capabilities for detected corruption
-- Human-in-the-loop for framework modifications
+- Self-watchful AI systems monitoring their own frameworks via Q3 confidence validation
+- Anomaly detection for framework parameter changes using integrity checks (Equation \eqref{eq:framework_integrity})
+- Rollback capabilities for detected corruption of $A$, $B$, $C$, $D$ matrices
+- Human-in-the-loop for framework modifications at Q4 level
 
 ### Alignment through Framework Specification
 
@@ -260,19 +316,19 @@ Protection of group-level cognitive processes:
 
 ### Manipulation Risks
 
-Meta-level cognition raises concerns about:
+Meta-level cognition raises concerns that extend the problem of faultless responsibility in distributed systems [@floridi2016faultless]:
 
-- Potential for sophisticated cognitive manipulation
-- Exploitation of framework vulnerabilities
-- Asymmetric knowledge advantages
+- Potential for sophisticated cognitive manipulation targeting any quadrant
+- Exploitation of framework vulnerabilities by actors with asymmetric knowledge
+- Dual-use nature of meta-cognitive insights: defense tools can also inform attacks
 
 ### Responsibility in Framework Design
 
-Designers of cognitive systems bear responsibility for:
+Designers of cognitive systems bear responsibility for [@floridi2016faultless; @gabriel2020artificial]:
 
-- Secure framework specifications
-- Robust defense mechanisms
-- Transparent vulnerability disclosure
+- Secure framework specifications with built-in integrity constraints
+- Robust defense mechanisms operating at all four quadrant levels
+- Transparent vulnerability disclosure and responsible research practices
 
 ### Self-Determination
 

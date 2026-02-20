@@ -127,10 +127,10 @@ Usage         Understanding       Excellence
 $ python3 scripts/03_render_pdf.py
 INFO: Loading manuscript configuration...
 INFO: Generating PDF with LaTeX...
-INFO: PDF generated successfully: output/code_project/pdf/code_project_combined.pdf
+INFO: PDF generated successfully: output/{project_name}/pdf/{project_name}_combined.pdf
 
 # View the result
-open output/code_project/pdf/code_project_combined.pdf
+open output/{project_name}/pdf/{project_name}_combined.pdf
 ```
 
 **Implementation Details:**
@@ -539,9 +539,9 @@ metadata = {
 
 # Publish to Zenodo
 files_to_publish = [
-    'output/code_project/pdf/code_project_combined.pdf',
-    'output/code_project/data/analysis_results.json',
-    'projects/code_project/src/analysis.py'
+    'output/act_inf_metaanalysis/pdf/act_inf_metaanalysis_combined.pdf',
+    'output/act_inf_metaanalysis/data/analysis_results.json',
+    'projects/act_inf_metaanalysis/src/analysis.py'
 ]
 
 result = publish_to_zenodo(metadata, files_to_publish, zenodo_token)

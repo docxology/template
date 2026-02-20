@@ -1,32 +1,27 @@
 # Multi-Project Execution Summary
 
-**Generated:** 2026-02-12T13:19:45.745357
+**Generated:** 2026-02-20T12:28:29.098478
 
 ## Overview
 
-- **Total Projects:** 2
-- **Successful:** 2
+- **Total Projects:** 1
+- **Successful:** 1
 - **Failed:** 0
-- **Total Duration:** 126.8s
+- **Total Duration:** 138.0s
 
 ## Project Results
 
-### ✅ blake_active_inference
+### ✅ act_inf_metaanalysis
 - **Status:** Success
-- **Duration:** 74.8s
-- **Stages Completed:** 7
-
-### ✅ code_project
-- **Status:** Success
-- **Duration:** 40.2s
+- **Duration:** 137.8s
 - **Stages Completed:** 7
 
 ## Performance Analysis
 
-- **Slowest Project:** blake_active_inference
-- **Fastest Project:** code_project
-- **Average Duration:** 57.5s
-- **Total Pipeline Time:** 115.0s
+- **Slowest Project:** act_inf_metaanalysis
+- **Fastest Project:** act_inf_metaanalysis
+- **Average Duration:** 137.8s
+- **Total Pipeline Time:** 137.8s
 
 ## Error Summary
 

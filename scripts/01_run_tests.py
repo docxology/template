@@ -818,6 +818,16 @@ def run_project_tests(repo_root: Path, project_name: str = "project", quiet: boo
     # Set up environment - running from project directory so paths are relative
     env = os.environ.copy()
 
+    # Add project root to PYTHONPATH to allow imports like 'from src...' specific to this project
+    # This fixes issues where tests import 'src.data...' but only repo root is in path
+    pythonpath_parts = [
+        str(repo_root),
+        str(project_root),
+    ]
+    if env.get("PYTHONPATH"):
+        pythonpath_parts.append(env["PYTHONPATH"])
+    env["PYTHONPATH"] = os.pathsep.join(pythonpath_parts)
+
     # Add cov-datafile flag if supported, otherwise use environment variable
     cov_datafile_supported = _check_cov_datafile_support()
     if cov_datafile_supported:
@@ -1451,9 +1461,14 @@ def main() -> int:
     
     parser = argparse.ArgumentParser(description="Run test suite")
     parser.add_argument(
+        '--quiet', '-q',
+        action='store_true',
+        help='Suppress individual test names (default: verbose mode)'
+    )
+    parser.add_argument(
         '--verbose', '-v',
         action='store_true',
-        help='Show individual test names (default: quiet mode)'
+        help='Show individual test names (deprecated/default)'
     )
     parser.add_argument(
         '--project',
@@ -1486,7 +1501,7 @@ def main() -> int:
     if args.infra_only and args.project_only:
         parser.error("--infra-only and --project-only cannot be used together")
     
-    quiet = not args.verbose
+    quiet = args.quiet
 
     # Determine execution mode based on flags
     run_infra = not args.project_only  # Run infra unless --project-only specified

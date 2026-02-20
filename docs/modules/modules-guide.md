@@ -41,7 +41,7 @@ if report.overall_integrity:
 ```python
 from infrastructure.documentation.glossary_gen import generate_glossary
 
-glossary = generate_glossary("projects/code_project/src/")
+glossary = generate_glossary("projects/act_inf_metaanalysis/src/")
 print(f"Generated {len(glossary)} entries")
 ```
 

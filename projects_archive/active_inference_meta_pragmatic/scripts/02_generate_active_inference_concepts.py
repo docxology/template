@@ -24,8 +24,8 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root / "src"))
 
 # Import src/ modules
-from active_inference import demonstrate_active_inference_concepts
-from generative_models import create_simple_generative_model
+from core.active_inference import demonstrate_active_inference_concepts
+from core.generative_models import create_simple_generative_model
 from utils.figure_manager import FigureManager
 # Local imports
 from utils.logging import get_logger

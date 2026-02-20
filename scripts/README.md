@@ -86,7 +86,7 @@ Orchestration:
 
 ```bash
 # Single project (core pipeline, no LLM)
-python3 scripts/execute_pipeline.py --project code_project --core-only
+python3 scripts/execute_pipeline.py --project {project_name} --core-only
 
 # All projects (core pipeline, no LLM)
 python3 scripts/execute_multi_project.py --no-llm
@@ -296,7 +296,7 @@ The pipeline supports automatic checkpointing and resume capability:
 
 ```bash
 # Resume from last checkpoint (Python orchestrator)
-python3 scripts/execute_pipeline.py --project code_project --core-only --resume
+python3 scripts/execute_pipeline.py --project {project_name} --core-only --resume
 
 # Resume from last checkpoint (Shell orchestrator)
 ./run.sh --pipeline --resume
@@ -319,10 +319,10 @@ If validation fails, the pipeline starts fresh with a warning.
 python3 -c "from infrastructure.core.checkpoint import CheckpointManager; cm = CheckpointManager(); print('Exists:', cm.checkpoint_exists())"
 
 # View checkpoint contents
-cat projects/code_project/output/.checkpoints/pipeline_checkpoint.json | python3 -m json.tool
+cat projects/{project_name}/output/.checkpoints/pipeline_checkpoint.json | python3 -m json.tool
 
 # Clear checkpoint manually
-rm -f projects/code_project/output/.checkpoints/pipeline_checkpoint.json
+rm -f projects/{project_name}/output/.checkpoints/pipeline_checkpoint.json
 ```
 
 See [`docs/operational/checkpoint-resume.md`](../docs/operational/checkpoint-resume.md) for documentation.
@@ -609,6 +609,6 @@ Root entry points work with **ANY** project following this structure.
 
 - [`AGENTS.md`](AGENTS.md) - documentation
 - [`../RUN_GUIDE.md`](../RUN_GUIDE.md) - Unified runner guide
-- [`projects/code_project/scripts/README.md`](../projects/code_project/scripts/README.md) - Project scripts guide
+- [`projects/act_inf_metaanalysis/scripts/`](../projects/act_inf_metaanalysis/scripts/) - Project scripts
 - [`../docs/architecture/thin-orchestrator-summary.md`](../docs/architecture/thin-orchestrator-summary.md) - Pattern details
 - [`../AGENTS.md`](../AGENTS.md) - system documentation

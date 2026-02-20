@@ -4,7 +4,7 @@ import tempfile
 from pathlib import Path
 
 import pytest
-from src.pipeline.reporting import ReportGenerator
+from pipeline.reporting import ReportGenerator
 
 
 class TestReportGenerator:

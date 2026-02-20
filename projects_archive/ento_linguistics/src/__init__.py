@@ -33,8 +33,8 @@ Infrastructure Modules:
 All submodules are imported lazily — use explicit imports to avoid
 loading unnecessary dependencies:
 
-    from src.analysis.term_extraction import TerminologyExtractor
-    from src.visualization.concept_visualization import ConceptVisualizer
+    from analysis.term_extraction import TerminologyExtractor
+    from visualization.concept_visualization import ConceptVisualizer
 """
 
 __version__ = "1.0.0"

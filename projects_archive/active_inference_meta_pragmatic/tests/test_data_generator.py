@@ -6,7 +6,7 @@ ensuring all synthetic data generation functions work correctly.
 
 import numpy as np
 import pytest
-from src.data_generator import DataGenerator
+from src.analysis.data_generator import DataGenerator
 
 
 class TestDataGenerator:

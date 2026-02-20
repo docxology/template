@@ -524,14 +524,14 @@ Before committing documentation:
 ### Good AGENTS.md References
 
 - [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) - module docs
-- [code_project/src/AGENTS.md](../projects/code_project/src/AGENTS.md) - Project code docs
+- [act_inf_metaanalysis/AGENTS.md](../projects/act_inf_metaanalysis/AGENTS.md) - Project code docs
 - [tests/AGENTS.md](../tests/AGENTS.md) - Test framework docs
 
 ### Good README.md References
 
 - [infrastructure/README.md](../infrastructure/README.md) - Quick patterns
 - [scripts/README.md](../scripts/README.md) - Quick commands
-- [code_project/README.md](../projects/code_project/README.md) - Project quick start
+- [act_inf_metaanalysis/README.md](../projects/act_inf_metaanalysis/README.md) - Project quick start
 
 ## See Also
 

@@ -19,6 +19,13 @@ This file contains LaTeX packages and commands that are automatically included i
 \usepackage{algorithmic}
 \usepackage{tikz}
 \usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{cleveref}
+\usepackage{enumitem}
+\usepackage{doi}
 
 % Custom theorem environments
 \newtheorem{theorem}{Theorem}

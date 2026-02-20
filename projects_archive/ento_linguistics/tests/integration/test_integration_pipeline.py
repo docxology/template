@@ -68,10 +68,22 @@ def _setup_test_project_structure(tmp_path: Path, test_name: str) -> Path:
     if scripts_src.exists():
         shutil.copytree(scripts_src, project_test / "scripts")
 
+    # Copy data/ if exists (for real corpus)
+    data_src = project_root / "data"
+    if data_src.exists():
+        # If output/data destination already exists from previous steps (it shouldn't yet), handle it matches
+        # but here we are copying the source data (corpus), not output data.
+        # The test_root/project directory structure:
+        # project/
+        #   data/  <-- Real data here
+        #   output/
+        #     data/ <-- Generated data here
+        shutil.copytree(data_src, project_test / "data")
+    
     # Create output and manuscript directories
-    (project_test / "output" / "figures").mkdir(parents=True)
-    (project_test / "output" / "data").mkdir(parents=True)
-    (project_test / "manuscript").mkdir(parents=True)
+    (project_test / "output" / "figures").mkdir(parents=True, exist_ok=True)
+    (project_test / "output" / "data").mkdir(parents=True, exist_ok=True)
+    (project_test / "manuscript").mkdir(parents=True, exist_ok=True)
 
     return test_root
 
@@ -107,7 +119,7 @@ More content here.
         )
 
         # Step 1: Run example_figure.py script
-        example_script = project_dir / "scripts" / "example_figure.py"
+        example_script = project_dir / "scripts" / "_example_figure.py"
         # Run scripts with proper PYTHONPATH
         env = os.environ.copy()
         repo_root = str(Path(__file__).parent.parent.parent.parent.parent)  # template/
@@ -136,7 +148,7 @@ More content here.
         assert (project_dir / "output" / "data" / "example_data.csv").exists()
 
         # Step 2: Run generate_research_figures.py script
-        research_script = project_dir / "scripts" / "generate_research_figures.py"
+        research_script = project_dir / "scripts" / "02_generate_figures.py"
         result2 = subprocess.run(
             [sys.executable, str(research_script)],
             cwd=str(project_dir),
@@ -320,7 +332,7 @@ accuracy = \frac{TP}{TP + FP}
             (manuscript_dir / filename).write_text(content)
 
         # Run research figures script
-        research_script = project_dir / "scripts" / "generate_research_figures.py"
+        research_script = project_dir / "scripts" / "02_generate_figures.py"
         result = subprocess.run(
             [sys.executable, str(research_script)],
             cwd=str(project_dir),
@@ -363,7 +375,7 @@ This is fine.
         )
 
         # Run scripts (should succeed despite issues)
-        example_script = project_dir / "scripts" / "example_figure.py"
+        example_script = project_dir / "scripts" / "_example_figure.py"
         result1 = subprocess.run(
             [sys.executable, str(example_script)],
             cwd=str(project_dir),
@@ -372,7 +384,7 @@ This is fine.
         )
         assert result1.returncode == 0
 
-        research_script = project_dir / "scripts" / "generate_research_figures.py"
+        research_script = project_dir / "scripts" / "02_generate_figures.py"
         result2 = subprocess.run(
             [sys.executable, str(research_script)],
             cwd=str(project_dir),
@@ -426,8 +438,8 @@ x^2 + y^2 = z^2
         )
 
         # Run 1: Execute scripts
-        example_script = project_dir / "scripts" / "example_figure.py"
-        research_script = project_dir / "scripts" / "generate_research_figures.py"
+        example_script = project_dir / "scripts" / "_example_figure.py"
+        research_script = project_dir / "scripts" / "02_generate_figures.py"
 
         env = os.environ.copy()
         repo_root_str = str(Path(__file__).parent.parent.parent.parent.parent)
@@ -511,7 +523,7 @@ x^2 + y^2 = z^2
         (test_root / "manuscript").mkdir()
 
         # Create scripts that will fail due to missing dependencies
-        (test_root / "scripts" / "example_figure.py").write_text(
+        (test_root / "scripts" / "_example_figure.py").write_text(
             """
 import os
 import sys
@@ -525,7 +537,7 @@ if __name__ == "__main__":
 """
         )
 
-        (test_root / "scripts" / "generate_research_figures.py").write_text(
+        (test_root / "scripts" / "02_generate_figures.py").write_text(
             """
 import os
 import sys
@@ -584,13 +596,13 @@ This section tests integration between multiple scripts.
 
 ## Example Figure {#subsec:example}
 
-From example_figure.py script:
+From _example_figure.py script:
 
 ![Example Figure](../output/figures/example_figure.png)
 
 ## Research Figures {#subsec:research}
 
-From generate_research_figures.py script:
+From 02_generate_figures.py script:
 
 ![Domain Comparison](../output/figures/domain_comparison.png)
 
@@ -609,7 +621,7 @@ This demonstrates that all components work together properly.
         )
 
         # Run example figure script
-        example_script = project_dir / "scripts" / "example_figure.py"
+        example_script = project_dir / "scripts" / "_example_figure.py"
         result1 = subprocess.run(
             [sys.executable, str(example_script)],
             cwd=str(project_dir),
@@ -619,7 +631,7 @@ This demonstrates that all components work together properly.
         assert result1.returncode == 0
 
         # Run research figures script
-        research_script = project_dir / "scripts" / "generate_research_figures.py"
+        research_script = project_dir / "scripts" / "02_generate_figures.py"
         result2 = subprocess.run(
             [sys.executable, str(research_script)],
             cwd=str(project_dir),
@@ -703,7 +715,7 @@ Reference to equation \eqref{{eq:section_{i}}}.
         (project_dir / "manuscript" / "01_large_test.md").write_text(large_content)
 
         # Run scripts (they should handle large content gracefully)
-        research_script = project_dir / "scripts" / "generate_research_figures.py"
+        research_script = project_dir / "scripts" / "02_generate_figures.py"
         result = subprocess.run(
             [sys.executable, str(research_script)],
             cwd=str(project_dir),

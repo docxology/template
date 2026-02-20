@@ -38,14 +38,13 @@ concurrency:
   cancel-in-progress: true
 ```
 
-#### Job 1: Code Quality (Lint)
+#### Job 1: Lint & Type Check (`lint`)
 
-**Purpose:** Enforce code style and quality standards
+**Purpose:** Enforce code style, quality standards, and type safety
 
 **Environment:**
 - **Runner:** `ubuntu-latest`
-- **Python Version:** 3.10
-- **Working Directory:** `project/`
+- **Python Version:** 3.12
 
 **Steps:**
 1. **Checkout Code**
@@ -53,78 +52,159 @@ concurrency:
    - uses: actions/checkout@v4
    ```
 
-2. **Setup Python Environment**
+2. **Setup uv**
+   ```yaml
+   - uses: astral-sh/setup-uv@v7
+     with:
+       enable-cache: true
+       cache-dependency-glob: "**/uv.lock"
+   ```
+
+3. **Setup Python Environment**
    ```yaml
    - uses: actions/setup-python@v5
      with:
-       python-version: "3.10"
-   ```
-
-3. **Install Package Manager**
-   ```yaml
-   - name: Install uv
-     run: python -m pip install uv
+       python-version: "3.12"
    ```
 
 4. **Install Dependencies**
    ```yaml
    - name: Sync dependencies
-     run: uv sync --frozen --no-dev
-     working-directory: project
+     run: uv sync
    ```
 
 5. **Code Linting**
    ```yaml
    - name: Ruff lint
-     run: uv run ruff check .
-     working-directory: project
+     run: uvx ruff check infrastructure/ projects/act_inf_metaanalysis/src/
    ```
 
 6. **Format Checking**
    ```yaml
    - name: Ruff format check
-     run: uv run ruff format --check .
-     working-directory: project
+     run: uvx ruff format --check infrastructure/ projects/act_inf_metaanalysis/src/
    ```
 
-#### Job 2: Testing (Tests)
+7. **Type Checking**
+   ```yaml
+   - name: Type checking
+     run: uv run mypy infrastructure/ projects/act_inf_metaanalysis/src/
+   ```
 
-**Purpose:** Validate functionality across Python versions
+#### Job 2: Infrastructure Tests (`test-infra`)
+
+**Purpose:** Validate infrastructure code across Python versions
 
 **Matrix Strategy:**
 ```yaml
 strategy:
   fail-fast: false
   matrix:
-    python-version: ["3.10", "3.11"]
+    python-version: ["3.10", "3.11", "3.12"]
 ```
 
 **Environment per Matrix:**
 - **Runner:** `ubuntu-latest`
-- **Python Versions:** 3.10, 3.11
-- **Working Directory:** `project/`
+- **Python Versions:** 3.10, 3.11, 3.12
 
 **Steps:**
 1. **Checkout Code**
-2. **Setup Python Environment** (matrix version)
-3. **Install Package Manager**
+2. **Setup uv** (with caching)
+3. **Setup Python Environment** (matrix version)
 4. **Install Dependencies**
-5. **Execute Test Suite**
+5. **Run Infrastructure Tests**
    ```yaml
-   - name: Run tests
-     run: uv run pytest tests/ --cov=src
-     working-directory: project
+   - name: Run infrastructure tests
+     run: >-
+       uv run pytest tests/infra_tests/
+       --cov=infrastructure
+       --cov-report=term-missing
+       --cov-fail-under=60
+       --durations=10
+       -m "not requires_ollama"
    ```
 
-6. **Upload Coverage Reports**
+#### Job 3: Project Tests (`test-project`)
+
+**Purpose:** Validate project code across Python versions
+
+**Matrix Strategy:**
+```yaml
+strategy:
+  fail-fast: false
+  matrix:
+    python-version: ["3.10", "3.11", "3.12"]
+```
+
+**Steps:**
+1. **Checkout Code**
+2. **Setup uv** (with caching)
+3. **Setup Python Environment** (matrix version)
+4. **Install Dependencies**
+5. **Run Project Tests**
    ```yaml
-   - name: Upload coverage reports
-     uses: codecov/codecov-action@v3
-     with:
-       file: ./coverage.xml
-       flags: unittests
-       name: codecov-umbrella
+   - name: Run project tests
+     run: >-
+       uv run pytest projects/act_inf_metaanalysis/tests/
+       --cov=projects/act_inf_metaanalysis/src
+       --cov-report=term-missing
+       --cov-fail-under=90
+       --durations=10
    ```
+
+#### Job 4: Validate Manuscripts (`validate`)
+
+**Purpose:** Validate manuscript markdown and project imports
+**Depends on:** `lint`
+
+**Steps:**
+1. **Checkout Code**
+2. **Setup uv & Python 3.12**
+3. **Validate Manuscript Markdown**
+   ```yaml
+   - name: Validate manuscript markdown
+     run: >-
+       uv run python -m infrastructure.validation.cli markdown
+       projects/act_inf_metaanalysis/manuscript/
+   ```
+4. **Verify Project Imports**
+   ```yaml
+   - name: Verify project imports
+     run: uv run python -c "import projects.act_inf_metaanalysis.src; print('OK')"
+   ```
+
+#### Job 5: Security Scan (`security`)
+
+**Purpose:** Audit dependencies and scan code for vulnerabilities
+**Depends on:** `lint`
+
+**Steps:**
+1. **Checkout Code**
+2. **Setup uv & Python 3.12**
+3. **Dependency Audit**
+   ```yaml
+   - name: Dependency audit
+     run: uv run pip-audit
+     continue-on-error: true
+   ```
+4. **Code Security Scan**
+   ```yaml
+   - name: Code security scan
+     run: >-
+       uv run bandit -r
+       infrastructure/
+       projects/act_inf_metaanalysis/src/
+   ```
+
+#### Job 6: Performance Check (`performance`)
+
+**Purpose:** Ensure import times remain acceptable
+**Depends on:** `test-infra`, `test-project`
+
+**Steps:**
+1. **Checkout Code**
+2. **Setup uv & Python 3.12**
+3. **Run Import Benchmarks** - Verify infrastructure and project imports complete in under 5 seconds
 
 ## Quality Assurance Standards
 
@@ -159,8 +239,8 @@ strategy:
 ### Compatibility Assurance
 
 **Python Version Support:**
-- **Primary Version:** Python 3.10 (linting and reference)
-- **Supported Versions:** Python 3.10, 3.11
+- **Primary Version:** Python 3.12 (linting, validation, security, performance)
+- **Supported Versions:** Python 3.10, 3.11, 3.12
 - **Future Compatibility:** Regular version updates
 - **Deprecation Handling:** Graceful version transitions
 
@@ -197,16 +277,17 @@ strategy:
 
 **Dependency Security:**
 ```yaml
-# Future: Security vulnerability scanning
-- name: Security audit
-  run: uv run safety check
+# Active in CI security job
+- name: Dependency audit
+  run: uv run pip-audit
+  continue-on-error: true
 ```
 
 **Code Security:**
 ```yaml
-# Future: Static security analysis
-- name: Security scan
-  run: uv run bandit -r src/
+# Active in CI security job
+- name: Code security scan
+  run: uv run bandit -r infrastructure/ projects/act_inf_metaanalysis/src/
 ```
 
 ### Secret Management
@@ -236,12 +317,9 @@ strategy:
 ### Reporting Integration
 
 **Coverage Reporting:**
-```yaml
-# Codecov integration
-- uses: codecov/codecov-action@v3
-  with:
-    token: ${{ secrets.CODECOV_TOKEN }}
-    file: ./coverage.xml
+```bash
+# Coverage is reported via --cov-report=term-missing in CI
+# Infrastructure: 60% minimum, Project: 90% minimum
 ```
 
 **Status Integration:**
@@ -257,35 +335,40 @@ strategy:
 **Linting Failures:**
 ```bash
 # Local linting reproduction
-cd project
-uv sync --frozen --no-dev
-uv run ruff check .
-uv run ruff format --check .
+uv sync
+uvx ruff check infrastructure/ projects/act_inf_metaanalysis/src/
+uvx ruff format --check infrastructure/ projects/act_inf_metaanalysis/src/
 
 # Fix common issues
-uv run ruff check . --fix
-uv run ruff format .
+uvx ruff check infrastructure/ projects/act_inf_metaanalysis/src/ --fix
+uvx ruff format infrastructure/ projects/act_inf_metaanalysis/src/
 ```
 
 **Test Failures:**
 ```bash
-# Local test reproduction
-cd project
-uv sync --frozen
-uv run pytest tests/ -v
+# Local infrastructure test reproduction
+uv sync
+uv run pytest tests/infra_tests/ -v
+
+# Local project test reproduction
+uv run pytest projects/act_inf_metaanalysis/tests/ -v
 
 # Debug specific test
-uv run pytest tests/test_specific.py::TestClass::test_method -s --pdb
+uv run pytest tests/infra_tests/test_specific.py::TestClass::test_method -s --pdb
 ```
 
 **Coverage Issues:**
 ```bash
-# Local coverage analysis
-uv run pytest tests/ --cov=src --cov-report=html
+# Local infrastructure coverage analysis
+uv run pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
+open htmlcov/index.html
+
+# Local project coverage analysis
+uv run pytest projects/act_inf_metaanalysis/tests/ --cov=projects/act_inf_metaanalysis/src --cov-report=html
 open htmlcov/index.html
 
 # Check coverage thresholds
-uv run pytest tests/ --cov=src --cov-fail-under=90
+uv run pytest projects/act_inf_metaanalysis/tests/ --cov=projects/act_inf_metaanalysis/src --cov-fail-under=90
 ```
 
 ### Debug Workflows
@@ -299,10 +382,14 @@ export GITHUB_WORKFLOW=CI
 export GITHUB_RUN_ID=12345
 
 # Run linting
-cd project && uv run ruff check . && uv run ruff format --check .
+uvx ruff check infrastructure/ projects/act_inf_metaanalysis/src/
+uvx ruff format --check infrastructure/ projects/act_inf_metaanalysis/src/
 
-# Run tests
-cd project && uv run pytest tests/ --cov=src
+# Run infrastructure tests
+uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
+
+# Run project tests
+uv run pytest projects/act_inf_metaanalysis/tests/ --cov=projects/act_inf_metaanalysis/src --cov-fail-under=90
 ```
 
 **Pipeline Debugging:**
@@ -324,20 +411,16 @@ jobs:
 
 **Custom Linting Rules:**
 ```yaml
-# Future: Custom quality checks
+# Custom quality checks
 - name: Custom quality check
-  run: |
-    uv run python scripts/custom_quality_check.py
-    working-directory: project
+  run: uv run python scripts/custom_quality_check.py
 ```
 
 **Additional Testing:**
 ```yaml
-# Future: Integration testing
+# Integration testing
 - name: Integration tests
-  run: |
-    uv run pytest tests/integration/ -v
-    working-directory: project
+  run: uv run pytest tests/integration/ -v
 ```
 
 ### Workflow Customization

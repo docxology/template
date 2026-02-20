@@ -18,7 +18,7 @@ This prompt ensures features integrate properly with the existing system:
 You are adding a feature to the Research Project Template. The feature must integrate seamlessly with the existing two-layer architecture and thin orchestrator pattern while meeting all quality and testing standards.
 
 FEATURE DESCRIPTION: [Describe the feature to implement]
-TARGET PROJECT: [Specify which project: "code_project" or new project name]
+TARGET PROJECT: [Specify which project: "act_inf_metaanalysis" or new project name]
 LAYER: [Specify: "infrastructure" for generic/shared OR "project" for domain-specific]
 
 FEATURE REQUIREMENTS:

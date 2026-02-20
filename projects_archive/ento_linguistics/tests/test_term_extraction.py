@@ -9,8 +9,8 @@ from __future__ import annotations
 from typing import Dict, List
 
 import pytest
-from src.analysis.term_extraction import Term, TerminologyExtractor
-from src.analysis.text_analysis import TextProcessor
+from analysis.term_extraction import Term, TerminologyExtractor
+from analysis.text_analysis import TextProcessor
 
 
 class TestTerm:
@@ -101,6 +101,21 @@ class TestTerminologyExtractor:
         """Create a TerminologyExtractor instance."""
         return TerminologyExtractor()
 
+    def test_non_list_input_raises(self, extractor: TerminologyExtractor) -> None:
+        """Test that non-list input raises ValueError."""
+        with pytest.raises(ValueError):
+            extractor.extract_terms("not a list")
+
+    def test_invalid_min_frequency_raises(self, extractor: TerminologyExtractor) -> None:
+        """Test that invalid min_frequency raises ValueError."""
+        with pytest.raises(ValueError):
+            extractor.extract_terms(["text"], min_frequency=0)
+
+    def test_all_empty_strings(self, extractor: TerminologyExtractor) -> None:
+        """Test extraction with all empty strings."""
+        result = extractor.extract_terms(["", "  ", ""])
+        assert result == {}
+
     @pytest.fixture
     def sample_texts(self) -> List[str]:
         """Sample entomological texts for testing."""
@@ -174,6 +189,85 @@ class TestTerminologyExtractor:
         assert not extractor._is_candidate_term("the")  # Too short
         assert not extractor._is_candidate_term("a" * 100)  # Too long
         assert not extractor._is_candidate_term("123")  # Numeric
+
+    def test_is_candidate_term_short_token(self, extractor: TerminologyExtractor) -> None:
+        """Test that very short tokens are rejected."""
+        assert not extractor._is_candidate_term("ab")
+
+    def test_is_candidate_term_very_long(self, extractor: TerminologyExtractor) -> None:
+        """Test that very long tokens are rejected."""
+        assert not extractor._is_candidate_term("a" * 51)
+
+    def test_is_candidate_term_underscore_compound(self, extractor: TerminologyExtractor) -> None:
+        """Test that underscore compounds are accepted."""
+        assert extractor._is_candidate_term("colony_size")
+
+    def test_is_candidate_term_hyphenated(self, extractor: TerminologyExtractor) -> None:
+        """Test that hyphenated compounds are accepted."""
+        assert extractor._is_candidate_term("worker-bee")
+
+    def test_is_candidate_term_camelcase(self, extractor: TerminologyExtractor) -> None:
+        """Test that camelCase terms are accepted."""
+        assert extractor._is_candidate_term("ColonySize")
+
+    def test_classify_by_pattern_individuality(self, extractor: TerminologyExtractor) -> None:
+        """Test individuality pattern classification."""
+        result = extractor._classify_by_pattern("collective_organism")
+        assert "unit_of_individuality" in result
+
+    def test_classify_by_pattern_behavior(self, extractor: TerminologyExtractor) -> None:
+        """Test behavior pattern classification."""
+        result = extractor._classify_by_pattern("foraging_task")
+        assert "behavior_and_identity" in result
+
+    def test_classify_by_pattern_power(self, extractor: TerminologyExtractor) -> None:
+        """Test power pattern classification."""
+        result = extractor._classify_by_pattern("caste_hierarchy")
+        assert "power_and_labor" in result
+
+    def test_classify_by_pattern_reproduction(self, extractor: TerminologyExtractor) -> None:
+        """Test reproduction pattern classification."""
+        result = extractor._classify_by_pattern("sex_reproduction")
+        assert "sex_and_reproduction" in result
+
+    def test_classify_by_pattern_kin(self, extractor: TerminologyExtractor) -> None:
+        """Test kin pattern classification."""
+        result = extractor._classify_by_pattern("kin_relatedness")
+        assert "kin_and_relatedness" in result
+
+    def test_classify_by_pattern_economics(self, extractor: TerminologyExtractor) -> None:
+        """Test economics pattern classification."""
+        result = extractor._classify_by_pattern("resource_allocation")
+        assert "economics" in result
+
+    def test_classify_by_pattern_no_match(self, extractor: TerminologyExtractor) -> None:
+        """Test pattern classification with no match."""
+        result = extractor._classify_by_pattern("xyz_abc_nothing")
+        assert result == []
+
+    def test_calculate_extraction_confidence_medium(self, extractor: TerminologyExtractor) -> None:
+        """Test extraction confidence for medium frequency term."""
+        term = Term(text="worker", lemma="worker", frequency=7)
+        conf = extractor._calculate_extraction_confidence(term)
+        assert conf > 0
+
+    def test_export_terms_csv_with_populated_data(self, extractor: TerminologyExtractor, tmp_path) -> None:
+        """Test CSV export with pre-populated terms."""
+        import csv
+        extractor.extracted_terms = {
+            "colony": Term(text="colony", lemma="colony",
+                          domains=["behavioral"], frequency=10,
+                          confidence=0.8, contexts=["The colony grows"]),
+            "worker": Term(text="worker", lemma="worker",
+                          domains=["behavioral"], frequency=5,
+                          confidence=0.6, contexts=["Workers forage"]),
+        }
+        filepath = tmp_path / "terms.csv"
+        extractor.export_terms_csv(str(filepath))
+        with open(filepath) as f:
+            reader = csv.DictReader(f)
+            rows = list(reader)
+        assert len(rows) == 2
 
     def test_context_extraction(self, extractor: TerminologyExtractor) -> None:
         """Test term context extraction."""
@@ -396,12 +490,11 @@ class TestTerminologyExtractionIntegration:
         for term_text in terms1_set:
             assert terms1[term_text].frequency == terms2[term_text].frequency
 
-    @pytest.mark.skip(reason="Test missing extractor fixture in integration class")
     def test_create_domain_seed_expansion(
         self, extractor: TerminologyExtractor, sample_texts: List[str]
     ) -> None:
         """Test domain seed expansion functionality."""
-        from src.analysis.term_extraction import create_domain_seed_expansion
+        from analysis.term_extraction import create_domain_seed_expansion
 
         # Extract some terms first
         terms = extractor.extract_terms(sample_texts, min_frequency=1)
@@ -418,3 +511,11 @@ class TestTerminologyExtractionIntegration:
             assert isinstance(expanded[domain], set)
             # Should have at least the original seeds
             assert len(expanded[domain]) >= len(extractor.DOMAIN_SEEDS[domain])
+
+    def test_create_domain_seed_expansion_all_domains_present(self) -> None:
+        """Test that expansion produces all domains even with empty corpus."""
+        from analysis.term_extraction import create_domain_seed_expansion
+
+        extractor = TerminologyExtractor()
+        expanded = create_domain_seed_expansion(extractor, {})
+        assert len(expanded) == len(extractor.DOMAIN_SEEDS)

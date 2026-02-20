@@ -6,17 +6,11 @@ import sys
 # Force headless backend for matplotlib in tests
 os.environ.setdefault("MPLBACKEND", "Agg")
 
-# Add src/ to path so we can import project modules
-ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-SRC = os.path.join(ROOT, "src")
-if SRC not in sys.path:
-    sys.path.insert(0, SRC)
-
-# Add infrastructure/ to path so we can import template infrastructure
-TEMPLATE_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-INFRASTRUCTURE = os.path.join(TEMPLATE_ROOT, "infrastructure")
-if INFRASTRUCTURE not in sys.path:
-    sys.path.insert(0, INFRASTRUCTURE)
+# Add template root to path so we can import infrastructure modules
+# tests/ -> ento_linguistics/ -> projects_archive/ -> template/
+TEMPLATE_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+if TEMPLATE_ROOT not in sys.path:
+    sys.path.insert(0, TEMPLATE_ROOT)
 
 # Configure pytest-httpserver
 try:

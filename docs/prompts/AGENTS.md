@@ -405,7 +405,7 @@ prompt_validation:
 - [`../../.cursorrules/infrastructure_modules.md`](../../.cursorrules/infrastructure_modules.md) - Infrastructure standards
 
 ### Project Documentation
-- [`../../projects/code_project/AGENTS.md`](../../projects/code_project/AGENTS.md) - Code project documentation
+- [`../../projects/act_inf_metaanalysis/AGENTS.md`](../../projects/act_inf_metaanalysis/AGENTS.md) - Active project documentation
 - [`../core/workflow.md`](../core/workflow.md) - Development workflow guide
 - [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Standards compliance
 

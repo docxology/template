@@ -50,7 +50,7 @@ class ProjectInfo:
         """Full path-like name for display and selection.
 
         Returns:
-            For standalone projects: just the name (e.g., "code_project")
+            For standalone projects: just the name (e.g., "act_inf_metaanalysis")
             For nested projects: program/name (e.g., "cognitive_integrity/cogsec_multiagent_1_theory")
         """
         if self.program:
@@ -89,7 +89,7 @@ def discover_projects(repo_root: Path | str) -> list[ProjectInfo]:
         >>> projects = discover_projects(Path("/path/to/template"))
         >>> for project in projects:
         ...     print(f"{project.qualified_name}: {project.path}")
-        code_project: /path/to/template/projects/code_project
+        act_inf_metaanalysis: /path/to/template/projects/act_inf_metaanalysis
         cognitive_integrity/cogsec_multiagent_1_theory: /path/to/template/projects/cognitive_integrity/cogsec_multiagent_1_theory
     """
     if isinstance(repo_root, str):

@@ -545,7 +545,7 @@ class TestVisualizationEngine:
             # Missing both 'quadrants' and ('matrix', 'labels')
         }
 
-        from utils.exceptions import ValidationError
+        from src.utils.exceptions import ValidationError
 
         with pytest.raises(ValidationError) as exc_info:
             engine.create_quadrant_matrix_plot(matrix_data)
@@ -563,7 +563,7 @@ class TestVisualizationEngine:
             # Missing 'labels' key
         }
 
-        from utils.exceptions import ValidationError
+        from src.utils.exceptions import ValidationError
 
         with pytest.raises(ValidationError) as exc_info:
             engine.create_quadrant_matrix_plot(matrix_data)

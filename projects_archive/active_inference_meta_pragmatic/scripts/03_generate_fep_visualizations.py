@@ -24,7 +24,7 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root / "src"))
 
 # Import src/ modules
-from free_energy_principle import FreeEnergyPrinciple, define_what_is_a_thing
+from core.free_energy_principle import FreeEnergyPrinciple, define_what_is_a_thing
 from utils.figure_manager import FigureManager
 # Local imports
 from utils.logging import get_logger

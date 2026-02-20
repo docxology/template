@@ -492,7 +492,7 @@ Root entry points work with **ANY** project that follows this structure.
 ## See Also
 
 - [`../README.md`](../README.md) - Quick reference
-- [`../projects/code_project/scripts/AGENTS.md`](../projects/code_project/scripts/AGENTS.md) - Project scripts example
+- [`../projects/act_inf_metaanalysis/scripts/`](../projects/act_inf_metaanalysis/scripts/) - Project scripts example
 - [`../docs/architecture/thin-orchestrator-summary.md`](../docs/architecture/thin-orchestrator-summary.md) - Pattern explanation
 - [`../AGENTS.md`](../AGENTS.md) - system documentation
 

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>04a_extraction_pipeline</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1
+id="llm-based-assertion-extraction-prompt-design-error-taxonomy-and-validation">LLM-Based
+Assertion Extraction: Prompt Design, Error Taxonomy, and Validation
+</h1>
+<p><em>This supplementary section documents the implementation specifics
+of the LLM-based assertion extraction pipeline.</em></p>
+<h2 id="relationship-to-prior-approaches">Relationship to Prior
+Approaches</h2>
+<p>The closest prior effort is the systematic literature analysis of
+Knight, Cordes, and Friedman , which used human annotators to manually
+code structural, visual, and mathematical features of FEP and Active
+Inference publications. Their work operated at the scale of hundreds of
+annotated papers and employed terms from the Active Inference
+Institute’s Active Inference Ontology for automated text analysis. Our
+pipeline replaces the manual coding step with LLM-based assertion
+extraction, enabling scalable processing of the full corpus (<span
+class="math inline">\(N = 1208\)</span> papers) at the cost of
+exchanging human-verified precision for machine-generated assessments
+that require post-hoc validation.</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 48%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Knight et al. (2022)</th>
+<th>This work</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Scale</strong></td>
+<td>Hundreds of papers</td>
+<td>1208 papers</td>
+</tr>
+<tr>
+<td><strong>Annotation</strong></td>
+<td>Manual (structural/visual/math features)</td>
+<td>Automated (LLM hypothesis assessment)</td>
+</tr>
+<tr>
+<td><strong>Ontology</strong></td>
+<td>Active Inference Ontology terms</td>
+<td>8 standard hypotheses</td>
+</tr>
+<tr>
+<td><strong>Output</strong></td>
+<td>Annotated features + term frequencies</td>
+<td>Nanopublications + knowledge graph</td>
+</tr>
+<tr>
+<td><strong>Reproducibility</strong></td>
+<td>Annotator-dependent</td>
+<td>Deterministic (given model + seed)</td>
+</tr>
+<tr>
+<td><strong>Precision</strong></td>
+<td>High (human-verified)</td>
+<td>Medium (requires validation)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="prompt-engineering-and-schema-design">Prompt Engineering and
+Schema Design</h2>
+<p>The structured prompt is designed to minimize parsing failures and
+maximize assessment quality:</p>
+<ol type="1">
+<li><p><strong>Explicit JSON schema.</strong> The prompt specifies the
+exact output schema—field names, allowed direction values, and the
+numeric confidence range—reducing the LLM’s tendency to generate
+free-form text or ad hoc structures.</p></li>
+<li><p><strong>Hypothesis definitions in-context.</strong> All eight
+definitions are included verbatim, ensuring the LLM assesses relevance
+from the provided context rather than relying on parametric knowledge
+that may be stale.</p></li>
+<li><p><strong>Reasoning field.</strong> Each assessment includes a
+natural-language reasoning string, providing an audit trail for human
+reviewers and enabling systematic analysis of error patterns.</p></li>
+<li><p><strong>Irrelevant filtering.</strong> An explicit “irrelevant”
+direction allows the LLM to mark hypotheses that a paper does not
+address, avoiding forced spurious assessments.</p></li>
+</ol>
+<h3 id="prompt-template">Prompt Template</h3>
+<p>The extraction prompt follows a two-part structure (system +
+user):</p>
+<pre class="text"><code>SYSTEM: You are a scientific literature analyst specializing in the
+Free Energy Principle and Active Inference. Assess the relevance of
+the given paper to each hypothesis. Return a JSON array.
+
+USER:
+Paper: {title}
+Abstract: {abstract}
+
+Hypotheses:
+H1: FEP Universality — {description}
+H2: AIF Optimality — {description}
+...
+H8: Language AIF — {description}
+
+For each hypothesis, return:
+{
+  &quot;hypothesis_id&quot;: &quot;H1&quot;,
+  &quot;direction&quot;: &quot;supports|contradicts|neutral|irrelevant&quot;,
+  &quot;confidence&quot;: 0.0-1.0,
+  &quot;reasoning&quot;: &quot;...&quot;
+}</code></pre>
+<p>The extraction module
+(<code>src/knowledge_graph/llm_extraction.py</code>) includes
+configurable retry logic with exponential backoff, JSON parsing with
+handling of markdown code fences and extraneous text, confidence
+clamping, and validation against the hypothesis ID set. The default
+model is <code>gemma3:4b</code> on a local Ollama instance, configurable
+via <code>--llm-model</code> and <code>--llm-url</code> flags.</p>
+<h2 id="failure-modes-and-error-recovery">Failure Modes and Error
+Recovery</h2>
+<p>The primary failure modes are documented below.</p>
+<h3 id="over-extraction-bias">Over-Extraction Bias</h3>
+<p>Approximately 15–20% of assessments in preliminary experiments
+exhibit over-extraction: the LLM attributes claims to a paper that
+merely mentions a hypothesis without taking a position. This is the most
+common error mode and produces false supporting evidence.</p>
+<h3 id="direction-misclassification">Direction Misclassification</h3>
+<p>The LLM misclassifies a contradicting claim as supporting, or vice
+versa. Rarer but more consequential, as it directly inverts the evidence
+signal. Most common for papers that discuss limitations while ultimately
+endorsing a hypothesis.</p>
+<h3 id="confidence-calibration-constraints">Confidence Calibration
+Constraints</h3>
+<p>The model occasionally assigns high confidence to assessments where
+the underlying semantic evidence is demonstrably weak or ambiguous.
+Reliable confidence calibration remains an open research problem across
+nearly all zero-shot LLM applications, necessitating the multi-tiered
+validation protocols described below.</p>
+<h3 id="progressive-json-parsing-recovery">Progressive JSON Parsing
+Recovery</h3>
+<p>To mitigate formatting inconsistencies, the module implements a
+progressive parsing pipeline to recover malformed LLM outputs:</p>
+<ol type="1">
+<li><strong>Direct parse</strong>: Attempt <code>json.loads()</code> on
+the raw response.</li>
+<li><strong>Strip code fences</strong>: Remove Markdown
+<code>```json ... ```</code> wrappers and retry.</li>
+<li><strong>Extract JSON array</strong>: Scan for the first
+<code>[...]</code> substring in the response text.</li>
+<li><strong>Individual recovery</strong>: If a valid array contains
+malformed elements, parse each element independently.</li>
+</ol>
+<p>Papers that fail all parsing stages are logged and skipped; their
+count is reported at pipeline completion.</p>
+<h2 id="validation-methodology">Validation Methodology</h2>
+<p>Validation of LLM-extracted assertions follows a three-tier
+protocol:</p>
+<ol type="1">
+<li><p><strong>Spot-check validation.</strong> A random sample of 50
+papers is reviewed by a domain expert, comparing LLM assessments against
+human judgments for direction accuracy and confidence
+appropriateness.</p></li>
+<li><p><strong>Boundary-case audit.</strong> Papers known to make
+contested claims (e.g., critiques of FEP universality, Markov blanket
+realism debates) are specifically checked for correct direction
+assignment.</p></li>
+<li><p><strong>Aggregate consistency.</strong> Hypothesis scores are
+compared against qualitative expectations from the literature:
+hypotheses known to be well-supported (e.g., H4 Predictive Coding)
+should score positively; those known to be contested (e.g., H3 Markov
+Blanket Realism) should show lower or mixed scores.</p></li>
+</ol>
+<p>Preliminary experiments on a sampled subset of Active Inference
+papers—evaluated across GPT-4 and Claude-family models—suggest that this
+automated approach reduces human annotation time by approximately 60–70%
+compared to purely manual extraction. Both over-extraction biases and
+direction inversion errors are consistently intercepted by human review
+at acceptable rates. Structurally, the pipeline is designed for seamless
+proprietary or open-weight model upgrades: swapping the underlying
+reasoning engine requires only adjusting the <code>--llm-model</code>
+flag.</p>
+</body>
+</html>

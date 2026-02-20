@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>98_symbols_glossary</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="notation-abbreviations-and-hypothesis-definitions">Notation,
+Abbreviations, and Hypothesis Definitions</h1>
+<h2 id="mathematical-symbols-and-notation">Mathematical Symbols and
+Notation</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="math inline">\(\mathcal{F}\)</span></td>
+<td>Variational free energy</td>
+</tr>
+<tr>
+<td><span class="math inline">\(\mathbf{F}\)</span></td>
+<td>Expected free energy (for policy selection)</td>
+</tr>
+<tr>
+<td><span class="math inline">\(D_{\mathrm{KL}}\)</span></td>
+<td>Kullback–Leibler divergence</td>
+</tr>
+<tr>
+<td><span class="math inline">\(q(\cdot)\)</span></td>
+<td>Approximate posterior (recognition density)</td>
+</tr>
+<tr>
+<td><span class="math inline">\(p(\cdot)\)</span></td>
+<td>Generative model (prior and likelihood)</td>
+</tr>
+<tr>
+<td><span class="math inline">\(\mathbf{s}\)</span></td>
+<td>Hidden states</td>
+</tr>
+<tr>
+<td><span class="math inline">\(\mathbf{o}\)</span></td>
+<td>Observations</td>
+</tr>
+<tr>
+<td><span class="math inline">\(\pi\)</span></td>
+<td>Policy (sequence of actions)</td>
+</tr>
+<tr>
+<td><span class="math inline">\(\mathbf{A}\)</span></td>
+<td>Likelihood mapping (observation model)</td>
+</tr>
+<tr>
+<td><span class="math inline">\(\mathbf{B}\)</span></td>
+<td>Transition model (state dynamics)</td>
+</tr>
+<tr>
+<td><span class="math inline">\(\mathbf{C}\)</span></td>
+<td>Prior preferences over observations</td>
+</tr>
+<tr>
+<td><span class="math inline">\(\mathbf{D}\)</span></td>
+<td>Prior over initial states</td>
+</tr>
+<tr>
+<td><span class="math inline">\(N\)</span></td>
+<td>Corpus size (total deduplicated papers)</td>
+</tr>
+<tr>
+<td><span class="math inline">\(n\)</span></td>
+<td>Subfield paper count</td>
+</tr>
+<tr>
+<td><span class="math inline">\(T\)</span></td>
+<td>Time span in years (for CAGR computation)</td>
+</tr>
+<tr>
+<td><span class="math inline">\(N_{\text{start}}\)</span></td>
+<td>Publication count in the first year of the corpus</td>
+</tr>
+<tr>
+<td><span class="math inline">\(N_{\text{end}}\)</span></td>
+<td>Publication count in the last year of the corpus</td>
+</tr>
+<tr>
+<td><span class="math inline">\(w(a)\)</span></td>
+<td>Citation-weighted assertion score: <span
+class="math inline">\(\log(1 + \text{citations}) \cdot
+\text{confidence}\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(\text{score}(H)\)</span></td>
+<td>Aggregate evidence score for hypothesis <span
+class="math inline">\(H\)</span>, range <span class="math inline">\([-1,
+1]\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(S(H)\)</span></td>
+<td>Set of supporting assertions for hypothesis <span
+class="math inline">\(H\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(C(H)\)</span></td>
+<td>Set of contradicting assertions for hypothesis <span
+class="math inline">\(H\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(A(H)\)</span></td>
+<td>Set of all assertions for hypothesis <span
+class="math inline">\(H\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(c\)</span></td>
+<td>Assertion confidence, range <span class="math inline">\([0,
+1]\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(d\)</span></td>
+<td>Assertion direction: supports, contradicts, or neutral</td>
+</tr>
+<tr>
+<td><span class="math inline">\(\mathbf{V}\)</span></td>
+<td>Document-term matrix (NMF input)</td>
+</tr>
+<tr>
+<td><span class="math inline">\(\mathbf{W}\)</span></td>
+<td>Document-topic matrix (NMF factor)</td>
+</tr>
+<tr>
+<td><span class="math inline">\(\mathbf{H}\)</span></td>
+<td>Topic-term matrix (NMF factor)</td>
+</tr>
+<tr>
+<td><span class="math inline">\(k\)</span></td>
+<td>Number of latent topics</td>
+</tr>
+<tr>
+<td><span class="math inline">\(\epsilon\)</span></td>
+<td>Numerical stability constant (<span
+class="math inline">\(10^{-10}\)</span>)</td>
+</tr>
+<tr>
+<td><span class="math inline">\(\text{CAGR}\)</span></td>
+<td>Compound annual growth rate</td>
+</tr>
+<tr>
+<td><span class="math inline">\(t_d\)</span></td>
+<td>Publication doubling time</td>
+</tr>
+<tr>
+<td><span class="math inline">\(\bar{g}\)</span></td>
+<td>Mean annual year-over-year growth rate</td>
+</tr>
+<tr>
+<td><span class="math inline">\(\kappa\)</span></td>
+<td>Cohen’s kappa (inter-annotator agreement)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="abbreviations-and-acronyms-used">Abbreviations and Acronyms
+Used</h2>
+<table>
+<thead>
+<tr>
+<th>Abbreviation</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AIF</td>
+<td>Active Inference</td>
+</tr>
+<tr>
+<td>API</td>
+<td>Application Programming Interface</td>
+</tr>
+<tr>
+<td>CAGR</td>
+<td>Compound Annual Growth Rate</td>
+</tr>
+<tr>
+<td>CI</td>
+<td>Confidence Interval</td>
+</tr>
+<tr>
+<td>DCM</td>
+<td>Dynamic Causal Modelling</td>
+</tr>
+<tr>
+<td>DOI</td>
+<td>Digital Object Identifier</td>
+</tr>
+<tr>
+<td>DPI</td>
+<td>Dots Per Inch (figure resolution)</td>
+</tr>
+<tr>
+<td>EEG</td>
+<td>Electroencephalography</td>
+</tr>
+<tr>
+<td>EFE</td>
+<td>Expected Free Energy</td>
+</tr>
+<tr>
+<td>ERP</td>
+<td>Event-Related Potential</td>
+</tr>
+<tr>
+<td>FEP</td>
+<td>Free Energy Principle</td>
+</tr>
+<tr>
+<td>fMRI</td>
+<td>Functional Magnetic Resonance Imaging</td>
+</tr>
+<tr>
+<td>GML</td>
+<td>Graph Modelling Language (network serialization format)</td>
+</tr>
+<tr>
+<td>JSON</td>
+<td>JavaScript Object Notation</td>
+</tr>
+<tr>
+<td>JSONL</td>
+<td>JSON Lines (newline-delimited JSON)</td>
+</tr>
+<tr>
+<td>KG</td>
+<td>Knowledge Graph</td>
+</tr>
+<tr>
+<td>KL</td>
+<td>Kullback–Leibler (divergence)</td>
+</tr>
+<tr>
+<td>LLM</td>
+<td>Large Language Model</td>
+</tr>
+<tr>
+<td>NMF</td>
+<td>Non-negative Matrix Factorization</td>
+</tr>
+<tr>
+<td>NLP</td>
+<td>Natural Language Processing</td>
+</tr>
+<tr>
+<td>ORCID</td>
+<td>Open Researcher and Contributor ID</td>
+</tr>
+<tr>
+<td>OWL</td>
+<td>Web Ontology Language</td>
+</tr>
+<tr>
+<td>PCA</td>
+<td>Principal Component Analysis</td>
+</tr>
+<tr>
+<td>POMDP</td>
+<td>Partially Observable Markov Decision Process</td>
+</tr>
+<tr>
+<td>RDF</td>
+<td>Resource Description Framework</td>
+</tr>
+<tr>
+<td>RL</td>
+<td>Reinforcement Learning</td>
+</tr>
+<tr>
+<td>RNG</td>
+<td>Random Number Generator</td>
+</tr>
+<tr>
+<td>SPARQL</td>
+<td>SPARQL Protocol and RDF Query Language</td>
+</tr>
+<tr>
+<td>SPM</td>
+<td>Statistical Parametric Mapping</td>
+</tr>
+<tr>
+<td>TF-IDF</td>
+<td>Term Frequency–Inverse Document Frequency</td>
+</tr>
+<tr>
+<td>URI</td>
+<td>Uniform Resource Identifier</td>
+</tr>
+<tr>
+<td>YAML</td>
+<td>YAML Ain’t Markup Language (configuration format)</td>
+</tr>
+<tr>
+<td>YoY</td>
+<td>Year-over-Year</td>
+</tr>
+</tbody>
+</table>
+<h2 id="standard-hypothesis-definitions-and-identifiers">Standard
+Hypothesis Definitions and Identifiers</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>ID</th>
+<th>Hypothesis</th>
+<th>Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>H1</td>
+<td>FEP Universality: The Free Energy Principle applies universally to
+all self-organizing systems</td>
+<td>A (Core Theory)</td>
+</tr>
+<tr>
+<td>H2</td>
+<td>AIF Optimality: Active Inference agents achieve optimal
+decision-making under uncertainty</td>
+<td>B (Tools)</td>
+</tr>
+<tr>
+<td>H3</td>
+<td>Markov Blanket Realism: Markov blankets correspond to real physical
+boundaries</td>
+<td>A (Core Theory)</td>
+</tr>
+<tr>
+<td>H4</td>
+<td>Predictive Coding: Cortical hierarchies minimize prediction errors
+via predictive coding</td>
+<td>C1 (Neuroscience)</td>
+</tr>
+<tr>
+<td>H5</td>
+<td>Scalability: Active Inference scales to complex, high-dimensional
+environments</td>
+<td>B (Tools)</td>
+</tr>
+<tr>
+<td>H6</td>
+<td>Clinical Utility: Active Inference provides clinically useful models
+of psychiatric conditions</td>
+<td>C4 (Psychiatry)</td>
+</tr>
+<tr>
+<td>H7</td>
+<td>Morphogenesis: The FEP explains morphogenetic and developmental
+processes</td>
+<td>C5 (Biology)</td>
+</tr>
+<tr>
+<td>H8</td>
+<td>Language AIF: Active Inference provides a viable framework for
+language processing</td>
+<td>C3 (Language)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="glossary-of-key-terms">Glossary of Key Terms</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Active Inference</strong></td>
+<td>A framework in which agents minimize expected free energy to select
+actions, unifying perception, learning, and decision-making under the
+Free Energy Principle.</td>
+</tr>
+<tr>
+<td><strong>Assertion</strong></td>
+<td>A directed, confidence-scored claim linking a paper to a hypothesis
+(supports, contradicts, or neutral). The basic unit of evidence in the
+knowledge graph.</td>
+</tr>
+<tr>
+<td><strong>Canonical ID</strong></td>
+<td>The unique identifier assigned to each paper during deduplication,
+following the priority scheme: DOI &gt; arXiv ID &gt; Semantic Scholar
+ID &gt; OpenAlex ID &gt; title hash.</td>
+</tr>
+<tr>
+<td><strong>Expected Free Energy</strong></td>
+<td>A quantity combining epistemic value (information gain) and
+pragmatic value (goal achievement) that active inference agents minimize
+over policies.</td>
+</tr>
+<tr>
+<td><strong>Free Energy Principle</strong></td>
+<td>The principle that self-organizing systems minimize variational free
+energy, an upper bound on surprise, to maintain their structural
+integrity.</td>
+</tr>
+<tr>
+<td><strong>Generative Model</strong></td>
+<td>A probabilistic model specifying the joint distribution over hidden
+states and observations, encoding an agent’s beliefs about how
+observations are generated.</td>
+</tr>
+<tr>
+<td><strong>Knowledge Graph</strong></td>
+<td>A directed graph encoding papers, assertions, hypotheses, and their
+relationships, serialized in an RDF-compatible format.</td>
+</tr>
+<tr>
+<td><strong>Markov Blanket</strong></td>
+<td>A statistical boundary separating internal states from external
+states, defined as the set of nodes that renders a system conditionally
+independent of its environment.</td>
+</tr>
+<tr>
+<td><strong>Nanopublication</strong></td>
+<td>A minimal, self-contained unit of publishable knowledge consisting
+of an assertion, provenance metadata, and publication context.</td>
+</tr>
+<tr>
+<td><strong>Precision</strong></td>
+<td>The inverse variance of a probability distribution; in active
+inference, precision weighting determines the influence of prediction
+errors at different levels of a hierarchy.</td>
+</tr>
+<tr>
+<td><strong>Variational Free Energy</strong></td>
+<td>An upper bound on surprise (negative log-evidence) that can be
+decomposed into complexity (KL divergence from prior) and accuracy
+(expected log-likelihood).</td>
+</tr>
+<tr>
+<td><strong>Louvain Algorithm</strong></td>
+<td>A greedy modularity-maximization algorithm for community detection
+in networks. Applied to the citation graph to identify clusters of
+densely interconnected papers.</td>
+</tr>
+<tr>
+<td><strong>PageRank</strong></td>
+<td>A centrality metric originally designed for web page ranking. In
+citation networks, PageRank identifies highly influential papers that
+serve as hubs connecting otherwise disconnected subgraphs.</td>
+</tr>
+<tr>
+<td><strong>Ward Linkage</strong></td>
+<td>A hierarchical clustering method that minimizes the total
+within-cluster variance at each merge step. Used to compute dendrograms
+of domain centroids from mean TF-IDF vectors.</td>
+</tr>
+<tr>
+<td><strong>Checkpoint</strong></td>
+<td>A JSON Lines snapshot of LLM extraction progress, recording which
+papers have been processed and the resulting assertions, enabling
+incremental resume after interruption.</td>
+</tr>
+<tr>
+<td><strong>Incremental Resume</strong></td>
+<td>The pipeline’s ability to continue from where a previous run
+stopped, loading existing corpus/assertions and processing only new
+papers, controlled by <code>--clear-corpus</code> and
+<code>--clear-assertions</code> CLI flags.</td>
+</tr>
+<tr>
+<td><strong>LLM Config</strong></td>
+<td>A configuration object specifying the Ollama model name, API URL,
+temperature, maximum retries, and retry delay for LLM-based assertion
+extraction.</td>
+</tr>
+<tr>
+<td><strong>Domain Timeline</strong></td>
+<td>Per-domain yearly publication counts showing temporal evolution of
+research activity across the eight tracked categories (A1–A2, B,
+C1–C5).</td>
+</tr>
+<tr>
+<td><strong>Progressive Parsing</strong></td>
+<td>The pipeline’s multi-stage JSON recovery strategy for handling
+malformed LLM output: direct parse → strip code fences → extract first
+JSON array → individual element recovery.</td>
+</tr>
+<tr>
+<td><strong>Wong Palette</strong></td>
+<td>The colorblind-safe 8-color palette from Wong (2011), used as the
+standard visualization palette throughout all pipeline-generated
+figures.</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

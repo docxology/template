@@ -2,9 +2,8 @@
 
 import numpy as np
 import pytest
-from src.core.metrics import (CustomMetric, calculate_accuracy, calculate_all_metrics,
+from core.metrics import (CustomMetric, calculate_accuracy, calculate_all_metrics,
                      calculate_convergence_metrics, calculate_effect_size,
-                     calculate_p_value_approximation,
                      calculate_precision_recall_f1, calculate_psnr,
                      calculate_snr, calculate_ssim)
 
@@ -61,12 +60,15 @@ class TestCalculateConvergenceMetrics:
     """Test convergence metrics calculation."""
 
     def test_convergence_metrics(self):
-        """Test convergence metrics."""
+        """Test convergence metrics with value range assertions."""
         values = np.array([10, 8, 6, 4, 2, 1, 0.5, 0.1])
         metrics = calculate_convergence_metrics(values, target=0.0)
         assert "final_error" in metrics
         assert "convergence_rate" in metrics
         assert "is_converged" in metrics
+        assert 0.0 <= metrics["convergence_rate"] <= 1.0
+        assert metrics["final_error"] < values[0]  # Error should decrease
+        assert isinstance(metrics["is_converged"], bool)  # Convergence depends on threshold
 
 
 class TestCalculateSNR:
@@ -218,26 +220,6 @@ class TestCalculateAllMetrics:
         group2 = np.array([5, 6, 7, 8, 9])
         result = calculate_effect_size(group1, group2)
         assert result["interpretation"] in ["medium", "large"]
-
-    def test_calculate_p_value_approximation_normal_large(self):
-        """Test p-value approximation for large normal statistic."""
-        p_value = calculate_p_value_approximation(4.0, distribution="normal")
-        assert p_value == 0.001
-
-    def test_calculate_p_value_approximation_normal_medium(self):
-        """Test p-value approximation for medium normal statistic."""
-        p_value = calculate_p_value_approximation(2.5, distribution="normal")
-        assert p_value == 0.05
-
-    def test_calculate_p_value_approximation_normal_small(self):
-        """Test p-value approximation for small normal statistic."""
-        p_value = calculate_p_value_approximation(1.0, distribution="normal")
-        assert p_value == 0.1
-
-    def test_calculate_p_value_approximation_other_distribution(self):
-        """Test p-value approximation for other distribution."""
-        p_value = calculate_p_value_approximation(2.0, distribution="t")
-        assert p_value == 0.05
 
     def test_calculate_all_metrics_with_original_reconstructed(self):
         """Test calculate_all_metrics with original and reconstructed."""

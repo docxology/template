@@ -193,9 +193,9 @@ ls -la projects/{project_name}/output/logs/archive/
 **Viewing Logs:**
 
 ```bash
-cat output/code_project/logs/pipeline.log
-grep -i error output/code_project/logs/pipeline.log
-grep "Stage 5" output/code_project/logs/pipeline.log
+cat output/{project_name}/logs/pipeline.log
+grep -i error output/{project_name}/logs/pipeline.log
+grep "Stage 5" output/{project_name}/logs/pipeline.log
 ```
 
 ---

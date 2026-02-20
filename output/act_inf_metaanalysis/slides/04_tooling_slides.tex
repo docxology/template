@@ -1,0 +1,288 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+\usepackage{caption}
+% Make caption package work with longtable
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}[fragile]{Tooling and Infrastructure: Software Ecosystem,
+Knowledge Graph Deployment, and Quality Assurance \label{sec:tooling}}
+\protect\phantomsection\label{tooling-and-infrastructure-software-ecosystem-knowledge-graph-deployment-and-quality-assurance}
+The practical utility of a computational meta-analysis depends on robust
+tooling at each pipeline stage: assertion extraction, modeling and
+simulation, knowledge graph infrastructure, and quality assurance.
+
+\begin{block}{LLM-Based Assertion Extraction}
+\protect\phantomsection\label{llm-based-assertion-extraction}
+Extracting structured assertions from unstructured text is the most
+labor-intensive component of knowledge graph construction. Manual
+annotation produces high-quality results but does not scale to corpora
+of thousands of papers---a constraint demonstrated by Knight et
+al.~\citep{knight2022fep}, whose systematic literature analysis of FEP
+and Active Inference publications required manual coding of structural,
+visual, and mathematical features for hundreds of annotated papers. We
+implement a hybrid approach: LLMs perform initial extraction, with human
+review for validation and correction.
+
+Our extraction pipeline deploys a locally hosted LLM through Ollama
+\citep{ollama2024}. Each paper's abstract is assessed against the eight
+hypothesis definitions in a structured prompt requesting a JSON array of
+assessments. Unlike keyword matching, which detects only topical terms,
+the LLM evaluates the \emph{semantic relationship} between a paper's
+claims and each hypothesis. Papers critiquing the FEP correctly receive
+``contradicts'' assessments for FEP Universality (H1), while methodology
+tutorials receive ``neutral'' assessments reflecting their pedagogical
+character. Detailed prompt engineering, schemas, and failure modes are
+documented in the supplementary extraction pipeline (see
+\hyperref[sec:extraction_pipeline]{Section 4a}).
+\end{block}
+
+\begin{block}{Software Ecosystem}
+\protect\phantomsection\label{software-ecosystem}
+The Active Inference community has developed several specialized
+software tools, though the ecosystem remains highly fragmented---no
+single package spans the full spectrum from theoretical simulation to
+empirical data analysis:
+
+\textbf{pymdp.} The pymdp library \citep{heins2022pymdp} provides a
+Python implementation of active inference for discrete state-space
+POMDPs, supporting message passing on factor graphs, policy inference
+via expected free energy, and hierarchical generative models. It has
+become the standard entry point for algorithm development.
+
+\textbf{SPM.} The SPM package (Wellcome Centre for Human Neuroimaging)
+includes MATLAB implementations of Dynamic Causal Modeling and
+variational Bayesian inference under the FEP. It remains the reference
+implementation for neuroimaging applications.
+
+\textbf{RxInfer.jl.} RxInfer is a Julia package for reactive
+message-passing-based Bayesian inference, supporting real-time and
+streaming inference suitable for robotics and online learning. The
+release of version 4.0.0 in early 2025 \citep{rxinfer2025} substantially
+enhanced its probabilistic programming framework, introducing projected
+constraints and adaptive qualities specifically optimized for dynamic
+streams of data and autonomous systems.
+
+\begin{block}{Comparative Feature Matrix}
+\protect\phantomsection\label{comparative-feature-matrix}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Feature
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+pymdp
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+SPM
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+RxInfer.jl
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\textbf{Language} & Python & MATLAB & Julia \\
+\textbf{State Spaces} & Discrete & Discrete + Continuous & Continuous
+(factor graphs) \\
+\textbf{Inference} & Message passing & Variational Bayes & Reactive
+message passing \\
+\textbf{Deep AIF} & Partial & No & Via custom factors \\
+\textbf{Real-time} & No & No & Yes (streaming) \\
+\textbf{Hierarchical} & Yes & Yes (DCM) & Yes \\
+\textbf{License} & MIT & GPL & MIT \\
+\textbf{Primary Use} & Research prototyping & Neuroimaging & Robotics /
+online learning \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+The complementary strengths across these packages reveal a structurally
+fragmented ecosystem: \texttt{pymdp} provides an accessible,
+Python-native entry point for discrete prototyping; \texttt{SPM} remains
+the clinical gold standard for continuous neuroimaging; and
+\texttt{RxInfer.jl} addresses the real-time constraints of embedded
+robotics. The absence of a unified, cross-regime computational
+infrastructure represents both a critical operational bottleneck and a
+major opportunity for framework unification.
+\end{block}
+\end{block}
+
+\begin{block}{Knowledge Graph Infrastructure}
+\protect\phantomsection\label{knowledge-graph-infrastructure}
+Our knowledge graph uses an RDF-compatible schema deployable on standard
+semantic web infrastructure. The engineering trade-offs among the three
+deployment options are straightforward:
+
+\textbf{Nanopublication servers} provide decentralized,
+content-addressed storage. Our current JSON Lines implementation
+prioritizes simplicity; the schema supports migration to the
+nanopublication network for public deployment.
+
+\textbf{RDF stores} (e.g., Apache Jena Fuseki, Blazegraph, Oxigraph)
+enable SPARQL queries such as ``find all papers supporting hypothesis H
+published after 2020 in the neuroscience domain (C1).'' The cost is
+operational overhead and query latency.
+
+\textbf{Property graph databases} (e.g., Neo4j) prioritize traversal
+performance for path queries and community detection, at the expense of
+semantic web compatibility.
+
+The namespace \texttt{http://activeinference.org/ontology/} ensures
+integration with external ontologies and linked data resources.
+\end{block}
+
+\begin{block}{Multi-Level Quality Assurance}
+\protect\phantomsection\label{multi-level-quality-assurance}
+Quality assurance operates at four levels.
+
+\begin{block}{Assertion-Level Validation}
+\protect\phantomsection\label{assertion-level-validation}
+Assertions below a configurable confidence threshold (default 0.5) are
+flagged for review. Inter-annotator agreement (\(\kappa\)) is computed
+when multiple annotators assess the same paper.
+\end{block}
+
+\begin{block}{Graph-Level Consistency Checks}
+\protect\phantomsection\label{graph-level-consistency-checks}
+Consistency checks verify that all nodes link to valid targets and no
+orphan nodes exist. Coverage metrics track the proportion of annotated
+papers.
+\end{block}
+
+\begin{block}{Score-Level Unit Testing}
+\protect\phantomsection\label{score-level-unit-testing}
+Hypothesis scoring is validated through unit tests with synthetic data
+verifying boundary conditions (all-support → +1, all-contradict → −1,
+balanced → 0). Sensitivity analysis varies confidence thresholds and
+citation weighting.
+\end{block}
+
+\begin{block}{Pipeline-Level Test Coverage}
+\protect\phantomsection\label{pipeline-level-test-coverage}
+Test-driven development enforces 90\% minimum code coverage on project
+modules and 60\% on shared infrastructure, with real data and
+computation (no mocking).
+\end{block}
+
+\begin{block}{Quality Thresholds}
+\protect\phantomsection\label{quality-thresholds}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+Level & Metric & Threshold & On Failure \\
+\midrule\noalign{}
+\endhead
+Assertion & Confidence & \(\geq 0.5\) & Flag for review \\
+Assertion & Inter-annotator \(\kappa\) & \(\geq 0.6\) & Re-annotate \\
+Graph & Orphan node ratio & \(= 0\) & Reject build \\
+Graph & Corpus coverage & \(\geq 80\%\) & Warning \\
+Score & Boundary tests & All pass & Block release \\
+Pipeline & Code coverage & \(\geq 90\%\) & Block merge \\
+Pipeline & Test pass rate & \(100\%\) & Block release \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+The hypothesis evidence results, temporal dynamics of evidence
+accumulation, and assertion analysis are presented in the dedicated
+hypothesis results section (see
+\hyperref[sec:hypothesis_results]{Section 4b}).
+\end{block}
+\end{block}
+\end{frame}
+
+\end{document}

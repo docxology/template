@@ -177,3 +177,37 @@ class TestValidationError:
         assert error1.context["id"] == 1
         assert error2.context["id"] == 2
         assert error3.suggestions == ["Fix"]
+
+
+class TestBackwardCompatWrappers:
+    """Test backward-compat wrapper modules in src/ root."""
+
+    def test_active_inference_wrapper(self):
+        """Test src/active_inference.py re-exports from core."""
+        from src.active_inference import ActiveInferenceFramework
+        assert ActiveInferenceFramework is not None
+
+    def test_free_energy_principle_wrapper(self):
+        """Test src/free_energy_principle.py re-exports from core."""
+        from src.free_energy_principle import FreeEnergyPrinciple
+        assert FreeEnergyPrinciple is not None
+
+    def test_meta_cognition_wrapper(self):
+        """Test src/meta_cognition.py re-exports from framework."""
+        from src.meta_cognition import MetaCognitiveSystem
+        assert MetaCognitiveSystem is not None
+
+    def test_modeler_perspective_wrapper(self):
+        """Test src/modeler_perspective.py re-exports from framework."""
+        from src.modeler_perspective import ModelerPerspective
+        assert ModelerPerspective is not None
+
+    def test_validation_wrapper(self):
+        """Test src/validation.py re-exports from analysis."""
+        from src.validation import ValidationFramework
+        assert ValidationFramework is not None
+
+    def test_statistical_analysis_wrapper(self):
+        """Test src/statistical_analysis.py re-exports from analysis."""
+        from src.statistical_analysis import StatisticalAnalyzer
+        assert StatisticalAnalyzer is not None

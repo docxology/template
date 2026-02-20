@@ -7,12 +7,15 @@ used in Ento-Linguistic research.
 from __future__ import annotations
 
 import json
+import time
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Dict, List
 
 import pytest
-from src.data.literature_mining import (ArXivMiner, LiteratureCorpus, Publication,
-                                   PubMedMiner)
+from data.literature_mining import (ArXivMiner, LiteratureCorpus, Publication,
+                                   PubMedMiner, create_entomology_query,
+                                   mine_entomology_literature)
 
 
 class TestPublication:
@@ -125,7 +128,7 @@ class TestLiteratureCorpus:
         assert len(corpus.publications) == initial_count + 1
         assert corpus.publications[-1] == new_pub
 
-    @pytest.mark.skipif(not Path("tmp").exists(), reason="Temporary directory needed")
+
     def test_corpus_save_load(self, corpus: LiteratureCorpus, tmp_path: Path) -> None:
         """Test saving and loading corpus to/from file."""
         filepath = tmp_path / "test_corpus.json"
@@ -332,6 +335,124 @@ class TestPubMedMiner:
 
         assert pub is None
 
+    def test_search_empty_query_raises(self, miner: PubMedMiner) -> None:
+        """Test that empty query raises ValueError."""
+        with pytest.raises(ValueError):
+            miner.search("")
+
+    def test_search_whitespace_query_raises(self, miner: PubMedMiner) -> None:
+        """Test that whitespace-only query raises ValueError."""
+        with pytest.raises(ValueError):
+            miner.search("   ")
+
+    def test_search_invalid_max_results_raises(self, miner: PubMedMiner) -> None:
+        """Test that invalid max_results raises ValueError."""
+        with pytest.raises(ValueError):
+            miner.search("ants", max_results=0)
+
+    def test_search_max_results_too_large_raises(self, miner: PubMedMiner) -> None:
+        """Test that too-large max_results raises ValueError."""
+        with pytest.raises(ValueError):
+            miner.search("ants", max_results=20000)
+
+    def test_search_caching(self, httpserver, miner: PubMedMiner) -> None:
+        """Test that repeated searches use cache instead of making new HTTP calls."""
+        miner_cached = PubMedMiner(enable_cache=True)
+        response_data = {"esearchresult": {"idlist": ["111", "222"]}}
+        httpserver.expect_request("/esearch.fcgi").respond_with_json(response_data)
+
+        original_base_url = miner_cached.BASE_URL
+        miner_cached.BASE_URL = httpserver.url_for("/")
+        try:
+            result1 = miner_cached.search("test query", max_results=10)
+            result2 = miner_cached.search("test query", max_results=10)
+        finally:
+            miner_cached.BASE_URL = original_base_url
+
+        assert result1 == ["111", "222"]
+        assert result1 == result2
+        assert miner_cached.get_cache_size() == 1
+
+    def test_search_json_decode_error(self, httpserver, miner: PubMedMiner) -> None:
+        """Test search when server returns non-JSON response."""
+        httpserver.expect_request("/esearch.fcgi").respond_with_data(
+            "not json", content_type="text/plain"
+        )
+        original_base_url = miner.BASE_URL
+        miner.BASE_URL = httpserver.url_for("/")
+        try:
+            results = miner.search("test")
+        finally:
+            miner.BASE_URL = original_base_url
+        assert results == []
+
+    def test_search_unexpected_response_format(self, httpserver, miner: PubMedMiner) -> None:
+        """Test search when idlist is not a list."""
+        response_data = {"esearchresult": {"idlist": "not a list"}}
+        httpserver.expect_request("/esearch.fcgi").respond_with_json(response_data)
+        original_base_url = miner.BASE_URL
+        miner.BASE_URL = httpserver.url_for("/")
+        try:
+            results = miner.search("test")
+        finally:
+            miner.BASE_URL = original_base_url
+        assert results == []
+
+    def test_clear_cache(self, miner: PubMedMiner) -> None:
+        """Test clearing the search cache."""
+        miner_cached = PubMedMiner(enable_cache=True)
+        miner_cached._search_cache["key"] = ["1", "2"]
+        assert miner_cached.get_cache_size() == 1
+        miner_cached.clear_cache()
+        assert miner_cached.get_cache_size() == 0
+
+    def test_parse_pubmed_summary_with_doi(self, miner: PubMedMiner) -> None:
+        """Test parsing PubMed summary that includes a DOI."""
+        data = {
+            "title": "Test",
+            "authors": [],
+            "elocationid": "DOI: 10.1234/test",
+            "pubdate": "2023",
+        }
+        result = miner._parse_pubmed_summary(data)
+        assert result is not None
+        assert result.doi == "10.1234/test"
+
+    def test_parse_pubmed_summary_no_year(self, miner: PubMedMiner) -> None:
+        """Test parsing PubMed summary with no year."""
+        data = {"title": "Test Title", "authors": [], "pubdate": ""}
+        result = miner._parse_pubmed_summary(data)
+        assert result is not None
+        assert result.year is None
+
+    def test_parse_pubmed_summary_error_handling(self, miner: PubMedMiner) -> None:
+        """Test that None input to parse is handled gracefully."""
+        result = miner._parse_pubmed_summary(None)
+        assert result is None
+
+    def test_fetch_publications_empty_pmids(self, miner: PubMedMiner) -> None:
+        """Test fetching with empty PMID list."""
+        result = miner.fetch_publications([])
+        assert result == []
+
+    def test_search_by_authors(self) -> None:
+        """Test searching corpus by author field."""
+        corpus = LiteratureCorpus()
+        corpus.add_publication(Publication(
+            title="Test", authors=["Jane Smith", "John Doe"]
+        ))
+        results = corpus.search_publications("Smith", field="authors")
+        assert len(results) == 1
+
+    def test_get_text_with_full_text(self) -> None:
+        """Test text corpus extraction with full_text field."""
+        corpus = LiteratureCorpus()
+        corpus.add_publication(Publication(
+            title="T", authors=["A"], full_text="Full text content here"
+        ))
+        texts = corpus.get_text_corpus()
+        assert any("Full text content" in t for t in texts)
+
 
 class TestArXivMiner:
     """Test ArXiv mining functionality."""
@@ -415,8 +536,6 @@ class TestArXivMiner:
 
     def test_parse_arxiv_entry_missing_title(self, miner: ArXivMiner) -> None:
         """Test parsing ArXiv entry with missing title."""
-        import xml.etree.ElementTree as ET
-
         entry_xml = """<entry xmlns="http://www.w3.org/2005/Atom">
             <author><name>Author, A.</name></author>
             <summary>Test abstract</summary>
@@ -428,6 +547,67 @@ class TestArXivMiner:
         pub = miner._parse_arxiv_entry(entry, ns)
 
         assert pub is None
+
+    def test_parse_arxiv_entry_with_doi(self, miner: ArXivMiner) -> None:
+        """Test parsing ArXiv entry with DOI element."""
+        ns = {"arxiv": "http://www.w3.org/2005/Atom"}
+        xml = """<entry xmlns="http://www.w3.org/2005/Atom">
+            <title>Paper with DOI</title>
+            <author><name>Author</name></author>
+            <doi>10.1234/test</doi>
+        </entry>"""
+        entry = ET.fromstring(xml)
+        result = miner._parse_arxiv_entry(entry, ns)
+        assert result is not None
+        assert result.title == "Paper with DOI"
+
+    def test_parse_arxiv_entry_multiple_authors(self, miner: ArXivMiner) -> None:
+        """Test parsing ArXiv entry with multiple authors."""
+        ns = {"arxiv": "http://www.w3.org/2005/Atom"}
+        xml = """<entry xmlns="http://www.w3.org/2005/Atom">
+            <title>Multi-author Paper</title>
+            <author><name>Author One</name></author>
+            <author><name>Author Two</name></author>
+            <author><name>Author Three</name></author>
+        </entry>"""
+        entry = ET.fromstring(xml)
+        result = miner._parse_arxiv_entry(entry, ns)
+        assert result is not None
+        assert len(result.authors) == 3
+
+    def test_parse_arxiv_entry_empty_title(self, miner: ArXivMiner) -> None:
+        """Test parsing ArXiv entry with empty title returns None."""
+        ns = {"arxiv": "http://www.w3.org/2005/Atom"}
+        xml = """<entry xmlns="http://www.w3.org/2005/Atom">
+            <title></title>
+            <author><name>Author</name></author>
+        </entry>"""
+        entry = ET.fromstring(xml)
+        result = miner._parse_arxiv_entry(entry, ns)
+        assert result is None
+
+    def test_search_unreachable_port(self, miner: ArXivMiner) -> None:
+        """Test ArXiv search when network is unreachable."""
+        original_base_url = miner.BASE_URL
+        miner.BASE_URL = "http://127.0.0.1:1/api/query?"
+        try:
+            results = miner.search("test query")
+        finally:
+            miner.BASE_URL = original_base_url
+        assert results == []
+
+    def test_search_invalid_xml(self, httpserver, miner: ArXivMiner) -> None:
+        """Test ArXiv search when server returns invalid XML."""
+        httpserver.expect_request("/api/query").respond_with_data(
+            "invalid xml <<<", content_type="application/xml"
+        )
+        original_base_url = miner.BASE_URL
+        miner.BASE_URL = httpserver.url_for("/api/query?")
+        try:
+            results = miner.search("test")
+        finally:
+            miner.BASE_URL = original_base_url
+        assert results == []
 
 
 class TestLiteratureMiningIntegration:
@@ -485,7 +665,7 @@ class TestLiteratureMiningIntegration:
         assert stats["total_publications"] == 2
         assert stats["publications_with_abstract"] == 2
 
-    @pytest.mark.skipif(not Path("tmp").exists(), reason="Temporary directory needed")
+
     def test_full_mining_workflow(self, tmp_path: Path) -> None:
         """Test a complete mining workflow."""
         corpus = LiteratureCorpus()
@@ -526,7 +706,7 @@ class TestLiteratureMiningIntegration:
 
     def test_create_entomology_query(self) -> None:
         """Test entomology query creation."""
-        from src.data.literature_mining import create_entomology_query
+        from data.literature_mining import create_entomology_query
 
         query = create_entomology_query()
 
@@ -540,16 +720,158 @@ class TestLiteratureMiningIntegration:
 
     def test_mine_entomology_literature(self) -> None:
         """Test the complete entomology literature mining workflow."""
-        from src.data.literature_mining import (LiteratureCorpus,
-                                           mine_entomology_literature)
-
         # This test is primarily for code coverage - the actual mining
         # would require real API calls, so we just test that it returns a corpus
-        # Note: This function makes real API calls, so we'll just test the structure
-        # Test that the function exists and can be called (without actually calling it
-        # to avoid real API dependencies in CI)
         assert callable(mine_entomology_literature)
 
         # Test that it returns the expected type when we create an empty corpus
         corpus = LiteratureCorpus()
         assert isinstance(corpus, LiteratureCorpus)
+
+
+class TestCreateEntomologyQuery:
+    """Tests for the create_entomology_query function."""
+
+    def test_query_contains_key_terms(self) -> None:
+        """Test query contains key entomological terms."""
+        query = create_entomology_query()
+        assert isinstance(query, str)
+        assert "ants" in query.lower()
+        assert "formicidae" in query.lower()
+        assert "eusocial" in query.lower()
+        assert "colony" in query.lower()
+
+    def test_query_format(self) -> None:
+        """Test query has expected format with OR connectors and language filter."""
+        query = create_entomology_query()
+        assert "OR" in query
+        assert "English" in query
+
+
+class TestMineEntomologyLiteratureWithServer:
+    """Tests for mine_entomology_literature with real HTTP server."""
+
+    def test_with_httpserver(self, httpserver, monkeypatch) -> None:
+        """Test mine_entomology_literature with real HTTP server."""
+        pubmed_search_response = {
+            "esearchresult": {"idlist": ["111", "222"]}
+        }
+        httpserver.expect_request("/esearch.fcgi").respond_with_json(pubmed_search_response)
+
+        pubmed_summary_response = {
+            "result": {
+                "111": {
+                    "title": "PubMed Paper on Ants",
+                    "authors": [{"name": "Author A"}],
+                    "pubdate": "2023",
+                    "source": "Entomology Journal",
+                    "uid": "111",
+                }
+            }
+        }
+        httpserver.expect_request("/esummary.fcgi").respond_with_json(pubmed_summary_response)
+
+        arxiv_xml_response = """<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <entry>
+    <title>Ant colony behavior modeling</title>
+    <author><name>Author B</name></author>
+    <summary>Study of ant colony behavior in social insect populations.</summary>
+    <published>2024-01-15T00:00:00Z</published>
+  </entry>
+</feed>"""
+        httpserver.expect_request("/api/query").respond_with_data(
+            arxiv_xml_response, content_type="application/xml"
+        )
+
+        test_base = httpserver.url_for("/")
+        monkeypatch.setattr(PubMedMiner, "BASE_URL", test_base)
+        monkeypatch.setattr(ArXivMiner, "BASE_URL", httpserver.url_for("/api/query?"))
+        monkeypatch.setattr(time, "sleep", lambda _: None)
+
+        corpus = mine_entomology_literature(max_results=10)
+        assert isinstance(corpus, LiteratureCorpus)
+        assert len(corpus.publications) >= 1
+
+
+class TestLiteratureCorpusExpanded:
+    """Expanded tests for LiteratureCorpus methods."""
+
+    @pytest.fixture
+    def corpus_with_data(self) -> LiteratureCorpus:
+        """Create a LiteratureCorpus with diverse publications."""
+        corpus = LiteratureCorpus()
+        pubs = [
+            Publication(
+                title="Ant colony optimization",
+                authors=["A. Smith", "B. Jones"],
+                year=2020,
+                abstract="Study of ant colony optimization algorithms.",
+                doi="10.1234/test1",
+            ),
+            Publication(
+                title="Eusociality in Hymenoptera",
+                authors=["C. Wilson", "A. Smith"],
+                year=2021,
+                abstract="Evolution of eusociality in bees and ants.",
+                journal="Nature",
+            ),
+            Publication(
+                title="Termite mound architecture",
+                authors=["D. Brown"],
+                year=2019,
+                abstract="Architectural patterns in termite mounds.",
+            ),
+            Publication(
+                title="Swarm intelligence review",
+                authors=["E. Davis", "F. Garcia"],
+                year=2022,
+                abstract="A comprehensive review of swarm intelligence.",
+            ),
+        ]
+        for pub in pubs:
+            corpus.add_publication(pub)
+        return corpus
+
+    def test_filter_by_year_range(self, corpus_with_data: LiteratureCorpus) -> None:
+        """Test filtering publications by year range."""
+        pubs = [
+            p for p in corpus_with_data.publications
+            if p.year and 2020 <= p.year <= 2021
+        ]
+        assert len(pubs) == 2
+
+    def test_search_title_match(self, corpus_with_data: LiteratureCorpus) -> None:
+        """Test searching by title."""
+        results = corpus_with_data.search_publications("colony")
+        assert len(results) >= 1
+
+    def test_search_abstract_match(self, corpus_with_data: LiteratureCorpus) -> None:
+        """Test searching by abstract content."""
+        results = corpus_with_data.search_publications("architecture")
+        assert len(results) >= 1
+
+    def test_corpus_save_load_roundtrip(self, corpus_with_data: LiteratureCorpus, tmp_path) -> None:
+        """Test save/load roundtrip."""
+        filepath = tmp_path / "corpus.json"
+        corpus_with_data.save_to_file(filepath)
+        assert filepath.exists()
+        loaded = LiteratureCorpus.load_from_file(filepath)
+        assert len(loaded.publications) == len(corpus_with_data.publications)
+
+    def test_publication_to_dict_from_dict_roundtrip(self) -> None:
+        """Test Publication serialization roundtrip."""
+        pub = Publication(
+            title="Test Title",
+            authors=["A", "B"],
+            year=2024,
+            abstract="Test abstract",
+            doi="10.1234/test",
+            journal="Test Journal",
+        )
+        d = pub.to_dict()
+        restored = Publication.from_dict(d)
+        assert restored.title == pub.title
+        assert restored.authors == pub.authors
+        assert restored.year == pub.year
+        assert restored.doi == pub.doi

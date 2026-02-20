@@ -6,11 +6,11 @@ system boundary definition, structure preservation, and theoretical validation.
 
 import numpy as np
 import pytest
-from src.free_energy_principle import (FreeEnergyPrinciple,
-                                       define_what_is_a_thing,
-                                       demonstrate_fep_concepts)
-from src.validation import ValidationFramework
-from utils.exceptions import ValidationError
+from src.core.free_energy_principle import (FreeEnergyPrinciple,
+                                            define_what_is_a_thing,
+                                            demonstrate_fep_concepts)
+from src.analysis.validation import ValidationFramework
+from src.utils.exceptions import ValidationError
 
 
 class TestFreeEnergyPrinciple:
@@ -384,3 +384,72 @@ class TestFEPIntegration:
 
         for concept in key_concepts:
             assert concept in definition_text
+
+
+class TestFreeEnergyPrincipleCoverage:
+    """Additional tests to cover uncovered branches."""
+
+    def test_missing_system_state_raises(self):
+        """Test that missing required state raises ValidationError."""
+        from src.utils.exceptions import ValidationError
+
+        states = {
+            "internal": np.array([0.5, 0.5]),
+            "external": np.array([0.3, 0.7]),
+            # Missing "sensory"
+        }
+        with pytest.raises(ValidationError, match="Missing required"):
+            FreeEnergyPrinciple(states)
+
+    def test_shape_mismatch_logs_warning(self):
+        """Test that shape mismatch between internal and sensory logs warning."""
+        states = {
+            "internal": np.array([0.5, 0.5, 0.3]),
+            "external": np.array([0.3, 0.7]),
+            "sensory": np.array([0.4, 0.6]),  # Different shape from internal
+        }
+        # Should NOT raise, just warn
+        fep = FreeEnergyPrinciple(states)
+        assert fep is not None
+
+    def test_energy_with_matrix_shapes(self):
+        """Test energy calculation with 2D observation matrix."""
+        states = {
+            "internal": np.array([0.5, 0.5]),
+            "external": np.array([0.3, 0.7]),
+            "sensory": np.array([0.4, 0.6]),
+        }
+        fep = FreeEnergyPrinciple(states)
+
+        # 2D observation matrix with compatible beliefs
+        obs_matrix = np.array([[0.8, 0.2], [0.3, 0.7]])
+        beliefs = np.array([0.5, 0.5])
+        fe, components = fep.calculate_free_energy(obs_matrix, beliefs)
+        assert np.isfinite(fe)
+
+    def test_define_system_boundary(self):
+        """Test system boundary (Markov blanket) definition."""
+        states = {
+            "internal": np.array([0.5, 0.5]),
+            "external": np.array([0.3, 0.7]),
+            "sensory": np.array([0.4, 0.6]),
+        }
+        fep = FreeEnergyPrinciple(states)
+        boundary = fep.define_system_boundary()
+        assert "internal_states" in boundary
+        assert "external_states" in boundary
+        assert "sensory_states" in boundary
+        assert "active_states" in boundary
+
+    def test_structure_preservation_short(self):
+        """Test structure preservation with few time steps."""
+        states = {
+            "internal": np.array([0.5, 0.5]),
+            "external": np.array([0.3, 0.7]),
+            "sensory": np.array([0.4, 0.6]),
+        }
+        fep = FreeEnergyPrinciple(states)
+        result = fep.demonstrate_structure_preservation(time_steps=5)
+        assert "internal_states" in result
+        assert "free_energy_history" in result
+        assert len(result["free_energy_history"]) == 5

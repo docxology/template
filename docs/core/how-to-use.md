@@ -257,7 +257,7 @@ Level 10-12: Expert Usage (1-2 months)
 
 - **[Markdown Template Guide](../usage/markdown-template-guide.md)** - formatting reference
 - **[Manuscript Numbering](../usage/manuscript-numbering-system.md)** - Section organization
-- **[LaTeX Preamble](../../projects/code_project/manuscript/preamble.md)** - Styling configuration example
+- **[LaTeX Preamble](../../projects/act_inf_metaanalysis/manuscript/preamble.md)** - Styling configuration example
 
 ### Examples & Help
 

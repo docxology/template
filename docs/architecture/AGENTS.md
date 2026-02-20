@@ -327,7 +327,7 @@ cat docs/architecture/decision-tree.md
 - [`../core/architecture.md`](../core/architecture.md) - System architecture overview
 - [`../core/workflow.md`](../core/workflow.md) - Development workflow
 - [`../../infrastructure/AGENTS.md`](../../infrastructure/AGENTS.md) - Infrastructure implementation
-- [`../../projects/code_project/src/AGENTS.md`](../../projects/code_project/src/AGENTS.md) - Code project implementation
+- [`../../projects/act_inf_metaanalysis/src/AGENTS.md`](../../projects/act_inf_metaanalysis/src/AGENTS.md) - Active project implementation
 
 **System Documentation:**
 - [`../../AGENTS.md`](../../AGENTS.md) - system overview

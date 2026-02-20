@@ -6,11 +6,11 @@ policy selection, perception as inference, and theoretical correctness validatio
 
 import numpy as np
 import pytest
-from src.active_inference import (ActiveInferenceFramework,
-                                  demonstrate_active_inference_concepts)
-from src.generative_models import create_simple_generative_model
-from src.validation import ValidationFramework
-from utils.exceptions import ValidationError
+from src.core.active_inference import (ActiveInferenceFramework,
+                                      demonstrate_active_inference_concepts)
+from src.core.generative_models import create_simple_generative_model
+from src.analysis.validation import ValidationFramework
+from src.utils.exceptions import ValidationError
 
 
 class TestActiveInferenceFramework:

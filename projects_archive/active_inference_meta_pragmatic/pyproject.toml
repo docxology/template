@@ -9,10 +9,29 @@ build-backend = "setuptools.build_meta"
 name = "active-inference-meta-pragmatic"
 version = "1.0.0"
 description = "Active Inference as a Meta-(Pragmatic/Epistemic) Method: A theoretical framework for understanding cognitive science implications"
+readme = "README.md"
+license = {text = "Apache-2.0"}
 authors = [
     {name = "Daniel Friedman", email = "daniel.friedman@example.com"}
 ]
 requires-python = ">=3.10"
+keywords = [
+    "active-inference",
+    "free-energy-principle",
+    "meta-cognition",
+    "cognitive-security",
+    "generative-models",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
 dependencies = [
     "numpy>=1.24.0",
     "scipy>=1.10.0",
@@ -47,6 +66,13 @@ exclude_lines = [
     "if __name__ == .__main__.:",
     "raise NotImplementedError",
 ]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+check_untyped_defs = true
 
 [tool.uv]
 # Inherits workspace settings from root pyproject.toml

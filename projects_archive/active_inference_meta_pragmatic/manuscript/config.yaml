@@ -34,6 +34,12 @@ keywords:
   - "cognitive science"
   - "cognitive security"
   - "generative models"
+  - "expected free energy"
+  - "predictive processing"
+  - "AI safety"
+  - "value alignment"
+  - "framework specification"
+  - "cognitive_security"
 
 # Additional metadata
 metadata:
@@ -47,11 +53,10 @@ llm:
   reviews:
     enabled: true
     types:
-      - executive_summary  # Default: single review
-      # Uncomment to enable additional reviews:
-      # - quality_review
-      # - methodology_review
-      # - improvement_suggestions
+      - executive_summary
+      - quality_review
+      - methodology_review
+      - improvement_suggestions
   translations:
     enabled: true  # Set to false to disable translation generation
     languages:

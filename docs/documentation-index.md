@@ -164,6 +164,7 @@ Development standards are documented in the `.cursorrules/` directory:
 ### **Dependency & Build Management**
 
 - **[`docs/operational/dependency-management.md`](operational/dependency-management.md)** - guide for uv package manager
+- **[`docs/operational/build-history.md`](operational/build-history.md)** - Build history and changelog
 - **[`docs/operational/build-system.md`](operational/build-system.md)** - build system reference
 - **[`docs/operational/performance-optimization.md`](operational/performance-optimization.md)** - Build time optimization and caching strategies
 
@@ -289,6 +290,7 @@ docs/
 ├── operational/                        # Operational workflows
 │   ├── README.md                       # Operational docs overview
 │   ├── AGENTS.md                       # Operational technical guide
+│   ├── build-history.md                # Build history and changelog
 │   ├── build-system.md                 # Build system reference
 │   ├── ci-cd-integration.md            # CI/CD setup
 │   ├── dependency-management.md        # Package management

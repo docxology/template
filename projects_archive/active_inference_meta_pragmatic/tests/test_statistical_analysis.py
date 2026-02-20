@@ -6,8 +6,8 @@ ensuring correct statistical computations and error handling.
 
 import numpy as np
 import pytest
-from src.statistical_analysis import StatisticalAnalyzer
-from utils.exceptions import ValidationError
+from src.analysis.statistical_analysis import StatisticalAnalyzer
+from src.utils.exceptions import ValidationError
 
 
 class TestStatisticalAnalyzer:
@@ -381,3 +381,115 @@ class TestStatisticalAnalyzer:
         small_data = np.array([1e-10, 2e-10, 3e-10])
         stats_small = analyzer.calculate_descriptive_stats(small_data)
         assert stats_small["mean"] > 0
+
+
+class TestStatisticalAnalyzerCoverage:
+    """Additional tests to increase coverage of uncovered branches."""
+
+    def test_descriptive_stats_fewer_than_3_points(self):
+        """Test descriptive stats with fewer than 3 data points (skewness/kurtosis fallback)."""
+        analyzer = StatisticalAnalyzer()
+        data = np.array([1.0, 2.0])
+        result = analyzer.calculate_descriptive_stats(data)
+        assert result["skewness"] == 0.0
+        assert result["kurtosis"] == 0.0
+        assert result["count"] == 2
+
+    def test_correlation_moderate_strength(self):
+        """Test correlation interpretation for moderate strength."""
+        analyzer = StatisticalAnalyzer()
+        np.random.seed(42)
+        x = np.arange(20, dtype=float)
+        y = x * 0.5 + np.random.normal(0, 3, 20)
+        result = analyzer.calculate_correlation(x, y)
+        assert "correlation" in result
+        assert isinstance(result["interpretation"], str)
+
+    def test_confidence_interval_with_confidence_level_param(self):
+        """Test confidence interval using confidence_level parameter name."""
+        analyzer = StatisticalAnalyzer()
+        data = np.array([1, 2, 3, 4, 5], dtype=float)
+        result = analyzer.calculate_confidence_interval(data, confidence_level=0.99)
+        assert "mean" in result
+        assert result["confidence_level"] == 0.99
+
+    def test_confidence_interval_both_params_raises(self):
+        """Test that specifying both confidence and confidence_level raises error."""
+        analyzer = StatisticalAnalyzer()
+        data = np.array([1, 2, 3, 4, 5], dtype=float)
+        with pytest.raises(ValidationError):
+            analyzer.calculate_confidence_interval(data, confidence_level=0.95, confidence=0.99)
+
+    def test_t_test_invalid_test_type(self):
+        """Test t-test with invalid test_type raises error."""
+        analyzer = StatisticalAnalyzer()
+        g1 = np.array([1.0, 2.0, 3.0])
+        g2 = np.array([4.0, 5.0, 6.0])
+        with pytest.raises(ValidationError):
+            analyzer.perform_t_test(g1, g2, test_type="invalid")
+
+    def test_t_test_group_too_small(self):
+        """Test t-test with group having fewer than 2 observations."""
+        analyzer = StatisticalAnalyzer()
+        with pytest.raises(ValidationError):
+            analyzer.perform_t_test(np.array([1.0]), np.array([1.0, 2.0]))
+        with pytest.raises(ValidationError):
+            analyzer.perform_t_test(np.array([1.0, 2.0]), np.array([1.0]))
+
+    def test_t_test_paired_unequal_sizes(self):
+        """Test paired t-test with unequal sample sizes."""
+        analyzer = StatisticalAnalyzer()
+        with pytest.raises(ValidationError):
+            analyzer.perform_t_test(
+                np.array([1.0, 2.0, 3.0]),
+                np.array([4.0, 5.0]),
+                test_type="paired",
+            )
+
+    def test_effect_size_interpretation_all_levels(self):
+        """Test effect size interpretation covers all branches."""
+        analyzer = StatisticalAnalyzer()
+        assert "large" in analyzer._interpret_effect_size(0.9)
+        assert "medium" in analyzer._interpret_effect_size(0.6)
+        assert "small" in analyzer._interpret_effect_size(0.3)
+        assert "negligible" in analyzer._interpret_effect_size(0.1)
+
+    def test_algorithm_performance_empty_raises(self):
+        """Test algorithm performance with empty results raises error."""
+        analyzer = StatisticalAnalyzer()
+        with pytest.raises(ValidationError):
+            analyzer.analyze_algorithm_performance({})
+
+    def test_convenience_functions(self):
+        """Test module-level convenience functions."""
+        from src.analysis.statistical_analysis import (
+            calculate_descriptive_stats,
+            calculate_correlation,
+            calculate_confidence_interval,
+            anova_test,
+        )
+
+        data = np.array([1.0, 2.0, 3.0, 4.0, 5.0])
+        stats = calculate_descriptive_stats(data)
+        assert stats["mean"] == 3.0
+
+        corr = calculate_correlation(data, data)
+        assert np.isclose(corr["correlation"], 1.0)
+
+        ci = calculate_confidence_interval(data)
+        assert "mean" in ci
+
+        result = anova_test(data, data + 5)
+        assert "f_statistic" in result
+
+    def test_demonstrate_statistical_analysis(self):
+        """Test the demonstrate_statistical_analysis function."""
+        from src.analysis.statistical_analysis import demonstrate_statistical_analysis
+
+        demo = demonstrate_statistical_analysis()
+        assert "descriptive_statistics" in demo
+        assert "correlation_analysis" in demo
+        assert "confidence_interval" in demo
+        assert "anova_test" in demo
+        assert "algorithm_comparison" in demo
+        assert "purpose" in demo

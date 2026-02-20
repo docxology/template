@@ -17,14 +17,14 @@ class TestExampleFigureScript:
     def test_script_exists_and_executable(self):
         """Test that the example_figure.py script exists."""
         script_path = os.path.join(
-            os.path.dirname(__file__), "..", "..", "scripts", "example_figure.py"
+            os.path.dirname(__file__), "..", "..", "scripts", "_example_figure.py"
         )
         assert os.path.exists(script_path)
 
     def test_script_has_shebang(self):
         """Test that script has proper Python shebang."""
         script_path = os.path.join(
-            os.path.dirname(__file__), "..", "..", "scripts", "example_figure.py"
+            os.path.dirname(__file__), "..", "..", "scripts", "_example_figure.py"
         )
         with open(script_path, "r") as f:
             first_line = f.readline().strip()
@@ -74,7 +74,7 @@ if __name__ == "__main__":
         """Test main function successfully imports from src/ modules."""
         # Create a temporary copy of the script for testing
         script_path = os.path.join(
-            os.path.dirname(__file__), "..", "..", "scripts", "example_figure.py"
+            os.path.dirname(__file__), "..", "..", "scripts", "_example_figure.py"
         )
 
         # Create test environment
@@ -129,7 +129,7 @@ def find_minimum(numbers):
         (core_dir / "example.py").write_text(example_content)
 
         # Copy script to test directory and modify it for testing
-        test_script = test_root / "scripts" / "example_figure.py"
+        test_script = test_root / "scripts" / "_example_figure.py"
         test_script.parent.mkdir()
         shutil.copy2(script_path, test_script)
 
@@ -177,9 +177,9 @@ def find_minimum(numbers):
         test_root.mkdir()
 
         script_path = os.path.join(
-            os.path.dirname(__file__), "..", "..", "scripts", "example_figure.py"
+            os.path.dirname(__file__), "..", "..", "scripts", "_example_figure.py"
         )
-        test_script = test_root / "scripts" / "example_figure.py"
+        test_script = test_root / "scripts" / "_example_figure.py"
         test_script.parent.mkdir()
         shutil.copy2(script_path, test_script)
 
@@ -279,9 +279,9 @@ def get_logger(name: str) -> logging.Logger:
 
         # Copy script
         script_path = os.path.join(
-            os.path.dirname(__file__), "..", "..", "scripts", "example_figure.py"
+            os.path.dirname(__file__), "..", "..", "scripts", "_example_figure.py"
         )
-        test_script = test_root / "scripts" / "example_figure.py"
+        test_script = test_root / "scripts" / "_example_figure.py"
         test_script.parent.mkdir()
         shutil.copy2(script_path, test_script)
 
@@ -332,9 +332,9 @@ def find_minimum(numbers): return min(numbers) if numbers else None
         )
 
         script_path = os.path.join(
-            os.path.dirname(__file__), "..", "..", "scripts", "example_figure.py"
+            os.path.dirname(__file__), "..", "..", "scripts", "_example_figure.py"
         )
-        test_script = test_root / "scripts" / "example_figure.py"
+        test_script = test_root / "scripts" / "_example_figure.py"
         test_script.parent.mkdir()
         shutil.copy2(script_path, test_script)
 
@@ -379,9 +379,9 @@ def find_minimum(numbers): return min(numbers) if numbers else None
         )
 
         script_path = os.path.join(
-            os.path.dirname(__file__), "..", "..", "scripts", "example_figure.py"
+            os.path.dirname(__file__), "..", "..", "scripts", "_example_figure.py"
         )
-        test_script = test_root / "scripts" / "example_figure.py"
+        test_script = test_root / "scripts" / "_example_figure.py"
         test_script.parent.mkdir()
         shutil.copy2(script_path, test_script)
 
@@ -424,7 +424,7 @@ def find_minimum(numbers): return min(numbers) if numbers else None
         )
 
         script_path = os.path.join(
-            os.path.dirname(__file__), "..", "..", "scripts", "example_figure.py"
+            os.path.dirname(__file__), "..", "..", "scripts", "_example_figure.py"
         )
         test_script = test_root / "scripts" / "example_figure.py"
         test_script.parent.mkdir()
@@ -490,7 +490,7 @@ def find_minimum(numbers): return min(numbers) if numbers else None
         )
 
         script_path = os.path.join(
-            os.path.dirname(__file__), "..", "..", "scripts", "example_figure.py"
+            os.path.dirname(__file__), "..", "..", "scripts", "_example_figure.py"
         )
         test_script = test_root / "scripts" / "example_figure.py"
         test_script.parent.mkdir()
@@ -576,9 +576,9 @@ def broken_function(
         )
 
         script_path = os.path.join(
-            os.path.dirname(__file__), "..", "..", "scripts", "example_figure.py"
+            os.path.dirname(__file__), "..", "..", "scripts", "_example_figure.py"
         )
-        test_script = test_root / "scripts" / "example_figure.py"
+        test_script = test_root / "scripts" / "_example_figure.py"
         test_script.parent.mkdir()
         shutil.copy2(script_path, test_script)
 
@@ -626,9 +626,9 @@ def find_minimum(numbers): return min(numbers) if numbers else None
         )
 
         script_path = os.path.join(
-            os.path.dirname(__file__), "..", "..", "scripts", "example_figure.py"
+            os.path.dirname(__file__), "..", "..", "scripts", "_example_figure.py"
         )
-        test_script = test_root / "scripts" / "example_figure.py"
+        test_script = test_root / "scripts" / "_example_figure.py"
         test_script.parent.mkdir()
         shutil.copy2(script_path, test_script)
 

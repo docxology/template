@@ -4,6 +4,21 @@ This section provides detailed analytical results and theoretical extensions tha
 
 ## Theoretical Extensions
 
+### Formalism of Individuality: Markov Blankets
+
+To rigorize the "Unit of Individuality" domain, we employ the **Markov Blanket** formalism \cite{friston2013life, kirchhoff2018markov}. A Markov Blanket ($B$) defines the boundary of a system by rendering internal states ($\mu$) conditionally independent of external states ($\eta$):
+
+\begin{equation}\label{eq:markov_blanket}
+P(\mu | \eta, B) = P(\mu | B)
+\end{equation}
+
+In biological systems, the blanket consists of **sensory states** (inputs) and **active states** (outputs).
+
+- **Organismal Blanket**: The ant's cuticle and sensory receptors.
+- **Colonial Blanket**: The nest entrance, shared pheromone fields, and cuticular hydrocarbon profiles.
+
+Linguistic confusion arises when terms index the wrong blanket. "Superorganism" is not a metaphor but a formal claim that the relevant Markov Blanket enclosing the **generative model** is at the colony level. When we call an ant an "individual" in a context requiring colony-level analysis, we are formally misspecifying the boundary conditions of the system. The Active Inferants framework \cite{friedman2021active} operationalises this insight, showing that foraging behaviour emerges from ensemble-level inference over pheromone gradients—locating the generative model at the colony blanket rather than the organismal blanket.
+
 ### Extended Discourse Analysis Frameworks
 
 Building on our mixed-methodology approach, we extend the theoretical framework for analyzing scientific discourse beyond the six Ento-Linguistic domains. Our analysis reveals that terminology networks serve as both descriptive tools and constitutive elements of scientific knowledge production.
@@ -131,7 +146,7 @@ Ultra-longitudinal analysis reveals century-scale conceptual evolution:
 
 **Molecular Biology Era (1950-1999)**: Gene expression and hormonal control of caste differentiation
 
-**Genomic Era (2000-2024)**: Epigenetic and transcriptomic regulation of caste phenotypes \cite{chandra2021epigenetics}, accompanied by calls to broaden conceptions of sociality beyond traditional eusocial models \cite{sociable2025}.
+**Genomic Era (2000-2024)**: Epigenetic and transcriptomic regulation of caste phenotypes \cite{chandra2021epigenetics}, accompanied by calls to broaden conceptions of sociality beyond traditional eusocial models \cite{sociable2025}. \citet{warner2024caste} demonstrate that caste differentiation becomes increasingly *canalized* from early development through cascading gene-expression changes modulated by juvenile hormone signaling, while gene expression in *Lasius niger* is more strongly influenced by age than by caste—further undermining the fixedness implied by "caste" terminology.
 
 ### Superorganism Concept Evolution
 

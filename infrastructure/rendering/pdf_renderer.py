@@ -855,7 +855,7 @@ class PDFRenderer:
                     )
 
         # Insert bibliography commands before \end{document} if bibliography exists
-        if bib_exists:
+        if bib_exists and "\\bibliography{" not in tex_content:
             end_doc_idx = tex_content.rfind("\\end{document}")
             if end_doc_idx > 0:
                 bibliography_commands = (
@@ -1770,10 +1770,10 @@ class PDFRenderer:
 
                     preamble_lines.append(f"\\author{{{author_str}}}")
 
-            # Note: We do NOT add a separate \date{} command here.
-            # The date is included in the \author block above for tight spacing.
-            # The \date{} command in 00_preamble.md (if present) will be used for the image.
-            # If 00_preamble.md is missing, \date{} will be empty (standard behavior).
+            if date:
+                preamble_lines.append(f"\\date{{{date}}}")
+            else:
+                preamble_lines.append(r"\date{\today}")
 
             logger.debug(
                 f"Generated title page preamble with {len(preamble_lines)} commands"

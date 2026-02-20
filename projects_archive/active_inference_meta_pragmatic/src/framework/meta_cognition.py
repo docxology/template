@@ -19,8 +19,8 @@ from typing import Dict, List, Optional, Tuple, Union
 
 import numpy as np
 from numpy.typing import NDArray
-from utils.exceptions import ValidationError
-from utils.logging import get_logger
+from ..utils.exceptions import ValidationError
+from ..utils.logging import get_logger
 
 logger = get_logger(__name__)
 
@@ -477,87 +477,14 @@ class MetaCognitiveSystem:
 def demonstrate_meta_cognitive_processes() -> Dict[str, Union[str, List, Dict]]:
     """Demonstrate meta-cognitive processes and their operation.
 
+    Convenience function that creates a MetaCognitiveSystem instance
+    and delegates to its demonstrate_meta_cognitive_processes method.
+
     Returns:
         Dictionary containing demonstrations of meta-cognitive capabilities
     """
-    # Create a meta-cognitive system for demonstration
     system = MetaCognitiveSystem()
-
-    # Simulate a scenario with varying confidence
-    scenarios = [
-        {
-            "name": "High Confidence Scenario",
-            "beliefs": np.array([0.9, 0.05, 0.05]),
-            "uncertainty": 0.1,
-        },
-        {
-            "name": "Moderate Confidence Scenario",
-            "beliefs": np.array([0.6, 0.3, 0.1]),
-            "uncertainty": 0.3,
-        },
-        {
-            "name": "Low Confidence Scenario",
-            "beliefs": np.array([0.4, 0.3, 0.3]),
-            "uncertainty": 0.7,
-        },
-    ]
-
-    demonstrations = []
-
-    for scenario in scenarios:
-        assessment = system.assess_inference_confidence(
-            scenario["beliefs"], scenario["uncertainty"]
-        )
-
-        attention = system.adjust_attention_allocation(
-            assessment, {"monitoring": 1.0, "processing": 1.0, "evaluation": 1.0}
-        )
-
-        control = system.implement_meta_cognitive_control(
-            {"current_beliefs": scenario["beliefs"]}, assessment
-        )
-
-        demonstrations.append(
-            {
-                "scenario": scenario["name"],
-                "assessment": assessment,
-                "attention_allocation": attention,
-                "control_decision": control,
-            }
-        )
-
-    meta_cognitive_explanation = {
-        "core_concept": """
-        Meta-cognition enables 'thinking about thinking' - the ability to monitor,
-        evaluate, and control one's own cognitive processes. In Active Inference,
-        this manifests as confidence assessment, attention regulation, and adaptive
-        strategy selection.
-        """,
-        "active_inference_role": """
-        Meta-cognition in Active Inference involves evaluating the reliability of
-        inferences and adjusting processing strategies accordingly. Low confidence
-        triggers increased monitoring and more conservative decision-making.
-        """,
-        "quadrant_placement": """
-        Meta-cognition primarily operates in Quadrant 3 (Data & Meta-Cognitive)
-        for reflective processing of raw data, and extends to Quadrant 4
-        (Meta-Data & Meta-Cognitive) for processing meta-data about meta-cognition.
-        """,
-    }
-
-    demonstration_results = {
-        "scenarios": demonstrations,
-        "meta_cognitive_explanation": meta_cognitive_explanation,
-        "key_insights": {
-            "adaptive_control": "Meta-cognition enables dynamic adjustment of cognitive strategies based on confidence",
-            "self_monitoring": "Continuous self-assessment prevents overconfidence and enables error detection",
-            "resource_allocation": "Attention and processing resources are allocated based on meta-cognitive evaluation",
-            "robustness": "Meta-cognitive control increases system robustness in uncertain environments",
-        },
-    }
-
-    logger.info("Demonstrated meta-cognitive processes across confidence scenarios")
-    return demonstration_results
+    return system.demonstrate_meta_cognitive_processes()
 
 
 def demonstrate_thinking_about_thinking() -> Dict[str, str]:

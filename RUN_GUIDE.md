@@ -122,9 +122,9 @@ The template now supports **multiple research projects** in a single repository.
 
 ### Available Projects
 
-The template includes the following active project:
+The template includes the following active projects:
 
-- **`code_project`** - Code-focused with analysis pipeline and figures
+- **`act_inf_metaanalysis`** - Active Inference meta-analysis research
 
 **Note:** Additional projects can be created following the template structure. Archived projects are preserved in `projects_archive/` for reference but are not actively executed.
 
@@ -135,7 +135,7 @@ The template includes the following active project:
 ./run.sh
 
 # Run specific project
-./run.sh --project code_project --pipeline
+./run.sh --project act_inf_metaanalysis --pipeline
 
 # Run all projects sequentially
 ./run.sh --all-projects --pipeline
@@ -271,53 +271,6 @@ Executes the full pipeline but skips infrastructure tests.
 
 - Useful for multi-project execution where infrastructure tests may have already passed
 - Runs project tests only to save time in development workflows
-Generates AI-powered manuscript reviews using local Ollama LLM.
-- Checks Ollama availability and selects best model
-- Extracts full text from combined PDF manuscript
-- Generates executive summary, quality review, methodology review, and improvement suggestions
-- Saves all reviews to `project/output/llm/`
-
-**Requires**: Running Ollama server with at least one model installed. Skips gracefully if unavailable.
-
-#### Option 7: LLM Translations
-
-Generates multi-language technical abstract translations.
-
-- Translates abstract to configured languages (see `project/manuscript/config.yaml`)
-- Uses local Ollama LLM for translation
-- Saves translations to `project/output/llm/`
-
-**Requires**: Running Ollama server and translation configuration in `config.yaml`.
-
-#### Option 8: Run Full Pipeline
-
-Executes the 10-stage build pipeline (displayed as [1/10] to [10/10]):
-
-| Stage | Name | Purpose |
-|-------|------|---------|
-| 1 | Clean Output Directories | Prepare fresh output directories |
-| 2 | Environment Setup | Verify Python, dependencies, build tools |
-| 3 | Infrastructure Tests | Test generic modules (60%+ coverage, may be skipped) |
-| 4 | Project Tests | Test project code (90%+ coverage) |
-| 5 | Project Analysis | Run analysis scripts, generate figures |
-| 6 | PDF Rendering | Generate manuscript PDFs |
-| 7 | Output Validation | Validate all outputs |
-| 8 | LLM Scientific Review | Generate AI reviews (optional, requires Ollama) |
-| 9 | LLM Translations | Multi-language technical abstract generation (optional, requires Ollama) |
-| 10 | Copy Outputs | Copy deliverables to top-level output/ |
-
-**Note**: The pipeline stages are displayed as [1/10] to [10/10] in progress logs. Clean Output Directories is stage 1.
-
-**Generated Outputs**:
-
-- Coverage reports: `htmlcov/`
-- PDF files: `project/output/pdf/`
-- Figures: `project/output/figures/`
-- Data files: `project/output/data/`
-- LLM reviews: `project/output/llm/` (if Ollama available)
-- Pipeline reports: `project/output/reports/` (JSON, HTML, Markdown)
-
-**Checkpoint/Resume**: Supports `--resume` flag to resume from last checkpoint
 
 ### Manuscript Non-Interactive Mode
 

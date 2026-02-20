@@ -18,9 +18,34 @@ This project implements Active Inference as a meta-(pragmatic/epistemic) methodo
 - **Generative Models**: A, B, C, D matrix implementations with validation
 - **Visualization Engine**: Publication-quality plotting with consistent styling
 
+## Source Architecture
+
+The `src/` directory contains 11 modules organized into 4 subpackages:
+
+```
+src/
+├── core/                     # No internal cross-dependencies
+│   ├── active_inference.py
+│   ├── free_energy_principle.py
+│   └── generative_models.py
+├── framework/                # Depends on core
+│   ├── quadrant_framework.py
+│   ├── meta_cognition.py
+│   ├── modeler_perspective.py
+│   └── cognitive_security.py
+├── analysis/                 # Depends on core + framework
+│   ├── data_generator.py
+│   ├── statistical_analysis.py
+│   └── validation.py
+└── visualization/            # Depends on all
+    └── visualization.py
+```
+
+Import convention: `from src.core.active_inference import ActiveInferenceFramework` (with subpackage) or `from src.active_inference import ActiveInferenceFramework` (flat, for backward compatibility via `__init__.py` re-exports).
+
 ## Core Modules
 
-### Active Inference Framework (`src/active_inference.py`)
+### Active Inference Framework (`src/core/active_inference.py`)
 
 **Purpose**: Core Active Inference implementation with EFE calculations
 **Key Classes**:
@@ -95,7 +120,20 @@ This project implements Active Inference as a meta-(pragmatic/epistemic) methodo
 - `synthesize_meta_theoretical_perspective()`: meta-theory synthesis
 **Validation**: Framework consistency and recursive logic
 
-### Data Generator (`src/data_generator.py`)
+### Cognitive Security (`src/framework/cognitive_security.py`)
+
+**Purpose**: Cognitive security analysis within the Active Inference framework
+**Key Classes**:
+
+- `CognitiveSecurityAnalyzer`: Attack surface mapping, parameter drift simulation, anomaly detection
+**Key Methods**:
+- `analyze_attack_surface()`: Map potential attack vectors across all four quadrants
+- `simulate_parameter_drift()`: Simulate gradual corruption of A/B/C/D matrices and measure impact
+- `detect_anomaly()`: Detect anomalous observations using KL divergence thresholds
+- `validate_framework_integrity()`: Comprehensive integrity check across all model components
+**Validation**: Drift detection accuracy, anomaly sensitivity, integrity report correctness
+
+### Data Generator (`src/analysis/data_generator.py`)
 
 **Purpose**: Synthetic data generation for demonstrations and testing
 **Key Classes**:
@@ -178,12 +216,12 @@ from utils.figure_manager import FigureManager
 
 ### Coverage Requirements
 
-- **Project Code**: 90% minimum coverage (currently 91.44% achieved)
+- **Project Code**: 95%+ coverage target
 - **Utilities**: Local utilities with basic functionality
-- **No Mocks Policy**: All tests use data and computations
+- **No Mocks Policy**: All tests use real data and computations
 - **Theoretical Validation**: Mathematics correctness verification
 
-### Test Categories
+### Test Categories (~17 test files)
 
 - `test_active_inference.py`: Core EFE and policy selection
 - `test_free_energy_principle.py`: FEP calculations and system boundaries
@@ -191,14 +229,29 @@ from utils.figure_manager import FigureManager
 - `test_generative_models.py`: Matrix operations and modeler specifications
 - `test_meta_cognition.py`: Confidence assessment and adaptation
 - `test_modeler_perspective.py`: Framework specification and synthesis
+- `test_cognitive_security.py`: Attack surface, drift simulation, anomaly detection
+- `test_data_generator.py`: Data generation correctness and reproducibility
+- `test_statistical_analysis.py`: Statistical methods and hypothesis testing
+- `test_validation.py`: Validation framework self-checks
+- `test_visualization.py`: Figure generation and saving
 
 ## Manuscript Structure
 
 ### Section Organization
 
-- **01-09**: Main manuscript sections with theoretical development
-- **S01-S03**: Supplemental materials with extended methods and results
-- **98-99**: Reference sections (glossary and bibliography)
+- **01**: Abstract with keywords and MSC codes
+- **02**: Introduction (motivation, contributions, paper organization)
+- **03**: Related Work (5 research traditions surveyed)
+- **04**: Background and Theoretical Foundations (FEP, EFE, generative models, meta-aspects)
+- **05**: Methodology (theoretical approach, computational validation)
+- **06**: The 2x2 Quadrant Model (Q1-Q4 with formulations and demonstrations)
+- **07**: Security Implications (threat model, cognitive security, AI safety, ethics)
+- **08**: Discussion (contributions, limitations, future directions)
+- **09**: Conclusion (summary, key insights, closing perspective)
+- **10**: Acknowledgments
+- **11**: Appendix (mathematical derivations, algorithms, benchmarks)
+- **98**: Symbols and Notation glossary
+- **99**: References (52 BibTeX entries)
 
 ### Cross-Reference System
 
@@ -298,5 +351,32 @@ from utils.figure_manager import FigureManager
 3. **Theoretical Validation**: Mathematical correctness checking
 4. **Performance Testing**: Runtime and memory benchmarking
 5. **Rendering Validation**: manuscript processing verification
+
+## Troubleshooting
+
+### Common Import Issues
+
+**Subpackage imports fail**: If `from src.core.active_inference import ...` fails, ensure that `__init__.py` files exist in `src/`, `src/core/`, `src/framework/`, `src/analysis/`, and `src/visualization/`. The flat import path (`from src.active_inference import ...`) may still work via re-exports.
+
+**`utils` not found**: The `utils/` package must be on the Python path. When running from the project root, set `PYTHONPATH=.` or use `uv run` which handles paths automatically.
+
+**`ModuleNotFoundError` for scipy**: Install with `uv sync` or `pip install scipy>=1.10.0`. The `statistical_analysis.py` module requires scipy for hypothesis testing.
+
+### Common Test Issues
+
+**Coverage below threshold**: The project targets 95%+ coverage. If tests fail the coverage gate, check for untested branches in newly added code. Run `uv run pytest tests/ --cov=src --cov-report=term-missing` to see uncovered lines.
+
+**Matplotlib backend errors**: Set `MPLBACKEND=Agg` for headless environments. This is handled automatically by the pipeline but may need manual setting in CI or SSH sessions.
+
+**Numerical tolerance failures**: Some tests validate floating-point properties (probability sums, entropy bounds). If tests fail with small numerical discrepancies, check that numpy version is >= 1.24 and that no global numpy settings have been modified.
+
+## Documentation
+
+Detailed documentation is available in the `doc/` directory:
+
+- `doc/architecture.md` -- System architecture, module dependencies, data flow
+- `doc/api_reference.md` -- Comprehensive API reference with signatures and examples
+- `doc/theoretical_primer.md` -- Accessible introduction to Active Inference theory
+- `doc/quickstart.md` -- 5-minute getting-started guide
 
 This framework provides a solid foundation for implementing, validating, and extending Active Inference as a meta-(pragmatic/epistemic) methodology, with rigorous theoretical foundations and practical implementation quality.
