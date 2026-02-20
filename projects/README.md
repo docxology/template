@@ -1,27 +1,14 @@
 # Projects Directory
 
-This directory contains multiple **standalone research projects**, each with independent source code, tests, analysis scripts, and manuscripts. Each project operates completely independently while leveraging shared infrastructure for common operations.
+This directory contains multiple **standalone research projects**, each with independent source code, tests, analysis scripts, and manuscripts. Each project operates completely independently while being executed, tested, and rendered by the overarching **[docxology/template](https://github.com/docxology/template/)** infrastructure.
 
-## Exemplar Projects Showcase
+## Active Projects
 
-This directory contains **two active projects** demonstrating the template's full capabilities:
+This directory contains **one active project**:
 
-### 🚀 **code_project**: Computational Research Exemplar
+### **act_inf_metaanalysis**: Active Inference Meta-Analysis
 
-An optimization research project featuring:
-
-- **Advanced Algorithms**: Full gradient descent implementation with convergence analysis
-- **Publication-Quality Output**: Professional LaTeX manuscript with cross-references
-- **Rigorous Testing**: 100% test coverage with performance benchmarks
-- **Automated Analysis**: Script-driven figure generation and data visualization
-
-### 🎨 **blake_active_inference**: Interdisciplinary Manuscript Exemplar
-
-A manuscript-focused research project exploring Active Inference through William Blake's epistemology:
-
-- **29-Section Manuscript**: Comprehensive academic paper with synthesis mappings
-- **Publication Pipeline**: Full rendering with figures and bibliography
-- **Show-Not-Tell Methodology**: Demonstrates research template for theory-heavy projects
+An Active Inference meta-analysis research project.
 
 **Note:** Archived projects are preserved in `projects_archive/` for reference but are not actively executed.
 
@@ -85,24 +72,22 @@ mv projects_archive/myproject projects/myproject
 
 # Project will be automatically discovered on next run.sh execution
 
-| `code_project/` | Optimization algorithms research | ✅ Active |
-| `blake_active_inference/` | Blake × Active Inference manuscript | ✅ Active |
+| `act_inf_metaanalysis/` | Active Inference meta-analysis research | ✅ Active |
 
-**Archived projects** are available in `projects_archive/` for historical reference (e.g., `cognitive_integrity`, `active_inference_meta_pragmatic`, `medical_ai`).
+**Archived projects** are available in `projects_archive/` for historical reference (e.g., `code_project`, `blake_active_inference`, `cognitive_integrity`, `active_inference_meta_pragmatic`).
 
 ```mermaid
 graph TD
     subgraph projects["projects/ - Multi-Project Container"]
-        CODE[code_project/<br/>Optimization Research<br/>Gradient descent algorithms]
-        BLAKE[blake_active_inference/<br/>Interdisciplinary Manuscript<br/>Blake × Active Inference]
+        PROJ[act_inf_metaanalysis/<br/>Active Inference Meta-Analysis]
         CUSTOM[your_project/<br/>Custom research<br/>Your algorithms here]
 
-        CODE --> CODE_SRC[src/<br/>optimizer.py<br/>gradient_descent]
-        CODE -->CODE_TESTS[tests/<br/>34 tests<br/>100% coverage]
-        CODE --> CODE_SCRIPTS[scripts/<br/>Analysis pipeline<br/>API documentation]
-        CODE --> CODE_MANUSCRIPT[manuscript/<br/>Research paper<br/>Equations & figures]
-        CODE --> CODE_OUTPUT[output/<br/>Generated figures<br/>Disposable]
-        CODE --> CODE_CONFIG[pyproject.toml<br/>Project metadata]
+        PROJ --> PROJ_SRC[src/<br/>Research algorithms]
+        PROJ --> PROJ_TESTS[tests/<br/>Test suite]
+        PROJ --> PROJ_SCRIPTS[scripts/<br/>Analysis pipeline]
+        PROJ --> PROJ_MANUSCRIPT[manuscript/<br/>Research paper]
+        PROJ --> PROJ_OUTPUT[output/<br/>Generated outputs<br/>Disposable]
+        PROJ --> PROJ_CONFIG[pyproject.toml<br/>Project metadata]
     end
 
     subgraph Infrastructure["🔧 Shared Infrastructure"]
@@ -118,25 +103,25 @@ graph TD
         CURSORRULES[infrastructure_modules.md<br/>testing_standards.md<br/>documentation_standards.md]
     end
 
-    CODE -->|Validated by| VALIDATION
-    CODE -->|Rendered by| RENDERING
-    CODE -->|Reported by| REPORTING
-    CODE -->|Discovered by| SCRIPTS_ROOT
+    PROJ -->|Validated by| VALIDATION
+    PROJ -->|Rendered by| RENDERING
+    PROJ -->|Reported by| REPORTING
+    PROJ -->|Discovered by| SCRIPTS_ROOT
 
-    CODE_SRC -->|Imports from| INFRA
-    CODE_SCRIPTS -->|Imports from| INFRA
-    CODE_SCRIPTS -->|Orchestrated by| SCRIPTS_ROOT
+    PROJ_SRC -->|Imports from| INFRA
+    PROJ_SCRIPTS -->|Imports from| INFRA
+    PROJ_SCRIPTS -->|Orchestrated by| SCRIPTS_ROOT
 
-    CODE -->|Complies with| STANDARDS
+    PROJ -->|Complies with| STANDARDS
     STANDARDS --> CURSORRULES
 
-    CODE_MANUSCRIPT -->|Rendered to| CODE_OUTPUT
+    PROJ_MANUSCRIPT -->|Rendered to| PROJ_OUTPUT
 
     classDef project fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
     classDef infra fill:#fff3e0,stroke:#e65100,stroke-width:2px
     classDef compliance fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
 
-    class CODE,CODE_SRC,CODE_TESTS,CODE_SCRIPTS,CODE_MANUSCRIPT,CODE_OUTPUT,CODE_CONFIG,BLAKE project
+    class PROJ,PROJ_SRC,PROJ_TESTS,PROJ_SCRIPTS,PROJ_MANUSCRIPT,PROJ_OUTPUT,PROJ_CONFIG project
     class INFRA,SCRIPTS_ROOT,VALIDATION,RENDERING,REPORTING infra
     class STANDARDS,CURSORRULES compliance
 ```
@@ -151,10 +136,10 @@ Each project is **operated upon** by infrastructure modules while maintaining in
 from infrastructure.project import discover_projects, validate_project_structure
 
 # Automatically discovers all valid projects
-projects = discover_projects(Path("."))  # Finds code_project, blake_active_inference, etc.
+projects = discover_projects(Path("."))  # Finds act_inf_metaanalysis, etc.
 
 # Validates project structure
-is_valid, message = validate_project_structure(Path("projects/code_project"))
+is_valid, message = validate_project_structure(Path("projects/act_inf_metaanalysis"))
 # Returns: (True, "Valid project structure")
 ```
 
@@ -162,31 +147,31 @@ is_valid, message = validate_project_structure(Path("projects/code_project"))
 
 ```bash
 # Runs project-specific tests with infrastructure orchestration
-python3 scripts/01_run_tests.py --project code_project
+python3 scripts/01_run_tests.py --project {name}
 
 # Infrastructure validates structure, then runs:
-# pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-under=90
+# pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-under=90
 ```
 
 ### ⚙️ **Analysis Scripts** (`scripts/02_run_analysis.py`)
 
 ```python
 # Discovers and executes project scripts
-python3 scripts/02_run_analysis.py --project code_project
+python3 scripts/02_run_analysis.py --project {name}
 
 # Infrastructure finds and runs:
-# projects/code_project/scripts/optimization_analysis.py
-# projects/code_project/scripts/generate_api_docs.py
+# projects/{name}/scripts/analysis_pipeline.py
+# projects/{name}/scripts/generate_figures.py
 ```
 
 ### 📄 **PDF Rendering** (`scripts/03_render_pdf.py`)
 
 ```python
 # Renders project manuscript using infrastructure.rendering
-python3 scripts/03_render_pdf.py --project code_project
+python3 scripts/03_render_pdf.py --project {name}
 
 # Infrastructure processes:
-# projects/code_project/manuscript/*.md -> PDF with figures
+# projects/{name}/manuscript/*.md -> PDF with figures
 ```
 
 ### ✅ **Quality Validation** (`scripts/04_validate_output.py`)
@@ -202,9 +187,9 @@ python3 scripts/04_validate_output.py --project project
 
 ```python
 # Organizes final deliverables
-python3 scripts/05_copy_outputs.py --project blake_active_inference
+python3 scripts/05_copy_outputs.py --project {name}
 
-# Copies from projects/blake_active_inference/output/ to output/blake_active_inference/
+# Copies from projects/{name}/output/ to output/{name}/
 ```
 
 ## Project Isolation Principles
@@ -283,24 +268,18 @@ Every project must comply with development standards defined in `.cursorrules/`:
 Each project follows this structure:
 
 ```
-307: projects/
-308: ├── code_project/         # Optimization research project
-309: │   ├── src/              # Source code
-310: │   ├── tests/            # Test suite
-311: │   ├── scripts/          # Analysis scripts
-312: │   ├── manuscript/       # Research manuscript
-313: │   ├── output/           # Generated outputs (not in git)
-314: │   └── pyproject.toml    # Project configuration
-315: ├── blake_active_inference/  # Blake × Active Inference manuscript
-316: │   ├── src/
-317: │   ├── tests/
-318: │   ├── scripts/
-319: │   ├── manuscript/
-320: │   └── pyproject.toml
-321: ├── myresearch/           # Custom project 1
-322: │   └── ...
-323: └── experiment2/          # Custom project 2
-324:     └── ...
+projects/
+├── act_inf_metaanalysis/  # Active Inference meta-analysis
+│   ├── src/              # Source code
+│   ├── tests/            # Test suite
+│   ├── scripts/          # Analysis scripts
+│   ├── manuscript/       # Research manuscript
+│   ├── output/           # Generated outputs (not in git)
+│   └── pyproject.toml    # Project configuration
+├── myresearch/           # Custom project 1
+│   └── ...
+└── experiment2/          # Custom project 2
+    └── ...
 ```
 
 ## Creating a New Project
@@ -308,8 +287,8 @@ Each project follows this structure:
 ### Option 1: Copy the Template
 
 ```bash
-# Copy an existing project as a starting point (choose code_project or cogsec templates)
-cp -r projects/code_project projects/myresearch
+# Copy an existing project as a starting point
+cp -r projects/act_inf_metaanalysis projects/myresearch
 
 # Customize pyproject.toml
 vim projects/myresearch/pyproject.toml
@@ -474,14 +453,11 @@ Example:
 
 ```
 output/
-├── code_project/      # Optimization research project
+├── act_inf_metaanalysis/  # Active Inference meta-analysis
 │   ├── pdf/
 │   ├── figures/
 │   └── ...
-├── blake_active_inference/  # Blake × Active Inference
-│   ├── pdf/
-│   └── ...
-└── your_project/      # Your custom research project
+└── your_project/          # Your custom research project
     └── ...
 ```
 
@@ -578,38 +554,21 @@ Available projects are automatically discovered - use `--project {name}` to spec
 
 ## Real Project Examples
 
-### ⚙️ **Optimization Research** (`projects/code_project/`)
+### **Active Inference Meta-Analysis** (`projects/act_inf_metaanalysis/`)
 
-Project demonstrating gradient descent algorithms:
+Active Inference meta-analysis research project:
 
 **Standalone Guarantees:**
 
-- **Tests**: 34 tests for optimization algorithms with convergence and stability validation
-- **Methods**: Gradient descent implementation in `src/optimizer.py`
-- **Manuscript**: Research manuscript with algorithm description and analysis
+- **Tests**: Test suite validating analysis algorithms
+- **Methods**: Meta-analysis implementation in `src/`
+- **Manuscript**: Research manuscript with analysis and figures
 
 **Infrastructure Operations:**
 
 ```bash
-# pipeline execution
-python3 scripts/execute_pipeline.py --project code_project --core-only
-```
-
-### 🎨 **Blake Active Inference** (`projects/blake_active_inference/`)
-
-Interdisciplinary manuscript mapping William Blake's epistemology to Active Inference:
-
-**Standalone Guarantees:**
-
-- **Tests**: Validation of manuscript content and rendering pipeline
-- **Methods**: Synthesis mapping and correspondence analysis in `src/`
-- **Manuscript**: 29-section academic paper with extended analysis
-
-**Infrastructure Operations:**
-
-```bash
-# Render manuscript via infrastructure
-python3 scripts/03_render_pdf.py --project blake_active_inference
+# Pipeline execution
+python3 scripts/execute_pipeline.py --project act_inf_metaanalysis --core-only
 ```
 
 ## Creating New Projects
@@ -617,8 +576,8 @@ python3 scripts/03_render_pdf.py --project blake_active_inference
 ### Method 1: Copy Existing Project (Recommended)
 
 ```bash
-# Copy a, working project as template
-cp -r projects/code_project projects/my_research
+# Copy an existing project as template
+cp -r projects/act_inf_metaanalysis projects/my_research
 cd projects/my_research
 
 # Update project metadata
@@ -639,38 +598,23 @@ cd ../..
 python3 -c "from infrastructure.project import validate_project_structure; print(validate_project_structure(Path('projects/my_research')))"
 ```
 
-### Method 2: Start from Small Project
+### Method 2: Start from Scratch
 
 ```bash
-# Use minimal template for code-focused research
-cp -r projects/code_project projects/optimization_research
-cd projects/optimization_research
+# Create minimal project structure
+mkdir -p projects/my_new_project/{src,tests,scripts,manuscript}
+touch projects/my_new_project/src/__init__.py
+touch projects/my_new_project/tests/__init__.py
 
-# Replace optimization algorithms with your research
-vim src/optimizer.py  # Your algorithm here
-vim tests/test_optimizer.py  # Your tests here
+# Add your research algorithms
+vim projects/my_new_project/src/my_algorithm.py
+
+# Add corresponding tests
+vim projects/my_new_project/tests/test_my_algorithm.py
 
 # Update manuscript content
-vim manuscript/01_introduction.md
-vim manuscript/02_methodology.md
-```
-
-### Method 3: Manuscript-Focused Research
-
-```bash
-# Use blake_active_inference as template for manuscript-heavy research
-cp -r projects/blake_active_inference projects/literature_review
-cd projects/literature_review
-
-# Focus on manuscript content with equations
-vim manuscript/01_abstract.md
-vim manuscript/02_introduction.md
-vim manuscript/03_methodology.md
-vim manuscript/04_analysis.md
-
-# Add minimal supporting code
-vim src/theoretical_model.py
-vim tests/test_theoretical_model.py
+vim projects/my_new_project/manuscript/01_introduction.md
+vim projects/my_new_project/manuscript/02_methodology.md
 ```
 
 ## Troubleshooting
@@ -869,10 +813,9 @@ The `projects/` directory implements a **standalone project paradigm** with infr
 - **Quality Gates**: 90% coverage, documentation, type safety
 - **Infrastructure Access**: Import from `infrastructure/` modules for shared utilities
 
-### 🎯 **Real Examples**
+### 🎯 **Active Project**
 
-- **blake_active_inference**: Blake × Active Inference (interdisciplinary manuscript)
-- **code_project**: Optimization algorithms (computational research template)
+- **act_inf_metaanalysis**: Active Inference meta-analysis research
 
 **Note:** Archived projects are preserved in `projects_archive/` for reference.
 
