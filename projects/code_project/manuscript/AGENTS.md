@@ -10,7 +10,7 @@ This document defines the strict behavioral standards for any AI agent interacti
 
 ## 1. Project Identity
 
-This is not an isolated python script; it is a heavily-integrated, production-grade optimization study.
+This is not an isolated python script; it is a heavily-integrated, production-grade optimization study explicitly acting as a self-referential exemplar. As you modify it, you must maintain a "show, not tell" meta-narrative linking the scientific prose directly to the physical files operating inside the codebase.
 
 * **Primary Objective**: To demonstrate how a theoretical mathematical algorithm (Gradient Descent) is implemented, validated, and published using the `infrastructure`, `tests`, and `docs` layers of the repository.
 * **Operating Principle**: Do not invent parallel systems. You must utilize the existing repository infrastructure.
@@ -40,6 +40,7 @@ This project strictly adheres to the Rigorous Agentic Scientific Protocol (RASP)
 1. **No Extraneous Summaries**: Do not add "In summary" or "In conclusion" to the ends of markdown sections.
 2. **LaTeX Integration**: Assume the manuscript files (`00_abstract.md`, etc.) are pre-processed by `preamble.md` and `config.yaml` before pandoc conversion.
 3. **Visualization Coupling**: If you change a visualization in `scripts/optimization_analysis.py`, you MUST update the corresponding caption in `03_results.md` to reflect the exact data shown.
+4. **Self-Referential Linking**: Whenever discussing a framework component in the text, link directly to its physical location, e.g., `[docxology/template/infrastructure/core/](https://github.com/docxology/template/tree/main/infrastructure/core)`.
 
 ## 5. Development Workflow
 

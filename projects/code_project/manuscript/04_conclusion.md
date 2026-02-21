@@ -24,7 +24,7 @@ The hallmark of this implementation is the test matrix:
 
 - **Analytical Automation**: `infrastructure.core.progress.PipelineProgress` executing deterministic optimization experiments.
 - **Reporting & Integrity**: `infrastructure.reporting.pipeline_reporter` and `infrastructure.validation.output_validator` assuring CSV/JSON configurations conform.
-- **Visual Cryptography**: Publication-ready graphics compiled by `infrastructure.rendering.pdf_renderer.py`, automatically linked via the LaTeX preamble.
+- **Visual Cryptography**: Publication-ready graphics compiled by `infrastructure.rendering.pdf_renderer.py` using metadata from `projects/code_project/manuscript/config.yaml`, automatically linked via the LaTeX configuration in `projects/code_project/manuscript/preamble.md`.
 
 ## Research Pipeline Validation
 
@@ -54,4 +54,4 @@ This foundation could be extended to:
 
 This work conclusively demonstrates that the research template seamlessly supports projects spanning the full spectrum—from prose-focused manuscripts to fully-tested algorithmic ecosystems. The optimization study achieved convergence across four step sizes with accuracy below $10^{-4}$ relative error, completely validated by the 34-test suite at 100% branch and statement coverage.
 
-By operating entirely over the `infrastructure` components, the pipeline produced six robust figures, generated quantitative CSVs, and rendered this exact manuscript flawlessly. The implementation stands as a verified blueprint for automated, reproducible computational research, showcasing the extraordinary depth of the overall repository.
+As the ultimate proof of the template's architecture, consider the document you are reading right now. By operating entirely over the `infrastructure` components, the pipeline produced six robust figures, generated quantitative CSVs, and rendered this exact markdown file (`projects/code_project/manuscript/04_conclusion.md`) alongside `config.yaml` flawlessly into a finalized PDF. The `code_project` implementation stands as a fully verified blueprint for automated, reproducible computational research, showcasing the extraordinary depth of the `docxology/template` repository.

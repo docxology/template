@@ -2,7 +2,7 @@
 
 This file contains LaTeX packages and commands that are automatically injected into the document compilation process.
 
-> **Infrastructure Note**: This file is parsed by `infrastructure.rendering.latex_utils.py` and combined with the configuration output by `infrastructure.rendering.pdf_renderer.py` before final Pandoc execution.
+> **Infrastructure Note**: This file is parsed by `infrastructure/rendering/latex_utils.py` and combined with the configuration output by `infrastructure/rendering/pdf_renderer.py` before final Pandoc execution to generate the physical PDF holding this text.
 
 ```latex
 % Core mathematics

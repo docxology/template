@@ -1,16 +1,16 @@
 # Introduction
 
-This code project serves as the foundational exemplar for the Generalized Research Template, demonstrating a fully-tested numerical optimization implementation securely bracketed by rigorous infrastructure, hermetic testing, and extensive documentation architectures. The project is specifically designed to showcase the complete research pipeline from algorithm implementation through strict validation to multi-format result visualization.
+This `code_project` serves as the foundational exemplar for the [docxology/template](https://github.com/docxology/template) ecosystem, demonstrating a fully-tested numerical optimization implementation securely bracketed by rigorous infrastructure, hermetic testing, and extensive documentation architectures. The words you are reading—and the mathematical figures below them—have been programmably generated through an unbreakable custody chain starting from algorithm implementation through strict CI/CD validation to multi-format `.pdf` compilation.
 
 ## Template Architecture Context
 
 Scientific engineering requires mathematical accuracy combined with software reliability. This project unifies theoretical optimization with the repository's three foundational pillars:
 
-1. **`infrastructure/` Layer**: A modular stack of nine subpackages (`core`, `validation`, `scientific`, `rendering`, `reporting`, `documentation`, `llm`, `publishing`, `project`) providing the computational scaffolding.
-2. **`tests/` Framework**: An uncompromising validation layer maintaining a zero-mock testing policy, encompassing deep integration and infrastructure test batteries.
-3. **`docs/` Knowledge Base**: A structured repository of architectural guidelines, operational patterns, and the Rigorous Agentic Scientific Protocol (RASP) that governs AI-assisted development.
+1. **`infrastructure/` Layer (Root Directory)**: A modular stack of nine subpackages (`core`, `validation`, `scientific`, `rendering`, `reporting`, `documentation`, `llm`, `publishing`, `project`) providing the computational scaffolding.
+2. **`tests/` Framework (`projects/code_project/tests/`)**: An uncompromising validation layer maintaining a zero-mock testing policy. This is enforced automatically via [`.github/workflows/ci.yml`](https://github.com/docxology/template/blob/main/.github/workflows/ci.yml) mapping to `pyproject.toml` directives.
+3. **`docs/` Knowledge Base (`projects/code_project/docs/`)**: A structured repository of architectural guidelines, operational patterns, and the Rigorous Agentic Scientific Protocol (RASP) that governs the AI-assisted agents writing these very texts.
 
-This implementation of gradient descent algorithms for solving optimization problems is used as the vehicle to demonstrate these pillars:
+This implementation of gradient descent algorithms for solving optimization problems is used as the vehicle to demonstrate these pillars. The theoretical problem is mapped programmatically inside [`projects/code_project/src/optimizer.py`](https://github.com/docxology/template/blob/main/projects/code_project/src/optimizer.py):
 
 \begin{equation}
 \label{eq:optimization_problem}

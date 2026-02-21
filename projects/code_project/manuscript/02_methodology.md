@@ -6,9 +6,9 @@ This section describes the implementation methodology, explicitly detailing how 
 
 ### Gradient Descent Algorithm
 
-The core algorithm implements the iterative procedure for unconstrained optimization. Crucially, the implementation is designed to be highly observable, delegating all logging to `infrastructure.core.logging_utils.ProjectLogger` and executing under the hermetic boundaries defined in `tests/conftest.py`.
+The core algorithm implements the iterative procedure for unconstrained optimization. Crucially, the implementation is designed to be highly observable, delegating all logging to `infrastructure.core.logging_utils.ProjectLogger` and executing under the hermetic boundaries defined in [`projects/code_project/tests/conftest.py`](https://github.com/docxology/template/blob/main/projects/code_project/tests/conftest.py).
 
-**Algorithm 1: Gradient Descent**
+**Algorithm 1: Gradient Descent (implemented in [`projects/code_project/src/optimizer.py`](https://github.com/docxology/template/blob/main/projects/code_project/src/optimizer.py#L42-L138))**
 
 > **Input:** Initial point $x_0$, step size $\alpha$, tolerance $\epsilon$, max iterations $N_{\max}$
 >
@@ -26,11 +26,11 @@ The methodology explicitly bridges theoretical mathematics with production-grade
 
 ### Numerical Stability Analysis
 
-Rather than writing ad-hoc validation code, the project imports `infrastructure.scientific.stability.check_numerical_stability`. This utility subjects the objective function to a barrage of extreme inputs (NaN, Inf, $\pm 10^{10}$) to calculate a formalized stability score and ensure the gradient descent implementation cannot enter unrecoverable states.
+Rather than writing ad-hoc validation code, the project imports `infrastructure.scientific.stability.check_numerical_stability`. This utility subjects the objective function to a barrage of extreme inputs (NaN, Inf, $\pm 10^{10}$) to calculate a formalized stability score. If this score degrades, the [`scripts/02_run_analysis.py`](https://github.com/docxology/template/blob/main/scripts/02_run_analysis.py) execution deliberately aborts, ensuring the methodology cannot enter unrecoverable states.
 
 ### Performance Benchmarking
 
-Computational complexity is evaluated not just theoretically, but empirically via `infrastructure.scientific.benchmarking.benchmark_function`. This module captures high-resolution execution timings and memory footprints across dimensionality sweeps, guaranteeing that the $O(n)$ space-time complexity predictions hold true on the host architecture.
+Computational complexity is evaluated not just theoretically, but empirically via [`infrastructure.scientific.benchmarking.benchmark_function`](https://github.com/docxology/template/blob/main/infrastructure/scientific/benchmarking.py). This module captures high-resolution execution timings and memory footprints across dimensionality sweeps, guaranteeing that the $O(n)$ space-time complexity predictions hold true on the host architecture.
 
 ## Convergence Analysis
 
@@ -56,11 +56,11 @@ We investigate the effect of different step sizes on convergence:
 
 ### Zero-Mock Testing Methodology
 
-The most critical aspect of the project's methodology is its validation framework. The project is governed by a strict zero-mock testing policy, implemented across a 34-test validation suite (`tests/` directory).
+The most critical aspect of the project's methodology is its validation framework. The project is governed by a strict Zero-Mock testing policy, evaluated actively by executing `uv run pytest projects/code_project/tests/` during the infrastructure build phase.
 
 1. **Integration Testing**: The `tests/integration/` battery ensures that the optimization algorithm, the analysis pipeline, and the `infrastructure.rendering` components operate flawlessly together without simulated data.
 2. **Infrastructure Validation**: The `tests/infra_tests/` suite confirms that the underlying modules (e.g., `pipeline_reporter.py`, `doc_discovery.py`) behave deterministically.
-3. **Coverage Gates**: The CI pipeline enforces a mandatory 100% branch and statement coverage gate before manuscript compilation is permitted.
+3. **Coverage Gates**: The [GitHub Actions CI workflow](https://github.com/docxology/template/blob/main/.github/workflows/ci.yml) enforces a mandatory 100% branch and statement coverage gate prior to compiling the manuscript to a PDF.
 
 ## Analysis Pipeline & LaTeX Integration
 

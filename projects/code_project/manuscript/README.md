@@ -8,19 +8,19 @@ It demonstrates the complete research pipeline from algorithm implementation thr
 
 This project is explicitly designed to showcase the repository's three foundational pillars:
 
-1. **`infrastructure/` Layer**: The code delegates all tracking, performance benchmarking, stability validation, and PDF rendering to the 9-module infrastructure cluster.
-2. **`tests/` Integrity**: An uncompromising zero-mock testing policy validated by a 34-test CI suite operating at 100% statement and branch coverage.
-3. **`docs/` Orchestration**: Adherence to the Rigorous Agentic Scientific Protocol (RASP) ensuring total documentation-to-code parity.
+1. **`infrastructure/` Layer**: The code delegates all tracking, performance benchmarking, stability validation, and PDF rendering to the 9-module infrastructure cluster (located at the repository root).
+2. **`tests/` Integrity**: An uncompromising zero-mock testing policy validated by a 34-test CI suite (`projects/code_project/tests/`) operating at 100% statement and branch coverage.
+3. **`docs/` Orchestration**: Adherence to the Rigorous Agentic Scientific Protocol (RASP) ensuring total documentation-to-code parity (`projects/code_project/docs/`).
 
 ## Manuscript Structure
 
-The `manuscript/` directory contains the raw markdown files that the `infrastructure.rendering` engine transforms into the final academic PDF:
+The `manuscript/` directory contains the raw markdown files that the renderer (`infrastructure/rendering/pdf_renderer.py`) transforms into the final academic PDF. These files are designed as a meta-narrative to demonstrate exactly how the repository executes:
 
 - `00_abstract.md`: Overview of the 34-test exemplar strategy.
-- `01_introduction.md`: Introduction of the infrastructure pillars.
-- `02_methodology.md`: Mathematical methods and zero-mock testing logic.
-- `03_results.md`: Convergence analysis built via `infrastructure.reporting`.
-- `04_conclusion.md`: Summary of the seamless template automation.
+- `01_introduction.md`: Introduction of the infrastructure pillars bridging to CI/CD files.
+- `02_methodology.md`: Mathematical methods mapping to specific python script execution lines.
+- `03_results.md`: Convergence analysis built via `infrastructure.reporting`, pointing back at itself.
+- `04_conclusion.md`: Summary of the seamless template automation asserting the PDF itself as final proof.
 
 ## Architecture
 

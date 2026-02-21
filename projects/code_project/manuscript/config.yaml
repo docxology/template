@@ -1,17 +1,17 @@
 # Code Project Configuration - Optimization Research Exemplar
 # Comprehensive research project demonstrating advanced optimization algorithms
-# This file serves as the definitive reference for the template's configuration layer,
-# directly read by `infrastructure.core.config_loader.py`.
+# This file serves as a meta-artifact linking the prose of the manuscript to the execution
+# layer. It is directly read by `infrastructure/core/config_loader.py`.
 
-# Consumed by: `infrastructure.rendering.pdf_renderer.py` and `infrastructure.reporting.pipeline_summary.py`
+# Consumed by: `infrastructure/rendering/pdf_renderer.py` and `infrastructure/reporting/pipeline_summary.py`
 paper:
   # RASP Standard: Title must be descriptive and objective
   title: "Convergence Analysis of Gradient Descent Optimization"
   subtitle: "Theoretical Bounds and Empirical Performance in Quadratic Minimization"
   version: "2.0"
-  date: "" # Auto-generated via `infrastructure.validation.output_validator` if empty
+  date: "" # Auto-generated via `infrastructure/validation/output_validator.py` if empty
 
-# Consumed by: `infrastructure.publishing.extract_publication_metadata`
+# Consumed by: `infrastructure/publishing/extract_publication_metadata.py`
 authors:
   - name: "Research Template Author"
     orcid: "0000-0000-0000-1234"
@@ -23,7 +23,7 @@ authors:
     email: "coauthor@research-template.org"
     affiliation: "Department of Computational Mathematics"
 
-# Consumed by: `infrastructure.publishing.publish_to_zenodo`
+# Consumed by: `infrastructure/publishing/publish_to_zenodo.py`
 publication:
   doi: "10.5281/zenodo.12345678" # Checked by validation gates
   journal: "Journal of Optimization Methods"
@@ -44,8 +44,8 @@ metadata:
   license: "MIT"
   language: "en"
 
-# Consumed by: `infrastructure.llm.client` and `infrastructure.llm.agent`
-# See docs/operational/LLM_INTEGRATION.md for details
+# Consumed by: `infrastructure/llm/client.py` and `infrastructure/llm/agent.py`
+# See projects/code_project/docs/ for details
 llm:
   reviews:
     # Explicitly enabled for this exemplar to demonstrate AI-aided analysis
@@ -59,7 +59,7 @@ llm:
     languages:
       - zh
 
-# Consumed by: `infrastructure.reporting.pipeline_reporter` and CI/CD gates
+# Consumed by: `infrastructure/reporting/pipeline_reporter.py` and CI/CD gates
 # ZERO-MOCK TOLERANCE: Any failure blocks manuscript rendering
 testing:
   max_test_failures: 0
