@@ -3,7 +3,6 @@
 Tests visual dashboard generation in multiple formats (PNG, PDF, HTML).
 """
 
-from pathlib import Path
 
 import pytest
 
@@ -213,6 +212,7 @@ class TestChartGeneration:
 class TestMatplotlibDashboard:
     """Test matplotlib dashboard generation."""
 
+    @pytest.mark.timeout(30)
     def test_generate_matplotlib_dashboard(self, sample_summary, tmp_path):
         """Test generating matplotlib dashboard (PNG and PDF)."""
         saved_files = generate_matplotlib_dashboard(sample_summary, tmp_path)
@@ -267,7 +267,7 @@ class TestPlotlyDashboard:
     def test_generate_plotly_dashboard(self, sample_summary, tmp_path):
         """Test generating plotly dashboard (interactive HTML)."""
         try:
-            import plotly
+            import plotly  # noqa: F401
 
             html_path = generate_plotly_dashboard(sample_summary, tmp_path)
 
@@ -284,6 +284,7 @@ class TestPlotlyDashboard:
 class TestAllDashboards:
     """Test generating all dashboard formats."""
 
+    @pytest.mark.timeout(30)
     def test_generate_all_dashboards(self, sample_summary, tmp_path):
         """Test generating all dashboard formats."""
         all_files = generate_all_dashboards(sample_summary, tmp_path)

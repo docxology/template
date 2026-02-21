@@ -9,14 +9,13 @@ Part of the infrastructure reporting layer (Layer 1) - reusable across projects.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List
 
 import matplotlib
 
 matplotlib.use("Agg")  # Use non-interactive backend
 import csv
 
-import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.figure import Figure
@@ -444,7 +443,7 @@ def create_performance_timeline_chart(projects: List[ProjectMetrics]) -> Figure:
     test_times = [p.tests.execution_time for p in projects]
     coverages = [p.tests.coverage_percent for p in projects]
 
-    scatter = ax2.scatter(
+    ax2.scatter(
         test_times, coverages, s=100, c=range(len(projects)), cmap="viridis", alpha=0.7
     )
     for i, name in enumerate(project_names):
@@ -529,7 +528,6 @@ def create_summary_table(
         Matplotlib Figure
     """
     fig, ax = plt.subplots(figsize=(16, 8))
-    ax.axis("tight")
     ax.axis("off")
 
     # Import health score calculation
@@ -626,7 +624,6 @@ def create_summary_table(
         "Comprehensive Project Metrics Summary", fontweight="bold", fontsize=16, pad=30
     )
 
-    plt.tight_layout()
     return fig
 
 
@@ -689,7 +686,7 @@ def generate_matplotlib_dashboard(
         # Coverage with thresholds
         ax2 = axes[0, 1]
         coverage = [p.tests.coverage_percent for p in projects]
-        bars = ax2.bar(x, coverage, color=COLORS["primary"], alpha=0.8)
+        ax2.bar(x, coverage, color=COLORS["primary"], alpha=0.8)
         ax2.axhline(
             y=90,
             color=COLORS["success"],
@@ -716,7 +713,7 @@ def generate_matplotlib_dashboard(
         # Pipeline performance
         ax3 = axes[0, 2]
         durations = [p.pipeline.total_duration for p in projects]
-        bars = ax3.bar(x, durations, color=COLORS["warning"], alpha=0.8)
+        ax3.bar(x, durations, color=COLORS["warning"], alpha=0.8)
         ax3.set_xlabel("Project", fontweight="bold")
         ax3.set_ylabel("Duration (seconds)", fontweight="bold")
         ax3.set_title("Pipeline Execution Time", fontweight="bold")
@@ -739,7 +736,7 @@ def generate_matplotlib_dashboard(
         ax4 = axes[1, 0]
         word_counts = [p.manuscript.total_words for p in projects]
         equations = [p.manuscript.equations for p in projects]
-        scatter = ax4.scatter(
+        ax4.scatter(
             word_counts,
             equations,
             s=100,
@@ -816,7 +813,7 @@ def generate_matplotlib_dashboard(
             for count, duration in zip(pdf_counts, durations)
         ]
 
-        bars = ax6.bar(x, efficiency, color=COLORS["success"], alpha=0.8)
+        ax6.bar(x, efficiency, color=COLORS["success"], alpha=0.8)
         ax6.set_xlabel("Project", fontweight="bold")
         ax6.set_ylabel("PDFs per Second", fontweight="bold")
         ax6.set_title("Pipeline Efficiency", fontweight="bold")
@@ -843,7 +840,7 @@ def generate_matplotlib_dashboard(
         health_scores = [
             calculate_project_health_score(p)["percentage"] for p in projects
         ]
-        bars = ax7.bar(x, health_scores, color=COLORS["primary"], alpha=0.8)
+        ax7.bar(x, health_scores, color=COLORS["primary"], alpha=0.8)
         ax7.axhline(
             y=85,
             color=COLORS["success"],
@@ -875,7 +872,7 @@ def generate_matplotlib_dashboard(
         ax8 = axes[2, 1]
         test_times = [p.tests.execution_time for p in projects]
         coverages = [p.tests.coverage_percent for p in projects]
-        scatter = ax8.scatter(
+        ax8.scatter(
             test_times,
             coverages,
             s=100,
@@ -898,7 +895,6 @@ def generate_matplotlib_dashboard(
 
         # Enhanced summary table
         ax9 = axes[2, 2]
-        ax9.axis("tight")
         ax9.axis("off")
 
         headers = ["Project", "Health", "Words", "Tests", "Coverage"]
@@ -952,8 +948,6 @@ def generate_matplotlib_dashboard(
             cell.set_text_props(weight="bold")
 
         ax9.set_title("Executive Summary", fontweight="bold", fontsize=12, pad=20)
-
-        plt.tight_layout()
 
         # Save as PNG (high resolution)
         organizer = OutputOrganizer()
@@ -2347,7 +2341,7 @@ def generate_codebase_complexity_chart(
         methods = [p.codebase.methods for p in projects]
         classes = [p.codebase.classes for p in projects]
 
-        scatter = ax2.scatter(
+        ax2.scatter(
             methods,
             classes,
             s=100,
