@@ -1,0 +1,14 @@
+{
+  "iteration": 0,
+  "parameters": {},
+  "results": {
+    "iteration_0": {
+      "value": 0.30471707975443135,
+      "error": 9.69528292024557,
+      "step_size": 0.30471707975443135
+    }
+  },
+  "metadata": {},
+  "timestamp": "2026-02-20 15:21:32",
+  "seed": 42
+}

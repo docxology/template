@@ -513,6 +513,13 @@ run_all_tests() {
     log_stage_with_project 2 "Run Tests (Infrastructure + Project)" 9 "$project_name"
     log_project_context "$project_name" "Testing"
 
+    # Strict Zero-Mock validation before running the test suite
+    log_info "Running strict Zero-Mock policy validation..."
+    if ! execute_with_logging $(get_python_cmd) "$REPO_ROOT/scripts/verify_no_mocks.py"; then
+        log_error "Zero-Mock validation failed - tests aborted"
+        return 1
+    fi
+
     # Run with verbose logging via the test runner
     execute_with_logging $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" --project "$project_name" --stage tests
     return $?

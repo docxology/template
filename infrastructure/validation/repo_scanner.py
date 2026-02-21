@@ -644,20 +644,20 @@ def main() -> int:
     report_path = repo_root / "docs" / "REPO_ACCURACY_COMPLETENESS_REPORT.md"
     report_path.write_text(report, encoding="utf-8")
 
-    print("\n" + "=" * 70)
-    print("SCAN COMPLETE")
-    print("=" * 70)
-    print(f"\nReport saved to: {report_path}")
-    print(f"\nSummary:")
-    print(f"  Accuracy Issues: {len(results.accuracy_issues)}")
-    print(f"  Completeness Gaps: {len(results.completeness_gaps)}")
+    logger.info("\n" + "=" * 70)
+    logger.info("SCAN COMPLETE")
+    logger.info("=" * 70)
+    logger.info(f"\nReport saved to: {report_path}")
+    logger.info(f"\nSummary:")
+    logger.info(f"  Accuracy Issues: {len(results.accuracy_issues)}")
+    logger.info(f"  Completeness Gaps: {len(results.completeness_gaps)}")
 
     # Count by severity
     error_count = sum(1 for i in results.accuracy_issues if i.severity == "error")
     warning_count = sum(1 for i in results.accuracy_issues if i.severity == "warning")
 
-    print(f"\n  Errors: {error_count}")
-    print(f"  Warnings: {warning_count}")
+    logger.info(f"\n  Errors: {error_count}")
+    logger.info(f"  Warnings: {warning_count}")
 
     return 0 if error_count == 0 else 1
 

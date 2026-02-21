@@ -1,0 +1,6650 @@
+{
+  "parasite-parasite": {
+    "lemma": "parasite-parasite",
+    "domains": [
+      "power_and_labor"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "self-organization": {
+    "lemma": "self-organization",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "population-mean": {
+    "lemma": "population-mean",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "head-to-body": {
+    "lemma": "head-to-body",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "large-scale": {
+    "lemma": "large-scale",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "far-reaching": {
+    "lemma": "far-reaching",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "full-sister": {
+    "lemma": "full-sister",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "diploids": {
+    "lemma": "diploid",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.2,
+    "n_contexts": 2
+  },
+  "species-specific": {
+    "lemma": "species-specific",
+    "domains": [],
+    "frequency": 3,
+    "confidence": 0.4,
+    "n_contexts": 3
+  },
+  "caste": {
+    "lemma": "caste",
+    "domains": [
+      "power_and_labor",
+      "behavior_and_identity"
+    ],
+    "frequency": 122,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 5
+  },
+  "52247-256": {
+    "lemma": "52247-256",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "ant-parasitic": {
+    "lemma": "ant-parasitic",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "pesticide-induced": {
+    "lemma": "pesticide-induced",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "sex-specific": {
+    "lemma": "sex-specific",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 4,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 4
+  },
+  "genetic": {
+    "lemma": "genetic",
+    "domains": [],
+    "frequency": 168,
+    "confidence": 0.4,
+    "n_contexts": 5
+  },
+  "near-identical": {
+    "lemma": "near-identical",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "worker-worker": {
+    "lemma": "worker-worker",
+    "domains": [
+      "power_and_labor",
+      "behavior_and_identity"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "nearly-so": {
+    "lemma": "nearly-so",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "route-following": {
+    "lemma": "route-following",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "t-maze": {
+    "lemma": "t-maze",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "factor-1": {
+    "lemma": "factor-1",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "one-queen": {
+    "lemma": "one-queen",
+    "domains": [
+      "sex_and_reproduction",
+      "power_and_labor"
+    ],
+    "frequency": 2,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 2
+  },
+  "so-called": {
+    "lemma": "so-called",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "mono-": {
+    "lemma": "mono-",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "full-sib": {
+    "lemma": "full-sib",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "inclusive-fitness": {
+    "lemma": "inclusive-fitness",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "5242335-2359": {
+    "lemma": "5242335-2359",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "ant-following": {
+    "lemma": "ant-following",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 8,
+    "confidence": 0.9,
+    "n_contexts": 5
+  },
+  "birth-death": {
+    "lemma": "birth-death",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "population-level": {
+    "lemma": "population-level",
+    "domains": [],
+    "frequency": 3,
+    "confidence": 0.4,
+    "n_contexts": 3
+  },
+  "species-poor": {
+    "lemma": "species-poor",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "sex-ratio": {
+    "lemma": "sex-ratio",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 3,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 3
+  },
+  "selection": {
+    "lemma": "selection",
+    "domains": [],
+    "frequency": 131,
+    "confidence": 0.4,
+    "n_contexts": 5
+  },
+  "paternally-inherited": {
+    "lemma": "paternally-inherited",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "symmetry-breaking": {
+    "lemma": "symmetry-breaking",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "loss-of-function-based": {
+    "lemma": "loss-of-function-based",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "nest-site": {
+    "lemma": "nest-site",
+    "domains": [],
+    "frequency": 5,
+    "confidence": 0.4,
+    "n_contexts": 5
+  },
+  "intercaste": {
+    "lemma": "intercaste",
+    "domains": [
+      "power_and_labor"
+    ],
+    "frequency": 1,
+    "confidence": 0.6,
+    "n_contexts": 1
+  },
+  "notch-like": {
+    "lemma": "notch-like",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "cyp4aa1-linked": {
+    "lemma": "cyp4aa1-linked",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "superefficiency": {
+    "lemma": "superefficiency",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.2,
+    "n_contexts": 1
+  },
+  "spectrometry-based": {
+    "lemma": "spectrometry-based",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "tachykinin-ir": {
+    "lemma": "tachykinin-ir",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "insect-brain": {
+    "lemma": "insect-brain",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "colony-derived": {
+    "lemma": "colony-derived",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "behavior": {
+    "lemma": "behavior",
+    "domains": [
+      "behavior_and_identity"
+    ],
+    "frequency": 159,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 5
+  },
+  "40-yr": {
+    "lemma": "40-yr",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "fitness-based": {
+    "lemma": "fitness-based",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "condition-dependent": {
+    "lemma": "condition-dependent",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "low-relatedness": {
+    "lemma": "low-relatedness",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 2,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 2
+  },
+  "3-methylalkanes": {
+    "lemma": "3-methylalkanes",
+    "domains": [],
+    "frequency": 3,
+    "confidence": 0.4,
+    "n_contexts": 3
+  },
+  "5-d": {
+    "lemma": "5-d",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "caste-biasing": {
+    "lemma": "caste-biasing",
+    "domains": [
+      "power_and_labor",
+      "behavior_and_identity"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "subcastes": {
+    "lemma": "subcastes",
+    "domains": [
+      "power_and_labor"
+    ],
+    "frequency": 7,
+    "confidence": 0.7000000000000001,
+    "n_contexts": 5
+  },
+  "chromatography-mass": {
+    "lemma": "chromatography-mass",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "co-evolved": {
+    "lemma": "co-evolved",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "consistent-as": {
+    "lemma": "consistent-as",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "hi-c": {
+    "lemma": "hi-c",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "eusociality": {
+    "lemma": "eusociality",
+    "domains": [],
+    "frequency": 29,
+    "confidence": 0.4,
+    "n_contexts": 5
+  },
+  "symbionts": {
+    "lemma": "symbionts",
+    "domains": [],
+    "frequency": 8,
+    "confidence": 0.30000000000000004,
+    "n_contexts": 5
+  },
+  "well-informed": {
+    "lemma": "well-informed",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "behaviors": {
+    "lemma": "behavior",
+    "domains": [
+      "behavior_and_identity"
+    ],
+    "frequency": 57,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 5
+  },
+  "microgynes": {
+    "lemma": "microgynes",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.2,
+    "n_contexts": 2
+  },
+  "genetically-differentiated": {
+    "lemma": "genetically-differentiated",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "colony-specific": {
+    "lemma": "colony-specific",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 5,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 5
+  },
+  "trade-off": {
+    "lemma": "trade-off",
+    "domains": [
+      "economics"
+    ],
+    "frequency": 6,
+    "confidence": 0.9,
+    "n_contexts": 5
+  },
+  "jh-sensitive": {
+    "lemma": "jh-sensitive",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "size-shape": {
+    "lemma": "size-shape",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "kin-selection": {
+    "lemma": "kin-selection",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 4,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 4
+  },
+  "worker-selected": {
+    "lemma": "worker-selected",
+    "domains": [
+      "power_and_labor",
+      "behavior_and_identity"
+    ],
+    "frequency": 3,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 3
+  },
+  "digestion-related": {
+    "lemma": "digestion-related",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "relatedness-asymmetry": {
+    "lemma": "relatedness-asymmetry",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "bio-inspired": {
+    "lemma": "bio-inspired",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "winner-loser": {
+    "lemma": "winner-loser",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "termite-raiding": {
+    "lemma": "termite-raiding",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "queen-worker": {
+    "lemma": "queen-worker",
+    "domains": [
+      "sex_and_reproduction",
+      "power_and_labor",
+      "behavior_and_identity"
+    ],
+    "frequency": 8,
+    "confidence": 0.9,
+    "n_contexts": 5
+  },
+  "queen-selected": {
+    "lemma": "queen-selected",
+    "domains": [
+      "sex_and_reproduction",
+      "power_and_labor"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "different-sized": {
+    "lemma": "different-sized",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "locust-ant": {
+    "lemma": "locust-ant",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "mrna-changes": {
+    "lemma": "mrna-changes",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "pure-lineage": {
+    "lemma": "pure-lineage",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "relatedness": {
+    "lemma": "relatedness",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 98,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 5
+  },
+  "task-specialized": {
+    "lemma": "task-specialized",
+    "domains": [
+      "behavior_and_identity"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "short-living": {
+    "lemma": "short-living",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "organismal": {
+    "lemma": "organismal",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 2,
+    "confidence": 0.6,
+    "n_contexts": 2
+  },
+  "biodiversity-focused": {
+    "lemma": "biodiversity-focused",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "caste-specific": {
+    "lemma": "caste-specific",
+    "domains": [
+      "power_and_labor",
+      "behavior_and_identity"
+    ],
+    "frequency": 14,
+    "confidence": 0.9999999999999999,
+    "n_contexts": 5
+  },
+  "delay-differential": {
+    "lemma": "delay-differential",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "inter-nest": {
+    "lemma": "inter-nest",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "non-kin": {
+    "lemma": "non-kin",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 2,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 2
+  },
+  "male-destined": {
+    "lemma": "male-destined",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "phenotypes": {
+    "lemma": "phenotype",
+    "domains": [],
+    "frequency": 42,
+    "confidence": 0.4,
+    "n_contexts": 5
+  },
+  "evolutionarily": {
+    "lemma": "evolutionarily",
+    "domains": [],
+    "frequency": 13,
+    "confidence": 0.4,
+    "n_contexts": 5
+  },
+  "bi-directional": {
+    "lemma": "bi-directional",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "castes": {
+    "lemma": "caste",
+    "domains": [
+      "power_and_labor"
+    ],
+    "frequency": 80,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 5
+  },
+  "matings": {
+    "lemma": "mating",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 4,
+    "confidence": 0.6,
+    "n_contexts": 4
+  },
+  "workers": {
+    "lemma": "worker",
+    "domains": [],
+    "frequency": 567,
+    "confidence": 0.4,
+    "n_contexts": 5
+  },
+  "uspallata-calingasta": {
+    "lemma": "uspallata-calingasta",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "nestmate-remains": {
+    "lemma": "nestmate-remains",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "dual-determinant": {
+    "lemma": "dual-determinant",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "protein-fed": {
+    "lemma": "protein-fed",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "non-infected": {
+    "lemma": "non-infected",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "tri-determinant": {
+    "lemma": "tri-determinant",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "post-infection": {
+    "lemma": "post-infection",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "walking": {
+    "lemma": "walking",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 3,
+    "confidence": 0.6,
+    "n_contexts": 3
+  },
+  "higher-level": {
+    "lemma": "higher-level",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "tank-like": {
+    "lemma": "tank-like",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "ps-mnp": {
+    "lemma": "ps-mnp",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "virgin-queen": {
+    "lemma": "virgin-queen",
+    "domains": [
+      "sex_and_reproduction",
+      "power_and_labor"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "superorganismal": {
+    "lemma": "superorganismal",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 4,
+    "confidence": 0.6,
+    "n_contexts": 4
+  },
+  "middle-aged": {
+    "lemma": "middle-aged",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "genetically": {
+    "lemma": "genetically",
+    "domains": [],
+    "frequency": 27,
+    "confidence": 0.4,
+    "n_contexts": 5
+  },
+  "nest-centric": {
+    "lemma": "nest-centric",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "workerless": {
+    "lemma": "workerless",
+    "domains": [],
+    "frequency": 5,
+    "confidence": 0.2,
+    "n_contexts": 5
+  },
+  "oxytocinvasopressin-related": {
+    "lemma": "oxytocinvasopressin-related",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "workersexual": {
+    "lemma": "workersexual",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 1,
+    "confidence": 0.6,
+    "n_contexts": 1
+  },
+  "cestoda-infected": {
+    "lemma": "cestoda-infected",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "drinking": {
+    "lemma": "drinking",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 1,
+    "confidence": 0.6,
+    "n_contexts": 1
+  },
+  "behaviorally": {
+    "lemma": "behaviorally",
+    "domains": [
+      "behavior_and_identity"
+    ],
+    "frequency": 4,
+    "confidence": 0.6,
+    "n_contexts": 4
+  },
+  "density-dependent": {
+    "lemma": "density-dependent",
+    "domains": [],
+    "frequency": 4,
+    "confidence": 0.4,
+    "n_contexts": 4
+  },
+  "seed-harvester": {
+    "lemma": "seed-harvester",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "oil-based": {
+    "lemma": "oil-based",
+    "domains": [],
+    "frequency": 3,
+    "confidence": 0.4,
+    "n_contexts": 3
+  },
+  "leaf-quality": {
+    "lemma": "leaf-quality",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "leaf-cutter": {
+    "lemma": "leaf-cutter",
+    "domains": [],
+    "frequency": 6,
+    "confidence": 0.5,
+    "n_contexts": 5
+  },
+  "altruism": {
+    "lemma": "altruism",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 20,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 5
+  },
+  "n-alkanes": {
+    "lemma": "n-alkanes",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "mouth-to-mouth": {
+    "lemma": "mouth-to-mouth",
+    "domains": [],
+    "frequency": 4,
+    "confidence": 0.4,
+    "n_contexts": 4
+  },
+  "pesticide-contaminated": {
+    "lemma": "pesticide-contaminated",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "phylogenetic": {
+    "lemma": "phylogenetic",
+    "domains": [],
+    "frequency": 20,
+    "confidence": 0.4,
+    "n_contexts": 5
+  },
+  "multi-queened": {
+    "lemma": "multi-queened",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "olfactory-mediated": {
+    "lemma": "olfactory-mediated",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "reduced-representation": {
+    "lemma": "reduced-representation",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "9-exon": {
+    "lemma": "9-exon",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "caste-": {
+    "lemma": "caste-",
+    "domains": [
+      "power_and_labor",
+      "behavior_and_identity"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "noon-anant": {
+    "lemma": "noon-anant",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "cell-body": {
+    "lemma": "cell-body",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "slow-developing": {
+    "lemma": "slow-developing",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "ant-lion": {
+    "lemma": "ant-lion",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "scissor-cutting": {
+    "lemma": "scissor-cutting",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "sister-sister": {
+    "lemma": "sister-sister",
+    "domains": [],
+    "frequency": 3,
+    "confidence": 0.4,
+    "n_contexts": 3
+  },
+  "network-based": {
+    "lemma": "network-based",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "b-carrying": {
+    "lemma": "b-carrying",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "first-response": {
+    "lemma": "first-response",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "investments": {
+    "lemma": "investment",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.2,
+    "n_contexts": 1
+  },
+  "breaking": {
+    "lemma": "breaking",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 1,
+    "confidence": 0.6,
+    "n_contexts": 1
+  },
+  "flax-seed": {
+    "lemma": "flax-seed",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "re-development": {
+    "lemma": "re-development",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "rt-qpcr": {
+    "lemma": "rt-qpcr",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "acacia-ants": {
+    "lemma": "acacia-ants",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "toxic-a": {
+    "lemma": "toxic-a",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "male-biased": {
+    "lemma": "male-biased",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 7,
+    "confidence": 0.9,
+    "n_contexts": 5
+  },
+  "isolation-by-distance": {
+    "lemma": "isolation-by-distance",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "female-biased": {
+    "lemma": "female-biased",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 11,
+    "confidence": 0.9999999999999999,
+    "n_contexts": 5
+  },
+  "non-monophyletic": {
+    "lemma": "non-monophyletic",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "3-11": {
+    "lemma": "3-11",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "non-heritable": {
+    "lemma": "non-heritable",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "codimension-2": {
+    "lemma": "codimension-2",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "behaviors5": {
+    "lemma": "behaviors5",
+    "domains": [
+      "behavior_and_identity"
+    ],
+    "frequency": 1,
+    "confidence": 0.6,
+    "n_contexts": 1
+  },
+  "intra-": {
+    "lemma": "intra-",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "protein-coding": {
+    "lemma": "protein-coding",
+    "domains": [],
+    "frequency": 4,
+    "confidence": 0.4,
+    "n_contexts": 4
+  },
+  "intra-colony": {
+    "lemma": "intra-colony",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 3,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 3
+  },
+  "spatially-organised": {
+    "lemma": "spatially-organised",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "pseudoqueens": {
+    "lemma": "pseudoqueens",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.2,
+    "n_contexts": 1
+  },
+  "trade-offs": {
+    "lemma": "trade-off",
+    "domains": [
+      "economics"
+    ],
+    "frequency": 5,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 5
+  },
+  "neuronal-like": {
+    "lemma": "neuronal-like",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "plot-based": {
+    "lemma": "plot-based",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "nest1-3": {
+    "lemma": "nest1-3",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "supplydemand-driven": {
+    "lemma": "supplydemand-driven",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "non-reproductive": {
+    "lemma": "non-reproductive",
+    "domains": [
+      "behavior_and_identity"
+    ],
+    "frequency": 7,
+    "confidence": 0.9,
+    "n_contexts": 5
+  },
+  "pheromone-sensitive": {
+    "lemma": "pheromone-sensitive",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "single-gene": {
+    "lemma": "single-gene",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "individual-behaviour": {
+    "lemma": "individual-behaviour",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 2,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 2
+  },
+  "video-tracking": {
+    "lemma": "video-tracking",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "z-3-hexenyl": {
+    "lemma": "z-3-hexenyl",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "non-recombining": {
+    "lemma": "non-recombining",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "alkaloid-mediated": {
+    "lemma": "alkaloid-mediated",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "non-viable": {
+    "lemma": "non-viable",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "nlg2-expressing": {
+    "lemma": "nlg2-expressing",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "diploid": {
+    "lemma": "diploid",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 22,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 5
+  },
+  "self-regulate": {
+    "lemma": "self-regulate",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "agent-based": {
+    "lemma": "agent-based",
+    "domains": [],
+    "frequency": 3,
+    "confidence": 0.4,
+    "n_contexts": 3
+  },
+  "worker-queen": {
+    "lemma": "worker-queen",
+    "domains": [
+      "sex_and_reproduction",
+      "power_and_labor",
+      "behavior_and_identity"
+    ],
+    "frequency": 2,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 2
+  },
+  "toti-like": {
+    "lemma": "toti-like",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "rank-order": {
+    "lemma": "rank-order",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "low-light": {
+    "lemma": "low-light",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "winner-winner": {
+    "lemma": "winner-winner",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "multiply-inseminated": {
+    "lemma": "multiply-inseminated",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "sinv-3-uninfected": {
+    "lemma": "sinv-3-uninfected",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "opposite-they": {
+    "lemma": "opposite-they",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "reproduction-can": {
+    "lemma": "reproduction-can",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "wood-dwelling": {
+    "lemma": "wood-dwelling",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "ps-mnps": {
+    "lemma": "ps-mnps",
+    "domains": [],
+    "frequency": 3,
+    "confidence": 0.4,
+    "n_contexts": 3
+  },
+  "on-nest": {
+    "lemma": "on-nest",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "pre-senescent": {
+    "lemma": "pre-senescent",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "evolutionary-derived": {
+    "lemma": "evolutionary-derived",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "time-dependent": {
+    "lemma": "time-dependent",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "non-human": {
+    "lemma": "non-human",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "size-variable": {
+    "lemma": "size-variable",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "demand-varies": {
+    "lemma": "demand-varies",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "pyrethroid-based": {
+    "lemma": "pyrethroid-based",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "vitellogenin-3": {
+    "lemma": "vitellogenin-3",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "gamma-2": {
+    "lemma": "gamma-2",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "intra-colonial": {
+    "lemma": "intra-colonial",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "group-members": {
+    "lemma": "group-members",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "3-methylindole": {
+    "lemma": "3-methylindole",
+    "domains": [],
+    "frequency": 4,
+    "confidence": 0.4,
+    "n_contexts": 3
+  },
+  "re-allocating": {
+    "lemma": "re-allocating",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "akin": {
+    "lemma": "akin",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 1,
+    "confidence": 0.6,
+    "n_contexts": 1
+  },
+  "138-145": {
+    "lemma": "138-145",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "gyne-biased": {
+    "lemma": "gyne-biased",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "37-549": {
+    "lemma": "37-549",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "no-choice": {
+    "lemma": "no-choice",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "colony-wide": {
+    "lemma": "colony-wide",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 4,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 4
+  },
+  "zig-zagged": {
+    "lemma": "zig-zagged",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "making": {
+    "lemma": "making",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 10,
+    "confidence": 0.7000000000000001,
+    "n_contexts": 5
+  },
+  "host-queen-tolerant": {
+    "lemma": "host-queen-tolerant",
+    "domains": [
+      "sex_and_reproduction",
+      "power_and_labor"
+    ],
+    "frequency": 2,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 2
+  },
+  "kin": {
+    "lemma": "kin",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 64,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 5
+  },
+  "multi-queen": {
+    "lemma": "multi-queen",
+    "domains": [
+      "sex_and_reproduction",
+      "power_and_labor"
+    ],
+    "frequency": 9,
+    "confidence": 0.9,
+    "n_contexts": 5
+  },
+  "non-associative": {
+    "lemma": "non-associative",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "hierarchy": {
+    "lemma": "hierarchy",
+    "domains": [
+      "power_and_labor"
+    ],
+    "frequency": 5,
+    "confidence": 0.6,
+    "n_contexts": 5
+  },
+  "non-sas": {
+    "lemma": "non-sas",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "age-matched": {
+    "lemma": "age-matched",
+    "domains": [],
+    "frequency": 5,
+    "confidence": 0.4,
+    "n_contexts": 3
+  },
+  "sociality-associated": {
+    "lemma": "sociality-associated",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "structures-linear": {
+    "lemma": "structures-linear",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "nest-mate": {
+    "lemma": "nest-mate",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "haplodiploidy": {
+    "lemma": "haplodiploidy",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 16,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 5
+  },
+  "non-independent": {
+    "lemma": "non-independent",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "re-constructed": {
+    "lemma": "re-constructed",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "hlb-transmission-critical": {
+    "lemma": "hlb-transmission-critical",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "individual-based": {
+    "lemma": "individual-based",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 2,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 2
+  },
+  "sub-networks": {
+    "lemma": "sub-networks",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "supercolony": {
+    "lemma": "supercolony",
+    "domains": [],
+    "frequency": 8,
+    "confidence": 0.30000000000000004,
+    "n_contexts": 5
+  },
+  "30-35": {
+    "lemma": "30-35",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "worker-produced": {
+    "lemma": "worker-produced",
+    "domains": [
+      "power_and_labor",
+      "behavior_and_identity"
+    ],
+    "frequency": 11,
+    "confidence": 0.9999999999999999,
+    "n_contexts": 5
+  },
+  "15-fold": {
+    "lemma": "15-fold",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "low-altitude": {
+    "lemma": "low-altitude",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "fecundity-longevity": {
+    "lemma": "fecundity-longevity",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "rnai-based": {
+    "lemma": "rnai-based",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "non-host": {
+    "lemma": "non-host",
+    "domains": [
+      "power_and_labor"
+    ],
+    "frequency": 3,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 3
+  },
+  "modalities-including": {
+    "lemma": "modalities-including",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "low-threat": {
+    "lemma": "low-threat",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "gene-family": {
+    "lemma": "gene-family",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "set-up": {
+    "lemma": "set-up",
+    "domains": [],
+    "frequency": 3,
+    "confidence": 0.4,
+    "n_contexts": 3
+  },
+  "knife-cutting": {
+    "lemma": "knife-cutting",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "egg-laying": {
+    "lemma": "egg-laying",
+    "domains": [],
+    "frequency": 9,
+    "confidence": 0.5,
+    "n_contexts": 5
+  },
+  "diet-based": {
+    "lemma": "diet-based",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "non-easily": {
+    "lemma": "non-easily",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "near-isometric": {
+    "lemma": "near-isometric",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "full-size": {
+    "lemma": "full-size",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "stereo-microscopically": {
+    "lemma": "stereo-microscopically",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "hydrocarbons-the": {
+    "lemma": "hydrocarbons-the",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "leaf-harvesting": {
+    "lemma": "leaf-harvesting",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "species-rich": {
+    "lemma": "species-rich",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "lab-longer": {
+    "lemma": "lab-longer",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "polygyne": {
+    "lemma": "polygyne",
+    "domains": [],
+    "frequency": 17,
+    "confidence": 0.4,
+    "n_contexts": 5
+  },
+  "walk-based": {
+    "lemma": "walk-based",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "location-specific": {
+    "lemma": "location-specific",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "brood-tending": {
+    "lemma": "brood-tending",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "by-products": {
+    "lemma": "by-product",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "non-lethal": {
+    "lemma": "non-lethal",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "within-group": {
+    "lemma": "within-group",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "x-ray": {
+    "lemma": "x-ray",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "high-quality": {
+    "lemma": "high-quality",
+    "domains": [],
+    "frequency": 4,
+    "confidence": 0.4,
+    "n_contexts": 4
+  },
+  "non-typical": {
+    "lemma": "non-typical",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "aco-alo": {
+    "lemma": "aco-alo",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "allocation": {
+    "lemma": "allocation",
+    "domains": [
+      "economics"
+    ],
+    "frequency": 63,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 5
+  },
+  "ovarian-specific": {
+    "lemma": "ovarian-specific",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "dose-dependent": {
+    "lemma": "dose-dependent",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "food-blending": {
+    "lemma": "food-blending",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "meta-analysis": {
+    "lemma": "meta-analysis",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "efficiency": {
+    "lemma": "efficiency",
+    "domains": [],
+    "frequency": 32,
+    "confidence": 0.4,
+    "n_contexts": 5
+  },
+  "pre-formed": {
+    "lemma": "pre-formed",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "diamond-shaped": {
+    "lemma": "diamond-shaped",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "nest-workers": {
+    "lemma": "nest-workers",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "stage-": {
+    "lemma": "stage-",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "1-2": {
+    "lemma": "1-2",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "diet-related": {
+    "lemma": "diet-related",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "diploidy": {
+    "lemma": "diploidy",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.2,
+    "n_contexts": 2
+  },
+  "long-range": {
+    "lemma": "long-range",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "co-amplified": {
+    "lemma": "co-amplified",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "fertility-linked": {
+    "lemma": "fertility-linked",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "male-beneficial": {
+    "lemma": "male-beneficial",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "three-allele": {
+    "lemma": "three-allele",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "12-19": {
+    "lemma": "12-19",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "1-5": {
+    "lemma": "1-5",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "non-targeted": {
+    "lemma": "non-targeted",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "well-suited": {
+    "lemma": "well-suited",
+    "domains": [],
+    "frequency": 3,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "queenright": {
+    "lemma": "queenright",
+    "domains": [],
+    "frequency": 6,
+    "confidence": 0.30000000000000004,
+    "n_contexts": 5
+  },
+  "approach-drawing": {
+    "lemma": "approach-drawing",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "on-the-spot": {
+    "lemma": "on-the-spot",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "ant-psyllid": {
+    "lemma": "ant-psyllid",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "broad-complex": {
+    "lemma": "broad-complex",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "nestmate": {
+    "lemma": "nestmate",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 31,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 5
+  },
+  "gamma-distribution": {
+    "lemma": "gamma-distribution",
+    "domains": [
+      "economics"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "working": {
+    "lemma": "working",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 7,
+    "confidence": 0.7000000000000001,
+    "n_contexts": 5
+  },
+  "nutrient-sensing": {
+    "lemma": "nutrient-sensing",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "animal-built": {
+    "lemma": "animal-built",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "organismic": {
+    "lemma": "organismic",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 1,
+    "confidence": 0.6,
+    "n_contexts": 1
+  },
+  "well-developed": {
+    "lemma": "well-developed",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "colony-treated": {
+    "lemma": "colony-treated",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "2-256": {
+    "lemma": "2-256",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "shared-can": {
+    "lemma": "shared-can",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "ps-mnp-contaminated": {
+    "lemma": "ps-mnp-contaminated",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "pre-foraging": {
+    "lemma": "pre-foraging",
+    "domains": [
+      "behavior_and_identity"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "ant-shaped": {
+    "lemma": "ant-shaped",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "23-46": {
+    "lemma": "23-46",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "phenotype": {
+    "lemma": "phenotype",
+    "domains": [],
+    "frequency": 12,
+    "confidence": 0.4,
+    "n_contexts": 5
+  },
+  "slavemaking": {
+    "lemma": "slavemaking",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 1,
+    "confidence": 0.6,
+    "n_contexts": 1
+  },
+  "tea-tree": {
+    "lemma": "tea-tree",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "three-year-old": {
+    "lemma": "three-year-old",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "double-stranded": {
+    "lemma": "double-stranded",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "self-organisation": {
+    "lemma": "self-organisation",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "kind": {
+    "lemma": "kind",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 1,
+    "confidence": 0.6,
+    "n_contexts": 1
+  },
+  "host-symbiont": {
+    "lemma": "host-symbiont",
+    "domains": [
+      "power_and_labor",
+      "unit_of_individuality"
+    ],
+    "frequency": 2,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 2
+  },
+  "inter-species": {
+    "lemma": "inter-species",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "king": {
+    "lemma": "king",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 1,
+    "confidence": 0.6,
+    "n_contexts": 1
+  },
+  "designs4-15": {
+    "lemma": "designs4-15",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "nestmates": {
+    "lemma": "nestmates",
+    "domains": [],
+    "frequency": 24,
+    "confidence": 0.4,
+    "n_contexts": 5
+  },
+  "non-reproducing": {
+    "lemma": "non-reproducing",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "worker-upregulated": {
+    "lemma": "worker-upregulated",
+    "domains": [
+      "power_and_labor",
+      "behavior_and_identity"
+    ],
+    "frequency": 2,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 2
+  },
+  "behavioral": {
+    "lemma": "behavioral",
+    "domains": [
+      "behavior_and_identity"
+    ],
+    "frequency": 82,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 5
+  },
+  "size-correlated": {
+    "lemma": "size-correlated",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "cestode-infected": {
+    "lemma": "cestode-infected",
+    "domains": [],
+    "frequency": 3,
+    "confidence": 0.4,
+    "n_contexts": 3
+  },
+  "short-lived": {
+    "lemma": "short-lived",
+    "domains": [],
+    "frequency": 4,
+    "confidence": 0.4,
+    "n_contexts": 4
+  },
+  "workers8910": {
+    "lemma": "workers8910",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.2,
+    "n_contexts": 1
+  },
+  "top-ranking": {
+    "lemma": "top-ranking",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 2,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 2
+  },
+  "post-injection": {
+    "lemma": "post-injection",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "dominance": {
+    "lemma": "dominance",
+    "domains": [],
+    "frequency": 17,
+    "confidence": 0.4,
+    "n_contexts": 5
+  },
+  "haplodiploid": {
+    "lemma": "haplodiploid",
+    "domains": [],
+    "frequency": 11,
+    "confidence": 0.4,
+    "n_contexts": 5
+  },
+  "age-dependent": {
+    "lemma": "age-dependent",
+    "domains": [],
+    "frequency": 4,
+    "confidence": 0.4,
+    "n_contexts": 4
+  },
+  "geo-referenced": {
+    "lemma": "geo-referenced",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "fungus-growing": {
+    "lemma": "fungus-growing",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "caterpillar-ant": {
+    "lemma": "caterpillar-ant",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "piwi-interacting": {
+    "lemma": "piwi-interacting",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "multiqueen": {
+    "lemma": "multiqueen",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.2,
+    "n_contexts": 2
+  },
+  "caretaking": {
+    "lemma": "caretaking",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 1,
+    "confidence": 0.6,
+    "n_contexts": 1
+  },
+  "whole-brain": {
+    "lemma": "whole-brain",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "kingdom": {
+    "lemma": "kingdom",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 2,
+    "confidence": 0.6,
+    "n_contexts": 2
+  },
+  "nutrient-processing": {
+    "lemma": "nutrient-processing",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "ant-bee": {
+    "lemma": "ant-bee",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "active-feeding": {
+    "lemma": "active-feeding",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "kinship": {
+    "lemma": "kinship",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 9,
+    "confidence": 0.7000000000000001,
+    "n_contexts": 5
+  },
+  "haploids": {
+    "lemma": "haploid",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.2,
+    "n_contexts": 1
+  },
+  "mirna-mediated": {
+    "lemma": "mirna-mediated",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "host-specificity": {
+    "lemma": "host-specificity",
+    "domains": [
+      "power_and_labor"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "young-": {
+    "lemma": "young-",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "non-nestmate": {
+    "lemma": "non-nestmate",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 6,
+    "confidence": 0.9,
+    "n_contexts": 5
+  },
+  "odorant-binding": {
+    "lemma": "odorant-binding",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "time-window": {
+    "lemma": "time-window",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "high-carbohydrate": {
+    "lemma": "high-carbohydrate",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "non-doryline": {
+    "lemma": "non-doryline",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "fast-developing": {
+    "lemma": "fast-developing",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "colony-level": {
+    "lemma": "colony-level",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 29,
+    "confidence": 0.9999999999999999,
+    "n_contexts": 5
+  },
+  "female-costly": {
+    "lemma": "female-costly",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "sinv-3": {
+    "lemma": "sinv-3",
+    "domains": [],
+    "frequency": 10,
+    "confidence": 0.5,
+    "n_contexts": 5
+  },
+  "gynes": {
+    "lemma": "gynes",
+    "domains": [],
+    "frequency": 4,
+    "confidence": 0.2,
+    "n_contexts": 4
+  },
+  "living-fossil": {
+    "lemma": "living-fossil",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "transformer-derived": {
+    "lemma": "transformer-derived",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "by-product": {
+    "lemma": "by-product",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "castes-queens": {
+    "lemma": "castes-queens",
+    "domains": [
+      "power_and_labor"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "environment-controlled": {
+    "lemma": "environment-controlled",
+    "domains": [
+      "power_and_labor"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "nest-level": {
+    "lemma": "nest-level",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "queen-derived": {
+    "lemma": "queen-derived",
+    "domains": [
+      "sex_and_reproduction",
+      "power_and_labor"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "cross-nestmate": {
+    "lemma": "cross-nestmate",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "host-specific": {
+    "lemma": "host-specific",
+    "domains": [
+      "power_and_labor"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "linking": {
+    "lemma": "linking",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 4,
+    "confidence": 0.6,
+    "n_contexts": 4
+  },
+  "macrogynes": {
+    "lemma": "macrogynes",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.2,
+    "n_contexts": 2
+  },
+  "cross-disciplinary": {
+    "lemma": "cross-disciplinary",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "task-specific": {
+    "lemma": "task-specific",
+    "domains": [
+      "behavior_and_identity"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "25-40": {
+    "lemma": "25-40",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "parent-offspring": {
+    "lemma": "parent-offspring",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "whole-al": {
+    "lemma": "whole-al",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "800-pixel": {
+    "lemma": "800-pixel",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "single-copy": {
+    "lemma": "single-copy",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "gyne-like": {
+    "lemma": "gyne-like",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 2,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 2
+  },
+  "non-formicoid": {
+    "lemma": "non-formicoid",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "antibiotic-based": {
+    "lemma": "antibiotic-based",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "inter-organismal": {
+    "lemma": "inter-organismal",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "parasite-induced": {
+    "lemma": "parasite-induced",
+    "domains": [
+      "power_and_labor"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "single-": {
+    "lemma": "single-",
+    "domains": [],
+    "frequency": 6,
+    "confidence": 0.5,
+    "n_contexts": 5
+  },
+  "co-occur": {
+    "lemma": "co-occur",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "s-shaped": {
+    "lemma": "s-shaped",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "geneticepigenetic": {
+    "lemma": "geneticepigenetic",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.2,
+    "n_contexts": 1
+  },
+  "re-introduced": {
+    "lemma": "re-introduced",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "acacia-ant": {
+    "lemma": "acacia-ant",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "re-establishment": {
+    "lemma": "re-establishment",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "allatostatin-a-": {
+    "lemma": "allatostatin-a-",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "high-amino-acid": {
+    "lemma": "high-amino-acid",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "haplo-diploid": {
+    "lemma": "haplo-diploid",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "long-lived": {
+    "lemma": "long-lived",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "subordinate": {
+    "lemma": "subordinate",
+    "domains": [
+      "power_and_labor"
+    ],
+    "frequency": 4,
+    "confidence": 0.6,
+    "n_contexts": 4
+  },
+  "sex-determining": {
+    "lemma": "sex-determining",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 2,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 2
+  },
+  "female-specific": {
+    "lemma": "female-specific",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 4,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 4
+  },
+  "backward-bent": {
+    "lemma": "backward-bent",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "low-": {
+    "lemma": "low-",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "high-density": {
+    "lemma": "high-density",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "undertaking": {
+    "lemma": "undertaking",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 1,
+    "confidence": 0.6,
+    "n_contexts": 1
+  },
+  "foraging-based": {
+    "lemma": "foraging-based",
+    "domains": [
+      "behavior_and_identity"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "single-cell": {
+    "lemma": "single-cell",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "queen-": {
+    "lemma": "queen-",
+    "domains": [
+      "sex_and_reproduction",
+      "power_and_labor"
+    ],
+    "frequency": 6,
+    "confidence": 0.9,
+    "n_contexts": 5
+  },
+  "slave-making": {
+    "lemma": "slave-making",
+    "domains": [
+      "power_and_labor"
+    ],
+    "frequency": 7,
+    "confidence": 0.9,
+    "n_contexts": 5
+  },
+  "coevolutionary": {
+    "lemma": "coevolutionary",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.2,
+    "n_contexts": 2
+  },
+  "ant-like": {
+    "lemma": "ant-like",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 2,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 2
+  },
+  "organism": {
+    "lemma": "organism",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 6,
+    "confidence": 0.7000000000000001,
+    "n_contexts": 5
+  },
+  "self-organize": {
+    "lemma": "self-organize",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "free-living": {
+    "lemma": "free-living",
+    "domains": [],
+    "frequency": 4,
+    "confidence": 0.4,
+    "n_contexts": 4
+  },
+  "pre-imaginal": {
+    "lemma": "pre-imaginal",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "dark-dark": {
+    "lemma": "dark-dark",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "anti-aging": {
+    "lemma": "anti-aging",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "cavity-dwelling": {
+    "lemma": "cavity-dwelling",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "longer-chained": {
+    "lemma": "longer-chained",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "coniferous-broadleaved": {
+    "lemma": "coniferous-broadleaved",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "non-hierarchical": {
+    "lemma": "non-hierarchical",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "co-expression": {
+    "lemma": "co-expression",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "finely-tuned": {
+    "lemma": "finely-tuned",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "nest-mates": {
+    "lemma": "nest-mates",
+    "domains": [],
+    "frequency": 4,
+    "confidence": 0.4,
+    "n_contexts": 4
+  },
+  "alpha-cypermethrin": {
+    "lemma": "alpha-cypermethrin",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "broad-range": {
+    "lemma": "broad-range",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "pheromone-guide": {
+    "lemma": "pheromone-guide",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "121-by-121": {
+    "lemma": "121-by-121",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "parthenogenetically": {
+    "lemma": "parthenogenetically",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.2,
+    "n_contexts": 1
+  },
+  "parasitism-the": {
+    "lemma": "parasitism-the",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "8-br-cgmp": {
+    "lemma": "8-br-cgmp",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "size-complexity": {
+    "lemma": "size-complexity",
+    "domains": [],
+    "frequency": 4,
+    "confidence": 0.4,
+    "n_contexts": 4
+  },
+  "colonys": {
+    "lemma": "colony",
+    "domains": [],
+    "frequency": 17,
+    "confidence": 0.4,
+    "n_contexts": 5
+  },
+  "multi-year": {
+    "lemma": "multi-year",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "non-leafcutting": {
+    "lemma": "non-leafcutting",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "lyapunov-based": {
+    "lemma": "lyapunov-based",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "time-leads": {
+    "lemma": "time-leads",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "nest-based": {
+    "lemma": "nest-based",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "class-1": {
+    "lemma": "class-1",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "allatostatin-a": {
+    "lemma": "allatostatin-a",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "nest-close": {
+    "lemma": "nest-close",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "477-489": {
+    "lemma": "477-489",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "within-nest": {
+    "lemma": "within-nest",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "mexicanus-a": {
+    "lemma": "mexicanus-a",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "selectionenhances": {
+    "lemma": "selectionenhances",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.2,
+    "n_contexts": 1
+  },
+  "familiarity-based": {
+    "lemma": "familiarity-based",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "population-dependent": {
+    "lemma": "population-dependent",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "olfactory-related": {
+    "lemma": "olfactory-related",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "sinv-3-infected": {
+    "lemma": "sinv-3-infected",
+    "domains": [],
+    "frequency": 5,
+    "confidence": 0.4,
+    "n_contexts": 5
+  },
+  "individual-level": {
+    "lemma": "individual-level",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 4,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 4
+  },
+  "cross-species": {
+    "lemma": "cross-species",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "task-associated": {
+    "lemma": "task-associated",
+    "domains": [
+      "behavior_and_identity"
+    ],
+    "frequency": 2,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "ant-tending": {
+    "lemma": "ant-tending",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 2,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 2
+  },
+  "male-specific": {
+    "lemma": "male-specific",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "hard-wired": {
+    "lemma": "hard-wired",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "desert-dwelling": {
+    "lemma": "desert-dwelling",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "task-": {
+    "lemma": "task-",
+    "domains": [
+      "behavior_and_identity"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "non-target": {
+    "lemma": "non-target",
+    "domains": [],
+    "frequency": 4,
+    "confidence": 0.4,
+    "n_contexts": 4
+  },
+  "lower-level": {
+    "lemma": "lower-level",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "per-capita": {
+    "lemma": "per-capita",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "foraging": {
+    "lemma": "foraging",
+    "domains": [
+      "behavior_and_identity"
+    ],
+    "frequency": 164,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 5
+  },
+  "tata-box-binding": {
+    "lemma": "tata-box-binding",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "pre-pupal": {
+    "lemma": "pre-pupal",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "ontogenetic": {
+    "lemma": "ontogenetic",
+    "domains": [],
+    "frequency": 5,
+    "confidence": 0.2,
+    "n_contexts": 5
+  },
+  "motivation-driven": {
+    "lemma": "motivation-driven",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "years-the": {
+    "lemma": "years-the",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "category-switching": {
+    "lemma": "category-switching",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "non-exclusive": {
+    "lemma": "non-exclusive",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "l-alt": {
+    "lemma": "l-alt",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "67b2-like": {
+    "lemma": "67b2-like",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "more-distantly": {
+    "lemma": "more-distantly",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "single-stranded": {
+    "lemma": "single-stranded",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "deep-time": {
+    "lemma": "deep-time",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "disease-signalling": {
+    "lemma": "disease-signalling",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "pirna-specific": {
+    "lemma": "pirna-specific",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "mir-1175-3p": {
+    "lemma": "mir-1175-3p",
+    "domains": [],
+    "frequency": 8,
+    "confidence": 0.5,
+    "n_contexts": 5
+  },
+  "vision-based": {
+    "lemma": "vision-based",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "gyne": {
+    "lemma": "gyne",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 10,
+    "confidence": 0.7000000000000001,
+    "n_contexts": 5
+  },
+  "short-term": {
+    "lemma": "short-term",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "poison-induced": {
+    "lemma": "poison-induced",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "monogyne": {
+    "lemma": "monogyne",
+    "domains": [],
+    "frequency": 15,
+    "confidence": 0.4,
+    "n_contexts": 5
+  },
+  "sub-castes": {
+    "lemma": "sub-castes",
+    "domains": [
+      "power_and_labor"
+    ],
+    "frequency": 3,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 3
+  },
+  "queen-mate": {
+    "lemma": "queen-mate",
+    "domains": [
+      "sex_and_reproduction",
+      "power_and_labor"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "endo-": {
+    "lemma": "endo-",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "morphology-based": {
+    "lemma": "morphology-based",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "micro-": {
+    "lemma": "micro-",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "qrt-pcr": {
+    "lemma": "qrt-pcr",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "c-enriched": {
+    "lemma": "c-enriched",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "three-dimensional": {
+    "lemma": "three-dimensional",
+    "domains": [],
+    "frequency": 5,
+    "confidence": 0.4,
+    "n_contexts": 5
+  },
+  "around-the-clock": {
+    "lemma": "around-the-clock",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "kinase": {
+    "lemma": "kinase",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 1,
+    "confidence": 0.6,
+    "n_contexts": 1
+  },
+  "host-parasite": {
+    "lemma": "host-parasite",
+    "domains": [
+      "power_and_labor"
+    ],
+    "frequency": 10,
+    "confidence": 0.9,
+    "n_contexts": 5
+  },
+  "10-12": {
+    "lemma": "10-12",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "stress-related": {
+    "lemma": "stress-related",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "queen-less": {
+    "lemma": "queen-less",
+    "domains": [
+      "sex_and_reproduction",
+      "power_and_labor"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "multi-chambered": {
+    "lemma": "multi-chambered",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "protein-level": {
+    "lemma": "protein-level",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "light-dark": {
+    "lemma": "light-dark",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "size-": {
+    "lemma": "size-",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "single-sex": {
+    "lemma": "single-sex",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "superorganisms": {
+    "lemma": "superorganisms",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 11,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 5
+  },
+  "carbohydrate-rich": {
+    "lemma": "carbohydrate-rich",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "sinv-2": {
+    "lemma": "sinv-2",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "time-lags": {
+    "lemma": "time-lags",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "sub-solvent": {
+    "lemma": "sub-solvent",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "male-haploid": {
+    "lemma": "male-haploid",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "age-associated": {
+    "lemma": "age-associated",
+    "domains": [],
+    "frequency": 3,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "group-level": {
+    "lemma": "group-level",
+    "domains": [],
+    "frequency": 3,
+    "confidence": 0.4,
+    "n_contexts": 3
+  },
+  "soaking": {
+    "lemma": "soaking",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 1,
+    "confidence": 0.6,
+    "n_contexts": 1
+  },
+  "non-invasive": {
+    "lemma": "non-invasive",
+    "domains": [],
+    "frequency": 3,
+    "confidence": 0.4,
+    "n_contexts": 3
+  },
+  "follow-up": {
+    "lemma": "follow-up",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "ever-changing": {
+    "lemma": "ever-changing",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "well-known": {
+    "lemma": "well-known",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "co-occurring": {
+    "lemma": "co-occurring",
+    "domains": [],
+    "frequency": 3,
+    "confidence": 0.4,
+    "n_contexts": 3
+  },
+  "sib-mating": {
+    "lemma": "sib-mating",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 2,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 2
+  },
+  "mating": {
+    "lemma": "mating",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 54,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 5
+  },
+  "seed-eating": {
+    "lemma": "seed-eating",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "worker-laid": {
+    "lemma": "worker-laid",
+    "domains": [
+      "power_and_labor",
+      "behavior_and_identity"
+    ],
+    "frequency": 6,
+    "confidence": 0.9,
+    "n_contexts": 5
+  },
+  "category-dependent": {
+    "lemma": "category-dependent",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "insecticide-treated": {
+    "lemma": "insecticide-treated",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "non-nestmates": {
+    "lemma": "non-nestmates",
+    "domains": [],
+    "frequency": 8,
+    "confidence": 0.5,
+    "n_contexts": 5
+  },
+  "seeking": {
+    "lemma": "seeking",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 2,
+    "confidence": 0.6,
+    "n_contexts": 2
+  },
+  "c28-c31": {
+    "lemma": "c28-c31",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "chain-like": {
+    "lemma": "chain-like",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "caenorhabditis-related": {
+    "lemma": "caenorhabditis-related",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "caste-differentiated": {
+    "lemma": "caste-differentiated",
+    "domains": [
+      "power_and_labor",
+      "behavior_and_identity"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "tracking": {
+    "lemma": "tracking",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 5,
+    "confidence": 0.6,
+    "n_contexts": 5
+  },
+  "non-clonal": {
+    "lemma": "non-clonal",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "younger-workers": {
+    "lemma": "younger-workers",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "long-distance": {
+    "lemma": "long-distance",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "gc-ms": {
+    "lemma": "gc-ms",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "colonyconsistent": {
+    "lemma": "colonyconsistent",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.2,
+    "n_contexts": 1
+  },
+  "peaking": {
+    "lemma": "peaking",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 1,
+    "confidence": 0.6,
+    "n_contexts": 1
+  },
+  "molecular-level": {
+    "lemma": "molecular-level",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "five-year": {
+    "lemma": "five-year",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "mark-recapture": {
+    "lemma": "mark-recapture",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "goal-orientated": {
+    "lemma": "goal-orientated",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "20-30": {
+    "lemma": "20-30",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "piliscapa-a": {
+    "lemma": "piliscapa-a",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "site-associated": {
+    "lemma": "site-associated",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "parthenogenetic": {
+    "lemma": "parthenogenetic",
+    "domains": [],
+    "frequency": 4,
+    "confidence": 0.2,
+    "n_contexts": 4
+  },
+  "route-centric": {
+    "lemma": "route-centric",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "newly-laid": {
+    "lemma": "newly-laid",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "inter-colony": {
+    "lemma": "inter-colony",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "non-local": {
+    "lemma": "non-local",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "thought-provoking": {
+    "lemma": "thought-provoking",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "investment": {
+    "lemma": "investment",
+    "domains": [
+      "economics"
+    ],
+    "frequency": 29,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 5
+  },
+  "pollen-collecting": {
+    "lemma": "pollen-collecting",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "neo-sex": {
+    "lemma": "neo-sex",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 2,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 2
+  },
+  "intercastes": {
+    "lemma": "intercastes",
+    "domains": [
+      "power_and_labor"
+    ],
+    "frequency": 3,
+    "confidence": 0.6,
+    "n_contexts": 3
+  },
+  "1-4": {
+    "lemma": "1-4",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "2-formylaminobenzoic": {
+    "lemma": "2-formylaminobenzoic",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "single-queen": {
+    "lemma": "single-queen",
+    "domains": [
+      "sex_and_reproduction",
+      "power_and_labor"
+    ],
+    "frequency": 14,
+    "confidence": 0.9999999999999999,
+    "n_contexts": 5
+  },
+  "high-maturity": {
+    "lemma": "high-maturity",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "industrial-scale": {
+    "lemma": "industrial-scale",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "z3-hacs": {
+    "lemma": "z3-hacs",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "co-foundresses": {
+    "lemma": "co-foundresses",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "nutrient-specific": {
+    "lemma": "nutrient-specific",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "hardy-weinberg": {
+    "lemma": "hardy-weinberg",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "house-hunting": {
+    "lemma": "house-hunting",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "relatedness-based": {
+    "lemma": "relatedness-based",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "two-pronged": {
+    "lemma": "two-pronged",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "sex-biased": {
+    "lemma": "sex-biased",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "-uninfected": {
+    "lemma": "-uninfected",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "kin-discriminatory": {
+    "lemma": "kin-discriminatory",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "inside-likely": {
+    "lemma": "inside-likely",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "self-organized": {
+    "lemma": "self-organized",
+    "domains": [],
+    "frequency": 4,
+    "confidence": 0.4,
+    "n_contexts": 4
+  },
+  "solid-phase": {
+    "lemma": "solid-phase",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "two-queen": {
+    "lemma": "two-queen",
+    "domains": [
+      "sex_and_reproduction",
+      "power_and_labor"
+    ],
+    "frequency": 3,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 3
+  },
+  "non-foraging": {
+    "lemma": "non-foraging",
+    "domains": [
+      "behavior_and_identity"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "production-in": {
+    "lemma": "production-in",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "ant-presence": {
+    "lemma": "ant-presence",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "newly-mated": {
+    "lemma": "newly-mated",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "high-speed": {
+    "lemma": "high-speed",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "micro-ct": {
+    "lemma": "micro-ct",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "rna-seq": {
+    "lemma": "rna-seq",
+    "domains": [],
+    "frequency": 3,
+    "confidence": 0.4,
+    "n_contexts": 3
+  },
+  "age-": {
+    "lemma": "age-",
+    "domains": [],
+    "frequency": 3,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "honeydew-producing": {
+    "lemma": "honeydew-producing",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "ant-produced": {
+    "lemma": "ant-produced",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "two-dimensional": {
+    "lemma": "two-dimensional",
+    "domains": [],
+    "frequency": 4,
+    "confidence": 0.4,
+    "n_contexts": 4
+  },
+  "context-dependent": {
+    "lemma": "context-dependent",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "group-living": {
+    "lemma": "group-living",
+    "domains": [],
+    "frequency": 3,
+    "confidence": 0.4,
+    "n_contexts": 3
+  },
+  "intra-population": {
+    "lemma": "intra-population",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "nestmates-a": {
+    "lemma": "nestmates-a",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "size-specific": {
+    "lemma": "size-specific",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "mole-rat": {
+    "lemma": "mole-rat",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "frequency-dependent": {
+    "lemma": "frequency-dependent",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "outcome-namely": {
+    "lemma": "outcome-namely",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "co-expressed": {
+    "lemma": "co-expressed",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "reproduction": {
+    "lemma": "reproduction",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 94,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 5
+  },
+  "caste-associated": {
+    "lemma": "caste-associated",
+    "domains": [
+      "power_and_labor",
+      "behavior_and_identity"
+    ],
+    "frequency": 3,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 3
+  },
+  "tachykinin": {
+    "lemma": "tachykinin",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 1,
+    "confidence": 0.6,
+    "n_contexts": 1
+  },
+  "tissue-specific": {
+    "lemma": "tissue-specific",
+    "domains": [],
+    "frequency": 3,
+    "confidence": 0.4,
+    "n_contexts": 3
+  },
+  "jh-regulated": {
+    "lemma": "jh-regulated",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "in-nest": {
+    "lemma": "in-nest",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "queen": {
+    "lemma": "queen",
+    "domains": [
+      "sex_and_reproduction",
+      "power_and_labor"
+    ],
+    "frequency": 241,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 5
+  },
+  "brother-sister": {
+    "lemma": "brother-sister",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "attacking": {
+    "lemma": "attacking",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 2,
+    "confidence": 0.6,
+    "n_contexts": 2
+  },
+  "coevolution": {
+    "lemma": "coevolution",
+    "domains": [],
+    "frequency": 7,
+    "confidence": 0.30000000000000004,
+    "n_contexts": 5
+  },
+  "queens": {
+    "lemma": "queen",
+    "domains": [],
+    "frequency": 367,
+    "confidence": 0.4,
+    "n_contexts": 5
+  },
+  "size-did": {
+    "lemma": "size-did",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "kin-informative": {
+    "lemma": "kin-informative",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "stage-specific": {
+    "lemma": "stage-specific",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "forager-type": {
+    "lemma": "forager-type",
+    "domains": [
+      "behavior_and_identity"
+    ],
+    "frequency": 2,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 2
+  },
+  "over-representation": {
+    "lemma": "over-representation",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "vitellogenin-2": {
+    "lemma": "vitellogenin-2",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "counter-adaptations": {
+    "lemma": "counter-adaptations",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "3-phosphate": {
+    "lemma": "3-phosphate",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "red-like": {
+    "lemma": "red-like",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "within-colony": {
+    "lemma": "within-colony",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 9,
+    "confidence": 0.9,
+    "n_contexts": 5
+  },
+  "licking": {
+    "lemma": "licking",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 1,
+    "confidence": 0.6,
+    "n_contexts": 1
+  },
+  "time-calibrated": {
+    "lemma": "time-calibrated",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "collective-level": {
+    "lemma": "collective-level",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "memory-dependent": {
+    "lemma": "memory-dependent",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "formicoxenus-group": {
+    "lemma": "formicoxenus-group",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "population-specific": {
+    "lemma": "population-specific",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "life-history": {
+    "lemma": "life-history",
+    "domains": [],
+    "frequency": 5,
+    "confidence": 0.4,
+    "n_contexts": 5
+  },
+  "16-20": {
+    "lemma": "16-20",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "term-a": {
+    "lemma": "term-a",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "stage-dependent": {
+    "lemma": "stage-dependent",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "radio-frequency": {
+    "lemma": "radio-frequency",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "genetics": {
+    "lemma": "genetics",
+    "domains": [],
+    "frequency": 8,
+    "confidence": 0.30000000000000004,
+    "n_contexts": 5
+  },
+  "toxicant-exposed": {
+    "lemma": "toxicant-exposed",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "6-hour": {
+    "lemma": "6-hour",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "half-sister": {
+    "lemma": "half-sister",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "y-maze": {
+    "lemma": "y-maze",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "co-founding": {
+    "lemma": "co-founding",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "free-running": {
+    "lemma": "free-running",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "state-dependent": {
+    "lemma": "state-dependent",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "co-evolutionary": {
+    "lemma": "co-evolutionary",
+    "domains": [],
+    "frequency": 3,
+    "confidence": 0.4,
+    "n_contexts": 3
+  },
+  "pre-processing": {
+    "lemma": "pre-processing",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "short-range": {
+    "lemma": "short-range",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "systems-level": {
+    "lemma": "systems-level",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "striking": {
+    "lemma": "striking",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 7,
+    "confidence": 0.7000000000000001,
+    "n_contexts": 5
+  },
+  "life-span": {
+    "lemma": "life-span",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "worker-destined": {
+    "lemma": "worker-destined",
+    "domains": [
+      "power_and_labor",
+      "behavior_and_identity"
+    ],
+    "frequency": 4,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 4
+  },
+  "queen-like": {
+    "lemma": "queen-like",
+    "domains": [
+      "sex_and_reproduction",
+      "power_and_labor"
+    ],
+    "frequency": 3,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 3
+  },
+  "sibmating": {
+    "lemma": "sibmating",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 1,
+    "confidence": 0.6,
+    "n_contexts": 1
+  },
+  "dige-based": {
+    "lemma": "dige-based",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "lacking": {
+    "lemma": "lacking",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 3,
+    "confidence": 0.6,
+    "n_contexts": 3
+  },
+  "home-made": {
+    "lemma": "home-made",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "family-based": {
+    "lemma": "family-based",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 2,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 2
+  },
+  "up-regulation": {
+    "lemma": "up-regulation",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "well-studied": {
+    "lemma": "well-studied",
+    "domains": [],
+    "frequency": 3,
+    "confidence": 0.4,
+    "n_contexts": 3
+  },
+  "de-centralized": {
+    "lemma": "de-centralized",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "multiple-queen": {
+    "lemma": "multiple-queen",
+    "domains": [
+      "sex_and_reproduction",
+      "power_and_labor"
+    ],
+    "frequency": 13,
+    "confidence": 0.9999999999999999,
+    "n_contexts": 5
+  },
+  "early-life": {
+    "lemma": "early-life",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "host-adapted": {
+    "lemma": "host-adapted",
+    "domains": [
+      "power_and_labor"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "chemosensory-related": {
+    "lemma": "chemosensory-related",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "stage-related": {
+    "lemma": "stage-related",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "queen-treated": {
+    "lemma": "queen-treated",
+    "domains": [
+      "sex_and_reproduction",
+      "power_and_labor"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "class-3": {
+    "lemma": "class-3",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "superorganismality": {
+    "lemma": "superorganismality",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 2,
+    "confidence": 0.6,
+    "n_contexts": 2
+  },
+  "soldiers": {
+    "lemma": "soldier",
+    "domains": [],
+    "frequency": 5,
+    "confidence": 0.2,
+    "n_contexts": 5
+  },
+  "series-parallel": {
+    "lemma": "series-parallel",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "phloem-feeding": {
+    "lemma": "phloem-feeding",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "same-aged": {
+    "lemma": "same-aged",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "queen-mating": {
+    "lemma": "queen-mating",
+    "domains": [
+      "sex_and_reproduction",
+      "power_and_labor"
+    ],
+    "frequency": 5,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 5
+  },
+  "chc-poor": {
+    "lemma": "chc-poor",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "small-molecule": {
+    "lemma": "small-molecule",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "over-the-counter": {
+    "lemma": "over-the-counter",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "olfactory-receptor": {
+    "lemma": "olfactory-receptor",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "s-hydroprene": {
+    "lemma": "s-hydroprene",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "prey-predator": {
+    "lemma": "prey-predator",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "hypo-methylated": {
+    "lemma": "hypo-methylated",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "n-labeled": {
+    "lemma": "n-labeled",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "olfactory-driven": {
+    "lemma": "olfactory-driven",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "unheard-of": {
+    "lemma": "unheard-of",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "half-sisters": {
+    "lemma": "half-sister",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "iso-": {
+    "lemma": "iso-",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "male-queen": {
+    "lemma": "male-queen",
+    "domains": [
+      "sex_and_reproduction",
+      "power_and_labor"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "matri-": {
+    "lemma": "matri-",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "kin-structures": {
+    "lemma": "kin-structures",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "one-shot": {
+    "lemma": "one-shot",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "candidates-colony": {
+    "lemma": "candidates-colony",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "nest-sites": {
+    "lemma": "nest-sites",
+    "domains": [],
+    "frequency": 4,
+    "confidence": 0.4,
+    "n_contexts": 4
+  },
+  "queen-destined": {
+    "lemma": "queen-destined",
+    "domains": [
+      "sex_and_reproduction",
+      "power_and_labor"
+    ],
+    "frequency": 2,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 2
+  },
+  "self-assembly": {
+    "lemma": "self-assembly",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "shaking": {
+    "lemma": "shaking",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 1,
+    "confidence": 0.6,
+    "n_contexts": 1
+  },
+  "age-related": {
+    "lemma": "age-related",
+    "domains": [],
+    "frequency": 15,
+    "confidence": 0.6,
+    "n_contexts": 5
+  },
+  "re-evaluation": {
+    "lemma": "re-evaluation",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "mid-elevations": {
+    "lemma": "mid-elevations",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "group-specific": {
+    "lemma": "group-specific",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "987-996": {
+    "lemma": "987-996",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "yolk-rich": {
+    "lemma": "yolk-rich",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "queenless": {
+    "lemma": "queenless",
+    "domains": [],
+    "frequency": 14,
+    "confidence": 0.4,
+    "n_contexts": 5
+  },
+  "pyrethroid-treated": {
+    "lemma": "pyrethroid-treated",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "locking": {
+    "lemma": "locking",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 1,
+    "confidence": 0.6,
+    "n_contexts": 1
+  },
+  "mother-daughter": {
+    "lemma": "mother-daughter",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "age-specific": {
+    "lemma": "age-specific",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "co-introduced": {
+    "lemma": "co-introduced",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "sinv-1": {
+    "lemma": "sinv-1",
+    "domains": [],
+    "frequency": 4,
+    "confidence": 0.4,
+    "n_contexts": 4
+  },
+  "real-world": {
+    "lemma": "real-world",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "possibly-rewarding": {
+    "lemma": "possibly-rewarding",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "field-relevant": {
+    "lemma": "field-relevant",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "c-labeled": {
+    "lemma": "c-labeled",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "self-organizing": {
+    "lemma": "self-organizing",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "single-locus": {
+    "lemma": "single-locus",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "plant-herbivore": {
+    "lemma": "plant-herbivore",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "goal-oriented": {
+    "lemma": "goal-oriented",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "semen-liquefying": {
+    "lemma": "semen-liquefying",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "patriline-specific": {
+    "lemma": "patriline-specific",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "ping-pong": {
+    "lemma": "ping-pong",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "u-turns": {
+    "lemma": "u-turn",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "sensory-motor": {
+    "lemma": "sensory-motor",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "soldier": {
+    "lemma": "soldier",
+    "domains": [
+      "behavior_and_identity"
+    ],
+    "frequency": 8,
+    "confidence": 0.7000000000000001,
+    "n_contexts": 5
+  },
+  "phenotype-specific": {
+    "lemma": "phenotype-specific",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "strategies-including": {
+    "lemma": "strategies-including",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "z3-hac": {
+    "lemma": "z3-hac",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "evolutionary": {
+    "lemma": "evolutionary",
+    "domains": [],
+    "frequency": 74,
+    "confidence": 0.4,
+    "n_contexts": 5
+  },
+  "male-producing": {
+    "lemma": "male-producing",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 2,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 2
+  },
+  "strikingly": {
+    "lemma": "strikingly",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 3,
+    "confidence": 0.6,
+    "n_contexts": 3
+  },
+  "mass-specific": {
+    "lemma": "mass-specific",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "gene-regulatory": {
+    "lemma": "gene-regulatory",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "task-related": {
+    "lemma": "task-related",
+    "domains": [
+      "behavior_and_identity"
+    ],
+    "frequency": 2,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 2
+  },
+  "same-age": {
+    "lemma": "same-age",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "queen-size": {
+    "lemma": "queen-size",
+    "domains": [
+      "sex_and_reproduction",
+      "power_and_labor"
+    ],
+    "frequency": 2,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 2
+  },
+  "1-day-old": {
+    "lemma": "1-day-old",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "further-namely": {
+    "lemma": "further-namely",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "high-resolution": {
+    "lemma": "high-resolution",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "two-photon": {
+    "lemma": "two-photon",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "host-wolbachia": {
+    "lemma": "host-wolbachia",
+    "domains": [
+      "power_and_labor"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "high-throughput": {
+    "lemma": "high-throughput",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "predominance": {
+    "lemma": "predominance",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.2,
+    "n_contexts": 2
+  },
+  "cytogenetic": {
+    "lemma": "cytogenetic",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.2,
+    "n_contexts": 1
+  },
+  "car-like": {
+    "lemma": "car-like",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "back-and-forth": {
+    "lemma": "back-and-forth",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "birds-eye": {
+    "lemma": "birds-eye",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "genome-wide": {
+    "lemma": "genome-wide",
+    "domains": [],
+    "frequency": 6,
+    "confidence": 0.5,
+    "n_contexts": 5
+  },
+  "whole-colony": {
+    "lemma": "whole-colony",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "queen-laid": {
+    "lemma": "queen-laid",
+    "domains": [
+      "sex_and_reproduction",
+      "power_and_labor"
+    ],
+    "frequency": 4,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 4
+  },
+  "non-coding": {
+    "lemma": "non-coding",
+    "domains": [],
+    "frequency": 3,
+    "confidence": 0.4,
+    "n_contexts": 3
+  },
+  "inter-specific": {
+    "lemma": "inter-specific",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "host-derived": {
+    "lemma": "host-derived",
+    "domains": [
+      "power_and_labor"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "on-route": {
+    "lemma": "on-route",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "south-western": {
+    "lemma": "south-western",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "twig-like": {
+    "lemma": "twig-like",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "1-14": {
+    "lemma": "1-14",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "sl-csd": {
+    "lemma": "sl-csd",
+    "domains": [],
+    "frequency": 3,
+    "confidence": 0.4,
+    "n_contexts": 3
+  },
+  "non-descendant": {
+    "lemma": "non-descendant",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "colony-mates": {
+    "lemma": "colony-mates",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "high-elevation": {
+    "lemma": "high-elevation",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "self-medication": {
+    "lemma": "self-medication",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "benchmarking": {
+    "lemma": "benchmarking",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 1,
+    "confidence": 0.6,
+    "n_contexts": 1
+  },
+  "haploid": {
+    "lemma": "haploid",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 12,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 5
+  },
+  "ant-associated": {
+    "lemma": "ant-associated",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "taking": {
+    "lemma": "taking",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 3,
+    "confidence": 0.6,
+    "n_contexts": 3
+  },
+  "stop-flow": {
+    "lemma": "stop-flow",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "symbiont": {
+    "lemma": "symbiont",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 5,
+    "confidence": 0.6,
+    "n_contexts": 5
+  },
+  "kin-selected": {
+    "lemma": "kin-selected",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 4,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 4
+  },
+  "kr\u00fcppel-homolog": {
+    "lemma": "kr\u00fcppel-homolog",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "co-opted": {
+    "lemma": "co-opted",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "non-contaminated": {
+    "lemma": "non-contaminated",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "two-types": {
+    "lemma": "two-types",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "same-stage": {
+    "lemma": "same-stage",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "non-chemical": {
+    "lemma": "non-chemical",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "nest-building": {
+    "lemma": "nest-building",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "4-9": {
+    "lemma": "4-9",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "taxon-restricted": {
+    "lemma": "taxon-restricted",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "crispr-mediated": {
+    "lemma": "crispr-mediated",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "interference-mediated": {
+    "lemma": "interference-mediated",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "whole-genome": {
+    "lemma": "whole-genome",
+    "domains": [],
+    "frequency": 4,
+    "confidence": 0.4,
+    "n_contexts": 4
+  },
+  "intra-specific": {
+    "lemma": "intra-specific",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "epigenetics": {
+    "lemma": "epigenetics",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.2,
+    "n_contexts": 1
+  },
+  "worker": {
+    "lemma": "worker",
+    "domains": [
+      "power_and_labor",
+      "behavior_and_identity"
+    ],
+    "frequency": 266,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 5
+  },
+  "2-month-old": {
+    "lemma": "2-month-old",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "55-60": {
+    "lemma": "55-60",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "caste-based": {
+    "lemma": "caste-based",
+    "domains": [
+      "power_and_labor",
+      "behavior_and_identity"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "outside-likely": {
+    "lemma": "outside-likely",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "organismality": {
+    "lemma": "organismality",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 1,
+    "confidence": 0.6,
+    "n_contexts": 1
+  },
+  "ant-inspired": {
+    "lemma": "ant-inspired",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "n-undecane": {
+    "lemma": "n-undecane",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "resource": {
+    "lemma": "resource",
+    "domains": [
+      "economics"
+    ],
+    "frequency": 25,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 5
+  },
+  "gyne-producing": {
+    "lemma": "gyne-producing",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "host-queen-intolerant": {
+    "lemma": "host-queen-intolerant",
+    "domains": [
+      "sex_and_reproduction",
+      "power_and_labor"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "positive-sense": {
+    "lemma": "positive-sense",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "fission-performing": {
+    "lemma": "fission-performing",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "self-determination": {
+    "lemma": "self-determination",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "green-head": {
+    "lemma": "green-head",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "phylogenetically": {
+    "lemma": "phylogenetically",
+    "domains": [],
+    "frequency": 9,
+    "confidence": 0.30000000000000004,
+    "n_contexts": 5
+  },
+  "food-deprived": {
+    "lemma": "food-deprived",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "queen-biased": {
+    "lemma": "queen-biased",
+    "domains": [
+      "sex_and_reproduction",
+      "power_and_labor"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "social-supergene": {
+    "lemma": "social-supergene",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "contacts-can": {
+    "lemma": "contacts-can",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "polygyne-associated": {
+    "lemma": "polygyne-associated",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "carbon-carbon": {
+    "lemma": "carbon-carbon",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "x-linked": {
+    "lemma": "x-linked",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "multi-level": {
+    "lemma": "multi-level",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "ant-plant": {
+    "lemma": "ant-plant",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "rna-sequencing": {
+    "lemma": "rna-sequencing",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "intracolony": {
+    "lemma": "intracolony",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.2,
+    "n_contexts": 2
+  },
+  "co-ancestry": {
+    "lemma": "co-ancestry",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "male-killing": {
+    "lemma": "male-killing",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "400-ant": {
+    "lemma": "400-ant",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "changes-becoming": {
+    "lemma": "changes-becoming",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "queens-males": {
+    "lemma": "queens-males",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "counter-adaptation": {
+    "lemma": "counter-adaptation",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "cutting-edge": {
+    "lemma": "cutting-edge",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "low-maturity": {
+    "lemma": "low-maturity",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "leaf-cutting": {
+    "lemma": "leaf-cutting",
+    "domains": [],
+    "frequency": 13,
+    "confidence": 0.6,
+    "n_contexts": 5
+  },
+  "60-95": {
+    "lemma": "60-95",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "co-adapted": {
+    "lemma": "co-adapted",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "wild-type": {
+    "lemma": "wild-type",
+    "domains": [],
+    "frequency": 3,
+    "confidence": 0.4,
+    "n_contexts": 3
+  },
+  "26-fold": {
+    "lemma": "26-fold",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "ant-infested": {
+    "lemma": "ant-infested",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "bait-choice": {
+    "lemma": "bait-choice",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "plant-ants": {
+    "lemma": "plant-ants",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "surface-based": {
+    "lemma": "surface-based",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "three-year": {
+    "lemma": "three-year",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "long-read": {
+    "lemma": "long-read",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "more-closely": {
+    "lemma": "more-closely",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "macroevolutionary": {
+    "lemma": "macroevolutionary",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.2,
+    "n_contexts": 1
+  },
+  "hassell-varley": {
+    "lemma": "hassell-varley",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "time-points": {
+    "lemma": "time-points",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "endosymbiont": {
+    "lemma": "endosymbiont",
+    "domains": [],
+    "frequency": 3,
+    "confidence": 0.2,
+    "n_contexts": 3
+  },
+  "pheromones-elicit": {
+    "lemma": "pheromones-elicit",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "colony": {
+    "lemma": "colony",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 396,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 5
+  },
+  "resources": {
+    "lemma": "resource",
+    "domains": [
+      "economics"
+    ],
+    "frequency": 31,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 5
+  },
+  "caste-related": {
+    "lemma": "caste-related",
+    "domains": [
+      "power_and_labor",
+      "behavior_and_identity"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "non-hybridogenetic": {
+    "lemma": "non-hybridogenetic",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "droplet-like": {
+    "lemma": "droplet-like",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "ant-organs": {
+    "lemma": "ant-organs",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "colony-founding": {
+    "lemma": "colony-founding",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 2,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 2
+  },
+  "self-restraint": {
+    "lemma": "self-restraint",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "epigenetic": {
+    "lemma": "epigenetic",
+    "domains": [],
+    "frequency": 7,
+    "confidence": 0.30000000000000004,
+    "n_contexts": 5
+  },
+  "distance-decay": {
+    "lemma": "distance-decay",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "time-course": {
+    "lemma": "time-course",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "6-8": {
+    "lemma": "6-8",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "behaviors8": {
+    "lemma": "behaviors8",
+    "domains": [
+      "behavior_and_identity"
+    ],
+    "frequency": 1,
+    "confidence": 0.6,
+    "n_contexts": 1
+  },
+  "fine-scale": {
+    "lemma": "fine-scale",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "con-": {
+    "lemma": "con-",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "off-route": {
+    "lemma": "off-route",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "groups-available": {
+    "lemma": "groups-available",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "two-category": {
+    "lemma": "two-category",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "queen-queen": {
+    "lemma": "queen-queen",
+    "domains": [
+      "sex_and_reproduction",
+      "power_and_labor"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "multiple-choice": {
+    "lemma": "multiple-choice",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "cgmp-dependent": {
+    "lemma": "cgmp-dependent",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "eusocial": {
+    "lemma": "eusocial",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 84,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 5
+  },
+  "superorganism": {
+    "lemma": "superorganism",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 10,
+    "confidence": 0.7000000000000001,
+    "n_contexts": 5
+  },
+  "false-positive": {
+    "lemma": "false-positive",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "brood-caring": {
+    "lemma": "brood-caring",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "non-visual": {
+    "lemma": "non-visual",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "re-mate": {
+    "lemma": "re-mate",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "stratum-specific": {
+    "lemma": "stratum-specific",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "workers-yet": {
+    "lemma": "workers-yet",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "full-sisters": {
+    "lemma": "full-sisters",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "foragers-providing": {
+    "lemma": "foragers-providing",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "jack-of-all-trades": {
+    "lemma": "jack-of-all-trades",
+    "domains": [
+      "economics"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "wolbachia-infected": {
+    "lemma": "wolbachia-infected",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "well-mixed": {
+    "lemma": "well-mixed",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "leaders-supervisors": {
+    "lemma": "leaders-supervisors",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "decision-making": {
+    "lemma": "decision-making",
+    "domains": [
+      "kin_and_relatedness"
+    ],
+    "frequency": 4,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 4
+  },
+  "sixty-six": {
+    "lemma": "sixty-six",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "linked-read": {
+    "lemma": "linked-read",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "two-thirds": {
+    "lemma": "two-thirds",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "chc-sensitive": {
+    "lemma": "chc-sensitive",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "often-devastating": {
+    "lemma": "often-devastating",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "one-way": {
+    "lemma": "one-way",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "long-term": {
+    "lemma": "long-term",
+    "domains": [],
+    "frequency": 12,
+    "confidence": 0.6,
+    "n_contexts": 5
+  },
+  "sub-caste": {
+    "lemma": "sub-caste",
+    "domains": [
+      "power_and_labor",
+      "behavior_and_identity"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "s-hyroprene": {
+    "lemma": "s-hyroprene",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "all-surface": {
+    "lemma": "all-surface",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "queen-loss": {
+    "lemma": "queen-loss",
+    "domains": [
+      "sex_and_reproduction",
+      "power_and_labor"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "side-effect": {
+    "lemma": "side-effect",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "br-c": {
+    "lemma": "br-c",
+    "domains": [],
+    "frequency": 3,
+    "confidence": 0.4,
+    "n_contexts": 3
+  },
+  "fungus-farming": {
+    "lemma": "fungus-farming",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "high-order": {
+    "lemma": "high-order",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "brood-tender-type": {
+    "lemma": "brood-tender-type",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "older-workers": {
+    "lemma": "older-workers",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "substrate-borne": {
+    "lemma": "substrate-borne",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "post-transcriptional": {
+    "lemma": "post-transcriptional",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "behavior111213141516": {
+    "lemma": "behavior111213141516",
+    "domains": [
+      "behavior_and_identity"
+    ],
+    "frequency": 1,
+    "confidence": 0.6,
+    "n_contexts": 1
+  },
+  "cuticle-like": {
+    "lemma": "cuticle-like",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "organisms": {
+    "lemma": "organism",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 43,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 5
+  },
+  "split-sex-ratio": {
+    "lemma": "split-sex-ratio",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "co-evolving": {
+    "lemma": "co-evolving",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "behavior-the": {
+    "lemma": "behavior-the",
+    "domains": [
+      "behavior_and_identity"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "self-non-self": {
+    "lemma": "self-non-self",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "n-c23": {
+    "lemma": "n-c23",
+    "domains": [],
+    "frequency": 5,
+    "confidence": 0.4,
+    "n_contexts": 5
+  },
+  "risk-related": {
+    "lemma": "risk-related",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "evolution": {
+    "lemma": "evolution",
+    "domains": [],
+    "frequency": 135,
+    "confidence": 0.4,
+    "n_contexts": 5
+  },
+  "wing-buds": {
+    "lemma": "wing-buds",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "male-": {
+    "lemma": "male-",
+    "domains": [
+      "sex_and_reproduction"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "chemical-to": {
+    "lemma": "chemical-to",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "hybrid-dominated": {
+    "lemma": "hybrid-dominated",
+    "domains": [],
+    "frequency": 2,
+    "confidence": 0.4,
+    "n_contexts": 2
+  },
+  "super-organisms": {
+    "lemma": "super-organisms",
+    "domains": [
+      "unit_of_individuality"
+    ],
+    "frequency": 1,
+    "confidence": 0.7999999999999999,
+    "n_contexts": 1
+  },
+  "importance-rather": {
+    "lemma": "importance-rather",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  },
+  "toxin-gene": {
+    "lemma": "toxin-gene",
+    "domains": [],
+    "frequency": 1,
+    "confidence": 0.4,
+    "n_contexts": 1
+  }
+}

@@ -833,25 +833,31 @@ class PDFRenderer:
 
         # Insert title page body commands AFTER \begin{document}
         if title_page_body:
+            # We want to ensure our custom title page body is used and we also
+            # want a table of contents and a newpage.
+            full_title_body = title_page_body + "\n\\tableofcontents\n\\newpage"
+            
             # Check if \maketitle is already present (e.g. from Pandoc)
             if "\\maketitle" in tex_content:
-                logger.debug("✓ \\maketitle already present in LaTeX content (skipping injection)")
+                logger.debug("✓ \\maketitle already present in LaTeX content - replacing with our full title/TOC body")
+                # Find the first occurrence of \maketitle and replace it
+                tex_content = tex_content.replace("\\maketitle", full_title_body, 1)
             else:
                 begin_doc_idx = tex_content.find("\\begin{document}")
                 if begin_doc_idx > 0:
                     # Find position right after \begin{document}
                     end_of_begin_doc = tex_content.find("\n", begin_doc_idx) + 1
                     if end_of_begin_doc > begin_doc_idx:
-                        # Insert \maketitle and formatting after \begin{document}
+                        # Insert full title body and formatting after \begin{document}
                         tex_content = (
                             tex_content[:end_of_begin_doc]
                             + "\n"
-                            + title_page_body
+                            + full_title_body
                         + "\n\n"
                         + tex_content[end_of_begin_doc:]
                     )
                     logger.info(
-                        r"✓ Inserted title page (\maketitle) after \begin{document}"
+                        r"✓ Inserted title page (\maketitle), TOC, and newpage after \begin{document}"
                     )
 
         # Insert bibliography commands before \end{document} if bibliography exists

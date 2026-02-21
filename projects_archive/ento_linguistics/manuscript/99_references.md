@@ -1,3 +1,0 @@
-# References {#sec:references}
-
-\nocite{*}

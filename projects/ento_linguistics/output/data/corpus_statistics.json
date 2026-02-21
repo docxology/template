@@ -1,0 +1,89 @@
+{
+  "total_tokens": 48833,
+  "unique_tokens": 7066,
+  "total_characters": 538322,
+  "avg_token_length": 7.3232445272663975,
+  "most_common_tokens": [
+    [
+      "ant",
+      1043
+    ],
+    [
+      "colony",
+      855
+    ],
+    [
+      "worker",
+      833
+    ],
+    [
+      "queen",
+      608
+    ],
+    [
+      "social",
+      587
+    ],
+    [
+      "specie",
+      436
+    ],
+    [
+      "insect",
+      299
+    ],
+    [
+      "individual",
+      266
+    ],
+    [
+      "study",
+      233
+    ],
+    [
+      "behavior",
+      216
+    ],
+    [
+      "nest",
+      212
+    ],
+    [
+      "caste",
+      202
+    ],
+    [
+      "gene",
+      200
+    ],
+    [
+      "male",
+      195
+    ],
+    [
+      "reproductive",
+      194
+    ],
+    [
+      "may",
+      189
+    ],
+    [
+      "result",
+      183
+    ],
+    [
+      "genetic",
+      168
+    ],
+    [
+      "population",
+      167
+    ],
+    [
+      "foraging",
+      164
+    ]
+  ],
+  "type_token_ratio": 0.14469723342821453
+}

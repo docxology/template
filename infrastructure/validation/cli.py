@@ -28,24 +28,24 @@ def validate_pdf_command(args: argparse.Namespace) -> None:
     logger.info(f"Validating PDF: {pdf_path}")
     report = validate_pdf_rendering(pdf_path, n_words=args.preview_words)
 
-    print(f"\nValidation Results:")
-    print(f"Total issues found: {report['issues']['total_issues']}")
+    logger.info(f"\nValidation Results:")
+    logger.info(f"Total issues found: {report['issues']['total_issues']}")
 
     # report['issues'] values are integers (counts), not lists
     unresolved_refs_count = report["issues"].get("unresolved_references", 0)
     if unresolved_refs_count > 0:
-        print(f"Unresolved references: {unresolved_refs_count}")
+        logger.info(f"Unresolved references: {unresolved_refs_count}")
         if args.verbose:
-            print("  (See PDF for details)")
+            logger.info("  (See PDF for details)")
 
     missing_citations_count = report["issues"].get("missing_citations", 0)
     if missing_citations_count > 0:
-        print(f"Missing citations: {missing_citations_count}")
+        logger.info(f"Missing citations: {missing_citations_count}")
 
     if args.verbose and report.get("first_words"):
         words_preview = report["first_words"][:500] if report["first_words"] else ""
         if words_preview:
-            print(f"\nFirst words:\n{words_preview}")
+            logger.info(f"\nFirst words:\n{words_preview}")
 
     sys.exit(0 if not report["summary"]["has_issues"] else 1)
 
@@ -64,9 +64,9 @@ def validate_markdown_command(args: argparse.Namespace) -> None:
 
     if problems:
         for problem in problems:
-            print(f"  {problem}")
+            logger.info(f"  {problem}")
     else:
-        print("  No issues found!")
+        logger.info("  No issues found!")
 
     sys.exit(exit_code)
 
@@ -86,20 +86,20 @@ def verify_integrity_command(args: argparse.Namespace) -> None:
     total_files = len(report.file_integrity)
     total_issues = len(report.issues)
 
-    print(f"\nIntegrity Report:")
-    print(f"Files checked: {total_files}")
-    print(f"Issues found: {total_issues}")
-    print(f"Overall integrity: {'PASS' if report.overall_integrity else 'FAIL'}")
+    logger.info(f"\nIntegrity Report:")
+    logger.info(f"Files checked: {total_files}")
+    logger.info(f"Issues found: {total_issues}")
+    logger.info(f"Overall integrity: {'PASS' if report.overall_integrity else 'FAIL'}")
 
     if args.verbose and report.issues:
-        print("\nIssues:")
+        logger.info("\nIssues:")
         for issue in report.issues[:10]:
-            print(f"  - {issue}")
+            logger.info(f"  - {issue}")
 
     if args.verbose and report.warnings:
-        print("\nWarnings:")
+        logger.info("\nWarnings:")
         for warning in report.warnings[:10]:
-            print(f"  - {warning}")
+            logger.info(f"  - {warning}")
 
     sys.exit(0 if report.overall_integrity else 1)
 
@@ -126,13 +126,13 @@ def validate_links_command(args: argparse.Namespace) -> None:
         output_path.write_text(report, encoding="utf-8")
         logger.info(f"Report saved to: {output_path}")
     else:
-        print(report)
+        logger.info(report)
 
     if total_broken > 0:
-        print(f"\n❌ Found {total_broken} broken link(s)")
+        logger.info(f"\n❌ Found {total_broken} broken link(s)")
         sys.exit(1)
     else:
-        print("\n✅ All links valid!")
+        logger.info("\n✅ All links valid!")
         sys.exit(0)
 
 

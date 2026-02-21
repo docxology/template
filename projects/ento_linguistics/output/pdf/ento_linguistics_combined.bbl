@@ -1,0 +1,321 @@
+\begin{thebibliography}{48}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Anderson et~al.(2006)Anderson, Gadau, Mott, Johnson, Altamirano,
+  Strehl, and Fewell]{anderson2006}
+Kirk~E Anderson, J{\"u}rgen Gadau, Brendon~M Mott, Robert~A Johnson, Alejandra
+  Altamirano, Christoph Strehl, and Jennifer~H Fewell.
+\newblock Are social insects on the verge of becoming a ``model system'' for
+  evo-devo?
+\newblock \emph{Evolution \& Development}, 8\penalty0 (4):\penalty0 365--382,
+  2006.
+\newblock \doi{10.1111/j.1525-142X.2006.00114.x}.
+
+\bibitem[Berlin(1992)]{berlin1992}
+Brent Berlin.
+\newblock \emph{Ethnobiological Classification: Principles of Categorization of
+  Plants and Animals in Traditional Societies}.
+\newblock Princeton University Press, Princeton, NJ, 1992.
+
+\bibitem[Boomsma and Gawne(2018)]{boomsma2018superorganismality}
+Jacobus~J Boomsma and Richard Gawne.
+\newblock Superorganismality and caste differentiation as points of no return:
+  how the major evolutionary transitions were lost in translation.
+\newblock \emph{Biological Reviews}, 93\penalty0 (1):\penalty0 28--54, 2018.
+\newblock \doi{10.1111/brv.12330}.
+
+\bibitem[Chandra et~al.(2021)Chandra, Gal, Bhaktaram, and
+  Kronauer]{chandra2021epigenetics}
+Vinay Chandra, Adi Gal, Cait Bhaktaram, and Daniel~JC Kronauer.
+\newblock The role of epigenetics, particularly {DNA} methylation, in the
+  evolution of caste in insect societies.
+\newblock \emph{Philosophical Transactions of the Royal Society B},
+  376\penalty0 (1826):\penalty0 20200115, 2021.
+\newblock \doi{10.1098/rstb.2020.0115}.
+
+\bibitem[Chen(2006)]{chen2006citespace}
+Chaomei Chen.
+\newblock Citespace {II}: Detecting and visualizing emerging trends and
+  transient patterns in scientific literature.
+\newblock \emph{Journal of the American Society for Information Science and
+  Technology}, 57\penalty0 (3):\penalty0 359--377, 2006.
+\newblock \doi{10.1002/asi.20317}.
+
+\bibitem[Clark(2013)]{clark2013whatever}
+Andy Clark.
+\newblock Whatever next? predictive brains, situated agents, and the future of
+  cognitive science.
+\newblock \emph{Behavioral and Brain Sciences}, 36\penalty0 (3):\penalty0
+  181--204, 2013.
+
+\bibitem[Crespi and Yanega(1992)]{crespi1992caste}
+Bernard~J Crespi and Douglas Yanega.
+\newblock Definitions of {``}caste{''} in social insects.
+\newblock \emph{Ethology Ecology \& Evolution}, 4\penalty0 (3):\penalty0
+  295--297, 1992.
+\newblock \doi{10.1080/08927014.1992.9523134}.
+
+\bibitem[Deacon(2011)]{deacon2011incomplete}
+Terrence~W Deacon.
+\newblock \emph{Incomplete Nature: How Mind Emerged from Matter}.
+\newblock W. W. Norton \& Company, New York, 2011.
+
+\bibitem[{Entomological Society of America}(2024)]{betternamesproject2024}
+{Entomological Society of America}.
+\newblock Better common names: Addressing racist, colonial, and otherwise
+  problematic common names.
+\newblock \emph{ESA Common Names}, 2024.
+\newblock URL \url{https://entsoc.org/better-common-names}.
+\newblock Public submissions accepted for proposed name changes.
+
+\bibitem[Fairclough(1992)]{fairclough1992}
+Norman Fairclough.
+\newblock \emph{Discourse and Social Change}.
+\newblock Polity Press, Cambridge, UK, 1992.
+
+\bibitem[Foucault(1972)]{foucault1972archaeology}
+Michel Foucault.
+\newblock \emph{The Archaeology of Knowledge}.
+\newblock Pantheon Books, New York, 1972.
+
+\bibitem[Friedman et~al.(2021)Friedman, S{\o}vik, et~al.]{friedman2021active}
+Daniel~A. Friedman, Eirik S{\o}vik, et~al.
+\newblock An active inference framework for ant colony behavior.
+\newblock \emph{Frontiers in Behavioral Neuroscience}, 15:\penalty0 647732,
+  2021.
+\newblock \doi{10.3389/fnbeh.2021.647732}.
+
+\bibitem[Friston(2010)]{friston2010free}
+Karl Friston.
+\newblock The free-energy principle: a unified brain theory?
+\newblock \emph{Nature Reviews Neuroscience}, 11\penalty0 (2):\penalty0
+  127--138, 2010.
+
+\bibitem[Friston(2013)]{friston2013life}
+Karl Friston.
+\newblock Life as we know it.
+\newblock \emph{Journal of the Royal Society Interface}, 10\penalty0
+  (86):\penalty0 20130475, 2013.
+
+\bibitem[Gordon(2010)]{gordon2010}
+Deborah~M. Gordon.
+\newblock \emph{Ant Encounters: Interaction Networks and Colony Behavior}.
+\newblock Princeton University Press, Princeton, NJ, 2010.
+\newblock ISBN 978-0691138794.
+
+\bibitem[Gordon(2016)]{gordon2016}
+Deborah~M. Gordon.
+\newblock From division of labor to the collective behavior of social insects.
+\newblock \emph{Behavioral Ecology and Sociobiology}, 70\penalty0 (7):\penalty0
+  1101--1108, 2016.
+\newblock \doi{10.1007/s00265-015-2045-3}.
+
+\bibitem[Gordon(2019)]{gordon2019ecology}
+Deborah~M. Gordon.
+\newblock The ecology of collective behavior.
+\newblock \emph{PLoS Biology}, 17\penalty0 (2):\penalty0 e3000129, 2019.
+\newblock \doi{10.1371/journal.pbio.3000129}.
+
+\bibitem[Gordon(2023)]{gordon2023ecology}
+Deborah~M. Gordon.
+\newblock \emph{The Ecology of Collective Behavior}.
+\newblock Princeton University Press, Princeton, NJ, 2023.
+\newblock ISBN 978-0691232157.
+
+\bibitem[Hacking(1999)]{hacking1999social}
+Ian Hacking.
+\newblock \emph{The Social Construction of What?}
+\newblock Harvard University Press, Cambridge, MA, 1999.
+\newblock ISBN 978-0674004122.
+
+\bibitem[Haraway(1991)]{haraway1991}
+Donna~J. Haraway.
+\newblock \emph{Simians, Cyborgs, and Women: The Reinvention of Nature}.
+\newblock Routledge, New York, NY, 1991.
+
+\bibitem[Heinze and Schrempf(2017)]{heinze2017molecular}
+J{\"u}rgen Heinze and Alexandra Schrempf.
+\newblock A molecular concept of caste in insect societies.
+\newblock \emph{Current Opinion in Insect Science}, 25:\penalty0 30--36, 2017.
+\newblock \doi{10.1016/j.cois.2017.11.010}.
+
+\bibitem[Herbers(2006)]{herbers2006}
+Joan~M Herbers.
+\newblock The loaded language of science.
+\newblock \emph{The Chronicle of Higher Education}, 52\penalty0 (41):\penalty0
+  B13, 2006.
+
+\bibitem[Herbers(2007)]{herbers2007}
+Joan~M Herbers.
+\newblock Watch your language! {R}acially loaded metaphors in scientific
+  research.
+\newblock \emph{BioScience}, 57\penalty0 (2):\penalty0 104--105, 2007.
+\newblock \doi{10.1641/B570203}.
+
+\bibitem[H{\"o}lldobler and Wilson(1990)]{hölldobler1990}
+Bert H{\"o}lldobler and Edward~O. Wilson.
+\newblock \emph{The Ants}.
+\newblock Harvard University Press, Cambridge, MA, 1990.
+\newblock ISBN 978-0674040755.
+
+\bibitem[H{\"o}lldobler and Wilson(2008)]{wilson2008superorganism}
+Bert H{\"o}lldobler and Edward~O. Wilson.
+\newblock \emph{The Superorganism: The Beauty, Elegance, and Strangeness of
+  Insect Societies}.
+\newblock W. W. Norton \& Company, New York, 2008.
+
+\bibitem[Keller(1995)]{keller1995language}
+Evelyn~Fox Keller.
+\newblock Language and ideology in evolutionary theory: Reading cultural norms
+  into natural law.
+\newblock \emph{Primate Politics}, pages 85--102, 1995.
+
+\bibitem[Kirchhoff et~al.(2018)Kirchhoff, Parr, Palacios, Friston, and
+  Kiverstein]{kirchhoff2018markov}
+Michael Kirchhoff, Thomas Parr, Ensor Palacios, Karl Friston, and Julian
+  Kiverstein.
+\newblock The markov blankets of life: autonomy, active inference and the free
+  energy principle.
+\newblock \emph{Journal of the Royal Society Interface}, 15\penalty0
+  (138):\penalty0 20170792, 2018.
+
+\bibitem[Kuhn(1996)]{kuhn1996}
+Thomas~S. Kuhn.
+\newblock \emph{The Structure of Scientific Revolutions}.
+\newblock University of Chicago Press, Chicago, IL, 1996.
+
+\bibitem[Laciny(2024)]{laciny2024terminology}
+Alice Laciny.
+\newblock Problematic terminology in myrmecology.
+\newblock \emph{Myrmecological News Blog}, 2024.
+\newblock URL
+  \url{https://blog.myrmecologicalnews.org/2024/04/problematic-terminology-in-myrmecology/}.
+\newblock Discussion of inclusive language reforms following the MirMeco 2023
+  International Ant Meeting.
+
+\bibitem[Laciny et~al.(2022)Laciny, Carls-Diamante, and
+  Silani]{laciny2022neurodiversity}
+Alice Laciny, Sidney Carls-Diamante, and Giorgio Silani.
+\newblock Neurodiversity and anthropomorphism in social insect research.
+\newblock \emph{Philosophical Transactions of the Royal Society B},
+  377\penalty0 (1854):\penalty0 20210282, 2022.
+\newblock \doi{10.1098/rstb.2021.0282}.
+
+\bibitem[Lakoff and Johnson(1980)]{lakoff1980metaphors}
+George Lakoff and Mark Johnson.
+\newblock \emph{Metaphors We Live By}.
+\newblock University of Chicago Press, 1980.
+
+\bibitem[Latour(1987)]{latour1987}
+Bruno Latour.
+\newblock \emph{Science in Action: How to Follow Scientists and Engineers
+  through Society}.
+\newblock Harvard University Press, Cambridge, MA, 1987.
+
+\bibitem[Longino(1990)]{longino1990}
+Helen~E. Longino.
+\newblock \emph{Science as Social Knowledge: Values and Objectivity in
+  Scientific Inquiry}.
+\newblock Princeton University Press, Princeton, NJ, 1990.
+
+\bibitem[Mavhunga(2018)]{mavhunga2018transient}
+Clapperton~Chakanetsa Mavhunga.
+\newblock \emph{Transient Workspaces: Technologies of Everyday Innovation in
+  Zimbabwe}.
+\newblock MIT Press, Cambridge, MA, 2018.
+\newblock Discusses colonial pest control as technological domination.
+
+\bibitem[Meunier et~al.(2025)]{sociable2025}
+Joël Meunier et~al.
+\newblock Sociable arthropods: broadening conceptions about social insects.
+\newblock \emph{Biological Reviews}, 100:\penalty0 1--20, 2025.
+\newblock \doi{10.1111/brv.13050}.
+
+\bibitem[Oster and Wilson(1978)]{oster1978caste}
+George~F. Oster and Edward~O. Wilson.
+\newblock Caste and ecology in the social insects.
+\newblock \emph{Monographs in Population Biology}, 12, 1978.
+
+\bibitem[Ravary et~al.(2007)Ravary, Lecoutey, Kaminski, Ch{\^a}line, and
+  Jaisson]{ravary2007}
+Fabrice Ravary, Emmanuel Lecoutey, Gwidon Kaminski, Nicolas Ch{\^a}line, and
+  Pierre Jaisson.
+\newblock Individual experience alone can generate lasting division of labor in
+  ants.
+\newblock \emph{Current Biology}, 17\penalty0 (15):\penalty0 1308--1312, 2007.
+\newblock \doi{10.1016/j.cub.2007.06.047}.
+
+\bibitem[Sandoval(2024)]{feed2024insects}
+Vanessa Sandoval.
+\newblock Bugs, bias, and colonialism: Decolonizing entomophagy in mexico.
+\newblock \emph{Journal of Insects as Food and Feed}, 10\penalty0 (2):\penalty0
+  101--115, 2024.
+
+\bibitem[Sapir(1921)]{sapir1921}
+Edward Sapir.
+\newblock \emph{Language: An Introduction to the Study of Speech}.
+\newblock Harcourt, Brace and Company, New York, 1921.
+
+\bibitem[Sleigh(2007{\natexlab{a}})]{sleigh2007ants}
+Charlotte Sleigh.
+\newblock \emph{Six Legs Better: A Cultural History of Myrmecology}.
+\newblock Johns Hopkins University Press, Baltimore, MD, 2007{\natexlab{a}}.
+\newblock ISBN 978-0801886980.
+
+\bibitem[Sleigh(2007{\natexlab{b}})]{sleigh2007sixlegs}
+Charlotte Sleigh.
+\newblock Six legs better: A cultural history of myrmecology.
+\newblock \emph{The British Journal for the History of Science}, 40\penalty0
+  (4):\penalty0 612--614, 2007{\natexlab{b}}.
+
+\bibitem[Steen(2017)]{steen2017deliberate}
+Gerard~J. Steen.
+\newblock Deliberate metaphor theory: Basic assumptions, main tenets, and
+  recent developments.
+\newblock \emph{Intercultural Pragmatics}, 14\penalty0 (1):\penalty0 1--24,
+  2017.
+\newblock \doi{10.1515/ip-2017-0001}.
+
+\bibitem[Tschinkel(2006)]{tschinkel2006}
+Walter~R. Tschinkel.
+\newblock \emph{The Fire Ants}.
+\newblock Harvard University Press, Cambridge, MA, 2006.
+\newblock ISBN 978-0674022076.
+
+\bibitem[Warner et~al.(2024)Warner, Qiu, Mikheyev, and
+  Linksvayer]{warner2024caste}
+Miles~R. Warner, Lijun Qiu, Alexander~S. Mikheyev, and Timothy~A. Linksvayer.
+\newblock Caste differentiation becomes increasingly canalized from early
+  development in two ant species.
+\newblock \emph{Nature Communications}, 15:\penalty0 4218, 2024.
+\newblock \doi{10.1038/s41467-024-48526-2}.
+
+\bibitem[Wheeler(1911)]{wheeler1911}
+William~Morton Wheeler.
+\newblock The ant-colony as an organism.
+\newblock \emph{Journal of Morphology}, 22\penalty0 (2):\penalty0 307--325,
+  1911.
+\newblock \doi{10.1002/jmor.1050220206}.
+
+\bibitem[Whorf(1956)]{whorf1956}
+Benjamin~Lee Whorf.
+\newblock \emph{Language, Thought, and Reality: Selected Writings of {Benjamin
+  Lee Whorf}}.
+\newblock MIT Press, Cambridge, MA, 1956.
+
+\bibitem[Wilson(1971)]{wilson1971insect}
+Edward~O. Wilson.
+\newblock \emph{The Insect Societies}.
+\newblock Harvard University Press, Cambridge, MA, 1971.
+\newblock ISBN 978-0674454903.
+
+\bibitem[Wodak and Meyer(2009)]{wodak2009methods}
+Ruth Wodak and Michael Meyer.
+\newblock \emph{Methods of Critical Discourse Analysis}.
+\newblock SAGE Publications, London, 2nd edition, 2009.
+
+\end{thebibliography}

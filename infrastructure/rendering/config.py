@@ -34,7 +34,7 @@ class RenderingConfig:
     web_theme: str = "simple"
 
     @classmethod
-    def from_env(cls) -> RenderingConfig:
+    def from_env(cls, env: Optional[Dict[str, str]] = None) -> RenderingConfig:
         """Create configuration from environment variables.
 
         Supported environment variables:
@@ -51,12 +51,16 @@ class RenderingConfig:
         - SLIDE_THEME: Theme for slides (default: metropolis)
         - WEB_THEME: Theme for web output (default: simple)
 
+        Args:
+            env: Optional dictionary to override or replace os.environ
+
         Returns:
             RenderingConfig with values from environment or defaults
         """
         import os
 
         config_kwargs: Dict[str, Any] = {}
+        env_vars = env if env is not None else os.environ
 
         # Map environment variables to config fields
         env_mappings = {
@@ -75,7 +79,7 @@ class RenderingConfig:
         }
 
         for env_var, config_key in env_mappings.items():
-            value = os.environ.get(env_var)
+            value = env_vars.get(env_var)
             if value is not None:
                 config_kwargs[config_key] = value
 

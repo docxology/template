@@ -1,0 +1,56 @@
+{
+  "n_concepts": 6,
+  "n_relationships": 8,
+  "concepts": {
+    "biological_individuality": {
+      "description": "Concepts related to what constitutes a biological individual",
+      "n_terms": 56,
+      "domains": [
+        "unit_of_individuality"
+      ],
+      "confidence": 0.0
+    },
+    "social_organization": {
+      "description": "Principles of social organization and structure",
+      "n_terms": 96,
+      "domains": [
+        "power_and_labor",
+        "behavior_and_identity"
+      ],
+      "confidence": 0.0
+    },
+    "reproductive_biology": {
+      "description": "Reproductive systems and sex determination",
+      "n_terms": 63,
+      "domains": [
+        "sex_and_reproduction"
+      ],
+      "confidence": 0.0
+    },
+    "kinship_systems": {
+      "description": "Genetic and social relatedness structures",
+      "n_terms": 56,
+      "domains": [
+        "kin_and_relatedness"
+      ],
+      "confidence": 0.0
+    },
+    "resource_economics": {
+      "description": "Resource allocation and economic principles",
+      "n_terms": 13,
+      "domains": [
+        "economics"
+      ],
+      "confidence": 0.0
+    },
+    "behavioral_ecology": {
+      "description": "Behavioral adaptations and ecological contexts",
+      "n_terms": 52,
+      "domains": [
+        "behavior_and_identity",
+        "economics"
+      ],
+      "confidence": 0.0
+    }
+  }
+}

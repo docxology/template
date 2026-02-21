@@ -287,6 +287,9 @@ def extract_timeout_errors(stdout: str, stderr: str) -> list[dict]:
 
 def _run_pytest_stream(cmd: list[str], repo_root: Path, env: dict, quiet: bool) -> Tuple[int, str, str]:
     """Run pytest streaming output to console while capturing logs for reporting."""
+    import select
+    import sys
+    
     keywords = ['passed', 'failed', 'skipped', 'warnings', 'ERROR', 'FAILED', 'PASSED', 'coverage', '=']
     stdout_buf: list[str] = []
 
@@ -296,8 +299,8 @@ def _run_pytest_stream(cmd: list[str], repo_root: Path, env: dict, quiet: bool) 
         env=env,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
-        text=True,
-        bufsize=1,
+        text=False,  # Use binary mode for non-blocking IO
+        bufsize=0,
     )
 
     assert process.stdout is not None
@@ -338,28 +341,77 @@ def _run_pytest_stream(cmd: list[str], repo_root: Path, env: dict, quiet: bool) 
         'line = str(self.fp.readline'
     ]
 
-    for line in process.stdout:
-        # Skip lines that are clearly internal stack traces
-        if any(pattern in line for pattern in internal_stack_patterns):
-            continue  # Skip internal stack trace lines
+    fd = process.stdout.fileno()
+    import os
+    os.set_blocking(fd, False)
 
-        stdout_buf.append(line)
-        recent_lines.append(line)
-        if len(recent_lines) > 10:  # Keep only last 10 lines
-            recent_lines.pop(0)
-
-        if not quiet:
-            print(line, end='')
+    current_line = ""
+    while True:
+        reads, _, _ = select.select([fd], [], [], 0.1)
+        
+        if fd in reads:
+            raw_chunk = process.stdout.read(4096)
+            if raw_chunk is None:
+                # No data available right now (EAGAIN/EWOULDBLOCK)
+                if process.poll() is not None:
+                    break
+                continue
+            if not raw_chunk:
+                # EOF
+                if process.poll() is not None:
+                    break
+                continue
+                
+            chunk = raw_chunk.decode('utf-8', errors='replace')
+            
+            # Process the chunk character by character to handle lines and dots
+            for char in chunk:
+                current_line += char
+                if char == '\n' or (char == '.' and not quiet):
+                    # We have a full line or a progress dot in non-quiet mode
+                    line_to_process = current_line
+                    
+                    if char == '\n':
+                        # Only append full lines to the buffer and history
+                        if not any(pattern in line_to_process for pattern in internal_stack_patterns):
+                            stdout_buf.append(line_to_process)
+                            recent_lines.append(line_to_process)
+                            if len(recent_lines) > 10:
+                                recent_lines.pop(0)
+                        
+                    # Decide whether to print
+                    should_print = False
+                    if not quiet:
+                        # In verbose mode, print everything, but skip stack traces if it's a newline combo
+                        if char == '.' or not any(pattern in line_to_process for pattern in internal_stack_patterns):
+                            should_print = True
+                    else:
+                        if char == '\n':
+                            if any(k in line_to_process for k in keywords) or line_to_process.count('=') >= 10:
+                                should_print = True
+                    
+                    if should_print:
+                        sys.stdout.write(char if char == '.' else line_to_process)
+                        sys.stdout.flush()
+                        
+                    if char == '\n':
+                        current_line = ""
         else:
-            # Always print summary lines (pytest final summary with ===) and lines with keywords
-            if any(k in line for k in keywords) or line.count('=') >= 10:
-                print(line, end='')
+            if process.poll() is not None:
+                break
+                
+    # Process remainder
+    if current_line:
+        stdout_buf.append(current_line)
+        if not quiet:
+            sys.stdout.write(current_line)
+            sys.stdout.flush()
 
     # After process completes, ensure the final summary is captured
-    # Check the last few lines for summary information
-    for line in recent_lines[-3:]:  # Check last 3 lines
+    for line in recent_lines[-3:]:
         if ('passed' in line or 'failed' in line or 'skipped' in line) and not any(k in line for k in keywords):
-            print(line, end='')
+            sys.stdout.write(line)
+            sys.stdout.flush()
 
     process.wait()
     return process.returncode, "".join(stdout_buf), ""
@@ -1173,27 +1225,27 @@ def report_results(
 
     # Check for collection errors
     if infra_results.get('collection_errors', 0) > 0:
-        print()
-        print(f"⚠️  Collection Errors: {infra_results['collection_errors']}")
-        print(f"   Tests discovered: {infra_results.get('discovery_count', 0)}")
-        print(f"   Tests executed: 0 (collection failed)")
-        print()
-        print("   Common causes:")
-        print("     - Missing test dependencies (pytest-httpserver, etc.)")
-        print("     - Syntax errors in test files")
-        print("     - Import errors in conftest.py")
-        print()
+        logger.info("")
+        logger.info(f"⚠️  Collection Errors: {infra_results['collection_errors']}")
+        logger.info(f"   Tests discovered: {infra_results.get('discovery_count', 0)}")
+        logger.info(f"   Tests executed: 0 (collection failed)")
+        logger.info("")
+        logger.info("   Common causes:")
+        logger.info("     - Missing test dependencies (pytest-httpserver, etc.)")
+        logger.info("     - Syntax errors in test files")
+        logger.info("     - Import errors in conftest.py")
+        logger.info("")
 
     # Infrastructure summary
-    print()  # Add spacing
+    logger.info("")  # Add spacing
     # Check if infrastructure tests were actually run
     infra_was_run = infra_results.get('total', 0) > 0 or infra_exit != 0
     
     if not infra_was_run:
         # Infrastructure tests were skipped
-        print("Infrastructure Results:")
-        print(f"  ⏭ Skipped (not run in this execution)")
-        print(f"  📊 Coverage: N/A (tests not executed)")
+        logger.info("Infrastructure Results:")
+        logger.info(f"  ⏭ Skipped (not run in this execution)")
+        logger.info(f"  📊 Coverage: N/A (tests not executed)")
     elif infra_exit == 0:
         passed = infra_results.get('passed', 0)
         failed = infra_results.get('failed', 0)
@@ -1201,62 +1253,62 @@ def report_results(
         total = infra_results.get('total', 0)
         coverage = infra_results.get('coverage_percent', 0)
 
-        print("Infrastructure Results:")
-        print(f"  ✓ Passed: {passed}")
+        logger.info("Infrastructure Results:")
+        logger.info(f"  ✓ Passed: {passed}")
         if skipped > 0:
-            print(f"  ⚠ Skipped: {skipped}")
+            logger.info(f"  ⚠ Skipped: {skipped}")
         warnings = infra_results.get('warnings', 0)
         if warnings > 0:
-            print(f"  ⚠ Warnings: {warnings}")
-        print(f"  📊 Coverage: {format_coverage_status(coverage, 60.0)}")
+            logger.info(f"  ⚠ Warnings: {warnings}")
+        logger.info(f"  📊 Coverage: {format_coverage_status(coverage, 60.0)}")
 
         # Show coverage improvement suggestions if below threshold
         if coverage < 60.0:
             suggestions = analyze_coverage_gaps(infra_results, 60.0, "Infrastructure", report)
             for suggestion in suggestions:
-                print(f"    {suggestion}")
+                logger.info(f"    {suggestion}")
 
         # Show execution phases if available
         phases = infra_results.get('execution_phases', {})
         if phases:
             total_exec_time = sum(phases.values())
-            print(f"  ⏱ Duration: {format_duration(total_exec_time)}")
+            logger.info(f"  ⏱ Duration: {format_duration(total_exec_time)}")
     else:
         failed = infra_results.get('failed', 0)
         skipped = infra_results.get('skipped', 0)
         warnings = infra_results.get('warnings', 0)
-        print("Infrastructure Results:")
-        print(f"  ✗ Failed: {failed} test(s) failed")
+        logger.info("Infrastructure Results:")
+        logger.info(f"  ✗ Failed: {failed} test(s) failed")
         if skipped > 0:
-            print(f"  ⚠ Skipped: {skipped}")
+            logger.info(f"  ⚠ Skipped: {skipped}")
         if warnings > 0:
-            print(f"  ⚠ Warnings: {warnings}")
+            logger.info(f"  ⚠ Warnings: {warnings}")
 
         # Show detailed failure information
         failed_tests = infra_results.get('failed_tests', [])
         if failed_tests:
-            print()
-            print("  📋 Failed Tests:")
+            logger.info("")
+            logger.info("  📋 Failed Tests:")
             for i, failure in enumerate(failed_tests[:5], 1):  # Show first 5 failures
-                print(f"    {i}. {failure['test']}")
+                logger.info(f"    {i}. {failure['test']}")
                 if failure['error_type'] != 'Unknown':
-                    print(f"       {failure['error_type']}: {failure['error_message'][:60]}{'...' if len(failure['error_message']) > 60 else ''}")
+                    logger.info(f"       {failure['error_type']}: {failure['error_message'][:60]}{'...' if len(failure['error_message']) > 60 else ''}")
             if len(failed_tests) > 5:
-                print(f"    ... and {len(failed_tests) - 5} more failures")
+                logger.info(f"    ... and {len(failed_tests) - 5} more failures")
 
         # Show timeout errors separately if detected
         # Note: We need to extract timeouts from the raw stdout/stderr since they're not in failed_tests
         timeout_errors = []  # Would need access to raw stdout/stderr here
         if timeout_errors:
-            print()
-            print("  ⏰ Timeout Errors:")
+            logger.info("")
+            logger.info("  ⏰ Timeout Errors:")
             for i, timeout in enumerate(timeout_errors[:3], 1):
-                print(f"    {i}. {timeout['test']} ({timeout['timeout_duration']})")
-                print(f"       {timeout['suggestion']}")
+                logger.info(f"    {i}. {timeout['test']} ({timeout['timeout_duration']})")
+                logger.info(f"       {timeout['suggestion']}")
 
         # Always show debug commands
-        print()
-        print("  🔧 Quick Fix Suggestions:")
+        logger.info("")
+        logger.info("  🔧 Quick Fix Suggestions:")
 
         # Check for specific error types and provide targeted solutions
         has_import_errors = any('import' in str(f) or 'module' in str(f).lower() for f in failed_tests)
@@ -1264,28 +1316,28 @@ def report_results(
         has_timeout_errors = any('timeout' in str(f).lower() for f in failed_tests)
 
         if has_import_errors:
-            print("    - Missing dependencies: pip install pytest-httpserver pytest-timeout")
-            print("    - Import path issues: check PYTHONPATH includes repository root")
+            logger.info("    - Missing dependencies: pip install pytest-httpserver pytest-timeout")
+            logger.info("    - Import path issues: check PYTHONPATH includes repository root")
 
         if has_coverage_errors:
-            print("    - Coverage database corruption: files automatically cleaned and retried")
-            print("    - If errors persist: rm -f .coverage* coverage_*.json && rerun tests")
-            print("    - To skip coverage temporarily: pytest --no-cov tests/infra_tests/")
-            print("    - Coverage isolation: infrastructure and project tests use separate data files")
+            logger.info("    - Coverage database corruption: files automatically cleaned and retried")
+            logger.info("    - If errors persist: rm -f .coverage* coverage_*.json && rerun tests")
+            logger.info("    - To skip coverage temporarily: pytest --no-cov tests/infra_tests/")
+            logger.info("    - Coverage isolation: infrastructure and project tests use separate data files")
 
         if has_timeout_errors:
-            print("    - Timeout issues: increase with --timeout=60 or PYTEST_TIMEOUT=60")
-            print("    - Identify slow tests: pytest --durations=10 tests/infra_tests/")
-            print("    - Skip slow tests: pytest -m 'not slow' tests/infra_tests/")
+            logger.info("    - Timeout issues: increase with --timeout=60 or PYTEST_TIMEOUT=60")
+            logger.info("    - Identify slow tests: pytest --durations=10 tests/infra_tests/")
+            logger.info("    - Skip slow tests: pytest -m 'not slow' tests/infra_tests/")
 
         # General debugging suggestions
-        print("    - Run individual failing tests: pytest tests/infra_tests/<test_file> -v")
-        print("    - Debug with full traceback: pytest tests/infra_tests/<test_file> -s --tb=long")
-        print("    - Run infrastructure tests only: python3 scripts/01_run_tests.py --infrastructure-only")
-        print("    - Check test environment: python3 scripts/00_setup_environment.py")
+        logger.info("    - Run individual failing tests: pytest tests/infra_tests/<test_file> -v")
+        logger.info("    - Debug with full traceback: pytest tests/infra_tests/<test_file> -s --tb=long")
+        logger.info("    - Run infrastructure tests only: python3 scripts/01_run_tests.py --infrastructure-only")
+        logger.info("    - Check test environment: python3 scripts/00_setup_environment.py")
 
     # Project summary
-    print()  # Add spacing
+    logger.info("")  # Add spacing
     if project_exit == 0:
         passed = project_results.get('passed', 0)
         failed = project_results.get('failed', 0)
@@ -1293,62 +1345,62 @@ def report_results(
         total = project_results.get('total', 0)
         coverage = project_results.get('coverage_percent', 0)
 
-        print("Project Results:")
-        print(f"  ✓ Passed: {passed}")
+        logger.info("Project Results:")
+        logger.info(f"  ✓ Passed: {passed}")
         if skipped > 0:
-            print(f"  ⚠ Skipped: {skipped}")
+            logger.info(f"  ⚠ Skipped: {skipped}")
         warnings = project_results.get('warnings', 0)
         if warnings > 0:
-            print(f"  ⚠ Warnings: {warnings}")
-        print(f"  📊 Coverage: {format_coverage_status(coverage, 90.0)}")
+            logger.info(f"  ⚠ Warnings: {warnings}")
+        logger.info(f"  📊 Coverage: {format_coverage_status(coverage, 90.0)}")
 
         # Show coverage improvement suggestions if below threshold
         if coverage < 90.0:
             suggestions = analyze_coverage_gaps(project_results, 90.0, "Project", report)
             for suggestion in suggestions:
-                print(f"    {suggestion}")
+                logger.info(f"    {suggestion}")
 
         # Show execution phases if available
         phases = project_results.get('execution_phases', {})
         if phases:
             total_exec_time = sum(phases.values())
-            print(f"  ⏱ Duration: {format_duration(total_exec_time)}")
+            logger.info(f"  ⏱ Duration: {format_duration(total_exec_time)}")
     else:
         failed = project_results.get('failed', 0)
         skipped = project_results.get('skipped', 0)
         warnings = project_results.get('warnings', 0)
-        print("Project Results:")
-        print(f"  ✗ Failed: {failed} test(s) failed")
+        logger.info("Project Results:")
+        logger.info(f"  ✗ Failed: {failed} test(s) failed")
         if skipped > 0:
-            print(f"  ⚠ Skipped: {skipped}")
+            logger.info(f"  ⚠ Skipped: {skipped}")
         if warnings > 0:
-            print(f"  ⚠ Warnings: {warnings}")
+            logger.info(f"  ⚠ Warnings: {warnings}")
 
         # Show detailed failure information
         failed_tests = project_results.get('failed_tests', [])
         if failed_tests:
-            print()
-            print("  📋 Failed Tests:")
+            logger.info("")
+            logger.info("  📋 Failed Tests:")
             for i, failure in enumerate(failed_tests[:5], 1):  # Show first 5 failures
-                print(f"    {i}. {failure['test']}")
+                logger.info(f"    {i}. {failure['test']}")
                 if failure['error_type'] != 'Unknown':
-                    print(f"       {failure['error_type']}: {failure['error_message'][:60]}{'...' if len(failure['error_message']) > 60 else ''}")
+                    logger.info(f"       {failure['error_type']}: {failure['error_message'][:60]}{'...' if len(failure['error_message']) > 60 else ''}")
             if len(failed_tests) > 5:
-                print(f"    ... and {len(failed_tests) - 5} more failures")
+                logger.info(f"    ... and {len(failed_tests) - 5} more failures")
 
         # Show timeout errors separately if detected
         # Note: We need to extract timeouts from the raw stdout/stderr since they're not in failed_tests
         timeout_errors = []  # Would need access to raw stdout/stderr here
         if timeout_errors:
-            print()
-            print("  ⏰ Timeout Errors:")
+            logger.info("")
+            logger.info("  ⏰ Timeout Errors:")
             for i, timeout in enumerate(timeout_errors[:3], 1):
-                print(f"    {i}. {timeout['test']} ({timeout['timeout_duration']})")
-                print(f"       {timeout['suggestion']}")
+                logger.info(f"    {i}. {timeout['test']} ({timeout['timeout_duration']})")
+                logger.info(f"       {timeout['suggestion']}")
 
         # Always show debug commands
-        print()
-        print("  🔧 Quick Fix Suggestions:")
+        logger.info("")
+        logger.info("  🔧 Quick Fix Suggestions:")
 
         # Check for specific error types and provide targeted solutions
         has_import_errors = any('import' in str(f) or 'module' in str(f).lower() for f in failed_tests)
@@ -1357,32 +1409,32 @@ def report_results(
         has_timeout_errors = any('timeout' in str(f).lower() for f in failed_tests)
 
         if has_import_errors:
-            print("    - Missing project dependencies: check pyproject.toml and uv sync")
-            print("    - Import path issues: verify project src/ directory structure")
+            logger.info("    - Missing project dependencies: check pyproject.toml and uv sync")
+            logger.info("    - Import path issues: verify project src/ directory structure")
 
         if has_assertion_errors:
-            print("    - Review test assertions and expected values")
-            print("    - Check test data generation and reproducibility")
+            logger.info("    - Review test assertions and expected values")
+            logger.info("    - Check test data generation and reproducibility")
 
         if has_coverage_errors:
-            print("    - Coverage database corruption: files automatically cleaned and retried")
-            print("    - If errors persist: rm -f .coverage* coverage_*.json && rerun tests")
-            print("    - Coverage isolation: project tests use separate data file (.coverage.project)")
+            logger.info("    - Coverage database corruption: files automatically cleaned and retried")
+            logger.info("    - If errors persist: rm -f .coverage* coverage_*.json && rerun tests")
+            logger.info("    - Coverage isolation: project tests use separate data file (.coverage.project)")
 
         if has_timeout_errors:
-            print("    - Timeout issues: increase with --timeout=60 or PYTEST_TIMEOUT=60")
-            print(f"    - Identify slow tests: pytest --durations=10 projects/{project_name}/tests/")
-            print("    - Skip slow tests: pytest -m 'not slow' projects/{project_name}/tests/")
+            logger.info("    - Timeout issues: increase with --timeout=60 or PYTEST_TIMEOUT=60")
+            logger.info(f"    - Identify slow tests: pytest --durations=10 projects/{project_name}/tests/")
+            logger.info("    - Skip slow tests: pytest -m 'not slow' projects/{project_name}/tests/")
 
         # General debugging suggestions
-        print(f"    - Run individual failing tests: pytest projects/{project_name}/tests/<test_file> -v")
-        print(f"    - Debug with full traceback: pytest projects/{project_name}/tests/<test_file> -s --tb=long")
-        print(f"    - Run project tests only: python3 scripts/01_run_tests.py --project {project_name} --project-only")
-        print(f"    - Check project structure: verify projects/{project_name}/src/ and tests/ exist")
+        logger.info(f"    - Run individual failing tests: pytest projects/{project_name}/tests/<test_file> -v")
+        logger.info(f"    - Debug with full traceback: pytest projects/{project_name}/tests/<test_file> -s --tb=long")
+        logger.info(f"    - Run project tests only: python3 scripts/01_run_tests.py --project {project_name} --project-only")
+        logger.info(f"    - Check project structure: verify projects/{project_name}/src/ and tests/ exist")
 
     # Overall summary
-    print()  # Add spacing
-    print("=" * 64)
+    logger.info("")  # Add spacing
+    logger.info("=" * 64)
 
     infra_passed = infra_results.get('passed', 0)
     infra_total = infra_results.get('total', 0)
@@ -1402,47 +1454,47 @@ def report_results(
     if overall_success:
         # Report infrastructure status separately
         if not infra_was_run:
-            print("Infrastructure: ⏭ SKIPPED (intentionally skipped - use --infra-only to run infrastructure tests)")
+            logger.info("Infrastructure: ⏭ SKIPPED (intentionally skipped - use --infra-only to run infrastructure tests)")
         elif infra_exit == 0:
-            print("Infrastructure: ✓ PASSED "
+            logger.info("Infrastructure: ✓ PASSED "
                   f"({infra_passed}/{infra_total} tests, {infra_coverage:.1f}% coverage)")
         else:
             infra_failed = infra_results.get('failed', 0)
-            print(f"Infrastructure: ⚠ WARNING "
+            logger.info(f"Infrastructure: ⚠ WARNING "
                   f"({infra_failed} test(s) failed, but continuing)")
 
-        print(f"Project:       ✓ PASSED "
+        logger.info(f"Project:       ✓ PASSED "
               f"({project_passed}/{project_total} tests, {project_coverage:.1f}% coverage)")
-        print("-" * 64)
-        print(f"Total:         ✓ PASSED ({total_passed}/{total_tests} tests)")
+        logger.info("-" * 64)
+        logger.info(f"Total:         ✓ PASSED ({total_passed}/{total_tests} tests)")
         if infra_was_run:
-            print(f"Coverage:      Infrastructure: {infra_coverage:.1f}% | Project: {project_coverage:.1f}%")
+            logger.info(f"Coverage:      Infrastructure: {infra_coverage:.1f}% | Project: {project_coverage:.1f}%")
         else:
-            print(f"Coverage:      Infrastructure: N/A | Project: {project_coverage:.1f}%")
+            logger.info(f"Coverage:      Infrastructure: N/A | Project: {project_coverage:.1f}%")
 
         # Calculate total duration
         infra_duration = sum(infra_results.get('execution_phases', {}).values())
         project_duration = sum(project_results.get('execution_phases', {}).values())
         total_duration = infra_duration + project_duration
         if total_duration > 0:
-            print(f"Duration:      {format_duration(total_duration)}")
+            logger.info(f"Duration:      {format_duration(total_duration)}")
 
-        print("=" * 64)
+        logger.info("=" * 64)
         log_success("All tests passed - ready for analysis", logger)
     else:
         # Project tests failed - this is fatal
         if infra_exit == 0:
-            print("Infrastructure: ✓ PASSED "
+            logger.info("Infrastructure: ✓ PASSED "
                   f"({infra_passed}/{infra_total} tests, {infra_coverage:.1f}% coverage)")
         else:
             infra_failed = infra_results.get('failed', 0)
-            print(f"Infrastructure: ✗ FAILED "
+            logger.info(f"Infrastructure: ✗ FAILED "
                   f"({infra_failed} test(s) failed)")
 
-        print(f"Project:       ✗ FAILED "
+        logger.info(f"Project:       ✗ FAILED "
               f"({project_results.get('failed', 0)} test(s) failed)")
-        print("-" * 64)
-        print("Total:         ✗ FAILED (project tests failed)")
+        logger.info("-" * 64)
+        logger.info("Total:         ✗ FAILED (project tests failed)")
         logger.error("Project tests failed - pipeline cannot continue until tests pass")
         logger.info("Fix the failing tests shown above and re-run the pipeline")
         logger.info("Run 'pytest projects/{project_name}/tests/ -v' for detailed failure information")
@@ -1556,14 +1608,14 @@ def main() -> int:
             # Show detailed failure information
             failed_tests = infra_results.get('failed_tests', [])
             if failed_tests:
-                print()
-                print("📋 Failed Tests:")
+                logger.info("")
+                logger.info("📋 Failed Tests:")
                 for i, failure in enumerate(failed_tests[:5], 1):
-                    print(f"    {i}. {failure['test']}")
+                    logger.info(f"    {i}. {failure['test']}")
                     if failure['error_type'] != 'Unknown':
-                        print(f"       {failure['error_type']}: {failure['error_message'][:60]}{'...' if len(failure['error_message']) > 60 else ''}")
+                        logger.info(f"       {failure['error_type']}: {failure['error_message'][:60]}{'...' if len(failure['error_message']) > 60 else ''}")
                 if len(failed_tests) > 5:
-                    print(f"    ... and {len(failed_tests) - 5} more failures")
+                    logger.info(f"    ... and {len(failed_tests) - 5} more failures")
 
     # Log resource usage at end
     log_resource_usage("Test stage end", logger)

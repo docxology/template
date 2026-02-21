@@ -67,122 +67,96 @@ class TestRenderingConfig:
 class TestRenderingConfigFromEnv:
     """Test RenderingConfig.from_env() method."""
 
-    def test_from_env_no_vars_returns_defaults(self, monkeypatch):
+    def test_from_env_no_vars_returns_defaults(self):
         """Test that from_env() returns defaults when no env vars are set."""
         # Ensure relevant env vars are not set
-        for var in ["MANUSCRIPT_DIR", "OUTPUT_DIR", "LATEX_COMPILER"]:
-            monkeypatch.delenv(var, raising=False)
-
-        config = RenderingConfig.from_env()
+        config = RenderingConfig.from_env({})
 
         assert config.manuscript_dir == "manuscript"
         assert config.output_dir == "output"
         assert config.latex_compiler == "xelatex"
 
-    def test_from_env_reads_manuscript_dir(self, monkeypatch):
+    def test_from_env_reads_manuscript_dir(self):
         """Test that from_env() reads MANUSCRIPT_DIR."""
-        monkeypatch.setenv("MANUSCRIPT_DIR", "/custom/manuscript")
-
-        config = RenderingConfig.from_env()
+        config = RenderingConfig.from_env({"MANUSCRIPT_DIR": "/custom/manuscript"})
 
         assert config.manuscript_dir == "/custom/manuscript"
 
-    def test_from_env_reads_figures_dir(self, monkeypatch):
+    def test_from_env_reads_figures_dir(self):
         """Test that from_env() reads FIGURES_DIR."""
-        monkeypatch.setenv("FIGURES_DIR", "/custom/figures")
-
-        config = RenderingConfig.from_env()
+        config = RenderingConfig.from_env({"FIGURES_DIR": "/custom/figures"})
 
         assert config.figures_dir == "/custom/figures"
 
-    def test_from_env_reads_output_dir(self, monkeypatch):
+    def test_from_env_reads_output_dir(self):
         """Test that from_env() reads OUTPUT_DIR."""
-        monkeypatch.setenv("OUTPUT_DIR", "/custom/output")
-
-        config = RenderingConfig.from_env()
+        config = RenderingConfig.from_env({"OUTPUT_DIR": "/custom/output"})
 
         assert config.output_dir == "/custom/output"
 
-    def test_from_env_reads_pdf_dir(self, monkeypatch):
+    def test_from_env_reads_pdf_dir(self):
         """Test that from_env() reads PDF_DIR."""
-        monkeypatch.setenv("PDF_DIR", "/custom/pdf")
-
-        config = RenderingConfig.from_env()
+        config = RenderingConfig.from_env({"PDF_DIR": "/custom/pdf"})
 
         assert config.pdf_dir == "/custom/pdf"
 
-    def test_from_env_reads_web_dir(self, monkeypatch):
+    def test_from_env_reads_web_dir(self):
         """Test that from_env() reads WEB_DIR."""
-        monkeypatch.setenv("WEB_DIR", "/custom/web")
-
-        config = RenderingConfig.from_env()
+        config = RenderingConfig.from_env({"WEB_DIR": "/custom/web"})
 
         assert config.web_dir == "/custom/web"
 
-    def test_from_env_reads_slides_dir(self, monkeypatch):
+    def test_from_env_reads_slides_dir(self):
         """Test that from_env() reads SLIDES_DIR."""
-        monkeypatch.setenv("SLIDES_DIR", "/custom/slides")
-
-        config = RenderingConfig.from_env()
+        config = RenderingConfig.from_env({"SLIDES_DIR": "/custom/slides"})
 
         assert config.slides_dir == "/custom/slides"
 
-    def test_from_env_reads_poster_dir(self, monkeypatch):
+    def test_from_env_reads_poster_dir(self):
         """Test that from_env() reads POSTER_DIR."""
-        monkeypatch.setenv("POSTER_DIR", "/custom/posters")
-
-        config = RenderingConfig.from_env()
+        config = RenderingConfig.from_env({"POSTER_DIR": "/custom/posters"})
 
         assert config.poster_dir == "/custom/posters"
 
-    def test_from_env_reads_latex_compiler(self, monkeypatch):
+    def test_from_env_reads_latex_compiler(self):
         """Test that from_env() reads LATEX_COMPILER."""
-        monkeypatch.setenv("LATEX_COMPILER", "pdflatex")
-
-        config = RenderingConfig.from_env()
+        config = RenderingConfig.from_env({"LATEX_COMPILER": "pdflatex"})
 
         assert config.latex_compiler == "pdflatex"
 
-    def test_from_env_reads_pandoc_path(self, monkeypatch):
+    def test_from_env_reads_pandoc_path(self):
         """Test that from_env() reads PANDOC_PATH."""
-        monkeypatch.setenv("PANDOC_PATH", "/usr/local/bin/pandoc")
-
-        config = RenderingConfig.from_env()
+        config = RenderingConfig.from_env({"PANDOC_PATH": "/usr/local/bin/pandoc"})
 
         assert config.pandoc_path == "/usr/local/bin/pandoc"
 
-    def test_from_env_reads_template_dir(self, monkeypatch):
+    def test_from_env_reads_template_dir(self):
         """Test that from_env() reads TEMPLATE_DIR."""
-        monkeypatch.setenv("TEMPLATE_DIR", "/custom/templates")
-
-        config = RenderingConfig.from_env()
+        config = RenderingConfig.from_env({"TEMPLATE_DIR": "/custom/templates"})
 
         assert config.template_dir == "/custom/templates"
 
-    def test_from_env_reads_slide_theme(self, monkeypatch):
+    def test_from_env_reads_slide_theme(self):
         """Test that from_env() reads SLIDE_THEME."""
-        monkeypatch.setenv("SLIDE_THEME", "beamer")
-
-        config = RenderingConfig.from_env()
+        config = RenderingConfig.from_env({"SLIDE_THEME": "beamer"})
 
         assert config.slide_theme == "beamer"
 
-    def test_from_env_reads_web_theme(self, monkeypatch):
+    def test_from_env_reads_web_theme(self):
         """Test that from_env() reads WEB_THEME."""
-        monkeypatch.setenv("WEB_THEME", "tufte")
-
-        config = RenderingConfig.from_env()
+        config = RenderingConfig.from_env({"WEB_THEME": "tufte"})
 
         assert config.web_theme == "tufte"
 
-    def test_from_env_reads_multiple_vars(self, monkeypatch):
+    def test_from_env_reads_multiple_vars(self):
         """Test that from_env() reads multiple environment variables correctly."""
-        monkeypatch.setenv("MANUSCRIPT_DIR", "/project/manuscript")
-        monkeypatch.setenv("OUTPUT_DIR", "/project/output")
-        monkeypatch.setenv("LATEX_COMPILER", "lualatex")
-        monkeypatch.setenv("SLIDE_THEME", "madrid")
-
-        config = RenderingConfig.from_env()
+        env = {
+            "MANUSCRIPT_DIR": "/project/manuscript",
+            "OUTPUT_DIR": "/project/output",
+            "LATEX_COMPILER": "lualatex",
+            "SLIDE_THEME": "madrid",
+        }
+        config = RenderingConfig.from_env(env)
 
         assert config.manuscript_dir == "/project/manuscript"
         assert config.output_dir == "/project/output"
@@ -192,16 +166,10 @@ class TestRenderingConfigFromEnv:
         assert config.pandoc_path == "pandoc"
         assert config.web_theme == "simple"
 
-    def test_from_env_partial_override(self, monkeypatch):
+    def test_from_env_partial_override(self):
         """Test that from_env() correctly handles partial environment overrides."""
-        # Only set a few vars
-        monkeypatch.setenv("OUTPUT_DIR", "/override/output")
-
-        # Make sure others are not set
-        monkeypatch.delenv("MANUSCRIPT_DIR", raising=False)
-        monkeypatch.delenv("LATEX_COMPILER", raising=False)
-
-        config = RenderingConfig.from_env()
+        env = {"OUTPUT_DIR": "/override/output"}
+        config = RenderingConfig.from_env(env)
 
         # Overridden value
         assert config.output_dir == "/override/output"

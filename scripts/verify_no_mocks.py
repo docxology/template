@@ -8,91 +8,84 @@ Exit codes:
 - 0: No mock usage found (success)
 - 1: Mock usage detected (failure)
 """
+from __future__ import annotations
 
-import subprocess
 import sys
 from pathlib import Path
 
+# Add root to path for infrastructure imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from infrastructure.core.logging_utils import get_logger, log_header, log_success
 
-def main():
+logger = get_logger(__name__)
+
+
+def main() -> int:
     """Main verification function."""
     repo_root = Path(__file__).parent.parent
+    tests_dir = repo_root / "tests"
 
-    print("🔍 Verifying No Mocks Policy compliance...")
-    print("=" * 60)
+    log_header("🔍 Verifying No Mocks Policy compliance...", logger)
 
-    # Run grep to find mock usage - only actual mock framework patterns
-    mock_patterns = [
-        r'MagicMock',
-        r'unittest\.mock',
-        r'mocker\.',
-        r'from unittest\.mock import',
-        r'@patch',
-        r'patch\(',
-        r'with patch',
-        r'pytest\.mock',
-        r'Mock\(',
+    mock_frameworks = [
+        'from unittest.mock', 'import unittest.mock', 'unittest.mock import',
+        'MagicMock(', '@patch', 'with patch(', 'patch.object(',
+        'Mock(', 'mocker.patch', 'pytest.mock'
+    ]
+    
+    skip_patterns = [
+        '#',  # Comments
+        'def patch_', 'def patched_', 'patch_llm_client', 'patched_init',
+        'monkeypatch.setattr',  # pytest monkeypatch is acceptable
+        'No Mocks Policy', 'mock usage', 'mocking framework',
+        'mock_repo', 'mock_',
+        'pytest.mark',
     ]
 
     all_output = []
-    for pattern in mock_patterns:
-        result = subprocess.run(
-            ['grep', '-r', '--include=*.py', pattern, 'tests/'],
-            cwd=repo_root,
-            capture_output=True,
-            text=True
-        )
-        if result.returncode == 0:
-            # Filter out false positives
-            lines = result.stdout.strip().split('\n')
-            filtered_lines = []
-            for line in lines:
-                # Skip documentation files, binary files, comments, and acceptable patterns
-                if any(skip_pattern in line for skip_pattern in [
-                    '__pycache__', '.pyc', 'AGENTS.md', '.md:',  # Documentation and binary
-                    '#',  # Comments
-                    'def patch_', 'def patched_', 'patch_llm_client', 'patched_init',  # Function names (not mock usage)
-                    'monkeypatch.setattr',  # pytest monkeypatch is acceptable (test isolation, not mocking)
-                    'No Mocks Policy', 'mock usage', 'mocking framework',  # Documentation text
-                    'mock_repo', 'mock_',  # Variable names in documentation examples
-                    'pytest.mark',  # Pytest markers are not mock usage
-                ]):
-                    continue
-                # Only include actual mock framework usage (not function names or comments)
-                if any(mock_framework in line for mock_framework in [
-                    'from unittest.mock', 'import unittest.mock', 'unittest.mock import',
-                    'MagicMock(', '@patch', 'with patch(', 'patch.object(',
-                    'Mock(', 'mocker.patch', 'pytest.mock'
-                ]):
-                    # Exclude if it's just a function name or comment
-                    if 'def ' in line or '#' in line:
+    
+    if not tests_dir.exists():
+        logger.warning(f"Tests directory not found at {tests_dir}")
+        return 0
+
+    for py_file in tests_dir.rglob("*.py"):
+        try:
+            with open(py_file, 'r', encoding='utf-8') as f:
+                for line_num, line in enumerate(f, 1):
+                    line_str = line.strip()
+                    
+                    # Skip if missing any mock framework
+                    if not any(fw in line_str for fw in mock_frameworks):
                         continue
-                    filtered_lines.append(line)
-            if filtered_lines:
-                all_output.append(f"Pattern '{pattern}':")
-                all_output.extend(filtered_lines)
-                all_output.append("")
+                        
+                    # Skip if finding any skip patterns or if defining a function
+                    if 'def ' in line_str or any(sp in line_str for sp in skip_patterns):
+                        continue
+                        
+                    relative_path = py_file.relative_to(repo_root)
+                    all_output.append(f"{relative_path}:{line_num}: {line_str}")
+        except Exception as e:
+            logger.warning(f"Error reading {py_file}: {e}")
 
-    combined_output = '\n'.join(all_output)
-
-    if combined_output.strip():
+    if all_output:
         # Mock usage found
-        print("❌ FAILURE: Mock usage detected in test files!")
-        print("=" * 60)
-        print("Found the following mock usage:")
-        print(combined_output)
-        print()
-        print("🚫 No Mocks Policy Violation")
-        print("All tests must use real data and real computations.")
-        print("See AGENTS.md for implementation patterns.")
+        logger.error("❌ FAILURE: Mock usage detected in test files!")
+        logger.info("=" * 60)
+        logger.info("Found the following mock usage:")
+        for out_line in all_output:
+            logger.info(out_line)
+        logger.info("")
+        logger.info("🚫 No Mocks Policy Violation")
+        logger.info("All tests must use real data and real computations.")
+        logger.info("See AGENTS.md for implementation patterns.")
         return 1
     else:
         # No mock usage found
-        print("✅ SUCCESS: No mock usage detected!")
-        print("=" * 60)
-        print("✓ All tests comply with No Mocks Policy")
-        print("✓ Real data and computations used throughout")
-        print("✓ Integration points properly tested")
+        log_success("✅ SUCCESS: No mock usage detected!", logger)
+        logger.info("=" * 60)
+        logger.info("✓ All tests comply with No Mocks Policy")
+        logger.info("✓ Real data and computations used throughout")
+        logger.info("✓ Integration points properly tested")
         return 0
 
 

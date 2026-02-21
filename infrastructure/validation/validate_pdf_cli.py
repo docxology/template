@@ -44,46 +44,46 @@ def print_validation_report(report: dict, verbose: bool = False) -> None:
         report: Validation report from src/pdf_validator
         verbose: If True, print full details
     """
-    print("\n" + "=" * 70)
-    print("📋 PDF VALIDATION REPORT")
-    print("=" * 70)
+    logger.info("\n" + "=" * 70)
+    logger.info("📋 PDF VALIDATION REPORT")
+    logger.info("=" * 70)
 
     pdf_name = Path(report["pdf_path"]).name
-    print(f"📄 File: {pdf_name}")
-    print()
+    logger.info(f"📄 File: {pdf_name}")
+    logger.info("")
 
     # Issues summary
     issues = report["issues"]
     total = issues["total_issues"]
 
     if total == 0:
-        print("✅ No rendering issues detected!")
+        logger.info("✅ No rendering issues detected!")
     else:
-        print(f"⚠️  Found {total} rendering issue(s):")
+        logger.info(f"⚠️  Found {total} rendering issue(s):")
         if issues["unresolved_references"] > 0:
-            print(f"   • Unresolved references (??): {issues['unresolved_references']}")
+            logger.info(f"   • Unresolved references (??): {issues['unresolved_references']}")
         if issues["warnings"] > 0:
-            print(f"   • Warnings: {issues['warnings']}")
+            logger.info(f"   • Warnings: {issues['warnings']}")
         if issues["errors"] > 0:
-            print(f"   • Errors: {issues['errors']}")
+            logger.info(f"   • Errors: {issues['errors']}")
         if issues["missing_citations"] > 0:
-            print(f"   • Missing citations [?]: {issues['missing_citations']}")
+            logger.info(f"   • Missing citations [?]: {issues['missing_citations']}")
 
-    print()
-    print("-" * 70)
-    print(f"📖 First {report['summary']['word_count']} words of document:")
-    print("-" * 70)
-    print(report["first_words"])
-    print("-" * 70)
+    logger.info("")
+    logger.info("-" * 70)
+    logger.info(f"📖 First {report['summary']['word_count']} words of document:")
+    logger.info("-" * 70)
+    logger.info(report["first_words"])
+    logger.info("-" * 70)
 
     if verbose:
-        print("\n📊 Full Report Details:")
-        print(f"   PDF Path: {report['pdf_path']}")
-        print(f"   Has Issues: {report['summary']['has_issues']}")
-        print(f"   Word Count: {report['summary']['word_count']}")
+        logger.info("\n📊 Full Report Details:")
+        logger.info(f"   PDF Path: {report['pdf_path']}")
+        logger.info(f"   Has Issues: {report['summary']['has_issues']}")
+        logger.info(f"   Word Count: {report['summary']['word_count']}")
 
-    print("=" * 70)
-    print()
+    logger.info("=" * 70)
+    logger.info("")
 
 
 def main(

@@ -8,7 +8,45 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, TypedDict
+
+class AuthorConfig(TypedDict, total=False):
+    name: str
+    corresponding: bool
+    orcid: str
+    email: str
+
+class PaperConfig(TypedDict, total=False):
+    title: str
+
+class PublicationConfig(TypedDict, total=False):
+    doi: str
+
+class TranslationsConfig(TypedDict, total=False):
+    enabled: bool
+    languages: List[str]
+
+class ReviewsConfig(TypedDict, total=False):
+    enabled: bool
+    types: List[str]
+
+class LLMConfig(TypedDict, total=False):
+    translations: TranslationsConfig
+    reviews: ReviewsConfig
+
+class TestingConfig(TypedDict, total=False):
+    max_test_failures: int | str
+    max_infra_test_failures: int | str
+    max_project_test_failures: int | str
+    infra_coverage_threshold: int | str
+    project_coverage_threshold: int | str
+
+class ManuscriptConfig(TypedDict, total=False):
+    paper: PaperConfig
+    authors: List[AuthorConfig]
+    publication: PublicationConfig
+    llm: LLMConfig
+    testing: TestingConfig
 
 try:
     import yaml
@@ -18,14 +56,14 @@ except ImportError:
     YAML_AVAILABLE = False
 
 
-def load_config(config_path: Path | str) -> Optional[Dict[str, Any]]:
+def load_config(config_path: Path | str) -> Optional[ManuscriptConfig]:
     """Load configuration from YAML file.
 
     Args:
         config_path: Path to config.yaml file
 
     Returns:
-        Dictionary of configuration data, or None if file doesn't exist or can't be loaded
+        ManuscriptConfig dictionary, or None if file doesn't exist or can't be loaded
     """
     if not YAML_AVAILABLE:
         return None
@@ -48,7 +86,7 @@ def load_config(config_path: Path | str) -> Optional[Dict[str, Any]]:
         return None
 
 
-def format_author_details(authors: List[Dict[str, Any]], doi: str = "") -> str:
+def format_author_details(authors: List[AuthorConfig], doi: str = "") -> str:
     """Format author details string for LaTeX.
 
     Args:
@@ -76,7 +114,7 @@ def format_author_details(authors: List[Dict[str, Any]], doi: str = "") -> str:
     return "\\\\ ".join(parts)
 
 
-def format_author_name(authors: List[Dict[str, Any]]) -> str:
+def format_author_name(authors: List[AuthorConfig]) -> str:
     """Format author name(s) for display.
 
     Args:
