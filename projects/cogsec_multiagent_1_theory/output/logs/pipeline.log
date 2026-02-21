@@ -63,4 +63,10 @@ collected 2704 items / 12 deselected / 2692 selected
 ..........tests/infra_tests/llm/test_config.py .........                           [ 25%]
 .....tests/infra_tests/llm/test_context.py ....                               [ 25%]
 ......................tests/infra_tests/llm/test_context_engineering.py .....................  [ 26%]
-....................
+.............................tests/infra_tests/llm/test_core.py ............................          [ 27%]
+........tests/infra_tests/llm/test_llm_core_additional.py .......                [ 27%]
+.........................tests/infra_tests/llm/test_llm_core_coverage.py ........................ [ 28%]
+..........                                                                    [ 28%]
+.............................tests/infra_tests/llm/test_llm_core_full.py ............................ [ 29%]
+..                                                                        [ 29%]
+...
