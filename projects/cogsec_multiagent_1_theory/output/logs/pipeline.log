@@ -1,0 +1,66 @@
+
+======================================================================
+[2026-02-20 17:10:41] Starting: Infrastructure Tests
+======================================================================
+[2026-02-20 17:10:41] [INFO] Executing stage 'infra_tests' for project 'cogsec_multiagent_1_theory': /Users/4d/.pyenv/versions/3.12.11/bin/python3 /Users/4d/Documents/GitHub/template/scripts/01_run_tests.py --infra-only --verbose --project cogsec_multiagent_1_theory
+[2026-02-20 17:10:41] [INFO] Cleaning coverage database files...
+[2026-02-20 17:10:42] [INFO] Removed coverage files: projects/ento_linguistics/.coverage, .coverage.project, projects/ento_linguistics/.coverage.timelock.local.82213.XRyqKhdx, projects/ento_linguistics/.coverage.timelock.local.83073.XFzplyDx, projects/ento_linguistics/.coverage.timelock.local.82917.XemrQjBx, projects/ento_linguistics/.coverage.timelock.local.83062.XMMrCorx, projects/ento_linguistics/.coverage.timelock.local.82846.XcnpHalx, projects/ento_linguistics/.coverage.timelock.local.82918.XSnZgXpx, projects/ento_linguistics/.coverage.timelock.local.83352.XQyQSBTx, projects/ento_linguistics/.coverage.timelock.local.82443.XDKmzkox, projects/ento_linguistics/.coverage.timelock.local.83089.XkjsqzWx, projects/ento_linguistics/.coverage.timelock.local.82083.XBTlfuex, projects/ento_linguistics/.coverage.timelock.local.82204.XAwBBcqx, projects/ento_linguistics/.coverage.timelock.local.82084.XFrqgYkx, projects/ento_linguistics/.coverage.timelock.local.82227.XKIkzaKx, projects/ento_linguistics/.coverage.timelock.local.82080.XiGeDHDx, projects/ento_linguistics/.coverage.timelock.local.82207.XzClsvAx, projects/ento_linguistics/.coverage.timelock.local.83068.XhIARZgx, projects/ento_linguistics/.coverage.timelock.local.82219.XfAmgxMx, projects/ento_linguistics/.coverage.timelock.local.82864.XfIDHLEx, projects/ento_linguistics/.coverage.timelock.local.83084.XNDUbZNx, projects/ento_linguistics/.coverage.timelock.local.82280.XWVGZoNx, projects/ento_linguistics/.coverage.timelock.local.83290.XsrOQELx, projects/ento_linguistics/.coverage.timelock.local.82094.XMThFFOx, projects/ento_linguistics/.coverage.timelock.local.83020.XgSRTQqx, projects/ento_linguistics/.coverage.timelock.local.82106.XVmWEnlx, projects/ento_linguistics/.coverage.timelock.local.82064.XXhymFCx, projects/ento_linguistics/.coverage.timelock.local.83019.XaFxtNXx, projects/ento_linguistics/.coverage.timelock.local.82273.XWHvGKyx, projects/ento_linguistics/.coverage.timelock.local.82073.XirpSwlx, projects/ento_linguistics/.coverage.timelock.local.82908.XHOlcXqx, projects/ento_linguistics/.coverage.timelock.local.82214.XynCSfHx, projects/ento_linguistics/.coverage.timelock.local.83118.XkZSeLCx, projects/ento_linguistics/.coverage.timelock.local.83063.XYOWIJvx, projects/ento_linguistics/.coverage.timelock.local.82193.XkmnJJox, projects/ento_linguistics/.coverage.timelock.local.82062.XtaYMLKx, projects/ento_linguistics/.coverage.timelock.local.82251.XgjLlRlx, projects/ento_linguistics/.coverage.timelock.local.83117.XWSfocYx, projects/ento_linguistics/.coverage.timelock.local.82683.XOTWOINx, projects/ento_linguistics/.coverage.timelock.local.83027.XheUAOox, projects/ento_linguistics/.coverage.timelock.local.83354.XcYpIHDx, projects/ento_linguistics/.coverage.timelock.local.83125.XrGsNnox, projects/ento_linguistics/.coverage.timelock.local.83289.XNEjKPlx, projects/ento_linguistics/.coverage.timelock.local.83292.XSgxXlux, projects/ento_linguistics/.coverage.timelock.local.82910.XpvabLOx, projects/ento_linguistics/.coverage.timelock.local.82212.XbnMFTfx, coverage_project.json
+[2026-02-20 17:10:42] [INFO] Coverage database cleanup completed
+Running infrastructure tests
+============================= test session starts ==============================
+......platform darwin -- Python 3.12.11, pytest-8.4.2, pluggy-1.6.0
+.....benchmark: 5.1.0 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)
+rootdir: /Users/4d/Documents/GitHub/template
+.configfile: pyproject.toml
+............................plugins: jaxtyping-0.3.3, anyio-4.9.0, hypothesis-6.135.29, html-4.1.1, Faker-37.4.0, xdist-3.8.0, timeout-2.4.0, metadata-3.1.1, cov-4.1.0, asyncio-1.3.0, mock-3.14.1, pytest_httpserver-1.1.3, benchmark-5.1.0, zarr-3.1.5
+.timeout: 10.0s
+timeout method: thread
+timeout func_only: False
+.asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collected 2704 items / 12 deselected / 2692 selected
+
+....................tests/infra_tests/core/test_checkpoint.py ...................            [  0%]
+...........tests/infra_tests/core/test_cli.py ..........                            [  1%]
+......tests/infra_tests/core/test_config_cli_coverage.py .....                 [  1%]
+............................tests/infra_tests/core/test_config_loader.py ........................... [  2%]
+..................................                                                        [  2%]
+.............................tests/infra_tests/core/test_credentials.py ............................  [  3%]
+.......................tests/infra_tests/core/test_credentials_module.py ...................... [  4%]
+..........                                                                    [  4%]
+......................tests/infra_tests/core/test_environment.py .....................         [  5%]
+...............................tests/infra_tests/core/test_exceptions.py .............................. [  6%]
+............                                                                   [  7%]
+...................tests/infra_tests/core/test_file_inventory.py ..................         [  7%]
+..........................tests/infra_tests/core/test_file_operations.py ......................... [  8%]
+....                                                                       [  8%]
+..................tests/infra_tests/core/test_logging_helpers.py .................         [  9%]
+.........................tests/infra_tests/core/test_logging_progress.py ........................ [ 10%]
+..............                                                                  [ 10%]
+............................tests/infra_tests/core/test_logging_utils.py ........................... [ 11%]
+                                                                         [ 11%]
+.......................tests/infra_tests/core/test_menu.py ......................               [ 12%]
+..............tests/infra_tests/core/test_multi_project.py .............               [ 12%]
+...........................tests/infra_tests/core/test_performance.py .............s.s...s......... [ 13%]
+..                                                                        [ 13%]
+...............tests/infra_tests/core/test_pipeline.py ..............                   [ 14%]
+...................tests/infra_tests/core/test_pipeline_summary.py ..................       [ 15%]
+.................................tests/infra_tests/core/test_progress.py ................................ [ 16%]
+......                                                                      [ 16%]
+................tests/infra_tests/core/test_project_discovery.py ...............         [ 16%]
+.......tests/infra_tests/core/test_project_logger.py ......                     [ 17%]
+.................................tests/infra_tests/core/test_retry.py ................................    [ 18%]
+.................tests/infra_tests/core/test_script_discovery.py ................         [ 18%]
+.................................tests/infra_tests/core/test_security.py ................................ [ 20%]
+........................................................................................                             [ 21%]
+..................tests/infra_tests/documentation/test_figure_manager.py ................. [ 22%]
+......                                                                      [ 22%]
+............tests/infra_tests/documentation/test_glossary_gen.py ...........         [ 22%]
+...................tests/infra_tests/documentation/test_image_manager.py .................. [ 23%]
+..................                                                                [ 23%]
+............tests/infra_tests/documentation/test_markdown_integration.py ........... [ 24%]
+............                                                                   [ 24%]
+..............tests/infra_tests/llm/test_cli.py .............                          [ 25%]
+..........tests/infra_tests/llm/test_config.py .........                           [ 25%]
+.....tests/infra_tests/llm/test_context.py ....                               [ 25%]
+......................tests/infra_tests/llm/test_context_engineering.py .....................  [ 26%]
+....................
