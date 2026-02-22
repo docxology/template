@@ -66,10 +66,10 @@ print(f"Memory Usage: {result.memory_usage or 'Not measured'} MB")
 
 ```bash
 # Validate scientific code quality
-python3 -m infrastructure.scientific.cli validate-code src/
+uv run python -m infrastructure.scientific.cli validate-code src/
 
 # Generate performance reports
-python3 -m infrastructure.scientific.cli benchmark src/algorithms.py
+uv run python -m infrastructure.scientific.cli benchmark src/algorithms.py
 ```
 
 ---

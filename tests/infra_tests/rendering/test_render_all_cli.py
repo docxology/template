@@ -5,8 +5,6 @@ Follows No Mocks Policy - all tests use real data and real execution.
 """
 
 import logging
-import sys
-from pathlib import Path
 
 import pytest
 

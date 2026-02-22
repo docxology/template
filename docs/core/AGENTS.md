@@ -124,7 +124,7 @@ Usage         Understanding       Excellence
 
 ```bash
 # Good: command with context
-$ python3 scripts/03_render_pdf.py
+$ uv run python scripts/03_render_pdf.py
 INFO: Loading manuscript configuration...
 INFO: Generating PDF with LaTeX...
 INFO: PDF generated successfully: output/{project_name}/pdf/{project_name}_combined.pdf
@@ -257,13 +257,13 @@ vim project/src/analysis.py
 
 ```bash
 # Run tests
-python3 scripts/01_run_tests.py
+uv run python scripts/01_run_tests.py
 
 # Generate outputs
-python3 scripts/03_render_pdf.py
+uv run python scripts/03_render_pdf.py
 
 # Validate results
-python3 scripts/04_validate_output.py
+uv run python scripts/04_validate_output.py
 ```
 
 ### Advanced Research Workflow
@@ -272,26 +272,26 @@ python3 scripts/04_validate_output.py
 
 ```bash
 # Multiple analysis scripts
-python3 project/scripts/data_analysis.py &
-python3 project/scripts/statistical_modeling.py &
-python3 project/scripts/visualization.py &
+uv run python project/scripts/data_analysis.py &
+uv run python project/scripts/statistical_modeling.py &
+uv run python project/scripts/visualization.py &
 wait
 
 # Combined manuscript generation
-python3 scripts/03_render_pdf.py
+uv run python scripts/03_render_pdf.py
 ```
 
 **Continuous Integration:**
 
 ```bash
 # Automated testing
-python3 scripts/01_run_tests.py
+uv run python scripts/01_run_tests.py
 
 # Quality validation
-python3 scripts/04_validate_output.py
+uv run python scripts/04_validate_output.py
 
 # Output deployment
-python3 scripts/05_copy_outputs.py
+uv run python scripts/05_copy_outputs.py
 ```
 
 ## Configuration Management
@@ -387,7 +387,7 @@ assert len(issues['errors']) == 0
 
 ```bash
 # Check configuration loading
-python3 -c "
+uv run python -c "
 from infrastructure.core import load_config
 config = load_config()
 print('Configuration loaded successfully')
@@ -399,7 +399,7 @@ print(f'Author: {config.get(\"author_name\")}')
 
 ```bash
 # Debug build process
-LOG_LEVEL=0 python3 scripts/03_render_pdf.py
+LOG_LEVEL=0 uv run python scripts/03_render_pdf.py
 
 # Check LaTeX installation
 which xelatex
@@ -413,7 +413,7 @@ tlmgr list --only-installed | grep multirow
 pytest projects/{name}/tests/test_analysis.py::TestAnalysis::test_algorithm -v
 
 # Check test data integrity
-python3 -c "
+uv run python -c "
 import pandas as pd
 data = pd.read_csv('test_data.csv')
 print(f'Data shape: {data.shape}')

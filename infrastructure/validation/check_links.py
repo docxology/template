@@ -14,12 +14,10 @@ This script validates:
 from __future__ import annotations
 
 import ast
-import os
 import re
 import sys
 from pathlib import Path
 from typing import Dict, List, Set, Tuple
-from urllib.parse import urlparse
 
 from infrastructure.core.logging_utils import get_logger
 
@@ -550,7 +548,7 @@ def validate_placeholder_consistency(
 
     # Find all placeholder usage
     placeholder_pattern = re.compile(r"\{([^}]+)\}")
-    placeholders = placeholder_pattern.findall(content)
+    placeholder_pattern.findall(content)
 
     # Skip validation for certain file types that naturally use templates
     file_path_str = str(file_path)
@@ -839,12 +837,11 @@ def generate_comprehensive_report(issues: Dict[str, List], total_files: int) -> 
     """Generate a comprehensive validation report."""
     total_issues = sum(len(issue_list) for issue_list in issues.values())
 
-    print("=" * 80)
-    print("COMPREHENSIVE FILEPATH AND REFERENCE AUDIT REPORT")
-    print("=" * 80)
-    print(f"Files scanned: {total_files}")
-    print(f"Total issues found: {total_issues}")
-    print()
+    logger.info("=" * 80)
+    logger.info("COMPREHENSIVE FILEPATH AND REFERENCE AUDIT REPORT")
+    logger.info("=" * 80)
+    logger.info(f"Files scanned: {total_files}")
+    logger.info(f"Total issues found: {total_issues}")
 
     # Report each category
     categories = [
@@ -885,38 +882,36 @@ def generate_comprehensive_report(issues: Dict[str, List], total_files: int) -> 
         issue_list = issues[category_key]
         if issue_list:
             has_issues = True
-            print(f"🚨 {title} ({len(issue_list)} issues)")
-            print(f"   {description}")
-            print()
+            logger.warning(f"🚨 {title} ({len(issue_list)} issues)")
+            logger.warning(f"   {description}")
 
             # Show first 5 issues per category
             for i, issue in enumerate(issue_list[:5]):
-                print(f"   {i+1}. {issue['file']}:{issue['line']}")
-                print(f"      Target: {issue['target']}")
-                print(f"      Issue: {issue['issue']}")
+                logger.warning(f"   {i+1}. {issue['file']}:{issue['line']}")
+                logger.warning(f"      Target: {issue['target']}")
+                logger.warning(f"      Issue: {issue['issue']}")
                 if "text" in issue:
-                    print(f"      Text: {issue['text']}")
-                print()
+                    logger.warning(f"      Text: {issue['text']}")
 
             if len(issue_list) > 5:
-                print(f"   ... and {len(issue_list) - 5} more issues in this category")
-            print("-" * 60)
+                logger.warning(f"   ... and {len(issue_list) - 5} more issues in this category")
+            logger.info("-" * 60)
 
     if not has_issues:
-        print("✅ ALL VALIDATIONS PASSED!")
-        print("No broken links, missing files, or reference issues found.")
+        logger.info("✅ ALL VALIDATIONS PASSED!")
+        logger.info("No broken links, missing files, or reference issues found.")
         return 0
 
-    print("\n📋 SUMMARY BY CATEGORY:")
+    logger.info("\n📋 SUMMARY BY CATEGORY:")
     for category_key, title, _ in categories:
         count = len(issues[category_key])
         if count > 0:
-            print(f"   • {title}: {count} issues")
+            logger.info(f"   • {title}: {count} issues")
 
-    print(
-        f"\n🔧 Next steps: Run the audit script to generate detailed fix recommendations:"
+    logger.info(
+        "\n🔧 Next steps: Run the audit script to generate detailed fix recommendations:"
     )
-    print("   python scripts/audit_filepaths.py")
+    logger.info("   python scripts/audit_filepaths.py")
 
     return 1
 

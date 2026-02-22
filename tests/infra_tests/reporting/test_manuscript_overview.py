@@ -6,7 +6,6 @@ Tests manuscript overview generation using real data (No Mocks Policy):
 - Real file I/O operations
 """
 
-from io import BytesIO
 from pathlib import Path
 
 import pytest
@@ -391,7 +390,6 @@ class TestGenerateAllManuscriptOverviews:
 
     def test_generate_all_no_pdfs_found(self, tmp_path):
         """Test handling when no manuscript PDFs exist."""
-        from infrastructure.reporting.executive_reporter import ProjectMetrics
         from infrastructure.reporting.manuscript_overview import \
             generate_all_manuscript_overviews
 

@@ -8,7 +8,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-import pytest
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 

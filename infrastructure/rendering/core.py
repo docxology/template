@@ -96,7 +96,7 @@ class RenderManager:
                                 error_msg += f" - Check LaTeX compilation log: {beamer_pdf.parent / beamer_pdf.stem}.log"
                             else:
                                 error_msg += f" (PDF created: {size_mb:.2f} MB)"
-                    except:
+                    except Exception:
                         pass  # Ignore errors when checking PDF status
 
                     logger.warning(error_msg)

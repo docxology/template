@@ -1,0 +1,136 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}[fragile]{Abstract}
+\protect\phantomsection\label{abstract}
+This paper presents a comprehensive analysis of gradient descent
+optimization algorithms, constructed not merely as a mathematical
+exercise, but as the representative computational exemplar of the
+\href{https://github.com/docxology/template}{docxology/template}
+repository. We implement and evaluate the classical gradient descent
+method with fixed step size for quadratic minimization problems,
+examining convergence behavior across learning rates from
+\(\alpha = 0.01\) to \(\alpha = 0.20\). Crucially, the experimental
+framework is built entirely atop the template's nine
+\texttt{infrastructure} subpackages to guarantee absolute
+reproducibility and cryptographic output integrity. The very PDF holding
+these words was deterministically generated via
+\texttt{infrastructure/rendering/pdf\_renderer.py} relying on
+\texttt{code\_project/scripts/optimization\_analysis.py} data.
+
+The key contributions of this work are dual-natured. Methodologically,
+it demonstrates empirical validation of theoretical convergence rates on
+quadratic objective functions and automated complexity analysis.
+Architecturally, it establishes a rigorously enforced development
+standard: (1) a zero-mock testing policy validated by 34 passing tests
+with 100\% coverage (as explicitly asserted in
+\href{https://github.com/docxology/template/blob/main/projects/code_project/tests/test_optimizer.py}{\texttt{projects/code\_project/tests/test\_optimizer.py}});
+(2) automated analysis pipelines generating publication-quality,
+accessible visualizations; and (3) deep integration patterns
+demonstrating how scientific logic strictly couples with the core
+infrastructure (e.g., executing
+\texttt{infrastructure.scientific.benchmarking} directly from
+\texttt{projects/code\_project/scripts/optimization\_analysis.py}).
+
+Results confirm that all tested step sizes converge to the analytical
+optimum \(x^* = 1.0\) with objective value \(f(x^*) = -0.5\). The
+codebase validates the template's modular \texttt{tests/} infrastructure
+and expansive
+\href{https://github.com/docxology/template/tree/main/projects/code_project/docs}{\texttt{projects/code\_project/docs/}}
+knowledge base, serving as the master exemplar for bridging theoretical
+algorithm development with production-grade, reproducible computational
+science.
+
+\textbf{Keywords:} gradient descent, reproducible research, zero-mock
+testing, scientific infrastructure, pipeline orchestration
+\end{frame}
+
+\end{document}

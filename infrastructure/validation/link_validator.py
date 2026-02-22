@@ -9,7 +9,6 @@ from __future__ import annotations
 import re
 from pathlib import Path
 from typing import Dict, List, Set, Tuple
-from urllib.parse import urlparse
 
 from infrastructure.core.logging_utils import get_logger
 
@@ -79,7 +78,6 @@ class LinkValidator:
         lines = content.split("\n")
 
         in_code_block = False
-        in_inline_code = False
 
         for line_num, line in enumerate(lines, 1):
             # Track code block state (``` markers)
@@ -382,7 +380,7 @@ class LinkValidator:
         report_lines = [
             "# Markdown Link Validation Report",
             "",
-            f"## Summary",
+            "## Summary",
             "",
             f"- **Files scanned**: {total_files}",
             f"- **Valid links**: {total_valid_links}",
@@ -429,7 +427,6 @@ class LinkValidator:
         for file_path, file_results in validation_results.items():
             valid_count = len(file_results["valid"])
             broken_count = len(file_results["broken"])
-            status = "✅" if broken_count == 0 else "❌"
             report_lines.append(f"| {file_path} | {valid_count} | {broken_count} |")
 
         return "\n".join(report_lines)
@@ -470,7 +467,7 @@ def main() -> int:
         Path(args.output).write_text(report, encoding="utf-8")
         logger.info(f"Report written to {args.output}")
     else:
-        print(report)
+        logger.info(report)
 
     # Return exit code based on validation results
     return 0 if total_broken == 0 else 1

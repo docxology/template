@@ -9,7 +9,6 @@ All tests verify template structure and content.
 """
 
 import ast
-import re
 
 import pytest
 

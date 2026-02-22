@@ -6,6 +6,7 @@ into testable Python code following the thin orchestrator pattern.
 """
 
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 
 # Add repo root to Python path
@@ -15,7 +16,7 @@ sys.path.insert(0, str(repo_root))
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor
 from infrastructure.core.pipeline_summary import generate_pipeline_summary
-from infrastructure.core.environment import get_python_command
+from infrastructure.core.environment import get_python_command, validate_interpreter
 
 logger = get_logger(__name__)
 
@@ -81,6 +82,9 @@ def execute_pipeline(
         Exit code (0 for success, 1 for failure)
     """
     try:
+        # Validate interpreter hermeticity
+        validate_interpreter()
+
         # Create pipeline configuration
         config = PipelineConfig(
             project_name=project_name,
@@ -113,7 +117,7 @@ def execute_pipeline(
             skip_infra=skip_infra,
             format='text'
         )
-        print(text_summary)
+        logger.info(text_summary)
         
         # Generate JSON and HTML reports for programmatic access
         try:
@@ -159,7 +163,7 @@ def execute_pipeline(
                 logger.info(f"  • {fmt.upper()}: {path.name}")
             
             if log_summary:
-                logger.info(f"  • LOG SUMMARY: log_summary.txt")
+                logger.info("  • LOG SUMMARY: log_summary.txt")
                 
         except Exception as e:
             logger.warning(f"Failed to generate comprehensive pipeline report: {e}")
@@ -187,6 +191,17 @@ def execute_pipeline(
         return 1
 
 
+@dataclass(frozen=True)
+class PipelineArgs:
+    """Frozen, typed CLI arguments for pipeline execution."""
+    project: str
+    skip_infra: bool = False
+    skip_llm: bool = False
+    resume: bool = False
+    core_only: bool = False
+    stage: str | None = None
+
+
 def main():
     """Main entry point."""
     import argparse
@@ -202,7 +217,15 @@ def main():
         help="Run a single stage and exit (setup, infra_tests, project_tests, analysis, render_pdf, validate, copy, llm_reviews, llm_translations, executive_report)",
     )
 
-    args = parser.parse_args()
+    raw_args = parser.parse_args()
+    args = PipelineArgs(
+        project=raw_args.project,
+        skip_infra=raw_args.skip_infra,
+        skip_llm=raw_args.skip_llm,
+        resume=raw_args.resume,
+        core_only=raw_args.core_only,
+        stage=raw_args.stage,
+    )
 
     if args.stage:
         return execute_single_stage(args.stage, args.project, repo_root)

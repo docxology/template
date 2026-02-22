@@ -4,10 +4,7 @@ Tests the PDF validation CLI script using real implementations.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-import sys
-from pathlib import Path
 
-import pytest
 
 from infrastructure.validation import validate_pdf_cli
 

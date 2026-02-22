@@ -4,9 +4,7 @@ Tests documentation scanning and validation functionality using real implementat
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-from pathlib import Path
 
-import pytest
 
 from infrastructure.validation import doc_scanner
 

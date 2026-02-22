@@ -3,7 +3,6 @@
 Tests publishing API functionality comprehensively.
 """
 
-from pathlib import Path
 
 # No mock imports needed - using real HTTP server
 import pytest

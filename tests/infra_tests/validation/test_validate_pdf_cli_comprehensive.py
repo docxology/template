@@ -9,7 +9,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-import pytest
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
@@ -27,7 +26,7 @@ class TestValidatePdfCliModule:
 class TestPrintValidationReport:
     """Test print_validation_report function."""
 
-    def test_print_report_no_issues(self, capsys):
+    def test_print_report_no_issues(self, caplog):
         """Test printing report with no issues."""
         from infrastructure.validation.validate_pdf_cli import \
             print_validation_report
@@ -48,13 +47,13 @@ class TestPrintValidationReport:
             "first_words": "This is the beginning...",
         }
 
-        print_validation_report(report)
+        with caplog.at_level(logging.INFO):
+            print_validation_report(report)
 
-        captured = capsys.readouterr()
-        assert "No rendering issues detected" in captured.out
-        assert "test.pdf" in captured.out
+        assert "No rendering issues detected" in caplog.text
+        assert "test.pdf" in caplog.text
 
-    def test_print_report_with_issues(self, capsys):
+    def test_print_report_with_issues(self, caplog):
         """Test printing report with issues."""
         from infrastructure.validation.validate_pdf_cli import \
             print_validation_report
@@ -75,16 +74,16 @@ class TestPrintValidationReport:
             "first_words": "Content with issues...",
         }
 
-        print_validation_report(report)
+        with caplog.at_level(logging.INFO):
+            print_validation_report(report)
 
-        captured = capsys.readouterr()
-        assert "Found 5 rendering issue" in captured.out
-        assert "Unresolved references" in captured.out
-        assert "Warnings" in captured.out
-        assert "Errors" in captured.out
-        assert "Missing citations" in captured.out
+        assert "Found 5 rendering issue" in caplog.text
+        assert "Unresolved references" in caplog.text
+        assert "Warnings" in caplog.text
+        assert "Errors" in caplog.text
+        assert "Missing citations" in caplog.text
 
-    def test_print_report_verbose(self, capsys):
+    def test_print_report_verbose(self, caplog):
         """Test printing report with verbose flag."""
         from infrastructure.validation.validate_pdf_cli import \
             print_validation_report
@@ -102,11 +101,11 @@ class TestPrintValidationReport:
             "first_words": "Content...",
         }
 
-        print_validation_report(report, verbose=True)
+        with caplog.at_level(logging.INFO):
+            print_validation_report(report, verbose=True)
 
-        captured = capsys.readouterr()
-        assert "Full Report Details" in captured.out
-        assert "PDF Path" in captured.out
+        assert "Full Report Details" in caplog.text
+        assert "PDF Path" in caplog.text
 
 
 class TestMainFunction:
@@ -188,7 +187,7 @@ class TestMainFunction:
         # Should return valid exit code
         assert exit_code in [0, 1, 2]
 
-    def test_main_verbose_with_error(self, tmp_path, capsys):
+    def test_main_verbose_with_error(self, tmp_path, caplog):
         """Test main verbose mode - uses real validation."""
         from infrastructure.validation import validate_pdf_cli
 
@@ -199,13 +198,13 @@ class TestMainFunction:
         c.save()
 
         # Use real validation with verbose flag
-        exit_code = validate_pdf_cli.main(pdf_path=pdf, verbose=True)
+        with caplog.at_level(logging.INFO):
+            exit_code = validate_pdf_cli.main(pdf_path=pdf, verbose=True)
 
         # Should return valid exit code
         assert exit_code in [0, 1, 2]
-        captured = capsys.readouterr()
         # Verbose output should contain more details
-        assert len(captured.out) > 0
+        assert len(caplog.text) > 0
 
 
 class TestDefaultPdfPath:

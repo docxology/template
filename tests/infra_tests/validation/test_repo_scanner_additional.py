@@ -4,9 +4,7 @@ Tests repository scanning functionality using real implementations.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-from pathlib import Path
 
-import pytest
 
 from infrastructure.validation.repo_scanner import RepositoryScanner
 

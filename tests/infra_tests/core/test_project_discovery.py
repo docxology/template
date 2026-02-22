@@ -7,7 +7,6 @@ Follows No Mocks Policy - all tests use real data and real execution.
 
 from pathlib import Path
 
-import pytest
 
 from infrastructure.project.discovery import (ProjectInfo, discover_projects,
                                               get_project_metadata,

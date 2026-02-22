@@ -6,7 +6,6 @@ Follows No Mocks Policy - all tests use real data and real subprocess execution.
 
 import shutil
 import subprocess
-import sys
 from pathlib import Path
 
 import pytest

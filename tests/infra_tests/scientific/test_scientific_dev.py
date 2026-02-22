@@ -4,18 +4,15 @@ This test suite provides comprehensive validation for scientific development too
 including numerical stability, performance benchmarking, and best practices.
 """
 
-from pathlib import Path
 
 import numpy as np
 import pytest
 
 # Import the modules to test
-from infrastructure.scientific import (BenchmarkResult, StabilityTest,
-                                       benchmark_function,
+from infrastructure.scientific import (BenchmarkResult, benchmark_function,
                                        check_numerical_stability,
                                        check_research_compliance,
                                        create_scientific_module_template,
-                                       create_scientific_test_suite,
                                        create_scientific_workflow_template,
                                        generate_api_documentation,
                                        generate_performance_report,
@@ -314,8 +311,6 @@ class TestPerformanceReporting:
 
     def test_generate_performance_report(self):
         """Test generation of performance analysis report."""
-        from infrastructure.scientific import (BenchmarkResult,
-                                               generate_api_documentation)
 
         results = [
             BenchmarkResult(
@@ -426,7 +421,6 @@ class TestPerformanceRecommendations:
 
     def test_generate_performance_report_slow_functions(self):
         """Test performance report with slow functions (lines 459-461)."""
-        from infrastructure.scientific import BenchmarkResult
 
         results = [
             # Slow function (> 0.1s)
@@ -457,7 +451,6 @@ class TestPerformanceRecommendations:
 
     def test_generate_performance_report_memory_intensive(self):
         """Test performance report with memory-intensive functions (lines 463-467)."""
-        from infrastructure.scientific import BenchmarkResult
 
         results = [
             # Memory-intensive function (> 100MB)
@@ -488,7 +481,6 @@ class TestPerformanceRecommendations:
 
     def test_generate_performance_report_both_issues(self):
         """Test performance report with both slow and memory-intensive functions."""
-        from infrastructure.scientific import BenchmarkResult
 
         results = [
             BenchmarkResult(

@@ -8,7 +8,6 @@ Part of the infrastructure layer (Layer 1) - reusable across all projects.
 
 from __future__ import annotations
 
-import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Optional
@@ -65,7 +64,7 @@ class FileInventoryManager:
         if categories is None:
             categories = self.OUTPUT_CATEGORIES
 
-        entries = []
+        entries: List[FileInventoryEntry] = []
 
         # Check if output directory exists and is a directory
         exists_check = output_dir.exists()
@@ -369,7 +368,7 @@ class FileInventoryManager:
         Returns:
             Dictionary mapping category names to lists of entries
         """
-        groups = {}
+        groups: Dict[str, List[FileInventoryEntry]] = {}
         for entry in entries:
             if entry.category not in groups:
                 groups[entry.category] = []

@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import time
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.validation.check_links import (
@@ -19,13 +19,11 @@ from infrastructure.validation.check_links import (
 from infrastructure.validation.doc_accuracy import check_links
 from infrastructure.validation.doc_discovery import (categorize_documentation,
                                                      find_markdown_files)
-from infrastructure.validation.doc_models import (AccuracyIssue,
-                                                  CompletenessGap,
-                                                  DocumentationFile, LinkIssue,
+from infrastructure.validation.doc_models import (DocumentationFile, LinkIssue,
                                                   QualityIssue, ScanResults)
 from infrastructure.validation.issue_categorizer import (
-    filter_false_positives, generate_issue_summary, get_severity_flag,
-    is_false_positive, prioritize_issues)
+    generate_issue_summary, get_severity_flag,
+    prioritize_issues)
 
 logger = get_logger(__name__)
 

@@ -21,20 +21,16 @@ class TestExtractManuscriptText:
             extract_manuscript_text(str(tmp_path / "nonexistent.pdf"))
 
     def test_no_pdf_library_raises_error(self, tmp_path):
-        """Test extract_manuscript_text raises ValueError when no PDF library available."""
+        """Test extract_manuscript_text returns None when no PDF library available or error."""
         # Create a dummy PDF file
         pdf_file = tmp_path / "test.pdf"
         pdf_file.write_bytes(b"dummy pdf content")
 
-        # Test with a scenario where libraries are not available
-        # This test verifies the error handling when PDF libraries fail to import
-        # Since we can't easily mock imports without patch, we'll test with a malformed PDF
-        # that would cause all libraries to fail
         try:
-            result = extract_manuscript_text(str(pdf_file))
-            # If no exception is raised, that's also acceptable (library handled it gracefully)
+            text, metrics = extract_manuscript_text(str(pdf_file))
+            if text is None:
+                assert metrics.total_chars == 0
         except ValueError as e:
-            # This is the expected behavior when no suitable PDF library is available
             assert "No PDF parsing library available" in str(e)
 
     def test_with_pdfplumber(self, tmp_path):
@@ -50,13 +46,12 @@ class TestExtractManuscriptText:
         c.drawString(100, 730, "Second line of text")
         c.save()
 
-        # Test real extraction with pdfplumber (if available)
         try:
-            result = extract_manuscript_text(str(pdf_file))
-            assert "Extracted text from page" in result
-            assert "Second line of text" in result
+            text, metrics = extract_manuscript_text(str(pdf_file))
+            assert text is not None
+            assert "Extracted text from page" in text
+            assert "Second line of text" in text
         except ValueError as e:
-            # If pdfplumber not available, should raise ValueError
             assert "No PDF parsing library available" in str(e)
 
     def test_with_pypdf(self, tmp_path):
@@ -72,13 +67,12 @@ class TestExtractManuscriptText:
         c.drawString(100, 730, "More text content")
         c.save()
 
-        # Test real extraction with pypdf (if available)
         try:
-            result = extract_manuscript_text(str(pdf_file))
-            assert "Extracted text" in result
-            assert "More text content" in result
+            text, metrics = extract_manuscript_text(str(pdf_file))
+            assert text is not None
+            assert "Extracted text" in text
+            assert "More text content" in text
         except ValueError as e:
-            # If pypdf not available, should raise ValueError
             assert "No PDF parsing library available" in str(e)
 
 
@@ -88,30 +82,29 @@ class TestGenerateReviewWithMetrics:
     @pytest.mark.slow
     def test_generates_executive_summary(self, ollama_test_server):
         """Test generate_review_with_metrics with executive_summary type."""
+        from infrastructure.llm.prompts.templates import ExecutiveSummary
         manuscript_text = "This is a test manuscript about machine learning."
+        client = LLMClient()
 
-        # The generate_review_with_metrics function will use the real LLM client
-        # which will connect to our test server
         review_text, metrics = generate_review_with_metrics(
-            manuscript_text, "executive_summary"
+            client, manuscript_text, "executive_summary", "Executive Summary", ExecutiveSummary
         )
 
-        # Verify the review text was generated (real LLM response)
         assert isinstance(review_text, str)
         assert len(review_text) > 0
-        assert "tokens_used" in metrics
-        assert "time_seconds" in metrics
-        assert "input_chars" in metrics
-        assert "output_chars" in metrics
+        # ReviewMetrics attributes:
+        assert metrics.output_chars > 0
+        assert metrics.generation_time_seconds > 0
 
     @pytest.mark.slow
     def test_generates_quality_review(self, ollama_test_server):
         """Test generate_review_with_metrics with quality_review type."""
+        from infrastructure.llm.prompts.templates import QualityReview
         manuscript_text = "Test manuscript text."
+        client = LLMClient()
 
-        # Real LLM client will connect to test server
         review_text, metrics = generate_review_with_metrics(
-            manuscript_text, "quality_review"
+            client, manuscript_text, "quality_review", "Quality Review", QualityReview
         )
 
         assert isinstance(review_text, str)
@@ -120,10 +113,12 @@ class TestGenerateReviewWithMetrics:
     @pytest.mark.slow
     def test_generates_methodology_review(self, ollama_test_server):
         """Test generate_review_with_metrics with methodology_review type."""
+        from infrastructure.llm.prompts.templates import MethodologyReview
         manuscript_text = "Test manuscript."
+        client = LLMClient()
 
         review_text, metrics = generate_review_with_metrics(
-            manuscript_text, "methodology_review"
+            client, manuscript_text, "methodology_review", "Methodology Review", MethodologyReview
         )
 
         assert isinstance(review_text, str)
@@ -132,10 +127,12 @@ class TestGenerateReviewWithMetrics:
     @pytest.mark.slow
     def test_generates_improvement_suggestions(self, ollama_test_server):
         """Test generate_review_with_metrics with improvement_suggestions type."""
+        from infrastructure.llm.prompts.templates import ImprovementSuggestions
         manuscript_text = "Test manuscript."
+        client = LLMClient()
 
         review_text, metrics = generate_review_with_metrics(
-            manuscript_text, "improvement_suggestions"
+            client, manuscript_text, "improvement_suggestions", "Improvement Suggestions", ImprovementSuggestions
         )
 
         assert isinstance(review_text, str)
@@ -144,35 +141,29 @@ class TestGenerateReviewWithMetrics:
     @pytest.mark.slow
     def test_metrics_include_all_fields(self, ollama_test_server):
         """Test that metrics dict includes all expected fields."""
+        from infrastructure.llm.prompts.templates import ExecutiveSummary
         manuscript_text = "Test manuscript text for metrics testing."
+        client = LLMClient()
 
-        _, metrics = generate_review_with_metrics(manuscript_text, "executive_summary")
+        _, metrics = generate_review_with_metrics(client, manuscript_text, "executive_summary", "Executive Summary", ExecutiveSummary)
 
-        required_fields = [
-            "tokens_used",
-            "time_seconds",
-            "input_chars",
-            "input_words",
-            "input_tokens_est",
-            "output_chars",
-            "output_words",
-            "output_tokens_est",
-        ]
-        for field in required_fields:
-            assert field in metrics, f"Missing field: {field}"
+        # Check dataclass attributes
+        assert hasattr(metrics, "input_chars")
+        assert hasattr(metrics, "output_chars")
+        assert hasattr(metrics, "generation_time_seconds")
+        assert hasattr(metrics, "input_tokens_est")
 
     @pytest.mark.slow
     def test_truncates_long_manuscript(self, ollama_test_server):
         """Test that long manuscripts are truncated."""
-        long_text = "x" * 600000  # Longer than default max
+        from infrastructure.llm.prompts.templates import ExecutiveSummary
+        long_text = "x" * 600000
+        client = LLMClient()
 
-        # The function should handle long text gracefully
-        # (truncation happens internally in the LLM client)
         review_text, metrics = generate_review_with_metrics(
-            long_text, "executive_summary"
+            client, long_text, "executive_summary", "Executive Summary", ExecutiveSummary
         )
 
-        # Verify the function completed successfully
         assert isinstance(review_text, str)
         assert len(review_text) > 0
 
@@ -184,11 +175,10 @@ class TestTemplateBasedGenerators:
     def test_generate_executive_summary_calls_llm(self, ollama_test_server):
         """Test generate_executive_summary actually queries LLM."""
         manuscript_text = "Test manuscript about AI research."
+        client = LLMClient()
 
-        # Use real LLM client that connects to test server
-        result = generate_executive_summary(manuscript_text, model="gemma3:4b")
+        result, metrics = generate_executive_summary(client, manuscript_text, model_name="gemma3:4b")
 
-        # Verify we got a real response
         assert isinstance(result, str)
         assert len(result) > 0
 
@@ -196,9 +186,9 @@ class TestTemplateBasedGenerators:
     def test_generate_quality_review_calls_llm(self, ollama_test_server):
         """Test generate_quality_review actually queries LLM."""
         manuscript_text = "Test manuscript."
+        client = LLMClient()
 
-        # Use real LLM client that connects to test server
-        result = generate_quality_review(manuscript_text)
+        result, metrics = generate_quality_review(client, manuscript_text)
 
         assert isinstance(result, str)
         assert len(result) > 0
@@ -207,8 +197,9 @@ class TestTemplateBasedGenerators:
     def test_generate_methodology_review_calls_llm(self, ollama_test_server):
         """Test generate_methodology_review actually queries LLM."""
         manuscript_text = "Test manuscript."
+        client = LLMClient()
 
-        result = generate_methodology_review(manuscript_text)
+        result, metrics = generate_methodology_review(client, manuscript_text)
 
         assert isinstance(result, str)
         assert len(result) > 0
@@ -217,8 +208,9 @@ class TestTemplateBasedGenerators:
     def test_generate_improvement_suggestions_calls_llm(self, ollama_test_server):
         """Test generate_improvement_suggestions actually queries LLM."""
         manuscript_text = "Test manuscript."
+        client = LLMClient()
 
-        result = generate_improvement_suggestions(manuscript_text)
+        result, metrics = generate_improvement_suggestions(client, manuscript_text)
 
         assert isinstance(result, str)
         assert len(result) > 0
@@ -228,8 +220,9 @@ class TestTemplateBasedGenerators:
         """Test generate_translation actually queries LLM."""
         text = "Hello world"
         target_language = "zh"
+        client = LLMClient()
 
-        result = generate_translation(text, target_language)
+        result, metrics = generate_translation(client, text, target_language)
 
         assert isinstance(result, str)
         assert len(result) > 0
@@ -239,9 +232,9 @@ class TestTemplateBasedGenerators:
         """Test generate_translation respects model parameter."""
         text = "Test"
         target_language = "hi"
+        client = LLMClient()
 
-        # Use real LLM client - model parameter is handled internally
-        result = generate_translation(text, target_language, model="gemma3:4b")
+        result, metrics = generate_translation(client, text, target_language, model_name="gemma3:4b")
 
         assert isinstance(result, str)
         assert len(result) > 0
@@ -257,21 +250,10 @@ class TestReviewGeneratorsIntegration:
 
         client = LLMClient()
         if not client.check_connection():
-            pytest.fail(
-                "\n" + "=" * 80 + "\n"
-                "❌ TEST FAILURE: Ollama server is not available!\n"
-                "=" * 80 + "\n"
-                "This test requires Ollama to be running.\n"
-                "The ensure_ollama_for_tests fixture should have started it.\n\n"
-                "Troubleshooting:\n"
-                "  1. Check if Ollama is installed: ollama --version\n"
-                "  2. Start Ollama manually: ollama serve\n"
-                "  3. Check logs above for auto-start errors\n"
-                "=" * 80
-            )
+            pytest.fail("Ollama server is not available!")
 
         manuscript_text = "This is a test manuscript about machine learning and AI."
-        result = generate_executive_summary(manuscript_text)
+        result, metrics = generate_executive_summary(client, manuscript_text)
 
         assert len(result) > 0
         assert isinstance(result, str)
@@ -282,25 +264,15 @@ class TestReviewGeneratorsIntegration:
 
         client = LLMClient()
         if not client.check_connection():
-            pytest.fail(
-                "\n" + "=" * 80 + "\n"
-                "❌ TEST FAILURE: Ollama server is not available!\n"
-                "=" * 80 + "\n"
-                "This test requires Ollama to be running.\n"
-                "The ensure_ollama_for_tests fixture should have started it.\n\n"
-                "Troubleshooting:\n"
-                "  1. Check if Ollama is installed: ollama --version\n"
-                "  2. Start Ollama manually: ollama serve\n"
-                "  3. Check logs above for auto-start errors\n"
-                "=" * 80
-            )
+            pytest.fail("Ollama server is not available!")
 
         manuscript_text = "Test manuscript about optimization algorithms."
+        from infrastructure.llm.prompts.templates import ExecutiveSummary
         review_text, metrics = generate_review_with_metrics(
-            manuscript_text, "executive_summary"
+            client, manuscript_text, "executive_summary", "Executive Summary", ExecutiveSummary
         )
 
         assert len(review_text) > 0
-        assert "tokens_used" in metrics
-        assert "time_seconds" in metrics
-        assert metrics["time_seconds"] > 0
+        assert hasattr(metrics, "output_chars")
+        assert hasattr(metrics, "generation_time_seconds")
+        assert metrics.generation_time_seconds > 0

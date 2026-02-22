@@ -7,7 +7,7 @@ and security measures for LLM prompts and user inputs.
 import html
 import re
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional
 
 from infrastructure.core.logging_utils import get_logger
 
@@ -176,7 +176,7 @@ class InputSanitizer:
         for pattern in self.dangerous_patterns:
             if re.search(pattern, text, re.IGNORECASE):
                 logger.warning(f"Dangerous pattern detected: {pattern}")
-                raise SecurityError(f"Dangerous content detected in input")
+                raise SecurityError("Dangerous content detected in input")
 
     def _escape_html_entities(self, text: str) -> str:
         """Escape HTML entities for safety."""
@@ -294,7 +294,7 @@ class HealthChecker:
 
             response = requests.get("https://httpbin.org/status/200", timeout=5)
             http_available = response.status_code == 200
-        except:
+        except Exception:
             http_available = False
 
         return {

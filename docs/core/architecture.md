@@ -273,7 +273,7 @@ uv run python scripts/generate_research_figures.py
 
 ```bash
 # Validate all markdown references and images
-python3 -m infrastructure.validation.cli markdown project/manuscript/
+uv run python -m infrastructure.validation.cli markdown project/manuscript/
 ```
 
 **Checks**:
@@ -287,7 +287,7 @@ python3 -m infrastructure.validation.cli markdown project/manuscript/
 
 ```bash
 # Auto-generate glossary from current project/src/ API
-python3 -m infrastructure.documentation.generate_glossary_cli
+uv run python -m infrastructure.documentation.generate_glossary_cli
 ```
 
 **Purpose**: Keeps documentation automatically synchronized with source code changes. This is also integrated into the build pipeline (Stage 03).
@@ -445,17 +445,17 @@ uv run pytest tests/ --cov=src --cov-report=term-missing
 
 # Generate figures and validate
 uv run python project/scripts/example_figure.py
-python3 -m infrastructure.validation.cli markdown project/manuscript/
+uv run python -m infrastructure.validation.cli markdown project/manuscript/
 ```
 
 ### 3. Integration
 
 ```bash
 # Run pipeline
-python3 scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --core-only
 
 # Or individual stages
-python3 scripts/03_render_pdf.py  # PDF generation
+uv run python scripts/03_render_pdf.py  # PDF generation
 
 # Verify all outputs are generated
 # Check that PDFs build successfully
@@ -477,7 +477,7 @@ python3 scripts/03_render_pdf.py  # PDF generation
 2. **Test-Driven Development**: Tests validate functionality before implementation
 3. **Automated Validation**: All components are automatically checked for coherence
 4. **Reproducible Outputs**: All results are deterministic and verifiable
-5. **Integrated Workflow**: One command (`python3 scripts/execute_pipeline.py --core-only`) validates the entire system
+5. **Integrated Workflow**: One command (`uv run python scripts/execute_pipeline.py --core-only`) validates the entire system
 6. **Thin Orchestrator Pattern**: Scripts import and use project/src/ methods, never implement algorithms
 
 ## Thin Orchestrator Pattern

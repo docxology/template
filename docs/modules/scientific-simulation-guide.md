@@ -324,7 +324,7 @@ Demonstrates simulation workflow:
 
 **Run:**
 ```bash
-python3 scripts/scientific_simulation.py
+uv run python scripts/scientific_simulation.py
 ```
 
 ### Analysis Pipeline (`scripts/analysis_pipeline.py`)
@@ -337,7 +337,7 @@ Demonstrates statistical analysis workflow:
 
 **Run:**
 ```bash
-python3 scripts/analysis_pipeline.py
+uv run python scripts/analysis_pipeline.py
 ```
 
 ### Generate Scientific Figures (`scripts/generate_scientific_figures.py`)
@@ -351,7 +351,7 @@ Automated figure generation workflow:
 
 **Run:**
 ```bash
-python3 scripts/generate_scientific_figures.py
+uv run python scripts/generate_scientific_figures.py
 ```
 
 ## Integration with Build System

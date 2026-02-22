@@ -4,9 +4,7 @@ This test suite validates edge cases including hash mismatches, missing
 cross-references, permission checks, and validation for missing categories.
 """
 
-from pathlib import Path
 
-import pytest
 
 from infrastructure.validation import integrity
 

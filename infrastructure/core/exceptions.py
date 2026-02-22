@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import builtins
 from pathlib import Path
-from typing import Any, Optional, Sequence
+from typing import Any, Optional
 
 # =============================================================================
 # BASE EXCEPTION
@@ -422,11 +422,10 @@ class MissingDependencyError(DependencyError):
             import platform
 
             system = platform.system().lower()
+            import shutil
 
             if system == "linux":
                 # Try to detect package manager
-                import shutil
-
                 if shutil.which("apt-get"):
                     recovery_commands.append(
                         f"sudo apt-get update && sudo apt-get install -y {dependency}"

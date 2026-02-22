@@ -12,9 +12,9 @@ import logging
 import os
 import subprocess
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, Optional
+from typing import Callable, Optional
 
 from infrastructure.core.checkpoint import CheckpointManager, StageResult
 from infrastructure.core.environment import (get_python_command,
@@ -22,6 +22,12 @@ from infrastructure.core.environment import (get_python_command,
 from infrastructure.core.logging_utils import (get_logger, log_operation,
                                                log_stage_with_eta,
                                                setup_logger)
+from infrastructure.core.errors import (
+    PIPELINE_STAGE_FAILED,
+    SCRIPT_EXECUTION_FAILED,
+    STAGE_EXCEPTION,
+    STAGE_FAILED,
+)
 
 logger = get_logger(__name__)
 
@@ -233,7 +239,7 @@ class PipelineExecutor:
 
             if not result.success:
                 logger.error(
-                    f"Pipeline failed at stage {executed_stage_num}: {stage_name}"
+                    PIPELINE_STAGE_FAILED.format(stage_num=executed_stage_num, stage_name=stage_name)
                 )
                 break
 
@@ -286,7 +292,7 @@ class PipelineExecutor:
                     duration=duration,
                 )
             else:
-                logger.error(f"✗ Stage {stage_num} failed")
+                logger.error(STAGE_FAILED.format(stage_num=stage_num))
                 return PipelineStageResult(
                     stage_num=stage_num,
                     stage_name=stage_name,
@@ -297,7 +303,7 @@ class PipelineExecutor:
 
         except Exception as e:
             duration = time.time() - start_time
-            logger.error(f"✗ Stage {stage_num} failed with exception: {e}")
+            logger.error(STAGE_EXCEPTION.format(stage_num=stage_num, error=e))
             return PipelineStageResult(
                 stage_num=stage_num,
                 stage_name=stage_name,
@@ -444,7 +450,7 @@ class PipelineExecutor:
             resumed_results.append(result)
             if not result.success:
                 logger.error(
-                    f"Pipeline failed at stage {executed_stage_num}: {stage_name}"
+                    PIPELINE_STAGE_FAILED.format(stage_num=executed_stage_num, stage_name=stage_name)
                 )
                 break
             self._save_checkpoint(pipeline_start, executed_stage_num, resumed_results)
@@ -683,5 +689,5 @@ class PipelineExecutor:
 
             return False
         except Exception as e:
-            logger.error(f"Failed to run script {script_name}: {e}")
+            logger.error(SCRIPT_EXECUTION_FAILED.format(script_name=script_name, error=e))
             return False

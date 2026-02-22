@@ -13,8 +13,6 @@ import pytest
 
 from infrastructure.llm.cli.main import (check_command, main, models_command,
                                          query_command, template_command)
-from infrastructure.llm.core.client import LLMClient
-from infrastructure.llm.core.config import LLMConfig
 
 
 class TestCLIArgumentParsing:
@@ -73,7 +71,7 @@ class TestCLIArgumentParsing:
         """Test check command exists."""
         parser = argparse.ArgumentParser()
         subparsers = parser.add_subparsers(dest="command")
-        check_parser = subparsers.add_parser("check")
+        subparsers.add_parser("check")
 
         args = parser.parse_args(["check"])
         assert args.command == "check"
@@ -82,7 +80,7 @@ class TestCLIArgumentParsing:
         """Test models command exists."""
         parser = argparse.ArgumentParser()
         subparsers = parser.add_subparsers(dest="command")
-        models_parser = subparsers.add_parser("models")
+        subparsers.add_parser("models")
 
         args = parser.parse_args(["models"])
         assert args.command == "models"

@@ -149,7 +149,7 @@ ls -la projects/{project_name}/output/logs/archive/
 
 **Solutions:**
 
-1. Check log level: `LOG_LEVEL=0 python3 script.py`
+1. Check log level: `LOG_LEVEL=0 uv run python script.py`
 2. Ensure logger is set up: `logger = get_logger(__name__)`
 3. Check if using print() instead of logger
 

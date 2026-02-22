@@ -4,7 +4,6 @@ Comprehensive tests for repository accuracy and completeness scanning.
 """
 
 import logging
-from pathlib import Path
 
 import pytest
 

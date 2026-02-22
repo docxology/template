@@ -1,10 +1,7 @@
 """Tests for manuscript logging."""
 
-from pathlib import Path
 
-import pytest
 
-from infrastructure.core.logging_utils import get_logger
 from infrastructure.rendering.manuscript_discovery import \
     discover_manuscript_files
 
@@ -19,7 +16,7 @@ def test_all_filenames_logged(tmp_path, caplog):
     for fname in files:
         (manuscript_dir / fname).write_text(f"# {fname}\n\nContent here.")
 
-    result = discover_manuscript_files(manuscript_dir)
+    discover_manuscript_files(manuscript_dir)
 
     # Verify each filename appears in logs
     log_text = caplog.text

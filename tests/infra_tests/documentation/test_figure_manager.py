@@ -1,10 +1,7 @@
 """Comprehensive tests for src/figure_manager.py to ensure 100% coverage."""
 
 import json
-import tempfile
-from pathlib import Path
 
-import pytest
 
 from infrastructure.documentation.figure_manager import (FigureManager,
                                                          FigureMetadata)

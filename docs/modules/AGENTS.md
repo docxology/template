@@ -62,13 +62,13 @@ docs/modules/
 
 ```bash
 # Validate generated PDF
-python3 -m infrastructure.validation.cli pdf output/pdf/project_combined.pdf
+uv run python -m infrastructure.validation.cli pdf output/pdf/project_combined.pdf
 
 # Validate with verbose output
-python3 -m infrastructure.validation.cli pdf output/pdf/ --verbose
+uv run python -m infrastructure.validation.cli pdf output/pdf/ --verbose
 
 # Check specific PDF file
-python3 -m infrastructure.validation.cli pdf output/pdf/01_abstract.pdf
+uv run python -m infrastructure.validation.cli pdf output/pdf/01_abstract.pdf
 ```
 
 **Validation Checks:**
@@ -501,26 +501,26 @@ class SecurePublisher:
 
 ```bash
 # Check module installation
-python3 -c "import infrastructure.validation; print('Module imported successfully')"
+uv run python -c "import infrastructure.validation; print('Module imported successfully')"
 
 # Verify dependencies
 pip list | grep PyPDF2
 
 # Check Python path
-python3 -c "import sys; print(sys.path)"
+uv run python -c "import sys; print(sys.path)"
 ```
 
 **Performance Issues:**
 
 ```bash
 # Profile module execution
-python3 -m cProfile -s cumulative script_using_module.py
+uv run python -m cProfile -s cumulative script_using_module.py
 
 # Check memory usage
-python3 -m memory_profiler script_using_module.py
+uv run python -m memory_profiler script_using_module.py
 
 # Monitor system resources
-python3 -c "
+uv run python -c "
 import psutil
 print(f'CPU: {psutil.cpu_percent()}%')
 print(f'Memory: {psutil.virtual_memory().percent}%')
@@ -531,7 +531,7 @@ print(f'Memory: {psutil.virtual_memory().percent}%')
 
 ```bash
 # Validate configuration
-python3 -c "
+uv run python -c "
 from infrastructure.core import load_config
 config = load_config()
 print('Configuration loaded successfully')

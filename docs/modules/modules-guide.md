@@ -69,10 +69,10 @@ pdf_path = manager.render_pdf(Path("manuscript/main.tex"))
 
 ```bash
 # Automatic build verification
-python3 scripts/04_validate_output.py
+uv run python scripts/04_validate_output.py
 
 # Manual verification
-python3 -m infrastructure.validation.cli integrity output/
+uv run python -m infrastructure.validation.cli integrity output/
 ```
 
 ---

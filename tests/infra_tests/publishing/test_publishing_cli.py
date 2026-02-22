@@ -5,8 +5,6 @@ Tests the CLI interface for publishing operations.
 
 import argparse
 import logging
-import os
-import subprocess
 import sys
 from pathlib import Path
 
@@ -182,7 +180,6 @@ class TestMainCli:
     def test_main_without_command(self):
         """Test main without any subcommand."""
         # Test argument parsing directly (real argparse behavior)
-        import sys
 
         original_argv = sys.argv
         try:
@@ -194,7 +191,6 @@ class TestMainCli:
 
     def test_main_help_shows_commands(self):
         """Test that help shows available commands."""
-        import sys
 
         original_argv = sys.argv
         try:

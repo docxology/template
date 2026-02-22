@@ -8,7 +8,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-import pytest
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
@@ -161,7 +160,7 @@ class TestPdfValidationOutput:
         print_validation_report(report)
         assert True  # If no exception, test passes
 
-    def test_print_summary(self, capsys):
+    def test_print_summary(self, caplog):
         """Test summary printing."""
         from infrastructure.validation.validate_pdf_cli import \
             print_validation_report
@@ -182,9 +181,11 @@ class TestPdfValidationOutput:
             "first_words": "Test content",
         }
 
-        print_validation_report(report)
-        captured = capsys.readouterr()
-        assert len(captured.out) > 0  # Should produce output
+        import logging
+
+        with caplog.at_level(logging.INFO):
+            print_validation_report(report)
+        assert len(caplog.records) > 0  # Should produce log output
 
 
 class TestPdfCliMain:

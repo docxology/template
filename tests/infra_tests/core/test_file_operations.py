@@ -4,11 +4,7 @@ Comprehensive tests for file and directory operation utilities including
 cleaning output directories and copying final deliverables.
 """
 
-import shutil
-import tempfile
-from pathlib import Path
 
-import pytest
 
 from infrastructure.core.file_operations import (clean_output_directories,
                                                  clean_output_directory,
@@ -92,7 +88,6 @@ class TestCleanOutputDirectory:
 
     def test_clean_directory_with_readonly_files(self, tmp_path):
         """Test cleaning directory with read-only files."""
-        import os
         import stat
 
         output_dir = tmp_path / "output"
@@ -389,7 +384,7 @@ class TestCopyFinalDeliverables:
         output_dir = tmp_path / "final_output" / "project"
         output_dir.mkdir(parents=True)
 
-        stats = copy_final_deliverables(
+        copy_final_deliverables(
             project_root, output_dir, project_name="project"
         )
 
@@ -415,7 +410,7 @@ class TestCopyFinalDeliverables:
         output_dir.mkdir(parents=True)
         (output_dir / "old_file.txt").write_text("old")
 
-        stats = copy_final_deliverables(
+        copy_final_deliverables(
             project_root, output_dir, project_name="project"
         )
 
@@ -524,7 +519,6 @@ class TestCleanCoverageFiles:
 
     def test_clean_coverage_files_locked_file(self, tmp_path):
         """Test cleaning when a coverage file is locked."""
-        import os
 
         # Create a regular file (can't really lock on all systems)
         coverage_file = tmp_path / ".coverage"

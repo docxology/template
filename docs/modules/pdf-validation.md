@@ -51,16 +51,16 @@ Command-line interface that:
 
 ```bash
 # Validate default combined PDF (via pipeline orchestrator)
-python3 scripts/04_validate_output.py
+uv run python scripts/04_validate_output.py
 
 # Validate specific PDF using CLI
-python3 -m infrastructure.validation.cli pdf output/pdf/01_abstract.pdf
+uv run python -m infrastructure.validation.cli pdf output/pdf/01_abstract.pdf
 
 # Validate with verbose output
-python3 -m infrastructure.validation.cli pdf output/pdf/01_abstract.pdf --verbose
+uv run python -m infrastructure.validation.cli pdf output/pdf/01_abstract.pdf --verbose
 
 # Validate markdown files
-python3 -m infrastructure.validation.cli markdown project/manuscript/
+uv run python -m infrastructure.validation.cli markdown project/manuscript/
 ```
 
 #### Automated Validation
@@ -69,13 +69,13 @@ The validation is automatically integrated into the pipeline (Stage 4):
 
 ```bash
 # Standard usage (includes validation)
-python3 scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --core-only
 
 # Or use unified interactive menu
 ./run.sh
 
 # Run only validation stage (skip other stages)
-python3 scripts/04_validate_output.py
+uv run python scripts/04_validate_output.py
 ```
 
 This will:
@@ -211,7 +211,7 @@ Ensure you're running from the repository root:
 
 ```bash
 cd /path/to/template
-python3 -m infrastructure.validation.cli pdf output/pdf/project_combined.pdf
+uv run python -m infrastructure.validation.cli pdf output/pdf/project_combined.pdf
 ```
 
 ### "PDF file not found"
@@ -219,17 +219,17 @@ python3 -m infrastructure.validation.cli pdf output/pdf/project_combined.pdf
 Generate PDFs first:
 
 ```bash
-python3 scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --core-only
 ```
 
 Or run the pipeline:
 
 ```bash
 # Standard build with validation
-python3 scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --core-only
 
 # With options
-python3 scripts/execute_pipeline.py --core-only --verbose --log-file build.log
+uv run python scripts/execute_pipeline.py --core-only --verbose --log-file build.log
 ```
 
 ### High number of ?? issues

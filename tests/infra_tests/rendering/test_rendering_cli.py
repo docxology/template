@@ -13,7 +13,6 @@ from pathlib import Path
 import pytest
 
 from infrastructure.rendering import cli
-from infrastructure.rendering.core import RenderManager
 
 
 class TestRenderPdfCommand:

@@ -12,7 +12,6 @@ from pathlib import Path
 import pytest
 
 from infrastructure.reporting.output_organizer import (FileType,
-                                                       OrganizationResult,
                                                        OutputOrganizer)
 
 

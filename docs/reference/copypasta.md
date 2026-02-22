@@ -53,7 +53,7 @@ Get started immediately with this **[research project template](https://github.c
 
 ```bash
 # Clean all outputs and regenerate everything
-python3 scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --core-only
 ```
 
 ### **🧪 Running Tests**
@@ -85,10 +85,10 @@ export PROJECT_TITLE="Your Project Title"
 uv sync
 
 # Run pipeline
-python3 scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --core-only
 
 # Run pipeline (includes cleanup)
-python3 scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --core-only
 ```
 
 ### **📊 Development Workflow**
@@ -100,10 +100,10 @@ uv run pytest tests/ --cov=src --cov-report=term-missing
 
 # 3. Generate figures and validate
 uv run python project/scripts/example_figure.py
-python3 -m infrastructure.validation.cli markdown project/manuscript/
+uv run python -m infrastructure.validation.cli markdown project/manuscript/
 
 # 4. Build pipeline
-python3 scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --core-only
 ```
 
 ## 📱 **Social Media Posts**
@@ -157,7 +157,7 @@ cd template
 uv sync
 
 # Generate everything
-python3 scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --core-only
 ```
 
 The template automatically handles LaTeX compilation, figure integration, and generates publication-ready PDFs. for academic papers and research documentation. Check the **[how to use guide](../core/how-to-use.md)** for step-by-step instructions and the **[architecture guide](../core/architecture.md)** for detailed system design.
@@ -453,7 +453,7 @@ graph LR
 - [ ] Click **[Use this template](https://github.com/docxology/template)** on GitHub
 - [ ] Clone your new repository
 - [ ] Run `uv sync` to install dependencies
-- [ ] Execute `python3 scripts/execute_pipeline.py --core-only` to test the pipeline
+- [ ] Execute `uv run python scripts/execute_pipeline.py --core-only` to test the pipeline
 
 ### **🔧 Customization Steps**
 

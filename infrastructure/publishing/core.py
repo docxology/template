@@ -15,27 +15,23 @@ from __future__ import annotations
 
 import hashlib
 import re
-from dataclasses import asdict, dataclass
+from dataclasses import asdict
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 # Import from split modules
-from infrastructure.publishing.citations import (
+from infrastructure.publishing.citations import (  # noqa: F401
     extract_citations_from_markdown, format_authors_apa, format_authors_mla,
     generate_citation_apa, generate_citation_bibtex, generate_citation_mla,
     generate_citations_markdown)
-from infrastructure.publishing.metadata import (calculate_complexity_score,
-                                                create_academic_profile_data,
-                                                create_repository_metadata,
-                                                extract_publication_metadata,
-                                                generate_publication_metrics,
-                                                generate_publication_summary,
-                                                validate_doi)
-from infrastructure.publishing.models import CitationStyle, PublicationMetadata
-from infrastructure.publishing.platforms import (create_github_release,
-                                                 prepare_arxiv_submission,
-                                                 publish_to_zenodo)
+from infrastructure.publishing.metadata import (  # noqa: F401
+    calculate_complexity_score, create_academic_profile_data,
+    create_repository_metadata, extract_publication_metadata,
+    generate_publication_metrics, generate_publication_summary, validate_doi)
+from infrastructure.publishing.models import CitationStyle, PublicationMetadata  # noqa: F401
+from infrastructure.publishing.platforms import (  # noqa: F401
+    create_github_release, prepare_arxiv_submission, publish_to_zenodo)
 
 
 def calculate_file_hash(file_path: Path, algorithm: str = "sha256") -> Optional[str]:
@@ -233,7 +229,6 @@ def create_publication_announcement(metadata: PublicationMetadata) -> str:
     Returns:
         Markdown formatted announcement
     """
-    from infrastructure.publishing.citations import generate_citation_apa
 
     announcement = f"""# 🚀 New Publication: {metadata.title}
 
@@ -288,8 +283,6 @@ def validate_publication_readiness(
     Returns:
         Dictionary with publication readiness assessment
     """
-    from infrastructure.publishing.citations import \
-        extract_citations_from_markdown
 
     readiness = {
         "ready_for_publication": True,
@@ -304,7 +297,7 @@ def validate_publication_readiness(
         try:
             with open(md_file, "r", encoding="utf-8") as f:
                 all_content += f.read()
-        except:
+        except (OSError, UnicodeDecodeError):
             continue
 
     has_abstract = "abstract" in all_content.lower()

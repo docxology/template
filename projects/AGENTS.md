@@ -61,7 +61,7 @@ Archived projects in the `projects_archive/` directory are:
 ```mermaid
 graph TD
     subgraph Active["Active Projects (projects/)"]
-        P1[act_inf_metaanalysis<br/>Active - Discovered]
+        P1[code_project<br/>Active - Discovered]
     end
 
     subgraph Archive["Archived Projects (projects_archive/)"]
@@ -108,7 +108,7 @@ To reactivate an archived project:
 
 Every valid project **must** have these directories:
 
-```
+```text
 projects/{name}/
 ├── src/                    # Python source code (algorithms, data processing)
 │   ├── __init__.py        # Package initialization
@@ -121,7 +121,7 @@ projects/{name}/
 
 ### Optional Directories (Recommended for Full Functionality)
 
-```
+```text
 projects/{name}/
 ├── scripts/                # Analysis workflows (thin orchestrators)
 │   ├── analysis_pipeline.py    # Main analysis script
@@ -131,14 +131,16 @@ projects/{name}/
 │   ├── references.bib      # Bibliography
 │   ├── 01_abstract.md      # Manuscript sections
 │   └── *.md                # Additional sections
+├── docs/                   # Modular documentation hub
+│   ├── architecture.md     # Flow and orchestration details
+│   ├── testing_philosophy.md # Validation and zero-mock rules
+│   ├── rendering_pipeline.md # LaTeX/PDF mapping
+│   └── agent_instructions.md # Rules for LLMs
 ├── output/                 # Generated outputs (disposable)
 │   ├── figures/            # PNG/PDF figures
 │   ├── data/               # CSV/NPZ data files
 │   ├── pdf/                # Generated PDFs
 │   └── reports/            # Analysis reports
-└── docs/                   # Project documentation (optional)
-    ├── AGENTS.md           # Technical docs
-    └── README.md           # Quick reference
 ```
 
 ## Infrastructure Compliance
@@ -161,7 +163,7 @@ for project in projects:
     print(f"  Has scripts: {project.has_scripts}")
 
 # Validate specific project
-is_valid, message = validate_project_structure(Path("projects/act_inf_metaanalysis"))
+is_valid, message = validate_project_structure(Path("projects/code_project"))
 assert is_valid  # (True, "Valid project structure")
 ```
 
@@ -269,7 +271,7 @@ python3 scripts/05_copy_outputs.py --project {name}
 
 ```
 output/
-├── act_inf_metaanalysis/       # Final deliverables
+├── code_project/       # Final deliverables
 │   ├── pdf/                    # Manuscript PDFs
 │   ├── figures/                # Publication figures
 │   ├── data/                   # Analysis datasets
@@ -395,7 +397,7 @@ def test_llm_integration_real_http(ollama_test_server):
 
 **Directory Structure:**
 
-```
+```text
 projects/{name}/tests/
 ├── __init__.py                      # Test package
 ├── conftest.py                      # Shared fixtures and configuration
@@ -473,7 +475,7 @@ for script in scripts:
 
 **Generated during pipeline execution:**
 
-```
+```text
 projects/{name}/output/
 ├── figures/                 # PNG/PDF figures for manuscript
 ├── data/                    # CSV/NPZ datasets from analysis
@@ -497,7 +499,7 @@ projects/{name}/output/
 
 **Copied by `scripts/05_copy_outputs.py`:**
 
-```
+```text
 output/{name}/
 ├── pdf/                     # Final manuscript PDFs
 ├── figures/                 # Publication-quality figures
@@ -557,11 +559,11 @@ All projects in this directory comply with the template's development standards 
 
 ### Compliance Verification Results
 
-**✅ VERIFICATION COMPLETED - ALL STANDARDS MET**
+#### ✅ VERIFICATION COMPLETED - ALL STANDARDS MET
 
 #### Testing Standards Results
 
-- **act_inf_metaanalysis**: Meets coverage requirements ✅
+- **code_project**: Meets coverage requirements ✅
 - **Combined**: All tests use data, no mocks detected ✅
 
 #### Documentation Standards Results
@@ -917,7 +919,7 @@ ls projects/myproject/output/pdf/*_compile.log
 
 **Note:** This project has been archived. Reactivate by moving from `projects_archive/` to `projects/`.
 
-### Active Inference Meta-Analysis (`projects/act_inf_metaanalysis/`)
+### Active Inference Meta-Analysis (`projects/code_project/`)
 
 **Standalone Guarantees:**
 
@@ -928,9 +930,9 @@ ls projects/myproject/output/pdf/*_compile.log
 **Infrastructure Operations:**
 
 ```bash
-python3 scripts/01_run_tests.py --project act_inf_metaanalysis
-python3 scripts/02_run_analysis.py --project act_inf_metaanalysis
-python3 scripts/03_render_pdf.py --project act_inf_metaanalysis
+python3 scripts/01_run_tests.py --project code_project
+python3 scripts/02_run_analysis.py --project code_project
+python3 scripts/03_render_pdf.py --project code_project
 ```
 
 ## See Also

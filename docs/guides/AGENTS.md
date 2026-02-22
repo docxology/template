@@ -51,7 +51,7 @@ docs/guides/
 **Show, Don't Tell Philosophy:**
 ```bash
 # Good: working example
-$ python3 scripts/03_render_pdf.py --project {project_name}
+$ uv run python scripts/03_render_pdf.py --project {project_name}
 INFO: Loading configuration from projects/{project_name}/manuscript/config.yaml
 INFO: Generating PDF with LaTeX rendering engine
 INFO: PDF generated successfully: output/{project_name}/pdf/{project_name}_combined.pdf
@@ -87,7 +87,7 @@ vim project/manuscript/config.yaml
 vim project/manuscript/01_introduction.md
 
 # 4. Generate outputs
-python3 scripts/03_render_pdf.py
+uv run python scripts/03_render_pdf.py
 ```
 ```
 
@@ -114,22 +114,22 @@ print(f"Author: {config.get('author_name', 'Researcher')}")
 ```bash
 # workflow from figures-and-analysis.md
 # 1. Set up environment
-python3 scripts/00_setup_environment.py
+uv run python scripts/00_setup_environment.py
 
 # 2. Run tests to ensure everything works
-python3 scripts/01_run_tests.py
+uv run python scripts/01_run_tests.py
 
 # 3. Execute your analysis
-python3 scripts/02_run_analysis.py
+uv run python scripts/02_run_analysis.py
 
 # 4. Generate manuscript
-python3 scripts/03_render_pdf.py
+uv run python scripts/03_render_pdf.py
 
 # 5. Validate outputs
-python3 scripts/04_validate_output.py
+uv run python scripts/04_validate_output.py
 
 # 6. Copy final deliverables
-python3 scripts/05_copy_outputs.py
+uv run python scripts/05_copy_outputs.py
 ```
 
 ### Error Handling Examples
@@ -137,7 +137,7 @@ python3 scripts/05_copy_outputs.py
 **Common Issues and Solutions:**
 ```bash
 # Problem: PDF generation fails
-$ python3 scripts/03_render_pdf.py
+$ uv run python scripts/03_render_pdf.py
 ERROR: LaTeX compilation failed
 
 # Solution: Check LaTeX installation
@@ -148,7 +148,7 @@ $ which xelatex
 $ sudo tlmgr install multirow cleveref doi
 
 # Retry generation
-$ python3 scripts/03_render_pdf.py --project {project_name}
+$ uv run python scripts/03_render_pdf.py --project {project_name}
 SUCCESS: PDF generated at output/{project_name}/pdf/{project_name}_combined.pdf
 ```
 
@@ -204,7 +204,7 @@ SUCCESS: PDF generated at output/{project_name}/pdf/{project_name}_combined.pdf
 ./validate_guide_examples.sh docs/guides/
 
 # Check example output accuracy
-python3 validate_examples.py docs/guides/getting-started.md
+uv run python validate_examples.py docs/guides/getting-started.md
 
 # Lint markdown formatting
 markdownlint docs/guides/*.md

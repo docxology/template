@@ -15,7 +15,7 @@ from infrastructure.core.performance import (PerformanceMetrics,
 
 # Check if psutil is available for conditional testing
 try:
-    import psutil
+    import psutil  # noqa: F401
 
     HAS_PSUTIL = True
 except ImportError:

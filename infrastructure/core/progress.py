@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import sys
 import time
-from typing import Callable, Optional
+from typing import Optional
 
 from infrastructure.core.logging_utils import (calculate_eta,
                                                calculate_eta_ema,
@@ -108,7 +108,8 @@ class ProgressBar:
                             self.total,
                             previous_eta=self.previous_eta,
                         )
-                    status_parts.append(f"ETA: {format_duration(self.previous_eta)}")
+                    if self.previous_eta is not None:
+                        status_parts.append(f"ETA: {format_duration(self.previous_eta)}")
             else:
                 eta_seconds = calculate_eta(elapsed, self.current, self.total)
                 if eta_seconds is not None:
@@ -193,7 +194,7 @@ class LLMProgressTracker:
 
     def _display(self, throughput: float) -> None:
         """Display current progress."""
-        elapsed = time.time() - self.start_time
+        time.time() - self.start_time
 
         if self.total_tokens:
             percent = (
@@ -263,7 +264,7 @@ class SubStageProgress:
         self.stage_name = stage_name
         self.current = 0
         self.start_time = time.time()
-        self.substage_start_time = None
+        self.substage_start_time: Optional[float] = None
         self.current_substage_name = ""
         self.use_ema = use_ema
         self.previous_eta: Optional[float] = None

@@ -1,0 +1,45 @@
+[2026-02-22 13:20:08,905] [INFO] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/code_project/output/logs/pipeline.log
+[2026-02-22 13:20:08,905] [INFO] ✓ Stage 1 completed successfully (0.0s)
+[2026-02-22 13:20:08,905] [INFO] 
+[2026-02-22 13:20:08,905] [INFO] [2/8] Environment Setup (25% complete)
+[2026-02-22 13:20:08,905] [INFO]   Elapsed: 0s | ETA: 0s
+[2026-02-22 13:20:08,905] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-02-22 13:20:08,905] [INFO] Running environment setup...
+[2026-02-22 13:20:10,541] [INFO] ✓ Stage 2 completed successfully (1.6s)
+[2026-02-22 13:20:10,542] [INFO] Skipping stage: Infrastructure Tests
+[2026-02-22 13:20:10,542] [INFO] 
+[2026-02-22 13:20:10,542] [INFO] [3/8] Project Tests (37% complete)
+[2026-02-22 13:20:10,542] [INFO]   Elapsed: 1s | ETA: 2s
+[2026-02-22 13:20:10,542] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-02-22 13:20:10,542] [INFO] Running project tests...
+[2026-02-22 13:20:22,429] [INFO] ✓ Stage 3 completed successfully (11.9s)
+[2026-02-22 13:20:22,430] [INFO] 
+[2026-02-22 13:20:22,430] [INFO] [4/8] Project Analysis (50% complete)
+[2026-02-22 13:20:22,430] [INFO]   Elapsed: 13s | ETA: 13s
+[2026-02-22 13:20:22,430] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-02-22 13:20:22,431] [INFO] Running project analysis...
+[2026-02-22 13:20:27,987] [INFO] ✓ Stage 4 completed successfully (5.6s)
+[2026-02-22 13:20:27,988] [INFO] 
+[2026-02-22 13:20:27,988] [INFO] [5/8] PDF Rendering (62% complete)
+[2026-02-22 13:20:27,988] [INFO]   Elapsed: 19s | ETA: 11s
+[2026-02-22 13:20:27,988] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-02-22 13:20:27,988] [INFO] Running PDF rendering...
+[2026-02-22 13:21:02,111] [INFO] ✓ Stage 5 completed successfully (34.1s)
+[2026-02-22 13:21:02,112] [INFO] 
+[2026-02-22 13:21:02,112] [INFO] [6/8] Output Validation (75% complete)
+[2026-02-22 13:21:02,112] [INFO]   Elapsed: 53s | ETA: 17s
+[2026-02-22 13:21:02,112] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-02-22 13:21:02,113] [INFO] Running output validation...
+[2026-02-22 13:21:02,646] [INFO] ✓ Stage 6 completed successfully (0.5s)
+[2026-02-22 13:21:02,646] [INFO] 
+[2026-02-22 13:21:02,646] [INFO] [7/8] Copy Outputs (87% complete)
+[2026-02-22 13:21:02,646] [INFO]   Elapsed: 53s | ETA: 7s
+[2026-02-22 13:21:02,646] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-02-22 13:21:02,647] [INFO] Running output copying...
+[2026-02-22 13:21:03,150] [INFO] ✓ Stage 7 completed successfully (0.5s)
+[2026-02-22 13:21:03,461] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (JSON) saved: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/pipeline_report.json
+[2026-02-22 13:21:03,462] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (Markdown) saved: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/pipeline_report.md
+[2026-02-22 13:21:03,462] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (HTML) saved: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/pipeline_report.html
+[2026-02-22 13:21:03,462] [INFO] [infrastructure.reporting.pipeline_reporter] For project code_project, proj_result type: <class 'list'>, len: 7
+[2026-02-22 13:21:03,462] [INFO] [infrastructure.reporting.pipeline_reporter] Multi-project summary saved: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.json
+[2026-02-22 13:21:03,463] [INFO] [infrastructure.reporting.pipeline_reporter] Multi-project summary saved: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.md

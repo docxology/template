@@ -6,7 +6,6 @@ error formatting and duration formatting.
 
 from pathlib import Path
 
-import pytest
 
 from infrastructure.core.exceptions import TemplateError
 from infrastructure.core.logging_helpers import (format_duration,

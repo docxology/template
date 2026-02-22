@@ -5,9 +5,7 @@ Tests manuscript file discovery and figure verification functionality.
 
 from __future__ import annotations
 
-from pathlib import Path
 
-import pytest
 
 from infrastructure.rendering.manuscript_discovery import (
     discover_manuscript_files, verify_figures_exist)

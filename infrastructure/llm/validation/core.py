@@ -16,15 +16,9 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from infrastructure.core.exceptions import ValidationError
 from infrastructure.core.logging_utils import get_logger
-from infrastructure.llm.validation.format import (
-    check_format_compliance, detect_conversational_phrases,
-    has_on_topic_signals, is_off_topic)
 # Import from split modules
 from infrastructure.llm.validation.repetition import (deduplicate_sections,
                                                       detect_repetition)
-from infrastructure.llm.validation.structure import (
-    extract_structured_sections, validate_response_structure,
-    validate_section_completeness)
 
 logger = get_logger(__name__)
 

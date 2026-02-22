@@ -48,7 +48,7 @@ def extract_metadata_command(args: argparse.Namespace) -> None:
 
     metadata = extract_publication_metadata(md_files)
 
-    print(f"\nMetadata:")
+    print("\nMetadata:")
     print(f"Title: {metadata.title}")
     print(f"Authors: {', '.join(metadata.authors)}")
     print(

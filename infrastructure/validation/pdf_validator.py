@@ -112,8 +112,6 @@ def extract_text_from_pdf(pdf_path: Path) -> str:
 
 def _extract_with_pypdf(pdf_path: Path) -> str:
     """Extract text using pypdf library."""
-    import contextlib
-    import io
 
     from pypdf import PdfReader
 

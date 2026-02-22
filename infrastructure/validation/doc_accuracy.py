@@ -127,7 +127,7 @@ def check_links(
             for match in link_pattern.finditer(content):
                 # Skip if link is inside a code block
                 link_start = match.start()
-                link_end = match.end()
+                match.end()
                 in_code_block = any(
                     start <= link_start < end for start, end in code_block_ranges
                 )

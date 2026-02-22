@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import os
 import sys
-from typing import Tuple
 
 from infrastructure.core.logging_utils import get_logger
 

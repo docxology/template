@@ -3,7 +3,6 @@ from __future__ import annotations
 import os
 from textwrap import dedent
 
-import pytest
 
 from infrastructure.documentation.glossary_gen import \
     _first_sentence  # type: ignore
@@ -165,23 +164,18 @@ def test_package_init_normalization(tmp_path):
     assert any(e.module == "p" for e in entries)
 
 
-def test_build_api_index_skips_unreadable_file(tmp_path, monkeypatch):
-    # Create a file but monkeypatch open to raise for that path
+def test_build_api_index_skips_unreadable_file(tmp_path):
+    """Test that build_api_index gracefully skips files that cannot be read."""
     src_dir = tmp_path / "src"
     bad_path = src_dir / "cantread.py"
     write(bad_path.as_posix(), "def x():\n    return 1\n")
 
-    real_open = open
-
-    def fake_open(path, *args, **kwargs):
-        if os.path.abspath(path) == os.path.abspath(bad_path.as_posix()):
-            raise OSError("permission denied")
-        return real_open(path, *args, **kwargs)
-
-    import builtins
-
-    monkeypatch.setattr(builtins, "open", fake_open)
-
-    entries = build_api_index(src_dir.as_posix())
-    # Should not raise, and simply skip the unreadable file
-    assert isinstance(entries, list)
+    # Make the file truly unreadable at the OS level
+    os.chmod(bad_path, 0o000)
+    try:
+        entries = build_api_index(src_dir.as_posix())
+        # Should not raise, and simply skip the unreadable file
+        assert isinstance(entries, list)
+    finally:
+        # Restore permissions so tmp_path cleanup can delete it
+        os.chmod(bad_path, 0o644)

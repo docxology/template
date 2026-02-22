@@ -3,9 +3,7 @@
 Tests link checking functionality comprehensively.
 """
 
-from pathlib import Path
 
-import pytest
 
 from infrastructure.validation import check_links
 from infrastructure.validation.check_links import (check_file_reference,

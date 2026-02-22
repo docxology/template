@@ -139,7 +139,7 @@ Auto-generated API reference from `src/` code. Updated automatically during buil
 
 **File**: `manuscript/98_symbols_glossary.md`
 
-**Generation**: `python3 -m infrastructure.documentation.generate_glossary_cli` (or integrated into build pipeline Stage 03)
+**Generation**: `uv run python -m infrastructure.documentation.generate_glossary_cli` (or integrated into build pipeline Stage 03)
 
 ### Guard Clause
 
@@ -210,7 +210,7 @@ Research document composed of numbered sections in `manuscript/` directory. Conv
 
 Automated checking of markdown files for broken references, missing images, invalid links, and syntax errors.
 
-**Command**: `python3 -m infrastructure.validation.cli markdown project/manuscript/`
+**Command**: `uv run python -m infrastructure.validation.cli markdown project/manuscript/`
 
 **See**: [markdown-template-guide.md](../usage/markdown-template-guide.md)
 
@@ -270,7 +270,7 @@ Process of converting markdown sources to professional PDF documents using Pando
 
 Automated checking of generated PDFs for rendering issues, unresolved references, and structural problems.
 
-**Command**: `python3 scripts/04_validate_output.py` or `python3 -m infrastructure.validation.cli pdf <path>`
+**Command**: `uv run python scripts/04_validate_output.py` or `uv run python -m infrastructure.validation.cli pdf <path>`
 
 **Checks**: Unresolved references (??), missing citations, warnings, errors
 
@@ -318,7 +318,7 @@ LaTeX-based cross-referencing that automatically numbers and links sections, equ
 
 Another name for [Build Pipeline](#build-pipeline). The sequence from tests to final PDF.
 
-**Script**: `python3 scripts/execute_pipeline.py --core-only`
+**Script**: `uv run python scripts/execute_pipeline.py --core-only`
 
 ### Reproducibility
 

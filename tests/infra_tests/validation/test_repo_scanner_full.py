@@ -3,9 +3,7 @@
 Tests repository scanning functionality comprehensively.
 """
 
-from pathlib import Path
 
-import pytest
 
 from infrastructure.validation import repo_scanner
 from infrastructure.validation.repo_scanner import (AccuracyIssue,
@@ -533,11 +531,10 @@ class TestMainFunction:
         (tmp_path / "README.md").write_text("# Test")
 
         # Monkeypatch the repo root detection
-        original_file = repo_scanner.__file__
 
         # Create a scanner with tmp_path as root
         scanner = RepositoryScanner(tmp_path)
-        results = scanner.scan_all()
+        scanner.scan_all()
         report = scanner.generate_report()
 
         # Write report to tmp_path docs

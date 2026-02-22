@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Dict, List
 
 from infrastructure.core.logging_utils import get_logger, log_operation
+from infrastructure.core.errors import PROJECT_EXCEPTION, PROJECT_FAILED
 from infrastructure.core.pipeline import (PipelineConfig, PipelineExecutor,
                                           PipelineStageResult)
 from infrastructure.project.discovery import ProjectInfo
@@ -236,12 +237,12 @@ class MultiProjectOrchestrator:
                         )
                     else:
                         failed_projects += 1
-                        logger.error(f"❌ Project '{project_name}' failed")
+                        logger.error(PROJECT_FAILED.format(project_name=project_name))
                         # Continue with other projects even if one fails
 
             except Exception as e:
                 failed_projects += 1
-                logger.error(f"❌ Project '{project_name}' failed with exception: {e}")
+                logger.error(PROJECT_EXCEPTION.format(project_name=project_name, error=e))
                 project_results[project_name] = []
 
         # Generate executive report if enabled and we have multiple projects

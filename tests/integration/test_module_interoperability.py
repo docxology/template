@@ -5,15 +5,12 @@ a complete research workflow. Following the "no mocks" policy, all tests use
 real implementations or skip when services are unavailable.
 """
 
-from pathlib import Path
 
 import pytest
 
 from infrastructure import publishing
 from infrastructure.core.health_check import SystemHealthChecker
-from infrastructure.core.performance_monitor import benchmark_function
 from infrastructure.llm import LLMClient
-from infrastructure.rendering import RenderManager
 
 
 class TestResearchWorkflow:

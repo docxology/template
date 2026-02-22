@@ -152,16 +152,16 @@ Conduct a assessment and review of all methods, tests, documentation, sections, 
 ### 1. Automated Analysis
 ```bash
 # Test coverage and success
-python3 scripts/01_run_tests.py --project project
+uv run python scripts/01_run_tests.py --project project
 
 # Manuscript validation
-python3 -m infrastructure.validation.cli markdown projects/{project_name}/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/{project_name}/manuscript/
 
 # Output integrity
-python3 -m infrastructure.validation.cli integrity projects/{project_name}/output/
+uv run python -m infrastructure.validation.cli integrity projects/{project_name}/output/
 
 # Cross-reference checking
-python3 -m infrastructure.validation.cli refs projects/{project_name}/manuscript/
+uv run python -m infrastructure.validation.cli refs projects/{project_name}/manuscript/
 ```
 
 ### 2. Manual Code Review

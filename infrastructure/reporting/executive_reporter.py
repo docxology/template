@@ -257,7 +257,7 @@ def collect_test_metrics(reports_dir: Path) -> TestMetrics:
         with open(test_report_path) as f:
             report = json.load(f)
 
-        logger.debug(f"Successfully loaded test report JSON")
+        logger.debug("Successfully loaded test report JSON")
 
         # Extract project test metrics
         project_tests = report.get("project", {})
@@ -281,7 +281,7 @@ def collect_test_metrics(reports_dir: Path) -> TestMetrics:
 
     except Exception as e:
         logger.warning(f"Error loading test report: {e}")
-        logger.debug(f"Exception details", exc_info=True)
+        logger.debug("Exception details", exc_info=True)
 
     return metrics
 
@@ -1159,7 +1159,7 @@ def _generate_markdown_report(summary: ExecutiveSummary) -> str:
         lines.extend(
             [
                 f"- **Test Data**: Unavailable for all {total_projects} projects",
-                f"- **Note**: Run test stage first to generate test metrics",
+                "- **Note**: Run test stage first to generate test metrics",
                 "",
             ]
         )

@@ -104,7 +104,7 @@ log_info "This appears in both terminal and log file"
 
 ```bash
 # Standard error handling with troubleshooting
-if ! python3 scripts/03_render_pdf.py; then
+if ! uv run python scripts/03_render_pdf.py; then
     log_pipeline_error "PDF Rendering" "PDF generation failed" $? \
         "Check LaTeX installation" \
         "Verify manuscript files exist" \

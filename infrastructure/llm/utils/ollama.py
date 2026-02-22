@@ -27,7 +27,6 @@ import requests
 from requests.exceptions import ConnectionError as RequestsConnectionError
 from requests.exceptions import RequestException, Timeout
 
-from infrastructure.core.exceptions import LLMConnectionError
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
@@ -188,7 +187,7 @@ def get_available_models(
 
             return models
 
-        except Timeout as e:
+        except Timeout:
             last_error = f"Timeout after {timeout}s"
             if attempt < retries:
                 wait_time = (attempt + 1) * 0.5
@@ -496,7 +495,7 @@ def preload_model(
                     f"Preload returned status {response.status_code}: {last_error}"
                 )
 
-        except Timeout as e:
+        except Timeout:
             last_error = f"Timeout after {timeout}s (model may still be loading)"
             if attempt < retries:
                 wait_time = (attempt + 1) * 2.0

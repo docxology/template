@@ -5,10 +5,7 @@ YAML config loading, and credential retrieval from multiple sources.
 """
 
 import os
-import tempfile
-from pathlib import Path
 
-import pytest
 import yaml
 
 from infrastructure.core.credentials import CredentialManager

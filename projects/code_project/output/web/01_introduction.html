@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>01_introduction</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="introduction">Introduction</h1>
+<p>This <code>code_project</code> serves as the foundational exemplar
+for the <a
+href="https://github.com/docxology/template">docxology/template</a>
+ecosystem, demonstrating a fully-tested numerical optimization
+implementation securely bracketed by rigorous infrastructure, hermetic
+testing, and extensive documentation architectures. The words you are
+reading—and the mathematical figures below them—have been programmably
+generated through an unbreakable custody chain starting from algorithm
+implementation through strict CI/CD validation to multi-format
+<code>.pdf</code> compilation.</p>
+<h2 id="template-architecture-context">Template Architecture
+Context</h2>
+<p>Scientific engineering requires mathematical accuracy combined with
+software reliability. This project unifies theoretical optimization with
+the repository’s three foundational pillars:</p>
+<ol type="1">
+<li><strong><code>infrastructure/</code> Layer (Root
+Directory)</strong>: A modular stack of nine subpackages
+(<code>core</code>, <code>validation</code>, <code>scientific</code>,
+<code>rendering</code>, <code>reporting</code>,
+<code>documentation</code>, <code>llm</code>, <code>publishing</code>,
+<code>project</code>) providing the computational scaffolding.</li>
+<li><strong><code>tests/</code> Framework
+(<code>projects/code_project/tests/</code>)</strong>: An uncompromising
+validation layer maintaining a zero-mock testing policy. This is
+enforced automatically via <a
+href="https://github.com/docxology/template/blob/main/.github/workflows/ci.yml"><code>.github/workflows/ci.yml</code></a>
+mapping to <code>pyproject.toml</code> directives.</li>
+<li><strong><code>docs/</code> Knowledge Base
+(<code>projects/code_project/docs/</code>)</strong>: A structured
+repository of architectural guidelines, operational patterns, and the
+Rigorous Agentic Scientific Protocol (RASP) that governs the AI-assisted
+agents writing these very texts.</li>
+</ol>
+<p>This implementation of gradient descent algorithms for solving
+optimization problems is used as the vehicle to demonstrate these
+pillars. The theoretical problem is mapped programmatically inside <a
+href="https://github.com/docxology/template/blob/main/projects/code_project/src/optimizer.py"><code>projects/code_project/src/optimizer.py</code></a>:</p>
+<p><span class="math display">\[\begin{equation}
+\label{eq:optimization_problem}
+\min_{x \in \mathbb{R}^n} f(x)
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(f: \mathbb{R}^n \rightarrow
+\mathbb{R}\)</span> is a continuously differentiable objective
+function.</p>
+<h2 id="infrastructure-integration">Infrastructure Integration</h2>
+<p>Rather than existing as isolated scripts, this project extensively
+leverages the <code>infrastructure</code> layer:</p>
+<ul>
+<li><strong>Scientific Utilities</strong>: Utilizing
+<code>infrastructure.scientific.stability</code> and
+<code>infrastructure.scientific.benchmarking</code> to guarantee
+numerical boundaries and performance scaling.</li>
+<li><strong>Hermetic Validation</strong>: Deploying
+<code>infrastructure.validation</code> components
+(<code>markdown_validator</code>, <code>output_validator</code>) to
+ensure all generated artifacts are cryptographically sound.</li>
+<li><strong>Reporting &amp; Rendering</strong>: Employing
+<code>infrastructure.rendering.pdf_renderer</code> and
+<code>infrastructure.reporting.executive_reporter</code> to
+automatically transform code outputs into this finalized
+manuscript.</li>
+</ul>
+<h2 id="algorithm-overview">Algorithm Overview</h2>
+<p>The reference gradient descent algorithm iteratively updates the
+solution using:</p>
+<p><span class="math display">\[\begin{equation}
+\label{eq:gradient_descent_update}
+x_{k+1} = x_k - \alpha \nabla f(x_k)
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\alpha &gt; 0\)</span> is the step
+size (learning rate) and <span class="math inline">\(\nabla
+f(x_k)\)</span> is the gradient of the objective function at iteration
+<span class="math inline">\(k\)</span>.</p>
+<h2 id="exemplar-implementation-goals">Exemplar Implementation
+Goals</h2>
+<p>As the representative project for the repository, this implementation
+explicitly demonstrates:</p>
+<ol type="1">
+<li><strong>Infrastructure-Coupled Code</strong>: Scientific
+implementations that delegate logging, file ops, and reporting to the
+<code>infrastructure</code> core.</li>
+<li><strong>Zero-Mock Verification</strong>: A strict 34-test validation
+suite proving numerical accuracy without artificial test
+boundaries.</li>
+<li><strong>Automated Research Pipelines</strong>: High-precision
+analyses that generate publication-quality, accessible visualizations
+automatically.</li>
+<li><strong>Agentic Documentation standards</strong>: Native adherence
+to the RASP methodology and <code>AGENTS.md</code> guidelines, ensuring
+the logic remains verifiable by both human and artificial
+intelligence.</li>
+</ol>
+</body>
+</html>

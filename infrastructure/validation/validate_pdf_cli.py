@@ -28,10 +28,10 @@ try:
     from infrastructure.validation.pdf_validator import (
         PDFValidationError, validate_pdf_rendering)
 except ImportError as e:
-    logger.error(f"Failed to import from infrastructure/validation/pdf_validator.py")
+    logger.error("Failed to import from infrastructure/validation/pdf_validator.py")
     logger.error(f"   {e}")
     logger.error(
-        f"   Ensure infrastructure/validation/pdf_validator.py exists and is properly formatted"
+        "   Ensure infrastructure/validation/pdf_validator.py exists and is properly formatted"
     )
     sys.exit(1)
 

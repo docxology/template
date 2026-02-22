@@ -20,7 +20,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import Tuple
 
 # Add root to path for infrastructure imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -29,7 +29,7 @@ from infrastructure.core.logging_utils import (
     get_logger, log_success, log_header, log_substep
 )
 from infrastructure.core.logging_progress import (
-    log_with_spinner, StreamingProgress
+    log_with_spinner
 )
 from infrastructure.core.config_loader import get_testing_config
 from infrastructure.core.file_operations import clean_coverage_files
@@ -39,250 +39,16 @@ from infrastructure.reporting.test_reporter import (
     save_test_report as save_test_report_to_files,
 )
 from infrastructure.core.environment import get_python_command, check_uv_available
+from infrastructure.reporting.coverage_parser import (
+    check_cov_datafile_support,
+    extract_failed_tests,
+    check_test_failures,
+    extract_coverage_percentage,
+)
+
 
 # Set up logger for this module
 logger = get_logger(__name__)
-
-
-def _check_cov_datafile_support() -> bool:
-    """Check if pytest-cov supports the --cov-datafile flag.
-
-    Returns:
-        True if --cov-datafile is supported, False otherwise
-    """
-    try:
-        cmd = get_python_command() + ["-m", "pytest", "--help"]
-        result = subprocess.run(
-            cmd,
-            capture_output=True, text=True, timeout=10
-        )
-        return "--cov-datafile" in result.stdout
-    except (subprocess.TimeoutExpired, subprocess.CalledProcessError, FileNotFoundError):
-        # If we can't check, assume it's not supported to be safe
-        return False
-
-
-def extract_failed_tests(stdout: str, stderr: str) -> list[dict]:
-    """Extract detailed information about failed tests from pytest output.
-
-    Handles multiple pytest output formats for comprehensive failure detection.
-
-    Args:
-        stdout: Standard output from pytest
-        stderr: Standard error from pytest
-
-    Returns:
-        List of dictionaries with failure details:
-        [
-            {
-                'test': 'test_file.py::TestClass::test_method',
-                'error_type': 'AssertionError',
-                'error_message': 'Expected 1, got 2',
-                'traceback': ['line1', 'line2', ...]
-            },
-            ...
-        ]
-    """
-    failed_tests = []
-    combined_output = stdout + "\n" + stderr
-
-    # Method 1: Extract from FAILURES section (--tb=line format)
-    # Pattern: /path/file.py:line: ErrorType: message
-    failures_section = False
-    current_test = None
-
-    for line in combined_output.split('\n'):
-        line = line.strip()
-
-        if 'FAILURES' in line and '===' in line:
-            failures_section = True
-            continue
-        elif line.startswith('=') and 'durations' in line.lower():
-            failures_section = False
-            break
-
-        if failures_section:
-            # Check if this is a test header line (function name)
-            if line.startswith('__') and '__' in line:
-                # Extract test function name: __ TestClass.test_method __
-                test_func_match = re.search(r'__\s+([^_\s]+)\s+__', line)
-                if test_func_match:
-                    current_test = test_func_match.group(1)
-
-            # Check if this is an error line: /path/file.py:line: ErrorType: message
-            elif line.startswith('/') and '.py:' in line and ':' in line:
-                parts = line.split(':', 2)
-                if len(parts) >= 3:
-                    error_part = parts[2].strip()
-                    if ':' in error_part:
-                        error_split = error_part.split(':', 1)
-                        error_type = error_split[0].strip()
-                        error_message = error_split[1].strip()
-
-                        # Try to extract test name from the path if we don't have current_test
-                        test_name = current_test
-                        if not test_name:
-                            # Extract from path: /path/to/test_file.py -> test_file.py
-                            path_part = parts[0].strip()
-                            if '/' in path_part:
-                                test_name = path_part.split('/')[-1]
-                            else:
-                                test_name = path_part
-
-                        failed_tests.append({
-                            'test': test_name,
-                            'error_type': error_type,
-                            'error_message': error_message,
-                            'traceback': []
-                        })
-
-    # Method 2: Extract from verbose output (--verbose format)
-    # Pattern: test_file.py::TestClass::test_method FAILED
-    if not failed_tests:
-        verbose_lines = [l for l in combined_output.split('\n')
-                        if ' FAILED' in l and '::' in l and not l.strip().startswith('=')]
-        for line in verbose_lines:
-            # Extract test name from pattern: test_file.py::TestClass::test_method FAILED
-            test_match = re.search(r'([^\s]+)\s+FAILED', line.strip())
-            if test_match:
-                test_name = test_match.group(1)
-                failed_tests.append({
-                    'test': test_name,
-                    'error_type': 'Unknown',
-                    'error_message': 'Failed (use --tb=short for details)'
-                })
-
-    # Method 3: Extract from short FAILED lines
-    # Pattern: FAILED test_file.py::test_method - ErrorType: message
-    if not failed_tests:
-        short_failed_lines = [l for l in combined_output.split('\n')
-                             if l.strip().startswith('FAILED ') and '::' in l]
-        for line in short_failed_lines:
-            # Extract test name and error details
-            test_match = re.search(r'FAILED\s+([^\s]+)', line)
-            if test_match:
-                test_name = test_match.group(1)
-
-                # Try to extract error details from the line
-                error_type = 'Unknown'
-                error_message = 'Run with -v for details'
-
-                # Look for error patterns in the same line
-                if ' - ' in line:
-                    error_part = line.split(' - ', 1)[1]
-                    if ':' in error_part:
-                        error_split = error_part.split(':', 1)
-                        error_type = error_split[0].strip()
-                        error_message = error_split[1].strip()
-
-                failed_tests.append({
-                    'test': test_name,
-                    'error_type': error_type,
-                    'error_message': error_message
-                })
-
-    # Method 4: Extract timeout errors specifically
-    if not failed_tests:
-        timeout_lines = [l for l in combined_output.split('\n')
-                        if 'timeout' in l.lower() or 'pytest_timeout' in l.lower()]
-        for line in timeout_lines:
-            # Look for test names near timeout errors
-            test_lines = []
-            lines = combined_output.split('\n')
-            for i, l in enumerate(lines):
-                if 'timeout' in l.lower():
-                    # Look a few lines before for test name
-                    for j in range(max(0, i-3), i):
-                        if '::' in lines[j] and ('PASSED' in lines[j] or 'FAILED' in lines[j]):
-                            test_match = re.search(r'([^\s]+)\s+(?:PASSED|FAILED)', lines[j])
-                            if test_match:
-                                test_lines.append(test_match.group(1))
-
-            for test_name in test_lines:
-                failed_tests.append({
-                    'test': test_name,
-                    'error_type': 'TimeoutError',
-                    'error_message': 'Test timed out (increase timeout or optimize test)'
-                })
-
-    # Method 5: Ultimate fallback - extract from any FAILED lines
-    if not failed_tests:
-        any_failed_lines = [l for l in combined_output.split('\n')
-                           if l.strip().startswith('FAILED') and '::' in l]
-        for line in any_failed_lines:
-            test_match = re.search(r'FAILED\s+([^\s]+)', line)
-            if test_match:
-                failed_tests.append({
-                    'test': test_match.group(1),
-                    'error_type': 'Unknown',
-                    'error_message': 'Test failed (use --tb=short -v for details)'
-                })
-
-    return failed_tests
-
-
-def extract_timeout_errors(stdout: str, stderr: str) -> list[dict]:
-    """Extract timeout errors from pytest output.
-
-    Args:
-        stdout: Standard output from pytest
-        stderr: Standard error from pytest
-
-    Returns:
-        List of dictionaries with timeout error details:
-        [
-            {
-                'test': 'test_file.py::TestClass::test_method',
-                'timeout_duration': '10.0s',
-                'suggestion': 'Increase timeout or optimize test'
-            },
-            ...
-        ]
-    """
-    timeout_errors = []
-    combined_output = stdout + "\n" + stderr
-
-    # Look for timeout-related error patterns
-    timeout_patterns = [
-        r'timeout',
-        r'pytest_timeout',
-        r'TimeoutError',
-        r'test.*timed out',
-        r'exceeded.*timeout'
-    ]
-
-    lines = combined_output.split('\n')
-    for i, line in enumerate(lines):
-        line_lower = line.lower()
-
-        # Check if this line contains timeout errors
-        has_timeout = any(pattern in line_lower for pattern in timeout_patterns)
-        if has_timeout:
-            # Try to find the associated test name
-            test_name = 'Unknown'
-
-            # Look a few lines before for test name patterns
-            for j in range(max(0, i-5), i):
-                prev_line = lines[j]
-                # Look for test execution lines
-                test_match = re.search(r'([^\s]+\.py(?:::[^\s]+)*)\s+(?:PASSED|FAILED|ERROR)', prev_line)
-                if test_match:
-                    test_name = test_match.group(1)
-                    break
-
-            # Extract timeout duration if mentioned
-            timeout_duration = 'Unknown'
-            duration_match = re.search(r'(\d+(?:\.\d+)?)\s*s(?:econds?)?', line_lower)
-            if duration_match:
-                timeout_duration = f"{duration_match.group(1)}s"
-
-            timeout_errors.append({
-                'test': test_name,
-                'timeout_duration': timeout_duration,
-                'suggestion': 'Increase timeout with --timeout=N or optimize slow test'
-            })
-
-    return timeout_errors
 
 
 def _run_pytest_stream(cmd: list[str], repo_root: Path, env: dict, quiet: bool) -> Tuple[int, str, str]:
@@ -416,70 +182,6 @@ def _run_pytest_stream(cmd: list[str], repo_root: Path, env: dict, quiet: bool) 
     process.wait()
     return process.returncode, "".join(stdout_buf), ""
 
-
-def check_test_failures(
-    failed_count: int,
-    test_suite: str,
-    repo_root: Path,
-    env_var: str = "MAX_TEST_FAILURES",
-    config_key: str = "max_test_failures"
-) -> tuple[bool, str]:
-    """Check if test failures are within tolerance.
-    
-    Priority order:
-    1. Environment variables (highest priority)
-    2. Config file (project/manuscript/config.yaml)
-    3. Default value (0 - strict by default)
-    
-    Args:
-        failed_count: Number of failed tests
-        test_suite: Name of test suite (for logging)
-        repo_root: Repository root path (for loading config file)
-        env_var: Environment variable name for threshold (e.g., MAX_INFRA_TEST_FAILURES)
-        config_key: Config file key name (e.g., "max_infra_test_failures")
-        
-    Returns:
-        Tuple of (should_halt, message)
-        
-    Examples:
-        >>> check_test_failures(0, "Infrastructure", Path("."), "MAX_INFRA_TEST_FAILURES")
-        (False, "Infrastructure: All tests passed")
-        
-        >>> os.environ["MAX_TEST_FAILURES"] = "5"
-        >>> check_test_failures(3, "Project", Path("."), "MAX_TEST_FAILURES")
-        (False, "Project: 3 failure(s) within tolerance (max: 5)")
-        
-        >>> check_test_failures(10, "Project", Path("."), "MAX_TEST_FAILURES")
-        (True, "Project: 10 failure(s) exceeds tolerance (max: 5)")
-    """
-    # Priority 1: Check environment variables (highest priority)
-    # Try specific env var first (e.g., MAX_INFRA_TEST_FAILURES), then fall back to MAX_TEST_FAILURES
-    env_value = os.environ.get(env_var) or os.environ.get("MAX_TEST_FAILURES")
-    
-    if env_value is not None:
-        try:
-            max_failures = int(env_value)
-        except (ValueError, TypeError):
-            max_failures = 0  # Invalid env var, use default
-    else:
-        # Priority 2: Check config file
-        testing_config = get_testing_config(repo_root)
-        config_value = testing_config.get(config_key) or testing_config.get("max_test_failures")
-        
-        if config_value is not None:
-            max_failures = int(config_value)
-        else:
-            # Priority 3: Default value (strict - no failures allowed)
-            max_failures = 0
-    
-    if failed_count == 0:
-        return False, f"{test_suite}: All tests passed"
-    elif failed_count <= max_failures:
-        return False, f"{test_suite}: {failed_count} failure(s) within tolerance (max: {max_failures})"
-    else:
-        return True, f"{test_suite}: {failed_count} failure(s) exceeds tolerance (max: {max_failures})"
-
-
 def run_infrastructure_tests(repo_root: Path, project_name: str = "project", quiet: bool = True, include_slow: bool = False, include_ollama_tests: bool = False) -> tuple[int, dict]:
     """Execute infrastructure test suite with coverage.
 
@@ -509,11 +211,11 @@ def run_infrastructure_tests(repo_root: Path, project_name: str = "project", qui
     # Log test discovery and configuration
     test_path = repo_root / "tests" / "infra_tests"
     logger.info(f"Test path: {test_path}")
-    logger.info(f"Coverage target: infrastructure (60% minimum)")
+    logger.info("Coverage target: infrastructure (60% minimum)")
     if not include_ollama_tests:
-        logger.info(f"Filters applied: -m 'not requires_ollama', exclude integration tests")
+        logger.info("Filters applied: -m 'not requires_ollama', exclude integration tests")
     else:
-        logger.info(f"Filters applied: include all tests (including Ollama-dependent), exclude integration tests")
+        logger.info("Filters applied: include all tests (including Ollama-dependent), exclude integration tests")
 
     # Build pytest command using get_python_command() which handles uv fallback
     # Conditionally skip requires_ollama tests based on include_ollama_tests parameter
@@ -537,7 +239,7 @@ def run_infrastructure_tests(repo_root: Path, project_name: str = "project", qui
     env = os.environ.copy()
 
     # Add cov-datafile flag if supported, otherwise use environment variable
-    cov_datafile_supported = _check_cov_datafile_support()
+    cov_datafile_supported = check_cov_datafile_support()
     if cov_datafile_supported:
         cmd.append("--cov-datafile=.coverage.infra")
     else:
@@ -659,71 +361,30 @@ def run_infrastructure_tests(repo_root: Path, project_name: str = "project", qui
         execution_time = time.time() - execution_start
         logger.info(f"✓ Infrastructure test execution completed in {execution_time:.1f}s")
 
-        # Check for coverage now that pytest has completed and written coverage.json
-        coverage_found = False
-        coverage_pct: Optional[float] = None
+        # Extract coverage using the external parser
 
-        # First try to read from coverage.json files (written after process completion)
+
         coverage_json_paths = [
-            repo_root / "coverage_infra.json",  # Infrastructure-specific coverage
-            repo_root / "coverage.json",  # Fallback to general coverage
-            repo_root / "htmlcov" / "coverage.json",  # HTML report location
+
+
+            repo_root / "coverage_infra.json",
+
+
+            repo_root / "coverage.json",
+
+
+            repo_root / "htmlcov" / "coverage.json",
+
+
         ]
 
-        logger.debug(f"Looking for coverage files in {repo_root}")
 
-        # Wait for coverage files to be written (retry up to 3 times with 0.5s delay)
-        max_retries = 3
-        for attempt in range(max_retries):
-            if attempt > 0:
-                time.sleep(0.5)  # Wait for file to be written
-
-            for coverage_json_path in coverage_json_paths:
-                logger.debug(f"Attempt {attempt+1}/{max_retries}: Checking coverage file: {coverage_json_path} (exists: {coverage_json_path.exists()})")
-                if coverage_json_path.exists():
-                    # Check file size to ensure it's not empty/incomplete
-                    file_size = coverage_json_path.stat().st_size
-                    logger.debug(f"Coverage file size: {file_size} bytes")
-                    if file_size < 100:  # Coverage JSON should be much larger
-                        logger.debug(f"Coverage file too small ({file_size} bytes), likely incomplete")
-                        continue
-
-                    try:
-                        import json
-                        with open(coverage_json_path, 'r') as f:
-                            coverage_data = json.load(f)
-                        overall_coverage = coverage_data.get('totals', {}).get('percent_covered', 0)
-                        logger.debug(f"Coverage data from {coverage_json_path}: totals={coverage_data.get('totals', {})}")
-                        if overall_coverage > 0:
-                            logger.info(f"✓ Found coverage: {overall_coverage:.1f}%")
-                            coverage_pct = overall_coverage
-                            coverage_found = True
-                            break
-                        else:
-                            logger.debug(f"Coverage file exists but overall_coverage is 0 or None: {overall_coverage}")
-                    except json.JSONDecodeError as e:
-                        logger.debug(f"JSON decode error for {coverage_json_path}: {e} (file may be incomplete)")
-                    except Exception as e:
-                        logger.debug(f"Could not read coverage from {coverage_json_path}: {e}")
-                if coverage_found:
-                    break
-            if coverage_found:
-                break
-
-        # Fallback to stdout parsing if JSON not found
-        if not coverage_found:
-            coverage_match = re.search(r'TOTAL\s+.*?\s+(\d+\.\d+)%', stdout_text)
-            if not coverage_match:
-                # Fallback to any percentage pattern
-                coverage_match = re.search(r'(\d+\.\d+)%', stdout_text)
-
-            if coverage_match:
-                coverage_pct = float(coverage_match.group(1))
-                logger.info(f"✓ Found coverage: {coverage_pct:.1f}%")
-                coverage_found = True
+        coverage_found, coverage_pct = extract_coverage_percentage(stdout_text, coverage_json_paths, is_infra=True)
 
         if not coverage_found:
-            logger.warning(f"✗ No coverage percentage found")
+
+
+            logger.warning("✗ No coverage percentage found")
             logger.info("Coverage extraction diagnostics:")
             logger.info("  • Checked files: coverage_infra.json, coverage.json")
             logger.info("  • Searched stdout for: 'TOTAL ... X%', 'X%' patterns")
@@ -748,7 +409,7 @@ def run_infrastructure_tests(repo_root: Path, project_name: str = "project", qui
                           '[100%]' in stdout_text or
                           exit_code == 0)
         if has_test_output:
-            logger.info(f"✓ Captured test execution output")
+            logger.info("✓ Captured test execution output")
         else:
             logger.warning(f"✗ No test execution output found in stdout (length: {len(stdout_text)})")
 
@@ -841,7 +502,7 @@ def run_project_tests(repo_root: Path, project_name: str = "project", quiet: boo
     test_path = project_root / "tests"
     logger.info(f"Test path: {test_path}")
     logger.info(f"Coverage target: projects/{project_name}/src ({project_threshold}% minimum)")
-    logger.info(f"Filters applied: exclude integration tests")
+    logger.info("Filters applied: exclude integration tests")
 
     # Build pytest command using get_python_command() which handles uv fallback
     # Run from repo root using the template's unified virtual environment
@@ -881,7 +542,7 @@ def run_project_tests(repo_root: Path, project_name: str = "project", quiet: boo
     env["PYTHONPATH"] = os.pathsep.join(pythonpath_parts)
 
     # Add cov-datafile flag if supported, otherwise use environment variable
-    cov_datafile_supported = _check_cov_datafile_support()
+    cov_datafile_supported = check_cov_datafile_support()
     if cov_datafile_supported:
         cmd.append("--cov-datafile=.coverage.project")
     else:
@@ -996,45 +657,30 @@ def run_project_tests(repo_root: Path, project_name: str = "project", quiet: boo
         execution_time = time.time() - execution_start
         logger.info(f"✓ Project test execution completed in {execution_time:.1f}s")
 
-        # Check for coverage now that pytest has completed and written coverage_project.json
-        coverage_found = False
-        coverage_pct: Optional[float] = None
+        # Extract coverage using the external parser
 
-        # Try project-specific coverage file first
+
         coverage_json_paths = [
-            repo_root / "coverage_project.json",  # Project-specific coverage
-            repo_root / "coverage.json",  # Fallback to general coverage
-            repo_root / "htmlcov" / "coverage.json",  # HTML report location
+
+
+            repo_root / "coverage_project.json",
+
+
+            repo_root / "coverage.json",
+
+
+            repo_root / "htmlcov" / "coverage.json",
+
+
         ]
 
-        for coverage_json_path in coverage_json_paths:
-            if coverage_json_path.exists():
-                try:
-                    import json
-                    with open(coverage_json_path, 'r') as f:
-                        coverage_data = json.load(f)
-                    overall_coverage = coverage_data.get('totals', {}).get('percent_covered', 0)
-                    if overall_coverage > 0:
-                        logger.info(f"✓ Found project coverage: {overall_coverage:.1f}%")
-                        coverage_pct = overall_coverage
-                        coverage_found = True
-                        break
-                except Exception as e:
-                    logger.debug(f"Could not read project coverage from {coverage_json_path}: {e}")
 
-        # Fallback to stdout parsing if JSON not found
-        if not coverage_found:
-            coverage_match = re.search(r'TOTAL\s+.*?\s+(\d+\.\d+)%', stdout_text)
-            if not coverage_match:
-                coverage_match = re.search(r'(\d+\.\d+)%', stdout_text)
-
-            if coverage_match:
-                coverage_pct = float(coverage_match.group(1))
-                logger.info(f"✓ Found project coverage: {coverage_pct:.1f}%")
-                coverage_found = True
+        coverage_found, coverage_pct = extract_coverage_percentage(stdout_text, coverage_json_paths)
 
         if not coverage_found:
-            logger.warning(f"✗ No project coverage percentage found")
+
+
+            logger.warning("✗ No project coverage percentage found")
             logger.info("Coverage extraction diagnostics:")
             logger.info("  • Checked files: coverage_project.json, coverage.json, htmlcov/coverage.json")
             logger.info("  • Searched stdout for: 'TOTAL ... X%', 'X%' patterns")
@@ -1055,7 +701,7 @@ def run_project_tests(repo_root: Path, project_name: str = "project", quiet: boo
             logger.info("  • Ensure tests import from project source correctly")
 
         # Phase 3: Result parsing and validation
-        logger.info(f"Phase 3: Parsing project test results and validating coverage...")
+        logger.info("Phase 3: Parsing project test results and validating coverage...")
         parse_start = time.time()
 
         # Parse test results from output
@@ -1112,9 +758,6 @@ def run_project_tests(repo_root: Path, project_name: str = "project", quiet: boo
         duration = time.time() - start_time
         logger.error(f"Failed to run project tests after {duration:.1f}s: {e}", exc_info=True)
         return 1, {}
-
-
-
 
 def report_results(
     infra_exit: int,
@@ -1228,7 +871,7 @@ def report_results(
         logger.info("")
         logger.info(f"⚠️  Collection Errors: {infra_results['collection_errors']}")
         logger.info(f"   Tests discovered: {infra_results.get('discovery_count', 0)}")
-        logger.info(f"   Tests executed: 0 (collection failed)")
+        logger.info("   Tests executed: 0 (collection failed)")
         logger.info("")
         logger.info("   Common causes:")
         logger.info("     - Missing test dependencies (pytest-httpserver, etc.)")
@@ -1244,13 +887,13 @@ def report_results(
     if not infra_was_run:
         # Infrastructure tests were skipped
         logger.info("Infrastructure Results:")
-        logger.info(f"  ⏭ Skipped (not run in this execution)")
-        logger.info(f"  📊 Coverage: N/A (tests not executed)")
+        logger.info("  ⏭ Skipped (not run in this execution)")
+        logger.info("  📊 Coverage: N/A (tests not executed)")
     elif infra_exit == 0:
         passed = infra_results.get('passed', 0)
         failed = infra_results.get('failed', 0)
         skipped = infra_results.get('skipped', 0)
-        total = infra_results.get('total', 0)
+        infra_results.get('total', 0)
         coverage = infra_results.get('coverage_percent', 0)
 
         logger.info("Infrastructure Results:")
@@ -1342,7 +985,7 @@ def report_results(
         passed = project_results.get('passed', 0)
         failed = project_results.get('failed', 0)
         skipped = project_results.get('skipped', 0)
-        total = project_results.get('total', 0)
+        project_results.get('total', 0)
         coverage = project_results.get('coverage_percent', 0)
 
         logger.info("Project Results:")

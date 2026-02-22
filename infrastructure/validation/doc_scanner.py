@@ -12,25 +12,24 @@ This script performs a systematic 7-phase documentation scan:
 """
 from __future__ import annotations
 
-import json
+import json  # noqa: F401
 import subprocess
 import sys
 from collections import defaultdict
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field  # noqa: F401
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Dict, List, Optional, Set, Tuple  # noqa: F401
 
-import yaml
+import yaml  # noqa: F401
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging_utils import get_logger, log_header, log_success
 from infrastructure.validation.doc_accuracy import run_accuracy_phase
 from infrastructure.validation.doc_completeness import run_completeness_phase
 from infrastructure.validation.doc_discovery import run_discovery_phase
-from infrastructure.validation.doc_models import (AccuracyIssue,
-                                                  CompletenessGap,
-                                                  DocumentationFile, LinkIssue,
-                                                  QualityIssue, ScanResults)
+from infrastructure.validation.doc_models import (  # noqa: F401
+    AccuracyIssue, CompletenessGap, DocumentationFile,
+    LinkIssue, QualityIssue, ScanResults)
 from infrastructure.validation.doc_quality import run_quality_phase
 
 logger = get_logger(__name__)
@@ -90,7 +89,6 @@ class DocumentationScanner:
 
     def phase1_discovery(self) -> Dict:
         """Phase 1: Discovery and Inventory."""
-        from infrastructure.validation.doc_discovery import find_markdown_files
 
         inventory = run_discovery_phase(self.repo_root)
 
@@ -292,12 +290,12 @@ class DocumentationScanner:
             "# Documentation Scan and Improvement Report",
             "",
             f"**Date**: {self.results.scan_date}",
-            f"**Scope**: Comprehensive 7-phase documentation scan across entire repository",
+            "**Scope**: Comprehensive 7-phase documentation scan across entire repository",
             f"**Files Scanned**: {self.results.total_files} markdown files",
             "",
             "## Executive Summary",
             "",
-            f"A comprehensive documentation scan was performed across the entire repository following the systematic 7-phase approach.",
+            "A comprehensive documentation scan was performed across the entire repository following the systematic 7-phase approach.",
             "",
             "### Key Statistics",
             "",
@@ -432,18 +430,16 @@ def main() -> int:
     report_path = repo_root / "docs" / "DOCUMENTATION_SCAN_REPORT.md"
     report_path.parent.mkdir(parents=True, exist_ok=True)
     report_path.write_text(report, encoding="utf-8")
-    print(f"\nReport saved to: {report_path}")
+    log_success(f"Report saved to: {report_path}", logger)
 
     # Print summary
-    print("\n" + "=" * 60)
-    print("SUMMARY")
-    print("=" * 60)
-    print(f"Total files scanned: {results.total_files}")
-    print(f"Link issues: {len(results.link_issues)}")
-    print(f"Accuracy issues: {len(results.accuracy_issues)}")
-    print(f"Completeness gaps: {len(results.completeness_gaps)}")
-    print(f"Quality issues: {len(results.quality_issues)}")
-    print(f"Improvements identified: {len(results.improvements_made)}")
+    log_header("SUMMARY", logger)
+    logger.info(f"Total files scanned: {results.total_files}")
+    logger.info(f"Link issues: {len(results.link_issues)}")
+    logger.info(f"Accuracy issues: {len(results.accuracy_issues)}")
+    logger.info(f"Completeness gaps: {len(results.completeness_gaps)}")
+    logger.info(f"Quality issues: {len(results.quality_issues)}")
+    logger.info(f"Improvements identified: {len(results.improvements_made)}")
 
     return (
         0 if len(results.link_issues) == 0 and len(results.accuracy_issues) == 0 else 1

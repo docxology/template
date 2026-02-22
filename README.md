@@ -516,7 +516,7 @@ graph TB
 graph TB
     subgraph Entry["🚀 Entry Points"]
         RUNSH[./run.sh\nInteractive menu\nFull pipeline control]
-        RUNALL[python3 scripts/execute_pipeline.py --core-only\nProgrammatic\nCore pipeline]
+        RUNALL[uv run python scripts/execute_pipeline.py --core-only\nProgrammatic\nCore pipeline]
         INDIVIDUAL[Individual Scripts\nscripts/00-05_*.py\nStage-specific execution]
     end
 
@@ -866,22 +866,22 @@ pip install -e .
 ./run.sh --pipeline
 
 # Alternative: Core 8-stage pipeline (stages 00-05, no LLM dependencies)
-python3 scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --core-only
 
 # Or run stages individually (using generic entry point orchestrators)
-python3 scripts/00_setup_environment.py      # Setup environment
-python3 scripts/01_run_tests.py              # Run tests (infrastructure + project)
-python3 scripts/02_run_analysis.py           # Execute projects/{name}/scripts/
-python3 scripts/03_render_pdf.py             # Render PDFs
-python3 scripts/04_validate_output.py        # Validate output
-python3 scripts/05_copy_outputs.py           # Copy final deliverables
+uv run python scripts/00_setup_environment.py      # Setup environment
+uv run python scripts/01_run_tests.py              # Run tests (infrastructure + project)
+uv run python scripts/02_run_analysis.py           # Execute projects/{name}/scripts/
+uv run python scripts/03_render_pdf.py             # Render PDFs
+uv run python scripts/04_validate_output.py        # Validate output
+uv run python scripts/05_copy_outputs.py           # Copy final deliverables
 ```
 
 **Pipeline Entry Points:**
 
 - **`./run.sh`**: Main entry point - Interactive menu or extended pipeline (10 stages displayed as [1/10] to [10/10]) with optional LLM review and translations
 - **`./run.sh --pipeline`**: 10 stages displayed as [1/10] to [10/10] - Extended pipeline with optional LLM review and translations
-- **`python3 scripts/execute_pipeline.py --core-only`**: 8 stages (00-05) - Core pipeline only, no LLM dependencies
+- **`uv run python scripts/execute_pipeline.py --core-only`**: 8 stages (00-05) - Core pipeline only, no LLM dependencies
 
 **See [How To Use Guide](docs/core/how-to-use.md) for setup instructions at all skill levels.**
 
@@ -958,7 +958,7 @@ export PROJECT_TITLE="Your Project Title"
 export DOI="10.5281/zenodo.12345678"
 
 # Generate with custom configuration
-python3 scripts/03_render_pdf.py
+uv run python scripts/03_render_pdf.py
 ```
 
 **Priority**: Environment variables override config file values.
@@ -1026,7 +1026,7 @@ The system enforces test coverage using TDD principles:
 
 ```bash
 # Run all tests with coverage (infrastructure + project)
-python3 scripts/01_run_tests.py
+uv run python scripts/01_run_tests.py
 
 # Or run manually with coverage reports
 pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
@@ -1143,7 +1143,7 @@ flowchart TD
     class STAGE8,STAGE9 optional
 ```
 
-### Entry Point 2: Core Pipeline (`python3 scripts/execute_pipeline.py --core-only`)
+### Entry Point 2: Core Pipeline (`uv run python scripts/execute_pipeline.py --core-only`)
 
 **8-stage core pipeline** (stages 00-05) without LLM dependencies:
 

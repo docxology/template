@@ -3,7 +3,6 @@
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-import pytest
 
 from infrastructure.publishing import api
 

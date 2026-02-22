@@ -15,7 +15,7 @@ except ImportError:
     DOTENV_AVAILABLE = False
 
     # No-op function if dotenv not available
-    def load_dotenv(*args, **kwargs):
+    def load_dotenv(*args: Any, **kwargs: Any) -> None:  # type: ignore[misc]
         """Load environment variables from a .env file (no-op fallback).
 
         This is a fallback implementation used when python-dotenv is not
@@ -66,7 +66,7 @@ class CredentialManager:
             config = yaml.safe_load(f)
 
         # Recursively substitute ${VAR} with environment variables
-        return self._substitute_env_vars(config)
+        return self._substitute_env_vars(config) or {}
 
     def _substitute_env_vars(self, obj: Any) -> Any:
         """Recursively substitute ${VAR} patterns with environment variables."""
@@ -111,7 +111,7 @@ class CredentialManager:
 
         return default
 
-    def get_zenodo_credentials(self, use_sandbox: bool = True) -> Dict[str, str]:
+    def get_zenodo_credentials(self, use_sandbox: bool = True) -> Dict[str, Any]:
         """Get Zenodo API credentials.
 
         Args:
@@ -133,7 +133,7 @@ class CredentialManager:
             ),
         }
 
-    def get_github_credentials(self) -> Dict[str, str]:
+    def get_github_credentials(self) -> Dict[str, Any]:
         """Get GitHub API credentials.
 
         Returns:
@@ -145,7 +145,7 @@ class CredentialManager:
             "api_url": "https://api.github.com",
         }
 
-    def get_arxiv_credentials(self) -> Dict[str, Optional[str]]:
+    def get_arxiv_credentials(self) -> Dict[str, Any]:
         """Get arXiv SWORD API credentials (optional).
 
         Returns:
@@ -170,4 +170,4 @@ class CredentialManager:
     def has_arxiv_credentials(self) -> bool:
         """Check if arXiv credentials are available."""
         creds = self.get_arxiv_credentials()
-        return creds.get("enabled", False)
+        return bool(creds.get("enabled", False))

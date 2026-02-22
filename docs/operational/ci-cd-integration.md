@@ -152,11 +152,11 @@ jobs:
       run: uv sync
     
     - name: Run build pipeline
-      run: python3 scripts/execute_pipeline.py --core-only
+      run: uv run python scripts/execute_pipeline.py --core-only
     
     - name: Validate PDFs
       run: |
-        python3 scripts/04_validate_output.py
+        uv run python scripts/04_validate_output.py
     
     - name: Upload PDF artifacts
       uses: actions/upload-artifact@v3
@@ -192,7 +192,7 @@ jobs:
     
     - name: Validate PDF quality
       run: |
-        python3 scripts/04_validate_output.py
+        uv run python scripts/04_validate_output.py
 ```
 
 ## Automated Testing
@@ -296,7 +296,7 @@ jobs:
         AUTHOR_ORCID: ${{ secrets.AUTHOR_ORCID }}
         PROJECT_TITLE: ${{ secrets.PROJECT_TITLE }}
       run: |
-        python3 scripts/execute_pipeline.py --core-only
+        uv run python scripts/execute_pipeline.py --core-only
     
     - name: Upload PDFs
       uses: actions/upload-artifact@v3
@@ -311,7 +311,7 @@ jobs:
 ```yaml
 - name: Validate PDFs
   run: |
-    python3 scripts/04_validate_output.py
+    uv run python scripts/04_validate_output.py
     
     # Check for errors
     if [ $? -ne 0 ]; then
@@ -351,7 +351,7 @@ jobs:
         uv sync
     
     - name: Generate PDFs
-      run: python3 scripts/execute_pipeline.py --core-only
+      run: uv run python scripts/execute_pipeline.py --core-only
     
     - name: Create release package
       run: |

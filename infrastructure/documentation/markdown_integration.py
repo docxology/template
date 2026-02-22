@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from .figure_manager import FigureManager
 from .image_manager import ImageManager
@@ -108,7 +108,7 @@ class MarkdownIntegration:
         if output_file is None:
             output_file = self.manuscript_dir / "00_table_of_figures.md"
 
-        content = self.figure_manager.generate_table_of_figures()
+        self.figure_manager.generate_table_of_figures()
 
         # Convert LaTeX to markdown format
         markdown_content = "# Table of Figures\n\n"
@@ -122,7 +122,7 @@ class MarkdownIntegration:
             if fig_meta.section:
                 markdown_content += f"**Section**: {fig_meta.section}\n\n"
             markdown_content += f"**File**: `{fig_meta.filename}`\n\n"
-            markdown_content += f"**LaTeX Block**:\n\n```latex\n"
+            markdown_content += "**LaTeX Block**:\n\n```latex\n"
             markdown_content += self.figure_manager.generate_latex_figure_block(
                 fig_meta.label
             )

@@ -7,7 +7,7 @@ output directory structure.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Dict, List
+from typing import Any, Dict
 
 from infrastructure.core.logging_utils import get_logger, log_success
 

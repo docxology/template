@@ -161,7 +161,7 @@ Glossary generation simplified:
 ```bash
 # Run glossary generation (writes directly to manuscript/98_symbols_glossary.md)
 # This is now integrated into the build pipeline (Stage 03) or can be run manually:
-# python3 -m infrastructure.documentation.generate_glossary_cli
+# uv run python -m infrastructure.documentation.generate_glossary_cli
 ```
 
 **Effect:** Generates glossary directly in `manuscript/98_symbols_glossary.md` - no intermediate files or copy steps needed.
@@ -209,7 +209,7 @@ Glossary generation simplified:
 **Current status:**
 
 ```markdown
-**Note:** This glossary is auto-generated from src/ by the infrastructure documentation module (integrated into build pipeline Stage 03 or run manually via `python3 -m infrastructure.documentation.generate_glossary_cli`)
+**Note:** This glossary is auto-generated from src/ by the infrastructure documentation module (integrated into build pipeline Stage 03 or run manually via `uv run python -m infrastructure.documentation.generate_glossary_cli`)
 and written directly to manuscript/98_symbols_glossary.md during the build process.
 ```
 
@@ -262,7 +262,7 @@ vim manuscript/07_limitations.md
 # Content here...
 
 # Build and verify
-python3 scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --core-only
 ```
 
 **Result:** Section appears between 06_conclusion.md and 08_acknowledgments.md.
@@ -282,7 +282,7 @@ vim manuscript/S03_supplemental_figures.md
 # See \ref{sec:supplemental_figures} for additional figures.
 
 # Build and verify
-python3 scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --core-only
 ```
 
 **Result:** Section appears after S02 and before glossary (98).

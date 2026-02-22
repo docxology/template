@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>00_abstract</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="abstract">Abstract</h1>
+<p>This paper presents a comprehensive analysis of gradient descent
+optimization algorithms, constructed not merely as a mathematical
+exercise, but as the representative computational exemplar of the <a
+href="https://github.com/docxology/template">docxology/template</a>
+repository. We implement and evaluate the classical gradient descent
+method with fixed step size for quadratic minimization problems,
+examining convergence behavior across learning rates from <span
+class="math inline">\(\alpha = 0.01\)</span> to <span
+class="math inline">\(\alpha = 0.20\)</span>. Crucially, the
+experimental framework is built entirely atop the template’s nine
+<code>infrastructure</code> subpackages to guarantee absolute
+reproducibility and cryptographic output integrity. The very PDF holding
+these words was deterministically generated via
+<code>infrastructure/rendering/pdf_renderer.py</code> relying on
+<code>code_project/scripts/optimization_analysis.py</code> data.</p>
+<p>The key contributions of this work are dual-natured.
+Methodologically, it demonstrates empirical validation of theoretical
+convergence rates on quadratic objective functions and automated
+complexity analysis. Architecturally, it establishes a rigorously
+enforced development standard: (1) a zero-mock testing policy validated
+by 34 passing tests with 100% coverage (as explicitly asserted in <a
+href="https://github.com/docxology/template/blob/main/projects/code_project/tests/test_optimizer.py"><code>projects/code_project/tests/test_optimizer.py</code></a>);
+(2) automated analysis pipelines generating publication-quality,
+accessible visualizations; and (3) deep integration patterns
+demonstrating how scientific logic strictly couples with the core
+infrastructure (e.g., executing
+<code>infrastructure.scientific.benchmarking</code> directly from
+<code>projects/code_project/scripts/optimization_analysis.py</code>).</p>
+<p>Results confirm that all tested step sizes converge to the analytical
+optimum <span class="math inline">\(x^* = 1.0\)</span> with objective
+value <span class="math inline">\(f(x^*) = -0.5\)</span>. The codebase
+validates the template’s modular <code>tests/</code> infrastructure and
+expansive <a
+href="https://github.com/docxology/template/tree/main/projects/code_project/docs"><code>projects/code_project/docs/</code></a>
+knowledge base, serving as the master exemplar for bridging theoretical
+algorithm development with production-grade, reproducible computational
+science.</p>
+<p><strong>Keywords:</strong> gradient descent, reproducible research,
+zero-mock testing, scientific infrastructure, pipeline orchestration</p>
+</body>
+</html>

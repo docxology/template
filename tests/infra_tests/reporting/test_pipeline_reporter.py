@@ -142,7 +142,7 @@ def test_generate_validation_report_and_markdown(tmp_path: Path) -> None:
     validation_results = {
         "checks": {"pdf_validation": True, "markdown_validation": False}
     }
-    saved = generate_validation_report(validation_results, tmp_path)
+    generate_validation_report(validation_results, tmp_path)
 
     assert (tmp_path / "validation_report.json").exists()
     assert (tmp_path / "validation_report.md").exists()

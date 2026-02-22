@@ -18,7 +18,7 @@ import sys
 import time
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, Callable, Iterator, Optional, TypeVar
+from typing import Any, Callable, Dict, Iterator, Optional, TypeVar
 
 # Import from split modules
 from infrastructure.core.logging_formatters import (JSONFormatter,
@@ -28,10 +28,6 @@ from infrastructure.core.logging_helpers import (format_duration,
 from infrastructure.core.logging_progress import (
     Spinner, StreamingProgress, calculate_eta, calculate_eta_ema,
     calculate_eta_with_confidence, log_progress_bar, log_progress_streaming)
-from infrastructure.core.logging_progress import \
-    log_resource_usage as _log_resource_usage
-from infrastructure.core.logging_progress import \
-    log_stage_with_eta as _log_stage_with_eta
 from infrastructure.core.logging_progress import log_with_spinner
 
 # Type variable for generic context manager
@@ -368,14 +364,13 @@ def setup_logger(
     # In test environment: don't add console handler, enable propagation
     # so pytest's caplog can capture logs from root logger
     # In normal environment: add console handler, disable propagation
-    if not is_test_env:
-        # Console handler (only in non-test environment)
-        console_handler = logging.StreamHandler(sys.stdout)
-        if USE_STRUCTURED_LOGGING:
-            console_handler.setFormatter(JSONFormatter())
-        else:
-            console_handler.setFormatter(TemplateFormatter())
-        logger.addHandler(console_handler)
+    # Always add Console handler so capsys can capture stdout
+    console_handler = logging.StreamHandler(sys.stdout)
+    if USE_STRUCTURED_LOGGING:
+        console_handler.setFormatter(JSONFormatter())
+    else:
+        console_handler.setFormatter(TemplateFormatter())
+    logger.addHandler(console_handler)
 
     # File handler (optional, works in both environments)
     if log_file:
@@ -387,7 +382,7 @@ def setup_logger(
         file_handler.setFormatter(file_formatter)
         logger.addHandler(file_handler)
 
-    # Set propagation based on environment
+    # Set propagation based on environment (caplog requires propagation)
     logger.propagate = is_test_env
 
     # In test environment, ensure root logger is configured to receive propagated logs
@@ -442,17 +437,10 @@ def get_logger(name: str) -> logging.Logger:
     if not logger.handlers:
         return setup_logger(name)
 
-    # If in test environment and logger was configured before test mode,
-    # force reconfiguration to enable propagation and remove console handlers
+    # If in test environment and logger hasn't been configured for propagation,
+    # force reconfiguration to enable propagation
     if is_test_env:
-        # Check if logger needs reconfiguration (has console handlers or propagate is False)
-        has_console_handler = any(
-            isinstance(h, logging.StreamHandler)
-            and (h.stream is sys.stdout or h.stream is sys.stderr)
-            for h in logger.handlers
-        )
-
-        if has_console_handler or not logger.propagate:
+        if not logger.propagate:
             # Force reconfiguration by clearing handlers and calling setup_logger
             logger.handlers.clear()
             return setup_logger(name)
@@ -678,7 +666,7 @@ def log_header(message: str, logger: Optional[logging.Logger] = None) -> None:
     if logger is None:
         logger = get_logger(__name__)
 
-    emoji = EMOJIS["rocket"] if USE_EMOJIS else ""
+    EMOJIS["rocket"] if USE_EMOJIS else ""
     separator = "=" * 50
 
     logger.info("")
@@ -802,7 +790,6 @@ __all__ = [
     "log_progress",
     "log_stage",
     "log_substep",
-    "log_file_generated",
     # Helpers
     "format_error_with_suggestions",
     "format_duration",
@@ -938,7 +925,7 @@ class LogAggregator:
 
     def __init__(self):
         """Initialize log aggregator."""
-        self.messages = {
+        self.messages: dict[str, list[dict[str, Any]]] = {
             "debug": [],
             "info": [],
             "warning": [],
@@ -1048,7 +1035,7 @@ def collect_log_statistics(log_file: Path) -> Dict[str, Any]:
     if not log_file.exists():
         return {"error": "Log file not found", "counts": {}, "total_lines": 0}
 
-    stats = {
+    stats: dict[str, Any] = {
         "counts": {"debug": 0, "info": 0, "warning": 0, "error": 0, "critical": 0},
         "total_lines": 0,
         "errors": [],

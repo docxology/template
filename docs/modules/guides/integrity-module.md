@@ -57,10 +57,10 @@ for ref_type, is_valid in integrity_status.items():
 
 ```bash
 # Automatic integrity validation
-python3 scripts/04_validate_output.py
+uv run python scripts/04_validate_output.py
 
 # Manual integrity check
-python3 -m infrastructure.validation.integrity.cli output/
+uv run python -m infrastructure.validation.integrity.cli output/
 ```
 
 ---

@@ -86,10 +86,10 @@ Orchestration:
 
 ```bash
 # Single project (core pipeline, no LLM)
-python3 scripts/execute_pipeline.py --project {project_name} --core-only
+uv run python scripts/execute_pipeline.py --project {project_name} --core-only
 
 # All projects (core pipeline, no LLM)
-python3 scripts/execute_multi_project.py --no-llm
+uv run python scripts/execute_multi_project.py --no-llm
 ```
 
 **Notes:**
@@ -182,14 +182,14 @@ Additional stages available in the interactive orchestrator:
 ## Running Individual Stages
 
 ```bash
-python3 scripts/00_setup_environment.py  # Setup environment
-python3 scripts/01_run_tests.py          # Run tests only (quiet mode by default)
-python3 scripts/01_run_tests.py --verbose  # Run tests with verbose output
-python3 scripts/02_run_analysis.py       # Run project scripts
-python3 scripts/03_render_pdf.py         # Render PDFs only
-python3 scripts/04_validate_output.py    # Validate outputs only
-python3 scripts/05_copy_outputs.py       # Copy final deliverables
-python3 scripts/06_llm_review.py         # LLM manuscript review
+uv run python scripts/00_setup_environment.py  # Setup environment
+uv run python scripts/01_run_tests.py          # Run tests only (quiet mode by default)
+uv run python scripts/01_run_tests.py --verbose  # Run tests with verbose output
+uv run python scripts/02_run_analysis.py       # Run project scripts
+uv run python scripts/03_render_pdf.py         # Render PDFs only
+uv run python scripts/04_validate_output.py    # Validate outputs only
+uv run python scripts/05_copy_outputs.py       # Copy final deliverables
+uv run python scripts/06_llm_review.py         # LLM manuscript review
 ```
 
 ## Generated Reports
@@ -215,7 +215,7 @@ The pipeline automatically generates reports in `projects/{name}/output/reports/
   - Categorizes errors by type
   - Provides actionable fixes with documentation links
 
-## Entry Points
+## Detailed Stage Behaviors
 
 ### Stage 00: Setup Environment
 
@@ -296,7 +296,7 @@ The pipeline supports automatic checkpointing and resume capability:
 
 ```bash
 # Resume from last checkpoint (Python orchestrator)
-python3 scripts/execute_pipeline.py --project {project_name} --core-only --resume
+uv run python scripts/execute_pipeline.py --project {project_name} --core-only --resume
 
 # Resume from last checkpoint (Shell orchestrator)
 ./run.sh --pipeline --resume
@@ -316,10 +316,10 @@ If validation fails, the pipeline starts fresh with a warning.
 
 ```bash
 # Check if checkpoint exists
-python3 -c "from infrastructure.core.checkpoint import CheckpointManager; cm = CheckpointManager(); print('Exists:', cm.checkpoint_exists())"
+uv run python -c "from infrastructure.core.checkpoint import CheckpointManager; cm = CheckpointManager(); print('Exists:', cm.checkpoint_exists())"
 
 # View checkpoint contents
-cat projects/{project_name}/output/.checkpoints/pipeline_checkpoint.json | python3 -m json.tool
+cat projects/{project_name}/output/.checkpoints/pipeline_checkpoint.json | uv run python -m json.tool
 
 # Clear checkpoint manually
 rm -f projects/{project_name}/output/.checkpoints/pipeline_checkpoint.json
@@ -345,7 +345,7 @@ These scripts:
 - Are discovered and executed by `02_run_analysis.py`
 - Follow thin orchestrator pattern
 
-## Pipeline Architecture
+## Execution Data Flow
 
 ```mermaid
 graph TB
@@ -559,6 +559,7 @@ Menu Option 8 (--pipeline) → Full Pipeline:
 - Coordinate build pipeline
 - Discover `project/scripts/`
 - Handle stages (setup, test, analysis, pdf, validate)
+- Follow the **Thin Orchestrator** pattern: All core computational, presentation, and complex parsing logic is extracted to the `infrastructure/` package (e.g., LLM prompts, coverage parsing, test result synthesis)
 - Work with ANY project
 
 ### Project Scripts (Specific)

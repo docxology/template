@@ -3,9 +3,7 @@
 Tests publishing API functionality.
 """
 
-from pathlib import Path
 
-import pytest
 
 
 class TestPublishingApiCore:
@@ -82,7 +80,7 @@ class TestArxivApi:
 
         if hasattr(api, "prepare_arxiv_submission"):
             try:
-                result = api.prepare_arxiv_submission(str(tmp_path))
+                api.prepare_arxiv_submission(str(tmp_path))
             except Exception:
                 pass
 
@@ -92,7 +90,7 @@ class TestArxivApi:
 
         if hasattr(api, "create_arxiv_package"):
             try:
-                result = api.create_arxiv_package(str(tmp_path))
+                api.create_arxiv_package(str(tmp_path))
             except Exception:
                 pass
 

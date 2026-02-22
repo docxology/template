@@ -195,7 +195,7 @@ Figures are referenced in markdown using relative paths:
 Markdown validation is performed via the infrastructure validation module:
 
 ```bash
-python3 -m infrastructure.validation.cli markdown project/manuscript/
+uv run python -m infrastructure.validation.cli markdown project/manuscript/
 ```
 
 This checks:
@@ -210,7 +210,7 @@ This checks:
 Glossary generation is integrated into the build pipeline (Stage 03) or can be run manually:
 
 ```bash
-python3 -m infrastructure.documentation.generate_glossary_cli
+uv run python -m infrastructure.documentation.generate_glossary_cli
 ```
 
 This:

@@ -3,7 +3,6 @@
 
 import os
 import sys
-from pathlib import Path
 
 import pytest
 
@@ -19,7 +18,8 @@ from infrastructure.core.config_loader import (YAML_AVAILABLE,
                                                get_config_as_env_vars,
                                                get_testing_config,
                                                get_translation_languages,
-                                               load_config)
+                                               load_config,
+                                               validate_config_keys)
 
 
 @pytest.fixture
@@ -663,7 +663,6 @@ class TestErrorHandling:
         config_path.write_text("test: value")
 
         # Make file unreadable (real permission testing)
-        import os
         import stat
 
         try:
@@ -714,4 +713,80 @@ testing:
             "project_coverage_threshold": 90,
         }
         assert result == expected
+
+
+class TestConfigKeyValidation:
+    """Test config key typo detection."""
+
+    def test_unknown_key_logs_warning(self, tmp_path, caplog):
+        """Test that unknown config keys produce a warning with typo suggestion."""
+        import logging
+
+        import yaml
+
+        config = {
+            "papr": {"title": "Typo Test"},  # Typo: should be 'paper'
+            "authors": [{"name": "Test Author"}],
+        }
+        config_file = tmp_path / "typo_config.yaml"
+        with open(config_file, "w") as f:
+            yaml.dump(config, f)
+
+        with caplog.at_level(logging.WARNING, logger="infrastructure.core.config_loader"):
+            result = load_config(config_file)
+
+        assert result is not None
+        # Should warn about 'papr' with suggestion 'paper'
+        assert any("papr" in msg and "paper" in msg for msg in caplog.messages)
+
+    def test_known_keys_no_warning(self, tmp_path, caplog):
+        """Test that valid config keys produce no warnings."""
+        import logging
+
+        import yaml
+
+        config = {
+            "paper": {"title": "Valid Config"},
+            "authors": [{"name": "Test Author"}],
+            "publication": {"doi": "10.1234/test"},
+            "keywords": ["optimization"],
+            "metadata": {"license": "MIT"},
+            "llm": {"reviews": {"enabled": True}},
+            "testing": {"max_test_failures": 0},
+        }
+        config_file = tmp_path / "valid_config.yaml"
+        with open(config_file, "w") as f:
+            yaml.dump(config, f)
+
+        with caplog.at_level(logging.WARNING, logger="infrastructure.core.config_loader"):
+            result = load_config(config_file)
+
+        assert result is not None
+        # No warnings should be logged for valid keys
+        config_warnings = [
+            msg for msg in caplog.messages if "Unknown config key" in msg
+        ]
+        assert config_warnings == []
+
+    def test_validate_config_keys_direct(self):
+        """Test validate_config_keys function directly."""
+        # Known keys only → no warnings
+        warnings = validate_config_keys({"paper": {}, "testing": {}})
+        assert warnings == []
+
+        # Unknown key with typo suggestion
+        warnings = validate_config_keys({"papr": {}})
+        assert len(warnings) == 1
+        assert "papr" in warnings[0]
+        assert "paper" in warnings[0]
+
+        # Unknown key with no close match
+        warnings = validate_config_keys({"zzz_nonsense": {}})
+        assert len(warnings) == 1
+        assert "zzz_nonsense" in warnings[0]
+
+    def test_validate_config_keys_non_dict(self):
+        """Test validate_config_keys handles non-dict input gracefully."""
+        warnings = validate_config_keys("not a dict")  # type: ignore[arg-type]
+        assert warnings == []
 

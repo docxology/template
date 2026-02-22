@@ -1,6 +1,5 @@
 """Tests for infrastructure.rendering.cli module."""
 
-import pytest
 
 from infrastructure.rendering import cli
 

@@ -31,7 +31,7 @@ def generate_output_summary(
     logger.info("=" * 60)
 
     logger.info(f"\nOutput directory: {output_dir}")
-    logger.info(f"\nFiles copied by directory:")
+    logger.info("\nFiles copied by directory:")
     logger.info(f"  • PDF files: {stats['pdf_files']}")
     logger.info(f"  • Web files: {stats['web_files']}")
     logger.info(f"  • Slides files: {stats['slides_files']}")
@@ -46,7 +46,7 @@ def generate_output_summary(
 
     # Include structure validation if provided
     if structure_validation:
-        logger.info(f"\nDirectory structure:")
+        logger.info("\nDirectory structure:")
         for item, info in structure_validation.get("directory_structure", {}).items():
             if info.get("exists"):
                 if "size_mb" in info and "files" in info:
@@ -183,7 +183,7 @@ def collect_output_statistics(
     project_basename = Path(project_name).name
     combined_pdf_found = False
     for pdf_name in [f"{project_basename}_combined.pdf", "project_combined.pdf"]:
-        pdf_path = output_dir / pdf_name
+        pdf_path = output_dir / "pdf" / pdf_name
         if pdf_path.exists():
             combined_pdf_found = True
             break

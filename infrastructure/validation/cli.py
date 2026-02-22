@@ -28,7 +28,7 @@ def validate_pdf_command(args: argparse.Namespace) -> None:
     logger.info(f"Validating PDF: {pdf_path}")
     report = validate_pdf_rendering(pdf_path, n_words=args.preview_words)
 
-    logger.info(f"\nValidation Results:")
+    logger.info("\nValidation Results:")
     logger.info(f"Total issues found: {report['issues']['total_issues']}")
 
     # report['issues'] values are integers (counts), not lists
@@ -86,7 +86,7 @@ def verify_integrity_command(args: argparse.Namespace) -> None:
     total_files = len(report.file_integrity)
     total_issues = len(report.issues)
 
-    logger.info(f"\nIntegrity Report:")
+    logger.info("\nIntegrity Report:")
     logger.info(f"Files checked: {total_files}")
     logger.info(f"Issues found: {total_issues}")
     logger.info(f"Overall integrity: {'PASS' if report.overall_integrity else 'FAIL'}")

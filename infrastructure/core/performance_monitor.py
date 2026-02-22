@@ -6,7 +6,6 @@ and profiling capabilities for research code execution.
 
 import cProfile
 import functools
-import io
 import pstats
 import time
 import tracemalloc
@@ -41,7 +40,7 @@ class PerformanceMetrics:
         if self.memory_delta:
             self.memory_delta = self.memory_delta // (1024 * 1024)
 
-    def to_dict(self) -> Dict[str, Union[str, float, int]]:
+    def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for reporting."""
         return {
             "operation": self.operation_name,
@@ -157,7 +156,7 @@ class PerformanceMonitor:
 
         for i in range(iterations):
             start_time = time.perf_counter()
-            result = func(*args, **kwargs)
+            func(*args, **kwargs)
             end_time = time.perf_counter()
 
             execution_time = end_time - start_time

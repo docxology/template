@@ -16,6 +16,10 @@ import sys
 from pathlib import Path
 from typing import Optional
 
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
+
 # Add infrastructure to path for imports
 repo_root = Path(__file__).parent.parent
 sys.path.insert(0, str(repo_root))
@@ -51,7 +55,6 @@ def find_markdown_files(directory: str) -> list:
         list: List of markdown file paths sorted numerically
     """
     import os
-    from pathlib import Path
 
     md_files = []
     for f in os.listdir(directory):
@@ -167,7 +170,6 @@ def validate_math(md_files: list, repo_root_str: str) -> list:
         list: List of issues found
     """
     issues = []
-    import re
 
     for file_path in md_files:
         with open(file_path, "r") as f:
@@ -193,7 +195,7 @@ def main(manuscript_path: Optional[Path] = None, strict: bool = False) -> int:
     """
     # Handle import errors that should only occur at runtime
     if import_error:
-        print(import_error)
+        logger.error(import_error)
         return 1
 
     try:
@@ -219,19 +221,19 @@ def main(manuscript_path: Optional[Path] = None, strict: bool = False) -> int:
                 if not strict
                 else "Validation issues found"
             )
-            print(header + ":")
+            logger.warning(header + ":")
             for p in problems:
-                print(" -", p)
+                logger.warning(f" - {p}")
         else:
-            print("Markdown validation passed: all images and references resolved.")
+            logger.info("Markdown validation passed: all images and references resolved.")
 
         return exit_code
 
     except FileNotFoundError as e:
-        print(f"❌ Error: {e}")
+        logger.error(f"❌ Error: {e}")
         return 1
     except Exception as e:
-        print(f"❌ Unexpected error: {e}")
+        logger.error(f"❌ Unexpected error: {e}")
         return 1
 
 

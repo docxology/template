@@ -6,8 +6,6 @@ including file integrity, cross-reference validation, and data consistency.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-import json
-import tempfile
 from pathlib import Path
 
 import pytest
@@ -589,11 +587,9 @@ class TestEdgeCases:
         with open(pkl_file, "wb") as f:
             pickle.dump({"key": "value"}, f)
 
-        # The code uses pickle.load() but pickle is not imported in integrity.py
-        # This will raise NameError, which is caught and sets data_integrity to False
-        # This tests the exception handling path (line 193-194)
+        # pickle is imported in integrity.py so .pkl validation succeeds
         consistency = integrity.verify_data_consistency([pkl_file])
-        assert consistency["data_integrity"] == False  # Exception is caught
+        assert consistency["data_integrity"] == True
 
     def test_verify_data_consistency_exception(self, tmp_path):
         """Test data consistency with exception."""

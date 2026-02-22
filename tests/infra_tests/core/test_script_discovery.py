@@ -3,8 +3,6 @@
 Comprehensive tests for script discovery and output verification utilities.
 """
 
-import tempfile
-from pathlib import Path
 
 import pytest
 

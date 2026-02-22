@@ -12,13 +12,13 @@
 
 ```bash
 # Run all tests with coverage (quiet mode by default, skips slow tests)
-python3 scripts/01_run_tests.py
+uv run python scripts/01_run_tests.py
 
 # Run tests with verbose output (shows all test names)
-python3 scripts/01_run_tests.py --verbose
+uv run python scripts/01_run_tests.py --verbose
 
 # Run including slow tests (LLM integration tests)
-python3 scripts/01_run_tests.py --include-slow
+uv run python scripts/01_run_tests.py --include-slow
 
 # Run specific test suite
 pytest tests/infra_tests/ -v
@@ -44,7 +44,7 @@ By default, slow tests are **automatically skipped** to ensure fast test runs:
 
 ```bash
 # Normal test run (skips slow tests)
-python3 scripts/01_run_tests.py
+uv run python scripts/01_run_tests.py
 
 # pytest directly (also skips slow tests due to addopts)
 pytest tests/
@@ -56,7 +56,7 @@ To include slow tests when needed:
 
 ```bash
 # Include slow tests in orchestrator
-python3 scripts/01_run_tests.py --include-slow
+uv run python scripts/01_run_tests.py --include-slow
 
 # Run only slow tests (useful for LLM testing)
 pytest -m slow

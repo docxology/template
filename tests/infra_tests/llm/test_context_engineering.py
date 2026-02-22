@@ -3,12 +3,10 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 
 import pytest
 
-from infrastructure.core.exceptions import ContextLimitError
-from infrastructure.llm.core.context import ConversationContext, Message
+from infrastructure.llm.core.context import ConversationContext
 
 
 class TestContextStateManagement:

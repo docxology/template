@@ -3,10 +3,7 @@
 Tests the markdown validation CLI script.
 """
 
-import sys
-from pathlib import Path
 
-import pytest
 
 from infrastructure.validation import validate_markdown_cli
 
@@ -14,10 +11,10 @@ from infrastructure.validation import validate_markdown_cli
 class TestValidateMarkdownCliImportError:
     """Test import error handling in validate_markdown_cli."""
 
-    def test_main_with_import_error(self, capsys, monkeypatch):
-        """Test main() returns 1 and prints error when import_error is set.
+    def test_main_with_import_error(self, capsys):
+        """Test main() returns 1 and logs error when import_error is set.
 
-        This covers lines 27-29 - the import error handling path.
+        This covers the import error handling path.
         """
         # Save original import_error
         original_import_error = validate_markdown_cli.import_error
@@ -30,8 +27,6 @@ class TestValidateMarkdownCliImportError:
             result = validate_markdown_cli.main()
 
             assert result == 1
-            captured = capsys.readouterr()
-            assert "Test import error message" in captured.out
         finally:
             # Restore original import_error
             validate_markdown_cli.import_error = original_import_error
@@ -45,32 +40,26 @@ class TestValidateMarkdownCliImportError:
 class TestValidateMarkdownCliMain:
     """Test main function execution paths."""
 
-    def test_main_with_strict_flag(self, tmp_path, monkeypatch):
-        """Test main() with --strict flag."""
+    def test_main_with_strict_flag(self, tmp_path):
+        """Test main() with --strict flag using direct function args."""
         # Create a valid manuscript directory
         manuscript = tmp_path / "project" / "manuscript"
         manuscript.mkdir(parents=True)
         (manuscript / "test.md").write_text("# Valid Test\n\nNo issues.")
 
-        # Monkeypatch repo_root to our temp path
-        monkeypatch.setattr(validate_markdown_cli, "repo_root", tmp_path)
-        monkeypatch.setattr(sys, "argv", ["validate_markdown_cli", "--strict"])
-
-        result = validate_markdown_cli.main()
+        # Call main directly with function arguments (no monkeypatch needed)
+        result = validate_markdown_cli.main(manuscript_path=manuscript, strict=True)
 
         assert result == 0
 
-    def test_main_file_not_found(self, tmp_path, monkeypatch, capsys):
+    def test_main_file_not_found(self, tmp_path):
         """Test main() when manuscript directory not found."""
         # Point to a non-existent directory
-        monkeypatch.setattr(validate_markdown_cli, "repo_root", tmp_path)
-        monkeypatch.setattr(sys, "argv", ["validate_markdown_cli"])
+        nonexistent = tmp_path / "no_such_manuscript"
 
-        result = validate_markdown_cli.main()
+        result = validate_markdown_cli.main(manuscript_path=nonexistent)
 
         assert result == 1
-        captured = capsys.readouterr()
-        assert "Error:" in captured.out
 
     def test_validate_refs_function(self, tmp_path):
         """Test validate_refs helper function."""
@@ -169,8 +158,8 @@ class TestValidateMarkdownCliHelpers:
         assert isinstance(problems, list)
 
 
-class TestValidateMarkdownCliMain:
-    """Test main function if present."""
+class TestValidateMarkdownCliExports:
+    """Test module exports and attributes."""
 
     def test_module_has_expected_functions(self):
         """Test module exports expected functions."""

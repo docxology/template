@@ -96,16 +96,16 @@ for chunk in client.stream_query("Write a research summary"):
 
 ```bash
 # Check Ollama connection
-python3 -m infrastructure.llm.cli check
+uv run python -m infrastructure.llm.cli check
 
 # List available models
-python3 -m infrastructure.llm.cli models
+uv run python -m infrastructure.llm.cli models
 
 # Send query
-python3 -m infrastructure.llm.cli query "What is machine learning?"
+uv run python -m infrastructure.llm.cli query "What is machine learning?"
 
 # Apply template
-python3 -m infrastructure.llm.cli template summarize_abstract --input "Abstract text..."
+uv run python -m infrastructure.llm.cli template summarize_abstract --input "Abstract text..."
 ```
 
 ---

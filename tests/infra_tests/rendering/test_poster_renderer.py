@@ -3,9 +3,7 @@
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-from pathlib import Path
 
-import pytest
 
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.poster_renderer import PosterRenderer

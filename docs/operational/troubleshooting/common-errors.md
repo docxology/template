@@ -109,7 +109,7 @@ cat document.log | grep Error
 ```bash
 ls project/output/figures/
 grep "includegraphics" project/output/pdf/_combined_manuscript.tex
-python3 scripts/02_run_analysis.py   # Regenerate figures
+uv run python scripts/02_run_analysis.py   # Regenerate figures
 ```
 
 ---
@@ -132,7 +132,7 @@ python3 scripts/02_run_analysis.py   # Regenerate figures
 
 ```bash
 ls -la project/output/.checkpoints/pipeline_checkpoint.json
-cat project/output/.checkpoints/pipeline_checkpoint.json | python3 -m json.tool
+cat project/output/.checkpoints/pipeline_checkpoint.json | uv run python -m json.tool
 ```
 
 **Solutions:**

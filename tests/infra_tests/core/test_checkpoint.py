@@ -5,12 +5,9 @@ and error handling scenarios.
 """
 
 import json
-import shutil
 import tempfile
-import time
 from pathlib import Path
 
-import pytest
 
 from infrastructure.core.checkpoint import (CheckpointManager,
                                             PipelineCheckpoint, StageResult)

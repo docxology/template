@@ -16,10 +16,10 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import pickle  # noqa: S403 — used for pickle file validation
 import re
-from collections import defaultdict
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any, Dict, List, Optional
 
 from infrastructure.core.logging_utils import get_logger
 

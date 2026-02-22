@@ -206,9 +206,9 @@ class RetryableOperation:
         exc_type: Optional[Type[Exception]],
         exc_val: Optional[Exception],
         exc_tb: Any,
-    ) -> bool:
+    ) -> None:
         """Exit context manager."""
-        return False  # Don't suppress exceptions
+        return None  # Don't suppress exceptions
 
     def __iter__(self):
         """Iterate over attempts."""

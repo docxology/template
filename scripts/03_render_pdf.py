@@ -174,7 +174,7 @@ def run_render_pipeline(project_name: str = "project") -> int:
     
     # Separate markdown files (for combined PDF) from other files
     md_files = [f for f in source_files if f.suffix == '.md']
-    other_files = [f for f in source_files if f.suffix != '.md']
+    [f for f in source_files if f.suffix != '.md']
     
     # Render individual files with progress tracking
     rendered_count = 0
@@ -239,7 +239,7 @@ def run_render_pipeline(project_name: str = "project") -> int:
                 
                 # Log error context (content around error)
                 if 'error_context' in re.context:
-                    logger.error(f"  Error context (content around error position):")
+                    logger.error("  Error context (content around error position):")
                     # Show context with line numbers if possible
                     context = re.context['error_context']
                     lines = context.split('\n')
@@ -287,7 +287,7 @@ def run_render_pipeline(project_name: str = "project") -> int:
             logger.error(f"❌ Unexpected error generating combined PDF: {e}")
             import traceback
             logger.error(f"  Error type: {type(e).__name__}")
-            logger.error(f"  This is an unexpected error - please report this issue")
+            logger.error("  This is an unexpected error - please report this issue")
             logger.error(f"  Full traceback:\n{traceback.format_exc()}")
             
             # Try to extract any useful information from the exception
@@ -314,7 +314,7 @@ def run_render_pipeline(project_name: str = "project") -> int:
         try:
             logger.info("\n" + "="*60)
             logger.info("Generating combined HTML manuscript...")
-            combined_html = manager.render_combined_web(md_files, manuscript_dir, project_name)
+            manager.render_combined_web(md_files, manuscript_dir, project_name)
             # Note: web_renderer.py already logs success message
 
             
@@ -328,7 +328,7 @@ def run_render_pipeline(project_name: str = "project") -> int:
             # Non-fatal - don't fail pipeline for HTML generation
     
     # Report results
-    logger.info(f"\nRendering Summary:")
+    logger.info("\nRendering Summary:")
     logger.info(f"  Individual files processed: {rendered_count}")
     logger.info(f"  Markdown files: {len(md_files)}")
     
@@ -436,13 +436,13 @@ def log_rendering_summary(summary: dict) -> None:
 
     if summary['combined_pdf']:
         pdf = summary['combined_pdf']
-        logger.info(f"\n📕 Combined Manuscript PDF:")
+        logger.info("\n📕 Combined Manuscript PDF:")
         logger.info(f"   {pdf['name']:<40} {pdf['size_kb']:>8.1f} KB")
         logger.info(f"   Location: {pdf['path']}")
 
     if summary['combined_html']:
         html = summary['combined_html']
-        logger.info(f"\n🌐 Combined Manuscript HTML:")
+        logger.info("\n🌐 Combined Manuscript HTML:")
         logger.info(f"   {html['name']:<40} {html['size_kb']:>8.1f} KB")
         logger.info(f"   Location: {html['path']}")
 
@@ -598,7 +598,7 @@ def verify_pdf_outputs(project_name: str = "project") -> bool:
                 if failed_compilations:
                     logger.warning(f"\n⚠️  Combined manuscript PDF generated but {len(failed_compilations)} other PDF(s) failed to compile")
                 else:
-                    logger.info(f"\n✅ Combined manuscript PDF successfully generated!")
+                    logger.info("\n✅ Combined manuscript PDF successfully generated!")
                 logger.info(f"  File size: {size_mb:.2f} MB")
                 logger.info(f"  Valid PDFs: {valid_pdfs}/{len(pdf_files)}")
             else:

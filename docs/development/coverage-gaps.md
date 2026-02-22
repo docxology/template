@@ -123,13 +123,13 @@ The following modules have coverage below 50% and are prioritized for improvemen
 
 ```bash
 # Infrastructure coverage
-python3 -m pytest tests/infrastructure/ --cov=infrastructure --cov-report=term-missing
+uv run python -m pytest tests/infrastructure/ --cov=infrastructure --cov-report=term-missing
 
 # View HTML report
 open htmlcov/index.html
 
 # Check specific module
-python3 -m pytest tests/infrastructure/core/ --cov=infrastructure.core.checkpoint --cov-report=term
+uv run python -m pytest tests/infrastructure/core/ --cov=infrastructure.core.checkpoint --cov-report=term
 ```
 
 ### Coverage Trends

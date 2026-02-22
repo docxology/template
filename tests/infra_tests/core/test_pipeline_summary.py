@@ -6,7 +6,6 @@ import json
 import tempfile
 from pathlib import Path
 
-import pytest
 
 from infrastructure.core.file_inventory import FileInventoryEntry
 from infrastructure.core.pipeline import PipelineStageResult

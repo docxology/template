@@ -11,7 +11,6 @@ Stage 5 of the pipeline orchestration.
 """
 from __future__ import annotations
 
-import json
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -20,7 +19,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from infrastructure.core.logging_utils import get_logger, log_success, log_header, log_substep
-from infrastructure.reporting import generate_validation_report as generate_validation_report_structured
 from infrastructure.validation.figure_validator import validate_figure_registry
 
 # Set up logger for this module
@@ -129,7 +127,7 @@ def verify_outputs_exist(project_name: str = "project") -> tuple[bool, dict]:
     log_substep("Verifying output structure...", logger)
     
     repo_root = Path(__file__).parent.parent
-    project_root = repo_root / "projects" / project_name
+    repo_root / "projects" / project_name
     output_dir = repo_root / "output" / project_name  # Use final output directory
     
     # Use comprehensive validation from infrastructure
@@ -331,7 +329,7 @@ def main() -> int:
             }
     
     # Generate validation report
-    validation_results = generate_validation_report(results, figure_issues, output_statistics, args.project)
+    generate_validation_report(results, figure_issues, output_statistics, args.project)
     
     # Comprehensive validation summary
     logger.info("\n" + "="*60)

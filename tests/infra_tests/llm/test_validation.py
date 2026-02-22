@@ -1,6 +1,5 @@
 """Tests for infrastructure.llm.validation module."""
 
-import json
 
 import pytest
 

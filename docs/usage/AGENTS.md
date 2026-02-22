@@ -170,13 +170,13 @@ print(f"Hypertension prevalence: {results['hypertension_prevalence']:.1f}%")
 **Workflow Demonstrations:**
 ```bash
 # Execute analysis pipeline
-python3 scripts/02_run_analysis.py
+uv run python scripts/02_run_analysis.py
 
 # Generate manuscript with results
-python3 scripts/03_render_pdf.py
+uv run python scripts/03_render_pdf.py
 
 # Validate all outputs
-python3 scripts/04_validate_output.py
+uv run python scripts/04_validate_output.py
 
 # Output: cardiovascular_study.pdf (manuscript)
 ```
@@ -279,7 +279,7 @@ authors:
   - name: 'Dr. Researcher'" > project/manuscript/config.yaml
 
 # Generate basic output
-python3 scripts/03_render_pdf.py
+uv run python scripts/03_render_pdf.py
 ```
 
 **Level 3-4 (Intermediate):**
@@ -379,10 +379,10 @@ class ComparativeAnalyzer(BaseAnalyzer):
 ./validate_usage_examples.sh docs/usage/
 
 # Check example code syntax
-python3 -m py_compile docs/usage/examples/**/*.py
+uv run python -m py_compile docs/usage/examples/**/*.py
 
 # Validate markdown examples
-python3 validate_markdown_examples.py docs/usage/
+uv run python validate_markdown_examples.py docs/usage/
 ```
 
 **Example Completeness:**

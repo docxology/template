@@ -1,10 +1,7 @@
 """Comprehensive tests for src/markdown_integration.py to ensure 100% coverage."""
 
-from pathlib import Path
 
-import pytest
 
-from infrastructure.documentation.figure_manager import FigureManager
 from infrastructure.documentation.markdown_integration import \
     MarkdownIntegration
 

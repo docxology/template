@@ -22,7 +22,7 @@ logger = get_logger(__name__)
 
 # Try to import prompt composer system
 try:
-    from infrastructure.llm.prompts.composer import PromptComposer
+    from infrastructure.llm.prompts.composer import PromptComposer  # noqa: F401
 
     PROMPT_COMPOSER_AVAILABLE = True
 except ImportError:

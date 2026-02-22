@@ -4,8 +4,6 @@ Tests PDF rendering functionality thoroughly.
 """
 
 import shutil
-import subprocess
-from pathlib import Path
 
 import pytest
 

@@ -8,7 +8,6 @@ import os
 import sys
 from pathlib import Path
 
-import pytest
 
 from infrastructure.core.environment import (check_dependencies,
                                              check_python_version)
@@ -144,7 +143,7 @@ class TestDependencyValidation:
     def test_numpy_importable(self):
         """Test that numpy can be imported."""
         try:
-            import numpy
+            import numpy  # noqa: F401
 
             can_import = True
         except ImportError:

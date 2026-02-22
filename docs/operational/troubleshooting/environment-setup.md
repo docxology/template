@@ -119,7 +119,7 @@ uv --version
 ```bash
 export MPLBACKEND=Agg
 export MPLCONFIGDIR=/tmp/matplotlib
-python3 scripts/02_run_analysis.py
+uv run python scripts/02_run_analysis.py
 ```
 
 ---
@@ -154,13 +154,13 @@ python3 scripts/02_run_analysis.py
 env | grep -E "MAX_TEST|MPL|LOG_LEVEL|AUTHOR|PROJECT|DOI"
 
 # Test matplotlib configuration
-python3 -c "import matplotlib; print(matplotlib.get_backend())"
+uv run python -c "import matplotlib; print(matplotlib.get_backend())"
 
 # Verify LaTeX installation
 which xelatex && echo "LaTeX OK" || echo "LaTeX missing"
 
 # Check Python imports
-python3 -c "from infrastructure.core import credentials; print('Imports OK')"
+uv run python -c "from infrastructure.core import credentials; print('Imports OK')"
 ```
 
 ---

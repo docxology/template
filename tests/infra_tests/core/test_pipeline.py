@@ -6,7 +6,6 @@ import json
 import tempfile
 from pathlib import Path
 
-import pytest
 
 from infrastructure.core.checkpoint import CheckpointManager
 from infrastructure.core.pipeline import (PipelineConfig, PipelineExecutor,

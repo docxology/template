@@ -36,11 +36,11 @@ ollama run llama3-gradient "Hello"
 
 ```bash
 # Check script can find Ollama
-python3 scripts/06_llm_review.py --reviews-only
+uv run python scripts/06_llm_review.py --reviews-only
 
 # Check with verbose logging
 export LOG_LEVEL=0
-python3 scripts/06_llm_review.py --reviews-only
+uv run python scripts/06_llm_review.py --reviews-only
 ```
 
 ## Common Issues and Solutions
@@ -114,7 +114,7 @@ brew services list | grep ollama  # macOS
 ollama list
 
 # Check model preferences
-python3 -c "from infrastructure.llm.utils.ollama import DEFAULT_MODEL_PREFERENCES; print(DEFAULT_MODEL_PREFERENCES)"
+uv run python -c "from infrastructure.llm.utils.ollama import DEFAULT_MODEL_PREFERENCES; print(DEFAULT_MODEL_PREFERENCES)"
 ```
 
 **Solutions:**
@@ -170,7 +170,7 @@ time ollama run llama3-gradient "Generate a short test response"
    ```bash
    # Set longer timeout (in seconds)
    export LLM_REVIEW_TIMEOUT=600  # 10 minutes
-   python3 scripts/06_llm_review.py --reviews-only
+   uv run python scripts/06_llm_review.py --reviews-only
    ```
 
 2. **Use faster model:**
@@ -184,7 +184,7 @@ time ollama run llama3-gradient "Generate a short test response"
    ```bash
    # Limit input to LLM (reduces processing time)
    export LLM_MAX_INPUT_LENGTH=250000  # ~62K tokens
-   python3 scripts/06_llm_review.py --reviews-only
+   uv run python scripts/06_llm_review.py --reviews-only
    ```
 
 4. **Check system resources:**
@@ -216,7 +216,7 @@ time ollama run llama3-gradient "Generate a short test response"
 ls -la project/output/pdf/project_combined.pdf
 
 # Check PDF generation
-python3 scripts/03_render_pdf.py
+uv run python scripts/03_render_pdf.py
 ```
 
 **Solutions:**
@@ -224,10 +224,10 @@ python3 scripts/03_render_pdf.py
 1. **Generate manuscript PDF first:**
    ```bash
    # Run PDF rendering stage
-   python3 scripts/03_render_pdf.py
+   uv run python scripts/03_render_pdf.py
    
    # Or run full pipeline up to PDF stage
-   python3 scripts/execute_pipeline.py --core-only
+   uv run python scripts/execute_pipeline.py --core-only
    ```
 
 2. **Verify PDF location:**
@@ -261,7 +261,7 @@ python3 scripts/03_render_pdf.py
 **Diagnosis:**
 ```bash
 # Test PDF readability
-python3 -c "
+uv run python -c "
 from pathlib import Path
 import PyPDF2
 with open('project/output/pdf/project_combined.pdf', 'rb') as f:
@@ -284,7 +284,7 @@ with open('project/output/pdf/project_combined.pdf', 'rb') as f:
    ```bash
    # Clean and regenerate
    rm -rf project/output/pdf/*
-   python3 scripts/03_render_pdf.py
+   uv run python scripts/03_render_pdf.py
    ```
 
 3. **Check PDF encryption:**
@@ -328,7 +328,7 @@ ollama ps
    ```bash
    # Allow longer responses
    export LLM_LONG_MAX_TOKENS=8192
-   python3 scripts/06_llm_review.py --reviews-only
+   uv run python scripts/06_llm_review.py --reviews-only
    ```
 
 3. **Check model memory:**
@@ -395,7 +395,7 @@ env | grep TRANSLATION
 3. **Run translations only:**
    ```bash
    # Run translations separately
-   python3 scripts/06_llm_review.py --translations-only
+   uv run python scripts/06_llm_review.py --translations-only
    ```
 
 ### Issue: "Review types not configured" or "Want to customize which reviews are generated"
@@ -466,7 +466,7 @@ cat project/output/llm/quality_review.md
 
 # Check validation logs
 export LOG_LEVEL=0
-python3 scripts/06_llm_review.py --reviews-only
+uv run python scripts/06_llm_review.py --reviews-only
 ```
 
 **Solutions:**
@@ -516,14 +516,14 @@ env | grep LLM_MAX_INPUT_LENGTH
    ```bash
    # For models with large context (e.g., llama3-gradient: 256K)
    export LLM_CONTEXT_WINDOW=262144
-   python3 scripts/06_llm_review.py --reviews-only
+   uv run python scripts/06_llm_review.py --reviews-only
    ```
 
 2. **Limit input size:**
    ```bash
    # Reduce input to fit smaller models
    export LLM_MAX_INPUT_LENGTH=100000  # ~25K tokens
-   python3 scripts/06_llm_review.py --reviews-only
+   uv run python scripts/06_llm_review.py --reviews-only
    ```
 
 3. **Use model with larger context:**
@@ -590,7 +590,7 @@ export LLM_REVIEW_TIMEOUT=600
 export LLM_MAX_INPUT_LENGTH=100000
 
 # Run with custom settings
-python3 scripts/06_llm_review.py --reviews-only
+uv run python scripts/06_llm_review.py --reviews-only
 ```
 
 ## Diagnostic Commands
@@ -615,13 +615,13 @@ ollama run llama3-gradient "Test query"
 
 ```bash
 # Check script imports
-python3 -c "from infrastructure.llm.core.client import LLMClient; print('OK')"
+uv run python -c "from infrastructure.llm.core.client import LLMClient; print('OK')"
 
 # Check Ollama utilities
-python3 -c "from infrastructure.llm.utils.ollama import is_ollama_running; print(is_ollama_running())"
+uv run python -c "from infrastructure.llm.utils.ollama import is_ollama_running; print(is_ollama_running())"
 
 # Test LLM client
-python3 -c "
+uv run python -c "
 from infrastructure.llm.core.client import LLMClient
 client = LLMClient()
 print('Available:', client.check_connection())
@@ -635,7 +635,7 @@ print('Available:', client.check_connection())
 ls -la project/output/pdf/project_combined.pdf
 
 # Test PDF text extraction
-python3 -c "
+uv run python -c "
 from pathlib import Path
 import PyPDF2
 pdf_path = Path('project/output/pdf/project_combined.pdf')
@@ -690,7 +690,7 @@ export LLM_REVIEW_TIMEOUT=600  # 10 minutes
 ```bash
 # Enable debug logging
 export LOG_LEVEL=0
-python3 scripts/06_llm_review.py --reviews-only 2>&1 | tee llm_review.log
+uv run python scripts/06_llm_review.py --reviews-only 2>&1 | tee llm_review.log
 
 # Review log file
 cat llm_review.log | grep -i error

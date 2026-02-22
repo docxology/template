@@ -83,17 +83,17 @@ pdf_path = manager.render_combined_pdf(
 
 ```bash
 # Render all formats
-python3 -m infrastructure.rendering.cli all manuscript.tex
+uv run python -m infrastructure.rendering.cli all manuscript.tex
 
 # Render PDF only
-python3 -m infrastructure.rendering.cli pdf manuscript.tex
+uv run python -m infrastructure.rendering.cli pdf manuscript.tex
 
 # Generate slides
-python3 -m infrastructure.rendering.cli slides presentation.md --format beamer
-python3 -m infrastructure.rendering.cli slides presentation.md --format revealjs
+uv run python -m infrastructure.rendering.cli slides presentation.md --format beamer
+uv run python -m infrastructure.rendering.cli slides presentation.md --format revealjs
 
 # Generate web version
-python3 -m infrastructure.rendering.cli web manuscript.md
+uv run python -m infrastructure.rendering.cli web manuscript.md
 ```
 
 ---

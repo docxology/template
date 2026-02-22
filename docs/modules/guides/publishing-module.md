@@ -74,10 +74,10 @@ print(f"DOI: {metadata.doi or 'Not specified'}")
 
 ```bash
 # Prepare publication package
-python3 -m infrastructure.publishing.cli prepare-submission output/ --format=arxiv
+uv run python -m infrastructure.publishing.cli prepare-submission output/ --format=arxiv
 
 # Validate publication metadata
-python3 -m infrastructure.publishing.cli validate-metadata manuscript/
+uv run python -m infrastructure.publishing.cli validate-metadata manuscript/
 ```
 
 ---

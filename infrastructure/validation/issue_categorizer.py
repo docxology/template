@@ -194,7 +194,6 @@ def is_false_positive(issue: Issue) -> bool:
         return True
 
     # Check for code literals (numbers, quoted strings) - these are code examples, not file paths
-    import re
 
     target_clean = target.strip()
     if re.match(r"^\d+$", target_clean):  # Pure number like "42"

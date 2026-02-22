@@ -3,9 +3,7 @@
 Tests link validation, file reference checking, and anchor validation.
 """
 
-from pathlib import Path
 
-import pytest
 
 from infrastructure.validation import check_links
 

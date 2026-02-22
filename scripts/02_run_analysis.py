@@ -29,7 +29,7 @@ from pathlib import Path
 # Add root to path for infrastructure imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from infrastructure.core.logging_utils import get_logger, log_operation, log_success, log_progress, format_error_with_suggestions
+from infrastructure.core.logging_utils import get_logger, log_operation, log_success, format_error_with_suggestions
 from infrastructure.core.progress import SubStageProgress
 from infrastructure.core.exceptions import ScriptExecutionError, PipelineError
 from infrastructure.core.environment import get_python_command, get_subprocess_env
@@ -92,11 +92,11 @@ def run_analysis_script(script_path: Path, repo_root: Path, project_name: str = 
         
         if result.returncode != 0:
             logger.error(f"Script failed: {script_path.name} (exit code: {result.returncode})")
-            logger.info(f"  Troubleshooting:")
+            logger.info("  Troubleshooting:")
             logger.info(f"    - Run script manually: python3 {script_path}")
             logger.info(f"    - Check script syntax: python3 -m py_compile {script_path}")
             logger.info(f"    - Verify dependencies: Check imports in {script_path.name}")
-            logger.info(f"    - Review script logs above for specific error details")
+            logger.info("    - Review script logs above for specific error details")
         
         return result.returncode
     except Exception as e:
@@ -157,11 +157,11 @@ def run_analysis_pipeline(scripts: list[Path], project_name: str = "project") ->
         logger.error(f"\n{len(failed_scripts)} script(s) failed:")
         for script_name in failed_scripts:
             logger.error(f"  Failed: {script_name}")
-        logger.info(f"\n  Troubleshooting:")
-        logger.info(f"    - Review error messages above for each failed script")
-        logger.info(f"    - Run scripts individually to isolate issues")
-        logger.info(f"    - Check script dependencies and imports")
-        logger.info(f"    - Verify input data files exist if required")
+        logger.info("\n  Troubleshooting:")
+        logger.info("    - Review error messages above for each failed script")
+        logger.info("    - Run scripts individually to isolate issues")
+        logger.info("    - Check script dependencies and imports")
+        logger.info("    - Verify input data files exist if required")
         return 1
 
     return 0

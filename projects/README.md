@@ -4,11 +4,11 @@ This directory contains multiple **standalone research projects**, each with ind
 
 ## Active Projects
 
-This directory contains **one active project**:
+This directory contains **one active project**, which serves as the **master exemplar**:
 
-### **act_inf_metaanalysis**: Active Inference Meta-Analysis
+### **code_project**: The Template Project of docxology/template/ repository
 
-An Active Inference meta-analysis research project.
+A fully-tested numerical optimization implementation securely bracketed by rigorous infrastructure, hermetic testing, and extensive documentation architectures.
 
 **Note:** Archived projects are preserved in `projects_archive/` for reference but are not actively executed.
 
@@ -72,20 +72,21 @@ mv projects_archive/myproject projects/myproject
 
 # Project will be automatically discovered on next run.sh execution
 
-| `act_inf_metaanalysis/` | Active Inference meta-analysis research | ✅ Active |
+| `code_project/` | The master exemplar implementation | ✅ Active |
 
-**Archived projects** are available in `projects_archive/` for historical reference (e.g., `code_project`, `blake_active_inference`, `cognitive_integrity`, `active_inference_meta_pragmatic`).
+**Archived projects** are available in `projects_archive/` for historical reference (e.g., `blake_active_inference`, `cognitive_integrity`, `active_inference_meta_pragmatic`).
 
 ```mermaid
 graph TD
     subgraph projects["projects/ - Multi-Project Container"]
-        PROJ[act_inf_metaanalysis/<br/>Active Inference Meta-Analysis]
+        PROJ[code_project/<br/>The Master Exemplar]
         CUSTOM[your_project/<br/>Custom research<br/>Your algorithms here]
 
-        PROJ --> PROJ_SRC[src/<br/>Research algorithms]
-        PROJ --> PROJ_TESTS[tests/<br/>Test suite]
-        PROJ --> PROJ_SCRIPTS[scripts/<br/>Analysis pipeline]
+        PROJ --> PROJ_SRC[src/<br/>Pure scientific logic]
+        PROJ --> PROJ_TESTS[tests/<br/>Zero-mock test suite]
+        PROJ --> PROJ_SCRIPTS[scripts/<br/>Thin orchestrators]
         PROJ --> PROJ_MANUSCRIPT[manuscript/<br/>Research paper]
+        PROJ --> PROJ_DOCS[docs/<br/>Modular documentation]
         PROJ --> PROJ_OUTPUT[output/<br/>Generated outputs<br/>Disposable]
         PROJ --> PROJ_CONFIG[pyproject.toml<br/>Project metadata]
     end
@@ -136,10 +137,10 @@ Each project is **operated upon** by infrastructure modules while maintaining in
 from infrastructure.project import discover_projects, validate_project_structure
 
 # Automatically discovers all valid projects
-projects = discover_projects(Path("."))  # Finds act_inf_metaanalysis, etc.
+projects = discover_projects(Path("."))  # Finds code_project, etc.
 
 # Validates project structure
-is_valid, message = validate_project_structure(Path("projects/act_inf_metaanalysis"))
+is_valid, message = validate_project_structure(Path("projects/code_project"))
 # Returns: (True, "Valid project structure")
 ```
 
@@ -269,11 +270,12 @@ Each project follows this structure:
 
 ```
 projects/
-├── act_inf_metaanalysis/  # Active Inference meta-analysis
-│   ├── src/              # Source code
-│   ├── tests/            # Test suite
-│   ├── scripts/          # Analysis scripts
+├── code_project/         # The Master Exemplar
+│   ├── src/              # Pure scientific logic
+│   ├── tests/            # Zero-Mock test suite
+│   ├── scripts/          # Thin orchestrators
 │   ├── manuscript/       # Research manuscript
+│   ├── docs/             # Modular documentation hub
 │   ├── output/           # Generated outputs (not in git)
 │   └── pyproject.toml    # Project configuration
 ├── myresearch/           # Custom project 1
@@ -288,7 +290,7 @@ projects/
 
 ```bash
 # Copy an existing project as a starting point
-cp -r projects/act_inf_metaanalysis projects/myresearch
+cp -r projects/code_project projects/myresearch
 
 # Customize pyproject.toml
 vim projects/myresearch/pyproject.toml
@@ -453,7 +455,7 @@ Example:
 
 ```
 output/
-├── act_inf_metaanalysis/  # Active Inference meta-analysis
+├── code_project/  # Active Inference meta-analysis
 │   ├── pdf/
 │   ├── figures/
 │   └── ...
@@ -554,9 +556,9 @@ Available projects are automatically discovered - use `--project {name}` to spec
 
 ## Real Project Examples
 
-### **Active Inference Meta-Analysis** (`projects/act_inf_metaanalysis/`)
+### **The Master Exemplar** (`projects/code_project/`)
 
-Active Inference meta-analysis research project:
+The fully-featured research exemplar demonstrating the Generalized Research Template:
 
 **Standalone Guarantees:**
 
@@ -568,7 +570,7 @@ Active Inference meta-analysis research project:
 
 ```bash
 # Pipeline execution
-python3 scripts/execute_pipeline.py --project act_inf_metaanalysis --core-only
+python3 scripts/execute_pipeline.py --project code_project --core-only
 ```
 
 ## Creating New Projects
@@ -577,7 +579,7 @@ python3 scripts/execute_pipeline.py --project act_inf_metaanalysis --core-only
 
 ```bash
 # Copy an existing project as template
-cp -r projects/act_inf_metaanalysis projects/my_research
+cp -r projects/code_project projects/my_research
 cd projects/my_research
 
 # Update project metadata
@@ -815,7 +817,7 @@ The `projects/` directory implements a **standalone project paradigm** with infr
 
 ### 🎯 **Active Project**
 
-- **act_inf_metaanalysis**: Active Inference meta-analysis research
+- **code_project**: Active Inference meta-analysis research
 
 **Note:** Archived projects are preserved in `projects_archive/` for reference.
 

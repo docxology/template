@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
 
 from infrastructure.reporting.output_reporter import (
     collect_output_statistics, generate_output_summary)

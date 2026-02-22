@@ -16,13 +16,10 @@ Test Pattern:
 
 from __future__ import annotations
 
-import json
 
-import pytest
-import requests
 
 from infrastructure.llm.core.client import LLMClient
-from infrastructure.llm.core.config import GenerationOptions, LLMConfig
+from infrastructure.llm.core.config import LLMConfig
 
 # No mock imports needed - using real HTTP server
 

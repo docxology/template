@@ -8,13 +8,9 @@ This module tests the critical fixes for:
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-import tempfile
 import unicodedata
-from pathlib import Path
 
-import pytest
 
-from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.pdf_renderer import PDFRenderer
 

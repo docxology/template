@@ -5,11 +5,8 @@ Follows No Mocks Policy - all tests use real data and real execution.
 """
 
 from datetime import datetime
-from pathlib import Path
 
-import pytest
 
-from infrastructure.validation import doc_scanner
 from infrastructure.validation.doc_scanner import (AccuracyIssue,
                                                    CompletenessGap,
                                                    DocumentationFile,

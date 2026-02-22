@@ -20,7 +20,7 @@ Figure \ref{fig:convergence} illustrates the convergence behavior of gradient de
 
 Figure \ref{fig:step_sensitivity} examines how the choice of step size affects the convergence path and solution quality. The analysis reveals the trade-off between convergence speed and numerical stability.
 
-![Step size sensitivity analysis across 10 values ($\alpha = 0.005$ to $0.4$). Left: iterations decrease geometrically with $\alpha$ on log-log axes. Right: all step sizes achieve the optimal objective value $f(x^*) = -0.5$ from the initial value $f(x_0) = 0$, confirming robust convergence across the full range.](../output/figures/step_size_sensitivity.png){#fig:step_sensitivity}
+![Step size sensitivity analysis across 10 values (alpha from 0.005 to 0.4). Left panel: iterations to convergence decrease geometrically with step size on log--log axes. Right panel: all step sizes achieve the optimal objective value of -0.5 from the initial value of 0, confirming robust convergence across the full range.](../output/figures/step_size_sensitivity.png){#fig:step_sensitivity}
 
 ## Quantitative Results
 

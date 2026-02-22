@@ -4,9 +4,7 @@ Comprehensive tests for output validation functionality including
 copied outputs validation and output structure validation.
 """
 
-from pathlib import Path
 
-import pytest
 
 from infrastructure.validation.output_validator import (
     validate_copied_outputs, validate_output_structure)

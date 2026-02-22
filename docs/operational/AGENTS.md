@@ -119,29 +119,29 @@ docs/operational/
 
 ```bash
 # 1. Environment check
-python3 scripts/00_setup_environment.py
+uv run python scripts/00_setup_environment.py
 
 # 2. Code development and testing
-python3 scripts/01_run_tests.py
+uv run python scripts/01_run_tests.py
 
 # 3. Analysis execution
-python3 scripts/02_run_analysis.py
+uv run python scripts/02_run_analysis.py
 
 # 4. Output generation
-python3 scripts/03_render_pdf.py
+uv run python scripts/03_render_pdf.py
 
 # 5. Quality validation
-python3 scripts/04_validate_output.py
+uv run python scripts/04_validate_output.py
 
 # 6. Delivery preparation
-python3 scripts/05_copy_outputs.py
+uv run python scripts/05_copy_outputs.py
 ```
 
 **Health Monitoring:**
 
 ```bash
 # Check system status
-python3 -c "
+uv run python -c "
 from infrastructure.core import environment
 status = environment.check_system_requirements()
 for component, info in status.items():
@@ -160,7 +160,7 @@ for component, info in status.items():
 uv lock --upgrade
 
 # Run full test suite
-python3 scripts/01_run_tests.py
+uv run python scripts/01_run_tests.py
 
 # Check disk usage
 du -sh output/ project/output/
@@ -182,7 +182,7 @@ tar -czf "backup_$(date +%Y%m%d).tar.gz" \
 safety check
 
 # Performance benchmark
-python3 scripts/02_run_analysis.py --benchmark
+uv run python scripts/02_run_analysis.py --benchmark
 ```
 
 ### Configuration Management
@@ -248,7 +248,7 @@ export GITHUB_TOKEN="your-github-token"
 
 ```bash
 # Configuration error recovery
-python3 -c "
+uv run python -c "
 from infrastructure.core import load_config
 try:
     config = load_config()
@@ -259,13 +259,13 @@ except Exception as e:
 "
 
 # Build error recovery
-LOG_LEVEL=0 python3 scripts/03_render_pdf.py  # Debug logging
+LOG_LEVEL=0 uv run python scripts/03_render_pdf.py  # Debug logging
 # Check LaTeX installation
 which xelatex
 tlmgr list --only-installed | grep multirow
 
 # Validation error recovery
-python3 scripts/04_validate_output.py --verbose
+uv run python scripts/04_validate_output.py --verbose
 # Review validation report in output/reports/
 ```
 
@@ -277,14 +277,14 @@ python3 scripts/04_validate_output.py --verbose
 
 ```bash
 # Python environment
-python3 -m venv research_env
+uv run python -m venv research_env
 source research_env/bin/activate
 
 # Install dependencies
 uv pip install -e .
 
 # Verify installation
-python3 -c "import infrastructure; print('Installation successful')"
+uv run python -c "import infrastructure; print('Installation successful')"
 ```
 
 **Production Environment:**
@@ -358,8 +358,8 @@ tar -xzf data-20241227.tar.gz
 cd recovered-data
 
 # Validate recovery
-python3 scripts/01_run_tests.py
-python3 scripts/03_render_pdf.py
+uv run python scripts/01_run_tests.py
+uv run python scripts/03_render_pdf.py
 ```
 
 ## Performance Management
@@ -474,7 +474,7 @@ if resources['memory']['percent'] > 80:
 df -h .
 
 # Clean up generated files
-python3 scripts/execute_pipeline.py --clean
+uv run python scripts/execute_pipeline.py --clean
 
 # Archive old outputs
 find output/ -name "*.pdf" -mtime +30 -exec mv {} archives/ \;
@@ -507,15 +507,15 @@ find output/logs/ -name "*.log" -mtime +7 -exec gzip {} \;
    pip list | grep -E "(infrastructure|pandoc|texlive)"
 
    # Log analysis
-   LOG_LEVEL=0 python3 scripts/problematic_script.py 2>&1 | tee debug.log
+   LOG_LEVEL=0 uv run python scripts/problematic_script.py 2>&1 | tee debug.log
    ```
 
 3. **Isolate the Problem**
 
    ```bash
    # Test individual components
-   python3 -c "from infrastructure.core import load_config; print('Config loads')"
-   python3 -c "from infrastructure.validation import validate_pdf_rendering; print('Validation imports')"
+   uv run python -c "from infrastructure.core import load_config; print('Config loads')"
+   uv run python -c "from infrastructure.validation import validate_pdf_rendering; print('Validation imports')"
    ```
 
 4. **Apply Fix and Test**
@@ -525,8 +525,8 @@ find output/logs/ -name "*.log" -mtime +7 -exec gzip {} \;
    vim fixed_file.py
 
    # Test fix
-   python3 scripts/01_run_tests.py
-   python3 scripts/affected_script.py
+   uv run python scripts/01_run_tests.py
+   uv run python scripts/affected_script.py
    ```
 
 ### Common Issues and Solutions
@@ -557,7 +557,7 @@ export MAX_PARALLEL_SUMMARIES=1
 export PDF_MEMORY_LIMIT="2GB"
 
 # Monitor memory usage
-python3 -c "
+uv run python -c "
 import psutil
 print(f'Memory usage: {psutil.virtual_memory().percent}%')
 "
@@ -606,7 +606,7 @@ export ZENODO_TOKEN="$(cat ~/.zenodo_token)"
 export GITHUB_TOKEN="$(cat ~/.github_token)"
 
 # Avoid logging sensitive data
-python3 -c "
+uv run python -c "
 import os
 token = os.getenv('ZENODO_TOKEN')
 if token:
@@ -630,7 +630,7 @@ sudo rkhunter --check
 sudo chkrootkit
 
 # File integrity
-find . -name "*.py" -exec python3 -m py_compile {} \;
+find . -name "*.py" -exec uv run python -m py_compile {} \;
 ```
 
 ## Continuous Improvement

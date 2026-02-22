@@ -4,9 +4,6 @@
 This module tests the link validation utilities for documentation.
 All tests use real data and computations - no mocks allowed.
 """
-import os
-import tempfile
-from pathlib import Path
 
 import pytest
 

@@ -4,13 +4,12 @@ from __future__ import annotations
 
 import re
 from collections import defaultdict
-from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Set
 
 from infrastructure.core.logging_utils import get_logger
-from infrastructure.project.discovery import ProjectInfo, discover_projects
+from infrastructure.project.discovery import discover_projects
 from infrastructure.validation.doc_models import DocumentationFile
 
 logger = get_logger(__name__)

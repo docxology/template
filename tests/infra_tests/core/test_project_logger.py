@@ -1,6 +1,5 @@
 """Tests for ProjectLogger and standardized logging interface."""
 
-import pytest
 
 from infrastructure.core.logging_utils import (ProjectLogger,
                                                get_project_logger,

@@ -93,15 +93,15 @@ docs/reference/
 **Command Reference:**
 ```bash
 # pipeline execution
-python3 scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --core-only
 
 # Individual stage execution
-python3 scripts/00_setup_environment.py  # Environment check
-python3 scripts/01_run_tests.py          # Test suite
-python3 scripts/02_run_analysis.py       # Analysis execution
-python3 scripts/03_render_pdf.py         # PDF generation
-python3 scripts/04_validate_output.py    # Quality validation
-python3 scripts/05_copy_outputs.py       # Deliverable copying
+uv run python scripts/00_setup_environment.py  # Environment check
+uv run python scripts/01_run_tests.py          # Test suite
+uv run python scripts/02_run_analysis.py       # Analysis execution
+uv run python scripts/03_render_pdf.py         # PDF generation
+uv run python scripts/04_validate_output.py    # Quality validation
+uv run python scripts/05_copy_outputs.py       # Deliverable copying
 
 # Interactive menu
 ./run.sh  # Main interactive interface
@@ -144,7 +144,7 @@ publication:
 **Standard Commands:**
 ```bash
 # System health check
-python3 -c "
+uv run python -c "
 from infrastructure.core import environment
 status = environment.check_system_requirements()
 print('System Status:')
@@ -153,10 +153,10 @@ for component, info in status.items():
 "
 
 # Quick test run
-python3 scripts/01_run_tests.py --tb=short
+uv run python scripts/01_run_tests.py --tb=short
 
 # Fast PDF generation
-python3 scripts/03_render_pdf.py --quiet
+uv run python scripts/03_render_pdf.py --quiet
 ```
 
 ## Reference Material Standards
@@ -175,13 +175,13 @@ python3 scripts/03_render_pdf.py --quiet
 
 **Quick Use:**
 ```bash
-python3 scripts/03_render_pdf.py
+uv run python scripts/03_render_pdf.py
 ```
 
 **With Custom Config:**
 ```bash
 export LOG_LEVEL=0  # Debug output
-python3 scripts/03_render_pdf.py --config custom.yaml
+uv run python scripts/03_render_pdf.py --config custom.yaml
 ```
 
 **Common Issues:**
@@ -239,7 +239,7 @@ python3 scripts/03_render_pdf.py --config custom.yaml
 ./validate_faq_answers.sh docs/reference/faq.md
 
 # Test API reference examples
-python3 validate_api_examples.py docs/reference/api-reference.md
+uv run python validate_api_examples.py docs/reference/api-reference.md
 ```
 
 ### User Feedback Integration
@@ -315,7 +315,7 @@ for cmd in $(grep "^\`\`\`bash" quick-start-cheatsheet.md | sed 's/```bash//'); 
 done
 
 # Validate configuration examples
-python3 -c "
+uv run python -c "
 import yaml
 with open('config_example.yaml') as f:
     config = yaml.safe_load(f)

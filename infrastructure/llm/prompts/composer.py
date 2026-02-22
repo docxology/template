@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import re
-from pathlib import Path
 from typing import Any, Dict, Optional
 
 from infrastructure.core.exceptions import LLMTemplateError
@@ -78,7 +77,7 @@ class PromptComposer:
                     )
                 elif "format_requirements" in fragment_ref:
                     # Build format requirements
-                    format_data = self.loader.load_fragment(
+                    self.loader.load_fragment(
                         fragment_ref.replace(".json", ".json")
                     )
                     headers = template.get("section_config", {}).get("headers", [])

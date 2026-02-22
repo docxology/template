@@ -119,9 +119,9 @@ from infrastructure.llm.validation.format import (
 
 # Re-export infrastructure utilities for tests
 try:
-    from infrastructure.llm.core.client import LLMClient
-    from infrastructure.llm.core.config import LLMConfig
-    from infrastructure.llm.utils.ollama import (
+    from infrastructure.llm.core.client import LLMClient  # noqa: F401
+    from infrastructure.llm.core.config import LLMConfig  # noqa: F401
+    from infrastructure.llm.utils.ollama import (  # noqa: F401
         is_ollama_running,
         select_best_model,
     )

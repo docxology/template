@@ -132,7 +132,7 @@ flowchart TD
 2. **Implement functionality** - Write code to pass tests
 3. **Validate integration** - Ensure scripts can use the code
 4. **Update documentation** - Reflect changes in markdown
-5. **Run pipeline** - Use `python3 scripts/execute_pipeline.py --core-only` to validate coherence
+5. **Run pipeline** - Use `uv run python scripts/execute_pipeline.py --core-only` to validate coherence
 
 ## Step-by-Step Workflow
 
@@ -161,14 +161,14 @@ uv run python project/scripts/example_figure.py
 uv run python scripts/generate_research_figures.py
 
 # Validate markdown integrity
-python3 -m infrastructure.validation.cli markdown project/manuscript/
+uv run python -m infrastructure.validation.cli markdown project/manuscript/
 ```
 
 ### 3. Integration Phase
 
 ```bash
 # Run the pipeline (all 8 stages)
-python3 scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --core-only
 
 # Or use unified interactive menu
 ./run.sh
@@ -254,10 +254,10 @@ uv run python project/scripts/example_figure.py
 uv run python scripts/generate_research_figures.py
 
 # Validate markdown
-python3 -m infrastructure.validation.cli markdown project/manuscript/
+uv run python -m infrastructure.validation.cli markdown project/manuscript/
 
 # Build PDF pipeline
-python3 scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --core-only
 
 # Clean all generated outputs (regeneratable)
 # Pipeline automatically handles cleanup
@@ -320,7 +320,7 @@ All directories under `output/` are disposable and can be safely cleaned.
 
 ```bash
 # Check what's failing
-python3 -m infrastructure.validation.cli markdown project/manuscript/
+uv run python -m infrastructure.validation.cli markdown project/manuscript/
 
 # Regenerate specific figures
 uv run python project/scripts/example_figure.py

@@ -95,7 +95,7 @@ def main() -> int:
         '--project',
         help='Project name (ignored - this stage runs for all projects)'
     )
-    args = parser.parse_args()
+    parser.parse_args()
     
     log_header("STAGE 10: Executive Reporting", logger)
     
@@ -195,10 +195,10 @@ def main() -> int:
         logger.info("")
         
         # Log output location
-        log_success(f"\n✅ Executive reporting complete!", logger)
+        log_success("\n✅ Executive reporting complete!", logger)
         logger.info(f"Reports saved to: {output_dir}")
-        logger.info(f"  • Consolidated report: consolidated_report.{{json,html,md}}")
-        logger.info(f"  • Visual dashboard: dashboard.{{png,pdf,html}}")
+        logger.info("  • Consolidated report: consolidated_report.{json,html,md}")
+        logger.info("  • Visual dashboard: dashboard.{png,pdf,html}")
         
         # Log resource usage at end
         log_resource_usage("Executive reporting stage end", logger)

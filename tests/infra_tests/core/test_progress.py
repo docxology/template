@@ -3,11 +3,8 @@
 Comprehensive tests for progress bar and sub-stage progress tracking.
 """
 
-import sys
 import time
-from io import StringIO
 
-import pytest
 
 from infrastructure.core.progress import ProgressBar, SubStageProgress
 

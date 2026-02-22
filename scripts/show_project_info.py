@@ -16,8 +16,7 @@ from typing import Dict, Any
 repo_root = Path(__file__).parent.parent
 sys.path.insert(0, str(repo_root))
 
-from infrastructure.core.logging_utils import get_logger
-from infrastructure.project.discovery import discover_projects, ProjectInfo
+from infrastructure.core.logging_utils import get_logger, log_header, log_substep
 
 logger = get_logger(__name__)
 
@@ -88,48 +87,42 @@ def get_project_info(project_name: str, repo_root: Path) -> Dict[str, Any]:
 
 def display_project_info(info: Dict[str, Any]) -> None:
     """Display project information in formatted output."""
-    print(f"\n{'='*60}")
-    print(f"  PROJECT INFORMATION: {info['name']}")
-    print(f"{'='*60}\n")
+    log_header(f"PROJECT INFORMATION: {info['name']}", logger)
 
-    print(f"Project Directory: {info['directory']}\n")
+    logger.info(f"Project Directory: {info['directory']}")
 
     # Manuscript
     if info["manuscript"]:
-        print("Manuscript:")
-        print(f"  Location: {info['manuscript'].get('location', 'N/A')}")
-        print(f"  Markdown files: {info['manuscript'].get('md_files', 0)}")
+        log_substep("Manuscript", logger)
+        logger.info(f"  Location: {info['manuscript'].get('location', 'N/A')}")
+        logger.info(f"  Markdown files: {info['manuscript'].get('md_files', 0)}")
         if info['manuscript'].get('has_config'):
-            print("  Config: ✓ (config.yaml found)")
+            logger.info("  Config: ✓ (config.yaml found)")
             if info['manuscript'].get('title'):
-                print(f"  Title: {info['manuscript']['title']}")
+                logger.info(f"  Title: {info['manuscript']['title']}")
         else:
-            print("  Config: ✗ (config.yaml not found)")
-        print()
+            logger.info("  Config: ✗ (config.yaml not found)")
 
     # Source code
     if info["source"]:
-        print("Source Code:")
-        print(f"  Location: {info['source'].get('location', 'N/A')}")
-        print(f"  Python files: {info['source'].get('py_files', 0)}")
-        print()
+        log_substep("Source Code", logger)
+        logger.info(f"  Location: {info['source'].get('location', 'N/A')}")
+        logger.info(f"  Python files: {info['source'].get('py_files', 0)}")
 
     # Output
     if info["output"]:
-        print("Output:")
-        print(f"  Location: {info['output'].get('location', 'N/A')}")
+        log_substep("Output", logger)
+        logger.info(f"  Location: {info['output'].get('location', 'N/A')}")
         if "pdf_count" in info["output"]:
-            print(f"  PDFs: {info['output']['pdf_count']}")
+            logger.info(f"  PDFs: {info['output']['pdf_count']}")
         if "figure_count" in info["output"]:
-            print(f"  Figures: {info['output']['figure_count']}")
-        print()
+            logger.info(f"  Figures: {info['output']['figure_count']}")
 
     # Tests
     if info["tests"]:
-        print("Tests:")
-        print(f"  Location: {info['tests'].get('location', 'N/A')}")
-        print(f"  Test files: {info['tests'].get('test_files', 0)}")
-        print()
+        log_substep("Tests", logger)
+        logger.info(f"  Location: {info['tests'].get('location', 'N/A')}")
+        logger.info(f"  Test files: {info['tests'].get('test_files', 0)}")
 
 
 def main():

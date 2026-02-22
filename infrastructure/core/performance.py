@@ -12,7 +12,6 @@ import os
 import time
 from contextlib import contextmanager
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import Any, Optional
 
 from infrastructure.core.logging_utils import format_duration, get_logger
@@ -163,7 +162,7 @@ class PerformanceMonitor:
             import psutil
 
             process = psutil.Process(os.getpid())
-            return process.memory_info().rss / 1024 / 1024  # Convert to MB
+            return float(process.memory_info().rss / 1024 / 1024)  # Convert to MB
         except ImportError:
             # Fallback if psutil not available
             return 0.0
@@ -180,7 +179,7 @@ class PerformanceMonitor:
             import psutil
 
             process = psutil.Process(os.getpid())
-            return process.cpu_percent(interval=0.1)
+            return float(process.cpu_percent(interval=0.1))
         except ImportError:
             return 0.0
         except Exception:
@@ -337,7 +336,7 @@ class StagePerformanceTracker:
         Returns:
             List of warning dictionaries
         """
-        warnings = []
+        warnings: list[dict[str, Any]] = []
 
         if not self.stages:
             return warnings

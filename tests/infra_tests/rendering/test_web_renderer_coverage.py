@@ -4,9 +4,7 @@ Tests web/HTML rendering functionality using real implementations.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-from pathlib import Path
 
-import pytest
 
 from infrastructure.rendering import web_renderer
 
@@ -38,7 +36,7 @@ class TestHtmlRendering:
 
         if hasattr(web_renderer, "render_html"):
             try:
-                result = web_renderer.render_html(str(md))
+                web_renderer.render_html(str(md))
             except Exception:
                 pass
 
@@ -49,7 +47,7 @@ class TestHtmlRendering:
 
         if hasattr(web_renderer, "render_html"):
             try:
-                result = web_renderer.render_html(str(md), template="default")
+                web_renderer.render_html(str(md), template="default")
             except Exception:
                 pass
 
@@ -64,7 +62,7 @@ class TestMathJaxIntegration:
 
         if hasattr(web_renderer, "render_html"):
             try:
-                result = web_renderer.render_html(str(md), mathjax=True)
+                web_renderer.render_html(str(md), mathjax=True)
             except Exception:
                 pass
 
@@ -93,7 +91,7 @@ class TestCssIntegration:
         if hasattr(web_renderer, "inline_css"):
             html = "<html><head></head><body></body></html>"
             try:
-                result = web_renderer.inline_css(html, str(css))
+                web_renderer.inline_css(html, str(css))
             except Exception:
                 pass
 

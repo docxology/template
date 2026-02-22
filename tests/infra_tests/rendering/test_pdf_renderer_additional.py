@@ -4,9 +4,7 @@ Tests PDF rendering functionality using real implementations.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-from pathlib import Path
 
-import pytest
 
 from infrastructure.rendering import pdf_renderer
 
@@ -86,7 +84,7 @@ class TestPdfRendererErrors:
         if hasattr(pdf_renderer, "render_pdf"):
             # Use real execution - may fail if LaTeX not available, which is expected
             try:
-                result = pdf_renderer.render_pdf(str(tex))
+                pdf_renderer.render_pdf(str(tex))
             except Exception:
                 pass  # Expected to fail with invalid LaTeX
 
@@ -94,6 +92,6 @@ class TestPdfRendererErrors:
         """Test handling missing file."""
         if hasattr(pdf_renderer, "render_pdf"):
             try:
-                result = pdf_renderer.render_pdf(str(tmp_path / "missing.tex"))
+                pdf_renderer.render_pdf(str(tmp_path / "missing.tex"))
             except Exception:
                 pass  # Expected to fail

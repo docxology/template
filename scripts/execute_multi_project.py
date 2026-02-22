@@ -12,7 +12,7 @@ from pathlib import Path
 repo_root = Path(__file__).parent.parent
 sys.path.insert(0, str(repo_root))
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging_utils import get_logger, log_header, log_success
 from infrastructure.core.multi_project import MultiProjectConfig, MultiProjectOrchestrator
 from infrastructure.project.discovery import discover_projects
 
@@ -79,25 +79,24 @@ def execute_multi_project(
         total_projects = len(projects)
         success_rate = (result.successful_projects / total_projects * 100) if total_projects > 0 else 0
 
-        print(f"\n{'='*60}")
-        print(f"MULTI-PROJECT EXECUTION RESULTS")
-        print(f"{'='*60}")
-        print(f"Operation: {operation_desc}")
-        print(f"Total Projects: {total_projects}")
-        print(f"Successful: {result.successful_projects}")
+        log_header("MULTI-PROJECT EXECUTION RESULTS", logger)
+        logger.info(f"Operation: {operation_desc}")
+        logger.info(f"Total Projects: {total_projects}")
+        logger.info(f"Successful: {result.successful_projects}")
         failed_projects = total_projects - result.successful_projects
-        print(f"Failed: {failed_projects}")
-        print(f"Success Rate: {success_rate:.1f}%")
-        print(f"Total Duration: {result.total_duration:.1f}s")
-        print(f"Average per Project: {result.total_duration/total_projects:.1f}s" if total_projects > 0 else "")
+        logger.info(f"Failed: {failed_projects}")
+        logger.info(f"Success Rate: {success_rate:.1f}%")
+        logger.info(f"Total Duration: {result.total_duration:.1f}s")
+        if total_projects > 0:
+            logger.info(f"Average per Project: {result.total_duration/total_projects:.1f}s")
 
         if run_infra_tests and result.infra_test_duration > 0:
             infra_percentage = (result.infra_test_duration / result.total_duration * 100)
-            print(f"Infrastructure Tests: {result.infra_test_duration:.1f}s ({infra_percentage:.1f}%)")
+            logger.info(f"Infrastructure Tests: {result.infra_test_duration:.1f}s ({infra_percentage:.1f}%)")
 
         # Show project status summary
         if hasattr(result, 'project_results') and result.project_results:
-            print(f"\nProject Status:")
+            logger.info("Project Status:")
             if isinstance(result.project_results, dict):
                 for proj_name in sorted(result.project_results.keys()):
                     proj_result = result.project_results[proj_name]
@@ -106,13 +105,11 @@ def execute_multi_project(
                         all_success = all(stage.success for stage in proj_result if hasattr(stage, 'success'))
                         duration = sum(stage.duration for stage in proj_result if hasattr(stage, 'duration'))
                         status = "✅" if all_success else "❌"
-                        print(f"  {status} {proj_name}: {len(proj_result)} stages, {duration:.1f}s")
+                        logger.info(f"  {status} {proj_name}: {len(proj_result)} stages, {duration:.1f}s")
                     else:
-                        print(f"  ❓ {proj_name}: Unknown status")
+                        logger.info(f"  ❓ {proj_name}: Unknown status")
             else:
-                print(f"  ⚠ project_results format unexpected")
-
-        print(f"{'='*60}")
+                logger.warning("  ⚠ project_results format unexpected")
 
         # Generate comprehensive final summary
         try:
@@ -137,10 +134,10 @@ def execute_multi_project(
             logger.warning(f"Failed to generate multi-project summary: {e}")
 
         if result.successful_projects == len(projects):
-            print("🎉 All projects completed successfully!")
+            log_success("🎉 All projects completed successfully!", logger)
             return 0
         else:
-            print("❌ Some projects failed")
+            logger.error("❌ Some projects failed")
             # List failed projects
             if hasattr(result, 'project_results') and result.project_results:
                 failed = []
@@ -155,9 +152,9 @@ def execute_multi_project(
                         failed.append(name)
 
                 if failed:
-                    print("   Failed projects:")
+                    logger.error("   Failed projects:")
                     for proj_name in failed:
-                        print(f"     - {proj_name}")
+                        logger.error(f"     - {proj_name}")
             return 1
 
     except Exception as e:

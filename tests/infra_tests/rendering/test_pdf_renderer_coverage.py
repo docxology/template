@@ -4,10 +4,8 @@ Tests PDF rendering functionality using real implementations.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-import subprocess
 from pathlib import Path
 
-import pytest
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering import pdf_renderer
@@ -116,7 +114,7 @@ class TestRenderMarkdown:
 
         # Use real execution - may succeed or fail depending on pandoc
         try:
-            result = renderer.render_markdown(md_file)
+            renderer.render_markdown(md_file)
             # May succeed or fail
             assert True
         except (RenderingError, Exception):

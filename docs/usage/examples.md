@@ -167,7 +167,7 @@ Validate that everything works:
 
 ```bash
 # Pipeline automatically handles cleanup
-python3 scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --core-only
 ```
 
 ### 5. Customize Further

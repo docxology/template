@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """Tests for issue_categorizer module."""
 
-import pytest
 
 from infrastructure.validation.doc_models import (AccuracyIssue,
-                                                  CompletenessGap, LinkIssue,
+                                                  LinkIssue,
                                                   QualityIssue)
 from infrastructure.validation.issue_categorizer import (
     assign_severity, categorize_by_type, filter_false_positives,

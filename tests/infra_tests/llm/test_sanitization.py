@@ -4,8 +4,6 @@
 This module tests the input sanitization and security utilities for LLM operations.
 All tests use real data and computations - no mocks allowed.
 """
-import os
-import tempfile
 from pathlib import Path
 
 import pytest

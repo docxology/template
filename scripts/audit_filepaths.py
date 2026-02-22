@@ -27,7 +27,7 @@ from pathlib import Path
 # Add root to path for infrastructure imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from infrastructure.core.logging_utils import get_logger, setup_logger
+from infrastructure.core.logging_utils import get_logger, setup_logger, log_header, log_success
 from infrastructure.validation.audit_orchestrator import (
     run_comprehensive_audit,
     generate_audit_report
@@ -109,19 +109,17 @@ Examples:
         # Print summary to console
         total_issues = sum(scan_results.statistics.values())
 
-        print("\n" + "="*80)
-        print("AUDIT COMPLETE")
-        print("="*80)
-        print(f"Files scanned: {scan_results.scanned_files}")
-        print(f"Issues found: {total_issues}")
-        print(f"Duration: {scan_results.scan_duration:.2f}s")
-        print(f"Report saved: {args.output}")
+        log_header("AUDIT COMPLETE", logger)
+        logger.info(f"Files scanned: {scan_results.scanned_files}")
+        logger.info(f"Issues found: {total_issues}")
+        logger.info(f"Duration: {scan_results.scan_duration:.2f}s")
+        log_success(f"Report saved: {args.output}", logger)
 
         if total_issues > 0:
-            print("\n🚨 Issues found by category:")
+            logger.warning("🚨 Issues found by category:")
             for category, count in scan_results.statistics.items():
                 if count > 0:
-                    print(f"   • {category.replace('_', ' ').title()}: {count}")
+                    logger.warning(f"   • {category.replace('_', ' ').title()}: {count}")
 
         # Exit with appropriate code
         sys.exit(0 if total_issues == 0 else 1)

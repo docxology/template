@@ -16,8 +16,7 @@ import time
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import (Any, Dict, Generator, Iterator, Literal, Optional, Tuple,
-                    Union)
+from typing import (Any, Dict, Iterator, Optional, Tuple)
 
 import requests
 
@@ -751,7 +750,7 @@ class LLMClient:
 
                 return content
 
-            except requests.exceptions.Timeout as e:
+            except requests.exceptions.Timeout:
                 last_error = f"Timeout after {self.config.timeout}s"
                 if attempt < retries:
                     logger.debug(
@@ -1000,7 +999,7 @@ class LLMClient:
                 # Success - break retry loop
                 break
 
-            except requests.exceptions.Timeout as e:
+            except requests.exceptions.Timeout:
                 error_count += 1
                 metrics.error_count = error_count
                 last_error = f"Timeout after {self.config.timeout}s"

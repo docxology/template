@@ -9,7 +9,7 @@ from __future__ import annotations
 import shutil
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List
+from typing import Any, Dict, List
 
 from infrastructure.core.logging_utils import get_logger, log_success
 
@@ -31,7 +31,7 @@ def clean_output_directory(output_dir: Path) -> bool:
         logger.info(f"Output directory does not exist, creating: {output_dir}")
         try:
             output_dir.mkdir(parents=True, exist_ok=True)
-            log_success(f"Created output directory", logger)
+            log_success("Created output directory", logger)
             return True
         except PermissionError as e:
             logger.error(
@@ -394,7 +394,7 @@ def copy_final_deliverables(
 
     project_output = project_root / "projects" / project_name / "output"
 
-    stats = {
+    stats: dict[str, Any] = {
         "pdf_files": 0,
         "web_files": 0,
         "slides_files": 0,

@@ -321,7 +321,50 @@ def get_python_command() -> list[str]:
     return [sys.executable]
 
 
-def get_subprocess_env(base_env: dict = None) -> dict:
+def validate_interpreter() -> bool:
+    """Validate that sys.executable is inside the expected virtual environment.
+
+    Checks that the Python interpreter being used is the one managed by
+    uv inside the project's .venv directory. This prevents "environment escape"
+    where a system Python accidentally intercepts pipeline execution.
+
+    Returns:
+        True if interpreter is inside the venv (or no venv is expected), False otherwise.
+
+    Note:
+        Logs a warning if the interpreter is outside the venv but does not
+        raise an exception, since CI environments and direct invocations
+        may have valid reasons for running outside a venv.
+    """
+    interpreter = Path(sys.executable).resolve()
+
+    # Check if VIRTUAL_ENV is set and matches
+    venv_path = os.environ.get("VIRTUAL_ENV")
+    if venv_path:
+        venv_resolved = Path(venv_path).resolve()
+        try:
+            interpreter.relative_to(venv_resolved)
+            logger.debug(f"Interpreter validated: {interpreter} is inside {venv_resolved}")
+            return True
+        except ValueError:
+            logger.warning(
+                f"⚠️  Interpreter escape detected: sys.executable={interpreter} "
+                f"is NOT inside VIRTUAL_ENV={venv_resolved}"
+            )
+            return False
+
+    # Check for .venv in common ancestor directories
+    for parent in interpreter.parents:
+        if parent.name == ".venv":
+            logger.debug(f"Interpreter validated: {interpreter} is inside a .venv")
+            return True
+
+    # No venv detected — might be CI or system Python, just note it
+    logger.debug(f"No virtual environment detected for interpreter: {interpreter}")
+    return True
+
+
+def get_subprocess_env(base_env: dict | None = None) -> dict:
     """Get environment dict for subprocess with uv compatibility.
 
     Creates a clean environment dictionary for subprocess execution that handles

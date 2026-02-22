@@ -9,10 +9,8 @@ Tests specific edge cases for improved coverage using real implementations:
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-import os
 from pathlib import Path
 
-import pytest
 
 from infrastructure.validation import check_links
 
@@ -275,7 +273,6 @@ class TestMainFunctionReporting:
         )
 
         # Run main with custom repo root
-        original_main = check_links.main
 
         def patched_main():
             """Patched main to use tmp_path as repo root."""

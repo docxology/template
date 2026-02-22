@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Tuple
 
 from infrastructure.core.exceptions import ContextLimitError
 from infrastructure.core.logging_utils import get_logger

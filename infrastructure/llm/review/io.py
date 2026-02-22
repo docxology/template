@@ -513,19 +513,19 @@ def generate_review_summary(
 
     # Input manuscript metrics
     m = session_metrics.manuscript
-    logger.info(f"\nInput manuscript:")
+    logger.info("\nInput manuscript:")
     logger.info(
         f"  {m.total_chars:,} chars ({m.total_words:,} words, ~{m.total_tokens_est:,} tokens)"
     )
     if m.truncated:
         logger.info(f"  Truncated to {m.truncated_chars:,} chars")
     else:
-        logger.info(f"  Full text sent to LLM (no truncation)")
+        logger.info("  Full text sent to LLM (no truncation)")
 
     logger.info(f"\nOutput directory: {output_dir}")
 
     # Per-review metrics
-    logger.info(f"\nReviews generated:")
+    logger.info("\nReviews generated:")
     total_output_chars = 0
     total_output_words = 0
 
@@ -546,7 +546,7 @@ def generate_review_summary(
     logger.info(f"Total generation time: {session_metrics.total_generation_time:.1f}s")
 
     # File sizes with full paths
-    logger.info(f"\nFiles created:")
+    logger.info("\nFiles created:")
     translation_files = []
     other_files = []
     for filepath in sorted(output_dir.glob("*")):
@@ -557,7 +557,7 @@ def generate_review_summary(
 
     # Log translation files with language names, full paths, and word counts
     if translation_files:
-        logger.info(f"\n  Translation files:")
+        logger.info("\n  Translation files:")
         for filepath in translation_files:
             full_path = filepath.resolve()
             size_kb = filepath.stat().st_size / 1024
@@ -576,7 +576,7 @@ def generate_review_summary(
 
     # Log other files with full paths and word counts
     if other_files:
-        logger.info(f"\n  Other files:")
+        logger.info("\n  Other files:")
         for filepath in other_files:
             full_path = filepath.resolve()
             size_kb = filepath.stat().st_size / 1024

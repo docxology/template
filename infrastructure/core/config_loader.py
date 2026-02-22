@@ -6,7 +6,10 @@ and formatting metadata for LaTeX and bash export. Part of the infrastructure la
 
 from __future__ import annotations
 
+import difflib
+import logging
 import os
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Optional, TypedDict
 
@@ -35,11 +38,21 @@ class LLMConfig(TypedDict, total=False):
     reviews: ReviewsConfig
 
 class TestingConfig(TypedDict, total=False):
-    max_test_failures: int | str
-    max_infra_test_failures: int | str
-    max_project_test_failures: int | str
-    infra_coverage_threshold: int | str
-    project_coverage_threshold: int | str
+    max_test_failures: int
+    max_infra_test_failures: int
+    max_project_test_failures: int
+    infra_coverage_threshold: int
+    project_coverage_threshold: int
+
+
+@dataclass(frozen=True)
+class ResolvedTestingConfig:
+    """Immutable, fully-resolved testing configuration with defaults applied."""
+    max_test_failures: int = 0
+    max_infra_test_failures: int = 0
+    max_project_test_failures: int = 0
+    infra_coverage_threshold: int = 60
+    project_coverage_threshold: int = 90
 
 class ManuscriptConfig(TypedDict, total=False):
     paper: PaperConfig
@@ -47,6 +60,8 @@ class ManuscriptConfig(TypedDict, total=False):
     publication: PublicationConfig
     llm: LLMConfig
     testing: TestingConfig
+    keywords: List[str]
+    metadata: Dict[str, str]
 
 try:
     import yaml
@@ -56,8 +71,43 @@ except ImportError:
     YAML_AVAILABLE = False
 
 
+def validate_config_keys(config: Dict[str, Any], config_path: Path | str = "") -> List[str]:
+    """Validate top-level config keys against known schema.
+
+    Logs warnings for unrecognized keys with typo suggestions via
+    difflib.get_close_matches().
+
+    Args:
+        config: Parsed YAML configuration dictionary
+        config_path: Path to config file (for log messages)
+
+    Returns:
+        List of warning messages for unknown keys
+    """
+    known_keys = frozenset(ManuscriptConfig.__annotations__.keys())
+    warnings: List[str] = []
+    logger = logging.getLogger(__name__)
+
+    if not isinstance(config, dict):
+        return warnings
+
+    for key in config:
+        if key not in known_keys:
+            matches = difflib.get_close_matches(key, known_keys, n=1, cutoff=0.6)
+            if matches:
+                msg = f"Unknown config key '{key}' in {config_path} — did you mean '{matches[0]}'?"
+            else:
+                msg = f"Unknown config key '{key}' in {config_path}"
+            logger.warning(msg)
+            warnings.append(msg)
+
+    return warnings
+
+
 def load_config(config_path: Path | str) -> Optional[ManuscriptConfig]:
     """Load configuration from YAML file.
+
+    Validates top-level keys and logs warnings for unrecognized keys.
 
     Args:
         config_path: Path to config.yaml file
@@ -74,13 +124,14 @@ def load_config(config_path: Path | str) -> Optional[ManuscriptConfig]:
 
     try:
         with open(config_path, "r", encoding="utf-8") as f:
-            return yaml.safe_load(f)
+            data = yaml.safe_load(f)
+            if isinstance(data, dict):
+                validate_config_keys(data, config_path)
+            return data  # type: ignore[no-any-return]  # yaml.safe_load returns Any
     except (FileNotFoundError, PermissionError, yaml.YAMLError):
         return None
     except Exception:
         # Log unexpected errors but don't fail
-        import logging
-
         logger = logging.getLogger(__name__)
         logger.warning(f"Unexpected error loading config from {config_path}")
         return None
@@ -338,7 +389,7 @@ def get_review_types(repo_root: Path | str, project_name: str = "project") -> Li
     return valid_types
 
 
-def get_testing_config(repo_root: Path | str) -> Dict[str, Any]:
+def get_testing_config(repo_root: Path | str) -> TestingConfig:
     """Get testing configuration from config.yaml.
 
     Reads the testing section from config.yaml and returns
@@ -436,5 +487,5 @@ def get_testing_config(repo_root: Path | str) -> Dict[str, Any]:
         if key not in result:
             result[key] = default_val
 
-    return result
+    return result  # type: ignore[return-value]  # dict matches TestingConfig shape
 

@@ -5,9 +5,7 @@ No mocks - uses actual environment variables and temp files.
 """
 
 import os
-from pathlib import Path
 
-import pytest
 
 from infrastructure.core.credentials import CredentialManager
 

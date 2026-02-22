@@ -1,6 +1,5 @@
 """Test configuration for publishing infrastructure tests."""
 
-import json
 
 import pytest
 from pytest_httpserver import HTTPServer

@@ -9,9 +9,8 @@ import sys
 import tempfile
 from pathlib import Path
 
-import pytest
 
-from infrastructure.core.cli import create_parser, main
+from infrastructure.core.cli import create_parser
 
 
 class TestCreateParser:

@@ -4,14 +4,9 @@ Tests documentation scanner phase functionality using real implementations.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-from pathlib import Path
 
-import pytest
 
-from infrastructure.validation.doc_scanner import (AccuracyIssue,
-                                                   DocumentationFile,
-                                                   DocumentationScanner,
-                                                   LinkIssue, ScanResults)
+from infrastructure.validation.doc_scanner import (DocumentationScanner)
 
 
 class TestDocScannerPhase5:

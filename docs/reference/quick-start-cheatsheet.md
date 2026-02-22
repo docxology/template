@@ -15,7 +15,7 @@ git clone https://github.com/docxology/template.git
 uv sync
 
 # Run build
-python3 scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --core-only
 ```
 
 ### Daily Workflow Commands
@@ -24,10 +24,10 @@ python3 scripts/execute_pipeline.py --core-only
 pytest tests/ --cov=src --cov-report=html
 
 # Generate figures only
-python3 scripts/02_run_analysis.py
+uv run python scripts/02_run_analysis.py
 
 # Validate markdown
-python3 -m infrastructure.validation.cli markdown project/manuscript/
+uv run python -m infrastructure.validation.cli markdown project/manuscript/
 
 # Open manuscript
 open output/project_combined.pdf  # Top-level output
@@ -36,17 +36,17 @@ open output/project_combined.pdf  # Top-level output
 ### Build Pipeline Commands
 ```bash
 # pipeline execution
-python3 scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --core-only
 
 # With specific stage
-python3 scripts/00_setup_environment.py      # Setup
-python3 scripts/01_run_tests.py              # Test
-python3 scripts/02_run_analysis.py           # Analysis
-python3 scripts/03_render_pdf.py             # PDF
-python3 scripts/04_validate_output.py        # Validate
+uv run python scripts/00_setup_environment.py      # Setup
+uv run python scripts/01_run_tests.py              # Test
+uv run python scripts/02_run_analysis.py           # Analysis
+uv run python scripts/03_render_pdf.py             # PDF
+uv run python scripts/04_validate_output.py        # Validate
 
 # Validate PDFs
-python3 -m infrastructure.validation.cli pdf output/pdf/
+uv run python -m infrastructure.validation.cli pdf output/pdf/
 ```
 
 ## 📁 Directory Structure Quick Reference
@@ -74,7 +74,7 @@ vim project/manuscript/07_new_section.md
 echo "# New Section {#sec:new_section}" > project/manuscript/07_new_section.md
 
 # 3. Rebuild
-python3 scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --core-only
 ```
 
 ### Add a New Figure
@@ -158,7 +158,7 @@ Reference it: \ref{fig:my_figure}
 | **Coverage < 100%** | `pytest --cov=src --cov-report=term-missing` |
 | **Import errors** | Check `PYTHONPATH` or use `uv run` |
 | **PDF fails** | Check `pandoc --version` and `xelatex --version` |
-| **Figures missing** | Run `python3 scripts/*.py` first |
+| **Figures missing** | Run `uv run python scripts/*.py` first |
 | **References show ??** | Check label spelling and existence |
 
 ## 📊 Key Metrics
@@ -196,10 +196,10 @@ Reference it: \ref{fig:my_figure}
 1. **Always run tests first**: `pytest tests/` before building
 2. **Use thin orchestrator pattern**: Scripts import from `src/`
 3. **Coverage requirements**: 90% minimum for project code, 60% for infrastructure
-4. **Run pipeline**: `python3 scripts/execute_pipeline.py --core-only` executes all stages
+4. **Run pipeline**: `uv run python scripts/execute_pipeline.py --core-only` executes all stages
 5. **Pipeline stages**: 8 stages (00-05) from setup to final deliverables
 6. **Read build logs**: Check `project/output/pdf/*_compile.log` for errors
-7. **Individual stages**: Run `python3 scripts/XX_stage_name.py` for specific stages
+7. **Individual stages**: Run `uv run python scripts/XX_stage_name.py` for specific stages
 8. **CI/CD friendly**: Pipeline scripts support automated builds
 
 ---

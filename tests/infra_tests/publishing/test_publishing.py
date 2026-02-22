@@ -7,7 +7,6 @@ Follows No Mocks Policy - all tests use real data and real execution.
 """
 
 import json
-from pathlib import Path
 
 import pytest
 
@@ -834,13 +833,13 @@ class TestDissemination:
                     delete_url = f"{github_credentials['api_url']}/repos/{github_credentials['repository']}/releases/{release_id}"
                     headers = {"Authorization": f"token {github_credentials['token']}"}
                     requests.delete(delete_url, headers=headers)
-                except:
+                except Exception:
                     pass
             try:
                 tag_url = f"{github_credentials['api_url']}/repos/{github_credentials['repository']}/git/refs/tags/{tag}"
                 headers = {"Authorization": f"token {github_credentials['token']}"}
                 requests.delete(tag_url, headers=headers)
-            except:
+            except Exception:
                 pass
 
 

@@ -40,7 +40,7 @@ Plus:
 1. **Click "Use this template"** on the [GitHub repository](https://github.com/docxology/template)
 2. **Clone your new repository**
 3. **Install dependencies**: `uv sync`
-4. **Generate your first document**: `python3 scripts/execute_pipeline.py --core-only`
+4. **Generate your first document**: `uv run python scripts/execute_pipeline.py --core-only`
 
 That's it! You now have a research project structure.
 

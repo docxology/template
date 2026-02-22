@@ -9,10 +9,6 @@ Tests scientific documentation generation utilities including:
 All tests use real functions and modules with no mocks.
 """
 
-import inspect
-import sys
-from pathlib import Path
-from types import ModuleType
 
 import numpy as np
 import pytest
@@ -181,7 +177,7 @@ class TestGenerateScientificDocumentation:
 
     def test_lambda_function_documentation(self):
         """Test documentation for lambda function."""
-        square = lambda x: x * x
+        square = lambda x: x * x  # noqa: E731 — testing lambda documentation
 
         doc = generate_scientific_documentation(square)
 
@@ -381,7 +377,7 @@ class TestDocumentationEdgeCases:
 
     def test_function_with_complex_annotations(self):
         """Test documentation with complex type annotations."""
-        from typing import Dict, List, Optional, Tuple, Union
+        from typing import Dict, List, Optional, Tuple
 
         def complex_types(
             data: List[float],

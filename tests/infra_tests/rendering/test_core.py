@@ -2,7 +2,6 @@ from pathlib import Path
 
 import pytest
 
-from infrastructure.rendering.core import RenderManager
 
 
 @pytest.mark.requires_latex

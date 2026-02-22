@@ -1,9 +1,6 @@
 """Tests for infrastructure.rendering.config module."""
 
-import os
-from pathlib import Path
 
-import pytest
 
 from infrastructure.rendering.config import RenderingConfig
 

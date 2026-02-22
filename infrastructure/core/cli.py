@@ -11,10 +11,24 @@ from __future__ import annotations
 import argparse
 import sys
 from pathlib import Path
-from typing import List, Optional
 
 from infrastructure.core.file_inventory import FileInventoryManager
 from infrastructure.core.logging_utils import get_logger, setup_logger
+from infrastructure.core.errors import (
+    CLI_COMMAND_FAILED,
+    CLI_UNKNOWN_COMMAND,
+    CLI_UNKNOWN_EXECUTION_TYPE,
+    DISCOVER_FAILED,
+    INVENTORY_FAILED,
+    INVALID_PROJECTS,
+    MULTI_PROJECT_FAILED,
+    NO_PROJECTS_FOUND,
+    NO_PROJECTS_TO_EXECUTE,
+    PIPELINE_EXECUTION_FAILED,
+    PIPELINE_STAGES_INCOMPLETE,
+    PROJECTS_INCOMPLETE,
+    SUMMARY_FAILED,
+)
 from infrastructure.core.multi_project import (MultiProjectConfig,
                                                MultiProjectOrchestrator)
 from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor
@@ -145,11 +159,11 @@ def main() -> int:
         elif args.command == "discover":
             return handle_discover_command(args)
         else:
-            logger.error(f"Unknown command: {args.command}")
+            logger.error(CLI_UNKNOWN_COMMAND.format(command=args.command))
             return 1
 
     except Exception as e:
-        logger.error(f"CLI command failed: {e}")
+        logger.error(CLI_COMMAND_FAILED.format(error=e))
         return 1
 
 
@@ -188,7 +202,7 @@ def handle_pipeline_command(args: argparse.Namespace) -> int:
             logger.info("✅ All pipeline stages completed successfully")
             return 0
         else:
-            logger.error("❌ Some pipeline stages failed")
+            logger.error(PIPELINE_STAGES_INCOMPLETE.format())
             for result in results:
                 if not result.success:
                     logger.error(
@@ -197,7 +211,7 @@ def handle_pipeline_command(args: argparse.Namespace) -> int:
             return 1
 
     except Exception as e:
-        logger.error(f"Pipeline execution failed: {e}")
+        logger.error(PIPELINE_EXECUTION_FAILED.format(error=e))
         return 1
 
 
@@ -208,7 +222,7 @@ def handle_multi_project_command(args: argparse.Namespace) -> int:
     # Discover projects
     projects = discover_projects(args.repo_root)
     if not projects:
-        logger.error("No valid projects found")
+        logger.error(NO_PROJECTS_FOUND.format())
         return 1
 
     # Filter projects if specified
@@ -218,14 +232,14 @@ def handle_multi_project_command(args: argparse.Namespace) -> int:
         invalid_projects = requested_names - project_names
 
         if invalid_projects:
-            logger.error(f"Invalid projects: {', '.join(invalid_projects)}")
+            logger.error(INVALID_PROJECTS.format(projects=', '.join(invalid_projects)))
             logger.info(f"Available projects: {', '.join(project_names)}")
             return 1
 
         projects = [p for p in projects if p.name in requested_names]
 
     if not projects:
-        logger.error("No projects to execute")
+        logger.error(NO_PROJECTS_TO_EXECUTE.format())
         return 1
 
     logger.info(
@@ -257,11 +271,11 @@ def handle_multi_project_command(args: argparse.Namespace) -> int:
         elif args.execution_type == "core-no-infra":
             result = orchestrator.execute_all_projects_core_no_infra()
         else:
-            logger.error(f"Unknown execution type: {args.execution_type}")
+            logger.error(CLI_UNKNOWN_EXECUTION_TYPE.format(execution_type=args.execution_type))
             return 1
 
         # Report results
-        logger.info(f"Multi-project execution completed:")
+        logger.info("Multi-project execution completed:")
         logger.info(f"  - Successful projects: {result.successful_projects}")
         logger.info(f"  - Failed projects: {result.failed_projects}")
         logger.info(f"  - Total duration: {result.total_duration:.1f}s")
@@ -273,11 +287,11 @@ def handle_multi_project_command(args: argparse.Namespace) -> int:
             logger.info("✅ All projects completed successfully")
             return 0
         else:
-            logger.error("❌ Some projects failed")
+            logger.error(PROJECTS_INCOMPLETE.format())
             return 1
 
     except Exception as e:
-        logger.error(f"Multi-project execution failed: {e}")
+        logger.error(MULTI_PROJECT_FAILED.format(error=e))
         return 1
 
 
@@ -300,7 +314,7 @@ def handle_inventory_command(args: argparse.Namespace) -> int:
         return 0
 
     except Exception as e:
-        logger.error(f"Failed to generate inventory: {e}")
+        logger.error(INVENTORY_FAILED.format(error=e))
         return 1
 
 
@@ -339,7 +353,7 @@ def handle_summary_command(args: argparse.Namespace) -> int:
         return 0
 
     except Exception as e:
-        logger.error(f"Failed to generate summary: {e}")
+        logger.error(SUMMARY_FAILED.format(error=e))
         return 1
 
 
@@ -401,7 +415,7 @@ def handle_discover_command(args: argparse.Namespace) -> int:
         return 0
 
     except Exception as e:
-        logger.error(f"Failed to discover projects: {e}")
+        logger.error(DISCOVER_FAILED.format(error=e))
         return 1
 
 

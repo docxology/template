@@ -7,14 +7,9 @@ This test suite validates the complete workflow of:
 - Integration with PDF generation pipeline
 """
 
-import os
-import shutil
 import subprocess
 import sys
-import tempfile
-from pathlib import Path
 
-import numpy as np
 import pytest
 
 

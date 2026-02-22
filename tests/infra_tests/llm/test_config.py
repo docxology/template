@@ -1,8 +1,6 @@
 """Tests for infrastructure.llm.config module."""
 
-from pathlib import Path
 
-import pytest
 
 from infrastructure.llm.core.config import LLMConfig
 

@@ -5,9 +5,7 @@ registry loading, reference detection, and validation reporting.
 """
 
 import json
-from pathlib import Path
 
-import pytest
 
 from infrastructure.validation.figure_validator import validate_figure_registry
 
@@ -151,8 +149,10 @@ class TestValidateFigureRegistry:
         assert success is True
         assert len(issues) == 0
 
-    def test_validate_handles_file_read_errors(self, tmp_path, monkeypatch):
+    def test_validate_handles_file_read_errors(self, tmp_path):
         """Test that file read errors are handled gracefully."""
+        import os
+
         # Create registry
         registry_path = tmp_path / "registry.json"
         registry = {"fig:example1": {"path": "figures/example1.png"}}
@@ -164,16 +164,16 @@ class TestValidateFigureRegistry:
         test_file = manuscript_dir / "01_introduction.md"
         test_file.write_text("\\ref{fig:example1}")
 
-        # Mock read_text to raise exception
-        def mock_read_text(*args, **kwargs):
-            raise PermissionError("Cannot read file")
+        # Make the file truly unreadable at the OS level
+        os.chmod(test_file, 0o000)
+        try:
+            success, issues = validate_figure_registry(registry_path, manuscript_dir)
 
-        monkeypatch.setattr(Path, "read_text", mock_read_text)
-
-        success, issues = validate_figure_registry(registry_path, manuscript_dir)
-
-        # Should still complete validation (warns but continues)
-        assert isinstance(success, bool)
+            # Should still complete validation (warns but continues)
+            assert isinstance(success, bool)
+        finally:
+            # Restore permissions so tmp_path cleanup can delete it
+            os.chmod(test_file, 0o644)
 
     def test_validate_empty_manuscript_directory(self, tmp_path):
         """Test validation with empty manuscript directory."""

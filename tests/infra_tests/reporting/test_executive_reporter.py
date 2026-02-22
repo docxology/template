@@ -4,8 +4,6 @@ Tests comprehensive metrics collection across projects and executive summary gen
 """
 
 import json
-import tempfile
-from pathlib import Path
 
 import pytest
 
@@ -15,7 +13,7 @@ from infrastructure.reporting.executive_reporter import (
     collect_manuscript_metrics, collect_output_metrics,
     collect_pipeline_metrics, collect_project_metrics, collect_test_metrics,
     generate_aggregate_metrics, generate_comparative_tables,
-    generate_executive_summary, generate_recommendations,
+    generate_recommendations,
     save_executive_summary)
 
 

@@ -123,7 +123,7 @@ class SlidesRenderer:
 
         try:
             # Convert markdown to LaTeX
-            result = subprocess.run(cmd, check=True, capture_output=True, text=True)
+            subprocess.run(cmd, check=True, capture_output=True, text=True)
 
             # Read LaTeX content and fix figure paths
             tex_content = temp_tex.read_text()
@@ -187,7 +187,7 @@ class SlidesRenderer:
                     )
 
                     if error_hints:
-                        error_msg += f"\n\nPossible Issues:\n" + "\n".join(
+                        error_msg += "\n\nPossible Issues:\n" + "\n".join(
                             f"- {hint}" for hint in error_hints
                         )
 

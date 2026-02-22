@@ -14,7 +14,6 @@ All tests use real data and computations - no mocks allowed per project policy.
 
 import time
 from pathlib import Path
-from typing import Any, Dict
 
 import pytest
 

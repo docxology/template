@@ -22,7 +22,6 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "scripts"))
 
 # Now import the module (avoiding the leading digit in filename)
-import importlib.util
 
 spec = importlib.util.spec_from_file_location(
     "copy_outputs",

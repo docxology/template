@@ -29,7 +29,7 @@ cd template
 ### 2. **Install Dependencies**
 ```bash
 # Create virtual environment
-python3 -m venv .venv
+uv run python -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
 # Install dependencies
@@ -98,7 +98,7 @@ pytest
 pytest --cov=src --cov-report=html
 
 # Test the build pipeline
-python3 scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --core-only
 ```
 
 ### 4. **Submit a Pull Request**

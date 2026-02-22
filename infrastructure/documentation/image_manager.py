@@ -9,9 +9,9 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import List, Optional, Tuple
 
-from .figure_manager import FigureManager, FigureMetadata
+from .figure_manager import FigureManager
 
 
 class ImageManager:

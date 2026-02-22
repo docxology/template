@@ -60,7 +60,7 @@ source ~/.zshrc
 
 ```bash
 # Check which packages are missing
-python3 scripts/03_render_pdf.py --project project 2>&1 | grep "File.*not found"
+uv run python scripts/03_render_pdf.py --project project 2>&1 | grep "File.*not found"
 
 # Install missing packages
 sudo tlmgr update --self
@@ -110,10 +110,10 @@ tail -150 project/output/pdf/_combined_manuscript.log | grep -A2 -B2 "graphics\|
 
 **Solutions:**
 
-1. Generate missing figures: `python3 scripts/02_run_analysis.py`
+1. Generate missing figures: `uv run python scripts/02_run_analysis.py`
 2. Verify graphicx package: `grep "usepackage{graphicx}" project/output/pdf/_combined_manuscript.tex`
 3. Fix figure paths: `sed -i 's|{figures/|{../output/figures/|g' project/manuscript/*.md`
-4. Run full rebuild: `python3 scripts/execute_pipeline.py --core-only --clean`
+4. Run full rebuild: `uv run python scripts/execute_pipeline.py --core-only --clean`
 
 ---
 

@@ -4,652 +4,729 @@ from __future__ import annotations
 
 import os
 import re
-from typing import Any, Dict, List, Optional, Tuple
+import subprocess
+import time
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
+from pathlib import Path
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging_utils import (
+    get_logger, log_success, format_error_with_suggestions,
+    log_with_spinner, StreamingProgress, Spinner
+)
+
+if TYPE_CHECKING:
+    from infrastructure.llm.core.client import LLMClient
+    from infrastructure.llm.core.config import LLMConfig
+
+from infrastructure.llm.utils.ollama import (
+    is_ollama_running,
+    ensure_ollama_ready,
+    select_best_model,
+    get_available_models,
+    check_model_loaded,
+    preload_model,
+)
+from infrastructure.llm.utils.heartbeat import StreamHeartbeatMonitor
+from infrastructure.llm.templates.manuscript import (
+    ManuscriptExecutiveSummary,
+    ManuscriptQualityReview,
+    ManuscriptMethodologyReview,
+    ManuscriptImprovementSuggestions,
+    ManuscriptTranslationAbstract,
+    REVIEW_MIN_WORDS,
+)
+from infrastructure.llm.validation.repetition import (
+    detect_repetition,
+    deduplicate_sections,
+)
+from infrastructure.llm.validation.format import (
+    is_off_topic,
+    check_format_compliance,
+)
+
+from infrastructure.llm.review.metrics import ReviewMetrics, ManuscriptMetrics, estimate_tokens
+
+# Try to import new prompt system
+try:
+    from infrastructure.llm.prompts.loader import get_default_loader
+    from infrastructure.llm.prompts.composer import PromptComposer
+    PROMPT_SYSTEM_AVAILABLE = True
+except ImportError:
+    PROMPT_SYSTEM_AVAILABLE = False
+    
+from infrastructure.validation.pdf_validator import extract_text_from_pdf, PDFValidationError
 
 logger = get_logger(__name__)
 
-# Default configuration values for review operations
-DEFAULT_MAX_INPUT_LENGTH = 500000  # Characters
-DEFAULT_REVIEW_MAX_TOKENS = (
-    16384  # Increased for longer review outputs (matches long_max_tokens default)
-)
-DEFAULT_REVIEW_TIMEOUT = 600.0  # seconds
-
+DEFAULT_MAX_INPUT_LENGTH = 500000
+DEFAULT_REVIEW_TIMEOUT = 300.0
 
 def get_manuscript_review_system_prompt() -> str:
-    """Get the system prompt for manuscript reviews.
+    if PROMPT_SYSTEM_AVAILABLE:
+        try:
+            loader = get_default_loader()
+            return loader.get_system_prompt("manuscript_review")
+        except Exception as e:
+            logger.debug(f"Could not load system prompt from prompt system: {e}")
+    
+    return """You are an expert academic manuscript reviewer with extensive experience in peer review for top-tier journals. Your role is to provide thorough, constructive, and professional reviews of research manuscripts.
 
-    Returns:
-        System prompt string for manuscript review operations
-    """
-    return (
-        "You are an expert scientific reviewer. "
-        "Provide thorough, constructive, and scientifically rigorous reviews. "
-        "Focus on methodology, clarity, and scientific contribution."
-    )
+Key responsibilities:
+1. Analyze the manuscript content carefully and completely
+2. Provide specific, actionable feedback with references to the text
+3. Maintain a professional, constructive tone
+4. Focus exclusively on the manuscript content provided
+5. Structure your responses clearly with the requested headers and sections
+
+Guidelines:
+- Always base your assessment on the actual manuscript text provided
+- Do not reference external sources or unrelated materials
+- Provide balanced feedback highlighting both strengths and areas for improvement
+- Be specific - cite sections, passages, or elements when making observations
+- Use markdown formatting for clear structure
+- Complete all requested sections with substantive content
+
+You are reviewing an academic research manuscript. Treat this as a formal peer review."""
 
 
 def get_max_input_length() -> int:
-    """Get maximum input length for manuscript review operations.
-
-    Reads from LLM_MAX_INPUT_LENGTH environment variable if set,
-    otherwise returns DEFAULT_MAX_INPUT_LENGTH.
-
-    Returns:
-        Maximum number of characters that can be processed (0 = unlimited)
-    """
-    env_limit = os.environ.get("LLM_MAX_INPUT_LENGTH")
-    if env_limit:
+    env_value = os.environ.get("LLM_MAX_INPUT_LENGTH")
+    if env_value is not None:
         try:
-            return int(env_limit)
+            return int(env_value)
         except ValueError:
-            return DEFAULT_MAX_INPUT_LENGTH
+            logger.warning(f"Invalid LLM_MAX_INPUT_LENGTH value: {env_value}, using default")
     return DEFAULT_MAX_INPUT_LENGTH
 
 
 def get_review_timeout() -> float:
-    """Get timeout for review generation operations.
-
-    Returns:
-        Timeout in seconds
-    """
+    env_value = os.environ.get("LLM_REVIEW_TIMEOUT")
+    if env_value is not None:
+        try:
+            return float(env_value)
+        except ValueError:
+            logger.warning(f"Invalid LLM_REVIEW_TIMEOUT value: {env_value}, using default")
     return DEFAULT_REVIEW_TIMEOUT
 
 
-def get_review_max_tokens() -> tuple[int, str]:
-    """Get maximum tokens for review generation.
+def log_timeout_info(timeout: float, operation: str) -> None:
+    logger.info(f"    Timeout: {timeout:.0f}s per {operation}")
+    if timeout < 60:
+        logger.warning(f"    ⚠️  Low timeout ({timeout:.0f}s) - may cause failures for slow models")
+        logger.info("    Consider: export LLM_REVIEW_TIMEOUT=300 (5 minutes) for better reliability")
 
-    Reads from LLM_LONG_MAX_TOKENS environment variable if set,
-    otherwise uses DEFAULT_REVIEW_MAX_TOKENS.
 
-    Returns:
-        Tuple of (max_tokens, source_description)
-    """
-    import os
-
-    env_tokens = os.environ.get("LLM_LONG_MAX_TOKENS")
-    if env_tokens:
-        try:
-            return (int(env_tokens), "LLM_LONG_MAX_TOKENS environment variable")
-        except ValueError:
-            pass
-
-    # Also check LLM_REVIEW_MAX_TOKENS for review-specific override
-    env_review_tokens = os.environ.get("LLM_REVIEW_MAX_TOKENS")
-    if env_review_tokens:
-        try:
-            return (
-                int(env_review_tokens),
-                "LLM_REVIEW_MAX_TOKENS environment variable",
-            )
-        except ValueError:
-            pass
-
-    return (DEFAULT_REVIEW_MAX_TOKENS, "default_config")
+def get_review_max_tokens() -> Tuple[int, str]:
+    from infrastructure.llm.core.config import LLMConfig
+    config = LLMConfig.from_env()
+    max_tokens = config.long_max_tokens
+    if os.environ.get("LLM_LONG_MAX_TOKENS"):
+        source = f"environment variable LLM_LONG_MAX_TOKENS={max_tokens}"
+    else:
+        source = f"config default long_max_tokens={max_tokens}"
+    return max_tokens, source
 
 
 def validate_review_quality(
-    review_text: str,
-    review_type: Optional[str] = None,
-    model_name: Optional[str] = None,
+    response: str,
+    review_type: str,
+    min_words: Optional[int] = None,
+    model_name: str = "",
 ) -> Tuple[bool, List[str], Dict[str, Any]]:
-    """Validate that a review meets quality standards.
-
-    Args:
-        review_text: The review text to validate
-        review_type: Type of review (executive_summary, quality_review,
-                    improvement_suggestions, methodology_review)
-        model_name: Optional model name for logging/context
-
-    Returns:
-        Tuple of (is_valid, issues_list, details_dict)
-    """
-    from infrastructure.llm.validation.format import (
-        detect_conversational_phrases, is_off_topic)
-    from infrastructure.llm.validation.repetition import detect_repetition
-    from infrastructure.llm.validation.structure import (
-        extract_structured_sections, validate_section_completeness)
-
-    issues: List[str] = []
-    details: Dict[str, Any] = {
-        "word_count": len(review_text.split()),
-        "review_type": review_type or "default",
-    }
-
-    # Basic checks
-    word_count = len(review_text.split()) if review_text else 0
-    details["word_count"] = word_count
-
-    if not review_text or len(review_text.strip()) < 50:
-        issues.append("Review text too short or empty")
-        # Still check word count and add word count issue
-        if review_type == "executive_summary":
-            issues.append(f"Too short: {word_count} words (minimum 250 words)")
-        elif review_type == "quality_review" and word_count < 400:
-            issues.append(f"Too short: {word_count} words (minimum 400 words)")
-        elif review_type == "improvement_suggestions" and word_count < 200:
-            issues.append(f"Too short: {word_count} words (minimum 200 words)")
-        elif review_type == "methodology_review" and word_count < 400:
-            issues.append(f"Too short: {word_count} words (minimum 400 words)")
-        elif word_count > 0:
-            issues.append(f"Too short: {word_count} words")
+    issues = []
+    details: Dict[str, Any] = {"sections_found": [], "scores_found": [], "format_compliance": {}, "repetition": {}}
+    response_lower = response.lower()
+    
+    if is_off_topic(response):
+        issues.append("Response appears off-topic or confused")
         return False, issues, details
-
-    # Check for off-topic content
-    if is_off_topic(review_text):
-        issues.append("Response appears off-topic or conversational")
-        details["off_topic"] = True
-        return False, issues, details
-
-    # Check for conversational phrases (format compliance)
-    conversational = detect_conversational_phrases(review_text)
-    if conversational:
-        details["format_compliance"] = {
-            "conversational_phrases": conversational,
-            "format_warnings": len(conversational),
-        }
-
-    # Review type-specific validation
-    if review_type == "executive_summary":
-        # Executive summary: minimum 250 words, requires sections
-        if word_count < 250:
-            issues.append(f"Too short: {word_count} words (minimum 250 words)")
-
-        # Check for required sections (flexible matching)
-        required_sections = [
-            "## Overview",
-            "## Key Contributions",
-            "## Methodology",
-            "## Principal Results",
-            "## Significance",
-        ]
-        alternatives = {
-            "overview": ["summary", "introduction"],
-            "key contributions": ["contributions", "main contributions"],
-            "methodology": ["methods", "approach"],
-            "principal results": ["results", "findings", "key results"],
-            "significance": ["impact", "implications", "significance"],
-        }
-
-        sections = extract_structured_sections(review_text)
-        details["sections_found"] = list(sections.keys())
-
-        # Check if we have at least some structure
-        # Be very lenient - if we have any sections or markdown headers, consider it structured
-        has_any_headers = bool(re.search(r"^#{1,6}\s+", review_text, re.MULTILINE))
-
-        if not sections and not has_any_headers:
-            issues.append("Missing expected structure: no section headers found")
-        elif sections:
-            # We have sections - that's good enough for structure validation
-            details["matched_sections"] = list(sections.keys())
-        # If we have headers but no sections extracted, that's still okay (lenient)
-
-    elif review_type == "quality_review":
-        # Quality review: minimum 400 words, requires scores or assessment sections
-        if word_count < 400:
-            issues.append(f"Too short: {word_count} < 400 words")
-
-        # Check for scores or assessment keywords
-        score_patterns = [
-            r"score:\s*\d+",
-            r"rating:\s*\d+",
-            r"\[\d+/\d+\]",
-            r"\d+\s*out\s*of\s*\d+",
-            r"rating\s*of\s*\d+",
-        ]
-        assessment_keywords = [
-            "clarity",
-            "structure",
-            "readability",
-            "technical accuracy",
-            "overall quality",
-            "assessment",
-            "evaluation",
-        ]
-
-        has_score = any(
-            re.search(pattern, review_text, re.IGNORECASE) for pattern in score_patterns
-        )
-        has_assessment = any(
-            keyword in review_text.lower() for keyword in assessment_keywords
-        )
-
-        if not has_score and not has_assessment:
-            issues.append("Missing scoring or assessment sections")
-        else:
-            details["has_scoring"] = has_score
-            details["has_assessment"] = has_assessment
-
-    elif review_type == "improvement_suggestions":
-        # Improvement suggestions: minimum 200 words, requires priority sections
-        if word_count < 200:
-            issues.append(f"Too short: {word_count} words (minimum 200 words)")
-
-        # Check for priority sections
-        priority_keywords = [
-            "high priority",
-            "medium priority",
-            "low priority",
-            "critical",
-            "immediate",
-            "moderate",
-            "nice to have",
-            "urgent",
-            "important",
-            "optional",
-        ]
-
-        has_priorities = any(
-            keyword in review_text.lower() for keyword in priority_keywords
-        )
-
-        if not has_priorities:
-            # Check for section headers that might indicate priorities
-            sections = extract_structured_sections(review_text)
-            priority_sections = [
-                s
-                for s in sections.keys()
-                if any(kw in s.lower() for kw in ["priority", "critical", "immediate"])
-            ]
-            if not priority_sections:
-                issues.append("Missing priority-based organization")
-            else:
-                details["priority_sections"] = priority_sections
-        else:
-            details["has_priorities"] = True
-
-    elif review_type == "methodology_review":
-        # Methodology review: minimum 400 words, at least one section
-        if word_count < 400:
-            issues.append(f"Too short: {word_count} < 400 words")
-
-        # Check for at least one section
-        sections = extract_structured_sections(review_text)
-        if not sections:
-            # Check for keywords that indicate structure
-            structure_keywords = [
-                "strengths",
-                "weaknesses",
-                "limitations",
-                "strong points",
-            ]
-            has_structure = any(kw in review_text.lower() for kw in structure_keywords)
-            if not has_structure:
-                issues.append(
-                    "Missing expected structure: no sections or structure keywords found"
-                )
-        else:
-            details["sections_found"] = list(sections.keys())
-
-    # Repetition detection
-    has_repetition, duplicates, unique_ratio = detect_repetition(review_text)
+    
+    has_repetition, duplicates, unique_ratio = detect_repetition(response)
     details["repetition"] = {
         "has_repetition": has_repetition,
         "unique_ratio": unique_ratio,
         "duplicates_found": len(duplicates),
     }
-
-    if has_repetition and unique_ratio < 0.5:
-        issues.append(f"Severe repetition detected (unique ratio: {unique_ratio:.1%})")
-
+    
+    if unique_ratio < 0.5:
+        issues.append(f"Excessive repetition detected: {unique_ratio:.0%} unique content")
+        return False, issues, details
+    elif has_repetition:
+        details["repetition_warning"] = f"Some repeated content detected ({len(duplicates)} duplicates)"
+        logger.debug(f"Repetition warning: {unique_ratio:.0%} unique content")
+    
+    is_format_compliant, format_issues, format_details = check_format_compliance(response)
+    details["format_compliance"] = format_details
+    
+    if not is_format_compliant:
+        details["format_warnings"] = format_issues
+    
+    is_small_model = any(s in model_name.lower() for s in ["3b", "4b", "7b", "8b"])
+    default_min = REVIEW_MIN_WORDS.get(review_type, 200)
+    if is_small_model:
+        default_min = int(default_min * 0.8)
+    min_word_count = min_words or default_min
+    
+    word_count = len(response.split())
+    details["word_count"] = word_count
+    details["min_required"] = min_word_count
+    
+    tolerance = max(1, int(min_word_count * 0.05))
+    effective_min = min_word_count - tolerance
+    
+    if word_count < effective_min:
+        issues.append(f"Too short: {word_count} words (minimum: {min_word_count}, effective: {effective_min} with tolerance)")
+    
+    if review_type == "executive_summary":
+        header_variations = [
+            (["overview", "summary", "introduction", "abstract"], "overview"),
+            (["key contributions", "contributions", "main findings", "key findings", "highlights"], "contributions"),
+            (["methodology", "methods", "approach", "method", "techniques"], "methodology"),
+            (["results", "findings", "principal results", "outcomes", "key results"], "results"),
+            (["significance", "impact", "implications", "importance", "takeaway"], "significance"),
+        ]
+        found_sections = []
+        for variations, section_name in header_variations:
+            if any(v in response_lower for v in variations):
+                found_sections.append(section_name)
+        
+        details["sections_found"] = found_sections
+        details["sections_required"] = 1
+        
+        if len(found_sections) < 1:
+            issues.append("Missing expected structure (found: none of 5 expected sections)")
+    
+    elif review_type == "quality_review":
+        score_patterns = [
+            (r'\*\*score:\s*(\d)/5\*\*', "**Score: X/5**"),
+            (r'score:\s*(\d)/5', "Score: X/5"),
+            (r'\*\*(\d)/5\*\*', "**X/5**"),
+            (r'score\s*:\s*(\d)', "Score: X"),
+            (r'rating\s*:\s*(\d)', "Rating: X"),
+            (r'\[(\d)/5\]', "[X/5]"),
+            (r'(\d)\s*out\s*of\s*5', "X out of 5"),
+            (r'(\d)/5', "X/5"),
+        ]
+        
+        scores_found = []
+        for pattern, pattern_name in score_patterns:
+            matches = re.findall(pattern, response_lower)
+            if matches:
+                scores_found.extend([(m, pattern_name) for m in matches])
+        
+        details["scores_found"] = scores_found
+        
+        has_assessment = any([
+            "clarity" in response_lower,
+            "structure" in response_lower,
+            "readability" in response_lower,
+            "technical accuracy" in response_lower,
+            "overall quality" in response_lower,
+        ])
+        details["has_assessment"] = has_assessment
+        
+        if not scores_found and not has_assessment:
+            issues.append("Missing scoring or quality assessment")
+    
+    elif review_type == "methodology_review":
+        methodology_sections = [
+            (["strengths", "strong points", "advantages", "positives", "pros"], "strengths"),
+            (["weaknesses", "limitations", "concerns", "issues", "weak points", "cons", "gaps"], "weaknesses"),
+            (["suggestions", "recommendations", "improvements", "future work"], "recommendations"),
+        ]
+        found_sections = []
+        for variations, section_name in methodology_sections:
+            if any(v in response_lower for v in variations):
+                found_sections.append(section_name)
+        
+        details["sections_found"] = found_sections
+        
+        has_methodology_content = any([
+            "research design" in response_lower,
+            "methodology" in response_lower,
+            "approach" in response_lower,
+            "methods" in response_lower,
+            "experimental" in response_lower,
+        ])
+        details["has_methodology_content"] = has_methodology_content
+        
+        if len(found_sections) < 1 and not has_methodology_content:
+            issues.append(f"Missing expected sections (found: {found_sections or 'none'})")
+    
+    elif review_type == "improvement_suggestions":
+        priority_variations = [
+            (["high priority", "critical", "urgent", "must fix", "immediate", "major"], "high"),
+            (["medium priority", "moderate", "should address", "important", "significant"], "medium"),
+            (["low priority", "minor", "nice to have", "optional", "consider", "cosmetic"], "low"),
+        ]
+        found_priorities = []
+        for variations, priority_name in priority_variations:
+            if any(v in response_lower for v in variations):
+                found_priorities.append(priority_name)
+        
+        details["priorities_found"] = found_priorities
+        
+        has_recommendations = any([
+            "recommendation" in response_lower,
+            "suggest" in response_lower,
+            "improve" in response_lower,
+            "fix" in response_lower,
+            "address" in response_lower,
+        ])
+        details["has_recommendations"] = has_recommendations
+        
+        if len(found_priorities) < 1 and not has_recommendations:
+            issues.append("Missing priority sections or recommendations")
+    
+    elif review_type == "translation":
+        has_english = any([
+            "english abstract" in response_lower,
+            "## english" in response_lower,
+            "abstract" in response_lower and "english" in response_lower,
+        ])
+        details["has_english_section"] = has_english
+        
+        translation_keywords = ["translation", "chinese", "hindi", "russian", "中文", "हिंदी", "русский"]
+        has_translation = any(kw in response_lower for kw in translation_keywords)
+        details["has_translation_section"] = has_translation
+        
+        if not has_english:
+            issues.append("Missing English abstract section")
+        if not has_translation:
+            issues.append("Missing translation section")
+    
     is_valid = len(issues) == 0
     return is_valid, issues, details
 
 
-def create_review_client():
-    """Create an LLM client configured for review operations.
-
-    Returns:
-        LLMClient instance configured for reviews
-    """
-    from infrastructure.llm import LLMClient, LLMConfig
-
-    config = LLMConfig(
-        max_tokens=DEFAULT_REVIEW_MAX_TOKENS,
-        timeout=DEFAULT_REVIEW_TIMEOUT,
-    )
+def create_review_client(model_name: str) -> LLMClient:
+    from infrastructure.llm.core.client import LLMClient
+    from infrastructure.llm.core.config import LLMConfig
+    
+    config = LLMConfig.from_env()
+    config.default_model = model_name
+    config.timeout = get_review_timeout()
+    config.system_prompt = get_manuscript_review_system_prompt()
+    config.auto_inject_system_prompt = True
+    
+    max_tokens, source = get_review_max_tokens()
+    logger.debug(f"Review max_tokens configuration: {source}")
     return LLMClient(config)
 
 
-def check_ollama_availability() -> bool:
-    """Check if Ollama is available for review operations.
-
-    Returns:
-        True if Ollama is available
-    """
-    from infrastructure.llm.utils.ollama import is_ollama_running
-
-    return is_ollama_running()
+def log_stage(message: str) -> None:
+    logger.info(f"\n  {message}")
 
 
-def warmup_model(model_name: str) -> bool:
-    """Warm up a model by sending a test query.
+def check_ollama_availability() -> Tuple[bool, Optional[str]]:
+    log_stage("Checking Ollama availability...")
+    auto_start = os.environ.get("OLLAMA_AUTO_START", "true").lower() == "true"
 
-    Args:
-        model_name: Name of the model to warm up
-
-    Returns:
-        True if warmup successful
-    """
     try:
-        from infrastructure.llm import LLMClient
+        result = subprocess.run(
+            ["which", "ollama"],
+            capture_output=True,
+            timeout=2.0
+        )
+        if result.returncode != 0:
+            logger.error("❌ Ollama command not found. Install Ollama: https://ollama.ai")
+            return False, None
+    except (subprocess.SubprocessError, FileNotFoundError):
+        logger.error("❌ Unable to check if Ollama is installed")
+        return False, None
 
-        client = LLMClient()
-        client.query("test", model=model_name)
-        return True
-    except Exception:
-        return False
+    logger.info("    Checking Ollama server status...")
+
+    max_retries = 3
+    for attempt in range(max_retries):
+        if attempt > 0:
+            wait_time = min(2 ** attempt, 10)
+            logger.info(f"    Retry {attempt}/{max_retries - 1} in {wait_time}s...")
+            time.sleep(wait_time)
+
+        if not is_ollama_running():
+            if auto_start:
+                logger.info("    Ollama not running, attempting to start automatically...")
+                if ensure_ollama_ready(auto_start=True):
+                    log_success("Ollama server started and ready", logger)
+                    break 
+                else:
+                    if attempt == max_retries - 1:
+                        logger.warning("❌ Failed to start Ollama server automatically after retries")
+                        return False, None
+                    else:
+                        continue
+            else:
+                logger.warning("❌ Ollama server is not running")
+                return False, None
+        else:
+            log_success("Ollama server is running", logger)
+            break
+    
+    logger.info("    Discovering available models...")
+    available_models = get_available_models()
+    if not available_models:
+        logger.warning("❌ No Ollama models available")
+        return False, None
+    
+    model_names = [m.get("name", "unknown") for m in available_models]
+    logger.info(f"    Found {len(model_names)} model(s): {', '.join(model_names[:5])}")
+    
+    logger.info("    Selecting best model for manuscript review...")
+    model = select_best_model()
+    if not model:
+        logger.warning("❌ Could not select a suitable model")
+        return False, None
+        
+    return True, model
 
 
-def extract_manuscript_text(pdf_path: str) -> str:
-    """Extract text from a PDF manuscript.
+def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> Tuple[bool, float]:
+    log_stage("Warming up model...")
+    warmup_timeout = get_review_timeout()
+    logger.info(f"    Timeout: {warmup_timeout:.0f}s for warmup")
 
-    Attempts to extract text using available PDF parsing libraries.
-    Supports PyPDF2, pdfplumber, and pypdf as optional dependencies.
+    logger.info("    Checking loaded models via Ollama API...")
+    model_preloaded, loaded_model = check_model_loaded(model_name)
+    
+    need_preload = False
+    if model_preloaded:
+        logger.info(f"    ✓ Model {model_name} is already loaded in GPU memory")
+    elif loaded_model:
+        logger.info(f"    ⚠️ Different model loaded: {loaded_model}")
+        need_preload = True
+    else:
+        logger.info("    ⏳ No model currently loaded in GPU memory")
+        need_preload = True
+    
+    if need_preload:
+        logger.info(f"    ⏳ Loading {model_name} into GPU memory...")
+        preload_start = time.time()
+        with log_with_spinner(
+            f"Loading {model_name} into GPU memory...",
+            logger,
+            final_message=None
+        ):
+            preload_success, preload_error = preload_model(model_name)
 
-    Args:
-        pdf_path: Path to the PDF file
-
-    Returns:
-        Extracted text content
-
-    Raises:
-        FileNotFoundError: If PDF file does not exist
-        ValueError: If no PDF parsing library is available
-
-    Example:
-        >>> text = extract_manuscript_text("manuscript.pdf")
-        >>> print(f"Extracted {len(text)} characters")
-    """
-    from pathlib import Path
-
-    pdf_file = Path(pdf_path)
-    if not pdf_file.exists():
-        raise FileNotFoundError(f"PDF file not found: {pdf_path}")
-
-    # Try pdfplumber first (best quality)
+        preload_elapsed = time.time() - preload_start
+        if preload_success:
+            logger.info(f"    ✓ Model loaded successfully in {preload_elapsed:.1f}s")
+        else:
+            error_msg = f": {preload_error}" if preload_error else ""
+            logger.warning(f"    ⚠️ Preload returned error{error_msg}, continuing anyway...")
+    
+    prompt = f"In exactly one sentence, what is the main topic of this text?\\n\\n{text_preview[:500]}"
+    
+    start_time = time.time()
+    response_chunks = []
+    first_token_time = None
+    
+    spinner = Spinner("Waiting for first token...", delay=0.1)
+    spinner.start()
+    
     try:
-        import pdfplumber
-
-        text_parts = []
-        with pdfplumber.open(pdf_file) as pdf:
-            for page in pdf.pages:
-                page_text = page.extract_text()
-                if page_text:
-                    text_parts.append(page_text)
-        return "\n\n".join(text_parts)
-    except ImportError:
-        pass
+        for chunk in client.stream_short(prompt):
+            if first_token_time is None:
+                first_token_time = time.time()
+                time_to_first = first_token_time - start_time
+                spinner.stop()
+                logger.info(f"    ✓ First token in {time_to_first:.1f}s - generating response...")
+            response_chunks.append(chunk)
+        
+        elapsed = time.time() - start_time
+        response = "".join(response_chunks)
+        
+        if first_token_time:
+            generation_time = elapsed - (first_token_time - start_time)
+            output_tokens = len(response.split()) * 1.3
+            tokens_per_sec = output_tokens / generation_time if generation_time > 0 else 0
+        else:
+            tokens_per_sec = 0
+        
+        log_success(f"Warmup complete ({elapsed:.1f}s)", logger)
+        response_preview = response[:80].replace('\\n', ' ')
+        if len(response) > 80:
+            response_preview += "..."
+        logger.info(f"    Response: {response_preview}")
+        logger.info(f"    Performance: ~{tokens_per_sec:.1f} tokens/sec")
+        
+        return True, tokens_per_sec
+        
     except Exception as e:
-        logger.warning(f"pdfplumber extraction failed: {e}, trying alternatives...")
+        spinner.stop()
+        elapsed = time.time() - start_time
+        logger.error(f"Model warmup failed after {elapsed:.1f}s: {e}")
+        return False, 0.0
 
-    # Try pypdf (newer PyPDF2)
+
+def extract_manuscript_text(pdf_path: Path | str) -> Tuple[Optional[str], ManuscriptMetrics]:
+    log_stage(f"Extracting text from manuscript: {Path(pdf_path).name}")
+    metrics = ManuscriptMetrics()
+    
+    if isinstance(pdf_path, str):
+        pdf_path = Path(pdf_path)
+
+    if not pdf_path.exists():
+        logger.error(f"Manuscript PDF not found: {pdf_path}")
+        return None, metrics
+    
     try:
-        import pypdf
-
-        text_parts = []
-        with open(pdf_file, "rb") as f:
-            pdf_reader = pypdf.PdfReader(f)
-            for page in pdf_reader.pages:
-                page_text = page.extract_text()
-                if page_text:
-                    text_parts.append(page_text)
-        return "\n\n".join(text_parts)
-    except ImportError:
-        pass
-    except Exception as e:
-        logger.warning(f"pypdf extraction failed: {e}, trying PyPDF2...")
-
-    # Try PyPDF2 (legacy)
-    try:
-        import PyPDF2
-
-        text_parts = []
-        with open(pdf_file, "rb") as f:
-            pdf_reader = PyPDF2.PdfReader(f)
-            for page in pdf_reader.pages:
-                page_text = page.extract_text()
-                if page_text:
-                    text_parts.append(page_text)
-        return "\n\n".join(text_parts)
-    except ImportError:
-        pass
-    except Exception as e:
-        logger.warning(f"PyPDF2 extraction failed: {e}")
-
-    # No PDF library available
-    raise ValueError(
-        "No PDF parsing library available. Install one of: pdfplumber, pypdf, or PyPDF2. "
-        "Example: pip install pdfplumber"
-    )
+        text = extract_text_from_pdf(pdf_path)
+        metrics.total_chars = len(text)
+        metrics.total_words = len(text.split())
+        metrics.total_tokens_est = estimate_tokens(text)
+        logger.info(f"  Extracted: {metrics.total_chars:,} chars ({metrics.total_words:,} words, ~{metrics.total_tokens_est:,} tokens)")
+        max_length = get_max_input_length()
+        
+        if max_length > 0 and len(text) > max_length:
+            metrics.truncated = True
+            metrics.truncated_chars = max_length
+            logger.warning(f"  Truncating from {metrics.total_chars:,} to {max_length:,} characters")
+            text = text[:max_length] + "\\n\\n[... truncated for LLM context limit ...]"
+        else:
+            metrics.truncated = False
+            metrics.truncated_chars = metrics.total_chars
+            logger.info("  Sending full manuscript to LLM (no truncation)")
+        
+        return text, metrics
+    except PDFValidationError as e:
+        logger.error(format_error_with_suggestions(e))
+        return None, metrics
 
 
 def generate_review_with_metrics(
-    manuscript_text: str, review_type: str, model: str | None = None
-) -> tuple[str, dict]:
-    """Generate a review with metrics.
-
-    Generates a review of the specified type and collects comprehensive metrics
-    including generation time, token estimates, and output statistics.
-
-    Args:
-        manuscript_text: Text of the manuscript
-        review_type: Type of review to generate (executive_summary, quality_review,
-                    methodology_review, improvement_suggestions)
-        model: Model name to use (optional)
-
-    Returns:
-        Tuple of (review_text, metrics_dict) where metrics_dict contains:
-        - tokens_used: Estimated tokens used
-        - time_seconds: Generation time in seconds
-        - input_chars: Input text length
-        - output_chars: Output text length
-        - output_words: Output word count
-
-    Example:
-        >>> review, metrics = generate_review_with_metrics(
-        ...     manuscript_text, "executive_summary", model="llama3"
-        ... )
-        >>> print(f"Generated {metrics['output_words']} words in {metrics['time_seconds']:.2f}s")
-    """
-    import time as time_module
-
-    from infrastructure.llm import LLMClient
-    from infrastructure.llm.review.metrics import (ReviewMetrics,
-                                                   estimate_tokens)
-
-    start_time = time_module.time()
-
-    # Truncate manuscript if needed
-    max_length = get_max_input_length()
-    if len(manuscript_text) > max_length:
-        manuscript_text = manuscript_text[:max_length]
-        logger.warning(f"Manuscript truncated to {max_length} characters")
-
-    # Generate review based on type
-    if review_type == "executive_summary":
-        review_text = generate_executive_summary(manuscript_text, model=model)
-    elif review_type == "quality_review":
-        review_text = generate_quality_review(manuscript_text, model=model)
-    elif review_type == "methodology_review":
-        review_text = generate_methodology_review(manuscript_text, model=model)
-    elif review_type == "improvement_suggestions":
-        review_text = generate_improvement_suggestions(manuscript_text, model=model)
-    else:
-        # Fallback: generic review
-        client = LLMClient()
-        review_text = client.query(
-            f"Provide a comprehensive {review_type} review of this manuscript:\n\n{manuscript_text[:10000]}",
-            model=model,
-        )
-
-    generation_time = time_module.time() - start_time
-
-    # Calculate metrics
+    client: LLMClient,
+    text: str,
+    review_type: str,
+    review_name: str,
+    template_class: type,
+    model_name: str = "",
+    temperature: float = 0.3,
+    max_tokens: Optional[int] = None,
+    max_retries: int = 1,
+) -> Tuple[str, ReviewMetrics]:
+    log_stage(f"Generating {review_name}...")
+    
+    if max_tokens is None:
+        max_tokens, _ = get_review_max_tokens()
+    
     metrics = ReviewMetrics(
-        input_chars=len(manuscript_text),
-        input_words=len(manuscript_text.split()),
-        input_tokens_est=estimate_tokens(manuscript_text),
-        output_chars=len(review_text),
-        output_words=len(review_text.split()),
-        output_tokens_est=estimate_tokens(review_text),
-        generation_time_seconds=generation_time,
-        preview=review_text[:150] if review_text else "",
+        input_chars=len(text),
+        input_words=len(text.split()),
+        input_tokens_est=estimate_tokens(text),
+    )
+    
+    client.reset()
+    template = template_class()
+    prompt = template.render(text=text, max_tokens=max_tokens)
+    from infrastructure.llm.core.config import GenerationOptions
+
+    is_small_model = any(s in model_name.lower() for s in ["3b", "4b", "7b", "8b"])
+    adjusted_temp = temperature + 0.1 if is_small_model else temperature
+    options = GenerationOptions(temperature=adjusted_temp, max_tokens=max_tokens)
+    
+    start_time = time.time()
+    best_response = ""
+    had_off_topic = False
+    
+    for attempt in range(max_retries + 1):
+        try:
+            current_prompt = prompt
+            if attempt > 0:
+                client.reset()
+                adjusted_temp = min(temperature + 0.15 * attempt, 0.8)
+                options = GenerationOptions(temperature=adjusted_temp, max_tokens=max_tokens)
+                
+                if had_off_topic:
+                    if PROMPT_SYSTEM_AVAILABLE:
+                        try:
+                            composer = PromptComposer()
+                            retry_prompt = composer.add_retry_prompt(prompt, retry_type="off_topic")
+                            current_prompt = retry_prompt
+                        except Exception:
+                            current_prompt = "IMPORTANT: You must review the ACTUAL manuscript text provided below.\\n\\n" + prompt
+                    else:
+                        current_prompt = "IMPORTANT: You must review the ACTUAL manuscript text provided below.\\n\\n" + prompt
+            
+            response_chunks = []
+            tokens_generated = 0
+            start_gen_time = time.time()
+            estimated_total_tokens = max_tokens
+            
+            try:
+                progress = StreamingProgress(
+                    total=estimated_total_tokens,
+                    message=f"Generating {review_name}",
+                    update_interval=0.5
+                )
+
+                from infrastructure.llm.core.config import LLMConfig
+                from infrastructure.llm.utils.heartbeat import StreamHeartbeatMonitor
+                
+                config = LLMConfig.from_env()
+                heartbeat_monitor = StreamHeartbeatMonitor(
+                    operation_name=review_name,
+                    timeout_seconds=get_review_timeout(),
+                    heartbeat_interval=config.heartbeat_interval,
+                    stall_threshold=config.stall_threshold,
+                    early_warning_threshold=config.early_warning_threshold,
+                    logger=logger
+                )
+                heartbeat_monitor.set_estimated_total(estimated_total_tokens)
+                heartbeat_monitor.start_monitoring()
+
+                try:
+                    for chunk in client.stream_query(current_prompt, options=options):
+                        response_chunks.append(chunk)
+                        tokens_generated += len(chunk.split())
+                        progress.set(tokens_generated)
+                        heartbeat_monitor.update_token_received()
+                finally:
+                    heartbeat_monitor.stop_monitoring()
+                
+                total_time = time.time() - start_gen_time
+                final_tokens_per_sec = tokens_generated / total_time if total_time > 0 else 0
+                progress.finish(f"    Generated {tokens_generated:,} tokens in {total_time:.1f}s ({final_tokens_per_sec:.1f} tokens/sec)")
+                response = "".join(response_chunks)
+                
+            except Exception:
+                response = client.query(current_prompt, options=options)
+            
+            is_valid, issues, details = validate_review_quality(response, review_type, model_name=model_name)
+            had_off_topic = any("off-topic" in issue.lower() for issue in issues)
+            
+            if len(response.split()) > len(best_response.split()):
+                best_response = response
+            
+            if is_valid:
+                break
+            elif attempt < max_retries:
+                continue
+            else:
+                response = best_response
+                
+        except Exception as e:
+            if attempt < max_retries:
+                continue
+            else:
+                metrics.generation_time_seconds = time.time() - start_time
+                error_response = f"*Error generating {review_name}: {e}*"
+                metrics.output_chars = len(error_response)
+                metrics.output_words = len(error_response.split())
+                return error_response, metrics
+    
+    original_length = len(response)
+    has_rep, _, unique_ratio = detect_repetition(response, similarity_threshold=0.8)
+    if has_rep and unique_ratio < 0.3:
+        response = deduplicate_sections(
+            response, max_repetitions=2, mode="conservative",
+            similarity_threshold=0.9, min_content_preservation=0.8
+        )
+        reduction_ratio = len(response) / original_length
+        if reduction_ratio < 0.7:
+            response = best_response
+    
+    metrics.generation_time_seconds = time.time() - start_time
+    metrics.output_chars = len(response)
+    metrics.output_words = len(response.split())
+    metrics.output_tokens_est = estimate_tokens(response)
+    metrics.preview = response[:150].replace('\\n', ' ') + "..." if len(response) > 150 else response
+    
+    log_success(f"{review_name} generated", logger)
+    return response, metrics
+
+
+def generate_executive_summary(client: LLMClient, text: str, model_name: str = "") -> Tuple[str, ReviewMetrics]:
+    return generate_review_with_metrics(
+        client=client, text=text, review_type="executive_summary",
+        review_name="executive summary", template_class=ManuscriptExecutiveSummary,
+        model_name=model_name, temperature=0.3, max_tokens=None,
     )
 
-    # Convert to dict for return
-    metrics_dict = {
-        "tokens_used": metrics.output_tokens_est,
-        "time_seconds": metrics.generation_time_seconds,
-        "input_chars": metrics.input_chars,
-        "input_words": metrics.input_words,
-        "input_tokens_est": metrics.input_tokens_est,
-        "output_chars": metrics.output_chars,
-        "output_words": metrics.output_words,
-        "output_tokens_est": metrics.output_tokens_est,
-    }
+def generate_quality_review(client: LLMClient, text: str, model_name: str = "") -> Tuple[str, ReviewMetrics]:
+    return generate_review_with_metrics(
+        client=client, text=text, review_type="quality_review",
+        review_name="quality review", template_class=ManuscriptQualityReview,
+        model_name=model_name, temperature=0.3, max_tokens=None,
+    )
 
-    return review_text, metrics_dict
+def generate_methodology_review(client: LLMClient, text: str, model_name: str = "") -> Tuple[str, ReviewMetrics]:
+    return generate_review_with_metrics(
+        client=client, text=text, review_type="methodology_review",
+        review_name="methodology review", template_class=ManuscriptMethodologyReview,
+        model_name=model_name, temperature=0.3, max_tokens=None,
+    )
 
+def generate_improvement_suggestions(client: LLMClient, text: str, model_name: str = "") -> Tuple[str, ReviewMetrics]:
+    return generate_review_with_metrics(
+        client=client, text=text, review_type="improvement_suggestions",
+        review_name="improvement suggestions", template_class=ManuscriptImprovementSuggestions,
+        model_name=model_name, temperature=0.4, max_tokens=None,
+    )
 
-def generate_executive_summary(manuscript_text: str, model: str | None = None) -> str:
-    """Generate an executive summary of the manuscript.
-
-    Uses the ManuscriptExecutiveSummary template to create a prompt and queries
-    the LLM to generate a comprehensive executive summary.
-
-    Args:
-        manuscript_text: Text of the manuscript
-        model: Model name to use (optional)
-
-    Returns:
-        Executive summary text generated by the LLM
-
-    Example:
-        >>> summary = generate_executive_summary(manuscript_text, model="llama3")
-        >>> print(f"Summary length: {len(summary)} characters")
-    """
-    from infrastructure.llm import LLMClient
-    from infrastructure.llm.templates import ManuscriptExecutiveSummary
-
-    template = ManuscriptExecutiveSummary()
-    prompt = template.render(text=manuscript_text[:50000])
-
-    client = LLMClient()
-    return client.query(prompt, model=model)
-
-
-def generate_quality_review(manuscript_text: str, model: str | None = None) -> str:
-    """Generate a quality review of the manuscript.
-
-    Uses the ManuscriptQualityReview template to create a prompt and queries
-    the LLM to generate a comprehensive quality assessment.
-
-    Args:
-        manuscript_text: Text of the manuscript
-        model: Model name to use (optional)
-
-    Returns:
-        Quality review text generated by the LLM
-
-    Example:
-        >>> review = generate_quality_review(manuscript_text, model="llama3")
-        >>> print(f"Review length: {len(review)} characters")
-    """
-    from infrastructure.llm import LLMClient
-    from infrastructure.llm.templates import ManuscriptQualityReview
-
-    template = ManuscriptQualityReview()
-    prompt = template.render(text=manuscript_text[:50000])
-
-    client = LLMClient()
-    return client.query(prompt, model=model)
-
-
-def generate_methodology_review(manuscript_text: str, model: str | None = None) -> str:
-    """Generate a methodology review of the manuscript.
-
-    Uses the ManuscriptMethodologyReview template to create a prompt and queries
-    the LLM to generate a comprehensive methodology assessment.
-
-    Args:
-        manuscript_text: Text of the manuscript
-        model: Model name to use (optional)
-
-    Returns:
-        Methodology review text generated by the LLM
-
-    Example:
-        >>> review = generate_methodology_review(manuscript_text, model="llama3")
-        >>> print(f"Review length: {len(review)} characters")
-    """
-    from infrastructure.llm import LLMClient
-    from infrastructure.llm.templates import ManuscriptMethodologyReview
-
-    template = ManuscriptMethodologyReview()
-    prompt = template.render(text=manuscript_text[:50000])
-
-    client = LLMClient()
-    return client.query(prompt, model=model)
-
-
-def generate_improvement_suggestions(
-    manuscript_text: str, model: str | None = None
-) -> str:
-    """Generate improvement suggestions for the manuscript.
-
-    Uses the ManuscriptImprovementSuggestions template to create a prompt and queries
-    the LLM to generate actionable improvement recommendations.
-
-    Args:
-        manuscript_text: Text of the manuscript
-        model: Model name to use (optional)
-
-    Returns:
-        Improvement suggestions text generated by the LLM
-
-    Example:
-        >>> suggestions = generate_improvement_suggestions(manuscript_text, model="llama3")
-        >>> print(f"Suggestions length: {len(suggestions)} characters")
-    """
-    from infrastructure.llm import LLMClient
-    from infrastructure.llm.templates import ManuscriptImprovementSuggestions
-
-    template = ManuscriptImprovementSuggestions()
-    prompt = template.render(text=manuscript_text[:50000])
-
-    client = LLMClient()
-    return client.query(prompt, model=model)
-
-
-def generate_translation(
-    text: str, target_language: str, model: str | None = None
-) -> str:
-    """Generate a translation of text to target language.
-
-    Uses the ManuscriptTranslationAbstract template to create a prompt and queries
-    the LLM to generate a translation of the provided text.
-
-    Args:
-        text: Text to translate
-        target_language: Target language code (e.g., "zh", "hi", "ru")
-        model: Model name to use (optional)
-
-    Returns:
-        Translated text generated by the LLM
-
-    Example:
-        >>> translation = generate_translation("Hello world", "zh", model="llama3")
-        >>> print(f"Translation: {translation}")
-    """
-    from infrastructure.llm import LLMClient
-    from infrastructure.llm.templates import ManuscriptTranslationAbstract
-
+def generate_translation(client: LLMClient, text: str, language_code: str, model_name: str = "") -> Tuple[str, ReviewMetrics]:
+    from infrastructure.llm.review.pipeline_runner import TRANSLATION_LANGUAGES
+    target_language = TRANSLATION_LANGUAGES.get(language_code, language_code)
+    log_stage(f"Generating translation ({target_language})...")
+    
+    metrics = ReviewMetrics(input_chars=len(text), input_words=len(text.split()), input_tokens_est=estimate_tokens(text))
+    client.reset()
+    max_tokens, _ = get_review_max_tokens()
+    timeout = get_review_timeout()
+    log_timeout_info(timeout, f"translation ({target_language})")
+    from infrastructure.llm.core.config import GenerationOptions
+    
     template = ManuscriptTranslationAbstract()
-    prompt = template.render(text=text, target_language=target_language)
+    prompt = template.render(text=text, target_language=target_language, max_tokens=max_tokens)
+    is_small_model = any(s in model_name.lower() for s in ["3b", "4b", "7b", "8b"])
+    temperature = 0.4 if is_small_model else 0.3
+    options = GenerationOptions(temperature=temperature, max_tokens=max_tokens)
+    
+    start_time = time.time()
+    try:
+        try:
+            progress = StreamingProgress(
+                total=max_tokens, message=f"Generating translation ({target_language})", update_interval=0.5
+            )
+            config = LLMConfig.from_env()
+            heartbeat_monitor = StreamHeartbeatMonitor(
+                operation_name=f"translation ({target_language})", timeout_seconds=timeout,
+                heartbeat_interval=config.heartbeat_interval, stall_threshold=config.stall_threshold,
+                early_warning_threshold=config.early_warning_threshold, logger=logger
+            )
+            heartbeat_monitor.set_estimated_total(max_tokens)
+            heartbeat_monitor.start_monitoring()
 
-    client = LLMClient()
-    return client.query(prompt, model=model)
+            response_chunks = []
+            tokens_generated = 0
+            try:
+                for chunk in client.stream_query(prompt, options=options):
+                    response_chunks.append(chunk)
+                    tokens_generated += len(chunk.split())
+                    progress.set(tokens_generated)
+                    heartbeat_monitor.update_token_received()
+                total_time = time.time() - heartbeat_monitor.start_time
+                final_tokens_per_sec = tokens_generated / total_time if total_time > 0 else 0
+                progress.finish(f"    Generated {tokens_generated:,} tokens in {total_time:.1f}s ({final_tokens_per_sec:.1f} tokens/sec)")
+            finally:
+                heartbeat_monitor.stop_monitoring()
+            response = "".join(response_chunks)
+        except Exception:
+            response = client.query(prompt, options=options)
+
+    except Exception as e:
+        metrics.generation_time_seconds = time.time() - start_time
+        error_response = f"*Error generating translation to {target_language}: {e}*"
+        metrics.output_chars = len(error_response)
+        metrics.output_words = len(error_response.split())
+        return error_response, metrics
+    
+    metrics.generation_time_seconds = time.time() - start_time
+    metrics.output_chars = len(response)
+    metrics.output_words = len(response.split())
+    metrics.output_tokens_est = estimate_tokens(response)
+    metrics.preview = response[:150].replace('\\n', ' ') + "..." if len(response) > 150 else response
+    
+    log_success(f"translation ({target_language}) generated", logger)
+    return response, metrics

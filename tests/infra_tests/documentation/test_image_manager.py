@@ -1,8 +1,6 @@
 """Comprehensive tests for src/image_manager.py to ensure 100% coverage."""
 
-from pathlib import Path
 
-import pytest
 
 from infrastructure.documentation.figure_manager import FigureManager
 from infrastructure.documentation.image_manager import ImageManager

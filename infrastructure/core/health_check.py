@@ -7,7 +7,7 @@ including dependencies, filesystem, network, and performance metrics.
 import os
 import time
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 import psutil
 
@@ -19,7 +19,7 @@ logger = get_logger(__name__)
 class SystemHealthChecker:
     """Comprehensive system health monitoring."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.start_time = time.time()
         self.checks = {
             "filesystem": self._check_filesystem,
@@ -37,7 +37,7 @@ class SystemHealthChecker:
         Returns:
             Dictionary containing health status for all components
         """
-        status = {
+        status: Dict[str, Any] = {
             "timestamp": time.time(),
             "overall_status": "healthy",
             "checks": {},
@@ -79,7 +79,7 @@ class SystemHealthChecker:
         """Check filesystem health and permissions."""
         import tempfile
 
-        results = {}
+        results: Dict[str, Any] = {}
 
         # Check write permissions
         try:
@@ -156,7 +156,7 @@ class SystemHealthChecker:
         """Check network connectivity."""
         import socket
 
-        results = {}
+        results: Dict[str, Any] = {}
 
         # Test DNS resolution
         try:
@@ -172,7 +172,7 @@ class SystemHealthChecker:
             response = requests.get("https://httpbin.org/status/200", timeout=5)
             results["http_connectivity"] = response.status_code == 200
         except (ImportError, requests.RequestException):
-            results["http_connectivity"] = None  # Not available or failed
+            results["http_connectivity"] = False  # Not available or failed
 
         return results
 
@@ -186,7 +186,7 @@ class SystemHealthChecker:
             "psutil",  # For monitoring
         ]
 
-        results = {}
+        results: Dict[str, Any] = {}
         for dep in critical_deps:
             try:
                 __import__(dep)
@@ -208,6 +208,7 @@ class SystemHealthChecker:
 
     def _check_uptime(self) -> Dict[str, Any]:
         """Check system uptime and process runtime."""
+        uptime_seconds: Optional[float] = None
         try:
             with open("/proc/uptime", "r") as f:
                 uptime_seconds = float(f.readline().split()[0])
@@ -232,7 +233,7 @@ class SystemHealthChecker:
         """Generate summary metrics from health status."""
         checks = status["checks"]
 
-        summary = {
+        summary: Dict[str, Any] = {
             "total_checks": len(checks),
             "healthy_checks": sum(
                 1 for c in checks.values() if c["status"] == "healthy"
@@ -243,7 +244,7 @@ class SystemHealthChecker:
         }
 
         # Add critical resource warnings
-        warnings = []
+        warnings: List[str] = []
 
         if "memory" in checks and checks["memory"].get("details", {}).get(
             "is_critical"
@@ -262,7 +263,7 @@ class SystemHealthChecker:
 class HealthCheckAPI:
     """REST-like API for health check endpoints."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.checker = SystemHealthChecker()
 
     def get_status(self) -> Dict[str, Any]:
@@ -287,7 +288,7 @@ class HealthCheckAPI:
     def is_healthy(self) -> bool:
         """Quick health check - returns True if system is healthy."""
         status = self.get_status()
-        return status["overall_status"] == "healthy"
+        return bool(status["overall_status"] == "healthy")
 
     def get_metrics(self) -> Dict[str, Any]:
         """Get health metrics in a format suitable for monitoring systems."""

@@ -58,7 +58,7 @@ def benchmark_function(
         for _ in range(10):
             try:
                 _ = func(test_input)
-            except:
+            except Exception:
                 pass
 
         # Measure execution time
@@ -66,9 +66,9 @@ def benchmark_function(
 
         for _ in range(iterations):
             try:
-                result = func(test_input)
-            except:
-                result = None
+                func(test_input)
+            except Exception:
+                pass
 
         end_time = time.perf_counter()
         avg_time = (end_time - start_time) / iterations
@@ -80,7 +80,7 @@ def benchmark_function(
                 process = psutil.Process(os.getpid())
                 memory_info = process.memory_info()
                 memory_usages.append(memory_info.rss / 1024 / 1024)  # MB
-            except:
+            except Exception:
                 memory_usages.append(None)
         else:
             memory_usages.append(None)

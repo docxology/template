@@ -4,10 +4,8 @@ Tests slides rendering functionality using real implementations.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-import subprocess
 from pathlib import Path
 
-import pytest
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering import slides_renderer
@@ -94,7 +92,7 @@ class TestRevealJsRendering:
 
         # Use real execution - may succeed or fail depending on pandoc
         try:
-            result = renderer._render_revealjs(source, output)
+            renderer._render_revealjs(source, output)
             # May succeed
             assert True
         except (RenderingError, Exception):
@@ -158,7 +156,7 @@ class TestBeamerRendering:
 
         # Use real execution - may fail before PDF generation
         try:
-            result = renderer._render_beamer_with_paths(source, output, None, None)
+            renderer._render_beamer_with_paths(source, output, None, None)
             # May succeed or fail
             assert True
         except (RenderingError, Exception):
@@ -176,7 +174,7 @@ class TestBeamerRendering:
 
         # Use real execution - may succeed or fail
         try:
-            result = renderer._render_beamer_with_paths(source, output, None, None)
+            renderer._render_beamer_with_paths(source, output, None, None)
             # May succeed
             assert True
         except (RenderingError, Exception):

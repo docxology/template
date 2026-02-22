@@ -10,15 +10,13 @@ This script performs comprehensive checks for:
 from __future__ import annotations
 
 import ast
-import importlib.util
-import os
 import re
 import subprocess
 import sys
 from collections import defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, List, Set, Tuple
+from typing import Any, Dict, List, Set
 
 import yaml
 
@@ -438,7 +436,7 @@ class RepositoryScanner:
         pyproject_path = self.repo_root / "pyproject.toml"
         if pyproject_path.exists():
             try:
-                content = pyproject_path.read_text(encoding="utf-8")
+                pyproject_path.read_text(encoding="utf-8")
                 # Check if dependencies are used
                 # This is a simplified check
                 pass
@@ -519,10 +517,8 @@ class RepositoryScanner:
                     r"def\s+\w+\([^)]*\):\s*\n\s*#\s*[Cc]ompute",
                 ]
 
-                has_business_logic = False
                 for pattern in business_logic_patterns:
                     if re.search(pattern, content, re.MULTILINE):
-                        has_business_logic = True
                         break
 
                 # Scripts should import from src, not implement business logic
@@ -648,7 +644,7 @@ def main() -> int:
     logger.info("SCAN COMPLETE")
     logger.info("=" * 70)
     logger.info(f"\nReport saved to: {report_path}")
-    logger.info(f"\nSummary:")
+    logger.info("\nSummary:")
     logger.info(f"  Accuracy Issues: {len(results.accuracy_issues)}")
     logger.info(f"  Completeness Gaps: {len(results.completeness_gaps)}")
 

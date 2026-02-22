@@ -13,7 +13,6 @@ from pathlib import Path
 import pytest
 import yaml
 
-from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.pdf_renderer import PDFRenderer
 
@@ -329,7 +328,7 @@ class TestCombinedPDFRendering:
         renderer = PDFRenderer(config)
 
         # Create minimal LaTeX document
-        latex = (
+        (
             r"\documentclass{article}" + "\n"
             r"\begin{document}" + "\n"
             r"Content here" + "\n"

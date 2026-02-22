@@ -3,13 +3,11 @@
 import argparse
 import logging
 import sys
-from io import StringIO
-from pathlib import Path
 
 import pytest
 
 from infrastructure.validation import cli
-from infrastructure.validation.cli import (main, validate_markdown_command,
+from infrastructure.validation.cli import (validate_markdown_command,
                                            validate_pdf_command,
                                            verify_integrity_command)
 
@@ -76,7 +74,7 @@ class TestValidateMarkdownCommand:
         assert exc_info.value.code == 1
         assert "Directory not found" in caplog.text
 
-    def test_valid_markdown_dir(self, tmp_path, capsys):
+    def test_valid_markdown_dir(self, tmp_path, caplog):
         """Test validate_markdown_command with valid directory."""
         md_dir = tmp_path / "manuscript"
         md_dir.mkdir()
@@ -84,12 +82,12 @@ class TestValidateMarkdownCommand:
 
         args = argparse.Namespace(markdown_dir=str(md_dir), repo_root=str(tmp_path))
 
-        with pytest.raises(SystemExit) as exc_info:
-            validate_markdown_command(args)
+        with caplog.at_level(logging.INFO):
+            with pytest.raises(SystemExit) as exc_info:
+                validate_markdown_command(args)
 
         assert exc_info.value.code == 0
-        captured = capsys.readouterr()
-        assert "No issues found" in captured.out
+        assert "No issues found" in caplog.text
 
 
 class TestVerifyIntegrityCommand:
@@ -117,12 +115,11 @@ class TestVerifyIntegrityCommand:
         args = argparse.Namespace(output_dir=str(output_dir), verbose=False)
 
         with caplog.at_level(logging.INFO):
-            with pytest.raises(SystemExit) as exc_info:
+            with pytest.raises(SystemExit):
                 verify_integrity_command(args)
 
-        captured = capsys.readouterr()
         assert "Verifying integrity" in caplog.text
-        assert "Integrity Report" in captured.out
+        assert "Integrity Report" in caplog.text
 
     def test_valid_output_dir_verbose(self, tmp_path, capsys, caplog):
         """Test verify_integrity_command with verbose flag."""
@@ -145,14 +142,18 @@ class TestVerifyIntegrityCommand:
 class TestCLIMain:
     """Test main CLI entry point."""
 
-    def test_no_command_prints_help(self, capsys, monkeypatch):
-        """Test main with no command prints help."""
-        monkeypatch.setattr(sys, "argv", ["cli"])
+    def test_no_command_prints_help(self):
+        """Test main with no command exits with error code."""
+        import subprocess
 
-        with pytest.raises(SystemExit) as exc_info:
-            main()
+        result = subprocess.run(
+            [sys.executable, "-m", "infrastructure.validation.cli"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
 
-        assert exc_info.value.code == 1
+        assert result.returncode == 1
 
 
 class TestValidationCLI:

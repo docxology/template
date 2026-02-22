@@ -410,7 +410,7 @@ See [build-history.md](build-history.md) for historical fixes and resolved issue
 
    ```bash
    # Run all stages
-   python3 scripts/execute_pipeline.py --core-only
+   uv run python scripts/execute_pipeline.py --core-only
    
    # Or use unified interactive menu
    ./run.sh
@@ -434,7 +434,7 @@ See [build-history.md](build-history.md) for historical fixes and resolved issue
 
 1. Check imports: Ensure scripts import from `project/src/` modules
 2. Check file paths: Verify output directories exist
-3. Run scripts individually: `python3 project/scripts/example_figure.py`
+3. Run scripts individually: `uv run python project/scripts/example_figure.py`
 
 ### References Show ??
 
@@ -448,7 +448,7 @@ See [build-history.md](build-history.md) for historical fixes and resolved issue
 
    ```bash
    # Run pipeline (includes multiple LaTeX passes)
-   python3 scripts/execute_pipeline.py --core-only
+   uv run python scripts/execute_pipeline.py --core-only
    ```
 
 ### Coverage Below 100%
@@ -472,7 +472,7 @@ To verify everything works on your system:
 
 ```bash
 # 1. Run pipeline (all 8 stages)
-python3 scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --core-only
 
 # Or use unified interactive menu
 ./run.sh

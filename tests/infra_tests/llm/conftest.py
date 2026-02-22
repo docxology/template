@@ -1,5 +1,4 @@
 import json
-import os
 
 import pytest
 from pytest_httpserver import HTTPServer
@@ -17,7 +16,6 @@ def ollama_test_server():
     # Mock /api/chat endpoint (what the client actually uses)
     def handle_chat_request(request):
         """Handle chat requests, supporting both streaming and non-streaming."""
-        import json
 
         # Parse the request JSON
         try:
@@ -35,14 +33,13 @@ def ollama_test_server():
             model = request_data.get("model", "gemma3:4b")
             messages = request_data.get("messages", [])
             format_type = request_data.get("format")  # Check for JSON format
-            options = request_data.get("options", {})  # Extract options for streaming
-        except Exception as e:
+            request_data.get("options", {})  # Extract options for streaming
+        except Exception:
             # Fallback for debugging
             is_stream = False
             model = "gemma3:4b"
             messages = []
             format_type = None
-            options = {}
 
         # Handle model-specific responses for fallback testing
         if model == "primary-model":
@@ -187,27 +184,21 @@ def clean_llm_env(monkeypatch):
 
 @pytest.fixture(autouse=True)
 def patch_llm_client_for_tests(request, ollama_test_server, monkeypatch):
-    """Patch LLMClient to use test server by default when no config provided.
+    """Redirect LLMClient to test server via environment variables.
 
-    Uses real HTTP server (pytest-httpserver) - compliant with no-mocks policy.
-    Skips patching if test is marked with 'no_patch_llm_client' to allow
-    testing real default configuration.
+    Sets OLLAMA_HOST to the test server URL so that LLMConfig.from_env()
+    naturally discovers the test server. No class patching required —
+    fully compliant with the zero-mocks policy.
+
+    Skips environment redirection if test is marked with 'no_patch_llm_client'
+    to allow testing real default configuration.
     """
     # Check if test needs real default behavior
     if request.node.get_closest_marker("no_patch_llm_client"):
-        return  # Skip patching - test will use real default config
+        return  # Skip — test will use real default config
 
-    from infrastructure.llm import LLMClient, LLMConfig
-
-    original_init = LLMClient.__init__
-
-    def patched_init(self, config=None):
-        if config is None:
-            # Create config pointing to real HTTP test server
-            config = LLMConfig(auto_inject_system_prompt=False)
-            config.base_url = ollama_test_server.url_for("/")
-            config.default_model = "gemma3:4b"
-            config.fallback_models = ["llama3:8b"]
-        original_init(self, config)
-
-    monkeypatch.setattr(LLMClient, "__init__", patched_init)
+    # Set environment variables so LLMConfig.from_env() picks up test server
+    monkeypatch.setenv("OLLAMA_HOST", ollama_test_server.url_for("/"))
+    monkeypatch.setenv("OLLAMA_MODEL", "gemma3:4b")
+    # Disable auto system prompt injection for predictable test behavior
+    monkeypatch.setenv("LLM_AUTO_INJECT_SYSTEM_PROMPT", "false")

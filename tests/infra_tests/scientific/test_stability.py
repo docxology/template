@@ -372,7 +372,8 @@ class TestStabilityIntegration:
 
         def numerical_derivative(x, h=1e-8):
             """Approximate derivative of x^2 at point x."""
-            f = lambda t: t * t
+            def f(t):
+                return t * t
             return (f(x + h) - f(x)) / h
 
         test_inputs = list(np.linspace(-10, 10, 50))

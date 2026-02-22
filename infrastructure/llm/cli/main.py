@@ -13,7 +13,6 @@ Usage:
 
 import argparse
 import sys
-from typing import Optional
 
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.llm.core.client import LLMClient

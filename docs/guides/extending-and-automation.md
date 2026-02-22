@@ -69,13 +69,13 @@ pytest tests/ --cov=src --cov-report=html \
     --markers="ml"  # Only ML tests
 
 # 2. Train models
-python3 scripts/train_models.py
+uv run python scripts/train_models.py
 
 # 3. Evaluate models
-python3 scripts/evaluate_models.py
+uv run python scripts/evaluate_models.py
 
 # 4. Generate model cards
-python3 scripts/generate_model_cards.py
+uv run python scripts/generate_model_cards.py
 
 # 5. Build documentation
 pandoc docs/*.md -o output/ml_docs.pdf \
@@ -213,7 +213,7 @@ jobs:
     
     - name: Run build pipeline
       run: |
-        python3 scripts/execute_pipeline.py --core-only
+        uv run python scripts/execute_pipeline.py --core-only
     
     - name: Upload PDFs
       uses: actions/upload-artifact@v3

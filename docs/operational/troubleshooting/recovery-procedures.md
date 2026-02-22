@@ -20,7 +20,7 @@ uv sync
 uv run pytest tests/
 
 # Rebuild pipeline
-python3 scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --core-only
 ```
 
 ---
@@ -49,10 +49,10 @@ uv sync
 uv run pytest tests/
 
 # Regenerate only figures
-python3 project/scripts/example_figure.py
+uv run python project/scripts/example_figure.py
 
 # Rebuild PDFs (run stage 3 only)
-python3 scripts/03_render_pdf.py
+uv run python scripts/03_render_pdf.py
 ```
 
 ---
@@ -63,7 +63,7 @@ python3 scripts/03_render_pdf.py
 
 ```bash
 rm -f project/output/.checkpoints/pipeline_checkpoint.json
-python3 scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --core-only
 ```
 
 ---

@@ -8,7 +8,7 @@ Tests LLM core functionality using real data (No Mocks Policy):
 import pytest
 import requests
 
-from infrastructure.core.exceptions import LLMConnectionError, LLMError
+from infrastructure.core.exceptions import LLMConnectionError
 from infrastructure.llm.core.client import LLMClient, ResponseMode
 from infrastructure.llm.core.config import GenerationOptions, LLMConfig
 

@@ -48,7 +48,7 @@
 
    ```bash
    # Run pipeline (all 8 stages)
-   python3 scripts/execute_pipeline.py --core-only
+   uv run python scripts/execute_pipeline.py --core-only
    ```
 
 4. **View the result**
@@ -95,7 +95,7 @@
 4. **Rebuild manuscript**
 
    ```bash
-   python3 scripts/execute_pipeline.py --core-only
+   uv run python scripts/execute_pipeline.py --core-only
    ```
 
 5. **Reference from other sections**
@@ -191,7 +191,7 @@
 5. **Run script**
 
    ```bash
-   python3 scripts/my_analysis_figure.py
+   uv run python scripts/my_analysis_figure.py
    ```
 
 6. **Add to manuscript**
@@ -249,7 +249,7 @@
 4. **Rebuild**
 
    ```bash
-   python3 scripts/execute_pipeline.py --core-only
+   uv run python scripts/execute_pipeline.py --core-only
    ```
 
 **Expected Result**: Numbered equations with clickable references
@@ -318,7 +318,7 @@ Table \ref{tab:performance} summarizes...
 **Validation**:
 
 ```bash
-python3 -m infrastructure.validation.cli markdown project/manuscript/
+uv run python -m infrastructure.validation.cli markdown project/manuscript/
 ```
 
 **See Also**: [Markdown Template Guide](../usage/markdown-template-guide.md)
@@ -581,20 +581,20 @@ def test_process_negative():
 
    ```bash
    # Standard build - executes all 8 stages (00-07)
-   python3 scripts/execute_pipeline.py --core-only
+   uv run python scripts/execute_pipeline.py --core-only
    
    # Or use unified interactive menu
    ./run.sh
    
    # Run individual stages if needed (stages 00-07)
-   python3 scripts/00_setup_environment.py  # Stage 00: Setup Environment
-   python3 scripts/01_run_tests.py          # Stage 01: Run Tests
-   python3 scripts/02_run_analysis.py       # Stage 02: Run Analysis
-   python3 scripts/03_render_pdf.py         # Stage 03: Render PDF
-   python3 scripts/04_validate_output.py    # Stage 04: Validate Output
-   python3 scripts/05_copy_outputs.py       # Stage 05: Copy Outputs
-   python3 scripts/06_llm_review.py         # Stage 06: LLM Review
-   python3 scripts/07_generate_executive_report.py  # Stage 07: Executive Report
+   uv run python scripts/00_setup_environment.py  # Stage 00: Setup Environment
+   uv run python scripts/01_run_tests.py          # Stage 01: Run Tests
+   uv run python scripts/02_run_analysis.py       # Stage 02: Run Analysis
+   uv run python scripts/03_render_pdf.py         # Stage 03: Render PDF
+   uv run python scripts/04_validate_output.py    # Stage 04: Validate Output
+   uv run python scripts/05_copy_outputs.py       # Stage 05: Copy Outputs
+   uv run python scripts/06_llm_review.py         # Stage 06: LLM Review
+   uv run python scripts/07_generate_executive_report.py  # Stage 07: Executive Report
    ```
 
 2. **Check for errors**
@@ -679,7 +679,7 @@ def test_process_negative():
 4. **Generate with custom metadata**
 
    ```bash
-   python3 scripts/execute_pipeline.py --core-only
+   uv run python scripts/execute_pipeline.py --core-only
    ```
 
 **Applied To**:
@@ -724,7 +724,7 @@ def test_process_negative():
 4. **Rebuild**
 
    ```bash
-   python3 scripts/execute_pipeline.py --core-only
+   uv run python scripts/execute_pipeline.py --core-only
    ```
 
 **Naming Convention**:
@@ -779,7 +779,7 @@ def test_process_negative():
 
    ```bash
    # Standard build - executes all 8 stages
-   python3 scripts/execute_pipeline.py --core-only
+   uv run python scripts/execute_pipeline.py --core-only
    
    # Or use unified interactive menu
    ./run.sh

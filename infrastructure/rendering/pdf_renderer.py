@@ -334,7 +334,7 @@ class PDFRenderer:
             ]
         )
 
-        logger.info(f"Converting combined markdown to LaTeX...")
+        logger.info("Converting combined markdown to LaTeX...")
         logger.debug(f"Combined markdown file: {combined_md}")
 
         # Pre-validate combined markdown for common issues
@@ -490,7 +490,7 @@ class PDFRenderer:
             )
         except subprocess.CalledProcessError as e:
             # Provide more detailed error information
-            error_msg = f"Failed to convert markdown to LaTeX"
+            error_msg = "Failed to convert markdown to LaTeX"
 
             # Combine stderr and stdout for comprehensive error extraction
             all_output = ""
@@ -777,7 +777,7 @@ class PDFRenderer:
             if preamble_content:
                 logger.info(f"✓ Extracted preamble from {preamble_file.name}")
             else:
-                logger.warning(f"⚠️  Preamble file found but no LaTeX content extracted")
+                logger.warning("⚠️  Preamble file found but no LaTeX content extracted")
         else:
             logger.debug(f"No preamble file found at {preamble_file}")
 
@@ -971,7 +971,7 @@ class PDFRenderer:
             # Temporary PDF file created during compilation (before renaming to final output)
             temp_pdf = output_dir / "_combined_manuscript.pdf"
 
-            logger.info(f"  LaTeX compilation pass 1/4...")
+            logger.info("  LaTeX compilation pass 1/4...")
             result = subprocess.run(
                 cmd, check=False, capture_output=True, text=True, cwd=str(output_dir)
             )
@@ -982,13 +982,13 @@ class PDFRenderer:
                 result.returncode > 1 and not temp_pdf.exists()
             ):
                 raise RenderingError(
-                    f"XeLaTeX compilation failed (pass 1)",
+                    "XeLaTeX compilation failed (pass 1)",
                     context={"source": str(combined_tex), "output": str(output_file)},
                 )
 
             # Process bibliography if it exists
             if bib_exists:
-                logger.info(f"  Bibliography processing...")
+                logger.info("  Bibliography processing...")
                 try:
                     self._process_bibliography(combined_tex, output_dir, bib_file)
                 except Exception as bib_error:
@@ -1178,7 +1178,7 @@ class PDFRenderer:
                 return output_file
             else:
                 raise RenderingError(
-                    f"PDF file was not created",
+                    "PDF file was not created",
                     context={"source": str(combined_tex), "output": str(output_file)},
                 )
 
@@ -1366,7 +1366,6 @@ class PDFRenderer:
         # Additional pattern for \pandocbounded{\includegraphics[...]{path}}
         # This handles the complex case where options contain nested braces (alt={...})
         # We'll use a fallback string replacement after regex for any missed paths
-        pandocbounded_pattern = r"](\{\.\.\/output\/figures\/[^}]+\.png\})\}"
 
         figures_dir = manuscript_dir.parent / "output" / "figures"
         fixed_count = 0

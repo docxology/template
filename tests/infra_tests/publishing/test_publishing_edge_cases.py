@@ -4,9 +4,7 @@ This test suite validates edge cases including DOI validation, minimal
 metadata handling, and publication readiness scenarios.
 """
 
-from pathlib import Path
 
-import pytest
 
 from infrastructure.publishing import core as publishing
 

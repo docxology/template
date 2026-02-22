@@ -13,8 +13,6 @@ from infrastructure.core.exceptions import LLMConnectionError, LLMError
 from infrastructure.llm.core.client import LLMClient, ResponseMode
 from infrastructure.llm.core.config import GenerationOptions, LLMConfig
 from infrastructure.llm.core.context import ConversationContext
-from infrastructure.llm.utils.ollama import (is_ollama_running,
-                                             select_small_fast_model)
 from tests.infra_tests._test_helpers import safe_network_test
 
 

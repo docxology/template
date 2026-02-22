@@ -6,8 +6,6 @@ and integrity validation commands.
 
 import argparse
 import logging
-import sys
-from pathlib import Path
 
 import pytest
 
@@ -92,20 +90,23 @@ class TestValidateMarkdownCommand:
         # Clean markdown should pass
         assert exc_info.value.code == 0
 
-    def test_markdown_command_with_problems(self, tmp_path, capsys):
-        """Test markdown validation when problems are found using real validation."""
-        # Create markdown with missing image reference
-        md_file = tmp_path / "test.md"
-        md_file.write_text("# Test\n\n![broken](missing_image_that_does_not_exist.png)")
+    def test_markdown_command_with_problems(self, tmp_path, caplog):
+        """Test markdown validation command when there are issues."""
+        from infrastructure.validation import cli
 
-        args = argparse.Namespace(markdown_dir=str(tmp_path), repo_root=str(tmp_path))
+        # Create markdown with broken image reference
+        md_dir = tmp_path / "content"
+        md_dir.mkdir()
+        md_file = md_dir / "test.md"
+        md_file.write_text("Hello ![broken image](missing_image_that_does_not_exist.png)")
 
-        with pytest.raises(SystemExit) as exc_info:
-            cli.validate_markdown_command(args)
+        args = argparse.Namespace(markdown_dir=str(md_dir), repo_root=str(tmp_path))
 
-        captured = capsys.readouterr()
-        # Should report the missing image in output
-        assert "missing_image_that_does_not_exist.png" in captured.out
+        with caplog.at_level(logging.INFO):
+            with pytest.raises(SystemExit) as exc_info:
+                cli.validate_markdown_command(args)
+
+            assert "missing_image_that_does_not_exist.png" in caplog.text
         # Exit code may be 0 (non-strict) or 1 (strict mode)
         assert exc_info.value.code in [0, 1]
 

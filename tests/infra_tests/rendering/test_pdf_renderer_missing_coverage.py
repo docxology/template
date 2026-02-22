@@ -11,7 +11,6 @@ Targets functions and error paths that are currently not covered:
 Follows No Mocks Policy - all tests use real data.
 """
 
-import tempfile
 from pathlib import Path
 
 import pytest

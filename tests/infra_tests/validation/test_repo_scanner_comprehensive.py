@@ -4,14 +4,9 @@ Tests repository scanning functionality using real implementations.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-from pathlib import Path
 
-import pytest
 
-from infrastructure.validation import repo_scanner
-from infrastructure.validation.repo_scanner import (AccuracyIssue,
-                                                    CompletenessGap,
-                                                    RepositoryScanner,
+from infrastructure.validation.repo_scanner import (RepositoryScanner,
                                                     ScanResults)
 
 
@@ -108,7 +103,7 @@ class TestRepositoryScannerCompleteness:
         scanner._check_completeness()
 
         # module_b should be flagged as undocumented
-        gaps = [g for g in scanner.results.completeness_gaps if "module_b" in g.item]
+        [g for g in scanner.results.completeness_gaps if "module_b" in g.item]
         # May or may not find gaps depending on implementation
         assert scanner.results is not None
 

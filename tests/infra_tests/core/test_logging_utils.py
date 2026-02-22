@@ -15,10 +15,8 @@ from __future__ import annotations
 import logging
 import os
 import sys
-import tempfile
 from pathlib import Path
 
-import pytest
 
 # Add repo root to path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
@@ -359,7 +357,6 @@ class TestGlobalConfiguration:
         """Test setting global log level."""
         # Create a test logger with 'infrastructure' in name so it matches filter
         logger = get_logger("infrastructure.test_global")
-        initial_level = logger.level
 
         # Set global level to DEBUG
         set_global_log_level(logging.DEBUG)

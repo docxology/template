@@ -132,13 +132,13 @@ class WebRenderer:
         if lua_filter.exists():
             cmd.extend(["--lua-filter", str(lua_filter)])
 
-        logger.info(f"Converting combined markdown to HTML...")
+        logger.info("Converting combined markdown to HTML...")
         logger.debug(f"Combined markdown file: {combined_md}")
 
         try:
-            result = subprocess.run(cmd, check=True, capture_output=True, text=True)
+            subprocess.run(cmd, check=True, capture_output=True, text=True)
         except subprocess.CalledProcessError as e:
-            error_msg = f"Failed to convert markdown to HTML"
+            error_msg = "Failed to convert markdown to HTML"
             all_output = ""
             if e.stderr:
                 all_output += f"STDERR:\n{e.stderr}\n"

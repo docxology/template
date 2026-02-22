@@ -17,7 +17,6 @@ from pathlib import Path
 from typing import List, Set, Tuple
 
 from infrastructure.core.exceptions import (FileNotFoundError,
-                                            FileOperationError,
                                             NotADirectoryError)
 
 # Regex patterns for validation

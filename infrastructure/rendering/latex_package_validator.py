@@ -5,7 +5,7 @@ from __future__ import annotations
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, NamedTuple, Optional
+from typing import List, NamedTuple, Optional
 
 from infrastructure.core.exceptions import ValidationError
 from infrastructure.core.logging_utils import get_logger
@@ -51,7 +51,7 @@ class ValidationReport:
 
         if self.missing_required or self.missing_optional:
             missing_all = self.missing_required + self.missing_optional
-            lines.append(f"\nInstallation command:")
+            lines.append("\nInstallation command:")
             lines.append(f"  sudo tlmgr install {' '.join(missing_all)}")
 
         return "\n".join(lines)

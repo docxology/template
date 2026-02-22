@@ -5,9 +5,7 @@ Follows No Mocks Policy - all tests use real data and real validation.
 """
 
 import json
-from pathlib import Path
 
-import pytest
 
 from infrastructure.validation.audit_orchestrator import (
     generate_audit_report, run_comprehensive_audit)

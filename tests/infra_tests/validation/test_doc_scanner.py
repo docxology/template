@@ -4,8 +4,6 @@ Comprehensive tests for the documentation scanner covering all phases
 and report generation.
 """
 
-from datetime import datetime
-from pathlib import Path
 
 import pytest
 

@@ -10,7 +10,6 @@ Tests performance benchmarking utilities including:
 All tests use real numerical data with no mocks.
 """
 
-import time
 
 import numpy as np
 import pytest

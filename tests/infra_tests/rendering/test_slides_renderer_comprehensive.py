@@ -4,9 +4,7 @@ Tests slides rendering functionality using real implementations.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-from pathlib import Path
 
-import pytest
 
 from infrastructure.rendering import slides_renderer
 
@@ -87,7 +85,7 @@ class TestRevealJsSlides:
 
         if hasattr(slides_renderer, "render_revealjs"):
             try:
-                result = slides_renderer.render_revealjs(str(md))
+                slides_renderer.render_revealjs(str(md))
             except Exception:
                 pass
 

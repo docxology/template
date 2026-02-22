@@ -9,8 +9,6 @@ Test Pattern:
     to set the appropriate log level for the test.
 """
 
-import sys
-import time
 from io import StringIO
 
 import pytest

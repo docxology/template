@@ -10,11 +10,16 @@ Part of the infrastructure reporting layer (Layer 1) - reusable across projects.
 from __future__ import annotations
 
 import math
-from io import BytesIO
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import TYPE_CHECKING, Dict, List, Tuple
 
 from infrastructure.core.logging_utils import get_logger
+
+if TYPE_CHECKING:
+    import PIL.Image
+    from pypdf import PdfReader
+
+    from infrastructure.reporting.executive_report import ExecutiveSummary
 
 logger = get_logger(__name__)
 
@@ -84,7 +89,7 @@ def _render_pages_with_reportlab(
 
         from PIL import Image
         from reportlab.lib.pagesizes import letter
-        from reportlab.lib.utils import ImageReader
+        from reportlab.lib.utils import ImageReader  # noqa: F401
         from reportlab.pdfgen import canvas
     except ImportError:
         raise ImportError("reportlab and PIL required for advanced rendering")
@@ -141,7 +146,7 @@ def _render_pages_with_reportlab(
                 draw = ImageDraw.Draw(img)
                 try:
                     font = ImageFont.truetype("Helvetica", 12)
-                except:
+                except Exception:
                     font = ImageFont.load_default()
 
                 y_pos = 50
@@ -159,7 +164,7 @@ def _render_pages_with_reportlab(
             # Clean up temp file
             try:
                 os.unlink(temp_pdf_path)
-            except:
+            except OSError:
                 pass
 
     return images
@@ -184,7 +189,7 @@ def _render_pages_simple(reader: "PdfReader", dpi: int) -> List["PIL.Image.Image
         # Try to load a font
         try:
             font = ImageFont.truetype("Helvetica", 12)
-        except:
+        except Exception:
             font = ImageFont.load_default()
 
         # Extract and render text
@@ -292,7 +297,7 @@ def create_page_grid(
     # Try to load font for page numbers
     try:
         font = ImageFont.truetype("Helvetica", 10)
-    except:
+    except Exception:
         font = ImageFont.load_default()
 
     # Place images in grid
@@ -320,7 +325,7 @@ def create_page_grid(
     title = f"Manuscript Overview - {num_images} Pages"
     try:
         title_font = ImageFont.truetype("Helvetica-Bold", 16)
-    except:
+    except Exception:
         title_font = ImageFont.load_default()
 
     draw.text((padding, padding // 2), title, fill="black", font=title_font)

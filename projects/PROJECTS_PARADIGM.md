@@ -28,7 +28,7 @@ Projects are **architecturally isolated** - each operates as if it were the only
 
 ```mermaid
 graph TD
-        P1[act_inf_metaanalysis<br/>Active Inference Meta-Analysis<br/>📝 Own manuscript<br/>🧪 Own tests<br/>🧠 Own algorithms]
+        P1[code_project<br/>The Master Exemplar<br/>📝 Own manuscript<br/>🧪 Own tests<br/>🧠 Own algorithms]
         P2[your_project<br/>Your Research<br/>📝 Own manuscript<br/>🧪 Own tests<br/>🧠 Own algorithms]
 
         P1 -.->|❌ No imports| P2
@@ -86,7 +86,7 @@ from infrastructure.project import discover_projects
 
 # Infrastructure discovers all projects automatically
 projects = discover_projects(Path("."))
-# Returns: [act_inf_metaanalysis, ...]
+# Returns: [code_project, ...]
 
 # Infrastructure validates each project independently
 for project in projects:
@@ -280,7 +280,7 @@ copy_final_deliverables(project.path / "output", output_root / project.name)
 
 ### Project Lifecycle Under Infrastructure
 
-```
+```text
 Project Development Lifecycle
 ├── 1. Creation
 │   ├── Copy template or create from scratch
@@ -368,7 +368,7 @@ Every project maintains **manuscript independence**:
 
 #### **Independent Content Structure**
 
-```
+```text
 projects/{name}/manuscript/
 ├── 00_abstract.md                    # Project-specific abstract
 ├── 01_introduction.md               # Domain introduction
@@ -436,25 +436,26 @@ Infrastructure modules are **domain-independent utilities** that benefit all pro
 
 ## Real Project Example
 
-### Active Inference Meta-Analysis Paradigm
+### The Master Exemplar Paradigm
 
 **Standalone Guarantees:**
 
-- **Tests**: Test suite validating analysis algorithms
-- **Methods**: Meta-analysis implementation in `src/`
-- **Manuscript**: Research manuscript with analysis and figures
+- **Tests**: Zero-Mock test suite rigorously testing bounds, precision, and state.
+- **Methods**: Pure scientific logic in `src/`, with thin orchestrators in `scripts/`.
+- **Manuscript**: Research manuscript meticulously mapping to specific code artifacts.
+- **Docs**: Modular documentation hub detailing exact infrastructure bounds.
 
 **Infrastructure Integration:**
 
 ```bash
 # Infrastructure operates on project independently
-python3 scripts/execute_pipeline.py --project act_inf_metaanalysis --core-only
+python3 scripts/execute_pipeline.py --project code_project --core-only
 
 # Result: Complete analysis pipeline executed
 # - Tests validate analysis algorithms
 # - Scripts generate analysis figures
 # - Manuscript renders with equations
-# - Outputs organized in output/act_inf_metaanalysis/
+# - Outputs organized in output/code_project/
 ```
 
 ## Benefits of Standalone Paradigm

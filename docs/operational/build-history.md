@@ -58,20 +58,20 @@ The build pipeline evolved from a 6-stage core pipeline to the current 8-stage s
 
 ```bash
 # Run pipeline (all 8 stages)
-python3 scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --core-only
 
 # Or use unified interactive menu
 ./run.sh
 
 # Run individual stages
-python3 scripts/00_setup_environment.py  # Stage 00
-python3 scripts/01_run_tests.py          # Stage 01
-python3 scripts/02_run_analysis.py       # Stage 02
-python3 scripts/03_render_pdf.py         # Stage 03
-python3 scripts/04_validate_output.py    # Stage 04
-python3 scripts/05_copy_outputs.py       # Stage 05
-python3 scripts/06_llm_review.py         # Stage 06
-python3 scripts/07_generate_executive_report.py  # Stage 07
+uv run python scripts/00_setup_environment.py  # Stage 00
+uv run python scripts/01_run_tests.py          # Stage 01
+uv run python scripts/02_run_analysis.py       # Stage 02
+uv run python scripts/03_render_pdf.py         # Stage 03
+uv run python scripts/04_validate_output.py    # Stage 04
+uv run python scripts/05_copy_outputs.py       # Stage 05
+uv run python scripts/06_llm_review.py         # Stage 06
+uv run python scripts/07_generate_executive_report.py  # Stage 07
 ```
 
 ---

@@ -160,7 +160,7 @@ def validate_scientific_best_practices(module: Any) -> Dict[str, Any]:
     try:
         source = inspect.getsource(module)
         source_lines = source.split("\n")
-    except:
+    except Exception:
         pass
 
     has_try_except = any("try:" in line or "except" in line for line in source_lines)
@@ -277,7 +277,7 @@ def check_research_compliance(func: Callable) -> Dict[str, Any]:
         )
         compliance["has_error_handling"] = has_error_handling
 
-    except:
+    except Exception:
         pass
 
     # Calculate compliance score

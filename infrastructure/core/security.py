@@ -4,10 +4,7 @@ This module provides comprehensive security measures including input validation,
 security headers, rate limiting, and security monitoring.
 """
 
-import hashlib
-import hmac
 import re
-import secrets
 import time
 from functools import wraps
 from pathlib import Path
@@ -364,8 +361,8 @@ class SecurityMonitor:
             Dictionary with security statistics
         """
         total_events = len(self.events)
-        events_by_type = {}
-        events_by_severity = {}
+        events_by_type: Dict[str, int] = {}
+        events_by_severity: Dict[str, int] = {}
 
         for event in self.events:
             event_type = event["type"]

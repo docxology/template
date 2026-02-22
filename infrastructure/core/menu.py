@@ -7,7 +7,7 @@ CLI entry points. It intentionally avoids any business logic.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Iterable, List, Sequence
+from typing import Sequence
 
 
 @dataclass(frozen=True)

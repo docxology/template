@@ -305,8 +305,8 @@ def _deduplicate_paragraphs(
     # Content preservation check
     if len(result) / original_length < min_content_preservation:
         logger.warning(
-            f"Paragraph deduplication would remove too much content. "
-            f"Skipping deduplication."
+            "Paragraph deduplication would remove too much content. "
+            "Skipping deduplication."
         )
         return text
 
@@ -386,7 +386,6 @@ def deduplicate_sections(
 
             # Check similarity against existing sections
             is_duplicate = False
-            duplicate_key = None
 
             for existing_key, existing_data in seen_sections.items():
                 similarity = _calculate_similarity(
@@ -396,7 +395,6 @@ def deduplicate_sections(
                     existing_data["count"] += 1
                     if existing_data["count"] >= max_repetitions:
                         is_duplicate = True
-                        duplicate_key = existing_key
                         logger.debug(
                             f"Duplicate section detected (similarity: {similarity:.2f}, "
                             f"count: {existing_data['count']})"

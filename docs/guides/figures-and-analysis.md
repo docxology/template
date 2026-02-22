@@ -80,10 +80,10 @@ The template includes example scripts:
 
 ```bash
 # Generate basic example figure
-python3 project/scripts/example_figure.py
+uv run python project/scripts/example_figure.py
 
 # Generate research-quality figures
-python3 scripts/generate_research_figures.py
+uv run python scripts/generate_research_figures.py
 ```
 
 **What they demonstrate**:
@@ -241,7 +241,7 @@ if __name__ == '__main__':
 **Step 6: Run script**
 
 ```bash
-python3 scripts/statistics_figure.py
+uv run python scripts/statistics_figure.py
 ```
 
 **Step 7: Add to manuscript**
@@ -509,7 +509,7 @@ print('output/data/analysis_data.csv')
 The pipeline orchestrator (`scripts/execute_pipeline.py`) orchestrates everything:
 
 ```bash
-python3 scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --core-only
 ```
 
 **What happens**:
@@ -569,7 +569,7 @@ pytest tests/test_my_module.py --cov=src.my_module
 vim scripts/my_figure.py
 
 # 5. Run build
-python3 scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --core-only
 
 # 6. View result (top-level output after stage 5)
 open output/project_combined.pdf
@@ -579,15 +579,15 @@ open output/project_combined.pdf
 
 ```bash
 # 1. Full rebuild with validation (recommended - all 8 stages)
-python3 scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --core-only
 
 # Or use unified interactive menu
 ./run.sh
 
 # Alternative: Manual steps
 # # Pipeline automatically handles cleanup
-# python3 scripts/execute_pipeline.py --core-only
-# python3 scripts/04_validate_output.py
+# uv run python scripts/execute_pipeline.py --core-only
+# uv run python scripts/04_validate_output.py
 ```
 
 ### Creating Custom Build Scripts
@@ -608,8 +608,8 @@ pytest tests/test_correlation.py --cov=src.correlation
 
 # 2. Generate specific figures
 echo "Generating figures..."
-python3 scripts/correlation_analysis.py
-python3 scripts/statistics_figure.py
+uv run python scripts/correlation_analysis.py
+uv run python scripts/statistics_figure.py
 
 # 3. Build specific sections
 echo "Building results section..."

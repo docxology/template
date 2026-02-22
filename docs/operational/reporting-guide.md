@@ -92,7 +92,7 @@ grep -i error projects/project/output/reports/log_summary.txt
 cat projects/project/output/reports/output_statistics.txt
 
 # Parse JSON for programmatic access
-python3 -c "import json; print(json.load(open('projects/project/output/reports/output_statistics.json')))"
+uv run python -c "import json; print(json.load(open('projects/project/output/reports/output_statistics.json')))"
 ```
 
 ### 5. Multi-Project Summary
@@ -146,10 +146,10 @@ Reports are automatically generated during pipeline execution:
 
 ```bash
 # Single project - generates all reports
-python3 scripts/execute_pipeline.py --project project
+uv run python scripts/execute_pipeline.py --project project
 
 # Multi-project - generates all reports + executive summary
-python3 scripts/execute_multi_project.py
+uv run python scripts/execute_multi_project.py
 ```
 
 ### Manual Generation
@@ -158,13 +158,13 @@ Generate specific reports independently:
 
 ```bash
 # Validation report only
-python3 scripts/04_validate_output.py --project project
+uv run python scripts/04_validate_output.py --project project
 
 # Output statistics only
-python3 scripts/05_copy_outputs.py --project project
+uv run python scripts/05_copy_outputs.py --project project
 
 # Executive report only
-python3 scripts/07_generate_executive_report.py
+uv run python scripts/07_generate_executive_report.py
 ```
 
 ## Interpreting Reports
@@ -292,7 +292,7 @@ uv sync
 **Solutions**:
 ```bash
 # Re-run specific stage
-python3 scripts/04_validate_output.py --project project
+uv run python scripts/04_validate_output.py --project project
 
 # Check for errors in logs
 grep -i "failed to generate report" projects/project/output/logs/pipeline.log
@@ -313,7 +313,7 @@ grep -i "failed to generate report" projects/project/output/logs/pipeline.log
 jq . projects/project/output/reports/pipeline_report.json
 
 # Regenerate report
-python3 scripts/execute_pipeline.py --project project --stage validate
+uv run python scripts/execute_pipeline.py --project project --stage validate
 ```
 
 ## Best Practices

@@ -60,7 +60,7 @@ Examples:
         help="Project name (default: auto-detect from current directory or use 'project')",
     )
 
-    args = parser.parse_args()
+    parser.parse_args()
 
     if not YAML_AVAILABLE:
         logger.error("PyYAML not installed. Install with: pip install pyyaml")

@@ -336,7 +336,7 @@ projects/{name}/tests/                 # [LAYER 2] Project tests
 
 ```mermaid
 flowchart TD
-    START([User runs:<br/>python3 scripts/execute_pipeline.py --core-only]) --> CLEAN[STAGE 0: Clean Output Directories<br/>- Remove old outputs<br/>- Prepare fresh build]
+    START([User runs:<br/>uv run python scripts/execute_pipeline.py --core-only]) --> CLEAN[STAGE 0: Clean Output Directories<br/>- Remove old outputs<br/>- Prepare fresh build]
     CLEAN --> STAGE00[STAGE 00: LAYER 1<br/>Setup Environment<br/>- Validate Python, dependencies<br/>- Check build tools]
     
     STAGE00 --> PHASE1[PHASE 1: LAYER 1<br/>Test Validation<br/>- Run tests/infrastructure/*.py<br/>- Run projects/{name}/tests/*.py<br/>- Run tests/integration/*.py<br/>- Validate coverage requirements<br/>Report: [LAYER-1-INFRASTRUCTURE] Running]
@@ -644,7 +644,7 @@ If you have an old project with flat src/, migrating to the two-layer structure:
 
    ```bash
    pytest tests/ projects/{name}/tests/ --cov=infrastructure --cov=projects/{name}/src
-   python3 scripts/execute_pipeline.py --project {name} --core-only
+   uv run python scripts/execute_pipeline.py --project {name} --core-only
    ```
 
 ---

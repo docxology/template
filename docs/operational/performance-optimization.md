@@ -48,9 +48,9 @@ The pipeline automatically identifies bottlenecks:
 time ./run.sh --pipeline
 
 # Check individual stage times
-python3 scripts/00_setup_environment.py
-time python3 scripts/01_run_tests.py
-time python3 scripts/02_run_analysis.py
+uv run python scripts/00_setup_environment.py
+time uv run python scripts/01_run_tests.py
+time uv run python scripts/02_run_analysis.py
 ```
 
 ## Optimization Strategies
@@ -131,7 +131,7 @@ Monitor memory consumption:
 
 ```bash
 # Check memory usage during pipeline
-/usr/bin/time -v python3 scripts/execute_pipeline.py --core-only
+/usr/bin/time -v uv run python scripts/execute_pipeline.py --core-only
 
 # Monitor continuously
 watch -n 1 'ps aux | grep python'
@@ -146,7 +146,7 @@ Monitor CPU utilization:
 top -p $(pgrep -f "python3 scripts")
 
 # Profile CPU-intensive operations
-python3 -m cProfile -o profile.stats scripts/03_render_pdf.py
+uv run python -m cProfile -o profile.stats scripts/03_render_pdf.py
 ```
 
 ### Disk I/O
@@ -191,24 +191,24 @@ Typical pipeline execution times:
 
 ```bash
 # Profile entire pipeline
-python3 -m cProfile -o pipeline.prof scripts/execute_pipeline.py --core-only
+uv run python -m cProfile -o pipeline.prof scripts/execute_pipeline.py --core-only
 
 # Analyze profile
-python3 -m pstats pipeline.prof
+uv run python -m pstats pipeline.prof
 ```
 
 ### Stage-Specific Profiling
 
 ```bash
 # Profile specific stage
-python3 -m cProfile -o stage.prof scripts/03_render_pdf.py
+uv run python -m cProfile -o stage.prof scripts/03_render_pdf.py
 ```
 
 ### Memory Profiling
 
 ```bash
 # Memory profiler
-python3 -m memory_profiler scripts/execute_pipeline.py --core-only
+uv run python -m memory_profiler scripts/execute_pipeline.py --core-only
 ```
 
 ## Caching Strategies
