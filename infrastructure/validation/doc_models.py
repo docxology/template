@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 
 @dataclass
@@ -78,5 +78,5 @@ class ScanResults:
     accuracy_issues: List[AccuracyIssue] = field(default_factory=list)
     completeness_gaps: List[CompletenessGap] = field(default_factory=list)
     quality_issues: List[QualityIssue] = field(default_factory=list)
-    improvements_made: List[Dict] = field(default_factory=list)
-    statistics: Dict = field(default_factory=dict)
+    improvements_made: List[Dict[str, Any]] = field(default_factory=list)
+    statistics: Dict[str, Any] = field(default_factory=dict)

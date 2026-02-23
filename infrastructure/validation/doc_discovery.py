@@ -6,7 +6,7 @@ import re
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Set
+from typing import Any, Dict, List, Set
 
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.project.discovery import discover_projects
@@ -101,10 +101,7 @@ def find_script_files(repo_root: Path) -> List[Path]:
             # Skip if any part of the path is in exclude list
             if not any(excluded in script.parts for excluded in exclude_dirs):
                 # Only include scripts in specific directories
-                if any(
-                    part in script.parts
-                    for part in ["scripts", "repo_utilities", "src"]
-                ):
+                if any(part in script.parts for part in ["scripts", "repo_utilities", "src"]):
                     scripts.append(script)
 
     return sorted(scripts)
@@ -140,9 +137,7 @@ def identify_cross_references(md_files: List[Path]) -> Set[str]:
     return cross_refs
 
 
-def categorize_documentation(
-    md_files: List[Path], repo_root: Path
-) -> Dict[str, List[str]]:
+def categorize_documentation(md_files: List[Path], repo_root: Path) -> Dict[str, List[str]]:
     """Categorize documentation files."""
     categories = defaultdict(list)
 
@@ -180,7 +175,7 @@ def categorize_documentation(
     return dict(categories)
 
 
-def _get_project_category(rel_path: str, project_names: set) -> str | None:
+def _get_project_category(rel_path: str, project_names: set[str]) -> str | None:
     """Determine if a file belongs to a specific project and return category."""
     # Check if path contains projects/{name}/
     if rel_path.startswith("projects/"):
@@ -251,7 +246,7 @@ def analyze_documentation_file(md_file: Path, repo_root: Path) -> DocumentationF
         )
 
 
-def run_discovery_phase(repo_root: Path) -> Dict:
+def run_discovery_phase(repo_root: Path) -> Dict[str, Any]:
     """Run Phase 1: Discovery and Inventory.
 
     Args:
@@ -310,7 +305,7 @@ def run_discovery_phase(repo_root: Path) -> Dict:
     return inventory
 
 
-def discover_project_documentation(repo_root: Path) -> Dict[str, Dict]:
+def discover_project_documentation(repo_root: Path) -> Dict[str, Dict[str, Any]]:
     """Discover documentation organized by project.
 
     Args:
@@ -349,15 +344,15 @@ def discover_project_documentation(repo_root: Path) -> Dict[str, Dict]:
             rel_path = str(md_file.relative_to(repo_root))
             if rel_path.startswith(project_prefix):
                 doc_info = analyze_documentation_file(md_file, repo_root)
-                project_docs[project.name]["documentation_files"].append(doc_info)
+                project_docs[project.name]["documentation_files"].append(doc_info)  # type: ignore
 
                 # Categorize within project
                 if "manuscript/" in rel_path:
-                    project_docs[project.name]["manuscript_files"].append(doc_info)
+                    project_docs[project.name]["manuscript_files"].append(doc_info)  # type: ignore
                 elif "scripts/" in rel_path:
-                    project_docs[project.name]["script_docs"].append(doc_info)
+                    project_docs[project.name]["script_docs"].append(doc_info)  # type: ignore
                 elif "tests/" in rel_path:
-                    project_docs[project.name]["test_docs"].append(doc_info)
+                    project_docs[project.name]["test_docs"].append(doc_info)  # type: ignore
 
         # Calculate statistics
         project_docs[project.name]["statistics"] = _calculate_project_stats(
@@ -367,7 +362,7 @@ def discover_project_documentation(repo_root: Path) -> Dict[str, Dict]:
     return project_docs
 
 
-def _calculate_project_stats(project_data: Dict) -> Dict[str, int]:
+def _calculate_project_stats(project_data: Dict[str, Any]) -> Dict[str, int]:
     """Calculate documentation statistics for a project."""
     all_docs = (
         project_data["documentation_files"]
@@ -378,9 +373,7 @@ def _calculate_project_stats(project_data: Dict) -> Dict[str, int]:
 
     total_words = sum(doc.word_count for doc in all_docs if hasattr(doc, "word_count"))
     total_lines = sum(doc.line_count for doc in all_docs if hasattr(doc, "line_count"))
-    has_links = sum(
-        1 for doc in all_docs if hasattr(doc, "has_links") and doc.has_links
-    )
+    has_links = sum(1 for doc in all_docs if hasattr(doc, "has_links") and doc.has_links)
     has_code_blocks = sum(
         1 for doc in all_docs if hasattr(doc, "has_code_blocks") and doc.has_code_blocks
     )
@@ -435,7 +428,7 @@ def validate_project_documentation_integrity(repo_root: Path) -> Dict[str, List[
     return issues
 
 
-def get_audit_context(repo_root: Path) -> Dict:
+def get_audit_context(repo_root: Path) -> Dict[str, Any]:
     """Get comprehensive context for audit operations.
 
     Args:
@@ -453,8 +446,7 @@ def get_audit_context(repo_root: Path) -> Dict:
 
     return {
         "projects": [
-            {"name": p.name, "path": str(p.path), "metadata": p.metadata}
-            for p in projects
+            {"name": p.name, "path": str(p.path), "metadata": p.metadata} for p in projects
         ],
         "total_projects": len(projects),
         "total_markdown_files": len(md_files),

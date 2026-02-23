@@ -14,7 +14,7 @@ This script handles only I/O and orchestration.
 
 import sys
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 from infrastructure.core.logging_utils import get_logger
 
@@ -25,8 +25,8 @@ repo_root = Path(__file__).parent.parent
 sys.path.insert(0, str(repo_root / "src"))
 
 try:
-    from infrastructure.validation.pdf_validator import (
-        PDFValidationError, validate_pdf_rendering)
+    from infrastructure.core.exceptions import PDFValidationError
+    from infrastructure.validation.pdf_validator import validate_pdf_rendering
 except ImportError as e:
     logger.error("Failed to import from infrastructure/validation/pdf_validator.py")
     logger.error(f"   {e}")
@@ -36,7 +36,7 @@ except ImportError as e:
     sys.exit(1)
 
 
-def print_validation_report(report: dict, verbose: bool = False) -> None:
+def print_validation_report(report: dict[str, Any], verbose: bool = False) -> None:
     """
     Print validation report to stdout in human-readable format.
 
@@ -86,9 +86,7 @@ def print_validation_report(report: dict, verbose: bool = False) -> None:
     logger.info("")
 
 
-def main(
-    pdf_path: Optional[Path] = None, n_words: int = 200, verbose: bool = False
-) -> int:
+def main(pdf_path: Optional[Path] = None, n_words: int = 200, verbose: bool = False) -> int:
     """
     Main validation orchestration.
 
@@ -171,9 +169,7 @@ Examples:
         default=200,
         help="Number of words to extract for preview (default: 200)",
     )
-    parser.add_argument(
-        "-v", "--verbose", action="store_true", help="Enable verbose output"
-    )
+    parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose output")
 
     args = parser.parse_args()
 

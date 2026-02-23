@@ -7,6 +7,7 @@ This script performs comprehensive checks for:
 - Test coverage (all src/ modules have tests)
 - Configuration accuracy (dependencies, configs match reality)
 """
+
 from __future__ import annotations
 
 import ast
@@ -104,7 +105,7 @@ class RepositoryScanner:
 
         return self.results
 
-    def _discover_structure(self):
+    def _discover_structure(self) -> None:
         """Discover repository structure."""
         # Find src modules
         src_dir = self.repo_root / "src"
@@ -137,7 +138,7 @@ class RepositoryScanner:
         logger.info(f"Found {len(self.test_files)} test files")
         logger.info(f"Found {len(self.documented_modules)} documented modules")
 
-    def _find_documented_modules(self):
+    def _find_documented_modules(self) -> None:
         """Find modules mentioned in documentation."""
         docs_dirs = [
             self.repo_root / "docs",
@@ -159,7 +160,7 @@ class RepositoryScanner:
                 except Exception:
                     pass
 
-    def _check_code_accuracy(self):
+    def _check_code_accuracy(self) -> None:
         """Check code accuracy."""
         issues = []
 
@@ -173,9 +174,7 @@ class RepositoryScanner:
                         module_name = imp.replace("src.", "")
                         if module_name in self.src_modules:
                             # Check if function/class exists
-                            if not self._verify_import(
-                                script, module_name, imports[imp]
-                            ):
+                            if not self._verify_import(script, module_name, imports[imp]):
                                 issues.append(
                                     AccuracyIssue(
                                         category="import",
@@ -203,7 +202,7 @@ class RepositoryScanner:
 
     def _extract_imports(self, file_path: Path) -> Dict[str, List[str]]:
         """Extract imports from Python file."""
-        imports = {}
+        imports: dict[str, list[str]] = {}
         try:
             content = file_path.read_text(encoding="utf-8")
             tree = ast.parse(content)
@@ -223,9 +222,7 @@ class RepositoryScanner:
 
         return imports
 
-    def _verify_import(
-        self, script_path: Path, module_name: str, items: List[str]
-    ) -> bool:
+    def _verify_import(self, script_path: Path, module_name: str, items: List[str]) -> bool:
         """Verify that imported items exist in module."""
         module_path = self.repo_root / "src" / f"{module_name}.py"
         if not module_path.exists():
@@ -250,7 +247,7 @@ class RepositoryScanner:
         except Exception:
             return False
 
-    def _check_documented_commands(self):
+    def _check_documented_commands(self) -> None:
         """Check if documented commands/scripts actually exist."""
         issues = []
 
@@ -283,18 +280,15 @@ class RepositoryScanner:
                     if not script_path.exists():
                         # Check scripts/ and repo_utilities/
                         for script_dir in ["scripts", "repo_utilities"]:
-                            alt_path = (
-                                self.repo_root / script_dir / Path(script_ref).name
-                            )
+                            alt_path = self.repo_root / script_dir / Path(script_ref).name
                             if alt_path.exists():
                                 break
                         else:
-                            # Only report if it's clearly a script reference (has .sh or in scripts/)
+                            # Only report if it's clearly a script reference (has .sh or in scripts/)  # noqa: E501
                             # Skip if it's in EXAMPLES.md (those are templates/examples)
                             if (
                                 md_file.name == "EXAMPLES.md"
-                                and "Create"
-                                in content[max(0, match.start() - 50) : match.start()]
+                                and "Create" in content[max(0, match.start() - 50) : match.start()]
                             ):
                                 continue
 
@@ -318,7 +312,7 @@ class RepositoryScanner:
 
         self.results.accuracy_issues.extend(issues)
 
-    def _check_completeness(self):
+    def _check_completeness(self) -> None:
         """Check completeness."""
         gaps = []
 
@@ -373,10 +367,7 @@ class RepositoryScanner:
                     pass
 
         for script in self.script_files:
-            if (
-                script.name not in documented_scripts
-                and script.name != "comprehensive_doc_scan.py"
-            ):
+            if script.name not in documented_scripts and script.name != "comprehensive_doc_scan.py":
                 gaps.append(
                     CompletenessGap(
                         category="documentation",
@@ -389,7 +380,7 @@ class RepositoryScanner:
         self.results.completeness_gaps.extend(gaps)
         logger.info(f"Found {len(gaps)} completeness gaps")
 
-    def _check_test_coverage(self):
+    def _check_test_coverage(self) -> None:
         """Check test coverage."""
         # Try to run pytest (without coverage to avoid dependency issues)
         try:
@@ -412,9 +403,7 @@ class RepositoryScanner:
                             file="tests/",
                             message="Test suite has failures",
                             details=(
-                                result.stdout[-500:]
-                                if result.stdout
-                                else result.stderr[-500:]
+                                result.stdout[-500:] if result.stdout else result.stderr[-500:]
                             ),
                         )
                     )
@@ -428,7 +417,7 @@ class RepositoryScanner:
         except Exception as e:
             logger.warning(f"Could not run tests: {e}")
 
-    def _check_configuration(self):
+    def _check_configuration(self) -> None:
         """Check configuration accuracy."""
         issues = []
 
@@ -477,7 +466,7 @@ class RepositoryScanner:
         self.results.accuracy_issues.extend(issues)
         logger.info(f"Found {len(issues)} configuration issues")
 
-    def _configs_match(self, config: dict, example: dict) -> bool:
+    def _configs_match(self, config: dict[str, Any], example: dict[str, Any]) -> bool:
         """Check if config structures match."""
         # Simplified check - just verify top-level keys
         if not config or not example:
@@ -489,15 +478,12 @@ class RepositoryScanner:
         # Config should have same or subset of example keys
         return config_keys.issubset(example_keys) or config_keys == example_keys
 
-    def _check_thin_orchestrator_pattern(self):
+    def _check_thin_orchestrator_pattern(self) -> None:
         """Check thin orchestrator pattern compliance."""
         issues = []
 
         for script in self.script_files:
-            if (
-                script.name.startswith("_")
-                or script.name == "comprehensive_doc_scan.py"
-            ):
+            if script.name.startswith("_") or script.name == "comprehensive_doc_scan.py":
                 continue
 
             try:
@@ -528,7 +514,7 @@ class RepositoryScanner:
                             category="architecture",
                             severity="warning",
                             file=str(script.relative_to(self.repo_root)),
-                            message="Script may not follow thin orchestrator pattern (no src/ imports)",
+                            message="Script may not follow thin orchestrator pattern (no src/ imports)",  # noqa: E501
                         )
                     )
             except Exception as e:
@@ -585,12 +571,12 @@ class RepositoryScanner:
         # Group by category
         by_category = defaultdict(list)
         for gap in self.results.completeness_gaps:
-            by_category[gap.category].append(gap)
+            by_category[gap.category].append(gap)  # type: ignore
 
         for category, gaps in sorted(by_category.items()):
             lines.append(f"### {category.title()} Gaps ({len(gaps)})")
             lines.append("")
-            for gap in gaps:
+            for gap in gaps:  # type: ignore
                 lines.append(f"- **{gap.severity.upper()}**: {gap.item}")
                 lines.append(f"  - {gap.description}")
             lines.append("")

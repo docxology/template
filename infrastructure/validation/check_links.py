@@ -11,13 +11,14 @@ This script validates:
 - Python import statements
 - Consistency of {name} placeholders vs actual project names
 """
+
 from __future__ import annotations
 
 import ast
 import re
 import sys
 from pathlib import Path
-from typing import Dict, List, Set, Tuple
+from typing import Any, Dict, List, Set, Tuple
 
 from infrastructure.core.logging_utils import get_logger
 
@@ -48,9 +49,7 @@ def find_all_markdown_files(repo_root: str) -> List[Path]:
     return sorted(md_files)
 
 
-def extract_links(
-    content: str, file_path: Path
-) -> Tuple[List[Dict], List[Dict], List[Dict]]:
+def extract_links(content: str, file_path: Path) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]], List[Dict[str, Any]]]:
     """Extract internal links, external links, and file references from markdown."""
     internal_links = []
     external_links = []
@@ -107,7 +106,7 @@ def extract_links(
     return internal_links, external_links, file_refs
 
 
-def extract_code_blocks(content: str, file_path: Path) -> List[Dict]:
+def extract_code_blocks(content: str, file_path: Path) -> List[Dict[str, Any]]:
     """Extract code blocks from markdown content for validation.
 
     Improved to handle multi-line code blocks and filter out formatting artifacts.
@@ -139,16 +138,16 @@ def extract_code_blocks(content: str, file_path: Path) -> List[Dict]:
     return code_blocks
 
 
-def validate_file_paths_in_code(
-    content: str, file_path: Path, repo_root: Path
-) -> List[Dict]:
+def validate_file_paths_in_code(content: str, file_path: Path, repo_root: Path) -> List[Dict[str, Any]]:
     """Validate file path references within code blocks.
 
     Improved to avoid catching formatting artifacts and better handle multi-line paths.
     """
     from infrastructure.validation.known_exceptions import (
-        is_code_block_artifact, is_mermaid_artifact,
-        is_valid_directory_reference)
+        is_code_block_artifact,
+        is_mermaid_artifact,
+        is_valid_directory_reference,
+    )
 
     issues = []
     code_blocks = extract_code_blocks(content, file_path)
@@ -162,9 +161,9 @@ def validate_file_paths_in_code(
         # Common patterns: projects/{name}/, output/{name}/, infrastructure/, scripts/
         # Improved patterns that avoid catching formatting artifacts
         path_patterns = [
-            r'projects/\{[^}]+\}/[^\'"\s\n\|`\)\]\}]*',  # projects/{name}/path (exclude formatting chars)
+            r'projects/\{[^}]+\}/[^\'"\s\n\|`\)\]\}]*',  # projects/{name}/path (exclude formatting chars)  # noqa: E501
             r'output/\{[^}]+\}/[^\'"\s\n\|`\)\]\}]*',  # output/{name}/path
-            r'infrastructure/[^\'"\s\n\|`\)\]\}]+',  # infrastructure/path (must have something after)
+            r'infrastructure/[^\'"\s\n\|`\)\]\}]+',  # infrastructure/path (must have something after)  # noqa: E501
             r'scripts/[^\'"\s\n\|`\)\]\}]+',  # scripts/path
             r'projects/[a-zA-Z_][a-zA-Z0-9_]*/[^\'"\s\n\|`\)\]\}]+',  # projects/project_name/path
         ]
@@ -193,9 +192,7 @@ def validate_file_paths_in_code(
                 # Skip if it's clearly in a string literal (quotes around it)
                 match_start = match.start()
                 match_end = match.end()
-                context_before = block["content"][
-                    max(0, match_start - 10) : match_start
-                ]
+                context_before = block["content"][max(0, match_start - 10) : match_start]
                 context_after = block["content"][
                     match_end : min(len(block["content"]), match_end + 10)
                 ]
@@ -215,13 +212,12 @@ def validate_file_paths_in_code(
                 # Check if this path exists
                 resolved_path = _resolve_template_path(path_ref, repo_root)
                 if resolved_path and not resolved_path.exists():
-                    # Only flag if it's clearly a file reference (has extension or doesn't end with /)
+                    # Only flag if it's clearly a file reference (has extension or doesn't end with /)  # noqa: E501
                     if resolved_path.suffix or not path_ref.endswith("/"):
                         issues.append(
                             {
                                 "file": str(file_path),
-                                "line": block["line"]
-                                + content[: match.start()].count("\n"),
+                                "line": block["line"] + content[: match.start()].count("\n"),
                                 "target": path_ref,
                                 "issue": f"File path in code block does not exist: {path_ref}",
                                 "type": "code_block_path",
@@ -333,9 +329,7 @@ def _resolve_template_path(path_ref: str, repo_root: Path) -> Path | None:
             # Try actual project names first (discovered dynamically)
             project_names = _get_actual_project_names(repo_root)
             for project_name in project_names:
-                actual_path = path_ref.replace(
-                    "projects/project/", f"projects/{project_name}/"
-                )
+                actual_path = path_ref.replace("projects/project/", f"projects/{project_name}/")
                 full_path = repo_root / actual_path
                 if full_path.exists():
                     return full_path
@@ -352,9 +346,7 @@ def _resolve_template_path(path_ref: str, repo_root: Path) -> Path | None:
             # Try actual project names (discovered dynamically)
             project_names = _get_actual_project_names(repo_root)
             for project_name in project_names:
-                actual_path = path_ref.replace(
-                    "output/project/", f"output/{project_name}/"
-                )
+                actual_path = path_ref.replace("output/project/", f"output/{project_name}/")
                 full_path = repo_root / actual_path
                 if full_path.exists():
                     return full_path
@@ -366,11 +358,9 @@ def _resolve_template_path(path_ref: str, repo_root: Path) -> Path | None:
         return None
 
 
-def validate_directory_structures(
-    content: str, file_path: Path, repo_root: Path
-) -> List[Dict]:
+def validate_directory_structures(content: str, file_path: Path, repo_root: Path) -> List[Dict[str, Any]]:
     """Validate directory structure examples against actual filesystem."""
-    issues = []
+    issues: list[dict[str, str]] = []
 
     # Look for directory tree patterns in code blocks and regular text
     tree_patterns = [
@@ -417,9 +407,7 @@ def _is_real_path_item(item_name: str) -> bool:
     return True
 
 
-def validate_python_imports(
-    content: str, file_path: Path, repo_root: Path
-) -> List[Dict]:
+def validate_python_imports(content: str, file_path: Path, repo_root: Path) -> List[Dict[str, Any]]:
     """Validate Python import statements in code blocks."""
     issues = []
     code_blocks = extract_code_blocks(content, file_path)
@@ -438,17 +426,13 @@ def validate_python_imports(
                             for alias in node.names:
                                 module_name = alias.name
                                 issues.extend(
-                                    _validate_import_path(
-                                        module_name, block, file_path, repo_root
-                                    )
+                                    _validate_import_path(module_name, block, file_path, repo_root)
                                 )
                         elif isinstance(node, ast.ImportFrom):
-                            module_name = node.module
-                            if module_name:
+                            module_name = node.module  # type: ignore[assignment]
+                            if module_name is not None:
                                 issues.extend(
-                                    _validate_import_path(
-                                        module_name, block, file_path, repo_root
-                                    )
+                                    _validate_import_path(module_name, block, file_path, repo_root)
                                 )
             except SyntaxError:
                 # Skip malformed Python code
@@ -458,17 +442,16 @@ def validate_python_imports(
 
 
 def _validate_import_path(
-    module_name: str, block: Dict, file_path: Path, repo_root: Path
-) -> List[Dict]:
+    module_name: str, block: Dict[str, Any], file_path: Path, repo_root: Path
+) -> List[Dict[str, Any]]:
     """Validate a single import path."""
-    issues = []
+    issues: list[dict[str, str]] = []
 
     # Convert module path to file path
     if module_name.startswith("infrastructure."):
         # First check if it's a direct module import (e.g., infrastructure.core.performance)
         file_path_guess = (
-            module_name.replace("infrastructure.", "infrastructure/").replace(".", "/")
-            + ".py"
+            module_name.replace("infrastructure.", "infrastructure/").replace(".", "/") + ".py"
         )
         full_path = repo_root / file_path_guess
         if full_path.exists():
@@ -476,16 +459,14 @@ def _validate_import_path(
             return issues
 
         # Check if it's a submodule that should be imported from __init__.py
-        # For example: infrastructure.core.performance might be imported via infrastructure.core.__init__.py
+        # For example: infrastructure.core.performance might be imported via infrastructure.core.__init__.py  # noqa: E501
         path_parts = module_name.split(".")
         if len(path_parts) >= 2:
             # Check parent __init__.py files
             for i in range(len(path_parts) - 1, 0, -1):
                 parent_module = ".".join(path_parts[:i])
                 init_path_guess = (
-                    parent_module.replace("infrastructure.", "infrastructure/").replace(
-                        ".", "/"
-                    )
+                    parent_module.replace("infrastructure.", "infrastructure/").replace(".", "/")
                     + "/__init__.py"
                 )
                 init_full_path = repo_root / init_path_guess
@@ -540,11 +521,9 @@ def _validate_import_path(
     return issues
 
 
-def validate_placeholder_consistency(
-    content: str, file_path: Path, repo_root: Path
-) -> List[Dict]:
+def validate_placeholder_consistency(content: str, file_path: Path, repo_root: Path) -> List[Dict[str, Any]]:
     """Validate consistency of {name} placeholders vs actual project names."""
-    issues = []
+    issues: list[dict[str, str]] = []
 
     # Find all placeholder usage
     placeholder_pattern = re.compile(r"\{([^}]+)\}")
@@ -602,8 +581,7 @@ def validate_placeholder_consistency(
             ]
 
             has_specific_indicator = any(
-                indicator in context.lower()
-                for indicator in specific_project_indicators
+                indicator in context.lower() for indicator in specific_project_indicators
             )
             mentions_specific_project = any(proj in context for proj in project_names)
 
@@ -612,9 +590,9 @@ def validate_placeholder_consistency(
                 issues.append(
                     {
                         "file": str(file_path),
-                        "line": content[: match.start()].count("\n") + 1,
+                        "line": content[: match.start()].count("\n") + 1,  # type: ignore[dict-item]
                         "target": match.group(0),
-                        "issue": f"Using placeholder {{name}} when specific project names exist: {project_names}",
+                        "issue": f"Using placeholder {{name}} when specific project names exist: {project_names}",  # noqa: E501
                         "type": "placeholder_inconsistency",
                     }
                 )
@@ -636,9 +614,7 @@ def _get_actual_project_names(repo_root: Path) -> List[str]:
     return project_names
 
 
-def check_file_reference(
-    target: str, source_file: Path, repo_root: Path
-) -> Tuple[bool, str]:
+def check_file_reference(target: str, source_file: Path, repo_root: Path) -> Tuple[bool, str]:
     """Check if a file reference resolves correctly."""
     # Handle relative paths
     if target.startswith("../"):
@@ -710,7 +686,7 @@ def extract_headings(content: str) -> Set[str]:
     return headings
 
 
-def main():
+def main() -> int:
     """Main function to check all documentation links and references comprehensively."""
     # Go up from infrastructure/validation/check_links.py to repo root
     repo_root = Path(__file__).parent.parent.parent
@@ -720,7 +696,7 @@ def main():
     logger.info("Running comprehensive filepath and reference audit")
 
     all_headings: Dict[str, Set[str]] = {}
-    issues = {
+    issues: Dict[str, list[str]] = {
         "broken_anchor_links": [],
         "broken_file_refs": [],
         "code_block_paths": [],
@@ -733,9 +709,7 @@ def main():
     for md_file in md_files:
         try:
             content = md_file.read_text(encoding="utf-8")
-            all_headings[str(md_file.relative_to(repo_root))] = extract_headings(
-                content
-            )
+            all_headings[str(md_file.relative_to(repo_root))] = extract_headings(content)
         except Exception as e:
             logger.error(f"Error reading {md_file}: {e}")
 
@@ -777,7 +751,7 @@ def main():
                 # Only check for actual heading anchors within the same file
                 if file_key in all_headings and target not in all_headings[file_key]:
                     issues["broken_anchor_links"].append(
-                        {
+                        {  # type: ignore
                             "file": file_key,
                             "line": link["line"],
                             "target": link["target"],
@@ -800,7 +774,7 @@ def main():
                     exists, msg = check_file_reference(target, md_file, repo_root)
                     if not exists:
                         issues["broken_file_refs"].append(
-                            {
+                            {  # type: ignore
                                 "file": str(md_file.relative_to(repo_root)),
                                 "line": ref["line"],
                                 "target": ref["target"],
@@ -811,20 +785,16 @@ def main():
 
             # Additional validations
             code_block_issues = validate_file_paths_in_code(content, md_file, repo_root)
-            issues["code_block_paths"].extend(code_block_issues)
+            issues["code_block_paths"].extend(code_block_issues)  # type: ignore
 
-            dir_structure_issues = validate_directory_structures(
-                content, md_file, repo_root
-            )
-            issues["directory_structures"].extend(dir_structure_issues)
+            dir_structure_issues = validate_directory_structures(content, md_file, repo_root)
+            issues["directory_structures"].extend(dir_structure_issues)  # type: ignore
 
             import_issues = validate_python_imports(content, md_file, repo_root)
-            issues["python_imports"].extend(import_issues)
+            issues["python_imports"].extend(import_issues)  # type: ignore
 
-            placeholder_issues = validate_placeholder_consistency(
-                content, md_file, repo_root
-            )
-            issues["placeholder_consistency"].extend(placeholder_issues)
+            placeholder_issues = validate_placeholder_consistency(content, md_file, repo_root)
+            issues["placeholder_consistency"].extend(placeholder_issues)  # type: ignore
 
         except Exception as e:
             logger.error(f"Error processing {md_file}: {e}")
@@ -833,7 +803,7 @@ def main():
     return generate_comprehensive_report(issues, len(md_files))
 
 
-def generate_comprehensive_report(issues: Dict[str, List], total_files: int) -> int:
+def generate_comprehensive_report(issues: Dict[str, List[Any]], total_files: int) -> int:
     """Generate a comprehensive validation report."""
     total_issues = sum(len(issue_list) for issue_list in issues.values())
 
@@ -887,7 +857,7 @@ def generate_comprehensive_report(issues: Dict[str, List], total_files: int) -> 
 
             # Show first 5 issues per category
             for i, issue in enumerate(issue_list[:5]):
-                logger.warning(f"   {i+1}. {issue['file']}:{issue['line']}")
+                logger.warning(f"   {i + 1}. {issue['file']}:{issue['line']}")
                 logger.warning(f"      Target: {issue['target']}")
                 logger.warning(f"      Issue: {issue['issue']}")
                 if "text" in issue:
@@ -908,9 +878,7 @@ def generate_comprehensive_report(issues: Dict[str, List], total_files: int) -> 
         if count > 0:
             logger.info(f"   • {title}: {count} issues")
 
-    logger.info(
-        "\n🔧 Next steps: Run the audit script to generate detailed fix recommendations:"
-    )
+    logger.info("\n🔧 Next steps: Run the audit script to generate detailed fix recommendations:")
     logger.info("   python scripts/audit_filepaths.py")
 
     return 1

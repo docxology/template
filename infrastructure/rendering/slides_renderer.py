@@ -130,9 +130,7 @@ class SlidesRenderer:
 
             # Fix figure paths for LaTeX compilation
             if figures_dir:
-                tex_content = self._fix_figure_paths(
-                    tex_content, output_dir, figures_dir
-                )
+                tex_content = self._fix_figure_paths(tex_content, output_dir, figures_dir)
 
             # Write fixed LaTeX back
             temp_tex.write_text(tex_content)
@@ -163,15 +161,13 @@ class SlidesRenderer:
                     # Extract last 20 lines for context
                     log_lines = log_content.split("\n")
                     last_lines = log_lines[-20:] if len(log_lines) > 20 else log_lines
-                    recent_errors = "\n".join(
-                        line for line in last_lines if line.strip()
-                    )
+                    recent_errors = "\n".join(line for line in last_lines if line.strip())
 
                     # Detect specific error types
                     error_hints = []
                     if "*** (job aborted, no legal \\end found)" in log_content:
                         error_hints.append(
-                            "LaTeX document structure error: missing \\end{document} or unmatched \\begin{}/\\end{} pairs"
+                            "LaTeX document structure error: missing \\end{document} or unmatched \\begin{}/\\end{} pairs"  # noqa: E501
                         )
                     if "Undefined control sequence" in log_content:
                         error_hints.append(
@@ -182,16 +178,14 @@ class SlidesRenderer:
                             "Missing file reference - check figure paths and bibliography files"
                         )
 
-                    error_msg += (
-                        f"\n\nLaTeX Compilation Log ({log_file}):\n{recent_errors}"
-                    )
+                    error_msg += f"\n\nLaTeX Compilation Log ({log_file}):\n{recent_errors}"
 
                     if error_hints:
                         error_msg += "\n\nPossible Issues:\n" + "\n".join(
                             f"- {hint}" for hint in error_hints
                         )
 
-                    error_msg += f"\n\nSuggestions:\n- Check LaTeX log file: {log_file}\n- Verify LaTeX syntax in generated .tex file: {temp_tex}\n- Ensure all referenced figures exist\n- Check for missing LaTeX packages"
+                    error_msg += f"\n\nSuggestions:\n- Check LaTeX log file: {log_file}\n- Verify LaTeX syntax in generated .tex file: {temp_tex}\n- Ensure all referenced figures exist\n- Check for missing LaTeX packages"  # noqa: E501
 
                 except Exception as log_error:
                     error_msg += f"\n\nCould not read LaTeX log file: {log_error}"
@@ -205,9 +199,7 @@ class SlidesRenderer:
                 },
             )
 
-    def _fix_figure_paths(
-        self, tex_content: str, output_dir: Path, figures_dir: Path
-    ) -> str:
+    def _fix_figure_paths(self, tex_content: str, output_dir: Path, figures_dir: Path) -> str:
         """Fix figure paths in LaTeX content for proper compilation.
 
         Converts paths like ../output/figures/file.png to relative paths
@@ -247,7 +239,7 @@ class SlidesRenderer:
             else:
                 return path_str
 
-        def fix_path(match: re.Match) -> str:
+        def fix_path(match: re.Match[str]) -> str:
             r"""Fix a single includegraphics path to be relative to the slides compilation directory.
 
             Transforms figure paths from various formats (absolute, manuscript-relative,

@@ -8,15 +8,24 @@ false positive filtering, and issue grouping for better analysis and reporting.
 from __future__ import annotations
 
 import re
-from typing import Dict, List, Union
+from typing import Any, Dict, List, Union
 
-from infrastructure.validation.doc_models import (AccuracyIssue,
-                                                  CompletenessGap, LinkIssue,
-                                                  QualityIssue)
+from infrastructure.validation.doc_models import (
+    AccuracyIssue,
+    CompletenessGap,
+    LinkIssue,
+    QualityIssue,
+)
 from infrastructure.validation.known_exceptions import (
-    is_code_block_artifact, is_code_example, is_latex_reference,
-    is_mermaid_artifact, is_table_artifact, is_template_pattern,
-    is_valid_directory_reference, is_venv_reference)
+    is_code_block_artifact,
+    is_code_example,
+    is_latex_reference,
+    is_mermaid_artifact,
+    is_table_artifact,
+    is_template_pattern,
+    is_valid_directory_reference,
+    is_venv_reference,
+)
 
 # Type alias for any issue type
 Issue = Union[LinkIssue, AccuracyIssue, CompletenessGap, QualityIssue]
@@ -31,7 +40,7 @@ def categorize_by_type(issues: List[Issue]) -> Dict[str, List[Issue]]:
     Returns:
         Dictionary mapping category names to lists of issues
     """
-    categories = {
+    categories = {  # type: ignore
         "critical": [],
         "error": [],
         "warning": [],
@@ -182,10 +191,7 @@ def is_false_positive(issue: Issue) -> bool:
         return True
 
     # Markdown table formatting artifacts (specific patterns)
-    if (
-        "infrastructure/agents.md]" in target_lower
-        or "infrastructure/readme.md]" in target_lower
-    ):
+    if "infrastructure/agents.md]" in target_lower or "infrastructure/readme.md]" in target_lower:
         return True
 
     # Check if issue message indicates it's a directory reference
@@ -244,26 +250,26 @@ def group_related_issues(issues: List[Issue]) -> List[List[Issue]]:
         return []
 
     # Group by file first
-    file_groups = {}
+    file_groups: dict[str, list[str]] = {}
     for issue in issues:
         file_key = _get_issue_file(issue)
         if file_key not in file_groups:
             file_groups[file_key] = []
-        file_groups[file_key].append(issue)
+        file_groups[file_key].append(issue)  # type: ignore
 
     # Within each file, group by issue type
-    groups = []
+    groups: list[dict[str, str]] = []
     for file_issues in file_groups.values():
-        type_groups = {}
-        for issue in file_issues:
+        type_groups: dict[str, list[str]] = {}
+        for issue in file_issues:  # type: ignore
             issue_type = _get_issue_type(issue)
             if issue_type not in type_groups:
                 type_groups[issue_type] = []
-            type_groups[issue_type].append(issue)
+            type_groups[issue_type].append(issue)  # type: ignore
 
-        groups.extend(type_groups.values())
+        groups.extend(type_groups.values())  # type: ignore
 
-    return groups
+    return groups  # type: ignore
 
 
 def prioritize_issues(issues: List[Issue]) -> List[Issue]:
@@ -276,7 +282,7 @@ def prioritize_issues(issues: List[Issue]) -> List[Issue]:
         Sorted list with highest priority issues first
     """
 
-    def sort_key(issue: Issue) -> tuple:
+    def sort_key(issue: Issue) -> tuple[int, str, str]:
         """Generate a sort key tuple for prioritizing issues.
 
         Creates a tuple for sorting issues by severity (critical first),
@@ -309,7 +315,7 @@ def generate_issue_summary(issues: List[Issue]) -> Dict[str, int]:
     Returns:
         Dictionary with summary statistics
     """
-    summary = {
+    summary: dict[str, Any] = {
         "total": len(issues),
         "by_severity": {"critical": 0, "error": 0, "warning": 0, "info": 0},
         "by_severity_flag": {"red": 0, "yellow": 0, "green": 0},
@@ -336,27 +342,27 @@ def generate_issue_summary(issues: List[Issue]) -> Dict[str, int]:
 def _get_issue_text(issue: Issue) -> str:
     """Extract text content from any issue type."""
     if hasattr(issue, "issue_message"):
-        return issue.issue_message
+        return str(issue.issue_message)
     elif hasattr(issue, "description"):
-        return issue.description
+        return str(issue.description)
     elif hasattr(issue, "text"):
-        return issue.text
+        return str(issue.text)
     return str(issue)
 
 
 def _get_issue_target(issue: Issue) -> str:
     """Extract target/path from any issue type."""
     if hasattr(issue, "target"):
-        return issue.target
+        return str(issue.target)
     return ""
 
 
 def _get_issue_file(issue: Issue) -> str:
     """Extract file path from any issue type."""
     if hasattr(issue, "file"):
-        return issue.file
+        return str(issue.file)
     elif hasattr(issue, "source_file"):
-        return issue.source_file
+        return str(issue.source_file)
     return "unknown"
 
 

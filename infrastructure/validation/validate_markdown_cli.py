@@ -10,11 +10,12 @@ This script validates markdown files for integrity issues:
 All business logic is in infrastructure/markdown_validator.py
 This script handles only CLI argument parsing and I/O.
 """
+
 from __future__ import annotations
 
 import sys
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 from infrastructure.core.logging_utils import get_logger
 
@@ -26,12 +27,14 @@ sys.path.insert(0, str(repo_root))
 
 try:
     from infrastructure.validation.markdown_validator import (
-        find_manuscript_directory, validate_markdown)
+        find_manuscript_directory,
+        validate_markdown,
+    )
 except ImportError as e:
     # Store error for main() function to handle
-    import_error = f"❌ Error: Failed to import from infrastructure/validation/markdown_validator.py\n   {e}\n   Ensure infrastructure/validation/markdown_validator.py exists and is properly formatted"
+    import_error = f"❌ Error: Failed to import from infrastructure/validation/markdown_validator.py\n   {e}\n   Ensure infrastructure/validation/markdown_validator.py exists and is properly formatted"  # noqa: E501
 else:
-    import_error = None
+    import_error = None  # type: ignore[assignment]
 
 
 # Helper function for tests
@@ -45,7 +48,7 @@ def _repo_root() -> str:
 
 
 # Re-export functions from infrastructure for tests
-def find_markdown_files(directory: str) -> list:
+def find_markdown_files(directory: str) -> list[str]:
     """Find all markdown files in directory (for testing).
 
     Args:
@@ -75,7 +78,7 @@ def find_markdown_files(directory: str) -> list:
     )
 
 
-def collect_symbols(md_files: list) -> tuple:
+def collect_symbols(md_files: list[str]) -> tuple[dict[str, str], dict[str, str]]:
     """Collect symbols from markdown files (for testing).
 
     Args:
@@ -102,7 +105,7 @@ def collect_symbols(md_files: list) -> tuple:
     return labels, anchors
 
 
-def validate_images(md_files: list, repo_root_str: str) -> list:
+def validate_images(md_files: list[str], repo_root_str: str) -> list[str]:
     """Validate image references (for testing).
 
     Args:
@@ -130,9 +133,7 @@ def validate_images(md_files: list, repo_root_str: str) -> list:
     return issues
 
 
-def validate_refs(
-    md_files: list, labels: dict, anchors: dict, repo_root_str: str
-) -> list:
+def validate_refs(md_files: list[str], labels: dict[str, str], anchors: dict[str, str], repo_root_str: str) -> list[str]:
     """Validate cross-references (for testing).
 
     Args:
@@ -159,7 +160,7 @@ def validate_refs(
     return issues
 
 
-def validate_math(md_files: list, repo_root_str: str) -> list:
+def validate_math(md_files: list[str], repo_root_str: str) -> list[str]:
     """Validate math equations (for testing).
 
     Args:
@@ -210,9 +211,7 @@ def main(manuscript_path: Optional[Path] = None, strict: bool = False) -> int:
             manuscript_dir = find_manuscript_directory(repo_root)
 
         # Run validation
-        problems, exit_code = validate_markdown(
-            manuscript_dir, repo_root, strict=strict
-        )
+        problems, exit_code = validate_markdown(manuscript_dir, repo_root, strict=strict)
 
         # Print results
         if problems:
@@ -251,9 +250,7 @@ if __name__ == "__main__":
         type=Path,
         help="Path to markdown file or directory (default: auto-detect)",
     )
-    parser.add_argument(
-        "--strict", action="store_true", help="Enable strict validation mode"
-    )
+    parser.add_argument("--strict", action="store_true", help="Enable strict validation mode")
 
     args = parser.parse_args()
 

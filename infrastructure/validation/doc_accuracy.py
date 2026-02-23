@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 import yaml
 
@@ -37,9 +37,7 @@ def extract_headings(content: str) -> Set[str]:
     return headings
 
 
-def resolve_file_path(
-    target: str, source_file: Path, repo_root: Path
-) -> Tuple[bool, str, str]:
+def resolve_file_path(target: str, source_file: Path, repo_root: Path) -> Tuple[bool, str, str]:
     """Resolve a file path relative to source file.
 
     Returns:
@@ -128,9 +126,7 @@ def check_links(
                 # Skip if link is inside a code block
                 link_start = match.start()
                 match.end()
-                in_code_block = any(
-                    start <= link_start < end for start, end in code_block_ranges
-                )
+                in_code_block = any(start <= link_start < end for start, end in code_block_ranges)
                 if in_code_block:
                     continue
 
@@ -172,9 +168,7 @@ def check_links(
                                     severity = "error"
                                 elif path_type == "directory":
                                     issue_type = "broken_directory"
-                                    severity = (
-                                        "warning"  # Directory might be intentional
-                                    )
+                                    severity = "warning"  # Directory might be intentional
                                 else:
                                     issue_type = "broken_path"
                                     severity = "warning"
@@ -237,7 +231,7 @@ def verify_commands(md_files: List[Path], repo_root: Path) -> List[AccuracyIssue
                                             file=file_key,
                                             line=line_num,
                                             issue_type="command",
-                                            issue_message=f"Referenced script '{script_name}' does not exist",
+                                            issue_message=f"Referenced script '{script_name}' does not exist",  # noqa: E501
                                             severity="error",
                                         )
                                     )
@@ -262,9 +256,7 @@ def check_file_paths(md_files: List[Path], repo_root: Path) -> List[AccuracyIssu
                 line_num = content[: match.start()].count("\n") + 1
 
                 # Check if it looks like a file path
-                if "/" in path_str or path_str.endswith(
-                    (".md", ".py", ".sh", ".yaml", ".toml")
-                ):
+                if "/" in path_str or path_str.endswith((".md", ".py", ".sh", ".yaml", ".toml")):
                     resolved = resolve_file_path(path_str, md_file, repo_root)
                     exists, message, path_type = resolved
                     if not exists and "output" not in path_str:
@@ -277,12 +269,8 @@ def check_file_paths(md_files: List[Path], repo_root: Path) -> List[AccuracyIssu
                                     file=file_key,
                                     line=line_num,
                                     issue_type="path",
-                                    issue_message=f"Referenced path '{path_str}' may not exist: {message}",
-                                    severity=(
-                                        "warning"
-                                        if path_type == "directory"
-                                        else "error"
-                                    ),
+                                    issue_message=f"Referenced path '{path_str}' may not exist: {message}",  # noqa: E501
+                                    severity=("warning" if path_type == "directory" else "error"),
                                 )
                             )
         except Exception:
@@ -295,7 +283,7 @@ def validate_config_options(
     md_files: List[Path], config_files: Dict[str, Path]
 ) -> List[AccuracyIssue]:
     """Validate configuration options mentioned in docs."""
-    issues = []
+    issues: list[AccuracyIssue] = []
 
     # Load actual config files
     config_data = {}
@@ -314,7 +302,7 @@ def validate_config_options(
 
 def check_terminology(md_files: List[Path]) -> List[AccuracyIssue]:
     """Check terminology consistency across documentation."""
-    issues = []
+    issues: list[AccuracyIssue] = []
     # This would check for inconsistent terminology
     # For now, return empty - could be enhanced with a terminology dictionary
     return issues
@@ -322,7 +310,7 @@ def check_terminology(md_files: List[Path]) -> List[AccuracyIssue]:
 
 def run_accuracy_phase(
     md_files: List[Path], repo_root: Path, config_files: Dict[str, Path]
-) -> Tuple[Dict, List[LinkIssue], List[AccuracyIssue], Dict[str, Set[str]]]:
+) -> Tuple[Dict[str, Any], List[LinkIssue], List[AccuracyIssue], Dict[str, Set[str]]]:
     """Run Phase 2: Accuracy Verification.
 
     Args:
@@ -340,9 +328,7 @@ def run_accuracy_phase(
     for md_file in md_files:
         try:
             content = md_file.read_text(encoding="utf-8")
-            all_headings[str(md_file.relative_to(repo_root))] = extract_headings(
-                content
-            )
+            all_headings[str(md_file.relative_to(repo_root))] = extract_headings(content)
         except Exception as e:
             logger.warning("Error reading %s: %s", md_file, e)
 

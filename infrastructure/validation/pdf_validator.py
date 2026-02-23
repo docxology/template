@@ -43,7 +43,7 @@ def extract_text_from_pdf(pdf_path: Path) -> str:
 
     # Validate PDF file size and basic integrity
     file_size = pdf_path.stat().st_size
-    logger.debug(f"PDF file size: {file_size} bytes ({file_size/1024:.1f} KB)")
+    logger.debug(f"PDF file size: {file_size} bytes ({file_size / 1024:.1f} KB)")
 
     if file_size < 1000:  # Less than 1KB
         raise PDFValidationError(
@@ -52,7 +52,7 @@ def extract_text_from_pdf(pdf_path: Path) -> str:
 
     if file_size > 100 * 1024 * 1024:  # More than 100MB
         raise PDFValidationError(
-            f"PDF file is too large ({file_size/1024/1024:.1f} MB) - exceeds safety limit"
+            f"PDF file is too large ({file_size / 1024 / 1024:.1f} MB) - exceeds safety limit"
         )
 
     # Try extraction with multiple libraries in order of preference
@@ -68,9 +68,7 @@ def extract_text_from_pdf(pdf_path: Path) -> str:
             logger.debug(f"Attempting PDF text extraction with {method_name}")
             text = extract_func(pdf_path)
             if text and text.strip():
-                logger.debug(
-                    f"Successfully extracted {len(text)} characters with {method_name}"
-                )
+                logger.debug(f"Successfully extracted {len(text)} characters with {method_name}")
                 return text
             else:
                 logger.debug(f"{method_name} returned empty text, trying next method")
@@ -96,7 +94,7 @@ def extract_text_from_pdf(pdf_path: Path) -> str:
             if not header.startswith(b"%PDF-"):
                 error_details.append("File does not have valid PDF header")
             else:
-                error_details.append(f"PDF header detected: {header[:8]}")
+                error_details.append(f"PDF header detected: {header[:8].decode(errors='replace')}")
     except Exception as diag_error:
         error_details.append(f"Could not read PDF header: {diag_error}")
 
@@ -196,9 +194,7 @@ def scan_for_issues(text: str) -> Dict[str, int]:
     # Count errors (case-insensitive, but exclude common false positives)
     # Match [ERROR] or "Error:" only when it appears to be a system message
     # Exclude scientific terms like "standard error:", "final error:", "measurement error:"
-    issues["errors"] = len(
-        re.findall(r"\[ERROR\]|^\s*Error:\s|Error:\s+[A-Z]", text, re.MULTILINE)
-    )
+    issues["errors"] = len(re.findall(r"\[ERROR\]|^\s*Error:\s|Error:\s+[A-Z]", text, re.MULTILINE))
 
     # Count missing citations [?]
     issues["missing_citations"] = len(re.findall(r"\[\?\]", text))
@@ -226,7 +222,7 @@ def decode_pdf_hex_strings(text: str) -> str:
         return ""
 
     # Pattern: /x followed by exactly 2 hex digits
-    def decode_hex_match(match: re.Match) -> str:
+    def decode_hex_match(match: re.Match[str]) -> str:
         """Convert a regex match of a hex code to its character representation.
 
         Takes a regex match object where group(1) contains a 2-digit hex code
@@ -244,7 +240,7 @@ def decode_pdf_hex_strings(text: str) -> str:
         try:
             return chr(int(hex_code, 16))
         except (ValueError, OverflowError):
-            return match.group(0)  # Return original if decode fails
+            return str(match.group(0))  # Return original if decode fails
 
     # Replace /xHH patterns with decoded characters
     decoded = re.sub(r"/x([0-9a-fA-F]{2})", decode_hex_match, text)

@@ -44,9 +44,7 @@ def _parse_missing_package_error(log_file: Path) -> Optional[str]:
             return package_name
 
         # Also check for the "! LaTeX Error: File *.sty not found" pattern
-        match = re.search(
-            r"! LaTeX Error: File `?([^'`\s]+\.sty)'? not found", log_content
-        )
+        match = re.search(r"! LaTeX Error: File `?([^'`\s]+\.sty)'? not found", log_content)
         if match:
             sty_file = match.group(1)
             package_name = sty_file.replace(".sty", "")
@@ -84,9 +82,7 @@ class PDFRenderer:
         logger.warning(f"Unsupported format for direct rendering: {source_file.suffix}")
         return Path("")
 
-    def render_markdown(
-        self, source_file: Path, output_name: Optional[str] = None
-    ) -> Path:
+    def render_markdown(self, source_file: Path, output_name: Optional[str] = None) -> Path:
         """Render a single markdown file to PDF using Pandoc.
 
         Args:
@@ -126,9 +122,7 @@ class PDFRenderer:
         # Add resource paths
         cmd.extend(resource_paths)
 
-        logger.info(
-            f"Rendering markdown to PDF: {source_file.name} -> {output_file.name}"
-        )
+        logger.info(f"Rendering markdown to PDF: {source_file.name} -> {output_file.name}")
 
         try:
             subprocess.run(cmd, check=True, capture_output=True, text=True)
@@ -140,9 +134,7 @@ class PDFRenderer:
                 context={"source": str(source_file), "target": str(output_file)},
             )
 
-    def _process_bibliography(
-        self, tex_file: Path, output_dir: Path, bib_file: Path
-    ) -> bool:
+    def _process_bibliography(self, tex_file: Path, output_dir: Path, bib_file: Path) -> bool:
         """Process bibliography using bibtex/biber.
 
         SECURITY AND COMPATIBILITY CONSIDERATIONS:
@@ -178,13 +170,13 @@ class PDFRenderer:
         try:
             if not bib_file.exists():
                 logger.warning(
-                    f"Bibliography file not found: {bib_file} (bibliography processing will be skipped)"
+                    f"Bibliography file not found: {bib_file} (bibliography processing will be skipped)"  # noqa: E501
                 )
                 return False
         except UnboundLocalError:
             if not bib_file.exists():
                 logger.warning(
-                    f"Bibliography file not found: {bib_file} (bibliography processing will be skipped)"
+                    f"Bibliography file not found: {bib_file} (bibliography processing will be skipped)"  # noqa: E501
                 )
                 return False
 
@@ -219,14 +211,10 @@ class PDFRenderer:
             cmd = [bibtex_cmd, aux_file.name]
             logger.info(f"Processing bibliography with {bibtex_cmd}...")
 
-            result = subprocess.run(
-                cmd, capture_output=True, text=True, cwd=str(output_dir)
-            )
+            result = subprocess.run(cmd, capture_output=True, text=True, cwd=str(output_dir))
 
             if result.returncode != 0 and result.stderr.strip():
-                logger.warning(
-                    f"Bibliography processing warning: {result.stderr[:200]}"
-                )
+                logger.warning(f"Bibliography processing warning: {result.stderr[:200]}")
                 # Don't fail on warnings - bibtex often returns non-zero for minor issues
 
             logger.debug(f"✓ Bibliography processed: {bibtex_cmd} {aux_file.stem}")
@@ -265,9 +253,7 @@ class PDFRenderer:
         logger.info(f"Combining {len(source_files)} section(s):")
         for i, md_file in enumerate(source_files, 1):
             size_kb = md_file.stat().st_size / 1024
-            logger.info(
-                f"  [{i:>2}/{len(source_files)}] {md_file.name:<40} ({size_kb:>6.1f} KB)"
-            )
+            logger.info(f"  [{i:>2}/{len(source_files)}] {md_file.name:<40} ({size_kb:>6.1f} KB)")
 
         total_size_kb = sum(f.stat().st_size for f in source_files) / 1024
         logger.info(f"  {'Total input size:':<48} ({total_size_kb:>6.1f} KB)")
@@ -311,7 +297,7 @@ class PDFRenderer:
             str(combined_md),
             "-o",
             str(combined_tex),
-            "--from=markdown+tex_math_dollars+raw_tex+header_attributes",  # Preserve LaTeX math, raw blocks, and header attributes like {#sec:...}
+            "--from=markdown+tex_math_dollars+raw_tex+header_attributes",  # Preserve LaTeX math, raw blocks, and header attributes like {#sec:...}  # noqa: E501
             "--to=latex",
             "--standalone",
             "--number-sections",
@@ -362,7 +348,6 @@ class PDFRenderer:
                     # ID portion is already validated by the regex pattern itself
                     # No need for separate character check - pattern only captures valid chars
 
-
                 # Check for unmatched opening braces in header attributes
                 # Pattern: # Header {#sec:name} - should have balanced braces
                 header_lines = re.findall(r"^#+\s+.*\{#.*$", md_content, re.MULTILINE)
@@ -383,15 +368,10 @@ class PDFRenderer:
                 # - (\cref{sec:omega4}) in \text{... (\cref{sec:omega4})}
                 # LaTeX has its own comprehensive error reporting during compilation.
 
-
                 # Check for unmatched braces in markdown (outside code blocks)
                 # Remove code blocks first
-                content_for_brace_check = re.sub(
-                    r"```.*?```", "", md_content, flags=re.DOTALL
-                )
-                content_for_brace_check = re.sub(
-                    r"`[^`]+`", "", content_for_brace_check
-                )
+                content_for_brace_check = re.sub(r"```.*?```", "", md_content, flags=re.DOTALL)
+                content_for_brace_check = re.sub(r"`[^`]+`", "", content_for_brace_check)
 
                 # Count braces (but ignore LaTeX commands which use braces)
                 # Simple check: count { and } outside LaTeX commands
@@ -416,9 +396,7 @@ class PDFRenderer:
                                     # Skip optional argument
                                     depth = 1
                                     j += 1
-                                    while (
-                                        j < len(content_for_brace_check) and depth > 0
-                                    ):
+                                    while j < len(content_for_brace_check) and depth > 0:
                                         if content_for_brace_check[j] == "[":
                                             depth += 1
                                         elif content_for_brace_check[j] == "]":
@@ -431,9 +409,7 @@ class PDFRenderer:
                                     # Skip required argument
                                     depth = 1
                                     j += 1
-                                    while (
-                                        j < len(content_for_brace_check) and depth > 0
-                                    ):
+                                    while j < len(content_for_brace_check) and depth > 0:
                                         if content_for_brace_check[j] == "{":
                                             depth += 1
                                         elif content_for_brace_check[j] == "}":
@@ -459,14 +435,13 @@ class PDFRenderer:
                 # - Inline math with nested commands like H(\mathcal{F}_c)
                 # - Math containing \left( \right) pairs
                 # - Expression continuations across lines
-                # 
+                #
                 # LaTeX compilation provides comprehensive error reporting for actual
                 # syntax issues. These pre-validation checks produced false positives
                 # for valid expressions like:
                 # - $H(\mathcal{F}_c)$ in fractions
                 # - Text containing parens inside \text{} commands
                 # - Cross-references like (\cref{sec:omega4})
-
 
                 if validation_errors:
                     logger.warning(
@@ -485,9 +460,7 @@ class PDFRenderer:
                     pass
 
         try:
-            result = subprocess.run(
-                pandoc_to_tex, check=True, capture_output=True, text=True
-            )
+            result = subprocess.run(pandoc_to_tex, check=True, capture_output=True, text=True)
         except subprocess.CalledProcessError as e:
             # Provide more detailed error information
             error_msg = "Failed to convert markdown to LaTeX"
@@ -545,12 +518,8 @@ class PDFRenderer:
                             pos_match = re.search(r"position\s+(\d+)", line_lower)
                             if pos_match:
                                 position_info = int(pos_match.group(1))
-                    elif (
-                        "error" in line_lower or "warning" in line_lower
-                    ) and line.strip():
-                        if line not in [
-                            err.split(":", 1)[-1].strip() for err in error_lines
-                        ]:
+                    elif ("error" in line_lower or "warning" in line_lower) and line.strip():
+                        if line not in [err.split(":", 1)[-1].strip() for err in error_lines]:
                             error_lines.append(f"Pandoc (stdout): {line}")
 
             # Build error message - always include full Pandoc output for debugging
@@ -562,7 +531,9 @@ class PDFRenderer:
                 error_msg += f"\n\nFull Pandoc output:\n{all_output}"
             elif not error_lines:
                 # If no specific errors found and no output, include return code
-                error_msg += f"\n\nPandoc failed with return code {e.returncode} (no output captured)"
+                error_msg += (
+                    f"\n\nPandoc failed with return code {e.returncode} (no output captured)"
+                )
 
             # Check if combined_md exists and show relevant context
             context_info = {"source": str(combined_md), "target": str(combined_tex)}
@@ -574,19 +545,19 @@ class PDFRenderer:
                     if not md_content:
                         md_content = combined_md.read_text(encoding="utf-8")
 
-                    context_info["total_size"] = len(md_content)
+                    context_info["total_size"] = len(md_content)  # type: ignore
 
                     # Show content around error position if available
                     if position_info is not None:
                         pos = position_info
                         start = max(0, pos - 150)
                         end = min(len(md_content), pos + 150)
-                        context_info["error_position"] = pos
+                        context_info["error_position"] = pos  # type: ignore
                         context_info["error_context"] = md_content[start:end]
 
                         # Calculate line number for the position
                         line_num = md_content[:pos].count("\n") + 1
-                        context_info["error_line"] = line_num
+                        context_info["error_line"] = line_num  # type: ignore
 
                         # Extract the line containing the error
                         lines = md_content.split("\n")
@@ -594,10 +565,10 @@ class PDFRenderer:
                             context_info["error_line_content"] = lines[line_num - 1]
 
                         suggestions.append(
-                            f"Check character position {pos} (line {line_num}) in combined markdown file"
+                            f"Check character position {pos} (line {line_num}) in combined markdown file"  # noqa: E501
                         )
                         suggestions.append(
-                            f"Review content around position: {repr(md_content[max(0, pos-20):min(len(md_content), pos+20)])}"
+                            f"Review content around position: {repr(md_content[max(0, pos - 20) : min(len(md_content), pos + 20)])}"  # noqa: E501
                         )
                     else:
                         # Show first and last 200 chars for context if no position info
@@ -605,19 +576,12 @@ class PDFRenderer:
                         context_info["last_200_chars"] = md_content[-200:]
 
                     # Add suggestions based on error type
-                    if (
-                        "unbalanced" in error_msg.lower()
-                        or "parenthesis" in error_msg.lower()
-                    ):
+                    if "unbalanced" in error_msg.lower() or "parenthesis" in error_msg.lower():
                         suggestions.append(
                             "Check for unmatched parentheses, brackets, or braces in markdown"
                         )
-                        suggestions.append(
-                            "Verify LaTeX commands have properly matched delimiters"
-                        )
-                        suggestions.append(
-                            "Review math expressions for balanced parentheses"
-                        )
+                        suggestions.append("Verify LaTeX commands have properly matched delimiters")
+                        suggestions.append("Review math expressions for balanced parentheses")
 
                     suggestions.append(f"Inspect combined markdown file: {combined_md}")
                     suggestions.append(
@@ -641,11 +605,9 @@ class PDFRenderer:
             # Log full error details at ERROR level
             logger.error(f"Pandoc conversion failed: {error_msg}")
             if context_info.get("error_position") is not None:
-                pos = context_info["error_position"]
+                pos = context_info["error_position"]  # type: ignore
                 line = context_info.get("error_line", "unknown")
-                logger.error(
-                    f"  Error at position {pos} (line {line}) in combined markdown"
-                )
+                logger.error(f"  Error at position {pos} (line {line}) in combined markdown")
                 # Show the actual characters at that position
                 if md_content and pos < len(md_content):
                     start = max(0, pos - 20)
@@ -658,13 +620,9 @@ class PDFRenderer:
                     for i in range(max(0, pos - 5), min(len(md_content), pos + 6)):
                         marker = " >>> " if i == pos else "     "
                         char = md_content[i]
-                        logger.error(
-                            f"    {marker}Position {i}: {repr(char)} (ord: {ord(char)})"
-                        )
+                        logger.error(f"    {marker}Position {i}: {repr(char)} (ord: {ord(char)})")
             if context_info.get("error_context"):
-                logger.error(
-                    f"  Context around error:\n{context_info['error_context']}"
-                )
+                logger.error(f"  Context around error:\n{context_info['error_context']}")
             # Always log the combined markdown file location for inspection
             logger.error(f"  Combined markdown file saved at: {combined_md}")
             logger.error(f"  Combined markdown file size: {len(md_content)} characters")
@@ -687,24 +645,20 @@ class PDFRenderer:
 
                         if current_pos <= position_info < current_pos + file_size:
                             context_info["problematic_file"] = str(source_file)
-                            context_info["problematic_file_index"] = i + 1
+                            context_info["problematic_file_index"] = i + 1  # type: ignore
                             logger.error(
-                                f"  Error likely in source file {i+1}/{len(source_files)}: {source_file.name}"
+                                f"  Error likely in source file {i + 1}/{len(source_files)}: {source_file.name}"  # noqa: E501
                             )
                             # Show position within that file
                             file_pos = position_info - current_pos
                             line_num = file_content[:file_pos].count("\n") + 1
-                            logger.error(
-                                f"  Position within file: {file_pos} (line {line_num})"
-                            )
+                            logger.error(f"  Position within file: {file_pos} (line {line_num})")
 
                             # Show context around the error position in the source file
                             start = max(0, file_pos - 50)
                             end = min(len(file_content), file_pos + 50)
                             context_snippet = file_content[start:end]
-                            logger.error(
-                                f"  Context in source file (chars {start}-{end}):"
-                            )
+                            logger.error(f"  Context in source file (chars {start}-{end}):")
                             # Show with line numbers if reasonable
                             lines = context_snippet.split("\n")
                             if len(lines) <= 10:
@@ -714,13 +668,10 @@ class PDFRenderer:
                                         " >>> "
                                         if start + sum(len(l) + 1 for l in lines[:j])
                                         <= file_pos
-                                        < start
-                                        + sum(len(l) + 1 for l in lines[: j + 1])
+                                        < start + sum(len(l) + 1 for l in lines[: j + 1])
                                         else "     "
                                     )
-                                    logger.error(
-                                        f"    {marker}Line {actual_line}: {repr(line)}"
-                                    )
+                                    logger.error(f"    {marker}Line {actual_line}: {repr(line)}")
                             else:
                                 logger.error(f"    {repr(context_snippet)}")
 
@@ -728,27 +679,23 @@ class PDFRenderer:
                             if file_pos < len(file_content):
                                 char_at_pos = file_content[file_pos]
                                 logger.error(
-                                    f"  Character at error position: {repr(char_at_pos)} (ord: {ord(char_at_pos)})"
+                                    f"  Character at error position: {repr(char_at_pos)} (ord: {ord(char_at_pos)})"  # noqa: E501
                                 )
                             break
 
                         # Move to next file position
                         current_pos += file_size + separator_size
                     except Exception as ex:
-                        logger.debug(
-                            f"Error analyzing file {i+1} ({source_file.name}): {ex}"
-                        )
+                        logger.debug(f"Error analyzing file {i + 1} ({source_file.name}): {ex}")
                         pass
 
-            raise RenderingError(
-                error_msg, context=context_info, suggestions=suggestions
-            )
+            raise RenderingError(error_msg, context=context_info, suggestions=suggestions)
 
         # Read and process LaTeX content
         tex_content = combined_tex.read_text()
 
         # Fix lmodern conflict with xelatex (causes run-on words)
-        # The lmodern package relies on T1 font encoding which can conflict with 
+        # The lmodern package relies on T1 font encoding which can conflict with
         # XeLaTeX's font handling, leading to missing spaces between words.
         if "\\usepackage{lmodern}" in tex_content:
             tex_content = tex_content.replace("\\usepackage{lmodern}", "% \\usepackage{lmodern}")
@@ -761,9 +708,7 @@ class PDFRenderer:
             logger.warning(
                 f"Math delimiter fixing failed: {e}. Continuing with original LaTeX content."
             )
-            logger.debug(
-                f"Math delimiter fixing error details: {type(e).__name__}: {e}"
-            )
+            logger.debug(f"Math delimiter fixing error details: {type(e).__name__}: {e}")
             # Continue with original tex_content - it may still compile
 
         # Fix figure paths for LaTeX compilation
@@ -805,15 +750,15 @@ class PDFRenderer:
                 # Insert defaults (config.yaml) first, but checking for duplicates
                 if title_page_preamble:
                     # Filter out commands that would overwrite existing Pandoc-generated metadata
-                    lines = title_page_preamble.split('\n')
+                    lines = title_page_preamble.split("\n")
                     filtered_lines = []
                     for line in lines:
                         # We want to inject our formatted metadata even if Pandoc generated some.
-                        # Since we append to combined_preamble which is inserted before \begin{document}
-                        # (likely after Pandoc's preamble), our definitions should take precedence or at least exist.
+                        # Since we append to combined_preamble which is inserted before \begin{document}  # noqa: E501
+                        # (likely after Pandoc's preamble), our definitions should take precedence or at least exist.  # noqa: E501
                         # For \author and \date, redefinition is standard.
                         filtered_lines.append(line)
-                    
+
                     if filtered_lines:
                         combined_preamble += "\n".join(filtered_lines) + "\n\n"
 
@@ -823,12 +768,10 @@ class PDFRenderer:
 
                 # Insert before \begin{document}
                 tex_content = (
-                    tex_content[:begin_doc_idx]
-                    + combined_preamble
-                    + tex_content[begin_doc_idx:]
+                    tex_content[:begin_doc_idx] + combined_preamble + tex_content[begin_doc_idx:]
                 )
                 logger.debug(
-                    f"✓ Inserted preamble ({len(combined_preamble)} chars) before \\begin{{document}}"
+                    f"✓ Inserted preamble ({len(combined_preamble)} chars) before \\begin{{document}}"  # noqa: E501
                 )
 
         # Insert title page body commands AFTER \begin{document}
@@ -836,10 +779,12 @@ class PDFRenderer:
             # We want to ensure our custom title page body is used and we also
             # want a table of contents and a newpage.
             full_title_body = title_page_body + "\n\\tableofcontents\n\\newpage"
-            
+
             # Check if \maketitle is already present (e.g. from Pandoc)
             if "\\maketitle" in tex_content:
-                logger.debug("✓ \\maketitle already present in LaTeX content - replacing with our full title/TOC body")
+                logger.debug(
+                    "✓ \\maketitle already present in LaTeX content - replacing with our full title/TOC body"  # noqa: E501
+                )
                 # Find the first occurrence of \maketitle and replace it
                 tex_content = tex_content.replace("\\maketitle", full_title_body, 1)
             else:
@@ -853,11 +798,11 @@ class PDFRenderer:
                             tex_content[:end_of_begin_doc]
                             + "\n"
                             + full_title_body
-                        + "\n\n"
-                        + tex_content[end_of_begin_doc:]
-                    )
+                            + "\n\n"
+                            + tex_content[end_of_begin_doc:]
+                        )
                     logger.info(
-                        r"✓ Inserted title page (\maketitle), TOC, and newpage after \begin{document}"
+                        r"✓ Inserted title page (\maketitle), TOC, and newpage after \begin{document}"  # noqa: E501
                     )
 
         # Insert bibliography commands before \end{document} if bibliography exists
@@ -868,15 +813,11 @@ class PDFRenderer:
                     "\n\n\\bibliographystyle{unsrt}\n\\bibliography{references}\n"
                 )
                 tex_content = (
-                    tex_content[:end_doc_idx]
-                    + bibliography_commands
-                    + tex_content[end_doc_idx:]
+                    tex_content[:end_doc_idx] + bibliography_commands + tex_content[end_doc_idx:]
                 )
                 logger.info("✓ Inserted bibliography commands before \\end{document}")
             else:
-                logger.warning(
-                    "⚠️  Could not find \\end{document} to insert bibliography commands"
-                )
+                logger.warning("⚠️  Could not find \\end{document} to insert bibliography commands")
 
         combined_tex.write_text(tex_content)
 
@@ -917,21 +858,15 @@ class PDFRenderer:
                             if f.name.lower().startswith(filename.split(".")[0].lower())
                         ]
                         if similar:
-                            logger.debug(
-                                f"    Similar files found: {', '.join(similar)}"
-                            )
+                            logger.debug(f"    Similar files found: {', '.join(similar)}")
 
-            logger.info(
-                f"  Found: {len(found_figures)}/{len(referenced_figures)} figures"
-            )
+            logger.info(f"  Found: {len(found_figures)}/{len(referenced_figures)} figures")
             if missing_figures:
                 logger.warning(
                     f"  Missing {len(missing_figures)} figure(s): {', '.join(missing_figures[:5])}"
                 )
                 if len(missing_figures) > 5:
-                    logger.warning(
-                        f"  ... and {len(missing_figures) - 5} more missing figures"
-                    )
+                    logger.warning(f"  ... and {len(missing_figures) - 5} more missing figures")
 
         # Now compile LaTeX to PDF using xelatex
         # IMPORTANT:
@@ -963,7 +898,7 @@ class PDFRenderer:
         logger.debug(f"  Combined MD file: {combined_md.name}")
 
         try:
-            # Run xelatex with bibliography processing for proper cross-references, TOC, and bibliography
+            # Run xelatex with bibliography processing for proper cross-references, TOC, and bibliography  # noqa: E501
             # Pass 1: Initial xelatex compilation
             # Pass 2: Bibtex processing (if bibliography exists)
             # Pass 3-4: Additional xelatex passes for reference resolution
@@ -993,9 +928,7 @@ class PDFRenderer:
                     self._process_bibliography(combined_tex, output_dir, bib_file)
                 except Exception as bib_error:
                     logger.warning(f"  Bibliography processing failed: {bib_error}")
-                    logger.warning(
-                        "  Continuing PDF generation without bibliography processing"
-                    )
+                    logger.warning("  Continuing PDF generation without bibliography processing")
                     # Don't fail the entire PDF generation for bibliography issues
 
             # Additional passes for reference resolution (especially after bibtex)
@@ -1018,9 +951,7 @@ class PDFRenderer:
                     consecutive_failures += 1
 
                     if output_file.exists():
-                        logger.warning(
-                            f"⚠️  PDF generated but with warnings (run {run+1})"
-                        )
+                        logger.warning(f"⚠️  PDF generated but with warnings (run {run + 1})")
                         # Reset failure count if we have a PDF
                         consecutive_failures = 0
                         break
@@ -1042,7 +973,7 @@ class PDFRenderer:
                                     },
                                     suggestions=[
                                         f"Install package: sudo tlmgr install {missing_pkg}",
-                                        "Verify LaTeX packages: python3 -m infrastructure.rendering.latex_package_validator",
+                                        "Verify LaTeX packages: python3 -m infrastructure.rendering.latex_package_validator",  # noqa: E501
                                         "Update TeX Live: sudo tlmgr update --self",
                                         f"Check log file for details: {log_file}",
                                     ],
@@ -1051,14 +982,12 @@ class PDFRenderer:
                             # Check for other recoverable errors
                             if consecutive_failures >= max_consecutive_failures:
                                 raise RenderingError(
-                                    f"LaTeX compilation failed after {consecutive_failures} consecutive attempts",
+                                    f"LaTeX compilation failed after {consecutive_failures} consecutive attempts",  # noqa: E501
                                     context={
                                         "source": str(combined_tex),
                                         "log_file": str(log_file),
                                         "last_error": (
-                                            result.stderr[:500]
-                                            if result.stderr
-                                            else "No stderr"
+                                            result.stderr[:500] if result.stderr else "No stderr"
                                         ),
                                     },
                                     suggestions=[
@@ -1070,7 +999,7 @@ class PDFRenderer:
                                 )
                         else:
                             logger.warning(
-                                f"⚠️  LaTeX compilation failed (run {run+1}), continuing..."
+                                f"⚠️  LaTeX compilation failed (run {run + 1}), continuing..."
                             )
 
                             if missing_pkg:
@@ -1083,7 +1012,7 @@ class PDFRenderer:
                                     },
                                     suggestions=[
                                         f"Install package: sudo tlmgr install {missing_pkg}",
-                                        "Verify BasicTeX packages: python3 -m infrastructure.rendering.latex_package_validator",
+                                        "Verify BasicTeX packages: python3 -m infrastructure.rendering.latex_package_validator",  # noqa: E501
                                         "Update TeX Live: sudo tlmgr update --self",
                                         "Or install full MacTeX instead of BasicTeX: https://www.tug.org/mactex/",
                                         f"Check log file for details: {log_file}",
@@ -1091,7 +1020,7 @@ class PDFRenderer:
                                 )
                             else:
                                 raise RenderingError(
-                                    f"XeLaTeX compilation failed (run {run+1})",
+                                    f"XeLaTeX compilation failed (run {run + 1})",
                                     context={
                                         "source": str(combined_tex),
                                         "output": str(output_file),
@@ -1099,8 +1028,8 @@ class PDFRenderer:
                                     suggestions=[
                                         "Check LaTeX log file for detailed error messages",
                                         "Verify all required packages are installed",
-                                        "Ensure figure paths are correct relative to output directory",
-                                        "Run: python3 -m infrastructure.rendering.latex_package_validator",
+                                        "Ensure figure paths are correct relative to output directory",  # noqa: E501
+                                        "Run: python3 -m infrastructure.rendering.latex_package_validator",  # noqa: E501
                                         "Run with --verbose flag for detailed compilation output",
                                     ],
                                 )
@@ -1110,18 +1039,13 @@ class PDFRenderer:
                 if log_file.exists():
                     log_content = log_file.read_text()
                     # If no warnings/issues found, we can stop early
-                    if (
-                        "Rerun" not in log_content
-                        and "undefined" not in log_content.lower()
-                    ):
-                        logger.info(f"  All references resolved after pass {run+1}")
+                    if "Rerun" not in log_content and "undefined" not in log_content.lower():
+                        logger.info(f"  All references resolved after pass {run + 1}")
                         break
 
                     # Check for graphics-specific issues
                     if run == max_passes - 1:  # Last pass
-                        graphics_issues = self._check_latex_log_for_graphics_errors(
-                            log_file
-                        )
+                        graphics_issues = self._check_latex_log_for_graphics_errors(log_file)
                         if graphics_issues["graphics_errors"]:
                             for error in graphics_issues["graphics_errors"]:
                                 logger.warning(f"  Graphics error: {error}")
@@ -1130,9 +1054,7 @@ class PDFRenderer:
                                 logger.warning(f"  Missing file: {missing}")
                         if graphics_issues["graphics_warnings"]:
                             for warning in graphics_issues["graphics_warnings"]:
-                                logger.warning(
-                                    f"  Graphics warning: {warning[:100]}..."
-                                )
+                                logger.warning(f"  Graphics warning: {warning[:100]}...")
 
             # Check if the temporary PDF was created and rename it
             if temp_pdf.exists():
@@ -1141,12 +1063,10 @@ class PDFRenderer:
                 # NEW: Log successful combination with output size
                 if output_file.exists():
                     output_size_kb = output_file.stat().st_size / 1024
-                    logger.info(
-                        f"\n✅ Successfully combined {len(source_files)} sections"
-                    )
+                    logger.info(f"\n✅ Successfully combined {len(source_files)} sections")
                     logger.info(f"   Output: {output_file.name}")
                     logger.info(
-                        f"   Size: {output_size_kb:.1f} KB ({output_size_kb/1024:.2f} MB)"
+                        f"   Size: {output_size_kb:.1f} KB ({output_size_kb / 1024:.2f} MB)"
                     )
                     logger.info(f"   Location: {output_file.parent}")
 
@@ -1163,9 +1083,7 @@ class PDFRenderer:
                 output_size_kb = output_file.stat().st_size / 1024
                 logger.info(f"\n✅ Successfully combined {len(source_files)} sections")
                 logger.info(f"   Output: {output_file.name}")
-                logger.info(
-                    f"   Size: {output_size_kb:.1f} KB ({output_size_kb/1024:.2f} MB)"
-                )
+                logger.info(f"   Size: {output_size_kb:.1f} KB ({output_size_kb / 1024:.2f} MB)")
                 logger.info(f"   Location: {output_file.parent}")
 
                 # Log performance metrics
@@ -1223,7 +1141,7 @@ class PDFRenderer:
                     # Check for balanced braces
                     if attr.count("{") != attr.count("}"):
                         logger.warning(
-                            f"Potential unbalanced braces in {md_file.name} header attribute: {{#{attr}}}"
+                            f"Potential unbalanced braces in {md_file.name} header attribute: {{#{attr}}}"  # noqa: E501
                         )
 
                 # Add file content
@@ -1297,7 +1215,7 @@ class PDFRenderer:
         # Pandoc might complain about certain characters at position 0
         if combined and combined[0] in ["(", ")", "[", "]", "{", "}"]:
             logger.warning(
-                f"Combined markdown starts with potentially problematic character: {repr(combined[0])}"
+                f"Combined markdown starts with potentially problematic character: {repr(combined[0])}"  # noqa: E501
             )
 
         return combined
@@ -1331,17 +1249,13 @@ class PDFRenderer:
             # Combine all latex blocks
             preamble_lines = [match.strip() for match in matches]
             result = "\n".join(preamble_lines)
-            logger.debug(
-                f"Extracted {len(matches)} LaTeX preamble block(s) ({len(result)} chars)"
-            )
+            logger.debug(f"Extracted {len(matches)} LaTeX preamble block(s) ({len(result)} chars)")
             return result
         else:
             logger.debug(f"No LaTeX code blocks found in {preamble_file.name}")
             return ""
 
-    def _fix_figure_paths(
-        self, tex_content: str, manuscript_dir: Path, output_dir: Path
-    ) -> str:
+    def _fix_figure_paths(self, tex_content: str, manuscript_dir: Path, output_dir: Path) -> str:
         r"""Fix figure paths in LaTeX content for proper compilation.
 
         Converts relative paths like ../output/figures/ to paths relative to the
@@ -1362,7 +1276,7 @@ class PDFRenderer:
         # Handles both \includegraphics{path} and \includegraphics[options]{path}
         # Note: This basic pattern may miss \pandocbounded with nested braces in alt={}
         pattern = r"\\includegraphics(?:\[[^\]]*\])?\{([^}]+)\}"
-        
+
         # Additional pattern for \pandocbounded{\includegraphics[...]{path}}
         # This handles the complex case where options contain nested braces (alt={...})
         # We'll use a fallback string replacement after regex for any missed paths
@@ -1402,7 +1316,7 @@ class PDFRenderer:
                 # Just a filename
                 return path_str
 
-        def fix_path(match: re.Match) -> str:
+        def fix_path(match: re.Match[str]) -> str:
             r"""Fix a single includegraphics path to be relative to the compilation directory.
 
             Transforms figure paths from various formats (absolute, manuscript-relative,
@@ -1492,9 +1406,7 @@ class PDFRenderer:
         else:
             # No paths fixed - check if there are any figure references at all
             if pattern and re.search(pattern, tex_content):
-                logger.debug(
-                    "No figure paths needed fixing (already in correct format)"
-                )
+                logger.debug("No figure paths needed fixing (already in correct format)")
 
         return tex_content
 
@@ -1543,7 +1455,7 @@ class PDFRenderer:
         # Pattern: {[} ... (everything) ... {]}\label{...}{]}
         pattern_with_label = r"\{\[\}(.*)\{\]\}\\label\{([^}]+)\}\{\]\}"
 
-        def fix_display_math_with_label(match: re.Match) -> str:
+        def fix_display_math_with_label(match: re.Match[str]) -> str:
             r"""Fix display math blocks that include equation labels.
 
             Handles the pattern {[} ... {]}\\label{eq:...}{]} which Pandoc incorrectly
@@ -1569,7 +1481,7 @@ class PDFRenderer:
         # Match greedily to get the last {]} in a paragraph/block
         pattern_no_label = r"\{\[\}([^{]*?)\{\]\}(?!\\label)(?=\s|$)"
 
-        def fix_display_math_no_label(match: re.Match) -> str:
+        def fix_display_math_no_label(match: re.Match[str]) -> str:
             r"""Fix display math blocks without equation labels.
 
             Handles the pattern {[} ... {]} which Pandoc incorrectly generates,
@@ -1629,9 +1541,7 @@ class PDFRenderer:
                 replacement = "\\\\" + greek + ")"
                 tex_content = re.sub(pattern, replacement, tex_content)
             except re.error as e:
-                logger.warning(
-                    f"Failed to fix Greek letter '{greek}': {e}. Skipping this pattern."
-                )
+                logger.warning(f"Failed to fix Greek letter '{greek}': {e}. Skipping this pattern.")
                 continue
             except Exception as e:
                 logger.warning(
@@ -1644,7 +1554,7 @@ class PDFRenderer:
 
         return tex_content
 
-    def _check_latex_log_for_graphics_errors(self, log_file: Path) -> dict:
+    def _check_latex_log_for_graphics_errors(self, log_file: Path) -> dict[str, list[str]]:
         """Parse LaTeX log file for graphics-related errors and warnings.
 
         Args:
@@ -1653,7 +1563,11 @@ class PDFRenderer:
         Returns:
             Dictionary with graphics issues found
         """
-        result = {"graphics_errors": [], "graphics_warnings": [], "missing_files": []}
+        result: dict[str, list[str]] = {
+            "graphics_errors": [],
+            "graphics_warnings": [],
+            "missing_files": [],
+        }
 
         if not log_file.exists():
             return result
@@ -1736,42 +1650,46 @@ class PDFRenderer:
                 for author in authors:
                     if "name" not in author:
                         continue
-                    
+
                     name = author["name"]
                     parts = [name]
-                    
+
                     # Add affiliation if present
                     if "affiliation" in author:
                         parts.append(f"\\\\\\footnotesize{{{author['affiliation']}}}")
-                    
+
                     # Add email if present
                     if "email" in author:
                         parts.append(f"\\\\\\footnotesize{{\\texttt{{{author['email']}}}}}")
-                    
+
                     # Add ORCID if present (with hyperlink)
                     if "orcid" in author:
                         orcid = author["orcid"]
-                        parts.append(f"\\\\\\footnotesize{{\\href{{https://orcid.org/{orcid}}}{{ORCID: {orcid}}}}}")
-                    
+                        parts.append(
+                            f"\\\\\\footnotesize{{\\href{{https://orcid.org/{orcid}}}{{ORCID: {orcid}}}}}"  # noqa: E501
+                        )
+
                     # Join all parts for this author
                     author_block = "".join(parts)
                     author_blocks.append(author_block)
-                
+
                 if author_blocks:
                     # Use standard \and for multiple authors, but tight formatting within each
                     author_str = " \\\\and ".join(author_blocks)
-                    
+
                     # Add DOI and Date to the author block for tight vertical layout
                     extras = []
                     if doi:
                         extras.append(f"\\href{{https://doi.org/{doi}}}{{DOI: {doi}}}")
-                    
+
                     if date:
                         extras.append(date)
 
                     if extras:
                         # Add extras with small vertical space and small font
-                        author_str += " \\\\ " + " \\\\ ".join([f"\\footnotesize{{{e}}}" for e in extras])
+                        author_str += " \\\\ " + " \\\\ ".join(
+                            [f"\\footnotesize{{{e}}}" for e in extras]
+                        )
 
                     preamble_lines.append(f"\\author{{{author_str}}}")
 
@@ -1780,9 +1698,7 @@ class PDFRenderer:
             else:
                 preamble_lines.append(r"\date{\today}")
 
-            logger.debug(
-                f"Generated title page preamble with {len(preamble_lines)} commands"
-            )
+            logger.debug(f"Generated title page preamble with {len(preamble_lines)} commands")
             return "\n".join(preamble_lines)
 
         except Exception as e:

@@ -5,11 +5,10 @@ from __future__ import annotations
 import re
 from collections import defaultdict
 from pathlib import Path
-from typing import Dict, List
+from typing import Any, Dict, List, Tuple
 
 from infrastructure.core.logging_utils import get_logger
-from infrastructure.validation.doc_models import (CompletenessGap,
-                                                  DocumentationFile)
+from infrastructure.validation.doc_models import CompletenessGap, DocumentationFile
 
 logger = get_logger(__name__)
 
@@ -78,7 +77,7 @@ def check_script_documentation(repo_root: Path) -> List[CompletenessGap]:
 
 def check_config_documentation(config_files: Dict[str, Path]) -> List[CompletenessGap]:
     """Check if configuration options are documented."""
-    gaps = []
+    gaps: list[CompletenessGap] = []
     # Check if config.yaml.example is comprehensive
     if "config.yaml.example" in config_files:
         # This could be enhanced to check all options are documented
@@ -91,9 +90,7 @@ def check_troubleshooting(
 ) -> List[CompletenessGap]:
     """Check troubleshooting guide completeness."""
     gaps = []
-    has_troubleshooting = any(
-        "TROUBLESHOOTING" in d.relative_path for d in documentation_files
-    )
+    has_troubleshooting = any("TROUBLESHOOTING" in d.relative_path for d in documentation_files)
     if not has_troubleshooting:
         gaps.append(
             CompletenessGap(
@@ -129,9 +126,7 @@ def check_onboarding(
 ) -> List[CompletenessGap]:
     """Check new user onboarding completeness."""
     gaps = []
-    has_getting_started = any(
-        "GETTING_STARTED" in d.relative_path for d in documentation_files
-    )
+    has_getting_started = any("GETTING_STARTED" in d.relative_path for d in documentation_files)
     has_quick_start = any("QUICK_START" in d.relative_path for d in documentation_files)
 
     if not has_getting_started and not has_quick_start:
@@ -148,14 +143,14 @@ def check_onboarding(
 
 def check_cross_reference_completeness() -> List[CompletenessGap]:
     """Check cross-reference completeness."""
-    gaps = []
+    gaps: list[CompletenessGap] = []
     # This could check if related topics are linked
     return gaps
 
 
 def group_gaps_by_category(gaps: List[CompletenessGap]) -> Dict[str, int]:
     """Group completeness gaps by category."""
-    categories = defaultdict(int)
+    categories: dict[str, int] = defaultdict(int)
     for gap in gaps:
         categories[gap.category] += 1
     return dict(categories)
@@ -163,7 +158,7 @@ def group_gaps_by_category(gaps: List[CompletenessGap]) -> Dict[str, int]:
 
 def group_gaps_by_severity(gaps: List[CompletenessGap]) -> Dict[str, int]:
     """Group completeness gaps by severity."""
-    severities = defaultdict(int)
+    severities: dict[str, int] = defaultdict(int)
     for gap in gaps:
         severities[gap.severity] += 1
     return dict(severities)
@@ -173,7 +168,7 @@ def run_completeness_phase(
     repo_root: Path,
     documentation_files: List[DocumentationFile],
     config_files: Dict[str, Path],
-) -> Dict:
+) -> Tuple[Dict[str, Any], List[CompletenessGap]]:
     """Run Phase 3: Completeness Analysis.
 
     Args:

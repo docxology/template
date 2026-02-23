@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Any, Dict, List, Tuple
 
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.validation.doc_models import QualityIssue
@@ -39,7 +39,7 @@ def assess_actionability(
     content: str, md_file: Path, lines: List[str], repo_root: Path
 ) -> List[QualityIssue]:
     """Assess actionability of instructions."""
-    issues = []
+    issues: list[Any] = []
     # Check for imperative verbs in instructions
     # This is a simplified check
     return issues
@@ -49,7 +49,7 @@ def assess_maintainability(
     content: str, md_file: Path, lines: List[str], repo_root: Path
 ) -> List[QualityIssue]:
     """Assess maintainability (duplication, organization)."""
-    issues = []
+    issues: list[Any] = []
     # Check for duplicate content
     # This could be enhanced
     return issues
@@ -84,7 +84,7 @@ def check_formatting(
 
 def group_quality_by_type(issues: List[QualityIssue]) -> Dict[str, int]:
     """Group quality issues by type."""
-    types = defaultdict(int)
+    types: dict[str, int] = defaultdict(int)
     for issue in issues:
         types[issue.issue_type] += 1
     return dict(types)
@@ -92,15 +92,13 @@ def group_quality_by_type(issues: List[QualityIssue]) -> Dict[str, int]:
 
 def group_quality_by_severity(issues: List[QualityIssue]) -> Dict[str, int]:
     """Group quality issues by severity."""
-    severities = defaultdict(int)
+    severities: dict[str, int] = defaultdict(int)
     for issue in issues:
         severities[issue.severity] += 1
     return dict(severities)
 
 
-def run_quality_phase(
-    md_files: List[Path], repo_root: Path
-) -> Tuple[Dict, List[QualityIssue]]:
+def run_quality_phase(md_files: List[Path], repo_root: Path) -> Tuple[Dict[str, Any], List[QualityIssue]]:
     """Run Phase 4: Quality Assessment.
 
     Args:
@@ -124,15 +122,11 @@ def run_quality_phase(
             quality_issues.extend(clarity_issues)
 
             # Check actionability
-            actionability_issues = assess_actionability(
-                content, md_file, lines, repo_root
-            )
+            actionability_issues = assess_actionability(content, md_file, lines, repo_root)
             quality_issues.extend(actionability_issues)
 
             # Check maintainability
-            maintainability_issues = assess_maintainability(
-                content, md_file, lines, repo_root
-            )
+            maintainability_issues = assess_maintainability(content, md_file, lines, repo_root)
             quality_issues.extend(maintainability_issues)
 
             # Check formatting

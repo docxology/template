@@ -10,6 +10,7 @@ This script performs a systematic 7-phase documentation scan:
 6. Verification and Validation
 7. Reporting
 """
+
 from __future__ import annotations
 
 import json  # noqa: F401
@@ -19,7 +20,7 @@ from collections import defaultdict
 from dataclasses import asdict, dataclass, field  # noqa: F401
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Set, Tuple  # noqa: F401
+from typing import Any, Dict, List, Optional, Set, Tuple  # noqa: F401
 
 import yaml  # noqa: F401
 
@@ -28,8 +29,13 @@ from infrastructure.validation.doc_accuracy import run_accuracy_phase
 from infrastructure.validation.doc_completeness import run_completeness_phase
 from infrastructure.validation.doc_discovery import run_discovery_phase
 from infrastructure.validation.doc_models import (  # noqa: F401
-    AccuracyIssue, CompletenessGap, DocumentationFile,
-    LinkIssue, QualityIssue, ScanResults)
+    AccuracyIssue,
+    CompletenessGap,
+    DocumentationFile,
+    LinkIssue,
+    QualityIssue,
+    ScanResults,
+)
 from infrastructure.validation.doc_quality import run_quality_phase
 
 logger = get_logger(__name__)
@@ -54,8 +60,7 @@ class DocumentationScanner:
 
     def _catalog_agents_readme(self, md_files: List[Path]) -> List[str]:
         """Catalog all AGENTS.md and README.md files (private method for testing)."""
-        from infrastructure.validation.doc_discovery import \
-            catalog_agents_readme
+        from infrastructure.validation.doc_discovery import catalog_agents_readme
 
         return catalog_agents_readme(md_files, self.repo_root)
 
@@ -76,8 +81,7 @@ class DocumentationScanner:
 
     def _analyze_documentation_file(self, md_file: Path) -> DocumentationFile:
         """Analyze a documentation file (private method for testing)."""
-        from infrastructure.validation.doc_discovery import \
-            analyze_documentation_file
+        from infrastructure.validation.doc_discovery import analyze_documentation_file
 
         return analyze_documentation_file(md_file, self.repo_root)
 
@@ -87,7 +91,7 @@ class DocumentationScanner:
 
         return extract_headings(content)
 
-    def phase1_discovery(self) -> Dict:
+    def phase1_discovery(self) -> Dict[str, Any]:
         """Phase 1: Discovery and Inventory."""
 
         inventory = run_discovery_phase(self.repo_root)
@@ -97,25 +101,21 @@ class DocumentationScanner:
         self.results.total_files = inventory["markdown_files"]
         self.config_files = {
             name: self.repo_root / path
-            for name, path in zip(
-                inventory["config_files_list"], inventory["config_files_list"]
-            )
+            for name, path in zip(inventory["config_files_list"], inventory["config_files_list"])
         }
-        self.script_files = [
-            self.repo_root / path for path in inventory["script_files_list"]
-        ]
+        self.script_files = [self.repo_root / path for path in inventory["script_files_list"]]
 
         self.results.statistics["phase1"] = inventory
         return inventory
 
-    def phase2_accuracy(self) -> Dict:
+    def phase2_accuracy(self) -> Dict[str, Any]:
         """Phase 2: Accuracy Verification."""
         from infrastructure.validation.doc_discovery import find_markdown_files
 
         md_files = find_markdown_files(self.repo_root)
 
-        accuracy_report, link_issues, accuracy_issues, all_headings = (
-            run_accuracy_phase(md_files, self.repo_root, self.config_files)
+        accuracy_report, link_issues, accuracy_issues, all_headings = run_accuracy_phase(
+            md_files, self.repo_root, self.config_files
         )
 
         self.results.link_issues.extend(link_issues)
@@ -125,7 +125,7 @@ class DocumentationScanner:
         self.results.statistics["phase2"] = accuracy_report
         return accuracy_report
 
-    def phase3_completeness(self) -> Dict:
+    def phase3_completeness(self) -> Dict[str, Any]:
         """Phase 3: Completeness Analysis."""
         completeness_report, gaps = run_completeness_phase(
             self.repo_root, self.results.documentation_files, self.config_files
@@ -133,9 +133,9 @@ class DocumentationScanner:
 
         self.results.completeness_gaps.extend(gaps)
         self.results.statistics["phase3"] = completeness_report
-        return completeness_report
+        return dict(completeness_report)
 
-    def phase4_quality(self) -> Dict:
+    def phase4_quality(self) -> Dict[str, Any]:
         """Phase 4: Quality Assessment."""
         from infrastructure.validation.doc_discovery import find_markdown_files
 
@@ -146,7 +146,7 @@ class DocumentationScanner:
         self.results.statistics["phase4"] = quality_report
         return quality_report
 
-    def phase5_improvements(self) -> Dict:
+    def phase5_improvements(self) -> Dict[str, Any]:
         """Phase 5: Intelligent Improvements."""
         logger.info("Phase 5: Implementing Intelligent Improvements...")
 
@@ -165,19 +165,15 @@ class DocumentationScanner:
         improvement_report = {
             "total_improvements": len(improvements),
             "link_fixes": len([i for i in improvements if i.get("type") == "link_fix"]),
-            "content_updates": len(
-                [i for i in improvements if i.get("type") == "content_update"]
-            ),
-            "structural_changes": len(
-                [i for i in improvements if i.get("type") == "structural"]
-            ),
+            "content_updates": len([i for i in improvements if i.get("type") == "content_update"]),
+            "structural_changes": len([i for i in improvements if i.get("type") == "structural"]),
         }
 
         self.results.statistics["phase5"] = improvement_report
         logger.info(f"  Identified {len(improvements)} improvements")
         return improvement_report
 
-    def phase6_verification(self) -> Dict:
+    def phase6_verification(self) -> Dict[str, Any]:
         """Phase 6: Verification and Validation."""
         logger.info("Phase 6: Verification and Validation...")
 
@@ -199,7 +195,7 @@ class DocumentationScanner:
         report = self._generate_report()
         return report
 
-    def _identify_link_fixes(self) -> List[Dict]:
+    def _identify_link_fixes(self) -> List[Dict[str, Any]]:
         """Identify link fixes needed."""
         fixes = []
         for issue in self.results.link_issues:
@@ -216,16 +212,13 @@ class DocumentationScanner:
                 )
         return fixes
 
-    def _identify_other_improvements(self) -> List[Dict]:
+    def _identify_other_improvements(self) -> List[Dict[str, Any]]:
         """Identify other improvements needed."""
         improvements = []
 
         # Based on quality issues
         for issue in self.results.quality_issues:
-            if (
-                issue.issue_type == "formatting"
-                and "heading" in issue.issue_message.lower()
-            ):
+            if issue.issue_type == "formatting" and "heading" in issue.issue_message.lower():
                 improvements.append(
                     {
                         "type": "structural",
@@ -237,17 +230,13 @@ class DocumentationScanner:
 
         return improvements
 
-    def _run_link_checker(self) -> Dict:
+    def _run_link_checker(self) -> Dict[str, Any]:
         """Run the existing link checker."""
         try:
             result = subprocess.run(
                 [
                     sys.executable,
-                    str(
-                        self.repo_root
-                        / "repo_utilities"
-                        / "check_documentation_links.py"
-                    ),
+                    str(self.repo_root / "repo_utilities" / "check_documentation_links.py"),
                 ],
                 capture_output=True,
                 text=True,
@@ -261,18 +250,20 @@ class DocumentationScanner:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def _validate_markdown_syntax(self) -> Dict:
+    def _validate_markdown_syntax(self) -> Dict[str, Any]:
         """Validate markdown syntax."""
         return {"status": "basic_validation_passed"}
 
-    def _test_documented_commands(self) -> Dict:
+    def _test_documented_commands(self) -> Dict[str, Any]:
         """Test documented commands."""
         return {"status": "manual_testing_required", "commands_found": 0}
 
-    def _verify_cross_references(self) -> Dict:
+    def _verify_cross_references(self) -> Dict[str, Any]:
         """Verify cross-references."""
         from infrastructure.validation.doc_discovery import (
-            find_markdown_files, identify_cross_references)
+            find_markdown_files,
+            identify_cross_references,
+        )
 
         md_files = find_markdown_files(self.repo_root)
         return {
@@ -280,7 +271,7 @@ class DocumentationScanner:
             "total_references": len(identify_cross_references(md_files)),
         }
 
-    def _check_circular_references(self) -> Dict:
+    def _check_circular_references(self) -> Dict[str, Any]:
         """Check for circular references."""
         return {"status": "no_circular_references_detected"}
 
@@ -295,7 +286,7 @@ class DocumentationScanner:
             "",
             "## Executive Summary",
             "",
-            "A comprehensive documentation scan was performed across the entire repository following the systematic 7-phase approach.",
+            "A comprehensive documentation scan was performed across the entire repository following the systematic 7-phase approach.",  # noqa: E501
             "",
             "### Key Statistics",
             "",
@@ -349,9 +340,7 @@ class DocumentationScanner:
                     f"- `{issue.file}:{issue.line}` - {issue.target} ({issue.issue_message})"
                 )
             if len(self.results.link_issues) > 20:
-                report_lines.append(
-                    f"- ... and {len(self.results.link_issues) - 20} more"
-                )
+                report_lines.append(f"- ... and {len(self.results.link_issues) - 20} more")
             report_lines.append("")
 
         # Add other phases
@@ -359,7 +348,7 @@ class DocumentationScanner:
             [
                 "## Phase 3: Completeness Analysis",
                 "",
-                f"Found {len(self.results.completeness_gaps)} completeness gaps across various categories.",
+                f"Found {len(self.results.completeness_gaps)} completeness gaps across various categories.",  # noqa: E501
                 "",
                 "## Phase 4: Quality Assessment",
                 "",
@@ -441,9 +430,7 @@ def main() -> int:
     logger.info(f"Quality issues: {len(results.quality_issues)}")
     logger.info(f"Improvements identified: {len(results.improvements_made)}")
 
-    return (
-        0 if len(results.link_issues) == 0 and len(results.accuracy_issues) == 0 else 1
-    )
+    return 0 if len(results.link_issues) == 0 and len(results.accuracy_issues) == 0 else 1
 
 
 if __name__ == "__main__":
