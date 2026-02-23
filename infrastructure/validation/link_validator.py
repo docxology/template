@@ -44,7 +44,7 @@ class LinkValidator:
         }
 
         for path in self.repo_root.rglob("*"):
-            # Skip excluded directories - check if any path component exactly matches exclude pattern
+            # Skip excluded directories - check if any path component exactly matches exclude pattern  # noqa: E501
             path_parts = path.parts
             should_exclude = False
             for part in path_parts:
@@ -59,9 +59,7 @@ class LinkValidator:
             elif path.is_dir():
                 self.all_dirs.add(path.relative_to(self.repo_root))
 
-    def extract_markdown_links(
-        self, content: str, file_path: Path
-    ) -> List[Tuple[str, str, int]]:
+    def extract_markdown_links(self, content: str, file_path: Path) -> List[Tuple[str, str, int]]:
         """Extract all markdown links from content, skipping those inside code blocks.
 
         Args:
@@ -97,9 +95,7 @@ class LinkValidator:
 
         return links
 
-    def resolve_link_target(
-        self, link_target: str, source_file: Path
-    ) -> Tuple[Path | None, bool]:
+    def resolve_link_target(self, link_target: str, source_file: Path) -> Tuple[Path | None, bool]:
         """Resolve a link target to an absolute path.
 
         Args:
@@ -135,7 +131,7 @@ class LinkValidator:
 
                 # Convert to parts and manually resolve .. components
                 parts = list(full_path.parts)
-                resolved_parts = []
+                resolved_parts: list[str] = []
 
                 for part in parts:
                     if part == "..":
@@ -219,9 +215,7 @@ class LinkValidator:
         broken_links = []
 
         for link_text, link_target, line_num in links:
-            resolved_path, is_external = self.resolve_link_target(
-                link_target, file_path
-            )
+            resolved_path, is_external = self.resolve_link_target(link_target, file_path)
 
             if is_external:
                 # External links are considered valid (we don't check them)
@@ -339,7 +333,7 @@ class LinkValidator:
         results = {}
 
         # Find all markdown files
-        markdown_files = []
+        markdown_files: list[Path] = []
         for ext in ["*.md", "*.markdown"]:
             markdown_files.extend(self.repo_root.rglob(ext))
 
@@ -400,7 +394,7 @@ class LinkValidator:
 
             for broken in broken_links_details:
                 report_lines.append(
-                    f"| {broken['file']} | {broken['line']} | {broken['text']} | {broken['target']} |"
+                    f"| {broken['file']} | {broken['line']} | {broken['text']} | {broken['target']} |"  # noqa: E501
                 )
 
             report_lines.append("")
@@ -436,9 +430,7 @@ def main() -> int:
     """Main entry point for link validation."""
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="Validate markdown links in repository"
-    )
+    parser = argparse.ArgumentParser(description="Validate markdown links in repository")
     parser.add_argument("--output", type=str, help="Output file for validation report")
     parser.add_argument("--verbose", action="store_true", help="Enable verbose logging")
 

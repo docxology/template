@@ -223,9 +223,7 @@ class FileInventoryManager:
                 count = len(category_entries)
 
                 # Use uppercase for known categories, title case for others
-                category_name = (
-                    category.upper() if category in ["pdf", "tex"] else category.title()
-                )
+                category_name = category.upper() if category in ["pdf", "tex"] else category.title()
                 lines.append(
                     f"  {category_name} ({count} file(s), {format_file_size(total_size)}):"
                 )
@@ -239,9 +237,7 @@ class FileInventoryManager:
                             lines.append(f"    ... and {remaining} more file(s)")
                         break
 
-                    rel_path = (
-                        entry.path.relative_to(base_dir) if base_dir else entry.path
-                    )
+                    rel_path = entry.path.relative_to(base_dir) if base_dir else entry.path
                     lines.append(f"    - {rel_path} ({entry.size_formatted})")
                     shown_count += 1
 
@@ -278,9 +274,7 @@ class FileInventoryManager:
                 "files": [
                     {
                         "path": (
-                            str(entry.path.relative_to(base_dir))
-                            if base_dir
-                            else str(entry.path)
+                            str(entry.path.relative_to(base_dir)) if base_dir else str(entry.path)
                         ),
                         "size": entry.size,
                         "size_formatted": entry.size_formatted,
@@ -335,21 +329,15 @@ class FileInventoryManager:
                 count = len(category_entries)
 
                 # Use uppercase for known categories, title case for others
-                category_name = (
-                    category.upper() if category in ["pdf", "tex"] else category.title()
-                )
+                category_name = category.upper() if category in ["pdf", "tex"] else category.title()
                 html_parts.append(
                     f"<h4>{category_name} ({count} file(s), {format_file_size(total_size)})</h4>"
                 )
                 html_parts.append("<ul>")
 
                 for entry in sorted(category_entries, key=lambda e: e.path):
-                    rel_path = (
-                        entry.path.relative_to(base_dir) if base_dir else entry.path
-                    )
-                    html_parts.append(
-                        f"<li><code>{rel_path}</code> ({entry.size_formatted})</li>"
-                    )
+                    rel_path = entry.path.relative_to(base_dir) if base_dir else entry.path
+                    html_parts.append(f"<li><code>{rel_path}</code> ({entry.size_formatted})</li>")
 
                 html_parts.append("</ul>")
 

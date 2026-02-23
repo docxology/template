@@ -15,6 +15,7 @@ from typing import List, Optional
 @dataclass(frozen=True)
 class LogEntry:
     """A single parsed structured log entry."""
+
     timestamp: str
     level: str
     logger: str
@@ -46,13 +47,15 @@ def parse_structured_logs(output: str) -> List[LogEntry]:
             continue
         try:
             data = json.loads(line)
-            entries.append(LogEntry(
-                timestamp=data.get("timestamp", ""),
-                level=data.get("level", ""),
-                logger=data.get("logger", ""),
-                message=data.get("message", ""),
-                exception=data.get("exception"),
-            ))
+            entries.append(
+                LogEntry(
+                    timestamp=data.get("timestamp", ""),
+                    level=data.get("level", ""),
+                    logger=data.get("logger", ""),
+                    message=data.get("message", ""),
+                    exception=data.get("exception"),
+                )
+            )
         except (json.JSONDecodeError, KeyError):
             continue
     return entries

@@ -89,9 +89,7 @@ class TestSecurityValidator:
     def test_validate_llm_input_dangerous_patterns(self, dangerous_input: str):
         """Test that dangerous patterns are detected and rejected."""
         validator = SecurityValidator()
-        with pytest.raises(
-            SecurityViolation, match="potentially dangerous content"
-        ):
+        with pytest.raises(SecurityViolation, match="potentially dangerous content"):
             validator.validate_llm_input(dangerous_input)
 
     def test_validate_llm_input_sanitizes_html(self):
@@ -343,9 +341,7 @@ class TestSecurityMonitor:
     def test_log_security_event_adds_event(self):
         """Test that logging an event adds it to the list."""
         monitor = SecurityMonitor()
-        monitor.log_security_event(
-            "test_event", {"detail": "value"}, "info"
-        )
+        monitor.log_security_event("test_event", {"detail": "value"}, "info")
 
         assert len(monitor.events) == 1
         assert monitor.events[0]["type"] == "test_event"
@@ -488,6 +484,7 @@ class TestRateLimitDecorator:
 
     def test_rate_limit_decorator_allows_initial_calls(self):
         """Test that decorated function works initially."""
+
         @rate_limit(max_requests=5, window_seconds=60)
         def test_function() -> str:
             return "success"
@@ -497,6 +494,7 @@ class TestRateLimitDecorator:
 
     def test_rate_limit_decorator_blocks_after_limit(self):
         """Test that decorator blocks after limit reached."""
+
         @rate_limit(max_requests=2, window_seconds=60)
         def limited_function() -> str:
             return "success"
@@ -511,6 +509,7 @@ class TestRateLimitDecorator:
 
     def test_rate_limit_decorator_preserves_function_name(self):
         """Test that decorator preserves function metadata."""
+
         @rate_limit(max_requests=5, window_seconds=60)
         def named_function() -> str:
             """A docstring."""
@@ -521,6 +520,7 @@ class TestRateLimitDecorator:
 
     def test_rate_limit_decorator_with_args(self):
         """Test that decorated function accepts arguments."""
+
         @rate_limit(max_requests=5, window_seconds=60)
         def add_numbers(a: int, b: int) -> int:
             return a + b
@@ -530,6 +530,7 @@ class TestRateLimitDecorator:
 
     def test_rate_limit_decorator_with_kwargs(self):
         """Test that decorated function accepts keyword arguments."""
+
         @rate_limit(max_requests=5, window_seconds=60)
         def greet(name: str = "World") -> str:
             return f"Hello, {name}!"
@@ -564,15 +565,9 @@ class TestSecurityIntegration:
         monitor = get_security_monitor()
 
         # Log various events
-        monitor.log_security_event(
-            "validation_failure", {"input": "test"}, "warning"
-        )
-        monitor.log_security_event(
-            "rate_limit_exceeded", {"key": "user123"}, "warning"
-        )
-        monitor.log_security_event(
-            "successful_validation", {"count": 100}, "info"
-        )
+        monitor.log_security_event("validation_failure", {"input": "test"}, "warning")
+        monitor.log_security_event("rate_limit_exceeded", {"key": "user123"}, "warning")
+        monitor.log_security_event("successful_validation", {"count": 100}, "info")
 
         # Check summary
         summary = monitor.get_security_summary()

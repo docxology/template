@@ -4,8 +4,6 @@ Tests publishing API functionality.
 """
 
 
-
-
 class TestPublishingApiCore:
     """Test core publishing API functionality."""
 
@@ -40,9 +38,7 @@ class TestZenodoApi:
         pdf = tmp_path / "test.pdf"
         pdf.write_bytes(b"%PDF")
 
-        config = ZenodoConfig(
-            access_token="test", base_url=zenodo_test_server.url_for("")
-        )
+        config = ZenodoConfig(access_token="test", base_url=zenodo_test_server.url_for(""))
         client = ZenodoClient(config)
 
         # Test real file upload to test server
@@ -55,9 +51,7 @@ class TestZenodoApi:
         """Test creating Zenodo deposition."""
         from infrastructure.publishing.api import ZenodoClient, ZenodoConfig
 
-        config = ZenodoConfig(
-            access_token="test", base_url=zenodo_test_server.url_for("")
-        )
+        config = ZenodoConfig(access_token="test", base_url=zenodo_test_server.url_for(""))
         client = ZenodoClient(config)
 
         # Test real deposition creation with test server
@@ -121,9 +115,7 @@ class TestGitHubApi:
         """Test Zenodo publication."""
         from infrastructure.publishing.api import ZenodoClient, ZenodoConfig
 
-        config = ZenodoConfig(
-            access_token="test", base_url=zenodo_test_server.url_for("")
-        )
+        config = ZenodoConfig(access_token="test", base_url=zenodo_test_server.url_for(""))
         client = ZenodoClient(config)
 
         # Test real publication with test server

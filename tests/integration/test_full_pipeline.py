@@ -59,9 +59,7 @@ class TestFullPipelineStructuredLogs:
         src.mkdir()
         (src / "__init__.py").write_text("")
         (src / "core.py").write_text(
-            "def compute(x: int) -> int:\n"
-            '    """Compute double of x."""\n'
-            "    return x * 2\n"
+            'def compute(x: int) -> int:\n    """Compute double of x."""\n    return x * 2\n'
         )
 
         # Tests
@@ -69,9 +67,7 @@ class TestFullPipelineStructuredLogs:
         tests.mkdir()
         (tests / "__init__.py").write_text("")
         (tests / "test_core.py").write_text(
-            "from src.core import compute\n\n"
-            "def test_compute():\n"
-            "    assert compute(5) == 10\n"
+            "from src.core import compute\n\ndef test_compute():\n    assert compute(5) == 10\n"
         )
 
         # Output directories
@@ -92,7 +88,8 @@ class TestFullPipelineStructuredLogs:
             [
                 sys.executable,
                 str(ROOT / "scripts" / "execute_pipeline.py"),
-                "--project", "test_project",
+                "--project",
+                "test_project",
                 "--skip-infra",
                 "--core-only",
             ],
@@ -130,7 +127,8 @@ class TestFullPipelineStructuredLogs:
             [
                 sys.executable,
                 str(ROOT / "scripts" / "execute_pipeline.py"),
-                "--project", "test_project",
+                "--project",
+                "test_project",
                 "--skip-infra",
                 "--core-only",
             ],

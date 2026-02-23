@@ -42,7 +42,7 @@ def get_project_info(project_name: str, repo_root: Path) -> Dict[str, Any]:
         "manuscript": {},
         "source": {},
         "output": {},
-        "tests": {}
+        "tests": {},
     }
 
     # Manuscript info
@@ -56,6 +56,7 @@ def get_project_info(project_name: str, repo_root: Path) -> Dict[str, Any]:
 
         if config_file.exists():
             import yaml
+
             with open(config_file) as f:
                 config = yaml.safe_load(f)
                 info["manuscript"]["title"] = config.get("paper", {}).get("title", "")
@@ -96,9 +97,9 @@ def display_project_info(info: Dict[str, Any]) -> None:
         log_substep("Manuscript", logger)
         logger.info(f"  Location: {info['manuscript'].get('location', 'N/A')}")
         logger.info(f"  Markdown files: {info['manuscript'].get('md_files', 0)}")
-        if info['manuscript'].get('has_config'):
+        if info["manuscript"].get("has_config"):
             logger.info("  Config: ✓ (config.yaml found)")
-            if info['manuscript'].get('title'):
+            if info["manuscript"].get("title"):
                 logger.info(f"  Title: {info['manuscript']['title']}")
         else:
             logger.info("  Config: ✗ (config.yaml not found)")

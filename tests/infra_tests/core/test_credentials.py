@@ -126,9 +126,7 @@ class TestYAMLConfigLoading:
 
         try:
             config_file = tmp_path / "config.yaml"
-            config_data = {
-                "zenodo": {"token": "${ZENODO_TOKEN}", "url": "https://zenodo.org"}
-            }
+            config_data = {"zenodo": {"token": "${ZENODO_TOKEN}", "url": "https://zenodo.org"}}
             config_file.write_text(yaml.dump(config_data))
 
             manager = CredentialManager(config_file=config_file)

@@ -53,12 +53,12 @@ the trade-off between convergence speed and numerical stability.
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={Step size sensitivity analysis across 10 values (\textbackslash alpha = 0.005 to 0.4). Left: iterations decrease geometrically with \textbackslash alpha on log-log axes. Right: all step sizes achieve the optimal objective value f(x\^{}*) = -0.5 from the initial value f(x\_0) = 0, confirming robust convergence across the full range.}]{../figures/step_size_sensitivity.png}}
-\caption{Step size sensitivity analysis across 10 values
-(\(\alpha = 0.005\) to \(0.4\)). Left: iterations decrease geometrically
-with \(\alpha\) on log-log axes. Right: all step sizes achieve the
-optimal objective value \(f(x^*) = -0.5\) from the initial value
-\(f(x_0) = 0\), confirming robust convergence across the full
+\pandocbounded{\includegraphics[keepaspectratio,alt={Step size sensitivity analysis across 10 values (alpha from 0.005 to 0.4). Left panel: iterations to convergence decrease geometrically with step size on log--log axes. Right panel: all step sizes achieve the optimal objective value of -0.5 from the initial value of 0, confirming robust convergence across the full range.}]{../figures/step_size_sensitivity.png}}
+\caption{Step size sensitivity analysis across 10 values (alpha from
+0.005 to 0.4). Left panel: iterations to convergence decrease
+geometrically with step size on log--log axes. Right panel: all step
+sizes achieve the optimal objective value of -0.5 from the initial value
+of 0, confirming robust convergence across the full
 range.}\label{fig:step_sensitivity}
 \end{figure}
 \end{block}

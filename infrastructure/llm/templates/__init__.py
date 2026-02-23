@@ -3,20 +3,34 @@
 from infrastructure.core.exceptions import LLMTemplateError
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.llm.templates.base import ResearchTemplate
-from infrastructure.llm.templates.helpers import (content_requirements,
-                                                  format_requirements,
-                                                  section_structure,
-                                                  token_budget_awareness,
-                                                  validation_hints)
+from infrastructure.llm.templates.helpers import (
+    content_requirements,
+    format_requirements,
+    section_structure,
+    token_budget_awareness,
+    validation_hints,
+)
 from infrastructure.llm.templates.manuscript import (
-    REVIEW_MIN_WORDS, TRANSLATION_LANGUAGES, ManuscriptExecutiveSummary,
-    ManuscriptImprovementSuggestions, ManuscriptMethodologyReview,
-    ManuscriptQualityReview, ManuscriptTranslationAbstract)
+    REVIEW_MIN_WORDS,
+    TRANSLATION_LANGUAGES,
+    ManuscriptExecutiveSummary,
+    ManuscriptImprovementSuggestions,
+    ManuscriptMethodologyReview,
+    ManuscriptQualityReview,
+    ManuscriptTranslationAbstract,
+)
 from infrastructure.llm.templates.research import (
-    CitationNetworkAnalysis, CodeDocumentation, ComparativeAnalysis,
-    DataInterpretation, LiteratureReview, LiteratureReviewSynthesis,
-    PaperSummarization, ResearchGapIdentification,
-    ScienceCommunicationNarrative, SummarizeAbstract)
+    CitationNetworkAnalysis,
+    CodeDocumentation,
+    ComparativeAnalysis,
+    DataInterpretation,
+    LiteratureReview,
+    LiteratureReviewSynthesis,
+    PaperSummarization,
+    ResearchGapIdentification,
+    ScienceCommunicationNarrative,
+    SummarizeAbstract,
+)
 
 logger = get_logger(__name__)
 

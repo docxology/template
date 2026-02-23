@@ -1,7 +1,5 @@
 """Tests for infrastructure.llm.config module."""
 
-
-
 from infrastructure.llm.core.config import LLMConfig
 
 
@@ -23,9 +21,7 @@ class TestLLMConfig:
         assert config.default_model == "gemma3:4b"
         assert config.temperature == 0.7
         assert config.max_tokens == 2048
-        assert (
-            config.context_window == 131072
-        )  # 128K context window (supports gemma3:4b)
+        assert config.context_window == 131072  # 128K context window (supports gemma3:4b)
 
     def test_config_custom_values(self):
         """Test config with custom values."""

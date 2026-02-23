@@ -3,13 +3,14 @@
 Comprehensive tests for script discovery and output verification utilities.
 """
 
-
 import pytest
 
 from infrastructure.core.exceptions import PipelineError
-from infrastructure.core.script_discovery import (discover_analysis_scripts,
-                                                  discover_orchestrators,
-                                                  verify_analysis_outputs)
+from infrastructure.core.script_discovery import (
+    discover_analysis_scripts,
+    discover_orchestrators,
+    verify_analysis_outputs,
+)
 
 
 class TestDiscoverAnalysisScripts:
@@ -30,9 +31,7 @@ class TestDiscoverAnalysisScripts:
 
         assert len(scripts) == 3
         assert all(s.suffix == ".py" for s in scripts)
-        assert all(
-            s.name in ["analysis1.py", "analysis2.py", "analysis3.py"] for s in scripts
-        )
+        assert all(s.name in ["analysis1.py", "analysis2.py", "analysis3.py"] for s in scripts)
 
     def test_discover_analysis_scripts_ignores_hidden(self, tmp_path):
         """Test that hidden files (starting with _) are ignored."""

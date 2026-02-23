@@ -14,8 +14,13 @@ from io import StringIO
 import pytest
 
 from infrastructure.core.logging_progress import (
-    Spinner, calculate_eta, calculate_eta_ema, calculate_eta_with_confidence,
-    log_progress_bar, log_with_spinner)
+    Spinner,
+    calculate_eta,
+    calculate_eta_ema,
+    calculate_eta_with_confidence,
+    log_progress_bar,
+    log_with_spinner,
+)
 
 
 class TestCalculateEta:
@@ -91,12 +96,8 @@ class TestCalculateEtaEma:
     def test_calculate_eta_ema_alpha_parameter(self):
         """Test EMA ETA with different alpha values."""
         previous_eta = 80.0
-        eta_low_alpha = calculate_eta_ema(
-            30.0, 3, 10, previous_eta=previous_eta, alpha=0.1
-        )
-        eta_high_alpha = calculate_eta_ema(
-            30.0, 3, 10, previous_eta=previous_eta, alpha=0.9
-        )
+        eta_low_alpha = calculate_eta_ema(30.0, 3, 10, previous_eta=previous_eta, alpha=0.1)
+        eta_high_alpha = calculate_eta_ema(30.0, 3, 10, previous_eta=previous_eta, alpha=0.9)
 
         # Higher alpha should be closer to linear estimate
         linear_eta = calculate_eta(30.0, 3, 10)

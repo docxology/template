@@ -7,12 +7,15 @@ Follows No Mocks Policy - all tests use real data and real execution.
 from datetime import datetime
 
 
-from infrastructure.validation.doc_scanner import (AccuracyIssue,
-                                                   CompletenessGap,
-                                                   DocumentationFile,
-                                                   DocumentationScanner,
-                                                   LinkIssue, QualityIssue,
-                                                   ScanResults)
+from infrastructure.validation.doc_scanner import (
+    AccuracyIssue,
+    CompletenessGap,
+    DocumentationFile,
+    DocumentationScanner,
+    LinkIssue,
+    QualityIssue,
+    ScanResults,
+)
 
 
 class TestDataClasses:

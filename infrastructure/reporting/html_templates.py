@@ -162,8 +162,8 @@ def render_summary_cards(cards: list[Dict[str, Any]]) -> str:
     html = '<div class="summary-grid">\n'
     for card in cards:
         html += f"""        <div class="summary-card">
-            <h3>{card['title']}</h3>
-            <div class="value">{card['value']}</div>
+            <h3>{card["title"]}</h3>
+            <div class="value">{card["value"]}</div>
         </div>
 """
     html += "    </div>"

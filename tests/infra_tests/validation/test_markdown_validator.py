@@ -11,8 +11,14 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.insert(0, ROOT)
 
 from infrastructure.validation.markdown_validator import (
-    collect_symbols, find_manuscript_directory, find_markdown_files,
-    validate_images, validate_markdown, validate_math, validate_refs)
+    collect_symbols,
+    find_manuscript_directory,
+    find_markdown_files,
+    validate_images,
+    validate_markdown,
+    validate_math,
+    validate_refs,
+)
 
 
 class TestFindMarkdownFiles:
@@ -64,12 +70,10 @@ class TestCollectSymbols:
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
         (manuscript / "test1.md").write_text(
-            "\\begin{equation}\\label{eq:test1}\\end{equation}\n"
-            "# Section {#sec:test1}\n"
+            "\\begin{equation}\\label{eq:test1}\\end{equation}\n# Section {#sec:test1}\n"
         )
         (manuscript / "test2.md").write_text(
-            "\\begin{equation}\\label{eq:test2}\\end{equation}\n"
-            "## Subsection {#subsec:test2}\n"
+            "\\begin{equation}\\label{eq:test2}\\end{equation}\n## Subsection {#subsec:test2}\n"
         )
 
         labels, anchors = collect_symbols(
@@ -95,9 +99,7 @@ class TestValidateImages:
         # Create test markdown file
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
-        (manuscript / "test.md").write_text(
-            "![alt text](../output/figures/missing.png)"
-        )
+        (manuscript / "test.md").write_text("![alt text](../output/figures/missing.png)")
 
         problems = validate_images([str(manuscript / "test.md")], tmp_path)
 
@@ -109,9 +111,7 @@ class TestValidateImages:
         # Create test markdown file and image
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
-        (manuscript / "test.md").write_text(
-            "![alt text](../output/figures/existing.png)"
-        )
+        (manuscript / "test.md").write_text("![alt text](../output/figures/existing.png)")
         (tmp_path / "output" / "figures").mkdir(parents=True)
         (tmp_path / "output" / "figures" / "existing.png").write_text("fake image")
 
@@ -157,8 +157,7 @@ class TestValidateImages:
         # Should report missing image since we didn't create it
         assert len(problems) == 1
         assert (
-            "output/figures/test.png" in problems[0]
-            or "../output/figures/test.png" in problems[0]
+            "output/figures/test.png" in problems[0] or "../output/figures/test.png" in problems[0]
         )
 
     def test_relative_path_exists_after_repo_root_join(self, tmp_path):
@@ -227,9 +226,7 @@ class TestValidateRefs:
         # Create test markdown file
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
-        (manuscript / "test.md").write_text(
-            "[https://example.com](https://example.com)"
-        )
+        (manuscript / "test.md").write_text("[https://example.com](https://example.com)")
 
         problems = validate_refs([str(manuscript / "test.md")], set(), set(), tmp_path)
 
@@ -270,9 +267,7 @@ class TestValidateMath:
         # Create test markdown file
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
-        (manuscript / "test.md").write_text(
-            r"\begin{equation}x^2 + y^2 = z^2\end{equation}"
-        )
+        (manuscript / "test.md").write_text(r"\begin{equation}x^2 + y^2 = z^2\end{equation}")
 
         problems = validate_math([str(manuscript / "test.md")], tmp_path)
 

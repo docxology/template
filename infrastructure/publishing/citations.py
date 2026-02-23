@@ -63,23 +63,19 @@ def generate_citation_bibtex(metadata: PublicationMetadata) -> str:
         BibTeX formatted citation
     """
     # Create a simple citation key
-    first_author = (
-        metadata.authors[0].replace(" ", "").lower() if metadata.authors else "unknown"
-    )
-    year = (
-        metadata.publication_date.split("-")[0] if metadata.publication_date else "2024"
-    )
+    first_author = metadata.authors[0].replace(" ", "").lower() if metadata.authors else "unknown"
+    year = metadata.publication_date.split("-")[0] if metadata.publication_date else "2024"
     citation_key = f"{first_author}{year}"
 
     bibtex = f"""@software{{{citation_key},
-  author = {{{' and '.join(metadata.authors)}}},
+  author = {{{" and ".join(metadata.authors)}}},
   title = {{{metadata.title}}},
   year = {{{year}}},
-  publisher = {{{metadata.publisher or 'Self-published'}}},
-  url = {{{metadata.repository_url or ''}}},
+  publisher = {{{metadata.publisher or "Self-published"}}},
+  url = {{{metadata.repository_url or ""}}},
   license = {{{metadata.license}}},
   abstract = {{{metadata.abstract}}},
-  keywords = {{{', '.join(metadata.keywords)}}}
+  keywords = {{{", ".join(metadata.keywords)}}}
 """
 
     if metadata.doi:
@@ -100,9 +96,7 @@ def generate_citation_apa(metadata: PublicationMetadata) -> str:
         APA formatted citation
     """
     authors_text = format_authors_apa(metadata.authors)
-    year = (
-        metadata.publication_date.split("-")[0] if metadata.publication_date else "2024"
-    )
+    year = metadata.publication_date.split("-")[0] if metadata.publication_date else "2024"
 
     citation = f"{authors_text} ({year}). {metadata.title}."
 
@@ -122,9 +116,7 @@ def generate_citation_mla(metadata: PublicationMetadata) -> str:
         MLA formatted citation
     """
     authors_text = format_authors_mla(metadata.authors)
-    year = (
-        metadata.publication_date.split("-")[0] if metadata.publication_date else "2024"
-    )
+    year = metadata.publication_date.split("-")[0] if metadata.publication_date else "2024"
 
     citation = f'{authors_text}. "{metadata.title}." {year}.'
 
@@ -174,7 +166,7 @@ If you use this template in your research, please cite:
 
 ## Plain Text
 
-{format_authors_apa(metadata.authors)}. ({metadata.publication_date.split('-')[0] if metadata.publication_date else '2024'}). {metadata.title}. {metadata.publisher or 'Self-published'}.
+{format_authors_apa(metadata.authors)}. ({metadata.publication_date.split("-")[0] if metadata.publication_date else "2024"}). {metadata.title}. {metadata.publisher or "Self-published"}.
 """
 
     if metadata.doi:

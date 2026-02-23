@@ -11,8 +11,7 @@ from pathlib import Path
 
 import pytest
 
-from infrastructure.reporting.output_organizer import (FileType,
-                                                       OutputOrganizer)
+from infrastructure.reporting.output_organizer import FileType, OutputOrganizer
 
 
 class TestFileType:
@@ -125,38 +124,28 @@ class TestOutputOrganizer:
     def test_get_output_path_basic(self, organizer, temp_output_dir):
         """Test basic output path generation."""
         file_path = Path("chart.png")
-        result_path = organizer.get_output_path(
-            file_path, temp_output_dir, FileType.PNG
-        )
+        result_path = organizer.get_output_path(file_path, temp_output_dir, FileType.PNG)
 
         expected = temp_output_dir / "png" / "chart.png"
         assert result_path == expected
 
     def test_get_output_path_with_filename_only(self, organizer, temp_output_dir):
         """Test output path generation with filename string."""
-        result_path = organizer.get_output_path(
-            "report.pdf", temp_output_dir, FileType.PDF
-        )
+        result_path = organizer.get_output_path("report.pdf", temp_output_dir, FileType.PDF)
 
         expected = temp_output_dir / "pdf" / "report.pdf"
         assert result_path == expected
 
-    def test_get_output_path_preserves_relative_structure(
-        self, organizer, temp_output_dir
-    ):
+    def test_get_output_path_preserves_relative_structure(self, organizer, temp_output_dir):
         """Test that output path preserves relative structure."""
         file_path = Path("subdir/chart.png")
-        result_path = organizer.get_output_path(
-            file_path, temp_output_dir, FileType.PNG
-        )
+        result_path = organizer.get_output_path(file_path, temp_output_dir, FileType.PNG)
 
         # Should use just the filename, not the full relative path
         expected = temp_output_dir / "png" / "chart.png"
         assert result_path == expected
 
-    def test_ensure_directory_structure_creates_all_dirs(
-        self, organizer, temp_output_dir
-    ):
+    def test_ensure_directory_structure_creates_all_dirs(self, organizer, temp_output_dir):
         """Test that directory structure creates all required subdirectories."""
         organizer.ensure_directory_structure(temp_output_dir)
 
@@ -185,9 +174,7 @@ class TestOutputOrganizer:
         combined_dir = temp_output_dir / "combined_pdfs"
         assert combined_dir.exists()
 
-    def test_organize_existing_files_moves_files_correctly(
-        self, organizer, temp_output_dir
-    ):
+    def test_organize_existing_files_moves_files_correctly(self, organizer, temp_output_dir):
         """Test that existing files are moved to correct subdirectories."""
         # Create test files
         png_file = temp_output_dir / "chart.png"
@@ -219,9 +206,7 @@ class TestOutputOrganizer:
         assert (temp_output_dir / "pdf" / "report.pdf").exists()
         assert (temp_output_dir / "csv" / "data.csv").exists()
 
-    def test_organize_existing_files_already_organized(
-        self, organizer, temp_output_dir
-    ):
+    def test_organize_existing_files_already_organized(self, organizer, temp_output_dir):
         """Test organization when files are already in correct subdirectories."""
         # Create directory structure first
         organizer.ensure_directory_structure(temp_output_dir)
@@ -362,9 +347,7 @@ class TestOutputOrganizer:
         assert summary["csv"] == []  # Empty directory
         assert summary["combined_pdfs"] == ["proj1.pdf"]
 
-    def test_get_organized_structure_summary_empty_dirs(
-        self, organizer, temp_output_dir
-    ):
+    def test_get_organized_structure_summary_empty_dirs(self, organizer, temp_output_dir):
         """Test summary when directories exist but are empty."""
         organizer.ensure_directory_structure(temp_output_dir)
 

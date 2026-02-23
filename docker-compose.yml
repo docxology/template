@@ -1,22 +1,32 @@
-version: '3.8'
+# docker-compose.yml — Research Project Template
+# Usage:
+#   docker compose --profile dev up -d        # Dev environment
+#   docker compose --profile ollama up -d     # With local Ollama
 
 services:
   research-template:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: research-template-dev
     volumes:
       - .:/home/research/template
-      - ./output:/home/research/template/output
-      - ./project/output:/home/research/template/project/output
+      - output_data:/home/research/template/output
     working_dir: /home/research/template
     environment:
-      - OLLAMA_HOST=http://host.docker.internal:11434
+      - OLLAMA_HOST=http://ollama:11434
       - LOG_LEVEL=1
+      - UV_FROZEN=true
+      - MPLBACKEND=Agg
     ports:
       - "8000:8000"  # For any web interfaces
     command: sleep infinity
     profiles:
       - dev
+    depends_on:
+      ollama:
+        condition: service_started
+        required: false
 
   ollama:
     image: ollama/ollama:latest
@@ -29,17 +39,14 @@ services:
       - OLLAMA_HOST=0.0.0.0
     profiles:
       - ollama
-    # Uncomment to pull models on startup
-    # command: |
-    #   sh -c "
-    #     ollama serve &
-    #     sleep 5 &&
-    #     ollama pull gemma3:4b &&
-    #     ollama pull llama3.1:8b &&
-    #     wait
-    #   "
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 volumes:
+  output_data:
   ollama_data:
 
 networks:

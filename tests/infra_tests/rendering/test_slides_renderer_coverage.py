@@ -136,9 +136,7 @@ class TestBeamerRendering:
 
         # Use real execution
         try:
-            result = renderer._render_beamer_with_paths(
-                source, output, manuscript_dir, figures_dir
-            )
+            result = renderer._render_beamer_with_paths(source, output, manuscript_dir, figures_dir)
             # If successful, should return a path
             assert result is not None or isinstance(result, Path)
         except Exception:

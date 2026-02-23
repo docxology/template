@@ -7,9 +7,11 @@ import time
 
 import pytest
 
-from infrastructure.core.retry import (RetryableOperation,
-                                       retry_on_transient_failure,
-                                       retry_with_backoff)
+from infrastructure.core.retry import (
+    RetryableOperation,
+    retry_on_transient_failure,
+    retry_with_backoff,
+)
 
 
 class TestRetryWithBackoff:
@@ -55,9 +57,7 @@ class TestRetryWithBackoff:
     def test_retry_specific_exception(self):
         """Test retry only on specific exceptions."""
 
-        @retry_with_backoff(
-            max_attempts=3, initial_delay=0.01, exceptions=(ValueError,)
-        )
+        @retry_with_backoff(max_attempts=3, initial_delay=0.01, exceptions=(ValueError,))
         def function_with_wrong_exception():
             raise TypeError("Wrong exception type")
 
@@ -276,9 +276,7 @@ class TestRetryableOperation:
         """Test exponential backoff in RetryableOperation."""
         start = time.time()
 
-        with RetryableOperation(
-            max_attempts=3, initial_delay=0.1, exponential_base=2.0
-        ) as op:
+        with RetryableOperation(max_attempts=3, initial_delay=0.1, exponential_base=2.0) as op:
             try:
                 for attempt in op:
                     if attempt < 3:
@@ -351,9 +349,7 @@ class TestRetryableOperation:
         """Test retry with custom exception types."""
         attempt_count = [0]
 
-        @retry_with_backoff(
-            max_attempts=3, initial_delay=0.01, exceptions=(KeyError, IndexError)
-        )
+        @retry_with_backoff(max_attempts=3, initial_delay=0.01, exceptions=(KeyError, IndexError))
         def function_with_custom_exceptions():
             attempt_count[0] += 1
             if attempt_count[0] < 2:
@@ -447,9 +443,7 @@ class TestRetryableOperation:
 
         attempt_count = [0]
 
-        @retry_with_backoff(
-            max_attempts=3, initial_delay=0.01, on_retry=on_retry_callback
-        )
+        @retry_with_backoff(max_attempts=3, initial_delay=0.01, on_retry=on_retry_callback)
         def function_with_callback():
             attempt_count[0] += 1
             if attempt_count[0] < 2:

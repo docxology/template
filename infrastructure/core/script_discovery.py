@@ -15,9 +15,7 @@ from infrastructure.core.logging_utils import get_logger, log_success
 logger = get_logger(__name__)
 
 
-def discover_analysis_scripts(
-    repo_root: Path, project_name: str = "project"
-) -> List[Path]:
+def discover_analysis_scripts(repo_root: Path, project_name: str = "project") -> List[Path]:
     """Discover all analysis scripts in projects/{project_name}/scripts/ to execute.
 
     Args:
@@ -37,25 +35,19 @@ def discover_analysis_scripts(
         >>> scripts = discover_analysis_scripts(Path("."), "myresearch")
         >>> # Discovers scripts in projects/myresearch/scripts/
     """
-    logger.info(
-        f"[STAGE-02] Discovering analysis scripts in projects/{project_name}/..."
-    )
+    logger.info(f"[STAGE-02] Discovering analysis scripts in projects/{project_name}/...")
 
     project_scripts_dir = repo_root / "projects" / project_name / "scripts"
 
     if not project_scripts_dir.exists():
         logger.info(
-            f"[STAGE-02] No scripts directory found for '{project_name}' - analysis stage will be skipped"
+            f"[STAGE-02] No scripts directory found for '{project_name}' - analysis stage will be skipped"  # noqa: E501
         )
         return []
 
     # Find all Python scripts in projects/{project_name}/scripts/ except README files
     scripts = sorted(
-        [
-            f
-            for f in project_scripts_dir.glob("*.py")
-            if f.is_file() and not f.name.startswith("_")
-        ]
+        [f for f in project_scripts_dir.glob("*.py") if f.is_file() and not f.name.startswith("_")]
     )
 
     for script in scripts:
@@ -111,9 +103,7 @@ def verify_analysis_outputs(repo_root: Path, project_name: str = "project") -> b
     Returns:
         True if outputs are valid, False otherwise
     """
-    logger.info(
-        f"[STAGE-02] Verifying analysis outputs for projects/{project_name}/..."
-    )
+    logger.info(f"[STAGE-02] Verifying analysis outputs for projects/{project_name}/...")
 
     output_dirs = [
         repo_root / "projects" / project_name / "output" / "figures",

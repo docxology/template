@@ -15,18 +15,20 @@ import sys
 
 import pytest
 
-from infrastructure.core.environment import (check_build_tools,
-                                             check_dependencies,
-                                             check_python_version,
-                                             check_uv_available,
-                                             get_python_command,
-                                             get_subprocess_env,
-                                             install_missing_packages,
-                                             set_environment_variables,
-                                             setup_directories,
-                                             validate_directory_structure,
-                                             validate_uv_sync_result,
-                                             verify_source_structure)
+from infrastructure.core.environment import (
+    check_build_tools,
+    check_dependencies,
+    check_python_version,
+    check_uv_available,
+    get_python_command,
+    get_subprocess_env,
+    install_missing_packages,
+    set_environment_variables,
+    setup_directories,
+    validate_directory_structure,
+    validate_uv_sync_result,
+    verify_source_structure,
+)
 
 
 @pytest.mark.integration
@@ -288,9 +290,7 @@ dependencies = []
         # Test installation of a simple package
         # Note: This would actually install the package, so we skip for safety
         # In a real scenario, you'd test with a test-specific package
-        pytest.skip(
-            "Package installation test skipped for safety - would modify environment"
-        )
+        pytest.skip("Package installation test skipped for safety - would modify environment")
 
     def test_validate_directory_structure(self, tmp_path):
         """Test directory structure validation."""

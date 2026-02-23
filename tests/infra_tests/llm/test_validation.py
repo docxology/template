@@ -1,17 +1,21 @@
 """Tests for infrastructure.llm.validation module."""
 
-
 import pytest
 
 from infrastructure.core.exceptions import ValidationError
-from infrastructure.llm.validation import (OutputValidator,
-                                           check_format_compliance,
-                                           deduplicate_sections,
-                                           detect_conversational_phrases,
-                                           detect_repetition,
-                                           has_on_topic_signals, is_off_topic)
+from infrastructure.llm.validation import (
+    OutputValidator,
+    check_format_compliance,
+    deduplicate_sections,
+    detect_conversational_phrases,
+    detect_repetition,
+    has_on_topic_signals,
+    is_off_topic,
+)
 from infrastructure.llm.validation.repetition import (
-    _calculate_similarity, calculate_unique_content_ratio)
+    _calculate_similarity,
+    calculate_unique_content_ratio,
+)
 
 
 class TestJSONValidation:
@@ -223,10 +227,7 @@ class TestCompleteValidation:
         """Test structured mode comprehensive validation."""
         content = '{"key": "value"}'
         schema = {"type": "object", "properties": {"key": {"type": "string"}}}
-        assert (
-            OutputValidator.validate_complete(content, mode="structured", schema=schema)
-            is True
-        )
+        assert OutputValidator.validate_complete(content, mode="structured", schema=schema) is True
 
     def test_validate_complete_empty_content(self):
         """Test empty content validation."""
@@ -331,10 +332,7 @@ class TestTypeCheckingEdgeCases:
     def test_check_type_object(self):
         """Test object type checking."""
         schema = {"type": "object", "properties": {"data": {"type": "object"}}}
-        assert (
-            OutputValidator.validate_structure({"data": {"nested": True}}, schema)
-            is True
-        )
+        assert OutputValidator.validate_structure({"data": {"nested": True}}, schema) is True
 
 
 class TestCompleteValidationEdgeCases:
@@ -445,8 +443,7 @@ This is the third section with yet another unique topic C.
         """Test that repeated content is detected."""
         # Create text with repeated sections
         repeated_section = (
-            "This is repeated content about machine learning and optimization methods. "
-            * 5
+            "This is repeated content about machine learning and optimization methods. " * 5
         )
         text = f"""
 ## Section 1
@@ -488,9 +485,7 @@ This section provides an introduction to machine learning algorithms and their a
 ## Introduction
 This part discusses machine learning methods and their use in analyzing scientific data.
 """
-        has_rep, duplicates, unique_ratio = detect_repetition(
-            text, similarity_threshold=0.8
-        )
+        has_rep, duplicates, unique_ratio = detect_repetition(text, similarity_threshold=0.8)
         # Should not detect as repetition despite similar topics
         assert has_rep is False
         assert unique_ratio >= 0.8

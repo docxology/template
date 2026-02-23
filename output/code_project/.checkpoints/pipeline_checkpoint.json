@@ -1,50 +1,64 @@
 {
-  "pipeline_start_time": 1771795208.887028,
-  "last_stage_completed": 6,
+  "pipeline_start_time": 1771861467.1277199,
+  "last_stage_completed": 8,
   "stage_results": [
     {
       "name": "Clean Output Directories",
       "exit_code": 0,
-      "duration": 0.01835918426513672,
-      "timestamp": "2026-02-22 13:21:02",
+      "duration": 0.022017955780029297,
+      "timestamp": "2026-02-23 07:46:24",
       "completed": true
     },
     {
       "name": "Environment Setup",
       "exit_code": 0,
-      "duration": 1.6359553337097168,
-      "timestamp": "2026-02-22 13:21:02",
+      "duration": 1.471019983291626,
+      "timestamp": "2026-02-23 07:46:24",
       "completed": true
     },
     {
       "name": "Project Tests",
       "exit_code": 0,
-      "duration": 11.887336015701294,
-      "timestamp": "2026-02-22 13:21:02",
+      "duration": 10.797944068908691,
+      "timestamp": "2026-02-23 07:46:24",
       "completed": true
     },
     {
       "name": "Project Analysis",
       "exit_code": 0,
-      "duration": 5.557436227798462,
-      "timestamp": "2026-02-22 13:21:02",
+      "duration": 4.949965715408325,
+      "timestamp": "2026-02-23 07:46:24",
       "completed": true
     },
     {
       "name": "PDF Rendering",
       "exit_code": 0,
-      "duration": 34.123201847076416,
-      "timestamp": "2026-02-22 13:21:02",
+      "duration": 35.90902805328369,
+      "timestamp": "2026-02-23 07:46:24",
       "completed": true
     },
     {
       "name": "Output Validation",
       "exit_code": 0,
-      "duration": 0.5335350036621094,
-      "timestamp": "2026-02-22 13:21:02",
+      "duration": 0.5171811580657959,
+      "timestamp": "2026-02-23 07:46:24",
+      "completed": true
+    },
+    {
+      "name": "LLM Scientific Review",
+      "exit_code": 0,
+      "duration": 9.929675102233887,
+      "timestamp": "2026-02-23 07:46:24",
+      "completed": true
+    },
+    {
+      "name": "LLM Translations",
+      "exit_code": 0,
+      "duration": 53.29566287994385,
+      "timestamp": "2026-02-23 07:46:24",
       "completed": true
     }
   ],
-  "total_stages": 8,
-  "checkpoint_time": 1771795262.646496
+  "total_stages": 10,
+  "checkpoint_time": 1771861584.0243049
 }

@@ -10,16 +10,18 @@ import pytest
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.insert(0, ROOT)
 
-from infrastructure.core.config_loader import (YAML_AVAILABLE,
-                                               find_config_file,
-                                               format_author_details,
-                                               format_author_name,
-                                               get_config_as_dict,
-                                               get_config_as_env_vars,
-                                               get_testing_config,
-                                               get_translation_languages,
-                                               load_config,
-                                               validate_config_keys)
+from infrastructure.core.config_loader import (
+    YAML_AVAILABLE,
+    find_config_file,
+    format_author_details,
+    format_author_name,
+    get_config_as_dict,
+    get_config_as_env_vars,
+    get_testing_config,
+    get_translation_languages,
+    load_config,
+    validate_config_keys,
+)
 
 
 @pytest.fixture
@@ -253,9 +255,7 @@ class TestGetConfigAsEnvVars:
 
         result = get_config_as_env_vars(tmp_path, respect_existing=False)
 
-        assert (
-            result["PROJECT_TITLE"] == "Test Paper Title"
-        )  # Config value, not env var
+        assert result["PROJECT_TITLE"] == "Test Paper Title"  # Config value, not env var
 
 
 class TestFindConfigFile:
@@ -288,9 +288,7 @@ class TestIntegration:
         # Create config file
         config = {
             "paper": {"title": "Integration Test"},
-            "authors": [
-                {"name": "Test Author", "orcid": "0000", "email": "test@example.com"}
-            ],
+            "authors": [{"name": "Test Author", "orcid": "0000", "email": "test@example.com"}],
         }
         config_file = tmp_path / "project" / "manuscript" / "config.yaml"
         config_file.parent.mkdir(parents=True)
@@ -323,9 +321,7 @@ class TestGetTranslationLanguages:
         """Test returns empty list when translations are disabled."""
         import yaml
 
-        config = {
-            "llm": {"translations": {"enabled": False, "languages": ["zh", "hi", "ru"]}}
-        }
+        config = {"llm": {"translations": {"enabled": False, "languages": ["zh", "hi", "ru"]}}}
         config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
         config_file.parent.mkdir(parents=True)
         with open(config_file, "w") as f:
@@ -351,9 +347,7 @@ class TestGetTranslationLanguages:
         """Test returns language list when translations are enabled."""
         import yaml
 
-        config = {
-            "llm": {"translations": {"enabled": True, "languages": ["zh", "hi", "ru"]}}
-        }
+        config = {"llm": {"translations": {"enabled": True, "languages": ["zh", "hi", "ru"]}}}
         config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
         config_file.parent.mkdir(parents=True)
         with open(config_file, "w") as f:
@@ -549,9 +543,7 @@ class TestGetReviewTypes:
                     }
                 }
             }
-            config_file = (
-                tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
-            )
+            config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
             config_file.parent.mkdir(parents=True)
             with open(config_file, "w") as f:
                 yaml.dump(config, f)
@@ -763,9 +755,7 @@ class TestConfigKeyValidation:
 
         assert result is not None
         # No warnings should be logged for valid keys
-        config_warnings = [
-            msg for msg in caplog.messages if "Unknown config key" in msg
-        ]
+        config_warnings = [msg for msg in caplog.messages if "Unknown config key" in msg]
         assert config_warnings == []
 
     def test_validate_config_keys_direct(self):
@@ -789,4 +779,3 @@ class TestConfigKeyValidation:
         """Test validate_config_keys handles non-dict input gracefully."""
         warnings = validate_config_keys("not a dict")  # type: ignore[arg-type]
         assert warnings == []
-

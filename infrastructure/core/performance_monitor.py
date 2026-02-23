@@ -167,9 +167,7 @@ class PerformanceMonitor:
         avg_time = sum(execution_times) / len(execution_times)
         min_time = min(execution_times)
         max_time = max(execution_times)
-        std_dev = (
-            sum((t - avg_time) ** 2 for t in execution_times) / len(execution_times)
-        ) ** 0.5
+        std_dev = (sum((t - avg_time) ** 2 for t in execution_times) / len(execution_times)) ** 0.5
 
         benchmark_results = {
             "function_name": func.__name__,
@@ -181,11 +179,7 @@ class PerformanceMonitor:
             "all_times": execution_times,
         }
 
-        logger.info(
-            f"Benchmark: {func.__name__} - "
-            f"avg: {avg_time:.4f}s, "
-            f"std: {std_dev:.4f}s"
-        )
+        logger.info(f"Benchmark: {func.__name__} - avg: {avg_time:.4f}s, std: {std_dev:.4f}s")
 
         return benchmark_results
 
@@ -243,7 +237,7 @@ class PerformanceMonitor:
 
             for metric in self.metrics_history[-10:]:  # Last 10 operations
                 report_lines.append(
-                    f"| {metric.operation_name} | {metric.execution_time:.3f} | {metric.memory_peak or 'N/A'} |"
+                    f"| {metric.operation_name} | {metric.execution_time:.3f} | {metric.memory_peak or 'N/A'} |"  # noqa: E501
                 )
 
         return "\n".join(report_lines)
@@ -282,6 +276,7 @@ def monitor_performance(operation_name: str, track_memory: bool = True):
         Returns:
             Callable: Wrapped function that monitors performance metrics.
         """
+
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             """Execute the wrapped function with performance monitoring.
@@ -361,9 +356,7 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description="Performance monitoring and profiling")
-    parser.add_argument(
-        "--report", action="store_true", help="Generate performance report"
-    )
+    parser.add_argument("--report", action="store_true", help="Generate performance report")
     parser.add_argument("--clear", action="store_true", help="Clear metrics history")
 
     args = parser.parse_args()

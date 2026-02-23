@@ -7,11 +7,13 @@ import tempfile
 from pathlib import Path
 
 
-from infrastructure.core.file_inventory import (FileInventoryEntry,
-                                                FileInventoryManager,
-                                                collect_output_files,
-                                                format_file_size,
-                                                generate_inventory_report)
+from infrastructure.core.file_inventory import (
+    FileInventoryEntry,
+    FileInventoryManager,
+    collect_output_files,
+    format_file_size,
+    generate_inventory_report,
+)
 
 
 class TestFileInventoryEntry:
@@ -20,9 +22,7 @@ class TestFileInventoryEntry:
     def test_entry_creation(self):
         """Test entry creation and properties."""
         path = Path("/tmp/test.pdf")
-        entry = FileInventoryEntry(
-            path=path, size=1024, category="pdf", modified=1234567890.0
-        )
+        entry = FileInventoryEntry(path=path, size=1024, category="pdf", modified=1234567890.0)
 
         assert entry.path == path
         assert entry.size == 1024
@@ -167,9 +167,7 @@ class TestFileInventoryManager:
         """Test generating text format inventory report."""
         entries = [
             FileInventoryEntry(Path("/tmp/pdf/doc.pdf"), 1024, "pdf", 1234567890),
-            FileInventoryEntry(
-                Path("/tmp/figures/plot.png"), 2048, "figures", 1234567891
-            ),
+            FileInventoryEntry(Path("/tmp/figures/plot.png"), 2048, "figures", 1234567891),
             FileInventoryEntry(Path("/tmp/data/results.csv"), 512, "data", 1234567892),
         ]
 
@@ -232,9 +230,7 @@ class TestFileInventoryManager:
         entries = [
             FileInventoryEntry(Path("/tmp/pdf/doc1.pdf"), 1024, "pdf", 1234567890),
             FileInventoryEntry(Path("/tmp/pdf/doc2.pdf"), 2048, "pdf", 1234567891),
-            FileInventoryEntry(
-                Path("/tmp/figures/plot.png"), 512, "figures", 1234567892
-            ),
+            FileInventoryEntry(Path("/tmp/figures/plot.png"), 512, "figures", 1234567892),
         ]
 
         manager = FileInventoryManager()

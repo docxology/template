@@ -64,9 +64,7 @@ DEFAULT_MODEL_PREFERENCES = [
 ]
 
 
-def is_ollama_running(
-    base_url: str = "http://localhost:11434", timeout: float = 2.0
-) -> bool:
+def is_ollama_running(base_url: str = "http://localhost:11434", timeout: float = 2.0) -> bool:
     """Check if Ollama server is running and responding."""
     try:
         logger.debug(f"Checking Ollama server at {base_url}...")
@@ -75,9 +73,7 @@ def is_ollama_running(
             logger.debug(f"Ollama server responding at {base_url}")
             return True
         else:
-            logger.warning(
-                f"Ollama server returned status {response.status_code} at {base_url}"
-            )
+            logger.warning(f"Ollama server returned status {response.status_code} at {base_url}")
             return False
     except Timeout:
         logger.debug(f"Ollama server timeout at {base_url} (timeout={timeout}s)")
@@ -109,13 +105,9 @@ def start_ollama_server(wait_seconds: float = 3.0, max_retries: int = 2) -> bool
                 logger.info(f"Retry {attempt}/{max_retries}...")
 
             # Check if ollama command exists
-            result = subprocess.run(
-                ["which", "ollama"], capture_output=True, timeout=2.0
-            )
+            result = subprocess.run(["which", "ollama"], capture_output=True, timeout=2.0)
             if result.returncode != 0:
-                logger.error(
-                    "Ollama command not found. Install Ollama: https://ollama.ai"
-                )
+                logger.error("Ollama command not found. Install Ollama: https://ollama.ai")
                 return False
 
             # Start server
@@ -185,14 +177,14 @@ def get_available_models(
             else:
                 logger.warning("Ollama returned empty model list")
 
-            return models
+            return models  # type: ignore
 
         except Timeout:
             last_error = f"Timeout after {timeout}s"
             if attempt < retries:
                 wait_time = (attempt + 1) * 0.5
                 logger.debug(
-                    f"Timeout getting models (attempt {attempt + 1}/{retries + 1}), retrying in {wait_time}s..."
+                    f"Timeout getting models (attempt {attempt + 1}/{retries + 1}), retrying in {wait_time}s..."  # noqa: E501
                 )
                 time.sleep(wait_time)
             else:
@@ -205,7 +197,7 @@ def get_available_models(
             if attempt < retries:
                 wait_time = (attempt + 1) * 0.5
                 logger.debug(
-                    f"Connection error (attempt {attempt + 1}/{retries + 1}), retrying in {wait_time}s..."
+                    f"Connection error (attempt {attempt + 1}/{retries + 1}), retrying in {wait_time}s..."  # noqa: E501
                 )
                 time.sleep(wait_time)
             else:
@@ -296,9 +288,7 @@ def select_small_fast_model(base_url: str = "http://localhost:11434") -> Optiona
     return select_best_model(fast_preferences, base_url)
 
 
-def ensure_ollama_ready(
-    base_url: str = "http://localhost:11434", auto_start: bool = True
-) -> bool:
+def ensure_ollama_ready(base_url: str = "http://localhost:11434", auto_start: bool = True) -> bool:
     """Ensure Ollama server is running and has models available."""
     # Check if running
     if not is_ollama_running(base_url):
@@ -406,15 +396,11 @@ def check_model_loaded(
             proc_model = proc.get("model", "")
             proc_base = proc_model.split(":")[0] if ":" in proc_model else proc_model
             if model_base == proc_base:
-                logger.debug(
-                    f"Partial match found: {proc_model} (requested: {model_name})"
-                )
+                logger.debug(f"Partial match found: {proc_model} (requested: {model_name})")
                 return (True, proc_model)
 
         loaded_models = [p.get("model", "unknown") for p in processes]
-        logger.debug(
-            f"Model {model_name} not loaded. Currently loaded: {', '.join(loaded_models)}"
-        )
+        logger.debug(f"Model {model_name} not loaded. Currently loaded: {', '.join(loaded_models)}")
         return (False, None)
 
     except Timeout:
@@ -465,9 +451,7 @@ def preload_model(
             logger.debug(f"Model {model_name} already loaded ({loaded_name})")
             return (True, None)
 
-    logger.debug(
-        f"Preloading model {model_name} (timeout={timeout}s, retries={retries})"
-    )
+    logger.debug(f"Preloading model {model_name} (timeout={timeout}s, retries={retries})")
 
     last_error = None
 
@@ -491,29 +475,23 @@ def preload_model(
                 return (True, None)
             else:
                 last_error = f"HTTP {response.status_code}: {response.text[:200]}"
-                logger.warning(
-                    f"Preload returned status {response.status_code}: {last_error}"
-                )
+                logger.warning(f"Preload returned status {response.status_code}: {last_error}")
 
         except Timeout:
             last_error = f"Timeout after {timeout}s (model may still be loading)"
             if attempt < retries:
                 wait_time = (attempt + 1) * 2.0
                 logger.debug(
-                    f"Preload timeout (attempt {attempt + 1}/{retries + 1}), retrying in {wait_time}s..."
+                    f"Preload timeout (attempt {attempt + 1}/{retries + 1}), retrying in {wait_time}s..."  # noqa: E501
                 )
                 time.sleep(wait_time)
             else:
-                logger.warning(
-                    f"Preload timeout after {retries + 1} attempts: {last_error}"
-                )
+                logger.warning(f"Preload timeout after {retries + 1} attempts: {last_error}")
                 # Timeout might mean model is still loading, not necessarily failed
                 # Check if it's loaded now
                 is_loaded, loaded_name = check_model_loaded(model_name, base_url)
                 if is_loaded:
-                    logger.info(
-                        f"Model {model_name} loaded despite timeout (found: {loaded_name})"
-                    )
+                    logger.info(f"Model {model_name} loaded despite timeout (found: {loaded_name})")
                     return (True, None)
 
         except RequestsConnectionError as e:
@@ -521,7 +499,7 @@ def preload_model(
             if attempt < retries:
                 wait_time = (attempt + 1) * 1.0
                 logger.debug(
-                    f"Preload connection error (attempt {attempt + 1}/{retries + 1}), retrying in {wait_time}s..."
+                    f"Preload connection error (attempt {attempt + 1}/{retries + 1}), retrying in {wait_time}s..."  # noqa: E501
                 )
                 time.sleep(wait_time)
             else:

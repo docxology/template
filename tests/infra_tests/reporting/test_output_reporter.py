@@ -4,7 +4,9 @@ from pathlib import Path
 
 
 from infrastructure.reporting.output_reporter import (
-    collect_output_statistics, generate_output_summary)
+    collect_output_statistics,
+    generate_output_summary,
+)
 
 
 def _create_file(path: Path, size: int = 10) -> None:

@@ -24,7 +24,7 @@ def execute_multi_project(
     run_infra_tests: bool = True,
     run_llm: bool = True,
     run_executive_report: bool = True,
-    skip_infra: bool = False
+    skip_infra: bool = False,
 ) -> int:
     """Execute multi-project orchestration.
 
@@ -53,7 +53,7 @@ def execute_multi_project(
             projects=projects,
             run_infra_tests=run_infra_tests,
             run_llm=run_llm,
-            run_executive_report=run_executive_report
+            run_executive_report=run_executive_report,
         )
 
         # Execute multi-project pipeline
@@ -77,7 +77,9 @@ def execute_multi_project(
 
         # Enhanced result reporting
         total_projects = len(projects)
-        success_rate = (result.successful_projects / total_projects * 100) if total_projects > 0 else 0
+        success_rate = (
+            (result.successful_projects / total_projects * 100) if total_projects > 0 else 0
+        )
 
         log_header("MULTI-PROJECT EXECUTION RESULTS", logger)
         logger.info(f"Operation: {operation_desc}")
@@ -88,24 +90,32 @@ def execute_multi_project(
         logger.info(f"Success Rate: {success_rate:.1f}%")
         logger.info(f"Total Duration: {result.total_duration:.1f}s")
         if total_projects > 0:
-            logger.info(f"Average per Project: {result.total_duration/total_projects:.1f}s")
+            logger.info(f"Average per Project: {result.total_duration / total_projects:.1f}s")
 
         if run_infra_tests and result.infra_test_duration > 0:
-            infra_percentage = (result.infra_test_duration / result.total_duration * 100)
-            logger.info(f"Infrastructure Tests: {result.infra_test_duration:.1f}s ({infra_percentage:.1f}%)")
+            infra_percentage = result.infra_test_duration / result.total_duration * 100
+            logger.info(
+                f"Infrastructure Tests: {result.infra_test_duration:.1f}s ({infra_percentage:.1f}%)"
+            )
 
         # Show project status summary
-        if hasattr(result, 'project_results') and result.project_results:
+        if hasattr(result, "project_results") and result.project_results:
             logger.info("Project Status:")
             if isinstance(result.project_results, dict):
                 for proj_name in sorted(result.project_results.keys()):
                     proj_result = result.project_results[proj_name]
                     if isinstance(proj_result, list) and proj_result:
                         # Check if all stages succeeded
-                        all_success = all(stage.success for stage in proj_result if hasattr(stage, 'success'))
-                        duration = sum(stage.duration for stage in proj_result if hasattr(stage, 'duration'))
+                        all_success = all(
+                            stage.success for stage in proj_result if hasattr(stage, "success")
+                        )
+                        duration = sum(
+                            stage.duration for stage in proj_result if hasattr(stage, "duration")
+                        )
                         status = "✅" if all_success else "❌"
-                        logger.info(f"  {status} {proj_name}: {len(proj_result)} stages, {duration:.1f}s")
+                        logger.info(
+                            f"  {status} {proj_name}: {len(proj_result)} stages, {duration:.1f}s"
+                        )
                     else:
                         logger.info(f"  ❓ {proj_name}: Unknown status")
             else:
@@ -113,21 +123,22 @@ def execute_multi_project(
 
         # Generate comprehensive final summary
         try:
-            from infrastructure.reporting.pipeline_reporter import generate_multi_project_summary_report
+            from infrastructure.reporting.pipeline_reporter import (
+                generate_multi_project_summary_report,
+            )
+
             summary_output_dir = repo_root / "output" / "multi_project_summary"
             summary_output_dir.mkdir(parents=True, exist_ok=True)
-            
+
             # Generate and save comprehensive summary
             summary_files = generate_multi_project_summary_report(
-                result=result,
-                projects=projects,
-                output_dir=summary_output_dir
+                result=result, projects=projects, output_dir=summary_output_dir
             )
-            
+
             logger.info("Multi-project summary reports generated:")
             for fmt, path in summary_files.items():
                 logger.info(f"  • {fmt.upper()}: {path}")
-                
+
         except ImportError:
             logger.warning("Multi-project summary generation not available")
         except Exception as e:
@@ -139,7 +150,7 @@ def execute_multi_project(
         else:
             logger.error("❌ Some projects failed")
             # List failed projects
-            if hasattr(result, 'project_results') and result.project_results:
+            if hasattr(result, "project_results") and result.project_results:
                 failed = []
                 for name, results_list in result.project_results.items():
                     if isinstance(results_list, list) and results_list:
@@ -170,7 +181,9 @@ def main():
     parser.add_argument("--no-infra-tests", action="store_true", help="Skip infrastructure tests")
     parser.add_argument("--no-llm", action="store_true", help="Skip LLM stages")
     parser.add_argument("--no-executive-report", action="store_true", help="Skip executive report")
-    parser.add_argument("--skip-infra", action="store_true", help="Skip infra tests for individual projects")
+    parser.add_argument(
+        "--skip-infra", action="store_true", help="Skip infra tests for individual projects"
+    )
 
     args = parser.parse_args()
 
@@ -179,7 +192,7 @@ def main():
         run_infra_tests=not args.no_infra_tests,
         run_llm=not args.no_llm,
         run_executive_report=not args.no_executive_report,
-        skip_infra=args.skip_infra
+        skip_infra=args.skip_infra,
     )
 
 

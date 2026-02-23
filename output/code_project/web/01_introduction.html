@@ -200,9 +200,9 @@ Directory)</strong>: A modular stack of nine subpackages
 <li><strong><code>tests/</code> Framework
 (<code>projects/code_project/tests/</code>)</strong>: An uncompromising
 validation layer maintaining a zero-mock testing policy. This is
-enforced automatically via <a
-href="https://github.com/docxology/template/blob/main/.github/workflows/ci.yml"><code>.github/workflows/ci.yml</code></a>
-mapping to <code>pyproject.toml</code> directives.</li>
+enforced automatically via the <a
+href="https://github.com/docxology/template/blob/main/.github/workflows/ci.yml">CI
+workflow</a> mapping to <code>pyproject.toml</code> directives.</li>
 <li><strong><code>docs/</code> Knowledge Base
 (<code>projects/code_project/docs/</code>)</strong>: A structured
 repository of architectural guidelines, operational patterns, and the
@@ -211,8 +211,10 @@ agents writing these very texts.</li>
 </ol>
 <p>This implementation of gradient descent algorithms for solving
 optimization problems is used as the vehicle to demonstrate these
-pillars. The theoretical problem is mapped programmatically inside <a
-href="https://github.com/docxology/template/blob/main/projects/code_project/src/optimizer.py"><code>projects/code_project/src/optimizer.py</code></a>:</p>
+pillars. The theoretical problem is mapped programmatically inside the
+<a
+href="https://github.com/docxology/template/blob/main/projects/code_project/src/optimizer.py">optimizer
+module</a>:</p>
 <p><span class="math display">\[\begin{equation}
 \label{eq:optimization_problem}
 \min_{x \in \mathbb{R}^n} f(x)

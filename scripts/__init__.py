@@ -1,12 +1,13 @@
 """Scripts package - entry point orchestrators for the build pipeline.
 
-This package contains thin orchestrators that coordinate the template's 
+This package contains thin orchestrators that coordinate the template's
 build pipeline stages. All business logic is in infrastructure/ modules.
 
 This package intentionally re-exports a small set of functions for integration
 tests (notably the LLM review helpers), while keeping orchestration logic in
 thin entry points under `scripts/` and business logic in `infrastructure/`.
 """
+
 from __future__ import annotations
 
 import importlib.util
@@ -20,56 +21,56 @@ MENU_SCRIPT_MAPPING = {
         "script": "00_setup_environment.py",
         "function": "run_setup_environment",
         "requires_ollama": False,
-        "description": "Setup Environment"
+        "description": "Setup Environment",
     },
     1: {
         "script": "01_run_tests.py",
         "function": "run_all_tests",
         "requires_ollama": False,
-        "description": "Run Tests (infrastructure + project)"
+        "description": "Run Tests (infrastructure + project)",
     },
     2: {
         "script": "02_run_analysis.py",
         "function": "run_analysis_standalone",
         "requires_ollama": False,
-        "description": "Run Analysis"
+        "description": "Run Analysis",
     },
     3: {
         "script": "03_render_pdf.py",
         "function": "run_pdf_rendering",
         "requires_ollama": False,
         "note": "Requires analysis outputs to be available",
-        "description": "Render PDF"
+        "description": "Render PDF",
     },
     4: {
         "script": "04_validate_output.py",
         "function": "run_validation_standalone",
         "requires_ollama": False,
-        "description": "Validate Output"
+        "description": "Validate Output",
     },
     5: {
         "script": "06_llm_review.py",
         "function": "run_llm_review",
         "requires_ollama": True,
-        "description": "LLM Review (reviews-only from run.sh)"
+        "description": "LLM Review (reviews-only from run.sh)",
     },
     6: {
         "script": "06_llm_review.py",
         "function": "run_llm_translations",
         "requires_ollama": True,
-        "description": "LLM Translations (translations-only from run.sh)"
+        "description": "LLM Translations (translations-only from run.sh)",
     },
     7: {
         "script": "05_copy_outputs.py",
         "function": "run_copy_outputs_standalone",
         "requires_ollama": False,
-        "description": "Copy Outputs"
+        "description": "Copy Outputs",
     },
     8: {
         "script": "execute_pipeline.py",
         "function": "run_full_pipeline",
         "requires_ollama": False,
-        "description": "Run Full Pipeline (via execute_pipeline.py)"
+        "description": "Run Full Pipeline (via execute_pipeline.py)",
     },
 }
 
@@ -141,7 +142,7 @@ __all__ = [
     "MENU_SCRIPT_MAPPING",
     "DEFAULT_MAX_INPUT_LENGTH",
     "ReviewMetrics",
-    "ManuscriptMetrics", 
+    "ManuscriptMetrics",
     "SessionMetrics",
     "estimate_tokens",
     "get_max_input_length",

@@ -29,9 +29,7 @@ class Message:
 class ConversationContext:
     """Manages conversation history and token limits."""
 
-    def __init__(
-        self, max_tokens: int = 262144
-    ):  # Default to 256K for large-context models
+    def __init__(self, max_tokens: int = 262144):  # Default to 256K for large-context models
         self.messages: List[Message] = []
         self.max_tokens = max_tokens
         self.estimated_tokens = 0
@@ -73,9 +71,7 @@ class ConversationContext:
                 "messages_after": len(self.messages),
                 "tokens_est_after": self.estimated_tokens,
                 "usage_percent": (
-                    (self.estimated_tokens / self.max_tokens * 100)
-                    if self.max_tokens > 0
-                    else 0
+                    (self.estimated_tokens / self.max_tokens * 100) if self.max_tokens > 0 else 0
                 ),
             },
         )
@@ -317,9 +313,7 @@ class ConversationContext:
             >>> print(f"Total messages: {stats['total_messages_added']}")
         """
         usage_percent = (
-            (self.estimated_tokens / self.max_tokens * 100)
-            if self.max_tokens > 0
-            else 0
+            (self.estimated_tokens / self.max_tokens * 100) if self.max_tokens > 0 else 0
         )
 
         stats = {

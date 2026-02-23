@@ -9,6 +9,7 @@ This thin orchestrator prepares the environment for the complete project pipelin
 
 Stage 1 of the pipeline orchestration.
 """
+
 from __future__ import annotations
 
 import subprocess
@@ -37,17 +38,17 @@ logger = get_logger(__name__)
 def main() -> int:
     """Execute environment setup orchestration."""
     import argparse
-    
+
     parser = argparse.ArgumentParser(description="Setup environment")
     parser.add_argument(
-        '--project',
-        default='project',
-        help='Project name in projects/ directory (default: project)'
+        "--project",
+        default="project",
+        help="Project name in projects/ directory (default: project)",
     )
     args = parser.parse_args()
-    
+
     log_header(f"STAGE 00: Environment Setup (Project: {args.project})", logger)
-    
+
     repo_root = Path(__file__).parent.parent
 
     # Clean coverage files to ensure clean state for subsequent test runs
@@ -58,9 +59,14 @@ def main() -> int:
         logger.info("Checking for uv package manager...")
 
         try:
-            result = subprocess.run(['uv', 'sync'], cwd=str(repo_root),
-                                  capture_output=True, text=True, check=False,
-                                  timeout=30)
+            result = subprocess.run(
+                ["uv", "sync"],
+                cwd=str(repo_root),
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=30,
+            )
             if result.returncode == 0:
                 log_success("Workspace dependencies synced successfully with uv", logger)
                 logger.debug(f"uv output: {result.stdout}")
@@ -75,14 +81,18 @@ def main() -> int:
                 return all_present
         except FileNotFoundError:
             logger.info("uv not found in PATH, using fallback dependency checking")
-            logger.info("Install uv with: pip install uv (recommended for faster dependency management)")
+            logger.info(
+                "Install uv with: pip install uv (recommended for faster dependency management)"
+            )
             # Fall back to checking individual dependencies
             all_present, missing = check_dependencies()
             if not all_present and missing:
                 return install_missing_packages(missing)
             return all_present
         except subprocess.TimeoutExpired:
-            logger.warning("uv sync timed out after 30s - dependencies likely already available in venv")
+            logger.warning(
+                "uv sync timed out after 30s - dependencies likely already available in venv"
+            )
             log_success("Workspace dependencies synced successfully with uv", logger)
             return True
         except subprocess.SubprocessError as e:
@@ -129,7 +139,7 @@ def main() -> int:
         except Exception as e:
             logger.error(f"Project discovery failed: {e}")
             return False
-    
+
     checks = [
         ("Python version", lambda: check_python_version()),
         ("Dependencies", check_and_install_dependencies),
@@ -139,7 +149,7 @@ def main() -> int:
         ("Project discovery", check_project_discovery),
         ("Environment variables", lambda: set_environment_variables(repo_root)),
     ]
-    
+
     results = []
     for check_name, check_fn in checks:
         try:
@@ -148,17 +158,17 @@ def main() -> int:
         except Exception as e:
             logger.error(f"Error during {check_name}: {e}")
             results.append((check_name, False))
-    
+
     # Summary
     log_header("Setup Summary")
-    
+
     all_passed = True
     for check_name, result in results:
         status = "✅ PASS" if result else "❌ FAIL"
         logger.info(f"{status}: {check_name}")
         if not result:
             all_passed = False
-    
+
     if all_passed:
         log_success("\n✅ Environment setup complete - ready to proceed")
         return 0
@@ -169,4 +179,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     exit(main())
-

@@ -3,8 +3,6 @@
 Tests link validation, file reference checking, and anchor validation.
 """
 
-
-
 from infrastructure.validation import check_links
 
 
@@ -149,9 +147,7 @@ class TestCheckFileReference:
         target = tmp_path / "docs" / "target.md"
         target.write_text("# Target")
 
-        exists, error = check_links.check_file_reference(
-            "./target.md", source, tmp_path
-        )
+        exists, error = check_links.check_file_reference("./target.md", source, tmp_path)
 
         # Either succeeds or gives an error message
         assert isinstance(exists, bool)
@@ -162,9 +158,7 @@ class TestCheckFileReference:
         source = tmp_path / "source.md"
         source.write_text("# Source")
 
-        exists, error = check_links.check_file_reference(
-            "./nonexistent.md", source, tmp_path
-        )
+        exists, error = check_links.check_file_reference("./nonexistent.md", source, tmp_path)
 
         assert exists is False
         assert "not found" in error.lower() or len(error) > 0
@@ -179,9 +173,7 @@ class TestCheckFileReference:
         target = tmp_path / "readme.md"
         target.write_text("# README")
 
-        exists, error = check_links.check_file_reference(
-            "../../readme.md", source, tmp_path
-        )
+        exists, error = check_links.check_file_reference("../../readme.md", source, tmp_path)
 
         # Result depends on implementation
         assert isinstance(exists, bool)
@@ -266,9 +258,7 @@ class TestCheckLinksIntegration:
         all_file_refs = []
         for file_path in files:
             content = file_path.read_text()
-            internal, external, file_refs = check_links.extract_links(
-                content, file_path
-            )
+            internal, external, file_refs = check_links.extract_links(content, file_path)
             all_file_refs.extend(file_refs)
 
         # Should have file references
@@ -344,9 +334,7 @@ See [missing file](./nonexistent.md) for details.
         _, _, file_refs = check_links.extract_links(content, md_file)
 
         assert len(file_refs) == 1
-        exists, msg = check_links.check_file_reference(
-            file_refs[0]["target"], md_file, tmp_path
-        )
+        exists, msg = check_links.check_file_reference(file_refs[0]["target"], md_file, tmp_path)
         assert exists is False
 
     def test_file_reference_with_anchor(self, tmp_path):
@@ -445,9 +433,7 @@ class TestReportingBrokenLinks:
                 target = target.split("#")[0]
 
             if target:
-                exists, msg = check_links.check_file_reference(
-                    target, md_file, tmp_path
-                )
+                exists, msg = check_links.check_file_reference(target, md_file, tmp_path)
                 if not exists:
                     broken_file_refs.append(
                         {

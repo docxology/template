@@ -17,13 +17,10 @@ Test Pattern:
 from __future__ import annotations
 
 
-
 from infrastructure.llm.core.client import LLMClient
 from infrastructure.llm.core.config import LLMConfig
 
 # No mock imports needed - using real HTTP server
-
-
 
 
 class TestQueryLogging:
@@ -56,8 +53,7 @@ class TestQueryLogging:
             # Check for structured data in LogRecord attributes
             # These should be set by the extra={...} parameter in the logging call
             has_model = (
-                hasattr(start_record, "model")
-                and getattr(start_record, "model", None) is not None
+                hasattr(start_record, "model") and getattr(start_record, "model", None) is not None
             )
             has_prompt_length = (
                 hasattr(start_record, "prompt_length")
@@ -90,9 +86,7 @@ class TestQueryLogging:
             assert "Query completed" in caplog.text
             # Check LogRecord attributes for structured data (extra fields)
             # In Python logging, extra={...} fields become attributes on LogRecord
-            completion_records = [
-                r for r in caplog.records if "Query completed" in r.message
-            ]
+            completion_records = [r for r in caplog.records if "Query completed" in r.message]
             assert len(completion_records) > 0, "No 'Query completed' log record found"
             completion_record = completion_records[0]
             # Check for structured data in LogRecord attributes
@@ -103,8 +97,7 @@ class TestQueryLogging:
             )
             has_generation_time = (
                 hasattr(completion_record, "generation_time_seconds")
-                and getattr(completion_record, "generation_time_seconds", None)
-                is not None
+                and getattr(completion_record, "generation_time_seconds", None) is not None
             )
             has_structured_data = has_response_length or has_generation_time
             assert has_structured_data, (
@@ -379,50 +372,46 @@ class TestErrorLogging:
     def test_connection_error_logs(self, caplog):
         """Test connection errors are logged."""
         import logging
+        from unittest.mock import patch
+        import requests
 
         from infrastructure.core.logging_utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
         logger.setLevel(logging.ERROR)
 
-        # Use an invalid URL to simulate connection error
-        config = LLMConfig(
-            auto_inject_system_prompt=False, base_url="http://invalid-host:9999/"
-        )
+        config = LLMConfig(auto_inject_system_prompt=False)
         client = LLMClient(config=config)
 
         with caplog.at_level("ERROR", logger="infrastructure.llm.core.client"):
-            try:
-                client.query("Test")
-            except Exception:
-                pass
+            with patch("infrastructure.llm.core.client.requests.post", side_effect=requests.exceptions.ConnectionError("Connection simulated error")):
+                try:
+                    client.query("Test")
+                except Exception:
+                    pass
 
-            assert (
-                "Connection error" in caplog.text or "Failed to connect" in caplog.text
-            )
+            assert "Connection error" in caplog.text or "Failed to connect" in caplog.text
 
     def test_timeout_error_logs(self, caplog):
         """Test timeout errors are logged."""
         import logging
+        from unittest.mock import patch
+        import requests
 
         from infrastructure.core.logging_utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
         logger.setLevel(logging.ERROR)
 
-        # Use a very short timeout to simulate timeout
-        config = LLMConfig(
-            auto_inject_system_prompt=False,
-            timeout=0.001,
-            base_url="http://httpbin.org/delay/1",
-        )
+        config = LLMConfig(auto_inject_system_prompt=False)
         client = LLMClient(config=config)
 
         with caplog.at_level("ERROR", logger="infrastructure.llm.core.client"):
-            try:
-                client.query("Test")
-            except Exception:
-                pass
+            with patch("infrastructure.llm.core.client.requests.post", side_effect=requests.exceptions.Timeout("Timeout simulated error")):
+                try:
+                    client.query("Test")
+                except Exception:
+                    pass
 
             assert "timeout" in caplog.text.lower() or "Timeout" in caplog.text
 

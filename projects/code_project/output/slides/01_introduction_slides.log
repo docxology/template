@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  22 FEB 2026 13:20
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  23 FEB 2026 07:44
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1244,27 +1244,27 @@ roduction_slides.vrb
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10.95> not available
 (Font)              Font shape `TU/lmtt/b/n' tried instead on input line 22.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.8961pt on input line 47.
+(Font)              scaled to size 7.8961pt on input line 48.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.64008pt on input line 47.
+(Font)              scaled to size 5.64008pt on input line 48.
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 4
-7.
+8.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 11.28131pt on input line 47.
+(Font)              scaled to size 11.28131pt on input line 48.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.89691pt on input line 47.
+(Font)              scaled to size 7.89691pt on input line 48.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.64066pt on input line 47.
+(Font)              scaled to size 5.64066pt on input line 48.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 11.27914pt on input line 47.
+(Font)              scaled to size 11.27914pt on input line 48.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.8954pt on input line 47.
+(Font)              scaled to size 7.8954pt on input line 48.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.63957pt on input line 47.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 47.
+(Font)              scaled to size 5.63957pt on input line 48.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 48.
 
  (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
@@ -1272,7 +1272,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 47.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 48.
 
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -1285,7 +1285,7 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 File: mt-LatinModernRoman.cfg 2021/02/21 v1.1 microtype config. file: Latin Mod
 ern Roman (RS)
 ))
-Overfull \vbox (787.35645pt too high) detected at line 210
+Overfull \vbox (773.75644pt too high) detected at line 211
  []
 
 
@@ -1313,7 +1313,7 @@ L3 programming layer <2025-01-18>
 Here is how much of TeX's memory you used:
  29415 strings out of 473832
  596243 string characters out of 5729482
- 1152414 words of memory out of 5000000
+ 1152413 words of memory out of 5000000
  51936 multiletter control sequences out of 15000+600000
  562380 words of font info for 69 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191

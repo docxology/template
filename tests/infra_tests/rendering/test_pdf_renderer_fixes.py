@@ -33,18 +33,14 @@ class TestBibliographyProcessing:
         aux_file = tmp_path / "pdf" / "test.aux"
         bib_file = tmp_path / "references.bib"
 
-        tex_file.write_text(
-            "\\documentclass{article}\n\\begin{document}\n\\end{document}"
-        )
+        tex_file.write_text("\\documentclass{article}\n\\begin{document}\n\\end{document}")
         (tmp_path / "pdf").mkdir(exist_ok=True)
         aux_file.write_text("some aux content")
         bib_file.write_text("@article{test,\n  title={Test}\n}")
 
         # Use real bibtex execution - may fail if bibtex not available
         try:
-            result = renderer._process_bibliography(
-                tex_file, tmp_path / "pdf", bib_file
-            )
+            result = renderer._process_bibliography(tex_file, tmp_path / "pdf", bib_file)
             # May succeed or fail depending on bibtex availability
             assert isinstance(result, bool)
         except Exception:
@@ -108,9 +104,7 @@ class TestBibliographyProcessing:
 
         # Use real bibtex execution
         try:
-            result = renderer._process_bibliography(
-                tex_file, tmp_path / "pdf", bib_file
-            )
+            result = renderer._process_bibliography(tex_file, tmp_path / "pdf", bib_file)
             # May succeed or fail depending on bibtex availability
             assert isinstance(result, bool)
         except Exception:
@@ -160,9 +154,7 @@ class TestFigurePathResolution:
         (tmp_path / "output" / "figures").mkdir(parents=True)
         (tmp_path / "output" / "figures" / "test.png").write_text("fake")
 
-        tex_content = (
-            r"\includegraphics[width=0.9\textwidth]{../output/figures/test.png}"
-        )
+        tex_content = r"\includegraphics[width=0.9\textwidth]{../output/figures/test.png}"
 
         fixed = renderer._fix_figure_paths(
             tex_content, tmp_path / "manuscript", tmp_path / "output" / "pdf"
@@ -194,10 +186,7 @@ class TestFigurePathResolution:
 
         # Should normalize and fix the path
         assert "../figures/" in fixed
-        assert (
-            unicode_filename in fixed
-            or unicodedata.normalize("NFC", unicode_filename) in fixed
-        )
+        assert unicode_filename in fixed or unicodedata.normalize("NFC", unicode_filename) in fixed
 
     def test_fix_figure_paths_missing_figure(self, tmp_path):
         """Test figure path fixing handles missing figures gracefully."""

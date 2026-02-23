@@ -6,9 +6,11 @@ import json
 from datetime import datetime
 
 
-from infrastructure.llm.core.response_saver import (ResponseMetadata,
-                                                    save_response,
-                                                    save_streaming_response)
+from infrastructure.llm.core.response_saver import (
+    ResponseMetadata,
+    save_response,
+    save_streaming_response,
+)
 
 
 class TestResponseMetadata:
@@ -104,9 +106,7 @@ class TestSaveResponse:
         )
 
         output_path = tmp_path / "response.json"
-        saved_path = save_response(
-            "Response text", output_path, metadata, format="json"
-        )
+        saved_path = save_response("Response text", output_path, metadata, format="json")
 
         assert saved_path.exists()
 

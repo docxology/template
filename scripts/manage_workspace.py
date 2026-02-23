@@ -16,6 +16,7 @@ Usage:
     uv run python scripts/manage_workspace.py tree
     uv run python scripts/manage_workspace.py status
 """
+
 from __future__ import annotations
 
 import argparse
@@ -35,12 +36,7 @@ logger = get_logger(__name__)
 def run_uv_command(cmd: List[str], cwd: Optional[Path] = None) -> int:
     """Run a uv command and return exit code."""
     try:
-        result = subprocess.run(
-            cmd,
-            cwd=cwd or Path.cwd(),
-            capture_output=False,
-            check=False
-        )
+        result = subprocess.run(cmd, cwd=cwd or Path.cwd(), capture_output=False, check=False)
         return result.returncode
     except Exception as e:
         logger.error(f"Failed to run uv command: {e}")
@@ -52,7 +48,7 @@ def sync_workspace() -> int:
     log_header("SYNCING WORKSPACE DEPENDENCIES", logger)
     logger.info("Running 'uv sync' for entire workspace...")
 
-    exit_code = run_uv_command(['uv', 'sync'])
+    exit_code = run_uv_command(["uv", "sync"])
     if exit_code == 0:
         log_success("Workspace dependencies synced successfully", logger)
     else:
@@ -73,7 +69,7 @@ def add_dependency(package: str, project_name: str) -> int:
         return 1
 
     # Use uv add to add to the specific project's pyproject.toml
-    exit_code = run_uv_command(['uv', 'add', package], cwd=project_dir)
+    exit_code = run_uv_command(["uv", "add", package], cwd=project_dir)
     if exit_code == 0:
         log_success(f"Added '{package}' to project '{project_name}'", logger)
         logger.info("Run 'uv sync' to install the new dependency")
@@ -88,7 +84,7 @@ def update_workspace() -> int:
     log_header("UPDATING WORKSPACE DEPENDENCIES", logger)
     logger.info("Running 'uv sync --upgrade' for entire workspace...")
 
-    exit_code = run_uv_command(['uv', 'sync', '--upgrade'])
+    exit_code = run_uv_command(["uv", "sync", "--upgrade"])
     if exit_code == 0:
         log_success("Workspace dependencies updated successfully", logger)
     else:
@@ -102,7 +98,7 @@ def show_workspace_tree() -> int:
     log_header("WORKSPACE DEPENDENCY TREE", logger)
     logger.info("Showing workspace dependency tree...")
 
-    exit_code = run_uv_command(['uv', 'tree'])
+    exit_code = run_uv_command(["uv", "tree"])
     if exit_code != 0:
         logger.error("Failed to show workspace dependency tree")
 
@@ -122,13 +118,14 @@ def show_workspace_status() -> int:
     # Check workspace configuration
     try:
         import tomllib
-        with open(workspace_file, 'rb') as f:
+
+        with open(workspace_file, "rb") as f:
             config = tomllib.load(f)
 
-        workspace_config = config.get('tool', {}).get('uv', {}).get('workspace', {})
+        workspace_config = config.get("tool", {}).get("uv", {}).get("workspace", {})
         if workspace_config:
-            members = workspace_config.get('members', [])
-            exclude = workspace_config.get('exclude', [])
+            members = workspace_config.get("members", [])
+            exclude = workspace_config.get("exclude", [])
 
             logger.info(f"Workspace members: {len(members)}")
             for member in members:
@@ -169,27 +166,27 @@ Examples:
   uv run python scripts/manage_workspace.py update
   uv run python scripts/manage_workspace.py tree
   uv run python scripts/manage_workspace.py status
-        """
+        """,
     )
 
-    subparsers = parser.add_subparsers(dest='command', help='Available commands')
+    subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
     # sync command
-    subparsers.add_parser('sync', help='Sync all workspace dependencies')
+    subparsers.add_parser("sync", help="Sync all workspace dependencies")
 
     # add command
-    add_parser = subparsers.add_parser('add', help='Add dependency to specific project')
-    add_parser.add_argument('package', help='Package name to add')
-    add_parser.add_argument('--project', required=True, help='Project name to add dependency to')
+    add_parser = subparsers.add_parser("add", help="Add dependency to specific project")
+    add_parser.add_argument("package", help="Package name to add")
+    add_parser.add_argument("--project", required=True, help="Project name to add dependency to")
 
     # update command
-    subparsers.add_parser('update', help='Update all workspace dependencies')
+    subparsers.add_parser("update", help="Update all workspace dependencies")
 
     # tree command
-    subparsers.add_parser('tree', help='Show workspace dependency tree')
+    subparsers.add_parser("tree", help="Show workspace dependency tree")
 
     # status command
-    subparsers.add_parser('status', help='Show workspace status')
+    subparsers.add_parser("status", help="Show workspace status")
 
     args = parser.parse_args()
 
@@ -198,15 +195,15 @@ Examples:
         return 1
 
     # Execute the requested command
-    if args.command == 'sync':
+    if args.command == "sync":
         return sync_workspace()
-    elif args.command == 'add':
+    elif args.command == "add":
         return add_dependency(args.package, args.project)
-    elif args.command == 'update':
+    elif args.command == "update":
         return update_workspace()
-    elif args.command == 'tree':
+    elif args.command == "tree":
         return show_workspace_tree()
-    elif args.command == 'status':
+    elif args.command == "status":
         return show_workspace_status()
     else:
         logger.error(f"Unknown command: {args.command}")

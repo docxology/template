@@ -12,10 +12,13 @@ import sys
 import time
 from typing import Optional
 
-from infrastructure.core.logging_utils import (calculate_eta,
-                                               calculate_eta_ema,
-                                               calculate_eta_with_confidence,
-                                               format_duration, get_logger)
+from infrastructure.core.logging_utils import (
+    calculate_eta,
+    calculate_eta_ema,
+    calculate_eta_with_confidence,
+    format_duration,
+    get_logger,
+)
 
 logger = get_logger(__name__)
 
@@ -198,11 +201,11 @@ class LLMProgressTracker:
 
         if self.total_tokens:
             percent = (
-                (self.generated_tokens * 100) // self.total_tokens
-                if self.total_tokens > 0
-                else 0
+                (self.generated_tokens * 100) // self.total_tokens if self.total_tokens > 0 else 0
             )
-            status = f"  {self.task}: {self.generated_tokens}/{self.total_tokens} tokens ({percent}%)"
+            status = (
+                f"  {self.task}: {self.generated_tokens}/{self.total_tokens} tokens ({percent}%)"
+            )
 
             # Calculate ETA
             if self.generated_tokens > 0 and throughput > 0:
@@ -233,7 +236,7 @@ class LLMProgressTracker:
             sys.stderr.flush()
 
         logger.info(
-            f"  ✅ {self.task} complete: {self.generated_tokens} tokens in {format_duration(elapsed)} "
+            f"  ✅ {self.task} complete: {self.generated_tokens} tokens in {format_duration(elapsed)} "  # noqa: E501
             f"({throughput:.1f} tokens/sec)"
         )
 
@@ -349,7 +352,7 @@ class SubStageProgress:
         elapsed = time.time() - self.start_time
         eta_seconds = self.get_eta()
 
-        status = f"  Progress: {self.current}/{self.total} ({percent}%) - Elapsed: {format_duration(elapsed)}"
+        status = f"  Progress: {self.current}/{self.total} ({percent}%) - Elapsed: {format_duration(elapsed)}"  # noqa: E501
         if eta_seconds is not None:
             status += f" | ETA: {format_duration(eta_seconds)}"
 

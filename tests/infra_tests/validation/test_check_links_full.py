@@ -3,13 +3,13 @@
 Tests link checking functionality comprehensively.
 """
 
-
-
 from infrastructure.validation import check_links
-from infrastructure.validation.check_links import (check_file_reference,
-                                                   extract_headings,
-                                                   extract_links,
-                                                   find_all_markdown_files)
+from infrastructure.validation.check_links import (
+    check_file_reference,
+    extract_headings,
+    extract_links,
+    find_all_markdown_files,
+)
 
 
 class TestFindAllMarkdownFiles:

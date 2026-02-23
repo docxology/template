@@ -9,7 +9,6 @@ import sys
 from pathlib import Path
 
 
-
 class TestRenderAllCliCore:
     """Test core render all CLI functionality."""
 
@@ -23,9 +22,7 @@ class TestRenderAllCliCore:
         """Test that module has main function."""
         from infrastructure.rendering import render_all_cli
 
-        assert hasattr(render_all_cli, "main") or hasattr(
-            render_all_cli, "render_all_cli"
-        )
+        assert hasattr(render_all_cli, "main") or hasattr(render_all_cli, "render_all_cli")
 
 
 class TestRenderCommands:
@@ -70,6 +67,7 @@ class TestRenderCliParsing:
                 capture_output=True,
                 text=True,
                 cwd=Path(__file__).parent.parent.parent.parent,
+                timeout=30,
             )
 
             # May succeed or fail depending on dependencies
@@ -89,6 +87,7 @@ class TestRenderCliParsing:
                 capture_output=True,
                 text=True,
                 cwd=Path(__file__).parent.parent.parent.parent,
+                timeout=30,
             )
 
             # May succeed or fail
@@ -124,6 +123,7 @@ class TestRenderCliMain:
             capture_output=True,
             text=True,
             cwd=Path(__file__).parent.parent.parent.parent,
+            timeout=30,
         )
 
         # Should exit with error when no args provided
@@ -132,9 +132,7 @@ class TestRenderCliMain:
     def test_main_with_pdf(self, tmp_path):
         """Test main with PDF command via real subprocess."""
         tex_file = tmp_path / "test.tex"
-        tex_file.write_text(
-            "\\documentclass{article}\\begin{document}Test\\end{document}"
-        )
+        tex_file.write_text("\\documentclass{article}\\begin{document}Test\\end{document}")
 
         # Run real CLI command via subprocess
         result = subprocess.run(
@@ -148,6 +146,7 @@ class TestRenderCliMain:
             capture_output=True,
             text=True,
             cwd=Path(__file__).parent.parent.parent.parent,
+            timeout=30,
         )
 
         # May succeed or fail depending on LaTeX availability

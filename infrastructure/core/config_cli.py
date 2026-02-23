@@ -29,8 +29,7 @@ repo_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(repo_root))
 
 try:
-    from infrastructure.core.config_loader import (YAML_AVAILABLE,
-                                                   get_config_as_env_vars)
+    from infrastructure.core.config_loader import YAML_AVAILABLE, get_config_as_env_vars
 except ImportError as e:
     logger.error(f"Failed to import from infrastructure/core/config_loader.py: {e}")
     logger.error("Falling back to environment variables only")
@@ -70,7 +69,7 @@ Examples:
     # Determine which project to use
     # For backward compatibility, if no project specified, use the default behavior
     # which looks for repo_root/project/manuscript/config.yaml
-    # If project is specified, we could extend this to look in projects/{project}/manuscript/config.yaml
+    # If project is specified, we could extend this to look in projects/{project}/manuscript/config.yaml  # noqa: E501
     # but for now, maintain backward compatibility with the original single-project structure
 
     # Get configuration respecting existing environment variables

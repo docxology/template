@@ -1,6 +1,5 @@
 """Test configuration for publishing infrastructure tests."""
 
-
 import pytest
 from pytest_httpserver import HTTPServer
 
@@ -30,9 +29,7 @@ def zenodo_test_server():
     )
 
     # Mock file upload endpoint for test.pdf
-    server.expect_request(
-        "/api/files/bucket123/test.pdf", method="PUT"
-    ).respond_with_json(
+    server.expect_request("/api/files/bucket123/test.pdf", method="PUT").respond_with_json(
         {
             "key": "test.pdf",
             "mimetype": "application/pdf",
@@ -43,9 +40,7 @@ def zenodo_test_server():
     )
 
     # Mock file upload endpoint for paper.pdf (used in full workflow test)
-    server.expect_request(
-        "/api/files/bucket123/paper.pdf", method="PUT"
-    ).respond_with_json(
+    server.expect_request("/api/files/bucket123/paper.pdf", method="PUT").respond_with_json(
         {
             "key": "paper.pdf",
             "mimetype": "application/pdf",
@@ -72,9 +67,10 @@ def zenodo_test_server():
         }
     )
 
-    yield server
-
-    server.stop()
+    try:
+        yield server
+    finally:
+        server.stop()
 
 
 @pytest.fixture
@@ -84,9 +80,7 @@ def github_test_server():
     server.start()
 
     # Mock GitHub release creation
-    server.expect_request(
-        "/repos/testuser/testrepo/releases", method="POST"
-    ).respond_with_json(
+    server.expect_request("/repos/testuser/testrepo/releases", method="POST").respond_with_json(
         {
             "id": 12345,
             "tag_name": "v1.0.0",
@@ -96,6 +90,7 @@ def github_test_server():
         }
     )
 
-    yield server
-
-    server.stop()
+    try:
+        yield server
+    finally:
+        server.stop()

@@ -9,6 +9,8 @@ import sys
 import tempfile
 from pathlib import Path
 
+import pytest
+
 
 from infrastructure.core.cli import create_parser
 
@@ -64,6 +66,7 @@ class TestCreateParser:
         assert args.categories is None
 
 
+@pytest.mark.timeout(60)
 class TestCLISubprocess:
     """Test CLI through real subprocess execution."""
 
@@ -142,6 +145,7 @@ authors:
                 capture_output=True,
                 text=True,
                 env=env,
+                timeout=30,
             )
 
             assert result.returncode == 0
@@ -226,6 +230,7 @@ authors:
                 capture_output=True,
                 text=True,
                 env=env,
+                timeout=30,
             )
 
             assert result.returncode == 0
@@ -256,6 +261,7 @@ authors:
                 ],
                 capture_output=True,
                 text=True,
+                timeout=30,
             )
 
             assert result.returncode == 0
@@ -297,12 +303,14 @@ authors:
                 ],
                 capture_output=True,
                 text=True,
+                timeout=30,
             )
 
             assert result.returncode == 0
             assert "Found 1 projects" in result.stdout
 
 
+@pytest.mark.timeout(60)
 class TestMainFunction:
     """Test main CLI function with real subprocess calls."""
 
@@ -312,6 +320,7 @@ class TestMainFunction:
             [sys.executable, "-m", "infrastructure.core.cli", "--help"],
             capture_output=True,
             text=True,
+            timeout=30,
         )
 
         assert result.returncode == 0
@@ -323,6 +332,7 @@ class TestMainFunction:
             [sys.executable, "-m", "infrastructure.core.cli", "invalid_command"],
             capture_output=True,
             text=True,
+            timeout=30,
         )
 
         assert result.returncode == 2  # argparse error code

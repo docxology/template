@@ -17,8 +17,7 @@ import pytest
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering.config import RenderingConfig
-from infrastructure.rendering.pdf_renderer import (
-    PDFRenderer, _parse_missing_package_error)
+from infrastructure.rendering.pdf_renderer import PDFRenderer, _parse_missing_package_error
 
 
 class TestParseMissingPackageError:
@@ -587,9 +586,7 @@ authors:
 
         return config, manuscript_dir, [md_file]
 
-    def test_render_combined_removes_existing_output(
-        self, full_project_setup, tmp_path
-    ):
+    def test_render_combined_removes_existing_output(self, full_project_setup, tmp_path):
         """Test that existing output file is removed before rendering."""
         config, manuscript_dir, source_files = full_project_setup
         renderer = PDFRenderer(config)
@@ -634,8 +631,7 @@ class TestModuleLevel:
 
     def test_module_has_parse_missing_package(self):
         """Test that module exports _parse_missing_package_error."""
-        from infrastructure.rendering.pdf_renderer import \
-            _parse_missing_package_error
+        from infrastructure.rendering.pdf_renderer import _parse_missing_package_error
 
         assert callable(_parse_missing_package_error)
 
@@ -678,9 +674,7 @@ class TestCombineMarkdownFilesEdgeCases:
         # Should add trailing newline
         assert result.endswith("\n")
 
-    def test_combine_file_with_unbalanced_header_braces(
-        self, renderer, tmp_path, caplog
-    ):
+    def test_combine_file_with_unbalanced_header_braces(self, renderer, tmp_path, caplog):
         """Test combining file with unbalanced braces in header attributes."""
         md_file = tmp_path / "test.md"
         md_file.write_text("# Header {#sec:test{nested}\n\nContent")
@@ -765,9 +759,7 @@ authors:
 
         return config, manuscript_dir, pdf_dir
 
-    def test_graphicx_added_when_missing_in_preamble(
-        self, full_project, tmp_path, caplog
-    ):
+    def test_graphicx_added_when_missing_in_preamble(self, full_project, tmp_path, caplog):
         """Test graphicx is added when not in preamble."""
         config, manuscript_dir, pdf_dir = full_project
         renderer = PDFRenderer(config)
@@ -901,9 +893,7 @@ class TestRenderMethodDispatch:
     def test_render_tex_file_dispatch(self, renderer, tmp_path):
         """Test that .tex files are dispatched correctly."""
         tex_file = tmp_path / "test.tex"
-        tex_file.write_text(
-            r"\documentclass{article}\begin{document}Test\end{document}"
-        )
+        tex_file.write_text(r"\documentclass{article}\begin{document}Test\end{document}")
 
         try:
             result = renderer.render(tex_file)

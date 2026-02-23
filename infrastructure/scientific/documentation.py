@@ -50,7 +50,7 @@ def generate_scientific_documentation(func: Callable) -> str:
 ### Parameters
 {chr(10).join(parameters)}
 
-### {return_info if return_info else 'Returns'}
+### {return_info if return_info else "Returns"}
 No return annotation specified.
 
 ### Usage Example

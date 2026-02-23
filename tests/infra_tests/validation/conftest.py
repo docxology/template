@@ -44,6 +44,7 @@ def http_test_server():
         status=200,
     )
 
-    yield server
-
-    server.stop()
+    try:
+        yield server
+    finally:
+        server.stop()

@@ -156,25 +156,21 @@ Examples:
   python3 scripts/organize_executive_outputs.py --dry-run
   python3 scripts/organize_executive_outputs.py --executive-only
   python3 scripts/organize_executive_outputs.py --multi-project-only
-        """
+        """,
     )
 
     parser.add_argument(
-        "--dry-run",
-        action="store_true",
-        help="Show what would be done without making changes"
+        "--dry-run", action="store_true", help="Show what would be done without making changes"
     )
 
     parser.add_argument(
-        "--executive-only",
-        action="store_true",
-        help="Only organize executive summary outputs"
+        "--executive-only", action="store_true", help="Only organize executive summary outputs"
     )
 
     parser.add_argument(
         "--multi-project-only",
         action="store_true",
-        help="Only organize multi-project summary outputs"
+        help="Only organize multi-project summary outputs",
     )
 
     args = parser.parse_args()
@@ -222,6 +218,7 @@ Examples:
     except Exception as e:
         logger.error(f"Reorganization failed: {e}")
         import traceback
+
         logger.debug(traceback.format_exc())
         return 1
 

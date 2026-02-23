@@ -21,13 +21,17 @@ from pathlib import Path
 from typing import Any, Callable, Dict, Iterator, Optional, TypeVar
 
 # Import from split modules
-from infrastructure.core.logging_formatters import (JSONFormatter,
-                                                    TemplateFormatter)
-from infrastructure.core.logging_helpers import (format_duration,
-                                                 format_error_with_suggestions)
+from infrastructure.core.logging_formatters import JSONFormatter, TemplateFormatter
+from infrastructure.core.logging_helpers import format_duration, format_error_with_suggestions
 from infrastructure.core.logging_progress import (
-    Spinner, StreamingProgress, calculate_eta, calculate_eta_ema,
-    calculate_eta_with_confidence, log_progress_bar, log_progress_streaming)
+    Spinner,
+    StreamingProgress,
+    calculate_eta,
+    calculate_eta_ema,
+    calculate_eta_with_confidence,
+    log_progress_bar,
+    log_progress_streaming,
+)
 from infrastructure.core.logging_progress import log_with_spinner
 
 # Type variable for generic context manager
@@ -356,9 +360,7 @@ def setup_logger(
     is_test_env = (
         os.getenv("PYTEST_CURRENT_TEST") is not None
         or "pytest" in sys.modules
-        or any(
-            "pytest" in str(v) for v in sys.modules.values() if hasattr(v, "__file__")
-        )
+        or any("pytest" in str(v) for v in sys.modules.values() if hasattr(v, "__file__"))
     )
 
     # In test environment: don't add console handler, enable propagation
@@ -428,9 +430,7 @@ def get_logger(name: str) -> logging.Logger:
     is_test_env = (
         os.getenv("PYTEST_CURRENT_TEST") is not None
         or "pytest" in sys.modules
-        or any(
-            "pytest" in str(v) for v in sys.modules.values() if hasattr(v, "__file__")
-        )
+        or any("pytest" in str(v) for v in sys.modules.values() if hasattr(v, "__file__"))
     )
 
     # If not configured, set up with defaults
@@ -614,9 +614,7 @@ def log_function_call(logger: Optional[logging.Logger] = None) -> Callable:
                 return result
             except Exception as e:
                 duration = time.time() - start_time
-                func_logger.error(
-                    f"Failed: {func.__name__} after {duration:.1f}s - {e}"
-                )
+                func_logger.error(f"Failed: {func.__name__} after {duration:.1f}s - {e}")
                 raise
 
         wrapper.__name__ = func.__name__
@@ -866,9 +864,7 @@ def log_stage_with_eta(
     logger.info(separator)
 
 
-def log_resource_usage(
-    stage_name: str = "", logger: Optional[logging.Logger] = None
-) -> None:
+def log_resource_usage(stage_name: str = "", logger: Optional[logging.Logger] = None) -> None:
     """Log current resource usage (if psutil available).
 
     Provides memory and CPU usage information when psutil is installed.
@@ -949,9 +945,7 @@ class LogAggregator:
             timestamp = time.time()
 
         if level.lower() in self.messages:
-            self.messages[level.lower()].append(
-                {"message": message, "timestamp": timestamp}
-            )
+            self.messages[level.lower()].append({"message": message, "timestamp": timestamp})
 
     def get_summary(self) -> Dict[str, Any]:
         """Get summary of aggregated logs.

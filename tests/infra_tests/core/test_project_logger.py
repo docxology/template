@@ -1,9 +1,10 @@
 """Tests for ProjectLogger and standardized logging interface."""
 
-
-from infrastructure.core.logging_utils import (ProjectLogger,
-                                               get_project_logger,
-                                               setup_project_logging)
+from infrastructure.core.logging_utils import (
+    ProjectLogger,
+    get_project_logger,
+    setup_project_logging,
+)
 
 
 class TestProjectLogger:

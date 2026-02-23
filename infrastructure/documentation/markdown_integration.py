@@ -114,18 +114,14 @@ class MarkdownIntegration:
         markdown_content = "# Table of Figures\n\n"
         markdown_content += "This document lists all figures in the manuscript.\n\n"
 
-        for fig_meta in sorted(
-            self.figure_manager.get_all_figures(), key=lambda f: f.figure_id
-        ):
+        for fig_meta in sorted(self.figure_manager.get_all_figures(), key=lambda f: f.figure_id):
             markdown_content += f"## {fig_meta.label}\n\n"
             markdown_content += f"**Caption**: {fig_meta.caption}\n\n"
             if fig_meta.section:
                 markdown_content += f"**Section**: {fig_meta.section}\n\n"
             markdown_content += f"**File**: `{fig_meta.filename}`\n\n"
             markdown_content += "**LaTeX Block**:\n\n```latex\n"
-            markdown_content += self.figure_manager.generate_latex_figure_block(
-                fig_meta.label
-            )
+            markdown_content += self.figure_manager.generate_latex_figure_block(fig_meta.label)
             markdown_content += "\n```\n\n"
 
         output_file.write_text(markdown_content, encoding="utf-8")
@@ -167,11 +163,7 @@ class MarkdownIntegration:
                         if next_para:
                             insert_pos = figure_end + next_para.end()
                             ref_text = f"See Figure \\ref{{{label}}}."
-                            content = (
-                                content[:insert_pos]
-                                + f" {ref_text}"
-                                + content[insert_pos:]
-                            )
+                            content = content[:insert_pos] + f" {ref_text}" + content[insert_pos:]
                             updated += 1
 
         # Write back

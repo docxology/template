@@ -9,18 +9,31 @@ Modules:
 """
 
 from .api import ZenodoClient, ZenodoConfig
-from .core import (CitationStyle, PublicationMetadata,
-                   calculate_complexity_score, calculate_file_hash,
-                   create_academic_profile_data, create_github_release,
-                   create_publication_announcement, create_publication_package,
-                   create_repository_metadata, create_submission_checklist,
-                   extract_citations_from_markdown,
-                   extract_publication_metadata, generate_citation_apa,
-                   generate_citation_bibtex, generate_citation_mla,
-                   generate_citations_markdown, generate_doi_badge,
-                   generate_publication_metrics, generate_publication_summary,
-                   prepare_arxiv_submission, publish_to_zenodo, validate_doi,
-                   validate_publication_readiness)
+from .core import (
+    CitationStyle,
+    PublicationMetadata,
+    calculate_complexity_score,
+    calculate_file_hash,
+    create_academic_profile_data,
+    create_github_release,
+    create_publication_announcement,
+    create_publication_package,
+    create_repository_metadata,
+    create_submission_checklist,
+    extract_citations_from_markdown,
+    extract_publication_metadata,
+    generate_citation_apa,
+    generate_citation_bibtex,
+    generate_citation_mla,
+    generate_citations_markdown,
+    generate_doi_badge,
+    generate_publication_metrics,
+    generate_publication_summary,
+    prepare_arxiv_submission,
+    publish_to_zenodo,
+    validate_doi,
+    validate_publication_readiness,
+)
 
 __all__ = [
     # Classes

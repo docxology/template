@@ -1,10 +1,13 @@
 import pytest
 
-from infrastructure.llm.templates import (REVIEW_MIN_WORDS,
-                                          TRANSLATION_LANGUAGES,
-                                          LLMTemplateError,
-                                          ManuscriptTranslationAbstract,
-                                          SummarizeAbstract, get_template)
+from infrastructure.llm.templates import (
+    REVIEW_MIN_WORDS,
+    TRANSLATION_LANGUAGES,
+    LLMTemplateError,
+    ManuscriptTranslationAbstract,
+    SummarizeAbstract,
+    get_template,
+)
 
 
 class TestGetTemplate:
@@ -45,9 +48,7 @@ class TestManuscriptTranslationAbstract:
     def test_render_with_language(self):
         """Test template renders correctly with target language."""
         tmpl = ManuscriptTranslationAbstract()
-        result = tmpl.render(
-            text="Sample manuscript text", target_language="Chinese (Simplified)"
-        )
+        result = tmpl.render(text="Sample manuscript text", target_language="Chinese (Simplified)")
 
         assert "Sample manuscript text" in result
         assert "Chinese (Simplified)" in result

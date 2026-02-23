@@ -8,13 +8,24 @@ import json
 import pytest
 
 from infrastructure.reporting.executive_reporter import (
-    CodebaseMetrics, ExecutiveSummary, ManuscriptMetrics, OutputMetrics,
-    PipelineMetrics, ProjectMetrics, TestMetrics, collect_codebase_metrics,
-    collect_manuscript_metrics, collect_output_metrics,
-    collect_pipeline_metrics, collect_project_metrics, collect_test_metrics,
-    generate_aggregate_metrics, generate_comparative_tables,
+    CodebaseMetrics,
+    ExecutiveSummary,
+    ManuscriptMetrics,
+    OutputMetrics,
+    PipelineMetrics,
+    ProjectMetrics,
+    TestMetrics,
+    collect_codebase_metrics,
+    collect_manuscript_metrics,
+    collect_output_metrics,
+    collect_pipeline_metrics,
+    collect_project_metrics,
+    collect_test_metrics,
+    generate_aggregate_metrics,
+    generate_comparative_tables,
     generate_recommendations,
-    save_executive_summary)
+    save_executive_summary,
+)
 
 
 @pytest.fixture
@@ -47,23 +58,14 @@ def temp_src_dir(tmp_path):
 
     # Create test Python files
     (src_dir / "module1.py").write_text(
-        "class TestClass:\n"
-        "    def method1(self):\n"
-        "        pass\n"
-        "\n"
-        "def function1():\n"
-        "    pass\n"
+        "class TestClass:\n    def method1(self):\n        pass\n\ndef function1():\n    pass\n"
     )
 
-    (src_dir / "module2.py").write_text(
-        "# Comment\n" "\n" "def function2():\n" "    return 42\n"
-    )
+    (src_dir / "module2.py").write_text("# Comment\n\ndef function2():\n    return 42\n")
 
     scripts_dir = tmp_path / "scripts"
     scripts_dir.mkdir()
-    (scripts_dir / "script1.py").write_text(
-        "#!/usr/bin/env python3\n" "import sys\n" "print('test')\n"
-    )
+    (scripts_dir / "script1.py").write_text("#!/usr/bin/env python3\nimport sys\nprint('test')\n")
 
     return src_dir, scripts_dir
 
@@ -101,9 +103,7 @@ def temp_reports_dir(tmp_path):
         ],
     }
 
-    (reports_dir / "pipeline_report.json").write_text(
-        json.dumps(pipeline_report, indent=2)
-    )
+    (reports_dir / "pipeline_report.json").write_text(json.dumps(pipeline_report, indent=2))
 
     return reports_dir
 
@@ -274,9 +274,7 @@ class TestProjectMetrics:
         # Create minimal structure
         manuscript_dir = project_root / "manuscript"
         manuscript_dir.mkdir()
-        (manuscript_dir / "01_intro.md").write_text(
-            "# Test\n\nTest content with 5 words.\n"
-        )
+        (manuscript_dir / "01_intro.md").write_text("# Test\n\nTest content with 5 words.\n")
 
         src_dir = project_root / "src"
         src_dir.mkdir()
@@ -327,9 +325,7 @@ class TestAggregateMetrics:
             manuscript=ManuscriptMetrics(
                 total_words=1000, sections=4, equations=10, figures=5, references=20
             ),
-            codebase=CodebaseMetrics(
-                source_lines=500, methods=25, classes=5, scripts=3
-            ),
+            codebase=CodebaseMetrics(source_lines=500, methods=25, classes=5, scripts=3),
             tests=TestMetrics(
                 total_tests=100,
                 passed=100,
@@ -361,9 +357,7 @@ class TestAggregateMetrics:
             manuscript=ManuscriptMetrics(
                 total_words=800, sections=3, equations=8, figures=4, references=15
             ),
-            codebase=CodebaseMetrics(
-                source_lines=400, methods=20, classes=4, scripts=2
-            ),
+            codebase=CodebaseMetrics(source_lines=400, methods=20, classes=4, scripts=2),
             tests=TestMetrics(
                 total_tests=80,
                 passed=80,
@@ -430,9 +424,7 @@ class TestComparativeTables:
             name="project2",
             manuscript=ManuscriptMetrics(total_words=800, sections=3),
             codebase=CodebaseMetrics(),
-            tests=TestMetrics(
-                total_tests=80, passed=80, coverage_percent=92.0, execution_time=8.0
-            ),
+            tests=TestMetrics(total_tests=80, passed=80, coverage_percent=92.0, execution_time=8.0),
             outputs=OutputMetrics(pdf_files=4, pdf_size_mb=1.5, figures=4, slides=8),
             pipeline=PipelineMetrics(
                 total_duration=100.0, bottleneck_stage="render", bottleneck_percent=40.0
@@ -462,9 +454,7 @@ class TestRecommendations:
             name="good_project",
             manuscript=ManuscriptMetrics(total_words=2000),
             codebase=CodebaseMetrics(),
-            tests=TestMetrics(
-                total_tests=100, passed=100, failed=0, coverage_percent=95.0
-            ),
+            tests=TestMetrics(total_tests=100, passed=100, failed=0, coverage_percent=95.0),
             outputs=OutputMetrics(),
             pipeline=PipelineMetrics(bottleneck_percent=30.0),
         )
@@ -481,9 +471,7 @@ class TestRecommendations:
             name="low_coverage_project",
             manuscript=ManuscriptMetrics(total_words=2000),
             codebase=CodebaseMetrics(),
-            tests=TestMetrics(
-                total_tests=100, passed=100, failed=0, coverage_percent=75.0
-            ),
+            tests=TestMetrics(total_tests=100, passed=100, failed=0, coverage_percent=75.0),
             outputs=OutputMetrics(),
             pipeline=PipelineMetrics(),
         )
@@ -491,9 +479,7 @@ class TestRecommendations:
         recommendations = generate_recommendations([project])
 
         # Should recommend improving coverage
-        assert any(
-            "coverage" in rec.lower() and "90%" in rec for rec in recommendations
-        )
+        assert any("coverage" in rec.lower() and "90%" in rec for rec in recommendations)
 
     def test_generate_recommendations_failed_tests(self):
         """Test recommendations with failed tests."""
@@ -501,9 +487,7 @@ class TestRecommendations:
             name="failed_tests_project",
             manuscript=ManuscriptMetrics(total_words=2000),
             codebase=CodebaseMetrics(),
-            tests=TestMetrics(
-                total_tests=100, passed=90, failed=10, coverage_percent=95.0
-            ),
+            tests=TestMetrics(total_tests=100, passed=90, failed=10, coverage_percent=95.0),
             outputs=OutputMetrics(),
             pipeline=PipelineMetrics(),
         )

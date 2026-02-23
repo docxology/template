@@ -1,0 +1,194 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\section{Conclusions}\label{sec:conclusions}
+
+\begin{frame}{Summary of Contributions}
+\protect\phantomsection\label{summary-of-contributions}
+This paper introduced a systematic \(2 \times 2\) matrix framework for
+analyzing Active Inference's meta-level operation, organized along
+Data/Meta-Data and Cognitive/Meta-Cognitive dimensions. The four
+resulting quadrants provide a comprehensive taxonomy:
+
+\begin{enumerate}
+\item
+  \textbf{Quadrant 1 (Data-Cognitive):} Baseline EFE computation with
+  direct sensory processing, establishing the foundation for
+  pragmatic-epistemic balance through standard policy selection.
+\item
+  \textbf{Quadrant 2 (Meta-Data-Cognitive):} Extended EFE with meta-data
+  weighting and quality integration, demonstrating that incorporating
+  confidence scores and reliability metrics improves decision accuracy
+  from 85\% to 94\% under uncertain conditions.
+\item
+  \textbf{Quadrant 3 (Data-Meta-Cognitive):} Hierarchical EFE with
+  self-assessment and adaptive control, enabling agents to monitor
+  inference quality and switch strategies when confidence degrades.
+\item
+  \textbf{Quadrant 4 (Meta-Data-Meta-Cognitive):} Framework-level
+  optimization enabling cognitive architecture evolution, yielding a
+  23\% overall performance improvement through recursive self-analysis
+  of meta-cognitive parameters.
+\end{enumerate}
+
+Beyond the quadrant taxonomy, this work established three principal
+results. First, that Active Inference is meta-pragmatic---the
+specification of matrix \(C\) defines complex value landscapes that
+transcend scalar reward functions, making what matters a design variable
+rather than an external constraint. Second, that Active Inference is
+meta-epistemic---the specification of matrices \(A\), \(B\), and \(D\)
+determines epistemological boundaries, making what can be known an
+explicit modeling choice. Third, that these meta-level properties have
+direct implications for cognitive security and AI safety, with each
+quadrant presenting distinct attack surfaces and defense requirements.
+\end{frame}
+
+\begin{frame}{Computational Validation}
+\protect\phantomsection\label{computational-validation}
+The framework was validated through implementations yielding
+statistically significant results across all hypotheses: meta-data
+integration improves performance (Cohen's \(d = 1.05\)), meta-cognitive
+control enhances robustness (\(F(3,96) = 12.45\), \(p < 0.001\)), and
+framework optimization provides adaptive advantage (Cohen's
+\(d = 0.85\)). The performance regression model achieves \(R^2 = 0.87\),
+confirming that meta-level processing accounts for substantial variance
+in cognitive performance.
+\end{frame}
+
+\begin{frame}{Unified Framework}
+\protect\phantomsection\label{unified-framework}
+Active Inference, through its meta-level operation, provides a unified
+framework for understanding:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Perception as Inference:} Bayesian hypothesis testing under
+  generative model constraints
+\item
+  \textbf{Action as Free Energy Minimization:} Goal-directed behavior
+  shaped by preference priors
+\item
+  \textbf{Learning as Model Refinement:} Generative model adaptation
+  through experience
+\item
+  \textbf{Meta-Cognition as Self-Modeling:} Recursive cognitive
+  awareness enabling adaptive control
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Broader Vision}
+\protect\phantomsection\label{broader-vision}
+The capacity to specify epistemic frameworks (what can be known) and
+pragmatic landscapes (what matters) elevates Active Inference from a
+theory of cognition to a \emph{meta-theory}---a methodology for
+understanding how cognitive theories themselves are constructed,
+evaluated, and revised. This meta-theoretical status carries practical
+weight: for AI safety, it grounds value alignment in transparent,
+inspectable framework parameters rather than opaque reward signals; for
+cognitive security, it reveals attack surfaces and defense strategies
+that operate at the level of cognitive architecture rather than
+individual beliefs.
+
+Ultimately, the quadrant framework developed here suggests that
+intelligence is best understood as \emph{framework flexibility}: the
+capacity to modify the structures within which cognition operates. As
+Active Inference matures as both a theoretical and computational
+paradigm, the meta-level perspective offered here provides a foundation
+for understanding not just how agents think, but how the conditions of
+thought itself are specified, secured, and transformed. Realizing this
+promise will require the empirical, computational, and
+cross-disciplinary advances outlined in Section
+\ref{sec:future_directions}---work that we hope this framework helps to
+motivate and organize.
+\end{frame}
+
+\end{document}

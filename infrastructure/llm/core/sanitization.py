@@ -56,9 +56,7 @@ class InputSanitizer:
             "/": "&#x2F;",
         }
 
-    def sanitize_prompt(
-        self, prompt: str, context: Optional[Dict[str, Any]] = None
-    ) -> str:
+    def sanitize_prompt(self, prompt: str, context: Optional[Dict[str, Any]] = None) -> str:
         """Sanitize LLM prompt for security.
 
         Args:
@@ -123,9 +121,7 @@ class InputSanitizer:
 
         # Check file extension
         if allowed_extensions:
-            if resolved.suffix.lower() not in [
-                ext.lower() for ext in allowed_extensions
-            ]:
+            if resolved.suffix.lower() not in [ext.lower() for ext in allowed_extensions]:
                 raise SecurityError(f"File extension not allowed: {resolved.suffix}")
 
         # Check file size (prevent DoS)
@@ -193,9 +189,7 @@ class InputSanitizer:
     def _limit_length(self, text: str, max_length: int = 100000) -> str:
         """Limit text length to prevent resource exhaustion."""
         if len(text) > max_length:
-            logger.warning(
-                f"Text truncated from {len(text)} to {max_length} characters"
-            )
+            logger.warning(f"Text truncated from {len(text)} to {max_length} characters")
             return text[:max_length] + "...[truncated]"
         return text
 

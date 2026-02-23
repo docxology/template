@@ -13,29 +13,36 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Optional, TypedDict
 
+
 class AuthorConfig(TypedDict, total=False):
     name: str
     corresponding: bool
     orcid: str
     email: str
 
+
 class PaperConfig(TypedDict, total=False):
     title: str
 
+
 class PublicationConfig(TypedDict, total=False):
     doi: str
+
 
 class TranslationsConfig(TypedDict, total=False):
     enabled: bool
     languages: List[str]
 
+
 class ReviewsConfig(TypedDict, total=False):
     enabled: bool
     types: List[str]
 
+
 class LLMConfig(TypedDict, total=False):
     translations: TranslationsConfig
     reviews: ReviewsConfig
+
 
 class TestingConfig(TypedDict, total=False):
     max_test_failures: int
@@ -48,11 +55,13 @@ class TestingConfig(TypedDict, total=False):
 @dataclass(frozen=True)
 class ResolvedTestingConfig:
     """Immutable, fully-resolved testing configuration with defaults applied."""
+
     max_test_failures: int = 0
     max_infra_test_failures: int = 0
     max_project_test_failures: int = 0
     infra_coverage_threshold: int = 60
     project_coverage_threshold: int = 90
+
 
 class ManuscriptConfig(TypedDict, total=False):
     paper: PaperConfig
@@ -62,6 +71,7 @@ class ManuscriptConfig(TypedDict, total=False):
     testing: TestingConfig
     keywords: List[str]
     metadata: Dict[str, str]
+
 
 try:
     import yaml
@@ -237,9 +247,7 @@ def get_config_as_dict(repo_root: Path | str) -> Dict[str, str]:
     return result
 
 
-def get_config_as_env_vars(
-    repo_root: Path | str, respect_existing: bool = True
-) -> Dict[str, str]:
+def get_config_as_env_vars(repo_root: Path | str, respect_existing: bool = True) -> Dict[str, str]:
     """Get configuration as environment variables.
 
     Args:
@@ -277,9 +285,7 @@ def find_config_file(repo_root: Path | str) -> Optional[Path]:
     return None
 
 
-def get_translation_languages(
-    repo_root: Path | str, project_name: str = "project"
-) -> List[str]:
+def get_translation_languages(repo_root: Path | str, project_name: str = "project") -> List[str]:
     """Get list of enabled translation languages from config.
 
     Reads the llm.translations section from config.yaml and returns
@@ -448,18 +454,14 @@ def get_testing_config(repo_root: Path | str) -> TestingConfig:
     # Read max_infra_test_failures (infrastructure-specific)
     if "max_infra_test_failures" in testing_config:
         try:
-            result["max_infra_test_failures"] = int(
-                testing_config["max_infra_test_failures"]
-            )
+            result["max_infra_test_failures"] = int(testing_config["max_infra_test_failures"])
         except (ValueError, TypeError):
             pass  # Invalid value, skip
 
     # Read max_project_test_failures (project-specific)
     if "max_project_test_failures" in testing_config:
         try:
-            result["max_project_test_failures"] = int(
-                testing_config["max_project_test_failures"]
-            )
+            result["max_project_test_failures"] = int(testing_config["max_project_test_failures"])
         except (ValueError, TypeError):
             pass  # Invalid value, skip
 
@@ -467,9 +469,7 @@ def get_testing_config(repo_root: Path | str) -> TestingConfig:
     if "infra_coverage_threshold" not in result:
         if "infra_coverage_threshold" in testing_config:
             try:
-                result["infra_coverage_threshold"] = int(
-                    testing_config["infra_coverage_threshold"]
-                )
+                result["infra_coverage_threshold"] = int(testing_config["infra_coverage_threshold"])
             except (ValueError, TypeError):
                 pass
 
@@ -488,4 +488,3 @@ def get_testing_config(repo_root: Path | str) -> TestingConfig:
             result[key] = default_val
 
     return result  # type: ignore[return-value]  # dict matches TestingConfig shape
-

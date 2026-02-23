@@ -5,6 +5,7 @@ This script generates pipeline reports (JSON, HTML, Markdown) for a project
 that has completed the pipeline stages. It can be called from run.sh or
 manually.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -16,7 +17,10 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from infrastructure.core.logging_utils import get_logger
-from infrastructure.reporting.pipeline_reporter import generate_pipeline_report, save_pipeline_report
+from infrastructure.reporting.pipeline_reporter import (
+    generate_pipeline_report,
+    save_pipeline_report,
+)
 
 logger = get_logger(__name__)
 
@@ -24,8 +28,10 @@ logger = get_logger(__name__)
 def main() -> int:
     """Generate pipeline reports for a project."""
     parser = argparse.ArgumentParser(description="Generate pipeline reports")
-    parser.add_argument('--project', required=True, help='Project name')
-    parser.add_argument('--total-duration', type=float, default=0.0, help='Total pipeline duration in seconds')
+    parser.add_argument("--project", required=True, help="Project name")
+    parser.add_argument(
+        "--total-duration", type=float, default=0.0, help="Total pipeline duration in seconds"
+    )
     args = parser.parse_args()
 
     project_name = args.project
@@ -57,8 +63,9 @@ def main() -> int:
 
         # Collect performance metrics
         performance_metrics = {
-            'total_duration': total_duration,
-            'average_stage_duration': sum(r['duration'] for r in stage_results) / len(stage_results),
+            "total_duration": total_duration,
+            "average_stage_duration": sum(r["duration"] for r in stage_results)
+            / len(stage_results),
         }
 
         # Generate pipeline report
@@ -71,8 +78,10 @@ def main() -> int:
         )
 
         # Save report in multiple formats
-        saved_files = save_pipeline_report(report, output_dir, formats=['json', 'html', 'markdown'])
-        logger.info(f"Pipeline reports saved: {', '.join(str(p.name) for p in saved_files.values())}")
+        saved_files = save_pipeline_report(report, output_dir, formats=["json", "html", "markdown"])
+        logger.info(
+            f"Pipeline reports saved: {', '.join(str(p.name) for p in saved_files.values())}"
+        )
 
         return 0
 

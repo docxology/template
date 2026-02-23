@@ -283,9 +283,7 @@ def gradient_descent(
         if grad_norm < tolerance:
             converged = True
             if LOGGING_AVAILABLE and logger:
-                logger.debug(
-                    f"Converged at iteration {iteration} with ||∇f||={grad_norm:.2e}"
-                )
+                logger.debug(f"Converged at iteration {iteration} with ||∇f||={grad_norm:.2e}")
             break
 
         # Update: x = x - step_size * ∇f(x)
@@ -301,11 +299,11 @@ def gradient_descent(
     if LOGGING_AVAILABLE and logger:
         if converged:
             logger.info(
-                f"Gradient descent converged in {iteration} iterations, final f(x)={final_obj_value:.6f}"
+                f"Gradient descent converged in {iteration} iterations, final f(x)={final_obj_value:.6f}"  # noqa: E501
             )
         else:
             logger.warning(
-                f"Gradient descent did not converge within {max_iterations} iterations, final f(x)={final_obj_value:.6f}"
+                f"Gradient descent did not converge within {max_iterations} iterations, final f(x)={final_obj_value:.6f}"  # noqa: E501
             )
 
     return OptimizationResult(

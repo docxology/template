@@ -113,9 +113,7 @@ def ollama_test_server():
                 }
             )
 
-    server.expect_request("/api/chat", method="POST").respond_with_handler(
-        handle_chat_request
-    )
+    server.expect_request("/api/chat", method="POST").respond_with_handler(handle_chat_request)
 
     # Mock /api/tags endpoint (model list)
     server.expect_request("/api/tags").respond_with_json(
@@ -127,9 +125,10 @@ def ollama_test_server():
         }
     )
 
-    yield server
-
-    server.stop()
+    try:
+        yield server
+    finally:
+        server.stop()
 
 
 @pytest.fixture

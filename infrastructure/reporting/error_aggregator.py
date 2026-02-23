@@ -128,7 +128,7 @@ class ErrorAggregator:
         fixes = []
 
         # Group errors by type and provide fixes
-        error_types = {}
+        error_types = {}  # type: ignore
         for error in self.errors:
             if error.type not in error_types:
                 error_types[error.type] = []
@@ -142,7 +142,7 @@ class ErrorAggregator:
                         "issue": f"{len(errors)} test failure(s)",
                         "actions": [
                             "Review test output for failure details",
-                            "Run failing tests individually: pytest path/to/test_file.py::test_name",
+                            "Run failing tests individually: pytest path/to/test_file.py::test_name",  # noqa: E501
                             "Check test data and fixtures",
                             "Review recent code changes",
                         ],
@@ -255,9 +255,7 @@ class ErrorAggregator:
             lines.append("")
             for fix in summary["actionable_fixes"]:
                 priority_emoji = "🔴" if fix["priority"] == "high" else "🟡"
-                lines.append(
-                    f"### {priority_emoji} {fix['issue']} ({fix['priority']} priority)"
-                )
+                lines.append(f"### {priority_emoji} {fix['issue']} ({fix['priority']} priority)")
                 lines.append("")
                 lines.append("**Actions:**")
                 for i, action in enumerate(fix["actions"], 1):

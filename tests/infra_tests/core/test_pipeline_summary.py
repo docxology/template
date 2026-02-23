@@ -9,9 +9,11 @@ from pathlib import Path
 
 from infrastructure.core.file_inventory import FileInventoryEntry
 from infrastructure.core.pipeline import PipelineStageResult
-from infrastructure.core.pipeline_summary import (PipelineSummary,
-                                                  PipelineSummaryGenerator,
-                                                  generate_pipeline_summary)
+from infrastructure.core.pipeline_summary import (
+    PipelineSummary,
+    PipelineSummaryGenerator,
+    generate_pipeline_summary,
+)
 
 
 class TestPipelineSummary:
@@ -64,9 +66,7 @@ class TestPipelineSummaryGenerator:
             PipelineStageResult(1, "Setup", True, 2.0),
             PipelineStageResult(2, "Tests", True, 15.0),
             PipelineStageResult(3, "Analysis", True, 8.0),
-            PipelineStageResult(
-                4, "Render", False, 5.0, exit_code=1, error_message="Failed"
-            ),
+            PipelineStageResult(4, "Render", False, 5.0, exit_code=1, error_message="Failed"),
         ]
 
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -87,9 +87,7 @@ class TestPipelineSummaryGenerator:
             assert summary.total_duration == 30.0
             assert len(summary.stage_results) == 4
             assert summary.slowest_stage.stage_name == "Tests"  # 15.0s
-            assert (
-                summary.fastest_stage.stage_name == "Analysis"
-            )  # 8.0s (fastest among stages 2-4)
+            assert summary.fastest_stage.stage_name == "Analysis"  # 8.0s (fastest among stages 2-4)
             assert len(summary.failed_stages) == 1
             assert summary.failed_stages[0].stage_name == "Render"
             assert summary.log_file.exists()  # Should be the temp log file we created
@@ -323,12 +321,8 @@ class TestConvenienceFunction:
         """Test generate_pipeline_summary convenience function."""
         # Create real pipeline stage results (not checkpoint StageResult)
         stage_results = [
-            PipelineStageResult(
-                stage_num=1, stage_name="Setup", success=True, duration=2.0
-            ),
-            PipelineStageResult(
-                stage_num=2, stage_name="Tests", success=True, duration=5.0
-            ),
+            PipelineStageResult(stage_num=1, stage_name="Setup", success=True, duration=2.0),
+            PipelineStageResult(stage_num=2, stage_name="Tests", success=True, duration=5.0),
         ]
 
         with tempfile.TemporaryDirectory() as tmp_dir:

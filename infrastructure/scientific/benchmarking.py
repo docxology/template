@@ -87,9 +87,7 @@ def benchmark_function(
 
     avg_execution_time = np.mean(execution_times) if execution_times else 0.0
     valid_memory = [
-        m
-        for m in memory_usages
-        if m is not None and not (isinstance(m, float) and np.isnan(m))
+        m for m in memory_usages if m is not None and not (isinstance(m, float) and np.isnan(m))
     ]
     avg_memory_usage = np.mean(valid_memory) if valid_memory else None
 
@@ -100,7 +98,7 @@ def benchmark_function(
 
     return BenchmarkResult(
         function_name=func.__name__,
-        execution_time=avg_execution_time,
+        execution_time=avg_execution_time,  # type: ignore
         memory_usage=avg_memory_usage,
         iterations=iterations,
         parameters={"input_count": len(test_inputs)},
@@ -123,9 +121,7 @@ def generate_performance_report(benchmark_results: List[BenchmarkResult]) -> str
 
     # Calculate summary statistics
     execution_times = [r.execution_time for r in benchmark_results]
-    memory_usages = [
-        r.memory_usage for r in benchmark_results if r.memory_usage is not None
-    ]
+    memory_usages = [r.memory_usage for r in benchmark_results if r.memory_usage is not None]
 
     report = []
     report.append("# Performance Analysis Report")
@@ -145,19 +141,13 @@ def generate_performance_report(benchmark_results: List[BenchmarkResult]) -> str
     report.append("")
 
     report.append("## Detailed Results")
-    report.append(
-        "| Function | Exec Time (s) | Memory (MB) | Iterations | Parameters |"
-    )
-    report.append(
-        "|----------|---------------|-------------|------------|------------|"
-    )
+    report.append("| Function | Exec Time (s) | Memory (MB) | Iterations | Parameters |")
+    report.append("|----------|---------------|-------------|------------|------------|")
 
-    for result in sorted(
-        benchmark_results, key=lambda x: x.execution_time, reverse=True
-    ):
+    for result in sorted(benchmark_results, key=lambda x: x.execution_time, reverse=True):
         memory_str = f"{result.memory_usage:.1f}" if result.memory_usage else "N/A"
         report.append(
-            f"| `{result.function_name}` | {result.execution_time:.6f} | {memory_str} | {result.iterations} | {result.parameters} |"
+            f"| `{result.function_name}` | {result.execution_time:.6f} | {memory_str} | {result.iterations} | {result.parameters} |"  # noqa: E501
         )
 
     report.append("")
@@ -169,17 +159,15 @@ def generate_performance_report(benchmark_results: List[BenchmarkResult]) -> str
         report.append("### Performance Optimization")
         for func in slow_functions[:3]:  # Top 3 slowest
             report.append(
-                f"- Consider optimizing `{func.function_name}` (currently {func.execution_time:.6f}s)"
+                f"- Consider optimizing `{func.function_name}` (currently {func.execution_time:.6f}s)"  # noqa: E501
             )
 
-    memory_intensive = [
-        r for r in benchmark_results if r.memory_usage and r.memory_usage > 100
-    ]
+    memory_intensive = [r for r in benchmark_results if r.memory_usage and r.memory_usage > 100]
     if memory_intensive:
         report.append("### Memory Optimization")
         for func in memory_intensive[:3]:  # Top 3 memory intensive
             report.append(
-                f"- Review memory usage in `{func.function_name}` (currently {func.memory_usage:.1f}MB)"
+                f"- Review memory usage in `{func.function_name}` (currently {func.memory_usage:.1f}MB)"  # noqa: E501
             )
 
     report.append("")

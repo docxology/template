@@ -15,8 +15,7 @@ from typing import Dict, List
 
 from infrastructure.core.logging_utils import get_logger, log_operation
 from infrastructure.core.errors import PROJECT_EXCEPTION, PROJECT_FAILED
-from infrastructure.core.pipeline import (PipelineConfig, PipelineExecutor,
-                                          PipelineStageResult)
+from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor, PipelineStageResult
 from infrastructure.project.discovery import ProjectInfo
 
 logger = get_logger(__name__)
@@ -85,9 +84,7 @@ class MultiProjectOrchestrator:
         Returns:
             Multi-project execution result
         """
-        logger.info(
-            f"Executing full pipeline (no infra) for {len(self.config.projects)} projects"
-        )
+        logger.info(f"Executing full pipeline (no infra) for {len(self.config.projects)} projects")
 
         return self._execute_multi_project_pipeline(
             run_infra_tests=False, run_llm=True, pipeline_method="execute_full_pipeline"
@@ -99,9 +96,7 @@ class MultiProjectOrchestrator:
         Returns:
             Multi-project execution result
         """
-        logger.info(
-            f"Executing core pipeline (no infra) for {len(self.config.projects)} projects"
-        )
+        logger.info(f"Executing core pipeline (no infra) for {len(self.config.projects)} projects")
 
         return self._execute_multi_project_pipeline(
             run_infra_tests=False,
@@ -129,9 +124,7 @@ class MultiProjectOrchestrator:
         infra_duration = 0.0
         if run_infra_tests:
             if not self._run_infrastructure_tests_once():
-                logger.error(
-                    "Infrastructure tests failed - aborting multi-project execution"
-                )
+                logger.error("Infrastructure tests failed - aborting multi-project execution")
                 return MultiProjectResult(
                     project_results={},
                     infra_test_duration=infra_duration,
@@ -150,7 +143,7 @@ class MultiProjectOrchestrator:
 
         for i, project in enumerate(self.config.projects, 1):
             # Use qualified_name to include program directory for nested projects
-            # e.g., 'cognitive_integrity/cogsec_multiagent_1_theory' instead of 'cogsec_multiagent_1_theory'
+            # e.g., 'cognitive_integrity/cogsec_multiagent_1_theory' instead of 'cogsec_multiagent_1_theory'  # noqa: E501
             project_name = project.qualified_name
             logger.info(f"Project {i}/{len(self.config.projects)}: {project_name}")
 
@@ -160,7 +153,7 @@ class MultiProjectOrchestrator:
                     pipeline_config = PipelineConfig(
                         project_name=project_name,
                         repo_root=self.config.repo_root,
-                        skip_infra=True,  # Always skip infra tests for individual projects in multi-project mode
+                        skip_infra=True,  # Always skip infra tests for individual projects in multi-project mode  # noqa: E501
                         skip_llm=not run_llm,
                         total_stages=10 if run_llm else 8,
                     )
@@ -176,11 +169,11 @@ class MultiProjectOrchestrator:
                     try:
                         from infrastructure.reporting import (
                             collect_output_statistics,
-                            generate_pipeline_report, save_pipeline_report)
-
-                        output_dir = (
-                            self.config.repo_root / "projects" / project_name / "output"
+                            generate_pipeline_report,
+                            save_pipeline_report,
                         )
+
+                        output_dir = self.config.repo_root / "projects" / project_name / "output"
                         reports_dir = output_dir / "reports"
                         reports_dir.mkdir(parents=True, exist_ok=True)
 
@@ -201,9 +194,7 @@ class MultiProjectOrchestrator:
                                     ),
                                     "duration": r.duration,
                                     "error_message": (
-                                        r.error_message
-                                        if hasattr(r, "error_message")
-                                        else ""
+                                        r.error_message if hasattr(r, "error_message") else ""
                                     ),
                                 }
                                 for r in results
@@ -232,9 +223,7 @@ class MultiProjectOrchestrator:
                     all_success = all(r.success for r in results)
                     if all_success:
                         successful_projects += 1
-                        logger.info(
-                            f"✅ Project '{project_name}' completed successfully"
-                        )
+                        logger.info(f"✅ Project '{project_name}' completed successfully")
                     else:
                         failed_projects += 1
                         logger.error(PROJECT_FAILED.format(project_name=project_name))
@@ -252,7 +241,7 @@ class MultiProjectOrchestrator:
         total_duration = time.time() - start_time
 
         logger.info(
-            f"Multi-project execution completed: {successful_projects} successful, {failed_projects} failed"
+            f"Multi-project execution completed: {successful_projects} successful, {failed_projects} failed"  # noqa: E501
         )
 
         return MultiProjectResult(
@@ -272,7 +261,7 @@ class MultiProjectOrchestrator:
         logger.info("Running infrastructure tests once for all projects...")
 
         try:
-            # Use an existing project name so reports can be written under projects/{name}/output/reports/
+            # Use an existing project name so reports can be written under projects/{name}/output/reports/  # noqa: E501
             # (the infrastructure test suite itself does not depend on project code).
             # Use qualified_name for proper nested project path resolution.
             fallback_project = (
@@ -303,9 +292,7 @@ class MultiProjectOrchestrator:
             logger.error(f"❌ Infrastructure tests failed with exception: {e}")
             return False
 
-    def _run_executive_reporting(
-        self, results: Dict[str, List[PipelineStageResult]]
-    ) -> None:
+    def _run_executive_reporting(self, results: Dict[str, List[PipelineStageResult]]) -> None:
         """Generate cross-project executive report.
 
         Args:
@@ -338,9 +325,7 @@ class MultiProjectOrchestrator:
 
         except ImportError as e:
             logger.warning(f"Executive reporting not available: {e}")
-            logger.debug(
-                "  infrastructure.reporting module may not be properly configured"
-            )
+            logger.debug("  infrastructure.reporting module may not be properly configured")
         except Exception as e:
             logger.error(f"Executive reporting failed: {e}", exc_info=True)
             logger.info("  Continuing without executive report (non-critical)")

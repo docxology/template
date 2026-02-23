@@ -28,16 +28,10 @@ class TestCheckFileReferenceEdgeCases:
         outside_target = Path("/tmp/outside_file.txt")
 
         # Test with a path that resolves outside the repo
-        result, msg = check_links.check_file_reference(
-            str(outside_target), source, tmp_path
-        )
+        result, msg = check_links.check_file_reference(str(outside_target), source, tmp_path)
 
         # Should fail because path resolves outside repository
-        assert (
-            result is False
-            or "outside" in msg.lower()
-            or "does not exist" in msg.lower()
-        )
+        assert result is False or "outside" in msg.lower() or "does not exist" in msg.lower()
 
     def test_path_with_many_parent_refs(self, tmp_path):
         """Test path with multiple ../ references going outside repo."""
@@ -61,7 +55,9 @@ class TestCheckFileReferenceEdgeCases:
 
         # Test with a path that might cause issues
         result, msg = check_links.check_file_reference(
-            "\x00invalid\x00path", source, tmp_path  # Null bytes should cause issues
+            "\x00invalid\x00path",
+            source,
+            tmp_path,  # Null bytes should cause issues
         )
 
         # Should handle exception gracefully
@@ -179,9 +175,7 @@ class TestMainFunction:
         assert file_refs[0]["target"] == "nonexistent_file.md"
 
         # Check file reference - should fail
-        result, msg = check_links.check_file_reference(
-            "nonexistent_file.md", md_file, tmp_path
-        )
+        result, msg = check_links.check_file_reference("nonexistent_file.md", md_file, tmp_path)
         assert result is False
 
 
@@ -299,18 +293,15 @@ class TestMainFunctionReporting:
             for md_file in md_files:
                 try:
                     content = md_file.read_text(encoding="utf-8")
-                    internal_links, external_links, file_refs = (
-                        check_links.extract_links(content, md_file)
+                    internal_links, external_links, file_refs = check_links.extract_links(
+                        content, md_file
                     )
 
                     # Check internal links
                     for link in internal_links:
                         target = link["target"].lstrip("#")
                         file_key = str(md_file.relative_to(repo_root))
-                        if (
-                            file_key in all_headings
-                            and target not in all_headings[file_key]
-                        ):
+                        if file_key in all_headings and target not in all_headings[file_key]:
                             broken_links.append(
                                 {
                                     "file": file_key,
@@ -347,18 +338,14 @@ class TestMainFunctionReporting:
             if broken_links:
                 print(f"\nFound {len(broken_links)} broken anchor links:")
                 for link in broken_links[:10]:
-                    print(
-                        f"  {link['file']}:{link['line']} - {link['target']} ({link['issue']})"
-                    )
+                    print(f"  {link['file']}:{link['line']} - {link['target']} ({link['issue']})")
                 if len(broken_links) > 10:
                     print(f"  ... and {len(broken_links) - 10} more")
 
             if broken_file_refs:
                 print(f"\nFound {len(broken_file_refs)} broken file references:")
                 for ref in broken_file_refs[:10]:
-                    print(
-                        f"  {ref['file']}:{ref['line']} - {ref['target']} ({ref['issue']})"
-                    )
+                    print(f"  {ref['file']}:{ref['line']} - {ref['target']} ({ref['issue']})")
                 if len(broken_file_refs) > 10:
                     print(f"  ... and {len(broken_file_refs) - 10} more")
 
@@ -373,8 +360,7 @@ class TestMainFunctionReporting:
 
         # Should report the broken anchor
         assert (
-            "broken anchor links" in captured.out.lower()
-            or "nonexistent" in captured.out.lower()
+            "broken anchor links" in captured.out.lower() or "nonexistent" in captured.out.lower()
         )
         assert exit_code == 1
 
@@ -395,9 +381,7 @@ class TestMainFunctionReporting:
 
         assert len(file_refs) == 1
 
-        exists, msg = check_links.check_file_reference(
-            file_refs[0]["target"], md_file, tmp_path
-        )
+        exists, msg = check_links.check_file_reference(file_refs[0]["target"], md_file, tmp_path)
         assert exists is False
         assert "does not exist" in msg.lower()
 
@@ -419,7 +403,5 @@ class TestMainFunctionReporting:
         internal, external, file_refs = check_links.extract_links(content, md_file)
 
         for ref in file_refs:
-            exists, msg = check_links.check_file_reference(
-                ref["target"], md_file, tmp_path
-            )
+            exists, msg = check_links.check_file_reference(ref["target"], md_file, tmp_path)
             assert exists is True

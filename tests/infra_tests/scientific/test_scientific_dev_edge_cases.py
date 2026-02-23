@@ -4,13 +4,14 @@ This test suite validates edge cases including NaN handling, exception
 handling, and complex function signatures.
 """
 
-
-
-from infrastructure.scientific import (BenchmarkResult, StabilityTest,
-                                       benchmark_function,
-                                       check_numerical_stability,
-                                       generate_scientific_documentation,
-                                       validate_scientific_implementation)
+from infrastructure.scientific import (
+    BenchmarkResult,
+    StabilityTest,
+    benchmark_function,
+    check_numerical_stability,
+    generate_scientific_documentation,
+    validate_scientific_implementation,
+)
 
 
 class TestScientificDevEdgeCases:
@@ -60,9 +61,7 @@ class TestScientificDevEdgeCases:
     def test_generate_scientific_documentation_complex_signature(self):
         """Test documentation generation with complex function signature."""
 
-        def complex_function(
-            x: float, y: int = 1, *args, z: str = "default", **kwargs
-        ) -> tuple:
+        def complex_function(x: float, y: int = 1, *args, z: str = "default", **kwargs) -> tuple:
             """Complex function with many parameters.
 
             Args:

@@ -15,14 +15,14 @@
 
 [project]
 name = "research-project-template"
-version = "2.0.0"
+version = "3.0.0"
 description = "A comprehensive template for research projects with test-driven development, automated PDF generation, and professional documentation structure"
 authors = [{ name = "Research Template Team" }]
 readme = "README.md"
 requires-python = ">=3.10"
 keywords = ["research", "template", "academic", "scientific", "documentation", "pdf-generation", "test-driven-development"]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Science/Research",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: Apache Software License",
@@ -180,7 +180,6 @@ line-length = 100
 [tool.ruff.lint]
 select = ["E", "F"]
 ignore = [
-    "E501",  # Line too long — not enforced yet (476 occurrences)
     "E741",  # Allow short math variable names in scientific code (l, I, O)
 ]
 
@@ -188,9 +187,25 @@ ignore = [
 "infrastructure/core/logging_utils.py" = ["E402"]  # Conditional imports after setup
 "infrastructure/publishing/publish_cli.py" = ["E402"]  # sys.path manipulation before imports
 "infrastructure/rendering/render_all_cli.py" = ["E402"]  # sys.path manipulation before imports
-"scripts/*" = ["E402"]  # All scripts use sys.path setup before infrastructure imports
+"scripts/*" = ["E402", "E501"]  # sys.path before imports; docstring line length
 "tests/*" = ["E712", "E402"]  # Allow == True/False assertions; conditional test imports
 "__init__.py" = ["F401"]  # Allow re-exports in __init__ files
+# E501 in docstrings/comments (ruff format handles code structure line length)
+"infrastructure/core/checkpoint.py" = ["E501"]
+"infrastructure/core/errors.py" = ["E501"]
+"infrastructure/core/exceptions.py" = ["E501"]
+"infrastructure/core/file_operations.py" = ["E501"]
+"infrastructure/core/pipeline.py" = ["E501"]
+"infrastructure/llm/*" = ["E501"]
+"infrastructure/project/discovery.py" = ["E501"]
+"infrastructure/publishing/citations.py" = ["E501"]
+"infrastructure/publishing/core.py" = ["E501"]
+"infrastructure/rendering/slides_renderer.py" = ["E501"]
+"infrastructure/reporting/*" = ["E501"]
+"infrastructure/scientific/templates.py" = ["E501"]
+"infrastructure/validation/markdown_validator.py" = ["E501"]
+"infrastructure/validation/output_validator.py" = ["E501"]
+"projects/*/src/**" = ["E501"]
 
 # ============================================================================
 # mypy Type Checking Configuration (v2.7.0)
@@ -214,4 +229,13 @@ disallow_untyped_defs = true
 
 [[tool.mypy.overrides]]
 module = "infrastructure.core.exceptions"
+disallow_untyped_defs = true
+
+# v2.13.0: Strict overrides for validation & rendering packages
+[[tool.mypy.overrides]]
+module = "infrastructure.validation.*"
+disallow_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = "infrastructure.rendering.*"
 disallow_untyped_defs = true

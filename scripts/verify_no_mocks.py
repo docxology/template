@@ -8,6 +8,7 @@ Exit codes:
 - 0: No mock usage found (success)
 - 1: Mock usage detected (failure)
 """
+
 from __future__ import annotations
 
 import sys
@@ -28,7 +29,7 @@ def main() -> int:
     tests_dir = repo_root / "tests"
 
     log_header("🔍 Verifying No Mocks Policy compliance...", logger)
-    
+
     if not tests_dir.exists():
         logger.warning(f"Tests directory not found at {tests_dir}")
         return 0

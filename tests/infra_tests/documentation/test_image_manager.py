@@ -1,7 +1,5 @@
 """Comprehensive tests for src/image_manager.py to ensure 100% coverage."""
 
-
-
 from infrastructure.documentation.figure_manager import FigureManager
 from infrastructure.documentation.image_manager import ImageManager
 
@@ -136,9 +134,7 @@ class TestImageManager:
         )
 
         markdown_file = tmp_path / "test.md"
-        markdown_file.write_text(
-            "# Section 1\n\nContent.\n\n## Section 2\n\nMore content."
-        )
+        markdown_file.write_text("# Section 1\n\nContent.\n\n## Section 2\n\nMore content.")
         result = manager.insert_figure(
             markdown_file, "fig:test", section="Section 1", position="after_section"
         )
@@ -172,9 +168,7 @@ class TestImageManager:
         )
 
         markdown_file = tmp_path / "test.md"
-        markdown_file.write_text(
-            "# Section 1\n\nContent.\n\n## Section 2\n\nMore content."
-        )
+        markdown_file.write_text("# Section 1\n\nContent.\n\n## Section 2\n\nMore content.")
         result = manager.insert_figure(
             markdown_file, "fig:test", section="Section 2", position="before_section"
         )
@@ -271,9 +265,7 @@ class TestImageManager:
 
         markdown_file = tmp_path / "test.md"
         markdown_file.write_text("# Test\n\nContent.")
-        result = manager.insert_reference(
-            markdown_file, "fig:test", text="See the figure"
-        )
+        result = manager.insert_reference(markdown_file, "fig:test", text="See the figure")
         assert result is True
         content = markdown_file.read_text()
         assert "See the figure (see Figure \\ref{fig:test})" in content
@@ -301,11 +293,7 @@ class TestImageManager:
 
         markdown_file = tmp_path / "test.md"
         markdown_file.write_text(
-            "# Test\n\n"
-            "\\begin{figure}[h]\n"
-            "\\label{fig:test}\n"
-            "\\end{figure}\n\n"
-            "Some text here."
+            "# Test\n\n\\begin{figure}[h]\n\\label{fig:test}\n\\end{figure}\n\nSome text here."
         )
         result = manager.insert_reference(markdown_file, "fig:test")
         assert result is True
@@ -320,9 +308,7 @@ class TestImageManager:
         )
 
         markdown_file = tmp_path / "test.md"
-        markdown_file.write_text(
-            "# Test\n\n" "\\begin{figure}[h]\n" "\\label{fig:test}\n" "\\end{figure}"
-        )
+        markdown_file.write_text("# Test\n\n\\begin{figure}[h]\n\\label{fig:test}\n\\end{figure}")
         result = manager.insert_reference(markdown_file, "fig:test")
         assert result is True
         content = markdown_file.read_text()
@@ -376,10 +362,7 @@ class TestImageManager:
         manager = ImageManager()
         markdown_file = tmp_path / "test.md"
         markdown_file.write_text(
-            "# Test\n\n"
-            "\\begin{figure}[h]\n"
-            "\\label{fig:unregistered}\n"
-            "\\end{figure}\n"
+            "# Test\n\n\\begin{figure}[h]\n\\label{fig:unregistered}\n\\end{figure}\n"
         )
         errors = manager.validate_figures(markdown_file)
         # Should have error for unregistered label

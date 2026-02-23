@@ -12,8 +12,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Optional
 
-from infrastructure.core.file_inventory import (FileInventoryEntry,
-                                                FileInventoryManager)
+from infrastructure.core.file_inventory import FileInventoryEntry, FileInventoryManager
 from infrastructure.core.logging_utils import format_duration, get_logger
 from infrastructure.core.pipeline import PipelineStageResult
 
@@ -119,17 +118,13 @@ class PipelineSummaryGenerator:
             log_file_final = self._get_final_log_path(summary.log_file)
             lines.append(f"Full pipeline log: {summary.log_file}")
             if str(summary.log_file) != str(log_file_final):
-                lines.append(
-                    f"  (Will be available at: {log_file_final} after copy stage)"
-                )
+                lines.append(f"  (Will be available at: {log_file_final} after copy stage)")
 
         lines.append("")
         lines.append("Stage Results:")
 
         # Stage results
-        executed_stages = [
-            r for r in summary.stage_results if r.success or r.exit_code != 0
-        ]
+        executed_stages = [r for r in summary.stage_results if r.success or r.exit_code != 0]
         total_stage_time = sum(r.duration for r in executed_stages)
 
         for result in summary.stage_results:
@@ -147,17 +142,15 @@ class PipelineSummaryGenerator:
             lines.append(f"  Average Stage Time: {avg_time:.1f}s")
 
         if summary.slowest_stage:
-            slowest_pct = (
-                summary.slowest_stage.duration * 100
-            ) / summary.total_duration
+            slowest_pct = (summary.slowest_stage.duration * 100) / summary.total_duration
             lines.append(
-                f"  Slowest Stage: Stage {summary.slowest_stage.stage_num} - {summary.slowest_stage.stage_name} "
+                f"  Slowest Stage: Stage {summary.slowest_stage.stage_num} - {summary.slowest_stage.stage_name} "  # noqa: E501
                 f"({format_duration(summary.slowest_stage.duration)}, {slowest_pct:.0f}%)"
             )
 
         if summary.fastest_stage:
             lines.append(
-                f"  Fastest Stage: Stage {summary.fastest_stage.stage_num} - {summary.fastest_stage.stage_name} "
+                f"  Fastest Stage: Stage {summary.fastest_stage.stage_num} - {summary.fastest_stage.stage_name} "  # noqa: E501
                 f"({format_duration(summary.fastest_stage.duration)})"
             )
 
@@ -176,7 +169,7 @@ class PipelineSummaryGenerator:
                 project_name = self._extract_project_name_from_path(base_dir)
                 if project_name:
                     lines.append(
-                        f"Note: Files are also available in projects/{project_name}/output/ during development"
+                        f"Note: Files are also available in projects/{project_name}/output/ during development"  # noqa: E501
                     )
             else:
                 lines.append("Note: Files will be copied to output/ during copy stage")
@@ -232,9 +225,7 @@ class PipelineSummaryGenerator:
             "performance": {
                 "slowest_stage": self._stage_result_to_dict(summary.slowest_stage),
                 "fastest_stage": self._stage_result_to_dict(summary.fastest_stage),
-                "failed_stages": [
-                    self._stage_result_to_dict(r) for r in summary.failed_stages
-                ],
+                "failed_stages": [self._stage_result_to_dict(r) for r in summary.failed_stages],
             },
             "files": {
                 "count": len(summary.inventory),
@@ -293,9 +284,7 @@ class PipelineSummaryGenerator:
             )
 
             html_parts.append(f"<li class='{css_class}'>")
-            html_parts.append(
-                f"  {status_icon} Stage {result.stage_num}: {result.stage_name} "
-            )
+            html_parts.append(f"  {status_icon} Stage {result.stage_num}: {result.stage_name} ")
             html_parts.append(f"  ({duration_formatted}, {percentage:.0f}%)")
             if result.error_message:
                 html_parts.append(f"  <br><em>Error: {result.error_message}</em>")
@@ -305,21 +294,15 @@ class PipelineSummaryGenerator:
 
         html_parts.append("<h3>Performance Metrics</h3>")
         html_parts.append("<ul class='performance-metrics'>")
-        html_parts.append(
-            f"<li>Total Execution Time: {summary.total_duration:.1f}s</li>"
-        )
+        html_parts.append(f"<li>Total Execution Time: {summary.total_duration:.1f}s</li>")
 
-        executed_stages = [
-            r for r in summary.stage_results if r.success or r.exit_code != 0
-        ]
+        executed_stages = [r for r in summary.stage_results if r.success or r.exit_code != 0]
         if executed_stages:
             avg_time = sum(r.duration for r in executed_stages) / len(executed_stages)
             html_parts.append(f"<li>Average Stage Time: {avg_time:.1f}s</li>")
 
         if summary.slowest_stage:
-            slowest_pct = (
-                summary.slowest_stage.duration * 100
-            ) / summary.total_duration
+            slowest_pct = (summary.slowest_stage.duration * 100) / summary.total_duration
             html_parts.append(
                 f"<li>Slowest Stage: {summary.slowest_stage.stage_name} "
                 f"({format_duration(summary.slowest_stage.duration)}, {slowest_pct:.0f}%)</li>"
@@ -398,9 +381,7 @@ class PipelineSummaryGenerator:
             return f"⊘ Stage {result.stage_num}: {result.stage_name} (skipped)"
 
         duration_formatted = f"{result.duration:.1f}s"
-        percentage = (
-            (result.duration * 100) / total_duration if total_duration > 0 else 0
-        )
+        percentage = (result.duration * 100) / total_duration if total_duration > 0 else 0
 
         if result.success:
             # Check if this is the slowest stage
@@ -408,15 +389,13 @@ class PipelineSummaryGenerator:
                 self._find_slowest_stage([result] * 2)  # Mock comparison
                 and result.duration > 10
             ):  # Only highlight if > 10 seconds
-                return f"✓ Stage {result.stage_num}: {result.stage_name} ({duration_formatted}, {percentage:.1f}%) ⚠ bottleneck"
+                return f"✓ Stage {result.stage_num}: {result.stage_name} ({duration_formatted}, {percentage:.1f}%) ⚠ bottleneck"  # noqa: E501
             else:
-                return f"✓ Stage {result.stage_num}: {result.stage_name} ({duration_formatted}, {percentage:.1f}%)"
+                return f"✓ Stage {result.stage_num}: {result.stage_name} ({duration_formatted}, {percentage:.1f}%)"  # noqa: E501
         else:
             return f"✗ Stage {result.stage_num}: {result.stage_name} ({duration_formatted}) FAILED"
 
-    def _stage_result_to_dict(
-        self, result: Optional[PipelineStageResult]
-    ) -> Optional[dict]:
+    def _stage_result_to_dict(self, result: Optional[PipelineStageResult]) -> Optional[dict]:
         """Convert stage result to dictionary.
 
         Args:
@@ -459,9 +438,7 @@ class PipelineSummaryGenerator:
                 )  # +7 to skip "/output" but keep the "/"
         return log_file
 
-    def _find_base_output_dir(
-        self, inventory: List[FileInventoryEntry]
-    ) -> Optional[Path]:
+    def _find_base_output_dir(self, inventory: List[FileInventoryEntry]) -> Optional[Path]:
         """Find the base output directory from inventory.
 
         Args:

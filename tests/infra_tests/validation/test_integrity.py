@@ -746,9 +746,7 @@ class TestEdgeCases:
         completeness = integrity.verify_output_completeness(tmp_path)
 
         assert completeness["figures_complete"] == False
-        assert any(
-            "Figures directory" in out for out in completeness["missing_outputs"]
-        )
+        assert any("Figures directory" in out for out in completeness["missing_outputs"])
 
     def test_verify_output_completeness_missing_figure(self, tmp_path):
         """Test output completeness with missing figure."""

@@ -66,9 +66,7 @@ class PipelineCheckpoint:
 class CheckpointManager:
     """Manages pipeline checkpoints for resume capability."""
 
-    def __init__(
-        self, checkpoint_dir: Optional[Path] = None, project_name: str = "project"
-    ):
+    def __init__(self, checkpoint_dir: Optional[Path] = None, project_name: str = "project"):
         """Initialize checkpoint manager.
 
         Args:
@@ -78,9 +76,7 @@ class CheckpointManager:
         if checkpoint_dir is None:
             # Default to projects/{project_name}/output/.checkpoints
             repo_root = Path(__file__).parent.parent.parent
-            checkpoint_dir = (
-                repo_root / "projects" / project_name / "output" / ".checkpoints"
-            )
+            checkpoint_dir = repo_root / "projects" / project_name / "output" / ".checkpoints"
 
         self.checkpoint_dir = Path(checkpoint_dir)
         self.checkpoint_file = self.checkpoint_dir / "pipeline_checkpoint.json"
@@ -117,9 +113,7 @@ class CheckpointManager:
             self._ensure_checkpoint_dir()
             with open(self.checkpoint_file, "w") as f:
                 json.dump(checkpoint.to_dict(), f, indent=2)
-            logger.debug(
-                f"Checkpoint saved: stage {last_stage_completed}/{total_stages}"
-            )
+            logger.debug(f"Checkpoint saved: stage {last_stage_completed}/{total_stages}")
         except Exception as e:
             logger.warning(f"Failed to save checkpoint: {e}")
             logger.info(
@@ -140,14 +134,12 @@ class CheckpointManager:
                 data = json.load(f)
             checkpoint = PipelineCheckpoint.from_dict(data)
             logger.info(
-                f"Loaded checkpoint: stage {checkpoint.last_stage_completed}/{checkpoint.total_stages}"
+                f"Loaded checkpoint: stage {checkpoint.last_stage_completed}/{checkpoint.total_stages}"  # noqa: E501
             )
             return checkpoint
         except Exception as e:
             logger.warning(f"Failed to load checkpoint: {e}")
-            logger.info(
-                "Invalid checkpoint file detected - starting fresh pipeline run"
-            )
+            logger.info("Invalid checkpoint file detected - starting fresh pipeline run")
             return None
 
     def clear_checkpoint(self) -> None:
@@ -197,26 +189,26 @@ class CheckpointManager:
             if checkpoint.last_stage_completed < 0:
                 return (
                     False,
-                    f"Invalid checkpoint: last_stage_completed ({checkpoint.last_stage_completed}) cannot be negative - checkpoint corrupted",
+                    f"Invalid checkpoint: last_stage_completed ({checkpoint.last_stage_completed}) cannot be negative - checkpoint corrupted",  # noqa: E501
                 )
 
             if checkpoint.total_stages <= 0:
                 return (
                     False,
-                    f"Invalid checkpoint: total_stages ({checkpoint.total_stages}) must be positive - checkpoint corrupted",
+                    f"Invalid checkpoint: total_stages ({checkpoint.total_stages}) must be positive - checkpoint corrupted",  # noqa: E501
                 )
 
             if checkpoint.last_stage_completed >= checkpoint.total_stages:
                 return (
                     False,
-                    f"Invalid checkpoint: last_stage_completed ({checkpoint.last_stage_completed}) >= total_stages ({checkpoint.total_stages}) - checkpoint corrupted",
+                    f"Invalid checkpoint: last_stage_completed ({checkpoint.last_stage_completed}) >= total_stages ({checkpoint.total_stages}) - checkpoint corrupted",  # noqa: E501
                 )
 
             # Validate stage results consistency
             if len(checkpoint.stage_results) != checkpoint.last_stage_completed:
                 return (
                     False,
-                    f"Checkpoint inconsistency: {len(checkpoint.stage_results)} stage results but last_stage_completed={checkpoint.last_stage_completed} - checkpoint corrupted",
+                    f"Checkpoint inconsistency: {len(checkpoint.stage_results)} stage results but last_stage_completed={checkpoint.last_stage_completed} - checkpoint corrupted",  # noqa: E501
                 )
 
             # Check that all completed stages have exit_code 0
@@ -232,5 +224,5 @@ class CheckpointManager:
         except Exception as e:
             return (
                 False,
-                f"Checkpoint validation failed: {e} - checkpoint file may be corrupted, starting fresh pipeline run",
+                f"Checkpoint validation failed: {e} - checkpoint file may be corrupted, starting fresh pipeline run",  # noqa: E501
             )

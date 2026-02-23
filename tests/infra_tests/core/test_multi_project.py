@@ -7,15 +7,17 @@ import time
 from pathlib import Path
 
 
-from infrastructure.core.multi_project import (MultiProjectConfig,
-                                               MultiProjectOrchestrator,
-                                               MultiProjectResult)
+import pytest
+
+from infrastructure.core.multi_project import (
+    MultiProjectConfig,
+    MultiProjectOrchestrator,
+    MultiProjectResult,
+)
 from infrastructure.project.discovery import ProjectInfo
 
 
-def _create_test_repo_structure(
-    tmp_dir: Path, make_project2_fail: bool = False
-) -> Path:
+def _create_test_repo_structure(tmp_dir: Path, make_project2_fail: bool = False) -> Path:
     """Create a minimal test repository structure with scripts and projects."""
     repo_root = Path(tmp_dir) / "repo"
     repo_root.mkdir()
@@ -189,6 +191,7 @@ class TestMultiProjectResult:
         assert result.failed_projects == 0
 
 
+@pytest.mark.timeout(120)
 class TestMultiProjectOrchestrator:
     """Test MultiProjectOrchestrator class."""
 
@@ -214,9 +217,7 @@ class TestMultiProjectOrchestrator:
         """Test successful full pipeline execution for all projects."""
         with tempfile.TemporaryDirectory() as tmp_dir:
             # Create real test repository structure (no failures)
-            repo_root = _create_test_repo_structure(
-                Path(tmp_dir), make_project2_fail=False
-            )
+            repo_root = _create_test_repo_structure(Path(tmp_dir), make_project2_fail=False)
 
             # Create test projects
             _create_test_project(repo_root, "project1")
@@ -339,9 +340,7 @@ class TestMultiProjectOrchestrator:
         """Test execution when some projects fail."""
         with tempfile.TemporaryDirectory() as tmp_dir:
             # Create real test repository structure (project2 will fail)
-            repo_root = _create_test_repo_structure(
-                Path(tmp_dir), make_project2_fail=True
-            )
+            repo_root = _create_test_repo_structure(Path(tmp_dir), make_project2_fail=True)
 
             # Create test projects
             _create_test_project(repo_root, "project1")

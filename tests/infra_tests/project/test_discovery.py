@@ -171,7 +171,7 @@ def multi_project_repo(tmp_path: Path) -> Path:
     (beta / "tests").mkdir()
     (beta / "scripts").mkdir()
     (beta / "manuscript").mkdir()
-    (beta / "src" / "main.py").write_text('def main(): pass\n')
+    (beta / "src" / "main.py").write_text("def main(): pass\n")
     (beta / "tests" / "__init__.py").write_text("")
 
     # Create project_gamma (valid)
@@ -931,6 +931,7 @@ description = "A nested project with metadata"
         assert proj.has_scripts is True
         assert proj.metadata["version"] == "1.2.3"
         assert proj.metadata["description"] == "A nested project with metadata"
+
 
 # =============================================================================
 # TestGetDefaultProject - Tests for get_default_project()

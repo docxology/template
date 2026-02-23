@@ -11,8 +11,13 @@ import sys
 
 import pytest
 
-from infrastructure.llm.cli.main import (check_command, main, models_command,
-                                         query_command, template_command)
+from infrastructure.llm.cli.main import (
+    check_command,
+    main,
+    models_command,
+    query_command,
+    template_command,
+)
 
 
 class TestCLIArgumentParsing:
@@ -61,9 +66,7 @@ class TestCLIArgumentParsing:
         assert args.stream is True
 
         # Test with options
-        args = parser.parse_args(
-            ["query", "--temperature", "0.5", "--seed", "42", "test"]
-        )
+        args = parser.parse_args(["query", "--temperature", "0.5", "--seed", "42", "test"])
         assert args.temperature == 0.5
         assert args.seed == 42
 
@@ -125,10 +128,7 @@ class TestCLICheckCommand:
                     check_command(args)
 
             assert exc_info.value.code == 1
-            assert (
-                "Cannot connect" in caplog.text
-                or "cannot connect" in caplog.text.lower()
-            )
+            assert "Cannot connect" in caplog.text or "cannot connect" in caplog.text.lower()
         finally:
             if old_host:
                 os.environ["OLLAMA_HOST"] = old_host
@@ -158,9 +158,7 @@ class TestCLITemplateCommand:
                 template_command(args)
 
         assert exc_info.value.code == 1
-        assert (
-            "Template name required" in caplog.text or "template" in caplog.text.lower()
-        )
+        assert "Template name required" in caplog.text or "template" in caplog.text.lower()
 
 
 class TestCLIModelsCommand:
@@ -214,10 +212,7 @@ class TestCLIQueryCommand:
                     query_command(args)
 
             assert exc_info.value.code == 1
-            assert (
-                "Cannot connect" in caplog.text
-                or "cannot connect" in caplog.text.lower()
-            )
+            assert "Cannot connect" in caplog.text or "cannot connect" in caplog.text.lower()
         finally:
             if old_host:
                 os.environ["OLLAMA_HOST"] = old_host

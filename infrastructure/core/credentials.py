@@ -40,9 +40,7 @@ class CredentialManager:
     - YAML configuration files with environment variable substitution
     """
 
-    def __init__(
-        self, env_file: Optional[Path] = None, config_file: Optional[Path] = None
-    ):
+    def __init__(self, env_file: Optional[Path] = None, config_file: Optional[Path] = None):
         """Initialize credential manager.
 
         Args:
@@ -127,9 +125,7 @@ class CredentialManager:
             "token": token,
             "use_sandbox": use_sandbox,
             "base_url": (
-                "https://sandbox.zenodo.org/api"
-                if use_sandbox
-                else "https://zenodo.org/api"
+                "https://sandbox.zenodo.org/api" if use_sandbox else "https://zenodo.org/api"
             ),
         }
 

@@ -13,6 +13,9 @@ import requests
 from infrastructure.core.exceptions import PublishingError
 from infrastructure.publishing.models import PublicationMetadata
 
+#: Default timeout for HTTP requests (seconds)
+REQUEST_TIMEOUT = 30
+
 
 def publish_to_zenodo(
     metadata: PublicationMetadata,
@@ -107,9 +110,7 @@ def prepare_arxiv_submission(output_dir: Path, metadata: PublicationMetadata) ->
         shutil.copy2(bbl_file, submission_dir)
 
     # Create tarball
-    tar_path = (
-        output_dir / f"arxiv_submission_{datetime.now().strftime('%Y%m%d')}.tar.gz"
-    )
+    tar_path = output_dir / f"arxiv_submission_{datetime.now().strftime('%Y%m%d')}.tar.gz"
     with tarfile.open(tar_path, "w:gz") as tar:
         tar.add(submission_dir, arcname="")
 
@@ -162,7 +163,7 @@ def create_github_release(
     }
 
     try:
-        response = requests.post(url, json=payload, headers=headers)
+        response = requests.post(url, json=payload, headers=headers, timeout=REQUEST_TIMEOUT)
         response.raise_for_status()
         release_data = response.json()
         upload_url = release_data["upload_url"].split("{")[0]
@@ -178,10 +179,13 @@ def create_github_release(
                 upload_headers = headers.copy()
                 upload_headers["Content-Type"] = "application/octet-stream"
                 requests.post(
-                    f"{upload_url}?name={name}", headers=upload_headers, data=f
-                )
+                    f"{upload_url}?name={name}",
+                    headers=upload_headers,
+                    data=f,
+                    timeout=REQUEST_TIMEOUT,
+                )  # noqa: E501
 
-        return html_url
+        return html_url  # type: ignore
 
     except requests.exceptions.RequestException as e:
         raise PublishingError(f"GitHub release failed: {e}")

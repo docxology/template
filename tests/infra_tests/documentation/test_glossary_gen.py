@@ -4,11 +4,12 @@ import os
 from textwrap import dedent
 
 
-from infrastructure.documentation.glossary_gen import \
-    _first_sentence  # type: ignore
-from infrastructure.documentation.glossary_gen import (build_api_index,
-                                                       generate_markdown_table,
-                                                       inject_between_markers)
+from infrastructure.documentation.glossary_gen import _first_sentence  # type: ignore
+from infrastructure.documentation.glossary_gen import (
+    build_api_index,
+    generate_markdown_table,
+    inject_between_markers,
+)
 
 
 def write(path: str, content: str) -> None:

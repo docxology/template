@@ -21,9 +21,7 @@ class TestRenderPdfCommand:
     def test_render_pdf_basic(self, tmp_path, caplog):
         """Test basic PDF rendering with real RenderManager."""
         tex_file = tmp_path / "test.tex"
-        tex_file.write_text(
-            "\\documentclass{article}\\begin{document}Test\\end{document}"
-        )
+        tex_file.write_text("\\documentclass{article}\\begin{document}Test\\end{document}")
 
         args = argparse.Namespace(source=str(tex_file))
 
@@ -38,11 +36,7 @@ class TestRenderPdfCommand:
                 )
             except Exception:
                 # LaTeX compilation may fail - that's real behavior, just verify command was attempted
-                assert (
-                    "rendering" in caplog.text.lower()
-                    or "error" in caplog.text.lower()
-                    or True
-                )
+                assert "rendering" in caplog.text.lower() or "error" in caplog.text.lower() or True
 
     def test_render_pdf_nonexistent_source(self, tmp_path, caplog):
         """Test PDF rendering with nonexistent source."""
@@ -62,9 +56,7 @@ class TestRenderAllCommand:
     def test_render_all_basic(self, tmp_path, caplog):
         """Test rendering all formats with real RenderManager."""
         tex_file = tmp_path / "test.tex"
-        tex_file.write_text(
-            "\\documentclass{article}\\begin{document}Test\\end{document}"
-        )
+        tex_file.write_text("\\documentclass{article}\\begin{document}Test\\end{document}")
 
         args = argparse.Namespace(source=str(tex_file))
 
@@ -79,11 +71,7 @@ class TestRenderAllCommand:
                 )
             except Exception:
                 # LaTeX compilation may fail - that's real behavior, just verify command was attempted
-                assert (
-                    "rendering" in caplog.text.lower()
-                    or "error" in caplog.text.lower()
-                    or True
-                )
+                assert "rendering" in caplog.text.lower() or "error" in caplog.text.lower() or True
 
     def test_render_all_nonexistent_source(self, tmp_path, capsys):
         """Test render all with nonexistent source."""
@@ -115,11 +103,7 @@ class TestRenderSlidesCommand:
                 )
             except Exception:
                 # LaTeX compilation may fail - that's real behavior, just verify command was attempted
-                assert (
-                    "beamer" in caplog.text.lower()
-                    or "rendering" in caplog.text.lower()
-                    or True
-                )
+                assert "beamer" in caplog.text.lower() or "rendering" in caplog.text.lower() or True
 
     def test_render_slides_revealjs(self, tmp_path, capsys):
         """Test reveal.js slide rendering with real RenderManager."""
@@ -157,17 +141,11 @@ class TestRenderSlidesCommand:
                 )
             except Exception:
                 # LaTeX compilation may fail - that's real behavior, just verify command was attempted
-                assert (
-                    "beamer" in caplog.text.lower()
-                    or "rendering" in caplog.text.lower()
-                    or True
-                )
+                assert "beamer" in caplog.text.lower() or "rendering" in caplog.text.lower() or True
 
     def test_render_slides_nonexistent_source(self, tmp_path, capsys):
         """Test slides with nonexistent source."""
-        args = argparse.Namespace(
-            source=str(tmp_path / "nonexistent.md"), format="beamer"
-        )
+        args = argparse.Namespace(source=str(tmp_path / "nonexistent.md"), format="beamer")
 
         with pytest.raises(SystemExit) as exc_info:
             cli.render_slides_command(args)
@@ -205,9 +183,7 @@ class TestMainCli:
     def test_main_with_pdf_command(self, tmp_path):
         """Test main with pdf subcommand via real subprocess."""
         tex_file = tmp_path / "test.tex"
-        tex_file.write_text(
-            "\\documentclass{article}\\begin{document}Test\\end{document}"
-        )
+        tex_file.write_text("\\documentclass{article}\\begin{document}Test\\end{document}")
 
         # Run real CLI command via subprocess
         result = subprocess.run(
@@ -220,9 +196,8 @@ class TestMainCli:
             ],
             capture_output=True,
             text=True,
-            cwd=Path(
-                __file__
-            ).parent.parent.parent.parent,  # Repository root for module imports
+            cwd=Path(__file__).parent.parent.parent.parent,  # Repository root for module imports,
+            timeout=30,
         )
 
         # Accept success or failure depending on LaTeX availability
@@ -231,9 +206,7 @@ class TestMainCli:
     def test_main_with_all_command(self, tmp_path):
         """Test main with all subcommand via real subprocess."""
         tex_file = tmp_path / "test.tex"
-        tex_file.write_text(
-            "\\documentclass{article}\\begin{document}Test\\end{document}"
-        )
+        tex_file.write_text("\\documentclass{article}\\begin{document}Test\\end{document}")
 
         # Run real CLI command via subprocess
         result = subprocess.run(
@@ -247,6 +220,7 @@ class TestMainCli:
             capture_output=True,
             text=True,
             cwd=Path(__file__).parent.parent.parent.parent,
+            timeout=30,
         )
 
         # Accept success or failure depending on dependencies
@@ -269,6 +243,7 @@ class TestMainCli:
             capture_output=True,
             text=True,
             cwd=Path(__file__).parent.parent.parent.parent,
+            timeout=30,
         )
 
         # Accept success or failure depending on pandoc availability
@@ -285,6 +260,7 @@ class TestMainCli:
             capture_output=True,
             text=True,
             cwd=Path(__file__).parent.parent.parent.parent,
+            timeout=30,
         )
 
         # Accept success or failure depending on pandoc availability
@@ -297,6 +273,7 @@ class TestMainCli:
             capture_output=True,
             text=True,
             cwd=Path(__file__).parent.parent.parent.parent,
+            timeout=30,
         )
 
         # Should exit with error code when no command provided
@@ -306,9 +283,7 @@ class TestMainCli:
         """Test main when command raises an exception via real execution."""
         # Create a file that might cause issues
         tex_file = tmp_path / "test.tex"
-        tex_file.write_text(
-            "\\documentclass{article}\\begin{document}Test\\end{document}"
-        )
+        tex_file.write_text("\\documentclass{article}\\begin{document}Test\\end{document}")
 
         # Run real CLI - may succeed or fail depending on environment
         result = subprocess.run(
@@ -322,6 +297,7 @@ class TestMainCli:
             capture_output=True,
             text=True,
             cwd=Path(__file__).parent.parent.parent.parent,
+            timeout=30,
         )
 
         # Accept any return code - real execution may succeed or fail
@@ -346,6 +322,7 @@ class TestMainCli:
             capture_output=True,
             text=True,
             cwd=Path(__file__).parent.parent.parent.parent,
+            timeout=30,
         )
 
         # Accept success or failure depending on pandoc availability

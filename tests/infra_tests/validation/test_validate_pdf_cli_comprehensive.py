@@ -28,8 +28,7 @@ class TestPrintValidationReport:
 
     def test_print_report_no_issues(self, caplog):
         """Test printing report with no issues."""
-        from infrastructure.validation.validate_pdf_cli import \
-            print_validation_report
+        from infrastructure.validation.validate_pdf_cli import print_validation_report
 
         report = {
             "pdf_path": "/path/to/test.pdf",
@@ -55,8 +54,7 @@ class TestPrintValidationReport:
 
     def test_print_report_with_issues(self, caplog):
         """Test printing report with issues."""
-        from infrastructure.validation.validate_pdf_cli import \
-            print_validation_report
+        from infrastructure.validation.validate_pdf_cli import print_validation_report
 
         report = {
             "pdf_path": "/path/to/test.pdf",
@@ -85,8 +83,7 @@ class TestPrintValidationReport:
 
     def test_print_report_verbose(self, caplog):
         """Test printing report with verbose flag."""
-        from infrastructure.validation.validate_pdf_cli import \
-            print_validation_report
+        from infrastructure.validation.validate_pdf_cli import print_validation_report
 
         report = {
             "pdf_path": "/path/to/test.pdf",
@@ -265,6 +262,7 @@ class TestValidatePdfCliSubprocess:
             capture_output=True,
             text=True,
             cwd=Path(__file__).parent.parent.parent.parent,
+            timeout=30,
         )
 
         # Accept various exit codes depending on validation results
@@ -290,6 +288,7 @@ class TestValidatePdfCliSubprocess:
             capture_output=True,
             text=True,
             cwd=Path(__file__).parent.parent.parent.parent,
+            timeout=30,
         )
 
         # Accept various exit codes

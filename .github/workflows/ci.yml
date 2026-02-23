@@ -167,13 +167,13 @@ jobs:
           python-version: "3.12"
       - name: Sync dependencies
         run: uv sync
-      - name: Dependency audit
+      - name: Dependency audit (pip-audit)
         run: uv run pip-audit
-        continue-on-error: true
-      - name: Code security scan
+      - name: Code security scan (Bandit MEDIUM+)
         run: >-
-          uv run bandit -r
+          uv run bandit -r -ll
           infrastructure/
+          scripts/
           projects/
 
   performance:

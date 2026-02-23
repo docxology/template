@@ -4,11 +4,11 @@ Comprehensive tests for file and directory operation utilities including
 cleaning output directories and copying final deliverables.
 """
 
-
-
-from infrastructure.core.file_operations import (clean_output_directories,
-                                                 clean_output_directory,
-                                                 copy_final_deliverables)
+from infrastructure.core.file_operations import (
+    clean_output_directories,
+    clean_output_directory,
+    copy_final_deliverables,
+)
 
 
 class TestCleanOutputDirectory:
@@ -62,9 +62,7 @@ class TestCleanOutputDirectory:
         (output_dir / "level1").mkdir()
         (output_dir / "level1" / "level2").mkdir()
         (output_dir / "level1" / "level2" / "level3").mkdir()
-        (output_dir / "level1" / "level2" / "level3" / "deep_file.txt").write_text(
-            "deep"
-        )
+        (output_dir / "level1" / "level2" / "level3" / "deep_file.txt").write_text("deep")
         (output_dir / "file.txt").write_text("root")
 
         result = clean_output_directory(output_dir)
@@ -176,9 +174,7 @@ class TestCleanOutputDirectories:
         top_output.mkdir(parents=True)
 
         custom_subdirs = ["custom1", "custom2", "custom3"]
-        clean_output_directories(
-            repo_root, project_name="project", subdirs=custom_subdirs
-        )
+        clean_output_directories(repo_root, project_name="project", subdirs=custom_subdirs)
 
         # Check that custom subdirs were created
         for subdir in custom_subdirs:
@@ -265,9 +261,7 @@ class TestCopyFinalDeliverables:
         output_dir = tmp_path / "final_output" / "project"
         output_dir.mkdir(parents=True)
 
-        stats = copy_final_deliverables(
-            project_root, output_dir, project_name="project"
-        )
+        stats = copy_final_deliverables(project_root, output_dir, project_name="project")
 
         # Check files were copied
         assert (output_dir / "pdf" / "document.pdf").exists()
@@ -329,9 +323,7 @@ class TestCopyFinalDeliverables:
         output_dir = tmp_path / "final_output" / "project"
         output_dir.mkdir(parents=True)
 
-        stats = copy_final_deliverables(
-            project_root, output_dir, project_name="project"
-        )
+        stats = copy_final_deliverables(project_root, output_dir, project_name="project")
 
         # Check counts
         assert stats["pdf_files"] >= 2
@@ -359,9 +351,7 @@ class TestCopyFinalDeliverables:
         output_dir = tmp_path / "final_output" / "project"
         output_dir.mkdir(parents=True)
 
-        stats = copy_final_deliverables(
-            project_root, output_dir, project_name="project"
-        )
+        stats = copy_final_deliverables(project_root, output_dir, project_name="project")
 
         # Combined PDF should not be copied
         assert not (output_dir / "project_combined.pdf").exists()
@@ -384,9 +374,7 @@ class TestCopyFinalDeliverables:
         output_dir = tmp_path / "final_output" / "project"
         output_dir.mkdir(parents=True)
 
-        copy_final_deliverables(
-            project_root, output_dir, project_name="project"
-        )
+        copy_final_deliverables(project_root, output_dir, project_name="project")
 
         # Check nested structure preserved
         assert (output_dir / "pdf" / "subdir" / "nested.pdf").exists()
@@ -410,9 +398,7 @@ class TestCopyFinalDeliverables:
         output_dir.mkdir(parents=True)
         (output_dir / "old_file.txt").write_text("old")
 
-        copy_final_deliverables(
-            project_root, output_dir, project_name="project"
-        )
+        copy_final_deliverables(project_root, output_dir, project_name="project")
 
         # New files should be present
         assert (output_dir / "pdf" / "new.pdf").exists()
@@ -439,9 +425,7 @@ class TestCopyFinalDeliverables:
         output_dir = tmp_path / "final_output" / "project"
         output_dir.mkdir(parents=True)
 
-        stats = copy_final_deliverables(
-            project_root, output_dir, project_name="project"
-        )
+        stats = copy_final_deliverables(project_root, output_dir, project_name="project")
 
         # Verify counts match
         assert stats["pdf_files"] == 5
@@ -465,9 +449,7 @@ class TestCopyFinalDeliverables:
         output_dir.mkdir(parents=True)
 
         # Normal case should work
-        stats = copy_final_deliverables(
-            project_root, output_dir, project_name="project"
-        )
+        stats = copy_final_deliverables(project_root, output_dir, project_name="project")
 
         # Should complete successfully
         assert len(stats["errors"]) == 0 or all(
@@ -556,9 +538,7 @@ class TestCleanCoverageFiles:
 
         from infrastructure.core.file_operations import clean_coverage_files
 
-        result = clean_coverage_files(
-            tmp_path, patterns=[".coverage*", "coverage_*.json"]
-        )
+        result = clean_coverage_files(tmp_path, patterns=[".coverage*", "coverage_*.json"])
 
         assert result is True
 

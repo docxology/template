@@ -3,7 +3,6 @@
 Tests publishing API functionality comprehensively.
 """
 
-
 # No mock imports needed - using real HTTP server
 import pytest
 
@@ -104,9 +103,7 @@ class TestZenodoClient:
 
     def test_publish_success(self, zenodo_test_server):
         """Test successful publication."""
-        config = ZenodoConfig(
-            access_token="test", base_url=zenodo_test_server.url_for("")
-        )
+        config = ZenodoConfig(access_token="test", base_url=zenodo_test_server.url_for(""))
         client = ZenodoClient(config)
 
         # Use real HTTP request to test server
@@ -137,9 +134,7 @@ class TestPublishingApiIntegration:
 
     def test_full_workflow(self, tmp_path, zenodo_test_server):
         """Test complete publishing workflow."""
-        config = ZenodoConfig(
-            access_token="test", base_url=zenodo_test_server.url_for("")
-        )
+        config = ZenodoConfig(access_token="test", base_url=zenodo_test_server.url_for(""))
         client = ZenodoClient(config)
 
         # Create test file

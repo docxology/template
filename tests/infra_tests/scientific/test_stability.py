@@ -150,8 +150,10 @@ class TestCheckNumericalStability:
         result = check_numerical_stability(exception_raiser, test_inputs)
 
         assert result.stability_score < 1.0
-        assert any("edge cases" in rec.lower() or "exception" in rec.lower()
-                   for rec in result.recommendations)
+        assert any(
+            "edge cases" in rec.lower() or "exception" in rec.lower()
+            for rec in result.recommendations
+        )
 
     def test_all_exceptions(self):
         """Test when all inputs cause exceptions."""
@@ -372,8 +374,10 @@ class TestStabilityIntegration:
 
         def numerical_derivative(x, h=1e-8):
             """Approximate derivative of x^2 at point x."""
+
             def f(t):
                 return t * t
+
             return (f(x + h) - f(x)) / h
 
         test_inputs = list(np.linspace(-10, 10, 50))

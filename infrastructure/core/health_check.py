@@ -130,9 +130,7 @@ class SystemHealthChecker:
                 "cpu_percent": psutil.cpu_percent(interval=1),
                 "cpu_count": psutil.cpu_count(),
                 "cpu_count_logical": psutil.cpu_count(logical=True),
-                "load_average": (
-                    psutil.getloadavg() if hasattr(psutil, "getloadavg") else None
-                ),
+                "load_average": (psutil.getloadavg() if hasattr(psutil, "getloadavg") else None),
             }
         except ImportError:
             return {"psutil_unavailable": True}
@@ -215,9 +213,7 @@ class SystemHealthChecker:
         except (FileNotFoundError, OSError):
             # Fallback for systems without /proc/uptime
             uptime_seconds = (
-                time.time() - psutil.boot_time()
-                if hasattr(psutil, "boot_time")
-                else None
+                time.time() - psutil.boot_time() if hasattr(psutil, "boot_time") else None
             )
 
         process_uptime = time.time() - self.start_time
@@ -235,20 +231,14 @@ class SystemHealthChecker:
 
         summary: Dict[str, Any] = {
             "total_checks": len(checks),
-            "healthy_checks": sum(
-                1 for c in checks.values() if c["status"] == "healthy"
-            ),
-            "unhealthy_checks": sum(
-                1 for c in checks.values() if c["status"] == "unhealthy"
-            ),
+            "healthy_checks": sum(1 for c in checks.values() if c["status"] == "healthy"),
+            "unhealthy_checks": sum(1 for c in checks.values() if c["status"] == "unhealthy"),
         }
 
         # Add critical resource warnings
         warnings: List[str] = []
 
-        if "memory" in checks and checks["memory"].get("details", {}).get(
-            "is_critical"
-        ):
+        if "memory" in checks and checks["memory"].get("details", {}).get("is_critical"):
             warnings.append("High memory usage detected")
 
         if "disk" in checks and checks["disk"].get("details", {}).get("is_critical"):
@@ -301,9 +291,7 @@ class HealthCheckAPI:
 
         # Add individual check metrics
         for check_name, check_data in status["checks"].items():
-            metrics[f"{check_name}_status"] = (
-                1 if check_data["status"] == "healthy" else 0
-            )
+            metrics[f"{check_name}_status"] = 1 if check_data["status"] == "healthy" else 0
 
         # Add resource metrics
         if "memory" in status["checks"]:

@@ -10,9 +10,7 @@ from contextlib import contextmanager
 from typing import Any, Iterator, Optional
 
 
-def calculate_eta(
-    elapsed_time: float, completed_items: int, total_items: int
-) -> Optional[float]:
+def calculate_eta(elapsed_time: float, completed_items: int, total_items: int) -> Optional[float]:
     """Calculate estimated time remaining based on current progress.
 
     Uses simple linear calculation for basic ETA estimation.
@@ -187,9 +185,7 @@ class Spinner:
 
     SPINNER_CHARS = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
 
-    def __init__(
-        self, message: str = "Processing...", stream: Any = None, delay: float = 0.1
-    ):
+    def __init__(self, message: str = "Processing...", stream: Any = None, delay: float = 0.1):
         """Initialize spinner.
 
         Args:

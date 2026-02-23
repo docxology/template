@@ -13,6 +13,9 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+#: Default timeout for HTTP requests (seconds)
+REQUEST_TIMEOUT = 30
+
 
 @dataclass
 class ZenodoConfig:
@@ -42,11 +45,7 @@ class ZenodoConfig:
         """
         if self.base_url:
             return self.base_url
-        return (
-            "https://sandbox.zenodo.org/api"
-            if self.sandbox
-            else "https://zenodo.org/api"
-        )
+        return "https://sandbox.zenodo.org/api" if self.sandbox else "https://zenodo.org/api"
 
 
 class ZenodoClient:
@@ -66,7 +65,9 @@ class ZenodoClient:
         payload = {"metadata": metadata}
 
         try:
-            response = requests.post(url, json=payload, headers=self.headers)
+            response = requests.post(
+                url, json=payload, headers=self.headers, timeout=REQUEST_TIMEOUT
+            )  # noqa: E501
             response.raise_for_status()
             return str(response.json()["id"])
         except requests.exceptions.RequestException as e:
@@ -79,7 +80,7 @@ class ZenodoClient:
 
         try:
             with open(file_path, "rb") as f:
-                response = requests.put(url, data=f, headers=self.headers)
+                response = requests.put(url, data=f, headers=self.headers, timeout=REQUEST_TIMEOUT)
                 response.raise_for_status()
         except OSError as e:
             raise UploadError(f"File access failed: {e}")
@@ -95,8 +96,8 @@ class ZenodoClient:
         url = f"{self.config.api_base_url}/api/deposit/depositions/{deposition_id}/actions/publish"
 
         try:
-            response = requests.post(url, headers=self.headers)
+            response = requests.post(url, headers=self.headers, timeout=REQUEST_TIMEOUT)
             response.raise_for_status()
-            return response.json()["doi"]
+            return response.json()["doi"]  # type: ignore
         except requests.exceptions.RequestException as e:
             raise PublishingError(f"Publication failed: {e}")

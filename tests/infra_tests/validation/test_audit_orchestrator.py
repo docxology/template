@@ -8,7 +8,9 @@ import json
 
 
 from infrastructure.validation.audit_orchestrator import (
-    generate_audit_report, run_comprehensive_audit)
+    generate_audit_report,
+    run_comprehensive_audit,
+)
 from infrastructure.validation.doc_models import ScanResults
 
 
@@ -122,9 +124,7 @@ class TestAuditOrchestrator:
         (tmp_path / "tests").mkdir()
 
         # Create markdown files
-        (tmp_path / "docs" / "README.md").write_text(
-            "# Documentation\n\n[Link](README.md)"
-        )
+        (tmp_path / "docs" / "README.md").write_text("# Documentation\n\n[Link](README.md)")
         (tmp_path / "README.md").write_text("# Main README\n\n## Section")
 
         # Create Python files
@@ -158,9 +158,7 @@ class TestAuditOrchestrator:
         """Test that audit validates links using real link checking."""
         # Create markdown with links
         test_md = tmp_path / "test.md"
-        test_md.write_text(
-            "# Test\n\n[Valid Link](test.md)\n[Invalid Link](nonexistent.md)"
-        )
+        test_md.write_text("# Test\n\n[Valid Link](test.md)\n[Invalid Link](nonexistent.md)")
 
         # Create target file for valid link
         (tmp_path / "test.md").write_text("# Test")
@@ -196,9 +194,7 @@ cd /some/path
         (tmp_path / "src" / "module.py").write_text("content")
 
         # Run audit with code validation
-        results = run_comprehensive_audit(
-            tmp_path, verbose=False, include_code_validation=True
-        )
+        results = run_comprehensive_audit(tmp_path, verbose=False, include_code_validation=True)
 
         assert isinstance(results, ScanResults)
         assert hasattr(results, "quality_issues")
@@ -433,8 +429,7 @@ class TestValidateSingleFile:
 
     def test_validate_file_with_link_issues(self, tmp_path):
         """Test validation detects link issues."""
-        from infrastructure.validation.audit_orchestrator import \
-            _validate_single_file
+        from infrastructure.validation.audit_orchestrator import _validate_single_file
 
         md_file = tmp_path / "test.md"
         md_file.write_text("# Test\n\n[Broken](nonexistent.md)")
@@ -459,8 +454,7 @@ class TestValidateSingleFile:
 
     def test_validate_file_with_code_blocks(self, tmp_path):
         """Test validation of code blocks."""
-        from infrastructure.validation.audit_orchestrator import \
-            _validate_single_file
+        from infrastructure.validation.audit_orchestrator import _validate_single_file
 
         md_file = tmp_path / "test.md"
         md_file.write_text(
@@ -491,8 +485,7 @@ path = "src/main.py"
 
     def test_validate_file_with_directory_structure(self, tmp_path):
         """Test validation of directory structures."""
-        from infrastructure.validation.audit_orchestrator import \
-            _validate_single_file
+        from infrastructure.validation.audit_orchestrator import _validate_single_file
 
         md_file = tmp_path / "test.md"
         md_file.write_text(
@@ -526,8 +519,7 @@ project/
 
     def test_validate_file_with_imports(self, tmp_path):
         """Test validation of Python imports."""
-        from infrastructure.validation.audit_orchestrator import \
-            _validate_single_file
+        from infrastructure.validation.audit_orchestrator import _validate_single_file
 
         # Create Python file
         (tmp_path / "mymodule.py").write_text("# module")
@@ -560,8 +552,7 @@ from mymodule import something
 
     def test_validate_file_with_placeholders(self, tmp_path):
         """Test validation of placeholders."""
-        from infrastructure.validation.audit_orchestrator import \
-            _validate_single_file
+        from infrastructure.validation.audit_orchestrator import _validate_single_file
 
         md_file = tmp_path / "test.md"
         md_file.write_text(
@@ -590,8 +581,7 @@ Also update {another_placeholder}.
 
     def test_validate_file_all_options(self, tmp_path):
         """Test validation with all options enabled."""
-        from infrastructure.validation.audit_orchestrator import \
-            _validate_single_file
+        from infrastructure.validation.audit_orchestrator import _validate_single_file
 
         md_file = tmp_path / "test.md"
         md_file.write_text(
@@ -638,8 +628,7 @@ class TestCalculateStatistics:
 
     def test_calculate_statistics_empty(self):
         """Test statistics calculation with empty results."""
-        from infrastructure.validation.audit_orchestrator import \
-            _calculate_statistics
+        from infrastructure.validation.audit_orchestrator import _calculate_statistics
 
         results = ScanResults(scan_date="2024-01-01")
         results.documentation_files = []
@@ -656,10 +645,8 @@ class TestCalculateStatistics:
 
     def test_calculate_statistics_with_data(self):
         """Test statistics calculation with real data."""
-        from infrastructure.validation.audit_orchestrator import \
-            _calculate_statistics
-        from infrastructure.validation.doc_models import (DocumentationFile,
-                                                          LinkIssue)
+        from infrastructure.validation.audit_orchestrator import _calculate_statistics
+        from infrastructure.validation.doc_models import DocumentationFile, LinkIssue
 
         results = ScanResults(scan_date="2024-01-01")
         results.documentation_files = [
@@ -719,7 +706,9 @@ class TestModuleStructure:
     def test_public_functions_exist(self):
         """Test expected public functions exist."""
         from infrastructure.validation.audit_orchestrator import (
-            generate_audit_report, run_comprehensive_audit)
+            generate_audit_report,
+            run_comprehensive_audit,
+        )
 
         assert callable(run_comprehensive_audit)
         assert callable(generate_audit_report)

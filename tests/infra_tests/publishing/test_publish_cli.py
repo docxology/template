@@ -37,6 +37,7 @@ class TestPublishCliMain:
             text=True,
             cwd=tmp_path,
             env=env,
+            timeout=30,
         )
 
         # Should show help without error
@@ -54,14 +55,13 @@ class TestPublishCliMain:
 
         # Run without required arguments - should fail
         result = subprocess.run(
-            [sys.executable, str(script_path)], capture_output=True, text=True, env=env
+            [sys.executable, str(script_path)], capture_output=True, text=True, env=env,
+            timeout=30,
         )
 
         # Should exit with error due to missing required arguments
         assert result.returncode != 0
-        assert (
-            "required" in result.stderr.lower() or "required" in result.stdout.lower()
-        )
+        assert "required" in result.stderr.lower() or "required" in result.stdout.lower()
 
 
 class TestPublishCliModule:

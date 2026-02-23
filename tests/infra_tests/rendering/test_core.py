@@ -3,7 +3,6 @@ from pathlib import Path
 import pytest
 
 
-
 @pytest.mark.requires_latex
 def test_render_all_tex(render_manager, tmp_path, skip_if_no_latex):
     """Test rendering all formats from LaTeX source with real compilation."""

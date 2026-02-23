@@ -86,6 +86,6 @@ def check_numerical_stability(
         input_range=(min(test_inputs), max(test_inputs)) if test_inputs else (0, 0),
         expected_behavior="Stable numerical behavior across input range",
         actual_behavior=f"Stability score: {overall_score:.2f}",
-        stability_score=overall_score,
+        stability_score=overall_score,  # type: ignore
         recommendations=recommendations,
     )

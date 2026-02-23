@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  22 FEB 2026 13:20
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  23 FEB 2026 07:45
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1076,30 +1076,6 @@ Underfull \hbox (badness 1024) in paragraph at lines 126--140
  []
 
 
-Underfull \hbox (badness 1259) in paragraph at lines 141--154
-[]\TU/lmr/m/n/10 The key contributions of this work are dual-natured. Methodolo
-gically, it demonstrates
- []
-
-
-Underfull \hbox (badness 1325) in paragraph at lines 141--154
-\TU/lmr/m/n/10 empirical validation of theoretical convergence rates on quadrat
-ic objective functions and
- []
-
-
-Underfull \hbox (badness 2582) in paragraph at lines 141--154
-\TU/lmr/m/n/10 automated analysis pipelines generating publication-quality, acc
-essible visualizations; and
- []
-
-
-Underfull \hbox (badness 1394) in paragraph at lines 141--154
-\TU/lmr/m/n/10 (3) deep integration patterns demonstrating how scientific logic
- strictly couples with the
- []
-
-
 
 [3]
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10> not available
@@ -1113,20 +1089,14 @@ U/lmr/m/n/10 , \TU/lmtt/m/n/10 publishing\TU/lmr/m/n/10 ,
  []
 
 
-Underfull \hbox (badness 1838) in paragraph at lines 199--205
-[]\TU/lmtt/b/n/10 tests/ \TU/lmr/bx/n/10 Framework (\TU/lmtt/b/n/10 projects/co
-de_project/tests/\TU/lmr/bx/n/10 )\TU/lmr/m/n/10 : An uncompromising valida-
- []
-
-
-Overfull \hbox (133.30373pt too wide) in paragraph at lines 234--239
+Overfull \hbox (133.30373pt too wide) in paragraph at lines 235--240
 []\TU/lmr/bx/n/10 Scientific Utilities\TU/lmr/m/n/10 : Utilizing \TU/lmtt/m/n/1
 0 infrastructure.scientific.stability \TU/lmr/m/n/10 and \TU/lmtt/m/n/10 infras
 tructure.scientific.benchmarking
  []
 
 
-Overfull \hbox (35.49373pt too wide) in paragraph at lines 239--244
+Overfull \hbox (35.49373pt too wide) in paragraph at lines 240--245
 []\TU/lmr/bx/n/10 Hermetic Validation\TU/lmr/m/n/10 : Deploying \TU/lmtt/m/n/10
  infrastructure.validation \TU/lmr/m/n/10 components (\TU/lmtt/m/n/10 markdown_
 validator\TU/lmr/m/n/10 ,
@@ -1137,19 +1107,19 @@ validator\TU/lmr/m/n/10 ,
 [4]
 
 [5]
-Underfull \hbox (badness 1365) in paragraph at lines 303--309
+Underfull \hbox (badness 1365) in paragraph at lines 304--310
 \TU/lmr/m/n/10 cially, the implementation is designed to be highly observable, 
 delegating all logging to
  []
 
 
-Underfull \hbox (badness 5862) in paragraph at lines 303--309
+Underfull \hbox (badness 5862) in paragraph at lines 304--310
 \TU/lmtt/m/n/10 infrastructure.core.logging_utils.ProjectLogger \TU/lmr/m/n/10 
 and executing under the hermetic
  []
 
 
-Overfull \hbox (14.92044pt too wide) in paragraph at lines 311--312
+Overfull \hbox (14.92044pt too wide) in paragraph at lines 312--313
 []\TU/lmr/bx/n/10 Algorithm 1: Gradient Descent (implemented in []\TU/lmtt/b/n/
 10 projects/code_project/src/optimizer.py[]\TU/lmr/bx/n/10 ) 
  []
@@ -1161,21 +1131,21 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.315 \(
+l.316 \(
         \epsilon\), max iterations \(N_{\max}\)
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
 
-Overfull \hbox (165.52737pt too wide) in paragraph at lines 352--360
+Overfull \hbox (165.52737pt too wide) in paragraph at lines 353--361
 \TU/lmr/m/n/10 Rather than writing ad-hoc validation code, the project imports 
 \TU/lmtt/m/n/10 infrastructure.scientific.stability.check_numerical_stability\T
 U/lmr/m/n/10 .
  []
 
 
-Overfull \hbox (216.88739pt too wide) in paragraph at lines 363--369
+Overfull \hbox (216.88739pt too wide) in paragraph at lines 364--370
 \TU/lmr/m/n/10 Computational complexity is evaluated not just theoretically, bu
 t empirically via []\TU/lmtt/m/n/10 infrastructure.scientific.benchmarking.benc
 hmark_function[]\TU/lmr/m/n/10 .
@@ -1184,7 +1154,7 @@ hmark_function[]\TU/lmr/m/n/10 .
 
 
 [6]
-Underfull \hbox (badness 1297) in paragraph at lines 440--447
+Underfull \hbox (badness 1297) in paragraph at lines 441--448
 []\TU/lmr/m/n/10 The research template supports advanced LaTeX customization th
 rough the \TU/lmtt/m/n/10 preamble.md
  []
@@ -1202,7 +1172,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.477 for \(\alpha = 0.01\).}
+l.478 for \(\alpha = 0.01\).}
                              \label{fig:convergence}
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
@@ -1219,7 +1189,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.477 for \(\alpha = 0.01\).}
+l.478 for \(\alpha = 0.01\).}
                              \label{fig:convergence}
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
@@ -1234,32 +1204,6 @@ ex-text;!
 [8]
 File: ../figures/step_size_sensitivity.png Graphic file (type bmp)
 <../figures/step_size_sensitivity.png>
-
-
-! LaTeX Error: Bad math environment delimiter.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.512 range.}
-             \label{fig:step_sensitivity}
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-
-! LaTeX Error: Bad math environment delimiter.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.512 range.}
-             \label{fig:step_sensitivity}
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
 
 Missing character: There is no α (U+03B1) in font [lmroman10-regular]:mapping=t
 ex-text;!
@@ -1286,7 +1230,7 @@ ex-text;!
 Missing character: There is no ∼ (U+223C) in font [lmroman10-regular]:mapping=t
 ex-text;!
 
-Underfull \hbox (badness 5161) in paragraph at lines 767--767
+Underfull \hbox (badness 5161) in paragraph at lines 768--768
 []\TU/lmr/m/n/10 Figure 5: []Dimensional scaling benchmark. Left: mean executio
 n time ($[]$s) per
  []
@@ -1296,13 +1240,13 @@ File: ../figures/stability_analysis.png Graphic file (type bmp)
 
 
 [14]
-Overfull \hbox (3.39876pt too wide) in paragraph at lines 828--833
+Overfull \hbox (3.39876pt too wide) in paragraph at lines 829--834
 []\TU/lmr/bx/n/10 Infrastructure tests \TU/lmr/m/n/10 covering all underlying m
 echanisms across \TU/lmtt/m/n/10 infrastructure.reporting\TU/lmr/m/n/10 ,
  []
 
 
-Underfull \hbox (badness 1028) in paragraph at lines 859--860
+Underfull \hbox (badness 1028) in paragraph at lines 860--861
 \TU/lmr/m/it/10 including all dynamic references (e.g., Figure []6[]), confirms
  the absolute reliability of the
  []
@@ -1310,35 +1254,33 @@ Underfull \hbox (badness 1028) in paragraph at lines 859--860
 
 
 [15]
-
-[16]
-Underfull \hbox (badness 10000) in paragraph at lines 926--931
+Underfull \hbox (badness 10000) in paragraph at lines 927--932
 []\TU/lmr/bx/n/10 Reporting & Integrity\TU/lmr/m/n/10 : \TU/lmtt/m/n/10 infrast
 ructure.reporting.pipeline_reporter \TU/lmr/m/n/10 and
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 926--931
+Underfull \hbox (badness 10000) in paragraph at lines 927--932
 \TU/lmtt/m/n/10 infrastructure.validation.output_validator \TU/lmr/m/n/10 assur
 ing CSV/JSON configurations
  []
 
 
-Overfull \hbox (88.36372pt too wide) in paragraph at lines 931--936
+Overfull \hbox (88.36372pt too wide) in paragraph at lines 932--937
 []\TU/lmr/bx/n/10 Visual Cryptography\TU/lmr/m/n/10 : Publication-ready graphic
 s compiled by \TU/lmtt/m/n/10 infrastructure.rendering.pdf_renderer.py
  []
 
 
 
-[17]
-Overfull \hbox (32.11711pt too wide) in paragraph at lines 993--996
+[16]
+Overfull \hbox (32.11711pt too wide) in paragraph at lines 994--997
 []\TU/lmr/bx/n/10 Agentic Generation Systems\TU/lmr/m/n/10 : Extending validati
 on tools built over \TU/lmtt/m/n/10 infrastructure.validation
  []
 
 
-Underfull \hbox (badness 4713) in paragraph at lines 1007--1016
+Underfull \hbox (badness 4713) in paragraph at lines 1008--1017
 \TU/lmr/m/n/10 (\TU/lmtt/m/n/10 projects/code_project/manuscript/04_conclusion.
 md\TU/lmr/m/n/10 ) alongside \TU/lmtt/m/n/10 config.yaml \TU/lmr/m/n/10 flawles
 sly
@@ -1346,9 +1288,9 @@ sly
 
 (./_combined_manuscript.bbl
 
-[18])
+[17])
 
-[19] (./_combined_manuscript.aux)
+[18] (./_combined_manuscript.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -1357,10 +1299,10 @@ L3 programming layer <2025-01-18>
 Here is how much of TeX's memory you used:
  27285 strings out of 473832
  552556 string characters out of 5729482
- 1093570 words of memory out of 5000000
+ 1093592 words of memory out of 5000000
  50030 multiletter control sequences out of 15000+600000
  564232 words of font info for 88 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  90i,7n,114p,1017b,1075s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on _combined_manuscript.pdf (19 pages).
+Output written on _combined_manuscript.pdf (18 pages).

@@ -91,34 +91,26 @@ def content_requirements(
 
     if no_hallucination:
         lines.append(
-            "1. NO HALLUCINATION: Only discuss information explicitly present in the provided content"
+            "1. NO HALLUCINATION: Only discuss information explicitly present in the provided content"  # noqa: E501
         )
-        lines.append(
-            "   - Do NOT add external knowledge, assumptions, or invented details"
-        )
-        lines.append(
-            "   - Do NOT reference sources not mentioned in the provided content"
-        )
+        lines.append("   - Do NOT add external knowledge, assumptions, or invented details")
+        lines.append("   - Do NOT reference sources not mentioned in the provided content")
 
     if cite_sources:
         lines.append(
             "2. CITE SOURCES: Reference specific sections, passages, or elements from the content"
         )
         lines.append("   - Quote or paraphrase actual text when making observations")
-        lines.append(
-            "   - Use specific section titles or page references when available"
-        )
+        lines.append("   - Use specific section titles or page references when available")
 
     if evidence_based:
-        lines.append(
-            "3. EVIDENCE-BASED: Base all claims on evidence from the provided content"
-        )
+        lines.append("3. EVIDENCE-BASED: Base all claims on evidence from the provided content")
         lines.append("   - Support observations with specific examples")
         lines.append("   - Explain reasoning with reference to actual content")
 
     if no_meta_commentary:
         lines.append(
-            "4. NO META-COMMENTARY: Do not mention being an AI, assistant, or that this is generated content"
+            "4. NO META-COMMENTARY: Do not mention being an AI, assistant, or that this is generated content"  # noqa: E501
         )
         lines.append("   - Write as if you are a human expert reviewer")
         lines.append("   - Use professional, academic tone throughout")
@@ -176,9 +168,7 @@ def validation_hints(
 
     if word_count_range:
         min_words, max_words = word_count_range
-        lines.append(
-            f"1. Word count: Must be between {min_words} and {max_words} words"
-        )
+        lines.append(f"1. Word count: Must be between {min_words} and {max_words} words")
 
     if required_elements:
         lines.append("2. Required elements:")

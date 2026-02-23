@@ -26,12 +26,20 @@ import pytest
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "scripts"))
 
 # Import validation functions from infrastructure (now moved there)
-from infrastructure.llm import (is_off_topic)
+from infrastructure.llm import is_off_topic
+
 # Import functions and classes from the review script
-from scripts import (DEFAULT_MAX_INPUT_LENGTH, ManuscriptMetrics,
-                     ReviewMetrics, SessionMetrics, estimate_tokens,
-                     generate_review_summary, get_max_input_length,
-                     save_review_outputs, validate_review_quality)
+from scripts import (
+    DEFAULT_MAX_INPUT_LENGTH,
+    ManuscriptMetrics,
+    ReviewMetrics,
+    SessionMetrics,
+    estimate_tokens,
+    generate_review_summary,
+    get_max_input_length,
+    save_review_outputs,
+    validate_review_quality,
+)
 
 
 class TestEstimateTokens:
@@ -284,9 +292,7 @@ class TestSaveReviewOutputs:
                 generation_time_seconds=25.0,
             )
 
-            save_review_outputs(
-                reviews, output_dir, "llama3", pdf_path, session_metrics
-            )
+            save_review_outputs(reviews, output_dir, "llama3", pdf_path, session_metrics)
 
             # Load and verify metadata
             metadata_path = output_dir / "review_metadata.json"
@@ -322,9 +328,7 @@ class TestSaveReviewOutputs:
                 output_chars=600, output_words=100, generation_time_seconds=25.0
             )
 
-            save_review_outputs(
-                reviews, output_dir, "llama3", pdf_path, session_metrics
-            )
+            save_review_outputs(reviews, output_dir, "llama3", pdf_path, session_metrics)
 
             combined = (output_dir / "combined_review.md").read_text()
 
@@ -438,8 +442,7 @@ class TestModuleImports:
 
     def test_all_required_imports_available(self):
         """Test that all required functions/classes are importable."""
-        from scripts import (estimate_tokens,
-                             main)
+        from scripts import estimate_tokens, main
 
         # All imports should be available
         assert callable(estimate_tokens)
@@ -554,9 +557,7 @@ class TestValidateReviewQuality:
             + " word" * 300
         )  # Add words to meet minimum
 
-        is_valid, issues, details = validate_review_quality(
-            response, "executive_summary"
-        )
+        is_valid, issues, details = validate_review_quality(response, "executive_summary")
         assert is_valid is True
         assert len(issues) == 0
         assert "sections_found" in details
@@ -655,9 +656,7 @@ class TestValidateReviewQuality:
             + " word" * 300
         )
 
-        is_valid, issues, _ = validate_review_quality(
-            response, "improvement_suggestions"
-        )
+        is_valid, issues, _ = validate_review_quality(response, "improvement_suggestions")
         assert is_valid is True
 
     def test_improvement_suggestions_alternative_terms(self):
@@ -675,9 +674,7 @@ class TestValidateReviewQuality:
             + " word" * 300
         )
 
-        is_valid, issues, _ = validate_review_quality(
-            response, "improvement_suggestions"
-        )
+        is_valid, issues, _ = validate_review_quality(response, "improvement_suggestions")
         assert is_valid is True
 
     def test_off_topic_response_rejected(self):
@@ -747,18 +744,14 @@ class TestValidateReviewQuality:
             + " word" * 300
         )
 
-        is_valid, issues, _ = validate_review_quality(
-            response, "improvement_suggestions"
-        )
+        is_valid, issues, _ = validate_review_quality(response, "improvement_suggestions")
         assert is_valid is True
 
     def test_word_count_tracking(self):
         """Test that word count is tracked in validation details."""
         response = "Short response."
 
-        is_valid, issues, details = validate_review_quality(
-            response, "executive_summary"
-        )
+        is_valid, issues, details = validate_review_quality(response, "executive_summary")
         assert is_valid is False
         # Check that word count is in details
         assert "word_count" in details
@@ -911,9 +904,7 @@ class TestWordCountBoundary:
             + "word " * 240
             + "\n## Key Contributions\nSignificant findings here."
         )
-        is_valid, issues, details = validate_review_quality(
-            response, "executive_summary"
-        )
+        is_valid, issues, details = validate_review_quality(response, "executive_summary")
         assert is_valid is True
         assert "word_count" in details
         assert details["word_count"] >= 250
@@ -939,9 +930,7 @@ class TestWordCountBoundary:
             + "word " * 185
             + "\n## Medium Priority\nModerate concerns about structure."
         )
-        is_valid, issues, details = validate_review_quality(
-            response, "improvement_suggestions"
-        )
+        is_valid, issues, details = validate_review_quality(response, "improvement_suggestions")
         assert is_valid is True
         assert details["word_count"] >= 200
 
@@ -954,9 +943,7 @@ class TestWordCountBoundary:
             + "word " * 130
             + "## Low Priority\nMinor."
         )
-        is_valid, issues, details = validate_review_quality(
-            response, "improvement_suggestions"
-        )
+        is_valid, issues, details = validate_review_quality(response, "improvement_suggestions")
         assert is_valid is False
         assert any("Too short" in issue for issue in issues)
 
@@ -1048,9 +1035,11 @@ class TestLLMReviewIntegration:
 
     def test_check_ollama_availability(self):
         """Test Ollama availability check."""
-        from infrastructure.llm.utils.ollama import (get_available_models,
-                                                     is_ollama_running,
-                                                     select_best_model)
+        from infrastructure.llm.utils.ollama import (
+            get_available_models,
+            is_ollama_running,
+            select_best_model,
+        )
 
         # Since the fixture ensures Ollama is ready, these should all work
         assert is_ollama_running() is True
@@ -1066,10 +1055,8 @@ class TestLLMReviewIntegration:
         """Test generating a review with real LLM."""
         from infrastructure.llm.core.client import LLMClient
         from infrastructure.llm.core.config import LLMConfig
-        from infrastructure.llm.review.generator import \
-            generate_executive_summary
-        from infrastructure.llm.utils.ollama import (is_ollama_running,
-                                                     select_best_model)
+        from infrastructure.llm.review.generator import generate_executive_summary
+        from infrastructure.llm.utils.ollama import is_ollama_running, select_best_model
 
         if not is_ollama_running():
             pytest.fail(
@@ -1109,7 +1096,7 @@ class TestLLMReviewIntegration:
         client = LLMClient()
         test_text = "This is a brief manuscript to test actual LLM functionality."
         response, metrics = generate_executive_summary(client, test_text, model_name=model)
-        
+
         assert response is not None
         assert len(response) > 0
         assert isinstance(response, str)
@@ -1135,9 +1122,7 @@ class TestValidateReviewQualityRepetition:
 ## Results
 {repeated_block}
 """
-        is_valid, issues, details = validate_review_quality(
-            response, "executive_summary"
-        )
+        is_valid, issues, details = validate_review_quality(response, "executive_summary")
 
         # Check that repetition is tracked
         assert "repetition" in details
@@ -1167,9 +1152,7 @@ This research has important implications for the field.
             + " word" * 200
         )  # Ensure word count is met
 
-        is_valid, issues, details = validate_review_quality(
-            response, "executive_summary"
-        )
+        is_valid, issues, details = validate_review_quality(response, "executive_summary")
 
         # Unique content should have high unique ratio
         assert details.get("repetition", {}).get("unique_ratio", 1.0) >= 0.5
@@ -1197,9 +1180,7 @@ The work has significant implications for the field.
             + " word" * 200
         )
 
-        is_valid, issues, details = validate_review_quality(
-            response, "executive_summary"
-        )
+        is_valid, issues, details = validate_review_quality(response, "executive_summary")
 
         # Should track repetition but not necessarily fail
         assert "repetition" in details

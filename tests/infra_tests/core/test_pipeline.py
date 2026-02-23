@@ -8,8 +8,7 @@ from pathlib import Path
 
 
 from infrastructure.core.checkpoint import CheckpointManager
-from infrastructure.core.pipeline import (PipelineConfig, PipelineExecutor,
-                                          PipelineStageResult)
+from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor, PipelineStageResult
 
 
 class TestPipelineConfig:
@@ -83,9 +82,7 @@ class TestPipelineStageResult:
 class TestPipelineExecutor:
     """Test PipelineExecutor class."""
 
-    def _create_fake_repo(
-        self, repo_root: Path, project_name: str, include_llm: bool
-    ) -> Path:
+    def _create_fake_repo(self, repo_root: Path, project_name: str, include_llm: bool) -> Path:
         """Create a minimal repo layout with scripts that always succeed.
 
         The pipeline executor runs scripts from `{repo_root}/scripts/*.py`. For tests we create
@@ -97,12 +94,8 @@ class TestPipelineExecutor:
         scripts_dir.mkdir(parents=True, exist_ok=True)
 
         # Minimal project structure so PYTHONPATH augmentation is stable
-        (repo_root / "projects" / project_name / "src").mkdir(
-            parents=True, exist_ok=True
-        )
-        (repo_root / "projects" / project_name / "output").mkdir(
-            parents=True, exist_ok=True
-        )
+        (repo_root / "projects" / project_name / "src").mkdir(parents=True, exist_ok=True)
+        (repo_root / "projects" / project_name / "output").mkdir(parents=True, exist_ok=True)
 
         common_script = """
 import json
@@ -155,9 +148,7 @@ sys.exit(0)
         executor = PipelineExecutor(config)
 
         # Ensure checkpoints are written under the temp repo, not the real repository root.
-        checkpoint_dir = (
-            repo_root / "projects" / project_name / "output" / ".checkpoints"
-        )
+        checkpoint_dir = repo_root / "projects" / project_name / "output" / ".checkpoints"
         executor.checkpoint_manager = CheckpointManager(
             checkpoint_dir=checkpoint_dir, project_name=project_name
         )

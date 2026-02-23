@@ -72,21 +72,15 @@ class PromptComposer:
                 if fragment_ref.endswith("#test_template"):
                     # Special handling for section structures
                     fragment_data = self.loader.load_fragment(fragment_ref)
-                    fragment_values[fragment_key] = self._build_section_structure(
-                        "test_template"
-                    )
+                    fragment_values[fragment_key] = self._build_section_structure("test_template")
                 elif "format_requirements" in fragment_ref:
                     # Build format requirements
-                    self.loader.load_fragment(
-                        fragment_ref.replace(".json", ".json")
-                    )
+                    self.loader.load_fragment(fragment_ref.replace(".json", ".json"))
                     headers = template.get("section_config", {}).get("headers", [])
                     if not headers and "section_structure" in fragment_values:
                         # Extract headers from section structure
                         headers = ["## Section1", "## Section2"]  # Default for tests
-                    fragment_values[fragment_key] = self._build_format_requirements(
-                        headers
-                    )
+                    fragment_values[fragment_key] = self._build_format_requirements(headers)
                 elif "content_requirements" in fragment_ref:
                     fragment_values[fragment_key] = self._build_content_requirements()
                 elif "token_budget_awareness" in fragment_ref:
@@ -94,18 +88,14 @@ class PromptComposer:
                     sections = section_config.get("sections", 2)
                     total = max_tokens or 1000
                     section_budgets = {
-                        f"Section{i+1}": total // sections for i in range(sections)
+                        f"Section{i + 1}": total // sections for i in range(sections)
                     }
                     fragment_values[fragment_key] = self._build_token_budget_awareness(
                         total_tokens=total, section_budgets=section_budgets
                     )
                 elif "validation_hints" in fragment_ref:
-                    word_count = template.get("variables", {}).get(
-                        "word_count_range", [100, 200]
-                    )
-                    required = template.get("variables", {}).get(
-                        "required_elements", []
-                    )
+                    word_count = template.get("variables", {}).get("word_count_range", [100, 200])
+                    required = template.get("variables", {}).get("required_elements", [])
                     fragment_values[fragment_key] = self._build_validation_hints(
                         word_count_range=tuple(word_count), required_elements=required
                     )
@@ -151,7 +141,7 @@ class PromptComposer:
                     "${section_structure}", fragment_values["section_structure"]
                 )
 
-            return result
+            return result  # type: ignore
 
         except Exception as e:
             if isinstance(e, LLMTemplateError):
@@ -214,20 +204,16 @@ class PromptComposer:
             # Handle section requirements if present
             if "section_requirements_template" in format_data:
                 section_template = format_data["section_requirements_template"]
-                result = result.replace(
-                    "${section_requirements_block}", section_template
-                )
+                result = result.replace("${section_requirements_block}", section_template)
             else:
                 result = result.replace("${section_requirements_block}", "")
 
-            return result
+            return result  # type: ignore
 
         except LLMTemplateError:
             # Fallback if fragment not found
             headers_text = "\n".join(f"  - {h}" for h in headers_list)
-            return (
-                f"FORMAT REQUIREMENTS:\n\n1. Use markdown\n2. Headers:\n{headers_text}"
-            )
+            return f"FORMAT REQUIREMENTS:\n\n1. Use markdown\n2. Headers:\n{headers_text}"
 
     def _build_content_requirements(self) -> str:
         """Build content requirements fragment.
@@ -249,16 +235,14 @@ class PromptComposer:
                 "cite_sources", "2. CITE SOURCES: Reference specific sections"
             )
 
-            result = base_template.replace(
-                "${no_hallucination_block}", no_hallucination
-            )
+            result = base_template.replace("${no_hallucination_block}", no_hallucination)
             result = result.replace("${cite_sources_block}", cite_sources)
 
-            return result
+            return result  # type: ignore
 
         except LLMTemplateError:
             # Fallback
-            return "CONTENT REQUIREMENTS:\n\n1. NO HALLUCINATION: Only use provided content\n2. CITE SOURCES: Reference specific sections"
+            return "CONTENT REQUIREMENTS:\n\n1. NO HALLUCINATION: Only use provided content\n2. CITE SOURCES: Reference specific sections"  # noqa: E501
 
     def _build_section_structure(self, structure_key: str) -> str:
         """Build section structure fragment.
@@ -280,9 +264,7 @@ class PromptComposer:
                     f"Section structure '{structure_key}' not found",
                     context={
                         "available_keys": (
-                            list(structures.keys())
-                            if isinstance(structures, dict)
-                            else []
+                            list(structures.keys()) if isinstance(structures, dict) else []
                         )
                     },
                 )
@@ -335,23 +317,23 @@ class PromptComposer:
             total_block = total_template.replace("${total_tokens}", str(total_tokens))
 
             budgets_list = "\n".join(
-                f"  - {name}: {budget} tokens"
-                for name, budget in section_budgets.items()
+                f"  - {name}: {budget} tokens" for name, budget in section_budgets.items()
             )
             section_block = section_template.replace("${budgets_list}", budgets_list)
 
             result = base_template.replace("${total_tokens_block}", total_block)
             result = result.replace("${section_budgets_block}", section_block)
 
-            return result
+            return result  # type: ignore
 
         except LLMTemplateError:
             # Fallback
             budgets_list = "\n".join(
-                f"  - {name}: {budget} tokens"
-                for name, budget in section_budgets.items()
+                f"  - {name}: {budget} tokens" for name, budget in section_budgets.items()
             )
-            return f"TOKEN BUDGET:\n\n1. Total: {total_tokens} tokens\n2. Per section:\n{budgets_list}"
+            return (
+                f"TOKEN BUDGET:\n\n1. Total: {total_tokens} tokens\n2. Per section:\n{budgets_list}"
+            )
 
     def _build_validation_hints(
         self, word_count_range: tuple[int, int], required_elements: list[str]
@@ -385,17 +367,15 @@ class PromptComposer:
             )
 
             elements_list = "\n".join(f"  - {elem}" for elem in required_elements)
-            elements_block = elements_template.replace(
-                "${elements_list}", elements_list
-            )
+            elements_block = elements_template.replace("${elements_list}", elements_list)
 
             result = base_template.replace("${word_count_block}", word_block)
             result = result.replace("${required_elements_block}", elements_block)
 
-            return result
+            return result  # type: ignore
 
         except LLMTemplateError:
             # Fallback
             min_words, max_words = word_count_range
             elements_list = "\n".join(f"  - {elem}" for elem in required_elements)
-            return f"VALIDATION:\n\n1. Word count: {min_words}-{max_words}\n2. Required:\n{elements_list}"
+            return f"VALIDATION:\n\n1. Word count: {min_words}-{max_words}\n2. Required:\n{elements_list}"  # noqa: E501

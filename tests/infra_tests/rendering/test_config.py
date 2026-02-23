@@ -1,7 +1,5 @@
 """Tests for infrastructure.rendering.config module."""
 
-
-
 from infrastructure.rendering.config import RenderingConfig
 
 

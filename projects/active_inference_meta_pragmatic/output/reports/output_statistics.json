@@ -1,0 +1,308 @@
+{
+  "directories": {
+    "pdf": {
+      "exists": true,
+      "file_count": 9,
+      "size_mb": "5.32",
+      "total_size_bytes": 5581884,
+      "largest_files": [
+        {
+          "name": "active_inference_meta_pragmatic_combined.pdf",
+          "size_mb": "4.95",
+          "path": "pdf/active_inference_meta_pragmatic_combined.pdf"
+        },
+        {
+          "name": "_combined_manuscript.tex",
+          "size_mb": "0.11",
+          "path": "pdf/_combined_manuscript.tex"
+        },
+        {
+          "name": "_combined_manuscript.md",
+          "size_mb": "0.09",
+          "path": "pdf/_combined_manuscript.md"
+        }
+      ],
+      "extensions": {
+        ".md": 1,
+        ".log": 1,
+        ".aux": 1,
+        ".blg": 1,
+        ".bib": 1,
+        ".tex": 1,
+        ".toc": 1,
+        ".bbl": 1,
+        ".pdf": 1
+      }
+    },
+    "web": {
+      "exists": true,
+      "file_count": 15,
+      "size_mb": "0.39",
+      "total_size_bytes": 411941,
+      "largest_files": [
+        {
+          "name": "index.html",
+          "size_mb": "0.15",
+          "path": "web/index.html"
+        },
+        {
+          "name": "_combined_manuscript.md",
+          "size_mb": "0.09",
+          "path": "web/_combined_manuscript.md"
+        },
+        {
+          "name": "07_security_implications.html",
+          "size_mb": "0.03",
+          "path": "web/07_security_implications.html"
+        }
+      ],
+      "extensions": {
+        ".html": 14,
+        ".md": 1
+      }
+    },
+    "slides": {
+      "exists": true,
+      "file_count": 94,
+      "size_mb": "6.30",
+      "total_size_bytes": 6610749,
+      "largest_files": [
+        {
+          "name": "06_quadrant_model_slides.pdf",
+          "size_mb": "2.52",
+          "path": "slides/06_quadrant_model_slides.pdf"
+        },
+        {
+          "name": "04_background_slides.pdf",
+          "size_mb": "2.29",
+          "path": "slides/04_background_slides.pdf"
+        },
+        {
+          "name": "07_security_implications_slides.pdf",
+          "size_mb": "0.37",
+          "path": "slides/07_security_implications_slides.pdf"
+        }
+      ],
+      "extensions": {
+        ".nav": 13,
+        ".toc": 13,
+        ".tex": 13,
+        ".snm": 13,
+        ".aux": 13,
+        ".log": 13,
+        ".pdf": 13,
+        ".vrb": 3
+      }
+    },
+    "figures": {
+      "exists": true,
+      "file_count": 35,
+      "size_mb": "5.99",
+      "total_size_bytes": 6282808,
+      "largest_files": [
+        {
+          "name": "quadrant_matrix_enhanced.png",
+          "size_mb": "0.86",
+          "path": "figures/quadrant_matrix_enhanced.png"
+        },
+        {
+          "name": "quadrant_2_metadata_cognitive.png",
+          "size_mb": "0.47",
+          "path": "figures/quadrant_2_metadata_cognitive.png"
+        },
+        {
+          "name": "structure_preservation.png",
+          "size_mb": "0.44",
+          "path": "figures/structure_preservation.png"
+        }
+      ],
+      "extensions": {
+        ".pdf": 17,
+        ".png": 17,
+        ".json": 1
+      }
+    },
+    "data": {
+      "exists": true,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0,
+      "largest_files": [],
+      "extensions": {}
+    },
+    "reports": {
+      "exists": true,
+      "file_count": 4,
+      "size_mb": "0.01",
+      "total_size_bytes": 5829,
+      "largest_files": [
+        {
+          "name": "validation_report.json",
+          "size_mb": "0.00",
+          "path": "reports/validation_report.json"
+        },
+        {
+          "name": "test_results.json",
+          "size_mb": "0.00",
+          "path": "reports/test_results.json"
+        },
+        {
+          "name": "test_results.md",
+          "size_mb": "0.00",
+          "path": "reports/test_results.md"
+        }
+      ],
+      "extensions": {
+        ".md": 2,
+        ".json": 2
+      }
+    },
+    "simulations": {
+      "exists": true,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0,
+      "largest_files": [],
+      "extensions": {}
+    },
+    "llm": {
+      "exists": true,
+      "file_count": 9,
+      "size_mb": "0.43",
+      "total_size_bytes": 453731,
+      "largest_files": [
+        {
+          "name": "combined_review.md",
+          "size_mb": "0.18",
+          "path": "llm/combined_review.md"
+        },
+        {
+          "name": "translation_hi.md",
+          "size_mb": "0.09",
+          "path": "llm/translation_hi.md"
+        },
+        {
+          "name": "translation_ru.md",
+          "size_mb": "0.09",
+          "path": "llm/translation_ru.md"
+        }
+      ],
+      "extensions": {
+        ".md": 8,
+        ".json": 1
+      }
+    },
+    "logs": {
+      "exists": true,
+      "file_count": 1,
+      "size_mb": "0.00",
+      "total_size_bytes": 4031,
+      "largest_files": [
+        {
+          "name": "pipeline.log",
+          "size_mb": "0.00",
+          "path": "logs/pipeline.log"
+        }
+      ],
+      "extensions": {
+        ".log": 1
+      }
+    }
+  },
+  "total_files": 167,
+  "total_size_mb": 18.4545259475708,
+  "largest_files": [
+    {
+      "name": "active_inference_meta_pragmatic_combined.pdf",
+      "size_mb": "4.95",
+      "category": "pdf",
+      "path": "pdf/active_inference_meta_pragmatic_combined.pdf"
+    },
+    {
+      "name": "06_quadrant_model_slides.pdf",
+      "size_mb": "2.52",
+      "category": "slides",
+      "path": "slides/06_quadrant_model_slides.pdf"
+    },
+    {
+      "name": "04_background_slides.pdf",
+      "size_mb": "2.29",
+      "category": "slides",
+      "path": "slides/04_background_slides.pdf"
+    },
+    {
+      "name": "quadrant_matrix_enhanced.png",
+      "size_mb": "0.86",
+      "category": "figures",
+      "path": "figures/quadrant_matrix_enhanced.png"
+    },
+    {
+      "name": "quadrant_2_metadata_cognitive.png",
+      "size_mb": "0.47",
+      "category": "figures",
+      "path": "figures/quadrant_2_metadata_cognitive.png"
+    },
+    {
+      "name": "structure_preservation.png",
+      "size_mb": "0.44",
+      "category": "figures",
+      "path": "figures/structure_preservation.png"
+    },
+    {
+      "name": "07_security_implications_slides.pdf",
+      "size_mb": "0.37",
+      "category": "slides",
+      "path": "slides/07_security_implications_slides.pdf"
+    },
+    {
+      "name": "combined_review.md",
+      "size_mb": "0.18",
+      "category": "llm",
+      "path": "llm/combined_review.md"
+    },
+    {
+      "name": "index.html",
+      "size_mb": "0.15",
+      "category": "web",
+      "path": "web/index.html"
+    },
+    {
+      "name": "_combined_manuscript.tex",
+      "size_mb": "0.11",
+      "category": "pdf",
+      "path": "pdf/_combined_manuscript.tex"
+    }
+  ],
+  "missing_expected_files": [],
+  "file_counts_by_type": {
+    ".md": 12,
+    ".log": 15,
+    ".aux": 14,
+    ".blg": 1,
+    ".bib": 1,
+    ".tex": 14,
+    ".toc": 14,
+    ".bbl": 1,
+    ".pdf": 31,
+    ".html": 14,
+    ".nav": 13,
+    ".snm": 13,
+    ".vrb": 3,
+    ".png": 17,
+    ".json": 4
+  },
+  "sizes_by_category": {
+    "pdf": 5.323299407958984,
+    "web": 0.39285755157470703,
+    "slides": 6.304501533508301,
+    "figures": 5.991752624511719,
+    "data": 0.0,
+    "reports": 0.005558967590332031,
+    "simulations": 0.0,
+    "llm": 0.4327116012573242,
+    "logs": 0.0038442611694335938
+  },
+  "pdf_files": 9,
+  "figures": 35,
+  "data_files": 0
+}

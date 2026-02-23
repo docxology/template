@@ -30,9 +30,7 @@ import requests
 from infrastructure.core.exceptions import LLMConnectionError
 
 
-def create_project_config_structure(
-    repo_root: Path, project_name: str = "project"
-) -> Path:
+def create_project_config_structure(repo_root: Path, project_name: str = "project") -> Path:
     """Create a standard project config structure.
 
     Args:
@@ -107,9 +105,7 @@ def create_output_directory_structure(output_dir: Path) -> None:
         (output_dir / subdir).mkdir(exist_ok=True)
 
 
-def create_pdf_file(
-    pdf_path: Path, content: str = "Test PDF content", size_kb: int = 100
-) -> None:
+def create_pdf_file(pdf_path: Path, content: str = "Test PDF content", size_kb: int = 100) -> None:
     """Create a PDF file for testing.
 
     Uses reportlab if available, otherwise creates a minimal PDF-like file.
@@ -193,9 +189,7 @@ startxref
         pdf_path.write_text(pdf_content)
 
 
-def create_output_with_pdf(
-    output_dir: Path, pdf_name: str = "project_combined.pdf"
-) -> Path:
+def create_output_with_pdf(output_dir: Path, pdf_name: str = "project_combined.pdf") -> Path:
     """Create output directory with a PDF file in the pdf/ subdirectory.
 
     Args:

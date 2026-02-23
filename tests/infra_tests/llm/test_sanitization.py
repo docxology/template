@@ -4,17 +4,20 @@
 This module tests the input sanitization and security utilities for LLM operations.
 All tests use real data and computations - no mocks allowed.
 """
+
 from pathlib import Path
 
 import pytest
 
-from infrastructure.llm.core.sanitization import (HealthChecker,
-                                                  InputSanitizer,
-                                                  SecurityError,
-                                                  get_health_checker,
-                                                  get_input_sanitizer,
-                                                  run_health_check,
-                                                  sanitize_llm_input)
+from infrastructure.llm.core.sanitization import (
+    HealthChecker,
+    InputSanitizer,
+    SecurityError,
+    get_health_checker,
+    get_input_sanitizer,
+    run_health_check,
+    sanitize_llm_input,
+)
 
 
 class TestInputSanitizer:

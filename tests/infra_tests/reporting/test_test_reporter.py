@@ -3,9 +3,11 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from infrastructure.reporting.test_reporter import (generate_test_report,
-                                                    parse_pytest_output,
-                                                    save_test_report)
+from infrastructure.reporting.test_reporter import (
+    generate_test_report,
+    parse_pytest_output,
+    save_test_report,
+)
 
 
 def test_parse_pytest_output_extracts_counts_and_coverage() -> None:
@@ -38,9 +40,7 @@ def test_generate_test_report_combines_infra_and_project() -> None:
         "exit_code": 1,
     }
 
-    report = generate_test_report(
-        infra_results=infra, project_results=project, repo_root=Path(".")
-    )
+    report = generate_test_report(infra_results=infra, project_results=project, repo_root=Path("."))
 
     summary = report["summary"]
     assert summary["total_passed"] == 12
@@ -124,9 +124,7 @@ def test_generate_test_report_no_coverage() -> None:
     infra = {"passed": 5, "failed": 0, "skipped": 1, "total": 6, "exit_code": 0}
     project = {"passed": 7, "failed": 1, "skipped": 0, "total": 8, "exit_code": 1}
 
-    report = generate_test_report(
-        infra_results=infra, project_results=project, repo_root=Path(".")
-    )
+    report = generate_test_report(infra_results=infra, project_results=project, repo_root=Path("."))
 
     assert "infrastructure_coverage" not in report["summary"]
     assert "project_coverage" not in report["summary"]
@@ -137,9 +135,7 @@ def test_generate_test_report_all_passed() -> None:
     infra = {"passed": 10, "failed": 0, "skipped": 0, "total": 10, "exit_code": 0}
     project = {"passed": 20, "failed": 0, "skipped": 0, "total": 20, "exit_code": 0}
 
-    report = generate_test_report(
-        infra_results=infra, project_results=project, repo_root=Path(".")
-    )
+    report = generate_test_report(infra_results=infra, project_results=project, repo_root=Path("."))
 
     assert report["summary"]["all_passed"] is True
     assert report["summary"]["total_passed"] == 30

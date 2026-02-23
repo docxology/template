@@ -4,16 +4,18 @@ Comprehensive tests for the documentation scanner covering all phases
 and report generation.
 """
 
-
 import pytest
 
 from infrastructure.validation import doc_scanner
-from infrastructure.validation.doc_scanner import (AccuracyIssue,
-                                                   CompletenessGap,
-                                                   DocumentationFile,
-                                                   DocumentationScanner,
-                                                   LinkIssue, QualityIssue,
-                                                   ScanResults)
+from infrastructure.validation.doc_scanner import (
+    AccuracyIssue,
+    CompletenessGap,
+    DocumentationFile,
+    DocumentationScanner,
+    LinkIssue,
+    QualityIssue,
+    ScanResults,
+)
 
 
 class TestDataClasses:

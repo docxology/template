@@ -8,9 +8,12 @@ Follows No Mocks Policy - all tests use real data and real execution.
 from pathlib import Path
 
 
-from infrastructure.project.discovery import (ProjectInfo, discover_projects,
-                                              get_project_metadata,
-                                              validate_project_structure)
+from infrastructure.project.discovery import (
+    ProjectInfo,
+    discover_projects,
+    get_project_metadata,
+    validate_project_structure,
+)
 
 
 class TestValidateProjectStructure:
@@ -24,9 +27,7 @@ class TestValidateProjectStructure:
         (project_dir / "tests").mkdir()
         (project_dir / "src" / "__init__.py").write_text("")
         (project_dir / "tests" / "__init__.py").write_text("")
-        (project_dir / "tests" / "test_example.py").write_text(
-            "def test_example(): pass"
-        )
+        (project_dir / "tests" / "test_example.py").write_text("def test_example(): pass")
 
         is_valid, message = validate_project_structure(project_dir)
         assert is_valid is True

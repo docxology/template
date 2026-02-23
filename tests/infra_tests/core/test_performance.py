@@ -7,11 +7,14 @@ import time
 
 import pytest
 
-from infrastructure.core.performance import (PerformanceMetrics,
-                                             PerformanceMonitor, ResourceUsage,
-                                             StagePerformanceTracker,
-                                             get_system_resources,
-                                             monitor_performance)
+from infrastructure.core.performance import (
+    PerformanceMetrics,
+    PerformanceMonitor,
+    ResourceUsage,
+    StagePerformanceTracker,
+    get_system_resources,
+    monitor_performance,
+)
 
 # Check if psutil is available for conditional testing
 try:

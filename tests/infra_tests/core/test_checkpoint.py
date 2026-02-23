@@ -9,8 +9,7 @@ import tempfile
 from pathlib import Path
 
 
-from infrastructure.core.checkpoint import (CheckpointManager,
-                                            PipelineCheckpoint, StageResult)
+from infrastructure.core.checkpoint import CheckpointManager, PipelineCheckpoint, StageResult
 
 
 class TestStageResult:

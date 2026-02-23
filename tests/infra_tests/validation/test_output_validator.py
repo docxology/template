@@ -4,10 +4,10 @@ Comprehensive tests for output validation functionality including
 copied outputs validation and output structure validation.
 """
 
-
-
 from infrastructure.validation.output_validator import (
-    validate_copied_outputs, validate_output_structure)
+    validate_copied_outputs,
+    validate_output_structure,
+)
 
 
 class TestValidateCopiedOutputs:
@@ -141,8 +141,7 @@ class TestValidateRootOutputStructure:
 
     def test_output_directory_not_exists(self, tmp_path):
         """Test validation when output directory doesn't exist."""
-        from infrastructure.validation.output_validator import \
-            validate_root_output_structure
+        from infrastructure.validation.output_validator import validate_root_output_structure
 
         result = validate_root_output_structure(tmp_path)
 
@@ -153,8 +152,7 @@ class TestValidateRootOutputStructure:
 
     def test_valid_project_folders_only(self, tmp_path):
         """Test validation with only valid project folders."""
-        from infrastructure.validation.output_validator import \
-            validate_root_output_structure
+        from infrastructure.validation.output_validator import validate_root_output_structure
 
         output_dir = tmp_path / "output"
         output_dir.mkdir()
@@ -183,8 +181,7 @@ class TestValidateRootOutputStructure:
 
     def test_invalid_root_level_directories(self, tmp_path):
         """Test validation with invalid root-level directories."""
-        from infrastructure.validation.output_validator import \
-            validate_root_output_structure
+        from infrastructure.validation.output_validator import validate_root_output_structure
 
         output_dir = tmp_path / "output"
         output_dir.mkdir()
@@ -220,8 +217,7 @@ class TestValidateRootOutputStructure:
 
     def test_unknown_directories_flagged(self, tmp_path):
         """Test that unknown directories are flagged."""
-        from infrastructure.validation.output_validator import \
-            validate_root_output_structure
+        from infrastructure.validation.output_validator import validate_root_output_structure
 
         output_dir = tmp_path / "output"
         output_dir.mkdir()
@@ -249,8 +245,7 @@ class TestValidateRootOutputStructure:
 
     def test_files_in_output_ignored(self, tmp_path):
         """Test that files in output directory are ignored."""
-        from infrastructure.validation.output_validator import \
-            validate_root_output_structure
+        from infrastructure.validation.output_validator import validate_root_output_structure
 
         output_dir = tmp_path / "output"
         output_dir.mkdir()
@@ -280,8 +275,7 @@ class TestValidateRootOutputStructure:
 
     def test_gitkeep_ignored(self, tmp_path):
         """Test that .gitkeep and .gitignore are ignored."""
-        from infrastructure.validation.output_validator import \
-            validate_root_output_structure
+        from infrastructure.validation.output_validator import validate_root_output_structure
 
         output_dir = tmp_path / "output"
         output_dir.mkdir()
@@ -316,8 +310,7 @@ class TestCollectDetailedValidationResults:
 
     def test_collect_complete_results(self, tmp_path):
         """Test collecting results with complete structure."""
-        from infrastructure.validation.output_validator import \
-            collect_detailed_validation_results
+        from infrastructure.validation.output_validator import collect_detailed_validation_results
 
         output_root = tmp_path / "output"
         output_root.mkdir()
@@ -351,8 +344,7 @@ class TestCollectDetailedValidationResults:
 
     def test_collect_missing_directories(self, tmp_path):
         """Test collecting results with missing directories."""
-        from infrastructure.validation.output_validator import \
-            collect_detailed_validation_results
+        from infrastructure.validation.output_validator import collect_detailed_validation_results
 
         output_root = tmp_path / "output"
         output_root.mkdir()
@@ -373,8 +365,7 @@ class TestCollectDetailedValidationResults:
 
     def test_collect_missing_pdf_critical(self, tmp_path):
         """Test that missing PDF is flagged as critical."""
-        from infrastructure.validation.output_validator import \
-            collect_detailed_validation_results
+        from infrastructure.validation.output_validator import collect_detailed_validation_results
 
         output_root = tmp_path / "output"
         output_root.mkdir()
@@ -392,8 +383,7 @@ class TestCollectDetailedValidationResults:
 
     def test_collect_generates_recommendations(self, tmp_path):
         """Test that recommendations are generated based on issues."""
-        from infrastructure.validation.output_validator import \
-            collect_detailed_validation_results
+        from infrastructure.validation.output_validator import collect_detailed_validation_results
 
         output_root = tmp_path / "output"
         output_root.mkdir()
@@ -413,8 +403,7 @@ class TestCollectDetailedValidationResults:
 
     def test_collect_calculates_total_size(self, tmp_path):
         """Test that total size is calculated correctly."""
-        from infrastructure.validation.output_validator import \
-            collect_detailed_validation_results
+        from infrastructure.validation.output_validator import collect_detailed_validation_results
 
         output_root = tmp_path / "output"
         output_root.mkdir()
@@ -438,8 +427,7 @@ class TestCollectDetailedValidationResults:
 
     def test_collect_finds_largest_file(self, tmp_path):
         """Test that largest file is identified per directory."""
-        from infrastructure.validation.output_validator import \
-            collect_detailed_validation_results
+        from infrastructure.validation.output_validator import collect_detailed_validation_results
 
         output_root = tmp_path / "output"
         output_root.mkdir()
@@ -456,14 +444,11 @@ class TestCollectDetailedValidationResults:
         result = collect_detailed_validation_results(project_output_dir)
 
         # Largest file should be identified
-        assert (
-            result["directories"]["pdf"]["largest_file"] == "test_project_combined.pdf"
-        )
+        assert result["directories"]["pdf"]["largest_file"] == "test_project_combined.pdf"
 
     def test_collect_handles_empty_output(self, tmp_path):
         """Test handling of completely empty output directory."""
-        from infrastructure.validation.output_validator import \
-            collect_detailed_validation_results
+        from infrastructure.validation.output_validator import collect_detailed_validation_results
 
         output_root = tmp_path / "output"
         output_root.mkdir()
@@ -478,8 +463,7 @@ class TestCollectDetailedValidationResults:
 
     def test_collect_suspicious_sizes_from_structure(self, tmp_path):
         """Test that suspicious sizes from structure validation are propagated."""
-        from infrastructure.validation.output_validator import \
-            collect_detailed_validation_results
+        from infrastructure.validation.output_validator import collect_detailed_validation_results
 
         output_root = tmp_path / "output"
         output_root.mkdir()

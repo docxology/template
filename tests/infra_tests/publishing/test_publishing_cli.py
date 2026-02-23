@@ -66,10 +66,7 @@ testing, research
                 cli.extract_metadata_command(args)
         assert exc_info.value.code == 1
 
-        assert (
-            "no markdown files" in caplog.text.lower()
-            or "no .md files" in caplog.text.lower()
-        )
+        assert "no markdown files" in caplog.text.lower() or "no .md files" in caplog.text.lower()
 
 
 class TestGenerateCitationCommand:
@@ -113,9 +110,7 @@ class TestGenerateCitationCommand:
 
     def test_generate_citation_nonexistent_dir(self, tmp_path, capsys):
         """Test citation generation with nonexistent directory."""
-        args = argparse.Namespace(
-            manuscript_dir=str(tmp_path / "nonexistent"), format="bibtex"
-        )
+        args = argparse.Namespace(manuscript_dir=str(tmp_path / "nonexistent"), format="bibtex")
 
         with pytest.raises(SystemExit) as exc_info:
             cli.generate_citation_command(args)

@@ -17,9 +17,7 @@ def test_render_summary_cards_and_table() -> None:
     assert "Tests" in cards_html
     assert "9" in cards_html
 
-    table_html = html_templates.render_table(
-        headers=["Name", "Status"], rows=[["setup", "passed"]]
-    )
+    table_html = html_templates.render_table(headers=["Name", "Status"], rows=[["setup", "passed"]])
     assert "<table>" in table_html
     assert "setup" in table_html
 

@@ -153,7 +153,7 @@ def save_streaming_response(
     """
     if metadata.streaming:
         # Add streaming-specific info to metadata
-        streaming_info = f"\n*Streaming: {metadata.chunk_count} chunks in {metadata.streaming_time_seconds:.2f}s*"
+        streaming_info = f"\n*Streaming: {metadata.chunk_count} chunks in {metadata.streaming_time_seconds:.2f}s*"  # noqa: E501
         if metadata.partial_response:
             streaming_info += " (partial response saved)"
     else:

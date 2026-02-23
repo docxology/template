@@ -21,10 +21,8 @@ import numpy as np
 from matplotlib.figure import Figure
 
 from infrastructure.core.logging_utils import get_logger
-from infrastructure.reporting.executive_reporter import (ExecutiveSummary,
-                                                         ProjectMetrics)
-from infrastructure.reporting.manuscript_overview import \
-    generate_all_manuscript_overviews
+from infrastructure.reporting.executive_reporter import ExecutiveSummary, ProjectMetrics
+from infrastructure.reporting.manuscript_overview import generate_all_manuscript_overviews
 from infrastructure.reporting.output_organizer import FileType, OutputOrganizer
 
 logger = get_logger(__name__)
@@ -115,9 +113,7 @@ def create_coverage_chart(projects: List[ProjectMetrics]) -> Figure:
     ax.bar(x, coverage, color=colors)
 
     # Add threshold line at 90%
-    ax.axhline(
-        y=90, color=COLORS["danger"], linestyle="--", linewidth=2, label="90% Threshold"
-    )
+    ax.axhline(y=90, color=COLORS["danger"], linestyle="--", linewidth=2, label="90% Threshold")
 
     ax.set_xlabel("Project", fontweight="bold")
     ax.set_ylabel("Coverage (%)", fontweight="bold")
@@ -397,9 +393,7 @@ def create_manuscript_complexity_chart(projects: List[ProjectMetrics]) -> Figure
         ax4.set_ylim(0, 1.1)
         ax4.grid(True, alpha=0.3)
 
-    fig.suptitle(
-        "Manuscript Complexity Analysis", fontsize=16, fontweight="bold", y=0.98
-    )
+    fig.suptitle("Manuscript Complexity Analysis", fontsize=16, fontweight="bold", y=0.98)
     plt.tight_layout()
     return fig
 
@@ -443,9 +437,7 @@ def create_performance_timeline_chart(projects: List[ProjectMetrics]) -> Figure:
     test_times = [p.tests.execution_time for p in projects]
     coverages = [p.tests.coverage_percent for p in projects]
 
-    ax2.scatter(
-        test_times, coverages, s=100, c=range(len(projects)), cmap="viridis", alpha=0.7
-    )
+    ax2.scatter(test_times, coverages, s=100, c=range(len(projects)), cmap="viridis", alpha=0.7)
     for i, name in enumerate(project_names):
         ax2.annotate(
             name,
@@ -486,9 +478,7 @@ def create_performance_timeline_chart(projects: List[ProjectMetrics]) -> Figure:
             for count, duration in zip(pdf_counts, durations)
         ]
 
-        bars = ax4.bar(
-            range(len(projects)), efficiency, color=COLORS["warning"], alpha=0.7
-        )
+        bars = ax4.bar(range(len(projects)), efficiency, color=COLORS["warning"], alpha=0.7)
         ax4.set_xlabel("Project", fontweight="bold")
         ax4.set_ylabel("PDFs per Second", fontweight="bold")
         ax4.set_title("Pipeline Efficiency", fontweight="bold")
@@ -508,16 +498,12 @@ def create_performance_timeline_chart(projects: List[ProjectMetrics]) -> Figure:
                 fontweight="bold",
             )
 
-    fig.suptitle(
-        "Performance Analysis Dashboard", fontsize=16, fontweight="bold", y=0.98
-    )
+    fig.suptitle("Performance Analysis Dashboard", fontsize=16, fontweight="bold", y=0.98)
     plt.tight_layout()
     return fig
 
 
-def create_summary_table(
-    projects: List[ProjectMetrics], aggregate: Dict[str, Any]
-) -> Figure:
+def create_summary_table(projects: List[ProjectMetrics], aggregate: Dict[str, Any]) -> Figure:
     """Create enhanced summary table with key metrics and health scores.
 
     Args:
@@ -531,8 +517,7 @@ def create_summary_table(
     ax.axis("off")
 
     # Import health score calculation
-    from infrastructure.reporting.executive_reporter import \
-        calculate_project_health_score
+    from infrastructure.reporting.executive_reporter import calculate_project_health_score
 
     # Prepare table data with more columns
     headers = [
@@ -574,10 +559,10 @@ def create_summary_table(
             "**AGGREGATE**",
             "**N/A**",
             "**N/A**",
-            f"**{aggregate['manuscript']['total_words']:,}**\n({manuscript_stats.get('avg', 0):,.0f} avg)",
+            f"**{aggregate['manuscript']['total_words']:,}**\n({manuscript_stats.get('avg', 0):,.0f} avg)",  # noqa: E501
             f"**{aggregate['tests']['total_tests']}**",
-            f"**{aggregate['tests']['average_coverage']:.1f}%**\n({coverage_stats.get('avg', 0):.1f} avg)",
-            f"**{aggregate['pipeline']['total_duration']:.0f}s**\n({duration_stats.get('avg', 0):.0f} avg)",
+            f"**{aggregate['tests']['average_coverage']:.1f}%**\n({coverage_stats.get('avg', 0):.1f} avg)",  # noqa: E501
+            f"**{aggregate['pipeline']['total_duration']:.0f}s**\n({duration_stats.get('avg', 0):.0f} avg)",  # noqa: E501
             f"**{aggregate['outputs']['total_pdfs']}**",
             f"**{aggregate['outputs']['total_figures']}**",
         ]
@@ -620,16 +605,12 @@ def create_summary_table(
                 health_cell.set_facecolor("#f8d7da")  # Light red
                 grade_cell.set_facecolor("#f8d7da")
 
-    ax.set_title(
-        "Comprehensive Project Metrics Summary", fontweight="bold", fontsize=16, pad=30
-    )
+    ax.set_title("Comprehensive Project Metrics Summary", fontweight="bold", fontsize=16, pad=30)
 
     return fig
 
 
-def generate_matplotlib_dashboard(
-    summary: ExecutiveSummary, output_dir: Path
-) -> Dict[str, Path]:
+def generate_matplotlib_dashboard(summary: ExecutiveSummary, output_dir: Path) -> Dict[str, Path]:
     """Generate complete dashboard using matplotlib (PNG and PDF).
 
     Args:
@@ -834,12 +815,9 @@ def generate_matplotlib_dashboard(
         # Row 3: Comparative analysis and summary
         # Health scores comparison
         ax7 = axes[2, 0]
-        from infrastructure.reporting.executive_reporter import \
-            calculate_project_health_score
+        from infrastructure.reporting.executive_reporter import calculate_project_health_score
 
-        health_scores = [
-            calculate_project_health_score(p)["percentage"] for p in projects
-        ]
+        health_scores = [calculate_project_health_score(p)["percentage"] for p in projects]
         ax7.bar(x, health_scores, color=COLORS["primary"], alpha=0.8)
         ax7.axhline(
             y=85,
@@ -922,15 +900,13 @@ def generate_matplotlib_dashboard(
             [
                 "**TOTAL**",
                 "**N/A**",
-                f"**{manuscript_agg.get('total_words', 0):,}**\n({words_stats.get('avg', 0):,.0f} avg)",
+                f"**{manuscript_agg.get('total_words', 0):,}**\n({words_stats.get('avg', 0):,.0f} avg)",  # noqa: E501
                 f"**{tests_agg.get('total_tests', 0)}**",
-                f"**{tests_agg.get('average_coverage', 0):.1f}%**\n({coverage_stats.get('avg', 0):.1f} avg)",
+                f"**{tests_agg.get('average_coverage', 0):.1f}%**\n({coverage_stats.get('avg', 0):.1f} avg)",  # noqa: E501
             ]
         )
 
-        table = ax9.table(
-            cellText=rows, colLabels=headers, loc="center", cellLoc="center"
-        )
+        table = ax9.table(cellText=rows, colLabels=headers, loc="center", cellLoc="center")
         table.auto_set_font_size(False)
         table.set_fontsize(8)
         table.scale(1, 1.8)
@@ -951,13 +927,13 @@ def generate_matplotlib_dashboard(
 
         # Save as PNG (high resolution)
         organizer = OutputOrganizer()
-        png_path = organizer.get_output_path("dashboard.png", output_dir, FileType.PNG)
+        png_path = organizer.get_output_path("dashboard.png", output_dir, FileType.PNG)  # type: ignore
         plt.savefig(png_path, dpi=300, bbox_inches="tight", facecolor="white")
         saved_files["png"] = png_path
         logger.info(f"Saved PNG dashboard: {png_path}")
 
         # Save as PDF (vector graphics)
-        pdf_path = organizer.get_output_path("dashboard.pdf", output_dir, FileType.PDF)
+        pdf_path = organizer.get_output_path("dashboard.pdf", output_dir, FileType.PDF)  # type: ignore
         plt.savefig(pdf_path, format="pdf", bbox_inches="tight", facecolor="white")
         saved_files["pdf"] = pdf_path
         logger.info(f"Saved PDF dashboard: {pdf_path}")
@@ -985,10 +961,8 @@ def generate_plotly_dashboard(summary: ExecutiveSummary, output_dir: Path) -> Pa
         import plotly.graph_objects as go
         from plotly.subplots import make_subplots
     except ImportError:
-        logger.warning(
-            "Plotly not installed, skipping interactive dashboard generation"
-        )
-        return None
+        logger.warning("Plotly not installed, skipping interactive dashboard generation")
+        return None  # type: ignore
 
     logger.info("Generating interactive plotly dashboard...")
 
@@ -1041,11 +1015,13 @@ def generate_plotly_dashboard(summary: ExecutiveSummary, output_dir: Path) -> Pa
     coverage_values = [p.tests.coverage_percent for p in projects]
     fig.add_trace(
         go.Bar(
+            name="Coverage",
             x=project_names,
             y=coverage_values,
             marker_color=COLORS["primary"],
             text=[f"{c:.1f}%" for c in coverage_values],
             textposition="outside",
+            showlegend=False,
         ),
         row=1,
         col=2,
@@ -1054,11 +1030,13 @@ def generate_plotly_dashboard(summary: ExecutiveSummary, output_dir: Path) -> Pa
     # Pipeline duration chart
     fig.add_trace(
         go.Bar(
+            name="Duration",
             x=project_names,
             y=[p.pipeline.total_duration for p in projects],
             marker_color=COLORS["warning"],
             text=[f"{p.pipeline.total_duration:.0f}s" for p in projects],
             textposition="outside",
+            showlegend=False,
         ),
         row=1,
         col=3,
@@ -1091,19 +1069,40 @@ def generate_plotly_dashboard(summary: ExecutiveSummary, output_dir: Path) -> Pa
     # Manuscript size chart
     fig.add_trace(
         go.Bar(
+            name="Words",
             x=project_names,
             y=[p.manuscript.total_words for p in projects],
             marker_color=COLORS["primary"],
             text=[f"{p.manuscript.total_words:,}" for p in projects],
             textposition="outside",
+            showlegend=False,
         ),
         row=2,
         col=2,
     )
 
-    # Summary table
+    # Summary table with status indicators and full project names
+    # Determine pipeline status for each project
+    project_statuses = []
+    status_colors = []
+    for p in projects:
+        if p.tests.failed > 0:
+            project_statuses.append("❌ Failed")
+            status_colors.append(COLORS["danger"])
+        elif p.tests.passed == p.tests.total_tests and p.tests.total_tests > 0:
+            project_statuses.append("✅ Passed")
+            status_colors.append(COLORS["success"])
+        else:
+            project_statuses.append("⚠️ Partial")
+            status_colors.append(COLORS["warning"])
+
+    # Use display-friendly names (replace underscores with spaces)
+    display_names = [p.name.replace("_", " ").title() for p in projects] + ["TOTAL"]
+    project_statuses.append("—")
+
     table_data = {
-        "Project": project_names + ["TOTAL"],
+        "Project": display_names,
+        "Status": project_statuses,
         "Words": [f"{p.manuscript.total_words:,}" for p in projects]
         + [f"{summary.aggregate_metrics['manuscript']['total_words']:,}"],
         "Tests": [str(p.tests.total_tests) for p in projects]
@@ -1112,15 +1111,23 @@ def generate_plotly_dashboard(summary: ExecutiveSummary, output_dir: Path) -> Pa
         + [f"{summary.aggregate_metrics['tests']['average_coverage']:.1f}%"],
     }
 
+    # Row colors: white for data rows, light gray for total
+    row_colors = [["white"] * len(projects) + [COLORS["light"]]]
+
     fig.add_trace(
         go.Table(
             header=dict(
                 values=list(table_data.keys()),
                 fill_color=COLORS["primary"],
                 font=dict(color="white", size=12),
+                align="center",
             ),
             cells=dict(
-                values=list(table_data.values()), fill_color="white", align="left"
+                values=list(table_data.values()),
+                fill_color=row_colors * len(table_data),
+                align="center",
+                font=dict(size=11),
+                height=30,
             ),
         ),
         row=2,
@@ -1134,19 +1141,38 @@ def generate_plotly_dashboard(summary: ExecutiveSummary, output_dir: Path) -> Pa
         showlegend=True,
         height=1000,
         template="plotly_white",
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1,
+        ),
     )
 
-    # Save HTML
+    # Save HTML with proper page title
     html_path = output_dir / "dashboard.html"
-    fig.write_html(html_path)
+    fig.write_html(
+        html_path,
+        full_html=True,
+        include_plotlyjs=True,
+        config={"displayModeBar": True, "responsive": True},
+    )
+
+    # Inject proper HTML <title> tag
+    html_content = html_path.read_text()
+    html_content = html_content.replace(
+        "<head>",
+        "<head>\n<title>Executive Dashboard - Research Template</title>",
+    )
+    html_path.write_text(html_content)
+
     logger.info(f"Saved interactive HTML dashboard: {html_path}")
 
     return html_path
 
 
-def generate_health_radar_chart(
-    summary: ExecutiveSummary, output_dir: Path
-) -> Dict[str, Path]:
+def generate_health_radar_chart(summary: ExecutiveSummary, output_dir: Path) -> Dict[str, Path]:
     """Generate radar chart for health score factors.
 
     Args:
@@ -1160,7 +1186,7 @@ def generate_health_radar_chart(
 
     organizer = OutputOrganizer()
     organizer.ensure_directory_structure(output_dir)
-    saved_files = {}
+    saved_files = {}  # type: ignore
 
     try:
         # Prepare data for radar chart
@@ -1223,9 +1249,7 @@ def generate_health_radar_chart(
         ax.set_xticks(angles[:-1])
         ax.set_xticklabels(factor_labels)
         ax.set_ylim(0, 50)  # Scale to show relative importance
-        ax.set_title(
-            "Project Health Score Analysis", size=16, fontweight="bold", pad=20
-        )
+        ax.set_title("Project Health Score Analysis", size=16, fontweight="bold", pad=20)
         ax.legend(loc="upper right", bbox_to_anchor=(1.2, 1.0))
         ax.grid(True, alpha=0.3)
 
@@ -1245,17 +1269,13 @@ def generate_health_radar_chart(
 
         # Save PNG
         organizer = OutputOrganizer()
-        png_path = organizer.get_output_path(
-            "health_scores_radar.png", output_dir, FileType.PNG
-        )
+        png_path = organizer.get_output_path("health_scores_radar.png", output_dir, FileType.PNG)  # type: ignore
         fig.savefig(png_path, dpi=300, bbox_inches="tight")
         saved_files["png"] = png_path
         logger.info(f"Health radar chart (PNG) saved: {png_path}")
 
         # Save PDF
-        pdf_path = organizer.get_output_path(
-            "health_scores_radar.pdf", output_dir, FileType.PDF
-        )
+        pdf_path = organizer.get_output_path("health_scores_radar.pdf", output_dir, FileType.PDF)  # type: ignore
         fig.savefig(pdf_path, bbox_inches="tight")
         saved_files["pdf"] = pdf_path
         logger.info(f"Health radar chart (PDF) saved: {pdf_path}")
@@ -1284,7 +1304,7 @@ def generate_health_comparison_chart(
 
     organizer = OutputOrganizer()
     organizer.ensure_directory_structure(output_dir)
-    saved_files = {}
+    saved_files = {}  # type: ignore
 
     try:
         projects = summary.project_metrics
@@ -1294,7 +1314,7 @@ def generate_health_comparison_chart(
         # Extract health scores
         project_names = []
         overall_scores = []
-        factor_scores = {
+        factor_scores = {  # type: ignore
             "coverage": [],
             "integrity": [],
             "manuscript": [],
@@ -1309,18 +1329,12 @@ def generate_health_comparison_chart(
 
                 # Extract individual factor scores
                 factors = health.get("factors", {})
-                factor_scores["coverage"].append(
-                    factors.get("test_coverage", {}).get("score", 0)
-                )
-                factor_scores["integrity"].append(
-                    factors.get("test_failures", {}).get("score", 0)
-                )
+                factor_scores["coverage"].append(factors.get("test_coverage", {}).get("score", 0))
+                factor_scores["integrity"].append(factors.get("test_failures", {}).get("score", 0))
                 factor_scores["manuscript"].append(
                     factors.get("manuscript_size", {}).get("score", 0)
                 )
-                factor_scores["outputs"].append(
-                    factors.get("outputs", {}).get("score", 0)
-                )
+                factor_scores["outputs"].append(factors.get("outputs", {}).get("score", 0))
 
         if not project_names:
             return saved_files
@@ -1329,9 +1343,7 @@ def generate_health_comparison_chart(
         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 10))
 
         # Overall health scores
-        bars = ax1.bar(
-            project_names, overall_scores, color=COLORS["primary"], alpha=0.8
-        )
+        bars = ax1.bar(project_names, overall_scores, color=COLORS["primary"], alpha=0.8)
         ax1.set_ylabel("Overall Health Score (%)", fontweight="bold")
         ax1.set_title("Project Health Scores Overview", fontweight="bold")
         ax1.set_ylim(0, 105)
@@ -1397,7 +1409,9 @@ def generate_health_comparison_chart(
         # Save PNG
         organizer = OutputOrganizer()
         png_path = organizer.get_output_path(
-            "health_scores_comparison.png", output_dir, FileType.PNG
+            "health_scores_comparison.png",
+            output_dir,
+            FileType.PNG,  # type: ignore
         )
         fig.savefig(png_path, dpi=300, bbox_inches="tight")
         saved_files["png"] = png_path
@@ -1405,7 +1419,9 @@ def generate_health_comparison_chart(
 
         # Save PDF
         pdf_path = organizer.get_output_path(
-            "health_scores_comparison.pdf", output_dir, FileType.PDF
+            "health_scores_comparison.pdf",
+            output_dir,
+            FileType.PDF,  # type: ignore
         )
         fig.savefig(pdf_path, bbox_inches="tight")
         saved_files["pdf"] = pdf_path
@@ -1419,9 +1435,7 @@ def generate_health_comparison_chart(
     return saved_files
 
 
-def generate_project_breakdowns(
-    summary: ExecutiveSummary, output_dir: Path
-) -> Dict[str, Path]:
+def generate_project_breakdowns(summary: ExecutiveSummary, output_dir: Path) -> Dict[str, Path]:
     """Generate individual dashboard for each project.
 
     Args:
@@ -1435,7 +1449,7 @@ def generate_project_breakdowns(
 
     organizer = OutputOrganizer()
     organizer.ensure_directory_structure(output_dir)
-    saved_files = {}
+    saved_files = {}  # type: ignore
 
     try:
         projects = summary.project_metrics
@@ -1445,9 +1459,7 @@ def generate_project_breakdowns(
         for project in projects:
             # Create individual dashboard for this project
             fig, axes = plt.subplots(2, 2, figsize=(15, 12))
-            fig.suptitle(
-                f"Project Dashboard: {project.name}", fontsize=16, fontweight="bold"
-            )
+            fig.suptitle(f"Project Dashboard: {project.name}", fontsize=16, fontweight="bold")
 
             # Manuscript metrics
             ax1 = axes[0, 0]
@@ -1458,9 +1470,7 @@ def generate_project_breakdowns(
                 project.manuscript.figures,
             ]
             manuscript_labels = ["Words", "Sections", "Equations", "Figures"]
-            bars = ax1.bar(
-                manuscript_labels, manuscript_data, color=COLORS["primary"], alpha=0.8
-            )
+            bars = ax1.bar(manuscript_labels, manuscript_data, color=COLORS["primary"], alpha=0.8)
             ax1.set_title("Manuscript Metrics", fontweight="bold")
             ax1.set_ylabel("Count", fontweight="bold")
             ax1.grid(axis="y", alpha=0.3)
@@ -1485,9 +1495,7 @@ def generate_project_breakdowns(
                 project.codebase.scripts,
             ]
             codebase_labels = ["Source Lines", "Methods", "Classes", "Scripts"]
-            bars = ax2.bar(
-                codebase_labels, codebase_data, color=COLORS["success"], alpha=0.8
-            )
+            bars = ax2.bar(codebase_labels, codebase_data, color=COLORS["success"], alpha=0.8)
             ax2.set_title("Codebase Metrics", fontweight="bold")
             ax2.set_ylabel("Count", fontweight="bold")
             ax2.grid(axis="y", alpha=0.3)
@@ -1622,10 +1630,7 @@ def generate_project_breakdowns(
                 else:
                     # Fallback: try case-insensitive partial match
                     for i, stage in enumerate(stages):
-                        if (
-                            bottleneck_name in stage.lower()
-                            or stage.lower() in bottleneck_name
-                        ):
+                        if bottleneck_name in stage.lower() or stage.lower() in bottleneck_name:
                             bottleneck_idx = i
                             break
 
@@ -1639,14 +1644,14 @@ def generate_project_breakdowns(
             organizer = OutputOrganizer()
             safe_name = project.name.replace("_", "").replace("-", "").lower()
             png_filename = f"project_dashboard_{safe_name}.png"
-            png_path = organizer.get_output_path(png_filename, output_dir, FileType.PNG)
+            png_path = organizer.get_output_path(png_filename, output_dir, FileType.PNG)  # type: ignore
             fig.savefig(png_path, dpi=300, bbox_inches="tight")
             saved_files[f"{safe_name}_png"] = png_path
             logger.info(f"Project dashboard ({project.name} PNG) saved: {png_path}")
 
             # Save PDF
             pdf_filename = f"project_dashboard_{safe_name}.pdf"
-            pdf_path = organizer.get_output_path(pdf_filename, output_dir, FileType.PDF)
+            pdf_path = organizer.get_output_path(pdf_filename, output_dir, FileType.PDF)  # type: ignore
             fig.savefig(pdf_path, bbox_inches="tight")
             saved_files[f"{safe_name}_pdf"] = pdf_path
             logger.info(f"Project dashboard ({project.name} PDF) saved: {pdf_path}")
@@ -1675,7 +1680,7 @@ def generate_pipeline_efficiency_chart(
 
     organizer = OutputOrganizer()
     organizer.ensure_directory_structure(output_dir)
-    saved_files = {}
+    saved_files = {}  # type: ignore
 
     try:
         projects = summary.project_metrics
@@ -1709,7 +1714,7 @@ def generate_pipeline_efficiency_chart(
             )
 
         # Chart 2: Bottleneck analysis
-        bottlenecks = {}
+        bottlenecks = {}  # type: ignore
         for project in projects:
             stage = project.pipeline.bottleneck_stage or "Unknown"
             if stage not in bottlenecks:
@@ -1718,9 +1723,7 @@ def generate_pipeline_efficiency_chart(
 
         if bottlenecks:
             bottleneck_labels = list(bottlenecks.keys())
-            bottleneck_means = [
-                np.mean(durations) for durations in bottlenecks.values()
-            ]
+            bottleneck_means = [np.mean(durations) for durations in bottlenecks.values()]
             bottleneck_stds = [np.std(durations) for durations in bottlenecks.values()]
 
             bars = ax2.bar(
@@ -1773,9 +1776,7 @@ def generate_pipeline_efficiency_chart(
                 efficiency = 0
             outputs_per_second.append(efficiency)
 
-        bars = ax4.bar(
-            project_names, outputs_per_second, color=COLORS["primary"], alpha=0.8
-        )
+        bars = ax4.bar(project_names, outputs_per_second, color=COLORS["primary"], alpha=0.8)
         ax4.set_ylabel("Outputs per Second", fontweight="bold")
         ax4.set_title("Pipeline Efficiency", fontweight="bold")
         ax4.set_xticks(range(len(project_names)))
@@ -1797,17 +1798,13 @@ def generate_pipeline_efficiency_chart(
 
         # Save PNG
         organizer = OutputOrganizer()
-        png_path = organizer.get_output_path(
-            "pipeline_efficiency.png", output_dir, FileType.PNG
-        )
+        png_path = organizer.get_output_path("pipeline_efficiency.png", output_dir, FileType.PNG)  # type: ignore
         fig.savefig(png_path, dpi=300, bbox_inches="tight")
         saved_files["png"] = png_path
         logger.info(f"Pipeline efficiency chart (PNG) saved: {png_path}")
 
         # Save PDF
-        pdf_path = organizer.get_output_path(
-            "pipeline_efficiency.pdf", output_dir, FileType.PDF
-        )
+        pdf_path = organizer.get_output_path("pipeline_efficiency.pdf", output_dir, FileType.PDF)  # type: ignore
         fig.savefig(pdf_path, bbox_inches="tight")
         saved_files["pdf"] = pdf_path
         logger.info(f"Pipeline efficiency chart (PDF) saved: {pdf_path}")
@@ -1836,7 +1833,7 @@ def generate_pipeline_bottlenecks_chart(
 
     organizer = OutputOrganizer()
     organizer.ensure_directory_structure(output_dir)
-    saved_files = {}
+    saved_files = {}  # type: ignore
 
     try:
         projects = summary.project_metrics
@@ -1844,7 +1841,7 @@ def generate_pipeline_bottlenecks_chart(
             return saved_files
 
         # Collect bottleneck data
-        bottleneck_data = {}
+        bottleneck_data = {}  # type: ignore
         for project in projects:
             stage = project.pipeline.bottleneck_stage or "Unknown"
             duration = project.pipeline.bottleneck_duration
@@ -1863,12 +1860,8 @@ def generate_pipeline_bottlenecks_chart(
 
         # Chart 1: Bottleneck duration by stage
         stages = list(bottleneck_data.keys())
-        avg_durations = [
-            np.mean([d[1] for d in data]) for data in bottleneck_data.values()
-        ]
-        std_durations = [
-            np.std([d[1] for d in data]) for data in bottleneck_data.values()
-        ]
+        avg_durations = [np.mean([d[1] for d in data]) for data in bottleneck_data.values()]
+        std_durations = [np.std([d[1] for d in data]) for data in bottleneck_data.values()]
 
         bars = ax1.bar(
             stages,
@@ -1885,12 +1878,8 @@ def generate_pipeline_bottlenecks_chart(
         ax1.grid(axis="y", alpha=0.3)
 
         # Chart 2: Bottleneck percentage of total pipeline time
-        avg_percentages = [
-            np.mean([d[2] for d in data]) for data in bottleneck_data.values()
-        ]
-        std_percentages = [
-            np.std([d[2] for d in data]) for data in bottleneck_data.values()
-        ]
+        avg_percentages = [np.mean([d[2] for d in data]) for data in bottleneck_data.values()]
+        std_percentages = [np.std([d[2] for d in data]) for data in bottleneck_data.values()]
 
         bars = ax2.bar(
             stages,
@@ -1922,17 +1911,13 @@ def generate_pipeline_bottlenecks_chart(
 
         # Save PNG
         organizer = OutputOrganizer()
-        png_path = organizer.get_output_path(
-            "pipeline_bottlenecks.png", output_dir, FileType.PNG
-        )
+        png_path = organizer.get_output_path("pipeline_bottlenecks.png", output_dir, FileType.PNG)  # type: ignore
         fig.savefig(png_path, dpi=300, bbox_inches="tight")
         saved_files["png"] = png_path
         logger.info(f"Pipeline bottlenecks chart (PNG) saved: {png_path}")
 
         # Save PDF
-        pdf_path = organizer.get_output_path(
-            "pipeline_bottlenecks.pdf", output_dir, FileType.PDF
-        )
+        pdf_path = organizer.get_output_path("pipeline_bottlenecks.pdf", output_dir, FileType.PDF)  # type: ignore
         fig.savefig(pdf_path, bbox_inches="tight")
         saved_files["pdf"] = pdf_path
         logger.info(f"Pipeline bottlenecks chart (PDF) saved: {pdf_path}")
@@ -1961,7 +1946,7 @@ def generate_output_distribution_charts(
 
     organizer = OutputOrganizer()
     organizer.ensure_directory_structure(output_dir)
-    saved_files = {}
+    saved_files = {}  # type: ignore
 
     try:
         projects = summary.project_metrics
@@ -1979,9 +1964,7 @@ def generate_output_distribution_charts(
         slide_counts = [p.outputs.slides for p in projects]
         web_counts = [p.outputs.web_outputs for p in projects]
 
-        ax1.bar(
-            project_names, pdf_counts, label="PDFs", color=COLORS["primary"], alpha=0.8
-        )
+        ax1.bar(project_names, pdf_counts, label="PDFs", color=COLORS["primary"], alpha=0.8)
         ax1.bar(
             project_names,
             figure_counts,
@@ -2027,16 +2010,12 @@ def generate_output_distribution_charts(
                 + project.outputs.web_outputs
             )
             if project.pipeline.total_duration > 0:
-                efficiency = total_outputs / (
-                    project.pipeline.total_duration / 60
-                )  # per minute
+                efficiency = total_outputs / (project.pipeline.total_duration / 60)  # per minute
             else:
                 efficiency = 0
             outputs_per_minute.append(efficiency)
 
-        bars = ax2.bar(
-            project_names, outputs_per_minute, color=COLORS["primary"], alpha=0.8
-        )
+        bars = ax2.bar(project_names, outputs_per_minute, color=COLORS["primary"], alpha=0.8)
         ax2.set_ylabel("Outputs per Minute", fontweight="bold")
         ax2.set_title("Output Generation Efficiency", fontweight="bold")
         ax2.set_xticks(range(len(project_names)))
@@ -2080,16 +2059,12 @@ def generate_output_distribution_charts(
         for project in projects:
             # Calculate a completeness score based on expected outputs
             expected_pdfs = 1  # At least one PDF
-            expected_figures = max(
-                1, project.manuscript.figures
-            )  # At least as many as references
+            expected_figures = max(1, project.manuscript.figures)  # At least as many as references
             expected_slides = 4  # Standard slide count
             expected_web = 4  # Standard web count
 
             pdf_score = (
-                min(project.outputs.pdf_files / expected_pdfs, 1.0)
-                if expected_pdfs > 0
-                else 1.0
+                min(project.outputs.pdf_files / expected_pdfs, 1.0) if expected_pdfs > 0 else 1.0
             )
             figure_score = (
                 min(project.outputs.figures / expected_figures, 1.0)
@@ -2097,22 +2072,16 @@ def generate_output_distribution_charts(
                 else 1.0
             )
             slide_score = (
-                min(project.outputs.slides / expected_slides, 1.0)
-                if expected_slides > 0
-                else 1.0
+                min(project.outputs.slides / expected_slides, 1.0) if expected_slides > 0 else 1.0
             )
             web_score = (
-                min(project.outputs.web_outputs / expected_web, 1.0)
-                if expected_web > 0
-                else 1.0
+                min(project.outputs.web_outputs / expected_web, 1.0) if expected_web > 0 else 1.0
             )
 
             avg_completeness = (pdf_score + figure_score + slide_score + web_score) / 4
             completeness_scores.append(avg_completeness * 100)  # Convert to percentage
 
-        bars = ax4.bar(
-            project_names, completeness_scores, color=COLORS["success"], alpha=0.8
-        )
+        bars = ax4.bar(project_names, completeness_scores, color=COLORS["success"], alpha=0.8)
         ax4.set_ylabel("Completeness (%)", fontweight="bold")
         ax4.set_title("Output Completeness", fontweight="bold")
         ax4.set_xticks(range(len(project_names)))
@@ -2135,17 +2104,13 @@ def generate_output_distribution_charts(
 
         # Save PNG
         organizer = OutputOrganizer()
-        png_path = organizer.get_output_path(
-            "output_distribution.png", output_dir, FileType.PNG
-        )
+        png_path = organizer.get_output_path("output_distribution.png", output_dir, FileType.PNG)  # type: ignore
         fig.savefig(png_path, dpi=300, bbox_inches="tight")
         saved_files["png"] = png_path
         logger.info(f"Output distribution chart (PNG) saved: {png_path}")
 
         # Save PDF
-        pdf_path = organizer.get_output_path(
-            "output_distribution.pdf", output_dir, FileType.PDF
-        )
+        pdf_path = organizer.get_output_path("output_distribution.pdf", output_dir, FileType.PDF)  # type: ignore
         fig.savefig(pdf_path, bbox_inches="tight")
         saved_files["pdf"] = pdf_path
         logger.info(f"Output distribution chart (PDF) saved: {pdf_path}")
@@ -2174,7 +2139,7 @@ def generate_output_comparison_chart(
 
     organizer = OutputOrganizer()
     organizer.ensure_directory_structure(output_dir)
-    saved_files = {}
+    saved_files = {}  # type: ignore
 
     try:
         projects = summary.project_metrics
@@ -2212,9 +2177,7 @@ def generate_output_comparison_chart(
 
         for i, (output_type, color) in enumerate(zip(output_types, colors)):
             values = [project_data[i] for project_data in data]
-            bars = ax.bar(
-                x + i * width, values, width, label=output_type, color=color, alpha=0.8
-            )
+            bars = ax.bar(x + i * width, values, width, label=output_type, color=color, alpha=0.8)
 
             # Add value labels
             for bar, value in zip(bars, values):
@@ -2230,9 +2193,7 @@ def generate_output_comparison_chart(
                     )
 
         ax.set_ylabel("Count", fontweight="bold")
-        ax.set_title(
-            "Output Comparison by Type and Project", fontweight="bold", fontsize=14
-        )
+        ax.set_title("Output Comparison by Type and Project", fontweight="bold", fontsize=14)
         ax.set_xticks(x + width * 2)
         ax.set_xticklabels(project_names, rotation=45, ha="right")
         ax.legend()
@@ -2242,17 +2203,13 @@ def generate_output_comparison_chart(
 
         # Save PNG
         organizer = OutputOrganizer()
-        png_path = organizer.get_output_path(
-            "output_comparison.png", output_dir, FileType.PNG
-        )
+        png_path = organizer.get_output_path("output_comparison.png", output_dir, FileType.PNG)  # type: ignore
         fig.savefig(png_path, dpi=300, bbox_inches="tight")
         saved_files["png"] = png_path
         logger.info(f"Output comparison chart (PNG) saved: {png_path}")
 
         # Save PDF
-        pdf_path = organizer.get_output_path(
-            "output_comparison.pdf", output_dir, FileType.PDF
-        )
+        pdf_path = organizer.get_output_path("output_comparison.pdf", output_dir, FileType.PDF)  # type: ignore
         fig.savefig(pdf_path, bbox_inches="tight")
         saved_files["pdf"] = pdf_path
         logger.info(f"Output comparison chart (PDF) saved: {pdf_path}")
@@ -2281,7 +2238,7 @@ def generate_codebase_complexity_chart(
 
     organizer = OutputOrganizer()
     organizer.ensure_directory_structure(output_dir)
-    saved_files = {}
+    saved_files = {}  # type: ignore
 
     try:
         projects = summary.project_metrics
@@ -2392,16 +2349,12 @@ def generate_codebase_complexity_chart(
         for project in projects:
             total_lines = project.codebase.source_lines
             if total_lines > 0:
-                ratio = (
-                    project.codebase.methods / total_lines
-                ) * 100  # methods per 100 lines
+                ratio = (project.codebase.methods / total_lines) * 100  # methods per 100 lines
             else:
                 ratio = 0
             complexity_ratios.append(ratio)
 
-        bars = ax4.bar(
-            project_names, complexity_ratios, color=COLORS["secondary"], alpha=0.8
-        )
+        bars = ax4.bar(project_names, complexity_ratios, color=COLORS["secondary"], alpha=0.8)
         ax4.set_ylabel("Methods per 100 Lines", fontweight="bold")
         ax4.set_title("Code Density Metric", fontweight="bold")
         ax4.set_xticks(range(len(project_names)))
@@ -2423,17 +2376,13 @@ def generate_codebase_complexity_chart(
 
         # Save PNG
         organizer = OutputOrganizer()
-        png_path = organizer.get_output_path(
-            "codebase_complexity.png", output_dir, FileType.PNG
-        )
+        png_path = organizer.get_output_path("codebase_complexity.png", output_dir, FileType.PNG)  # type: ignore
         fig.savefig(png_path, dpi=300, bbox_inches="tight")
         saved_files["png"] = png_path
         logger.info(f"Codebase complexity chart (PNG) saved: {png_path}")
 
         # Save PDF
-        pdf_path = organizer.get_output_path(
-            "codebase_complexity.pdf", output_dir, FileType.PDF
-        )
+        pdf_path = organizer.get_output_path("codebase_complexity.pdf", output_dir, FileType.PDF)  # type: ignore
         fig.savefig(pdf_path, bbox_inches="tight")
         saved_files["pdf"] = pdf_path
         logger.info(f"Codebase complexity chart (PDF) saved: {pdf_path}")
@@ -2462,7 +2411,7 @@ def generate_codebase_comparison_chart(
 
     organizer = OutputOrganizer()
     organizer.ensure_directory_structure(output_dir)
-    saved_files = {}
+    saved_files = {}  # type: ignore
 
     try:
         projects = summary.project_metrics
@@ -2500,9 +2449,7 @@ def generate_codebase_comparison_chart(
 
         for i, (metric, color) in enumerate(zip(metrics, colors)):
             values = [project_data[i] for project_data in data]
-            bars = ax.bar(
-                x + i * width, values, width, label=metric, color=color, alpha=0.8
-            )
+            bars = ax.bar(x + i * width, values, width, label=metric, color=color, alpha=0.8)
 
             # Add value labels for non-zero values
             for bar, value in zip(bars, values):
@@ -2518,9 +2465,7 @@ def generate_codebase_comparison_chart(
                     )
 
         ax.set_ylabel("Count", fontweight="bold")
-        ax.set_title(
-            "Codebase Comparison by Metric and Project", fontweight="bold", fontsize=14
-        )
+        ax.set_title("Codebase Comparison by Metric and Project", fontweight="bold", fontsize=14)
         ax.set_xticks(x + width * 2)
         ax.set_xticklabels(project_names, rotation=45, ha="right")
         ax.legend()
@@ -2536,17 +2481,13 @@ def generate_codebase_comparison_chart(
 
         # Save PNG
         organizer = OutputOrganizer()
-        png_path = organizer.get_output_path(
-            "codebase_comparison.png", output_dir, FileType.PNG
-        )
+        png_path = organizer.get_output_path("codebase_comparison.png", output_dir, FileType.PNG)  # type: ignore
         fig.savefig(png_path, dpi=300, bbox_inches="tight")
         saved_files["png"] = png_path
         logger.info(f"Codebase comparison chart (PNG) saved: {png_path}")
 
         # Save PDF
-        pdf_path = organizer.get_output_path(
-            "codebase_comparison.pdf", output_dir, FileType.PDF
-        )
+        pdf_path = organizer.get_output_path("codebase_comparison.pdf", output_dir, FileType.PDF)  # type: ignore
         fig.savefig(pdf_path, bbox_inches="tight")
         saved_files["pdf"] = pdf_path
         logger.info(f"Codebase comparison chart (PDF) saved: {pdf_path}")
@@ -2559,15 +2500,11 @@ def generate_codebase_comparison_chart(
     return saved_files
 
 
-def generate_detailed_project_breakdown_csv(
-    summary: ExecutiveSummary, output_dir: Path
-) -> Path:
+def generate_detailed_project_breakdown_csv(summary: ExecutiveSummary, output_dir: Path) -> Path:
     """Generate detailed project breakdown CSV with all metrics and explanations."""
     organizer = OutputOrganizer()
     organizer.ensure_directory_structure(output_dir)
-    csv_path = organizer.get_output_path(
-        "detailed_project_breakdown.csv", output_dir, FileType.CSV
-    )
+    csv_path = organizer.get_output_path("detailed_project_breakdown.csv", output_dir, FileType.CSV)  # type: ignore
 
     with open(csv_path, "w", newline="") as f:
         writer = csv.writer(f)
@@ -2877,15 +2814,11 @@ def generate_detailed_project_breakdown_csv(
     return csv_path
 
 
-def generate_comparative_analysis_csv(
-    summary: ExecutiveSummary, output_dir: Path
-) -> Path:
+def generate_comparative_analysis_csv(summary: ExecutiveSummary, output_dir: Path) -> Path:
     """Generate comparative analysis CSV with rankings and percentiles."""
     organizer = OutputOrganizer()
     organizer.ensure_directory_structure(output_dir)
-    csv_path = organizer.get_output_path(
-        "comparative_analysis.csv", output_dir, FileType.CSV
-    )
+    csv_path = organizer.get_output_path("comparative_analysis.csv", output_dir, FileType.CSV)  # type: ignore
 
     with open(csv_path, "w", newline="") as f:
         writer = csv.writer(f)
@@ -2924,13 +2857,7 @@ def generate_comparative_analysis_csv(
             if not values_list:
                 return (
                     50,
-                    len(
-                        [
-                            v
-                            for v in values_list
-                            if (v > value if higher_is_better else v < value)
-                        ]
-                    )
+                    len([v for v in values_list if (v > value if higher_is_better else v < value)])
                     + 1,
                 )
 
@@ -2945,13 +2872,7 @@ def generate_comparative_analysis_csv(
             except ValueError:
                 # Handle ties or missing values
                 rank = (
-                    len(
-                        [
-                            v
-                            for v in values_list
-                            if (v > value if higher_is_better else v < value)
-                        ]
-                    )
+                    len([v for v in values_list if (v > value if higher_is_better else v < value)])
                     + 1
                 )
                 percentile = (rank - 1) / len(values_list) * 100
@@ -2992,12 +2913,8 @@ def generate_comparative_analysis_csv(
                 metrics_data["manuscript_words"],
                 higher_is_better=True,
             )
-            avg = sum(metrics_data["manuscript_words"]) / len(
-                metrics_data["manuscript_words"]
-            )
-            vs_avg = (
-                ((project.manuscript.total_words - avg) / avg * 100) if avg > 0 else 0
-            )
+            avg = sum(metrics_data["manuscript_words"]) / len(metrics_data["manuscript_words"])  # type: ignore
+            vs_avg = ((project.manuscript.total_words - avg) / avg * 100) if avg > 0 else 0
 
             writer.writerow(
                 [
@@ -3018,8 +2935,8 @@ def generate_comparative_analysis_csv(
                 metrics_data["manuscript_sections"],
                 higher_is_better=True,
             )
-            avg = sum(metrics_data["manuscript_sections"]) / len(
-                metrics_data["manuscript_sections"]
+            avg = sum(metrics_data["manuscript_sections"]) / len(  # type: ignore
+                metrics_data["manuscript_sections"]  # type: ignore
             )
             vs_avg = ((project.manuscript.sections - avg) / avg * 100) if avg > 0 else 0
 
@@ -3043,12 +2960,8 @@ def generate_comparative_analysis_csv(
                 metrics_data["codebase_lines"],
                 higher_is_better=True,
             )
-            avg = sum(metrics_data["codebase_lines"]) / len(
-                metrics_data["codebase_lines"]
-            )
-            vs_avg = (
-                ((project.codebase.source_lines - avg) / avg * 100) if avg > 0 else 0
-            )
+            avg = sum(metrics_data["codebase_lines"]) / len(metrics_data["codebase_lines"])  # type: ignore
+            vs_avg = ((project.codebase.source_lines - avg) / avg * 100) if avg > 0 else 0
 
             writer.writerow(
                 [
@@ -3070,12 +2983,8 @@ def generate_comparative_analysis_csv(
                 metrics_data["pipeline_duration"],
                 higher_is_better=False,
             )
-            avg = sum(metrics_data["pipeline_duration"]) / len(
-                metrics_data["pipeline_duration"]
-            )
-            vs_avg = (
-                ((project.pipeline.total_duration - avg) / avg * 100) if avg > 0 else 0
-            )
+            avg = sum(metrics_data["pipeline_duration"]) / len(metrics_data["pipeline_duration"])  # type: ignore
+            vs_avg = ((project.pipeline.total_duration - avg) / avg * 100) if avg > 0 else 0
 
             writer.writerow(
                 [
@@ -3097,10 +3006,8 @@ def generate_comparative_analysis_csv(
                 metrics_data["output_total"],
                 higher_is_better=True,
             )
-            avg = sum(metrics_data["output_total"]) / len(metrics_data["output_total"])
-            vs_avg = (
-                ((project.outputs.total_outputs - avg) / avg * 100) if avg > 0 else 0
-            )
+            avg = sum(metrics_data["output_total"]) / len(metrics_data["output_total"])  # type: ignore
+            vs_avg = ((project.outputs.total_outputs - avg) / avg * 100) if avg > 0 else 0
 
             writer.writerow(
                 [
@@ -3120,14 +3027,14 @@ def generate_comparative_analysis_csv(
     return csv_path
 
 
-def generate_prioritized_recommendations_csv(
-    summary: ExecutiveSummary, output_dir: Path
-) -> Path:
+def generate_prioritized_recommendations_csv(summary: ExecutiveSummary, output_dir: Path) -> Path:
     """Generate prioritized recommendations CSV with impact and effort estimates."""
     organizer = OutputOrganizer()
     organizer.ensure_directory_structure(output_dir)
     csv_path = organizer.get_output_path(
-        "recommendations_prioritized.csv", output_dir, FileType.CSV
+        "recommendations_prioritized.csv",
+        output_dir,
+        FileType.CSV,  # type: ignore
     )
 
     with open(csv_path, "w", newline="") as f:
@@ -3164,17 +3071,14 @@ def generate_prioritized_recommendations_csv(
             next_steps = "Review and implement as appropriate"
 
             if any(
-                keyword in rec.lower()
-                for keyword in ["critical", "immediate", "failing", "broken"]
+                keyword in rec.lower() for keyword in ["critical", "immediate", "failing", "broken"]
             ):
                 priority_score = 5
                 priority_level = "High"
                 impact_level = "High"
                 effort_level = "Medium"
                 time_estimate = "1-2 days"
-            elif any(
-                keyword in rec.lower() for keyword in ["below", "improve", "consider"]
-            ):
+            elif any(keyword in rec.lower() for keyword in ["below", "improve", "consider"]):
                 priority_score = 3
                 priority_level = "Medium"
                 impact_level = "Medium"
@@ -3218,7 +3122,7 @@ def generate_prioritized_recommendations_csv(
             )
 
         # Sort by priority score (highest first)
-        recommendations_data.sort(key=lambda x: x["priority_score"], reverse=True)
+        recommendations_data.sort(key=lambda x: x["priority_score"], reverse=True)  # type: ignore
 
         # Write sorted recommendations
         for item in recommendations_data:
@@ -3241,9 +3145,7 @@ def generate_prioritized_recommendations_csv(
     return csv_path
 
 
-def generate_csv_data_tables(
-    summary: ExecutiveSummary, output_dir: Path
-) -> Dict[str, Path]:
+def generate_csv_data_tables(summary: ExecutiveSummary, output_dir: Path) -> Dict[str, Path]:
     """Generate CSV data tables for dashboard data export.
 
     Args:
@@ -3255,8 +3157,7 @@ def generate_csv_data_tables(
     """
     import csv
 
-    from infrastructure.reporting.executive_reporter import \
-        calculate_project_health_score
+    from infrastructure.reporting.executive_reporter import calculate_project_health_score
 
     organizer = OutputOrganizer()
     organizer.ensure_directory_structure(output_dir)
@@ -3264,9 +3165,7 @@ def generate_csv_data_tables(
 
     # Project metrics CSV
     organizer = OutputOrganizer()
-    metrics_csv = organizer.get_output_path(
-        "project_metrics.csv", output_dir, FileType.CSV
-    )
+    metrics_csv = organizer.get_output_path("project_metrics.csv", output_dir, FileType.CSV)  # type: ignore
     with open(metrics_csv, "w", newline="") as f:
         writer = csv.writer(f)
 
@@ -3332,9 +3231,7 @@ def generate_csv_data_tables(
     logger.info(f"Generated CSV metrics table: {metrics_csv}")
 
     # Aggregate metrics CSV
-    aggregate_csv = organizer.get_output_path(
-        "aggregate_metrics.csv", output_dir, FileType.CSV
-    )
+    aggregate_csv = organizer.get_output_path("aggregate_metrics.csv", output_dir, FileType.CSV)  # type: ignore
     with open(aggregate_csv, "w", newline="") as f:
         writer = csv.writer(f)
 
@@ -3344,9 +3241,7 @@ def generate_csv_data_tables(
 
         # Manuscript aggregates
         manuscript = agg.get("manuscript", {})
-        writer.writerow(
-            ["Manuscript", "Total_Words", manuscript.get("total_words", 0), "words"]
-        )
+        writer.writerow(["Manuscript", "Total_Words", manuscript.get("total_words", 0), "words"])
         writer.writerow(
             [
                 "Manuscript",
@@ -3383,15 +3278,9 @@ def generate_csv_data_tables(
         # Test aggregates
         tests = agg.get("tests", {})
         writer.writerow(["Tests", "Total_Tests", tests.get("total_tests", 0), "tests"])
-        writer.writerow(
-            ["Tests", "Total_Passed", tests.get("total_passed", 0), "tests"]
-        )
-        writer.writerow(
-            ["Tests", "Total_Failed", tests.get("total_failed", 0), "tests"]
-        )
-        writer.writerow(
-            ["Tests", "Average_Coverage", tests.get("average_coverage", 0), "percent"]
-        )
+        writer.writerow(["Tests", "Total_Passed", tests.get("total_passed", 0), "tests"])
+        writer.writerow(["Tests", "Total_Failed", tests.get("total_failed", 0), "tests"])
+        writer.writerow(["Tests", "Average_Coverage", tests.get("average_coverage", 0), "percent"])
         writer.writerow(
             [
                 "Tests",
@@ -3433,27 +3322,17 @@ def generate_csv_data_tables(
 
         # Output aggregates
         outputs = agg.get("outputs", {})
-        writer.writerow(
-            ["Outputs", "Total_PDFs", outputs.get("total_pdfs", 0), "files"]
-        )
-        writer.writerow(
-            ["Outputs", "Total_Size_MB", outputs.get("total_size_mb", 0), "MB"]
-        )
-        writer.writerow(
-            ["Outputs", "Total_Figures", outputs.get("total_figures", 0), "files"]
-        )
-        writer.writerow(
-            ["Outputs", "Total_Slides", outputs.get("total_slides", 0), "files"]
-        )
+        writer.writerow(["Outputs", "Total_PDFs", outputs.get("total_pdfs", 0), "files"])
+        writer.writerow(["Outputs", "Total_Size_MB", outputs.get("total_size_mb", 0), "MB"])
+        writer.writerow(["Outputs", "Total_Figures", outputs.get("total_figures", 0), "files"])
+        writer.writerow(["Outputs", "Total_Slides", outputs.get("total_slides", 0), "files"])
         writer.writerow(["Outputs", "Total_Web", outputs.get("total_web", 0), "files"])
 
     csv_files["aggregates"] = aggregate_csv
     logger.info(f"Generated CSV aggregates table: {aggregate_csv}")
 
     # Health scores CSV
-    health_csv = organizer.get_output_path(
-        "health_scores.csv", output_dir, FileType.CSV
-    )
+    health_csv = organizer.get_output_path("health_scores.csv", output_dir, FileType.CSV)  # type: ignore
     with open(health_csv, "w", newline="") as f:
         writer = csv.writer(f)
 
@@ -3500,9 +3379,7 @@ def generate_csv_data_tables(
     return csv_files
 
 
-def generate_all_dashboards(
-    summary: ExecutiveSummary, output_dir: Path
-) -> Dict[str, Path]:
+def generate_all_dashboards(summary: ExecutiveSummary, output_dir: Path) -> Dict[str, Path]:
     """Generate all dashboard formats including CSV data exports.
 
     Args:
@@ -3542,26 +3419,20 @@ def generate_all_dashboards(
 
     # Generate pipeline efficiency visualizations
     try:
-        pipeline_efficiency_files = generate_pipeline_efficiency_chart(
-            summary, output_dir
-        )
+        pipeline_efficiency_files = generate_pipeline_efficiency_chart(summary, output_dir)
         all_files.update(pipeline_efficiency_files)
     except Exception as e:
         logger.warning(f"Could not generate pipeline efficiency chart: {e}")
 
     try:
-        pipeline_bottlenecks_files = generate_pipeline_bottlenecks_chart(
-            summary, output_dir
-        )
+        pipeline_bottlenecks_files = generate_pipeline_bottlenecks_chart(summary, output_dir)
         all_files.update(pipeline_bottlenecks_files)
     except Exception as e:
         logger.warning(f"Could not generate pipeline bottlenecks chart: {e}")
 
     # Generate output analysis visualizations
     try:
-        output_distribution_files = generate_output_distribution_charts(
-            summary, output_dir
-        )
+        output_distribution_files = generate_output_distribution_charts(summary, output_dir)
         all_files.update(output_distribution_files)
     except Exception as e:
         logger.warning(f"Could not generate output distribution charts: {e}")
@@ -3574,17 +3445,13 @@ def generate_all_dashboards(
 
     # Generate codebase analysis visualizations
     try:
-        codebase_complexity_files = generate_codebase_complexity_chart(
-            summary, output_dir
-        )
+        codebase_complexity_files = generate_codebase_complexity_chart(summary, output_dir)
         all_files.update(codebase_complexity_files)
     except Exception as e:
         logger.warning(f"Could not generate codebase complexity chart: {e}")
 
     try:
-        codebase_comparison_files = generate_codebase_comparison_chart(
-            summary, output_dir
-        )
+        codebase_comparison_files = generate_codebase_comparison_chart(summary, output_dir)
         all_files.update(codebase_comparison_files)
     except Exception as e:
         logger.warning(f"Could not generate codebase comparison chart: {e}")
@@ -3610,9 +3477,7 @@ def generate_all_dashboards(
         comparative_csv = generate_comparative_analysis_csv(summary, output_dir)
         all_files["comparative_analysis_csv"] = comparative_csv
 
-        recommendations_csv = generate_prioritized_recommendations_csv(
-            summary, output_dir
-        )
+        recommendations_csv = generate_prioritized_recommendations_csv(summary, output_dir)
         all_files["recommendations_csv"] = recommendations_csv
 
     except Exception as e:

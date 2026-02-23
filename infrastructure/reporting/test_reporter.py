@@ -61,11 +61,9 @@ def parse_coverage_json(coverage_json_path: Path) -> Optional[Dict[str, Any]]:
         total_executed = sum(data["executed_lines"] for data in file_coverage.values())
         total_missing = sum(data["missing_lines"] for data in file_coverage.values())
         total_excluded = sum(data["excluded_lines"] for data in file_coverage.values())
-        total_lines = total_executed + total_missing + total_excluded
+        total_lines = total_executed + total_missing + total_excluded  # type: ignore
 
-        overall_coverage = (
-            (total_executed / total_lines * 100) if total_lines > 0 else 0.0
-        )
+        overall_coverage = (total_executed / total_lines * 100) if total_lines > 0 else 0.0
 
         return {
             "overall_coverage": overall_coverage,
@@ -117,9 +115,7 @@ def parse_pytest_output(stdout: str, stderr: str, exit_code: int) -> Dict[str, A
 
     # Parse summary line (e.g., "1747 passed, 2 skipped, 41 deselected in 37.59s")
     # This handles both verbose and quiet modes
-    summary_pattern = (
-        r"(\d+)\s+passed|(\d+)\s+failed|(\d+)\s+skipped|(\d+)\s+deselected"
-    )
+    summary_pattern = r"(\d+)\s+passed|(\d+)\s+failed|(\d+)\s+skipped|(\d+)\s+deselected"
     for match in re.finditer(summary_pattern, stdout):
         if match.group(1):  # passed
             results["passed"] = int(match.group(1))
@@ -131,9 +127,7 @@ def parse_pytest_output(stdout: str, stderr: str, exit_code: int) -> Dict[str, A
     # If no summary line found, check for collection errors vs test failures
     if results["passed"] == 0 and results["failed"] == 0 and results["skipped"] == 0:
         # Check for collection errors FIRST
-        collection_error_match = re.search(
-            r"collected\s+\d+\s+items?\s*/\s*(\d+)\s+error", stdout
-        )
+        collection_error_match = re.search(r"collected\s+\d+\s+items?\s*/\s*(\d+)\s+error", stdout)
 
         if collection_error_match:
             # Collection error - don't treat as test failures
@@ -183,7 +177,7 @@ def parse_pytest_output(stdout: str, stderr: str, exit_code: int) -> Dict[str, A
     }
 
     for phase, pattern in timing_patterns.items():
-        match = re.search(pattern, stdout, re.DOTALL)
+        match = re.search(pattern, stdout, re.DOTALL)  # type: ignore
         if match:
             if phase == "execution" and len(match.groups()) > 1:
                 results["execution_phases"][phase] = float(match.group(2))
@@ -243,17 +237,12 @@ def generate_test_report(
         "infrastructure": infra_results,
         "project": project_results,
         "summary": {
-            "total_passed": infra_results.get("passed", 0)
-            + project_results.get("passed", 0),
-            "total_failed": infra_results.get("failed", 0)
-            + project_results.get("failed", 0),
-            "total_skipped": infra_results.get("skipped", 0)
-            + project_results.get("skipped", 0),
-            "total_tests": infra_results.get("total", 0)
-            + project_results.get("total", 0),
+            "total_passed": infra_results.get("passed", 0) + project_results.get("passed", 0),
+            "total_failed": infra_results.get("failed", 0) + project_results.get("failed", 0),
+            "total_skipped": infra_results.get("skipped", 0) + project_results.get("skipped", 0),
+            "total_tests": infra_results.get("total", 0) + project_results.get("total", 0),
             "all_passed": (
-                infra_results.get("exit_code", 1) == 0
-                and project_results.get("exit_code", 1) == 0
+                infra_results.get("exit_code", 1) == 0 and project_results.get("exit_code", 1) == 0
             ),
         },
     }
@@ -315,9 +304,7 @@ def save_test_report(report: Dict[str, Any], output_dir: Path) -> Tuple[Path, Pa
         f.write(f"- Failed: {report['infrastructure'].get('failed', 0)}\n")
         f.write(f"- Skipped: {report['infrastructure'].get('skipped', 0)}\n")
         if "coverage_percent" in report["infrastructure"]:
-            f.write(
-                f"- Coverage: {report['infrastructure']['coverage_percent']:.2f}%\n"
-            )
+            f.write(f"- Coverage: {report['infrastructure']['coverage_percent']:.2f}%\n")
         f.write("\n## Project Tests\n\n")
         f.write(f"- Passed: {report['project'].get('passed', 0)}\n")
         f.write(f"- Failed: {report['project'].get('failed', 0)}\n")
@@ -328,9 +315,7 @@ def save_test_report(report: Dict[str, Any], output_dir: Path) -> Tuple[Path, Pa
         f.write(f"- Total Passed: {report['summary']['total_passed']}\n")
         f.write(f"- Total Failed: {report['summary']['total_failed']}\n")
         f.write(f"- Total Tests: {report['summary']['total_tests']}\n")
-        f.write(
-            f"- Status: {'✅ PASSED' if report['summary']['all_passed'] else '❌ FAILED'}\n"
-        )
+        f.write(f"- Status: {'✅ PASSED' if report['summary']['all_passed'] else '❌ FAILED'}\n")
 
     logger.info(f"Test summary saved: {md_path}")
 

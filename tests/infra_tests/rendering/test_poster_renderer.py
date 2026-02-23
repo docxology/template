@@ -3,8 +3,6 @@
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-
-
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.poster_renderer import PosterRenderer
 

@@ -16,9 +16,9 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from infrastructure.core.exceptions import ValidationError
 from infrastructure.core.logging_utils import get_logger
+
 # Import from split modules
-from infrastructure.llm.validation.repetition import (deduplicate_sections,
-                                                      detect_repetition)
+from infrastructure.llm.validation.repetition import deduplicate_sections, detect_repetition
 
 logger = get_logger(__name__)
 
@@ -36,7 +36,7 @@ class OutputValidator:
             elif "```" in content:
                 content = content.split("```")[1].split("```")[0]
 
-            return json.loads(content.strip())
+            return json.loads(content.strip())  # type: ignore
         except json.JSONDecodeError as e:
             raise ValidationError(
                 "LLM output is not valid JSON",
@@ -44,9 +44,7 @@ class OutputValidator:
             )
 
     @staticmethod
-    def validate_length(
-        content: str, min_len: int = 0, max_len: Optional[int] = None
-    ) -> bool:
+    def validate_length(content: str, min_len: int = 0, max_len: Optional[int] = None) -> bool:
         """Validate output length."""
         length = len(content)
         if length < min_len:
@@ -69,9 +67,7 @@ class OutputValidator:
         """Validate short response format (< 150 tokens)."""
         tokens = OutputValidator.estimate_tokens(content)
         if tokens > max_tokens:
-            logger.warning(
-                f"Short response exceeds limit: {tokens} > {max_tokens} tokens"
-            )
+            logger.warning(f"Short response exceeds limit: {tokens} > {max_tokens} tokens")
             return False
         return True
 
@@ -80,9 +76,7 @@ class OutputValidator:
         """Validate long response format (> 500 tokens)."""
         tokens = OutputValidator.estimate_tokens(content)
         if tokens < min_tokens:
-            logger.warning(
-                f"Long response below minimum: {tokens} < {min_tokens} tokens"
-            )
+            logger.warning(f"Long response below minimum: {tokens} < {min_tokens} tokens")
             return False
         return True
 
@@ -107,9 +101,7 @@ class OutputValidator:
         for key, value in content.items():
             if key in properties:
                 expected_type = properties[key].get("type")
-                if expected_type and not OutputValidator._check_type(
-                    value, expected_type
-                ):
+                if expected_type and not OutputValidator._check_type(value, expected_type):
                     raise ValidationError(
                         f"Field '{key}' has wrong type",
                         context={
@@ -135,7 +127,7 @@ class OutputValidator:
         expected = type_map.get(expected_type)
         if expected is None:
             return True
-        return isinstance(value, expected)
+        return isinstance(value, expected)  # type: ignore
 
     @staticmethod
     def validate_citations(content: str) -> List[str]:

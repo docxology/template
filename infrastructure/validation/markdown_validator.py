@@ -16,8 +16,7 @@ import re
 from pathlib import Path
 from typing import List, Set, Tuple
 
-from infrastructure.core.exceptions import (FileNotFoundError,
-                                            NotADirectoryError)
+from infrastructure.core.exceptions import FileNotFoundError, NotADirectoryError
 
 # Regex patterns for validation
 IMG_PATTERN = re.compile(r"!\[[^\]]*\]\(([^\)]+)\)")
@@ -54,11 +53,7 @@ def find_markdown_files(markdown_dir: str | Path) -> List[str]:
             context={"path": str(markdown_dir)},
         )
 
-    return [
-        str(markdown_dir / f)
-        for f in sorted(os.listdir(markdown_dir))
-        if f.endswith(".md")
-    ]
+    return [str(markdown_dir / f) for f in sorted(os.listdir(markdown_dir)) if f.endswith(".md")]
 
 
 def collect_symbols(md_paths: List[str]) -> Tuple[Set[str], Set[str]]:
@@ -131,7 +126,7 @@ def validate_refs(
         for ref in EQ_REF_PATTERN.findall(text):
             if ref not in labels:
                 problems.append(
-                    f"Missing equation label for \\eqref{{{ref}}} in {os.path.relpath(path, repo_root)}"
+                    f"Missing equation label for \\eqref{{{ref}}} in {os.path.relpath(path, repo_root)}"  # noqa: E501
                 )
         for link in INTERNAL_LINK_PATTERN.findall(text):
             if link not in anchors and link not in labels:
@@ -141,7 +136,7 @@ def validate_refs(
         # Flag bare URLs not inside Markdown links
         for m in BARE_URL_PATTERN.finditer(text):
             problems.append(
-                f"Bare URL found (use informative Markdown link text): '{m.group(0)}' in {os.path.relpath(path, repo_root)}"
+                f"Bare URL found (use informative Markdown link text): '{m.group(0)}' in {os.path.relpath(path, repo_root)}"  # noqa: E501
             )
         # Flag non-informative link text (label equals URL)
         for m in LINK_PATTERN.finditer(text):
@@ -149,7 +144,7 @@ def validate_refs(
             url = m.group(2).strip()
             if label == url or label.lower().startswith("http") or "/" in label:
                 problems.append(
-                    f"Non-informative link text for {url} in {os.path.relpath(path, repo_root)}; replace with descriptive text"
+                    f"Non-informative link text for {url} in {os.path.relpath(path, repo_root)}; replace with descriptive text"  # noqa: E501
                 )
     return problems
 
@@ -166,9 +161,7 @@ def validate_math(md_paths: List[str], repo_root: str | Path) -> List[str]:
     """
     repo_root = str(repo_root)
     problems: List[str] = []
-    eq_block = re.compile(
-        r"\\begin\{equation\}([\s\S]*?)\\end\{equation\}", re.MULTILINE
-    )
+    eq_block = re.compile(r"\\begin\{equation\}([\s\S]*?)\\end\{equation\}", re.MULTILINE)
     label_pattern = re.compile(r"\\label\{([^}]+)\}")
     seen_labels: Set[str] = set()
     for path in md_paths:
@@ -195,7 +188,7 @@ def validate_math(md_paths: List[str], repo_root: str | Path) -> List[str]:
                 for lab in labels_in_block:
                     if lab in seen_labels:
                         problems.append(
-                            f"Duplicate equation label '{{{lab}}}' found in {os.path.relpath(path, repo_root)}"
+                            f"Duplicate equation label '{{{lab}}}' found in {os.path.relpath(path, repo_root)}"  # noqa: E501
                         )
                     seen_labels.add(lab)
     return problems
@@ -245,9 +238,7 @@ def validate_markdown(
         return ([], 0)
 
 
-def find_manuscript_directory(
-    repo_root: str | Path, project_name: str = "project"
-) -> Path:
+def find_manuscript_directory(repo_root: str | Path, project_name: str = "project") -> Path:
     """Find the manuscript directory at the standard location.
 
     Args:

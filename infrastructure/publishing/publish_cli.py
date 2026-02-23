@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Wrapper script for publishing releases."""
+
 import argparse
 import sys
 from pathlib import Path

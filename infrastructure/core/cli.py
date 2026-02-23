@@ -29,8 +29,7 @@ from infrastructure.core.errors import (
     PROJECTS_INCOMPLETE,
     SUMMARY_FAILED,
 )
-from infrastructure.core.multi_project import (MultiProjectConfig,
-                                               MultiProjectOrchestrator)
+from infrastructure.core.multi_project import MultiProjectConfig, MultiProjectOrchestrator
 from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor
 from infrastructure.core.pipeline_summary import PipelineSummaryGenerator
 from infrastructure.project.discovery import discover_projects
@@ -48,9 +47,7 @@ def create_parser() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
     # Pipeline execution command
-    pipeline_parser = subparsers.add_parser(
-        "pipeline", help="Execute pipeline for a project"
-    )
+    pipeline_parser = subparsers.add_parser("pipeline", help="Execute pipeline for a project")
     pipeline_parser.add_argument(
         "pipeline_type", choices=["full", "core"], help="Type of pipeline to execute"
     )
@@ -86,12 +83,8 @@ def create_parser() -> argparse.ArgumentParser:
     )
 
     # File inventory command
-    inventory_parser = subparsers.add_parser(
-        "inventory", help="Generate file inventory report"
-    )
-    inventory_parser.add_argument(
-        "output_dir", type=Path, help="Output directory to scan"
-    )
+    inventory_parser = subparsers.add_parser("inventory", help="Generate file inventory report")
+    inventory_parser.add_argument("output_dir", type=Path, help="Output directory to scan")
     inventory_parser.add_argument(
         "--format",
         choices=["text", "json", "html"],
@@ -106,9 +99,7 @@ def create_parser() -> argparse.ArgumentParser:
     summary_parser = subparsers.add_parser(
         "summary", help="Generate pipeline summary (for testing)"
     )
-    summary_parser.add_argument(
-        "--output-dir", type=Path, required=True, help="Output directory"
-    )
+    summary_parser.add_argument("--output-dir", type=Path, required=True, help="Output directory")
     summary_parser.add_argument(
         "--format",
         choices=["text", "json", "html"],
@@ -123,9 +114,7 @@ def create_parser() -> argparse.ArgumentParser:
     )
 
     # Project discovery command
-    discover_parser = subparsers.add_parser(
-        "discover", help="Discover available projects"
-    )
+    discover_parser = subparsers.add_parser("discover", help="Discover available projects")
     discover_parser.add_argument(
         "--repo-root", type=Path, default=Path.cwd(), help="Repository root directory"
     )
@@ -194,9 +183,7 @@ def handle_pipeline_command(args: argparse.Namespace) -> int:
         successful_stages = sum(1 for r in results if r.success)
         total_stages = len(results)
 
-        logger.info(
-            f"Pipeline completed: {successful_stages}/{total_stages} stages successful"
-        )
+        logger.info(f"Pipeline completed: {successful_stages}/{total_stages} stages successful")
 
         if all(r.success for r in results):
             logger.info("✅ All pipeline stages completed successfully")
@@ -206,7 +193,7 @@ def handle_pipeline_command(args: argparse.Namespace) -> int:
             for result in results:
                 if not result.success:
                     logger.error(
-                        f"  - Stage {result.stage_num}: {result.stage_name} - {result.error_message}"
+                        f"  - Stage {result.stage_num}: {result.stage_name} - {result.error_message}"  # noqa: E501
                     )
             return 1
 
@@ -232,7 +219,7 @@ def handle_multi_project_command(args: argparse.Namespace) -> int:
         invalid_projects = requested_names - project_names
 
         if invalid_projects:
-            logger.error(INVALID_PROJECTS.format(projects=', '.join(invalid_projects)))
+            logger.error(INVALID_PROJECTS.format(projects=", ".join(invalid_projects)))
             logger.info(f"Available projects: {', '.join(project_names)}")
             return 1
 
@@ -242,9 +229,7 @@ def handle_multi_project_command(args: argparse.Namespace) -> int:
         logger.error(NO_PROJECTS_TO_EXECUTE.format())
         return 1
 
-    logger.info(
-        f"Found {len(projects)} projects: {', '.join(p.name for p in projects)}"
-    )
+    logger.info(f"Found {len(projects)} projects: {', '.join(p.name for p in projects)}")
 
     # Create multi-project configuration
     run_infra_tests = "no-infra" not in args.execution_type
@@ -307,9 +292,7 @@ def handle_inventory_command(args: argparse.Namespace) -> int:
             logger.info("No files found in output directory")
             return 0
 
-        report = manager.generate_inventory_report(
-            entries, args.format, args.output_dir
-        )
+        report = manager.generate_inventory_report(entries, args.format, args.output_dir)
         print(report)
         return 0
 

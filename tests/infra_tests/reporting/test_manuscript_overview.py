@@ -15,9 +15,7 @@ from reportlab.pdfgen import canvas
 
 
 # Helper functions to create test data
-def create_test_pdf(
-    path: Path, num_pages: int = 5, text_per_page: str = "Test content"
-) -> Path:
+def create_test_pdf(path: Path, num_pages: int = 5, text_per_page: str = "Test content") -> Path:
     """Create a real PDF file for testing."""
     c = canvas.Canvas(str(path), pagesize=letter)
 
@@ -29,9 +27,7 @@ def create_test_pdf(
 
         # Add more lines to simulate content
         for j in range(10):
-            c.drawString(
-                100, 640 - (j * 20), f"Line {j + 1}: Sample text content for testing"
-            )
+            c.drawString(100, 640 - (j * 20), f"Line {j + 1}: Sample text content for testing")
 
         if i < num_pages - 1:
             c.showPage()
@@ -58,8 +54,7 @@ class TestExtractPdfPagesAsImages:
 
     def test_extract_pdf_pages_file_not_found(self, tmp_path):
         """Test extraction from non-existent file raises error."""
-        from infrastructure.reporting.manuscript_overview import \
-            extract_pdf_pages_as_images
+        from infrastructure.reporting.manuscript_overview import extract_pdf_pages_as_images
 
         nonexistent = tmp_path / "nonexistent.pdf"
 
@@ -68,8 +63,7 @@ class TestExtractPdfPagesAsImages:
 
     def test_extract_pdf_pages_basic(self, tmp_path):
         """Test basic PDF page extraction."""
-        from infrastructure.reporting.manuscript_overview import \
-            extract_pdf_pages_as_images
+        from infrastructure.reporting.manuscript_overview import extract_pdf_pages_as_images
 
         # Create test PDF
         pdf_path = tmp_path / "test.pdf"
@@ -86,8 +80,7 @@ class TestExtractPdfPagesAsImages:
 
     def test_extract_pdf_single_page(self, tmp_path):
         """Test extraction from single-page PDF."""
-        from infrastructure.reporting.manuscript_overview import \
-            extract_pdf_pages_as_images
+        from infrastructure.reporting.manuscript_overview import extract_pdf_pages_as_images
 
         pdf_path = tmp_path / "single.pdf"
         create_test_pdf(pdf_path, num_pages=1)
@@ -99,8 +92,7 @@ class TestExtractPdfPagesAsImages:
 
     def test_extract_pdf_many_pages(self, tmp_path):
         """Test extraction from multi-page PDF."""
-        from infrastructure.reporting.manuscript_overview import \
-            extract_pdf_pages_as_images
+        from infrastructure.reporting.manuscript_overview import extract_pdf_pages_as_images
 
         pdf_path = tmp_path / "multi.pdf"
         create_test_pdf(pdf_path, num_pages=10)
@@ -117,8 +109,7 @@ class TestRenderPagesSimple:
         """Test simple rendering creates valid images."""
         from pypdf import PdfReader
 
-        from infrastructure.reporting.manuscript_overview import \
-            _render_pages_simple
+        from infrastructure.reporting.manuscript_overview import _render_pages_simple
 
         # Create test PDF
         pdf_path = tmp_path / "test.pdf"
@@ -136,8 +127,7 @@ class TestRenderPagesSimple:
         """Test rendered images contain page content."""
         from pypdf import PdfReader
 
-        from infrastructure.reporting.manuscript_overview import \
-            _render_pages_simple
+        from infrastructure.reporting.manuscript_overview import _render_pages_simple
 
         pdf_path = tmp_path / "test.pdf"
         create_test_pdf(pdf_path, num_pages=1, text_per_page="Test content line")
@@ -155,16 +145,14 @@ class TestCreatePageGrid:
 
     def test_create_grid_empty_input(self):
         """Test grid creation with no images raises error."""
-        from infrastructure.reporting.manuscript_overview import \
-            create_page_grid
+        from infrastructure.reporting.manuscript_overview import create_page_grid
 
         with pytest.raises(ValueError, match="No images provided"):
             create_page_grid([])
 
     def test_create_grid_single_image(self):
         """Test grid creation with single image."""
-        from infrastructure.reporting.manuscript_overview import \
-            create_page_grid
+        from infrastructure.reporting.manuscript_overview import create_page_grid
 
         img = create_test_image(400, 600)
         grid = create_page_grid([img], cols=4)
@@ -176,8 +164,7 @@ class TestCreatePageGrid:
 
     def test_create_grid_multiple_images(self):
         """Test grid creation with multiple images."""
-        from infrastructure.reporting.manuscript_overview import \
-            create_page_grid
+        from infrastructure.reporting.manuscript_overview import create_page_grid
 
         images = [create_test_image(400, 600) for _ in range(8)]
         grid = create_page_grid(images, cols=4)
@@ -189,8 +176,7 @@ class TestCreatePageGrid:
 
     def test_create_grid_custom_cols(self):
         """Test grid with different column counts."""
-        from infrastructure.reporting.manuscript_overview import \
-            create_page_grid
+        from infrastructure.reporting.manuscript_overview import create_page_grid
 
         images = [create_test_image(400, 600) for _ in range(6)]
 
@@ -207,8 +193,7 @@ class TestCreatePageGrid:
 
     def test_create_grid_custom_padding(self):
         """Test grid with custom padding."""
-        from infrastructure.reporting.manuscript_overview import \
-            create_page_grid
+        from infrastructure.reporting.manuscript_overview import create_page_grid
 
         images = [create_test_image(400, 600) for _ in range(4)]
 
@@ -222,8 +207,7 @@ class TestCreatePageGrid:
 
     def test_create_grid_maintains_aspect_ratio(self):
         """Test grid maintains image aspect ratios."""
-        from infrastructure.reporting.manuscript_overview import \
-            create_page_grid
+        from infrastructure.reporting.manuscript_overview import create_page_grid
 
         # Create portrait and landscape images
         portrait = create_test_image(400, 800)
@@ -235,8 +219,7 @@ class TestCreatePageGrid:
 
     def test_create_grid_white_background(self):
         """Test grid has white background."""
-        from infrastructure.reporting.manuscript_overview import \
-            create_page_grid
+        from infrastructure.reporting.manuscript_overview import create_page_grid
 
         img = create_test_image(100, 100)
         grid = create_page_grid([img], cols=1, padding=50)
@@ -251,8 +234,7 @@ class TestGenerateManuscriptOverview:
 
     def test_generate_overview_file_not_found(self, tmp_path):
         """Test overview generation with non-existent PDF."""
-        from infrastructure.reporting.manuscript_overview import \
-            generate_manuscript_overview
+        from infrastructure.reporting.manuscript_overview import generate_manuscript_overview
 
         nonexistent = tmp_path / "nonexistent.pdf"
         output_dir = tmp_path / "output"
@@ -262,8 +244,7 @@ class TestGenerateManuscriptOverview:
 
     def test_generate_overview_creates_png(self, tmp_path):
         """Test overview generation creates PNG file."""
-        from infrastructure.reporting.manuscript_overview import \
-            generate_manuscript_overview
+        from infrastructure.reporting.manuscript_overview import generate_manuscript_overview
 
         # Create test PDF
         pdf_path = tmp_path / "test.pdf"
@@ -271,9 +252,7 @@ class TestGenerateManuscriptOverview:
 
         output_dir = tmp_path / "output"
 
-        result = generate_manuscript_overview(
-            pdf_path, output_dir, "test_project", dpi=72
-        )
+        result = generate_manuscript_overview(pdf_path, output_dir, "test_project", dpi=72)
 
         # Should create PNG
         png_key = "manuscript_overview_test_project.png"
@@ -282,8 +261,7 @@ class TestGenerateManuscriptOverview:
 
     def test_generate_overview_creates_output_dir(self, tmp_path):
         """Test overview generation creates output directory."""
-        from infrastructure.reporting.manuscript_overview import \
-            generate_manuscript_overview
+        from infrastructure.reporting.manuscript_overview import generate_manuscript_overview
 
         pdf_path = tmp_path / "test.pdf"
         create_test_pdf(pdf_path, num_pages=2)
@@ -297,8 +275,7 @@ class TestGenerateManuscriptOverview:
 
     def test_generate_overview_project_name_in_filename(self, tmp_path):
         """Test project name is included in output filename."""
-        from infrastructure.reporting.manuscript_overview import \
-            generate_manuscript_overview
+        from infrastructure.reporting.manuscript_overview import generate_manuscript_overview
 
         pdf_path = tmp_path / "test.pdf"
         create_test_pdf(pdf_path, num_pages=2)
@@ -306,9 +283,7 @@ class TestGenerateManuscriptOverview:
         output_dir = tmp_path / "output"
         project_name = "my_research_project"
 
-        result = generate_manuscript_overview(
-            pdf_path, output_dir, project_name, dpi=72
-        )
+        result = generate_manuscript_overview(pdf_path, output_dir, project_name, dpi=72)
 
         # Check filenames contain project name
         for key in result.keys():
@@ -320,8 +295,7 @@ class TestSaveImageAsPdf:
 
     def test_save_image_as_pdf_creates_file(self, tmp_path):
         """Test saving image as PDF creates valid file."""
-        from infrastructure.reporting.manuscript_overview import \
-            _save_image_as_pdf
+        from infrastructure.reporting.manuscript_overview import _save_image_as_pdf
 
         img = create_test_image(800, 1100)
         pdf_path = tmp_path / "output.pdf"
@@ -335,8 +309,7 @@ class TestSaveImageAsPdf:
         """Test saved PDF is readable."""
         from pypdf import PdfReader
 
-        from infrastructure.reporting.manuscript_overview import \
-            _save_image_as_pdf
+        from infrastructure.reporting.manuscript_overview import _save_image_as_pdf
 
         img = create_test_image(800, 1100)
         pdf_path = tmp_path / "output.pdf"
@@ -351,8 +324,7 @@ class TestSaveImageAsPdf:
         """Test saved PDF has single page."""
         from pypdf import PdfReader
 
-        from infrastructure.reporting.manuscript_overview import \
-            _save_image_as_pdf
+        from infrastructure.reporting.manuscript_overview import _save_image_as_pdf
 
         img = create_test_image(800, 1100)
         pdf_path = tmp_path / "output.pdf"
@@ -370,8 +342,7 @@ class TestRenderPagesWithReportlab:
         """Test reportlab rendering creates valid images."""
         from pypdf import PdfReader
 
-        from infrastructure.reporting.manuscript_overview import \
-            _render_pages_with_reportlab
+        from infrastructure.reporting.manuscript_overview import _render_pages_with_reportlab
 
         # Create test PDF
         pdf_path = tmp_path / "test.pdf"
@@ -390,8 +361,7 @@ class TestGenerateAllManuscriptOverviews:
 
     def test_generate_all_no_pdfs_found(self, tmp_path):
         """Test handling when no manuscript PDFs exist."""
-        from infrastructure.reporting.manuscript_overview import \
-            generate_all_manuscript_overviews
+        from infrastructure.reporting.manuscript_overview import generate_all_manuscript_overviews
 
         # Create a minimal ExecutiveSummary-like object
         class MockSummary:
@@ -408,8 +378,7 @@ class TestGenerateAllManuscriptOverviews:
 
     def test_generate_all_with_valid_pdf(self, tmp_path):
         """Test generating overviews when PDFs exist."""
-        from infrastructure.reporting.manuscript_overview import \
-            generate_all_manuscript_overviews
+        from infrastructure.reporting.manuscript_overview import generate_all_manuscript_overviews
 
         # Create directory structure
         project_name = "test_project"
@@ -445,8 +414,11 @@ class TestModuleImports:
     def test_public_functions_exist(self):
         """Test expected public functions exist."""
         from infrastructure.reporting.manuscript_overview import (
-            create_page_grid, extract_pdf_pages_as_images,
-            generate_all_manuscript_overviews, generate_manuscript_overview)
+            create_page_grid,
+            extract_pdf_pages_as_images,
+            generate_all_manuscript_overviews,
+            generate_manuscript_overview,
+        )
 
         assert callable(extract_pdf_pages_as_images)
         assert callable(create_page_grid)
@@ -459,8 +431,7 @@ class TestEdgeCases:
 
     def test_empty_pdf_pages(self, tmp_path):
         """Test handling of PDF with minimal content."""
-        from infrastructure.reporting.manuscript_overview import \
-            extract_pdf_pages_as_images
+        from infrastructure.reporting.manuscript_overview import extract_pdf_pages_as_images
 
         # Create minimal PDF
         pdf_path = tmp_path / "minimal.pdf"
@@ -475,8 +446,7 @@ class TestEdgeCases:
 
     def test_very_small_images(self):
         """Test grid creation with very small images."""
-        from infrastructure.reporting.manuscript_overview import \
-            create_page_grid
+        from infrastructure.reporting.manuscript_overview import create_page_grid
 
         tiny_images = [create_test_image(10, 10) for _ in range(4)]
         grid = create_page_grid(tiny_images, cols=2)
@@ -485,8 +455,7 @@ class TestEdgeCases:
 
     def test_very_large_images(self):
         """Test grid creation with large images gets resized."""
-        from infrastructure.reporting.manuscript_overview import \
-            create_page_grid
+        from infrastructure.reporting.manuscript_overview import create_page_grid
 
         large_images = [create_test_image(2000, 3000) for _ in range(2)]
         grid = create_page_grid(large_images, cols=2, max_thumb_size=(200, 300))

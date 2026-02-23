@@ -151,7 +151,7 @@ class StreamHeartbeatMonitor:
                 remaining = self.timeout_seconds - elapsed
                 if remaining > 0:
                     self.logger.warning(
-                        f"⚠️ {self.operation_name.capitalize()} timeout warning: {remaining:.1f}s remaining",
+                        f"⚠️ {self.operation_name.capitalize()} timeout warning: {remaining:.1f}s remaining",  # noqa: E501
                         extra={
                             "operation": self.operation_name,
                             "elapsed": elapsed,
@@ -165,7 +165,7 @@ class StreamHeartbeatMonitor:
             if self.first_token_time is None:
                 if elapsed > self.early_warning_threshold:
                     self.logger.warning(
-                        f"⚠️ {self.operation_name.capitalize()} taking longer than expected: {elapsed:.1f}s elapsed, no tokens yet",
+                        f"⚠️ {self.operation_name.capitalize()} taking longer than expected: {elapsed:.1f}s elapsed, no tokens yet",  # noqa: E501
                         extra={
                             "operation": self.operation_name,
                             "elapsed": elapsed,
@@ -179,7 +179,7 @@ class StreamHeartbeatMonitor:
                 time_since_last_token = now - self.last_token_time
                 if time_since_last_token > self.stall_threshold:
                     self.logger.error(
-                        f"🚨 {self.operation_name.capitalize()} stalled: no tokens received for {time_since_last_token:.1f}s",
+                        f"🚨 {self.operation_name.capitalize()} stalled: no tokens received for {time_since_last_token:.1f}s",  # noqa: E501
                         extra={
                             "operation": self.operation_name,
                             "time_since_last_token": time_since_last_token,
@@ -197,9 +197,7 @@ class StreamHeartbeatMonitor:
                 self.last_progress_log_time = now
 
             # Wait before next check
-            self._stop_event.wait(
-                self.heartbeat_interval / 4
-            )  # Check more frequently than log
+            self._stop_event.wait(self.heartbeat_interval / 4)  # Check more frequently than log
 
     def _log_progress_update(self, elapsed: float) -> None:
         """Log periodic progress update."""

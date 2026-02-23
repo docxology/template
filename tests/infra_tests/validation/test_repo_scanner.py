@@ -8,10 +8,12 @@ import logging
 import pytest
 
 from infrastructure.validation import repo_scanner
-from infrastructure.validation.repo_scanner import (AccuracyIssue,
-                                                    CompletenessGap,
-                                                    RepositoryScanner,
-                                                    ScanResults)
+from infrastructure.validation.repo_scanner import (
+    AccuracyIssue,
+    CompletenessGap,
+    RepositoryScanner,
+    ScanResults,
+)
 
 
 class TestDataClasses:
@@ -155,9 +157,7 @@ class TestReportGeneration:
 
         # Add some accuracy issues
         scanner.results.accuracy_issues = [
-            AccuracyIssue(
-                "command", "error", "test.md", 10, "Script not found", "details"
-            ),
+            AccuracyIssue("command", "error", "test.md", 10, "Script not found", "details"),
             AccuracyIssue("command", "warning", "other.md", 5, "Script may be missing"),
             AccuracyIssue("import", "error", "module.py", 1, "Import failed"),
         ]
@@ -190,8 +190,7 @@ class TestReportGeneration:
 
         # Add more than 20 issues
         scanner.results.accuracy_issues = [
-            AccuracyIssue("command", "error", f"file{i}.md", i, f"Issue {i}")
-            for i in range(25)
+            AccuracyIssue("command", "error", f"file{i}.md", i, f"Issue {i}") for i in range(25)
         ]
 
         report = scanner.generate_report()

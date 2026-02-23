@@ -474,12 +474,12 @@ Methodologically, it demonstrates empirical validation of theoretical
 convergence rates on quadratic objective functions and automated
 complexity analysis. Architecturally, it establishes a rigorously
 enforced development standard: (1) a zero-mock testing policy validated
-by 34 passing tests with 100% coverage (as explicitly asserted in <a
-href="https://github.com/docxology/template/blob/main/projects/code_project/tests/test_optimizer.py"><code>projects/code_project/tests/test_optimizer.py</code></a>);
-(2) automated analysis pipelines generating publication-quality,
-accessible visualizations; and (3) deep integration patterns
-demonstrating how scientific logic strictly couples with the core
-infrastructure (e.g., executing
+by 34 passing tests with 100% coverage (as explicitly asserted in the <a
+href="https://github.com/docxology/template/blob/main/projects/code_project/tests/test_optimizer.py">test
+suite</a>); (2) automated analysis pipelines generating
+publication-quality, accessible visualizations; and (3) deep integration
+patterns demonstrating how scientific logic strictly couples with the
+core infrastructure (e.g., executing
 <code>infrastructure.scientific.benchmarking</code> directly from
 <code>projects/code_project/scripts/optimization_analysis.py</code>).</p>
 <p>Results confirm that all tested step sizes converge to the analytical
@@ -487,10 +487,10 @@ optimum <span class="math inline">\(x^* = 1.0\)</span> with objective
 value <span class="math inline">\(f(x^*) = -0.5\)</span>. The codebase
 validates the template’s modular <code>tests/</code> infrastructure and
 expansive <a
-href="https://github.com/docxology/template/tree/main/projects/code_project/docs"><code>projects/code_project/docs/</code></a>
-knowledge base, serving as the master exemplar for bridging theoretical
-algorithm development with production-grade, reproducible computational
-science.</p>
+href="https://github.com/docxology/template/tree/main/projects/code_project/docs">project
+documentation</a> knowledge base, serving as the master exemplar for
+bridging theoretical algorithm development with production-grade,
+reproducible computational science.</p>
 <p><strong>Keywords:</strong> gradient descent, reproducible research,
 zero-mock testing, scientific infrastructure, pipeline orchestration</p>
 <hr />
@@ -522,9 +522,9 @@ Directory)</strong>: A modular stack of nine subpackages
 <li><strong><code>tests/</code> Framework
 (<code>projects/code_project/tests/</code>)</strong>: An uncompromising
 validation layer maintaining a zero-mock testing policy. This is
-enforced automatically via <a
-href="https://github.com/docxology/template/blob/main/.github/workflows/ci.yml"><code>.github/workflows/ci.yml</code></a>
-mapping to <code>pyproject.toml</code> directives.</li>
+enforced automatically via the <a
+href="https://github.com/docxology/template/blob/main/.github/workflows/ci.yml">CI
+workflow</a> mapping to <code>pyproject.toml</code> directives.</li>
 <li><strong><code>docs/</code> Knowledge Base
 (<code>projects/code_project/docs/</code>)</strong>: A structured
 repository of architectural guidelines, operational patterns, and the
@@ -533,8 +533,10 @@ agents writing these very texts.</li>
 </ol>
 <p>This implementation of gradient descent algorithms for solving
 optimization problems is used as the vehicle to demonstrate these
-pillars. The theoretical problem is mapped programmatically inside <a
-href="https://github.com/docxology/template/blob/main/projects/code_project/src/optimizer.py"><code>projects/code_project/src/optimizer.py</code></a>:</p>
+pillars. The theoretical problem is mapped programmatically inside the
+<a
+href="https://github.com/docxology/template/blob/main/projects/code_project/src/optimizer.py">optimizer
+module</a>:</p>
 <p><span class="math display">\[\begin{equation}
 \label{eq:optimization_problem}
 \min_{x \in \mathbb{R}^n} f(x)
@@ -782,15 +784,13 @@ quality. The analysis reveals the trade-off between convergence speed
 and numerical stability.</p>
 <figure id="fig:step_sensitivity">
 <img src="../output/figures/step_size_sensitivity.png"
-alt="Step size sensitivity analysis across 10 values (\alpha = 0.005 to 0.4). Left: iterations decrease geometrically with \alpha on log-log axes. Right: all step sizes achieve the optimal objective value f(x^*) = -0.5 from the initial value f(x_0) = 0, confirming robust convergence across the full range." />
+alt="Step size sensitivity analysis across 10 values (alpha from 0.005 to 0.4). Left panel: iterations to convergence decrease geometrically with step size on log–log axes. Right panel: all step sizes achieve the optimal objective value of -0.5 from the initial value of 0, confirming robust convergence across the full range." />
 <figcaption aria-hidden="true">Step size sensitivity analysis across 10
-values (<span class="math inline">\(\alpha = 0.005\)</span> to <span
-class="math inline">\(0.4\)</span>). Left: iterations decrease
-geometrically with <span class="math inline">\(\alpha\)</span> on
-log-log axes. Right: all step sizes achieve the optimal objective value
-<span class="math inline">\(f(x^*) = -0.5\)</span> from the initial
-value <span class="math inline">\(f(x_0) = 0\)</span>, confirming robust
-convergence across the full range.</figcaption>
+values (alpha from 0.005 to 0.4). Left panel: iterations to convergence
+decrease geometrically with step size on log–log axes. Right panel: all
+step sizes achieve the optimal objective value of -0.5 from the initial
+value of 0, confirming robust convergence across the full
+range.</figcaption>
 </figure>
 <h2 data-number="4.2" id="quantitative-results"><span
 class="header-section-number">4.2</span> Quantitative Results</h2>

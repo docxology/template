@@ -4,6 +4,7 @@
 Tests the custom exception hierarchy with real usage patterns.
 No mocks - tests actual exception behavior and context.
 """
+
 from __future__ import annotations
 
 import sys
@@ -14,29 +15,36 @@ import pytest
 # Add infrastructure to path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from infrastructure.core.exceptions import (BuildError, CompilationError,
-                                            ConfigurationError,
-                                            DataValidationError,
-                                            DependencyError, FileNotFoundError,
-                                            FileOperationError,
-                                            InsufficientCoverageError,
-                                            IntegrationError,
-                                            InvalidConfigurationError,
-                                            InvalidFileFormatError,
-                                            MarkdownValidationError,
-                                            MissingConfigurationError,
-                                            MissingDependencyError,
-                                            PDFValidationError, PipelineError,
-                                            ScriptExecutionError,
-                                            TemplateError)
-from infrastructure.core.exceptions import \
-    TestError as \
-    TemplateTestError  # Renamed to avoid pytest collection conflict
-from infrastructure.core.exceptions import (ValidationError,
-                                            VersionMismatchError,
-                                            chain_exceptions,
-                                            format_file_context,
-                                            raise_with_context)
+from infrastructure.core.exceptions import (
+    BuildError,
+    CompilationError,
+    ConfigurationError,
+    DataValidationError,
+    DependencyError,
+    FileNotFoundError,
+    FileOperationError,
+    InsufficientCoverageError,
+    IntegrationError,
+    InvalidConfigurationError,
+    InvalidFileFormatError,
+    MarkdownValidationError,
+    MissingConfigurationError,
+    MissingDependencyError,
+    PDFValidationError,
+    PipelineError,
+    ScriptExecutionError,
+    TemplateError,
+)
+from infrastructure.core.exceptions import (
+    TestError as TemplateTestError,
+)  # Renamed to avoid pytest collection conflict
+from infrastructure.core.exceptions import (
+    ValidationError,
+    VersionMismatchError,
+    chain_exceptions,
+    format_file_context,
+    raise_with_context,
+)
 
 
 class TestBaseTemplateError:

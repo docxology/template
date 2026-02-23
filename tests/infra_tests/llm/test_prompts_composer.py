@@ -20,9 +20,7 @@ class TestPromptComposer:
         fragments_dir.mkdir()
 
         # System prompts
-        system_prompts = {
-            "test_prompt": {"version": "1.0", "content": "You are a test assistant."}
-        }
+        system_prompts = {"test_prompt": {"version": "1.0", "content": "You are a test assistant."}}
         with open(fragments_dir / "system_prompts.json", "w") as f:
             json.dump(system_prompts, f)
 
@@ -154,9 +152,7 @@ class TestPromptComposer:
         composer = PromptComposer(loader=loader)
 
         # text is required but not provided
-        with pytest.raises(
-            Exception
-        ):  # Should raise error during template substitution
+        with pytest.raises(Exception):  # Should raise error during template substitution
             composer.compose_template("test_templates.json#test_template")
 
     def test_add_retry_prompt_off_topic(self, setup_prompts):

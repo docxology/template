@@ -3,8 +3,6 @@
 Tests link checking and reference validation functionality.
 """
 
-
-
 from infrastructure.validation import check_links
 
 
@@ -113,9 +111,7 @@ class TestMarkdownLinkExtraction:
         md_content = "[External](https://example.com)"
 
         if hasattr(check_links, "extract_links"):
-            internal, external, file_refs = check_links.extract_links(
-                md_content, md_file
-            )
+            internal, external, file_refs = check_links.extract_links(md_content, md_file)
             assert len(external) == 1
             assert external[0]["target"] == "https://example.com"
 
@@ -125,9 +121,7 @@ class TestMarkdownLinkExtraction:
         md_content = "[Section](#section-1)"
 
         if hasattr(check_links, "extract_links"):
-            internal, external, file_refs = check_links.extract_links(
-                md_content, md_file
-            )
+            internal, external, file_refs = check_links.extract_links(md_content, md_file)
             assert len(internal) == 1
             assert internal[0]["target"] == "#section-1"
 
@@ -137,9 +131,7 @@ class TestMarkdownLinkExtraction:
         md_content = "[Other Doc](other.md)"
 
         if hasattr(check_links, "extract_links"):
-            internal, external, file_refs = check_links.extract_links(
-                md_content, md_file
-            )
+            internal, external, file_refs = check_links.extract_links(md_content, md_file)
             assert len(file_refs) == 1
             assert file_refs[0]["target"] == "other.md"
 

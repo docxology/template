@@ -173,9 +173,7 @@ class TestContextUsageTracking:
 
     def test_usage_stats_tracks_pruning(self):
         """Test usage stats track pruning operations."""
-        context = ConversationContext(
-            max_tokens=50
-        )  # Very small limit to ensure pruning
+        context = ConversationContext(max_tokens=50)  # Very small limit to ensure pruning
 
         # Fill context to trigger pruning - each message is ~37 chars = ~9 tokens
         # Need at least 6 messages to exceed 50 token limit
@@ -264,9 +262,7 @@ class TestContextPruningLogging:
         root_logger = logging.getLogger()
         root_logger.setLevel(logging.INFO)
 
-        context = ConversationContext(
-            max_tokens=50
-        )  # Very small limit to ensure pruning
+        context = ConversationContext(max_tokens=50)  # Very small limit to ensure pruning
 
         # Fill context aggressively to trigger pruning
         # Each message is ~37 chars = ~9 tokens, need >5 messages to exceed 50 token limit
@@ -287,9 +283,9 @@ class TestContextPruningLogging:
                     for r in caplog.records
                 )
             )
-            assert (
-                has_prune_log
-            ), f"Expected pruning log, got: {caplog.text}, records: {[r.message for r in caplog.records]}"
+            assert has_prune_log, (
+                f"Expected pruning log, got: {caplog.text}, records: {[r.message for r in caplog.records]}"
+            )
 
     def test_prune_preserves_system_prompt(self):
         """Test pruning preserves system prompt."""

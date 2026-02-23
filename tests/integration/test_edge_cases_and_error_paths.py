@@ -4,8 +4,6 @@ This test suite validates error handling and edge cases that span multiple
 infrastructure modules, ensuring graceful degradation and proper error propagation.
 """
 
-
-
 from infrastructure.scientific import check_numerical_stability
 from infrastructure.validation import integrity
 

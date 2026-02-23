@@ -22,7 +22,7 @@ def extract_publication_metadata(markdown_files: List[Path]) -> PublicationMetad
     metadata = PublicationMetadata(
         title="Research Project Template",
         authors=["Template Author"],
-        abstract="A comprehensive template for research projects with test-driven development and automated PDF generation.",
+        abstract="A comprehensive template for research projects with test-driven development and automated PDF generation.",  # noqa: E501
         keywords=["research", "template", "academic", "scientific"],
         license="Apache-2.0",
     )
@@ -35,9 +35,7 @@ def extract_publication_metadata(markdown_files: List[Path]) -> PublicationMetad
                 content = f.read()
 
             # Only use this content if it contains actual research content (not template content)
-            if "Research Project Template" not in content and (
-                "#" in content or "**" in content
-            ):
+            if "Research Project Template" not in content and ("#" in content or "**" in content):
                 combined_content = content
         except Exception:
             combined_content = ""
@@ -155,11 +153,11 @@ def generate_publication_summary(metadata: PublicationMetadata) -> str:
 
 **Title**: {metadata.title}
 
-**Authors**: {', '.join(metadata.authors)}
+**Authors**: {", ".join(metadata.authors)}
 
 **Abstract**: {metadata.abstract[:200]}...
 
-**Keywords**: {', '.join(metadata.keywords)}
+**Keywords**: {", ".join(metadata.keywords)}
 
 """
 
@@ -192,9 +190,7 @@ def create_academic_profile_data(metadata: PublicationMetadata) -> Dict[str, Any
         "authors": metadata.authors,
         "abstract": metadata.abstract,
         "keywords": metadata.keywords,
-        "publication_type": (
-            "software" if "template" in metadata.title.lower() else "article"
-        ),
+        "publication_type": ("software" if "template" in metadata.title.lower() else "article"),
         "license": metadata.license,
         "repository_url": metadata.repository_url,
         "publication_date": metadata.publication_date,
@@ -202,7 +198,7 @@ def create_academic_profile_data(metadata: PublicationMetadata) -> Dict[str, Any
 
     if metadata.doi:
         profile_data["identifiers"] = [
-            {
+            {  # type: ignore
                 "type": "doi",
                 "value": metadata.doi,
                 "url": f"https://doi.org/{metadata.doi}",
@@ -242,9 +238,7 @@ def generate_publication_metrics(metadata: PublicationMetadata) -> Dict[str, Any
         "reading_time_minutes": reading_time_minutes,
         "license_type": metadata.license,
         "has_doi": bool(metadata.doi),
-        "publication_type": (
-            "software" if "template" in metadata.title.lower() else "article"
-        ),
+        "publication_type": ("software" if "template" in metadata.title.lower() else "article"),
         "complexity_score": calculate_complexity_score(metadata),
     }
 

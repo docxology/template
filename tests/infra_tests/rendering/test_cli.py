@@ -1,6 +1,5 @@
 """Tests for infrastructure.rendering.cli module."""
 
-
 from infrastructure.rendering import cli
 
 

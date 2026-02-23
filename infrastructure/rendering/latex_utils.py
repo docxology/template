@@ -52,7 +52,7 @@ def compile_latex(
         max_passes = 2
         for i in range(max_passes):
             pass_start = time.time()
-            logger.debug(f"Pass {i+1}/{max_passes}...")
+            logger.debug(f"Pass {i + 1}/{max_passes}...")
 
             result = subprocess.run(
                 cmd,
@@ -63,17 +63,15 @@ def compile_latex(
             )
 
             pass_duration = time.time() - pass_start
-            logger.debug(f"Pass {i+1} completed in {pass_duration:.2f}s")
+            logger.debug(f"Pass {i + 1} completed in {pass_duration:.2f}s")
 
-            # Note: xelatex may return non-zero exit code even when PDF is generated (due to warnings)
+            # Note: xelatex may return non-zero exit code even when PDF is generated (due to warnings)  # noqa: E501
             # So we check for PDF existence rather than just exit code
             pdf_file_temp = output_dir / f"{tex_file.stem}.pdf"
             if not pdf_file_temp.exists():
                 # Only raise error if PDF was NOT generated
                 log_file = output_dir / f"{tex_file.stem}.log"
-                log_content = (
-                    log_file.read_text() if log_file.exists() else "No log file"
-                )
+                log_content = log_file.read_text() if log_file.exists() else "No log file"
 
                 # Enhanced error analysis for better troubleshooting
                 error_hints = []
@@ -81,7 +79,7 @@ def compile_latex(
                 # Detect specific LaTeX error patterns
                 if "*** (job aborted, no legal \\end found)" in log_content:
                     error_hints.append(
-                        "Document structure error: missing \\end{document} or unmatched \\begin{}/\\end{} pairs"
+                        "Document structure error: missing \\end{document} or unmatched \\begin{}/\\end{} pairs"  # noqa: E501
                     )
                 if "Undefined control sequence" in log_content:
                     error_hints.append(
@@ -92,9 +90,7 @@ def compile_latex(
                         "Missing file reference - check figure paths and bibliography files"
                     )
                 if "LaTeX Error: File" in log_content and "not found" in log_content:
-                    error_hints.append(
-                        "Missing LaTeX package - install required packages"
-                    )
+                    error_hints.append("Missing LaTeX package - install required packages")
                 if "Missing \\begin{document}" in log_content:
                     error_hints.append(
                         "Missing \\begin{document} command - check document structure"
@@ -127,9 +123,7 @@ def compile_latex(
                 ]
 
                 if error_hints:
-                    enhanced_suggestions.extend(
-                        [f"Common issue: {hint}" for hint in error_hints]
-                    )
+                    enhanced_suggestions.extend([f"Common issue: {hint}" for hint in error_hints])
 
                 raise CompilationError(
                     f"LaTeX compilation failed (exit code: {result.returncode})",
@@ -137,11 +131,7 @@ def compile_latex(
                         "exit_code": result.returncode,
                         "stderr": result.stderr[:300] if result.stderr else "",
                         "log_file": str(log_file),
-                        "log_tail": (
-                            log_content[-800:]
-                            if len(log_content) > 800
-                            else log_content
-                        ),
+                        "log_tail": (log_content[-800:] if len(log_content) > 800 else log_content),
                         "recent_errors": recent_errors,
                         "detected_issues": error_hints,
                     },
@@ -150,9 +140,7 @@ def compile_latex(
 
         pdf_file = output_dir / f"{tex_file.stem}.pdf"
         if not pdf_file.exists():
-            raise CompilationError(
-                "PDF not generated", context={"expected": str(pdf_file)}
-            )
+            raise CompilationError("PDF not generated", context={"expected": str(pdf_file)})
 
         total_duration = time.time() - start_time
         logger.info(f"LaTeX compilation completed in {total_duration:.2f}s")

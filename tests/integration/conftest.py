@@ -129,9 +129,7 @@ def sample_project_structure(tmp_path: Path) -> Generator[Path, None, None]:
         tests_dir = project_root / "tests"
         tests_dir.mkdir()
         (tests_dir / "__init__.py").write_text("")
-        (tests_dir / "test_sample.py").write_text(
-            "def test_example():\n    assert True\n"
-        )
+        (tests_dir / "test_sample.py").write_text("def test_example():\n    assert True\n")
 
         # Create output structure
         output_dir = project_root / "output"
@@ -232,9 +230,7 @@ def run_python_script(repo_root: Path):
         Function that runs Python scripts and returns CompletedProcess
     """
 
-    def _run(
-        script_path: Path | str, args: list[str] | None = None, cwd: Path | None = None
-    ):
+    def _run(script_path: Path | str, args: list[str] | None = None, cwd: Path | None = None):
         cmd = [sys.executable, str(script_path)]
         if args:
             cmd.extend(args)

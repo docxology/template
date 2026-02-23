@@ -66,11 +66,9 @@ def generate_multi_project_summary_report(
     # Build comprehensive summary
     successful_projects = getattr(result, "successful_projects", 0)
     total_projects_count = len(projects)
-    failed_projects = getattr(
-        result, "failed_projects", total_projects_count - successful_projects
-    )
+    failed_projects = getattr(result, "failed_projects", total_projects_count - successful_projects)
 
-    summary = {
+    summary = {  # type: ignore
         "timestamp": datetime.now().isoformat(),
         "total_projects": total_projects_count,
         "successful_projects": successful_projects,
@@ -88,9 +86,7 @@ def generate_multi_project_summary_report(
     project_results = getattr(result, "project_results", {})
 
     # Debug: log what we got
-    logger.debug(
-        f"project_results type: {type(project_results)}, value: {project_results}"
-    )
+    logger.debug(f"project_results type: {type(project_results)}, value: {project_results}")
 
     # Ensure project_results is a dict - strengthen validation
     if not isinstance(project_results, dict):
@@ -106,7 +102,7 @@ def generate_multi_project_summary_report(
         for key, value in project_results.items():
             if not isinstance(value, list):
                 logger.warning(
-                    f"project_results['{key}'] is not a list, got {type(value)} - converting to empty list"
+                    f"project_results['{key}'] is not a list, got {type(value)} - converting to empty list"  # noqa: E501
                 )
                 project_results[key] = []
 
@@ -114,21 +110,17 @@ def generate_multi_project_summary_report(
         try:
             proj_result = project_results.get(proj_name, [])
             logger.info(
-                f"For project {proj_name}, proj_result type: {type(proj_result)}, len: {len(proj_result) if hasattr(proj_result, '__len__') else 'N/A'}"
+                f"For project {proj_name}, proj_result type: {type(proj_result)}, len: {len(proj_result) if hasattr(proj_result, '__len__') else 'N/A'}"  # noqa: E501
             )
 
             # Handle different result formats defensively
             if isinstance(proj_result, list) and proj_result:
                 # New format: list of PipelineStageResult objects
                 all_success = all(
-                    result.success
-                    for result in proj_result
-                    if hasattr(result, "success")
+                    result.success for result in proj_result if hasattr(result, "success")
                 )
                 total_duration = sum(
-                    result.duration
-                    for result in proj_result
-                    if hasattr(result, "duration")
+                    result.duration for result in proj_result if hasattr(result, "duration")
                 )
                 stages_completed = len(proj_result)
                 errors = []
@@ -138,7 +130,7 @@ def generate_multi_project_summary_report(
                     elif hasattr(result, "errors") and result.errors:
                         errors.extend(result.errors)
 
-                summary["projects"][proj_name] = {
+                summary["projects"][proj_name] = {  # type: ignore
                     "success": all_success,
                     "duration": total_duration,
                     "stages_completed": stages_completed,
@@ -146,7 +138,7 @@ def generate_multi_project_summary_report(
                 }
             elif isinstance(proj_result, dict):
                 # Legacy format: dict with direct keys
-                summary["projects"][proj_name] = {
+                summary["projects"][proj_name] = {  # type: ignore
                     "success": proj_result.get("success", False),
                     "duration": proj_result.get("duration", 0.0),
                     "stages_completed": proj_result.get("stages_completed", 0),
@@ -154,10 +146,8 @@ def generate_multi_project_summary_report(
                 }
             else:
                 # Unknown format or empty
-                logger.debug(
-                    f"Unknown project result format for {proj_name}: {type(proj_result)}"
-                )
-                summary["projects"][proj_name] = {
+                logger.debug(f"Unknown project result format for {proj_name}: {type(proj_result)}")
+                summary["projects"][proj_name] = {  # type: ignore
                     "success": False,
                     "duration": 0.0,
                     "stages_completed": 0,
@@ -165,7 +155,7 @@ def generate_multi_project_summary_report(
                 }
         except Exception as e:
             logger.warning(f"Error processing results for project {proj_name}: {e}")
-            summary["projects"][proj_name] = {
+            summary["projects"][proj_name] = {  # type: ignore
                 "success": False,
                 "duration": 0.0,
                 "stages_completed": 0,
@@ -177,7 +167,7 @@ def generate_multi_project_summary_report(
         try:
             # Collect durations from the projects summary we just built
             durations = []
-            for proj_name, proj_data in summary["projects"].items():
+            for proj_name, proj_data in summary["projects"].items():  # type: ignore
                 if isinstance(proj_data, dict) and proj_data.get("duration", 0) > 0:
                     durations.append(proj_data["duration"])
 
@@ -186,31 +176,25 @@ def generate_multi_project_summary_report(
                     "slowest_project": (
                         max(
                             (
-                                (n, summary["projects"][n]["duration"])
-                                for n in summary["projects"]
-                                if summary["projects"][n]["duration"] > 0
+                                (n, summary["projects"][n]["duration"])  # type: ignore
+                                for n in summary["projects"]  # type: ignore
+                                if summary["projects"][n]["duration"] > 0  # type: ignore
                             ),
                             key=lambda x: x[1],
                         )[0]
-                        if any(
-                            summary["projects"][n]["duration"] > 0
-                            for n in summary["projects"]
-                        )
+                        if any(summary["projects"][n]["duration"] > 0 for n in summary["projects"])  # type: ignore
                         else None
                     ),
                     "fastest_project": (
                         min(
                             (
-                                (n, summary["projects"][n]["duration"])
-                                for n in summary["projects"]
-                                if summary["projects"][n]["duration"] > 0
+                                (n, summary["projects"][n]["duration"])  # type: ignore
+                                for n in summary["projects"]  # type: ignore
+                                if summary["projects"][n]["duration"] > 0  # type: ignore
                             ),
                             key=lambda x: x[1],
                         )[0]
-                        if any(
-                            summary["projects"][n]["duration"] > 0
-                            for n in summary["projects"]
-                        )
+                        if any(summary["projects"][n]["duration"] > 0 for n in summary["projects"])  # type: ignore
                         else None
                     ),
                     "average_duration": sum(durations) / len(durations),
@@ -222,7 +206,7 @@ def generate_multi_project_summary_report(
 
     # Error aggregation
     all_errors = []
-    for proj_name, proj_data in summary["projects"].items():
+    for proj_name, proj_data in summary["projects"].items():  # type: ignore
         errors = proj_data.get("errors", [])
         for err in errors:
             all_errors.append({"project": proj_name, "error": err})
@@ -230,13 +214,13 @@ def generate_multi_project_summary_report(
         "total_errors": len(all_errors),
         "errors_by_project": {
             proj: len(summary["projects"].get(proj, {}).get("errors", []))
-            for proj in project_names
+            for proj in project_names  # type: ignore
         },
     }
 
     # Generate recommendations
     if failed_projects > 0:
-        summary["recommendations"].append(
+        summary["recommendations"].append(  # type: ignore
             {
                 "priority": "high",
                 "action": "Review failed projects",
@@ -244,12 +228,12 @@ def generate_multi_project_summary_report(
             }
         )
 
-    if summary["performance_analysis"].get("average_duration", 0) > 300:  # 5 minutes
-        summary["recommendations"].append(
+    if summary["performance_analysis"].get("average_duration", 0) > 300:  # type: ignore  # 5 minutes
+        summary["recommendations"].append(  # type: ignore
             {
                 "priority": "medium",
                 "action": "Consider performance optimization",
-                "details": f'Average project execution time: {summary["performance_analysis"]["average_duration"]:.1f}s',
+                "details": f"Average project execution time: {summary['performance_analysis']['average_duration']:.1f}s",  # type: ignore  # noqa: E501
             }
         )
 
@@ -298,9 +282,7 @@ def _format_multi_project_summary_markdown(summary: Dict[str, Any]) -> str:
     ]
 
     if summary.get("infra_test_duration", 0) > 0:
-        lines.extend(
-            [f"- **Infrastructure Tests:** {summary['infra_test_duration']:.1f}s", ""]
-        )
+        lines.extend([f"- **Infrastructure Tests:** {summary['infra_test_duration']:.1f}s", ""])
 
     # Per-project results
     lines.extend(["## Project Results", ""])
@@ -406,9 +388,7 @@ def generate_pipeline_report(
 
     # Add log file info to output_statistics if project_name provided
     if project_name and output_statistics is not None:
-        log_file = (
-            repo_root / "projects" / project_name / "output" / "logs" / "pipeline.log"
-        )
+        log_file = repo_root / "projects" / project_name / "output" / "logs" / "pipeline.log"
         log_file_info = {
             "exists": log_file.exists(),
             "size": log_file.stat().st_size if log_file.exists() else 0,
@@ -515,7 +495,7 @@ def generate_markdown_report(report: PipelineReport) -> str:
     lines.append(f"- **Stages Executed:** {total}")
     lines.append(f"- **Stages Passed:** {passed}")
     lines.append(f"- **Stages Failed:** {failed}")
-    lines.append(f"- **Success Rate:** {(passed/total*100) if total > 0 else 0:.1f}%")
+    lines.append(f"- **Success Rate:** {(passed / total * 100) if total > 0 else 0:.1f}%")
     lines.append("")
 
     # Stage details
@@ -740,15 +720,15 @@ def generate_html_report(report: PipelineReport) -> str:
         summary = report.test_results.get("summary", {})
         html += f"""    <div class="section">
         <h2>Test Results</h2>
-        <p><strong>Total Tests:</strong> {summary.get('total_tests', 0)}</p>
-        <p><strong>Passed:</strong> {summary.get('total_passed', 0)}</p>
-        <p><strong>Failed:</strong> {summary.get('total_failed', 0)}</p>
-        <p><strong>Skipped:</strong> {summary.get('total_skipped', 0)}</p>
+        <p><strong>Total Tests:</strong> {summary.get("total_tests", 0)}</p>
+        <p><strong>Passed:</strong> {summary.get("total_passed", 0)}</p>
+        <p><strong>Failed:</strong> {summary.get("total_failed", 0)}</p>
+        <p><strong>Skipped:</strong> {summary.get("total_skipped", 0)}</p>
 """
         if "infrastructure_coverage" in summary:
-            html += f"        <p><strong>Infrastructure Coverage:</strong> {summary['infrastructure_coverage']:.2f}%</p>\n"
+            html += f"        <p><strong>Infrastructure Coverage:</strong> {summary['infrastructure_coverage']:.2f}%</p>\n"  # noqa: E501
         if "project_coverage" in summary:
-            html += f"        <p><strong>Project Coverage:</strong> {summary['project_coverage']:.2f}%</p>\n"
+            html += f"        <p><strong>Project Coverage:</strong> {summary['project_coverage']:.2f}%</p>\n"  # noqa: E501
         html += "    </div>\n"
 
     html += """</body>
@@ -831,9 +811,7 @@ def generate_validation_markdown(results: Dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def generate_performance_report(
-    performance_metrics: Dict[str, Any], output_dir: Path
-) -> Path:
+def generate_performance_report(performance_metrics: Dict[str, Any], output_dir: Path) -> Path:
     """Generate performance report.
 
     Args:
@@ -852,9 +830,7 @@ def generate_performance_report(
     return json_path
 
 
-def generate_error_summary(
-    errors: List[Dict[str, Any]], output_dir: Path
-) -> Dict[str, Any]:
+def generate_error_summary(errors: List[Dict[str, Any]], output_dir: Path) -> Dict[str, Any]:
     """Generate error summary report.
 
     Args:

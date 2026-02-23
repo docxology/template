@@ -3,8 +3,6 @@
 Tests the markdown validation CLI script.
 """
 
-
-
 from infrastructure.validation import validate_markdown_cli
 
 
@@ -69,9 +67,7 @@ class TestValidateMarkdownCliMain:
         labels = {"existing_label": str(md_file)}
         anchors = {}
 
-        issues = validate_markdown_cli.validate_refs(
-            [str(md_file)], labels, anchors, str(tmp_path)
-        )
+        issues = validate_markdown_cli.validate_refs([str(md_file)], labels, anchors, str(tmp_path))
 
         # Should find reference to missing_ref
         assert isinstance(issues, list)

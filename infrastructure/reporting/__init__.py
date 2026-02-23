@@ -13,25 +13,39 @@ from pathlib import Path
 from typing import Dict, List
 
 from infrastructure.reporting.dashboard_generator import (
-    generate_all_dashboards, generate_matplotlib_dashboard,
-    generate_plotly_dashboard)
-from infrastructure.reporting.error_aggregator import (ErrorAggregator,
-                                                       ErrorEntry,
-                                                       get_error_aggregator,
-                                                       reset_error_aggregator)
+    generate_all_dashboards,
+    generate_matplotlib_dashboard,
+    generate_plotly_dashboard,
+)
+from infrastructure.reporting.error_aggregator import (
+    ErrorAggregator,
+    ErrorEntry,
+    get_error_aggregator,
+    reset_error_aggregator,
+)
 from infrastructure.reporting.executive_reporter import (
-    ExecutiveSummary, ProjectMetrics, collect_project_metrics,
-    generate_executive_summary, save_executive_summary)
+    ExecutiveSummary,
+    ProjectMetrics,
+    collect_project_metrics,
+    generate_executive_summary,
+    save_executive_summary,
+)
 from infrastructure.reporting.output_reporter import (
-    collect_output_statistics, generate_output_summary)
+    collect_output_statistics,
+    generate_output_summary,
+)
 from infrastructure.reporting.pipeline_reporter import (
-    generate_error_summary, generate_performance_report,
-    generate_pipeline_report, generate_test_report, generate_validation_report,
-    save_pipeline_report)
-from infrastructure.reporting.test_reporter import \
-    generate_test_report as generate_test_report_from_results
-from infrastructure.reporting.test_reporter import (parse_pytest_output,
-                                                    save_test_report)
+    generate_error_summary,
+    generate_performance_report,
+    generate_pipeline_report,
+    generate_test_report,
+    generate_validation_report,
+    save_pipeline_report,
+)
+from infrastructure.reporting.test_reporter import (
+    generate_test_report as generate_test_report_from_results,
+)
+from infrastructure.reporting.test_reporter import parse_pytest_output, save_test_report
 
 
 def generate_multi_project_report(
@@ -66,30 +80,25 @@ def generate_multi_project_report(
 
     logger = get_logger(__name__)
 
-    logger.info(
-        f"Starting multi-project reporting for {len(project_names)} projects..."
-    )
+    logger.info(f"Starting multi-project reporting for {len(project_names)} projects...")
 
     all_files = {}
 
     try:
         # Step 1: Generate executive summary
-        logger.info("Generating executive summary...")
+        # (executive_reporter.py logs step-level detail)
         summary = generate_executive_summary(repo_root, project_names)
 
         # Step 2: Save summary reports
-        logger.info("Saving summary reports...")
         summary_files = save_executive_summary(summary, output_dir)
         all_files.update(summary_files)
 
         # Step 3: Generate dashboards
-        logger.info("Generating visual dashboards...")
         dashboard_files = generate_all_dashboards(summary, output_dir)
         all_files.update(dashboard_files)
 
-        logger.info(
-            f"Multi-project reporting complete. Generated {len(all_files)} files:"
-        )
+        logger.info(f"Multi-project reporting complete. Generated {len(all_files)} files.")
+
         for file_type, path in all_files.items():
             logger.info(f"  {file_type.upper()}: {path.name}")
 

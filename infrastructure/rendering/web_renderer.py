@@ -77,9 +77,7 @@ class WebRenderer:
         logger.info(f"Combining {len(source_files)} section(s):")
         for i, md_file in enumerate(source_files, 1):
             size_kb = md_file.stat().st_size / 1024
-            logger.info(
-                f"  [{i:>2}/{len(source_files)}] {md_file.name:<40} ({size_kb:>6.1f} KB)"
-            )
+            logger.info(f"  [{i:>2}/{len(source_files)}] {md_file.name:<40} ({size_kb:>6.1f} KB)")
 
         total_size_kb = sum(f.stat().st_size for f in source_files) / 1024
         logger.info(f"  {'Total input size:':<48} ({total_size_kb:>6.1f} KB)")
@@ -271,9 +269,7 @@ class WebRenderer:
             # Read CSS file
             css_file = Path(__file__).parent / "ide_style.css"
             if not css_file.exists():
-                logger.warning(
-                    f"CSS file not found: {css_file}, skipping CSS embedding"
-                )
+                logger.warning(f"CSS file not found: {css_file}, skipping CSS embedding")
                 return
 
             css_content = css_file.read_text(encoding="utf-8")
@@ -292,9 +288,7 @@ class WebRenderer:
                     style_tag = f"<head>\n<style>\n{css_content}\n</style>\n"
                     html_content = html_content.replace("<head>", style_tag, 1)
                 else:
-                    logger.warning(
-                        "Could not find <head> tag in HTML, CSS not embedded"
-                    )
+                    logger.warning("Could not find <head> tag in HTML, CSS not embedded")
                     return
 
             # Write modified HTML back

@@ -7,9 +7,11 @@ import sys
 import pytest
 
 from infrastructure.validation import cli
-from infrastructure.validation.cli import (validate_markdown_command,
-                                           validate_pdf_command,
-                                           verify_integrity_command)
+from infrastructure.validation.cli import (
+    validate_markdown_command,
+    validate_pdf_command,
+    verify_integrity_command,
+)
 
 
 class TestValidatePdfCommand:
@@ -63,9 +65,7 @@ class TestValidateMarkdownCommand:
 
     def test_markdown_dir_not_found_exits(self, tmp_path, caplog):
         """Test validate_markdown_command exits with error for missing dir."""
-        args = argparse.Namespace(
-            markdown_dir=str(tmp_path / "nonexistent"), repo_root=None
-        )
+        args = argparse.Namespace(markdown_dir=str(tmp_path / "nonexistent"), repo_root=None)
 
         with caplog.at_level(logging.ERROR):
             with pytest.raises(SystemExit) as exc_info:
@@ -95,9 +95,7 @@ class TestVerifyIntegrityCommand:
 
     def test_output_dir_not_found_exits(self, tmp_path, caplog):
         """Test verify_integrity_command exits with error for missing dir."""
-        args = argparse.Namespace(
-            output_dir=str(tmp_path / "nonexistent"), verbose=False
-        )
+        args = argparse.Namespace(output_dir=str(tmp_path / "nonexistent"), verbose=False)
 
         with caplog.at_level(logging.ERROR):
             with pytest.raises(SystemExit) as exc_info:

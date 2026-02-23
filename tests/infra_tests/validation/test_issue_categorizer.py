@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """Tests for issue_categorizer module."""
 
-
-from infrastructure.validation.doc_models import (AccuracyIssue,
-                                                  LinkIssue,
-                                                  QualityIssue)
+from infrastructure.validation.doc_models import AccuracyIssue, LinkIssue, QualityIssue
 from infrastructure.validation.issue_categorizer import (
-    assign_severity, categorize_by_type, filter_false_positives,
-    generate_issue_summary, group_related_issues, is_false_positive,
-    prioritize_issues)
+    assign_severity,
+    categorize_by_type,
+    filter_false_positives,
+    generate_issue_summary,
+    group_related_issues,
+    is_false_positive,
+    prioritize_issues,
+)
 
 
 class TestIssueCategorizer:
@@ -53,9 +55,7 @@ class TestIssueCategorizer:
 
         result = categorize_by_type(issues)
 
-        assert (
-            len(result["critical"]) == 1
-        )  # Link issue (severity='error' -> 'critical')
+        assert len(result["critical"]) == 1  # Link issue (severity='error' -> 'critical')
         assert len(result["warning"]) == 1  # Accuracy issue
         assert len(result["info"]) == 1  # Quality issue
         assert len(result["broken_links"]) == 1  # Link issue type maps to broken_links

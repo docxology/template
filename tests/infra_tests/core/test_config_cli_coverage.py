@@ -8,8 +8,10 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
 
 
+@pytest.mark.timeout(60)
 class TestConfigCli:
     """Test config_cli module."""
 
@@ -41,6 +43,7 @@ class TestConfigCli:
                 capture_output=True,
                 text=True,
                 env=env,
+                timeout=30,
             )
 
             # Argparse --help returns 0
@@ -65,6 +68,7 @@ class TestConfigCli:
                 capture_output=True,
                 text=True,
                 env=env,
+                timeout=30,
             )
 
             # Should execute without error (may output nothing if no config, but exit code should be 0)
@@ -85,6 +89,7 @@ class TestConfigCli:
                 capture_output=True,
                 text=True,
                 env=env,
+                timeout=30,
             )
 
             # Should execute without error

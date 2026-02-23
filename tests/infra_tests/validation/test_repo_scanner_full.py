@@ -3,13 +3,13 @@
 Tests repository scanning functionality comprehensively.
 """
 
-
-
 from infrastructure.validation import repo_scanner
-from infrastructure.validation.repo_scanner import (AccuracyIssue,
-                                                    CompletenessGap,
-                                                    RepositoryScanner,
-                                                    ScanResults)
+from infrastructure.validation.repo_scanner import (
+    AccuracyIssue,
+    CompletenessGap,
+    RepositoryScanner,
+    ScanResults,
+)
 
 
 class TestDataClasses:
@@ -162,9 +162,7 @@ import src.module
         scanner._check_completeness()
 
         # undocumented should be flagged
-        gaps = [
-            g for g in scanner.results.completeness_gaps if "undocumented" in g.item
-        ]
+        gaps = [g for g in scanner.results.completeness_gaps if "undocumented" in g.item]
         assert len(gaps) >= 0  # May or may not find gaps depending on implementation
 
     def test_check_test_coverage(self, tmp_path):
@@ -246,9 +244,7 @@ class TestCheckDocumentedCommands:
         scanner._check_documented_commands()
 
         # Should not find any issues
-        command_issues = [
-            i for i in scanner.results.accuracy_issues if i.category == "command"
-        ]
+        command_issues = [i for i in scanner.results.accuracy_issues if i.category == "command"]
         assert len(command_issues) == 0
 
     def test_documented_script_missing(self, tmp_path):
@@ -260,9 +256,7 @@ class TestCheckDocumentedCommands:
         scanner._check_documented_commands()
 
         # Should find the broken reference
-        command_issues = [
-            i for i in scanner.results.accuracy_issues if i.category == "command"
-        ]
+        command_issues = [i for i in scanner.results.accuracy_issues if i.category == "command"]
         assert len(command_issues) == 1
         assert "missing.sh" in command_issues[0].message
 
@@ -281,9 +275,7 @@ class TestCheckDocumentedCommands:
         scanner._check_documented_commands()
 
         # Should not flag scripts in code blocks
-        command_issues = [
-            i for i in scanner.results.accuracy_issues if i.category == "command"
-        ]
+        command_issues = [i for i in scanner.results.accuracy_issues if i.category == "command"]
         assert len(command_issues) == 0
 
     def test_src_module_reference_ignored(self, tmp_path):
@@ -294,9 +286,7 @@ class TestCheckDocumentedCommands:
         scanner.src_modules = {"example"}
         scanner._check_documented_commands()
 
-        command_issues = [
-            i for i in scanner.results.accuracy_issues if i.category == "command"
-        ]
+        command_issues = [i for i in scanner.results.accuracy_issues if i.category == "command"]
         assert len(command_issues) == 0
 
     def test_script_found_in_alt_location(self, tmp_path):
@@ -311,9 +301,7 @@ class TestCheckDocumentedCommands:
         scanner.src_modules = set()
         scanner._check_documented_commands()
 
-        command_issues = [
-            i for i in scanner.results.accuracy_issues if i.category == "command"
-        ]
+        command_issues = [i for i in scanner.results.accuracy_issues if i.category == "command"]
         # helper.sh exists in repo_utilities, should not be flagged
         assert len(command_issues) == 0
 

@@ -126,13 +126,17 @@ def discover_projects(repo_root: Path | str) -> list[ProjectInfo]:
                 program="",
             )
             projects.append(project_info)
-            logger.debug(f"Discovered standalone project: {project_info.name} at {project_info.path}")
+            logger.debug(
+                f"Discovered standalone project: {project_info.name} at {project_info.path}"
+            )
         else:
             # Not a valid project - check if it's a program directory containing projects
             nested_projects = _discover_nested_projects(child_dir, program_name=child_dir.name)
             if nested_projects:
                 projects.extend(nested_projects)
-                logger.debug(f"Discovered program directory: {child_dir.name} with {len(nested_projects)} projects")
+                logger.debug(
+                    f"Discovered program directory: {child_dir.name} with {len(nested_projects)} projects"  # noqa: E501
+                )
             else:
                 logger.debug(f"Skipping {child_dir.name}: {message}")
 
@@ -279,9 +283,7 @@ def get_project_metadata(project_dir: Path) -> dict:
             if "project" in pyproject_data:
                 project_config = pyproject_data["project"]
                 metadata["name"] = project_config.get("name", metadata["name"])
-                metadata["description"] = project_config.get(
-                    "description", metadata["description"]
-                )
+                metadata["description"] = project_config.get("description", metadata["description"])
                 metadata["version"] = project_config.get("version", metadata["version"])
 
                 # Extract authors

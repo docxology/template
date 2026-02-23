@@ -1,0 +1,342 @@
+\begin{thebibliography}{52}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Amodei et~al.(2016)Amodei, Olah, Steinhardt, Christiano, Schulman, and
+  Man{\'e}]{amodei2016concrete}
+Dario Amodei, Chris Olah, Jacob Steinhardt, Paul Christiano, John Schulman, and
+  Dan Man{\'e}.
+\newblock Concrete problems in {AI} safety.
+\newblock \emph{arXiv preprint arXiv:1606.06565}, 2016.
+
+\bibitem[Beal(2003)]{beal2003variational}
+Matthew~J Beal.
+\newblock \emph{Variational Algorithms for Approximate {Bayesian} Inference}.
+\newblock PhD thesis, University College London, 2003.
+
+\bibitem[Benkler et~al.(2018)Benkler, Faris, and Roberts]{benkler2018network}
+Yochai Benkler, Robert Faris, and Hal Roberts.
+\newblock \emph{Network Propaganda: Manipulation, Disinformation, and
+  Radicalization in American Politics}.
+\newblock Oxford University Press, New York, 2018.
+
+\bibitem[Bishop(2006)]{bishop2006pattern}
+Christopher~M Bishop.
+\newblock \emph{Pattern recognition and machine learning}.
+\newblock Springer, 2006.
+
+\bibitem[Blei et~al.(2017)Blei, Kucukelbir, and McAuliffe]{blei2017variational}
+David~M Blei, Alp Kucukelbir, and Jon~D McAuliffe.
+\newblock Variational inference: A review for statisticians.
+\newblock \emph{Journal of the American Statistical Association}, 112\penalty0
+  (518):\penalty0 859--877, 2017.
+
+\bibitem[Bostrom(2014)]{bostrom2014superintelligence}
+Nick Bostrom.
+\newblock \emph{Superintelligence: Paths, Dangers, Strategies}.
+\newblock Oxford University Press, Oxford, 2014.
+
+\bibitem[Bruineberg et~al.(2018)Bruineberg, Kiverstein, and
+  Rietveld]{bruineberg2018anticipating}
+Jelle Bruineberg, Julian Kiverstein, and Erik Rietveld.
+\newblock The anticipating brain is not a scientist: the free-energy principle
+  from an ecological-enactivist perspective.
+\newblock \emph{Synthese}, 195\penalty0 (6):\penalty0 2417--2444, 2018.
+
+\bibitem[Cerutti et~al.(2025)]{sofai2025}
+Federico Cerutti et~al.
+\newblock Fast, slow, and metacognitive thinking in {AI}.
+\newblock \emph{npj Artificial Intelligence}, 2025.
+\newblock \doi{10.1038/s44387-025-00027-5}.
+
+\bibitem[Champion et~al.(2025)Champion, Da~Costa, Parr, and
+  Friston]{champion2025efeplanning}
+Thijs Champion, Lancelot Da~Costa, Thomas Parr, and Karl Friston.
+\newblock Expected free energy-based planning as variational inference.
+\newblock \emph{arXiv preprint arXiv:2504.14898}, 2025.
+\newblock EFE-based planning as variational inference with bounded
+  computational resources.
+
+\bibitem[Clark(2013)]{clark2013whatever}
+Andy Clark.
+\newblock Whatever next? predictive brains, situated agents, and the future of
+  cognitive science.
+\newblock \emph{Behavioral and Brain Sciences}, 36\penalty0 (3):\penalty0
+  181--204, 2013.
+
+\bibitem[Constant et~al.(2019)Constant, Ramstead, Veissi{\`e}re, Campbell, and
+  Friston]{constant2019regimes}
+Axel Constant, Maxwell J~D Ramstead, Samuel P~L Veissi{\`e}re, John~O Campbell,
+  and Karl~J Friston.
+\newblock Regimes of expectations: An active inference model of social
+  conformity and human decision making.
+\newblock \emph{Frontiers in Psychology}, 10:\penalty0 679, 2019.
+
+\bibitem[Cover and Thomas(2006)]{cover2006elements}
+Thomas~M Cover and Joy~A Thomas.
+\newblock \emph{Elements of Information Theory}.
+\newblock Wiley-Interscience, Hoboken, NJ, 2nd edition, 2006.
+
+\bibitem[Da~Costa et~al.(2020)Da~Costa, Parr, Sajid, Veselic, Neacsu, and
+  Friston]{dacosta2020active}
+Lancelot Da~Costa, Thomas Parr, Noor Sajid, Sacha Veselic, Vasile Neacsu, and
+  Karl Friston.
+\newblock Active inference on discrete state-spaces: a synthesis.
+\newblock \emph{Journal of Mathematical Psychology}, 99:\penalty0 102447, 2020.
+
+\bibitem[Efklides(2008)]{efklides2008metacognition}
+Anastasia Efklides.
+\newblock Metacognition: Defining its facets and levels of functioning in
+  relation to self-regulation and co-regulation.
+\newblock \emph{European Journal of Psychology of Education}, 23\penalty0
+  (1):\penalty0 105--118, 2008.
+
+\bibitem[Flavell(1979)]{flavell1979metacognition}
+John~H Flavell.
+\newblock Metacognition and cognitive monitoring: A new area of
+  cognitive-developmental inquiry.
+\newblock \emph{American Psychologist}, 34\penalty0 (10):\penalty0 906--911,
+  1979.
+
+\bibitem[Fleming and Dolan(2012)]{fleming2012metacognition}
+Stephen~M Fleming and Raymond~J Dolan.
+\newblock The neural basis of metacognitive ability.
+\newblock \emph{Philosophical Transactions of the Royal Society B: Biological
+  Sciences}, 367\penalty0 (1594):\penalty0 1338--1349, 2012.
+
+\bibitem[Floridi(2016)]{floridi2016faultless}
+Luciano Floridi.
+\newblock Faultless responsibility: on the nature and allocation of moral
+  responsibility for distributed moral actions.
+\newblock \emph{Philosophical Transactions of the Royal Society A:
+  Mathematical, Physical and Engineering Sciences}, 374\penalty0
+  (2083):\penalty0 20160112, 2016.
+
+\bibitem[Friston(2010)]{friston2010free}
+Karl Friston.
+\newblock The free-energy principle: a unified brain theory?
+\newblock \emph{Nature Reviews Neuroscience}, 11\penalty0 (2):\penalty0
+  127--138, 2010.
+
+\bibitem[Friston(2012)]{friston2012prediction}
+Karl Friston.
+\newblock The history of the future of the bayesian brain.
+\newblock \emph{NeuroImage}, 62\penalty0 (2):\penalty0 1230--1233, 2012.
+
+\bibitem[Friston(2019)]{friston2019particular}
+Karl Friston.
+\newblock A free energy principle for a particular physics.
+\newblock \emph{arXiv preprint arXiv:1906.10184}, 2019.
+
+\bibitem[Friston et~al.(2014)Friston, Stephan, Montague, and
+  Dolan]{friston2014active}
+Karl Friston, Klaas~E Stephan, Read Montague, and Raymond~J Dolan.
+\newblock Active inference and cognitive dissonance.
+\newblock \emph{Nature Reviews Neuroscience}, 15\penalty0 (11):\penalty0
+  749--750, 2014.
+
+\bibitem[Friston et~al.(2016)Friston, FitzGerald, Rigoli, Schwartenbeck, and
+  Pezzulo]{friston2016active}
+Karl Friston, Thomas FitzGerald, Francesco Rigoli, Philipp Schwartenbeck, and
+  Giovanni Pezzulo.
+\newblock Active inference and learning.
+\newblock \emph{Neuroscience \& Biobehavioral Reviews}, 68:\penalty0 862--879,
+  2016.
+
+\bibitem[Friston et~al.(2025)Friston, Heins, Verbelen, Da~Costa, Salvatori,
+  Markovic, Tschantz, Koudahl, Buckley, and Parr]{friston2025scalefree}
+Karl Friston, Conor Heins, Tim Verbelen, Lancelot Da~Costa, Tommaso Salvatori,
+  Dimitrije Markovic, Alexander Tschantz, Magnus Koudahl, Christopher Buckley,
+  and Thomas Parr.
+\newblock From pixels to planning: scale-free active inference.
+\newblock \emph{Frontiers in Network Physiology}, 3:\penalty0 1521963, 2025.
+\newblock \doi{10.3389/fnetp.2025.1521963}.
+
+\bibitem[Friston et~al.(2015)Friston, FitzGerald, Rigoli, Schwartenbeck, and
+  Pezzulo]{friston2015active}
+Karl~J Friston, Thomas FitzGerald, Francesco Rigoli, Philipp Schwartenbeck, and
+  Giovanni Pezzulo.
+\newblock Active inference, curiosity and insight.
+\newblock \emph{Neural computation}, 27\penalty0 (10):\penalty0 2013--2043,
+  2015.
+
+\bibitem[Gabriel(2020)]{gabriel2020artificial}
+Iason Gabriel.
+\newblock Artificial intelligence, values, and alignment.
+\newblock \emph{Minds and Machines}, 30\penalty0 (3):\penalty0 411--437, 2020.
+
+\bibitem[Griffiths et~al.(2010)Griffiths, Chater, Kemp, Perfors, and
+  Tenenbaum]{griffiths2010probabilistic}
+Thomas~L Griffiths, Nick Chater, Charles Kemp, Amy Perfors, and Joshua~B
+  Tenenbaum.
+\newblock Probabilistic models of cognition.
+\newblock \emph{Trends in Cognitive Sciences}, 14\penalty0 (7):\penalty0
+  337--348, 2010.
+
+\bibitem[Heins et~al.(2022)Heins, Millidge, Da~Costa, Mann, Kirchhoff, Koudahl,
+  Tschantz, Buckley, and Friston]{heins2022pymdp}
+Conor Heins, Beren Millidge, Lancelot Da~Costa, Stephen Mann, Michael
+  Kirchhoff, Magnus Koudahl, Alexander Tschantz, Christopher~L Buckley, and
+  Karl Friston.
+\newblock pymdp: A python library for active inference in discrete state
+  spaces.
+\newblock \emph{Journal of Open Source Software}, 7\penalty0 (73):\penalty0
+  4098, 2022.
+
+\bibitem[Hesp et~al.(2021)Hesp, Smith, Parr, Allen, Friston, and
+  Ramstead]{hesp2021deeply}
+Casper Hesp, Ryan Smith, Thomas Parr, Micah Allen, Karl~J Friston, and Maxwell
+  J~D Ramstead.
+\newblock Deeply felt affect: The emergence of valence in deep active
+  inference.
+\newblock \emph{Neural Computation}, 33\penalty0 (2):\penalty0 398--446, 2021.
+
+\bibitem[Hohwy(2013)]{hohwy2013predictive}
+Jakob Hohwy.
+\newblock \emph{The Predictive Mind}.
+\newblock Oxford University Press, Oxford, 2013.
+
+\bibitem[Jaynes(2003)]{jaynes2003probability}
+Edwin~T Jaynes.
+\newblock \emph{Probability theory: the logic of science}.
+\newblock Cambridge university press, 2003.
+
+\bibitem[MacKay(2003)]{mackay2003information}
+David~JC MacKay.
+\newblock \emph{Information theory, inference and learning algorithms}.
+\newblock Cambridge university press, 2003.
+
+\bibitem[Maier et~al.(2025)Maier, Ebrahimzadeh, Shen, and
+  Chowdhury]{friston2025worldbrain}
+Martin Maier, Amin Ebrahimzadeh, Xuemin Shen, and Meryem Chowdhury.
+\newblock From artificial intelligence to active inference: The key to true
+  {AI} and {6G} world brain.
+\newblock \emph{arXiv preprint arXiv:2505.10569}, 2025.
+\newblock Invited paper from OFC 2025.
+
+\bibitem[Mautner et~al.(2025)Mautner, Sadeghi, Ostrowski, and
+  Briegel]{feps2025}
+Johannes Mautner, Meisam Sadeghi, Lena Ostrowski, and Hans~J Briegel.
+\newblock Free energy projective simulation ({FEPS}): Active inference with
+  interpretability.
+\newblock \emph{PLOS One}, 2025.
+\newblock \doi{10.1371/journal.pone.0331047}.
+
+\bibitem[Millidge et~al.(2021)Millidge, Tschantz, and
+  Buckley]{millidge2021whence}
+Beren Millidge, Alexander Tschantz, and Christopher~L Buckley.
+\newblock Whence the expected free energy?
+\newblock \emph{Neural Computation}, 33\penalty0 (2):\penalty0 447--482, 2021.
+
+\bibitem[Nelson and Narens(1990)]{nelson1990metamemory}
+Thomas~O Nelson and Louis Narens.
+\newblock Metamemory: A theoretical framework and new findings.
+\newblock In \emph{Psychology of Learning and Motivation}, volume~26, pages
+  125--173. Academic Press, 1990.
+
+\bibitem[Ngo et~al.(2022)Ngo, Chan, and S{\"o}ren]{ngo2022alignment}
+Richard Ngo, Lawrence Chan, and Mindermann S{\"o}ren.
+\newblock The alignment problem from a deep learning perspective.
+\newblock \emph{arXiv preprint arXiv:2209.00626}, 2022.
+
+\bibitem[Parr and Friston(2019)]{parr2019generalised}
+Thomas Parr and Karl~J Friston.
+\newblock Generalised free energy and active inference.
+\newblock \emph{Biological Cybernetics}, 113\penalty0 (5--6):\penalty0
+  495--513, 2019.
+
+\bibitem[Parr et~al.(2022)Parr, Pezzulo, and Friston]{parr2022active}
+Thomas Parr, Giovanni Pezzulo, and Karl~J Friston.
+\newblock Active inference: The free energy principle in mind, brain, and
+  behavior.
+\newblock \emph{MIT Press}, 2022.
+\newblock Comprehensive textbook on Active Inference.
+
+\bibitem[Pezzulo et~al.(2015)Pezzulo, Rigoli, and Friston]{pezzulo2015active}
+Giovanni Pezzulo, Francesco Rigoli, and Karl Friston.
+\newblock Active inference, homeostatic regulation and adaptive behavioural
+  control.
+\newblock \emph{Progress in Neurobiology}, 134:\penalty0 17--35, 2015.
+
+\bibitem[Proust(2013)]{proust2013philosophy}
+Jo{\"e}lle Proust.
+\newblock \emph{The Philosophy of Metacognition: Mental Agency and
+  Self-Awareness}.
+\newblock Oxford University Press, Oxford, 2013.
+
+\bibitem[Ramstead et~al.(2018)Ramstead, Badcock, and
+  Friston]{ramstead2018answering}
+Maxwell J~D Ramstead, Paul~B Badcock, and Karl~J Friston.
+\newblock Answering {Schr{\"o}dinger's} question: A free-energy formulation.
+\newblock \emph{Physics of Life Reviews}, 24:\penalty0 1--16, 2018.
+
+\bibitem[Rao and Ballard(1999)]{rao1999predictive}
+Rajesh P~N Rao and Dana~H Ballard.
+\newblock Predictive coding in the visual cortex: a functional interpretation
+  of some extra-classical receptive-field effects.
+\newblock \emph{Nature Neuroscience}, 2\penalty0 (1):\penalty0 79--87, 1999.
+
+\bibitem[Russell(2019)]{russell2019human}
+Stuart Russell.
+\newblock \emph{Human Compatible: Artificial Intelligence and the Problem of
+  Control}.
+\newblock Viking, New York, 2019.
+
+\bibitem[Sajid et~al.(2021)Sajid, Ball, Parr, and Friston]{sajid2021active}
+Noor Sajid, Philip~J Ball, Thomas Parr, and Karl~J Friston.
+\newblock Active inference: demystified and compared.
+\newblock \emph{Neural Computation}, 33\penalty0 (3):\penalty0 674--712, 2021.
+
+\bibitem[Sajid et~al.(2022)Sajid, Ball, and Parr]{sajid2022active}
+Noor Sajid, Peter Ball, and Thomas Parr.
+\newblock Active inference and agency: optimal control without cost functions.
+\newblock \emph{arXiv preprint arXiv:2201.09302}, 2022.
+
+\bibitem[Smith et~al.(2022)Smith, Friston, and Whyte]{smith2022step}
+Ryan Smith, Karl~J Friston, and Christopher~J Whyte.
+\newblock A step-by-step tutorial on active inference and its application to
+  empirical data.
+\newblock \emph{Journal of Mathematical Psychology}, 107:\penalty0 102632,
+  2022.
+
+\bibitem[Tani et~al.(2016)Tani, Porr, and Ito]{tani2016exploring}
+Jun Tani, Bernd Porr, and Masato Ito.
+\newblock Exploring the structure of intrinsic motivation.
+\newblock \emph{Frontiers in neurorobotics}, 10:\penalty0 16, 2016.
+
+\bibitem[Tenenbaum et~al.(2011)Tenenbaum, Kemp, Griffiths, and
+  Goodman]{tenenbaum2011how}
+Joshua~B Tenenbaum, Charles Kemp, Thomas~L Griffiths, and Noah~D Goodman.
+\newblock How to grow a mind: Statistics, structure, and abstraction.
+\newblock \emph{Science}, 331\penalty0 (6022):\penalty0 1279--1285, 2011.
+
+\bibitem[Tschantz et~al.(2020)Tschantz, Millidge, Seth, and
+  Buckley]{tschantz2020scaling}
+Aran Tschantz, Beren Millidge, Anil Seth, and Christopher~L Buckley.
+\newblock Scaling active inference.
+\newblock \emph{arXiv preprint arXiv:2006.12911}, 2020.
+
+\bibitem[Wardle and Derakhshan(2017)]{wardle2017information}
+Claire Wardle and Hossein Derakhshan.
+\newblock Information disorder: Toward an interdisciplinary framework for
+  research and policymaking.
+\newblock Technical Report DGI(2017)09, Council of Europe, 2017.
+
+\bibitem[Woolley and Howard(2016)]{woolley2016political}
+Samuel~C Woolley and Philip~N Howard.
+\newblock Political communication, computational propaganda, and autonomous
+  agents.
+\newblock Technical report, Oxford Internet Institute, 2016.
+\newblock Working Paper No. 2016.7.
+
+\bibitem[Zhang et~al.(2025)]{metamind2025}
+Xiangmeng Zhang et~al.
+\newblock {MetaMind}: Modeling human social thoughts with metacognitive
+  multi-agent systems.
+\newblock \emph{arXiv preprint arXiv:2505.18943}, 2025.
+\newblock 35.7\% improvement in social reasoning, 6.2\% gain in Theory of Mind.
+
+\end{thebibliography}

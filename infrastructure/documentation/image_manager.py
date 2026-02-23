@@ -69,9 +69,7 @@ class ImageManager:
         else:
             # Insert at found position
             content = (
-                content[:insertion_point]
-                + f"\n\n{figure_block}\n\n"
-                + content[insertion_point:]
+                content[:insertion_point] + f"\n\n{figure_block}\n\n" + content[insertion_point:]
             )
 
         # Write back
@@ -104,9 +102,7 @@ class ImageManager:
                 match = matches[0]
                 if position == "after_section":
                     # Find end of section (next section or end of file)
-                    next_section = re.search(
-                        r"^#+\s+", content[match.end() :], re.MULTILINE
-                    )
+                    next_section = re.search(r"^#+\s+", content[match.end() :], re.MULTILINE)
                     if next_section:
                         return match.end() + next_section.start()
                     else:

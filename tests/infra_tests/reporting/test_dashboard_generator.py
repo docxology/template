@@ -3,18 +3,29 @@
 Tests visual dashboard generation in multiple formats (PNG, PDF, HTML).
 """
 
-
 import pytest
 
 from infrastructure.reporting.dashboard_generator import (
-    create_coverage_chart, create_manuscript_size_chart,
-    create_output_distribution_chart, create_pipeline_duration_chart,
-    create_summary_table, create_test_count_chart, generate_all_dashboards,
-    generate_matplotlib_dashboard, generate_plotly_dashboard)
+    create_coverage_chart,
+    create_manuscript_size_chart,
+    create_output_distribution_chart,
+    create_pipeline_duration_chart,
+    create_summary_table,
+    create_test_count_chart,
+    generate_all_dashboards,
+    generate_matplotlib_dashboard,
+    generate_plotly_dashboard,
+)
 from infrastructure.reporting.executive_reporter import (
-    CodebaseMetrics, ExecutiveSummary, ManuscriptMetrics, OutputMetrics,
-    PipelineMetrics, ProjectMetrics, TestMetrics,
-    calculate_project_health_score)
+    CodebaseMetrics,
+    ExecutiveSummary,
+    ManuscriptMetrics,
+    OutputMetrics,
+    PipelineMetrics,
+    ProjectMetrics,
+    TestMetrics,
+    calculate_project_health_score,
+)
 
 
 @pytest.fixture
@@ -353,9 +364,7 @@ class TestEdgeCases:
             name="large_project",
             manuscript=ManuscriptMetrics(total_words=1000000),
             codebase=CodebaseMetrics(),
-            tests=TestMetrics(
-                total_tests=100000, passed=100000, coverage_percent=100.0
-            ),
+            tests=TestMetrics(total_tests=100000, passed=100000, coverage_percent=100.0),
             outputs=OutputMetrics(pdf_files=1000),
             pipeline=PipelineMetrics(total_duration=10000.0),
         )

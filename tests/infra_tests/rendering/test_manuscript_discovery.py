@@ -6,9 +6,10 @@ Tests manuscript file discovery and figure verification functionality.
 from __future__ import annotations
 
 
-
 from infrastructure.rendering.manuscript_discovery import (
-    discover_manuscript_files, verify_figures_exist)
+    discover_manuscript_files,
+    verify_figures_exist,
+)
 
 
 class TestVerifyFiguresExist:
@@ -419,9 +420,7 @@ class TestDiscoverManuscriptFiles:
 
         # Should include files with different case (not exact matches to exclude list)
         assert len(result) >= 3
-        assert "readme.md" in [f.name for f in result] or "README.MD" in [
-            f.name for f in result
-        ]
+        assert "readme.md" in [f.name for f in result] or "README.MD" in [f.name for f in result]
         assert "agents.md" in [f.name for f in result]
         # On case-insensitive filesystems, readme.md and README.MD are the same file
         # so we check that at least one variant is present (not excluded)

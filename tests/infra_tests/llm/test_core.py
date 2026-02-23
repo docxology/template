@@ -274,9 +274,7 @@ class TestLLMClientWithOllama:
         try:
             # Use simpler prompt to reduce processing time
             with safe_network_test("Ollama"):
-                response = long_client.query_long(
-                    "Explain what a variable is in programming."
-                )
+                response = long_client.query_long("Explain what a variable is in programming.")
 
                 assert response is not None
                 assert len(response) > 50  # Should have some content
@@ -414,12 +412,8 @@ class TestLLMClientWithOllama:
         opts = GenerationOptions(temperature=0.0, seed=42, max_tokens=50)
 
         with safe_network_test("Ollama"):
-            response1 = client.query(
-                "Complete: The sky is", options=opts, reset_context=True
-            )
-            response2 = client.query(
-                "Complete: The sky is", options=opts, reset_context=True
-            )
+            response1 = client.query("Complete: The sky is", options=opts, reset_context=True)
+            response2 = client.query("Complete: The sky is", options=opts, reset_context=True)
 
             # With same seed and temp=0, responses should be similar
             assert response1 is not None

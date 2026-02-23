@@ -1,0 +1,49 @@
+{
+  "model": "smollm2:135m-instruct-q4_K_S",
+  "timestamp": "2026-02-23T07:46:23.930436",
+  "source_pdf": "/Users/4d/Documents/GitHub/template/projects/code_project/output/pdf/code_project_combined.pdf",
+  "reviews_generated": [
+    "translation_zh"
+  ],
+  "max_input_length": 500000,
+  "manuscript_metrics": {
+    "total_chars": 28672,
+    "total_words": 4834,
+    "total_tokens_est": 7168,
+    "truncated": false,
+    "truncated_chars": 28672
+  },
+  "review_metrics": {
+    "translation_zh": {
+      "input_chars": 28672,
+      "input_words": 4834,
+      "input_tokens_est": 7168,
+      "output_chars": 90140,
+      "output_words": 12504,
+      "output_tokens_est": 22535,
+      "generation_time_seconds": 51.34
+    }
+  },
+  "format_compliance": {
+    "overall_rate": 100.0,
+    "compliant_reviews": 1,
+    "total_reviews": 1,
+    "per_review": {
+      "translation_zh": {
+        "compliant": true,
+        "issues": [],
+        "conversational_phrases": 0
+      }
+    }
+  },
+  "total_generation_time_seconds": 51.34,
+  "config": {
+    "temperature_summary": 0.3,
+    "temperature_review": 0.3,
+    "temperature_suggestions": 0.4,
+    "max_tokens": 16384,
+    "max_tokens_source": "config default long_max_tokens=16384",
+    "timeout_seconds": 300.0,
+    "system_prompt": "manuscript_review"
+  }
+}

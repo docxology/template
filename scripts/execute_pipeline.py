@@ -21,7 +21,9 @@ from infrastructure.core.environment import get_python_command, validate_interpr
 logger = get_logger(__name__)
 
 _STAGE_TO_SCRIPT: dict[str, list[str]] = {
-    "clean": ["scripts/00_setup_environment.py"],  # setup script also validates dirs; clean is handled in PipelineExecutor
+    "clean": [
+        "scripts/00_setup_environment.py"
+    ],  # setup script also validates dirs; clean is handled in PipelineExecutor
     "setup": ["scripts/00_setup_environment.py"],
     "infra_tests": ["scripts/01_run_tests.py", "--infra-only", "--verbose"],
     "project_tests": ["scripts/01_run_tests.py", "--project-only", "--verbose"],
@@ -51,7 +53,12 @@ def execute_single_stage(stage: str, project_name: str, repo_root: Path) -> int:
     extra_args = script_and_args[1:]
 
     # Most scripts support --project; executive report ignores it but accepts it.
-    cmd = get_python_command() + [str(repo_root / script_rel)] + extra_args + ["--project", project_name]
+    cmd = (
+        get_python_command()
+        + [str(repo_root / script_rel)]
+        + extra_args
+        + ["--project", project_name]
+    )
     logger.info(f"Executing stage '{stage_key}' for project '{project_name}': {' '.join(cmd)}")
 
     import subprocess
@@ -91,7 +98,7 @@ def execute_pipeline(
             repo_root=repo_root,
             skip_infra=skip_infra,
             skip_llm=skip_llm,
-            resume=resume
+            resume=resume,
         )
 
         # Execute pipeline
@@ -103,30 +110,34 @@ def execute_pipeline(
             results = executor.execute_full_pipeline()
 
         # Generate comprehensive pipeline report
-        output_dir = repo_root / 'projects' / project_name / 'output'
-        reports_dir = output_dir / 'reports'
+        output_dir = repo_root / "projects" / project_name / "output"
+        reports_dir = output_dir / "reports"
         reports_dir.mkdir(parents=True, exist_ok=True)
-        
+
         total_duration = sum(r.duration for r in results)
-        
+
         # Generate text summary for display
         text_summary = generate_pipeline_summary(
             stage_results=results,
             total_duration=total_duration,
             output_dir=output_dir,
             skip_infra=skip_infra,
-            format='text'
+            format="text",
         )
         logger.info(text_summary)
-        
+
         # Generate JSON and HTML reports for programmatic access
         try:
-            from infrastructure.reporting import generate_pipeline_report, save_pipeline_report, collect_output_statistics
+            from infrastructure.reporting import (
+                generate_pipeline_report,
+                save_pipeline_report,
+                collect_output_statistics,
+            )
             from infrastructure.core.logging_utils import generate_log_summary
-            
+
             # Collect output statistics
             output_stats = collect_output_statistics(repo_root, project_name)
-            
+
             # Generate log summary if log file exists
             log_summary = None
             log_file = output_dir / "logs" / "pipeline.log"
@@ -136,35 +147,40 @@ def execute_pipeline(
                     log_summary_text = generate_log_summary(log_file, log_summary_file)
                     logger.info("Log summary generated")
                     log_summary = {
-                        'summary_file': str(log_summary_file),
-                        'preview': log_summary_text[:500]  # First 500 chars
+                        "summary_file": str(log_summary_file),
+                        "preview": log_summary_text[:500],  # First 500 chars
                     }
                 except Exception as e:
                     logger.warning(f"Failed to generate log summary: {e}")
-            
+
             # Generate comprehensive pipeline report
             pipeline_report = generate_pipeline_report(
-                stage_results=[{
-                    'name': r.stage_name,
-                    'exit_code': r.exit_code,
-                    'duration': r.duration,
-                    'error_message': r.error_message
-                } for r in results],
+                stage_results=[
+                    {
+                        "name": r.stage_name,
+                        "exit_code": r.exit_code,
+                        "duration": r.duration,
+                        "error_message": r.error_message,
+                    }
+                    for r in results
+                ],
                 total_duration=total_duration,
                 repo_root=repo_root,
                 output_statistics=output_stats,
-                project_name=project_name
+                project_name=project_name,
             )
-            
+
             # Save report in multiple formats
-            saved_files = save_pipeline_report(pipeline_report, reports_dir, formats=['json', 'html', 'markdown'])
+            saved_files = save_pipeline_report(
+                pipeline_report, reports_dir, formats=["json", "html", "markdown"]
+            )
             logger.info(f"Pipeline reports saved to {reports_dir}")
             for fmt, path in saved_files.items():
                 logger.info(f"  • {fmt.upper()}: {path.name}")
-            
+
             if log_summary:
                 logger.info("  • LOG SUMMARY: log_summary.txt")
-                
+
         except Exception as e:
             logger.warning(f"Failed to generate comprehensive pipeline report: {e}")
 
@@ -187,13 +203,14 @@ def execute_pipeline(
         return 0 if success else 1
 
     except Exception as e:
-        logger.error(f'Pipeline execution failed: {e}')
+        logger.error(f"Pipeline execution failed: {e}")
         return 1
 
 
 @dataclass(frozen=True)
 class PipelineArgs:
     """Frozen, typed CLI arguments for pipeline execution."""
+
     project: str
     skip_infra: bool = False
     skip_llm: bool = False
@@ -214,7 +231,7 @@ def main():
     parser.add_argument("--core-only", action="store_true", help="Run core pipeline only (no LLM)")
     parser.add_argument(
         "--stage",
-        help="Run a single stage and exit (setup, infra_tests, project_tests, analysis, render_pdf, validate, copy, llm_reviews, llm_translations, executive_report)",
+        help="Run a single stage and exit (setup, infra_tests, project_tests, analysis, render_pdf, validate, copy, llm_reviews, llm_translations, executive_report)",  # noqa: E501
     )
 
     raw_args = parser.parse_args()
@@ -236,7 +253,7 @@ def main():
         skip_infra=args.skip_infra,
         skip_llm=args.skip_llm,
         resume=args.resume,
-        core_only=args.core_only
+        core_only=args.core_only,
     )
 
 

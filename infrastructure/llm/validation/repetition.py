@@ -140,9 +140,7 @@ def calculate_unique_content_ratio(text: str, chunk_size: int = 200) -> float:
 
     # First try splitting by paragraphs/sections (double newlines)
     # This is better for detecting repeated sections
-    paragraphs = [
-        p.strip() for p in text.split("\n\n") if len(p.strip()) >= chunk_size // 2
-    ]
+    paragraphs = [p.strip() for p in text.split("\n\n") if len(p.strip()) >= chunk_size // 2]
 
     if len(paragraphs) >= 2:
         # Use paragraphs as chunks if we have enough
@@ -198,7 +196,7 @@ def detect_repetition(
     ]
 
     # Try each pattern to find the best split
-    chunks = []
+    chunks = []  # type: ignore
     for pattern in section_patterns:
         parts = re.split(pattern, text)
         valid_parts = [p.strip() for p in parts if len(p.strip()) >= min_chunk_size]
@@ -207,9 +205,7 @@ def detect_repetition(
 
     # Fallback: split by double newlines (paragraphs)
     if len(chunks) < 2:
-        chunks = [
-            p.strip() for p in text.split("\n\n") if len(p.strip()) >= min_chunk_size
-        ]
+        chunks = [p.strip() for p in text.split("\n\n") if len(p.strip()) >= min_chunk_size]
 
     if len(chunks) < 2:
         return False, [], 1.0
@@ -247,9 +243,7 @@ def detect_repetition(
     # Calculate unique content ratio
     # For better detection, also check content without headers
     content_only = re.sub(r"^#{1,6}\s+[^\n]+\n?", "", text, flags=re.MULTILINE)
-    unique_ratio = calculate_unique_content_ratio(
-        content_only if content_only.strip() else text
-    )
+    unique_ratio = calculate_unique_content_ratio(content_only if content_only.strip() else text)
 
     has_repetition = len(duplicates) > 0 or unique_ratio < 0.7
 
@@ -289,9 +283,7 @@ def _deduplicate_paragraphs(
                 existing_data["count"] += 1
                 if existing_data["count"] >= max_repetitions:
                     is_duplicate = True
-                    logger.debug(
-                        f"Duplicate paragraph detected (similarity: {similarity:.2f})"
-                    )
+                    logger.debug(f"Duplicate paragraph detected (similarity: {similarity:.2f})")
                 break
 
         if not is_duplicate:
@@ -305,8 +297,7 @@ def _deduplicate_paragraphs(
     # Content preservation check
     if len(result) / original_length < min_content_preservation:
         logger.warning(
-            "Paragraph deduplication would remove too much content. "
-            "Skipping deduplication."
+            "Paragraph deduplication would remove too much content. Skipping deduplication."
         )
         return text
 
@@ -388,9 +379,7 @@ def deduplicate_sections(
             is_duplicate = False
 
             for existing_key, existing_data in seen_sections.items():
-                similarity = _calculate_similarity(
-                    normalized, existing_key, method="hybrid"
-                )
+                similarity = _calculate_similarity(normalized, existing_key, method="hybrid")
                 if similarity >= similarity_threshold:
                     existing_data["count"] += 1
                     if existing_data["count"] >= max_repetitions:
@@ -422,7 +411,7 @@ def deduplicate_sections(
     if len(result) / original_length < min_content_preservation:
         logger.warning(
             f"Deduplication would remove too much content "
-            f"({len(result)}/{original_length} = {len(result)/original_length:.1%}). "
+            f"({len(result)}/{original_length} = {len(result) / original_length:.1%}). "
             f"Using conservative fallback."
         )
         # Fallback to more conservative deduplication
@@ -438,7 +427,7 @@ def deduplicate_sections(
         logger.info(
             f"Deduplication removed {removed_count} duplicate sections "
             f"({original_length} → {len(result)} chars, "
-            f"{len(result)/original_length:.1%} preserved)"
+            f"{len(result) / original_length:.1%} preserved)"
         )
 
     return result

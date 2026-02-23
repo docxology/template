@@ -133,9 +133,7 @@ class LLMConfig:
     # Heartbeat monitoring settings
     heartbeat_interval: float = 15.0  # Seconds between progress updates
     stall_threshold: float = 60.0  # Seconds without tokens before stall warning
-    early_warning_threshold: float = (
-        60.0  # Seconds before first token to trigger early warning
-    )
+    early_warning_threshold: float = 60.0  # Seconds before first token to trigger early warning
 
     def __init__(self, *args, **kwargs):
         """Initialize config, supporting num_ctx as alias for context_window."""
@@ -189,9 +187,7 @@ class LLMConfig:
         # Long max tokens for extended responses
         if "LLM_LONG_MAX_TOKENS" in os.environ:
             try:
-                config_kwargs["long_max_tokens"] = int(
-                    os.environ["LLM_LONG_MAX_TOKENS"]
-                )
+                config_kwargs["long_max_tokens"] = int(os.environ["LLM_LONG_MAX_TOKENS"])
             except ValueError:
                 pass  # Use default
 
@@ -230,17 +226,13 @@ class LLMConfig:
         # Heartbeat monitoring settings
         if "LLM_HEARTBEAT_INTERVAL" in os.environ:
             try:
-                config_kwargs["heartbeat_interval"] = float(
-                    os.environ["LLM_HEARTBEAT_INTERVAL"]
-                )
+                config_kwargs["heartbeat_interval"] = float(os.environ["LLM_HEARTBEAT_INTERVAL"])
             except ValueError:
                 pass  # Use default
 
         if "LLM_STALL_THRESHOLD" in os.environ:
             try:
-                config_kwargs["stall_threshold"] = float(
-                    os.environ["LLM_STALL_THRESHOLD"]
-                )
+                config_kwargs["stall_threshold"] = float(os.environ["LLM_STALL_THRESHOLD"])
             except ValueError:
                 pass  # Use default
 

@@ -18,6 +18,7 @@ Examples:
     python scripts/audit_filepaths.py --output my_audit.md --verbose
     python scripts/audit_filepaths.py --format json --output audit.json
 """
+
 from __future__ import annotations
 
 import argparse
@@ -30,10 +31,11 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from infrastructure.core.logging_utils import get_logger, setup_logger, log_header, log_success
 from infrastructure.validation.audit_orchestrator import (
     run_comprehensive_audit,
-    generate_audit_report
+    generate_audit_report,
 )
 
 logger = get_logger(__name__)
+
 
 def main():
     """Main entry point for the audit script."""
@@ -46,33 +48,30 @@ Examples:
   python scripts/audit_filepaths.py --output docs/audit/my_audit.md --verbose
   python scripts/audit_filepaths.py --format json --output audit_results.json
   python scripts/audit_filepaths.py --project project
-        """
+        """,
     )
 
     parser.add_argument(
-        '--output', '-o',
+        "--output",
+        "-o",
         type=Path,
-        default=Path('docs/audit/FILEPATH_AUDIT_REPORT.md'),
-        help='Output file for the audit report'
+        default=Path("docs/audit/FILEPATH_AUDIT_REPORT.md"),
+        help="Output file for the audit report",
     )
 
     parser.add_argument(
-        '--format', '-f',
-        choices=['markdown', 'json'],
-        default='markdown',
-        help='Output format for the report'
+        "--format",
+        "-f",
+        choices=["markdown", "json"],
+        default="markdown",
+        help="Output format for the report",
     )
 
     parser.add_argument(
-        '--verbose', '-v',
-        action='store_true',
-        help='Show detailed progress information'
+        "--verbose", "-v", action="store_true", help="Show detailed progress information"
     )
 
-    parser.add_argument(
-        '--project',
-        help='Audit specific project only (default: all projects)'
-    )
+    parser.add_argument("--project", help="Audit specific project only (default: all projects)")
 
     args = parser.parse_args()
 
@@ -92,7 +91,7 @@ Examples:
             include_code_validation=True,
             include_directory_validation=True,
             include_import_validation=True,
-            include_placeholder_validation=True
+            include_placeholder_validation=True,
         )
 
         # Generate and save report
@@ -103,7 +102,7 @@ Examples:
         args.output.parent.mkdir(parents=True, exist_ok=True)
 
         # Save report
-        with open(args.output, 'w', encoding='utf-8') as f:
+        with open(args.output, "w", encoding="utf-8") as f:
             f.write(report)
 
         # Print summary to console
@@ -128,9 +127,10 @@ Examples:
         logger.error(f"Audit failed: {e}")
         if args.verbose:
             import traceback
+
             traceback.print_exc()
         sys.exit(1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

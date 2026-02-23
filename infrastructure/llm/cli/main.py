@@ -23,8 +23,7 @@ logger = get_logger(__name__)
 
 def query_command(args: argparse.Namespace) -> None:
     """Handle query command."""
-    from infrastructure.llm.utils.ollama import (is_ollama_running,
-                                                 select_best_model)
+    from infrastructure.llm.utils.ollama import is_ollama_running, select_best_model
 
     config = LLMConfig.from_env()
 
@@ -207,9 +206,7 @@ Examples:
     query_parser.add_argument(
         "--long", action="store_true", help="Request a detailed response (> 500 tokens)"
     )
-    query_parser.add_argument(
-        "--stream", action="store_true", help="Stream response in real-time"
-    )
+    query_parser.add_argument("--stream", action="store_true", help="Stream response in real-time")
     query_parser.add_argument(
         "--model", type=str, default=None, help="Model to use (overrides OLLAMA_MODEL)"
     )
@@ -236,15 +233,9 @@ Examples:
     models_parser.set_defaults(func=models_command)
 
     # Template command
-    template_parser = subparsers.add_parser(
-        "template", help="Apply a research template"
-    )
-    template_parser.add_argument(
-        "name", nargs="?", default=None, help="Template name to apply"
-    )
-    template_parser.add_argument(
-        "--list", action="store_true", help="List available templates"
-    )
+    template_parser = subparsers.add_parser("template", help="Apply a research template")
+    template_parser.add_argument("name", nargs="?", default=None, help="Template name to apply")
+    template_parser.add_argument("--list", action="store_true", help="List available templates")
     template_parser.add_argument(
         "--input", type=str, default=None, help="Input text (otherwise read from stdin)"
     )

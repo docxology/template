@@ -30,9 +30,7 @@ class TestPDFRendererClass:
         (tmp_path / "pdf").mkdir(exist_ok=True)
 
         tex_file = tmp_path / "test.tex"
-        tex_file.write_text(
-            r"\documentclass{article}\begin{document}Test\end{document}"
-        )
+        tex_file.write_text(r"\documentclass{article}\begin{document}Test\end{document}")
 
         # Use real execution - may fail if LaTeX not available
         try:
@@ -149,9 +147,7 @@ class TestBibliographyProcessing:
         renderer = PDFRenderer(config)
 
         tex_file = tmp_path / "test.tex"
-        tex_file.write_text(
-            r"\documentclass{article}\begin{document}\cite{ref}\end{document}"
-        )
+        tex_file.write_text(r"\documentclass{article}\begin{document}\cite{ref}\end{document}")
 
         bib_file = tmp_path / "references.bib"
         bib_file.write_text("@article{ref, title={Test}}")
@@ -160,9 +156,7 @@ class TestBibliographyProcessing:
 
         # Use real execution - may succeed or fail depending on bibtex
         try:
-            result = renderer._process_bibliography(
-                tex_file, tmp_path / "pdf", bib_file
-            )
+            result = renderer._process_bibliography(tex_file, tmp_path / "pdf", bib_file)
             # Should return boolean
             assert isinstance(result, bool)
         except Exception:
@@ -281,9 +275,7 @@ class TestLatexCompilation:
     def test_compile_latex_multiple_passes(self, tmp_path):
         """Test multiple LaTeX compilation passes using real execution."""
         tex = tmp_path / "test.tex"
-        tex.write_text(
-            "\\documentclass{article}\\begin{document}\\ref{fig}\\end{document}"
-        )
+        tex.write_text("\\documentclass{article}\\begin{document}\\ref{fig}\\end{document}")
 
         if hasattr(pdf_renderer, "compile_latex"):
             # Use real execution

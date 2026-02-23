@@ -1,4 +1,3 @@
-
 import pytest
 
 from infrastructure.core.exceptions import CompilationError

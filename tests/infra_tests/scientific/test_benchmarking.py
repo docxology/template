@@ -10,7 +10,6 @@ Tests performance benchmarking utilities including:
 All tests use real numerical data with no mocks.
 """
 
-
 import numpy as np
 import pytest
 
@@ -230,15 +229,9 @@ class TestGeneratePerformanceReport:
     def test_generate_report_multiple_results(self):
         """Test report generation with multiple results."""
         results = [
-            BenchmarkResult(
-                "func1", 0.001, 10.0, 100, {}, "Fast", "2024-01-15 10:00:00"
-            ),
-            BenchmarkResult(
-                "func2", 0.010, 25.0, 100, {}, "Medium", "2024-01-15 10:00:01"
-            ),
-            BenchmarkResult(
-                "func3", 0.100, 50.0, 100, {}, "Slow", "2024-01-15 10:00:02"
-            ),
+            BenchmarkResult("func1", 0.001, 10.0, 100, {}, "Fast", "2024-01-15 10:00:00"),
+            BenchmarkResult("func2", 0.010, 25.0, 100, {}, "Medium", "2024-01-15 10:00:01"),
+            BenchmarkResult("func3", 0.100, 50.0, 100, {}, "Slow", "2024-01-15 10:00:02"),
         ]
 
         report = generate_performance_report(results)
@@ -254,9 +247,7 @@ class TestGeneratePerformanceReport:
     def test_generate_report_with_slow_functions(self):
         """Test recommendations for slow functions (> 0.1s)."""
         results = [
-            BenchmarkResult(
-                "slow_func", 0.150, 10.0, 100, {}, "Slow", "2024-01-15 10:00:00"
-            ),
+            BenchmarkResult("slow_func", 0.150, 10.0, 100, {}, "Slow", "2024-01-15 10:00:00"),
             BenchmarkResult(
                 "very_slow_func", 0.300, 10.0, 100, {}, "Very slow", "2024-01-15 10:00:01"
             ),
@@ -287,12 +278,8 @@ class TestGeneratePerformanceReport:
     def test_generate_report_no_memory_data(self):
         """Test report generation when memory data is None."""
         results = [
-            BenchmarkResult(
-                "func1", 0.001, None, 100, {}, "No memory", "2024-01-15 10:00:00"
-            ),
-            BenchmarkResult(
-                "func2", 0.002, None, 100, {}, "No memory", "2024-01-15 10:00:01"
-            ),
+            BenchmarkResult("func1", 0.001, None, 100, {}, "No memory", "2024-01-15 10:00:00"),
+            BenchmarkResult("func2", 0.002, None, 100, {}, "No memory", "2024-01-15 10:00:01"),
         ]
 
         report = generate_performance_report(results)
@@ -306,9 +293,7 @@ class TestGeneratePerformanceReport:
             BenchmarkResult(
                 "with_memory", 0.001, 30.0, 100, {}, "Has memory", "2024-01-15 10:00:00"
             ),
-            BenchmarkResult(
-                "no_memory", 0.002, None, 100, {}, "No memory", "2024-01-15 10:00:01"
-            ),
+            BenchmarkResult("no_memory", 0.002, None, 100, {}, "No memory", "2024-01-15 10:00:01"),
         ]
 
         report = generate_performance_report(results)
@@ -335,9 +320,7 @@ class TestGeneratePerformanceReport:
     def test_generate_report_recommendations_section(self):
         """Test recommendations section is always present."""
         results = [
-            BenchmarkResult(
-                "fast_func", 0.001, 10.0, 100, {}, "Fast", "2024-01-15 10:00:00"
-            )
+            BenchmarkResult("fast_func", 0.001, 10.0, 100, {}, "Fast", "2024-01-15 10:00:00")
         ]
 
         report = generate_performance_report(results)
@@ -347,15 +330,9 @@ class TestGeneratePerformanceReport:
     def test_generate_report_sorted_by_execution_time(self):
         """Test results are sorted by execution time (slowest first)."""
         results = [
-            BenchmarkResult(
-                "fast", 0.001, 10.0, 100, {}, "Fast", "2024-01-15 10:00:00"
-            ),
-            BenchmarkResult(
-                "slow", 0.100, 10.0, 100, {}, "Slow", "2024-01-15 10:00:01"
-            ),
-            BenchmarkResult(
-                "medium", 0.050, 10.0, 100, {}, "Medium", "2024-01-15 10:00:02"
-            ),
+            BenchmarkResult("fast", 0.001, 10.0, 100, {}, "Fast", "2024-01-15 10:00:00"),
+            BenchmarkResult("slow", 0.100, 10.0, 100, {}, "Slow", "2024-01-15 10:00:01"),
+            BenchmarkResult("medium", 0.050, 10.0, 100, {}, "Medium", "2024-01-15 10:00:02"),
         ]
 
         report = generate_performance_report(results)

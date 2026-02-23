@@ -9,7 +9,6 @@ import sys
 from pathlib import Path
 
 
-
 class TestValidateMarkdownCliModule:
     """Test module-level functionality."""
 
@@ -88,6 +87,7 @@ class TestValidateMarkdownCliMain:
             capture_output=True,
             text=True,
             cwd=Path(__file__).parent.parent.parent.parent,
+            timeout=30,
         )
 
         # May succeed or fail depending on validation

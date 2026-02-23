@@ -71,6 +71,7 @@ class TestMainFunction:
             capture_output=True,
             text=True,
             cwd=Path(__file__).parent.parent.parent.parent,
+            timeout=30,
         )
 
         # May succeed or fail depending on validation
@@ -100,6 +101,7 @@ class TestMainFunction:
             capture_output=True,
             text=True,
             cwd=Path(__file__).parent.parent.parent.parent,
+            timeout=30,
         )
 
         # May succeed or fail
@@ -113,6 +115,7 @@ class TestMainFunction:
             capture_output=True,
             text=True,
             cwd=Path(__file__).parent.parent.parent.parent,
+            timeout=30,
         )
 
         # Should exit with error when no args provided or use default

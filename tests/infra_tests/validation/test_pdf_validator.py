@@ -11,11 +11,13 @@ import pytest
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
-from infrastructure.validation.pdf_validator import (PDFValidationError,
-                                                     extract_first_n_words,
-                                                     extract_text_from_pdf,
-                                                     scan_for_issues,
-                                                     validate_pdf_rendering)
+from infrastructure.validation.pdf_validator import (
+    PDFValidationError,
+    extract_first_n_words,
+    extract_text_from_pdf,
+    scan_for_issues,
+    validate_pdf_rendering,
+)
 
 
 @pytest.fixture

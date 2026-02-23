@@ -4,21 +4,23 @@ This test suite provides comprehensive validation for scientific development too
 including numerical stability, performance benchmarking, and best practices.
 """
 
-
 import numpy as np
 import pytest
 
 # Import the modules to test
-from infrastructure.scientific import (BenchmarkResult, benchmark_function,
-                                       check_numerical_stability,
-                                       check_research_compliance,
-                                       create_scientific_module_template,
-                                       create_scientific_workflow_template,
-                                       generate_api_documentation,
-                                       generate_performance_report,
-                                       generate_scientific_documentation,
-                                       validate_scientific_best_practices,
-                                       validate_scientific_implementation)
+from infrastructure.scientific import (
+    BenchmarkResult,
+    benchmark_function,
+    check_numerical_stability,
+    check_research_compliance,
+    create_scientific_module_template,
+    create_scientific_workflow_template,
+    generate_api_documentation,
+    generate_performance_report,
+    generate_scientific_documentation,
+    validate_scientific_best_practices,
+    validate_scientific_implementation,
+)
 
 
 class TestNumericalStability:
@@ -313,12 +315,8 @@ class TestPerformanceReporting:
         """Test generation of performance analysis report."""
 
         results = [
-            BenchmarkResult(
-                "func1", 0.001, 10.5, 100, {}, "Fast function", "2024-01-01 10:00:00"
-            ),
-            BenchmarkResult(
-                "func2", 0.010, 25.0, 100, {}, "Slow function", "2024-01-01 10:00:01"
-            ),
+            BenchmarkResult("func1", 0.001, 10.5, 100, {}, "Fast function", "2024-01-01 10:00:00"),
+            BenchmarkResult("func2", 0.010, 25.0, 100, {}, "Slow function", "2024-01-01 10:00:01"),
             BenchmarkResult(
                 "func3", 0.005, 15.2, 100, {}, "Medium function", "2024-01-01 10:00:02"
             ),
@@ -424,9 +422,7 @@ class TestPerformanceRecommendations:
 
         results = [
             # Slow function (> 0.1s)
-            BenchmarkResult(
-                "slow_func", 0.15, 10.0, 100, {}, "Slow", "2024-01-01 10:00:00"
-            ),
+            BenchmarkResult("slow_func", 0.15, 10.0, 100, {}, "Slow", "2024-01-01 10:00:00"),
             # Very slow function
             BenchmarkResult(
                 "very_slow_func",
@@ -438,9 +434,7 @@ class TestPerformanceRecommendations:
                 "2024-01-01 10:00:01",
             ),
             # Fast function
-            BenchmarkResult(
-                "fast_func", 0.001, 10.0, 100, {}, "Fast", "2024-01-01 10:00:02"
-            ),
+            BenchmarkResult("fast_func", 0.001, 10.0, 100, {}, "Fast", "2024-01-01 10:00:02"),
         ]
 
         report = generate_performance_report(results)
@@ -468,9 +462,7 @@ class TestPerformanceRecommendations:
                 "2024-01-01 10:00:01",
             ),
             # Normal function
-            BenchmarkResult(
-                "normal_func", 0.01, 10.0, 100, {}, "Normal", "2024-01-01 10:00:02"
-            ),
+            BenchmarkResult("normal_func", 0.01, 10.0, 100, {}, "Normal", "2024-01-01 10:00:02"),
         ]
 
         report = generate_performance_report(results)

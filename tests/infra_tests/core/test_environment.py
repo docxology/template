@@ -9,8 +9,7 @@ import sys
 from pathlib import Path
 
 
-from infrastructure.core.environment import (check_dependencies,
-                                             check_python_version)
+from infrastructure.core.environment import check_dependencies, check_python_version
 
 
 class TestCheckPythonVersion:

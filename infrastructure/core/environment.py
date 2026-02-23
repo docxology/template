@@ -156,13 +156,9 @@ def install_missing_packages(packages: List[str]) -> bool:
         for package in packages:
             add_cmd = ["uv", "add", package]
             logger.info(f"Adding to pyproject.toml: {' '.join(add_cmd)}")
-            add_result = subprocess.run(
-                add_cmd, check=False, capture_output=True, text=True
-            )
+            add_result = subprocess.run(add_cmd, check=False, capture_output=True, text=True)
             if add_result.returncode != 0:
-                logger.warning(
-                    f"Failed to add {package} to pyproject.toml: {add_result.stderr}"
-                )
+                logger.warning(f"Failed to add {package} to pyproject.toml: {add_result.stderr}")
 
         # Then sync to install all dependencies
         cmd = ["uv", "sync"]
@@ -291,9 +287,7 @@ def check_uv_available() -> bool:
         ...     print("Falling back to pip - consider installing uv")
     """
     try:
-        result = subprocess.run(
-            ["uv", "--version"], capture_output=True, text=True, check=False
-        )
+        result = subprocess.run(["uv", "--version"], capture_output=True, text=True, check=False)
         return result.returncode == 0
     except (FileNotFoundError, subprocess.SubprocessError):
         return False
@@ -513,9 +507,7 @@ def validate_uv_sync_result(repo_root: Path) -> tuple[bool, str]:
     return True, "uv sync completed successfully"
 
 
-def validate_directory_structure(
-    repo_root: Path, project_name: str = "project"
-) -> list[str]:
+def validate_directory_structure(repo_root: Path, project_name: str = "project") -> list[str]:
     """Validate that required directory structure exists.
 
     Checks for the presence of all directories created by setup_directories().

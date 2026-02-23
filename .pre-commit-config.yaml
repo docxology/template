@@ -1,18 +1,35 @@
+# .pre-commit-config.yaml — Research Project Template
+# Install: uv run pre-commit install
+# Run all: uv run pre-commit run --all-files
+
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.8.4
+    rev: v0.9.7
     hooks:
       - id: ruff
-        args: ["--fix"]
+        args: [--fix, --exit-non-zero-on-fix]
       - id: ruff-format
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
+    rev: v5.0.0
     hooks:
       - id: end-of-file-fixer
       - id: trailing-whitespace
       - id: check-yaml
+      - id: check-toml
       - id: check-ast
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: ["--maxkb=500"]
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.15.0
+    hooks:
+      - id: mypy
+        args: [--config-file=pyproject.toml]
+        additional_dependencies: []
+        pass_filenames: false
+        entry: mypy infrastructure/validation/ infrastructure/rendering/
 
   - repo: local
     hooks:
@@ -22,18 +39,3 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

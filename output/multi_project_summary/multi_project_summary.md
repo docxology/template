@@ -1,27 +1,34 @@
 # Multi-Project Execution Summary
 
-**Generated:** 2026-02-22T13:21:03.462470
+**Generated:** 2026-02-23T07:46:33.596797
 
 ## Overview
 
-- **Total Projects:** 1
-- **Successful:** 1
+- **Total Projects:** 2
+- **Successful:** 2
 - **Failed:** 0
-- **Total Duration:** 54.6s
+- **Total Duration:** 980.8s
+
+- **Infrastructure Tests:** 503.4s
 
 ## Project Results
 
+### ✅ active_inference_meta_pragmatic
+- **Status:** Success
+- **Duration:** 350.6s
+- **Stages Completed:** 9
+
 ### ✅ code_project
 - **Status:** Success
-- **Duration:** 54.3s
-- **Stages Completed:** 7
+- **Duration:** 117.4s
+- **Stages Completed:** 9
 
 ## Performance Analysis
 
-- **Slowest Project:** code_project
+- **Slowest Project:** active_inference_meta_pragmatic
 - **Fastest Project:** code_project
-- **Average Duration:** 54.3s
-- **Total Pipeline Time:** 54.3s
+- **Average Duration:** 234.0s
+- **Total Pipeline Time:** 468.0s
 
 ## Error Summary
 

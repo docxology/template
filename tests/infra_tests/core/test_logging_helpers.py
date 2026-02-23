@@ -8,8 +8,7 @@ from pathlib import Path
 
 
 from infrastructure.core.exceptions import TemplateError
-from infrastructure.core.logging_helpers import (format_duration,
-                                                 format_error_with_suggestions)
+from infrastructure.core.logging_helpers import format_duration, format_error_with_suggestions
 
 
 class TestFormatErrorWithSuggestions:
@@ -99,9 +98,7 @@ class TestFormatErrorWithSuggestions:
 
     def test_format_template_error_with_string_path(self):
         """Test formatting TemplateError with string path in context."""
-        error = TemplateError(
-            "File not found", context={"file": "/path/to/file.txt", "line": 10}
-        )
+        error = TemplateError("File not found", context={"file": "/path/to/file.txt", "line": 10})
 
         result = format_error_with_suggestions(error)
 

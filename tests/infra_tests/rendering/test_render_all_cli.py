@@ -24,8 +24,7 @@ class TestRenderAllCliMain:
 
         assert exc_info.value.code == 1
         assert (
-            "no manuscript directory" in caplog.text.lower()
-            or "not found" in caplog.text.lower()
+            "no manuscript directory" in caplog.text.lower() or "not found" in caplog.text.lower()
         )
 
     def test_main_with_manuscript(self, tmp_path, caplog, monkeypatch):

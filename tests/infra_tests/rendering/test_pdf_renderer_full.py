@@ -53,12 +53,8 @@ class TestRenderFunctions:
             or hasattr(pdf_renderer, "PDFRenderer")
         )
 
-    @pytest.mark.skipif(
-        not shutil.which("xelatex"), reason="LaTeX (xelatex) not installed"
-    )
-    @pytest.mark.skipif(
-        not shutil.which("xelatex"), reason="LaTeX (xelatex) not installed"
-    )
+    @pytest.mark.skipif(not shutil.which("xelatex"), reason="LaTeX (xelatex) not installed")
+    @pytest.mark.skipif(not shutil.which("xelatex"), reason="LaTeX (xelatex) not installed")
     def test_render_pdf_with_tex(self, tmp_path):
         """Test rendering PDF from TeX file."""
         tex = tmp_path / "test.tex"
@@ -76,17 +72,13 @@ class TestRenderFunctions:
 class TestLatexCompilation:
     """Test LaTeX compilation functions."""
 
-    @pytest.mark.skipif(
-        not shutil.which("xelatex"), reason="LaTeX (xelatex) not installed"
-    )
+    @pytest.mark.skipif(not shutil.which("xelatex"), reason="LaTeX (xelatex) not installed")
     def test_compile_tex(self, tmp_path):
         """Test compiling TeX file."""
         tex = tmp_path / "test.tex"
         tex.write_text("\\documentclass{article}\\begin{document}Hello\\end{document}")
 
-        if hasattr(pdf_renderer, "compile_latex") or hasattr(
-            pdf_renderer, "compile_tex"
-        ):
+        if hasattr(pdf_renderer, "compile_latex") or hasattr(pdf_renderer, "compile_tex"):
             compile_func = getattr(pdf_renderer, "compile_latex", None) or getattr(
                 pdf_renderer, "compile_tex", None
             )
@@ -137,9 +129,7 @@ class TestOutputValidation:
 class TestRenderOptions:
     """Test rendering with options."""
 
-    @pytest.mark.skipif(
-        not shutil.which("xelatex"), reason="LaTeX (xelatex) not installed"
-    )
+    @pytest.mark.skipif(not shutil.which("xelatex"), reason="LaTeX (xelatex) not installed")
     def test_render_with_engine(self, tmp_path):
         """Test rendering with specific engine."""
         tex = tmp_path / "test.tex"

@@ -20,6 +20,7 @@ Complete project outputs copied:
 - Simulations (simulations/ directory - all simulation outputs and checkpoints)
 - LLM reviews (llm/ directory - LLM-generated manuscript reviews)
 """
+
 from __future__ import annotations
 
 import sys
@@ -53,28 +54,29 @@ def log_stage(message: str) -> None:
 
 def main() -> int:
     """Execute output copying orchestration.
-    
+
     Returns:
         Exit code (0=success, 1=failure)
     """
     import argparse
-    
+
     parser = argparse.ArgumentParser(description="Copy outputs")
     parser.add_argument(
-        '--project',
-        default='project',
-        help='Project name in projects/ directory (default: project)'
+        "--project",
+        default="project",
+        help="Project name in projects/ directory (default: project)",
     )
     args = parser.parse_args()
-    
+
     log_header(f"STAGE 05: Copy Outputs (Project: {args.project})", logger)
-    
+
     repo_root = Path(__file__).parent.parent
     output_dir = repo_root / "output" / args.project
-    
+
     try:
         # Step 1: Clean root-level directories from output/ (keep only project folders)
         from infrastructure.project.discovery import discover_projects
+
         projects = discover_projects(repo_root)
         project_names = [p.name for p in projects]
         if not clean_root_output_directory(repo_root, project_names):
@@ -85,43 +87,47 @@ def main() -> int:
         if not clean_output_directory(output_dir):
             logger.error("Failed to clean output directory")
             return 1
-        
+
         # Step 2: Copy final deliverables
         stats = copy_final_deliverables(repo_root, output_dir, args.project)
-        
+
         # Step 3: Validate copied files
         validation_passed = validate_copied_outputs(output_dir)
-        
+
         # Step 3b: Validate directory structure
         structure_validation = validate_output_structure(output_dir)
-        
+
         # Step 4: Collect comprehensive output statistics
-        from infrastructure.reporting.output_reporter import collect_output_statistics, generate_detailed_output_report
-        
+        from infrastructure.reporting.output_reporter import (
+            collect_output_statistics,
+            generate_detailed_output_report,
+        )
+
         output_stats = collect_output_statistics(repo_root, args.project)
         detailed_report = generate_detailed_output_report(output_dir, output_stats)
-        
+
         # Log detailed report
         logger.info(detailed_report)
-        
+
         # Save detailed report to file
         reports_dir = repo_root / "projects" / args.project / "output" / "reports"
         reports_dir.mkdir(parents=True, exist_ok=True)
         report_file = reports_dir / "output_statistics.txt"
-        with open(report_file, 'w') as f:
+        with open(report_file, "w") as f:
             f.write(detailed_report)
         logger.info(f"Detailed output statistics saved to: {report_file}")
-        
+
         # Also save JSON version
         import json
+
         json_file = reports_dir / "output_statistics.json"
-        with open(json_file, 'w') as f:
+        with open(json_file, "w") as f:
             json.dump(output_stats, f, indent=2)
         logger.info(f"Output statistics JSON saved to: {json_file}")
-        
+
         # Step 5: Generate original summary (for backward compatibility)
         generate_output_summary(output_dir, stats, structure_validation)
-        
+
         # Determine success/failure
         if stats.get("total_files", 0) > 0 and validation_passed:
             log_success("\n✅ Output copying complete - all project outputs ready!", logger)
@@ -129,7 +135,7 @@ def main() -> int:
         else:
             logger.error("\n❌ Output copying incomplete - check warnings above")
             return 1
-    
+
     except Exception as e:
         logger.error(f"Unexpected error during output copying: {e}", exc_info=True)
         return 1
@@ -137,4 +143,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     exit(main())
-

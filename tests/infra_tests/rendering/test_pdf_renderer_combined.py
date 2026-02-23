@@ -180,9 +180,7 @@ class TestFigurePathResolution:
         fig_file = figures_dir / "example.png"
         fig_file.write_text("dummy")
 
-        tex_content = (
-            r"\includegraphics[width=0.8\textwidth]{../output/figures/example.png}"
-        )
+        tex_content = r"\includegraphics[width=0.8\textwidth]{../output/figures/example.png}"
         fixed = renderer._fix_figure_paths(tex_content, manuscript_dir, output_dir)
 
         assert "../figures/example.png" in fixed
@@ -263,8 +261,7 @@ class TestCombinedPDFRendering:
                 "# Introduction\n\n"
                 r"\begin{figure}[h]" + "\n"
                 r"\centering" + "\n"
-                r"\includegraphics[width=0.8\textwidth]{../output/figures/example.png}"
-                + "\n"
+                r"\includegraphics[width=0.8\textwidth]{../output/figures/example.png}" + "\n"
                 r"\caption{Test figure}" + "\n"
                 r"\label{fig:test}" + "\n"
                 r"\end{figure}" + "\n"
@@ -301,9 +298,7 @@ class TestCombinedPDFRendering:
         renderer = PDFRenderer(config)
 
         # Generate source files list
-        source_files = sorted(
-            [f for f in manuscript_dir.glob("*.md") if f.name[0].isdigit()]
-        )
+        source_files = sorted([f for f in manuscript_dir.glob("*.md") if f.name[0].isdigit()])
 
         # Create combined markdown
         combined_md = manuscript_dir.parent / "_combined_manuscript.md"

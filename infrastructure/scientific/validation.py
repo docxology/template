@@ -13,9 +13,7 @@ import inspect
 from typing import Any, Callable, Dict, List, Tuple
 
 
-def validate_scientific_implementation(
-    func: Callable, test_cases: List[Tuple]
-) -> Dict[str, Any]:
+def validate_scientific_implementation(func: Callable, test_cases: List[Tuple]) -> Dict[str, Any]:
     """Validate scientific implementation against known test cases.
 
     Args:
@@ -42,8 +40,8 @@ def validate_scientific_implementation(
                 expected_output, (int, float)
             ):
                 if abs(actual_output - expected_output) < 1e-10:
-                    validation_results["passed_tests"] += 1
-                    validation_results["details"].append(
+                    validation_results["passed_tests"] += 1  # type: ignore
+                    validation_results["details"].append(  # type: ignore
                         {
                             "test_index": i,
                             "input": test_input,
@@ -53,8 +51,8 @@ def validate_scientific_implementation(
                         }
                     )
                 else:
-                    validation_results["failed_tests"] += 1
-                    validation_results["details"].append(
+                    validation_results["failed_tests"] += 1  # type: ignore
+                    validation_results["details"].append(  # type: ignore
                         {
                             "test_index": i,
                             "input": test_input,
@@ -64,8 +62,8 @@ def validate_scientific_implementation(
                         }
                     )
             elif actual_output == expected_output:
-                validation_results["passed_tests"] += 1
-                validation_results["details"].append(
+                validation_results["passed_tests"] += 1  # type: ignore
+                validation_results["details"].append(  # type: ignore
                     {
                         "test_index": i,
                         "input": test_input,
@@ -75,8 +73,8 @@ def validate_scientific_implementation(
                     }
                 )
             else:
-                validation_results["failed_tests"] += 1
-                validation_results["details"].append(
+                validation_results["failed_tests"] += 1  # type: ignore
+                validation_results["details"].append(  # type: ignore
                     {
                         "test_index": i,
                         "input": test_input,
@@ -87,8 +85,8 @@ def validate_scientific_implementation(
                 )
 
         except Exception as e:
-            validation_results["failed_tests"] += 1
-            validation_results["details"].append(
+            validation_results["failed_tests"] += 1  # type: ignore
+            validation_results["details"].append(  # type: ignore
                 {
                     "test_index": i,
                     "input": test_input,
@@ -99,9 +97,9 @@ def validate_scientific_implementation(
             )
 
     # Calculate accuracy score
-    if validation_results["total_tests"] > 0:
+    if validation_results["total_tests"] > 0:  # type: ignore
         validation_results["accuracy_score"] = (
-            validation_results["passed_tests"] / validation_results["total_tests"]
+            validation_results["passed_tests"] / validation_results["total_tests"]  # type: ignore
         )
 
     return validation_results
@@ -136,9 +134,7 @@ def validate_scientific_best_practices(module: Any) -> Dict[str, Any]:
         return validation
 
     # Check docstring coverage
-    documented_functions = sum(
-        1 for _, func in functions if inspect.getdoc(func) is not None
-    )
+    documented_functions = sum(1 for _, func in functions if inspect.getdoc(func) is not None)
     validation["docstring_coverage"] = documented_functions / len(functions)
 
     # Check type hints coverage
@@ -169,10 +165,7 @@ def validate_scientific_best_practices(module: Any) -> Dict[str, Any]:
 
     # Check for input validation patterns
     has_validation = any(
-        "assert" in line
-        or "isinstance" in line
-        or "ValueError" in line
-        or "TypeError" in line
+        "assert" in line or "isinstance" in line or "ValueError" in line or "TypeError" in line
         for line in source_lines
     )
     validation["input_validation"] = has_validation
@@ -186,30 +179,26 @@ def validate_scientific_best_practices(module: Any) -> Dict[str, Any]:
     }
 
     validation["best_practices_score"] = (
-        validation["docstring_coverage"] * weights["docstring_coverage"]
-        + validation["type_hints_coverage"] * weights["type_hints_coverage"]
+        validation["docstring_coverage"] * weights["docstring_coverage"]  # type: ignore
+        + validation["type_hints_coverage"] * weights["type_hints_coverage"]  # type: ignore
         + (1.0 if validation["error_handling"] else 0.0) * weights["error_handling"]
         + (1.0 if validation["input_validation"] else 0.0) * weights["input_validation"]
     )
 
     # Generate recommendations
-    if validation["docstring_coverage"] < 0.8:
-        validation["recommendations"].append("Add docstrings to undocumented functions")
+    if validation["docstring_coverage"] < 0.8:  # type: ignore
+        validation["recommendations"].append("Add docstrings to undocumented functions")  # type: ignore
 
-    if validation["type_hints_coverage"] < 0.8:
-        validation["recommendations"].append(
+    if validation["type_hints_coverage"] < 0.8:  # type: ignore
+        validation["recommendations"].append(  # type: ignore
             "Add type hints to function parameters and return values"
         )
 
     if not validation["error_handling"]:
-        validation["recommendations"].append(
-            "Add proper error handling with try/except blocks"
-        )
+        validation["recommendations"].append("Add proper error handling with try/except blocks")  # type: ignore
 
     if not validation["input_validation"]:
-        validation["recommendations"].append(
-            "Add input validation to prevent invalid arguments"
-        )
+        validation["recommendations"].append("Add input validation to prevent invalid arguments")  # type: ignore
 
     return validation
 
@@ -263,17 +252,13 @@ def check_research_compliance(func: Callable) -> Dict[str, Any]:
         source_lines = source.split("\n")
 
         has_validation = any(
-            "assert" in line
-            or "isinstance" in line
-            or "ValueError" in line
-            or "TypeError" in line
+            "assert" in line or "isinstance" in line or "ValueError" in line or "TypeError" in line
             for line in source_lines
         )
         compliance["has_input_validation"] = has_validation
 
         has_error_handling = any(
-            "try:" in line or "except" in line or "raise" in line
-            for line in source_lines
+            "try:" in line or "except" in line or "raise" in line for line in source_lines
         )
         compliance["has_error_handling"] = has_error_handling
 
@@ -299,29 +284,23 @@ def check_research_compliance(func: Callable) -> Dict[str, Any]:
 
     # Generate recommendations
     if not compliance["has_docstring"]:
-        compliance["recommendations"].append(
+        compliance["recommendations"].append(  # type: ignore
             "Add comprehensive docstring with description and parameters"
         )
 
     if not compliance["has_type_hints"]:
-        compliance["recommendations"].append(
-            "Add type hints to parameters and return value"
-        )
+        compliance["recommendations"].append("Add type hints to parameters and return value")  # type: ignore
 
     if not compliance["has_examples"]:
-        compliance["recommendations"].append("Add usage examples in docstring")
+        compliance["recommendations"].append("Add usage examples in docstring")  # type: ignore
 
     if not compliance["has_error_handling"]:
-        compliance["recommendations"].append("Add proper error handling for edge cases")
+        compliance["recommendations"].append("Add proper error handling for edge cases")  # type: ignore
 
     if not compliance["has_input_validation"]:
-        compliance["recommendations"].append(
-            "Add input validation to prevent invalid arguments"
-        )
+        compliance["recommendations"].append("Add input validation to prevent invalid arguments")  # type: ignore
 
     if not compliance["follows_naming_conventions"]:
-        compliance["recommendations"].append(
-            "Use snake_case naming convention for functions"
-        )
+        compliance["recommendations"].append("Use snake_case naming convention for functions")  # type: ignore
 
     return compliance

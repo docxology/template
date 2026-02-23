@@ -3,9 +3,11 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from infrastructure.reporting.error_aggregator import (ErrorAggregator,
-                                                       get_error_aggregator,
-                                                       reset_error_aggregator)
+from infrastructure.reporting.error_aggregator import (
+    ErrorAggregator,
+    get_error_aggregator,
+    reset_error_aggregator,
+)
 
 
 def test_error_aggregator_summary_and_actionable_fixes() -> None:
@@ -125,9 +127,7 @@ def test_error_aggregator_warning_severity() -> None:
 def test_error_aggregator_get_actionable_fixes_generic() -> None:
     """Test ErrorAggregator generates generic fixes for unknown error types."""
     aggregator = ErrorAggregator()
-    aggregator.add_error(
-        "unknown_error", "Something went wrong", suggestions=["Check logs"]
-    )
+    aggregator.add_error("unknown_error", "Something went wrong", suggestions=["Check logs"])
 
     fixes = aggregator.get_actionable_fixes()
     assert len(fixes) == 1

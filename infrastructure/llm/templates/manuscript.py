@@ -8,11 +8,13 @@ from typing import Any, Optional
 from infrastructure.core.exceptions import LLMTemplateError
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.llm.templates.base import ResearchTemplate
-from infrastructure.llm.templates.helpers import (content_requirements,
-                                                  format_requirements,
-                                                  section_structure,
-                                                  token_budget_awareness,
-                                                  validation_hints)
+from infrastructure.llm.templates.helpers import (
+    content_requirements,
+    format_requirements,
+    section_structure,
+    token_budget_awareness,
+    validation_hints,
+)
 
 logger = get_logger(__name__)
 
@@ -106,11 +108,9 @@ Begin your executive summary now:"""
         if text is None:
             text = kwargs.pop("text", None)
 
-        # Check required arguments and raise LLMTemplateError if missing (matches base class behavior)
+        # Check required arguments and raise LLMTemplateError if missing (matches base class behavior)  # noqa: E501
         if text is None:
-            raise LLMTemplateError(
-                "Missing template variable: text", context={"required": "text"}
-            )
+            raise LLMTemplateError("Missing template variable: text", context={"required": "text"})
 
         # Try to use new prompt composer if available
         if PROMPT_COMPOSER_AVAILABLE:
@@ -247,11 +247,9 @@ Begin your quality review now:"""
         if text is None:
             text = kwargs.pop("text", None)
 
-        # Check required arguments and raise LLMTemplateError if missing (matches base class behavior)
+        # Check required arguments and raise LLMTemplateError if missing (matches base class behavior)  # noqa: E501
         if text is None:
-            raise LLMTemplateError(
-                "Missing template variable: text", context={"required": "text"}
-            )
+            raise LLMTemplateError("Missing template variable: text", context={"required": "text"})
 
         required_headers = [
             "## Overall Quality Score",
@@ -264,18 +262,18 @@ Begin your quality review now:"""
         ]
 
         section_descriptions = {
-            "## Overall Quality Score": "Provide overall score (1-5) with brief justification (50-80 words)",
-            "## Clarity Assessment": "Evaluate writing clarity with score and specific examples (80-120 words)",
-            "## Structure and Organization": "Assess organization with score and structural observations (80-120 words)",
-            "## Technical Accuracy": "Review technical correctness with score and evidence (80-120 words)",
+            "## Overall Quality Score": "Provide overall score (1-5) with brief justification (50-80 words)",  # noqa: E501
+            "## Clarity Assessment": "Evaluate writing clarity with score and specific examples (80-120 words)",  # noqa: E501
+            "## Structure and Organization": "Assess organization with score and structural observations (80-120 words)",  # noqa: E501
+            "## Technical Accuracy": "Review technical correctness with score and evidence (80-120 words)",  # noqa: E501
             "## Readability": "Evaluate readability with score and specific issues (60-100 words)",
-            "## Specific Issues Found": "List concrete issues with manuscript references (100-150 words)",
+            "## Specific Issues Found": "List concrete issues with manuscript references (100-150 words)",  # noqa: E501
             "## Recommendations": "Provide actionable recommendations (80-120 words)",
         }
 
         section_requirements = {
             "Overall Quality Score": "Must include: **Score: X/5** format where X is 1-5",
-            "All scoring sections": "Each section with 'Assessment' or 'Accuracy' must include **Score: X/5**",
+            "All scoring sections": "Each section with 'Assessment' or 'Accuracy' must include **Score: X/5**",  # noqa: E501
             "Specific Issues Found": "Must quote or reference specific manuscript sections",
             "Recommendations": "Must be actionable and specific to manuscript content",
         }
@@ -284,8 +282,7 @@ Begin your quality review now:"""
         if max_tokens:
             tokens_per_section = max_tokens // 7
             section_budgets = {
-                section.replace("## ", ""): tokens_per_section
-                for section in required_headers
+                section.replace("## ", ""): tokens_per_section for section in required_headers
             }
 
         format_req = format_requirements(
@@ -379,11 +376,9 @@ Begin your methodology review now:"""
         if text is None:
             text = kwargs.pop("text", None)
 
-        # Check required arguments and raise LLMTemplateError if missing (matches base class behavior)
+        # Check required arguments and raise LLMTemplateError if missing (matches base class behavior)  # noqa: E501
         if text is None:
-            raise LLMTemplateError(
-                "Missing template variable: text", context={"required": "text"}
-            )
+            raise LLMTemplateError("Missing template variable: text", context={"required": "text"})
 
         required_headers = [
             "## Methodology Overview",
@@ -394,8 +389,8 @@ Begin your methodology review now:"""
         ]
 
         section_descriptions = {
-            "## Methodology Overview": "Summarize the methodology used in the manuscript (100-150 words)",
-            "## Research Design Assessment": "Evaluate the research design and approach (120-180 words)",
+            "## Methodology Overview": "Summarize the methodology used in the manuscript (100-150 words)",  # noqa: E501
+            "## Research Design Assessment": "Evaluate the research design and approach (120-180 words)",  # noqa: E501
             "## Strengths": "Identify methodological strengths with evidence (100-150 words)",
             "## Weaknesses": "Identify methodological weaknesses with evidence (100-150 words)",
             "## Recommendations": "Provide specific improvement recommendations (80-120 words)",
@@ -405,8 +400,7 @@ Begin your methodology review now:"""
         if max_tokens:
             tokens_per_section = max_tokens // 5
             section_budgets = {
-                section.replace("## ", ""): tokens_per_section
-                for section in required_headers
+                section.replace("## ", ""): tokens_per_section for section in required_headers
             }
 
         format_req = format_requirements(required_headers, markdown_format=True)
@@ -491,11 +485,9 @@ Begin your improvement suggestions now:"""
         if text is None:
             text = kwargs.pop("text", None)
 
-        # Check required arguments and raise LLMTemplateError if missing (matches base class behavior)
+        # Check required arguments and raise LLMTemplateError if missing (matches base class behavior)  # noqa: E501
         if text is None:
-            raise LLMTemplateError(
-                "Missing template variable: text", context={"required": "text"}
-            )
+            raise LLMTemplateError("Missing template variable: text", context={"required": "text"})
 
         required_headers = [
             "## Summary",
@@ -507,15 +499,15 @@ Begin your improvement suggestions now:"""
 
         section_descriptions = {
             "## Summary": "Brief overview of key improvement areas (80-120 words)",
-            "## High Priority Improvements": "Critical issues requiring immediate attention (150-200 words)",
-            "## Medium Priority Improvements": "Important but not critical improvements (120-180 words)",
+            "## High Priority Improvements": "Critical issues requiring immediate attention (150-200 words)",  # noqa: E501
+            "## Medium Priority Improvements": "Important but not critical improvements (120-180 words)",  # noqa: E501
             "## Low Priority Improvements": "Minor enhancements and suggestions (100-150 words)",
-            "## Overall Recommendation": "Final recommendation: Accept with Minor Revisions, Accept with Major Revisions, or Revise and Resubmit (80-120 words)",
+            "## Overall Recommendation": "Final recommendation: Accept with Minor Revisions, Accept with Major Revisions, or Revise and Resubmit (80-120 words)",  # noqa: E501
         }
 
         section_requirements = {
-            "All improvement sections": "Each improvement must include: WHAT (the issue), WHY (why it matters), HOW (how to address it)",
-            "Overall Recommendation": "Must choose exactly ONE: 'Accept with Minor Revisions', 'Accept with Major Revisions', or 'Revise and Resubmit'",
+            "All improvement sections": "Each improvement must include: WHAT (the issue), WHY (why it matters), HOW (how to address it)",  # noqa: E501
+            "Overall Recommendation": "Must choose exactly ONE: 'Accept with Minor Revisions', 'Accept with Major Revisions', or 'Revise and Resubmit'",  # noqa: E501
         }
 
         section_budgets = None
@@ -625,11 +617,9 @@ Begin with the English abstract, then provide the translation:"""
         if target_language is None:
             target_language = kwargs.pop("target_language", None)
 
-        # Check required arguments and raise LLMTemplateError if missing (matches base class behavior)
+        # Check required arguments and raise LLMTemplateError if missing (matches base class behavior)  # noqa: E501
         if text is None:
-            raise LLMTemplateError(
-                "Missing template variable: text", context={"required": "text"}
-            )
+            raise LLMTemplateError("Missing template variable: text", context={"required": "text"})
         if target_language is None:
             raise LLMTemplateError(
                 "Missing template variable: target_language",
@@ -638,13 +628,13 @@ Begin with the English abstract, then provide the translation:"""
         required_headers = ["## English Abstract", f"## {target_language} Translation"]
 
         section_descriptions = {
-            "## English Abstract": "Technical abstract in English (200-400 words) covering: research objective, methodology, key findings, significance",
-            f"## {target_language} Translation": f"Complete and accurate translation in {target_language}, preserving technical terminology and scientific accuracy",
+            "## English Abstract": "Technical abstract in English (200-400 words) covering: research objective, methodology, key findings, significance",  # noqa: E501
+            f"## {target_language} Translation": f"Complete and accurate translation in {target_language}, preserving technical terminology and scientific accuracy",  # noqa: E501
         }
 
         section_requirements = {
-            "English Abstract": "Must include: research objective and motivation, methodology overview, key findings and results, significance and implications",
-            f"{target_language} Translation": "Must be complete translation (not summary), preserve technical terms, use native script (not transliteration), maintain formal academic tone",
+            "English Abstract": "Must include: research objective and motivation, methodology overview, key findings and results, significance and implications",  # noqa: E501
+            f"{target_language} Translation": "Must be complete translation (not summary), preserve technical terms, use native script (not transliteration), maintain formal academic tone",  # noqa: E501
         }
 
         section_budgets = None

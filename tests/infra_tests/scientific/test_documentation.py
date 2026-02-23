@@ -9,7 +9,6 @@ Tests scientific documentation generation utilities including:
 All tests use real functions and modules with no mocks.
 """
 
-
 import numpy as np
 import pytest
 
@@ -253,6 +252,7 @@ def _private_function(x):
 
         # Import the module dynamically
         import importlib.util
+
         spec = importlib.util.spec_from_file_location("custom_module", module_file)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
@@ -279,6 +279,7 @@ def _private2(x):
 ''')
 
         import importlib.util
+
         spec = importlib.util.spec_from_file_location("empty_module", module_file)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
@@ -310,6 +311,7 @@ def calculate_mean(values: list) -> float:
 ''')
 
         import importlib.util
+
         spec = importlib.util.spec_from_file_location("described_module", module_file)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
@@ -340,6 +342,7 @@ class ResultContainer:
 ''')
 
         import importlib.util
+
         spec = importlib.util.spec_from_file_location("class_module", module_file)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
@@ -419,6 +422,7 @@ class TestDocumentationEdgeCases:
             def inner(x: int) -> int:
                 """Inner function docstring."""
                 return x + 1
+
             return inner
 
         inner_func = outer()

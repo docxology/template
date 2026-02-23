@@ -12,9 +12,14 @@ import pytest
 
 from infrastructure.core.exceptions import ValidationError
 from infrastructure.rendering.latex_package_validator import (
-    PackageStatus, ValidationReport, check_latex_package, find_kpsewhich,
-    get_missing_packages_command, validate_packages,
-    validate_preamble_packages)
+    PackageStatus,
+    ValidationReport,
+    check_latex_package,
+    find_kpsewhich,
+    get_missing_packages_command,
+    validate_packages,
+    validate_preamble_packages,
+)
 
 
 class TestFindKpsewhich:
@@ -35,9 +40,7 @@ class TestFindKpsewhich:
     def test_find_kpsewhich_via_which_command(self):
         """Test finding kpsewhich via which command using real execution."""
         # Use real which command
-        result = subprocess.run(
-            ["which", "kpsewhich"], capture_output=True, text=True, check=False
-        )
+        result = subprocess.run(["which", "kpsewhich"], capture_output=True, text=True, check=False)
 
         # Real execution - may or may not find kpsewhich
         if result.returncode == 0 and result.stdout.strip():
@@ -82,9 +85,7 @@ class TestCheckLatexPackage:
         kpsewhich_path = Path(shutil.which("kpsewhich"))
 
         # Use a package name that definitely doesn't exist
-        result = check_latex_package(
-            "nonexistent_package_xyz_123", kpsewhich_path=kpsewhich_path
-        )
+        result = check_latex_package("nonexistent_package_xyz_123", kpsewhich_path=kpsewhich_path)
 
         assert isinstance(result, PackageStatus)
         assert result.name == "nonexistent_package_xyz_123"

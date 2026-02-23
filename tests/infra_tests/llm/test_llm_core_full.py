@@ -164,9 +164,7 @@ class TestSystemPromptManagementPure:
 
     def test_set_system_prompt(self):
         """Test setting system prompt."""
-        config = LLMConfig(
-            system_prompt="Initial prompt", auto_inject_system_prompt=True
-        )
+        config = LLMConfig(system_prompt="Initial prompt", auto_inject_system_prompt=True)
         client = LLMClient(config=config)
 
         client.set_system_prompt("New system prompt")
@@ -194,9 +192,7 @@ class TestSystemPromptManagementPure:
 
     def test_system_prompt_preserved_on_reset(self):
         """Test system prompt is preserved when auto-inject is on."""
-        config = LLMConfig(
-            system_prompt="Persistent prompt", auto_inject_system_prompt=True
-        )
+        config = LLMConfig(system_prompt="Persistent prompt", auto_inject_system_prompt=True)
         client = LLMClient(config=config)
 
         # Add user message
@@ -253,9 +249,7 @@ class TestLLMCoreEdgeCasesPure:
 
     def test_config_response_mode_limits(self):
         """Test config response mode token limits."""
-        config = LLMConfig(
-            short_max_tokens=100, long_max_tokens=5000, long_min_tokens=400
-        )
+        config = LLMConfig(short_max_tokens=100, long_max_tokens=5000, long_min_tokens=400)
 
         assert config.short_max_tokens == 100
         assert config.long_max_tokens == 5000

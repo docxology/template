@@ -4,6 +4,7 @@
 This script aggregates test results from infrastructure and active project
 tests to create a comprehensive summary report.
 """
+
 from __future__ import annotations
 
 import sys

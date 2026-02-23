@@ -6,8 +6,7 @@ No mocks - all tests use actual function calls with various inputs.
 
 import pytest
 
-from infrastructure.core.menu import (MenuOption, format_menu,
-                                      parse_choice_sequence)
+from infrastructure.core.menu import MenuOption, format_menu, parse_choice_sequence
 
 
 class TestMenuOption:

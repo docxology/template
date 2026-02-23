@@ -12,15 +12,12 @@ import re
 from pathlib import Path
 from typing import List, Tuple
 
-from infrastructure.core.logging_utils import (get_logger, log_substep,
-                                               log_success)
+from infrastructure.core.logging_utils import get_logger, log_substep, log_success
 
 logger = get_logger(__name__)
 
 
-def validate_figure_registry(
-    registry_path: Path, manuscript_dir: Path
-) -> Tuple[bool, List[str]]:
+def validate_figure_registry(registry_path: Path, manuscript_dir: Path) -> Tuple[bool, List[str]]:
     """Validate figure registry against manuscript references.
 
     Checks that all figure references in manuscript markdown files are
@@ -82,12 +79,10 @@ def validate_figure_registry(
     # If figures are referenced but registry doesn't exist, this is a problem
     if not registry_path.exists():
         issues.append(
-            f"Figure registry not found but {len(referenced_figures)} figure reference(s) found in manuscript"
+            f"Figure registry not found but {len(referenced_figures)} figure reference(s) found in manuscript"  # noqa: E501
         )
         logger.warning(f"Figure registry not found at {registry_path}")
-        logger.warning(
-            f"  Found {len(referenced_figures)} figure reference(s) in manuscript"
-        )
+        logger.warning(f"  Found {len(referenced_figures)} figure reference(s) in manuscript")
         return False, issues
 
     # Find unregistered references

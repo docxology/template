@@ -309,9 +309,7 @@ class StagePerformanceTracker:
             process = psutil.Process(os.getpid())
             current_memory = process.memory_info().rss / 1024 / 1024  # MB
             metrics["memory_mb"] = current_memory
-            metrics["peak_memory_mb"] = (
-                current_memory  # Simplified - could track peak during stage
-            )
+            metrics["peak_memory_mb"] = current_memory  # Simplified - could track peak during stage
             metrics["cpu_percent"] = process.cpu_percent(interval=0.1)
 
             if self.start_io:
@@ -354,7 +352,7 @@ class StagePerformanceTracker:
                         "stage": stage["stage_name"],
                         "duration": stage["duration"],
                         "average": avg_duration,
-                        "message": f"Stage {stage['stage_name']} took {format_duration(stage['duration'])} (2x average)",
+                        "message": f"Stage {stage['stage_name']} took {format_duration(stage['duration'])} (2x average)",  # noqa: E501
                         "suggestion": "Consider optimizing this stage or running it in parallel",
                     }
                 )
@@ -367,7 +365,7 @@ class StagePerformanceTracker:
                         "type": "high_memory",
                         "stage": stage["stage_name"],
                         "memory_mb": stage["peak_memory_mb"],
-                        "message": f"Stage {stage['stage_name']} used {stage['peak_memory_mb']:.0f} MB memory",
+                        "message": f"Stage {stage['stage_name']} used {stage['peak_memory_mb']:.0f} MB memory",  # noqa: E501
                         "suggestion": "Consider memory optimization or increasing available memory",
                     }
                 )
@@ -380,7 +378,7 @@ class StagePerformanceTracker:
                         "type": "high_cpu",
                         "stage": stage["stage_name"],
                         "cpu_percent": stage["cpu_percent"],
-                        "message": f"Stage {stage['stage_name']} used {stage['cpu_percent']:.1f}% CPU",
+                        "message": f"Stage {stage['stage_name']} used {stage['cpu_percent']:.1f}% CPU",  # noqa: E501
                         "suggestion": "Consider parallelization or CPU optimization",
                     }
                 )
@@ -410,8 +408,6 @@ class StagePerformanceTracker:
                 min(self.stages, key=lambda s: s["duration"]) if self.stages else None
             ),
             "total_memory_mb": sum(s.get("memory_mb", 0) for s in self.stages),
-            "peak_memory_mb": max(
-                (s.get("peak_memory_mb", 0) for s in self.stages), default=0
-            ),
+            "peak_memory_mb": max((s.get("peak_memory_mb", 0) for s in self.stages), default=0),
             "warnings": self.get_performance_warnings(),
         }

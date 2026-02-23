@@ -75,9 +75,7 @@ class TestLLMClientSystemPrompt:
 
     def test_system_prompt_injection(self):
         """Test system prompt is injected."""
-        config = LLMConfig(
-            system_prompt="Test system prompt", auto_inject_system_prompt=True
-        )
+        config = LLMConfig(system_prompt="Test system prompt", auto_inject_system_prompt=True)
         client = LLMClient(config=config)
 
         # System prompt should be in context
@@ -159,9 +157,7 @@ class TestLLMClientContextManagement:
 
     def test_reset_reinjects_system_prompt(self):
         """Test reset re-injects system prompt."""
-        config = LLMConfig(
-            system_prompt="System prompt", auto_inject_system_prompt=True
-        )
+        config = LLMConfig(system_prompt="System prompt", auto_inject_system_prompt=True)
         client = LLMClient(config=config)
 
         client.context.add_message("user", "Test")
@@ -300,7 +296,6 @@ class TestLLMCoreIntegration:
 @pytest.mark.requires_ollama
 @pytest.mark.timeout(60)
 class TestLLMClientQueryIntegration:
-
     """Integration tests requiring running Ollama server.
 
     Run with: pytest -m requires_ollama

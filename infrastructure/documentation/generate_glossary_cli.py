@@ -4,6 +4,7 @@
 This module provides functionality to automatically generate a glossary of
 public APIs from the src/ directory and inject it into markdown files.
 """
+
 from __future__ import annotations
 
 import os
@@ -60,12 +61,13 @@ def main() -> int:
     # Add repo root to path so infrastructure can be imported
     sys.path.insert(0, repo)
     try:
-        from infrastructure.documentation.glossary_gen import (  # type: ignore
-            build_api_index, generate_markdown_table, inject_between_markers)
-    except Exception as exc:
-        logger.error(
-            "Failed to import glossary_gen from infrastructure/documentation/: %s", exc
+        from infrastructure.documentation.glossary_gen import (
+            build_api_index,
+            generate_markdown_table,
+            inject_between_markers,
         )
+    except Exception as exc:
+        logger.error("Failed to import glossary_gen from infrastructure/documentation/: %s", exc)
         return 1
 
     with open(glossary_md, "r", encoding="utf-8") as fh:

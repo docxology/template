@@ -437,9 +437,7 @@ class MissingDependencyError(DependencyError):
                 elif shutil.which("pacman"):
                     recovery_commands.append(f"sudo pacman -S {dependency}")
                 else:
-                    recovery_commands.append(
-                        f"# Install {dependency} using your package manager"
-                    )
+                    recovery_commands.append(f"# Install {dependency} using your package manager")
             elif system == "darwin":  # macOS
                 if shutil.which("brew"):
                     recovery_commands.append(f"brew install {dependency}")
@@ -641,9 +639,7 @@ class MetadataError(PublishingError):
 # =============================================================================
 
 
-def raise_with_context(
-    exception_class: type[TemplateError], message: str, **context: Any
-) -> None:
+def raise_with_context(exception_class: type[TemplateError], message: str, **context: Any) -> None:
     """Raise an exception with context information.
 
     This is a convenience function for raising exceptions with keyword arguments
@@ -669,9 +665,7 @@ def raise_with_context(
     raise exception_class(message, context=context)
 
 
-def format_file_context(
-    file_path: Path | str, line: Optional[int] = None
-) -> dict[str, Any]:
+def format_file_context(file_path: Path | str, line: Optional[int] = None) -> dict[str, Any]:
     """Format file path and optional line number as error context.
 
     Args:
@@ -692,9 +686,7 @@ def format_file_context(
     return context
 
 
-def chain_exceptions(
-    new_exception: TemplateError, original: Exception
-) -> TemplateError:
+def chain_exceptions(new_exception: TemplateError, original: Exception) -> TemplateError:
     """Chain a new exception with the original exception's context.
 
     This preserves the original exception while wrapping it in a more

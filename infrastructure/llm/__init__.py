@@ -25,37 +25,56 @@ Direct imports (recommended):
 """
 
 # Convenience re-exports from submodules (use direct imports for better clarity)
-from infrastructure.llm.core import (ConversationContext, GenerationOptions,
-                                     LLMClient, LLMConfig, Message,
-                                     ResponseMode, strip_thinking_tags)
-from infrastructure.llm.templates import (REVIEW_MIN_WORDS,
-                                          TRANSLATION_LANGUAGES,
-                                          ManuscriptExecutiveSummary,
-                                          ManuscriptImprovementSuggestions,
-                                          ManuscriptMethodologyReview,
-                                          ManuscriptQualityReview,
-                                          ManuscriptTranslationAbstract,
-                                          PaperSummarization, ResearchTemplate,
-                                          get_template)
-from infrastructure.llm.utils import (check_model_loaded, ensure_ollama_ready,
-                                      get_available_models, get_model_info,
-                                      get_model_names, is_ollama_running,
-                                      preload_model, select_best_model,
-                                      select_small_fast_model,
-                                      start_ollama_server)
-from infrastructure.llm.validation import (CONVERSATIONAL_PATTERNS,
-                                           OFF_TOPIC_PATTERNS_ANYWHERE,
-                                           OFF_TOPIC_PATTERNS_START,
-                                           ON_TOPIC_SIGNALS, OutputValidator,
-                                           calculate_unique_content_ratio,
-                                           check_format_compliance,
-                                           deduplicate_sections,
-                                           detect_conversational_phrases,
-                                           detect_repetition,
-                                           extract_structured_sections,
-                                           has_on_topic_signals, is_off_topic,
-                                           validate_response_structure,
-                                           validate_section_completeness)
+from infrastructure.llm.core import (
+    ConversationContext,
+    GenerationOptions,
+    LLMClient,
+    LLMConfig,
+    Message,
+    ResponseMode,
+    strip_thinking_tags,
+)
+from infrastructure.llm.templates import (
+    REVIEW_MIN_WORDS,
+    TRANSLATION_LANGUAGES,
+    ManuscriptExecutiveSummary,
+    ManuscriptImprovementSuggestions,
+    ManuscriptMethodologyReview,
+    ManuscriptQualityReview,
+    ManuscriptTranslationAbstract,
+    PaperSummarization,
+    ResearchTemplate,
+    get_template,
+)
+from infrastructure.llm.utils import (
+    check_model_loaded,
+    ensure_ollama_ready,
+    get_available_models,
+    get_model_info,
+    get_model_names,
+    is_ollama_running,
+    preload_model,
+    select_best_model,
+    select_small_fast_model,
+    start_ollama_server,
+)
+from infrastructure.llm.validation import (
+    CONVERSATIONAL_PATTERNS,
+    OFF_TOPIC_PATTERNS_ANYWHERE,
+    OFF_TOPIC_PATTERNS_START,
+    ON_TOPIC_SIGNALS,
+    OutputValidator,
+    calculate_unique_content_ratio,
+    check_format_compliance,
+    deduplicate_sections,
+    detect_conversational_phrases,
+    detect_repetition,
+    extract_structured_sections,
+    has_on_topic_signals,
+    is_off_topic,
+    validate_response_structure,
+    validate_section_completeness,
+)
 
 # Optional prompt system imports
 try:
@@ -66,27 +85,34 @@ except ImportError:
     PromptComposer = None  # type: ignore
 
 # Review generation modules
-from infrastructure.llm.review import (ManuscriptMetrics, ReviewMetrics,
-                                       SessionMetrics, StreamingMetrics,
-                                       calculate_format_compliance_summary,
-                                       calculate_quality_summary,
-                                       check_ollama_availability,
-                                       create_review_client, estimate_tokens,
-                                       extract_action_items,
-                                       extract_manuscript_text,
-                                       generate_executive_summary,
-                                       generate_improvement_suggestions,
-                                       generate_methodology_review,
-                                       generate_quality_review,
-                                       generate_review_summary,
-                                       generate_review_with_metrics,
-                                       generate_translation,
-                                       get_manuscript_review_system_prompt,
-                                       get_max_input_length,
-                                       get_review_max_tokens,
-                                       get_review_timeout, save_review_outputs,
-                                       save_single_review,
-                                       validate_review_quality, warmup_model)
+from infrastructure.llm.review import (
+    ManuscriptMetrics,
+    ReviewMetrics,
+    SessionMetrics,
+    StreamingMetrics,
+    calculate_format_compliance_summary,
+    calculate_quality_summary,
+    check_ollama_availability,
+    create_review_client,
+    estimate_tokens,
+    extract_action_items,
+    extract_manuscript_text,
+    generate_executive_summary,
+    generate_improvement_suggestions,
+    generate_methodology_review,
+    generate_quality_review,
+    generate_review_summary,
+    generate_review_with_metrics,
+    generate_translation,
+    get_manuscript_review_system_prompt,
+    get_max_input_length,
+    get_review_max_tokens,
+    get_review_timeout,
+    save_review_outputs,
+    save_single_review,
+    validate_review_quality,
+    warmup_model,
+)
 
 __all__ = [
     # Core client

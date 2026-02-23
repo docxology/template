@@ -4,9 +4,7 @@ Tests documentation scanner phase functionality using real implementations.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-
-
-from infrastructure.validation.doc_scanner import (DocumentationScanner)
+from infrastructure.validation.doc_scanner import DocumentationScanner
 
 
 class TestDocScannerPhase5:
@@ -51,9 +49,7 @@ class TestDocScannerHelpers:
 
         gaps = [
             CompletenessGap(category="a", item="1", description="d", severity="error"),
-            CompletenessGap(
-                category="b", item="2", description="d", severity="warning"
-            ),
+            CompletenessGap(category="b", item="2", description="d", severity="warning"),
         ]
 
         if hasattr(scanner, "_group_gaps_by_severity"):

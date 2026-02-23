@@ -98,6 +98,7 @@ class TestPdfCliParsing:
                 capture_output=True,
                 text=True,
                 cwd=Path(__file__).parent.parent.parent.parent,
+                timeout=30,
             )
 
             # Should execute (may succeed or fail depending on PDF)
@@ -126,6 +127,7 @@ class TestPdfCliParsing:
                 capture_output=True,
                 text=True,
                 cwd=Path(__file__).parent.parent.parent.parent,
+                timeout=30,
             )
 
             # Should execute with verbose flag
@@ -137,8 +139,7 @@ class TestPdfValidationOutput:
 
     def test_format_results(self):
         """Test result formatting via print_validation_report."""
-        from infrastructure.validation.validate_pdf_cli import \
-            print_validation_report
+        from infrastructure.validation.validate_pdf_cli import print_validation_report
 
         report = {
             "pdf_path": "/path/to/test.pdf",
@@ -162,8 +163,7 @@ class TestPdfValidationOutput:
 
     def test_print_summary(self, caplog):
         """Test summary printing."""
-        from infrastructure.validation.validate_pdf_cli import \
-            print_validation_report
+        from infrastructure.validation.validate_pdf_cli import print_validation_report
 
         report = {
             "pdf_path": "/path/to/test.pdf",
@@ -210,6 +210,7 @@ class TestPdfCliMain:
             capture_output=True,
             text=True,
             cwd=Path(__file__).parent.parent.parent.parent,
+            timeout=30,
         )
 
         # Should execute (may succeed or find issues)
@@ -230,6 +231,7 @@ class TestPdfCliMain:
             capture_output=True,
             text=True,
             cwd=Path(__file__).parent.parent.parent.parent,
+            timeout=30,
         )
 
         # Should fail with file not found

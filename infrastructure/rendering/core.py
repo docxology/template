@@ -84,16 +84,12 @@ class RenderManager:
 
                     # Check if PDF was created but is empty (0.0 KB)
                     try:
-                        beamer_pdf = self.slides_renderer.render(
-                            source_file, format="beamer"
-                        )
+                        beamer_pdf = self.slides_renderer.render(source_file, format="beamer")
                         if beamer_pdf.exists():
                             size_mb = beamer_pdf.stat().st_size / (1024 * 1024)
                             if size_mb < 0.001:  # Less than 1KB
-                                error_msg += (
-                                    f" (PDF created but empty: {size_mb:.3f} MB)"
-                                )
-                                error_msg += f" - Check LaTeX compilation log: {beamer_pdf.parent / beamer_pdf.stem}.log"
+                                error_msg += f" (PDF created but empty: {size_mb:.3f} MB)"
+                                error_msg += f" - Check LaTeX compilation log: {beamer_pdf.parent / beamer_pdf.stem}.log"  # noqa: E501
                             else:
                                 error_msg += f" (PDF created: {size_mb:.2f} MB)"
                     except Exception:
@@ -122,18 +118,14 @@ class RenderManager:
             if not outputs:
                 raise TemplateError(f"No outputs generated for {source_file.name}")
 
-            logger.info(
-                f"Successfully rendered {len(outputs)} format(s) for {source_file.name}"
-            )
+            logger.info(f"Successfully rendered {len(outputs)} format(s) for {source_file.name}")
             return outputs
 
         except TemplateError:
             # Re-raise TemplateError as-is
             raise
         except Exception as e:
-            logger.error(
-                f"Unexpected error during rendering of {source_file.name}: {e}"
-            )
+            logger.error(f"Unexpected error during rendering of {source_file.name}: {e}")
             raise TemplateError(f"Rendering failed: {e}") from e
 
     def render_markdown_pdf(self, source_file: Path) -> Path:
@@ -200,9 +192,7 @@ class RenderManager:
             Path to generated combined PDF file
         """
         logger.info(f"Rendering combined PDF from {len(source_files)} files...")
-        return self.pdf_renderer.render_combined(
-            source_files, manuscript_dir, project_name
-        )
+        return self.pdf_renderer.render_combined(source_files, manuscript_dir, project_name)
 
     def render_combined_web(
         self,
@@ -221,6 +211,4 @@ class RenderManager:
             Path to generated combined HTML file (index.html)
         """
         logger.info(f"Rendering combined HTML from {len(source_files)} files...")
-        return self.web_renderer.render_combined(
-            source_files, manuscript_dir, project_name
-        )
+        return self.web_renderer.render_combined(source_files, manuscript_dir, project_name)

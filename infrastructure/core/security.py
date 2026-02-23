@@ -51,9 +51,7 @@ class SecurityValidator:
             r"\\write|\\read|\\openout|\\openin",
         ]
 
-    def validate_llm_input(
-        self, prompt: str, context: Optional[Dict[str, Any]] = None
-    ) -> str:
+    def validate_llm_input(self, prompt: str, context: Optional[Dict[str, Any]] = None) -> str:
         """Validate and sanitize LLM input.
 
         Args:
@@ -194,7 +192,7 @@ class SecurityHeaders:
         return {
             # Prevent clickjacking
             "X-Frame-Options": "DENY",
-            "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'",
+            "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'",  # noqa: E501
             # Prevent MIME sniffing
             "X-Content-Type-Options": "nosniff",
             # Enable XSS protection
@@ -257,9 +255,7 @@ class RateLimiter:
 
         # Remove old requests outside the window
         self.requests[key] = [
-            timestamp
-            for timestamp in self.requests[key]
-            if now - timestamp < self.window_seconds
+            timestamp for timestamp in self.requests[key] if now - timestamp < self.window_seconds
         ]
 
         # Check if under limit
@@ -284,9 +280,7 @@ class RateLimiter:
 
         # Clean old requests
         self.requests[key] = [
-            timestamp
-            for timestamp in self.requests[key]
-            if now - timestamp < self.window_seconds
+            timestamp for timestamp in self.requests[key] if now - timestamp < self.window_seconds
         ]
 
         return max(0, self.max_requests - len(self.requests[key]))
@@ -467,9 +461,7 @@ def rate_limit(max_requests: int = 100, window_seconds: int = 60):
                     },
                     "warning",
                 )
-                raise SecurityViolation(
-                    f"Rate limit exceeded. {remaining} requests remaining."
-                )
+                raise SecurityViolation(f"Rate limit exceeded. {remaining} requests remaining.")
 
             return func(*args, **kwargs)
 

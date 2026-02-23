@@ -116,8 +116,7 @@ class FigureManager:
                             max(
                                 int(fig.figure_id.split("_")[-1])
                                 for fig in self.figures.values()
-                                if "_" in fig.figure_id
-                                and fig.figure_id.split("_")[-1].isdigit()
+                                if "_" in fig.figure_id and fig.figure_id.split("_")[-1].isdigit()
                             )
                             + 1
                         )

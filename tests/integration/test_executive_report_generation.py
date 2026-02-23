@@ -124,15 +124,11 @@ class TestExecutiveReportScript:
             spec.loader.exec_module(module)
 
             # Test with valid project
-            is_complete = module.verify_project_completion(
-                sample_project_structure, "project1"
-            )
+            is_complete = module.verify_project_completion(sample_project_structure, "project1")
             assert is_complete is True
 
             # Test with invalid project
-            is_complete = module.verify_project_completion(
-                sample_project_structure, "nonexistent"
-            )
+            is_complete = module.verify_project_completion(sample_project_structure, "nonexistent")
             assert is_complete is False
 
         finally:
@@ -153,10 +149,7 @@ class TestScriptIntegration:
 
         # Should show help and exit successfully
         assert result.returncode == 0
-        assert (
-            "executive report" in result.stdout.lower()
-            or "usage" in result.stdout.lower()
-        )
+        assert "executive report" in result.stdout.lower() or "usage" in result.stdout.lower()
 
 
 class TestErrorHandling:

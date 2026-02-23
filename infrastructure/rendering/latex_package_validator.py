@@ -43,9 +43,7 @@ class ValidationReport:
                 lines.append(f"  - {pkg}")
 
         if self.missing_optional:
-            lines.append(
-                f"\n⚠️  Missing {len(self.missing_optional)} optional package(s):"
-            )
+            lines.append(f"\n⚠️  Missing {len(self.missing_optional)} optional package(s):")
             for pkg in self.missing_optional:
                 lines.append(f"  - {pkg}")
 
@@ -79,9 +77,7 @@ def find_kpsewhich() -> Optional[Path]:
 
     # Try which command
     try:
-        result = subprocess.run(
-            ["which", "kpsewhich"], capture_output=True, text=True, check=False
-        )
+        result = subprocess.run(["which", "kpsewhich"], capture_output=True, text=True, check=False)
         if result.returncode == 0 and result.stdout.strip():
             return Path(result.stdout.strip())
     except Exception:
@@ -90,9 +86,7 @@ def find_kpsewhich() -> Optional[Path]:
     return None
 
 
-def check_latex_package(
-    package_name: str, kpsewhich_path: Optional[Path] = None
-) -> PackageStatus:
+def check_latex_package(package_name: str, kpsewhich_path: Optional[Path] = None) -> PackageStatus:
     """Check if a LaTeX package is installed.
 
     Args:
@@ -255,7 +249,7 @@ def validate_preamble_packages(strict: bool = False) -> ValidationReport:
     return report
 
 
-def main():
+def main() -> None:
     """CLI entry point for package validation."""
     import sys
 

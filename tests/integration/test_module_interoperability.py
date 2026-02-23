@@ -5,7 +5,6 @@ a complete research workflow. Following the "no mocks" policy, all tests use
 real implementations or skip when services are unavailable.
 """
 
-
 import pytest
 
 from infrastructure import publishing
@@ -30,7 +29,9 @@ class TestResearchWorkflow:
 
             # Use LLM to analyze health status
             llm = LLMClient()
-            analysis_prompt = f"Analyze this system health status and provide recommendations: {health_status}"
+            analysis_prompt = (
+                f"Analyze this system health status and provide recommendations: {health_status}"
+            )
             analysis = llm.query(analysis_prompt)
 
             # Verify we got a meaningful response
@@ -47,9 +48,7 @@ class TestResearchWorkflow:
         """
         # Create test LaTeX file
         tex_file = tmp_path / "paper.tex"
-        tex_file.write_text(
-            "\\documentclass{article}\\begin{document}Test\\end{document}"
-        )
+        tex_file.write_text("\\documentclass{article}\\begin{document}Test\\end{document}")
 
         # Test metadata creation without actual rendering
         metadata = publishing.PublicationMetadata(
@@ -110,11 +109,13 @@ class TestModuleInteroperability:
     def test_shared_exception_handling(self):
         """Test that all modules use common exception hierarchy."""
         # All should inherit from TemplateError
-        from infrastructure.core.exceptions import (LiteratureSearchError,
-                                                    LLMConnectionError,
-                                                    PublishingError,
-                                                    RenderingError,
-                                                    TemplateError)
+        from infrastructure.core.exceptions import (
+            LiteratureSearchError,
+            LLMConnectionError,
+            PublishingError,
+            RenderingError,
+            TemplateError,
+        )
 
         assert issubclass(LiteratureSearchError, TemplateError)
         assert issubclass(LLMConnectionError, TemplateError)

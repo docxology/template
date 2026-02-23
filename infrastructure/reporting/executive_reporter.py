@@ -158,9 +158,7 @@ def collect_manuscript_metrics(manuscript_dir: Path) -> ManuscriptMetrics:
     return metrics
 
 
-def collect_codebase_metrics(
-    src_dir: Path, scripts_dir: Optional[Path] = None
-) -> CodebaseMetrics:
+def collect_codebase_metrics(src_dir: Path, scripts_dir: Optional[Path] = None) -> CodebaseMetrics:
     """Collect codebase metrics from source and script files.
 
     Args:
@@ -245,7 +243,7 @@ def collect_test_metrics(reports_dir: Path) -> TestMetrics:
             f"Test report not found: {test_report_path} - test metrics will show as unavailable"
         )
         logger.info(f"Expected test report location: {test_report_path}")
-        # Set a flag to indicate data is unavailable (using negative values to distinguish from actual 0s)
+        # Set a flag to indicate data is unavailable (using negative values to distinguish from actual 0s)  # noqa: E501
         metrics.total_tests = -1  # Special value to indicate "unavailable"
         return metrics
 
@@ -276,7 +274,7 @@ def collect_test_metrics(reports_dir: Path) -> TestMetrics:
             metrics.test_files = max(1, metrics.total_tests // 10)  # Rough estimate
 
         logger.debug(
-            f"Successfully extracted test metrics: {metrics.total_tests} tests, {metrics.coverage_percent:.1f}% coverage"
+            f"Successfully extracted test metrics: {metrics.total_tests} tests, {metrics.coverage_percent:.1f}% coverage"  # noqa: E501
         )
 
     except Exception as e:
@@ -470,7 +468,7 @@ def generate_aggregate_metrics(projects: List[ProjectMetrics]) -> Dict[str, Any]
             "total_equations": sum(p.manuscript.equations for p in projects),
             "total_figures": sum(p.manuscript.figures for p in projects),
             "total_references": sum(p.manuscript.references for p in projects),
-            "words_stats": calculate_stats(manuscript_words),
+            "words_stats": calculate_stats(manuscript_words),  # type: ignore
         },
         "codebase": {
             "total_source_lines": sum(p.codebase.source_lines for p in projects),
@@ -776,9 +774,7 @@ def generate_recommendations(projects: List[ProjectMetrics]) -> List[str]:
     health_scores.sort(key=lambda x: x[1]["score"], reverse=True)
 
     # Overall portfolio health
-    avg_health = sum(score["percentage"] for _, score in health_scores) / len(
-        health_scores
-    )
+    avg_health = sum(score["percentage"] for _, score in health_scores) / len(health_scores)
     if avg_health >= 85:
         recommendations.append(
             "🎉 **Portfolio Health**: Excellent overall project health across all metrics."
@@ -807,7 +803,7 @@ def generate_recommendations(projects: List[ProjectMetrics]) -> List[str]:
         worst_coverage = min(coverage_stats)
         project_names = ", ".join(p.name for p in low_coverage)
         recommendations.append(
-            f"📊 **Test Coverage**: {project_names} below 90% threshold (lowest: {worst_coverage:.1f}%). "
+            f"📊 **Test Coverage**: {project_names} below 90% threshold (lowest: {worst_coverage:.1f}%). "  # noqa: E501
             "Action: Add unit tests for uncovered functions, especially in `src/` modules. "
             "Target: Aim for 95%+ coverage for critical functionality."
         )
@@ -821,9 +817,7 @@ def generate_recommendations(projects: List[ProjectMetrics]) -> List[str]:
     failed_tests = [p for p in projects if p.tests.failed > 0]
     if failed_tests:
         for p in failed_tests:
-            failure_rate = (
-                p.tests.failed / p.tests.total_tests if p.tests.total_tests > 0 else 1.0
-            )
+            failure_rate = p.tests.failed / p.tests.total_tests if p.tests.total_tests > 0 else 1.0
             if failure_rate > 0.1:
                 recommendations.append(
                     f"❌ **Critical Test Failures**: {p.name} has {failure_rate:.1%} failure rate "
@@ -837,9 +831,7 @@ def generate_recommendations(projects: List[ProjectMetrics]) -> List[str]:
                     "Action: Review test output for details and fix failures before release."
                 )
     else:
-        recommendations.append(
-            "✅ **Test Integrity**: All tests passing across all projects."
-        )
+        recommendations.append("✅ **Test Integrity**: All tests passing across all projects.")
 
     # Performance bottlenecks with specific recommendations
     slow_projects = [p for p in projects if p.pipeline.bottleneck_percent > 50]
@@ -849,18 +841,18 @@ def generate_recommendations(projects: List[ProjectMetrics]) -> List[str]:
             if stage == "PDF Rendering":
                 recommendations.append(
                     f"⏱️ **PDF Performance**: {p.name} bottleneck in LaTeX compilation. "
-                    "Action: Check for complex equations or large figures. Consider using lighter LaTeX packages "
+                    "Action: Check for complex equations or large figures. Consider using lighter LaTeX packages "  # noqa: E501
                     "or optimizing figure resolution."
                 )
             elif stage == "Infrastructure Tests":
                 recommendations.append(
                     f"⏱️ **Test Performance**: {p.name} slow test execution. "
-                    "Action: Optimize slow tests, consider parallel execution, review computationally intensive tests."
+                    "Action: Optimize slow tests, consider parallel execution, review computationally intensive tests."  # noqa: E501
                 )
             elif stage == "Project Analysis":
                 recommendations.append(
                     f"⏱️ **Analysis Performance**: {p.name} slow analysis scripts. "
-                    "Action: Profile analysis_pipeline.py, optimize data processing, cache intermediate results."
+                    "Action: Profile analysis_pipeline.py, optimize data processing, cache intermediate results."  # noqa: E501
                 )
             else:
                 recommendations.append(
@@ -892,19 +884,14 @@ def generate_recommendations(projects: List[ProjectMetrics]) -> List[str]:
     output_poor = []
     for p in projects:
         total_outputs = (
-            p.outputs.pdf_files
-            + p.outputs.figures
-            + p.outputs.slides
-            + p.outputs.web_outputs
+            p.outputs.pdf_files + p.outputs.figures + p.outputs.slides + p.outputs.web_outputs
         )
         if total_outputs < 3:
             output_poor.append(f"{p.name} ({total_outputs} outputs)")
 
     if output_poor:
         recommendations.append(
-            "🎨 **Output Richness**: "
-            + ", ".join(output_poor)
-            + " have limited outputs. "
+            "🎨 **Output Richness**: " + ", ".join(output_poor) + " have limited outputs. "
             "Action: Generate more visual outputs (figures, slides, web versions). "
             "Enhance analysis_pipeline.py to produce comprehensive results."
         )
@@ -913,13 +900,11 @@ def generate_recommendations(projects: List[ProjectMetrics]) -> List[str]:
     if len(projects) > 1:
         # Compare projects and suggest improvements
         best_coverage = max(p.tests.coverage_percent for p in projects)
-        best_project = next(
-            p.name for p in projects if p.tests.coverage_percent == best_coverage
-        )
+        best_project = next(p.name for p in projects if p.tests.coverage_percent == best_coverage)
 
         if best_coverage > 95:
             recommendations.append(
-                f"🏆 **Best Practice**: {best_project} demonstrates excellent test coverage ({best_coverage:.1f}%). "
+                f"🏆 **Best Practice**: {best_project} demonstrates excellent test coverage ({best_coverage:.1f}%). "  # noqa: E501
                 "Action: Study this project's testing approach and apply lessons to other projects."
             )
 
@@ -931,7 +916,7 @@ def generate_recommendations(projects: List[ProjectMetrics]) -> List[str]:
 
         if largest_manuscript > 2000:
             recommendations.append(
-                f"📚 **Comprehensive Research**: {largest_project} has extensive manuscript ({largest_manuscript:,} words). "
+                f"📚 **Comprehensive Research**: {largest_project} has extensive manuscript ({largest_manuscript:,} words). "  # noqa: E501
                 "Consider if other projects could benefit from similar depth."
             )
 
@@ -942,16 +927,14 @@ def generate_recommendations(projects: List[ProjectMetrics]) -> List[str]:
         avg_methods_per_class = total_methods / total_classes
         if avg_methods_per_class < 3:
             recommendations.append(
-                f"🏗️ **Code Structure**: Low average methods per class ({avg_methods_per_class:.1f}). "
+                f"🏗️ **Code Structure**: Low average methods per class ({avg_methods_per_class:.1f}). "  # noqa: E501
                 "Action: Consider refactoring to improve encapsulation and modularity."
             )
 
     return recommendations
 
 
-def generate_executive_summary(
-    repo_root: Path, project_names: List[str]
-) -> ExecutiveSummary:
+def generate_executive_summary(repo_root: Path, project_names: List[str]) -> ExecutiveSummary:
     """Generate complete executive summary for all projects.
 
     Args:
@@ -994,9 +977,7 @@ def generate_executive_summary(
     return summary
 
 
-def save_executive_summary(
-    summary: ExecutiveSummary, output_dir: Path
-) -> Dict[str, Path]:
+def save_executive_summary(summary: ExecutiveSummary, output_dir: Path) -> Dict[str, Path]:
     """Save executive summary in multiple formats.
 
     Args:
@@ -1011,27 +992,21 @@ def save_executive_summary(
     saved_files = {}
 
     # Save JSON (machine-readable)
-    json_path = organizer.get_output_path(
-        "consolidated_report.json", output_dir, FileType.JSON
-    )
+    json_path = organizer.get_output_path("consolidated_report.json", output_dir, FileType.JSON)  # type: ignore
     with open(json_path, "w") as f:
         json.dump(asdict(summary), f, indent=2, default=str)
     saved_files["json"] = json_path
     logger.info(f"Saved JSON report: {json_path}")
 
     # Save Markdown (human-readable)
-    md_path = organizer.get_output_path(
-        "consolidated_report.md", output_dir, FileType.MARKDOWN
-    )
+    md_path = organizer.get_output_path("consolidated_report.md", output_dir, FileType.MARKDOWN)  # type: ignore
     md_content = _generate_markdown_report(summary)
     md_path.write_text(md_content)
     saved_files["markdown"] = md_path
     logger.info(f"Saved Markdown report: {md_path}")
 
     # Save HTML (styled)
-    html_path = organizer.get_output_path(
-        "consolidated_report.html", output_dir, FileType.HTML
-    )
+    html_path = organizer.get_output_path("consolidated_report.html", output_dir, FileType.HTML)  # type: ignore
     html_content = _generate_html_report(summary)
     html_path.write_text(html_content)
     saved_files["html"] = html_path
@@ -1073,19 +1048,19 @@ def _generate_markdown_report(summary: ExecutiveSummary) -> str:
     lines.extend(
         [
             "### Key Findings",
-            f"- **Portfolio Size**: {manuscript_words:,} total manuscript words across {total_projects} projects",
+            f"- **Portfolio Size**: {manuscript_words:,} total manuscript words across {total_projects} projects",  # noqa: E501
             f"- **Average Project**: {avg_project_size:,.0f} words per project",
         ]
     )
 
     if largest_project:
         lines.append(
-            f"- **Largest Project**: {largest_project.name} ({largest_project.manuscript.total_words:,} words)"
+            f"- **Largest Project**: {largest_project.name} ({largest_project.manuscript.total_words:,} words)"  # noqa: E501
         )
 
     if smallest_project and smallest_project != largest_project:
         lines.append(
-            f"- **Smallest Project**: {smallest_project.name} ({smallest_project.manuscript.total_words:,} words)"
+            f"- **Smallest Project**: {smallest_project.name} ({smallest_project.manuscript.total_words:,} words)"  # noqa: E501
         )
 
     if most_efficient:
@@ -1115,9 +1090,7 @@ def _generate_markdown_report(summary: ExecutiveSummary) -> str:
             grade = health.get("grade", "Unknown")
             lines.append(f"- **{project}**: {grade} health grade")
     else:
-        lines.extend(
-            ["", "### Health Status", "✅ **All projects** are in good health"]
-        )
+        lines.extend(["", "### Health Status", "✅ **All projects** are in good health"])
 
     lines.extend(
         [
@@ -1129,7 +1102,7 @@ def _generate_markdown_report(summary: ExecutiveSummary) -> str:
             f"- **Total Sections**: {summary.aggregate_metrics['manuscript']['total_sections']}",
             f"- **Total Equations**: {summary.aggregate_metrics['manuscript']['total_equations']}",
             f"- **Total Figures**: {summary.aggregate_metrics['manuscript']['total_figures']}",
-            f"- **Total References**: {summary.aggregate_metrics['manuscript']['total_references']}",
+            f"- **Total References**: {summary.aggregate_metrics['manuscript']['total_references']}",  # noqa: E501
             "",
             "### Codebase",
             f"- **Source Lines**: {summary.aggregate_metrics['codebase']['total_source_lines']:,}",
@@ -1148,7 +1121,7 @@ def _generate_markdown_report(summary: ExecutiveSummary) -> str:
     if projects_with_data > 0:
         lines.extend(
             [
-                f"- **Total Tests**: {test_metrics['total_tests']} ({test_metrics['total_passed']} passed)",
+                f"- **Total Tests**: {test_metrics['total_tests']} ({test_metrics['total_passed']} passed)",  # noqa: E501
                 f"- **Average Coverage**: {test_metrics['average_coverage']:.1f}%",
                 f"- **Total Execution Time**: {test_metrics['total_execution_time']:.1f}s",
                 f"- **Projects with Test Data**: {projects_with_data}/{total_projects}",
@@ -1168,14 +1141,14 @@ def _generate_markdown_report(summary: ExecutiveSummary) -> str:
         [
             "",
             "### Outputs",
-            f"- **PDFs**: {summary.aggregate_metrics['outputs']['total_pdfs']} files ({summary.aggregate_metrics['outputs']['total_size_mb']:.1f} MB)",
+            f"- **PDFs**: {summary.aggregate_metrics['outputs']['total_pdfs']} files ({summary.aggregate_metrics['outputs']['total_size_mb']:.1f} MB)",  # noqa: E501
             f"- **Figures**: {summary.aggregate_metrics['outputs']['total_figures']}",
             f"- **Slides**: {summary.aggregate_metrics['outputs']['total_slides']}",
             f"- **Web Pages**: {summary.aggregate_metrics['outputs']['total_web']}",
             "",
             "### Pipeline",
             f"- **Total Duration**: {summary.aggregate_metrics['pipeline']['total_duration']:.0f}s",
-            f"- **Average Duration**: {summary.aggregate_metrics['pipeline']['average_duration']:.0f}s",
+            f"- **Average Duration**: {summary.aggregate_metrics['pipeline']['average_duration']:.0f}s",  # noqa: E501
             f"- **Stages Passed**: {summary.aggregate_metrics['pipeline']['total_stages_passed']}",
             "",
             "## Project Comparison",
@@ -1211,13 +1184,10 @@ def _generate_markdown_report(summary: ExecutiveSummary) -> str:
 
     for rec in summary.recommendations:
         if any(
-            keyword in rec.lower()
-            for keyword in ["critical", "immediate", "failing", "broken"]
+            keyword in rec.lower() for keyword in ["critical", "immediate", "failing", "broken"]
         ):
             high_priority.append(f"🚨 **HIGH**: {rec}")
-        elif any(
-            keyword in rec.lower() for keyword in ["below", "improve", "consider"]
-        ):
+        elif any(keyword in rec.lower() for keyword in ["below", "improve", "consider"]):
             medium_priority.append(f"⚠️ **MEDIUM**: {rec}")
         else:
             low_priority.append(f"ℹ️ **LOW**: {rec}")
@@ -1267,7 +1237,10 @@ def _generate_markdown_report(summary: ExecutiveSummary) -> str:
 def _generate_html_report(summary: ExecutiveSummary) -> str:
     """Generate HTML format executive report."""
     from infrastructure.reporting.html_templates import (
-        get_base_html_template, render_summary_cards, render_table)
+        get_base_html_template,
+        render_summary_cards,
+        render_table,
+    )
 
     # Generate header content
     header_html = f"""        <h1>Executive Summary - All Projects</h1>
@@ -1375,13 +1348,10 @@ def _generate_html_report(summary: ExecutiveSummary) -> str:
 
     for rec in summary.recommendations:
         if any(
-            keyword in rec.lower()
-            for keyword in ["critical", "immediate", "failing", "broken"]
+            keyword in rec.lower() for keyword in ["critical", "immediate", "failing", "broken"]
         ):
             high_priority.append(f'<li class="status-failed">{rec}</li>')
-        elif any(
-            keyword in rec.lower() for keyword in ["below", "improve", "consider"]
-        ):
+        elif any(keyword in rec.lower() for keyword in ["below", "improve", "consider"]):
             medium_priority.append(f'<li class="status-warning">{rec}</li>')
         else:
             low_priority.append(f'<li class="status-passed">{rec}</li>')
@@ -1389,9 +1359,7 @@ def _generate_html_report(summary: ExecutiveSummary) -> str:
     recommendations_html = '<div class="section"><h2>Actionable Recommendations</h2>'
 
     if high_priority:
-        recommendations_html += (
-            "<h3>🚨 High Priority</h3><ul>" + "".join(high_priority) + "</ul>"
-        )
+        recommendations_html += "<h3>🚨 High Priority</h3><ul>" + "".join(high_priority) + "</ul>"
 
     if medium_priority:
         recommendations_html += (
@@ -1399,9 +1367,7 @@ def _generate_html_report(summary: ExecutiveSummary) -> str:
         )
 
     if low_priority:
-        recommendations_html += (
-            "<h3>ℹ️ Low Priority</h3><ul>" + "".join(low_priority) + "</ul>"
-        )
+        recommendations_html += "<h3>ℹ️ Low Priority</h3><ul>" + "".join(low_priority) + "</ul>"
 
     recommendations_html += "</div>"
 

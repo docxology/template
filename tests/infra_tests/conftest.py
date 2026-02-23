@@ -208,9 +208,11 @@ def ensure_ollama_for_tests():
     marked with @pytest.mark.requires_ollama have a working Ollama instance.
     """
     from infrastructure.core.logging_utils import get_logger
-    from infrastructure.llm.utils.ollama import (ensure_ollama_ready,
-                                                 get_model_names,
-                                                 is_ollama_running)
+    from infrastructure.llm.utils.ollama import (
+        ensure_ollama_ready,
+        get_model_names,
+        is_ollama_running,
+    )
 
     logger = get_logger(__name__)
 
@@ -251,7 +253,5 @@ def ensure_ollama_for_tests():
             "=" * 80
         )
 
-    logger.info(
-        f"✓ Ollama ready for tests with {len(models)} model(s): {', '.join(models[:3])}"
-    )
+    logger.info(f"✓ Ollama ready for tests with {len(models)} model(s): {', '.join(models[:3])}")
     return True

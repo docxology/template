@@ -12,7 +12,9 @@ from typing import Optional
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.core import RenderManager
 from infrastructure.rendering.manuscript_discovery import (
-    discover_manuscript_files, verify_figures_exist)
+    discover_manuscript_files,
+    verify_figures_exist,
+)
 
 
 def get_render_manager(config: Optional[RenderingConfig] = None) -> RenderManager:

@@ -4,8 +4,6 @@ Tests slides rendering functionality using real implementations.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-
-
 from infrastructure.rendering import slides_renderer
 
 

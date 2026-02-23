@@ -17,6 +17,7 @@ CLI Usage:
 - python3 scripts/06_llm_review.py --reviews-only # Run only English scientific reviews
 - python3 scripts/06_llm_review.py --translations-only # Run only translations
 """
+
 from __future__ import annotations
 
 import argparse
@@ -62,22 +63,22 @@ if __name__ == "__main__":
         default="project",
         help="Project name in projects/ directory (default: project)",
     )
-    
+
     # Mutually exclusive group for execution mode
     mode_group = parser.add_mutually_exclusive_group()
     mode_group.add_argument(
-        "--reviews-only", 
-        action="store_true", 
-        help="Run only English scientific reviews (no translations)"
+        "--reviews-only",
+        action="store_true",
+        help="Run only English scientific reviews (no translations)",
     )
     mode_group.add_argument(
-        "--translations-only", 
-        action="store_true", 
-        help="Run only translations (no scientific reviews)"
+        "--translations-only",
+        action="store_true",
+        help="Run only translations (no scientific reviews)",
     )
-    
+
     args = parser.parse_args()
-    
+
     try:
         if args.reviews_only:
             exec_mode = ReviewMode.REVIEWS_ONLY
@@ -85,7 +86,7 @@ if __name__ == "__main__":
             exec_mode = ReviewMode.TRANSLATIONS_ONLY
         else:
             exec_mode = ReviewMode.ALL
-            
+
         sys.exit(main(mode=exec_mode, project_name=args.project))
     except KeyboardInterrupt:
         logger.info("\nLLM Review cancelled by user.")

@@ -1,9 +1,6 @@
 """Comprehensive tests for src/markdown_integration.py to ensure 100% coverage."""
 
-
-
-from infrastructure.documentation.markdown_integration import \
-    MarkdownIntegration
+from infrastructure.documentation.markdown_integration import MarkdownIntegration
 
 
 class TestMarkdownIntegration:
@@ -29,9 +26,7 @@ class TestMarkdownIntegration:
         integration = MarkdownIntegration(manuscript_dir=manuscript_dir)
 
         markdown_file = manuscript_dir / "test.md"
-        markdown_file.write_text(
-            "# Section 1\n\n" "## Subsection 1.1\n\n" "### Subsubsection 1.1.1\n"
-        )
+        markdown_file.write_text("# Section 1\n\n## Subsection 1.1\n\n### Subsubsection 1.1.1\n")
         sections = integration.detect_sections(markdown_file)
         assert len(sections) == 3
         assert sections[0]["name"] == "Section 1"
@@ -123,9 +118,7 @@ class TestMarkdownIntegration:
         integration = MarkdownIntegration(manuscript_dir=manuscript_dir)
 
         markdown_file = manuscript_dir / "test.md"
-        markdown_file.write_text(
-            "# Test\n\n" "\\begin{figure}[h]\n" "\\label{fig:test}\n" "\\end{figure}\n"
-        )
+        markdown_file.write_text("# Test\n\n\\begin{figure}[h]\n\\label{fig:test}\n\\end{figure}\n")
         updated = integration.update_all_references(markdown_file)
         assert updated >= 0
 
@@ -148,11 +141,7 @@ class TestMarkdownIntegration:
         markdown_file = manuscript_dir / "test.md"
         # Create content with figure label but no reference
         markdown_file.write_text(
-            "# Test\n\n"
-            "\\begin{figure}[h]\n"
-            "\\label{fig:test}\n"
-            "\\end{figure}\n\n"
-            "Some text here.\n"
+            "# Test\n\n\\begin{figure}[h]\n\\label{fig:test}\n\\end{figure}\n\nSome text here.\n"
         )
         updated = integration.update_all_references(markdown_file)
         # Should insert a reference
@@ -190,9 +179,7 @@ class TestMarkdownIntegration:
         # Create markdown file with label but ensure the branch path is tested
         # The method looks for labels using re.findall, then tries to update them
         markdown_file = manuscript_dir / "test.md"
-        markdown_file.write_text(
-            "# Test\n\n" "\\begin{figure}[h]\n" "\\label{fig:test}\n" "\\end{figure}\n"
-        )
+        markdown_file.write_text("# Test\n\n\\begin{figure}[h]\n\\label{fig:test}\n\\end{figure}\n")
 
         # This tests the normal path where label is found
         updated = integration.update_all_references(markdown_file)
@@ -214,10 +201,7 @@ class TestMarkdownIntegration:
         markdown_file = manuscript_dir / "test.md"
         # Create content with figure label but no \end{figure}
         markdown_file.write_text(
-            "# Test\n\n"
-            "\\begin{figure}[h]\n"
-            "\\label{fig:test}\n"
-            "No end figure here.\n"
+            "# Test\n\n\\begin{figure}[h]\n\\label{fig:test}\nNo end figure here.\n"
         )
         updated = integration.update_all_references(markdown_file)
         # Should not insert reference since figure_end == -1

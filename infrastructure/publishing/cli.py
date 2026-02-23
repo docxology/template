@@ -51,11 +51,7 @@ def extract_metadata_command(args: argparse.Namespace) -> None:
     print("\nMetadata:")
     print(f"Title: {metadata.title}")
     print(f"Authors: {', '.join(metadata.authors)}")
-    print(
-        f"Abstract: {metadata.abstract[:200]}..."
-        if metadata.abstract
-        else "Abstract: N/A"
-    )
+    print(f"Abstract: {metadata.abstract[:200]}..." if metadata.abstract else "Abstract: N/A")
     print(f"Keywords: {', '.join(metadata.keywords)}")
 
 
@@ -139,7 +135,7 @@ def publish_zenodo_command(args: argparse.Namespace) -> None:
         sys.exit(1)
 
     logger.info("Publishing %d files to Zenodo", len(pdfs))
-    client = ZenodoClient()
+    client = ZenodoClient()  # type: ignore
 
     # Use provided metadata or extract from manuscript
     metadata = {
@@ -149,7 +145,7 @@ def publish_zenodo_command(args: argparse.Namespace) -> None:
     }
 
     try:
-        record_id = client.upload_publication(metadata, pdfs)
+        record_id = client.upload_publication(metadata, pdfs)  # type: ignore
         print(f"Published successfully! Record ID: {record_id}")
     except Exception as e:
         logger.error("Zenodo upload failed: %s", e)
@@ -171,9 +167,7 @@ def main() -> None:
     Raises:
         SystemExit: If no command is specified or if the command fails.
     """
-    parser = argparse.ArgumentParser(
-        description="Publish research outputs to academic platforms."
-    )
+    parser = argparse.ArgumentParser(description="Publish research outputs to academic platforms.")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
     # Extract metadata
@@ -195,9 +189,7 @@ def main() -> None:
     # Publish to Zenodo
     zenodo_parser = subparsers.add_parser("publish-zenodo", help="Publish to Zenodo")
     zenodo_parser.add_argument("output_dir", help="Output directory with files")
-    zenodo_parser.add_argument(
-        "--token", help="Zenodo API token (or use ZENODO_TOKEN env)"
-    )
+    zenodo_parser.add_argument("--token", help="Zenodo API token (or use ZENODO_TOKEN env)")
     zenodo_parser.add_argument("--title", help="Publication title")
     zenodo_parser.add_argument("--authors", help="Comma-separated author list")
     zenodo_parser.add_argument("--description", help="Publication description")

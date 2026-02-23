@@ -4,6 +4,7 @@
 This module defines patterns that are known to be valid exceptions and should
 not be flagged as issues by the audit tool.
 """
+
 from __future__ import annotations
 
 from typing import List, Set

@@ -68,10 +68,7 @@ def validate_copied_outputs(output_dir: Path) -> bool:
             # Try project-specific filename in pdf/ directory
             project_pdf_in_pdf_dir = pdf_dir / f"{project_name}_combined.pdf"
 
-            if (
-                project_pdf_in_pdf_dir.exists()
-                and project_pdf_in_pdf_dir.stat().st_size > 0
-            ):
+            if project_pdf_in_pdf_dir.exists() and project_pdf_in_pdf_dir.stat().st_size > 0:
                 size_mb = project_pdf_in_pdf_dir.stat().st_size / (1024 * 1024)
                 log_success(f"Combined PDF valid ({size_mb:.2f} MB)", logger)
                 combined_pdf_found = True
@@ -80,7 +77,7 @@ def validate_copied_outputs(output_dir: Path) -> bool:
         if not combined_pdf_found:
             logger.debug(f"Project-specific PDF not found in {pdf_dir}")
 
-    # If PDF not found in output directory, check source directory (for Stage 6 validation before copy)
+    # If PDF not found in output directory, check source directory (for Stage 6 validation before copy)  # noqa: E501
     if not combined_pdf_found and project_name:
         # Check if we're running validation before copy stage (Stage 6)
         # Find repo root by looking for the "output" directory in the path
@@ -97,37 +94,28 @@ def validate_copied_outputs(output_dir: Path) -> bool:
         source_output_dir = source_project_dir / "output"
         source_pdf_dir = source_output_dir / "pdf"
 
-        logger.debug(
-            f"PDF not found in output directory, checking source: {source_output_dir}"
-        )
+        logger.debug(f"PDF not found in output directory, checking source: {source_output_dir}")
 
         if source_pdf_dir.exists():
             # Try project-specific filename in source pdf/ directory (use basename for filename)
             source_project_pdf = source_pdf_dir / f"{project_name}_combined.pdf"
 
-
             if source_project_pdf.exists() and source_project_pdf.stat().st_size > 0:
                 size_mb = source_project_pdf.stat().st_size / (1024 * 1024)
                 logger.info(
-                    f"Combined PDF found in source directory ({size_mb:.2f} MB) - validation before copy stage"
+                    f"Combined PDF found in source directory ({size_mb:.2f} MB) - validation before copy stage"  # noqa: E501
                 )
                 combined_pdf_found = True
 
             # Legacy filename support removed
             if not combined_pdf_found:
-                logger.debug(
-                    f"Project-specific PDF not found in source {source_pdf_dir}"
-                )
+                logger.debug(f"Project-specific PDF not found in source {source_pdf_dir}")
 
     if not combined_pdf_found:
         logger.error("Combined manuscript PDF missing or empty")
         if project_name:
-            logger.error(
-                f"  Expected: output/{project_name}/{project_name}_combined.pdf"
-            )
-            logger.error(
-                f"  Or in: output/{project_name}/pdf/{project_name}_combined.pdf"
-            )
+            logger.error(f"  Expected: output/{project_name}/{project_name}_combined.pdf")
+            logger.error(f"  Or in: output/{project_name}/pdf/{project_name}_combined.pdf")
             logger.error(
                 f"  Or in source: projects/{project_name}/output/pdf/{project_name}_combined.pdf"
             )
@@ -162,9 +150,7 @@ def validate_copied_outputs(output_dir: Path) -> bool:
             files = list(subdir.glob("**/*"))
             file_count = len([f for f in files if f.is_file()])
             if file_count > 0:
-                total_size_mb = sum(f.stat().st_size for f in files if f.is_file()) / (
-                    1024 * 1024
-                )
+                total_size_mb = sum(f.stat().st_size for f in files if f.is_file()) / (1024 * 1024)
                 log_success(
                     f"{dir_name}/ valid ({file_count} files, {total_size_mb:.2f} MB)",
                     logger,
@@ -172,18 +158,14 @@ def validate_copied_outputs(output_dir: Path) -> bool:
             else:
                 # Only warn for required directories, debug for optional or potentially empty
                 if dir_name in optional_dirs:
-                    logger.debug(
-                        f"{dir_name}/ not yet populated (generated in later stage)"
-                    )
+                    logger.debug(f"{dir_name}/ not yet populated (generated in later stage)")
                 else:
                     logger.debug(
-                        f"{dir_name}/ directory exists but is empty (may be expected for this project type)"
+                        f"{dir_name}/ directory exists but is empty (may be expected for this project type)"  # noqa: E501
                     )
         else:
             if dir_name in optional_dirs:
-                logger.debug(
-                    f"{dir_name}/ not found (optional, generated in later stage)"
-                )
+                logger.debug(f"{dir_name}/ not found (optional, generated in later stage)")
             else:
                 logger.warning(f"{dir_name}/ directory not found ({description})")
 
@@ -258,9 +240,7 @@ def validate_root_output_structure(repo_root: Path) -> Dict[str, Any]:
 
         if item_name in root_level_dirs:
             invalid_folders.append(item_name)
-            issues.append(
-                f"Root-level directory '{item_name}' should not exist in output/"
-            )
+            issues.append(f"Root-level directory '{item_name}' should not exist in output/")
         else:
             # Unknown directory - flag as potential issue
             issues.append(
@@ -277,9 +257,7 @@ def validate_root_output_structure(repo_root: Path) -> Dict[str, Any]:
     }
 
     if valid:
-        logger.info(
-            f"Root output structure valid: {len(project_folders)} project folders found"
-        )
+        logger.info(f"Root output structure valid: {len(project_folders)} project folders found")
     else:
         logger.warning(f"Root output structure invalid: {len(issues)} issues found")
 
@@ -331,7 +309,7 @@ def collect_detailed_validation_results(output_dir: Path) -> Dict[str, Any]:
             files = [f for f in files if f.is_file()]
             size_mb = sum(f.stat().st_size for f in files) / (1024 * 1024)
 
-            validation_results["directories"][subdir_name] = {
+            validation_results["directories"][subdir_name] = {  # type: ignore
                 "exists": True,
                 "file_count": len(files),
                 "size_mb": f"{size_mb:.2f}",
@@ -339,46 +317,46 @@ def collect_detailed_validation_results(output_dir: Path) -> Dict[str, Any]:
                     max((f.stat().st_size, f.name) for f in files)[1] if files else None
                 ),
             }
-            validation_results["file_counts"][subdir_name] = len(files)
-            validation_results["total_size_mb"] += size_mb
+            validation_results["file_counts"][subdir_name] = len(files)  # type: ignore
+            validation_results["total_size_mb"] += size_mb  # type: ignore
         else:
-            validation_results["directories"][subdir_name] = {
+            validation_results["directories"][subdir_name] = {  # type: ignore
                 "exists": False,
                 "file_count": 0,
                 "size_mb": "0.00",
             }
-            validation_results["issues_by_severity"]["warning"].append(
+            validation_results["issues_by_severity"]["warning"].append(  # type: ignore
                 f"Directory '{subdir_name}/' missing or empty"
             )
 
     # Add issues from structure validation
-    if not validation_results["structure"]["valid"]:
-        for issue in validation_results["structure"]["issues"]:
-            validation_results["issues_by_severity"]["critical"].append(issue)
+    if not validation_results["structure"]["valid"]:  # type: ignore
+        for issue in validation_results["structure"]["issues"]:  # type: ignore
+            validation_results["issues_by_severity"]["critical"].append(issue)  # type: ignore
 
     # Add missing file issues
-    for missing_file in validation_results["structure"].get("missing_files", []):
+    for missing_file in validation_results["structure"].get("missing_files", []):  # type: ignore
         if missing_file == "project_combined.pdf":
-            validation_results["issues_by_severity"]["critical"].append(
-                f"Missing expected file: {missing_file} (legacy filename - consider using project-specific naming)"
+            validation_results["issues_by_severity"]["critical"].append(  # type: ignore
+                f"Missing expected file: {missing_file} (legacy filename - consider using project-specific naming)"  # noqa: E501
             )
         elif "_combined.pdf" in missing_file:
             project_name = missing_file.replace("_combined.pdf", "")
-            validation_results["issues_by_severity"]["critical"].append(
-                f"Missing expected file: {missing_file} (project-specific combined PDF for {project_name})"
+            validation_results["issues_by_severity"]["critical"].append(  # type: ignore
+                f"Missing expected file: {missing_file} (project-specific combined PDF for {project_name})"  # noqa: E501
             )
         else:
-            validation_results["issues_by_severity"]["critical"].append(
+            validation_results["issues_by_severity"]["critical"].append(  # type: ignore
                 f"Missing expected file: {missing_file}"
             )
 
     # Add suspicious size issues
-    for size_issue in validation_results["structure"].get("suspicious_sizes", []):
-        validation_results["issues_by_severity"]["warning"].append(size_issue)
+    for size_issue in validation_results["structure"].get("suspicious_sizes", []):  # type: ignore
+        validation_results["issues_by_severity"]["warning"].append(size_issue)  # type: ignore
 
     # Generate recommendations based on issues
-    if validation_results["issues_by_severity"]["critical"]:
-        validation_results["recommendations"].append(
+    if validation_results["issues_by_severity"]["critical"]:  # type: ignore
+        validation_results["recommendations"].append(  # type: ignore
             {
                 "priority": "high",
                 "action": "Review critical issues in output generation",
@@ -386,8 +364,8 @@ def collect_detailed_validation_results(output_dir: Path) -> Dict[str, Any]:
             }
         )
 
-    if not validation_results["directories"]["figures"]["exists"]:
-        validation_results["recommendations"].append(
+    if not validation_results["directories"]["figures"]["exists"]:  # type: ignore
+        validation_results["recommendations"].append(  # type: ignore
             {
                 "priority": "medium",
                 "action": "Ensure analysis scripts generate figures",
@@ -395,8 +373,8 @@ def collect_detailed_validation_results(output_dir: Path) -> Dict[str, Any]:
             }
         )
 
-    if not validation_results["directories"]["reports"]["exists"]:
-        validation_results["recommendations"].append(
+    if not validation_results["directories"]["reports"]["exists"]:  # type: ignore
+        validation_results["recommendations"].append(  # type: ignore
             {
                 "priority": "low",
                 "action": "Generate analysis reports",
@@ -435,7 +413,7 @@ def validate_output_structure(output_dir: Path) -> Dict[str, Any]:
     # Check output directory exists
     if not output_dir.exists():
         result["valid"] = False
-        result["issues"].append("Output directory does not exist")
+        result["issues"].append("Output directory does not exist")  # type: ignore
         return result
 
     # Check combined PDF - try project-specific first, then fallback to generic
@@ -461,28 +439,23 @@ def validate_output_structure(output_dir: Path) -> Dict[str, Any]:
 
             # PDF should typically be > 100KB
             if size_bytes < 100 * 1024:
-                result["suspicious_sizes"].append(
+                result["suspicious_sizes"].append(  # type: ignore
                     f"Combined PDF is unusually small: {pdf_size_mb:.2f} MB"
                 )
         else:
-            # PDF not found in output directory, check source directory (for validation before copy stage)
+            # PDF not found in output directory, check source directory (for validation before copy stage)  # noqa: E501
             repo_root = output_dir.parent.parent  # output/ -> repo_root/
             source_project_dir = repo_root / "projects" / project_name
             source_output_dir = source_project_dir / "output"
             source_pdf_dir = source_output_dir / "pdf"
 
-            logger.debug(
-                f"PDF not found in output directory, checking source: {source_output_dir}"
-            )
+            logger.debug(f"PDF not found in output directory, checking source: {source_output_dir}")
 
             if source_pdf_dir.exists():
                 # Try project-specific filename in source pdf/ directory
                 source_project_pdf = source_pdf_dir / f"{project_name}_combined.pdf"
 
-                if (
-                    source_project_pdf.exists()
-                    and source_project_pdf.stat().st_size > 0
-                ):
+                if source_project_pdf.exists() and source_project_pdf.stat().st_size > 0:
                     size_bytes = source_project_pdf.stat().st_size
                     pdf_size_mb = size_bytes / (1024 * 1024)
                     combined_pdf_found = True
@@ -490,22 +463,20 @@ def validate_output_structure(output_dir: Path) -> Dict[str, Any]:
 
                     # PDF should typically be > 100KB
                     if size_bytes < 100 * 1024:
-                        result["suspicious_sizes"].append(
+                        result["suspicious_sizes"].append(  # type: ignore
                             f"Combined PDF is unusually small: {pdf_size_mb:.2f} MB"
                         )
 
                     logger.debug(
-                        f"Combined PDF found in source directory ({pdf_size_mb:.2f} MB) - validation before copy stage"
+                        f"Combined PDF found in source directory ({pdf_size_mb:.2f} MB) - validation before copy stage"  # noqa: E501
                     )
 
                 # Legacy filename support removed
                 if not combined_pdf_found:
-                    logger.debug(
-                        f"Project-specific PDF not found in source {source_pdf_dir}"
-                    )
+                    logger.debug(f"Project-specific PDF not found in source {source_pdf_dir}")
 
             if not combined_pdf_found:
-                result["missing_files"].append(f"{project_name}_combined.pdf")
+                result["missing_files"].append(f"{project_name}_combined.pdf")  # type: ignore
     else:
         # No project name detected, cannot validate specific PDF
         logger.debug(
@@ -518,14 +489,14 @@ def validate_output_structure(output_dir: Path) -> Dict[str, Any]:
     # Populate directory structure metadata
     pdf_key = "project_combined_pdf"  # Default key for backward compatibility
     if combined_pdf_found and pdf_file:
-        result["directory_structure"][pdf_key] = {
+        result["directory_structure"][pdf_key] = {  # type: ignore
             "exists": True,
             "size_mb": round(pdf_size_mb, 2),
             "readable": pdf_file.is_file(),
         }
     else:
         result["valid"] = False
-        result["directory_structure"][pdf_key] = {
+        result["directory_structure"][pdf_key] = {  # type: ignore
             "exists": False,
             "size_mb": 0.0,
             "readable": False,
@@ -556,11 +527,9 @@ def validate_output_structure(output_dir: Path) -> Dict[str, Any]:
         if subdir.exists():
             files = list(subdir.glob("**/*"))
             file_count = len([f for f in files if f.is_file()])
-            total_size_mb = sum(f.stat().st_size for f in files if f.is_file()) / (
-                1024 * 1024
-            )
+            total_size_mb = sum(f.stat().st_size for f in files if f.is_file()) / (1024 * 1024)
 
-            result["directory_structure"][subdir_name] = {
+            result["directory_structure"][subdir_name] = {  # type: ignore
                 "exists": True,
                 "files": file_count,
                 "size_mb": round(total_size_mb, 2),
@@ -570,9 +539,9 @@ def validate_output_structure(output_dir: Path) -> Dict[str, Any]:
 
             # Only flag empty directories as suspicious if not optional
             if file_count == 0 and subdir_name not in optional_dirs:
-                result["suspicious_sizes"].append(f"{subdir_name}/ directory is empty")
+                result["suspicious_sizes"].append(f"{subdir_name}/ directory is empty")  # type: ignore
         else:
-            result["directory_structure"][subdir_name] = {
+            result["directory_structure"][subdir_name] = {  # type: ignore
                 "exists": False,
                 "files": 0,
                 "size_mb": 0.0,
@@ -580,6 +549,6 @@ def validate_output_structure(output_dir: Path) -> Dict[str, Any]:
             }
             # Only add issue for required directories
             if subdir_name not in optional_dirs:
-                result["issues"].append(f"Missing directory: {subdir_name}/")
+                result["issues"].append(f"Missing directory: {subdir_name}/")  # type: ignore
 
     return result

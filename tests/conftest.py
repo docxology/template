@@ -33,11 +33,13 @@ sys.path.insert(0, ROOT)
 # CRITICAL: Import and cache the real infrastructure module NOW
 # before pytest discovers tests/infra_tests which would shadow it
 import infrastructure as _real_infra  # noqa: E402
-sys.modules['infrastructure'] = _real_infra
+
+sys.modules["infrastructure"] = _real_infra
 
 # Also cache core submodule
 from infrastructure import core as _real_core  # noqa: E402
-sys.modules['infrastructure.core'] = _real_core
+
+sys.modules["infrastructure.core"] = _real_core
 
 # Add src/ to path for scientific modules (if it exists)
 SRC = os.path.join(ROOT, "src")
@@ -81,21 +83,11 @@ for project_name in active_projects:
 
 def pytest_configure(config):
     """Register custom markers for test categorization."""
-    config.addinivalue_line(
-        "markers", "requires_zenodo: tests requiring Zenodo API access"
-    )
-    config.addinivalue_line(
-        "markers", "requires_github: tests requiring GitHub API access"
-    )
-    config.addinivalue_line(
-        "markers", "requires_arxiv: tests requiring arXiv API access"
-    )
-    config.addinivalue_line(
-        "markers", "requires_latex: tests requiring LaTeX installation"
-    )
-    config.addinivalue_line(
-        "markers", "requires_network: tests requiring network access"
-    )
+    config.addinivalue_line("markers", "requires_zenodo: tests requiring Zenodo API access")
+    config.addinivalue_line("markers", "requires_github: tests requiring GitHub API access")
+    config.addinivalue_line("markers", "requires_arxiv: tests requiring arXiv API access")
+    config.addinivalue_line("markers", "requires_latex: tests requiring LaTeX installation")
+    config.addinivalue_line("markers", "requires_network: tests requiring network access")
     config.addinivalue_line(
         "markers", "requires_credentials: tests requiring external service credentials"
     )
@@ -132,8 +124,7 @@ def zenodo_credentials(credential_manager):
     """
     if not credential_manager.has_zenodo_credentials(use_sandbox=True):
         pytest.skip(
-            "Zenodo sandbox credentials not available. "
-            "Set ZENODO_SANDBOX_TOKEN in .env file."
+            "Zenodo sandbox credentials not available. Set ZENODO_SANDBOX_TOKEN in .env file."
         )
 
     return credential_manager.get_zenodo_credentials(use_sandbox=True)
@@ -151,8 +142,7 @@ def github_credentials(credential_manager):
     """
     if not credential_manager.has_github_credentials():
         pytest.skip(
-            "GitHub credentials not available. "
-            "Set GITHUB_TOKEN and GITHUB_REPO in .env file."
+            "GitHub credentials not available. Set GITHUB_TOKEN and GITHUB_REPO in .env file."
         )
 
     return credential_manager.get_github_credentials()
@@ -170,8 +160,7 @@ def arxiv_credentials(credential_manager):
     """
     if not credential_manager.has_arxiv_credentials():
         pytest.skip(
-            "arXiv credentials not available. "
-            "Set ARXIV_USERNAME and ARXIV_PASSWORD in .env file."
+            "arXiv credentials not available. Set ARXIV_USERNAME and ARXIV_PASSWORD in .env file."
         )
 
     return credential_manager.get_arxiv_credentials()

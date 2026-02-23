@@ -34,17 +34,13 @@ def clean_output_directory(output_dir: Path) -> bool:
             log_success("Created output directory", logger)
             return True
         except PermissionError as e:
-            logger.error(
-                f"Permission denied creating output directory {output_dir}: {e}"
-            )
+            logger.error(f"Permission denied creating output directory {output_dir}: {e}")
             return False
         except OSError as e:
             logger.error(f"OS error creating output directory {output_dir}: {e}")
             return False
         except Exception as e:
-            logger.error(
-                f"Unexpected error creating output directory {output_dir}: {e}"
-            )
+            logger.error(f"Unexpected error creating output directory {output_dir}: {e}")
             return False
 
     # Remove existing contents
@@ -135,8 +131,7 @@ def clean_output_directories(
                     for log_file in log_files:
                         try:
                             archive_path = (
-                                archive_dir
-                                / f"{log_file.stem}_{timestamp}{log_file.suffix}"
+                                archive_dir / f"{log_file.stem}_{timestamp}{log_file.suffix}"
                             )
                             shutil.copy2(log_file, archive_path)
                             archived_count += 1
@@ -144,28 +139,22 @@ def clean_output_directories(
                                 f"  Archived log file: {log_file.name} → {archive_path.name}"
                             )
                         except Exception as e:
-                            logger.warning(
-                                f"  Failed to archive log file {log_file.name}: {e}"
-                            )
+                            logger.warning(f"  Failed to archive log file {log_file.name}: {e}")
 
                     if archived_count > 0:
-                        logger.info(
-                            f"  Archived {archived_count} log file(s) to logs/archive/"
-                        )
+                        logger.info(f"  Archived {archived_count} log file(s) to logs/archive/")
 
             # Remove all contents except .checkpoints directory (preserve for pipeline resume)
-            # We also preserve corpus.jsonl and nanopublications.jsonl to allow incremental processing
+            # We also preserve corpus.jsonl and nanopublications.jsonl to allow incremental processing  # noqa: E501
             preserved_files = {"corpus.jsonl", "nanopublications.jsonl"}
-            
+
             for item in output_dir.iterdir():
                 if item.is_dir():
                     # Preserve .checkpoints directory to maintain pipeline resume capability
                     if item.name != ".checkpoints":
                         shutil.rmtree(item)
                     else:
-                        logger.debug(
-                            f"  Preserving {item.name}/ directory for checkpoint resume"
-                        )
+                        logger.debug(f"  Preserving {item.name}/ directory for checkpoint resume")
                 else:
                     if item.name not in preserved_files:
                         item.unlink()
@@ -180,9 +169,7 @@ def clean_output_directories(
 
         log_success(f"Cleaned {relative_path}/ (recreated subdirectories)", logger)
 
-    log_success(
-        f"Output directories cleaned for project '{project_name}' - fresh start", logger
-    )
+    log_success(f"Output directories cleaned for project '{project_name}' - fresh start", logger)
 
 
 def clean_root_output_directory(repo_root: Path, project_names: list[str]) -> bool:
@@ -252,9 +239,7 @@ def clean_root_output_directory(repo_root: Path, project_names: list[str]) -> bo
                     removed_items.append(item_name)
                 else:
                     # Unknown directory - keep it but log it
-                    logger.warning(
-                        f"  Unknown directory in output/: {item_name} (keeping)"
-                    )
+                    logger.warning(f"  Unknown directory in output/: {item_name} (keeping)")
                     kept_items.append(item_name)
 
             else:
@@ -304,9 +289,7 @@ def clean_coverage_files(repo_root: Path, patterns: list[str] | None = None) -> 
         for pattern in patterns:
             if "*" in pattern:
                 # Glob pattern - search for matching files recursively
-                glob_pattern = (
-                    f"**/{pattern}" if not pattern.startswith("**/") else pattern
-                )
+                glob_pattern = f"**/{pattern}" if not pattern.startswith("**/") else pattern
                 for file_path in repo_root.glob(glob_pattern):
                     try:
                         file_path.unlink()
@@ -314,13 +297,9 @@ def clean_coverage_files(repo_root: Path, patterns: list[str] | None = None) -> 
                         logger.debug(f"  Removed: {file_path.relative_to(repo_root)}")
                     except PermissionError:
                         locked_files.append(str(file_path.relative_to(repo_root)))
-                        logger.debug(
-                            f"  Skipped (locked): {file_path.relative_to(repo_root)}"
-                        )
+                        logger.debug(f"  Skipped (locked): {file_path.relative_to(repo_root)}")
                     except OSError as e:
-                        logger.debug(
-                            f"  Failed to remove {file_path.relative_to(repo_root)}: {e}"
-                        )
+                        logger.debug(f"  Failed to remove {file_path.relative_to(repo_root)}: {e}")
             else:
                 # Exact filename
                 file_path = repo_root / pattern
@@ -466,16 +445,10 @@ def copy_final_deliverables(
                             if size == 0:
                                 logger.warning(f"  Log file is empty: {log_file.name}")
                             else:
-                                logger.debug(
-                                    f"  Found log file: {log_file.name} ({size:,} bytes)"
-                                )
+                                logger.debug(f"  Found log file: {log_file.name} ({size:,} bytes)")
                         except Exception as e:
-                            logger.warning(
-                                f"  Failed to verify log file {log_file.name}: {e}"
-                            )
-                    logger.info(
-                        f"  Found {len(log_files)} log file(s) in {subdir_name}/"
-                    )
+                            logger.warning(f"  Failed to verify log file {log_file.name}: {e}")
+                    logger.info(f"  Found {len(log_files)} log file(s) in {subdir_name}/")
 
             # Log each file with full path and size
             for file_path in file_items:
@@ -496,7 +469,7 @@ def copy_final_deliverables(
 
     # Copy combined PDF to root for convenient access
     # First try project-specific name, then fall back to legacy name
-    # Use project basename for file matching (handles nested projects like "cognitive_integrity/cogsec_multiagent_1_theory")
+    # Use project basename for file matching (handles nested projects like "cognitive_integrity/cogsec_multiagent_1_theory")  # noqa: E501
     project_basename = Path(project_name).name
     combined_pdf_src = output_dir / "pdf" / f"{project_basename}_combined.pdf"
     combined_pdf_dst = output_dir / f"{project_basename}_combined.pdf"

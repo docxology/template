@@ -9,7 +9,6 @@ Tests scientific validation utilities including:
 All tests use real functions and modules with no mocks.
 """
 
-
 import numpy as np
 import pytest
 
@@ -217,6 +216,7 @@ def documented_function(x: float, y: int = 5) -> float:
 ''')
 
         import importlib.util
+
         spec = importlib.util.spec_from_file_location("good_module", module_file)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
@@ -232,15 +232,16 @@ def documented_function(x: float, y: int = 5) -> float:
     def test_poorly_documented_module(self, tmp_path):
         """Test validation of poorly documented module."""
         module_file = tmp_path / "poor_module.py"
-        module_file.write_text('''
+        module_file.write_text("""
 def undocumented(x):
     return x + 1
 
 def another_undocumented(y):
     return y * 2
-''')
+""")
 
         import importlib.util
+
         spec = importlib.util.spec_from_file_location("poor_module", module_file)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
@@ -266,6 +267,7 @@ def undocumented(x):
 ''')
 
         import importlib.util
+
         spec = importlib.util.spec_from_file_location("partial_module", module_file)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
@@ -278,7 +280,7 @@ def undocumented(x):
     def test_module_with_error_handling(self, tmp_path):
         """Test detection of error handling patterns."""
         module_file = tmp_path / "error_module.py"
-        module_file.write_text('''
+        module_file.write_text("""
 def with_try_except(x):
     try:
         return x / x
@@ -289,9 +291,10 @@ def with_raise(x):
     if x < 0:
         raise ValueError("Negative input")
     return x
-''')
+""")
 
         import importlib.util
+
         spec = importlib.util.spec_from_file_location("error_module", module_file)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
@@ -303,7 +306,7 @@ def with_raise(x):
     def test_module_with_input_validation(self, tmp_path):
         """Test detection of input validation patterns."""
         module_file = tmp_path / "validation_module.py"
-        module_file.write_text('''
+        module_file.write_text("""
 def with_isinstance(x):
     if not isinstance(x, (int, float)):
         raise TypeError("x must be numeric")
@@ -312,9 +315,10 @@ def with_isinstance(x):
 def with_assert(x):
     assert x > 0, "x must be positive"
     return x
-''')
+""")
 
         import importlib.util
+
         spec = importlib.util.spec_from_file_location("validation_module", module_file)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
@@ -336,6 +340,7 @@ _PRIVATE_VAR = 42
 ''')
 
         import importlib.util
+
         spec = importlib.util.spec_from_file_location("empty_module", module_file)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
@@ -347,15 +352,16 @@ _PRIVATE_VAR = 42
     def test_recommendations_generation(self, tmp_path):
         """Test recommendations are generated appropriately."""
         module_file = tmp_path / "needs_work.py"
-        module_file.write_text('''
+        module_file.write_text("""
 def no_docs(x):
     return x
 
 def no_types(y):
     return y * 2
-''')
+""")
 
         import importlib.util
+
         spec = importlib.util.spec_from_file_location("needs_work", module_file)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
@@ -377,6 +383,7 @@ def typed_func(x: int) -> int:
 ''')
 
         import importlib.util
+
         spec = importlib.util.spec_from_file_location("scored_module", module_file)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
@@ -386,7 +393,6 @@ def typed_func(x: int) -> int:
         # Score = 0.25 * docstring + 0.25 * type_hints + 0.25 * error + 0.25 * validation
         # = 0.25 * 1.0 + 0.25 * 1.0 + 0.25 * 0 + 0.25 * 0 = 0.5
         assert result["best_practices_score"] == 0.5
-
 
 
 class TestCheckResearchCompliance:

@@ -27,9 +27,7 @@ class TestValidatePdfCommand:
         c.showPage()
         c.save()
 
-        args = argparse.Namespace(
-            pdf_path=str(pdf_file), preview_words=100, verbose=False
-        )
+        args = argparse.Namespace(pdf_path=str(pdf_file), preview_words=100, verbose=False)
 
         # Run real validation
         with pytest.raises(SystemExit) as exc_info:
@@ -50,9 +48,7 @@ class TestValidatePdfCommand:
         c.showPage()
         c.save()
 
-        args = argparse.Namespace(
-            pdf_path=str(pdf_file), preview_words=100, verbose=True
-        )
+        args = argparse.Namespace(pdf_path=str(pdf_file), preview_words=100, verbose=True)
 
         # Run real validation - should find issues
         with pytest.raises(SystemExit) as exc_info:
@@ -167,9 +163,7 @@ class TestVerifyIntegrityCommand:
 
     def test_integrity_command_nonexistent_dir(self, tmp_path, caplog):
         """Test integrity verification with nonexistent directory."""
-        args = argparse.Namespace(
-            output_dir=str(tmp_path / "nonexistent"), verbose=False
-        )
+        args = argparse.Namespace(output_dir=str(tmp_path / "nonexistent"), verbose=False)
 
         with caplog.at_level(logging.ERROR):
             with pytest.raises(SystemExit) as exc_info:
@@ -201,6 +195,7 @@ class TestMainCli:
             ["python", "-m", "infrastructure.validation.cli", "pdf", str(pdf_file)],
             capture_output=True,
             text=True,
+            timeout=30,
         )
         assert result.returncode == 0
 
@@ -222,6 +217,7 @@ class TestMainCli:
             ],
             capture_output=True,
             text=True,
+            timeout=30,
         )
         assert result.returncode == 0
 
@@ -243,6 +239,7 @@ class TestMainCli:
             ],
             capture_output=True,
             text=True,
+            timeout=30,
         )
         # Accept either pass or fail since integrity depends on actual state
         assert result.returncode in [0, 1]
@@ -256,6 +253,7 @@ class TestMainCli:
             ["python", "-m", "infrastructure.validation.cli"],
             capture_output=True,
             text=True,
+            timeout=30,
         )
         assert result.returncode == 1
 
@@ -272,6 +270,7 @@ class TestMainCli:
             ["python", "-m", "infrastructure.validation.cli", "pdf", str(pdf_file)],
             capture_output=True,
             text=True,
+            timeout=30,
         )
         # Invalid PDF should fail
         assert result.returncode == 1
@@ -302,6 +301,7 @@ class TestCliArgumentParsing:
             ["python", "-m", "infrastructure.validation.cli", "pdf", str(pdf_file)],
             capture_output=True,
             text=True,
+            timeout=30,
         )
         # Should run successfully
         assert result.returncode == 0
@@ -333,6 +333,7 @@ class TestCliArgumentParsing:
             ],
             capture_output=True,
             text=True,
+            timeout=30,
         )
         # Should complete (exit code may vary based on validation results)
         assert result.returncode in [0, 1]

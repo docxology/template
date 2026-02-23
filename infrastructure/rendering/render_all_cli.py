@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Wrapper script for rendering all formats."""
+
 import sys
 from pathlib import Path
 

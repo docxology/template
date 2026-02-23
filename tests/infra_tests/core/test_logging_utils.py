@@ -10,6 +10,7 @@ Test Pattern:
     to set the appropriate log level for the test. The logger automatically propagates
     to root logger in test mode, allowing pytest's caplog to capture the logs.
 """
+
 from __future__ import annotations
 
 import logging
@@ -21,14 +22,20 @@ from pathlib import Path
 # Add repo root to path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
-from infrastructure.core.logging_utils import (USE_EMOJIS, TemplateFormatter,
-                                               get_log_level_from_env,
-                                               get_logger, log_function_call,
-                                               log_header, log_operation,
-                                               log_progress, log_success,
-                                               log_timing,
-                                               set_global_log_level,
-                                               setup_logger)
+from infrastructure.core.logging_utils import (
+    USE_EMOJIS,
+    TemplateFormatter,
+    get_log_level_from_env,
+    get_logger,
+    log_function_call,
+    log_header,
+    log_operation,
+    log_progress,
+    log_success,
+    log_timing,
+    set_global_log_level,
+    setup_logger,
+)
 
 
 class TestLogLevelConfiguration:

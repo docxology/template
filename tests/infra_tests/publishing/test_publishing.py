@@ -480,9 +480,7 @@ class TestEdgeCases:
 
         metadata = publishing.extract_publication_metadata([md_file])
         # Should skip template content
-        assert (
-            metadata.title == "Research Project Template"
-        )  # Default, template content skipped
+        assert metadata.title == "Research Project Template"  # Default, template content skipped
 
     def test_extract_publication_metadata_author_with_title(self, tmp_path):
         """Test metadata extraction with author containing title."""
@@ -745,9 +743,7 @@ class TestDissemination:
                     client.delete_deposition(deposition_id)
                 except Exception as e:
                     # Log but don't fail test if cleanup fails
-                    print(
-                        f"Warning: Failed to delete test deposition {deposition_id}: {e}"
-                    )
+                    print(f"Warning: Failed to delete test deposition {deposition_id}: {e}")
 
     def test_prepare_arxiv_submission(self, tmp_path):
         """Test arXiv submission preparation."""

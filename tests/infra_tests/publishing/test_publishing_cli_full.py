@@ -9,7 +9,6 @@ import sys
 from pathlib import Path
 
 
-
 class TestPublishCliCore:
     """Test core publish CLI functionality."""
 
@@ -86,6 +85,7 @@ class TestPublishCliParsing:
             text=True,
             cwd=repo_root,
             env=env,
+            timeout=30,
         )
 
         # Should exit with code 0 (help) or 2 (error but parsed correctly)
@@ -112,13 +112,12 @@ class TestPublishCliMain:
             text=True,
             cwd=repo_root,
             env=env,
+            timeout=30,
         )
 
         # Should exit with error code due to missing required arguments
         assert result.returncode != 0
-        assert (
-            "required" in result.stderr.lower() or "required" in result.stdout.lower()
-        )
+        assert "required" in result.stderr.lower() or "required" in result.stdout.lower()
 
     def test_main_with_help(self):
         """Test main with help flag."""
@@ -136,6 +135,7 @@ class TestPublishCliMain:
             text=True,
             cwd=repo_root,
             env=env,
+            timeout=30,
         )
 
         # Should show help and exit

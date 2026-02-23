@@ -81,9 +81,7 @@ class TestPromptFragmentLoader:
 
     def test_load_template(self, tmp_path):
         """Test loading a template definition."""
-        template_data = {
-            "template1": {"version": "1.0", "base_template": "Test template ${var}"}
-        }
+        template_data = {"template1": {"version": "1.0", "base_template": "Test template ${var}"}}
         templates_dir = tmp_path / "templates"
         templates_dir.mkdir()
         test_file = templates_dir / "test.json"
@@ -98,9 +96,7 @@ class TestPromptFragmentLoader:
 
     def test_get_system_prompt(self, tmp_path):
         """Test getting a system prompt by name."""
-        system_prompts = {
-            "test_prompt": {"version": "1.0", "content": "You are a test assistant."}
-        }
+        system_prompts = {"test_prompt": {"version": "1.0", "content": "You are a test assistant."}}
         fragments_dir = tmp_path / "fragments"
         fragments_dir.mkdir()
         test_file = fragments_dir / "system_prompts.json"
@@ -114,9 +110,7 @@ class TestPromptFragmentLoader:
 
     def test_get_system_prompt_dict_content(self, tmp_path):
         """Test getting system prompt when content is in dict."""
-        system_prompts = {
-            "test_prompt": {"version": "1.0", "content": "You are a test assistant."}
-        }
+        system_prompts = {"test_prompt": {"version": "1.0", "content": "You are a test assistant."}}
         fragments_dir = tmp_path / "fragments"
         fragments_dir.mkdir()
         test_file = fragments_dir / "system_prompts.json"
@@ -183,9 +177,7 @@ class TestPromptFragmentLoader:
 
     def test_load_composition(self, tmp_path):
         """Test loading a composition rule."""
-        composition_data = {
-            "retry_prompt": {"version": "1.0", "content": "Retry instructions"}
-        }
+        composition_data = {"retry_prompt": {"version": "1.0", "content": "Retry instructions"}}
         compositions_dir = tmp_path / "compositions"
         compositions_dir.mkdir()
         test_file = compositions_dir / "test.json"

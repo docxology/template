@@ -65,6 +65,7 @@ def retry_with_backoff(
         Returns:
             Callable[..., T]: Wrapped function that retries on failure.
         """
+
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> T:
             """Execute the wrapped function with exponential backoff retry.
@@ -93,15 +94,11 @@ def retry_with_backoff(
 
                     if attempt >= max_attempts:
                         # Final attempt failed, log and re-raise
-                        logger.error(
-                            f"{func.__name__} failed after {max_attempts} attempts: {e}"
-                        )
+                        logger.error(f"{func.__name__} failed after {max_attempts} attempts: {e}")
                         raise
 
                     # Calculate delay with exponential backoff
-                    delay = min(
-                        initial_delay * (exponential_base ** (attempt - 1)), max_delay
-                    )
+                    delay = min(initial_delay * (exponential_base ** (attempt - 1)), max_delay)
 
                     # Add jitter to prevent synchronized retries
                     if jitter:
@@ -241,9 +238,7 @@ class RetryableOperation:
             StopIteration: If max attempts reached
         """
         if self.attempt >= self.max_attempts:
-            logger.error(
-                f"Operation failed after {self.max_attempts} attempts: {exception}"
-            )
+            logger.error(f"Operation failed after {self.max_attempts} attempts: {exception}")
             raise exception
 
         # Calculate delay

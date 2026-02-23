@@ -22,16 +22,29 @@ from typing import Any, Dict, List, Optional
 
 # Import from split modules
 from infrastructure.publishing.citations import (  # noqa: F401
-    extract_citations_from_markdown, format_authors_apa, format_authors_mla,
-    generate_citation_apa, generate_citation_bibtex, generate_citation_mla,
-    generate_citations_markdown)
+    extract_citations_from_markdown,
+    format_authors_apa,
+    format_authors_mla,
+    generate_citation_apa,
+    generate_citation_bibtex,
+    generate_citation_mla,
+    generate_citations_markdown,
+)
 from infrastructure.publishing.metadata import (  # noqa: F401
-    calculate_complexity_score, create_academic_profile_data,
-    create_repository_metadata, extract_publication_metadata,
-    generate_publication_metrics, generate_publication_summary, validate_doi)
+    calculate_complexity_score,
+    create_academic_profile_data,
+    create_repository_metadata,
+    extract_publication_metadata,
+    generate_publication_metrics,
+    generate_publication_summary,
+    validate_doi,
+)
 from infrastructure.publishing.models import CitationStyle, PublicationMetadata  # noqa: F401
 from infrastructure.publishing.platforms import (  # noqa: F401
-    create_github_release, prepare_arxiv_submission, publish_to_zenodo)
+    create_github_release,
+    prepare_arxiv_submission,
+    publish_to_zenodo,
+)
 
 
 def calculate_file_hash(file_path: Path, algorithm: str = "sha256") -> Optional[str]:
@@ -57,9 +70,7 @@ def calculate_file_hash(file_path: Path, algorithm: str = "sha256") -> Optional[
         return None
 
 
-def create_publication_package(
-    output_dir: Path, metadata: PublicationMetadata
-) -> Dict[str, Any]:
+def create_publication_package(output_dir: Path, metadata: PublicationMetadata) -> Dict[str, Any]:
     """Create a publication package with all necessary files.
 
     Args:
@@ -101,13 +112,11 @@ def create_publication_package(
             file_hash = calculate_file_hash(file_path)
             if file_hash:
                 file_hashes.append(file_hash)
-            package_info["files_included"].append(str(file_path))
+            package_info["files_included"].append(str(file_path))  # type: ignore
 
     if file_hashes:
         combined_hash = "".join(sorted(file_hashes))
-        package_info["package_hash"] = hashlib.sha256(
-            combined_hash.encode()
-        ).hexdigest()
+        package_info["package_hash"] = hashlib.sha256(combined_hash.encode()).hexdigest()
 
     return package_info
 
@@ -126,9 +135,9 @@ def create_submission_checklist(metadata: PublicationMetadata) -> str:
 ## 📋 Required Items
 
 - [ ] **Title**: {metadata.title}
-- [ ] **Authors**: {', '.join(metadata.authors)}
+- [ ] **Authors**: {", ".join(metadata.authors)}
 - [ ] **Abstract**: {len(metadata.abstract)} characters
-- [ ] **Keywords**: {', '.join(metadata.keywords)}
+- [ ] **Keywords**: {", ".join(metadata.keywords)}
 
 ## 📄 Document Requirements
 
@@ -209,9 +218,7 @@ def generate_doi_badge(doi: str, style: str = "zenodo") -> str:
         Markdown formatted badge
     """
     if style == "zenodo":
-        return (
-            f"[![DOI](https://zenodo.org/badge/DOI/{doi}.svg)](https://doi.org/{doi})"
-        )
+        return f"[![DOI](https://zenodo.org/badge/DOI/{doi}.svg)](https://doi.org/{doi})"
     elif style == "github":
         return f"[![DOI](https://img.shields.io/badge/DOI-{doi}-blue.svg)](https://doi.org/{doi})"
     elif style == "shields":
@@ -232,7 +239,7 @@ def create_publication_announcement(metadata: PublicationMetadata) -> str:
 
     announcement = f"""# 🚀 New Publication: {metadata.title}
 
-**Authors**: {', '.join(metadata.authors)}
+**Authors**: {", ".join(metadata.authors)}
 
 ## 📝 Abstract
 
@@ -240,7 +247,7 @@ def create_publication_announcement(metadata: PublicationMetadata) -> str:
 
 ## 🔑 Keywords
 
-{', '.join(f'`{keyword}`' for keyword in metadata.keywords)}
+{", ".join(f"`{keyword}`" for keyword in metadata.keywords)}
 
 ## 📊 Key Features
 
@@ -303,9 +310,7 @@ def validate_publication_readiness(
     has_abstract = "abstract" in all_content.lower()
     has_introduction = "introduction" in all_content.lower()
     has_methodology = "methodology" in all_content.lower()
-    has_results = (
-        "results" in all_content.lower() or "experimental" in all_content.lower()
-    )
+    has_results = "results" in all_content.lower() or "experimental" in all_content.lower()
     has_conclusion = "conclusion" in all_content.lower()
 
     score = 0
@@ -324,31 +329,27 @@ def validate_publication_readiness(
 
     if score < 80:
         readiness["ready_for_publication"] = False
-        readiness["missing_elements"].append("Document structure incomplete")
+        readiness["missing_elements"].append("Document structure incomplete")  # type: ignore
 
     # Check PDF generation
     if not pdf_files:
         readiness["ready_for_publication"] = False
-        readiness["missing_elements"].append("No PDF files generated")
+        readiness["missing_elements"].append("No PDF files generated")  # type: ignore
 
     # Check for citations
     citations = extract_citations_from_markdown(markdown_files)
     if not citations:
-        readiness["recommendations"].append("Consider adding citations to related work")
+        readiness["recommendations"].append("Consider adding citations to related work")  # type: ignore
 
     # Check for figures
     figure_count = len(re.findall(r"\\includegraphics", all_content))
     if figure_count == 0:
-        readiness["recommendations"].append(
-            "Consider adding figures to illustrate key concepts"
-        )
+        readiness["recommendations"].append("Consider adding figures to illustrate key concepts")  # type: ignore
 
     # Final assessment
     if readiness["ready_for_publication"]:
-        readiness["recommendations"].append("Project appears ready for publication!")
+        readiness["recommendations"].append("Project appears ready for publication!")  # type: ignore
     else:
-        readiness["recommendations"].append(
-            "Address missing elements before publication"
-        )
+        readiness["recommendations"].append("Address missing elements before publication")  # type: ignore
 
     return readiness

@@ -9,7 +9,6 @@ import sys
 from pathlib import Path
 
 
-
 class TestValidateMarkdownCliCore:
     """Test core validate markdown CLI functionality."""
 
@@ -73,6 +72,7 @@ class TestMarkdownCliMain:
             capture_output=True,
             text=True,
             cwd=Path(__file__).parent.parent.parent.parent,
+            timeout=30,
         )
 
         # May succeed or fail depending on validation

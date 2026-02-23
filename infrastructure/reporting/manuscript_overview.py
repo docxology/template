@@ -24,9 +24,7 @@ if TYPE_CHECKING:
 logger = get_logger(__name__)
 
 
-def extract_pdf_pages_as_images(
-    pdf_path: Path, dpi: int = 300
-) -> List["PIL.Image.Image"]:
+def extract_pdf_pages_as_images(pdf_path: Path, dpi: int = 300) -> List["PIL.Image.Image"]:
     """Extract each PDF page as a PIL Image.
 
     Uses pypdf to read PDF pages and renders them as images.
@@ -67,9 +65,7 @@ def extract_pdf_pages_as_images(
     try:
         images = _render_pages_with_reportlab(reader, dpi)
     except Exception as e:
-        logger.warning(
-            f"Advanced rendering failed, falling back to simple rendering: {e}"
-        )
+        logger.warning(f"Advanced rendering failed, falling back to simple rendering: {e}")
         try:
             images = _render_pages_simple(reader, dpi)
         except Exception as e2:
@@ -79,9 +75,7 @@ def extract_pdf_pages_as_images(
     return images
 
 
-def _render_pages_with_reportlab(
-    reader: "PdfReader", dpi: int
-) -> List["PIL.Image.Image"]:
+def _render_pages_with_reportlab(reader: "PdfReader", dpi: int) -> List["PIL.Image.Image"]:
     """Render PDF pages using reportlab for high-quality output."""
     try:
         import os
@@ -129,9 +123,7 @@ def _render_pages_with_reportlab(
             try:
                 from pdf2image import convert_from_path
 
-                page_images = convert_from_path(
-                    temp_pdf_path, dpi=dpi, first_page=1, last_page=1
-                )
+                page_images = convert_from_path(temp_pdf_path, dpi=dpi, first_page=1, last_page=1)
                 if page_images:
                     images.append(page_images[0])
                 else:
@@ -147,7 +139,7 @@ def _render_pages_with_reportlab(
                 try:
                     font = ImageFont.truetype("Helvetica", 12)
                 except Exception:
-                    font = ImageFont.load_default()
+                    font = ImageFont.load_default()  # type: ignore
 
                 y_pos = 50
                 for line in lines[:30]:
@@ -190,7 +182,7 @@ def _render_pages_simple(reader: "PdfReader", dpi: int) -> List["PIL.Image.Image
         try:
             font = ImageFont.truetype("Helvetica", 12)
         except Exception:
-            font = ImageFont.load_default()
+            font = ImageFont.load_default()  # type: ignore
 
         # Extract and render text
         try:
@@ -208,7 +200,7 @@ def _render_pages_simple(reader: "PdfReader", dpi: int) -> List["PIL.Image.Image
                         break
 
         except Exception as e:
-            logger.warning(f"Failed to extract text from page {i+1}: {e}")
+            logger.warning(f"Failed to extract text from page {i + 1}: {e}")
 
         # Add page number
         draw.text((50, height - 50), f"Page {i + 1}", fill="black", font=font)
@@ -298,7 +290,7 @@ def create_page_grid(
     try:
         font = ImageFont.truetype("Helvetica", 10)
     except Exception:
-        font = ImageFont.load_default()
+        font = ImageFont.load_default()  # type: ignore
 
     # Place images in grid
     for i, img in enumerate(resized_images):
@@ -326,7 +318,7 @@ def create_page_grid(
     try:
         title_font = ImageFont.truetype("Helvetica-Bold", 16)
     except Exception:
-        title_font = ImageFont.load_default()
+        title_font = ImageFont.load_default()  # type: ignore
 
     draw.text((padding, padding // 2), title, fill="black", font=title_font)
 
@@ -392,7 +384,7 @@ def generate_manuscript_overview(
     except Exception as e:
         logger.warning(f"Failed to save PDF overview: {e}")
         # Don't fail the whole operation if PDF save fails
-        pdf_output_path = None
+        pdf_output_path = None  # type: ignore
 
     result = {png_path.name: png_path}
     if pdf_output_path and pdf_output_path.exists():
@@ -467,22 +459,10 @@ def generate_all_manuscript_overviews(
         # Try multiple locations and filename patterns for the manuscript PDF
         pdf_paths = [
             repo_root / "output" / project_name / f"{project_name}_combined.pdf",
-            repo_root
-            / "output"
-            / project_name
-            / "project_combined.pdf",  # legacy naming
-            repo_root
-            / "output"
-            / project_name
-            / "pdf"
-            / f"{project_name}_combined.pdf",
+            repo_root / "output" / project_name / "project_combined.pdf",  # legacy naming
+            repo_root / "output" / project_name / "pdf" / f"{project_name}_combined.pdf",
             repo_root / "output" / project_name / "pdf" / "project_combined.pdf",
-            repo_root
-            / "projects"
-            / project_name
-            / "output"
-            / "pdf"
-            / "project_combined.pdf",
+            repo_root / "projects" / project_name / "output" / "pdf" / "project_combined.pdf",
         ]
 
         pdf_path = None
@@ -499,17 +479,13 @@ def generate_all_manuscript_overviews(
 
         try:
             logger.info(f"Generating manuscript overview for {project_name}")
-            overview_files = generate_manuscript_overview(
-                pdf_path, output_dir, project_name
-            )
+            overview_files = generate_manuscript_overview(pdf_path, output_dir, project_name)
             all_files.update(overview_files)
             logger.info(
                 f"Generated overview files for {project_name}: {list(overview_files.keys())}"
             )
         except Exception as e:
-            logger.warning(
-                f"Failed to generate manuscript overview for {project_name}: {e}"
-            )
+            logger.warning(f"Failed to generate manuscript overview for {project_name}: {e}")
             continue
 
     return all_files

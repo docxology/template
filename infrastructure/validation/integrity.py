@@ -29,7 +29,7 @@ logger = get_logger(__name__)
 class IntegrityReport:
     """Container for integrity verification results."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.file_integrity: Dict[str, bool] = {}
         self.cross_reference_integrity: Dict[str, bool] = {}
         self.data_consistency: Dict[str, bool] = {}
@@ -210,7 +210,7 @@ def verify_data_consistency(data_files: List[Path]) -> Dict[str, bool]:
             elif file_extension == ".pkl":
                 # Pickle validation
                 with open(data_file, "rb") as f:
-                    pickle.load(f)
+                    pickle.load(f)  # nosec B301 — validating project's own output files
 
         except Exception:
             consistency["data_integrity"] = False
@@ -261,13 +261,9 @@ def verify_academic_standards(markdown_files: List[Path]) -> Dict[str, bool]:
         re.search(r"\\section\{.*introduction|#\s*introduction", content_lower)
     )
     standards["has_methodology"] = bool(
-        re.search(
-            r"\\section\{.*methodology|#\s*methodology|#\s*methods", content_lower
-        )
+        re.search(r"\\section\{.*methodology|#\s*methodology|#\s*methods", content_lower)
     )
-    standards["has_results"] = bool(
-        re.search(r"\\section\{.*results?|#\s*results?", content_lower)
-    )
+    standards["has_results"] = bool(re.search(r"\\section\{.*results?|#\s*results?", content_lower))
     standards["has_discussion"] = bool(
         re.search(r"\\section\{.*discussion|#\s*discussion", content_lower)
     )
@@ -275,9 +271,7 @@ def verify_academic_standards(markdown_files: List[Path]) -> Dict[str, bool]:
         re.search(r"\\section\{.*conclusion|#\s*conclusion", content_lower)
     )
     standards["has_references"] = bool(
-        re.search(
-            r"\\section\{.*references?|#\s*references?|\\bibliography", content_lower
-        )
+        re.search(r"\\section\{.*references?|#\s*references?|\\bibliography", content_lower)
     )
 
     # Check for citations
@@ -288,9 +282,7 @@ def verify_academic_standards(markdown_files: List[Path]) -> Dict[str, bool]:
         r"\(\d+\)",
     ]
 
-    has_citations = any(
-        re.search(pattern, combined_content) for pattern in citation_patterns
-    )
+    has_citations = any(re.search(pattern, combined_content) for pattern in citation_patterns)
     if not has_citations:
         standards["proper_citations"] = False
 
@@ -335,9 +327,7 @@ def verify_output_integrity(
         + list(output_dir.rglob("*.npz"))
         + list(output_dir.rglob("*.json"))
     )
-    markdown_files = list(
-        output_dir.rglob("*.md")
-    )  # Look for markdown files in output directory
+    markdown_files = list(output_dir.rglob("*.md"))  # Look for markdown files in output directory
 
     # Verify file integrity
     report.file_integrity = verify_file_integrity(pdf_files + data_files)
@@ -370,9 +360,7 @@ def verify_output_integrity(
         academic_standards_files = list(manuscript_dir.rglob("*.md"))
         # Exclude documentation files (AGENTS.md, README.md) from academic standards check
         academic_standards_files = [
-            f
-            for f in academic_standards_files
-            if f.name not in ("AGENTS.md", "README.md")
+            f for f in academic_standards_files if f.name not in ("AGENTS.md", "README.md")
         ]
 
     report.academic_standards = verify_academic_standards(academic_standards_files)
@@ -380,17 +368,13 @@ def verify_output_integrity(
     # Check for any academic standards failures - only include standards that are actually False
     missing_standards = [k for k, v in report.academic_standards.items() if not v]
     if missing_standards:
-        report.warnings.append(
-            f"Missing academic standards: {', '.join(missing_standards)}"
-        )
+        report.warnings.append(f"Missing academic standards: {', '.join(missing_standards)}")
 
     # Generate recommendations
     if not report.overall_integrity:
         report.recommendations.append("Fix integrity issues before proceeding")
         report.recommendations.append("Check file permissions and paths")
-        report.recommendations.append(
-            "Verify all cross-references are properly defined"
-        )
+        report.recommendations.append("Verify all cross-references are properly defined")
 
     if report.warnings:
         report.recommendations.append("Consider addressing academic standard warnings")
@@ -483,12 +467,17 @@ def validate_build_artifacts(
     Returns:
         Dictionary with validation results
     """
-    validation = {
+    validation: Dict[str, Any] = {
         "expected_files": [],
         "missing_files": [],
         "unexpected_files": [],
         "validation_passed": True,
     }
+
+    # Typed accessors for list fields
+    expected_list: List[str] = validation["expected_files"]
+    missing_list: List[str] = validation["missing_files"]
+    unexpected_list: List[str] = validation["unexpected_files"]
 
     # Expected output structure (use provided expected_files or default)
     if expected_files is None:
@@ -544,17 +533,17 @@ def validate_build_artifacts(
         if not category_dir.exists():
             # Missing entire directory
             for expected_file in files:
-                validation["missing_files"].append(expected_file)
+                missing_list.append(expected_file)
                 validation["validation_passed"] = False
         else:
             # Directory exists, check for missing files
             for expected_file in files:
                 expected_path = category_dir / expected_file
                 if not expected_path.exists():
-                    validation["missing_files"].append(expected_file)
+                    missing_list.append(expected_file)
                     validation["validation_passed"] = False
                 else:
-                    validation["expected_files"].append(expected_file)
+                    expected_list.append(expected_file)
 
     # Check for unexpected files (basic check)
     for item in output_dir.rglob("*"):
@@ -565,7 +554,7 @@ def validate_build_artifacts(
                 for cat, files in expected_structure.items()
             )
             if not is_expected and item.name != "project_combined.html":
-                validation["unexpected_files"].append(str(rel_path))
+                unexpected_list.append(str(rel_path))
 
     return validation
 
@@ -579,11 +568,17 @@ def check_file_permissions(output_dir: Path) -> Dict[str, Any]:
     Returns:
         Dictionary with permission check results
     """
-    permissions = {"readable": True, "writable": True, "executable": True, "issues": []}
+    permissions: Dict[str, Any] = {
+        "readable": True,
+        "writable": True,
+        "executable": True,
+        "issues": [],
+    }
+    issues_list: List[str] = permissions["issues"]
 
     if not output_dir.exists():
         permissions["readable"] = False
-        permissions["issues"].append(f"Output directory does not exist: {output_dir}")
+        issues_list.append(f"Output directory does not exist: {output_dir}")
         return permissions
 
     try:
@@ -600,7 +595,7 @@ def check_file_permissions(output_dir: Path) -> Dict[str, Any]:
 
     except Exception as e:
         permissions["writable"] = False
-        permissions["issues"].append(f"Permission test failed: {e}")
+        issues_list.append(f"Permission test failed: {e}")
 
     return permissions
 
@@ -614,7 +609,7 @@ def verify_output_completeness(output_dir: Path) -> Dict[str, Any]:
     Returns:
         Dictionary with completeness verification results
     """
-    completeness = {
+    completeness: Dict[str, Any] = {
         "pdf_complete": True,
         "figures_complete": True,
         "data_complete": True,
@@ -623,6 +618,10 @@ def verify_output_completeness(output_dir: Path) -> Dict[str, Any]:
         "missing_outputs": [],
         "incomplete_outputs": [],
     }
+
+    # Typed accessors for list fields
+    missing_outputs: List[str] = completeness["missing_outputs"]
+    incomplete_outputs: List[str] = completeness["incomplete_outputs"]
 
     # Check PDF completeness
     pdf_dir = output_dir / "pdf"
@@ -643,16 +642,16 @@ def verify_output_completeness(output_dir: Path) -> Dict[str, Any]:
             pdf_path = pdf_dir / pdf_file
             if not pdf_path.exists():
                 completeness["pdf_complete"] = False
-                completeness["missing_outputs"].append(f"PDF: {pdf_file}")
+                missing_outputs.append(f"PDF: {pdf_file}")
             elif pdf_path.stat().st_size == 0:
                 completeness["pdf_complete"] = False
-                completeness["incomplete_outputs"].append(f"Empty PDF: {pdf_file}")
+                incomplete_outputs.append(f"Empty PDF: {pdf_file}")
 
     # Check figures completeness
     figures_dir = output_dir / "figures"
     if not figures_dir.exists():
         completeness["figures_complete"] = False
-        completeness["missing_outputs"].append("Figures directory")
+        missing_outputs.append("Figures directory")
     elif figures_dir.exists():
         expected_figures = [
             "ablation_study.png",
@@ -671,15 +670,15 @@ def verify_output_completeness(output_dir: Path) -> Dict[str, Any]:
             fig_path = figures_dir / fig_file
             if not fig_path.exists():
                 completeness["figures_complete"] = False
-                completeness["missing_outputs"].append(f"Figure: {fig_file}")
+                missing_outputs.append(f"Figure: {fig_file}")
             elif fig_path.stat().st_size < 1000:  # Very small file
-                completeness["incomplete_outputs"].append(f"Small figure: {fig_file}")
+                incomplete_outputs.append(f"Small figure: {fig_file}")
 
     # Check data completeness
     data_dir = output_dir / "data"
     if not data_dir.exists():
         completeness["data_complete"] = False
-        completeness["missing_outputs"].append("Data directory")
+        missing_outputs.append("Data directory")
     elif data_dir.exists():
         expected_data = [
             "convergence_data.npz",
@@ -693,16 +692,16 @@ def verify_output_completeness(output_dir: Path) -> Dict[str, Any]:
             data_path = data_dir / data_file
             if not data_path.exists():
                 completeness["data_complete"] = False
-                completeness["missing_outputs"].append(f"Data: {data_file}")
+                missing_outputs.append(f"Data: {data_file}")
             elif data_path.stat().st_size == 0:
                 completeness["data_complete"] = False
-                completeness["incomplete_outputs"].append(f"Empty data: {data_file}")
+                incomplete_outputs.append(f"Empty data: {data_file}")
 
     # Check LaTeX completeness
     tex_dir = output_dir / "tex"
     if not tex_dir.exists():
         completeness["latex_complete"] = False
-        completeness["missing_outputs"].append("LaTeX directory")
+        missing_outputs.append("LaTeX directory")
     elif tex_dir.exists():
         expected_tex = [
             "01_abstract.tex",
@@ -720,19 +719,19 @@ def verify_output_completeness(output_dir: Path) -> Dict[str, Any]:
             tex_path = tex_dir / tex_file
             if not tex_path.exists():
                 completeness["latex_complete"] = False
-                completeness["missing_outputs"].append(f"LaTeX: {tex_file}")
+                missing_outputs.append(f"LaTeX: {tex_file}")
             elif tex_path.stat().st_size == 0:
                 completeness["latex_complete"] = False
-                completeness["incomplete_outputs"].append(f"Empty LaTeX: {tex_file}")
+                incomplete_outputs.append(f"Empty LaTeX: {tex_file}")
 
     # Check HTML completeness
     html_file = output_dir / "project_combined.html"
     if not html_file.exists():
         completeness["html_complete"] = False
-        completeness["missing_outputs"].append("HTML: project_combined.html")
+        missing_outputs.append("HTML: project_combined.html")
     elif html_file.stat().st_size == 0:
         completeness["html_complete"] = False
-        completeness["incomplete_outputs"].append("Empty HTML: project_combined.html")
+        incomplete_outputs.append("Empty HTML: project_combined.html")
 
     return completeness
 
@@ -746,13 +745,17 @@ def create_integrity_manifest(output_dir: Path) -> Dict[str, Any]:
     Returns:
         Dictionary with comprehensive integrity manifest
     """
-    manifest = {
+    manifest: Dict[str, Any] = {
         "timestamp": os.path.getctime(output_dir) if output_dir.exists() else None,
         "file_count": 0,
         "total_size": 0,
         "file_hashes": {},
         "directory_structure": {},
     }
+
+    # Typed accessors for mutable fields
+    file_hashes: Dict[str, Any] = manifest["file_hashes"]
+    dir_structure: Dict[str, Any] = manifest["directory_structure"]
 
     if not output_dir.exists():
         return manifest
@@ -764,24 +767,22 @@ def create_integrity_manifest(output_dir: Path) -> Dict[str, Any]:
             file_hash = calculate_file_hash(item)
             file_size = item.stat().st_size
 
-            manifest["file_hashes"][rel_path] = {
+            file_hashes[rel_path] = {
                 "hash": file_hash,
                 "size": file_size,
                 "modified": item.stat().st_mtime,
             }
 
-            manifest["file_count"] += 1
-            manifest["total_size"] += file_size
+            manifest["file_count"] = int(manifest["file_count"]) + 1
+            manifest["total_size"] = int(manifest["total_size"]) + file_size
 
     # Create directory structure
     for dir_path in output_dir.rglob("*"):
         if dir_path.is_dir():
             rel_path = str(dir_path.relative_to(output_dir))
-            manifest["directory_structure"][rel_path] = {
+            dir_structure[rel_path] = {
                 "file_count": len(list(dir_path.glob("*"))),
-                "total_size": sum(
-                    f.stat().st_size for f in dir_path.glob("*") if f.is_file()
-                ),
+                "total_size": sum(f.stat().st_size for f in dir_path.glob("*") if f.is_file()),
             }
 
     return manifest
@@ -813,7 +814,8 @@ def load_integrity_manifest(manifest_path: Path) -> Optional[Dict[str, Any]]:
 
     try:
         with open(manifest_path, "r") as f:
-            return json.load(f)
+            result: Optional[Dict[str, Any]] = json.load(f)
+            return result
     except Exception:
         return None
 
@@ -831,10 +833,8 @@ def verify_integrity_against_manifest(
         Dictionary with integrity verification results
     """
     verification = {
-        "file_count_changed": current_manifest["file_count"]
-        != saved_manifest["file_count"],
-        "total_size_changed": current_manifest["total_size"]
-        != saved_manifest["total_size"],
+        "file_count_changed": current_manifest["file_count"] != saved_manifest["file_count"],
+        "total_size_changed": current_manifest["total_size"] != saved_manifest["total_size"],
         "files_changed": 0,
         "files_added": 0,
         "files_removed": 0,

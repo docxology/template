@@ -16,7 +16,7 @@ import time
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import (Any, Dict, Iterator, Optional, Tuple)
+from typing import Any, Dict, Iterator, Optional, Tuple
 
 import requests
 
@@ -138,9 +138,7 @@ class LLMClient:
             try:
                 loader = get_default_loader()
                 # Try to get manuscript review system prompt
-                self.config.system_prompt = loader.get_system_prompt(
-                    "manuscript_review"
-                )
+                self.config.system_prompt = loader.get_system_prompt("manuscript_review")
             except Exception as e:
                 logger.debug(f"Could not load system prompt from prompt system: {e}")
 
@@ -203,9 +201,7 @@ class LLMClient:
                     "System prompt re-injected after context reset",
                     extra={
                         "system_prompt_length": (
-                            len(self.config.system_prompt)
-                            if self.config.system_prompt
-                            else 0
+                            len(self.config.system_prompt) if self.config.system_prompt else 0
                         )
                     },
                 )
@@ -248,9 +244,7 @@ class LLMClient:
                     "response_tokens_est": len(response_text) // 4,
                     "generation_time_seconds": generation_time,
                     "response_preview": (
-                        response_text[:150] + "..."
-                        if len(response_text) > 150
-                        else response_text
+                        response_text[:150] + "..." if len(response_text) > 150 else response_text
                     ),
                 },
             )
@@ -341,9 +335,7 @@ class LLMClient:
         # Create temporary context for raw query
         messages = [{"role": "user", "content": prompt}]
 
-        response_text = self._generate_response_direct(
-            model_name, messages, options=options
-        )
+        response_text = self._generate_response_direct(model_name, messages, options=options)
 
         generation_time = time_module.time() - start_time
 
@@ -429,9 +421,7 @@ class LLMClient:
             "Provide a concise, brief response (less than 150 words). "
             "Be direct and to the point.\n\n"
         )
-        response = self.query(
-            instruction + prompt, model=model_name, options=short_options
-        )
+        response = self.query(instruction + prompt, model=model_name, options=short_options)
 
         generation_time = time_module.time() - start_time
         logger.info(
@@ -490,9 +480,7 @@ class LLMClient:
             "Provide a comprehensive, detailed response with examples and "
             "thorough explanation. Use multiple paragraphs if needed.\n\n"
         )
-        response = self.query(
-            instruction + prompt, model=model_name, options=long_options
-        )
+        response = self.query(instruction + prompt, model=model_name, options=long_options)
 
         generation_time = time_module.time() - start_time
         logger.info(
@@ -574,7 +562,9 @@ class LLMClient:
 
         schema_instruction = ""
         if schema:
-            schema_instruction = f"\n\nReturn valid JSON matching this schema:\n{json.dumps(schema, indent=2)}"
+            schema_instruction = (
+                f"\n\nReturn valid JSON matching this schema:\n{json.dumps(schema, indent=2)}"
+            )
 
         instruction = (
             "Return your response as valid JSON only, no markdown or extra text. "
@@ -582,13 +572,9 @@ class LLMClient:
         )
 
         # Use raw generation for structured to bypass context issues with JSON
-        messages = self.context.get_messages() + [
-            {"role": "user", "content": instruction + prompt}
-        ]
+        messages = self.context.get_messages() + [{"role": "user", "content": instruction + prompt}]
 
-        response_text = self._generate_response_direct(
-            model_name, messages, options=struct_options
-        )
+        response_text = self._generate_response_direct(model_name, messages, options=struct_options)
 
         generation_time = time_module.time() - start_time
 
@@ -613,13 +599,11 @@ class LLMClient:
                 "Structured query completed (JSON parsed successfully)",
                 extra={
                     "model": model_name,
-                    "response_keys": (
-                        list(parsed.keys()) if isinstance(parsed, dict) else None
-                    ),
+                    "response_keys": (list(parsed.keys()) if isinstance(parsed, dict) else None),
                     "generation_time_seconds": generation_time,
                 },
             )
-            return parsed
+            return parsed  # type: ignore
         except json.JSONDecodeError:
             # Try to extract JSON if wrapped
             if "{" in response_text and "}" in response_text:
@@ -635,7 +619,7 @@ class LLMClient:
                             "original_length": len(response_text),
                         },
                     )
-                    return parsed
+                    return parsed  # type: ignore
                 except json.JSONDecodeError as e:
                     logger.error(
                         "Failed to parse structured response as JSON",
@@ -661,9 +645,7 @@ class LLMClient:
                 context={"response": response_text[:200]},
             )
 
-    def _generate_response(
-        self, model: str, options: Optional[GenerationOptions] = None
-    ) -> str:
+    def _generate_response(self, model: str, options: Optional[GenerationOptions] = None) -> str:
         """Generate response from Ollama API using context.
 
         Args:
@@ -673,11 +655,9 @@ class LLMClient:
         Returns:
             Generated text
         """
-        return self._generate_response_direct(
-            model, self.context.get_messages(), options=options
-        )
+        return self._generate_response_direct(model, self.context.get_messages(), options=options)
 
-    def _generate_response_direct(
+    def _generate_response_direct(  # type: ignore
         self,
         model: str,
         messages: list[Dict[str, Any]],
@@ -722,7 +702,7 @@ class LLMClient:
                 if attempt > 0:
                     wait_time = min((attempt + 1) * 1.0, 5.0)  # Max 5s wait
                     logger.debug(
-                        f"Retrying request (attempt {attempt + 1}/{retries + 1}) after {wait_time}s..."
+                        f"Retrying request (attempt {attempt + 1}/{retries + 1}) after {wait_time}s..."  # noqa: E501
                     )
                     time.sleep(wait_time)
 
@@ -758,9 +738,7 @@ class LLMClient:
                     )
                     continue
                 else:
-                    logger.error(
-                        f"Request timeout after {retries + 1} attempts: {last_error}"
-                    )
+                    logger.error(f"Request timeout after {retries + 1} attempts: {last_error}")
                     raise LLMConnectionError(
                         f"Ollama request timeout ({model}): {last_error}",
                         context={
@@ -778,9 +756,7 @@ class LLMClient:
                     )
                     continue
                 else:
-                    logger.error(
-                        f"Connection error after {retries + 1} attempts: {last_error}"
-                    )
+                    logger.error(f"Connection error after {retries + 1} attempts: {last_error}")
                     raise LLMConnectionError(
                         f"Failed to connect to Ollama ({model}): {last_error}",
                         context={"url": url, "model": model},
@@ -788,16 +764,14 @@ class LLMClient:
 
             except requests.exceptions.HTTPError as e:
                 # Don't retry HTTP errors (4xx, 5xx) - they're not transient
-                error_msg = f"HTTP {response.status_code}: {response.text[:200] if 'response' in locals() else str(e)}"
+                error_msg = f"HTTP {response.status_code}: {response.text[:200] if 'response' in locals() else str(e)}"  # noqa: E501
                 logger.error(f"HTTP error from Ollama ({model}): {error_msg}")
                 raise LLMConnectionError(
                     f"Ollama HTTP error ({model}): {error_msg}",
                     context={
                         "url": url,
                         "model": model,
-                        "status_code": (
-                            response.status_code if "response" in locals() else None
-                        ),
+                        "status_code": (response.status_code if "response" in locals() else None),
                     },
                 )
 
@@ -841,8 +815,7 @@ class LLMClient:
         """
         import time as time_module
 
-        from infrastructure.llm.core.response_saver import (
-            ResponseMetadata, save_streaming_response)
+        from infrastructure.llm.core.response_saver import ResponseMetadata, save_streaming_response
 
         start_time = time_module.time()
         model_name = model or self.config.default_model
@@ -891,7 +864,7 @@ class LLMClient:
                 if attempt > 0:
                     wait_time = min((attempt + 1) * 1.0, 5.0)
                     logger.debug(
-                        f"Retrying streaming request (attempt {attempt + 1}/{retries + 1}) after {wait_time}s..."
+                        f"Retrying streaming request (attempt {attempt + 1}/{retries + 1}) after {wait_time}s..."  # noqa: E501
                     )
                     time.sleep(wait_time)
 
@@ -903,8 +876,8 @@ class LLMClient:
                     for line in r.iter_lines():
                         current_time = time_module.time()
 
-                        # Note: Early warning is handled by StreamHeartbeatMonitor in review/translation scripts
-                        # This avoids duplicate warnings. Stall detection after first token is handled below.
+                        # Note: Early warning is handled by StreamHeartbeatMonitor in review/translation scripts  # noqa: E501
+                        # This avoids duplicate warnings. Stall detection after first token is handled below.  # noqa: E501
 
                         if line:
                             try:
@@ -918,11 +891,9 @@ class LLMClient:
                                     # Track timing
                                     if first_chunk_time is None:
                                         first_chunk_time = current_time
-                                        metrics.first_chunk_time = (
-                                            current_time - start_time
-                                        )
+                                        metrics.first_chunk_time = current_time - start_time
                                         logger.debug(
-                                            f"First chunk received after {metrics.first_chunk_time:.2f}s",
+                                            f"First chunk received after {metrics.first_chunk_time:.2f}s",  # noqa: E501
                                             extra={"chunk_count": chunk_count},
                                         )
 
@@ -934,17 +905,14 @@ class LLMClient:
                                         and (current_time - last_chunk_time)
                                         > self.config.stall_threshold
                                     ):
-                                        time_since_last_chunk = (
-                                            current_time - last_chunk_time
-                                        )
+                                        time_since_last_chunk = current_time - last_chunk_time
                                         logger.error(
-                                            f"🚨 Streaming stalled: no tokens received for {time_since_last_chunk:.1f}s",
+                                            f"🚨 Streaming stalled: no tokens received for {time_since_last_chunk:.1f}s",  # noqa: E501
                                             extra={
                                                 "model": model_name,
                                                 "time_since_last_chunk": time_since_last_chunk,
                                                 "stall_threshold": self.config.stall_threshold,
-                                                "total_elapsed": current_time
-                                                - start_time,
+                                                "total_elapsed": current_time - start_time,
                                                 "timeout_remaining": max(
                                                     0,
                                                     self.config.timeout
@@ -969,21 +937,19 @@ class LLMClient:
 
                                     yield chunk
 
-                                    # Log timeout remaining when approaching limit (earlier warnings)
+                                    # Log timeout remaining when approaching limit (earlier warnings)  # noqa: E501
                                     elapsed = current_time - start_time
-                                    if (
-                                        elapsed > self.config.timeout * 0.3
-                                    ):  # After 30% of timeout
+                                    if elapsed > self.config.timeout * 0.3:  # After 30% of timeout
                                         remaining = self.config.timeout - elapsed
                                         if remaining > 0:
                                             logger.info(
-                                                f"Streaming timeout warning: {remaining:.1f}s remaining",
+                                                f"Streaming timeout warning: {remaining:.1f}s remaining",  # noqa: E501
                                                 extra={
                                                     "model": model_name,
                                                     "elapsed": elapsed,
                                                     "timeout": self.config.timeout,
                                                     "remaining": remaining,
-                                                    "progress": f"{chunk_count} chunks, {sum(len(c) for c in full_response)} chars",
+                                                    "progress": f"{chunk_count} chunks, {sum(len(c) for c in full_response)} chars",  # noqa: E501
                                                 },
                                             )
 
@@ -1034,14 +1000,10 @@ class LLMClient:
                                 f"Saved partial response ({chunk_count} chunks) before retry"
                             )
                         except Exception as save_error:
-                            logger.warning(
-                                f"Failed to save partial response: {save_error}"
-                            )
+                            logger.warning(f"Failed to save partial response: {save_error}")
                     continue
                 else:
-                    logger.error(
-                        f"Streaming timeout after {retries + 1} attempts: {last_error}"
-                    )
+                    logger.error(f"Streaming timeout after {retries + 1} attempts: {last_error}")
                     # Save partial response on final failure
                     if full_response and save_response:
                         try:
@@ -1069,9 +1031,7 @@ class LLMClient:
                                 f"Saved partial response ({chunk_count} chunks) after timeout"
                             )
                         except Exception as save_error:
-                            logger.warning(
-                                f"Failed to save partial response: {save_error}"
-                            )
+                            logger.warning(f"Failed to save partial response: {save_error}")
                     raise LLMConnectionError(
                         f"Streaming timeout ({model_name}): {last_error}",
                         context={
@@ -1088,7 +1048,7 @@ class LLMClient:
 
                 if attempt < retries:
                     logger.debug(
-                        f"Streaming connection error (attempt {attempt + 1}/{retries + 1}), will retry..."
+                        f"Streaming connection error (attempt {attempt + 1}/{retries + 1}), will retry..."  # noqa: E501
                     )
                     # Save partial response before retry
                     if full_response and save_response and not partial_saved:
@@ -1116,9 +1076,7 @@ class LLMClient:
                                 f"Saved partial response ({chunk_count} chunks) before retry"
                             )
                         except Exception as save_error:
-                            logger.warning(
-                                f"Failed to save partial response: {save_error}"
-                            )
+                            logger.warning(f"Failed to save partial response: {save_error}")
                     continue
                 else:
                     logger.error(
@@ -1148,12 +1106,10 @@ class LLMClient:
                             save_streaming_response(partial_text, save_path, metadata)
                             partial_saved = True
                             logger.info(
-                                f"Saved partial response ({chunk_count} chunks) after connection error"
+                                f"Saved partial response ({chunk_count} chunks) after connection error"  # noqa: E501
                             )
                         except Exception as save_error:
-                            logger.warning(
-                                f"Failed to save partial response: {save_error}"
-                            )
+                            logger.warning(f"Failed to save partial response: {save_error}")
                     raise LLMConnectionError(
                         f"Streaming connection failed ({model_name}): {last_error}",
                         context={
@@ -1187,12 +1143,8 @@ class LLMClient:
         metrics.total_chars = total_chars
         metrics.total_tokens_est = total_tokens_est
         metrics.streaming_time_seconds = streaming_time
-        metrics.chunks_per_second = (
-            chunk_count / streaming_time if streaming_time > 0 else 0.0
-        )
-        metrics.bytes_per_second = (
-            total_chars / streaming_time if streaming_time > 0 else 0.0
-        )
+        metrics.chunks_per_second = chunk_count / streaming_time if streaming_time > 0 else 0.0
+        metrics.bytes_per_second = total_chars / streaming_time if streaming_time > 0 else 0.0
         metrics.error_count = error_count
         metrics.partial_response_saved = partial_saved
         if last_chunk_time:
@@ -1359,9 +1311,7 @@ class LLMClient:
         is_available, _ = self.check_connection_detailed(timeout=timeout)
         return is_available
 
-    def check_connection_detailed(
-        self, timeout: float = 2.0
-    ) -> Tuple[bool, Optional[str]]:
+    def check_connection_detailed(self, timeout: float = 2.0) -> Tuple[bool, Optional[str]]:
         """Check if Ollama server is available with detailed status.
 
         Args:
@@ -1380,9 +1330,7 @@ class LLMClient:
         try:
             response = requests.get(f"{self.config.base_url}/api/tags", timeout=timeout)
             if response.status_code == 200:
-                logger.debug(
-                    f"Ollama connection check successful at {self.config.base_url}"
-                )
+                logger.debug(f"Ollama connection check successful at {self.config.base_url}")
                 return (True, None)
             else:
                 error_msg = f"HTTP {response.status_code}"

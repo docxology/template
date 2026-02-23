@@ -1,6 +1,5 @@
 """Tests for infrastructure.publishing.cli module."""
 
-
 from infrastructure.publishing import cli
 
 

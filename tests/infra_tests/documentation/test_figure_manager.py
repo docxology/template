@@ -3,8 +3,7 @@
 import json
 
 
-from infrastructure.documentation.figure_manager import (FigureManager,
-                                                         FigureMetadata)
+from infrastructure.documentation.figure_manager import FigureManager, FigureMetadata
 
 
 class TestFigureMetadata:
@@ -84,9 +83,7 @@ class TestFigureManager:
     def test_get_figure(self, tmp_path):
         """Test getting figure by label."""
         manager = FigureManager(registry_file=str(tmp_path / "registry.json"))
-        fig_meta = manager.register_figure(
-            filename="test.png", caption="Test", label="fig:test"
-        )
+        fig_meta = manager.register_figure(filename="test.png", caption="Test", label="fig:test")
         retrieved = manager.get_figure("fig:test")
         assert retrieved == fig_meta
 
@@ -101,9 +98,7 @@ class TestFigureManager:
     def test_generate_latex_figure_block(self, tmp_path):
         """Test generating LaTeX figure block."""
         manager = FigureManager(registry_file=str(tmp_path / "registry.json"))
-        manager.register_figure(
-            filename="test.png", caption="Test caption", label="fig:test"
-        )
+        manager.register_figure(filename="test.png", caption="Test caption", label="fig:test")
         latex = manager.generate_latex_figure_block("fig:test")
         assert "\\begin{figure}" in latex
         assert "\\includegraphics" in latex

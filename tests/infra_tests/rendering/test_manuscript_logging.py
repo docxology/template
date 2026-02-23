@@ -1,9 +1,6 @@
 """Tests for manuscript logging."""
 
-
-
-from infrastructure.rendering.manuscript_discovery import \
-    discover_manuscript_files
+from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
 
 
 def test_all_filenames_logged(tmp_path, caplog):
@@ -40,9 +37,7 @@ def test_no_hardcoded_warnings(tmp_path, caplog):
 
     log_text = caplog.text
     assert "Missing expected" not in log_text
-    assert (
-        "⚠️" not in log_text or "Figures directory" in log_text
-    )  # Only figures warning allowed
+    assert "⚠️" not in log_text or "Figures directory" in log_text  # Only figures warning allowed
 
 
 def test_categorization_logged(tmp_path, caplog):

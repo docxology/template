@@ -4,8 +4,6 @@ Tests documentation scanning and validation functionality using real implementat
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-
-
 from infrastructure.validation import doc_scanner
 
 

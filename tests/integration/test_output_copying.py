@@ -7,6 +7,7 @@ Tests the complete output copying pipeline:
 - Validation of copied files
 - Error handling for missing source files
 """
+
 import importlib.util
 import shutil
 import sys
@@ -147,9 +148,7 @@ class TestCopyFinalDeliverables:
 
         assert stats["combined_pdf"] == 1
         assert (output_dir / "code_project_combined.pdf").exists()
-        assert (
-            output_dir / "code_project_combined.pdf"
-        ).read_text() == "mock pdf content"
+        assert (output_dir / "code_project_combined.pdf").read_text() == "mock pdf content"
 
     def test_copy_slides(self, temp_project_structure):
         """Test copying slide PDFs."""
@@ -178,12 +177,7 @@ class TestCopyFinalDeliverables:
 
         # Remove combined PDF
         (
-            repo_root
-            / "projects"
-            / "code_project"
-            / "output"
-            / "pdf"
-            / "code_project_combined.pdf"
+            repo_root / "projects" / "code_project" / "output" / "pdf" / "code_project_combined.pdf"
         ).unlink()
 
         stats = copy_final_deliverables(repo_root, output_dir, "code_project")
@@ -227,12 +221,7 @@ class TestValidateCopiedOutputs:
 
         # Remove PDF from source directory (fixture creates it)
         source_pdf = (
-            repo_root
-            / "projects"
-            / "code_project"
-            / "output"
-            / "pdf"
-            / "code_project_combined.pdf"
+            repo_root / "projects" / "code_project" / "output" / "pdf" / "code_project_combined.pdf"
         )
         if source_pdf.exists():
             source_pdf.unlink()

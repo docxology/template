@@ -175,9 +175,7 @@ Another [valid link](another.md)
         source_file = temp_repo / "docs" / "guide.md"
 
         # Link to parent directory README
-        resolved, is_external = validator.resolve_link_target(
-            "../README.md", source_file
-        )
+        resolved, is_external = validator.resolve_link_target("../README.md", source_file)
 
         assert resolved is not None
         assert is_external is False
@@ -189,9 +187,7 @@ Another [valid link](another.md)
 
         source_file = temp_repo / "README.md"
 
-        resolved, is_external = validator.resolve_link_target(
-            "docs/guide.md#section", source_file
-        )
+        resolved, is_external = validator.resolve_link_target("docs/guide.md#section", source_file)
 
         assert resolved is not None
         assert is_external is False
@@ -243,9 +239,7 @@ Another [valid link](another.md)
         results = validator.validate_file_links(readme)
 
         # Should have internal link to docs/guide.md
-        valid_links = [
-            l for l in results["valid"] if l["type"] not in ("external", "anchor")
-        ]
+        valid_links = [l for l in results["valid"] if l["type"] not in ("external", "anchor")]
         # The link to docs/guide.md should be valid
         assert any("guide" in str(l.get("target", "")) for l in valid_links)
 
@@ -354,9 +348,7 @@ class TestLinkValidatorEdgeCases:
     def test_special_characters_in_links(self, tmp_path):
         """Test links with special characters."""
         test_file = tmp_path / "test.md"
-        test_file.write_text(
-            "[Space file](file with spaces.md)\n" "[Percent](file%20encoded.md)\n"
-        )
+        test_file.write_text("[Space file](file with spaces.md)\n[Percent](file%20encoded.md)\n")
 
         validator = LinkValidator(tmp_path)
         links = validator.extract_markdown_links(test_file.read_text(), test_file)
@@ -367,9 +359,7 @@ class TestLinkValidatorEdgeCases:
         """Test multiple anchor links to same file."""
         test_file = tmp_path / "test.md"
         test_file.write_text(
-            "[Section 1](#section-1)\n"
-            "[Section 2](#section-2)\n"
-            "[Section 3](#section-3)\n"
+            "[Section 1](#section-1)\n[Section 2](#section-2)\n[Section 3](#section-3)\n"
         )
 
         validator = LinkValidator(tmp_path)

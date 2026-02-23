@@ -11,8 +11,7 @@ Modules:
 """
 
 from .figure_manager import FigureManager, FigureMetadata
-from .glossary_gen import (ApiEntry, build_api_index, generate_markdown_table,
-                           inject_between_markers)
+from .glossary_gen import ApiEntry, build_api_index, generate_markdown_table, inject_between_markers
 from .image_manager import ImageManager
 from .markdown_integration import MarkdownIntegration
 

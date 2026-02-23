@@ -46,9 +46,7 @@ def _first_sentence(doc: str | None) -> str:
 def _iter_py_files(root: str) -> Iterable[str]:
     for dirpath, _, filenames in os.walk(root):
         for fname in filenames:
-            if fname.endswith(".py") and (
-                not fname.startswith("_") or fname == "__init__.py"
-            ):
+            if fname.endswith(".py") and (not fname.startswith("_") or fname == "__init__.py"):
                 yield os.path.join(dirpath, fname)
 
 
@@ -114,9 +112,7 @@ def generate_markdown_table(entries: List[ApiEntry]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def inject_between_markers(
-    text: str, begin_marker: str, end_marker: str, content: str
-) -> str:
+def inject_between_markers(text: str, begin_marker: str, end_marker: str, content: str) -> str:
     """Replace content between begin_marker and end_marker (inclusive markers preserved)."""
     start = text.find(begin_marker)
     end = text.find(end_marker)
