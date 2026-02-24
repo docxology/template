@@ -446,8 +446,17 @@ def get_logger(name: str) -> logging.Logger:
             return setup_logger(name)
         # Ensure propagation is enabled even if handlers exist
         logger.propagate = True
+    else:
+        # Non-test environment: always ensure propagate=False.
+        # Python's default is propagate=True, which means messages fire once via
+        # the module's own handler AND again via every ancestor logger that also
+        # has handlers — this causes doubled (or more) console output.
+        # setup_logger sets propagate=False, but get_logger must reinforce this
+        # each time it returns an already-configured logger.
+        logger.propagate = False
 
     return logger
+
 
 
 # =============================================================================

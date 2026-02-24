@@ -17,13 +17,13 @@ import sys
 from pathlib import Path
 from typing import Any, Optional
 
-from infrastructure.core.logging_utils import get_logger
-
-logger = get_logger(__name__)
-
-# Add infrastructure to path for imports
+# Add infrastructure to path for imports BEFORE any infrastructure imports
 repo_root = Path(__file__).parent.parent
 sys.path.insert(0, str(repo_root))
+
+from infrastructure.core.logging_utils import get_logger  # noqa: E402
+
+logger = get_logger(__name__)
 
 try:
     from infrastructure.validation.markdown_validator import (

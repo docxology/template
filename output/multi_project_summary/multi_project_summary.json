@@ -1,35 +1,35 @@
 {
-  "timestamp": "2026-02-23T07:46:33.596797",
+  "timestamp": "2026-02-24T14:20:47.213184",
   "total_projects": 2,
   "successful_projects": 2,
   "failed_projects": 0,
-  "total_duration": 980.826446056366,
-  "infra_test_duration": 503.41763186454773,
+  "total_duration": 409.5589089393616,
+  "infra_test_duration": 0.0,
   "projects": {
-    "active_inference_meta_pragmatic": {
-      "success": true,
-      "duration": 350.5541708469391,
-      "stages_completed": 9,
-      "errors": []
-    },
     "code_project": {
       "success": true,
-      "duration": 117.41219782829285,
-      "stages_completed": 9,
+      "duration": 53.74250102043152,
+      "stages_completed": 7,
+      "errors": []
+    },
+    "ento_linguistics": {
+      "success": true,
+      "duration": 346.09170794487,
+      "stages_completed": 7,
       "errors": []
     }
   },
   "performance_analysis": {
-    "slowest_project": "active_inference_meta_pragmatic",
+    "slowest_project": "ento_linguistics",
     "fastest_project": "code_project",
-    "average_duration": 233.98318433761597,
-    "total_pipeline_time": 467.96636867523193
+    "average_duration": 199.91710448265076,
+    "total_pipeline_time": 399.8342089653015
   },
   "error_aggregation": {
     "total_errors": 0,
     "errors_by_project": {
-      "active_inference_meta_pragmatic": 0,
-      "code_project": 0
+      "code_project": 0,
+      "ento_linguistics": 0
     }
   },
   "recommendations": []

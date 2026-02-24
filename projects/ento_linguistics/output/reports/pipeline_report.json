@@ -1,0 +1,333 @@
+{
+  "timestamp": "2026-02-24T14:20:37.825669",
+  "total_duration": 346.09170794487,
+  "stages": [
+    {
+      "name": "Clean Output Directories",
+      "exit_code": 0,
+      "duration": 0.017241954803466797,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Environment Setup",
+      "exit_code": 0,
+      "duration": 0.9771318435668945,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Project Tests",
+      "exit_code": 0,
+      "duration": 236.6512749195099,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Project Analysis",
+      "exit_code": 0,
+      "duration": 77.72470307350159,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "PDF Rendering",
+      "exit_code": 0,
+      "duration": 29.80663299560547,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Output Validation",
+      "exit_code": 0,
+      "duration": 0.47400712966918945,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Copy Outputs",
+      "exit_code": 0,
+      "duration": 0.440716028213501,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    }
+  ],
+  "test_results": null,
+  "validation_results": null,
+  "performance_metrics": null,
+  "error_summary": null,
+  "output_statistics": {
+    "directories": {
+      "pdf": {
+        "exists": true,
+        "file_count": 9,
+        "size_mb": "7.14",
+        "total_size_bytes": 7487948,
+        "largest_files": [
+          {
+            "name": "ento_linguistics_combined.pdf",
+            "size_mb": "6.66",
+            "path": "pdf/ento_linguistics_combined.pdf"
+          },
+          {
+            "name": "ento_linguistics_combined.tex",
+            "size_mb": "0.16",
+            "path": "pdf/ento_linguistics_combined.tex"
+          },
+          {
+            "name": "temp_combined.md",
+            "size_mb": "0.13",
+            "path": "pdf/temp_combined.md"
+          }
+        ],
+        "extensions": {
+          ".toc": 1,
+          ".tex": 1,
+          ".bib": 1,
+          ".bbl": 1,
+          ".pdf": 1,
+          ".blg": 1,
+          ".aux": 1,
+          ".md": 1,
+          ".log": 1
+        }
+      },
+      "web": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "slides": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "figures": {
+        "exists": true,
+        "file_count": 12,
+        "size_mb": "6.30",
+        "total_size_bytes": 6609166,
+        "largest_files": [
+          {
+            "name": "terminology_network.png",
+            "size_mb": "2.56",
+            "path": "figures/terminology_network.png"
+          },
+          {
+            "name": "domain_comparison.png",
+            "size_mb": "0.74",
+            "path": "figures/domain_comparison.png"
+          },
+          {
+            "name": "domain_overview_grid.png",
+            "size_mb": "0.69",
+            "path": "figures/domain_overview_grid.png"
+          }
+        ],
+        "extensions": {
+          ".png": 11,
+          ".json": 1
+        }
+      },
+      "data": {
+        "exists": true,
+        "file_count": 4,
+        "size_mb": "0.13",
+        "total_size_bytes": 131498,
+        "largest_files": [
+          {
+            "name": "extracted_terms.json",
+            "size_mb": "0.12",
+            "path": "data/extracted_terms.json"
+          },
+          {
+            "name": "domain_statistics.json",
+            "size_mb": "0.00",
+            "path": "data/domain_statistics.json"
+          },
+          {
+            "name": "concept_map_summary.json",
+            "size_mb": "0.00",
+            "path": "data/concept_map_summary.json"
+          }
+        ],
+        "extensions": {
+          ".json": 4
+        }
+      },
+      "reports": {
+        "exists": true,
+        "file_count": 6,
+        "size_mb": "0.01",
+        "total_size_bytes": 12636,
+        "largest_files": [
+          {
+            "name": "output_statistics.json",
+            "size_mb": "0.01",
+            "path": "reports/output_statistics.json"
+          },
+          {
+            "name": "validation_report.json",
+            "size_mb": "0.00",
+            "path": "reports/validation_report.json"
+          },
+          {
+            "name": "output_statistics.txt",
+            "size_mb": "0.00",
+            "path": "reports/output_statistics.txt"
+          }
+        ],
+        "extensions": {
+          ".json": 3,
+          ".txt": 1,
+          ".md": 2
+        }
+      },
+      "simulations": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "llm": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "logs": {
+        "exists": true,
+        "file_count": 1,
+        "size_mb": "0.01",
+        "total_size_bytes": 8769,
+        "largest_files": [
+          {
+            "name": "pipeline.log",
+            "size_mb": "0.01",
+            "path": "logs/pipeline.log"
+          }
+        ],
+        "extensions": {
+          ".log": 1
+        }
+      }
+    },
+    "total_files": 32,
+    "total_size_mb": 13.589875221252441,
+    "largest_files": [
+      {
+        "name": "ento_linguistics_combined.pdf",
+        "size_mb": "6.66",
+        "category": "pdf",
+        "path": "pdf/ento_linguistics_combined.pdf"
+      },
+      {
+        "name": "terminology_network.png",
+        "size_mb": "2.56",
+        "category": "figures",
+        "path": "figures/terminology_network.png"
+      },
+      {
+        "name": "domain_comparison.png",
+        "size_mb": "0.74",
+        "category": "figures",
+        "path": "figures/domain_comparison.png"
+      },
+      {
+        "name": "domain_overview_grid.png",
+        "size_mb": "0.69",
+        "category": "figures",
+        "path": "figures/domain_overview_grid.png"
+      },
+      {
+        "name": "ento_linguistics_combined.tex",
+        "size_mb": "0.16",
+        "category": "pdf",
+        "path": "pdf/ento_linguistics_combined.tex"
+      },
+      {
+        "name": "temp_combined.md",
+        "size_mb": "0.13",
+        "category": "pdf",
+        "path": "pdf/temp_combined.md"
+      },
+      {
+        "name": "extracted_terms.json",
+        "size_mb": "0.12",
+        "category": "data",
+        "path": "data/extracted_terms.json"
+      },
+      {
+        "name": "output_statistics.json",
+        "size_mb": "0.01",
+        "category": "reports",
+        "path": "reports/output_statistics.json"
+      },
+      {
+        "name": "pipeline.log",
+        "size_mb": "0.01",
+        "category": "logs",
+        "path": "logs/pipeline.log"
+      },
+      {
+        "name": "domain_statistics.json",
+        "size_mb": "0.00",
+        "category": "data",
+        "path": "data/domain_statistics.json"
+      }
+    ],
+    "missing_expected_files": [],
+    "file_counts_by_type": {
+      ".toc": 1,
+      ".tex": 1,
+      ".bib": 1,
+      ".bbl": 1,
+      ".pdf": 1,
+      ".blg": 1,
+      ".aux": 1,
+      ".md": 3,
+      ".log": 2,
+      ".png": 11,
+      ".json": 8,
+      ".txt": 1
+    },
+    "sizes_by_category": {
+      "pdf": 7.141063690185547,
+      "web": 0.0,
+      "slides": 0.0,
+      "figures": 6.30299186706543,
+      "data": 0.12540626525878906,
+      "reports": 0.012050628662109375,
+      "simulations": 0.0,
+      "llm": 0.0,
+      "logs": 0.008362770080566406
+    },
+    "pdf_files": 9,
+    "figures": 12,
+    "data_files": 4
+  }
+}

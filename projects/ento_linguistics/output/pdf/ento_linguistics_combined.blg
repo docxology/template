@@ -1,0 +1,46 @@
+This is BibTeX, Version 0.99d (TeX Live 2025)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: ento_linguistics_combined.aux
+The style file: plainnat.bst
+Database file #1: /Users/4d/Documents/GitHub/template/projects/ento_linguistics/manuscript/references.bib
+You've used 43 entries,
+            2773 wiz_defined-function locations,
+            859 strings with 11749 characters,
+and the built_in function-call counts, 16897 in all, are:
+= -- 1500
+> -- 747
+< -- 37
++ -- 267
+- -- 224
+* -- 1239
+:= -- 2675
+add.period$ -- 154
+call.type$ -- 43
+change.case$ -- 187
+chr.to.int$ -- 43
+cite$ -- 86
+duplicate$ -- 871
+empty$ -- 1563
+format.name$ -- 281
+if$ -- 3535
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 59
+newline$ -- 247
+num.names$ -- 174
+pop$ -- 418
+preamble$ -- 1
+purify$ -- 160
+quote$ -- 0
+skip$ -- 597
+stack$ -- 0
+substring$ -- 570
+swap$ -- 52
+text.length$ -- 2
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 383
+warning$ -- 0
+while$ -- 166
+width$ -- 0
+write$ -- 614

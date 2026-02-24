@@ -234,9 +234,10 @@ class MultiProjectOrchestrator:
                 logger.error(PROJECT_EXCEPTION.format(project_name=project_name, error=e))
                 project_results[project_name] = []
 
-        # Generate executive report if enabled and we have multiple projects
-        if self.config.run_executive_report and len(self.config.projects) > 1:
-            self._run_executive_reporting(project_results)
+        # Executive reporting is handled by the dedicated pipeline stage
+        # (07_generate_executive_report.py), which runs as part of the stage executor.
+        # Calling it here would duplicate all executive summary log lines.
+        # The _run_executive_reporting method below is retained for standalone use only.
 
         total_duration = time.time() - start_time
 
