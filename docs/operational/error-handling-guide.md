@@ -2,7 +2,7 @@
 
 > **Custom exception hierarchy** for consistent error handling
 
-**Quick Reference:** [Logging Guide](../operational/logging-guide.md) | [Testing Guide](../development/testing-guide.md)
+**Quick Reference:** [Logging Guide](../operational/logging/) | [Testing Guide](../development/testing/testing-guide.md)
 
 ## Quick Start
 
@@ -257,8 +257,8 @@ raise ValidationError("Error at line", context=context)
 
 ## See Also
 
-- [Logging Guide](../operational/logging-guide.md)
-- [Testing Guide](../development/testing-guide.md)
+- [Logging Guide](../operational/logging/)
+- [Testing Guide](../development/testing/testing-guide.md)
 - [API Reference](../reference/api-reference.md)
 
 

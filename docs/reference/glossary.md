@@ -46,7 +46,7 @@ Automated sequence of operations that validates tests, runs scripts, generates d
 
 **Stages**: Tests → Scripts → Validation → Glossary → Individual PDFs → Combined PDF
 
-**See**: [build-system.md](../operational/build-system.md)
+**See**: [build-system.md](../operational/build/build-system.md)
 
 ### Business Logic
 
@@ -188,7 +188,7 @@ Document setup and styling configuration loaded before content. Defines packages
 
 **File**: `manuscript/preamble.md`
 
-**Location**: [`act_inf_metaanalysis/manuscript/preamble.md`](../../projects/act_inf_metaanalysis/manuscript/preamble.md)
+**Location**: [`code_project/manuscript/preamble.md`](../../projects/code_project/manuscript/preamble.md)
 
 ## M
 
@@ -264,7 +264,7 @@ Process of converting markdown sources to professional PDF documents using Pando
 
 **Time**: ~84 seconds for rebuild (without optional LLM review)
 
-**See**: [build-system.md](../operational/build-system.md)
+**See**: [build-system.md](../operational/build/build-system.md)
 
 ### PDF Validation
 
@@ -364,7 +364,7 @@ Core business logic residing in `src/` directory. Must have test coverage.
 - No circular imports
 - test coverage
 
-**See**: [infrastructure/AGENTS.md](../../infrastructure/AGENTS.md), [act_inf_metaanalysis/src/AGENTS.md](../../projects/act_inf_metaanalysis/src/AGENTS.md)
+**See**: [infrastructure/AGENTS.md](../../infrastructure/AGENTS.md), [code_project/src/AGENTS.md](../../projects/code_project/src/AGENTS.md)
 
 ### Statement Coverage
 

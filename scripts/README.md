@@ -610,6 +610,6 @@ Root entry points work with **ANY** project following this structure.
 
 - [`AGENTS.md`](AGENTS.md) - documentation
 - [`../RUN_GUIDE.md`](../RUN_GUIDE.md) - Unified runner guide
-- [`projects/act_inf_metaanalysis/scripts/`](../projects/act_inf_metaanalysis/scripts/) - Project scripts
+- [`projects/code_project/scripts/`](../projects/code_project/scripts/) - Project scripts
 - [`../docs/architecture/thin-orchestrator-summary.md`](../docs/architecture/thin-orchestrator-summary.md) - Pattern details
 - [`../AGENTS.md`](../AGENTS.md) - system documentation

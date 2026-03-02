@@ -314,3 +314,82 @@ def gradient_descent(
         gradient_norm=final_grad_norm,
         objective_history=objective_history,
     )
+
+
+def make_quadratic_problem(
+    A: Optional[np.ndarray] = None,
+    b: Optional[np.ndarray] = None,
+) -> tuple[Callable[[np.ndarray], float], Callable[[np.ndarray], np.ndarray]]:
+    """Create paired (objective, gradient) callables for a quadratic problem.
+
+    Returns a tuple of (obj_func, grad_func) parametrized by A and b,
+    suitable for passing directly to gradient_descent().
+
+    Args:
+        A: Optional symmetric positive definite matrix (default: identity)
+        b: Optional target vector (default: vector of ones, same dim as x)
+
+    Returns:
+        Tuple of (objective_function, gradient_function)
+
+    Example:
+        >>> obj_func, grad_func = make_quadratic_problem(
+        ...     np.array([[1.0]]), np.array([1.0])
+        ... )
+        >>> result = gradient_descent(np.array([0.0]), obj_func, grad_func, step_size=0.1)
+    """
+
+    def obj_func(x: np.ndarray) -> float:
+        return quadratic_function(x, A, b)
+
+    def grad_func(x: np.ndarray) -> np.ndarray:
+        return compute_gradient(x, A, b)
+
+    return obj_func, grad_func
+
+
+def simulate_trajectory(
+    step_size: float,
+    max_iter: int = 50,
+    A: Optional[np.ndarray] = None,
+    b: Optional[np.ndarray] = None,
+    initial_point: Optional[np.ndarray] = None,
+) -> dict[str, list]:
+    """Run gradient descent and return iteration/objective history.
+
+    Uses gradient_descent() from this module — no reimplementation of the
+    update loop. Returns a dict with 'iterations' and 'objectives' lists
+    for downstream plotting.
+
+    Args:
+        step_size: Fixed step size for gradient descent.
+        max_iter: Maximum iterations (default: 50).
+        A: Optional quadratic coefficient matrix (default: identity).
+        b: Optional linear coefficient vector (default: ones).
+        initial_point: Starting point (default: [0.0]).
+
+    Returns:
+        Dict with keys 'iterations' (list[int]) and 'objectives' (list[float]).
+
+    Example:
+        >>> traj = simulate_trajectory(step_size=0.1, max_iter=20,
+        ...                           A=np.array([[1.0]]), b=np.array([1.0]))
+        >>> print(len(traj['iterations']), len(traj['objectives']))
+    """
+    if initial_point is None:
+        initial_point = np.array([0.0])
+
+    obj_func, grad_func = make_quadratic_problem(A, b)
+    result = gradient_descent(
+        initial_point=initial_point,
+        objective_func=obj_func,
+        gradient_func=grad_func,
+        step_size=step_size,
+        max_iterations=max_iter,
+        tolerance=1e-8,
+        verbose=False,
+    )
+    return {
+        "iterations": list(range(len(result.objective_history))),
+        "objectives": result.objective_history,
+    }

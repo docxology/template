@@ -1,70 +1,39 @@
-# operational/ - Operational Workflows
+# ⚙️ Operational Documentation
 
-> **Build system, CI/CD, configuration, and troubleshooting** guides
+> Build, configuration, logging, troubleshooting, reporting, and error handling guides
 
-**Quick Reference:** [Build System](build-system.md) | [Troubleshooting](troubleshooting-guide.md) | [Configuration](configuration.md) | [Reporting](reporting-guide.md)
+**Quick Reference:** [Build System](build/build-system.md) | [Troubleshooting](troubleshooting/) | [Logging](logging/) | [Configuration](config/configuration.md)
 
-## Purpose
+## Directory Structure
 
-The `operational/` directory contains documentation for operating, configuring, and troubleshooting the Research Project Template.
+| Sub-directory | Purpose | Key Files |
+|---------------|---------|-----------|
+| [`build/`](build/) | Build pipeline, CI/CD, dependencies | build-system.md, ci-cd-integration.md, dependency-management.md |
+| [`config/`](config/) | Configuration, checkpoints, performance | configuration.md, checkpoint-resume.md, performance-optimization.md |
+| [`logging/`](logging/) | Logging system (Python, Bash, patterns) | README.md (full guide), python-logging.md, bash-logging.md |
+| [`troubleshooting/`](troubleshooting/) | Issue resolution and recovery | README.md (flowchart), common-errors.md, llm-review.md |
 
-## Contents
+## Top-Level Guides
 
-| File | Purpose | Audience |
-|------|---------|----------|
-| [`build-history.md`](build-history.md) | Build history and changelog | Developers |
-| [`build-system.md`](build-system.md) | build system reference | Developers |
-| [`ci-cd-integration.md`](ci-cd-integration.md) | CI/CD integration guide | Developers |
-| [`dependency-management.md`](dependency-management.md) | Package management guide | Developers |
-| [`performance-optimization.md`](performance-optimization.md) | Performance tuning guide | Developers |
-| [`configuration.md`](configuration.md) | Configuration system guide | All users |
-| [`checkpoint-resume.md`](checkpoint-resume.md) | Checkpoint and resume system | All users |
-| [`troubleshooting-guide.md`](troubleshooting-guide.md) | troubleshooting | All users |
-| [`llm-review-troubleshooting.md`](llm-review-troubleshooting.md) | LLM-specific troubleshooting | Advanced users |
-| [`error-handling-guide.md`](error-handling-guide.md) | Error handling patterns | Developers |
-| [`logging-guide.md`](logging-guide.md) | Logging system guide | Developers |
-| [`reporting-guide.md`](reporting-guide.md) | Reporting system and report interpretation | Developers |
-
-### Subdirectories
-
-| Directory | Purpose | Key Files |
-|-----------|---------|----------|
-| [`logging/`](logging/) | Detailed logging guides | bash-logging.md, python-logging.md, logging-patterns.md |
-| [`troubleshooting/`](troubleshooting/) | Topic-specific troubleshooting | build-tools.md, common-errors.md, environment-setup.md, recovery-procedures.md, test-failures.md |
+| Guide | Description |
+|-------|-------------|
+| [reporting-guide.md](reporting-guide.md) | Pipeline reporting system and report interpretation |
+| [error-handling-guide.md](error-handling-guide.md) | Error handling patterns and custom exceptions |
 
 ## Quick Navigation
 
-### Building and Running
-
-→ Read **[Build System](build-system.md)** - Build pipeline reference
-
-### Setting Up CI/CD
-
-→ Follow **[CI/CD Integration](ci-cd-integration.md)** - GitHub Actions setup
-
-### Configuring the System
-
-→ Use **[Configuration](configuration.md)** - Configuration guide
-
-### Troubleshooting Issues
-
-→ Check **[Troubleshooting Guide](troubleshooting-guide.md)** - Common issues
-
-### Optimizing Performance
-
-→ Study **[Performance Optimization](performance-optimization.md)** - Tuning guide
-
-### Understanding Reports
-
-→ Review **[Reporting Guide](reporting-guide.md)** - Report types and interpretation
-
-## Related Documentation
-
-- **[`../reference/faq.md`](../reference/faq.md)** - Frequently asked questions
-- **[`../reference/common-workflows.md`](../reference/common-workflows.md)** - Step-by-step recipes
-- **[`../core/workflow.md`](../core/workflow.md)** - Development workflow
+| Need | Go to |
+|------|-------|
+| Build pipeline details | [build/build-system.md](build/build-system.md) |
+| CI/CD setup | [build/ci-cd-integration.md](build/ci-cd-integration.md) |
+| Fix a build error | [troubleshooting/](troubleshooting/) |
+| Configure logging | [logging/](logging/) |
+| System configuration | [config/configuration.md](config/configuration.md) |
+| Resume a failed pipeline | [config/checkpoint-resume.md](config/checkpoint-resume.md) |
+| Optimize performance | [config/performance-optimization.md](config/performance-optimization.md) |
 
 ## See Also
 
-- [`../documentation-index.md`](../documentation-index.md) - documentation index
-- [`../README.md`](../README.md) - Documentation hub overview
+- [Architecture](../core/architecture.md) — System design overview
+- [Common Workflows](../reference/common-workflows.md) — Step-by-step recipes
+- [FAQ](../reference/faq.md) — Common questions

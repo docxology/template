@@ -55,23 +55,28 @@ class FileType(Enum):
 **Key Methods:**
 
 **`detect_file_type(file_path: Path) -> Optional[FileType]`**
+
 - Detects file type from extension
 - Returns None for unsupported extensions
 
 **`get_output_path(file_path: Path, output_dir: Path, file_type: FileType) -> Path`**
+
 - Resolves organized output path: `output_dir/{type_subdirectory}/filename`
 - Used by all reporting modules for consistent file placement
 
 **`ensure_directory_structure(output_dir: Path) -> None`**
+
 - Creates all required subdirectories: `png/`, `pdf/`, `csv/`, `html/`, `json/`, `md/`, `combined_pdfs/`
 - Idempotent operation
 
 **`organize_existing_files(directory: Path) -> OrganizationResult`**
+
 - Moves existing files to appropriate subdirectories based on type
 - Handles files already in correct locations
 - Returns statistics on operations performed
 
 **`copy_combined_pdfs(repo_root: Path, target_dir: Path) -> int`**
+
 - Discovers `{project}_combined.pdf` files from all project output directories
 - Copies them to `target_dir/combined_pdfs/`
 - Returns number of PDFs copied
@@ -150,6 +155,7 @@ Generates consolidated reports from pipeline execution data.
 #### Key Functions
 
 **`generate_pipeline_report()`**
+
 ```python
 def generate_pipeline_report(
     stage_results: List[Dict[str, Any]],
@@ -179,11 +185,13 @@ def generate_pipeline_report(
         PipelineReport instance
     """
 ```
+
 - Creates a `PipelineReport` dataclass from stage results
 - Includes test results, validation results, performance metrics
 - Supports error summaries and output statistics
 
 **`save_pipeline_report()`**
+
 ```python
 def save_pipeline_report(
     report: PipelineReport,
@@ -199,11 +207,13 @@ def save_pipeline_report(
         Dictionary mapping format ('json', 'html', 'markdown') to file path
     """
 ```
+
 - Saves reports in multiple formats (JSON, HTML, Markdown)
 - Returns dictionary mapping format to file path
 - Creates output directory if needed
 
 **`generate_markdown_report()`**
+
 ```python
 def generate_markdown_report(report: PipelineReport) -> str:
     """Generate human-readable Markdown report.
@@ -215,10 +225,12 @@ def generate_markdown_report(report: PipelineReport) -> str:
         Markdown-formatted report string
     """
 ```
+
 - Generates human-readable Markdown report
 - Includes summary statistics, stage details, recommendations
 
 **`generate_html_report()`**
+
 ```python
 def generate_html_report(report: PipelineReport) -> str:
     """Generate styled HTML report.
@@ -230,6 +242,7 @@ def generate_html_report(report: PipelineReport) -> str:
         HTML-formatted report string
     """
 ```
+
 - Generates styled HTML report
 - Includes visual indicators (status badges, summary cards)
 - Responsive design for browser viewing
@@ -269,6 +282,7 @@ Collects, categorizes, and provides actionable fixes for errors and warnings.
 #### Key Classes
 
 **`ErrorAggregator`**
+
 ```python
 class ErrorAggregator:
     """Aggregate and categorize errors from pipeline execution."""
@@ -324,12 +338,14 @@ class ErrorAggregator:
             Dictionary mapping format to file path
         """
 ```
+
 - Main class for error collection
 - Categorizes errors by type
 - Generates actionable fixes with priority levels
 - Saves reports in JSON and Markdown formats
 
 **`ErrorEntry`**
+
 ```python
 @dataclass
 class ErrorEntry:
@@ -346,6 +362,7 @@ class ErrorEntry:
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary."""
 ```
+
 - Dataclass representing a single error or warning
 - Includes type, message, stage, file, line, severity
 - Supports suggestions and context
@@ -401,6 +418,7 @@ aggregator.save_report(Path("output/reports"))
 #### Error Types
 
 Common error types:
+
 - `test_failure` - Test execution failures
 - `validation_error` - Validation check failures
 - `stage_failure` - Pipeline stage failures
@@ -414,31 +432,37 @@ Generates cross-project metrics and executive summaries.
 #### Key Functions
 
 **`collect_manuscript_metrics(manuscript_dir: Path) -> ManuscriptMetrics`**
+
 - Parses markdown files for word counts, sections, equations
 - Detects figures, citations, and references
 - Returns structured manuscript metrics
 
 **`collect_codebase_metrics(src_dir: Path, scripts_dir: Optional[Path]) -> CodebaseMetrics`**
+
 - Analyzes Python files for lines of code, methods, classes
 - Separates source code from scripts
 - Uses AST parsing for accurate code metrics
 
 **`collect_test_metrics(reports_dir: Path) -> TestMetrics`**
+
 - Loads test results from JSON reports
 - Extracts pass/fail counts, coverage percentages
 - Calculates execution times and test files
 
 **`collect_output_metrics(output_dir: Path) -> OutputMetrics`**
+
 - Counts PDFs, figures, data files, slides
 - Calculates file sizes and totals
 - Enumerates web outputs and other artifacts
 
 **`collect_pipeline_metrics(reports_dir: Path) -> PipelineMetrics`**
+
 - Analyzes pipeline execution reports
 - Identifies bottleneck stages and durations
 - Counts passed/failed stages
 
 **`collect_project_metrics()`**
+
 ```python
 def collect_project_metrics(repo_root: Path, project_name: str) -> ProjectMetrics:
     """Collect all metrics for a single project.
@@ -451,10 +475,12 @@ def collect_project_metrics(repo_root: Path, project_name: str) -> ProjectMetric
         ProjectMetrics instance with all collected metrics
     """
 ```
+
 - Collects manuscript, codebase, test, output, and pipeline metrics
 - Returns structured ProjectMetrics dataclass
 
 **`generate_executive_summary()`**
+
 ```python
 def generate_executive_summary(
     repo_root: Path,
@@ -470,12 +496,14 @@ def generate_executive_summary(
         ExecutiveSummary instance with aggregated metrics and recommendations
     """
 ```
+
 - Orchestrates metrics collection across all projects
 - Generates aggregate statistics and comparisons
 - Creates recommendations based on metrics
 - Returns ExecutiveSummary dataclass
 
 **`save_executive_summary()`**
+
 ```python
 def save_executive_summary(
     summary: ExecutiveSummary,
@@ -491,6 +519,7 @@ def save_executive_summary(
         Dictionary mapping format ('json', 'html', 'markdown') to file path
     """
 ```
+
 - Saves reports in JSON, HTML, and Markdown formats
 - Returns dictionary mapping format to file path
 - Creates output directory if needed
@@ -502,7 +531,7 @@ from infrastructure.reporting import generate_executive_summary, save_executive_
 from pathlib import Path
 
 repo_root = Path(".")
-project_names = ["act_inf_metaanalysis"]
+project_names = ["code_project"]
 
 # Generate summary
 summary = generate_executive_summary(repo_root, project_names)
@@ -523,6 +552,7 @@ Creates visual dashboards and charts for executive reporting.
 #### Key Functions
 
 **`generate_all_dashboards()`**
+
 ```python
 def generate_all_dashboards(
     summary: ExecutiveSummary,
@@ -538,12 +568,14 @@ def generate_all_dashboards(
         Dictionary of all saved file paths (png, pdf, html, csv, etc.)
     """
 ```
+
 - Generates matplotlib dashboards (PNG/PDF)
 - Generates interactive Plotly dashboards (HTML)
 - Generates CSV data tables
 - Returns dictionary of all generated file paths
 
 **`generate_csv_data_tables()`**
+
 ```python
 def generate_csv_data_tables(
     summary: ExecutiveSummary,
@@ -559,11 +591,13 @@ def generate_csv_data_tables(
         Dictionary of saved CSV file paths
     """
 ```
+
 - Exports project metrics as CSV
 - Exports aggregate metrics as CSV
 - Exports health scores as CSV
 
 **`generate_matplotlib_dashboard()`**
+
 ```python
 def generate_matplotlib_dashboard(
     summary: ExecutiveSummary,
@@ -579,11 +613,13 @@ def generate_matplotlib_dashboard(
         Dictionary mapping format ('png', 'pdf') to file path
     """
 ```
+
 - Creates bar charts, pie charts, and summary tables
 - Saves in both PNG and PDF formats
 - Includes 9 charts
 
 **`generate_plotly_dashboard()`**
+
 ```python
 def generate_plotly_dashboard(
     summary: ExecutiveSummary,
@@ -599,6 +635,7 @@ def generate_plotly_dashboard(
         Path to generated HTML file
     """
 ```
+
 - Multi-tab interactive dashboard
 - Hover tooltips with detailed metrics
 - Zoom and pan functionality
@@ -629,12 +666,14 @@ Generates visual overviews of manuscript PDFs by extracting and arranging all pa
 #### Key Functions
 
 **`extract_pdf_pages_as_images(pdf_path: Path, dpi: int = 150) -> List[PIL.Image]`**
+
 - Extracts each PDF page as a PIL Image object
 - Uses pypdf for PDF reading and PIL for image rendering
 - Supports fallback rendering if advanced libraries unavailable
 - Returns list of PIL Images, one per page
 
 **`create_page_grid(images: List[PIL.Image], cols: int = 4, padding: int = 10, max_thumb_size: Tuple[int, int] = (600, 800)) -> PIL.Image`**
+
 - Arranges page images in a 4-column grid layout
 - Automatically calculates rows based on number of pages
 - Maintains aspect ratio and scales images appropriately
@@ -642,6 +681,7 @@ Generates visual overviews of manuscript PDFs by extracting and arranging all pa
 - Returns single PIL Image containing the grid
 
 **`generate_manuscript_overview()`**
+
 ```python
 def generate_manuscript_overview(
     pdf_path: Path,
@@ -665,12 +705,14 @@ def generate_manuscript_overview(
         ValueError: If PDF processing fails
     """
 ```
+
 - Main orchestration function for manuscript overview generation
 - Extracts pages, creates grid, saves both PNG and PDF outputs
 - Returns dictionary mapping filename to output file path
 - Handles errors gracefully and provides informative logging
 
 **`generate_all_manuscript_overviews()`**
+
 ```python
 def generate_all_manuscript_overviews(
     summary: ExecutiveSummary,
@@ -688,6 +730,7 @@ def generate_all_manuscript_overviews(
         Dictionary mapping filenames to output file paths
     """
 ```
+
 - Generates manuscript overviews for all projects in executive summary
 - Searches multiple possible locations for manuscript PDFs
 - Returns dictionary of all generated files (PNG and PDF for each project)
@@ -696,17 +739,20 @@ def generate_all_manuscript_overviews(
 #### Implementation Details
 
 **PDF Processing Strategy:**
+
 1. **Primary**: Uses pypdf to read PDF pages, then renders text content using PIL drawing
 2. **Advanced Fallback**: Attempts reportlab-based rendering for higher quality (if available)
 3. **Simple Fallback**: Basic text extraction and PIL rendering if advanced rendering fails
 
 **Grid Layout Algorithm:**
+
 - Fixed 4-column layout with automatic row calculation
 - Thumbnail sizing: Maintains aspect ratio, fits within max_thumb_size bounds (600x800 default)
 - Page numbering: Sequential labels ("Page 1", "Page 2", etc.) on each thumbnail
 - Spacing: Configurable padding between thumbnails
 
 **Error Handling:**
+
 - Missing PDF files: Logged as warning, project skipped
 - Corrupted PDFs: Logged as error, project skipped
 - Rendering failures: Graceful fallback to simpler rendering methods
@@ -742,10 +788,12 @@ dashboard_files = generate_all_dashboards(summary, output_dir)
 #### Dependencies
 
 **Required:**
+
 - `pypdf>=5.0`: PDF reading and page extraction
 - `pillow>=10.0.0`: Image processing and rendering
 
 **Optional:**
+
 - `reportlab>=4.0.0`: PDF rendering and output (recommended)
 
 #### Output Formats
@@ -761,15 +809,18 @@ Reusable HTML templates for report generation.
 #### Key Functions
 
 **`get_base_html_template()`**
+
 - Base HTML template with styling
 - Responsive design
 - Professional appearance
 
 **`render_summary_cards()`**
+
 - Renders summary statistics as cards
 - Grid layout for multiple metrics
 
 **`render_table()`**
+
 - Renders data tables
 - Supports headers and rows
 
@@ -798,13 +849,13 @@ The reporting module is integrated into multiple pipeline entry points:
 
 #### Multi-Project Executive Reporting
 
-4. **`run.sh` Multi-Project Options (a, b, c, d)**
+1. **`run.sh` Multi-Project Options (a, b, c, d)**
    - Automatically triggers executive reporting for 2+ projects
    - Generates cross-project analysis
    - Saves to `output/executive_summary/` directory
    - Includes consolidated reports, dashboards, and CSV data exports
 
-5. **`scripts/07_generate_executive_report.py`**
+2. **`scripts/07_generate_executive_report.py`**
    - Standalone executive reporting script
    - Can be run manually for any set of completed projects
    - Orchestrates full executive reporting workflow
@@ -867,6 +918,7 @@ files = generate_multi_project_report(
 ```
 
 **`generate_multi_project_report()` Function Signature:**
+
 ```python
 def generate_multi_project_report(
     repo_root: Path,
@@ -1011,19 +1063,3 @@ pytest tests/infra_tests/reporting/ --cov=infrastructure.reporting
 - [`../README.md`](../README.md) - Infrastructure layer overview
 - [`../AGENTS.md`](../AGENTS.md) - infrastructure documentation
 - [`../../docs/modules/modules-guide.md`](../../docs/modules/modules-guide.md) - Modules guide
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

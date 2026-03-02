@@ -1,38 +1,38 @@
-[2026-02-24 14:13:57,678] [INFO] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/code_project/output/logs/pipeline.log
-[2026-02-24 14:13:57,678] [INFO] ✓ Stage 1 completed successfully (0.0s)
-[2026-02-24 14:13:57,678] [INFO] 
-[2026-02-24 14:13:57,678] [INFO] [2/8] Environment Setup (25% complete)
-[2026-02-24 14:13:57,678] [INFO]   Elapsed: 0s | ETA: 0s
-[2026-02-24 14:13:57,678] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-02-24 14:13:57,678] [INFO] Running environment setup...
-[2026-02-24 14:13:59,390] [INFO] ✓ Stage 2 completed successfully (1.7s)
-[2026-02-24 14:13:59,391] [INFO] Skipping stage: Infrastructure Tests
-[2026-02-24 14:13:59,391] [INFO] 
-[2026-02-24 14:13:59,391] [INFO] [3/8] Project Tests (37% complete)
-[2026-02-24 14:13:59,391] [INFO]   Elapsed: 1s | ETA: 2s
-[2026-02-24 14:13:59,391] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-02-24 14:13:59,391] [INFO] Running project tests...
-[2026-02-24 14:14:11,033] [INFO] ✓ Stage 3 completed successfully (11.6s)
-[2026-02-24 14:14:11,034] [INFO] 
-[2026-02-24 14:14:11,034] [INFO] [4/8] Project Analysis (50% complete)
-[2026-02-24 14:14:11,034] [INFO]   Elapsed: 13s | ETA: 13s
-[2026-02-24 14:14:11,034] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-02-24 14:14:11,035] [INFO] Running project analysis...
-[2026-02-24 14:14:16,560] [INFO] ✓ Stage 4 completed successfully (5.5s)
-[2026-02-24 14:14:16,560] [INFO] 
-[2026-02-24 14:14:16,560] [INFO] [5/8] PDF Rendering (62% complete)
-[2026-02-24 14:14:16,560] [INFO]   Elapsed: 18s | ETA: 11s
-[2026-02-24 14:14:16,560] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-02-24 14:14:16,561] [INFO] Running PDF rendering...
-[2026-02-24 14:14:50,497] [INFO] ✓ Stage 5 completed successfully (33.9s)
-[2026-02-24 14:14:50,499] [INFO] 
-[2026-02-24 14:14:50,500] [INFO] [6/8] Output Validation (75% complete)
-[2026-02-24 14:14:50,500] [INFO]   Elapsed: 52s | ETA: 17s
-[2026-02-24 14:14:50,500] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-02-24 14:14:50,500] [INFO] Running output validation...
-[2026-02-24 14:14:50,951] [INFO] ✓ Stage 6 completed successfully (0.5s)
-[2026-02-24 14:14:50,951] [INFO] 
-[2026-02-24 14:14:50,951] [INFO] [7/8] Copy Outputs (87% complete)
-[2026-02-24 14:14:50,951] [INFO]   Elapsed: 53s | ETA: 7s
-[2026-02-24 14:14:50,951] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-02-24 14:14:50,952] [INFO] Running output copying...
+[2026-03-01 17:33:20,666] [INFO] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/code_project/output/logs/pipeline.log
+[2026-03-01 17:33:20,666] [INFO] ✓ Stage 1 completed successfully (0.0s)
+[2026-03-01 17:33:20,666] [INFO] 
+[2026-03-01 17:33:20,666] [INFO] [2/8] Environment Setup (25% complete)
+[2026-03-01 17:33:20,666] [INFO]   Elapsed: 0s | ETA: 0s
+[2026-03-01 17:33:20,666] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-01 17:33:20,666] [INFO] Running environment setup...
+[2026-03-01 17:33:22,283] [INFO] ✓ Stage 2 completed successfully (1.6s)
+[2026-03-01 17:33:22,283] [INFO] Skipping stage: Infrastructure Tests
+[2026-03-01 17:33:22,283] [INFO] 
+[2026-03-01 17:33:22,283] [INFO] [3/8] Project Tests (37% complete)
+[2026-03-01 17:33:22,283] [INFO]   Elapsed: 1s | ETA: 2s
+[2026-03-01 17:33:22,283] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-01 17:33:22,284] [INFO] Running project tests...
+[2026-03-01 17:33:31,078] [INFO] ✓ Stage 3 completed successfully (8.8s)
+[2026-03-01 17:33:31,078] [INFO] 
+[2026-03-01 17:33:31,078] [INFO] [4/8] Project Analysis (50% complete)
+[2026-03-01 17:33:31,078] [INFO]   Elapsed: 10s | ETA: 10s
+[2026-03-01 17:33:31,078] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-01 17:33:31,079] [INFO] Running project analysis...
+[2026-03-01 17:33:35,714] [INFO] ✓ Stage 4 completed successfully (4.6s)
+[2026-03-01 17:33:35,715] [INFO] 
+[2026-03-01 17:33:35,715] [INFO] [5/8] PDF Rendering (62% complete)
+[2026-03-01 17:33:35,715] [INFO]   Elapsed: 15s | ETA: 9s
+[2026-03-01 17:33:35,715] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-01 17:33:35,715] [INFO] Running PDF rendering...
+[2026-03-01 17:34:04,816] [INFO] ✓ Stage 5 completed successfully (29.1s)
+[2026-03-01 17:34:04,817] [INFO] 
+[2026-03-01 17:34:04,817] [INFO] [6/8] Output Validation (75% complete)
+[2026-03-01 17:34:04,817] [INFO]   Elapsed: 44s | ETA: 14s
+[2026-03-01 17:34:04,817] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-01 17:34:04,817] [INFO] Running output validation...
+[2026-03-01 17:34:05,407] [INFO] ✓ Stage 6 completed successfully (0.6s)
+[2026-03-01 17:34:05,407] [INFO] 
+[2026-03-01 17:34:05,407] [INFO] [7/8] Copy Outputs (87% complete)
+[2026-03-01 17:34:05,407] [INFO]   Elapsed: 44s | ETA: 6s
+[2026-03-01 17:34:05,407] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-01 17:34:05,408] [INFO] Running output copying...

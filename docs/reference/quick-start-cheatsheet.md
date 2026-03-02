@@ -170,7 +170,7 @@ Reference it: \ref{fig:my_figure}
 - **PDFs Generated**: 13 sections
 - **Documentation**: 25+ guides
 
-**See [Build System](../operational/build-system.md) for details**
+**See [Build System](../operational/build/build-system.md) for details**
 
 ## 🎯 Quick Decision Tree
 
@@ -206,6 +206,6 @@ Reference it: \ref{fig:my_figure}
 
 **Need more details?** See **[Documentation Index](../documentation-index.md)**
 
-**System Status**: ✅ All operational | [Build System](../operational/build-system.md)
+**System Status**: ✅ All operational | [Build System](../operational/build/build-system.md)
 
 

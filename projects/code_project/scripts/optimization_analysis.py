@@ -25,7 +25,8 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root / "src"))
 
 from optimizer import (OptimizationResult, compute_gradient, gradient_descent,  # noqa: E402
-                       quadratic_function)  # noqa: E402
+                       make_quadratic_problem, quadratic_function,  # noqa: E402
+                       simulate_trajectory)  # noqa: E402
 
 # Add infrastructure imports for scientific analysis
 try:
@@ -158,11 +159,7 @@ def run_convergence_experiment():
         logger.info("Running convergence experiments...")
 
     # Define test problem: f(x) = (1/2) x^2 - x, optimum at x = 1
-    def obj_func(x):
-        return quadratic_function(x, np.array([[1.0]]), np.array([1.0]))
-
-    def grad_func(x):
-        return compute_gradient(x, np.array([[1.0]]), np.array([1.0]))
+    obj_func, grad_func = make_quadratic_problem(np.array([[1.0]]), np.array([1.0]))
 
     # Different step sizes to test
     step_sizes = [0.01, 0.05, 0.1, 0.2]
@@ -197,11 +194,7 @@ def run_convergence_experiment_with_progress(progress_bar):
     print("Running convergence experiments...")
 
     # Define test problem: f(x) = (1/2) x^2 - x, optimum at x = 1
-    def obj_func(x):
-        return quadratic_function(x, np.array([[1.0]]), np.array([1.0]))
-
-    def grad_func(x):
-        return compute_gradient(x, np.array([[1.0]]), np.array([1.0]))
+    obj_func, grad_func = make_quadratic_problem(np.array([[1.0]]), np.array([1.0]))
 
     # Different step sizes to test
     step_sizes = [0.01, 0.05, 0.1, 0.2]
@@ -324,31 +317,8 @@ def generate_convergence_plot(results):
     return plot_path
 
 
-def simulate_trajectory(step_size, max_iter=50):
-    """Simulate gradient descent trajectory to collect intermediate values."""
-
-    def obj_func(x):
-        return quadratic_function(x, np.array([[1.0]]), np.array([1.0]))
-
-    def grad_func(x):
-        return compute_gradient(x, np.array([[1.0]]), np.array([1.0]))
-
-    x = np.array([0.0])  # Initial point
-    objectives = [obj_func(x)]
-    iterations = [0]
-
-    for i in range(max_iter):
-        grad = grad_func(x)
-        x = x - step_size * grad
-
-        objectives.append(obj_func(x))
-        iterations.append(i + 1)
-
-        # Check for convergence
-        if np.linalg.norm(grad) < 1e-8:
-            break
-
-    return {"iterations": iterations, "objectives": objectives}
+# simulate_trajectory is imported from src/optimizer — no reimplementation here.
+# It delegates to gradient_descent() and returns {"iterations": [...], "objectives": [...]}.
 
 
 def save_optimization_results(results):
@@ -1001,11 +971,7 @@ def generate_benchmark_visualization(benchmark_path):
         b = np.ones(d)
         x0 = np.zeros(d)
 
-        def obj_func(x, _A=A, _b=b):
-            return quadratic_function(x, _A, _b)
-
-        def grad_func(x, _A=A, _b=b):
-            return compute_gradient(x, _A, _b)
+        obj_func, grad_func = make_quadratic_problem(A, b)
 
         # Time 20 runs
         elapsed = []

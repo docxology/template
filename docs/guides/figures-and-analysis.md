@@ -523,7 +523,7 @@ uv run python scripts/execute_pipeline.py --core-only
 
 **Total**: ~84 seconds (without optional LLM review)
 
-**See [build-system.md](../operational/build-system.md) for detailed breakdown.**
+**See [build-system.md](../operational/build/build-system.md) for detailed breakdown.**
 
 ### Output Directory Structure
 
@@ -738,7 +738,7 @@ with Pool() as pool:
 
 - **[Quick Start Cheatsheet](../reference/quick-start-cheatsheet.md)** - Essential commands
 - **[Glossary](../reference/glossary.md)** - Terms and definitions
-- **[Build System](../operational/build-system.md)** - build system reference
+- **[Build System](../operational/build/build-system.md)** - build system reference
 - **[Examples Showcase](../usage/examples-showcase.md)** - Real-world applications
 - **[Documentation Index](../documentation-index.md)** - reference
 

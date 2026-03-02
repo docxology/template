@@ -245,7 +245,7 @@ def calculate_statistics(data: List[float]) -> Dict[str, float]:
 - Skip unnecessary steps
 - Optimize slow stages
 
-**See:** [Performance Optimization Guide](../operational/performance-optimization.md)
+**See:** [Performance Optimization Guide](../operational/config/performance-optimization.md)
 
 ### Build Validation
 
@@ -480,7 +480,7 @@ save_output(result, output_path)
 - Skip unnecessary steps
 - Monitor performance
 
-**See:** [Performance Optimization Guide](../operational/performance-optimization.md)
+**See:** [Performance Optimization Guide](../operational/config/performance-optimization.md)
 
 ## Quality Assurance
 

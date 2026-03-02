@@ -2,7 +2,7 @@
 
 > **Patterns, troubleshooting, and best practices** for the logging system
 
-**Quick Reference:** [Main Logging Guide](../logging-guide.md) | [Python](python-logging.md) | [Bash](bash-logging.md)
+**Quick Reference:** [Main Logging Guide](README.md) | [Python](python-logging.md) | [Bash](bash-logging.md)
 
 ---
 
@@ -200,4 +200,4 @@ grep "Stage 5" output/{project_name}/logs/pipeline.log
 
 ---
 
-**Related:** [Python Logging](python-logging.md) | [Bash Logging](bash-logging.md) | [Main Guide](../logging-guide.md)
+**Related:** [Python Logging](python-logging.md) | [Bash Logging](bash-logging.md) | [Main Guide](README.md)

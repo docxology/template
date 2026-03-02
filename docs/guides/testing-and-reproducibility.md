@@ -629,7 +629,7 @@ with open('output/environment.json', 'w') as f:
 → Read **[Architecture Guide](../core/architecture.md)**
 
 **See build system details**
-→ Read **[Build System](../operational/build-system.md)**
+→ Read **[Build System](../operational/build/build-system.md)**
 
 **Review testing standards**
 

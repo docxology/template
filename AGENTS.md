@@ -81,7 +81,7 @@ The template now supports **multiple independent projects** within a single repo
 
 **Active Projects:**
 
-- `projects/act_inf_metaanalysis/` - Active Inference meta-analysis research
+- `projects/code_project/` - Optimization research exemplar (master exemplar)
 
 **Note:** Archived projects are preserved in `projects_archive/` for reference but are not actively executed.
 
@@ -137,7 +137,7 @@ template/                           # Generic template repository
 │   └── test_*.py                   # Tests for infrastructure/ modules
 ├── projects/                      # Multiple research projects directory
 │   ├── README.md                  # Multi-project guide
-│   ├── act_inf_metaanalysis/      # Active Inference meta-analysis project
+│   ├── code_project/              # Optimization research exemplar (master exemplar)
 │   │   ├── src/                   # Project-specific scientific code
 │   │   │   └── *.py
 │   │   ├── tests/                 # Project tests
@@ -148,7 +148,7 @@ template/                           # Generic template repository
 │   │   ├── output/                # Working outputs (generated during pipeline)
 │   │   └── pyproject.toml
 └── output/                         # Final deliverables (organized by project)
-    ├── act_inf_metaanalysis/      # Project outputs
+    ├── code_project/              # Project outputs
     └── ...
 ```
 
@@ -216,7 +216,7 @@ template/                           # Generic Template
 │   ├── README.md
 │   └── test_*.py
 ├── projects/                       # Multiple research projects directory
-│   ├── act_inf_metaanalysis/       # Active Inference meta-analysis project
+│   ├── code_project/               # Optimization research exemplar
 │   │   ├── src/                    # Project scientific code (Layer 2)
 │   │   │   └── *.py                # Research algorithms
 │   │   ├── tests/                  # Project Tests

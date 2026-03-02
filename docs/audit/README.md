@@ -38,5 +38,5 @@ Audit reports typically include:
 ## See Also
 
 - [AGENTS.md](AGENTS.md) - audit documentation
-- [`../operational/troubleshooting-guide.md`](../operational/troubleshooting-guide.md) - Troubleshooting guide
+- [`../operational/troubleshooting/`](../operational/troubleshooting/) - Troubleshooting guide
 - [`../reference/faq.md`](../reference/faq.md) - Common questions

@@ -8,6 +8,7 @@ This script demonstrates the documentation infrastructure capabilities by:
 """
 
 import sys
+from contextlib import nullcontext
 from pathlib import Path
 
 # Add project src to path
@@ -39,13 +40,6 @@ try:
 
         def ProgressBar(*args, **kwargs):
             return nullcontext()
-
-        class nullcontext:
-            def __enter__(self):
-                return self
-
-            def __exit__(self, *args):
-                pass
 
     INFRASTRUCTURE_AVAILABLE = True
 except ImportError as e:

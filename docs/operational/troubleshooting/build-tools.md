@@ -2,7 +2,7 @@
 
 > **Solutions** for pandoc, LaTeX, and PDF generation issues
 
-**Quick Reference:** [Main Troubleshooting](../troubleshooting-guide.md) | [Environment](environment-setup.md) | [Build System](../build-system.md)
+**Quick Reference:** [Main Troubleshooting](README.md) | [Environment](environment-setup.md) | [Build System](../build/build-system.md)
 
 ---
 
@@ -195,4 +195,4 @@ Normal - pypdf gracefully handles malformed PDF objects.
 
 ---
 
-**Related:** [Environment Setup](environment-setup.md) | [Common Errors](common-errors.md) | [Main Guide](../troubleshooting-guide.md)
+**Related:** [Environment Setup](environment-setup.md) | [Common Errors](common-errors.md) | [Main Guide](README.md)

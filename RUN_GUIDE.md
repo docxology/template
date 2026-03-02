@@ -124,7 +124,7 @@ The template now supports **multiple research projects** in a single repository.
 
 The template includes the following active projects:
 
-- **`act_inf_metaanalysis`** - Active Inference meta-analysis research
+- **`code_project`** - Optimization research exemplar
 
 **Note:** Additional projects can be created following the template structure. Archived projects are preserved in `projects_archive/` for reference but are not actively executed.
 
@@ -135,7 +135,7 @@ The template includes the following active projects:
 ./run.sh
 
 # Run specific project
-./run.sh --project act_inf_metaanalysis --pipeline
+./run.sh --project code_project --pipeline
 
 # Run all projects sequentially
 ./run.sh --all-projects --pipeline

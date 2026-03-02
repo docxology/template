@@ -301,7 +301,7 @@ tests/
 
 - Unit tests for `projects/{name}/src/` modules (see `projects/{name}/tests/AGENTS.md`)
 - Each project has independent test suite with 90%+ coverage requirement
-- **act_inf_metaanalysis**: 96.1% coverage
+- **code_project**: 100% coverage
 
 ## Debugging
 
@@ -372,7 +372,7 @@ The test suite includes validation for:
 
 ### Overall Coverage (latest)
 
-- **act_inf_metaanalysis** (`projects/act_inf_metaanalysis/src/`): **96.1%** (Target: 90%+) ✅ Exceeds requirement!
+- **code_project** (`projects/code_project/src/`): **100%** (Target: 90%+) ✅ Exceeds requirement!
 - **Infrastructure** (`infrastructure/`): **83.33%** (Target: 60%+) ✅ Exceeds stretch goal!
 
 ### Coverage Details
@@ -384,5 +384,5 @@ Both test suites exceed their minimum requirements. For detailed coverage inform
 - [`AGENTS.md`](AGENTS.md) - Detailed testing guide
 - [`conftest.py`](conftest.py) - Test configuration
 - [`../infrastructure/README.md`](../infrastructure/README.md) - Infrastructure modules being tested
-- [`../projects/act_inf_metaanalysis/README.md`](../projects/act_inf_metaanalysis/README.md) - act_inf_metaanalysis project
+- [`../projects/code_project/README.md`](../projects/code_project/README.md) - code_project project
 - [`../docs/core/workflow.md`](../docs/core/workflow.md) - Development workflow

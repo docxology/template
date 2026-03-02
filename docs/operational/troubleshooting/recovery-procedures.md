@@ -2,7 +2,7 @@
 
 > **Reset and recovery** procedures for the Research Project Template
 
-**Quick Reference:** [Main Troubleshooting](../troubleshooting-guide.md) | [Build System](../build-system.md)
+**Quick Reference:** [Main Troubleshooting](README.md) | [Build System](../build/build-system.md)
 
 ---
 
@@ -110,7 +110,7 @@ ls -la output/ 2>/dev/null || echo "Output directory not found"
 
 - [FAQ](../../reference/faq.md) - Common questions
 - [Common Workflows](../../reference/common-workflows.md) - Step-by-step solutions
-- [Build System](../build-system.md) - Build details
+- [Build System](../build/build-system.md) - Build details
 - [GitHub Issues](https://github.com/docxology/template/issues) - Report bugs
 
 ---
@@ -126,4 +126,4 @@ ls -la output/ 2>/dev/null || echo "Output directory not found"
 
 ---
 
-**Related:** [Environment Setup](environment-setup.md) | [Build Tools](build-tools.md) | [Main Guide](../troubleshooting-guide.md)
+**Related:** [Environment Setup](environment-setup.md) | [Build Tools](build-tools.md) | [Main Guide](README.md)

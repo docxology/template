@@ -2,7 +2,7 @@
 
 > **Systematic solutions** for environment-related issues
 
-**Quick Reference:** [Main Troubleshooting](../troubleshooting-guide.md) | [Build Tools](build-tools.md) | [Configuration](../configuration.md)
+**Quick Reference:** [Main Troubleshooting](README.md) | [Build Tools](build-tools.md) | [Configuration](../config/configuration.md)
 
 ## Diagnostic Commands
 
@@ -165,4 +165,4 @@ uv run python -c "from infrastructure.core import credentials; print('Imports OK
 
 ---
 
-**Related:** [Build Tools](build-tools.md) | [Test Failures](test-failures.md) | [Main Guide](../troubleshooting-guide.md)
+**Related:** [Build Tools](build-tools.md) | [Test Failures](test-failures.md) | [Main Guide](README.md)

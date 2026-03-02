@@ -9,7 +9,7 @@ Create test suites that validate code functionality using data only, ensuring fu
 This prompt enforces the strict no-mocks testing policy and leverages testing standards:
 
 - [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Testing standards and no-mocks policy
-- [`../development/testing-guide.md`](../development/testing-guide.md) - Testing guide and expansion strategy
+- [`../development/testing/testing-guide.md`](../development/testing/testing-guide.md) - Testing guide and expansion strategy
 - [`../core/workflow.md`](../core/workflow.md) - Development workflow integration
 
 ## Prompt Template
@@ -410,7 +410,7 @@ LAYER: project
 
 ## Related Documentation
 
-- [`../development/testing-guide.md`](../development/testing-guide.md) - Testing guide and expansion strategy
+- [`../development/testing/testing-guide.md`](../development/testing/testing-guide.md) - Testing guide and expansion strategy
 - [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Testing standards
 - [`../core/workflow.md`](../core/workflow.md) - Development workflow integration
 ```

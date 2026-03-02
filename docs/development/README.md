@@ -2,7 +2,7 @@
 
 > **Contributing, testing, and development** guides
 
-**Quick Reference:** [Contributing](contributing.md) | [Testing Guide](testing-guide.md) | [Code of Conduct](code-of-conduct.md)
+**Quick Reference:** [Contributing](contributing.md) | [Testing Guide](testing/testing-guide.md) | [Code of Conduct](code-of-conduct.md)
 
 ## Purpose
 
@@ -16,8 +16,8 @@ The `development/` directory contains documentation for contributing to the proj
 | [`code-of-conduct.md`](code-of-conduct.md) | Community standards and behavior | All participants |
 | [`security.md`](security.md) | Security policy and vulnerability reporting | All users |
 | [`roadmap.md`](roadmap.md) | Development roadmap and future plans | Maintainers, contributors |
-| [`testing-guide.md`](testing-guide.md) | Testing framework guide | Developers |
-| [`testing-with-credentials.md`](testing-with-credentials.md) | Testing with external service credentials | Developers |
+| [`testing-guide.md`](testing/testing-guide.md) | Testing framework guide | Developers |
+| [`testing-with-credentials.md`](testing/testing-with-credentials.md) | Testing with external service credentials | Developers |
 | [`coverage-gaps.md`](coverage-gaps.md) | Test coverage gap analysis | Developers |
 
 ## Quick Navigation
@@ -26,7 +26,7 @@ The `development/` directory contains documentation for contributing to the proj
 → Read **[Contributing](contributing.md)** - Contribution guidelines
 
 ### Understanding Testing
-→ Study **[Testing Guide](testing-guide.md)** - Testing framework
+→ Study **[Testing Guide](testing/testing-guide.md)** - Testing framework
 
 ### Reporting Security Issues
 → Follow **[Security](security.md)** - Security policy

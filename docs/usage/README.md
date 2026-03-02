@@ -17,24 +17,30 @@ The `usage/` directory contains practical examples, usage patterns, and guides f
 | [`template-description.md`](template-description.md) | Template overview and features | New users |
 | [`markdown-template-guide.md`](markdown-template-guide.md) | Markdown authoring guide | Content creators |
 | [`manuscript-numbering-system.md`](manuscript-numbering-system.md) | Manuscript section numbering | Content creators |
+| [`style-guide.md`](style-guide.md) | Manuscript style guide (equations, figures, captions, tables) | Content creators |
 | [`image-management.md`](image-management.md) | Image insertion and cross-referencing | Content creators |
 | [`visualization-guide.md`](visualization-guide.md) | Visualization system guide | Developers |
 
 ## Quick Navigation
 
 ### Getting Started with Examples
+
 → Read **[Examples](examples.md)** - Basic usage patterns
 
 ### Real-World Applications
+
 → Study **[Examples Showcase](examples-showcase.md)** - Advanced examples
 
 ### Writing Content
+
 → Follow **[Markdown Template Guide](markdown-template-guide.md)** - Authoring guide
 
 ### Managing Images
+
 → Use **[Image Management](image-management.md)** - Image handling
 
 ### Creating Visualizations
+
 → Reference **[Visualization Guide](visualization-guide.md)** - Figure generation
 
 ## Related Documentation
@@ -47,8 +53,3 @@ The `usage/` directory contains practical examples, usage patterns, and guides f
 
 - [`../documentation-index.md`](../documentation-index.md) - documentation index
 - [`../README.md`](../README.md) - Documentation hub overview
-
-
-
-
-

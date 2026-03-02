@@ -4,7 +4,7 @@
 
 **Quick Reference:** [Examples Showcase](../usage/examples-showcase.md) | [Architecture](../core/architecture.md) | [How To Use](../core/how-to-use.md)
 
-This file shows examples of how to customize the template into specific research projects using configuration files and environment variables. For related information, see **[`examples-showcase.md`](../usage/examples-showcase.md)**, **[`configuration.md`](../operational/configuration.md)**, **[`README.md`](README.md)**, and **[`../core/architecture.md`](../core/architecture.md)**.
+This file shows examples of how to customize the template into specific research projects using configuration files and environment variables. For related information, see **[`examples-showcase.md`](../usage/examples-showcase.md)**, **[`configuration.md`](../operational/config/configuration.md)**, **[`README.md`](README.md)**, and **[`../core/architecture.md`](../core/architecture.md)**.
 
 ## Example 1: Machine Learning Research Project
 

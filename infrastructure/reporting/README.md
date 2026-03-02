@@ -5,6 +5,7 @@ Pipeline reporting and error aggregation utilities.
 ## Overview
 
 The reporting module provides reporting capabilities for pipeline execution, including:
+
 - Consolidated pipeline reports (JSON, HTML, Markdown)
 - Test results reporting
 - Validation reports with actionable recommendations
@@ -180,7 +181,7 @@ from infrastructure.reporting import generate_executive_summary, save_executive_
 from pathlib import Path
 
 repo_root = Path(".")
-project_names = ["act_inf_metaanalysis"]
+project_names = ["code_project"]
 
 # Generate cross-project summary
 summary = generate_executive_summary(repo_root, project_names)
@@ -292,6 +293,7 @@ All reports are generated in multiple formats:
 ## Integration
 
 The reporting module is automatically integrated into:
+
 - `scripts/execute_pipeline.py` - Generates pipeline report at end
 - `scripts/01_run_tests.py` - Generates test reports
 - `scripts/04_validate_output.py` - Generates validation reports
@@ -326,6 +328,7 @@ overview_files = generate_all_manuscript_overviews(summary, output_dir, repo_roo
 ```
 
 **Features:**
+
 - **Page Thumbnails**: High-quality page previews with page numbers
 - **Grid Layout**: 4-column arrangement with automatic row calculation
 - **Dual Output**: Both PNG (raster) and PDF (vector) formats
@@ -355,19 +358,3 @@ output/executive_summary/
 - [`AGENTS.md`](AGENTS.md) - reporting module documentation
 - [`../README.md`](../README.md) - Infrastructure layer overview
 - [`../AGENTS.md`](../AGENTS.md) - infrastructure documentation
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

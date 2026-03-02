@@ -1,35 +1,35 @@
 {
-  "timestamp": "2026-02-24T14:20:47.213184",
+  "timestamp": "2026-03-01T17:38:05.061856",
   "total_projects": 2,
   "successful_projects": 2,
   "failed_projects": 0,
-  "total_duration": 409.5589089393616,
+  "total_duration": 284.40701699256897,
   "infra_test_duration": 0.0,
   "projects": {
     "code_project": {
       "success": true,
-      "duration": 53.74250102043152,
+      "duration": 45.146143198013306,
       "stages_completed": 7,
       "errors": []
     },
-    "ento_linguistics": {
+    "pragmatism_blake": {
       "success": true,
-      "duration": 346.09170794487,
+      "duration": 238.99464011192322,
       "stages_completed": 7,
       "errors": []
     }
   },
   "performance_analysis": {
-    "slowest_project": "ento_linguistics",
+    "slowest_project": "pragmatism_blake",
     "fastest_project": "code_project",
-    "average_duration": 199.91710448265076,
-    "total_pipeline_time": 399.8342089653015
+    "average_duration": 142.07039165496826,
+    "total_pipeline_time": 284.1407833099365
   },
   "error_aggregation": {
     "total_errors": 0,
     "errors_by_project": {
       "code_project": 0,
-      "ento_linguistics": 0
+      "pragmatism_blake": 0
     }
   },
   "recommendations": []

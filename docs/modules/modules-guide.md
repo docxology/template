@@ -41,7 +41,7 @@ if report.overall_integrity:
 ```python
 from infrastructure.documentation.glossary_gen import generate_glossary
 
-glossary = generate_glossary("projects/act_inf_metaanalysis/src/")
+glossary = generate_glossary("projects/code_project/src/")
 print(f"Generated {len(glossary)} entries")
 ```
 
@@ -125,7 +125,7 @@ All modules work independently or together with minimal coupling.
 
 - **[API Reference](../reference/api-reference.md)** - Full API documentation
 - **[Infrastructure Guide](../../infrastructure/AGENTS.md)** - Module architecture
-- **[Build System](../operational/build-system.md)** - Build pipeline integration
+- **[Build System](../operational/build/build-system.md)** - Build pipeline integration
 
 ---
 

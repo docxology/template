@@ -2,7 +2,7 @@
 
 > **Python logging system** for consistent script output
 
-**Quick Reference:** [Main Logging Guide](../logging-guide.md) | [Bash Logging](bash-logging.md)
+**Quick Reference:** [Main Logging Guide](README.md) | [Bash Logging](bash-logging.md)
 
 ---
 
@@ -230,4 +230,4 @@ log_progress(i, total, "Task", logger)
 
 ---
 
-**Related:** [Bash Logging](bash-logging.md) | [Patterns](logging-patterns.md) | [Main Guide](../logging-guide.md)
+**Related:** [Bash Logging](bash-logging.md) | [Patterns](logging-patterns.md) | [Main Guide](README.md)

@@ -2,7 +2,7 @@
 
 > **Solutions** for pytest, coverage, and testing issues
 
-**Quick Reference:** [Main Troubleshooting](../troubleshooting-guide.md) | [Testing Guide](../../development/testing-guide.md)
+**Quick Reference:** [Main Troubleshooting](README.md) | [Testing Guide](../../development/testing/testing-guide.md)
 
 ---
 
@@ -180,4 +180,4 @@ uv run pytest tests/ -n auto
 
 ---
 
-**Related:** [Environment Setup](environment-setup.md) | [Testing Guide](../../development/testing-guide.md) | [Main Guide](../troubleshooting-guide.md)
+**Related:** [Environment Setup](environment-setup.md) | [Testing Guide](../../development/testing/testing-guide.md) | [Main Guide](README.md)

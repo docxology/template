@@ -2,7 +2,7 @@
 
 > **Shell script logging** for consistent pipeline output
 
-**Quick Reference:** [Main Logging Guide](../logging-guide.md) | [Python Logging](python-logging.md)
+**Quick Reference:** [Main Logging Guide](README.md) | [Python Logging](python-logging.md)
 
 ---
 
@@ -168,4 +168,4 @@ Total duration: 5m 42s
 
 ---
 
-**Related:** [Python Logging](python-logging.md) | [Patterns](logging-patterns.md) | [Main Guide](../logging-guide.md)
+**Related:** [Python Logging](python-logging.md) | [Patterns](logging-patterns.md) | [Main Guide](README.md)

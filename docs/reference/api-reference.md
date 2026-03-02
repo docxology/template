@@ -66,6 +66,42 @@ These modules are located in `projects/{name}/src/` and contain project-specific
 
 ---
 
+## Infrastructure Core Module Inventory
+
+> Auto-generated module inventory for `infrastructure/core/` (26 modules).
+
+| Module | Description |
+|--------|-------------|
+| `checkpoint` | Pipeline checkpoint system for resume capability |
+| `cli` | CLI interface for core infrastructure modules |
+| `config_cli` | Load manuscript configuration script (THIN ORCHESTRATOR) |
+| `config_loader` | Configuration loader for manuscript metadata |
+| `credentials` | Secure credential management for testing and operations |
+| `environment` | Environment setup and validation utilities |
+| `errors` | Typed error constants for consistent error messaging |
+| `exceptions` | Custom exception hierarchy for the Research Project Template |
+| `file_inventory` | File inventory and collection utilities |
+| `file_operations` | File and directory operation utilities |
+| `health_check` | System health monitoring and status checks |
+| `logging_formatters` | Logging formatters for structured and template-based output |
+| `logging_helpers` | Helper functions for logging utilities |
+| `logging_progress` | Progress bars, spinners, and ETA calculations for logging |
+| `logging_utils` | Unified Python logging module for the Research Project Template |
+| `menu` | Interactive menu utilities (pure helpers) |
+| `multi_project` | Multi-project orchestration system |
+| `performance` | Performance monitoring and resource tracking utilities |
+| `performance_monitor` | Performance monitoring and profiling utilities for research workflows |
+| `pipeline` | Pipeline execution system for research projects |
+| `pipeline_summary` | Pipeline summary generation and reporting |
+| `progress` | Progress reporting utilities for pipeline operations |
+| `retry` | Retry utilities for handling transient failures |
+| `script_discovery` | Script discovery and execution utilities |
+| `security` | Security utilities and input validation for the research template system |
+
+For detailed class and function signatures for each core module, see [Infrastructure Documentation](../../infrastructure/AGENTS.md).
+
+---
+
 ## Module: example
 
 ### Functions
@@ -797,7 +833,7 @@ latex_block = manager.generate_latex_figure_block("fig:convergence")
 For API documentation of all modules, see:
 
 - **[Infrastructure Documentation](../../infrastructure/AGENTS.md)** - infrastructure module descriptions
-- **[Project Source Documentation](../../projects/act_inf_metaanalysis/src/AGENTS.md)** - Project-specific module descriptions
+- **[Project Source Documentation](../../projects/code_project/src/AGENTS.md)** - Project-specific module descriptions
 - **[Scientific Simulation Guide](../modules/scientific-simulation-guide.md)** - Simulation and analysis modules
 - **[Visualization Guide](../usage/visualization-guide.md)** - Visualization and figure management
 - **[Image Management Guide](../usage/image-management.md)** - Image insertion and cross-referencing
@@ -832,7 +868,7 @@ This API reference covers all public functions and classes in the `infrastructur
 
 For usage examples, see [Modules Guide](../modules/modules-guide.md).
 
-For implementation details, see [Infrastructure Documentation](../../infrastructure/AGENTS.md) and [Project Source Documentation](../../projects/act_inf_metaanalysis/src/AGENTS.md).
+For implementation details, see [Infrastructure Documentation](../../infrastructure/AGENTS.md) and [Project Source Documentation](../../projects/code_project/src/AGENTS.md).
 
 ---
 
@@ -840,5 +876,5 @@ For implementation details, see [Infrastructure Documentation](../../infrastruct
 
 - [Modules Guide](../modules/modules-guide.md) - Usage examples
 - [Infrastructure Docs](../../infrastructure/AGENTS.md) - Infrastructure module implementation
-- [Project Source Docs](../../projects/act_inf_metaanalysis/src/AGENTS.md) - Project module implementation
+- [Project Source Docs](../../projects/code_project/src/AGENTS.md) - Project module implementation
 - [Best Practices](../best-practices/best-practices.md) - Usage recommendations

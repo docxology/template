@@ -2,7 +2,7 @@
 
 > **Common questions** and answers about the Research Project Template
 
-**Quick Reference:** [Getting Started](../guides/getting-started.md) | [Troubleshooting](../operational/troubleshooting-guide.md) | [How To Use](../core/how-to-use.md)
+**Quick Reference:** [Getting Started](../guides/getting-started.md) | [Troubleshooting](../operational/troubleshooting/) | [How To Use](../core/how-to-use.md)
 
 ## 🚀 **Getting Started**
 
@@ -71,7 +71,7 @@
 
 ### **Q: How do I rename the project?**
 
-**A:** Customize your project by editing `project/manuscript/config.yaml` or setting environment variables (`AUTHOR_NAME`, `PROJECT_TITLE`, etc.). See [Configuration Guide](../operational/configuration.md) for details.
+**A:** Customize your project by editing `project/manuscript/config.yaml` or setting environment variables (`AUTHOR_NAME`, `PROJECT_TITLE`, etc.). See [Configuration Guide](../operational/config/configuration.md) for details.
 
 ### **Q: Can I add new output formats?**
 
@@ -146,31 +146,31 @@
 
 ### **Q: How do I set up CI/CD?**
 
-**A:** See the [CI/CD Integration Guide](../operational/ci-cd-integration.md) for GitHub Actions setup, automated testing, and deployment workflows.
+**A:** See the [CI/CD Integration Guide](../operational/build/ci-cd-integration.md) for GitHub Actions setup, automated testing, and deployment workflows.
 
 ### **Q: Can I automate PDF generation in CI?**
 
-**A:** Yes! The [CI/CD Integration Guide](../operational/ci-cd-integration.md) includes examples for automated PDF generation in GitHub Actions and other CI systems.
+**A:** Yes! The [CI/CD Integration Guide](../operational/build/ci-cd-integration.md) includes examples for automated PDF generation in GitHub Actions and other CI systems.
 
 ## 📦 **Dependency Management**
 
 ### **Q: How do I manage dependencies with uv?**
 
-**A:** See the [Dependency Management Guide](../operational/dependency-management.md) for instructions on using uv for package management, including adding, updating, and removing dependencies.
+**A:** See the [Dependency Management Guide](../operational/build/dependency-management.md) for instructions on using uv for package management, including adding, updating, and removing dependencies.
 
 ### **Q: What if I have dependency conflicts?**
 
-**A:** The [Dependency Management Guide](../operational/dependency-management.md) includes troubleshooting for dependency conflicts and resolution strategies.
+**A:** The [Dependency Management Guide](../operational/build/dependency-management.md) includes troubleshooting for dependency conflicts and resolution strategies.
 
 ## ⚡ **Performance**
 
 ### **Q: How can I optimize build times?**
 
-**A:** See the [Performance Optimization Guide](../operational/performance-optimization.md) for strategies to reduce build times, including parallel execution, caching, and optimization techniques.
+**A:** See the [Performance Optimization Guide](../operational/config/performance-optimization.md) for strategies to reduce build times, including parallel execution, caching, and optimization techniques.
 
 ### **Q: What's the current build performance?**
 
-**A:** The build system achieves 84-second builds for core pipeline regeneration (without optional LLM review). See [Build System](../operational/build-system.md) for detailed performance metrics and [Performance Optimization Guide](../operational/performance-optimization.md) for optimization strategies.
+**A:** The build system achieves 84-second builds for core pipeline regeneration (without optional LLM review). See [Build System](../operational/build/build-system.md) for detailed performance metrics and [Performance Optimization Guide](../operational/config/performance-optimization.md) for optimization strategies.
 
 ## 📞 **Getting Help**
 

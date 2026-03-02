@@ -4,49 +4,76 @@
 
 The Infrastructure layer provides reusable, modular tools for building, validating, and managing research projects. Organized by functionality into submodules, each with clear responsibilities and testing.
 
-## New Modular Architecture (v2.1)
+## Modular Architecture (v2.1)
 
-The infrastructure has been reorganized into focused modules grouping related functionalities:
+The infrastructure has been reorganized into focused modules grouping related functionalities.
+Each module also has a `SKILL.md` file for Claude Code skill discovery.
 
-```
+```text
 infrastructure/
+├── SKILL.md        # Top-level infrastructure skill
 ├── core/           # Foundation utilities
 │   ├── exceptions.py       # Exception hierarchy with context
 │   ├── logging_utils.py    # Unified Python logging
-│   └── config_loader.py    # Configuration management
+│   ├── config_loader.py    # Configuration management
+│   ├── pipeline.py         # Pipeline execution system
+│   ├── multi_project.py    # Multi-project orchestration
+│   ├── checkpoint.py       # Pipeline state persistence
+│   ├── retry.py            # Exponential backoff retries
+│   ├── performance.py      # Resource monitoring
+│   ├── security.py         # Security & rate limiting
+│   ├── environment.py      # Environment setup & validation
+│   ├── file_operations.py  # File I/O utilities
+│   └── SKILL.md, AGENTS.md, README.md
 ├── validation/     # Quality & validation tools
 │   ├── pdf_validator.py      # PDF rendering validation
 │   ├── markdown_validator.py # Markdown structure validation
 │   ├── integrity.py          # File integrity & cross-references
-│   └── cli.py                # CLI for validation tools
+│   ├── audit_orchestrator.py # Comprehensive audit coordination
+│   ├── repo_scanner.py       # Repository-wide scanning
+│   ├── cli.py                # CLI for validation tools
+│   └── SKILL.md, AGENTS.md, README.md
 ├── documentation/  # Documentation & figure management
 │   ├── figure_manager.py       # Automatic figure numbering
 │   ├── image_manager.py        # Image file management
 │   ├── markdown_integration.py # Figure/reference insertion
 │   ├── glossary_gen.py         # API documentation generation
-│   └── cli.py                  # CLI for documentation tools
+│   └── SKILL.md, AGENTS.md, README.md
+├── project/        # Multi-project management
+│   ├── discovery.py         # Project discovery & metadata
+│   └── SKILL.md, AGENTS.md, README.md
 ├── scientific/     # Scientific development
-│   ├── scientific_dev.py    # Scientific utilities & best practices
-│   └── AGENTS.md, README.md  # Documentation
+│   ├── benchmarking.py      # Performance benchmarking
+│   ├── stability.py         # Numerical stability checks
+│   ├── validation.py        # Scientific best practices
+│   ├── templates.py         # Module/workflow scaffolding
+│   └── SKILL.md, AGENTS.md, README.md
 ├── llm/            # LLM integration
-│   ├── core.py              # LLM client
-│   ├── templates.py         # Research prompt templates
-│   └── AGENTS.md, README.md  # Documentation
+│   ├── core/                # Client, config, context
+│   ├── templates/           # Research prompt templates
+│   ├── validation/          # Output validation
+│   ├── review/              # Manuscript review generation
+│   ├── prompts/             # Prompt fragment system
+│   └── SKILL.md, AGENTS.md, README.md
 ├── rendering/      # Multi-format rendering
 │   ├── core.py              # Render manager
+│   ├── pdf_renderer.py      # PDF rendering engine
+│   ├── slides_renderer.py   # Beamer/Reveal.js slides
+│   ├── web_renderer.py      # HTML generation
 │   ├── latex_utils.py       # LaTeX utilities
 │   ├── cli.py               # CLI for rendering
-│   └── AGENTS.md, README.md  # Documentation
+│   └── SKILL.md, AGENTS.md, README.md
 ├── publishing/     # Academic publishing & dissemination
 │   ├── core.py              # Publishing workflows
-│   ├── api.py               # Platform API clients
-│   ├── cli.py               # CLI for publishing
-│   └── AGENTS.md, README.md  # Documentation
+│   ├── api.py               # Platform API clients (Zenodo)
+│   ├── citations.py         # Citation generation
+│   └── SKILL.md, AGENTS.md, README.md
 └── reporting/      # Pipeline reporting & error aggregation
     ├── pipeline_reporter.py  # Pipeline report generation
     ├── error_aggregator.py   # Error collection & categorization
-    ├── html_templates.py     # HTML report templates
-    └── AGENTS.md, README.md   # Documentation
+    ├── executive_reporter.py # Cross-project summaries
+    ├── dashboard_generator.py # Visual dashboards
+    └── SKILL.md, AGENTS.md, README.md
 ```
 
 ## Function Signatures
@@ -54,17 +81,30 @@ infrastructure/
 ### Core Module
 
 #### exceptions.py
+
 - `class TemplateError(Exception):`
-- `class LLMError(TemplateError):`
-- `class RenderingError(TemplateError):`
-- `class PublishingError(TemplateError):`
-- `class ValidationError(TemplateError):`
 - `class ConfigurationError(TemplateError):`
-- `class EnvironmentError(TemplateError):`
-- `def format_exception_chain(exc: Exception) -> str:`
-- `def preserve_context(func: Callable) -> Callable:`
+- `class ValidationError(TemplateError):`
+- `class BuildError(TemplateError):`
+- `class FileOperationError(TemplateError):`
+- `class DependencyError(TemplateError):`
+- `class TestError(TemplateError):`
+- `class IntegrationError(TemplateError):`
+- `class LiteratureSearchError(TemplateError):`
+- `class APIRateLimitError(LiteratureSearchError):`
+- `class LLMError(TemplateError):`
+- `class LLMConnectionError(LLMError):`
+- `class LLMTemplateError(LLMError):`
+- `class RenderingError(TemplateError):`
+- `class FormatError(RenderingError):`
+- `class PublishingError(TemplateError):`
+- `class UploadError(PublishingError):`
+- `def raise_with_context(exception_class, message, **context) -> None:`
+- `def format_file_context(file_path, line=None) -> dict:`
+- `def chain_exceptions(new_exception, original) -> TemplateError:`
 
 #### logging_utils.py
+
 - `class ProjectLogger:`
 - `def get_project_logger(name: str, level: Optional[int] = None) -> ProjectLogger:`
 - `def setup_project_logging(name: str, level: Optional[int] = None, ...):`
@@ -85,15 +125,17 @@ infrastructure/
 - `def log_resource_usage(logger: Optional[logging.Logger] = None) -> None:`
 
 #### config_loader.py
-- `def load_config_from_yaml(yaml_path: Path) -> Dict[str, Any]:`
-- `def load_config_from_env() -> Dict[str, Any]:`
-- `def merge_configs(yaml_config: Dict, env_config: Dict) -> Dict[str, Any]:`
-- `def load_project_config(project_dir: Path) -> Dict[str, Any]:`
-- `def format_author_name(author_data: Dict[str, Any]) -> str:`
-- `def format_author_affiliation(author_data: Dict[str, Any]) -> str:`
-- `def get_formatted_authors(config: Dict[str, Any]) -> List[str]:`
+
+- `def load_config(config_path: Path | str) -> Optional[Dict[str, Any]]:`
+- `def find_config_file(repo_root: Path | str) -> Optional[Path]:`
+- `def get_config_as_dict(repo_root: Path | str) -> Dict[str, str]:`
+- `def get_config_as_env_vars(repo_root: Path | str, respect_existing: bool = True) -> Dict[str, str]:`
+- `def get_translation_languages(repo_root: Path | str, project_name: str = "project") -> List[str]:`
+- `def format_author_name(authors: List[AuthorConfig]) -> str:`
+- `def format_author_details(authors: List[AuthorConfig], doi: str = "") -> str:`
 
 #### checkpoint.py
+
 - `class PipelineCheckpoint:`
 - `class CheckpointManager:`
 - `def create_checkpoint_dir(base_dir: Path) -> Path:`
@@ -102,6 +144,7 @@ infrastructure/
 - `def validate_checkpoint(checkpoint: PipelineCheckpoint) -> bool:`
 
 #### file_operations.py
+
 - `def clean_output_directory(output_dir: Path, project_name: str) -> None:`
 - `def copy_final_deliverables(output_dir: Path, final_dir: Path, project_name: str) -> None:`
 - `def ensure_directory_exists(directory: Path) -> None:`
@@ -109,6 +152,7 @@ infrastructure/
 - `def calculate_directory_size(directory: Path) -> int:`
 
 #### performance.py
+
 - `class PerformanceMonitor:`
 - `def get_system_resources() -> Dict[str, Any]:`
 - `def monitor_performance(func: Callable) -> Callable:`
@@ -118,39 +162,57 @@ infrastructure/
 ### Validation Module
 
 #### pdf_validator.py
-- `def validate_pdf_content(pdf_path: Path) -> ValidationReport:`
+
+- `def validate_pdf_rendering(pdf_path: Path) -> dict:`
 - `def extract_text_from_pdf(pdf_path: Path) -> str:`
-- `def check_unresolved_references(text: str) -> List[str]:`
-- `def check_latex_warnings(text: str) -> List[str]:`
-- `def validate_document_structure(pdf_path: Path) -> bool:`
+- `def scan_for_issues(pdf_path: Path) -> List[dict]:`
 
 #### markdown_validator.py
-- `def validate_markdown_file(file_path: Path) -> ValidationReport:`
-- `def validate_image_references(content: str, base_dir: Path) -> List[str]:`
-- `def validate_cross_references(content: str) -> List[str]:`
-- `def validate_equation_labels(content: str) -> List[str]:`
-- `def validate_link_formats(content: str) -> List[str]:`
+
+- `def validate_markdown(manuscript_dir: Path) -> dict:`
+- `def find_markdown_files(directory: Path) -> List[Path]:`
+- `def validate_images(md_content: str, base_path: Path) -> List[str]:`
+- `def validate_refs(md_content: str) -> List[str]:`
+- `def validate_math(md_content: str) -> List[str]:`
 
 #### integrity.py
-- `def verify_output_integrity(output_dir: Path) -> IntegrityReport:`
-- `def check_file_integrity(file_path: Path) -> bool:`
-- `def validate_cross_references(content: str) -> List[str]:`
-- `def generate_integrity_report(report: IntegrityReport) -> str:`
+
+- `def verify_output_integrity(output_dir: Path) -> dict:`
+- `def verify_file_integrity(file_path: Path) -> bool:`
+- `def verify_cross_references(manuscript_dir: Path) -> dict:`
+- `def verify_data_consistency(data_dir: Path) -> dict:`
+- `def verify_academic_standards(manuscript_dir: Path) -> dict:`
+- `def generate_integrity_report(report: dict) -> str:`
+
+#### audit_orchestrator.py
+
+- `def run_comprehensive_audit(project_path: Path) -> dict:`
+- `def generate_audit_report(audit_results: dict) -> str:`
+
+#### issue_categorizer.py
+
+- `def categorize_by_type(issues: List) -> dict:`
+- `def assign_severity(issues: List) -> List:`
+- `def filter_false_positives(issues: List) -> List:`
+- `def prioritize_issues(issues: List) -> List:`
 
 ### Rendering Module
 
 #### pdf_renderer.py
+
 - `def render_pdf_manuscript(manuscript_dir: Path, output_dir: Path, ...) -> Path:`
 - `def render_individual_sections(manuscript_dir: Path, output_dir: Path) -> List[Path]:`
 - `def combine_sections_to_pdf(section_files: List[Path], output_file: Path) -> None:`
 - `def render_ide_friendly_pdf(source_file: Path, output_file: Path) -> None:`
 
 #### latex_utils.py
+
 - `def compile_latex_to_pdf(tex_file: Path, output_dir: Path, ...) -> Path:`
 - `def extract_latex_errors(log_content: str) -> List[str]:`
 - `def clean_latex_auxiliary_files(output_dir: Path) -> None:`
 
 #### core.py
+
 - `class RenderManager:`
 - `def render_pdf(self, manuscript_dir: Path, output_dir: Path, ...) -> Path:`
 - `def render_html(self, manuscript_dir: Path, output_dir: Path) -> Path:`
@@ -159,12 +221,14 @@ infrastructure/
 ### LLM Module
 
 #### core.py
+
 - `class LLMConfig:`
 - `class LLMClient:`
 - `def query(self, prompt: str, options: Optional[GenerationOptions] = None) -> str:`
 - `def apply_template(self, template_name: str, **kwargs) -> str:`
 
 #### templates.py
+
 - `def get_template(template_name: str) -> str:`
 - `def list_available_templates() -> List[str]:`
 - `def apply_template_with_context(template_name: str, context: Dict[str, Any]) -> str:`
@@ -172,16 +236,19 @@ infrastructure/
 ### Publishing Module
 
 #### core.py
+
 - `def extract_publication_metadata(markdown_files: List[Path]) -> Dict[str, Any]:`
 - `def validate_metadata(metadata: Dict[str, Any]) -> List[str]:`
 - `def format_publication_metadata(metadata: Dict[str, Any]) -> str:`
 
 #### api.py
+
 - `def publish_to_zenodo(metadata: Dict[str, Any], files: List[Path], ...) -> str:`
 - `def create_github_release(metadata: Dict[str, Any], files: List[Path], ...) -> str:`
 - `def prepare_arxiv_submission(metadata: Dict[str, Any], files: List[Path]) -> Path:`
 
 #### citations.py
+
 - `def generate_citation_bibtex(metadata: Dict[str, Any]) -> str:`
 - `def generate_citation_apa(metadata: Dict[str, Any]) -> str:`
 - `def validate_doi(doi: str) -> bool:`
@@ -189,41 +256,49 @@ infrastructure/
 ### Scientific Module
 
 #### benchmarking.py
+
 - `def benchmark_function(func: Callable, test_inputs: List[Any], ...) -> BenchmarkReport:`
 - `def compare_implementations(functions: Dict[str, Callable], ...) -> ComparisonReport:`
 
 #### stability.py
+
 - `def check_numerical_stability(func: Callable, test_inputs: List[Any], ...) -> StabilityReport:`
 - `def assess_algorithm_stability(func: Callable, input_ranges: Dict[str, Tuple[float, float]]) -> Dict[str, Any]:`
 
 #### validation.py
+
 - `def validate_scientific_code(file_path: Path) -> ValidationReport:`
 - `def check_best_practices(code_content: str) -> List[str]:`
 
 ### Reporting Module
 
 #### pipeline_reporter.py
+
 - `def generate_pipeline_report(checkpoint_dir: Path, output_dir: Path) -> Path:`
 - `def generate_stage_report(stage_name: str, duration: float, ...) -> str:`
 
 #### error_aggregator.py
+
 - `def aggregate_errors(log_files: List[Path]) -> ErrorSummary:`
 - `def categorize_errors(error_messages: List[str]) -> Dict[str, List[str]]:`
 - `def generate_error_report(errors: ErrorSummary, output_dir: Path) -> Path:`
 
 #### executive_reporter.py
+
 - `def generate_executive_report(project_dirs: List[Path], output_dir: Path) -> Path:`
 - `def aggregate_project_metrics(project_dirs: List[Path]) -> Dict[str, Any]:`
 
 ### Documentation Module
 
 #### figure_manager.py
+
 - `class FigureManager:`
 - `def register_figure(self, figure_path: Path, caption: str, label: str) -> str:`
 - `def get_figure_reference(self, label: str) -> str:`
 - `def validate_figure_references(self, content: str) -> List[str]:`
 
 #### markdown_integration.py
+
 - `def integrate_figures_into_markdown(content: str, figure_manager: FigureManager) -> str:`
 - `def integrate_tables_into_markdown(content: str) -> str:`
 - `def validate_markdown_integrity(content: str) -> List[str]:`
@@ -231,18 +306,21 @@ infrastructure/
 ## Key Design Principles
 
 ### 1. Layered Architecture
+
 - **Layer 1 (infrastructure/)**: Generic, reusable tools for any project
 - All code is domain-independent
-- 100% test coverage required
+- 60%+ test coverage required (currently 83.33%)
 - Can be copied to other projects
 
 ### 2. Thin Orchestrator Pattern
+
 - **Business logic**: Implemented in module core (e.g., `core.py`)
 - **Orchestration**: Delegated to CLI wrappers and entry points
 - **Scripts**: Only coordinate, never duplicate logic
 - **Reusability**: Each module stands alone or integrates with others
 
 ### 3. Module Standardization
+
 - Each module has:
   - `__init__.py` - Public API exports
   - `core.py` - Core business logic (100% tested)
@@ -304,6 +382,7 @@ infrastructure/
   - `copy_final_deliverables` - Output copying
 
 **Usage:**
+
 ```python
 from infrastructure.core import (
     get_logger, TemplateError, load_config,
@@ -333,6 +412,7 @@ from infrastructure.core import (
   - Academic standards compliance
 
 **CLI:**
+
 ```bash
 python3 -m infrastructure.validation.cli pdf output/pdf/manuscript.pdf
 python3 -m infrastructure.validation.cli markdown project/manuscript/
@@ -364,6 +444,7 @@ python3 -m infrastructure.validation.cli integrity output/
   - Marker-based content injection
 
 **CLI:**
+
 ```bash
 python3 -m infrastructure.documentation.cli generate-api src/
 ```
@@ -383,12 +464,14 @@ python3 -m infrastructure.documentation.cli generate-api src/
 **Local LLM integration for research assistance.**
 
 Features:
+
 - Ollama integration for local models
 - Research prompt templates
 - Multi-turn conversation support
 - Streaming responses
 
 **Usage:**
+
 ```python
 from infrastructure.llm import LLMClient
 
@@ -401,6 +484,7 @@ summary = client.apply_template("summarize_abstract", text=abstract)
 **Multi-format output generation.**
 
 Supports:
+
 - PDF generation (standard & IDE-friendly)
 - HTML presentation (reveal.js)
 - Slide decks (Beamer & reveal.js)
@@ -408,6 +492,7 @@ Supports:
 - Web output with MathJax
 
 **CLI:**
+
 ```bash
 python3 -m infrastructure.rendering.cli pdf manuscript.tex
 python3 -m infrastructure.rendering.cli all manuscript.tex
@@ -419,6 +504,7 @@ python3 -m infrastructure.rendering.cli slides presentation.md --format revealjs
 **Pipeline reporting and error aggregation.**
 
 Features:
+
 - Consolidated pipeline reports (JSON, HTML, Markdown)
 - Test results reporting with coverage metrics
 - validation reports with actionable recommendations
@@ -428,6 +514,7 @@ Features:
 - Output statistics and summaries
 
 **Key Functions:**
+
 - `generate_pipeline_report` - Main pipeline report generation
 - `generate_test_report` - Test results reporting
 - `generate_validation_report` - Validation results reporting
@@ -435,6 +522,7 @@ Features:
 - `generate_output_summary` - Output file statistics
 
 **Usage:**
+
 ```python
 from infrastructure.reporting import (
     generate_pipeline_report,
@@ -456,7 +544,7 @@ saved_files = save_pipeline_report(report, Path("output/reports"))
 # Generate multi-project executive report
 exec_report = generate_multi_project_report(
     repo_root=Path("."),
-    project_names=["act_inf_metaanalysis"],
+    project_names=["code_project"],
     output_dir=Path("output/executive_summary")
 )
 
@@ -467,6 +555,7 @@ aggregator.save_report(Path("output/reports"))
 ```
 
 **Integration:**
+
 - Automatically integrated into `scripts/execute_pipeline.py`
 - Test reports generated by `scripts/01_run_tests.py`
 - Validation reports generated by `scripts/04_validate_output.py`
@@ -477,6 +566,7 @@ aggregator.save_report(Path("output/reports"))
 **Academic publishing and dissemination.**
 
 Features:
+
 - Publication metadata extraction
 - Citation generation (BibTeX, APA, MLA)
 - Zenodo integration with DOI minting
@@ -484,6 +574,7 @@ Features:
 - GitHub release automation
 
 **CLI:**
+
 ```bash
 python3 -m infrastructure.publishing.cli extract-metadata manuscript/
 python3 -m infrastructure.publishing.cli generate-citation manuscript/ --format bibtex
@@ -494,19 +585,23 @@ python3 -m infrastructure.publishing.cli create-release v1.0 output/ $GITHUB_TOK
 ## Design Principles
 
 ### 1. Modular Organization
+
 - Each module has a single, clear responsibility
 - Modules can be used independently or together
 - Related functionality grouped logically
 - Minimal cross-module dependencies
 
 ### 2. Documentation
+
 - Each module includes:
+  - `SKILL.md` - Claude Code skill for auto-discovery
   - `AGENTS.md` - Detailed architecture and API
   - `README.md` - Quick reference and examples
   - Inline docstrings for all public APIs
   - Usage examples in documentation
 
 ### 3. Unified Infrastructure
+
 - All modules use:
   - Shared `core/` utilities (logging, config, exceptions)
   - Consistent error handling
@@ -514,14 +609,16 @@ python3 -m infrastructure.publishing.cli create-release v1.0 output/ $GITHUB_TOK
   - Common environment variable support
 
 ### 4. CLI Integration
+
 - Each module with external functionality includes `cli.py`
 - Thin orchestrators calling module business logic
 - Consistent argument parsing
 - Helpful error messages
 
 ### 5. Testing
-- 100% test coverage for all modules
-- data analysis, no mocks
+
+- 83.33% test coverage overall (60% minimum required)
+- Real data analysis, no mocks
 - Integration tests for module interoperability
 - CI/CD compatible
 
@@ -541,6 +638,7 @@ The rendering pipeline (`scripts/02_run_analysis.py`, `scripts/03_render_pdf.py`
 ### Validation Gates
 
 Before PDF generation:
+
 - Markdown validation via `validation/`
 - File integrity checks via `validation/integrity`
 
@@ -654,16 +752,13 @@ pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
 
 ### Coverage Status
 
-All modules have test coverage:
-- core: 100%
-- validation: 100%
-- documentation: 100%
-- build: 100%
-- scientific: 100%
-- llm: 91%+
-- rendering: 91%+
-- publishing: 100%
-- reporting: 67% (tests added; continue improving pipeline reporting paths)
+Infrastructure test coverage: **83.33%** overall (exceeds 60% minimum).
+
+Run coverage report:
+
+```bash
+uv run pytest tests/infra_tests/ --cov=infrastructure --cov-report=term-missing
+```
 
 ## Troubleshooting
 
@@ -672,6 +767,7 @@ All modules have test coverage:
 If you see `ModuleNotFoundError: No module named 'infrastructure.xxx'`:
 
 1. Verify you're using the correct modular import path:
+
    ```python
    from infrastructure.validation.pdf_validator import validate_pdf_rendering
    from infrastructure.documentation.figure_manager import FigureManager
@@ -685,6 +781,7 @@ If you see `ModuleNotFoundError: No module named 'infrastructure.xxx'`:
 ### Configuration Issues
 
 If configuration isn't loading:
+
 1. Check `project/manuscript/config.yaml` exists
 2. Verify YAML is well-formed
 3. Fall back to environment variables as needed
@@ -696,12 +793,13 @@ If configuration isn't loading:
 3. **Reusability** - Modules can be used independently
 4. **Scalability** - Easy to add modules without cluttering core
 5. **Documentation** - Each module documented
-6. **Testing** - testing with 100% coverage
+6. **Testing** - Real data testing with 83.33% coverage
 7. **Flexibility** - Use individual modules or pipeline
 
 ## Future Enhancements
 
 Planned additions:
+
 - LLM template library
 - Additional rendering formats (EPUB, docx)
 - Extended publishing platform support
@@ -711,15 +809,20 @@ Planned additions:
 ## See Also
 
 **Module Documentation:**
+
 - Each module has detailed docs: `infrastructure/[module]/AGENTS.md`
+- Each module has a Claude Code skill: `infrastructure/[module]/SKILL.md`
 - Quick reference guides: `infrastructure/[module]/README.md`
 
 **Cross-Module Reference:**
+
 - [`README.md`](README.md) - Quick start guide for all modules
+- [`SKILL.md`](SKILL.md) - Top-level infrastructure skill
 - [`../.cursorrules/AGENTS.md`](../.cursorrules/AGENTS.md) - Development standards
 - [`../.cursorrules/infrastructure_modules.md`](../.cursorrules/infrastructure_modules.md) - Infrastructure standards
 
 **System Documentation:**
+
 - [`../AGENTS.md`](../AGENTS.md) - system documentation
 - [`../docs/core/architecture.md`](../docs/core/architecture.md) - System architecture overview
 - [`../docs/architecture/thin-orchestrator-summary.md`](../docs/architecture/thin-orchestrator-summary.md) - Orchestrator pattern details

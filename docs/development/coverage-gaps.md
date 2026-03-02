@@ -158,5 +158,5 @@ Track coverage improvements over time:
 
 ## See Also
 
-- [`testing-guide.md`](../development/testing-guide.md) - testing documentation
+- [`testing-guide.md`](../development/testing/testing-guide.md) - testing documentation
 - [`../core/architecture.md`](../core/architecture.md) - System architecture and testing standards

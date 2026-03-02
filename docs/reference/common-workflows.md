@@ -633,7 +633,7 @@ def test_process_negative():
 - PDF fails → Check pandoc/xelatex installation
 - References show ?? → Check label spelling
 
-**See Also**: [Build System](../operational/build-system.md) | [PDF Validation](../modules/pdf-validation.md)
+**See Also**: [Build System](../operational/build/build-system.md) | [PDF Validation](../modules/pdf-validation.md)
 
 ---
 

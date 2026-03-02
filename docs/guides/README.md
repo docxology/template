@@ -16,7 +16,7 @@ The `guides/` directory contains skill-level specific usage guides that progress
 | [`figures-and-analysis.md`](figures-and-analysis.md) | Figures and analysis guide (Levels 4-6) | Intermediate |
 | [`testing-and-reproducibility.md`](testing-and-reproducibility.md) | Testing and reproducibility guide (Levels 7-9) | Advanced |
 | [`extending-and-automation.md`](extending-and-automation.md) | Extending and automation guide (Levels 10-12) | Expert |
-| [`intermediate-usage.md`](intermediate-usage.md) | Backward-compatible redirect to Figures and Analysis | Intermediate |
+| [`figures-and-analysis.md`](figures-and-analysis.md) | Backward-compatible redirect to Figures and Analysis | Intermediate |
 
 ## Learning Path
 

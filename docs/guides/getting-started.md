@@ -41,6 +41,7 @@ By the end of this guide, you'll be able to:
 1. **Click "Use this template"** on [GitHub](https://github.com/docxology/template)
 2. **Name your repository** (e.g., "my-research-project")
 3. **Clone your new repository**
+
    ```bash
    git clone https://github.com/YOUR_USERNAME/your-repo-name.git
    cd your-repo-name
@@ -49,6 +50,7 @@ By the end of this guide, you'll be able to:
 ### Step 2: Install Dependencies
 
 **macOS:**
+
 ```bash
 # Install Homebrew if not already installed
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -63,6 +65,7 @@ uv sync
 ```
 
 **Ubuntu/Debian:**
+
 ```bash
 # Install system dependencies
 sudo apt-get update
@@ -116,12 +119,14 @@ manuscript/
 ### Edit the Abstract
 
 1. **Open the abstract file**
+
    ```bash
    vim manuscript/01_abstract.md
    # Or use your preferred text editor
    ```
 
 2. **You'll see**:
+
    ```markdown
    # Abstract {#sec:abstract}
    
@@ -129,6 +134,7 @@ manuscript/
    ```
 
 3. **Replace with your content**:
+
    ```markdown
    # Abstract {#sec:abstract}
    
@@ -142,11 +148,13 @@ manuscript/
 ### Edit the Introduction
 
 1. **Open the introduction**
+
    ```bash
    vim manuscript/02_introduction.md
    ```
 
 2. **Add your content**:
+
    ```markdown
    # Introduction {#sec:introduction}
    
@@ -171,6 +179,7 @@ manuscript/
 ### Generate Your PDF
 
 1. **Run pipeline**
+
    ```bash
    # Runs all 8 stages including cleanup
    uv run python scripts/execute_pipeline.py --core-only
@@ -179,12 +188,14 @@ manuscript/
    ./run.sh
    ```
 
-3. **View the result**
+2. **View the result**
+
    ```bash
    open output/project_combined.pdf  # Top-level output (after stage 5)
    ```
 
 **What You Get**:
+
 - ✅ Professional formatting
 - ✅ Automatic section numbering
 - ✅ Table of contents
@@ -230,6 +241,7 @@ x = \frac{-b \pm \sqrt{b^2-4ac}}{2a}
 ```
 
 **Key Parts**:
+
 - `\begin{equation}` - Start equation
 - `\label{eq:quadratic}` - Unique name for referencing
 - `\end{equation}` - End equation
@@ -292,6 +304,7 @@ Figure \ref{fig:example} demonstrates the algorithm's performance.
 ```
 
 **Figure Anatomy**:
+
 - `[h]` - Place here (h = here, t = top, b = bottom)
 - `width=0.8\textwidth` - 80% of text width
 - `caption{}` - Description below figure
@@ -360,16 +373,19 @@ uv run python scripts/execute_pipeline.py --core-only
 #### Method 2: Create .env File
 
 1. **Copy template**
+
    ```bash
    cp .env.template .env
    ```
 
 2. **Edit .env**
+
    ```bash
    vim .env
    ```
 
 3. **Add your information**
+
    ```bash
    AUTHOR_NAME="Dr. Jane Smith"
    AUTHOR_EMAIL="jane.smith@university.edu"
@@ -379,12 +395,14 @@ uv run python scripts/execute_pipeline.py --core-only
    ```
 
 4. **Source and build**
+
    ```bash
    source .env
    uv run python scripts/execute_pipeline.py --core-only
    ```
 
 **What Gets Updated**:
+
 - ✅ PDF title page
 - ✅ PDF metadata
 - ✅ Author information
@@ -404,23 +422,27 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 **Basic color customization**:
 
 1. **Open preamble**
+
    ```bash
    vim manuscript/preamble.md
    ```
 
 2. **Find color definitions** (around line 97-103):
+
    ```latex
    \definecolor{codebg}{RGB}{248, 248, 248}
    \definecolor{codeborder}{RGB}{200, 200, 200}
    ```
 
 3. **Add your colors**:
+
    ```latex
    \definecolor{myblue}{RGB}{0, 114, 178}
    \definecolor{mygreen}{RGB}{0, 158, 115}
    ```
 
 4. **Use in hyperlinks** (around line 54-60):
+
    ```latex
    \hypersetup{
        colorlinks=true,
@@ -430,16 +452,18 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
    }
    ```
 
-**See [act_inf_metaanalysis/manuscript/preamble.md](../../projects/act_inf_metaanalysis/manuscript/preamble.md) for the LaTeX preamble configuration.**
+**See [code_project/manuscript/preamble.md](../../projects/code_project/manuscript/preamble.md) for the LaTeX preamble configuration.**
 
 ### Add Bibliography
 
 1. **Edit references.bib**
+
    ```bash
    vim manuscript/references.bib
    ```
 
 2. **Add entries**:
+
    ```bibtex
    @article{smith2020climate,
      title={Machine Learning for Climate Prediction},
@@ -459,6 +483,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
    ```
 
 3. **Cite in manuscript**:
+
    ```markdown
    Recent advances \cite{smith2020climate} demonstrate...
    
@@ -466,6 +491,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
    ```
 
 4. **Rebuild to see citations**
+
    ```bash
    uv run python scripts/execute_pipeline.py --core-only
    ```
@@ -495,11 +521,13 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 ### Keyboard Shortcuts
 
 **Most text editors**:
+
 - Save: `Ctrl+S` (Linux/Windows) or `Cmd+S` (macOS)
 - Find: `Ctrl+F` or `Cmd+F`
 - Replace: `Ctrl+H` or `Cmd+Option+F`
 
 **Vim users**:
+
 - Save and quit: `:wq`
 - Quit without saving: `:q!`
 - Search: `/searchterm`
@@ -513,9 +541,11 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 **Problem**: PDF generation fails
 
 **Solutions**:
+
 1. Check pandoc installed: `pandoc --version`
 2. Check xelatex installed: `xelatex --version`
 3. Clean and rebuild:
+
    ```bash
    uv run python scripts/execute_pipeline.py --core-only
    ```
@@ -525,9 +555,11 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 **Problem**: Cross-references display as `??`
 
 **Solutions**:
+
 1. Check label exists: Search for `{#sec:labelname}`
 2. Check spelling matches exactly
 3. Rebuild (references need multiple passes):
+
    ```bash
    uv run python scripts/execute_pipeline.py --core-only
    ```
@@ -537,6 +569,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 **Problem**: Equations display as plain text
 
 **Solutions**:
+
 1. Check equation environment syntax
 2. Use `\begin{equation}` not `$$`
 3. Check for unescaped special characters
@@ -547,6 +580,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 **Problem**: Figure or reference not found
 
 **Solutions**:
+
 1. Check relative path: `../output/figures/name.png`
 2. Verify file exists: `ls project/output/figures/`
 3. Run pipeline (includes script execution): `uv run python scripts/execute_pipeline.py --core-only`
@@ -555,7 +589,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 
 ## What to Read Next
 
-### If you're ready to...
+### If you're ready to
 
 **Add your own figures and data**
 → Read **[Figures and Analysis Guide](../guides/figures-and-analysis.md)** (Levels 4-6)
@@ -601,5 +635,3 @@ After completing this guide, you should be able to:
 **Need help?** Check the **[FAQ](../reference/faq.md)** or **[Common Workflows](../reference/common-workflows.md)**
 
 **Quick Reference**: [Cheatsheet](../reference/quick-start-cheatsheet.md) | [Glossary](../reference/glossary.md)
-
-

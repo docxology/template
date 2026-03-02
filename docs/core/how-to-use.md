@@ -250,14 +250,14 @@ Level 10-12: Expert Usage (1-2 months)
 
 ### Build System
 
-- **[Build System](../operational/build-system.md)** - reference (status, performance, fixes)
+- **[Build System](../operational/build/build-system.md)** - reference (status, performance, fixes)
 - **[PDF Validation](../modules/pdf-validation.md)** - Quality checks
 
 ### Writing & Formatting
 
 - **[Markdown Template Guide](../usage/markdown-template-guide.md)** - formatting reference
 - **[Manuscript Numbering](../usage/manuscript-numbering-system.md)** - Section organization
-- **[LaTeX Preamble](../../projects/act_inf_metaanalysis/manuscript/preamble.md)** - Styling configuration example
+- **[LaTeX Preamble](../../projects/code_project/manuscript/preamble.md)** - Styling configuration example
 
 ### Examples & Help
 
@@ -284,21 +284,21 @@ Level 10-12: Expert Usage (1-2 months)
 
 - **[Two-Layer Architecture](../architecture/two-layer-architecture.md)** - architecture guide
 - **[Modules Guide](../modules/modules-guide.md)** - Using all 9 infrastructure modules
-- **[Dependency Management](../operational/dependency-management.md)** - uv package manager guide
-- **[CI/CD Integration](../operational/ci-cd-integration.md)** - GitHub Actions setup
-- **[Performance Optimization](../operational/performance-optimization.md)** - Build time optimization
+- **[Dependency Management](../operational/build/dependency-management.md)** - uv package manager guide
+- **[CI/CD Integration](../operational/build/ci-cd-integration.md)** - GitHub Actions setup
+- **[Performance Optimization](../operational/config/performance-optimization.md)** - Build time optimization
 - **[Migration Guide](../best-practices/migration-guide.md)** - Migrating from other templates
 
 ## 🆘 Troubleshooting
 
 Having issues? Here's where to look:
 
-1. **[Troubleshooting Guide](../operational/troubleshooting-guide.md)** - troubleshooting
+1. **[Troubleshooting Guide](../operational/troubleshooting/)** - troubleshooting
 2. **[FAQ](../reference/faq.md)** - Common questions and solutions
 3. **[Common Workflows](../reference/common-workflows.md)** - Step-by-step help
 4. **[Quick Start Cheatsheet](../reference/quick-start-cheatsheet.md)** - Quick troubleshooting section
 5. **[Glossary](../reference/glossary.md)** - Term definitions
-6. **[Build System](../operational/build-system.md)** - Build system details
+6. **[Build System](../operational/build/build-system.md)** - Build system details
 
 **Common Issues**:
 

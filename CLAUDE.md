@@ -20,6 +20,7 @@ This is a research project template with a test-driven development workflow, aut
 ## Common Commands
 
 ### Pipeline Execution
+
 ```bash
 # Interactive menu (recommended)
 ./run.sh
@@ -35,6 +36,7 @@ python3 scripts/execute_pipeline.py --project {project_name} --core-only
 ```
 
 ### Testing
+
 ```bash
 # Run all tests (infrastructure + project)
 python3 scripts/01_run_tests.py --project {project_name}
@@ -55,6 +57,7 @@ uv run pytest tests/infra_tests/test_specific.py::test_function_name -v
 ```
 
 ### Development Tools
+
 ```bash
 # Install dependencies
 uv sync
@@ -64,7 +67,7 @@ uv run python scripts/manage_workspace.py status
 uv run python scripts/manage_workspace.py add <package> --project <name>
 
 # Linting and type checking
-uv run mypy infrastructure/ projects/act_inf_metaanalysis/src/
+uv run mypy infrastructure/ projects/code_project/src/
 uv run bandit -r infrastructure/
 
 # Validate markdown
@@ -78,6 +81,7 @@ python3 -m infrastructure.documentation.generate_glossary_cli --project {project
 ```
 
 ### Multi-Project Operations
+
 ```bash
 # Run all projects with full pipeline
 ./run.sh --all-projects --pipeline
@@ -89,7 +93,7 @@ python3 scripts/execute_multi_project.py --no-llm
 python3 -c "from infrastructure.project.discovery import discover_projects; from pathlib import Path; print([p.name for p in discover_projects(Path('.'))])"
 ```
 
-**Active projects:** `act_inf_metaanalysis`
+**Active projects:** `code_project`
 **Archived projects:** Located in `projects_archive/` (not executed by pipeline)
 
 ## Architecture
@@ -97,11 +101,13 @@ python3 -c "from infrastructure.project.discovery import discover_projects; from
 ### Two-Layer System
 
 **Layer 1: Infrastructure (Generic, Reusable)**
+
 - `infrastructure/` - Generic build and validation tools
 - `scripts/` - Entry point orchestrators (00-07)
 - `tests/` - Infrastructure test suite
 
 **Layer 2: Projects (Domain-Specific)**
+
 - `projects/{name}/src/` - Project-specific algorithms and code
 - `projects/{name}/tests/` - Project test suite
 - `projects/{name}/scripts/` - Analysis scripts (thin orchestrators)
@@ -119,6 +125,7 @@ python3 -c "from infrastructure.project.discovery import discover_projects; from
 4. Use tested methods for all computation
 
 **Example**:
+
 ```python
 # BAD: Logic in script
 def calculate_average(data):
@@ -150,12 +157,13 @@ avg = calculate_average(data)  # Use tested method
 - **`projects/`** - Active projects (discovered and executed by infrastructure)
 - **`projects_archive/`** - Archived projects (preserved but not executed)
 
-**Current active projects:** `act_inf_metaanalysis`
+**Current active projects:** `code_project`
 
 To archive: `mv projects/{name}/ projects_archive/{name}/`
 To reactivate: `mv projects_archive/{name}/ projects/{name}/`
 
 ### Standard Project Layout
+
 ```
 projects/{project_name}/
 ├── src/                    # Project-specific code (100% test coverage target)
@@ -177,6 +185,7 @@ projects/{project_name}/
 ```
 
 ### Output Organization
+
 ```
 output/
 ├── {project_name}/         # Project-specific outputs
@@ -191,6 +200,7 @@ output/
 ## Pipeline Stages
 
 ### Core Pipeline (8 stages)
+
 1. **Clean Output Directories** - Remove previous outputs for a fresh run
 2. **Setup Environment** - Validate dependencies, discover projects
 3. **Infrastructure Tests** - Run infrastructure test suite (may be skipped)
@@ -201,29 +211,34 @@ output/
 8. **Copy Outputs** - Copy final deliverables to `output/<name>/`
 
 ### Extended Pipeline (Stages 9-10, Optional)
+
 9. **LLM Scientific Review** - Requires Ollama (executive summary, quality review, methodology review, improvement suggestions)
-10. **LLM Translations** - Multi-language abstract translations (configure in `config.yaml`)
+2. **LLM Translations** - Multi-language abstract translations (configure in `config.yaml`)
 
 **Note:** Executive Report (cross-project metrics and dashboards) runs automatically in multi-project mode when 2+ projects are executed.
 
 ## Testing Requirements
 
 ### No Mocks Policy
+
 **ABSOLUTE REQUIREMENT**: Never use `MagicMock`, `mocker.patch`, `unittest.mock`, or any mocking framework. All tests must use data and computations.
 
 **Patterns**:
+
 - HTTP testing: Use `pytest-httpserver` for local test servers
 - CLI testing: Execute subprocess commands
 - PDF testing: Create PDFs with `reportlab`
 - File operations: Use real temp files with `tmp_path` fixture
 
 ### Coverage Requirements
+
 - **Infrastructure**: 60% minimum (currently 83.33%)
 - **Projects**: 90% minimum (currently varies by project)
 - **No mocks**: All tests use real numerical examples
 - **Deterministic**: Fixed RNG seeds for reproducibility
 
 ### Running Tests
+
 ```bash
 # All tests
 python3 scripts/01_run_tests.py --project {project_name}
@@ -239,6 +254,7 @@ uv run pytest tests/infra_tests/test_specific.py::test_function -v
 ## Configuration
 
 ### Project Metadata (`projects/{name}/manuscript/config.yaml`)
+
 ```yaml
 paper:
   title: "Your Research Title"
@@ -265,20 +281,23 @@ llm:
 ```
 
 ### Environment Variables
+
 - `LOG_LEVEL` - Logging verbosity (0=DEBUG, 1=INFO, 2=WARN, 3=ERROR)
 - `AUTHOR_NAME` - Override config file author
 - `PROJECT_TITLE` - Override config file title
 - `MPLBACKEND=Agg` - Headless matplotlib (automatically set)
 
 ### IDE Integration
+
 ```bash
 # Set Python path for IDE/editor integration
-export PYTHONPATH=".:infrastructure:projects/act_inf_metaanalysis/src"
+export PYTHONPATH=".:infrastructure:projects/code_project/src"
 ```
 
 ## Development Workflow
 
 ### Adding Features
+
 1. Write tests first (TDD) in `projects/{name}/tests/` or `tests/infra_tests/`
 2. Implement in `projects/{name}/src/` or `infrastructure/`
 3. Ensure coverage requirements met
@@ -286,6 +305,7 @@ export PYTHONPATH=".:infrastructure:projects/act_inf_metaanalysis/src"
 5. Run full pipeline to validate
 
 ### Creating New Projects
+
 ```bash
 # Create project structure
 mkdir -p projects/my_project/{src,tests,scripts,manuscript}
@@ -293,7 +313,7 @@ touch projects/my_project/src/__init__.py
 touch projects/my_project/tests/__init__.py
 
 # Copy config template
-cp projects/act_inf_metaanalysis/manuscript/config.yaml projects/my_project/manuscript/
+cp projects/code_project/manuscript/config.yaml projects/my_project/manuscript/
 
 # Create pyproject.toml (see existing projects for template)
 
@@ -302,7 +322,9 @@ cp projects/act_inf_metaanalysis/manuscript/config.yaml projects/my_project/manu
 ```
 
 ### Working with Scripts
+
 Scripts in `projects/{name}/scripts/` should:
+
 - Import from `projects/{name}/src/` for computation
 - Import from `infrastructure/` for utilities
 - Handle only I/O, visualization, and orchestration
@@ -323,6 +345,7 @@ Scripts in `projects/{name}/scripts/` should:
 ## Common Patterns
 
 ### Adding a New Analysis Script
+
 ```python
 #!/usr/bin/env python3
 """Analysis script following thin orchestrator pattern."""
@@ -355,6 +378,7 @@ if __name__ == "__main__":
 ```
 
 ### Adding a Test
+
 ```python
 #!/usr/bin/env python3
 """Test following no-mocks policy."""
@@ -377,6 +401,7 @@ def test_analysis_produces_correct_output(tmp_path):
 ```
 
 ### Adding Infrastructure Module
+
 ```python
 #!/usr/bin/env python3
 """New infrastructure module.
@@ -409,27 +434,32 @@ def process_files(input_dir: Path) -> List[Path]:
 ### Common Issues
 
 **Tests Failing**: Check coverage requirements met (60% infra, 90% project)
+
 ```bash
 pytest --cov=infrastructure --cov-report=term-missing
 ```
 
 **PDF Generation Fails**: Validate LaTeX packages
+
 ```bash
 python3 -m infrastructure.rendering.latex_package_validator
 sudo tlmgr install multirow cleveref doi newunicodechar
 ```
 
 **Import Errors**: Ensure project structure correct
+
 ```bash
 python3 -c "import sys; sys.path.insert(0, 'projects/{name}/src'); import {module}"
 ```
 
 **Markdown Validation Errors**: Check image paths and references
+
 ```bash
 python3 -m infrastructure.validation.cli markdown projects/{name}/manuscript/
 ```
 
 ### Debug Mode
+
 ```bash
 export LOG_LEVEL=0  # Enable debug logging
 python3 scripts/03_render_pdf.py --project {name}

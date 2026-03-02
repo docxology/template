@@ -45,7 +45,7 @@ The `reference/` directory contains quick reference materials, API documentation
 
 - **[`../core/how-to-use.md`](../core/how-to-use.md)** - usage guide
 - **[`../guides/`](../guides/)** - Skill-level specific guides
-- **[`../operational/troubleshooting-guide.md`](../operational/troubleshooting-guide.md)** - Troubleshooting
+- **[`../operational/troubleshooting/`](../operational/troubleshooting/)** - Troubleshooting
 
 ## See Also
 

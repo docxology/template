@@ -328,9 +328,9 @@ uv run python scripts/execute_pipeline.py --project project --stage validate
 ## Related Documentation
 
 - [Validation Guide](../modules/pdf-validation.md)
-- [Logging Guide](logging-guide.md)
-- [Performance Optimization](performance-optimization.md)
-- [Troubleshooting Guide](troubleshooting-guide.md)
+- [Logging Guide](logging/)
+- [Performance Optimization](config/performance-optimization.md)
+- [Troubleshooting Guide](troubleshooting/)
 
 ## Support
 

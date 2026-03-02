@@ -2,7 +2,7 @@
 
 > **Strategies and procedures** for backing up and recovering projects
 
-**Quick Reference:** [Common Workflows](../reference/common-workflows.md) | [Troubleshooting Guide](../operational/troubleshooting-guide.md) | [Version Control](../best-practices/version-control.md)
+**Quick Reference:** [Common Workflows](../reference/common-workflows.md) | [Troubleshooting Guide](../operational/troubleshooting/) | [Version Control](../best-practices/version-control.md)
 
 This guide provides strategies for backing up your research projects and recovering from data loss or corruption.
 
@@ -353,14 +353,14 @@ Backup and recovery best practices:
 
 For more information, see:
 - [Version Control](../best-practices/version-control.md) - Git workflows
-- [Troubleshooting Guide](../operational/troubleshooting-guide.md) - Recovery troubleshooting
+- [Troubleshooting Guide](../operational/troubleshooting/) - Recovery troubleshooting
 - [Common Workflows](../reference/common-workflows.md) - Backup workflows
 
 ---
 
 **Related Documentation:**
 - [Version Control](../best-practices/version-control.md) - Git backup strategies
-- [Troubleshooting Guide](../operational/troubleshooting-guide.md) - Recovery procedures
+- [Troubleshooting Guide](../operational/troubleshooting/) - Recovery procedures
 - [Common Workflows](../reference/common-workflows.md) - Backup workflows
 
 

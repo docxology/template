@@ -5,6 +5,7 @@
 Root-level `scripts/` directory contains **generic entry point orchestrators** that coordinate the template's build pipeline. These are reusable across any project.
 
 Scripts in this directory:
+
 - Discover and invoke project-specific scripts
 - Coordinate build stages (setup, test, analysis, pdf, validate)
 - Handle template-level orchestration
@@ -15,6 +16,7 @@ Scripts in this directory:
 ## Architectural Role
 
 Root scripts are **thin orchestrators** that:
+
 - Do NOT implement analysis or algorithms
 - Discover and invoke `projects/{name}/scripts/*.py`
 - Handle I/O and orchestration
@@ -28,6 +30,7 @@ The template provides multiple entry points organized by function:
 ### Root-Level Scripts
 
 **Main Entry Point** (`run.sh`):
+
 - Interactive menu with manuscript pipeline operations (0-9)
 - Full pipeline execution (10 stages displayed as [1/10] to [10/10])
 - Non-interactive: `./run.sh [options]` for direct pipeline operations
@@ -35,6 +38,7 @@ The template provides multiple entry points organized by function:
 - Sources shared utilities from `scripts/bash_utils.sh`
 
 **Shared Utilities** (`scripts/bash_utils.sh`):
+
 - Color codes and formatting
 - Logging functions (log_header, log_success, log_error, etc.)
 - Utility functions (format_duration, get_elapsed_time, parse_choice_sequence)
@@ -48,6 +52,7 @@ The template provides multiple entry points organized by function:
 **Purpose:** Verify environment is ready for research template execution
 
 **Core Functionality:**
+
 - Checks Python version (3.8+ required)
 - Verifies dependencies with uv package manager integration
 - Confirms build tools availability (pandoc, xelatex)
@@ -56,11 +61,13 @@ The template provides multiple entry points organized by function:
 
 **uv Integration Strategy:**
 The setup prioritizes uv for dependency management due to its speed and reliability:
+
 1. **Primary:** `uv sync` - Fast workspace dependency resolution
 2. **Fallback:** Individual package checking/installation
 3. **Guidance:** Clear messages for manual installation when uv unavailable
 
 **Dependency Resolution Flow:**
+
 ```bash
 Check uv availability
 ├── uv available? → uv sync (fast, preferred)
@@ -73,16 +80,19 @@ Check uv availability
 
 **Directory Structure Setup:**
 Creates multi-project directory structure:
+
 - `output/{project}/` - Project-specific outputs
 - `projects/{project}/output/` - Working outputs
 - Build artifacts, logs, reports, figures, data, tex, pdf, slides, web, llm directories
 
 **Environment Variables:**
+
 - `MPLBACKEND=Agg` - Headless matplotlib for server environments
 - `PYTHONIOENCODING=utf-8` - Consistent text encoding
 - `PROJECT_ROOT` - Repository root path for relative operations
 
 **Error Handling:**
+
 - Graceful fallback from uv to pip-based installation
 - Clear error messages with actionable recovery steps
 - logging with debug-level subprocess details
@@ -90,6 +100,7 @@ Creates multi-project directory structure:
 **Generic:** Works for any project in the multi-project template structure
 
 **Troubleshooting:**
+
 - **uv sync fails:** Check network, pyproject.toml validity, uv version
 - **Missing packages:** Verify pip installation, check Python version compatibility
 - **Build tools missing:** Install pandoc/xelatex, verify PATH configuration
@@ -151,6 +162,7 @@ Creates multi-project directory structure:
 - Validates all files copied successfully
 
 **Notes:**
+
 - Typically invoked as the final stage of the pipeline (via `execute_pipeline.py` / `run.sh --pipeline`).
 - Can also be run directly when you only want to refresh `output/{project}/` from `projects/{project}/output/`.
 
@@ -161,6 +173,7 @@ Creates multi-project directory structure:
 **Purpose:** audit of filepaths, references, and documentation accuracy using modular infrastructure validation.
 
 **Core Functionality:**
+
 - Thin orchestrator that coordinates `infrastructure.validation.audit_orchestrator`
 - Discovers all markdown files in repository
 - Validates internal/external links and file references
@@ -171,6 +184,7 @@ Creates multi-project directory structure:
 - Filters false positives (Mermaid diagrams, LaTeX refs, templates)
 
 **Function Signatures:**
+
 ```python
 def main():
     """Main entry point for the audit script."""
@@ -181,6 +195,7 @@ def main():
 ```
 
 **Usage Examples:**
+
 ```bash
 # Basic audit with markdown report
 python scripts/audit_filepaths.py
@@ -208,6 +223,7 @@ python scripts/audit_filepaths.py --project myproject
 - Saves reports to `output/executive_summary/`
 
 **Function Signatures:**
+
 ```python
 def discover_projects(repo_root: Path) -> list[ProjectInfo]:
     \"\"\"Discover all valid projects in the repository.\"\"\"
@@ -247,6 +263,7 @@ def main():
 - Supports single-stage execution via `--stage`
 
 **Function Signatures:**
+
 ```python
 def execute_single_stage(stage: str, project_name: str, repo_root: Path) -> int:
     \"\"\"Execute a single pipeline stage.\"\"\"
@@ -276,6 +293,7 @@ def main():
 - Optionally generates executive reporting
 
 **Function Signatures:**
+
 ```python
 def execute_multi_project(
     repo_root: Path,
@@ -291,7 +309,6 @@ def main():
     \"\"\"Main entry point with argument parsing.\"\"\"
     pass
 ```
-
 
 ## Project-Specific Scripts
 
@@ -314,12 +331,14 @@ projects/{name}/scripts/
 ```
 
 These scripts:
+
 - Import from `projects/{name}/src/` for scientific computation
 - Import from `infrastructure/` for document management
 - Use the **thin orchestrator pattern**
 - Are discovered and executed by root `02_run_analysis.py`
 
 **Example:**
+
 ```python
 # projects/{name}/scripts/analysis_pipeline.py
 from data_generator import generate_synthetic_data
@@ -340,6 +359,7 @@ fm.register_figure("results.png", label="fig:results")
 ### ✅ CORRECT Pattern (Root Entry Points)
 
 Root entry points use **thin orchestrator pattern**:
+
 - Import infrastructure modules, not business logic
 - Coordinate between pipeline stages
 - Delegate all computation to imported modules
@@ -364,6 +384,7 @@ def run_render_pipeline() -> int:
 ```
 
 **Key Points:**
+
 - Uses `infrastructure.<module>` imports
 - Delegates computation to modules
 - Coordinates pipeline stages
@@ -387,6 +408,7 @@ fm.register_figure("results.png")
 ```
 
 **Key Points:**
+
 - Imports from `projects/{name}/src/` (computation)
 - Imports from `infrastructure/` (utilities)
 - Orchestrates workflow
@@ -412,19 +434,21 @@ python3 scripts/execute_pipeline.py --project project --core-only
 ```
 
 Stages:
+
 1. **00_setup_environment.py** - Environment ready?
 2. **01_run_tests.py** - Tests pass?
 3. **02_run_analysis.py** - Executes `projects/{name}/scripts/*.py`
 4. **03_render_pdf.py** - PDFs generated?
 5. **04_validate_output.py** - Output valid?
 6. **05_copy_outputs.py** - Final deliverables copied?
-10. **07_generate_executive_report.py** - Executive summaries (multi-project only)
+7. **07_generate_executive_report.py** - Executive summaries (multi-project only)
 
 Each stage is **generic** and works with any project structure in `projects/{name}/`.
 
 ## Testing
 
 Root entry points are tested through:
+
 - Integration with project code
 - Successful pipeline execution
 - Correct delegation to project scripts
@@ -434,6 +458,7 @@ No unit tests needed for orchestrators - they're thin wrappers.
 ## Best Practices
 
 ### Do's ✅
+
 - Keep root scripts generic
 - Discover project scripts dynamically
 - Delegate to `projects/{name}/scripts/`
@@ -441,6 +466,7 @@ No unit tests needed for orchestrators - they're thin wrappers.
 - Use clear logging
 
 ### Don'ts ❌
+
 - Implement analysis in root scripts
 - Hardcode paths to specific analyses
 - Assume specific project structure
@@ -492,7 +518,7 @@ Root entry points work with **ANY** project that follows this structure.
 ## See Also
 
 - [`../README.md`](../README.md) - Quick reference
-- [`../projects/act_inf_metaanalysis/scripts/`](../projects/act_inf_metaanalysis/scripts/) - Project scripts example
+- [`../projects/code_project/scripts/`](../projects/code_project/scripts/) - Project scripts example
 - [`../docs/architecture/thin-orchestrator-summary.md`](../docs/architecture/thin-orchestrator-summary.md) - Pattern explanation
 - [`../AGENTS.md`](../AGENTS.md) - system documentation
 
@@ -503,21 +529,25 @@ Root entry points work with **ANY** project that follows this structure.
 Root scripts (`run.sh`, `scripts/bash_utils.sh`) are tested using Python subprocess calls in `tests/integration/`:
 
 **Test Infrastructure:**
+
 - **`test_run_sh.py`** - Tests `run.sh` command-line interface, argument parsing, project discovery
 - **`test_bash_utils.sh`** - Tests individual bash utility functions using bash test framework
 - **`test_logging.py`** - Tests logging functions and structured output
 
 **Coverage Requirements:**
+
 - **100% coverage** for `bash_utils.sh` utility functions
 - **90%+ coverage** for core `run.sh` orchestration functions
 - **80%+ coverage** for helper functions (menu display, etc.)
 
 **Test Categories:**
+
 - ✅ **Unit Tests** - Individual function testing
 - ✅ **Integration Tests** - Full workflow testing
 - ✅ **Error Path Tests** - Edge cases and failure modes
 
 **Testing Philosophy:**
+
 - Use subprocess calls (no mocks for bash functions)
 - Test command-line interfaces as users would use them
 - Verify error handling and graceful degradation
@@ -526,6 +556,7 @@ Root scripts (`run.sh`, `scripts/bash_utils.sh`) are tested using Python subproc
 ### Logging Standards
 
 **Structured Logging Functions:**
+
 ```bash
 # Context-aware logging with timestamps
 log_with_context "INFO" "message" "context"
@@ -538,6 +569,7 @@ log_resource_usage "stage_name" "duration" "additional_metrics"
 ```
 
 **Error Handling Patterns:**
+
 ```bash
 # Before: Manual error logging
 log_error "Pipeline failed at Stage X"
@@ -552,11 +584,13 @@ log_pipeline_error "Stage X" "failure reason" "$exit_code" \
 ```
 
 **Progress Tracking:**
+
 - `log_stage_progress` - stage logging with ETA and resource monitoring
 - `STAGE_RESULTS[]` and `STAGE_DURATIONS[]` - Track pipeline execution metrics
 - Resource usage logging for performance monitoring
 
 **Log File Format:**
+
 - ANSI color codes stripped for log files
 - Consistent timestamp and context formatting
 - Structured output for programmatic parsing
@@ -564,11 +598,13 @@ log_pipeline_error "Stage X" "failure reason" "$exit_code" \
 ### Error Context and Troubleshooting
 
 **Standardized Error Messages:**
+
 - All pipeline errors include exit codes and troubleshooting steps
 - Function names and line numbers included in error context
 - Actionable guidance provided for common failure scenarios
 
 **Graceful Degradation:**
+
 - Optional stages (LLM review) fail gracefully without stopping pipeline
 - Clear messaging when features are unavailable
 - Fallback behavior documented and tested
@@ -576,6 +612,7 @@ log_pipeline_error "Stage X" "failure reason" "$exit_code" \
 ## Key Takeaway
 
 **Root scripts are generic entry points:**
+
 - ✅ Work with ANY project
 - ✅ Discover `projects/{name}/scripts/`
 - ✅ Coordinate build stages
@@ -583,6 +620,7 @@ log_pipeline_error "Stage X" "failure reason" "$exit_code" \
 - ❌ Never duplicate logic
 
 **Project scripts are specific to each research:**
+
 - ✅ Implement domain-specific logic
 - ✅ Import from `projects/{name}/src/`
 - ✅ Use infrastructure tools

@@ -10,7 +10,7 @@ This prompt leverages the documentation standards to create professional documen
 
 - [`../../.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md) - Documentation writing standards
 - [`../AGENTS.md`](../AGENTS.md) - Documentation organization guide
-- [`../../projects/act_inf_metaanalysis/AGENTS.md`](../../projects/act_inf_metaanalysis/AGENTS.md) - Project documentation example
+- [`../../projects/code_project/AGENTS.md`](../../projects/code_project/AGENTS.md) - Project documentation example
 
 ## Prompt Template
 
@@ -103,6 +103,7 @@ Create technical documentation following the AGENTS.md standard:
 ### Content Requirements
 
 **Show, Don't Tell:**
+
 ```markdown
 # ❌ BAD: Vague explanation
 This module provides data processing capabilities with various algorithms.
@@ -119,6 +120,7 @@ result = processor.process_csv('data.csv')
 assert result['valid_rows'] == 1000
 assert result['processing_time'] < 5.0
 ```
+
 ```
 
 **API Documentation:**
@@ -157,6 +159,7 @@ result = processor.process_csv(Path('data.csv'))
 print(f"Processed {result.valid_rows} rows")
 print(f"Execution time: {result.execution_time:.2f}s")
 ```
+
 ```
 
 **Architecture Diagrams:**
@@ -187,6 +190,7 @@ graph TD
 Create concise quick reference guide following README.md standards:
 
 ### Required Structure
+
 ```markdown
 # [Target Name]
 
@@ -227,12 +231,14 @@ See [`AGENTS.md`](AGENTS.md) for technical documentation.
 ### Content Guidelines
 
 **Essential Information Only:**
+
 - Focus on most common use cases
 - Include runnable code examples
 - Provide clear navigation to detailed docs
 - Use Mermaid diagrams for complex relationships
 
 **Navigation Mermaid:**
+
 ```mermaid
 graph TD
     A[Quick Start] --> B[Basic Usage]
@@ -252,41 +258,46 @@ graph TD
 ## 3. Cross-Referencing System
 
 ### Internal References
+
 ```markdown
 # Link to other AGENTS.md files
-See [`../module/AGENTS.md`](../module/AGENTS.md) for module details.
+See [`../module/AGENTS.md`](../modules/AGENTS.md) for module details.
 
 # Link to related documentation
 See [`../../docs/core/architecture.md`](../../docs/core/architecture.md) for architecture information.
 
 # Link to standards
-See [`../../../.cursorrules/testing_standards.md`](../../../.cursorrules/testing_standards.md) for testing requirements.
+See [`../../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) for testing requirements.
 ```
 
 ### Standards References
+
 ```markdown
 # Reference development standards
-See [`.cursorrules/code_style.md`](../../../.cursorrules/code_style.md) for code formatting standards.
+See [`.cursorrules/code_style.md`](../../.cursorrules/code_style.md) for code formatting standards.
 
 # Reference documentation standards
-See [`.cursorrules/documentation_standards.md`](../../../.cursorrules/documentation_standards.md) for documentation guidelines.
+See [`.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md) for documentation guidelines.
 ```
 
 ## 4. Content Quality Standards
 
 ### Technical Accuracy
+
 - All code examples must be runnable and correct
 - API signatures must match implementation
 - Configuration options must be accurate
 - Performance claims must be verifiable
 
 ### Completeness Requirements
+
 - All public APIs must be documented
 - All configuration options must be explained
 - All error conditions must be described
 - All integration points must be covered
 
 ### Consistency Standards
+
 - Use consistent terminology throughout
 - Follow established naming conventions
 - Maintain consistent formatting
@@ -295,6 +306,7 @@ See [`.cursorrules/documentation_standards.md`](../../../.cursorrules/documentat
 ## 5. Documentation Maintenance
 
 ### Update Procedures
+
 ```markdown
 # When code changes, update documentation:
 1. Review affected documentation sections
@@ -305,6 +317,7 @@ See [`.cursorrules/documentation_standards.md`](../../../.cursorrules/documentat
 ```
 
 ### Quality Validation
+
 ```bash
 # Validate documentation quality
 ./validate_documentation.py AGENTS.md README.md
@@ -330,6 +343,7 @@ See [`.cursorrules/documentation_standards.md`](../../../.cursorrules/documentat
 ## Standards Compliance Checklist
 
 ### Documentation Standards ([`../../.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md))
+
 - [ ] AGENTS.md structure with all required sections
 - [ ] README.md with Mermaid navigation diagrams
 - [ ] Code examples that are runnable and correct
@@ -337,12 +351,14 @@ See [`.cursorrules/documentation_standards.md`](../../../.cursorrules/documentat
 - [ ] Show-don't-tell approach throughout
 
 ### Content Standards
+
 - [ ] Technical accuracy (all APIs, configs, examples correct)
 - [ ] Completeness (all public interfaces documented)
 - [ ] Consistency (terminology, formatting, style)
 - [ ] Quality (examples work, links valid, diagrams correct)
 
 ### Integration Standards
+
 - [ ] Proper cross-referencing to related documentation
 - [ ] Integration with documentation navigation system
 - [ ] Standards compliance references included
@@ -351,6 +367,7 @@ See [`.cursorrules/documentation_standards.md`](../../../.cursorrules/documentat
 ## Example Usage
 
 **Input:**
+
 ```
 DOCUMENTATION TARGET: module
 TARGET NAME: Data Quality Assessment Module
@@ -358,6 +375,7 @@ TARGET PATH: infrastructure/data_quality/
 ```
 
 **Expected Output:**
+
 - `infrastructure/data_quality/AGENTS.md` with full technical documentation
 - Concise `infrastructure/data_quality/README.md` with quick reference
 - All APIs documented with examples
@@ -368,6 +386,7 @@ TARGET PATH: infrastructure/data_quality/
 
 - [`../../.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md) - Documentation writing standards
 - [`../AGENTS.md`](../AGENTS.md) - Documentation organization guide
-- [`../../projects/act_inf_metaanalysis/AGENTS.md`](../../projects/act_inf_metaanalysis/AGENTS.md) - Project documentation example
+- [`../../projects/code_project/AGENTS.md`](../../projects/code_project/AGENTS.md) - Project documentation example
 - [`../../README.md`](../../README.md) - README.md standards example
+
 ```

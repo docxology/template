@@ -70,7 +70,7 @@ Many "broken" references are actually:
    - Action: Verify which `.cursorrules/` files actually exist
 
 2. **Anchor links**: Some markdown links to anchor sections may be broken
-   - Example: `[Details](docs/operational/build-system.md#detailed-performance-analysis)`
+   - Example: `[Details](../operational/build/build-system.md#detailed-performance-analysis)`
    - Action: Verify anchor IDs exist in target files
 
 3. **Outdated project references**: References to archived or non-existent projects

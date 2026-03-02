@@ -53,6 +53,8 @@ dependencies = [
   "ollama>=0.6.1",
   "scikit-learn>=1.7.2",
   "wordcloud>=1.9.0",  # Word cloud visualizations (act_inf_metaanalysis)
+  "nltk>=3.8.0",       # Natural language processing (ento_linguistics)
+  "spacy>=3.7.0",      # NLP pipeline (ento_linguistics)
 ]
 
 [project.scripts]
@@ -91,6 +93,7 @@ package = false  # This is not a distributable package
 # Supports both standalone projects and nested projects within program directories
 members = [
     "projects/act_inf_metaanalysis",
+    "projects/ento_linguistics",
 ]
 exclude = [
     "projects/*/output",
@@ -101,7 +104,7 @@ exclude = [
 
 [tool.pytest.ini_options]
 # Pytest configuration (consolidated from pytest.ini)
-pythonpath = [".", "infrastructure", "projects/act_inf_metaanalysis/src"]
+pythonpath = [".", "infrastructure", "projects/act_inf_metaanalysis/src", "projects/ento_linguistics/src"]
 testpaths = ["tests", "projects/act_inf_metaanalysis/tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]

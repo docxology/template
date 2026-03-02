@@ -14,7 +14,8 @@ from pathlib import Path
 import numpy as np
 import pytest
 from src.optimizer import (OptimizationResult, compute_gradient,
-                           gradient_descent, quadratic_function)
+                           gradient_descent, make_quadratic_problem,
+                           quadratic_function, simulate_trajectory)
 
 # Try to import scientific analysis functions (graceful fallback)
 try:
@@ -857,3 +858,109 @@ class TestImportFallback:
             # Reload again to restore original state
             importlib.reload(opt_module)
             opt_module.LOGGING_AVAILABLE = original_logging_available
+
+
+class TestMakeQuadraticProblem:
+    """Tests for the make_quadratic_problem factory function."""
+
+    def test_returns_callable_pair(self):
+        """Factory returns two callables."""
+        obj_func, grad_func = make_quadratic_problem(
+            np.array([[1.0]]), np.array([1.0])
+        )
+        assert callable(obj_func)
+        assert callable(grad_func)
+
+    def test_objective_matches_quadratic_function(self):
+        """Returned objective matches quadratic_function directly."""
+        A, b = np.array([[2.0]]), np.array([1.0])
+        obj_func, _ = make_quadratic_problem(A, b)
+        x = np.array([0.5])
+        assert abs(obj_func(x) - quadratic_function(x, A, b)) < 1e-10
+
+    def test_gradient_matches_compute_gradient(self):
+        """Returned gradient matches compute_gradient directly."""
+        A, b = np.array([[2.0]]), np.array([1.0])
+        _, grad_func = make_quadratic_problem(A, b)
+        x = np.array([0.5])
+        np.testing.assert_allclose(grad_func(x), compute_gradient(x, A, b))
+
+    def test_factory_usable_with_gradient_descent(self):
+        """Factory output passes cleanly into gradient_descent."""
+        obj_func, grad_func = make_quadratic_problem(
+            np.array([[1.0]]), np.array([1.0])
+        )
+        result = gradient_descent(
+            initial_point=np.array([0.0]),
+            objective_func=obj_func,
+            gradient_func=grad_func,
+            step_size=0.1,
+            max_iterations=200,
+            tolerance=1e-8,
+        )
+        assert result.converged
+        np.testing.assert_allclose(result.optimal_point if hasattr(result, 'optimal_point') else result.solution, [1.0], atol=1e-5)
+
+    def test_factory_with_default_params(self):
+        """Factory with None params uses quadratic_function defaults."""
+        obj_func, grad_func = make_quadratic_problem()
+        x = np.array([1.0])
+        # With A=I, b=ones, f(1) = 0.5 - 1 = -0.5
+        assert abs(obj_func(x) - quadratic_function(x)) < 1e-10
+        np.testing.assert_allclose(grad_func(x), compute_gradient(x))
+
+    def test_factory_multidimensional(self):
+        """Factory works for multi-dimensional problems."""
+        A = np.eye(3)
+        b = np.ones(3)
+        obj_func, grad_func = make_quadratic_problem(A, b)
+        x = np.array([0.5, 0.5, 0.5])
+        assert abs(obj_func(x) - quadratic_function(x, A, b)) < 1e-10
+        np.testing.assert_allclose(grad_func(x), compute_gradient(x, A, b))
+
+
+class TestSimulateTrajectory:
+    """Tests for simulate_trajectory — confirms delegation to gradient_descent."""
+
+    def test_returns_dict_with_expected_keys(self):
+        """Output dict has 'iterations' and 'objectives' keys."""
+        result = simulate_trajectory(
+            step_size=0.1, max_iter=20,
+            A=np.array([[1.0]]), b=np.array([1.0])
+        )
+        assert "iterations" in result
+        assert "objectives" in result
+
+    def test_objectives_decrease_toward_optimum(self):
+        """Trajectory converges — final objective below initial objective."""
+        result = simulate_trajectory(
+            step_size=0.1, max_iter=50,
+            A=np.array([[1.0]]), b=np.array([1.0])
+        )
+        assert result["objectives"][-1] < result["objectives"][0]
+
+    def test_iterations_and_objectives_same_length(self):
+        """Iterations and objectives lists are parallel (same length)."""
+        result = simulate_trajectory(
+            step_size=0.05, max_iter=30,
+            A=np.array([[1.0]]), b=np.array([1.0])
+        )
+        assert len(result["iterations"]) == len(result["objectives"])
+
+    def test_iterations_are_sequential(self):
+        """Iterations list is 0-based sequential integers."""
+        result = simulate_trajectory(
+            step_size=0.1, max_iter=10,
+            A=np.array([[1.0]]), b=np.array([1.0])
+        )
+        iterations = result["iterations"]
+        assert iterations[0] == 0
+        for i in range(1, len(iterations)):
+            assert iterations[i] == iterations[i - 1] + 1
+
+    def test_default_params_produce_valid_trajectory(self):
+        """Default A, b, initial_point produce a valid trajectory."""
+        result = simulate_trajectory(step_size=0.1)
+        assert len(result["iterations"]) > 0
+        assert len(result["objectives"]) > 0
+        assert isinstance(result["objectives"][0], float)

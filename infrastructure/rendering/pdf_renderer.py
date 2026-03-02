@@ -780,30 +780,35 @@ class PDFRenderer:
             # want a table of contents and a newpage.
             full_title_body = title_page_body + "\n\\tableofcontents\n\\newpage"
 
-            # Check if \maketitle is already present (e.g. from Pandoc)
-            if "\\maketitle" in tex_content:
-                logger.debug(
-                    "✓ \\maketitle already present in LaTeX content - replacing with our full title/TOC body"  # noqa: E501
-                )
-                # Find the first occurrence of \maketitle and replace it
-                tex_content = tex_content.replace("\\maketitle", full_title_body, 1)
-            else:
-                begin_doc_idx = tex_content.find("\\begin{document}")
-                if begin_doc_idx > 0:
+            begin_doc_idx = tex_content.find("\\begin{document}")
+            if begin_doc_idx > 0:
+                tex_preamble = tex_content[:begin_doc_idx]
+                tex_body = tex_content[begin_doc_idx:]
+                
+                # Check if \maketitle is already present in the body
+                if "\\maketitle" in tex_body:
+                    logger.debug(
+                        "✓ \\maketitle already present in LaTeX body - replacing with our full title/TOC body"  # noqa: E501
+                    )
+                    # Find the first occurrence of \maketitle in the body and replace it
+                    tex_body = tex_body.replace("\\maketitle", full_title_body, 1)
+                else:
                     # Find position right after \begin{document}
-                    end_of_begin_doc = tex_content.find("\n", begin_doc_idx) + 1
-                    if end_of_begin_doc > begin_doc_idx:
+                    end_of_begin_doc = tex_body.find("\n") + 1
+                    if end_of_begin_doc > 0:
                         # Insert full title body and formatting after \begin{document}
-                        tex_content = (
-                            tex_content[:end_of_begin_doc]
+                        tex_body = (
+                            tex_body[:end_of_begin_doc]
                             + "\n"
                             + full_title_body
                             + "\n\n"
-                            + tex_content[end_of_begin_doc:]
+                            + tex_body[end_of_begin_doc:]
                         )
                     logger.info(
                         r"✓ Inserted title page (\maketitle), TOC, and newpage after \begin{document}"  # noqa: E501
                     )
+                
+                tex_content = tex_preamble + tex_body
 
         # Insert bibliography commands before \end{document} if bibliography exists
         if bib_exists and "\\bibliography{" not in tex_content:
@@ -1396,6 +1401,18 @@ class PDFRenderer:
             tex_content = tex_content.replace("../output/figures/", "../figures/")
             fixed_count += remaining_old_paths
             logger.info(f"✓ Fixed {remaining_old_paths} additional figure path(s) via fallback")
+
+        # Second fallback: Handle bare "figures/" paths (no ../ prefix)
+        # These come from markdown ![...](figures/xxx.png) references that Pandoc
+        # converts to \includegraphics{figures/xxx.png}. Since LaTeX compiles
+        # from output/pdf/, these need to become ../figures/xxx.png.
+        # We match the pattern "]{figures/" inside \includegraphics commands
+        # to avoid false positives in regular text.
+        bare_figure_count = tex_content.count("]{figures/")
+        if bare_figure_count > 0:
+            tex_content = tex_content.replace("]{figures/", "]{../figures/")
+            fixed_count += bare_figure_count
+            logger.info(f"✓ Fixed {bare_figure_count} bare figure path(s) via second fallback")
 
         if fixed_count > 0:
             logger.info(f"✓ Fixed {fixed_count} figure path(s)")

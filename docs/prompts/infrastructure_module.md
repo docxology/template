@@ -34,13 +34,14 @@ INFRASTRUCTURE REQUIREMENTS:
 - Abstract interfaces for domain-specific implementations
 
 **Reusability Requirements:**
-- Usable by `act_inf_metaanalysis` and future projects
+- Usable by `code_project` and future projects
 - Clear separation of generic logic from domain-specific logic
 - Extensible design for domain-specific extensions
 - Stable APIs that don't break between versions
 
 ### Module Structure
 ```
+
 infrastructure/[module_name]/
 ├── __init__.py          # Public API exports (__all__ list)
 ├── core.py             # Main functionality implementation
@@ -56,6 +57,7 @@ infrastructure/[module_name]/
     ├── test_validators.py
     ├── test_utils.py
     └── test_integration.py
+
 ```
 
 ## 2. Public API Design
@@ -86,6 +88,7 @@ __all__ = [
 ```
 
 ### Type-Safe Generic Interfaces
+
 ```python
 # infrastructure/[module_name]/types.py
 """Type definitions for infrastructure module."""
@@ -127,6 +130,7 @@ class ConfigurableProcessor(ABC, Generic[T]):
 ```
 
 ### Exception Hierarchy
+
 ```python
 # infrastructure/[module_name]/exceptions.py
 """Exception classes for infrastructure module."""
@@ -153,6 +157,7 @@ class ProcessingError(ModuleError):
 ## 3. Core Implementation
 
 ### Generic Algorithm Design
+
 ```python
 # infrastructure/[module_name]/core.py
 """Core implementation of generic functionality."""
@@ -327,6 +332,7 @@ class GenericProcessor:
 ## 4. Validation and Testing
 
 ### Input Validation Module
+
 ```python
 # infrastructure/[module_name]/validators.py
 """Input validation functions for infrastructure module."""
@@ -382,6 +388,7 @@ def validate_configuration(config: Dict[str, Any], schema: Dict[str, Any]) -> No
 ```
 
 ### Testing (60% Coverage)
+
 ```python
 # tests/test_core.py
 """Tests for infrastructure module core functionality."""
@@ -498,6 +505,7 @@ class TestGenericProcessor:
 ## 5. Documentation Standards
 
 ### AGENTS.md Technical Documentation
+
 ```markdown
 # [Module Name] Infrastructure Module
 
@@ -521,6 +529,7 @@ The `[module_name]` infrastructure module provides generic [functionality descri
 ### Module Structure
 
 ```
+
 infrastructure/[module_name]/
 ├── __init__.py          # Public API exports
 ├── core.py             # Main GenericProcessor implementation
@@ -528,6 +537,7 @@ infrastructure/[module_name]/
 ├── validators.py       # Generic validation functions
 ├── types.py            # Type definitions and protocols
 └── tests/              # test suite (60%+ coverage)
+
 ```
 
 ## API Reference
@@ -645,11 +655,13 @@ class ResearchAnalyzer:
 ## Testing
 
 ### Coverage Requirements
-- **60% minimum coverage** for infrastructure modules
-- **data testing** (no mocks)
-- **Integration testing** across module components
+
+- __60% minimum coverage__ for infrastructure modules
+- __data testing__ (no mocks)
+- __Integration testing__ across module components
 
 ### Test Categories
+
 - Unit tests for individual functions
 - Integration tests for component interaction
 - Performance tests for scalability
@@ -658,21 +670,24 @@ class ResearchAnalyzer:
 ## Performance Characteristics
 
 ### Time Complexity
-- **Generic algorithms**: O(n) to O(n log n) depending on configuration
-- **Validation**: O(1) for simple checks, O(n) for complex validation
-- **Configuration**: O(1) initialization, O(1) parameter access
+
+- __Generic algorithms__: O(n) to O(n log n) depending on configuration
+- __Validation__: O(1) for simple checks, O(n) for complex validation
+- __Configuration__: O(1) initialization, O(1) parameter access
 
 ### Space Complexity
-- **Memory usage**: O(1) base + O(n) for data processing
-- **Configuration**: O(c) where c is configuration size
-- **Caching**: Optional O(cache_size) for performance optimization
+
+- __Memory usage__: O(1) base + O(n) for data processing
+- __Configuration__: O(c) where c is configuration size
+- __Caching__: Optional O(cache_size) for performance optimization
 
 ## See Also
 
 - [`README.md`](README.md) - Quick reference guide
 - [`../../core/architecture.md`](../../docs/core/architecture.md) - Infrastructure layer architecture
-- [`../../../.cursorrules/infrastructure_modules.md`](../../../.cursorrules/infrastructure_modules.md) - Infrastructure development standards
-- [`../validation/AGENTS.md`](../validation/AGENTS.md) - Validation infrastructure
+- [`../../../.cursorrules/infrastructure_modules.md`](../../.cursorrules/infrastructure_modules.md) - Infrastructure development standards
+- [`../validation/AGENTS.md`](../modules/pdf-validation.md) - Validation infrastructure
+
 ```
 
 ## Key Requirements
@@ -713,9 +728,11 @@ class ResearchAnalyzer:
 
 **Input:**
 ```
+
 MODULE PURPOSE: Generic data quality assessment applicable to any research dataset
 MODULE NAME: data_quality
 REUSABILITY SCOPE: All research projects needing data validation and quality metrics
+
 ```
 
 **Expected Output:**

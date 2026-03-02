@@ -275,7 +275,7 @@ if os.path.exists(SRC) and SRC not in sys.path:
 
 # Add project src/ directories to path for project modules
 # Projects are discovered dynamically, so we add both known projects
-for project_name in ["act_inf_metaanalysis"]:
+for project_name in ["code_project"]:
     project_src = os.path.join(ROOT, "projects", project_name, "src")
     if os.path.exists(project_src) and project_src not in sys.path:
     sys.path.insert(0, PROJECT_SRC)
@@ -285,7 +285,7 @@ This allows tests to import directly:
 
 ```python
 from infrastructure.core.config_loader import load_config  # Infrastructure imports
-from projects.act_inf_metaanalysis.src.literature import corpus  # Project imports
+from projects.code_project.src.optimizer import gradient_descent  # Project imports
 ```
 
 ## Test Categories
@@ -320,7 +320,7 @@ Test project-specific code in `projects/{name}/tests/`:
 
 - Unit tests for `projects/{name}/src/` modules (see `projects/{name}/tests/AGENTS.md`)
 - Each project has independent test suite with 90%+ coverage requirement
-- act_inf_metaanalysis: 444 tests, 96.1% coverage
+- code_project: 34 tests, 100% coverage
 
 ### Integration Tests
 
@@ -337,14 +337,14 @@ Test cross-module interactions in `tests/integration/`:
 
 ```bash
 # Using pytest directly (both infrastructure and project)
-pytest tests/ --cov=infrastructure --cov=projects/act_inf_metaanalysis/src --cov-report=term-missing --cov-report=html
+pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov-report=term-missing --cov-report=html
 
 # Using uv
-uv run pytest tests/ --cov=infrastructure --cov=projects/act_inf_metaanalysis/src --cov-report=html
+uv run pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov-report=html
 
 # Verify coverage requirements
 pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
-pytest projects/act_inf_metaanalysis/tests/ --cov=projects/act_inf_metaanalysis/src --cov-fail-under=90
+pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-under=90
 ```
 
 ### Specific Tests
@@ -380,7 +380,7 @@ pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-report=html --cov-
 
 ### Coverage Snapshot (latest)
 
-- act_inf_metaanalysis: **96.1%** (exceeds 90% target!)
+- code_project: **100%** (exceeds 90% target!)
 - Infrastructure: **83.33%** (exceeds 60% target by 39%!)
 - Total tests: **2150+** (infrastructure + project)
 
@@ -493,7 +493,7 @@ def test_integration(client):
 ### Current Coverage Status
 
 **Project Modules** (`projects/{name}/src/`):
-- **act_inf_metaanalysis**: **96.1%** (Target: 90%+) ✅ Exceeds requirement!
+- **code_project**: **100%** (Target: 90%+) ✅ Exceeds requirement!
 - test coverage ensures research code reliability
 
 **Infrastructure Modules** (`infrastructure/`): **83.33%** (Target: 60%+)
@@ -507,7 +507,7 @@ def test_integration(client):
 ```toml
 [tool.coverage.run]
 branch = true
-source = ["infrastructure", "projects/act_inf_metaanalysis/src"]
+source = ["infrastructure", "projects/code_project/src"]
 
 [tool.coverage.report]
 fail_under = 70  # Global fallback; individual runs use 60% (infra) and 90% (project)
@@ -711,7 +711,7 @@ See **[docs/testing-with-credentials.md](../docs/development/testing-with-creden
 
 - [`conftest.py`](conftest.py) - Test configuration and fixtures
 - [`../infrastructure/AGENTS.md`](../infrastructure/AGENTS.md) - Infrastructure module documentation
-- [`../projects/act_inf_metaanalysis/AGENTS.md`](../projects/act_inf_metaanalysis/AGENTS.md) - act_inf_metaanalysis project documentation
+- [`../projects/code_project/AGENTS.md`](../projects/code_project/AGENTS.md) - code_project project documentation
 - [`../AGENTS.md`](../AGENTS.md) - System documentation
 - [`../docs/core/workflow.md`](../docs/core/workflow.md) - Development workflow
 - [`../docs/development/testing-with-credentials.md`](../docs/development/testing-with-credentials.md) - Credential configuration guide

@@ -428,7 +428,7 @@ git push origin feature/new-algorithm
 
 - **[Architecture Guide](../core/architecture.md)** - System design
 - **[Workflow Guide](../core/workflow.md)** - Development process
-- **[Build System](../operational/build-system.md)** - Performance and status
+- **[Build System](../operational/build/build-system.md)** - Performance and status
 - **[Contributing Guide](../development/contributing.md)** - Contribution process
 - **[Roadmap](../development/roadmap.md)** - Future plans
 

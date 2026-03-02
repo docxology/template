@@ -18,7 +18,7 @@ This prompt ensures features integrate properly with the existing system:
 You are adding a feature to the Research Project Template. The feature must integrate seamlessly with the existing two-layer architecture and thin orchestrator pattern while meeting all quality and testing standards.
 
 FEATURE DESCRIPTION: [Describe the feature to implement]
-TARGET PROJECT: [Specify which project: "act_inf_metaanalysis" or new project name]
+TARGET PROJECT: [Specify which project: "code_project" or new project name]
 LAYER: [Specify: "infrastructure" for generic/shared OR "project" for domain-specific]
 
 FEATURE REQUIREMENTS:
@@ -89,6 +89,7 @@ class FeatureRequirements:
 ```
 
 **API Design:**
+
 ```python
 # BEFORE: Plan the API design first
 from typing import Protocol, runtime_checkable
@@ -141,6 +142,7 @@ class NewFeature:
 ### Phase 2: Implementation
 
 **Module Structure Creation:**
+
 ```python
 # infrastructure/new_feature/ (for infrastructure features)
 """
@@ -166,6 +168,7 @@ __all__ = [
 ```
 
 **Script Orchestration:**
+
 ```python
 # scripts/run_new_feature.py (thin orchestrator)
 """
@@ -212,6 +215,7 @@ if __name__ == "__main__":
 ### Phase 3: Testing
 
 **Test Suite Implementation:**
+
 ```python
 # tests/test_new_feature.py (90%+ coverage for project features)
 """Tests for feature implementation."""
@@ -306,6 +310,7 @@ class TestNewFeature:
 ### Phase 4: Documentation Creation
 
 **AGENTS.md Documentation:**
+
 ```markdown
 # Feature Module
 
@@ -325,17 +330,19 @@ class TestNewFeature:
 ### Module Structure
 
 ```
+
 new_feature/
-├── __init__.py          # Public API exports
+├── **init**.py          # Public API exports
 ├── core.py             # Main feature implementation
 ├── exceptions.py       # Custom exceptions
 ├── validators.py       # Input validation
 ├── AGENTS.md           # This documentation
 ├── README.md           # Quick reference
 └── tests/
-    ├── __init__.py
+    ├── **init**.py
     ├── test_core.py
     └── test_validators.py
+
 ```
 
 ## API Reference
@@ -477,11 +484,13 @@ new_feature:
 ## Performance Characteristics
 
 ### Time Complexity
+
 - **Best Case**: O(n) for linear processing
 - **Average Case**: O(n log n) with sorting operations
 - **Worst Case**: O(n²) for complex validation
 
 ### Space Complexity
+
 - **Memory Usage**: O(n) for data processing
 - **Cache Usage**: O(1) with LRU eviction
 - **Temporary Files**: O(batch_size) during processing
@@ -508,9 +517,10 @@ FeatureError (base exception)
 ## See Also
 
 - [`README.md`](README.md) - Quick reference and usage examples
-- [`../../core/architecture.md`](../../core/architecture.md) - Architecture integration details
+- [`../../core/architecture.md`](../core/architecture.md) - Architecture integration details
 - [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Testing requirements
 - [`../../.cursorrules/api_design.md`](../../.cursorrules/api_design.md) - API design standards
+
 ```
 
 **README.md Quick Reference:**
@@ -530,12 +540,11 @@ result = feature.execute(data)
 
 ## Features
 
-- [Feature 1]: [Description]
-- [Feature 2]: [Description]
 
 ## Documentation
 
 See [`AGENTS.md`](AGENTS.md) for technical documentation.
+
 ```
 
 ## 3. Quality Assurance and Validation
@@ -557,6 +566,7 @@ def validate_new_feature():
 ```
 
 ### Performance Benchmarking
+
 ```python
 # Performance validation
 import time
@@ -597,12 +607,14 @@ def benchmark_feature():
 ## Standards Compliance Checklist
 
 ### Architecture Standards ([`../../docs/core/architecture.md`](../../docs/core/architecture.md))
+
 - [ ] Two-layer architecture compliance
 - [ ] Thin orchestrator pattern implementation
 - [ ] Correct layer placement (infrastructure vs project)
 - [ ] Module organization and structure
 
 ### Code Quality Standards ([`../../.cursorrules/code_style.md`](../../.cursorrules/code_style.md))
+
 - [ ] Type hints on all public APIs
 - [ ] Black formatting and isort compliance
 - [ ] Google-style docstrings
@@ -610,12 +622,14 @@ def benchmark_feature():
 - [ ] Unified logging system integration
 
 ### Testing Standards ([`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md))
+
 - [ ] No mocks policy (data only)
 - [ ] Coverage requirements achieved
 - [ ] Test organization and structure
 - [ ] Integration and performance testing
 
 ### Documentation Standards ([`../../.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md))
+
 - [ ] AGENTS.md with technical documentation
 - [ ] README.md with Mermaid diagrams
 - [ ] Cross-references between documents
@@ -624,6 +638,7 @@ def benchmark_feature():
 ## Example Usage
 
 **Input:**
+
 ```
 FEATURE DESCRIPTION: Add automated data quality assessment feature for research datasets
 TARGET PROJECT: project
@@ -631,6 +646,7 @@ LAYER: infrastructure
 ```
 
 **Expected Output:**
+
 - `infrastructure/data_quality/` module with assessment algorithms
 - `scripts/assess_data_quality.py` thin orchestrator script
 - test suite (60%+ coverage) with data
@@ -643,4 +659,5 @@ LAYER: infrastructure
 - [`../core/workflow.md`](../core/workflow.md) - Development workflow
 - [`../core/architecture.md`](../core/architecture.md) - Architecture principles
 - [`../../.cursorrules/`](../../.cursorrules/) - All development standards
+
 ```

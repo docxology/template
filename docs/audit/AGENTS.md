@@ -90,6 +90,6 @@ Audit reports integrate with:
 
 ## See Also
 
-- [`../operational/troubleshooting-guide.md`](../operational/troubleshooting-guide.md) - Troubleshooting guide
+- [`../operational/troubleshooting/`](../operational/troubleshooting/) - Troubleshooting guide
 - [`../reference/faq.md`](../reference/faq.md) - Common questions
 - [`../../infrastructure/validation/AGENTS.md`](../../infrastructure/validation/AGENTS.md) - Validation module documentation

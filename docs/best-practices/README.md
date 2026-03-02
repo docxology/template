@@ -39,7 +39,7 @@ The `best-practices/` directory contains consolidated best practices, project ma
 
 - **[`../core/workflow.md`](../core/workflow.md)** - Development workflow
 - **[`../development/contributing.md`](../development/contributing.md)** - Contribution guidelines
-- **[`../operational/configuration.md`](../operational/configuration.md)** - Configuration guide
+- **[`../operational/config/configuration.md`](../operational/config/configuration.md)** - Configuration guide
 
 ## See Also
 

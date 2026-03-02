@@ -11,6 +11,7 @@ This guide provides formatting standards for writing research manuscripts in the
 Use ordered lists for sequential steps, ranked items, or hierarchical information.
 
 **Markdown Syntax:**
+
 ```markdown
 1. First item
 2. Second item
@@ -18,12 +19,14 @@ Use ordered lists for sequential steps, ranked items, or hierarchical informatio
 ```
 
 **When to Use:**
+
 - Sequential procedures or steps
 - Ranked results or priorities
 - Numbered examples or cases
 - Hierarchical information with natural ordering
 
 **Example:**
+
 ```markdown
 The experimental evaluation follows three main steps:
 
@@ -37,6 +40,7 @@ The experimental evaluation follows three main steps:
 Use unordered lists for non-sequential items, features, or options.
 
 **Markdown Syntax:**
+
 ```markdown
 - First item
 - Second item
@@ -44,12 +48,14 @@ Use unordered lists for non-sequential items, features, or options.
 ```
 
 **When to Use:**
+
 - Features or characteristics
 - Non-sequential items
 - Options or alternatives
 - General itemization
 
 **Example:**
+
 ```markdown
 The framework provides several key features:
 
@@ -64,6 +70,7 @@ The framework provides several key features:
 Nested lists require proper indentation (2 spaces per level).
 
 **Markdown Syntax:**
+
 ```markdown
 1. Main item
    - Sub-item
@@ -74,6 +81,7 @@ Nested lists require proper indentation (2 spaces per level).
 ```
 
 **Example:**
+
 ```markdown
 The system includes:
 
@@ -92,6 +100,7 @@ The system includes:
 For list items with multiple paragraphs, indent subsequent paragraphs.
 
 **Markdown Syntax:**
+
 ```markdown
 1. First item with multiple paragraphs.
 
@@ -105,6 +114,7 @@ For list items with multiple paragraphs, indent subsequent paragraphs.
 
 - **Markdown lists** are converted to LaTeX `itemize` or `enumerate` environments during PDF rendering
 - **LaTeX lists** can be used directly in markdown for more control:
+
   ```latex
   \begin{itemize}
   \item First item
@@ -121,17 +131,20 @@ For list items with multiple paragraphs, indent subsequent paragraphs.
 Use inline equations for mathematical expressions within sentences.
 
 **Syntax:**
+
 ```markdown
 The variable $x$ represents the optimization parameter.
 The function $f(x) = x^2 + 1$ is quadratic.
 ```
 
 **When to Use:**
+
 - Short mathematical expressions in text
 - Variables, parameters, or simple formulas
 - Mathematical notation within sentences
 
 **Example:**
+
 ```markdown
 The algorithm updates the solution $x_k$ according to the gradient
 $\nabla f(x_k)$, where $k$ is the iteration index.
@@ -142,6 +155,7 @@ $\nabla f(x_k)$, where $k$ is the iteration index.
 Use the `equation` environment for standalone equations that should be centered and numbered.
 
 **Syntax:**
+
 ```markdown
 \begin{equation}
 \label{eq:objective}
@@ -150,12 +164,14 @@ f(x) = \sum_{i=1}^{n} w_i \phi_i(x) + \lambda R(x)
 ```
 
 **When to Use:**
+
 - Important equations that are referenced
 - Complex mathematical expressions
 - Equations that need numbering
 - Key results or definitions
 
 **Example:**
+
 ```markdown
 The optimization problem we solve is:
 
@@ -172,12 +188,14 @@ where $\mathcal{X}$ is the feasible set.
 All important equations must have descriptive labels.
 
 **Naming Convention:**
+
 - Prefix: `eq:`
 - Format: `eq:descriptive_name`
 - Use lowercase with underscores
 - Be descriptive, not generic
 
 **Good Examples:**
+
 ```markdown
 \label{eq:objective}
 \label{eq:convergence_rate}
@@ -186,6 +204,7 @@ All important equations must have descriptive labels.
 ```
 
 **Bad Examples:**
+
 ```markdown
 \label{eq:1}           # Too generic
 \label{eq:eq1}         # Redundant prefix
@@ -197,12 +216,14 @@ All important equations must have descriptive labels.
 Reference equations using `\eqref{}` command.
 
 **Syntax:**
+
 ```markdown
 As shown in \eqref{eq:objective}, the objective function...
 The convergence rate \eqref{eq:convergence} demonstrates...
 ```
 
 **Placement:**
+
 - Before punctuation: "Equation \eqref{eq:name} shows..."
 - In parentheses: "The result (see \eqref{eq:name}) indicates..."
 - As part of sentence: "Using \eqref{eq:name}, we derive..."
@@ -212,6 +233,7 @@ The convergence rate \eqref{eq:convergence} demonstrates...
 For equations spanning multiple lines, use `align` or `split` environments.
 
 **Align Environment (multiple equations):**
+
 ```markdown
 \begin{align}
 \label{eq:system}
@@ -221,6 +243,7 @@ y_{k+1} &= y_k + \beta_k (x_k - x_{k-1})
 ```
 
 **Split Environment (single equation, multiple lines):**
+
 ```markdown
 \begin{equation}
 \begin{split}
@@ -241,12 +264,14 @@ f(x) &= \sum_{i=1}^{n} w_i \phi_i(x) \\
 ### DO NOT Use
 
 **Never use these for display math:**
+
 ```markdown
 $$ f(x) = x^2 $$           # ❌ BAD: Double dollar signs
 \[ f(x) = x^2 \]          # ❌ BAD: Backslash square brackets
 ```
 
 **Always use:**
+
 ```markdown
 \begin{equation}
 \label{eq:name}
@@ -261,6 +286,7 @@ f(x) = x^2
 Use placement specifiers to control figure location.
 
 **Options:**
+
 - `[h]` - Here (current position, if possible)
 - `[t]` - Top of page
 - `[b]` - Bottom of page
@@ -268,6 +294,7 @@ Use placement specifiers to control figure location.
 - `[!htbp]` - Try here, then top, then bottom, then separate page
 
 **Syntax:**
+
 ```markdown
 \begin{figure}[h]
 \centering
@@ -284,6 +311,7 @@ Use placement specifiers to control figure location.
 Control figure size using `width` or `height` parameters.
 
 **Common Sizes:**
+
 ```markdown
 width=0.5\textwidth   # Half page width
 width=0.8\textwidth   # 80% page width (most common)
@@ -292,6 +320,7 @@ width=\textwidth      # Full page width
 ```
 
 **Syntax:**
+
 ```markdown
 \includegraphics[width=0.8\textwidth]{../output/figures/figure.png}
 ```
@@ -303,17 +332,20 @@ width=\textwidth      # Full page width
 All figures must use relative paths from the manuscript directory.
 
 **Path Format:**
+
 ```markdown
 ../output/figures/figure_name.png
 ```
 
 **Requirements:**
+
 - Paths are relative to `project/manuscript/`
 - Figures are stored in `project/output/figures/`
 - Use forward slashes (`/`) even on Windows
 - Include file extension (`.png`, `.pdf`, `.jpg`)
 
 **Example:**
+
 ```markdown
 \includegraphics[width=0.9\textwidth]{../output/figures/convergence_plot.png}
 ```
@@ -323,12 +355,14 @@ All figures must use relative paths from the manuscript directory.
 Captions must be descriptive and sentences.
 
 **Format:**
+
 - Start with capital letter
 - End with period
 - Describe what the figure shows
 - Include key information (method, dataset, result)
 
 **Good Examples:**
+
 ```markdown
 \caption{Algorithm convergence comparison showing performance improvement over baseline methods.}
 \caption{Experimental setup diagram illustrating the data processing pipeline.}
@@ -336,6 +370,7 @@ Captions must be descriptive and sentences.
 ```
 
 **Bad Examples:**
+
 ```markdown
 \caption{convergence plot}                    # Too brief, not a sentence
 \caption{Figure showing results}              # Vague, doesn't describe content
@@ -347,12 +382,14 @@ Captions must be descriptive and sentences.
 All figures must have descriptive labels.
 
 **Naming Convention:**
+
 - Prefix: `fig:`
 - Format: `fig:descriptive_name`
 - Use lowercase with underscores
 - Match filename when possible
 
 **Good Examples:**
+
 ```markdown
 \label{fig:convergence_plot}
 \label{fig:experimental_setup}
@@ -361,6 +398,7 @@ All figures must have descriptive labels.
 ```
 
 **Bad Examples:**
+
 ```markdown
 \label{fig:1}              # Too generic
 \label{fig:figure1}        # Redundant prefix
@@ -372,17 +410,20 @@ All figures must have descriptive labels.
 Reference figures using `\ref{}` command.
 
 **Syntax:**
+
 ```markdown
 As shown in Figure \ref{fig:convergence_plot}, the algorithm...
 The experimental setup (Figure \ref{fig:experimental_setup}) includes...
 ```
 
 **Placement:**
+
 - Capitalize "Figure" when starting a sentence
 - Use lowercase "figure" in the middle of a sentence
 - Place reference before the figure when possible
 
 **Examples:**
+
 ```markdown
 Figure \ref{fig:convergence_plot} shows the convergence behavior.
 The results, shown in figure \ref{fig:results}, demonstrate...
@@ -392,6 +433,7 @@ As illustrated in \ref{fig:setup}, the system includes...
 ### Figure Formatting
 
 **Centering:**
+
 ```markdown
 \begin{figure}[h]
 \centering
@@ -400,6 +442,7 @@ As illustrated in \ref{fig:setup}, the system includes...
 ```
 
 **Supported Formats:**
+
 - PNG (recommended for plots)
 - PDF (recommended for vector graphics)
 - JPG/JPEG (for photographs)
@@ -413,6 +456,7 @@ As illustrated in \ref{fig:setup}, the system includes...
 Use the `table` environment for all tables.
 
 **Basic Syntax:**
+
 ```markdown
 \begin{table}[h]
 \centering
@@ -432,12 +476,14 @@ Row 2, Col 1 & Row 2, Col 2 & Row 2, Col 3 \\
 ### Tabular Formatting
 
 **Column Alignment:**
+
 - `l` - Left-aligned
 - `c` - Center-aligned
 - `r` - Right-aligned
 - `|` - Vertical border
 
 **Examples:**
+
 ```markdown
 \begin{tabular}{lcr}           % Left, center, right (no borders)
 \begin{tabular}{|l|c|r|}        % With vertical borders
@@ -448,15 +494,18 @@ Row 2, Col 1 & Row 2, Col 2 & Row 2, Col 3 \\
 ### Table Borders
 
 **Horizontal Borders:**
+
 - `\hline` - Full-width horizontal line
 - Place before first row and after last row
 - Use between header and data rows
 
 **Vertical Borders:**
+
 - `|` in column specification
 - Use sparingly for clarity
 
 **Example:**
+
 ```markdown
 \begin{tabular}{|l|c|c|}
 \hline
@@ -473,12 +522,14 @@ Our Method & 0.92 & 8.5 \\
 Follow the same caption guidelines as figures.
 
 **Format:**
+
 - Descriptive and sentences
 - Start with capital letter
 - End with period
 - Place above table (before `\label`)
 
 **Example:**
+
 ```markdown
 \caption{Performance comparison showing accuracy and execution time for different methods.}
 ```
@@ -488,11 +539,13 @@ Follow the same caption guidelines as figures.
 All tables must have descriptive labels.
 
 **Naming Convention:**
+
 - Prefix: `tab:`
 - Format: `tab:descriptive_name`
 - Use lowercase with underscores
 
 **Good Examples:**
+
 ```markdown
 \label{tab:performance_comparison}
 \label{tab:dataset_summary}
@@ -504,23 +557,27 @@ All tables must have descriptive labels.
 Reference tables using `\ref{}` command.
 
 **Syntax:**
+
 ```markdown
 Table \ref{tab:performance_comparison} shows...
 The results (see Table \ref{tab:results}) indicate...
 ```
 
 **Placement:**
+
 - Capitalize "Table" when starting a sentence
 - Use lowercase "table" in the middle of a sentence
 
 ### Markdown Tables vs LaTeX Tables
 
 **Markdown Tables:**
+
 - Simple tables with basic formatting
 - Converted to LaTeX during rendering
 - Limited formatting options
 
 **LaTeX Tables:**
+
 - Full control over formatting
 - Support for complex layouts
 - Required for multirow/multicolumn
@@ -532,6 +589,7 @@ The results (see Table \ref{tab:results}) indicate...
 For tables with merged cells, use `multirow` and `multicolumn` packages.
 
 **Example:**
+
 ```markdown
 \begin{table}[h]
 \centering
@@ -557,6 +615,7 @@ Our Method & 0.92 & 8.5 \\
 Use `\cite{}` command for citations.
 
 **Basic Syntax:**
+
 ```markdown
 According to recent research \cite{author2023}, this method...
 The algorithm \cite{kingma2014} demonstrates...
@@ -567,11 +626,13 @@ The algorithm \cite{kingma2014} demonstrates...
 Cite multiple sources using comma-separated keys.
 
 **Syntax:**
+
 ```markdown
 \cite{key1,key2,key3}
 ```
 
 **Example:**
+
 ```markdown
 Previous work \cite{boyd2004, nesterov2018, kingma2014} has shown...
 ```
@@ -581,12 +642,14 @@ Previous work \cite{boyd2004, nesterov2018, kingma2014} has shown...
 Place citations before punctuation marks.
 
 **Correct:**
+
 ```markdown
 The method works well \cite{author2023}.
 Previous research \cite{key1,key2} has demonstrated this.
 ```
 
 **Incorrect:**
+
 ```markdown
 The method works well.\cite{author2023}  # ❌ After punctuation
 ```
@@ -596,11 +659,13 @@ The method works well.\cite{author2023}  # ❌ After punctuation
 Citation keys are case-sensitive and must match entries in `references.bib`.
 
 **Requirements:**
+
 - Keys are defined in `project/manuscript/references.bib`
 - Use exact key spelling (case-sensitive)
 - Keys typically follow pattern: `authorYYYY` or `authorYYYYkeyword`
 
 **Example:**
+
 ```bibtex
 @article{kingma2014,
   title={Adam: A Method for Stochastic Optimization},
@@ -611,6 +676,7 @@ Citation keys are case-sensitive and must match entries in `references.bib`.
 ```
 
 **Usage:**
+
 ```markdown
 The Adam optimizer \cite{kingma2014} provides...
 ```
@@ -620,6 +686,7 @@ The Adam optimizer \cite{kingma2014} provides...
 The system uses `plainnat` style, which produces numbered citations `[1]`, `[2]`, etc.
 
 **Output Format:**
+
 - Citations appear as `[1]`, `[2]`, `[3]` in text
 - Bibliography is numbered and sorted
 - Multiple citations: `[1,2,3]` or `[1-3]`
@@ -631,12 +698,14 @@ The system uses `plainnat` style, which produces numbered citations `[1]`, `[2]`
 Use consistent heading levels to maintain document structure.
 
 **Levels:**
+
 - `#` - Main section (e.g., "Introduction", "Methodology")
 - `##` - Subsection (e.g., "Experimental Setup", "Results")
 - `###` - Subsubsection (e.g., "Convergence Analysis", "Ablation Studies")
 - `####` - Paragraph-level heading (use sparingly)
 
 **Example:**
+
 ```markdown
 # Methodology {#sec:methodology}
 
@@ -652,12 +721,14 @@ Use consistent heading levels to maintain document structure.
 All main sections and important subsections should have labels.
 
 **Naming Convention:**
+
 - Prefix: `sec:`
 - Format: `{#sec:descriptive_name}`
 - Use lowercase with underscores
 - Place in heading: `# Section Title {#sec:section_name}`
 
 **Example:**
+
 ```markdown
 # Introduction {#sec:introduction}
 
@@ -669,12 +740,14 @@ All main sections and important subsections should have labels.
 Reference sections using `\ref{}` command.
 
 **Syntax:**
+
 ```markdown
 As described in Section \ref{sec:methodology}...
 The results (see \ref{sec:results}) show...
 ```
 
 **Placement:**
+
 - Capitalize "Section" when starting a sentence
 - Use lowercase "section" in the middle of a sentence
 
@@ -691,6 +764,7 @@ Section numbering is automatic in LaTeX.
 Maintain consistent heading structure across all manuscript files.
 
 **Recommended Structure:**
+
 ```markdown
 # Main Section {#sec:name}
 
@@ -708,11 +782,13 @@ Maintain consistent heading structure across all manuscript files.
 Use for emphasis, technical terms, or variable names in text.
 
 **Markdown:**
+
 ```markdown
 The *optimization variable* $x$ represents...
 ```
 
 **LaTeX:**
+
 ```markdown
 The \textit{optimization variable} $x$ represents...
 ```
@@ -722,11 +798,13 @@ The \textit{optimization variable} $x$ represents...
 Use for strong emphasis or key terms.
 
 **Markdown:**
+
 ```markdown
 The **key contribution** of this work is...
 ```
 
 **LaTeX:**
+
 ```markdown
 The \textbf{key contribution} of this work is...
 ```
@@ -736,11 +814,13 @@ The \textbf{key contribution} of this work is...
 Use for code, function names, or technical terms.
 
 **Markdown:**
+
 ```markdown
 The function `calculate_average()` computes...
 ```
 
 **LaTeX:**
+
 ```markdown
 The function \texttt{calculate\_average()} computes...
 ```
@@ -750,6 +830,7 @@ The function \texttt{calculate\_average()} computes...
 Code can appear in equations when appropriate.
 
 **Example:**
+
 ```markdown
 The function $f(\texttt{x})$ where $\texttt{x}$ is a vector...
 ```
@@ -759,6 +840,7 @@ The function $f(\texttt{x})$ where $\texttt{x}$ is a vector...
 Escape special LaTeX characters when needed.
 
 **Common Escaping:**
+
 - `%` → `\%`
 - `&` → `\&`
 - `$` → `\$`
@@ -774,6 +856,7 @@ Escape special LaTeX characters when needed.
 Reference other sections using `\ref{sec:name}`.
 
 **Examples:**
+
 ```markdown
 As discussed in Section \ref{sec:methodology}...
 The experimental setup (Section \ref{sec:experimental_setup}) includes...
@@ -785,6 +868,7 @@ See \ref{sec:results} for detailed analysis.
 Reference equations using `\eqref{eq:name}`.
 
 **Examples:**
+
 ```markdown
 The objective function \eqref{eq:objective} defines...
 Using \eqref{eq:convergence}, we can show...
@@ -796,6 +880,7 @@ As shown in equation \eqref{eq:update}, the algorithm...
 Reference figures using `\ref{fig:name}`.
 
 **Examples:**
+
 ```markdown
 Figure \ref{fig:convergence_plot} shows...
 The results (see Figure \ref{fig:results}) demonstrate...
@@ -807,6 +892,7 @@ As illustrated in \ref{fig:setup}, the system...
 Reference tables using `\ref{tab:name}`.
 
 **Examples:**
+
 ```markdown
 Table \ref{tab:performance_comparison} summarizes...
 The data (Table \ref{tab:dataset}) shows...
@@ -818,6 +904,7 @@ See \ref{tab:results} for statistics.
 Combine multiple references in a single sentence.
 
 **Examples:**
+
 ```markdown
 The methodology (Section \ref{sec:methodology}) and results
 (Section \ref{sec:results}) demonstrate...
@@ -832,6 +919,7 @@ Figures \ref{fig:convergence} and \ref{fig:scalability} show...
 Place references naturally within sentences.
 
 **Good Examples:**
+
 ```markdown
 The algorithm described in Section \ref{sec:methodology} achieves
 the convergence rate shown in \eqref{eq:convergence}.
@@ -841,6 +929,7 @@ baselines (see Table \ref{tab:comparison}).
 ```
 
 **Bad Examples:**
+
 ```markdown
 The algorithm. See Section \ref{sec:methodology}.  # ❌ Fragmented
 Figure \ref{fig:results}. Shows results.         # ❌ Fragmented
@@ -851,12 +940,14 @@ Figure \ref{fig:results}. Shows results.         # ❌ Fragmented
 ### Label Naming Conventions
 
 **Guidelines:**
+
 - Use descriptive names, not numbers
 - Be consistent across document
 - Use lowercase with underscores
 - Match content purpose (eq:, fig:, tab:, sec:)
 
 **Good:**
+
 ```markdown
 \label{eq:convergence_rate}
 \label{fig:experimental_setup}
@@ -865,6 +956,7 @@ Figure \ref{fig:results}. Shows results.         # ❌ Fragmented
 ```
 
 **Bad:**
+
 ```markdown
 \label{eq:1}
 \label{fig:figure1}
@@ -875,6 +967,7 @@ Figure \ref{fig:results}. Shows results.         # ❌ Fragmented
 ### Reference Validation
 
 **Before Building:**
+
 - Verify all `\ref{}` and `\eqref{}` targets exist
 - Check label spelling matches exactly
 - Ensure all figures/tables/equations have labels
@@ -883,6 +976,7 @@ Figure \ref{fig:results}. Shows results.         # ❌ Fragmented
 ### Figure/Table Placement Guidelines
 
 **Placement Strategy:**
+
 - Place figures/tables near first reference
 - Use `[h]` for most cases
 - Use `[t]` or `[b]` for large figures
@@ -891,6 +985,7 @@ Figure \ref{fig:results}. Shows results.         # ❌ Fragmented
 ### Equation Numbering Strategy
 
 **Numbering Guidelines:**
+
 - Number all equations that are referenced
 - Number key results and definitions
 - Don't number trivial or obvious equations
@@ -899,6 +994,7 @@ Figure \ref{fig:results}. Shows results.         # ❌ Fragmented
 ### Citation Management
 
 **Best Practices:**
+
 - Add all citations to `references.bib` first
 - Use consistent key naming (authorYYYY)
 - Verify keys match exactly (case-sensitive)
@@ -909,11 +1005,13 @@ Figure \ref{fig:results}. Shows results.         # ❌ Fragmented
 ### Using `$$` for Display Math
 
 **Never:**
+
 ```markdown
 $$ f(x) = x^2 $$
 ```
 
 **Always:**
+
 ```markdown
 \begin{equation}
 \label{eq:name}
@@ -924,6 +1022,7 @@ f(x) = x^2
 ### Missing Labels
 
 **Never:**
+
 ```markdown
 \begin{equation}
 f(x) = x^2
@@ -931,6 +1030,7 @@ f(x) = x^2
 ```
 
 **Always:**
+
 ```markdown
 \begin{equation}
 \label{eq:name}
@@ -941,12 +1041,14 @@ f(x) = x^2
 ### Incorrect Path References
 
 **Never:**
+
 ```markdown
 \includegraphics{figures/figure.png}           # ❌ Wrong path
 \includegraphics{output/figures/figure.png}   # ❌ Wrong path
 ```
 
 **Always:**
+
 ```markdown
 \includegraphics{../output/figures/figure.png}  # ✅ Correct relative path
 ```
@@ -954,6 +1056,7 @@ f(x) = x^2
 ### Case-Sensitive Citation Keys
 
 **Never:**
+
 ```markdown
 \cite{Kingma2014}  # ❌ Wrong case
 \cite{kingma2014}  # ✅ Correct case
@@ -964,6 +1067,7 @@ f(x) = x^2
 ### Inconsistent Label Naming
 
 **Never:**
+
 ```markdown
 \label{eq:Objective}      # ❌ Inconsistent case
 \label{eq:objective_func} # ❌ Inconsistent style
@@ -971,6 +1075,7 @@ f(x) = x^2
 ```
 
 **Always:**
+
 ```markdown
 \label{eq:objective}      # ✅ Consistent, descriptive
 ```
@@ -1032,10 +1137,9 @@ the iterative algorithm described in Section \ref{sec:algorithm}.
 
 ## See Also
 
-- [act_inf_metaanalysis/manuscript/](../projects/act_inf_metaanalysis/manuscript/) - manuscript documentation
+- [docs/usage/style-guide.md](../docs/usage/style-guide.md) - User-facing manuscript style guide (equations, figures, captions, tables)
 - [act_inf_metaanalysis/manuscript/](../projects/act_inf_metaanalysis/manuscript/) - Manuscript content
 - [docs/markdown-template-guide.md](../docs/usage/markdown-template-guide.md) - Markdown and cross-referencing guide
 - [docs/manuscript-numbering-system.md](../docs/usage/manuscript-numbering-system.md) - Section numbering system
 - [code_style.md](code_style.md) - Code formatting standards
 - [documentation_standards.md](documentation_standards.md) - Documentation writing guide
-

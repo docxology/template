@@ -2,7 +2,7 @@
 
 > **Quick lookup** for error messages and solutions
 
-**Quick Reference:** [Main Troubleshooting](../troubleshooting-guide.md) | [FAQ](../../reference/faq.md)
+**Quick Reference:** [Main Troubleshooting](README.md) | [FAQ](../../reference/faq.md)
 
 ---
 
@@ -187,4 +187,4 @@ cat project/output/.checkpoints/pipeline_checkpoint.json | uv run python -m json
 
 ---
 
-**Related:** [Environment Setup](environment-setup.md) | [Build Tools](build-tools.md) | [Main Guide](../troubleshooting-guide.md)
+**Related:** [Environment Setup](environment-setup.md) | [Build Tools](build-tools.md) | [Main Guide](README.md)

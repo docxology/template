@@ -233,7 +233,7 @@ This template now supports **multiple research projects** in a single repository
 graph TB
     subgraph Repository["📁 Repository"]
         subgraph Projects["projects/"]
-            P1[act_inf_metaanalysis/<br/>Active Inference meta-analysis]
+            P1[code_project/<br/>Optimization research exemplar]
             PN[your_project/<br/>Your research]
         end
 
@@ -244,7 +244,7 @@ graph TB
         end
 
         subgraph Output["📤 Final Deliverables"]
-            OUT1[output/act_inf_metaanalysis/<br/>Meta-analysis outputs]
+            OUT1[output/code_project/<br/>Exemplar outputs]
             OUTN[output/your_project/<br/>Your deliverables]
         end
     end
@@ -271,7 +271,7 @@ graph TB
 
 The template includes one active project:
 
-- **`projects/act_inf_metaanalysis/`** - Active Inference meta-analysis research project
+- **`projects/code_project/`** - Optimization research exemplar (master exemplar)
 
 **Note:** Archived projects are preserved in `projects_archive/` for reference but are not actively executed.
 
@@ -282,7 +282,7 @@ The template includes one active project:
 ./run.sh
 
 # Run specific project
-./run.sh --project act_inf_metaanalysis --pipeline
+./run.sh --project code_project --pipeline
 
 # Run all projects sequentially
 ./run.sh --all-projects --pipeline
@@ -321,7 +321,7 @@ Projects in `projects_archive/` are **preserved but not executed**:
 
 **Current Active Projects:**
 
-- `act_inf_metaanalysis/` - Active Inference meta-analysis research
+- `code_project/` - Optimization research exemplar
 
 **To archive a project:** `mv projects/{name}/ projects_archive/{name}/`
 **To reactivate:** `mv projects_archive/{name}/ projects/{name}/`
