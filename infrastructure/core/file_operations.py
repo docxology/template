@@ -66,6 +66,43 @@ def clean_output_directory(output_dir: Path) -> bool:
         return False
 
 
+def _clean_dir_preserving(
+    dir_path: Path,
+    output_dir: Path,
+    preserved_relative_paths: set[Path],
+    log: Any,
+) -> None:
+    """Remove all files inside *dir_path* except those in *preserved_relative_paths*.
+
+    Paths in *preserved_relative_paths* are relative to *output_dir*.
+    After removing files, any empty directories are cleaned up bottom-up.
+    """
+    preserved_count = 0
+    removed_count = 0
+
+    for file_path in list(dir_path.rglob("*")):
+        if not file_path.is_file():
+            continue
+        rel = file_path.relative_to(output_dir)
+        if rel in preserved_relative_paths:
+            log.info(f"  Preserving file for incremental processing: {rel}")
+            preserved_count += 1
+        else:
+            file_path.unlink()
+            removed_count += 1
+
+    # Clean up empty directories bottom-up
+    for sub in sorted(dir_path.rglob("*"), key=lambda p: len(p.parts), reverse=True):
+        if sub.is_dir() and not any(sub.iterdir()):
+            sub.rmdir()
+
+    if preserved_count:
+        log.info(
+            f"  Selectively cleaned {dir_path.name}/: "
+            f"removed {removed_count} files, preserved {preserved_count}"
+        )
+
+
 def clean_output_directories(
     repo_root: Path, project_name: str = "project", subdirs: List[str] | None = None
 ) -> None:
@@ -144,22 +181,40 @@ def clean_output_directories(
                     if archived_count > 0:
                         logger.info(f"  Archived {archived_count} log file(s) to logs/archive/")
 
-            # Remove all contents except .checkpoints directory (preserve for pipeline resume)
-            # We also preserve corpus.jsonl and nanopublications.jsonl to allow incremental processing  # noqa: E501
-            preserved_files = {"corpus.jsonl", "nanopublications.jsonl"}
+            # Remove all contents except .checkpoints directory and specific
+            # persistence files that support incremental processing across runs.
+            # Paths are relative to output_dir so files inside subdirectories
+            # (e.g. data/nanopublications.jsonl) are correctly preserved.
+            preserved_relative_paths = {
+                Path("data") / "corpus.jsonl",
+                Path("data") / "nanopublications.jsonl",
+                Path("data") / "nanopublications.trig",
+            }
 
             for item in output_dir.iterdir():
                 if item.is_dir():
                     # Preserve .checkpoints directory to maintain pipeline resume capability
-                    if item.name != ".checkpoints":
-                        shutil.rmtree(item)
-                    else:
+                    if item.name == ".checkpoints":
                         logger.debug(f"  Preserving {item.name}/ directory for checkpoint resume")
-                else:
-                    if item.name not in preserved_files:
-                        item.unlink()
+                        continue
+
+                    # Check if this subdirectory contains any preserved files
+                    has_preserved = any(
+                        p.parts[0] == item.name for p in preserved_relative_paths
+                    )
+                    if has_preserved:
+                        # Selectively clean: remove everything except preserved files
+                        _clean_dir_preserving(
+                            item, output_dir, preserved_relative_paths, logger,
+                        )
                     else:
+                        shutil.rmtree(item)
+                else:
+                    # Root-level files: preserve if in the set (legacy compat)
+                    if Path(item.name) in preserved_relative_paths:
                         logger.debug(f"  Preserving file for incremental processing: {item.name}")
+                    else:
+                        item.unlink()
         else:
             logger.info(f"  Creating {relative_path}/...")
 
