@@ -9,7 +9,7 @@ It demonstrates the complete research pipeline from algorithm implementation thr
 This project is explicitly designed to showcase the repository's three foundational pillars:
 
 1. **`infrastructure/` Layer**: The code delegates all tracking, performance benchmarking, stability validation, and PDF rendering to the 9-module infrastructure cluster (located at the repository root).
-2. **`tests/` Integrity**: An uncompromising zero-mock testing policy validated by a 34-test CI suite (`projects/code_project/tests/`) operating at 100% statement and branch coverage.
+2. **`tests/` Integrity**: An uncompromising zero-mock testing policy validated by a 45-test CI suite (`projects/code_project/tests/`) operating at 100% statement and branch coverage.
 3. **`docs/` Orchestration**: Adherence to the Rigorous Agentic Scientific Protocol (RASP) ensuring total documentation-to-code parity (`projects/code_project/docs/`).
 
 ## Manuscript Structure

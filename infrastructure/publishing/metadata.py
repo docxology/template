@@ -6,7 +6,10 @@ import re
 from pathlib import Path
 from typing import Any, Dict, List
 
+from infrastructure.core.logging_utils import get_logger
 from infrastructure.publishing.models import PublicationMetadata
+
+logger = get_logger(__name__)
 
 
 def extract_publication_metadata(markdown_files: List[Path]) -> PublicationMetadata:
@@ -37,7 +40,8 @@ def extract_publication_metadata(markdown_files: List[Path]) -> PublicationMetad
             # Only use this content if it contains actual research content (not template content)
             if "Research Project Template" not in content and ("#" in content or "**" in content):
                 combined_content = content
-        except Exception:
+        except Exception as e:
+            logger.warning(f"Could not read metadata from {markdown_files[0]}: {e}")
             combined_content = ""
 
     # Extract title (first # header)

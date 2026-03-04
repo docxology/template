@@ -17,7 +17,7 @@ A research project exemplifying mathematical optimization algorithms with rigoro
 
 ### Research Quality Assurance
 
-- **100% Test Coverage**: 34 tests covering edge cases, stability analysis, and performance benchmarks
+- **100% Test Coverage**: 45 tests covering edge cases, stability analysis, and performance benchmarks
 - **Deterministic Algorithms**: Reproducible results with fixed random seeds
 - **Documentation**: Complete type hints, docstrings, and examples
 - **Parameter Validation**: Robust input checking and error handling
@@ -331,7 +331,7 @@ This project complies with the template's development standards defined in `.cur
 
 ### ✅ **Testing Standards Compliance**
 
-- **90%+ coverage**: Achieves 100% test coverage with 34 tests (exceeds 90% requirement)
+- **90%+ coverage**: Achieves 100% test coverage with 45 tests (exceeds 90% requirement)
 - **Real data only**: All tests use computations, no mocks
 - **Full integration**: Tests cover algorithm convergence, stability analysis, and performance benchmarking
 - **Deterministic results**: Fixed seeds ensure reproducible test outcomes
@@ -503,5 +503,4 @@ Step sizes: 100%|██████████████████| 4/4 [00
 ## See Also
 
 - [Root AGENTS.md](../../AGENTS.md) - Template documentation
-- [projects/ento_linguistics/](../ento_linguistics/AGENTS.md) - Ento Linguistics research project
 - [infrastructure/scientific/](../../infrastructure/scientific/AGENTS.md) - Scientific utilities

@@ -91,7 +91,7 @@ class CheckpointManager:
         last_stage_completed: int,
         stage_results: list[StageResult],
         total_stages: int,
-    ) -> None:
+    ) -> bool:
         """Save pipeline checkpoint.
 
         Args:
@@ -99,6 +99,11 @@ class CheckpointManager:
             last_stage_completed: Last successfully completed stage number
             stage_results: List of stage results
             total_stages: Total number of stages
+
+        Returns:
+            True if checkpoint saved successfully, False if save failed.
+            Callers should log a warning and continue — pipeline execution
+            proceeds regardless, but resume will not be available.
         """
         checkpoint = PipelineCheckpoint(
             pipeline_start_time=pipeline_start_time,
@@ -114,11 +119,13 @@ class CheckpointManager:
             with open(self.checkpoint_file, "w") as f:
                 json.dump(checkpoint.to_dict(), f, indent=2)
             logger.debug(f"Checkpoint saved: stage {last_stage_completed}/{total_stages}")
+            return True
         except Exception as e:
-            logger.warning(f"Failed to save checkpoint: {e}")
-            logger.info(
+            logger.error(f"Failed to save checkpoint: {e}")
+            logger.warning(
                 "Checkpoint save failed - pipeline resume will not be available for this run"
             )
+            return False
 
     def load_checkpoint(self) -> Optional[PipelineCheckpoint]:
         """Load pipeline checkpoint.

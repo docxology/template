@@ -12,6 +12,9 @@ from pathlib import Path
 from typing import Dict, Any
 
 from infrastructure.core.config_loader import get_testing_config
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def load_test_results(project_name: str) -> Dict[str, Any]:
@@ -35,10 +38,10 @@ def load_test_results(project_name: str) -> Dict[str, Any]:
                 else:
                     return data  # type: ignore
         except Exception as e:
-            print(f"Warning: Could not load results from {results_file}: {e}")
+            logger.warning(f"Could not load results from {results_file}: {e}")
             return {}
     else:
-        print(f"Warning: Test results file not found: {results_file}")
+        logger.warning(f"Test results file not found: {results_file}")
         return {}
 
 
@@ -73,7 +76,7 @@ def load_infrastructure_results() -> Dict[str, Any]:
                         "exit_code": 0 if infra_data.get("status") == "PASSED" else 1,
                     }
         except Exception as e:
-            print(f"Warning: Could not load infrastructure results from validation report: {e}")
+            logger.warning(f"Could not load infrastructure results from validation report: {e}")
 
     # Fallback: try coverage JSON files
     infra_json = Path("coverage_infra.json")
@@ -89,7 +92,7 @@ def load_infrastructure_results() -> Dict[str, Any]:
                     "missing_lines": totals.get("missing_lines", 0),
                 }
         except Exception as e:
-            print(f"Warning: Could not load infrastructure coverage: {e}")
+            logger.warning(f"Could not load infrastructure coverage: {e}")
 
     # Fallback: try to extract from HTML coverage if available
     htmlcov = Path("htmlcov/coverage.json")
@@ -105,9 +108,9 @@ def load_infrastructure_results() -> Dict[str, Any]:
                     "missing_lines": totals.get("missing_lines", 0),
                 }
         except Exception as e:
-            print(f"Warning: Could not load HTML coverage: {e}")
+            logger.warning(f"Could not load HTML coverage: {e}")
 
-    print("Warning: No infrastructure test results found")
+    logger.warning("No infrastructure test results found")
     return {}
 
 

@@ -30,7 +30,9 @@ def generate_scientific_documentation(func: Callable) -> str:
     for param_name, param in signature.parameters.items():
         param_info = f"- `{param_name}`"
         if param.annotation != inspect.Parameter.empty:
-            param_info += f" ({param.annotation.__name__})"
+            # Use getattr fallback: generic types (List[str], Optional[int]) have no __name__
+            ann_name = getattr(param.annotation, "__name__", str(param.annotation))
+            param_info += f" ({ann_name})"
         if param.default != inspect.Parameter.empty:
             param_info += f", default: {param.default}"
         parameters.append(param_info)
@@ -38,7 +40,9 @@ def generate_scientific_documentation(func: Callable) -> str:
     # Extract return information
     return_info = ""
     if signature.return_annotation != inspect.Signature.empty:
-        return_info = f"Returns: {signature.return_annotation.__name__}"
+        # Use getattr fallback: generic return types have no __name__
+        ret_name = getattr(signature.return_annotation, "__name__", str(signature.return_annotation))
+        return_info = f"Returns: {ret_name}"
 
     documentation = f"""## {func.__name__}
 

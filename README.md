@@ -1,5 +1,6 @@
 # 🚀 Research Project Template
 
+<!-- Badges below are manually updated after each pipeline run. Run `uv run pytest` to get current coverage numbers. -->
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](docs/operational/build-system.md)
 [![Test Coverage](https://img.shields.io/badge/coverage-100%25%20project%20|%2083.33%25%20infra-brightgreen)](docs/operational/build-system.md)
 [![Tests](https://img.shields.io/badge/tests-3025%20passing%20(100%25)-brightgreen)](docs/operational/build-system.md)

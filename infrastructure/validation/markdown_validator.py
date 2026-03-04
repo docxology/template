@@ -75,29 +75,69 @@ def collect_symbols(md_paths: List[str]) -> Tuple[Set[str], Set[str]]:
     return labels, anchors
 
 
-def validate_images(md_paths: List[str], repo_root: str | Path) -> List[str]:
+def validate_images(
+    md_paths: List[str],
+    repo_root: str | Path,
+    extra_search_dirs: List[str | Path] | None = None,
+) -> List[str]:
     """Validate that all referenced images exist in the filesystem.
+
+    When a relative image path fails to resolve from the markdown file's
+    directory, this function also checks ``extra_search_dirs`` and
+    auto-discovered project-level figure directories (``output/figures/``
+    and ``figures/`` relative to the manuscript's project root).
 
     Args:
         md_paths: List of markdown file paths to validate
         repo_root: Root directory of the repository
+        extra_search_dirs: Additional directories to search for images
 
     Returns:
         List of validation problem descriptions
     """
     repo_root = str(repo_root)
     problems: List[str] = []
+
+    # Build search directories from the markdown directory's project context.
+    # Manuscript dirs follow the pattern: projects/<name>/manuscript/
+    # So the project root is two levels up from the manuscript dir.
+    search_dirs: List[str] = []
+    if extra_search_dirs:
+        search_dirs.extend(str(d) for d in extra_search_dirs)
+
+    if md_paths:
+        md_dir = os.path.dirname(md_paths[0])
+        # Auto-discover sibling output/figures/ and figures/ dirs
+        project_root = os.path.dirname(md_dir)  # parent of manuscript/
+        for candidate in [
+            os.path.join(project_root, "output", "figures"),
+            os.path.join(project_root, "figures"),
+        ]:
+            if os.path.isdir(candidate) and candidate not in search_dirs:
+                search_dirs.append(candidate)
+
     for path in md_paths:
         with open(path, "r", encoding="utf-8") as fh:
             text = fh.read()
         for img in IMG_PATTERN.findall(text):
             # Strip optional attributes after ) are not included by regex
             img_clean = img.split()[0]
-            # Normalize relative paths (most are ../output/...)
+            # Normalize relative paths (most are ../output/...  or figures/)
             abs_path = os.path.normpath(os.path.join(os.path.dirname(path), img_clean))
             if not os.path.isabs(abs_path):
                 abs_path = os.path.join(repo_root, abs_path)
-            if not os.path.exists(abs_path):
+            if os.path.exists(abs_path):
+                continue
+
+            # Try each search directory as a fallback
+            img_basename = os.path.basename(img_clean)
+            found = False
+            for search_dir in search_dirs:
+                candidate = os.path.join(search_dir, img_basename)
+                if os.path.exists(candidate):
+                    found = True
+                    break
+            if not found:
                 problems.append(
                     f"Missing image: {img_clean} referenced from {os.path.relpath(path, repo_root)}"
                 )

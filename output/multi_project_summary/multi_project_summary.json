@@ -1,20 +1,20 @@
 {
-  "timestamp": "2026-03-01T17:38:05.061856",
+  "timestamp": "2026-03-03T13:35:12.311160",
   "total_projects": 2,
   "successful_projects": 2,
   "failed_projects": 0,
-  "total_duration": 284.40701699256897,
+  "total_duration": 326.7175290584564,
   "infra_test_duration": 0.0,
   "projects": {
     "code_project": {
       "success": true,
-      "duration": 45.146143198013306,
+      "duration": 44.46706438064575,
       "stages_completed": 7,
       "errors": []
     },
     "pragmatism_blake": {
       "success": true,
-      "duration": 238.99464011192322,
+      "duration": 282.0561378002167,
       "stages_completed": 7,
       "errors": []
     }
@@ -22,8 +22,8 @@
   "performance_analysis": {
     "slowest_project": "pragmatism_blake",
     "fastest_project": "code_project",
-    "average_duration": 142.07039165496826,
-    "total_pipeline_time": 284.1407833099365
+    "average_duration": 163.2616010904312,
+    "total_pipeline_time": 326.5232021808624
   },
   "error_aggregation": {
     "total_errors": 0,

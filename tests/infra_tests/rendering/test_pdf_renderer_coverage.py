@@ -60,16 +60,17 @@ class TestPDFRendererClass:
             pass
 
     def test_render_unsupported_format(self, tmp_path, caplog):
-        """Test render() with unsupported format."""
+        """Test render() raises RenderingError for unsupported format."""
+        import pytest
+
         config = RenderingConfig(output_dir=tmp_path)
         renderer = PDFRenderer(config)
 
         other_file = tmp_path / "test.txt"
         other_file.write_text("Content")
 
-        result = renderer.render(other_file)
-
-        assert result == Path("")
+        with pytest.raises(RenderingError):
+            renderer.render(other_file)
 
 
 class TestRenderMarkdown:

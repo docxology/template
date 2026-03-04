@@ -15,7 +15,20 @@ logger = get_logger(__name__)
 def assess_clarity(
     content: str, md_file: Path, lines: List[str], repo_root: Path
 ) -> List[QualityIssue]:
-    """Assess clarity and readability."""
+    """Assess clarity and readability of a markdown document.
+
+    Flags lines that exceed 120 characters, which may harm readability in
+    narrow viewports or code-review diffs.
+
+    Args:
+        content: Full file content as a string.
+        md_file: Absolute path to the markdown file being assessed.
+        lines: File content split into individual lines.
+        repo_root: Repository root used to compute relative file paths in issues.
+
+    Returns:
+        List of QualityIssue instances describing readability problems found.
+    """
     issues = []
     file_key = str(md_file.relative_to(repo_root))
 
@@ -38,7 +51,20 @@ def assess_clarity(
 def assess_actionability(
     content: str, md_file: Path, lines: List[str], repo_root: Path
 ) -> List[QualityIssue]:
-    """Assess actionability of instructions."""
+    """Assess whether instructions in the document are actionable.
+
+    Checks for imperative language and clear directives that guide the reader
+    toward concrete actions.  Currently a stub returning no issues.
+
+    Args:
+        content: Full file content as a string.
+        md_file: Absolute path to the markdown file being assessed.
+        lines: File content split into individual lines.
+        repo_root: Repository root used to compute relative file paths in issues.
+
+    Returns:
+        List of QualityIssue instances (currently always empty).
+    """
     issues: list[Any] = []
     # Check for imperative verbs in instructions
     # This is a simplified check
@@ -48,7 +74,20 @@ def assess_actionability(
 def assess_maintainability(
     content: str, md_file: Path, lines: List[str], repo_root: Path
 ) -> List[QualityIssue]:
-    """Assess maintainability (duplication, organization)."""
+    """Assess maintainability of the document (duplication, organisation).
+
+    Checks for duplicate content blocks and poor structural organisation that
+    would make the document difficult to keep up to date.  Currently a stub.
+
+    Args:
+        content: Full file content as a string.
+        md_file: Absolute path to the markdown file being assessed.
+        lines: File content split into individual lines.
+        repo_root: Repository root used to compute relative file paths in issues.
+
+    Returns:
+        List of QualityIssue instances (currently always empty).
+    """
     issues: list[Any] = []
     # Check for duplicate content
     # This could be enhanced
@@ -58,7 +97,20 @@ def assess_maintainability(
 def check_formatting(
     content: str, md_file: Path, lines: List[str], repo_root: Path
 ) -> List[QualityIssue]:
-    """Check formatting consistency."""
+    """Check markdown formatting consistency.
+
+    Validates heading hierarchy (no skipped levels) and other structural
+    formatting rules that affect rendered output and readability.
+
+    Args:
+        content: Full file content as a string.
+        md_file: Absolute path to the markdown file being assessed.
+        lines: File content split into individual lines.
+        repo_root: Repository root used to compute relative file paths in issues.
+
+    Returns:
+        List of QualityIssue instances describing formatting problems found.
+    """
     issues = []
     file_key = str(md_file.relative_to(repo_root))
 

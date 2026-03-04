@@ -113,6 +113,9 @@
 \usepackage[capitalise,noabbrev]{cleveref}
 \usepackage{natbib}
 
+\makeatletter
+\AtBeginDocument{\immediate\write\@auxout{\string\bibdata{references}}}
+\makeatother
 \begin{document}
 
 \maketitle
@@ -1017,6 +1020,5 @@ the extraordinary depth of the \texttt{docxology/template} repository.
 
 
 
-\bibliographystyle{unsrt}
 \bibliography{references}
 \end{document}

@@ -5,6 +5,7 @@ security headers, rate limiting, and security monitoring.
 """
 
 import re
+import threading
 import time
 from functools import wraps
 from pathlib import Path
@@ -27,28 +28,30 @@ class SecurityValidator:
             "content_size": 50 * 1024 * 1024,  # 50MB max content size
         }
 
-        # Dangerous patterns to block
+        # Dangerous patterns to block.
+        # \b anchors prevent substring false-positives (e.g. "hexec" won't match "exec").
+        # \s* between identifier and ( catches evasion via whitespace (e.g. "exec (").
         self.dangerous_patterns = [
-            # System prompt injection
+            # System prompt injection — exact injected phrases
             r"(?i)system\s*prompt\s*[:=]",
-            r"(?i)ignore\s+previous\s+instructions",
-            r"(?i)override\s+system\s+prompt",
-            # Code execution attempts
-            r"(?i)exec\(|eval\(|subprocess\.|os\.system",
-            r"(?i)import\s+os|import\s+subprocess",
-            # File system access
-            r"(?i)open\(|file\(|pathlib\.|os\.path",
-            r"(?i)read\s+file|write\s+file|delete\s+file",
-            # Network access
-            r"(?i)requests\.|urllib\.|socket\.|http",
-            # SQL injection
-            r"(?i)(select|insert|update|delete|drop|create)\s+.*from",
-            # XSS attempts
-            r"<script|<iframe|<object|<embed",
-            r"on\w+\s*=|javascript:|vbscript:",
-            # LaTeX injection
-            r"\\input|\\include|\\usepackage|\\newcommand",
-            r"\\write|\\read|\\openout|\\openin",
+            r"(?i)\bignore\s+previous\s+instructions\b",
+            r"(?i)\boverride\s+system\s+prompt\b",
+            # Python code execution — built-ins and subprocess (\b anchors to identifier boundary)
+            r"(?i)\bexec\s*\(|\beval\s*\(|\bsubprocess\.\w|\bos\.system\s*\(",
+            r"(?i)\bimport\s+os\b|\bimport\s+subprocess\b",
+            # File system access — open/file builtins and path libraries
+            r"(?i)\bopen\s*\(|\bfile\s*\(|\bpathlib\.\w|\bos\.path\.\w",
+            r"(?i)\bread\s+file\b|\bwrite\s+file\b|\bdelete\s+file\b",
+            # Network access — library prefixes (\b prevents partial matches like "urllib2")
+            r"(?i)\brequests\.\w|\burllib\.\w|\bsocket\.\w|\bhttps?://",
+            # SQL injection — DML/DDL keywords (\b on both sides reduces false positives)
+            r"(?i)\b(select|insert|update|delete|drop|create)\b\s+.*\bfrom\b",
+            # XSS — HTML injection tags ([\s>/] prevents matching "<scripted" etc.)
+            r"(?i)<script[\s>/]|<iframe[\s>/]|<object[\s>/]|<embed[\s>/]",
+            r"(?i)\bon\w+\s*=|javascript:|vbscript:",
+            # LaTeX injection — commands that read/write files or include external content
+            r"\\input\s*\{|\\include\s*\{|\\usepackage\s*[\[{]|\\newcommand\s*\{",
+            r"\\write\s*\d|\\read\s*\d|\\openout\s*\d|\\openin\s*\d",
         ]
 
     def validate_llm_input(self, prompt: str, context: Optional[Dict[str, Any]] = None) -> str:
@@ -233,12 +236,16 @@ class SecurityHeaders:
 
 
 class RateLimiter:
-    """Simple in-memory rate limiter."""
+    """Simple in-memory rate limiter.
+
+    Thread-safe: all mutations to the requests dict are guarded by a Lock.
+    """
 
     def __init__(self, max_requests: int = 100, window_seconds: int = 60):
         self.max_requests = max_requests
         self.window_seconds = window_seconds
         self.requests: Dict[str, List[float]] = {}
+        self._lock = threading.Lock()
 
     def is_allowed(self, key: str) -> bool:
         """Check if request is allowed for given key.
@@ -250,18 +257,19 @@ class RateLimiter:
             True if request is allowed, False if rate limited
         """
         now = time.time()
-        if key not in self.requests:
-            self.requests[key] = []
+        with self._lock:
+            if key not in self.requests:
+                self.requests[key] = []
 
-        # Remove old requests outside the window
-        self.requests[key] = [
-            timestamp for timestamp in self.requests[key] if now - timestamp < self.window_seconds
-        ]
+            # Remove old requests outside the window
+            self.requests[key] = [
+                ts for ts in self.requests[key] if now - ts < self.window_seconds
+            ]
 
-        # Check if under limit
-        if len(self.requests[key]) < self.max_requests:
-            self.requests[key].append(now)
-            return True
+            # Check if under limit
+            if len(self.requests[key]) < self.max_requests:
+                self.requests[key].append(now)
+                return True
 
         return False
 
@@ -275,15 +283,16 @@ class RateLimiter:
             Number of remaining requests in current window
         """
         now = time.time()
-        if key not in self.requests:
-            return self.max_requests
+        with self._lock:
+            if key not in self.requests:
+                return self.max_requests
 
-        # Clean old requests
-        self.requests[key] = [
-            timestamp for timestamp in self.requests[key] if now - timestamp < self.window_seconds
-        ]
+            # Clean old requests
+            self.requests[key] = [
+                ts for ts in self.requests[key] if now - ts < self.window_seconds
+            ]
 
-        return max(0, self.max_requests - len(self.requests[key]))
+            return max(0, self.max_requests - len(self.requests[key]))
 
 
 class SecurityMonitor:

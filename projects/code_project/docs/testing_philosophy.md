@@ -2,9 +2,9 @@
 
 The Generalized Research Template strictly forbids mocking in scientific/mathematical validation.
 
-## The 34-Test Exemplar Suite
+## The 45-Test Exemplar Suite
 
-The `code_project` implements a 34-test validation suite (`tests/test_optimizer.py`) that strictly adheres to this standard:
+The `code_project` implements a 45-test validation suite (`tests/test_optimizer.py`) that strictly adheres to this standard:
 
 - **100% Test Coverage**: Enforced via `pyproject.toml`, ensuring no logic escapes validation.
 - **Pure Computations**: Every test computes real gradients and performs actual gradient descent iterations.

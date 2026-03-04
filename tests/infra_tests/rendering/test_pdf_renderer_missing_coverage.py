@@ -915,22 +915,20 @@ class TestRenderMethodDispatch:
             pass  # Expected if Pandoc not available
 
     def test_render_unsupported_extension(self, renderer, tmp_path, caplog):
-        """Test unsupported file extensions return empty path."""
+        """Test unsupported file extensions raise RenderingError."""
         txt_file = tmp_path / "test.txt"
         txt_file.write_text("Plain text content")
 
-        result = renderer.render(txt_file)
-
-        assert result == Path("")
+        with pytest.raises(RenderingError):
+            renderer.render(txt_file)
 
     def test_render_rst_file_unsupported(self, renderer, tmp_path):
-        """Test .rst files are unsupported."""
+        """Test .rst files raise RenderingError (unsupported format)."""
         rst_file = tmp_path / "test.rst"
         rst_file.write_text("Title\n=====\n\nContent")
 
-        result = renderer.render(rst_file)
-
-        assert result == Path("")
+        with pytest.raises(RenderingError):
+            renderer.render(rst_file)
 
 
 class TestParseMissingPackagePatterns:

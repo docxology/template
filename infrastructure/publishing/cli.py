@@ -10,7 +10,7 @@ from pathlib import Path
 
 from infrastructure.core.logging_utils import get_logger
 
-from .api import ZenodoClient
+from .api import ZenodoClient, ZenodoConfig
 from .core import extract_publication_metadata, generate_citation_bibtex
 
 logger = get_logger(__name__)
@@ -135,18 +135,29 @@ def publish_zenodo_command(args: argparse.Namespace) -> None:
         sys.exit(1)
 
     logger.info("Publishing %d files to Zenodo", len(pdfs))
-    client = ZenodoClient()  # type: ignore
+    config = ZenodoConfig(access_token=token, sandbox=True)
+    client = ZenodoClient(config=config)
 
-    # Use provided metadata or extract from manuscript
-    metadata = {
+    # Build Zenodo-formatted metadata
+    zenodo_metadata = {
+        "upload_type": "publication",
+        "publication_type": "article",
         "title": args.title or "Research Publication",
-        "authors": args.authors.split(",") if args.authors else ["Unknown"],
+        "creators": [
+            {"name": name.strip()}
+            for name in (args.authors.split(",") if args.authors else ["Unknown Author"])
+        ],
         "description": args.description or "Published research output",
     }
 
     try:
-        record_id = client.upload_publication(metadata, pdfs)  # type: ignore
-        print(f"Published successfully! Record ID: {record_id}")
+        deposition_id = client.create_deposition(zenodo_metadata)
+        logger.info("Created Zenodo deposition: %s", deposition_id)
+        for pdf in pdfs:
+            client.upload_file(deposition_id, str(pdf))
+            logger.info("Uploaded: %s", pdf.name)
+        doi = client.publish(deposition_id)
+        print(f"Published successfully! DOI: {doi}")
     except Exception as e:
         logger.error("Zenodo upload failed: %s", e)
         sys.exit(1)

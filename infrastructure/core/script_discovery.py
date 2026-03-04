@@ -96,25 +96,38 @@ def discover_orchestrators(repo_root: Path) -> List[Path]:
 def verify_analysis_outputs(repo_root: Path, project_name: str = "project") -> bool:
     """Verify that analysis generated expected outputs.
 
+    Checks whether analysis scripts are present for this project and, if so,
+    whether they produced output files in the expected directories.  Returns
+    False only when scripts exist (output is expected) but all output
+    directories are empty or absent.
+
     Args:
         repo_root: Repository root directory
         project_name: Name of project in projects/ directory (default: "project")
 
     Returns:
-        True if outputs are valid, False otherwise
+        True if outputs are present or no scripts were expected to run,
+        False if scripts exist but no output was generated.
     """
     logger.info(f"[STAGE-02] Verifying analysis outputs for projects/{project_name}/...")
+
+    # Determine whether analysis scripts exist (so we know whether output is expected)
+    scripts_dir = repo_root / "projects" / project_name / "scripts"
+    scripts_exist = scripts_dir.exists() and any(
+        f for f in scripts_dir.glob("*.py") if not f.name.startswith("_")
+    )
 
     output_dirs = [
         repo_root / "projects" / project_name / "output" / "figures",
         repo_root / "projects" / project_name / "output" / "data",
     ]
 
-    all_valid = True
+    has_any_output = False
     for output_dir in output_dirs:
         if output_dir.exists():
             files = list(output_dir.glob("*"))
             if files:
+                has_any_output = True
                 log_success(
                     f"Output directory has {len(files)} file(s): {output_dir.name}",
                     logger,
@@ -122,7 +135,14 @@ def verify_analysis_outputs(repo_root: Path, project_name: str = "project") -> b
             else:
                 logger.info(f"  ℹ️  Output directory is empty: {output_dir.name}")
         else:
-            # Output directories may not exist yet, not an error
+            # Output directories may not exist yet, not an error on its own
             logger.info(f"  ℹ️  Output directory not yet created: {output_dir.name}")
 
-    return all_valid
+    if scripts_exist and not has_any_output:
+        logger.warning(
+            f"[STAGE-02] Analysis scripts found for '{project_name}' but no output files detected. "
+            "The analysis stage may have failed or produced no figures/data."
+        )
+        return False
+
+    return True

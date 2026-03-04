@@ -79,8 +79,10 @@ class PDFRenderer:
         if source_file.suffix == ".md":
             return self.render_markdown(source_file)
 
-        logger.warning(f"Unsupported format for direct rendering: {source_file.suffix}")
-        return Path("")
+        raise RenderingError(
+            f"Unsupported file format for rendering: {source_file.suffix}",
+            context={"source_file": str(source_file), "supported_formats": [".tex", ".md"]},
+        )
 
     def render_markdown(self, source_file: Path, output_name: Optional[str] = None) -> Path:
         """Render a single markdown file to PDF using Pandoc.
@@ -133,6 +135,101 @@ class PDFRenderer:
                 f"Failed to render markdown to PDF: {e.stderr}",
                 context={"source": str(source_file), "target": str(output_file)},
             )
+
+
+    def _repair_truncated_aux(self, aux_file: Path) -> None:
+        """Repair a truncated .aux file by removing the last incomplete entry.
+
+        xelatex has an internal write-buffer limit. On documents that produce
+        large .aux files (>80 KB from many figures, cross-references, and
+        labels), the .aux may be truncated mid-entry (e.g., an incomplete
+        \\newlabel or \\@writefile with unmatched braces). This is an inherent
+        xelatex behavior on large documents, not caused by signal handling.
+
+        The resulting 'File ended while scanning use of \\@newl@bel' error
+        prevents subsequent xelatex passes from completing. This method
+        detects and removes the last incomplete entry so bibtex and later
+        passes can read the .aux cleanly.
+        """
+        if not aux_file.exists():
+            return
+
+        try:
+            content = aux_file.read_text(encoding="utf-8", errors="replace")
+            if not content:
+                return
+
+            lines = content.split("\n")
+
+            # Remove trailing empty lines
+            while lines and not lines[-1].strip():
+                lines.pop()
+
+            if not lines:
+                return
+
+            # Check if the last line has balanced braces
+            last_line = lines[-1]
+            brace_depth = last_line.count("{") - last_line.count("}")
+
+            if brace_depth != 0:
+                # Last line is incomplete — remove it
+                removed = lines.pop()
+                logger.info(
+                    f"  ✓ Repaired truncated .aux: removed incomplete entry "
+                    f"({len(removed)} chars, brace depth {brace_depth})"
+                )
+
+                # Also check the new last line in case multiple lines were truncated
+                while lines and lines[-1].strip():
+                    new_last = lines[-1]
+                    depth = new_last.count("{") - new_last.count("}")
+                    if depth != 0:
+                        lines.pop()
+                    else:
+                        break
+
+                # Write the repaired content
+                aux_file.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        except Exception as e:
+            logger.debug(f"  .aux repair skipped: {e}")
+
+    def _validate_pdf_structure(self, pdf_path: Path) -> bool:
+        """Check that a PDF file has valid trailer markers.
+
+        A structurally valid PDF must end with a cross-reference table
+        (``xref`` or ``startxref``) and a ``%%EOF`` marker.  When xelatex
+        is killed by SIGPIPE (exit 141), the file may be truncated before
+        these markers are written, producing a file that opens partially
+        or not at all in some readers.
+
+        Args:
+            pdf_path: Path to the PDF file to validate.
+
+        Returns:
+            True if the PDF has valid structure, False otherwise.
+        """
+        try:
+            with open(pdf_path, "rb") as f:
+                # Read the last 4 KB — xref + EOF are at the very end
+                f.seek(0, 2)  # seek to end
+                size = f.tell()
+                tail_size = min(size, 4096)
+                f.seek(size - tail_size)
+                tail = f.read(tail_size)
+
+            has_eof = b"%%EOF" in tail
+            has_startxref = b"startxref" in tail
+            if not has_eof or not has_startxref:
+                logger.debug(
+                    f"  PDF validation: %%EOF={has_eof}, startxref={has_startxref} "
+                    f"in {pdf_path.name} ({size:,} bytes)"
+                )
+                return False
+            return True
+        except Exception as e:
+            logger.debug(f"  PDF validation skipped: {e}")
+            return False
 
     def _process_bibliography(self, tex_file: Path, output_dir: Path, bib_file: Path) -> bool:
         """Process bibliography using bibtex/biber.
@@ -810,19 +907,39 @@ class PDFRenderer:
                 
                 tex_content = tex_preamble + tex_body
 
-        # Insert bibliography commands before \end{document} if bibliography exists
+        # Insert \bibliography{references} before \end{document} if not already present.
+        # Pandoc's --natbib flag generates \bibliographystyle{plainnat} in the preamble
+        # but does NOT generate \bibliography{} unless used with --citeproc.
+        # We insert it here using the same style (plainnat) to avoid conflicts.
         if bib_exists and "\\bibliography{" not in tex_content:
             end_doc_idx = tex_content.rfind("\\end{document}")
             if end_doc_idx > 0:
-                bibliography_commands = (
-                    "\n\n\\bibliographystyle{unsrt}\n\\bibliography{references}\n"
-                )
                 tex_content = (
-                    tex_content[:end_doc_idx] + bibliography_commands + tex_content[end_doc_idx:]
+                    tex_content[:end_doc_idx]
+                    + "\n\n\\bibliography{references}\n"
+                    + tex_content[end_doc_idx:]
                 )
-                logger.info("✓ Inserted bibliography commands before \\end{document}")
+                logger.info("✓ Inserted \\bibliography{references} before \\end{document}")
             else:
-                logger.warning("⚠️  Could not find \\end{document} to insert bibliography commands")
+                logger.warning("⚠️  Could not find \\end{document} to insert bibliography")
+
+        # Ensure \bibdata{references} is written to .aux early via an \AtBeginDocument hook.
+        # xelatex has internal write-buffer limits that truncate the .aux file on large
+        # documents (>80 KB). When \bibliography{references} is at the end of the document,
+        # its \bibdata entry may be lost in the truncated tail. Writing it at document
+        # start guarantees bibtex can always find the bibliography database.
+        if bib_exists:
+            bibdata_hook = (
+                "\\makeatletter\n"
+                "\\AtBeginDocument{\\immediate\\write\\@auxout{\\string\\bibdata{references}}}\n"
+                "\\makeatother\n"
+            )
+            begin_doc_idx = tex_content.find("\\begin{document}")
+            if begin_doc_idx > 0:
+                tex_content = (
+                    tex_content[:begin_doc_idx] + bibdata_hook + tex_content[begin_doc_idx:]
+                )
+                logger.info("✓ Inserted early \\bibdata hook for .aux buffer safety")
 
         combined_tex.write_text(tex_content)
 
@@ -911,20 +1028,54 @@ class PDFRenderer:
             # Temporary PDF file created during compilation (before renaming to final output)
             temp_pdf = output_dir / "_combined_manuscript.pdf"
 
-            logger.info("  LaTeX compilation pass 1/4...")
-            result = subprocess.run(
-                cmd, check=False, capture_output=True, text=True, cwd=str(output_dir)
-            )
+            # Clean stale auxiliary files before compilation to prevent corruption.
+            # A corrupted .aux from a previous build (e.g., truncated figure caption labels
+            # with unmatched braces) causes "File ended while scanning use of \@newl@bel"
+            # and prevents bibtex from finding \bibdata, making all citations undefined.
+            stale_extensions = [".aux", ".bbl", ".blg", ".toc", ".out", ".lof", ".lot"]
+            tex_stem = combined_tex.stem
+            for ext in stale_extensions:
+                stale_file = output_dir / f"{tex_stem}{ext}"
+                if stale_file.exists():
+                    stale_file.unlink()
+                    logger.debug(f"  Cleaned stale auxiliary file: {stale_file.name}")
 
-            # Check for critical errors on first pass
-            # Note: Use temp_pdf (not output_file) since output_file is created by renaming temp_pdf
-            if "Fatal error occurred" in result.stdout or (
-                result.returncode > 1 and not temp_pdf.exists()
+            logger.info("  LaTeX compilation pass 1/4...")
+            # Redirect stdout/stderr to a log file instead of DEVNULL.
+            # Using DEVNULL causes SIGPIPE (exit 141) when xelatex's
+            # -shell-escape child processes (e.g. extractbb) write to
+            # a broken pipe. SIGPIPE kills xelatex before it writes the
+            # xref table and %%EOF marker, producing a truncated PDF.
+            # Writing to a file keeps the pipe open and avoids SIGPIPE.
+            SIGPIPE_EXIT = 141  # 128 + signal 13 (SIGPIPE)
+            xelatex_stdout_log = output_dir / "_xelatex_stdout.log"
+            with open(xelatex_stdout_log, "w") as stdout_sink:
+                result = subprocess.run(
+                    cmd, check=False,
+                    stdout=stdout_sink, stderr=subprocess.STDOUT,
+                    cwd=str(output_dir),
+                )
+
+            # Repair truncated .aux file after each pass.
+            # xelatex's internal write-buffer limits may truncate the .aux on
+            # documents with >~80 KB of auxiliary data (many figures, labels, etc.).
+            aux_file = output_dir / f"{tex_stem}.aux"
+            self._repair_truncated_aux(aux_file)
+
+            # Check for critical errors on first pass using the .log file.
+            # Exit code 141 (SIGPIPE) is expected on large documents and not fatal.
+            log_file = output_dir / "_combined_manuscript.log"
+            log_content = log_file.read_text() if log_file.exists() else ""
+            is_fatal = result.returncode > 1 and result.returncode != SIGPIPE_EXIT
+            if "Fatal error occurred" in log_content or (
+                is_fatal and not temp_pdf.exists()
             ):
                 raise RenderingError(
                     "XeLaTeX compilation failed (pass 1)",
                     context={"source": str(combined_tex), "output": str(output_file)},
                 )
+            if result.returncode == SIGPIPE_EXIT:
+                logger.debug(f"  xelatex exited with {SIGPIPE_EXIT} (SIGPIPE) — expected on large documents")
 
             # Process bibliography if it exists
             if bib_exists:
@@ -943,16 +1094,23 @@ class PDFRenderer:
 
             for run in range(1, max_passes):
                 log_progress_bar(run + 1, max_passes, "LaTeX compilation", bar_width=20)
-                result = subprocess.run(
-                    cmd,
-                    check=False,
-                    capture_output=True,
-                    text=True,
-                    cwd=str(output_dir),
-                )
+                with open(xelatex_stdout_log, "w") as stdout_sink:
+                    result = subprocess.run(
+                        cmd,
+                        check=False,
+                        stdout=stdout_sink,
+                        stderr=subprocess.STDOUT,
+                        cwd=str(output_dir),
+                    )
 
-                # Check for critical errors
-                if "Fatal error occurred" in result.stdout or result.returncode > 1:
+                # Repair truncated .aux after each pass
+                self._repair_truncated_aux(aux_file)
+
+                # Check for critical errors using .log file
+                # Exit code 141 (SIGPIPE) is expected on large documents and not fatal.
+                log_content = log_file.read_text() if log_file.exists() else ""
+                is_fatal = result.returncode > 1 and result.returncode != SIGPIPE_EXIT
+                if "Fatal error occurred" in log_content or is_fatal:
                     consecutive_failures += 1
 
                     if output_file.exists():
@@ -1061,8 +1219,25 @@ class PDFRenderer:
                             for warning in graphics_issues["graphics_warnings"]:
                                 logger.warning(f"  Graphics warning: {warning[:100]}...")
 
-            # Check if the temporary PDF was created and rename it
+            # Check if the temporary PDF was created, validate, and rename it
             if temp_pdf.exists():
+                # Validate PDF structure before accepting it
+                if not self._validate_pdf_structure(temp_pdf):
+                    logger.warning(
+                        "⚠️  PDF structurally invalid (truncated xref/%%EOF). "
+                        "Re-running xelatex for recovery pass..."
+                    )
+                    with open(xelatex_stdout_log, "w") as stdout_sink:
+                        subprocess.run(
+                            cmd, check=False,
+                            stdout=stdout_sink, stderr=subprocess.STDOUT,
+                            cwd=str(output_dir),
+                        )
+                    if not self._validate_pdf_structure(temp_pdf):
+                        logger.warning(
+                            "⚠️  PDF still invalid after recovery pass. "
+                            "Proceeding with best-effort output."
+                        )
                 # Rename temporary PDF to final name
                 temp_pdf.rename(output_file)
                 # NEW: Log successful combination with output size

@@ -39,7 +39,7 @@ The `reference/` directory contains quick reference materials, API documentation
 
 ### Following a Workflow?
 
-→ Use **[Common Workflows](../reference/common-workflows.md)** - Step-by-step recipes
+→ Use **[Common Workflows](common-workflows.md)** - Step-by-step recipes
 
 ## Related Documentation
 

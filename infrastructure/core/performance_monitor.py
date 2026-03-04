@@ -71,8 +71,12 @@ class PerformanceMonitor:
         start_time = time.time()
         cpu_start = time.process_time()
 
-        if track_memory:
+        # Only start tracing if not already active; track whether WE started it
+        # so we don't stop a caller's active trace session.
+        we_started_tracing = False
+        if track_memory and not tracemalloc.is_tracing():
             tracemalloc.start()
+            we_started_tracing = True
 
         try:
             yield
@@ -88,7 +92,8 @@ class PerformanceMonitor:
 
             if track_memory:
                 current, peak = tracemalloc.get_traced_memory()
-                tracemalloc.stop()
+                if we_started_tracing:
+                    tracemalloc.stop()
 
                 metrics.memory_current = current
                 metrics.memory_peak = peak

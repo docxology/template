@@ -22,7 +22,7 @@
 ### DOI Validation and Citation Generation
 
 ```python
-from infrastructure.publishing.core import validate_doi, generate_citation_bibtex
+from infrastructure.publishing.core import validate_doi, generate_citation_bibtex, PublicationMetadata
 
 # Validate DOI
 doi = "10.5281/zenodo.12345678"
@@ -31,13 +31,15 @@ if validate_doi(doi):
 else:
     print("❌ Invalid DOI")
 
-# Generate BibTeX citation
-metadata = {
-    'title': 'Research Project Title',
-    'authors': ['Dr. Jane Smith', 'Dr. John Doe'],
-    'year': '2024',
-    'doi': doi
-}
+# Generate BibTeX citation — construct PublicationMetadata (not a plain dict)
+metadata = PublicationMetadata(
+    title="Research Project Title",
+    authors=["Dr. Jane Smith", "Dr. John Doe"],
+    abstract="A research project abstract.",
+    keywords=["research", "template"],
+    doi=doi,
+    publication_date="2024",
+)
 
 bibtex = generate_citation_bibtex(metadata)
 print(bibtex)

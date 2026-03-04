@@ -129,9 +129,14 @@ This test suite provides comprehensive validation for scientific functions
 including numerical stability, performance benchmarking, and correctness verification.
 """
 
+import sys
 import pytest
 import numpy as np
 from pathlib import Path
+
+# Import scientific utilities
+from infrastructure.scientific.stability import check_numerical_stability
+from infrastructure.scientific.benchmarking import benchmark_function
 
 # Import the module to test
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
