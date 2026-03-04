@@ -1,109 +1,98 @@
-[2026-03-03 13:29:45,605] [INFO] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/code_project/output/logs/pipeline.log
-[2026-03-03 13:29:45,605] [INFO] ✓ Stage 1 completed successfully (0.0s)
-[2026-03-03 13:29:45,605] [INFO] 
-[2026-03-03 13:29:45,605] [INFO] [2/8] Environment Setup (25% complete)
-[2026-03-03 13:29:45,606] [INFO]   Elapsed: 0s | ETA: 0s
-[2026-03-03 13:29:45,606] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-03 13:29:45,606] [INFO] Running environment setup...
-[2026-03-03 13:29:47,802] [INFO] ✓ Stage 2 completed successfully (2.2s)
-[2026-03-03 13:29:47,803] [INFO] Skipping stage: Infrastructure Tests
-[2026-03-03 13:29:47,803] [INFO] 
-[2026-03-03 13:29:47,803] [INFO] [3/8] Project Tests (37% complete)
-[2026-03-03 13:29:47,803] [INFO]   Elapsed: 2s | ETA: 3s
-[2026-03-03 13:29:47,803] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-03 13:29:47,803] [INFO] Running project tests...
-[2026-03-03 13:29:54,220] [INFO] ✓ Stage 3 completed successfully (6.4s)
-[2026-03-03 13:29:54,221] [INFO] 
-[2026-03-03 13:29:54,221] [INFO] [4/8] Project Analysis (50% complete)
-[2026-03-03 13:29:54,221] [INFO]   Elapsed: 8s | ETA: 8s
-[2026-03-03 13:29:54,221] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-03 13:29:54,221] [INFO] Running project analysis...
-[2026-03-03 13:29:58,441] [INFO] ✓ Stage 4 completed successfully (4.2s)
-[2026-03-03 13:29:58,441] [INFO] 
-[2026-03-03 13:29:58,441] [INFO] [5/8] PDF Rendering (62% complete)
-[2026-03-03 13:29:58,441] [INFO]   Elapsed: 12s | ETA: 7s
-[2026-03-03 13:29:58,441] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-03 13:29:58,442] [INFO] Running PDF rendering...
-[2026-03-03 13:30:29,400] [INFO] ✓ Stage 5 completed successfully (31.0s)
-[2026-03-03 13:30:29,402] [INFO] 
-[2026-03-03 13:30:29,402] [INFO] [6/8] Output Validation (75% complete)
-[2026-03-03 13:30:29,402] [INFO]   Elapsed: 43s | ETA: 14s
-[2026-03-03 13:30:29,402] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-03 13:30:29,402] [INFO] Running output validation...
-[2026-03-03 13:30:29,763] [INFO] ✓ Stage 6 completed successfully (0.4s)
-[2026-03-03 13:30:29,764] [INFO] 
-[2026-03-03 13:30:29,764] [INFO] [7/8] Copy Outputs (87% complete)
-[2026-03-03 13:30:29,764] [INFO]   Elapsed: 44s | ETA: 6s
-[2026-03-03 13:30:29,764] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-03 13:30:29,764] [INFO] Running output copying...
-[2026-03-03 13:30:30,064] [INFO] ✓ Stage 7 completed successfully (0.3s)
-[2026-03-03 13:30:30,247] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (JSON) saved: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/pipeline_report.json
-[2026-03-03 13:30:30,247] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (Markdown) saved: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/pipeline_report.md
-[2026-03-03 13:30:30,247] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (HTML) saved: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/pipeline_report.html
-[2026-03-03 13:30:30,247] [INFO] [infrastructure.core.logging_utils] Starting: Pipeline execution for pragmatism_blake
-[2026-03-03 13:30:30,248] [INFO] [infrastructure.core.pipeline] Executing core pipeline for project 'pragmatism_blake'
-[2026-03-03 13:30:30,248] [INFO] [infrastructure.core.pipeline] 
-[2026-03-03 13:30:30,248] [INFO] [infrastructure.core.pipeline] [1/8] Clean Output Directories (12% complete)
-[2026-03-03 13:30:30,248] [INFO] [infrastructure.core.pipeline]   Elapsed: 0s | ETA: 0s
-[2026-03-03 13:30:30,248] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-03 13:30:30,248] [INFO] [infrastructure.core.logging_utils] Starting: Stage 1: Clean Output Directories
-[2026-03-03 13:30:30,248] [INFO] [infrastructure.core.pipeline] Cleaning output directories...
-[2026-03-03 13:30:30,272] [INFO] [infrastructure.core.pipeline] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/pragmatism_blake/output/logs/pipeline.log
-[2026-03-03 13:30:30,272] [INFO] [infrastructure.core.pipeline] ✓ Stage 1 completed successfully (0.0s)
-[2026-03-03 13:30:30,273] [INFO] [infrastructure.core.pipeline] 
-[2026-03-03 13:30:30,273] [INFO] [infrastructure.core.pipeline] [2/8] Environment Setup (25% complete)
-[2026-03-03 13:30:30,273] [INFO] [infrastructure.core.pipeline]   Elapsed: 0s | ETA: 0s
-[2026-03-03 13:30:30,273] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-03 13:30:30,273] [INFO] [infrastructure.core.logging_utils] Starting: Stage 2: Environment Setup
-[2026-03-03 13:30:30,273] [INFO] [infrastructure.core.pipeline] Running environment setup...
-[2026-03-03 13:30:31,326] [INFO] [infrastructure.core.logging_utils] Completed: Stage 2: Environment Setup (1.1s)
-[2026-03-03 13:30:31,327] [INFO] [infrastructure.core.pipeline] ✓ Stage 2 completed successfully (1.1s)
-[2026-03-03 13:30:31,327] [INFO] [infrastructure.core.pipeline] Skipping stage: Infrastructure Tests
-[2026-03-03 13:30:31,327] [INFO] [infrastructure.core.pipeline] 
-[2026-03-03 13:30:31,327] [INFO] [infrastructure.core.pipeline] [3/8] Project Tests (37% complete)
-[2026-03-03 13:30:31,327] [INFO] [infrastructure.core.pipeline]   Elapsed: 1s | ETA: 1s
-[2026-03-03 13:30:31,328] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-03 13:30:31,328] [INFO] [infrastructure.core.logging_utils] Starting: Stage 3: Project Tests
-[2026-03-03 13:30:31,328] [INFO] [infrastructure.core.pipeline] Running project tests...
-[2026-03-03 13:30:39,203] [INFO] [infrastructure.core.logging_utils] Completed: Stage 3: Project Tests (7.9s)
-[2026-03-03 13:30:39,203] [INFO] [infrastructure.core.pipeline] ✓ Stage 3 completed successfully (7.9s)
-[2026-03-03 13:30:39,203] [INFO] [infrastructure.core.pipeline] 
-[2026-03-03 13:30:39,203] [INFO] [infrastructure.core.pipeline] [4/8] Project Analysis (50% complete)
-[2026-03-03 13:30:39,203] [INFO] [infrastructure.core.pipeline]   Elapsed: 8s | ETA: 8s
-[2026-03-03 13:30:39,203] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-03 13:30:39,204] [INFO] [infrastructure.core.logging_utils] Starting: Stage 4: Project Analysis
-[2026-03-03 13:30:39,204] [INFO] [infrastructure.core.pipeline] Running project analysis...
-[2026-03-03 13:30:46,226] [INFO] [infrastructure.core.logging_utils] Completed: Stage 4: Project Analysis (7.0s)
-[2026-03-03 13:30:46,226] [INFO] [infrastructure.core.pipeline] ✓ Stage 4 completed successfully (7.0s)
-[2026-03-03 13:30:46,227] [INFO] [infrastructure.core.pipeline] 
-[2026-03-03 13:30:46,227] [INFO] [infrastructure.core.pipeline] [5/8] PDF Rendering (62% complete)
-[2026-03-03 13:30:46,227] [INFO] [infrastructure.core.pipeline]   Elapsed: 15s | ETA: 9s
-[2026-03-03 13:30:46,227] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-03 13:30:46,228] [INFO] [infrastructure.core.logging_utils] Starting: Stage 5: PDF Rendering
-[2026-03-03 13:30:46,228] [INFO] [infrastructure.core.pipeline] Running PDF rendering...
-[2026-03-03 13:35:11,571] [INFO] [infrastructure.core.logging_utils] Completed: Stage 5: PDF Rendering (265.3s)
-[2026-03-03 13:35:11,572] [INFO] [infrastructure.core.pipeline] ✓ Stage 5 completed successfully (265.3s)
-[2026-03-03 13:35:11,572] [INFO] [infrastructure.core.pipeline] 
-[2026-03-03 13:35:11,572] [INFO] [infrastructure.core.pipeline] [6/8] Output Validation (75% complete)
-[2026-03-03 13:35:11,573] [INFO] [infrastructure.core.pipeline]   Elapsed: 4m 41s | ETA: 1m 33s
-[2026-03-03 13:35:11,573] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-03 13:35:11,574] [INFO] [infrastructure.core.logging_utils] Starting: Stage 6: Output Validation
-[2026-03-03 13:35:11,574] [INFO] [infrastructure.core.pipeline] Running output validation...
-[2026-03-03 13:35:11,915] [INFO] [infrastructure.core.logging_utils] Completed: Stage 6: Output Validation (0.3s)
-[2026-03-03 13:35:11,916] [INFO] [infrastructure.core.pipeline] ✓ Stage 6 completed successfully (0.3s)
-[2026-03-03 13:35:11,916] [INFO] [infrastructure.core.pipeline] 
-[2026-03-03 13:35:11,916] [INFO] [infrastructure.core.pipeline] [7/8] Copy Outputs (87% complete)
-[2026-03-03 13:35:11,916] [INFO] [infrastructure.core.pipeline]   Elapsed: 4m 41s | ETA: 40s
-[2026-03-03 13:35:11,916] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-03 13:35:11,916] [INFO] [infrastructure.core.logging_utils] Starting: Stage 7: Copy Outputs
-[2026-03-03 13:35:11,917] [INFO] [infrastructure.core.pipeline] Running output copying...
-[2026-03-03 13:35:12,307] [INFO] [infrastructure.core.logging_utils] Completed: Stage 7: Copy Outputs (0.4s)
-[2026-03-03 13:35:12,307] [INFO] [infrastructure.core.pipeline] ✓ Stage 7 completed successfully (0.4s)
-[2026-03-03 13:35:12,310] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (JSON) saved: /Users/4d/Documents/GitHub/template/projects/pragmatism_blake/output/reports/pipeline_report.json
-[2026-03-03 13:35:12,310] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (Markdown) saved: /Users/4d/Documents/GitHub/template/projects/pragmatism_blake/output/reports/pipeline_report.md
-[2026-03-03 13:35:12,310] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (HTML) saved: /Users/4d/Documents/GitHub/template/projects/pragmatism_blake/output/reports/pipeline_report.html
-[2026-03-03 13:35:12,310] [INFO] [infrastructure.core.logging_utils] Completed: Pipeline execution for pragmatism_blake (282.1s)
-[2026-03-03 13:35:12,311] [INFO] [infrastructure.reporting.pipeline_reporter] For project code_project, proj_result type: <class 'list'>, len: 7
-[2026-03-03 13:35:12,311] [INFO] [infrastructure.reporting.pipeline_reporter] For project pragmatism_blake, proj_result type: <class 'list'>, len: 7
-[2026-03-03 13:35:12,311] [INFO] [infrastructure.reporting.pipeline_reporter] Multi-project summary saved: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.json
-[2026-03-03 13:35:12,311] [INFO] [infrastructure.reporting.pipeline_reporter] Multi-project summary saved: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.md
+[2026-03-04 13:32:50,283] [INFO] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/code_project/output/logs/pipeline.log
+[2026-03-04 13:32:50,283] [INFO] [infrastructure.core.pipeline] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/code_project/output/logs/pipeline.log
+[2026-03-04 13:32:50,283] [INFO] ✓ Stage 1 completed successfully (0.0s)
+[2026-03-04 13:32:50,283] [INFO] [infrastructure.core.pipeline] ✓ Stage 1 completed successfully (0.0s)
+[2026-03-04 13:32:50,284] [INFO] 
+[2026-03-04 13:32:50,284] [INFO] [infrastructure.core.pipeline] 
+[2026-03-04 13:32:50,284] [INFO] [2/8] Environment Setup (25% complete)
+[2026-03-04 13:32:50,284] [INFO] [infrastructure.core.pipeline] [2/8] Environment Setup (25% complete)
+[2026-03-04 13:32:50,284] [INFO]   Elapsed: 0s | ETA: 0s
+[2026-03-04 13:32:50,284] [INFO] [infrastructure.core.pipeline]   Elapsed: 0s | ETA: 0s
+[2026-03-04 13:32:50,284] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-04 13:32:50,284] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-04 13:32:50,284] [INFO] [infrastructure.core.logging_utils] Starting: Stage 2: Environment Setup
+[2026-03-04 13:32:50,284] [INFO] Running environment setup...
+[2026-03-04 13:32:50,284] [INFO] [infrastructure.core.pipeline] Running environment setup...
+[2026-03-04 13:32:52,267] [INFO] [infrastructure.core.logging_utils] Completed: Stage 2: Environment Setup (2.0s)
+[2026-03-04 13:32:52,268] [INFO] ✓ Stage 2 completed successfully (2.0s)
+[2026-03-04 13:32:52,268] [INFO] [infrastructure.core.pipeline] ✓ Stage 2 completed successfully (2.0s)
+[2026-03-04 13:32:52,269] [INFO] Skipping stage: Infrastructure Tests
+[2026-03-04 13:32:52,269] [INFO] [infrastructure.core.pipeline] Skipping stage: Infrastructure Tests
+[2026-03-04 13:32:52,269] [INFO] 
+[2026-03-04 13:32:52,269] [INFO] [infrastructure.core.pipeline] 
+[2026-03-04 13:32:52,269] [INFO] [3/8] Project Tests (37% complete)
+[2026-03-04 13:32:52,269] [INFO] [infrastructure.core.pipeline] [3/8] Project Tests (37% complete)
+[2026-03-04 13:32:52,269] [INFO]   Elapsed: 2s | ETA: 3s
+[2026-03-04 13:32:52,269] [INFO] [infrastructure.core.pipeline]   Elapsed: 2s | ETA: 3s
+[2026-03-04 13:32:52,269] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-04 13:32:52,269] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-04 13:32:52,272] [INFO] [infrastructure.core.logging_utils] Starting: Stage 3: Project Tests
+[2026-03-04 13:32:52,272] [INFO] Running project tests...
+[2026-03-04 13:32:52,272] [INFO] [infrastructure.core.pipeline] Running project tests...
+[2026-03-04 13:32:58,589] [INFO] [infrastructure.core.logging_utils] Completed: Stage 3: Project Tests (6.3s)
+[2026-03-04 13:32:58,589] [INFO] ✓ Stage 3 completed successfully (6.3s)
+[2026-03-04 13:32:58,589] [INFO] [infrastructure.core.pipeline] ✓ Stage 3 completed successfully (6.3s)
+[2026-03-04 13:32:58,590] [INFO] 
+[2026-03-04 13:32:58,590] [INFO] [infrastructure.core.pipeline] 
+[2026-03-04 13:32:58,590] [INFO] [4/8] Project Analysis (50% complete)
+[2026-03-04 13:32:58,590] [INFO] [infrastructure.core.pipeline] [4/8] Project Analysis (50% complete)
+[2026-03-04 13:32:58,590] [INFO]   Elapsed: 8s | ETA: 8s
+[2026-03-04 13:32:58,590] [INFO] [infrastructure.core.pipeline]   Elapsed: 8s | ETA: 8s
+[2026-03-04 13:32:58,590] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-04 13:32:58,590] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-04 13:32:58,591] [INFO] [infrastructure.core.logging_utils] Starting: Stage 4: Project Analysis
+[2026-03-04 13:32:58,591] [INFO] Running project analysis...
+[2026-03-04 13:32:58,591] [INFO] [infrastructure.core.pipeline] Running project analysis...
+[2026-03-04 13:33:03,007] [INFO] [infrastructure.core.logging_utils] Completed: Stage 4: Project Analysis (4.4s)
+[2026-03-04 13:33:03,008] [INFO] ✓ Stage 4 completed successfully (4.4s)
+[2026-03-04 13:33:03,008] [INFO] [infrastructure.core.pipeline] ✓ Stage 4 completed successfully (4.4s)
+[2026-03-04 13:33:03,008] [INFO] 
+[2026-03-04 13:33:03,008] [INFO] [infrastructure.core.pipeline] 
+[2026-03-04 13:33:03,008] [INFO] [5/8] PDF Rendering (62% complete)
+[2026-03-04 13:33:03,008] [INFO] [infrastructure.core.pipeline] [5/8] PDF Rendering (62% complete)
+[2026-03-04 13:33:03,008] [INFO]   Elapsed: 12s | ETA: 7s
+[2026-03-04 13:33:03,008] [INFO] [infrastructure.core.pipeline]   Elapsed: 12s | ETA: 7s
+[2026-03-04 13:33:03,008] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-04 13:33:03,008] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-04 13:33:03,009] [INFO] [infrastructure.core.logging_utils] Starting: Stage 5: PDF Rendering
+[2026-03-04 13:33:03,009] [INFO] Running PDF rendering...
+[2026-03-04 13:33:03,009] [INFO] [infrastructure.core.pipeline] Running PDF rendering...
+[2026-03-04 13:33:40,128] [INFO] [infrastructure.core.logging_utils] Completed: Stage 5: PDF Rendering (37.1s)
+[2026-03-04 13:33:40,129] [INFO] ✓ Stage 5 completed successfully (37.1s)
+[2026-03-04 13:33:40,129] [INFO] [infrastructure.core.pipeline] ✓ Stage 5 completed successfully (37.1s)
+[2026-03-04 13:33:40,131] [INFO] 
+[2026-03-04 13:33:40,131] [INFO] [infrastructure.core.pipeline] 
+[2026-03-04 13:33:40,131] [INFO] [6/8] Output Validation (75% complete)
+[2026-03-04 13:33:40,131] [INFO] [infrastructure.core.pipeline] [6/8] Output Validation (75% complete)
+[2026-03-04 13:33:40,131] [INFO]   Elapsed: 49s | ETA: 16s
+[2026-03-04 13:33:40,131] [INFO] [infrastructure.core.pipeline]   Elapsed: 49s | ETA: 16s
+[2026-03-04 13:33:40,131] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-04 13:33:40,131] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-04 13:33:40,132] [INFO] [infrastructure.core.logging_utils] Starting: Stage 6: Output Validation
+[2026-03-04 13:33:40,132] [INFO] Running output validation...
+[2026-03-04 13:33:40,132] [INFO] [infrastructure.core.pipeline] Running output validation...
+[2026-03-04 13:33:40,575] [INFO] [infrastructure.core.logging_utils] Completed: Stage 6: Output Validation (0.4s)
+[2026-03-04 13:33:40,575] [INFO] ✓ Stage 6 completed successfully (0.4s)
+[2026-03-04 13:33:40,575] [INFO] [infrastructure.core.pipeline] ✓ Stage 6 completed successfully (0.4s)
+[2026-03-04 13:33:40,576] [INFO] 
+[2026-03-04 13:33:40,576] [INFO] [infrastructure.core.pipeline] 
+[2026-03-04 13:33:40,576] [INFO] [7/8] Copy Outputs (87% complete)
+[2026-03-04 13:33:40,576] [INFO] [infrastructure.core.pipeline] [7/8] Copy Outputs (87% complete)
+[2026-03-04 13:33:40,576] [INFO]   Elapsed: 50s | ETA: 7s
+[2026-03-04 13:33:40,576] [INFO] [infrastructure.core.pipeline]   Elapsed: 50s | ETA: 7s
+[2026-03-04 13:33:40,576] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-04 13:33:40,576] [INFO] [infrastructure.core.pipeline] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-04 13:33:40,576] [INFO] [infrastructure.core.logging_utils] Starting: Stage 7: Copy Outputs
+[2026-03-04 13:33:40,576] [INFO] Running output copying...
+[2026-03-04 13:33:40,576] [INFO] [infrastructure.core.pipeline] Running output copying...
+[2026-03-04 13:33:41,259] [INFO] [infrastructure.core.logging_utils] Completed: Stage 7: Copy Outputs (0.7s)
+[2026-03-04 13:33:41,259] [INFO] ✓ Stage 7 completed successfully (0.7s)
+[2026-03-04 13:33:41,259] [INFO] [infrastructure.core.pipeline] ✓ Stage 7 completed successfully (0.7s)
+[2026-03-04 13:33:41,263] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (JSON) saved: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/pipeline_report.json
+[2026-03-04 13:33:41,263] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (Markdown) saved: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/pipeline_report.md
+[2026-03-04 13:33:41,263] [INFO] [infrastructure.reporting.pipeline_reporter] Pipeline report (HTML) saved: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/pipeline_report.html
+[2026-03-04 13:33:41,263] [INFO] [infrastructure.core.logging_utils] Completed: Pipeline execution for code_project (51.0s)
+[2026-03-04 13:33:41,264] [INFO] [infrastructure.reporting.pipeline_reporter] For project act_inf_metaanalysis, proj_result type: <class 'list'>, len: 7
+[2026-03-04 13:33:41,264] [INFO] [infrastructure.reporting.pipeline_reporter] For project code_project, proj_result type: <class 'list'>, len: 7
+[2026-03-04 13:33:41,264] [INFO] [infrastructure.reporting.pipeline_reporter] Multi-project summary saved: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.json
+[2026-03-04 13:33:41,264] [INFO] [infrastructure.reporting.pipeline_reporter] Multi-project summary saved: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.md

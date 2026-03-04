@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-03-03T13:30:30.246803",
-  "total_duration": 44.46706438064575,
+  "timestamp": "2026-03-04T13:33:41.262567",
+  "total_duration": 51.010265827178955,
   "stages": [
     {
       "name": "Clean Output Directories",
       "exit_code": 0,
-      "duration": 0.011610031127929688,
+      "duration": 0.03885006904602051,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -14,7 +14,7 @@
     {
       "name": "Environment Setup",
       "exit_code": 0,
-      "duration": 2.1967971324920654,
+      "duration": 1.9838919639587402,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -23,7 +23,7 @@
     {
       "name": "Project Tests",
       "exit_code": 0,
-      "duration": 6.4172399044036865,
+      "duration": 6.320713043212891,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -32,7 +32,7 @@
     {
       "name": "Project Analysis",
       "exit_code": 0,
-      "duration": 4.220163106918335,
+      "duration": 4.417562961578369,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -41,7 +41,7 @@
     {
       "name": "PDF Rendering",
       "exit_code": 0,
-      "duration": 30.958820104599,
+      "duration": 37.12106394767761,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -50,7 +50,7 @@
     {
       "name": "Output Validation",
       "exit_code": 0,
-      "duration": 0.36168909072875977,
+      "duration": 0.44480395317077637,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -59,7 +59,7 @@
     {
       "name": "Copy Outputs",
       "exit_code": 0,
-      "duration": 0.30074501037597656,
+      "duration": 0.6833798885345459,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -75,12 +75,12 @@
       "pdf": {
         "exists": true,
         "file_count": 10,
-        "size_mb": "1.78",
-        "total_size_bytes": 1868157,
+        "size_mb": "1.81",
+        "total_size_bytes": 1898051,
         "largest_files": [
           {
             "name": "code_project_combined.pdf",
-            "size_mb": "1.63",
+            "size_mb": "1.64",
             "path": "pdf/code_project_combined.pdf"
           },
           {
@@ -90,7 +90,7 @@
           },
           {
             "name": "_combined_manuscript.tex",
-            "size_mb": "0.04",
+            "size_mb": "0.05",
             "path": "pdf/_combined_manuscript.tex"
           }
         ],
@@ -108,13 +108,13 @@
       },
       "web": {
         "exists": true,
-        "file_count": 7,
-        "size_mb": "0.13",
-        "total_size_bytes": 139193,
+        "file_count": 8,
+        "size_mb": "0.17",
+        "total_size_bytes": 173304,
         "largest_files": [
           {
             "name": "index.html",
-            "size_mb": "0.05",
+            "size_mb": "0.07",
             "path": "web/index.html"
           },
           {
@@ -130,14 +130,14 @@
         ],
         "extensions": {
           ".md": 1,
-          ".html": 6
+          ".html": 7
         }
       },
       "slides": {
         "exists": true,
-        "file_count": 40,
-        "size_mb": "2.04",
-        "total_size_bytes": 2133937,
+        "file_count": 48,
+        "size_mb": "2.14",
+        "total_size_bytes": 2240422,
         "largest_files": [
           {
             "name": "03_results_slides.pdf",
@@ -156,21 +156,21 @@
           }
         ],
         "extensions": {
-          ".pdf": 5,
-          ".log": 5,
-          ".toc": 5,
-          ".tex": 5,
-          ".snm": 5,
-          ".aux": 5,
-          ".nav": 5,
-          ".vrb": 5
+          ".pdf": 6,
+          ".log": 6,
+          ".toc": 6,
+          ".tex": 6,
+          ".snm": 6,
+          ".aux": 6,
+          ".nav": 6,
+          ".vrb": 6
         }
       },
       "figures": {
         "exists": true,
         "file_count": 7,
         "size_mb": "1.54",
-        "total_size_bytes": 1612449,
+        "total_size_bytes": 1611137,
         "largest_files": [
           {
             "name": "algorithm_complexity.png",
@@ -213,7 +213,7 @@
         "exists": true,
         "file_count": 11,
         "size_mb": "0.02",
-        "total_size_bytes": 16018,
+        "total_size_bytes": 16019,
         "largest_files": [
           {
             "name": "output_statistics.json",
@@ -257,12 +257,12 @@
       "logs": {
         "exists": true,
         "file_count": 1,
-        "size_mb": "0.00",
-        "total_size_bytes": 3101,
+        "size_mb": "0.01",
+        "total_size_bytes": 8704,
         "largest_files": [
           {
             "name": "pipeline.log",
-            "size_mb": "0.00",
+            "size_mb": "0.01",
             "path": "logs/pipeline.log"
           }
         ],
@@ -271,12 +271,12 @@
         }
       }
     },
-    "total_files": 77,
-    "total_size_mb": 5.505650520324707,
+    "total_files": 86,
+    "total_size_mb": 5.672335624694824,
     "largest_files": [
       {
         "name": "code_project_combined.pdf",
-        "size_mb": "1.63",
+        "size_mb": "1.64",
         "category": "pdf",
         "path": "pdf/code_project_combined.pdf"
       },
@@ -305,6 +305,12 @@
         "path": "figures/convergence_rate_comparison.png"
       },
       {
+        "name": "index.html",
+        "size_mb": "0.07",
+        "category": "web",
+        "path": "web/index.html"
+      },
+      {
         "name": "03_results_slides.log",
         "size_mb": "0.06",
         "category": "slides",
@@ -317,54 +323,48 @@
         "path": "pdf/_combined_manuscript.log"
       },
       {
-        "name": "index.html",
+        "name": "_combined_manuscript.tex",
         "size_mb": "0.05",
-        "category": "web",
-        "path": "web/index.html"
+        "category": "pdf",
+        "path": "pdf/_combined_manuscript.tex"
       },
       {
         "name": "02_methodology_slides.log",
         "size_mb": "0.05",
         "category": "slides",
         "path": "slides/02_methodology_slides.log"
-      },
-      {
-        "name": "_combined_manuscript.tex",
-        "size_mb": "0.04",
-        "category": "pdf",
-        "path": "pdf/_combined_manuscript.tex"
       }
     ],
     "missing_expected_files": [],
     "file_counts_by_type": {
       ".md": 4,
-      ".log": 8,
-      ".aux": 6,
+      ".log": 9,
+      ".aux": 7,
       ".blg": 1,
       ".bib": 1,
-      ".pdf": 6,
-      ".tex": 6,
-      ".toc": 6,
+      ".pdf": 7,
+      ".tex": 7,
+      ".toc": 7,
       ".bbl": 1,
-      ".html": 7,
-      ".snm": 5,
-      ".nav": 5,
-      ".vrb": 5,
+      ".html": 8,
+      ".snm": 6,
+      ".nav": 6,
+      ".vrb": 6,
       ".png": 6,
       ".json": 8,
       ".csv": 1,
       ".txt": 1
     },
     "sizes_by_category": {
-      "pdf": 1.7816133499145508,
-      "web": 0.13274478912353516,
-      "slides": 2.035080909729004,
-      "figures": 1.5377511978149414,
+      "pdf": 1.8101224899291992,
+      "web": 0.16527557373046875,
+      "slides": 2.1366329193115234,
+      "figures": 1.5364999771118164,
       "data": 0.0002269744873046875,
-      "reports": 0.015275955200195312,
+      "reports": 0.015276908874511719,
       "simulations": 0.0,
       "llm": 0.0,
-      "logs": 0.0029573440551757812
+      "logs": 0.00830078125
     },
     "pdf_files": 10,
     "figures": 7,

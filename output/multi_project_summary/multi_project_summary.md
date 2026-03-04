@@ -1,32 +1,32 @@
 # Multi-Project Execution Summary
 
-**Generated:** 2026-03-03T13:35:12.311160
+**Generated:** 2026-03-04T13:33:41.263949
 
 ## Overview
 
 - **Total Projects:** 2
 - **Successful:** 2
 - **Failed:** 0
-- **Total Duration:** 326.7s
+- **Total Duration:** 214.9s
 
 ## Project Results
 
-### ✅ code_project
+### ✅ act_inf_metaanalysis
 - **Status:** Success
-- **Duration:** 44.5s
+- **Duration:** 163.7s
 - **Stages Completed:** 7
 
-### ✅ pragmatism_blake
+### ✅ code_project
 - **Status:** Success
-- **Duration:** 282.1s
+- **Duration:** 51.0s
 - **Stages Completed:** 7
 
 ## Performance Analysis
 
-- **Slowest Project:** pragmatism_blake
+- **Slowest Project:** act_inf_metaanalysis
 - **Fastest Project:** code_project
-- **Average Duration:** 163.3s
-- **Total Pipeline Time:** 326.5s
+- **Average Duration:** 107.3s
+- **Total Pipeline Time:** 214.7s
 
 ## Error Summary
 

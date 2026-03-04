@@ -555,16 +555,9 @@ Key best practices:
 9. **Performance** - Optimized code and builds
 10. **Quality** - High standards throughout
 
-For detailed guidance, see:
-
-- [Architecture](../core/architecture.md) - System design
-- [Workflow](../core/workflow.md) - Development process
-- [Thin Orchestrator Summary](../architecture/thin-orchestrator-summary.md) - Pattern details
-- [Contributing](../development/contributing.md) - Contribution guidelines
-
 ---
 
-**Related Documentation:**
+**See Also:**
 
 - [Getting Started](../guides/getting-started.md) - Basic practices
 - [Testing and Reproducibility](../guides/testing-and-reproducibility.md) - Advanced practices

@@ -17,6 +17,7 @@ Effective backup and recovery strategies are essential for protecting your resea
 **Primary backup method:**
 
 **Local Git:**
+
 ```bash
 # Regular commits
 git add .
@@ -27,6 +28,7 @@ git push origin main
 ```
 
 **Multiple Remotes:**
+
 ```bash
 # Add backup remote
 git remote add backup https://github.com/username/backup-repo.git
@@ -36,6 +38,7 @@ git push backup main
 ```
 
 **Benefits:**
+
 - Version history
 - Automatic backup on push
 - Easy recovery
@@ -44,6 +47,7 @@ git push backup main
 ### File System Backup
 
 **Manual backups:**
+
 ```bash
 # Create backup archive
 tar -czf backup_$(date +%Y%m%d).tar.gz \
@@ -58,6 +62,7 @@ tar -czf backup_$(date +%Y%m%d).tar.gz \
 ```
 
 **Automated backups:**
+
 ```bash
 #!/bin/bash
 # backup.sh
@@ -81,12 +86,14 @@ echo "Backup created: $BACKUP_DIR/$BACKUP_NAME"
 ### Cloud Backup
 
 **Cloud storage options:**
+
 - GitHub (git repository)
 - Dropbox/Google Drive (file sync)
 - AWS S3 (automated backups)
 - Backblaze (continuous backup)
 
 **GitHub backup:**
+
 ```bash
 # Push to GitHub
 git push origin main
@@ -101,6 +108,7 @@ git push origin main
 ### Selective Backup
 
 **What to backup:**
+
 - ✅ Source code (`src/`)
 - ✅ Tests (`tests/`)
 - ✅ Scripts (`scripts/`)
@@ -116,6 +124,7 @@ git push origin main
 ### Recovery
 
 **From Git repository:**
+
 ```bash
 # Clone repository
 git clone https://github.com/username/project.git
@@ -129,6 +138,7 @@ uv run python scripts/execute_pipeline.py --core-only
 ```
 
 **From backup archive:**
+
 ```bash
 # Extract backup
 tar -xzf backup_20250101.tar.gz
@@ -143,6 +153,7 @@ uv run python scripts/execute_pipeline.py --core-only
 ### Partial Recovery
 
 **Recover specific files:**
+
 ```bash
 # From Git
 git checkout HEAD -- path/to/file
@@ -157,6 +168,7 @@ git checkout <commit-hash> -- path/to/file
 ### Recovery from Corruption
 
 **If files are corrupted:**
+
 ```bash
 # Check Git status
 git status
@@ -176,6 +188,7 @@ git checkout <good-commit-hash> -- corrupted-file.py
 ### Critical Data
 
 **Ensure these are backed up:**
+
 1. **Source code** - All `src/` modules
 2. **Tests** - test suite
 3. **Manuscript** - All markdown files
@@ -185,12 +198,14 @@ git checkout <good-commit-hash> -- corrupted-file.py
 ### Regenerable Data
 
 **These can be regenerated:**
+
 - Output PDFs (from markdown)
 - Generated figures (from scripts)
 - Data files (from analysis)
 - Virtual environment (from dependencies)
 
 **But consider backing up:**
+
 - Final PDF outputs (for archival)
 - Important figures (for reference)
 - Key data files (for reproducibility)
@@ -200,6 +215,7 @@ git checkout <good-commit-hash> -- corrupted-file.py
 ### System Failure
 
 **Recovery steps:**
+
 1. **Restore from backup** - Latest backup archive
 2. **Clone from Git** - Latest repository state
 3. **Restore dependencies** - `uv sync`
@@ -209,6 +225,7 @@ git checkout <good-commit-hash> -- corrupted-file.py
 ### Partial Data Loss
 
 **Recovery steps:**
+
 1. **Identify lost files** - Compare with backup
 2. **Restore selectively** - From backup or Git
 3. **Verify integrity** - Check file hashes
@@ -218,6 +235,7 @@ git checkout <good-commit-hash> -- corrupted-file.py
 ### Corruption Recovery
 
 **If files are corrupted:**
+
 1. **Identify corruption** - Check file integrity
 2. **Restore from backup** - Latest known good
 3. **Verify restoration** - Check file contents
@@ -229,6 +247,7 @@ git checkout <good-commit-hash> -- corrupted-file.py
 ### Frequency
 
 **Recommended backup schedule:**
+
 - **Commits** - After each significant change
 - **Git push** - Daily or more frequently
 - **File backups** - Weekly or monthly
@@ -237,6 +256,7 @@ git checkout <good-commit-hash> -- corrupted-file.py
 ### Automation
 
 **Automated backup script:**
+
 ```bash
 #!/bin/bash
 # auto-backup.sh
@@ -262,6 +282,7 @@ find "$BACKUP_DIR" -name "backup_*.tar.gz" -mtime +30 -delete
 ```
 
 **Schedule with cron:**
+
 ```bash
 # Add to crontab
 0 2 * * * /path/to/auto-backup.sh
@@ -270,6 +291,7 @@ find "$BACKUP_DIR" -name "backup_*.tar.gz" -mtime +30 -delete
 ### Verification
 
 **Verify backups:**
+
 ```bash
 # Check backup integrity
 tar -tzf backup.tar.gz > /dev/null && echo "Backup OK" || echo "Backup corrupted"
@@ -313,6 +335,7 @@ uv run python scripts/execute_pipeline.py --core-only
 ### Regular Backups
 
 **Establish routine:**
+
 - Commit frequently
 - Push to remote regularly
 - Create file backups periodically
@@ -321,6 +344,7 @@ uv run python scripts/execute_pipeline.py --core-only
 ### Version Control
 
 **Use Git effectively:**
+
 - Commit after each change
 - Push to remote frequently
 - Use branches for experiments
@@ -329,6 +353,7 @@ uv run python scripts/execute_pipeline.py --core-only
 ### Documentation
 
 **Document your work:**
+
 - Keep notes in commits
 - Document important decisions
 - Maintain changelog
@@ -345,22 +370,17 @@ Backup and recovery best practices:
 5. **Prevention** - Regular backups, version control
 
 **Key principles:**
+
 - Backup before major changes
 - Test recovery procedures
 - Keep multiple backup copies
 - Document backup strategy
 - Automate when possible
 
-For more information, see:
-- [Version Control](../best-practices/version-control.md) - Git workflows
-- [Troubleshooting Guide](../operational/troubleshooting/) - Recovery troubleshooting
-- [Common Workflows](../reference/common-workflows.md) - Backup workflows
-
 ---
 
-**Related Documentation:**
+**See Also:**
+
 - [Version Control](../best-practices/version-control.md) - Git backup strategies
 - [Troubleshooting Guide](../operational/troubleshooting/) - Recovery procedures
 - [Common Workflows](../reference/common-workflows.md) - Backup workflows
-
-

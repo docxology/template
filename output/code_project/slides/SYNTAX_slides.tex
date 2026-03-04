@@ -1,0 +1,322 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{\textbf{#1}}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}[fragile]{Manuscript Syntax Reference}
+\protect\phantomsection\label{manuscript-syntax-reference}
+Formatting and syntax conventions for manuscript Markdown files in the
+\texttt{code\_project} exemplar.
+
+\begin{block}{Citation Syntax (Pandoc)}
+\protect\phantomsection\label{citation-syntax-pandoc}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\textless{}!{-}{-} Single citation {-}{-}\textgreater{}}
+\CommentTok{[}\OtherTok{@knuth1997}\CommentTok{]}
+
+\CommentTok{\textless{}!{-}{-} Multiple citations {-}{-}\textgreater{}}
+\CommentTok{[}\OtherTok{@knuth1997; @cormen2009}\CommentTok{]}
+
+\CommentTok{\textless{}!{-}{-} Citation with locator {-}{-}\textgreater{}}
+\CommentTok{[}\OtherTok{@knuth1997, pp. 42{-}45}\CommentTok{]}
+
+\CommentTok{\textless{}!{-}{-} Narrative citation {-}{-}\textgreater{}}
+\NormalTok{@knuth1997 showed that...}
+\end{Highlighting}
+\end{Shaded}
+
+All citation keys must exist in \texttt{references.bib}. The pipeline
+will flag undefined keys as errors.
+\end{block}
+
+\begin{block}{Equation Environments}
+\protect\phantomsection\label{equation-environments}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\textless{}!{-}{-} Numbered equation with label {-}{-}\textgreater{}}
+\NormalTok{$$}
+\NormalTok{\textbackslash{}nabla f(x) = Ax {-} b}
+\NormalTok{$$ \{\#eq:gradient\}}
+
+\CommentTok{\textless{}!{-}{-} Reference in text {-}{-}\textgreater{}}
+\NormalTok{As shown in @eq:gradient, the gradient...}
+\end{Highlighting}
+\end{Shaded}
+
+Pandoc-crossref resolves \texttt{\{\#eq:label\}} and \texttt{@eq:label}
+during rendering. Do \textbf{not} use raw
+\texttt{\textbackslash{}label\{\}} / \texttt{\textbackslash{}ref\{\}}
+--- the Markdown filter handles this.
+\end{block}
+
+\begin{block}{Figure References}
+\protect\phantomsection\label{figure-references}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\textless{}!{-}{-} Figure with label {-}{-}\textgreater{}}
+\AlertTok{![Convergence plot showing objective value vs iteration](figures/convergence\_plot.png)}\NormalTok{\{\#fig:convergence width=80\%\}}
+
+\CommentTok{\textless{}!{-}{-} Reference in text {-}{-}\textgreater{}}
+\NormalTok{@fig:convergence demonstrates...}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Images must exist in \texttt{output/figures/} at render time
+\item
+  Use \texttt{width=} or \texttt{height=} to control sizing (prevents
+  float-too-large warnings)
+\item
+  Captions should be descriptive (they appear in the PDF)
+\end{itemize}
+\end{block}
+
+\begin{block}{Table References}
+\protect\phantomsection\label{table-references}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\textless{}!{-}{-} Table with label {-}{-}\textgreater{}}
+\PreprocessorTok{|}\NormalTok{ Step Size }\PreprocessorTok{|}\NormalTok{ Iterations }\PreprocessorTok{|}\NormalTok{ Converged }\PreprocessorTok{|}
+\PreprocessorTok{|{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}|{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}|{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}|}
+\PreprocessorTok{|}\NormalTok{ 0.01      }\PreprocessorTok{|}\NormalTok{ 412       }\PreprocessorTok{|}\NormalTok{ Yes       }\PreprocessorTok{|}
+
+\NormalTok{: Performance comparison across step sizes \{\#tbl:performance\}}
+
+\CommentTok{\textless{}!{-}{-} Reference in text {-}{-}\textgreater{}}
+\NormalTok{@tbl:performance shows...}
+\end{Highlighting}
+\end{Shaded}
+\end{block}
+
+\begin{block}{Preamble Injection}
+\protect\phantomsection\label{preamble-injection}
+\texttt{preamble.md} contains raw LaTeX injected before the document
+body:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{{-}{-}{-}}
+\AnnotationTok{header{-}includes:}
+\CommentTok{  {-} \textbackslash{}usepackage\{amsmath\}}
+\CommentTok{  {-} \textbackslash{}tolerance=800}
+\CommentTok{  {-} \textbackslash{}hfuzz=2pt}
+\CommentTok{{-}{-}{-}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Preamble is parsed by
+  \texttt{infrastructure.rendering.latex\_utils.py}
+\item
+  Changes to tolerance/hfuzz affect line-breaking globally
+\item
+  Do \textbf{not} duplicate package imports already in the
+  infrastructure renderer
+\end{itemize}
+\end{block}
+
+\begin{block}{BibTeX Entry Format}
+\protect\phantomsection\label{bibtex-entry-format}
+\begin{Shaded}
+\begin{Highlighting}[]
+\VariableTok{@article}\NormalTok{\{}\OtherTok{knuth1997}\NormalTok{,}
+  \DataTypeTok{author}\NormalTok{  = \{Donald E. Knuth\},}
+  \DataTypeTok{title}\NormalTok{   = \{The Art of Computer Programming\},}
+  \DataTypeTok{journal}\NormalTok{ = \{Addison{-}Wesley\},}
+  \DataTypeTok{year}\NormalTok{    = \{1997\},}
+  \DataTypeTok{volume}\NormalTok{  = \{1\}}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Keys must be lowercase alphanumeric with optional underscores
+\item
+  Author names use \texttt{\{Last,\ First\}} or \texttt{\{First\ Last\}}
+  format
+\item
+  All entries must have at minimum: \texttt{author}, \texttt{title},
+  \texttt{year}
+\end{itemize}
+\end{block}
+
+\begin{block}{Section Numbering}
+\protect\phantomsection\label{section-numbering}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{00\_abstract.md    → Section 0 (unnumbered in PDF)}
+\NormalTok{01\_introduction.md → Section 1}
+\NormalTok{02\_methodology.md  → Section 2}
+\NormalTok{03\_results.md      → Section 3}
+\NormalTok{04\_conclusion.md   → Section 4}
+\end{Highlighting}
+\end{Shaded}
+
+Files are assembled in lexicographic order by
+\texttt{infrastructure.rendering.pdf\_renderer.py}. The \texttt{00\_}
+prefix ensures the abstract renders first.
+\end{block}
+
+\begin{block}{Prose Conventions}
+\protect\phantomsection\label{prose-conventions}
+\begin{itemize}
+\tightlist
+\item
+  No ``In summary'' or ``In conclusion'' at section ends (RASP standard)
+\item
+  Use active voice for methodology descriptions
+\item
+  Use explicit file paths when referencing code:
+  \texttt{src/optimizer.py}, not ``the optimizer module''
+\item
+  Keep paragraphs focused --- one idea per paragraph
+\end{itemize}
+\end{block}
+
+\begin{block}{See Also}
+\protect\phantomsection\label{see-also}
+\begin{itemize}
+\tightlist
+\item
+  \url{AGENTS.md} --- RASP protocol and AI agent constraints
+\item
+  \href{../docs/rendering_pipeline.md}{rendering\_pipeline.md} --- Full
+  rendering flow
+\item
+  \url{preamble.md} --- Active LaTeX preamble
+\end{itemize}
+\end{block}
+\end{frame}
+
+\end{document}

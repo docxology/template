@@ -629,15 +629,9 @@ Migration checklist:
 8. **Validation** - Test everything
 9. **Optimization** - Improve and refine
 
-For detailed guidance, see:
-
-- [Getting Started](../guides/getting-started.md) - Template basics
-- [Architecture](../core/architecture.md) - System structure
-- [Workflow](../core/workflow.md) - Development process
-
 ---
 
-**Related Documentation:**
+**See Also:**
 
 - [Getting Started](../guides/getting-started.md) - Template basics
 - [Architecture](../core/architecture.md) - Understanding structure

@@ -46,3 +46,13 @@
 \contentsline {subsection}{\numberline {5.4}Key Insights}{17}{subsection.5.4}%
 \contentsline {subsection}{\numberline {5.5}Future Extensions}{17}{subsection.5.5}%
 \contentsline {subsection}{\numberline {5.6}Final Assessment}{17}{subsection.5.6}%
+\contentsline {section}{\numberline {6}Manuscript Syntax Reference}{18}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Citation Syntax (Pandoc)}{18}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Equation Environments}{18}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Figure References}{18}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Table References}{18}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.5}Preamble Injection}{19}{subsection.6.5}%
+\contentsline {subsection}{\numberline {6.6}BibTeX Entry Format}{19}{subsection.6.6}%
+\contentsline {subsection}{\numberline {6.7}Section Numbering}{19}{subsection.6.7}%
+\contentsline {subsection}{\numberline {6.8}Prose Conventions}{20}{subsection.6.8}%
+\contentsline {subsection}{\numberline {6.9}See Also}{20}{subsection.6.9}%

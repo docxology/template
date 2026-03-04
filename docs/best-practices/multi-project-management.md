@@ -22,7 +22,7 @@ When managing multiple research projects, you can leverage the template's struct
 
 **Recommended organization:**
 
-```
+```text
 research/
 ├── project1/
 │   ├── src/
@@ -57,7 +57,7 @@ research/
 
 **Example:**
 
-```
+```text
 climate-analysis/
 optimization-study/
 ml-benchmarking/
@@ -441,7 +441,7 @@ done
 
 ## Automation Scripts
 
-### Project Initialization
+### Project Initialization Script
 
 **Template for new projects:**
 
@@ -512,15 +512,9 @@ Multi-project management strategies:
 - Shared improvements
 - Reduced duplication
 
-For more information, see:
-
-- [Getting Started](../guides/getting-started.md) - Project setup
-- [Architecture](../core/architecture.md) - Understanding structure
-- [Best Practices](../best-practices/best-practices.md) - General practices
-
 ---
 
-**Related Documentation:**
+**See Also:**
 
 - [Getting Started](../guides/getting-started.md) - Setting up projects
 - [Architecture](../core/architecture.md) - Project structure

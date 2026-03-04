@@ -1,6 +1,6 @@
 # 📊 Filepath and Reference Audit Report
 
-**Generated:** 2026-01-03 18:03:57
+**Generated:** Automated filepath audit
 **Files Scanned:** 257
 **Scan Duration:** 0.87 seconds
 
@@ -141,4 +141,4 @@
 - **Target:** `../.cursorrules/testing_standards.md`
 - **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/docs/.cursorrules/testing_standards.md
 
-*... and 66 more red flags*
+> ... and 66 more red flags (see full audit for details)

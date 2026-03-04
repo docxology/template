@@ -23,18 +23,23 @@ The `development/` directory contains documentation for contributing to the proj
 ## Quick Navigation
 
 ### Contributing to the Project
+
 → Read **[Contributing](contributing.md)** - Contribution guidelines
 
 ### Understanding Testing
+
 → Study **[Testing Guide](testing/testing-guide.md)** - Testing framework
 
 ### Reporting Security Issues
+
 → Follow **[Security](security.md)** - Security policy
 
 ### Community Standards
+
 → Review **[Code of Conduct](code-of-conduct.md)** - Community guidelines
 
 ### Future Development
+
 → Check **[Roadmap](roadmap.md)** - Development plans
 
 ## Related Documentation
@@ -47,8 +52,3 @@ The `development/` directory contains documentation for contributing to the proj
 
 - [`../documentation-index.md`](../documentation-index.md) - documentation index
 - [`../README.md`](../README.md) - Documentation hub overview
-
-
-
-
-

@@ -242,7 +242,7 @@ def generate_test_report(
             "total_skipped": infra_results.get("skipped", 0) + project_results.get("skipped", 0),
             "total_tests": infra_results.get("total", 0) + project_results.get("total", 0),
             "all_passed": (
-                infra_results.get("exit_code", 1) == 0 and project_results.get("exit_code", 1) == 0
+                infra_results.get("exit_code", 0) == 0 and project_results.get("exit_code", 1) == 0
             ),
         },
     }

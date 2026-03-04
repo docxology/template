@@ -7,6 +7,7 @@
 This document explains the development workflow that ensures source code, tests, and documentation remain in coherence.
 
 **For related information:**
+
 - **[How To Use](../core/how-to-use.md)** - usage guide from basic to advanced
 - **[Architecture](../core/architecture.md)** - System design overview
 - **[Thin Orchestrator Summary](../architecture/thin-orchestrator-summary.md)** - Pattern implementation details
@@ -52,7 +53,7 @@ graph TB
     SRC --> DATA
     SCRIPTS --> FIGURES
     SCRIPTS --> DATA
-    MD --> MARKDOWN_VAL
+    MANUSCRIPT --> MARKDOWN_VAL
     FIGURES --> MARKDOWN_VAL
     DATA --> MARKDOWN_VAL
 
@@ -78,20 +79,24 @@ graph TB
 The `scripts/execute_pipeline.py` orchestrator (or `./run.sh --pipeline`) executes 8 stages sequentially, ensuring coherence between all components:
 
 ### 1. Code Validation Phase
+
 - **Runs all generation scripts** - This validates that `src/` code works correctly
 - **Scripts import from src/** - Ensures no code duplication and validates imports
 - **Generates figures and data** - Creates outputs that markdown will reference
 
 ### 2. Markdown Validation Phase
+
 - **Validates all image references** - Ensures figures referenced in markdown exist
 - **Checks internal links** - Validates equation labels and section anchors
 - **Validates equation formatting** - Ensures proper LaTeX equation environments
 
 ### 3. Documentation Generation Phase
+
 - **Auto-generates glossary** - Creates API table from current `src/` code
 - **Updates documentation** - Keeps code-doc sync automatically
 
 ### 4. Output Generation Phase
+
 - **Builds individual PDFs** - Creates per-section PDFs from validated markdown
 - **Builds combined PDF** - Creates unified document from all sections
 - **Exports LaTeX** - Provides LaTeX source for further processing
@@ -101,6 +106,7 @@ The `scripts/execute_pipeline.py` orchestrator (or `./run.sh --pipeline`) execut
 The test suite ensures coverage of all modules and validates the entire pipeline:
 
 ### What Tests Validate
+
 - **Mathematical correctness** - All functions produce expected results
 - **Import compatibility** - Scripts can successfully import from `src/` modules
 - **Output generation** - Figure and data generation works correctly
@@ -108,6 +114,7 @@ The test suite ensures coverage of all modules and validates the entire pipeline
 - **Path management** - Outputs go to correct directories
 
 ### Test-Driven Development Flow
+
 ```mermaid
 flowchart TD
     START([Start Development]) --> TESTS[Write Tests First]
@@ -175,16 +182,20 @@ uv run python scripts/execute_pipeline.py --core-only
 ```
 
 The pipeline orchestrator executes 8 stages:
+
 - **Stage 00**: Environment setup & validation
 - **Stage 01**: Run tests with coverage (validates src/ code works)
 - **Stage 02**: Execute analysis scripts (generates figures and data)
 - **Stage 03**: Render PDFs from markdown (validates references, builds PDFs)
 - **Stage 04**: Validate outputs (checks PDF quality and integrity)
 - **Stage 05**: Copy final deliverables (copies to top-level output/)
+- **Stage 06**: LLM review (optional manuscript review)
+- **Stage 07**: Generate executive report
 
 ## Key Components
 
 ### Source Code (`src/`)
+
 - **`example.py`**: Basic mathematical functions (add, multiply, average, etc.)
 - **`glossary_gen.py`**: API documentation generation utilities
 - Additional modules can be added for specific project needs
@@ -192,6 +203,7 @@ The pipeline orchestrator executes 8 stages:
 **Critical Principle**: ALL business logic and algorithms must live in `src/` modules.
 
 ### Tests (`tests/`)
+
 - **90% minimum coverage** for project/src/ (currently achieving 100% - coverage!)
 - **60% minimum coverage** for infrastructure/ (currently achieving 83.33% - exceeds stretch goal!)
 - **Real numerical examples** (no mocks)
@@ -199,6 +211,7 @@ The pipeline orchestrator executes 8 stages:
 - **Fast and hermetic** execution
 
 ### Generation Scripts (`scripts/`)
+
 - **Import from src/** modules (no code duplication)
 - **Use src/ methods for all computation** (never implement algorithms)
 - **Generate figures and data** deterministically
@@ -206,13 +219,15 @@ The pipeline orchestrator executes 8 stages:
 - **Use headless plotting** (MPLBACKEND=Agg)
 
 ### Documentation (`manuscript/`)
+
 - **References source code** using inline code formatting
 - **Displays generated figures** from `output/figures/`
 - **Passes validation** for images, references, and equations
 - **Auto-updated glossary** from source API
 
 ### Output Structure (`output/`)
-```
+
+```text
 output/
 ├── figures/          # PNG/MP4/SVG files
 ├── data/             # CSV/NPZ files and manifests
@@ -223,18 +238,21 @@ output/
 ## Validation Rules
 
 ### Markdown Validation
+
 - All images must exist and be properly referenced
 - Internal links must have valid anchors
 - Equations must have unique labels
 - No bare URLs (use informative link text)
 
 ### Code Validation
+
 - All public APIs must have type hints
 - No circular imports
 - Consistent formatting and naming
 - Error handling for edge cases
 
 ### Test Validation
+
 - statement and branch coverage (90% project, 60% infra minimum)
 - All tests must pass
 - No network or file-system writes outside output/
@@ -268,11 +286,10 @@ coverage report -m
 
 ## Output Management
 
-### Output Management
-
 The pipeline automatically manages outputs. All outputs are regenerated from markdown sources during the build process, ensuring consistency.
 
 This script:
+
 - Removes `output/` directory (all disposable)
 - Preserves source code, tests, markdown, and scripts
 - Provides clear instructions for regeneration
@@ -349,6 +366,7 @@ The workflow enforces a **thin orchestrator pattern** where:
 - **`scripts/execute_pipeline.py`** orchestrates the entire 8-stage pipeline
 
 This ensures:
+
 - **Maintainability**: Single source of truth for business logic
 - **Testability**: tested core functionality
 - **Reusability**: Scripts can use any `src/` method
