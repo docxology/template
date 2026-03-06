@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import json
 import re
-import time
+import time as time_module
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
@@ -178,11 +178,8 @@ class LLMClient:
             >>> opts = GenerationOptions(temperature=0.0, seed=42)
             >>> response = client.query("Explain...", options=opts)
         """
-        import time as time_module
-
         start_time = time_module.time()
         model_name = model or self.config.default_model
-        prompt_preview = prompt[:100] + "..." if len(prompt) > 100 else prompt
 
         if reset_context:
             logger.info(
@@ -212,24 +209,10 @@ class LLMClient:
             extra={
                 "model": model_name,
                 "prompt_length": len(prompt),
-                "prompt_preview": prompt_preview,
-                "context_messages": len(self.context.messages),
-                "context_tokens_est": self.context.estimated_tokens,
-                "max_tokens": options.max_tokens if options else None,
-                "temperature": options.temperature if options else None,
-                "seed": options.seed if options else None,
             },
         )
 
         self.context.add_message("user", prompt)
-        logger.debug(
-            "Added user message to context",
-            extra={
-                "message_length": len(prompt),
-                "context_messages_after": len(self.context.messages),
-                "context_tokens_est_after": self.context.estimated_tokens,
-            },
-        )
 
         try:
             response_text = self._generate_response(model_name, options=options)
@@ -241,23 +224,11 @@ class LLMClient:
                 extra={
                     "model": model_name,
                     "response_length": len(response_text),
-                    "response_tokens_est": len(response_text) // 4,
                     "generation_time_seconds": generation_time,
-                    "response_preview": (
-                        response_text[:150] + "..." if len(response_text) > 150 else response_text
-                    ),
                 },
             )
 
             self.context.add_message("assistant", response_text)
-            logger.debug(
-                "Added assistant message to context",
-                extra={
-                    "message_length": len(response_text),
-                    "context_messages_after": len(self.context.messages),
-                    "context_tokens_est_after": self.context.estimated_tokens,
-                },
-            )
 
             return response_text
 
@@ -288,6 +259,10 @@ class LLMClient:
                     self.context.add_message("assistant", response_text)
                     return response_text
                 except LLMConnectionError:
+                    logger.debug(
+                        "Fallback model failed, trying next",
+                        extra={"fallback_model": fallback},
+                    )
                     continue
             raise
 
@@ -314,8 +289,6 @@ class LLMClient:
         Example:
             >>> response = client.query_raw("Complete: The quick brown fox")
         """
-        import time as time_module
-
         start_time = time_module.time()
         model_name = model or self.config.default_model
         prompt_preview = prompt[:100] + "..." if len(prompt) > 100 else prompt
@@ -394,12 +367,10 @@ class LLMClient:
         Returns:
             Brief response text
         """
-        import time as time_module
-
         start_time = time_module.time()
         model_name = model or self.config.default_model
 
-        logger.info(
+        logger.debug(
             "Starting short query",
             extra={
                 "model": model_name,
@@ -424,7 +395,7 @@ class LLMClient:
         response = self.query(instruction + prompt, model=model_name, options=short_options)
 
         generation_time = time_module.time() - start_time
-        logger.info(
+        logger.debug(
             "Short query completed",
             extra={
                 "model": model_name,
@@ -453,12 +424,10 @@ class LLMClient:
         Returns:
             Detailed response text
         """
-        import time as time_module
-
         start_time = time_module.time()
         model_name = model or self.config.default_model
 
-        logger.info(
+        logger.debug(
             "Starting long query",
             extra={
                 "model": model_name,
@@ -483,7 +452,7 @@ class LLMClient:
         response = self.query(instruction + prompt, model=model_name, options=long_options)
 
         generation_time = time_module.time() - start_time
-        logger.info(
+        logger.debug(
             "Long query completed",
             extra={
                 "model": model_name,
@@ -529,8 +498,6 @@ class LLMClient:
             ... }
             >>> result = client.query_structured("Analyze...", schema=schema)
         """
-        import time as time_module
-
         start_time = time_module.time()
         model_name = model or self.config.default_model
 
@@ -704,7 +671,7 @@ class LLMClient:
                     logger.debug(
                         f"Retrying request (attempt {attempt + 1}/{retries + 1}) after {wait_time}s..."  # noqa: E501
                     )
-                    time.sleep(wait_time)
+                    time_module.sleep(wait_time)
 
                 response = requests.post(url, json=payload, timeout=self.config.timeout)
                 response.raise_for_status()
@@ -813,8 +780,6 @@ class LLMClient:
             >>> for chunk in client.stream_query("Explain AI", log_progress=True):
             ...     print(chunk, end="")
         """
-        import time as time_module
-
         from infrastructure.llm.core.response_saver import ResponseMetadata, save_streaming_response
 
         start_time = time_module.time()
@@ -866,7 +831,7 @@ class LLMClient:
                     logger.debug(
                         f"Retrying streaming request (attempt {attempt + 1}/{retries + 1}) after {wait_time}s..."  # noqa: E501
                     )
-                    time.sleep(wait_time)
+                    time_module.sleep(wait_time)
 
                 with requests.post(
                     url, json=payload, stream=True, timeout=self.config.timeout

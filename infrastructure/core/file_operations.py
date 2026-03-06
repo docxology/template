@@ -12,6 +12,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+from infrastructure.core.exceptions import FileOperationError
 from infrastructure.core.logging_utils import get_logger, log_success
 
 logger = get_logger(__name__)
@@ -34,14 +35,8 @@ def clean_output_directory(output_dir: Path) -> bool:
             output_dir.mkdir(parents=True, exist_ok=True)
             log_success("Created output directory", logger)
             return True
-        except PermissionError as e:
-            logger.error(f"Permission denied creating output directory {output_dir}: {e}")
-            return False
         except OSError as e:
-            logger.error(f"OS error creating output directory {output_dir}: {e}")
-            return False
-        except Exception as e:
-            logger.error(f"Unexpected error creating output directory {output_dir}: {e}")
+            logger.error(f"Failed to create output directory {output_dir}: {e}")
             return False
 
     # Remove existing contents
@@ -56,14 +51,8 @@ def clean_output_directory(output_dir: Path) -> bool:
 
         log_success("Output directory cleaned", logger)
         return True
-    except PermissionError as e:
-        logger.error(f"Permission denied cleaning output directory {output_dir}: {e}")
-        return False
     except OSError as e:
-        logger.error(f"OS error cleaning output directory {output_dir}: {e}")
-        return False
-    except Exception as e:
-        logger.error(f"Unexpected error cleaning output directory {output_dir}: {e}")
+        logger.error(f"Failed to clean output directory {output_dir}: {e}")
         return False
 
 
@@ -121,12 +110,15 @@ def clean_output_directories(
         project_name: Name of project in projects/ directory (default: "project")
         subdirs: List of subdirectories to recreate. If None, uses default list.
     """
-    # Import project discovery to get list of valid project names
-    from infrastructure.project.discovery import discover_projects
-
-    # Discover all projects to know which folders to keep in output/
-    projects = discover_projects(repo_root)
-    project_names = [p.name for p in projects]
+    # Discover valid project names by scanning the projects/ directory directly.
+    # Using Path scan instead of infrastructure.project.discovery avoids a
+    # circular import: file_operations → project.discovery → core.logging_utils.
+    projects_dir = repo_root / "projects"
+    project_names: list[str] = (
+        [d.name for d in projects_dir.iterdir() if d.is_dir() and not d.name.startswith(".")]
+        if projects_dir.exists()
+        else []
+    )
 
     # Clean root-level directories from output/ before cleaning project-specific directories
     clean_root_output_directory(repo_root, project_names)
@@ -580,9 +572,16 @@ def calculate_file_hash(file_path: Path, algorithm: str = "sha256") -> Optional[
 
     try:
         hash_func = hashlib.new(algorithm)
+    except ValueError as e:
+        raise FileOperationError(f"Unsupported hash algorithm '{algorithm}': {e}") from e
+
+    try:
         with open(file_path, "rb") as f:
             while chunk := f.read(8192):
                 hash_func.update(chunk)
         return hash_func.hexdigest()
-    except Exception:
+    except PermissionError as e:
+        raise FileOperationError(f"Permission denied reading {file_path}: {e}") from e
+    except OSError as e:
+        logger.debug("Could not hash %s: %s", file_path, e)
         return None

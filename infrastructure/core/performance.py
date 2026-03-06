@@ -62,7 +62,11 @@ class PerformanceMetrics:
 
 
 class PerformanceMonitor:
-    """Monitor performance metrics for operations."""
+    """Resource-usage monitor tracking timing, memory, and operation counts.
+
+    Named ResourceTracker when disambiguation from performance_monitor.CodeProfiler
+    is needed (both modules expose a class called PerformanceMonitor).
+    """
 
     def __init__(self):
         """Initialize performance monitor."""
@@ -187,7 +191,7 @@ class PerformanceMonitor:
 
 
 @contextmanager
-def monitor_performance(operation_name: str = "Operation"):
+def performance_context(operation_name: str = "Operation"):
     """Context manager for monitoring operation performance.
 
     Args:
@@ -197,7 +201,7 @@ def monitor_performance(operation_name: str = "Operation"):
         PerformanceMonitor instance
 
     Example:
-        >>> with monitor_performance("Data processing") as monitor:
+        >>> with performance_context("Data processing") as monitor:
         ...     process_data()
         ...     monitor.record_operation()
         ... metrics = monitor.stop()
@@ -320,8 +324,10 @@ class StagePerformanceTracker:
                 metrics["io_write_mb"] = (
                     (current_io.write_bytes - self.start_io.write_bytes) / 1024 / 1024
                 )
-        except (ImportError, AttributeError):
-            pass
+        except ImportError:
+            logger.debug("psutil not available — performance metrics will use defaults")
+        except AttributeError as e:
+            logger.debug(f"psutil attribute not available on this platform: {e}")
 
         self.stages.append(metrics)
         self.start_time = None
@@ -411,3 +417,6 @@ class StagePerformanceTracker:
             "peak_memory_mb": max((s.get("peak_memory_mb", 0) for s in self.stages), default=0),
             "warnings": self.get_performance_warnings(),
         }
+
+# Alias with a distinct name to disambiguate from performance_monitor.CodeProfiler
+ResourceTracker = PerformanceMonitor

@@ -11,12 +11,14 @@ from __future__ import annotations
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List
+from typing import TYPE_CHECKING, Callable, Dict, List, Optional
 
 from infrastructure.core.logging_utils import get_logger, log_operation
 from infrastructure.core.errors import PROJECT_EXCEPTION, PROJECT_FAILED
 from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor, PipelineStageResult
-from infrastructure.project.discovery import ProjectInfo
+
+if TYPE_CHECKING:
+    from infrastructure.project.discovery import ProjectInfo
 
 logger = get_logger(__name__)
 
@@ -46,13 +48,21 @@ class MultiProjectResult:
 class MultiProjectOrchestrator:
     """Orchestrate pipeline execution across multiple projects."""
 
-    def __init__(self, config: MultiProjectConfig):
+    def __init__(
+        self,
+        config: MultiProjectConfig,
+        on_project_complete: Optional[Callable[[str, List[PipelineStageResult], Path], None]] = None,
+    ):
         """Initialize multi-project orchestrator.
 
         Args:
             config: Multi-project configuration
+            on_project_complete: Optional callback invoked after each project finishes.
+                Receives (project_name, stage_results, output_dir). Use this at the
+                call-site to generate reports without importing reporting modules here.
         """
         self.config = config
+        self.on_project_complete = on_project_complete
 
     def execute_all_projects_full(self) -> MultiProjectResult:
         """Execute full pipeline for all projects (with infrastructure tests, with LLM).
@@ -165,59 +175,19 @@ class MultiProjectOrchestrator:
 
                     project_results[project_name] = results
 
-                    # Generate pipeline report for this project
-                    try:
-                        from infrastructure.reporting import (
-                            collect_output_statistics,
-                            generate_pipeline_report,
-                            save_pipeline_report,
+                    # Notify call-site that this project finished (e.g. for report generation).
+                    # Reporting logic lives at the call-site to avoid a downward dependency
+                    # from core/ into the higher-level reporting/ layer.
+                    if self.on_project_complete is not None:
+                        output_dir = (
+                            self.config.repo_root / "projects" / project_name / "output"
                         )
-
-                        output_dir = self.config.repo_root / "projects" / project_name / "output"
-                        reports_dir = output_dir / "reports"
-                        reports_dir.mkdir(parents=True, exist_ok=True)
-
-                        total_duration = sum(r.duration for r in results)
-                        output_stats = collect_output_statistics(
-                            self.config.repo_root, project_name
-                        )
-
-                        # Generate comprehensive pipeline report
-                        pipeline_report = generate_pipeline_report(
-                            stage_results=[
-                                {
-                                    "name": r.stage_name,
-                                    "exit_code": (
-                                        r.exit_code
-                                        if hasattr(r, "exit_code")
-                                        else (0 if r.success else 1)
-                                    ),
-                                    "duration": r.duration,
-                                    "error_message": (
-                                        r.error_message if hasattr(r, "error_message") else ""
-                                    ),
-                                }
-                                for r in results
-                            ],
-                            total_duration=total_duration,
-                            repo_root=self.config.repo_root,
-                            output_statistics=output_stats,
-                        )
-
-                        # Save report in multiple formats
-                        saved_files = save_pipeline_report(
-                            pipeline_report,
-                            reports_dir,
-                            formats=["json", "html", "markdown"],
-                        )
-                        logger.info(f"Pipeline reports saved to {reports_dir}")
-                        for fmt, path in saved_files.items():
-                            logger.info(f"  • {fmt.upper()}: {path.name}")
-
-                    except Exception as e:
-                        logger.warning(
-                            f"Failed to generate pipeline report for {project_name}: {e}"
-                        )
+                        try:
+                            self.on_project_complete(project_name, results, output_dir)
+                        except Exception as e:
+                            logger.warning(
+                                f"Project completion callback failed for {project_name}: {e}"
+                            )
 
                     # Check if all stages succeeded
                     all_success = all(r.success for r in results)

@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import io
 from datetime import datetime, timezone
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
 from infrastructure.core.logging_utils import get_logger
 
@@ -78,7 +78,7 @@ def generate_qr_code(
 
     qr = qrcode.QRCode(
         version=None,  # Auto-size
-        error_correction=qrcode.constants.ERROR_CORRECT_H,
+        error_correction=qrcode.constants.ERROR_CORRECT_M,  # M = good scan + less dense
         box_size=box_size,
         border=border,
     )
@@ -172,6 +172,83 @@ def build_barcode_payload(
     return payload
 
 
+# ── QR code content builders (COMPACT — ≤100 chars for phone scanning) ──
+#
+# Phone cameras need low-density QR codes to scan reliably at small sizes.
+# Each builder targets ≤100 characters to stay at QR version 5 or below,
+# which produces a ~37×37 module grid — easily scannable at 40–50pt.
+
+
+def build_metadata_qr_text(
+    title: str = "",
+    authors: Optional[List[str]] = None,
+    document_id: str = "",
+    **_kwargs,
+) -> str:
+    """Build compact metadata for the metadata QR code (≤100 chars)."""
+    parts = []
+    if title:
+        parts.append(title[:40])
+    if document_id:
+        # Use hyphen instead of colon to avoid URI scheme triggering in camera apps
+        parts.append(f"Doc-ID {document_id[:16]}")
+    ts = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    parts.append(ts)
+    return " | ".join(parts)
+
+
+def build_citation_qr_text(
+    title: str = "",
+    authors: Optional[List[str]] = None,
+    **_kwargs,
+) -> str:
+    """Build a compact citation string (≤100 chars)."""
+    author = authors[0] if authors else "Unknown"
+    year = datetime.now(timezone.utc).strftime("%Y")
+    cite = f"{author} ({year}). {title[:50]}."
+    return cite[:100]
+
+
+def build_mailto_qr_text(
+    title: str = "",
+    authors: Optional[List[str]] = None,
+    author_emails: Optional[List[str]] = None,
+    **_kwargs,
+) -> str:
+    """Build a proper mailto: URI that opens an email draft.
+
+    Keeps the URI short and simple to avoid freezing phone apps.
+    Uses urllib to correctly URL-encode parameters.
+    """
+    if author_emails:
+        import urllib.parse
+        email = author_emails[0]
+        subject_raw = title[:40] if title else "Inquiry"
+        subject = urllib.parse.quote(subject_raw)
+        body = urllib.parse.quote("Please find my inquiry attached.")
+        return f"mailto:{email}?subject={subject}&body={body}"
+    # Fallback: just show name
+    name = authors[0] if authors else "Author"
+    return f"Contact {name}"
+
+
+def build_integrity_qr_text(
+    document_id: str = "",
+    hashes: Optional[Dict[str, str]] = None,
+    **_kwargs,
+) -> str:
+    """Build a compact integrity hash for the integrity QR (≤100 chars).
+
+    Shows the SHA256 of the compiled PDF binary file, avoiding colon prefixes.
+    """
+    parts = []
+    if hashes and "sha256" in hashes:
+        parts.append(f"SHA-256 {hashes['sha256'][:24]}...")
+    if document_id:
+        parts.append(f"ID {document_id[:12]}")
+    return " | ".join(parts)
+
+
 # ── Full barcode strip overlay ───────────────────────────────────────────
 
 
@@ -180,21 +257,43 @@ def create_barcode_strip_overlay(
     page_height: float,
     qr_data: str,
     code128_data: str,
-    strip_height: float = 36.0,
+    strip_height: float = 68.0,
+    title: str = "",
+    authors: Optional[List[str]] = None,
+    keywords: Optional[List[str]] = None,
+    author_emails: Optional[List[str]] = None,
+    document_id: str = "",
+    hashes: Optional[Dict[str, str]] = None,
+    source_filename: str = "",
+    total_pages: int = 0,
+    source_file_size: int = 0,
 ) -> bytes:
-    """Create a PDF overlay page with a barcode strip at the bottom.
+    """Create a PDF overlay page with labeled QR codes and a barcode strip.
 
-    The strip contains a QR code on the left and a Code128 barcode in
-    the centre, rendered within the bottom margin area.
+    Layout (bottom of page, 0–68pt):
+        ┌──────────────┬──────────────┬──────────────┬──────────────┬────────┐
+        │   Metadata   │   Citation   │   Contact    │  Integrity   │ Code128│
+        │     QR       │     QR       │     QR       │     QR       │  bars  │
+        │   (label)    │   (label)    │   (label)    │   (label)    │        │
+        └──────────────┴──────────────┴──────────────┴──────────────┴────────┘
+
+    Each QR encodes ≤100 chars so phone cameras can scan at this size.
 
     Args:
         page_width: Target page width in points.
         page_height: Target page height in points.
-        qr_data: Data to encode in the QR code.
-        code128_data: Data to encode in the Code128 barcode.
-                      Code128 supports ASCII printable chars only so
-                      the string is sanitised.
+        qr_data: Fallback data for backward compatibility.
+        code128_data: Data for Code128 barcode.
         strip_height: Height of the barcode strip area in points.
+        title: Document title for QR content.
+        authors: Author names for QR content.
+        keywords: Keywords for QR content.
+        author_emails: Author emails for mailto QR.
+        document_id: Document ID for integrity QR.
+        hashes: Hash digests for integrity QR.
+        source_filename: Original PDF filename.
+        total_pages: Total page count.
+        source_file_size: Original PDF file size in bytes.
 
     Returns:
         PDF bytes of the one-page overlay.
@@ -204,56 +303,104 @@ def create_barcode_strip_overlay(
     buf = io.BytesIO()
     c = rl_canvas_mod.Canvas(buf, pagesize=(page_width, page_height))
 
-    y_base = 2  # points from page bottom
+    # ── Layout constants ─────────────────────────────────────────────
+    label_font_size = 5
+    label_y = 6  # label text baseline (near page bottom, moved up from 4)
+    qr_y = label_y + label_font_size + 5  # QR starts confidently above label (approx 16pt)
+    qr_size = strip_height - qr_y - 2  # fill remaining strip height (approx 50pt)
 
-    # ── QR code (left side) ──────────────────────────────────────────
-    try:
-        qr_png = generate_qr_code(qr_data, box_size=2, border=1)
-        qr_reader = ImageReader(io.BytesIO(qr_png))
-        qr_size = strip_height - 4
-        c.drawImage(
-            qr_reader,
-            x=6,
-            y=y_base,
-            width=qr_size,
-            height=qr_size,
-            preserveAspectRatio=True,
-            mask="auto",
-        )
-    except Exception as exc:
-        logger.warning("QR code rendering failed: %s", exc)
+    # Distribute QR codes evenly across available width
+    n_qr = 4
+    code128_width = 100  # reserve space for Code128 on the right
+    margin = 14
+    available_width = page_width - code128_width - margin * 2
+    qr_spacing = (available_width - n_qr * qr_size) / (n_qr - 1) if n_qr > 1 else 0
+    if qr_spacing < 8:
+        qr_spacing = 8
 
-    # ── Code128 (centre) — render as text fallback ───────────────────
-    # SVG-to-PDF embedding is complex; instead we draw the code128 data
-    # as monospaced text with a simple barcode-style visual
+    # ── Build QR contents (compact — ≤100 chars each) ────────────────
+    qr_items = []
+
+    # 1. Metadata QR
+    meta_text = build_metadata_qr_text(
+        title=title, authors=authors, document_id=document_id,
+    )
+    qr_items.append(("Metadata", meta_text))
+
+    # 2. Citation QR
+    cite_text = build_citation_qr_text(title=title, authors=authors)
+    qr_items.append(("Citation", cite_text))
+
+    # 3. Contact QR (mailto: link)
+    contact_text = build_mailto_qr_text(
+        title=title, authors=authors, author_emails=author_emails,
+    )
+    qr_items.append(("Contact", contact_text))
+
+    # 4. Integrity QR (compact hash)
+    integrity_text = build_integrity_qr_text(
+        document_id=document_id, hashes=hashes,
+    )
+    qr_items.append(("Integrity", integrity_text))
+
+    # ── Draw QR codes with labels ────────────────────────────────────
+    x_cursor = margin
+
+    for label, data in qr_items:
+        try:
+            qr_png = generate_qr_code(data, box_size=3, border=1)
+            qr_reader = ImageReader(io.BytesIO(qr_png))
+            c.drawImage(
+                qr_reader,
+                x=x_cursor,
+                y=qr_y,
+                width=qr_size,
+                height=qr_size,
+                preserveAspectRatio=True,
+                mask="auto",
+            )
+        except Exception as exc:
+            logger.warning("QR code rendering failed for %s: %s", label, exc)
+
+        # Label centred below QR
+        c.saveState()
+        c.setFont("Helvetica", label_font_size)
+        c.setFillColorRGB(0.3, 0.3, 0.3)
+        c.drawCentredString(x_cursor + qr_size / 2, label_y, label)
+        c.restoreState()
+
+        x_cursor += qr_size + qr_spacing
+
+    # ── Code128 barcode bars (right side) ────────────────────────────
+    barcode_x_start = page_width - code128_width - margin + 10
     try:
         c.saveState()
-        c.setFont("Courier", 5)
-        c.setFillColorRGB(0.2, 0.2, 0.2)
-        # Sanitise to ASCII printable for Code128
-        safe_data = "".join(ch for ch in code128_data if 32 <= ord(ch) <= 126)[:80]
-        x_start = strip_height + 10
-        c.drawString(x_start, y_base + strip_height - 10, f"[CODE128] {safe_data}")
-
-        # Draw thin barcode placeholder lines
         c.setStrokeColorRGB(0, 0, 0)
         c.setLineWidth(0.3)
-        bar_x = x_start
-        for i, ch in enumerate(safe_data[:60]):
+
+        safe_data = "".join(ch for ch in code128_data if 32 <= ord(ch) <= 126)[:40]
+        bar_x = barcode_x_start
+        bar_bottom = qr_y + 4
+        bar_top = qr_y + qr_size - 4
+        for ch in safe_data:
             bar_width = (ord(ch) % 3 + 1) * 0.5
-            c.line(bar_x, y_base + 2, bar_x, y_base + strip_height - 14)
+            c.line(bar_x, bar_bottom, bar_x, bar_top)
             bar_x += bar_width + 0.5
 
+        # Label below bars
+        c.setFont("Courier", 3)
+        c.setFillColorRGB(0.4, 0.4, 0.4)
+        c.drawString(barcode_x_start, label_y, safe_data[:40])
         c.restoreState()
     except Exception as exc:
         logger.warning("Code128 rendering failed: %s", exc)
 
-    # ── Timestamp (right side) ───────────────────────────────────────
+    # ── Timestamp (far right, vertically centred) ────────────────────
     c.saveState()
-    c.setFont("Courier", 4)
+    c.setFont("Courier", 3.5)
     c.setFillColorRGB(0.5, 0.5, 0.5)
     ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
-    c.drawRightString(page_width - 6, y_base + 2, ts)
+    c.drawRightString(page_width - 6, qr_y + qr_size + 2, ts)
     c.restoreState()
 
     c.save()

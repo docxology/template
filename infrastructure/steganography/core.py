@@ -12,7 +12,7 @@ import io
 import shutil
 import tempfile
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Dict, List, Optional
 
 from infrastructure.core.logging_utils import get_logger, log_operation
 from infrastructure.steganography.config import SteganographyConfig
@@ -47,6 +47,7 @@ class SteganographyProcessor:
         title: str = "",
         authors: Optional[List[str]] = None,
         keywords: Optional[List[str]] = None,
+        author_emails: Optional[List[str]] = None,
     ) -> Path:
         """Run all enabled steganographic techniques on *input_pdf*.
 
@@ -95,7 +96,9 @@ class SteganographyProcessor:
             # 3. Apply overlays and barcodes (merged onto each page)
             if self.config.overlays_enabled or self.config.barcodes_enabled:
                 working_pdf = self._step_overlays_and_barcodes(
-                    working_pdf, title=title
+                    working_pdf, input_pdf=input_pdf,
+                    title=title, authors=authors, keywords=keywords,
+                    author_emails=author_emails,
                 )
 
             # 4. Inject metadata
@@ -150,7 +153,13 @@ class SteganographyProcessor:
             logger.info("║  %s: %s", algo.upper(), digest[:32] + "…")
 
     def _step_overlays_and_barcodes(
-        self, working_pdf: Path, title: str = ""
+        self,
+        working_pdf: Path,
+        input_pdf: Optional[Path] = None,
+        title: str = "",
+        authors: Optional[List[str]] = None,
+        keywords: Optional[List[str]] = None,
+        author_emails: Optional[List[str]] = None,
     ) -> Path:
         """Merge overlay and barcode pages onto every page of the PDF."""
         try:
@@ -164,34 +173,60 @@ class SteganographyProcessor:
         writer = PdfWriter()
         total_pages = len(reader.pages)
 
+        # Source file info for metrics
+        source_filename = input_pdf.name if input_pdf else ""
+        source_file_size = input_pdf.stat().st_size if input_pdf and input_pdf.exists() else 0
+
         hash_short = ""
         if self._hashes:
             first_algo = next(iter(self._hashes))
             hash_short = self._hashes[first_algo][:16]
 
+        # Build QR overlay data once if in QR mode
+        qr_overlay_data = ""
+        if self.config.overlays_enabled and self.config.overlay_mode == "qr":
+            from infrastructure.steganography.barcodes import build_barcode_payload
+            qr_overlay_data = self.config.overlay_qr_data or build_barcode_payload(
+                title=title,
+                hashes=self._hashes,
+                document_id=self._document_id,
+            )
+
         for page_idx, page in enumerate(reader.pages):
             page_width = float(page.mediabox.width)
             page_height = float(page.mediabox.height)
 
-            # ── Watermark overlay ────────────────────────────────
+            # ── Full-page overlay (text, QR, or none) ────────────
+            if self.config.overlays_enabled and self.config.overlay_mode != "none":
+                if self.config.overlay_mode == "qr":
+                    from infrastructure.steganography.overlays import create_qr_overlay
+                    wm_bytes = create_qr_overlay(
+                        page_width,
+                        page_height,
+                        qr_data=qr_overlay_data,
+                        opacity=self.config.overlay_opacity,
+                    )
+                else:  # 'text' (default)
+                    from infrastructure.steganography.overlays import create_watermark_overlay
+                    wm_bytes = create_watermark_overlay(
+                        page_width,
+                        page_height,
+                        text=self.config.overlay_text,
+                        opacity=self.config.overlay_opacity,
+                        color_rgb=self.config.overlay_color_rgb,
+                        font_size=self.config.overlay_font_size,
+                        repeat_count=self.config.overlay_repeat_count,
+                    )
+                wm_page = PdfReader(io.BytesIO(wm_bytes)).pages[0]
+                page.merge_page(wm_page)
+
+            # ── Footer overlay (always if overlays enabled) ──────
             if self.config.overlays_enabled:
                 from infrastructure.steganography.overlays import (
                     create_footer_overlay,
                     create_invisible_text_overlay,
-                    create_watermark_overlay,
                 )
 
-                wm_bytes = create_watermark_overlay(
-                    page_width,
-                    page_height,
-                    text=self.config.overlay_text,
-                    opacity=self.config.overlay_opacity,
-                    color_rgb=self.config.overlay_color_rgb,
-                )
-                wm_page = PdfReader(io.BytesIO(wm_bytes)).pages[0]
-                page.merge_page(wm_page)
-
-                # Footer overlay
                 footer_bytes = create_footer_overlay(
                     page_width,
                     page_height,
@@ -199,6 +234,10 @@ class SteganographyProcessor:
                     page_number=page_idx + 1,
                     total_pages=total_pages,
                     hash_short=hash_short,
+                    title=title,
+                    authors=", ".join(authors) if authors else "",
+                    source_filename=source_filename,
+                    source_file_size=source_file_size,
                 )
                 footer_page = PdfReader(io.BytesIO(footer_bytes)).pages[0]
                 page.merge_page(footer_page)
@@ -228,14 +267,22 @@ class SteganographyProcessor:
                     hashes=self._hashes,
                     document_id=self._document_id,
                 )
-                # Code128 needs shorter ASCII-safe data
-                c128_payload = f"ID:{self._document_id}|P:{page_idx + 1}"
+                c128_payload = f"ID:{self._document_id[:16]}|P:{page_idx + 1}"
 
                 bc_bytes = create_barcode_strip_overlay(
                     page_width,
                     page_height,
                     qr_data=self.config.barcode_content or qr_payload,
                     code128_data=c128_payload,
+                    title=title,
+                    authors=authors,
+                    keywords=keywords,
+                    author_emails=author_emails,
+                    document_id=self._document_id,
+                    hashes=self._hashes,
+                    source_filename=source_filename,
+                    total_pages=total_pages,
+                    source_file_size=source_file_size,
                 )
                 bc_page = PdfReader(io.BytesIO(bc_bytes)).pages[0]
                 page.merge_page(bc_page)
@@ -261,8 +308,10 @@ class SteganographyProcessor:
         keywords: Optional[List[str]] = None,
     ) -> Path:
         """Inject metadata into the PDF."""
+        import json
         from infrastructure.steganography.metadata import (
             build_document_metadata,
+            build_xmp_packet,
             inject_pdf_metadata,
         )
 
@@ -273,9 +322,33 @@ class SteganographyProcessor:
             document_id=self._document_id,
             keywords=keywords,
         )
+        
+        xmp = build_xmp_packet(
+            title=title,
+            authors=authors,
+            hashes=self._hashes,
+            document_id=self._document_id,
+            keywords=keywords,
+        )
+        
+        manifest_dict = {
+            "document_id": self._document_id,
+            "hashes": self._hashes,
+            "title": title,
+            "steganography_applied": True
+        }
+        attachments = {
+            "stego_manifest.json": json.dumps(manifest_dict, indent=2).encode('utf-8')
+        }
 
-        inject_pdf_metadata(working_pdf, working_pdf, meta)
-        logger.info("║  ✓ Metadata injected (%d keys)", len(meta))
+        inject_pdf_metadata(
+            working_pdf, 
+            working_pdf, 
+            metadata=meta,
+            xmp_string=xmp,
+            attachments=attachments
+        )
+        logger.info("║  ✓ Metadata, XMP, and manifest attachment injected")
         return working_pdf
 
     def _step_encryption(self, working_pdf: Path) -> Path:
@@ -318,6 +391,7 @@ def process_pdf(
     title: str = "",
     authors: Optional[List[str]] = None,
     keywords: Optional[List[str]] = None,
+    author_emails: Optional[List[str]] = None,
 ) -> Path:
     """Convenience function — create a processor and run it.
 
@@ -342,4 +416,5 @@ def process_pdf(
         title=title,
         authors=authors,
         keywords=keywords,
+        author_emails=author_emails,
     )

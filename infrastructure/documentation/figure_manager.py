@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import shutil
+import time
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -138,8 +139,6 @@ class FigureManager:
         """Backup a corrupted registry file before resetting."""
         if self.registry_file.exists():
             # Generate unique backup filename with timestamp
-            import time
-
             timestamp = time.strftime("%Y%m%d_%H%M%S")
             backup_path = self.registry_file.with_suffix(f".json.corrupted.{timestamp}")
             try:

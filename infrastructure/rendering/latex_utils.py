@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import subprocess
+import time
 from pathlib import Path
 
 from infrastructure.core.exceptions import CompilationError
@@ -44,8 +45,6 @@ def compile_latex(
     logger.info(f"Compiling {tex_file} with {compiler}")
 
     try:
-        import time
-
         start_time = time.time()
 
         # Run twice for references (first pass generates aux, second resolves references)
