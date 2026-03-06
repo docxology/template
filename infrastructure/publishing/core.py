@@ -18,7 +18,7 @@ import re
 from dataclasses import asdict
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 # Import from split modules
 from infrastructure.publishing.citations import (  # noqa: F401
@@ -45,29 +45,7 @@ from infrastructure.publishing.platforms import (  # noqa: F401
     prepare_arxiv_submission,
     publish_to_zenodo,
 )
-
-
-def calculate_file_hash(file_path: Path, algorithm: str = "sha256") -> Optional[str]:
-    """Calculate hash of a file for integrity verification.
-
-    Args:
-        file_path: Path to file to hash
-        algorithm: Hash algorithm to use
-
-    Returns:
-        Hash string or None if calculation fails
-    """
-    if not file_path.exists():
-        return None
-
-    try:
-        hash_func = hashlib.new(algorithm)
-        with open(file_path, "rb") as f:
-            while chunk := f.read(8192):
-                hash_func.update(chunk)
-        return hash_func.hexdigest()
-    except Exception:
-        return None
+from infrastructure.core.file_operations import calculate_file_hash  # noqa: F401
 
 
 def create_publication_package(output_dir: Path, metadata: PublicationMetadata) -> Dict[str, Any]:
