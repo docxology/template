@@ -96,12 +96,7 @@ from .performance import (
     get_system_resources,
     monitor_performance,
 )
-# performance_monitor.py is a richer sibling to performance.py.
-# The canonical public names (PerformanceMetrics, PerformanceMonitor) resolve to
-# performance.py.  The Advanced* aliases expose the extended implementation for
-# callers that need context-manager monitoring or tracemalloc integration.
-from .performance_monitor import PerformanceMetrics as AdvancedPerformanceMetrics
-from .performance_monitor import PerformanceMonitor as AdvancedPerformanceMonitor
+from .performance_monitor import CodeProfiler, ProfilingMetrics
 from .performance_monitor import benchmark_function, benchmark_llm_query, get_performance_monitor
 from .performance_monitor import monitor_performance as monitor_performance_decorator
 from .performance_monitor import profile_memory_usage
@@ -184,8 +179,8 @@ __all__ = [
     "ResourceUsage",
     "monitor_performance",
     "get_system_resources",
-    "AdvancedPerformanceMonitor",
-    "AdvancedPerformanceMetrics",
+    "CodeProfiler",
+    "ProfilingMetrics",
     "monitor_performance_decorator",
     "get_performance_monitor",
     "benchmark_function",

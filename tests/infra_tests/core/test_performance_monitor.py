@@ -1,6 +1,6 @@
 """Tests for infrastructure/core/performance_monitor.py.
 
-Tests PerformanceMetrics and PerformanceMonitor with real timing calls.
+Tests ProfilingMetrics and CodeProfiler with real timing calls.
 No mocks — uses actual time measurements.
 """
 
@@ -9,16 +9,16 @@ from __future__ import annotations
 import time
 
 from infrastructure.core.performance_monitor import (
-    PerformanceMetrics,
-    PerformanceMonitor,
+    ProfilingMetrics,
+    CodeProfiler,
 )
 
 class TestPerformanceMetrics:
-    """Test PerformanceMetrics dataclass."""
+    """Test ProfilingMetrics dataclass."""
 
     def test_basic_creation(self):
-        """Create basic PerformanceMetrics with required fields."""
-        metrics = PerformanceMetrics(operation_name="test_op", execution_time=1.234)
+        """Create basic ProfilingMetrics with required fields."""
+        metrics = ProfilingMetrics(operation_name="test_op", execution_time=1.234)
         assert metrics.operation_name == "test_op"
         assert metrics.execution_time == 1.234
         assert metrics.memory_peak is None
@@ -27,7 +27,7 @@ class TestPerformanceMetrics:
 
     def test_to_dict_has_expected_keys(self):
         """to_dict() returns dict with expected keys."""
-        metrics = PerformanceMetrics(operation_name="op", execution_time=0.5)
+        metrics = ProfilingMetrics(operation_name="op", execution_time=0.5)
         d = metrics.to_dict()
         assert "operation" in d
         assert "execution_time_seconds" in d
@@ -36,14 +36,14 @@ class TestPerformanceMetrics:
 
     def test_to_dict_rounds_execution_time(self):
         """to_dict() rounds execution_time to 3 decimal places."""
-        metrics = PerformanceMetrics(operation_name="op", execution_time=1.23456789)
+        metrics = ProfilingMetrics(operation_name="op", execution_time=1.23456789)
         d = metrics.to_dict()
         assert d["execution_time_seconds"] == round(1.23456789, 3)
 
     def test_memory_converted_to_mb(self):
         """Memory values in bytes are converted to MB in __post_init__."""
         # 10 MB = 10 * 1024 * 1024 = 10485760 bytes
-        metrics = PerformanceMetrics(
+        metrics = ProfilingMetrics(
             operation_name="op",
             execution_time=1.0,
             memory_peak=10485760,  # 10 MB
@@ -54,22 +54,22 @@ class TestPerformanceMetrics:
 
     def test_none_memory_stays_none(self):
         """None memory values remain None after __post_init__."""
-        metrics = PerformanceMetrics(operation_name="op", execution_time=1.0)
+        metrics = ProfilingMetrics(operation_name="op", execution_time=1.0)
         assert metrics.memory_peak is None
         assert metrics.memory_current is None
 
     def test_timestamp_is_set_automatically(self):
         """timestamp is set to current time if not provided."""
         before = time.time()
-        metrics = PerformanceMetrics(operation_name="op", execution_time=0.0)
+        metrics = ProfilingMetrics(operation_name="op", execution_time=0.0)
         after = time.time()
         assert before <= metrics.timestamp <= after
 
 class TestPerformanceMonitor:
-    """Test PerformanceMonitor context manager and history."""
+    """Test CodeProfiler context manager and history."""
 
     def setup_method(self):
-        self.monitor = PerformanceMonitor()
+        self.monitor = CodeProfiler()
 
     def test_monitor_context_manager_basic(self):
         """Context manager completes without error."""
@@ -126,7 +126,7 @@ class TestPerformanceMonitor:
 
     def test_monitor_history_initially_empty(self):
         """Fresh monitor has empty history."""
-        fresh = PerformanceMonitor()
+        fresh = CodeProfiler()
         assert len(fresh.metrics_history) == 0
 
     def test_benchmark_function_returns_stats(self):

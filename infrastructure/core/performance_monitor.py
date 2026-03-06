@@ -21,7 +21,7 @@ logger = get_logger(__name__)
 
 
 @dataclass
-class PerformanceMetrics:
+class ProfilingMetrics:
     """Container for performance measurement results."""
 
     operation_name: str
@@ -56,11 +56,11 @@ class PerformanceMetrics:
         }
 
 
-class PerformanceMonitor:
+class CodeProfiler:
     """Comprehensive performance monitoring and profiling."""
 
     def __init__(self):
-        self.metrics_history: List[PerformanceMetrics] = []
+        self.metrics_history: List[ProfilingMetrics] = []
 
     @contextmanager
     def monitor(self, operation_name: str, track_memory: bool = True):
@@ -86,7 +86,7 @@ class PerformanceMonitor:
             execution_time = time.time() - start_time
             cpu_time = time.process_time() - cpu_start
 
-            metrics = PerformanceMetrics(
+            metrics = ProfilingMetrics(
                 operation_name=operation_name,
                 execution_time=execution_time,
                 cpu_time=cpu_time,
@@ -190,7 +190,7 @@ class PerformanceMonitor:
 
         return benchmark_results
 
-    def get_recent_metrics(self, limit: int = 10) -> List[PerformanceMetrics]:
+    def get_recent_metrics(self, limit: int = 10) -> List[ProfilingMetrics]:
         """Get the most recent performance metrics.
 
         Args:
@@ -251,14 +251,14 @@ class PerformanceMonitor:
 
 
 # Global performance monitor instance
-_global_monitor = PerformanceMonitor()
+_global_monitor = CodeProfiler()
 
 
-def get_performance_monitor() -> PerformanceMonitor:
+def get_performance_monitor() -> CodeProfiler:
     """Get the global performance monitor instance.
 
     Returns:
-        Global PerformanceMonitor instance
+        Global CodeProfiler instance
     """
     return _global_monitor
 
@@ -383,7 +383,7 @@ def benchmark_function(
     func: Callable, *args, iterations: int = 5, **kwargs
 ) -> Dict[str, Union[float, List[float]]]:
     """
-    Convenience function to benchmark a function using PerformanceMonitor.
+    Convenience function to benchmark a function using CodeProfiler.
 
     Args:
         func: The function to benchmark.
@@ -394,7 +394,7 @@ def benchmark_function(
     Returns:
         Dictionary containing benchmark results.
     """
-    monitor = PerformanceMonitor()
+    monitor = CodeProfiler()
     return monitor.benchmark_function(func, *args, iterations=iterations, **kwargs)
 
 
