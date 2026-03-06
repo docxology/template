@@ -13,7 +13,6 @@ All functions follow the thin orchestrator pattern and maintain
 
 from __future__ import annotations
 
-import hashlib
 import json
 import os
 import pickle  # noqa: S403 — used for pickle file validation
@@ -21,6 +20,7 @@ import re
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+from infrastructure.core.file_operations import calculate_file_hash  # noqa: F401
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
@@ -81,29 +81,6 @@ def verify_file_integrity(
     passed = sum(1 for v in integrity.values() if v)
     logger.info(f"Integrity check complete: {passed}/{len(integrity)} files passed")
     return integrity
-
-
-def calculate_file_hash(file_path: Path, algorithm: str = "sha256") -> Optional[str]:
-    """Calculate hash of a file for integrity verification.
-
-    Args:
-        file_path: Path to file to hash
-        algorithm: Hash algorithm to use
-
-    Returns:
-        Hash string or None if calculation fails
-    """
-    if not file_path.exists():
-        return None
-
-    try:
-        hash_func = hashlib.new(algorithm)
-        with open(file_path, "rb") as f:
-            while chunk := f.read(8192):
-                hash_func.update(chunk)
-        return hash_func.hexdigest()
-    except Exception:
-        return None
 
 
 def verify_cross_references(markdown_files: List[Path]) -> Dict[str, bool]:

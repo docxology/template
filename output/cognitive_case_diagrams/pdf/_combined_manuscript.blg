@@ -1,0 +1,61 @@
+This is BibTeX, Version 0.99d (TeX Live 2025)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: _combined_manuscript.aux
+The style file: plainnat.bst
+Illegal, another \bibdata command---line 607 of file _combined_manuscript.aux
+ : \bibdata
+ :         {references}
+I'm skipping whatever remains of this command
+Database file #1: references.bib
+Warning--I didn't find a database entry for "jha2021sanskrit"
+Warning--I didn't find a database entry for "kak1987paninian"
+Warning--I didn't find a database entry for "jakobson1958morphologic"
+Warning--I didn't find a database entry for "hjelmslev1935categorie"
+Warning--I didn't find a database entry for "duneau2021parsing"
+Warning--I didn't find a database entry for "friston2010free"
+Warning--I didn't find a database entry for "donnarumma2023integrating"
+Warning--I didn't find a database entry for "friston2021understanding"
+Warning--I didn't find a database entry for "friston2020generative"
+Warning--empty publisher in lambek2004fine
+You've used 54 entries,
+            2773 wiz_defined-function locations,
+            921 strings with 15826 characters,
+and the built_in function-call counts, 22784 in all, are:
+= -- 2073
+> -- 1257
+< -- 45
++ -- 437
+- -- 382
+* -- 1661
+:= -- 3625
+add.period$ -- 220
+call.type$ -- 54
+change.case$ -- 279
+chr.to.int$ -- 53
+cite$ -- 109
+duplicate$ -- 1058
+empty$ -- 1883
+format.name$ -- 461
+if$ -- 4772
+int.to.chr$ -- 2
+int.to.str$ -- 1
+missing$ -- 38
+newline$ -- 331
+num.names$ -- 222
+pop$ -- 584
+preamble$ -- 1
+purify$ -- 232
+quote$ -- 0
+skip$ -- 818
+stack$ -- 0
+substring$ -- 516
+swap$ -- 89
+text.length$ -- 4
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 584
+warning$ -- 1
+while$ -- 202
+width$ -- 0
+write$ -- 790
+(There was 1 error message)

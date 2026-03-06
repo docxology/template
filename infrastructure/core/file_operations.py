@@ -6,10 +6,11 @@ output directories and files.
 
 from __future__ import annotations
 
+import hashlib
 import shutil
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from infrastructure.core.logging_utils import get_logger, log_success
 
@@ -562,3 +563,26 @@ def copy_final_deliverables(
         logger.debug(f"Combined PDF not found at: {combined_pdf_src}")
 
     return stats
+
+
+def calculate_file_hash(file_path: Path, algorithm: str = "sha256") -> Optional[str]:
+    """Calculate hash of a file for integrity verification.
+
+    Args:
+        file_path: Path to file to hash
+        algorithm: Hash algorithm to use
+
+    Returns:
+        Hash string or None if calculation fails
+    """
+    if not file_path.exists():
+        return None
+
+    try:
+        hash_func = hashlib.new(algorithm)
+        with open(file_path, "rb") as f:
+            while chunk := f.read(8192):
+                hash_func.update(chunk)
+        return hash_func.hexdigest()
+    except Exception:
+        return None

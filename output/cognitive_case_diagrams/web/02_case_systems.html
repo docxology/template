@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Case Systems and Grammatical Relations</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Case Systems and Grammatical Relations</h1>
+</header>
+<h1 id="sec:case-systems">Case Systems, Grammatical Relations, and
+Alignment Typology</h1>
+<h2
+id="historical-foundations-from-pāṇini-to-jakobson-fillmore-and-melčuk">Historical
+Foundations: From Pāṇini to Jakobson, Fillmore, and Mel’čuk</h2>
+<p>The formal study of grammatical case begins with the Sanskrit
+grammarian Pāṇini (c. 4th-5th century BCE), whose <em>Aṣṭādhyāyī</em>
+formalized the <em>Kāraka</em> theory — a semantic system of deep roles
+(e.g., agent, patient) linking nouns to verbs in Sanskrit grammar.
+Etymologically meaning “that which brings about” an action, the Kāraka
+system expresses world knowledge through rigorous mappings from deep
+semantic relations to phonological representations via case endings. As
+later structuralists noted, “Semantics and phonetics have been the basis
+of all linguistic analysis in the Sanskritic tradition… providing steps
+for semantic interpretation through carefully crafted morpho-syntactic
+procedures” <span class="citation"
+data-cites="jha2021sanskrit kak1987paninian">[-@jha2021sanskrit;
+-@kak1987paninian]</span>.</p>
+<p>This profound insight—that a finite set of relational roles underlies
+the infinite variety of sentences—was resurrected in modern linguistics
+by Charles Fillmore’s seminal “The Case for Case” (1968), which
+explicitly acknowledged its Pāṇinian inheritance while proposing
+<em>deep cases</em> (Agentive, Objective, Dative) as universal semantic
+primitives <span class="citation"
+data-cites="fillmore1968case">[-@fillmore1968case]</span>. In parallel,
+structuralist formalisms pioneered by Roman Jakobson in <em>Morphologic
+Inquiry into Slavic Declension</em> (1958) and Louis Hjelmslev in <em>La
+catégorie des cas</em> (1935) treated case not merely as semantic
+markers, but as formal systems of paradigmatic and syntagmatic
+oppositions — treating cases as bundles of structural features rather
+than isolated labels <span class="citation"
+data-cites="jakobson1958morphologic hjelmslev1935categorie">[-@jakobson1958morphologic;
+-@hjelmslev1935categorie]</span>.</p>
+<p>Fillmore’s deep cases were precursors to modern <em>thematic
+role</em> theory. Dowty <span class="citation"
+data-cites="dowty1991thematic">[-@dowty1991thematic]</span> refined the
+approach by decomposing thematic roles into clusters of sentential
+entailments, yielding two <em>proto-roles</em>: the Proto-Agent
+(characterized by volitional involvement, sentience, causation,
+movement) and the Proto-Patient (characterized by undergoing change of
+state, incremental theme, causal affectedness, stationary relative to
+another participant). This decomposition is significant for our
+categorical formalization because it replaces a discrete role inventory
+with a <em>graded</em> structure—morphisms in our case category can
+carry weights reflecting the degree to which a noun phrase satisfies
+proto-role entailments.</p>
+<p>Between Pāṇini and Fillmore, the structuralist and functionalist
+traditions of the early 20th century—particularly those rooted in
+Russian and Slavic linguistics—laid essential groundwork. Roman
+Jakobson’s 1936 formalization of the Russian six-case system
+(nominative, genitive, dative, accusative, instrumental, prepositional)
+employed binary distinctive features (e.g., [±directional],
+[±peripheral]), treating case oppositions analogously to phonological
+oppositions and revealing that morphological paradigms possess an
+internal algebraic structure. The Prague Linguistic Circle, led by
+Nikolai Trubetzkoy and Sergej Karcevskij alongside Jakobson, extended
+this functionalist analysis to Czech and other Slavic languages,
+emphasizing <em>markedness</em> hierarchies and the communicative load
+of case distinctions—insights that anticipate the weighted morphisms of
+our categorical framework. Louis Hjelmslev’s glossematics (1930s–1940s),
+though Danish in origin, resonated deeply within Slavic formalism by
+positing case as a purely relational category within a sign/content
+dichotomy, prefiguring Fillmore’s abstractions from surface morphology.
+Igor Mel’čuk’s Meaning-Text Theory (1970s–present) models Russian case
+assignment through deep syntactic actants mapped to surface cases via
+dependency trees, providing a computationally explicit formalization
+that bridges the gap between Fillmore’s semantic roles and contemporary
+distributional semantics.</p>
+<h2 id="the-cross-linguistic-typological-landscape">The Cross-Linguistic
+Typological Landscape</h2>
+<p>Contemporary typological work reveals that the world’s languages
+realize case systems according to a small number of <em>alignment
+types</em>—systematic patterns governing how the core arguments of
+transitive and intransitive clauses are grouped <span class="citation"
+data-cites="polinsky2015case blake2001grammatical haspelmath2009universality">[@polinsky2015case;
+@blake2001grammatical; @haspelmath2009universality]</span>.</p>
+<h3 id="core-argument-roles">Core Argument Roles</h3>
+<p>The cross-linguistic comparison rests on three primitives:</p>
+<table>
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 35%" />
+<col style="width: 28%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: center;">Symbol</th>
+<th style="text-align: left;">Role</th>
+<th style="text-align: left;">Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>S</strong></td>
+<td style="text-align: left;">Sole argument of intransitive</td>
+<td style="text-align: left;">“The child <strong>sleeps</strong>”</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>A</strong></td>
+<td style="text-align: left;">Agent-like argument of transitive</td>
+<td style="text-align: left;">“<strong>The child</strong> broke the
+vase”</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>P</strong></td>
+<td style="text-align: left;">Patient-like argument of transitive</td>
+<td style="text-align: left;">“The child broke <strong>the
+vase</strong>”</td>
+</tr>
+</tbody>
+</table>
+<h3 id="alignment-systems">Alignment Systems</h3>
+<p>The key insight from typological research is that languages differ in
+how they <em>group</em> these three roles for purposes of case marking,
+agreement, and other grammatical processes:</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Alignment</th>
+<th style="text-align: left;">Grouping</th>
+<th style="text-align: left;">Exemplar Languages</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td
+style="text-align: left;"><strong>Nominative–Accusative</strong></td>
+<td style="text-align: left;">S = A <span
+class="math inline">\(\neq\)</span> P</td>
+<td style="text-align: left;">English, Latin, Finnish, Russian</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Ergative–Absolutive</strong></td>
+<td style="text-align: left;">S = P <span
+class="math inline">\(\neq\)</span> A</td>
+<td style="text-align: left;">Basque, Dyirbal, Georgian (partly)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Active–Stative</strong></td>
+<td style="text-align: left;">S splits by agentivity</td>
+<td style="text-align: left;">Lakhota, Guaraní, Eastern Pomo</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Tripartite</strong></td>
+<td style="text-align: left;">S <span
+class="math inline">\(\neq\)</span> A <span
+class="math inline">\(\neq\)</span> P</td>
+<td style="text-align: left;">Nez Perce, some Australian languages</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Fluid-S</strong></td>
+<td style="text-align: left;">S marking varies by context</td>
+<td style="text-align: left;">Bats (NE Caucasian), Acehnese</td>
+</tr>
+</tbody>
+</table>
+<p>Claassen <span class="citation"
+data-cites="claassen2025alignment">[-@claassen2025alignment]</span>
+provides a comprehensive survey of the explanatory frameworks proposed
+for alignment diversity, arguing that no single factor (processing
+efficiency, disambiguation, discourse pragmatics) suffices—a conclusion
+that motivates our multi-dimensional categorical formalization. Wu <span
+class="citation" data-cites="wu2024amis">[-@wu2024amis]</span> offers a
+detailed case study of Amis (Austronesian), demonstrating how verb
+classification, case marking, and grammatical relations interact in a
+language that defies simple alignment classification.</p>
+<h3 id="extended-case-inventories-and-the-cerebrum-framework">Extended
+Case Inventories and the CEREBRUM Framework</h3>
+<p>Beyond the three core arguments, languages distinguish a rich
+inventory of oblique cases. Our formalization follows the CEREBRUM
+framework <span class="citation"
+data-cites="friedman2024cerebrum">[@friedman2024cerebrum]</span> in
+adopting eight fundamental cases:</p>
+<table>
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 29%" />
+<col style="width: 23%" />
+<col style="width: 23%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Case</th>
+<th style="text-align: center;">Abbreviation</th>
+<th style="text-align: left;">Semantic Core</th>
+<th style="text-align: left;">Syntactic Prototype</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Nominative</td>
+<td style="text-align: center;">NOM</td>
+<td style="text-align: left;">Agent / experiencer</td>
+<td style="text-align: left;">Intransitive subject, transitive
+agent</td>
+</tr>
+<tr>
+<td style="text-align: left;">Accusative</td>
+<td style="text-align: center;">ACC</td>
+<td style="text-align: left;">Patient / theme</td>
+<td style="text-align: left;">Direct object, incremental theme</td>
+</tr>
+<tr>
+<td style="text-align: left;">Genitive</td>
+<td style="text-align: center;">GEN</td>
+<td style="text-align: left;">Possessor / source</td>
+<td style="text-align: left;">Possessive modifier, partitive</td>
+</tr>
+<tr>
+<td style="text-align: left;">Dative</td>
+<td style="text-align: center;">DAT</td>
+<td style="text-align: left;">Recipient / goal</td>
+<td style="text-align: left;">Indirect object, beneficiary</td>
+</tr>
+<tr>
+<td style="text-align: left;">Instrumental</td>
+<td style="text-align: center;">INS</td>
+<td style="text-align: left;">Instrument / means</td>
+<td style="text-align: left;">Adverbial of means</td>
+</tr>
+<tr>
+<td style="text-align: left;">Locative</td>
+<td style="text-align: center;">LOC</td>
+<td style="text-align: left;">Location / context</td>
+<td style="text-align: left;">Spatial/temporal ground</td>
+</tr>
+<tr>
+<td style="text-align: left;">Ablative</td>
+<td style="text-align: center;">ABL</td>
+<td style="text-align: left;">Origin / cause</td>
+<td style="text-align: left;">Source of motion, causal adjunct</td>
+</tr>
+<tr>
+<td style="text-align: left;">Vocative</td>
+<td style="text-align: center;">VOC</td>
+<td style="text-align: left;">Addressee</td>
+<td style="text-align: left;">Direct address</td>
+</tr>
+</tbody>
+</table>
+<h2 id="categorical-formalization-of-case-systems">Categorical
+Formalization of Case Systems</h2>
+<h3 id="case-categories-as-directed-graphs">Case Categories as Directed
+Graphs</h3>
+<p>We define a <strong>case category</strong> <span
+class="math inline">\(\mathcal{C}\)</span> as a small category
+where:</p>
+<ul>
+<li><strong>Objects</strong> are case roles (NOM, ACC, GEN, DAT, INS,
+LOC, ABL, VOC)</li>
+<li><strong>Morphisms</strong> are grammatical relations between roles
+(e.g., “transitive action”: NOM → ACC)</li>
+<li><strong>Identity morphisms</strong> represent the reflexive relation
+of each case role to itself</li>
+<li><strong>Composition</strong> models the transitivity of grammatical
+dependencies</li>
+</ul>
+<p>This formalization is implemented in our <code>CaseCategory</code>
+class, which uses a directed graph (via NetworkX) as the underlying
+representation. Each object carries its role enum and optional
+morphosyntactic features; each morphism carries a relation label and an
+enriched weight <span class="math inline">\(w \in [0,1]\)</span>. shows
+the full eight-case standard category.</p>
+<figure id="fig:case-standard">
+<img src="output/figures/case_category_standard.png"
+alt="The standard linguistic case category with eight case roles (NOM, ACC, GEN, DAT, INS, LOC, ABL, VOC) and directed morphisms representing grammatical relations between them. Edge labels encode relation types (e.g., transitive action, possession, spatial grounding), and edge weights in the interval zero to one reflect proto-role satisfaction. Generated from the CaseCategory class." />
+<figcaption aria-hidden="true">The standard linguistic case category
+with eight case roles (NOM, ACC, GEN, DAT, INS, LOC, ABL, VOC) and
+directed morphisms representing grammatical relations between them. Edge
+labels encode relation types (e.g., transitive action, possession,
+spatial grounding), and edge weights in the interval zero to one reflect
+proto-role satisfaction. Generated from the CaseCategory
+class.</figcaption>
+</figure>
+<h3 id="alignment-functors-between-case-categories">Alignment Functors
+Between Case Categories</h3>
+<p>An <strong>alignment functor</strong> <span class="math inline">\(F:
+\mathcal{U} \to \mathcal{L}\)</span> maps a universal (maximal) case
+category <span class="math inline">\(\mathcal{U}\)</span> to a
+language-specific category <span
+class="math inline">\(\mathcal{L}\)</span> by collapsing objects that a
+particular language treats as equivalent. For example, in an accusative
+language, the functor merges S and A into a single NOM role while
+keeping P as a distinct ACC role: <span
+class="math inline">\(F(\text{S}) = F(\text{A}) = \text{NOM}\)</span>,
+<span class="math inline">\(F(\text{P}) = \text{ACC}\)</span>.</p>
+<p>This functor is:</p>
+<ul>
+<li><strong>Surjective on objects</strong>: every case in the target
+language is the image of some universal role</li>
+<li><strong>Structure-preserving</strong>: grammatical relations in
+<span class="math inline">\(\mathcal{U}\)</span> map to grammatical
+relations in <span class="math inline">\(\mathcal{L}\)</span></li>
+<li><strong>Non-identity when alignment differs</strong>: the kernel of
+<span class="math inline">\(F\)</span> (the set of objects mapped to the
+same target) characterizes the alignment type</li>
+</ul>
+<p>The alignment functor provides a formal account of neutralization:
+two semantically distinct roles (S vs. A) receive the same morphological
+treatment because the functor maps them to the same object. shows three
+alignment systems rendered from our <code>CaseCategory</code>
+implementation.</p>
+<figure id="fig:alignment">
+<img src="output/figures/alignment_comparison.png"
+alt="Side-by-side comparison of three alignment systems—Nominative-Accusative, Ergative-Absolutive, and Tripartite—showing how each alignment type groups the three core arguments (S, A, P) into distinct morphological categories. Color-coded nodes indicate case role identity; shared colors reveal the S=A or S=P neutralizations that define each alignment." />
+<figcaption aria-hidden="true">Side-by-side comparison of three
+alignment systems—Nominative-Accusative, Ergative-Absolutive, and
+Tripartite—showing how each alignment type groups the three core
+arguments (S, A, P) into distinct morphological categories. Color-coded
+nodes indicate case role identity; shared colors reveal the S=A or S=P
+neutralizations that define each alignment.</figcaption>
+</figure>
+<figure id="fig:composition">
+<img src="output/figures/composition_triangle.png"
+alt="The categorical composition triangle: morphism f (transitive action, NOM to ACC) and morphism g (transfer, ACC to DAT) compose to yield g after f (NOM to DAT), illustrating how grammatical dependencies chain transitively through intermediate case roles. The commutativity of this triangle encodes that indirect object assignment factors through the direct object." />
+<figcaption aria-hidden="true">The categorical composition triangle:
+morphism f (transitive action, NOM to ACC) and morphism g (transfer, ACC
+to DAT) compose to yield g after f (NOM to DAT), illustrating how
+grammatical dependencies chain transitively through intermediate case
+roles. The commutativity of this triangle encodes that indirect object
+assignment factors through the direct object.</figcaption>
+</figure>
+<h3 id="enriched-morphisms-proto-roles-and-graded-structure">Enriched
+Morphisms, Proto-Roles, and Graded Structure</h3>
+<p>Following Dowty <span class="citation"
+data-cites="dowty1991thematic">[-@dowty1991thematic]</span>, we equip
+morphisms with weights in <span class="math inline">\([0,1]\)</span>
+that encode the degree of proto-role satisfaction. A morphism <span
+class="math inline">\(f: \text{NOM} \to \text{ACC}\)</span> with weight
+<span class="math inline">\(w = 0.9\)</span> indicates a strong
+transitive action (clear agent acting on clear patient), while <span
+class="math inline">\(w = 0.4\)</span> might indicate an experiencer
+construction (“The child fears the dark”) where the nominative argument
+only weakly satisfies Proto-Agent entailments.</p>
+<p>Composition of enriched morphisms multiplies weights: <span
+class="math display">\[w(g \circ f) = w(g) \cdot w(f)\]</span></p>
+<p>This multiplicative composition reflects the intuition that
+grammatical dependencies attenuate as they chain through intermediate
+roles. illustrates the categorical composition of two morphisms through
+an intermediate case role. The resulting structure is a category
+enriched over <span class="math inline">\(([0,1], \cdot, 1)\)</span>—a
+connection we develop fully in .</p>
+</body>
+</html>

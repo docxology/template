@@ -1,0 +1,47 @@
+\frametitle{Passivization as Algebraic Type Permutation}
+\protect\phantomsection\label{passivization-as-algebraic-type-permutation}
+One of the most revealing case-theoretic operations is
+\textbf{passivization}, which transforms an active transitive clause
+into a passive construction by promoting the patient to subject position
+and (optionally) demoting the agent to an oblique role. In our
+categorical framework, passivization is not an ad hoc syntactic
+transformation but a precise \emph{type permutation}---a swap of the
+noun types feeding into the verb's pregroup derivation.
+
+In a pregroup grammar, the active transitive ``Alice chases Bob'' has
+the type reduction:
+
+\[n_{\text{NOM}} \cdot (n^r \cdot s \cdot n^l) \cdot n_{\text{ACC}} \to s\]
+
+Passivization permutes the noun arguments, yielding ``Bob is chased by
+Alice'' with the swapped type assignment:
+
+\[n_{\text{ACC}} \cdot (n^r \cdot s \cdot n^l) \cdot n_{\text{NOM}} \to s\]
+
+Crucially, DisCoPy's \texttt{Swap} primitive makes this permutation
+explicit and algebraically precise: the swap operation
+\(\sigma_{n,n}: n \otimes n \to n \otimes n\) permutes the two noun
+wires without violating the monoidal structure. The resulting diagram
+differs from the active version precisely in the crossing of the noun
+wires---making the voice alternation \emph{visible} as a topological
+feature of the string diagram.
+
+This diagrammatic transparency exemplifies Shimojima's
+{[}-@shimojima1996reasoning{]} free-ride inference: by inspecting the
+diagram, one can immediately see that passivization preserves the verb's
+inherent argument structure while rearranging the surface
+realization---a fact that requires multiple inference steps to establish
+in a linear notation.
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Passivization modeled as a type permutation: the active transitive sentence ``Alice chases Bob'' (left panel) and its passive counterpart ``Bob is-chased'' (right panel), both rendered by DisCoPy. In the active diagram, nom-type Alice feeds the verb's n.r slot while acc-type Bob feeds n.l; in the passive, the patient Bob is promoted to subject (n) position while the verb's type reduces to n.r @ s. The structural difference between voice alternations is visible as a topological change in the wire connectivity.}]{../figures/discopy_passive.png}}
+\caption{Passivization modeled as a type permutation: the active
+transitive sentence ``Alice chases Bob'' (left panel) and its passive
+counterpart ``Bob is-chased'' (right panel), both rendered by DisCoPy.
+In the active diagram, nom-type Alice feeds the verb's n.r slot while
+acc-type Bob feeds n.l; in the passive, the patient Bob is promoted to
+subject (n) position while the verb's type reduces to n.r @ s. The
+structural difference between voice alternations is visible as a
+topological change in the wire connectivity.}\label{fig:discopy-passive}
+\end{figure}

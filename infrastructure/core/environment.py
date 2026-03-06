@@ -156,7 +156,13 @@ def install_missing_packages(packages: List[str]) -> bool:
         for package in packages:
             add_cmd = ["uv", "add", package]
             logger.info(f"Adding to pyproject.toml: {' '.join(add_cmd)}")
-            add_result = subprocess.run(add_cmd, check=False, capture_output=True, text=True)
+            try:
+                add_result = subprocess.run(
+                    add_cmd, check=False, capture_output=True, text=True, timeout=30
+                )
+            except subprocess.TimeoutExpired:
+                logger.warning(f"Timeout adding {package} to pyproject.toml (30s)")
+                continue
             if add_result.returncode != 0:
                 logger.warning(f"Failed to add {package} to pyproject.toml: {add_result.stderr}")
 
@@ -164,7 +170,11 @@ def install_missing_packages(packages: List[str]) -> bool:
         cmd = ["uv", "sync"]
         logger.info(f"Syncing dependencies: {' '.join(cmd)}")
 
-        result = subprocess.run(cmd, check=False)
+        try:
+            result = subprocess.run(cmd, check=False, timeout=120)
+        except subprocess.TimeoutExpired:
+            logger.error("uv sync timed out after 120s")
+            return False
 
         if result.returncode == 0:
             # Verify installation
@@ -287,9 +297,11 @@ def check_uv_available() -> bool:
         ...     print("Falling back to pip - consider installing uv")
     """
     try:
-        result = subprocess.run(["uv", "--version"], capture_output=True, text=True, check=False)
+        result = subprocess.run(
+            ["uv", "--version"], capture_output=True, text=True, check=False, timeout=10
+        )
         return result.returncode == 0
-    except (FileNotFoundError, subprocess.SubprocessError):
+    except (FileNotFoundError, subprocess.SubprocessError, subprocess.TimeoutExpired):
         return False
 
 

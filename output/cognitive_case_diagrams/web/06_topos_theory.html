@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Topos-Theoretic Bridges</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Topos-Theoretic Bridges</h1>
+</header>
+<h1 id="sec:topos-theory">Topos-Theoretic Bridges and Inter-Theoretic
+Transfer</h1>
+<h2 id="from-categories-to-toposes-the-translation-problem">From
+Categories to Toposes: The Translation Problem</h2>
+<p>The preceding sections have shown how case systems, categorial
+grammars, distributional semantics, and enriched categories each provide
+a different “window” onto the same underlying linguistic phenomenon. But
+how do we know that results proved in one framework transfer to another?
+This is the problem of <em>inter-theoretic translation</em>—and it is
+precisely the problem that Caramello’s <span class="citation"
+data-cites="caramello2016bridges">[-@caramello2016bridges]</span>
+topos-theoretic bridge technique was designed to solve.</p>
+<h2 id="classifying-toposes-and-morita-equivalence">Classifying Toposes
+and Morita Equivalence</h2>
+<h3 id="what-is-a-topos-generalized-universes-of-sets">What Is a Topos?
+Generalized Universes of Sets</h3>
+<p>A <strong>topos</strong> is a category that behaves like a
+generalized universe of sets: it has products, exponentials, a subobject
+classifier (playing the role of a “truth-value object”), and enough
+structure to interpret first-order logic internally. The category
+<strong>Set</strong> of ordinary sets is a topos, but there are many
+others—presheaf categories, sheaf categories over topological spaces,
+and the categories of models of geometric theories.</p>
+<h3 id="classifying-toposes-of-geometric-theories">Classifying Toposes
+of Geometric Theories</h3>
+<p>Every <em>geometric theory</em> <span
+class="math inline">\(\mathbb{T}\)</span> (a theory axiomatized by
+sequents involving only finite conjunctions, arbitrary disjunctions, and
+existential quantification) has a <strong>classifying topos</strong>
+<span class="math inline">\(\mathcal{E}_\mathbb{T}\)</span>—a canonical
+topos whose models correspond exactly to the geometric functors from
+<span class="math inline">\(\mathcal{E}_\mathbb{T}\)</span> to other
+toposes. The classifying topos encodes the theory’s “logical shape”
+independently of any particular model.</p>
+<p>Caramello’s key insight <span class="citation"
+data-cites="caramello2016bridges caramello2021five">[-@caramello2016bridges;
+-@caramello2021five]</span> is that different theories can share the
+same classifying topos up to equivalence—an equivalence known as
+<strong>Morita equivalence</strong>. When two theories <span
+class="math inline">\(\mathbb{T}_1\)</span> and <span
+class="math inline">\(\mathbb{T}_2\)</span> are Morita equivalent (<span
+class="math inline">\(\mathcal{E}_{\mathbb{T}_1} \simeq
+\mathcal{E}_{\mathbb{T}_2}\)</span>), any property that can be expressed
+as an invariant of the classifying topos transfers automatically between
+them.</p>
+<h2 id="bridge-theorems-for-the-four-case-theories">Bridge Theorems for
+the Four Case Theories</h2>
+<h3 id="formalizing-case-theories-as-geometric-theories">Formalizing
+Case Theories as Geometric Theories</h3>
+<p>We formalize each case-theoretic framework as a geometric theory:</p>
+<ol type="1">
+<li><p><strong>Typological case theory</strong> <span
+class="math inline">\(\mathbb{T}_{\text{typ}}\)</span>: Objects are case
+roles, morphisms are grammatical relations, axioms specify alignment
+constraints (e.g., “S = A” in accusative alignment).</p></li>
+<li><p><strong>Type-logical case theory</strong> <span
+class="math inline">\(\mathbb{T}_{\text{log}}\)</span>: Objects are
+syntactic types, morphisms are Lambek calculus derivations, axioms
+specify well-formedness conditions (pregroup contractions).</p></li>
+<li><p><strong>Distributional case theory</strong> <span
+class="math inline">\(\mathbb{T}_{\text{dist}}\)</span>: Objects are
+vector spaces, morphisms are linear maps, axioms specify the composition
+law for distributional meaning (DisCoCat).</p></li>
+<li><p><strong>Enriched case theory</strong> <span
+class="math inline">\(\mathbb{T}_{\text{enr}}\)</span>: Objects are
+expressions, morphisms carry <span
+class="math inline">\([0,1]\)</span>-valued weights, axioms specify the
+identity and composition inequalities.</p></li>
+</ol>
+<h3 id="the-bridge-theorem-morita-equivalence-chain">The Bridge Theorem:
+Morita Equivalence Chain</h3>
+<p>The central claim is that these four theories are related by a chain
+of Morita equivalences:</p>
+<p><span class="math display">\[\mathcal{E}_{\mathbb{T}_{\text{typ}}}
+\leftarrow \mathcal{E}_{\mathbb{T}_{\text{bridge}}} \rightarrow
+\mathcal{E}_{\mathbb{T}_{\text{log}}} \leftarrow
+\mathcal{E}_{\mathbb{T}_{\text{bridge}&#39;}} \rightarrow
+\mathcal{E}_{\mathbb{T}_{\text{dist}}}\]</span></p>
+<p>where the intermediate toposes are constructed by finding geometric
+theories that are simultaneously interpretable in both flanking
+frameworks. The Morita equivalence ensures that:</p>
+<ul>
+<li><strong>Syntactic theorems port to semantics</strong>: A
+commutativity result proved in the type-logical framework automatically
+yields a compositionality result in the distributional framework.</li>
+<li><strong>Typological universals constrain distributional
+models</strong>: Alignment types (accusative, ergative) impose
+structural constraints on the vector spaces used in DisCoCat.</li>
+<li><strong>Enriched structure enriches all frameworks</strong>: The
+<span class="math inline">\([0,1]\)</span>-valued weights from the
+enriched theory can be pulled back to give probabilistic interpretations
+of typological, logical, and distributional constructions.</li>
+</ul>
+<p> visualizes the alignment functor between the Accusative and Ergative
+category instantiations, showing how the same eight case roles are
+connected by different morphism structures under different alignment
+types.</p>
+<figure id="fig:functor-alignment">
+<img src="output/figures/functor_alignment.png"
+alt="The alignment functor F mapping the Accusative case category (source, blue panel) to the Ergative case category (target, amber panel). Each of the eight case roles (NOM, ACC, GEN, DAT, INS, LOC, ABL, VOC) appears as a labeled node in both categories, with purple horizontal arrows showing the functor’s object-level mapping F(role). Below each category, annotations indicate the distinctive morphism grouping: Accusative groups S+A vs. P (subject and agent unmarked); Ergative groups S+P vs. A (absolutive unmarked). An explanatory legend clarifies that the functor preserves role inventory but restructures the morphism pattern — the formal content of the alignment-as-functor principle." />
+<figcaption aria-hidden="true">The alignment functor F mapping the
+Accusative case category (source, blue panel) to the Ergative case
+category (target, amber panel). Each of the eight case roles (NOM, ACC,
+GEN, DAT, INS, LOC, ABL, VOC) appears as a labeled node in both
+categories, with purple horizontal arrows showing the functor’s
+object-level mapping F(role). Below each category, annotations indicate
+the distinctive morphism grouping: Accusative groups S+A vs. P (subject
+and agent unmarked); Ergative groups S+P vs. A (absolutive unmarked). An
+explanatory legend clarifies that the functor preserves role inventory
+but restructures the morphism pattern — the formal content of the
+alignment-as-functor principle.</figcaption>
+</figure>
+<h2 id="phillips-and-the-universal-language-of-thought">Phillips and the
+Universal Language of Thought</h2>
+<p>Phillips <span class="citation"
+data-cites="phillips2024lot">[-@phillips2024lot]</span> provides a
+striking application of topos-theoretic methods to cognitive science. He
+shows that the <strong>Language of Thought</strong> (LoT) hypothesis—the
+claim that cognition operates over structured, combinatorial
+representations with language-like properties—can be formalized
+categorically, and that the resulting structure is <em>universal</em> in
+the topos-theoretic sense.</p>
+<p>Specifically, Phillips demonstrates that:</p>
+<ol type="1">
+<li><p>LoT properties (discrete constituents, role-filler independence,
+systematicity) arise as <strong>universal constructions</strong> in a
+topos—categorical products, fiber bundles, and presheaves.</p></li>
+<li><p>Every topos supports an internal first-order logic, explaining
+how LoT-like logical capacities can emerge in systems (biological or
+artificial) whose internal architecture forms a topos.</p></li>
+<li><p>The “shape” of cognitive representations is fundamentally
+<strong>topological</strong>, captured by presheaves and fiber bundles
+rather than by point-set structures.</p></li>
+</ol>
+<p>For our framework, Phillips’s result is significant because it
+provides a topos-theoretic foundation for the claim that case structure
+is a universal feature of cognitive architecture. If the Language of
+Thought is topos-universal, and case categories are definable within any
+topos (which they are, being small categories with first-order axioms),
+then every cognitive system with LoT-like structure must be able to
+represent case distinctions—a strong universality claim that goes beyond
+mere typological observation.</p>
+<h2 id="syntactic-learning-via-classifying-toposes">Syntactic Learning
+via Classifying Toposes</h2>
+<p>Caramello <span class="citation"
+data-cites="caramello2023syntactic">[-@caramello2023syntactic]</span>
+extends the bridge technique to a learning theory: she shows that
+classifying toposes can be used to <em>learn</em> the theory of a
+mathematical structure from finite data (a finite set of models). The
+learning algorithm constructs a classifying topos from the observed data
+and then extracts the axioms of the underlying theory.</p>
+<p>Applied to case systems, this suggests a principled approach to
+<em>grammatical induction</em>: given a corpus annotated with case
+labels, one could construct the classifying topos of the implicit case
+theory and read off its axioms—recovering the alignment type, the
+morphism structure, and the enriched weights from data alone. This
+topos-theoretic learning procedure would be provably correct (recovering
+the true theory in the limit) and maximally general (not presupposing
+any particular alignment type).</p>
+<h2
+id="diagrammatic-implications-of-inter-theoretic-transfer">Diagrammatic
+Implications of Inter-Theoretic Transfer</h2>
+<p>The bridge technique has a natural diagrammatic interpretation.
+Morita equivalence between theories is witnessed by <em>functorial
+translations</em>—diagrams in the 2-category of toposes that commute up
+to natural isomorphism. These diagrams serve the same cognitive function
+as the commutative diagrams of : they make the transfer of structure
+visible, allowing a researcher to verify at a glance that a result
+proved in one framework genuinely applies in another.</p>
+<p>Manders <span class="citation"
+data-cites="manders2008euclidean">[-@manders2008euclidean]</span>
+observed that even in classical mathematics, diagrams serve not merely
+as illustrations but as <em>inferential instruments</em> whose spatial
+properties encode proof-relevant information. The topos-theoretic bridge
+diagrams extend this observation to the meta-theoretical level: the
+commutative diagram expressing Morita equivalence is itself a “free
+ride” inference, automatically transferring any topos-invariant property
+from one theory to another without requiring a case-by-case
+verification.</p>
+</body>
+</html>

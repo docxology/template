@@ -1,0 +1,27 @@
+{
+  "timestamp": "2026-03-06T05:06:08.636482",
+  "infrastructure": {},
+  "project": {
+    "passed": 0,
+    "failed": 0,
+    "skipped": 0,
+    "total": 0,
+    "warnings": 0,
+    "exit_code": 2,
+    "discovery_count": 132,
+    "collection_errors": 1,
+    "execution_phases": {
+      "setup": 0.85,
+      "collection": 0.85
+    },
+    "test_categories": {},
+    "failed_tests": []
+  },
+  "summary": {
+    "total_passed": 0,
+    "total_failed": 0,
+    "total_skipped": 0,
+    "total_tests": 0,
+    "all_passed": false
+  }
+}

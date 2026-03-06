@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Conclusion and Future Directions</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Conclusion and Future Directions</h1>
+</header>
+<h1 id="sec:conclusion">Conclusion, Contributions, and Future
+Directions</h1>
+<h2 id="summary-of-principal-contributions">Summary of Principal
+Contributions</h2>
+<p>This paper has developed a unified category-theoretic framework for
+analyzing linguistic case systems, synthesizing five distinct research
+traditions into a coherent whole and embedding it within an active
+inference model of cognition. Our principal contributions are:</p>
+<h3 id="c1-case-categories-as-a-formal-algebraic-framework">C1: Case
+Categories as a Formal Algebraic Framework</h3>
+<p>The review formalized case systems as categories with case roles as
+objects and grammatical relations as morphisms (). This formalization
+captures the full typological range of alignment
+systems—nominative-accusative, ergative-absolutive, active-stative,
+tripartite, and fluid-S—within a single algebraic framework, with
+alignment functors providing structure-preserving mappings between
+systems. By tracing the lineage from Fillmore’s <span class="citation"
+data-cites="fillmore1968case">[-@fillmore1968case]</span> deep cases
+through Jakobson’s binary distinctive features and Dowty’s <span
+class="citation"
+data-cites="dowty1991thematic">[-@dowty1991thematic]</span> proto-roles,
+the analysis demonstrated how enriched (weighted) morphisms link the
+categorical formalization to the gradient nature of thematic role
+assignment.</p>
+<h3 id="c2-string-diagrams-for-case-derivation-visualization">C2: String
+Diagrams for Case Derivation Visualization</h3>
+<p>Building on Joyal and Street’s <span class="citation"
+data-cites="joyalstreet1991geometry">[-@joyalstreet1991geometry]</span>
+string diagram formalism and its application in categorial grammar (),
+we showed how case-marked noun phrases receive type-logical assignments
+that are fully visualizable as string diagrams. The Curry–Howard
+correspondence ensures that syntactic well-formedness guarantees
+semantic compositionality, and the diagrammatic format provides
+Shimojima’s <span class="citation"
+data-cites="shimojima1996reasoning">[-@shimojima1996reasoning]</span>
+“free ride” inferences—conclusions about argument structure that are
+perceptually available from the diagram without explicit computation. We
+further demonstrated that passivization reduces to a <em>type
+permutation</em> (a Swap operation in the pregroup category), making
+voice alternation visible as a topological feature of the string
+diagram.</p>
+<h3
+id="c3-case-marked-discocat-compact-closure-and-discourse-extension">C3:
+Case-Marked DisCoCat, Compact Closure, and Discourse Extension</h3>
+<p>We extended the DisCoCat framework () with case-typed noun spaces and
+alignment-sensitive meaning functors, and showed how the recent
+DisCoCirc <span class="citation"
+data-cites="defelice2022discocirc">[@defelice2022discocirc]</span> and
+QNLP <span class="citation"
+data-cites="lorenz2023lambeq">[@lorenz2023lambeq]</span> developments
+extend this analysis to discourse-level structure and quantum hardware
+respectively. We formalized the <em>compact closure axiom</em> (snake
+equation) that underpins pregroup reductions, demonstrating that the
+cup-cap zigzag identity provides a visual coherence proof with genuine
+cognitive significance. Diagram complexity metrics—normal form and
+depth—provide a quantitative bridge between the type-logical and
+distributional perspectives on linguistic structure. Case categories can
+serve as the structural backbone of compositional models of meaning at
+all levels—word, sentence, discourse, and dialogue.</p>
+<h3
+id="c4-enriched-cases-categorical-magnitude-and-information-theory">C4:
+Enriched Cases, Categorical Magnitude, and Information Theory</h3>
+<p>Through Fritz et al.’s <span class="citation"
+data-cites="fritz2021enriched">[-@fritz2021enriched]</span> enrichment
+framework and Bradley’s <span class="citation"
+data-cites="bradley2020entropy">[-@bradley2020entropy]</span>
+information-theoretic analysis (), we showed that equipping case
+categories with <span class="math inline">\([0,1]\)</span>-valued
+hom-objects yields a principled bridge between symbolic case grammar and
+statistical semantics. Categorical magnitude provides a new quantitative
+invariant for comparing case systems: the “effective size” of a case
+category captures how much relational information the language
+encodes.</p>
+<h3 id="c5-topos-theoretic-transfer-via-morita-equivalence">C5:
+Topos-Theoretic Transfer via Morita Equivalence</h3>
+<p>Using Caramello’s <span class="citation"
+data-cites="caramello2016bridges">[-@caramello2016bridges]</span> bridge
+technique and Phillips’s <span class="citation"
+data-cites="phillips2024lot">[-@phillips2024lot]</span> universality
+result (), we established that results proved in any one of our four
+case-theoretic frameworks (typological, type-logical, distributional,
+enriched) transfer automatically to the others via Morita equivalence of
+classifying toposes.</p>
+<h3 id="c6-diagrams-as-cognitively-privileged-representations">C6:
+Diagrams as Cognitively Privileged Representations</h3>
+<p>The meta-contribution (Sections 1 and 7) is the argument—supported by
+the cognitive science of diagrams <span class="citation"
+data-cites="larkin1987diagram shimojima1996reasoning giardino2017diagrammatic manders2008euclidean">[@larkin1987diagram;
+@shimojima1996reasoning; @giardino2017diagrammatic;
+@manders2008euclidean]</span>—that commutative diagrams are not merely
+convenient notation but cognitively privileged representations that
+provide inferential advantages in case reasoning. When embedded in an
+active inference framework <span class="citation"
+data-cites="friston2017active">[@friston2017active]</span> and the
+CEREBRUM architecture <span class="citation"
+data-cites="friedman2024cerebrum">[@friedman2024cerebrum]</span>, these
+diagrams serve as the structural core of generative models for total
+cognitive scenario understanding.</p>
+<h3 id="c7-computational-verification-and-test-suite">C7: Computational
+Verification and Test Suite</h3>
+<p>The entire framework is computationally implemented and verified
+through 158 automated tests with 95.97% code coverage (). The DisCoPy
+integration exercises pregroup type theory (types, words, cups, caps,
+swaps, normal forms, depth analysis) against the same algebraic
+structures described theoretically, confirming that the categorical
+abstractions are not just mathematically elegant but computationally
+executable.</p>
+<h3 id="c8-quantum-active-inference-and-topological-semantic-flow">C8:
+Quantum Active Inference and Topological Semantic Flow</h3>
+<p>The framework’s categorical string diagrams were extended into their
+natural quantum generalization through topological quantum neural
+networks, the ZX-calculus, and sheaf-theoretic quantum semantic
+communication (). By demonstrating that DisCoCat derivations, ZX
+circuits, and TQNN spin-networks are all morphisms in compact closed
+monoidal categories with functorial semantics into Hilbert spaces, the
+analysis established that case assignment can be modeled as quantum
+measurement on a holographic screen—and that quantum features
+(entanglement, contextuality, discord) provide genuine advantages for
+semantic communication of relational structure.</p>
+<h2 id="future-research-directions">Future Research Directions</h2>
+<h3 id="f1-computational-experiments-with-discocirc-and-lambeq">F1:
+Computational Experiments with DisCoCirc and lambeq</h3>
+<p>The DisCoCirc framework <span class="citation"
+data-cites="defelice2020discourse defelice2022discocirc">[@defelice2020discourse;
+@defelice2022discocirc]</span> offers a natural platform for testing our
+case-theoretic predictions computationally. Concrete experiments could
+include:</p>
+<ul>
+<li>Implementing case-marked DisCoCat models in the
+<strong>lambeq</strong> library <span class="citation"
+data-cites="lorenz2023lambeq">[@lorenz2023lambeq]</span> and evaluating
+them on semantic role labeling (SRL) tasks</li>
+<li>Comparing the accuracy of alignment-specific meaning functors
+(accusative vs. ergative) on typologically diverse corpora</li>
+<li>Measuring the categorical magnitude of empirically derived enriched
+case categories and correlating it with typological complexity
+measures</li>
+</ul>
+<h3 id="f2-topos-theoretic-grammatical-induction-from-corpora">F2:
+Topos-Theoretic Grammatical Induction from Corpora</h3>
+<p>Caramello’s <span class="citation"
+data-cites="caramello2023syntactic">[-@caramello2023syntactic]</span>
+syntactic learning technique could be applied to induce case-theoretic
+axioms from annotated corpora. The program would:</p>
+<ol type="1">
+<li>Extract case-labeled dependency structures from a Universal
+Dependencies treebank</li>
+<li>Construct the classifying topos of the implicit case theory</li>
+<li>Read off the alignment type, morphism structure, and enriched
+weights from the topos-theoretic axioms</li>
+<li>Compare the induced theory against typological descriptions</li>
+</ol>
+<h3 id="f3-quantum-case-categories-on-near-term-hardware">F3: Quantum
+Case Categories on Near-Term Hardware</h3>
+<p>The QNLP connection () opens the possibility of implementing case
+categories directly as quantum circuits. Case roles would correspond to
+quantum registers, grammatical relations to parameterized gates, and
+alignment functors to circuit transformations. This would provide a
+genuinely new computational paradigm for grammatical
+inference—exploiting quantum parallelism to explore the space of case
+assignments simultaneously.</p>
+<h3
+id="f4-neural-predictive-processing-and-electrophysiological-predictions">F4:
+Neural Predictive Processing and Electrophysiological Predictions</h3>
+<p>The predictive processing account of generates testable
+neuroscientific predictions:</p>
+<ul>
+<li>Case-marking violations should elicit prediction-error responses
+(P600/N400) proportional to the enriched weight of the violated
+morphism</li>
+<li>Typologically unusual case patterns should require more precision
+updating than expected patterns</li>
+<li>Diagrammatic representations of case structure should be decodable
+from neural activity during sentence comprehension</li>
+</ul>
+<h3 id="f5-cross-modal-case-structure-in-embodied-cognition">F5:
+Cross-Modal Case Structure in Embodied Cognition</h3>
+<p>The situation semantics connection () suggests extending case
+categories beyond language to multi-modal perception. Visual scene
+understanding also requires assigning relational roles—who is acting on
+what, where things are located, what instruments are being used. An
+active inference agent should maintain a unified case diagram that
+integrates linguistic, visual, and motor information, using the same
+categorical structure for all modalities. This would provide a formal
+account of how language grounds in perception and action—a key challenge
+for embodied AI.</p>
+<h3 id="f6-enriched-category-learning-from-distributional-data">F6:
+Enriched Category Learning from Distributional Data</h3>
+<p>Bradley’s <span class="citation"
+data-cites="bradley2024ipam bradley2025tea">[-@bradley2024ipam;
+-@bradley2025tea]</span> program of treating language itself as an
+enriched category suggests a learning algorithm: estimate the enriched
+hom-values from corpus data and then extract the categorical structure
+that best explains the observed distributional patterns. Applied to
+case, this would yield <em>empirically grounded</em> case categories
+whose objects (roles) and morphisms (relations) emerge from data rather
+than being stipulated a priori.</p>
+<h2 id="closing-remarks">Closing Remarks</h2>
+<p>The commutative diagram is the central motif of this review—both as a
+mathematical tool and as a cognitive instrument. The analysis has
+demonstrated that the same diagrammatic language that makes category
+theory effective for formalizing case systems also makes it effective
+for <em>thinking about</em> case systems: the spatial structure of a
+commutative diagram encodes relational information in a format that
+supports rapid search, pattern recognition, and free-ride inference.</p>
+<p>This convergence of mathematical utility and cognitive efficacy is
+not accidental. If the active inference framework is correct, then the
+brain operates by constructing and updating generative models of the
+world’s relational structure. Category theory provides the structural
+algebra for these generative models; commutative diagrams supply their
+natural topology; and case categories instantiate the precise relational
+vocabulary that cognitive systems deploy to organize the entropy of
+experience into coherent narratives of <em>who does what to whom</em>.
+Ultimately, the mathematics of case alignment is not merely an
+abstraction of human grammar, but the formal geometry of meaning
+itself—the syntactic architecture through which consciousness navigates
+and renders the cosmos intelligible.</p>
+</body>
+</html>

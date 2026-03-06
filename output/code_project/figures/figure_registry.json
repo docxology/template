@@ -42,27 +42,5 @@
     "placement": "h",
     "generated_by": "optimization_analysis.py",
     "metadata": {}
-  },
-  "fig:stability": {
-    "figure_id": "figure_004",
-    "filename": "stability_analysis.png",
-    "caption": "Numerical stability analysis results and recommendations",
-    "label": "fig:stability",
-    "section": "Results",
-    "width": "0.8\\textwidth",
-    "placement": "h",
-    "generated_by": "optimization_analysis.py",
-    "metadata": {}
-  },
-  "fig:benchmark": {
-    "figure_id": "figure_005",
-    "filename": "performance_benchmark.png",
-    "caption": "Performance benchmarking results and metrics",
-    "label": "fig:benchmark",
-    "section": "Results",
-    "width": "0.8\\textwidth",
-    "placement": "h",
-    "generated_by": "optimization_analysis.py",
-    "metadata": {}
   }
 }

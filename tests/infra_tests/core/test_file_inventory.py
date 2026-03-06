@@ -79,7 +79,7 @@ class TestFileInventoryManager:
     def test_initialization(self):
         """Test manager initialization."""
         manager = FileInventoryManager()
-        assert manager.OUTPUT_CATEGORIES == [
+        assert list(manager.OUTPUT_CATEGORIES) == [
             "pdf",
             "figures",
             "data",

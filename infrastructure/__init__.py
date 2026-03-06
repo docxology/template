@@ -12,6 +12,7 @@ Modules:
     rendering: Multi-format output generation
     publishing: Academic publishing & dissemination
     reporting: Pipeline reporting & error aggregation
+    steganography: Optional secure PDF post-processing (overlays, barcodes, hashing)
 """
 
 __version__ = "2.0.0"
@@ -50,8 +51,14 @@ try:
 
     # Validation
     from .validation import validate_markdown, validate_pdf_rendering, verify_output_integrity
+except ImportError as _e:
+    import warnings
+    warnings.warn(f"infrastructure convenience imports unavailable: {_e}", ImportWarning, stacklevel=2)
+
+# Steganography — optional, only loaded when dependencies are available
+try:
+    from .steganography import SteganographyConfig, SteganographyProcessor, process_pdf
 except ImportError:
-    # Graceful fallback if imports fail
     pass
 
 __all__ = [
@@ -64,6 +71,7 @@ __all__ = [
     "rendering",
     "publishing",
     "reporting",
+    "steganography",
     # Core conveniences
     "get_logger",
     "setup_logger",

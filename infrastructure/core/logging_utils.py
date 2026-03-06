@@ -143,29 +143,11 @@ class ProjectLogger:
             self._logger.setLevel(level)
 
     def debug(self, message: str, *args, **kwargs) -> None:
-        """Log a debug-level message.
-
-        Args:
-            message: The message to log.
-            *args: Additional positional arguments for string formatting.
-            **kwargs: Additional keyword arguments for the logger.
-
-        Returns:
-            None
-        """
+        """Log debug message."""
         self._logger.debug(message, *args, **kwargs)
 
     def info(self, message: str, *args, **kwargs) -> None:
-        """Log an info-level message.
-
-        Args:
-            message: The message to log.
-            *args: Additional positional arguments for string formatting.
-            **kwargs: Additional keyword arguments for the logger.
-
-        Returns:
-            None
-        """
+        """Log info message."""
         self._logger.info(message, *args, **kwargs)
 
     def warning(self, message: str, *args, **kwargs) -> None:
@@ -173,16 +155,7 @@ class ProjectLogger:
         self._logger.warning(message, *args, **kwargs)
 
     def error(self, message: str, *args, **kwargs) -> None:
-        """Log an error-level message.
-
-        Args:
-            message: The error message to log.
-            *args: Additional positional arguments for string formatting.
-            **kwargs: Additional keyword arguments for the logger.
-
-        Returns:
-            None
-        """
+        """Log error message."""
         self._logger.error(message, *args, **kwargs)
 
     def critical(self, message: str, *args, **kwargs) -> None:
@@ -194,14 +167,7 @@ class ProjectLogger:
         log_success(message, self._logger)
 
     def header(self, message: str) -> None:
-        """Log a section header with visual emphasis.
-
-        Args:
-            message: The header text to display.
-
-        Returns:
-            None
-        """
+        """Log section header."""
         log_header(message, self._logger)
 
     def progress(self, current: int, total: int, task: str = "") -> None:
@@ -587,33 +553,9 @@ def log_function_call(logger: Optional[logging.Logger] = None) -> Callable:
     """
 
     def decorator(func: Callable[..., T]) -> Callable[..., T]:
-        """Wrap the target function with logging functionality.
-
-        Args:
-            func: The function to be decorated with logging.
-
-        Returns:
-            Callable[..., T]: Wrapped function that logs calls and timing.
-        """
         func_logger = logger or get_logger(func.__module__)
 
         def wrapper(*args: Any, **kwargs: Any) -> T:
-            """Execute the wrapped function with entry/exit logging.
-
-            Logs the function call at entry, measures execution time,
-            and logs completion or failure at exit.
-
-            Args:
-                *args: Positional arguments passed to the wrapped function.
-                **kwargs: Keyword arguments passed to the wrapped function.
-
-            Returns:
-                T: The return value from the wrapped function.
-
-            Raises:
-                Exception: Re-raises any exception from the wrapped function
-                    after logging the failure.
-            """
             func_logger.info(f"Calling: {func.__name__}")
             start_time = time.time()
             try:

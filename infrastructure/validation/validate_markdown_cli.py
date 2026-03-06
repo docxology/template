@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from typing import Any, Optional
+from typing import Optional
 
 # Add infrastructure to path for imports BEFORE any infrastructure imports
 repo_root = Path(__file__).parent.parent

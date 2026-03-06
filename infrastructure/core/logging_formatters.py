@@ -70,12 +70,12 @@ class TemplateFormatter(logging.Formatter):
     Adds emojis when appropriate and running in a TTY.
     """
 
-    LEVEL_EMOJIS = {
+    LEVEL_EMOJIS: dict = {
         logging.DEBUG: "",
         logging.INFO: EMOJIS["info"] if USE_EMOJIS else "",
         logging.WARNING: EMOJIS["warning"] if USE_EMOJIS else "",
         logging.ERROR: EMOJIS["error"] if USE_EMOJIS else "",
-    }
+    }  # read-only lookup — do not mutate
 
     def format(self, record: logging.LogRecord) -> str:
         """Format log record with timestamp and emoji.

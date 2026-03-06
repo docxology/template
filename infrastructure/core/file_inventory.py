@@ -36,7 +36,7 @@ class FileInventoryManager:
     """Manage file inventory and reports."""
 
     # Standard output categories to scan
-    OUTPUT_CATEGORIES = [
+    OUTPUT_CATEGORIES = (
         "pdf",
         "figures",
         "data",
@@ -47,7 +47,7 @@ class FileInventoryManager:
         "web",
         "slides",
         "tex",
-    ]
+    )
 
     def collect_output_files(
         self, output_dir: Path, categories: Optional[List[str]] = None

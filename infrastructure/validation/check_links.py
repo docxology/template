@@ -21,6 +21,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Set, Tuple
 
 from infrastructure.core.logging_utils import get_logger
+from infrastructure.validation.doc_accuracy import extract_headings
 
 logger = get_logger(__name__)
 
@@ -661,29 +662,6 @@ def check_file_reference(target: str, source_file: Path, repo_root: Path) -> Tup
             return False, f"File or directory does not exist: {target_path}"
     except Exception as e:
         return False, f"Error resolving path: {e}"
-
-
-def extract_headings(content: str) -> Set[str]:
-    """Extract all heading anchors from markdown content."""
-    headings = set()
-
-    # Pattern for headings with anchors: # Heading {#anchor}
-    anchor_pattern = re.compile(r"^#+\s+.*\{#([^}]+)\}", re.MULTILINE)
-    for match in anchor_pattern.finditer(content):
-        headings.add(match.group(1))
-
-    # Pattern for regular headings (convert to anchor format)
-    heading_pattern = re.compile(r"^(#+)\s+(.+)$", re.MULTILINE)
-    for match in heading_pattern.finditer(content):
-        heading_text = match.group(2).strip()
-        # Convert to anchor format (lowercase, spaces to hyphens, remove special chars)
-        anchor = re.sub(r"[^\w\s-]", "", heading_text.lower())
-        anchor = re.sub(r"[-\s]+", "-", anchor)
-        anchor = anchor.strip("-")
-        if anchor:
-            headings.add(anchor)
-
-    return headings
 
 
 def main() -> int:

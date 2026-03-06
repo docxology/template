@@ -65,9 +65,24 @@ def run_analysis_script(script_path: Path, repo_root: Path, project_name: str = 
     """
     logger.info(f"\n  Running: {project_name}/{script_path.name}")
 
-    cmd = get_python_command() + [str(script_path)]
-
     project_root = repo_root / "projects" / project_name
+
+    # Detect project-local venv: if the project has its own .venv with optional
+    # dependencies (e.g., discopy for cognitive_case_diagrams), use uv run
+    # from the project directory so those dependencies are available.
+    project_venv = project_root / ".venv"
+    if project_venv.is_dir():
+        import shutil
+
+        uv_path = shutil.which("uv")
+        if uv_path:
+            cmd = [uv_path, "run", "--directory", str(project_root), "python", str(script_path)]
+            logger.info(f"  Using project-local venv: {project_venv}")
+        else:
+            cmd = get_python_command() + [str(script_path)]
+            logger.warning("  Project has local .venv but 'uv' not found; using root Python")
+    else:
+        cmd = get_python_command() + [str(script_path)]
 
     # Get clean environment dict with uv compatibility (handles VIRTUAL_ENV warnings)
     env = get_subprocess_env()
@@ -87,10 +102,14 @@ def run_analysis_script(script_path: Path, repo_root: Path, project_name: str = 
     # Set PROJECT_ROOT env var for scripts that need to find resources relative to project
     env["PROJECT_DIR"] = str(project_root)
 
+    # Remove VIRTUAL_ENV to prevent uv from getting confused when switching venvs
+    env.pop("VIRTUAL_ENV", None)
+
     try:
         with log_operation(f"Execute {script_path.name}", logger):
-            # Run from repo_root to prevent uv from creating project-local venvs
-            # Scripts use PROJECT_DIR env var and PYTHONPATH for project-relative paths
+            # When using project-local venv, run from repo_root but let uv
+            # handle the venv via --directory. Otherwise run from repo_root
+            # as before.
             result = subprocess.run(
                 cmd, cwd=str(repo_root), capture_output=False, check=False, env=env
             )

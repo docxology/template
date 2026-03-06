@@ -1,0 +1,142 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Abstract},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{\texorpdfstring{Abstract}{Abstract}}
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Abstract}
+\protect\phantomsection\label{abstract}
+Linguistic case is the formal inflectional and syntactic encoding of
+participant roles---such as agent, patient, and instrument---that
+structures semantic dependencies across the world's languages. This
+manuscript presents a wide-scoping review of theoretical and applied
+linguistics, synthesizing categorial grammar, compositional semantics,
+enriched category theory, and topos-theoretic logic within a modern
+computational and cognitive methodology. From the foundational Kāraka
+theory of Pāṇini and Charles Fillmore's universal deep cases through to
+the contemporary alignment typologies of Polinsky and Preminger, the
+grammatical space of case systems exhibits a rigorous algebraic
+topology. Category theory provides the native mathematical architecture
+for this structure: thematic roles manifest as objects, grammatical
+derivations as morphisms, and cross-linguistic alignment variations as
+structure-preserving functors. The residuated syntactic calculus of
+Lambek, simplified into pregroup grammars, instantiates sentence
+derivations as compact closed categories, rendering complex grammatical
+operations visually transparent through Joyal and Street's string
+diagrams. The DisCoCat framework functorially maps these abstract
+syntactic derivations into concrete vector spaces, generating
+empirically testable compositional semantics, while its topological
+successor, DisCoCirc, expands this tensor network logic to
+multi-sentence discourse coherence via persistent entity wires. The
+integration of categorical magnitude over \([0,1]\)-enriched hom-sets
+translates semantic proximity into information-theoretic invariants of
+linguistic complexity. Furthermore, Caramello's topos-theoretic bridges
+guarantee structural translation across divergent formalisms, ensuring
+that invariants established in one grammatical theory port seamlessly to
+another. Embedding these linguistic traditions within the biophysics of
+active inference reveals case-marked commutative diagrams not merely as
+descriptive notation, but as the generative models cognitive systems
+deploy to minimize surprisal during embodied action and linguistic
+comprehension. The synthetic CEREBRUM architecture instantiates this
+unification computationally by assigning case roles as functional
+constraints within an active inference cycle. The cognitive science of
+diagrammatic reasoning---from Larkin and Simon's computational analyses
+to Shimojima's free-ride inferences---establishes these tensor networks
+as cognitively privileged representations offering deep inferential
+advantages. Ultimately, categorical compositional structure supplies the
+mathematical bedrock for scalable, interpretable artificial
+intelligence, demonstrating that the identical relational algebras
+governing human grammatical case assignment inherently support
+structured multi-agent coordination, linguistic generation, and dynamic
+environmental adaptation.
+\end{frame}
+
+\end{document}

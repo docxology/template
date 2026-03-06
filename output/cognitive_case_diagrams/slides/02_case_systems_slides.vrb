@@ -1,0 +1,118 @@
+\frametitle{Categorical Formalization of Case Systems}
+\protect\phantomsection\label{categorical-formalization-of-case-systems}
+\begin{block}{Case Categories as Directed Graphs}
+\protect\phantomsection\label{case-categories-as-directed-graphs}
+We define a \textbf{case category} \(\mathcal{C}\) as a small category
+where:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Objects} are case roles (NOM, ACC, GEN, DAT, INS, LOC, ABL,
+  VOC)
+\item
+  \textbf{Morphisms} are grammatical relations between roles (e.g.,
+  ``transitive action'': NOM → ACC)
+\item
+  \textbf{Identity morphisms} represent the reflexive relation of each
+  case role to itself
+\item
+  \textbf{Composition} models the transitivity of grammatical
+  dependencies
+\end{itemize}
+
+This formalization is implemented in our \texttt{CaseCategory} class,
+which uses a directed graph (via NetworkX) as the underlying
+representation. Each object carries its role enum and optional
+morphosyntactic features; each morphism carries a relation label and an
+enriched weight \(w \in [0,1]\). \autoref{fig:case-standard} shows the
+full eight-case standard category.
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={The standard linguistic case category with eight case roles (NOM, ACC, GEN, DAT, INS, LOC, ABL, VOC) and directed morphisms representing grammatical relations between them. Edge labels encode relation types (e.g., transitive action, possession, spatial grounding), and edge weights in the interval zero to one reflect proto-role satisfaction. Generated from the CaseCategory class.}]{../figures/case_category_standard.png}}
+\caption{The standard linguistic case category with eight case roles
+(NOM, ACC, GEN, DAT, INS, LOC, ABL, VOC) and directed morphisms
+representing grammatical relations between them. Edge labels encode
+relation types (e.g., transitive action, possession, spatial grounding),
+and edge weights in the interval zero to one reflect proto-role
+satisfaction. Generated from the CaseCategory
+class.}\label{fig:case-standard}
+\end{figure}
+\end{block}
+
+\begin{block}{Alignment Functors Between Case Categories}
+\protect\phantomsection\label{alignment-functors-between-case-categories}
+An \textbf{alignment functor} \(F: \mathcal{U} \to \mathcal{L}\) maps a
+universal (maximal) case category \(\mathcal{U}\) to a language-specific
+category \(\mathcal{L}\) by collapsing objects that a particular
+language treats as equivalent. For example, in an accusative language,
+the functor merges S and A into a single NOM role while keeping P as a
+distinct ACC role: \(F(\text{S}) = F(\text{A}) = \text{NOM}\),
+\(F(\text{P}) = \text{ACC}\).
+
+This functor is:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Surjective on objects}: every case in the target language is
+  the image of some universal role
+\item
+  \textbf{Structure-preserving}: grammatical relations in
+  \(\mathcal{U}\) map to grammatical relations in \(\mathcal{L}\)
+\item
+  \textbf{Non-identity when alignment differs}: the kernel of \(F\) (the
+  set of objects mapped to the same target) characterizes the alignment
+  type
+\end{itemize}
+
+The alignment functor provides a formal account of neutralization: two
+semantically distinct roles (S vs.~A) receive the same morphological
+treatment because the functor maps them to the same object.
+\autoref{fig:alignment} shows three alignment systems rendered from our
+\texttt{CaseCategory} implementation.
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Side-by-side comparison of three alignment systems---Nominative-Accusative, Ergative-Absolutive, and Tripartite---showing how each alignment type groups the three core arguments (S, A, P) into distinct morphological categories. Color-coded nodes indicate case role identity; shared colors reveal the S=A or S=P neutralizations that define each alignment.}]{../figures/alignment_comparison.png}}
+\caption{Side-by-side comparison of three alignment
+systems---Nominative-Accusative, Ergative-Absolutive, and
+Tripartite---showing how each alignment type groups the three core
+arguments (S, A, P) into distinct morphological categories. Color-coded
+nodes indicate case role identity; shared colors reveal the S=A or S=P
+neutralizations that define each alignment.}\label{fig:alignment}
+\end{figure}
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={The categorical composition triangle: morphism f (transitive action, NOM to ACC) and morphism g (transfer, ACC to DAT) compose to yield g after f (NOM to DAT), illustrating how grammatical dependencies chain transitively through intermediate case roles. The commutativity of this triangle encodes that indirect object assignment factors through the direct object.}]{../figures/composition_triangle.png}}
+\caption{The categorical composition triangle: morphism f (transitive
+action, NOM to ACC) and morphism g (transfer, ACC to DAT) compose to
+yield g after f (NOM to DAT), illustrating how grammatical dependencies
+chain transitively through intermediate case roles. The commutativity of
+this triangle encodes that indirect object assignment factors through
+the direct object.}\label{fig:composition}
+\end{figure}
+\end{block}
+
+\begin{block}{Enriched Morphisms, Proto-Roles, and Graded Structure}
+\protect\phantomsection\label{enriched-morphisms-proto-roles-and-graded-structure}
+Following Dowty {[}-@dowty1991thematic{]}, we equip morphisms with
+weights in \([0,1]\) that encode the degree of proto-role satisfaction.
+A morphism \(f: \text{NOM} \to \text{ACC}\) with weight \(w = 0.9\)
+indicates a strong transitive action (clear agent acting on clear
+patient), while \(w = 0.4\) might indicate an experiencer construction
+(``The child fears the dark'') where the nominative argument only weakly
+satisfies Proto-Agent entailments.
+
+Composition of enriched morphisms multiplies weights:
+\[w(g \circ f) = w(g) \cdot w(f)\]
+
+This multiplicative composition reflects the intuition that grammatical
+dependencies attenuate as they chain through intermediate roles.
+\autoref{fig:composition} illustrates the categorical composition of two
+morphisms through an intermediate case role. The resulting structure is
+a category enriched over \(([0,1], \cdot, 1)\)---a connection we develop
+fully in \autoref{sec:enriched-categories}.
+\end{block}

@@ -122,7 +122,7 @@ class TestPerformanceMonitor:
         metrics = self.monitor.metrics_history[0]
         assert metrics.operation_name == "mem_track"
         # Memory metrics should be set (may be 0 for small allocations)
-        assert metrics.memory_peak is not None or metrics.memory_current is not None or True
+        # Memory tracking is best-effort; verify the operation name was recorded at minimum
 
     def test_monitor_history_initially_empty(self):
         """Fresh monitor has empty history."""

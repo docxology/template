@@ -51,13 +51,7 @@ def format_error_with_suggestions(error: Any) -> str:
     if error.context:
         lines.append("\n📋 Context:")
         for key, value in error.context.items():
-            # Format file paths and line numbers specially
-            if key == "file" and isinstance(value, (str, Path)):
-                lines.append(f"   • {key}: {value}")
-            elif key == "line" and isinstance(value, int):
-                lines.append(f"   • {key}: {value}")
-            else:
-                lines.append(f"   • {key}: {value}")
+            lines.append(f"   • {key}: {value}")
 
     if error.suggestions:
         lines.append("\n🔧 Recovery Options:")

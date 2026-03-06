@@ -52,6 +52,19 @@ class TestingConfig(TypedDict, total=False):
     project_coverage_threshold: int
 
 
+class SteganographyConfigYAML(TypedDict, total=False):
+    """YAML schema for the steganography config section."""
+    enabled: bool
+    overlays: bool
+    barcodes: bool
+    metadata: bool
+    hashing: bool
+    encryption: bool
+    overlay_text: str
+    overlay_opacity: float
+    pdf_password: str
+
+
 @dataclass(frozen=True)
 class ResolvedTestingConfig:
     """Immutable, fully-resolved testing configuration with defaults applied."""
@@ -69,6 +82,7 @@ class ManuscriptConfig(TypedDict, total=False):
     publication: PublicationConfig
     llm: LLMConfig
     testing: TestingConfig
+    steganography: SteganographyConfigYAML
     keywords: List[str]
     metadata: Dict[str, str]
 
@@ -431,39 +445,43 @@ def get_testing_config(repo_root: Path | str) -> TestingConfig:
         try:
             result["infra_coverage_threshold"] = int(env_infra)
         except (ValueError, TypeError):
-            pass
+            _logger = logging.getLogger(__name__)
+            _logger.debug("INFRA_COVERAGE_THRESHOLD=%r is not a valid int, ignoring", env_infra)
 
     if env_project := os.environ.get("PROJECT_COVERAGE_THRESHOLD"):
         try:
             result["project_coverage_threshold"] = int(env_project)
         except (ValueError, TypeError):
-            pass
+            _logger = logging.getLogger(__name__)
+            _logger.debug("PROJECT_COVERAGE_THRESHOLD=%r is not a valid int, ignoring", env_project)
 
     # Priority 2: Load from config file
     config_path = find_config_file(repo_root)
     config = load_config(config_path) if config_path else None
     testing_config = config.get("testing", {}) if config else {}
 
+    _logger = logging.getLogger(__name__)
+
     # Read max_test_failures (general/default)
     if "max_test_failures" in testing_config:
         try:
             result["max_test_failures"] = int(testing_config["max_test_failures"])
         except (ValueError, TypeError):
-            pass  # Invalid value, skip
+            _logger.debug("Invalid max_test_failures value: %r", testing_config["max_test_failures"])
 
     # Read max_infra_test_failures (infrastructure-specific)
     if "max_infra_test_failures" in testing_config:
         try:
             result["max_infra_test_failures"] = int(testing_config["max_infra_test_failures"])
         except (ValueError, TypeError):
-            pass  # Invalid value, skip
+            _logger.debug("Invalid max_infra_test_failures value: %r", testing_config["max_infra_test_failures"])
 
     # Read max_project_test_failures (project-specific)
     if "max_project_test_failures" in testing_config:
         try:
             result["max_project_test_failures"] = int(testing_config["max_project_test_failures"])
         except (ValueError, TypeError):
-            pass  # Invalid value, skip
+            _logger.debug("Invalid max_project_test_failures value: %r", testing_config["max_project_test_failures"])
 
     # Read coverage thresholds from config (if not already set by env vars)
     if "infra_coverage_threshold" not in result:
@@ -471,7 +489,7 @@ def get_testing_config(repo_root: Path | str) -> TestingConfig:
             try:
                 result["infra_coverage_threshold"] = int(testing_config["infra_coverage_threshold"])
             except (ValueError, TypeError):
-                pass
+                _logger.debug("Invalid infra_coverage_threshold value: %r", testing_config["infra_coverage_threshold"])
 
     if "project_coverage_threshold" not in result:
         if "project_coverage_threshold" in testing_config:
@@ -480,7 +498,7 @@ def get_testing_config(repo_root: Path | str) -> TestingConfig:
                     testing_config["project_coverage_threshold"]
                 )
             except (ValueError, TypeError):
-                pass
+                _logger.debug("Invalid project_coverage_threshold value: %r", testing_config["project_coverage_threshold"])
 
     # Priority 3: Apply defaults for any missing values
     for key, default_val in defaults.items():
