@@ -1,5 +1,7 @@
 """Output validation for LLM responses."""
 
+from __future__ import annotations
+
 from infrastructure.llm.validation.core import OutputValidator
 from infrastructure.llm.validation.format import (
     CONVERSATIONAL_PATTERNS,

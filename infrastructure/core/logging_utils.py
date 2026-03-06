@@ -55,66 +55,6 @@ LOG_LEVEL_MAP = {
 # STANDARDIZED PROJECT LOGGING INTERFACE
 # =============================================================================
 
-"""
-Standardized Logging Interface for Research Projects
-
-This module provides a unified logging interface that works across both
-infrastructure and project layers. Projects can use the simple ProjectLogger
-class for consistent logging throughout their codebase.
-
-USAGE PATTERNS:
-
-1. Basic Project Logging:
-   ```python
-   from utils.logging import get_logger
-   log = get_logger(__name__)
-   log.info("Starting analysis")
-   log.success("Completed successfully")
-   ```
-
-2. Context Managers:
-   ```python
-   with log.operation("Running simulation"):
-       # Your code here
-       pass
-   ```
-
-3. Progress Tracking:
-   ```python
-   log.progress(50, 100, "Processing data")
-   log.stage(2, 5, "Data Analysis")
-   ```
-
-4. File Logging:
-   ```python
-   from infrastructure.core.logging_utils import setup_project_logging
-   log = setup_project_logging(__name__, log_file="analysis.log")
-   ```
-
-ENVIRONMENT VARIABLES:
-- LOG_LEVEL: 0=DEBUG, 1=INFO, 2=WARNING, 3=ERROR
-- NO_EMOJI: Disable emoji in output (for CI/CD)
-- STRUCTURED_LOGGING: Enable JSON structured logging
-
-LOGGING LEVELS:
-- DEBUG: Detailed diagnostic information
-- INFO: General information about program execution
-- WARNING: Warning messages for potential issues
-- ERROR: Error messages for failures
-- SUCCESS: Success confirmations with emoji
-- HEADER: Section headers with formatting
-- PROGRESS: Progress indicators with percentages
-- STAGE: Pipeline stage indicators
-- SUBSTEP: Sub-operation indicators
-
-BEST PRACTICES:
-1. Use __name__ as logger name for proper hierarchy
-2. Use context managers for operations that have clear start/end
-3. Use appropriate log levels (don't spam INFO with DEBUG details)
-4. Use progress/stage logging for long-running operations
-5. Test logging in your code (don't assume it works)
-"""
-
 
 class ProjectLogger:
     """Standardized logging interface for research projects.

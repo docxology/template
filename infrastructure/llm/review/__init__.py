@@ -1,5 +1,7 @@
 """Manuscript review system for LLM operations."""
 
+from __future__ import annotations
+
 from infrastructure.llm.review.generator import (
     check_ollama_availability,
     create_review_client,

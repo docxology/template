@@ -7,6 +7,8 @@ This module provides tools for generating research outputs:
 - Posters
 """
 
+from __future__ import annotations
+
 from typing import Optional
 
 from infrastructure.rendering.config import RenderingConfig

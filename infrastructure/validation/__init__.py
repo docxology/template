@@ -14,6 +14,8 @@ Modules:
     repo_scanner: Repository-wide accuracy and completeness scanning
 """
 
+from __future__ import annotations
+
 from .audit_orchestrator import generate_audit_report, run_comprehensive_audit
 from .figure_validator import validate_figure_registry
 from .integrity import (

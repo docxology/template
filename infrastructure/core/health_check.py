@@ -4,6 +4,8 @@ This module provides comprehensive health monitoring for all system components,
 including dependencies, filesystem, network, and performance metrics.
 """
 
+from __future__ import annotations
+
 import os
 import time
 from pathlib import Path

@@ -24,6 +24,8 @@ Direct imports (recommended):
     from infrastructure.llm.validation import OutputValidator
 """
 
+from __future__ import annotations
+
 # Convenience re-exports from submodules (use direct imports for better clarity)
 from infrastructure.llm.core import (
     ConversationContext,

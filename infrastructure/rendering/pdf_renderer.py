@@ -34,7 +34,6 @@ def _parse_missing_package_error(log_file: Path) -> Optional[str]:
         log_content = log_file.read_text(encoding="utf-8", errors="ignore")
 
         # Look for "File `*.sty' not found" pattern
-        import re
 
         match = re.search(r"File `([^']+\.sty)' not found", log_content)
         if match:
@@ -426,7 +425,6 @@ class PDFRenderer:
         if combined_md.exists():
             try:
                 md_content = combined_md.read_text(encoding="utf-8")
-                import re
 
                 # Validate basic markdown structure
                 # Check for common syntax issues that Pandoc might complain about
@@ -586,7 +584,6 @@ class PDFRenderer:
                     ):
                         error_lines.append(f"Pandoc Error: {line}")
                         # Extract position number
-                        import re
 
                         pos_match = re.search(r"position\s+(\d+)", line_lower)
                         if pos_match:
@@ -610,7 +607,6 @@ class PDFRenderer:
                             error_lines.append(f"Pandoc Error (stdout): {line}")
                         # Extract position number if not already found
                         if position_info is None:
-                            import re
 
                             pos_match = re.search(r"position\s+(\d+)", line_lower)
                             if pos_match:
@@ -945,7 +941,6 @@ class PDFRenderer:
 
         # Verify figure files exist before compilation
         figures_dir = manuscript_dir.parent / "output" / "figures"
-        import re
 
         fig_pattern = r"\\includegraphics(?:\[[^\]]*\])?\{([^}]+)\}"
         referenced_figures = re.findall(fig_pattern, tex_content)
@@ -1314,7 +1309,6 @@ class PDFRenderer:
                 content = content.rstrip() + "\n"
 
                 # Validate section header syntax in this file
-                import re
 
                 header_attrs = re.findall(r"\{#([^}]+)\}", content)
                 for attr in header_attrs:
@@ -1419,7 +1413,6 @@ class PDFRenderer:
             return ""
 
         # Look for ```latex ... ``` blocks (handles various line ending styles)
-        import re
 
         # Pattern handles different line endings and optional whitespace
         pattern = r"```\s*latex\s*\n(.*?)\n\s*```"
@@ -1768,7 +1761,6 @@ class PDFRenderer:
             log_content = log_file.read_text(errors="ignore")
 
             # Look for common graphics-related error patterns
-            import re
 
             # Pattern for file not found errors
             file_not_found = re.findall(r"File `([^`]+)` not found", log_content)

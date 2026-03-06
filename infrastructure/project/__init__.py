@@ -9,6 +9,8 @@ Key Functions:
     - get_project_metadata: Extract project configuration
 """
 
+from __future__ import annotations
+
 from infrastructure.project.discovery import (
     ProjectInfo,
     discover_projects,

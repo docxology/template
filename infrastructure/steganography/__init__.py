@@ -27,6 +27,8 @@ Usage::
     process_pdf(Path("paper.pdf"), config=config, title="My Paper")
 """
 
+from __future__ import annotations
+
 from infrastructure.steganography.config import SteganographyConfig
 from infrastructure.steganography.core import SteganographyProcessor, process_pdf
 

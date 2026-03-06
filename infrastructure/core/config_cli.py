@@ -16,6 +16,8 @@ Usage:
     eval "$(python3 infrastructure/core/config_cli.py --project act_inf_metaanalysis)"
 """
 
+from __future__ import annotations
+
 import argparse
 import sys
 from pathlib import Path

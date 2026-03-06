@@ -4,6 +4,8 @@ This module provides comprehensive security measures including input validation,
 security headers, rate limiting, and security monitoring.
 """
 
+from __future__ import annotations
+
 import re
 import threading
 import time

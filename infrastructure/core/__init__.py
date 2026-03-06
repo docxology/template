@@ -9,6 +9,8 @@ Modules:
     exceptions: Custom exception hierarchy with context preservation
 """
 
+from __future__ import annotations
+
 from .checkpoint import CheckpointManager, PipelineCheckpoint, StageResult
 from .config_loader import (
     find_config_file,

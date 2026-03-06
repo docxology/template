@@ -4,6 +4,8 @@ This module provides comprehensive performance monitoring, benchmarking,
 and profiling capabilities for research code execution.
 """
 
+from __future__ import annotations
+
 import cProfile
 import functools
 import pstats

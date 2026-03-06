@@ -7,11 +7,14 @@ and formatting metadata for LaTeX and bash export. Part of the infrastructure la
 from __future__ import annotations
 
 import difflib
-import logging
 import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Optional, TypedDict
+
+from infrastructure.core.logging_utils import get_logger
+
+_logger = get_logger(__name__)
 
 
 class AuthorConfig(TypedDict, total=False):
@@ -110,7 +113,6 @@ def validate_config_keys(config: Dict[str, Any], config_path: Path | str = "") -
     """
     known_keys = frozenset(ManuscriptConfig.__annotations__.keys())
     warnings: List[str] = []
-    logger = logging.getLogger(__name__)
 
     if not isinstance(config, dict):
         return warnings
@@ -122,7 +124,7 @@ def validate_config_keys(config: Dict[str, Any], config_path: Path | str = "") -
                 msg = f"Unknown config key '{key}' in {config_path} — did you mean '{matches[0]}'?"
             else:
                 msg = f"Unknown config key '{key}' in {config_path}"
-            logger.warning(msg)
+            _logger.warning(msg)
             warnings.append(msg)
 
     return warnings
@@ -156,8 +158,7 @@ def load_config(config_path: Path | str) -> Optional[ManuscriptConfig]:
         return None
     except Exception:
         # Log unexpected errors but don't fail
-        logger = logging.getLogger(__name__)
-        logger.warning(f"Unexpected error loading config from {config_path}")
+        _logger.warning(f"Unexpected error loading config from {config_path}")
         return None
 
 
@@ -397,10 +398,7 @@ def get_review_types(repo_root: Path | str, project_name: str = "project") -> Li
     invalid_types = [rt for rt in review_types if rt not in VALID_REVIEW_TYPES]
 
     if invalid_types:
-        import logging
-
-        logger = logging.getLogger(__name__)
-        logger.warning(f"Invalid review types ignored: {invalid_types}")
+                _logger.warning(f"Invalid review types ignored: {invalid_types}")
 
     # If no valid types after filtering, default to single review
     if not valid_types:
@@ -445,22 +443,19 @@ def get_testing_config(repo_root: Path | str) -> TestingConfig:
         try:
             result["infra_coverage_threshold"] = int(env_infra)
         except (ValueError, TypeError):
-            _logger = logging.getLogger(__name__)
-            _logger.debug("INFRA_COVERAGE_THRESHOLD=%r is not a valid int, ignoring", env_infra)
+                    _logger.debug("INFRA_COVERAGE_THRESHOLD=%r is not a valid int, ignoring", env_infra)
 
     if env_project := os.environ.get("PROJECT_COVERAGE_THRESHOLD"):
         try:
             result["project_coverage_threshold"] = int(env_project)
         except (ValueError, TypeError):
-            _logger = logging.getLogger(__name__)
-            _logger.debug("PROJECT_COVERAGE_THRESHOLD=%r is not a valid int, ignoring", env_project)
+                    _logger.debug("PROJECT_COVERAGE_THRESHOLD=%r is not a valid int, ignoring", env_project)
 
     # Priority 2: Load from config file
     config_path = find_config_file(repo_root)
     config = load_config(config_path) if config_path else None
     testing_config = config.get("testing", {}) if config else {}
 
-    _logger = logging.getLogger(__name__)
 
     # Read max_test_failures (general/default)
     if "max_test_failures" in testing_config:

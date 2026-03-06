@@ -15,6 +15,8 @@ Modules:
     steganography: Optional secure PDF post-processing (overlays, barcodes, hashing)
 """
 
+from __future__ import annotations
+
 __version__ = "2.0.0"
 __layer__ = "infrastructure"
 

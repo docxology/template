@@ -1,5 +1,7 @@
 """Prompt templates for research tasks."""
 
+from __future__ import annotations
+
 from infrastructure.core.exceptions import LLMTemplateError
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.llm.templates.base import ResearchTemplate

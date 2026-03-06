@@ -12,6 +12,8 @@ All business logic is in src/pdf_validator.py
 This script handles only I/O and orchestration.
 """
 
+from __future__ import annotations
+
 import sys
 from pathlib import Path
 from typing import Any, Optional

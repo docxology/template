@@ -21,6 +21,8 @@ Usage:
     organizer.copy_combined_pdfs(repo_root, output_dir)
 """
 
+from __future__ import annotations
+
 import shutil
 from dataclasses import dataclass
 from enum import Enum

@@ -10,6 +10,8 @@ This module provides functions to:
 All functions are pure business logic with no I/O side effects.
 """
 
+from __future__ import annotations
+
 import contextlib
 import io
 import re
