@@ -1,0 +1,188 @@
+{
+  "assessments": {
+    "ai_generated_debt": 58,
+    "package_organization": 55
+  },
+  "findings": [
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "restating_optional_logger_guard",
+      "summary": "Identical `if logger is None: logger = get_logger(__name__)` guard copied verbatim into 10+ functions in logging_utils.py",
+      "related_files": ["infrastructure/core/logging_utils.py"],
+      "evidence": [
+        "The pattern `if logger is None:\\n        logger = get_logger(__name__)` appears at lines 261, 300, 331, 398, 419, 446, 475, 498, 600, 636 — identical boilerplate in every utility function.",
+        "The same pattern is repeated in logging_progress.py at lines 164, 462, 488."
+      ],
+      "suggestion": "Make `logger` a required parameter with no default, or create a single internal `_resolve_logger(logger)` helper and call it once. The current repetition is a hallmark of AI expansion of a simple function signature.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "duplicate_is_test_env_detection",
+      "summary": "Identical 3-condition pytest environment detection block copy-pasted verbatim in both `setup_logger` and `get_logger`",
+      "related_files": ["infrastructure/core/logging_utils.py"],
+      "evidence": [
+        "Lines 130-134 and 200-203 contain byte-for-byte identical code blocks checking `PYTEST_CURRENT_TEST`, `'pytest' in sys.modules`, and a generator over `sys.modules.values()`.",
+        "The comment 'Check if we're in test environment (pytest)' and 'Check if we're in test environment (same detection as setup_logger)' acknowledge the duplication without resolving it."
+      ],
+      "suggestion": "Extract to a module-level `_in_test_env() -> bool` function and call it from both sites.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "duplicate_emojis_dict",
+      "summary": "The `EMOJIS` dict is defined identically in both logging_utils.py and logging_formatters.py",
+      "related_files": [
+        "infrastructure/core/logging_utils.py",
+        "infrastructure/core/logging_formatters.py"
+      ],
+      "evidence": [
+        "logging_formatters.py lines 11-24: '# Define emoji constants here to avoid circular import' followed by a full EMOJIS dict with 11 keys.",
+        "logging_utils.py lines 74-86: same dict with the same 11 keys.",
+        "The comment in formatters.py acknowledges the split was made to avoid circular import, but this is a structural symptom of an incorrect split — constants should live in a standalone constants module imported by both."
+      ],
+      "suggestion": "Move EMOJIS and USE_EMOJIS/USE_STRUCTURED_LOGGING into a `logging_constants.py` module with no infrastructure imports. Both files import from it, breaking the circular dependency without duplication.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "duplicate_function_names_cross_files",
+      "summary": "Two pairs of functions with identical names exist across the logging split files: `log_stage_with_eta` and `log_resource_usage`",
+      "related_files": [
+        "infrastructure/core/logging_utils.py",
+        "infrastructure/core/logging_progress.py"
+      ],
+      "evidence": [
+        "`log_stage_with_eta` is defined at logging_utils.py:571 (takes stage_num, total_stages, stage_name, pipeline_start) AND at logging_progress.py:445 (takes stage, current, total, elapsed_time) — different signatures, same name.",
+        "`log_resource_usage` is defined at logging_utils.py:622 (takes stage_name, logger; queries psutil internally) AND at logging_progress.py:476 (takes cpu_percent, memory_mb, logger as inputs).",
+        "The __all__ in logging_utils.py exports `log_stage_with_eta` referencing the utils version; logging_progress also exports its own. Consumers importing from logging_utils will silently get the wrong version."
+      ],
+      "suggestion": "Rename the logging_progress variants to `log_stage_progress_with_eta` and `log_precomputed_resource_usage`, or consolidate into a single definition. Resolve the name collision before it causes a silent bug.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "stub_body_with_pass",
+      "summary": "`log_progress_streaming` contains a `show_eta` code path that is a documented stub — `pass` with a comment explaining the real implementation is not done",
+      "related_files": ["infrastructure/core/logging_progress.py"],
+      "evidence": [
+        "Lines 432-435: `if show_eta and current > 0:\\n        # Simple ETA calculation would require tracking start time\\n        # For now, just show percentage\\n        pass`",
+        "The `show_eta` parameter is in the public signature but its body is a no-op, making the parameter a lie."
+      ],
+      "suggestion": "Either implement the ETA display using `self.start_time` tracking (matching StreamingProgress) or remove the `show_eta` parameter until the feature is built.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "docstring_bloat_on_trivial_functions",
+      "summary": "Multi-line docstrings with Args/Returns/Example blocks on functions that are 2-4 lines of real logic",
+      "related_files": [
+        "infrastructure/core/logging_utils.py",
+        "infrastructure/core/logging_helpers.py"
+      ],
+      "evidence": [
+        "`format_duration` in logging_helpers.py: 10-line docstring including two Examples for a 14-line function.",
+        "`log_progress` in logging_utils.py: 10-line docstring including a formatted Example for a 2-line function body (`percent = ...; logger.info(...)`).",
+        "`log_substep` in logging_utils.py: 8-line docstring for a 1-line function body (`logger.info(f'\\n  {message}')`).",
+        "Pattern repeats across all 10+ `if logger is None` functions — each has a full docstring, args, returns, and example block."
+      ],
+      "suggestion": "Reserve full Args/Returns/Example docstrings for non-obvious public APIs. One-line summaries are sufficient for wrappers this trivial.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "dead_variable_in_log_header",
+      "summary": "`log_header` computes an emoji string and immediately discards it",
+      "related_files": ["infrastructure/core/logging_utils.py"],
+      "evidence": [
+        "Line 422: `EMOJIS['rocket'] if USE_EMOJIS else ''` — result is not assigned to any variable, so the expression is evaluated and thrown away.",
+        "The intended use (prefixing the header lines) never happens because the result was not captured."
+      ],
+      "suggestion": "Either assign to `emoji` and prefix `separator`/`message` lines, or remove the expression entirely. As-is it is dead code.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "publishing_core_is_pure_passthrough",
+      "summary": "`infrastructure/publishing/core.py` contains zero business logic — it is a re-export relay for four sibling modules",
+      "related_files": [
+        "infrastructure/publishing/core.py",
+        "infrastructure/publishing/__init__.py"
+      ],
+      "evidence": [
+        "core.py lines 23-47: four `from infrastructure.publishing.{citations,metadata,models,platforms} import ... # noqa: F401` blocks importing everything and exporting it all with noqa to suppress unused-import warnings.",
+        "The one actual function in core.py, `create_publication_package` (line 51), could belong in any of the four sibling modules.",
+        "`publishing/__init__.py` then imports from `core` which then re-exports from the real modules — a two-hop indirection with no added abstraction."
+      ],
+      "suggestion": "Move `create_publication_package` into the appropriate sibling module (likely `metadata.py` or a new `package.py`). Delete `core.py` and have `__init__.py` import directly from the four focused modules.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "logging_split_creates_circular_import_workarounds",
+      "summary": "Forced split of `logging_utils.py` into four files creates circular-import escape hatches scattered throughout the split files",
+      "related_files": [
+        "infrastructure/core/logging_utils.py",
+        "infrastructure/core/logging_formatters.py",
+        "infrastructure/core/logging_helpers.py",
+        "infrastructure/core/logging_progress.py"
+      ],
+      "evidence": [
+        "logging_helpers.py line 8: `# Note: get_logger is imported at function level to avoid circular import`; line 44: `from infrastructure.core.exceptions import TemplateError` inside a function body.",
+        "logging_progress.py lines 164-167: `from infrastructure.core.logging_utils import get_logger` inside a function body to avoid circular import.",
+        "logging_progress.py lines 372-373: `from infrastructure.core.logging_helpers import format_duration` inside a method body.",
+        "logging_progress.py lines 422-423 and 463-464: same pattern repeated.",
+        "logging_formatters.py duplicates EMOJIS dict entirely to avoid the circular import.",
+        "The split was made for size reduction but produced four tightly coupled files with bidirectional runtime dependencies."
+      ],
+      "suggestion": "Introduce `logging_constants.py` (no infrastructure imports) for EMOJIS/USE_EMOJIS/USE_STRUCTURED_LOGGING. Move ETA math functions to a standalone `logging_eta.py` with no logging imports. This breaks the cycle structurally instead of with function-level import workarounds.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "core_init_overloaded_with_unrelated_concerns",
+      "summary": "`infrastructure/core/__init__.py` re-exports 80+ names spanning 15 distinct modules including security, LLM-adjacent health checks, and multi-project orchestration",
+      "related_files": ["infrastructure/core/__init__.py"],
+      "evidence": [
+        "The `__init__.py` imports from: checkpoint, config_loader, environment, exceptions, file_inventory, file_operations, health_check, logging_utils, multi_project, performance, performance_monitor, pipeline, pipeline_summary, progress, retry, script_discovery, security.",
+        "Modules like `SecurityValidator`, `RateLimiter`, `SecurityMonitor` are security-domain concerns that have no logical home in a 'core foundation utilities' package.",
+        "`MultiProjectOrchestrator` is a top-level orchestration concern placed inside `core/`.",
+        "`HealthCheckAPI` and `SystemHealthChecker` are operational monitoring concerns, not core utilities.",
+        "The `__all__` list has 90+ entries — navigability is severely impaired."
+      ],
+      "suggestion": "Split `core/` into at minimum: `core/` (logging, exceptions, config, file_ops), `core/pipeline/` (pipeline, checkpoint, progress, retry), and promote `security.py` and `health_check.py` to their own top-level `infrastructure/` subpackages. `multi_project.py` belongs in `infrastructure/project/`.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "ghost_exports_in_reporting_init",
+      "summary": "`infrastructure/reporting/__init__.py` exports `OutputOrganizer` and `FileType` in `__all__` but never imports them",
+      "related_files": ["infrastructure/reporting/__init__.py"],
+      "evidence": [
+        "`__all__` lines 137-138 list `'OutputOrganizer'` and `'FileType'`.",
+        "No `from infrastructure.reporting.output_organizer import ...` line exists anywhere in `__init__.py`.",
+        "Any consumer doing `from infrastructure.reporting import OutputOrganizer` receives `ImportError` at runtime."
+      ],
+      "suggestion": "Add `from infrastructure.reporting.output_organizer import FileType, OutputOrganizer` to `__init__.py`, or remove the entries from `__all__`.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "two_performance_modules_in_core",
+      "summary": "`infrastructure/core/` contains two separate performance modules: `performance.py` and `performance_monitor.py` with overlapping purpose",
+      "related_files": [
+        "infrastructure/core/performance.py",
+        "infrastructure/core/performance_monitor.py",
+        "infrastructure/core/__init__.py"
+      ],
+      "evidence": [
+        "`performance.py` defines `PerformanceMetrics`, `PerformanceMonitor`, `ResourceUsage`, `get_system_resources`, `monitor_performance`.",
+        "`performance_monitor.py` defines `ProfilingMetrics`, `CodeProfiler`, `get_performance_monitor`, `monitor_performance` (decorator), `benchmark_function`, `benchmark_llm_query`, `profile_memory_usage`.",
+        "`core/__init__.py` imports `monitor_performance` from `performance` and then `monitor_performance as monitor_performance_decorator` from `performance_monitor` to avoid a name collision — a naming band-aid over a structural split.",
+        "Both files solve performance measurement; the split criteria are unclear and force the alias at the consumer level."
+      ],
+      "suggestion": "Merge into a single `performance.py` with clear sections (resource tracking vs. profiling), or use `performance/` subpackage with `__init__.py` exposing a clean unified API.",
+      "confidence": "medium"
+    }
+  ]
+}

@@ -1,0 +1,145 @@
+{
+  "assessments": {
+    "ai_generated_debt": 62,
+    "abstraction_fitness": 74,
+    "convention_outlier": 71,
+    "dependency_health": 82
+  },
+  "findings": [
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "repeated_inline_time_import",
+      "summary": "time module imported inline inside every method body instead of once at module level",
+      "related_files": ["infrastructure/llm/core/client.py"],
+      "evidence": [
+        "Line 15: `import time` exists at module top level",
+        "Lines 181, 291, 371, 430, 506, 790: `import time as time_module` repeated inside 6 separate method bodies",
+        "The module-level import is already present; the inline re-imports shadow it under a different alias and serve no purpose"
+      ],
+      "suggestion": "Remove the inline `import time as time_module` statements and alias once at module level with `import time as time_module` replacing `import time`, then use `time_module` consistently.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "dead_prompt_preview_variable",
+      "summary": "`prompt_preview` computed but never consumed in `query()` method",
+      "related_files": ["infrastructure/llm/core/client.py"],
+      "evidence": [
+        "Line 185: `prompt_preview = prompt[:100] + '...' if len(prompt) > 100 else prompt`",
+        "Lines 210-215: the subsequent `logger.info('Starting query', extra={...})` dict includes only `model` and `prompt_length` — `prompt_preview` is absent",
+        "Same variable is correctly used in `query_raw` (line 302) and `stream_query` (line 804), but the dead assignment in `query()` is a copy-paste residue"
+      ],
+      "suggestion": "Remove the `prompt_preview` assignment from `query()` since it is never referenced in that method.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "emoji_heavy_generated_checklists",
+      "summary": "Generated submission checklist and announcement strings are dense with section-emoji decoration that adds no programmatic value",
+      "related_files": ["infrastructure/publishing/core.py"],
+      "evidence": [
+        "Lines 92-164: `create_submission_checklist` returns a multi-section markdown string where every heading is prefixed with a decorative emoji (📋, 📄, 🎯, 🔗, 📊, 🧪, 📝, ✅, 📅)",
+        "Lines 199-236: `create_publication_announcement` similarly prefixes every heading (🚀, 📝, 🔑, 📊, 🔗, 📚)",
+        "Emoji prefixes in machine-generated utility text are a consistent AI hallmark; they do not aid rendering or parsing"
+      ],
+      "suggestion": "Strip decorative emoji from generated section headings in `create_submission_checklist` and `create_publication_announcement`; keep only semantic content.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "nosy_query_entry_exit_logging",
+      "summary": "Every LLMClient query method logs both entry and exit with structured extras, creating excessive noise for a synchronous library call",
+      "related_files": ["infrastructure/llm/core/client.py"],
+      "evidence": [
+        "Each of `query`, `query_raw`, `query_short`, `query_long`, `query_structured`, and `stream_query` emits an INFO-level 'Starting ...' log and a 'Completed ...' log with generation time, response length, and token estimates",
+        "`query_short` (lines 376-408) and `query_long` (lines 435-468) duplicate this pattern on top of `query()`, which already logs — a single call to `query_short` produces 4 log lines at INFO",
+        "This matches the 'nosy debug logging: entry/exit logs on every function' AI-debt pattern"
+      ],
+      "suggestion": "Move per-call timing and token metrics to DEBUG level in `query_short`/`query_long`; let `query()` own the single INFO-level completion record.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "validate_markdown_cli_reimplements_file_helpers",
+      "summary": "`validate_markdown_cli.py` re-implements `find_markdown_files`, `collect_symbols`, `validate_images`, `validate_refs`, and `validate_math` as local helpers that duplicate logic already in `infrastructure/validation/markdown_validator.py`",
+      "related_files": ["infrastructure/validation/validate_markdown_cli.py"],
+      "evidence": [
+        "Lines 56-82: `find_markdown_files()` re-implements directory scanning with custom sort logic",
+        "Lines 85-107: `collect_symbols()` re-implements label/anchor extraction with `re.finditer` patterns already present in the validator",
+        "Lines 110-133, 136-159, 162-182: `validate_images`, `validate_refs`, `validate_math` re-implement checks that the imported `validate_markdown` function performs internally",
+        "Module comment (line 45) says 'Re-export functions from infrastructure for tests' but the functions are local reimplementations, not re-exports"
+      ],
+      "suggestion": "Expose the needed primitives from `infrastructure/validation/markdown_validator.py` directly and import them in the CLI; remove the local reimplementations.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "wide_dict_context_param_bags_in_exceptions",
+      "summary": "`TemplateError` and all subclasses accept an open `dict[str, Any]` context bag, creating an implicit untyped parameter contract at every raise site",
+      "related_files": ["infrastructure/core/exceptions.py"],
+      "evidence": [
+        "Line 46: `context: Optional[dict[str, Any]] = None` — completely open bag",
+        "82 `config_bag_mentions` counted in exceptions.py by the scanner, indicating wide downstream usage",
+        "Different callers stuff heterogeneous keys (`file`, `error`, `script`, `exit_code`, `response`, `url`, `model`) into the same field with no schema enforcement; callers must read source to know what to expect"
+      ],
+      "suggestion": "Define per-exception typed context dataclasses (e.g., `FileErrorContext`, `LLMErrorContext`) or use keyword-only constructor params for the most commonly used fields, reserving the dict bag for truly open-ended extensions.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "scripts_02_missing_standard_logging_pattern",
+      "summary": "`scripts/02_run_analysis.py` does not use the `get_logger`/`log_header`/`log_success` trio that 15 of 18 sibling scripts use",
+      "related_files": ["scripts/02_run_analysis.py"],
+      "evidence": [
+        "Sibling behavior scan reports `get_logger` in 15/18 scripts, `log_header` in 13/18, `log_success` in 11/18",
+        "`scripts/02_run_analysis.py` is listed as missing `get_logger`, `log_header`, and `log_success`",
+        "The file uses `logger = get_logger(__name__)` at line 49 but then never calls `log_header` or `log_success` while the surrounding stage scripts (01, 03, 04, 05) all do"
+      ],
+      "suggestion": "Add `log_header` call at stage entry and `log_success` at stage completion to match the established convention in sibling orchestrators.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "validate_markdown_cli_uses_os_path_instead_of_pathlib",
+      "summary": "`validate_markdown_cli.py` mixes `os.path` / `os.listdir` / `os.path.join` with `pathlib.Path` while every sibling validator uses only `pathlib`",
+      "related_files": ["infrastructure/validation/validate_markdown_cli.py"],
+      "evidence": [
+        "Lines 65-82: `find_markdown_files` uses `os.listdir`, `os.path.join`, `os.path.basename`, `filter(str.isdigit, ...)` — raw os.path string manipulation",
+        "Lines 122-131: `validate_images` uses `os.path.join`, `os.path.dirname`, `os.path.exists`",
+        "Siblings `check_links.py`, `integrity.py`, `markdown_validator.py`, `doc_scanner.py` all use `pathlib.Path` exclusively",
+        "The module already imports `Path` at line 19 but does not use it in these local helpers"
+      ],
+      "suggestion": "Replace `os.path` / `os.listdir` usage in local helpers with `pathlib.Path` methods consistent with sibling modules.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "scripts_init_missing_all_shared_patterns",
+      "summary": "`scripts/__init__.py` is the sole scripts-package file missing `Path`, `sys`, `get_logger`, `log_header`, and `log_success`",
+      "related_files": ["scripts/__init__.py"],
+      "evidence": [
+        "Sibling behavior scan lists it as missing all five shared patterns that 13-17 of its 18 siblings use",
+        "The file is a config/metadata module (defines `PipelineStageDefinition` dataclass and `MENU_SCRIPT_MAPPING`) — a genuine style island compared to the orchestrator siblings"
+      ],
+      "suggestion": "This is a legitimate config-only module; annotate it with a comment distinguishing it from orchestrator scripts so the sibling outlier is intentional and documented rather than accidental drift.",
+      "confidence": "low"
+    },
+    {
+      "dimension": "dependency_health",
+      "identifier": "requests_used_for_llm_http_only",
+      "summary": "`requests` is a heavy production dependency used exclusively for LLM (Ollama) HTTP calls, duplicating what the optional `ollama` SDK already handles",
+      "related_files": [
+        "infrastructure/llm/core/client.py",
+        "pyproject.toml"
+      ],
+      "evidence": [
+        "`requests>=2.31.0` is a mandatory production dependency in `pyproject.toml` (line 43)",
+        "`ollama>=0.6.1` is also present but in the optional `llm` dependency group (line 61)",
+        "`infrastructure/llm/core/client.py` line 21: `import requests` and uses it exclusively for POST to `{base_url}/api/chat` and streaming",
+        "The `ollama` Python SDK provides a typed client that handles the same HTTP communication without needing raw `requests`; having both for the same purpose duplicates the HTTP stack"
+      ],
+      "suggestion": "Move `requests` to the `llm` optional dependency group, or migrate `LLMClient` to use the `ollama` SDK's client and remove the raw `requests` calls. If raw HTTP is intentional for portability, document why the `ollama` SDK is insufficient.",
+      "confidence": "medium"
+    }
+  ]
+}

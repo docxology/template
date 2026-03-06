@@ -1,0 +1,207 @@
+{
+  "assessments": {
+    "abstraction_fitness": 58,
+    "dependency_health": 62,
+    "test_strategy": 72
+  },
+  "findings": [
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "get_testing_config_typed_lie",
+      "summary": "get_testing_config declares return type TestingConfig but builds and returns Dict[str, Any] suppressed with type: ignore",
+      "related_files": ["infrastructure/core/config_loader.py"],
+      "evidence": [
+        "Line 446: result: Dict[str, Any] = {}",
+        "Line 510: return result  # type: ignore[return-value]  # dict matches TestingConfig shape",
+        "TestingConfig is a TypedDict but the returned dict may be missing keys that TestingConfig expects, with no runtime validation"
+      ],
+      "suggestion": "Either return a properly constructed TestingConfig (fill all keys before returning) or return ResolvedTestingConfig which already captures defaults as a frozen dataclass",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "resolved_testing_config_dead_abstraction",
+      "summary": "ResolvedTestingConfig dataclass is defined but never exported, never instantiated, and never used anywhere in the codebase",
+      "related_files": ["infrastructure/core/config_loader.py", "infrastructure/core/__init__.py"],
+      "evidence": [
+        "ResolvedTestingConfig defined at line 72 of config_loader.py",
+        "Absent from infrastructure/core/__init__.py exports and __all__",
+        "Grep across all .py files finds only its definition site — no usages"
+      ],
+      "suggestion": "Either use ResolvedTestingConfig as the return type of get_testing_config (replacing the Dict[str, Any] construction) or delete it",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "get_config_as_dict_drops_typed_schema",
+      "summary": "get_config_as_dict returns Dict[str, str] (flat stringly-typed map) despite ManuscriptConfig TypedDict schema being available above it",
+      "related_files": ["infrastructure/core/config_loader.py"],
+      "evidence": [
+        "load_config() returns Optional[ManuscriptConfig] — a typed nested schema",
+        "get_config_as_dict() immediately flattens this to Dict[str, str] with string keys like PROJECT_TITLE, AUTHOR_NAME",
+        "Callers lose all type information; downstream code accesses config by magic string keys"
+      ],
+      "suggestion": "Return ManuscriptConfig (or a typed projection dataclass) from the primary config accessor; keep the flat dict as a separate env-var serialization helper",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "publishing_core_dual_role_module",
+      "summary": "infrastructure/publishing/core.py mixes re-export aggregator and implementation module roles, creating confusion about where logic lives",
+      "related_files": ["infrastructure/publishing/core.py", "infrastructure/publishing/__init__.py"],
+      "evidence": [
+        "Lines 24-47: core.py re-imports and re-exports everything from citations, metadata, models, platforms with # noqa: F401",
+        "Lines 51-333: core.py also directly implements create_publication_package, create_submission_checklist, generate_doi_badge, create_publication_announcement, validate_publication_readiness",
+        "publishing/__init__.py then imports from .core, creating a chain: __init__ -> core -> citations/metadata/models/platforms"
+      ],
+      "suggestion": "Split core.py: move the re-export aggregation into __init__.py directly, and keep core.py as a pure implementation module for the functions it actually defines",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "render_manager_no_injection_seam",
+      "summary": "RenderManager directly instantiates all four concrete renderer classes in __init__, with no dependency injection or abstraction boundary",
+      "related_files": ["infrastructure/rendering/core.py"],
+      "evidence": [
+        "Lines 30-33: self.pdf_renderer = PDFRenderer(self.config), self.slides_renderer = SlidesRenderer(self.config), self.web_renderer = WebRenderer(self.config), self.poster_renderer = PosterRenderer(self.config)",
+        "No Protocol or abstract base class for renderers",
+        "Cannot substitute a renderer without modifying RenderManager"
+      ],
+      "suggestion": "Define a Renderer Protocol with a render() method and accept renderer instances as optional constructor parameters, defaulting to the concrete types",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "validate_publication_readiness_untyped_return",
+      "summary": "validate_publication_readiness returns Dict[str, Any] and requires type: ignore casts for list appends on typed keys",
+      "related_files": ["infrastructure/publishing/core.py"],
+      "evidence": [
+        "Lines 272-277: readiness dict built with heterogeneous value types (bool, int, list[str], list[str])",
+        "Lines 310, 315, 320, 325, 329, 331: all list appends carry # type: ignore comments",
+        "Return type Dict[str, Any] gives callers no information about the dict shape"
+      ],
+      "suggestion": "Define a PublicationReadiness TypedDict or dataclass with typed fields ready_for_publication: bool, completeness_score: int, missing_elements: List[str], recommendations: List[str]",
+      "confidence": "high"
+    },
+    {
+      "dimension": "dependency_health",
+      "identifier": "ollama_hard_runtime_dependency",
+      "summary": "ollama>=0.6.1 is declared as a hard runtime dependency despite the LLM subsystem being entirely optional and guarded by requires_ollama markers",
+      "related_files": ["pyproject.toml"],
+      "evidence": [
+        "pyproject.toml line 49: \"ollama>=0.6.1\" in [project].dependencies (not in [dependency-groups])",
+        "All LLM tests use @pytest.mark.requires_ollama to skip when Ollama is unavailable",
+        "ollama is only imported in infrastructure/llm/ — an entire optional subsystem"
+      ],
+      "suggestion": "Move ollama to an optional dependency group (e.g., [dependency-groups] llm = [\"ollama>=0.6.1\"]) and guard all imports with try/except ImportError",
+      "confidence": "high"
+    },
+    {
+      "dimension": "dependency_health",
+      "identifier": "networkx_unjustified_core_dependency",
+      "summary": "networkx>=3.0 is declared as a hard dependency justified by cognitive_case_diagrams but no infrastructure module imports it",
+      "related_files": ["pyproject.toml"],
+      "evidence": [
+        "pyproject.toml line 48: \"networkx>=3.0\" with comment \"# Graph/network analysis (cognitive_case_diagrams)\"",
+        "output/cognitive_case_diagrams/ is an output directory, not an infrastructure module",
+        "Grep across all infrastructure/**/*.py finds zero networkx imports"
+      ],
+      "suggestion": "Remove networkx from core dependencies; add it to an optional dependency group or to the specific project's pyproject.toml if used in project scripts",
+      "confidence": "high"
+    },
+    {
+      "dimension": "dependency_health",
+      "identifier": "plotly_hard_dep_behind_lazy_import",
+      "summary": "plotly is declared as a hard runtime dependency but is only used via a lazy local import inside one function in dashboard_generator.py",
+      "related_files": ["pyproject.toml", "infrastructure/reporting/dashboard_generator.py"],
+      "evidence": [
+        "pyproject.toml line 47: \"plotly>=5.0.0\" in [project].dependencies",
+        "infrastructure/reporting/dashboard_generator.py line 961: import plotly.graph_objects as go inside a function body",
+        "The lazy import pattern signals the author already anticipated optional use"
+      ],
+      "suggestion": "Move plotly to an optional dependency group; the existing lazy import already provides a clean fallback point — add an ImportError handler there",
+      "confidence": "high"
+    },
+    {
+      "dimension": "dependency_health",
+      "identifier": "get_review_types_missing_from_core_init_exports",
+      "summary": "get_review_types and ResolvedTestingConfig are defined in config_loader.py but not re-exported from infrastructure/core/__init__.py, breaking the stable public interface contract",
+      "related_files": ["infrastructure/core/__init__.py", "infrastructure/core/config_loader.py"],
+      "evidence": [
+        "__init__.py from .config_loader import block lists: find_config_file, get_config_as_dict, get_config_as_env_vars, get_translation_languages, load_config — get_review_types is absent",
+        "__all__ in __init__.py does not contain get_review_types",
+        "infrastructure/llm/review/pipeline_runner.py imports get_review_types directly from infrastructure.core.config_loader (submodule bypass)"
+      ],
+      "suggestion": "Add get_review_types to the from .config_loader import block and to __all__ in infrastructure/core/__init__.py so all callers can use the stable public interface",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "tests_import_implementation_not_public_interface",
+      "summary": "Several test files import directly from submodule paths rather than the package public interface, coupling tests to implementation location",
+      "related_files": [
+        "tests/infra_tests/publishing/test_publishing_core.py",
+        "tests/infra_tests/publishing/test_publishing_edge_cases.py"
+      ],
+      "evidence": [
+        "test_publishing_core.py line 9: from infrastructure.publishing.core import create_publication_package",
+        "test_publishing_edge_cases.py line 7: from infrastructure.publishing import core as publishing",
+        "The stable public interface is infrastructure.publishing (the __init__) — bypassing it means tests would not catch interface regressions"
+      ],
+      "suggestion": "Import from infrastructure.publishing (the public __init__) in all test files; test the contract, not the implementation location",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "vacuous_set_count_assertion",
+      "summary": "test_duplicate_headings_deduplicated uses result.count() with an else True fallback that makes the assertion always pass for the actual return type (set)",
+      "related_files": ["tests/infra_tests/validation/test_doc_accuracy.py"],
+      "evidence": [
+        "Line 115: assert result.count(\"introduction\") == 1 if hasattr(result, \"count\") else True",
+        "extract_headings returns a set, which has no .count() method",
+        "hasattr(result, 'count') is False for a set, so the else True branch always executes — the uniqueness assertion never fires"
+      ],
+      "suggestion": "Replace with: assert len([h for h in result if h == 'introduction']) == 1 or simply assert 'introduction' in result (sets already deduplicate, so a membership check suffices)",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "misleading_test_no_false_positives_in_code_blocks",
+      "summary": "test_no_false_positives_in_code_blocks does not actually test the false-positive scenario it names",
+      "related_files": ["tests/infra_tests/validation/test_doc_accuracy.py"],
+      "evidence": [
+        "Lines 78-84: test comment acknowledges 'code block lines with # are tricky' but the test input contains no code block",
+        "The test only verifies that a real heading outside a code block is found — this is already covered by test_single_h1_heading",
+        "The actual defect (# inside a fenced code block being extracted as a heading) goes untested"
+      ],
+      "suggestion": "Provide input containing a fenced code block with # lines and assert those lines are NOT in the result; mark the test as xfail if the function is known to have this limitation",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "global_warning_suppression_in_filterwarnings",
+      "summary": "pytest filterwarnings globally suppresses UserWarning and FutureWarning, potentially hiding real deprecation signals from dependencies",
+      "related_files": ["pyproject.toml"],
+      "evidence": [
+        "pyproject.toml lines 120-121: \"ignore::UserWarning\", \"ignore::FutureWarning\"",
+        "These are broad suppression patterns with no module scope restriction",
+        "Libraries like numpy, matplotlib, and plotly use FutureWarning for breaking API changes"
+      ],
+      "suggestion": "Scope warning filters to specific modules that are known to emit spurious warnings (e.g., 'ignore::FutureWarning:matplotlib') rather than suppressing the entire category",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "conftest_importlib_shadow_workaround",
+      "summary": "conftest.py uses importlib.util.spec_from_file_location to import test helpers because the test directory structure mirrors infrastructure packages and causes sys.path shadows",
+      "related_files": ["tests/infra_tests/conftest.py"],
+      "evidence": [
+        "Lines 32-37: importlib.util.spec_from_file_location used instead of a normal import for _test_helpers",
+        "Comment at line 22: 'Do NOT add tests/infra_tests to sys.path - it would shadow infrastructure.* imports'",
+        "tests/infra_tests/validation/ and tests/infra_tests/rendering/ share names with infrastructure/validation/ and infrastructure/rendering/"
+      ],
+      "suggestion": "Rename test subdirectories to break the mirror symmetry (e.g., tests/infra_tests/test_validation/, tests/infra_tests/test_rendering/) and use normal package imports for helpers",
+      "confidence": "medium"
+    }
+  ]
+}

@@ -86,8 +86,9 @@ def check_dependencies(
             "pytest",
             "requests",
         ]
-        # Optional packages (nice to have but not critical)
-        optional_packages = ["scipy"]
+        # No optional packages in default infrastructure check
+        # (project-specific deps like scipy belong in projects/{name}/pyproject.toml)
+        optional_packages: List[str] = []
     else:
         optional_packages = []
 
