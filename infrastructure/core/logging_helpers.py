@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from pathlib import Path
 from typing import Any
 
 # Note: get_logger is imported at function level to avoid circular import
@@ -67,20 +66,7 @@ def format_error_with_suggestions(error: Any) -> str:
 
 
 def format_duration(seconds: float) -> str:
-    """Format duration in seconds to human-readable string.
-
-    Args:
-        seconds: Duration in seconds
-
-    Returns:
-        Formatted duration string (e.g., "1m 23s", "45s")
-
-    Example:
-        >>> format_duration(83)
-        '1m 23s'
-        >>> format_duration(45)
-        '45s'
-    """
+    """Format duration in seconds to human-readable string (e.g., '1m 23s', '45s')."""
     if seconds < 60:
         return f"{int(seconds)}s"
 

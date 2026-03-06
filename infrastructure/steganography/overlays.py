@@ -9,7 +9,7 @@ document-ID stamps.
 from __future__ import annotations
 
 import io
-from typing import Optional, Tuple
+from typing import Tuple
 
 from infrastructure.core.logging_utils import get_logger
 

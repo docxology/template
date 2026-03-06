@@ -11,9 +11,6 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Dict, List
 
-import matplotlib
-
-matplotlib.use("Agg")  # Use non-interactive backend
 import csv
 
 import matplotlib.pyplot as plt
@@ -3379,7 +3376,7 @@ def generate_csv_data_tables(summary: ExecutiveSummary, output_dir: Path) -> Dic
     return csv_files
 
 
-def generate_all_dashboards(summary: ExecutiveSummary, output_dir: Path) -> Dict[str, Path]:
+def generate_all_dashboards(summary: ExecutiveSummary, output_dir: Path) -> Dict[str, Any]:
     """Generate all dashboard formats including CSV data exports.
 
     Args:
@@ -3387,110 +3384,68 @@ def generate_all_dashboards(summary: ExecutiveSummary, output_dir: Path) -> Dict
         output_dir: Output directory path
 
     Returns:
-        Dictionary of all saved file paths
+        Dictionary of generated file paths. On partial failure the key
+        ``"_errors"`` maps to a list of ``(generator_name, error_message)``
+        tuples so callers can distinguish partial failure from full success.
     """
     logger.info("Generating all dashboard formats...")
 
-    all_files = {}
+    all_files: Dict[str, Any] = {}
+    failures: List[str] = []
+
+    def _try(generator_name: str, fn: Any) -> None:
+        try:
+            result = fn()
+            if isinstance(result, dict):
+                all_files.update(result)
+            elif result is not None:
+                all_files[generator_name] = result
+        except Exception as e:
+            logger.warning(f"Could not generate {generator_name}: {e}")
+            failures.append(f"{generator_name}: {e}")
 
     # Generate matplotlib dashboards (PNG + PDF)
     matplotlib_files = generate_matplotlib_dashboard(summary, output_dir)
     all_files.update(matplotlib_files)
 
     # Generate health score visualizations
-    try:
-        health_radar_files = generate_health_radar_chart(summary, output_dir)
-        all_files.update(health_radar_files)
-    except Exception as e:
-        logger.warning(f"Could not generate health radar chart: {e}")
-
-    try:
-        health_comparison_files = generate_health_comparison_chart(summary, output_dir)
-        all_files.update(health_comparison_files)
-    except Exception as e:
-        logger.warning(f"Could not generate health comparison chart: {e}")
+    _try("health_radar_chart", lambda: generate_health_radar_chart(summary, output_dir))
+    _try("health_comparison_chart", lambda: generate_health_comparison_chart(summary, output_dir))
 
     # Generate individual project dashboards
-    try:
-        project_dashboard_files = generate_project_breakdowns(summary, output_dir)
-        all_files.update(project_dashboard_files)
-    except Exception as e:
-        logger.warning(f"Could not generate project dashboards: {e}")
+    _try("project_breakdowns", lambda: generate_project_breakdowns(summary, output_dir))
 
     # Generate pipeline efficiency visualizations
-    try:
-        pipeline_efficiency_files = generate_pipeline_efficiency_chart(summary, output_dir)
-        all_files.update(pipeline_efficiency_files)
-    except Exception as e:
-        logger.warning(f"Could not generate pipeline efficiency chart: {e}")
-
-    try:
-        pipeline_bottlenecks_files = generate_pipeline_bottlenecks_chart(summary, output_dir)
-        all_files.update(pipeline_bottlenecks_files)
-    except Exception as e:
-        logger.warning(f"Could not generate pipeline bottlenecks chart: {e}")
+    _try("pipeline_efficiency_chart", lambda: generate_pipeline_efficiency_chart(summary, output_dir))
+    _try("pipeline_bottlenecks_chart", lambda: generate_pipeline_bottlenecks_chart(summary, output_dir))
 
     # Generate output analysis visualizations
-    try:
-        output_distribution_files = generate_output_distribution_charts(summary, output_dir)
-        all_files.update(output_distribution_files)
-    except Exception as e:
-        logger.warning(f"Could not generate output distribution charts: {e}")
-
-    try:
-        output_comparison_files = generate_output_comparison_chart(summary, output_dir)
-        all_files.update(output_comparison_files)
-    except Exception as e:
-        logger.warning(f"Could not generate output comparison chart: {e}")
+    _try("output_distribution_charts", lambda: generate_output_distribution_charts(summary, output_dir))
+    _try("output_comparison_chart", lambda: generate_output_comparison_chart(summary, output_dir))
 
     # Generate codebase analysis visualizations
-    try:
-        codebase_complexity_files = generate_codebase_complexity_chart(summary, output_dir)
-        all_files.update(codebase_complexity_files)
-    except Exception as e:
-        logger.warning(f"Could not generate codebase complexity chart: {e}")
-
-    try:
-        codebase_comparison_files = generate_codebase_comparison_chart(summary, output_dir)
-        all_files.update(codebase_comparison_files)
-    except Exception as e:
-        logger.warning(f"Could not generate codebase comparison chart: {e}")
+    _try("codebase_complexity_chart", lambda: generate_codebase_complexity_chart(summary, output_dir))
+    _try("codebase_comparison_chart", lambda: generate_codebase_comparison_chart(summary, output_dir))
 
     # Generate plotly dashboard (HTML)
-    try:
-        plotly_file = generate_plotly_dashboard(summary, output_dir)
-        if plotly_file:
-            all_files["html"] = plotly_file
-    except Exception as e:
-        logger.warning(f"Could not generate interactive dashboard: {e}")
+    _try("html", lambda: generate_plotly_dashboard(summary, output_dir))
 
     # Generate CSV data tables
-    try:
-        # Existing aggregate CSV
-        aggregate_csv = generate_csv_data_tables(summary, output_dir)
-        all_files.update(aggregate_csv)
+    def _generate_csvs() -> Dict[str, Any]:
+        result: Dict[str, Any] = {}
+        result.update(generate_csv_data_tables(summary, output_dir))
+        result["detailed_breakdown_csv"] = generate_detailed_project_breakdown_csv(summary, output_dir)
+        result["comparative_analysis_csv"] = generate_comparative_analysis_csv(summary, output_dir)
+        result["recommendations_csv"] = generate_prioritized_recommendations_csv(summary, output_dir)
+        return result
 
-        # New detailed CSVs
-        detailed_csv = generate_detailed_project_breakdown_csv(summary, output_dir)
-        all_files["detailed_breakdown_csv"] = detailed_csv
-
-        comparative_csv = generate_comparative_analysis_csv(summary, output_dir)
-        all_files["comparative_analysis_csv"] = comparative_csv
-
-        recommendations_csv = generate_prioritized_recommendations_csv(summary, output_dir)
-        all_files["recommendations_csv"] = recommendations_csv
-
-    except Exception as e:
-        logger.warning(f"Could not generate CSV data tables: {e}")
+    _try("csv_data_tables", _generate_csvs)
 
     # Generate manuscript overviews for each project
-    try:
-        manuscript_overview_files = generate_all_manuscript_overviews(
-            summary, output_dir, Path(".")
-        )
-        all_files.update(manuscript_overview_files)
-    except Exception as e:
-        logger.warning(f"Could not generate manuscript overviews: {e}")
+    _try("manuscript_overviews", lambda: generate_all_manuscript_overviews(summary, output_dir, Path(".")))
 
+    if failures:
+        all_files["_errors"] = failures
+        logger.warning(f"Dashboard generation completed with {len(failures)} partial failure(s)")
     logger.info(f"Generated {len(all_files)} dashboard and data file(s)")
     return all_files

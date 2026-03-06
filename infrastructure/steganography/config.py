@@ -21,10 +21,19 @@ class SteganographyConfig:
         metadata_enabled: XMP and PDF Info dictionary injection.
         hashing_enabled: Hash computation and embedding.
         encryption_enabled: AES-256 payload encryption and PDF password.
+
+        overlay_mode: Overlay content mode:
+            'text'  — repeating diagonal text (default)
+            'qr'    — tiled QR codes encoding document metadata
+            'none'  — disable the full-page overlay while keeping footer
         overlay_text: Watermark text rendered diagonally across pages.
-        overlay_opacity: Opacity of the watermark overlay (0.0–1.0).
-        overlay_color_rgb: RGB tuple for overlay text colour.
-        barcode_content: Data to encode in barcodes (None → auto from title + hash).
+        overlay_opacity: Alpha (0.0 = invisible, 1.0 = solid).
+        overlay_color_rgb: RGB tuple (0–255 per channel).
+        overlay_font_size: Font size for text overlay.
+        overlay_repeat_count: Number of text repetitions across the page.
+        overlay_qr_data: Custom data for QR overlay mode (auto if None).
+
+        barcode_content: Data to encode in barcodes (None → auto).
         hash_algorithms: Hash algorithms to compute.
         pdf_password: Optional password for PDF-level encryption.
         output_suffix: Suffix appended to the output filename.
@@ -38,19 +47,29 @@ class SteganographyConfig:
     hashing_enabled: bool = True
     encryption_enabled: bool = False
 
+    # ── Full-page overlay settings ────────────────────────────────────
+    overlay_mode: str = "text"  # 'text' | 'qr' | 'none'
     overlay_text: str = "CONFIDENTIAL"
     overlay_opacity: float = 0.08
     overlay_color_rgb: tuple = (128, 128, 128)
+    overlay_font_size: int = 60
+    overlay_repeat_count: int = 5
+    overlay_qr_data: Optional[str] = None  # custom data for QR mode
 
+    # ── Barcode strip settings ────────────────────────────────────────
     barcode_content: Optional[str] = None
 
+    # ── Hashing ───────────────────────────────────────────────────────
     hash_algorithms: List[str] = field(default_factory=lambda: ["sha256", "sha512"])
 
+    # ── Encryption ────────────────────────────────────────────────────
     pdf_password: Optional[str] = None
+
+    # ── Output ────────────────────────────────────────────────────────
     output_suffix: str = "_steganography"
     manifest_enabled: bool = True
 
-    # ── Factory ───────────────────────────────────────────────────────────
+    # ── Factory ───────────────────────────────────────────────────────
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "SteganographyConfig":
@@ -76,6 +95,10 @@ class SteganographyConfig:
         for alias, canon in bool_aliases.items():
             if alias in data and canon not in filtered:
                 filtered[canon] = bool(data[alias])
+
+        # Handle overlay_color as list → tuple
+        if "overlay_color_rgb" in filtered and isinstance(filtered["overlay_color_rgb"], list):
+            filtered["overlay_color_rgb"] = tuple(filtered["overlay_color_rgb"])
 
         return cls(**filtered)
 

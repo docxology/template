@@ -118,7 +118,7 @@ class TestPerformanceMonitor:
         """Context manager with memory tracking records memory metrics."""
         with self.monitor.monitor("mem_track", track_memory=True):
             # Allocate some memory
-            data = list(range(1000))
+            _ = list(range(1000))
         metrics = self.monitor.metrics_history[0]
         assert metrics.operation_name == "mem_track"
         # Memory metrics should be set (may be 0 for small allocations)

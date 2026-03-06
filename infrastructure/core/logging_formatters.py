@@ -4,30 +4,10 @@ from __future__ import annotations
 
 import json
 import logging
-import os
-import sys
 from datetime import datetime
+from typing import ClassVar, Dict
 
-# Define emoji constants here to avoid circular import
-EMOJIS = {
-    "info": "ℹ️",
-    "success": "✅",
-    "warning": "⚠️",
-    "error": "❌",
-    "rocket": "🚀",
-    "sparkles": "✨",
-    "folder": "📁",
-    "book": "📖",
-    "clean": "🧹",
-    "gear": "⚙️",
-    "chart": "📊",
-}
-
-# Check if emojis should be used (NO_EMOJI env var or not a TTY)
-USE_EMOJIS = not os.getenv("NO_EMOJI") and sys.stdout.isatty()
-
-# Check if structured logging (JSON) should be used
-USE_STRUCTURED_LOGGING = os.getenv("STRUCTURED_LOGGING", "false").lower() == "true"
+from infrastructure.core.logging_constants import EMOJIS, USE_EMOJIS
 
 
 class JSONFormatter(logging.Formatter):
@@ -70,7 +50,7 @@ class TemplateFormatter(logging.Formatter):
     Adds emojis when appropriate and running in a TTY.
     """
 
-    LEVEL_EMOJIS: dict = {
+    LEVEL_EMOJIS: ClassVar[Dict[int, str]] = {
         logging.DEBUG: "",
         logging.INFO: EMOJIS["info"] if USE_EMOJIS else "",
         logging.WARNING: EMOJIS["warning"] if USE_EMOJIS else "",
