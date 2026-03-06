@@ -45,7 +45,7 @@ from infrastructure.publishing.platforms import (  # noqa: F401
     prepare_arxiv_submission,
     publish_to_zenodo,
 )
-from infrastructure.core.file_operations import calculate_file_hash  # noqa: F401
+from infrastructure.core.file_operations import calculate_file_hash
 
 
 def create_publication_package(output_dir: Path, metadata: PublicationMetadata) -> Dict[str, Any]:

@@ -15,7 +15,6 @@ from .core import (
     CitationStyle,
     PublicationMetadata,
     calculate_complexity_score,
-    calculate_file_hash,
     create_academic_profile_data,
     create_github_release,
     create_publication_announcement,
@@ -60,7 +59,6 @@ __all__ = [
     "validate_publication_readiness",
     "generate_publication_metrics",
     "create_repository_metadata",
-    "calculate_file_hash",
     "calculate_complexity_score",
     # Dissemination
     "publish_to_zenodo",
