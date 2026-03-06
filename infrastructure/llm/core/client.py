@@ -204,7 +204,7 @@ class LLMClient:
                 )
 
         # Log query start
-        logger.info(
+        logger.debug(
             "Starting query",
             extra={
                 "model": model_name,
@@ -219,7 +219,7 @@ class LLMClient:
             generation_time = time_module.time() - start_time
 
             # Log response received
-            logger.info(
+            logger.debug(
                 "Query completed",
                 extra={
                     "model": model_name,
@@ -293,7 +293,7 @@ class LLMClient:
         model_name = model or self.config.default_model
         prompt_preview = prompt[:100] + "..." if len(prompt) > 100 else prompt
 
-        logger.info(
+        logger.debug(
             "Starting raw query (no system prompt)",
             extra={
                 "model": model_name,
@@ -312,7 +312,7 @@ class LLMClient:
 
         generation_time = time_module.time() - start_time
 
-        logger.info(
+        logger.debug(
             "Raw query completed",
             extra={
                 "model": model_name,

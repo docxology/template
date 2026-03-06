@@ -64,18 +64,6 @@ class ConversationContext:
         self._total_messages_added += 1
         self._total_tokens_estimated += tokens
 
-        logger.debug(
-            "Message added to context",
-            extra={
-                "role": role,
-                "messages_after": len(self.messages),
-                "tokens_est_after": self.estimated_tokens,
-                "usage_percent": (
-                    (self.estimated_tokens / self.max_tokens * 100) if self.max_tokens > 0 else 0
-                ),
-            },
-        )
-
     def get_messages(self) -> List[Dict[str, Any]]:
         """Get messages formatted for API."""
         return [m.to_dict() for m in self.messages]
@@ -112,8 +100,6 @@ class ConversationContext:
         self.estimated_tokens = 0
         self._clear_count += 1
 
-        logger.debug("Context cleared", extra={"clear_count": self._clear_count})
-
     def _prune_context(self, new_tokens: int) -> None:
         """Remove old messages to fit new ones."""
         messages_before = len(self.messages)
@@ -141,17 +127,6 @@ class ConversationContext:
             removed_tokens = len(removed.content) // 4
             self.estimated_tokens -= removed_tokens
             pruned_count += 1
-
-            logger.debug(
-                "Pruned message",
-                extra={
-                    "role": removed.role,
-                    "content_length": len(removed.content),
-                    "tokens_removed": removed_tokens,
-                    "tokens_after": self.estimated_tokens,
-                    "messages_remaining": len(self.messages),
-                },
-            )
 
         self._prune_count += 1
 
@@ -242,14 +217,6 @@ class ConversationContext:
         self.estimated_tokens = state.get("estimated_tokens", 0)
         self.max_tokens = state.get("max_tokens", self.max_tokens)
 
-        logger.debug(
-            "Context state restored",
-            extra={
-                "messages_restored": len(self.messages),
-                "estimated_tokens": self.estimated_tokens,
-            },
-        )
-
     def export_context(self, path: Path) -> None:
         """Export context to JSON file.
 
@@ -299,8 +266,6 @@ class ConversationContext:
         )
 
         self.restore_state(import_data)
-
-        logger.debug("Context imported successfully")
 
     def get_usage_stats(self) -> Dict[str, Any]:
         """Get context usage statistics.

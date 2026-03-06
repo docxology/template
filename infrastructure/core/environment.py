@@ -97,7 +97,7 @@ def check_dependencies(
     for package in required_packages:
         try:
             __import__(package)
-            log_success(f"Package '{package}' available", logger)
+            logger.debug("Package '%s' available", package)
         except ImportError:
             logger.error(f"Package '{package}' not found")
             missing_packages.append(package)
@@ -106,11 +106,14 @@ def check_dependencies(
     for package in optional_packages:
         try:
             __import__(package)
-            log_success(f"Package '{package}' available", logger)
+            logger.debug("Package '%s' available", package)
         except ImportError:
             logger.warning(f"Package '{package}' not found (optional)")
             optional_missing.append(package)
 
+    found_count = len(required_packages) - len(missing_packages)
+    if not missing_packages:
+        log_success(f"All {found_count} required packages found", logger)
     if optional_missing:
         logger.info(f"Optional packages missing: {', '.join(optional_missing)}")
         logger.info("These are not critical but recommended for full functionality")
@@ -183,11 +186,13 @@ def install_missing_packages(packages: List[str]) -> bool:
             for package in packages:
                 try:
                     __import__(package)
-                    log_success(f"Package '{package}' installed successfully", logger)
+                    logger.debug("Package '%s' installed successfully", package)
                 except ImportError:
                     logger.error(f"Package '{package}' installation failed")
                     all_installed = False
 
+            if all_installed:
+                log_success(f"All {len(packages)} packages installed successfully", logger)
             return all_installed
         else:
             logger.error(f"uv installation failed (exit code: {result.returncode})")
@@ -218,12 +223,46 @@ def check_build_tools(required_tools: dict[str, str] | None = None) -> bool:
     all_present = True
     for tool, purpose in required_tools.items():
         if shutil.which(tool):
-            log_success(f"'{tool}' available ({purpose})", logger)
+            logger.debug("'%s' available (%s)", tool, purpose)
         else:
             logger.error(f"'{tool}' not found ({purpose})")
             all_present = False
 
+    if all_present:
+        log_success(f"All {len(required_tools)} build tools available", logger)
     return all_present
+
+
+def _project_output_dirs(project_name: str) -> List[str]:
+    """Return the canonical list of output directories for a project.
+
+    Used by both setup_directories and validate_directory_structure to
+    ensure the two functions always reference the same layout.
+    """
+    return [
+        f"output/{project_name}",
+        f"output/{project_name}/figures",
+        f"output/{project_name}/data",
+        f"output/{project_name}/tex",
+        f"output/{project_name}/pdf",
+        f"output/{project_name}/logs",
+        f"output/{project_name}/reports",
+        f"output/{project_name}/simulations",
+        f"output/{project_name}/slides",
+        f"output/{project_name}/web",
+        f"output/{project_name}/llm",
+        f"projects/{project_name}/output",
+        f"projects/{project_name}/output/figures",
+        f"projects/{project_name}/output/data",
+        f"projects/{project_name}/output/pdf",
+        f"projects/{project_name}/output/tex",
+        f"projects/{project_name}/output/logs",
+        f"projects/{project_name}/output/reports",
+        f"projects/{project_name}/output/simulations",
+        f"projects/{project_name}/output/slides",
+        f"projects/{project_name}/output/web",
+        f"projects/{project_name}/output/llm",
+    ]
 
 
 def setup_directories(
@@ -243,37 +282,14 @@ def setup_directories(
     logger.info("Setting up directory structure...")
 
     if directories is None:
-        # For multi-project, create both repo-level and project-level directories
-        directories = [
-            f"output/{project_name}",
-            f"output/{project_name}/figures",
-            f"output/{project_name}/data",
-            f"output/{project_name}/tex",
-            f"output/{project_name}/pdf",
-            f"output/{project_name}/logs",
-            f"output/{project_name}/reports",
-            f"output/{project_name}/simulations",
-            f"output/{project_name}/slides",
-            f"output/{project_name}/web",
-            f"output/{project_name}/llm",
-            f"projects/{project_name}/output",
-            f"projects/{project_name}/output/figures",
-            f"projects/{project_name}/output/data",
-            f"projects/{project_name}/output/pdf",
-            f"projects/{project_name}/output/tex",
-            f"projects/{project_name}/output/logs",
-            f"projects/{project_name}/output/reports",
-            f"projects/{project_name}/output/simulations",
-            f"projects/{project_name}/output/slides",
-            f"projects/{project_name}/output/web",
-            f"projects/{project_name}/output/llm",
-        ]
+        directories = _project_output_dirs(project_name)
 
     try:
         for directory in directories:
             dir_path = repo_root / directory
             dir_path.mkdir(parents=True, exist_ok=True)
-            log_success(f"Directory ready: {directory}", logger)
+            logger.debug("Directory ready: %s", directory)
+        log_success(f"All {len(directories)} directories ready", logger)
         return True
     except Exception as e:
         logger.error(f"Failed to create directories: {e}", exc_info=True)
@@ -429,7 +445,7 @@ def verify_source_structure(repo_root: Path, project_name: str = "project") -> b
     for directory in required_dirs:
         dir_path = repo_root / directory
         if dir_path.exists() and dir_path.is_dir():
-            log_success(f"Directory found: {directory}", logger)
+            logger.debug("Directory found: %s", directory)
         else:
             logger.error(f"Directory not found: {directory}")
             all_present = False
@@ -438,10 +454,12 @@ def verify_source_structure(repo_root: Path, project_name: str = "project") -> b
     for directory in optional_dirs:
         dir_path = repo_root / directory
         if dir_path.exists() and dir_path.is_dir():
-            log_success(f"Directory found: {directory} (optional)", logger)
+            logger.debug("Directory found: %s (optional)", directory)
         else:
             logger.warning(f"Directory not found: {directory} (optional)")
 
+    if all_present:
+        log_success(f"All {len(required_dirs)} required directories present", logger)
     return all_present
 
 
@@ -470,16 +488,14 @@ def set_environment_variables(repo_root: Path) -> bool:
     try:
         # Set matplotlib backend for headless operation
         os.environ["MPLBACKEND"] = "Agg"
-        log_success("MPLBACKEND=Agg", logger)
 
         # Ensure UTF-8 encoding
         os.environ["PYTHONIOENCODING"] = "utf-8"
-        log_success("PYTHONIOENCODING=utf-8", logger)
 
         # Set project root in environment
         os.environ["PROJECT_ROOT"] = str(repo_root)
-        log_success(f"PROJECT_ROOT={repo_root}", logger)
 
+        log_success("Environment variables configured (MPLBACKEND, PYTHONIOENCODING, PROJECT_ROOT)", logger)
         return True
     except Exception as e:
         logger.error(f"Failed to set environment variables: {e}", exc_info=True)
@@ -539,30 +555,7 @@ def validate_directory_structure(repo_root: Path, project_name: str = "project")
         ... else:
         ...     print("All directories present")
     """
-    required_dirs = [
-        f"output/{project_name}",
-        f"output/{project_name}/figures",
-        f"output/{project_name}/data",
-        f"output/{project_name}/tex",
-        f"output/{project_name}/pdf",
-        f"output/{project_name}/logs",
-        f"output/{project_name}/reports",
-        f"output/{project_name}/simulations",
-        f"output/{project_name}/slides",
-        f"output/{project_name}/web",
-        f"output/{project_name}/llm",
-        f"projects/{project_name}/output",
-        f"projects/{project_name}/output/figures",
-        f"projects/{project_name}/output/data",
-        f"projects/{project_name}/output/pdf",
-        f"projects/{project_name}/output/tex",
-        f"projects/{project_name}/output/logs",
-        f"projects/{project_name}/output/reports",
-        f"projects/{project_name}/output/simulations",
-        f"projects/{project_name}/output/slides",
-        f"projects/{project_name}/output/web",
-        f"projects/{project_name}/output/llm",
-    ]
+    required_dirs = _project_output_dirs(project_name)
 
     missing = []
     for dir_path in required_dirs:
