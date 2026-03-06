@@ -281,20 +281,27 @@ def get_config_as_env_vars(repo_root: Path | str, respect_existing: bool = True)
         return config_dict
 
 
-def find_config_file(repo_root: Path | str) -> Optional[Path]:
+def find_config_file(repo_root: Path | str, project_name: Optional[str] = None) -> Optional[Path]:
     """Find the manuscript config file at the standard location.
 
     Args:
         repo_root: Root directory of the repository
+        project_name: Name of the project; if None, the first config found under
+                      projects/*/manuscript/ is returned
 
     Returns:
-        Path to config.yaml if found at project/manuscript/config.yaml, None otherwise
+        Path to config.yaml if found, None otherwise
     """
     repo_root = Path(repo_root)
 
-    config_path = repo_root / "project" / "manuscript" / "config.yaml"
+    if project_name:
+        config_path = repo_root / "projects" / project_name / "manuscript" / "config.yaml"
+        if config_path.exists():
+            return config_path
+        return None
 
-    if config_path.exists():
+    # Scan for any project config under projects/*/manuscript/config.yaml
+    for config_path in sorted((repo_root / "projects").glob("*/manuscript/config.yaml")):
         return config_path
 
     return None

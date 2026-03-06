@@ -262,33 +262,20 @@ class PDFRenderer:
         Returns:
             True if bibliography processing succeeded, False otherwise
         """
-        # Check if bibliography file exists with fallback logging
-        try:
-            if not bib_file.exists():
-                logger.warning(
-                    f"Bibliography file not found: {bib_file} (bibliography processing will be skipped)"  # noqa: E501
-                )
-                return False
-        except UnboundLocalError:
-            if not bib_file.exists():
-                logger.warning(
-                    f"Bibliography file not found: {bib_file} (bibliography processing will be skipped)"  # noqa: E501
-                )
-                return False
+        # Check if bibliography file exists
+        if not bib_file.exists():
+            logger.warning(
+                f"Bibliography file not found: {bib_file} (bibliography processing will be skipped)"  # noqa: E501
+            )
+            return False
 
         # Determine which bibliography processor to use
         bibtex_cmd = "bibtex"
         aux_file = output_dir / f"{tex_file.stem}.aux"
 
-        # Check if auxiliary file exists with fallback logging
-        try:
-            if not aux_file.exists():
-                logger.warning(f"Auxiliary file not found: {aux_file}")
-                return False
-        except UnboundLocalError:
-            if not aux_file.exists():
-                logger.warning(f"Auxiliary file not found: {aux_file}")
-                return False
+        if not aux_file.exists():
+            logger.warning(f"Auxiliary file not found: {aux_file}")
+            return False
 
         try:
             # Copy bibliography file to output directory to avoid bibtex paranoid mode issues

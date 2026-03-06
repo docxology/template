@@ -188,7 +188,7 @@ class TestGetConfigAsDict:
         """Test getting full configuration as dictionary."""
         import yaml
 
-        config_file = tmp_path / "project" / "manuscript" / "config.yaml"
+        config_file = tmp_path / "projects" / "myproject" / "manuscript" / "config.yaml"
         config_file.parent.mkdir(parents=True)
         with open(config_file, "w") as f:
             yaml.dump(sample_config, f)
@@ -213,7 +213,7 @@ class TestGetConfigAsDict:
         import yaml
 
         config = {"paper": {"title": "Test"}}
-        config_file = tmp_path / "project" / "manuscript" / "config.yaml"
+        config_file = tmp_path / "projects" / "myproject" / "manuscript" / "config.yaml"
         config_file.parent.mkdir(parents=True)
         with open(config_file, "w") as f:
             yaml.dump(config, f)
@@ -230,7 +230,7 @@ class TestGetConfigAsEnvVars:
         """Test that existing environment variables are respected."""
         import yaml
 
-        config_file = tmp_path / "project" / "manuscript" / "config.yaml"
+        config_file = tmp_path / "projects" / "myproject" / "manuscript" / "config.yaml"
         config_file.parent.mkdir(parents=True)
         with open(config_file, "w") as f:
             yaml.dump(sample_config, f)
@@ -246,7 +246,7 @@ class TestGetConfigAsEnvVars:
         """Test not respecting existing environment variables."""
         import yaml
 
-        config_file = tmp_path / "project" / "manuscript" / "config.yaml"
+        config_file = tmp_path / "projects" / "myproject" / "manuscript" / "config.yaml"
         config_file.parent.mkdir(parents=True)
         with open(config_file, "w") as f:
             yaml.dump(sample_config, f)
@@ -263,7 +263,7 @@ class TestFindConfigFile:
 
     def test_finds_project_manuscript_config(self, tmp_path):
         """Test finding config in project/manuscript/."""
-        config_file = tmp_path / "project" / "manuscript" / "config.yaml"
+        config_file = tmp_path / "projects" / "myproject" / "manuscript" / "config.yaml"
         config_file.parent.mkdir(parents=True)
         config_file.write_text("test: content")
 
@@ -290,7 +290,7 @@ class TestIntegration:
             "paper": {"title": "Integration Test"},
             "authors": [{"name": "Test Author", "orcid": "0000", "email": "test@example.com"}],
         }
-        config_file = tmp_path / "project" / "manuscript" / "config.yaml"
+        config_file = tmp_path / "projects" / "myproject" / "manuscript" / "config.yaml"
         config_file.parent.mkdir(parents=True)
         with open(config_file, "w") as f:
             yaml.dump(config, f)
@@ -685,7 +685,7 @@ class TestTestingConfig:
 
     def test_get_testing_config_with_testing_section(self, tmp_path):
         """Test get_testing_config with testing section."""
-        config_path = tmp_path / "project" / "manuscript" / "config.yaml"
+        config_path = tmp_path / "projects" / "myproject" / "manuscript" / "config.yaml"
         config_path.parent.mkdir(parents=True)
         config_path.write_text(
             """
