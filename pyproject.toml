@@ -40,7 +40,6 @@ dependencies = [
   "pypdf>=5.0",
   "pyyaml>=6.0",
   "requests>=2.31.0",
-  "reportlab>=4.0.0",
 ]
 
 [project.scripts]
@@ -57,6 +56,10 @@ type-check = "mypy --strict infrastructure/"
 # Optional LLM integration (requires running Ollama server)
 llm = [
   "ollama>=0.6.1",
+]
+# Optional rendering enhancements (lazily imported in manuscript_overview.py)
+rendering = [
+  "reportlab>=4.0.0",
 ]
 # Optional dashboard generation (lazily imported in dashboard_generator.py)
 dashboard = [

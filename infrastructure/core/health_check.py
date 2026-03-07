@@ -282,27 +282,19 @@ class SystemHealthChecker:
         return summary
 
 
-_checker: Optional[SystemHealthChecker] = None
-
-
-def _get_checker() -> SystemHealthChecker:
-    """Return the module-level SystemHealthChecker, creating it on first call."""
-    global _checker
-    if _checker is None:
-        _checker = SystemHealthChecker()
-    return _checker
+_checker = SystemHealthChecker()
 
 
 def quick_health_check() -> bool:
     """Return True if system is healthy."""
-    return _get_checker().is_healthy()
+    return _checker.is_healthy()
 
 
 def get_health_status() -> Dict[str, Any]:
     """Get detailed health status."""
-    return _get_checker().get_health_status()
+    return _checker.get_health_status()
 
 
 def get_health_metrics() -> Dict[str, Any]:
     """Get health metrics for monitoring systems."""
-    return _get_checker().get_metrics()
+    return _checker.get_metrics()

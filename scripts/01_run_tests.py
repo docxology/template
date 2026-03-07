@@ -30,7 +30,7 @@ from infrastructure.core.logging_utils import get_logger, log_success, log_heade
 from infrastructure.core.logging_progress import log_with_spinner
 from infrastructure.core.config_loader import get_testing_config
 from infrastructure.core.file_operations import clean_coverage_files
-from infrastructure.reporting.test_reporter import (
+from infrastructure.reporting.coverage_reporter import (
     parse_pytest_output,
     generate_test_report,
     save_test_report as save_test_report_to_files,

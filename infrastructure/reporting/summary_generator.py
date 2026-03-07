@@ -1,11 +1,11 @@
 """Test summary generator — re-export shim for backwards compatibility.
 
-All implementations live in infrastructure.reporting.test_summary_generator.
+All implementations live in infrastructure.reporting.suite_summary_generator.
 """
 
 from __future__ import annotations
 
-from infrastructure.reporting.test_summary_generator import (  # noqa: F401
+from infrastructure.reporting.suite_summary_generator import (  # noqa: F401
 
 from infrastructure.core.logging_utils import get_logger
 
