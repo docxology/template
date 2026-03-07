@@ -21,37 +21,51 @@ __version__ = "2.0.0"
 __layer__ = "infrastructure"
 
 # Import commonly-used items for convenient access
+# Core utilities are mandatory — everything else degrades gracefully
 try:
-    # Core
-    from .core import (  # type: ignore
+    # Core (always available) — import from submodules directly
+    from .core.exceptions import (  # type: ignore
         BuildError,
         ConfigurationError,
         TemplateError,
         ValidationError,
+    )
+    from .core.config_loader import load_config  # type: ignore
+    from .core.logging_utils import (  # type: ignore
         get_logger,
-        load_config,
         log_operation,
         log_timing,
         setup_logger,
     )
+except ImportError as _core_e:
+    raise RuntimeError(f"infrastructure core import failed: {_core_e}") from _core_e
 
-    # Documentation
+# Optional subpackages — imported for convenience but not required
+import warnings as _warnings
+
+try:
     from .documentation import FigureManager, ImageManager, MarkdownIntegration
+except ImportError as _doc_e:
+    _warnings.warn(f"Documentation subpackage unavailable: {_doc_e}", ImportWarning, stacklevel=2)
 
-    # Publishing
+try:
     from .publishing import (
         extract_publication_metadata,
         generate_citation_bibtex,
         publish_to_zenodo,
     )
+except ImportError as _pub_e:
+    _warnings.warn(f"Publishing subpackage unavailable: {_pub_e}", ImportWarning, stacklevel=2)
 
-    # Reporting
+try:
     from .reporting import generate_pipeline_report, get_error_aggregator
+except ImportError as _rep_e:
+    _warnings.warn(f"Reporting subpackage unavailable: {_rep_e}", ImportWarning, stacklevel=2)
 
-    # Validation
+try:
     from .validation import validate_markdown, validate_pdf_rendering, verify_output_integrity
-except ImportError as _e:
-    raise RuntimeError(f"infrastructure sub-package import failed: {_e}") from _e
+except ImportError as _val_e:
+    _warnings.warn(f"Validation subpackage unavailable: {_val_e}", ImportWarning, stacklevel=2)
 
 # Steganography — optional, only loaded when dependencies are available
 try:
