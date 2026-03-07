@@ -523,10 +523,7 @@ def copy_final_deliverables(
     combined_pdf_src = output_dir / "pdf" / f"{project_basename}_combined.pdf"
     combined_pdf_dst = output_dir / f"{project_basename}_combined.pdf"
 
-    if combined_pdf_src.exists():
-        # Use project-specific name
-        pass
-    else:
+    if not combined_pdf_src.exists():
         # Fall back to legacy name
         combined_pdf_src = output_dir / "pdf" / "project_combined.pdf"
         combined_pdf_dst = output_dir / "project_combined.pdf"

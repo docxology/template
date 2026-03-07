@@ -867,15 +867,16 @@ class LLMClient:
                                             extra={"chunk_count": chunk_count},
                                         )
 
+                                    prev_chunk_time = last_chunk_time
                                     last_chunk_time = current_time
 
                                     # Check for stalled stream (configurable threshold)
                                     if (
-                                        last_chunk_time
-                                        and (current_time - last_chunk_time)
+                                        prev_chunk_time is not None
+                                        and (current_time - prev_chunk_time)
                                         > self.config.stall_threshold
                                     ):
-                                        time_since_last_chunk = current_time - last_chunk_time
+                                        time_since_last_chunk = current_time - prev_chunk_time
                                         logger.error(
                                             f"🚨 Streaming stalled: no tokens received for {time_since_last_chunk:.1f}s",  # noqa: E501
                                             extra={
