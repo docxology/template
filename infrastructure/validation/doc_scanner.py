@@ -24,11 +24,7 @@ from infrastructure.validation.doc_accuracy import run_accuracy_phase
 from infrastructure.validation.doc_completeness import run_completeness_phase
 from infrastructure.validation.doc_discovery import run_discovery_phase
 from infrastructure.validation.doc_models import (
-    AccuracyIssue,
-    CompletenessGap,
     DocumentationFile,
-    LinkIssue,
-    QualityIssue,
     ScanResults,
 )
 from infrastructure.validation.doc_quality import run_quality_phase

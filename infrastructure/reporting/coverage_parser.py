@@ -1,9 +1,8 @@
 """Coverage and test output parsing utilities.
 
-This module provides parsing functions to extract coverage metrics,
-failed tests strings, timeout errors, and coverage capabilities from pytest output.
-
-Internal module: import directly (not re-exported from infrastructure.reporting).
+Provides parsing functions to extract coverage metrics, failed test names,
+timeout errors, and coverage capabilities from pytest output.
+Import from this module directly; functions are not re-exported via the package surface.
 """
 
 from __future__ import annotations
