@@ -15,7 +15,7 @@ from pathlib import Path
 repo_root = Path(__file__).parent.parent
 sys.path.insert(0, str(repo_root))
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging_utils import get_logger, log_header, log_success
 from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor
 from infrastructure.core.pipeline_summary import generate_pipeline_summary
 from infrastructure.core.environment import get_python_command, validate_interpreter
@@ -246,10 +246,12 @@ def main():
         stage=raw_args.stage,
     )
 
+    log_header(f"Pipeline: {args.project}", logger)
+
     if args.stage:
         return execute_single_stage(args.stage, args.project, repo_root)
 
-    return execute_pipeline(
+    result = execute_pipeline(
         project_name=args.project,
         repo_root=repo_root,
         skip_infra=args.skip_infra,
@@ -257,6 +259,9 @@ def main():
         resume=args.resume,
         core_only=args.core_only,
     )
+    if result == 0:
+        log_success(f"Pipeline complete: {args.project}", logger)
+    return result
 
 
 if __name__ == "__main__":

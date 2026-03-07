@@ -334,24 +334,16 @@ class LLMClient:
         Returns:
             Brief response text
         """
-        model_name = model or self.config.default_model
-
-        # Create options for short response
-        short_options = (
-            dataclasses.replace(options, max_tokens=self.config.short_max_tokens)
-            if options
-            else GenerationOptions(max_tokens=self.config.short_max_tokens)
+        return self._query_with_mode(
+            prompt,
+            model=model,
+            max_tokens=self.config.short_max_tokens,
+            instruction=(
+                "Provide a concise, brief response (less than 150 words). "
+                "Be direct and to the point.\n\n"
+            ),
+            options=options,
         )
-
-        instruction = (
-            "Provide a concise, brief response (less than 150 words). "
-            "Be direct and to the point.\n\n"
-        )
-        response, _ = self._time_call(
-            lambda: self.query(instruction + prompt, model=model_name, options=short_options)
-        )
-
-        return response
 
     def query_long(
         self,
@@ -371,23 +363,39 @@ class LLMClient:
         Returns:
             Detailed response text
         """
-        model_name = model or self.config.default_model
-
-        # Create options for long response with higher token limit, preserving caller options
-        long_options = (
-            dataclasses.replace(options, max_tokens=self.config.long_max_tokens)
-            if options
-            else GenerationOptions(max_tokens=self.config.long_max_tokens)
+        return self._query_with_mode(
+            prompt,
+            model=model,
+            max_tokens=self.config.long_max_tokens,
+            instruction=(
+                "Provide a comprehensive, detailed response with examples and "
+                "thorough explanation. Use multiple paragraphs if needed.\n\n"
+            ),
+            options=options,
         )
 
-        instruction = (
-            "Provide a comprehensive, detailed response with examples and "
-            "thorough explanation. Use multiple paragraphs if needed.\n\n"
+    def _query_with_mode(
+        self,
+        prompt: str,
+        model: Optional[str],
+        max_tokens: int,
+        instruction: str,
+        options: Optional[GenerationOptions] = None,
+    ) -> str:
+        """Run query with a fixed token budget and instruction prefix.
+
+        Keeps token-budget configuration and instruction injection in one place
+        rather than duplicating it across query_short and query_long.
+        """
+        model_name = model or self.config.default_model
+        mode_options = (
+            dataclasses.replace(options, max_tokens=max_tokens)
+            if options
+            else GenerationOptions(max_tokens=max_tokens)
         )
         response, _ = self._time_call(
-            lambda: self.query(instruction + prompt, model=model_name, options=long_options)
+            lambda: self.query(instruction + prompt, model=model_name, options=mode_options)
         )
-
         return response
 
     def query_structured(
