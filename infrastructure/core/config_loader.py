@@ -292,16 +292,6 @@ def find_config_file(repo_root: Path | str, project_name: Optional[str] = None) 
     return None
 
 
-def _load_project_config(
-    repo_root: Path | str, project_name: str
-) -> Optional[ManuscriptConfig]:
-    """Load config for a named project, returning None if unavailable."""
-    config_path = Path(repo_root) / "projects" / project_name / "manuscript" / "config.yaml"
-    if not config_path.exists():
-        return None
-    return load_config(config_path)
-
-
 def get_translation_languages(repo_root: Path | str, project_name: str = "project") -> List[str]:
     """Get list of enabled translation languages from config.
 
@@ -316,7 +306,8 @@ def get_translation_languages(repo_root: Path | str, project_name: str = "projec
         List of language codes (e.g., ['zh', 'hi', 'ru']) if translations
         are enabled, empty list otherwise
     """
-    config = _load_project_config(repo_root, project_name)
+    config_path = find_config_file(repo_root, project_name)
+    config = load_config(config_path) if config_path else None
     if not config:
         return []
 
@@ -354,7 +345,8 @@ def get_review_types(repo_root: Path | str, project_name: str = "project") -> Li
         "improvement_suggestions",
     ]
 
-    config = _load_project_config(repo_root, project_name)
+    config_path = find_config_file(repo_root, project_name)
+    config = load_config(config_path) if config_path else None
     if not config:
         return ["executive_summary"]
 
@@ -402,6 +394,29 @@ def _safe_int_from_dict(config_dict: dict, key: str) -> Optional[int]:
         return None
 
 
+def _resolve_int_setting(
+    env_var: str,
+    config_dict: dict,
+    config_key: str,
+    default: int,
+) -> int:
+    """Resolve an int setting with env-var priority over config file.
+
+    Environment variable takes precedence over config file value.
+    Config file takes precedence over default.
+    """
+    raw = os.environ.get(env_var)
+    if raw is not None:
+        try:
+            return int(raw)
+        except (ValueError, TypeError):
+            logger.debug("%s=%r is not a valid int, ignoring", env_var, raw)
+    config_val = _safe_int_from_dict(config_dict, config_key)
+    if config_val is not None:
+        return config_val
+    return default
+
+
 def get_testing_config(repo_root: Path | str) -> ResolvedTestingConfig:
     """Get testing configuration from config.yaml.
 
@@ -426,48 +441,33 @@ def get_testing_config(repo_root: Path | str) -> ResolvedTestingConfig:
     """
     defaults = ResolvedTestingConfig()
 
-    infra_threshold = defaults.infra_coverage_threshold
-    project_threshold = defaults.project_coverage_threshold
-    max_test_failures = defaults.max_test_failures
-    max_infra_test_failures = defaults.max_infra_test_failures
-    max_project_test_failures = defaults.max_project_test_failures
-
-    # Priority 1: Check environment variables first
-    if env_infra := os.environ.get("INFRA_COVERAGE_THRESHOLD"):
-        try:
-            infra_threshold = int(env_infra)
-        except (ValueError, TypeError):
-            logger.debug("INFRA_COVERAGE_THRESHOLD=%r is not a valid int, ignoring", env_infra)
-
-    if env_project := os.environ.get("PROJECT_COVERAGE_THRESHOLD"):
-        try:
-            project_threshold = int(env_project)
-        except (ValueError, TypeError):
-            logger.debug("PROJECT_COVERAGE_THRESHOLD=%r is not a valid int, ignoring", env_project)
-
-    env_set_infra = "INFRA_COVERAGE_THRESHOLD" in os.environ
-    env_set_project = "PROJECT_COVERAGE_THRESHOLD" in os.environ
-
-    # Priority 2: Load from config file
+    # Load config file (env vars take priority, applied inside _resolve_int_setting)
     config_path = find_config_file(repo_root)
     config = load_config(config_path) if config_path else None
     testing_cfg = config.get("testing", {}) if config else {}
 
-    if (v := _safe_int_from_dict(testing_cfg, "max_test_failures")) is not None:
-        max_test_failures = v
-    if (v := _safe_int_from_dict(testing_cfg, "max_infra_test_failures")) is not None:
-        max_infra_test_failures = v
-    if (v := _safe_int_from_dict(testing_cfg, "max_project_test_failures")) is not None:
-        max_project_test_failures = v
-    if not env_set_infra and (v := _safe_int_from_dict(testing_cfg, "infra_coverage_threshold")) is not None:
-        infra_threshold = v
-    if not env_set_project and (v := _safe_int_from_dict(testing_cfg, "project_coverage_threshold")) is not None:
-        project_threshold = v
+    def _int_or_default(key: str, default: int) -> int:
+        v = _safe_int_from_dict(testing_cfg, key)
+        return v if v is not None else default
 
     return ResolvedTestingConfig(
-        max_test_failures=max_test_failures,
-        max_infra_test_failures=max_infra_test_failures,
-        max_project_test_failures=max_project_test_failures,
-        infra_coverage_threshold=infra_threshold,
-        project_coverage_threshold=project_threshold,
+        max_test_failures=_int_or_default("max_test_failures", defaults.max_test_failures),
+        max_infra_test_failures=_int_or_default(
+            "max_infra_test_failures", defaults.max_infra_test_failures
+        ),
+        max_project_test_failures=_int_or_default(
+            "max_project_test_failures", defaults.max_project_test_failures
+        ),
+        infra_coverage_threshold=_resolve_int_setting(
+            "INFRA_COVERAGE_THRESHOLD",
+            testing_cfg,
+            "infra_coverage_threshold",
+            defaults.infra_coverage_threshold,
+        ),
+        project_coverage_threshold=_resolve_int_setting(
+            "PROJECT_COVERAGE_THRESHOLD",
+            testing_cfg,
+            "project_coverage_threshold",
+            defaults.project_coverage_threshold,
+        ),
     )

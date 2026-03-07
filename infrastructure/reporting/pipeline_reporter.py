@@ -86,12 +86,15 @@ def generate_multi_project_summary_report(
 
     # Collect per-project data
     project_names = [p.name for p in projects]
-    project_results = result.project_results
+    raw_results = result.project_results
+    project_results = raw_results if isinstance(raw_results, dict) else {}
 
     for proj_name in project_names:
-        proj_result = project_results.get(proj_name, [])
+        raw = project_results.get(proj_name, [])
+        # Defensively ensure we have a list of stage objects; dict values are unknown format
+        proj_result = raw if isinstance(raw, list) else []
 
-        all_success = all(stage.success for stage in proj_result)
+        all_success = len(proj_result) > 0 and all(stage.success for stage in proj_result)
         total_duration = sum(stage.duration for stage in proj_result)
         errors = [stage.error_message for stage in proj_result if stage.error_message]
 

@@ -300,18 +300,8 @@ def setup_directories(
 def check_uv_available() -> bool:
     """Check if uv package manager is available and working.
 
-    Tests uv availability by running 'uv --version' command. uv is a fast
-    Python package manager that provides reliable dependency resolution and
-    virtual environment management.
-
     Returns:
         True if uv is available and functional, False otherwise
-
-    Example:
-        >>> if check_uv_available():
-        ...     print("Using uv for fast dependency management")
-        ... else:
-        ...     print("Falling back to pip - consider installing uv")
     """
     try:
         result = subprocess.run(
@@ -336,10 +326,6 @@ def get_python_command() -> list[str]:
 
     Returns:
         List of command arguments suitable for subprocess.run()
-
-    Example:
-        >>> cmd = get_python_command()
-        >>> result = subprocess.run(cmd + ['-c', 'print("hello")'], ...)
     """
     return [sys.executable]
 
@@ -467,22 +453,14 @@ def verify_source_structure(repo_root: Path, project_name: str = "project") -> b
 def set_environment_variables(repo_root: Path) -> bool:
     """Configure environment variables for pipeline.
 
-    Sets critical environment variables needed for the research template pipeline:
-    - MPLBACKEND=Agg: Ensures matplotlib runs in headless mode for server environments
-    - PYTHONIOENCODING=utf-8: Ensures consistent text encoding across platforms
-    - PROJECT_ROOT: Points to repository root for relative path calculations
+    Sets MPLBACKEND=Agg (headless matplotlib), PYTHONIOENCODING=utf-8,
+    and PROJECT_ROOT for the pipeline scripts.
 
     Args:
         repo_root: Repository root directory
 
     Returns:
         True if environment variables set successfully, False otherwise
-
-    Example:
-        >>> from pathlib import Path
-        >>> repo_root = Path("/path/to/template")
-        >>> success = set_environment_variables(repo_root)
-        >>> assert success is True
     """
     logger.info("Setting environment variables...")
 

@@ -194,6 +194,24 @@ def setup_root_log_file_handler(log_file: Path) -> logging.FileHandler:
     return handler
 
 
+def flush_file_handlers() -> None:
+    """Flush all FileHandlers on the root logger and all named loggers.
+
+    Call this before copying or archiving log files to ensure all buffered
+    writes are flushed to disk.
+    """
+    root_logger = logging.getLogger()
+    for handler in root_logger.handlers:
+        if isinstance(handler, logging.FileHandler):
+            handler.flush()
+
+    for logger_name in logging.Logger.manager.loggerDict:
+        logger_obj = logging.getLogger(logger_name)
+        for handler in logger_obj.handlers:
+            if isinstance(handler, logging.FileHandler):
+                handler.flush()
+
+
 def get_logger(name: str) -> logging.Logger:
     """Get or create a logger with standard configuration.
 

@@ -19,6 +19,7 @@ from typing import Callable, Optional
 from infrastructure.core.checkpoint import CheckpointManager, StageResult
 from infrastructure.core.environment import get_python_command, get_subprocess_env
 from infrastructure.core.logging_utils import (
+    flush_file_handlers,
     get_logger,
     log_operation,
     log_stage_with_eta,
@@ -519,20 +520,7 @@ class PipelineExecutor:
         Returns:
             True if log file exists and has content, False otherwise
         """
-        import logging
-
-        # Flush all file handlers
-        root_logger = logging.getLogger()
-        for handler in root_logger.handlers:
-            if isinstance(handler, logging.FileHandler):
-                handler.flush()
-
-        # Also flush module-specific loggers
-        for logger_name in logging.Logger.manager.loggerDict:
-            logger_obj = logging.getLogger(logger_name)
-            for handler in logger_obj.handlers:
-                if isinstance(handler, logging.FileHandler):
-                    handler.flush()
+        flush_file_handlers()
 
         # Verify log file exists and has content
         if self.log_file.exists():
