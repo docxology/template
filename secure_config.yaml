@@ -1,0 +1,93 @@
+################################################################################
+# Secure Configuration — Steganographic PDF Post-Processing Settings
+#
+# This file controls security features applied by secure_run.sh.
+# All settings here override defaults in infrastructure/steganography/config.py.
+#
+# Location: <repo-root>/secure_config.yaml
+# Loaded by: secure_run.sh (Step 2: Steganographic Post-Processing)
+################################################################################
+
+steganography:
+  # Master switch — always enabled when running secure_run.sh
+  enabled: true
+
+  # ── Feature Toggles ──────────────────────────────────────────────────
+
+  overlays_enabled: true     # Diagonal watermark + footer + invisible text
+  barcodes_enabled: true     # QR codes + Code128 barcode strip at page bottom
+  metadata_enabled: true     # PDF metadata + XMP packet injection
+  hashing_enabled: true      # SHA-256/512 hash computation + manifest file
+  encryption_enabled: false  # PDF password protection (set pdf_password below)
+
+  # ── Full-Page Overlay ────────────────────────────────────────────────
+  #
+  # Controls the diagonal watermark that covers each page.
+  # Three overlay modes are available:
+  #
+  #   "text"  — Repeating diagonal text (e.g. "CONFIDENTIAL")
+  #   "qr"   — Tiled QR codes encoding document metadata
+  #   "none"  — No full-page overlay (footer + barcodes still applied)
+
+  overlay_mode: "text"              # "text" | "qr" | "none"
+  overlay_text: "CONFIDENTIAL"      # Text for "text" mode
+  overlay_opacity: 0.08             # 0.0 = invisible, 1.0 = solid opaque
+  overlay_color_rgb: [128, 128, 128]  # RGB colour (0-255 per channel)
+  overlay_font_size: 60             # Font size in points for "text" mode
+  overlay_repeat_count: 5           # Number of text lines for "text" mode
+
+  # For "qr" mode — override default QR data (leave empty to auto-generate):
+  # overlay_qr_data: "custom data to encode in QR tiles"
+
+  # ── Barcode Strip ────────────────────────────────────────────────────
+  #
+  # A strip at the bottom of each page containing 4 labelled QR codes
+  # (Metadata, Citation, Contact, Integrity) plus a Code128 linear barcode.
+  #
+  # barcode_content: ""  # Override QR data (leave empty to auto-generate)
+
+  # ── Hash Algorithms ──────────────────────────────────────────────────
+  #
+  # Which hash algorithms to compute for document integrity verification.
+  # A .hashes.json manifest is written alongside each processed PDF.
+
+  hash_algorithms:
+    - sha256
+    - sha512
+
+  # ── Encryption ───────────────────────────────────────────────────────
+  #
+  # Optional AES-256 PDF password protection.
+  # Set encryption_enabled: true and provide a password.
+
+  # pdf_password: ""     # Uncomment and set to enable password protection
+  # hmac_secret: ""      # Optional HMAC key for fingerprint verification
+
+  # ── Output ───────────────────────────────────────────────────────────
+  #
+  # Steganography PDFs are saved alongside the originals with this suffix.
+
+  output_suffix: "_steganography"
+
+
+################################################################################
+# Opacity Reference
+#
+#   0.00  — Completely invisible (white on white)
+#   0.02  — Barely perceptible (subtle security mark)
+#   0.05  — Light watermark (default for QR overlay)
+#   0.08  — Standard watermark (default for text overlay)
+#   0.15  — Clearly visible watermark
+#   0.30  — Strong overlay
+#   0.50  — Half-opaque (very prominent)
+#   1.00  — Solid opaque (fully blocks background)
+#
+# Colour Reference
+#
+#   [128, 128, 128]  — Medium grey (default, subtle)
+#   [0, 0, 0]        — Black (bold, high-contrast)
+#   [255, 0, 0]      — Red (attention-grabbing)
+#   [200, 200, 200]  — Light grey (barely visible)
+#   [255, 255, 255]  — White (invisible on white paper)
+#
+################################################################################

@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import time
 from pathlib import Path
-from typing import Optional
 
 from infrastructure.core.logging_utils import (
     get_logger,
@@ -42,7 +41,6 @@ REVIEW_GENERATORS = {
     "improvement_suggestions": generate_improvement_suggestions,
 }
 
-
 class ReviewMode:
     """Mode for LLM review execution."""
 
@@ -50,11 +48,10 @@ class ReviewMode:
     REVIEWS_ONLY = "reviews_only"  # Run only English scientific reviews
     TRANSLATIONS_ONLY = "translations_only"  # Run only translations
 
-
 def run_llm_review_pipeline(
     mode: str = ReviewMode.ALL,
     project_name: str = "project",
-    repo_root: Optional[Path] = None,
+    repo_root: Path | None = None,
 ) -> int:
     """Execute LLM manuscript review orchestration.
 

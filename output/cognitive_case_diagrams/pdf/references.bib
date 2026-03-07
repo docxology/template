@@ -164,10 +164,11 @@
 
 @article{fritz2021enriched,
   title={An enriched category theory of language: from syntax to semantics},
-  author={Fritz, Tobias and Gadducci, Fabio and Kissinger, Aleks and Liang, Sophie},
+  author={Bradley, Tai-Danae and Terilla, John and Weyhrich, Tyler},
   journal={arXiv preprint arXiv:2106.07890},
   year={2021},
-  url={https://arxiv.org/abs/2106.07890}
+  url={https://arxiv.org/abs/2106.07890},
+  note={Original key retained for citation stability; correct authors are Bradley, Terilla, and Weyhrich}
 }
 
 @misc{bradley2024ipam,
@@ -366,6 +367,33 @@
   url={https://arxiv.org/abs/2111.13154}
 }
 
+@misc{duneau2021parsing,
+  title={A Pipeline for Discourse Circuits from {CCG}},
+  author={Duneau, Ariane},
+  year={2021},
+  howpublished={MSc Dissertation, University of Oxford},
+  note={Constructs DisCoCirc discourse circuits from CCG parse trees via iterative coreference resolution and wire merging}
+}
+
+@inproceedings{wang2025discosg,
+  title={{DiscoSG}: Towards Discourse-Level Text Scene Graph Parsing},
+  author={Wang, Jingting and others},
+  booktitle={Proceedings of the Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+  year={2025},
+  url={https://arxiv.org/abs/2506.15583},
+  note={Discourse-level scene graph parsing with cross-sentence coreference; DiscoSG-Refiner outperforms baselines by 30--48\% SPICE}
+}
+
+@misc{sherborne2025paramqnlp,
+  title={Efficient Generation of Parameterised Quantum Circuits from Large Language Models},
+  author={Sherborne, Tom and others},
+  year={2025},
+  eprint={2505.13208},
+  archivePrefix={arXiv},
+  primaryClass={cs.CL},
+  note={Uses DisCoCirc string diagrams to generate discourse-level quantum circuits; composes sentence diagrams via coreference resolution for scalable QNLP}
+}
+
 %% ========================================================================
 %% 9. Case Grammar Origins and Thematic Roles
 %% ========================================================================
@@ -389,6 +417,15 @@
   pages={547--619},
   year={1991},
   doi={10.2307/415037}
+}
+
+@inproceedings{arlas2025adversarial,
+  title={Adversarial Reinforcement Learning for {LLM} Agent Safety},
+  author={{ARLAS Team}},
+  booktitle={OpenReview preprint},
+  year={2025},
+  url={https://openreview.net/pdf?id=tguzk54PbV},
+  note={Co-evolves attacker and defender LLM agents via RL; demonstrates indirect prompt injection as role manipulation in multi-turn tool-use scenarios}
 }
 
 %% ========================================================================
@@ -654,5 +691,227 @@
   year={2016},
   doi={10.1007/s10623-015-0157-4},
   note={Quantum cryptographic primitives beyond QKD including secure computation and authentication}
+}
+
+%% ========================================================================
+%% 15. Distributional Semantics and the Distributional Hypothesis
+%% ========================================================================
+
+@book{firth1957papers,
+  title={Papers in Linguistics 1934--1951},
+  author={Firth, John Rupert},
+  publisher={Oxford University Press},
+  year={1957},
+  note={Origin of the distributional hypothesis: ``You shall know a word by the company it keeps''}
+}
+
+@article{harris1954distributional,
+  title={Distributional Structure},
+  author={Harris, Zellig S.},
+  journal={Word},
+  volume={10},
+  number={2--3},
+  pages={146--162},
+  year={1954},
+  doi={10.1080/00437956.1954.11659520},
+  note={Foundational formalization of distributional analysis in structural linguistics}
+}
+
+@article{turney2010frequency,
+  title={From Frequency to Meaning: Vector Space Models of Semantics},
+  author={Turney, Peter D. and Pantel, Patrick},
+  journal={Journal of Artificial Intelligence Research},
+  volume={37},
+  pages={141--188},
+  year={2010},
+  doi={10.1613/jair.2934},
+  note={Comprehensive survey of vector space models for word meaning}
+}
+
+@article{baroni2010distributional,
+  title={Distributional Memory: A General Framework for Corpus-Based Semantics},
+  author={Baroni, Marco and Lenci, Alessandro},
+  journal={Computational Linguistics},
+  volume={36},
+  number={4},
+  pages={673--721},
+  year={2010},
+  doi={10.1162/coli_a_00016},
+  note={Unified tensor-based framework for distributional semantic phenomena}
+}
+
+@article{lenci2018distributional,
+  title={Distributional Models of Word Meaning},
+  author={Lenci, Alessandro},
+  journal={Annual Review of Linguistics},
+  volume={4},
+  pages={151--171},
+  year={2018},
+  doi={10.1146/annurev-linguistics-030514-125254},
+  note={Authoritative survey linking distributional semantics to cognitive and computational models}
+}
+
+%% ========================================================================
+%% 16. Word Embeddings, Transformers, and Large Language Models
+%% ========================================================================
+
+@inproceedings{mikolov2013efficient,
+  title={Efficient Estimation of Word Representations in Vector Space},
+  author={Mikolov, Tomas and Chen, Kai and Corrado, Greg and Dean, Jeffrey},
+  booktitle={International Conference on Learning Representations (ICLR) Workshop},
+  year={2013},
+  url={https://arxiv.org/abs/1301.3781},
+  note={Introduces Word2Vec: skip-gram and CBOW architectures for static word embeddings}
+}
+
+@inproceedings{pennington2014glove,
+  title={{GloVe}: Global Vectors for Word Representation},
+  author={Pennington, Jeffrey and Socher, Richard and Manning, Christopher D.},
+  booktitle={Proceedings of the Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+  pages={1532--1543},
+  year={2014},
+  doi={10.3115/v1/D14-1162},
+  note={Log-bilinear word embedding model capturing global co-occurrence statistics}
+}
+
+@article{devlin2019bert,
+  title={{BERT}: Pre-training of Deep Bidirectional Transformers for Language Understanding},
+  author={Devlin, Jacob and Chang, Ming-Wei and Lee, Kenton and Toutanova, Kristina},
+  journal={Proceedings of NAACL-HLT},
+  pages={4171--4186},
+  year={2019},
+  url={https://arxiv.org/abs/1810.04805},
+  note={Bidirectional contextualized embeddings via masked language modeling}
+}
+
+@misc{radford2018improving,
+  title={Improving Language Understanding by Generative Pre-Training},
+  author={Radford, Alec and Narasimhan, Karthik and Salimans, Tim and Sutskever, Ilya},
+  year={2018},
+  howpublished={OpenAI Technical Report},
+  url={https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf},
+  note={GPT-1: autoregressive generative pre-training for contextualized language representations}
+}
+
+@inproceedings{vaswani2017attention,
+  title={Attention Is All You Need},
+  author={Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N. and Kaiser, {\L}ukasz and Polosukhin, Illia},
+  booktitle={Advances in Neural Information Processing Systems (NeurIPS)},
+  volume={30},
+  year={2017},
+  url={https://arxiv.org/abs/1706.03762},
+  note={Introduces the transformer architecture with multi-head self-attention}
+}
+
+%% ========================================================================
+%% 17. Distributional Active Inference and Distributional RL
+%% ========================================================================
+
+@misc{akgul2026distributional,
+  title={Distributional Active Inference},
+  author={Akg{\"u}l, Abdullah and Baykal, Gulcin and Hau{\ss}mann, Manuel and {\c{C}}elikok, Mustafa Mert and Kandemir, Melih},
+  year={2026},
+  eprint={2601.20985},
+  archivePrefix={arXiv},
+  primaryClass={cs.LG},
+  doi={10.48550/arXiv.2601.20985},
+  note={Integrates active inference into distributional RL via push-forward measures on representation paths}
+}
+
+@inproceedings{bellemare2017distributional,
+  title={A Distributional Perspective on Reinforcement Learning},
+  author={Bellemare, Marc G. and Dabney, Will and Munos, R{\'e}mi},
+  booktitle={International Conference on Machine Learning (ICML)},
+  pages={449--458},
+  year={2017},
+  url={https://arxiv.org/abs/1707.06887},
+  note={Foundational paper on distributional RL: modeling full return distributions rather than expected returns}
+}
+
+%% ========================================================================
+%% 18. Missing References: Active Inference and Language
+%% ========================================================================
+
+@article{friston2010free,
+  title={The free-energy principle: a unified brain theory?},
+  author={Friston, Karl J.},
+  journal={Nature Reviews Neuroscience},
+  volume={11},
+  number={2},
+  pages={127--138},
+  year={2010},
+  doi={10.1038/nrn2787},
+  note={Foundational statement of the free energy principle for biological self-organization}
+}
+
+@article{friston2020generative,
+  title={Generative models, linguistic communication and active inference},
+  author={Friston, Karl J. and Parr, Thomas and Yufik, Yan and Sajid, Noor and Price, Catherine J. and Holmes, Emily},
+  journal={Neuroscience \& Biobehavioral Reviews},
+  volume={118},
+  pages={42--64},
+  year={2020},
+  doi={10.1016/j.neubiorev.2020.07.005},
+  note={Active inference framework for language production and comprehension via hierarchical generative models}
+}
+
+@article{friston2021understanding,
+  title={World model learning and inference},
+  author={Friston, Karl J. and Da Costa, Lancelot and Sajid, Noor and Heins, Conor and Ueltzhöffer, Kai and Pavliotis, Grigorios A. and Parr, Thomas},
+  journal={Neural Networks},
+  volume={144},
+  pages={573--590},
+  year={2021},
+  doi={10.1016/j.neunet.2021.09.011},
+  note={World models and understanding through active inference; cited in cognitive integration chapter}
+}
+
+@misc{donnarumma2023integrating,
+  title={Integrating Large Language Models and Active Inference},
+  author={Donnarumma, Francesco and Frosolone, Giovanni and Pezzulo, Giovanni},
+  year={2023},
+  howpublished={Presented at the 5th International Workshop on Active Inference (IWAI 2023)},
+  note={Integration of LLM architectures with active inference for linguistic processing}
+}
+
+%% ========================================================================
+%% 19. Missing References: Historical Linguistics (§2)
+%% ========================================================================
+
+@article{jakobson1958morphologic,
+  title={Morphological Inquiry into Slavic Declension: Structure of Russian Case Forms},
+  author={Jakobson, Roman},
+  journal={American Contributions to the Fourth International Congress of Slavicists},
+  publisher={Mouton},
+  year={1958},
+  note={Originally written 1936; binary distinctive features for Russian case oppositions}
+}
+
+@book{hjelmslev1935categorie,
+  title={La cat\'{e}gorie des cas: \'{e}tude de grammaire g\'{e}n\'{e}rale},
+  author={Hjelmslev, Louis},
+  publisher={Universitetsforlaget i Aarhus},
+  year={1935},
+  note={Foundational glossematic analysis treating case as a purely relational category}
+}
+
+@inproceedings{jha2021sanskrit,
+  title={Sanskrit and Computational Linguistics},
+  author={Jha, Girish Nath},
+  booktitle={The Oxford Handbook of History of Linguistics},
+  publisher={Oxford University Press},
+  year={2021},
+  doi={10.1093/oxfordhb/9780199585847.013.0034},
+  note={Survey of Sanskrit grammatical tradition and computational approaches}
+}
+
+@article{kak1987paninian,
+  title={P\={a}\d{n}inian Grammar and Computer Science},
+  author={Kak, Subhash},
+  journal={Annals of the Bhandarkar Oriental Research Institute},
+  volume={68},
+  pages={79--90},
+  year={1987},
+  note={Connections between P\={a}\d{n}ini's generative grammar and formal language theory}
 }
 

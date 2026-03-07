@@ -1,27 +1,104 @@
 {
-  "timestamp": "2026-03-06T05:06:08.636482",
+  "timestamp": "2026-03-07T10:12:23.975536",
   "infrastructure": {},
   "project": {
-    "passed": 0,
+    "passed": 175,
     "failed": 0,
     "skipped": 0,
-    "total": 0,
-    "warnings": 0,
-    "exit_code": 2,
-    "discovery_count": 132,
-    "collection_errors": 1,
+    "total": 175,
+    "warnings": 3,
+    "exit_code": 1,
+    "discovery_count": 175,
+    "collection_errors": 0,
     "execution_phases": {
-      "setup": 0.85,
-      "collection": 0.85
+      "setup": 4.2,
+      "collection": 4.2,
+      "execution": 4.2
     },
     "test_categories": {},
+    "coverage_percent": 84.26966292134831,
     "failed_tests": []
   },
   "summary": {
-    "total_passed": 0,
+    "total_passed": 175,
     "total_failed": 0,
     "total_skipped": 0,
-    "total_tests": 0,
-    "all_passed": false
+    "total_tests": 175,
+    "all_passed": false,
+    "project_coverage": 84.26966292134831
+  },
+  "coverage_details": {
+    "project": {
+      "overall_coverage": 85.17145505097312,
+      "total_executed": 919,
+      "total_missing": 160,
+      "total_excluded": 0,
+      "total_lines": 1079,
+      "file_coverage": {
+        "projects/cognitive_case_diagrams/src/category/case_category.py": {
+          "coverage_percent": 97.54098360655738,
+          "executed_lines": 119,
+          "missing_lines": 3,
+          "excluded_lines": 0,
+          "total_lines": 122
+        },
+        "projects/cognitive_case_diagrams/src/category/enriched.py": {
+          "coverage_percent": 98.63013698630137,
+          "executed_lines": 72,
+          "missing_lines": 1,
+          "excluded_lines": 0,
+          "total_lines": 73
+        },
+        "projects/cognitive_case_diagrams/src/category/functor.py": {
+          "coverage_percent": 95.06172839506173,
+          "executed_lines": 77,
+          "missing_lines": 4,
+          "excluded_lines": 0,
+          "total_lines": 81
+        },
+        "projects/cognitive_case_diagrams/src/utils/logging_config.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 7,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 7
+        },
+        "projects/cognitive_case_diagrams/src/visualization/category_diagram.py": {
+          "coverage_percent": 94.37229437229438,
+          "executed_lines": 218,
+          "missing_lines": 13,
+          "excluded_lines": 0,
+          "total_lines": 231
+        },
+        "projects/cognitive_case_diagrams/src/visualization/convenience.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 28,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 28
+        },
+        "projects/cognitive_case_diagrams/src/visualization/discopy_diagrams.py": {
+          "coverage_percent": 57.71604938271605,
+          "executed_lines": 187,
+          "missing_lines": 137,
+          "excluded_lines": 0,
+          "total_lines": 324
+        },
+        "projects/cognitive_case_diagrams/src/visualization/string_diagram.py": {
+          "coverage_percent": 98.94179894179894,
+          "executed_lines": 187,
+          "missing_lines": 2,
+          "excluded_lines": 0,
+          "total_lines": 189
+        },
+        "projects/cognitive_case_diagrams/src/visualization/styles.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 24,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 24
+        }
+      }
+    }
   }
 }

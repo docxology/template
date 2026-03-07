@@ -10,22 +10,20 @@ Provides comprehensive validation for scientific code:
 from __future__ import annotations
 
 import inspect
-from typing import Any, Callable, Dict, List, Tuple, TypedDict
+from typing import Any, Callable, TypedDict
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
-
 
 class _ValidationResults(TypedDict):
     total_tests: int
     passed_tests: int
     failed_tests: int
     accuracy_score: float
-    details: List[Dict[str, Any]]
+    details: list[dict[str, Any]]
 
-
-def validate_scientific_implementation(func: Callable, test_cases: List[Tuple]) -> Dict[str, Any]:
+def validate_scientific_implementation(func: Callable, test_cases: list[Tuple]) -> dict[str, Any]:
     """Validate scientific implementation against known test cases.
 
     Args:
@@ -116,8 +114,7 @@ def validate_scientific_implementation(func: Callable, test_cases: List[Tuple]) 
 
     return validation_results
 
-
-def validate_scientific_best_practices(module: Any) -> Dict[str, Any]:
+def validate_scientific_best_practices(module: Any) -> dict[str, Any]:
     """Validate that a module follows scientific computing best practices.
 
     Args:
@@ -214,8 +211,7 @@ def validate_scientific_best_practices(module: Any) -> Dict[str, Any]:
 
     return validation
 
-
-def check_research_compliance(func: Callable) -> Dict[str, Any]:
+def check_research_compliance(func: Callable) -> dict[str, Any]:
     """Check function compliance with research software standards.
 
     Args:

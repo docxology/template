@@ -10,12 +10,11 @@ import json
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
-
 
 @dataclass
 class ErrorEntry:
@@ -23,9 +22,9 @@ class ErrorEntry:
 
     type: str  # 'test_failure', 'validation_error', 'stage_failure', etc.
     message: str
-    stage: Optional[str] = None
-    file: Optional[str] = None
-    line: Optional[int] = None
+    stage: str | None = None
+    file: str | None = None
+    line: int | None = None
     severity: str = "error"  # 'error', 'warning', 'info'
     suggestions: list[str] = field(default_factory=list)
     context: dict[str, Any] = field(default_factory=dict)
@@ -43,7 +42,6 @@ class ErrorEntry:
             "context": self.context,
         }
 
-
 class ErrorAggregator:
     """Aggregate and categorize errors from pipeline execution."""
 
@@ -55,12 +53,12 @@ class ErrorAggregator:
         self,
         error_type: str,
         message: str,
-        stage: Optional[str] = None,
-        file: Optional[str] = None,
-        line: Optional[int] = None,
+        stage: str | None = None,
+        file: str | None = None,
+        line: int | None = None,
         severity: str = "error",
-        suggestions: Optional[list[str]] = None,
-        context: Optional[dict[str, Any]] = None,
+        suggestions: list[str | None] = None,
+        context: dict[str, Any | None] = None,
     ) -> None:
         """Add an error or warning.
 
@@ -286,10 +284,8 @@ class ErrorAggregator:
 
         return "\n".join(lines)
 
-
 # Global error aggregator instance
-_global_aggregator: Optional[ErrorAggregator] = None
-
+_global_aggregator: ErrorAggregator | None = None
 
 def get_error_aggregator() -> ErrorAggregator:
     """Get global error aggregator instance.
@@ -301,7 +297,6 @@ def get_error_aggregator() -> ErrorAggregator:
     if _global_aggregator is None:
         _global_aggregator = ErrorAggregator()
     return _global_aggregator
-
 
 def reset_error_aggregator() -> None:
     """Reset global error aggregator (for testing)."""

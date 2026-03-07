@@ -12,12 +12,11 @@ import json
 import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Optional, Tuple
+from typing import Any
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
-
 
 @dataclass
 class StageResult:
@@ -29,7 +28,6 @@ class StageResult:
     timestamp: str = ""
     completed: bool = True
     status: str = ""
-
 
 @dataclass
 class PipelineCheckpoint:
@@ -63,15 +61,14 @@ class PipelineCheckpoint:
             checkpoint_time=data["checkpoint_time"],
         )
 
-
 class CheckpointManager:
     """Manages pipeline checkpoints for resume capability."""
 
     def __init__(
         self,
-        checkpoint_dir: Optional[Path] = None,
+        checkpoint_dir: Path | None = None,
         project_name: str = "project",
-        repo_root: Optional[Path] = None,
+        repo_root: Path | None = None,
     ):
         """Initialize checkpoint manager.
 
@@ -133,7 +130,7 @@ class CheckpointManager:
             )
             return False
 
-    def load_checkpoint(self) -> Optional[PipelineCheckpoint]:
+    def load_checkpoint(self) -> PipelineCheckpoint | None:
         """Load pipeline checkpoint.
 
         Returns:
@@ -179,7 +176,7 @@ class CheckpointManager:
         except Exception:
             return False
 
-    def validate_checkpoint(self) -> Tuple[bool, Optional[str]]:
+    def validate_checkpoint(self) -> tuple[bool, str | None]:
         """Validate checkpoint integrity and consistency.
 
         Returns:

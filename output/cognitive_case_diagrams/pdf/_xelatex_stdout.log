@@ -215,58 +215,38 @@ meta.code.tex)))
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msb.cfg)
 [1] (./_combined_manuscript.toc
 [2]
-[3])
-[4]
+[3]
+[4])
 [5]
 [6]
 [7]
 [8]
-
-Package natbib Warning: Citation `jha2021sanskrit' on page 9 undefined on input
- line 437.
-
-
-Package natbib Warning: Citation `kak1987paninian' on page 9 undefined on input
- line 437.
-
-
-Package natbib Warning: Citation `jakobson1958morphologic' on page 9 undefined 
-on input line 450.
-
-
-Package natbib Warning: Citation `hjelmslev1935categorie' on page 9 undefined o
-n input line 450.
-
 [9]
-[10]
-[11]
+[10] [11]
 [12]
 [13]
-
-Package natbib Warning: Citation `duneau2021parsing' on page 14 undefined on in
-put line 786.
-
-
 [14]
-Missing character: There is no ⊗ (U+2297) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no ⊗ (U+2297) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no ⊗ (U+2297) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no ⊗ (U+2297) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no ⊗ (U+2297) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no ⊗ (U+2297) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no ⊗ (U+2297) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no ⊗ (U+2297) in font [lmroman10-regular]:mapping=t
-ex-text;!
-
 [15]
 [16]
+Missing character: There is no ⊗ (U+2297) in font [lmroman10-regular]:mapping=t
+ex-text;!
+Missing character: There is no ⊗ (U+2297) in font [lmroman10-regular]:mapping=t
+ex-text;!
+Missing character: There is no ⊗ (U+2297) in font [lmroman10-regular]:mapping=t
+ex-text;!
+Missing character: There is no ⊗ (U+2297) in font [lmroman10-regular]:mapping=t
+ex-text;!
+Missing character: There is no ⊗ (U+2297) in font [lmroman10-regular]:mapping=t
+ex-text;!
+Missing character: There is no ⊗ (U+2297) in font [lmroman10-regular]:mapping=t
+ex-text;!
+Missing character: There is no ⊗ (U+2297) in font [lmroman10-regular]:mapping=t
+ex-text;!
+Missing character: There is no ⊗ (U+2297) in font [lmroman10-regular]:mapping=t
+ex-text;!
+
+[17]
+[18]
 ! Missing $ inserted.
 <inserted text> 
                 $
@@ -306,80 +286,67 @@ l.965 \end{enumerate}
 l.965 \end{enumerate}
                      
 
-[17]
-[18]
 [19]
-Underfull \hbox (badness 1902) in paragraph at lines 1151--1157
+[20]
+[21]
+Overfull \hbox (0.1677pt too wide) in paragraph at lines 1155--1165
+\TU/lmr/m/n/10 be understood as learning a particular \TU/lmr/m/it/10 relationa
+l role\TU/lmr/m/n/10 —attending to subjects, objects, modifiers, or other gram-
+
+
+[22]
+Underfull \hbox (badness 1902) in paragraph at lines 1247--1253
 []\TU/lmr/bx/n/10 Typed noun spaces\TU/lmr/m/n/10 : Instead of a single noun sp
 ace $[]$, we define case-specific spaces
 
-Underfull \hbox (badness 1107) in paragraph at lines 1151--1157
+Underfull \hbox (badness 1107) in paragraph at lines 1247--1253
 [][][] [][][] [][][] []$ \TU/lmr/m/n/10 Morphisms between these spaces encode c
 ase-changing operations (pas-
 
-[20]
+[23]
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.1210 
+l.1306 
        
-
-[21]
-Missing character: There is no ⊗ (U+2297) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no ⊗ (U+2297) in font [lmroman10-regular]:mapping=t
-ex-text;!
-
-[22]
-[23]
-Missing character: There is no ∣ (U+2223) in font [lmroman10-regular]:mapping=t
-ex-text;!
 
 [24]
 [25]
+Missing character: There is no ⊗ (U+2297) in font [lmroman10-regular]:mapping=t
+ex-text;!
+Missing character: There is no ⊗ (U+2297) in font [lmroman10-regular]:mapping=t
+ex-text;!
+
 [26]
+[27]
+Missing character: There is no ∣ (U+2223) in font [lmroman10-regular]:mapping=t
+ex-text;!
+
+[28]
+[29]
+[30]
+[31]
 ! Missing { inserted.
 <to be read again> 
                    \__um_group_begin: 
-l.1619 \(\mathcal{E}_\mathbb
+l.1789 \(\mathcal{E}_\mathbb
                             {T}\)---a canonical topos whose models correspond
 ! Missing } inserted.
 <inserted text> 
                 }
-l.1619 \(\mathcal{E}_\mathbb{T}\)
+l.1789 \(\mathcal{E}_\mathbb{T}\)
                                  ---a canonical topos whose models correspond
 ! Missing { inserted.
 <to be read again> 
                    \__um_group_begin: 
-l.1620 ...tric functors from \(\mathcal{E}_\mathbb
+l.1790 ...tric functors from \(\mathcal{E}_\mathbb
                                                   {T}\) to
 ! Missing } inserted.
 <inserted text> 
                 }
-l.1620 ...functors from \(\mathcal{E}_\mathbb{T}\)
+l.1790 ...functors from \(\mathcal{E}_\mathbb{T}\)
                                                    to
 
-[27]
-[28]
-[29]
-
-Package natbib Warning: Citation `friston2010free' on page 30 undefined on inpu
-t line 1817.
-
-
-Package natbib Warning: Citation `donnarumma2023integrating' on page 30 undefin
-ed on input line 1839.
-
-
-Package natbib Warning: Citation `friston2021understanding' on page 30 undefine
-d on input line 1845.
-
-
-Package natbib Warning: Citation `friston2020generative' on page 30 undefined o
-n input line 1845.
-
-
-[30] [31]
 [32]
 [33]
 [34]
@@ -392,15 +359,70 @@ n input line 1845.
 [41]
 [42]
 [43]
-[44] (./_combined_manuscript.bbl
+[44]
 [45]
 [46]
-[47])
+[47]
+[48]
+[49]
+[50]
+[51]
+[52]
+[53]
+[54] [55] [56] [57] [58] [59] [60] [61] [62]
+[63] [64]
+[65] [66] [67]
+! Missing $ inserted.
+<inserted text> 
+                $
+l.4185 \(\beta)-reduction &
+                            --- & Computational reduction step in
+! Missing $ inserted.
+<inserted text> 
+                $
+l.4186 ...rresponds to cut elimination in proofs &
+                                                   §3 \\
 
-Package natbib Warning: There were undefined citations.
+Overfull \hbox (113.89708pt too wide) in paragraph at lines 4185--4186
+[][][][][][][][][] [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
+[][][][][]$  
+! Missing $ inserted.
+<inserted text> 
+                $
+l.4188 ...ences converge to the same normal form &
+                                                   §3 \\
 
-
-[48] (./_combined_manuscript.aux) )
+Overfull \hbox (144.77031pt too wide) in paragraph at lines 4187--4188
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][]$  
+! Missing $ inserted.
+<inserted text> 
+                $
+l.4192 ...mas; corresponds to \(\beta)-reduction &
+                                                   §3 \\
+[68] [69] [70]
+! Missing $ inserted.
+<inserted text> 
+                $
+l.4325 \(\alpha, \beta) &
+                          Natural transformations \\
+! Missing $ inserted.
+<inserted text> 
+                $
+l.4350 \(\gamma) &
+                   Discount factor in distributional RL return computation \\
+! Missing $ inserted.
+<inserted text> 
+                $
+l.4355 \(\eta) &
+                 Compact closure unit (cap); also learning rate in some
+[71] (./_combined_manuscript.bbl
+[72]
+[73]
+[74]
+[75]
+[76])
+[77] (./_combined_manuscript.aux) )
 (see the transcript file for additional information)
-Output written on _combined_manuscript.pdf (48 pages).
+Output written on _combined_manuscript.pdf (77 pages).
 Transcript written on _combined_manuscript.log.

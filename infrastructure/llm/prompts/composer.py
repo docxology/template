@@ -3,14 +3,13 @@
 from __future__ import annotations
 
 import re
-from typing import Any, Optional
+from typing import Any
 
 from infrastructure.core.exceptions import LLMTemplateError
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.llm.prompts.loader import PromptFragmentLoader
 
 logger = get_logger(__name__)
-
 
 class PromptComposer:
     """Composes prompts from fragments and templates.
@@ -29,7 +28,7 @@ class PromptComposer:
         ... )
     """
 
-    def __init__(self, loader: Optional[PromptFragmentLoader] = None):
+    def __init__(self, loader: PromptFragmentLoader | None = None):
         """Initialize prompt composer.
 
         Args:
@@ -38,7 +37,7 @@ class PromptComposer:
         self.loader = loader or PromptFragmentLoader()
 
     def compose_template(
-        self, template_ref: str, max_tokens: Optional[int] = None, **variables: Any
+        self, template_ref: str, max_tokens: int | None = None, **variables: Any
     ) -> str:
         """Compose a prompt from a template definition.
 

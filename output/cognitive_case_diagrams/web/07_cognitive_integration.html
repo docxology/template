@@ -282,6 +282,72 @@ functorial mappings between case categories</li>
 <p>Active inference adds the dynamic component: the agent moves through
 a sequence of situations, updating its case diagram in real time and
 using the diagram to predict which situation will come next.</p>
+<h2
+id="distributional-active-inference-convergence-of-two-distributional-traditions">Distributional
+Active Inference: Convergence of Two Distributional Traditions</h2>
+<p>A remarkable convergence has recently emerged between
+<em>distributional semantics</em> in linguistics and <em>distributional
+reinforcement learning</em> in machine learning, mediated by active
+inference. Akgül et al. <span class="citation"
+data-cites="akgul2026distributional">[-@akgul2026distributional]</span>
+introduce <strong>Distributional Active Inference (DAIF)</strong>, which
+integrates active inference into the distributional RL framework of
+Bellemare, Dabney, and Munos <span class="citation"
+data-cites="bellemare2017distributional">[-@bellemare2017distributional]</span>.
+Where classical RL optimizes <em>expected</em> returns (scalar values),
+distributional RL models the <em>full distribution</em> of returns—a
+shift from point estimates to distributional representations that
+parallels the shift from symbolic to distributional semantics in
+linguistics.</p>
+<p>The formal architecture of DAIF proceeds through three stages: (1)
+reconstructing active inference via variational Bayesian inference on a
+controlled Markov process, expressing priors through Pearl’s
+do-calculus; (2) defining a <em>push-forward</em> operation on
+representation paths that maps latent-space trajectories to return
+distributions; and (3) deriving a temporal-difference quantile-matching
+algorithm that implements active inference without requiring explicit
+transition dynamics modeling. The resulting “push-forward RL” template
+achieves active inference’s sample-efficiency advantages within a
+model-free computational architecture:</p>
+<p><span class="math display">\[\mathbb{E}\left[\sum_{t=0}^{\infty}
+\gamma^t R(x_t, a_t) \mid x_0, a_0\right] =
+\int_{\mathcal{S}^{\mathbb{N}_+}} R \circ f \, d(\mathbf{S}_{\#}
+\mathbb{P}_{x_0, a_0}^{P_\pi}) \tag{7.1}\]</span></p>
+<p>where <span class="math inline">\(\mathbf{S}_{\#}\)</span> denotes
+the push-forward measure on representation paths and <span
+class="math inline">\(f: \mathcal{S} \to \mathcal{X}\)</span> is the
+stochastic decoder.</p>
+<p>The terminological collision between “distributional” in
+distributional semantics and “distributional” in distributional RL is
+not mere homonymy—it reflects a deep structural parallel. In both
+domains, the core move is the same: <strong>replacing scalar summaries
+with full distributional representations.</strong> In linguistics, this
+means replacing symbolic word identities with probability distributions
+over contexts (Firth’s <span class="citation"
+data-cites="firth1957papers">[-@firth1957papers]</span> company-keeping
+principle). In RL, it means replacing expected-value estimates with full
+return distributions. In active inference, it means replacing point
+estimates of world states with variational posterior distributions. The
+enriched-categorical framework of provides the unifying abstraction: all
+three are instances of <span
+class="math inline">\([0,1]\)</span>-enriched categories where
+hom-values encode distributional proximity rather than discrete
+identity.</p>
+<p>For case-theoretic reasoning, DAIF suggests a computational
+architecture in which case assignment operates distributional-ly at
+every level: the agent maintains not a single case diagram but a
+<em>distribution over case diagrams</em>, weighted by their posterior
+probability given the observed linguistic evidence. Each incoming word
+updates this distribution via variational message passing, and the
+agent’s production choices minimize expected free energy across the full
+distribution of possible relational structures—not merely the most
+likely one. This distributional perspective on case assignment aligns
+naturally with the graded proto-role structure of Dowty <span
+class="citation"
+data-cites="dowty1991thematic">[-@dowty1991thematic]</span>: a noun
+phrase is not categorically “agent” or “patient” but distributes
+probability mass across case roles, with the distribution sharpening as
+more evidence accumulates.</p>
 <h2 id="cerebrum-the-computational-architecture">CEREBRUM: The
 Computational Architecture</h2>
 <h3 id="architecture-and-design-principles">Architecture and Design

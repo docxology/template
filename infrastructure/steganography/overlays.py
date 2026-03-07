@@ -9,14 +9,12 @@ document-ID stamps.
 from __future__ import annotations
 
 import io
-from typing import Tuple
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
 # ── Lazy imports ─────────────────────────────────────────────────────────
-
 
 def _get_reportlab():
     """Lazily import reportlab components."""
@@ -31,16 +29,14 @@ def _get_reportlab():
             "Install it with: pip install reportlab"
         )
 
-
 # ── Public API ───────────────────────────────────────────────────────────
-
 
 def create_watermark_overlay(
     page_width: float,
     page_height: float,
     text: str = "CONFIDENTIAL",
     opacity: float = 0.08,
-    color_rgb: Tuple[int, int, int] = (128, 128, 128),
+    color_rgb: tuple[int, int, int] = (128, 128, 128),
     font_size: int = 60,
     repeat_count: int = 5,
 ) -> bytes:
@@ -85,7 +81,6 @@ def create_watermark_overlay(
     c.save()
 
     return buf.getvalue()
-
 
 def create_qr_overlay(
     page_width: float,
@@ -156,7 +151,6 @@ def create_qr_overlay(
     c.save()
 
     return buf.getvalue()
-
 
 def create_footer_overlay(
     page_width: float,
@@ -271,7 +265,6 @@ def create_footer_overlay(
     c.save()
 
     return buf.getvalue()
-
 
 def create_invisible_text_overlay(
     page_width: float,

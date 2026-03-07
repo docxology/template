@@ -1,0 +1,144 @@
+{
+  "assessments": {
+    "cross_module_architecture": 84,
+    "convention_outlier": 79,
+    "error_consistency": 72,
+    "abstraction_fitness": 75
+  },
+  "findings": [
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "reporting_imports_core_checkpoint",
+      "summary": "pipeline_reporter imports StageResult from infrastructure.core.checkpoint, coupling reporting to core internals",
+      "related_files": ["infrastructure/reporting/pipeline_reporter.py", "infrastructure/core/checkpoint.py"],
+      "evidence": [
+        "pipeline_reporter.py line 15: from infrastructure.core.checkpoint import StageResult",
+        "StageResult is used as the element type in PipelineReport.stages, meaning reporting.PipelineReport is structurally dependent on core.checkpoint.StageResult",
+        "generate_pipeline_report() also constructs new StageResult instances from raw dicts, embedding checkpoint data model knowledge inside the reporting layer"
+      ],
+      "suggestion": "Extract StageResult (or a reporting-specific equivalent) into a shared models module or into infrastructure.reporting itself so the reporting layer does not import from infrastructure.core.checkpoint",
+      "confidence": "high"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "multi_project_reporter_imports_dashboard",
+      "summary": "multi_project_reporter imports dashboard_generator which imports executive_reporter and output_organizer, creating a deep intra-reporting dependency chain",
+      "related_files": [
+        "infrastructure/reporting/multi_project_reporter.py",
+        "infrastructure/reporting/dashboard_generator.py",
+        "infrastructure/reporting/executive_reporter.py"
+      ],
+      "evidence": [
+        "multi_project_reporter.py line 15-16: imports generate_all_dashboards and ExecutiveSummary/ProjectMetrics/etc from within the same reporting package",
+        "dashboard_generator.py lines 33-35: imports ExecutiveSummary, ProjectMetrics from executive_reporter and generate_all_manuscript_overviews from manuscript_overview and OutputOrganizer from output_organizer",
+        "dashboard_generator.py also defers three more imports of calculate_project_health_score (lines 529, 827, 3169) inside function bodies, indicating the top-level import was already causing issues",
+        "This creates multi_project_reporter -> dashboard_generator -> executive_reporter/manuscript_overview/output_organizer coupling across most of the reporting package"
+      ],
+      "suggestion": "Flatten the intra-reporting coupling: have multi_project_reporter orchestrate dashboard_generator and executive_reporter independently rather than delegating through dashboard_generator; extract the shared data models (ExecutiveSummary, ProjectMetrics) to a separate reporting.models module so each generator can import from there without pulling in each other",
+      "confidence": "high"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "logging_module_fragmentation",
+      "summary": "Logging functionality is split across four sibling modules (logging_utils, logging_helpers, logging_formatters, logging_progress, logging_constants) with an inconsistent split boundary",
+      "related_files": [
+        "infrastructure/core/logging_utils.py",
+        "infrastructure/core/logging_helpers.py",
+        "infrastructure/core/logging_formatters.py",
+        "infrastructure/core/logging_progress.py",
+        "infrastructure/core/logging_constants.py"
+      ],
+      "evidence": [
+        "logging_utils.py re-imports and re-exports format_duration and format_error_with_suggestions from logging_helpers, and calculate_eta from logging_progress, and EMOJIS/USE_EMOJIS/USE_STRUCTURED_LOGGING from logging_constants",
+        "logging_utils.__all__ includes format_duration and format_error_with_suggestions which live in logging_helpers — these are exported through a different module than their definition",
+        "logging_progress.py imports format_duration from logging_helpers, which in turn does not import from logging_utils, creating an asymmetric dependency graph within the logging subgroup",
+        "The split was motivated by avoiding circular imports (logging_constants docstring mentions this), but the resulting surface is inconsistent: some utilities are reachable from multiple paths"
+      ],
+      "suggestion": "Consolidate to two modules: logging_core (constants, formatters, get_logger, setup_logger) and logging_ops (context managers, progress, ETA, resource usage). Remove the re-export surface from logging_utils or make it the single authoritative import path by not exporting from submodules directly",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "mixed_type_annotation_styles",
+      "summary": "Inconsistent use of legacy typing aliases vs built-in generic types across sibling modules",
+      "related_files": [
+        "infrastructure/core/environment.py",
+        "infrastructure/core/pipeline.py",
+        "infrastructure/reporting/suite_summary_generator.py",
+        "infrastructure/core/multi_project.py"
+      ],
+      "evidence": [
+        "environment.py line 43: from typing import List, Tuple — uses legacy typing.List, typing.Tuple",
+        "pipeline.py uses built-in list[...] and dict[...] throughout (modern style with from __future__ import annotations)",
+        "multi_project.py line 14: from typing import TYPE_CHECKING, Callable, Dict, List, Optional — mixes legacy Dict, List with modern usage patterns",
+        "suite_summary_generator.py line 12: from typing import Any, Dict, TypedDict — uses Dict while sibling modules use dict[...]",
+        "All files use from __future__ import annotations, so built-in generics work uniformly; the legacy aliases are unnecessary convention drift"
+      ],
+      "suggestion": "Standardize on built-in generic types (list, dict, tuple) throughout since from __future__ import annotations is already applied universally; remove legacy typing.List, typing.Dict, typing.Tuple imports",
+      "confidence": "high"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "mixed_swallow_vs_reraise_in_dashboard",
+      "summary": "dashboard_generator silently swallows exceptions from chart generation (log + no reraise) while pipeline_reporter and suite_summary_generator reraise on the same category of OSError",
+      "related_files": [
+        "infrastructure/reporting/dashboard_generator.py",
+        "infrastructure/reporting/pipeline_reporter.py",
+        "infrastructure/reporting/suite_summary_generator.py"
+      ],
+      "evidence": [
+        "dashboard_generator.py lines 952-954: except Exception as e: logger.error(...) — no reraise, caller gets no indication the chart failed",
+        "dashboard_generator.py lines 1294-1296 and 1441-1442: same pattern — log error and fall through, function returns None implicitly",
+        "pipeline_reporter.py lines 121-123: except OSError as e: logger.error(...); raise — consistent reraise on write failure",
+        "suite_summary_generator.py lines 371-373: except OSError as e: logger.error(...); raise — reraise on write failure",
+        "The inconsistency means callers of dashboard chart functions cannot detect failures programmatically, whereas callers of report-write functions can"
+      ],
+      "suggestion": "Pick one strategy for recoverable generation failures: either reraise so callers can decide, or return an Optional/Result-style sentinel that callers check. The current mix makes failure detection unpredictable across the reporting package",
+      "confidence": "high"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "lost_context_on_except_return_none",
+      "summary": "Several infrastructure functions catch exceptions and return None without preserving original exception context, making upstream debugging harder",
+      "related_files": [
+        "infrastructure/reporting/coverage_parser.py",
+        "infrastructure/validation/integrity.py",
+        "infrastructure/reporting/suite_summary_generator.py"
+      ],
+      "evidence": [
+        "coverage_parser.py _parse_coverage_json(): except json.JSONDecodeError as e: logger.warning(...) return None — caller in extract_coverage_percentage falls back to stdout parsing, losing the structured exception context",
+        "integrity.py load_integrity_manifest(): except (OSError, json.JSONDecodeError) as e: logger.debug(...) return None — debug level means this is invisible in default logging; exception type and details are dropped",
+        "suite_summary_generator.py load_test_results(): except (OSError, json.JSONDecodeError, KeyError) as e: logger.warning(...) return {} — three different exception categories collapsed to the same fallback with only a warning log"
+      ],
+      "suggestion": "Use exception chaining (raise NewException(...) from e) when rethrowing, or at minimum log at WARNING/ERROR with the original exception type in the message so callers have enough context to diagnose failures without a debugger",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "retry_on_transient_failure_thin_wrapper",
+      "summary": "retry_on_transient_failure is a pure parameter-preset wrapper around retry_with_backoff with no added policy or domain meaning",
+      "related_files": ["infrastructure/core/retry.py"],
+      "evidence": [
+        "retry_on_transient_failure() body is a single return retry_with_backoff(max_attempts=max_attempts, initial_delay=initial_delay, exceptions=(IOError, ConnectionError, TimeoutError, OSError))",
+        "The only difference from retry_with_backoff is a hardcoded exceptions tuple; the caller still must pass max_attempts and initial_delay",
+        "No callers in the codebase were found using this wrapper (grep across infrastructure shows all retry usage goes directly to retry_with_backoff)",
+        "This is a textbook pass-through wrapper: it adds no retry policy, no logging difference, no domain concept"
+      ],
+      "suggestion": "Remove retry_on_transient_failure or fold it into a module-level constant TRANSIENT_EXCEPTIONS and let callers pass it to retry_with_backoff directly; alternatively give it a genuine domain meaning by encoding the full default policy (attempts, delays, exceptions)",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "logging_progress_dead_code_in_log_progress_streaming",
+      "summary": "log_progress_streaming contains a pass block that was supposed to compute ETA but never does, making the function a partial abstraction",
+      "related_files": ["infrastructure/core/logging_progress.py"],
+      "evidence": [
+        "logging_progress.py lines 418-421: if show_eta and current > 0: # Simple ETA calculation would require tracking start time / # For now, just show percentage / pass",
+        "The show_eta parameter is accepted but never honored — the function always shows only percentage regardless of the flag value",
+        "A separate StreamingProgress class in the same file does implement ETA correctly, making log_progress_streaming a redundant, incomplete abstraction"
+      ],
+      "suggestion": "Either implement ETA in log_progress_streaming using a caller-supplied start_time parameter, remove the show_eta parameter and dead pass block, or remove log_progress_streaming entirely in favor of StreamingProgress which already does this correctly",
+      "confidence": "high"
+    }
+  ]
+}

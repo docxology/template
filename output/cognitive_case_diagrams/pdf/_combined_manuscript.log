@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  6 MAR 2026 05:06
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  7 MAR 2026 10:13
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1280,70 +1280,52 @@ LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
 
 ]
 
-[3])
+[3]
+
+[4])
 \tf@toc=\write5
 \openout5 = `_combined_manuscript.toc'.
 
 
 
-[4]
+[5]
 
-[5
+[6
 
 ]
 File: ../figures/case_category_minimal.png Graphic file (type bmp)
 <../figures/case_category_minimal.png>
 
 
-[6
+[7
 
 ]
-
-[7]
 
 [8]
 
-Package natbib Warning: Citation `jha2021sanskrit' on page 9 undefined on input
- line 437.
+[9]
 
-
-Package natbib Warning: Citation `kak1987paninian' on page 9 undefined on input
- line 437.
-
-
-Package natbib Warning: Citation `jakobson1958morphologic' on page 9 undefined 
-on input line 450.
-
-
-Package natbib Warning: Citation `hjelmslev1935categorie' on page 9 undefined o
-n input line 450.
-
-[9
+[10] [11
 
 ]
 
-[10]
+[12]
 File: ../figures/case_category_standard.png Graphic file (type bmp)
 <../figures/case_category_standard.png>
 
 
-[11]
+[13]
 File: ../figures/alignment_comparison.png Graphic file (type bmp)
 <../figures/alignment_comparison.png>
 File: ../figures/composition_triangle.png Graphic file (type bmp)
 <../figures/composition_triangle.png>
 
 
-[12]
+[14]
 
-[13]
+[15]
 
-Package natbib Warning: Citation `duneau2021parsing' on page 14 undefined on in
-put line 786.
-
-
-
-[14
+[16
 
 ]
 File: ../figures/discopy_sentence_progression.png Graphic file (type bmp)
@@ -1371,9 +1353,9 @@ File: ../figures/discopy_transitive.png Graphic file (type bmp)
 <../figures/discopy_transitive.png>
 
 
-[15]
+[17]
 
-[16]
+[18]
 ! Missing $ inserted.
 <inserted text> 
                 $
@@ -1432,26 +1414,35 @@ you left one out. Proceed, with fingers crossed.
 
 
 
-[17]
+[19]
 File: ../figures/discopy_passive.png Graphic file (type bmp)
 <../figures/discopy_passive.png>
 
 
-[18]
+[20]
+
+[21
+
+]
+Overfull \hbox (0.1677pt too wide) in paragraph at lines 1155--1165
+\TU/lmr/m/n/10 be understood as learning a particular \TU/lmr/m/it/10 relationa
+l role\TU/lmr/m/n/10 —attending to subjects, objects, modifiers, or other gram-
+
+ []
+
+
+
+[22]
 File: ../figures/discopy_discocat.png Graphic file (type bmp)
 <../figures/discopy_discocat.png>
 
-
-[19
-
-]
-Underfull \hbox (badness 1902) in paragraph at lines 1151--1157
+Underfull \hbox (badness 1902) in paragraph at lines 1247--1253
 []\TU/lmr/bx/n/10 Typed noun spaces\TU/lmr/m/n/10 : Instead of a single noun sp
 ace $[]$, we define case-specific spaces
  []
 
 
-Underfull \hbox (badness 1107) in paragraph at lines 1151--1157
+Underfull \hbox (badness 1107) in paragraph at lines 1247--1253
 [][][] [][][] [][][] []$ \TU/lmr/m/n/10 Morphisms between these spaces encode c
 ase-changing operations (pas-
  []
@@ -1460,11 +1451,11 @@ File: ../figures/discopy_complex_sentence.png Graphic file (type bmp)
 <../figures/discopy_complex_sentence.png>
 
 
-[20]
+[23]
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.1210 
+l.1306 
        
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -1473,7 +1464,9 @@ File: ../figures/discopy_snake.png Graphic file (type bmp)
 <../figures/discopy_snake.png>
 
 
-[21]
+[24]
+
+[25]
 File: ../figures/discopy_discocirc_discourse.png Graphic file (type bmp)
 <../figures/discopy_discocirc_discourse.png>
 
@@ -1481,31 +1474,35 @@ Missing character: There is no ⊗ (U+2297) in font [lmroman10-regular]:mapping=
 ex-text;!
 Missing character: There is no ⊗ (U+2297) in font [lmroman10-regular]:mapping=t
 ex-text;!
+File: ../figures/discopy_three_sentence_discourse.png Graphic file (type bmp)
+<../figures/discopy_three_sentence_discourse.png>
 
 
-[22]
+[26]
 
-[23]
+[27]
 Missing character: There is no ∣ (U+2223) in font [lmroman10-regular]:mapping=t
 ex-text;!
 
 
-[24
+[28
 
 ]
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 1457.
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 1606.
 File: ../figures/enriched_hom_matrix.png Graphic file (type bmp)
 <../figures/enriched_hom_matrix.png>
 
 
-[25]
+[29]
 
-[26]
+[30]
+
+[31]
 ! Missing { inserted.
 <to be read again> 
                    \__um_group_begin: 
-l.1619 \(\mathcal{E}_\mathbb
+l.1789 \(\mathcal{E}_\mathbb
                             {T}\)---a canonical topos whose models correspond
 A left brace was mandatory here, so I've put one in.
 You might want to delete and/or insert some corrections
@@ -1515,7 +1512,7 @@ so that I will find a matching right brace soon.
 ! Missing } inserted.
 <inserted text> 
                 }
-l.1619 \(\mathcal{E}_\mathbb{T}\)
+l.1789 \(\mathcal{E}_\mathbb{T}\)
                                  ---a canonical topos whose models correspond
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -1526,7 +1523,7 @@ my insertion and my current dilemma will both disappear.
 ! Missing { inserted.
 <to be read again> 
                    \__um_group_begin: 
-l.1620 ...tric functors from \(\mathcal{E}_\mathbb
+l.1790 ...tric functors from \(\mathcal{E}_\mathbb
                                                   {T}\) to
 A left brace was mandatory here, so I've put one in.
 You might want to delete and/or insert some corrections
@@ -1536,7 +1533,7 @@ so that I will find a matching right brace soon.
 ! Missing } inserted.
 <inserted text> 
                 }
-l.1620 ...functors from \(\mathcal{E}_\mathbb{T}\)
+l.1790 ...functors from \(\mathcal{E}_\mathbb{T}\)
                                                    to
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -1546,47 +1543,20 @@ my insertion and my current dilemma will both disappear.
 
 
 
-[27
+[32
 
 ]
 File: ../figures/functor_alignment.png Graphic file (type bmp)
 <../figures/functor_alignment.png>
 
 
-[28]
-
-[29]
-
-Package natbib Warning: Citation `friston2010free' on page 30 undefined on inpu
-t line 1817.
-
-
-Package natbib Warning: Citation `donnarumma2023integrating' on page 30 undefin
-ed on input line 1839.
-
-
-Package natbib Warning: Citation `friston2021understanding' on page 30 undefine
-d on input line 1845.
-
-
-Package natbib Warning: Citation `friston2020generative' on page 30 undefined o
-n input line 1845.
-
-
-
-[30
-
-] [31]
-
-[32]
-
 [33]
 
-[34
+[34]
+
+[35
 
 ]
-
-[35]
 
 [36]
 
@@ -1594,47 +1564,145 @@ n input line 1845.
 
 [38]
 
-[39
+[39]
+
+[40
 
 ]
-
-[40]
 
 [41]
 
 [42]
 
-[43
+[43]
+
+[44]
+
+[45
 
 ]
 
-[44] (./_combined_manuscript.bbl
+[46]
 
-[45]
+[47]
 
-[46
+[48]
+
+[49]
+
+[50]
+
+[51
 
 ]
 
-[47])
+[52]
 
-Package natbib Warning: There were undefined citations.
+[53]
+
+[54] [55
+
+] [56] [57] [58] [59] [60] [61] [62]
+
+[63] [64]
+
+[65] [66] [67]
+! Missing $ inserted.
+<inserted text> 
+                $
+l.4185 \(\beta)-reduction &
+                            --- & Computational reduction step in
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.4186 ...rresponds to cut elimination in proofs &
+                                                   §3 \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
 
 
+Overfull \hbox (113.89708pt too wide) in paragraph at lines 4185--4186
+[][][][][][][][][] [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
+[][][][][]$  
+ []
 
-[48] (./_combined_manuscript.aux)
+! Missing $ inserted.
+<inserted text> 
+                $
+l.4188 ...ences converge to the same normal form &
+                                                   §3 \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+Overfull \hbox (144.77031pt too wide) in paragraph at lines 4187--4188
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][]$  
+ []
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.4192 ...mas; corresponds to \(\beta)-reduction &
+                                                   §3 \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+[68] [69] [70]
+! Missing $ inserted.
+<inserted text> 
+                $
+l.4325 \(\alpha, \beta) &
+                          Natural transformations \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.4350 \(\gamma) &
+                   Discount factor in distributional RL return computation \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.4355 \(\eta) &
+                 Compact closure unit (cap); also learning rate in some
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+[71] (./_combined_manuscript.bbl
+
+[72]
+
+[73
+
+]
+
+[74]
+
+[75]
+
+[76])
+
+[77] (./_combined_manuscript.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 34631 strings out of 473832
- 699477 string characters out of 5729482
- 1260776 words of memory out of 5000000
- 57160 multiletter control sequences out of 15000+600000
+ 34775 strings out of 473832
+ 703842 string characters out of 5729482
+ 1268434 words of memory out of 5000000
+ 57303 multiletter control sequences out of 15000+600000
  564264 words of font info for 92 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 98i,10n,114p,1209b,633s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 98i,10n,114p,1209b,676s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on _combined_manuscript.pdf (48 pages).
+Output written on _combined_manuscript.pdf (77 pages).

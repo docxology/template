@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 from .figure_manager import FigureManager
 from .image_manager import ImageManager
@@ -17,14 +17,13 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
-
 class MarkdownIntegration:
     """Integrates figures and references into markdown files."""
 
     def __init__(
         self,
-        manuscript_dir: Optional[Path] = None,
-        figure_manager: Optional[FigureManager] = None,
+        manuscript_dir: Path | None = None,
+        figure_manager: FigureManager | None = None,
     ):
         """Initialize markdown integration.
 
@@ -39,7 +38,7 @@ class MarkdownIntegration:
         self.figure_manager = figure_manager or FigureManager()
         self.image_manager = ImageManager(self.figure_manager)
 
-    def detect_sections(self, markdown_file: Path) -> List[Dict[str, Any]]:
+    def detect_sections(self, markdown_file: Path) -> list[dict[str, Any]]:
         """Detect sections in markdown file.
 
         Args:
@@ -100,7 +99,7 @@ class MarkdownIntegration:
             position=f"{position}_section",
         )
 
-    def generate_table_of_figures(self, output_file: Optional[Path] = None) -> Path:
+    def generate_table_of_figures(self, output_file: Path | None = None) -> Path:
         """Generate table of figures markdown file.
 
         Args:
@@ -175,7 +174,7 @@ class MarkdownIntegration:
 
         return updated
 
-    def validate_manuscript(self) -> Dict[str, List[Tuple[str, str]]]:
+    def validate_manuscript(self) -> dict[str, list[tuple[str, str]]]:
         """Validate all figures in manuscript.
 
         Returns:
@@ -191,7 +190,7 @@ class MarkdownIntegration:
 
         return validation_results
 
-    def get_figure_statistics(self) -> Dict[str, Any]:
+    def get_figure_statistics(self) -> dict[str, Any]:
         """Get statistics about figures in manuscript.
 
         Returns:
@@ -200,13 +199,13 @@ class MarkdownIntegration:
         all_figures = self.figure_manager.get_all_figures()
 
         # Count figures by section
-        figures_by_section: Dict[str, int] = {}
+        figures_by_section: dict[str, int] = {}
         for fig in all_figures:
             section = fig.section or "unknown"
             figures_by_section[section] = figures_by_section.get(section, 0) + 1
 
         # Count figures by generator
-        figures_by_generator: Dict[str, int] = {}
+        figures_by_generator: dict[str, int] = {}
         for fig in all_figures:
             generator = fig.generated_by or "unknown"
             figures_by_generator[generator] = figures_by_generator.get(generator, 0) + 1

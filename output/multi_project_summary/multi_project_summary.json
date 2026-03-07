@@ -1,35 +1,42 @@
 {
-  "timestamp": "2026-03-06T05:06:53.566418",
-  "total_projects": 2,
-  "successful_projects": 2,
+  "timestamp": "2026-03-07T10:13:34.755528",
+  "total_projects": 3,
+  "successful_projects": 3,
   "failed_projects": 0,
-  "total_duration": 94.9519612789154,
+  "total_duration": 121.91880393028259,
   "infra_test_duration": 0.0,
   "projects": {
     "code_project": {
       "success": true,
-      "duration": 43.50502109527588,
+      "duration": 43.390544176101685,
       "stages_completed": 7,
       "errors": []
     },
     "cognitive_case_diagrams": {
       "success": true,
-      "duration": 51.2541389465332,
+      "duration": 55.96001744270325,
+      "stages_completed": 7,
+      "errors": []
+    },
+    "template": {
+      "success": true,
+      "duration": 22.558812379837036,
       "stages_completed": 7,
       "errors": []
     }
   },
   "performance_analysis": {
     "slowest_project": "cognitive_case_diagrams",
-    "fastest_project": "code_project",
-    "average_duration": 47.37958002090454,
-    "total_pipeline_time": 94.75916004180908
+    "fastest_project": "template",
+    "average_duration": 40.636457999547325,
+    "total_pipeline_time": 121.90937399864197
   },
   "error_aggregation": {
     "total_errors": 0,
     "errors_by_project": {
       "code_project": 0,
-      "cognitive_case_diagrams": 0
+      "cognitive_case_diagrams": 0,
+      "template": 0
     }
   },
   "recommendations": []

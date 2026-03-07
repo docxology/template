@@ -256,7 +256,7 @@ degree.</p>
 <p>To accommodate this quantitative dimension, we move from ordinary
 categories to <strong>enriched categories</strong>, where hom-sets are
 not just sets of morphisms but carry additional algebraic structure. The
-framework of Fritz et al. <span class="citation"
+framework of Bradley et al. <span class="citation"
 data-cites="fritz2021enriched">[-@fritz2021enriched]</span> provides the
 key construction.</p>
 <h2 id="the-01-enrichment-of-case-categories">The <span
@@ -268,15 +268,11 @@ over the unit interval <span class="math inline">\(([0,1], \cdot,
 class="math inline">\(A, B\)</span> a <em>hom-value</em> <span
 class="math inline">\(\mathcal{C}(A, B) \in [0,1]\)</span>
 satisfying:</p>
-<ol type="1">
-<li><strong>Identity</strong>: <span
-class="math inline">\(\mathcal{C}(A, A) = 1\)</span> for all objects
-<span class="math inline">\(A\)</span></li>
-<li><strong>Composition</strong>: <span
-class="math inline">\(\mathcal{C}(A, C) \geq \mathcal{C}(A, B) \cdot
-\mathcal{C}(B, C)\)</span> for all objects <span
-class="math inline">\(A, B, C\)</span></li>
-</ol>
+<p><span class="math display">\[\mathcal{C}(A, A) = 1 \quad
+\text{(Identity)} \tag{5.1}\]</span></p>
+<p><span class="math display">\[\mathcal{C}(A, C) \geq \mathcal{C}(A, B)
+\cdot \mathcal{C}(B, C) \quad \text{(Composition)}
+\tag{5.2}\]</span></p>
 <p>The identity axiom says that every expression is maximally related to
 itself. The composition inequality says that distributional relatedness
 composes sub-multiplicatively: if <span class="math inline">\(A\)</span>
@@ -288,7 +284,7 @@ class="math inline">\(0.8 \times 0.7 = 56\%\)</span> related to <span
 class="math inline">\(C\)</span>.</p>
 <h3 id="interpreting-hom-values-in-linguistic-context">Interpreting
 Hom-Values in Linguistic Context</h3>
-<p>Fritz et al. <span class="citation"
+<p>Bradley et al. <span class="citation"
 data-cites="fritz2021enriched">[-@fritz2021enriched]</span> interpret
 hom-values as <em>conditional probabilities</em> in a distributional
 model: <span class="math inline">\(\mathcal{C}(A, B) = P(\text{context}
@@ -378,8 +374,8 @@ objects, let <span class="math inline">\(Z\)</span> be the <span
 class="math inline">\(n \times n\)</span> matrix with <span
 class="math inline">\(Z_{ij} = \mathcal{C}(i, j)\)</span>. The magnitude
 is:</p>
-<p><span class="math display">\[|\mathcal{C}| = \sum_{i,j}
-(Z^{-1})_{ij}\]</span></p>
+<p><span class="math display">\[|\mathcal{C}| = \sum_{i,j} (Z^{-1})_{ij}
+\tag{5.3}\]</span></p>
 <p>when <span class="math inline">\(Z\)</span> is invertible. Magnitude
 has deep connections to information theory:</p>
 <ul>
@@ -404,8 +400,9 @@ theoretical justification for using magnitude as a measure of linguistic
 complexity: the magnitude of a case category quantifies how much
 “information” the case system encodes about relational structure.</p>
 <h2
-id="enriched-functors-and-bradleys-language-as-category-model">Enriched
-Functors and Bradley’s Language-as-Category Model</h2>
+id="enriched-functors-bradleys-language-as-category-model-and-the-llm-connection">Enriched
+Functors, Bradley’s Language-as-Category Model, and the LLM
+Connection</h2>
 <p>Bradley’s <span class="citation"
 data-cites="bradley2024ipam bradley2025tea">[-@bradley2024ipam;
 -@bradley2025tea]</span> broader program treats natural language itself
@@ -436,6 +433,31 @@ functor from the syntactic category to the semantic category, mapping
 type-logical derivations to distributional meaning representations while
 preserving the enriched structure.</p></li>
 </ol>
+<p>The deep connection to modern distributional semantics is this: the
+static word embeddings of Word2Vec <span class="citation"
+data-cites="mikolov2013efficient">[@mikolov2013efficient]</span> and
+GloVe <span class="citation"
+data-cites="pennington2014glove">[@pennington2014glove]</span>
+operationalize the enriched hom-values as <em>cosine similarities</em>
+in a learned vector space—<span class="math inline">\(\mathcal{C}(A, B)
+= \cos(\vec{v}_A, \vec{v}_B)\)</span>—while contextualized embeddings
+from transformers <span class="citation"
+data-cites="devlin2019bert vaswani2017attention">[@devlin2019bert;
+@vaswani2017attention]</span> compute <em>dynamic</em> hom-values that
+depend on the sentential context. In the enriched-categorical framework,
+this transition from static to contextualized embeddings corresponds to
+moving from a <em>fixed</em> enriched category (where hom-values are
+precomputed from corpus statistics) to a <em>parameterized</em> enriched
+category (where hom-values are computed on-the-fly by attention
+mechanisms). Transformer attention weights <span
+class="math inline">\(\alpha_{ij}\)</span> are precisely such
+context-dependent enriched hom-values: they encode how “related” token
+<span class="math inline">\(i\)</span> is to token <span
+class="math inline">\(j\)</span> in a given representational layer,
+satisfying a softmax normalization that parallels the probabilistic
+interpretation of Bradley et al.’s <span class="citation"
+data-cites="fritz2021enriched">[-@fritz2021enriched]</span> hom-values
+as conditional probabilities.</p>
 <h2
 id="connection-to-lawveres-metric-spaces-and-generalized-logic">Connection
 to Lawvere’s Metric Spaces and Generalized Logic</h2>

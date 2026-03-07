@@ -7,7 +7,7 @@ not be flagged as issues by the audit tool.
 
 from __future__ import annotations
 
-from typing import List, Set
+from typing import Set
 
 # Valid directory references (these are directories, not files)
 # Note: Only generic directory patterns are listed here.
@@ -23,13 +23,13 @@ VALID_DIRECTORY_REFERENCES: Set[str] = {
 }
 
 # Template patterns (placeholders that can't be resolved)
-TEMPLATE_PATTERNS: List[str] = [
+TEMPLATE_PATTERNS: list[str] = [
     r"\{[^}]+\}",  # {name}, {project}, etc.
     r"<[^>]+>",  # <module>, <name>, etc.
 ]
 
 # Code example patterns (intentional examples, not real paths)
-CODE_EXAMPLE_PATTERNS: List[str] = [
+CODE_EXAMPLE_PATTERNS: list[str] = [
     "your_project",
     "example.com",
     "your-domain.com",
@@ -44,14 +44,14 @@ CODE_EXAMPLE_PATTERNS: List[str] = [
 ]
 
 # Numeric or quoted strings (code examples, not file paths)
-CODE_LITERAL_PATTERNS: List[str] = [
+CODE_LITERAL_PATTERNS: list[str] = [
     r"^\d+$",  # Pure numbers like "42"
     r'^"[^"]+"$',  # Quoted strings like "hello"
     r"^'[^']+'$",  # Single-quoted strings
 ]
 
 # Mermaid diagram patterns (formatting artifacts)
-MERMAID_PATTERNS: List[str] = [
+MERMAID_PATTERNS: list[str] = [
     r"\\n",  # Newline in mermaid
     r"<br/>",  # Line break in mermaid
     r"<br>",  # Line break in mermaid
@@ -59,14 +59,14 @@ MERMAID_PATTERNS: List[str] = [
 ]
 
 # Table formatting artifacts
-TABLE_ARTIFACTS: List[str] = [
+TABLE_ARTIFACTS: list[str] = [
     r"\]",  # Closing bracket from markdown table
     r"\)",  # Closing paren from markdown table
     r"\`",  # Backtick from markdown table
 ]
 
 # Code block formatting artifacts
-CODE_BLOCK_ARTIFACTS: List[str] = [
+CODE_BLOCK_ARTIFACTS: list[str] = [
     r"\n",  # Newline in code block
     r"\|",  # Pipe character (often from tables)
     r"`",  # Backtick
@@ -76,7 +76,7 @@ CODE_BLOCK_ARTIFACTS: List[str] = [
 ]
 
 # LaTeX references (valid in manuscripts)
-LATEX_PATTERNS: List[str] = [
+LATEX_PATTERNS: list[str] = [
     r"\\ref\{",
     r"\\eqref\{",
     r"\\cite\{",
@@ -84,14 +84,13 @@ LATEX_PATTERNS: List[str] = [
 ]
 
 # Virtual environment patterns
-VENV_PATTERNS: List[str] = [
+VENV_PATTERNS: list[str] = [
     ".venv/",
     "/.venv/",
     "venv/",
     "/venv/",
     "site-packages/",
 ]
-
 
 def is_valid_directory_reference(target: str) -> bool:
     """Check if target is a valid directory reference.
@@ -134,7 +133,6 @@ def is_valid_directory_reference(target: str) -> bool:
 
     return False
 
-
 def is_template_pattern(target: str) -> bool:
     """Check if target contains template placeholders.
 
@@ -150,7 +148,6 @@ def is_template_pattern(target: str) -> bool:
         if re.search(pattern, target):
             return True
     return False
-
 
 def is_code_example(target: str) -> bool:
     """Check if target is a code example pattern.
@@ -174,7 +171,6 @@ def is_code_example(target: str) -> bool:
             return True
     return False
 
-
 def is_mermaid_artifact(target: str) -> bool:
     """Check if target contains Mermaid diagram artifacts.
 
@@ -194,7 +190,6 @@ def is_mermaid_artifact(target: str) -> bool:
         return True
     return False
 
-
 def is_table_artifact(target: str) -> bool:
     """Check if target is a table formatting artifact.
 
@@ -213,7 +208,6 @@ def is_table_artifact(target: str) -> bool:
     if target.endswith(("]", ")", "`")):
         return True
     return False
-
 
 def is_code_block_artifact(target: str) -> bool:
     """Check if target is a code block formatting artifact.
@@ -237,7 +231,6 @@ def is_code_block_artifact(target: str) -> bool:
         return True
     return False
 
-
 def is_latex_reference(target: str) -> bool:
     """Check if target is a LaTeX reference.
 
@@ -253,7 +246,6 @@ def is_latex_reference(target: str) -> bool:
         if re.search(pattern, target):
             return True
     return False
-
 
 def is_venv_reference(target: str) -> bool:
     """Check if target is a virtual environment reference.

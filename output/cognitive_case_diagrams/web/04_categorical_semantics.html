@@ -197,15 +197,120 @@ primitives.</p></li>
 <li><p><strong>Distributional semantics</strong> assigns meaning
 empirically: a word’s meaning is characterized by its distribution
 across contexts, typically encoded as a vector in a high-dimensional
-space. This tradition captures graded similarity and analogy but lacks
-compositional structure—the meaning of “dog bites man” and “man bites
-dog” may receive identical vector representations.</p></li>
+space. The distributional hypothesis—“You shall know a word by the
+company it keeps” <span class="citation"
+data-cites="firth1957papers">[@firth1957papers]</span>—traces to J.R.
+Firth’s contextual theory of meaning and, independently, to Zellig
+Harris’s <span class="citation"
+data-cites="harris1954distributional">[-@harris1954distributional]</span>
+algebraic analysis of distributional structure, which demonstrated that
+linguistic elements occurring in similar environments share semantic
+properties. This tradition captures graded similarity and analogy but
+lacks compositional structure—the meaning of “dog bites man” and “man
+bites dog” may receive identical vector representations.</p></li>
 </ol>
+<p>The tension between these two traditions is one of the deepest in the
+science of language. Turney and Pantel’s <span class="citation"
+data-cites="turney2010frequency">[-@turney2010frequency]</span>
+comprehensive survey of vector space models showed that distributional
+methods capture remarkably fine-grained semantic distinctions—synonymy,
+antonymy, hypernymy, analogy—but only at the word level. Baroni and
+Lenci <span class="citation"
+data-cites="baroni2010distributional">[-@baroni2010distributional]</span>
+developed a tensor-based <em>Distributional Memory</em> framework that
+partially addresses compositionality by structuring co-occurrence data
+as a three-way tensor over (word, relation, word) triples, but without a
+principled type-logical backbone. Lenci <span class="citation"
+data-cites="lenci2018distributional">[-@lenci2018distributional]</span>
+surveys the modern landscape and identifies the central open problem:
+how to reconcile the <em>algebraic compositionality</em> of formal
+semantics with the <em>empirical grounding</em> of distributional
+models.</p>
 <p>The <strong>DisCoCat</strong> (Distributional Compositional
 Categorical) framework <span class="citation"
 data-cites="coecke2010mathematical">[@coecke2010mathematical]</span>
 resolves this tension by using category theory to compose distributional
-meanings according to syntactic structure.</p>
+meanings according to syntactic structure—achieving, for the first time,
+a framework that is simultaneously <em>compositional</em> (from
+categorial grammar), <em>distributional</em> (from corpus-derived vector
+spaces), and <em>algebraically principled</em> (from monoidal category
+theory).</p>
+<h2
+id="from-static-embeddings-to-contextual-representations-llms-as-distributional-models">From
+Static Embeddings to Contextual Representations: LLMs as Distributional
+Models</h2>
+<p>The distributional programme has undergone a dramatic computational
+intensification in the era of large language models (LLMs). The
+trajectory from classical co-occurrence matrices through static word
+embeddings to contextual transformers can be understood as a progressive
+<em>enrichment</em> of the distributional hypothesis itself:</p>
+<ol type="1">
+<li><p><strong>Static embeddings</strong>: Mikolov et al.’s <span
+class="citation"
+data-cites="mikolov2013efficient">[-@mikolov2013efficient]</span>
+Word2Vec (skip-gram and CBOW architectures) demonstrated that
+prediction-based training on local context windows produces word vectors
+exhibiting striking algebraic regularity—the famous “king <span
+class="math inline">\(-\)</span> man <span
+class="math inline">\(+\)</span> woman <span
+class="math inline">\(\approx\)</span> queen” analogy. Pennington et
+al.’s <span class="citation"
+data-cites="pennington2014glove">[-@pennington2014glove]</span> GloVe
+incorporated global co-occurrence statistics via log-bilinear
+regression, yielding vectors whose inner products approximate pointwise
+mutual information. Both models instantiate the distributional
+hypothesis in its classical Firthian form: meaning is determined by
+context of use, encoded as geometric position in a learned vector
+space.</p></li>
+<li><p><strong>Contextual embeddings</strong>: BERT <span
+class="citation" data-cites="devlin2019bert">[@devlin2019bert]</span>
+and GPT <span class="citation"
+data-cites="radford2018improving">[@radford2018improving]</span> move
+beyond static type-level representations to <em>token-level</em>
+contextualized embeddings, where the same word receives different
+vectors in different contexts. In the terms of the formal/distributional
+dichotomy, this is a critical advance: contextualized embeddings
+partially capture <em>compositional</em> structure by conditioning word
+representations on their full sentential environment, resolving polysemy
+and constructional effects that static embeddings conflate.</p></li>
+<li><p><strong>Transformer architecture</strong>: The transformer <span
+class="citation"
+data-cites="vaswani2017attention">[@vaswani2017attention]</span>
+implements distributional composition through multi-head self-attention,
+where each attention head computes a weighted combination of input token
+representations. The attention weights <span
+class="math inline">\(\alpha_{ij} = \text{softmax}(Q_i K_j^T /
+\sqrt{d_k})\)</span> are analogous to the enriched hom-values of : they
+encode the <em>degree of contextual relevance</em> between tokens <span
+class="math inline">\(i\)</span> and <span
+class="math inline">\(j\)</span> in a given representational subspace—a
+graded, learned distributional relation.</p></li>
+</ol>
+<p>The connection to our categorical framework is direct:
+<strong>DisCoCat is the algebraic formalization of what LLMs do
+empirically.</strong> Where a transformer computes sentence
+representations by attending to syntactically and semantically relevant
+tokens through learned weight matrices, DisCoCat composes word vectors
+through type-logical derivations in a compact closed category. The
+functor <span class="math inline">\(F: \mathbf{Preg} \to
+\mathbf{FVect}\)</span> that defines DisCoCat is, in this light, the
+<em>principled version</em> of the composition that attention mechanisms
+learn from data. This perspective is confirmed by Gavranović’s <span
+class="citation"
+data-cites="gavranovic2024thesis">[-@gavranovic2024thesis]</span>
+categorical deep learning programme, which shows that attention heads
+can be understood as parameterized optics—categorical constructions that
+compose functorially, just as DisCoCat derivations do.</p>
+<p>For case theory specifically, the transformer analogy is
+illuminating: each attention head in a transformer can be understood as
+learning a particular <em>relational role</em>—attending to subjects,
+objects, modifiers, or other grammatical functions. This is precisely
+the role that case marking plays in natural language: structuring
+who-does-what-to-whom. The case-typed noun spaces of our enriched
+DisCoCat model (<span class="math inline">\(N_{\text{NOM}},
+N_{\text{ACC}}, N_{\text{DAT}}, \ldots\)</span>) correspond to the
+role-specific representational subspaces that different attention heads
+learn to inhabit.</p>
 <h2 id="the-discocat-compositional-framework">The DisCoCat Compositional
 Framework</h2>
 <h3 id="the-key-insight-shared-compact-closed-structure">The Key
@@ -214,8 +319,8 @@ Insight: Shared Compact Closed Structure</h3>
 spaces share a common abstract structure: both are <strong>compact
 closed categories</strong>. This means there exists a <em>meaning
 functor</em>:</p>
-<p><span class="math display">\[F: \mathbf{Preg} \to
-\mathbf{FVect}\]</span></p>
+<p><span class="math display">\[F: \mathbf{Preg} \to \mathbf{FVect}
+\tag{4.1}\]</span></p>
 <p>from the pregroup grammar category (where objects are types and
 morphisms are grammatical reductions) to the category of
 finite-dimensional vector spaces (where objects are vector spaces and
@@ -241,7 +346,8 @@ determined by the syntactic derivation. For “Alice chases Bob”:</p>
 <p><span class="math display">\[\overrightarrow{\text{Alice chases Bob}}
 = (\overrightarrow{\text{Alice}} \otimes
 \overleftrightarrow{\text{chases}} \otimes \overrightarrow{\text{Bob}})
-\circ (\varepsilon_N \otimes 1_S \otimes \varepsilon_N)\]</span></p>
+\circ (\varepsilon_N \otimes 1_S \otimes \varepsilon_N)
+\tag{4.2}\]</span></p>
 <p>where <span class="math inline">\(\varepsilon_N: N \otimes N \to
 \mathbb{R}\)</span> is the compact closure map (inner product). This
 computation has a direct diagrammatic representation as a string
@@ -260,13 +366,13 @@ different sentence vectors because the syntactic structure assigns
 different roles to the nouns.</p>
 <figure id="fig:discopy-discocat">
 <img src="output/figures/discopy_discocat.png"
-alt="DisCoPy rendering of the DisCoCat sentence “Alice chases Bob” as a pregroup grammar string diagram, produced using the DisCoPy library’s native drawing backend. The three Word boxes (Alice type n, chases type n.r @ s @ n.l, Bob type n) are connected by Cup contractions that cancel adjoint type pairs, reducing the entire expression to the sentence type s. This demonstates the monoidal structure of type contraction that underlies all DisCoCat computations." />
+alt="DisCoPy rendering of the DisCoCat sentence “Alice chases Bob” as a pregroup grammar string diagram, produced using the DisCoPy library’s native drawing backend. The three Word boxes (Alice type n, chases type n.r @ s @ n.l, Bob type n) are connected by Cup contractions that cancel adjoint type pairs, reducing the entire expression to the sentence type s. This demonstrates the monoidal structure of type contraction that underlies all DisCoCat computations." />
 <figcaption aria-hidden="true">DisCoPy rendering of the DisCoCat
 sentence “Alice chases Bob” as a pregroup grammar string diagram,
 produced using the DisCoPy library’s native drawing backend. The three
 Word boxes (Alice type n, chases type n.r @ s @ n.l, Bob type n) are
 connected by Cup contractions that cancel adjoint type pairs, reducing
-the entire expression to the sentence type s. This demonstates the
+the entire expression to the sentence type s. This demonstrates the
 monoidal structure of type contraction that underlies all DisCoCat
 computations.</figcaption>
 </figure>
@@ -324,7 +430,7 @@ class="math inline">\(\eta_n: 1 \to n \otimes n^r\)</span> (cap) and
 (cup) satisfy the <strong>snake equation</strong> (also called the
 zigzag identity):</p>
 <p><span class="math display">\[(\varepsilon_n \otimes 1_n) \circ (1_n
-\otimes \eta_n) = 1_n\]</span></p>
+\otimes \eta_n) = 1_n \tag{4.3}\]</span></p>
 <p>In string-diagrammatic terms, a cup composed with a cap on adjacent
 wires “straightens out” into an identity wire—a zigzag that cancels into
 a straight line. This axiom is not merely a formal curiosity: it is the
@@ -404,24 +510,80 @@ carried by Bob’s wire</li>
 data-cites="defelice2022discocirc">[-@defelice2022discocirc]</span>
 further develop this into a full-fledged circuit model that handles
 ambiguity, coreference, and discourse coherence within the same
-categorical formalism. illustrates a multi-sentence discourse diagram
-where entity wires persist across sentence boundaries. For case theory,
-DisCoCirc is significant because it shows how case-marked argument
-structure <em>composes across discourse</em>: the nominative subject of
-one sentence can become the accusative object of the next, and this
+categorical formalism. A CCG-based pipeline for generating discourse
+circuits from syntactic parse trees has recently demonstrated that
+DisCoCirc can scale to real-world text, dynamically composing
+sentence-level diagrams along shared entity wires via an iterative
+process of coreference resolution and wire merging <span
+class="citation"
+data-cites="duneau2021parsing">[-@duneau2021parsing]</span>.
+Complementary work on <strong>DiscoSG</strong> (Discourse Scene Graphs)
+extends this approach to multi-sentence image captions, parsing text
+into scene graphs that capture cross-sentence coreference relations.
+illustrates a multi-sentence discourse diagram where entity wires
+persist across sentence boundaries. For case theory, DisCoCirc is
+significant because it shows how case-marked argument structure
+<em>composes across discourse</em>: the nominative subject of one
+sentence can become the accusative object of the next, and this
 transformation is tracked as a morphism in the discourse category.</p>
 <figure id="fig:discourse">
 <img src="output/figures/discopy_discocirc_discourse.png"
-alt="A DisCoCirc-style discourse diagram for the two-sentence discourse “Alice chases Bob. He runs,” generated using DisCoPy’s pregroup grammar. Each sentence is rendered as a separate sub-diagram: Sentence 1 contracts Alice and Bob into the verb ‘chases’ to produce sentence type s; Sentence 2 contracts ‘He’ into ‘runs’ to produce a second s. The full discourse is the tensor product s ⊗ s, encoding inter-sentential coherence through parallel compositional structure. This real DisCoPy implementation demonstrates discourse-level case persistence without matplotlib fallbacks." />
+alt="A DisCoCirc-style discourse diagram for the two-sentence discourse “Alice chases Bob. Bob runs,” generated using DisCoPy’s pregroup grammar. Each sentence is rendered as a separate sub-diagram: Sentence 1 contracts Alice and Bob into the verb ‘chases’ to produce sentence type s; Sentence 2 contracts Bob into ‘runs’ to produce a second s. The full discourse is the tensor product s ⊗ s, encoding inter-sentential coherence through parallel compositional structure." />
 <figcaption aria-hidden="true">A DisCoCirc-style discourse diagram for
-the two-sentence discourse “Alice chases Bob. He runs,” generated using
+the two-sentence discourse “Alice chases Bob. Bob runs,” generated using
 DisCoPy’s pregroup grammar. Each sentence is rendered as a separate
 sub-diagram: Sentence 1 contracts Alice and Bob into the verb ‘chases’
-to produce sentence type s; Sentence 2 contracts ‘He’ into ‘runs’ to
+to produce sentence type s; Sentence 2 contracts Bob into ‘runs’ to
 produce a second s. The full discourse is the tensor product s ⊗ s,
 encoding inter-sentential coherence through parallel compositional
-structure. This real DisCoPy implementation demonstrates discourse-level
-case persistence without matplotlib fallbacks.</figcaption>
+structure.</figcaption>
+</figure>
+<h3 id="case-role-reversal-across-discourse-boundaries">Case Role
+Reversal Across Discourse Boundaries</h3>
+<p>The power of DisCoCirc for case theory becomes particularly vivid in
+multi-sentence discourses where the <em>same entity occupies different
+case roles</em> across sentences. Consider the three-sentence
+discourse:</p>
+<blockquote>
+<p><em>“Alice chases Bob. Bob fears Alice. She smiles.”</em></p>
+</blockquote>
+<p>In this discourse, Alice undergoes a complete cycle of case role
+reversals:</p>
+<ol type="1">
+<li><strong>Sentence 1</strong>: Alice is <span
+class="math inline">\(\text{NOM}\)</span> (Proto-Agent, the one chasing)
+and Bob is <span class="math inline">\(\text{ACC}\)</span>
+(Proto-Patient, the one chased).</li>
+<li><strong>Sentence 2</strong>: Bob is now <span
+class="math inline">\(\text{NOM}\)</span> (the one fearing) and Alice is
+<span class="math inline">\(\text{ACC}\)</span> (the one feared)—a role
+reversal where Alice moves from agent to patient.</li>
+<li><strong>Sentence 3</strong>: “She” resolves anaphorically to Alice,
+who returns to <span class="math inline">\(\text{NOM}\)</span> as the
+agent of smiling.</li>
+</ol>
+<p>This NOM → ACC → NOM trajectory for Alice across three sentences is
+precisely the kind of <em>dynamic case assignment</em> that static
+single-sentence analyses cannot capture. The categorical representation
+as a triple tensor product <span class="math inline">\(s \otimes s
+\otimes s\)</span> () encodes each sentence as an independent pregroup
+derivation while preserving the entity identity that links them. In a
+full DisCoCirc implementation, Alice’s entity wire would carry
+accumulated semantic state—the meaning of “She” in sentence 3 inherits
+the enriched state of an Alice who has first chased and then been
+feared, not merely the bare lexical entry for “Alice.”</p>
+<figure id="fig:three-sentence-discourse">
+<img src="output/figures/discopy_three_sentence_discourse.png"
+alt="Three-sentence discourse diagram “Alice chases Bob. Bob fears Alice. She smiles.” rendered using DisCoPy’s pregroup grammar. The diagram demonstrates case role reversal: Alice is NOM (agent) in sentence 1, ACC (patient) in sentence 2, and NOM again via the anaphoric pronoun “She” in sentence 3. Each sentence reduces independently to type s via cup contractions, and the full discourse is the triple tensor product s \otimes s \otimes s. This illustrates how DisCoCirc-style analyses track dynamic case assignment across discourse boundaries." />
+<figcaption aria-hidden="true">Three-sentence discourse diagram “Alice
+chases Bob. Bob fears Alice. She smiles.” rendered using DisCoPy’s
+pregroup grammar. The diagram demonstrates case role reversal: Alice is
+NOM (agent) in sentence 1, ACC (patient) in sentence 2, and NOM again
+via the anaphoric pronoun “She” in sentence 3. Each sentence reduces
+independently to type s via cup contractions, and the full discourse is
+the triple tensor product <span class="math inline">\(s \otimes s
+\otimes s\)</span>. This illustrates how DisCoCirc-style analyses track
+dynamic case assignment across discourse boundaries.</figcaption>
 </figure>
 <h3 id="quantum-nlp-and-the-lambeq-pipeline">Quantum NLP and the lambeq
 Pipeline</h3>

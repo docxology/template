@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 try:
     import requests
@@ -19,12 +19,11 @@ logger = get_logger(__name__)
 #: Default timeout for HTTP requests (seconds)
 REQUEST_TIMEOUT = 30
 
-
 @dataclass
 class ZenodoConfig:
     access_token: str
     sandbox: bool = True
-    base_url: Optional[str] = None
+    base_url: str | None = None
 
     @property
     def api_base_url(self) -> str:
@@ -50,7 +49,6 @@ class ZenodoConfig:
             return self.base_url
         return "https://sandbox.zenodo.org/api" if self.sandbox else "https://zenodo.org/api"
 
-
 class ZenodoClient:
     """Client for Zenodo API."""
 
@@ -58,7 +56,7 @@ class ZenodoClient:
         self.config = config
         self.headers = {"Authorization": f"Bearer {config.access_token}"}
 
-    def create_deposition(self, metadata: Dict[str, Any]) -> str:
+    def create_deposition(self, metadata: dict[str, Any]) -> str:
         """Create a new deposition.
 
         Returns:

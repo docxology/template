@@ -6,7 +6,6 @@ import json
 import re
 from datetime import datetime
 from pathlib import Path
-from typing import Dict
 
 from infrastructure.core.logging_utils import get_logger, log_success
 from infrastructure.llm.core.config import LLMConfig
@@ -19,8 +18,7 @@ from infrastructure.llm.validation.format import (
 
 logger = get_logger(__name__)
 
-
-def extract_action_items(reviews: Dict[str, str]) -> str:
+def extract_action_items(reviews: dict[str, str]) -> str:
     """Extract actionable items from reviews into a TODO checklist.
 
     Args:
@@ -76,8 +74,7 @@ def extract_action_items(reviews: Dict[str, str]) -> str:
 
     return "\n".join(todos[:10])  # Limit to 10 items
 
-
-def calculate_format_compliance_summary(reviews: Dict[str, str]) -> str:
+def calculate_format_compliance_summary(reviews: dict[str, str]) -> str:
     """Calculate format compliance summary across all reviews.
 
     Simplified version - only checks for conversational phrases.
@@ -114,8 +111,7 @@ def calculate_format_compliance_summary(reviews: Dict[str, str]) -> str:
 
     return "\n".join(summary_parts)
 
-
-def calculate_quality_summary(reviews: Dict[str, str]) -> str:
+def calculate_quality_summary(reviews: dict[str, str]) -> str:
     """Calculate overall quality summary from reviews.
 
     Args:
@@ -142,9 +138,8 @@ def calculate_quality_summary(reviews: Dict[str, str]) -> str:
     else:
         return "*Quality scores not available*"
 
-
 def save_review_outputs(
-    reviews: Dict[str, str],
+    reviews: dict[str, str],
     output_dir: Path,
     model_name: str,
     pdf_path: Path,
@@ -411,7 +406,6 @@ The following items are extracted from the review for easy tracking:
 
     return success
 
-
 def save_single_review(
     review_name: str,
     content: str,
@@ -476,9 +470,8 @@ def save_single_review(
         logger.error(f"Failed to save {review_name}: {e}")
         raise
 
-
 def generate_review_summary(
-    reviews: Dict[str, str],
+    reviews: dict[str, str],
     output_dir: Path,
     session_metrics: SessionMetrics,
 ) -> None:

@@ -13,13 +13,12 @@ import re
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.reporting.output_organizer import FileType, OutputOrganizer
 
 logger = get_logger(__name__)
-
 
 @dataclass
 class ManuscriptMetrics:
@@ -33,7 +32,6 @@ class ManuscriptMetrics:
     figures: int = 0
     references: int = 0
 
-
 @dataclass
 class CodebaseMetrics:
     """Codebase metrics for a single project."""
@@ -44,7 +42,6 @@ class CodebaseMetrics:
     script_lines: int = 0
     methods: int = 0
     classes: int = 0
-
 
 @dataclass
 class TestMetrics:
@@ -58,7 +55,6 @@ class TestMetrics:
     coverage_percent: float = 0.0
     execution_time: float = 0.0
 
-
 @dataclass
 class OutputMetrics:
     """Output metrics for a single project."""
@@ -71,7 +67,6 @@ class OutputMetrics:
     web_outputs: int = 0
     total_outputs: int = 0
 
-
 @dataclass
 class PipelineMetrics:
     """Pipeline metrics for a single project."""
@@ -82,7 +77,6 @@ class PipelineMetrics:
     bottleneck_stage: str = ""
     bottleneck_duration: float = 0.0
     bottleneck_percent: float = 0.0
-
 
 @dataclass
 class ProjectMetrics:
@@ -95,7 +89,6 @@ class ProjectMetrics:
     outputs: OutputMetrics
     pipeline: PipelineMetrics
 
-
 @dataclass
 class ExecutiveSummary:
     """Executive summary aggregating all project metrics."""
@@ -107,7 +100,6 @@ class ExecutiveSummary:
     health_scores: dict[str, Any]  # Project health scores by project name
     comparative_tables: dict[str, Any]
     recommendations: list[str]
-
 
 def collect_manuscript_metrics(manuscript_dir: Path) -> ManuscriptMetrics:
     """Collect manuscript metrics from markdown files.
@@ -157,8 +149,7 @@ def collect_manuscript_metrics(manuscript_dir: Path) -> ManuscriptMetrics:
 
     return metrics
 
-
-def collect_codebase_metrics(src_dir: Path, scripts_dir: Optional[Path] = None) -> CodebaseMetrics:
+def collect_codebase_metrics(src_dir: Path, scripts_dir: Path | None = None) -> CodebaseMetrics:
     """Collect codebase metrics from source and script files.
 
     Args:
@@ -215,7 +206,6 @@ def collect_codebase_metrics(src_dir: Path, scripts_dir: Optional[Path] = None) 
                 logger.warning(f"Error processing {script_file.name}: {e}")
 
     return metrics
-
 
 def collect_test_metrics(reports_dir: Path) -> TestMetrics:
     """Collect test metrics from test reports.
@@ -283,7 +273,6 @@ def collect_test_metrics(reports_dir: Path) -> TestMetrics:
 
     return metrics
 
-
 def collect_output_metrics(output_dir: Path) -> OutputMetrics:
     """Collect output metrics from output directory.
 
@@ -341,7 +330,6 @@ def collect_output_metrics(output_dir: Path) -> OutputMetrics:
 
     return metrics
 
-
 def collect_pipeline_metrics(reports_dir: Path) -> PipelineMetrics:
     """Collect pipeline metrics from pipeline report.
 
@@ -384,7 +372,6 @@ def collect_pipeline_metrics(reports_dir: Path) -> PipelineMetrics:
 
     return metrics
 
-
 def collect_project_metrics(repo_root: Path, project_name: str) -> ProjectMetrics:
     """Collect all metrics for a single project.
 
@@ -414,7 +401,6 @@ def collect_project_metrics(repo_root: Path, project_name: str) -> ProjectMetric
         outputs=outputs,
         pipeline=pipeline,
     )
-
 
 def generate_aggregate_metrics(projects: list[ProjectMetrics]) -> dict[str, Any]:
     """Generate aggregate metrics across all projects.
@@ -523,7 +509,6 @@ def generate_aggregate_metrics(projects: list[ProjectMetrics]) -> dict[str, Any]
     }
 
     return aggregates
-
 
 def calculate_project_health_score(project: ProjectMetrics) -> dict[str, Any]:
     """Calculate a health score for a project based on its metrics.
@@ -699,7 +684,6 @@ def calculate_project_health_score(project: ProjectMetrics) -> dict[str, Any]:
         "factors": factors,
     }
 
-
 def generate_comparative_tables(projects: list[ProjectMetrics]) -> dict[str, Any]:
     """Generate comparative tables for all projects.
 
@@ -752,7 +736,6 @@ def generate_comparative_tables(projects: list[ProjectMetrics]) -> dict[str, Any
     }
 
     return tables
-
 
 def generate_recommendations(projects: list[ProjectMetrics]) -> list[str]:
     """Generate actionable recommendations based on comprehensive project metrics analysis.
@@ -929,7 +912,6 @@ def generate_recommendations(projects: list[ProjectMetrics]) -> list[str]:
 
     return recommendations
 
-
 def generate_executive_summary(repo_root: Path, project_names: list[str]) -> ExecutiveSummary:
     """Generate complete executive summary for all projects.
 
@@ -972,7 +954,6 @@ def generate_executive_summary(repo_root: Path, project_names: list[str]) -> Exe
     logger.info("Executive summary generated successfully")
     return summary
 
-
 def save_executive_summary(summary: ExecutiveSummary, output_dir: Path) -> dict[str, Path]:
     """Save executive summary in multiple formats.
 
@@ -1009,7 +990,6 @@ def save_executive_summary(summary: ExecutiveSummary, output_dir: Path) -> dict[
     logger.info(f"Saved HTML report: {html_path}")
 
     return saved_files
-
 
 def _generate_markdown_report(summary: ExecutiveSummary) -> str:
     """Generate Markdown format executive report."""
@@ -1228,7 +1208,6 @@ def _generate_markdown_report(summary: ExecutiveSummary) -> str:
     )
 
     return "\n".join(lines)
-
 
 def _generate_html_report(summary: ExecutiveSummary) -> str:
     """Generate HTML format executive report."""

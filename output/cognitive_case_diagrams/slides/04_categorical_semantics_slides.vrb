@@ -8,7 +8,7 @@ pregroup category: for every type \(n\), the adjunction maps
 \(\varepsilon_n: n^r \otimes n \to 1\) (cup) satisfy the \textbf{snake
 equation} (also called the zigzag identity):
 
-\[(\varepsilon_n \otimes 1_n) \circ (1_n \otimes \eta_n) = 1_n\]
+\[(\varepsilon_n \otimes 1_n) \circ (1_n \otimes \eta_n) = 1_n \tag{4.3}\]
 
 In string-diagrammatic terms, a cup composed with a cap on adjacent
 wires ``straightens out'' into an identity wire---a zigzag that cancels

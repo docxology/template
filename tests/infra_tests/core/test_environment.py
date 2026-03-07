@@ -22,7 +22,7 @@ class TestCheckPythonVersion:
 
     def test_python_version_check_succeeds(self):
         """Test that Python version check succeeds on current system."""
-        # We're running on Python 3.8+, so this should pass
+        # We're running on Python 3.11+, so this should pass
         result = check_python_version()
 
         assert result is True

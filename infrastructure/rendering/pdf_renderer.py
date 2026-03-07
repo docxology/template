@@ -7,7 +7,6 @@ import subprocess
 import time
 import unicodedata
 from pathlib import Path
-from typing import List, Optional
 
 import yaml
 
@@ -19,8 +18,7 @@ from infrastructure.rendering.latex_utils import compile_latex
 
 logger = get_logger(__name__)
 
-
-def _parse_missing_package_error(log_file: Path) -> Optional[str]:
+def _parse_missing_package_error(log_file: Path) -> str | None:
     """Parse LaTeX log for missing package errors.
 
     Args:
@@ -56,14 +54,13 @@ def _parse_missing_package_error(log_file: Path) -> Optional[str]:
 
     return None
 
-
 class PDFRenderer:
     """Handles PDF generation logic."""
 
     def __init__(self, config: RenderingConfig):
         self.config = config
 
-    def render(self, source_file: Path, output_name: Optional[str] = None) -> Path:
+    def render(self, source_file: Path, output_name: str | None = None) -> Path:
         """Render manuscript to PDF.
 
         This assumes source_file is a LaTeX file or Markdown file to be converted.
@@ -85,7 +82,7 @@ class PDFRenderer:
             context={"source_file": str(source_file), "supported_formats": [".tex", ".md"]},
         )
 
-    def render_markdown(self, source_file: Path, output_name: Optional[str] = None) -> Path:
+    def render_markdown(self, source_file: Path, output_name: str | None = None) -> Path:
         """Render a single markdown file to PDF using Pandoc.
 
         Args:
@@ -136,7 +133,6 @@ class PDFRenderer:
                 f"Failed to render markdown to PDF: {e.stderr}",
                 context={"source": str(source_file), "target": str(output_file)},
             )
-
 
     def _repair_truncated_aux(self, aux_file: Path) -> None:
         """Repair a truncated .aux file by removing the last incomplete entry.
@@ -309,7 +305,7 @@ class PDFRenderer:
             logger.warning(f"Bibliography processing failed: {e}", exc_info=True)
             return False
 
-    def _check_brace_balance(self, md_content: str) -> List[str]:
+    def _check_brace_balance(self, md_content: str) -> list[str]:
         """Check markdown content for unbalanced braces.
 
         Performs three checks:
@@ -323,7 +319,7 @@ class PDFRenderer:
         Returns:
             List of warning message strings (empty if no issues found)
         """
-        warnings: List[str] = []
+        warnings: list[str] = []
 
         # Check balanced braces in section header attributes
         header_attr_pattern = r"\{#([a-zA-Z0-9_:.-]+)"
@@ -393,9 +389,9 @@ class PDFRenderer:
         self,
         e: "subprocess.CalledProcessError",
         combined_md: Path,
-        source_files: List[Path],
+        source_files: list[Path],
         md_content: str,
-        pandoc_cmd: List[str],
+        pandoc_cmd: list[str],
     ) -> "RenderingError":
         """Parse a CalledProcessError from pandoc and build a RenderingError with full context.
 
@@ -419,8 +415,8 @@ class PDFRenderer:
             all_output += f"STDOUT:\n{e.stdout}\n"
 
         # Parse output for structured error lines and position
-        error_lines: List[str] = []
-        position_info: Optional[int] = None
+        error_lines: list[str] = []
+        position_info: int | None = None
 
         for label, text in [("Pandoc Error", e.stderr), ("Pandoc Error (stdout)", e.stdout)]:
             if not text:
@@ -452,7 +448,7 @@ class PDFRenderer:
             error_msg += f"\n\nPandoc failed with return code {e.returncode} (no output captured)"
 
         context_info: dict = {"source": str(combined_md), "target": str(combined_md.with_suffix(".tex"))}
-        suggestions: List[str] = []
+        suggestions: list[str] = []
 
         if combined_md.exists():
             try:
@@ -576,7 +572,7 @@ class PDFRenderer:
 
     def render_combined(
         self,
-        source_files: List[Path],
+        source_files: list[Path],
         manuscript_dir: Path,
         project_name: str = "project",
     ) -> Path:
@@ -1202,7 +1198,7 @@ class PDFRenderer:
                 context={"source": str(combined_tex), "output": str(output_file)},
             )
 
-    def _combine_markdown_files(self, source_files: List[Path]) -> str:
+    def _combine_markdown_files(self, source_files: list[Path]) -> str:
         """Combine multiple markdown files into one.
 
         Args:

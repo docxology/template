@@ -9,12 +9,11 @@ from __future__ import annotations
 import tomllib
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Optional, Tuple, Union
+from typing import Union
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
-
 
 @dataclass
 class ProjectInfo:
@@ -57,8 +56,7 @@ class ProjectInfo:
             return f"{self.program}/{self.name}"
         return self.name
 
-
-def discover_projects(repo_root: Union[Path, str]) -> List[ProjectInfo]:
+def discover_projects(repo_root: Union[Path, str]) -> list[ProjectInfo]:
     """Discover all valid projects in projects/ directory.
 
     This function scans the projects/ directory for both:
@@ -142,8 +140,7 @@ def discover_projects(repo_root: Union[Path, str]) -> List[ProjectInfo]:
 
     return projects
 
-
-def _discover_nested_projects(program_dir: Path, program_name: str) -> List[ProjectInfo]:
+def _discover_nested_projects(program_dir: Path, program_name: str) -> list[ProjectInfo]:
     """Discover projects nested within a program directory.
 
     A program directory is a folder that contains multiple related projects,
@@ -186,8 +183,7 @@ def _discover_nested_projects(program_dir: Path, program_name: str) -> List[Proj
 
     return nested_projects
 
-
-def validate_project_structure(project_dir: Path) -> Tuple[bool, str]:
+def validate_project_structure(project_dir: Path) -> tuple[bool, str]:
     """Validate that project has required directory structure.
 
     Required directories:
@@ -243,7 +239,6 @@ def validate_project_structure(project_dir: Path) -> Tuple[bool, str]:
         logger.debug(f"{project_dir.name}: Optional manuscript/ directory not found")
 
     return True, "Valid project structure"
-
 
 def get_project_metadata(project_dir: Path) -> dict:
     """Extract metadata from project configuration files.
@@ -321,8 +316,7 @@ def get_project_metadata(project_dir: Path) -> dict:
 
     return metadata
 
-
-def get_default_project(repo_root: Path) -> Optional[ProjectInfo]:
+def get_default_project(repo_root: Path) -> ProjectInfo | None:
     """Get the default project (projects/project).
 
     Args:

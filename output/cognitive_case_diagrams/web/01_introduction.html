@@ -300,11 +300,24 @@ structure reaches down to the sublexical level.</p>
 <h3
 id="pillar-3-categorical-compositional-distributional-semantics-discocat">Pillar
 3: Categorical Compositional Distributional Semantics (DisCoCat)</h3>
-<p>The DisCoCat framework <span class="citation"
-data-cites="coecke2010mathematical grefenstette2015concrete sadrzadeh2013compositional">[@coecke2010mathematical;
-@grefenstette2015concrete; @sadrzadeh2013compositional]</span> maps
-pregroup derivations functorially into vector spaces, enabling empirical
-evaluation. Recent extensions include DisCoCirc <span class="citation"
+<p>Coecke, Sadrzadeh, and Clark’s <span class="citation"
+data-cites="coecke2010mathematical">[-@coecke2010mathematical]</span>
+DisCoCat framework composes distributional word meanings according to
+syntactic structure using monoidal categories and string diagrams. This
+framework bridges the two great traditions of linguistic meaning—formal
+(truth-conditional, compositional) and distributional
+(context-dependent, statistical)—by using the algebra of compact closed
+categories to compose vector representations according to type-logical
+derivations. The resulting categorical semantics provides the
+<em>algebraic formalization</em> of the distributional programme that
+modern large language models (from Word2Vec <span class="citation"
+data-cites="mikolov2013efficient">[@mikolov2013efficient]</span> through
+transformer architectures <span class="citation"
+data-cites="vaswani2017attention devlin2019bert">[@vaswani2017attention;
+@devlin2019bert]</span>) implement empirically, making it possible to
+analyse both symbolic and neural approaches to language within a single
+mathematical framework. Recent extensions include DisCoCirc <span
+class="citation"
 data-cites="defelice2020discourse defelice2022discocirc">[@defelice2020discourse;
 @defelice2022discocirc]</span> for discourse-level coherence and the
 lambeq library <span class="citation"
@@ -314,7 +327,7 @@ hardware.</p>
 <h3
 id="pillar-4-enriched-category-theory-and-distributional-measures">Pillar
 4: Enriched Category Theory and Distributional Measures</h3>
-<p>Fritz et al.’s <span class="citation"
+<p>Bradley et al.’s <span class="citation"
 data-cites="fritz2021enriched">[-@fritz2021enriched]</span> enrichment
 over <span class="math inline">\([0,1]\)</span> equips hom-sets with
 distributional proximity measures. Bradley’s <span class="citation"

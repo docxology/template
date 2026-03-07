@@ -1,0 +1,204 @@
+{
+  "session": {
+    "id": "ext_20260307_113059_e0d61fc8",
+    "token": "507c6ee9868e49dd61b5347b86091a8f"
+  },
+  "assessments": {
+    "abstraction_fitness": 62,
+    "ai_generated_debt": 48,
+    "test_strategy": 74
+  },
+  "findings": [
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "performance_shim_re_export_module",
+      "summary": "infrastructure/core/performance.py is a pure re-export shim with no value-add",
+      "related_files": ["infrastructure/core/performance.py"],
+      "evidence": [
+        "Lines 1-44: entire file is `from infrastructure.core.function_profiler import ...` and `from infrastructure.core.stage_monitor import ...` with an `__all__` list",
+        "The module docstring acknowledges it exists only for backward compatibility ('Import from those modules directly for new code')",
+        "The shim exports 11 names from two sub-modules — all call sites could import from the real modules directly"
+      ],
+      "suggestion": "Migrate all call sites to import directly from stage_monitor or function_profiler, then delete the shim. If backward compatibility is required during a transition, pin the deadline in a TODO comment with a ticket reference.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "pipeline_stage_spec_named_tuple_skip_semantics",
+      "summary": "StageSpec.skip flag mixes stage description with execution policy, leaking control flow into data",
+      "related_files": ["infrastructure/core/pipeline.py"],
+      "evidence": [
+        "Line 65-70: `class StageSpec(NamedTuple)` carries a `skip: bool = False` field",
+        "Lines 182-200: `_execute_pipeline` iterates stages and branches on `stage_spec.skip` to `continue`",
+        "The skip condition is evaluated at stage construction time (_build_stage_list lines 119-133), so a stage can never dynamically decide to run; the flag is set from config booleans at build time, not at execution time",
+        "This means the stage list describes both what stages exist and which to suppress — two separate concerns"
+      ],
+      "suggestion": "Filter skipped stages out of the list before passing to `_execute_pipeline`, or introduce a separate `active_stages` vs `all_stages` concept. `StageSpec` should only describe a stage, not encode execution policy.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "health_checker_singleton_global_state",
+      "summary": "Module-level mutable singleton `_checker` in health_check.py is hidden global state",
+      "related_files": ["infrastructure/core/health_check.py"],
+      "evidence": [
+        "Lines 278-286: `_checker: SystemHealthChecker | None = None` and `get_health_checker()` implements a lazy global singleton",
+        "The singleton captures `_PROCESS_START_TIME` at import time (line 277), making tests that import this module time-dependent",
+        "No mechanism to reset the singleton between test runs, so repeated calls return the same stale object with a fixed start time"
+      ],
+      "suggestion": "Remove the module-level singleton. Callers that need a shared checker should manage lifetime themselves, or pass `start_time` explicitly. For tests, the class can be instantiated directly.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "exceptions_auto_generate_recovery_commands",
+      "summary": "Exception constructors implement OS detection and install-command generation — business logic misplaced in exception classes",
+      "related_files": ["infrastructure/core/exceptions.py"],
+      "evidence": [
+        "Lines 243-268: `_build_install_commands()` contains platform detection with `platform.system()` and `shutil.which()` for four package managers",
+        "Lines 283-314: `MissingDependencyError.__init__` calls `_build_install_commands` and generates suggestion strings",
+        "Lines 182-219: `FileNotFoundError.__init__` generates `ls -la` and `find` shell commands",
+        "Exception constructors are responsible for OS-specific install heuristics — this makes exception construction side-effectful and hard to test in isolation"
+      ],
+      "suggestion": "Move install-command generation to a dedicated helper in a diagnostics or environment module. Exception classes should only carry data; the caller or a display layer should enrich with recovery suggestions.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "suite_summary_generator_hardcoded_file_paths",
+      "summary": "suite_summary_generator.py uses relative path literals instead of accepting a repo_root parameter",
+      "related_files": ["infrastructure/reporting/suite_summary_generator.py"],
+      "evidence": [
+        "Line 37: `results_file = Path(f'projects/{project_name}/output/reports/test_results.json')` — relative path, cwd-dependent",
+        "Line 75: `infra_results_file = Path('infrastructure_validation_report.json')` — relative path",
+        "Line 100: `for coverage_path in (Path('coverage_infra.json'), Path('htmlcov/coverage.json'))` — relative paths",
+        "Lines 120-130: `discover_active_projects` uses `Path('projects')` — relative path",
+        "`generate_summary_report()` takes no arguments and is entirely cwd-dependent; tests use `monkeypatch.chdir` to work around this"
+      ],
+      "suggestion": "Add a `repo_root: Path` parameter to `generate_summary_report`, `load_test_results`, `load_infrastructure_results`, and `discover_active_projects`. Derive all paths from it. Remove the `monkeypatch.chdir` workaround from tests.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "exceptions_verbose_docstrings_on_trivial_subclasses",
+      "summary": "Nearly-empty exception subclasses carry disproportionately long docstrings with fabricated examples",
+      "related_files": ["infrastructure/core/exceptions.py"],
+      "evidence": [
+        "Lines 79-83: `ConfigurationError` has a one-line docstring for a `pass` body",
+        "Lines 85-88: `MissingConfigurationError` docstring string ends without a period — minor but indicates template paste",
+        "Lines 270-280: `MissingDependencyError` docstring includes a multi-line `>>> raise ...` example that only illustrates constructor arguments already visible in the signature",
+        "Lines 317-327: `VersionMismatchError` docstring example block is copy-pasted structure from `MissingDependencyError` with only context dict values changed"
+      ],
+      "suggestion": "Strip examples from exception subclass docstrings. A one-line description is sufficient for exception subclasses. Examples belong in developer docs, not inline docstrings on raise-only classes.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "pipeline_executor_log_handler_commentary_bloat",
+      "summary": "__init__ docstring restates internal implementation details that belong in inline comments",
+      "related_files": ["infrastructure/core/pipeline.py"],
+      "evidence": [
+        "Lines 77-89: `__init__` docstring describes that it 'Sets up per-project log file that captures all pipeline execution logs (Python + subprocess output). Log file is located at: projects/{project_name}/output/logs/pipeline.log' — this is implementation detail, not interface documentation",
+        "Lines 91-99: Inline comments explain `log_dir`, `log_file`, `self.log_file`, and `self._log_handler` separately, repeating what the code already states",
+        "Line 97: comment '# Set up log file handler initially' is followed immediately by `self._setup_log_file_handler()` — the comment adds no information"
+      ],
+      "suggestion": "Remove the implementation detail paragraph from `__init__` docstring; keep only the Args/Returns interface contract. Remove comments that restate what the adjacent code line does.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "pipeline_reporter_redundant_section_comments",
+      "summary": "pipeline_reporter.py uses comment banners to mark sections whose purpose is already clear from the code",
+      "related_files": ["infrastructure/reporting/pipeline_reporter.py"],
+      "evidence": [
+        "Lines 115-116: `# Generate JSON report` immediately before `if 'json' in formats:`",
+        "Lines 127-128: `# Generate Markdown report` immediately before `if 'markdown' in formats:`",
+        "Lines 139-140: `# Generate HTML report` immediately before `if 'html' in formats:`",
+        "Lines 102-103: `# Convert to dictionary for serialization` before a dict literal — comment restates the line",
+        "Lines 359-360: `# Convert to checkpoint format` in `_save_checkpoint` before a list comprehension that is clearly building checkpoint format"
+      ],
+      "suggestion": "Remove comments that restate what the immediately following code statement already expresses. Reserve inline comments for non-obvious decisions (e.g., why exit code 2 is treated as success).",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "health_check_verbose_private_method_docstrings",
+      "summary": "Private methods in SystemHealthChecker have docstrings describing obvious behavior",
+      "related_files": ["infrastructure/core/health_check.py"],
+      "evidence": [
+        "Line 77: `def _check_filesystem(self) -> dict[str, Any]:` has docstring 'Check filesystem health and permissions.' — restates the method name",
+        "Line 252: `def _generate_summary(self, status)` has no docstring at all while public methods do — inconsistent",
+        "Lines 110-121: `_check_memory`, `_check_cpu`, `_check_disk` have no docstrings at all despite the public `get_health_status` having one — pattern inconsistency from likely partial generation"
+      ],
+      "suggestion": "Apply a consistent docstring policy: either all private methods get one-line docstrings, or none do. Do not mix verbose docstrings on trivial methods with absent docstrings on equally trivial adjacent methods.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "test_environment_tautological_assertions",
+      "summary": "Several tests in test_environment.py assert only on types rather than values, providing near-zero failure signal",
+      "related_files": ["tests/infra_tests/core/test_environment.py"],
+      "evidence": [
+        "Lines 35-42: `test_check_default_dependencies` asserts only `isinstance(all_present, bool)` and `isinstance(missing, list)` — these can never fail unless the function raises",
+        "Lines 75-80: `test_returns_tuple` asserts `isinstance(result, tuple)` and `len(result) == 2` — zero behavioral signal",
+        "Lines 111-119: `TestEnvironmentState.test_import_system_working` checks that the module has attributes named `check_python_version` and `check_dependencies` and that they are callable — this would pass even if both functions always raised NotImplementedError"
+      ],
+      "suggestion": "Replace type-only assertions with value assertions. `test_check_default_dependencies` should check that known-present packages are not in `missing`. `test_returns_tuple` should be deleted — it tests Python's type system, not the function.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "test_pipeline_multi_project_mock_dataclasses",
+      "summary": "TestGenerateMultiProjectSummaryReport uses locally-defined mock dataclasses that duplicate production types",
+      "related_files": ["tests/infra_tests/reporting/test_pipeline_reporter.py"],
+      "evidence": [
+        "Lines 343-386: `test_generate_with_successful_projects` defines `MockProject`, `MockStageResult`, and `MockResult` dataclasses inline — three structural dummies that mirror production types",
+        "Lines 399-443: `test_generate_with_failed_projects` redefines the same three mock dataclasses from scratch with minor variation",
+        "Lines 445-475, 477-521, 522-562, 564-591: each test method in the class redefines its own version of these same mock types — six separate inline class definitions total",
+        "This pattern defeats duck-typing benefits and will silently pass if production code changes its expected interface"
+      ],
+      "suggestion": "Define shared test fixtures at module scope (or a conftest) that use the real production types. If production types cannot be used directly, define mock dataclasses once at module scope. Inline redefinition per test is a maintenance and correctness hazard.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "test_performance_direct_internal_state_mutation",
+      "summary": "StagePerformanceTracker tests bypass the public API and directly set internal state",
+      "related_files": ["tests/infra_tests/core/test_performance.py"],
+      "evidence": [
+        "Lines 404-423: `test_get_performance_warnings_slow_stage` directly assigns `tracker.stages = [...]` instead of calling `start_stage` / `end_stage`",
+        "Lines 431-447: `test_get_performance_warnings_high_memory` directly assigns `tracker.stages = [...]`",
+        "Lines 449-465: `test_get_performance_warnings_high_cpu` directly assigns `tracker.stages = [...]`",
+        "Lines 467-500: `test_get_summary` directly assigns `tracker.stages = [...]`",
+        "These tests validate the warning/summary computation but do not verify that the computation is reachable via the real `start_stage`/`end_stage` path, which is the only path users have"
+      ],
+      "suggestion": "Use `start_stage` / `end_stage` with controlled sleep values to produce real stage data. If performance warning thresholds make this awkward in tests, extract the threshold constants and pass them as parameters so tests can set low thresholds.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "test_pipeline_stage_count_assertion_fragility",
+      "summary": "test_execute_full_pipeline_success hardcodes stage count and name list, making it brittle to pipeline evolution",
+      "related_files": ["tests/infra_tests/core/test_pipeline.py"],
+      "evidence": [
+        "Lines 262-280: asserts `len(results) == 9` and checks an exact ordered list of nine stage names",
+        "Line 306: `test_execute_core_pipeline_success` asserts `len(results) == 7` and checks exact names",
+        "Any addition or reordering of a pipeline stage requires updating multiple test assertions — the test tests structure rather than behavior"
+      ],
+      "suggestion": "Assert on behavioral properties: all results succeeded, required stages are present (set membership not ordered list), pipeline was not aborted early. Remove exact count and exact order assertions; those belong in a dedicated 'stage ordering contract' test that is clearly labeled as such.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "coverage_parser_check_cov_datafile_support_behaviorless_test",
+      "summary": "test_check_cov_datafile_support only asserts the return type is bool, not whether detection is correct",
+      "related_files": ["tests/infra_tests/reporting/test_coverage_parser.py"],
+      "evidence": [
+        "Lines 164-166: `test_returns_bool` calls `check_cov_datafile_support()` and asserts `isinstance(result, bool)` — this would pass even if the function always returned `False` or always raised and was caught internally",
+        "The function makes a real subprocess call to `pytest --help`; the test could assert that when pytest is installed the result is `True`, which is a real behavioral claim"
+      ],
+      "suggestion": "Assert that `check_cov_datafile_support()` returns `True` in the test environment (pytest-cov is a declared test dependency). A False result in CI would be a real signal of a missing dependency.",
+      "confidence": "medium"
+    }
+  ]
+}

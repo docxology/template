@@ -17,14 +17,13 @@ import sys
 from collections import defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, List, Set
+from typing import Any, Set
 
 import yaml
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
-
 
 @dataclass
 class AccuracyIssue:
@@ -37,7 +36,6 @@ class AccuracyIssue:
     message: str = ""
     details: str = ""
 
-
 @dataclass
 class CompletenessGap:
     """Represents a completeness gap."""
@@ -47,15 +45,13 @@ class CompletenessGap:
     description: str
     severity: str = "warning"
 
-
 @dataclass
 class ScanResults:
     """Container for scan results."""
 
-    accuracy_issues: List[AccuracyIssue] = field(default_factory=list)
-    completeness_gaps: List[CompletenessGap] = field(default_factory=list)
-    statistics: Dict[str, Any] = field(default_factory=dict)
-
+    accuracy_issues: list[AccuracyIssue] = field(default_factory=list)
+    completeness_gaps: list[CompletenessGap] = field(default_factory=list)
+    statistics: dict[str, Any] = field(default_factory=dict)
 
 class RepositoryScanner:
     """Comprehensive repository scanner."""
@@ -64,8 +60,8 @@ class RepositoryScanner:
         self.repo_root = repo_root.resolve()
         self.results = ScanResults()
         self.src_modules: Set[str] = set()
-        self.script_files: List[Path] = []
-        self.test_files: List[Path] = []
+        self.script_files: list[Path] = []
+        self.test_files: list[Path] = []
         self.documented_modules: Set[str] = set()
 
     def scan_all(self) -> ScanResults:
@@ -200,7 +196,7 @@ class RepositoryScanner:
         self.results.accuracy_issues.extend(issues)
         logger.info(f"Found {len(issues)} code accuracy issues")
 
-    def _extract_imports(self, file_path: Path) -> Dict[str, List[str]]:
+    def _extract_imports(self, file_path: Path) -> dict[str, list[str]]:
         """Extract imports from Python file."""
         imports: dict[str, list[str]] = {}
         try:
@@ -222,7 +218,7 @@ class RepositoryScanner:
 
         return imports
 
-    def _verify_import(self, script_path: Path, module_name: str, items: List[str]) -> bool:
+    def _verify_import(self, script_path: Path, module_name: str, items: list[str]) -> bool:
         """Verify that imported items exist in module."""
         module_path = self.repo_root / "src" / f"{module_name}.py"
         if not module_path.exists():
@@ -591,7 +587,6 @@ class RepositoryScanner:
 
         return datetime.now().isoformat()
 
-
 def main() -> int:
     """Execute repository-wide accuracy and completeness scan.
 
@@ -632,7 +627,6 @@ def main() -> int:
     logger.info(f"  Warnings: {warning_count}")
 
     return 0 if error_count == 0 else 1
-
 
 if __name__ == "__main__":
     sys.exit(main())

@@ -5,7 +5,6 @@ from __future__ import annotations
 import re
 import subprocess
 from pathlib import Path
-from typing import Optional
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging_utils import get_logger
@@ -13,7 +12,6 @@ from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_utils import compile_latex
 
 logger = get_logger(__name__)
-
 
 class SlidesRenderer:
     """Handles slide generation (Beamer/Reveal.js)."""
@@ -25,8 +23,8 @@ class SlidesRenderer:
         self,
         source_file: Path,
         format: str = "beamer",
-        manuscript_dir: Optional[Path] = None,
-        figures_dir: Optional[Path] = None,
+        manuscript_dir: Path | None = None,
+        figures_dir: Path | None = None,
     ) -> Path:
         """Render slides from markdown with figure path resolution.
 
@@ -87,8 +85,8 @@ class SlidesRenderer:
         self,
         source_file: Path,
         output_file: Path,
-        manuscript_dir: Optional[Path],
-        figures_dir: Optional[Path],
+        manuscript_dir: Path | None,
+        figures_dir: Path | None,
     ) -> Path:
         """Render beamer slides with proper figure path handling.
 

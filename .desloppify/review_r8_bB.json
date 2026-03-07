@@ -1,0 +1,113 @@
+{
+  "session": {
+    "id": "ext_20260307_180453_2aec5086",
+    "token": "5a2f7661a0490d6453dcbc1b53d427bd"
+  },
+  "assessments": {
+    "dependency_health": 82,
+    "test_strategy": 71,
+    "ai_generated_debt": 76,
+    "package_organization": 70
+  },
+  "findings": [
+    {
+      "dimension": "dependency_health",
+      "identifier": "requests_core_dep",
+      "summary": "requests is a hard base dependency but is only used by the optional LLM client",
+      "related_files": ["pyproject.toml", "infrastructure/llm/core/client.py"],
+      "evidence": [
+        "pyproject.toml line 42: 'requests>=2.31.0  # Required by infrastructure/llm/core/client.py (base dep, not llm optional group)'",
+        "The comment itself acknowledges this is a known placement compromise — requests is pulled into every install even without LLM use"
+      ],
+      "suggestion": "Move requests into the llm dependency group and guard the import in client.py with a try/except ImportError, consistent with how ollama, plotly, and reportlab are handled",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "coverage_chasing_proliferation",
+      "summary": "Six separate test files exist for pdf_renderer, indicating coverage-chasing rather than domain-driven test decomposition",
+      "related_files": [
+        "tests/infra_tests/rendering/test_pdf_renderer_additional.py",
+        "tests/infra_tests/rendering/test_pdf_renderer_combined.py",
+        "tests/infra_tests/rendering/test_pdf_renderer_coverage.py",
+        "tests/infra_tests/rendering/test_pdf_renderer_fixes.py",
+        "tests/infra_tests/rendering/test_pdf_renderer_full.py",
+        "tests/infra_tests/rendering/test_pdf_renderer_missing_coverage.py"
+      ],
+      "evidence": [
+        "6 test files for a single production module, with names like '_coverage', '_missing_coverage', '_additional', '_fixes' — suffix names that signal incremental patch files rather than designed test suites",
+        "Pattern repeats in validation: test_check_links.py, test_check_links_comprehensive.py, test_check_links_edge_cases.py, test_check_links_full.py — 4 files for one module",
+        "Same pattern in rendering CLI: test_rendering_cli.py and test_rendering_cli_full.py"
+      ],
+      "suggestion": "Consolidate patch test files into a single well-organized test module per production module. Use pytest marks (slow, integration) to segregate test types rather than separate files with suffixes like _full, _coverage, _additional",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "untested_critical_scripts",
+      "summary": "scripts/01_run_tests.py (623 LOC) and projects/code_project/scripts/optimization_analysis.py (1649 LOC) are untested with zero importers",
+      "related_files": [
+        "scripts/01_run_tests.py",
+        "projects/code_project/scripts/optimization_analysis.py"
+      ],
+      "evidence": [
+        "Blind packet existing_findings: 'scripts/01_run_tests.py: test_coverage: Untested critical module (623 LOC, 0 importers) — high blast radius'",
+        "Blind packet existing_findings: 'projects/code_project/scripts/optimization_analysis.py: test_coverage: Untested critical module (1649 LOC, 0 importers) — high blast radius'",
+        "01_run_tests.py is the primary test orchestration entry point — not tested despite being 623 LOC"
+      ],
+      "suggestion": "Extract testable logic from 01_run_tests.py into infrastructure modules (e.g., suite_runner.py already exists for this purpose) and write tests against the extracted functions. For optimization_analysis.py, apply the thin-orchestrator pattern strictly — all computation should move to projects/code_project/src/ where 90% coverage is enforced",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "mechanical_parse_strategy_quintuplets",
+      "summary": "Five near-identical failure-parsing functions with mechanical suffixes (_section, _verbose, _short, _timeout, _fallback) indicate AI-generated strategy proliferation",
+      "related_files": ["infrastructure/reporting/coverage_parser.py"],
+      "evidence": [
+        "Lines 35-130: _parse_failures_section, _parse_failures_verbose, _parse_failures_short, _parse_failures_timeout, _parse_failures_fallback — five functions with identical signatures (combined_output: str) -> list[dict]",
+        "Each is 10-20 lines with a single regex loop; the distinctions are format-specific but the code structure is copy-paste with minor variation",
+        "All five are collected into _FAILURE_STRATEGIES list and iterated in order — the strategy dispatch is not wrong, but generating 5 separate named functions rather than a parameterized approach is characteristic AI fragmentation"
+      ],
+      "suggestion": "Parameterize the strategy dispatch: each strategy is a regex pattern + extractor, representable as a data table (pattern, field_extractor) rather than five named function bodies. This would halve the LOC and make adding new formats a data change, not a code change",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "trivial_constructor_docstrings",
+      "summary": "Trivial __init__ docstrings that restate the class name add no value",
+      "related_files": [
+        "infrastructure/reporting/error_aggregator.py",
+        "infrastructure/reporting/output_organizer.py"
+      ],
+      "evidence": [
+        "error_aggregator.py line 51: '\"\"\"Initialize error aggregator.\"\"\"' on a 2-line __init__ that sets two empty lists",
+        "output_organizer.py line 91: '\"\"\"Initialize the OutputOrganizer.\"\"\"' — same pattern",
+        "Neither docstring conveys any information beyond the class name already visible in the class definition"
+      ],
+      "suggestion": "Remove docstrings from trivial constructors that do nothing but initialize instance variables; the class-level docstring already describes the object's purpose",
+      "confidence": "high"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "reporting_dir_overload",
+      "summary": "infrastructure/reporting/ (14 files, 8902 LOC) bundles test-runner infrastructure, coverage parsing, pipeline reporting, executive summaries, and dashboard generation — four distinct concerns in one package",
+      "related_files": [
+        "infrastructure/reporting/suite_runner.py",
+        "infrastructure/reporting/coverage_parser.py",
+        "infrastructure/reporting/suite_summary_generator.py",
+        "infrastructure/reporting/dashboard_generator.py",
+        "infrastructure/reporting/executive_reporter.py",
+        "infrastructure/reporting/pipeline_reporter.py"
+      ],
+      "evidence": [
+        "suite_runner.py streams pytest subprocess output — this is test execution infrastructure, not reporting",
+        "coverage_parser.py calls subprocess to run pytest --help to detect flags — test orchestration, not reporting",
+        "dashboard_generator.py is 3462 LOC generating matplotlib/plotly charts — visualization, not reporting",
+        "executive_reporter.py (1415 LOC) generates cross-project metrics aggregation — analysis, not reporting in the narrow sense",
+        "The directory's avg_fan_in is 3.4 (moderate) but internal file count and LOC are the heaviest in the codebase aside from validation/"
+      ],
+      "suggestion": "Split infrastructure/reporting/ into at minimum: infrastructure/reporting/ (pipeline_reporter, coverage_reporter, output_reporter, error_aggregator, html_templates), infrastructure/reporting/runners/ or infrastructure/testing/ (suite_runner, coverage_parser, suite_summary_generator), and either keep dashboard_generator co-located or move it to infrastructure/visualization/",
+      "confidence": "medium"
+    }
+  ]
+}

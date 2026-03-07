@@ -9,12 +9,10 @@ from __future__ import annotations
 import logging
 import threading
 import time
-from typing import Optional
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
-
 
 class StreamHeartbeatMonitor:
     """Monitor heartbeat for streaming LLM operations.
@@ -30,7 +28,7 @@ class StreamHeartbeatMonitor:
         heartbeat_interval: float = 15.0,
         stall_threshold: float = 60.0,
         early_warning_threshold: float = 30.0,
-        logger: Optional[logging.Logger] = None,
+        logger: logging.Logger | None = None,
     ):
         """Initialize heartbeat monitor.
 
@@ -50,16 +48,16 @@ class StreamHeartbeatMonitor:
         self.logger = logger or get_logger(__name__)
 
         # Threading state
-        self._monitor_thread: Optional[threading.Thread] = None
+        self._monitor_thread: threading.Thread | None = None
         self._stop_event = threading.Event()
         self._lock = threading.Lock()
 
         # Progress tracking
         self.start_time = time.time()
-        self.last_token_time: Optional[float] = None
+        self.last_token_time: float | None = None
         self.token_count = 0
-        self.first_token_time: Optional[float] = None
-        self.estimated_total_tokens: Optional[int] = None
+        self.first_token_time: float | None = None
+        self.estimated_total_tokens: int | None = None
 
         # Heartbeat state
         self.last_heartbeat_time = self.start_time

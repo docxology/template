@@ -6,15 +6,9 @@ A category \(\mathcal{C}\) enriched over the unit interval
 \(([0,1], \cdot, 1)\) assigns to every pair of objects \(A, B\) a
 \emph{hom-value} \(\mathcal{C}(A, B) \in [0,1]\) satisfying:
 
-\begin{enumerate}
-\tightlist
-\item
-  \textbf{Identity}: \(\mathcal{C}(A, A) = 1\) for all objects \(A\)
-\item
-  \textbf{Composition}:
-  \(\mathcal{C}(A, C) \geq \mathcal{C}(A, B) \cdot \mathcal{C}(B, C)\)
-  for all objects \(A, B, C\)
-\end{enumerate}
+\[\mathcal{C}(A, A) = 1 \quad \text{(Identity)} \tag{5.1}\]
+
+\[\mathcal{C}(A, C) \geq \mathcal{C}(A, B) \cdot \mathcal{C}(B, C) \quad \text{(Composition)} \tag{5.2}\]
 
 The identity axiom says that every expression is maximally related to
 itself. The composition inequality says that distributional relatedness
@@ -25,7 +19,7 @@ composes sub-multiplicatively: if \(A\) is 80\% related to \(B\) and
 
 \begin{block}{Interpreting Hom-Values in Linguistic Context}
 \protect\phantomsection\label{interpreting-hom-values-in-linguistic-context}
-Fritz et al. {[}-@fritz2021enriched{]} interpret hom-values as
+Bradley et al. {[}-@fritz2021enriched{]} interpret hom-values as
 \emph{conditional probabilities} in a distributional model:
 \(\mathcal{C}(A, B) = P(\text{context} \mid A \text{ and } B \text{ co-occur})\).
 In our case-theoretic application, we interpret them more broadly:

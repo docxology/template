@@ -1,0 +1,161 @@
+{
+  "assessments": {
+    "cross_module_architecture": 72,
+    "convention_outlier": 78,
+    "package_organization": 70,
+    "error_consistency": 81
+  },
+  "findings": [
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "runtime_import_inversion_cli",
+      "summary": "CLI module defers imports of core sibling modules into function bodies, inverting the expected static dependency graph",
+      "related_files": ["infrastructure/core/cli.py"],
+      "evidence": [
+        "cli.py:136 - `from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor` inside handle_pipeline_command()",
+        "cli.py:184 - `from infrastructure.core.multi_project import MultiProjectConfig, MultiProjectOrchestrator` inside handle_multi_project_command()",
+        "cli.py:288 - `from infrastructure.project.discovery import discover_projects` inside handle_discover_command() (also imported at module level in handle_multi_project_command at line 185)",
+        "discover_projects is imported twice in the same file: once at line 185 inside a function body, and once at line 288 inside another function body, with no module-level import"
+      ],
+      "suggestion": "Move the imports of PipelineConfig/PipelineExecutor, MultiProjectConfig/MultiProjectOrchestrator, and discover_projects to the module top level. Runtime function-body imports in a CLI entry point provide no meaningful benefit and mask the real dependency graph from static analysis tools.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "validation_imports_project_discovery",
+      "summary": "infrastructure/validation/ module imports from infrastructure/project/ at module scope, creating a lateral cross-package dependency",
+      "related_files": ["infrastructure/validation/doc_discovery.py", "infrastructure/validation/output_validator.py"],
+      "evidence": [
+        "doc_discovery.py:13 - `from infrastructure.project.discovery import discover_projects` at module level",
+        "output_validator.py:202 - `from infrastructure.project.discovery import discover_projects` inside validate_root_output_structure() function body",
+        "Both validation/ modules reach into project/ for discovery logic; project/ is a peer package, not a dependency declared lower in the stack"
+      ],
+      "suggestion": "Pass discovered project names/paths as parameters to these validation functions rather than importing from project/ directly. This removes the lateral coupling and makes both packages independently testable.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "reporting_test_runner_imports_core_progress",
+      "summary": "infrastructure/reporting/test_runner.py imports a spinner from infrastructure/core/logging_progress, pulling a UI/display concern from core into reporting",
+      "related_files": ["infrastructure/reporting/test_runner.py"],
+      "evidence": [
+        "test_runner.py:21 - `from infrastructure.core.logging_progress import log_with_spinner`",
+        "test_runner.py:208 - `with log_with_spinner(config.spinner_label, logger):` used inside run_test_suite()",
+        "logging_progress lives in core/ and contains thread-based spinner + progress-bar UI primitives; importing it into reporting/ creates a downward dependency from reporting into core display internals"
+      ],
+      "suggestion": "This direction (reporting -> core) is acceptable in principle, but log_with_spinner introduces a threading + TTY concern into the reporting layer. Accept the dependency as-is or extract log_with_spinner to a shared ui/ module if the spinner is needed more broadly.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "logging_split_oversized_hub",
+      "summary": "logging_utils.py re-imports and re-exports symbols from all four logging sub-modules, acting as a hub that negates the split",
+      "related_files": [
+        "infrastructure/core/logging_utils.py",
+        "infrastructure/core/logging_constants.py",
+        "infrastructure/core/logging_formatters.py",
+        "infrastructure/core/logging_helpers.py",
+        "infrastructure/core/logging_progress.py"
+      ],
+      "evidence": [
+        "logging_utils.py:24-28 - imports JSONFormatter, TemplateFormatter, format_duration, format_error_with_suggestions, calculate_eta from sibling logging_* modules",
+        "logging_utils.py:415-432 - __all__ re-exports format_duration and format_error_with_suggestions which live in logging_helpers.py",
+        "logging_progress.py:13-14 - imports from logging_constants AND logging_helpers, creating a chain: progress -> helpers -> exceptions",
+        "All callers (e.g. pipeline.py:21-28) still import exclusively from logging_utils, so the split modules have no independent importers"
+      ],
+      "suggestion": "Either collapse the four logging_* satellite files back into logging_utils (since no external caller imports them directly), or fully commit to the split by removing the re-export hub and updating all callers to import from the specific submodule they need.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "inconsistent_logger_initialization_pattern",
+      "summary": "logging_progress.py and logging_helpers.py use logging.getLogger(__name__) directly instead of the project-standard get_logger(__name__)",
+      "related_files": [
+        "infrastructure/core/logging_progress.py",
+        "infrastructure/core/logging_helpers.py"
+      ],
+      "evidence": [
+        "logging_progress.py:103 - `logger = logging.getLogger(__name__)` (bare stdlib call inside log_progress_bar)",
+        "logging_progress.py:375 - `_logger = logger or logging.getLogger(__name__)` inside log_progress_streaming()",
+        "logging_progress.py:374 - `logger = logging.getLogger(__name__)` inside log_stage_with_eta()",
+        "logging_progress.py:399 - `logger = logging.getLogger(__name__)` inside log_resource_usage()",
+        "All other infrastructure modules use get_logger(__name__) (e.g. logging_utils.py:186, doc_discovery.py:15, test_runner.py:28) — the logging_* satellites are an island using the raw stdlib call"
+      ],
+      "suggestion": "Replace all `logging.getLogger(__name__)` calls in logging_progress.py with the project-standard `get_logger(__name__)`. Note that logging_progress cannot import get_logger from logging_utils without a circular import, which is itself evidence that the split was not fully thought through — resolve the split vs. hub decision first.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "test_runner_in_reporting_not_core",
+      "summary": "infrastructure/reporting/test_runner.py contains pytest subprocess execution logic that belongs in core/, not reporting/",
+      "related_files": ["infrastructure/reporting/test_runner.py"],
+      "evidence": [
+        "test_runner.py:1-3 docstring: 'Test runner infrastructure for pytest execution. Provides pytest streaming execution and a common retry/coverage-conflict loop'",
+        "test_runner.py:92-161 - run_pytest_stream() uses select(), os.set_blocking(), subprocess.Popen() — raw process orchestration with no reporting concern",
+        "test_runner.py:184-298 - run_test_suite() drives retry logic, coverage conflict detection, and exit-code interpretation",
+        "reporting/ is described in CLAUDE.md as 'Pipeline reporting and error aggregation'; subprocess test execution is a pipeline execution concern, not a reporting concern",
+        "test_runner.py imports from infrastructure.core.file_operations and infrastructure.core.logging_progress, showing its natural affinity is with core/"
+      ],
+      "suggestion": "Move test_runner.py to infrastructure/core/ (e.g. infrastructure/core/test_executor.py). The reporting/ module should only consume results, not drive subprocess execution. Update imports in scripts/01_run_tests.py accordingly.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "doc_discovery_in_validation_not_documentation",
+      "summary": "infrastructure/validation/doc_discovery.py performs documentation cataloguing and categorization, which belongs in infrastructure/documentation/, not validation/",
+      "related_files": ["infrastructure/validation/doc_discovery.py"],
+      "evidence": [
+        "doc_discovery.py functions: find_markdown_files, catalog_agents_readme, find_config_files, find_script_files, create_hierarchy, categorize_documentation, discover_project_documentation, get_audit_context — all are discovery/inventory operations, not validation",
+        "CLAUDE.md describes infrastructure/documentation/ as 'Figure management, API docs, glossary generation' — doc discovery fits squarely here",
+        "CLAUDE.md describes infrastructure/validation/ as 'PDF and markdown validation, output validation' — structural scanning of the repo is not validation",
+        "doc_discovery.py imports discover_projects from infrastructure/project/ — a documentation-level concern pulling in project discovery, appropriate for documentation/ but odd in validation/"
+      ],
+      "suggestion": "Move doc_discovery.py to infrastructure/documentation/doc_discovery.py. Update imports in any callers. This separates the 'find docs' concern (documentation/) from the 'validate docs/PDFs' concern (validation/).",
+      "confidence": "high"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "mixed_error_strategy_bool_vs_exception",
+      "summary": "Pipeline layer uses bool return values for stage success/failure while callers also wrap in broad Exception catches, creating redundant and inconsistent error signalling",
+      "related_files": [
+        "infrastructure/core/pipeline.py",
+        "infrastructure/core/multi_project.py",
+        "infrastructure/core/cli.py"
+      ],
+      "evidence": [
+        "pipeline.py:526-536 - _run_script() returns False on OSError/SubprocessError instead of raising",
+        "pipeline.py:224-259 - _execute_stage() catches all Exception and converts to PipelineStageResult(success=False) — swallows all exceptions silently into a result object",
+        "multi_project.py:191-194 - outer try/except around entire project execution sets project_results[project_name] = [] on any exception, losing all failure detail",
+        "cli.py:129-131 - top-level catch converts any exception to exit code 1 with only error=e logged, no chaining",
+        "cli.py:177-179 and 257-259 - duplicate try/except blocks in handle_pipeline_command and handle_multi_project_command that are already inside the outer try in main() — triple-nested catches for the same failure path"
+      ],
+      "suggestion": "Choose one error strategy for the pipeline layer: either propagate typed exceptions (PipelineError, StageError) and catch only at the CLI boundary, or use Result/PipelineStageResult throughout and eliminate the redundant exception wrapping. The current mix of bool returns, result objects, and silent exception catches makes failure diagnosis non-deterministic.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "silent_swallow_on_callback_failure",
+      "summary": "on_project_complete callback exception is caught and logged but silently suppressed, masking reporting failures",
+      "related_files": ["infrastructure/core/multi_project.py"],
+      "evidence": [
+        "multi_project.py:174-179 - `try: self.on_project_complete(...) except Exception as e: logger.warning(f'Project completion callback failed for {project_name}: {e}')`",
+        "The warning log loses the full traceback; the outer result still counts the project as successful (successful_projects += 1 at line 184)",
+        "A reporting callback failure is indistinguishable from success in the returned MultiProjectResult"
+      ],
+      "suggestion": "Either propagate the callback exception (let callers decide whether it is fatal) or record it in the MultiProjectResult so callers can inspect it. At minimum, log the full traceback with logger.warning(..., exc_info=True).",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "validate_project_documentation_integrity_dead_condition",
+      "summary": "doc_discovery.py contains a condition that is always False, silently producing no issues for a case that was intended to be checked",
+      "related_files": ["infrastructure/validation/doc_discovery.py"],
+      "evidence": [
+        "doc_discovery.py:409 - `if project.has_manuscript and not project.has_manuscript:` — both sides test the same attribute; the body is unreachable dead code",
+        "The surrounding function validate_project_documentation_integrity returns issues per project; this dead branch silently omits the intended check without any error or warning"
+      ],
+      "suggestion": "Fix the condition to its intended logic (likely `if not project.has_manuscript:` or a check for a missing AGENTS.md file). Add a test for this function to catch regressions.",
+      "confidence": "high"
+    }
+  ]
+}

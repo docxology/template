@@ -170,7 +170,7 @@ matter of degree.
 To accommodate this quantitative dimension, we move from ordinary
 categories to \textbf{enriched categories}, where hom-sets are not just
 sets of morphisms but carry additional algebraic structure. The
-framework of Fritz et al. {[}-@fritz2021enriched{]} provides the key
+framework of Bradley et al. {[}-@fritz2021enriched{]} provides the key
 construction.
 \end{frame}
 
@@ -182,15 +182,9 @@ A category \(\mathcal{C}\) enriched over the unit interval
 \(([0,1], \cdot, 1)\) assigns to every pair of objects \(A, B\) a
 \emph{hom-value} \(\mathcal{C}(A, B) \in [0,1]\) satisfying:
 
-\begin{enumerate}
-\tightlist
-\item
-  \textbf{Identity}: \(\mathcal{C}(A, A) = 1\) for all objects \(A\)
-\item
-  \textbf{Composition}:
-  \(\mathcal{C}(A, C) \geq \mathcal{C}(A, B) \cdot \mathcal{C}(B, C)\)
-  for all objects \(A, B, C\)
-\end{enumerate}
+\[\mathcal{C}(A, A) = 1 \quad \text{(Identity)} \tag{5.1}\]
+
+\[\mathcal{C}(A, C) \geq \mathcal{C}(A, B) \cdot \mathcal{C}(B, C) \quad \text{(Composition)} \tag{5.2}\]
 
 The identity axiom says that every expression is maximally related to
 itself. The composition inequality says that distributional relatedness
@@ -201,7 +195,7 @@ composes sub-multiplicatively: if \(A\) is 80\% related to \(B\) and
 
 \begin{block}{Interpreting Hom-Values in Linguistic Context}
 \protect\phantomsection\label{interpreting-hom-values-in-linguistic-context}
-Fritz et al. {[}-@fritz2021enriched{]} interpret hom-values as
+Bradley et al. {[}-@fritz2021enriched{]} interpret hom-values as
 \emph{conditional probabilities} in a distributional model:
 \(\mathcal{C}(A, B) = P(\text{context} \mid A \text{ and } B \text{ co-occur})\).
 In our case-theoretic application, we interpret them more broadly:
@@ -288,7 +282,7 @@ For an enriched category with \(n\) objects, let \(Z\) be the
 \(n \times n\) matrix with \(Z_{ij} = \mathcal{C}(i, j)\). The magnitude
 is:
 
-\[|\mathcal{C}| = \sum_{i,j} (Z^{-1})_{ij}\]
+\[|\mathcal{C}| = \sum_{i,j} (Z^{-1})_{ij} \tag{5.3}\]
 
 when \(Z\) is invertible. Magnitude has deep connections to information
 theory:
@@ -318,9 +312,9 @@ a case category quantifies how much ``information'' the case system
 encodes about relational structure.
 \end{frame}
 
-\begin{frame}{Enriched Functors and Bradley's Language-as-Category
-Model}
-\protect\phantomsection\label{enriched-functors-and-bradleys-language-as-category-model}
+\begin{frame}{Enriched Functors, Bradley's Language-as-Category Model,
+and the LLM Connection}
+\protect\phantomsection\label{enriched-functors-bradleys-language-as-category-model-and-the-llm-connection}
 Bradley's {[}-@bradley2024ipam; -@bradley2025tea{]} broader program
 treats natural language itself as an enriched category, where:
 
@@ -356,6 +350,25 @@ implications for case theory:
   type-logical derivations to distributional meaning representations
   while preserving the enriched structure.
 \end{enumerate}
+
+The deep connection to modern distributional semantics is this: the
+static word embeddings of Word2Vec {[}@mikolov2013efficient{]} and GloVe
+{[}@pennington2014glove{]} operationalize the enriched hom-values as
+\emph{cosine similarities} in a learned vector
+space---\(\mathcal{C}(A, B) = \cos(\vec{v}_A, \vec{v}_B)\)---while
+contextualized embeddings from transformers {[}@devlin2019bert;
+@vaswani2017attention{]} compute \emph{dynamic} hom-values that depend
+on the sentential context. In the enriched-categorical framework, this
+transition from static to contextualized embeddings corresponds to
+moving from a \emph{fixed} enriched category (where hom-values are
+precomputed from corpus statistics) to a \emph{parameterized} enriched
+category (where hom-values are computed on-the-fly by attention
+mechanisms). Transformer attention weights \(\alpha_{ij}\) are precisely
+such context-dependent enriched hom-values: they encode how ``related''
+token \(i\) is to token \(j\) in a given representational layer,
+satisfying a softmax normalization that parallels the probabilistic
+interpretation of Bradley et al.'s {[}-@fritz2021enriched{]} hom-values
+as conditional probabilities.
 \end{frame}
 
 \begin{frame}{Connection to Lawvere's Metric Spaces and Generalized

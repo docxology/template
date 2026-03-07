@@ -1,0 +1,667 @@
+\frametitle{Appendix: Comprehensive Notation and Terminology}
+\protect\phantomsection\label{sec:notation}
+This appendix collects all notation, symbols, and technical terminology
+used throughout the manuscript. Entries are grouped by domain and
+ordered alphabetically within each section. The \textbf{First Use}
+column indicates the section where each term is first introduced or
+defined.
+
+\begin{block}{A. Linguistic Terms}
+\protect\phantomsection\label{a.-linguistic-terms}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2222}}
+  >{\centering\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2778}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2222}}
+  >{\centering\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2778}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Term
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Symbol
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Definition
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+First Use
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+Ablative & ABL & Case role encoding origin, source, or cause & §2 \\
+Accusative & ACC & Case role encoding patient, theme, or direct object &
+§2 \\
+Active--Stative alignment & --- & Alignment in which the sole argument S
+splits by agentivity & §2 \\
+Agent-like argument & A & The agent-like argument of a transitive clause
+& §2 \\
+Alignment functor & \(F: \mathcal{U} \to \mathcal{L}\) &
+Structure-preserving map from universal to language-specific case
+category & §2 \\
+Alignment type & --- & Systematic pattern governing how S, A, P are
+grouped for case marking & §2 \\
+Case category & \(\mathcal{C}\) & Small category whose objects are case
+roles and morphisms are grammatical relations & §2 \\
+Case frame & --- & The set of case roles activated by a particular verb
+or predicate & §2 \\
+Case-typed noun space & \(N_{\text{NOM}}, N_{\text{ACC}}, \ldots\) &
+Case-specific vector subspace in a case-enriched DisCoCat model & §4 \\
+Categorial grammar & --- & Grammar assigning each lexical item an
+algebraic type encoding combinatory potential & §3 \\
+Contraction & \(a^l \cdot a \to 1\) & Pregroup reduction eliminating an
+adjoint pair & §3 \\
+Dative & DAT & Case role encoding recipient, goal, or beneficiary &
+§2 \\
+Deep case & --- & Fillmore's universal semantic primitive (e.g.,
+Agentive, Objective) & §2 \\
+Ergative--Absolutive alignment & --- & Alignment grouping S = P \(\neq\)
+A & §2 \\
+Expansion & \(1 \to a \cdot a^l\) & Pregroup expansion introducing an
+adjoint pair & §3 \\
+Fluid-S & --- & Alignment in which S marking varies by context or
+volition & §2 \\
+Genitive & GEN & Case role encoding possessor or source & §2 \\
+Formal semantics & --- & Montague's programme: meaning assigned
+compositionally via truth-conditional functions & §4 \\
+Grammatical relation & --- & Morphism in a case category relating two
+case roles & §2 \\
+Instrumental & INS & Case role encoding instrument or means & §2 \\
+Kāraka & --- & Pāṇini's system of deep semantic roles in Sanskrit
+grammar & §2 \\
+Left adjoint & \(a^l\) & Left adjoint type satisfying
+\(a^l \cdot a \leq 1\) & §3 \\
+Locative & LOC & Case role encoding location or context & §2 \\
+Markedness & --- & Asymmetry in the formal complexity of paradigmatic
+oppositions & §2 \\
+Monadic semantics & --- & Song's extension using monads to model
+sublexical verb-root decomposition & §3 \\
+Nominative & NOM & Case role encoding agent, experiencer, or
+intransitive subject & §2 \\
+Nominative--Accusative alignment & --- & Alignment grouping S = A
+\(\neq\) P & §2 \\
+Passivization & --- & Syntactic transformation promoting patient to
+subject position & §3 \\
+Patient-like argument & P & The patient-like argument of a transitive
+clause & §2 \\
+Pregroup grammar & --- & Grammar where types have left and right
+adjoints forming a compact closed category & §3 \\
+Proto-Agent & --- & Dowty's cluster of agentive entailments (volition,
+sentience, causation) & §2 \\
+Proto-Patient & --- & Dowty's cluster of patient entailments (change of
+state, causal affectedness) & §2 \\
+Right adjoint & \(a^r\) & Right adjoint type satisfying
+\(a \cdot a^r \leq 1\) & §3 \\
+Sole argument & S & The sole argument of an intransitive clause & §2 \\
+Thematic role & --- & Semantic relation between a predicate and its
+argument (Agent, Patient, Goal, etc.) & §2 \\
+Tripartite alignment & --- & Alignment in which S \(\neq\) A \(\neq\) P
+(all three distinguished) & §2 \\
+Verb root decomposition & --- & Analysis of a verb's internal causative
+and result-state layers via a monad & §3 \\
+Vocative & VOC & Case role encoding direct address & §2 \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+
+\begin{block}{B. Category Theory}
+\protect\phantomsection\label{b.-category-theory}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2222}}
+  >{\centering\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2778}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2222}}
+  >{\centering\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2778}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Term
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Symbol
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Definition
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+First Use
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+Box & --- & Node in a string diagram representing a morphism & §3 \\
+Cap & \(\eta: 1 \to a^r \otimes a\) & Unit of a compact closure
+(coevaluation map) & §3 \\
+Category & \(\mathcal{C}\) & Collection of objects and morphisms with
+identity and associative composition & §2 \\
+Classifying topos & \(\mathcal{E}_{\mathbb{T}}\) & Canonical topos whose
+models correspond to geometric functors from
+\(\mathcal{E}_{\mathbb{T}}\) & §6 \\
+Codomain & \(\text{cod}(f)\) & Target object of a morphism \(f\) & §2 \\
+Commutative diagram & --- & Diagram in which all directed paths with the
+same start and end yield equal composites & §1 \\
+Cobordism & --- & Manifold with boundary connecting two
+lower-dimensional manifolds; domain of TQFT functors & §8 \\
+Compact closed category & --- & Monoidal category in which every object
+has a left and right dual & §3 \\
+Composition & \(g \circ f\) & Sequential application of morphisms: first
+\(f\), then \(g\) & §2 \\
+Cup & \(\varepsilon: a \otimes a^r \to 1\) & Counit of a compact closure
+(evaluation map) & §3 \\
+Diagram & \(D\) & DisCoPy representation of a morphism in a monoidal
+category & §3 \\
+\(\dagger\)-compact closed category & --- & Compact closed category with
+a contravariant involutive endofunctor \(\dagger\); framework for
+ZX-calculus & §8 \\
+Domain & \(\text{dom}(f)\) & Source object of a morphism \(f\) & §2 \\
+Fiber bundle & --- & Projection \(\pi: E \to B\) whose fibers carry
+role-filler structure; topos-theoretic LoT model & §6 \\
+Functor & \(F: \mathcal{C} \to \mathcal{D}\) & Structure-preserving map
+between categories & §2 \\
+Geometric theory & \(\mathbb{T}\) & Theory axiomatized by sequents with
+finite conjunctions, arbitrary disjunctions, existential quantification
+& §6 \\
+Identity morphism & \(\text{id}_A\) & Morphism from \(A\) to itself
+satisfying \(f \circ \text{id} = f = \text{id} \circ f\) & §2 \\
+Monad & --- & Endofunctor with unit and multiplication satisfying
+associativity and unit laws & §3 \\
+Monoidal category & --- & Category with a bifunctor \(\otimes\) (tensor
+product) and unit object \(I\) & §3 \\
+Morita equivalence &
+\(\mathcal{E}_{\mathbb{T}_1} \simeq \mathcal{E}_{\mathbb{T}_2}\) &
+Equivalence of classifying toposes enabling inter-theoretic transfer &
+§6 \\
+Morphism & \(f: A \to B\) & Arrow between objects in a category; encodes
+a relation or transformation & §2 \\
+Natural transformation & \(\alpha: F \Rightarrow G\) & Family of
+morphisms \(\alpha_A: F(A) \to G(A)\) commuting with all morphisms &
+§2 \\
+Object & \(A, B, \ldots\) & Entities in a category; in our framework,
+case roles & §2 \\
+Presheaf & \(\hat{\mathcal{C}} = [\mathcal{C}^{op}, \textbf{Set}]\) &
+Contravariant functor from \(\mathcal{C}\) to \textbf{Set} & §6 \\
+Snake equation & \((1 \otimes \varepsilon) \circ (\eta \otimes 1) = 1\)
+& Zigzag identity: fundamental axiom of compact closed categories &
+§4 \\
+String diagram & --- & Planar graph faithfully representing morphisms in
+a monoidal category & §3 \\
+Subobject classifier & \(\Omega\) & Object in a topos playing the role
+of a truth-value object & §6 \\
+Swap & \(\sigma_{A,B}: A \otimes B \to B \otimes A\) & Braiding morphism
+permuting two objects in a symmetric monoidal category & §3 \\
+Tensor product & \(A \otimes B\) & Monoidal product representing
+parallel composition or concatenation & §3 \\
+Topos & \(\mathcal{E}\) & Category with products, exponentials, and a
+subobject classifier; generalized universe of sets & §6 \\
+Universal construction & --- & Object or morphism characterized by a
+universal property (product, coproduct, limit) & §6 \\
+Wire & --- & Edge in a string diagram representing a type (object) &
+§3 \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+
+\begin{block}{C. Enriched Categories and Magnitude}
+\protect\phantomsection\label{c.-enriched-categories-and-magnitude}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2222}}
+  >{\centering\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2778}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2222}}
+  >{\centering\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2778}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Term
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Symbol
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Definition
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+First Use
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+Categorical magnitude & \(\lvert X \rvert\) & Sum \(\sum_i w_i\) where
+\((w_1, \ldots, w_n)\) solves \(Z \mathbf{w} = \mathbf{1}\); measures
+effective number of objects & §5 \\
+Composition inequality &
+\(\mathcal{V}(A,B) \otimes \mathcal{V}(B,C) \leq \mathcal{V}(A,C)\) &
+Enriched analogue of composition: the composite hom-value is at least
+the product of intermediate values & §5 \\
+Enriched category & \(\mathcal{V}\text{-Cat}\) & Category whose hom-sets
+are replaced by objects of a monoidal category \(\mathcal{V}\) & §5 \\
+Enriched functor & --- & Structure-preserving map between enriched
+categories respecting hom-values & §5 \\
+Hom-value & \(\mathcal{V}(A,B) \in [0,1]\) & Enriched analogue of
+hom-set; measures degree of relation between objects & §5 \\
+Identity inequality & \(1 \leq \mathcal{V}(A,A)\) & Every object has
+maximal self-relatedness in the enriched hom & §5 \\
+Similarity matrix & \(Z_{ij} = \mathcal{V}(A_i, A_j)\) & Matrix of all
+pairwise hom-values; used to compute categorical magnitude & §5 \\
+Lawvere metric space & --- & Category enriched over
+\(([0,\infty], +, 0)\); generalizes metric spaces via enriched
+categories & §5 \\
+Shannon entropy & \(H\) & Information-theoretic measure characterized as
+the unique derivation of a topological operad (Bradley) & §5 \\
+Topological operad & --- & Operad with topological structure whose
+derivations connect magnitude to entropy & §5 \\
+Weight vector & \(\mathbf{w}\) & Solution to
+\(Z\mathbf{w} = \mathbf{1}\); entries are the effective weights of each
+object & §5 \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+
+\begin{block}{D. Distributional Semantics and LLMs}
+\protect\phantomsection\label{d.-distributional-semantics-and-llms}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2222}}
+  >{\centering\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2778}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2222}}
+  >{\centering\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2778}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Term
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Symbol
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Definition
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+First Use
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+Attention mechanism & --- & Transformer component computing weighted
+relevance between token positions & §4 \\
+Attention weight & \(\alpha_{ij}\) & Softmax-normalized score encoding
+contextual relevance of token \(j\) to token \(i\) & §4 \\
+BERT & --- & Bidirectional Encoder Representations from Transformers;
+masked language model producing contextualized embeddings & §4 \\
+Contextualized embedding & \(\mathbf{v}_w^{(c)}\) & Vector
+representation of word \(w\) that varies with linguistic context \(c\) &
+§4 \\
+Compact closure map & \(\varepsilon_N: N \otimes N \to \mathbb{R}\) &
+Inner product implementing pregroup contraction in the vector space
+semantics & §4 \\
+Cosine similarity & \(\cos(\mathbf{u}, \mathbf{v})\) & Similarity
+measure
+\(\frac{\mathbf{u} \cdot \mathbf{v}}{\|\mathbf{u}\| \|\mathbf{v}\|}\)
+between vectors & §5 \\
+Distributional Memory & --- & Baroni--Lenci tensor-based framework
+structuring co-occurrence as (word, relation, word) triples & §4 \\
+DisCoCat & --- & Distributional Compositional Categorical model;
+monoidal functor from pregroup grammars to vector spaces & §3 \\
+DisCoCirc & --- & Discourse-level extension of DisCoCat with persistent
+entity wires & §4 \\
+Distributional hypothesis & --- & The thesis that words occurring in
+similar contexts have similar meanings (Harris 1954, Firth 1957) & §4 \\
+GloVe & --- & Global Vectors for Word Representation; log-bilinear model
+of word co-occurrence statistics & §4 \\
+GPT & --- & Generative Pre-trained Transformer; autoregressive language
+model & §4 \\
+Meaning functor & \(F: \mathbf{Preg} \to \mathbf{FVect}\) & Monoidal
+functor assigning vector spaces to types and linear maps to derivations
+& §4 \\
+Noun space & \(N\) & Vector space to which noun types \(n\) map under
+the meaning functor & §4 \\
+Parameterized optic & --- & Categorical construction (Gavranović)
+modeling attention heads as functorial lenses & §9 \\
+Self-attention &
+\(\text{Attn}(Q,K,V) = \text{softmax}(\frac{QK^\top}{\sqrt{d_k}})V\) &
+Core transformer operation computing contextualized representations &
+§4 \\
+Sentence space & \(S\) & Vector space to which sentence type \(s\) maps
+under the meaning functor & §4 \\
+Sentence vector & \(\overrightarrow{\text{sentence}}\) & Vector in \(S\)
+computed by tensoring and contracting word meanings via DisCoCat & §4 \\
+Static embedding & \(\mathbf{v}_w\) & Fixed vector representation of
+word \(w\) independent of context (e.g., Word2Vec, GloVe) & §4 \\
+Transformer & --- & Neural architecture using self-attention and
+feed-forward layers for sequence processing & §4 \\
+Word2Vec & --- & Neural embedding model (Mikolov et al.~2013) learning
+word vectors from local context windows & §4 \\
+Word vector & \(\mathbf{v}_w \in \mathbb{R}^d\) & \(d\)-dimensional
+real-valued vector encoding distributional properties of word \(w\) &
+§4 \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+
+\begin{block}{E. Active Inference and Cognitive Models}
+\protect\phantomsection\label{e.-active-inference-and-cognitive-models}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2222}}
+  >{\centering\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2778}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2222}}
+  >{\centering\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2778}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Term
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Symbol
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Definition
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+First Use
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+Active inference & --- & Framework in which perception and action are
+unified as variational free energy minimization & §7 \\
+Active sampling & --- & Agent's selection of actions to confirm or
+update case assignments via sensory evidence & §7 \\
+Belief updating & --- & Bayesian posterior computation: revising
+generative model parameters given new observations & §7 \\
+CEREBRUM & --- & Case-Enabled Reasoning Engine with Bayesian
+Representations Using Models; treats AI models as case-bearing entities
+& §7 \\
+Distributional Active Inference (DAIF) & --- & Extension replacing
+scalar value summaries with full return distributions in active
+inference & §7 \\
+Distributional RL & --- & Reinforcement learning operating on full
+return distributions rather than scalar expected values & §7 \\
+Free energy & \(F\) & Variational bound on surprisal;
+\(F = D_{KL}[q(\theta) \parallel p(\theta \mid o)] - \ln p(o)\) & §7 \\
+Free energy principle (FEP) & --- & The principle that self-organizing
+systems maintain themselves by minimizing surprisal & §7 \\
+Garden-path reanalysis & --- & Restructuring of case assignments when
+incoming evidence contradicts the current parse & §7 \\
+Generative model & \(p(o, s)\) & Joint probability model over
+observations \(o\) and hidden states \(s\) & §7 \\
+Markov blanket & --- & Statistical boundary separating internal states
+from external environment; defines agent boundary & §7 \\
+N400 & --- & Event-related brain potential peaking \textasciitilde400ms
+post-stimulus; indexes semantic prediction error & §7 \\
+P600 & --- & Event-related brain potential peaking \textasciitilde600ms
+post-stimulus; indexes syntactic prediction error & §7 \\
+Perceptual inference & --- & Updating internal beliefs to better predict
+current observations (reduce prediction error) & §7 \\
+Precision weighting & --- & Weighting of prediction errors by inverse
+variance; enriched morphism weights serve this role & §7 \\
+Prediction error & \(\varepsilon\) & Difference between predicted and
+observed sensory input; drives belief updating & §7 \\
+Push-forward measure & \(T_\# \mu\) & Distribution obtained by
+transforming a base measure \(\mu\) through a function \(T\) & §7 \\
+Situation semantics & --- & Framework representing meaning as relations
+between situations (Barwise and Perry 1983) & §7 \\
+Surprisal & \(-\ln p(o)\) & Negative log-probability of an observation
+under the generative model & §7 \\
+Variational free energy & \(F[q]\) & Functional upper bound on surprisal
+minimized by approximate posterior \(q\) & §7 \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+
+\begin{block}{F. Quantum and Topological Terms}
+\protect\phantomsection\label{f.-quantum-and-topological-terms}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2222}}
+  >{\centering\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2778}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2222}}
+  >{\centering\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2778}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Term
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Symbol
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Definition
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+First Use
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+Amplituhedron & --- & Positive geometry encoding scattering amplitudes;
+connected to TQNN execution traces & §8 \\
+\(\dagger\)-compact category & --- & See \(\dagger\)-compact closed
+category in §B & §8 \\
+CPTP map & --- & Completely Positive Trace-Preserving map; quantum
+channel between Hilbert spaces & §8 \\
+Density operator & \(\rho\) & Positive semidefinite trace-one operator
+encoding a quantum (or semantic) state & §8 \\
+Execution trace & --- & Record of operations in a quantum computation;
+connects TQNNs to amplituhedra & §8 \\
+Generalized flow & --- & Graph-theoretic property ensuring deterministic
+circuit extraction from ZX-diagrams & §8 \\
+Hadamard box & \(H\) & ZX-calculus element implementing the Hadamard
+gate; converts between Z and X bases & §8 \\
+Holographic screen & --- & Information boundary between interacting
+quantum systems carrying a qubit array & §8 \\
+Pointer state & --- & Preferred quantum state selected by a QRF;
+determines the measurement basis & §8 \\
+Quantum contextuality & --- & Quantum correlations that reduce
+cohomological obstructions to semantic alignment & §8 \\
+Quantum discord & --- & Quantum correlation measure equal to integrated
+semantic information in sheaf framework & §8 \\
+Quantum key distribution (QKD) & --- & Protocol providing
+information-theoretic security for quantum communication channels &
+§9 \\
+Quantum reference frame (QRF) & --- & Observer-relative frame selecting
+pointer states and inducing decoherence & §8 \\
+Quantum semantic sheaf & \((H, F, \rho)\) & Triple of Hilbert spaces,
+CPTP channels, and density operators over a communication graph & §8 \\
+Reshetikhin--Turaev invariant & --- & Topological invariant assigning to
+a ribbon graph a linear map via TQFT & §8 \\
+Sheaf cohomology & \(H^n(\mathcal{F})\) & Cohomological obstruction
+classes governing alignment in a quantum semantic sheaf & §8 \\
+Spin-network & --- & Graph with edges labeled by representations and
+vertices by intertwiners; TQFT data & §8 \\
+Spider & --- & Elementary ZX-diagram node (Z-spider or X-spider)
+representing a quantum operation & §8 \\
+TQFT & --- & Topological Quantum Field Theory; functor from cobordisms
+to Hilbert spaces & §8 \\
+TQNN & --- & Topological Quantum Neural Network; QNN reformulated via
+spin-networks and TQFT & §8 \\
+Turaev--Viro invariant & --- & State-sum TQFT invariant; implements
+quantum error-correcting codes in TQNNs & §8 \\
+ZX-calculus & --- & Graphical language for quantum circuits using
+Z-spiders, X-spiders, and Hadamard boxes & §8 \\
+ZX-diagram & --- & String diagram in a \(\dagger\)-compact closed
+category representing a quantum process & §8 \\
+ZX rewrite rule & --- & Graph-theoretic transformation preserving the
+semantics (linear map) of a ZX-diagram & §8 \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+
+\begin{block}{G. Logical and Type-Theoretic Terms}
+\protect\phantomsection\label{g.-logical-and-type-theoretic-terms}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2222}}
+  >{\centering\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2778}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2222}}
+  >{\centering\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2778}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Term
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Symbol
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Definition
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+First Use
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\(\beta\)-reduction & --- & Computational reduction step in
+\(\lambda\)-calculus; corresponds to cut elimination in proofs & §3 \\
+Church--Rosser property & --- & Confluence of \(\beta\)-reduction: all
+reduction sequences converge to the same normal form & §3 \\
+Curry--Howard isomorphism & --- & Correspondence between proofs and
+programs, propositions and types & §3 \\
+Cut elimination & --- & Proof normalization procedure removing
+intermediate lemmas; corresponds to \(\beta\)-reduction & §3 \\
+Graded type theory & --- & Extension of type theory tracking effects
+(e.g., evidentiality) via graded modalities & §3 \\
+Lambek calculus & --- & Non-commutative intuitionistic linear logic for
+syntactic type assignment & §3 \\
+Left residual & \(A \backslash B\) & Type of an expression that, given
+\(A\) to the left, produces \(B\) & §3 \\
+Residuation law &
+\(A \otimes B \leq C \iff A \leq C / B \iff B \leq A \backslash C\) &
+Fundamental axiom connecting the three connectives of the Lambek
+calculus & §3 \\
+Right residual & \(B / A\) & Type of an expression that, given \(A\) to
+the right, produces \(B\) & §3 \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+
+\begin{block}{H. AI and Communication Protocols}
+\protect\phantomsection\label{h.-ai-and-communication-protocols}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2222}}
+  >{\centering\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2778}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2222}}
+  >{\centering\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2778}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Term
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Symbol
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Definition
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+First Use
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+A2A Protocol & --- & Google's Agent-to-Agent protocol for
+cross-framework agent communication via HTTP/JSON-RPC & §9 \\
+ACP & --- & Agent Communication Protocol; standardizes messaging formats
+across agents, apps, and humans & §9 \\
+ANP & --- & Agent Network Protocol; three-layer architecture for trusted
+distributed agent interaction & §9 \\
+Categorical deep learning & --- & Deep learning approached through the
+lens of category theory (Gavranović et al.) & §9 \\
+Double Categorical Systems Theory (DCST) & --- & Framework using
+2-categories (horizontal + vertical composition) for explainable
+autonomous AI & §9 \\
+Functorial encryption & --- & Semantic cryptography: applying a secret
+functor to map plaintext categories into ciphertext categories & §9 \\
+lambeq & --- & Quantum Natural Language Processing pipeline compiling
+DisCoCat diagrams to quantum circuits & §9 \\
+MCP & --- & Model Context Protocol; standardizes how AI agents access
+external tools and data sources & §9 \\
+Parameterized optics / lenses & --- & Categorical constructions modeling
+neural network components (Gavranović); attention heads as optics &
+§9 \\
+QNLP & --- & Quantum Natural Language Processing; quantum computation on
+DisCoCat sentence diagrams & §9 \\
+Semantic cryptography & --- & Encrypting compositional meaning
+structures (functorial encryption, diagram obfuscation, weight masking)
+& §9 \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+
+\begin{block}{I. Diagrammatic Reasoning}
+\protect\phantomsection\label{i.-diagrammatic-reasoning}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2222}}
+  >{\centering\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2778}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2222}}
+  >{\centering\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2778}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Term
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Symbol
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Definition
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+First Use
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+Cognitively privileged representation & --- & Representation format that
+leverages perceptual and spatial cognition for inference & §1 \\
+Diagram depth & --- & Length of the longest input-to-output path through
+boxes; measures derivational complexity & §4 \\
+Existential graphs & --- & Peirce's graphical logic system conducting
+first-order logic entirely diagrammatically & §7 \\
+Free ride & --- & Shimojima's term: information extracted from a diagram
+without explicit inference steps & §1 \\
+Hybrid reasoning & --- & Giardino's term: reasoning combining perceptual
+pattern recognition with theoretical knowledge & §1 \\
+Inferential instrument & --- & Manders's term: a diagram whose spatial
+properties encode proof-relevant information & §6 \\
+Joyal--Street theorem & --- & Soundness and completeness of
+string-diagrammatic reasoning for monoidal categories & §3 \\
+Normal form & \(D_{\text{nf}}\) & Canonical form of a diagram obtained
+by rewriting; unique up to the axioms & §4 \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+
+\begin{block}{J. Notation Conventions}
+\protect\phantomsection\label{j.-notation-conventions}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Convention
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Meaning
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\(\mathcal{C}, \mathcal{D}\) & Categories \\
+\(\mathcal{V}\) & Enrichment base (monoidal category, typically
+\(([0,1], \cdot, 1)\)) \\
+\(\mathcal{U}\) & Universal (maximal) case category \\
+\(\mathcal{L}\) & Language-specific case category \\
+\(\mathcal{E}_{\mathbb{T}}\) & Classifying topos of theory
+\(\mathbb{T}\) \\
+\(f, g, h\) & Morphisms \\
+\(F, G\) & Functors \\
+\(\alpha, \beta\) & Natural transformations \\
+\(n, s\) & Basic pregroup types: noun, sentence \\
+\(n^l, n^r\) & Left and right adjoints of type \(n\) \\
+\(n_{\text{NOM}}, n_{\text{ACC}}\) & Case-subscripted noun types (e.g.,
+nominative noun, accusative noun) \\
+\(N, S\) & Noun space and sentence space under the meaning functor \\
+\(N_{\text{NOM}}, N_{\text{ACC}}, \ldots\) & Case-specific vector
+subspaces in case-enriched DisCoCat \\
+\(\overrightarrow{\text{word}}\) & Word vector (column vector in noun
+space \(N\)) \\
+\(\overleftrightarrow{\text{verb}}\) & Verb tensor (element of
+\(N \otimes S \otimes N\) for transitive verbs) \\
+\(\mathbf{Preg}\) & Category of pregroup types and reductions \\
+\(\mathbf{FVect}\) / \(\mathbf{FdVect}\) & Category of
+finite-dimensional vector spaces and linear maps \\
+\(\mathbf{FHilb}\) & Category of finite-dimensional Hilbert spaces and
+linear maps \\
+\(\mathbf{Qubit}\) & Category of qubit systems with tensor product
+structure \\
+\(\mathbf{Set}\) & Category of sets and functions \\
+\(\otimes\) & Tensor product (monoidal product, type concatenation) \\
+\(\circ\) & Composition of morphisms \\
+\(\Rightarrow\) & Natural transformation between functors \\
+\(\simeq\) & Categorical equivalence \\
+\(\leq\) & Preorder relation on types (derivability) \\
+\(\gamma\) & Discount factor in distributional RL return computation \\
+\(w \in [0,1]\) & Enriched morphism weight (proto-role satisfaction
+degree) \\
+\(\varepsilon\) & Prediction error (active inference); also compact
+closure counit \\
+\(\eta\) & Compact closure unit (cap); also learning rate in some
+contexts \\
+\(\rho\) & Density operator (quantum state) \\
+\([@key]\) & Parenthetical citation \\
+\texttt{{[}-@key{]}} & Suppress-author citation \\
+\texttt{\textbackslash{}autoref\{...\}} & Automatic cross-reference
+(section or figure) \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}

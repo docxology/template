@@ -3,16 +3,15 @@
 from __future__ import annotations
 
 import re
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
-
 def validate_section_completeness(
-    response: str, required_headers: List[str], flexible: bool = True
-) -> Tuple[bool, List[str], Dict[str, Any]]:
+    response: str, required_headers: list[str], flexible: bool = True
+) -> tuple[bool, list[str], dict[str, Any]]:
     """Validate that all required sections are present in the response.
 
     Args:
@@ -25,7 +24,7 @@ def validate_section_completeness(
     """
     found_headers = []
     missing_headers = []
-    details: Dict[str, Any] = {
+    details: dict[str, Any] = {
         "required": required_headers,
         "found": [],
         "missing": [],
@@ -61,8 +60,7 @@ def validate_section_completeness(
     is_complete = len(missing_headers) == 0
     return is_complete, missing_headers, details
 
-
-def extract_structured_sections(response: str) -> Dict[str, str]:
+def extract_structured_sections(response: str) -> dict[str, str]:
     """Extract markdown sections from response into structured data.
 
     Args:
@@ -71,14 +69,14 @@ def extract_structured_sections(response: str) -> Dict[str, str]:
     Returns:
         Dict mapping section headers to section content
     """
-    sections: Dict[str, str] = {}
+    sections: dict[str, str] = {}
 
     # Pattern to match markdown headers (## Header or # Header)
     header_pattern = r"^(#{1,6})\s+(.+)$"
 
     lines = response.split("\n")
     current_header = None
-    current_content: List[str] = []
+    current_content: list[str] = []
 
     for line in lines:
         match = re.match(header_pattern, line)
@@ -100,14 +98,13 @@ def extract_structured_sections(response: str) -> Dict[str, str]:
 
     return sections
 
-
 def validate_response_structure(
     response: str,
-    required_headers: List[str],
-    min_word_count: Optional[int] = None,
-    max_word_count: Optional[int] = None,
+    required_headers: list[str],
+    min_word_count: int | None = None,
+    max_word_count: int | None = None,
     flexible_headers: bool = True,
-) -> Tuple[bool, List[str], Dict[str, Any]]:
+) -> tuple[bool, list[str], dict[str, Any]]:
     """Comprehensive structure validation for LLM responses.
 
     Args:
@@ -121,7 +118,7 @@ def validate_response_structure(
         Tuple of (is_valid, list of issues, details dict)
     """
     issues = []
-    details: Dict[str, Any] = {
+    details: dict[str, Any] = {
         "word_count": len(response.split()),
         "sections": {},
     }

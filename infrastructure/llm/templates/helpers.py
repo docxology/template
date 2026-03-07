@@ -2,17 +2,14 @@
 
 from __future__ import annotations
 
-from typing import Dict, List, Optional
-
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
-
 def format_requirements(
-    required_headers: List[str],
+    required_headers: list[str],
     markdown_format: bool = True,
-    section_requirements: Optional[Dict[str, str]] = None,
+    section_requirements: dict[str, str | None] = None,
 ) -> str:
     """Generate format requirements section for prompts.
 
@@ -39,11 +36,10 @@ def format_requirements(
 
     return "\n".join(lines)
 
-
 def token_budget_awareness(
-    total_tokens: Optional[int] = None,
-    section_budgets: Optional[Dict[str, int]] = None,
-    word_targets: Optional[Dict[str, tuple]] = None,
+    total_tokens: int | None = None,
+    section_budgets: dict[str, int | None] = None,
+    word_targets: dict[str, tuple | None] = None,
 ) -> str:
     """Generate token budget awareness hints for prompts.
 
@@ -72,7 +68,6 @@ def token_budget_awareness(
             lines.append(f"   - {section}: {min_words}-{max_words} words")
 
     return "\n".join(lines)
-
 
 def content_requirements(
     no_hallucination: bool = True,
@@ -121,10 +116,9 @@ def content_requirements(
 
     return "\n".join(lines)
 
-
 def section_structure(
-    sections: List[str],
-    section_descriptions: Optional[Dict[str, str]] = None,
+    sections: list[str],
+    section_descriptions: dict[str, str | None] = None,
     required_order: bool = True,
 ) -> str:
     """Generate section structure requirements.
@@ -152,11 +146,10 @@ def section_structure(
 
     return "\n".join(lines)
 
-
 def validation_hints(
-    word_count_range: Optional[tuple] = None,
-    required_elements: Optional[List[str]] = None,
-    format_checks: Optional[List[str]] = None,
+    word_count_range: tuple | None = None,
+    required_elements: list[str | None] = None,
+    format_checks: list[str | None] = None,
 ) -> str:
     """Generate validation hints that inform the model what will be checked.
 

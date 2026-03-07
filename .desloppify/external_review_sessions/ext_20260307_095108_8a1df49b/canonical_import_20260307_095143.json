@@ -1,0 +1,95 @@
+{
+  "assessments": {
+    "ai_generated_debt": 85,
+    "convention_outlier": 84,
+    "error_consistency": 88,
+    "low_level_elegance": 88,
+    "cross_module_architecture": 76
+  },
+  "findings": [
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "aidbt-generator-retry-loop",
+      "summary": "generator.py retry loop logs attempt failure but silently continues without surfacing partial context",
+      "related_files": [
+        "infrastructure/llm/review/generator.py"
+      ],
+      "evidence": [
+        "In _generate_review(), the except block on attempt < max_retries only logs debug and continues \u2014 caller never knows attempts failed",
+        "After max_retries exhausted, the outer function returns an empty result with no indication of how many attempts were made",
+        "Pattern appears in three separate review generators with identical retry boilerplate"
+      ],
+      "suggestion": "Include attempt count in the returned result dict, or raise a RetryExhausted error after max_retries so callers can distinguish 'no content' from 'all retries failed'.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "conv-all-breadth-remaining",
+      "summary": "logging_utils.__all__ still exports log_stage_with_eta and log_resource_usage which belong to pipeline orchestration, not the core logging API",
+      "related_files": [
+        "infrastructure/core/logging_utils.py"
+      ],
+      "evidence": [
+        "log_stage_with_eta and log_resource_usage are pipeline-coordination helpers, not basic logging primitives",
+        "format_error_with_suggestions is also in __all__ but it formats TemplateError, not generic log messages \u2014 belongs in exceptions module or logging_helpers"
+      ],
+      "suggestion": "Move log_stage_with_eta, log_resource_usage, and format_error_with_suggestions out of the core __all__; callers needing them can import from their source submodules.",
+      "confidence": "low"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "err-validation-bare-except",
+      "summary": "integrity.py uses broad except Exception blocks that convert all errors to False or empty lists without logging",
+      "related_files": [
+        "infrastructure/validation/integrity.py"
+      ],
+      "evidence": [
+        "verify_file_integrity() catches Exception and returns False without logging the error type or message",
+        "Multiple cross-reference validators silently return empty lists on any exception",
+        "Pattern makes it impossible to distinguish 'file missing' from 'permission denied' from 'parsing error'"
+      ],
+      "suggestion": "Log the exception at DEBUG level before returning the sentinel value, or wrap in a typed error that preserves the original cause.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "lle-performance-codeprofiler-tracemalloc",
+      "summary": "CodeProfiler.monitor() we_started_tracing flag pattern could use tracemalloc.is_tracing() in finally block",
+      "related_files": [
+        "infrastructure/core/performance.py"
+      ],
+      "evidence": [
+        "we_started_tracing boolean flag is set before try block and checked inside the finally block \u2014 this is correct but verbose",
+        "tracemalloc.is_tracing() could replace the flag: stop only if is_tracing() returns True after the block",
+        "The flag approach adds a variable that lives across the try/finally boundary unnecessarily"
+      ],
+      "suggestion": "In the finally block, call tracemalloc.stop() only when tracemalloc.is_tracing() is True, eliminating the we_started_tracing flag entirely.",
+      "confidence": "low"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "cma-logging-hub-accepted-debt",
+      "summary": "logging_utils.py fan-in hub pattern is accepted architectural debt with 134 importers",
+      "related_files": [
+        "infrastructure/core/logging_utils.py"
+      ],
+      "evidence": [
+        "134 modules import from logging_utils.py making it a high-blast-radius hub",
+        "The split into 5 submodules was done for file size, not domain ownership boundaries",
+        "Circular import has been resolved but the aggregation pattern persists"
+      ],
+      "suggestion": "Accept as wontfix given the cost of updating 134 import sites; document in module docstring that this is the stable public API for logging.",
+      "confidence": "low"
+    }
+  ],
+  "provenance": {
+    "kind": "blind_review_batch_import",
+    "blind": true,
+    "runner": "claude",
+    "run_stamp": "ext_20260307_095108_8a1df49b",
+    "created_at": "2026-03-07T09:51:43+00:00",
+    "packet_path": "/Users/4d/Documents/GitHub/template/.desloppify/review_packet_blind.json",
+    "packet_sha256": "28171636f8c73c3990a081bb49a41de010499614d784f3c14aa58f063c913aa5",
+    "external_session_id": "ext_20260307_095108_8a1df49b"
+  }
+}

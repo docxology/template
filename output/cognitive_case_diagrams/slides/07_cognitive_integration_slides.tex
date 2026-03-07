@@ -228,6 +228,68 @@ the diagram to predict which situation will come next.
 \end{block}
 \end{frame}
 
+\begin{frame}{Distributional Active Inference: Convergence of Two
+Distributional Traditions}
+\protect\phantomsection\label{distributional-active-inference-convergence-of-two-distributional-traditions}
+A remarkable convergence has recently emerged between
+\emph{distributional semantics} in linguistics and \emph{distributional
+reinforcement learning} in machine learning, mediated by active
+inference. Akgül et al. {[}-@akgul2026distributional{]} introduce
+\textbf{Distributional Active Inference (DAIF)}, which integrates active
+inference into the distributional RL framework of Bellemare, Dabney, and
+Munos {[}-@bellemare2017distributional{]}. Where classical RL optimizes
+\emph{expected} returns (scalar values), distributional RL models the
+\emph{full distribution} of returns---a shift from point estimates to
+distributional representations that parallels the shift from symbolic to
+distributional semantics in linguistics.
+
+The formal architecture of DAIF proceeds through three stages: (1)
+reconstructing active inference via variational Bayesian inference on a
+controlled Markov process, expressing priors through Pearl's
+do-calculus; (2) defining a \emph{push-forward} operation on
+representation paths that maps latent-space trajectories to return
+distributions; and (3) deriving a temporal-difference quantile-matching
+algorithm that implements active inference without requiring explicit
+transition dynamics modeling. The resulting ``push-forward RL'' template
+achieves active inference's sample-efficiency advantages within a
+model-free computational architecture:
+
+\[\mathbb{E}\left[\sum_{t=0}^{\infty} \gamma^t R(x_t, a_t) \mid x_0, a_0\right] = \int_{\mathcal{S}^{\mathbb{N}_+}} R \circ f \, d(\mathbf{S}_{\#} \mathbb{P}_{x_0, a_0}^{P_\pi}) \tag{7.1}\]
+
+where \(\mathbf{S}_{\#}\) denotes the push-forward measure on
+representation paths and \(f: \mathcal{S} \to \mathcal{X}\) is the
+stochastic decoder.
+
+The terminological collision between ``distributional'' in
+distributional semantics and ``distributional'' in distributional RL is
+not mere homonymy---it reflects a deep structural parallel. In both
+domains, the core move is the same: \textbf{replacing scalar summaries
+with full distributional representations.} In linguistics, this means
+replacing symbolic word identities with probability distributions over
+contexts (Firth's {[}-@firth1957papers{]} company-keeping principle). In
+RL, it means replacing expected-value estimates with full return
+distributions. In active inference, it means replacing point estimates
+of world states with variational posterior distributions. The
+enriched-categorical framework of \autoref{sec:enriched-categories}
+provides the unifying abstraction: all three are instances of
+\([0,1]\)-enriched categories where hom-values encode distributional
+proximity rather than discrete identity.
+
+For case-theoretic reasoning, DAIF suggests a computational architecture
+in which case assignment operates distributional-ly at every level: the
+agent maintains not a single case diagram but a \emph{distribution over
+case diagrams}, weighted by their posterior probability given the
+observed linguistic evidence. Each incoming word updates this
+distribution via variational message passing, and the agent's production
+choices minimize expected free energy across the full distribution of
+possible relational structures---not merely the most likely one. This
+distributional perspective on case assignment aligns naturally with the
+graded proto-role structure of Dowty {[}-@dowty1991thematic{]}: a noun
+phrase is not categorically ``agent'' or ``patient'' but distributes
+probability mass across case roles, with the distribution sharpening as
+more evidence accumulates.
+\end{frame}
+
 \begin{frame}{CEREBRUM: The Computational Architecture}
 \protect\phantomsection\label{cerebrum-the-computational-architecture}
 \begin{block}{Architecture and Design Principles}

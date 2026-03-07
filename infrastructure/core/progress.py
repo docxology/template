@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import sys
 import time
-from typing import Optional
 
 from infrastructure.core.logging_helpers import format_duration
 from infrastructure.core.logging_progress import (
@@ -21,7 +20,6 @@ from infrastructure.core.logging_progress import (
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
-
 
 class ProgressBar:
     """Simple text-based progress bar for terminal output.
@@ -65,7 +63,7 @@ class ProgressBar:
         self.current = 0
         self.start_time = time.time()
         self.last_update_time = 0.0
-        self.previous_eta: Optional[float] = None
+        self.previous_eta: float | None = None
 
     def update(self, value: int, force: bool = False) -> None:
         """Update progress bar.
@@ -133,7 +131,6 @@ class ProgressBar:
         if self.task:
             logger.info(f"  ✅ Completed: {self.task} ({format_duration(elapsed)})")
 
-
 class LLMProgressTracker:
     """Progress tracker for LLM operations with token-based progress.
 
@@ -149,7 +146,7 @@ class LLMProgressTracker:
 
     def __init__(
         self,
-        total_tokens: Optional[int] = None,
+        total_tokens: int | None = None,
         task: str = "LLM Generation",
         show_throughput: bool = True,
     ):
@@ -238,7 +235,6 @@ class LLMProgressTracker:
             f"({throughput:.1f} tokens/sec)"
         )
 
-
 class SubStageProgress:
     """Track progress across multiple sub-stages within a main stage.
 
@@ -265,10 +261,10 @@ class SubStageProgress:
         self.stage_name = stage_name
         self.current = 0
         self.start_time = time.time()
-        self.substage_start_time: Optional[float] = None
+        self.substage_start_time: float | None = None
         self.current_substage_name = ""
         self.use_ema = use_ema
-        self.previous_eta: Optional[float] = None
+        self.previous_eta: float | None = None
         self.substage_durations: list[float] = []
 
     def start_substage(self, substage_num: int, substage_name: str = "") -> None:
@@ -295,7 +291,7 @@ class SubStageProgress:
             self.substage_durations.append(duration)
             logger.info(f"    ✅ Completed in {format_duration(duration)}")
 
-    def get_eta(self) -> Optional[float]:
+    def get_eta(self) -> float | None:
         """Get estimated time remaining.
 
         Uses EMA if enabled for smoother estimates.
@@ -327,7 +323,7 @@ class SubStageProgress:
 
     def get_eta_with_confidence(
         self,
-    ) -> tuple[Optional[float], Optional[float], Optional[float]]:
+    ) -> tuple[float | None, float | None, float | None]:
         """Get ETA with confidence intervals.
 
         Returns:

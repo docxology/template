@@ -12,7 +12,7 @@ from __future__ import annotations
 import os
 import time
 from dataclasses import dataclass
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable
 
 import numpy as np
 
@@ -21,22 +21,20 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
-
 @dataclass
 class BenchmarkResult:
     """Container for benchmark results."""
 
     function_name: str
     execution_time: float
-    memory_usage: Optional[float]
+    memory_usage: float | None
     iterations: int
-    parameters: Dict[str, Any]
+    parameters: dict[str, Any]
     result_summary: str
     timestamp: str
 
-
 def benchmark_function(
-    func: Callable, test_inputs: List[Any], iterations: int = 100
+    func: Callable, test_inputs: list[Any], iterations: int = 100
 ) -> BenchmarkResult:
     """Benchmark function performance across multiple inputs.
 
@@ -53,13 +51,15 @@ def benchmark_function(
     execution_times = []
     memory_usages = []
 
+    func_name = getattr(func, "__name__", getattr(getattr(func, "func", None), "__name__", repr(func)))
+
     for test_input in test_inputs:
         # Warm up
         for _ in range(10):
             try:
                 _ = func(test_input)
             except Exception as e:
-                logger.debug(f"Benchmark warm-up failed for {func.__name__}: {e}")
+                logger.debug(f"Benchmark warm-up failed for {func_name}: {e}")
 
         # Measure execution time
         start_time = time.perf_counter()
@@ -68,7 +68,7 @@ def benchmark_function(
             try:
                 func(test_input)
             except Exception as e:
-                logger.warning(f"Benchmark measurement failed for {func.__name__}: {e}")
+                logger.warning(f"Benchmark measurement failed for {func_name}: {e}")
 
         end_time = time.perf_counter()
         avg_time = (end_time - start_time) / iterations
@@ -98,7 +98,7 @@ def benchmark_function(
         result_summary += f", Avg memory: {avg_memory_usage:.1f}MB"
 
     return BenchmarkResult(
-        function_name=func.__name__,
+        function_name=func_name,
         execution_time=avg_execution_time,  # type: ignore
         memory_usage=avg_memory_usage,
         iterations=iterations,
@@ -107,8 +107,7 @@ def benchmark_function(
         timestamp=time.strftime("%Y-%m-%d %H:%M:%S"),
     )
 
-
-def generate_performance_report(benchmark_results: List[BenchmarkResult]) -> str:
+def generate_performance_report(benchmark_results: list[BenchmarkResult]) -> str:
     """Generate a performance analysis report.
 
     Args:

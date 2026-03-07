@@ -12,7 +12,7 @@ import os
 import time
 from contextlib import contextmanager
 from dataclasses import dataclass, field
-from typing import Any, Optional
+from typing import Any
 
 from infrastructure.core._optional_deps import psutil
 from infrastructure.core.exceptions import BuildError
@@ -25,7 +25,6 @@ logger = get_logger(__name__)
 _SLOW_STAGE_MULTIPLIER = 2  # warn when a stage takes > N× the pipeline average
 _HIGH_MEMORY_MB = 1024  # warn when a stage RSS exceeds 1 GB
 _HIGH_CPU_PERCENT = 90.0  # warn when CPU usage exceeds this percentage
-
 
 @dataclass
 class ResourceUsage:
@@ -47,7 +46,6 @@ class ResourceUsage:
             "io_write_mb": self.io_write_mb,
         }
 
-
 @dataclass
 class PerformanceMetrics:
     """Performance metrics for a stage or operation."""
@@ -68,18 +66,17 @@ class PerformanceMetrics:
             "cache_misses": self.cache_misses,
         }
 
-
 class PerformanceMonitor:
     """Resource-usage monitor tracking timing, memory, and operation counts."""
 
     def __init__(self):
-        self.start_time: Optional[float] = None
-        self.start_memory: Optional[float] = None
+        self.start_time: float | None = None
+        self.start_memory: float | None = None
         self.peak_memory: float = 0.0
         self.operations_count: int = 0
         self.cache_hits: int = 0
         self.cache_misses: int = 0
-        self.last_metrics: Optional[PerformanceMetrics] = None
+        self.last_metrics: PerformanceMetrics | None = None
 
     def start(self) -> None:
         """Start a monitoring session."""
@@ -146,7 +143,6 @@ class PerformanceMonitor:
             logger.debug(f"Failed to get CPU percent: {e}")
             return 0.0
 
-
 @contextmanager
 def performance_context(operation_name: str = "Operation"):
     """Context manager for monitoring operation performance.
@@ -165,7 +161,6 @@ def performance_context(operation_name: str = "Operation"):
             logger.debug(f"{operation_name}: {format_duration(metrics.duration)}")
         except BuildError as e:
             logger.debug(f"performance_context stop failed for {operation_name}: {e}")
-
 
 def get_system_resources() -> dict[str, Any]:
     """Return current system resource information."""
@@ -192,7 +187,6 @@ def get_system_resources() -> dict[str, Any]:
         logger.warning(f"Failed to get system resources: {e}")
         return {}
 
-
 class StagePerformanceTracker:
     """Track performance metrics for pipeline stages."""
 
@@ -203,9 +197,9 @@ class StagePerformanceTracker:
         high_cpu_percent: float = _HIGH_CPU_PERCENT,
     ):
         self.stages: list[dict[str, Any]] = []
-        self.start_time: Optional[float] = None
+        self.start_time: float | None = None
         self.start_memory: float = 0.0
-        self.start_io: Optional[Any] = None
+        self.start_io: Any | None = None
         self._slow_stage_multiplier = slow_stage_multiplier
         self._high_memory_mb = high_memory_mb
         self._high_cpu_percent = high_cpu_percent

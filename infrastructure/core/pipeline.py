@@ -14,7 +14,7 @@ import subprocess
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable, NamedTuple, Optional
+from typing import Callable, NamedTuple
 
 from infrastructure.core.checkpoint import CheckpointManager, StageResult
 from infrastructure.core.environment import get_python_command, get_subprocess_env
@@ -35,7 +35,6 @@ from infrastructure.core.file_operations import clean_output_directories
 
 logger = get_logger(__name__)
 
-
 @dataclass
 class PipelineConfig:
     """Configuration for pipeline execution."""
@@ -47,7 +46,6 @@ class PipelineConfig:
     skip_llm: bool = False
     resume: bool = False
     total_stages: int = 10
-
 
 @dataclass
 class PipelineStageResult:
@@ -61,13 +59,11 @@ class PipelineStageResult:
     error_message: str = ""
     exception_type: str = ""
 
-
 class StageSpec(NamedTuple):
     """Specification for a single pipeline stage."""
 
     name: str
     func: Callable[[], bool]
-
 
 class PipelineExecutor:
     """Execute research project pipeline stages."""
@@ -198,7 +194,7 @@ class PipelineExecutor:
         stage_num: int,
         stage_name: str,
         stage_func: Callable[[], bool],
-        pipeline_start: Optional[float] = None,
+        pipeline_start: float | None = None,
     ) -> PipelineStageResult:
         """Execute single pipeline stage with timing and error handling.
 

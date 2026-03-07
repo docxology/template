@@ -13,14 +13,12 @@ import re
 import subprocess
 import time
 from pathlib import Path
-from typing import Optional
 
 from infrastructure.core.environment import get_python_command
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.core.config_loader import get_testing_config
 
 logger = get_logger(__name__)
-
 
 def check_cov_datafile_support() -> bool:
     """Return True if pytest-cov supports the --cov-datafile flag."""
@@ -30,7 +28,6 @@ def check_cov_datafile_support() -> bool:
         return "--cov-datafile" in result.stdout
     except (subprocess.TimeoutExpired, subprocess.CalledProcessError, FileNotFoundError):
         return False
-
 
 def _parse_failures_section(combined_output: str) -> list[dict]:
     """Parse failures from the FAILURES section (--tb=line format)."""
@@ -63,7 +60,6 @@ def _parse_failures_section(combined_output: str) -> list[dict]:
                     })
     return failed_tests
 
-
 def _parse_failures_verbose(combined_output: str) -> list[dict]:
     """Parse failures from verbose output (--verbose format)."""
     failed_tests: list[dict] = []
@@ -74,7 +70,6 @@ def _parse_failures_verbose(combined_output: str) -> list[dict]:
                 failed_tests.append({"test": m.group(1), "error_type": "Unknown",
                                      "error_message": "Failed (use --tb=short for details)"})
     return failed_tests
-
 
 def _parse_failures_short(combined_output: str) -> list[dict]:
     """Parse failures from short FAILED lines."""
@@ -93,7 +88,6 @@ def _parse_failures_short(combined_output: str) -> list[dict]:
                                      "error_message": error_message})
     return failed_tests
 
-
 def _parse_failures_timeout(combined_output: str) -> list[dict]:
     """Parse timeout failures by scanning context around timeout lines."""
     failed_tests: list[dict] = []
@@ -108,7 +102,6 @@ def _parse_failures_timeout(combined_output: str) -> list[dict]:
                                              "error_message": "Test timed out (increase timeout or optimize test)"})
     return failed_tests
 
-
 def _parse_failures_fallback(combined_output: str) -> list[dict]:
     """Parse any remaining FAILED lines as a last resort."""
     failed_tests: list[dict] = []
@@ -120,7 +113,6 @@ def _parse_failures_fallback(combined_output: str) -> list[dict]:
                                      "error_message": "Test failed (use --tb=short -v for details)"})
     return failed_tests
 
-
 _FAILURE_STRATEGIES = [
     _parse_failures_section,
     _parse_failures_verbose,
@@ -128,7 +120,6 @@ _FAILURE_STRATEGIES = [
     _parse_failures_timeout,
     _parse_failures_fallback,
 ]
-
 
 def extract_failed_tests(stdout: str, stderr: str) -> list[dict]:
     """Extract failed test info from pytest output using cascading parse strategies."""
@@ -138,7 +129,6 @@ def extract_failed_tests(stdout: str, stderr: str) -> list[dict]:
         if result:
             return result
     return []
-
 
 def extract_timeout_errors(stdout: str, stderr: str) -> list[dict]:
     """Extract timeout errors from pytest output."""
@@ -183,7 +173,6 @@ def extract_timeout_errors(stdout: str, stderr: str) -> list[dict]:
 
     return timeout_errors
 
-
 def check_test_failures(
     failed_count: int,
     test_suite: str,
@@ -223,10 +212,9 @@ def check_test_failures(
             f"{test_suite}: {failed_count} failure(s) exceeds tolerance (max: {max_failures})",
         )
 
-
 def _wait_for_coverage_file(
     paths: list[Path], max_retries: int = 3, delay: float = 0.5
-) -> Optional[Path]:
+) -> Path | None:
     """Return the first ready coverage JSON path, waiting up to max_retries attempts."""
     for attempt in range(max_retries):
         if attempt > 0:
@@ -242,8 +230,7 @@ def _wait_for_coverage_file(
             logger.debug(f"Coverage file too small ({file_size} bytes), likely incomplete")
     return None
 
-
-def _parse_coverage_json(path: Path) -> Optional[float]:
+def _parse_coverage_json(path: Path) -> float | None:
     """Return percent_covered from a coverage JSON file, or None on failure."""
     try:
         with open(path, "r") as f:
@@ -259,10 +246,9 @@ def _parse_coverage_json(path: Path) -> Optional[float]:
         logger.warning(f"Could not read coverage from {path}: {e}")
     return None
 
-
 def extract_coverage_percentage(
     stdout_text: str, coverage_json_paths: list[Path]
-) -> tuple[bool, Optional[float]]:
+) -> tuple[bool, float | None]:
     """Extract coverage percentage from defined JSON paths or stdout fallback.
 
     Args:

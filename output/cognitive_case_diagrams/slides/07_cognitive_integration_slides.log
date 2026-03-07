@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  6 MAR 2026 05:06
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  7 MAR 2026 10:12
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1381,7 +1381,16 @@ Overfull \vbox (753.91159pt too high) detected at line 229
 [4
 
 ]
-Overfull \vbox (439.09514pt too high) detected at line 299
+(/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-LatinModernRoman.cfg
+File: mt-LatinModernRoman.cfg 2021/02/21 v1.1 microtype config. file: Latin Mod
+ern Roman (RS)
+)
+
+LaTeX Warning: Reference `sec:enriched-categories' on page 5 undefined on input
+ line 291.
+
+
+Overfull \vbox (566.62059pt too high) detected at line 291
  []
 
 
@@ -1389,12 +1398,7 @@ Overfull \vbox (439.09514pt too high) detected at line 299
 [5
 
 ]
-
-LaTeX Warning: Reference `sec:introduction' on page 6 undefined on input line 3
-72.
-
-
-Overfull \vbox (475.61127pt too high) detected at line 372
+Overfull \vbox (439.09514pt too high) detected at line 361
  []
 
 
@@ -1403,32 +1407,45 @@ Overfull \vbox (475.61127pt too high) detected at line 372
 
 ]
 
-LaTeX Warning: Reference `sec:case-systems' on page 7 undefined on input line 4
-16.
+LaTeX Warning: Reference `sec:introduction' on page 7 undefined on input line 4
+34.
 
 
-LaTeX Warning: Reference `sec:categorial-grammar' on page 7 undefined on input 
-line 416.
-
-
-LaTeX Warning: Reference `sec:categorical-semantics' on page 7 undefined on inp
-ut line 416.
-
-
-LaTeX Warning: Reference `sec:enriched-categories' on page 7 undefined on input
- line 416.
-
-
-LaTeX Warning: Reference `sec:topos-theory' on page 7 undefined on input line 4
-16.
-
-
-Overfull \vbox (147.86407pt too high) detected at line 416
+Overfull \vbox (475.61127pt too high) detected at line 434
  []
 
 
 
 [7
+
+]
+
+LaTeX Warning: Reference `sec:case-systems' on page 8 undefined on input line 4
+78.
+
+
+LaTeX Warning: Reference `sec:categorial-grammar' on page 8 undefined on input 
+line 478.
+
+
+LaTeX Warning: Reference `sec:categorical-semantics' on page 8 undefined on inp
+ut line 478.
+
+
+LaTeX Warning: Reference `sec:enriched-categories' on page 8 undefined on input
+ line 478.
+
+
+LaTeX Warning: Reference `sec:topos-theory' on page 8 undefined on input line 4
+78.
+
+
+Overfull \vbox (147.86407pt too high) detected at line 478
+ []
+
+
+
+[8
 
 ]
 \openout4 = `07_cognitive_integration_slides.vrb'.
@@ -1437,20 +1454,20 @@ Overfull \vbox (147.86407pt too high) detected at line 416
 (/Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/sl
 ides/07_cognitive_integration_slides.vrb
 
-LaTeX Warning: Reference `sec:categorial-grammar' on page 8 undefined on input 
+LaTeX Warning: Reference `sec:categorial-grammar' on page 9 undefined on input 
 line 21.
 
 
-LaTeX Warning: Reference `sec:categorical-semantics' on page 8 undefined on inp
+LaTeX Warning: Reference `sec:categorical-semantics' on page 9 undefined on inp
 ut line 22.
 
 )
-Overfull \vbox (262.07368pt too high) detected at line 472
+Overfull \vbox (262.07368pt too high) detected at line 534
  []
 
 
 
-[8
+[9
 
 ]
 \tf@nav=\write5
@@ -1475,13 +1492,13 @@ LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 31086 strings out of 473832
- 627014 string characters out of 5729482
- 1176888 words of memory out of 5000000
- 53601 multiletter control sequences out of 15000+600000
- 562372 words of font info for 68 fonts, out of 8000000 for 9000
+ 31130 strings out of 473832
+ 628426 string characters out of 5729482
+ 1177100 words of memory out of 5000000
+ 53636 multiletter control sequences out of 15000+600000
+ 562396 words of font info for 71 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1111b,611s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on /Users/4d/Documents/GitHub/template/projects/cognitive_case_d
-iagrams/output/slides/07_cognitive_integration_slides.pdf (8 pages).
+iagrams/output/slides/07_cognitive_integration_slides.pdf (9 pages).

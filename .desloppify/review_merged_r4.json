@@ -1,0 +1,342 @@
+{
+  "assessments": {
+    "ai_generated_debt": 22,
+    "abstraction_fitness": 28,
+    "convention_outlier": 30,
+    "cross_module_architecture": 74,
+    "dependency_health": 81,
+    "design_coherence": 70,
+    "error_consistency": 74,
+    "package_organization": 71,
+    "test_strategy": 72
+  },
+  "findings": [
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "pipeline_stage_methods_restate_name",
+      "summary": "Eight _run_* stage methods open with logger.info that restates the method name verbatim",
+      "related_files": ["infrastructure/core/pipeline.py"],
+      "evidence": [
+        "pipeline.py:388: logger.info(\"Running environment setup...\") inside _run_setup_environment",
+        "pipeline.py:393: logger.info(\"Running infrastructure tests...\") inside _run_infrastructure_tests",
+        "pipeline.py:401: logger.info(\"Running project tests...\") inside _run_project_tests",
+        "pipeline.py:407: logger.info(\"Running project analysis...\") inside _run_analysis",
+        "pipeline.py:412: logger.info(\"Running PDF rendering...\") inside _run_pdf_rendering",
+        "pipeline.py:417: logger.info(\"Running output validation...\") inside _run_validation",
+        "pipeline.py:427: logger.info(\"Running LLM scientific review...\") inside _run_llm_review",
+        "pipeline.py:441: logger.info(\"Running LLM translations...\") inside _run_llm_translations"
+      ],
+      "suggestion": "Remove the logger.info call from each _run_* method; the stage name is already logged by _execute_stage via log_pipeline_stage_with_eta before the method is called.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "logging_utils_restating_docstrings",
+      "summary": "Several utility functions have docstrings that echo their one-line implementation without adding meaning",
+      "related_files": ["infrastructure/core/logging_utils.py"],
+      "evidence": [
+        "logging_utils.py:341: def log_substep — docstring 'Log a substep within a stage with leading newline and two-space indentation' exactly restates the single-line body logger.info(f'\\n  {message}')",
+        "logging_utils.py:318: def log_progress — docstring 'Log progress as [current/total - percent%] task' is a format string template of the body",
+        "logging_utils.py:325: def log_stage — docstring 'Log a pipeline stage header as [stage_num/total_stages] stage_name with separator' reads as generated format description"
+      ],
+      "suggestion": "Trim docstrings on trivial one-liners to a single sentence describing intent (not implementation). For log_substep, 'Log a pipeline sub-step message with standard indentation.' is sufficient.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "pipeline_run_stage_single_line_forwarders",
+      "summary": "Eight _run_* methods in PipelineExecutor are pure single-call forwarders to _run_script with no policy",
+      "related_files": ["infrastructure/core/pipeline.py"],
+      "evidence": [
+        "pipeline.py:387-389: _run_setup_environment does only logger.info + return self._run_script('00_setup_environment.py', ...)",
+        "pipeline.py:391-397: _run_infrastructure_tests does only logger.info + return self._run_script('01_run_tests.py', ...)",
+        "pipeline.py:399-404: _run_project_tests same pattern",
+        "pipeline.py:406-409: _run_analysis same pattern",
+        "pipeline.py:411-414: _run_pdf_rendering same pattern",
+        "pipeline.py:416-419: _run_validation same pattern"
+      ],
+      "suggestion": "The six pure-forward methods (_run_setup_environment through _run_validation) could be replaced by a data-driven stage registry: a list of (stage_name, script_name, *args) tuples consumed by _build_stage_list, eliminating the boilerplate while keeping the two special-case methods (_run_llm_review, _run_copy_outputs) that carry real policy.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "generate_multi_project_report_pure_orchestrator",
+      "summary": "generate_multi_project_report is a 3-call sequence with no added policy, duplicating the caller's job",
+      "related_files": ["infrastructure/reporting/multi_project_reporter.py"],
+      "evidence": [
+        "multi_project_reporter.py:41-57: entire function body is: generate_executive_summary, save_executive_summary, generate_all_dashboards, with only error re-raise and logging around them",
+        "No argument transformation, no conditional logic beyond _DASHBOARD_AVAILABLE, no caching or retry"
+      ],
+      "suggestion": "Either inline this into its only caller (execute_multi_project.py) or add meaningful policy (e.g., retry on failure, output path resolution, format selection) to justify the wrapper.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "generate_executive_summary_name_collision",
+      "summary": "Two unrelated functions share the name generate_executive_summary and are both exported from their packages",
+      "related_files": [
+        "infrastructure/reporting/executive_reporter.py",
+        "infrastructure/llm/review/generator.py"
+      ],
+      "evidence": [
+        "executive_reporter.py:933: def generate_executive_summary(repo_root: Path, project_names: list[str]) -> ExecutiveSummary — reads pipeline output files",
+        "llm/review/generator.py:656: def generate_executive_summary(client: LLMClient, text: str, model_name: str = '') -> tuple[str, ReviewMetrics] — calls LLM",
+        "reporting/__init__.py:18 exports generate_executive_summary from executive_reporter",
+        "llm/review/__init__.py:10 exports generate_executive_summary from generator"
+      ],
+      "suggestion": "Rename the LLM variant to generate_llm_executive_summary (or generate_manuscript_executive_summary) to disambiguate the two distinct operations at import time.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "logging_module_split_unclear_boundaries",
+      "summary": "The logging subsystem is split across five sibling files with no clear boundary between them",
+      "related_files": [
+        "infrastructure/core/logging_utils.py",
+        "infrastructure/core/logging_helpers.py",
+        "infrastructure/core/logging_constants.py",
+        "infrastructure/core/logging_formatters.py",
+        "infrastructure/core/logging_progress.py"
+      ],
+      "evidence": [
+        "logging_helpers.py contains format_duration (a string formatter) and format_error_with_suggestions — neither are logging helpers in the handler/formatter sense",
+        "logging_utils.py re-exports format_duration from logging_helpers in its __all__ despite format_duration having no logging dependency",
+        "log_resource_usage (takes pre-computed values) lives in logging_progress.py while log_live_resource_usage (samples psutil) lives in logging_utils.py — split with no principled boundary",
+        "logging_utils.py:412-414: comment 'Core logging API — progress utilities, formatters, and constants are importable directly from their respective submodules' acknowledges the confusion without resolving it"
+      ],
+      "suggestion": "Consolidate format_duration and format_error_with_suggestions into a formatting.py module (or move to exceptions.py). Merge log_resource_usage and log_live_resource_usage into a single location. The five-file split is finer-grained than the actual conceptual boundaries warrant.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "dict_typing_style_inconsistency",
+      "summary": "composer.py uses legacy Dict from typing while all sibling modules use built-in dict",
+      "related_files": ["infrastructure/llm/prompts/composer.py"],
+      "evidence": [
+        "composer.py:7: from typing import Any, Dict, Optional",
+        "composer.py:69: fragment_values: Dict[str, str] = {}",
+        "composer.py:278: def _build_token_budget_awareness(self, total_tokens: int, section_budgets: Dict[str, int]) -> str",
+        "All other infrastructure files reviewed use lowercase dict[str, ...] (Python 3.9+ style)"
+      ],
+      "suggestion": "Replace Dict with dict throughout composer.py and remove Dict from the typing import.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "multi_project_calls_private_pipeline_method",
+      "summary": "MultiProjectOrchestrator calls a private method on PipelineExecutor to run infra tests, creating a tight coupling to implementation internals",
+      "related_files": [
+        "infrastructure/core/multi_project.py"
+      ],
+      "evidence": [
+        "multi_project.py:241 — `success = executor._run_infrastructure_tests()` calls a name-mangled private method on an instance of PipelineExecutor from a different class, bypassing any public API boundary"
+      ],
+      "suggestion": "Expose a public `run_infrastructure_tests()` method on PipelineExecutor, or extract the subprocess invocation into a standalone function in a shared utilities module that both classes can call directly",
+      "confidence": "high"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "doc_discovery_calls_project_discovery",
+      "summary": "infrastructure/validation/doc_discovery.py imports and calls discover_projects from infrastructure/project/discovery.py, creating a lateral dependency between two infrastructure sub-packages at the same layer",
+      "related_files": [
+        "infrastructure/validation/doc_discovery.py",
+        "infrastructure/project/discovery.py"
+      ],
+      "evidence": [
+        "doc_discovery.py:13 — `from infrastructure.project.discovery import discover_projects`",
+        "doc_discovery.py:145 — `projects = discover_projects(repo_root)` called inside categorize_documentation()",
+        "doc_discovery.py:317 — `projects = discover_projects(repo_root)` called inside discover_project_documentation()",
+        "doc_discovery.py:402 — `projects = discover_projects(repo_root)` called inside validate_project_documentation_integrity()"
+      ],
+      "suggestion": "Accept a pre-resolved list of ProjectInfo objects as a parameter to these functions rather than calling discover_projects() internally; let callers wire the dependency at the orchestration layer",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "reporting_imports_core_multi_project",
+      "summary": "infrastructure/reporting/multi_project_reporter.py imports MultiProjectResult from infrastructure/core, creating a downward dependency from reporting into core, which is the expected direction, but combined with the callback pattern in core that avoids importing reporting, the boundary is asymmetric and fragile",
+      "related_files": [
+        "infrastructure/reporting/multi_project_reporter.py",
+        "infrastructure/core/multi_project.py"
+      ],
+      "evidence": [
+        "multi_project_reporter.py:14 — `from infrastructure.core.multi_project import MultiProjectResult`",
+        "multi_project.py:63-65 — `on_project_complete` callback injected to avoid importing reporting from core, but MultiProjectResult still crosses back into reporting as a data carrier"
+      ],
+      "suggestion": "The callback pattern is correct. Consider moving MultiProjectResult to a shared data-models module (e.g., infrastructure/core/models.py) so the reporting layer imports from models, not from the orchestration logic in core/multi_project.py",
+      "confidence": "low"
+    },
+    {
+      "dimension": "dependency_health",
+      "identifier": "duplicate_exclude_dirs_sets",
+      "summary": "Three separate functions in doc_discovery.py each define their own nearly-identical exclude_dirs set with diverging membership, creating maintenance drift risk",
+      "related_files": [
+        "infrastructure/validation/doc_discovery.py"
+      ],
+      "evidence": [
+        "doc_discovery.py:20-34 — find_markdown_files() defines exclude_dirs with 'projects_archive' included",
+        "doc_discovery.py:54-67 — find_config_files() defines exclude_dirs without 'projects_archive'",
+        "doc_discovery.py:83-97 — find_script_files() defines exclude_dirs without 'projects_archive' but adds 'tests'"
+      ],
+      "suggestion": "Define a module-level DEFAULT_EXCLUDE_DIRS constant and let each function accept an optional override parameter, composing from the default rather than redefining from scratch",
+      "confidence": "high"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "pipeline_summary_generator_multiple_formats_in_one_class",
+      "summary": "PipelineSummaryGenerator conflates three distinct rendering concerns (text, JSON, HTML) in one class alongside data-gathering logic, giving it two separable responsibilities",
+      "related_files": [
+        "infrastructure/core/pipeline_summary.py"
+      ],
+      "evidence": [
+        "pipeline_summary.py:82-97 — format_summary() dispatches to _format_text_summary, _format_json_summary, _format_html_summary all within the same class",
+        "pipeline_summary.py:99-196 — _format_text_summary() is 97 lines of rendering logic with its own private helpers (_get_final_log_path, _find_base_output_dir, _extract_project_name_from_path) that have nothing to do with data collection",
+        "pipeline_summary.py:36-80 — generate_summary() performs data aggregation (slowest/fastest stage, file inventory scan); the same class then renders that data in three formats"
+      ],
+      "suggestion": "Split into a PipelineSummaryCollector (handles generate_summary) and a PipelineSummaryFormatter (handles all format_* methods). The formatter can be a plain module of functions if a class is not warranted",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "generate_multi_project_summary_report_mixed_concerns",
+      "summary": "generate_multi_project_summary_report() in multi_project_reporter.py computes analytics (performance analysis, error aggregation, recommendations) and performs I/O in a single function, mixing business logic with file writing",
+      "related_files": [
+        "infrastructure/reporting/multi_project_reporter.py"
+      ],
+      "evidence": [
+        "multi_project_reporter.py:60-179 — single function builds a summary dict (lines 77-158), then writes JSON (lines 161-168), then writes Markdown (lines 170-177), with inline analytics computation between those two I/O blocks",
+        "multi_project_reporter.py:109-127 — performance analysis computed inline inside the I/O function",
+        "multi_project_reporter.py:129-138 — error aggregation computed inline inside the I/O function"
+      ],
+      "suggestion": "Extract a pure _build_summary_dict(result, projects) function that returns the dict, then have the file-writing caller iterate over formats. This makes the analytics logic independently testable without touching the filesystem",
+      "confidence": "high"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "calculate_project_stats_double_counts_docs",
+      "summary": "_calculate_project_stats() in doc_discovery.py concatenates documentation_files with manuscript_files, script_docs, and test_docs, but those sub-lists are subsets of documentation_files, so word/line counts are double-counted",
+      "related_files": [
+        "infrastructure/validation/doc_discovery.py"
+      ],
+      "evidence": [
+        "doc_discovery.py:366-372 — all_docs = documentation_files + manuscript_files + script_docs + test_docs",
+        "doc_discovery.py:347-355 — discover_project_documentation() appends each doc_info to both documentation_files and whichever sub-list it belongs to (manuscript_files, script_docs, or test_docs), so the same object ends up in both lists"
+      ],
+      "suggestion": "Either populate documentation_files as a catch-all that excludes sub-lists, or compute stats from the sub-lists only (manuscript + script + test + uncategorized), not from the concatenation of both tiers",
+      "confidence": "high"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "pipeline_executor_log_handler_management",
+      "summary": "PipelineExecutor mixes pipeline orchestration with log file handler lifecycle management, including recreating the handler after the clean stage deletes the log directory",
+      "related_files": [
+        "infrastructure/core/pipeline.py"
+      ],
+      "evidence": [
+        "pipeline.py:95-99 — __init__ sets up a log handler before pipeline execution begins",
+        "pipeline.py:370-384 — _run_clean_outputs() calls _setup_log_file_handler() again after the clean stage deletes the log directory",
+        "pipeline.py:460-462 — _run_copy_outputs() calls _flush_log_handlers() and _verify_log_file() before running the copy script, embedding I/O verification logic in the orchestrator"
+      ],
+      "suggestion": "Extract log-file lifecycle into a separate PipelineLogManager class that PipelineExecutor holds as a dependency. PipelineExecutor notifies the manager at stage boundaries (post-clean, pre-copy) rather than implementing that logic itself",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "broad_exception_swallow_in_llm_io",
+      "summary": "Multiple broad Exception catches in llm/review/io.py log errors and silently continue without propagating or wrapping",
+      "related_files": [
+        "infrastructure/llm/review/io.py"
+      ],
+      "evidence": [
+        "io.py:205 — `except Exception as e: logger.error(f'Failed to save {name}: {e}'); success = False` — sets a boolean flag but does not raise or return a typed error, allowing callers to proceed with partial output silently",
+        "io.py:342, 411, 481 — same pattern: broad catch, log, return None or False with no context chain"
+      ],
+      "suggestion": "Raise a typed FileOperationError (already defined in infrastructure/core/exceptions.py) or return a result object that callers are forced to inspect, rather than logging and continuing; at minimum wrap the original exception with `chain_exceptions()` so context is preserved",
+      "confidence": "high"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "dual_error_vocabulary_not_always_used",
+      "summary": "errors.py InfraError constants are used inconsistently — some exception paths (e.g., multi_project.py:252, checkpoint.py:130) use raw f-strings instead of the defined constants",
+      "related_files": [
+        "infrastructure/core/checkpoint.py",
+        "infrastructure/core/multi_project.py"
+      ],
+      "evidence": [
+        "checkpoint.py:130 — `logger.error(f'Failed to save checkpoint: {e}')` — raw f-string, bypasses the InfraError constant pattern",
+        "checkpoint.py:154 — `logger.warning(f'Failed to load checkpoint: {e}')` — same raw pattern",
+        "multi_project.py:252 — `logger.error(f'Infrastructure tests failed with exception: {e}')` — raw string, no constant defined for this path despite the pattern being established in errors.py"
+      ],
+      "suggestion": "Define InfraError constants for checkpoint save/load failures and infrastructure test exception cases, then use `.format()` consistently; this keeps all error message wording in one place and makes grep-based audits reliable",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "infrastructure_core_flat_overload",
+      "summary": "infrastructure/core/ contains 32 files mixing concerns: pipeline orchestration, logging (5 files), security, credentials, menu, progress, retry, and CLI — no sub-grouping despite clear affinity clusters",
+      "related_files": [
+        "infrastructure/core/logging_constants.py",
+        "infrastructure/core/logging_formatters.py",
+        "infrastructure/core/logging_helpers.py",
+        "infrastructure/core/logging_progress.py",
+        "infrastructure/core/logging_utils.py",
+        "infrastructure/core/credentials.py",
+        "infrastructure/core/security.py",
+        "infrastructure/core/menu.py",
+        "infrastructure/core/pipeline.py",
+        "infrastructure/core/multi_project.py"
+      ],
+      "evidence": [
+        "`ls infrastructure/core/` returns 32 entries including 5 logging-prefixed files, 2 security/credential files, and standalone menu.py/progress.py/retry.py that share no concern with pipeline.py or config_loader.py",
+        "logging_constants.py, logging_formatters.py, logging_helpers.py, logging_progress.py, logging_utils.py are five files all named with the same prefix but living flat alongside unrelated pipeline and security code"
+      ],
+      "suggestion": "Extract the five logging_* files into infrastructure/core/logging/, credentials.py and security.py into infrastructure/core/security/, and menu.py/progress.py/retry.py into infrastructure/core/ui/ or infrastructure/core/util/; update imports accordingly",
+      "confidence": "high"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "three_markdown_docs_at_infra_root",
+      "summary": "infrastructure/ root contains AGENTS.md, README.md, PAI.md, and SKILL.md — four doc files plus __init__.py with no code, making the root a mixed doc/package directory",
+      "related_files": [
+        "infrastructure/AGENTS.md",
+        "infrastructure/PAI.md",
+        "infrastructure/SKILL.md",
+        "infrastructure/README.md"
+      ],
+      "evidence": [
+        "`ls infrastructure/` lists AGENTS.md, PAI.md, README.md, SKILL.md, __init__.py, and 9 subdirectories — the root is primarily navigational but the presence of 4 markdown files at this level adds noise to directory scans and import path checks"
+      ],
+      "suggestion": "Move PAI.md and SKILL.md to infrastructure/docs/ or the project-level docs/ directory; AGENTS.md and README.md can remain at the root as they are conventional discovery targets",
+      "confidence": "low"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "llm_review_generator_core_paths_gated_behind_slow",
+      "summary": "All substantive tests for generate_review_with_metrics, generate_executive_summary, generate_quality_review, etc. are marked @pytest.mark.slow and excluded from the default test run",
+      "related_files": [
+        "tests/infra_tests/llm/test_review_generators.py"
+      ],
+      "evidence": [
+        "pyproject.toml:121 — `addopts = ... -m 'not slow'` — slow tests are excluded by default",
+        "test_review_generators.py:86-155 — all TestGenerateReviewWithMetrics test methods carry @pytest.mark.slow, meaning generate_review_with_metrics(), generate_executive_summary(), generate_quality_review(), generate_methodology_review(), generate_improvement_suggestions(), and generate_translation() have zero coverage in the standard CI run",
+        "The only non-slow tests in this file cover extract_manuscript_text() file-not-found and PDF-parsing edge cases"
+      ],
+      "suggestion": "Factor out the Ollama-dependent assertion (e.g., checking response length and metric fields) from the logic under test; write deterministic unit tests for validate_review_quality(), the retry loop decision logic, and response post-processing that do not require a live server, so the critical business logic has coverage in the default run",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "pipeline_executor_execute_stage_exception_path_only_via_generic_exception",
+      "summary": "test_execute_stage_failure uses a bare `raise Exception('Test error')` to exercise the catch-all handler, which does not verify that the exception_type field is correctly recorded for domain exceptions",
+      "related_files": [
+        "tests/infra_tests/core/test_pipeline.py"
+      ],
+      "evidence": [
+        "test_pipeline.py:236-246 — the failure test raises `Exception('Test error')` and checks `result.error_message` contains 'Test error', but does not assert `result.exception_type == 'Exception'` nor exercise the path with OSError or subprocess.TimeoutExpired to verify those are handled correctly at the _run_script level",
+        "pipeline.py:537 — `except (OSError, subprocess.SubprocessError, subprocess.TimeoutExpired) as e` — this narrower catch in _run_script is not covered by any test that actually triggers a TimeoutExpired or OSError"
+      ],
+      "suggestion": "Add tests that pass a stage function raising OSError and subprocess.TimeoutExpired to verify exception_type is captured correctly, and add a test for _run_script that simulates a TimeoutExpired to confirm it returns False without raising",
+      "confidence": "medium"
+    }
+  ]
+}

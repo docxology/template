@@ -1,0 +1,14 @@
+{
+  "session": {
+    "id": "ext_20260307_095108_8a1df49b",
+    "token": "4b7dd7ffbd2f57ead31a8e1974a6f310"
+  },
+  "assessments": {
+    "ai_generated_debt": 0,
+    "convention_outlier": 0,
+    "error_consistency": 0,
+    "low_level_elegance": 0,
+    "cross_module_architecture": 0
+  },
+  "findings": []
+}

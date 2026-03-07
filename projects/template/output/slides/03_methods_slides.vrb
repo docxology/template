@@ -1,0 +1,58 @@
+\frametitle{Methods}
+\protect\phantomsection\label{methods}
+The \emph{Docxology Template} architecture is bifurcated into a globally
+shared \texttt{infrastructure/} layer and project-specific
+\texttt{projects/} silos. This ``Two-Layer Architecture'' allows for
+massive scaling across heterogeneous research domains (e.g., from
+cognitive diagrams to code optimization) while maintaining a singular
+source of truth for build logic.
+
+\begin{block}{The 7-Stage Pipeline}
+\protect\phantomsection\label{the-7-stage-pipeline}
+Our primary methodology involves a sequential, staged orchestrator that
+manages the transition between code and prose:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Stage 00 (Sanitization)}: Environment validation and
+  dependency syncing.
+\item
+  \textbf{Stage 01 (Verification)}: Full execution of
+  \texttt{tests/infra\_tests} and
+  \texttt{projects/\textless{}name\textgreater{}/tests}.
+\item
+  \textbf{Stage 02 (Extraction)}: Triggering analysis scripts in
+  \texttt{projects/\textless{}name\textgreater{}/scripts/} to generate
+  \texttt{data/} and \texttt{figures/}.
+\item
+  \textbf{Stage 03 (Rendering)}: Sequential Pandoc and XeLaTeX
+  invocation to compile Markdown sections into a unified PDF.
+\item
+  \textbf{Stage 04 (Security)}: Application of SHA-256/512 hashing and
+  Alpha-Channel steganographic text/QR overlays.
+\item
+  \textbf{Stage 05 (Validation)}: Structural PDF checking for
+  xref/trailer integrity.
+\item
+  \textbf{Stage 06 (Summarization)}: Generation of Executive Reports and
+  LLM-aided reviews.
+\end{enumerate}
+\end{block}
+
+\begin{block}{High-Consistency Documentation}
+\protect\phantomsection\label{high-consistency-documentation}
+We utilize a ``Triad Documentation'' standard for all infrastructure
+components:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{README.md}: High-level purpose and quick-start.
+\item
+  \texttt{AGENTS.md}: Deep technical implementation details for AI
+  collaborators.
+\item
+  \texttt{SKILL.md}: Actionable patterns and API usage snippets.
+\end{itemize}
+\end{block}

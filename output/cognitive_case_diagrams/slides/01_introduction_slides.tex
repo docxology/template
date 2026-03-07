@@ -232,10 +232,20 @@ level.
 \begin{block}{Pillar 3: Categorical Compositional Distributional
 Semantics (DisCoCat)}
 \protect\phantomsection\label{pillar-3-categorical-compositional-distributional-semantics-discocat}
-The DisCoCat framework {[}@coecke2010mathematical;
-@grefenstette2015concrete; @sadrzadeh2013compositional{]} maps pregroup
-derivations functorially into vector spaces, enabling empirical
-evaluation. Recent extensions include DisCoCirc
+Coecke, Sadrzadeh, and Clark's {[}-@coecke2010mathematical{]} DisCoCat
+framework composes distributional word meanings according to syntactic
+structure using monoidal categories and string diagrams. This framework
+bridges the two great traditions of linguistic meaning---formal
+(truth-conditional, compositional) and distributional
+(context-dependent, statistical)---by using the algebra of compact
+closed categories to compose vector representations according to
+type-logical derivations. The resulting categorical semantics provides
+the \emph{algebraic formalization} of the distributional programme that
+modern large language models (from Word2Vec {[}@mikolov2013efficient{]}
+through transformer architectures {[}@vaswani2017attention;
+@devlin2019bert{]}) implement empirically, making it possible to analyse
+both symbolic and neural approaches to language within a single
+mathematical framework. Recent extensions include DisCoCirc
 {[}@defelice2020discourse; @defelice2022discocirc{]} for discourse-level
 coherence and the lambeq library {[}@lorenz2023lambeq{]} for quantum
 NLP, which implements the full categorical pipeline on quantum hardware.
@@ -244,7 +254,7 @@ NLP, which implements the full categorical pipeline on quantum hardware.
 \begin{block}{Pillar 4: Enriched Category Theory and Distributional
 Measures}
 \protect\phantomsection\label{pillar-4-enriched-category-theory-and-distributional-measures}
-Fritz et al.'s {[}-@fritz2021enriched{]} enrichment over \([0,1]\)
+Bradley et al.'s {[}-@fritz2021enriched{]} enrichment over \([0,1]\)
 equips hom-sets with distributional proximity measures. Bradley's
 {[}-@bradley2020entropy; -@bradley2024ipam{]} work on topological
 operads and categorical magnitude provides information-theoretic

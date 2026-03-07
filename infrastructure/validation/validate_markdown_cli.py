@@ -14,7 +14,6 @@ This script handles only CLI argument parsing and I/O.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Optional
 
 from infrastructure.core.logging_utils import get_logger
 
@@ -38,7 +37,6 @@ except ImportError as e:
 else:
     import_error = None  # type: ignore[assignment]
 
-
 # Helper function for tests
 def _repo_root() -> str:
     """Get repository root path (for testing).
@@ -48,8 +46,7 @@ def _repo_root() -> str:
     """
     return str(repo_root)
 
-
-def main(manuscript_path: Optional[Path] = None, strict: bool = False) -> int:
+def main(manuscript_path: Path | None = None, strict: bool = False) -> int:
     """Main function to run markdown validation.
 
     Args:
@@ -100,7 +97,6 @@ def main(manuscript_path: Optional[Path] = None, strict: bool = False) -> int:
     except Exception as e:
         logger.error(f"❌ Unexpected error: {e}")
         return 1
-
 
 if __name__ == "__main__":
     import argparse

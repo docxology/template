@@ -202,7 +202,7 @@ class="math inline">\(/\)</span> of the multiplicative connective <span
 class="math inline">\(\otimes\)</span> (concatenation). The key axiom is
 the residuation law:</p>
 <p><span class="math display">\[A \otimes B \leq C \quad \iff \quad A
-\leq C / B \quad \iff \quad B \leq A \backslash C\]</span></p>
+\leq C / B \quad \iff \quad B \leq A \backslash C \tag{3.1}\]</span></p>
 <p>This law captures the fundamental duality of syntax: a verb of type
 <span class="math inline">\((n \backslash s) / n\)</span>
 <em>consumes</em> noun arguments to <em>produce</em> a sentence. The
@@ -218,7 +218,7 @@ the framework to <strong>pregroup grammars</strong>, where each type
 class="math inline">\(a^l\)</span> and a right adjoint <span
 class="math inline">\(a^r\)</span> satisfying:</p>
 <p><span class="math display">\[a^l \cdot a \leq 1 \leq a \cdot a^l
-\qquad a \cdot a^r \leq 1 \leq a^r \cdot a\]</span></p>
+\qquad a \cdot a^r \leq 1 \leq a^r \cdot a \tag{3.2}\]</span></p>
 <p>This formal structuralism was revolutionized by Coecke, Sadrzadeh,
 and Clark’s introduction of the <strong>DisCoCat</strong>
 (Distributional Compositional Categorical) model in 2010 <span
@@ -453,11 +453,11 @@ noun types feeding into the verb’s pregroup derivation.</p>
 <p>In a pregroup grammar, the active transitive “Alice chases Bob” has
 the type reduction:</p>
 <p><span class="math display">\[n_{\text{NOM}} \cdot (n^r \cdot s \cdot
-n^l) \cdot n_{\text{ACC}} \to s\]</span></p>
+n^l) \cdot n_{\text{ACC}} \to s \tag{3.3}\]</span></p>
 <p>Passivization permutes the noun arguments, yielding “Bob is chased by
 Alice” with the swapped type assignment:</p>
 <p><span class="math display">\[n_{\text{ACC}} \cdot (n^r \cdot s \cdot
-n^l) \cdot n_{\text{NOM}} \to s\]</span></p>
+n^l) \cdot n_{\text{NOM}} \to s \tag{3.4}\]</span></p>
 <p>Crucially, DisCoPy’s <code>Swap</code> primitive makes this
 permutation explicit and algebraically precise: the swap operation <span
 class="math inline">\(\sigma_{n,n}: n \otimes n \to n \otimes n\)</span>

@@ -3,12 +3,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
-
 
 @dataclass
 class GenerationOptions:
@@ -19,17 +18,17 @@ class GenerationOptions:
     to Ollama API format.
     """
 
-    temperature: Optional[float] = None
-    max_tokens: Optional[int] = None
-    top_p: Optional[float] = None
-    top_k: Optional[int] = None
-    seed: Optional[int] = None
-    stop: Optional[List[str]] = None
+    temperature: float | None = None
+    max_tokens: int | None = None
+    top_p: float | None = None
+    top_k: int | None = None
+    seed: int | None = None
+    stop: list[str | None] = None
     format_json: bool = False
-    repeat_penalty: Optional[float] = None
-    num_ctx: Optional[int] = None
+    repeat_penalty: float | None = None
+    num_ctx: int | None = None
 
-    def to_ollama_options(self, config: "LLMConfig") -> Dict[str, Any]:
+    def to_ollama_options(self, config: "LLMConfig") -> dict[str, Any]:
         """Convert to Ollama API options format.
 
         Uses values from this GenerationOptions instance if provided,
@@ -41,7 +40,7 @@ class GenerationOptions:
         Returns:
             Dictionary compatible with Ollama API options parameter
         """
-        options: Dict[str, Any] = {}
+        options: dict[str, Any] = {}
 
         # Use GenerationOptions value if provided, otherwise use config default
         if self.temperature is not None:
@@ -79,7 +78,6 @@ class GenerationOptions:
             options["num_ctx"] = config.context_window
 
         return options
-
 
 @dataclass
 class LLMConfig:
@@ -119,7 +117,7 @@ class LLMConfig:
     max_tokens: int = 2048
     top_p: float = 0.9
     context_window: int = 131072  # 128K context window (supports gemma3:4b)
-    seed: Optional[int] = None
+    seed: int | None = None
 
     # Response length settings
     short_max_tokens: int = 150
@@ -176,7 +174,7 @@ class LLMConfig:
         base_url = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
 
         # Read LLM configuration from environment variables
-        config_kwargs: Dict[str, Any] = {"base_url": base_url}
+        config_kwargs: dict[str, Any] = {"base_url": base_url}
 
         # Context window (128K default for gemma3:4b)
         if "LLM_CONTEXT_WINDOW" in os.environ:
@@ -321,7 +319,7 @@ class LLMConfig:
             >>> opts = config.create_options(temperature=0.0, seed=42)
         """
         # Start with config defaults
-        options_dict: Dict[str, Any] = {
+        options_dict: dict[str, Any] = {
             "temperature": self.temperature,
             "max_tokens": self.max_tokens,
             "top_p": self.top_p,
@@ -333,19 +331,15 @@ class LLMConfig:
 
         return GenerationOptions(**options_dict)
 
-
-
 # Module-level accessors so callers don't need to instantiate LLMConfig.
 
 def get_review_timeout() -> float:
     """Return the review timeout in seconds (from env or default)."""
     return LLMConfig.from_env().review_timeout
 
-
 def get_max_input_length() -> int:
     """Return the maximum input character length (from env or default)."""
     return LLMConfig.from_env().max_input_length
-
 
 def get_review_max_tokens() -> tuple[int, str]:
     """Return (max_tokens, source_label) for review generation."""

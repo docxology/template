@@ -8,7 +8,6 @@ Provides templates for new scientific modules and workflows:
 
 from __future__ import annotations
 
-
 def create_scientific_module_template(module_name: str) -> str:
     """Create a template for a new scientific module.
 
@@ -38,8 +37,7 @@ All functions include:
 from __future__ import annotations
 
 import numpy as np
-from typing import List, Tuple, Optional, Union
-
+from typing import Union
 
 def function1(param1: float, param2: int) -> float:
     """[Brief description of function1].
@@ -76,8 +74,7 @@ def function1(param1: float, param2: int) -> float:
     except OverflowError:
         raise ValueError("Computation resulted in overflow")
 
-
-def function2(data: List[float], threshold: float = 0.0) -> Tuple[List[float], float]:
+def function2(data: list[float], threshold: float = 0.0) -> tuple[list[float], float]:
     """[Brief description of function2].
 
     This function processes [data type] using [algorithm approach]
@@ -113,7 +110,6 @@ def function2(data: List[float], threshold: float = 0.0) -> Tuple[List[float], f
 '''
     return template
 
-
 def create_scientific_test_suite(module_name: str) -> str:
     """Create a comprehensive test suite for a scientific module.
 
@@ -142,7 +138,6 @@ from infrastructure.scientific.benchmarking import benchmark_function
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 import {module_name}
 
-
 class TestNumericalStability:
     """Test numerical stability of functions."""
 
@@ -161,7 +156,6 @@ class TestNumericalStability:
                     # Skip functions that can't be tested this way
                     continue
 
-
 class TestPerformance:
     """Test performance characteristics."""
 
@@ -178,7 +172,6 @@ class TestPerformance:
                 except Exception as e:  # noqa: BLE001
                     continue
 
-
 class TestCorrectness:
     """Test mathematical correctness."""
 
@@ -186,7 +179,6 @@ class TestCorrectness:
         """Test basic function behavior."""
         # Add specific test cases for your functions
         pass
-
 
 class TestEdgeCases:
     """Test edge cases and boundary conditions."""
@@ -201,12 +193,10 @@ class TestEdgeCases:
         # Add large input test cases
         pass
 
-
 if __name__ == "__main__":
     pytest.main([__file__])
 '''
     return test_content
-
 
 def create_scientific_workflow_template(workflow_name: str) -> str:
     """Create a template for scientific research workflows.
@@ -235,7 +225,7 @@ import sys
 import json
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, Any
+from typing import Any
 
 # Scientific computing imports
 import numpy as np
@@ -251,7 +241,6 @@ from quality_checker import analyze_document_quality
 # Set up logger using unified logging system
 logger = get_logger(__name__)
 
-
 def setup_workflow_environment():
     """Setup environment for reproducible scientific workflow."""
     # Set random seeds for reproducibility
@@ -265,8 +254,7 @@ def setup_workflow_environment():
     for dir_path in output_dirs:
         Path(dir_path).mkdir(parents=True, exist_ok=True)
 
-
-def run_data_processing() -> Dict[str, Any]:
+def run_data_processing() -> dict[str, Any]:
     """Run the main data processing workflow."""
     logger.info(f"Starting {workflow_name} workflow")
 
@@ -287,14 +275,12 @@ def run_data_processing() -> Dict[str, Any]:
     logger.info(f"Completed {workflow_name} workflow")
     return results
 
-
-def validate_workflow_results(results: Dict[str, Any]) -> bool:
+def validate_workflow_results(results: dict[str, Any]) -> bool:
     """Validate workflow results for correctness."""
     # Add validation logic here
     return True
 
-
-def generate_workflow_report(results: Dict[str, Any], reproducibility_report: Any) -> str:
+def generate_workflow_report(results: dict[str, Any], reproducibility_report: Any) -> str:
     """Generate comprehensive workflow report."""
     report = []
     report.append("# Scientific Workflow Report")
@@ -313,7 +299,6 @@ def generate_workflow_report(results: Dict[str, Any], reproducibility_report: An
     report.append("")
 
     return '\\n'.join(report)
-
 
 def main():
     """Main workflow execution function."""
@@ -339,7 +324,6 @@ def main():
     save_reproducibility_report(reproducibility_report, Path("output/reproducibility_report.json"))
 
     logger.info("Workflow completed successfully")
-
 
 if __name__ == "__main__":
     main()

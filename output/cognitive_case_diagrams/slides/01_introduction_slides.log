@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  6 MAR 2026 05:06
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  7 MAR 2026 10:12
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1308,7 +1308,7 @@ Overfull \vbox (553.99335pt too high) detected at line 201
 [4
 
 ]
-Overfull \vbox (453.01073pt too high) detected at line 268
+Overfull \vbox (602.6108pt too high) detected at line 278
  []
 
 
@@ -1316,7 +1316,7 @@ Overfull \vbox (453.01073pt too high) detected at line 268
 [5
 
 ]
-Overfull \vbox (52.66403pt too high) detected at line 292
+Overfull \vbox (52.66403pt too high) detected at line 302
  []
 
 
@@ -1326,34 +1326,34 @@ Overfull \vbox (52.66403pt too high) detected at line 292
 ]
 
 LaTeX Warning: Reference `sec:case-systems' on page 7 undefined on input line 3
-06.
+16.
 
 
 LaTeX Warning: Reference `sec:categorial-grammar' on page 7 undefined on input 
-line 306.
+line 316.
 
 
 LaTeX Warning: Reference `sec:categorical-semantics' on page 7 undefined on inp
-ut line 306.
+ut line 316.
 
 
 LaTeX Warning: Reference `sec:enriched-categories' on page 7 undefined on input
- line 306.
+ line 316.
 
 
 LaTeX Warning: Reference `sec:topos-theory' on page 7 undefined on input line 3
-06.
+16.
 
 
 LaTeX Warning: Reference `sec:cognitive-integration' on page 7 undefined on inp
-ut line 306.
+ut line 316.
 
 
 LaTeX Warning: Reference `sec:ai-implications' on page 7 undefined on input lin
-e 306.
+e 316.
 
 
-LaTeX Warning: Reference `sec:conclusion' on page 7 undefined on input line 306
+LaTeX Warning: Reference `sec:conclusion' on page 7 undefined on input line 316
 .
 
 
@@ -1385,7 +1385,7 @@ LaTeX Warning: There were undefined references.
 Here is how much of TeX's memory you used:
  29448 strings out of 473832
  595708 string characters out of 5729482
- 1136550 words of memory out of 5000000
+ 1139551 words of memory out of 5000000
  51986 multiletter control sequences out of 15000+600000
  562372 words of font info for 68 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191

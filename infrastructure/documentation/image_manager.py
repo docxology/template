@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import List, Optional, Tuple
 
 from .figure_manager import FigureManager
 
@@ -17,11 +16,10 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
-
 class ImageManager:
     """Manages image insertion and cross-referencing in markdown files."""
 
-    def __init__(self, figure_manager: Optional[FigureManager] = None):
+    def __init__(self, figure_manager: FigureManager | None = None):
         """Initialize image manager.
 
         Args:
@@ -33,7 +31,7 @@ class ImageManager:
         self,
         markdown_file: Path,
         figure_label: str,
-        section: Optional[str] = None,
+        section: str | None = None,
         position: str = "after_section",
     ) -> bool:
         """Insert figure into markdown file.
@@ -82,8 +80,8 @@ class ImageManager:
         return True
 
     def _find_insertion_point(
-        self, content: str, section: Optional[str], position: str
-    ) -> Optional[int]:
+        self, content: str, section: str | None, position: str
+    ) -> int | None:
         """Find insertion point in markdown content.
 
         Args:
@@ -120,8 +118,8 @@ class ImageManager:
         self,
         markdown_file: Path,
         figure_label: str,
-        text: Optional[str] = None,
-        position: Optional[int] = None,
+        text: str | None = None,
+        position: int | None = None,
     ) -> bool:
         """Insert figure reference in markdown text.
 
@@ -175,7 +173,7 @@ class ImageManager:
 
         return True
 
-    def validate_figures(self, markdown_file: Path) -> List[Tuple[str, str]]:
+    def validate_figures(self, markdown_file: Path) -> list[tuple[str, str]]:
         """Validate figures referenced in markdown file.
 
         Args:
@@ -220,7 +218,7 @@ class ImageManager:
 
         return errors
 
-    def get_figure_list(self, markdown_file: Path) -> List[str]:
+    def get_figure_list(self, markdown_file: Path) -> list[str]:
         """Get list of figures referenced in markdown file.
 
         Args:

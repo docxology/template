@@ -27,12 +27,10 @@ import shutil
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Optional
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
-
 
 class FileType(Enum):
     """
@@ -60,7 +58,6 @@ class FileType(Enum):
         """Get the subdirectory name for this file type."""
         return self.value[1]
 
-
 @dataclass
 class OrganizationResult:
     """
@@ -78,7 +75,6 @@ class OrganizationResult:
     error_files: int = 0
     created_dirs: int = 0
 
-
 class OutputOrganizer:
     """
     Centralized organizer for executive summary and multi-project outputs.
@@ -90,7 +86,7 @@ class OutputOrganizer:
     def __init__(self):
         self.logger = logger
 
-    def detect_file_type(self, file_path: Path) -> Optional[FileType]:
+    def detect_file_type(self, file_path: Path) -> FileType | None:
         """
         Detect file type from file extension.
 

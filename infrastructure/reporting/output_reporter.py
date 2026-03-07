@@ -7,17 +7,16 @@ collecting output statistics.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
-
 def generate_output_summary(
     output_dir: Path,
     stats: dict[str, Any],
-    structure_validation: Optional[dict[str, Any]] = None,
+    structure_validation: dict[str, Any | None] = None,
 ) -> None:
     """Generate summary of output copying results.
 
@@ -64,7 +63,6 @@ def generate_output_summary(
             logger.warning(f"  • {error}")
 
     logger.info("")
-
 
 def collect_output_statistics(repo_root: Path, project_name: str = "project") -> dict[str, Any]:
     """Collect comprehensive output file statistics.
@@ -202,7 +200,6 @@ def collect_output_statistics(repo_root: Path, project_name: str = "project") ->
 
     return stats
 
-
 def generate_detailed_output_report(output_dir: Path, stats: dict[str, Any]) -> str:
     """Generate detailed output statistics report.
 
@@ -258,11 +255,9 @@ def generate_detailed_output_report(output_dir: Path, stats: dict[str, Any]) -> 
 
     return "\n".join(lines)
 
-
 # =============================================================================
 # LOG ANALYSIS
 # =============================================================================
-
 
 def _collect_log_statistics(log_file: Path) -> dict[str, Any]:
     """Collect statistics from a log file."""
@@ -304,8 +299,7 @@ def _collect_log_statistics(log_file: Path) -> dict[str, Any]:
 
     return stats
 
-
-def generate_log_summary(log_file: Path, output_file: Optional[Path] = None) -> str:
+def generate_log_summary(log_file: Path, output_file: Path | None = None) -> str:
     """Generate summary report from log file.
 
     Args:

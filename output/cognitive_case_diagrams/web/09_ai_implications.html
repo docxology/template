@@ -311,6 +311,38 @@ Gavranović’s lens, performs a kind of <em>categorical case
 assignment</em>—each attention head selects which input tokens play
 which functional roles in the computation, with attention weights
 serving as the enriched hom-values of .</p>
+<p>The distributional semantics perspective deepens this connection. The
+transformer architecture <span class="citation"
+data-cites="vaswani2017attention">[@vaswani2017attention]</span> is, at
+its mathematical core, a <em>distributional composition engine</em>: it
+takes distributional word representations (embeddings in the Firthian
+tradition <span class="citation"
+data-cites="firth1957papers">[@firth1957papers]</span>) and composes
+them into contextual sentence representations through attention-weighted
+aggregation. This is precisely what the DisCoCat functor <span
+class="math inline">\(F: \mathbf{Preg} \to \mathbf{FVect}\)</span> does
+algebraically—compose word vectors according to syntactic structure. The
+key difference is that DisCoCat derives its composition rules from
+type-logical grammar, while transformers learn them from data. The
+convergence is striking: both arrive at tensor-contracted sentence
+representations, both use multi-linear maps for composition, and both
+produce vector spaces where similarity encodes semantic relatedness.
+Large language models such as BERT <span class="citation"
+data-cites="devlin2019bert">[@devlin2019bert]</span> and GPT <span
+class="citation"
+data-cites="radford2018improving">[@radford2018improving]</span> thus
+serve as massive-scale <em>empirical validations</em> of the
+distributional programme that DisCoCat formalizes categorically.</p>
+<p>Recent work on Distributional Active Inference <span class="citation"
+data-cites="akgul2026distributional">[@akgul2026distributional]</span>
+extends this parallel into the domain of sequential decision-making:
+just as LLMs model full contextual distributions over tokens,
+distributional RL models full return distributions over outcomes—and
+active inference provides the variational Bayesian bridge between the
+two (see ). For multi-agent AI systems, this suggests an architecture in
+which agents maintain <em>distributional</em> representations of both
+semantic content and expected interaction returns, composing them
+categorically.</p>
 <h2 id="string-diagrams-as-a-foundation-for-interpretable-ai">String
 Diagrams as a Foundation for Interpretable AI</h2>
 <p>The lambeq library <span class="citation"
@@ -514,5 +546,134 @@ topological invariants are robust to continuous deformation, so small
 perturbations to the generative model’s parameters cannot change its
 topological class, providing inherent resistance to gradient-based
 adversarial attacks.</p>
+<h3 id="prompt-injection-as-adversarial-case-frame-manipulation">Prompt
+Injection as Adversarial Case-Frame Manipulation</h3>
+<p>The case-theoretic framework offers a novel structural analysis of
+<em>prompt injection attacks</em>—the predominant vulnerability in
+contemporary LLM-based agent systems <span class="citation"
+data-cites="arlas2025adversarial">[@arlas2025adversarial]</span>. From
+the case-theoretic perspective, a prompt injection attack is
+fundamentally an attempt to <em>re-assign the case roles</em> of
+participants in the human-AI interaction:</p>
+<p>In a well-formed agent interaction, the relational structure is:</p>
+<ul>
+<li>The <strong>user</strong> occupies NOM (Agent)—the initiator of
+requests</li>
+<li>The <strong>system prompt</strong> occupies LOC (Context)—the
+boundary conditions governing behavior</li>
+<li>The <strong>AI model</strong> occupies INS (Instrument)—the means of
+executing the user’s intentions</li>
+<li>The <strong>tool/API</strong> occupies ACC (Patient)—the target of
+directed operations</li>
+<li>The <strong>output</strong> occupies DAT (Recipient)—the endpoint of
+information transfer</li>
+</ul>
+<p>A prompt injection attack succeeds by <em>covertly re-assigning</em>
+these case roles. The injected text attempts to promote itself from ACC
+(passive data being processed) to NOM (active agent issuing commands),
+while simultaneously demoting the system prompt from LOC (authoritative
+context) to ACC (data to be overridden). In case-theoretic terms, this
+is an <em>illicit voice alternation</em>—analogous to passivization, but
+performed adversarially rather than grammatically. Where legitimate
+passivization is a well-typed Swap operation in the pregroup category
+(see ), prompt injection is a <em>type violation</em>: an attempt to
+force a case-role permutation that the interaction grammar does not
+license.</p>
+<p>This analysis extends to indirect prompt injection in multi-agent
+systems, where adversarial content embedded in retrieved documents or
+tool outputs can manipulate an agent’s case-frame interpretation across
+communication boundaries <span class="citation"
+data-cites="arlas2025adversarial">[@arlas2025adversarial]</span>. In a
+DisCoCirc discourse model (see ), this corresponds to an adversarial
+entity wire that enters the discourse circuit through a legitimate
+channel but carries corrupted state—a coreference attack where the
+adversary’s identity wire is surreptitiously merged with the system’s
+authority wire.</p>
+<h3
+id="case-theoretic-firewalls-for-multi-agent-communication">Case-Theoretic
+Firewalls for Multi-Agent Communication</h3>
+<p>The case-role analysis of prompt injection suggests a principled
+defense: <strong>categorical type-checking at agent communication
+boundaries</strong>. Just as a type-safe programming language prevents
+category errors at compile time, a case-theoretic firewall would enforce
+relational type constraints on every message exchange:</p>
+<ol type="1">
+<li><p><strong>Case-role immutability</strong>: Once a participant is
+assigned a case role (NOM, ACC, INS, LOC) at the protocol level, no
+subsequent message content can alter that assignment. This is enforced
+by requiring that the case-type of each wire in the interaction diagram
+is fixed at connection time—analogous to the type discipline in pregroup
+grammar, where each word receives its type before composition
+begins.</p></li>
+<li><p><strong>Relational integrity constraints</strong>: Every message
+must type-check against the interaction diagram’s expected morphism
+types. A response from an ACC-typed data source that contains NOM-typed
+command structures would be rejected as a type error, preventing the
+case-role promotion that prompt injection requires. This is the
+categorical analogue of a firewall rule: not filtering by content, but
+by relational type.</p></li>
+<li><p><strong>Enriched confidence boundaries</strong>: The enriched
+weights of provide a graded trust mechanism. Messages from external
+sources carry lower enriched hom-values (trust weights) than those from
+authenticated system components. The composition inequality <span
+class="math inline">\(\mathcal{C}(A,C) \geq \mathcal{C}(A,B) \cdot
+\mathcal{C}(B,C)\)</span> ensures that trust attenuates through
+communication chains—an indirect message relayed through multiple agents
+cannot accumulate more authority than any single link provides.</p></li>
+<li><p><strong>Topos-theoretic verification</strong>: Protocol
+correctness conditions proved in one categorical formulation transfer
+automatically to all Morita-equivalent formulations (), ensuring that
+security guarantees are implementation-independent. A firewall rule
+verified for a DisCoCat-style agent communication protocol automatically
+holds for any quantum circuit implementation of the same
+protocol.</p></li>
+</ol>
+<h3 id="epistemic-case-security-in-multi-agent-systems">Epistemic Case
+Security in Multi-Agent Systems</h3>
+<p>The interaction between case theory and cognitive security acquires
+particular urgency in multi-agent AI ecosystems where agents must reason
+about each other’s beliefs, intentions, and relational roles. We propose
+<em>epistemic case security</em> as a framework for protecting the
+relational reasoning of AI agents operating in adversarial
+environments.</p>
+<p>In a multi-agent system governed by case categories, each agent
+maintains a generative model (in the active inference sense) of the
+case-frame structure of its interactions. This model determines who is
+acting (NOM), who is acted upon (ACC), what tools are being used (INS),
+and what contextual constraints apply (LOC). An adversary targeting the
+epistemic level of this system does not merely inject false data—it
+attempts to <em>corrupt the agent’s generative model of relational
+structure itself</em>:</p>
+<ul>
+<li><p><strong>Belief injection</strong>: Causing an agent to adopt a
+false case-frame interpretation of observed interactions—believing that
+agent <span class="math inline">\(A\)</span> (NOM) is acting on agent
+<span class="math inline">\(B\)</span> (ACC), when in fact the
+relational structure is reversed. In active inference terms, this
+corresponds to injecting a high-precision prior that overwhelms the
+agent’s evidence-based case assignment.</p></li>
+<li><p><strong>Precision poisoning</strong>: Manipulating the enriched
+weights of an agent’s case category so that adversarially useful case
+assignments receive disproportionate confidence. If the enriched
+hom-value <span class="math inline">\(\mathcal{C}(\text{NOM},
+\text{ACC})\)</span> is artificially inflated for a particular entity
+pair, the agent will preferentially interpret that entity as an agent
+acting on its targets—even when evidence suggests otherwise.</p></li>
+<li><p><strong>Cascade corruption via Morita equivalence</strong>: The
+topos-theoretic transfer mechanism of is both a strength and a
+vulnerability. Results proved in one framework propagate to all
+Morita-equivalent frameworks, so a single corrupted axiom in one
+case-theoretic formulation—say, the distributional framework—could
+propagate incorrect relational inferences to the typological,
+type-logical, and enriched frameworks simultaneously.</p></li>
+</ul>
+<p>The defense against epistemic case attacks draws on the same
+categorical structure that enables the attack surface: topological
+invariants provide tamper-detection (a corrupted case category will have
+different magnitude from the authentic one), quantum authentication
+ensures parameter integrity, and the compositional structure of the
+categorical framework enables <em>local</em> verification—each morphism
+can be independently authenticated without requiring global model
+inspection.</p>
 </body>
 </html>

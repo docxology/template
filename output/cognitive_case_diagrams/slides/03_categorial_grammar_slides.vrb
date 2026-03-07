@@ -11,12 +11,12 @@ noun types feeding into the verb's pregroup derivation.
 In a pregroup grammar, the active transitive ``Alice chases Bob'' has
 the type reduction:
 
-\[n_{\text{NOM}} \cdot (n^r \cdot s \cdot n^l) \cdot n_{\text{ACC}} \to s\]
+\[n_{\text{NOM}} \cdot (n^r \cdot s \cdot n^l) \cdot n_{\text{ACC}} \to s \tag{3.3}\]
 
 Passivization permutes the noun arguments, yielding ``Bob is chased by
 Alice'' with the swapped type assignment:
 
-\[n_{\text{ACC}} \cdot (n^r \cdot s \cdot n^l) \cdot n_{\text{NOM}} \to s\]
+\[n_{\text{ACC}} \cdot (n^r \cdot s \cdot n^l) \cdot n_{\text{NOM}} \to s \tag{3.4}\]
 
 Crucially, DisCoPy's \texttt{Swap} primitive makes this permutation
 explicit and algebraically precise: the swap operation

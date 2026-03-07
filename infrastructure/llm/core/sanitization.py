@@ -10,13 +10,12 @@ from __future__ import annotations
 import html
 import re
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from infrastructure.core.exceptions import LLMError
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
-
 
 class InputSanitizer:
     """Comprehensive input sanitization for LLM operations."""
@@ -50,8 +49,7 @@ class InputSanitizer:
             r"on\w+\s*=|javascript:|vbscript:",
         ]
 
-
-    def sanitize_prompt(self, prompt: str, context: Optional[Dict[str, Any]] = None) -> str:
+    def sanitize_prompt(self, prompt: str, context: dict[str, Any | None] = None) -> str:
         """Sanitize LLM prompt for security.
 
         Args:
@@ -86,7 +84,7 @@ class InputSanitizer:
         return prompt
 
     def validate_file_input(
-        self, file_path: Path, allowed_extensions: Optional[List[str]] = None
+        self, file_path: Path, allowed_extensions: list[str | None] = None
     ) -> bool:
         """Validate file input for security.
 
@@ -188,16 +186,13 @@ class InputSanitizer:
             return text[:max_length] + "...[truncated]"
         return text
 
-
 class SecurityError(LLMError):
     """Exception raised for security violations in LLM operations."""
 
     pass
 
-
 # Global instance (lazy initialization — avoids import-time side effects)
 _input_sanitizer: InputSanitizer | None = None
-
 
 def get_input_sanitizer() -> InputSanitizer:
     """Get the global input sanitizer instance."""
@@ -205,7 +200,6 @@ def get_input_sanitizer() -> InputSanitizer:
     if _input_sanitizer is None:
         _input_sanitizer = InputSanitizer()
     return _input_sanitizer
-
 
 def sanitize_llm_input(prompt: str) -> str:
     """Convenience function for LLM input sanitization."""

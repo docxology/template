@@ -13,13 +13,11 @@ import os
 import shutil
 import tempfile
 from pathlib import Path
-from typing import Dict, List, Optional
 
 from infrastructure.core.logging_utils import get_logger, log_operation
 from infrastructure.steganography.config import DocumentMetadata, SteganographyConfig
 
 logger = get_logger(__name__)
-
 
 class SteganographyProcessor:
     """Orchestrates steganographic PDF post-processing.
@@ -35,8 +33,8 @@ class SteganographyProcessor:
     def __init__(self, config: SteganographyConfig | None = None):
         self.config = config or SteganographyConfig()
         self._document_id: str = ""
-        self._hashes: Dict[str, str] = {}
-        self._metadata_extra: Dict[str, str] = {}
+        self._hashes: dict[str, str] = {}
+        self._metadata_extra: dict[str, str] = {}
 
     # ── Public API ───────────────────────────────────────────────────
 
@@ -46,9 +44,9 @@ class SteganographyProcessor:
         input_pdf: Path,
         output_pdf: Path | None = None,
         title: str = "",
-        authors: Optional[List[str]] = None,
-        keywords: Optional[List[str]] = None,
-        author_emails: Optional[List[str]] = None,
+        authors: list[str | None] = None,
+        keywords: list[str | None] = None,
+        author_emails: list[str | None] = None,
     ) -> Path:
         """Run all enabled steganographic techniques on *input_pdf*.
 
@@ -158,11 +156,11 @@ class SteganographyProcessor:
     def _step_overlays_and_barcodes(
         self,
         working_pdf: Path,
-        input_pdf: Optional[Path] = None,
+        input_pdf: Path | None = None,
         title: str = "",
-        authors: Optional[List[str]] = None,
-        keywords: Optional[List[str]] = None,
-        author_emails: Optional[List[str]] = None,
+        authors: list[str | None] = None,
+        keywords: list[str | None] = None,
+        author_emails: list[str | None] = None,
     ) -> Path:
         """Merge overlay and barcode pages onto every page of the PDF."""
         try:
@@ -307,8 +305,8 @@ class SteganographyProcessor:
         self,
         working_pdf: Path,
         title: str = "",
-        authors: Optional[List[str]] = None,
-        keywords: Optional[List[str]] = None,
+        authors: list[str | None] = None,
+        keywords: list[str | None] = None,
     ) -> Path:
         """Inject metadata into the PDF."""
         import json
@@ -377,18 +375,16 @@ class SteganographyProcessor:
         )
         logger.info("║  ✓ Hash manifest written")
 
-
 # ── Convenience function ─────────────────────────────────────────────────
-
 
 def process_pdf(
     input_pdf: Path,
     output_pdf: Path | None = None,
     config: SteganographyConfig | None = None,
     title: str = "",
-    authors: Optional[List[str]] = None,
-    keywords: Optional[List[str]] = None,
-    author_emails: Optional[List[str]] = None,
+    authors: list[str | None] = None,
+    keywords: list[str | None] = None,
+    author_emails: list[str | None] = None,
 ) -> Path:
     """Convenience function — create a processor and run it.
 

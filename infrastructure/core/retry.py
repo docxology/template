@@ -11,7 +11,7 @@ from __future__ import annotations
 import random
 import time
 from functools import wraps
-from typing import Any, Callable, Optional, Tuple, Type, TypeVar
+from typing import Any, Callable, Type, TypeVar
 
 from infrastructure.core.exceptions import PipelineError
 from infrastructure.core.logging_utils import get_logger
@@ -25,15 +25,14 @@ T = TypeVar("T")
 # retry_on_transient_failure() for a pre-configured shorthand.
 TRANSIENT_EXCEPTIONS: tuple[type[Exception], ...] = (IOError, ConnectionError, TimeoutError, OSError)
 
-
 def retry_with_backoff(
     max_attempts: int = 3,
     initial_delay: float = 1.0,
     max_delay: float = 60.0,
     exponential_base: float = 2.0,
     jitter: bool = True,
-    exceptions: Tuple[Type[Exception], ...] = (Exception,),
-    on_retry: Optional[Callable[[int, Exception], None]] = None,
+    exceptions: tuple[Type[Exception], ...] = (Exception,),
+    on_retry: Callable[[int, Exception | None, None]] = None,
 ) -> Callable[[Callable[..., T]], Callable[..., T]]:
     """Decorator to retry a function with exponential backoff.
 
@@ -131,7 +130,6 @@ def retry_with_backoff(
 
     return decorator
 
-
 def retry_on_transient_failure(
     max_attempts: int = 3, initial_delay: float = 1.0
 ) -> Callable[[Callable[..., T]], Callable[..., T]]:
@@ -161,7 +159,6 @@ def retry_on_transient_failure(
         max_delay=10.0,
         exceptions=TRANSIENT_EXCEPTIONS,
     )
-
 
 class RetryableOperation:
     """Context manager for retryable operations with manual control.
@@ -208,8 +205,8 @@ class RetryableOperation:
 
     def __exit__(
         self,
-        exc_type: Optional[Type[Exception]],
-        exc_val: Optional[Exception],
+        exc_type: Type[Exception | None],
+        exc_val: Exception | None,
         exc_tb: Any,
     ) -> None:
         """Exit context manager."""

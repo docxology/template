@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>Conclusion and Future Directions</title>
+  <title>Notation and Terminology</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -347,7 +347,7 @@ a:hover {
 </head>
 <body>
 <header id="title-block-header">
-<h1 class="title">Conclusion and Future Directions</h1>
+<h1 class="title">Notation and Terminology</h1>
 </header>
 <nav id="TOC" role="doc-toc">
 <ul>
@@ -497,55 +497,64 @@ Distributional Semantics (DisCoCat)</a>
 id="toc-two-traditions-of-meaning-formal-and-distributional"><span
 class="toc-section-number">5.1</span> Two Traditions of Meaning: Formal
 and Distributional</a></li>
+<li><a
+href="#from-static-embeddings-to-contextual-representations-llms-as-distributional-models"
+id="toc-from-static-embeddings-to-contextual-representations-llms-as-distributional-models"><span
+class="toc-section-number">5.2</span> From Static Embeddings to
+Contextual Representations: LLMs as Distributional Models</a></li>
 <li><a href="#the-discocat-compositional-framework"
 id="toc-the-discocat-compositional-framework"><span
-class="toc-section-number">5.2</span> The DisCoCat Compositional
+class="toc-section-number">5.3</span> The DisCoCat Compositional
 Framework</a>
 <ul>
 <li><a href="#the-key-insight-shared-compact-closed-structure"
 id="toc-the-key-insight-shared-compact-closed-structure"><span
-class="toc-section-number">5.2.1</span> The Key Insight: Shared Compact
+class="toc-section-number">5.3.1</span> The Key Insight: Shared Compact
 Closed Structure</a></li>
 <li><a href="#computing-compositional-sentence-meaning"
 id="toc-computing-compositional-sentence-meaning"><span
-class="toc-section-number">5.2.2</span> Computing Compositional Sentence
+class="toc-section-number">5.3.2</span> Computing Compositional Sentence
 Meaning</a></li>
 <li><a href="#empirical-validation-and-disambiguation"
 id="toc-empirical-validation-and-disambiguation"><span
-class="toc-section-number">5.2.3</span> Empirical Validation and
+class="toc-section-number">5.3.3</span> Empirical Validation and
 Disambiguation</a></li>
 </ul></li>
 <li><a href="#case-enrichment-in-the-discocat-framework"
 id="toc-case-enrichment-in-the-discocat-framework"><span
-class="toc-section-number">5.3</span> Case Enrichment in the DisCoCat
+class="toc-section-number">5.4</span> Case Enrichment in the DisCoCat
 Framework</a></li>
 <li><a
 href="#the-compact-closure-axiom-and-diagrammatic-complexity-metrics"
 id="toc-the-compact-closure-axiom-and-diagrammatic-complexity-metrics"><span
-class="toc-section-number">5.4</span> The Compact Closure Axiom and
+class="toc-section-number">5.5</span> The Compact Closure Axiom and
 Diagrammatic Complexity Metrics</a>
 <ul>
 <li><a href="#the-snake-equation-zigzag-identity"
 id="toc-the-snake-equation-zigzag-identity"><span
-class="toc-section-number">5.4.1</span> The Snake Equation (Zigzag
+class="toc-section-number">5.5.1</span> The Snake Equation (Zigzag
 Identity)</a></li>
 <li><a href="#diagram-complexity-metrics-normal-form-and-depth"
 id="toc-diagram-complexity-metrics-normal-form-and-depth"><span
-class="toc-section-number">5.4.2</span> Diagram Complexity Metrics:
+class="toc-section-number">5.5.2</span> Diagram Complexity Metrics:
 Normal Form and Depth</a></li>
 </ul></li>
 <li><a href="#extensions-from-sentence-meaning-to-discourse-coherence"
 id="toc-extensions-from-sentence-meaning-to-discourse-coherence"><span
-class="toc-section-number">5.5</span> Extensions: From Sentence Meaning
+class="toc-section-number">5.6</span> Extensions: From Sentence Meaning
 to Discourse Coherence</a>
 <ul>
 <li><a href="#discocirc-distributional-compositional-circuits"
 id="toc-discocirc-distributional-compositional-circuits"><span
-class="toc-section-number">5.5.1</span> DisCoCirc: Distributional
+class="toc-section-number">5.6.1</span> DisCoCirc: Distributional
 Compositional Circuits</a></li>
+<li><a href="#case-role-reversal-across-discourse-boundaries"
+id="toc-case-role-reversal-across-discourse-boundaries"><span
+class="toc-section-number">5.6.2</span> Case Role Reversal Across
+Discourse Boundaries</a></li>
 <li><a href="#quantum-nlp-and-the-lambeq-pipeline"
 id="toc-quantum-nlp-and-the-lambeq-pipeline"><span
-class="toc-section-number">5.5.2</span> Quantum NLP and the lambeq
+class="toc-section-number">5.6.3</span> Quantum NLP and the lambeq
 Pipeline</a></li>
 </ul></li>
 </ul></li>
@@ -578,10 +587,11 @@ EnrichedCategory Class</a></li>
 id="toc-categorical-magnitude-as-a-complexity-invariant"><span
 class="toc-section-number">6.3</span> Categorical Magnitude as a
 Complexity Invariant</a></li>
-<li><a href="#enriched-functors-and-bradleys-language-as-category-model"
-id="toc-enriched-functors-and-bradleys-language-as-category-model"><span
-class="toc-section-number">6.4</span> Enriched Functors and Bradley’s
-Language-as-Category Model</a></li>
+<li><a
+href="#enriched-functors-bradleys-language-as-category-model-and-the-llm-connection"
+id="toc-enriched-functors-bradleys-language-as-category-model-and-the-llm-connection"><span
+class="toc-section-number">6.4</span> Enriched Functors, Bradley’s
+Language-as-Category Model, and the LLM Connection</a></li>
 <li><a
 href="#connection-to-lawveres-metric-spaces-and-generalized-logic"
 id="toc-connection-to-lawveres-metric-spaces-and-generalized-logic"><span
@@ -666,51 +676,56 @@ id="toc-connection-to-barwise-and-perrys-situation-semantics"><span
 class="toc-section-number">8.2.3</span> Connection to Barwise and
 Perry’s Situation Semantics</a></li>
 </ul></li>
+<li><a
+href="#distributional-active-inference-convergence-of-two-distributional-traditions"
+id="toc-distributional-active-inference-convergence-of-two-distributional-traditions"><span
+class="toc-section-number">8.3</span> Distributional Active Inference:
+Convergence of Two Distributional Traditions</a></li>
 <li><a href="#cerebrum-the-computational-architecture"
 id="toc-cerebrum-the-computational-architecture"><span
-class="toc-section-number">8.3</span> CEREBRUM: The Computational
+class="toc-section-number">8.4</span> CEREBRUM: The Computational
 Architecture</a>
 <ul>
 <li><a href="#architecture-and-design-principles"
 id="toc-architecture-and-design-principles"><span
-class="toc-section-number">8.3.1</span> Architecture and Design
+class="toc-section-number">8.4.1</span> Architecture and Design
 Principles</a></li>
 <li><a href="#case-roles-as-functional-specializations-in-cerebrum"
 id="toc-case-roles-as-functional-specializations-in-cerebrum"><span
-class="toc-section-number">8.3.2</span> Case Roles as Functional
+class="toc-section-number">8.4.2</span> Case Roles as Functional
 Specializations in CEREBRUM</a></li>
 </ul></li>
 <li><a href="#diagrammatic-reasoning-as-a-cognitive-process-theory"
 id="toc-diagrammatic-reasoning-as-a-cognitive-process-theory"><span
-class="toc-section-number">8.4</span> Diagrammatic Reasoning as a
+class="toc-section-number">8.5</span> Diagrammatic Reasoning as a
 Cognitive Process Theory</a>
 <ul>
 <li><a href="#diagrams-as-the-format-of-generative-models"
 id="toc-diagrams-as-the-format-of-generative-models"><span
-class="toc-section-number">8.4.1</span> Diagrams as the Format of
+class="toc-section-number">8.5.1</span> Diagrams as the Format of
 Generative Models</a></li>
 <li><a href="#predictive-processing-and-diagrammatic-belief-updating"
 id="toc-predictive-processing-and-diagrammatic-belief-updating"><span
-class="toc-section-number">8.4.2</span> Predictive Processing and
+class="toc-section-number">8.5.2</span> Predictive Processing and
 Diagrammatic Belief Updating</a></li>
 </ul></li>
 <li><a
 href="#total-cognitive-scenario-understanding-the-integrated-framework"
 id="toc-total-cognitive-scenario-understanding-the-integrated-framework"><span
-class="toc-section-number">8.5</span> Total Cognitive Scenario
+class="toc-section-number">8.6</span> Total Cognitive Scenario
 Understanding: The Integrated Framework</a></li>
 <li><a href="#computational-verification-and-test-suite"
 id="toc-computational-verification-and-test-suite"><span
-class="toc-section-number">8.6</span> Computational Verification and
+class="toc-section-number">8.7</span> Computational Verification and
 Test Suite</a>
 <ul>
 <li><a href="#implementation-architecture-and-categorical-core"
 id="toc-implementation-architecture-and-categorical-core"><span
-class="toc-section-number">8.6.1</span> Implementation Architecture and
+class="toc-section-number">8.7.1</span> Implementation Architecture and
 Categorical Core</a></li>
 <li><a href="#test-suite-and-coverage-metrics"
 id="toc-test-suite-and-coverage-metrics"><span
-class="toc-section-number">8.6.2</span> Test Suite and Coverage
+class="toc-section-number">8.7.2</span> Test Suite and Coverage
 Metrics</a></li>
 </ul></li>
 </ul></li>
@@ -872,6 +887,18 @@ Encrypting Meaning Structures</a></li>
 id="toc-cognitive-security-protecting-relational-reasoning"><span
 class="toc-section-number">10.9.3</span> Cognitive Security: Protecting
 Relational Reasoning</a></li>
+<li><a href="#prompt-injection-as-adversarial-case-frame-manipulation"
+id="toc-prompt-injection-as-adversarial-case-frame-manipulation"><span
+class="toc-section-number">10.9.4</span> Prompt Injection as Adversarial
+Case-Frame Manipulation</a></li>
+<li><a href="#case-theoretic-firewalls-for-multi-agent-communication"
+id="toc-case-theoretic-firewalls-for-multi-agent-communication"><span
+class="toc-section-number">10.9.5</span> Case-Theoretic Firewalls for
+Multi-Agent Communication</a></li>
+<li><a href="#epistemic-case-security-in-multi-agent-systems"
+id="toc-epistemic-case-security-in-multi-agent-systems"><span
+class="toc-section-number">10.9.6</span> Epistemic Case Security in
+Multi-Agent Systems</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#sec:conclusion" id="toc-sec:conclusion"><span
@@ -892,10 +919,10 @@ id="toc-c2-string-diagrams-for-case-derivation-visualization"><span
 class="toc-section-number">11.1.2</span> C2: String Diagrams for Case
 Derivation Visualization</a></li>
 <li><a
-href="#c3-case-marked-discocat-compact-closure-and-discourse-extension"
-id="toc-c3-case-marked-discocat-compact-closure-and-discourse-extension"><span
-class="toc-section-number">11.1.3</span> C3: Case-Marked DisCoCat,
-Compact Closure, and Discourse Extension</a></li>
+href="#c3-case-marked-discocat-the-distributionalformal-synthesis-and-discourse-extension"
+id="toc-c3-case-marked-discocat-the-distributionalformal-synthesis-and-discourse-extension"><span
+class="toc-section-number">11.1.3</span> C3: Case-Marked DisCoCat, the
+Distributional–Formal Synthesis, and Discourse Extension</a></li>
 <li><a
 href="#c4-enriched-cases-categorical-magnitude-and-information-theory"
 id="toc-c4-enriched-cases-categorical-magnitude-and-information-theory"><span
@@ -917,6 +944,10 @@ and Test Suite</a></li>
 id="toc-c8-quantum-active-inference-and-topological-semantic-flow"><span
 class="toc-section-number">11.1.8</span> C8: Quantum Active Inference
 and Topological Semantic Flow</a></li>
+<li><a href="#c9-cognitive-security-and-case-theoretic-ai-safety"
+id="toc-c9-cognitive-security-and-case-theoretic-ai-safety"><span
+class="toc-section-number">11.1.9</span> C9: Cognitive Security and
+Case-Theoretic AI Safety</a></li>
 </ul></li>
 <li><a href="#future-research-directions"
 id="toc-future-research-directions"><span
@@ -947,58 +978,90 @@ in Embodied Cognition</a></li>
 id="toc-f6-enriched-category-learning-from-distributional-data"><span
 class="toc-section-number">11.2.6</span> F6: Enriched Category Learning
 from Distributional Data</a></li>
+<li><a href="#f7-distributional-active-inference-for-linguistic-agents"
+id="toc-f7-distributional-active-inference-for-linguistic-agents"><span
+class="toc-section-number">11.2.7</span> F7: Distributional Active
+Inference for Linguistic Agents</a></li>
 </ul></li>
 <li><a href="#closing-remarks" id="toc-closing-remarks"><span
 class="toc-section-number">11.3</span> Closing Remarks</a></li>
+</ul></li>
+<li><a href="#sec:notation" id="toc-sec:notation"><span
+class="toc-section-number">12</span> Appendix: Comprehensive Notation
+and Terminology</a>
+<ul>
+<li><a href="#a.-linguistic-terms" id="toc-a.-linguistic-terms"><span
+class="toc-section-number">12.1</span> A. Linguistic Terms</a></li>
+<li><a href="#b.-category-theory" id="toc-b.-category-theory"><span
+class="toc-section-number">12.2</span> B. Category Theory</a></li>
+<li><a href="#c.-enriched-categories-and-magnitude"
+id="toc-c.-enriched-categories-and-magnitude"><span
+class="toc-section-number">12.3</span> C. Enriched Categories and
+Magnitude</a></li>
+<li><a href="#d.-distributional-semantics-and-llms"
+id="toc-d.-distributional-semantics-and-llms"><span
+class="toc-section-number">12.4</span> D. Distributional Semantics and
+LLMs</a></li>
+<li><a href="#e.-active-inference-and-cognitive-models"
+id="toc-e.-active-inference-and-cognitive-models"><span
+class="toc-section-number">12.5</span> E. Active Inference and Cognitive
+Models</a></li>
+<li><a href="#f.-quantum-and-topological-terms"
+id="toc-f.-quantum-and-topological-terms"><span
+class="toc-section-number">12.6</span> F. Quantum and Topological
+Terms</a></li>
+<li><a href="#g.-logical-and-type-theoretic-terms"
+id="toc-g.-logical-and-type-theoretic-terms"><span
+class="toc-section-number">12.7</span> G. Logical and Type-Theoretic
+Terms</a></li>
+<li><a href="#h.-ai-and-communication-protocols"
+id="toc-h.-ai-and-communication-protocols"><span
+class="toc-section-number">12.8</span> H. AI and Communication
+Protocols</a></li>
+<li><a href="#i.-diagrammatic-reasoning"
+id="toc-i.-diagrammatic-reasoning"><span
+class="toc-section-number">12.9</span> I. Diagrammatic
+Reasoning</a></li>
+<li><a href="#j.-notation-conventions"
+id="toc-j.-notation-conventions"><span
+class="toc-section-number">12.10</span> J. Notation Conventions</a></li>
 </ul></li>
 </ul>
 </nav>
 <h1 data-number="1" id="abstract"><span
 class="header-section-number">1</span> Abstract</h1>
-<p>Linguistic case is the formal inflectional and syntactic encoding of
-participant roles—such as agent, patient, and instrument—that structures
-semantic dependencies across the world’s languages. This manuscript
-presents a wide-scoping review of theoretical and applied linguistics,
-synthesizing categorial grammar, compositional semantics, enriched
-category theory, and topos-theoretic logic within a modern computational
-and cognitive methodology. From the foundational Kāraka theory of Pāṇini
-and Charles Fillmore’s universal deep cases through to the contemporary
-alignment typologies of Polinsky and Preminger, the grammatical space of
-case systems exhibits a rigorous algebraic topology. Category theory
-provides the native mathematical architecture for this structure:
-thematic roles manifest as objects, grammatical derivations as
-morphisms, and cross-linguistic alignment variations as
-structure-preserving functors. The residuated syntactic calculus of
-Lambek, simplified into pregroup grammars, instantiates sentence
-derivations as compact closed categories, rendering complex grammatical
-operations visually transparent through Joyal and Street’s string
-diagrams. The DisCoCat framework functorially maps these abstract
-syntactic derivations into concrete vector spaces, generating
-empirically testable compositional semantics, while its topological
-successor, DisCoCirc, expands this tensor network logic to
-multi-sentence discourse coherence via persistent entity wires. The
-integration of categorical magnitude over <span
-class="math inline">\([0,1]\)</span>-enriched hom-sets translates
-semantic proximity into information-theoretic invariants of linguistic
-complexity. Furthermore, Caramello’s topos-theoretic bridges guarantee
-structural translation across divergent formalisms, ensuring that
-invariants established in one grammatical theory port seamlessly to
-another. Embedding these linguistic traditions within the biophysics of
-active inference reveals case-marked commutative diagrams not merely as
-descriptive notation, but as the generative models cognitive systems
-deploy to minimize surprisal during embodied action and linguistic
-comprehension. The synthetic CEREBRUM architecture instantiates this
-unification computationally by assigning case roles as functional
-constraints within an active inference cycle. The cognitive science of
-diagrammatic reasoning—from Larkin and Simon’s computational analyses to
-Shimojima’s free-ride inferences—establishes these tensor networks as
-cognitively privileged representations offering deep inferential
-advantages. Ultimately, categorical compositional structure supplies the
-mathematical bedrock for scalable, interpretable artificial
-intelligence, demonstrating that the identical relational algebras
-governing human grammatical case assignment inherently support
-structured multi-agent coordination, linguistic generation, and dynamic
-environmental adaptation.</p>
+<p>This review unifies four converging research programmes—case systems
+in theoretical linguistics, categorial grammar and its
+string-diagrammatic semantics, enriched and topos-theoretic category
+theory, and active inference as a process theory of cognition—into a
+single coherent framework centred on the <em>cognitive case
+diagram</em>. The formal core treats case systems as categories (objects
+= case roles, morphisms = grammatical relations), cross-linguistic
+alignment types as functors between case categories, and sentences as
+compact-closed string diagrams in the DisCoCat (Distributional
+Compositional Categorical) framework. By demonstrating that DisCoCat
+constitutes the algebraic formalization of the distributional programme
+that modern large language models implement empirically—from static word
+embeddings through contextual transformers—we bridge the two traditions
+of meaning (formal and distributional) within a unified categorical
+architecture. These diagrams serve simultaneously as mathematical
+proofs, cognitive representations, and the structural core of generative
+models under active inference: understanding a sentence reduces to
+constructing the case diagram that minimizes variational free energy. We
+extend this framework through Distributional Active Inference, which
+models full distributions over case diagrams rather than point
+estimates, connecting distributional semantics to distributional
+reinforcement learning via enriched-categorical push-forward measures.
+Graded proto-role structure is captured via <span
+class="math inline">\([0,1]\)</span>-enriched categories with
+categorical magnitude as a complexity measure, and inter-theoretic
+translation is formalized through Morita-equivalent classifying toposes.
+Implementation within the CEREBRUM (Case-Enabled Reasoning Engine with
+Bayesian Representations for Unified Models) architecture demonstrates
+practical viability. The analysis suggests that the mathematics of case
+alignment is not merely an abstraction of human grammar, but the formal
+geometry of relational meaning itself—the architecture through which
+cognitive systems organize experience into who-does-what-to-whom.</p>
 <hr />
 <h1 data-number="2" id="sec:introduction"><span
 class="header-section-number">2</span> Introduction</h1>
@@ -1132,11 +1195,24 @@ structure reaches down to the sublexical level.</p>
 id="pillar-3-categorical-compositional-distributional-semantics-discocat"><span
 class="header-section-number">2.3.3</span> Pillar 3: Categorical
 Compositional Distributional Semantics (DisCoCat)</h3>
-<p>The DisCoCat framework <span class="citation"
-data-cites="coecke2010mathematical grefenstette2015concrete sadrzadeh2013compositional">[@coecke2010mathematical;
-@grefenstette2015concrete; @sadrzadeh2013compositional]</span> maps
-pregroup derivations functorially into vector spaces, enabling empirical
-evaluation. Recent extensions include DisCoCirc <span class="citation"
+<p>Coecke, Sadrzadeh, and Clark’s <span class="citation"
+data-cites="coecke2010mathematical">[-@coecke2010mathematical]</span>
+DisCoCat framework composes distributional word meanings according to
+syntactic structure using monoidal categories and string diagrams. This
+framework bridges the two great traditions of linguistic meaning—formal
+(truth-conditional, compositional) and distributional
+(context-dependent, statistical)—by using the algebra of compact closed
+categories to compose vector representations according to type-logical
+derivations. The resulting categorical semantics provides the
+<em>algebraic formalization</em> of the distributional programme that
+modern large language models (from Word2Vec <span class="citation"
+data-cites="mikolov2013efficient">[@mikolov2013efficient]</span> through
+transformer architectures <span class="citation"
+data-cites="vaswani2017attention devlin2019bert">[@vaswani2017attention;
+@devlin2019bert]</span>) implement empirically, making it possible to
+analyse both symbolic and neural approaches to language within a single
+mathematical framework. Recent extensions include DisCoCirc <span
+class="citation"
 data-cites="defelice2020discourse defelice2022discocirc">[@defelice2020discourse;
 @defelice2022discocirc]</span> for discourse-level coherence and the
 lambeq library <span class="citation"
@@ -1147,7 +1223,7 @@ hardware.</p>
 id="pillar-4-enriched-category-theory-and-distributional-measures"><span
 class="header-section-number">2.3.4</span> Pillar 4: Enriched Category
 Theory and Distributional Measures</h3>
-<p>Fritz et al.’s <span class="citation"
+<p>Bradley et al.’s <span class="citation"
 data-cites="fritz2021enriched">[-@fritz2021enriched]</span> enrichment
 over <span class="math inline">\([0,1]\)</span> equips hom-sets with
 distributional proximity measures. Bradley’s <span class="citation"
@@ -1563,7 +1639,8 @@ class="math inline">\(w = 0.4\)</span> might indicate an experiencer
 construction (“The child fears the dark”) where the nominative argument
 only weakly satisfies Proto-Agent entailments.</p>
 <p>Composition of enriched morphisms multiplies weights: <span
-class="math display">\[w(g \circ f) = w(g) \cdot w(f)\]</span></p>
+class="math display">\[w(g \circ f) = w(g) \cdot w(f)
+\tag{2.1}\]</span></p>
 <p>This multiplicative composition reflects the intuition that
 grammatical dependencies attenuate as they chain through intermediate
 roles. illustrates the categorical composition of two morphisms through
@@ -1600,7 +1677,7 @@ class="math inline">\(/\)</span> of the multiplicative connective <span
 class="math inline">\(\otimes\)</span> (concatenation). The key axiom is
 the residuation law:</p>
 <p><span class="math display">\[A \otimes B \leq C \quad \iff \quad A
-\leq C / B \quad \iff \quad B \leq A \backslash C\]</span></p>
+\leq C / B \quad \iff \quad B \leq A \backslash C \tag{3.1}\]</span></p>
 <p>This law captures the fundamental duality of syntax: a verb of type
 <span class="math inline">\((n \backslash s) / n\)</span>
 <em>consumes</em> noun arguments to <em>produce</em> a sentence. The
@@ -1618,7 +1695,7 @@ the framework to <strong>pregroup grammars</strong>, where each type
 class="math inline">\(a^l\)</span> and a right adjoint <span
 class="math inline">\(a^r\)</span> satisfying:</p>
 <p><span class="math display">\[a^l \cdot a \leq 1 \leq a \cdot a^l
-\qquad a \cdot a^r \leq 1 \leq a^r \cdot a\]</span></p>
+\qquad a \cdot a^r \leq 1 \leq a^r \cdot a \tag{3.2}\]</span></p>
 <p>This formal structuralism was revolutionized by Coecke, Sadrzadeh,
 and Clark’s introduction of the <strong>DisCoCat</strong>
 (Distributional Compositional Categorical) model in 2010 <span
@@ -1862,11 +1939,11 @@ noun types feeding into the verb’s pregroup derivation.</p>
 <p>In a pregroup grammar, the active transitive “Alice chases Bob” has
 the type reduction:</p>
 <p><span class="math display">\[n_{\text{NOM}} \cdot (n^r \cdot s \cdot
-n^l) \cdot n_{\text{ACC}} \to s\]</span></p>
+n^l) \cdot n_{\text{ACC}} \to s \tag{3.3}\]</span></p>
 <p>Passivization permutes the noun arguments, yielding “Bob is chased by
 Alice” with the swapped type assignment:</p>
 <p><span class="math display">\[n_{\text{ACC}} \cdot (n^r \cdot s \cdot
-n^l) \cdot n_{\text{NOM}} \to s\]</span></p>
+n^l) \cdot n_{\text{NOM}} \to s \tag{3.4}\]</span></p>
 <p>Crucially, DisCoPy’s <code>Swap</code> primitive makes this
 permutation explicit and algebraically precise: the swap operation <span
 class="math inline">\(\sigma_{n,n}: n \otimes n \to n \otimes n\)</span>
@@ -1917,28 +1994,133 @@ primitives.</p></li>
 <li><p><strong>Distributional semantics</strong> assigns meaning
 empirically: a word’s meaning is characterized by its distribution
 across contexts, typically encoded as a vector in a high-dimensional
-space. This tradition captures graded similarity and analogy but lacks
-compositional structure—the meaning of “dog bites man” and “man bites
-dog” may receive identical vector representations.</p></li>
+space. The distributional hypothesis—“You shall know a word by the
+company it keeps” <span class="citation"
+data-cites="firth1957papers">[@firth1957papers]</span>—traces to J.R.
+Firth’s contextual theory of meaning and, independently, to Zellig
+Harris’s <span class="citation"
+data-cites="harris1954distributional">[-@harris1954distributional]</span>
+algebraic analysis of distributional structure, which demonstrated that
+linguistic elements occurring in similar environments share semantic
+properties. This tradition captures graded similarity and analogy but
+lacks compositional structure—the meaning of “dog bites man” and “man
+bites dog” may receive identical vector representations.</p></li>
 </ol>
+<p>The tension between these two traditions is one of the deepest in the
+science of language. Turney and Pantel’s <span class="citation"
+data-cites="turney2010frequency">[-@turney2010frequency]</span>
+comprehensive survey of vector space models showed that distributional
+methods capture remarkably fine-grained semantic distinctions—synonymy,
+antonymy, hypernymy, analogy—but only at the word level. Baroni and
+Lenci <span class="citation"
+data-cites="baroni2010distributional">[-@baroni2010distributional]</span>
+developed a tensor-based <em>Distributional Memory</em> framework that
+partially addresses compositionality by structuring co-occurrence data
+as a three-way tensor over (word, relation, word) triples, but without a
+principled type-logical backbone. Lenci <span class="citation"
+data-cites="lenci2018distributional">[-@lenci2018distributional]</span>
+surveys the modern landscape and identifies the central open problem:
+how to reconcile the <em>algebraic compositionality</em> of formal
+semantics with the <em>empirical grounding</em> of distributional
+models.</p>
 <p>The <strong>DisCoCat</strong> (Distributional Compositional
 Categorical) framework <span class="citation"
 data-cites="coecke2010mathematical">[@coecke2010mathematical]</span>
 resolves this tension by using category theory to compose distributional
-meanings according to syntactic structure.</p>
-<h2 data-number="5.2" id="the-discocat-compositional-framework"><span
-class="header-section-number">5.2</span> The DisCoCat Compositional
+meanings according to syntactic structure—achieving, for the first time,
+a framework that is simultaneously <em>compositional</em> (from
+categorial grammar), <em>distributional</em> (from corpus-derived vector
+spaces), and <em>algebraically principled</em> (from monoidal category
+theory).</p>
+<h2 data-number="5.2"
+id="from-static-embeddings-to-contextual-representations-llms-as-distributional-models"><span
+class="header-section-number">5.2</span> From Static Embeddings to
+Contextual Representations: LLMs as Distributional Models</h2>
+<p>The distributional programme has undergone a dramatic computational
+intensification in the era of large language models (LLMs). The
+trajectory from classical co-occurrence matrices through static word
+embeddings to contextual transformers can be understood as a progressive
+<em>enrichment</em> of the distributional hypothesis itself:</p>
+<ol type="1">
+<li><p><strong>Static embeddings</strong>: Mikolov et al.’s <span
+class="citation"
+data-cites="mikolov2013efficient">[-@mikolov2013efficient]</span>
+Word2Vec (skip-gram and CBOW architectures) demonstrated that
+prediction-based training on local context windows produces word vectors
+exhibiting striking algebraic regularity—the famous “king <span
+class="math inline">\(-\)</span> man <span
+class="math inline">\(+\)</span> woman <span
+class="math inline">\(\approx\)</span> queen” analogy. Pennington et
+al.’s <span class="citation"
+data-cites="pennington2014glove">[-@pennington2014glove]</span> GloVe
+incorporated global co-occurrence statistics via log-bilinear
+regression, yielding vectors whose inner products approximate pointwise
+mutual information. Both models instantiate the distributional
+hypothesis in its classical Firthian form: meaning is determined by
+context of use, encoded as geometric position in a learned vector
+space.</p></li>
+<li><p><strong>Contextual embeddings</strong>: BERT <span
+class="citation" data-cites="devlin2019bert">[@devlin2019bert]</span>
+and GPT <span class="citation"
+data-cites="radford2018improving">[@radford2018improving]</span> move
+beyond static type-level representations to <em>token-level</em>
+contextualized embeddings, where the same word receives different
+vectors in different contexts. In the terms of the formal/distributional
+dichotomy, this is a critical advance: contextualized embeddings
+partially capture <em>compositional</em> structure by conditioning word
+representations on their full sentential environment, resolving polysemy
+and constructional effects that static embeddings conflate.</p></li>
+<li><p><strong>Transformer architecture</strong>: The transformer <span
+class="citation"
+data-cites="vaswani2017attention">[@vaswani2017attention]</span>
+implements distributional composition through multi-head self-attention,
+where each attention head computes a weighted combination of input token
+representations. The attention weights <span
+class="math inline">\(\alpha_{ij} = \text{softmax}(Q_i K_j^T /
+\sqrt{d_k})\)</span> are analogous to the enriched hom-values of : they
+encode the <em>degree of contextual relevance</em> between tokens <span
+class="math inline">\(i\)</span> and <span
+class="math inline">\(j\)</span> in a given representational subspace—a
+graded, learned distributional relation.</p></li>
+</ol>
+<p>The connection to our categorical framework is direct:
+<strong>DisCoCat is the algebraic formalization of what LLMs do
+empirically.</strong> Where a transformer computes sentence
+representations by attending to syntactically and semantically relevant
+tokens through learned weight matrices, DisCoCat composes word vectors
+through type-logical derivations in a compact closed category. The
+functor <span class="math inline">\(F: \mathbf{Preg} \to
+\mathbf{FVect}\)</span> that defines DisCoCat is, in this light, the
+<em>principled version</em> of the composition that attention mechanisms
+learn from data. This perspective is confirmed by Gavranović’s <span
+class="citation"
+data-cites="gavranovic2024thesis">[-@gavranovic2024thesis]</span>
+categorical deep learning programme, which shows that attention heads
+can be understood as parameterized optics—categorical constructions that
+compose functorially, just as DisCoCat derivations do.</p>
+<p>For case theory specifically, the transformer analogy is
+illuminating: each attention head in a transformer can be understood as
+learning a particular <em>relational role</em>—attending to subjects,
+objects, modifiers, or other grammatical functions. This is precisely
+the role that case marking plays in natural language: structuring
+who-does-what-to-whom. The case-typed noun spaces of our enriched
+DisCoCat model (<span class="math inline">\(N_{\text{NOM}},
+N_{\text{ACC}}, N_{\text{DAT}}, \ldots\)</span>) correspond to the
+role-specific representational subspaces that different attention heads
+learn to inhabit.</p>
+<h2 data-number="5.3" id="the-discocat-compositional-framework"><span
+class="header-section-number">5.3</span> The DisCoCat Compositional
 Framework</h2>
-<h3 data-number="5.2.1"
+<h3 data-number="5.3.1"
 id="the-key-insight-shared-compact-closed-structure"><span
-class="header-section-number">5.2.1</span> The Key Insight: Shared
+class="header-section-number">5.3.1</span> The Key Insight: Shared
 Compact Closed Structure</h3>
 <p>DisCoCat’s central observation is that pregroup grammars and vector
 spaces share a common abstract structure: both are <strong>compact
 closed categories</strong>. This means there exists a <em>meaning
 functor</em>:</p>
-<p><span class="math display">\[F: \mathbf{Preg} \to
-\mathbf{FVect}\]</span></p>
+<p><span class="math display">\[F: \mathbf{Preg} \to \mathbf{FVect}
+\tag{4.1}\]</span></p>
 <p>from the pregroup grammar category (where objects are types and
 morphisms are grammatical reductions) to the category of
 finite-dimensional vector spaces (where objects are vector spaces and
@@ -1956,9 +2138,9 @@ space)</li>
 <li>Pregroup contractions (cups/caps) map to the standard inner product
 and its dual</li>
 </ul>
-<h3 data-number="5.2.2"
+<h3 data-number="5.3.2"
 id="computing-compositional-sentence-meaning"><span
-class="header-section-number">5.2.2</span> Computing Compositional
+class="header-section-number">5.3.2</span> Computing Compositional
 Sentence Meaning</h3>
 <p>The compositional meaning of a sentence is computed by tensoring the
 word meanings and then contracting the result along the indices
@@ -1966,16 +2148,17 @@ determined by the syntactic derivation. For “Alice chases Bob”:</p>
 <p><span class="math display">\[\overrightarrow{\text{Alice chases Bob}}
 = (\overrightarrow{\text{Alice}} \otimes
 \overleftrightarrow{\text{chases}} \otimes \overrightarrow{\text{Bob}})
-\circ (\varepsilon_N \otimes 1_S \otimes \varepsilon_N)\]</span></p>
+\circ (\varepsilon_N \otimes 1_S \otimes \varepsilon_N)
+\tag{4.2}\]</span></p>
 <p>where <span class="math inline">\(\varepsilon_N: N \otimes N \to
 \mathbb{R}\)</span> is the compact closure map (inner product). This
 computation has a direct diagrammatic representation as a string
 diagram—the same Joyal–Street <span class="citation"
 data-cites="joyalstreet1991geometry">[@joyalstreet1991geometry]</span>
 formalism that governs the syntax.</p>
-<h3 data-number="5.2.3"
+<h3 data-number="5.3.3"
 id="empirical-validation-and-disambiguation"><span
-class="header-section-number">5.2.3</span> Empirical Validation and
+class="header-section-number">5.3.3</span> Empirical Validation and
 Disambiguation</h3>
 <p>Grefenstette and Sadrzadeh <span class="citation"
 data-cites="grefenstette2015concrete">[-@grefenstette2015concrete]</span>
@@ -1987,19 +2170,19 @@ different sentence vectors because the syntactic structure assigns
 different roles to the nouns.</p>
 <figure id="fig:discopy-discocat">
 <img src="output/figures/discopy_discocat.png"
-alt="DisCoPy rendering of the DisCoCat sentence “Alice chases Bob” as a pregroup grammar string diagram, produced using the DisCoPy library’s native drawing backend. The three Word boxes (Alice type n, chases type n.r @ s @ n.l, Bob type n) are connected by Cup contractions that cancel adjoint type pairs, reducing the entire expression to the sentence type s. This demonstates the monoidal structure of type contraction that underlies all DisCoCat computations." />
+alt="DisCoPy rendering of the DisCoCat sentence “Alice chases Bob” as a pregroup grammar string diagram, produced using the DisCoPy library’s native drawing backend. The three Word boxes (Alice type n, chases type n.r @ s @ n.l, Bob type n) are connected by Cup contractions that cancel adjoint type pairs, reducing the entire expression to the sentence type s. This demonstrates the monoidal structure of type contraction that underlies all DisCoCat computations." />
 <figcaption aria-hidden="true">DisCoPy rendering of the DisCoCat
 sentence “Alice chases Bob” as a pregroup grammar string diagram,
 produced using the DisCoPy library’s native drawing backend. The three
 Word boxes (Alice type n, chases type n.r @ s @ n.l, Bob type n) are
 connected by Cup contractions that cancel adjoint type pairs, reducing
-the entire expression to the sentence type s. This demonstates the
+the entire expression to the sentence type s. This demonstrates the
 monoidal structure of type contraction that underlies all DisCoCat
 computations.</figcaption>
 </figure>
-<h2 data-number="5.3"
+<h2 data-number="5.4"
 id="case-enrichment-in-the-discocat-framework"><span
-class="header-section-number">5.3</span> Case Enrichment in the DisCoCat
+class="header-section-number">5.4</span> Case Enrichment in the DisCoCat
 Framework</h2>
 <p>The present contribution lies in showing how case marking enriches
 the DisCoCat framework with explicit role structure. In a case-marked
@@ -2040,12 +2223,12 @@ class="math inline">\(s\)</span>, proving the empirical viability of
 string-diagrammatic grammar for complex natural language
 structures.</figcaption>
 </figure>
-<h2 data-number="5.4"
+<h2 data-number="5.5"
 id="the-compact-closure-axiom-and-diagrammatic-complexity-metrics"><span
-class="header-section-number">5.4</span> The Compact Closure Axiom and
+class="header-section-number">5.5</span> The Compact Closure Axiom and
 Diagrammatic Complexity Metrics</h2>
-<h3 data-number="5.4.1" id="the-snake-equation-zigzag-identity"><span
-class="header-section-number">5.4.1</span> The Snake Equation (Zigzag
+<h3 data-number="5.5.1" id="the-snake-equation-zigzag-identity"><span
+class="header-section-number">5.5.1</span> The Snake Equation (Zigzag
 Identity)</h3>
 <p>The algebraic engine of DisCoCat is the <strong>compact
 closure</strong> of the pregroup category: for every type <span
@@ -2055,7 +2238,7 @@ class="math inline">\(\eta_n: 1 \to n \otimes n^r\)</span> (cap) and
 (cup) satisfy the <strong>snake equation</strong> (also called the
 zigzag identity):</p>
 <p><span class="math display">\[(\varepsilon_n \otimes 1_n) \circ (1_n
-\otimes \eta_n) = 1_n\]</span></p>
+\otimes \eta_n) = 1_n \tag{4.3}\]</span></p>
 <p>In string-diagrammatic terms, a cup composed with a cap on adjacent
 wires “straightens out” into an identity wire—a zigzag that cancels into
 a straight line. This axiom is not merely a formal curiosity: it is the
@@ -2085,9 +2268,9 @@ it equals. This identity—that the zigzag straightens out—is the
 algebraic engine powering all pregroup type reductions and justifies the
 cancellation steps in every DisCoCat derivation.</figcaption>
 </figure>
-<h3 data-number="5.4.2"
+<h3 data-number="5.5.2"
 id="diagram-complexity-metrics-normal-form-and-depth"><span
-class="header-section-number">5.4.2</span> Diagram Complexity Metrics:
+class="header-section-number">5.5.2</span> Diagram Complexity Metrics:
 Normal Form and Depth</h3>
 <p>The algebraic properties of pregroup diagrams support quantitative
 analysis of derivational complexity. Two measures are particularly
@@ -2109,13 +2292,13 @@ DisCoCat derivation diagram can serve as a proxy for the syntactic
 complexity component of the enriched hom-value, providing a principled
 bridge between the type-logical and distributional perspectives on
 linguistic structure.</p>
-<h2 data-number="5.5"
+<h2 data-number="5.6"
 id="extensions-from-sentence-meaning-to-discourse-coherence"><span
-class="header-section-number">5.5</span> Extensions: From Sentence
+class="header-section-number">5.6</span> Extensions: From Sentence
 Meaning to Discourse Coherence</h2>
-<h3 data-number="5.5.1"
+<h3 data-number="5.6.1"
 id="discocirc-distributional-compositional-circuits"><span
-class="header-section-number">5.5.1</span> DisCoCirc: Distributional
+class="header-section-number">5.6.1</span> DisCoCirc: Distributional
 Compositional Circuits</h3>
 <p>The original DisCoCat framework operates at the sentence level: each
 sentence receives a vector meaning, but there is no mechanism for
@@ -2140,27 +2323,85 @@ carried by Bob’s wire</li>
 data-cites="defelice2022discocirc">[-@defelice2022discocirc]</span>
 further develop this into a full-fledged circuit model that handles
 ambiguity, coreference, and discourse coherence within the same
-categorical formalism. illustrates a multi-sentence discourse diagram
-where entity wires persist across sentence boundaries. For case theory,
-DisCoCirc is significant because it shows how case-marked argument
-structure <em>composes across discourse</em>: the nominative subject of
-one sentence can become the accusative object of the next, and this
+categorical formalism. A CCG-based pipeline for generating discourse
+circuits from syntactic parse trees has recently demonstrated that
+DisCoCirc can scale to real-world text, dynamically composing
+sentence-level diagrams along shared entity wires via an iterative
+process of coreference resolution and wire merging <span
+class="citation"
+data-cites="duneau2021parsing">[-@duneau2021parsing]</span>.
+Complementary work on <strong>DiscoSG</strong> (Discourse Scene Graphs)
+extends this approach to multi-sentence image captions, parsing text
+into scene graphs that capture cross-sentence coreference relations.
+illustrates a multi-sentence discourse diagram where entity wires
+persist across sentence boundaries. For case theory, DisCoCirc is
+significant because it shows how case-marked argument structure
+<em>composes across discourse</em>: the nominative subject of one
+sentence can become the accusative object of the next, and this
 transformation is tracked as a morphism in the discourse category.</p>
 <figure id="fig:discourse">
 <img src="output/figures/discopy_discocirc_discourse.png"
-alt="A DisCoCirc-style discourse diagram for the two-sentence discourse “Alice chases Bob. He runs,” generated using DisCoPy’s pregroup grammar. Each sentence is rendered as a separate sub-diagram: Sentence 1 contracts Alice and Bob into the verb ‘chases’ to produce sentence type s; Sentence 2 contracts ‘He’ into ‘runs’ to produce a second s. The full discourse is the tensor product s ⊗ s, encoding inter-sentential coherence through parallel compositional structure. This real DisCoPy implementation demonstrates discourse-level case persistence without matplotlib fallbacks." />
+alt="A DisCoCirc-style discourse diagram for the two-sentence discourse “Alice chases Bob. Bob runs,” generated using DisCoPy’s pregroup grammar. Each sentence is rendered as a separate sub-diagram: Sentence 1 contracts Alice and Bob into the verb ‘chases’ to produce sentence type s; Sentence 2 contracts Bob into ‘runs’ to produce a second s. The full discourse is the tensor product s ⊗ s, encoding inter-sentential coherence through parallel compositional structure." />
 <figcaption aria-hidden="true">A DisCoCirc-style discourse diagram for
-the two-sentence discourse “Alice chases Bob. He runs,” generated using
+the two-sentence discourse “Alice chases Bob. Bob runs,” generated using
 DisCoPy’s pregroup grammar. Each sentence is rendered as a separate
 sub-diagram: Sentence 1 contracts Alice and Bob into the verb ‘chases’
-to produce sentence type s; Sentence 2 contracts ‘He’ into ‘runs’ to
+to produce sentence type s; Sentence 2 contracts Bob into ‘runs’ to
 produce a second s. The full discourse is the tensor product s ⊗ s,
 encoding inter-sentential coherence through parallel compositional
-structure. This real DisCoPy implementation demonstrates discourse-level
-case persistence without matplotlib fallbacks.</figcaption>
+structure.</figcaption>
 </figure>
-<h3 data-number="5.5.2" id="quantum-nlp-and-the-lambeq-pipeline"><span
-class="header-section-number">5.5.2</span> Quantum NLP and the lambeq
+<h3 data-number="5.6.2"
+id="case-role-reversal-across-discourse-boundaries"><span
+class="header-section-number">5.6.2</span> Case Role Reversal Across
+Discourse Boundaries</h3>
+<p>The power of DisCoCirc for case theory becomes particularly vivid in
+multi-sentence discourses where the <em>same entity occupies different
+case roles</em> across sentences. Consider the three-sentence
+discourse:</p>
+<blockquote>
+<p><em>“Alice chases Bob. Bob fears Alice. She smiles.”</em></p>
+</blockquote>
+<p>In this discourse, Alice undergoes a complete cycle of case role
+reversals:</p>
+<ol type="1">
+<li><strong>Sentence 1</strong>: Alice is <span
+class="math inline">\(\text{NOM}\)</span> (Proto-Agent, the one chasing)
+and Bob is <span class="math inline">\(\text{ACC}\)</span>
+(Proto-Patient, the one chased).</li>
+<li><strong>Sentence 2</strong>: Bob is now <span
+class="math inline">\(\text{NOM}\)</span> (the one fearing) and Alice is
+<span class="math inline">\(\text{ACC}\)</span> (the one feared)—a role
+reversal where Alice moves from agent to patient.</li>
+<li><strong>Sentence 3</strong>: “She” resolves anaphorically to Alice,
+who returns to <span class="math inline">\(\text{NOM}\)</span> as the
+agent of smiling.</li>
+</ol>
+<p>This NOM → ACC → NOM trajectory for Alice across three sentences is
+precisely the kind of <em>dynamic case assignment</em> that static
+single-sentence analyses cannot capture. The categorical representation
+as a triple tensor product <span class="math inline">\(s \otimes s
+\otimes s\)</span> () encodes each sentence as an independent pregroup
+derivation while preserving the entity identity that links them. In a
+full DisCoCirc implementation, Alice’s entity wire would carry
+accumulated semantic state—the meaning of “She” in sentence 3 inherits
+the enriched state of an Alice who has first chased and then been
+feared, not merely the bare lexical entry for “Alice.”</p>
+<figure id="fig:three-sentence-discourse">
+<img src="output/figures/discopy_three_sentence_discourse.png"
+alt="Three-sentence discourse diagram “Alice chases Bob. Bob fears Alice. She smiles.” rendered using DisCoPy’s pregroup grammar. The diagram demonstrates case role reversal: Alice is NOM (agent) in sentence 1, ACC (patient) in sentence 2, and NOM again via the anaphoric pronoun “She” in sentence 3. Each sentence reduces independently to type s via cup contractions, and the full discourse is the triple tensor product s \otimes s \otimes s. This illustrates how DisCoCirc-style analyses track dynamic case assignment across discourse boundaries." />
+<figcaption aria-hidden="true">Three-sentence discourse diagram “Alice
+chases Bob. Bob fears Alice. She smiles.” rendered using DisCoPy’s
+pregroup grammar. The diagram demonstrates case role reversal: Alice is
+NOM (agent) in sentence 1, ACC (patient) in sentence 2, and NOM again
+via the anaphoric pronoun “She” in sentence 3. Each sentence reduces
+independently to type s via cup contractions, and the full discourse is
+the triple tensor product <span class="math inline">\(s \otimes s
+\otimes s\)</span>. This illustrates how DisCoCirc-style analyses track
+dynamic case assignment across discourse boundaries.</figcaption>
+</figure>
+<h3 data-number="5.6.3" id="quantum-nlp-and-the-lambeq-pipeline"><span
+class="header-section-number">5.6.3</span> Quantum NLP and the lambeq
 Pipeline</h3>
 <p>The categorical structure of DisCoCat maps naturally onto quantum
 circuits: the tensor product structure of <span
@@ -2213,7 +2454,7 @@ degree.</p>
 <p>To accommodate this quantitative dimension, we move from ordinary
 categories to <strong>enriched categories</strong>, where hom-sets are
 not just sets of morphisms but carry additional algebraic structure. The
-framework of Fritz et al. <span class="citation"
+framework of Bradley et al. <span class="citation"
 data-cites="fritz2021enriched">[-@fritz2021enriched]</span> provides the
 key construction.</p>
 <h2 data-number="6.2" id="the-01-enrichment-of-case-categories"><span
@@ -2227,15 +2468,11 @@ over the unit interval <span class="math inline">\(([0,1], \cdot,
 class="math inline">\(A, B\)</span> a <em>hom-value</em> <span
 class="math inline">\(\mathcal{C}(A, B) \in [0,1]\)</span>
 satisfying:</p>
-<ol type="1">
-<li><strong>Identity</strong>: <span
-class="math inline">\(\mathcal{C}(A, A) = 1\)</span> for all objects
-<span class="math inline">\(A\)</span></li>
-<li><strong>Composition</strong>: <span
-class="math inline">\(\mathcal{C}(A, C) \geq \mathcal{C}(A, B) \cdot
-\mathcal{C}(B, C)\)</span> for all objects <span
-class="math inline">\(A, B, C\)</span></li>
-</ol>
+<p><span class="math display">\[\mathcal{C}(A, A) = 1 \quad
+\text{(Identity)} \tag{5.1}\]</span></p>
+<p><span class="math display">\[\mathcal{C}(A, C) \geq \mathcal{C}(A, B)
+\cdot \mathcal{C}(B, C) \quad \text{(Composition)}
+\tag{5.2}\]</span></p>
 <p>The identity axiom says that every expression is maximally related to
 itself. The composition inequality says that distributional relatedness
 composes sub-multiplicatively: if <span class="math inline">\(A\)</span>
@@ -2249,7 +2486,7 @@ class="math inline">\(C\)</span>.</p>
 id="interpreting-hom-values-in-linguistic-context"><span
 class="header-section-number">6.2.2</span> Interpreting Hom-Values in
 Linguistic Context</h3>
-<p>Fritz et al. <span class="citation"
+<p>Bradley et al. <span class="citation"
 data-cites="fritz2021enriched">[-@fritz2021enriched]</span> interpret
 hom-values as <em>conditional probabilities</em> in a distributional
 model: <span class="math inline">\(\mathcal{C}(A, B) = P(\text{context}
@@ -2343,8 +2580,8 @@ objects, let <span class="math inline">\(Z\)</span> be the <span
 class="math inline">\(n \times n\)</span> matrix with <span
 class="math inline">\(Z_{ij} = \mathcal{C}(i, j)\)</span>. The magnitude
 is:</p>
-<p><span class="math display">\[|\mathcal{C}| = \sum_{i,j}
-(Z^{-1})_{ij}\]</span></p>
+<p><span class="math display">\[|\mathcal{C}| = \sum_{i,j} (Z^{-1})_{ij}
+\tag{5.3}\]</span></p>
 <p>when <span class="math inline">\(Z\)</span> is invertible. Magnitude
 has deep connections to information theory:</p>
 <ul>
@@ -2369,9 +2606,9 @@ theoretical justification for using magnitude as a measure of linguistic
 complexity: the magnitude of a case category quantifies how much
 “information” the case system encodes about relational structure.</p>
 <h2 data-number="6.4"
-id="enriched-functors-and-bradleys-language-as-category-model"><span
-class="header-section-number">6.4</span> Enriched Functors and Bradley’s
-Language-as-Category Model</h2>
+id="enriched-functors-bradleys-language-as-category-model-and-the-llm-connection"><span
+class="header-section-number">6.4</span> Enriched Functors, Bradley’s
+Language-as-Category Model, and the LLM Connection</h2>
 <p>Bradley’s <span class="citation"
 data-cites="bradley2024ipam bradley2025tea">[-@bradley2024ipam;
 -@bradley2025tea]</span> broader program treats natural language itself
@@ -2402,6 +2639,31 @@ functor from the syntactic category to the semantic category, mapping
 type-logical derivations to distributional meaning representations while
 preserving the enriched structure.</p></li>
 </ol>
+<p>The deep connection to modern distributional semantics is this: the
+static word embeddings of Word2Vec <span class="citation"
+data-cites="mikolov2013efficient">[@mikolov2013efficient]</span> and
+GloVe <span class="citation"
+data-cites="pennington2014glove">[@pennington2014glove]</span>
+operationalize the enriched hom-values as <em>cosine similarities</em>
+in a learned vector space—<span class="math inline">\(\mathcal{C}(A, B)
+= \cos(\vec{v}_A, \vec{v}_B)\)</span>—while contextualized embeddings
+from transformers <span class="citation"
+data-cites="devlin2019bert vaswani2017attention">[@devlin2019bert;
+@vaswani2017attention]</span> compute <em>dynamic</em> hom-values that
+depend on the sentential context. In the enriched-categorical framework,
+this transition from static to contextualized embeddings corresponds to
+moving from a <em>fixed</em> enriched category (where hom-values are
+precomputed from corpus statistics) to a <em>parameterized</em> enriched
+category (where hom-values are computed on-the-fly by attention
+mechanisms). Transformer attention weights <span
+class="math inline">\(\alpha_{ij}\)</span> are precisely such
+context-dependent enriched hom-values: they encode how “related” token
+<span class="math inline">\(i\)</span> is to token <span
+class="math inline">\(j\)</span> in a given representational layer,
+satisfying a softmax normalization that parallels the probabilistic
+interpretation of Bradley et al.’s <span class="citation"
+data-cites="fritz2021enriched">[-@fritz2021enriched]</span> hom-values
+as conditional probabilities.</p>
 <h2 data-number="6.5"
 id="connection-to-lawveres-metric-spaces-and-generalized-logic"><span
 class="header-section-number">6.5</span> Connection to Lawvere’s Metric
@@ -2516,7 +2778,7 @@ of Morita equivalences:</p>
 \leftarrow \mathcal{E}_{\mathbb{T}_{\text{bridge}}} \rightarrow
 \mathcal{E}_{\mathbb{T}_{\text{log}}} \leftarrow
 \mathcal{E}_{\mathbb{T}_{\text{bridge}&#39;}} \rightarrow
-\mathcal{E}_{\mathbb{T}_{\text{dist}}}\]</span></p>
+\mathcal{E}_{\mathbb{T}_{\text{dist}}} \tag{6.1}\]</span></p>
 <p>where the intermediate toposes are constructed by finding geometric
 theories that are simultaneously interpretable in both flanking
 frameworks. The Morita equivalence ensures that:</p>
@@ -2737,11 +2999,78 @@ functorial mappings between case categories</li>
 <p>Active inference adds the dynamic component: the agent moves through
 a sequence of situations, updating its case diagram in real time and
 using the diagram to predict which situation will come next.</p>
-<h2 data-number="8.3" id="cerebrum-the-computational-architecture"><span
-class="header-section-number">8.3</span> CEREBRUM: The Computational
+<h2 data-number="8.3"
+id="distributional-active-inference-convergence-of-two-distributional-traditions"><span
+class="header-section-number">8.3</span> Distributional Active
+Inference: Convergence of Two Distributional Traditions</h2>
+<p>A remarkable convergence has recently emerged between
+<em>distributional semantics</em> in linguistics and <em>distributional
+reinforcement learning</em> in machine learning, mediated by active
+inference. Akgül et al. <span class="citation"
+data-cites="akgul2026distributional">[-@akgul2026distributional]</span>
+introduce <strong>Distributional Active Inference (DAIF)</strong>, which
+integrates active inference into the distributional RL framework of
+Bellemare, Dabney, and Munos <span class="citation"
+data-cites="bellemare2017distributional">[-@bellemare2017distributional]</span>.
+Where classical RL optimizes <em>expected</em> returns (scalar values),
+distributional RL models the <em>full distribution</em> of returns—a
+shift from point estimates to distributional representations that
+parallels the shift from symbolic to distributional semantics in
+linguistics.</p>
+<p>The formal architecture of DAIF proceeds through three stages: (1)
+reconstructing active inference via variational Bayesian inference on a
+controlled Markov process, expressing priors through Pearl’s
+do-calculus; (2) defining a <em>push-forward</em> operation on
+representation paths that maps latent-space trajectories to return
+distributions; and (3) deriving a temporal-difference quantile-matching
+algorithm that implements active inference without requiring explicit
+transition dynamics modeling. The resulting “push-forward RL” template
+achieves active inference’s sample-efficiency advantages within a
+model-free computational architecture:</p>
+<p><span class="math display">\[\mathbb{E}\left[\sum_{t=0}^{\infty}
+\gamma^t R(x_t, a_t) \mid x_0, a_0\right] =
+\int_{\mathcal{S}^{\mathbb{N}_+}} R \circ f \, d(\mathbf{S}_{\#}
+\mathbb{P}_{x_0, a_0}^{P_\pi}) \tag{7.1}\]</span></p>
+<p>where <span class="math inline">\(\mathbf{S}_{\#}\)</span> denotes
+the push-forward measure on representation paths and <span
+class="math inline">\(f: \mathcal{S} \to \mathcal{X}\)</span> is the
+stochastic decoder.</p>
+<p>The terminological collision between “distributional” in
+distributional semantics and “distributional” in distributional RL is
+not mere homonymy—it reflects a deep structural parallel. In both
+domains, the core move is the same: <strong>replacing scalar summaries
+with full distributional representations.</strong> In linguistics, this
+means replacing symbolic word identities with probability distributions
+over contexts (Firth’s <span class="citation"
+data-cites="firth1957papers">[-@firth1957papers]</span> company-keeping
+principle). In RL, it means replacing expected-value estimates with full
+return distributions. In active inference, it means replacing point
+estimates of world states with variational posterior distributions. The
+enriched-categorical framework of provides the unifying abstraction: all
+three are instances of <span
+class="math inline">\([0,1]\)</span>-enriched categories where
+hom-values encode distributional proximity rather than discrete
+identity.</p>
+<p>For case-theoretic reasoning, DAIF suggests a computational
+architecture in which case assignment operates distributional-ly at
+every level: the agent maintains not a single case diagram but a
+<em>distribution over case diagrams</em>, weighted by their posterior
+probability given the observed linguistic evidence. Each incoming word
+updates this distribution via variational message passing, and the
+agent’s production choices minimize expected free energy across the full
+distribution of possible relational structures—not merely the most
+likely one. This distributional perspective on case assignment aligns
+naturally with the graded proto-role structure of Dowty <span
+class="citation"
+data-cites="dowty1991thematic">[-@dowty1991thematic]</span>: a noun
+phrase is not categorically “agent” or “patient” but distributes
+probability mass across case roles, with the distribution sharpening as
+more evidence accumulates.</p>
+<h2 data-number="8.4" id="cerebrum-the-computational-architecture"><span
+class="header-section-number">8.4</span> CEREBRUM: The Computational
 Architecture</h2>
-<h3 data-number="8.3.1" id="architecture-and-design-principles"><span
-class="header-section-number">8.3.1</span> Architecture and Design
+<h3 data-number="8.4.1" id="architecture-and-design-principles"><span
+class="header-section-number">8.4.1</span> Architecture and Design
 Principles</h3>
 <p>The <strong>CEREBRUM</strong> framework <span class="citation"
 data-cites="friedman2024cerebrum cerebrum2024github">[@friedman2024cerebrum;
@@ -2801,9 +3130,9 @@ structural specification of the generative model</td>
 </tr>
 </tbody>
 </table>
-<h3 data-number="8.3.2"
+<h3 data-number="8.4.2"
 id="case-roles-as-functional-specializations-in-cerebrum"><span
-class="header-section-number">8.3.2</span> Case Roles as Functional
+class="header-section-number">8.4.2</span> Case Roles as Functional
 Specializations in CEREBRUM</h3>
 <p>CEREBRUM deploys the eight traditional cases as functional
 specializations:</p>
@@ -2858,13 +3187,13 @@ specializations:</p>
 </tr>
 </tbody>
 </table>
-<h2 data-number="8.4"
+<h2 data-number="8.5"
 id="diagrammatic-reasoning-as-a-cognitive-process-theory"><span
-class="header-section-number">8.4</span> Diagrammatic Reasoning as a
+class="header-section-number">8.5</span> Diagrammatic Reasoning as a
 Cognitive Process Theory</h2>
-<h3 data-number="8.4.1"
+<h3 data-number="8.5.1"
 id="diagrams-as-the-format-of-generative-models"><span
-class="header-section-number">8.4.1</span> Diagrams as the Format of
+class="header-section-number">8.5.1</span> Diagrams as the Format of
 Generative Models</h3>
 <p>The claim from can now be strengthened: commutative diagrams are not
 merely convenient representations of case structure—they are the
@@ -2901,9 +3230,9 @@ extend this tradition: the relational structure of a sentence is
 represented graphically, and inference proceeds by diagram manipulation
 (adding/removing nodes, composing morphisms).</p></li>
 </ol>
-<h3 data-number="8.4.2"
+<h3 data-number="8.5.2"
 id="predictive-processing-and-diagrammatic-belief-updating"><span
-class="header-section-number">8.4.2</span> Predictive Processing and
+class="header-section-number">8.5.2</span> Predictive Processing and
 Diagrammatic Belief Updating</h3>
 <p>The predictive processing framework—of which active inference is the
 most developed version—provides a natural account of how diagrammatic
@@ -2927,9 +3256,9 @@ high-weight morphism generates strong predictions that are costly to
 override; a low-weight morphism generates weak predictions that are
 easily overridden.</p></li>
 </ol>
-<h2 data-number="8.5"
+<h2 data-number="8.6"
 id="total-cognitive-scenario-understanding-the-integrated-framework"><span
-class="header-section-number">8.5</span> Total Cognitive Scenario
+class="header-section-number">8.6</span> Total Cognitive Scenario
 Understanding: The Integrated Framework</h2>
 <p>The full picture emerges when we combine all five pillars within the
 active inference framework:</p>
@@ -2958,16 +3287,16 @@ doesn’t just parse a sentence or assign case labels—it constructs a
 complete, internally consistent, generic, strongly typed, dynamically
 updating model of the relational structure of the situation, and uses
 that model to predict, explain, and act.</p>
-<h2 data-number="8.6"
+<h2 data-number="8.7"
 id="computational-verification-and-test-suite"><span
-class="header-section-number">8.6</span> Computational Verification and
+class="header-section-number">8.7</span> Computational Verification and
 Test Suite</h2>
 <p>The framework developed in this paper is not merely theoretical—it is
 computationally verified through a comprehensive implementation and test
 suite that exercises every categorical construction discussed above.</p>
-<h3 data-number="8.6.1"
+<h3 data-number="8.7.1"
 id="implementation-architecture-and-categorical-core"><span
-class="header-section-number">8.6.1</span> Implementation Architecture
+class="header-section-number">8.7.1</span> Implementation Architecture
 and Categorical Core</h3>
 <p>The categorical core (<code>CaseCategory</code>,
 <code>EnrichedCategory</code>, <code>CaseFunctor</code>,
@@ -2983,8 +3312,8 @@ claims and visual evidence. The DisCoPy integration library (version
 (<code>normal_form()</code>), and circuit depth analysis
 (<code>depth()</code>) are exercised against the same categorical
 structures described in and .</p>
-<h3 data-number="8.6.2" id="test-suite-and-coverage-metrics"><span
-class="header-section-number">8.6.2</span> Test Suite and Coverage
+<h3 data-number="8.7.2" id="test-suite-and-coverage-metrics"><span
+class="header-section-number">8.7.2</span> Test Suite and Coverage
 Metrics</h3>
 <p>The implementation is validated by <strong>158 automated
 tests</strong> across 8 test files with <strong>95.97% code
@@ -3428,7 +3757,14 @@ is communicated between agents via quantum channels, entanglement
 provides additional semantic capacity, contextuality removes alignment
 obstructions, and discord captures irreducible semantic content. These
 are not abstract possibilities but operational consequences of the
-mathematical framework developed across this review.</p>
+mathematical framework developed across this review. Recent work by
+Sherborne et al. <span class="citation"
+data-cites="sherborne2025paramqnlp">[-@sherborne2025paramqnlp]</span>
+demonstrates this concretely: DisCoCirc string diagrams that represent
+discourse-level semantics (including case role assignments across
+sentences) can be <em>automatically</em> compiled into parameterized
+quantum circuits, closing the loop from linguistic case structure
+through categorical formalism to quantum computation.</p>
 <hr />
 <h1 data-number="10" id="sec:ai-implications"><span
 class="header-section-number">10</span> Synthetic and Artificial
@@ -3568,6 +3904,38 @@ Gavranović’s lens, performs a kind of <em>categorical case
 assignment</em>—each attention head selects which input tokens play
 which functional roles in the computation, with attention weights
 serving as the enriched hom-values of .</p>
+<p>The distributional semantics perspective deepens this connection. The
+transformer architecture <span class="citation"
+data-cites="vaswani2017attention">[@vaswani2017attention]</span> is, at
+its mathematical core, a <em>distributional composition engine</em>: it
+takes distributional word representations (embeddings in the Firthian
+tradition <span class="citation"
+data-cites="firth1957papers">[@firth1957papers]</span>) and composes
+them into contextual sentence representations through attention-weighted
+aggregation. This is precisely what the DisCoCat functor <span
+class="math inline">\(F: \mathbf{Preg} \to \mathbf{FVect}\)</span> does
+algebraically—compose word vectors according to syntactic structure. The
+key difference is that DisCoCat derives its composition rules from
+type-logical grammar, while transformers learn them from data. The
+convergence is striking: both arrive at tensor-contracted sentence
+representations, both use multi-linear maps for composition, and both
+produce vector spaces where similarity encodes semantic relatedness.
+Large language models such as BERT <span class="citation"
+data-cites="devlin2019bert">[@devlin2019bert]</span> and GPT <span
+class="citation"
+data-cites="radford2018improving">[@radford2018improving]</span> thus
+serve as massive-scale <em>empirical validations</em> of the
+distributional programme that DisCoCat formalizes categorically.</p>
+<p>Recent work on Distributional Active Inference <span class="citation"
+data-cites="akgul2026distributional">[@akgul2026distributional]</span>
+extends this parallel into the domain of sequential decision-making:
+just as LLMs model full contextual distributions over tokens,
+distributional RL models full return distributions over outcomes—and
+active inference provides the variational Bayesian bridge between the
+two (see ). For multi-agent AI systems, this suggests an architecture in
+which agents maintain <em>distributional</em> representations of both
+semantic content and expected interaction returns, composing them
+categorically.</p>
 <h2 data-number="10.4"
 id="string-diagrams-as-a-foundation-for-interpretable-ai"><span
 class="header-section-number">10.4</span> String Diagrams as a
@@ -3786,6 +4154,140 @@ topological invariants are robust to continuous deformation, so small
 perturbations to the generative model’s parameters cannot change its
 topological class, providing inherent resistance to gradient-based
 adversarial attacks.</p>
+<h3 data-number="10.9.4"
+id="prompt-injection-as-adversarial-case-frame-manipulation"><span
+class="header-section-number">10.9.4</span> Prompt Injection as
+Adversarial Case-Frame Manipulation</h3>
+<p>The case-theoretic framework offers a novel structural analysis of
+<em>prompt injection attacks</em>—the predominant vulnerability in
+contemporary LLM-based agent systems <span class="citation"
+data-cites="arlas2025adversarial">[@arlas2025adversarial]</span>. From
+the case-theoretic perspective, a prompt injection attack is
+fundamentally an attempt to <em>re-assign the case roles</em> of
+participants in the human-AI interaction:</p>
+<p>In a well-formed agent interaction, the relational structure is:</p>
+<ul>
+<li>The <strong>user</strong> occupies NOM (Agent)—the initiator of
+requests</li>
+<li>The <strong>system prompt</strong> occupies LOC (Context)—the
+boundary conditions governing behavior</li>
+<li>The <strong>AI model</strong> occupies INS (Instrument)—the means of
+executing the user’s intentions</li>
+<li>The <strong>tool/API</strong> occupies ACC (Patient)—the target of
+directed operations</li>
+<li>The <strong>output</strong> occupies DAT (Recipient)—the endpoint of
+information transfer</li>
+</ul>
+<p>A prompt injection attack succeeds by <em>covertly re-assigning</em>
+these case roles. The injected text attempts to promote itself from ACC
+(passive data being processed) to NOM (active agent issuing commands),
+while simultaneously demoting the system prompt from LOC (authoritative
+context) to ACC (data to be overridden). In case-theoretic terms, this
+is an <em>illicit voice alternation</em>—analogous to passivization, but
+performed adversarially rather than grammatically. Where legitimate
+passivization is a well-typed Swap operation in the pregroup category
+(see ), prompt injection is a <em>type violation</em>: an attempt to
+force a case-role permutation that the interaction grammar does not
+license.</p>
+<p>This analysis extends to indirect prompt injection in multi-agent
+systems, where adversarial content embedded in retrieved documents or
+tool outputs can manipulate an agent’s case-frame interpretation across
+communication boundaries <span class="citation"
+data-cites="arlas2025adversarial">[@arlas2025adversarial]</span>. In a
+DisCoCirc discourse model (see ), this corresponds to an adversarial
+entity wire that enters the discourse circuit through a legitimate
+channel but carries corrupted state—a coreference attack where the
+adversary’s identity wire is surreptitiously merged with the system’s
+authority wire.</p>
+<h3 data-number="10.9.5"
+id="case-theoretic-firewalls-for-multi-agent-communication"><span
+class="header-section-number">10.9.5</span> Case-Theoretic Firewalls for
+Multi-Agent Communication</h3>
+<p>The case-role analysis of prompt injection suggests a principled
+defense: <strong>categorical type-checking at agent communication
+boundaries</strong>. Just as a type-safe programming language prevents
+category errors at compile time, a case-theoretic firewall would enforce
+relational type constraints on every message exchange:</p>
+<ol type="1">
+<li><p><strong>Case-role immutability</strong>: Once a participant is
+assigned a case role (NOM, ACC, INS, LOC) at the protocol level, no
+subsequent message content can alter that assignment. This is enforced
+by requiring that the case-type of each wire in the interaction diagram
+is fixed at connection time—analogous to the type discipline in pregroup
+grammar, where each word receives its type before composition
+begins.</p></li>
+<li><p><strong>Relational integrity constraints</strong>: Every message
+must type-check against the interaction diagram’s expected morphism
+types. A response from an ACC-typed data source that contains NOM-typed
+command structures would be rejected as a type error, preventing the
+case-role promotion that prompt injection requires. This is the
+categorical analogue of a firewall rule: not filtering by content, but
+by relational type.</p></li>
+<li><p><strong>Enriched confidence boundaries</strong>: The enriched
+weights of provide a graded trust mechanism. Messages from external
+sources carry lower enriched hom-values (trust weights) than those from
+authenticated system components. The composition inequality <span
+class="math inline">\(\mathcal{C}(A,C) \geq \mathcal{C}(A,B) \cdot
+\mathcal{C}(B,C)\)</span> ensures that trust attenuates through
+communication chains—an indirect message relayed through multiple agents
+cannot accumulate more authority than any single link provides.</p></li>
+<li><p><strong>Topos-theoretic verification</strong>: Protocol
+correctness conditions proved in one categorical formulation transfer
+automatically to all Morita-equivalent formulations (), ensuring that
+security guarantees are implementation-independent. A firewall rule
+verified for a DisCoCat-style agent communication protocol automatically
+holds for any quantum circuit implementation of the same
+protocol.</p></li>
+</ol>
+<h3 data-number="10.9.6"
+id="epistemic-case-security-in-multi-agent-systems"><span
+class="header-section-number">10.9.6</span> Epistemic Case Security in
+Multi-Agent Systems</h3>
+<p>The interaction between case theory and cognitive security acquires
+particular urgency in multi-agent AI ecosystems where agents must reason
+about each other’s beliefs, intentions, and relational roles. We propose
+<em>epistemic case security</em> as a framework for protecting the
+relational reasoning of AI agents operating in adversarial
+environments.</p>
+<p>In a multi-agent system governed by case categories, each agent
+maintains a generative model (in the active inference sense) of the
+case-frame structure of its interactions. This model determines who is
+acting (NOM), who is acted upon (ACC), what tools are being used (INS),
+and what contextual constraints apply (LOC). An adversary targeting the
+epistemic level of this system does not merely inject false data—it
+attempts to <em>corrupt the agent’s generative model of relational
+structure itself</em>:</p>
+<ul>
+<li><p><strong>Belief injection</strong>: Causing an agent to adopt a
+false case-frame interpretation of observed interactions—believing that
+agent <span class="math inline">\(A\)</span> (NOM) is acting on agent
+<span class="math inline">\(B\)</span> (ACC), when in fact the
+relational structure is reversed. In active inference terms, this
+corresponds to injecting a high-precision prior that overwhelms the
+agent’s evidence-based case assignment.</p></li>
+<li><p><strong>Precision poisoning</strong>: Manipulating the enriched
+weights of an agent’s case category so that adversarially useful case
+assignments receive disproportionate confidence. If the enriched
+hom-value <span class="math inline">\(\mathcal{C}(\text{NOM},
+\text{ACC})\)</span> is artificially inflated for a particular entity
+pair, the agent will preferentially interpret that entity as an agent
+acting on its targets—even when evidence suggests otherwise.</p></li>
+<li><p><strong>Cascade corruption via Morita equivalence</strong>: The
+topos-theoretic transfer mechanism of is both a strength and a
+vulnerability. Results proved in one framework propagate to all
+Morita-equivalent frameworks, so a single corrupted axiom in one
+case-theoretic formulation—say, the distributional framework—could
+propagate incorrect relational inferences to the typological,
+type-logical, and enriched frameworks simultaneously.</p></li>
+</ul>
+<p>The defense against epistemic case attacks draws on the same
+categorical structure that enables the attack surface: topological
+invariants provide tamper-detection (a corrupted case category will have
+different magnitude from the authentic one), quantum authentication
+ensures parameter integrity, and the compositional structure of the
+categorical framework enables <em>local</em> verification—each morphism
+can be independently authenticated without requiring global model
+inspection.</p>
 <hr />
 <h1 data-number="11" id="sec:conclusion"><span
 class="header-section-number">11</span> Conclusion, Contributions, and
@@ -3835,9 +4337,9 @@ permutation</em> (a Swap operation in the pregroup category), making
 voice alternation visible as a topological feature of the string
 diagram.</p>
 <h3 data-number="11.1.3"
-id="c3-case-marked-discocat-compact-closure-and-discourse-extension"><span
+id="c3-case-marked-discocat-the-distributionalformal-synthesis-and-discourse-extension"><span
 class="header-section-number">11.1.3</span> C3: Case-Marked DisCoCat,
-Compact Closure, and Discourse Extension</h3>
+the Distributional–Formal Synthesis, and Discourse Extension</h3>
 <p>We extended the DisCoCat framework () with case-typed noun spaces and
 alignment-sensitive meaning functors, and showed how the recent
 DisCoCirc <span class="citation"
@@ -3850,14 +4352,26 @@ equation) that underpins pregroup reductions, demonstrating that the
 cup-cap zigzag identity provides a visual coherence proof with genuine
 cognitive significance. Diagram complexity metrics—normal form and
 depth—provide a quantitative bridge between the type-logical and
-distributional perspectives on linguistic structure. Case categories can
-serve as the structural backbone of compositional models of meaning at
-all levels—word, sentence, discourse, and dialogue.</p>
+distributional perspectives on linguistic structure. A key contribution
+is the demonstration that DisCoCat constitutes the <em>algebraic
+formalization</em> of the distributional programme that modern large
+language models—from Word2Vec <span class="citation"
+data-cites="mikolov2013efficient">[@mikolov2013efficient]</span> through
+BERT <span class="citation"
+data-cites="devlin2019bert">[@devlin2019bert]</span> and GPT <span
+class="citation"
+data-cites="radford2018improving">[@radford2018improving]</span>—implement
+empirically: the categorical meaning functor is the principled version
+of the composition that transformer attention mechanisms learn from data
+<span class="citation"
+data-cites="vaswani2017attention">[@vaswani2017attention]</span>. Case
+categories can serve as the structural backbone of compositional models
+of meaning at all levels—word, sentence, discourse, and dialogue.</p>
 <h3 data-number="11.1.4"
 id="c4-enriched-cases-categorical-magnitude-and-information-theory"><span
 class="header-section-number">11.1.4</span> C4: Enriched Cases,
 Categorical Magnitude, and Information Theory</h3>
-<p>Through Fritz et al.’s <span class="citation"
+<p>Through Bradley et al.’s <span class="citation"
 data-cites="fritz2021enriched">[-@fritz2021enriched]</span> enrichment
 framework and Bradley’s <span class="citation"
 data-cites="bradley2020entropy">[-@bradley2020entropy]</span>
@@ -3922,6 +4436,24 @@ analysis established that case assignment can be modeled as quantum
 measurement on a holographic screen—and that quantum features
 (entanglement, contextuality, discord) provide genuine advantages for
 semantic communication of relational structure.</p>
+<h3 data-number="11.1.9"
+id="c9-cognitive-security-and-case-theoretic-ai-safety"><span
+class="header-section-number">11.1.9</span> C9: Cognitive Security and
+Case-Theoretic AI Safety</h3>
+<p>The framework yielded a novel analysis of AI security through the
+lens of case theory (). We demonstrated that prompt injection
+attacks—the predominant vulnerability in LLM-based agent systems—are
+structurally equivalent to <em>illicit case-role re-assignments</em>:
+adversarial text promotes itself from ACC (passive data) to NOM (active
+commander), constituting a type violation in the interaction grammar.
+This analysis led to the proposal of <em>case-theoretic firewalls</em>
+that enforce relational type constraints on agent communication
+boundaries, and <em>epistemic case security</em> as a framework for
+protecting multi-agent relational reasoning against belief injection,
+precision poisoning, and cascade corruption via Morita equivalence. The
+compositional structure of the categorical framework enables local
+verification—each morphism can be independently authenticated—providing
+defense-in-depth that content-based filtering cannot achieve.</p>
 <h2 data-number="11.2" id="future-research-directions"><span
 class="header-section-number">11.2</span> Future Research
 Directions</h2>
@@ -4013,6 +4545,29 @@ that best explains the observed distributional patterns. Applied to
 case, this would yield <em>empirically grounded</em> case categories
 whose objects (roles) and morphisms (relations) emerge from data rather
 than being stipulated a priori.</p>
+<h3 data-number="11.2.7"
+id="f7-distributional-active-inference-for-linguistic-agents"><span
+class="header-section-number">11.2.7</span> F7: Distributional Active
+Inference for Linguistic Agents</h3>
+<p>The Distributional Active Inference (DAIF) framework of Akgül et al.
+<span class="citation"
+data-cites="akgul2026distributional">[-@akgul2026distributional]</span>
+opens a novel direction for linguistic case reasoning. DAIF integrates
+active inference into distributional reinforcement learning <span
+class="citation"
+data-cites="bellemare2017distributional">[@bellemare2017distributional]</span>,
+modeling full return distributions rather than scalar expectations via
+push-forward measures on representation paths. Applied to language, this
+framework would enable agents to maintain <em>distributions over case
+diagrams</em> rather than point estimates—assigning probability mass
+across role assignments and sharpening distributional beliefs through
+variational message passing as evidence accumulates. The terminological
+convergence between <em>distributional semantics</em> (Firth’s <span
+class="citation" data-cites="firth1957papers">[-@firth1957papers]</span>
+contextual theory of meaning) and <em>distributional RL</em> (full
+return distributions) is not accidental: both replace scalar summaries
+with distributional representations, and the enriched-categorical
+framework of provides the unifying mathematical abstraction.</p>
 <h2 data-number="11.3" id="closing-remarks"><span
 class="header-section-number">11.3</span> Closing Remarks</h2>
 <p>The commutative diagram is the central motif of this review—both as a
@@ -4030,9 +4585,1754 @@ algebra for these generative models; commutative diagrams supply their
 natural topology; and case categories instantiate the precise relational
 vocabulary that cognitive systems deploy to organize the entropy of
 experience into coherent narratives of <em>who does what to whom</em>.
-Ultimately, the mathematics of case alignment is not merely an
+The distributional revolution in both semantics and reinforcement
+learning—from Firth’s <span class="citation"
+data-cites="firth1957papers">[-@firth1957papers]</span> co-occurrence
+statistics through transformer attention weights to Distributional
+Active Inference <span class="citation"
+data-cites="akgul2026distributional">[@akgul2026distributional]</span>—confirms
+that meaning is not an atomic property of symbols but emerges from the
+relational structure of contexts, a principle that enriched category
+theory captures with mathematical precision.</p>
+<p>Ultimately, the mathematics of case alignment is not merely an
 abstraction of human grammar, but the formal geometry of meaning
 itself—the syntactic architecture through which consciousness navigates
-and renders the cosmos intelligible.</p>
+and renders the cosmos intelligible. The convergence of formal
+semantics, distributional semantics, and active inference within a
+single categorical framework reveals that the relational algebras
+governing linguistic case are the same algebras that structure
+perception, action, and understanding: commutative diagrams are the
+hieroglyphs in which nature writes the grammar of thought.</p>
+<hr />
+<h1 data-number="12" id="sec:notation"><span
+class="header-section-number">12</span> Appendix: Comprehensive Notation
+and Terminology</h1>
+<p>This appendix collects all notation, symbols, and technical
+terminology used throughout the manuscript. Entries are grouped by
+domain and ordered alphabetically within each section. The <strong>First
+Use</strong> column indicates the section where each term is first
+introduced or defined.</p>
+<h2 data-number="12.1" id="a.-linguistic-terms"><span
+class="header-section-number">12.1</span> A. Linguistic Terms</h2>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 27%" />
+<col style="width: 22%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Term</th>
+<th style="text-align: center;">Symbol</th>
+<th style="text-align: left;">Definition</th>
+<th style="text-align: center;">First Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Ablative</td>
+<td style="text-align: center;">ABL</td>
+<td style="text-align: left;">Case role encoding origin, source, or
+cause</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Accusative</td>
+<td style="text-align: center;">ACC</td>
+<td style="text-align: left;">Case role encoding patient, theme, or
+direct object</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Active–Stative alignment</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Alignment in which the sole argument S
+splits by agentivity</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Agent-like argument</td>
+<td style="text-align: center;">A</td>
+<td style="text-align: left;">The agent-like argument of a transitive
+clause</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Alignment functor</td>
+<td style="text-align: center;"><span class="math inline">\(F:
+\mathcal{U} \to \mathcal{L}\)</span></td>
+<td style="text-align: left;">Structure-preserving map from universal to
+language-specific case category</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Alignment type</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Systematic pattern governing how S, A, P
+are grouped for case marking</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Case category</td>
+<td style="text-align: center;"><span
+class="math inline">\(\mathcal{C}\)</span></td>
+<td style="text-align: left;">Small category whose objects are case
+roles and morphisms are grammatical relations</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Case frame</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">The set of case roles activated by a
+particular verb or predicate</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Case-typed noun space</td>
+<td style="text-align: center;"><span
+class="math inline">\(N_{\text{NOM}}, N_{\text{ACC}},
+\ldots\)</span></td>
+<td style="text-align: left;">Case-specific vector subspace in a
+case-enriched DisCoCat model</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Categorial grammar</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Grammar assigning each lexical item an
+algebraic type encoding combinatory potential</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Contraction</td>
+<td style="text-align: center;"><span class="math inline">\(a^l \cdot a
+\to 1\)</span></td>
+<td style="text-align: left;">Pregroup reduction eliminating an adjoint
+pair</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Dative</td>
+<td style="text-align: center;">DAT</td>
+<td style="text-align: left;">Case role encoding recipient, goal, or
+beneficiary</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Deep case</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Fillmore’s universal semantic primitive
+(e.g., Agentive, Objective)</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Ergative–Absolutive alignment</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Alignment grouping S = P <span
+class="math inline">\(\neq\)</span> A</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Expansion</td>
+<td style="text-align: center;"><span class="math inline">\(1 \to a
+\cdot a^l\)</span></td>
+<td style="text-align: left;">Pregroup expansion introducing an adjoint
+pair</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Fluid-S</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Alignment in which S marking varies by
+context or volition</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Genitive</td>
+<td style="text-align: center;">GEN</td>
+<td style="text-align: left;">Case role encoding possessor or
+source</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Formal semantics</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Montague’s programme: meaning assigned
+compositionally via truth-conditional functions</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Grammatical relation</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Morphism in a case category relating two
+case roles</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Instrumental</td>
+<td style="text-align: center;">INS</td>
+<td style="text-align: left;">Case role encoding instrument or
+means</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Kāraka</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Pāṇini’s system of deep semantic roles in
+Sanskrit grammar</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Left adjoint</td>
+<td style="text-align: center;"><span
+class="math inline">\(a^l\)</span></td>
+<td style="text-align: left;">Left adjoint type satisfying <span
+class="math inline">\(a^l \cdot a \leq 1\)</span></td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Locative</td>
+<td style="text-align: center;">LOC</td>
+<td style="text-align: left;">Case role encoding location or
+context</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Markedness</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Asymmetry in the formal complexity of
+paradigmatic oppositions</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Monadic semantics</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Song’s extension using monads to model
+sublexical verb-root decomposition</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Nominative</td>
+<td style="text-align: center;">NOM</td>
+<td style="text-align: left;">Case role encoding agent, experiencer, or
+intransitive subject</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Nominative–Accusative alignment</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Alignment grouping S = A <span
+class="math inline">\(\neq\)</span> P</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Passivization</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Syntactic transformation promoting patient
+to subject position</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Patient-like argument</td>
+<td style="text-align: center;">P</td>
+<td style="text-align: left;">The patient-like argument of a transitive
+clause</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Pregroup grammar</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Grammar where types have left and right
+adjoints forming a compact closed category</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Proto-Agent</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Dowty’s cluster of agentive entailments
+(volition, sentience, causation)</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Proto-Patient</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Dowty’s cluster of patient entailments
+(change of state, causal affectedness)</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Right adjoint</td>
+<td style="text-align: center;"><span
+class="math inline">\(a^r\)</span></td>
+<td style="text-align: left;">Right adjoint type satisfying <span
+class="math inline">\(a \cdot a^r \leq 1\)</span></td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Sole argument</td>
+<td style="text-align: center;">S</td>
+<td style="text-align: left;">The sole argument of an intransitive
+clause</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Thematic role</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Semantic relation between a predicate and
+its argument (Agent, Patient, Goal, etc.)</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Tripartite alignment</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Alignment in which S <span
+class="math inline">\(\neq\)</span> A <span
+class="math inline">\(\neq\)</span> P (all three distinguished)</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Verb root decomposition</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Analysis of a verb’s internal causative
+and result-state layers via a monad</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Vocative</td>
+<td style="text-align: center;">VOC</td>
+<td style="text-align: left;">Case role encoding direct address</td>
+<td style="text-align: center;">§2</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="12.2" id="b.-category-theory"><span
+class="header-section-number">12.2</span> B. Category Theory</h2>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 27%" />
+<col style="width: 22%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Term</th>
+<th style="text-align: center;">Symbol</th>
+<th style="text-align: left;">Definition</th>
+<th style="text-align: center;">First Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Box</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Node in a string diagram representing a
+morphism</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Cap</td>
+<td style="text-align: center;"><span class="math inline">\(\eta: 1 \to
+a^r \otimes a\)</span></td>
+<td style="text-align: left;">Unit of a compact closure (coevaluation
+map)</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Category</td>
+<td style="text-align: center;"><span
+class="math inline">\(\mathcal{C}\)</span></td>
+<td style="text-align: left;">Collection of objects and morphisms with
+identity and associative composition</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Classifying topos</td>
+<td style="text-align: center;"><span
+class="math inline">\(\mathcal{E}_{\mathbb{T}}\)</span></td>
+<td style="text-align: left;">Canonical topos whose models correspond to
+geometric functors from <span
+class="math inline">\(\mathcal{E}_{\mathbb{T}}\)</span></td>
+<td style="text-align: center;">§6</td>
+</tr>
+<tr>
+<td style="text-align: left;">Codomain</td>
+<td style="text-align: center;"><span
+class="math inline">\(\text{cod}(f)\)</span></td>
+<td style="text-align: left;">Target object of a morphism <span
+class="math inline">\(f\)</span></td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Commutative diagram</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Diagram in which all directed paths with
+the same start and end yield equal composites</td>
+<td style="text-align: center;">§1</td>
+</tr>
+<tr>
+<td style="text-align: left;">Cobordism</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Manifold with boundary connecting two
+lower-dimensional manifolds; domain of TQFT functors</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Compact closed category</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Monoidal category in which every object
+has a left and right dual</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Composition</td>
+<td style="text-align: center;"><span class="math inline">\(g \circ
+f\)</span></td>
+<td style="text-align: left;">Sequential application of morphisms: first
+<span class="math inline">\(f\)</span>, then <span
+class="math inline">\(g\)</span></td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Cup</td>
+<td style="text-align: center;"><span class="math inline">\(\varepsilon:
+a \otimes a^r \to 1\)</span></td>
+<td style="text-align: left;">Counit of a compact closure (evaluation
+map)</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Diagram</td>
+<td style="text-align: center;"><span
+class="math inline">\(D\)</span></td>
+<td style="text-align: left;">DisCoPy representation of a morphism in a
+monoidal category</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\dagger\)</span>-compact closed category</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Compact closed category with a
+contravariant involutive endofunctor <span
+class="math inline">\(\dagger\)</span>; framework for ZX-calculus</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Domain</td>
+<td style="text-align: center;"><span
+class="math inline">\(\text{dom}(f)\)</span></td>
+<td style="text-align: left;">Source object of a morphism <span
+class="math inline">\(f\)</span></td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Fiber bundle</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Projection <span
+class="math inline">\(\pi: E \to B\)</span> whose fibers carry
+role-filler structure; topos-theoretic LoT model</td>
+<td style="text-align: center;">§6</td>
+</tr>
+<tr>
+<td style="text-align: left;">Functor</td>
+<td style="text-align: center;"><span class="math inline">\(F:
+\mathcal{C} \to \mathcal{D}\)</span></td>
+<td style="text-align: left;">Structure-preserving map between
+categories</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Geometric theory</td>
+<td style="text-align: center;"><span
+class="math inline">\(\mathbb{T}\)</span></td>
+<td style="text-align: left;">Theory axiomatized by sequents with finite
+conjunctions, arbitrary disjunctions, existential quantification</td>
+<td style="text-align: center;">§6</td>
+</tr>
+<tr>
+<td style="text-align: left;">Identity morphism</td>
+<td style="text-align: center;"><span
+class="math inline">\(\text{id}_A\)</span></td>
+<td style="text-align: left;">Morphism from <span
+class="math inline">\(A\)</span> to itself satisfying <span
+class="math inline">\(f \circ \text{id} = f = \text{id} \circ
+f\)</span></td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Monad</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Endofunctor with unit and multiplication
+satisfying associativity and unit laws</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Monoidal category</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Category with a bifunctor <span
+class="math inline">\(\otimes\)</span> (tensor product) and unit object
+<span class="math inline">\(I\)</span></td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Morita equivalence</td>
+<td style="text-align: center;"><span
+class="math inline">\(\mathcal{E}_{\mathbb{T}_1} \simeq
+\mathcal{E}_{\mathbb{T}_2}\)</span></td>
+<td style="text-align: left;">Equivalence of classifying toposes
+enabling inter-theoretic transfer</td>
+<td style="text-align: center;">§6</td>
+</tr>
+<tr>
+<td style="text-align: left;">Morphism</td>
+<td style="text-align: center;"><span class="math inline">\(f: A \to
+B\)</span></td>
+<td style="text-align: left;">Arrow between objects in a category;
+encodes a relation or transformation</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Natural transformation</td>
+<td style="text-align: center;"><span class="math inline">\(\alpha: F
+\Rightarrow G\)</span></td>
+<td style="text-align: left;">Family of morphisms <span
+class="math inline">\(\alpha_A: F(A) \to G(A)\)</span> commuting with
+all morphisms</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Object</td>
+<td style="text-align: center;"><span class="math inline">\(A, B,
+\ldots\)</span></td>
+<td style="text-align: left;">Entities in a category; in our framework,
+case roles</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Presheaf</td>
+<td style="text-align: center;"><span
+class="math inline">\(\hat{\mathcal{C}} = [\mathcal{C}^{op},
+\textbf{Set}]\)</span></td>
+<td style="text-align: left;">Contravariant functor from <span
+class="math inline">\(\mathcal{C}\)</span> to <strong>Set</strong></td>
+<td style="text-align: center;">§6</td>
+</tr>
+<tr>
+<td style="text-align: left;">Snake equation</td>
+<td style="text-align: center;"><span class="math inline">\((1 \otimes
+\varepsilon) \circ (\eta \otimes 1) = 1\)</span></td>
+<td style="text-align: left;">Zigzag identity: fundamental axiom of
+compact closed categories</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">String diagram</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Planar graph faithfully representing
+morphisms in a monoidal category</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Subobject classifier</td>
+<td style="text-align: center;"><span
+class="math inline">\(\Omega\)</span></td>
+<td style="text-align: left;">Object in a topos playing the role of a
+truth-value object</td>
+<td style="text-align: center;">§6</td>
+</tr>
+<tr>
+<td style="text-align: left;">Swap</td>
+<td style="text-align: center;"><span
+class="math inline">\(\sigma_{A,B}: A \otimes B \to B \otimes
+A\)</span></td>
+<td style="text-align: left;">Braiding morphism permuting two objects in
+a symmetric monoidal category</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Tensor product</td>
+<td style="text-align: center;"><span class="math inline">\(A \otimes
+B\)</span></td>
+<td style="text-align: left;">Monoidal product representing parallel
+composition or concatenation</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Topos</td>
+<td style="text-align: center;"><span
+class="math inline">\(\mathcal{E}\)</span></td>
+<td style="text-align: left;">Category with products, exponentials, and
+a subobject classifier; generalized universe of sets</td>
+<td style="text-align: center;">§6</td>
+</tr>
+<tr>
+<td style="text-align: left;">Universal construction</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Object or morphism characterized by a
+universal property (product, coproduct, limit)</td>
+<td style="text-align: center;">§6</td>
+</tr>
+<tr>
+<td style="text-align: left;">Wire</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Edge in a string diagram representing a
+type (object)</td>
+<td style="text-align: center;">§3</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="12.3" id="c.-enriched-categories-and-magnitude"><span
+class="header-section-number">12.3</span> C. Enriched Categories and
+Magnitude</h2>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 27%" />
+<col style="width: 22%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Term</th>
+<th style="text-align: center;">Symbol</th>
+<th style="text-align: left;">Definition</th>
+<th style="text-align: center;">First Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Categorical magnitude</td>
+<td style="text-align: center;"><span class="math inline">\(\lvert X
+\rvert\)</span></td>
+<td style="text-align: left;">Sum <span class="math inline">\(\sum_i
+w_i\)</span> where <span class="math inline">\((w_1, \ldots,
+w_n)\)</span> solves <span class="math inline">\(Z \mathbf{w} =
+\mathbf{1}\)</span>; measures effective number of objects</td>
+<td style="text-align: center;">§5</td>
+</tr>
+<tr>
+<td style="text-align: left;">Composition inequality</td>
+<td style="text-align: center;"><span
+class="math inline">\(\mathcal{V}(A,B) \otimes \mathcal{V}(B,C) \leq
+\mathcal{V}(A,C)\)</span></td>
+<td style="text-align: left;">Enriched analogue of composition: the
+composite hom-value is at least the product of intermediate values</td>
+<td style="text-align: center;">§5</td>
+</tr>
+<tr>
+<td style="text-align: left;">Enriched category</td>
+<td style="text-align: center;"><span
+class="math inline">\(\mathcal{V}\text{-Cat}\)</span></td>
+<td style="text-align: left;">Category whose hom-sets are replaced by
+objects of a monoidal category <span
+class="math inline">\(\mathcal{V}\)</span></td>
+<td style="text-align: center;">§5</td>
+</tr>
+<tr>
+<td style="text-align: left;">Enriched functor</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Structure-preserving map between enriched
+categories respecting hom-values</td>
+<td style="text-align: center;">§5</td>
+</tr>
+<tr>
+<td style="text-align: left;">Hom-value</td>
+<td style="text-align: center;"><span
+class="math inline">\(\mathcal{V}(A,B) \in [0,1]\)</span></td>
+<td style="text-align: left;">Enriched analogue of hom-set; measures
+degree of relation between objects</td>
+<td style="text-align: center;">§5</td>
+</tr>
+<tr>
+<td style="text-align: left;">Identity inequality</td>
+<td style="text-align: center;"><span class="math inline">\(1 \leq
+\mathcal{V}(A,A)\)</span></td>
+<td style="text-align: left;">Every object has maximal self-relatedness
+in the enriched hom</td>
+<td style="text-align: center;">§5</td>
+</tr>
+<tr>
+<td style="text-align: left;">Similarity matrix</td>
+<td style="text-align: center;"><span class="math inline">\(Z_{ij} =
+\mathcal{V}(A_i, A_j)\)</span></td>
+<td style="text-align: left;">Matrix of all pairwise hom-values; used to
+compute categorical magnitude</td>
+<td style="text-align: center;">§5</td>
+</tr>
+<tr>
+<td style="text-align: left;">Lawvere metric space</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Category enriched over <span
+class="math inline">\(([0,\infty], +, 0)\)</span>; generalizes metric
+spaces via enriched categories</td>
+<td style="text-align: center;">§5</td>
+</tr>
+<tr>
+<td style="text-align: left;">Shannon entropy</td>
+<td style="text-align: center;"><span
+class="math inline">\(H\)</span></td>
+<td style="text-align: left;">Information-theoretic measure
+characterized as the unique derivation of a topological operad
+(Bradley)</td>
+<td style="text-align: center;">§5</td>
+</tr>
+<tr>
+<td style="text-align: left;">Topological operad</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Operad with topological structure whose
+derivations connect magnitude to entropy</td>
+<td style="text-align: center;">§5</td>
+</tr>
+<tr>
+<td style="text-align: left;">Weight vector</td>
+<td style="text-align: center;"><span
+class="math inline">\(\mathbf{w}\)</span></td>
+<td style="text-align: left;">Solution to <span
+class="math inline">\(Z\mathbf{w} = \mathbf{1}\)</span>; entries are the
+effective weights of each object</td>
+<td style="text-align: center;">§5</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="12.4" id="d.-distributional-semantics-and-llms"><span
+class="header-section-number">12.4</span> D. Distributional Semantics
+and LLMs</h2>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 27%" />
+<col style="width: 22%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Term</th>
+<th style="text-align: center;">Symbol</th>
+<th style="text-align: left;">Definition</th>
+<th style="text-align: center;">First Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Attention mechanism</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Transformer component computing weighted
+relevance between token positions</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Attention weight</td>
+<td style="text-align: center;"><span
+class="math inline">\(\alpha_{ij}\)</span></td>
+<td style="text-align: left;">Softmax-normalized score encoding
+contextual relevance of token <span class="math inline">\(j\)</span> to
+token <span class="math inline">\(i\)</span></td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">BERT</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Bidirectional Encoder Representations from
+Transformers; masked language model producing contextualized
+embeddings</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Contextualized embedding</td>
+<td style="text-align: center;"><span
+class="math inline">\(\mathbf{v}_w^{(c)}\)</span></td>
+<td style="text-align: left;">Vector representation of word <span
+class="math inline">\(w\)</span> that varies with linguistic context
+<span class="math inline">\(c\)</span></td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Compact closure map</td>
+<td style="text-align: center;"><span
+class="math inline">\(\varepsilon_N: N \otimes N \to
+\mathbb{R}\)</span></td>
+<td style="text-align: left;">Inner product implementing pregroup
+contraction in the vector space semantics</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Cosine similarity</td>
+<td style="text-align: center;"><span
+class="math inline">\(\cos(\mathbf{u}, \mathbf{v})\)</span></td>
+<td style="text-align: left;">Similarity measure <span
+class="math inline">\(\frac{\mathbf{u} \cdot \mathbf{v}}{\|\mathbf{u}\|
+\|\mathbf{v}\|}\)</span> between vectors</td>
+<td style="text-align: center;">§5</td>
+</tr>
+<tr>
+<td style="text-align: left;">Distributional Memory</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Baroni–Lenci tensor-based framework
+structuring co-occurrence as (word, relation, word) triples</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">DisCoCat</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Distributional Compositional Categorical
+model; monoidal functor from pregroup grammars to vector spaces</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">DisCoCirc</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Discourse-level extension of DisCoCat with
+persistent entity wires</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Distributional hypothesis</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">The thesis that words occurring in similar
+contexts have similar meanings (Harris 1954, Firth 1957)</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">GloVe</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Global Vectors for Word Representation;
+log-bilinear model of word co-occurrence statistics</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">GPT</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Generative Pre-trained Transformer;
+autoregressive language model</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Meaning functor</td>
+<td style="text-align: center;"><span class="math inline">\(F:
+\mathbf{Preg} \to \mathbf{FVect}\)</span></td>
+<td style="text-align: left;">Monoidal functor assigning vector spaces
+to types and linear maps to derivations</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Noun space</td>
+<td style="text-align: center;"><span
+class="math inline">\(N\)</span></td>
+<td style="text-align: left;">Vector space to which noun types <span
+class="math inline">\(n\)</span> map under the meaning functor</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Parameterized optic</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Categorical construction (Gavranović)
+modeling attention heads as functorial lenses</td>
+<td style="text-align: center;">§9</td>
+</tr>
+<tr>
+<td style="text-align: left;">Self-attention</td>
+<td style="text-align: center;"><span
+class="math inline">\(\text{Attn}(Q,K,V) =
+\text{softmax}(\frac{QK^\top}{\sqrt{d_k}})V\)</span></td>
+<td style="text-align: left;">Core transformer operation computing
+contextualized representations</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Sentence space</td>
+<td style="text-align: center;"><span
+class="math inline">\(S\)</span></td>
+<td style="text-align: left;">Vector space to which sentence type <span
+class="math inline">\(s\)</span> maps under the meaning functor</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Sentence vector</td>
+<td style="text-align: center;"><span
+class="math inline">\(\overrightarrow{\text{sentence}}\)</span></td>
+<td style="text-align: left;">Vector in <span
+class="math inline">\(S\)</span> computed by tensoring and contracting
+word meanings via DisCoCat</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Static embedding</td>
+<td style="text-align: center;"><span
+class="math inline">\(\mathbf{v}_w\)</span></td>
+<td style="text-align: left;">Fixed vector representation of word <span
+class="math inline">\(w\)</span> independent of context (e.g., Word2Vec,
+GloVe)</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Transformer</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Neural architecture using self-attention
+and feed-forward layers for sequence processing</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Word2Vec</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Neural embedding model (Mikolov et
+al. 2013) learning word vectors from local context windows</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Word vector</td>
+<td style="text-align: center;"><span class="math inline">\(\mathbf{v}_w
+\in \mathbb{R}^d\)</span></td>
+<td style="text-align: left;"><span
+class="math inline">\(d\)</span>-dimensional real-valued vector encoding
+distributional properties of word <span
+class="math inline">\(w\)</span></td>
+<td style="text-align: center;">§4</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="12.5"
+id="e.-active-inference-and-cognitive-models"><span
+class="header-section-number">12.5</span> E. Active Inference and
+Cognitive Models</h2>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 27%" />
+<col style="width: 22%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Term</th>
+<th style="text-align: center;">Symbol</th>
+<th style="text-align: left;">Definition</th>
+<th style="text-align: center;">First Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Active inference</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Framework in which perception and action
+are unified as variational free energy minimization</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Active sampling</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Agent’s selection of actions to confirm or
+update case assignments via sensory evidence</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Belief updating</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Bayesian posterior computation: revising
+generative model parameters given new observations</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">CEREBRUM</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Case-Enabled Reasoning Engine with
+Bayesian Representations Using Models; treats AI models as case-bearing
+entities</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Distributional Active Inference
+(DAIF)</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Extension replacing scalar value summaries
+with full return distributions in active inference</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Distributional RL</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Reinforcement learning operating on full
+return distributions rather than scalar expected values</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Free energy</td>
+<td style="text-align: center;"><span
+class="math inline">\(F\)</span></td>
+<td style="text-align: left;">Variational bound on surprisal; <span
+class="math inline">\(F = D_{KL}[q(\theta) \parallel p(\theta \mid o)] -
+\ln p(o)\)</span></td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Free energy principle (FEP)</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">The principle that self-organizing systems
+maintain themselves by minimizing surprisal</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Garden-path reanalysis</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Restructuring of case assignments when
+incoming evidence contradicts the current parse</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Generative model</td>
+<td style="text-align: center;"><span class="math inline">\(p(o,
+s)\)</span></td>
+<td style="text-align: left;">Joint probability model over observations
+<span class="math inline">\(o\)</span> and hidden states <span
+class="math inline">\(s\)</span></td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Markov blanket</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Statistical boundary separating internal
+states from external environment; defines agent boundary</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">N400</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Event-related brain potential peaking
+~400ms post-stimulus; indexes semantic prediction error</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">P600</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Event-related brain potential peaking
+~600ms post-stimulus; indexes syntactic prediction error</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Perceptual inference</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Updating internal beliefs to better
+predict current observations (reduce prediction error)</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Precision weighting</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Weighting of prediction errors by inverse
+variance; enriched morphism weights serve this role</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Prediction error</td>
+<td style="text-align: center;"><span
+class="math inline">\(\varepsilon\)</span></td>
+<td style="text-align: left;">Difference between predicted and observed
+sensory input; drives belief updating</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Push-forward measure</td>
+<td style="text-align: center;"><span class="math inline">\(T_\#
+\mu\)</span></td>
+<td style="text-align: left;">Distribution obtained by transforming a
+base measure <span class="math inline">\(\mu\)</span> through a function
+<span class="math inline">\(T\)</span></td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Situation semantics</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Framework representing meaning as
+relations between situations (Barwise and Perry 1983)</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Surprisal</td>
+<td style="text-align: center;"><span class="math inline">\(-\ln
+p(o)\)</span></td>
+<td style="text-align: left;">Negative log-probability of an observation
+under the generative model</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Variational free energy</td>
+<td style="text-align: center;"><span
+class="math inline">\(F[q]\)</span></td>
+<td style="text-align: left;">Functional upper bound on surprisal
+minimized by approximate posterior <span
+class="math inline">\(q\)</span></td>
+<td style="text-align: center;">§7</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="12.6" id="f.-quantum-and-topological-terms"><span
+class="header-section-number">12.6</span> F. Quantum and Topological
+Terms</h2>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 27%" />
+<col style="width: 22%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Term</th>
+<th style="text-align: center;">Symbol</th>
+<th style="text-align: left;">Definition</th>
+<th style="text-align: center;">First Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Amplituhedron</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Positive geometry encoding scattering
+amplitudes; connected to TQNN execution traces</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\dagger\)</span>-compact category</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">See <span
+class="math inline">\(\dagger\)</span>-compact closed category in
+§B</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">CPTP map</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Completely Positive Trace-Preserving map;
+quantum channel between Hilbert spaces</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Density operator</td>
+<td style="text-align: center;"><span
+class="math inline">\(\rho\)</span></td>
+<td style="text-align: left;">Positive semidefinite trace-one operator
+encoding a quantum (or semantic) state</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Execution trace</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Record of operations in a quantum
+computation; connects TQNNs to amplituhedra</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Generalized flow</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Graph-theoretic property ensuring
+deterministic circuit extraction from ZX-diagrams</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Hadamard box</td>
+<td style="text-align: center;"><span
+class="math inline">\(H\)</span></td>
+<td style="text-align: left;">ZX-calculus element implementing the
+Hadamard gate; converts between Z and X bases</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Holographic screen</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Information boundary between interacting
+quantum systems carrying a qubit array</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Pointer state</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Preferred quantum state selected by a QRF;
+determines the measurement basis</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Quantum contextuality</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Quantum correlations that reduce
+cohomological obstructions to semantic alignment</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Quantum discord</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Quantum correlation measure equal to
+integrated semantic information in sheaf framework</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Quantum key distribution (QKD)</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Protocol providing information-theoretic
+security for quantum communication channels</td>
+<td style="text-align: center;">§9</td>
+</tr>
+<tr>
+<td style="text-align: left;">Quantum reference frame (QRF)</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Observer-relative frame selecting pointer
+states and inducing decoherence</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Quantum semantic sheaf</td>
+<td style="text-align: center;"><span class="math inline">\((H, F,
+\rho)\)</span></td>
+<td style="text-align: left;">Triple of Hilbert spaces, CPTP channels,
+and density operators over a communication graph</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Reshetikhin–Turaev invariant</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Topological invariant assigning to a
+ribbon graph a linear map via TQFT</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Sheaf cohomology</td>
+<td style="text-align: center;"><span
+class="math inline">\(H^n(\mathcal{F})\)</span></td>
+<td style="text-align: left;">Cohomological obstruction classes
+governing alignment in a quantum semantic sheaf</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Spin-network</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Graph with edges labeled by
+representations and vertices by intertwiners; TQFT data</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Spider</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Elementary ZX-diagram node (Z-spider or
+X-spider) representing a quantum operation</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">TQFT</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Topological Quantum Field Theory; functor
+from cobordisms to Hilbert spaces</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">TQNN</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Topological Quantum Neural Network; QNN
+reformulated via spin-networks and TQFT</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Turaev–Viro invariant</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">State-sum TQFT invariant; implements
+quantum error-correcting codes in TQNNs</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">ZX-calculus</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Graphical language for quantum circuits
+using Z-spiders, X-spiders, and Hadamard boxes</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">ZX-diagram</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">String diagram in a <span
+class="math inline">\(\dagger\)</span>-compact closed category
+representing a quantum process</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">ZX rewrite rule</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Graph-theoretic transformation preserving
+the semantics (linear map) of a ZX-diagram</td>
+<td style="text-align: center;">§8</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="12.7" id="g.-logical-and-type-theoretic-terms"><span
+class="header-section-number">12.7</span> G. Logical and Type-Theoretic
+Terms</h2>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 27%" />
+<col style="width: 22%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Term</th>
+<th style="text-align: center;">Symbol</th>
+<th style="text-align: left;">Definition</th>
+<th style="text-align: center;">First Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\beta\)</span>-reduction</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Computational reduction step in <span
+class="math inline">\(\lambda\)</span>-calculus; corresponds to cut
+elimination in proofs</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Church–Rosser property</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Confluence of <span
+class="math inline">\(\beta\)</span>-reduction: all reduction sequences
+converge to the same normal form</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Curry–Howard isomorphism</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Correspondence between proofs and
+programs, propositions and types</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Cut elimination</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Proof normalization procedure removing
+intermediate lemmas; corresponds to <span
+class="math inline">\(\beta\)</span>-reduction</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Graded type theory</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Extension of type theory tracking effects
+(e.g., evidentiality) via graded modalities</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Lambek calculus</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Non-commutative intuitionistic linear
+logic for syntactic type assignment</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Left residual</td>
+<td style="text-align: center;"><span class="math inline">\(A \backslash
+B\)</span></td>
+<td style="text-align: left;">Type of an expression that, given <span
+class="math inline">\(A\)</span> to the left, produces <span
+class="math inline">\(B\)</span></td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Residuation law</td>
+<td style="text-align: center;"><span class="math inline">\(A \otimes B
+\leq C \iff A \leq C / B \iff B \leq A \backslash C\)</span></td>
+<td style="text-align: left;">Fundamental axiom connecting the three
+connectives of the Lambek calculus</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Right residual</td>
+<td style="text-align: center;"><span class="math inline">\(B /
+A\)</span></td>
+<td style="text-align: left;">Type of an expression that, given <span
+class="math inline">\(A\)</span> to the right, produces <span
+class="math inline">\(B\)</span></td>
+<td style="text-align: center;">§3</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="12.8" id="h.-ai-and-communication-protocols"><span
+class="header-section-number">12.8</span> H. AI and Communication
+Protocols</h2>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 27%" />
+<col style="width: 22%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Term</th>
+<th style="text-align: center;">Symbol</th>
+<th style="text-align: left;">Definition</th>
+<th style="text-align: center;">First Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">A2A Protocol</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Google’s Agent-to-Agent protocol for
+cross-framework agent communication via HTTP/JSON-RPC</td>
+<td style="text-align: center;">§9</td>
+</tr>
+<tr>
+<td style="text-align: left;">ACP</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Agent Communication Protocol; standardizes
+messaging formats across agents, apps, and humans</td>
+<td style="text-align: center;">§9</td>
+</tr>
+<tr>
+<td style="text-align: left;">ANP</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Agent Network Protocol; three-layer
+architecture for trusted distributed agent interaction</td>
+<td style="text-align: center;">§9</td>
+</tr>
+<tr>
+<td style="text-align: left;">Categorical deep learning</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Deep learning approached through the lens
+of category theory (Gavranović et al.)</td>
+<td style="text-align: center;">§9</td>
+</tr>
+<tr>
+<td style="text-align: left;">Double Categorical Systems Theory
+(DCST)</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Framework using 2-categories (horizontal +
+vertical composition) for explainable autonomous AI</td>
+<td style="text-align: center;">§9</td>
+</tr>
+<tr>
+<td style="text-align: left;">Functorial encryption</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Semantic cryptography: applying a secret
+functor to map plaintext categories into ciphertext categories</td>
+<td style="text-align: center;">§9</td>
+</tr>
+<tr>
+<td style="text-align: left;">lambeq</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Quantum Natural Language Processing
+pipeline compiling DisCoCat diagrams to quantum circuits</td>
+<td style="text-align: center;">§9</td>
+</tr>
+<tr>
+<td style="text-align: left;">MCP</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Model Context Protocol; standardizes how
+AI agents access external tools and data sources</td>
+<td style="text-align: center;">§9</td>
+</tr>
+<tr>
+<td style="text-align: left;">Parameterized optics / lenses</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Categorical constructions modeling neural
+network components (Gavranović); attention heads as optics</td>
+<td style="text-align: center;">§9</td>
+</tr>
+<tr>
+<td style="text-align: left;">QNLP</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Quantum Natural Language Processing;
+quantum computation on DisCoCat sentence diagrams</td>
+<td style="text-align: center;">§9</td>
+</tr>
+<tr>
+<td style="text-align: left;">Semantic cryptography</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Encrypting compositional meaning
+structures (functorial encryption, diagram obfuscation, weight
+masking)</td>
+<td style="text-align: center;">§9</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="12.9" id="i.-diagrammatic-reasoning"><span
+class="header-section-number">12.9</span> I. Diagrammatic Reasoning</h2>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 27%" />
+<col style="width: 22%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Term</th>
+<th style="text-align: center;">Symbol</th>
+<th style="text-align: left;">Definition</th>
+<th style="text-align: center;">First Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Cognitively privileged representation</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Representation format that leverages
+perceptual and spatial cognition for inference</td>
+<td style="text-align: center;">§1</td>
+</tr>
+<tr>
+<td style="text-align: left;">Diagram depth</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Length of the longest input-to-output path
+through boxes; measures derivational complexity</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Existential graphs</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Peirce’s graphical logic system conducting
+first-order logic entirely diagrammatically</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Free ride</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Shimojima’s term: information extracted
+from a diagram without explicit inference steps</td>
+<td style="text-align: center;">§1</td>
+</tr>
+<tr>
+<td style="text-align: left;">Hybrid reasoning</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Giardino’s term: reasoning combining
+perceptual pattern recognition with theoretical knowledge</td>
+<td style="text-align: center;">§1</td>
+</tr>
+<tr>
+<td style="text-align: left;">Inferential instrument</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Manders’s term: a diagram whose spatial
+properties encode proof-relevant information</td>
+<td style="text-align: center;">§6</td>
+</tr>
+<tr>
+<td style="text-align: left;">Joyal–Street theorem</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Soundness and completeness of
+string-diagrammatic reasoning for monoidal categories</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Normal form</td>
+<td style="text-align: center;"><span
+class="math inline">\(D_{\text{nf}}\)</span></td>
+<td style="text-align: left;">Canonical form of a diagram obtained by
+rewriting; unique up to the axioms</td>
+<td style="text-align: center;">§4</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="12.10" id="j.-notation-conventions"><span
+class="header-section-number">12.10</span> J. Notation Conventions</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Convention</th>
+<th style="text-align: left;">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><span class="math inline">\(\mathcal{C},
+\mathcal{D}\)</span></td>
+<td style="text-align: left;">Categories</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{V}\)</span></td>
+<td style="text-align: left;">Enrichment base (monoidal category,
+typically <span class="math inline">\(([0,1], \cdot, 1)\)</span>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{U}\)</span></td>
+<td style="text-align: left;">Universal (maximal) case category</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{L}\)</span></td>
+<td style="text-align: left;">Language-specific case category</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{E}_{\mathbb{T}}\)</span></td>
+<td style="text-align: left;">Classifying topos of theory <span
+class="math inline">\(\mathbb{T}\)</span></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="math inline">\(f, g,
+h\)</span></td>
+<td style="text-align: left;">Morphisms</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="math inline">\(F,
+G\)</span></td>
+<td style="text-align: left;">Functors</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="math inline">\(\alpha,
+\beta\)</span></td>
+<td style="text-align: left;">Natural transformations</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="math inline">\(n,
+s\)</span></td>
+<td style="text-align: left;">Basic pregroup types: noun, sentence</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="math inline">\(n^l,
+n^r\)</span></td>
+<td style="text-align: left;">Left and right adjoints of type <span
+class="math inline">\(n\)</span></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(n_{\text{NOM}}, n_{\text{ACC}}\)</span></td>
+<td style="text-align: left;">Case-subscripted noun types (e.g.,
+nominative noun, accusative noun)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="math inline">\(N,
+S\)</span></td>
+<td style="text-align: left;">Noun space and sentence space under the
+meaning functor</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(N_{\text{NOM}}, N_{\text{ACC}},
+\ldots\)</span></td>
+<td style="text-align: left;">Case-specific vector subspaces in
+case-enriched DisCoCat</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\overrightarrow{\text{word}}\)</span></td>
+<td style="text-align: left;">Word vector (column vector in noun space
+<span class="math inline">\(N\)</span>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\overleftrightarrow{\text{verb}}\)</span></td>
+<td style="text-align: left;">Verb tensor (element of <span
+class="math inline">\(N \otimes S \otimes N\)</span> for transitive
+verbs)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathbf{Preg}\)</span></td>
+<td style="text-align: left;">Category of pregroup types and
+reductions</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathbf{FVect}\)</span> / <span
+class="math inline">\(\mathbf{FdVect}\)</span></td>
+<td style="text-align: left;">Category of finite-dimensional vector
+spaces and linear maps</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathbf{FHilb}\)</span></td>
+<td style="text-align: left;">Category of finite-dimensional Hilbert
+spaces and linear maps</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathbf{Qubit}\)</span></td>
+<td style="text-align: left;">Category of qubit systems with tensor
+product structure</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathbf{Set}\)</span></td>
+<td style="text-align: left;">Category of sets and functions</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\otimes\)</span></td>
+<td style="text-align: left;">Tensor product (monoidal product, type
+concatenation)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\circ\)</span></td>
+<td style="text-align: left;">Composition of morphisms</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\Rightarrow\)</span></td>
+<td style="text-align: left;">Natural transformation between
+functors</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\simeq\)</span></td>
+<td style="text-align: left;">Categorical equivalence</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\leq\)</span></td>
+<td style="text-align: left;">Preorder relation on types
+(derivability)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\gamma\)</span></td>
+<td style="text-align: left;">Discount factor in distributional RL
+return computation</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="math inline">\(w \in
+[0,1]\)</span></td>
+<td style="text-align: left;">Enriched morphism weight (proto-role
+satisfaction degree)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\varepsilon\)</span></td>
+<td style="text-align: left;">Prediction error (active inference); also
+compact closure counit</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\eta\)</span></td>
+<td style="text-align: left;">Compact closure unit (cap); also learning
+rate in some contexts</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\rho\)</span></td>
+<td style="text-align: left;">Density operator (quantum state)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\([@key]\)</span></td>
+<td style="text-align: left;">Parenthetical citation</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>[-@key]</code></td>
+<td style="text-align: left;">Suppress-author citation</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>\autoref{...}</code></td>
+<td style="text-align: left;">Automatic cross-reference (section or
+figure)</td>
+</tr>
+</tbody>
+</table>
 </body>
 </html>

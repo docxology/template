@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import re
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 from infrastructure.core.logging_utils import get_logger
 
@@ -102,7 +102,6 @@ ON_TOPIC_SIGNALS = [
     r"the study",
 ]
 
-
 def has_on_topic_signals(text: str) -> bool:
     """Check if response contains clear on-topic indicators.
 
@@ -120,8 +119,7 @@ def has_on_topic_signals(text: str) -> bool:
     # If we find 2+ on-topic signals, it's clearly on-topic
     return signals_found >= 2
 
-
-def detect_conversational_phrases(text: str) -> List[str]:
+def detect_conversational_phrases(text: str) -> list[str]:
     """Detect conversational AI phrases in response text.
 
     Args:
@@ -140,8 +138,7 @@ def detect_conversational_phrases(text: str) -> List[str]:
                 phrases_found.append(match.group(0)[:50])
     return phrases_found
 
-
-def check_format_compliance(response: str) -> Tuple[bool, List[str], Dict[str, Any]]:
+def check_format_compliance(response: str) -> tuple[bool, list[str], dict[str, Any]]:
     """Check response for format compliance issues.
 
     Simplified validation focusing on structural compliance only.
@@ -157,7 +154,7 @@ def check_format_compliance(response: str) -> Tuple[bool, List[str], Dict[str, A
         Tuple of (is_compliant, list of issues, details dict)
     """
     issues = []
-    details: Dict[str, Any] = {
+    details: dict[str, Any] = {
         "conversational_phrases": [],
     }
 
@@ -170,7 +167,6 @@ def check_format_compliance(response: str) -> Tuple[bool, List[str], Dict[str, A
 
     is_compliant = len(issues) == 0
     return is_compliant, issues, details
-
 
 def is_off_topic(text: str) -> bool:
     """Check if response contains off-topic indicators.

@@ -16,7 +16,6 @@ import hmac
 import os
 import secrets
 from pathlib import Path
-from typing import Dict
 
 from infrastructure.core.logging_utils import get_logger
 
@@ -31,7 +30,6 @@ try:
 except ImportError:
     _CRYPTOGRAPHY_AVAILABLE = False
 
-
 def _require_cryptography() -> None:
     """Raise ImportError with guidance if ``cryptography`` is missing."""
     if not _CRYPTOGRAPHY_AVAILABLE:
@@ -40,14 +38,12 @@ def _require_cryptography() -> None:
             "Install it with: pip install cryptography"
         )
 
-
 # ── AES-256-GCM payload encryption ──────────────────────────────────────
-
 
 def encrypt_payload(
     plaintext: str,
     key: bytes | None = None,
-) -> Dict[str, str]:
+) -> dict[str, str]:
     """Encrypt a plaintext string with AES-256-GCM.
 
     Args:
@@ -76,7 +72,6 @@ def encrypt_payload(
     logger.debug(f"Payload encrypted (AES-256-GCM), ciphertext length={len(ciphertext)}")
     return result
 
-
 def decrypt_payload(
     ciphertext_b64: str,
     nonce_b64: str,
@@ -102,14 +97,12 @@ def decrypt_payload(
     plaintext = aesgcm.decrypt(nonce, ciphertext, None)
     return plaintext.decode("utf-8")
 
-
 # ── HMAC digital fingerprint ────────────────────────────────────────────
-
 
 def generate_fingerprint(
     content: bytes,
     secret: str | None = None,
-) -> Dict[str, str]:
+) -> dict[str, str]:
     """Generate an HMAC-SHA256 digital fingerprint.
 
     This does **not** require the ``cryptography`` package — it uses the
@@ -131,9 +124,7 @@ def generate_fingerprint(
 
     return {"fingerprint": fp, "secret": secret}
 
-
 # ── PDF password protection ─────────────────────────────────────────────
-
 
 def apply_pdf_password(
     input_pdf: Path,
@@ -189,7 +180,6 @@ def apply_pdf_password(
 
     logger.info(f"PDF password protection applied → {output_pdf.name}")
     return output_pdf
-
 
 def generate_document_id() -> str:
     """Generate a unique document identifier (UUID4-style hex token)."""

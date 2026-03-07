@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import List, Optional
 
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.rendering.config import RenderingConfig
@@ -14,15 +13,14 @@ from infrastructure.rendering.web_renderer import WebRenderer
 
 logger = get_logger(__name__)
 
-
 class RenderManager:
     """Orchestrates rendering of all output formats."""
 
     def __init__(
         self,
-        config: Optional[RenderingConfig] = None,
-        manuscript_dir: Optional[Path] = None,
-        figures_dir: Optional[Path] = None,
+        config: RenderingConfig | None = None,
+        manuscript_dir: Path | None = None,
+        figures_dir: Path | None = None,
     ):
         self.config = config or RenderingConfig.from_env()
         self.manuscript_dir = manuscript_dir
@@ -32,7 +30,7 @@ class RenderManager:
         self.web_renderer = WebRenderer(self.config)
         self.poster_renderer = PosterRenderer(self.config)
 
-    def render_all(self, source_file: Path) -> List[Path]:
+    def render_all(self, source_file: Path) -> list[Path]:
         """Render all supported formats for a source file.
 
         For markdown files, generates:
@@ -177,7 +175,7 @@ class RenderManager:
 
     def render_combined_pdf(
         self,
-        source_files: List[Path],
+        source_files: list[Path],
         manuscript_dir: Path,
         project_name: str = "project",
     ) -> Path:
@@ -196,7 +194,7 @@ class RenderManager:
 
     def render_combined_web(
         self,
-        source_files: List[Path],
+        source_files: list[Path],
         manuscript_dir: Path,
         project_name: str = "project",
     ) -> Path:

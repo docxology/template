@@ -142,7 +142,7 @@ structure on syntactic types: two binary operations, the left residual
 connective \(\otimes\) (concatenation). The key axiom is the residuation
 law:
 
-\[A \otimes B \leq C \quad \iff \quad A \leq C / B \quad \iff \quad B \leq A \backslash C\]
+\[A \otimes B \leq C \quad \iff \quad A \leq C / B \quad \iff \quad B \leq A \backslash C \tag{3.1}\]
 
 This law captures the fundamental duality of syntax: a verb of type
 \((n \backslash s) / n\) \emph{consumes} noun arguments to
@@ -157,7 +157,7 @@ Lambek {[}-@lambek2004fine{]} later simplified the framework to
 \textbf{pregroup grammars}, where each type \(a\) has a left adjoint
 \(a^l\) and a right adjoint \(a^r\) satisfying:
 
-\[a^l \cdot a \leq 1 \leq a \cdot a^l \qquad a \cdot a^r \leq 1 \leq a^r \cdot a\]
+\[a^l \cdot a \leq 1 \leq a \cdot a^l \qquad a \cdot a^r \leq 1 \leq a^r \cdot a \tag{3.2}\]
 
 This formal structuralism was revolutionized by Coecke, Sadrzadeh, and
 Clark's introduction of the \textbf{DisCoCat} (Distributional
@@ -381,12 +381,12 @@ noun types feeding into the verb's pregroup derivation.
 In a pregroup grammar, the active transitive ``Alice chases Bob'' has
 the type reduction:
 
-\[n_{\text{NOM}} \cdot (n^r \cdot s \cdot n^l) \cdot n_{\text{ACC}} \to s\]
+\[n_{\text{NOM}} \cdot (n^r \cdot s \cdot n^l) \cdot n_{\text{ACC}} \to s \tag{3.3}\]
 
 Passivization permutes the noun arguments, yielding ``Bob is chased by
 Alice'' with the swapped type assignment:
 
-\[n_{\text{ACC}} \cdot (n^r \cdot s \cdot n^l) \cdot n_{\text{NOM}} \to s\]
+\[n_{\text{ACC}} \cdot (n^r \cdot s \cdot n^l) \cdot n_{\text{NOM}} \to s \tag{3.4}\]
 
 Crucially, DisCoPy's \texttt{Swap} primitive makes this permutation
 explicit and algebraically precise: the swap operation

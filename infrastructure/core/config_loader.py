@@ -16,36 +16,29 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
-
 class AuthorConfig(TypedDict, total=False):
     name: str
     corresponding: bool
     orcid: str
     email: str
 
-
 class PaperConfig(TypedDict, total=False):
     title: str
 
-
 class PublicationConfig(TypedDict, total=False):
     doi: str
-
 
 class TranslationsConfig(TypedDict, total=False):
     enabled: bool
     languages: list[str]
 
-
 class ReviewsConfig(TypedDict, total=False):
     enabled: bool
     types: list[str]
 
-
 class LLMConfig(TypedDict, total=False):
     translations: TranslationsConfig
     reviews: ReviewsConfig
-
 
 class TestingConfig(TypedDict, total=False):
     max_test_failures: int
@@ -53,7 +46,6 @@ class TestingConfig(TypedDict, total=False):
     max_project_test_failures: int
     infra_coverage_threshold: int
     project_coverage_threshold: int
-
 
 class SteganographyConfigYAML(TypedDict, total=False):
     """YAML schema for the steganography config section."""
@@ -67,7 +59,6 @@ class SteganographyConfigYAML(TypedDict, total=False):
     overlay_opacity: float
     pdf_password: str
 
-
 @dataclass(frozen=True)
 class ResolvedTestingConfig:
     """Immutable, fully-resolved testing configuration with defaults applied."""
@@ -77,7 +68,6 @@ class ResolvedTestingConfig:
     max_project_test_failures: int = 0
     infra_coverage_threshold: int = 60
     project_coverage_threshold: int = 90
-
 
 class ManuscriptConfig(TypedDict, total=False):
     paper: PaperConfig
@@ -89,14 +79,12 @@ class ManuscriptConfig(TypedDict, total=False):
     keywords: list[str]
     metadata: dict[str, str]
 
-
 try:
     import yaml
 
     YAML_AVAILABLE = True
 except ImportError:
     YAML_AVAILABLE = False
-
 
 def validate_config_keys(config: dict[str, Any], config_path: Path | str = "") -> list[str]:
     """Validate top-level config keys against known schema.
@@ -128,7 +116,6 @@ def validate_config_keys(config: dict[str, Any], config_path: Path | str = "") -
             warnings.append(msg)
 
     return warnings
-
 
 def load_config(config_path: Path | str) -> ManuscriptConfig | None:
     """Load configuration from YAML file.
@@ -163,7 +150,6 @@ def load_config(config_path: Path | str) -> ManuscriptConfig | None:
         logger.warning(f"YAML parse error in config {config_path}: {e}")
         return None
 
-
 def format_author_details(authors: list[AuthorConfig], doi: str = "") -> str:
     """Format author details string for LaTeX.
 
@@ -191,7 +177,6 @@ def format_author_details(authors: list[AuthorConfig], doi: str = "") -> str:
     # Join with "\\\\ " (double backslash + space) for LaTeX line breaks
     return "\\\\ ".join(parts)
 
-
 def format_author_name(authors: list[AuthorConfig]) -> str:
     """Format author name(s) for display.
 
@@ -205,7 +190,6 @@ def format_author_name(authors: list[AuthorConfig]) -> str:
         return "Project Author"
 
     return authors[0].get("name", "Project Author")
-
 
 def get_config_as_dict(
     repo_root: Path | str, respect_existing: bool = False
@@ -263,14 +247,12 @@ def get_config_as_dict(
         return {k: v for k, v in result.items() if k not in os.environ}
     return result
 
-
 def get_config_as_env_vars(repo_root: Path | str, respect_existing: bool = True) -> dict[str, str]:
     """Get configuration as environment variables.
 
     Thin wrapper over get_config_as_dict with respect_existing=True by default.
     """
     return get_config_as_dict(repo_root, respect_existing=respect_existing)
-
 
 def find_config_file(repo_root: Path | str, project_name: str | None = None) -> Path | None:
     """Find the manuscript config file at the standard location.
@@ -296,7 +278,6 @@ def find_config_file(repo_root: Path | str, project_name: str | None = None) -> 
         return config_path
 
     return None
-
 
 def get_translation_languages(repo_root: Path | str, project_name: str = "project") -> list[str]:
     """Get list of enabled translation languages from config.
@@ -327,7 +308,6 @@ def get_translation_languages(repo_root: Path | str, project_name: str = "projec
     # Return the list of language codes
     languages = translations_config.get("languages", [])
     return languages if isinstance(languages, list) else []
-
 
 def get_review_types(repo_root: Path | str, project_name: str = "project") -> list[str]:
     """Get list of enabled review types from config.
@@ -387,7 +367,6 @@ def get_review_types(repo_root: Path | str, project_name: str = "project") -> li
 
     return valid_types
 
-
 def _safe_int_from_dict(config_dict: dict, key: str) -> int | None:
     """Safely extract an integer value from a config dict by key."""
     val = config_dict.get(key)
@@ -398,7 +377,6 @@ def _safe_int_from_dict(config_dict: dict, key: str) -> int | None:
     except (ValueError, TypeError):
         logger.debug(f"Invalid {key} value: {val!r}")
         return None
-
 
 def _resolve_int_setting(
     env_var: str,
@@ -421,7 +399,6 @@ def _resolve_int_setting(
     if config_val is not None:
         return config_val
     return default
-
 
 def get_testing_config(repo_root: Path | str) -> ResolvedTestingConfig:
     """Get testing configuration from config.yaml.

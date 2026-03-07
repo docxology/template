@@ -99,6 +99,9 @@ VIZ_CONFIG = {
     "markers": ["o", "s", "^", "D", "v", "p"],
 }
 
+# Project root: projects/code_project/
+project_root = Path(__file__).resolve().parent.parent
+
 
 def apply_visualization_style():
     """Apply global matplotlib style for publication-quality, accessible figures."""

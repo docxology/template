@@ -1,0 +1,100 @@
+{
+  "assessments": {
+    "ai_generated_debt": 80,
+    "convention_outlier": 82,
+    "error_consistency": 85,
+    "cross_module_architecture": 74,
+    "low_level_elegance": 86
+  },
+  "findings": [
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "aidbt-remaining-01",
+      "summary": "generate_pipeline_report unpacks ReportExtras into six local variables used exactly once",
+      "related_files": [
+        "infrastructure/reporting/pipeline_reporter.py"
+      ],
+      "evidence": [
+        "Six consecutive assignments extract every field of extras into identically-named local variables (test_results, validation_results, performance_metrics, error_summary, output_statistics, project_name)",
+        "Each local is used exactly once \u2014 either passed directly to PipelineReport or used in the log_file side-effect block",
+        "Pattern reads as AI padding: x = extras.x if extras is not None else None repeated six times"
+      ],
+      "suggestion": "Use extras directly (extras.test_results etc.) in the PipelineReport constructor, or let ReportExtras carry a to_dict()/to_report() method. Eliminate the intermediate locals entirely.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "conv-logging-all-breadth",
+      "summary": "logging_utils.__all__ re-exports 30+ symbols from five submodules making the public surface non-obvious",
+      "related_files": [
+        "infrastructure/core/logging_utils.py"
+      ],
+      "evidence": [
+        "__all__ lists 30 symbols spanning formatters (JSONFormatter, TemplateFormatter), spinner classes (Spinner, StreamingProgress), ETA functions (calculate_eta, calculate_eta_ema, calculate_eta_with_confidence), and constants (EMOJIS, USE_EMOJIS)",
+        "Callers that only need get_logger must load the import graph of all five submodules \u2014 the public surface is broader than any single caller needs",
+        "Sibling __init__.py files (validation/__init__.py, rendering/__init__.py) export only the symbols that belong to their domain, not everything from all sub-modules"
+      ],
+      "suggestion": "Trim __all__ to the core logging API: get_logger, setup_logger, log_operation, log_timing, log_stage, log_substep, format_duration. Callers needing Spinner or ETA functions should import from logging_progress directly.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "err-stage-tracker-silent-return",
+      "summary": "StagePerformanceTracker.end_stage() returns empty dict when not started; PerformanceMonitor.stop() raises BuildError for same precondition",
+      "related_files": [
+        "infrastructure/core/performance.py"
+      ],
+      "evidence": [
+        "PerformanceMonitor.stop(): raises BuildError('Monitor not started') when start_time is None",
+        "StagePerformanceTracker.end_stage(): logs debug then returns {} when start_time is None \u2014 same precondition, different strategy",
+        "Callers cannot distinguish 'stage never ran' from 'stage produced empty metrics' when receiving {}"
+      ],
+      "suggestion": "Align both classes: either both raise on unstarted state, or both return a typed sentinel (e.g. None or a dedicated NotStarted dataclass). Silent empty dict is harder to debug than an explicit error.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "cma-logging-fan-in-hub",
+      "summary": "logging_utils.py remains a fan-in hub imported by 134 modules, aggregating five submodules with no owned logic beyond get_logger/setup_logger",
+      "related_files": [
+        "infrastructure/core/logging_utils.py",
+        "infrastructure/core/logging_formatters.py",
+        "infrastructure/core/logging_progress.py",
+        "infrastructure/core/logging_helpers.py",
+        "infrastructure/core/logging_constants.py"
+      ],
+      "evidence": [
+        "logging_utils imports from logging_formatters, logging_helpers, logging_constants, logging_progress (twice) and _optional_deps \u2014 it owns none of this logic",
+        "With 134 importers, a change to any of the five submodules triggers reloads through logging_utils, amplifying blast radius",
+        "The split was done for file size, not ownership \u2014 the module hierarchy doesn't reflect domain boundaries"
+      ],
+      "suggestion": "Either collapse the five submodules back into logging_utils.py (cohesion is high, the split adds indirection without isolation) or move them into a logging/ subpackage with a clean __init__.py as the public API.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "lle-performance-profiler-closure",
+      "summary": "profile_memory_usage uses result_holder list as closure workaround and indexes metrics_history[-1] directly",
+      "related_files": [
+        "infrastructure/core/performance.py"
+      ],
+      "evidence": [
+        "result_holder = [] used as a mutable container to return a value from a nested thread function \u2014 a Python 2-era pattern unnecessary since Python 3 nonlocal is available",
+        "metrics_history[-1] accessed immediately after append without guard \u2014 if profiling fails before append, IndexError",
+        "CodeProfiler.monitor() has a we_started_tracing boolean flag to manage tracemalloc state \u2014 the flag and conditional stop could be replaced by a try/finally with tracemalloc.is_tracing()"
+      ],
+      "suggestion": "Replace result_holder list with nonlocal or a threading.Event + shared variable. Guard metrics_history access. Simplify tracemalloc state management with is_tracing().",
+      "confidence": "medium"
+    }
+  ],
+  "provenance": {
+    "kind": "blind_review_batch_import",
+    "blind": true,
+    "runner": "claude",
+    "run_stamp": "ext_20260307_093950_b3fa8930",
+    "created_at": "2026-03-07T09:41:07+00:00",
+    "packet_path": "/Users/4d/Documents/GitHub/template/.desloppify/review_packet_blind.json",
+    "packet_sha256": "623f9f69dc04f68647a0b38b84e056c35189c29ed2bffb204086800a3b8ac7ab",
+    "external_session_id": "ext_20260307_093950_b3fa8930"
+  }
+}

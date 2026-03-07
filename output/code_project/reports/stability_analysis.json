@@ -1,5 +1,5 @@
 {
-  "function_name": "test_func",
+  "function_name": "quadratic_function",
   "stability_score": 1.0,
   "expected_behavior": "Stable numerical behavior across input range",
   "actual_behavior": "Stability score: 1.00",

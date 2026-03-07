@@ -5,13 +5,12 @@ from __future__ import annotations
 import json
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 from infrastructure.core.exceptions import ContextLimitError
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
-
 
 @dataclass
 class Message:
@@ -19,18 +18,17 @@ class Message:
 
     role: str
     content: str
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for API."""
         return {"role": self.role, "content": self.content}
-
 
 class ConversationContext:
     """Manages conversation history and token limits."""
 
     def __init__(self, max_tokens: int = 262144):  # Default to 256K for large-context models
-        self.messages: List[Message] = []
+        self.messages: list[Message] = []
         self.max_tokens = max_tokens
         self.estimated_tokens = 0
         # Usage tracking
@@ -64,7 +62,7 @@ class ConversationContext:
         self._total_messages_added += 1
         self._total_tokens_estimated += tokens
 
-    def get_messages(self) -> List[Dict[str, Any]]:
+    def get_messages(self) -> list[dict[str, Any]]:
         """Get messages formatted for API."""
         return [m.to_dict() for m in self.messages]
 
@@ -151,7 +149,7 @@ class ConversationContext:
                 },
             )
 
-    def save_state(self) -> Dict[str, Any]:
+    def save_state(self) -> dict[str, Any]:
         """Save current context state for restoration.
 
         Returns:
@@ -179,7 +177,7 @@ class ConversationContext:
 
         return state
 
-    def restore_state(self, state: Dict[str, Any]) -> None:
+    def restore_state(self, state: dict[str, Any]) -> None:
         """Restore context from saved state.
 
         Args:
@@ -252,7 +250,7 @@ class ConversationContext:
 
         self.restore_state(import_data)
 
-    def get_usage_stats(self) -> Dict[str, Any]:
+    def get_usage_stats(self) -> dict[str, Any]:
         """Get context usage statistics.
 
         Returns:
@@ -296,7 +294,7 @@ class ConversationContext:
         else:
             return "critical"
 
-    def check_health(self) -> Tuple[str, Dict[str, Any]]:
+    def check_health(self) -> tuple[str, dict[str, Any]]:
         """Check context health and return status with details.
 
         Returns:

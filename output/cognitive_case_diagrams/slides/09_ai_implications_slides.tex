@@ -204,6 +204,35 @@ Gavranović's lens, performs a kind of \emph{categorical case
 assignment}---each attention head selects which input tokens play which
 functional roles in the computation, with attention weights serving as
 the enriched hom-values of \autoref{sec:enriched-categories}.
+
+The distributional semantics perspective deepens this connection. The
+transformer architecture {[}@vaswani2017attention{]} is, at its
+mathematical core, a \emph{distributional composition engine}: it takes
+distributional word representations (embeddings in the Firthian
+tradition {[}@firth1957papers{]}) and composes them into contextual
+sentence representations through attention-weighted aggregation. This is
+precisely what the DisCoCat functor
+\(F: \mathbf{Preg} \to \mathbf{FVect}\) does algebraically---compose
+word vectors according to syntactic structure. The key difference is
+that DisCoCat derives its composition rules from type-logical grammar,
+while transformers learn them from data. The convergence is striking:
+both arrive at tensor-contracted sentence representations, both use
+multi-linear maps for composition, and both produce vector spaces where
+similarity encodes semantic relatedness. Large language models such as
+BERT {[}@devlin2019bert{]} and GPT {[}@radford2018improving{]} thus
+serve as massive-scale \emph{empirical validations} of the
+distributional programme that DisCoCat formalizes categorically.
+
+Recent work on Distributional Active Inference
+{[}@akgul2026distributional{]} extends this parallel into the domain of
+sequential decision-making: just as LLMs model full contextual
+distributions over tokens, distributional RL models full return
+distributions over outcomes---and active inference provides the
+variational Bayesian bridge between the two (see
+\autoref{sec:cognitive-integration}). For multi-agent AI systems, this
+suggests an architecture in which agents maintain \emph{distributional}
+representations of both semantic content and expected interaction
+returns, composing them categorically.
 \end{frame}
 
 \begin{frame}{String Diagrams as a Foundation for Interpretable AI}
@@ -456,6 +485,155 @@ mechanism: topological invariants are robust to continuous deformation,
 so small perturbations to the generative model's parameters cannot
 change its topological class, providing inherent resistance to
 gradient-based adversarial attacks.
+\end{block}
+
+\begin{block}{Prompt Injection as Adversarial Case-Frame Manipulation}
+\protect\phantomsection\label{prompt-injection-as-adversarial-case-frame-manipulation}
+The case-theoretic framework offers a novel structural analysis of
+\emph{prompt injection attacks}---the predominant vulnerability in
+contemporary LLM-based agent systems {[}@arlas2025adversarial{]}. From
+the case-theoretic perspective, a prompt injection attack is
+fundamentally an attempt to \emph{re-assign the case roles} of
+participants in the human-AI interaction:
+
+In a well-formed agent interaction, the relational structure is:
+
+\begin{itemize}
+\tightlist
+\item
+  The \textbf{user} occupies NOM (Agent)---the initiator of requests
+\item
+  The \textbf{system prompt} occupies LOC (Context)---the boundary
+  conditions governing behavior
+\item
+  The \textbf{AI model} occupies INS (Instrument)---the means of
+  executing the user's intentions
+\item
+  The \textbf{tool/API} occupies ACC (Patient)---the target of directed
+  operations
+\item
+  The \textbf{output} occupies DAT (Recipient)---the endpoint of
+  information transfer
+\end{itemize}
+
+A prompt injection attack succeeds by \emph{covertly re-assigning} these
+case roles. The injected text attempts to promote itself from ACC
+(passive data being processed) to NOM (active agent issuing commands),
+while simultaneously demoting the system prompt from LOC (authoritative
+context) to ACC (data to be overridden). In case-theoretic terms, this
+is an \emph{illicit voice alternation}---analogous to passivization, but
+performed adversarially rather than grammatically. Where legitimate
+passivization is a well-typed Swap operation in the pregroup category
+(see \autoref{sec:categorial-grammar}), prompt injection is a \emph{type
+violation}: an attempt to force a case-role permutation that the
+interaction grammar does not license.
+
+This analysis extends to indirect prompt injection in multi-agent
+systems, where adversarial content embedded in retrieved documents or
+tool outputs can manipulate an agent's case-frame interpretation across
+communication boundaries {[}@arlas2025adversarial{]}. In a DisCoCirc
+discourse model (see \autoref{sec:categorical-semantics}), this
+corresponds to an adversarial entity wire that enters the discourse
+circuit through a legitimate channel but carries corrupted state---a
+coreference attack where the adversary's identity wire is
+surreptitiously merged with the system's authority wire.
+\end{block}
+
+\begin{block}{Case-Theoretic Firewalls for Multi-Agent Communication}
+\protect\phantomsection\label{case-theoretic-firewalls-for-multi-agent-communication}
+The case-role analysis of prompt injection suggests a principled
+defense: \textbf{categorical type-checking at agent communication
+boundaries}. Just as a type-safe programming language prevents category
+errors at compile time, a case-theoretic firewall would enforce
+relational type constraints on every message exchange:
+
+\begin{enumerate}
+\item
+  \textbf{Case-role immutability}: Once a participant is assigned a case
+  role (NOM, ACC, INS, LOC) at the protocol level, no subsequent message
+  content can alter that assignment. This is enforced by requiring that
+  the case-type of each wire in the interaction diagram is fixed at
+  connection time---analogous to the type discipline in pregroup
+  grammar, where each word receives its type before composition begins.
+\item
+  \textbf{Relational integrity constraints}: Every message must
+  type-check against the interaction diagram's expected morphism types.
+  A response from an ACC-typed data source that contains NOM-typed
+  command structures would be rejected as a type error, preventing the
+  case-role promotion that prompt injection requires. This is the
+  categorical analogue of a firewall rule: not filtering by content, but
+  by relational type.
+\item
+  \textbf{Enriched confidence boundaries}: The enriched weights of
+  \autoref{sec:enriched-categories} provide a graded trust mechanism.
+  Messages from external sources carry lower enriched hom-values (trust
+  weights) than those from authenticated system components. The
+  composition inequality
+  \(\mathcal{C}(A,C) \geq \mathcal{C}(A,B) \cdot \mathcal{C}(B,C)\)
+  ensures that trust attenuates through communication chains---an
+  indirect message relayed through multiple agents cannot accumulate
+  more authority than any single link provides.
+\item
+  \textbf{Topos-theoretic verification}: Protocol correctness conditions
+  proved in one categorical formulation transfer automatically to all
+  Morita-equivalent formulations (\autoref{sec:topos-theory}), ensuring
+  that security guarantees are implementation-independent. A firewall
+  rule verified for a DisCoCat-style agent communication protocol
+  automatically holds for any quantum circuit implementation of the same
+  protocol.
+\end{enumerate}
+\end{block}
+
+\begin{block}{Epistemic Case Security in Multi-Agent Systems}
+\protect\phantomsection\label{epistemic-case-security-in-multi-agent-systems}
+The interaction between case theory and cognitive security acquires
+particular urgency in multi-agent AI ecosystems where agents must reason
+about each other's beliefs, intentions, and relational roles. We propose
+\emph{epistemic case security} as a framework for protecting the
+relational reasoning of AI agents operating in adversarial environments.
+
+In a multi-agent system governed by case categories, each agent
+maintains a generative model (in the active inference sense) of the
+case-frame structure of its interactions. This model determines who is
+acting (NOM), who is acted upon (ACC), what tools are being used (INS),
+and what contextual constraints apply (LOC). An adversary targeting the
+epistemic level of this system does not merely inject false data---it
+attempts to \emph{corrupt the agent's generative model of relational
+structure itself}:
+
+\begin{itemize}
+\item
+  \textbf{Belief injection}: Causing an agent to adopt a false
+  case-frame interpretation of observed interactions---believing that
+  agent \(A\) (NOM) is acting on agent \(B\) (ACC), when in fact the
+  relational structure is reversed. In active inference terms, this
+  corresponds to injecting a high-precision prior that overwhelms the
+  agent's evidence-based case assignment.
+\item
+  \textbf{Precision poisoning}: Manipulating the enriched weights of an
+  agent's case category so that adversarially useful case assignments
+  receive disproportionate confidence. If the enriched hom-value
+  \(\mathcal{C}(\text{NOM}, \text{ACC})\) is artificially inflated for a
+  particular entity pair, the agent will preferentially interpret that
+  entity as an agent acting on its targets---even when evidence suggests
+  otherwise.
+\item
+  \textbf{Cascade corruption via Morita equivalence}: The
+  topos-theoretic transfer mechanism of \autoref{sec:topos-theory} is
+  both a strength and a vulnerability. Results proved in one framework
+  propagate to all Morita-equivalent frameworks, so a single corrupted
+  axiom in one case-theoretic formulation---say, the distributional
+  framework---could propagate incorrect relational inferences to the
+  typological, type-logical, and enriched frameworks simultaneously.
+\end{itemize}
+
+The defense against epistemic case attacks draws on the same categorical
+structure that enables the attack surface: topological invariants
+provide tamper-detection (a corrupted case category will have different
+magnitude from the authentic one), quantum authentication ensures
+parameter integrity, and the compositional structure of the categorical
+framework enables \emph{local} verification---each morphism can be
+independently authenticated without requiring global model inspection.
 \end{block}
 \end{frame}
 

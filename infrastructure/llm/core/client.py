@@ -17,7 +17,7 @@ import time as time_module
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Callable, Dict, Iterator, Optional, Tuple, TypeVar
+from typing import Any, Callable, Iterator, TypeVar
 
 _T = TypeVar("_T")
 
@@ -41,7 +41,6 @@ try:
     PROMPT_LOADER_AVAILABLE = True
 except ImportError:
     PROMPT_LOADER_AVAILABLE = False
-
 
 def strip_thinking_tags(text: str) -> str:
     """Remove thinking tags from LLM responses.
@@ -71,7 +70,6 @@ def strip_thinking_tags(text: str) -> str:
 
     return result
 
-
 class ResponseMode(str, Enum):
     """Response generation modes for different use cases."""
 
@@ -79,7 +77,6 @@ class ResponseMode(str, Enum):
     LONG = "long"  # Comprehensive answers (> 500 tokens)
     STRUCTURED = "structured"  # JSON-formatted structured response
     RAW = "raw"  # Raw prompt without modification
-
 
 class LLMClient:
     """Client for interacting with LLM providers (Ollama).
@@ -109,7 +106,7 @@ class LLMClient:
         ... )
     """
 
-    def __init__(self, config: Optional[LLMConfig] = None):
+    def __init__(self, config: LLMConfig | None = None):
         """Initialize LLM client.
 
         Args:
@@ -153,7 +150,7 @@ class LLMClient:
             self._system_prompt_injected = True
 
     @staticmethod
-    def _time_call(fn: Callable[[], _T]) -> Tuple[_T, float]:
+    def _time_call(fn: Callable[[], _T]) -> tuple[_T, float]:
         """Execute fn() and return (result, elapsed_seconds)."""
         start = time_module.time()
         result = fn()
@@ -162,9 +159,9 @@ class LLMClient:
     def query(
         self,
         prompt: str,
-        model: Optional[str] = None,
+        model: str | None = None,
         reset_context: bool = False,
-        options: Optional[GenerationOptions] = None,
+        options: GenerationOptions | None = None,
     ) -> str:
         """Send a query to the LLM with context management.
 
@@ -257,8 +254,8 @@ class LLMClient:
     def query_raw(
         self,
         prompt: str,
-        model: Optional[str] = None,
-        options: Optional[GenerationOptions] = None,
+        model: str | None = None,
+        options: GenerationOptions | None = None,
         add_to_context: bool = False,
     ) -> str:
         """Send a raw prompt without system prompt or instructions.
@@ -316,8 +313,8 @@ class LLMClient:
     def query_short(
         self,
         prompt: str,
-        model: Optional[str] = None,
-        options: Optional[GenerationOptions] = None,
+        model: str | None = None,
+        options: GenerationOptions | None = None,
     ) -> str:
         """Generate a short response (< 150 tokens).
 
@@ -345,8 +342,8 @@ class LLMClient:
     def query_long(
         self,
         prompt: str,
-        model: Optional[str] = None,
-        options: Optional[GenerationOptions] = None,
+        model: str | None = None,
+        options: GenerationOptions | None = None,
     ) -> str:
         """Generate a comprehensive, detailed response (> 500 tokens).
 
@@ -374,10 +371,10 @@ class LLMClient:
     def _query_with_mode(
         self,
         prompt: str,
-        model: Optional[str],
+        model: str | None,
         max_tokens: int,
         instruction: str,
-        options: Optional[GenerationOptions] = None,
+        options: GenerationOptions | None = None,
     ) -> str:
         """Run query with a fixed token budget and instruction prefix.
 
@@ -398,11 +395,11 @@ class LLMClient:
     def query_structured(
         self,
         prompt: str,
-        schema: Optional[Dict[str, Any]] = None,
-        model: Optional[str] = None,
-        options: Optional[GenerationOptions] = None,
+        schema: dict[str, Any | None] = None,
+        model: str | None = None,
+        options: GenerationOptions | None = None,
         use_native_json: bool = True,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Generate a structured JSON response.
 
         Uses Ollama's native JSON format mode when available for guaranteed
@@ -542,7 +539,7 @@ class LLMClient:
                 context={"response": response_text[:200]},
             )
 
-    def _generate_response(self, model: str, options: Optional[GenerationOptions] = None) -> str:
+    def _generate_response(self, model: str, options: GenerationOptions | None = None) -> str:
         """Generate response from Ollama API using context.
 
         Args:
@@ -557,8 +554,8 @@ class LLMClient:
     def _generate_response_direct(  # type: ignore
         self,
         model: str,
-        messages: list[Dict[str, Any]],
-        options: Optional[GenerationOptions] = None,
+        messages: list[dict[str, Any]],
+        options: GenerationOptions | None = None,
         retries: int = 1,
     ) -> str:
         """Generate response from Ollama API with direct messages and retry logic.
@@ -581,7 +578,7 @@ class LLMClient:
         opts = options or GenerationOptions()
         ollama_options = opts.to_ollama_options(self.config)
 
-        payload: Dict[str, Any] = {
+        payload: dict[str, Any] = {
             "model": model,
             "messages": messages,
             "stream": False,
@@ -692,10 +689,10 @@ class LLMClient:
     def stream_query(
         self,
         prompt: str,
-        model: Optional[str] = None,
-        options: Optional[GenerationOptions] = None,
+        model: str | None = None,
+        options: GenerationOptions | None = None,
         save_response: bool = False,
-        save_path: Optional[Path] = None,
+        save_path: Path | None = None,
         log_progress: bool = True,
         retries: int = 1,
     ) -> Iterator[str]:
@@ -743,7 +740,7 @@ class LLMClient:
         opts = options or GenerationOptions()
         ollama_options = opts.to_ollama_options(self.config)
 
-        payload: Dict[str, Any] = {
+        payload: dict[str, Any] = {
             "model": model_name,
             "messages": self.context.get_messages(),
             "stream": True,
@@ -1112,10 +1109,10 @@ class LLMClient:
     def stream_short(
         self,
         prompt: str,
-        model: Optional[str] = None,
-        options: Optional[GenerationOptions] = None,
+        model: str | None = None,
+        options: GenerationOptions | None = None,
         save_response: bool = False,
-        save_path: Optional[Path] = None,
+        save_path: Path | None = None,
         log_progress: bool = True,
     ) -> Iterator[str]:
         """Stream a short response with comprehensive logging.
@@ -1152,10 +1149,10 @@ class LLMClient:
     def stream_long(
         self,
         prompt: str,
-        model: Optional[str] = None,
-        options: Optional[GenerationOptions] = None,
+        model: str | None = None,
+        options: GenerationOptions | None = None,
         save_response: bool = False,
-        save_path: Optional[Path] = None,
+        save_path: Path | None = None,
         log_progress: bool = True,
     ) -> Iterator[str]:
         """Stream a comprehensive response with comprehensive logging.
@@ -1222,7 +1219,7 @@ class LLMClient:
         is_available, _ = self.check_connection_detailed(timeout=timeout)
         return is_available
 
-    def check_connection_detailed(self, timeout: float = 2.0) -> Tuple[bool, Optional[str]]:
+    def check_connection_detailed(self, timeout: float = 2.0) -> tuple[bool, str | None]:
         """Check if Ollama server is available with detailed status.
 
         Args:

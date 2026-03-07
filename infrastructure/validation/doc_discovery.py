@@ -6,7 +6,7 @@ import re
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Set
+from typing import Any, Set
 
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.project.discovery import discover_projects
@@ -29,8 +29,7 @@ _DEFAULT_EXCLUDE_DIRS = {
     ".mypy_cache",
 }
 
-
-def find_markdown_files(repo_root: Path) -> List[Path]:
+def find_markdown_files(repo_root: Path) -> list[Path]:
     """Find all markdown files excluding output/htmlcov and virtual environments."""
     exclude_dirs = _DEFAULT_EXCLUDE_DIRS | {"projects_archive"}
     md_files = []
@@ -40,8 +39,7 @@ def find_markdown_files(repo_root: Path) -> List[Path]:
             md_files.append(md_file)
     return sorted(md_files)
 
-
-def catalog_agents_readme(md_files: List[Path], repo_root: Path) -> List[str]:
+def catalog_agents_readme(md_files: list[Path], repo_root: Path) -> list[str]:
     """Catalog all AGENTS.md and README.md files."""
     agents_readme = []
     for md_file in md_files:
@@ -49,8 +47,7 @@ def catalog_agents_readme(md_files: List[Path], repo_root: Path) -> List[str]:
             agents_readme.append(str(md_file.relative_to(repo_root)))
     return sorted(agents_readme)
 
-
-def find_config_files(repo_root: Path) -> Dict[str, Path]:
+def find_config_files(repo_root: Path) -> dict[str, Path]:
     """Find configuration files."""
     exclude_dirs = _DEFAULT_EXCLUDE_DIRS
     config_patterns = ["pyproject.toml", "config.yaml", "*.toml", "*.yaml", "*.yml"]
@@ -65,8 +62,7 @@ def find_config_files(repo_root: Path) -> Dict[str, Path]:
 
     return configs
 
-
-def find_script_files(repo_root: Path) -> List[Path]:
+def find_script_files(repo_root: Path) -> list[Path]:
     """Find all script files (Python and shell) excluding virtual environments."""
     exclude_dirs = _DEFAULT_EXCLUDE_DIRS | {"tests"}
     scripts = []
@@ -80,8 +76,7 @@ def find_script_files(repo_root: Path) -> List[Path]:
 
     return sorted(scripts)
 
-
-def create_hierarchy(md_files: List[Path], repo_root: Path) -> Dict[str, List[str]]:
+def create_hierarchy(md_files: list[Path], repo_root: Path) -> dict[str, list[str]]:
     """Create documentation hierarchy map."""
     hierarchy = defaultdict(list)
     for md_file in md_files:
@@ -92,8 +87,7 @@ def create_hierarchy(md_files: List[Path], repo_root: Path) -> Dict[str, List[st
         hierarchy[directory].append(rel_path)
     return dict(hierarchy)
 
-
-def identify_cross_references(md_files: List[Path]) -> Set[str]:
+def identify_cross_references(md_files: list[Path]) -> Set[str]:
     """Identify cross-reference patterns."""
     cross_refs = set()
     link_pattern = re.compile(r"\[([^\]]+)\]\(([^\)]+)\)")
@@ -110,8 +104,7 @@ def identify_cross_references(md_files: List[Path]) -> Set[str]:
 
     return cross_refs
 
-
-def categorize_documentation(md_files: List[Path], repo_root: Path) -> Dict[str, List[str]]:
+def categorize_documentation(md_files: list[Path], repo_root: Path) -> dict[str, list[str]]:
     """Categorize documentation files."""
     categories = defaultdict(list)
 
@@ -148,7 +141,6 @@ def categorize_documentation(md_files: List[Path], repo_root: Path) -> Dict[str,
 
     return dict(categories)
 
-
 def _get_project_category(rel_path: str, project_names: set[str]) -> str | None:
     """Determine if a file belongs to a specific project and return category."""
     # Check if path contains projects/{name}/
@@ -169,7 +161,6 @@ def _get_project_category(rel_path: str, project_names: set[str]) -> str | None:
                 return f"project_{project_name}"
 
     return None
-
 
 def analyze_documentation_file(md_file: Path, repo_root: Path) -> DocumentationFile:
     """Analyze a documentation file and extract metadata."""
@@ -219,8 +210,7 @@ def analyze_documentation_file(md_file: Path, repo_root: Path) -> DocumentationF
             name=md_file.name,
         )
 
-
-def run_discovery_phase(repo_root: Path) -> Dict[str, Any]:
+def run_discovery_phase(repo_root: Path) -> dict[str, Any]:
     """Run Phase 1: Discovery and Inventory.
 
     Args:
@@ -279,8 +269,7 @@ def run_discovery_phase(repo_root: Path) -> Dict[str, Any]:
 
     return inventory
 
-
-def discover_project_documentation(repo_root: Path) -> Dict[str, Dict[str, Any]]:
+def discover_project_documentation(repo_root: Path) -> dict[str, dict[str, Any]]:
     """Discover documentation organized by project.
 
     Args:
@@ -336,8 +325,7 @@ def discover_project_documentation(repo_root: Path) -> Dict[str, Dict[str, Any]]
 
     return project_docs
 
-
-def _calculate_project_stats(project_data: Dict[str, Any]) -> Dict[str, int]:
+def _calculate_project_stats(project_data: dict[str, Any]) -> dict[str, int]:
     """Calculate documentation statistics for a project."""
     # documentation_files already contains all docs; sub-lists are subsets of it.
     # Use only the sub-lists plus any uncategorized docs to avoid double-counting.
@@ -368,8 +356,7 @@ def _calculate_project_stats(project_data: Dict[str, Any]) -> Dict[str, int]:
         "files_with_code": has_code_blocks,
     }
 
-
-def validate_project_documentation_integrity(repo_root: Path) -> Dict[str, List[str]]:
+def validate_project_documentation_integrity(repo_root: Path) -> dict[str, list[str]]:
     """Validate documentation integrity across projects.
 
     Args:
@@ -406,8 +393,7 @@ def validate_project_documentation_integrity(repo_root: Path) -> Dict[str, List[
 
     return issues
 
-
-def get_audit_context(repo_root: Path) -> Dict[str, Any]:
+def get_audit_context(repo_root: Path) -> dict[str, Any]:
     """Get comprehensive context for audit operations.
 
     Args:

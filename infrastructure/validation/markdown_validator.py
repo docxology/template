@@ -14,7 +14,7 @@ from __future__ import annotations
 import os
 import re
 from pathlib import Path
-from typing import List, Set, Tuple
+from typing import Set
 
 from infrastructure.core.exceptions import FileNotFoundError, NotADirectoryError
 
@@ -31,8 +31,7 @@ INTERNAL_LINK_PATTERN = re.compile(r"\(#([^\)]+)\)")
 LINK_PATTERN = re.compile(r"\[([^\]]+)\]\((https?://[^\)]+)\)")
 BARE_URL_PATTERN = re.compile(r"(?<!\]\()https?://\S+")
 
-
-def find_markdown_files(markdown_dir: str | Path) -> List[str]:
+def find_markdown_files(markdown_dir: str | Path) -> list[str]:
     """Find all markdown files in the specified directory.
 
     Args:
@@ -59,8 +58,7 @@ def find_markdown_files(markdown_dir: str | Path) -> List[str]:
 
     return [str(markdown_dir / f) for f in sorted(os.listdir(markdown_dir)) if f.endswith(".md")]
 
-
-def collect_symbols(md_paths: List[str]) -> Tuple[Set[str], Set[str]]:
+def collect_symbols(md_paths: list[str]) -> tuple[Set[str], Set[str]]:
     """Collect all equation labels and section anchors from markdown files.
 
     Args:
@@ -78,12 +76,11 @@ def collect_symbols(md_paths: List[str]) -> Tuple[Set[str], Set[str]]:
         anchors.update(ANCHOR_PATTERN.findall(text))
     return labels, anchors
 
-
 def validate_images(
-    md_paths: List[str],
+    md_paths: list[str],
     repo_root: str | Path,
-    extra_search_dirs: List[str | Path] | None = None,
-) -> List[str]:
+    extra_search_dirs: list[str | Path] | None = None,
+) -> list[str]:
     """Validate that all referenced images exist in the filesystem.
 
     When a relative image path fails to resolve from the markdown file's
@@ -100,12 +97,12 @@ def validate_images(
         List of validation problem descriptions
     """
     repo_root = str(repo_root)
-    problems: List[str] = []
+    problems: list[str] = []
 
     # Build search directories from the markdown directory's project context.
     # Manuscript dirs follow the pattern: projects/<name>/manuscript/
     # So the project root is two levels up from the manuscript dir.
-    search_dirs: List[str] = []
+    search_dirs: list[str] = []
     if extra_search_dirs:
         search_dirs.extend(str(d) for d in extra_search_dirs)
 
@@ -147,10 +144,9 @@ def validate_images(
                 )
     return problems
 
-
 def validate_refs(
-    md_paths: List[str], labels: Set[str], anchors: Set[str], repo_root: str | Path
-) -> List[str]:
+    md_paths: list[str], labels: Set[str], anchors: Set[str], repo_root: str | Path
+) -> list[str]:
     """Validate cross-references, internal links, and external URLs.
 
     Args:
@@ -163,7 +159,7 @@ def validate_refs(
         List of validation problem descriptions
     """
     repo_root = str(repo_root)
-    problems: List[str] = []
+    problems: list[str] = []
     for path in md_paths:
         with open(path, "r", encoding="utf-8") as fh:
             text = fh.read()
@@ -192,8 +188,7 @@ def validate_refs(
                 )
     return problems
 
-
-def validate_math(md_paths: List[str], repo_root: str | Path) -> List[str]:
+def validate_math(md_paths: list[str], repo_root: str | Path) -> list[str]:
     """Validate mathematical equation formatting and labeling.
 
     Args:
@@ -204,7 +199,7 @@ def validate_math(md_paths: List[str], repo_root: str | Path) -> List[str]:
         List of validation problem descriptions
     """
     repo_root = str(repo_root)
-    problems: List[str] = []
+    problems: list[str] = []
     eq_block = re.compile(r"\\begin\{equation\}([\s\S]*?)\\end\{equation\}", re.MULTILINE)
     label_pattern = re.compile(r"\\label\{([^}]+)\}")
     seen_labels: Set[str] = set()
@@ -237,10 +232,9 @@ def validate_math(md_paths: List[str], repo_root: str | Path) -> List[str]:
                     seen_labels.add(lab)
     return problems
 
-
 def validate_markdown(
     markdown_dir: str | Path, repo_root: str | Path, strict: bool = False
-) -> Tuple[List[str], int]:
+) -> tuple[list[str], int]:
     """Validate all markdown files in a directory.
 
     This is the main validation function that runs all checks.
@@ -270,7 +264,7 @@ def validate_markdown(
 
     labels, anchors = collect_symbols(md_paths)
 
-    problems: List[str] = []
+    problems: list[str] = []
     problems += validate_images(md_paths, repo_root)
     problems += validate_refs(md_paths, labels, anchors, repo_root)
     problems += validate_math(md_paths, repo_root)
@@ -280,7 +274,6 @@ def validate_markdown(
         return (problems, exit_code)
     else:
         return ([], 0)
-
 
 def find_manuscript_directory(repo_root: str | Path, project_name: str = "project") -> Path:
     """Find the manuscript directory at the standard location.

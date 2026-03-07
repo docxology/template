@@ -8,13 +8,12 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 from infrastructure.core.exceptions import LLMTemplateError
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
-
 
 class PromptFragmentLoader:
     """Loads prompt fragments from JSON/YAML files with caching.
@@ -28,7 +27,7 @@ class PromptFragmentLoader:
         >>> template = loader.load_template("manuscript_reviews.json#manuscript_executive_summary")
     """
 
-    def __init__(self, base_path: Optional[Path] = None):
+    def __init__(self, base_path: Path | None = None):
         """Initialize fragment loader.
 
         Args:
@@ -41,8 +40,8 @@ class PromptFragmentLoader:
             base_path = this_file.parent
 
         self.base_path = Path(base_path)
-        self._fragment_cache: Dict[str, Any] = {}
-        self._template_cache: Dict[str, Any] = {}
+        self._fragment_cache: dict[str, Any] = {}
+        self._template_cache: dict[str, Any] = {}
 
     def _resolve_path(self, filename: str, subdirectory: str = "fragments") -> Path:
         """Resolve path to a prompt file.
@@ -56,7 +55,7 @@ class PromptFragmentLoader:
         """
         return self.base_path / subdirectory / filename
 
-    def _load_json_file(self, filepath: Path) -> Dict[str, Any]:
+    def _load_json_file(self, filepath: Path) -> dict[str, Any]:
         """Load and parse JSON file with caching.
 
         Args:
@@ -153,7 +152,7 @@ class PromptFragmentLoader:
         """
         return self._resolve_reference(reference, subdirectory="fragments")
 
-    def load_template(self, reference: str) -> Dict[str, Any]:
+    def load_template(self, reference: str) -> dict[str, Any]:
         """Load a template definition.
 
         Args:
@@ -204,10 +203,8 @@ class PromptFragmentLoader:
         self._fragment_cache.clear()
         self._template_cache.clear()
 
-
 # Global loader instance for convenience
-_default_loader: Optional[PromptFragmentLoader] = None
-
+_default_loader: PromptFragmentLoader | None = None
 
 def get_default_loader() -> PromptFragmentLoader:
     """Get the default global fragment loader instance.

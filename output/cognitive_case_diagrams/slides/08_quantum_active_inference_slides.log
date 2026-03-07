@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  6 MAR 2026 05:06
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  7 MAR 2026 10:12
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1325,40 +1325,40 @@ ides/08_quantum_active_inference_slides.nav)
 ]
 
 LaTeX Warning: Reference `sec:categorical-semantics' on page 2 undefined on inp
-ut line 528.
+ut line 534.
 
 
 LaTeX Warning: Reference `sec:enriched-categories' on page 2 undefined on input
- line 528.
+ line 534.
 
 
 LaTeX Warning: Reference `sec:topos-theory' on page 2 undefined on input line 5
-28.
+34.
 
 LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
-(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 528.
+(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 534.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.8961pt on input line 528.
+(Font)              scaled to size 7.8961pt on input line 534.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.64008pt on input line 528.
+(Font)              scaled to size 5.64008pt on input line 534.
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 5
-28.
+34.
 (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 11.28131pt on input line 528.
+(Font)              scaled to size 11.28131pt on input line 534.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.89691pt on input line 528.
+(Font)              scaled to size 7.89691pt on input line 534.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.64066pt on input line 528.
+(Font)              scaled to size 5.64066pt on input line 534.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 11.27914pt on input line 528.
+(Font)              scaled to size 11.27914pt on input line 534.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.8954pt on input line 528.
+(Font)              scaled to size 7.8954pt on input line 534.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.63957pt on input line 528.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 528
+(Font)              scaled to size 5.63957pt on input line 534.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 534
 .
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
@@ -1367,7 +1367,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 528
+LaTeX Font Info:    Trying to load font information for U+msb on input line 534
 .
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -1378,18 +1378,18 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 
 LaTeX Warning: Reference `sec:case-systems' on page 2 undefined on input line 5
-28.
+34.
 
 
 LaTeX Warning: Reference `sec:categorical-semantics' on page 2 undefined on inp
-ut line 528.
+ut line 534.
 
 
 LaTeX Warning: Reference `sec:cognitive-integration' on page 2 undefined on inp
-ut line 528.
+ut line 534.
 
 
-Overfull \vbox (4157.61507pt too high) detected at line 528
+Overfull \vbox (4239.2151pt too high) detected at line 534
  []
 
 
@@ -1421,7 +1421,7 @@ LaTeX Warning: There were undefined references.
 Here is how much of TeX's memory you used:
  31059 strings out of 473832
  626529 string characters out of 5729482
- 1373006 words of memory out of 5000000
+ 1377688 words of memory out of 5000000
  53579 multiletter control sequences out of 15000+600000
  562364 words of font info for 67 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191

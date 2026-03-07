@@ -5,12 +5,10 @@ from __future__ import annotations
 import math
 import re
 from collections import Counter
-from typing import Dict, List, Tuple
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
-
 
 def _normalize_for_comparison(text: str) -> str:
     """Normalize text for comparison by removing whitespace variations.
@@ -29,7 +27,6 @@ def _normalize_for_comparison(text: str) -> str:
     normalized = re.sub(r"\d+", "N", normalized)
     return normalized
 
-
 def _jaccard_similarity(text1: str, text2: str) -> float:
     """Calculate Jaccard similarity (word overlap)."""
     words1 = set(text1.split())
@@ -42,7 +39,6 @@ def _jaccard_similarity(text1: str, text2: str) -> float:
     union = words1 | words2
 
     return len(intersection) / len(union) if union else 0.0
-
 
 def _tfidf_cosine_similarity(text1: str, text2: str) -> float:
     """Calculate TF-IDF cosine similarity for semantic matching."""
@@ -70,7 +66,6 @@ def _tfidf_cosine_similarity(text1: str, text2: str) -> float:
 
     return dot_product / (norm1 * norm2)
 
-
 def _sequence_similarity(text1: str, text2: str) -> float:
     """Calculate sequence-based similarity using n-gram overlap."""
 
@@ -89,7 +84,6 @@ def _sequence_similarity(text1: str, text2: str) -> float:
     union = ngrams1 | ngrams2
 
     return len(intersection) / len(union) if union else 0.0
-
 
 def _calculate_similarity(text1: str, text2: str, method: str = "hybrid") -> float:
     """Calculate similarity between two texts using multiple methods.
@@ -123,7 +117,6 @@ def _calculate_similarity(text1: str, text2: str, method: str = "hybrid") -> flo
 
         # Weighted combination: favor TF-IDF and sequence similarity
         return 0.3 * jaccard_sim + 0.4 * tfidf_sim + 0.3 * sequence_sim
-
 
 def calculate_unique_content_ratio(text: str, chunk_size: int = 200) -> float:
     """Calculate ratio of unique content in text.
@@ -163,13 +156,12 @@ def calculate_unique_content_ratio(text: str, chunk_size: int = 200) -> float:
 
     return len(unique_chunks) / len(chunks) if chunks else 1.0
 
-
 def detect_repetition(
     text: str,
     min_chunk_size: int = 100,
     similarity_threshold: float = 0.8,
     similarity_method: str = "hybrid",
-) -> Tuple[bool, List[str], float]:
+) -> tuple[bool, list[str], float]:
     """Detect repetitive content in LLM output with improved semantic detection.
 
     Uses hybrid similarity methods to better identify true repetition vs.
@@ -249,7 +241,6 @@ def detect_repetition(
 
     return has_repetition, duplicates, unique_ratio
 
-
 def _deduplicate_paragraphs(
     text: str,
     max_repetitions: int,
@@ -262,7 +253,7 @@ def _deduplicate_paragraphs(
         return text
 
     original_length = len(text)
-    seen_content: Dict[str, Dict] = {}
+    seen_content: dict[str, Dict] = {}
     result_paragraphs = []
     removed_count = 0
 
@@ -308,7 +299,6 @@ def _deduplicate_paragraphs(
         )
 
     return result
-
 
 def deduplicate_sections(
     text: str,
@@ -357,7 +347,7 @@ def deduplicate_sections(
         )
 
     # Track seen sections with semantic similarity
-    seen_sections: Dict[str, Dict] = {}  # key -> {"count": int, "text": str}
+    seen_sections: dict[str, Dict] = {}  # key -> {"count": int, "text": str}
     result_parts = []
     removed_count = 0
 

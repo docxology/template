@@ -8,20 +8,19 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.steganography.config import DocumentMetadata
 
 logger = get_logger(__name__)
 
-
 def inject_pdf_metadata(
     input_pdf: Path,
     output_pdf: Path,
-    metadata: Dict[str, str],
-    xmp_string: Optional[str] = None,
-    attachments: Optional[Dict[str, bytes]] = None,
+    metadata: dict[str, str],
+    xmp_string: str | None = None,
+    attachments: dict[str, bytes | None] = None,
 ) -> Path:
     """Inject metadata into PDF Info dictionary.
 
@@ -54,7 +53,7 @@ def inject_pdf_metadata(
         writer.add_page(page)
 
     # Preserve existing metadata and overlay new values
-    existing: Dict[str, Any] = {}
+    existing: dict[str, Any] = {}
     if reader.metadata:
         for key, value in reader.metadata.items():
             if isinstance(value, str):
@@ -92,8 +91,7 @@ def inject_pdf_metadata(
     )
     return output_pdf
 
-
-def build_document_metadata(doc: DocumentMetadata) -> Dict[str, str]:
+def build_document_metadata(doc: DocumentMetadata) -> dict[str, str]:
     """Build a metadata dictionary ready for PDF injection.
 
     Args:
@@ -104,7 +102,7 @@ def build_document_metadata(doc: DocumentMetadata) -> Dict[str, str]:
     """
     timestamp = datetime.now(timezone.utc).isoformat()
 
-    meta: Dict[str, str] = {
+    meta: dict[str, str] = {
         "/Creator": "Research Template Steganography Module",
         "/Producer": "infrastructure.steganography",
         "/CreationDate": timestamp,
@@ -134,7 +132,6 @@ def build_document_metadata(doc: DocumentMetadata) -> Dict[str, str]:
 
     logger.debug(f"Built document metadata with {len(meta)} entries")
     return meta
-
 
 def build_xmp_packet(doc: DocumentMetadata) -> str:
     """Build an XMP metadata XML packet.

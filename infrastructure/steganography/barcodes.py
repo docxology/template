@@ -11,15 +11,12 @@ from __future__ import annotations
 
 import io
 from datetime import datetime, timezone
-from typing import Dict, List, Optional
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
-
 # ── Lazy imports ─────────────────────────────────────────────────────────
-
 
 def _get_qrcode():
     try:
@@ -31,7 +28,6 @@ def _get_qrcode():
             "Install it with: pip install qrcode[pil]"
         )
 
-
 def _get_barcode():
     try:
         import barcode  # type: ignore
@@ -41,7 +37,6 @@ def _get_barcode():
             "The 'python-barcode' package is required for linear barcode generation. "
             "Install it with: pip install python-barcode"
         )
-
 
 def _get_reportlab():
     try:
@@ -55,9 +50,7 @@ def _get_reportlab():
             "Install it with: pip install reportlab"
         )
 
-
 # ── QR Code ──────────────────────────────────────────────────────────────
-
 
 def generate_qr_code(
     data: str,
@@ -92,9 +85,7 @@ def generate_qr_code(
     logger.debug(f"QR code generated, data length={len(data)}, image size={buf.getbuffer().nbytes} bytes")
     return buf.getvalue()
 
-
 # ── Code128 linear barcode ───────────────────────────────────────────────
-
 
 def generate_code128(
     data: str,
@@ -129,15 +120,13 @@ def generate_code128(
     logger.debug(f"Code128 barcode generated for data: {data[:30]}…")
     return buf.getvalue()
 
-
 # ── Barcode data builder ─────────────────────────────────────────────────
-
 
 def build_barcode_payload(
     title: str = "",
-    hashes: Optional[Dict[str, str]] = None,
+    hashes: dict[str, str | None] = None,
     document_id: str = "",
-    extra: Optional[Dict[str, str]] = None,
+    extra: dict[str, str | None] = None,
 ) -> str:
     """Build a compact barcode payload string.
 
@@ -171,17 +160,15 @@ def build_barcode_payload(
     logger.debug(f"Barcode payload built: {payload[:80]}")
     return payload
 
-
 # ── QR code content builders (COMPACT — ≤100 chars for phone scanning) ──
 #
 # Phone cameras need low-density QR codes to scan reliably at small sizes.
 # Each builder targets ≤100 characters to stay at QR version 5 or below,
 # which produces a ~37×37 module grid — easily scannable at 40–50pt.
 
-
 def build_metadata_qr_text(
     title: str = "",
-    authors: Optional[List[str]] = None,
+    authors: list[str | None] = None,
     document_id: str = "",
     **_kwargs,
 ) -> str:
@@ -196,10 +183,9 @@ def build_metadata_qr_text(
     parts.append(ts)
     return " | ".join(parts)
 
-
 def build_citation_qr_text(
     title: str = "",
-    authors: Optional[List[str]] = None,
+    authors: list[str | None] = None,
     **_kwargs,
 ) -> str:
     """Build a compact citation string (≤100 chars)."""
@@ -208,11 +194,10 @@ def build_citation_qr_text(
     cite = f"{author} ({year}). {title[:50]}."
     return cite[:100]
 
-
 def build_mailto_qr_text(
     title: str = "",
-    authors: Optional[List[str]] = None,
-    author_emails: Optional[List[str]] = None,
+    authors: list[str | None] = None,
+    author_emails: list[str | None] = None,
     **_kwargs,
 ) -> str:
     """Build a proper mailto: URI that opens an email draft.
@@ -231,10 +216,9 @@ def build_mailto_qr_text(
     name = authors[0] if authors else "Author"
     return f"Contact {name}"
 
-
 def build_integrity_qr_text(
     document_id: str = "",
-    hashes: Optional[Dict[str, str]] = None,
+    hashes: dict[str, str | None] = None,
     **_kwargs,
 ) -> str:
     """Build a compact integrity hash for the integrity QR (≤100 chars).
@@ -248,9 +232,7 @@ def build_integrity_qr_text(
         parts.append(f"ID {document_id[:12]}")
     return " | ".join(parts)
 
-
 # ── Full barcode strip overlay ───────────────────────────────────────────
-
 
 def create_barcode_strip_overlay(
     page_width: float,
@@ -259,11 +241,11 @@ def create_barcode_strip_overlay(
     code128_data: str,
     strip_height: float = 68.0,
     title: str = "",
-    authors: Optional[List[str]] = None,
-    keywords: Optional[List[str]] = None,
-    author_emails: Optional[List[str]] = None,
+    authors: list[str | None] = None,
+    keywords: list[str | None] = None,
+    author_emails: list[str | None] = None,
     document_id: str = "",
-    hashes: Optional[Dict[str, str]] = None,
+    hashes: dict[str, str | None] = None,
     source_filename: str = "",
     total_pages: int = 0,
     source_file_size: int = 0,

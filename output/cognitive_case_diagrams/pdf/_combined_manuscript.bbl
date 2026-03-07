@@ -1,9 +1,17 @@
-\begin{thebibliography}{54}
+\begin{thebibliography}{76}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Akg{\"u}l et~al.(2026)Akg{\"u}l, Baykal, Hau{\ss}mann, {\c{C}}elikok,
+  and Kandemir]{akgul2026distributional}
+Abdullah Akg{\"u}l, Gulcin Baykal, Manuel Hau{\ss}mann, Mustafa~Mert
+  {\c{C}}elikok, and Melih Kandemir.
+\newblock Distributional active inference, 2026.
+\newblock Integrates active inference into distributional RL via push-forward
+  measures on representation paths.
 
 \bibitem[{ANP Project}(2025)]{anp2025protocol}
 {ANP Project}.
@@ -20,11 +28,29 @@
 \newblock Standard for connecting AI systems with external tools and data
   sources.
 
+\bibitem[{ARLAS Team}(2025)]{arlas2025adversarial}
+{ARLAS Team}.
+\newblock Adversarial reinforcement learning for {LLM} agent safety.
+\newblock In \emph{OpenReview preprint}, 2025.
+\newblock URL \url{https://openreview.net/pdf?id=tguzk54PbV}.
+\newblock Co-evolves attacker and defender LLM agents via RL; demonstrates
+  indirect prompt injection as role manipulation in multi-turn tool-use
+  scenarios.
+
 \bibitem[Asudeh and Giorgolo(2020)]{asudeh2020graded}
 Ash Asudeh and Gianluca Giorgolo.
 \newblock A monadic semantics for evidentials.
 \newblock \emph{Proceedings of SALT}, 30, 2020.
 \newblock \doi{10.3765/salt.v30i0.4843}.
+
+\bibitem[Baroni and Lenci(2010)]{baroni2010distributional}
+Marco Baroni and Alessandro Lenci.
+\newblock Distributional memory: A general framework for corpus-based
+  semantics.
+\newblock \emph{Computational Linguistics}, 36\penalty0 (4):\penalty0 673--721,
+  2010.
+\newblock \doi{10.1162/coli_a_00016}.
+\newblock Unified tensor-based framework for distributional semantic phenomena.
 
 \bibitem[Barwise and Perry(1983)]{barwise1983situations}
 Jon Barwise and John Perry.
@@ -37,6 +63,16 @@ Jon Barwise and John Perry.
 \newblock \url{https://agentcommunicationprotocol.dev/}, 2025.
 \newblock Standardized messaging format for agent, application, and user
   communication.
+
+\bibitem[Bellemare et~al.(2017)Bellemare, Dabney, and
+  Munos]{bellemare2017distributional}
+Marc~G. Bellemare, Will Dabney, and R{\'e}mi Munos.
+\newblock A distributional perspective on reinforcement learning.
+\newblock In \emph{International Conference on Machine Learning (ICML)}, pages
+  449--458, 2017.
+\newblock URL \url{https://arxiv.org/abs/1707.06887}.
+\newblock Foundational paper on distributional RL: modeling full return
+  distributions rather than expected returns.
 
 \bibitem[Blake(2001)]{blake2001grammatical}
 Barry~J. Blake.
@@ -61,6 +97,14 @@ Tai-Danae Bradley.
 \newblock An enriched category theory of language.
 \newblock Tea Talk, 2025.
 \newblock URL \url{https://www.youtube.com/watch?v=KCtyiE6Ybnc}.
+
+\bibitem[Bradley et~al.(2021)Bradley, Terilla, and Weyhrich]{fritz2021enriched}
+Tai-Danae Bradley, John Terilla, and Tyler Weyhrich.
+\newblock An enriched category theory of language: from syntax to semantics.
+\newblock \emph{arXiv preprint arXiv:2106.07890}, 2021.
+\newblock URL \url{https://arxiv.org/abs/2106.07890}.
+\newblock Original key retained for citation stability; correct authors are
+  Bradley, Terilla, and Weyhrich.
 
 \bibitem[Broadbent and Schaffner(2016)]{broadbent2016qcrypto}
 Anne Broadbent and Christian Schaffner.
@@ -128,11 +172,35 @@ Giovanni de~Felice, Konstantinos Meichanetzidis, and Bob Coecke.
 \newblock \emph{arXiv preprint arXiv:2205.14815}, 2022.
 \newblock URL \url{https://arxiv.org/abs/2205.14815}.
 
+\bibitem[Devlin et~al.(2019)Devlin, Chang, Lee, and Toutanova]{devlin2019bert}
+Jacob Devlin, Ming-Wei Chang, Kenton Lee, and Kristina Toutanova.
+\newblock {BERT}: Pre-training of deep bidirectional transformers for language
+  understanding.
+\newblock \emph{Proceedings of NAACL-HLT}, pages 4171--4186, 2019.
+\newblock URL \url{https://arxiv.org/abs/1810.04805}.
+\newblock Bidirectional contextualized embeddings via masked language modeling.
+
+\bibitem[Donnarumma et~al.(2023)Donnarumma, Frosolone, and
+  Pezzulo]{donnarumma2023integrating}
+Francesco Donnarumma, Giovanni Frosolone, and Giovanni Pezzulo.
+\newblock Integrating large language models and active inference.
+\newblock Presented at the 5th International Workshop on Active Inference (IWAI
+  2023), 2023.
+\newblock Integration of LLM architectures with active inference for linguistic
+  processing.
+
 \bibitem[Dowty(1991)]{dowty1991thematic}
 David~R. Dowty.
 \newblock Thematic proto-roles and argument selection.
 \newblock \emph{Language}, 67\penalty0 (3):\penalty0 547--619, 1991.
 \newblock \doi{10.2307/415037}.
+
+\bibitem[Duneau(2021)]{duneau2021parsing}
+Ariane Duneau.
+\newblock A pipeline for discourse circuits from {CCG}.
+\newblock MSc Dissertation, University of Oxford, 2021.
+\newblock Constructs DisCoCirc discourse circuits from CCG parse trees via
+  iterative coreference resolution and wire merging.
 
 \bibitem[Fields and Glazebrook(2021)]{fields2021qrf}
 Chris Fields and James~F. Glazebrook.
@@ -174,6 +242,13 @@ Charles~J. Fillmore.
 \newblock In Emmon Bach and Robert~T. Harms, editors, \emph{Universals in
   Linguistic Theory}, pages 1--88. Holt, Rinehart \& Winston, 1968.
 
+\bibitem[Firth(1957)]{firth1957papers}
+John~Rupert Firth.
+\newblock \emph{Papers in Linguistics 1934--1951}.
+\newblock Oxford University Press, 1957.
+\newblock Origin of the distributional hypothesis: ``You shall know a word by
+  the company it keeps''.
+
 \bibitem[Friedman and {Active Inference Institute}(2024)]{cerebrum2024github}
 Daniel~A. Friedman and {Active Inference Institute}.
 \newblock {CEREBRUM}: Case-enabled reasoning engine with bayesian
@@ -188,6 +263,15 @@ Daniel~Ari Friedman.
   representations for unified modeling.
 \newblock \url{https://github.com/ActiveInferenceInstitute/CEREBRUM}, 2024.
 
+\bibitem[Friston(2010)]{friston2010free}
+Karl~J. Friston.
+\newblock The free-energy principle: a unified brain theory?
+\newblock \emph{Nature Reviews Neuroscience}, 11\penalty0 (2):\penalty0
+  127--138, 2010.
+\newblock \doi{10.1038/nrn2787}.
+\newblock Foundational statement of the free energy principle for biological
+  self-organization.
+
 \bibitem[Friston et~al.(2017)Friston, FitzGerald, Rigoli, Schwartenbeck, and
   Pezzulo]{friston2017active}
 Karl~J. Friston, Thomas FitzGerald, Francesco Rigoli, Philipp Schwartenbeck,
@@ -196,12 +280,26 @@ Karl~J. Friston, Thomas FitzGerald, Francesco Rigoli, Philipp Schwartenbeck,
 \newblock \emph{Neural Computation}, 29\penalty0 (1):\penalty0 1--49, 2017.
 \newblock \doi{10.1162/NECO_a_00912}.
 
-\bibitem[Fritz et~al.(2021)Fritz, Gadducci, Kissinger, and
-  Liang]{fritz2021enriched}
-Tobias Fritz, Fabio Gadducci, Aleks Kissinger, and Sophie Liang.
-\newblock An enriched category theory of language: from syntax to semantics.
-\newblock \emph{arXiv preprint arXiv:2106.07890}, 2021.
-\newblock URL \url{https://arxiv.org/abs/2106.07890}.
+\bibitem[Friston et~al.(2020)Friston, Parr, Yufik, Sajid, Price, and
+  Holmes]{friston2020generative}
+Karl~J. Friston, Thomas Parr, Yan Yufik, Noor Sajid, Catherine~J. Price, and
+  Emily Holmes.
+\newblock Generative models, linguistic communication and active inference.
+\newblock \emph{Neuroscience \& Biobehavioral Reviews}, 118:\penalty0 42--64,
+  2020.
+\newblock \doi{10.1016/j.neubiorev.2020.07.005}.
+\newblock Active inference framework for language production and comprehension
+  via hierarchical generative models.
+
+\bibitem[Friston et~al.(2021)Friston, Da~Costa, Sajid, Heins, Ueltzhöffer,
+  Pavliotis, and Parr]{friston2021understanding}
+Karl~J. Friston, Lancelot Da~Costa, Noor Sajid, Conor Heins, Kai Ueltzhöffer,
+  Grigorios~A. Pavliotis, and Thomas Parr.
+\newblock World model learning and inference.
+\newblock \emph{Neural Networks}, 144:\penalty0 573--590, 2021.
+\newblock \doi{10.1016/j.neunet.2021.09.011}.
+\newblock World models and understanding through active inference; cited in
+  cognitive integration chapter.
 
 \bibitem[Gavranovi{\'c}(2024)]{gavranovic2024thesis}
 Bruno Gavranovi{\'c}.
@@ -231,6 +329,14 @@ Edward Grefenstette and Mehrnoosh Sadrzadeh.
   2015.
 \newblock \doi{10.1162/COLI_a_00209}.
 
+\bibitem[Harris(1954)]{harris1954distributional}
+Zellig~S. Harris.
+\newblock Distributional structure.
+\newblock \emph{Word}, 10\penalty0 (2--3):\penalty0 146--162, 1954.
+\newblock \doi{10.1080/00437956.1954.11659520}.
+\newblock Foundational formalization of distributional analysis in structural
+  linguistics.
+
 \bibitem[Haspelmath(2009)]{haspelmath2009universality}
 Martin Haspelmath.
 \newblock Grammatical categories and relations: Universality vs.
@@ -239,12 +345,46 @@ Martin Haspelmath.
   1--25, 2009.
 \newblock \doi{10.1111/j.1749-818X.2008.00111.x}.
 
+\bibitem[Hjelmslev(1935)]{hjelmslev1935categorie}
+Louis Hjelmslev.
+\newblock \emph{La cat\'{e}gorie des cas: \'{e}tude de grammaire
+  g\'{e}n\'{e}rale}.
+\newblock Universitetsforlaget i Aarhus, 1935.
+\newblock Foundational glossematic analysis treating case as a purely
+  relational category.
+
+\bibitem[Jakobson(1958)]{jakobson1958morphologic}
+Roman Jakobson.
+\newblock Morphological inquiry into slavic declension: Structure of russian
+  case forms.
+\newblock \emph{American Contributions to the Fourth International Congress of
+  Slavicists}, 1958.
+\newblock Originally written 1936; binary distinctive features for Russian case
+  oppositions.
+
+\bibitem[Jha(2021)]{jha2021sanskrit}
+Girish~Nath Jha.
+\newblock Sanskrit and computational linguistics.
+\newblock In \emph{The Oxford Handbook of History of Linguistics}. Oxford
+  University Press, 2021.
+\newblock \doi{10.1093/oxfordhb/9780199585847.013.0034}.
+\newblock Survey of Sanskrit grammatical tradition and computational
+  approaches.
+
 \bibitem[Joyal and Street(1991)]{joyalstreet1991geometry}
 Andr{\'e} Joyal and Ross Street.
 \newblock The geometry of tensor calculus, {I}.
 \newblock \emph{Advances in Mathematics}, 88\penalty0 (1):\penalty0 55--112,
   1991.
 \newblock \doi{10.1016/0001-8708(91)90003-P}.
+
+\bibitem[Kak(1987)]{kak1987paninian}
+Subhash Kak.
+\newblock P\={a}\d{n}inian grammar and computer science.
+\newblock \emph{Annals of the Bhandarkar Oriental Research Institute},
+  68:\penalty0 79--90, 1987.
+\newblock Connections between P\={a}\d{n}ini's generative grammar and formal
+  language theory.
 
 \bibitem[Kartsaklis et~al.(2021)Kartsaklis, Fan, Yeung, Pearson, Lorenz, Toumi,
   de~Felice, Meichanetzidis, Clark, and Coecke]{kartsaklis2021functorial}
@@ -289,6 +429,14 @@ Jill~H. Larkin and Herbert~A. Simon.
 \newblock \emph{Cognitive Science}, 11\penalty0 (1):\penalty0 65--100, 1987.
 \newblock \doi{10.1111/j.1551-6708.1987.tb00863.x}.
 
+\bibitem[Lenci(2018)]{lenci2018distributional}
+Alessandro Lenci.
+\newblock Distributional models of word meaning.
+\newblock \emph{Annual Review of Linguistics}, 4:\penalty0 151--171, 2018.
+\newblock \doi{10.1146/annurev-linguistics-030514-125254}.
+\newblock Authoritative survey linking distributional semantics to cognitive
+  and computational models.
+
 \bibitem[Lorenz et~al.(2023)Lorenz, Pearson, Meichanetzidis, Kartsaklis, and
   Coecke]{lorenz2023lambeq}
 Robin Lorenz, Anna Pearson, Konstantinos Meichanetzidis, Dimitri Kartsaklis,
@@ -310,11 +458,31 @@ Konstantinos Meichanetzidis, Stefano Gogioso, Giovanni de~Felice, Nicol{\`o}
 \newblock \emph{arXiv preprint arXiv:2005.04147}, 2020.
 \newblock URL \url{https://arxiv.org/abs/2005.04147}.
 
+\bibitem[Mikolov et~al.(2013)Mikolov, Chen, Corrado, and
+  Dean]{mikolov2013efficient}
+Tomas Mikolov, Kai Chen, Greg Corrado, and Jeffrey Dean.
+\newblock Efficient estimation of word representations in vector space.
+\newblock In \emph{International Conference on Learning Representations (ICLR)
+  Workshop}, 2013.
+\newblock URL \url{https://arxiv.org/abs/1301.3781}.
+\newblock Introduces Word2Vec: skip-gram and CBOW architectures for static word
+  embeddings.
+
 \bibitem[Montague(1973)]{montague1973proper}
 Richard Montague.
 \newblock The proper treatment of quantification in ordinary {E}nglish.
 \newblock In Jaakko Hintikka, Julius Moravcsik, and Patrick Suppes, editors,
   \emph{Approaches to Natural Language}, pages 221--242. Reidel, 1973.
+
+\bibitem[Pennington et~al.(2014)Pennington, Socher, and
+  Manning]{pennington2014glove}
+Jeffrey Pennington, Richard Socher, and Christopher~D. Manning.
+\newblock {GloVe}: Global vectors for word representation.
+\newblock In \emph{Proceedings of the Conference on Empirical Methods in
+  Natural Language Processing (EMNLP)}, pages 1532--1543, 2014.
+\newblock \doi{10.3115/v1/D14-1162}.
+\newblock Log-bilinear word embedding model capturing global co-occurrence
+  statistics.
 
 \bibitem[Phillips(2024)]{phillips2024lot}
 Steven Phillips.
@@ -346,12 +514,23 @@ Maria Polinsky and Omer Preminger.
 \newblock URL
   \url{https://omer.lingsite.org/files/Polinsky-and-Preminger-Case-and-Grammatical-Relations.pdf}.
 
-\bibitem[Sadrzadeh(2013)]{sadrzadeh2013compositional}
-Mehrnoosh Sadrzadeh.
-\newblock \emph{Category-Theoretic Quantitative Compositional Distributional
-  Semantics}.
-\newblock PhD thesis, University of Oxford, 2013.
-\newblock URL \url{https://arxiv.org/abs/1311.1539}.
+\bibitem[Radford et~al.(2018)Radford, Narasimhan, Salimans, and
+  Sutskever]{radford2018improving}
+Alec Radford, Karthik Narasimhan, Tim Salimans, and Ilya Sutskever.
+\newblock Improving language understanding by generative pre-training.
+\newblock OpenAI Technical Report, 2018.
+\newblock URL
+  \url{https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf}.
+\newblock GPT-1: autoregressive generative pre-training for contextualized
+  language representations.
+
+\bibitem[Sherborne et~al.(2025)]{sherborne2025paramqnlp}
+Tom Sherborne et~al.
+\newblock Efficient generation of parameterised quantum circuits from large
+  language models, 2025.
+\newblock Uses DisCoCirc string diagrams to generate discourse-level quantum
+  circuits; composes sentence diagrams via coreference resolution for scalable
+  QNLP.
 
 \bibitem[Shiebler et~al.(2024)Shiebler, Gavranovi{\'c}, and
   Wilson]{shiebler2024categorical}
@@ -383,6 +562,14 @@ Julio Song.
   \url{https://blog.juliosong.com/linguistics/mathematics/category-theory-notes-3/},
   2022{\natexlab{b}}.
 
+\bibitem[Turney and Pantel(2010)]{turney2010frequency}
+Peter~D. Turney and Patrick Pantel.
+\newblock From frequency to meaning: Vector space models of semantics.
+\newblock \emph{Journal of Artificial Intelligence Research}, 37:\penalty0
+  141--188, 2010.
+\newblock \doi{10.1613/jair.2934}.
+\newblock Comprehensive survey of vector space models for word meaning.
+
 \bibitem[Vasil et~al.(2020)Vasil, Badcock, Constant, Friston, and
   Ramstead]{vasil2020world}
 Jared Vasil, Paul~B. Badcock, Axel Constant, Karl Friston, and Maxwell J.~D.
@@ -393,6 +580,17 @@ Jared Vasil, Paul~B. Badcock, Axel Constant, Karl Friston, and Maxwell J.~D.
 \newblock URL \url{https://discovery.ucl.ac.uk/id/eprint/10096443/}.
 \newblock Active inference model of human communication as joint generative
   modeling.
+
+\bibitem[Vaswani et~al.(2017)Vaswani, Shazeer, Parmar, Uszkoreit, Jones, Gomez,
+  Kaiser, and Polosukhin]{vaswani2017attention}
+Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones,
+  Aidan~N. Gomez, {\L}ukasz Kaiser, and Illia Polosukhin.
+\newblock Attention is all you need.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, volume~30, 2017.
+\newblock URL \url{https://arxiv.org/abs/1706.03762}.
+\newblock Introduces the transformer architecture with multi-head
+  self-attention.
 
 \bibitem[Wu(2024)]{wu2024amis}
 Grace Wu.

@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import json
 import re
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 from infrastructure.core.exceptions import ValidationError
 from infrastructure.core.logging_utils import get_logger
@@ -22,12 +22,11 @@ from infrastructure.llm.validation.repetition import deduplicate_sections, detec
 
 logger = get_logger(__name__)
 
-
 class OutputValidator:
     """Validates LLM outputs for quality and correctness."""
 
     @staticmethod
-    def validate_json(content: str) -> Dict[str, Any]:
+    def validate_json(content: str) -> dict[str, Any]:
         """Validate and parse JSON output."""
         try:
             # Try to find JSON block if wrapped in markdown
@@ -44,7 +43,7 @@ class OutputValidator:
             )
 
     @staticmethod
-    def validate_length(content: str, min_len: int = 0, max_len: Optional[int] = None) -> bool:
+    def validate_length(content: str, min_len: int = 0, max_len: int | None = None) -> bool:
         """Validate output length."""
         length = len(content)
         if length < min_len:
@@ -81,7 +80,7 @@ class OutputValidator:
         return True
 
     @staticmethod
-    def validate_structure(content: Dict[str, Any], schema: Dict[str, Any]) -> bool:
+    def validate_structure(content: dict[str, Any], schema: dict[str, Any]) -> bool:
         """Validate structured response against schema."""
         required_keys = schema.get("required", [])
         properties = schema.get("properties", {})
@@ -130,7 +129,7 @@ class OutputValidator:
         return isinstance(value, expected)  # type: ignore
 
     @staticmethod
-    def validate_citations(content: str) -> List[str]:
+    def validate_citations(content: str) -> list[str]:
         """Extract and validate citations in content."""
         # Look for common citation patterns
         patterns = [
@@ -166,7 +165,7 @@ class OutputValidator:
 
     @staticmethod
     def validate_complete(
-        content: str, mode: str = "standard", schema: Optional[Dict[str, Any]] = None
+        content: str, mode: str = "standard", schema: dict[str, Any | None] = None
     ) -> bool:
         """Comprehensive validation based on mode."""
         if not content or not content.strip():
@@ -194,7 +193,7 @@ class OutputValidator:
     def validate_no_repetition(
         content: str,
         max_allowed_ratio: float = 0.3,
-    ) -> Tuple[bool, Dict[str, Any]]:
+    ) -> tuple[bool, dict[str, Any]]:
         """Validate that response doesn't contain excessive repetition.
 
         Detects when LLM output gets stuck in a loop repeating content.
@@ -249,7 +248,6 @@ class OutputValidator:
         return deduplicate_sections(
             content, max_repetitions, mode="balanced", min_content_preservation=0.3
         )
-
 
 # Note: Functions are imported at module level above for use in OutputValidator methods
 __all__ = [

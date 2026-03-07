@@ -6,7 +6,7 @@ import os
 import re
 import subprocess
 import time
-from typing import Any, Optional
+from typing import Any
 from pathlib import Path
 
 from infrastructure.core.logging_utils import (
@@ -66,7 +66,6 @@ try:
 except ImportError:
     PROMPT_SYSTEM_AVAILABLE = False
 
-
 def get_manuscript_review_system_prompt() -> str:
     if PROMPT_SYSTEM_AVAILABLE:
         try:
@@ -94,7 +93,6 @@ Guidelines:
 
 You are reviewing an academic research manuscript. Treat this as a formal peer review."""
 
-
 def log_timeout_info(timeout: float, operation: str) -> None:
     logger.info(f"    Timeout: {timeout:.0f}s per {operation}")
     if timeout < 60:
@@ -103,11 +101,10 @@ def log_timeout_info(timeout: float, operation: str) -> None:
             "    Consider: export LLM_REVIEW_TIMEOUT=300 (5 minutes) for better reliability"
         )
 
-
 def validate_review_quality(
     response: str,
     review_type: str,
-    min_words: Optional[int] = None,
+    min_words: int | None = None,
     model_name: str = "",
 ) -> tuple[bool, list[str], dict[str, Any]]:
     issues = []
@@ -170,7 +167,6 @@ def validate_review_quality(
     is_valid = len(issues) == 0
     return is_valid, issues, details
 
-
 def _validate_executive_summary_section(
     response_lower: str, details: dict[str, Any], issues: list[str]
 ) -> None:
@@ -191,7 +187,6 @@ def _validate_executive_summary_section(
     details["sections_required"] = 1
     if not found_sections:
         issues.append("Missing expected structure (found: none of 5 expected sections)")
-
 
 def _validate_quality_review_section(
     response_lower: str, details: dict[str, Any], issues: list[str]
@@ -220,7 +215,6 @@ def _validate_quality_review_section(
     if not scores_found and not has_assessment:
         issues.append("Missing scoring or quality assessment")
 
-
 def _validate_methodology_review_section(
     response_lower: str, details: dict[str, Any], issues: list[str]
 ) -> None:
@@ -244,7 +238,6 @@ def _validate_methodology_review_section(
     if not found_sections and not has_methodology_content:
         issues.append(f"Missing expected sections (found: {found_sections or 'none'})")
 
-
 def _validate_improvement_suggestions_section(
     response_lower: str, details: dict[str, Any], issues: list[str]
 ) -> None:
@@ -265,7 +258,6 @@ def _validate_improvement_suggestions_section(
     if not found_priorities and not has_recommendations:
         issues.append("Missing priority sections or recommendations")
 
-
 def _validate_translation_section(
     response_lower: str, details: dict[str, Any], issues: list[str]
 ) -> None:
@@ -285,7 +277,6 @@ def _validate_translation_section(
     if not has_translation:
         issues.append("Missing translation section")
 
-
 # Module-level dispatch table — built once after all validators are defined.
 _REVIEW_TYPE_VALIDATORS: dict[str, Any] = {
     "executive_summary": _validate_executive_summary_section,
@@ -294,7 +285,6 @@ _REVIEW_TYPE_VALIDATORS: dict[str, Any] = {
     "improvement_suggestions": _validate_improvement_suggestions_section,
     "translation": _validate_translation_section,
 }
-
 
 def create_review_client(model_name: str) -> LLMClient:
     config = LLMConfig.from_env()
@@ -311,8 +301,7 @@ def create_review_client(model_name: str) -> LLMClient:
     logger.debug(f"Review max_tokens configuration: {source}")
     return LLMClient(config)
 
-
-def check_ollama_availability() -> tuple[bool, Optional[str]]:
+def check_ollama_availability() -> tuple[bool, str | None]:
     log_substep("Checking Ollama availability...")
     auto_start = os.environ.get("OLLAMA_AUTO_START", "true").lower() == "true"
 
@@ -371,7 +360,6 @@ def check_ollama_availability() -> tuple[bool, Optional[str]]:
         return False, None
 
     return True, model
-
 
 def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> tuple[bool, float]:
     log_substep("Warming up model...")
@@ -451,8 +439,7 @@ def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> tuple
         logger.error(f"Model warmup failed after {elapsed:.1f}s: {e}")
         return False, 0.0
 
-
-def extract_manuscript_text(pdf_path: Path | str) -> tuple[Optional[str], ManuscriptInputMetrics]:
+def extract_manuscript_text(pdf_path: Path | str) -> tuple[str | None, ManuscriptInputMetrics]:
     log_substep(f"Extracting text from manuscript: {Path(pdf_path).name}")
     metrics = ManuscriptInputMetrics()
 
@@ -490,7 +477,6 @@ def extract_manuscript_text(pdf_path: Path | str) -> tuple[Optional[str], Manusc
         logger.error(format_error_with_suggestions(e))
         return None, metrics
 
-
 def _build_retry_prompt(prompt: str, had_off_topic: bool) -> str:
     """Build a modified prompt for a retry, prepending an off-topic warning if needed."""
     if not had_off_topic:
@@ -503,7 +489,6 @@ def _build_retry_prompt(prompt: str, had_off_topic: bool) -> str:
         except (ImportError, AttributeError, OSError, KeyError) as e:
             logger.debug(f"PromptComposer retry prompt failed, using plain prefix: {e}")
     return prefix + prompt
-
 
 def _stream_with_heartbeat(
     client: LLMClient,
@@ -557,7 +542,6 @@ def _stream_with_heartbeat(
         logger.warning(f"Streaming query failed, falling back to blocking query: {type(e).__name__}: {e}")
         return client.query(prompt, options=options)
 
-
 def generate_review_with_metrics(
     client: LLMClient,
     text: str,
@@ -566,7 +550,7 @@ def generate_review_with_metrics(
     template_class: type,
     model_name: str = "",
     temperature: float = 0.3,
-    max_tokens: Optional[int] = None,
+    max_tokens: int | None = None,
     max_retries: int = 1,
 ) -> tuple[str, ReviewMetrics]:
     log_substep(f"Generating {review_name}...")
@@ -656,7 +640,6 @@ def generate_review_with_metrics(
     log_success(f"{review_name} generated", logger)
     return response, metrics
 
-
 def generate_llm_executive_summary(
     client: LLMClient, text: str, model_name: str = ""
 ) -> tuple[str, ReviewMetrics]:
@@ -670,9 +653,6 @@ def generate_llm_executive_summary(
         temperature=0.3,
         max_tokens=None,
     )
-
-
-
 
 def generate_quality_review(
     client: LLMClient, text: str, model_name: str = ""
@@ -688,7 +668,6 @@ def generate_quality_review(
         max_tokens=None,
     )
 
-
 def generate_methodology_review(
     client: LLMClient, text: str, model_name: str = ""
 ) -> tuple[str, ReviewMetrics]:
@@ -703,7 +682,6 @@ def generate_methodology_review(
         max_tokens=None,
     )
 
-
 def generate_improvement_suggestions(
     client: LLMClient, text: str, model_name: str = ""
 ) -> tuple[str, ReviewMetrics]:
@@ -717,7 +695,6 @@ def generate_improvement_suggestions(
         temperature=0.4,
         max_tokens=None,
     )
-
 
 def generate_translation(
     client: LLMClient, text: str, language_code: str, model_name: str = ""

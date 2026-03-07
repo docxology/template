@@ -11,17 +11,16 @@ import hashlib
 import json
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
-
 def compute_file_hashes(
     file_path: Path,
-    algorithms: List[str] | None = None,
-) -> Dict[str, str]:
+    algorithms: list[str] | None = None,
+) -> dict[str, str]:
     """Compute cryptographic hashes for *file_path*.
 
     Args:
@@ -36,7 +35,7 @@ def compute_file_hashes(
         algorithms = ["sha256", "sha512"]
 
     content = file_path.read_bytes()
-    results: Dict[str, str] = {}
+    results: dict[str, str] = {}
 
     for algo in algorithms:
         try:
@@ -49,12 +48,11 @@ def compute_file_hashes(
 
     return results
 
-
 def write_hash_manifest(
     pdf_path: Path,
-    hashes: Dict[str, str],
+    hashes: dict[str, str],
     output_path: Path | None = None,
-    extra: Dict[str, Any] | None = None,
+    extra: dict[str, Any] | None = None,
 ) -> Path:
     """Write a JSON sidecar manifest containing hash values.
 
@@ -71,7 +69,7 @@ def write_hash_manifest(
     if output_path is None:
         output_path = pdf_path.with_suffix(".hashes.json")
 
-    manifest: Dict[str, Any] = {
+    manifest: dict[str, Any] = {
         "source_file": pdf_path.name,
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "hashes": hashes,
@@ -82,7 +80,6 @@ def write_hash_manifest(
     output_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     logger.info(f"Hash manifest written → {output_path}")
     return output_path
-
 
 def compute_content_hash(content: bytes, algorithm: str = "sha256") -> str:
     """Compute a hash of arbitrary byte content.

@@ -7,12 +7,11 @@ techniques are applied when producing the secure PDF variant.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
-
 
 @dataclass
 class DocumentMetadata:
@@ -23,12 +22,11 @@ class DocumentMetadata:
     """
 
     title: str = ""
-    authors: Optional[List[str]] = None
-    hashes: Optional[Dict[str, str]] = None
+    authors: list[str | None] = None
+    hashes: dict[str, str | None] = None
     document_id: str = ""
-    keywords: Optional[List[str]] = None
-    extra: Optional[Dict[str, str]] = None
-
+    keywords: list[str | None] = None
+    extra: dict[str, str | None] = None
 
 @dataclass
 class SteganographyConfig:
@@ -74,16 +72,16 @@ class SteganographyConfig:
     overlay_color_rgb: tuple = (128, 128, 128)
     overlay_font_size: int = 60
     overlay_repeat_count: int = 5
-    overlay_qr_data: Optional[str] = None  # custom data for QR mode
+    overlay_qr_data: str | None = None  # custom data for QR mode
 
     # ── Barcode strip settings ────────────────────────────────────────
-    barcode_content: Optional[str] = None
+    barcode_content: str | None = None
 
     # ── Hashing ───────────────────────────────────────────────────────
-    hash_algorithms: List[str] = field(default_factory=lambda: ["sha256", "sha512"])
+    hash_algorithms: list[str] = field(default_factory=lambda: ["sha256", "sha512"])
 
     # ── Encryption ────────────────────────────────────────────────────
-    pdf_password: Optional[str] = None
+    pdf_password: str | None = None
 
     # ── Output ────────────────────────────────────────────────────────
     output_suffix: str = "_steganography"
@@ -92,7 +90,7 @@ class SteganographyConfig:
     # ── Factory ───────────────────────────────────────────────────────
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "SteganographyConfig":
+    def from_dict(cls, data: dict[str, Any]) -> "SteganographyConfig":
         """Build config from a raw dictionary (e.g. parsed YAML section).
 
         Unknown keys are silently ignored so forward-compatible config files

@@ -1,0 +1,174 @@
+{
+  "session": {
+    "id": "ext_20260307_150515_01f41e01",
+    "token": "65b5e596fffed7fc3bc34540cb32c030"
+  },
+  "assessments": {
+    "high_level_elegance": 74,
+    "mid_level_elegance": 68,
+    "low_level_elegance": 70,
+    "design_coherence": 65
+  },
+  "findings": [
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "convenience_function_duplication_blurs_ownership",
+      "summary": "Module-level convenience functions that instantiate a private manager class duplicate the class API, blurring ownership",
+      "related_files": [
+        "infrastructure/core/file_inventory.py",
+        "infrastructure/core/pipeline_summary.py"
+      ],
+      "evidence": [
+        "file_inventory.py defines FileInventoryManager with collect_output_files() and generate_inventory_report(), then re-exposes identical free functions collect_output_files() and generate_inventory_report() that just instantiate the manager and delegate (lines 383-415)",
+        "pipeline_summary.py exposes generate_pipeline_summary() free function (lines 484-509) that only instantiates PipelineSummaryGenerator and calls generate_summary+format_summary",
+        "Callers cannot tell from the public surface which layer owns the logic"
+      ],
+      "suggestion": "Remove the free-function wrappers and let callers construct the manager directly, or make the manager private and expose only the free functions — pick one ownership model consistently",
+      "confidence": "high"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "get_config_as_env_vars_pure_wrapper",
+      "summary": "get_config_as_env_vars is a named entry point that only changes a default argument, adding surface area without adding capability",
+      "related_files": [
+        "infrastructure/core/config_loader.py"
+      ],
+      "evidence": [
+        "Line 267-272: get_config_as_env_vars calls get_config_as_dict with respect_existing=True — the only difference is the default value of one argument",
+        "Docstring says 'Thin wrapper over get_config_as_dict with respect_existing=True by default', confirming it adds no logic"
+      ],
+      "suggestion": "Remove get_config_as_env_vars and let callers pass respect_existing=True explicitly, or make it a module-level constant default and keep one function",
+      "confidence": "high"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "generate_translation_diverges_from_generate_review_with_metrics",
+      "summary": "generate_translation duplicates the generate_review_with_metrics pattern inline instead of reusing it, creating two divergent seams for the same operation",
+      "related_files": [
+        "infrastructure/llm/review/generator.py"
+      ],
+      "evidence": [
+        "generate_review_with_metrics (lines 557-653) handles: metrics init, client.reset(), template render, options, retry loop, streaming, post-processing, metrics finalization",
+        "generate_translation (lines 716-755) independently reimplements: metrics init, client.reset(), template render, options, streaming via _stream_with_heartbeat, metrics finalization — but with no retry loop and different variable naming (_cfg, max_tokens, timeout) that duplicates LLMConfig.from_env() call pattern",
+        "If _stream_with_heartbeat or metrics finalization changes, both paths must be updated independently"
+      ],
+      "suggestion": "Add a translation-specific flag or variant to generate_review_with_metrics (e.g., max_retries=0), or extract shared setup/teardown into a helper so generate_translation calls through the same seam",
+      "confidence": "high"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "multi_project_reporter_dual_report_functions_inconsistent_contract",
+      "summary": "Two top-level reporting functions in multi_project_reporter have different input types, different error contracts, and different output shapes with no shared seam",
+      "related_files": [
+        "infrastructure/reporting/multi_project_reporter.py"
+      ],
+      "evidence": [
+        "generate_multi_project_report (lines 28-67) takes repo_root+project_names, calls executive_reporter, raises on OSError/ValueError/KeyError",
+        "generate_multi_project_summary_report (lines 70-192) takes MultiProjectResult+projects, builds summary dict inline, raises only on OSError from file writes",
+        "The two functions cover overlapping purposes (both produce multi-project summaries) but neither calls the other and they produce different artefacts with no shared boundary type"
+      ],
+      "suggestion": "Define a clear boundary: one function owns the data assembly (returns a typed summary object), the other owns serialisation — currently both mix assembly and I/O",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "check_ollama_availability_mixes_detection_and_startup",
+      "summary": "check_ollama_availability orchestrates installation check, retry loop with backoff, auto-start, model discovery, and model selection in one function body — seams for each concern are invisible",
+      "related_files": [
+        "infrastructure/llm/review/generator.py"
+      ],
+      "evidence": [
+        "Lines 311-369: single function performs subprocess which-check, retry loop with exponential backoff (lines 327-352), auto-start branch (lines 334-348), available model enumeration (lines 354-361), and best-model selection (lines 363-368)",
+        "The retry loop nests three levels of conditional logic (attempt, is_ollama_running, auto_start) making the fallback path hard to trace"
+      ],
+      "suggestion": "Split into: check_ollama_installed(), ensure_server_ready() (with retry), and select_review_model() — compose them at the call site",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "resume_pipeline_name_matching_loop_is_complex",
+      "summary": "The resume stage-matching loop uses a stateful index variable and conditional advance to reconcile two ordered lists, which is harder to follow than a direct set/dict lookup",
+      "related_files": [
+        "infrastructure/core/pipeline.py"
+      ],
+      "evidence": [
+        "Lines 304-322: completed_names list and completed_idx counter are maintained through an outer for loop over stages, advancing the index only when names match — effectively a manual zip-match across two sequences",
+        "A subsequent validation checks completed_idx == len(completed_names), requiring readers to understand the index contract to assess correctness"
+      ],
+      "suggestion": "Use a simpler approach: build a set of completed stage names, filter stages list to those not in the set, and validate the set matches completed_names exactly before filtering",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "hardcoded_string_in_format_text_summary",
+      "summary": "_format_text_summary unconditionally prints 'All stages completed successfully!' regardless of whether stages actually succeeded",
+      "related_files": [
+        "infrastructure/core/pipeline_summary.py"
+      ],
+      "evidence": [
+        "Line 114: lines.append('All stages completed successfully!') appears before any check of summary.failed_stages",
+        "PipelineSummary has a failed_stages field but the text formatter ignores it for the header message"
+      ],
+      "suggestion": "Conditionally emit the success/failure headline based on len(summary.failed_stages) == 0",
+      "confidence": "high"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "display_order_list_duplicated_across_text_and_html_generators",
+      "summary": "The display_order list for category rendering is duplicated verbatim in _generate_text_report and _generate_html_report",
+      "related_files": [
+        "infrastructure/core/file_inventory.py"
+      ],
+      "evidence": [
+        "Lines 203-214 (_generate_text_report) define display_order = ['pdf', 'figures', 'data', 'reports', 'simulations', 'llm', 'logs', 'web', 'slides', 'tex']",
+        "Lines 309-320 (_generate_html_report) define an identical list",
+        "The same category_name formatting logic (uppercase for pdf/tex, title-case for others) is also duplicated in both methods"
+      ],
+      "suggestion": "Extract display_order as a class constant and extract category_name formatting into a private helper method",
+      "confidence": "high"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "generate_review_with_metrics_does_too_many_things",
+      "summary": "generate_review_with_metrics combines prompt construction, model size detection, retry orchestration, streaming, quality validation, repetition deduplication, and metrics collection in one body",
+      "related_files": [
+        "infrastructure/llm/review/generator.py"
+      ],
+      "evidence": [
+        "Lines 557-653: single function body handles template instantiation and prompt rendering (lines 580-581), model-size-based temperature adjustment (lines 582-583), retry loop with attempt-based temperature escalation (lines 590-628), post-generation repetition deduplication with rollback (lines 631-642), and metrics finalization (lines 644-651)",
+        "The model-size detection string ('3b', '4b', '7b', '8b') appears independently in both generate_review_with_metrics (line 582) and generate_translation (line 732), indicating a missing abstraction"
+      ],
+      "suggestion": "Extract is_small_model(model_name) as a named predicate; extract post-generation deduplication into a separate function; let the retry loop focus only on attempt/validate/retry",
+      "confidence": "high"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "validate_review_quality_builds_dispatch_table_on_every_call",
+      "summary": "validate_review_quality constructs a _REVIEW_TYPE_VALIDATORS dict literal on every invocation instead of defining it at module scope",
+      "related_files": [
+        "infrastructure/llm/review/generator.py"
+      ],
+      "evidence": [
+        "Lines 165-171: _REVIEW_TYPE_VALIDATORS dict is defined as a local variable inside validate_review_quality and recreated on every call",
+        "The dict maps string keys to module-level functions that are already stable at import time"
+      ],
+      "suggestion": "Move _REVIEW_TYPE_VALIDATORS to module scope as a constant",
+      "confidence": "high"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "get_testing_config_ignores_env_vars_for_three_of_five_settings",
+      "summary": "get_testing_config applies env-var override logic to only 2 of 5 settings via _resolve_int_setting, using a simpler _int_or_default for the other 3, creating an inconsistent resolution pattern",
+      "related_files": [
+        "infrastructure/core/config_loader.py"
+      ],
+      "evidence": [
+        "Lines 459-478: max_test_failures, max_infra_test_failures, and max_project_test_failures use _int_or_default (config file only, no env var check)",
+        "infra_coverage_threshold and project_coverage_threshold use _resolve_int_setting (env var + config + default)",
+        "The docstring (lines 433-434) states the priority is env var > config > default for all five settings, but the implementation only honours this for two"
+      ],
+      "suggestion": "Apply _resolve_int_setting to all five settings with corresponding env var names (e.g., MAX_TEST_FAILURES, MAX_INFRA_TEST_FAILURES, MAX_PROJECT_TEST_FAILURES), or remove the docstring claim about env var priority for the three that don't support it",
+      "confidence": "high"
+    }
+  ]
+}

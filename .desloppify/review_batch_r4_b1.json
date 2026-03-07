@@ -1,0 +1,119 @@
+{
+  "assessments": {
+    "ai_generated_debt": 22,
+    "abstraction_fitness": 28,
+    "convention_outlier": 30
+  },
+  "findings": [
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "pipeline_stage_methods_restate_name",
+      "summary": "Eight _run_* stage methods open with logger.info that restates the method name verbatim",
+      "related_files": ["infrastructure/core/pipeline.py"],
+      "evidence": [
+        "pipeline.py:388: logger.info(\"Running environment setup...\") inside _run_setup_environment",
+        "pipeline.py:393: logger.info(\"Running infrastructure tests...\") inside _run_infrastructure_tests",
+        "pipeline.py:401: logger.info(\"Running project tests...\") inside _run_project_tests",
+        "pipeline.py:407: logger.info(\"Running project analysis...\") inside _run_analysis",
+        "pipeline.py:412: logger.info(\"Running PDF rendering...\") inside _run_pdf_rendering",
+        "pipeline.py:417: logger.info(\"Running output validation...\") inside _run_validation",
+        "pipeline.py:427: logger.info(\"Running LLM scientific review...\") inside _run_llm_review",
+        "pipeline.py:441: logger.info(\"Running LLM translations...\") inside _run_llm_translations"
+      ],
+      "suggestion": "Remove the logger.info call from each _run_* method; the stage name is already logged by _execute_stage via log_pipeline_stage_with_eta before the method is called.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "logging_utils_restating_docstrings",
+      "summary": "Several utility functions have docstrings that echo their one-line implementation without adding meaning",
+      "related_files": ["infrastructure/core/logging_utils.py"],
+      "evidence": [
+        "logging_utils.py:341: def log_substep — docstring 'Log a substep within a stage with leading newline and two-space indentation' exactly restates the single-line body logger.info(f'\\n  {message}')",
+        "logging_utils.py:318: def log_progress — docstring 'Log progress as [current/total - percent%] task' is a format string template of the body",
+        "logging_utils.py:325: def log_stage — docstring 'Log a pipeline stage header as [stage_num/total_stages] stage_name with separator' reads as generated format description"
+      ],
+      "suggestion": "Trim docstrings on trivial one-liners to a single sentence describing intent (not implementation). For log_substep, 'Log a pipeline sub-step message with standard indentation.' is sufficient.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "pipeline_run_stage_single_line_forwarders",
+      "summary": "Eight _run_* methods in PipelineExecutor are pure single-call forwarders to _run_script with no policy",
+      "related_files": ["infrastructure/core/pipeline.py"],
+      "evidence": [
+        "pipeline.py:387-389: _run_setup_environment does only logger.info + return self._run_script('00_setup_environment.py', ...)",
+        "pipeline.py:391-397: _run_infrastructure_tests does only logger.info + return self._run_script('01_run_tests.py', ...)",
+        "pipeline.py:399-404: _run_project_tests same pattern",
+        "pipeline.py:406-409: _run_analysis same pattern",
+        "pipeline.py:411-414: _run_pdf_rendering same pattern",
+        "pipeline.py:416-419: _run_validation same pattern"
+      ],
+      "suggestion": "The six pure-forward methods (_run_setup_environment through _run_validation) could be replaced by a data-driven stage registry: a list of (stage_name, script_name, *args) tuples consumed by _build_stage_list, eliminating the boilerplate while keeping the two special-case methods (_run_llm_review, _run_copy_outputs) that carry real policy.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "generate_multi_project_report_pure_orchestrator",
+      "summary": "generate_multi_project_report is a 3-call sequence with no added policy, duplicating the caller's job",
+      "related_files": ["infrastructure/reporting/multi_project_reporter.py"],
+      "evidence": [
+        "multi_project_reporter.py:41-57: entire function body is: generate_executive_summary, save_executive_summary, generate_all_dashboards, with only error re-raise and logging around them",
+        "No argument transformation, no conditional logic beyond _DASHBOARD_AVAILABLE, no caching or retry"
+      ],
+      "suggestion": "Either inline this into its only caller (execute_multi_project.py) or add meaningful policy (e.g., retry on failure, output path resolution, format selection) to justify the wrapper.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "generate_executive_summary_name_collision",
+      "summary": "Two unrelated functions share the name generate_executive_summary and are both exported from their packages",
+      "related_files": [
+        "infrastructure/reporting/executive_reporter.py",
+        "infrastructure/llm/review/generator.py"
+      ],
+      "evidence": [
+        "executive_reporter.py:933: def generate_executive_summary(repo_root: Path, project_names: list[str]) -> ExecutiveSummary — reads pipeline output files",
+        "llm/review/generator.py:656: def generate_executive_summary(client: LLMClient, text: str, model_name: str = '') -> tuple[str, ReviewMetrics] — calls LLM",
+        "reporting/__init__.py:18 exports generate_executive_summary from executive_reporter",
+        "llm/review/__init__.py:10 exports generate_executive_summary from generator"
+      ],
+      "suggestion": "Rename the LLM variant to generate_llm_executive_summary (or generate_manuscript_executive_summary) to disambiguate the two distinct operations at import time.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "logging_module_split_unclear_boundaries",
+      "summary": "The logging subsystem is split across five sibling files with no clear boundary between them",
+      "related_files": [
+        "infrastructure/core/logging_utils.py",
+        "infrastructure/core/logging_helpers.py",
+        "infrastructure/core/logging_constants.py",
+        "infrastructure/core/logging_formatters.py",
+        "infrastructure/core/logging_progress.py"
+      ],
+      "evidence": [
+        "logging_helpers.py contains format_duration (a string formatter) and format_error_with_suggestions — neither are logging helpers in the handler/formatter sense",
+        "logging_utils.py re-exports format_duration from logging_helpers in its __all__ despite format_duration having no logging dependency",
+        "log_resource_usage (takes pre-computed values) lives in logging_progress.py while log_live_resource_usage (samples psutil) lives in logging_utils.py — split with no principled boundary",
+        "logging_utils.py:412-414: comment 'Core logging API — progress utilities, formatters, and constants are importable directly from their respective submodules' acknowledges the confusion without resolving it"
+      ],
+      "suggestion": "Consolidate format_duration and format_error_with_suggestions into a formatting.py module (or move to exceptions.py). Merge log_resource_usage and log_live_resource_usage into a single location. The five-file split is finer-grained than the actual conceptual boundaries warrant.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "dict_typing_style_inconsistency",
+      "summary": "composer.py uses legacy Dict from typing while all sibling modules use built-in dict",
+      "related_files": ["infrastructure/llm/prompts/composer.py"],
+      "evidence": [
+        "composer.py:7: from typing import Any, Dict, Optional",
+        "composer.py:69: fragment_values: Dict[str, str] = {}",
+        "composer.py:278: def _build_token_budget_awareness(self, total_tokens: int, section_budgets: Dict[str, int]) -> str",
+        "All other infrastructure files reviewed use lowercase dict[str, ...] (Python 3.9+ style)"
+      ],
+      "suggestion": "Replace Dict with dict throughout composer.py and remove Dict from the typing import.",
+      "confidence": "high"
+    }
+  ]
+}
