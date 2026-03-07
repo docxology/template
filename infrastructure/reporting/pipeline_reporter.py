@@ -10,10 +10,12 @@ import json
 from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
 from infrastructure.core.logging_utils import format_duration, get_logger
-from infrastructure.core.multi_project import MultiProjectResult
+
+if TYPE_CHECKING:
+    from infrastructure.core.multi_project import MultiProjectResult
 
 logger = get_logger(__name__)
 
