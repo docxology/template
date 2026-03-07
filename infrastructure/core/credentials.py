@@ -120,8 +120,8 @@ class CredentialManager:
         Returns:
             Dictionary with token and environment info
         """
-        token_env = "ZENODO_SANDBOX_TOKEN" if use_sandbox else "ZENODO_PROD_TOKEN"
-        token = self._get_credential(token_env)
+        token_env_var = "ZENODO_SANDBOX_TOKEN" if use_sandbox else "ZENODO_PROD_TOKEN"
+        token = self._get_credential(token_env_var)
 
         return {
             "token": token,

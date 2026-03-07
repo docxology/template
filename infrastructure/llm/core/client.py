@@ -10,13 +10,16 @@ Provides LLMClient for interacting with Ollama local LLMs with:
 
 from __future__ import annotations
 
+import dataclasses
 import json
 import re
 import time as time_module
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, Iterator, Optional, Tuple
+from typing import Any, Callable, Dict, Iterator, Optional, Tuple, TypeVar
+
+_T = TypeVar("_T")
 
 import requests
 
@@ -24,7 +27,6 @@ from infrastructure.core.exceptions import LLMConnectionError, LLMError
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.llm.core.config import GenerationOptions, LLMConfig
 from infrastructure.llm.core.context import ConversationContext
-from infrastructure.llm.review.metrics import StreamingMetrics
 from infrastructure.llm.templates import get_template
 
 logger = get_logger(__name__)
@@ -153,6 +155,13 @@ class LLMClient:
             self.context.add_message("system", self.config.system_prompt)
             self._system_prompt_injected = True
 
+    @staticmethod
+    def _time_call(fn: Callable[[], _T]) -> Tuple[_T, float]:
+        """Execute fn() and return (result, elapsed_seconds)."""
+        start = time_module.time()
+        result = fn()
+        return result, time_module.time() - start
+
     def query(
         self,
         prompt: str,
@@ -178,7 +187,6 @@ class LLMClient:
             >>> opts = GenerationOptions(temperature=0.0, seed=42)
             >>> response = client.query("Explain...", options=opts)
         """
-        start_time = time_module.time()
         model_name = model or self.config.default_model
 
         if reset_context:
@@ -215,8 +223,9 @@ class LLMClient:
         self.context.add_message("user", prompt)
 
         try:
-            response_text = self._generate_response(model_name, options=options)
-            generation_time = time_module.time() - start_time
+            response_text, generation_time = self._time_call(
+                lambda: self._generate_response(model_name, options=options)
+            )
 
             # Log response received
             logger.debug(
@@ -289,7 +298,6 @@ class LLMClient:
         Example:
             >>> response = client.query_raw("Complete: The quick brown fox")
         """
-        start_time = time_module.time()
         model_name = model or self.config.default_model
         prompt_preview = prompt[:100] + "..." if len(prompt) > 100 else prompt
 
@@ -308,9 +316,9 @@ class LLMClient:
         # Create temporary context for raw query
         messages = [{"role": "user", "content": prompt}]
 
-        response_text = self._generate_response_direct(model_name, messages, options=options)
-
-        generation_time = time_module.time() - start_time
+        response_text, generation_time = self._time_call(
+            lambda: self._generate_response_direct(model_name, messages, options=options)
+        )
 
         logger.debug(
             "Raw query completed",
@@ -367,7 +375,6 @@ class LLMClient:
         Returns:
             Brief response text
         """
-        start_time = time_module.time()
         model_name = model or self.config.default_model
 
         logger.debug(
@@ -381,20 +388,19 @@ class LLMClient:
         )
 
         # Create options for short response
-        short_options = GenerationOptions(
-            max_tokens=self.config.short_max_tokens,
-            temperature=options.temperature if options else None,
-            seed=options.seed if options else None,
-            stop=options.stop if options else None,
+        short_options = (
+            dataclasses.replace(options, max_tokens=self.config.short_max_tokens)
+            if options
+            else GenerationOptions(max_tokens=self.config.short_max_tokens)
         )
 
         instruction = (
             "Provide a concise, brief response (less than 150 words). "
             "Be direct and to the point.\n\n"
         )
-        response = self.query(instruction + prompt, model=model_name, options=short_options)
-
-        generation_time = time_module.time() - start_time
+        response, generation_time = self._time_call(
+            lambda: self.query(instruction + prompt, model=model_name, options=short_options)
+        )
         logger.debug(
             "Short query completed",
             extra={
@@ -424,7 +430,6 @@ class LLMClient:
         Returns:
             Detailed response text
         """
-        start_time = time_module.time()
         model_name = model or self.config.default_model
 
         logger.debug(
@@ -437,21 +442,20 @@ class LLMClient:
             },
         )
 
-        # Create options for long response with higher token limit
-        long_options = GenerationOptions(
-            max_tokens=self.config.long_max_tokens,
-            temperature=options.temperature if options else None,
-            seed=options.seed if options else None,
-            stop=options.stop if options else None,
+        # Create options for long response with higher token limit, preserving caller options
+        long_options = (
+            dataclasses.replace(options, max_tokens=self.config.long_max_tokens)
+            if options
+            else GenerationOptions(max_tokens=self.config.long_max_tokens)
         )
 
         instruction = (
             "Provide a comprehensive, detailed response with examples and "
             "thorough explanation. Use multiple paragraphs if needed.\n\n"
         )
-        response = self.query(instruction + prompt, model=model_name, options=long_options)
-
-        generation_time = time_module.time() - start_time
+        response, generation_time = self._time_call(
+            lambda: self.query(instruction + prompt, model=model_name, options=long_options)
+        )
         logger.debug(
             "Long query completed",
             extra={
@@ -498,7 +502,6 @@ class LLMClient:
             ... }
             >>> result = client.query_structured("Analyze...", schema=schema)
         """
-        start_time = time_module.time()
         model_name = model or self.config.default_model
 
         logger.info(
@@ -541,9 +544,9 @@ class LLMClient:
         # Use raw generation for structured to bypass context issues with JSON
         messages = self.context.get_messages() + [{"role": "user", "content": instruction + prompt}]
 
-        response_text = self._generate_response_direct(model_name, messages, options=struct_options)
-
-        generation_time = time_module.time() - start_time
+        response_text, generation_time = self._time_call(
+            lambda: self._generate_response_direct(model_name, messages, options=struct_options)
+        )
 
         logger.debug(
             "Structured response received",
@@ -821,7 +824,8 @@ class LLMClient:
         error_count = 0
         partial_saved = False
 
-        # Initialize metrics
+        # Initialize metrics (imported locally to avoid circular import with review.metrics)
+        from infrastructure.llm.review.metrics import StreamingMetrics  # noqa: PLC0415
         metrics = StreamingMetrics()
 
         for attempt in range(retries + 1):

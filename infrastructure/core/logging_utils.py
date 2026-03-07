@@ -38,6 +38,15 @@ from infrastructure.core.logging_progress import log_with_spinner
 T = TypeVar("T")
 
 
+def _is_test_environment() -> bool:
+    """Return True if running inside pytest."""
+    return (
+        os.getenv("PYTEST_CURRENT_TEST") is not None
+        or "pytest" in sys.modules
+        or any("pytest" in str(v) for v in sys.modules.values() if hasattr(v, "__file__"))
+    )
+
+
 # =============================================================================
 # LOG LEVEL CONFIGURATION
 # =============================================================================
@@ -253,12 +262,7 @@ def setup_logger(
     logger.handlers.clear()
 
     # Check if we're in test environment (pytest)
-    # Check multiple indicators for pytest environment
-    is_test_env = (
-        os.getenv("PYTEST_CURRENT_TEST") is not None
-        or "pytest" in sys.modules
-        or any("pytest" in str(v) for v in sys.modules.values() if hasattr(v, "__file__"))
-    )
+    is_test_env = _is_test_environment()
 
     # In test environment: don't add console handler, enable propagation
     # so pytest's caplog can capture logs from root logger
@@ -324,11 +328,7 @@ def get_logger(name: str) -> logging.Logger:
     logger = logging.getLogger(name)
 
     # Check if we're in test environment (same detection as setup_logger)
-    is_test_env = (
-        os.getenv("PYTEST_CURRENT_TEST") is not None
-        or "pytest" in sys.modules
-        or any("pytest" in str(v) for v in sys.modules.values() if hasattr(v, "__file__"))
-    )
+    is_test_env = _is_test_environment()
 
     # If not configured, set up with defaults
     if not logger.handlers:
@@ -512,12 +512,12 @@ def log_header(message: str, logger: Optional[logging.Logger] = None) -> None:
     if logger is None:
         logger = get_logger(__name__)
 
-    EMOJIS["rocket"] if USE_EMOJIS else ""
+    prefix = EMOJIS["rocket"] + " " if USE_EMOJIS else ""
     separator = "=" * 50
 
     logger.info("")
     logger.info(separator)
-    logger.info(message)
+    logger.info("%s%s", prefix, message)
     logger.info(separator)
 
 
@@ -668,10 +668,8 @@ def log_resource_usage(stage_name: str = "", logger: Optional[logging.Logger] = 
             logger.info(f"  Resource usage: {resource_info}")
 
     except ImportError:
-        # psutil not available - skip resource reporting
-        pass
+        logger.debug("psutil not available, skipping resource usage reporting")
     except Exception as e:
-        # Any other error - log at debug level
         logger.debug(f"Failed to get resource usage: {e}")
 
 

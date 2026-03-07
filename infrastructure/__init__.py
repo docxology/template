@@ -54,14 +54,14 @@ try:
     # Validation
     from .validation import validate_markdown, validate_pdf_rendering, verify_output_integrity
 except ImportError as _e:
-    import warnings
-    warnings.warn(f"infrastructure convenience imports unavailable: {_e}", ImportWarning, stacklevel=2)
+    raise RuntimeError(f"infrastructure sub-package import failed: {_e}") from _e
 
 # Steganography — optional, only loaded when dependencies are available
 try:
     from .steganography import SteganographyConfig, SteganographyProcessor, process_pdf
-except ImportError:
-    pass
+except ImportError as _steg_e:
+    import warnings
+    warnings.warn(f"Steganography dependencies unavailable: {_steg_e}", ImportWarning, stacklevel=2)
 
 __all__ = [
     # Modules

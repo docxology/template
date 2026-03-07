@@ -25,7 +25,10 @@ def clean_output_directory(output_dir: Path) -> bool:
         output_dir: Path to top-level output directory
 
     Returns:
-        True if cleanup successful, False otherwise
+        True on success.
+
+    Raises:
+        FileOperationError: If the directory cannot be created or cleaned.
     """
     logger.info("Cleaning output directory...")
 
@@ -36,8 +39,7 @@ def clean_output_directory(output_dir: Path) -> bool:
             log_success("Created output directory", logger)
             return True
         except OSError as e:
-            logger.error(f"Failed to create output directory {output_dir}: {e}")
-            return False
+            raise FileOperationError(f"Failed to create output directory {output_dir}: {e}") from e
 
     # Remove existing contents
     try:
@@ -52,8 +54,7 @@ def clean_output_directory(output_dir: Path) -> bool:
         log_success("Output directory cleaned", logger)
         return True
     except OSError as e:
-        logger.error(f"Failed to clean output directory {output_dir}: {e}")
-        return False
+        raise FileOperationError(f"Failed to clean output directory {output_dir}: {e}") from e
 
 
 def _clean_dir_preserving(

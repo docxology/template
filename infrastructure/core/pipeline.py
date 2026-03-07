@@ -121,8 +121,8 @@ class PipelineExecutor:
         if self._log_handler is not None:
             try:
                 self._log_handler.close()
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(f"Failed to close log handler: {e}")
 
         # Create new file handler
         self._log_handler = logging.FileHandler(self.log_file)
@@ -305,6 +305,19 @@ class PipelineExecutor:
                 error_message=str(e),
             )
 
+    def _start_fresh(self) -> list[PipelineStageResult]:
+        """Run the pipeline from scratch, temporarily disabling resume to avoid recursion."""
+        original_resume = self.config.resume
+        self.config.resume = False
+        try:
+            return (
+                self.execute_full_pipeline()
+                if not self.config.skip_llm
+                else self.execute_core_pipeline()
+            )
+        finally:
+            self.config.resume = original_resume
+
     def _resume_pipeline(self) -> list[PipelineStageResult]:
         """Resume pipeline from checkpoint.
 
@@ -316,31 +329,12 @@ class PipelineExecutor:
         is_valid, error_message = self.checkpoint_manager.validate_checkpoint()
         if not is_valid:
             logger.warning(f"Checkpoint invalid, starting fresh: {error_message}")
-            # Fall back to fresh run (but force resume off to avoid recursion)
-            original_resume = self.config.resume
-            self.config.resume = False
-            try:
-                return (
-                    self.execute_full_pipeline()
-                    if not self.config.skip_llm
-                    else self.execute_core_pipeline()
-                )
-            finally:
-                self.config.resume = original_resume
+            return self._start_fresh()
 
         checkpoint = self.checkpoint_manager.load_checkpoint()
         if checkpoint is None:
             logger.warning("No checkpoint found, starting fresh")
-            original_resume = self.config.resume
-            self.config.resume = False
-            try:
-                return (
-                    self.execute_full_pipeline()
-                    if not self.config.skip_llm
-                    else self.execute_core_pipeline()
-                )
-            finally:
-                self.config.resume = original_resume
+            return self._start_fresh()
 
         # Rebuild stage list based on configured pipeline type
         stages: list[tuple] = []
@@ -400,16 +394,7 @@ class PipelineExecutor:
             logger.warning(
                 "Checkpoint stages did not match configured pipeline stages; starting fresh to avoid inconsistency"  # noqa: E501
             )
-            original_resume = self.config.resume
-            self.config.resume = False
-            try:
-                return (
-                    self.execute_full_pipeline()
-                    if not self.config.skip_llm
-                    else self.execute_core_pipeline()
-                )
-            finally:
-                self.config.resume = original_resume
+            return self._start_fresh()
 
         logger.info(
             f"Resuming from stage {len(resumed_results) + 1} ({len(remaining)} stage(s) remaining)"
@@ -649,7 +634,9 @@ class PipelineExecutor:
 
         try:
             # Stream subprocess output to console for long-running stages; still capture exit code.
-            result = subprocess.run(cmd, cwd=self.config.repo_root, env=env, check=False)
+            result = subprocess.run(
+                cmd, cwd=self.config.repo_root, env=env, check=False, timeout=7200
+            )
 
             # Exit code 0 = success
             if result.returncode == 0:

@@ -71,10 +71,12 @@ from .health_check import (
     quick_health_check,
 )
 from .logging_utils import (
+    ProjectLogger,
     calculate_eta,
     format_duration,
     format_error_with_suggestions,
     get_logger,
+    get_project_logger,
     log_function_call,
     log_header,
     log_operation,
@@ -87,6 +89,7 @@ from .logging_utils import (
     log_timing,
     set_global_log_level,
     setup_logger,
+    setup_project_logging,
 )
 from .multi_project import MultiProjectConfig, MultiProjectOrchestrator, MultiProjectResult
 from .performance import (
@@ -98,7 +101,6 @@ from .performance import (
 from .performance_monitor import CodeProfiler, ProfilingMetrics
 from .performance_monitor import benchmark_function, benchmark_llm_query, get_performance_monitor
 from .performance_monitor import monitor_performance
-from .performance_monitor import monitor_performance as monitor_performance_decorator
 from .performance_monitor import profile_memory_usage
 from .pipeline import PipelineConfig, PipelineExecutor, PipelineStageResult
 from .pipeline_summary import PipelineSummary, PipelineSummaryGenerator, generate_pipeline_summary
@@ -148,6 +150,9 @@ __all__ = [
     # Logging
     "setup_logger",
     "get_logger",
+    "get_project_logger",
+    "setup_project_logging",
+    "ProjectLogger",
     "log_operation",
     "log_timing",
     "log_function_call",

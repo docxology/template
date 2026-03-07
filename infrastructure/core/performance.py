@@ -1,9 +1,9 @@
-"""Performance monitoring and resource tracking utilities.
+"""Pipeline-stage resource tracking (CPU, memory, I/O, timing).
 
-This module provides utilities for tracking resource usage (CPU, memory),
-performance metrics, and bottleneck identification during pipeline execution.
+Provides PerformanceMonitor (start/stop resource snapshots), StagePerformanceTracker
+(per-stage pipeline metrics), and performance_context context manager.
 
-Part of the infrastructure layer (Layer 1) - reusable across all projects.
+For function-level profiling and timing decorators, see performance_monitor.py.
 """
 
 from __future__ import annotations
@@ -64,8 +64,8 @@ class PerformanceMetrics:
 class PerformanceMonitor:
     """Resource-usage monitor tracking timing, memory, and operation counts.
 
-    Named ResourceTracker when disambiguation from performance_monitor.CodeProfiler
-    is needed (both modules expose a class called PerformanceMonitor).
+    Named ResourceTracker in contexts where disambiguation from CodeProfiler
+    in performance_monitor.py is needed.
     """
 
     def __init__(self):
@@ -219,9 +219,6 @@ def performance_context(operation_name: str = "Operation"):
             f"Memory: {metrics.resource_usage.memory_mb:.1f}MB, "
             f"Peak: {metrics.resource_usage.peak_memory_mb:.1f}MB"
         )
-
-
-monitor_performance = performance_context
 
 
 def get_system_resources() -> dict[str, Any]:
@@ -422,3 +419,4 @@ class StagePerformanceTracker:
         }
 
 ResourceTracker = PerformanceMonitor
+monitor_performance = performance_context

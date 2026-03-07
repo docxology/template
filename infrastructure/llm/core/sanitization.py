@@ -1,7 +1,8 @@
 """Input sanitization and security utilities for LLM operations.
 
-This module provides comprehensive input validation, sanitization,
-and security measures for LLM prompts and user inputs.
+Validates and sanitizes LLM prompts before generation: strips dangerous
+patterns, normalizes whitespace, and enforces length limits. Called by
+LLMClient before each outbound request.
 """
 
 from __future__ import annotations
@@ -48,7 +49,8 @@ class InputSanitizer:
             r"on\w+\s*=|javascript:|vbscript:",
         ]
 
-        # HTML entities to escape
+
+        # HTML entities reference table (used by _escape_html_entities via html.escape)
         self.html_entities = {
             "<": "&lt;",
             ">": "&gt;",
