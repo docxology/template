@@ -24,13 +24,13 @@ logger = get_logger(__name__)
 
 try:
     from infrastructure.validation.markdown_validator import (
-        collect_symbols,
+        collect_symbols,  # noqa: F401 — re-exported for tests
         find_manuscript_directory,
-        find_markdown_files,
-        validate_images,
+        find_markdown_files,  # noqa: F401 — re-exported for tests
+        validate_images,  # noqa: F401 — re-exported for tests
         validate_markdown,
-        validate_math,
-        validate_refs,
+        validate_math,  # noqa: F401 — re-exported for tests
+        validate_refs,  # noqa: F401 — re-exported for tests
     )
 except ImportError as e:
     # Store error for main() function to handle
