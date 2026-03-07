@@ -41,31 +41,19 @@ class PipelineReport:
     output_statistics: Optional[Dict[str, Any]] = None
 
 
-@dataclass
-class ReportExtras:
-    """Optional supplementary data for a pipeline report.
-
-    Groups the six optional fields of generate_pipeline_report into a single
-    object so callers only construct what they need.
-    """
-
-    test_results: Optional[Dict[str, Any]] = None
-    validation_results: Optional[Dict[str, Any]] = None
-    performance_metrics: Optional[Dict[str, Any]] = None
-    error_summary: Optional[Dict[str, Any]] = None
-    output_statistics: Optional[Dict[str, Any]] = None
-    project_name: Optional[str] = None
-
-
-
 def generate_pipeline_report(
     stage_results: List[Dict[str, Any]],
     total_duration: float,
     repo_root: Path,
-    extras: Optional[ReportExtras] = None,
+    *,
+    test_results: Optional[Dict[str, Any]] = None,
+    validation_results: Optional[Dict[str, Any]] = None,
+    performance_metrics: Optional[Dict[str, Any]] = None,
+    error_summary: Optional[Dict[str, Any]] = None,
+    output_statistics: Optional[Dict[str, Any]] = None,
+    project_name: Optional[str] = None,
 ) -> PipelineReport:
     """Generate consolidated pipeline report from stage results and optional extras."""
-    e = extras or ReportExtras()
     stages = []
     for result in stage_results:
         status = "passed" if result.get("exit_code", 1) == 0 else "failed"
@@ -78,24 +66,27 @@ def generate_pipeline_report(
             )
         )
 
-    # Enrich output_statistics with log file info before passing to report
-    if e.project_name and e.output_statistics is not None:
-        log_file = repo_root / "projects" / e.project_name / "output" / "logs" / "pipeline.log"
-        e.output_statistics["log_file"] = {
-            "exists": log_file.exists(),
-            "size": log_file.stat().st_size if log_file.exists() else 0,
-            "path": str(log_file),
+    # Enrich a copy of output_statistics with log file info (avoid mutating caller's dict)
+    if project_name and output_statistics is not None:
+        log_file = repo_root / "projects" / project_name / "output" / "logs" / "pipeline.log"
+        output_statistics = {
+            **output_statistics,
+            "log_file": {
+                "exists": log_file.exists(),
+                "size": log_file.stat().st_size if log_file.exists() else 0,
+                "path": str(log_file),
+            },
         }
 
     return PipelineReport(
         timestamp=datetime.now().isoformat(),
         total_duration=total_duration,
         stages=stages,
-        test_results=e.test_results,
-        validation_results=e.validation_results,
-        performance_metrics=e.performance_metrics,
-        error_summary=e.error_summary,
-        output_statistics=e.output_statistics,
+        test_results=test_results,
+        validation_results=validation_results,
+        performance_metrics=performance_metrics,
+        error_summary=error_summary,
+        output_statistics=output_statistics,
     )
 
 

@@ -36,7 +36,6 @@ from .output_reporter import (
     generate_output_summary,
 )
 from .pipeline_reporter import (
-    ReportExtras,
     generate_error_summary,
     generate_performance_report,
     generate_pipeline_report,
@@ -56,7 +55,6 @@ from .suite_summary_generator import (
 
 
 __all__ = [
-    "ReportExtras",
     "generate_pipeline_report",
     "generate_validation_report",
     "save_test_results",

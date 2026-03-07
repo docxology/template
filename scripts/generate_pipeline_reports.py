@@ -18,7 +18,6 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from infrastructure.core.logging_utils import get_logger, log_header, log_success
 from infrastructure.reporting.pipeline_reporter import (
-    ReportExtras,
     generate_pipeline_report,
     save_pipeline_report,
 )
@@ -74,10 +73,8 @@ def main() -> int:
             stage_results=stage_results,
             total_duration=total_duration,
             repo_root=repo_root,
-            extras=ReportExtras(
-                test_results=test_results,
-                performance_metrics=performance_metrics,
-            ),
+            test_results=test_results,
+            performance_metrics=performance_metrics,
         )
 
         # Save report in multiple formats
