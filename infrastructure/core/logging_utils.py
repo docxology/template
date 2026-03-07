@@ -353,7 +353,7 @@ def set_global_log_level(level: int) -> None:
             logger.setLevel(level)
 
 
-def log_stage_with_eta(
+def log_pipeline_stage_with_eta(
     stage_num: int,
     total_stages: int,
     stage_name: str,
@@ -382,8 +382,8 @@ def log_stage_with_eta(
     logger.info(separator)
 
 
-def log_resource_usage(stage_name: str = "", logger: Optional[logging.Logger] = None) -> None:
-    """Log current resource usage (if psutil available)."""
+def log_live_resource_usage(stage_name: str = "", logger: Optional[logging.Logger] = None) -> None:
+    """Log current resource usage via live psutil sampling (if psutil available)."""
     logger = logger or get_logger(__name__)
 
     if psutil is None:
@@ -424,9 +424,9 @@ __all__ = [
     "log_header",
     "log_progress",
     "log_stage",
-    "log_stage_with_eta",
+    "log_pipeline_stage_with_eta",
     "log_substep",
-    "log_resource_usage",
+    "log_live_resource_usage",
     "format_error_with_suggestions",
     "format_duration",
 ]

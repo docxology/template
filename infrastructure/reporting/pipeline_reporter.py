@@ -137,7 +137,7 @@ def save_pipeline_report(
     if "markdown" in formats:
         md_path = output_dir / "pipeline_report.md"
         try:
-            md_content = generate_markdown_report(report)
+            md_content = _generate_pipeline_markdown(report)
             md_path.write_text(md_content)
             saved_files["markdown"] = md_path
             logger.info(f"Pipeline report (Markdown) saved: {md_path}")
@@ -160,7 +160,7 @@ def save_pipeline_report(
     return saved_files
 
 
-def generate_markdown_report(report: PipelineReport) -> str:
+def _generate_pipeline_markdown(report: PipelineReport) -> str:
     """Generate Markdown format pipeline report.
 
     Args:

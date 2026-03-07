@@ -22,7 +22,7 @@ from infrastructure.core.logging_utils import (
     flush_file_handlers,
     get_logger,
     log_operation,
-    log_stage_with_eta,
+    log_pipeline_stage_with_eta,
     setup_logger,
     setup_root_log_file_handler,
 )
@@ -233,7 +233,7 @@ class PipelineExecutor:
 
         # Use enhanced stage logging with ETA if pipeline start time available
         if pipeline_start is not None:
-            log_stage_with_eta(
+            log_pipeline_stage_with_eta(
                 stage_num, self.config.total_stages, stage_name, pipeline_start, logger
             )
         else:

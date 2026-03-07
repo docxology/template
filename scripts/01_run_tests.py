@@ -25,7 +25,7 @@ from pathlib import Path
 # Add root to path for infrastructure imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from infrastructure.core.logging_utils import get_logger, log_success, log_header, log_substep, log_resource_usage
+from infrastructure.core.logging_utils import get_logger, log_success, log_header, log_substep, log_live_resource_usage
 from infrastructure.core.config_loader import get_testing_config
 from infrastructure.core.file_operations import clean_coverage_files
 from infrastructure.reporting.coverage_reporter import (
@@ -668,7 +668,7 @@ def main() -> int:
     log_header(f"STAGE 01: Run Tests (Project: {args.project})", logger)
 
     # Log resource usage at start
-    log_resource_usage("Test stage start", logger)
+    log_live_resource_usage("Test stage start", logger)
 
     repo_root = Path(__file__).parent.parent
 
@@ -748,7 +748,7 @@ def main() -> int:
                     logger.info(f"    ... and {len(failed_tests) - 5} more failures")
 
     # Log resource usage at end
-    log_resource_usage("Test stage end", logger)
+    log_live_resource_usage("Test stage end", logger)
 
     # Return exit code based on execution mode
     if run_project and run_infra:

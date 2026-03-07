@@ -212,9 +212,9 @@ def main() -> int:
     log_header(f"STAGE 02: Run Analysis (Project: {args.project})", logger)
 
     # Log resource usage at start
-    from infrastructure.core.logging_utils import log_resource_usage
+    from infrastructure.core.logging_utils import log_live_resource_usage
 
-    log_resource_usage("Analysis stage start", logger)
+    log_live_resource_usage("Analysis stage start", logger)
 
     try:
         repo_root = Path(__file__).parent.parent
@@ -241,17 +241,17 @@ def main() -> int:
             logger.error("\nAnalysis failed - fix issues and try again")
 
         # Log resource usage at end
-        log_resource_usage("Analysis stage end", logger)
+        log_live_resource_usage("Analysis stage end", logger)
 
         return exit_code
 
     except (ScriptExecutionError, PipelineError) as e:
         logger.error(format_error_with_suggestions(e))
-        log_resource_usage("Analysis stage end (error)", logger)
+        log_live_resource_usage("Analysis stage end (error)", logger)
         return 1
     except Exception as e:
         logger.error(f"Unexpected error: {e}", exc_info=True)
-        log_resource_usage("Analysis stage end (error)", logger)
+        log_live_resource_usage("Analysis stage end (error)", logger)
         return 1
 
 
