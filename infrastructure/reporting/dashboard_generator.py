@@ -956,22 +956,14 @@ def generate_matplotlib_dashboard(summary: ExecutiveSummary, output_dir: Path) -
     return saved_files
 
 
-def generate_plotly_dashboard(summary: ExecutiveSummary, output_dir: Path) -> Path:
-    """Generate interactive HTML dashboard using plotly.
-
-    Args:
-        summary: ExecutiveSummary instance
-        output_dir: Output directory path
-
-    Returns:
-        Path to saved HTML file
-    """
+def generate_plotly_dashboard(summary: ExecutiveSummary, output_dir: Path) -> Path | None:
+    """Generate interactive HTML dashboard using plotly; returns None if plotly not installed."""
     try:
         import plotly.graph_objects as go
         from plotly.subplots import make_subplots
     except ImportError:
         logger.warning("Plotly not installed, skipping interactive dashboard generation")
-        return None  # type: ignore
+        return None
 
     logger.info("Generating interactive plotly dashboard...")
 
