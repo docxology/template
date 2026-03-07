@@ -9,7 +9,7 @@ from __future__ import annotations
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, TypedDict
+from typing import Any, TypedDict
 
 from infrastructure.core.config_loader import get_testing_config
 from infrastructure.core.logging_utils import get_logger
@@ -32,7 +32,7 @@ class InfraResults(TypedDict):
 logger = get_logger(__name__)
 
 
-def load_test_results(project_name: str, repo_root: Path | None = None) -> Dict[str, Any]:
+def load_test_results(project_name: str, repo_root: Path | None = None) -> dict[str, Any]:
     """Load test results from a project's output directory; returns {} if not found."""
     root = repo_root or Path.cwd()
     results_file = root / "projects" / project_name / "output" / "reports" / "test_results.json"
@@ -132,7 +132,7 @@ def discover_active_projects(repo_root: Path | None = None) -> list:
 
 
 def _calculate_weighted_coverage(
-    results_list: list[Dict[str, Any]],
+    results_list: list[dict[str, Any]],
 ) -> float:
     """Return coverage percentage weighted by lines of code across all suites."""
     total_lines = sum(r.get("total_lines", 0) for r in results_list)
@@ -142,7 +142,7 @@ def _calculate_weighted_coverage(
     return weighted_sum / total_lines
 
 
-def _aggregate_counts(results_list: list[Dict[str, Any]]) -> Dict[str, Any]:
+def _aggregate_counts(results_list: list[dict[str, Any]]) -> dict[str, Any]:
     """Return summed passed/failed/skipped/duration across all suites."""
     total_passed = sum(r.get("passed", 0) for r in results_list)
     total_failed = sum(r.get("failed", 0) for r in results_list)
@@ -168,7 +168,7 @@ def _is_ollama_available() -> bool:
         return False
 
 
-def generate_summary_report(repo_root: Path | None = None) -> Dict[str, Any]:
+def generate_summary_report(repo_root: Path | None = None) -> dict[str, Any]:
     """Generate comprehensive test summary report."""
     root = repo_root or Path.cwd()
     timestamp = datetime.now().isoformat()
@@ -186,7 +186,7 @@ def generate_summary_report(repo_root: Path | None = None) -> Dict[str, Any]:
     infra_lines = infra_results.get("total_lines", 0)
     testing_config = get_testing_config(root)
 
-    report: Dict[str, Any] = {
+    report: dict[str, Any] = {
         "timestamp": timestamp,
         "test_type": "full_repository_suite",
         "overall_success": overall_success,
@@ -247,7 +247,7 @@ def generate_summary_report(repo_root: Path | None = None) -> Dict[str, Any]:
     return report
 
 
-def generate_markdown_report(data: Dict[str, Any]) -> str:
+def generate_markdown_report(data: dict[str, Any]) -> str:
     """Generate human-readable markdown report from test data.
 
     Args:

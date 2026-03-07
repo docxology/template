@@ -32,6 +32,7 @@ from infrastructure.core.errors import (
     STAGE_EXCEPTION,
     STAGE_FAILED,
 )
+from infrastructure.core.file_operations import clean_output_directories
 
 logger = get_logger(__name__)
 
@@ -372,8 +373,6 @@ class PipelineExecutor:
         After cleaning, recreates the log file handler since clean_output_directories
         may have deleted the log file.
         """
-        from infrastructure.core.file_operations import clean_output_directories
-
         logger.info("Cleaning output directories...")
         clean_output_directories(self.config.repo_root, self.config.project_name)
 

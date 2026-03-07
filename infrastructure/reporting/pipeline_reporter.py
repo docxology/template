@@ -111,37 +111,21 @@ def save_pipeline_report(
         "output_statistics": report.output_statistics,
     }
 
+    formats_to_write = []
     if "json" in formats:
-        json_path = output_dir / "pipeline_report.json"
-        try:
-            with open(json_path, "w") as f:
-                json.dump(report_dict, f, indent=2)
-            saved_files["json"] = json_path
-            logger.info(f"Pipeline report (JSON) saved: {json_path}")
-        except OSError as e:
-            logger.error(f"Failed to write JSON report {json_path}: {e}")
-            raise
-
+        formats_to_write.append(("json", output_dir / "pipeline_report.json", json.dumps(report_dict, indent=2)))
     if "markdown" in formats:
-        md_path = output_dir / "pipeline_report.md"
-        try:
-            md_content = _generate_pipeline_markdown(report)
-            md_path.write_text(md_content)
-            saved_files["markdown"] = md_path
-            logger.info(f"Pipeline report (Markdown) saved: {md_path}")
-        except OSError as e:
-            logger.error(f"Failed to write Markdown report {md_path}: {e}")
-            raise
-
+        formats_to_write.append(("markdown", output_dir / "pipeline_report.md", _generate_pipeline_markdown(report)))
     if "html" in formats:
-        html_path = output_dir / "pipeline_report.html"
+        formats_to_write.append(("html", output_dir / "pipeline_report.html", generate_html_report(report)))
+
+    for fmt, path, content in formats_to_write:
         try:
-            html_content = generate_html_report(report)
-            html_path.write_text(html_content)
-            saved_files["html"] = html_path
-            logger.info(f"Pipeline report (HTML) saved: {html_path}")
+            path.write_text(content)
+            saved_files[fmt] = path
+            logger.info(f"Pipeline report ({fmt.upper()}) saved: {path}")
         except OSError as e:
-            logger.error(f"Failed to write HTML report {html_path}: {e}")
+            logger.error(f"Failed to write {fmt.upper()} report {path}: {e}")
             raise
 
     return saved_files

@@ -10,7 +10,7 @@ import json
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from infrastructure.core.logging_utils import get_logger
 
@@ -27,10 +27,10 @@ class ErrorEntry:
     file: Optional[str] = None
     line: Optional[int] = None
     severity: str = "error"  # 'error', 'warning', 'info'
-    suggestions: List[str] = field(default_factory=list)
-    context: Dict[str, Any] = field(default_factory=dict)
+    suggestions: list[str] = field(default_factory=list)
+    context: dict[str, Any] = field(default_factory=dict)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return {
             "type": self.type,
@@ -49,8 +49,8 @@ class ErrorAggregator:
 
     def __init__(self):
         """Initialize error aggregator."""
-        self.errors: List[ErrorEntry] = []
-        self.warnings: List[ErrorEntry] = []
+        self.errors: list[ErrorEntry] = []
+        self.warnings: list[ErrorEntry] = []
 
     def add_error(
         self,
@@ -60,8 +60,8 @@ class ErrorAggregator:
         file: Optional[str] = None,
         line: Optional[int] = None,
         severity: str = "error",
-        suggestions: Optional[List[str]] = None,
-        context: Optional[Dict[str, Any]] = None,
+        suggestions: Optional[list[str]] = None,
+        context: Optional[dict[str, Any]] = None,
     ) -> None:
         """Add an error or warning.
 
@@ -91,20 +91,20 @@ class ErrorAggregator:
         else:
             self.warnings.append(entry)
 
-    def get_summary(self) -> Dict[str, Any]:
+    def get_summary(self) -> dict[str, Any]:
         """Get error summary.
 
         Returns:
             Dictionary with error summary
         """
         # Categorize errors by type
-        errors_by_type: Dict[str, List[ErrorEntry]] = {}
+        errors_by_type: dict[str, list[ErrorEntry]] = {}
         for error in self.errors:
             if error.type not in errors_by_type:
                 errors_by_type[error.type] = []
             errors_by_type[error.type].append(error)
 
-        warnings_by_type: Dict[str, List[ErrorEntry]] = {}
+        warnings_by_type: dict[str, list[ErrorEntry]] = {}
         for warning in self.warnings:
             if warning.type not in warnings_by_type:
                 warnings_by_type[warning.type] = []
@@ -119,7 +119,7 @@ class ErrorAggregator:
             "warnings": [w.to_dict() for w in self.warnings],
         }
 
-    def get_actionable_fixes(self) -> List[Dict[str, Any]]:
+    def get_actionable_fixes(self) -> list[dict[str, Any]]:
         """Get actionable fixes for errors.
 
         Returns:
@@ -222,7 +222,7 @@ class ErrorAggregator:
 
         return json_path
 
-    def _generate_markdown_report(self, summary: Dict[str, Any]) -> str:
+    def _generate_markdown_report(self, summary: dict[str, Any]) -> str:
         """Generate Markdown error summary report.
 
         Args:

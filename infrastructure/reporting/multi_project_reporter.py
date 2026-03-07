@@ -8,7 +8,7 @@ from __future__ import annotations
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.core.multi_project import MultiProjectResult
@@ -23,7 +23,7 @@ logger = get_logger(__name__)
 
 def generate_multi_project_report(
     repo_root: Path, project_names: list[str], output_dir: Path
-) -> Dict[str, Path]:
+) -> dict[str, Path]:
     """Orchestrate complete multi-project reporting workflow.
 
     This is a convenience function that runs the full executive reporting pipeline:
@@ -63,8 +63,8 @@ def generate_multi_project_report(
 
 
 def generate_multi_project_summary_report(
-    result: MultiProjectResult, projects: List[Any], output_dir: Path
-) -> Dict[str, Path]:
+    result: MultiProjectResult, projects: list[Any], output_dir: Path
+) -> dict[str, Path]:
     """Generate comprehensive multi-project summary report.
 
     Args:
@@ -79,7 +79,7 @@ def generate_multi_project_summary_report(
 
     total_projects_count = len(projects)
 
-    summary: Dict[str, Any] = {
+    summary: dict[str, Any] = {
         "timestamp": datetime.now().isoformat(),
         "total_projects": total_projects_count,
         "successful_projects": result.successful_projects,
@@ -164,25 +164,30 @@ def generate_multi_project_summary_report(
             }
         )
 
-    saved_files: Dict[str, Path] = {}
+    saved_files: dict[str, Path] = {}
 
     json_file = output_dir / "multi_project_summary.json"
-    with open(json_file, "w") as f:
-        json.dump(summary, f, indent=2)
-    saved_files["json"] = json_file
-    logger.info(f"Multi-project summary saved: {json_file}")
+    try:
+        json_file.write_text(json.dumps(summary, indent=2))
+        saved_files["json"] = json_file
+        logger.info(f"Multi-project summary saved: {json_file}")
+    except OSError as e:
+        logger.error(f"Failed to write JSON summary {json_file}: {e}")
+        raise
 
     md_file = output_dir / "multi_project_summary.md"
-    md_content = _format_multi_project_summary_markdown(summary)
-    with open(md_file, "w") as f:
-        f.write(md_content)
-    saved_files["markdown"] = md_file
-    logger.info(f"Multi-project summary saved: {md_file}")
+    try:
+        md_file.write_text(_format_multi_project_summary_markdown(summary))
+        saved_files["markdown"] = md_file
+        logger.info(f"Multi-project summary saved: {md_file}")
+    except OSError as e:
+        logger.error(f"Failed to write Markdown summary {md_file}: {e}")
+        raise
 
     return saved_files
 
 
-def _format_multi_project_summary_markdown(summary: Dict[str, Any]) -> str:
+def _format_multi_project_summary_markdown(summary: dict[str, Any]) -> str:
     """Format multi-project summary as markdown."""
     lines = [
         "# Multi-Project Execution Summary",

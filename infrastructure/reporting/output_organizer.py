@@ -27,7 +27,7 @@ import shutil
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Optional
 
 from infrastructure.core.logging_utils import get_logger
 
@@ -275,7 +275,7 @@ class OutputOrganizer:
         self.logger.info(f"Copied {copied_count} combined PDF files")
         return copied_count
 
-    def get_organized_structure_summary(self, output_dir: Path) -> Dict[str, List[str]]:
+    def get_organized_structure_summary(self, output_dir: Path) -> dict[str, list[str]]:
         """
         Get a summary of the organized file structure.
 

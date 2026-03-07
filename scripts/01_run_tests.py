@@ -35,8 +35,8 @@ from infrastructure.reporting.coverage_reporter import (
     analyze_coverage_gaps,
     format_failure_suggestions,
 )
-from infrastructure.core.logging_helpers import format_duration as _format_duration
-from infrastructure.core.environment import get_python_command, check_uv_available
+from infrastructure.core.logging_utils import format_duration as _format_duration
+from infrastructure.core.environment import get_python_command
 from infrastructure.reporting.coverage_parser import check_cov_datafile_support
 from infrastructure.reporting.test_runner import TestSuiteConfig, run_test_suite
 
@@ -199,18 +199,12 @@ def run_project_tests(
     # Point coverage to the project's pyproject.toml so all subprocess coverage trackers
     # (spawned by integration tests) use the same branch=true setting. Without this,
     # subprocesses fall back to branch=false and combine() crashes with DataError.
-    if check_uv_available():
-        cmd = get_python_command() + [
-            "-m", "pytest",
-            f"projects/{project_name}/tests",
-            f"--cov=projects/{project_name}/src",
-            f"--cov-config={project_cov_config}",
-        ]
-    else:
-        cmd = [sys.executable, "-m", "pytest",
-               f"projects/{project_name}/tests",
-               f"--cov=projects/{project_name}/src",
-               f"--cov-config={project_cov_config}"]
+    cmd = get_python_command() + [
+        "-m", "pytest",
+        f"projects/{project_name}/tests",
+        f"--cov=projects/{project_name}/src",
+        f"--cov-config={project_cov_config}",
+    ]
 
     env = os.environ.copy()
     pythonpath_parts = [str(repo_root), str(project_root)]
@@ -309,6 +303,27 @@ def _report_suite_failure(
         logger.info(suggestion)
 
 
+def _report_suite_success(suite_name: str, results: dict, threshold: float, report: dict) -> None:
+    """Log success details for a test suite."""
+    passed = results.get("passed", 0)
+    skipped = results.get("skipped", 0)
+    coverage = results.get("coverage_percent", 0)
+    warnings = results.get("warnings", 0)
+    logger.info(f"{suite_name} Results:")
+    logger.info(f"  ✓ Passed: {passed}")
+    if skipped > 0:
+        logger.info(f"  ⚠ Skipped: {skipped}")
+    if warnings > 0:
+        logger.info(f"  ⚠ Warnings: {warnings}")
+    logger.info(f"  📊 Coverage: {format_coverage_status(coverage, threshold)}")
+    if coverage < threshold:
+        for suggestion in analyze_coverage_gaps(results, threshold, suite_name, report):
+            logger.info(f"    {suggestion}")
+    phases = results.get("execution_phases", {})
+    if phases:
+        logger.info(f"  ⏱ Duration: {_format_duration(sum(phases.values()))}")
+
+
 def report_results(
     infra_exit: int,
     project_exit: int,
@@ -354,62 +369,14 @@ def report_results(
         logger.info("  ⏭ Skipped (not run in this execution)")
         logger.info("  📊 Coverage: N/A (tests not executed)")
     elif infra_exit == 0:
-        passed = infra_results.get("passed", 0)
-        failed = infra_results.get("failed", 0)
-        skipped = infra_results.get("skipped", 0)
-        coverage = infra_results.get("coverage_percent", 0)
-
-        logger.info("Infrastructure Results:")
-        logger.info(f"  ✓ Passed: {passed}")
-        if skipped > 0:
-            logger.info(f"  ⚠ Skipped: {skipped}")
-        warnings = infra_results.get("warnings", 0)
-        if warnings > 0:
-            logger.info(f"  ⚠ Warnings: {warnings}")
-        logger.info(f"  📊 Coverage: {format_coverage_status(coverage, 60.0)}")
-
-        # Show coverage improvement suggestions if below threshold
-        if coverage < 60.0:
-            suggestions = analyze_coverage_gaps(infra_results, 60.0, "Infrastructure", report)
-            for suggestion in suggestions:
-                logger.info(f"    {suggestion}")
-
-        # Show execution phases if available
-        phases = infra_results.get("execution_phases", {})
-        if phases:
-            total_exec_time = sum(phases.values())
-            logger.info(f"  ⏱ Duration: {_format_duration(total_exec_time)}")
+        _report_suite_success("Infrastructure", infra_results, 60.0, report)
     else:
         _report_suite_failure("Infrastructure", infra_results)
 
     # Project summary
     logger.info("")  # Add spacing
     if project_exit == 0:
-        passed = project_results.get("passed", 0)
-        failed = project_results.get("failed", 0)
-        skipped = project_results.get("skipped", 0)
-        coverage = project_results.get("coverage_percent", 0)
-
-        logger.info("Project Results:")
-        logger.info(f"  ✓ Passed: {passed}")
-        if skipped > 0:
-            logger.info(f"  ⚠ Skipped: {skipped}")
-        warnings = project_results.get("warnings", 0)
-        if warnings > 0:
-            logger.info(f"  ⚠ Warnings: {warnings}")
-        logger.info(f"  📊 Coverage: {format_coverage_status(coverage, 90.0)}")
-
-        # Show coverage improvement suggestions if below threshold
-        if coverage < 90.0:
-            suggestions = analyze_coverage_gaps(project_results, 90.0, "Project", report)
-            for suggestion in suggestions:
-                logger.info(f"    {suggestion}")
-
-        # Show execution phases if available
-        phases = project_results.get("execution_phases", {})
-        if phases:
-            total_exec_time = sum(phases.values())
-            logger.info(f"  ⏱ Duration: {_format_duration(total_exec_time)}")
+        _report_suite_success("Project", project_results, 90.0, report)
     else:
         _report_suite_failure("Project", project_results, project_name)
 

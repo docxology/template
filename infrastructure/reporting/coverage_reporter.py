@@ -11,14 +11,14 @@ import json
 import re
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Optional
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
 
-def parse_coverage_json(coverage_json_path: Path) -> Optional[Dict[str, Any]]:
+def parse_coverage_json(coverage_json_path: Path) -> Optional[dict[str, Any]]:
     """Parse coverage.json file for detailed per-module coverage data.
 
     Args:
@@ -79,7 +79,7 @@ def parse_coverage_json(coverage_json_path: Path) -> Optional[Dict[str, Any]]:
         return None
 
 
-def parse_pytest_output(stdout: str, stderr: str, exit_code: int) -> Dict[str, Any]:
+def parse_pytest_output(stdout: str, stderr: str, exit_code: int) -> dict[str, Any]:
     """Parse pytest output to extract comprehensive metrics.
 
     Args:
@@ -100,7 +100,7 @@ def parse_pytest_output(stdout: str, stderr: str, exit_code: int) -> Dict[str, A
         - execution_phases: Timing breakdown for collection/execution phases
         - test_categories: Breakdown by test markers/categories
     """
-    results: Dict[str, Any] = {
+    results: dict[str, Any] = {
         "passed": 0,
         "failed": 0,
         "skipped": 0,
@@ -211,11 +211,11 @@ def parse_pytest_output(stdout: str, stderr: str, exit_code: int) -> Dict[str, A
 
 
 def generate_test_report(
-    infra_results: Dict[str, Any],
-    project_results: Dict[str, Any],
+    infra_results: dict[str, Any],
+    project_results: dict[str, Any],
     repo_root: Path,
     include_coverage_details: bool = True,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Generate structured test report from infrastructure and project test results.
 
     Args:
@@ -232,7 +232,7 @@ def generate_test_report(
         - summary: Combined summary with totals and pass/fail status
         - coverage_details: Detailed coverage information (if include_coverage_details=True)
     """
-    report: Dict[str, Any] = {
+    report: dict[str, Any] = {
         "timestamp": datetime.now().isoformat(),
         "infrastructure": infra_results,
         "project": project_results,
@@ -275,7 +275,7 @@ def generate_test_report(
     return report
 
 
-def save_test_report(report: Dict[str, Any], output_dir: Path) -> Tuple[Path, Path]:
+def save_test_report(report: dict[str, Any], output_dir: Path) -> tuple[Path, Path]:
     """Save test report to JSON and generate Markdown summary.
 
     Args:
@@ -338,7 +338,7 @@ def format_coverage_status(coverage_pct: float, threshold: float) -> str:
 
 
 def analyze_coverage_gaps(
-    results: Dict[str, Any], threshold: float, test_type: str, report: Dict[str, Any]
+    results: dict[str, Any], threshold: float, test_type: str, report: dict[str, Any]
 ) -> list:
     """Analyze coverage gaps and return actionable improvement suggestions."""
     suggestions = []

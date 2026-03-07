@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import math
 from pathlib import Path
-from typing import TYPE_CHECKING, Dict, List, Tuple
+from typing import TYPE_CHECKING
 
 from infrastructure.core.exceptions import PDFValidationError, ValidationError
 from infrastructure.core.logging_utils import get_logger
@@ -25,7 +25,7 @@ if TYPE_CHECKING:
 logger = get_logger(__name__)
 
 
-def extract_pdf_pages_as_images(pdf_path: Path, dpi: int = 300) -> List["PIL.Image.Image"]:
+def extract_pdf_pages_as_images(pdf_path: Path, dpi: int = 300) -> list["PIL.Image.Image"]:
     """Extract each PDF page as a PIL Image.
 
     Uses pypdf to read PDF pages and renders them as images.
@@ -78,7 +78,7 @@ def extract_pdf_pages_as_images(pdf_path: Path, dpi: int = 300) -> List["PIL.Ima
     return images
 
 
-def _render_pages_with_reportlab(reader: "PdfReader", dpi: int) -> List["PIL.Image.Image"]:
+def _render_pages_with_reportlab(reader: "PdfReader", dpi: int) -> list["PIL.Image.Image"]:
     """Render PDF pages using reportlab for high-quality output."""
     try:
         import os
@@ -165,7 +165,7 @@ def _render_pages_with_reportlab(reader: "PdfReader", dpi: int) -> List["PIL.Ima
     return images
 
 
-def _render_pages_simple(reader: "PdfReader", dpi: int) -> List["PIL.Image.Image"]:
+def _render_pages_simple(reader: "PdfReader", dpi: int) -> list["PIL.Image.Image"]:
     """Render PDF pages using simple text extraction and PIL drawing."""
     try:
         from PIL import Image, ImageDraw, ImageFont
@@ -214,10 +214,10 @@ def _render_pages_simple(reader: "PdfReader", dpi: int) -> List["PIL.Image.Image
 
 
 def create_page_grid(
-    images: List["PIL.Image.Image"],
+    images: list["PIL.Image.Image"],
     cols: int = 4,
     padding: int = 10,
-    max_thumb_size: Tuple[int, int] = (600, 800),
+    max_thumb_size: tuple[int, int] = (600, 800),
 ) -> "PIL.Image.Image":
     """Arrange page images in a grid layout.
 
@@ -330,7 +330,7 @@ def create_page_grid(
 
 def generate_manuscript_overview(
     pdf_path: Path, output_dir: Path, project_name: str, dpi: int = 300
-) -> Dict[str, Path]:
+) -> dict[str, Path]:
     """Generate manuscript overview images (PNG and PDF) for a project.
 
     Args:
@@ -443,7 +443,7 @@ def _save_image_as_pdf(image: "PIL.Image.Image", pdf_path: Path, title: str) -> 
 
 def generate_all_manuscript_overviews(
     summary: "ExecutiveSummary", output_dir: Path, repo_root: Path
-) -> Dict[str, Path]:
+) -> dict[str, Path]:
     """Generate manuscript overviews for all projects in the executive summary.
 
     Args:

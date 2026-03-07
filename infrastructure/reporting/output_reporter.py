@@ -7,7 +7,7 @@ collecting output statistics.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from infrastructure.core.logging_utils import get_logger
 
@@ -16,8 +16,8 @@ logger = get_logger(__name__)
 
 def generate_output_summary(
     output_dir: Path,
-    stats: Dict[str, Any],
-    structure_validation: Optional[Dict[str, Any]] = None,
+    stats: dict[str, Any],
+    structure_validation: Optional[dict[str, Any]] = None,
 ) -> None:
     """Generate summary of output copying results.
 
@@ -66,7 +66,7 @@ def generate_output_summary(
     logger.info("")
 
 
-def collect_output_statistics(repo_root: Path, project_name: str = "project") -> Dict[str, Any]:
+def collect_output_statistics(repo_root: Path, project_name: str = "project") -> dict[str, Any]:
     """Collect comprehensive output file statistics.
 
     Args:
@@ -203,7 +203,7 @@ def collect_output_statistics(repo_root: Path, project_name: str = "project") ->
     return stats
 
 
-def generate_detailed_output_report(output_dir: Path, stats: Dict[str, Any]) -> str:
+def generate_detailed_output_report(output_dir: Path, stats: dict[str, Any]) -> str:
     """Generate detailed output statistics report.
 
     Args:
@@ -264,12 +264,12 @@ def generate_detailed_output_report(output_dir: Path, stats: Dict[str, Any]) -> 
 # =============================================================================
 
 
-def _collect_log_statistics(log_file: Path) -> Dict[str, Any]:
+def _collect_log_statistics(log_file: Path) -> dict[str, Any]:
     """Collect statistics from a log file."""
     if not log_file.exists():
         return {"error": "Log file not found", "counts": {}, "total_lines": 0}
 
-    stats: Dict[str, Any] = {
+    stats: dict[str, Any] = {
         "counts": {"debug": 0, "info": 0, "warning": 0, "error": 0, "critical": 0},
         "total_lines": 0,
         "errors": [],

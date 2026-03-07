@@ -9,7 +9,7 @@ Part of the infrastructure reporting layer (Layer 1) - reusable across projects.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 import csv
 
@@ -47,7 +47,7 @@ COLORS = {
 }
 
 
-def create_test_count_chart(projects: List[ProjectMetrics]) -> Figure:
+def create_test_count_chart(projects: list[ProjectMetrics]) -> Figure:
     """Create bar chart showing test counts by project.
 
     Args:
@@ -94,7 +94,7 @@ def create_test_count_chart(projects: List[ProjectMetrics]) -> Figure:
     return fig
 
 
-def create_coverage_chart(projects: List[ProjectMetrics]) -> Figure:
+def create_coverage_chart(projects: list[ProjectMetrics]) -> Figure:
     """Create bar chart showing coverage percentages by project.
 
     Args:
@@ -141,7 +141,7 @@ def create_coverage_chart(projects: List[ProjectMetrics]) -> Figure:
     return fig
 
 
-def create_pipeline_duration_chart(projects: List[ProjectMetrics]) -> Figure:
+def create_pipeline_duration_chart(projects: list[ProjectMetrics]) -> Figure:
     """Create stacked bar chart showing pipeline durations by project.
 
     Args:
@@ -184,7 +184,7 @@ def create_pipeline_duration_chart(projects: List[ProjectMetrics]) -> Figure:
     return fig
 
 
-def create_output_distribution_chart(aggregate: Dict[str, Any]) -> Figure:
+def create_output_distribution_chart(aggregate: dict[str, Any]) -> Figure:
     """Create pie chart showing distribution of output types.
 
     Args:
@@ -247,7 +247,7 @@ def create_output_distribution_chart(aggregate: Dict[str, Any]) -> Figure:
     return fig
 
 
-def create_manuscript_size_chart(projects: List[ProjectMetrics]) -> Figure:
+def create_manuscript_size_chart(projects: list[ProjectMetrics]) -> Figure:
     """Create bar chart showing manuscript word counts by project.
 
     Args:
@@ -285,7 +285,7 @@ def create_manuscript_size_chart(projects: List[ProjectMetrics]) -> Figure:
     return fig
 
 
-def create_manuscript_complexity_chart(projects: List[ProjectMetrics]) -> Figure:
+def create_manuscript_complexity_chart(projects: list[ProjectMetrics]) -> Figure:
     """Create chart showing manuscript complexity metrics.
 
     Args:
@@ -407,7 +407,7 @@ def create_manuscript_complexity_chart(projects: List[ProjectMetrics]) -> Figure
     return fig
 
 
-def create_performance_timeline_chart(projects: List[ProjectMetrics]) -> Figure:
+def create_performance_timeline_chart(projects: list[ProjectMetrics]) -> Figure:
     """Create timeline chart showing performance trends.
 
     Args:
@@ -512,7 +512,7 @@ def create_performance_timeline_chart(projects: List[ProjectMetrics]) -> Figure:
     return fig
 
 
-def create_summary_table(projects: List[ProjectMetrics], aggregate: Dict[str, Any]) -> Figure:
+def create_summary_table(projects: list[ProjectMetrics], aggregate: dict[str, Any]) -> Figure:
     """Create enhanced summary table with key metrics and health scores.
 
     Args:
@@ -619,7 +619,7 @@ def create_summary_table(projects: List[ProjectMetrics], aggregate: Dict[str, An
     return fig
 
 
-def generate_matplotlib_dashboard(summary: ExecutiveSummary, output_dir: Path) -> Dict[str, Path]:
+def generate_matplotlib_dashboard(summary: ExecutiveSummary, output_dir: Path) -> dict[str, Path]:
     """Generate complete dashboard using matplotlib (PNG and PDF).
 
     Args:
@@ -1181,7 +1181,7 @@ def generate_plotly_dashboard(summary: ExecutiveSummary, output_dir: Path) -> Pa
     return html_path
 
 
-def generate_health_radar_chart(summary: ExecutiveSummary, output_dir: Path) -> Dict[str, Path]:
+def generate_health_radar_chart(summary: ExecutiveSummary, output_dir: Path) -> dict[str, Path]:
     """Generate radar chart for health score factors.
 
     Args:
@@ -1299,7 +1299,7 @@ def generate_health_radar_chart(summary: ExecutiveSummary, output_dir: Path) -> 
 
 def generate_health_comparison_chart(
     summary: ExecutiveSummary, output_dir: Path
-) -> Dict[str, Path]:
+) -> dict[str, Path]:
     """Generate health score comparison bar chart.
 
     Args:
@@ -1444,7 +1444,7 @@ def generate_health_comparison_chart(
     return saved_files
 
 
-def generate_project_breakdowns(summary: ExecutiveSummary, output_dir: Path) -> Dict[str, Path]:
+def generate_project_breakdowns(summary: ExecutiveSummary, output_dir: Path) -> dict[str, Path]:
     """Generate individual dashboard for each project.
 
     Args:
@@ -1675,7 +1675,7 @@ def generate_project_breakdowns(summary: ExecutiveSummary, output_dir: Path) -> 
 
 def generate_pipeline_efficiency_chart(
     summary: ExecutiveSummary, output_dir: Path
-) -> Dict[str, Path]:
+) -> dict[str, Path]:
     """Generate pipeline efficiency and bottleneck analysis chart.
 
     Args:
@@ -1828,7 +1828,7 @@ def generate_pipeline_efficiency_chart(
 
 def generate_pipeline_bottlenecks_chart(
     summary: ExecutiveSummary, output_dir: Path
-) -> Dict[str, Path]:
+) -> dict[str, Path]:
     """Generate detailed pipeline bottlenecks visualization.
 
     Args:
@@ -1941,7 +1941,7 @@ def generate_pipeline_bottlenecks_chart(
 
 def generate_output_distribution_charts(
     summary: ExecutiveSummary, output_dir: Path
-) -> Dict[str, Path]:
+) -> dict[str, Path]:
     """Generate output distribution and comparison charts.
 
     Args:
@@ -2134,7 +2134,7 @@ def generate_output_distribution_charts(
 
 def generate_output_comparison_chart(
     summary: ExecutiveSummary, output_dir: Path
-) -> Dict[str, Path]:
+) -> dict[str, Path]:
     """Generate detailed output comparison visualization.
 
     Args:
@@ -2233,7 +2233,7 @@ def generate_output_comparison_chart(
 
 def generate_codebase_complexity_chart(
     summary: ExecutiveSummary, output_dir: Path
-) -> Dict[str, Path]:
+) -> dict[str, Path]:
     """Generate codebase complexity visualization.
 
     Args:
@@ -2406,7 +2406,7 @@ def generate_codebase_complexity_chart(
 
 def generate_codebase_comparison_chart(
     summary: ExecutiveSummary, output_dir: Path
-) -> Dict[str, Path]:
+) -> dict[str, Path]:
     """Generate detailed codebase comparison visualization.
 
     Args:
@@ -3154,7 +3154,7 @@ def generate_prioritized_recommendations_csv(summary: ExecutiveSummary, output_d
     return csv_path
 
 
-def generate_csv_data_tables(summary: ExecutiveSummary, output_dir: Path) -> Dict[str, Path]:
+def generate_csv_data_tables(summary: ExecutiveSummary, output_dir: Path) -> dict[str, Path]:
     """Generate CSV data tables for dashboard data export.
 
     Args:
@@ -3388,7 +3388,7 @@ def generate_csv_data_tables(summary: ExecutiveSummary, output_dir: Path) -> Dic
     return csv_files
 
 
-def generate_all_dashboards(summary: ExecutiveSummary, output_dir: Path) -> Dict[str, Any]:
+def generate_all_dashboards(summary: ExecutiveSummary, output_dir: Path) -> dict[str, Any]:
     """Generate all dashboard formats including CSV data exports.
 
     Args:
@@ -3402,7 +3402,7 @@ def generate_all_dashboards(summary: ExecutiveSummary, output_dir: Path) -> Dict
     """
     logger.info("Generating all dashboard formats...")
 
-    all_files: Dict[str, Any] = {}
+    all_files: dict[str, Any] = {}
     failures: List[str] = []
 
     def _try(generator_name: str, fn: Any) -> None:
@@ -3443,8 +3443,8 @@ def generate_all_dashboards(summary: ExecutiveSummary, output_dir: Path) -> Dict
     _try("html", lambda: generate_plotly_dashboard(summary, output_dir))
 
     # Generate CSV data tables
-    def _generate_csvs() -> Dict[str, Any]:
-        result: Dict[str, Any] = {}
+    def _generate_csvs() -> dict[str, Any]:
+        result: dict[str, Any] = {}
         result.update(generate_csv_data_tables(summary, output_dir))
         result["detailed_breakdown_csv"] = generate_detailed_project_breakdown_csv(summary, output_dir)
         result["comparative_analysis_csv"] = generate_comparative_analysis_csv(summary, output_dir)
