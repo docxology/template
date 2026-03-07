@@ -333,3 +333,21 @@ class LLMConfig:
 
         return GenerationOptions(**options_dict)
 
+
+
+# Module-level accessors so callers don't need to instantiate LLMConfig.
+
+def get_review_timeout() -> float:
+    """Return the review timeout in seconds (from env or default)."""
+    return LLMConfig.from_env().review_timeout
+
+
+def get_max_input_length() -> int:
+    """Return the maximum input character length (from env or default)."""
+    return LLMConfig.from_env().max_input_length
+
+
+def get_review_max_tokens() -> tuple[int, str]:
+    """Return (max_tokens, source_label) for review generation."""
+    cfg = LLMConfig.from_env()
+    return cfg.long_max_tokens, "long_max_tokens"

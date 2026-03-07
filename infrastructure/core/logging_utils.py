@@ -451,12 +451,12 @@ def log_function_call(logger: Optional[logging.Logger] = None) -> Callable:
         func_logger = logger or get_logger(func.__module__)
 
         def wrapper(*args: Any, **kwargs: Any) -> T:
-            func_logger.info(f"Calling: {func.__name__}")
+            func_logger.debug(f"Calling: {func.__name__}")
             start_time = time.time()
             try:
                 result = func(*args, **kwargs)
                 duration = time.time() - start_time
-                func_logger.info(f"Completed: {func.__name__} ({duration:.1f}s)")
+                func_logger.debug(f"Completed: {func.__name__} ({duration:.1f}s)")
                 return result
             except Exception as e:
                 duration = time.time() - start_time

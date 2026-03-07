@@ -19,6 +19,7 @@ from infrastructure.llm.review.io import (
     generate_review_summary,
 )
 from infrastructure.llm.review.metrics import SessionMetrics
+from infrastructure.llm.core.config import get_max_input_length
 from infrastructure.llm.review.generator import (
     check_ollama_availability,
     create_review_client,
@@ -28,7 +29,6 @@ from infrastructure.llm.review.generator import (
     generate_methodology_review,
     generate_quality_review,
     generate_translation,
-    get_max_input_length,
     log_stage,
     warmup_model,
 )

@@ -38,6 +38,11 @@ from infrastructure.llm.core import (
     save_streaming_response,
     strip_thinking_tags,
 )
+from infrastructure.llm.core.config import (
+    get_max_input_length,
+    get_review_max_tokens,
+    get_review_timeout,
+)
 from infrastructure.llm.templates import (
     REVIEW_MIN_WORDS,
     TRANSLATION_LANGUAGES,
@@ -109,9 +114,6 @@ from infrastructure.llm.review import (
     generate_review_with_metrics,
     generate_translation,
     get_manuscript_review_system_prompt,
-    get_max_input_length,
-    get_review_max_tokens,
-    get_review_timeout,
     save_review_outputs,
     save_single_review,
     validate_review_quality,

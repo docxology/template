@@ -89,9 +89,8 @@ MENU_SCRIPT_MAPPING = {
 }
 
 # Import from infrastructure modules (where functions were moved during refactoring)
+from infrastructure.llm.core.config import get_max_input_length
 from infrastructure.llm.review.generator import (
-    DEFAULT_MAX_INPUT_LENGTH,
-    get_max_input_length,
     check_ollama_availability,
     extract_manuscript_text,
     generate_executive_summary,
@@ -100,6 +99,8 @@ from infrastructure.llm.review.generator import (
     generate_improvement_suggestions,
     validate_review_quality,
 )
+
+DEFAULT_MAX_INPUT_LENGTH: int = 500000
 from infrastructure.core.logging_utils import log_stage
 from infrastructure.llm.review.metrics import (
     ReviewMetrics,
