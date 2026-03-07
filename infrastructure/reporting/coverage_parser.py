@@ -230,6 +230,49 @@ def check_test_failures(
         )
 
 
+def _wait_for_coverage_file(
+    paths: list[Path], max_retries: int = 3, delay: float = 0.5, is_infra: bool = False
+) -> Optional[Path]:
+    """Return the first ready coverage JSON path, waiting up to max_retries attempts."""
+    for attempt in range(max_retries):
+        if attempt > 0:
+            time.sleep(delay)
+        for path in paths:
+            if is_infra:
+                logger.debug(
+                    f"Attempt {attempt + 1}/{max_retries}: {path} (exists: {path.exists()})"
+                )
+            if not path.exists():
+                continue
+            file_size = path.stat().st_size
+            if is_infra:
+                logger.debug(f"Coverage file size: {file_size} bytes")
+            if file_size >= 100:
+                return path
+            if is_infra:
+                logger.debug(f"Coverage file too small ({file_size} bytes), likely incomplete")
+    return None
+
+
+def _parse_coverage_json(path: Path, is_infra: bool = False) -> Optional[float]:
+    """Return percent_covered from a coverage JSON file, or None on failure."""
+    try:
+        with open(path, "r") as f:
+            coverage_data = json.load(f)
+        pct = coverage_data.get("totals", {}).get("percent_covered", 0)
+        if is_infra:
+            logger.debug(f"Coverage data from {path}: totals={coverage_data.get('totals', {})}")
+        if pct > 0:
+            return float(pct)
+        if is_infra:
+            logger.debug(f"Coverage file exists but percent_covered is 0: {pct}")
+    except json.JSONDecodeError as e:
+        logger.warning(f"Corrupt coverage JSON at {path}: {e} (falling back to stdout parsing)")
+    except OSError as e:
+        logger.warning(f"Could not read coverage from {path}: {e}")
+    return None
+
+
 def extract_coverage_percentage(
     stdout_text: str, coverage_json_paths: list[Path], is_infra: bool = False
 ) -> tuple[bool, Optional[float]]:
@@ -243,75 +286,24 @@ def extract_coverage_percentage(
     Returns:
         tuple (coverage_found, coverage_pct)
     """
-    coverage_found = False
-    coverage_pct: Optional[float] = None
-
     if is_infra:
         logger.debug("Looking for coverage files")
 
-    # Wait for coverage files to be written (retry up to 3 times with 0.5s delay)
-    max_retries = 3
-    for attempt in range(max_retries):
-        if attempt > 0:
-            time.sleep(0.5)  # Wait for file to be written
+    ready_path = _wait_for_coverage_file(coverage_json_paths, is_infra=is_infra)
+    if ready_path is not None:
+        pct = _parse_coverage_json(ready_path, is_infra=is_infra)
+        if pct is not None:
+            logger.info(f"✓ Found coverage: {pct:.1f}%")
+            return True, pct
 
-        for coverage_json_path in coverage_json_paths:
-            if is_infra:
-                logger.debug(
-                    f"Attempt {attempt + 1}/{max_retries}: Checking coverage file: {coverage_json_path} (exists: {coverage_json_path.exists()})"  # noqa: E501
-                )
+    # Fallback to stdout parsing
+    coverage_match = re.search(r"TOTAL\s+.*?\s+(\d+\.\d+)%", stdout_text)
+    if not coverage_match:
+        coverage_match = re.search(r"(\d+\.\d+)%", stdout_text)
 
-            if coverage_json_path.exists():
-                file_size = coverage_json_path.stat().st_size
-                if is_infra:
-                    logger.debug(f"Coverage file size: {file_size} bytes")
+    if coverage_match:
+        pct = float(coverage_match.group(1))
+        logger.info(f"✓ Found coverage: {pct:.1f}%")
+        return True, pct
 
-                if file_size < 100:  # Coverage JSON should be much larger
-                    if is_infra:
-                        logger.debug(
-                            f"Coverage file too small ({file_size} bytes), likely incomplete"
-                        )
-                    continue
-
-                try:
-                    with open(coverage_json_path, "r") as f:
-                        coverage_data = json.load(f)
-                    overall_coverage = coverage_data.get("totals", {}).get("percent_covered", 0)
-                    if is_infra:
-                        logger.debug(
-                            f"Coverage data from {coverage_json_path}: totals={coverage_data.get('totals', {})}"  # noqa: E501
-                        )
-                    if overall_coverage > 0:
-                        logger.info(f"✓ Found coverage: {overall_coverage:.1f}%")
-                        coverage_pct = overall_coverage
-                        coverage_found = True
-                        break
-                    else:
-                        if is_infra:
-                            logger.debug(
-                                f"Coverage file exists but overall_coverage is 0 or None: {overall_coverage}"  # noqa: E501
-                            )
-                except json.JSONDecodeError as e:
-                    logger.warning(
-                        f"Corrupt coverage JSON at {coverage_json_path}: {e} (falling back to stdout parsing)"  # noqa: E501
-                    )
-                except OSError as e:
-                    logger.warning(f"Could not read coverage from {coverage_json_path}: {e}")
-
-            if coverage_found:
-                break
-        if coverage_found:
-            break
-
-    # Fallback to stdout parsing if JSON not found
-    if not coverage_found:
-        coverage_match = re.search(r"TOTAL\s+.*?\s+(\d+\.\d+)%", stdout_text)
-        if not coverage_match:
-            coverage_match = re.search(r"(\d+\.\d+)%", stdout_text)
-
-        if coverage_match:
-            coverage_pct = float(coverage_match.group(1))
-            logger.info(f"✓ Found coverage: {coverage_pct:.1f}%")
-            coverage_found = True
-
-    return coverage_found, coverage_pct
+    return False, None

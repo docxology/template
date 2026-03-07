@@ -14,7 +14,6 @@ All functions follow the thin orchestrator pattern and maintain
 from __future__ import annotations
 
 import json
-import os
 import pickle  # noqa: S403 — used for pickle file validation
 import re
 from pathlib import Path
