@@ -78,26 +78,7 @@ def parse_coverage_json(coverage_json_path: Path) -> dict[str, Any] | None:
         return None
 
 def parse_pytest_output(stdout: str, stderr: str, exit_code: int) -> dict[str, Any]:
-    """Parse pytest output to extract comprehensive metrics.
-
-    Args:
-        stdout: Standard output from pytest
-        stderr: Standard error from pytest
-        exit_code: Exit code from pytest
-
-    Returns:
-        Dictionary with test metrics including:
-        - passed: Number of passed tests
-        - failed: Number of failed tests
-        - skipped: Number of skipped tests
-        - total: Total number of tests
-        - warnings: Number of warnings
-        - exit_code: Exit code from pytest
-        - coverage_percent: Coverage percentage (if present)
-        - discovery_count: Number of tests discovered during collection
-        - execution_phases: Timing breakdown for collection/execution phases
-        - test_categories: Breakdown by test markers/categories
-    """
+    """Parse pytest stdout/stderr and exit_code into structured test metrics."""
     results: dict[str, Any] = {
         "passed": 0,
         "failed": 0,
@@ -217,22 +198,7 @@ def generate_test_report(
     repo_root: Path,
     include_coverage_details: bool = True,
 ) -> dict[str, Any]:
-    """Generate structured test report from infrastructure and project test results.
-
-    Args:
-        infra_results: Infrastructure test results dictionary
-        project_results: Project test results dictionary
-        repo_root: Repository root path (for metadata)
-        include_coverage_details: Whether to include detailed coverage data from coverage.json
-
-    Returns:
-        Complete test report dictionary with:
-        - timestamp: ISO format timestamp
-        - infrastructure: Infrastructure test results
-        - project: Project test results
-        - summary: Combined summary with totals and pass/fail status
-        - coverage_details: Detailed coverage information (if include_coverage_details=True)
-    """
+    """Generate structured test report from infrastructure and project test results."""
     report: dict[str, Any] = {
         "timestamp": datetime.now().isoformat(),
         "infrastructure": infra_results,
@@ -397,22 +363,9 @@ def analyze_coverage_gaps(
                         f"    • {file_name}: {data['total_lines']} lines, {data['coverage_percent']:.1f}% coverage"  # noqa: E501
                     )
         else:
-            if test_type == "Infrastructure":
-                suggestions.extend(
-                    [
-                        "  • Add tests for CLI modules (currently ~60% coverage)",
-                        "  • Test error handling paths in core modules",
-                        "  • Add integration tests for module interactions",
-                    ]
-                )
-            elif test_type == "Project":
-                suggestions.extend(
-                    [
-                        "  • Test edge cases in data processing functions",
-                        "  • Add tests for visualization output generation",
-                        "  • Cover error handling in analysis pipelines",
-                    ]
-                )
+            suggestions.append(
+                "  • Run with --cov-report=json to enable file-level coverage suggestions"
+            )
 
         suggestions.extend(
             [

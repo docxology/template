@@ -13,6 +13,7 @@ from typing import Any, TypedDict
 
 from infrastructure.core.config_loader import get_testing_config
 from infrastructure.core.logging_utils import get_logger
+from infrastructure.project.discovery import discover_projects
 
 class InfraResults(TypedDict):
     """Infrastructure test result fields with consistent shape across all loaders."""
@@ -115,15 +116,7 @@ def load_infrastructure_results(repo_root: Path | None = None) -> InfraResults:
 def discover_active_projects(repo_root: Path | None = None) -> list:
     """Discover active projects from the projects/ directory."""
     root = repo_root or Path.cwd()
-    projects_dir = root / "projects"
-    if not projects_dir.exists():
-        return []
-
-    projects = []
-    for item in projects_dir.iterdir():
-        if item.is_dir() and not item.name.startswith((".", "_", "__")):
-            projects.append(item.name)
-    return sorted(projects)
+    return sorted(p.name for p in discover_projects(root))
 
 def _calculate_weighted_coverage(
     results_list: list[dict[str, Any]],

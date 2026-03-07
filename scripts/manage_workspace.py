@@ -148,7 +148,7 @@ def show_workspace_status() -> int:
             logger.error("No workspace configuration found in pyproject.toml")
             return 1
 
-    except Exception as e:
+    except (OSError, KeyError, TypeError, ValueError) as e:
         logger.error(f"Failed to read workspace configuration: {e}")
         return 1
 

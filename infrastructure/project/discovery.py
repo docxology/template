@@ -330,15 +330,4 @@ def get_default_project(repo_root: Path) -> ProjectInfo | None:
         logger.warning(f"Default project is invalid: {message}")
         return None
 
-    metadata = get_project_metadata(default_project_dir)
-
-    return ProjectInfo(
-        name="project",
-        path=default_project_dir,
-        has_src=(default_project_dir / "src").exists(),
-        has_tests=(default_project_dir / "tests").exists(),
-        has_scripts=(default_project_dir / "scripts").exists(),
-        has_manuscript=(default_project_dir / "manuscript").exists(),
-        metadata=metadata,
-        program="",
-    )
+    return _build_project_info(default_project_dir)
