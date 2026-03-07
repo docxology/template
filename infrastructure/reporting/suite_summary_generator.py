@@ -33,14 +33,7 @@ logger = get_logger(__name__)
 
 
 def load_test_results(project_name: str) -> Dict[str, Any]:
-    """Load test results from a project's output directory.
-
-    Args:
-        project_name: Name of the project (e.g., 'act_inf_metaanalysis')
-
-    Returns:
-        Dictionary containing test results, or empty dict if not found
-    """
+    """Load test results from a project's output directory; returns {} if not found."""
     results_file = Path(f"projects/{project_name}/output/reports/test_results.json")
 
     if results_file.exists():
@@ -75,11 +68,7 @@ _EMPTY_INFRA_RESULTS: InfraResults = {
 
 
 def load_infrastructure_results() -> InfraResults:
-    """Load infrastructure test results from root coverage files.
-
-    Returns:
-        InfraResults with consistent fields across all loader paths.
-    """
+    """Load infrastructure test results from root coverage files."""
     base: InfraResults = dict(_EMPTY_INFRA_RESULTS)  # type: ignore[assignment]
 
     # Try to load from the infrastructure validation report
@@ -129,11 +118,7 @@ def load_infrastructure_results() -> InfraResults:
 
 
 def discover_active_projects() -> list:
-    """Discover active projects from the projects/ directory.
-
-    Returns:
-        List of active project names
-    """
+    """Discover active projects from the projects/ directory."""
     projects_dir = Path("projects")
     if not projects_dir.exists():
         return []
@@ -183,11 +168,7 @@ def _is_ollama_available() -> bool:
 
 
 def generate_summary_report() -> Dict[str, Any]:
-    """Generate comprehensive test summary report.
-
-    Returns:
-        Dictionary containing aggregated test results and metadata
-    """
+    """Generate comprehensive test summary report."""
     timestamp = datetime.now().isoformat()
     active_projects = discover_active_projects()
 

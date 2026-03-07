@@ -244,7 +244,8 @@ class RepositoryScanner:
                 if item not in defined:
                     return False
             return True
-        except Exception:
+        except Exception as e:
+            logger.debug("Failed to verify imports in module %s: %s", module_name, e)
             return False
 
     def _check_documented_commands(self) -> None:

@@ -24,17 +24,12 @@ logger = get_logger(__name__)
 
 
 def check_cov_datafile_support() -> bool:
-    """Check if pytest-cov supports the --cov-datafile flag.
-
-    Returns:
-        True if --cov-datafile is supported, False otherwise
-    """
+    """Return True if pytest-cov supports the --cov-datafile flag."""
     try:
         cmd = get_python_command() + ["-m", "pytest", "--help"]
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=10)
         return "--cov-datafile" in result.stdout
     except (subprocess.TimeoutExpired, subprocess.CalledProcessError, FileNotFoundError):
-        # If we can't check, assume it's not supported to be safe
         return False
 
 

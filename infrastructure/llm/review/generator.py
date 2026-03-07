@@ -641,6 +641,7 @@ def generate_review_with_metrics(
 
         except Exception as e:
             if attempt < max_retries:
+                logger.debug(f"Attempt {attempt + 1} failed for {review_name}: {e}")
                 continue
             else:
                 metrics.generation_time_seconds = time.time() - start_time

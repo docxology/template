@@ -64,17 +64,7 @@ def generate_pipeline_report(
     repo_root: Path,
     extras: Optional[ReportExtras] = None,
 ) -> PipelineReport:
-    """Generate consolidated pipeline report.
-
-    Args:
-        stage_results: List of stage result dictionaries
-        total_duration: Total pipeline execution time
-        repo_root: Repository root path
-        extras: Optional supplementary report data
-
-    Returns:
-        PipelineReport instance
-    """
+    """Generate consolidated pipeline report from stage results and optional extras."""
     test_results = extras.test_results if extras is not None else None
     validation_results = extras.validation_results if extras is not None else None
     performance_metrics = extras.performance_metrics if extras is not None else None
@@ -483,15 +473,7 @@ def save_test_results(test_results: Dict[str, Any], output_dir: Path) -> Path:
 def generate_validation_report(
     validation_results: Dict[str, Any], output_dir: Path
 ) -> Dict[str, Path]:
-    """Generate validation report.
-
-    Args:
-        validation_results: Validation results dictionary
-        output_dir: Output directory path
-
-    Returns:
-        Dictionary mapping format to file path
-    """
+    """Generate validation report as JSON and Markdown; returns paths by format key."""
     output_dir.mkdir(parents=True, exist_ok=True)
     saved_files = {}
 

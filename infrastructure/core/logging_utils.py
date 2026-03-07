@@ -18,7 +18,7 @@ import sys
 import time
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, Callable, Dict, Iterator, Optional, TypeVar
+from typing import Any, Callable, Iterator, Optional, TypeVar
 
 # Import from split modules
 from infrastructure.core.logging_formatters import JSONFormatter, TemplateFormatter
@@ -34,6 +34,7 @@ from infrastructure.core.logging_progress import (
 )
 from infrastructure.core.logging_progress import log_with_spinner
 from infrastructure.core._optional_deps import psutil
+from infrastructure.core.logging_constants import EMOJIS, USE_EMOJIS, USE_STRUCTURED_LOGGING
 
 # Type variable for generic context manager
 T = TypeVar("T")
@@ -71,13 +72,6 @@ def get_log_level_from_env() -> int:
     """Get log level from LOG_LEVEL environment variable (0=DEBUG, 1=INFO, 2=WARN, 3=ERROR)."""
     env_level = os.getenv("LOG_LEVEL", "1")  # Default to INFO
     return LOG_LEVEL_MAP.get(env_level, logging.INFO)
-
-
-# =============================================================================
-# EMOJI SUPPORT (MATCHING BASH LOGGING)
-# =============================================================================
-
-from infrastructure.core.logging_constants import EMOJIS, USE_EMOJIS, USE_STRUCTURED_LOGGING  # noqa: E402
 
 
 # =============================================================================

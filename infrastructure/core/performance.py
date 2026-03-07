@@ -423,7 +423,7 @@ class CodeProfiler:
             profiler.disable()
             stats = pstats.Stats(profiler)
             stats.sort_stats("cumulative")
-            logger.info(f"Profile results for {func.__name__}:")
+            logger.debug(f"Profile results for {func.__name__}:")
             stats.print_stats(10)
 
     def benchmark_function(

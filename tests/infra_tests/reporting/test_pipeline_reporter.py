@@ -358,7 +358,7 @@ class TestGenerateMultiProjectSummaryReport:
         """Test generating summary report with successful projects."""
         from dataclasses import dataclass
 
-        from infrastructure.reporting.pipeline_reporter import generate_multi_project_summary_report
+        from infrastructure.reporting.multi_project_reporter import generate_multi_project_summary_report
 
         @dataclass
         class MockProject:
@@ -412,7 +412,7 @@ class TestGenerateMultiProjectSummaryReport:
         """Test generating summary report with failed projects."""
         from dataclasses import dataclass
 
-        from infrastructure.reporting.pipeline_reporter import generate_multi_project_summary_report
+        from infrastructure.reporting.multi_project_reporter import generate_multi_project_summary_report
 
         @dataclass
         class MockProject:
@@ -458,7 +458,7 @@ class TestGenerateMultiProjectSummaryReport:
         """Test generating summary report with empty project results."""
         from dataclasses import dataclass
 
-        from infrastructure.reporting.pipeline_reporter import generate_multi_project_summary_report
+        from infrastructure.reporting.multi_project_reporter import generate_multi_project_summary_report
 
         @dataclass
         class MockProject:
@@ -494,7 +494,7 @@ class TestGenerateMultiProjectSummaryReport:
         """
         from dataclasses import dataclass
 
-        from infrastructure.reporting.pipeline_reporter import generate_multi_project_summary_report
+        from infrastructure.reporting.multi_project_reporter import generate_multi_project_summary_report
 
         @dataclass
         class MockProject:
@@ -535,7 +535,7 @@ class TestGenerateMultiProjectSummaryReport:
         """Test summary report generates performance recommendation for slow projects."""
         from dataclasses import dataclass
 
-        from infrastructure.reporting.pipeline_reporter import generate_multi_project_summary_report
+        from infrastructure.reporting.multi_project_reporter import generate_multi_project_summary_report
 
         @dataclass
         class MockProject:
@@ -577,7 +577,7 @@ class TestGenerateMultiProjectSummaryReport:
         """Test handling non-dict project_results attribute."""
         from dataclasses import dataclass
 
-        from infrastructure.reporting.pipeline_reporter import generate_multi_project_summary_report
+        from infrastructure.reporting.multi_project_reporter import generate_multi_project_summary_report
 
         @dataclass
         class MockProject:
@@ -607,7 +607,7 @@ class TestFormatMultiProjectSummaryMarkdown:
 
     def test_format_basic_markdown(self) -> None:
         """Test basic markdown formatting."""
-        from infrastructure.reporting.pipeline_reporter import (
+        from infrastructure.reporting.multi_project_reporter import (
             _format_multi_project_summary_markdown,
         )
 
@@ -650,7 +650,7 @@ class TestFormatMultiProjectSummaryMarkdown:
 
     def test_format_with_infra_test_duration(self) -> None:
         """Test markdown includes infrastructure test duration."""
-        from infrastructure.reporting.pipeline_reporter import (
+        from infrastructure.reporting.multi_project_reporter import (
             _format_multi_project_summary_markdown,
         )
 
@@ -680,7 +680,7 @@ class TestFormatMultiProjectSummaryMarkdown:
 
     def test_format_with_performance_analysis(self) -> None:
         """Test markdown includes performance analysis."""
-        from infrastructure.reporting.pipeline_reporter import (
+        from infrastructure.reporting.multi_project_reporter import (
             _format_multi_project_summary_markdown,
         )
 
@@ -721,7 +721,7 @@ class TestFormatMultiProjectSummaryMarkdown:
 
     def test_format_with_recommendations(self) -> None:
         """Test markdown includes recommendations."""
-        from infrastructure.reporting.pipeline_reporter import (
+        from infrastructure.reporting.multi_project_reporter import (
             _format_multi_project_summary_markdown,
         )
 
@@ -760,7 +760,7 @@ class TestFormatMultiProjectSummaryMarkdown:
 
     def test_format_with_many_errors(self) -> None:
         """Test markdown truncates error list."""
-        from infrastructure.reporting.pipeline_reporter import (
+        from infrastructure.reporting.multi_project_reporter import (
             _format_multi_project_summary_markdown,
         )
 
