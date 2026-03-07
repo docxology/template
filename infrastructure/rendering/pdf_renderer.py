@@ -12,7 +12,8 @@ from typing import List, Optional
 import yaml
 
 from infrastructure.core.exceptions import RenderingError
-from infrastructure.core.logging_utils import get_logger, log_progress_bar
+from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging_progress import log_progress_bar
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_utils import compile_latex
 

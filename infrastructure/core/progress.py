@@ -12,13 +12,13 @@ import sys
 import time
 from typing import Optional
 
-from infrastructure.core.logging_utils import (
+from infrastructure.core.logging_helpers import format_duration
+from infrastructure.core.logging_progress import (
     calculate_eta,
     calculate_eta_ema,
     calculate_eta_with_confidence,
-    format_duration,
-    get_logger,
 )
+from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 

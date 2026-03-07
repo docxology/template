@@ -23,16 +23,7 @@ from typing import Any, Callable, Iterator, Optional, TypeVar
 # Import from split modules
 from infrastructure.core.logging_formatters import JSONFormatter, TemplateFormatter
 from infrastructure.core.logging_helpers import format_duration, format_error_with_suggestions
-from infrastructure.core.logging_progress import (
-    Spinner,
-    StreamingProgress,
-    calculate_eta,
-    calculate_eta_ema,
-    calculate_eta_with_confidence,
-    log_progress_bar,
-    log_progress_streaming,
-)
-from infrastructure.core.logging_progress import log_with_spinner
+from infrastructure.core.logging_progress import calculate_eta
 from infrastructure.core._optional_deps import psutil
 from infrastructure.core.logging_constants import EMOJIS, USE_EMOJIS, USE_STRUCTURED_LOGGING
 
