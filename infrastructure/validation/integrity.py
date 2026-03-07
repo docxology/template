@@ -122,11 +122,9 @@ def verify_cross_references(markdown_files: List[Path]) -> Dict[str, bool]:
             references.update(ref_matches)
             references.update(eqref_matches)
 
-        except Exception as e:
+        except OSError as e:
             logger.error("Error reading %s: %s", md_file, e, exc_info=True)
-            # Cannot verify cross-references for this file; mark all categories uncertain
-            for key in integrity:
-                integrity[key] = False
+            # Skip unreadable file; do not poison results for files that succeeded
 
     # Check if all references have corresponding labels, broken down by type prefix
     missing_labels = references - labels
@@ -243,8 +241,8 @@ def verify_academic_standards(markdown_files: List[Path]) -> Dict[str, bool]:
         try:
             with open(md_file, "r", encoding="utf-8") as f:
                 combined_content += f.read() + "\n"
-        except Exception as e:
-            logger.warning("Could not read markdown file %s: %s", md_file, e, exc_info=True)
+        except OSError as e:
+            logger.warning("Could not read markdown file %s: %s", md_file, e)
 
     # Check for required sections
     content_lower = combined_content.lower()

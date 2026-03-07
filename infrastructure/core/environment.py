@@ -123,28 +123,7 @@ def check_dependencies(
 
 
 def install_missing_packages(packages: List[str]) -> bool:
-    """Install missing packages using uv with fallback to pip.
-
-    Attempts to install packages using uv package manager for speed and reliability.
-    If uv is not available, provides guidance for manual installation.
-
-    The function uses 'uv add' to properly manage dependencies through pyproject.toml,
-    then runs 'uv sync' to install all dependencies. This ensures consistent
-    dependency resolution and lock file generation.
-
-    Args:
-        packages: List of package names to install
-
-    Returns:
-        True if installation successful, False otherwise
-
-    Example:
-        >>> success = install_missing_packages(['numpy', 'matplotlib'])
-        >>> if success:
-        ...     print("Packages installed successfully")
-        ... else:
-        ...     print("Installation failed - check uv availability")
-    """
+    """Install packages via uv add + uv sync; returns True on success."""
     logger.info(f"Installing {len(packages)} missing package(s) with uv...")
 
     # Check if uv is available
@@ -313,20 +292,7 @@ def check_uv_available() -> bool:
 
 
 def get_python_command() -> list[str]:
-    """Get the appropriate Python command for subprocess execution.
-
-    Always uses sys.executable to run subprocesses with the current Python
-    interpreter. This is the correct approach because:
-
-    1. When run via `uv run ./run.sh`, the venv is already activated and
-       sys.executable points to the correct uv-managed interpreter.
-    2. Using `uv run python` for each subprocess adds massive overhead
-       (~300s per invocation) due to environment resolution/syncing.
-    3. sys.executable is always valid and avoids redundant environment setup.
-
-    Returns:
-        List of command arguments suitable for subprocess.run()
-    """
+    """Return [sys.executable] for subprocess calls in the active venv."""
     return [sys.executable]
 
 
@@ -374,21 +340,13 @@ def validate_interpreter() -> bool:
 
 
 def get_subprocess_env(base_env: dict | None = None) -> dict:
-    """Get environment dict for subprocess with uv compatibility.
-
-    Creates a clean environment dictionary for subprocess execution that handles
-    VIRTUAL_ENV warnings when using uv. When uv is available and VIRTUAL_ENV is set,
-    it removes VIRTUAL_ENV from the environment to prevent uv warnings about absolute paths.
+    """Return env dict with VIRTUAL_ENV stripped when uv is active (avoids warnings).
 
     Args:
         base_env: Base environment dictionary (defaults to os.environ if None)
 
     Returns:
         Environment dictionary suitable for subprocess.run(env=...)
-
-    Example:
-        >>> env = get_subprocess_env()
-        >>> result = subprocess.run(cmd, env=env, ...)
     """
     env = dict(base_env or os.environ)
     # Unset VIRTUAL_ENV when using uv to avoid warnings about absolute paths
@@ -482,25 +440,7 @@ def set_environment_variables(repo_root: Path) -> bool:
 
 
 def validate_uv_sync_result(repo_root: Path) -> tuple[bool, str]:
-    """Validate that uv sync completed successfully.
-
-    Checks for the presence of expected artifacts after a uv sync operation:
-    - .venv/ directory: Virtual environment created
-    - uv.lock file: Dependency lock file generated
-
-    Args:
-        repo_root: Repository root directory where uv sync was run
-
-    Returns:
-        Tuple of (success: bool, message: str) describing validation result
-
-    Example:
-        >>> success, msg = validate_uv_sync_result(Path("."))
-        >>> if success:
-        ...     print("uv sync completed successfully")
-        ... else:
-        ...     print(f"uv sync validation failed: {msg}")
-    """
+    """Check for .venv/ and uv.lock after uv sync; returns (success, message)."""
     # Check for .venv directory
     venv_path = repo_root / ".venv"
     if not venv_path.exists():
@@ -515,25 +455,7 @@ def validate_uv_sync_result(repo_root: Path) -> tuple[bool, str]:
 
 
 def validate_directory_structure(repo_root: Path, project_name: str = "project") -> list[str]:
-    """Validate that required directory structure exists.
-
-    Checks for the presence of all directories created by setup_directories().
-    This is useful for post-setup validation to ensure the environment is ready.
-
-    Args:
-        repo_root: Repository root directory
-        project_name: Name of project in projects/ directory (default: "project")
-
-    Returns:
-        List of missing directory paths (empty list if all directories exist)
-
-    Example:
-        >>> missing = validate_directory_structure(Path("."), "my_project")
-        >>> if missing:
-        ...     print(f"Missing directories: {missing}")
-        ... else:
-        ...     print("All directories present")
-    """
+    """Return list of missing output directories for project (empty = all present)."""
     required_dirs = _project_output_dirs(project_name)
 
     missing = []

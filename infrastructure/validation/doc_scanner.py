@@ -207,7 +207,6 @@ class DocumentationScanner:
                         "line": issue.line,
                         "target": issue.target,
                         "issue": issue.issue_message,
-                        "fix_needed": True,
                     }
                 )
         return fixes

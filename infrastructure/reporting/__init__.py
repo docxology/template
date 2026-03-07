@@ -42,11 +42,6 @@ from .pipeline_reporter import (
     save_pipeline_report,
 )
 from .output_organizer import FileType, OutputOrganizer
-from .coverage_reporter import (
-    generate_test_report as generate_coverage_test_report,
-    parse_pytest_output,
-    save_test_report,
-)
 from .multi_project_reporter import generate_multi_project_report
 
 
@@ -57,9 +52,6 @@ __all__ = [
     "generate_performance_report",
     "generate_error_summary",
     "save_pipeline_report",
-    "parse_pytest_output",
-    "generate_coverage_test_report",
-    "save_test_report",
     "ErrorAggregator",
     "ErrorEntry",
     "get_error_aggregator",
