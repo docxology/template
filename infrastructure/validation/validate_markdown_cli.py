@@ -27,8 +27,13 @@ logger = get_logger(__name__)
 
 try:
     from infrastructure.validation.markdown_validator import (
+        collect_symbols,
         find_manuscript_directory,
+        find_markdown_files,
+        validate_images,
         validate_markdown,
+        validate_math,
+        validate_refs,
     )
 except ImportError as e:
     # Store error for main() function to handle
@@ -45,142 +50,6 @@ def _repo_root() -> str:
         str: Path to repository root
     """
     return str(repo_root)
-
-
-# Re-export functions from infrastructure for tests
-def find_markdown_files(directory: str) -> list[str]:
-    """Find all markdown files in directory (for testing).
-
-    Args:
-        directory: Directory to search
-
-    Returns:
-        list: List of markdown file paths sorted numerically
-    """
-    import os
-
-    md_files = []
-    for f in os.listdir(directory):
-        if f.endswith(".md"):
-            md_files.append(os.path.join(directory, f))
-
-    # Sort numerically
-    return sorted(
-        md_files,
-        key=lambda x: (
-            "".join(filter(str.isalpha, os.path.basename(x))),
-            (
-                int("".join(filter(str.isdigit, os.path.basename(x))))
-                if any(c.isdigit() for c in os.path.basename(x))
-                else 0
-            ),
-        ),
-    )
-
-
-def collect_symbols(md_files: list[str]) -> tuple[dict[str, str], dict[str, str]]:
-    """Collect symbols from markdown files (for testing).
-
-    Args:
-        md_files: List of markdown file paths
-
-    Returns:
-        tuple: (labels, anchors) dictionaries
-    """
-    labels = {}
-    anchors = {}
-
-    for file_path in md_files:
-        with open(file_path, "r") as f:
-            content = f.read()
-            # Collect labels from {#label} syntax
-            import re
-
-            for match in re.finditer(r"\{#([^}]+)\}", content):
-                labels[match.group(1)] = file_path
-            # Collect anchors from [anchor]: url syntax
-            for match in re.finditer(r"^\[([^\]]+)\]:\s*(.+)$", content, re.MULTILINE):
-                anchors[match.group(1)] = match.group(2)
-
-    return labels, anchors
-
-
-def validate_images(md_files: list[str], repo_root_str: str) -> list[str]:
-    """Validate image references (for testing).
-
-    Args:
-        md_files: List of markdown file paths
-        repo_root_str: Repository root path
-
-    Returns:
-        list: List of issues found
-    """
-    issues = []
-    import os
-    import re
-
-    for file_path in md_files:
-        with open(file_path, "r") as f:
-            content = f.read()
-            # Find image references ![alt](path)
-            for match in re.finditer(r"!\[([^\]]*)\]\(([^)]+)\)", content):
-                image_path = match.group(2)
-                if not image_path.startswith("http"):
-                    full_path = os.path.join(os.path.dirname(file_path), image_path)
-                    if not os.path.exists(full_path):
-                        issues.append(f"Image not found: {image_path} in {file_path}")
-
-    return issues
-
-
-def validate_refs(md_files: list[str], labels: dict[str, str], anchors: dict[str, str], repo_root_str: str) -> list[str]:
-    """Validate cross-references (for testing).
-
-    Args:
-        md_files: List of markdown file paths
-        labels: Dictionary of labels
-        anchors: Dictionary of anchors
-        repo_root_str: Repository root path
-
-    Returns:
-        list: List of issues found
-    """
-    issues = []
-    import re
-
-    for file_path in md_files:
-        with open(file_path, "r") as f:
-            content = f.read()
-            # Find references [text](#label)
-            for match in re.finditer(r"\[([^\]]+)\]\(#([^)]+)\)", content):
-                label = match.group(2)
-                if label not in labels:
-                    issues.append(f"Reference not found: #{label} in {file_path}")
-
-    return issues
-
-
-def validate_math(md_files: list[str], repo_root_str: str) -> list[str]:
-    """Validate math equations (for testing).
-
-    Args:
-        md_files: List of markdown file paths
-        repo_root_str: Repository root path
-
-    Returns:
-        list: List of issues found
-    """
-    issues = []
-
-    for file_path in md_files:
-        with open(file_path, "r") as f:
-            content = f.read()
-            # Check for unmatched brackets
-            open_count = content.count("$")
-            if open_count % 2 != 0:
-                issues.append(f"Unmatched $ symbols in {file_path}")
-
-    return issues
 
 
 def main(manuscript_path: Optional[Path] = None, strict: bool = False) -> int:

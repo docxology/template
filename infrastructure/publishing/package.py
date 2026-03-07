@@ -1,15 +1,4 @@
-"""Academic publishing workflow tools for research dissemination.
-
-This module provides utilities for:
-- DOI management and validation
-- Citation format generation
-- Publication metadata handling
-- Academic repository integration
-- Conference/journal submission preparation
-
-All functions follow the thin orchestrator pattern and maintain
-100% test coverage requirements.
-"""
+"""Publication package creation, submission checklists, and readiness validation."""
 
 from __future__ import annotations
 
@@ -20,32 +9,12 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List
 
-# Import from split modules
-from infrastructure.publishing.citations import (  # noqa: F401
-    extract_citations_from_markdown,
-    format_authors_apa,
-    format_authors_mla,
-    generate_citation_apa,
-    generate_citation_bibtex,
-    generate_citation_mla,
-    generate_citations_markdown,
-)
-from infrastructure.publishing.metadata import (  # noqa: F401
-    calculate_complexity_score,
-    create_academic_profile_data,
-    create_repository_metadata,
-    extract_publication_metadata,
-    generate_publication_metrics,
-    generate_publication_summary,
-    validate_doi,
-)
-from infrastructure.publishing.models import CitationStyle, PublicationMetadata  # noqa: F401
-from infrastructure.publishing.platforms import (  # noqa: F401
-    create_github_release,
-    prepare_arxiv_submission,
-    publish_to_zenodo,
-)
 from infrastructure.core.file_operations import calculate_file_hash
+from infrastructure.publishing.citations import (
+    extract_citations_from_markdown,
+    generate_citation_apa,
+)
+from infrastructure.publishing.models import PublicationMetadata
 
 
 def create_publication_package(output_dir: Path, metadata: PublicationMetadata) -> Dict[str, Any]:
@@ -269,7 +238,7 @@ def validate_publication_readiness(
         Dictionary with publication readiness assessment
     """
 
-    readiness = {
+    readiness: Dict[str, Any] = {
         "ready_for_publication": True,
         "completeness_score": 0,
         "missing_elements": [],
@@ -307,27 +276,27 @@ def validate_publication_readiness(
 
     if score < 80:
         readiness["ready_for_publication"] = False
-        readiness["missing_elements"].append("Document structure incomplete")  # type: ignore
+        readiness["missing_elements"].append("Document structure incomplete")
 
     # Check PDF generation
     if not pdf_files:
         readiness["ready_for_publication"] = False
-        readiness["missing_elements"].append("No PDF files generated")  # type: ignore
+        readiness["missing_elements"].append("No PDF files generated")
 
     # Check for citations
     citations = extract_citations_from_markdown(markdown_files)
     if not citations:
-        readiness["recommendations"].append("Consider adding citations to related work")  # type: ignore
+        readiness["recommendations"].append("Consider adding citations to related work")
 
     # Check for figures
     figure_count = len(re.findall(r"\\includegraphics", all_content))
     if figure_count == 0:
-        readiness["recommendations"].append("Consider adding figures to illustrate key concepts")  # type: ignore
+        readiness["recommendations"].append("Consider adding figures to illustrate key concepts")
 
     # Final assessment
     if readiness["ready_for_publication"]:
-        readiness["recommendations"].append("Project appears ready for publication!")  # type: ignore
+        readiness["recommendations"].append("Project appears ready for publication!")
     else:
-        readiness["recommendations"].append("Address missing elements before publication")  # type: ignore
+        readiness["recommendations"].append("Address missing elements before publication")
 
     return readiness

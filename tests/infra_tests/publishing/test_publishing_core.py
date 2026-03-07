@@ -6,7 +6,7 @@ No mocks — uses actual file I/O and real PublicationMetadata objects.
 
 from __future__ import annotations
 
-from infrastructure.publishing.core import create_publication_package
+from infrastructure.publishing.package import create_publication_package
 from infrastructure.publishing.models import PublicationMetadata
 from infrastructure.core.file_operations import calculate_file_hash
 
