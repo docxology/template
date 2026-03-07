@@ -29,9 +29,6 @@ from infrastructure.core.errors import (
     PROJECTS_INCOMPLETE,
     SUMMARY_FAILED,
 )
-from infrastructure.core.multi_project import MultiProjectConfig, MultiProjectOrchestrator
-from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor
-from infrastructure.core.pipeline_summary import PipelineSummaryGenerator
 
 logger = get_logger(__name__)
 
@@ -157,6 +154,8 @@ def main() -> int:
 
 def handle_pipeline_command(args: argparse.Namespace) -> int:
     """Handle pipeline execution command."""
+    from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor
+
     logger.info(f"Executing {args.pipeline_type} pipeline for project '{args.project}'")
 
     # Create pipeline configuration
@@ -203,10 +202,10 @@ def handle_pipeline_command(args: argparse.Namespace) -> int:
 
 def handle_multi_project_command(args: argparse.Namespace) -> int:
     """Handle multi-project execution command."""
-    logger.info(f"Executing {args.execution_type} pipeline across multiple projects")
-
-    # Discover projects (import kept local to avoid core/ → project/ layer coupling)
+    from infrastructure.core.multi_project import MultiProjectConfig, MultiProjectOrchestrator
     from infrastructure.project.discovery import discover_projects
+
+    logger.info(f"Executing {args.execution_type} pipeline across multiple projects")
 
     projects = discover_projects(args.repo_root)
     if not projects:
@@ -304,6 +303,9 @@ def handle_inventory_command(args: argparse.Namespace) -> int:
 
 def handle_summary_command(args: argparse.Namespace) -> int:
     """Handle summary generation command."""
+    from infrastructure.core.pipeline import PipelineStageResult
+    from infrastructure.core.pipeline_summary import PipelineSummaryGenerator
+
     logger.info("Generating pipeline summary (for testing)")
 
     try:
@@ -312,7 +314,6 @@ def handle_summary_command(args: argparse.Namespace) -> int:
         generator = PipelineSummaryGenerator()
 
         # Create mock stage results for demonstration
-        from infrastructure.core.pipeline import PipelineStageResult
 
         mock_results = [
             PipelineStageResult(1, "Environment Setup", True, 2.5),

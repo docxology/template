@@ -162,140 +162,134 @@ def validate_review_quality(
             f"Too short: {word_count} words (minimum: {min_word_count}, effective: {effective_min} with tolerance)"  # noqa: E501
         )
 
-    if review_type == "executive_summary":
-        header_variations = [
-            (["overview", "summary", "introduction", "abstract"], "overview"),
-            (
-                [
-                    "key contributions",
-                    "contributions",
-                    "main findings",
-                    "key findings",
-                    "highlights",
-                ],
-                "contributions",
-            ),
-            (["methodology", "methods", "approach", "method", "techniques"], "methodology"),
-            (["results", "findings", "principal results", "outcomes", "key results"], "results"),
-            (["significance", "impact", "implications", "importance", "takeaway"], "significance"),
-        ]
-        found_sections = []
-        for variations, section_name in header_variations:
-            if any(v in response_lower for v in variations):
-                found_sections.append(section_name)
-
-        details["sections_found"] = found_sections
-        details["sections_required"] = 1
-
-        if len(found_sections) < 1:
-            issues.append("Missing expected structure (found: none of 5 expected sections)")
-
-    elif review_type == "quality_review":
-        score_patterns = [
-            (r"\*\*score:\s*(\d)/5\*\*", "**Score: X/5**"),
-            (r"score:\s*(\d)/5", "Score: X/5"),
-            (r"\*\*(\d)/5\*\*", "**X/5**"),
-            (r"score\s*:\s*(\d)", "Score: X"),
-            (r"rating\s*:\s*(\d)", "Rating: X"),
-            (r"\[(\d)/5\]", "[X/5]"),
-            (r"(\d)\s*out\s*of\s*5", "X out of 5"),
-            (r"(\d)/5", "X/5"),
-        ]
-
-        scores_found = []
-        for pattern, pattern_name in score_patterns:
-            matches = re.findall(pattern, response_lower)
-            if matches:
-                scores_found.extend([(m, pattern_name) for m in matches])
-
-        details["scores_found"] = scores_found
-
-        has_assessment = any(
-            kw in response_lower
-            for kw in ("clarity", "structure", "readability", "technical accuracy", "overall quality")
-        )
-        details["has_assessment"] = has_assessment
-
-        if not scores_found and not has_assessment:
-            issues.append("Missing scoring or quality assessment")
-
-    elif review_type == "methodology_review":
-        methodology_sections = [
-            (["strengths", "strong points", "advantages", "positives", "pros"], "strengths"),
-            (
-                ["weaknesses", "limitations", "concerns", "issues", "weak points", "cons", "gaps"],
-                "weaknesses",
-            ),
-            (["suggestions", "recommendations", "improvements", "future work"], "recommendations"),
-        ]
-        found_sections = []
-        for variations, section_name in methodology_sections:
-            if any(v in response_lower for v in variations):
-                found_sections.append(section_name)
-
-        details["sections_found"] = found_sections
-
-        has_methodology_content = any(
-            kw in response_lower
-            for kw in ("research design", "methodology", "approach", "methods", "experimental")
-        )
-        details["has_methodology_content"] = has_methodology_content
-
-        if len(found_sections) < 1 and not has_methodology_content:
-            issues.append(f"Missing expected sections (found: {found_sections or 'none'})")
-
-    elif review_type == "improvement_suggestions":
-        priority_variations = [
-            (["high priority", "critical", "urgent", "must fix", "immediate", "major"], "high"),
-            (
-                ["medium priority", "moderate", "should address", "important", "significant"],
-                "medium",
-            ),
-            (["low priority", "minor", "nice to have", "optional", "consider", "cosmetic"], "low"),
-        ]
-        found_priorities = []
-        for variations, priority_name in priority_variations:
-            if any(v in response_lower for v in variations):
-                found_priorities.append(priority_name)
-
-        details["priorities_found"] = found_priorities
-
-        has_recommendations = any(
-            kw in response_lower
-            for kw in ("recommendation", "suggest", "improve", "fix", "address")
-        )
-        details["has_recommendations"] = has_recommendations
-
-        if len(found_priorities) < 1 and not has_recommendations:
-            issues.append("Missing priority sections or recommendations")
-
-    elif review_type == "translation":
-        has_english = (
-            "english abstract" in response_lower
-            or "## english" in response_lower
-            or ("abstract" in response_lower and "english" in response_lower)
-        )
-        details["has_english_section"] = has_english
-
-        translation_keywords = [
-            "translation",
-            "chinese",
-            "hindi",
-            "russian",
-            "中文",
-            "हिंदी",
-            "русский",
-        ]
-        has_translation = any(kw in response_lower for kw in translation_keywords)
-        details["has_translation_section"] = has_translation
-
-        if not has_english:
-            issues.append("Missing English abstract section")
-        if not has_translation:
-            issues.append("Missing translation section")
+    _REVIEW_TYPE_VALIDATORS = {
+        "executive_summary": _validate_executive_summary_section,
+        "quality_review": _validate_quality_review_section,
+        "methodology_review": _validate_methodology_review_section,
+        "improvement_suggestions": _validate_improvement_suggestions_section,
+        "translation": _validate_translation_section,
+    }
+    validator = _REVIEW_TYPE_VALIDATORS.get(review_type)
+    if validator:
+        validator(response_lower, details, issues)
 
     is_valid = len(issues) == 0
     return is_valid, issues, details
+
+
+def _validate_executive_summary_section(
+    response_lower: str, details: dict[str, Any], issues: list[str]
+) -> None:
+    header_variations = [
+        (["overview", "summary", "introduction", "abstract"], "overview"),
+        (
+            ["key contributions", "contributions", "main findings", "key findings", "highlights"],
+            "contributions",
+        ),
+        (["methodology", "methods", "approach", "method", "techniques"], "methodology"),
+        (["results", "findings", "principal results", "outcomes", "key results"], "results"),
+        (["significance", "impact", "implications", "importance", "takeaway"], "significance"),
+    ]
+    found_sections = [
+        name for variations, name in header_variations if any(v in response_lower for v in variations)
+    ]
+    details["sections_found"] = found_sections
+    details["sections_required"] = 1
+    if not found_sections:
+        issues.append("Missing expected structure (found: none of 5 expected sections)")
+
+
+def _validate_quality_review_section(
+    response_lower: str, details: dict[str, Any], issues: list[str]
+) -> None:
+    score_patterns = [
+        (r"\*\*score:\s*(\d)/5\*\*", "**Score: X/5**"),
+        (r"score:\s*(\d)/5", "Score: X/5"),
+        (r"\*\*(\d)/5\*\*", "**X/5**"),
+        (r"score\s*:\s*(\d)", "Score: X"),
+        (r"rating\s*:\s*(\d)", "Rating: X"),
+        (r"\[(\d)/5\]", "[X/5]"),
+        (r"(\d)\s*out\s*of\s*5", "X out of 5"),
+        (r"(\d)/5", "X/5"),
+    ]
+    scores_found = [
+        (m, name)
+        for pattern, name in score_patterns
+        for m in re.findall(pattern, response_lower)
+    ]
+    details["scores_found"] = scores_found
+    has_assessment = any(
+        kw in response_lower
+        for kw in ("clarity", "structure", "readability", "technical accuracy", "overall quality")
+    )
+    details["has_assessment"] = has_assessment
+    if not scores_found and not has_assessment:
+        issues.append("Missing scoring or quality assessment")
+
+
+def _validate_methodology_review_section(
+    response_lower: str, details: dict[str, Any], issues: list[str]
+) -> None:
+    methodology_sections = [
+        (["strengths", "strong points", "advantages", "positives", "pros"], "strengths"),
+        (
+            ["weaknesses", "limitations", "concerns", "issues", "weak points", "cons", "gaps"],
+            "weaknesses",
+        ),
+        (["suggestions", "recommendations", "improvements", "future work"], "recommendations"),
+    ]
+    found_sections = [
+        name for variations, name in methodology_sections if any(v in response_lower for v in variations)
+    ]
+    details["sections_found"] = found_sections
+    has_methodology_content = any(
+        kw in response_lower
+        for kw in ("research design", "methodology", "approach", "methods", "experimental")
+    )
+    details["has_methodology_content"] = has_methodology_content
+    if not found_sections and not has_methodology_content:
+        issues.append(f"Missing expected sections (found: {found_sections or 'none'})")
+
+
+def _validate_improvement_suggestions_section(
+    response_lower: str, details: dict[str, Any], issues: list[str]
+) -> None:
+    priority_variations = [
+        (["high priority", "critical", "urgent", "must fix", "immediate", "major"], "high"),
+        (["medium priority", "moderate", "should address", "important", "significant"], "medium"),
+        (["low priority", "minor", "nice to have", "optional", "consider", "cosmetic"], "low"),
+    ]
+    found_priorities = [
+        name for variations, name in priority_variations if any(v in response_lower for v in variations)
+    ]
+    details["priorities_found"] = found_priorities
+    has_recommendations = any(
+        kw in response_lower
+        for kw in ("recommendation", "suggest", "improve", "fix", "address")
+    )
+    details["has_recommendations"] = has_recommendations
+    if not found_priorities and not has_recommendations:
+        issues.append("Missing priority sections or recommendations")
+
+
+def _validate_translation_section(
+    response_lower: str, details: dict[str, Any], issues: list[str]
+) -> None:
+    has_english = (
+        "english abstract" in response_lower
+        or "## english" in response_lower
+        or ("abstract" in response_lower and "english" in response_lower)
+    )
+    details["has_english_section"] = has_english
+    has_translation = any(
+        kw in response_lower
+        for kw in ("translation", "chinese", "hindi", "russian", "中文", "हिंदी", "русский")
+    )
+    details["has_translation_section"] = has_translation
+    if not has_english:
+        issues.append("Missing English abstract section")
+    if not has_translation:
+        issues.append("Missing translation section")
 
 
 def create_review_client(model_name: str) -> LLMClient:
