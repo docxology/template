@@ -34,14 +34,14 @@ class TestQueryLogging:
 
         # Ensure logger is properly configured for test
         logger = get_logger("infrastructure.llm.core.client")
-        logger.setLevel(logging.INFO)
+        logger.setLevel(logging.DEBUG)
         logger.propagate = True  # Ensure propagation for caplog
 
         config = LLMConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
-        with caplog.at_level("INFO", logger="infrastructure.llm.core.client"):
+        with caplog.at_level("DEBUG", logger="infrastructure.llm.core.client"):
             client.query("Test prompt")
 
             assert "Starting query" in caplog.text
@@ -73,14 +73,14 @@ class TestQueryLogging:
 
         # Ensure logger is properly configured for test
         logger = get_logger("infrastructure.llm.core.client")
-        logger.setLevel(logging.INFO)
+        logger.setLevel(logging.DEBUG)
         logger.propagate = True  # Ensure propagation for caplog
 
         config = LLMConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
-        with caplog.at_level("INFO", logger="infrastructure.llm.core.client"):
+        with caplog.at_level("DEBUG", logger="infrastructure.llm.core.client"):
             client.query("Test prompt")
 
             assert "Query completed" in caplog.text
@@ -140,13 +140,13 @@ class TestQueryRawLogging:
         from infrastructure.core.logging_utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
-        logger.setLevel(logging.INFO)
+        logger.setLevel(logging.DEBUG)
 
         config = LLMConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
-        with caplog.at_level("INFO", logger="infrastructure.llm.core.client"):
+        with caplog.at_level("DEBUG", logger="infrastructure.llm.core.client"):
             client.query_raw("Test prompt")
 
             assert "Starting raw query" in caplog.text
@@ -158,13 +158,13 @@ class TestQueryRawLogging:
         from infrastructure.core.logging_utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
-        logger.setLevel(logging.INFO)
+        logger.setLevel(logging.DEBUG)
 
         config = LLMConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
-        with caplog.at_level("INFO", logger="infrastructure.llm.core.client"):
+        with caplog.at_level("DEBUG", logger="infrastructure.llm.core.client"):
             client.query_raw("Test prompt")
 
             assert "Raw query completed" in caplog.text
@@ -180,13 +180,13 @@ class TestQueryShortLogging:
         from infrastructure.core.logging_utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
-        logger.setLevel(logging.INFO)
+        logger.setLevel(logging.DEBUG)
 
         config = LLMConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
-        with caplog.at_level("INFO", logger="infrastructure.llm.core.client"):
+        with caplog.at_level("DEBUG", logger="infrastructure.llm.core.client"):
             client.query_short("Test")
 
             assert "Starting short query" in caplog.text
@@ -198,13 +198,13 @@ class TestQueryShortLogging:
         from infrastructure.core.logging_utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
-        logger.setLevel(logging.INFO)
+        logger.setLevel(logging.DEBUG)
 
         config = LLMConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
-        with caplog.at_level("INFO", logger="infrastructure.llm.core.client"):
+        with caplog.at_level("DEBUG", logger="infrastructure.llm.core.client"):
             client.query_short("Test")
 
             assert "Short query completed" in caplog.text
@@ -220,13 +220,13 @@ class TestQueryLongLogging:
         from infrastructure.core.logging_utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
-        logger.setLevel(logging.INFO)
+        logger.setLevel(logging.DEBUG)
 
         config = LLMConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
-        with caplog.at_level("INFO", logger="infrastructure.llm.core.client"):
+        with caplog.at_level("DEBUG", logger="infrastructure.llm.core.client"):
             client.query_long("Test")
 
             assert "Starting long query" in caplog.text
@@ -238,13 +238,13 @@ class TestQueryLongLogging:
         from infrastructure.core.logging_utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
-        logger.setLevel(logging.INFO)
+        logger.setLevel(logging.DEBUG)
 
         config = LLMConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
-        with caplog.at_level("INFO", logger="infrastructure.llm.core.client"):
+        with caplog.at_level("DEBUG", logger="infrastructure.llm.core.client"):
             client.query_long("Test")
 
             assert "Long query completed" in caplog.text
@@ -439,7 +439,7 @@ class TestLoggingLevels:
             assert len(caplog.records) > 0
 
     def test_info_logging(self, caplog, ollama_test_server):
-        """Test INFO level logging."""
+        """Test that resetting context generates an INFO log."""
         import logging
 
         from infrastructure.core.logging_utils import get_logger
@@ -452,15 +452,6 @@ class TestLoggingLevels:
         client = LLMClient(config=config)
 
         with caplog.at_level("INFO", logger="infrastructure.llm.core.client"):
-            client.query("Test")
+            client.query("Test", reset_context=True)
 
-            # Should have info logs - check both records and text
-            has_info = (
-                any(
-                    "Starting query" in r.message or "Query completed" in r.message
-                    for r in caplog.records
-                )
-                or "Starting query" in caplog.text
-                or "Query completed" in caplog.text
-            )
-            assert has_info
+            assert "Resetting context" in caplog.text

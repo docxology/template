@@ -156,9 +156,6 @@ def load_config(config_path: Path | str) -> Optional[ManuscriptConfig]:
             return data  # type: ignore[no-any-return]  # yaml.safe_load returns Any
     except (FileNotFoundError, PermissionError, yaml.YAMLError):
         return None
-    except Exception as e:
-        logger.warning(f"Unexpected error loading config from {config_path}: {e}")
-        return None
 
 
 def format_author_details(authors: List[AuthorConfig], doi: str = "") -> str:

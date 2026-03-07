@@ -162,6 +162,38 @@ def setup_logger(
     return logger
 
 
+def setup_root_log_file_handler(log_file: Path) -> logging.FileHandler:
+    """Add a file handler to the root logger, replacing any existing one for this path.
+
+    Intended for pipeline-level log capture where all loggers (including third-party)
+    should write to a single project log file.
+
+    Args:
+        log_file: Path to log file (parent directory must already exist)
+
+    Returns:
+        The newly created FileHandler (caller should store it for later close/remove)
+    """
+    root_logger = logging.getLogger()
+
+    # Remove any existing handler for this exact log file
+    for h in list(root_logger.handlers):
+        if (
+            isinstance(h, logging.FileHandler)
+            and hasattr(h, "baseFilename")
+            and Path(h.baseFilename).resolve() == log_file.resolve()
+        ):
+            h.close()
+            root_logger.removeHandler(h)
+
+    handler = logging.FileHandler(log_file)
+    handler.setFormatter(
+        logging.Formatter("[%(asctime)s] [%(levelname)s] [%(name)s] %(message)s")
+    )
+    root_logger.addHandler(handler)
+    return handler
+
+
 def get_logger(name: str) -> logging.Logger:
     """Get or create a logger with standard configuration.
 

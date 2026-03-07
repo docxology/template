@@ -118,6 +118,8 @@ if __name__ == "__main__":
     )
     parser.add_argument("--strict", action="store_true", help="Enable strict validation mode")
 
+    import sys
+
     args = parser.parse_args()
 
     exit_code = main(manuscript_path=args.manuscript_path, strict=args.strict)
