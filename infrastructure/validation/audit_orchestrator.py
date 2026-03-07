@@ -175,73 +175,27 @@ def _validate_single_file(
     except Exception as e:
         logger.warning(f"Link validation failed for {md_file}: {e}")
 
-    # Code block path validation
-    if include_code:
-        try:
-            code_issues = validate_file_paths_in_code(content, md_file, repo_root)
-            for issue in code_issues:  # type: ignore
-                results["quality_issues"].append(
-                    QualityIssue(
-                        file=file_key,
-                        line=issue.get("line", 0),  # type: ignore
-                        issue_type="code_block_path",
-                        issue_message=issue.get("issue", "Code block path issue"),  # type: ignore
-                        severity="warning",
+    quality_validators = [
+        (include_code, validate_file_paths_in_code, "code_block_path", "warning", "Code block path issue"),
+        (include_directory, validate_directory_structures, "directory_structure", "info", "Directory structure issue"),
+        (include_imports, validate_python_imports, "python_import", "warning", "Python import issue"),
+        (include_placeholders, validate_placeholder_consistency, "placeholder_consistency", "info", "Placeholder consistency issue"),
+    ]
+    for flag, validator_fn, issue_type, severity, default_msg in quality_validators:
+        if flag:
+            try:
+                for issue in validator_fn(content, md_file, repo_root):  # type: ignore
+                    results["quality_issues"].append(
+                        QualityIssue(
+                            file=file_key,
+                            line=issue.get("line", 0),  # type: ignore
+                            issue_type=issue_type,
+                            issue_message=issue.get("issue", default_msg),  # type: ignore
+                            severity=severity,
+                        )
                     )
-                )
-        except Exception as e:
-            logger.warning(f"Code validation failed for {md_file}: {e}")
-
-    # Directory structure validation
-    if include_directory:
-        try:
-            dir_issues = validate_directory_structures(content, md_file, repo_root)
-            for issue in dir_issues:  # type: ignore
-                results["quality_issues"].append(
-                    QualityIssue(
-                        file=file_key,
-                        line=issue.get("line", 0),  # type: ignore
-                        issue_type="directory_structure",
-                        issue_message=issue.get("issue", "Directory structure issue"),  # type: ignore
-                        severity="info",
-                    )
-                )
-        except Exception as e:
-            logger.warning(f"Directory validation failed for {md_file}: {e}")
-
-    # Python import validation
-    if include_imports:
-        try:
-            import_issues = validate_python_imports(content, md_file, repo_root)
-            for issue in import_issues:  # type: ignore
-                results["quality_issues"].append(
-                    QualityIssue(
-                        file=file_key,
-                        line=issue.get("line", 0),  # type: ignore
-                        issue_type="python_import",
-                        issue_message=issue.get("issue", "Python import issue"),  # type: ignore
-                        severity="warning",
-                    )
-                )
-        except Exception as e:
-            logger.warning(f"Import validation failed for {md_file}: {e}")
-
-    # Placeholder consistency validation
-    if include_placeholders:
-        try:
-            placeholder_issues = validate_placeholder_consistency(content, md_file, repo_root)
-            for issue in placeholder_issues:  # type: ignore
-                results["quality_issues"].append(
-                    QualityIssue(
-                        file=file_key,
-                        line=issue.get("line", 0),  # type: ignore
-                        issue_type="placeholder_consistency",
-                        issue_message=issue.get("issue", "Placeholder consistency issue"),  # type: ignore
-                        severity="info",
-                    )
-                )
-        except Exception as e:
-            logger.warning(f"Placeholder validation failed for {md_file}: {e}")
+            except Exception as e:
+                logger.warning(f"{issue_type} validation failed for {md_file}: {e}")
 
     return results
 

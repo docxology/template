@@ -36,162 +36,112 @@ def check_cov_datafile_support() -> bool:
         return False
 
 
-def extract_failed_tests(stdout: str, stderr: str) -> list[dict]:
-    """Extract detailed information about failed tests from pytest output.
-
-    Handles multiple pytest output formats for comprehensive failure detection.
-
-    Args:
-        stdout: Standard output from pytest
-        stderr: Standard error from pytest
-
-    Returns:
-        List of dictionaries with failure details:
-        [
-            {
-                'test': 'test_file.py::TestClass::test_method',
-                'error_type': 'AssertionError',
-                'error_message': 'Expected 1, got 2',
-                'traceback': ['line1', 'line2', ...]
-            },
-            ...
-        ]
-    """
-    failed_tests = []  # type: ignore
-    combined_output = stdout + "\n" + stderr
-
-    # Method 1: Extract from FAILURES section (--tb=line format)
+def _parse_failures_section(combined_output: str) -> list[dict]:
+    """Parse failures from the FAILURES section (--tb=line format)."""
+    failed_tests: list[dict] = []
     failures_section = False
     current_test = None
 
     for line in combined_output.split("\n"):
         line = line.strip()
-
         if "FAILURES" in line and "===" in line:
             failures_section = True
             continue
         elif line.startswith("=") and "durations" in line.lower():
-            failures_section = False
             break
-
         if failures_section:
             if line.startswith("__") and "__" in line:
-                test_func_match = re.search(r"__\s+([^_\s]+)\s+__", line)
-                if test_func_match:
-                    current_test = test_func_match.group(1)
-
-            elif line.startswith("/") and ".py:" in line and ":" in line:
+                m = re.search(r"__\s+([^_\s]+)\s+__", line)
+                if m:
+                    current_test = m.group(1)
+            elif line.startswith("/") and ".py:" in line:
                 parts = line.split(":", 2)
-                if len(parts) >= 3:
-                    error_part = parts[2].strip()
-                    if ":" in error_part:
-                        error_split = error_part.split(":", 1)
-                        error_type = error_split[0].strip()
-                        error_message = error_split[1].strip()
+                if len(parts) >= 3 and ":" in parts[2]:
+                    error_split = parts[2].strip().split(":", 1)
+                    path = parts[0].strip()
+                    failed_tests.append({
+                        "test": current_test or (path.split("/")[-1] if "/" in path else path),
+                        "error_type": error_split[0].strip(),
+                        "error_message": error_split[1].strip(),
+                        "traceback": [],
+                    })
+    return failed_tests
 
-                        test_name = current_test
-                        if not test_name:
-                            path_part = parts[0].strip()
-                            if "/" in path_part:
-                                test_name = path_part.split("/")[-1]
-                            else:
-                                test_name = path_part
 
-                        failed_tests.append(
-                            {
-                                "test": test_name,
-                                "error_type": error_type,
-                                "error_message": error_message,
-                                "traceback": [],
-                            }
-                        )
+def _parse_failures_verbose(combined_output: str) -> list[dict]:
+    """Parse failures from verbose output (--verbose format)."""
+    failed_tests: list[dict] = []
+    for line in combined_output.split("\n"):
+        if " FAILED" in line and "::" in line and not line.strip().startswith("="):
+            m = re.search(r"([^\s]+)\s+FAILED", line.strip())
+            if m:
+                failed_tests.append({"test": m.group(1), "error_type": "Unknown",
+                                     "error_message": "Failed (use --tb=short for details)"})
+    return failed_tests
 
-    # Method 2: Extract from verbose output (--verbose format)
-    if not failed_tests:
-        verbose_lines = [
-            l
-            for l in combined_output.split("\n")
-            if " FAILED" in l and "::" in l and not l.strip().startswith("=")
-        ]
-        for line in verbose_lines:
-            test_match = re.search(r"([^\s]+)\s+FAILED", line.strip())
-            if test_match:
-                test_name = test_match.group(1)
-                failed_tests.append(
-                    {
-                        "test": test_name,
-                        "error_type": "Unknown",
-                        "error_message": "Failed (use --tb=short for details)",
-                    }
-                )
 
-    # Method 3: Extract from short FAILED lines
-    if not failed_tests:
-        short_failed_lines = [
-            l for l in combined_output.split("\n") if l.strip().startswith("FAILED ") and "::" in l
-        ]
-        for line in short_failed_lines:
-            test_match = re.search(r"FAILED\s+([^\s]+)", line)
-            if test_match:
-                test_name = test_match.group(1)
-                error_type = "Unknown"
-                error_message = "Run with -v for details"
-
+def _parse_failures_short(combined_output: str) -> list[dict]:
+    """Parse failures from short FAILED lines."""
+    failed_tests: list[dict] = []
+    for line in combined_output.split("\n"):
+        if line.strip().startswith("FAILED ") and "::" in line:
+            m = re.search(r"FAILED\s+([^\s]+)", line)
+            if m:
+                error_type, error_message = "Unknown", "Run with -v for details"
                 if " - " in line:
                     error_part = line.split(" - ", 1)[1]
                     if ":" in error_part:
-                        error_split = error_part.split(":", 1)
-                        error_type = error_split[0].strip()
-                        error_message = error_split[1].strip()
-
-                failed_tests.append(
-                    {"test": test_name, "error_type": error_type, "error_message": error_message}
-                )
-
-    # Method 4: Extract timeout errors specifically
-    if not failed_tests:
-        timeout_lines = [
-            l
-            for l in combined_output.split("\n")
-            if "timeout" in l.lower() or "pytest_timeout" in l.lower()
-        ]
-        for line in timeout_lines:
-            test_lines = []
-            lines = combined_output.split("\n")
-            for i, l in enumerate(lines):
-                if "timeout" in l.lower():
-                    for j in range(max(0, i - 3), i):
-                        if "::" in lines[j] and ("PASSED" in lines[j] or "FAILED" in lines[j]):
-                            test_match = re.search(r"([^\s]+)\s+(?:PASSED|FAILED)", lines[j])
-                            if test_match:
-                                test_lines.append(test_match.group(1))
-
-            for test_name in test_lines:
-                failed_tests.append(
-                    {
-                        "test": test_name,
-                        "error_type": "TimeoutError",
-                        "error_message": "Test timed out (increase timeout or optimize test)",
-                    }
-                )
-
-    # Method 5: Ultimate fallback
-    if not failed_tests:
-        any_failed_lines = [
-            l for l in combined_output.split("\n") if l.strip().startswith("FAILED") and "::" in l
-        ]
-        for line in any_failed_lines:
-            test_match = re.search(r"FAILED\s+([^\s]+)", line)
-            if test_match:
-                failed_tests.append(
-                    {
-                        "test": test_match.group(1),
-                        "error_type": "Unknown",
-                        "error_message": "Test failed (use --tb=short -v for details)",
-                    }
-                )
-
+                        e = error_part.split(":", 1)
+                        error_type, error_message = e[0].strip(), e[1].strip()
+                failed_tests.append({"test": m.group(1), "error_type": error_type,
+                                     "error_message": error_message})
     return failed_tests
+
+
+def _parse_failures_timeout(combined_output: str) -> list[dict]:
+    """Parse timeout failures by scanning context around timeout lines."""
+    failed_tests: list[dict] = []
+    lines = combined_output.split("\n")
+    for i, line in enumerate(lines):
+        if "timeout" in line.lower() or "pytest_timeout" in line.lower():
+            for j in range(max(0, i - 3), i):
+                if "::" in lines[j] and ("PASSED" in lines[j] or "FAILED" in lines[j]):
+                    m = re.search(r"([^\s]+)\s+(?:PASSED|FAILED)", lines[j])
+                    if m:
+                        failed_tests.append({"test": m.group(1), "error_type": "TimeoutError",
+                                             "error_message": "Test timed out (increase timeout or optimize test)"})
+    return failed_tests
+
+
+def _parse_failures_fallback(combined_output: str) -> list[dict]:
+    """Parse any remaining FAILED lines as a last resort."""
+    failed_tests: list[dict] = []
+    for line in combined_output.split("\n"):
+        if line.strip().startswith("FAILED") and "::" in line:
+            m = re.search(r"FAILED\s+([^\s]+)", line)
+            if m:
+                failed_tests.append({"test": m.group(1), "error_type": "Unknown",
+                                     "error_message": "Test failed (use --tb=short -v for details)"})
+    return failed_tests
+
+
+_FAILURE_STRATEGIES = [
+    _parse_failures_section,
+    _parse_failures_verbose,
+    _parse_failures_short,
+    _parse_failures_timeout,
+    _parse_failures_fallback,
+]
+
+
+def extract_failed_tests(stdout: str, stderr: str) -> list[dict]:
+    """Extract failed test info from pytest output using cascading parse strategies."""
+    combined_output = stdout + "\n" + stderr
+    for strategy in _FAILURE_STRATEGIES:
+        result = strategy(combined_output)
+        if result:
+            return result
+    return []
 
 
 def extract_timeout_errors(stdout: str, stderr: str) -> list[dict]:
@@ -255,10 +205,12 @@ def check_test_failures(
             max_failures = 0
     else:
         testing_config = get_testing_config(repo_root)
-        config_value = testing_config.get(config_key) or testing_config.get("max_test_failures")
+        config_value = getattr(testing_config, config_key, None) or getattr(
+            testing_config, "max_test_failures", 0
+        )
 
         if config_value is not None:
-            max_failures = int(config_value)  # type: ignore
+            max_failures = int(config_value)
         else:
             max_failures = 0
 
