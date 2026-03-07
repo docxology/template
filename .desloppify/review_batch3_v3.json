@@ -1,0 +1,184 @@
+{
+  "assessments": {
+    "ai_generated_debt": 62,
+    "package_organization": 58,
+    "high_level_elegance": 65
+  },
+  "findings": [
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "logging_utils_scope_creep",
+      "summary": "LogAggregator class and collect_log_statistics function live inside logging_utils.py but are never imported anywhere else in the codebase",
+      "related_files": [
+        "infrastructure/core/logging_utils.py"
+      ],
+      "evidence": [
+        "LogAggregator class defined at line 597 of logging_utils.py with full add_message, get_summary, generate_report, and save_to_file methods",
+        "collect_log_statistics function defined at line 698 of logging_utils.py",
+        "Grep for 'LogAggregator' across all .py files returns exactly one match: its own definition site",
+        "Grep for 'collect_log_statistics' across all .py files returns exactly one match: its own definition site",
+        "Neither name appears in logging_utils __all__ export list (lines 551-589)"
+      ],
+      "suggestion": "Delete LogAggregator and collect_log_statistics from logging_utils.py. If they serve a real purpose, move them to a dedicated infrastructure/reporting/log_aggregator.py that is actually imported by callers.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "log_operation_silent_dead_wrapper",
+      "summary": "log_operation_silent is a one-line thin wrapper over log_operation with no callers outside its own file",
+      "related_files": [
+        "infrastructure/core/logging_utils.py"
+      ],
+      "evidence": [
+        "log_operation_silent defined at lines 281-287: 'with log_operation(operation, logger, level, log_completion=False): yield' — adds nothing except renaming one keyword argument",
+        "Grep for 'log_operation_silent' across all .py files returns only the definition file (infrastructure/core/logging_utils.py)",
+        "It appears in __all__ (line 559 region) but no importer pulls it"
+      ],
+      "suggestion": "Remove log_operation_silent. Callers can pass log_completion=False to log_operation directly. If retained for API stability, document that it exists only as a convenience alias.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "restating_docstring_bloat",
+      "summary": "Trivial utility functions carry multi-line docstrings with Args/Returns sections that restate exactly what the signature already says",
+      "related_files": [
+        "infrastructure/core/logging_utils.py",
+        "infrastructure/core/environment.py"
+      ],
+      "evidence": [
+        "log_success (lines 361-375): 4-line docstring on a 2-line function body; Args section says 'message: Success message' which adds no information beyond the parameter name",
+        "log_header (lines 378-401): 5-line docstring followed by body that calls logger.info four times; Returns nothing, side-effect-only — docstring Example block duplicates the code",
+        "check_python_version (lines 50-65 of environment.py): docstring says 'Returns: True if Python version is 3.8 or higher, False otherwise' — the function body is 8 lines, the docstring is 5",
+        "check_build_tools (lines 206-234 of environment.py): identical pattern — docstring restates arg types and return semantics already visible from the signature"
+      ],
+      "suggestion": "Collapse restating docstrings on sub-10-line utilities to a single summary line. Reserve Args/Returns sections for functions where the parameter contract is genuinely non-obvious.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "nosy_entry_exit_logging",
+      "summary": "Infrastructure functions emit logger.info on every entry ('Checking Python version...', 'Checking dependencies...', 'Setting up directory structure...') without diagnostic value",
+      "related_files": [
+        "infrastructure/core/environment.py",
+        "infrastructure/core/file_operations.py"
+      ],
+      "evidence": [
+        "check_python_version line 56: logger.info('Checking Python version...') — single-line check that takes <1ms",
+        "check_dependencies line 79: logger.info('Checking dependencies...') before a for-loop over 4 packages",
+        "check_build_tools line 216: logger.info('Checking build tools...')",
+        "setup_directories line 283: logger.info('Setting up directory structure...')",
+        "clean_output_directory line 33: logger.info('Cleaning output directory...')",
+        "Pattern is copy-pasted verbatim across all five environment-check helpers with no additional context"
+      ],
+      "suggestion": "Demote entry announcements to logger.debug. Reserve logger.info for results ('Python 3.11.2 OK', 'pandoc missing'). The current pattern produces redundant noise in normal pipeline runs.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "performance_module_duplication",
+      "summary": "infrastructure/core/ contains two near-identical performance modules: performance.py and performance_monitor.py, both defining CodeProfiler, benchmark_function, and benchmark_llm_query",
+      "related_files": [
+        "infrastructure/core/performance.py",
+        "infrastructure/core/performance_monitor.py"
+      ],
+      "evidence": [
+        "performance.py defines: PerformanceMonitor (line 73), CodeProfiler (line 365), benchmark_function (line 567), benchmark_llm_query (line 539)",
+        "performance_monitor.py defines: CodeProfiler (line 60), benchmark_function (line 362), benchmark_llm_query (line 293) — same class names, same method signatures",
+        "infrastructure/core/__init__.py imports exclusively from performance.py (lines 92-106), so performance_monitor.py exports are dead at the package boundary",
+        "infrastructure/core/ has 27 files (directory_profiles shows file_count: 27); performance_monitor.py is a leftover split artifact that was never cleaned up"
+      ],
+      "suggestion": "Delete performance_monitor.py. All callers already import from performance.py via core/__init__.py. Verify no direct imports of performance_monitor remain before deletion.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "summary_generator_duplication",
+      "summary": "infrastructure/reporting/ contains two files — summary_generator.py and test_summary_generator.py — with identical load_test_results and load_infrastructure_results implementations",
+      "related_files": [
+        "infrastructure/reporting/summary_generator.py",
+        "infrastructure/reporting/test_summary_generator.py"
+      ],
+      "evidence": [
+        "summary_generator.py lines 20-45: load_test_results with identical body to test_summary_generator.py lines 20-45",
+        "summary_generator.py lines 48-89: load_infrastructure_results with identical fallback logic, same JSON key paths, same hardcoded file paths ('infrastructure_validation_report.json', 'coverage_infra.json')",
+        "Both files import the same dependencies (json, datetime, Path, get_testing_config, get_logger)",
+        "reporting/__init__.py does not export either module's load_* functions, suggesting both files are called directly by scripts rather than through the package interface"
+      ],
+      "suggestion": "Merge into a single infrastructure/reporting/test_results_loader.py. Export load_test_results and load_infrastructure_results from reporting/__init__.py. Remove whichever duplicate file has fewer callers.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "core_directory_overload",
+      "summary": "infrastructure/core/ contains 27 files mixing six distinct concerns with no sub-grouping, making ownership boundaries and change scope unpredictable",
+      "related_files": [
+        "infrastructure/core/"
+      ],
+      "evidence": [
+        "directory_profiles shows infrastructure/core/ file_count: 27, total_loc: 9616",
+        "Files span six distinct concerns: logging (logging_utils.py, logging_constants.py, logging_formatters.py, logging_helpers.py, logging_progress.py — 5 files), performance (performance.py, performance_monitor.py — 2 files, one duplicate), pipeline execution (pipeline.py, pipeline_summary.py, checkpoint.py, multi_project.py), security (security.py, credentials.py), environment/setup (environment.py, script_discovery.py, health_check.py), and utilities (menu.py, retry.py, progress.py, file_operations.py, file_inventory.py, errors.py, exceptions.py, config_loader.py, config_cli.py, cli.py)",
+        "avg_fan_in of 9.6 means every file in core/ is imported by ~10 other files on average — any rename or split creates widespread ripple edits",
+        "Security and health check modules have very different update cadence from config/logging utilities but live at the same directory depth"
+      ],
+      "suggestion": "Extract infrastructure/core/logging/ (5 logging_* files), infrastructure/core/perf/ (performance.py after deleting performance_monitor.py), and infrastructure/core/security/ (security.py, credentials.py) as sub-packages. Keep config_loader, exceptions, errors, environment, pipeline, and multi_project in core/ where their fan-in justifies top-level placement.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "security_misplaced_in_core",
+      "summary": "SecurityValidator, RateLimiter, SecurityHeaders, and SecurityMonitor live in infrastructure/core/security.py, a concern orthogonal to the 'foundation utilities' role that core/ documents for itself",
+      "related_files": [
+        "infrastructure/core/security.py",
+        "infrastructure/core/__init__.py"
+      ],
+      "evidence": [
+        "infrastructure/core/__init__.py module docstring (lines 1-10): 'Foundation utilities — configuration management, logging, and exception hierarchy'",
+        "security.py implements SecurityValidator with 14 dangerous-pattern regexes, a threading-based RateLimiter, SecurityHeaders dataclass, and SecurityMonitor — none of which are 'foundation utilities'",
+        "infrastructure/__init__.py module docstring does not list security as a top-level infrastructure sub-module (it lists core, validation, documentation, scientific, llm, rendering, publishing, reporting, steganography)",
+        "security.py is consumed primarily by LLM input validation (validate_llm_input is exported from core/__init__.py line 127) — its natural home is infrastructure/llm/ or a dedicated infrastructure/security/ package"
+      ],
+      "suggestion": "Move security.py (and credentials.py) to infrastructure/security/ as a first-class sub-package. Update core/__init__.py to re-export the handful of functions used by LLM code. This makes core/ match its stated role and gives security concerns a navigable home.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "multi_project_split_across_core_and_scripts",
+      "summary": "Multi-project orchestration responsibility is split between infrastructure/core/multi_project.py and scripts/execute_multi_project.py with no clear ownership boundary documented",
+      "related_files": [
+        "infrastructure/core/multi_project.py",
+        "scripts/execute_multi_project.py"
+      ],
+      "evidence": [
+        "infrastructure/core/multi_project.py defines MultiProjectOrchestrator with execute_all_projects_full, execute_all_projects_core methods — business logic",
+        "scripts/execute_multi_project.py is described in CLAUDE.md as the entry point for multi-project runs",
+        "multi_project.py lives in core/ (27-file directory) even though it orchestrates project-level pipelines — a level above what 'core foundation utilities' implies",
+        "The two-layer architecture documented in CLAUDE.md places scripts as 'thin orchestrators' but multi_project.py in core/ is itself a thick orchestrator importing from pipeline.py, errors.py, and project/discovery.py"
+      ],
+      "suggestion": "Move MultiProjectOrchestrator to infrastructure/project/ (which already has discovery.py and a clear project-management mandate). This aligns ownership: infrastructure/project/ owns all project-lifecycle logic, core/ owns foundation utilities.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "reporting_module_boundary_unclear",
+      "summary": "infrastructure/reporting/ contains 15 files mixing four distinct sub-concerns (test reporting, executive summaries, dashboards, HTML templates) with no internal grouping, making the module's public contract unclear",
+      "related_files": [
+        "infrastructure/reporting/__init__.py",
+        "infrastructure/reporting/pipeline_reporter.py",
+        "infrastructure/reporting/test_reporter.py",
+        "infrastructure/reporting/test_summary_generator.py",
+        "infrastructure/reporting/summary_generator.py",
+        "infrastructure/reporting/dashboard_generator.py",
+        "infrastructure/reporting/html_templates.py"
+      ],
+      "evidence": [
+        "directory_profiles shows infrastructure/reporting/ file_count: 15, total_loc: 9255",
+        "reporting/__init__.py exports 20+ names spanning generate_pipeline_report, generate_coverage_test_report, generate_executive_summary, generate_all_dashboards, OutputOrganizer — four functionally distinct concerns",
+        "test_reporter.py and coverage_reporter.py both parse pytest JSON output; their split rationale is not documented",
+        "generate_multi_project_summary_report is defined in pipeline_reporter.py (lines 36-80+) even though it is a multi-project concern, not a single-pipeline concern",
+        "html_templates.py is a data-only module (string literals) co-located with algorithmic report generators — no sub-directory separates static assets from logic"
+      ],
+      "suggestion": "Split reporting/ into reporting/pipeline/ (pipeline_reporter, error_aggregator, output_organizer), reporting/test/ (test_reporter, coverage_reporter, test_summary_generator, summary_generator merged), and reporting/executive/ (executive_reporter, multi_project_reporter, dashboard_generator). This gives each sub-concern a predictable home and shrinks __init__.py's re-export surface.",
+      "confidence": "medium"
+    }
+  ]
+}

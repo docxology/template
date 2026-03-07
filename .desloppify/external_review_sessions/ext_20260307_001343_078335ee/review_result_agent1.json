@@ -1,0 +1,158 @@
+{
+  "session": {
+    "id": "ext_20260307_001343_078335ee",
+    "token": "90db5d21d1f3266b9666042f548d6476"
+  },
+  "assessments": {
+    "cross_module_architecture": 82,
+    "convention_outlier": 74,
+    "error_consistency": 65,
+    "abstraction_fitness": 71
+  },
+  "findings": [
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "CMA-001",
+      "summary": "Two parallel performance monitoring modules expose identically-named PerformanceMonitor class, forcing a disambiguation alias in the package boundary",
+      "related_files": [
+        "infrastructure/core/performance.py",
+        "infrastructure/core/performance_monitor.py",
+        "infrastructure/core/__init__.py"
+      ],
+      "evidence": "infrastructure/core/performance.py defines class PerformanceMonitor (line 64) and exports it as ResourceTracker alias (line 424). infrastructure/core/performance_monitor.py defines class CodeProfiler (line 59). The docstring on PerformanceMonitor at line 67 explicitly acknowledges the collision: 'Named ResourceTracker when disambiguation from performance_monitor.CodeProfiler is needed (both modules expose a class called PerformanceMonitor).' The core/__init__.py exposes ResourceTracker to resolve the ambiguity. performance_monitor.py has zero importers in infrastructure (grep confirms no `from infrastructure.core.performance_monitor import` anywhere), making it an orphaned module whose sole contribution is causing the naming collision.",
+      "suggestion": "Either consolidate the two performance modules into a single module with distinct class names, or remove performance_monitor.py if it has no active callers. Eliminate the alias workaround once the collision is resolved.",
+      "confidence": 0.95
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "CMA-002",
+      "summary": "reporting/__init__.py instantiates a logger and defines business logic (generate_multi_project_report) directly in the package boundary file, blurring __init__ from being a pure re-export surface",
+      "related_files": [
+        "infrastructure/reporting/__init__.py"
+      ],
+      "evidence": "infrastructure/reporting/__init__.py (lines 50-109) imports get_logger, defines a module-level logger = get_logger(__name__), and implements the multi-step generate_multi_project_report function (try/except, logger calls, orchestration). Package __init__ files in this codebase are otherwise thin re-export surfaces (e.g. infrastructure/__init__.py, infrastructure/llm/__init__.py). Placing orchestration logic here breaks that contract and increases the blast radius of changes to the reporting module.",
+      "suggestion": "Move generate_multi_project_report into a dedicated reporting/multi_project.py module and re-export only the symbol from __init__.py.",
+      "confidence": 0.9
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "CMA-003",
+      "summary": "infrastructure/llm/__init__.py re-exports the entire public surface of four sub-packages (80+ symbols), creating a hub module whose large blast radius means any change anywhere in llm/ forces consumers to re-validate against the full surface",
+      "related_files": [
+        "infrastructure/llm/__init__.py"
+      ],
+      "evidence": "infrastructure/llm/__init__.py imports and re-exports 70+ symbols from llm/core, llm/templates, llm/utils, llm/validation, llm/review (lines 30-120). The __all__ list runs from line 122 to 208 — 87 entries. By comparison, infrastructure/core/__init__.py exposes 11 well-chosen symbols. Callers that want only LLMClient are implicitly coupled to all review, validation, and template symbols because they live behind the same surface.",
+      "suggestion": "Reduce the llm/__init__.py surface to the handful of symbols that are genuinely needed by cross-package callers. Direct callers of review functions should import from infrastructure.llm.review directly, as the docstring itself recommends.",
+      "confidence": 0.85
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "CON-001",
+      "summary": "reporting/__init__.py is the only package __init__ that imports get_logger and defines a module-level logger, departing from the consistent pattern used by all other package __init__ files",
+      "related_files": [
+        "infrastructure/reporting/__init__.py",
+        "infrastructure/core/__init__.py",
+        "infrastructure/llm/__init__.py",
+        "infrastructure/__init__.py"
+      ],
+      "evidence": "infrastructure/__init__.py, infrastructure/core/__init__.py, infrastructure/llm/__init__.py, and infrastructure/publishing/__init__.py all avoid importing get_logger or creating a logger instance; they are pure import aggregators. infrastructure/reporting/__init__.py line 50 (`from infrastructure.core.logging_utils import get_logger`) and line 52 (`logger = get_logger(__name__)`) break this pattern. No other __init__.py in the infrastructure layer does this.",
+      "suggestion": "Move the logger and the generate_multi_project_report function to a module-level file (reporting/multi_project.py) and make reporting/__init__.py a pure re-export surface consistent with its siblings.",
+      "confidence": 0.92
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "CON-002",
+      "summary": "generate_test_report function name is defined in two sibling reporting modules with identical names but different signatures, then aliased awkwardly at the __init__ boundary",
+      "related_files": [
+        "infrastructure/reporting/pipeline_reporter.py",
+        "infrastructure/reporting/coverage_reporter.py",
+        "infrastructure/reporting/__init__.py"
+      ],
+      "evidence": "infrastructure/reporting/pipeline_reporter.py line 728 defines `def generate_test_report(test_results: Dict[str, Any], output_dir: Path) -> Path`. infrastructure/reporting/coverage_reporter.py line 213 also defines `def generate_test_report(...)`. In reporting/__init__.py lines 41 and 47 this creates the awkward alias: `generate_test_report as generate_test_report_from_results`. The __all__ then exports both `generate_test_report` (original) and `generate_test_report_from_results` (alias). All other function names in the reporting package are unique.",
+      "suggestion": "Rename one of the two functions to reflect its actual domain distinction (e.g., generate_coverage_test_report in coverage_reporter.py). Remove the __init__.py alias.",
+      "confidence": 0.9
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "CON-003",
+      "summary": "logging_utils.py exports log_stage_with_eta and log_resource_usage as wrapper functions defined after the __all__ declaration, an island pattern not used in any other module in the codebase",
+      "related_files": [
+        "infrastructure/core/logging_utils.py"
+      ],
+      "evidence": "infrastructure/core/logging_utils.py lines 454-495 define __all__, then lines 497-695 define log_stage_with_eta and log_resource_usage as standalone functions after the __all__ block. Both appear in __all__ (lines 479-481). Defining public API symbols after the __all__ declaration is not done in any other infrastructure module. Additionally, log_stage_with_eta (line 497) and log_resource_usage (line 547) are described as 'Wrapper functions' in a comment at line 496, but both contain substantial logic (ETA calculation, psutil integration), not just forwarding.",
+      "suggestion": "Move log_stage_with_eta and log_resource_usage above the __all__ declaration to follow the consistent module layout used elsewhere.",
+      "confidence": 0.82
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "ERR-001",
+      "summary": "dashboard_generator.py catches 11 Exception blocks and silently logs then continues, returning partial results with no way for callers to distinguish a clean run from one that lost 10 of 11 charts",
+      "related_files": [
+        "infrastructure/reporting/dashboard_generator.py"
+      ],
+      "evidence": "grep confirmed 11 `except Exception as e:` blocks in dashboard_generator.py. The pattern is consistent: catch, log error/warning, return whatever was collected so far. Examples at lines 940-942 (matplotlib dashboard), 1282-1283 (health radar), 1429-1430 (health comparison), etc. The outermost dispatcher at line 3403-3404 also catches per-generator exceptions without re-raising. Callers receive a dict of files; there is no distinction between 'all charts generated' and 'no charts generated due to failures'. The generate_multi_project_report in reporting/__init__.py (line 107) re-raises on failure, but dashboard_generator.py internals swallow failures silently.",
+      "suggestion": "Return a result object or raise the exception after logging. At minimum, callers should receive an explicit failures list so the pipeline reporter can surface rendering failures with full context.",
+      "confidence": 0.9
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "ERR-002",
+      "summary": "Broad except Exception swallowing is inconsistently applied across infrastructure modules: some locations re-raise (rendering/core.py, file_operations.py), others silently return False or None, making failure modes unpredictable",
+      "related_files": [
+        "infrastructure/core/checkpoint.py",
+        "infrastructure/validation/integrity.py",
+        "infrastructure/rendering/pdf_renderer.py",
+        "infrastructure/core/file_operations.py"
+      ],
+      "evidence": "infrastructure/core/checkpoint.py lines 127-130: catches Exception, logs error, returns True/False/None — no re-raise. infrastructure/validation/integrity.py lines 83-85: catches Exception, logs error, sets integrity value to False — continues silently. infrastructure/rendering/pdf_renderer.py line 307-308: catches Exception, logs warning with exc_info=True, returns False. infrastructure/core/file_operations.py lines in the broader module: 2 of 7 except Exception blocks use `raise ... from e` (the policy documented in core/__init__.py), while the rest log and return False. The core/__init__.py error policy states typed exceptions should propagate, but this policy is not consistently enforced across modules — especially in validation and checkpoint modules.",
+      "suggestion": "Apply the two-tier error contract documented in core/__init__.py consistently. Expected absence conditions return None/False; unexpected failures raise typed TemplateError subclasses with context. Audit checkpoint.py and integrity.py which routinely swallow unexpected I/O failures.",
+      "confidence": 0.88
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "ERR-003",
+      "summary": "pipeline_reporter.py generate_multi_project_summary_report contains defensive isinstance checks with warnings at runtime on data that is typed at the call site, creating a mixed strategy (typed signature + runtime type recovery) not used elsewhere",
+      "related_files": [
+        "infrastructure/reporting/pipeline_reporter.py"
+      ],
+      "evidence": "infrastructure/reporting/pipeline_reporter.py lines 80-95: `if not isinstance(project_results, dict):` logs warning and replaces with `{}`, then `elif project_results is None:` (unreachable because the prior branch already catches non-dict including None), then per-key `isinstance(value, list)` checks with conversion to `[]`. Lines 51-52 log `debug` statements about `type(result)` and `dir(result)` — dev-era diagnostic logging. This block has no parallel in generate_pipeline_report or other reporter functions. It also contains an unreachable branch (the None check after the not-isinstance check).",
+      "suggestion": "Remove the runtime type recovery and unreachable branch. Accept a typed dataclass or TypedDict at the boundary and let callers provide correct types. If the function genuinely needs to handle legacy dict format alongside the new list format, document this explicitly and remove the dead None branch.",
+      "confidence": 0.87
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "ABS-001",
+      "summary": "get_review_timeout(), get_review_max_tokens(), and get_max_input_length() are thin env-read wrappers whose logic could be consolidated into LLMConfig, adding a forwarding hop with no policy translation",
+      "related_files": [
+        "infrastructure/llm/review/generator.py",
+        "infrastructure/llm/core/config.py"
+      ],
+      "evidence": "infrastructure/llm/review/generator.py defines three config-accessor functions (lines 97-133). get_max_input_length() (lines 97-104): reads LLM_MAX_INPUT_LENGTH env var, falls back to DEFAULT_MAX_INPUT_LENGTH. get_review_timeout() (lines 107-114): reads LLM_REVIEW_TIMEOUT env var, falls back to DEFAULT_REVIEW_TIMEOUT. get_review_max_tokens() (lines 126-133): calls LLMConfig.from_env() then reads config.long_max_tokens. All three are env-reading delegation functions. LLMConfig already centralizes env-based LLM configuration (confirmed by from infrastructure.llm.core.config import LLMConfig in generator.py line 10). Adding three standalone functions in a different module for the same concern fragments the configuration contract.",
+      "suggestion": "Add review_timeout, max_input_length, and review_max_tokens properties or class methods directly to LLMConfig or a ReviewConfig dataclass. Eliminate the standalone accessor functions.",
+      "confidence": 0.88
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "ABS-002",
+      "summary": "ResourceTracker is a pure alias for PerformanceMonitor with no added behavior, kept solely because two sibling modules use the same class name — the alias exists to work around a naming collision rather than to express a domain distinction",
+      "related_files": [
+        "infrastructure/core/performance.py",
+        "infrastructure/core/__init__.py"
+      ],
+      "evidence": "infrastructure/core/performance.py line 424: `ResourceTracker = PerformanceMonitor`. The preceding comment (line 423) states: 'Alias with a distinct name to disambiguate from performance_monitor.CodeProfiler'. infrastructure/core/__init__.py exports `ResourceTracker` (line 47, 65). ResourceTracker adds no policy, no translation, no additional behavior — it is the same class under a different name purely because performance_monitor.py also named its class PerformanceMonitor. This is a symptom of the naming collision (CMA-001) manifesting as an abstraction layer.",
+      "suggestion": "Fix the root cause (CMA-001) by removing or renaming the orphaned performance_monitor.py module. Once the collision is gone, ResourceTracker alias can be removed and callers can use PerformanceMonitor directly.",
+      "confidence": 0.93
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "ABS-003",
+      "summary": "generate_multi_project_summary_report in pipeline_reporter.py uses a broad dict parameter (result: Any) with getattr fallback chains instead of a typed interface, forcing inline type recovery instead of a clean API boundary",
+      "related_files": [
+        "infrastructure/reporting/pipeline_reporter.py"
+      ],
+      "evidence": "infrastructure/reporting/pipeline_reporter.py lines 35-37: `result: Any, projects: List[Any]`. Lines 55-57: `getattr(result, 'successful_projects', 0)`, `getattr(result, 'failed_projects', ...)`, `getattr(result, 'total_duration', 0.0)`, `getattr(result, 'infra_test_duration', 0.0)`. Lines 74: `getattr(result, 'project_results', {})`. The function also handles both list-of-PipelineStageResult (new format, lines 105-126) and legacy dict format (lines 127-134) in the same body. This is an over-broad parameter bag (Any) used as an implicit interface — the antipattern called out by abstraction_fitness criteria.",
+      "suggestion": "Define a typed protocol or dataclass (MultiProjectResult already exists at infrastructure/core/multi_project.py and is imported by pipeline_reporter.py line 17) and accept that type directly. Remove the getattr fallback chains and the dual-format result processing.",
+      "confidence": 0.85
+    }
+  ]
+}

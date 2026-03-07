@@ -1,0 +1,134 @@
+{
+  "assessments": {
+    "cross_module_architecture": 78,
+    "high_level_elegance": 80,
+    "test_strategy": 82,
+    "package_organization": 77
+  },
+  "findings": [
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "reporting_init_dual_generate_test_report",
+      "summary": "reporting/__init__.py exports two different generate_test_report implementations under overlapping names, blurring the package boundary",
+      "related_files": [
+        "infrastructure/reporting/__init__.py",
+        "infrastructure/reporting/pipeline_reporter.py",
+        "infrastructure/reporting/coverage_reporter.py"
+      ],
+      "evidence": [
+        "Line 41: `from .pipeline_reporter import generate_test_report` (accepts StageResult-based pipeline data)",
+        "Lines 47-48: `from .coverage_reporter import generate_test_report as generate_test_report_from_results` (accepts raw pytest output dicts)",
+        "Both appear in __all__ under different names (generate_test_report and generate_test_report_from_results) — callers must know the internal module origin to pick the right one"
+      ],
+      "suggestion": "Rename the two functions to distinct domain-aligned names before re-exporting: e.g. `generate_pipeline_test_report` (pipeline_reporter) and `generate_coverage_test_report` (coverage_reporter). Remove the alias import and export both under their proper names so callers have an unambiguous choice at the package boundary.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "coverage_reporter_duplicate_path_bug",
+      "summary": "generate_test_report in coverage_reporter.py reads infrastructure and project coverage from the same hardcoded path, making project coverage always a copy of infra coverage",
+      "related_files": [
+        "infrastructure/reporting/coverage_reporter.py"
+      ],
+      "evidence": [
+        "Line 261: `infra_coverage_json = repo_root / 'htmlcov' / 'coverage.json'`",
+        "Line 267: `project_coverage_json = repo_root / 'htmlcov' / 'coverage.json'` — identical path",
+        "Lines 262-270: both infra_coverage and project_coverage are populated from the same file, so report['coverage_details']['project'] always equals report['coverage_details']['infrastructure']"
+      ],
+      "suggestion": "Use distinct paths: `repo_root / '.coverage.infra.json'` (or the project's own htmlcov subdirectory) for project coverage. The actual per-suite coverage JSON files should be parameterised or derived from the coverage configuration rather than hardcoded to a shared directory.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "reporting_init_overwide_public_surface",
+      "summary": "reporting/__init__.py re-exports 28+ symbols from 6 sub-modules, merging unrelated concerns (dashboards, pipeline reports, coverage parsing, executive summaries) into a single flat namespace",
+      "related_files": [
+        "infrastructure/reporting/__init__.py"
+      ],
+      "evidence": [
+        "__all__ lists 28 symbols spanning DashboardGenerator functions, ErrorAggregator, ExecutiveSummary, OutputOrganizer, FileType, pipeline reporter functions, and raw coverage parsing utilities",
+        "Callers that only need coverage parsing must import through a namespace that also exposes dashboard and executive summary concerns",
+        "The package surface does not reflect any cohesive ownership boundary — it is a flat aggregation of all sub-modules"
+      ],
+      "suggestion": "Narrow the package __all__ to the handful of symbols that represent the reporting package's primary contract (e.g. generate_pipeline_report, generate_multi_project_report, ErrorAggregator). Sub-module specialists (dashboard_generator, executive_reporter, coverage_reporter) should be imported directly by callers that need them rather than surfaced through the package namespace.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "logging_utils_facade_accumulates_split_module_surface",
+      "summary": "logging_utils.py re-aggregates all symbols from four split sub-modules (constants, formatters, helpers, progress), making the split purely internal while external callers still see a single 111-importer module",
+      "related_files": [
+        "infrastructure/core/logging_utils.py"
+      ],
+      "evidence": [
+        "Lines 24-36: explicit star-style re-exports from logging_constants, logging_formatters, logging_helpers, logging_progress",
+        "111 importers continue to reference logging_utils as a monolithic entry point — the split into sub-modules has not reduced coupling at any boundary",
+        "The module still accumulates all logging concerns: configuration, formatting, progress bars, spinners, streaming, ETA calculation"
+      ],
+      "suggestion": "The sub-module split is only valuable if callers migrate to direct sub-module imports over time. Add a migration note to logging_utils.py marking it as a compatibility shim, and update the highest-volume internal callers (scripts/, infrastructure/core/) to import directly from the sub-modules. This reduces blast radius when any individual sub-module changes.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "summary_generator_discover_active_projects_untested_cwd_assumption",
+      "summary": "summary_generator.py's discover_active_projects and load_test_results use relative Path() calls without accepting a root parameter, making them untestable in isolation and fragile outside cwd",
+      "related_files": [
+        "infrastructure/reporting/summary_generator.py"
+      ],
+      "evidence": [
+        "Line 29: `results_file = Path(f'projects/{project_name}/output/reports/test_results.json')` — relative path, implicitly depends on cwd",
+        "Line 123-130: `projects_dir = Path('projects')` — same implicit cwd dependency in discover_active_projects",
+        "No test exists that exercises these with a non-cwd project tree; tests would have to os.chdir() to exercise real paths, creating test ordering fragility"
+      ],
+      "suggestion": "Add an optional `repo_root: Path = Path.cwd()` parameter to both discover_active_projects and load_test_results (and thread it through generate_summary_report). This makes the functions testable with tmp_path without chdir and removes the cwd coupling that prevents parallel test execution.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "coverage_reporter_duplicate_path_untested",
+      "summary": "The duplicate-path bug in coverage_reporter.generate_test_report (both infra and project coverage read from the same htmlcov path) is not caught by any test in test_test_reporter.py",
+      "related_files": [
+        "infrastructure/reporting/coverage_reporter.py",
+        "tests/infra_tests/reporting/test_test_reporter.py"
+      ],
+      "evidence": [
+        "test_generate_test_report_combines_infra_and_project passes repo_root=Path('.') and does not assert on coverage_details content",
+        "The duplicate path defect (lines 261 and 267 are identical) could only be caught by a test that checks coverage_details['infrastructure'] != coverage_details['project'] when the two suites have different coverage files",
+        "No such assertion exists in the test suite"
+      ],
+      "suggestion": "Add a test that creates two distinct coverage JSON files (one for infra, one for project) in tmp_path and asserts that generate_test_report populates coverage_details['infrastructure'] and coverage_details['project'] from separate paths. This will immediately expose the duplicate-path bug and enforce the contract going forward.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "styles_py_imports_from_sibling_without_package_prefix",
+      "summary": "projects/cognitive_case_diagrams/src/visualization/styles.py imports from category.case_category without a relative or project-qualified prefix, relying on conftest.py sys.path injection",
+      "related_files": [
+        "projects/cognitive_case_diagrams/src/visualization/styles.py",
+        "conftest.py"
+      ],
+      "evidence": [
+        "Line 11: `from category.case_category import CaseRole` — bare `category` package name",
+        "This only resolves because conftest.py inserts every projects/*/src into sys.path at test time (lines 42-51)",
+        "If styles.py is ever imported outside the pytest session (e.g. in a script or notebook) without the conftest path manipulation, the import will fail with ModuleNotFoundError"
+      ],
+      "suggestion": "Change the import to a project-relative form: `from cognitive_case_diagrams.category.case_category import CaseRole` (if the project root is on sys.path) or restructure the src layout so that `visualization` and `category` share a package root that is explicitly importable without conftest manipulation.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "reporting_generate_test_report_naming_collision_in_all",
+      "summary": "__all__ in reporting/__init__.py exposes both 'generate_test_report' (pipeline-stage-based) and 'generate_test_report_from_results' (pytest-output-based), which are conceptually the same operation with different inputs — the naming obscures the architectural distinction",
+      "related_files": [
+        "infrastructure/reporting/__init__.py"
+      ],
+      "evidence": [
+        "Lines 115 and 121: both 'generate_test_report' and 'generate_test_report_from_results' are in __all__",
+        "A new engineer reading the package surface cannot tell from the names alone that these are fundamentally different input shapes (StageResult list vs raw pytest stdout dict)",
+        "The alias suffix '_from_results' was added to avoid the name collision but does not communicate the actual distinction"
+      ],
+      "suggestion": "Rename to reflect the actual distinction: `generate_stage_test_report` (from pipeline_reporter, takes List[StageResult]) and `generate_pytest_test_report` (from coverage_reporter, takes stdout/stderr strings). Update all call sites and the __all__ export list.",
+      "confidence": "medium"
+    }
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "session": {
+    "id": "ext_20260307_035901_1114f064",
+    "token": "a72dda5391ee36b604ca1ab9a523dd7d"
+  },
+  "assessments": {
+    "convention_outlier": 82.0,
+    "error_consistency": 73.0,
+    "abstraction_fitness": 72.0,
+    "mid_level_elegance": 70.0
+  },
+  "findings": [
+    {
+      "dimension": "convention_outlier",
+      "identifier": "performance_monitor_missing_annotations",
+      "summary": "performance_monitor.py is a re-export shim missing `from __future__ import annotations` present in all 136 other infrastructure siblings",
+      "related_files": [
+        "infrastructure/core/performance_monitor.py"
+      ],
+      "evidence": [
+        "performance_monitor.py has no `from __future__ import annotations` import",
+        "Sibling behavior data shows `annotations` present in 137/138 infrastructure files",
+        "The file is a thin re-export of performance.py, so the omission is purely a style gap rather than a functional need"
+      ],
+      "suggestion": "Add `from __future__ import annotations` as the first import line to match the codebase-wide convention",
+      "confidence": "high"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "integrity_inconsistent_exception_scope",
+      "summary": "verify_file_integrity uses broad `except Exception` while sibling verify_cross_references uses narrow `except OSError`, inconsistent within the same module",
+      "related_files": [
+        "infrastructure/validation/integrity.py"
+      ],
+      "evidence": [
+        "verify_file_integrity line 77: `except Exception as e:` catches all errors during hash calculation",
+        "verify_cross_references line 125: `except OSError as e:` precisely narrows to I/O errors only",
+        "verify_data_consistency line 209: `except Exception as e:` broad catch again",
+        "Three public functions in the same module use two different exception scoping strategies with no obvious reason for the difference"
+      ],
+      "suggestion": "Narrow the broad `except Exception` blocks in verify_file_integrity and verify_data_consistency to the specific exceptions that can occur (OSError for file I/O, json.JSONDecodeError for JSON parsing, numpy errors for numpy loads), matching the precise style used in verify_cross_references",
+      "confidence": "high"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "coverage_parser_double_catch_swallows_errors",
+      "summary": "extract_coverage_percentage catches json.JSONDecodeError with a warning, then immediately catches bare `except Exception` silently with only a debug log, losing error signal",
+      "related_files": [
+        "infrastructure/reporting/coverage_parser.py"
+      ],
+      "evidence": [
+        "Line 294: `except json.JSONDecodeError as e: logger.warning(...)` — specific catch with warning",
+        "Line 298: `except Exception as e: logger.debug(...)` — immediate second broad catch demoted to debug level",
+        "The second catch will silently swallow permission errors, encoding errors, and unexpected IOErrors, emitting only a debug message that is invisible at normal log levels"
+      ],
+      "suggestion": "Replace the bare `except Exception` with `except OSError` (the only other plausible I/O failure) and promote it to `logger.warning` to maintain consistent error visibility across both branches",
+      "confidence": "high"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "summary_generators_uniform_broad_catch",
+      "summary": "Both summary_generator.py and test_summary_generator.py use bare `except Exception` in load_test_results and load_infrastructure_results, swallowing all non-JSON errors silently",
+      "related_files": [
+        "infrastructure/reporting/summary_generator.py",
+        "infrastructure/reporting/test_summary_generator.py"
+      ],
+      "evidence": [
+        "summary_generator.py load_test_results line 40: `except Exception as e: logger.warning(...)` — catches all exceptions including programming errors (AttributeError, TypeError)",
+        "test_summary_generator.py load_test_results line 40: identical pattern",
+        "Neither module re-raises or narrows; a mistyped key access or unexpected data structure would silently return {} and produce a zero-filled report with no actionable error"
+      ],
+      "suggestion": "Narrow the catch to `(json.JSONDecodeError, OSError, KeyError)` — the concrete failure modes for file-not-openable and malformed JSON. Let unexpected errors (e.g., AttributeError) propagate so they surface as bugs rather than silent data gaps.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "health_check_api_passthrough_wrapper",
+      "summary": "HealthCheckAPI wraps SystemHealthChecker with four near-identical delegation methods that add no policy, auth, transformation, or logging",
+      "related_files": [
+        "infrastructure/core/health_check.py"
+      ],
+      "evidence": [
+        "HealthCheckAPI.get_status() calls self.checker.get_health_status() verbatim — no transformation",
+        "HealthCheckAPI.is_healthy() calls self.get_status()['overall_status'] == 'healthy' — a one-liner that adds no value over calling SystemHealthChecker directly",
+        "HealthCheckAPI.get_metrics() calls self.get_status() and reshapes output, but this reshape could live in SystemHealthChecker.get_metrics() with no loss of clarity",
+        "The wrapper has no callers that require a REST adapter contract and no doc indicating it stabilizes a changing interface"
+      ],
+      "suggestion": "Collapse HealthCheckAPI into SystemHealthChecker by adding the get_metrics and is_healthy methods directly to SystemHealthChecker. If HealthCheckAPI is intended as a future REST boundary, document that intent explicitly and add at least one policy difference (e.g., caching, auth check) to justify the indirection.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "duplicate_summary_generator_modules",
+      "summary": "summary_generator.py and test_summary_generator.py are near-identical modules with the same function signatures and implementations, duplicating the boundary logic",
+      "related_files": [
+        "infrastructure/reporting/summary_generator.py",
+        "infrastructure/reporting/test_summary_generator.py"
+      ],
+      "evidence": [
+        "Both modules define load_test_results(project_name), load_infrastructure_results(), discover_active_projects(), generate_summary_report(), and generate_markdown_report() with identical bodies",
+        "load_test_results in both files reads from the same path pattern, applies the same 'project' key extraction, and returns the same dict shape",
+        "load_infrastructure_results in both files has an identical three-path fallback chain (validation report, coverage_infra.json, htmlcov/coverage.json)",
+        "The duplication forces any fix to be applied twice and creates ambiguity about which module callers should use"
+      ],
+      "suggestion": "Consolidate into a single module (keep test_summary_generator.py as it appears newer; delete summary_generator.py) or extract the shared logic into infrastructure/reporting/results_loader.py with load_test_results and load_infrastructure_results, imported by both entry points",
+      "confidence": "high"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "check_test_failures_env_var_parameter_bypass",
+      "summary": "check_test_failures accepts an env_var parameter but then also hard-reads MAX_TEST_FAILURES directly, making the parameter contract misleading",
+      "related_files": [
+        "infrastructure/reporting/coverage_parser.py"
+      ],
+      "evidence": [
+        "Function signature: check_test_failures(failed_count, test_suite, repo_root, env_var='MAX_TEST_FAILURES', config_key='max_test_failures')",
+        "Line 201: `env_value = os.environ.get(env_var) or os.environ.get('MAX_TEST_FAILURES')` — the fallback hard-codes the default env var name, so a caller passing a custom env_var='MY_VAR' will still fall through to MAX_TEST_FAILURES if MY_VAR is unset",
+        "The double-read means the parameter does not cleanly control which environment variable governs the limit; the hard-coded fallback bypasses the caller's intent"
+      ],
+      "suggestion": "Remove the hard-coded fallback `or os.environ.get('MAX_TEST_FAILURES')` from line 201. The default parameter value `env_var='MAX_TEST_FAILURES'` already provides the default behavior. If the caller passes a custom env_var and it is unset, the function should fall through to the config_key path, not re-read the default name.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "coverage_parser_polling_inside_parse_function",
+      "summary": "extract_coverage_percentage embeds a retry/sleep loop inside a parse function, coupling I/O timing policy with data extraction logic at the boundary",
+      "related_files": [
+        "infrastructure/reporting/coverage_parser.py"
+      ],
+      "evidence": [
+        "Lines 253-304: a three-attempt retry loop with `time.sleep(0.5)` lives inside extract_coverage_percentage, which is semantically a parse/extract function",
+        "The polling wait is an orchestration concern (waiting for a file writer to flush) embedded in a data-extraction function, surprising callers who expect a pure parse operation",
+        "The function imports `time` specifically for this sleep, and the retry count (3) and delay (0.5s) are magic numbers embedded in business logic"
+      ],
+      "suggestion": "Extract the retry/polling logic into the caller (scripts/01_run_tests.py or the reporting orchestrator) or into a separate wait_for_coverage_file(paths, retries, delay) utility. Leave extract_coverage_percentage as a pure function that reads and parses whatever files exist at call time.",
+      "confidence": "medium"
+    }
+  ]
+}
