@@ -185,7 +185,7 @@ def get_system_resources() -> dict[str, Any]:
             "disk_free_gb": disk.free / 1024 / 1024 / 1024,
             "disk_percent": (disk.used / disk.total) * 100,
         }
-    except Exception as e:
+    except (OSError, AttributeError) as e:
         logger.warning(f"Failed to get system resources: {e}")
         return {}
 

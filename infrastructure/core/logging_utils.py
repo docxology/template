@@ -531,7 +531,7 @@ def log_resource_usage(stage_name: str = "", logger: Optional[logging.Logger] = 
 
     except ImportError:
         logger.debug("psutil not available, skipping resource usage reporting")
-    except Exception as e:
+    except (OSError, AttributeError) as e:
         logger.debug(f"Failed to get resource usage: {e}")
 
 
