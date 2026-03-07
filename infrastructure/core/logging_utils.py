@@ -213,19 +213,7 @@ def flush_file_handlers() -> None:
 
 
 def get_logger(name: str) -> logging.Logger:
-    """Get or create a logger with standard configuration.
-
-    Args:
-        name: Logger name (usually __name__)
-
-    Returns:
-        Logger instance
-
-    Example:
-        >>> from logging_utils import get_logger
-        >>> logger = get_logger(__name__)
-        >>> logger.info("Task complete")
-    """
+    """Return a logger configured with standard handlers for the given name."""
     logger = logging.getLogger(name)
 
     # Check if we're in test environment (same detection as setup_logger)
@@ -368,16 +356,7 @@ def log_function_call(logger: Optional[logging.Logger] = None) -> Callable:
 
 
 def log_success(message: str, logger: Optional[logging.Logger] = None) -> None:
-    """Log a success message with success emoji.
-
-    Args:
-        message: Success message
-        logger: Logger instance (creates one if None)
-
-    Example:
-        >>> log_success("Build completed successfully")
-        ✅ [2025-11-21 12:00:00] [INFO] Build completed successfully
-    """
+    """Log message at INFO level prefixed with the success emoji."""
     logger = logger or get_logger(__name__)
 
     emoji = EMOJIS["success"] if USE_EMOJIS else "[SUCCESS]"

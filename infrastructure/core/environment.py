@@ -53,7 +53,7 @@ def check_python_version() -> bool:
     Returns:
         True if Python version is 3.8 or higher, False otherwise
     """
-    logger.info("Checking Python version...")
+    logger.debug("Checking Python version...")
     version_info = sys.version_info
     version_str = f"{version_info.major}.{version_info.minor}.{version_info.micro}"
 
@@ -76,7 +76,7 @@ def check_dependencies(
     Returns:
         Tuple of (all_present, missing_packages)
     """
-    logger.info("Checking dependencies...")
+    logger.debug("Checking dependencies...")
 
     if required_packages is None:
         # Core required packages (must be present)
@@ -192,7 +192,7 @@ def check_build_tools(required_tools: dict[str, str] | None = None) -> bool:
     Returns:
         True if all tools are available, False otherwise
     """
-    logger.info("Checking build tools...")
+    logger.debug("Checking build tools...")
 
     if required_tools is None:
         required_tools = {
@@ -259,7 +259,7 @@ def setup_directories(
     Returns:
         True if all directories created successfully, False otherwise
     """
-    logger.info("Setting up directory structure...")
+    logger.debug("Setting up directory structure...")
 
     if directories is None:
         directories = _project_output_dirs(project_name)
@@ -369,7 +369,7 @@ def verify_source_structure(repo_root: Path, project_name: str = "project") -> b
     Returns:
         True if required directories exist, False otherwise
     """
-    logger.info("Verifying source code structure...")
+    logger.debug("Verifying source code structure...")
 
     # Core components (required for template operation)
     required_dirs = [
@@ -420,7 +420,7 @@ def set_environment_variables(repo_root: Path) -> bool:
     Returns:
         True if environment variables set successfully, False otherwise
     """
-    logger.info("Setting environment variables...")
+    logger.debug("Setting environment variables...")
 
     try:
         # Set matplotlib backend for headless operation

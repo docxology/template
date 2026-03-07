@@ -11,7 +11,10 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-import psutil
+try:
+    import psutil
+except ImportError:
+    psutil = None  # type: ignore[assignment]
 
 from infrastructure.core.logging_utils import get_logger
 
@@ -112,45 +115,42 @@ class SystemHealthChecker:
 
     def _check_memory(self) -> Dict[str, Any]:
         """Check system memory usage."""
-        try:
-            memory = psutil.virtual_memory()
-            return {
-                "total_mb": memory.total // (1024 * 1024),
-                "available_mb": memory.available // (1024 * 1024),
-                "used_mb": memory.used // (1024 * 1024),
-                "percent_used": memory.percent,
-                "critical_threshold": 95.0,  # Consider critical if > 95% used
-                "is_critical": memory.percent > 95.0,
-            }
-        except ImportError:
+        if psutil is None:
             return {"psutil_unavailable": True}
+        memory = psutil.virtual_memory()
+        return {
+            "total_mb": memory.total // (1024 * 1024),
+            "available_mb": memory.available // (1024 * 1024),
+            "used_mb": memory.used // (1024 * 1024),
+            "percent_used": memory.percent,
+            "critical_threshold": 95.0,
+            "is_critical": memory.percent > 95.0,
+        }
 
     def _check_cpu(self) -> Dict[str, Any]:
         """Check CPU usage and load."""
-        try:
-            return {
-                "cpu_percent": psutil.cpu_percent(interval=1),
-                "cpu_count": psutil.cpu_count(),
-                "cpu_count_logical": psutil.cpu_count(logical=True),
-                "load_average": (psutil.getloadavg() if hasattr(psutil, "getloadavg") else None),
-            }
-        except ImportError:
+        if psutil is None:
             return {"psutil_unavailable": True}
+        return {
+            "cpu_percent": psutil.cpu_percent(interval=1),
+            "cpu_count": psutil.cpu_count(),
+            "cpu_count_logical": psutil.cpu_count(logical=True),
+            "load_average": (psutil.getloadavg() if hasattr(psutil, "getloadavg") else None),
+        }
 
     def _check_disk(self) -> Dict[str, Any]:
         """Check disk usage."""
-        try:
-            disk = psutil.disk_usage("/")
-            return {
-                "total_gb": disk.total // (1024**3),
-                "used_gb": disk.used // (1024**3),
-                "free_gb": disk.free // (1024**3),
-                "percent_used": disk.percent,
-                "critical_threshold": 95.0,
-                "is_critical": disk.percent > 95.0,
-            }
-        except ImportError:
+        if psutil is None:
             return {"psutil_unavailable": True}
+        disk = psutil.disk_usage("/")
+        return {
+            "total_gb": disk.total // (1024**3),
+            "used_gb": disk.used // (1024**3),
+            "free_gb": disk.free // (1024**3),
+            "percent_used": disk.percent,
+            "critical_threshold": 95.0,
+            "is_critical": disk.percent > 95.0,
+        }
 
     def _check_network(self) -> Dict[str, Any]:
         """Check network connectivity."""
@@ -215,7 +215,9 @@ class SystemHealthChecker:
         except (FileNotFoundError, OSError):
             # Fallback for systems without /proc/uptime
             uptime_seconds = (
-                time.time() - psutil.boot_time() if hasattr(psutil, "boot_time") else None
+                time.time() - psutil.boot_time()
+                if psutil is not None and hasattr(psutil, "boot_time")
+                else None
             )
 
         process_uptime = time.time() - self.start_time
@@ -314,29 +316,27 @@ class HealthCheckAPI:
         return metrics
 
 
-# Global instances
-_health_api = HealthCheckAPI()
+_health_api: Optional[HealthCheckAPI] = None
 
 
 def get_health_api() -> HealthCheckAPI:
-    """Get the global health check API instance."""
+    """Return the module-level HealthCheckAPI, creating it on first call."""
+    global _health_api
+    if _health_api is None:
+        _health_api = HealthCheckAPI()
     return _health_api
 
 
 def quick_health_check() -> bool:
-    """Perform a quick health check.
-
-    Returns:
-        True if system is healthy, False otherwise
-    """
-    return _health_api.is_healthy()
+    """Return True if system is healthy."""
+    return get_health_api().is_healthy()
 
 
 def get_health_status() -> Dict[str, Any]:
     """Get detailed health status."""
-    return _health_api.get_status()
+    return get_health_api().get_status()
 
 
 def get_health_metrics() -> Dict[str, Any]:
     """Get health metrics for monitoring systems."""
-    return _health_api.get_metrics()
+    return get_health_api().get_metrics()

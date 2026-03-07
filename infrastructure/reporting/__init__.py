@@ -14,8 +14,14 @@ try:
         generate_matplotlib_dashboard,
         generate_plotly_dashboard,
     )
-except ImportError:
-    # plotly is optional; dashboard functions unavailable when not installed
+except ImportError as _dashboard_err:
+    import warnings
+
+    warnings.warn(
+        f"dashboard_generator unavailable (plotly not installed): {_dashboard_err}",
+        ImportWarning,
+        stacklevel=2,
+    )
     generate_all_dashboards = None  # type: ignore[assignment]
     generate_matplotlib_dashboard = None  # type: ignore[assignment]
     generate_plotly_dashboard = None  # type: ignore[assignment]

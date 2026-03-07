@@ -14,7 +14,7 @@ import subprocess
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable, Optional
+from typing import Callable, NamedTuple, Optional
 
 from infrastructure.core.checkpoint import CheckpointManager, StageResult
 from infrastructure.core.environment import get_python_command, get_subprocess_env
@@ -60,6 +60,14 @@ class PipelineStageResult:
     exit_code: int = 0
     error_message: str = ""
     exception_type: str = ""
+
+
+class StageSpec(NamedTuple):
+    """Specification for a single pipeline stage."""
+
+    name: str
+    func: Callable[[], "PipelineStageResult"]
+    skip: bool = False
 
 
 class PipelineExecutor:
@@ -108,37 +116,21 @@ class PipelineExecutor:
         self._log_handler = setup_root_log_file_handler(self.log_file)
         logger.debug("Set up log file handler: %s", self.log_file)
 
-    def _build_stage_list(self, include_llm: bool, skip_clean: bool) -> list[tuple]:
-        """Build canonical stage list.
-
-        Args:
-            include_llm: Whether to include LLM review and translation stages
-            skip_clean: Whether to skip the clean stage
-
-        Returns:
-            List of (stage_name, function[, skip_condition]) tuples
-        """
-        stages: list[tuple] = [
-            (
-                "Clean Output Directories",
-                self._run_clean_outputs,
-                skip_clean,
-            ),
-            ("Environment Setup", self._run_setup_environment),
-            (
-                "Infrastructure Tests",
-                self._run_infrastructure_tests,
-                self.config.skip_infra,
-            ),
-            ("Project Tests", self._run_project_tests),
-            ("Project Analysis", self._run_analysis),
-            ("PDF Rendering", self._run_pdf_rendering),
-            ("Output Validation", self._run_validation),
+    def _build_stage_list(self, include_llm: bool, skip_clean: bool) -> list[StageSpec]:
+        """Build canonical stage list."""
+        stages: list[StageSpec] = [
+            StageSpec("Clean Output Directories", self._run_clean_outputs, skip_clean),
+            StageSpec("Environment Setup", self._run_setup_environment),
+            StageSpec("Infrastructure Tests", self._run_infrastructure_tests, self.config.skip_infra),
+            StageSpec("Project Tests", self._run_project_tests),
+            StageSpec("Project Analysis", self._run_analysis),
+            StageSpec("PDF Rendering", self._run_pdf_rendering),
+            StageSpec("Output Validation", self._run_validation),
         ]
         if include_llm:
-            stages.append(("LLM Scientific Review", self._run_llm_review, self.config.skip_llm))
-            stages.append(("LLM Translations", self._run_llm_translations, self.config.skip_llm))
-        stages.append(("Copy Outputs", self._run_copy_outputs))
+            stages.append(StageSpec("LLM Scientific Review", self._run_llm_review, self.config.skip_llm))
+            stages.append(StageSpec("LLM Translations", self._run_llm_translations, self.config.skip_llm))
+        stages.append(StageSpec("Copy Outputs", self._run_copy_outputs))
         return stages
 
     def execute_full_pipeline(self) -> list[PipelineStageResult]:
@@ -169,23 +161,16 @@ class PipelineExecutor:
         skip_clean = (not self.config.clean) or self.config.resume
         return self._execute_pipeline(self._build_stage_list(include_llm=False, skip_clean=skip_clean))
 
-    def _execute_pipeline(self, stages: list) -> list[PipelineStageResult]:
-        """Execute pipeline stages.
-
-        Args:
-            stages: List of (stage_name, function, skip_condition) tuples
-
-        Returns:
-            List of stage results
-        """
+    def _execute_pipeline(self, stages: list[StageSpec]) -> list[PipelineStageResult]:
+        """Execute pipeline stages."""
         results: list[PipelineStageResult] = []
         pipeline_start = time.time()
 
         executed_stage_num = 0  # sequential over executed (non-skipped) stages only
         for stage_spec in stages:
-            stage_name = stage_spec[0]
-            stage_func = stage_spec[1]
-            skip_condition = stage_spec[2] if len(stage_spec) > 2 else False
+            stage_name = stage_spec.name
+            stage_func = stage_spec.func
+            skip_condition = stage_spec.skip
 
             if skip_condition:
                 logger.info(f"Skipping stage: {stage_name}")
@@ -336,11 +321,10 @@ class PipelineExecutor:
         # Identify remaining stages by matching stage names against checkpoint stage_results in-order  # noqa: E501
         completed_names = [sr.name for sr in checkpoint.stage_results]
         completed_idx = 0
-        remaining: list[tuple] = []
+        remaining: list[StageSpec] = []
         for stage_spec in stages:
-            stage_name = stage_spec[0]
-            skip_condition = stage_spec[2] if len(stage_spec) > 2 else False
-            if skip_condition:
+            stage_name = stage_spec.name
+            if stage_spec.skip:
                 continue
 
             if (
@@ -366,11 +350,8 @@ class PipelineExecutor:
         pipeline_start = checkpoint.pipeline_start_time
         executed_stage_num = len(resumed_results)
         for stage_spec in remaining:
-            stage_name = stage_spec[0]
-            stage_func = stage_spec[1]
-            skip_condition = stage_spec[2] if len(stage_spec) > 2 else False
-            if skip_condition:
-                continue
+            stage_name = stage_spec.name
+            stage_func = stage_spec.func
 
             executed_stage_num += 1
             result = self._execute_stage(executed_stage_num, stage_name, stage_func, pipeline_start)
