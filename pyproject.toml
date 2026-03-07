@@ -40,7 +40,6 @@ dependencies = [
   "pypdf>=5.0",
   "pyyaml>=6.0",
   "requests>=2.31.0",
-  "psutil>=5.9.0",
   "pillow>=10.0.0",
   "reportlab>=4.0.0",
 ]
@@ -72,6 +71,10 @@ dotenv = [
 steganography = [
   "qrcode[pil]>=8.2",
   "python-barcode>=0.15",
+]
+# Optional resource monitoring (gracefully absent via try/except in logging_utils.py)
+monitoring = [
+  "psutil>=5.9.0",
 ]
 # Development dependencies (replaces deprecated tool.uv.dev-dependencies)
 dev = [

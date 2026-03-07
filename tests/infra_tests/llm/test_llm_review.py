@@ -27,19 +27,12 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "scripts"))
 
 # Import validation functions from infrastructure (now moved there)
 from infrastructure.llm import is_off_topic
+from infrastructure.llm.core.config import get_max_input_length
 
-# Import functions and classes from the review script
-from scripts import (
-    DEFAULT_MAX_INPUT_LENGTH,
-    ManuscriptMetrics,
-    ReviewMetrics,
-    SessionMetrics,
-    estimate_tokens,
-    generate_review_summary,
-    get_max_input_length,
-    save_review_outputs,
-    validate_review_quality,
-)
+DEFAULT_MAX_INPUT_LENGTH: int = 500000
+from infrastructure.llm.review.generator import validate_review_quality
+from infrastructure.llm.review.io import SessionMetrics, generate_review_summary, save_review_outputs
+from infrastructure.llm.review.metrics import ManuscriptMetrics, ReviewMetrics, estimate_tokens
 
 
 class TestEstimateTokens:
@@ -442,11 +435,12 @@ class TestModuleImports:
 
     def test_all_required_imports_available(self):
         """Test that all required functions/classes are importable."""
-        from scripts import estimate_tokens, main
+        from infrastructure.llm.review.metrics import estimate_tokens
+        from infrastructure.llm.review.pipeline_runner import run_llm_review_pipeline
 
         # All imports should be available
         assert callable(estimate_tokens)
-        assert callable(main)
+        assert callable(run_llm_review_pipeline)
 
 
 class TestIsOffTopic:
@@ -765,7 +759,7 @@ class TestDetectConversationalPhrases:
 
     def test_no_conversational_phrases(self):
         """Test that formal academic text returns empty list."""
-        from scripts import detect_conversational_phrases
+        from infrastructure.llm.validation.format import detect_conversational_phrases
 
         text = """## Methodology Review
         
@@ -775,7 +769,7 @@ class TestDetectConversationalPhrases:
 
     def test_based_on_document_detected(self):
         """Test that 'based on the document you shared' is detected."""
-        from scripts import detect_conversational_phrases
+        from infrastructure.llm.validation.format import detect_conversational_phrases
 
         text = "Based on the document you shared, this appears to be a research paper."
         phrases = detect_conversational_phrases(text)
@@ -783,7 +777,7 @@ class TestDetectConversationalPhrases:
 
     def test_ill_help_you_detected(self):
         """Test that 'I'll help you' is detected."""
-        from scripts import detect_conversational_phrases
+        from infrastructure.llm.validation.format import detect_conversational_phrases
 
         text = "I'll help you understand the key points of this manuscript."
         phrases = detect_conversational_phrases(text)
@@ -791,7 +785,7 @@ class TestDetectConversationalPhrases:
 
     def test_let_me_know_detected(self):
         """Test that 'Let me know if' is detected."""
-        from scripts import detect_conversational_phrases
+        from infrastructure.llm.validation.format import detect_conversational_phrases
 
         text = "Let me know if you need more details about the methodology."
         phrases = detect_conversational_phrases(text)
@@ -799,7 +793,7 @@ class TestDetectConversationalPhrases:
 
     def test_multiple_phrases_detected(self):
         """Test that multiple conversational phrases are all detected."""
-        from scripts import detect_conversational_phrases
+        from infrastructure.llm.validation.format import detect_conversational_phrases
 
         text = """Based on the document you've shared, I'll provide you with analysis.
         Let me know if you have questions. I'd be happy to help further."""
@@ -816,7 +810,7 @@ class TestCheckFormatCompliance:
 
     def test_compliant_response(self):
         """Test that properly formatted response passes."""
-        from scripts import check_format_compliance
+        from infrastructure.llm.validation.format import check_format_compliance
 
         text = """## Overview
         
@@ -837,7 +831,7 @@ class TestCheckFormatCompliance:
 
     def test_emojis_allowed(self):
         """Test that emoji usage is now allowed."""
-        from scripts import check_format_compliance
+        from infrastructure.llm.validation.format import check_format_compliance
 
         text = """## Overview 🔑
         
@@ -849,7 +843,7 @@ class TestCheckFormatCompliance:
 
     def test_tables_allowed(self):
         """Test that table usage is now allowed."""
-        from scripts import check_format_compliance
+        from infrastructure.llm.validation.format import check_format_compliance
 
         text = """## Overview
 
@@ -864,7 +858,7 @@ class TestCheckFormatCompliance:
 
     def test_conversational_violation(self):
         """Test that conversational phrases are flagged."""
-        from scripts import check_format_compliance
+        from infrastructure.llm.validation.format import check_format_compliance
 
         text = """Based on the document you shared, I'll help you understand the key points.
         Let me know if you need more details."""
@@ -876,7 +870,7 @@ class TestCheckFormatCompliance:
 
     def test_emojis_tables_with_conversational_still_fails(self):
         """Test that conversational phrases still fail even with emojis/tables."""
-        from scripts import check_format_compliance
+        from infrastructure.llm.validation.format import check_format_compliance
 
         text = """## Overview 🚀
 
@@ -957,7 +951,7 @@ class TestValidateReviewQualityWithFormatCompliance:
 
     def test_emojis_pass_validation(self):
         """Test that emojis don't cause validation failures."""
-        from scripts import validate_review_quality
+        from infrastructure.llm.review.generator import validate_review_quality
 
         # Response with emoji - should be valid now
         response = (
@@ -994,7 +988,7 @@ class TestValidateReviewQualityWithFormatCompliance:
 
     def test_conversational_phrases_still_flagged(self):
         """Test that conversational phrases are flagged as format issues."""
-        from scripts import validate_review_quality
+        from infrastructure.llm.review.generator import validate_review_quality
 
         # Response with conversational phrases
         response = (

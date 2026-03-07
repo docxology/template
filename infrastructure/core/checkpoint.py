@@ -26,8 +26,9 @@ class StageResult:
     name: str
     exit_code: int
     duration: float
-    timestamp: str
+    timestamp: str = ""
     completed: bool = True
+    status: str = ""
 
 
 @dataclass

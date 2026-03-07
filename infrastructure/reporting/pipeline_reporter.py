@@ -12,11 +12,31 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from infrastructure.core.checkpoint import StageResult
 from infrastructure.core.logging_utils import format_duration, get_logger
 from infrastructure.core.multi_project import MultiProjectResult
 
 logger = get_logger(__name__)
+
+
+@dataclass
+class StageResult:
+    """Reporting-layer result of a pipeline stage execution."""
+
+    name: str
+    exit_code: int
+    duration: float
+    status: str = ""
+    output_files: List[str] = None  # type: ignore[assignment]
+    errors: List[str] = None  # type: ignore[assignment]
+    warnings: List[str] = None  # type: ignore[assignment]
+
+    def __post_init__(self) -> None:
+        if self.output_files is None:
+            self.output_files = []
+        if self.errors is None:
+            self.errors = []
+        if self.warnings is None:
+            self.warnings = []
 
 
 @dataclass
@@ -57,7 +77,7 @@ def generate_multi_project_summary_report(
         "successful_projects": result.successful_projects,
         "failed_projects": result.failed_projects,
         "total_duration": result.total_duration,
-        "infra_test_duration": result.infra_test_duration,
+        "infra_test_duration": getattr(result, "infra_test_duration", 0),
         "projects": {},
         "performance_analysis": {},
         "error_aggregation": {},

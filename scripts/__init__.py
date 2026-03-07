@@ -2,18 +2,11 @@
 
 This package contains thin orchestrators that coordinate the template's
 build pipeline stages. All business logic is in infrastructure/ modules.
-
-This package intentionally re-exports a small set of functions for integration
-tests (notably the LLM review helpers), while keeping orchestration logic in
-thin entry points under `scripts/` and business logic in `infrastructure/`.
 """
 
 from __future__ import annotations
 
-import importlib.util
-import sys
 from dataclasses import dataclass
-from pathlib import Path
 from typing import Optional
 
 
@@ -88,95 +81,12 @@ MENU_SCRIPT_MAPPING = {
     ),
 }
 
-# Import from infrastructure modules (where functions were moved during refactoring)
-from infrastructure.llm.core.config import get_max_input_length
-from infrastructure.llm.review.generator import (
-    check_ollama_availability,
-    extract_manuscript_text,
-    generate_executive_summary,
-    generate_quality_review,
-    generate_methodology_review,
-    generate_improvement_suggestions,
-    validate_review_quality,
-)
-
-DEFAULT_MAX_INPUT_LENGTH: int = 500000
-from infrastructure.core.logging_utils import log_stage
-from infrastructure.llm.review.metrics import (
-    ReviewMetrics,
-    ManuscriptMetrics,
-    estimate_tokens,
-)
-from infrastructure.llm.review.io import (
-    SessionMetrics,
-    save_review_outputs,
-    generate_review_summary,
-)
-
-# Load 06_llm_review.py dynamically for main() function and ReviewMode enum
-# Register it in sys.modules first so dataclasses can find it
-_script_path = Path(__file__).parent / "06_llm_review.py"
-_module_name = "scripts.llm_review"
-_spec = importlib.util.spec_from_file_location(_module_name, _script_path)
-_llm_review = importlib.util.module_from_spec(_spec)
-sys.modules[_module_name] = _llm_review
-_spec.loader.exec_module(_llm_review)
-
-# Export main function and ReviewMode from the script
-main = _llm_review.main
-ReviewMode = _llm_review.ReviewMode
-
-# Re-export validation functions
-from infrastructure.llm.validation.format import (
-    is_off_topic,
-    detect_conversational_phrases,
-    check_format_compliance,
-)
-
-# Re-export infrastructure utilities for tests
 try:
-    from infrastructure.llm.core.client import LLMClient  # noqa: F401
-    from infrastructure.llm.core.config import LLMConfig  # noqa: F401
-    from infrastructure.llm.utils.ollama import (  # noqa: F401
-        is_ollama_running,
-        select_best_model,
-    )
+    from infrastructure.llm.review.pipeline_runner import ReviewMode
 except ImportError:
-    # Infrastructure may not be available in all contexts
-    pass
-
-# Re-export pipeline orchestrators (preferred entry points)
-try:
-    from scripts.execute_pipeline import execute_pipeline, execute_single_stage
-    from scripts.execute_multi_project import execute_multi_project
-except Exception:
-    # Avoid hard import failures if scripts are executed in constrained contexts.
     pass
 
 __all__ = [
     "MENU_SCRIPT_MAPPING",
-    "DEFAULT_MAX_INPUT_LENGTH",
-    "ReviewMetrics",
-    "ManuscriptMetrics",
-    "SessionMetrics",
-    "estimate_tokens",
-    "get_max_input_length",
-    "check_ollama_availability",
-    "extract_manuscript_text",
-    "generate_executive_summary",
-    "generate_quality_review",
-    "generate_methodology_review",
-    "generate_improvement_suggestions",
-    "validate_review_quality",
-    "save_review_outputs",
-    "generate_review_summary",
-    "log_stage",
-    "is_off_topic",
-    "detect_conversational_phrases",
-    "check_format_compliance",
-    "main",
     "ReviewMode",
-    "execute_pipeline",
-    "execute_single_stage",
-    "execute_multi_project",
 ]
