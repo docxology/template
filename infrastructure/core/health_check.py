@@ -20,8 +20,9 @@ logger = get_logger(__name__)
 class SystemHealthChecker:
     """Comprehensive system health monitoring."""
 
-    def __init__(self) -> None:
+    def __init__(self, repo_root: Optional[Path] = None) -> None:
         self.start_time = time.time()
+        self.repo_root = repo_root or Path.cwd()
         self.checks = {
             "filesystem": self._check_filesystem,
             "memory": self._check_memory,
@@ -91,8 +92,8 @@ class SystemHealthChecker:
             results["write_permissions"] = False
 
         # Check critical directories (discover project dirs dynamically)
-        projects_root = Path("projects")
-        critical_dirs = [projects_root, Path("infrastructure")]
+        projects_root = self.repo_root / "projects"
+        critical_dirs = [projects_root, self.repo_root / "infrastructure"]
         if projects_root.exists():
             for p in sorted(projects_root.iterdir()):
                 if p.is_dir() and not p.name.startswith((".", "_")):

@@ -9,7 +9,22 @@ from __future__ import annotations
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any, Dict, TypedDict
+
+
+class InfraResults(TypedDict):
+    """Infrastructure test result fields with consistent shape across all loaders."""
+
+    passed: int
+    failed: int
+    skipped: int
+    warnings: int
+    coverage_percent: float
+    total_lines: int
+    covered_lines: int
+    missing_lines: int
+    duration_seconds: float
+    exit_code: int
 
 from infrastructure.core.config_loader import get_testing_config
 from infrastructure.core.logging_utils import get_logger
@@ -45,73 +60,72 @@ def load_test_results(project_name: str) -> Dict[str, Any]:
         return {}
 
 
-def load_infrastructure_results() -> Dict[str, Any]:
+_EMPTY_INFRA_RESULTS: InfraResults = {
+    "passed": 0,
+    "failed": 0,
+    "skipped": 0,
+    "warnings": 0,
+    "coverage_percent": 0.0,
+    "total_lines": 0,
+    "covered_lines": 0,
+    "missing_lines": 0,
+    "duration_seconds": 0.0,
+    "exit_code": 0,
+}
+
+
+def load_infrastructure_results() -> InfraResults:
     """Load infrastructure test results from root coverage files.
 
     Returns:
-        Dictionary containing infrastructure test results
+        InfraResults with consistent fields across all loader paths.
     """
+    base: InfraResults = dict(_EMPTY_INFRA_RESULTS)  # type: ignore[assignment]
+
     # Try to load from the infrastructure validation report
     infra_results_file = Path("infrastructure_validation_report.json")
     if infra_results_file.exists():
         try:
             with open(infra_results_file, "r") as f:
                 data = json.load(f)
-                # Extract infrastructure test results from the validation report
-                test_results = data.get("test_results", {})
-                infra_data = test_results.get("infrastructure", {})
-                if infra_data:
-                    return {
-                        "passed": infra_data.get("passed", 0),
-                        "failed": infra_data.get("total_tests", 0)
-                        - infra_data.get("passed", 0)
-                        - infra_data.get("skipped", 0),
-                        "skipped": infra_data.get("skipped", 0),
-                        "warnings": infra_data.get("warnings", 0),
-                        "coverage_percent": infra_data.get("coverage_percent", 0),
-                        "total_lines": 0,  # Not available in this format
-                        "covered_lines": 0,  # Not available in this format
-                        "missing_lines": 0,  # Not available in this format
-                        "duration_seconds": infra_data.get("duration_seconds", 0),
-                        "exit_code": 0 if infra_data.get("status") == "PASSED" else 1,
-                    }
+            test_results = data.get("test_results", {})
+            infra_data = test_results.get("infrastructure", {})
+            if infra_data:
+                total = infra_data.get("total_tests", 0)
+                passed = infra_data.get("passed", 0)
+                skipped = infra_data.get("skipped", 0)
+                return {
+                    **base,
+                    "passed": passed,
+                    "failed": max(0, total - passed - skipped),
+                    "skipped": skipped,
+                    "warnings": infra_data.get("warnings", 0),
+                    "coverage_percent": infra_data.get("coverage_percent", 0.0),
+                    "duration_seconds": infra_data.get("duration_seconds", 0.0),
+                    "exit_code": 0 if infra_data.get("status") == "PASSED" else 1,
+                }
         except (OSError, json.JSONDecodeError, KeyError) as e:
             logger.warning(f"Could not load infrastructure results from validation report: {e}")
 
     # Fallback: try coverage JSON files
-    infra_json = Path("coverage_infra.json")
-    if infra_json.exists():
-        try:
-            with open(infra_json, "r") as f:
-                coverage_data = json.load(f)
+    for coverage_path in (Path("coverage_infra.json"), Path("htmlcov/coverage.json")):
+        if coverage_path.exists():
+            try:
+                with open(coverage_path, "r") as f:
+                    coverage_data = json.load(f)
                 totals = coverage_data.get("totals", {})
                 return {
-                    "coverage_percent": totals.get("percent_covered", 0),
+                    **base,
+                    "coverage_percent": totals.get("percent_covered", 0.0),
                     "total_lines": totals.get("num_statements", 0),
                     "covered_lines": totals.get("covered_lines", 0),
                     "missing_lines": totals.get("missing_lines", 0),
                 }
-        except (OSError, json.JSONDecodeError) as e:
-            logger.warning(f"Could not load infrastructure coverage: {e}")
-
-    # Fallback: try to extract from HTML coverage if available
-    htmlcov = Path("htmlcov/coverage.json")
-    if htmlcov.exists():
-        try:
-            with open(htmlcov, "r") as f:
-                coverage_data = json.load(f)
-                totals = coverage_data.get("totals", {})
-                return {
-                    "coverage_percent": totals.get("percent_covered", 0),
-                    "total_lines": totals.get("num_statements", 0),
-                    "covered_lines": totals.get("covered_lines", 0),
-                    "missing_lines": totals.get("missing_lines", 0),
-                }
-        except (OSError, json.JSONDecodeError) as e:
-            logger.warning(f"Could not load HTML coverage: {e}")
+            except (OSError, json.JSONDecodeError) as e:
+                logger.warning(f"Could not load infrastructure coverage from {coverage_path}: {e}")
 
     logger.warning("No infrastructure test results found")
-    return {}
+    return base
 
 
 def discover_active_projects() -> list:

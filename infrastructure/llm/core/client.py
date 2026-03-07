@@ -211,30 +211,11 @@ class LLMClient:
                     },
                 )
 
-        # Log query start
-        logger.debug(
-            "Starting query",
-            extra={
-                "model": model_name,
-                "prompt_length": len(prompt),
-            },
-        )
-
         self.context.add_message("user", prompt)
 
         try:
             response_text, generation_time = self._time_call(
                 lambda: self._generate_response(model_name, options=options)
-            )
-
-            # Log response received
-            logger.debug(
-                "Query completed",
-                extra={
-                    "model": model_name,
-                    "response_length": len(response_text),
-                    "generation_time_seconds": generation_time,
-                },
             )
 
             self.context.add_message("assistant", response_text)
@@ -300,35 +281,12 @@ class LLMClient:
             >>> response = client.query_raw("Complete: The quick brown fox")
         """
         model_name = model or self.config.default_model
-        prompt_preview = prompt[:100] + "..." if len(prompt) > 100 else prompt
-
-        logger.debug(
-            "Starting raw query (no system prompt)",
-            extra={
-                "model": model_name,
-                "prompt_length": len(prompt),
-                "prompt_preview": prompt_preview,
-                "add_to_context": add_to_context,
-                "max_tokens": options.max_tokens if options else None,
-                "temperature": options.temperature if options else None,
-            },
-        )
 
         # Create temporary context for raw query
         messages = [{"role": "user", "content": prompt}]
 
         response_text, generation_time = self._time_call(
             lambda: self._generate_response_direct(model_name, messages, options=options)
-        )
-
-        logger.debug(
-            "Raw query completed",
-            extra={
-                "model": model_name,
-                "response_length": len(response_text),
-                "response_tokens_est": len(response_text) // 4,
-                "generation_time_seconds": generation_time,
-            },
         )
 
         if add_to_context:
@@ -378,16 +336,6 @@ class LLMClient:
         """
         model_name = model or self.config.default_model
 
-        logger.debug(
-            "Starting short query",
-            extra={
-                "model": model_name,
-                "prompt_length": len(prompt),
-                "max_tokens": self.config.short_max_tokens,
-                "temperature": options.temperature if options else None,
-            },
-        )
-
         # Create options for short response
         short_options = (
             dataclasses.replace(options, max_tokens=self.config.short_max_tokens)
@@ -399,16 +347,8 @@ class LLMClient:
             "Provide a concise, brief response (less than 150 words). "
             "Be direct and to the point.\n\n"
         )
-        response, generation_time = self._time_call(
+        response, _ = self._time_call(
             lambda: self.query(instruction + prompt, model=model_name, options=short_options)
-        )
-        logger.debug(
-            "Short query completed",
-            extra={
-                "model": model_name,
-                "response_length": len(response),
-                "generation_time_seconds": generation_time,
-            },
         )
 
         return response
@@ -433,16 +373,6 @@ class LLMClient:
         """
         model_name = model or self.config.default_model
 
-        logger.debug(
-            "Starting long query",
-            extra={
-                "model": model_name,
-                "prompt_length": len(prompt),
-                "max_tokens": self.config.long_max_tokens,
-                "temperature": options.temperature if options else None,
-            },
-        )
-
         # Create options for long response with higher token limit, preserving caller options
         long_options = (
             dataclasses.replace(options, max_tokens=self.config.long_max_tokens)
@@ -454,17 +384,8 @@ class LLMClient:
             "Provide a comprehensive, detailed response with examples and "
             "thorough explanation. Use multiple paragraphs if needed.\n\n"
         )
-        response, generation_time = self._time_call(
+        response, _ = self._time_call(
             lambda: self.query(instruction + prompt, model=model_name, options=long_options)
-        )
-        logger.debug(
-            "Long query completed",
-            extra={
-                "model": model_name,
-                "response_length": len(response),
-                "response_tokens_est": len(response) // 4,
-                "generation_time_seconds": generation_time,
-            },
         )
 
         return response
@@ -667,6 +588,15 @@ class LLMClient:
             payload["format"] = "json"
 
         last_error = None
+
+        logger.debug(
+            "Sending request to Ollama",
+            extra={
+                "model": model,
+                "message_count": len(messages),
+                "url": url,
+            },
+        )
 
         for attempt in range(retries + 1):
             try:
