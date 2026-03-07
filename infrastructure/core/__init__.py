@@ -93,15 +93,20 @@ from .logging_utils import (
 )
 from .multi_project import MultiProjectConfig, MultiProjectOrchestrator, MultiProjectResult
 from .performance import (
+    CodeProfiler,
     PerformanceMetrics,
     PerformanceMonitor,
+    ProfilingMetrics,
     ResourceUsage,
+    StagePerformanceTracker,
+    benchmark_function,
+    benchmark_llm_query,
+    get_performance_monitor,
     get_system_resources,
+    monitor_performance,
+    performance_context,
+    profile_memory_usage,
 )
-from .performance_monitor import CodeProfiler, ProfilingMetrics
-from .performance_monitor import benchmark_function, benchmark_llm_query, get_performance_monitor
-from .performance_monitor import monitor_performance
-from .performance_monitor import profile_memory_usage
 from .pipeline import PipelineConfig, PipelineExecutor, PipelineStageResult
 from .pipeline_summary import PipelineSummary, PipelineSummaryGenerator, generate_pipeline_summary
 from .progress import ProgressBar, SubStageProgress
@@ -182,11 +187,12 @@ __all__ = [
     "PerformanceMonitor",
     "PerformanceMetrics",
     "ResourceUsage",
+    "StagePerformanceTracker",
+    "performance_context",
     "monitor_performance",
     "get_system_resources",
     "CodeProfiler",
     "ProfilingMetrics",
-    "monitor_performance_decorator",
     "get_performance_monitor",
     "benchmark_function",
     "benchmark_llm_query",

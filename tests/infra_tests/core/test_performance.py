@@ -13,7 +13,7 @@ from infrastructure.core.performance import (
     ResourceUsage,
     StagePerformanceTracker,
     get_system_resources,
-    monitor_performance,
+    performance_context,
 )
 
 # Check if psutil is available for conditional testing
@@ -252,23 +252,22 @@ class TestPerformanceMonitor:
 
 
 class TestMonitorPerformance:
-    """Test monitor_performance context manager."""
+    """Test performance_context context manager."""
 
-    def test_monitor_performance_context_manager(self):
-        """Test using monitor_performance as context manager."""
-        with monitor_performance("Test Operation") as monitor:
+    def test_performance_context_context_manager(self):
+        """Test using performance_context as context manager."""
+        with performance_context("Test Operation") as monitor:
             assert isinstance(monitor, PerformanceMonitor)
             assert monitor.start_time is not None
             monitor.record_operation()
             time.sleep(0.01)  # Very short sleep to ensure duration > 0
 
-        # Context manager should have stopped the monitor
-        # Note: start_time is still set but stop() was called
+        # Context manager logs timing but does not call stop()
         assert monitor.start_time is not None
 
-    def test_monitor_performance_with_operations(self):
+    def test_performance_context_with_operations(self):
         """Test monitoring performance with recorded operations."""
-        with monitor_performance("Data Processing") as monitor:
+        with performance_context("Data Processing") as monitor:
             for i in range(5):
                 monitor.record_operation()
                 if i % 2 == 0:

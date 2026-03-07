@@ -9,8 +9,8 @@ Functions:
 from __future__ import annotations
 
 import ast
-import os
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Iterable, List
 
 from infrastructure.core.logging_utils import get_logger
@@ -48,10 +48,9 @@ def _first_sentence(doc: str | None) -> str:
 
 
 def _iter_py_files(root: str) -> Iterable[str]:
-    for dirpath, _, filenames in os.walk(root):
-        for fname in filenames:
-            if fname.endswith(".py") and (not fname.startswith("_") or fname == "__init__.py"):
-                yield os.path.join(dirpath, fname)
+    for path in Path(root).rglob("*.py"):
+        if not path.name.startswith("_") or path.name == "__init__.py":
+            yield str(path)
 
 
 def build_api_index(src_dir: str) -> List[ApiEntry]:
@@ -68,7 +67,7 @@ def build_api_index(src_dir: str) -> List[ApiEntry]:
         except Exception as e:
             logger.debug("Skipping %s (parse error): %s", py_path, e)
             continue
-        module = os.path.relpath(py_path, src_dir).replace(os.sep, ".")
+        module = Path(py_path).relative_to(src_dir).as_posix().replace("/", ".")
         # Normalize module names deterministically without branching
         module = module.removesuffix(".py").removesuffix(".__init__")
 

@@ -75,7 +75,7 @@ def verify_file_integrity(
                 integrity[str(file_path)] = actual_hash is not None
 
         except Exception as e:
-            logger.error(f"Error verifying {file_path}: {e}")
+            logger.error("Error verifying %s: %s", file_path, e, exc_info=True)
             integrity[str(file_path)] = False
 
     passed = sum(1 for v in integrity.values() if v)
@@ -123,9 +123,7 @@ def verify_cross_references(markdown_files: List[Path]) -> Dict[str, bool]:
             references.update(eqref_matches)
 
         except Exception as e:
-            logger.error(f"Error reading {md_file}: {e}")
-            integrity = {k: False for k in integrity}
-            break
+            logger.error("Error reading %s: %s", md_file, e, exc_info=True)
 
     # Check if all references have corresponding labels
     missing_labels = references - labels
@@ -190,7 +188,7 @@ def verify_data_consistency(data_files: List[Path]) -> Dict[str, bool]:
                     pickle.load(f)  # nosec B301 — validating project's own output files
 
         except Exception as e:
-            logger.warning(f"Data integrity check failed for {data_file}: {e}")
+            logger.warning("Data integrity check failed for %s: %s", data_file, e, exc_info=True)
             consistency["data_integrity"] = False
             break
 
@@ -226,9 +224,7 @@ def verify_academic_standards(markdown_files: List[Path]) -> Dict[str, bool]:
             with open(md_file, "r", encoding="utf-8") as f:
                 combined_content += f.read() + "\n"
         except Exception as e:
-            logger.warning(f"Could not read markdown file {md_file}: {e}")
-            standards = {k: False for k in standards}
-            break
+            logger.warning("Could not read markdown file %s: %s", md_file, e)
 
     # Check for required sections
     content_lower = combined_content.lower()
@@ -631,7 +627,7 @@ def verify_output_completeness(output_dir: Path) -> Dict[str, Any]:
     if not figures_dir.exists():
         completeness["figures_complete"] = False
         missing_outputs.append("Figures directory")
-    elif figures_dir.exists():
+    else:
         expected_figures = [
             "ablation_study.png",
             "convergence_plot.png",
@@ -658,7 +654,7 @@ def verify_output_completeness(output_dir: Path) -> Dict[str, Any]:
     if not data_dir.exists():
         completeness["data_complete"] = False
         missing_outputs.append("Data directory")
-    elif data_dir.exists():
+    else:
         expected_data = [
             "convergence_data.npz",
             "dataset_summary.csv",
@@ -681,7 +677,7 @@ def verify_output_completeness(output_dir: Path) -> Dict[str, Any]:
     if not tex_dir.exists():
         completeness["latex_complete"] = False
         missing_outputs.append("LaTeX directory")
-    elif tex_dir.exists():
+    else:
         expected_tex = [
             "01_abstract.tex",
             "02_introduction.tex",
@@ -725,7 +721,7 @@ def create_integrity_manifest(output_dir: Path) -> Dict[str, Any]:
         Dictionary with comprehensive integrity manifest
     """
     manifest: Dict[str, Any] = {
-        "timestamp": os.path.getctime(output_dir) if output_dir.exists() else None,
+        "timestamp": output_dir.stat().st_ctime if output_dir.exists() else None,
         "file_count": 0,
         "total_size": 0,
         "file_hashes": {},

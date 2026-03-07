@@ -245,6 +245,7 @@ class LLMClient:
             # Try fallback models
             for fallback in self.config.fallback_models:
                 try:
+                    fallback_start = time_module.time()
                     logger.info(
                         "Retrying with fallback model",
                         extra={
@@ -254,7 +255,7 @@ class LLMClient:
                         },
                     )
                     response_text = self._generate_response(fallback, options=options)
-                    generation_time = time_module.time() - start_time
+                    generation_time = time_module.time() - fallback_start
 
                     logger.info(
                         "Query completed with fallback model",

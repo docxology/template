@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import time
 
-from infrastructure.core.performance_monitor import (
+from infrastructure.core.performance import (
     ProfilingMetrics,
     CodeProfiler,
 )

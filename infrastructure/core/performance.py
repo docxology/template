@@ -1,18 +1,27 @@
-"""Pipeline-stage resource tracking (CPU, memory, I/O, timing).
+"""Pipeline-stage and function-level performance monitoring.
 
-Provides PerformanceMonitor (start/stop resource snapshots), StagePerformanceTracker
-(per-stage pipeline metrics), and performance_context context manager.
-
-For function-level profiling and timing decorators, see performance_monitor.py.
+Provides:
+- PerformanceMonitor: psutil-based resource snapshots (start/stop)
+- StagePerformanceTracker: per-stage pipeline metrics
+- performance_context: context manager wrapping PerformanceMonitor
+- CodeProfiler: cProfile + tracemalloc function-level profiling
+- monitor_performance: decorator for monitoring function performance
+- benchmark_function: convenience function-level benchmarking
 """
 
 from __future__ import annotations
 
+import cProfile
+import functools
 import os
+import pstats
 import time
+import tracemalloc
 from contextlib import contextmanager
 from dataclasses import dataclass, field
-from typing import Any, Optional
+from typing import Any, Callable, Dict, List, Optional, Union
+
+import psutil
 
 from infrastructure.core.logging_utils import format_duration, get_logger
 
@@ -62,14 +71,9 @@ class PerformanceMetrics:
 
 
 class PerformanceMonitor:
-    """Resource-usage monitor tracking timing, memory, and operation counts.
-
-    Named ResourceTracker in contexts where disambiguation from CodeProfiler
-    in performance_monitor.py is needed.
-    """
+    """Resource-usage monitor tracking timing, memory, and operation counts."""
 
     def __init__(self):
-        """Initialize performance monitor."""
         self.start_time: Optional[float] = None
         self.start_memory: Optional[float] = None
         self.peak_memory: float = 0.0
@@ -78,20 +82,7 @@ class PerformanceMonitor:
         self.cache_misses: int = 0
 
     def start(self) -> None:
-        """Start performance monitoring session.
-
-        Initializes timing, memory tracking, and resets all counters
-        to begin a new monitoring session.
-
-        Returns:
-            None
-
-        Example:
-            >>> monitor = PerformanceMonitor()
-            >>> monitor.start()
-            >>> # ... perform operations ...
-            >>> metrics = monitor.stop()
-        """
+        """Start a monitoring session."""
         self.start_time = time.time()
         self.start_memory = self._get_memory_usage()
         self.peak_memory = self.start_memory
@@ -100,11 +91,7 @@ class PerformanceMonitor:
         self.cache_misses = 0
 
     def stop(self) -> PerformanceMetrics:
-        """Stop monitoring and return metrics.
-
-        Returns:
-            PerformanceMetrics with collected data
-        """
+        """Stop monitoring and return metrics."""
         if self.start_time is None:
             raise RuntimeError("Monitor not started")
 
@@ -130,20 +117,7 @@ class PerformanceMonitor:
         self.operations_count += 1
 
     def record_cache_hit(self) -> None:
-        """Record a cache hit during the monitoring session.
-
-        Increments the cache hit counter. Use this to track cache
-        effectiveness during performance monitoring.
-
-        Returns:
-            None
-
-        Example:
-            >>> monitor = PerformanceMonitor()
-            >>> monitor.start()
-            >>> if data in cache:
-            ...     monitor.record_cache_hit()
-        """
+        """Record a cache hit."""
         self.cache_hits += 1
 
     def record_cache_miss(self) -> None:
@@ -157,35 +131,16 @@ class PerformanceMonitor:
             self.peak_memory = current
 
     def _get_memory_usage(self) -> float:
-        """Get current memory usage in MB.
-
-        Returns:
-            Memory usage in megabytes
-        """
+        """Return current process memory usage in MB."""
         try:
-            import psutil
-
-            process = psutil.Process(os.getpid())
-            return float(process.memory_info().rss / 1024 / 1024)  # Convert to MB
-        except ImportError:
-            # Fallback if psutil not available
-            return 0.0
+            return float(psutil.Process(os.getpid()).memory_info().rss / 1024 / 1024)
         except Exception:
             return 0.0
 
     def _get_cpu_percent(self) -> float:
-        """Get CPU usage percentage.
-
-        Returns:
-            CPU usage percentage (0-100)
-        """
+        """Return current process CPU usage percentage."""
         try:
-            import psutil
-
-            process = psutil.Process(os.getpid())
-            return float(process.cpu_percent(interval=0.1))
-        except ImportError:
-            return 0.0
+            return float(psutil.Process(os.getpid()).cpu_percent(interval=0.1))
         except Exception:
             return 0.0
 
@@ -194,47 +149,31 @@ class PerformanceMonitor:
 def performance_context(operation_name: str = "Operation"):
     """Context manager for monitoring operation performance.
 
-    Args:
-        operation_name: Name of the operation being monitored
-
-    Yields:
-        PerformanceMonitor instance
+    Yields the PerformanceMonitor so callers can record operations.
+    The context manager logs duration on exit; call monitor.stop()
+    explicitly if you need the final PerformanceMetrics object.
 
     Example:
         >>> with performance_context("Data processing") as monitor:
         ...     process_data()
         ...     monitor.record_operation()
-        ... metrics = monitor.stop()
-        >>> print(f"Duration: {metrics.duration:.2f}s")
     """
     monitor = PerformanceMonitor()
     monitor.start()
-
+    _start = time.time()
     try:
         yield monitor
     finally:
-        metrics = monitor.stop()
-        logger.debug(
-            f"{operation_name}: {format_duration(metrics.duration)}, "
-            f"Memory: {metrics.resource_usage.memory_mb:.1f}MB, "
-            f"Peak: {metrics.resource_usage.peak_memory_mb:.1f}MB"
-        )
+        _duration = time.time() - _start
+        logger.debug(f"{operation_name}: {format_duration(_duration)}")
 
 
 def get_system_resources() -> dict[str, Any]:
-    """Get current system resource information.
-
-    Returns:
-        Dictionary with system resource information
-    """
+    """Return current system resource information."""
     try:
-        import psutil
-
         cpu_percent = psutil.cpu_percent(interval=0.1)
         memory = psutil.virtual_memory()
         disk = psutil.disk_usage("/")
-
-        # Get process-specific resources
         process = psutil.Process(os.getpid())
         process_memory = process.memory_info()
 
@@ -248,9 +187,6 @@ def get_system_resources() -> dict[str, Any]:
             "disk_free_gb": disk.free / 1024 / 1024 / 1024,
             "disk_percent": (disk.used / disk.total) * 100,
         }
-    except ImportError:
-        logger.warning("psutil not available - resource tracking disabled")
-        return {}
     except Exception as e:
         logger.warning(f"Failed to get system resources: {e}")
         return {}
@@ -260,37 +196,22 @@ class StagePerformanceTracker:
     """Track performance metrics for pipeline stages."""
 
     def __init__(self):
-        """Initialize stage performance tracker."""
         self.stages: list[dict[str, Any]] = []
         self.start_time: Optional[float] = None
 
     def start_stage(self, stage_name: str) -> None:
-        """Start tracking a stage.
-
-        Args:
-            stage_name: Name of the stage
-        """
+        """Start tracking a stage."""
         self.start_time = time.time()
         try:
-            import psutil
-
             process = psutil.Process(os.getpid())
-            self.start_memory = process.memory_info().rss / 1024 / 1024  # MB
+            self.start_memory = process.memory_info().rss / 1024 / 1024
             self.start_io = process.io_counters()
-        except (ImportError, AttributeError):
+        except AttributeError:
             self.start_memory = 0.0
             self.start_io = None
 
     def end_stage(self, stage_name: str, exit_code: int) -> dict[str, Any]:
-        """End tracking a stage and return metrics.
-
-        Args:
-            stage_name: Name of the stage
-            exit_code: Exit code from the stage
-
-        Returns:
-            Dictionary with stage performance metrics
-        """
+        """End tracking a stage and return metrics."""
         if self.start_time is None:
             return {}
 
@@ -308,12 +229,10 @@ class StagePerformanceTracker:
         }
 
         try:
-            import psutil
-
             process = psutil.Process(os.getpid())
-            current_memory = process.memory_info().rss / 1024 / 1024  # MB
+            current_memory = process.memory_info().rss / 1024 / 1024
             metrics["memory_mb"] = current_memory
-            metrics["peak_memory_mb"] = current_memory  # Simplified - could track peak during stage
+            metrics["peak_memory_mb"] = current_memory
             metrics["cpu_percent"] = process.cpu_percent(interval=0.1)
 
             if self.start_io:
@@ -324,8 +243,6 @@ class StagePerformanceTracker:
                 metrics["io_write_mb"] = (
                     (current_io.write_bytes - self.start_io.write_bytes) / 1024 / 1024
                 )
-        except ImportError:
-            logger.debug("psutil not available — performance metrics will use defaults")
         except AttributeError as e:
             logger.debug(f"psutil attribute not available on this platform: {e}")
 
@@ -335,21 +252,15 @@ class StagePerformanceTracker:
         return metrics
 
     def get_performance_warnings(self) -> list[dict[str, Any]]:
-        """Get performance warnings for stages.
-
-        Returns:
-            List of warning dictionaries
-        """
+        """Return performance warnings for stages."""
         warnings: list[dict[str, Any]] = []
 
         if not self.stages:
             return warnings
 
-        # Calculate average duration
         durations = [s["duration"] for s in self.stages]
         avg_duration = sum(durations) / len(durations) if durations else 0
 
-        # Check for unusually slow stages (> 2x average)
         for stage in self.stages:
             if stage["duration"] > avg_duration * 2 and avg_duration > 0:
                 warnings.append(
@@ -363,7 +274,6 @@ class StagePerformanceTracker:
                     }
                 )
 
-        # Check for high memory usage (> 1GB)
         for stage in self.stages:
             if stage.get("peak_memory_mb", 0) > 1024:
                 warnings.append(
@@ -376,7 +286,6 @@ class StagePerformanceTracker:
                     }
                 )
 
-        # Check for high CPU usage (> 90%)
         for stage in self.stages:
             if stage.get("cpu_percent", 0) > 90:
                 warnings.append(
@@ -392,11 +301,7 @@ class StagePerformanceTracker:
         return warnings
 
     def get_summary(self) -> dict[str, Any]:
-        """Get performance summary.
-
-        Returns:
-            Dictionary with performance summary
-        """
+        """Return performance summary."""
         if not self.stages:
             return {}
 
@@ -418,5 +323,273 @@ class StagePerformanceTracker:
             "warnings": self.get_performance_warnings(),
         }
 
-ResourceTracker = PerformanceMonitor
-monitor_performance = performance_context
+
+# ── Function-level profiling (CodeProfiler) ─────────────────────────────────
+
+
+@dataclass
+class ProfilingMetrics:
+    """Container for function-level performance measurement results."""
+
+    operation_name: str
+    execution_time: float
+    memory_peak: Optional[int] = None
+    memory_current: Optional[int] = None
+    memory_delta: Optional[int] = None
+    cpu_time: Optional[float] = None
+    function_calls: Optional[int] = None
+    timestamp: float = field(default_factory=time.time)
+
+    def __post_init__(self):
+        """Convert memory values to MB."""
+        if self.memory_peak:
+            self.memory_peak = self.memory_peak // (1024 * 1024)
+        if self.memory_current:
+            self.memory_current = self.memory_current // (1024 * 1024)
+        if self.memory_delta:
+            self.memory_delta = self.memory_delta // (1024 * 1024)
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary for reporting."""
+        return {
+            "operation": self.operation_name,
+            "execution_time_seconds": round(self.execution_time, 3),
+            "memory_peak_mb": self.memory_peak,
+            "memory_current_mb": self.memory_current,
+            "memory_delta_mb": self.memory_delta,
+            "cpu_time_seconds": self.cpu_time,
+            "function_calls": self.function_calls,
+            "timestamp": self.timestamp,
+        }
+
+
+class CodeProfiler:
+    """Comprehensive performance monitoring and profiling via cProfile/tracemalloc."""
+
+    def __init__(self):
+        self.metrics_history: List[ProfilingMetrics] = []
+
+    @contextmanager
+    def monitor(self, operation_name: str, track_memory: bool = True):
+        """Context manager for monitoring operation performance."""
+        start_time = time.time()
+        cpu_start = time.process_time()
+
+        we_started_tracing = False
+        if track_memory and not tracemalloc.is_tracing():
+            tracemalloc.start()
+            we_started_tracing = True
+
+        try:
+            yield
+        finally:
+            execution_time = time.time() - start_time
+            cpu_time = time.process_time() - cpu_start
+
+            metrics = ProfilingMetrics(
+                operation_name=operation_name,
+                execution_time=execution_time,
+                cpu_time=cpu_time,
+            )
+
+            if track_memory:
+                current, peak = tracemalloc.get_traced_memory()
+                if we_started_tracing:
+                    tracemalloc.stop()
+                metrics.memory_current = current
+                metrics.memory_peak = peak
+
+            self.metrics_history.append(metrics)
+
+            logger.info(
+                f"Performance: {operation_name} completed in {execution_time:.3f}s "
+                f"(CPU: {cpu_time:.3f}s, Peak memory: {metrics.memory_peak or 'N/A'}MB)"
+            )
+
+    def profile_function(self, func: Callable, *args, **kwargs) -> Any:
+        """Profile a function execution with detailed cProfile statistics."""
+        profiler = cProfile.Profile()
+        profiler.enable()
+
+        try:
+            result = func(*args, **kwargs)
+            return result
+        finally:
+            profiler.disable()
+            stats = pstats.Stats(profiler)
+            stats.sort_stats("cumulative")
+            logger.info(f"Profile results for {func.__name__}:")
+            stats.print_stats(10)
+
+    def benchmark_function(
+        self,
+        func: Callable,
+        *args,
+        iterations: int = 5,
+        warmup_iterations: int = 2,
+        **kwargs,
+    ) -> Dict[str, Union[float, List[float]]]:
+        """Benchmark function performance over multiple iterations."""
+        for _ in range(warmup_iterations):
+            func(*args, **kwargs)
+
+        execution_times = []
+        for i in range(iterations):
+            start_time = time.perf_counter()
+            func(*args, **kwargs)
+            end_time = time.perf_counter()
+            execution_time = end_time - start_time
+            execution_times.append(execution_time)
+            logger.debug(f"Iteration {i + 1}: {execution_time:.4f}s")
+
+        avg_time = sum(execution_times) / len(execution_times)
+        min_time = min(execution_times)
+        max_time = max(execution_times)
+        std_dev = (sum((t - avg_time) ** 2 for t in execution_times) / len(execution_times)) ** 0.5
+
+        result = {
+            "function_name": func.__name__,
+            "iterations": iterations,
+            "average_time": avg_time,
+            "min_time": min_time,
+            "max_time": max_time,
+            "std_dev": std_dev,
+            "all_times": execution_times,
+        }
+
+        logger.info(f"Benchmark: {func.__name__} - avg: {avg_time:.4f}s, std: {std_dev:.4f}s")
+        return result
+
+    def get_recent_metrics(self, limit: int = 10) -> List[ProfilingMetrics]:
+        """Return the most recent performance metrics."""
+        return self.metrics_history[-limit:]
+
+    def clear_metrics_history(self):
+        """Clear the metrics history."""
+        self.metrics_history.clear()
+
+    def generate_performance_report(self) -> str:
+        """Generate a comprehensive performance report."""
+        if not self.metrics_history:
+            return "No performance metrics available."
+
+        report_lines = [
+            "# Performance Report",
+            f"Generated: {time.strftime('%Y-%m-%d %H:%M:%S')}",
+            "",
+            "## Summary Statistics",
+            f"- Total operations monitored: {len(self.metrics_history)}",
+        ]
+
+        total_time = sum(m.execution_time for m in self.metrics_history)
+        avg_time = total_time / len(self.metrics_history)
+        max_memory = max(
+            (m.memory_peak for m in self.metrics_history if m.memory_peak),
+            default=None,
+        )
+
+        report_lines.extend(
+            [
+                f"- Total execution time: {total_time:.3f}s",
+                f"- Average execution time: {avg_time:.3f}s",
+                f"- Peak memory usage: {max_memory or 'N/A'} MB",
+                "",
+                "## Recent Operations",
+                "| Operation | Time (s) | Peak Memory (MB) |",
+                "|-----------|----------|------------------|",
+            ]
+        )
+
+        for metric in self.metrics_history[-10:]:
+            report_lines.append(
+                f"| {metric.operation_name} | {metric.execution_time:.3f} | {metric.memory_peak or 'N/A'} |"  # noqa: E501
+            )
+
+        return "\n".join(report_lines)
+
+
+_global_monitor = CodeProfiler()
+
+
+def get_performance_monitor() -> CodeProfiler:
+    """Return the global CodeProfiler instance."""
+    return _global_monitor
+
+
+def monitor_performance(operation_name: str, track_memory: bool = True):
+    """Decorator for monitoring function performance.
+
+    Args:
+        operation_name: Label for the monitored operation
+        track_memory: Whether to track memory usage
+    """
+
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            monitor = get_performance_monitor()
+            op_name = operation_name or f"{func.__module__}.{func.__qualname__}"
+            with monitor.monitor(op_name, track_memory):
+                return func(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
+
+
+def benchmark_llm_query(
+    client, prompt: str, iterations: int = 3
+) -> Dict[str, Union[float, List[float]]]:
+    """Benchmark LLM query performance."""
+    monitor = get_performance_monitor()
+    return monitor.benchmark_function(client.query, prompt, iterations=iterations)
+
+
+def profile_memory_usage(func: Callable, *args, **kwargs) -> Dict[str, Any]:
+    """Profile memory usage of a function."""
+    tracemalloc.start()
+
+    try:
+        start_time = time.time()
+        result = func(*args, **kwargs)
+        execution_time = time.time() - start_time
+        current, peak = tracemalloc.get_traced_memory()
+
+        return {
+            "execution_time": execution_time,
+            "memory_current": current // (1024 * 1024),
+            "memory_peak": peak // (1024 * 1024),
+            "result": result,
+        }
+    finally:
+        tracemalloc.stop()
+
+
+def benchmark_function(
+    func: Callable, *args, iterations: int = 5, **kwargs
+) -> Dict[str, Union[float, List[float]]]:
+    """Benchmark a function using CodeProfiler."""
+    return CodeProfiler().benchmark_function(func, *args, iterations=iterations, **kwargs)
+
+
+def main():
+    """CLI entry point for performance monitoring."""
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Performance monitoring and profiling")
+    parser.add_argument("--report", action="store_true", help="Generate performance report")
+    parser.add_argument("--clear", action="store_true", help="Clear metrics history")
+
+    args = parser.parse_args()
+    monitor = get_performance_monitor()
+
+    if args.clear:
+        monitor.clear_metrics_history()
+        print("Performance metrics history cleared.")
+
+    if args.report:
+        print(monitor.generate_performance_report())
+
+
+if __name__ == "__main__":
+    main()

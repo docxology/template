@@ -9,26 +9,12 @@ This module provides tools for generating research outputs:
 
 from __future__ import annotations
 
-from typing import Optional
-
-from infrastructure.rendering.config import RenderingConfig
-from infrastructure.rendering.core import RenderManager
-from infrastructure.rendering.manuscript_discovery import (
+from .config import RenderingConfig
+from .core import RenderManager
+from .manuscript_discovery import (
     discover_manuscript_files,
     verify_figures_exist,
 )
-
-
-def get_render_manager(config: Optional[RenderingConfig] = None) -> RenderManager:
-    """Get a RenderManager instance.
-
-    Args:
-        config: Optional rendering configuration
-
-    Returns:
-        RenderManager instance
-    """
-    return RenderManager(config)
 
 
 __all__ = [
@@ -36,5 +22,4 @@ __all__ = [
     "RenderingConfig",
     "discover_manuscript_files",
     "verify_figures_exist",
-    "get_render_manager",
 ]
