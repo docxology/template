@@ -40,7 +40,6 @@ dependencies = [
   "pypdf>=5.0",
   "pyyaml>=6.0",
   "requests>=2.31.0",
-  "pillow>=10.0.0",
   "reportlab>=4.0.0",
 ]
 
@@ -89,9 +88,6 @@ dev = [
     "iniconfig>=2.3.0",
     "types-requests>=2.32.4.20260107",
     "types-pyyaml>=6.0.12.20250915",
-    # Optional feature deps — installed in dev so tests exercise full coverage
-    "python-dotenv>=1.0.0",
-    "qrcode[pil]>=8.2",
     "black>=23.0",
 ]
 
@@ -99,6 +95,7 @@ dev = [
 # uv-specific configuration
 managed = true  # Use uv's virtual environment management
 package = false  # This is not a distributable package
+default-groups = ["dev", "monitoring", "dotenv", "steganography"]  # Install optional feature groups alongside dev deps
 
 [tool.uv.workspace]
 # Workspace configuration for multi-project support

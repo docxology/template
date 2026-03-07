@@ -18,7 +18,7 @@ import os
 import pickle  # noqa: S403 — used for pickle file validation
 import re
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, TypedDict
 
 from infrastructure.core.file_operations import calculate_file_hash  # noqa: F401
 from infrastructure.core.logging_utils import get_logger
@@ -448,29 +448,46 @@ def generate_integrity_report(report: IntegrityReport) -> str:
     return "\n".join(lines)
 
 
+class BuildArtifactValidation(TypedDict):
+    """Typed result from validate_build_artifacts."""
+
+    expected_files: List[str]
+    missing_files: List[str]
+    unexpected_files: List[str]
+    validation_passed: bool
+
+
+class PermissionCheck(TypedDict):
+    """Typed result from check_file_permissions."""
+
+    readable: bool
+    writable: bool
+    executable: bool
+    issues: List[str]
+
+
+class OutputCompleteness(TypedDict):
+    """Typed result from verify_output_completeness."""
+
+    pdf_complete: bool
+    figures_complete: bool
+    data_complete: bool
+    latex_complete: bool
+    html_complete: bool
+    missing_outputs: List[str]
+    incomplete_outputs: List[str]
+
+
 def validate_build_artifacts(
     output_dir: Path, expected_files: Optional[Dict[str, List[str]]] = None
-) -> Dict[str, Any]:
-    """Validate that all expected build artifacts are present and correct.
-
-    Args:
-        output_dir: Output directory to validate
-        expected_files: Optional dictionary of expected files by category
-
-    Returns:
-        Dictionary with validation results
-    """
-    validation: Dict[str, Any] = {
+) -> BuildArtifactValidation:
+    """Validate that all expected build artifacts are present and correct."""
+    validation: BuildArtifactValidation = {
         "expected_files": [],
         "missing_files": [],
         "unexpected_files": [],
         "validation_passed": True,
     }
-
-    # Typed accessors for list fields
-    expected_list: List[str] = validation["expected_files"]
-    missing_list: List[str] = validation["missing_files"]
-    unexpected_list: List[str] = validation["unexpected_files"]
 
     # Expected output structure (callers must supply expected_files for project-specific content)
     expected_structure: Dict[str, List[str]] = expected_files if expected_files is not None else {}
@@ -481,17 +498,17 @@ def validate_build_artifacts(
         if not category_dir.exists():
             # Missing entire directory
             for expected_file in files:
-                missing_list.append(expected_file)
+                validation["missing_files"].append(expected_file)
                 validation["validation_passed"] = False
         else:
             # Directory exists, check for missing files
             for expected_file in files:
                 expected_path = category_dir / expected_file
                 if not expected_path.exists():
-                    missing_list.append(expected_file)
+                    validation["missing_files"].append(expected_file)
                     validation["validation_passed"] = False
                 else:
-                    expected_list.append(expected_file)
+                    validation["expected_files"].append(expected_file)
 
     # Check for unexpected files (basic check)
     for item in output_dir.rglob("*"):
@@ -502,31 +519,23 @@ def validate_build_artifacts(
                 for cat, files in expected_structure.items()
             )
             if not is_expected:
-                unexpected_list.append(str(rel_path))
+                validation["unexpected_files"].append(str(rel_path))
 
     return validation
 
 
-def check_file_permissions(output_dir: Path) -> Dict[str, Any]:
-    """Check file permissions and accessibility.
-
-    Args:
-        output_dir: Output directory to check
-
-    Returns:
-        Dictionary with permission check results
-    """
-    permissions: Dict[str, Any] = {
+def check_file_permissions(output_dir: Path) -> PermissionCheck:
+    """Check file permissions and accessibility."""
+    permissions: PermissionCheck = {
         "readable": True,
         "writable": True,
         "executable": True,
         "issues": [],
     }
-    issues_list: List[str] = permissions["issues"]
 
     if not output_dir.exists():
         permissions["readable"] = False
-        issues_list.append(f"Output directory does not exist: {output_dir}")
+        permissions["issues"].append(f"Output directory does not exist: {output_dir}")
         return permissions
 
     try:
@@ -543,21 +552,14 @@ def check_file_permissions(output_dir: Path) -> Dict[str, Any]:
 
     except Exception as e:
         permissions["writable"] = False
-        issues_list.append(f"Permission test failed: {e}")
+        permissions["issues"].append(f"Permission test failed: {e}")
 
     return permissions
 
 
-def verify_output_completeness(output_dir: Path) -> Dict[str, Any]:
-    """Verify that all expected outputs are present and complete.
-
-    Args:
-        output_dir: Output directory to verify
-
-    Returns:
-        Dictionary with completeness verification results
-    """
-    completeness: Dict[str, Any] = {
+def verify_output_completeness(output_dir: Path) -> OutputCompleteness:
+    """Verify that all expected outputs are present and complete."""
+    completeness: OutputCompleteness = {
         "pdf_complete": True,
         "figures_complete": True,
         "data_complete": True,
@@ -567,65 +569,61 @@ def verify_output_completeness(output_dir: Path) -> Dict[str, Any]:
         "incomplete_outputs": [],
     }
 
-    # Typed accessors for list fields
-    missing_outputs: List[str] = completeness["missing_outputs"]
-    incomplete_outputs: List[str] = completeness["incomplete_outputs"]
-
     # Check PDF completeness
     pdf_dir = output_dir / "pdf"
     if not pdf_dir.exists():
         completeness["pdf_complete"] = False
-        missing_outputs.append("PDF directory")
+        completeness["missing_outputs"].append("PDF directory")
     else:
         for pdf_path in pdf_dir.glob("*.pdf"):
             if pdf_path.stat().st_size == 0:
                 completeness["pdf_complete"] = False
-                incomplete_outputs.append(f"Empty PDF: {pdf_path.name}")
+                completeness["incomplete_outputs"].append(f"Empty PDF: {pdf_path.name}")
 
     # Check figures completeness
     figures_dir = output_dir / "figures"
     if not figures_dir.exists():
         completeness["figures_complete"] = False
-        missing_outputs.append("Figures directory")
+        completeness["missing_outputs"].append("Figures directory")
     else:
         figures = list(figures_dir.glob("*.png")) + list(figures_dir.glob("*.pdf"))
         for fig_path in figures:
             if fig_path.stat().st_size < 1000:
-                incomplete_outputs.append(f"Small figure: {fig_path.name}")
+                completeness["incomplete_outputs"].append(f"Small figure: {fig_path.name}")
 
     # Check data completeness
     data_dir = output_dir / "data"
     if not data_dir.exists():
         completeness["data_complete"] = False
-        missing_outputs.append("Data directory")
+        completeness["missing_outputs"].append("Data directory")
     else:
         data_files_found = list(data_dir.iterdir())
         for data_path in data_files_found:
             if data_path.is_file() and data_path.stat().st_size == 0:
                 completeness["data_complete"] = False
-                incomplete_outputs.append(f"Empty data: {data_path.name}")
+                completeness["incomplete_outputs"].append(f"Empty data: {data_path.name}")
 
     # Check LaTeX completeness
     tex_dir = output_dir / "tex"
     if not tex_dir.exists():
         completeness["latex_complete"] = False
-        missing_outputs.append("LaTeX directory")
+        completeness["missing_outputs"].append("LaTeX directory")
     else:
         for tex_path in tex_dir.glob("*.tex"):
             if tex_path.stat().st_size == 0:
                 completeness["latex_complete"] = False
-                incomplete_outputs.append(f"Empty LaTeX: {tex_path.name}")
+                completeness["incomplete_outputs"].append(f"Empty LaTeX: {tex_path.name}")
 
     # Check HTML completeness (any HTML file in output root)
     html_files = list(output_dir.glob("*.html"))
     if not html_files:
         completeness["html_complete"] = False
-        missing_outputs.append("HTML output")
+        completeness["missing_outputs"].append("HTML output")
     else:
         for html_file in html_files:
             if html_file.stat().st_size == 0:
                 completeness["html_complete"] = False
-                incomplete_outputs.append(f"Empty HTML: {html_file.name}")
+                completeness["incomplete_outputs"].append(f"Empty HTML: {html_file.name}")
 
     return completeness
 

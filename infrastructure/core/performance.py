@@ -21,7 +21,10 @@ from contextlib import contextmanager
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Optional, Union
 
-import psutil
+try:
+    import psutil
+except ImportError:
+    psutil = None  # type: ignore[assignment]
 
 from infrastructure.core.logging_utils import format_duration, get_logger
 
@@ -132,6 +135,8 @@ class PerformanceMonitor:
 
     def _get_memory_usage(self) -> float:
         """Return current process memory usage in MB."""
+        if psutil is None:
+            return 0.0
         try:
             return float(psutil.Process(os.getpid()).memory_info().rss / 1024 / 1024)
         except Exception:
@@ -139,6 +144,8 @@ class PerformanceMonitor:
 
     def _get_cpu_percent(self) -> float:
         """Return current process CPU usage percentage."""
+        if psutil is None:
+            return 0.0
         try:
             return float(psutil.Process(os.getpid()).cpu_percent(interval=0.1))
         except Exception:
@@ -170,6 +177,8 @@ def performance_context(operation_name: str = "Operation"):
 
 def get_system_resources() -> dict[str, Any]:
     """Return current system resource information."""
+    if psutil is None:
+        return {}
     try:
         cpu_percent = psutil.cpu_percent(interval=0.1)
         memory = psutil.virtual_memory()
@@ -204,6 +213,10 @@ class StagePerformanceTracker:
     def start_stage(self, stage_name: str) -> None:
         """Start tracking a stage."""
         self.start_time = time.time()
+        if psutil is None:
+            self.start_memory = 0.0
+            self.start_io = None
+            return
         try:
             process = psutil.Process(os.getpid())
             self.start_memory = process.memory_info().rss / 1024 / 1024
@@ -230,23 +243,24 @@ class StagePerformanceTracker:
             "io_write_mb": 0.0,
         }
 
-        try:
-            process = psutil.Process(os.getpid())
-            current_memory = process.memory_info().rss / 1024 / 1024
-            metrics["memory_mb"] = current_memory
-            metrics["peak_memory_mb"] = current_memory
-            metrics["cpu_percent"] = process.cpu_percent(interval=0.1)
+        if psutil is not None:
+            try:
+                process = psutil.Process(os.getpid())
+                current_memory = process.memory_info().rss / 1024 / 1024
+                metrics["memory_mb"] = current_memory
+                metrics["peak_memory_mb"] = current_memory
+                metrics["cpu_percent"] = process.cpu_percent(interval=0.1)
 
-            if self.start_io:
-                current_io = process.io_counters()
-                metrics["io_read_mb"] = (
-                    (current_io.read_bytes - self.start_io.read_bytes) / 1024 / 1024
-                )
-                metrics["io_write_mb"] = (
-                    (current_io.write_bytes - self.start_io.write_bytes) / 1024 / 1024
-                )
-        except AttributeError as e:
-            logger.debug(f"psutil attribute not available on this platform: {e}")
+                if self.start_io:
+                    current_io = process.io_counters()
+                    metrics["io_read_mb"] = (
+                        (current_io.read_bytes - self.start_io.read_bytes) / 1024 / 1024
+                    )
+                    metrics["io_write_mb"] = (
+                        (current_io.write_bytes - self.start_io.write_bytes) / 1024 / 1024
+                    )
+            except AttributeError as e:
+                logger.debug(f"psutil attribute not available on this platform: {e}")
 
         self.stages.append(metrics)
         self.start_time = None
@@ -507,11 +521,14 @@ class CodeProfiler:
         return "\n".join(report_lines)
 
 
-_global_monitor = CodeProfiler()
+_global_monitor: Optional[CodeProfiler] = None
 
 
 def get_performance_monitor() -> CodeProfiler:
-    """Return the global CodeProfiler instance."""
+    """Return the global CodeProfiler instance, creating it on first call."""
+    global _global_monitor
+    if _global_monitor is None:
+        _global_monitor = CodeProfiler()
     return _global_monitor
 
 
