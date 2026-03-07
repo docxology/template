@@ -59,6 +59,7 @@ class PipelineStageResult:
     duration: float
     exit_code: int = 0
     error_message: str = ""
+    exception_type: str = ""
 
 
 class PipelineExecutor:
@@ -277,6 +278,7 @@ class PipelineExecutor:
                 duration=duration,
                 exit_code=1,
                 error_message=str(e),
+                exception_type=type(e).__name__,
             )
 
     def _start_fresh(self) -> list[PipelineStageResult]:

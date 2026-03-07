@@ -18,7 +18,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from infrastructure.core.logging_utils import get_logger, log_header, log_success
-from infrastructure.validation.mock_validator import validate_no_mocks
+from infrastructure.validation.no_mock_enforcer import validate_no_mocks
 
 logger = get_logger(__name__)
 
