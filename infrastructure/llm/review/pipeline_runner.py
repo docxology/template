@@ -35,6 +35,13 @@ from infrastructure.llm.review.generator import (
 
 logger = get_logger(__name__)
 
+REVIEW_GENERATORS = {
+    "executive_summary": generate_executive_summary,
+    "quality_review": generate_quality_review,
+    "methodology_review": generate_methodology_review,
+    "improvement_suggestions": generate_improvement_suggestions,
+}
+
 
 class ReviewMode:
     """Mode for LLM review execution."""
@@ -134,17 +141,11 @@ def run_llm_review_pipeline(
                     i, len(review_types), f"Review: {review_type.replace('_', ' ').title()}", logger
                 )
 
-                if review_type == "executive_summary":
-                    response, metrics = generate_executive_summary(client, text, model_name)  # type: ignore
-                elif review_type == "quality_review":
-                    response, metrics = generate_quality_review(client, text, model_name)  # type: ignore
-                elif review_type == "methodology_review":
-                    response, metrics = generate_methodology_review(client, text, model_name)  # type: ignore
-                elif review_type == "improvement_suggestions":
-                    response, metrics = generate_improvement_suggestions(client, text, model_name)  # type: ignore
-                else:
+                generator = REVIEW_GENERATORS.get(review_type)
+                if generator is None:
                     logger.warning(f"  Skipping unknown review type: {review_type}")
                     continue
+                response, metrics = generator(client, text, model_name)  # type: ignore
 
                 reviews[review_type] = response
                 session_metrics.reviews[review_type] = metrics
