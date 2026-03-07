@@ -154,8 +154,8 @@ class PerformanceMonitor:
 def performance_context(operation_name: str = "Operation"):
     """Context manager for monitoring operation performance.
 
-    Yields the started PerformanceMonitor. Calls monitor.stop() in
-    the finally block so callers can read PerformanceMetrics after exit.
+    Yields the started PerformanceMonitor. After the with-block, callers
+    can read monitor.last_metrics for the final PerformanceMetrics.
     """
     monitor = PerformanceMonitor()
     monitor.start()
@@ -163,6 +163,7 @@ def performance_context(operation_name: str = "Operation"):
         yield monitor
     finally:
         metrics = monitor.stop()
+        monitor.last_metrics = metrics  # type: ignore[attr-defined]
         logger.debug(f"{operation_name}: {format_duration(metrics.duration)}")
 
 
@@ -280,8 +281,6 @@ class StagePerformanceTracker:
                         "suggestion": "Consider optimizing this stage or running it in parallel",
                     }
                 )
-
-        for stage in self.stages:
             if stage.get("peak_memory_mb", 0) > 1024:
                 warnings.append(
                     {
@@ -292,8 +291,6 @@ class StagePerformanceTracker:
                         "suggestion": "Consider memory optimization or increasing available memory",
                     }
                 )
-
-        for stage in self.stages:
             if stage.get("cpu_percent", 0) > 90:
                 warnings.append(
                     {
@@ -544,32 +541,19 @@ def monitor_performance(operation_name: str, track_memory: bool = True):
     return decorator
 
 
-def benchmark_llm_query(
-    client, prompt: str, iterations: int = 3
-) -> Dict[str, Union[float, List[float]]]:
-    """Benchmark LLM query performance."""
-    monitor = get_performance_monitor()
-    return monitor.benchmark_function(client.query, prompt, iterations=iterations)
-
-
 def profile_memory_usage(func: Callable, *args, **kwargs) -> Dict[str, Any]:
-    """Profile memory usage of a function."""
-    tracemalloc.start()
-
-    try:
-        start_time = time.time()
-        result = func(*args, **kwargs)
-        execution_time = time.time() - start_time
-        current, peak = tracemalloc.get_traced_memory()
-
-        return {
-            "execution_time": execution_time,
-            "memory_current": current // (1024 * 1024),
-            "memory_peak": peak // (1024 * 1024),
-            "result": result,
-        }
-    finally:
-        tracemalloc.stop()
+    """Profile memory usage of a function via CodeProfiler."""
+    monitor = get_performance_monitor()
+    result_holder: List[Any] = []
+    with monitor.monitor(func.__name__, track_memory=True):
+        result_holder.append(func(*args, **kwargs))
+    metrics = monitor.metrics_history[-1]
+    return {
+        "execution_time": metrics.execution_time,
+        "memory_current": (metrics.memory_current or 0) // (1024 * 1024),
+        "memory_peak": (metrics.memory_peak or 0) // (1024 * 1024),
+        "result": result_holder[0] if result_holder else None,
+    }
 
 
 def benchmark_function(
