@@ -80,7 +80,7 @@ def generate_pipeline_report(
     )
 
 def save_pipeline_report(
-    report: PipelineReport, output_dir: Path, formats: list[str | None] = None
+    report: PipelineReport, output_dir: Path, formats: list[str] | None = None
 ) -> dict[str, Path]:
     """Save pipeline report in multiple formats; returns dict mapping format to path."""
     if formats is None:

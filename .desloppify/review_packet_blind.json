@@ -238,7 +238,7 @@
         {
           "file": "infrastructure/core/logging_utils.py",
           "importers": 137,
-          "excerpt": "\"\"\"Unified Python logging module for the Research Project Template.\n\nThis module provides structured logging with consistent formatting across all Python\nscripts in the template. It integrates with the bash logging.sh format and provides:\n- Consistent log levels (DEBUG, INFO, WARN, ERROR)\n- Context managers for operation tracking\n- Performance timing utilities\n- Integration with environment-based configuration\n\nPart of the infrastructure layer (Layer 1) - reusable across all projects.\n\"\"\"\n\nfrom __future__ import annotations\n\nimport logging\nimport os\nimport sys\nimport time\nfrom contextlib import contextmanager\nfrom pathlib import Path\nfrom typing import Any, Callable, Iterator, TypeVar\n\n# Import from split modules\nfrom infrastructure.core.logging_formatters import JSONFormatter, TemplateFormatter\nfrom infrastructure.core.logging_helpers import format_duration\nfrom infrastructure.core.logging_progress import calculate_eta\nfrom infrastructure.core._optional_deps import psutil\nfrom infrastructure.core.logging_constants import EMOJIS, USE_EMOJIS, USE_STRUCTURED_LOGGING\n\n# Type variable for generic context manager\n\n... (350 more lines)"
+          "excerpt": "\"\"\"Unified Python logging module for the Research Project Template.\n\nThis module provides structured logging with consistent formatting across all Python\nscripts in the template. It integrates with the bash logging.sh format and provides:\n- Consistent log levels (DEBUG, INFO, WARN, ERROR)\n- Context managers for operation tracking\n- Performance timing utilities\n- Integration with environment-based configuration\n\nPart of the infrastructure layer (Layer 1) - reusable across all projects.\n\"\"\"\n\nfrom __future__ import annotations\n\nimport logging\nimport os\nimport sys\nimport time\nfrom contextlib import contextmanager\nfrom pathlib import Path\nfrom typing import Any, Callable, Iterator, TypeVar\n\n# Import from split modules\nfrom infrastructure.core.logging_formatters import JSONFormatter, TemplateFormatter\nfrom infrastructure.core.logging_helpers import format_duration\nfrom infrastructure.core.logging_progress import calculate_eta\nfrom infrastructure.core._optional_deps import psutil\nfrom infrastructure.core.logging_constants import EMOJIS, USE_EMOJIS, USE_STRUCTURED_LOGGING\n\n# Type variable for generic context manager\n\n... (353 more lines)"
         },
         {
           "file": "infrastructure/core/exceptions.py",
@@ -955,7 +955,7 @@
           "throws": 1
         },
         "core/": {
-          "try_catch": 147,
+          "try_catch": 148,
           "throws": 100,
           "returns_null": 28,
           "result_type": 4
@@ -991,7 +991,7 @@
           "returns_null": 2
         },
         "validation/": {
-          "try_catch": 66,
+          "try_catch": 65,
           "throws": 17,
           "returns_null": 15,
           "result_type": 2
@@ -1001,7 +1001,7 @@
           "returns_null": 2
         },
         "publishing/": {
-          "try_catch": 25,
+          "try_catch": 26,
           "throws": 6,
           "result_type": 2
         },
@@ -1012,8 +1012,8 @@
           "result_type": 3
         },
         "reporting/": {
-          "try_catch": 72,
-          "throws": 25,
+          "try_catch": 74,
+          "throws": 27,
           "returns_null": 7,
           "result_type": 1
         },
@@ -1374,7 +1374,7 @@
             "security.py",
             "stage_monitor.py"
           ],
-          "total_loc": 7703,
+          "total_loc": 7711,
           "avg_fan_in": 10.6,
           "avg_fan_out": 2.2,
           "zones": {
@@ -1386,7 +1386,7 @@
           "imported_by_dirs": {
             "scripts/": 35,
             "tests/infra_tests/core/": 34,
-            "infrastructure/validation/": 24,
+            "infrastructure/validation/": 25,
             "infrastructure/reporting/": 22,
             "infrastructure/rendering/": 18,
             "tests/infra_tests/llm/": 12,
@@ -1434,9 +1434,9 @@
           },
           "imports_from_dirs": {
             "infrastructure/llm/core/": 2,
-            "infrastructure/core/": 1,
+            "infrastructure/llm/templates/": 1,
             "infrastructure/llm/utils/": 1,
-            "infrastructure/llm/templates/": 1
+            "infrastructure/core/": 1
           },
           "imported_by_dirs": {
             "tests/infra_tests/llm/": 1
@@ -1461,9 +1461,9 @@
           },
           "imports_from_dirs": {
             "infrastructure/core/": 8,
-            "infrastructure/llm/prompts/": 1,
             "infrastructure/llm/review/": 1,
-            "infrastructure/llm/templates/": 1
+            "infrastructure/llm/templates/": 1,
+            "infrastructure/llm/prompts/": 1
           },
           "imported_by_dirs": {
             "tests/infra_tests/llm/": 24,
@@ -1490,8 +1490,8 @@
           },
           "imported_by_dirs": {
             "tests/infra_tests/llm/": 3,
-            "infrastructure/llm/templates/": 2,
             "infrastructure/llm/review/": 2,
+            "infrastructure/llm/templates/": 2,
             "infrastructure/llm/": 1,
             "infrastructure/llm/core/": 1
           }
@@ -1514,10 +1514,10 @@
           "imports_from_dirs": {
             "infrastructure/core/": 7,
             "infrastructure/llm/core/": 4,
-            "infrastructure/llm/templates/": 3,
             "infrastructure/llm/validation/": 3,
-            "infrastructure/llm/prompts/": 2,
+            "infrastructure/llm/templates/": 3,
             "infrastructure/llm/utils/": 2,
+            "infrastructure/llm/prompts/": 2,
             "infrastructure/validation/": 1
           },
           "imported_by_dirs": {
@@ -1550,8 +1550,8 @@
             "tests/infra_tests/llm/": 4,
             "infrastructure/llm/review/": 3,
             "infrastructure/llm/": 1,
-            "infrastructure/llm/cli/": 1,
-            "infrastructure/llm/core/": 1
+            "infrastructure/llm/core/": 1,
+            "infrastructure/llm/cli/": 1
           }
         },
         "infrastructure/llm/utils/": {
@@ -1619,9 +1619,9 @@
           },
           "imported_by_dirs": {
             "scripts/": 4,
-            "infrastructure/core/": 2,
-            "tests/infra_tests/core/": 2,
             "infrastructure/validation/": 2,
+            "tests/infra_tests/core/": 2,
+            "infrastructure/core/": 2,
             "tests/infra_tests/project/": 1
           }
         },
@@ -1638,7 +1638,7 @@
             "platforms.py",
             "publish_cli.py"
           ],
-          "total_loc": 1549,
+          "total_loc": 1552,
           "avg_fan_in": 5.1,
           "avg_fan_out": 3.2,
           "zones": {
@@ -1650,8 +1650,8 @@
           },
           "imported_by_dirs": {
             "tests/infra_tests/publishing/": 24,
-            "tests/integration/": 2,
-            "projects/code_project/scripts/": 2
+            "projects/code_project/scripts/": 2,
+            "tests/integration/": 2
           }
         },
         "infrastructure/rendering/": {
@@ -1704,7 +1704,7 @@
             "suite_runner.py",
             "suite_summary_generator.py"
           ],
-          "total_loc": 8795,
+          "total_loc": 8803,
           "avg_fan_in": 3.5,
           "avg_fan_out": 2.9,
           "zones": {
@@ -1796,14 +1796,14 @@
             "validate_markdown_cli.py",
             "validate_pdf_cli.py"
           ],
-          "total_loc": 7247,
+          "total_loc": 7245,
           "avg_fan_in": 4.6,
-          "avg_fan_out": 2.6,
+          "avg_fan_out": 2.7,
           "zones": {
             "production": 22
           },
           "imports_from_dirs": {
-            "infrastructure/core/": 24,
+            "infrastructure/core/": 25,
             "infrastructure/project/": 2
           },
           "imported_by_dirs": {
@@ -1946,8 +1946,8 @@
             "production": 2
           },
           "imports_from_dirs": {
-            "infrastructure/core/": 1,
-            "infrastructure/": 1
+            "infrastructure/": 1,
+            "infrastructure/core/": 1
           }
         },
         "projects/template/tests/": {
@@ -2374,8 +2374,8 @@
             "infrastructure/publishing/": 2,
             "infrastructure/scientific/": 1,
             "tests/helpers/": 1,
-            "infrastructure/llm/": 1,
-            "infrastructure/": 1
+            "infrastructure/": 1,
+            "infrastructure/llm/": 1
           }
         }
       },
@@ -2393,7 +2393,7 @@
         "tests/infra_tests/rendering/ \u2192 infrastructure/rendering/": 43,
         "scripts/ \u2192 infrastructure/core/": 35,
         "tests/infra_tests/core/ \u2192 infrastructure/core/": 34,
-        "infrastructure/validation/ \u2192 infrastructure/core/": 24,
+        "infrastructure/validation/ \u2192 infrastructure/core/": 25,
         "tests/infra_tests/llm/ \u2192 infrastructure/llm/core/": 24,
         "tests/infra_tests/publishing/ \u2192 infrastructure/publishing/": 24,
         "infrastructure/reporting/ \u2192 infrastructure/core/": 22,
@@ -2413,7 +2413,7 @@
     },
     "codebase_stats": {
       "total_files": 367,
-      "total_loc": 103205
+      "total_loc": 103222
     },
     "ai_debt_signals": {
       "file_signals": {
@@ -2479,7 +2479,7 @@
     },
     "error_conventions": {
       "try_catch": 171,
-      "throws": 85,
+      "throws": 86,
       "returns_null": 34,
       "result_type": 16
     },
@@ -3293,7 +3293,7 @@
         "smells: 1x type: ignore comment"
       ],
       "infrastructure/core/pipeline_summary.py": [
-        "structural: Needs decomposition: large (508 LOC) / complexity score 25",
+        "structural: Needs decomposition: large (516 LOC) / complexity score 29",
         "smells: 1x Function-level import (possible circular import workaround)"
       ],
       "projects_archive/cognitive_integrity/cogsec_multiagent_2_computational/tests/test_integration.py": [
@@ -5976,7 +5976,7 @@
     },
     "codebase_stats": {
       "total_files": 367,
-      "total_loc": 103205,
+      "total_loc": 103222,
       "avg_file_loc": 281
     },
     "sibling_conventions": {
@@ -6171,7 +6171,7 @@
       "infrastructure/publishing/cli.py": "try_catch",
       "infrastructure/publishing/metadata.py": "try_catch",
       "infrastructure/publishing/package.py": "try_catch",
-      "infrastructure/publishing/platforms.py": "mixed",
+      "infrastructure/publishing/platforms.py": "try_catch",
       "infrastructure/rendering/cli.py": "try_catch",
       "infrastructure/rendering/core.py": "throw",
       "infrastructure/rendering/latex_package_validator.py": "mixed",
@@ -6181,7 +6181,7 @@
       "infrastructure/rendering/web_renderer.py": "mixed",
       "infrastructure/reporting/__init__.py": "try_catch",
       "infrastructure/reporting/coverage_parser.py": "try_catch",
-      "infrastructure/reporting/coverage_reporter.py": "return_null",
+      "infrastructure/reporting/coverage_reporter.py": "mixed",
       "infrastructure/reporting/dashboard_generator.py": "try_catch",
       "infrastructure/reporting/executive_reporter.py": "try_catch",
       "infrastructure/reporting/manuscript_overview.py": "try_catch",

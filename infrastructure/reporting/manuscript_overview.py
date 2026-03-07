@@ -141,7 +141,8 @@ def _render_pages_with_reportlab(reader: "PdfReader", dpi: int) -> list["PIL.Ima
                 draw = ImageDraw.Draw(img)
                 try:
                     font = ImageFont.truetype("Helvetica", 12)
-                except Exception:
+                except (OSError, IOError) as e:
+                    logger.debug(f"Could not load Helvetica font: {e}")
                     font = ImageFont.load_default()  # type: ignore
 
                 y_pos = 50
@@ -184,7 +185,8 @@ def _render_pages_simple(reader: "PdfReader", dpi: int) -> list["PIL.Image.Image
         # Try to load a font
         try:
             font = ImageFont.truetype("Helvetica", 12)
-        except Exception:
+        except (OSError, IOError) as e:
+            logger.debug(f"Could not load Helvetica font: {e}")
             font = ImageFont.load_default()  # type: ignore
 
         # Extract and render text
@@ -292,7 +294,8 @@ def create_page_grid(
     # Try to load font for page numbers
     try:
         font = ImageFont.truetype("Helvetica", 10)
-    except Exception:
+    except (OSError, IOError) as e:
+        logger.debug(f"Could not load Helvetica font: {e}")
         font = ImageFont.load_default()  # type: ignore
 
     # Place images in grid
@@ -320,7 +323,8 @@ def create_page_grid(
     title = f"Manuscript Overview - {num_images} Pages"
     try:
         title_font = ImageFont.truetype("Helvetica-Bold", 16)
-    except Exception:
+    except (OSError, IOError) as e:
+        logger.debug(f"Could not load Helvetica-Bold font: {e}")
         title_font = ImageFont.load_default()  # type: ignore
 
     draw.text((padding, padding // 2), title, fill="black", font=title_font)

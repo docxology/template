@@ -198,7 +198,7 @@ class MissingDependencyError(DependencyError):
 
         # Auto-generate installation commands based on common package managers
         if recovery_commands is None and dependency:
-            from infrastructure.core.environment import build_install_commands
+            from infrastructure.core.environment import build_install_commands  # deferred: circular import guard
             recovery_commands = build_install_commands(dependency)
 
         super().__init__(message, context, suggestions, recovery_commands)

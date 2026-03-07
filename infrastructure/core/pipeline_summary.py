@@ -430,16 +430,13 @@ class PipelineSummaryGenerator:
         Returns:
             Final log file path
         """
-        # Replace "projects/{name}/output" with "output" in path
-        log_str = str(log_file)
-        # Handle paths like "projects/project/output/..." -> "output/..."
-        if "projects/" in log_str and "/output/" in log_str:
-            # Find the output directory and take everything after it
-            output_index = log_str.find("/output/")
-            if output_index != -1:
-                return Path(
-                    "output" + log_str[output_index + 7 :]
-                )  # +7 to skip "/output" but keep the "/"
+        # Handle paths like "projects/{name}/output/..." -> "output/..."
+        parts = log_file.parts
+        if "projects" in parts and "output" in parts:
+            output_idx = parts.index("output")
+            projects_idx = parts.index("projects")
+            if projects_idx < output_idx:
+                return Path("output").joinpath(*parts[output_idx + 1:])
         return log_file
 
     def _find_base_output_dir(self, inventory: list[FileInventoryEntry]) -> Path | None:
@@ -462,7 +459,7 @@ class PipelineSummaryGenerator:
         # Start with the first path and find common parent
         common_parent = paths[0].parent
         for path in paths[1:]:
-            while not str(path).startswith(str(common_parent)):
+            while not path.is_relative_to(common_parent):
                 common_parent = common_parent.parent
                 if common_parent == common_parent.parent:  # root
                     break
@@ -478,13 +475,12 @@ class PipelineSummaryGenerator:
         Returns:
             Project name
         """
-        path_str = str(path)
-        if "projects/" in path_str and "/output" in path_str:
-            # Extract project name between "projects/" and "/output"
-            start = path_str.find("projects/") + len("projects/")
-            end = path_str.find("/output", start)
-            if end > start:
-                return path_str[start:end]
+        parts = path.parts
+        if "projects" in parts and "output" in parts:
+            projects_idx = parts.index("projects")
+            output_idx = parts.index("output")
+            if projects_idx < output_idx and output_idx > projects_idx + 1:
+                return parts[projects_idx + 1]
         return None
 
 

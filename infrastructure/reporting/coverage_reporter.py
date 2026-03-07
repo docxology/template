@@ -17,7 +17,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
-def parse_coverage_json(coverage_json_path: Path) -> dict[str, Any]:
+def parse_coverage_json(coverage_json_path: Path) -> dict[str, Any] | None:
     """Parse coverage.json file for detailed per-module coverage data.
 
     Args:
@@ -162,9 +162,11 @@ def parse_pytest_output(stdout: str, stderr: str, exit_code: int) -> dict[str, A
     results["total"] = results["passed"] + results["failed"] + results["skipped"]
 
     # Parse discovery count from collection output (e.g., "collected 187 items")
-    discovery_match = re.search(r"collected\s+(\d+)\s+items?", stdout)
-    if discovery_match:
-        results["discovery_count"] = int(discovery_match.group(1))
+    # Only update if not already set by the collection-error branch above
+    if results["discovery_count"] == 0:
+        discovery_match = re.search(r"collected\s+(\d+)\s+items?", stdout)
+        if discovery_match:
+            results["discovery_count"] = int(discovery_match.group(1))
 
     # Parse execution timing phases
     # Look for patterns like "test session starts", "collecting", etc.
