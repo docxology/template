@@ -14,17 +14,10 @@ try:
         generate_matplotlib_dashboard,
         generate_plotly_dashboard,
     )
-except ImportError as _dashboard_err:
-    import warnings
 
-    warnings.warn(
-        f"dashboard_generator unavailable (plotly not installed): {_dashboard_err}",
-        ImportWarning,
-        stacklevel=2,
-    )
-    generate_all_dashboards = None  # type: ignore[assignment]
-    generate_matplotlib_dashboard = None  # type: ignore[assignment]
-    generate_plotly_dashboard = None  # type: ignore[assignment]
+    _DASHBOARD_AVAILABLE = True
+except ImportError:
+    _DASHBOARD_AVAILABLE = False
 from .error_aggregator import (
     ErrorAggregator,
     ErrorEntry,
@@ -81,9 +74,6 @@ __all__ = [
     "collect_project_metrics",
     "ProjectMetrics",
     "ExecutiveSummary",
-    "generate_all_dashboards",
-    "generate_matplotlib_dashboard",
-    "generate_plotly_dashboard",
     "generate_multi_project_report",
     "OutputOrganizer",
     "FileType",

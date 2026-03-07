@@ -4,44 +4,11 @@ from __future__ import annotations
 
 from typing import Any
 
-# Note: get_logger is imported at function level to avoid circular import
+from infrastructure.core.exceptions import TemplateError
 
 
 def format_error_with_suggestions(error: Any) -> str:
-    """Format error message with context, recovery suggestions, and commands.
-
-    Args:
-        error: TemplateError instance with context, suggestions, and recovery commands
-
-    Returns:
-        Formatted error message string
-
-    Example:
-        >>> from infrastructure.core.exceptions import TemplateError
-        >>> error = TemplateError(
-        ...     "File not found",
-        ...     context={"file": "test.txt", "line": 10},
-        ...     suggestions=["Check file path", "Verify permissions"],
-        ...     recovery_commands=["ls -la test.txt", "cat test.txt"]
-        ... )
-        >>> print(format_error_with_suggestions(error))
-        ❌ File not found
-        <BLANKLINE>
-        📋 Context:
-           • file: test.txt
-           • line: 10
-        <BLANKLINE>
-        🔧 Recovery Options:
-           1. Check file path
-           2. Verify permissions
-        <BLANKLINE>
-        💻 Quick Fix Commands:
-           $ ls -la test.txt
-           $ cat test.txt
-    """
-    # Import here to avoid circular import
-    from infrastructure.core.exceptions import TemplateError
-
+    """Format a TemplateError into a human-readable message with context and recovery suggestions."""
     if not isinstance(error, TemplateError):
         return str(error)
 

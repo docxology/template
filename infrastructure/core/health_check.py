@@ -277,23 +277,9 @@ _PROCESS_START_TIME: float = time.time()
 _checker: SystemHealthChecker | None = None
 
 
-def _get_checker() -> SystemHealthChecker:
+def get_health_checker() -> SystemHealthChecker:
+    """Return the module-level SystemHealthChecker singleton."""
     global _checker
     if _checker is None:
         _checker = SystemHealthChecker(start_time=_PROCESS_START_TIME)
     return _checker
-
-
-def quick_health_check() -> bool:
-    """Return True if system is healthy."""
-    return _get_checker().is_healthy()
-
-
-def get_health_status() -> dict[str, Any]:
-    """Get detailed health status."""
-    return _get_checker().get_health_status()
-
-
-def get_health_metrics() -> dict[str, Any]:
-    """Get health metrics for monitoring systems."""
-    return _get_checker().get_metrics()
