@@ -20,7 +20,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Optional, TypedDict
 
-from infrastructure.core.file_operations import calculate_file_hash  # noqa: F401
+from infrastructure.core.file_operations import calculate_file_hash
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)

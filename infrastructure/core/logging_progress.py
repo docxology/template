@@ -33,27 +33,7 @@ def calculate_eta_ema(
     previous_eta: Optional[float] = None,
     alpha: float = 0.3,
 ) -> Optional[float]:
-    """Calculate ETA using exponential moving average for better accuracy.
-
-    EMA provides smoother estimates that adapt to changing performance,
-    reducing the impact of outliers (very fast or slow items).
-
-    Args:
-        elapsed_time: Time elapsed so far in seconds
-        completed_items: Number of items completed
-        total_items: Total number of items
-        previous_eta: Previous ETA estimate (for EMA calculation)
-        alpha: Smoothing factor (0-1), higher = more responsive to recent data
-
-    Returns:
-        Estimated time remaining in seconds, or None if cannot calculate
-
-    Example:
-        >>> # First calculation (no previous ETA)
-        >>> eta1 = calculate_eta_ema(30.0, 3, 10)
-        >>> # Subsequent calculation with EMA smoothing
-        >>> eta2 = calculate_eta_ema(40.0, 4, 10, previous_eta=eta1)
-    """
+    """Calculate ETA using EMA blending; returns seconds remaining or None."""
     if completed_items <= 0 or total_items <= 0:
         return None
 
@@ -82,26 +62,7 @@ def calculate_eta_with_confidence(
     total_items: int,
     item_durations: Optional[list[float]] = None,
 ) -> tuple[Optional[float], Optional[float], Optional[float]]:
-    """Calculate ETA with confidence intervals (optimistic/pessimistic).
-
-    Provides three estimates:
-    - Optimistic: Based on fastest items
-    - Realistic: Based on average
-    - Pessimistic: Based on slowest items
-
-    Args:
-        elapsed_time: Time elapsed so far in seconds
-        completed_items: Number of items completed
-        total_items: Total number of items
-        item_durations: Optional list of individual item durations for better estimates
-
-    Returns:
-        Tuple of (optimistic_eta, realistic_eta, pessimistic_eta)
-
-    Example:
-        >>> calculate_eta_with_confidence(30.0, 3, 10, [8.0, 10.0, 12.0])
-        (56.0, 70.0, 84.0)  # Based on min/avg/max durations
-    """
+    """Return (optimistic, realistic, pessimistic) ETA tuple based on min/avg/max item duration."""
     if completed_items <= 0 or total_items <= 0:
         return (None, None, None)
 
@@ -136,19 +97,7 @@ def log_progress_bar(
     logger: Optional[logging.Logger] = None,
     bar_width: int = 40,
 ) -> None:
-    """Display a progress bar in the console.
-
-    Args:
-        current: Current progress value
-        total: Total progress value
-        message: Progress message
-        logger: Logger instance (optional)
-        bar_width: Width of progress bar in characters
-
-    Example:
-        >>> log_progress_bar(3, 10, "Processing files")
-        Processing files: [████████░░░░░░░░░░░░] 30%
-    """
+    """Log a filled/empty block progress bar at the given percentage."""
     if logger is None:
         logger = logging.getLogger(__name__)
 
@@ -249,22 +198,7 @@ def log_with_spinner(
     logger: Optional[logging.Logger] = None,
     final_message: Optional[str] = None,
 ) -> Iterator[None]:
-    """Context manager for operations with spinner indicator.
-
-    Args:
-        message: Message to display with spinner
-        logger: Logger instance (optional, for final message)
-        final_message: Message to display when done (uses logger if provided)
-
-    Yields:
-        None
-
-    Example:
-        >>> with log_with_spinner("Loading model...", logger):
-        ...     load_model()
-        ⠋ Loading model...
-        ✅ Model loaded
-    """
+    """Context manager that shows a spinner during the block and logs completion."""
     spinner = Spinner(message)
     spinner.start()
 

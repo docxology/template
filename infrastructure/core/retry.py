@@ -158,6 +158,7 @@ def retry_on_transient_failure(
     return retry_with_backoff(
         max_attempts=max_attempts,
         initial_delay=initial_delay,
+        max_delay=10.0,
         exceptions=TRANSIENT_EXCEPTIONS,
     )
 

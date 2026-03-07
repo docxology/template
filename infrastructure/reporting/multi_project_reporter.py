@@ -12,7 +12,11 @@ from typing import Any
 
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.core.multi_project import MultiProjectResult
-from infrastructure.reporting.dashboard_generator import generate_all_dashboards
+try:
+    from infrastructure.reporting.dashboard_generator import generate_all_dashboards
+    _DASHBOARD_AVAILABLE = True
+except ImportError:
+    _DASHBOARD_AVAILABLE = False
 from infrastructure.reporting.executive_reporter import (
     generate_executive_summary,
     save_executive_summary,
@@ -48,8 +52,9 @@ def generate_multi_project_report(
         summary_files = save_executive_summary(summary, output_dir)
         all_files.update(summary_files)
 
-        dashboard_files = generate_all_dashboards(summary, output_dir)
-        all_files.update(dashboard_files)
+        if _DASHBOARD_AVAILABLE:
+            dashboard_files = generate_all_dashboards(summary, output_dir)
+            all_files.update(dashboard_files)
 
         logger.info(f"Multi-project reporting complete. Generated {len(all_files)} files.")
         for file_type, path in all_files.items():

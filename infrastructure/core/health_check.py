@@ -20,9 +20,18 @@ logger = get_logger(__name__)
 class SystemHealthChecker:
     """Comprehensive system health monitoring."""
 
-    def __init__(self, repo_root: Path | None = None, start_time: float | None = None) -> None:
+    def __init__(
+        self,
+        repo_root: Path | None = None,
+        start_time: float | None = None,
+        network_test_hosts: tuple[str, ...] | None = None,
+    ) -> None:
         self.start_time = start_time if start_time is not None else time.time()
         self.repo_root = repo_root or Path.cwd()
+        self._network_dns_host, self._network_tcp_host = (
+            network_test_hosts[:2] if network_test_hosts and len(network_test_hosts) >= 2
+            else ("google.com", "1.1.1.1")
+        )
         self.checks = {
             "filesystem": self._check_filesystem,
             "memory": self._check_memory,
@@ -149,14 +158,14 @@ class SystemHealthChecker:
 
         # Test DNS resolution
         try:
-            socket.gethostbyname("google.com")
+            socket.gethostbyname(self._network_dns_host)
             results["dns_resolution"] = True
         except socket.gaierror:
             results["dns_resolution"] = False
 
         # Test basic TCP connectivity via socket (no external HTTP dependency)
         try:
-            with socket.create_connection(("1.1.1.1", 80), timeout=5):
+            with socket.create_connection((self._network_tcp_host, 80), timeout=5):
                 results["http_connectivity"] = True
         except OSError:
             results["http_connectivity"] = False

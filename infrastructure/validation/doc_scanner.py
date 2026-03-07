@@ -13,22 +13,17 @@ This script performs a systematic 7-phase documentation scan:
 
 from __future__ import annotations
 
-import json  # noqa: F401
 import subprocess
 import sys
 from collections import defaultdict
-from dataclasses import asdict, dataclass, field  # noqa: F401
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set, Tuple  # noqa: F401
-
-import yaml  # noqa: F401
 
 from infrastructure.core.logging_utils import get_logger, log_header, log_success
 from infrastructure.validation.doc_accuracy import run_accuracy_phase
 from infrastructure.validation.doc_completeness import run_completeness_phase
 from infrastructure.validation.doc_discovery import run_discovery_phase
-from infrastructure.validation.doc_models import (  # noqa: F401
+from infrastructure.validation.doc_models import (
     AccuracyIssue,
     CompletenessGap,
     DocumentationFile,
@@ -37,6 +32,17 @@ from infrastructure.validation.doc_models import (  # noqa: F401
     ScanResults,
 )
 from infrastructure.validation.doc_quality import run_quality_phase
+
+# Re-export doc_models symbols so callers can import them from this module
+__all__ = [
+    "DocumentationScanner",
+    "AccuracyIssue",
+    "CompletenessGap",
+    "DocumentationFile",
+    "LinkIssue",
+    "QualityIssue",
+    "ScanResults",
+]
 
 logger = get_logger(__name__)
 
@@ -377,7 +383,7 @@ class DocumentationScanner:
 
         return "\n".join(report_lines)
 
-    def run_full_scan(self) -> Tuple[ScanResults, str]:
+    def run_full_scan(self) -> tuple[ScanResults, str]:
         """Run all 7 phases of the documentation scan."""
         logger.info("Starting Comprehensive Documentation Scan...")
         logger.info("=" * 60)
