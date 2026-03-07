@@ -82,21 +82,7 @@ def get_log_level_from_env() -> int:
 def setup_logger(
     name: str, level: Optional[int] = None, log_file: Optional[Path | str] = None
 ) -> logging.Logger:
-    """Set up a logger with consistent formatting.
-
-    Args:
-        name: Logger name (usually __name__)
-        level: Logging level (None = use environment)
-        log_file: Optional file to write logs to
-
-    Returns:
-        Configured logger instance
-
-    Example:
-        >>> logger = setup_logger(__name__)
-        >>> logger.info("Processing started")
-        ℹ️ [2025-11-21 12:00:00] [INFO] Processing started
-    """
+    """Configure and return a logger with console handler and optional file handler."""
     logger = logging.getLogger(name)
 
     # Set level from environment or parameter
@@ -253,15 +239,7 @@ def log_operation(
     min_duration_to_log: float = 0.1,
     log_completion: bool = True,
 ) -> Iterator[None]:
-    """Context manager for logging operation start and optional completion.
-
-    Args:
-        operation: Description of the operation
-        logger: Logger instance (creates one if None)
-        level: Log level for messages
-        min_duration_to_log: Minimum duration (seconds) to log completion message
-        log_completion: Whether to log completion message (False = start only)
-    """
+    """Context manager that logs operation start, completion (if above min_duration), and failure."""
     logger = logger or get_logger(__name__)
 
     logger.log(level, f"Starting: {operation}")
@@ -281,20 +259,7 @@ def log_operation(
 
 @contextmanager
 def log_timing(label: str, logger: Optional[logging.Logger] = None) -> Iterator[None]:
-    """Context manager for timing operations.
-
-    Args:
-        label: Label for the timed operation
-        logger: Logger instance (creates one if None)
-
-    Yields:
-        None
-
-    Example:
-        >>> with log_timing("Data processing", logger):
-        ...     expensive_operation()
-        ℹ️ [2025-11-21 12:00:05] [INFO] Data processing: 5.0s
-    """
+    """Context manager that logs elapsed time for label on exit."""
     logger = logger or get_logger(__name__)
 
     start_time = time.time()
@@ -306,21 +271,7 @@ def log_timing(label: str, logger: Optional[logging.Logger] = None) -> Iterator[
 
 
 def log_function_call(logger: Optional[logging.Logger] = None) -> Callable:
-    """Decorator to log function calls with timing.
-
-    Args:
-        logger: Logger instance (creates one if None)
-
-    Returns:
-        Decorator function
-
-    Example:
-        >>> @log_function_call(logger)
-        ... def process_data():
-        ...     pass
-        ℹ️ [2025-11-21 12:00:00] [INFO] Calling: process_data
-        ℹ️ [2025-11-21 12:00:05] [INFO] Completed: process_data (5.0s)
-    """
+    """Decorator that logs function calls at DEBUG level with elapsed time and error reporting."""
 
     def decorator(func: Callable[..., T]) -> Callable[..., T]:
         func_logger = logger or get_logger(func.__module__)
@@ -359,19 +310,7 @@ def log_success(message: str, logger: Optional[logging.Logger] = None) -> None:
 
 
 def log_header(message: str, logger: Optional[logging.Logger] = None) -> None:
-    """Log a section header with visual emphasis.
-
-    Args:
-        message: Header message
-        logger: Logger instance (creates one if None)
-
-    Example:
-        >>> log_header("STAGE 01: Setup")
-        🚀 [2025-11-21 12:00:00] [INFO]
-        🚀 [2025-11-21 12:00:00] [INFO] ============================================================
-        🚀 [2025-11-21 12:00:00] [INFO] STAGE 01: Setup
-        🚀 [2025-11-21 12:00:00] [INFO] ============================================================
-    """
+    """Log a section header with visual emphasis (separator + message + separator)."""
     logger = logger or get_logger(__name__)
 
     prefix = EMOJIS["rocket"] + " " if USE_EMOJIS else ""
@@ -386,18 +325,7 @@ def log_header(message: str, logger: Optional[logging.Logger] = None) -> None:
 def log_progress(
     current: int, total: int, task: str, logger: Optional[logging.Logger] = None
 ) -> None:
-    """Log progress with percentage.
-
-    Args:
-        current: Current item number
-        total: Total number of items
-        task: Task description
-        logger: Logger instance (creates one if None)
-
-    Example:
-        >>> log_progress(15, 100, "Processing files")
-        ℹ️ [2025-11-21 12:00:00] [INFO] [15/100 - 15%] Processing files
-    """
+    """Log progress as [current/total - percent%] task."""
     logger = logger or get_logger(__name__)
 
     percent = (current * 100) // total if total > 0 else 0
@@ -410,22 +338,7 @@ def log_stage(
     stage_name: str,
     logger: Optional[logging.Logger] = None,
 ) -> None:
-    """Log a pipeline stage header with consistent formatting.
-
-    Provides standardized stage header formatting across all pipeline scripts.
-
-    Args:
-        stage_num: Current stage number (1-based)
-        total_stages: Total number of stages
-        stage_name: Name of the stage
-        logger: Logger instance (creates one if None)
-
-    Example:
-        >>> log_stage(3, 7, "PDF Rendering")
-        ℹ️ [2025-11-21 12:00:00] [INFO]
-        ℹ️ [2025-11-21 12:00:00] [INFO] [3/7] PDF Rendering
-        ℹ️ [2025-11-21 12:00:00] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    """
+    """Log a pipeline stage header as [stage_num/total_stages] stage_name with separator."""
     logger = logger or get_logger(__name__)
 
     separator = "━" * 46
@@ -435,33 +348,14 @@ def log_stage(
 
 
 def log_substep(message: str, logger: Optional[logging.Logger] = None) -> None:
-    """Log a substep within a stage with consistent indentation.
-
-    Adds a leading newline and indentation for visual separation.
-
-    Args:
-        message: Substep description
-        logger: Logger instance (creates one if None)
-
-    Example:
-        >>> log_substep("Validating PDF files...")
-        ℹ️ [2025-11-21 12:00:00] [INFO]
-        ℹ️ [2025-11-21 12:00:00] [INFO]   Validating PDF files...
-    """
+    """Log a substep within a stage with leading newline and two-space indentation."""
     logger = logger or get_logger(__name__)
 
     logger.info(f"\n  {message}")
 
 
 def set_global_log_level(level: int) -> None:
-    """Set log level for all template loggers.
-
-    Args:
-        level: Python logging level (DEBUG, INFO, WARNING, ERROR)
-
-    Example:
-        >>> set_global_log_level(logging.DEBUG)
-    """
+    """Set log level on the root logger and all named loggers."""
     logging.getLogger().setLevel(level)
     for logger_name in logging.Logger.manager.loggerDict:
         logger = logging.getLogger(logger_name)

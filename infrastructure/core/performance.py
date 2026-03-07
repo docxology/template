@@ -166,9 +166,12 @@ def performance_context(operation_name: str = "Operation"):
     try:
         yield monitor
     finally:
-        metrics = monitor.stop()
-        monitor.last_metrics = metrics
-        logger.debug(f"{operation_name}: {format_duration(metrics.duration)}")
+        try:
+            metrics = monitor.stop()
+            monitor.last_metrics = metrics
+            logger.debug(f"{operation_name}: {format_duration(metrics.duration)}")
+        except BuildError as e:
+            logger.debug(f"performance_context stop failed for {operation_name}: {e}")
 
 
 def get_system_resources() -> dict[str, Any]:
@@ -224,6 +227,7 @@ class StagePerformanceTracker:
     def end_stage(self, stage_name: str, exit_code: int) -> dict[str, Any]:
         """End tracking a stage and return metrics."""
         if self.start_time is None:
+            logger.debug("end_stage called without start_stage for %s", stage_name)
             return {}
 
         duration = time.time() - self.start_time
