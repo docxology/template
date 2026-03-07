@@ -120,8 +120,9 @@ class PipelineSummaryGenerator:
         # Log file info
         if summary.log_file:
             log_file_final = self._get_final_log_path(summary.log_file)
+            log_path_changed = str(summary.log_file) != str(log_file_final)
             lines.append(f"Full pipeline log: {summary.log_file}")
-            if str(summary.log_file) != str(log_file_final):
+            if log_path_changed:
                 lines.append(f"  (Will be available at: {log_file_final} after copy stage)")
 
         lines.append("")
@@ -177,13 +178,12 @@ class PipelineSummaryGenerator:
             else:
                 lines.append("Note: Files will be copied to output/ during copy stage")
 
-        # Log file location
+        # Log file location (reuses log_file_final computed above)
         if summary.log_file:
-            log_file_final = self._get_final_log_path(summary.log_file)
             lines.append("")
             lines.append("Pipeline Log:")
             lines.append(f"  • Current: {summary.log_file}")
-            if str(summary.log_file) != str(log_file_final):
+            if log_path_changed:
                 lines.append(f"  • Final: {log_file_final} (after copy stage)")
 
         # Coverage reports

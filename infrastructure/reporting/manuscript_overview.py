@@ -13,7 +13,7 @@ import math
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from infrastructure.core.exceptions import PDFValidationError, ValidationError
+from infrastructure.core.exceptions import FileNotFoundError, PDFValidationError, ValidationError
 from infrastructure.core.logging_utils import get_logger
 
 if TYPE_CHECKING:
@@ -43,7 +43,7 @@ def extract_pdf_pages_as_images(pdf_path: Path, dpi: int = 300) -> list["PIL.Ima
         ValueError: If PDF is corrupted or has no pages
     """
     if not pdf_path.exists():
-        raise FileNotFoundError(f"PDF file not found: {pdf_path}")
+        raise FileNotFoundError(f"PDF file not found: {pdf_path}", context={"file": str(pdf_path)})
 
     try:
         from pypdf import PdfReader
@@ -239,19 +239,6 @@ def create_page_grid(
         from PIL import Image, ImageDraw, ImageFont
     except ImportError:
         raise ImportError("PIL required for image processing")
-    """Arrange page images in a grid layout.
-
-    Args:
-        images: List of PIL Images (one per page)
-        cols: Number of columns in grid (default: 4)
-        padding: Padding between thumbnails in pixels (default: 10)
-        max_thumb_size: Maximum size for each thumbnail (width, height) (default: 600x800)
-
-    Returns:
-        Single PIL Image containing the grid layout
-    """
-    if not images:
-        raise ValidationError("No images provided for grid creation")
 
     # Calculate grid dimensions
     num_images = len(images)

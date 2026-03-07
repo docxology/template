@@ -14,7 +14,6 @@ from __future__ import annotations
 import os
 import re
 from pathlib import Path
-from typing import Set
 
 from infrastructure.core.exceptions import FileNotFoundError, NotADirectoryError
 
@@ -58,7 +57,7 @@ def find_markdown_files(markdown_dir: str | Path) -> list[str]:
 
     return [str(markdown_dir / f) for f in sorted(os.listdir(markdown_dir)) if f.endswith(".md")]
 
-def collect_symbols(md_paths: list[str]) -> tuple[Set[str], Set[str]]:
+def collect_symbols(md_paths: list[str]) -> tuple[set[str], set[str]]:
     """Collect all equation labels and section anchors from markdown files.
 
     Args:
@@ -67,8 +66,8 @@ def collect_symbols(md_paths: list[str]) -> tuple[Set[str], Set[str]]:
     Returns:
         Tuple of (equation_labels, section_anchors) as sets
     """
-    labels: Set[str] = set()
-    anchors: Set[str] = set()
+    labels: set[str] = set()
+    anchors: set[str] = set()
     for path in md_paths:
         with open(path, "r", encoding="utf-8") as fh:
             text = fh.read()
@@ -145,7 +144,7 @@ def validate_images(
     return problems
 
 def validate_refs(
-    md_paths: list[str], labels: Set[str], anchors: Set[str], repo_root: str | Path
+    md_paths: list[str], labels: set[str], anchors: set[str], repo_root: str | Path
 ) -> list[str]:
     """Validate cross-references, internal links, and external URLs.
 
@@ -202,7 +201,7 @@ def validate_math(md_paths: list[str], repo_root: str | Path) -> list[str]:
     problems: list[str] = []
     eq_block = re.compile(r"\\begin\{equation\}([\s\S]*?)\\end\{equation\}", re.MULTILINE)
     label_pattern = re.compile(r"\\label\{([^}]+)\}")
-    seen_labels: Set[str] = set()
+    seen_labels: set[str] = set()
     for path in md_paths:
         with open(path, "r", encoding="utf-8") as fh:
             text = fh.read()

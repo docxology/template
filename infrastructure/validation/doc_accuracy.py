@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import Any, Set
+from typing import Any
 
 import yaml
 
@@ -13,7 +13,7 @@ from infrastructure.validation.doc_models import AccuracyIssue, LinkIssue
 
 logger = get_logger(__name__)
 
-def extract_headings(content: str) -> Set[str]:
+def extract_headings(content: str) -> set[str]:
     """Extract all heading anchors from markdown."""
     headings = set()
 
@@ -99,7 +99,7 @@ def resolve_file_path(target: str, source_file: Path, repo_root: Path) -> tuple[
         return False, f"Error resolving path: {e}", "unknown"
 
 def check_links(
-    md_files: list[Path], repo_root: Path, all_headings: dict[str, Set[str]]
+    md_files: list[Path], repo_root: Path, all_headings: dict[str, set[str]]
 ) -> list[LinkIssue]:
     """Check all links in markdown files.
 
@@ -301,7 +301,7 @@ def check_terminology(md_files: list[Path]) -> list[AccuracyIssue]:
 
 def run_accuracy_phase(
     md_files: list[Path], repo_root: Path, config_files: dict[str, Path]
-) -> tuple[dict[str, Any], list[LinkIssue], list[AccuracyIssue], dict[str, Set[str]]]:
+) -> tuple[dict[str, Any], list[LinkIssue], list[AccuracyIssue], dict[str, set[str]]]:
     """Run Phase 2: Accuracy Verification.
 
     Args:
@@ -315,7 +315,7 @@ def run_accuracy_phase(
     logger.info("Phase 2: Accuracy Verification...")
 
     # Collect headings for anchor validation
-    all_headings: dict[str, Set[str]] = {}
+    all_headings: dict[str, set[str]] = {}
     for md_file in md_files:
         try:
             content = md_file.read_text(encoding="utf-8")

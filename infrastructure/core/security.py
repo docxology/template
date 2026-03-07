@@ -13,6 +13,7 @@ from functools import wraps
 from pathlib import Path
 from typing import Any, Callable, Union
 
+from infrastructure.core.exceptions import SecurityViolation
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
@@ -383,11 +384,6 @@ class SecurityMonitor:
             "most_recent_event": self.events[-1] if self.events else None,
         }
 
-
-class SecurityViolation(Exception):
-    """Exception raised for security violations."""
-
-    pass
 
 
 # Global instances (lazy initialization — avoids import-time side effects)

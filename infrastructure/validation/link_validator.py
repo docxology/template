@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import Set
 
 from infrastructure.core.logging_utils import get_logger
 
@@ -24,8 +23,8 @@ class LinkValidator:
             repo_root: Root directory of the repository
         """
         self.repo_root = repo_root
-        self.all_files: Set[Path] = set()
-        self.all_dirs: Set[Path] = set()
+        self.all_files: set[Path] = set()
+        self.all_dirs: set[Path] = set()
         self._scan_repository()
 
     def _scan_repository(self) -> None:

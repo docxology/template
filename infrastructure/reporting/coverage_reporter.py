@@ -159,7 +159,9 @@ def parse_pytest_output(stdout: str, stderr: str, exit_code: int) -> dict[str, A
                     results["passed"] = dot_count
                     results["total"] = dot_count
 
-    results["total"] = results["passed"] + results["failed"] + results["skipped"]
+    # Only compute total from parsed counts when the fallback branch didn't set it explicitly
+    if results["total"] == 0:
+        results["total"] = results["passed"] + results["failed"] + results["skipped"]
 
     # Parse discovery count from collection output (e.g., "collected 187 items")
     # Only update if not already set by the collection-error branch above

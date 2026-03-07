@@ -17,7 +17,7 @@ import sys
 from collections import defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Set
+from typing import Any
 
 import yaml
 
@@ -59,10 +59,10 @@ class RepositoryScanner:
     def __init__(self, repo_root: Path):
         self.repo_root = repo_root.resolve()
         self.results = ScanResults()
-        self.src_modules: Set[str] = set()
+        self.src_modules: set[str] = set()
         self.script_files: list[Path] = []
         self.test_files: list[Path] = []
-        self.documented_modules: Set[str] = set()
+        self.documented_modules: set[str] = set()
 
     def scan_all(self) -> ScanResults:
         """Execute all 6 phases of the repository scan.
