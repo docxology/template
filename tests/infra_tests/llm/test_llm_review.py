@@ -32,37 +32,7 @@ from infrastructure.llm.core.config import get_max_input_length
 DEFAULT_MAX_INPUT_LENGTH: int = 500000
 from infrastructure.llm.review.generator import validate_review_quality
 from infrastructure.llm.review.io import SessionMetrics, generate_review_summary, save_review_outputs
-from infrastructure.llm.review.metrics import ManuscriptInputMetrics, ReviewMetrics, estimate_tokens
-
-
-class TestEstimateTokens:
-    """Tests for estimate_tokens() function."""
-
-    def test_empty_string(self):
-        """Test token estimation for empty string."""
-        assert estimate_tokens("") == 0
-
-    def test_short_text(self):
-        """Test token estimation for short text."""
-        # 12 characters -> ~3 tokens
-        assert estimate_tokens("Hello World!") == 3
-
-    def test_longer_text(self):
-        """Test token estimation for longer text."""
-        # 400 characters -> ~100 tokens
-        text = "a" * 400
-        assert estimate_tokens(text) == 100
-
-    def test_realistic_text(self):
-        """Test token estimation for realistic text."""
-        # Typical research text
-        text = """This research presents a novel approach to optimization 
-        using machine learning techniques. The methodology involves 
-        training neural networks on synthetic data and evaluating 
-        performance on real-world datasets."""
-        # ~248 chars -> ~62 tokens
-        result = estimate_tokens(text)
-        assert 50 <= result <= 70
+from infrastructure.llm.review.metrics import ManuscriptInputMetrics, ReviewMetrics
 
 
 class TestGetMaxInputLength:

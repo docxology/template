@@ -14,6 +14,7 @@ All functions follow the thin orchestrator pattern and maintain
 from __future__ import annotations
 
 import json
+import os
 import pickle  # noqa: S403 — used for pickle file validation
 import re
 from dataclasses import dataclass, field
@@ -147,6 +148,11 @@ def verify_data_consistency(data_files: list[Path]) -> dict[str, bool]:
         "metadata_consistent": True,
     }
 
+    try:
+        import numpy as np  # optional; only used for .npz/.npy validation
+    except ImportError:
+        np = None  # type: ignore[assignment]
+
     for data_file in data_files:
         if not data_file.exists():
             logger.warning(f"Data file not found: {data_file}")
@@ -171,8 +177,8 @@ def verify_data_consistency(data_files: list[Path]) -> dict[str, bool]:
                             consistency["data_integrity"] = False
             elif file_extension in [".npz", ".npy"]:
                 # NumPy array validation
-                import numpy as np
-
+                if np is None:
+                    continue
                 data = np.load(data_file)
                 if not hasattr(data, "shape"):
                     consistency["data_integrity"] = False
@@ -446,7 +452,7 @@ def check_file_permissions(output_dir: Path) -> PermissionCheck:
     permissions: PermissionCheck = {
         "readable": True,
         "writable": True,
-        "executable": True,
+        "executable": os.access(output_dir, os.X_OK) if output_dir.exists() else False,
         "issues": [],
     }
 
@@ -558,6 +564,9 @@ def create_integrity_manifest(output_dir: Path) -> dict[str, Any]:
     if not output_dir.exists():
         return manifest
 
+    file_count = 0
+    total_size = 0
+
     # Calculate file hashes and collect metadata
     for item in output_dir.rglob("*"):
         if item.is_file():
@@ -571,8 +580,11 @@ def create_integrity_manifest(output_dir: Path) -> dict[str, Any]:
                 "modified": item.stat().st_mtime,
             }
 
-            manifest["file_count"] = int(manifest["file_count"]) + 1
-            manifest["total_size"] = int(manifest["total_size"]) + file_size
+            file_count += 1
+            total_size += file_size
+
+    manifest["file_count"] = file_count
+    manifest["total_size"] = total_size
 
     # Create directory structure
     for dir_path in output_dir.rglob("*"):

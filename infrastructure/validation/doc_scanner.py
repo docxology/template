@@ -22,7 +22,11 @@ from pathlib import Path
 from infrastructure.core.logging_utils import get_logger, log_header, log_success
 from infrastructure.validation.doc_accuracy import run_accuracy_phase
 from infrastructure.validation.doc_completeness import run_completeness_phase
-from infrastructure.validation.doc_discovery import run_discovery_phase
+from infrastructure.validation.doc_discovery import (
+    find_markdown_files,
+    identify_cross_references,
+    run_discovery_phase,
+)
 from infrastructure.validation.doc_models import (
     DocumentationFile,
     ScanResults,
@@ -61,8 +65,6 @@ class DocumentationScanner:
 
     def phase2_accuracy(self) -> Dict[str, Any]:
         """Phase 2: Accuracy Verification."""
-        from infrastructure.validation.doc_discovery import find_markdown_files
-
         md_files = find_markdown_files(self.repo_root)
 
         accuracy_report, link_issues, accuracy_issues, all_headings = run_accuracy_phase(
@@ -88,8 +90,6 @@ class DocumentationScanner:
 
     def phase4_quality(self) -> Dict[str, Any]:
         """Phase 4: Quality Assessment."""
-        from infrastructure.validation.doc_discovery import find_markdown_files
-
         md_files = find_markdown_files(self.repo_root)
         quality_report, quality_issues = run_quality_phase(md_files, self.repo_root)
 
@@ -210,11 +210,6 @@ class DocumentationScanner:
 
     def _verify_cross_references(self) -> Dict[str, Any]:
         """Verify cross-references."""
-        from infrastructure.validation.doc_discovery import (
-            find_markdown_files,
-            identify_cross_references,
-        )
-
         md_files = find_markdown_files(self.repo_root)
         return {
             "status": "verified",

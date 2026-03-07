@@ -162,13 +162,6 @@ def validate_review_quality(
             f"Too short: {word_count} words (minimum: {min_word_count}, effective: {effective_min} with tolerance)"  # noqa: E501
         )
 
-    _REVIEW_TYPE_VALIDATORS = {
-        "executive_summary": _validate_executive_summary_section,
-        "quality_review": _validate_quality_review_section,
-        "methodology_review": _validate_methodology_review_section,
-        "improvement_suggestions": _validate_improvement_suggestions_section,
-        "translation": _validate_translation_section,
-    }
     validator = _REVIEW_TYPE_VALIDATORS.get(review_type)
     if validator:
         validator(response_lower, details, issues)
@@ -292,6 +285,16 @@ def _validate_translation_section(
         issues.append("Missing translation section")
 
 
+# Module-level dispatch table — built once after all validators are defined.
+_REVIEW_TYPE_VALIDATORS: dict[str, Any] = {
+    "executive_summary": _validate_executive_summary_section,
+    "quality_review": _validate_quality_review_section,
+    "methodology_review": _validate_methodology_review_section,
+    "improvement_suggestions": _validate_improvement_suggestions_section,
+    "translation": _validate_translation_section,
+}
+
+
 def create_review_client(model_name: str) -> LLMClient:
     config = LLMConfig.from_env()
     config.default_model = model_name
@@ -321,13 +324,13 @@ def check_ollama_availability() -> tuple[bool, Optional[str]]:
         logger.error("❌ Unable to check if Ollama is installed")
         return False, None
 
-    logger.info("    Checking Ollama server status...")
+    logger.debug("    Checking Ollama server status...")
 
     max_retries = 3
     for attempt in range(max_retries):
         if attempt > 0:
             wait_time = min(2**attempt, 10)
-            logger.info(f"    Retry {attempt}/{max_retries - 1} in {wait_time}s...")
+            logger.debug(f"    Retry {attempt}/{max_retries - 1} in {wait_time}s...")
             time.sleep(wait_time)
 
         if not is_ollama_running():
@@ -351,16 +354,16 @@ def check_ollama_availability() -> tuple[bool, Optional[str]]:
             log_success("Ollama server is running", logger)
             break
 
-    logger.info("    Discovering available models...")
+    logger.debug("    Discovering available models...")
     available_models = get_available_models()
     if not available_models:
         logger.warning("❌ No Ollama models available")
         return False, None
 
     model_names = [m.get("name", "unknown") for m in available_models]
-    logger.info(f"    Found {len(model_names)} model(s): {', '.join(model_names[:5])}")
+    logger.debug(f"    Found {len(model_names)} model(s): {', '.join(model_names[:5])}")
 
-    logger.info("    Selecting best model for manuscript review...")
+    logger.debug("    Selecting best model for manuscript review...")
     model = select_best_model()
     if not model:
         logger.warning("❌ Could not select a suitable model")
@@ -374,7 +377,7 @@ def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> tuple
     warmup_timeout = client.config.review_timeout
     logger.info(f"    Timeout: {warmup_timeout:.0f}s for warmup")
 
-    logger.info("    Checking loaded models via Ollama API...")
+    logger.debug("    Checking loaded models via Ollama API...")
     model_preloaded, loaded_model = check_model_loaded(model_name)
 
     need_preload = False
