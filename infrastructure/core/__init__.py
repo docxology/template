@@ -32,7 +32,7 @@ from .logging_utils import (
 )
 
 # Performance (decorator used by analysis scripts)
-from .performance import monitor_performance
+from .function_profiler import monitor_performance
 
 # Progress (used by long-running scripts)
 from .progress import ProgressBar
