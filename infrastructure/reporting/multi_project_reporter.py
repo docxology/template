@@ -57,6 +57,82 @@ def generate_multi_project_report(
         raise
 
 
+def _build_summary_dict(result: MultiProjectResult, projects: list[Any]) -> dict[str, Any]:
+    """Build the analytics summary dict without performing any I/O."""
+    project_names = [p.name for p in projects]
+    raw_results = result.project_results
+    project_results = raw_results if isinstance(raw_results, dict) else {}
+
+    summary: dict[str, Any] = {
+        "timestamp": datetime.now().isoformat(),
+        "total_projects": len(projects),
+        "successful_projects": result.successful_projects,
+        "failed_projects": result.failed_projects,
+        "total_duration": result.total_duration,
+        "infra_test_duration": result.infra_test_duration,
+        "projects": {},
+        "performance_analysis": {},
+        "error_aggregation": {},
+        "recommendations": [],
+    }
+
+    for proj_name in project_names:
+        raw = project_results.get(proj_name, [])
+        proj_result = raw if isinstance(raw, list) else []
+        summary["projects"][proj_name] = {
+            "success": len(proj_result) > 0 and all(stage.success for stage in proj_result),
+            "duration": sum(stage.duration for stage in proj_result),
+            "stages_completed": len(proj_result),
+            "errors": [stage.error_message for stage in proj_result if stage.error_message],
+        }
+
+    if project_results:
+        try:
+            proj_dur = [
+                (n, d["duration"])
+                for n, d in summary["projects"].items()
+                if isinstance(d, dict) and d.get("duration", 0) > 0
+            ]
+            durations = [d for _, d in proj_dur]
+            if durations:
+                summary["performance_analysis"] = {
+                    "slowest_project": max(proj_dur, key=lambda x: x[1])[0] if proj_dur else None,
+                    "fastest_project": min(proj_dur, key=lambda x: x[1])[0] if proj_dur else None,
+                    "average_duration": sum(durations) / len(durations),
+                    "total_pipeline_time": sum(durations),
+                }
+        except (TypeError, KeyError, IndexError, ZeroDivisionError) as e:
+            logger.warning(f"Error calculating performance analysis: {e}")
+
+    all_errors = [
+        {"project": proj_name, "error": err}
+        for proj_name, proj_data in summary["projects"].items()
+        for err in proj_data.get("errors", [])
+    ]
+    summary["error_aggregation"] = {
+        "total_errors": len(all_errors),
+        "errors_by_project": {
+            proj: len(summary["projects"].get(proj, {}).get("errors", []))
+            for proj in project_names
+        },
+    }
+
+    if result.failed_projects > 0:
+        summary["recommendations"].append({
+            "priority": "high",
+            "action": "Review failed projects",
+            "details": f"{result.failed_projects} project(s) failed execution",
+        })
+    if summary["performance_analysis"].get("average_duration", 0) > 300:
+        summary["recommendations"].append({
+            "priority": "medium",
+            "action": "Consider performance optimization",
+            "details": f"Average project execution time: {summary['performance_analysis']['average_duration']:.1f}s",  # noqa: E501
+        })
+
+    return summary
+
+
 def generate_multi_project_summary_report(
     result: MultiProjectResult, projects: list[Any], output_dir: Path
 ) -> dict[str, Path]:
@@ -72,89 +148,7 @@ def generate_multi_project_summary_report(
     """
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    total_projects_count = len(projects)
-
-    summary: dict[str, Any] = {
-        "timestamp": datetime.now().isoformat(),
-        "total_projects": total_projects_count,
-        "successful_projects": result.successful_projects,
-        "failed_projects": result.failed_projects,
-        "total_duration": result.total_duration,
-        "infra_test_duration": result.infra_test_duration,
-        "projects": {},
-        "performance_analysis": {},
-        "error_aggregation": {},
-        "recommendations": [],
-    }
-
-    project_names = [p.name for p in projects]
-    raw_results = result.project_results
-    project_results = raw_results if isinstance(raw_results, dict) else {}
-
-    for proj_name in project_names:
-        raw = project_results.get(proj_name, [])
-        proj_result = raw if isinstance(raw, list) else []
-
-        all_success = len(proj_result) > 0 and all(stage.success for stage in proj_result)
-        total_duration = sum(stage.duration for stage in proj_result)
-        errors = [stage.error_message for stage in proj_result if stage.error_message]
-
-        summary["projects"][proj_name] = {
-            "success": all_success,
-            "duration": total_duration,
-            "stages_completed": len(proj_result),
-            "errors": errors,
-        }
-
-    if project_results:
-        try:
-            proj_dur = [
-                (n, d["duration"])
-                for n, d in summary["projects"].items()
-                if isinstance(d, dict) and d.get("duration", 0) > 0
-            ]
-            durations = [d for _, d in proj_dur]
-
-            if durations:
-                summary["performance_analysis"] = {
-                    "slowest_project": max(proj_dur, key=lambda x: x[1])[0] if proj_dur else None,
-                    "fastest_project": min(proj_dur, key=lambda x: x[1])[0] if proj_dur else None,
-                    "average_duration": sum(durations) / len(durations),
-                    "total_pipeline_time": sum(durations),
-                }
-        except (TypeError, KeyError, IndexError, ZeroDivisionError) as e:
-            logger.warning(f"Error calculating performance analysis: {e}")
-            summary["performance_analysis"] = {}
-
-    all_errors = []
-    for proj_name, proj_data in summary["projects"].items():
-        for err in proj_data.get("errors", []):
-            all_errors.append({"project": proj_name, "error": err})
-    summary["error_aggregation"] = {
-        "total_errors": len(all_errors),
-        "errors_by_project": {
-            proj: len(summary["projects"].get(proj, {}).get("errors", []))
-            for proj in project_names
-        },
-    }
-
-    if result.failed_projects > 0:
-        summary["recommendations"].append(
-            {
-                "priority": "high",
-                "action": "Review failed projects",
-                "details": f"{result.failed_projects} project(s) failed execution",
-            }
-        )
-
-    if summary["performance_analysis"].get("average_duration", 0) > 300:
-        summary["recommendations"].append(
-            {
-                "priority": "medium",
-                "action": "Consider performance optimization",
-                "details": f"Average project execution time: {summary['performance_analysis']['average_duration']:.1f}s",  # noqa: E501
-            }
-        )
+    summary = _build_summary_dict(result, projects)
 
     saved_files: dict[str, Path] = {}
 

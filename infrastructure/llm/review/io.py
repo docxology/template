@@ -203,7 +203,7 @@ def save_review_outputs(
             else:
                 logger.info(f"  Saved: {full_path} ({metrics.output_words:,} words)")
         except Exception as e:
-            logger.error(f"Failed to save {name}: {e}")
+            logger.error(f"Failed to save {name}: {e}", exc_info=True)
             success = False
 
     # Extract action items for TODO checklist
@@ -340,7 +340,7 @@ The following items are extracted from the review for easy tracking:
         combined_path.write_text(combined_content)
         logger.info(f"  Saved combined review: {combined_path}")
     except Exception as e:
-        logger.error(f"Failed to save combined review: {e}")
+        logger.error(f"Failed to save combined review: {e}", exc_info=True)
         success = False
 
     # Save metadata with comprehensive metrics
@@ -409,7 +409,7 @@ The following items are extracted from the review for easy tracking:
         metadata_path.write_text(json.dumps(metadata, indent=2))
         logger.info(f"  Saved metadata: {metadata_path}")
     except Exception as e:
-        logger.error(f"Failed to save metadata: {e}")
+        logger.error(f"Failed to save metadata: {e}", exc_info=True)
         success = False
 
     if success:

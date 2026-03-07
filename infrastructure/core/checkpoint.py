@@ -127,7 +127,7 @@ class CheckpointManager:
             logger.debug(f"Checkpoint saved: stage {last_stage_completed}/{total_stages}")
             return True
         except Exception as e:
-            logger.error(f"Failed to save checkpoint: {e}")
+            logger.error(f"Failed to save checkpoint: {e}", exc_info=True)
             logger.warning(
                 "Checkpoint save failed - pipeline resume will not be available for this run"
             )
@@ -151,7 +151,7 @@ class CheckpointManager:
             )
             return checkpoint
         except Exception as e:
-            logger.warning(f"Failed to load checkpoint: {e}")
+            logger.warning(f"Failed to load checkpoint: {e}", exc_info=True)
             logger.info("Invalid checkpoint file detected - starting fresh pipeline run")
             return None
 

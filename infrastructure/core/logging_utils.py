@@ -315,7 +315,7 @@ def log_header(message: str, logger: Optional[logging.Logger] = None) -> None:
 def log_progress(
     current: int, total: int, task: str, logger: Optional[logging.Logger] = None
 ) -> None:
-    """Log progress as [current/total - percent%] task."""
+    """Log a progress update with current position, total, and percentage."""
     logger = logger or get_logger(__name__)
 
     percent = (current * 100) // total if total > 0 else 0
@@ -328,7 +328,7 @@ def log_stage(
     stage_name: str,
     logger: Optional[logging.Logger] = None,
 ) -> None:
-    """Log a pipeline stage header as [stage_num/total_stages] stage_name with separator."""
+    """Log a numbered pipeline stage header with a visual separator."""
     logger = logger or get_logger(__name__)
 
     separator = "━" * 46
@@ -338,7 +338,7 @@ def log_stage(
 
 
 def log_substep(message: str, logger: Optional[logging.Logger] = None) -> None:
-    """Log a substep within a stage with leading newline and two-space indentation."""
+    """Log a pipeline sub-step message with standard indentation."""
     logger = logger or get_logger(__name__)
 
     logger.info(f"\n  {message}")
