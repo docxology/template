@@ -135,6 +135,7 @@ def execute_pipeline(
                 save_pipeline_report,
                 collect_output_statistics,
             )
+            from infrastructure.reporting.pipeline_reporter import ReportExtras
             from infrastructure.core.logging_utils import generate_log_summary
 
             # Collect output statistics
@@ -168,8 +169,10 @@ def execute_pipeline(
                 ],
                 total_duration=total_duration,
                 repo_root=repo_root,
-                output_statistics=output_stats,
-                project_name=project_name,
+                extras=ReportExtras(
+                    output_statistics=output_stats,
+                    project_name=project_name,
+                ),
             )
 
             # Save report in multiple formats
