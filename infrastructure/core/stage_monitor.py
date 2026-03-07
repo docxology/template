@@ -195,11 +195,19 @@ def get_system_resources() -> dict[str, Any]:
 class StagePerformanceTracker:
     """Track performance metrics for pipeline stages."""
 
-    def __init__(self):
+    def __init__(
+        self,
+        slow_stage_multiplier: float = _SLOW_STAGE_MULTIPLIER,
+        high_memory_mb: float = _HIGH_MEMORY_MB,
+        high_cpu_percent: float = _HIGH_CPU_PERCENT,
+    ):
         self.stages: list[dict[str, Any]] = []
         self.start_time: Optional[float] = None
         self.start_memory: float = 0.0
         self.start_io: Optional[Any] = None
+        self._slow_stage_multiplier = slow_stage_multiplier
+        self._high_memory_mb = high_memory_mb
+        self._high_cpu_percent = high_cpu_percent
 
     def start_stage(self, stage_name: str) -> None:
         """Start tracking a stage."""
@@ -269,18 +277,18 @@ class StagePerformanceTracker:
         avg_duration = sum(durations) / len(durations)
 
         for stage in self.stages:
-            if stage["duration"] > avg_duration * _SLOW_STAGE_MULTIPLIER and avg_duration > 0:
+            if stage["duration"] > avg_duration * self._slow_stage_multiplier and avg_duration > 0:
                 warnings.append(
                     {
                         "type": "slow_stage",
                         "stage": stage["stage_name"],
                         "duration": stage["duration"],
                         "average": avg_duration,
-                        "message": f"Stage {stage['stage_name']} took {format_duration(stage['duration'])} ({_SLOW_STAGE_MULTIPLIER}x average)",  # noqa: E501
+                        "message": f"Stage {stage['stage_name']} took {format_duration(stage['duration'])} ({self._slow_stage_multiplier}x average)",  # noqa: E501
                         "suggestion": "Consider optimizing this stage or running it in parallel",
                     }
                 )
-            if stage.get("end_memory_mb", 0) > _HIGH_MEMORY_MB:
+            if stage.get("end_memory_mb", 0) > self._high_memory_mb:
                 warnings.append(
                     {
                         "type": "high_memory",
@@ -290,7 +298,7 @@ class StagePerformanceTracker:
                         "suggestion": "Consider memory optimization or increasing available memory",
                     }
                 )
-            if stage.get("cpu_percent", 0) > _HIGH_CPU_PERCENT:
+            if stage.get("cpu_percent", 0) > self._high_cpu_percent:
                 warnings.append(
                     {
                         "type": "high_cpu",

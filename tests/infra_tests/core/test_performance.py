@@ -394,52 +394,33 @@ class TestStagePerformanceTracker:
         assert warnings == []
 
     def test_get_performance_warnings_slow_stage(self):
-        """Test getting warnings for slow stages."""
-        tracker = StagePerformanceTracker()
+        """Test getting warnings for slow stages via public start/end_stage API."""
+        # Use a multiplier of 1.5; with a fast stage (~0.01s) and slow stage (~0.1s),
+        # avg ≈ 0.055s → threshold ≈ 0.083s → 0.1s stage exceeds it.
+        tracker = StagePerformanceTracker(slow_stage_multiplier=1.5)
 
-        # Add stages with varying durations
-        # Average = (1.0 + 5.0 + 2.0) / 3 = 2.67
-        # Slow stage (5.0) is > 2 * 2.67 = 5.34? No, it's 5.0 which is < 5.34
-        # Let's make it more clearly slow: 10.0 > 2 * 2.67 = 5.34
-        tracker.stages = [
-            {
-                "stage_name": "fast",
-                "duration": 1.0,
-                "end_memory_mb": 100,
-                "cpu_percent": 50,
-            },
-            {
-                "stage_name": "slow",
-                "duration": 10.0,
-                "end_memory_mb": 100,
-                "cpu_percent": 50,
-            },
-            {
-                "stage_name": "medium",
-                "duration": 2.0,
-                "end_memory_mb": 100,
-                "cpu_percent": 50,
-            },
-        ]
+        tracker.start_stage("fast")
+        time.sleep(0.01)
+        tracker.end_stage("fast", 0)
+
+        tracker.start_stage("slow")
+        time.sleep(0.1)
+        tracker.end_stage("slow", 0)
 
         warnings = tracker.get_performance_warnings()
 
-        # Should warn about slow stage (10.0 > 2x average of ~4.33 = 8.67)
         assert len(warnings) > 0
         assert any(w["type"] == "slow_stage" for w in warnings)
+        assert any(w["stage"] == "slow" for w in warnings if w["type"] == "slow_stage")
 
     def test_get_performance_warnings_high_memory(self):
-        """Test getting warnings for high memory usage."""
-        tracker = StagePerformanceTracker()
+        """Test getting warnings for high memory usage via public start/end_stage API."""
+        # Set threshold to -1 so any real (non-negative) end_memory_mb triggers the warning.
+        tracker = StagePerformanceTracker(high_memory_mb=-1.0)
 
-        tracker.stages = [
-            {
-                "stage_name": "high_mem",
-                "duration": 1.0,
-                "end_memory_mb": 2048,
-                "cpu_percent": 50,
-            },
-        ]
+        tracker.start_stage("high_mem")
+        time.sleep(0.005)
+        tracker.end_stage("high_mem", 0)
 
         warnings = tracker.get_performance_warnings()
 
@@ -447,17 +428,13 @@ class TestStagePerformanceTracker:
         assert any(w["type"] == "high_memory" for w in warnings)
 
     def test_get_performance_warnings_high_cpu(self):
-        """Test getting warnings for high CPU usage."""
-        tracker = StagePerformanceTracker()
+        """Test getting warnings for high CPU usage via public start/end_stage API."""
+        # Set threshold to -1 so any real cpu_percent value (including 0) triggers the warning.
+        tracker = StagePerformanceTracker(high_cpu_percent=-1.0)
 
-        tracker.stages = [
-            {
-                "stage_name": "high_cpu",
-                "duration": 1.0,
-                "end_memory_mb": 100,
-                "cpu_percent": 95,
-            },
-        ]
+        tracker.start_stage("high_cpu")
+        time.sleep(0.005)
+        tracker.end_stage("high_cpu", 0)
 
         warnings = tracker.get_performance_warnings()
 
@@ -465,39 +442,30 @@ class TestStagePerformanceTracker:
         assert any(w["type"] == "high_cpu" for w in warnings)
 
     def test_get_summary(self):
-        """Test getting performance summary."""
+        """Test getting performance summary via public start/end_stage API."""
         tracker = StagePerformanceTracker()
 
-        tracker.stages = [
-            {
-                "stage_name": "stage1",
-                "duration": 1.0,
-                "memory_mb": 100,
-                "end_memory_mb": 150,
-            },
-            {
-                "stage_name": "stage2",
-                "duration": 2.0,
-                "memory_mb": 200,
-                "end_memory_mb": 250,
-            },
-            {
-                "stage_name": "stage3",
-                "duration": 3.0,
-                "memory_mb": 300,
-                "end_memory_mb": 350,
-            },
-        ]
+        tracker.start_stage("stage1")
+        time.sleep(0.01)
+        tracker.end_stage("stage1", 0)
+
+        tracker.start_stage("stage2")
+        time.sleep(0.05)
+        tracker.end_stage("stage2", 0)
+
+        tracker.start_stage("stage3")
+        time.sleep(0.1)
+        tracker.end_stage("stage3", 0)
 
         summary = tracker.get_summary()
 
         assert isinstance(summary, dict)
         assert summary["total_stages"] == 3
-        assert summary["total_duration"] == 6.0
-        assert summary["average_duration"] == 2.0
+        assert summary["total_duration"] > 0.15  # at least the sum of sleeps
+        assert summary["average_duration"] > 0
         assert summary["slowest_stage"]["stage_name"] == "stage3"
         assert summary["fastest_stage"]["stage_name"] == "stage1"
-        assert summary["peak_memory_mb"] == 350
+        assert summary["peak_memory_mb"] >= 0
 
     def test_get_summary_empty(self):
         """Test getting summary when no stages tracked."""

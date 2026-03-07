@@ -165,3 +165,13 @@ class TestCheckCovDatafileSupport:
     def test_returns_bool(self):
         result = check_cov_datafile_support()
         assert isinstance(result, bool)
+
+    def test_result_matches_actual_pytest_help(self):
+        # Verify the function correctly reflects whether --cov-datafile is in pytest --help
+        import subprocess
+        result = subprocess.run(
+            ["python", "-m", "pytest", "--help"],
+            capture_output=True, text=True, timeout=10,
+        )
+        expected = "--cov-datafile" in result.stdout
+        assert check_cov_datafile_support() == expected
