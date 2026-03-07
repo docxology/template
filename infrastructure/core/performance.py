@@ -1,12 +1,16 @@
-"""Pipeline-stage and function-level performance monitoring.
+"""Performance monitoring split into two distinct sub-domains.
 
-Provides:
-- PerformanceMonitor: psutil-based resource snapshots (start/stop)
-- StagePerformanceTracker: per-stage pipeline metrics
-- performance_context: context manager wrapping PerformanceMonitor
-- CodeProfiler: cProfile + tracemalloc function-level profiling
-- monitor_performance: decorator for monitoring function performance
-- benchmark_function: convenience function-level benchmarking
+Sub-domain 1 — Stage monitoring (psutil-based, pipeline-level):
+  PerformanceMonitor, StagePerformanceTracker, performance_context,
+  get_performance_monitor, get_performance_warnings, get_system_resources,
+  monitor_performance, profile_memory_usage.
+
+Sub-domain 2 — Function profiling (cProfile/tracemalloc, call-level):
+  ProfilingMetrics, CodeProfiler, get_code_profiler, benchmark_function.
+
+Both sub-domains share this module intentionally to avoid circular imports
+between infrastructure.core submodules. If this grows further, split into
+infrastructure/core/stage_monitor.py and infrastructure/core/function_profiler.py.
 """
 
 from __future__ import annotations
@@ -25,6 +29,9 @@ from infrastructure.core._optional_deps import psutil
 from infrastructure.core.logging_utils import format_duration, get_logger
 
 logger = get_logger(__name__)
+
+
+# ── Sub-domain 1: Stage monitoring (psutil-based, pipeline-level) ────────────
 
 
 @dataclass
@@ -555,8 +562,8 @@ def profile_memory_usage(func: Callable, *args, **kwargs) -> Dict[str, Any]:
 def benchmark_function(
     func: Callable, *args, iterations: int = 5, **kwargs
 ) -> Dict[str, Union[float, List[float]]]:
-    """Benchmark a function using CodeProfiler."""
-    return CodeProfiler().benchmark_function(func, *args, iterations=iterations, **kwargs)
+    """Benchmark a function using the global CodeProfiler."""
+    return get_performance_monitor().benchmark_function(func, *args, iterations=iterations, **kwargs)
 
 
 def main():
