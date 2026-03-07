@@ -33,6 +33,7 @@ from infrastructure.reporting.coverage_reporter import (
     save_test_report as save_test_report_to_files,
     format_coverage_status,
     analyze_coverage_gaps,
+    format_failure_suggestions,
 )
 from infrastructure.core.logging_helpers import format_duration as _format_duration
 from infrastructure.core.environment import get_python_command, check_uv_available
@@ -368,50 +369,10 @@ def report_results(
             if len(failed_tests) > 5:
                 logger.info(f"    ... and {len(failed_tests) - 5} more failures")
 
-        # Always show debug commands
         logger.info("")
         logger.info("  🔧 Quick Fix Suggestions:")
-
-        # Check for specific error types and provide targeted solutions
-        has_import_errors = any(
-            "import" in str(f) or "module" in str(f).lower() for f in failed_tests
-        )
-        has_coverage_errors = any(
-            "coverage" in str(f).lower()
-            or "dataerror" in str(f).lower()
-            or "no such table" in str(f).lower()
-            for f in failed_tests
-        )
-        has_timeout_errors = any("timeout" in str(f).lower() for f in failed_tests)
-
-        if has_import_errors:
-            logger.info("    - Missing dependencies: pip install pytest-httpserver pytest-timeout")
-            logger.info("    - Import path issues: check PYTHONPATH includes repository root")
-
-        if has_coverage_errors:
-            logger.info(
-                "    - Coverage database corruption: files automatically cleaned and retried"
-            )
-            logger.info("    - If errors persist: rm -f .coverage* coverage_*.json && rerun tests")
-            logger.info("    - To skip coverage temporarily: pytest --no-cov tests/infra_tests/")
-            logger.info(
-                "    - Coverage isolation: infrastructure and project tests use separate data files"
-            )
-
-        if has_timeout_errors:
-            logger.info("    - Timeout issues: increase with --timeout=60 or PYTEST_TIMEOUT=60")
-            logger.info("    - Identify slow tests: pytest --durations=10 tests/infra_tests/")
-            logger.info("    - Skip slow tests: pytest -m 'not slow' tests/infra_tests/")
-
-        # General debugging suggestions
-        logger.info("    - Run individual failing tests: pytest tests/infra_tests/<test_file> -v")
-        logger.info(
-            "    - Debug with full traceback: pytest tests/infra_tests/<test_file> -s --tb=long"
-        )
-        logger.info(
-            "    - Run infrastructure tests only: python3 scripts/01_run_tests.py --infrastructure-only"  # noqa: E501
-        )
-        logger.info("    - Check test environment: python3 scripts/00_setup_environment.py")
+        for suggestion in format_failure_suggestions(failed_tests, "infrastructure"):
+            logger.info(suggestion)
 
     # Project summary
     logger.info("")  # Add spacing
@@ -466,62 +427,10 @@ def report_results(
             if len(failed_tests) > 5:
                 logger.info(f"    ... and {len(failed_tests) - 5} more failures")
 
-        # Always show debug commands
         logger.info("")
         logger.info("  🔧 Quick Fix Suggestions:")
-
-        # Check for specific error types and provide targeted solutions
-        has_import_errors = any(
-            "import" in str(f) or "module" in str(f).lower() for f in failed_tests
-        )
-        has_assertion_errors = any("assertion" in str(f).lower() for f in failed_tests)
-        has_coverage_errors = any(
-            "coverage" in str(f).lower()
-            or "dataerror" in str(f).lower()
-            or "no such table" in str(f).lower()
-            for f in failed_tests
-        )
-        has_timeout_errors = any("timeout" in str(f).lower() for f in failed_tests)
-
-        if has_import_errors:
-            logger.info("    - Missing project dependencies: check pyproject.toml and uv sync")
-            logger.info("    - Import path issues: verify project src/ directory structure")
-
-        if has_assertion_errors:
-            logger.info("    - Review test assertions and expected values")
-            logger.info("    - Check test data generation and reproducibility")
-
-        if has_coverage_errors:
-            logger.info(
-                "    - Coverage database corruption: files automatically cleaned and retried"
-            )
-            logger.info("    - If errors persist: rm -f .coverage* coverage_*.json && rerun tests")
-            logger.info(
-                "    - Coverage isolation: project tests use separate data file (.coverage.project)"
-            )
-
-        if has_timeout_errors:
-            logger.info("    - Timeout issues: increase with --timeout=60 or PYTEST_TIMEOUT=60")
-            logger.info(
-                f"    - Identify slow tests: pytest --durations=10 projects/{project_name}/tests/"
-            )
-            logger.info(
-                "    - Skip slow tests: pytest -m 'not slow' projects/{project_name}/tests/"
-            )
-
-        # General debugging suggestions
-        logger.info(
-            f"    - Run individual failing tests: pytest projects/{project_name}/tests/<test_file> -v"  # noqa: E501
-        )
-        logger.info(
-            f"    - Debug with full traceback: pytest projects/{project_name}/tests/<test_file> -s --tb=long"  # noqa: E501
-        )
-        logger.info(
-            f"    - Run project tests only: python3 scripts/01_run_tests.py --project {project_name} --project-only"  # noqa: E501
-        )
-        logger.info(
-            f"    - Check project structure: verify projects/{project_name}/src/ and tests/ exist"
-        )
+        for suggestion in format_failure_suggestions(failed_tests, "project", project_name):
+            logger.info(suggestion)
 
     # Overall summary
     logger.info("")  # Add spacing

@@ -416,3 +416,69 @@ def analyze_coverage_gaps(
         )
 
     return suggestions
+
+
+def format_failure_suggestions(
+    failed_tests: list, test_suite: str, project_name: str = ""
+) -> list[str]:
+    """Return fix suggestions based on failure patterns in failed_tests.
+
+    Classifies failures by error type and returns actionable suggestions.
+    General debug commands are parameterized by test_suite ('infrastructure' or 'project').
+    """
+    suggestions: list[str] = []
+
+    has_import_errors = any(
+        "import" in str(f) or "module" in str(f).lower() for f in failed_tests
+    )
+    has_assertion_errors = any("assertion" in str(f).lower() for f in failed_tests)
+    has_coverage_errors = any(
+        "coverage" in str(f).lower()
+        or "dataerror" in str(f).lower()
+        or "no such table" in str(f).lower()
+        for f in failed_tests
+    )
+    has_timeout_errors = any("timeout" in str(f).lower() for f in failed_tests)
+
+    if has_import_errors:
+        if test_suite == "infrastructure":
+            suggestions.append("    - Missing dependencies: pip install pytest-httpserver pytest-timeout")
+            suggestions.append("    - Import path issues: check PYTHONPATH includes repository root")
+        else:
+            suggestions.append("    - Missing project dependencies: check pyproject.toml and uv sync")
+            suggestions.append("    - Import path issues: verify project src/ directory structure")
+
+    if has_assertion_errors and test_suite != "infrastructure":
+        suggestions.append("    - Review test assertions and expected values")
+        suggestions.append("    - Check test data generation and reproducibility")
+
+    if has_coverage_errors:
+        suggestions.append("    - Coverage database corruption: files automatically cleaned and retried")
+        suggestions.append("    - If errors persist: rm -f .coverage* coverage_*.json && rerun tests")
+        if test_suite == "infrastructure":
+            suggestions.append("    - To skip coverage temporarily: pytest --no-cov tests/infra_tests/")
+            suggestions.append("    - Coverage isolation: infrastructure and project tests use separate data files")
+        else:
+            suggestions.append(f"    - Coverage isolation: project tests use separate data file (.coverage.project)")
+
+    if has_timeout_errors:
+        suggestions.append("    - Timeout issues: increase with --timeout=60 or PYTEST_TIMEOUT=60")
+        if test_suite == "infrastructure":
+            suggestions.append("    - Identify slow tests: pytest --durations=10 tests/infra_tests/")
+            suggestions.append("    - Skip slow tests: pytest -m 'not slow' tests/infra_tests/")
+        else:
+            suggestions.append(f"    - Identify slow tests: pytest --durations=10 projects/{project_name}/tests/")
+            suggestions.append(f"    - Skip slow tests: pytest -m 'not slow' projects/{project_name}/tests/")
+
+    if test_suite == "infrastructure":
+        suggestions.append("    - Run individual failing tests: pytest tests/infra_tests/<test_file> -v")
+        suggestions.append("    - Debug with full traceback: pytest tests/infra_tests/<test_file> -s --tb=long")
+        suggestions.append("    - Run infrastructure tests only: python3 scripts/01_run_tests.py --infrastructure-only")
+        suggestions.append("    - Check test environment: python3 scripts/00_setup_environment.py")
+    else:
+        suggestions.append(f"    - Run individual failing tests: pytest projects/{project_name}/tests/<test_file> -v")
+        suggestions.append(f"    - Debug with full traceback: pytest projects/{project_name}/tests/<test_file> -s --tb=long")
+        suggestions.append(f"    - Run project tests only: python3 scripts/01_run_tests.py --project {project_name} --project-only")
+        suggestions.append(f"    - Check project structure: verify projects/{project_name}/src/ and tests/ exist")
+
+    return suggestions

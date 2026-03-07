@@ -440,14 +440,22 @@ def generate_validation_report(
     saved_files = {}
 
     json_path = output_dir / "validation_report.json"
-    with open(json_path, "w") as f:
-        json.dump(validation_results, f, indent=2)
-    saved_files["json"] = json_path
+    try:
+        with open(json_path, "w") as f:
+            json.dump(validation_results, f, indent=2)
+        saved_files["json"] = json_path
+    except OSError as e:
+        logger.error(f"Failed to write validation JSON {json_path}: {e}")
+        raise
 
     md_path = output_dir / "validation_report.md"
-    md_content = generate_validation_markdown(validation_results)
-    md_path.write_text(md_content)
-    saved_files["markdown"] = md_path
+    try:
+        md_content = generate_validation_markdown(validation_results)
+        md_path.write_text(md_content)
+        saved_files["markdown"] = md_path
+    except OSError as e:
+        logger.error(f"Failed to write validation Markdown {md_path}: {e}")
+        raise
 
     return saved_files
 
@@ -478,8 +486,12 @@ def generate_performance_report(performance_metrics: dict[str, Any], output_dir:
     output_dir.mkdir(parents=True, exist_ok=True)
 
     json_path = output_dir / "performance_report.json"
-    with open(json_path, "w") as f:
-        json.dump(performance_metrics, f, indent=2)
+    try:
+        with open(json_path, "w") as f:
+            json.dump(performance_metrics, f, indent=2)
+    except OSError as e:
+        logger.error(f"Failed to write performance report {json_path}: {e}")
+        raise
 
     return json_path
 
@@ -502,14 +514,21 @@ def save_error_summary(errors: list[dict[str, Any]], output_dir: Path) -> dict[s
         "errors": errors,
     }
 
-    # Save JSON report
     json_path = output_dir / "error_summary.json"
-    with open(json_path, "w") as f:
-        json.dump(summary, f, indent=2)
+    try:
+        with open(json_path, "w") as f:
+            json.dump(summary, f, indent=2)
+    except OSError as e:
+        logger.error(f"Failed to write error summary JSON {json_path}: {e}")
+        raise
 
     md_path = output_dir / "error_summary.md"
-    md_content = generate_error_markdown(summary)
-    md_path.write_text(md_content)
+    try:
+        md_content = generate_error_markdown(summary)
+        md_path.write_text(md_content)
+    except OSError as e:
+        logger.error(f"Failed to write error summary Markdown {md_path}: {e}")
+        raise
 
     return summary
 
