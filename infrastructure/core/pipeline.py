@@ -73,7 +73,9 @@ class PipelineExecutor:
             config: Pipeline configuration
         """
         self.config = config
-        self.checkpoint_manager = CheckpointManager(project_name=config.project_name)
+        self.checkpoint_manager = CheckpointManager(
+            project_name=config.project_name, repo_root=config.repo_root
+        )
 
         # Define log file path (will be created by _setup_log_file_handler)
         log_dir = config.repo_root / "projects" / config.project_name / "output" / "logs"
@@ -132,6 +134,39 @@ class PipelineExecutor:
         root_logger.addHandler(self._log_handler)
         logger.debug(f"Set up log file handler: {self.log_file}")
 
+    def _build_stage_list(self, include_llm: bool, skip_clean: bool) -> list[tuple]:
+        """Build canonical stage list.
+
+        Args:
+            include_llm: Whether to include LLM review and translation stages
+            skip_clean: Whether to skip the clean stage
+
+        Returns:
+            List of (stage_name, function[, skip_condition]) tuples
+        """
+        stages: list[tuple] = [
+            (
+                "Clean Output Directories",
+                self._run_clean_outputs,
+                skip_clean,
+            ),
+            ("Environment Setup", self._run_setup_environment),
+            (
+                "Infrastructure Tests",
+                self._run_infrastructure_tests,
+                self.config.skip_infra,
+            ),
+            ("Project Tests", self._run_project_tests),
+            ("Project Analysis", self._run_analysis),
+            ("PDF Rendering", self._run_pdf_rendering),
+            ("Output Validation", self._run_validation),
+        ]
+        if include_llm:
+            stages.append(("LLM Scientific Review", self._run_llm_review, self.config.skip_llm))
+            stages.append(("LLM Translations", self._run_llm_translations, self.config.skip_llm))
+        stages.append(("Copy Outputs", self._run_copy_outputs))
+        return stages
+
     def execute_full_pipeline(self) -> list[PipelineStageResult]:
         """Execute complete pipeline (tests → analysis → PDF → validate → copy → LLM).
 
@@ -143,31 +178,8 @@ class PipelineExecutor:
         if self.config.resume:
             return self._resume_pipeline()
 
-        stages: list[tuple] = []
-        # Stage 0 (conceptually): clean output dirs unless resuming or disabled
-        stages.append(
-            (
-                "Clean Output Directories",
-                self._run_clean_outputs,
-                (not self.config.clean) or self.config.resume,
-            )
-        )
-        stages.append(("Environment Setup", self._run_setup_environment))
-        stages.append(
-            (
-                "Infrastructure Tests",
-                self._run_infrastructure_tests,
-                self.config.skip_infra,
-            )
-        )
-        stages.append(("Project Tests", self._run_project_tests))
-        stages.append(("Project Analysis", self._run_analysis))
-        stages.append(("PDF Rendering", self._run_pdf_rendering))
-        stages.append(("Output Validation", self._run_validation))
-        stages.append(("LLM Scientific Review", self._run_llm_review, self.config.skip_llm))
-        stages.append(("LLM Translations", self._run_llm_translations, self.config.skip_llm))
-        stages.append(("Copy Outputs", self._run_copy_outputs))
-        return self._execute_pipeline(stages)
+        skip_clean = (not self.config.clean) or self.config.resume
+        return self._execute_pipeline(self._build_stage_list(include_llm=True, skip_clean=skip_clean))
 
     def execute_core_pipeline(self) -> list[PipelineStageResult]:
         """Execute core pipeline (tests → analysis → PDF → validate → copy).
@@ -180,28 +192,8 @@ class PipelineExecutor:
         if self.config.resume:
             return self._resume_pipeline()
 
-        stages: list[tuple] = []
-        stages.append(
-            (
-                "Clean Output Directories",
-                self._run_clean_outputs,
-                (not self.config.clean) or self.config.resume,
-            )
-        )
-        stages.append(("Environment Setup", self._run_setup_environment))
-        stages.append(
-            (
-                "Infrastructure Tests",
-                self._run_infrastructure_tests,
-                self.config.skip_infra,
-            )
-        )
-        stages.append(("Project Tests", self._run_project_tests))
-        stages.append(("Project Analysis", self._run_analysis))
-        stages.append(("PDF Rendering", self._run_pdf_rendering))
-        stages.append(("Output Validation", self._run_validation))
-        stages.append(("Copy Outputs", self._run_copy_outputs))
-        return self._execute_pipeline(stages)
+        skip_clean = (not self.config.clean) or self.config.resume
+        return self._execute_pipeline(self._build_stage_list(include_llm=False, skip_clean=skip_clean))
 
     def _execute_pipeline(self, stages: list) -> list[PipelineStageResult]:
         """Execute pipeline stages.
@@ -227,6 +219,15 @@ class PipelineExecutor:
 
             executed_stage_num += 1
             result = self._execute_stage(executed_stage_num, stage_name, stage_func, pipeline_start)
+            # Exit code 2 means "skipped successfully" (e.g., no LLM languages configured)
+            if result.exit_code == 2:
+                result = PipelineStageResult(
+                    stage_num=result.stage_num,
+                    stage_name=result.stage_name,
+                    success=True,
+                    duration=result.duration,
+                    exit_code=2,
+                )
             results.append(result)
 
             if not result.success:
@@ -336,27 +337,8 @@ class PipelineExecutor:
             logger.warning("No checkpoint found, starting fresh")
             return self._start_fresh()
 
-        # Rebuild stage list based on configured pipeline type
-        stages: list[tuple] = []
-        stages.append(
-            ("Clean Output Directories", self._run_clean_outputs, True)
-        )  # never re-run on resume
-        stages.append(("Environment Setup", self._run_setup_environment))
-        stages.append(
-            (
-                "Infrastructure Tests",
-                self._run_infrastructure_tests,
-                self.config.skip_infra,
-            )
-        )
-        stages.append(("Project Tests", self._run_project_tests))
-        stages.append(("Project Analysis", self._run_analysis))
-        stages.append(("PDF Rendering", self._run_pdf_rendering))
-        stages.append(("Output Validation", self._run_validation))
-        if not self.config.skip_llm:
-            stages.append(("LLM Scientific Review", self._run_llm_review))
-            stages.append(("LLM Translations", self._run_llm_translations))
-        stages.append(("Copy Outputs", self._run_copy_outputs))
+        # Rebuild stage list based on configured pipeline type (clean always skipped on resume)
+        stages = self._build_stage_list(include_llm=not self.config.skip_llm, skip_clean=True)
 
         # Convert prior results into PipelineStageResult objects for reporting continuity
         resumed_results: list[PipelineStageResult] = []
