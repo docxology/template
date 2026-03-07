@@ -26,20 +26,18 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
-# Fix repo_root calculation: go up 3 levels from infrastructure/core/config_cli.py to repo root
 repo_root = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(repo_root))
-
-try:
-    from infrastructure.core.config_loader import YAML_AVAILABLE, get_config_as_env_vars
-except ImportError as e:
-    logger.error(f"Failed to import from infrastructure/core/config_loader.py: {e}")
-    logger.error("Falling back to environment variables only")
-    sys.exit(0)
 
 
 def main() -> None:
     """Main function to load and export configuration."""
+    try:
+        from infrastructure.core.config_loader import YAML_AVAILABLE, get_config_as_env_vars
+    except ImportError as e:
+        logger.error(f"Failed to import from infrastructure/core/config_loader.py: {e}")
+        logger.error("Falling back to environment variables only")
+        return
+
     parser = argparse.ArgumentParser(
         description="Load manuscript configuration and export as environment variables",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -47,10 +45,10 @@ def main() -> None:
 Examples:
   # Export config for default project
   eval "$(python3 infrastructure/core/config_cli.py)"
-  
+
   # Export config for specific project
   eval "$(python3 infrastructure/core/config_cli.py --project act_inf_metaanalysis)"
-  
+
   # Use in bash script
   source <(python3 infrastructure/core/config_cli.py)
         """,
@@ -66,13 +64,7 @@ Examples:
     if not YAML_AVAILABLE:
         logger.error("PyYAML not installed. Install with: pip install pyyaml")
         logger.error("Falling back to environment variables only")
-        sys.exit(0)
-
-    # Determine which project to use
-    # For backward compatibility, if no project specified, use the default behavior
-    # which looks for repo_root/project/manuscript/config.yaml
-    # If project is specified, we could extend this to look in projects/{project}/manuscript/config.yaml  # noqa: E501
-    # but for now, maintain backward compatibility with the original single-project structure
+        return
 
     # Get configuration respecting existing environment variables
     env_vars = get_config_as_env_vars(repo_root, respect_existing=True)
