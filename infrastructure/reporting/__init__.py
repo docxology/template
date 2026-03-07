@@ -46,9 +46,9 @@ from .pipeline_reporter import (
     generate_error_summary,
     generate_performance_report,
     generate_pipeline_report,
-    generate_test_report,
     generate_validation_report,
     save_pipeline_report,
+    save_test_results,
 )
 from .output_organizer import FileType, OutputOrganizer
 from .multi_project_reporter import generate_multi_project_report
@@ -56,8 +56,8 @@ from .multi_project_reporter import generate_multi_project_report
 
 __all__ = [
     "generate_pipeline_report",
-    "generate_test_report",
     "generate_validation_report",
+    "save_test_results",
     "generate_performance_report",
     "generate_error_summary",
     "save_pipeline_report",

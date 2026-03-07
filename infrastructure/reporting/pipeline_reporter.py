@@ -652,7 +652,7 @@ def generate_html_report(report: PipelineReport) -> str:
     return html
 
 
-def generate_test_report(test_results: Dict[str, Any], output_dir: Path) -> Path:
+def save_test_results(test_results: Dict[str, Any], output_dir: Path) -> Path:
     """Write test_results dict to test_results.json and return the path.
 
     Args:

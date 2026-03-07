@@ -12,10 +12,10 @@ from infrastructure.reporting.pipeline_reporter import (
     generate_markdown_report,
     generate_performance_report,
     generate_pipeline_report,
-    generate_test_report,
     generate_validation_markdown,
     generate_validation_report,
     save_pipeline_report,
+    save_test_results,
 )
 
 
@@ -159,7 +159,7 @@ def test_generate_performance_and_test_reports(tmp_path: Path) -> None:
     path = generate_performance_report(perf, tmp_path)
     assert path.exists()
 
-    test_path = generate_test_report({"summary": {}}, tmp_path)
+    test_path = save_test_results({"summary": {}}, tmp_path)
     assert test_path.name == "test_results.json"
 
 
@@ -427,6 +427,7 @@ class TestGenerateMultiProjectSummaryReport:
             successful_projects: int = 1
             failed_projects: int = 1
             total_duration: float = 8.0
+            infra_test_duration: float = 0.0
             project_results: dict = None
 
             def __post_init__(self):
@@ -461,6 +462,7 @@ class TestGenerateMultiProjectSummaryReport:
             successful_projects: int = 0
             failed_projects: int = 1
             total_duration: float = 0.0
+            infra_test_duration: float = 0.0
             project_results: dict = None
 
             def __post_init__(self):
@@ -496,6 +498,7 @@ class TestGenerateMultiProjectSummaryReport:
             successful_projects: int = 1
             failed_projects: int = 0
             total_duration: float = 5.0
+            infra_test_duration: float = 0.0
             project_results: dict = None
 
             def __post_init__(self):
@@ -542,6 +545,7 @@ class TestGenerateMultiProjectSummaryReport:
             successful_projects: int = 1
             failed_projects: int = 0
             total_duration: float = 600.0
+            infra_test_duration: float = 0.0
             project_results: dict = None
 
             def __post_init__(self):
@@ -577,6 +581,7 @@ class TestGenerateMultiProjectSummaryReport:
             successful_projects: int = 0
             failed_projects: int = 1
             total_duration: float = 0.0
+            infra_test_duration: float = 0.0
             project_results: str = "invalid"  # Non-dict value
 
         projects = [MockProject("project1")]
