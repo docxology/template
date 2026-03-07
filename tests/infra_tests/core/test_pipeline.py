@@ -415,3 +415,52 @@ sys.exit(0)
         invoked = {i["script"] for i in invocations}
         assert "01_run_tests.py" not in invoked
         assert "02_run_analysis.py" not in invoked
+
+    def test_llm_stage_exit_code_2_treated_as_success(self, tmp_path: Path):
+        """LLM stages that exit with code 2 (Ollama unavailable) are treated as success."""
+        repo_root = tmp_path / "repo"
+        scripts_dir = repo_root / "scripts"
+        scripts_dir.mkdir(parents=True, exist_ok=True)
+        (repo_root / "projects" / "test" / "src").mkdir(parents=True, exist_ok=True)
+        (repo_root / "projects" / "test" / "output").mkdir(parents=True, exist_ok=True)
+
+        skip_script = "import sys; sys.exit(2)\n"  # simulates Ollama unavailable
+        success_script = "import sys; sys.exit(0)\n"
+
+        for name in ["00_setup_environment.py", "01_run_tests.py", "02_run_analysis.py",
+                     "03_render_pdf.py", "04_validate_output.py", "05_copy_outputs.py"]:
+            (scripts_dir / name).write_text(success_script, encoding="utf-8")
+        (scripts_dir / "06_llm_review.py").write_text(skip_script, encoding="utf-8")
+
+        executor = self._make_executor(
+            repo_root, "test", clean=False, skip_infra=True, skip_llm=False, resume=False
+        )
+        results = executor.execute_full_pipeline()
+
+        # All stages should succeed: LLM stage exit-2 is treated as graceful skip
+        assert all(r.success for r in results), [r for r in results if not r.success]
+
+    def test_resume_pipeline_valid_checkpoint_skips_completed_stages(self, tmp_path: Path):
+        """Resume with a valid checkpoint skips completed stages and runs remaining ones."""
+        from infrastructure.core.checkpoint import StageResult
+
+        repo_root = self._create_fake_repo(tmp_path / "repo", "test", include_llm=False)
+        executor = self._make_executor(
+            repo_root, "test", clean=False, skip_infra=True, skip_llm=True, resume=True
+        )
+
+        # Pre-populate checkpoint as if the first stage already completed
+        executor.checkpoint_manager.save_checkpoint(
+            pipeline_start_time=0.0,
+            last_stage_completed=1,
+            stage_results=[
+                StageResult(name="Setup Environment", exit_code=0, duration=0.1, completed=True)
+            ],
+            total_stages=executor.config.total_stages,
+        )
+
+        results = executor.execute_full_pipeline()
+
+        # Results should include at least the resumed stages (checkpoint stage + new stages)
+        assert len(results) > 0
+        assert all(isinstance(r, PipelineStageResult) for r in results)

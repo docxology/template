@@ -51,6 +51,9 @@ from infrastructure.llm.validation.format import (
 )
 
 from infrastructure.llm.review.metrics import ReviewMetrics, ManuscriptMetrics, estimate_tokens
+from infrastructure.validation.pdf_validator import extract_text_from_pdf, PDFValidationError
+
+logger = get_logger(__name__)
 
 # Try to import new prompt system
 try:
@@ -60,10 +63,6 @@ try:
     PROMPT_SYSTEM_AVAILABLE = True
 except ImportError:
     PROMPT_SYSTEM_AVAILABLE = False
-
-from infrastructure.validation.pdf_validator import extract_text_from_pdf, PDFValidationError
-
-logger = get_logger(__name__)
 
 def get_manuscript_review_system_prompt() -> str:
     if PROMPT_SYSTEM_AVAILABLE:

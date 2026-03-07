@@ -880,3 +880,51 @@ class TestErrorSummaryEdgeCases:
         }
         md = generate_error_markdown(summary)
         assert "test_example.py" in md
+
+
+def test_save_pipeline_report_raises_oserror_on_unwritable_dir(tmp_path: Path) -> None:
+    """save_pipeline_report raises OSError when the output directory is not writable."""
+    import stat
+
+    report = generate_pipeline_report(
+        stage_results=[{"name": "setup", "exit_code": 0, "duration": 0.1}],
+        total_duration=0.1,
+        repo_root=tmp_path,
+    )
+
+    # Create a read-only directory so writes will fail
+    output_dir = tmp_path / "readonly_output"
+    output_dir.mkdir()
+    output_dir.chmod(stat.S_IREAD | stat.S_IEXEC)
+
+    try:
+        with pytest.raises(OSError):
+            save_pipeline_report(report, output_dir, formats=["json"])
+    finally:
+        # Restore permissions so pytest cleanup can delete the directory
+        output_dir.chmod(stat.S_IRWXU)
+
+
+def test_generate_pipeline_report_enriches_output_statistics_with_log_file(
+    tmp_path: Path,
+) -> None:
+    """generate_pipeline_report with project_name + output_statistics adds log_file info."""
+    project_name = "test_project"
+    output_stats = {"pdf_files": 2}
+
+    report = generate_pipeline_report(
+        stage_results=[],
+        total_duration=1.0,
+        repo_root=tmp_path,
+        project_name=project_name,
+        output_statistics=output_stats,
+    )
+
+    assert report.output_statistics is not None
+    assert "log_file" in report.output_statistics
+    log_info = report.output_statistics["log_file"]
+    assert "exists" in log_info
+    assert "size" in log_info
+    assert "path" in log_info
+    # Original stats should still be present
+    assert report.output_statistics["pdf_files"] == 2

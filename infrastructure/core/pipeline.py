@@ -168,10 +168,8 @@ class PipelineExecutor:
         results: list[PipelineStageResult],
         pipeline_start: float,
     ) -> PipelineStageResult:
-        """Execute a stage, normalize exit-code-2, append to results, and checkpoint on success."""
+        """Execute a stage, append to results, and checkpoint on success."""
         result = self._execute_stage(stage_num, stage_spec.name, stage_spec.func, pipeline_start)
-        if result.exit_code == 2:
-            result = self._as_skip_success(result)
         results.append(result)
         if not result.success:
             logger.error(
@@ -200,17 +198,6 @@ class PipelineExecutor:
                 break
 
         return results
-
-    @staticmethod
-    def _as_skip_success(result: PipelineStageResult) -> PipelineStageResult:
-        """Return a copy of result marked success=True for graceful-skip (exit code 2)."""
-        return PipelineStageResult(
-            stage_num=result.stage_num,
-            stage_name=result.stage_name,
-            success=True,
-            duration=result.duration,
-            exit_code=2,
-        )
 
     def _execute_stage(
         self,

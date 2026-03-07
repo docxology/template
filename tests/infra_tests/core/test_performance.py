@@ -18,6 +18,7 @@ from infrastructure.core.stage_monitor import (
 )
 from infrastructure.core.function_profiler import (
     CodeProfiler,
+    ProfilingMetrics,
     monitor_performance,
 )
 
@@ -595,3 +596,51 @@ class TestCodeProfiler:
             pass
 
         assert my_function.__name__ == "my_function"
+
+
+class TestProfilingMetrics:
+    """Test ProfilingMetrics dataclass (function_profiler)."""
+
+    def test_basic_creation(self):
+        metrics = ProfilingMetrics(operation_name="test_op", execution_time=1.234)
+        assert metrics.operation_name == "test_op"
+        assert metrics.execution_time == 1.234
+        assert metrics.memory_peak is None
+        assert metrics.memory_current is None
+        assert metrics.cpu_time is None
+
+    def test_to_dict_has_expected_keys(self):
+        metrics = ProfilingMetrics(operation_name="op", execution_time=0.5)
+        d = metrics.to_dict()
+        assert "operation" in d
+        assert "execution_time_seconds" in d
+        assert "memory_peak_mb" in d
+        assert "timestamp" in d
+
+    def test_to_dict_rounds_execution_time(self):
+        metrics = ProfilingMetrics(operation_name="op", execution_time=1.23456789)
+        d = metrics.to_dict()
+        assert d["execution_time_seconds"] == round(1.23456789, 3)
+
+    def test_memory_converted_to_mb_in_to_dict(self):
+        metrics = ProfilingMetrics(
+            operation_name="op",
+            execution_time=1.0,
+            memory_peak=10485760,   # 10 MB in bytes
+            memory_current=5242880,  # 5 MB in bytes
+        )
+        d = metrics.to_dict()
+        assert d["memory_peak_mb"] == 10
+        assert d["memory_current_mb"] == 5
+
+    def test_none_memory_stays_none(self):
+        metrics = ProfilingMetrics(operation_name="op", execution_time=1.0)
+        assert metrics.memory_peak is None
+        assert metrics.memory_current is None
+
+    def test_timestamp_is_set_automatically(self):
+        import time as _time
+        before = _time.time()
+        metrics = ProfilingMetrics(operation_name="op", execution_time=0.0)
+        after = _time.time()
+        assert before <= metrics.timestamp <= after
