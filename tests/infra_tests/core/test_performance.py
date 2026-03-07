@@ -9,11 +9,13 @@ import pytest
 
 from infrastructure.core.exceptions import BuildError
 from infrastructure.core.performance import (
+    CodeProfiler,
     PerformanceMetrics,
     PerformanceMonitor,
     ResourceUsage,
     StagePerformanceTracker,
     get_system_resources,
+    monitor_performance,
     performance_context,
 )
 
@@ -501,3 +503,93 @@ class TestStagePerformanceTracker:
         summary = tracker.get_summary()
 
         assert summary == {}
+
+
+class TestCodeProfiler:
+    """Test CodeProfiler class."""
+
+    def test_monitor_appends_to_history(self):
+        """monitor() appends a ProfilingMetrics entry to metrics_history."""
+        profiler = CodeProfiler()
+        assert profiler.metrics_history == []
+
+        with profiler.monitor("op1", track_memory=False):
+            pass
+
+        assert len(profiler.metrics_history) == 1
+        assert profiler.metrics_history[0].operation_name == "op1"
+        assert profiler.metrics_history[0].execution_time >= 0
+
+    def test_monitor_multiple_entries_appended(self):
+        """Each monitor() call appends a separate entry."""
+        profiler = CodeProfiler()
+
+        with profiler.monitor("first", track_memory=False):
+            pass
+        with profiler.monitor("second", track_memory=False):
+            pass
+
+        assert len(profiler.metrics_history) == 2
+        assert profiler.metrics_history[0].operation_name == "first"
+        assert profiler.metrics_history[1].operation_name == "second"
+
+    def test_monitor_memory_fields_populated_when_track_memory_true(self):
+        """monitor() populates memory_current and memory_peak when track_memory=True."""
+        profiler = CodeProfiler()
+
+        with profiler.monitor("mem_op", track_memory=True):
+            # Allocate a small buffer so tracemalloc has something to measure.
+            _ = bytearray(1024)
+
+        metrics = profiler.metrics_history[-1]
+        assert metrics.memory_current is not None
+        assert metrics.memory_peak is not None
+        assert metrics.memory_peak >= 0
+
+    def test_monitor_memory_fields_none_when_track_memory_false(self):
+        """monitor() leaves memory fields as None when track_memory=False."""
+        profiler = CodeProfiler()
+
+        with profiler.monitor("no_mem", track_memory=False):
+            pass
+
+        metrics = profiler.metrics_history[-1]
+        assert metrics.memory_current is None
+        assert metrics.memory_peak is None
+
+    def test_benchmark_function_returns_correct_structure(self):
+        """benchmark_function() returns a dict with expected stats keys."""
+        profiler = CodeProfiler()
+
+        def noop():
+            return 42
+
+        result = profiler.benchmark_function(noop, iterations=3, warmup_iterations=1)
+
+        assert result["function_name"] == "noop"
+        assert result["iterations"] == 3
+        assert isinstance(result["average_time"], float)
+        assert isinstance(result["min_time"], float)
+        assert isinstance(result["max_time"], float)
+        assert isinstance(result["std_dev"], float)
+        assert len(result["all_times"]) == 3
+        assert result["min_time"] <= result["average_time"] <= result["max_time"]
+
+    def test_monitor_performance_decorator_preserves_return_value(self):
+        """monitor_performance decorator passes through the wrapped function's return value."""
+
+        @monitor_performance("test_op", track_memory=False)
+        def add(a, b):
+            return a + b
+
+        result = add(3, 7)
+        assert result == 10
+
+    def test_monitor_performance_decorator_preserves_function_name(self):
+        """monitor_performance preserves __name__ via functools.wraps."""
+
+        @monitor_performance("named_op")
+        def my_function():
+            pass
+
+        assert my_function.__name__ == "my_function"

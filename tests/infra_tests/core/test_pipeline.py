@@ -365,3 +365,53 @@ sys.exit(1)
         results = executor._resume_pipeline()
         assert len(results) > 0
         assert all(isinstance(r, PipelineStageResult) for r in results)
+
+    def test_execute_core_pipeline_aborts_on_first_failure(self, tmp_path: Path):
+        """Pipeline stops after the first failing stage; subsequent scripts are never invoked."""
+        repo_root = tmp_path / "repo"
+        scripts_dir = repo_root / "scripts"
+        scripts_dir.mkdir(parents=True, exist_ok=True)
+        (repo_root / "projects" / "test" / "src").mkdir(parents=True, exist_ok=True)
+        (repo_root / "projects" / "test" / "output").mkdir(parents=True, exist_ok=True)
+
+        # First script records its invocation then exits 1 (failure).
+        failing_script = """
+import json, os, sys
+log_path = os.path.join(os.getcwd(), "invocations.jsonl")
+with open(log_path, "a", encoding="utf-8") as f:
+    json.dump({"script": os.path.basename(__file__)}, f)
+    f.write("\\n")
+sys.exit(1)
+"""
+        # Second script records its invocation then exits 0 (success).
+        success_script = """
+import json, os, sys
+log_path = os.path.join(os.getcwd(), "invocations.jsonl")
+with open(log_path, "a", encoding="utf-8") as f:
+    json.dump({"script": os.path.basename(__file__)}, f)
+    f.write("\\n")
+sys.exit(0)
+"""
+
+        (scripts_dir / "00_setup_environment.py").write_text(failing_script, encoding="utf-8")
+        (scripts_dir / "01_run_tests.py").write_text(success_script, encoding="utf-8")
+        (scripts_dir / "02_run_analysis.py").write_text(success_script, encoding="utf-8")
+        (scripts_dir / "03_render_pdf.py").write_text(success_script, encoding="utf-8")
+        (scripts_dir / "04_validate_output.py").write_text(success_script, encoding="utf-8")
+        (scripts_dir / "05_copy_outputs.py").write_text(success_script, encoding="utf-8")
+
+        executor = self._make_executor(
+            repo_root, "test", clean=False, skip_infra=True, skip_llm=True, resume=False
+        )
+
+        results = executor.execute_core_pipeline()
+
+        # Only the failing stage result should be present.
+        assert len(results) == 1
+        assert results[0].success is False
+
+        # No subsequent scripts should have been invoked.
+        invocations = self._read_invocations(repo_root)
+        invoked = {i["script"] for i in invocations}
+        assert "01_run_tests.py" not in invoked
+        assert "02_run_analysis.py" not in invoked
