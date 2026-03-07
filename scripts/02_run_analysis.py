@@ -34,6 +34,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from infrastructure.core.logging_utils import (
     get_logger,
     log_header,
+    log_live_resource_usage,
     log_operation,
     log_success,
     format_error_with_suggestions,
@@ -212,8 +213,6 @@ def main() -> int:
     log_header(f"STAGE 02: Run Analysis (Project: {args.project})", logger)
 
     # Log resource usage at start
-    from infrastructure.core.logging_utils import log_live_resource_usage
-
     log_live_resource_usage("Analysis stage start", logger)
 
     try:

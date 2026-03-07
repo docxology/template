@@ -232,7 +232,6 @@ class StagePerformanceTracker:
         duration = time.time() - self.start_time
 
         memory_mb = 0.0
-        end_memory_mb = 0.0
         cpu_percent = 0.0
         io_read_mb = 0.0
         io_write_mb = 0.0
@@ -242,7 +241,6 @@ class StagePerformanceTracker:
                 process = psutil.Process(os.getpid())
                 current_memory = process.memory_info().rss / 1024 / 1024
                 memory_mb = current_memory
-                end_memory_mb = current_memory
                 cpu_percent = process.cpu_percent(interval=0.1)
                 if self.start_io:
                     current_io = process.io_counters()
@@ -258,7 +256,6 @@ class StagePerformanceTracker:
             "duration": duration,
             "exit_code": exit_code,
             "memory_mb": memory_mb,
-            "end_memory_mb": end_memory_mb,
             "cpu_percent": cpu_percent,
             "io_read_mb": io_read_mb,
             "io_write_mb": io_write_mb,
@@ -291,13 +288,13 @@ class StagePerformanceTracker:
                         "suggestion": "Consider optimizing this stage or running it in parallel",
                     }
                 )
-            if stage.get("end_memory_mb", 0) > self._high_memory_mb:
+            if stage.get("memory_mb", 0) > self._high_memory_mb:
                 warnings.append(
                     {
                         "type": "high_memory",
                         "stage": stage["stage_name"],
-                        "memory_mb": stage["end_memory_mb"],
-                        "message": f"Stage {stage['stage_name']} used {stage['end_memory_mb']:.0f} MB memory",  # noqa: E501
+                        "memory_mb": stage["memory_mb"],
+                        "message": f"Stage {stage['stage_name']} used {stage['memory_mb']:.0f} MB memory",  # noqa: E501
                         "suggestion": "Consider memory optimization or increasing available memory",
                     }
                 )

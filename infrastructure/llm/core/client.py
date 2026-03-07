@@ -21,7 +21,10 @@ from typing import Any, Callable, Dict, Iterator, Optional, Tuple, TypeVar
 
 _T = TypeVar("_T")
 
-import requests
+try:
+    import requests
+except ImportError:
+    requests = None  # type: ignore[assignment]
 
 from infrastructure.core.exceptions import LLMConnectionError, LLMError
 from infrastructure.core.logging_utils import get_logger

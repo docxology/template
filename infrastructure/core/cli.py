@@ -30,7 +30,6 @@ from infrastructure.core.errors import (
 )
 from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor
 from infrastructure.core.multi_project import MultiProjectConfig, MultiProjectOrchestrator
-from infrastructure.project.discovery import discover_projects
 
 logger = get_logger(__name__)
 
@@ -182,6 +181,8 @@ def handle_pipeline_command(args: argparse.Namespace) -> int:
 
 def handle_multi_project_command(args: argparse.Namespace) -> int:
     """Handle multi-project execution command."""
+    from infrastructure.project.discovery import discover_projects
+
     logger.info(f"Executing {args.execution_type} pipeline across multiple projects")
 
     projects = discover_projects(args.repo_root)
@@ -280,6 +281,8 @@ def handle_inventory_command(args: argparse.Namespace) -> int:
 
 def handle_discover_command(args: argparse.Namespace) -> int:
     """Handle project discovery command."""
+    from infrastructure.project.discovery import discover_projects
+
     logger.info("Discovering available projects")
 
     try:

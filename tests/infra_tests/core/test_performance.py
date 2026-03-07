@@ -370,7 +370,6 @@ class TestStagePerformanceTracker:
             "duration",
             "exit_code",
             "memory_mb",
-            "end_memory_mb",
             "cpu_percent",
         ]
         for key in expected_keys:

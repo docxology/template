@@ -116,10 +116,6 @@ def run_pytest_stream(
 
         if fd in reads:
             raw_chunk = process.stdout.read(4096)
-            if raw_chunk is None:
-                if process.poll() is not None:
-                    break
-                continue
             if not raw_chunk:
                 if process.poll() is not None:
                     break

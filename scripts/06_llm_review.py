@@ -27,7 +27,7 @@ from pathlib import Path
 # Add root to path for infrastructure imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from infrastructure.core.logging_utils import get_logger, log_header
+from infrastructure.core.logging_utils import get_logger, log_header, log_success
 from infrastructure.llm.review.pipeline_runner import ReviewMode, run_llm_review_pipeline
 
 # Set up logger for this module
@@ -52,7 +52,10 @@ def main(mode: str = ReviewMode.ALL, project_name: str = "project") -> int:
         log_header("Stage 8/9: LLM Manuscript Review", logger)
 
     repo_root = Path(__file__).parent.parent
-    return run_llm_review_pipeline(mode=mode, project_name=project_name, repo_root=repo_root)
+    exit_code = run_llm_review_pipeline(mode=mode, project_name=project_name, repo_root=repo_root)
+    if exit_code == 0:
+        log_success("LLM review stage completed successfully", logger)
+    return exit_code
 
 
 if __name__ == "__main__":

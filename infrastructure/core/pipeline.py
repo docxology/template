@@ -222,8 +222,7 @@ class PipelineExecutor:
             logger.info(f"Stage {stage_num}: {stage_name}")
 
         try:
-            with log_operation(f"Stage {stage_num}: {stage_name}"):
-                success = stage_func()
+            success = stage_func()
 
             duration = time.time() - start_time
 
