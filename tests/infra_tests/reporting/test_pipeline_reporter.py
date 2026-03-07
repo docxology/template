@@ -310,9 +310,9 @@ def test_generate_error_markdown_with_suggestions() -> None:
 
 def test_stage_result_dataclass_fields() -> None:
     """Test StageResult dataclass with all fields."""
-    from infrastructure.reporting.pipeline_reporter import StageResult
+    from infrastructure.reporting.pipeline_reporter import ReportingStageResult
 
-    stage = StageResult(
+    stage = ReportingStageResult(
         name="test",
         exit_code=0,
         duration=1.5,
@@ -332,12 +332,12 @@ def test_stage_result_dataclass_fields() -> None:
 
 def test_pipeline_report_dataclass_fields() -> None:
     """Test PipelineReport dataclass with all fields."""
-    from infrastructure.reporting.pipeline_reporter import PipelineReport, StageResult
+    from infrastructure.reporting.pipeline_reporter import PipelineReport, ReportingStageResult
 
     report = PipelineReport(
         timestamp="2025-01-01T00:00:00",
         total_duration=5.0,
-        stages=[StageResult(name="test", exit_code=0, duration=1.0, status="passed")],
+        stages=[ReportingStageResult(name="test", exit_code=0, duration=1.0, status="passed")],
         test_results={"summary": {"total_tests": 10}},
         validation_results={"checks": {"pdf": True}},
         performance_metrics={"duration": 5.0},

@@ -19,8 +19,8 @@ logger = get_logger(__name__)
 
 
 @dataclass
-class StageResult(_CheckpointStageResult):
-    """Reporting-layer extension of StageResult with output and error lists."""
+class ReportingStageResult(_CheckpointStageResult):
+    """Reporting-layer extension of checkpoint StageResult with output and error lists."""
 
     output_files: List[str] = field(default_factory=list)
     errors: List[str] = field(default_factory=list)
@@ -33,7 +33,7 @@ class PipelineReport:
 
     timestamp: str
     total_duration: float
-    stages: List[StageResult]
+    stages: List[ReportingStageResult]
     test_results: Optional[Dict[str, Any]] = None
     validation_results: Optional[Dict[str, Any]] = None
     performance_metrics: Optional[Dict[str, Any]] = None
@@ -85,7 +85,7 @@ def generate_pipeline_report(
     for result in stage_results:
         status = "passed" if result.get("exit_code", 1) == 0 else "failed"
         stages.append(
-            StageResult(
+            ReportingStageResult(
                 name=result.get("name", "unknown"),
                 exit_code=result.get("exit_code", 1),
                 duration=result.get("duration", 0.0),

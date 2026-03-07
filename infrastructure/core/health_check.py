@@ -20,8 +20,8 @@ logger = get_logger(__name__)
 class SystemHealthChecker:
     """Comprehensive system health monitoring."""
 
-    def __init__(self, repo_root: Path | None = None) -> None:
-        self.start_time = time.time()
+    def __init__(self, repo_root: Path | None = None, start_time: float | None = None) -> None:
+        self.start_time = start_time if start_time is not None else time.time()
         self.repo_root = repo_root or Path.cwd()
         self.checks = {
             "filesystem": self._check_filesystem,
@@ -107,7 +107,6 @@ class SystemHealthChecker:
         return results
 
     def _check_memory(self) -> dict[str, Any]:
-        """Check system memory usage."""
         if psutil is None:
             return {"psutil_unavailable": True}
         memory = psutil.virtual_memory()
@@ -121,7 +120,6 @@ class SystemHealthChecker:
         }
 
     def _check_cpu(self) -> dict[str, Any]:
-        """Check CPU usage and load."""
         if psutil is None:
             return {"psutil_unavailable": True}
         return {
@@ -132,7 +130,6 @@ class SystemHealthChecker:
         }
 
     def _check_disk(self) -> dict[str, Any]:
-        """Check disk usage."""
         if psutil is None:
             return {"psutil_unavailable": True}
         disk = psutil.disk_usage("/")
@@ -146,7 +143,6 @@ class SystemHealthChecker:
         }
 
     def _check_network(self) -> dict[str, Any]:
-        """Check network connectivity."""
         import socket
 
         results: dict[str, Any] = {}
@@ -168,7 +164,6 @@ class SystemHealthChecker:
         return results
 
     def _check_dependencies(self) -> dict[str, Any]:
-        """Check critical Python dependencies."""
         critical_deps = [
             "numpy",
             "matplotlib",
@@ -198,7 +193,7 @@ class SystemHealthChecker:
         return results
 
     def _check_uptime(self) -> dict[str, Any]:
-        """Check system uptime and process runtime."""
+        """Return system and process uptime; falls back from /proc/uptime to psutil.boot_time()."""
         uptime_seconds: float | None = None
         try:
             with open("/proc/uptime", "r") as f:
@@ -254,7 +249,6 @@ class SystemHealthChecker:
         return metrics
 
     def _generate_summary(self, status: dict[str, Any]) -> dict[str, Any]:
-        """Generate summary metrics from health status."""
         checks = status["checks"]
 
         summary: dict[str, Any] = {
@@ -278,20 +272,28 @@ class SystemHealthChecker:
         return summary
 
 
-# Module-level singleton so start_time captures the actual process start for uptime metrics.
-_checker = SystemHealthChecker()
+# Capture process start time at import (zero side effects — just reads the clock).
+_PROCESS_START_TIME: float = time.time()
+_checker: SystemHealthChecker | None = None
+
+
+def _get_checker() -> SystemHealthChecker:
+    global _checker
+    if _checker is None:
+        _checker = SystemHealthChecker(start_time=_PROCESS_START_TIME)
+    return _checker
 
 
 def quick_health_check() -> bool:
     """Return True if system is healthy."""
-    return _checker.is_healthy()
+    return _get_checker().is_healthy()
 
 
 def get_health_status() -> dict[str, Any]:
     """Get detailed health status."""
-    return _checker.get_health_status()
+    return _get_checker().get_health_status()
 
 
 def get_health_metrics() -> dict[str, Any]:
     """Get health metrics for monitoring systems."""
-    return _checker.get_metrics()
+    return _get_checker().get_metrics()

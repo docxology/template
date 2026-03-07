@@ -5,7 +5,7 @@ Sub-domain 1 — Stage monitoring (psutil-based, pipeline-level):
   get_system_resources, monitor_performance, profile_memory_usage.
 
 Sub-domain 2 — Function profiling (cProfile/tracemalloc, call-level):
-  ProfilingMetrics, CodeProfiler, get_performance_monitor, benchmark_function.
+  ProfilingMetrics, CodeProfiler, get_performance_monitor.
 
 Both sub-domains share this module intentionally to avoid circular imports
 between infrastructure.core submodules. If this grows further, split into
@@ -406,7 +406,7 @@ class CodeProfiler:
 
             self.metrics_history.append(metrics)
 
-            logger.info(
+            logger.debug(
                 f"Performance: {operation_name} completed in {execution_time:.3f}s "
                 f"(CPU: {cpu_time:.3f}s, Peak memory: {metrics.memory_peak or 'N/A'}MB)"
             )
@@ -558,13 +558,6 @@ def profile_memory_usage(func: Callable, *args, **kwargs) -> Dict[str, Any]:
         "memory_peak": (metrics.memory_peak or 0) // (1024 * 1024),
         "result": result_holder[0] if result_holder else None,
     }
-
-
-def benchmark_function(
-    func: Callable, *args, iterations: int = 5, **kwargs
-) -> Dict[str, Union[float, List[float]]]:
-    """Benchmark a function using the global CodeProfiler."""
-    return get_performance_monitor().benchmark_function(func, *args, iterations=iterations, **kwargs)
 
 
 def main():

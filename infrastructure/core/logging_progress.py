@@ -9,6 +9,9 @@ import time
 from contextlib import contextmanager
 from typing import Any, Iterator, Optional
 
+from infrastructure.core.logging_constants import EMOJIS, USE_EMOJIS
+from infrastructure.core.logging_helpers import format_duration
+
 
 def calculate_eta(elapsed_time: float, completed_items: int, total_items: int) -> Optional[float]:
     """Calculate estimated time remaining using linear extrapolation; returns None if indeterminate."""
@@ -147,9 +150,7 @@ def log_progress_bar(
         Processing files: [████████░░░░░░░░░░░░] 30%
     """
     if logger is None:
-        from infrastructure.core.logging_utils import get_logger
-
-        logger = get_logger(__name__)
+        logger = logging.getLogger(__name__)
 
     if total == 0:
         logger.info(f"{message}: 0/0 (0%)")
@@ -273,9 +274,9 @@ def log_with_spinner(
             spinner.stop(final_message)
         elif logger:
             spinner.stop()
-            from infrastructure.core.logging_utils import log_success
-
-            log_success(message.replace("...", " complete"), logger)
+            success_msg = message.replace("...", " complete")
+            emoji = EMOJIS["success"] if USE_EMOJIS else "[SUCCESS]"
+            logger.info(f"{emoji} {success_msg}" if USE_EMOJIS else success_msg)
         else:
             spinner.stop()
     except Exception as e:
@@ -354,7 +355,7 @@ class StreamingProgress:
         if self.current > 0 and elapsed > 0:
             rate = self.current / elapsed
             remaining = (self.total - self.current) / rate if rate > 0 else 0
-            from infrastructure.core.logging_helpers import format_duration
+
 
             eta_str = f" | ETA: {format_duration(remaining)}"
 
@@ -404,11 +405,11 @@ def log_progress_streaming(
         logger: Logger instance (optional)
         show_eta: Whether to show estimated time remaining
     """
-    from infrastructure.core.logging_utils import log_progress
-
     if not sys.stderr.isatty():
-        # Not a TTY - use regular progress logging
-        log_progress(current, total, message, logger)
+        # Not a TTY - fall back to plain log line
+        _logger = logger or logging.getLogger(__name__)
+        percent = (current * 100) // total if total > 0 else 0
+        _logger.info(f"[{current}/{total} - {percent}%] {message}")
         return
 
     percent = (current * 100) // total if total > 0 else 0
@@ -444,11 +445,7 @@ def log_stage_with_eta(
         logger: Logger instance (optional)
     """
     if logger is None:
-        from infrastructure.core.logging_utils import get_logger
-
-        logger = get_logger(__name__)
-
-    from infrastructure.core.logging_helpers import format_duration
+        logger = logging.getLogger(__name__)
 
     eta = calculate_eta(elapsed_time, current, total)
     if eta is not None:
@@ -471,9 +468,7 @@ def log_resource_usage(
         logger: Logger instance (optional)
     """
     if logger is None:
-        from infrastructure.core.logging_utils import get_logger
-
-        logger = get_logger(__name__)
+        logger = logging.getLogger(__name__)
 
     parts = []
     if cpu_percent is not None:
