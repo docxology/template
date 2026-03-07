@@ -111,8 +111,6 @@ class MarkdownIntegration:
         if output_file is None:
             output_file = self.manuscript_dir / "00_table_of_figures.md"
 
-        self.figure_manager.generate_table_of_figures()
-
         # Convert LaTeX to markdown format
         markdown_content = "# Table of Figures\n\n"
         markdown_content += "This document lists all figures in the manuscript.\n\n"

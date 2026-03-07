@@ -20,6 +20,9 @@ from infrastructure.core.config_loader import get_testing_config
 
 logger = get_logger(__name__)
 
+# Minimum file size (bytes) for a valid coverage JSON file; an empty JSON is ~50 bytes
+MIN_VALID_COVERAGE_FILE_BYTES = 100
+
 def check_cov_datafile_support() -> bool:
     """Return True if pytest-cov supports the --cov-datafile flag."""
     try:
@@ -215,7 +218,7 @@ def _wait_for_coverage_file(
             if not path.exists():
                 continue
             file_size = path.stat().st_size
-            if file_size >= 100:
+            if file_size >= MIN_VALID_COVERAGE_FILE_BYTES:
                 return path
             logger.debug(f"Attempt {attempt + 1}/{max_retries}: {path} too small ({file_size} bytes)")
     return None

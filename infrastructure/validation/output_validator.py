@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.logging_utils import get_logger, log_success
+from infrastructure.project.discovery import discover_projects
 
 logger = get_logger(__name__)
 
@@ -197,8 +198,6 @@ def validate_root_output_structure(repo_root: Path) -> dict[str, Any]:
         }
 
     # Discover valid project names
-    from infrastructure.project.discovery import discover_projects
-
     projects = discover_projects(repo_root)
     project_names = set(p.name for p in projects)
 

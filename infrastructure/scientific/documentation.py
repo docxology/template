@@ -61,14 +61,6 @@ def generate_scientific_documentation(func: Callable) -> str:
 ### {return_info if return_info else "Returns"}
 No return annotation specified.
 
-### Usage Example
-```python
-# Example usage would go here
-result = {func.__name__}(example_input)
-```
-
-### Scientific Context
-This function implements [mathematical concept] with [specific approach].
 """
 
     return documentation

@@ -18,6 +18,8 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+CRITICAL_RESOURCE_THRESHOLD = 95.0
+
 
 class SystemHealthChecker:
     """Comprehensive system health monitoring."""
@@ -124,8 +126,8 @@ class SystemHealthChecker:
             "available_mb": memory.available // (1024 * 1024),
             "used_mb": memory.used // (1024 * 1024),
             "percent_used": memory.percent,
-            "critical_threshold": 95.0,
-            "is_critical": memory.percent > 95.0,
+            "critical_threshold": CRITICAL_RESOURCE_THRESHOLD,
+            "is_critical": memory.percent > CRITICAL_RESOURCE_THRESHOLD,
         }
 
     def _check_cpu(self) -> dict[str, Any]:
@@ -147,8 +149,8 @@ class SystemHealthChecker:
             "used_gb": disk.used // (1024**3),
             "free_gb": disk.free // (1024**3),
             "percent_used": disk.percent,
-            "critical_threshold": 95.0,
-            "is_critical": disk.percent > 95.0,
+            "critical_threshold": CRITICAL_RESOURCE_THRESHOLD,
+            "is_critical": disk.percent > CRITICAL_RESOURCE_THRESHOLD,
         }
 
     def _check_network(self) -> dict[str, Any]:

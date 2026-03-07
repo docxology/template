@@ -21,6 +21,9 @@ from typing import Any
 from infrastructure.core.exceptions import PDFValidationError
 from infrastructure.core.logging_utils import get_logger
 
+logger = get_logger(__name__)
+
+
 def extract_text_from_pdf(pdf_path: Path) -> str:
     """
     Extract all text content from a PDF file with robust error handling and fallbacks.
@@ -39,8 +42,6 @@ def extract_text_from_pdf(pdf_path: Path) -> str:
     """
     if not pdf_path.exists():
         raise PDFValidationError(f"PDF file not found: {pdf_path}")
-
-    logger = get_logger(__name__)
 
     # Validate PDF file size and basic integrity
     file_size = pdf_path.stat().st_size
