@@ -428,15 +428,7 @@ def generate_html_report(report: PipelineReport) -> str:
 
 
 def save_test_results(test_results: dict[str, Any], output_dir: Path) -> Path:
-    """Write test_results dict to test_results.json and return the path.
-
-    Args:
-        test_results: Test results dictionary
-        output_dir: Output directory path
-
-    Returns:
-        Path to saved report
-    """
+    """Write test_results dict to test_results.json and return the path."""
     output_dir.mkdir(parents=True, exist_ok=True)
     report_path = output_dir / "test_results.json"
     with open(report_path, "w", encoding="utf-8") as f:
@@ -467,14 +459,7 @@ def generate_validation_report(
 
 
 def generate_validation_markdown(results: dict[str, Any]) -> str:
-    """Generate Markdown validation report.
-
-    Args:
-        results: Validation results dictionary
-
-    Returns:
-        Markdown formatted report
-    """
+    """Return Markdown-formatted validation report for the given results dict."""
     lines = [
         "# Validation Report",
         "",
@@ -495,15 +480,7 @@ def generate_validation_markdown(results: dict[str, Any]) -> str:
 
 
 def generate_performance_report(performance_metrics: dict[str, Any], output_dir: Path) -> Path:
-    """Generate performance report.
-
-    Args:
-        performance_metrics: Performance metrics dictionary
-        output_dir: Output directory path
-
-    Returns:
-        Path to saved report
-    """
+    """Write performance_metrics dict to performance_report.json and return the path."""
     output_dir.mkdir(parents=True, exist_ok=True)
 
     json_path = output_dir / "performance_report.json"

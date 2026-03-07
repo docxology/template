@@ -57,6 +57,7 @@ class SystemHealthChecker:
                 status["checks"][check_name] = {
                     "status": "unhealthy",
                     "error": str(e),
+                    "error_type": type(e).__name__,
                     "timestamp": time.time(),
                 }
                 unhealthy_checks.append(check_name)

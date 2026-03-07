@@ -267,8 +267,8 @@ class TestMonitorPerformance:
             monitor.record_operation()
             time.sleep(0.01)  # Very short sleep to ensure duration > 0
 
-        # Context manager logs timing but does not call stop()
-        assert monitor.start_time is not None
+        # Context manager calls stop() internally and stores the final metrics
+        assert monitor.last_metrics is not None
 
     def test_performance_context_with_operations(self):
         """Test monitoring performance with recorded operations."""

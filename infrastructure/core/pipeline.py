@@ -277,17 +277,12 @@ class PipelineExecutor:
             )
 
     def _start_fresh(self) -> list[PipelineStageResult]:
-        """Run the pipeline from scratch, temporarily disabling resume to avoid recursion."""
-        original_resume = self.config.resume
-        self.config.resume = False
-        try:
-            return (
-                self.execute_full_pipeline()
-                if not self.config.skip_llm
-                else self.execute_core_pipeline()
-            )
-        finally:
-            self.config.resume = original_resume
+        """Run the pipeline from scratch, bypassing any checkpoint."""
+        skip_clean = not self.config.clean
+        stages = self._build_stage_list(
+            include_llm=not self.config.skip_llm, skip_clean=skip_clean
+        )
+        return self._execute_pipeline(stages)
 
     def _resume_pipeline(self) -> list[PipelineStageResult]:
         """Resume pipeline from checkpoint.

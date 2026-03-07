@@ -459,46 +459,12 @@ class MetadataError(PublishingError):
 
 
 def raise_with_context(exception_class: type[TemplateError], message: str, **context: Any) -> None:
-    """Raise an exception with context information.
-
-    This is a convenience function for raising exceptions with keyword arguments
-    as context.
-
-    Args:
-        exception_class: Exception class to raise
-        message: Error message
-        **context: Context information as keyword arguments
-
-    Raises:
-        exception_class: The specified exception with context
-
-    Example:
-        >>> raise_with_context(
-        ...     ValidationError,
-        ...     "Validation failed",
-        ...     file="data.csv",
-        ...     line=10,
-        ...     column="temperature"
-        ... )
-    """
+    """Raise exception_class(message) with the given keyword arguments as context."""
     raise exception_class(message, context=context)
 
 
 def format_file_context(file_path: Path | str, line: Optional[int] = None) -> dict[str, Any]:
-    """Format file path and optional line number as error context.
-
-    Args:
-        file_path: Path to file
-        line: Optional line number
-
-    Returns:
-        Context dictionary with file and line information
-
-    Example:
-        >>> context = format_file_context("data.csv", line=10)
-        >>> context
-        {'file': 'data.csv', 'line': 10}
-    """
+    """Return a context dict with 'file' and optionally 'line' keys."""
     context: dict[str, Any] = {"file": str(file_path)}
     if line is not None:
         context["line"] = line
@@ -506,27 +472,7 @@ def format_file_context(file_path: Path | str, line: Optional[int] = None) -> di
 
 
 def chain_exceptions(new_exception: TemplateError, original: Exception) -> TemplateError:
-    """Chain a new exception with the original exception's context.
-
-    This preserves the original exception while wrapping it in a more
-    specific template exception.
-
-    Args:
-        new_exception: New exception to raise
-        original: Original exception that was caught
-
-    Returns:
-        New exception with chained context
-
-    Example:
-        >>> try:
-        ...     risky_operation()
-        ... except ValueError as e:
-        ...     raise chain_exceptions(
-        ...         ValidationError("Invalid value"),
-        ...         e
-        ...     )
-    """
+    """Set new_exception.__cause__ = original, store original info in context, and return it."""
     # Add original exception info to context
     if not new_exception.context:
         new_exception.context = {}

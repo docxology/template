@@ -572,7 +572,7 @@ def _stream_with_heartbeat(
         )
         return "".join(response_chunks)
     except Exception as e:
-        logger.debug(f"Streaming query failed, falling back to blocking query: {e}")
+        logger.warning(f"Streaming query failed, falling back to blocking query: {type(e).__name__}: {e}")
         return client.query(prompt, options=options)
 
 
