@@ -381,16 +381,24 @@ def run_test_summary_generation() -> int:
 
     # Save JSON report
     json_file = Path("test_results_summary.json")
-    with open(json_file, "w") as f:
-        json.dump(report_data, f, indent=2)
-    print(f"✅ JSON report saved: {json_file}")
+    try:
+        with open(json_file, "w") as f:
+            json.dump(report_data, f, indent=2)
+        print(f"✅ JSON report saved: {json_file}")
+    except OSError as e:
+        logger.error(f"Failed to write JSON report to {json_file}: {e}")
+        raise
 
     # Generate and save markdown report
     markdown_content = generate_markdown_report(report_data)
     md_file = Path("test_results_summary.md")
-    with open(md_file, "w") as f:
-        f.write(markdown_content)
-    print(f"✅ Markdown report saved: {md_file}")
+    try:
+        with open(md_file, "w") as f:
+            f.write(markdown_content)
+        print(f"✅ Markdown report saved: {md_file}")
+    except OSError as e:
+        logger.error(f"Failed to write markdown report to {md_file}: {e}")
+        raise
 
     # Print summary to console
     summary = report_data["summary"]
