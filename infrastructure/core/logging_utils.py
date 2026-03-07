@@ -71,10 +71,6 @@ def setup_logger(
     # Check if we're in test environment (pytest)
     is_test_env = _is_test_environment()
 
-    # In test environment: don't add console handler, enable propagation
-    # so pytest's caplog can capture logs from root logger
-    # In normal environment: add console handler, disable propagation
-    # Always add Console handler so capsys can capture stdout
     console_handler = logging.StreamHandler(sys.stdout)
     if USE_STRUCTURED_LOGGING:
         console_handler.setFormatter(JSONFormatter())
@@ -172,10 +168,8 @@ def get_logger(name: str) -> logging.Logger:
     """Return a logger configured with standard handlers for the given name."""
     logger = logging.getLogger(name)
 
-    # Check if we're in test environment (same detection as setup_logger)
     is_test_env = _is_test_environment()
 
-    # If not configured, set up with defaults
     if not logger.handlers:
         return setup_logger(name)
 
@@ -198,7 +192,6 @@ def get_logger(name: str) -> logging.Logger:
         logger.propagate = False
 
     return logger
-
 
 
 @contextmanager
