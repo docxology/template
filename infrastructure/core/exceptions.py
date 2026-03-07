@@ -256,6 +256,37 @@ class DependencyError(TemplateError):
     pass
 
 
+def _build_install_commands(dependency: str) -> list[str]:
+    """Return OS-appropriate installation commands for a dependency."""
+    import platform
+    import shutil
+
+    commands: list[str] = []
+    system = platform.system().lower()
+
+    if system == "linux":
+        if shutil.which("apt-get"):
+            commands.append(f"sudo apt-get update && sudo apt-get install -y {dependency}")
+        elif shutil.which("yum"):
+            commands.append(f"sudo yum install -y {dependency}")
+        elif shutil.which("dnf"):
+            commands.append(f"sudo dnf install -y {dependency}")
+        elif shutil.which("pacman"):
+            commands.append(f"sudo pacman -S {dependency}")
+        else:
+            commands.append(f"# Install {dependency} using your package manager")
+    elif system == "darwin":
+        if shutil.which("brew"):
+            commands.append(f"brew install {dependency}")
+        else:
+            commands.append(f"# Install {dependency} using Homebrew: brew install {dependency}")
+    else:
+        commands.append(f"# Install {dependency} using your system's package manager")
+
+    commands.append(f"which {dependency}  # Verify installation")
+    return commands
+
+
 class MissingDependencyError(DependencyError):
     """Raised when a required dependency is missing.
 
@@ -297,41 +328,7 @@ class MissingDependencyError(DependencyError):
 
         # Auto-generate installation commands based on common package managers
         if recovery_commands is None and dependency:
-            recovery_commands = []
-
-            # Detect OS and provide appropriate commands
-            import platform
-
-            system = platform.system().lower()
-            import shutil
-
-            if system == "linux":
-                # Try to detect package manager
-                if shutil.which("apt-get"):
-                    recovery_commands.append(
-                        f"sudo apt-get update && sudo apt-get install -y {dependency}"
-                    )
-                elif shutil.which("yum"):
-                    recovery_commands.append(f"sudo yum install -y {dependency}")
-                elif shutil.which("dnf"):
-                    recovery_commands.append(f"sudo dnf install -y {dependency}")
-                elif shutil.which("pacman"):
-                    recovery_commands.append(f"sudo pacman -S {dependency}")
-                else:
-                    recovery_commands.append(f"# Install {dependency} using your package manager")
-            elif system == "darwin":  # macOS
-                if shutil.which("brew"):
-                    recovery_commands.append(f"brew install {dependency}")
-                else:
-                    recovery_commands.append(
-                        f"# Install {dependency} using Homebrew: brew install {dependency}"
-                    )
-            else:
-                recovery_commands.append(
-                    f"# Install {dependency} using your system's package manager"
-                )
-
-            recovery_commands.append(f"which {dependency}  # Verify installation")
+            recovery_commands = _build_install_commands(dependency)
 
         super().__init__(message, context, suggestions, recovery_commands)
 

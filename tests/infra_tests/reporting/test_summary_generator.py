@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 
-from infrastructure.reporting.summary_generator import (
+from infrastructure.reporting.suite_summary_generator import (
     generate_markdown_report,
     generate_summary_report,
     load_infrastructure_results,

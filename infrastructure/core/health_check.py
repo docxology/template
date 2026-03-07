@@ -9,7 +9,7 @@ from __future__ import annotations
 import os
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from infrastructure.core._optional_deps import psutil
 from infrastructure.core.logging_utils import get_logger
@@ -20,7 +20,7 @@ logger = get_logger(__name__)
 class SystemHealthChecker:
     """Comprehensive system health monitoring."""
 
-    def __init__(self, repo_root: Optional[Path] = None) -> None:
+    def __init__(self, repo_root: Path | None = None) -> None:
         self.start_time = time.time()
         self.repo_root = repo_root or Path.cwd()
         self.checks = {
@@ -33,13 +33,13 @@ class SystemHealthChecker:
             "uptime": self._check_uptime,
         }
 
-    def get_health_status(self) -> Dict[str, Any]:
+    def get_health_status(self) -> dict[str, Any]:
         """Get comprehensive health status.
 
         Returns:
             Dictionary containing health status for all components
         """
-        status: Dict[str, Any] = {
+        status: dict[str, Any] = {
             "timestamp": time.time(),
             "overall_status": "healthy",
             "checks": {},
@@ -77,11 +77,11 @@ class SystemHealthChecker:
 
         return status
 
-    def _check_filesystem(self) -> Dict[str, Any]:
+    def _check_filesystem(self) -> dict[str, Any]:
         """Check filesystem health and permissions."""
         import tempfile
 
-        results: Dict[str, Any] = {}
+        results: dict[str, Any] = {}
 
         # Check write permissions
         try:
@@ -110,7 +110,7 @@ class SystemHealthChecker:
 
         return results
 
-    def _check_memory(self) -> Dict[str, Any]:
+    def _check_memory(self) -> dict[str, Any]:
         """Check system memory usage."""
         if psutil is None:
             return {"psutil_unavailable": True}
@@ -124,7 +124,7 @@ class SystemHealthChecker:
             "is_critical": memory.percent > 95.0,
         }
 
-    def _check_cpu(self) -> Dict[str, Any]:
+    def _check_cpu(self) -> dict[str, Any]:
         """Check CPU usage and load."""
         if psutil is None:
             return {"psutil_unavailable": True}
@@ -135,7 +135,7 @@ class SystemHealthChecker:
             "load_average": (psutil.getloadavg() if hasattr(psutil, "getloadavg") else None),
         }
 
-    def _check_disk(self) -> Dict[str, Any]:
+    def _check_disk(self) -> dict[str, Any]:
         """Check disk usage."""
         if psutil is None:
             return {"psutil_unavailable": True}
@@ -149,11 +149,11 @@ class SystemHealthChecker:
             "is_critical": disk.percent > 95.0,
         }
 
-    def _check_network(self) -> Dict[str, Any]:
+    def _check_network(self) -> dict[str, Any]:
         """Check network connectivity."""
         import socket
 
-        results: Dict[str, Any] = {}
+        results: dict[str, Any] = {}
 
         # Test DNS resolution
         try:
@@ -171,7 +171,7 @@ class SystemHealthChecker:
 
         return results
 
-    def _check_dependencies(self) -> Dict[str, Any]:
+    def _check_dependencies(self) -> dict[str, Any]:
         """Check critical Python dependencies."""
         critical_deps = [
             "numpy",
@@ -181,7 +181,7 @@ class SystemHealthChecker:
             "psutil",  # For monitoring
         ]
 
-        results: Dict[str, Any] = {}
+        results: dict[str, Any] = {}
         for dep in critical_deps:
             try:
                 __import__(dep)
@@ -201,9 +201,9 @@ class SystemHealthChecker:
 
         return results
 
-    def _check_uptime(self) -> Dict[str, Any]:
+    def _check_uptime(self) -> dict[str, Any]:
         """Check system uptime and process runtime."""
-        uptime_seconds: Optional[float] = None
+        uptime_seconds: float | None = None
         try:
             with open("/proc/uptime", "r") as f:
                 uptime_seconds = float(f.readline().split()[0])
@@ -228,11 +228,11 @@ class SystemHealthChecker:
         """Return True if all health checks pass."""
         return bool(self.get_health_status()["overall_status"] == "healthy")
 
-    def get_metrics(self) -> Dict[str, Any]:
+    def get_metrics(self) -> dict[str, Any]:
         """Return health metrics in a format suitable for monitoring systems."""
         status = self.get_health_status()
 
-        metrics: Dict[str, Any] = {
+        metrics: dict[str, Any] = {
             "health_status": 1 if status["overall_status"] == "healthy" else 0,
             "timestamp": status["timestamp"],
         }
@@ -257,18 +257,18 @@ class SystemHealthChecker:
 
         return metrics
 
-    def _generate_summary(self, status: Dict[str, Any]) -> Dict[str, Any]:
+    def _generate_summary(self, status: dict[str, Any]) -> dict[str, Any]:
         """Generate summary metrics from health status."""
         checks = status["checks"]
 
-        summary: Dict[str, Any] = {
+        summary: dict[str, Any] = {
             "total_checks": len(checks),
             "healthy_checks": sum(1 for c in checks.values() if c["status"] == "healthy"),
             "unhealthy_checks": sum(1 for c in checks.values() if c["status"] == "unhealthy"),
         }
 
         # Add critical resource warnings
-        warnings: List[str] = []
+        warnings: list[str] = []
 
         if "memory" in checks and checks["memory"].get("details", {}).get("is_critical"):
             warnings.append("High memory usage detected")
@@ -282,19 +282,26 @@ class SystemHealthChecker:
         return summary
 
 
-_checker = SystemHealthChecker()
+_checker: SystemHealthChecker | None = None
+
+
+def _get_checker() -> SystemHealthChecker:
+    global _checker
+    if _checker is None:
+        _checker = SystemHealthChecker()
+    return _checker
 
 
 def quick_health_check() -> bool:
     """Return True if system is healthy."""
-    return _checker.is_healthy()
+    return _get_checker().is_healthy()
 
 
-def get_health_status() -> Dict[str, Any]:
+def get_health_status() -> dict[str, Any]:
     """Get detailed health status."""
-    return _checker.get_health_status()
+    return _get_checker().get_health_status()
 
 
-def get_health_metrics() -> Dict[str, Any]:
+def get_health_metrics() -> dict[str, Any]:
     """Get health metrics for monitoring systems."""
-    return _checker.get_metrics()
+    return _get_checker().get_metrics()

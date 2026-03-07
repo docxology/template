@@ -87,6 +87,7 @@ class PerformanceMonitor:
         self.operations_count: int = 0
         self.cache_hits: int = 0
         self.cache_misses: int = 0
+        self.last_metrics: Optional[PerformanceMetrics] = None
 
     def start(self) -> None:
         """Start a monitoring session."""
@@ -167,7 +168,7 @@ def performance_context(operation_name: str = "Operation"):
         yield monitor
     finally:
         metrics = monitor.stop()
-        monitor.last_metrics = metrics  # type: ignore[attr-defined]
+        monitor.last_metrics = metrics
         logger.debug(f"{operation_name}: {format_duration(metrics.duration)}")
 
 

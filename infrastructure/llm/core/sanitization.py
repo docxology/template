@@ -12,6 +12,7 @@ import re
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+from infrastructure.core.exceptions import LLMError
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
@@ -188,8 +189,8 @@ class InputSanitizer:
         return text
 
 
-class SecurityError(Exception):
-    """Exception raised for security violations."""
+class SecurityError(LLMError):
+    """Exception raised for security violations in LLM operations."""
 
     pass
 
