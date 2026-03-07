@@ -465,3 +465,33 @@ def validate_directory_structure(repo_root: Path, project_name: str = "project")
             missing.append(dir_path)
 
     return missing
+
+
+def build_install_commands(dependency: str) -> list[str]:
+    """Return OS-appropriate installation commands for a dependency."""
+    import platform
+
+    commands: list[str] = []
+    system = platform.system().lower()
+
+    if system == "linux":
+        if shutil.which("apt-get"):
+            commands.append(f"sudo apt-get update && sudo apt-get install -y {dependency}")
+        elif shutil.which("yum"):
+            commands.append(f"sudo yum install -y {dependency}")
+        elif shutil.which("dnf"):
+            commands.append(f"sudo dnf install -y {dependency}")
+        elif shutil.which("pacman"):
+            commands.append(f"sudo pacman -S {dependency}")
+        else:
+            commands.append(f"# Install {dependency} using your package manager")
+    elif system == "darwin":
+        if shutil.which("brew"):
+            commands.append(f"brew install {dependency}")
+        else:
+            commands.append(f"# Install {dependency} using Homebrew: brew install {dependency}")
+    else:
+        commands.append(f"# Install {dependency} using your system's package manager")
+
+    commands.append(f"which {dependency}  # Verify installation")
+    return commands

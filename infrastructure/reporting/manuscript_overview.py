@@ -20,7 +20,7 @@ if TYPE_CHECKING:
     import PIL.Image
     from pypdf import PdfReader
 
-    from infrastructure.reporting.executive_report import ExecutiveSummary
+    from infrastructure.reporting.executive_reporter import ExecutiveSummary
 
 logger = get_logger(__name__)
 

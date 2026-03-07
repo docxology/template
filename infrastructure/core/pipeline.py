@@ -67,7 +67,6 @@ class StageSpec(NamedTuple):
 
     name: str
     func: Callable[[], bool]
-    skip: bool = False
 
 
 class PipelineExecutor:
@@ -117,19 +116,20 @@ class PipelineExecutor:
         logger.debug(f"Set up log file handler: {self.log_file}")
 
     def _build_stage_list(self, include_llm: bool, skip_clean: bool) -> list[StageSpec]:
-        """Build canonical stage list."""
-        stages: list[StageSpec] = [
-            StageSpec("Clean Output Directories", self._run_clean_outputs, skip_clean),
-            StageSpec("Environment Setup", self._run_setup_environment),
-            StageSpec("Infrastructure Tests", self._run_infrastructure_tests, self.config.skip_infra),
-            StageSpec("Project Tests", self._run_project_tests),
-            StageSpec("Project Analysis", self._run_analysis),
-            StageSpec("PDF Rendering", self._run_pdf_rendering),
-            StageSpec("Output Validation", self._run_validation),
-        ]
-        if include_llm:
-            stages.append(StageSpec("LLM Scientific Review", self._run_llm_review, self.config.skip_llm))
-            stages.append(StageSpec("LLM Translations", self._run_llm_translations, self.config.skip_llm))
+        """Build canonical stage list for active (non-skipped) stages only."""
+        stages: list[StageSpec] = []
+        if not skip_clean:
+            stages.append(StageSpec("Clean Output Directories", self._run_clean_outputs))
+        stages.append(StageSpec("Environment Setup", self._run_setup_environment))
+        if not self.config.skip_infra:
+            stages.append(StageSpec("Infrastructure Tests", self._run_infrastructure_tests))
+        stages.append(StageSpec("Project Tests", self._run_project_tests))
+        stages.append(StageSpec("Project Analysis", self._run_analysis))
+        stages.append(StageSpec("PDF Rendering", self._run_pdf_rendering))
+        stages.append(StageSpec("Output Validation", self._run_validation))
+        if include_llm and not self.config.skip_llm:
+            stages.append(StageSpec("LLM Scientific Review", self._run_llm_review))
+            stages.append(StageSpec("LLM Translations", self._run_llm_translations))
         stages.append(StageSpec("Copy Outputs", self._run_copy_outputs))
         return stages
 
@@ -184,15 +184,9 @@ class PipelineExecutor:
         results: list[PipelineStageResult] = []
         pipeline_start = time.time()
 
-        executed_stage_num = 0  # sequential over executed (non-skipped) stages only
-        for stage_spec in stages:
-            if stage_spec.skip:
-                logger.info(f"Skipping stage: {stage_spec.name}")
-                continue
-
-            executed_stage_num += 1
+        for stage_num, stage_spec in enumerate(stages, 1):
             result = self._run_stage_and_checkpoint(
-                executed_stage_num, stage_spec, results, pipeline_start
+                stage_num, stage_spec, results, pipeline_start
             )
             if not result.success:
                 break
@@ -311,9 +305,6 @@ class PipelineExecutor:
         remaining: list[StageSpec] = []
         for stage_spec in stages:
             stage_name = stage_spec.name
-            if stage_spec.skip:
-                continue
-
             if (
                 completed_idx < len(completed_names)
                 and stage_name == completed_names[completed_idx]

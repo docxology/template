@@ -1,10 +1,13 @@
 from __future__ import annotations
 
 import json
+from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Any
 
 import pytest
 
+from infrastructure.reporting.multi_project_reporter import generate_multi_project_summary_report
 from infrastructure.reporting.pipeline_reporter import (
     generate_error_markdown,
     save_error_summary,
@@ -17,6 +20,28 @@ from infrastructure.reporting.pipeline_reporter import (
     save_pipeline_report,
     save_test_results,
 )
+
+
+@dataclass
+class _MockProject:
+    name: str
+
+
+@dataclass
+class _MockStageResult:
+    success: bool
+    duration: float
+    error_message: str = ""
+    errors: list = field(default_factory=list)
+
+
+@dataclass
+class _MockResult:
+    successful_projects: int = 0
+    failed_projects: int = 0
+    total_duration: float = 0.0
+    infra_test_duration: float = 0.0
+    project_results: Any = field(default_factory=dict)
 
 
 def _stage_results() -> list[dict[str, object]]:
@@ -344,43 +369,17 @@ class TestGenerateMultiProjectSummaryReport:
 
     def test_generate_with_successful_projects(self, tmp_path: Path) -> None:
         """Test generating summary report with successful projects."""
-        from dataclasses import dataclass
-
-        from infrastructure.reporting.multi_project_reporter import generate_multi_project_summary_report
-
-        @dataclass
-        class MockProject:
-            name: str
-
-        @dataclass
-        class MockStageResult:
-            success: bool
-            duration: float
-            error_message: str = ""
-
-        @dataclass
-        class MockResult:
-            successful_projects: int = 2
-            failed_projects: int = 0
-            total_duration: float = 10.0
-            infra_test_duration: float = 2.0
-            project_results: dict = None
-
-            def __post_init__(self):
-                if self.project_results is None:
-                    self.project_results = {
-                        "project1": [
-                            MockStageResult(True, 3.0),
-                            MockStageResult(True, 2.0),
-                        ],
-                        "project2": [
-                            MockStageResult(True, 2.5),
-                            MockStageResult(True, 2.5),
-                        ],
-                    }
-
-        projects = [MockProject("project1"), MockProject("project2")]
-        result = MockResult()
+        projects = [_MockProject("project1"), _MockProject("project2")]
+        result = _MockResult(
+            successful_projects=2,
+            failed_projects=0,
+            total_duration=10.0,
+            infra_test_duration=2.0,
+            project_results={
+                "project1": [_MockStageResult(True, 3.0), _MockStageResult(True, 2.0)],
+                "project2": [_MockStageResult(True, 2.5), _MockStageResult(True, 2.5)],
+            },
+        )
         output_dir = tmp_path / "output"
 
         saved = generate_multi_project_summary_report(result, projects, output_dir)
@@ -390,7 +389,6 @@ class TestGenerateMultiProjectSummaryReport:
         assert saved["json"].exists()
         assert saved["markdown"].exists()
 
-        # Check JSON content
         data = json.loads(saved["json"].read_text())
         assert data["total_projects"] == 2
         assert data["successful_projects"] == 2
@@ -398,42 +396,17 @@ class TestGenerateMultiProjectSummaryReport:
 
     def test_generate_with_failed_projects(self, tmp_path: Path) -> None:
         """Test generating summary report with failed projects."""
-        from dataclasses import dataclass
-
-        from infrastructure.reporting.multi_project_reporter import generate_multi_project_summary_report
-
-        @dataclass
-        class MockProject:
-            name: str
-
-        @dataclass
-        class MockStageResult:
-            success: bool
-            duration: float
-            error_message: str = ""
-            errors: list = None
-
-            def __post_init__(self):
-                if self.errors is None:
-                    self.errors = []
-
-        @dataclass
-        class MockResult:
-            successful_projects: int = 1
-            failed_projects: int = 1
-            total_duration: float = 8.0
-            infra_test_duration: float = 0.0
-            project_results: dict = None
-
-            def __post_init__(self):
-                if self.project_results is None:
-                    self.project_results = {
-                        "project1": [MockStageResult(True, 3.0)],
-                        "project2": [MockStageResult(False, 2.0, "Test failed", ["Error 1"])],
-                    }
-
-        projects = [MockProject("project1"), MockProject("project2")]
-        result = MockResult()
+        projects = [_MockProject("project1"), _MockProject("project2")]
+        result = _MockResult(
+            successful_projects=1,
+            failed_projects=1,
+            total_duration=8.0,
+            infra_test_duration=0.0,
+            project_results={
+                "project1": [_MockStageResult(True, 3.0)],
+                "project2": [_MockStageResult(False, 2.0, "Test failed", ["Error 1"])],
+            },
+        )
         output_dir = tmp_path / "output"
 
         saved = generate_multi_project_summary_report(result, projects, output_dir)
@@ -444,28 +417,14 @@ class TestGenerateMultiProjectSummaryReport:
 
     def test_generate_with_empty_project_results(self, tmp_path: Path) -> None:
         """Test generating summary report with empty project results."""
-        from dataclasses import dataclass
-
-        from infrastructure.reporting.multi_project_reporter import generate_multi_project_summary_report
-
-        @dataclass
-        class MockProject:
-            name: str
-
-        @dataclass
-        class MockResult:
-            successful_projects: int = 0
-            failed_projects: int = 1
-            total_duration: float = 0.0
-            infra_test_duration: float = 0.0
-            project_results: dict = None
-
-            def __post_init__(self):
-                if self.project_results is None:
-                    self.project_results = {"project1": []}
-
-        projects = [MockProject("project1")]
-        result = MockResult()
+        projects = [_MockProject("project1")]
+        result = _MockResult(
+            successful_projects=0,
+            failed_projects=1,
+            total_duration=0.0,
+            infra_test_duration=0.0,
+            project_results={"project1": []},
+        )
         output_dir = tmp_path / "output"
 
         saved = generate_multi_project_summary_report(result, projects, output_dir)
@@ -480,35 +439,16 @@ class TestGenerateMultiProjectSummaryReport:
         The code defensively converts dict values to empty lists, so dict-style results
         will be treated as empty (unknown format).
         """
-        from dataclasses import dataclass
-
-        from infrastructure.reporting.multi_project_reporter import generate_multi_project_summary_report
-
-        @dataclass
-        class MockProject:
-            name: str
-
-        @dataclass
-        class MockResult:
-            successful_projects: int = 1
-            failed_projects: int = 0
-            total_duration: float = 5.0
-            infra_test_duration: float = 0.0
-            project_results: dict = None
-
-            def __post_init__(self):
-                if self.project_results is None:
-                    self.project_results = {
-                        "project1": {
-                            "success": True,
-                            "duration": 5.0,
-                            "stages_completed": 3,
-                            "errors": [],
-                        }
-                    }
-
-        projects = [MockProject("project1")]
-        result = MockResult()
+        projects = [_MockProject("project1")]
+        result = _MockResult(
+            successful_projects=1,
+            failed_projects=0,
+            total_duration=5.0,
+            infra_test_duration=0.0,
+            project_results={
+                "project1": {"success": True, "duration": 5.0, "stages_completed": 3, "errors": []}
+            },
+        )
         output_dir = tmp_path / "output"
 
         saved = generate_multi_project_summary_report(result, projects, output_dir)
@@ -521,36 +461,14 @@ class TestGenerateMultiProjectSummaryReport:
 
     def test_generate_with_performance_recommendation(self, tmp_path: Path) -> None:
         """Test summary report generates performance recommendation for slow projects."""
-        from dataclasses import dataclass
-
-        from infrastructure.reporting.multi_project_reporter import generate_multi_project_summary_report
-
-        @dataclass
-        class MockProject:
-            name: str
-
-        @dataclass
-        class MockStageResult:
-            success: bool
-            duration: float
-            error_message: str = ""
-
-        @dataclass
-        class MockResult:
-            successful_projects: int = 1
-            failed_projects: int = 0
-            total_duration: float = 600.0
-            infra_test_duration: float = 0.0
-            project_results: dict = None
-
-            def __post_init__(self):
-                if self.project_results is None:
-                    self.project_results = {
-                        "project1": [MockStageResult(True, 400.0)],
-                    }
-
-        projects = [MockProject("project1")]
-        result = MockResult()
+        projects = [_MockProject("project1")]
+        result = _MockResult(
+            successful_projects=1,
+            failed_projects=0,
+            total_duration=600.0,
+            infra_test_duration=0.0,
+            project_results={"project1": [_MockStageResult(True, 400.0)]},
+        )
         output_dir = tmp_path / "output"
 
         saved = generate_multi_project_summary_report(result, projects, output_dir)
@@ -563,24 +481,14 @@ class TestGenerateMultiProjectSummaryReport:
 
     def test_generate_with_non_dict_project_results(self, tmp_path: Path) -> None:
         """Test handling non-dict project_results attribute."""
-        from dataclasses import dataclass
-
-        from infrastructure.reporting.multi_project_reporter import generate_multi_project_summary_report
-
-        @dataclass
-        class MockProject:
-            name: str
-
-        @dataclass
-        class MockResult:
-            successful_projects: int = 0
-            failed_projects: int = 1
-            total_duration: float = 0.0
-            infra_test_duration: float = 0.0
-            project_results: str = "invalid"  # Non-dict value
-
-        projects = [MockProject("project1")]
-        result = MockResult()
+        projects = [_MockProject("project1")]
+        result = _MockResult(
+            successful_projects=0,
+            failed_projects=1,
+            total_duration=0.0,
+            infra_test_duration=0.0,
+            project_results="invalid",  # Non-dict value
+        )
         output_dir = tmp_path / "output"
 
         saved = generate_multi_project_summary_report(result, projects, output_dir)

@@ -40,6 +40,7 @@ from infrastructure.llm.templates.manuscript import (
     ManuscriptImprovementSuggestions,
     ManuscriptTranslationAbstract,
     REVIEW_MIN_WORDS,
+    TRANSLATION_LANGUAGES,
 )
 from infrastructure.llm.validation.repetition import (
     detect_repetition,
@@ -721,8 +722,6 @@ def generate_improvement_suggestions(
 def generate_translation(
     client: LLMClient, text: str, language_code: str, model_name: str = ""
 ) -> tuple[str, ReviewMetrics]:
-    from infrastructure.llm.review.pipeline_runner import TRANSLATION_LANGUAGES
-
     target_language = TRANSLATION_LANGUAGES.get(language_code, language_code)
     log_substep(f"Generating translation ({target_language})...")
 

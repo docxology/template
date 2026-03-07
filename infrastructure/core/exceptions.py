@@ -12,8 +12,6 @@ Part of the infrastructure layer (Layer 1) - reusable across all projects.
 from __future__ import annotations
 
 import builtins
-import platform
-import shutil
 from pathlib import Path
 from typing import Any, Optional
 
@@ -232,33 +230,6 @@ class DependencyError(TemplateError):
     pass
 
 
-def _build_install_commands(dependency: str) -> list[str]:
-    """Return OS-appropriate installation commands for a dependency."""
-    commands: list[str] = []
-    system = platform.system().lower()
-
-    if system == "linux":
-        if shutil.which("apt-get"):
-            commands.append(f"sudo apt-get update && sudo apt-get install -y {dependency}")
-        elif shutil.which("yum"):
-            commands.append(f"sudo yum install -y {dependency}")
-        elif shutil.which("dnf"):
-            commands.append(f"sudo dnf install -y {dependency}")
-        elif shutil.which("pacman"):
-            commands.append(f"sudo pacman -S {dependency}")
-        else:
-            commands.append(f"# Install {dependency} using your package manager")
-    elif system == "darwin":
-        if shutil.which("brew"):
-            commands.append(f"brew install {dependency}")
-        else:
-            commands.append(f"# Install {dependency} using Homebrew: brew install {dependency}")
-    else:
-        commands.append(f"# Install {dependency} using your system's package manager")
-
-    commands.append(f"which {dependency}  # Verify installation")
-    return commands
-
 
 class MissingDependencyError(DependencyError):
     """Raised when a required dependency is missing.
@@ -293,7 +264,8 @@ class MissingDependencyError(DependencyError):
 
         # Auto-generate installation commands based on common package managers
         if recovery_commands is None and dependency:
-            recovery_commands = _build_install_commands(dependency)
+            from infrastructure.core.environment import build_install_commands
+            recovery_commands = build_install_commands(dependency)
 
         super().__init__(message, context, suggestions, recovery_commands)
 
