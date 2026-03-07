@@ -1,23 +1,7 @@
 """Environment setup and validation utilities.
 
-This module provides comprehensive environment validation and setup for the research template.
-It handles dependency checking, build tool validation, directory structure creation, and
-provides robust uv package manager integration with graceful fallback mechanisms.
-
-Key Features:
-- uv package manager integration with automatic fallback to pip
-- Comprehensive dependency validation with missing package detection
-- Build tool availability checking (pandoc, xelatex, etc.)
-- Directory structure setup for multi-project workflows
-- Environment variable configuration for headless operation
-- Post-setup validation functions for reliability verification
-
-uv Integration:
-The module prioritizes uv for dependency management due to its speed and reliability.
-When uv is available, it uses 'uv sync' for workspace dependency management.
-When uv is unavailable, it falls back to individual package installation via pip.
-All uv operations include proper error handling and informative logging.
-
+Validates dependencies, build tools, and directory structure for the research template.
+Use this module to check or install requirements before running the pipeline.
 """
 
 from __future__ import annotations

@@ -175,7 +175,8 @@ class MultiProjectOrchestrator:
                             self.on_project_complete(project_name, results, output_dir)
                         except Exception as e:
                             logger.warning(
-                                f"Project completion callback failed for {project_name}: {e}"
+                                f"Project completion callback failed for {project_name}: {e}",
+                                exc_info=True,
                             )
 
                     # Check if all stages succeeded

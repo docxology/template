@@ -33,16 +33,7 @@ from infrastructure.validation.doc_models import (
 )
 from infrastructure.validation.doc_quality import run_quality_phase
 
-# Re-export doc_models symbols so callers can import them from this module
-__all__ = [
-    "DocumentationScanner",
-    "AccuracyIssue",
-    "CompletenessGap",
-    "DocumentationFile",
-    "LinkIssue",
-    "QualityIssue",
-    "ScanResults",
-]
+__all__ = ["DocumentationScanner"]
 
 logger = get_logger(__name__)
 

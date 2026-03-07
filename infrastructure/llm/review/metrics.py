@@ -25,7 +25,7 @@ class ReviewMetrics:
 
 
 @dataclass
-class ManuscriptMetrics:
+class ManuscriptInputMetrics:
     """Metrics for the manuscript input."""
 
     total_chars: int = 0
@@ -39,7 +39,7 @@ class ManuscriptMetrics:
 class SessionMetrics:
     """Complete metrics for the review session."""
 
-    manuscript: ManuscriptMetrics = field(default_factory=ManuscriptMetrics)
+    manuscript: ManuscriptInputMetrics = field(default_factory=ManuscriptInputMetrics)
     reviews: Dict[str, ReviewMetrics] = field(default_factory=dict)
     total_generation_time: float = 0.0
     model_name: str = ""

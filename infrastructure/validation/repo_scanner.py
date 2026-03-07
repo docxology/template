@@ -368,7 +368,7 @@ class RepositoryScanner:
                     logger.debug(f"Failed to check script documentation in {md_file}: {e}")
 
         for script in self.script_files:
-            if script.name not in documented_scripts and script.name != "comprehensive_doc_scan.py":
+            if script.name not in documented_scripts and not script.name.startswith("_"):
                 gaps.append(
                     CompletenessGap(
                         category="documentation",
@@ -473,7 +473,7 @@ class RepositoryScanner:
         issues = []
 
         for script in self.script_files:
-            if script.name.startswith("_") or script.name == "comprehensive_doc_scan.py":
+            if script.name.startswith("_"):
                 continue
 
             try:

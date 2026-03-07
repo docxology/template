@@ -35,7 +35,7 @@ class FileInventoryEntry:
 class FileInventoryManager:
     """Manage file inventory and reports."""
 
-    # Standard output categories to scan
+    # Standard output categories to scan and display
     OUTPUT_CATEGORIES = (
         "pdf",
         "figures",
@@ -48,6 +48,7 @@ class FileInventoryManager:
         "slides",
         "tex",
     )
+    DISPLAY_ORDER = list(OUTPUT_CATEGORIES)
 
     def collect_output_files(
         self, output_dir: Path, categories: Optional[List[str]] = None
@@ -199,21 +200,7 @@ class FileInventoryManager:
         lines.append("Generated Files Inventory:")
         lines.append("")
 
-        # Display order for categories
-        display_order = [
-            "pdf",
-            "figures",
-            "data",
-            "reports",
-            "simulations",
-            "llm",
-            "logs",
-            "web",
-            "slides",
-            "tex",
-        ]
-
-        for category in display_order:
+        for category in self.DISPLAY_ORDER:
             if category in category_groups:
                 category_entries = category_groups[category]
                 total_size = sum(entry.size for entry in category_entries)
@@ -305,21 +292,7 @@ class FileInventoryManager:
         html_parts.append("<div class='file-inventory'>")
         html_parts.append("<h3>Generated Files Inventory</h3>")
 
-        # Display order for categories
-        display_order = [
-            "pdf",
-            "figures",
-            "data",
-            "reports",
-            "simulations",
-            "llm",
-            "logs",
-            "web",
-            "slides",
-            "tex",
-        ]
-
-        for category in display_order:
+        for category in self.DISPLAY_ORDER:
             if category in category_groups:
                 category_entries = category_groups[category]
                 total_size = sum(entry.size for entry in category_entries)

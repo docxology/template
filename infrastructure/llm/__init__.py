@@ -95,7 +95,7 @@ except ImportError:
 
 # Review generation modules
 from infrastructure.llm.review import (
-    ManuscriptMetrics,
+    ManuscriptInputMetrics,
     ReviewMetrics,
     SessionMetrics,
     StreamingMetrics,
@@ -177,7 +177,7 @@ __all__ = [
     "PromptComposer",
     # Review metrics
     "ReviewMetrics",
-    "ManuscriptMetrics",
+    "ManuscriptInputMetrics",
     "SessionMetrics",
     "StreamingMetrics",
     "estimate_tokens",

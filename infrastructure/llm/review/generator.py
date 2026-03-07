@@ -51,7 +51,7 @@ from infrastructure.llm.validation.format import (
     check_format_compliance,
 )
 
-from infrastructure.llm.review.metrics import ReviewMetrics, ManuscriptMetrics, estimate_tokens
+from infrastructure.llm.review.metrics import ReviewMetrics, ManuscriptInputMetrics, estimate_tokens
 from infrastructure.validation.pdf_validator import extract_text_from_pdf, PDFValidationError
 
 logger = get_logger(__name__)
@@ -448,9 +448,9 @@ def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> tuple
         return False, 0.0
 
 
-def extract_manuscript_text(pdf_path: Path | str) -> tuple[Optional[str], ManuscriptMetrics]:
+def extract_manuscript_text(pdf_path: Path | str) -> tuple[Optional[str], ManuscriptInputMetrics]:
     log_substep(f"Extracting text from manuscript: {Path(pdf_path).name}")
-    metrics = ManuscriptMetrics()
+    metrics = ManuscriptInputMetrics()
 
     if isinstance(pdf_path, str):
         pdf_path = Path(pdf_path)

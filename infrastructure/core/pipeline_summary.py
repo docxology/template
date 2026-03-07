@@ -79,19 +79,19 @@ class PipelineSummaryGenerator:
             skip_infra=skip_infra,
         )
 
-    def format_summary(self, summary: PipelineSummary, format: str = "text") -> str:
+    def format_summary(self, summary: PipelineSummary, output_format: str = "text") -> str:
         """Format summary for display (text, json, html).
 
         Args:
             summary: Pipeline summary to format
-            format: Output format ("text", "json", "html")
+            output_format: Output format ("text", "json", "html")
 
         Returns:
             Formatted summary string
         """
-        if format == "json":
+        if output_format == "json":
             return self._format_json_summary(summary)
-        elif format == "html":
+        elif output_format == "html":
             return self._format_html_summary(summary)
         else:
             return self._format_text_summary(summary)
@@ -125,7 +125,6 @@ class PipelineSummaryGenerator:
 
         # Stage results
         executed_stages = [r for r in summary.stage_results if r.success or r.exit_code != 0]
-        total_stage_time = sum(r.duration for r in executed_stages)
 
         for result in summary.stage_results:
             stage_display = self._format_stage_result(
@@ -138,7 +137,7 @@ class PipelineSummaryGenerator:
         lines.append(f"  Total Execution Time: {summary.total_duration:.1f}s")
 
         if executed_stages:
-            avg_time = total_stage_time / len(executed_stages)
+            avg_time = sum(r.duration for r in executed_stages) / len(executed_stages)
             lines.append(f"  Average Stage Time: {avg_time:.1f}s")
 
         if summary.slowest_stage:

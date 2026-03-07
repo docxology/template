@@ -566,7 +566,6 @@ def calculate_project_health_score(project: ProjectMetrics) -> dict[str, Any]:
             "grade": "F",
             "reason": "Poor coverage <70%",
         }
-        score += 0
     max_score += 40
 
     # Test failure rate (30% weight)
@@ -599,7 +598,6 @@ def calculate_project_health_score(project: ProjectMetrics) -> dict[str, Any]:
                 "grade": "F",
                 "reason": f"High failure rate {failure_rate:.1%}",
             }
-            score += 0
     else:
         factors["test_failures"] = {
             "score": 0,
@@ -636,7 +634,6 @@ def calculate_project_health_score(project: ProjectMetrics) -> dict[str, Any]:
             "grade": "F",
             "reason": f"Insufficient manuscript ({project.manuscript.total_words} words)",
         }
-        score += 0
     max_score += 20
 
     # Output generation (10% weight)
@@ -673,7 +670,6 @@ def calculate_project_health_score(project: ProjectMetrics) -> dict[str, Any]:
             "grade": "F",
             "reason": f"Limited outputs ({outputs_generated} files)",
         }
-        score += 0
     max_score += 10
 
     # Calculate overall grade

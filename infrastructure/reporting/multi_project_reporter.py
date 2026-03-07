@@ -28,20 +28,10 @@ logger = get_logger(__name__)
 def generate_multi_project_report(
     repo_root: Path, project_names: list[str], output_dir: Path
 ) -> dict[str, Path]:
-    """Orchestrate complete multi-project reporting workflow.
-
-    This is a convenience function that runs the full executive reporting pipeline:
-    1. Generate executive summary with metrics collection
-    2. Save summary reports (JSON, HTML, Markdown)
-    3. Generate visual dashboards (PNG, PDF, HTML)
-
-    Args:
-        repo_root: Repository root path
-        project_names: List of project names to include in report
-        output_dir: Directory to save all reports and dashboards
+    """Orchestrate executive reporting for multiple projects into output_dir.
 
     Returns:
-        Dictionary mapping file types to saved file paths
+        Dictionary mapping file types (json, html, md, png, pdf) to saved file paths.
     """
     logger.info(f"Starting multi-project reporting for {len(project_names)} projects...")
 

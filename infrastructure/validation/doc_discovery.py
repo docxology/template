@@ -406,7 +406,7 @@ def validate_project_documentation_integrity(repo_root: Path) -> Dict[str, List[
         project_issues = []
 
         # Check for required documentation
-        if project.has_manuscript and not project.has_manuscript:
+        if not project.has_manuscript:
             project_issues.append("Project has manuscript directory but no AGENTS.md")
 
         if project.has_scripts and not any((project.path / "scripts").glob("*.md")):

@@ -69,17 +69,13 @@ class PromptComposer:
             fragment_values: Dict[str, str] = {}
 
             for fragment_key, fragment_ref in fragments.items():
-                if fragment_ref.endswith("#test_template"):
-                    # Special handling for section structures
-                    fragment_data = self.loader.load_fragment(fragment_ref)
-                    fragment_values[fragment_key] = self._build_section_structure("test_template")
+                if "section_structures.json#" in fragment_ref:
+                    # Load section structure by key from the fragment ref
+                    structure_key = fragment_ref.split("#", 1)[1]
+                    fragment_values[fragment_key] = self._build_section_structure(structure_key)
                 elif "format_requirements" in fragment_ref:
                     # Build format requirements
-                    self.loader.load_fragment(fragment_ref.replace(".json", ".json"))
                     headers = template.get("section_config", {}).get("headers", [])
-                    if not headers and "section_structure" in fragment_values:
-                        # Extract headers from section structure
-                        headers = ["## Section1", "## Section2"]  # Default for tests
                     fragment_values[fragment_key] = self._build_format_requirements(headers)
                 elif "content_requirements" in fragment_ref:
                     fragment_values[fragment_key] = self._build_content_requirements()

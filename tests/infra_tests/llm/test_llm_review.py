@@ -1,7 +1,7 @@
 """Tests for scripts/06_llm_review.py - LLM Manuscript Review orchestrator.
 
 Tests cover:
-- ReviewMetrics, ManuscriptMetrics, SessionMetrics dataclasses
+- ReviewMetrics, ManuscriptInputMetrics, SessionMetrics dataclasses
 - estimate_tokens() function
 - get_max_input_length() environment variable handling
 - extract_manuscript_text() with no truncation for normal files
@@ -32,7 +32,7 @@ from infrastructure.llm.core.config import get_max_input_length
 DEFAULT_MAX_INPUT_LENGTH: int = 500000
 from infrastructure.llm.review.generator import validate_review_quality
 from infrastructure.llm.review.io import SessionMetrics, generate_review_summary, save_review_outputs
-from infrastructure.llm.review.metrics import ManuscriptMetrics, ReviewMetrics, estimate_tokens
+from infrastructure.llm.review.metrics import ManuscriptInputMetrics, ReviewMetrics, estimate_tokens
 
 
 class TestEstimateTokens:
@@ -152,12 +152,12 @@ class TestReviewMetrics:
         assert metrics.generation_time_seconds == 45.5
 
 
-class TestManuscriptMetrics:
-    """Tests for ManuscriptMetrics dataclass."""
+class TestManuscriptInputMetrics:
+    """Tests for ManuscriptInputMetrics dataclass."""
 
     def test_default_values(self):
-        """Test default values for ManuscriptMetrics."""
-        metrics = ManuscriptMetrics()
+        """Test default values for ManuscriptInputMetrics."""
+        metrics = ManuscriptInputMetrics()
         assert metrics.total_chars == 0
         assert metrics.total_words == 0
         assert metrics.total_tokens_est == 0
@@ -165,8 +165,8 @@ class TestManuscriptMetrics:
         assert metrics.truncated_chars == 0
 
     def test_truncated_manuscript(self):
-        """Test ManuscriptMetrics for truncated manuscript."""
-        metrics = ManuscriptMetrics(
+        """Test ManuscriptInputMetrics for truncated manuscript."""
+        metrics = ManuscriptInputMetrics(
             total_chars=100000,
             total_words=15000,
             total_tokens_est=25000,
@@ -184,7 +184,7 @@ class TestSessionMetrics:
     def test_default_values(self):
         """Test default values for SessionMetrics."""
         metrics = SessionMetrics()
-        assert isinstance(metrics.manuscript, ManuscriptMetrics)
+        assert isinstance(metrics.manuscript, ManuscriptInputMetrics)
         assert isinstance(metrics.reviews, dict)
         assert metrics.total_generation_time == 0.0
         assert metrics.model_name == ""
@@ -193,7 +193,7 @@ class TestSessionMetrics:
     def test_with_reviews(self):
         """Test SessionMetrics with review metrics."""
         session = SessionMetrics(
-            manuscript=ManuscriptMetrics(total_chars=50000, total_words=8000),
+            manuscript=ManuscriptInputMetrics(total_chars=50000, total_words=8000),
             model_name="llama3:latest",
             max_input_length=500000,
             total_generation_time=180.5,
@@ -231,7 +231,7 @@ class TestSaveReviewOutputs:
 
             # Create session metrics
             session_metrics = SessionMetrics(
-                manuscript=ManuscriptMetrics(
+                manuscript=ManuscriptInputMetrics(
                     total_chars=50000,
                     total_words=8000,
                     total_tokens_est=12500,
@@ -270,7 +270,7 @@ class TestSaveReviewOutputs:
 
             reviews = {"executive_summary": "Test content"}
             session_metrics = SessionMetrics(
-                manuscript=ManuscriptMetrics(
+                manuscript=ManuscriptInputMetrics(
                     total_chars=10000,
                     total_words=1500,
                     total_tokens_est=2500,
@@ -312,7 +312,7 @@ class TestSaveReviewOutputs:
                 "quality_review": "Quality content",
             }
             session_metrics = SessionMetrics(
-                manuscript=ManuscriptMetrics(total_chars=20000, total_words=3000),
+                manuscript=ManuscriptInputMetrics(total_chars=20000, total_words=3000),
             )
             session_metrics.reviews["executive_summary"] = ReviewMetrics(
                 output_chars=500, output_words=80, generation_time_seconds=20.0
@@ -345,7 +345,7 @@ class TestGenerateReviewSummary:
 
             reviews = {"executive_summary": "Summary content"}
             session_metrics = SessionMetrics(
-                manuscript=ManuscriptMetrics(
+                manuscript=ManuscriptInputMetrics(
                     total_chars=50000,
                     total_words=8000,
                     total_tokens_est=12500,
@@ -371,7 +371,7 @@ class TestGenerateReviewSummary:
 
             # Test with truncated manuscript
             session_metrics = SessionMetrics(
-                manuscript=ManuscriptMetrics(
+                manuscript=ManuscriptInputMetrics(
                     total_chars=600000,
                     truncated=True,
                     truncated_chars=500000,
@@ -395,7 +395,7 @@ class TestGenerateReviewSummary:
                 "methodology_review": "Method content",
             }
             session_metrics = SessionMetrics(
-                manuscript=ManuscriptMetrics(total_chars=50000, total_words=8000),
+                manuscript=ManuscriptInputMetrics(total_chars=50000, total_words=8000),
                 total_generation_time=120.5,
             )
             for name in reviews:

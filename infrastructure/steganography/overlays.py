@@ -113,10 +113,13 @@ def create_qr_overlay(
         PDF bytes of the one-page overlay.
     """
     rl_canvas_mod, _letter, _inch = _get_reportlab()
-    from reportlab.lib.utils import ImageReader  # type: ignore
-
-    # Generate the QR code image once
-    from infrastructure.steganography.barcodes import generate_qr_code
+    try:
+        from reportlab.lib.utils import ImageReader  # type: ignore
+        from infrastructure.steganography.barcodes import generate_qr_code
+    except ImportError as exc:
+        raise ImportError(
+            "QR overlay requires optional dependencies: uv sync --group steganography"
+        ) from exc
 
     qr_png = generate_qr_code(qr_data, box_size=4, border=1)
 

@@ -44,14 +44,8 @@ def strip_thinking_tags(text: str) -> str:
     """Remove thinking tags from LLM responses.
 
     Some models (e.g., Qwen) output <think>...</think> tags before their
-    actual response. This function removes those tags to extract the
-    final answer.
-
-    Args:
-        text: Response text that may contain thinking tags
-
-    Returns:
-        Text with thinking tags removed
+    actual response. Handles case-insensitive tags and malformed closers
+    (e.g., </think> without a matching opener).
 
     Example:
         >>> text = "<think>Let me think about this...</think>The answer is 42."

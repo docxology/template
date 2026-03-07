@@ -25,7 +25,7 @@ from infrastructure.llm.review.io import (
     save_single_review,
 )
 from infrastructure.llm.review.metrics import (
-    ManuscriptMetrics,
+    ManuscriptInputMetrics,
     ReviewMetrics,
     SessionMetrics,
     StreamingMetrics,
@@ -34,7 +34,7 @@ from infrastructure.llm.review.metrics import (
 
 __all__ = [
     "ReviewMetrics",
-    "ManuscriptMetrics",
+    "ManuscriptInputMetrics",
     "SessionMetrics",
     "StreamingMetrics",
     "estimate_tokens",

@@ -13,7 +13,6 @@ Capabilities demonstrated:
 3. Saving numerical results securely via `infrastructure.validation`
 4. Registering figures for automated `infrastructure.rendering` into the PDF
 """
-# Add project src to path
 import functools
 import sys
 from pathlib import Path
@@ -22,19 +21,12 @@ from typing import Any, Dict, Optional
 import matplotlib.pyplot as plt
 import numpy as np
 
-project_root = Path(__file__).parent.parent
-sys.path.insert(0, str(project_root / "src"))
+from optimizer import (OptimizationResult, compute_gradient, gradient_descent,
+                       make_quadratic_problem, quadratic_function,
+                       simulate_trajectory)
 
-from optimizer import (OptimizationResult, compute_gradient, gradient_descent,  # noqa: E402
-                       make_quadratic_problem, quadratic_function,  # noqa: E402
-                       simulate_trajectory)  # noqa: E402
-
-# Add infrastructure imports for scientific analysis
+# Infrastructure imports (optional — PYTHONPATH must include repo root)
 try:
-    # Ensure repo root is on path for infrastructure imports
-    repo_root = Path(__file__).parent.parent.parent
-    sys.path.insert(0, str(repo_root))
-
     from infrastructure.core import (CheckpointManager, ProgressBar,
                                      SystemHealthChecker, get_logger,
                                      log_success,
