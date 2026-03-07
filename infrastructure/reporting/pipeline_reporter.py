@@ -10,24 +10,19 @@ import json
 from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
+from infrastructure.core.checkpoint import StageResult as _CheckpointStageResult
 from infrastructure.core.logging_utils import format_duration, get_logger
-
-if TYPE_CHECKING:
-    from infrastructure.core.multi_project import MultiProjectResult
+from infrastructure.core.multi_project import MultiProjectResult
 
 logger = get_logger(__name__)
 
 
 @dataclass
-class StageResult:
-    """Reporting-layer result of a pipeline stage execution."""
+class StageResult(_CheckpointStageResult):
+    """Reporting-layer extension of StageResult with output and error lists."""
 
-    name: str
-    exit_code: int
-    duration: float
-    status: str = ""
     output_files: List[str] = None  # type: ignore[assignment]
     errors: List[str] = None  # type: ignore[assignment]
     warnings: List[str] = None  # type: ignore[assignment]
@@ -79,7 +74,7 @@ def generate_multi_project_summary_report(
         "successful_projects": result.successful_projects,
         "failed_projects": result.failed_projects,
         "total_duration": result.total_duration,
-        "infra_test_duration": getattr(result, "infra_test_duration", 0),
+        "infra_test_duration": result.infra_test_duration,
         "projects": {},
         "performance_analysis": {},
         "error_aggregation": {},

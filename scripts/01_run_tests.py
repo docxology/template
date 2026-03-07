@@ -227,7 +227,7 @@ def run_infrastructure_tests(
 
     # Get coverage threshold from config
     testing_config = get_testing_config(repo_root)
-    infra_threshold = testing_config.get("infra_coverage_threshold", 60)
+    infra_threshold = testing_config.infra_coverage_threshold
 
     log_substep(f"Running infrastructure tests ({infra_threshold}% coverage threshold)...")
     if not include_ollama_tests:
@@ -439,7 +439,7 @@ def run_infrastructure_tests(
         ]
 
         coverage_found, coverage_pct = extract_coverage_percentage(
-            stdout_text, coverage_json_paths, is_infra=True
+            stdout_text, coverage_json_paths
         )
 
         if not coverage_found:
@@ -562,7 +562,7 @@ def run_project_tests(
 
     # Get coverage threshold from config
     testing_config = get_testing_config(repo_root)
-    project_threshold = testing_config.get("project_coverage_threshold", 90)
+    project_threshold = testing_config.project_coverage_threshold
 
     log_substep(
         f"Running project tests for '{project_name}' ({project_threshold}% coverage threshold)..."

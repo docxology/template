@@ -135,7 +135,8 @@ class PerformanceMonitor:
             return 0.0
         try:
             return float(psutil.Process(os.getpid()).memory_info().rss / 1024 / 1024)
-        except Exception:
+        except (OSError, AttributeError) as e:
+            logger.debug(f"Failed to get memory usage: {e}")
             return 0.0
 
     def _get_cpu_percent(self) -> float:
@@ -144,7 +145,8 @@ class PerformanceMonitor:
             return 0.0
         try:
             return float(psutil.Process(os.getpid()).cpu_percent(interval=0.1))
-        except Exception:
+        except (OSError, AttributeError) as e:
+            logger.debug(f"Failed to get CPU percent: {e}")
             return 0.0
 
 

@@ -231,41 +231,34 @@ def check_test_failures(
 
 
 def _wait_for_coverage_file(
-    paths: list[Path], max_retries: int = 3, delay: float = 0.5, is_infra: bool = False
+    paths: list[Path], max_retries: int = 3, delay: float = 0.5
 ) -> Optional[Path]:
     """Return the first ready coverage JSON path, waiting up to max_retries attempts."""
     for attempt in range(max_retries):
         if attempt > 0:
             time.sleep(delay)
         for path in paths:
-            if is_infra:
-                logger.debug(
-                    f"Attempt {attempt + 1}/{max_retries}: {path} (exists: {path.exists()})"
-                )
+            logger.debug(f"Attempt {attempt + 1}/{max_retries}: {path} (exists: {path.exists()})")
             if not path.exists():
                 continue
             file_size = path.stat().st_size
-            if is_infra:
-                logger.debug(f"Coverage file size: {file_size} bytes")
+            logger.debug(f"Coverage file size: {file_size} bytes")
             if file_size >= 100:
                 return path
-            if is_infra:
-                logger.debug(f"Coverage file too small ({file_size} bytes), likely incomplete")
+            logger.debug(f"Coverage file too small ({file_size} bytes), likely incomplete")
     return None
 
 
-def _parse_coverage_json(path: Path, is_infra: bool = False) -> Optional[float]:
+def _parse_coverage_json(path: Path) -> Optional[float]:
     """Return percent_covered from a coverage JSON file, or None on failure."""
     try:
         with open(path, "r") as f:
             coverage_data = json.load(f)
         pct = coverage_data.get("totals", {}).get("percent_covered", 0)
-        if is_infra:
-            logger.debug(f"Coverage data from {path}: totals={coverage_data.get('totals', {})}")
+        logger.debug(f"Coverage data from {path}: totals={coverage_data.get('totals', {})}")
         if pct > 0:
             return float(pct)
-        if is_infra:
-            logger.debug(f"Coverage file exists but percent_covered is 0: {pct}")
+        logger.debug(f"Coverage file exists but percent_covered is 0: {pct}")
     except json.JSONDecodeError as e:
         logger.warning(f"Corrupt coverage JSON at {path}: {e} (falling back to stdout parsing)")
     except OSError as e:
@@ -274,24 +267,22 @@ def _parse_coverage_json(path: Path, is_infra: bool = False) -> Optional[float]:
 
 
 def extract_coverage_percentage(
-    stdout_text: str, coverage_json_paths: list[Path], is_infra: bool = False
+    stdout_text: str, coverage_json_paths: list[Path]
 ) -> tuple[bool, Optional[float]]:
     """Extract coverage percentage from defined JSON paths or stdout fallback.
 
     Args:
         stdout_text: Stdout text from pytest run to act as fallback
         coverage_json_paths: List of paths to coverage JSON files to parse
-        is_infra: Boolean indicating if this is an infrastructure test run, for logs
 
     Returns:
         tuple (coverage_found, coverage_pct)
     """
-    if is_infra:
-        logger.debug("Looking for coverage files")
+    logger.debug("Looking for coverage files")
 
-    ready_path = _wait_for_coverage_file(coverage_json_paths, is_infra=is_infra)
+    ready_path = _wait_for_coverage_file(coverage_json_paths)
     if ready_path is not None:
-        pct = _parse_coverage_json(ready_path, is_infra=is_infra)
+        pct = _parse_coverage_json(ready_path)
         if pct is not None:
             logger.info(f"✓ Found coverage: {pct:.1f}%")
             return True, pct

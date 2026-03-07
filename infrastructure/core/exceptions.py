@@ -92,27 +92,13 @@ class ConfigurationError(TemplateError):
 
 
 class MissingConfigurationError(ConfigurationError):
-    """Raised when required configuration is missing.
-
-    Example:
-        >>> raise MissingConfigurationError(
-        ...     "Required configuration key 'author' not found",
-        ...     context={"file": "config.yaml"}
-        ... )
-    """
+    """Raised when required configuration is missing"""
 
     pass
 
 
 class InvalidConfigurationError(ConfigurationError):
-    """Raised when configuration values are invalid.
-
-    Example:
-        >>> raise InvalidConfigurationError(
-        ...     "Invalid email format",
-        ...     context={"field": "author_email", "value": "invalid-email"}
-        ... )
-    """
+    """Raised when configuration values are invalid"""
 
     pass
 
@@ -123,59 +109,25 @@ class InvalidConfigurationError(ConfigurationError):
 
 
 class ValidationError(TemplateError):
-    """Raised when validation fails.
-
-    This includes errors in:
-    - Markdown validation
-    - PDF validation
-    - Data validation
-    - Output verification
-
-    Example:
-        >>> raise ValidationError(
-        ...     "Unresolved figure reference",
-        ...     context={"reference": "fig:results", "file": "results.md"}
-        ... )
-    """
+    """Raised when validation fails"""
 
     pass
 
 
 class MarkdownValidationError(ValidationError):
-    """Raised when markdown validation fails.
-
-    Example:
-        >>> raise MarkdownValidationError(
-        ...     "Image file not found",
-        ...     context={"image": "figure.png", "referenced_in": "intro.md", "line": 42}
-        ... )
-    """
+    """Raised when markdown validation fails"""
 
     pass
 
 
 class PDFValidationError(ValidationError):
-    """Raised when PDF validation fails.
-
-    Example:
-        >>> raise PDFValidationError(
-        ...     "Unresolved references found in PDF",
-        ...     context={"pdf": "manuscript.pdf", "unresolved_count": 3}
-        ... )
-    """
+    """Raised when PDF validation fails"""
 
     pass
 
 
 class DataValidationError(ValidationError):
-    """Raised when data validation fails.
-
-    Example:
-        >>> raise DataValidationError(
-        ...     "Data contains NaN values",
-        ...     context={"column": "temperature", "count": 5}
-        ... )
-    """
+    """Raised when data validation fails"""
 
     pass
 
@@ -186,59 +138,25 @@ class DataValidationError(ValidationError):
 
 
 class BuildError(TemplateError):
-    """Raised when build process fails.
-
-    This includes errors in:
-    - PDF generation
-    - LaTeX compilation
-    - Script execution
-    - Pipeline orchestration
-
-    Example:
-        >>> raise BuildError(
-        ...     "LaTeX compilation failed",
-        ...     context={"file": "manuscript.tex", "exit_code": 1}
-        ... )
-    """
+    """Raised when build process fails"""
 
     pass
 
 
 class CompilationError(BuildError):
-    """Raised when compilation (LaTeX, etc.) fails.
-
-    Example:
-        >>> raise CompilationError(
-        ...     "xelatex exited with error",
-        ...     context={"file": "manuscript.tex", "exit_code": 1, "log": "compile.log"}
-        ... )
-    """
+    """Raised when compilation (LaTeX, etc.) fails"""
 
     pass
 
 
 class ScriptExecutionError(BuildError):
-    """Raised when script execution fails.
-
-    Example:
-        >>> raise ScriptExecutionError(
-        ...     "Analysis script failed",
-        ...     context={"script": "analysis_pipeline.py", "exit_code": 1}
-        ... )
-    """
+    """Raised when script execution fails"""
 
     pass
 
 
 class PipelineError(BuildError):
-    """Raised when pipeline orchestration fails.
-
-    Example:
-        >>> raise PipelineError(
-        ...     "Stage 2 failed",
-        ...     context={"stage": "02_run_analysis", "failed_scripts": ["script1.py"]}
-        ... )
-    """
+    """Raised when pipeline orchestration fails"""
 
     pass
 
@@ -249,20 +167,7 @@ class PipelineError(BuildError):
 
 
 class FileOperationError(TemplateError):
-    """Raised when file operations fail.
-
-    This includes errors in:
-    - File reading/writing
-    - Directory operations
-    - Path resolution
-    - Permission issues
-
-    Example:
-        >>> raise FileOperationError(
-        ...     "Failed to write output file",
-        ...     context={"file": "output.pdf", "reason": "Permission denied"}
-        ... )
-    """
+    """Raised when file operations fail"""
 
     pass
 
@@ -357,20 +262,7 @@ class InvalidFileFormatError(FileOperationError):
 
 
 class DependencyError(TemplateError):
-    """Raised when dependencies are missing or invalid.
-
-    This includes errors in:
-    - Missing Python packages
-    - Missing system tools (pandoc, xelatex)
-    - Version mismatches
-    - Environment setup
-
-    Example:
-        >>> raise DependencyError(
-        ...     "Required tool not found",
-        ...     context={"tool": "pandoc", "install_cmd": "apt-get install pandoc"}
-        ... )
-    """
+    """Raised when dependencies are missing or invalid"""
 
     pass
 
@@ -474,33 +366,13 @@ class VersionMismatchError(DependencyError):
 
 
 class TestError(TemplateError):
-    """Raised when test execution or validation fails.
-
-    This includes errors in:
-    - Test execution
-    - Coverage validation
-    - Test configuration
-    - Test data setup
-
-    Example:
-        >>> raise TestError(
-        ...     "Test coverage below threshold",
-        ...     context={"coverage": 85, "required": 100, "module": "data_processing"}
-        ... )
-    """
+    """Raised when test execution or validation fails"""
 
     pass
 
 
 class InsufficientCoverageError(TestError):
-    """Raised when test coverage is insufficient.
-
-    Example:
-        >>> raise InsufficientCoverageError(
-        ...     "Coverage below required threshold",
-        ...     context={"actual": 85.5, "required": 100.0, "missing_lines": [10, 15, 20]}
-        ... )
-    """
+    """Raised when test coverage is insufficient"""
 
     pass
 
@@ -511,20 +383,7 @@ class InsufficientCoverageError(TestError):
 
 
 class IntegrationError(TemplateError):
-    """Raised when component integration fails.
-
-    This includes errors in:
-    - Cross-module communication
-    - API mismatches
-    - Data format incompatibilities
-    - Protocol violations
-
-    Example:
-        >>> raise IntegrationError(
-        ...     "Script failed to import from src/",
-        ...     context={"script": "analysis.py", "module": "data_generator"}
-        ... )
-    """
+    """Raised when component integration fails"""
 
     pass
 
@@ -541,14 +400,7 @@ class LiteratureSearchError(TemplateError):
 
 
 class APIRateLimitError(LiteratureSearchError):
-    """Raised when API rate limits are exceeded.
-
-    Example:
-        >>> raise APIRateLimitError(
-        ...     "arXiv API rate limit exceeded",
-        ...     context={"retry_after": 60, "source": "arxiv"}
-        ... )
-    """
+    """Raised when API rate limits are exceeded"""
 
     pass
 
