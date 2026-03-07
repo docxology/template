@@ -118,17 +118,14 @@ def generate_multi_project_summary_report(
 
     if project_results:
         try:
-            durations = []
-            for proj_name, proj_data in summary["projects"].items():
-                if isinstance(proj_data, dict) and proj_data.get("duration", 0) > 0:
-                    durations.append(proj_data["duration"])
+            proj_dur = [
+                (n, d["duration"])
+                for n, d in summary["projects"].items()
+                if isinstance(d, dict) and d.get("duration", 0) > 0
+            ]
+            durations = [d for _, d in proj_dur]
 
             if durations:
-                proj_dur = [
-                    (n, d["duration"])
-                    for n, d in summary["projects"].items()
-                    if isinstance(d, dict) and d.get("duration", 0) > 0
-                ]
                 summary["performance_analysis"] = {
                     "slowest_project": max(proj_dur, key=lambda x: x[1])[0] if proj_dur else None,
                     "fastest_project": min(proj_dur, key=lambda x: x[1])[0] if proj_dur else None,

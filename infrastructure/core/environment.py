@@ -36,11 +36,7 @@ logger = get_logger(__name__)
 
 
 def check_python_version() -> bool:
-    """Verify Python 3.8+ is available.
-
-    Returns:
-        True if Python version is 3.8 or higher, False otherwise
-    """
+    """Verify Python 3.8+ is available."""
     logger.debug("Checking Python version...")
     version_str = platform.python_version()
 
@@ -264,11 +260,7 @@ def setup_directories(
 
 
 def check_uv_available() -> bool:
-    """Check if uv package manager is available and working.
-
-    Returns:
-        True if uv is available and functional, False otherwise
-    """
+    """Check if uv package manager is available and working."""
     try:
         result = subprocess.run(
             ["uv", "--version"], capture_output=True, text=True, check=False, timeout=10
