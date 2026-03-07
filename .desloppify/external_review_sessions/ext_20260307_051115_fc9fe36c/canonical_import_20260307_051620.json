@@ -1,0 +1,498 @@
+{
+  "assessments": {
+    "cross_module_architecture": 74,
+    "convention_outlier": 72,
+    "error_consistency": 58,
+    "abstraction_fitness": 78,
+    "dependency_health": 78,
+    "test_strategy": 72,
+    "ai_generated_debt": 68,
+    "package_organization": 74,
+    "high_level_elegance": 71,
+    "mid_level_elegance": 65,
+    "low_level_elegance": 72,
+    "design_coherence": 63
+  },
+  "findings": [
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "dual_error_systems_coexist",
+      "summary": "Two parallel error systems (exceptions.py and errors.py) coexist without clear boundary, causing fragmented import patterns",
+      "related_files": [
+        "infrastructure/core/exceptions.py",
+        "infrastructure/core/errors.py",
+        "infrastructure/core/pipeline.py",
+        "infrastructure/core/cli.py",
+        "infrastructure/core/multi_project.py"
+      ],
+      "evidence": [
+        "infrastructure/core/exceptions.py provides a full exception class hierarchy (TemplateError, ValidationError, BuildError, etc.) with 48 importers",
+        "infrastructure/core/errors.py provides a separate InfraError dataclass system with string-formatted error constants",
+        "Only 4 files import from errors.py (pipeline.py, multi_project.py, cli.py, test_errors.py) while 48 import from exceptions.py",
+        "pipeline.py imports from both: 'from infrastructure.core.errors import ...' and uses exceptions from __init__.py",
+        "The two systems have overlapping semantic coverage (PIPELINE_STAGE_FAILED in errors.py vs PipelineError in exceptions.py) with no documented boundary rule"
+      ],
+      "suggestion": "Establish an explicit boundary: errors.py for formatted log-message constants, exceptions.py for raiseable types. Document the rule in both module docstrings. Remove overlap where InfraError constants duplicate exception class intent.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "reporting_pipeline_reporter_local_json_import",
+      "summary": "pipeline_reporter.py performs a deferred local import of json inside a function body, inconsistent with module-level imports everywhere else",
+      "related_files": [
+        "infrastructure/reporting/pipeline_reporter.py"
+      ],
+      "evidence": [
+        "Line 677: 'import json' appears inside generate_test_report(), while json is already imported at module level (line 9)",
+        "All other infrastructure modules import json at module level; this is the only in-function import of a stdlib module"
+      ],
+      "suggestion": "Remove the redundant in-function 'import json' on line 677; the module-level import already makes json available.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "sibling_behavior_missing_get_logger_wide_scope",
+      "summary": "Large population of infrastructure modules missing get_logger call that 87/136 sibling modules use, creating a style island across multiple sub-packages",
+      "related_files": [
+        "infrastructure/llm/review/generator.py",
+        "infrastructure/llm/review/pipeline_runner.py",
+        "infrastructure/publishing/package.py",
+        "infrastructure/publishing/platforms.py",
+        "infrastructure/reporting/__init__.py",
+        "infrastructure/validation/markdown_validator.py"
+      ],
+      "evidence": [
+        "Blind packet sibling_behavior shows 87/136 infrastructure modules use get_logger; 49+ are flagged as outliers missing it",
+        "Modules with real logic (generator.py, pipeline_runner.py, package.py, platforms.py) lack loggers while their siblings all have them",
+        "reporting/__init__.py is flagged missing get_logger; other reporting siblings (pipeline_reporter.py, coverage_parser.py) all use it"
+      ],
+      "suggestion": "Add 'from infrastructure.core.logging_utils import get_logger' and 'logger = get_logger(__name__)' to all logic-bearing modules that are missing it. Pure data/constants modules (models.py, config.py dataclass files) are acceptable exceptions.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "scripts_missing_log_header_log_success",
+      "summary": "Several scripts in scripts/ omit log_header/log_success calls that 14/18 and 12/18 sibling scripts use respectively",
+      "related_files": [
+        "scripts/02_run_analysis.py",
+        "scripts/execute_pipeline.py",
+        "scripts/generate_pipeline_reports.py",
+        "scripts/show_project_info.py"
+      ],
+      "evidence": [
+        "Blind packet scripts/ sibling_behavior: log_header count=14/18, log_success count=12/18",
+        "scripts/02_run_analysis.py missing get_logger, log_header, and log_success",
+        "scripts/execute_pipeline.py and generate_pipeline_reports.py missing log_header and log_success",
+        "scripts/show_project_info.py missing from __future__ import annotations and log_success"
+      ],
+      "suggestion": "Align outlier scripts to the established pattern: import and call log_header at entry point and log_success at successful completion, matching the majority of sibling scripts.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "mixed_exception_types_bare_builtins_vs_custom",
+      "summary": "Infrastructure modules inconsistently raise bare builtin exceptions (ValueError, RuntimeError) alongside the custom TemplateError hierarchy",
+      "related_files": [
+        "infrastructure/reporting/manuscript_overview.py",
+        "infrastructure/core/retry.py",
+        "infrastructure/core/menu.py",
+        "infrastructure/core/performance.py",
+        "infrastructure/scientific/templates.py"
+      ],
+      "evidence": [
+        "infrastructure/reporting/manuscript_overview.py raises ValueError 5 times (e.g. 'PDF has no pages', 'No images provided') inside infrastructure layer",
+        "infrastructure/core/retry.py raises RuntimeError('failed after N attempts') instead of TemplateError subclass",
+        "infrastructure/core/menu.py raises ValueError('Empty choice'), ValueError('No valid choices found')",
+        "infrastructure/core/performance.py raises RuntimeError('Monitor not started')",
+        "The codebase has a well-defined custom exception hierarchy (18 raises of TemplateError subclasses) but these modules bypass it"
+      ],
+      "suggestion": "Replace bare ValueError/RuntimeError raises inside infrastructure/ with appropriate TemplateError subclasses (e.g., ValidationError for invalid input, BuildError for pipeline failures). This makes callers' catch clauses predictable.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "silent_swallow_log_only_pattern",
+      "summary": "Multiple except-Exception blocks log a warning/error and return empty/None without propagating, silently hiding failures from callers",
+      "related_files": [
+        "infrastructure/llm/cli/main.py",
+        "infrastructure/publishing/cli.py",
+        "infrastructure/reporting/pipeline_reporter.py"
+      ],
+      "evidence": [
+        "infrastructure/llm/cli/main.py lines 85-86 and 178-179: 'except Exception as e: logger.error(f\"{e}\")' with no re-raise or return of failure signal",
+        "infrastructure/publishing/cli.py lines 164-165 and 220-221: 'except Exception as e: logger.error(...)' with implicit None return",
+        "infrastructure/reporting/pipeline_reporter.py line 126-128: 'except Exception as e: logger.warning(...); summary[\"performance_analysis\"] = {}' \u2014 swallows error silently with degraded empty result",
+        "Pattern count: 179 except-Exception occurrences across 58 infrastructure files, many with only log+return"
+      ],
+      "suggestion": "At top-level CLI handlers, swallowing is acceptable. Inside library functions (pipeline_reporter, publishing internals), either re-raise as a typed TemplateError or return a typed result indicating failure so callers can react.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "mixed_return_none_vs_raise_on_io_failure",
+      "summary": "I/O boundary functions inconsistently return None on failure in some places and raise in others with no declared contract",
+      "related_files": [
+        "infrastructure/reporting/coverage_parser.py",
+        "infrastructure/validation/integrity.py",
+        "infrastructure/reporting/test_summary_generator.py"
+      ],
+      "evidence": [
+        "_parse_coverage_json() returns None on JSONDecodeError/OSError (coverage_parser.py lines 262-266)",
+        "load_integrity_manifest() returns None on OSError/JSONDecodeError (integrity.py lines 710-712)",
+        "load_test_results() returns {} on OSError/JSONDecodeError (test_summary_generator.py lines 40-42)",
+        "Callers of these functions must check for None/empty separately; the three functions use three different empty sentinels (None, None, {}) for the same semantic condition"
+      ],
+      "suggestion": "Establish a single convention for I/O helper return-on-failure: prefer Optional[T] with None for 'not found/unreadable' and document it explicitly. Consolidate the empty-dict vs None inconsistency.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "wide_dict_any_param_bags_in_reporting",
+      "summary": "Reporting and validation functions use Dict[str, Any] as both inputs and outputs extensively, creating implicit parameter bags with no type safety",
+      "related_files": [
+        "infrastructure/reporting/pipeline_reporter.py",
+        "infrastructure/reporting/test_summary_generator.py",
+        "infrastructure/validation/integrity.py"
+      ],
+      "evidence": [
+        "Blind packet wide_param_bag_count=61 across the codebase",
+        "generate_pipeline_report() accepts test_results: Optional[Dict[str, Any]], validation_results: Optional[Dict[str, Any]], performance_metrics: Optional[Dict[str, Any]], error_summary: Optional[Dict[str, Any]], output_statistics: Optional[Dict[str, Any]] \u2014 5 untyped dict bags in one signature",
+        "integrity.py functions return Dict[str, bool] and Dict[str, Any] where TypedDict variants already exist in the same file (BuildArtifactValidation, PermissionCheck, OutputCompleteness) but are not used for the primary functions",
+        "Dict[str, Any] appears 203 times across 49 infrastructure files"
+      ],
+      "suggestion": "Promote the existing TypedDict classes (BuildArtifactValidation, PermissionCheck, OutputCompleteness) to be used as return types for the primary verify_* functions. For pipeline_reporter, extract a PipelineReportInput dataclass to replace the 5 optional dict parameters.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "dependency_health",
+      "identifier": "psutil_optional_but_double_guarded",
+      "summary": "psutil is listed in the optional 'monitoring' dependency group but is guarded by try/except in two separate modules with duplicate fallback logic",
+      "related_files": [
+        "infrastructure/core/health_check.py",
+        "infrastructure/core/performance.py",
+        "pyproject.toml"
+      ],
+      "evidence": [
+        "Both health_check.py and performance.py independently do `try: import psutil except ImportError: psutil = None` with identical fallback assignment",
+        "pyproject.toml line 75-77 places psutil in optional 'monitoring' group, and line 98 includes it in default-groups \u2014 so it is always installed in normal use, making the try/except redundant in practice",
+        "The dual-guard pattern means neither module can share a single authoritative 'psutil available' check"
+      ],
+      "suggestion": "Consolidate the psutil availability check into a single location (e.g., infrastructure/core/environment.py or a thin infrastructure/core/optional_deps.py) and import the result from there. Both health_check and performance would then share one authoritative boolean.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "dependency_health",
+      "identifier": "requests_underpins_llm_and_core_separately",
+      "summary": "requests is a hard runtime dependency used both by the LLM client (HTTP calls to Ollama) and by health_check/_check_network, but the LLM subsystem is entirely optional",
+      "related_files": [
+        "pyproject.toml",
+        "infrastructure/llm/core/client.py",
+        "infrastructure/core/health_check.py"
+      ],
+      "evidence": [
+        "pyproject.toml lists `requests>=2.31.0` as a hard runtime dependency (line 43)",
+        "The entire llm/ subsystem is optional (requires Ollama), yet requests is not in the optional 'llm' group \u2014 it is pulled in for all consumers",
+        "health_check._check_network uses requests for HTTP availability testing, which is a lightweight use that could fall back to urllib"
+      ],
+      "suggestion": "Move requests to the optional 'llm' dependency group and replace the health_check network probe with urllib.request, which is stdlib. This would avoid adding a non-stdlib dependency for users who never use the LLM integration.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "critical_orchestration_scripts_untested",
+      "summary": "scripts/01_run_tests.py (1520 LOC) and projects/code_project/scripts/optimization_analysis.py (1662 LOC) are flagged as zero-importer critical modules with no test coverage",
+      "related_files": [
+        "scripts/01_run_tests.py",
+        "projects/code_project/scripts/optimization_analysis.py"
+      ],
+      "evidence": [
+        "existing_findings shows 'test_coverage: Untested critical module (1520 LOC, 0 importers)' for scripts/01_run_tests.py",
+        "existing_findings shows 'test_coverage: Untested critical module (1662 LOC, 0 importers)' for optimization_analysis.py",
+        "The testing section in holistic_context lists only one critical_untested file at the project level (cognitive_case_diagrams/src/visualization/styles.py), but the existing_findings reveal the two script-layer gaps are larger and higher-risk"
+      ],
+      "suggestion": "Extract the core logic of scripts/01_run_tests.py into a testable module (e.g., infrastructure/reporting/test_runner.py) following the documented thin orchestrator pattern. Test that module directly. Similarly, move analysis logic in optimization_analysis.py into projects/code_project/src/.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "single_mock_usage_in_test_suite",
+      "summary": "tests/infra_tests/llm/test_logging.py contains MagicMock usage despite the project-wide no-mocks policy",
+      "related_files": [
+        "tests/infra_tests/llm/test_logging.py"
+      ],
+      "evidence": [
+        "Grep for MagicMock/mock.patch/unittest.mock found exactly one file: tests/infra_tests/llm/test_logging.py",
+        "CLAUDE.md states 'ABSOLUTE REQUIREMENT: Never use MagicMock, mocker.patch, unittest.mock, or any mocking framework'",
+        "All other test files (including test_sanitization.py and test_pipeline_reporter.py) successfully avoid mocks using real HTTP servers and real data"
+      ],
+      "suggestion": "Replace the mock usage in test_logging.py with the real pytest-httpserver pattern already used in the LLM test suite (see conftest.py ollama_test_server fixture).",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "reporting_module_missing_init_in_test_dir",
+      "summary": "tests/infra_tests/reporting/ has no __init__.py while all peer test directories do, which can cause inconsistent test discovery",
+      "related_files": [
+        "tests/infra_tests/reporting"
+      ],
+      "evidence": [
+        "Glob for tests/infra_tests/**/__init__.py returns results for core/, publishing/, documentation/, llm/, project/, rendering/, validation/, scientific/, steganography/ \u2014 but NOT reporting/",
+        "tests/infra_tests/reporting/ contains 11 test files (3746 LOC) with no __init__.py"
+      ],
+      "suggestion": "Add an empty tests/infra_tests/reporting/__init__.py to match all sibling test directories and prevent any import resolution edge cases during pytest collection.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "docstring_bloat_on_trivial_dataclass_methods",
+      "summary": "Simple dataclass accessor methods carry multi-line docstrings with Args/Returns sections that restate the method signature",
+      "related_files": [
+        "infrastructure/core/performance.py",
+        "infrastructure/core/health_check.py"
+      ],
+      "evidence": [
+        "infrastructure/core/performance.py: ResourceUsage.to_dict() is a 6-line method mapping dataclass fields to a dict, yet it carries a docstring header 'Convert to dictionary.' \u2014 a restatement of the method name",
+        "infrastructure/core/health_check.py: SystemHealthChecker.get_health_status() has a full docstring with Args and Returns that repeats what the type signature already states (Dict[str, Any])",
+        "codebase avg comment ratio is 0.057 but the infrastructure/core/ subpackage has dense docstrings on every method regardless of complexity"
+      ],
+      "suggestion": "Reserve docstrings for non-obvious behaviour, side effects, or domain rules. Remove or shrink docstrings on methods whose purpose and contract are completely expressed by their name and type signature.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "entry_exit_logging_in_health_checks",
+      "summary": "Health-check helper methods emit structured log entries on entry and exit for operations that have no meaningful observability value at that granularity",
+      "related_files": [
+        "infrastructure/core/health_check.py",
+        "infrastructure/llm/core/client.py"
+      ],
+      "evidence": [
+        "holistic_context existing_findings flags infrastructure/llm/core/client.py for '6x Catch block that only logs (swallowed error)' \u2014 a classic AI-generated defensive logging pattern",
+        "logging_utils.py is imported by 115 modules; the sheer breadth suggests logging was added by default rather than selectively",
+        "infrastructure/core/__init__.py re-exports log_operation, log_stage, log_substep, log_success, log_header, log_stage_with_eta as a flat API surface \u2014 8 logging entry points encourages over-instrumentation"
+      ],
+      "suggestion": "Audit log call sites in health_check.py and llm/core/client.py for entry/exit logs that add no information beyond the function name. Remove those; retain only logs that carry meaningful state (e.g., actual values, error detail, timing).",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "infrastructure_core_overloaded_at_26_files",
+      "summary": "infrastructure/core/ has 26 files (8684 LOC) mixing pipeline orchestration, logging subsystem (4 files), health monitoring, security, credentials, menus, and progress \u2014 well beyond a coherent single-concern package",
+      "related_files": [
+        "infrastructure/core/__init__.py",
+        "infrastructure/core/logging_utils.py",
+        "infrastructure/core/logging_formatters.py",
+        "infrastructure/core/logging_helpers.py",
+        "infrastructure/core/logging_progress.py",
+        "infrastructure/core/pipeline.py",
+        "infrastructure/core/health_check.py",
+        "infrastructure/core/security.py",
+        "infrastructure/core/menu.py"
+      ],
+      "evidence": [
+        "directory_profiles shows infrastructure/core/ at 26 files, total_loc 8684, avg_fan_in 9.7 \u2014 the highest fan-in of any package, creating high blast radius for any change",
+        "The logging subsystem is already split into 4 files (logging_utils.py, logging_formatters.py, logging_helpers.py, logging_progress.py) \u2014 an implicit sub-package that is not surfaced as one",
+        "infrastructure/core/__init__.py re-exports 35 symbols spanning 8 conceptual domains (checkpoint, config, environment, exceptions, health, logging, multi-project, performance, pipeline, progress)",
+        "Unrelated concerns \u2014 menu.py (interactive CLI menus), security.py (regex-based input scanning), credentials.py \u2014 all live alongside pipeline.py with no sub-grouping"
+      ],
+      "suggestion": "Extract the logging quartet into infrastructure/core/logging/ as a sub-package. Consider moving menu.py to infrastructure/cli/ and security.py/credentials.py to infrastructure/security/. This would bring core/ down to a focused set of pipeline/lifecycle utilities.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "reporting_has_test_files_in_production_package",
+      "summary": "infrastructure/reporting/ contains two files named test_reporter.py and test_summary_generator.py that appear to be production modules despite their test_ prefix",
+      "related_files": [
+        "infrastructure/reporting/test_reporter.py",
+        "infrastructure/reporting/test_summary_generator.py"
+      ],
+      "evidence": [
+        "directory_profiles for infrastructure/reporting/ lists zones as {'production': 12, 'test': 2} \u2014 the scanner itself classified these as test files inside a production directory",
+        "The files are test_reporter.py and test_summary_generator.py \u2014 naming pattern matches the test/ convention, yet they live under infrastructure/reporting/ and are imported by scripts/",
+        "coupling_matrix shows scripts/ imports from infrastructure/reporting/ 12 times, which may include these ambiguously named modules"
+      ],
+      "suggestion": "Rename test_reporter.py to coverage_reporter.py and test_summary_generator.py to run_summary_generator.py (or similar) to avoid the test_ prefix collision. Update all import sites accordingly.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "health_checker_ownership_split",
+      "summary": "HealthChecker class placed inside sanitization.py rather than health_check.py, splitting ownership of system health across two unrelated modules",
+      "related_files": [
+        "infrastructure/llm/core/sanitization.py",
+        "infrastructure/core/health_check.py"
+      ],
+      "evidence": [
+        "infrastructure/core/health_check.py defines SystemHealthChecker (the canonical health monitoring class)",
+        "infrastructure/llm/core/sanitization.py lines 197-305 define a second HealthChecker class with overlapping responsibilities (filesystem, dependencies, network, memory checks) inside a file whose stated purpose is 'Input sanitization and security utilities for LLM operations'",
+        "Both classes expose run_all_checks / get_health_status entry points over identical concern areas"
+      ],
+      "suggestion": "Remove HealthChecker from sanitization.py and consolidate into infrastructure/core/health_check.py. Sanitization.py should only contain InputSanitizer and SecurityError.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "reporting_module_responsibility_sprawl",
+      "summary": "infrastructure/reporting/ contains 14 files with mixed, overlapping responsibilities including test reporting, pipeline reporting, validation reporting, error reporting, and executive reporting \u2014 boundaries are blurred",
+      "related_files": [
+        "infrastructure/reporting/pipeline_reporter.py",
+        "infrastructure/reporting/test_reporter.py",
+        "infrastructure/reporting/executive_reporter.py",
+        "infrastructure/reporting/multi_project_reporter.py",
+        "infrastructure/reporting/summary_generator.py"
+      ],
+      "evidence": [
+        "pipeline_reporter.py defines generate_test_report(), generate_validation_report(), generate_performance_report(), and generate_error_summary() \u2014 all logically belonging in dedicated sibling reporter files",
+        "test_reporter.py also defines generate_test_report() at line 213, creating a duplicate public API surface",
+        "14 files at 8461 LOC for a reporting layer is disproportionate; no clear ownership boundary between executive, pipeline, multi-project, and summary reporters"
+      ],
+      "suggestion": "Each reporter file should own one report type end-to-end. Remove the redundant generate_test_report/generate_validation_report/etc. functions from pipeline_reporter.py; delegate to the dedicated sibling reporters.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "stagereport_mutable_defaults_via_post_init",
+      "summary": "StageResult dataclass uses None sentinel fields with __post_init__ fixup instead of dataclass field(default_factory=list) \u2014 leaks mutation risk and obscures intent at the seam",
+      "related_files": [
+        "infrastructure/reporting/pipeline_reporter.py"
+      ],
+      "evidence": [
+        "Lines 26-28: output_files, errors, warnings declared as None with type: ignore[assignment] comments",
+        "Lines 30-36: __post_init__ checks each for None and replaces with [] \u2014 standard Python dataclass mutable-default anti-pattern workaround",
+        "The type: ignore comments indicate the workaround is acknowledged but not fixed"
+      ],
+      "suggestion": "Replace None sentinels with field(default_factory=list) for each of output_files, errors, warnings. Eliminates __post_init__ boilerplate and the type suppression.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "generate_pipeline_report_wide_param_bag",
+      "summary": "generate_pipeline_report() accepts 9 positional/keyword parameters where 6 are optional dicts \u2014 should accept a structured context object at this boundary",
+      "related_files": [
+        "infrastructure/reporting/pipeline_reporter.py"
+      ],
+      "evidence": [
+        "Lines 273-283: function signature has stage_results, total_duration, repo_root, test_results, validation_results, performance_metrics, error_summary, output_statistics, project_name",
+        "Six of nine parameters are Optional[Dict[str, Any]] \u2014 structurally identical at the call site, distinguishable only by position/name",
+        "The holistic_context wide_param_bags confirms pipeline_reporter.py as a flag (wide_functions: 1)"
+      ],
+      "suggestion": "Introduce a PipelineContext dataclass grouping the optional dict parameters. Callers pass one well-typed object instead of 6 keyword dicts.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "duplicate_generate_test_report_across_modules",
+      "summary": "generate_test_report() is defined in both pipeline_reporter.py and test_reporter.py, creating an ambiguous seam for callers",
+      "related_files": [
+        "infrastructure/reporting/pipeline_reporter.py",
+        "infrastructure/reporting/test_reporter.py"
+      ],
+      "evidence": [
+        "pipeline_reporter.py line 663: def generate_test_report(test_results: Dict[str, Any], output_dir: Path) -> Path",
+        "test_reporter.py line 213: def generate_test_report(...) \u2014 confirmed by grep",
+        "Both are in the reporting package's public surface; callers have no basis to choose between them"
+      ],
+      "suggestion": "Remove generate_test_report from pipeline_reporter.py; pipeline_reporter should call test_reporter.generate_test_report() if needed.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "inline_import_json_inside_function",
+      "summary": "generate_test_report() re-imports json at line 676 inside the function body, despite json already being imported at the top of the module",
+      "related_files": [
+        "infrastructure/reporting/pipeline_reporter.py"
+      ],
+      "evidence": [
+        "Line 9: import json (module-level)",
+        "Line 676: import json (inside generate_test_report body) \u2014 redundant and inconsistent"
+      ],
+      "suggestion": "Remove the inline import; the module-level import is sufficient.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "performance_context_drops_metrics",
+      "summary": "performance_context() context manager calls monitor.stop() in the finally block but discards the returned PerformanceMetrics \u2014 the metrics are unreachable after the context exits",
+      "related_files": [
+        "infrastructure/core/performance.py"
+      ],
+      "evidence": [
+        "Lines 153-166: yield monitor; finally: metrics = monitor.stop(); logger.debug(...) \u2014 metrics is a local variable that is never yielded or stored",
+        "Callers receive the monitor from yield but cannot access the final stop() metrics after the with-block",
+        "The docstring says 'callers can read PerformanceMetrics after exit' which is incorrect \u2014 monitor.stop() clears state (sets start_time = None)"
+      ],
+      "suggestion": "Either yield (monitor, metrics_holder) as a mutable container, or yield the monitor and let the caller call monitor.stop() explicitly; or store metrics on the monitor object as monitor.last_metrics.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "three_separate_stage_loops_in_get_performance_warnings",
+      "summary": "get_performance_warnings() iterates self.stages three times (slow, high-memory, high-cpu) where a single loop would suffice",
+      "related_files": [
+        "infrastructure/core/performance.py"
+      ],
+      "evidence": [
+        "Lines 271-307: three separate for stage in self.stages: loops, each looking at a different metric \u2014 slow_stage check, high_memory check, high_cpu check",
+        "Each loop is O(n); a single pass could collect all three warning types, reducing list traversals and improving locality"
+      ],
+      "suggestion": "Merge into a single for loop that checks all three conditions per stage.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "sanitization_module_mixes_two_unrelated_concerns",
+      "summary": "sanitization.py conflates LLM input sanitization (InputSanitizer, SecurityError) with general system health monitoring (HealthChecker), violating single-responsibility and making the module boundary confusing",
+      "related_files": [
+        "infrastructure/llm/core/sanitization.py"
+      ],
+      "evidence": [
+        "Module docstring: 'Input sanitization and security utilities for LLM operations' \u2014 no mention of health checks",
+        "InputSanitizer (lines 20-188) is tightly LLM-specific; HealthChecker (lines 197-305) checks filesystem free space, dependency availability, network DNS, memory \u2014 entirely orthogonal concerns",
+        "Global singleton _health_checker created at module import time (line 310), triggering dependency checking on every LLM sanitization import"
+      ],
+      "suggestion": "Move HealthChecker and related helpers (get_health_checker, run_health_check) to infrastructure/core/health_check.py. Keep sanitization.py focused on InputSanitizer and SecurityError.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "performance_module_two_parallel_monitor_hierarchies",
+      "summary": "performance.py provides two overlapping monitoring hierarchies: PerformanceMonitor/StagePerformanceTracker (psutil-based, stage-level) and CodeProfiler/ProfilingMetrics (tracemalloc/cProfile, function-level), each with a separate global instance pattern",
+      "related_files": [
+        "infrastructure/core/performance.py"
+      ],
+      "evidence": [
+        "PerformanceMonitor (line 76) and StagePerformanceTracker (line 195) provide stage-level monitoring; CodeProfiler (line 370) provides function-level profiling \u2014 three distinct classes solving overlapping problems",
+        "get_performance_monitor() (line 518) returns a global CodeProfiler; no equivalent global for PerformanceMonitor/StagePerformanceTracker",
+        "benchmark_function() at module level (line 575) creates a throwaway CodeProfiler() just to call its benchmark_function method \u2014 CodeProfiler.benchmark_function is effectively duplicated at module scope",
+        "ProfilingMetrics (function-level) and PerformanceMetrics (stage-level) are near-duplicate dataclasses with different field names for the same concepts"
+      ],
+      "suggestion": "Consolidate into one monitoring class or clearly separate into two modules (stage_monitor.py, function_profiler.py) with non-overlapping responsibilities and no duplicated global accessors.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "integrity_verify_output_completeness_hardcoded_output_subdirs",
+      "summary": "verify_output_completeness() hardcodes expected subdirectory names (pdf, figures, data, tex) rather than accepting them as parameters, making the function non-composable for varied project layouts",
+      "related_files": [
+        "infrastructure/validation/integrity.py"
+      ],
+      "evidence": [
+        "Lines 572-625: pdf_dir = output_dir / 'pdf'; figures_dir = output_dir / 'figures'; data_dir = output_dir / 'data'; tex_dir = output_dir / 'tex' \u2014 all hardcoded",
+        "The function checks html_files only in the output root (line 617) but all other checks use fixed subdirs \u2014 inconsistent internal structure",
+        "validate_build_artifacts() on line 480 correctly accepts expected_files as a parameter, showing the preferred pattern exists but was not applied here"
+      ],
+      "suggestion": "Parameterize subdirectory names (pdf_subdir, figures_subdir, etc.) or accept an expected layout config object, matching the pattern used by validate_build_artifacts().",
+      "confidence": "medium"
+    }
+  ],
+  "provenance": {
+    "kind": "blind_review_batch_import",
+    "blind": true,
+    "runner": "claude",
+    "run_stamp": "ext_20260307_051115_fc9fe36c",
+    "created_at": "2026-03-07T05:16:20+00:00",
+    "packet_path": "/Users/4d/Documents/GitHub/template/.desloppify/review_packet_blind.json",
+    "packet_sha256": "2ad2eb9b89e06a5f81d13451d37a37b475412de01af466328402f3d1553110a5",
+    "external_session_id": "ext_20260307_051115_fc9fe36c"
+  }
+}

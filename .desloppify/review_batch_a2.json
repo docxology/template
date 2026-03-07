@@ -1,0 +1,59 @@
+{
+  "session": {
+    "id": "ext_20260307_091848_38c50cda",
+    "token": "639e0c7ffe8a1bcedf9533896a26775d"
+  },
+  "assessments": {
+    "convention_outlier": 74,
+    "error_consistency": 80
+  },
+  "findings": [
+    {
+      "dimension": "convention_outlier",
+      "identifier": "logging_module_split_asymmetry",
+      "summary": "logging_utils.py re-exports everything from its split submodules but the split is asymmetric: logging_helpers.py has a sparse stub docstring and an at-function-level import to dodge a circular dependency, while logging_formatters.py and logging_progress.py are full modules — the internal seam is leaky and the circular-import workaround is a convention outlier relative to every other infrastructure submodule",
+      "related_files": [
+        "infrastructure/core/logging_helpers.py",
+        "infrastructure/core/logging_utils.py"
+      ],
+      "evidence": [
+        "logging_helpers.py line 7: '# Note: get_logger is imported at function level to avoid circular import' — no other infrastructure module uses this pattern",
+        "logging_helpers.py line 43: 'from infrastructure.core.exceptions import TemplateError' inside the function body, unlike all sibling modules which import at top level",
+        "logging_utils.py __all__ re-exports EMOJIS, USE_EMOJIS, USE_STRUCTURED_LOGGING, JSONFormatter, TemplateFormatter, Spinner, StreamingProgress — symbols that conceptually belong in their own modules, not the aggregator"
+      ],
+      "suggestion": "Move the TemplateError import in format_error_with_suggestions to module level (the circular import it avoids is itself a signal of a dependency direction problem worth resolving) or consolidate logging_helpers into logging_utils if it only exists to hold two helper functions",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "reporting_init_conditional_export",
+      "summary": "infrastructure/reporting/__init__.py uses a try/except ImportError block to conditionally define module-level names as None when dashboard_generator is unavailable, which is a unique pattern not used in any sibling __init__.py (validation/__init__.py does straight imports throughout); consumers cannot distinguish 'not installed' from 'explicitly None'",
+      "related_files": [
+        "infrastructure/reporting/__init__.py",
+        "infrastructure/validation/__init__.py"
+      ],
+      "evidence": [
+        "reporting/__init__.py lines 11-27: generate_all_dashboards, generate_matplotlib_dashboard, generate_plotly_dashboard assigned to None on ImportError",
+        "validation/__init__.py: all imports are unconditional, no None-fallback pattern",
+        "reporting/__init__.py line 26: 'generate_all_dashboards = None  # type: ignore[assignment]' — mixing callable and None in __all__ is a type-safety outlier"
+      ],
+      "suggestion": "Either move optional dashboard symbols out of __all__ and document them as optional, or use importlib.util.find_spec to gate the import and raise a clear ImportError at call time rather than silently setting names to None",
+      "confidence": "high"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "performance_stop_raises_error_context_managers_do_not",
+      "summary": "PerformanceMonitor.stop() raises BuildError on misuse, but the two context managers that wrap it (performance_context and CodeProfiler.monitor) both use bare 'finally' blocks that call stop() unconditionally — if stop() raises BuildError the original exception is replaced; meanwhile StagePerformanceTracker.end_stage() silently returns {} when not started, choosing a return-empty strategy inconsistent with PerformanceMonitor.stop()'s raise strategy for the same precondition",
+      "related_files": [
+        "infrastructure/core/performance.py"
+      ],
+      "evidence": [
+        "performance.py line 103: 'raise BuildError(\"Monitor not started\")' in PerformanceMonitor.stop()",
+        "performance.py line 169: 'finally: metrics = monitor.stop()' — exception in stop() during an active exception swaps the active exception",
+        "performance.py lines 226-227: 'if self.start_time is None: return {}' in StagePerformanceTracker.end_stage() — same precondition, opposite strategy (silent empty dict vs raise)"
+      ],
+      "suggestion": "Align the two tracker classes: either both raise on unstarted state, or both return a sentinel value. In performance_context, guard the stop() call so it does not run when the body raised (use an explicit flag rather than a bare finally).",
+      "confidence": "high"
+    }
+  ]
+}

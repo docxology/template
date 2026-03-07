@@ -1,0 +1,116 @@
+{
+  "session": {
+    "id": "ext_20260307_044704_2ea1b685",
+    "token": "5ee681e8247190c9447f06e6a9bfb5e5"
+  },
+  "assessments": {
+    "dependency_health": 78,
+    "test_strategy": 88,
+    "ai_generated_debt": 72,
+    "package_organization": 74
+  },
+  "findings": [
+    {
+      "dimension": "dependency_health",
+      "identifier": "reportlab_in_core_deps_but_optional_use",
+      "summary": "reportlab declared as core dependency but only used behind optional/lazy guards",
+      "related_files": [
+        "pyproject.toml",
+        "infrastructure/reporting/manuscript_overview.py",
+        "infrastructure/steganography/overlays.py",
+        "infrastructure/steganography/barcodes.py"
+      ],
+      "evidence": [
+        "pyproject.toml line 43: 'reportlab>=4.0.0' listed under [project].dependencies (always installed)",
+        "Only 3 infrastructure files import reportlab, all in optional/specialized subsystems (steganography, manuscript overview)",
+        "psutil is in optional 'monitoring' group yet is directly imported (with try/except guard) in performance.py, health_check.py, logging_utils.py — the guard is correct but the group placement signals optionality that is contradicted by widespread production use"
+      ],
+      "suggestion": "Move reportlab to an optional dependency group (e.g., 'rendering') with a lazy import guard matching the steganography and monitoring patterns already used. Alternatively, promote psutil to core dependencies to match its pervasive guarded use across 5 production modules.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "exception_subclass_docstring_bloat",
+      "summary": "Every pass-only exception subclass carries a multi-line docstring with Examples that restate the class name",
+      "related_files": [
+        "infrastructure/core/exceptions.py"
+      ],
+      "evidence": [
+        "exceptions.py line 75-91: ConfigurationError body is 'pass', preceded by a 9-line docstring listing what kinds of errors it covers and a full >>> raise example",
+        "exceptions.py line 94-104: MissingConfigurationError body is 'pass', with its own 5-line docstring and code example",
+        "exceptions.py line 107-117: InvalidConfigurationError body is 'pass', same pattern",
+        "exceptions.py line 125-141: ValidationError body is 'pass', 11-line docstring with bullet list and example",
+        "Pattern repeats for MarkdownValidationError, PDFValidationError, DataValidationError, BuildError — all pass-only bodies with multi-line docstrings",
+        "The docstring content ('This includes errors in: ...') adds no information beyond what the class name communicates"
+      ],
+      "suggestion": "Collapse pass-only exception subclasses to a single-line docstring that states only what distinguishes this subclass from its parent. Remove Examples sections from trivial subclasses; they belong on the base class __init__ only.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "core_init_massive_reexport_surface",
+      "summary": "infrastructure/core/__init__.py re-exports 90+ symbols with no selection rationale, obscuring internal structure",
+      "related_files": [
+        "infrastructure/core/__init__.py"
+      ],
+      "evidence": [
+        "infrastructure/core/__init__.py lines 14-246: __all__ contains 90+ entries spanning exceptions, logging, progress, retry, checkpoint, performance, health, security, config, environment, file ops, pipeline, multi-project, file inventory, pipeline summary",
+        "Symbols from 18 distinct sub-modules are all promoted to the same flat namespace with no grouping signal",
+        "The re-export surface includes implementation-detail types (ProfilingMetrics, StreamingProgress exported indirectly via logging_utils) alongside primary API entry points"
+      ],
+      "suggestion": "Restrict __init__.py re-exports to the 10-15 symbols most commonly needed by cross-module callers. Move specialist symbols (ProfilingMetrics, StagePerformanceTracker, SecurityViolation, etc.) to direct sub-module imports at their call sites.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "logging_split_modules_flat_in_core",
+      "summary": "Logging implementation is split across 5 files that all live flat in infrastructure/core/ rather than a logging/ sub-package",
+      "related_files": [
+        "infrastructure/core/logging_utils.py",
+        "infrastructure/core/logging_formatters.py",
+        "infrastructure/core/logging_helpers.py",
+        "infrastructure/core/logging_progress.py",
+        "infrastructure/core/logging_constants.py"
+      ],
+      "evidence": [
+        "infrastructure/core/ contains 26 files (8,947 LOC); 5 of them are logging_*.py sub-modules",
+        "logging_constants.py docstring line 1: 'Shared logging constants with no infrastructure imports' — explicitly exists to avoid circular imports within core/, which is a smell that the group has outgrown its directory",
+        "logging_utils.py imports from logging_formatters, logging_helpers, logging_progress, and logging_constants — a 4-level internal fan-out inside one package",
+        "The 5 logging files total ~1,200+ LOC and represent a cohesive sub-domain that would be better contained as infrastructure/core/logging/"
+      ],
+      "suggestion": "Move logging_utils.py, logging_formatters.py, logging_helpers.py, logging_progress.py, and logging_constants.py into infrastructure/core/logging/ with a __init__.py that re-exports get_logger and the primary public API. This eliminates the circular-import workaround and reduces infrastructure/core/ from 26 to 22 files.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "test_support_files_in_production_reporting_package",
+      "summary": "infrastructure/reporting/ contains test_reporter.py and test_summary_generator.py — names that signal test tooling living in a production package",
+      "related_files": [
+        "infrastructure/reporting/test_reporter.py",
+        "infrastructure/reporting/test_summary_generator.py"
+      ],
+      "evidence": [
+        "infrastructure/reporting/ directory profile shows 14 files with 2 marked as 'test' zone: test_reporter.py and test_summary_generator.py",
+        "Both files are imported by scripts/ (12 imports from reporting/) and tests/infra_tests/reporting/ (14 imports), suggesting they are production utilities that generate test-related reports — but their names are indistinguishable from test files",
+        "test_summary_generator.py line 361: run_test_summary_generation() is a main entry point called from scripts, not a test utility — the 'test_' prefix is misleading in a production module"
+      ],
+      "suggestion": "Rename test_reporter.py to coverage_reporter.py (or report_generator.py) and test_summary_generator.py to suite_summary_generator.py to clearly signal these are production report generators, not test files. Update all import references accordingly.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "untested_visualization_styles_module",
+      "summary": "projects/cognitive_case_diagrams/src/visualization/styles.py is imported by 3 production files but has no test coverage",
+      "related_files": [
+        "projects/cognitive_case_diagrams/src/visualization/styles.py"
+      ],
+      "evidence": [
+        "blind packet testing.critical_untested: styles.py listed with importers=3, meaning 3 production files depend on it",
+        "No test file targeting styles.py found in tests/infra_tests/ or projects/cognitive_case_diagrams/tests/",
+        "The visualization/ package has 6 files and 2,527 LOC — styles.py is the only untested file in this domain"
+      ],
+      "suggestion": "Add a test file projects/cognitive_case_diagrams/tests/test_styles.py that instantiates style objects and validates their properties with real data. This closes the only identified coverage gap in an otherwise well-tested codebase.",
+      "confidence": "high"
+    }
+  ]
+}
