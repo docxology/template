@@ -519,8 +519,8 @@ def _build_retry_prompt(prompt: str, had_off_topic: bool) -> str:
         try:
             composer = PromptComposer()
             return composer.add_retry_prompt(prompt, retry_type="off_topic")
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"PromptComposer retry prompt failed, using plain prefix: {e}")
     return prefix + prompt
 
 
@@ -572,7 +572,8 @@ def _stream_with_heartbeat(
             f" ({final_tokens_per_sec:.1f} tokens/sec)"
         )
         return "".join(response_chunks)
-    except Exception:
+    except Exception as e:
+        logger.debug(f"Streaming query failed, falling back to blocking query: {e}")
         return client.query(prompt, options=options)
 
 
@@ -792,7 +793,8 @@ def generate_translation(
             finally:
                 heartbeat_monitor.stop_monitoring()
             response = "".join(response_chunks)
-        except Exception:
+        except Exception as e:
+            logger.debug(f"Streaming query failed, falling back to blocking query: {e}")
             response = client.query(prompt, options=options)
 
     except Exception as e:
