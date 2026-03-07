@@ -50,7 +50,6 @@ def check_dependencies(
             "numpy",
             "matplotlib",
             "pytest",
-            "requests",
         ]
         # No optional packages in default infrastructure check
         # (project-specific deps like scipy belong in projects/{name}/pyproject.toml)

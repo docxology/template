@@ -118,6 +118,8 @@ class PipelineSummaryGenerator:
             lines.append("All stages completed successfully!")
 
         # Log file info
+        log_file_final = summary.log_file
+        log_path_changed = False
         if summary.log_file:
             log_file_final = self._get_final_log_path(summary.log_file)
             log_path_changed = str(summary.log_file) != str(log_file_final)

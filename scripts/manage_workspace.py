@@ -23,7 +23,6 @@ import argparse
 import subprocess
 import sys
 from pathlib import Path
-from typing import List, Optional
 
 # Add root to path for infrastructure imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -33,7 +32,7 @@ from infrastructure.core.logging_utils import get_logger, log_success, log_heade
 logger = get_logger(__name__)
 
 
-def run_uv_command(cmd: List[str], cwd: Optional[Path] = None) -> int:
+def run_uv_command(cmd: list[str], cwd: Path | None = None) -> int:
     """Run a uv command and return exit code."""
     try:
         result = subprocess.run(cmd, cwd=cwd or Path.cwd(), capture_output=False, check=False)

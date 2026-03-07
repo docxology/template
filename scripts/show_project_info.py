@@ -12,18 +12,19 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any
 
 # Add repo root to Python path
 repo_root = Path(__file__).parent.parent
 sys.path.insert(0, str(repo_root))
 
+from infrastructure.core.exceptions import FileNotFoundError
 from infrastructure.core.logging_utils import get_logger, log_header, log_substep
 
 logger = get_logger(__name__)
 
 
-def get_project_info(project_name: str, repo_root: Path) -> Dict[str, Any]:
+def get_project_info(project_name: str, repo_root: Path) -> dict[str, Any]:
     """Get comprehensive project information.
 
     Args:
@@ -36,7 +37,7 @@ def get_project_info(project_name: str, repo_root: Path) -> Dict[str, Any]:
     project_dir = repo_root / "projects" / project_name
 
     if not project_dir.exists():
-        raise FileNotFoundError(f"Project directory not found: {project_dir}")
+        raise FileNotFoundError(f"Project directory not found: {project_dir}", context={"file": str(project_dir)})
 
     info = {
         "name": project_name,
@@ -88,7 +89,7 @@ def get_project_info(project_name: str, repo_root: Path) -> Dict[str, Any]:
     return info
 
 
-def display_project_info(info: Dict[str, Any]) -> None:
+def display_project_info(info: dict[str, Any]) -> None:
     """Display project information in formatted output."""
     log_header(f"PROJECT INFORMATION: {info['name']}", logger)
 
