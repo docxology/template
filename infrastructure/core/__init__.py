@@ -94,10 +94,10 @@ from .performance import (
     PerformanceMonitor,
     ResourceUsage,
     get_system_resources,
-    monitor_performance,
 )
 from .performance_monitor import CodeProfiler, ProfilingMetrics
 from .performance_monitor import benchmark_function, benchmark_llm_query, get_performance_monitor
+from .performance_monitor import monitor_performance
 from .performance_monitor import monitor_performance as monitor_performance_decorator
 from .performance_monitor import profile_memory_usage
 from .pipeline import PipelineConfig, PipelineExecutor, PipelineStageResult

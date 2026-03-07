@@ -11,22 +11,7 @@ from typing import Any, Iterator, Optional
 
 
 def calculate_eta(elapsed_time: float, completed_items: int, total_items: int) -> Optional[float]:
-    """Calculate estimated time remaining based on current progress.
-
-    Uses simple linear calculation for basic ETA estimation.
-
-    Args:
-        elapsed_time: Time elapsed so far in seconds
-        completed_items: Number of items completed
-        total_items: Total number of items
-
-    Returns:
-        Estimated time remaining in seconds, or None if cannot calculate
-
-    Example:
-        >>> calculate_eta(30.0, 3, 10)
-        70.0  # 30s for 3 items = 10s/item, 7 remaining = 70s
-    """
+    """Calculate estimated time remaining using linear extrapolation; returns None if indeterminate."""
     if completed_items <= 0 or total_items <= 0:
         return None
 

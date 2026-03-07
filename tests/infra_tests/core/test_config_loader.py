@@ -12,6 +12,7 @@ sys.path.insert(0, ROOT)
 
 from infrastructure.core.config_loader import (
     YAML_AVAILABLE,
+    ResolvedTestingConfig,
     find_config_file,
     format_author_details,
     format_author_name,
@@ -678,10 +679,8 @@ class TestTestingConfig:
 
     def test_get_testing_config_no_config(self, tmp_path):
         """Test get_testing_config with no config file."""
-        # Should return defaults when no config exists
         result = get_testing_config(tmp_path)
-        # Defaults are always returned even without config file
-        assert result == {"infra_coverage_threshold": 60, "project_coverage_threshold": 90}
+        assert result == ResolvedTestingConfig(infra_coverage_threshold=60, project_coverage_threshold=90)
 
     def test_get_testing_config_with_testing_section(self, tmp_path):
         """Test get_testing_config with testing section."""
@@ -697,13 +696,13 @@ testing:
         )
 
         result = get_testing_config(tmp_path)
-        expected = {
-            "max_test_failures": 5,
-            "max_infra_test_failures": 2,
-            "max_project_test_failures": 1,
-            "infra_coverage_threshold": 60,
-            "project_coverage_threshold": 90,
-        }
+        expected = ResolvedTestingConfig(
+            max_test_failures=5,
+            max_infra_test_failures=2,
+            max_project_test_failures=1,
+            infra_coverage_threshold=60,
+            project_coverage_threshold=90,
+        )
         assert result == expected
 
 

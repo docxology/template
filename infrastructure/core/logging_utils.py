@@ -189,16 +189,7 @@ def setup_project_logging(
 
 
 def get_log_level_from_env() -> int:
-    """Get log level from LOG_LEVEL environment variable.
-
-    Returns:
-        Python logging level (DEBUG, INFO, WARNING, ERROR)
-
-    Example:
-        >>> os.environ['LOG_LEVEL'] = '0'
-        >>> get_log_level_from_env()
-        10  # logging.DEBUG
-    """
+    """Get log level from LOG_LEVEL environment variable (0=DEBUG, 1=INFO, 2=WARN, 3=ERROR)."""
     env_level = os.getenv("LOG_LEVEL", "1")  # Default to INFO
     return LOG_LEVEL_MAP.get(env_level, logging.INFO)
 
@@ -376,23 +367,16 @@ def log_operation(
     logger: Optional[logging.Logger] = None,
     level: int = logging.INFO,
     min_duration_to_log: float = 0.1,
+    log_completion: bool = True,
 ) -> Iterator[None]:
-    """Context manager for logging operation start and completion.
+    """Context manager for logging operation start and optional completion.
 
     Args:
         operation: Description of the operation
         logger: Logger instance (creates one if None)
         level: Log level for messages
         min_duration_to_log: Minimum duration (seconds) to log completion message
-
-    Yields:
-        None
-
-    Example:
-        >>> with log_operation("Processing data", logger):
-        ...     process_data()
-        ℹ️ [2025-11-21 12:00:00] [INFO] Starting: Processing data
-        ℹ️ [2025-11-21 12:00:05] [INFO] Completed: Processing data (5.0s)
+        log_completion: Whether to log completion message (False = start only)
     """
     if logger is None:
         logger = get_logger(__name__)
@@ -402,10 +386,10 @@ def log_operation(
 
     try:
         yield
-        duration = time.time() - start_time
-        # Only log completion if duration exceeds threshold
-        if duration >= min_duration_to_log:
-            logger.log(level, f"Completed: {operation} ({duration:.1f}s)")
+        if log_completion:
+            duration = time.time() - start_time
+            if duration >= min_duration_to_log:
+                logger.log(level, f"Completed: {operation} ({duration:.1f}s)")
     except Exception as e:
         duration = time.time() - start_time
         logger.error(f"Failed: {operation} after {duration:.1f}s - {e}")
@@ -416,36 +400,9 @@ def log_operation(
 def log_operation_silent(
     operation: str, logger: Optional[logging.Logger] = None, level: int = logging.DEBUG
 ) -> Iterator[None]:
-    """Context manager for logging operation start only (no completion message).
-
-    Useful for operations that complete very quickly or don't need completion logging.
-
-    Args:
-        operation: Description of the operation
-        logger: Logger instance (creates one if None)
-        level: Log level for messages
-
-    Yields:
-        None
-
-    Example:
-        >>> with log_operation_silent("Quick check", logger):
-        ...     quick_check()
-        ℹ️ [2025-11-21 12:00:00] [DEBUG] Starting: Quick check
-    """
-    if logger is None:
-        logger = get_logger(__name__)
-
-    logger.log(level, f"Starting: {operation}")
-    start_time = time.time()
-
-    try:
+    """Log operation start only; no completion message. Thin wrapper over log_operation."""
+    with log_operation(operation, logger, level, log_completion=False):
         yield
-        # No completion message logged
-    except Exception as e:
-        duration = time.time() - start_time
-        logger.error(f"Failed: {operation} after {duration:.1f}s - {e}")
-        raise
 
 
 @contextmanager
@@ -637,14 +594,6 @@ def log_substep(message: str, logger: Optional[logging.Logger] = None) -> None:
     logger.info(f"\n  {message}")
 
 
-# =============================================================================
-# MODULE INITIALIZATION
-# =============================================================================
-
-# Create default logger for this module
-_default_logger = setup_logger(__name__)
-
-
 def set_global_log_level(level: int) -> None:
     """Set log level for all template loggers.
 
@@ -659,6 +608,71 @@ def set_global_log_level(level: int) -> None:
         logger = logging.getLogger(logger_name)
         if hasattr(logger, "setLevel"):
             logger.setLevel(level)
+
+
+def log_stage_with_eta(
+    stage_num: int,
+    total_stages: int,
+    stage_name: str,
+    pipeline_start: Optional[float] = None,
+    logger: Optional[logging.Logger] = None,
+) -> None:
+    """Log a pipeline stage header with ETA calculation."""
+    if logger is None:
+        logger = get_logger(__name__)
+
+    percentage = (stage_num * 100) // total_stages if total_stages > 0 else 0
+    separator = "━" * 46
+
+    logger.info("")
+    logger.info(f"[{stage_num}/{total_stages}] {stage_name} ({percentage}% complete)")
+
+    # Calculate and display ETA if pipeline start time provided
+    if pipeline_start is not None and stage_num > 0:
+        elapsed = time.time() - pipeline_start
+        if elapsed > 0:
+            eta_seconds = calculate_eta(elapsed, stage_num, total_stages)
+            if eta_seconds is not None:
+                elapsed_str = format_duration(elapsed)
+                eta_str = format_duration(eta_seconds)
+                logger.info(f"  Elapsed: {elapsed_str} | ETA: {eta_str}")
+
+    logger.info(separator)
+
+
+def log_resource_usage(stage_name: str = "", logger: Optional[logging.Logger] = None) -> None:
+    """Log current resource usage (if psutil available)."""
+    if logger is None:
+        logger = get_logger(__name__)
+
+    try:
+        import psutil
+
+        process = psutil.Process()
+
+        # Get memory usage
+        memory_info = process.memory_info()
+        memory_mb = memory_info.rss / (1024 * 1024)
+
+        # Get CPU usage (average over 0.1s)
+        cpu_percent = process.cpu_percent(interval=0.1)
+
+        # Format resource info
+        resource_info = f"Memory: {memory_mb:.0f} MB"
+        if cpu_percent > 0:
+            resource_info += f", CPU: {cpu_percent:.1f}%"
+
+        if stage_name:
+            logger.info(f"  Resource usage ({stage_name}): {resource_info}")
+        else:
+            logger.info(f"  Resource usage: {resource_info}")
+
+    except ImportError:
+        # psutil not available - skip resource reporting
+        pass
+    except Exception as e:
+        # Any other error - log at debug level
+        logger.debug(f"Failed to get resource usage: {e}")
 
 
 # Public API exports
@@ -701,105 +715,6 @@ __all__ = [
     "USE_EMOJIS",
     "USE_STRUCTURED_LOGGING",
 ]
-
-
-# Wrapper functions
-def log_stage_with_eta(
-    stage_num: int,
-    total_stages: int,
-    stage_name: str,
-    pipeline_start: Optional[float] = None,
-    logger: Optional[logging.Logger] = None,
-) -> None:
-    """Log a pipeline stage header with ETA calculation.
-
-    Provides standardized stage header formatting with ETA calculation
-    similar to the bash script's log_stage function.
-
-    Args:
-        stage_num: Current stage number (1-based)
-        total_stages: Total number of stages
-        stage_name: Name of the stage
-        pipeline_start: Pipeline start time (for ETA calculation)
-        logger: Logger instance (creates one if None)
-
-    Example:
-        >>> import time
-        >>> start = time.time()
-        >>> time.sleep(5)
-        >>> log_stage_with_eta(3, 7, "PDF Rendering", start)
-        ℹ️ [2025-11-21 12:00:00] [INFO]
-        ℹ️ [2025-11-21 12:00:00] [INFO] [3/7] PDF Rendering (42% complete)
-        ℹ️ [2025-11-21 12:00:00] [INFO]   Elapsed: 5s | ETA: 6s
-        ℹ️ [2025-11-21 12:00:00] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    """
-    if logger is None:
-        logger = get_logger(__name__)
-
-    percentage = (stage_num * 100) // total_stages if total_stages > 0 else 0
-    separator = "━" * 46
-
-    logger.info("")
-    logger.info(f"[{stage_num}/{total_stages}] {stage_name} ({percentage}% complete)")
-
-    # Calculate and display ETA if pipeline start time provided
-    if pipeline_start is not None and stage_num > 0:
-        elapsed = time.time() - pipeline_start
-        if elapsed > 0:
-            eta_seconds = calculate_eta(elapsed, stage_num, total_stages)
-            if eta_seconds is not None:
-                elapsed_str = format_duration(elapsed)
-                eta_str = format_duration(eta_seconds)
-                logger.info(f"  Elapsed: {elapsed_str} | ETA: {eta_str}")
-
-    logger.info(separator)
-
-
-def log_resource_usage(stage_name: str = "", logger: Optional[logging.Logger] = None) -> None:
-    """Log current resource usage (if psutil available).
-
-    Provides memory and CPU usage information when psutil is installed.
-    Falls back gracefully if psutil is not available.
-
-    Args:
-        stage_name: Name of the stage (for context)
-        logger: Logger instance (creates one if None)
-
-    Example:
-        >>> log_resource_usage("PDF Rendering")
-        ℹ️ [2025-11-21 12:00:00] [INFO]   Resource usage: Memory: 512 MB, CPU: 15.2%
-    """
-    if logger is None:
-        logger = get_logger(__name__)
-
-    try:
-        import psutil
-
-        process = psutil.Process()
-
-        # Get memory usage
-        memory_info = process.memory_info()
-        memory_mb = memory_info.rss / (1024 * 1024)
-
-        # Get CPU usage (average over 0.1s)
-        cpu_percent = process.cpu_percent(interval=0.1)
-
-        # Format resource info
-        resource_info = f"Memory: {memory_mb:.0f} MB"
-        if cpu_percent > 0:
-            resource_info += f", CPU: {cpu_percent:.1f}%"
-
-        if stage_name:
-            logger.info(f"  Resource usage ({stage_name}): {resource_info}")
-        else:
-            logger.info(f"  Resource usage: {resource_info}")
-
-    except ImportError:
-        # psutil not available - skip resource reporting
-        pass
-    except Exception as e:
-        # Any other error - log at debug level
-        logger.debug(f"Failed to get resource usage: {e}")
 
 
 # =============================================================================

@@ -221,6 +221,9 @@ def performance_context(operation_name: str = "Operation"):
         )
 
 
+monitor_performance = performance_context
+
+
 def get_system_resources() -> dict[str, Any]:
     """Get current system resource information.
 
@@ -418,5 +421,4 @@ class StagePerformanceTracker:
             "warnings": self.get_performance_warnings(),
         }
 
-# Alias with a distinct name to disambiguate from performance_monitor.CodeProfiler
 ResourceTracker = PerformanceMonitor

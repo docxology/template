@@ -261,6 +261,14 @@ def get_config_as_dict(
     return result
 
 
+def get_config_as_env_vars(repo_root: Path | str, respect_existing: bool = True) -> Dict[str, str]:
+    """Get configuration as environment variables.
+
+    Thin wrapper over get_config_as_dict with respect_existing=True by default.
+    """
+    return get_config_as_dict(repo_root, respect_existing=respect_existing)
+
+
 def find_config_file(repo_root: Path | str, project_name: Optional[str] = None) -> Optional[Path]:
     """Find the manuscript config file at the standard location.
 
