@@ -21,10 +21,13 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, TypedDict
 
+from infrastructure.core._optional_deps import np
 from infrastructure.core.file_operations import calculate_file_hash
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
+
+_REPORT_SEPARATOR = "=" * 60
 
 @dataclass
 class IntegrityReport:
@@ -148,11 +151,6 @@ def verify_data_consistency(data_files: list[Path]) -> dict[str, bool]:
         "data_integrity": True,
         "metadata_consistent": True,
     }
-
-    try:
-        import numpy as np  # optional; only used for .npz/.npy validation
-    except ImportError:
-        np = None  # type: ignore[assignment]
 
     for data_file in data_files:
         if not data_file.exists():
@@ -306,9 +304,9 @@ def verify_output_integrity(
 def generate_integrity_report(report: IntegrityReport) -> str:
     """Generate a human-readable integrity report."""
     lines = []
-    lines.append("=" * 60)
+    lines.append(_REPORT_SEPARATOR)
     lines.append("INTEGRITY VERIFICATION REPORT")
-    lines.append("=" * 60)
+    lines.append(_REPORT_SEPARATOR)
 
     # Overall status
     status = "PASSED" if report.overall_integrity else "FAILED"
@@ -364,7 +362,7 @@ def generate_integrity_report(report: IntegrityReport) -> str:
             lines.append(f"  - {rec}")
         lines.append("")
 
-    lines.append("=" * 60)
+    lines.append(_REPORT_SEPARATOR)
 
     return "\n".join(lines)
 

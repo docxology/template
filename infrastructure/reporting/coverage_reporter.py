@@ -285,33 +285,41 @@ def save_test_report(report: dict[str, Any], output_dir: Path) -> tuple[Path, Pa
 
     # Save JSON report
     json_path = output_dir / "test_results.json"
-    with open(json_path, "w") as f:
-        json.dump(report, f, indent=2)
+    try:
+        with open(json_path, "w") as f:
+            json.dump(report, f, indent=2)
+    except OSError as e:
+        logger.error(f"Failed to write test report JSON: {e}")
+        raise
 
     logger.info(f"Test report saved: {json_path}")
 
     # Generate markdown summary
     md_path = output_dir / "test_results.md"
-    with open(md_path, "w") as f:
-        f.write("# Test Results Summary\n\n")
-        f.write(f"Generated: {report['timestamp']}\n\n")
-        f.write("## Infrastructure Tests\n\n")
-        f.write(f"- Passed: {report['infrastructure'].get('passed', 0)}\n")
-        f.write(f"- Failed: {report['infrastructure'].get('failed', 0)}\n")
-        f.write(f"- Skipped: {report['infrastructure'].get('skipped', 0)}\n")
-        if "coverage_percent" in report["infrastructure"]:
-            f.write(f"- Coverage: {report['infrastructure']['coverage_percent']:.2f}%\n")
-        f.write("\n## Project Tests\n\n")
-        f.write(f"- Passed: {report['project'].get('passed', 0)}\n")
-        f.write(f"- Failed: {report['project'].get('failed', 0)}\n")
-        f.write(f"- Skipped: {report['project'].get('skipped', 0)}\n")
-        if "coverage_percent" in report["project"]:
-            f.write(f"- Coverage: {report['project']['coverage_percent']:.2f}%\n")
-        f.write("\n## Summary\n\n")
-        f.write(f"- Total Passed: {report['summary']['total_passed']}\n")
-        f.write(f"- Total Failed: {report['summary']['total_failed']}\n")
-        f.write(f"- Total Tests: {report['summary']['total_tests']}\n")
-        f.write(f"- Status: {'✅ PASSED' if report['summary']['all_passed'] else '❌ FAILED'}\n")
+    try:
+        with open(md_path, "w") as f:
+            f.write("# Test Results Summary\n\n")
+            f.write(f"Generated: {report['timestamp']}\n\n")
+            f.write("## Infrastructure Tests\n\n")
+            f.write(f"- Passed: {report['infrastructure'].get('passed', 0)}\n")
+            f.write(f"- Failed: {report['infrastructure'].get('failed', 0)}\n")
+            f.write(f"- Skipped: {report['infrastructure'].get('skipped', 0)}\n")
+            if "coverage_percent" in report["infrastructure"]:
+                f.write(f"- Coverage: {report['infrastructure']['coverage_percent']:.2f}%\n")
+            f.write("\n## Project Tests\n\n")
+            f.write(f"- Passed: {report['project'].get('passed', 0)}\n")
+            f.write(f"- Failed: {report['project'].get('failed', 0)}\n")
+            f.write(f"- Skipped: {report['project'].get('skipped', 0)}\n")
+            if "coverage_percent" in report["project"]:
+                f.write(f"- Coverage: {report['project']['coverage_percent']:.2f}%\n")
+            f.write("\n## Summary\n\n")
+            f.write(f"- Total Passed: {report['summary']['total_passed']}\n")
+            f.write(f"- Total Failed: {report['summary']['total_failed']}\n")
+            f.write(f"- Total Tests: {report['summary']['total_tests']}\n")
+            f.write(f"- Status: {'✅ PASSED' if report['summary']['all_passed'] else '❌ FAILED'}\n")
+    except OSError as e:
+        logger.error(f"Failed to write test report markdown: {e}")
+        raise
 
     logger.info(f"Test summary saved: {md_path}")
 

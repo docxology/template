@@ -7,7 +7,10 @@ import tarfile
 from datetime import datetime
 from pathlib import Path
 
-import requests
+try:
+    import requests
+except ImportError:
+    requests = None  # type: ignore[assignment]
 
 from infrastructure.core.exceptions import PublishingError
 from infrastructure.publishing.models import PublicationMetadata

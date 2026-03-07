@@ -156,7 +156,7 @@ def _is_ollama_available() -> bool:
     try:
         import importlib
         return importlib.util.find_spec("ollama") is not None
-    except Exception:  # importlib.util.find_spec may raise various internal errors
+    except (ImportError, ValueError):  # importlib.util.find_spec may raise for invalid names
         return False
 
 def generate_summary_report(repo_root: Path | None = None) -> dict[str, Any]:

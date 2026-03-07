@@ -15,4 +15,9 @@ try:
 except ImportError:
     psutil = None  # type: ignore[assignment]
 
-__all__ = ["psutil"]
+try:
+    import numpy as np  # type: ignore[import-untyped]
+except ImportError:
+    np = None  # type: ignore[assignment]
+
+__all__ = ["psutil", "np"]

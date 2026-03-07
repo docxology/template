@@ -254,12 +254,15 @@ def log_success(message: str, logger: logging.Logger | None = None) -> None:
     emoji = EMOJIS["success"] if USE_EMOJIS else "[SUCCESS]"
     logger.info(f"{emoji} {message}" if USE_EMOJIS else message)
 
+_HEADER_SEPARATOR_WIDTH = 50
+_STAGE_SEPARATOR_WIDTH = 46
+
 def log_header(message: str, logger: logging.Logger | None = None) -> None:
     """Log a section header with visual emphasis (separator + message + separator)."""
     logger = logger or get_logger(__name__)
 
     prefix = EMOJIS["rocket"] + " " if USE_EMOJIS else ""
-    separator = "=" * 50
+    separator = "=" * _HEADER_SEPARATOR_WIDTH
 
     logger.info("")
     logger.info(separator)
@@ -284,7 +287,7 @@ def log_stage(
     """Log a numbered pipeline stage header with a visual separator."""
     logger = logger or get_logger(__name__)
 
-    separator = "━" * 46
+    separator = "━" * _STAGE_SEPARATOR_WIDTH
     logger.info("")
     logger.info(f"[{stage_num}/{total_stages}] {stage_name}")
     logger.info(separator)
@@ -313,7 +316,7 @@ def log_pipeline_stage_with_eta(
     logger = logger or get_logger(__name__)
 
     percentage = (stage_num * 100) // total_stages if total_stages > 0 else 0
-    separator = "━" * 46
+    separator = "━" * _STAGE_SEPARATOR_WIDTH
 
     logger.info("")
     logger.info(f"[{stage_num}/{total_stages}] {stage_name} ({percentage}% complete)")
