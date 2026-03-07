@@ -13,6 +13,7 @@ import math
 from pathlib import Path
 from typing import TYPE_CHECKING, Dict, List, Tuple
 
+from infrastructure.core.exceptions import PDFValidationError, ValidationError
 from infrastructure.core.logging_utils import get_logger
 
 if TYPE_CHECKING:
@@ -53,11 +54,13 @@ def extract_pdf_pages_as_images(pdf_path: Path, dpi: int = 300) -> List["PIL.Ima
     try:
         reader = PdfReader(pdf_path)
         if len(reader.pages) == 0:
-            raise ValueError(f"PDF has no pages: {pdf_path}")
+            raise PDFValidationError(f"PDF has no pages: {pdf_path}")
 
         logger.info(f"Extracting {len(reader.pages)} pages from {pdf_path.name}")
+    except PDFValidationError:
+        raise
     except Exception as e:
-        raise ValueError(f"Failed to read PDF {pdf_path}: {e}")
+        raise PDFValidationError(f"Failed to read PDF {pdf_path}: {e}")
 
     images = []
 
@@ -70,7 +73,7 @@ def extract_pdf_pages_as_images(pdf_path: Path, dpi: int = 300) -> List["PIL.Ima
             images = _render_pages_simple(reader, dpi)
         except Exception as e2:
             logger.error(f"Simple rendering also failed: {e2}")
-            raise ValueError(f"Failed to render PDF pages: {e2}")
+            raise PDFValidationError(f"Failed to render PDF pages: {e2}")
 
     return images
 
@@ -228,7 +231,7 @@ def create_page_grid(
         Single PIL Image containing the grid layout
     """
     if not images:
-        raise ValueError("No images provided for grid creation")
+        raise ValidationError("No images provided for grid creation")
 
     try:
         from PIL import Image, ImageDraw, ImageFont
@@ -246,7 +249,7 @@ def create_page_grid(
         Single PIL Image containing the grid layout
     """
     if not images:
-        raise ValueError("No images provided for grid creation")
+        raise ValidationError("No images provided for grid creation")
 
     # Calculate grid dimensions
     num_images = len(images)
@@ -355,7 +358,7 @@ def generate_manuscript_overview(
         raise
 
     if not page_images:
-        raise ValueError(f"No pages extracted from {pdf_path}")
+        raise PDFValidationError(f"No pages extracted from {pdf_path}")
 
     logger.info(f"Extracted {len(page_images)} page images")
 

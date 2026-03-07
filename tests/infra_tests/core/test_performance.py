@@ -7,6 +7,7 @@ import time
 
 import pytest
 
+from infrastructure.core.exceptions import BuildError
 from infrastructure.core.performance import (
     PerformanceMetrics,
     PerformanceMonitor,
@@ -162,7 +163,7 @@ class TestPerformanceMonitor:
         """Test stopping monitor without starting raises error."""
         monitor = PerformanceMonitor()
 
-        with pytest.raises(RuntimeError, match="not started"):
+        with pytest.raises(BuildError, match="not started"):
             monitor.stop()
 
     def test_performance_monitor_record_operation(self):

@@ -26,6 +26,7 @@ from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Optional, Union
 
 from infrastructure.core._optional_deps import psutil
+from infrastructure.core.exceptions import BuildError
 from infrastructure.core.logging_utils import format_duration, get_logger
 
 logger = get_logger(__name__)
@@ -99,7 +100,7 @@ class PerformanceMonitor:
     def stop(self) -> PerformanceMetrics:
         """Stop monitoring and return metrics."""
         if self.start_time is None:
-            raise RuntimeError("Monitor not started")
+            raise BuildError("Monitor not started")
 
         duration = time.time() - self.start_time
         current_memory = self._get_memory_usage()

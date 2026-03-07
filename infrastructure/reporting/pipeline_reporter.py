@@ -7,7 +7,7 @@ from pipeline execution data.
 from __future__ import annotations
 
 import json
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -23,17 +23,9 @@ logger = get_logger(__name__)
 class StageResult(_CheckpointStageResult):
     """Reporting-layer extension of StageResult with output and error lists."""
 
-    output_files: List[str] = None  # type: ignore[assignment]
-    errors: List[str] = None  # type: ignore[assignment]
-    warnings: List[str] = None  # type: ignore[assignment]
-
-    def __post_init__(self) -> None:
-        if self.output_files is None:
-            self.output_files = []
-        if self.errors is None:
-            self.errors = []
-        if self.warnings is None:
-            self.warnings = []
+    output_files: List[str] = field(default_factory=list)
+    errors: List[str] = field(default_factory=list)
+    warnings: List[str] = field(default_factory=list)
 
 
 @dataclass
@@ -123,7 +115,7 @@ def generate_multi_project_summary_report(
                     "average_duration": sum(durations) / len(durations),
                     "total_pipeline_time": sum(durations),
                 }
-        except Exception as e:
+        except (TypeError, KeyError, IndexError, ZeroDivisionError) as e:
             logger.warning(f"Error calculating performance analysis: {e}")
             summary["performance_analysis"] = {}
 

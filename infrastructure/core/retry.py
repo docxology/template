@@ -13,6 +13,7 @@ import time
 from functools import wraps
 from typing import Any, Callable, Optional, Tuple, Type, TypeVar
 
+from infrastructure.core.exceptions import PipelineError
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
@@ -119,7 +120,7 @@ def retry_with_backoff(
             # Should never reach here, but handle it just in case
             if last_exception:
                 raise last_exception
-            raise RuntimeError(f"{func.__name__} failed after {max_attempts} attempts")
+            raise PipelineError(f"{func.__name__} failed after {max_attempts} attempts")
 
         return wrapper
 

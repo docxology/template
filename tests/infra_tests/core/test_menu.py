@@ -6,6 +6,7 @@ No mocks - all tests use actual function calls with various inputs.
 
 import pytest
 
+from infrastructure.core.exceptions import ValidationError
 from infrastructure.core.menu import MenuOption, format_menu, parse_choice_sequence
 
 
@@ -60,23 +61,23 @@ class TestParseChoiceSequence:
         assert result == ["3", "4", "5"]
 
     def test_empty_input_raises(self):
-        """Test that empty input raises ValueError."""
-        with pytest.raises(ValueError, match="Empty choice"):
+        """Test that empty input raises ValidationError."""
+        with pytest.raises(ValidationError, match="Empty choice"):
             parse_choice_sequence("")
 
     def test_whitespace_only_raises(self):
-        """Test that whitespace-only input raises ValueError."""
-        with pytest.raises(ValueError, match="Empty choice"):
+        """Test that whitespace-only input raises ValidationError."""
+        with pytest.raises(ValidationError, match="Empty choice"):
             parse_choice_sequence("   ")
 
     def test_invalid_characters_raise(self):
-        """Test that non-digit characters raise ValueError."""
-        with pytest.raises(ValueError, match="Invalid choice token"):
+        """Test that non-digit characters raise ValidationError."""
+        with pytest.raises(ValidationError, match="Invalid choice token"):
             parse_choice_sequence("a,b,c")
 
     def test_mixed_valid_invalid_raises(self):
-        """Test that mixed valid/invalid raises ValueError."""
-        with pytest.raises(ValueError, match="Invalid choice token"):
+        """Test that mixed valid/invalid raises ValidationError."""
+        with pytest.raises(ValidationError, match="Invalid choice token"):
             parse_choice_sequence("1,a,3")
 
     def test_two_digit_single_choice(self):

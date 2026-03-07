@@ -194,120 +194,8 @@ class SecurityError(Exception):
     pass
 
 
-class HealthChecker:
-    """System health monitoring and status checks."""
-
-    def __init__(self):
-        self.checks = {
-            "filesystem": self._check_filesystem,
-            "dependencies": self._check_dependencies,
-            "network": self._check_network,
-            "memory": self._check_memory,
-        }
-
-    def run_all_checks(self) -> Dict[str, Dict[str, Any]]:
-        """Run all health checks.
-
-        Returns:
-            Dictionary of check results
-        """
-        results = {}
-        for name, check_func in self.checks.items():
-            try:
-                results[name] = {
-                    "status": "healthy",
-                    "details": check_func(),
-                    "timestamp": __import__("time").time(),
-                }
-            except Exception as e:
-                results[name] = {
-                    "status": "unhealthy",
-                    "error": str(e),
-                    "timestamp": __import__("time").time(),
-                }
-        return results
-
-    def _check_filesystem(self) -> Dict[str, Any]:
-        """Check filesystem health."""
-        import os
-        import tempfile
-
-        # Check disk space
-        stat = os.statvfs(".")
-        free_space = stat.f_bavail * stat.f_frsize
-        total_space = stat.f_blocks * stat.f_frsize
-
-        # Check write permissions
-        try:
-            with tempfile.NamedTemporaryFile(mode="w", delete=True) as f:
-                f.write("test")
-            writeable = True
-        except (OSError, IOError):
-            writeable = False
-
-        return {
-            "free_space_mb": free_space // (1024 * 1024),
-            "total_space_mb": total_space // (1024 * 1024),
-            "writeable": writeable,
-        }
-
-    def _check_dependencies(self) -> Dict[str, Any]:
-        """Check critical dependencies."""
-        dependencies = ["numpy", "matplotlib", "requests"]
-        results = {}
-
-        for dep in dependencies:
-            try:
-                __import__(dep)
-                results[dep] = "available"
-            except ImportError:
-                results[dep] = "missing"
-
-        return results
-
-    def _check_network(self) -> Dict[str, Any]:
-        """Check network connectivity."""
-        import socket
-
-        try:
-            # Test DNS resolution
-            socket.gethostbyname("google.com")
-            dns_resolvable = True
-        except socket.gaierror:
-            dns_resolvable = False
-
-        try:
-            # Test HTTP connectivity
-            import requests
-
-            response = requests.get("https://httpbin.org/status/200", timeout=5)
-            http_available = response.status_code == 200
-        except Exception:
-            http_available = False
-
-        return {
-            "dns_resolvable": dns_resolvable,
-            "http_available": http_available,
-        }
-
-    def _check_memory(self) -> Dict[str, Any]:
-        """Check memory usage."""
-        import psutil
-
-        try:
-            memory = psutil.virtual_memory()
-            return {
-                "total_mb": memory.total // (1024 * 1024),
-                "available_mb": memory.available // (1024 * 1024),
-                "percent_used": memory.percent,
-            }
-        except ImportError:
-            return {"psutil_unavailable": True}
-
-
-# Global instances
+# Global instance
 _input_sanitizer = InputSanitizer()
-_health_checker = HealthChecker()
 
 
 def get_input_sanitizer() -> InputSanitizer:
@@ -315,16 +203,6 @@ def get_input_sanitizer() -> InputSanitizer:
     return _input_sanitizer
 
 
-def get_health_checker() -> HealthChecker:
-    """Get the global health checker instance."""
-    return _health_checker
-
-
 def sanitize_llm_input(prompt: str) -> str:
     """Convenience function for LLM input sanitization."""
     return _input_sanitizer.sanitize_prompt(prompt)
-
-
-def run_health_check() -> Dict[str, Dict[str, Any]]:
-    """Convenience function for running health checks."""
-    return _health_checker.run_all_checks()

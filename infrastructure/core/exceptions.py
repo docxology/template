@@ -75,20 +75,7 @@ class TemplateError(Exception):
 
 
 class ConfigurationError(TemplateError):
-    """Raised when configuration is invalid or missing.
-
-    This includes errors in:
-    - YAML configuration files
-    - Environment variables
-    - Command-line arguments
-    - Project structure
-
-    Example:
-        >>> raise ConfigurationError(
-        ...     "Invalid YAML syntax in config file",
-        ...     context={"file": "config.yaml", "line": 10}
-        ... )
-    """
+    """Raised when configuration is invalid or missing."""
 
     pass
 
