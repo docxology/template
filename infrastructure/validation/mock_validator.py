@@ -8,6 +8,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
+
 
 def validate_no_mocks(tests_dir: Path, repo_root: Path) -> list[str]:
     """Scans tests_dir for mock usage and returns a list of violation messages.
@@ -67,9 +71,6 @@ def validate_no_mocks(tests_dir: Path, repo_root: Path) -> list[str]:
                     relative_path = py_file.relative_to(repo_root)
                     all_output.append(f"{relative_path}:{line_num}: {line_str}")
         except Exception as e:
-            from infrastructure.core.logging_utils import get_logger
-
-            logger = get_logger(__name__)
             logger.warning(f"Error reading {py_file}: {e}")
 
     return all_output

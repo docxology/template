@@ -6,7 +6,7 @@ import os
 import re
 import subprocess
 import time
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 from pathlib import Path
 
 from infrastructure.core.logging_utils import (
@@ -18,9 +18,8 @@ from infrastructure.core.logging_utils import (
     Spinner,
 )
 
-if TYPE_CHECKING:
-    from infrastructure.llm.core.client import LLMClient
-    from infrastructure.llm.core.config import LLMConfig
+from infrastructure.llm.core.client import LLMClient
+from infrastructure.llm.core.config import GenerationOptions, LLMConfig
 
 from infrastructure.llm.utils.ollama import (
     is_ollama_running,
@@ -125,8 +124,6 @@ def log_timeout_info(timeout: float, operation: str) -> None:
 
 
 def get_review_max_tokens() -> Tuple[int, str]:
-    from infrastructure.llm.core.config import LLMConfig
-
     config = LLMConfig.from_env()
     max_tokens = config.long_max_tokens
     if os.environ.get("LLM_LONG_MAX_TOKENS"):
@@ -349,9 +346,6 @@ def validate_review_quality(
 
 
 def create_review_client(model_name: str) -> LLMClient:
-    from infrastructure.llm.core.client import LLMClient
-    from infrastructure.llm.core.config import LLMConfig
-
     config = LLMConfig.from_env()
     config.default_model = model_name
     config.timeout = get_review_timeout()
@@ -571,8 +565,6 @@ def generate_review_with_metrics(
     client.reset()
     template = template_class()
     prompt = template.render(text=text, max_tokens=max_tokens)
-    from infrastructure.llm.core.config import GenerationOptions
-
     is_small_model = any(s in model_name.lower() for s in ["3b", "4b", "7b", "8b"])
     adjusted_temp = temperature + 0.1 if is_small_model else temperature
     options = GenerationOptions(temperature=adjusted_temp, max_tokens=max_tokens)
@@ -617,9 +609,6 @@ def generate_review_with_metrics(
                     message=f"Generating {review_name}",
                     update_interval=0.5,
                 )
-
-                from infrastructure.llm.core.config import LLMConfig
-                from infrastructure.llm.utils.heartbeat import StreamHeartbeatMonitor
 
                 config = LLMConfig.from_env()
                 heartbeat_monitor = StreamHeartbeatMonitor(
@@ -778,8 +767,6 @@ def generate_translation(
     max_tokens, _ = get_review_max_tokens()
     timeout = get_review_timeout()
     log_timeout_info(timeout, f"translation ({target_language})")
-    from infrastructure.llm.core.config import GenerationOptions
-
     template = ManuscriptTranslationAbstract()
     prompt = template.render(text=text, target_language=target_language, max_tokens=max_tokens)
     is_small_model = any(s in model_name.lower() for s in ["3b", "4b", "7b", "8b"])

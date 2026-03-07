@@ -6,7 +6,10 @@ import re
 from pathlib import Path
 from typing import List
 
+from infrastructure.core.logging_utils import get_logger
 from infrastructure.publishing.models import PublicationMetadata
+
+logger = get_logger(__name__)
 
 
 def format_authors_apa(authors: List[str]) -> str:
@@ -205,7 +208,8 @@ def extract_citations_from_markdown(markdown_files: List[Path]) -> List[str]:
                 matches = re.findall(pattern, content)
                 citations.update(matches)
 
-        except Exception:
+        except Exception as e:
+            logger.debug("Cannot extract citations from %s: %s", md_file, e)
             continue
 
     return sorted(list(citations))

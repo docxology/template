@@ -13,6 +13,10 @@ import os
 from dataclasses import dataclass
 from typing import Iterable, List
 
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
+
 
 @dataclass
 class ApiEntry:
@@ -61,8 +65,8 @@ def build_api_index(src_dir: str) -> List[ApiEntry]:
         try:
             with open(py_path, "r", encoding="utf-8") as fh:
                 tree = ast.parse(fh.read(), filename=py_path)
-        except Exception:
-            # Skip files that fail to parse
+        except Exception as e:
+            logger.debug("Skipping %s (parse error): %s", py_path, e)
             continue
         module = os.path.relpath(py_path, src_dir).replace(os.sep, ".")
         # Normalize module names deterministically without branching

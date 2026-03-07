@@ -10,7 +10,19 @@ Provides comprehensive validation for scientific code:
 from __future__ import annotations
 
 import inspect
-from typing import Any, Callable, Dict, List, Tuple
+from typing import Any, Callable, Dict, List, Tuple, TypedDict
+
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
+
+
+class _ValidationResults(TypedDict):
+    total_tests: int
+    passed_tests: int
+    failed_tests: int
+    accuracy_score: float
+    details: List[Dict[str, Any]]
 
 
 def validate_scientific_implementation(func: Callable, test_cases: List[Tuple]) -> Dict[str, Any]:
@@ -23,7 +35,7 @@ def validate_scientific_implementation(func: Callable, test_cases: List[Tuple]) 
     Returns:
         Dictionary with validation results
     """
-    validation_results = {
+    validation_results: _ValidationResults = {
         "total_tests": len(test_cases),
         "passed_tests": 0,
         "failed_tests": 0,
@@ -40,8 +52,8 @@ def validate_scientific_implementation(func: Callable, test_cases: List[Tuple]) 
                 expected_output, (int, float)
             ):
                 if abs(actual_output - expected_output) < 1e-10:
-                    validation_results["passed_tests"] += 1  # type: ignore
-                    validation_results["details"].append(  # type: ignore
+                    validation_results["passed_tests"] += 1
+                    validation_results["details"].append(
                         {
                             "test_index": i,
                             "input": test_input,
@@ -51,8 +63,8 @@ def validate_scientific_implementation(func: Callable, test_cases: List[Tuple]) 
                         }
                     )
                 else:
-                    validation_results["failed_tests"] += 1  # type: ignore
-                    validation_results["details"].append(  # type: ignore
+                    validation_results["failed_tests"] += 1
+                    validation_results["details"].append(
                         {
                             "test_index": i,
                             "input": test_input,
@@ -62,8 +74,8 @@ def validate_scientific_implementation(func: Callable, test_cases: List[Tuple]) 
                         }
                     )
             elif actual_output == expected_output:
-                validation_results["passed_tests"] += 1  # type: ignore
-                validation_results["details"].append(  # type: ignore
+                validation_results["passed_tests"] += 1
+                validation_results["details"].append(
                     {
                         "test_index": i,
                         "input": test_input,
@@ -73,8 +85,8 @@ def validate_scientific_implementation(func: Callable, test_cases: List[Tuple]) 
                     }
                 )
             else:
-                validation_results["failed_tests"] += 1  # type: ignore
-                validation_results["details"].append(  # type: ignore
+                validation_results["failed_tests"] += 1
+                validation_results["details"].append(
                     {
                         "test_index": i,
                         "input": test_input,
@@ -85,8 +97,8 @@ def validate_scientific_implementation(func: Callable, test_cases: List[Tuple]) 
                 )
 
         except Exception as e:
-            validation_results["failed_tests"] += 1  # type: ignore
-            validation_results["details"].append(  # type: ignore
+            validation_results["failed_tests"] += 1
+            validation_results["details"].append(
                 {
                     "test_index": i,
                     "input": test_input,
@@ -97,9 +109,9 @@ def validate_scientific_implementation(func: Callable, test_cases: List[Tuple]) 
             )
 
     # Calculate accuracy score
-    if validation_results["total_tests"] > 0:  # type: ignore
+    if validation_results["total_tests"] > 0:
         validation_results["accuracy_score"] = (
-            validation_results["passed_tests"] / validation_results["total_tests"]  # type: ignore
+            validation_results["passed_tests"] / validation_results["total_tests"]
         )
 
     return validation_results
@@ -156,8 +168,8 @@ def validate_scientific_best_practices(module: Any) -> Dict[str, Any]:
     try:
         source = inspect.getsource(module)
         source_lines = source.split("\n")
-    except Exception:
-        pass
+    except Exception as e:
+        logger.debug("Could not get source for module %s: %s", module, e)
 
     has_try_except = any("try:" in line or "except" in line for line in source_lines)
     has_raise = any("raise" in line for line in source_lines)
@@ -262,8 +274,8 @@ def check_research_compliance(func: Callable) -> Dict[str, Any]:
         )
         compliance["has_error_handling"] = has_error_handling
 
-    except Exception:
-        pass
+    except Exception as e:
+        logger.debug("Could not analyze function compliance for %s: %s", func, e)
 
     # Calculate compliance score
     weights = {

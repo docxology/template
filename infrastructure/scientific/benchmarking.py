@@ -16,6 +16,10 @@ from typing import Any, Callable, Dict, List, Optional
 
 import numpy as np
 
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
+
 
 @dataclass
 class BenchmarkResult:
@@ -58,8 +62,8 @@ def benchmark_function(
         for _ in range(10):
             try:
                 _ = func(test_input)
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug("Benchmark warm-up failed for %s: %s", func.__name__, e)
 
         # Measure execution time
         start_time = time.perf_counter()
@@ -67,8 +71,8 @@ def benchmark_function(
         for _ in range(iterations):
             try:
                 func(test_input)
-            except Exception:
-                pass
+            except Exception as e:
+                logger.warning("Benchmark measurement failed for %s: %s", func.__name__, e)
 
         end_time = time.perf_counter()
         avg_time = (end_time - start_time) / iterations
@@ -80,7 +84,8 @@ def benchmark_function(
                 process = psutil.Process(os.getpid())
                 memory_info = process.memory_info()
                 memory_usages.append(memory_info.rss / 1024 / 1024)  # MB
-            except Exception:
+            except Exception as e:
+                logger.debug("Memory measurement failed: %s", e)
                 memory_usages.append(None)
         else:
             memory_usages.append(None)

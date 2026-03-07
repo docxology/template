@@ -42,10 +42,14 @@ from infrastructure.reporting.pipeline_reporter import (
     generate_validation_report,
     save_pipeline_report,
 )
-from infrastructure.reporting.test_reporter import (
+from infrastructure.reporting.output_organizer import FileType, OutputOrganizer
+from infrastructure.reporting.coverage_reporter import (
     generate_test_report as generate_test_report_from_results,
 )
-from infrastructure.reporting.test_reporter import parse_pytest_output, save_test_report
+from infrastructure.reporting.coverage_reporter import parse_pytest_output, save_test_report
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def generate_multi_project_report(
@@ -76,10 +80,6 @@ def generate_multi_project_report(
         ... )
         >>> print(f"Generated {len(files)} files")
     """
-    from infrastructure.core.logging_utils import get_logger
-
-    logger = get_logger(__name__)
-
     logger.info(f"Starting multi-project reporting for {len(project_names)} projects...")
 
     all_files = {}
