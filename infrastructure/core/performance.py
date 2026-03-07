@@ -2,11 +2,10 @@
 
 Sub-domain 1 — Stage monitoring (psutil-based, pipeline-level):
   PerformanceMonitor, StagePerformanceTracker, performance_context,
-  get_performance_monitor, get_performance_warnings, get_system_resources,
-  monitor_performance, profile_memory_usage.
+  get_system_resources, monitor_performance, profile_memory_usage.
 
 Sub-domain 2 — Function profiling (cProfile/tracemalloc, call-level):
-  ProfilingMetrics, CodeProfiler, get_code_profiler, benchmark_function.
+  ProfilingMetrics, CodeProfiler, get_performance_monitor, benchmark_function.
 
 Both sub-domains share this module intentionally to avoid circular imports
 between infrastructure.core submodules. If this grows further, split into
@@ -354,8 +353,8 @@ class ProfilingMetrics:
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for reporting (memory values in MB)."""
-        def _bytes_to_mb(b: Optional[int]) -> Optional[int]:
-            return b // (1024 * 1024) if b is not None else None
+        def _bytes_to_mb(b: Optional[int]) -> Optional[float]:
+            return b / (1024 * 1024) if b is not None else None
 
         return {
             "operation": self.operation_name,

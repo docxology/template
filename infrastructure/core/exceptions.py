@@ -12,6 +12,8 @@ Part of the infrastructure layer (Layer 1) - reusable across all projects.
 from __future__ import annotations
 
 import builtins
+import platform
+import shutil
 from pathlib import Path
 from typing import Any, Optional
 
@@ -258,9 +260,6 @@ class DependencyError(TemplateError):
 
 def _build_install_commands(dependency: str) -> list[str]:
     """Return OS-appropriate installation commands for a dependency."""
-    import platform
-    import shutil
-
     commands: list[str] = []
     system = platform.system().lower()
 

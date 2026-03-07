@@ -194,6 +194,7 @@ class RetryableOperation:
         self.attempt = 0
         self.result = None
         self.succeeded = False
+        self._done = False
 
     def __enter__(self) -> "RetryableOperation":
         """Enter context manager."""
@@ -214,6 +215,8 @@ class RetryableOperation:
 
     def __next__(self) -> int:
         """Get next attempt number."""
+        if self._done:
+            raise StopIteration
         self.attempt += 1
         if self.attempt > self.max_attempts:
             raise StopIteration
@@ -227,7 +230,7 @@ class RetryableOperation:
         """
         self.result = result
         self.succeeded = True
-        raise StopIteration  # Exit the retry loop
+        self._done = True  # Signal __next__ to stop iteration
 
     def retry(self, exception: Exception) -> None:
         """Retry operation after delay.
