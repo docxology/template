@@ -2,6 +2,8 @@
 
 This module provides parsing functions to extract coverage metrics,
 failed tests strings, timeout errors, and coverage capabilities from pytest output.
+
+Internal module: import directly (not re-exported from infrastructure.reporting).
 """
 
 from __future__ import annotations
@@ -290,10 +292,9 @@ def extract_coverage_percentage(
                                 f"Coverage file exists but overall_coverage is 0 or None: {overall_coverage}"  # noqa: E501
                             )
                 except json.JSONDecodeError as e:
-                    if is_infra:
-                        logger.debug(
-                            f"JSON decode error for {coverage_json_path}: {e} (file may be incomplete)"  # noqa: E501
-                        )
+                    logger.warning(
+                        f"Corrupt coverage JSON at {coverage_json_path}: {e} (falling back to stdout parsing)"  # noqa: E501
+                    )
                 except Exception as e:
                     logger.debug(f"Could not read coverage from {coverage_json_path}: {e}")
 
