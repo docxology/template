@@ -57,12 +57,6 @@ class ReportExtras:
     project_name: Optional[str] = None
 
 
-# Re-exported for backward compatibility; implementation lives in multi_project_reporter
-from infrastructure.reporting.multi_project_reporter import (  # noqa: E402
-    _format_multi_project_summary_markdown,
-    generate_multi_project_summary_report,
-)
-
 
 def generate_pipeline_report(
     stage_results: List[Dict[str, Any]],

@@ -123,7 +123,7 @@ def execute_multi_project(
 
         # Generate comprehensive final summary
         try:
-            from infrastructure.reporting.pipeline_reporter import (
+            from infrastructure.reporting.multi_project_reporter import (
                 generate_multi_project_summary_report,
             )
 
