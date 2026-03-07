@@ -66,13 +66,6 @@ def extract_action_items(reviews: Dict[str, str]) -> str:
             if len(item) > 10 and item not in todos:
                 todos.append(f"[ ] {item[:100]}..." if len(item) > 100 else f"[ ] {item}")
 
-    # Extract from quality review - low scores
-    quality = reviews.get("quality_review", "")
-    for line in quality.split("\n"):
-        if "score:" in line.lower() and any(s in line for s in ["1", "2"]):
-            # Low score found - next few lines might have the issue
-            continue
-
     if not todos:
         todos = [
             "[ ] Review executive summary for accuracy",
@@ -375,12 +368,13 @@ The following items are extracted from the review for easy tracking:
         compliant_reviews = sum(1 for r in format_compliance_per_review.values() if r["compliant"])
         compliance_rate = (compliant_reviews / total_reviews * 100) if total_reviews > 0 else 100
 
+        llm_config = LLMConfig.from_env()
         metadata = {
             "model": model_name,
             "timestamp": timestamp,
             "source_pdf": str(pdf_path),
             "reviews_generated": list(reviews.keys()),
-            "max_input_length": LLMConfig.from_env().max_input_length,
+            "max_input_length": llm_config.max_input_length,
             "manuscript_metrics": {
                 "total_chars": session_metrics.manuscript.total_chars,
                 "total_words": session_metrics.manuscript.total_words,
@@ -400,9 +394,9 @@ The following items are extracted from the review for easy tracking:
                 "temperature_summary": 0.3,
                 "temperature_review": 0.3,
                 "temperature_suggestions": 0.4,
-                "max_tokens": LLMConfig.from_env().long_max_tokens,
+                "max_tokens": llm_config.long_max_tokens,
                 "max_tokens_source": "long_max_tokens",
-                "timeout_seconds": LLMConfig.from_env().review_timeout,
+                "timeout_seconds": llm_config.review_timeout,
                 "system_prompt": "manuscript_review",
             },
         }

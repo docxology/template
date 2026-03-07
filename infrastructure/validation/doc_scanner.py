@@ -49,45 +49,6 @@ class DocumentationScanner:
         self.config_files: Dict[str, Path] = {}
         self.documentation_structure: Dict[str, List[str]] = defaultdict(list)
 
-    def _find_markdown_files(self) -> List[Path]:
-        """Find all markdown files (private method for testing)."""
-        from infrastructure.validation.doc_discovery import find_markdown_files
-
-        return find_markdown_files(self.repo_root)
-
-    def _catalog_agents_readme(self, md_files: List[Path]) -> List[str]:
-        """Catalog all AGENTS.md and README.md files (private method for testing)."""
-        from infrastructure.validation.doc_discovery import catalog_agents_readme
-
-        return catalog_agents_readme(md_files, self.repo_root)
-
-    def _find_config_files(self) -> Dict[str, Path]:
-        """Find configuration files (private method for testing)."""
-        from infrastructure.validation.doc_discovery import find_config_files
-
-        return find_config_files(self.repo_root)
-
-    def _find_script_files(self) -> List[Path]:
-        """Find all script files (private method for testing)."""
-        from infrastructure.validation.doc_discovery import find_script_files
-
-        script_files = find_script_files(self.repo_root)
-        # Populate self.script_files for test compatibility
-        self.script_files = script_files
-        return script_files
-
-    def _analyze_documentation_file(self, md_file: Path) -> DocumentationFile:
-        """Analyze a documentation file (private method for testing)."""
-        from infrastructure.validation.doc_discovery import analyze_documentation_file
-
-        return analyze_documentation_file(md_file, self.repo_root)
-
-    def _extract_headings(self, content: str) -> Set[str]:
-        """Extract headings from content (private method for testing)."""
-        from infrastructure.validation.doc_accuracy import extract_headings
-
-        return extract_headings(content)
-
     def phase1_discovery(self) -> Dict[str, Any]:
         """Phase 1: Discovery and Inventory."""
 
