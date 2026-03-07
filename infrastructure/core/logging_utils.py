@@ -279,15 +279,6 @@ def log_operation(
 
 
 @contextmanager
-def log_operation_silent(
-    operation: str, logger: Optional[logging.Logger] = None, level: int = logging.DEBUG
-) -> Iterator[None]:
-    """Log operation start only; no completion message. Thin wrapper over log_operation."""
-    with log_operation(operation, logger, level, log_completion=False):
-        yield
-
-
-@contextmanager
 def log_timing(label: str, logger: Optional[logging.Logger] = None) -> Iterator[None]:
     """Context manager for timing operations.
 
@@ -556,7 +547,6 @@ __all__ = [
     "set_global_log_level",
     # Context managers
     "log_operation",
-    "log_operation_silent",
     "log_timing",
     "log_function_call",
     # Utility functions
@@ -594,108 +584,7 @@ __all__ = [
 # =============================================================================
 
 
-class LogAggregator:
-    """Aggregate and analyze log messages for summary reporting."""
-
-    def __init__(self):
-        """Initialize log aggregator."""
-        self.messages: dict[str, list[dict[str, Any]]] = {
-            "debug": [],
-            "info": [],
-            "warning": [],
-            "error": [],
-            "success": [],
-        }
-        self.start_time = None
-        self.end_time = None
-
-    def add_message(self, level: str, message: str, timestamp: Optional[float] = None):
-        """Add a log message to the aggregator.
-
-        Args:
-            level: Log level (debug, info, warning, error, success)
-            message: Log message text
-            timestamp: Message timestamp (default: current time)
-        """
-        import time
-
-        if timestamp is None:
-            timestamp = time.time()
-
-        if level.lower() in self.messages:
-            self.messages[level.lower()].append({"message": message, "timestamp": timestamp})
-
-    def get_summary(self) -> Dict[str, Any]:
-        """Get summary of aggregated logs.
-
-        Returns:
-            Dictionary with log statistics and key messages
-        """
-        summary = {
-            "counts": {level: len(msgs) for level, msgs in self.messages.items()},
-            "total_messages": sum(len(msgs) for msgs in self.messages.values()),
-            "recent_errors": [m["message"] for m in self.messages["error"][-5:]],
-            "recent_warnings": [m["message"] for m in self.messages["warning"][-5:]],
-            "has_errors": len(self.messages["error"]) > 0,
-            "has_warnings": len(self.messages["warning"]) > 0,
-        }
-        return summary
-
-    def generate_report(self) -> str:
-        """Generate human-readable log summary report.
-
-        Returns:
-            Formatted summary report string
-        """
-        summary = self.get_summary()
-
-        lines = [
-            "",
-            "LOG SUMMARY",
-            "=" * 60,
-            "",
-            "Message Counts:",
-        ]
-
-        for level, count in summary["counts"].items():
-            if count > 0:
-                lines.append(f"  {level.upper()}: {count}")
-
-        lines.append(f"  TOTAL: {summary['total_messages']}")
-        lines.append("")
-
-        if summary["recent_errors"]:
-            lines.append("Recent Errors:")
-            for err in summary["recent_errors"]:
-                lines.append(f"  • {err}")
-            lines.append("")
-
-        if summary["recent_warnings"]:
-            lines.append("Recent Warnings:")
-            for warn in summary["recent_warnings"]:
-                lines.append(f"  • {warn}")
-            lines.append("")
-
-        return "\n".join(lines)
-
-    def save_to_file(self, output_path: Path):
-        """Save aggregated logs to file.
-
-        Args:
-            output_path: Path to save log summary
-        """
-        import json
-
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-
-        summary = self.get_summary()
-        summary["all_messages"] = self.messages
-
-        with open(output_path, "w") as f:
-            json.dump(summary, f, indent=2)
-
-
-def collect_log_statistics(log_file: Path) -> Dict[str, Any]:
+def _collect_log_statistics(log_file: Path) -> Dict[str, Any]:
     """Collect statistics from a log file.
 
     Args:
@@ -753,7 +642,7 @@ def generate_log_summary(log_file: Path, output_file: Optional[Path] = None) -> 
     Returns:
         Formatted summary string
     """
-    stats = collect_log_statistics(log_file)
+    stats = _collect_log_statistics(log_file)
 
     if "error" in stats and stats.get("total_lines", 0) == 0:
         return f"Error: {stats['error']}"

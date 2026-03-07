@@ -7,6 +7,7 @@ Comprehensive tests covering functionality, edge cases, and numerical accuracy.
 > `pyproject.toml`.
 """
 
+import functools
 import json
 import time
 from pathlib import Path
@@ -145,11 +146,10 @@ class TestGradientDescent:
         """Test that gradient descent converges to known optimum."""
 
         # f(x) = (1/2) x^2 - x, minimum at x = 1, f(1) = -0.5
-        def obj_func(x):
-            return quadratic_function(x, np.array([[1.0]]), np.array([1.0]))
-
-        def grad_func(x):
-            return compute_gradient(x, np.array([[1.0]]), np.array([1.0]))
+        _A = np.array([[1.0]])
+        _b = np.array([1.0])
+        obj_func = functools.partial(quadratic_function, A=_A, b=_b)
+        grad_func = functools.partial(compute_gradient, A=_A, b=_b)
 
         result = gradient_descent(
             initial_point=np.array([0.0]),
@@ -192,11 +192,10 @@ class TestGradientDescent:
         """Test when starting point is already at optimum."""
 
         # Optimum of f(x) = (1/2)x^2 - x is x = 1
-        def obj_func(x):
-            return quadratic_function(x, np.array([[1.0]]), np.array([1.0]))
-
-        def grad_func(x):
-            return compute_gradient(x, np.array([[1.0]]), np.array([1.0]))
+        _A = np.array([[1.0]])
+        _b = np.array([1.0])
+        obj_func = functools.partial(quadratic_function, A=_A, b=_b)
+        grad_func = functools.partial(compute_gradient, A=_A, b=_b)
 
         result = gradient_descent(
             initial_point=np.array([1.0]),
@@ -215,12 +214,8 @@ class TestGradientDescent:
         # f(x,y) = (1/2)(x^2 + y^2) - (x + y), optimum at (1,1)
         A = np.eye(2)
         b = np.array([1.0, 1.0])
-
-        def obj_func(x):
-            return quadratic_function(x, A, b)
-
-        def grad_func(x):
-            return compute_gradient(x, A, b)
+        obj_func = functools.partial(quadratic_function, A=A, b=b)
+        grad_func = functools.partial(compute_gradient, A=A, b=b)
 
         result = gradient_descent(
             initial_point=np.array([0.0, 0.0]),
@@ -286,11 +281,10 @@ class TestGradientDescent:
         """Test gradient descent performance characteristics."""
 
         # Simple quadratic: f(x) = (1/2)x^2 - x, minimum at x=1
-        def obj_func(x):
-            return quadratic_function(x, np.array([[1.0]]), np.array([1.0]))
-
-        def grad_func(x):
-            return compute_gradient(x, np.array([[1.0]]), np.array([1.0]))
+        _A = np.array([[1.0]])
+        _b = np.array([1.0])
+        obj_func = functools.partial(quadratic_function, A=_A, b=_b)
+        grad_func = functools.partial(compute_gradient, A=_A, b=_b)
 
         # Test with different step sizes to verify performance
         step_sizes = [0.01, 0.1, 0.2]
@@ -323,12 +317,8 @@ class TestGradientDescent:
         # f(x) = (1/2) x^T A x - b^T x where A has eigenvalues [0.1, 10]
         A = np.array([[0.1, 0.0], [0.0, 10.0]])
         b = np.array([1.0, 1.0])
-
-        def obj_func(x):
-            return quadratic_function(x, A, b)
-
-        def grad_func(x):
-            return compute_gradient(x, A, b)
+        obj_func = functools.partial(quadratic_function, A=A, b=b)
+        grad_func = functools.partial(compute_gradient, A=A, b=b)
 
         # The optimum should be A^-1 b
         A_inv = np.linalg.inv(A)
@@ -670,11 +660,10 @@ class TestLoggingBranches:
         opt_module, orig_flag, orig_logger = self._enable_logging()
 
         try:
-            def obj_func(x):
-                return quadratic_function(x, np.array([[1.0]]), np.array([1.0]))
-
-            def grad_func(x):
-                return compute_gradient(x, np.array([[1.0]]), np.array([1.0]))
+            _A = np.array([[1.0]])
+            _b = np.array([1.0])
+            obj_func = functools.partial(quadratic_function, A=_A, b=_b)
+            grad_func = functools.partial(compute_gradient, A=_A, b=_b)
 
             result = gradient_descent(
                 initial_point=np.array([0.0]),
