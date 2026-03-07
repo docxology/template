@@ -34,7 +34,10 @@ from infrastructure.reporting.coverage_reporter import (
     parse_pytest_output,
     generate_test_report,
     save_test_report as save_test_report_to_files,
+    format_coverage_status,
+    analyze_coverage_gaps,
 )
+from infrastructure.core.logging_helpers import format_duration as _format_duration
 from infrastructure.core.environment import get_python_command, check_uv_available
 from infrastructure.reporting.coverage_parser import (
     check_cov_datafile_support,
@@ -911,116 +914,6 @@ def report_results(
         project_name: Name of the project (for debug command suggestions)
     """
 
-    def format_coverage_status(coverage_pct: float, threshold: float) -> str:
-        """Format coverage with visual indicators and improvement suggestions."""
-        if coverage_pct >= threshold:
-            return f"✓ {coverage_pct:.1f}% (meets {threshold}% threshold)"
-        elif coverage_pct >= threshold * 0.9:  # Within 10% of threshold
-            gap = threshold - coverage_pct
-            return f"🟡 {coverage_pct:.1f}% (close to {threshold}% threshold, {gap:.1f}% gap)"
-        elif coverage_pct >= threshold * 0.8:  # Within 20% of threshold
-            gap = threshold - coverage_pct
-            return f"⚠️ {coverage_pct:.1f}% (below {threshold}% threshold by {gap:.1f}%)"
-        else:
-            gap = threshold - coverage_pct
-            return (
-                f"❌ {coverage_pct:.1f}% (significantly below {threshold}% threshold by {gap:.1f}%)"
-            )
-
-    def format_duration(seconds: float) -> str:
-        """Format duration in human-readable format."""
-        if seconds < 60:
-            return f"{seconds:.1f}s"
-        else:
-            minutes = int(seconds // 60)
-            remaining_seconds = seconds % 60
-            return f"{minutes}m {remaining_seconds:.1f}s"
-
-    def analyze_coverage_gaps(
-        results: dict, threshold: float, test_type: str, report: dict
-    ) -> list[str]:
-        """Analyze coverage gaps with detailed file-level suggestions."""
-        suggestions = []
-        coverage = results.get("coverage_percent", 0)
-
-        if coverage < threshold:
-            gap = threshold - coverage
-            suggestions.append(f"📊 {test_type} coverage is {gap:.1f}% below threshold")
-
-            # Get detailed coverage information if available
-            coverage_details = report.get("coverage_details", {}).get(test_type.lower(), {})
-            file_coverage = coverage_details.get("file_coverage", {})
-
-            if file_coverage:
-                # Identify files with lowest coverage (< 50%)
-                low_coverage_files = [
-                    (file_path, data["coverage_percent"])
-                    for file_path, data in file_coverage.items()
-                    if data["coverage_percent"] < 50
-                    and data["total_lines"] > 10  # Only substantial files
-                ]
-                low_coverage_files.sort(key=lambda x: x[1])  # Sort by coverage ascending
-
-                if low_coverage_files:
-                    suggestions.append("  📁 Files needing attention:")
-                    for file_path, file_cov in low_coverage_files[:5]:  # Top 5 worst
-                        file_name = (
-                            file_path.split("/")[-1]
-                            if "/" in file_path
-                            else file_path.split("\\")[-1]
-                        )
-                        missing_lines = file_coverage[file_path]["missing_lines"]
-                        suggestions.append(
-                            f"    • {file_name}: {file_cov:.1f}% coverage ({missing_lines} uncovered lines)"  # noqa: E501
-                        )
-
-                # Identify largest files with low coverage
-                substantial_files = [
-                    (file_path, data)
-                    for file_path, data in file_coverage.items()
-                    if data["total_lines"] > 100 and data["coverage_percent"] < 70
-                ]
-                substantial_files.sort(key=lambda x: x[1]["total_lines"], reverse=True)
-
-                if substantial_files:
-                    suggestions.append("  📊 High-impact files to prioritize:")
-                    for file_path, data in substantial_files[:3]:
-                        file_name = (
-                            file_path.split("/")[-1]
-                            if "/" in file_path
-                            else file_path.split("\\")[-1]
-                        )
-                        suggestions.append(
-                            f"    • {file_name}: {data['total_lines']} lines, {data['coverage_percent']:.1f}% coverage"  # noqa: E501
-                        )
-            else:
-                # Fallback to generic suggestions if detailed coverage not available
-                if test_type == "Infrastructure":
-                    suggestions.extend(
-                        [
-                            "  • Add tests for CLI modules (currently ~60% coverage)",
-                            "  • Test error handling paths in core modules",
-                            "  • Add integration tests for module interactions",
-                        ]
-                    )
-                elif test_type == "Project":
-                    suggestions.extend(
-                        [
-                            "  • Test edge cases in data processing functions",
-                            "  • Add tests for visualization output generation",
-                            "  • Cover error handling in analysis pipelines",
-                        ]
-                    )
-
-            suggestions.extend(
-                [
-                    f"  • Target: Reach {threshold}% coverage minimum",
-                    "  • Run: pytest --cov-report=html && open htmlcov/index.html",
-                ]
-            )
-
-        return suggestions
-
     log_header("Test Execution Summary", logger)
 
     # Check for collection errors
@@ -1072,7 +965,7 @@ def report_results(
         phases = infra_results.get("execution_phases", {})
         if phases:
             total_exec_time = sum(phases.values())
-            logger.info(f"  ⏱ Duration: {format_duration(total_exec_time)}")
+            logger.info(f"  ⏱ Duration: {_format_duration(total_exec_time)}")
     else:
         failed = infra_results.get("failed", 0)
         skipped = infra_results.get("skipped", 0)
@@ -1181,7 +1074,7 @@ def report_results(
         phases = project_results.get("execution_phases", {})
         if phases:
             total_exec_time = sum(phases.values())
-            logger.info(f"  ⏱ Duration: {format_duration(total_exec_time)}")
+            logger.info(f"  ⏱ Duration: {_format_duration(total_exec_time)}")
     else:
         failed = project_results.get("failed", 0)
         skipped = project_results.get("skipped", 0)
@@ -1328,7 +1221,7 @@ def report_results(
         project_duration = sum(project_results.get("execution_phases", {}).values())
         total_duration = infra_duration + project_duration
         if total_duration > 0:
-            logger.info(f"Duration:      {format_duration(total_duration)}")
+            logger.info(f"Duration:      {_format_duration(total_duration)}")
 
         logger.info("=" * 64)
         log_success("All tests passed - ready for analysis", logger)

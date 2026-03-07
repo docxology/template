@@ -320,3 +320,99 @@ def save_test_report(report: Dict[str, Any], output_dir: Path) -> Tuple[Path, Pa
     logger.info(f"Test summary saved: {md_path}")
 
     return (json_path, md_path)
+
+
+def format_coverage_status(coverage_pct: float, threshold: float) -> str:
+    """Format coverage percentage with visual indicators and threshold context."""
+    if coverage_pct >= threshold:
+        return f"✓ {coverage_pct:.1f}% (meets {threshold}% threshold)"
+    elif coverage_pct >= threshold * 0.9:
+        gap = threshold - coverage_pct
+        return f"🟡 {coverage_pct:.1f}% (close to {threshold}% threshold, {gap:.1f}% gap)"
+    elif coverage_pct >= threshold * 0.8:
+        gap = threshold - coverage_pct
+        return f"⚠️ {coverage_pct:.1f}% (below {threshold}% threshold by {gap:.1f}%)"
+    else:
+        gap = threshold - coverage_pct
+        return f"❌ {coverage_pct:.1f}% (significantly below {threshold}% threshold by {gap:.1f}%)"
+
+
+def analyze_coverage_gaps(
+    results: Dict[str, Any], threshold: float, test_type: str, report: Dict[str, Any]
+) -> list:
+    """Analyze coverage gaps and return actionable improvement suggestions."""
+    suggestions = []
+    coverage = results.get("coverage_percent", 0)
+
+    if coverage < threshold:
+        gap = threshold - coverage
+        suggestions.append(f"📊 {test_type} coverage is {gap:.1f}% below threshold")
+
+        coverage_details = report.get("coverage_details", {}).get(test_type.lower(), {})
+        file_coverage = coverage_details.get("file_coverage", {})
+
+        if file_coverage:
+            low_coverage_files = [
+                (file_path, data["coverage_percent"])
+                for file_path, data in file_coverage.items()
+                if data["coverage_percent"] < 50 and data["total_lines"] > 10
+            ]
+            low_coverage_files.sort(key=lambda x: x[1])
+
+            if low_coverage_files:
+                suggestions.append("  📁 Files needing attention:")
+                for file_path, file_cov in low_coverage_files[:5]:
+                    file_name = (
+                        file_path.split("/")[-1]
+                        if "/" in file_path
+                        else file_path.split("\\")[-1]
+                    )
+                    missing_lines = file_coverage[file_path]["missing_lines"]
+                    suggestions.append(
+                        f"    • {file_name}: {file_cov:.1f}% coverage ({missing_lines} uncovered lines)"  # noqa: E501
+                    )
+
+            substantial_files = [
+                (file_path, data)
+                for file_path, data in file_coverage.items()
+                if data["total_lines"] > 100 and data["coverage_percent"] < 70
+            ]
+            substantial_files.sort(key=lambda x: x[1]["total_lines"], reverse=True)
+
+            if substantial_files:
+                suggestions.append("  📊 High-impact files to prioritize:")
+                for file_path, data in substantial_files[:3]:
+                    file_name = (
+                        file_path.split("/")[-1]
+                        if "/" in file_path
+                        else file_path.split("\\")[-1]
+                    )
+                    suggestions.append(
+                        f"    • {file_name}: {data['total_lines']} lines, {data['coverage_percent']:.1f}% coverage"  # noqa: E501
+                    )
+        else:
+            if test_type == "Infrastructure":
+                suggestions.extend(
+                    [
+                        "  • Add tests for CLI modules (currently ~60% coverage)",
+                        "  • Test error handling paths in core modules",
+                        "  • Add integration tests for module interactions",
+                    ]
+                )
+            elif test_type == "Project":
+                suggestions.extend(
+                    [
+                        "  • Test edge cases in data processing functions",
+                        "  • Add tests for visualization output generation",
+                        "  • Cover error handling in analysis pipelines",
+                    ]
+                )
+
+        suggestions.extend(
+            [
+                f"  • Target: Reach {threshold}% coverage minimum",
+                "  • Run: pytest --cov-report=html && open htmlcov/index.html",
+            ]
+        )
+
+    return suggestions

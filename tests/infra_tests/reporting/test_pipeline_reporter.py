@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from infrastructure.reporting.pipeline_reporter import (
+    ReportExtras,
     generate_error_markdown,
     generate_error_summary,
     generate_html_report,
@@ -35,11 +36,13 @@ def test_generate_pipeline_report_status_and_fields(tmp_path: Path) -> None:
         stage_results=_stage_results(),
         total_duration=7.0,
         repo_root=tmp_path,
-        test_results=test_results,
-        validation_results=validation_results,
-        performance_metrics={"peak_memory_mb": 123.4},
-        error_summary={"total_errors": 1},
-        output_statistics={"pdf_files": 2, "figures": 3, "data_files": 1},
+        extras=ReportExtras(
+            test_results=test_results,
+            validation_results=validation_results,
+            performance_metrics={"peak_memory_mb": 123.4},
+            error_summary={"total_errors": 1},
+            output_statistics={"pdf_files": 2, "figures": 3, "data_files": 1},
+        ),
     )
 
     assert report.total_duration == pytest.approx(7.0)
@@ -93,20 +96,22 @@ def test_generate_markdown_report_includes_sections() -> None:
         stage_results=_stage_results(),
         total_duration=9.5,
         repo_root=Path("."),
-        test_results={
-            "summary": {
-                "total_tests": 5,
-                "total_passed": 4,
-                "total_failed": 1,
-                "total_skipped": 0,
-                "infrastructure_coverage": 61.48,
-                "project_coverage": 99.88,
-            }
-        },
-        validation_results={"checks": {"pdf": True}},
-        performance_metrics={"duration": 9.5},
-        error_summary={"total_errors": 2},
-        output_statistics={"pdf_files": 2, "figures": 1, "data_files": 3},
+        extras=ReportExtras(
+            test_results={
+                "summary": {
+                    "total_tests": 5,
+                    "total_passed": 4,
+                    "total_failed": 1,
+                    "total_skipped": 0,
+                    "infrastructure_coverage": 61.48,
+                    "project_coverage": 99.88,
+                }
+            },
+            validation_results={"checks": {"pdf": True}},
+            performance_metrics={"duration": 9.5},
+            error_summary={"total_errors": 2},
+            output_statistics={"pdf_files": 2, "figures": 1, "data_files": 3},
+        ),
     )
 
     md_content = generate_markdown_report(report)
@@ -124,16 +129,18 @@ def test_generate_html_report_includes_test_coverage() -> None:
         stage_results=_stage_results(),
         total_duration=5.0,
         repo_root=Path("."),
-        test_results={
-            "summary": {
-                "total_tests": 3,
-                "total_passed": 3,
-                "total_failed": 0,
-                "total_skipped": 0,
-                "infrastructure_coverage": 70.0,
-                "project_coverage": 99.0,
-            }
-        },
+        extras=ReportExtras(
+            test_results={
+                "summary": {
+                    "total_tests": 3,
+                    "total_passed": 3,
+                    "total_failed": 0,
+                    "total_skipped": 0,
+                    "infrastructure_coverage": 70.0,
+                    "project_coverage": 99.0,
+                }
+            },
+        ),
     )
 
     html = generate_html_report(report)
@@ -799,8 +806,10 @@ class TestGeneratePipelineReportWithLogFile:
             stage_results=_stage_results(),
             total_duration=5.0,
             repo_root=tmp_path,
-            project_name=project_name,
-            output_statistics={"pdf_files": 1},
+            extras=ReportExtras(
+                project_name=project_name,
+                output_statistics={"pdf_files": 1},
+            ),
         )
 
         assert report.output_statistics is not None
@@ -817,8 +826,10 @@ class TestGeneratePipelineReportWithLogFile:
             stage_results=_stage_results(),
             total_duration=5.0,
             repo_root=tmp_path,
-            project_name=project_name,
-            output_statistics={"pdf_files": 1},
+            extras=ReportExtras(
+                project_name=project_name,
+                output_statistics={"pdf_files": 1},
+            ),
         )
 
         assert report.output_statistics is not None

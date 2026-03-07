@@ -69,42 +69,24 @@ def generate_pipeline_report(
     total_duration: float,
     repo_root: Path,
     extras: Optional[ReportExtras] = None,
-    # Legacy keyword args kept for backward compatibility
-    test_results: Optional[Dict[str, Any]] = None,
-    validation_results: Optional[Dict[str, Any]] = None,
-    performance_metrics: Optional[Dict[str, Any]] = None,
-    error_summary: Optional[Dict[str, Any]] = None,
-    output_statistics: Optional[Dict[str, Any]] = None,
-    project_name: Optional[str] = None,
 ) -> PipelineReport:
     """Generate consolidated pipeline report.
-
-    Preferred usage: pass optional data via ``extras=ReportExtras(...)``.
-    Individual keyword arguments are accepted for backward compatibility.
 
     Args:
         stage_results: List of stage result dictionaries
         total_duration: Total pipeline execution time
         repo_root: Repository root path
-        extras: Optional supplementary report data (preferred over individual kwargs)
-        test_results: Test execution results (legacy; use extras instead)
-        validation_results: Validation results (legacy; use extras instead)
-        performance_metrics: Performance metrics (legacy; use extras instead)
-        error_summary: Error summary (legacy; use extras instead)
-        output_statistics: Output file statistics (legacy; use extras instead)
-        project_name: Project name for log file lookup (legacy; use extras instead)
+        extras: Optional supplementary report data
 
     Returns:
         PipelineReport instance
     """
-    # extras takes precedence over individual kwargs
-    if extras is not None:
-        test_results = extras.test_results
-        validation_results = extras.validation_results
-        performance_metrics = extras.performance_metrics
-        error_summary = extras.error_summary
-        output_statistics = extras.output_statistics
-        project_name = extras.project_name
+    test_results = extras.test_results if extras is not None else None
+    validation_results = extras.validation_results if extras is not None else None
+    performance_metrics = extras.performance_metrics if extras is not None else None
+    error_summary = extras.error_summary if extras is not None else None
+    output_statistics = extras.output_statistics if extras is not None else None
+    project_name = extras.project_name if extras is not None else None
     stages = []
     for result in stage_results:
         status = "passed" if result.get("exit_code", 1) == 0 else "failed"
