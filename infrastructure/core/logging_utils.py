@@ -378,8 +378,7 @@ def log_operation(
         min_duration_to_log: Minimum duration (seconds) to log completion message
         log_completion: Whether to log completion message (False = start only)
     """
-    if logger is None:
-        logger = get_logger(__name__)
+    logger = logger or get_logger(__name__)
 
     logger.log(level, f"Starting: {operation}")
     start_time = time.time()
@@ -421,8 +420,7 @@ def log_timing(label: str, logger: Optional[logging.Logger] = None) -> Iterator[
         ...     expensive_operation()
         ℹ️ [2025-11-21 12:00:05] [INFO] Data processing: 5.0s
     """
-    if logger is None:
-        logger = get_logger(__name__)
+    logger = logger or get_logger(__name__)
 
     start_time = time.time()
     try:
@@ -488,8 +486,7 @@ def log_success(message: str, logger: Optional[logging.Logger] = None) -> None:
         >>> log_success("Build completed successfully")
         ✅ [2025-11-21 12:00:00] [INFO] Build completed successfully
     """
-    if logger is None:
-        logger = get_logger(__name__)
+    logger = logger or get_logger(__name__)
 
     emoji = EMOJIS["success"] if USE_EMOJIS else "[SUCCESS]"
     logger.info(f"{emoji} {message}" if USE_EMOJIS else message)
@@ -509,8 +506,7 @@ def log_header(message: str, logger: Optional[logging.Logger] = None) -> None:
         🚀 [2025-11-21 12:00:00] [INFO] STAGE 01: Setup
         🚀 [2025-11-21 12:00:00] [INFO] ============================================================
     """
-    if logger is None:
-        logger = get_logger(__name__)
+    logger = logger or get_logger(__name__)
 
     prefix = EMOJIS["rocket"] + " " if USE_EMOJIS else ""
     separator = "=" * 50
@@ -536,8 +532,7 @@ def log_progress(
         >>> log_progress(15, 100, "Processing files")
         ℹ️ [2025-11-21 12:00:00] [INFO] [15/100 - 15%] Processing files
     """
-    if logger is None:
-        logger = get_logger(__name__)
+    logger = logger or get_logger(__name__)
 
     percent = (current * 100) // total if total > 0 else 0
     logger.info(f"[{current}/{total} - {percent}%] {task}")
@@ -565,8 +560,7 @@ def log_stage(
         ℹ️ [2025-11-21 12:00:00] [INFO] [3/7] PDF Rendering
         ℹ️ [2025-11-21 12:00:00] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     """
-    if logger is None:
-        logger = get_logger(__name__)
+    logger = logger or get_logger(__name__)
 
     separator = "━" * 46
     logger.info("")
@@ -588,8 +582,7 @@ def log_substep(message: str, logger: Optional[logging.Logger] = None) -> None:
         ℹ️ [2025-11-21 12:00:00] [INFO]
         ℹ️ [2025-11-21 12:00:00] [INFO]   Validating PDF files...
     """
-    if logger is None:
-        logger = get_logger(__name__)
+    logger = logger or get_logger(__name__)
 
     logger.info(f"\n  {message}")
 
@@ -618,8 +611,7 @@ def log_stage_with_eta(
     logger: Optional[logging.Logger] = None,
 ) -> None:
     """Log a pipeline stage header with ETA calculation."""
-    if logger is None:
-        logger = get_logger(__name__)
+    logger = logger or get_logger(__name__)
 
     percentage = (stage_num * 100) // total_stages if total_stages > 0 else 0
     separator = "━" * 46
@@ -642,8 +634,7 @@ def log_stage_with_eta(
 
 def log_resource_usage(stage_name: str = "", logger: Optional[logging.Logger] = None) -> None:
     """Log current resource usage (if psutil available)."""
-    if logger is None:
-        logger = get_logger(__name__)
+    logger = logger or get_logger(__name__)
 
     try:
         import psutil

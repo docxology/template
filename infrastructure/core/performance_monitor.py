@@ -1,7 +1,8 @@
-"""Performance monitoring and profiling utilities for research workflows.
+"""Performance profiling and benchmarking for research code execution.
 
-This module provides comprehensive performance monitoring, benchmarking,
-and profiling capabilities for research code execution.
+Provides CodeProfiler context manager, benchmark_function decorator, and
+monitor_performance wrapper. Primary callers: pipeline stages and analysis
+scripts that need CPU/memory timing for long-running computations.
 """
 
 from __future__ import annotations
@@ -275,29 +276,8 @@ def monitor_performance(operation_name: str, track_memory: bool = True):
     """
 
     def decorator(func):
-        """Wrap the target function with performance monitoring.
-
-        Args:
-            func: The function to be decorated with monitoring.
-
-        Returns:
-            Callable: Wrapped function that monitors performance metrics.
-        """
-
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            """Execute the wrapped function with performance monitoring.
-
-            Monitors execution time, memory usage (if enabled), and logs
-            performance metrics upon completion.
-
-            Args:
-                *args: Positional arguments passed to the wrapped function.
-                **kwargs: Keyword arguments passed to the wrapped function.
-
-            Returns:
-                The return value from the wrapped function.
-            """
             monitor = get_performance_monitor()
             op_name = operation_name or f"{func.__module__}.{func.__qualname__}"
 

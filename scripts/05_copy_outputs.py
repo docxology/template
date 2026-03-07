@@ -84,9 +84,7 @@ def main() -> int:
             return 1
 
         # Step 2: Clean project-specific output directory
-        if not clean_output_directory(output_dir):
-            logger.error("Failed to clean output directory")
-            return 1
+        clean_output_directory(output_dir)
 
         # Step 2: Copy final deliverables
         stats = copy_final_deliverables(repo_root, output_dir, args.project)

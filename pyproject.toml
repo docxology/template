@@ -89,6 +89,7 @@ dev = [
     # Optional feature deps — installed in dev so tests exercise full coverage
     "python-dotenv>=1.0.0",
     "qrcode[pil]>=8.2",
+    "black>=23.0",
 ]
 
 [tool.uv]
