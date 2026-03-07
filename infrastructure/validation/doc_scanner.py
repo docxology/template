@@ -24,7 +24,7 @@ from infrastructure.core.logging_utils import get_logger, log_header, log_succes
 from infrastructure.validation.doc_accuracy import run_accuracy_phase
 from infrastructure.validation.doc_completeness import run_completeness_phase
 from infrastructure.validation.doc_discovery import (
-    find_markdown_files,
+    discover_markdown_files,
     identify_cross_references,
     run_discovery_phase,
 )
@@ -65,7 +65,7 @@ class DocumentationScanner:
 
     def phase2_accuracy(self) -> dict[str, Any]:
         """Phase 2: Accuracy Verification."""
-        md_files = find_markdown_files(self.repo_root)
+        md_files = discover_markdown_files(self.repo_root)
 
         accuracy_report, link_issues, accuracy_issues, all_headings = run_accuracy_phase(
             md_files, self.repo_root, self.config_files
@@ -90,7 +90,7 @@ class DocumentationScanner:
 
     def phase4_quality(self) -> dict[str, Any]:
         """Phase 4: Quality Assessment."""
-        md_files = find_markdown_files(self.repo_root)
+        md_files = discover_markdown_files(self.repo_root)
         quality_report, quality_issues = run_quality_phase(md_files, self.repo_root)
 
         self.results.quality_issues.extend(quality_issues)
@@ -203,7 +203,7 @@ class DocumentationScanner:
 
     def _verify_cross_references(self) -> dict[str, Any]:
         """Verify cross-references."""
-        md_files = find_markdown_files(self.repo_root)
+        md_files = discover_markdown_files(self.repo_root)
         return {
             "status": "verified",
             "total_references": len(identify_cross_references(md_files)),

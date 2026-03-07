@@ -20,7 +20,7 @@ from infrastructure.validation.check_links import (
     validate_python_imports,
 )
 from infrastructure.validation.doc_accuracy import check_links
-from infrastructure.validation.doc_discovery import categorize_documentation, find_markdown_files
+from infrastructure.validation.doc_discovery import categorize_documentation, discover_markdown_files
 from infrastructure.validation.doc_models import (
     DocumentationFile,
     LinkIssue,
@@ -49,7 +49,7 @@ def run_comprehensive_audit(
     logger.info("🔍 Starting filepath and reference audit...")
 
     # Phase 1: Discovery
-    md_files = find_markdown_files(repo_root)
+    md_files = discover_markdown_files(repo_root)
     logger.info(f"📁 Found {len(md_files)} markdown files to audit")
 
     # Get project categorization

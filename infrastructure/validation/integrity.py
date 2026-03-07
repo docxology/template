@@ -133,8 +133,8 @@ def verify_cross_references(markdown_files: list[Path]) -> dict[str, bool]:
                     matched = True
                     break
             if not matched:
-                # Unknown prefix — mark all types as potentially broken
-                for key in integrity:
+                # Unknown prefix — mark all reference types as potentially broken
+                for key in ("equations", "figures", "tables", "sections", "citations"):
                     integrity[key] = False
     else:
         logger.debug(f"Found {len(labels)} labels and {len(references)} references")

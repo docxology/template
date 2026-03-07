@@ -29,7 +29,7 @@ _DEFAULT_EXCLUDE_DIRS = {
     ".mypy_cache",
 }
 
-def find_markdown_files(repo_root: Path) -> list[Path]:
+def discover_markdown_files(repo_root: Path) -> list[Path]:
     """Find all markdown files excluding output/htmlcov and virtual environments."""
     exclude_dirs = _DEFAULT_EXCLUDE_DIRS | {"projects_archive"}
     md_files = []

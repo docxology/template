@@ -24,19 +24,7 @@ class TemplateError(Exception):
 
     All custom exceptions in the template inherit from this class, allowing
     code to catch all template-specific errors with a single except clause.
-
-    Attributes:
-        message: Human-readable error description
-        context: Additional context about the error
-        suggestions: List of actionable recovery suggestions
-        recovery_commands: List of command-line commands to fix the issue
-
-    Example:
-        >>> try:
-        ...     raise TemplateError("Something went wrong", context={"file": "data.csv"})
-        ... except TemplateError as e:
-        ...     print(f"Error: {e.message}")
-        ...     print(f"Context: {e.context}")
+    Attributes: message, context, suggestions, recovery_commands.
     """
 
     def __init__(
@@ -136,20 +124,7 @@ class FileOperationError(TemplateError):
     pass
 
 class FileNotFoundError(FileOperationError, builtins.FileNotFoundError):
-    """Raised when a required file is not found.
-
-    Inherits from both custom FileOperationError and built-in FileNotFoundError
-    for compatibility with standard Python exception handling while providing
-    better context for template-specific file errors.
-
-    Automatically generates recovery commands based on file path.
-
-    Example:
-        >>> raise FileNotFoundError(
-        ...     "Manuscript file not found",
-        ...     context={"file": "manuscript.md", "searched_in": "/path/to/project"}
-        ... )
-    """
+    """Raised when a required file is not found; auto-generates recovery commands."""
 
     def __init__(
         self,
@@ -200,16 +175,7 @@ class DependencyError(TemplateError):
     pass
 
 class MissingDependencyError(DependencyError):
-    """Raised when a required dependency is missing.
-
-    Automatically generates installation commands based on dependency name.
-
-    Example:
-        >>> raise MissingDependencyError(
-        ...     "pandoc not found in PATH",
-        ...     context={"dependency": "pandoc", "min_version": "3.1.9"}
-        ... )
-    """
+    """Raised when a required dependency is missing; auto-generates install commands."""
 
     def __init__(
         self,

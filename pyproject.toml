@@ -37,7 +37,6 @@ classifiers = [
 dependencies = [
   "numpy>=1.22",
   "matplotlib>=3.7",
-  "pypdf>=5.0",
   "pyyaml>=6.0",
 ]
 
@@ -57,9 +56,10 @@ llm = [
   "ollama>=0.6.1",
   "requests>=2.31.0",
 ]
-# Optional rendering enhancements (lazily imported in manuscript_overview.py)
+# Optional rendering enhancements (lazily imported in manuscript_overview.py and pdf_validator.py)
 rendering = [
   "reportlab>=4.0.0",
+  "pypdf>=5.0",
 ]
 # Optional dashboard generation (lazily imported in dashboard_generator.py)
 dashboard = [

@@ -2013,9 +2013,7 @@ dependencies = [
     { name = "matplotlib" },
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.4.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "pypdf" },
     { name = "pyyaml" },
-    { name = "requests" },
 ]
 
 [package.dev-dependencies]
@@ -2041,11 +2039,13 @@ dotenv = [
 ]
 llm = [
     { name = "ollama" },
+    { name = "requests" },
 ]
 monitoring = [
     { name = "psutil" },
 ]
 rendering = [
+    { name = "pypdf" },
     { name = "reportlab" },
 ]
 steganography = [
@@ -2057,9 +2057,7 @@ steganography = [
 requires-dist = [
     { name = "matplotlib", specifier = ">=3.7" },
     { name = "numpy", specifier = ">=1.22" },
-    { name = "pypdf", specifier = ">=5.0" },
     { name = "pyyaml", specifier = ">=6.0" },
-    { name = "requests", specifier = ">=2.31.0" },
 ]
 
 [package.metadata.requires-dev]
@@ -2079,9 +2077,15 @@ dev = [
     { name = "types-requests", specifier = ">=2.32.4.20260107" },
 ]
 dotenv = [{ name = "python-dotenv", specifier = ">=1.0.0" }]
-llm = [{ name = "ollama", specifier = ">=0.6.1" }]
+llm = [
+    { name = "ollama", specifier = ">=0.6.1" },
+    { name = "requests", specifier = ">=2.31.0" },
+]
 monitoring = [{ name = "psutil", specifier = ">=5.9.0" }]
-rendering = [{ name = "reportlab", specifier = ">=4.0.0" }]
+rendering = [
+    { name = "pypdf", specifier = ">=5.0" },
+    { name = "reportlab", specifier = ">=4.0.0" },
+]
 steganography = [
     { name = "python-barcode", specifier = ">=0.15" },
     { name = "qrcode", extras = ["pil"], specifier = ">=8.2" },

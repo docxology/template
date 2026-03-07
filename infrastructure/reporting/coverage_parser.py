@@ -182,7 +182,6 @@ def check_test_failures(
 ) -> tuple[bool, str]:
     """Check if test failures are within tolerance."""
     env_value = os.environ.get(env_var)
-
     if env_value is not None:
         try:
             max_failures = int(env_value)
@@ -190,12 +189,7 @@ def check_test_failures(
             max_failures = 0
     else:
         testing_config = get_testing_config(repo_root)
-        config_value = getattr(testing_config, config_key, None)
-
-        if config_value is not None:
-            max_failures = int(config_value)
-        else:
-            max_failures = 0
+        max_failures = int(getattr(testing_config, config_key, 0) or 0)
 
     if failed_count == 0:
         return False, f"{test_suite}: All tests passed"
@@ -232,10 +226,9 @@ def _parse_coverage_json(path: Path) -> float | None:
         with open(path, "r") as f:
             coverage_data = json.load(f)
         pct = coverage_data.get("totals", {}).get("percent_covered", 0)
-        logger.debug(f"Coverage data from {path}: totals={coverage_data.get('totals', {})}")
         if pct > 0:
             return float(pct)
-        logger.debug(f"Coverage file exists but percent_covered is 0: {pct}")
+        logger.debug(f"Coverage file {path}: percent_covered is 0")
     except json.JSONDecodeError as e:
         logger.warning(f"Corrupt coverage JSON at {path}: {e} (falling back to stdout parsing)")
     except OSError as e:

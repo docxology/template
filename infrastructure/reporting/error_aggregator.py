@@ -47,6 +47,46 @@ _FIX_TEMPLATES: dict[str, dict[str, Any]] = {
         ],
         "documentation": "docs/TROUBLESHOOTING_GUIDE.md",
     },
+    "coverage_failure": {
+        "priority": "high",
+        "actions": [
+            "Check coverage report: output/reports/coverage.html",
+            "Add tests for uncovered code paths",
+            "Run: uv run pytest --cov=infrastructure --cov-report=term-missing",
+            "Review coverage threshold in pyproject.toml",
+        ],
+        "documentation": "docs/TESTING_GUIDE.md",
+    },
+    "render_error": {
+        "priority": "high",
+        "actions": [
+            "Check LaTeX compilation logs in output/pdf/",
+            "Verify LaTeX packages are installed: tlmgr install <package>",
+            "Validate markdown syntax before rendering",
+            "Run: python3 -m infrastructure.rendering.latex_package_validator",
+        ],
+        "documentation": "docs/TROUBLESHOOTING_GUIDE.md",
+    },
+    "dependency_error": {
+        "priority": "high",
+        "actions": [
+            "Run: uv sync to install missing dependencies",
+            "Check pyproject.toml for required packages",
+            "Verify system dependencies (pandoc, latex, etc.) are installed",
+            "Review environment variables and PATH settings",
+        ],
+        "documentation": "docs/TROUBLESHOOTING_GUIDE.md",
+    },
+    "script_error": {
+        "priority": "medium",
+        "actions": [
+            "Review script execution logs",
+            "Check script input files exist",
+            "Run script manually with debug logging: LOG_LEVEL=0 python3 <script>",
+            "Verify PYTHONPATH includes project source directories",
+        ],
+        "documentation": "docs/TROUBLESHOOTING_GUIDE.md",
+    },
 }
 
 @dataclass
@@ -130,15 +170,11 @@ class ErrorAggregator:
         # Categorize errors by type
         errors_by_type: dict[str, list[ErrorEntry]] = {}
         for error in self.errors:
-            if error.type not in errors_by_type:
-                errors_by_type[error.type] = []
-            errors_by_type[error.type].append(error)
+            errors_by_type.setdefault(error.type, []).append(error)
 
         warnings_by_type: dict[str, list[ErrorEntry]] = {}
         for warning in self.warnings:
-            if warning.type not in warnings_by_type:
-                warnings_by_type[warning.type] = []
-            warnings_by_type[warning.type].append(warning)
+            warnings_by_type.setdefault(warning.type, []).append(warning)
 
         return {
             "total_errors": len(self.errors),

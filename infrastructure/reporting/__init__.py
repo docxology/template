@@ -34,7 +34,7 @@ from .pipeline_reporter import (
     save_test_results,
 )
 from .output_organizer import FileType, OutputOrganizer
-from .multi_project_reporter import generate_multi_project_report
+from .multi_project_reporter import generate_multi_project_report, generate_multi_project_summary_report
 from .suite_summary_generator import (
     generate_markdown_report,
     generate_summary_report,
@@ -76,6 +76,7 @@ __all__ = [
     "ProjectMetrics",
     "ExecutiveSummary",
     "generate_multi_project_report",
+    "generate_multi_project_summary_report",
     "OutputOrganizer",
     "FileType",
     "generate_summary_report",
