@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from infrastructure.reporting.test_reporter import (
+from infrastructure.reporting.coverage_reporter import (
     generate_test_report,
     parse_pytest_output,
     save_test_report,

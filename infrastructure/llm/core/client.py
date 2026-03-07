@@ -762,6 +762,7 @@ class LLMClient:
         last_chunk_time = None
         error_count = 0
         partial_saved = False
+        _timeout_warned = False
 
         # Initialize metrics (imported locally to avoid circular import with review.metrics)
         from infrastructure.llm.review.metrics import StreamingMetrics  # noqa: PLC0415
@@ -846,11 +847,15 @@ class LLMClient:
 
                                     yield chunk
 
-                                    # Log timeout remaining when approaching limit (earlier warnings)  # noqa: E501
+                                    # Log timeout remaining when approaching limit (warn once only)
                                     elapsed = current_time - start_time
-                                    if elapsed > self.config.timeout * 0.3:  # After 30% of timeout
+                                    if (
+                                        not _timeout_warned
+                                        and elapsed > self.config.timeout * 0.3
+                                    ):
                                         remaining = self.config.timeout - elapsed
                                         if remaining > 0:
+                                            _timeout_warned = True
                                             logger.info(
                                                 f"Streaming timeout warning: {remaining:.1f}s remaining",  # noqa: E501
                                                 extra={
