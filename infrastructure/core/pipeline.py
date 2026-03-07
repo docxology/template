@@ -195,13 +195,7 @@ class PipelineExecutor:
             result = self._execute_stage(executed_stage_num, stage_name, stage_func, pipeline_start)
             # Exit code 2 means "skipped successfully" (e.g., no LLM languages configured)
             if result.exit_code == 2:
-                result = PipelineStageResult(
-                    stage_num=result.stage_num,
-                    stage_name=result.stage_name,
-                    success=True,
-                    duration=result.duration,
-                    exit_code=2,
-                )
+                result = self._as_skip_success(result)
             results.append(result)
 
             if not result.success:
@@ -216,6 +210,17 @@ class PipelineExecutor:
             self._save_checkpoint(pipeline_start, executed_stage_num, results)
 
         return results
+
+    @staticmethod
+    def _as_skip_success(result: PipelineStageResult) -> PipelineStageResult:
+        """Return a copy of result marked success=True for graceful-skip (exit code 2)."""
+        return PipelineStageResult(
+            stage_num=result.stage_num,
+            stage_name=result.stage_name,
+            success=True,
+            duration=result.duration,
+            exit_code=2,
+        )
 
     def _execute_stage(
         self,
@@ -369,16 +374,9 @@ class PipelineExecutor:
 
             executed_stage_num += 1
             result = self._execute_stage(executed_stage_num, stage_name, stage_func, pipeline_start)
-            # Handle exit code 2 (skip) as success for LLM stages
-            if hasattr(result, "exit_code") and result.exit_code == 2:
-                # Exit code 2 means "skipped successfully" (e.g., no LLM languages configured)
-                result = PipelineStageResult(
-                    stage_num=result.stage_num,
-                    stage_name=result.stage_name,
-                    success=True,  # Treat skip as success
-                    duration=result.duration,
-                    exit_code=2,  # Preserve original exit code for reporting
-                )
+            # Exit code 2 means "skipped successfully" (e.g., no LLM languages configured)
+            if result.exit_code == 2:
+                result = self._as_skip_success(result)
             resumed_results.append(result)
             if not result.success:
                 logger.error(
@@ -592,6 +590,6 @@ class PipelineExecutor:
                 return True
 
             return False
-        except Exception as e:
+        except (OSError, subprocess.SubprocessError, subprocess.TimeoutExpired) as e:
             logger.error(SCRIPT_EXECUTION_FAILED.format(script_name=script_name, error=e))
             return False

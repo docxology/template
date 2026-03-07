@@ -15,7 +15,10 @@ try:
         generate_plotly_dashboard,
     )
 except ImportError:
-    pass
+    # plotly is optional; dashboard functions unavailable when not installed
+    generate_all_dashboards = None  # type: ignore[assignment]
+    generate_matplotlib_dashboard = None  # type: ignore[assignment]
+    generate_plotly_dashboard = None  # type: ignore[assignment]
 from .error_aggregator import (
     ErrorAggregator,
     ErrorEntry,

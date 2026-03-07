@@ -681,7 +681,7 @@ def generate_html_report(report: PipelineReport) -> str:
 
 
 def generate_test_report(test_results: Dict[str, Any], output_dir: Path) -> Path:
-    """Generate test results report.
+    """Write test_results dict to test_results.json and return the path.
 
     Args:
         test_results: Test results dictionary
@@ -690,10 +690,12 @@ def generate_test_report(test_results: Dict[str, Any], output_dir: Path) -> Path
     Returns:
         Path to saved report
     """
-    # This is a wrapper - actual test report generation is in scripts/01_run_tests.py
-    # This function can be used to generate additional formatted reports
     output_dir.mkdir(parents=True, exist_ok=True)
-    return output_dir / "test_results.json"
+    report_path = output_dir / "test_results.json"
+    with open(report_path, "w", encoding="utf-8") as f:
+        import json
+        json.dump(test_results, f, indent=2, default=str)
+    return report_path
 
 
 def generate_validation_report(
