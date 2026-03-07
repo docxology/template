@@ -227,8 +227,7 @@ class StagePerformanceTracker:
     def end_stage(self, stage_name: str, exit_code: int) -> dict[str, Any]:
         """End tracking a stage and return metrics."""
         if self.start_time is None:
-            logger.debug("end_stage called without start_stage for %s", stage_name)
-            return {}
+            raise BuildError(f"end_stage called without start_stage for {stage_name}")
 
         duration = time.time() - self.start_time
 
@@ -552,15 +551,17 @@ def monitor_performance(operation_name: str, track_memory: bool = True):
 def profile_memory_usage(func: Callable, *args, **kwargs) -> Dict[str, Any]:
     """Profile memory usage of a function via CodeProfiler."""
     monitor = get_performance_monitor()
-    result_holder: List[Any] = []
+    func_result = None
     with monitor.monitor(func.__name__, track_memory=True):
-        result_holder.append(func(*args, **kwargs))
+        func_result = func(*args, **kwargs)
+    if not monitor.metrics_history:
+        return {"execution_time": 0.0, "memory_current": 0, "memory_peak": 0, "result": func_result}
     metrics = monitor.metrics_history[-1]
     return {
         "execution_time": metrics.execution_time,
         "memory_current": (metrics.memory_current or 0) // (1024 * 1024),
         "memory_peak": (metrics.memory_peak or 0) // (1024 * 1024),
-        "result": result_holder[0] if result_holder else None,
+        "result": func_result,
     }
 
 

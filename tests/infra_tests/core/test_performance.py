@@ -374,13 +374,11 @@ class TestStagePerformanceTracker:
                 assert isinstance(metrics[key], (int, float))
 
     def test_end_stage_without_start(self):
-        """Test ending stage without starting returns empty dict."""
+        """Test ending stage without starting raises BuildError."""
         tracker = StagePerformanceTracker()
 
-        metrics = tracker.end_stage("test_stage", exit_code=0)
-
-        assert metrics == {}
-        assert len(tracker.stages) == 0
+        with pytest.raises(BuildError):
+            tracker.end_stage("test_stage", exit_code=0)
 
     def test_get_performance_warnings_no_stages(self):
         """Test getting warnings when no stages tracked."""
