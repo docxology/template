@@ -8,15 +8,17 @@ import time
 import pytest
 
 from infrastructure.core.exceptions import BuildError
-from infrastructure.core.performance import (
-    CodeProfiler,
+from infrastructure.core.stage_monitor import (
     PerformanceMetrics,
     PerformanceMonitor,
     ResourceUsage,
     StagePerformanceTracker,
     get_system_resources,
-    monitor_performance,
     performance_context,
+)
+from infrastructure.core.function_profiler import (
+    CodeProfiler,
+    monitor_performance,
 )
 
 # Check if psutil is available for conditional testing

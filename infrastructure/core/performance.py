@@ -42,26 +42,3 @@ __all__ = [
     "monitor_performance",
     "profile_memory_usage",
 ]
-
-
-def main():
-    """CLI entry point for performance monitoring."""
-    import argparse
-
-    parser = argparse.ArgumentParser(description="Performance monitoring and profiling")
-    parser.add_argument("--report", action="store_true", help="Generate performance report")
-    parser.add_argument("--clear", action="store_true", help="Clear metrics history")
-
-    args = parser.parse_args()
-    monitor = get_performance_monitor()
-
-    if args.clear:
-        monitor.clear_metrics_history()
-        print("Performance metrics history cleared.")
-
-    if args.report:
-        print(monitor.generate_performance_report())
-
-
-if __name__ == "__main__":
-    main()
