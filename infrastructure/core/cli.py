@@ -32,7 +32,6 @@ from infrastructure.core.errors import (
 from infrastructure.core.multi_project import MultiProjectConfig, MultiProjectOrchestrator
 from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor
 from infrastructure.core.pipeline_summary import PipelineSummaryGenerator
-from infrastructure.project.discovery import discover_projects
 
 logger = get_logger(__name__)
 
@@ -206,7 +205,9 @@ def handle_multi_project_command(args: argparse.Namespace) -> int:
     """Handle multi-project execution command."""
     logger.info(f"Executing {args.execution_type} pipeline across multiple projects")
 
-    # Discover projects
+    # Discover projects (import kept local to avoid core/ → project/ layer coupling)
+    from infrastructure.project.discovery import discover_projects
+
     projects = discover_projects(args.repo_root)
     if not projects:
         logger.error(NO_PROJECTS_FOUND.format())
@@ -345,6 +346,8 @@ def handle_discover_command(args: argparse.Namespace) -> int:
     logger.info("Discovering available projects")
 
     try:
+        from infrastructure.project.discovery import discover_projects
+
         projects = discover_projects(args.repo_root)
 
         if args.format == "json":

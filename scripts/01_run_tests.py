@@ -15,6 +15,7 @@ provides an interactive menu with options 1 (infrastructure) and 2 (project).
 
 from __future__ import annotations
 
+import collections
 import os
 import re
 import subprocess
@@ -50,26 +51,76 @@ from infrastructure.reporting.coverage_parser import (
 # Set up logger for this module
 logger = get_logger(__name__)
 
+# Stack-trace patterns from pytest internals / urllib3 that clutter output
+_INTERNAL_STACK_PATTERNS = [
+    "super().serve_forever",
+    "selector.select",
+    "_selector.poll",
+    "config.hook.pytest",
+    "hook_impl.function",
+    "httplib_response = super().getresponse",
+    "fp.readline",
+    "ready = selector.select",
+    "fd_event_list = self._selector.poll",
+    "code = main()",
+    "ret: ExitCode | int = config.hook.pytest_cmdline_main",
+    "res = hook_impl.function",
+    "runtestprotocol(item, nextitem=nextitem)",
+    "call = CallInfo.from_call",
+    "result: TResult | None = func()",
+    "lambda: runtest_hook(item=item",
+    "self.ihook.pytest_pyfunc_call",
+    "item.config.hook.pytest_runtest_protocol",
+    "response = long_client.query_long",
+    "response_text = self._generate_response",
+    "response = requests.post",
+    "return request(",
+    "return session.request",
+    "resp = self.send",
+    "r = adapter.send",
+    "resp = conn.urlopen",
+    "response = self._make_request",
+    "response = conn.getresponse",
+    "version, status, reason = self._read_status",
+    "line = str(self.fp.readline",
+]
+
+_SUMMARY_KEYWORDS = [
+    "passed",
+    "failed",
+    "skipped",
+    "warnings",
+    "ERROR",
+    "FAILED",
+    "PASSED",
+    "coverage",
+    "=",
+]
+
+
+def _is_internal_stack_line(line: str) -> bool:
+    """Return True if the line matches a known internal stack-trace pattern."""
+    return any(p in line for p in _INTERNAL_STACK_PATTERNS)
+
+
+def _should_print_line(char: str, line: str, quiet: bool) -> bool:
+    """Return True if the current line/dot should be printed to stdout."""
+    if not quiet:
+        return char == "." or not _is_internal_stack_line(line)
+    # quiet mode: only print summary lines
+    if char == "\n":
+        return any(k in line for k in _SUMMARY_KEYWORDS) or line.count("=") >= 10
+    return False
+
 
 def _run_pytest_stream(
     cmd: list[str], repo_root: Path, env: dict, quiet: bool
 ) -> Tuple[int, str, str]:
     """Run pytest streaming output to console while capturing logs for reporting."""
     import select
-    import sys
 
-    keywords = [
-        "passed",
-        "failed",
-        "skipped",
-        "warnings",
-        "ERROR",
-        "FAILED",
-        "PASSED",
-        "coverage",
-        "=",
-    ]
     stdout_buf: list[str] = []
+    recent_lines: collections.deque = collections.deque(maxlen=10)
 
     process = subprocess.Popen(
         cmd,
@@ -82,46 +133,7 @@ def _run_pytest_stream(
     )
 
     assert process.stdout is not None
-    recent_lines = []  # Keep track of recent lines for summary detection
-
-    # Filter out internal stack traces that clutter the output
-    internal_stack_patterns = [
-        "super().serve_forever",
-        "selector.select",
-        "_selector.poll",
-        "config.hook.pytest",
-        "hook_impl.function",
-        "httplib_response = super().getresponse",
-        "fp.readline",
-        "ready = selector.select",
-        "fd_event_list = self._selector.poll",
-        "code = main()",
-        "ret: ExitCode | int = config.hook.pytest_cmdline_main",
-        "res = hook_impl.function",
-        "runtestprotocol(item, nextitem=nextitem)",
-        "call = CallInfo.from_call",
-        "result: TResult | None = func()",
-        "lambda: runtest_hook(item=item",
-        "self.ihook.pytest_pyfunc_call",
-        "item.config.hook.pytest_runtest_protocol",
-        "response = long_client.query_long",
-        "response_text = self._generate_response",
-        "response = requests.post",
-        "return request(",
-        "return session.request",
-        "resp = self.send",
-        "r = adapter.send",
-        "resp = conn.urlopen",
-        "response = self._make_request",
-        "response = conn.getresponse",
-        "httplib_response = super().getresponse",
-        "version, status, reason = self._read_status",
-        "line = str(self.fp.readline",
-    ]
-
     fd = process.stdout.fileno()
-    import os
-
     os.set_blocking(fd, False)
 
     current_line = ""
@@ -131,53 +143,25 @@ def _run_pytest_stream(
         if fd in reads:
             raw_chunk = process.stdout.read(4096)
             if raw_chunk is None:
-                # No data available right now (EAGAIN/EWOULDBLOCK)
                 if process.poll() is not None:
                     break
                 continue
             if not raw_chunk:
-                # EOF
                 if process.poll() is not None:
                     break
                 continue
 
             chunk = raw_chunk.decode("utf-8", errors="replace")
 
-            # Process the chunk character by character to handle lines and dots
             for char in chunk:
                 current_line += char
                 if char == "\n" or (char == "." and not quiet):
-                    # We have a full line or a progress dot in non-quiet mode
-                    line_to_process = current_line
+                    if char == "\n" and not _is_internal_stack_line(current_line):
+                        stdout_buf.append(current_line)
+                        recent_lines.append(current_line)
 
-                    if char == "\n":
-                        # Only append full lines to the buffer and history
-                        if not any(
-                            pattern in line_to_process for pattern in internal_stack_patterns
-                        ):
-                            stdout_buf.append(line_to_process)
-                            recent_lines.append(line_to_process)
-                            if len(recent_lines) > 10:
-                                recent_lines.pop(0)
-
-                    # Decide whether to print
-                    should_print = False
-                    if not quiet:
-                        # In verbose mode, print everything, but skip stack traces if it's a newline combo  # noqa: E501
-                        if char == "." or not any(
-                            pattern in line_to_process for pattern in internal_stack_patterns
-                        ):
-                            should_print = True
-                    else:
-                        if char == "\n":
-                            if (
-                                any(k in line_to_process for k in keywords)
-                                or line_to_process.count("=") >= 10
-                            ):
-                                should_print = True
-
-                    if should_print:
-                        sys.stdout.write(char if char == "." else line_to_process)
+                    if _should_print_line(char, current_line, quiet):
+                        sys.stdout.write(char if char == "." else current_line)
                         sys.stdout.flush()
 
                     if char == "\n":
@@ -186,17 +170,15 @@ def _run_pytest_stream(
             if process.poll() is not None:
                 break
 
-    # Process remainder
     if current_line:
         stdout_buf.append(current_line)
         if not quiet:
             sys.stdout.write(current_line)
             sys.stdout.flush()
 
-    # After process completes, ensure the final summary is captured
-    for line in recent_lines[-3:]:
+    for line in list(recent_lines)[-3:]:
         if ("passed" in line or "failed" in line or "skipped" in line) and not any(
-            k in line for k in keywords
+            k in line for k in _SUMMARY_KEYWORDS
         ):
             sys.stdout.write(line)
             sys.stdout.flush()
