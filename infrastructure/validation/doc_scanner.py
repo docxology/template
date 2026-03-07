@@ -57,10 +57,7 @@ class DocumentationScanner:
         # Update results
         self.results.documentation_files = inventory.get("documentation_files", [])
         self.results.total_files = inventory["markdown_files"]
-        self.config_files = {
-            name: self.repo_root / path
-            for name, path in zip(inventory["config_files_list"], inventory["config_files_list"])
-        }
+        self.config_files = inventory["config_files_dict"]
         self.script_files = [self.repo_root / path for path in inventory["script_files_list"]]
 
         self.results.statistics["phase1"] = inventory

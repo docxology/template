@@ -272,6 +272,7 @@ def run_discovery_phase(repo_root: Path) -> Dict[str, Any]:
         "categories": categories,
         "agents_readme_list": agents_readme,
         "config_files_list": list(config_files.keys()),
+        "config_files_dict": config_files,
         "script_files_list": [str(s.relative_to(repo_root)) for s in script_files],
         "documentation_files": documentation_files,
     }

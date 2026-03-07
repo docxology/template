@@ -44,7 +44,6 @@ def verify_file_integrity(
     file_paths: list[Path], expected_hashes: Optional[dict[str, str]] = None
 ) -> dict[str, bool]:
     """Verify file integrity using hash comparison."""
-    logger.debug(f"Verifying integrity of {len(file_paths)} files")
     integrity = {}
 
     for file_path in file_paths:
@@ -77,7 +76,6 @@ def verify_file_integrity(
 
 def verify_cross_references(markdown_files: list[Path]) -> dict[str, bool]:
     """Verify cross-reference integrity in markdown files."""
-    logger.debug(f"Verifying cross-references in {len(markdown_files)} files")
     integrity = {
         "equations": True,
         "figures": True,
@@ -143,7 +141,6 @@ def verify_cross_references(markdown_files: list[Path]) -> dict[str, bool]:
 
 def verify_data_consistency(data_files: list[Path]) -> dict[str, bool]:
     """Verify data file consistency and integrity."""
-    logger.debug(f"Verifying data consistency for {len(data_files)} files")
     consistency = {
         "file_readable": True,
         "data_integrity": True,
@@ -250,35 +247,25 @@ def verify_output_integrity(
         report.overall_integrity = False
         return report
 
-    # Find all output files
     pdf_files = list(output_dir.rglob("*.pdf"))
     data_files = (
         list(output_dir.rglob("*.csv"))
         + list(output_dir.rglob("*.npz"))
         + list(output_dir.rglob("*.json"))
     )
-    markdown_files = list(output_dir.rglob("*.md"))  # Look for markdown files in output directory
+    markdown_files = list(output_dir.rglob("*.md"))
 
-    # Verify file integrity
     report.file_integrity = verify_file_integrity(pdf_files + data_files)
-
-    # Check for any file integrity failures
     if not all(report.file_integrity.values()):
         report.issues.append("Some output files failed integrity verification")
         report.overall_integrity = False
 
-    # Verify cross-references
     report.cross_reference_integrity = verify_cross_references(markdown_files)
-
-    # Check for any cross-reference failures
     if not all(report.cross_reference_integrity.values()):
         report.issues.append("Cross-reference integrity issues found")
         report.overall_integrity = False
 
-    # Verify data consistency
     report.data_consistency = verify_data_consistency(data_files)
-
-    # Check for any data consistency failures
     if not all(report.data_consistency.values()):
         report.issues.append("Data consistency issues found")
         report.overall_integrity = False
@@ -559,14 +546,7 @@ def verify_output_completeness(output_dir: Path) -> OutputCompleteness:
 
 
 def create_integrity_manifest(output_dir: Path) -> dict[str, Any]:
-    """Create an integrity manifest for all output files.
-
-    Args:
-        output_dir: Output directory to create manifest for
-
-    Returns:
-        Dictionary with comprehensive integrity manifest
-    """
+    """Create an integrity manifest for all output files."""
     manifest: dict[str, Any] = {
         "timestamp": output_dir.stat().st_ctime if output_dir.exists() else None,
         "file_count": 0,
@@ -630,15 +610,7 @@ def load_integrity_manifest(manifest_path: Path) -> Optional[dict[str, Any]]:
 def verify_integrity_against_manifest(
     current_manifest: dict[str, Any], saved_manifest: dict[str, Any]
 ) -> dict[str, Any]:
-    """Verify current integrity against a saved manifest.
-
-    Args:
-        current_manifest: Current integrity manifest
-        saved_manifest: Saved integrity manifest for comparison
-
-    Returns:
-        Dictionary with integrity verification results
-    """
+    """Verify current integrity against a saved manifest."""
     verification = {
         "file_count_changed": current_manifest["file_count"] != saved_manifest["file_count"],
         "total_size_changed": current_manifest["total_size"] != saved_manifest["total_size"],

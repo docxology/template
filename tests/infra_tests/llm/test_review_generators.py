@@ -38,14 +38,13 @@ class TestExtractManuscriptText:
         except ValueError as e:
             assert "No PDF parsing library available" in str(e)
 
-    def test_with_pdfplumber(self, tmp_path):
-        """Test extract_manuscript_text with pdfplumber library."""
-        # Create a real PDF with text content
-        pdf_file = tmp_path / "test.pdf"
-
+    def test_extracts_text_from_real_pdf(self, tmp_path):
+        """Test extract_manuscript_text with a real PDF file."""
+        reportlab = pytest.importorskip("reportlab")
         from reportlab.lib.pagesizes import letter
         from reportlab.pdfgen import canvas
 
+        pdf_file = tmp_path / "test.pdf"
         c = canvas.Canvas(str(pdf_file), pagesize=letter)
         c.drawString(100, 750, "Extracted text from page")
         c.drawString(100, 730, "Second line of text")
@@ -56,27 +55,6 @@ class TestExtractManuscriptText:
             assert text is not None
             assert "Extracted text from page" in text
             assert "Second line of text" in text
-        except ValueError as e:
-            assert "No PDF parsing library available" in str(e)
-
-    def test_with_pypdf(self, tmp_path):
-        """Test extract_manuscript_text with pypdf library."""
-        # Create a real PDF with text content
-        pdf_file = tmp_path / "test.pdf"
-
-        from reportlab.lib.pagesizes import letter
-        from reportlab.pdfgen import canvas
-
-        c = canvas.Canvas(str(pdf_file), pagesize=letter)
-        c.drawString(100, 750, "Extracted text")
-        c.drawString(100, 730, "More text content")
-        c.save()
-
-        try:
-            text, metrics = extract_manuscript_text(str(pdf_file))
-            assert text is not None
-            assert "Extracted text" in text
-            assert "More text content" in text
         except ValueError as e:
             assert "No PDF parsing library available" in str(e)
 
@@ -271,13 +249,34 @@ class TestReviewGeneratorsIntegration:
 
         client = LLMClient()
         if not client.check_connection():
-            pytest.fail("Ollama server is not available!")
+            pytest.skip("Ollama server is not available")
 
         manuscript_text = "This is a test manuscript about machine learning and AI."
         result, metrics = generate_executive_summary(client, manuscript_text)
 
         assert len(result) > 0
         assert isinstance(result, str)
+
+    def test_generate_review_with_metrics_real_ollama(self):
+        """Test generate_review_with_metrics with real Ollama."""
+        from infrastructure.llm import LLMClient
+
+        client = LLMClient()
+        if not client.check_connection():
+            pytest.skip("Ollama server is not available")
+
+        manuscript_text = "Test manuscript about optimization algorithms."
+        from infrastructure.llm.templates import ManuscriptExecutiveSummary
+
+        review_text, metrics = generate_review_with_metrics(
+            client, manuscript_text, "executive_summary", "Executive Summary", ManuscriptExecutiveSummary
+        )
+
+        assert len(review_text) > 0
+        assert hasattr(metrics, "output_chars")
+        assert hasattr(metrics, "generation_time_seconds")
+        assert metrics.generation_time_seconds > 0
+
 
 class TestValidateReviewQuality:
     """Deterministic tests for validate_review_quality() — no Ollama required."""
@@ -346,22 +345,3 @@ class TestValidateReviewQuality:
         assert small_short is True
 
 
-    def test_generate_review_with_metrics_real_ollama(self):
-        """Test generate_review_with_metrics with real Ollama."""
-        from infrastructure.llm import LLMClient
-
-        client = LLMClient()
-        if not client.check_connection():
-            pytest.fail("Ollama server is not available!")
-
-        manuscript_text = "Test manuscript about optimization algorithms."
-        from infrastructure.llm.templates import ManuscriptExecutiveSummary
-
-        review_text, metrics = generate_review_with_metrics(
-            client, manuscript_text, "executive_summary", "Executive Summary", ManuscriptExecutiveSummary
-        )
-
-        assert len(review_text) > 0
-        assert hasattr(metrics, "output_chars")
-        assert hasattr(metrics, "generation_time_seconds")
-        assert metrics.generation_time_seconds > 0
