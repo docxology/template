@@ -176,7 +176,6 @@ class SystemHealthChecker:
         critical_deps = [
             "numpy",
             "matplotlib",
-            "pypdf",
             "yaml",  # pyyaml installs as yaml
         ]
 
@@ -189,7 +188,7 @@ class SystemHealthChecker:
                 results[dep] = "missing"
 
         # Check optional dependencies
-        optional_deps = ["ollama", "reportlab", "requests", "psutil"]
+        optional_deps = ["ollama", "reportlab", "requests", "psutil", "pypdf"]
         results["optional"] = {}
         for dep in optional_deps:
             try:

@@ -111,7 +111,11 @@ class PipelineSummaryGenerator:
         lines.append("")
         lines.append("PIPELINE SUMMARY")
         lines.append("")
-        lines.append("All stages completed successfully!")
+        if summary.failed_stages:
+            failed_names = ", ".join(r.stage_name for r in summary.failed_stages)
+            lines.append(f"Pipeline completed with failures: {failed_names}")
+        else:
+            lines.append("All stages completed successfully!")
 
         # Log file info
         if summary.log_file:
@@ -259,7 +263,11 @@ class PipelineSummaryGenerator:
         html_parts = []
         html_parts.append("<div class='pipeline-summary'>")
         html_parts.append("<h2>Pipeline Summary</h2>")
-        html_parts.append("<p class='success'>All stages completed successfully!</p>")
+        if summary.failed_stages:
+            failed_names = ", ".join(r.stage_name for r in summary.failed_stages)
+            html_parts.append(f"<p class='error'>Pipeline completed with failures: {failed_names}</p>")
+        else:
+            html_parts.append("<p class='success'>All stages completed successfully!</p>")
 
         if summary.log_file:
             log_file_final = self._get_final_log_path(summary.log_file)
@@ -391,7 +399,7 @@ class PipelineSummaryGenerator:
         else:
             return f"✗ Stage {result.stage_num}: {result.stage_name} ({duration_formatted}) FAILED"
 
-    def _stage_result_to_dict(self, result: PipelineStageResult | None) -> Optional[dict]:
+    def _stage_result_to_dict(self, result: PipelineStageResult | None) -> dict | None:
         """Convert stage result to dictionary.
 
         Args:

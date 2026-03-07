@@ -13,6 +13,9 @@ from infrastructure.rendering.web_renderer import WebRenderer
 
 logger = get_logger(__name__)
 
+# Minimum PDF size in MB; PDFs below this are considered empty/corrupted (matches 1000-byte check in pdf_validator)
+_MIN_VALID_PDF_MB = 0.001
+
 class RenderManager:
     """Orchestrates rendering of all output formats."""
 
@@ -85,7 +88,7 @@ class RenderManager:
                         beamer_pdf = self.slides_renderer.render(source_file, format="beamer")
                         if beamer_pdf.exists():
                             size_mb = beamer_pdf.stat().st_size / (1024 * 1024)
-                            if size_mb < 0.001:  # Less than 1KB
+                            if size_mb < _MIN_VALID_PDF_MB:
                                 error_msg += f" (PDF created but empty: {size_mb:.3f} MB)"
                                 error_msg += f" - Check LaTeX compilation log: {beamer_pdf.parent / beamer_pdf.stem}.log"  # noqa: E501
                             else:

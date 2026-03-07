@@ -36,11 +36,11 @@ def generate_pipeline_report(
     total_duration: float,
     repo_root: Path,
     *,
-    test_results: dict[str, Any | None] = None,
-    validation_results: dict[str, Any | None] = None,
-    performance_metrics: dict[str, Any | None] = None,
-    error_summary: dict[str, Any | None] = None,
-    output_statistics: dict[str, Any | None] = None,
+    test_results: dict[str, Any] | None = None,
+    validation_results: dict[str, Any] | None = None,
+    performance_metrics: dict[str, Any] | None = None,
+    error_summary: dict[str, Any] | None = None,
+    output_statistics: dict[str, Any] | None = None,
     project_name: str | None = None,
 ) -> PipelineReport:
     """Generate consolidated pipeline report from stage results and optional extras."""

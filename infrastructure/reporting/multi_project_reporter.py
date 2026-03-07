@@ -12,15 +12,15 @@ from typing import Any
 
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.core.multi_project import MultiProjectResult
+from infrastructure.reporting.executive_reporter import (
+    generate_executive_summary,
+    save_executive_summary,
+)
 try:
     from infrastructure.reporting.dashboard_generator import generate_all_dashboards
     _DASHBOARD_AVAILABLE = True
 except ImportError:
     _DASHBOARD_AVAILABLE = False
-from infrastructure.reporting.executive_reporter import (
-    generate_executive_summary,
-    save_executive_summary,
-)
 
 logger = get_logger(__name__)
 
