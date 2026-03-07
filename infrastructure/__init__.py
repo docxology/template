@@ -26,16 +26,13 @@ try:
     from .core import (  # type: ignore
         BuildError,
         ConfigurationError,
-        ProjectLogger,
         TemplateError,
         ValidationError,
         get_logger,
-        get_project_logger,
         load_config,
         log_operation,
         log_timing,
         setup_logger,
-        setup_project_logging,
     )
 
     # Documentation
@@ -77,9 +74,6 @@ __all__ = [
     # Core conveniences
     "get_logger",
     "setup_logger",
-    "get_project_logger",
-    "setup_project_logging",
-    "ProjectLogger",
     "log_operation",
     "log_timing",
     "TemplateError",
