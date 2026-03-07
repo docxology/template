@@ -31,14 +31,6 @@ def create_publication_package(output_dir: Path, metadata: PublicationMetadata) 
     Returns:
         Dictionary with package information
     """
-    package_info = {
-        "package_name": f"{metadata.title.replace(' ', '_').lower()}",
-        "files_included": [],
-        "metadata": asdict(metadata),
-        "package_hash": "",
-        "created_at": datetime.now().isoformat(),
-    }
-
     # Collect files to include
     package_files = []
 
@@ -56,20 +48,28 @@ def create_publication_package(output_dir: Path, metadata: PublicationMetadata) 
         if file_path.exists():
             package_files.append(file_path)
 
-    # Calculate package hash
+    # Calculate package hash and collect included files
     file_hashes = []
+    files_included = []
     for file_path in package_files:
         if file_path.exists():
             file_hash = calculate_file_hash(file_path)
             if file_hash:
                 file_hashes.append(file_hash)
-            package_info["files_included"].append(str(file_path))  # type: ignore
+            files_included.append(str(file_path))
 
+    package_hash = ""
     if file_hashes:
         combined_hash = "".join(sorted(file_hashes))
-        package_info["package_hash"] = hashlib.sha256(combined_hash.encode()).hexdigest()
+        package_hash = hashlib.sha256(combined_hash.encode()).hexdigest()
 
-    return package_info
+    return {
+        "package_name": f"{metadata.title.replace(' ', '_').lower()}",
+        "files_included": files_included,
+        "metadata": asdict(metadata),
+        "package_hash": package_hash,
+        "created_at": datetime.now().isoformat(),
+    }
 
 
 def create_submission_checklist(metadata: PublicationMetadata) -> str:

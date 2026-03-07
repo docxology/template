@@ -2856,7 +2856,6 @@ def generate_comparative_analysis_csv(summary: ExecutiveSummary, output_dir: Pat
             "manuscript_words": [p.manuscript.total_words for p in projects],
             "manuscript_sections": [p.manuscript.sections for p in projects],
             "codebase_lines": [p.codebase.source_lines for p in projects],
-            "codebase_methods": [p.codebase.methods for p in projects],
             "pipeline_duration": [p.pipeline.total_duration for p in projects],
             "output_total": [p.outputs.total_outputs for p in projects],
         }

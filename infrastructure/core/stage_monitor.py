@@ -231,35 +231,38 @@ class StagePerformanceTracker:
 
         duration = time.time() - self.start_time
 
-        metrics = {
-            "stage_name": stage_name,
-            "duration": duration,
-            "exit_code": exit_code,
-            "memory_mb": 0.0,
-            "end_memory_mb": 0.0,
-            "cpu_percent": 0.0,
-            "io_read_mb": 0.0,
-            "io_write_mb": 0.0,
-        }
+        memory_mb = 0.0
+        end_memory_mb = 0.0
+        cpu_percent = 0.0
+        io_read_mb = 0.0
+        io_write_mb = 0.0
 
         if psutil is not None:
             try:
                 process = psutil.Process(os.getpid())
                 current_memory = process.memory_info().rss / 1024 / 1024
-                metrics["memory_mb"] = current_memory
-                metrics["end_memory_mb"] = current_memory
-                metrics["cpu_percent"] = process.cpu_percent(interval=0.1)
-
+                memory_mb = current_memory
+                end_memory_mb = current_memory
+                cpu_percent = process.cpu_percent(interval=0.1)
                 if self.start_io:
                     current_io = process.io_counters()
-                    metrics["io_read_mb"] = (
-                        (current_io.read_bytes - self.start_io.read_bytes) / 1024 / 1024
-                    )
-                    metrics["io_write_mb"] = (
-                        (current_io.write_bytes - self.start_io.write_bytes) / 1024 / 1024
-                    )
+                    io_read_mb = (current_io.read_bytes - self.start_io.read_bytes) / 1024 / 1024
+                    io_write_mb = (
+                        current_io.write_bytes - self.start_io.write_bytes
+                    ) / 1024 / 1024
             except AttributeError as e:
                 logger.debug(f"psutil attribute not available on this platform: {e}")
+
+        metrics = {
+            "stage_name": stage_name,
+            "duration": duration,
+            "exit_code": exit_code,
+            "memory_mb": memory_mb,
+            "end_memory_mb": end_memory_mb,
+            "cpu_percent": cpu_percent,
+            "io_read_mb": io_read_mb,
+            "io_write_mb": io_write_mb,
+        }
 
         self.stages.append(metrics)
         self.start_time = None
