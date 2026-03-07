@@ -12,7 +12,6 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
-from typing import List, Tuple
 
 from infrastructure.core.logging_utils import get_logger, log_success
 
@@ -33,8 +32,8 @@ def check_python_version() -> bool:
 
 
 def check_dependencies(
-    required_packages: List[str] | None = None,
-) -> Tuple[bool, List[str]]:
+    required_packages: list[str] | None = None,
+) -> tuple[bool, list[str]]:
     """Verify required packages are installed.
 
     Args:
@@ -55,7 +54,7 @@ def check_dependencies(
         ]
         # No optional packages in default infrastructure check
         # (project-specific deps like scipy belong in projects/{name}/pyproject.toml)
-        optional_packages: List[str] = []
+        optional_packages: list[str] = []
     else:
         optional_packages = []
 
@@ -89,7 +88,7 @@ def check_dependencies(
     return len(missing_packages) == 0, missing_packages
 
 
-def install_missing_packages(packages: List[str]) -> bool:
+def install_missing_packages(packages: list[str]) -> bool:
     """Install packages via uv add + uv sync; returns True on success."""
     logger.info(f"Installing {len(packages)} missing package(s) with uv...")
 
@@ -180,7 +179,7 @@ def check_build_tools(required_tools: dict[str, str] | None = None) -> bool:
     return all_present
 
 
-def _project_output_dirs(project_name: str) -> List[str]:
+def _project_output_dirs(project_name: str) -> list[str]:
     """Return the canonical list of output directories for a project.
 
     Used by both setup_directories and validate_directory_structure to
@@ -213,7 +212,7 @@ def _project_output_dirs(project_name: str) -> List[str]:
 
 
 def setup_directories(
-    repo_root: Path, project_name: str = "project", directories: List[str] | None = None
+    repo_root: Path, project_name: str = "project", directories: list[str] | None = None
 ) -> bool:
     """Create required directory structure.
 

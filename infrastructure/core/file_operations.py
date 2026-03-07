@@ -10,7 +10,7 @@ import hashlib
 import shutil
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from infrastructure.core.exceptions import FileOperationError
 from infrastructure.core.logging_utils import get_logger, log_success
@@ -95,7 +95,7 @@ def _clean_dir_preserving(
 
 
 def clean_output_directories(
-    repo_root: Path, project_name: str = "project", subdirs: List[str] | None = None
+    repo_root: Path, project_name: str = "project", subdirs: list[str] | None = None
 ) -> None:
     """Clean output directories for a fresh pipeline start.
 
@@ -415,7 +415,7 @@ def copy_final_deliverables(
             "logs_files": int,
             "combined_pdf": int,
             "total_files": int,
-            "errors": List[str]
+            "errors": list[str]
         }
     """
     logger.info(f"Copying all outputs for project '{project_name}'...")
@@ -555,7 +555,7 @@ def copy_final_deliverables(
     return stats
 
 
-def calculate_file_hash(file_path: Path, algorithm: str = "sha256") -> Optional[str]:
+def calculate_file_hash(file_path: Path, algorithm: str = "sha256") -> str | None:
     """Calculate hash of a file for integrity verification.
 
     Args:

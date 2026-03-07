@@ -11,7 +11,7 @@ from __future__ import annotations
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable, Dict, List, Optional
+from typing import TYPE_CHECKING, Callable
 
 from infrastructure.core.logging_utils import get_logger, log_operation
 from infrastructure.core.errors import PROJECT_EXCEPTION, PROJECT_FAILED
@@ -38,7 +38,7 @@ class MultiProjectConfig:
 class MultiProjectResult:
     """Result of multi-project execution."""
 
-    project_results: Dict[str, List[PipelineStageResult]]
+    project_results: dict[str, list[PipelineStageResult]]
     infra_test_duration: float = 0.0
     total_duration: float = 0.0
     successful_projects: int = 0
@@ -51,7 +51,7 @@ class MultiProjectOrchestrator:
     def __init__(
         self,
         config: MultiProjectConfig,
-        on_project_complete: Optional[Callable[[str, List[PipelineStageResult], Path], None]] = None,
+        on_project_complete: Callable[[str, list[PipelineStageResult], Path], None] | None = None,
     ):
         """Initialize multi-project orchestrator.
 

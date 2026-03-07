@@ -10,7 +10,7 @@ import difflib
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional, TypedDict
+from typing import Any, TypedDict
 
 from infrastructure.core.logging_utils import get_logger
 
@@ -34,12 +34,12 @@ class PublicationConfig(TypedDict, total=False):
 
 class TranslationsConfig(TypedDict, total=False):
     enabled: bool
-    languages: List[str]
+    languages: list[str]
 
 
 class ReviewsConfig(TypedDict, total=False):
     enabled: bool
-    types: List[str]
+    types: list[str]
 
 
 class LLMConfig(TypedDict, total=False):
@@ -81,13 +81,13 @@ class ResolvedTestingConfig:
 
 class ManuscriptConfig(TypedDict, total=False):
     paper: PaperConfig
-    authors: List[AuthorConfig]
+    authors: list[AuthorConfig]
     publication: PublicationConfig
     llm: LLMConfig
     testing: TestingConfig
     steganography: SteganographyConfigYAML
-    keywords: List[str]
-    metadata: Dict[str, str]
+    keywords: list[str]
+    metadata: dict[str, str]
 
 
 try:
@@ -98,7 +98,7 @@ except ImportError:
     YAML_AVAILABLE = False
 
 
-def validate_config_keys(config: Dict[str, Any], config_path: Path | str = "") -> List[str]:
+def validate_config_keys(config: dict[str, Any], config_path: Path | str = "") -> list[str]:
     """Validate top-level config keys against known schema.
 
     Logs warnings for unrecognized keys with typo suggestions via
@@ -112,7 +112,7 @@ def validate_config_keys(config: Dict[str, Any], config_path: Path | str = "") -
         List of warning messages for unknown keys
     """
     known_keys = frozenset(ManuscriptConfig.__annotations__.keys())
-    warnings: List[str] = []
+    warnings: list[str] = []
 
     if not isinstance(config, dict):
         return warnings
@@ -130,7 +130,7 @@ def validate_config_keys(config: Dict[str, Any], config_path: Path | str = "") -
     return warnings
 
 
-def load_config(config_path: Path | str) -> Optional[ManuscriptConfig]:
+def load_config(config_path: Path | str) -> ManuscriptConfig | None:
     """Load configuration from YAML file.
 
     Validates top-level keys and logs warnings for unrecognized keys.
@@ -164,7 +164,7 @@ def load_config(config_path: Path | str) -> Optional[ManuscriptConfig]:
         return None
 
 
-def format_author_details(authors: List[AuthorConfig], doi: str = "") -> str:
+def format_author_details(authors: list[AuthorConfig], doi: str = "") -> str:
     """Format author details string for LaTeX.
 
     Args:
@@ -192,7 +192,7 @@ def format_author_details(authors: List[AuthorConfig], doi: str = "") -> str:
     return "\\\\ ".join(parts)
 
 
-def format_author_name(authors: List[AuthorConfig]) -> str:
+def format_author_name(authors: list[AuthorConfig]) -> str:
     """Format author name(s) for display.
 
     Args:
@@ -209,7 +209,7 @@ def format_author_name(authors: List[AuthorConfig]) -> str:
 
 def get_config_as_dict(
     repo_root: Path | str, respect_existing: bool = False
-) -> Dict[str, str]:
+) -> dict[str, str]:
     """Get configuration as a dictionary of key-value pairs.
 
     Loads configuration from project/manuscript/config.yaml.
@@ -264,7 +264,7 @@ def get_config_as_dict(
     return result
 
 
-def get_config_as_env_vars(repo_root: Path | str, respect_existing: bool = True) -> Dict[str, str]:
+def get_config_as_env_vars(repo_root: Path | str, respect_existing: bool = True) -> dict[str, str]:
     """Get configuration as environment variables.
 
     Thin wrapper over get_config_as_dict with respect_existing=True by default.
@@ -272,7 +272,7 @@ def get_config_as_env_vars(repo_root: Path | str, respect_existing: bool = True)
     return get_config_as_dict(repo_root, respect_existing=respect_existing)
 
 
-def find_config_file(repo_root: Path | str, project_name: Optional[str] = None) -> Optional[Path]:
+def find_config_file(repo_root: Path | str, project_name: str | None = None) -> Path | None:
     """Find the manuscript config file at the standard location.
 
     Args:
@@ -298,7 +298,7 @@ def find_config_file(repo_root: Path | str, project_name: Optional[str] = None) 
     return None
 
 
-def get_translation_languages(repo_root: Path | str, project_name: str = "project") -> List[str]:
+def get_translation_languages(repo_root: Path | str, project_name: str = "project") -> list[str]:
     """Get list of enabled translation languages from config.
 
     Reads the llm.translations section from config.yaml and returns
@@ -329,7 +329,7 @@ def get_translation_languages(repo_root: Path | str, project_name: str = "projec
     return languages if isinstance(languages, list) else []
 
 
-def get_review_types(repo_root: Path | str, project_name: str = "project") -> List[str]:
+def get_review_types(repo_root: Path | str, project_name: str = "project") -> list[str]:
     """Get list of enabled review types from config.
 
     Reads the llm.reviews section from config.yaml and returns
@@ -388,7 +388,7 @@ def get_review_types(repo_root: Path | str, project_name: str = "project") -> Li
     return valid_types
 
 
-def _safe_int_from_dict(config_dict: dict, key: str) -> Optional[int]:
+def _safe_int_from_dict(config_dict: dict, key: str) -> int | None:
     """Safely extract an integer value from a config dict by key."""
     val = config_dict.get(key)
     if val is None:

@@ -7,7 +7,6 @@ and verifying their outputs.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import List
 
 from infrastructure.core.exceptions import PipelineError
 from infrastructure.core.logging_utils import get_logger, log_success
@@ -15,7 +14,7 @@ from infrastructure.core.logging_utils import get_logger, log_success
 logger = get_logger(__name__)
 
 
-def discover_analysis_scripts(repo_root: Path, project_name: str = "project") -> List[Path]:
+def discover_analysis_scripts(repo_root: Path, project_name: str = "project") -> list[Path]:
     """Discover all analysis scripts in projects/{project_name}/scripts/ to execute.
 
     Args:
@@ -56,7 +55,7 @@ def discover_analysis_scripts(repo_root: Path, project_name: str = "project") ->
     return scripts
 
 
-def discover_orchestrators(repo_root: Path) -> List[Path]:
+def discover_orchestrators(repo_root: Path) -> list[Path]:
     """Discover orchestrator scripts in scripts/ directory.
 
     Args:

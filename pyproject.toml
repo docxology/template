@@ -39,7 +39,7 @@ dependencies = [
   "matplotlib>=3.7",
   "pypdf>=5.0",
   "pyyaml>=6.0",
-  "requests>=2.31.0",
+  "requests>=2.31.0",  # Required by infrastructure/llm/core/client.py (base dep, not llm optional group)
 ]
 
 [project.scripts]

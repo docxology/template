@@ -29,7 +29,6 @@ from infrastructure.validation.doc_discovery import (
     run_discovery_phase,
 )
 from infrastructure.validation.doc_models import (
-    DocumentationFile,
     ScanResults,
 )
 from infrastructure.validation.doc_quality import run_quality_phase

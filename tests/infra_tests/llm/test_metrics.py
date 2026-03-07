@@ -35,6 +35,18 @@ class TestEstimateTokens:
         # Floor division: 3 // 4 == 0
         assert estimate_tokens("abc") == 0
 
+    def test_proportional_to_input_length(self):
+        """Tokens must grow linearly with input length (4 chars/token)."""
+        results = [estimate_tokens("a" * (n * 4)) for n in range(1, 6)]
+        for i in range(1, len(results)):
+            assert results[i] == results[i - 1] + 1, "Token estimate must be linearly proportional"
+
+    def test_doubling_input_doubles_tokens(self):
+        text = "hello world "
+        single = estimate_tokens(text)
+        double = estimate_tokens(text * 2)
+        assert double == single * 2
+
 
 class TestReviewMetrics:
     def test_default_values(self):
@@ -77,6 +89,21 @@ class TestSessionMetrics:
         s = SessionMetrics()
         s.reviews["quality_review"] = ReviewMetrics(output_chars=300)
         assert "quality_review" in s.reviews
+
+    def test_multiple_reviews_independently_tracked(self):
+        s = SessionMetrics()
+        s.reviews["review_a"] = ReviewMetrics(output_chars=100)
+        s.reviews["review_b"] = ReviewMetrics(output_chars=200)
+        assert s.reviews["review_a"].output_chars == 100
+        assert s.reviews["review_b"].output_chars == 200
+        assert len(s.reviews) == 2
+
+    def test_total_output_chars_from_all_reviews(self):
+        s = SessionMetrics()
+        s.reviews["r1"] = ReviewMetrics(output_chars=50)
+        s.reviews["r2"] = ReviewMetrics(output_chars=75)
+        total = sum(r.output_chars for r in s.reviews.values())
+        assert total == 125
 
 
 class TestStreamingMetrics:

@@ -10,7 +10,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Optional
 
 from infrastructure.core.file_inventory import FileInventoryEntry, FileInventoryManager
 from infrastructure.core.logging_utils import format_duration, get_logger
@@ -24,12 +23,12 @@ class PipelineSummary:
     """Summary of pipeline execution."""
 
     total_duration: float
-    stage_results: List[PipelineStageResult]
-    slowest_stage: Optional[PipelineStageResult]
-    fastest_stage: Optional[PipelineStageResult]
-    failed_stages: List[PipelineStageResult]
-    inventory: List[FileInventoryEntry]
-    log_file: Optional[Path] = None
+    stage_results: list[PipelineStageResult]
+    slowest_stage: PipelineStageResult | None
+    fastest_stage: PipelineStageResult | None
+    failed_stages: list[PipelineStageResult]
+    inventory: list[FileInventoryEntry]
+    log_file: Path | None = None
     skip_infra: bool = False
 
 
@@ -42,10 +41,10 @@ class PipelineSummaryGenerator:
 
     def generate_summary(
         self,
-        stage_results: List[PipelineStageResult],
+        stage_results: list[PipelineStageResult],
         total_duration: float,
         output_dir: Path,
-        log_file: Optional[Path] = None,
+        log_file: Path | None = None,
         skip_infra: bool = False,
     ) -> PipelineSummary:
         """Generate comprehensive pipeline summary.
@@ -329,8 +328,8 @@ class PipelineSummaryGenerator:
         return "\n".join(html_parts)
 
     def _find_slowest_stage(
-        self, results: List[PipelineStageResult]
-    ) -> Optional[PipelineStageResult]:
+        self, results: list[PipelineStageResult]
+    ) -> PipelineStageResult | None:
         """Find the slowest stage.
 
         Args:
@@ -346,8 +345,8 @@ class PipelineSummaryGenerator:
         return max(successful_results, key=lambda r: r.duration)
 
     def _find_fastest_stage(
-        self, results: List[PipelineStageResult]
-    ) -> Optional[PipelineStageResult]:
+        self, results: list[PipelineStageResult]
+    ) -> PipelineStageResult | None:
         """Find the fastest stage (excluding stage 1 which is usually setup).
 
         Args:
@@ -391,7 +390,7 @@ class PipelineSummaryGenerator:
         else:
             return f"✗ Stage {result.stage_num}: {result.stage_name} ({duration_formatted}) FAILED"
 
-    def _stage_result_to_dict(self, result: Optional[PipelineStageResult]) -> Optional[dict]:
+    def _stage_result_to_dict(self, result: PipelineStageResult | None) -> Optional[dict]:
         """Convert stage result to dictionary.
 
         Args:
@@ -434,7 +433,7 @@ class PipelineSummaryGenerator:
                 )  # +7 to skip "/output" but keep the "/"
         return log_file
 
-    def _find_base_output_dir(self, inventory: List[FileInventoryEntry]) -> Optional[Path]:
+    def _find_base_output_dir(self, inventory: list[FileInventoryEntry]) -> Path | None:
         """Find the base output directory from inventory.
 
         Args:
@@ -461,7 +460,7 @@ class PipelineSummaryGenerator:
 
         return common_parent
 
-    def _extract_project_name_from_path(self, path: Path) -> Optional[str]:
+    def _extract_project_name_from_path(self, path: Path) -> str | None:
         """Extract project name from output path.
 
         Args:
@@ -481,10 +480,10 @@ class PipelineSummaryGenerator:
 
 
 def generate_pipeline_summary(
-    stage_results: List[PipelineStageResult],
+    stage_results: list[PipelineStageResult],
     total_duration: float,
     output_dir: Path,
-    log_file: Optional[Path] = None,
+    log_file: Path | None = None,
     skip_infra: bool = False,
     format: str = "text",
 ) -> str:

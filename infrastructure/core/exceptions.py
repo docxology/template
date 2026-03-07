@@ -81,13 +81,13 @@ class ConfigurationError(TemplateError):
 
 
 class MissingConfigurationError(ConfigurationError):
-    """Raised when required configuration is missing"""
+    """Raised when required configuration is missing."""
 
     pass
 
 
 class InvalidConfigurationError(ConfigurationError):
-    """Raised when configuration values are invalid"""
+    """Raised when configuration values are invalid."""
 
     pass
 
@@ -98,25 +98,25 @@ class InvalidConfigurationError(ConfigurationError):
 
 
 class ValidationError(TemplateError):
-    """Raised when validation fails"""
+    """Raised when validation fails."""
 
     pass
 
 
 class MarkdownValidationError(ValidationError):
-    """Raised when markdown validation fails"""
+    """Raised when markdown validation fails."""
 
     pass
 
 
 class PDFValidationError(ValidationError):
-    """Raised when PDF validation fails"""
+    """Raised when PDF validation fails."""
 
     pass
 
 
 class DataValidationError(ValidationError):
-    """Raised when data validation fails"""
+    """Raised when data validation fails."""
 
     pass
 
@@ -127,25 +127,25 @@ class DataValidationError(ValidationError):
 
 
 class BuildError(TemplateError):
-    """Raised when build process fails"""
+    """Raised when build process fails."""
 
     pass
 
 
 class CompilationError(BuildError):
-    """Raised when compilation (LaTeX, etc.) fails"""
+    """Raised when compilation (LaTeX, etc.) fails."""
 
     pass
 
 
 class ScriptExecutionError(BuildError):
-    """Raised when script execution fails"""
+    """Raised when script execution fails."""
 
     pass
 
 
 class PipelineError(BuildError):
-    """Raised when pipeline orchestration fails"""
+    """Raised when pipeline orchestration fails."""
 
     pass
 
@@ -156,7 +156,7 @@ class PipelineError(BuildError):
 
 
 class FileOperationError(TemplateError):
-    """Raised when file operations fail"""
+    """Raised when file operations fail."""
 
     pass
 
@@ -225,7 +225,7 @@ class InvalidFileFormatError(FileOperationError):
 
 
 class DependencyError(TemplateError):
-    """Raised when dependencies are missing or invalid"""
+    """Raised when dependencies are missing or invalid."""
 
     pass
 
@@ -271,14 +271,7 @@ class MissingDependencyError(DependencyError):
 
 
 class VersionMismatchError(DependencyError):
-    """Raised when dependency version is incompatible.
-
-    Example:
-        >>> raise VersionMismatchError(
-        ...     "pandoc version too old",
-        ...     context={"dependency": "pandoc", "found": "2.5", "required": ">=3.1.9"}
-        ... )
-    """
+    """Raised when dependency version is incompatible."""
 
     pass
 
@@ -289,13 +282,13 @@ class VersionMismatchError(DependencyError):
 
 
 class TestError(TemplateError):
-    """Raised when test execution or validation fails"""
+    """Raised when test execution or validation fails."""
 
     pass
 
 
 class InsufficientCoverageError(TestError):
-    """Raised when test coverage is insufficient"""
+    """Raised when test coverage is insufficient."""
 
     pass
 
@@ -306,7 +299,7 @@ class InsufficientCoverageError(TestError):
 
 
 class IntegrationError(TemplateError):
-    """Raised when component integration fails"""
+    """Raised when component integration fails."""
 
     pass
 
@@ -323,7 +316,7 @@ class LiteratureSearchError(TemplateError):
 
 
 class APIRateLimitError(LiteratureSearchError):
-    """Raised when API rate limits are exceeded"""
+    """Raised when API rate limits are exceeded."""
 
     pass
 

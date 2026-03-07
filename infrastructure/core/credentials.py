@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 import yaml
 
@@ -35,7 +35,7 @@ class CredentialManager:
     - YAML configuration files with environment variable substitution
     """
 
-    def __init__(self, env_file: Optional[Path] = None, config_file: Optional[Path] = None):
+    def __init__(self, env_file: Path | None = None, config_file: Path | None = None):
         """Initialize credential manager.
 
         Args:
@@ -53,7 +53,7 @@ class CredentialManager:
         if config_file and config_file.exists():
             self.config = self._load_yaml_config(config_file)
 
-    def _load_yaml_config(self, config_file: Path) -> Dict[str, Any]:
+    def _load_yaml_config(self, config_file: Path) -> dict[str, Any]:
         """Load YAML config and substitute environment variables."""
         with open(config_file, "r") as f:
             config = yaml.safe_load(f)
@@ -75,7 +75,7 @@ class CredentialManager:
             return obj
         return obj
 
-    def _get_credential(self, key: str, default: Optional[str] = None) -> Optional[str]:
+    def _get_credential(self, key: str, default: str | None = None) -> str | None:
         """Get credential from environment or config.
 
         Args:
@@ -104,7 +104,7 @@ class CredentialManager:
 
         return default
 
-    def get_zenodo_credentials(self, use_sandbox: bool = True) -> Dict[str, Any]:
+    def get_zenodo_credentials(self, use_sandbox: bool = True) -> dict[str, Any]:
         """Get Zenodo API credentials.
 
         Args:
@@ -124,7 +124,7 @@ class CredentialManager:
             ),
         }
 
-    def get_github_credentials(self) -> Dict[str, Any]:
+    def get_github_credentials(self) -> dict[str, Any]:
         """Get GitHub API credentials.
 
         Returns:
@@ -136,7 +136,7 @@ class CredentialManager:
             "api_url": "https://api.github.com",
         }
 
-    def get_arxiv_credentials(self) -> Dict[str, Any]:
+    def get_arxiv_credentials(self) -> dict[str, Any]:
         """Get arXiv SWORD API credentials (optional).
 
         Returns:
