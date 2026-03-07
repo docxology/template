@@ -510,6 +510,72 @@ def extract_manuscript_text(pdf_path: Path | str) -> Tuple[Optional[str], Manusc
         return None, metrics
 
 
+def _build_retry_prompt(prompt: str, had_off_topic: bool) -> str:
+    """Build a modified prompt for a retry, prepending an off-topic warning if needed."""
+    if not had_off_topic:
+        return prompt
+    prefix = "IMPORTANT: You must review the ACTUAL manuscript text provided below.\\n\\n"
+    if PROMPT_SYSTEM_AVAILABLE:
+        try:
+            composer = PromptComposer()
+            return composer.add_retry_prompt(prompt, retry_type="off_topic")
+        except Exception:
+            pass
+    return prefix + prompt
+
+
+def _stream_with_heartbeat(
+    client: LLMClient,
+    prompt: str,
+    options: GenerationOptions,
+    review_name: str,
+    estimated_total_tokens: int,
+    config: LLMConfig,
+) -> str:
+    """Stream a query with heartbeat monitoring and progress display.
+
+    Falls back to a blocking query if streaming fails.
+    """
+    try:
+        progress = StreamingProgress(
+            total=estimated_total_tokens,
+            message=f"Generating {review_name}",
+            update_interval=0.5,
+        )
+        heartbeat_monitor = StreamHeartbeatMonitor(
+            operation_name=review_name,
+            timeout_seconds=config.review_timeout,
+            heartbeat_interval=config.heartbeat_interval,
+            stall_threshold=config.stall_threshold,
+            early_warning_threshold=config.early_warning_threshold,
+            logger=logger,
+        )
+        heartbeat_monitor.set_estimated_total(estimated_total_tokens)
+        heartbeat_monitor.start_monitoring()
+
+        response_chunks: list[str] = []
+        tokens_generated = 0
+        start_gen_time = time.time()
+        try:
+            for chunk in client.stream_query(prompt, options=options):
+                response_chunks.append(chunk)
+                tokens_generated += len(chunk.split())
+                progress.set(tokens_generated)
+                heartbeat_monitor.update_token_received()
+        finally:
+            heartbeat_monitor.stop_monitoring()
+
+        total_time = time.time() - start_gen_time
+        final_tokens_per_sec = tokens_generated / total_time if total_time > 0 else 0
+        progress.finish(
+            f"    Generated {tokens_generated:,} tokens in {total_time:.1f}s"
+            f" ({final_tokens_per_sec:.1f} tokens/sec)"
+        )
+        return "".join(response_chunks)
+    except Exception:
+        return client.query(prompt, options=options)
+
+
 def generate_review_with_metrics(
     client: LLMClient,
     text: str,
@@ -550,66 +616,12 @@ def generate_review_with_metrics(
                 client.reset()
                 adjusted_temp = min(temperature + 0.15 * attempt, 0.8)
                 options = GenerationOptions(temperature=adjusted_temp, max_tokens=max_tokens)
+                current_prompt = _build_retry_prompt(prompt, had_off_topic)
 
-                if had_off_topic:
-                    if PROMPT_SYSTEM_AVAILABLE:
-                        try:
-                            composer = PromptComposer()
-                            retry_prompt = composer.add_retry_prompt(prompt, retry_type="off_topic")
-                            current_prompt = retry_prompt
-                        except Exception:
-                            current_prompt = (
-                                "IMPORTANT: You must review the ACTUAL manuscript text provided below.\\n\\n"  # noqa: E501
-                                + prompt
-                            )
-                    else:
-                        current_prompt = (
-                            "IMPORTANT: You must review the ACTUAL manuscript text provided below.\\n\\n"  # noqa: E501
-                            + prompt
-                        )
-
-            response_chunks = []
-            tokens_generated = 0
-            start_gen_time = time.time()
-            estimated_total_tokens = max_tokens
-
-            try:
-                progress = StreamingProgress(
-                    total=estimated_total_tokens,
-                    message=f"Generating {review_name}",
-                    update_interval=0.5,
-                )
-
-                config = LLMConfig.from_env()
-                heartbeat_monitor = StreamHeartbeatMonitor(
-                    operation_name=review_name,
-                    timeout_seconds=config.review_timeout,
-                    heartbeat_interval=config.heartbeat_interval,
-                    stall_threshold=config.stall_threshold,
-                    early_warning_threshold=config.early_warning_threshold,
-                    logger=logger,
-                )
-                heartbeat_monitor.set_estimated_total(estimated_total_tokens)
-                heartbeat_monitor.start_monitoring()
-
-                try:
-                    for chunk in client.stream_query(current_prompt, options=options):
-                        response_chunks.append(chunk)
-                        tokens_generated += len(chunk.split())
-                        progress.set(tokens_generated)
-                        heartbeat_monitor.update_token_received()
-                finally:
-                    heartbeat_monitor.stop_monitoring()
-
-                total_time = time.time() - start_gen_time
-                final_tokens_per_sec = tokens_generated / total_time if total_time > 0 else 0
-                progress.finish(
-                    f"    Generated {tokens_generated:,} tokens in {total_time:.1f}s ({final_tokens_per_sec:.1f} tokens/sec)"  # noqa: E501
-                )
-                response = "".join(response_chunks)
-
-            except Exception:
-                response = client.query(current_prompt, options=options)
+            config = LLMConfig.from_env()
+            response = _stream_with_heartbeat(
+                client, current_prompt, options, review_name, max_tokens, config
+            )
 
             is_valid, issues, details = validate_review_quality(
                 response, review_type, model_name=model_name
