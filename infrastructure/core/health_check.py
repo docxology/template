@@ -52,7 +52,7 @@ class SystemHealthChecker:
                     "details": result,
                     "timestamp": time.time(),
                 }
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 — intentional: check functions are arbitrary; must not propagate
                 logger.warning(f"Health check failed for {check_name}: {e}")
                 status["checks"][check_name] = {
                     "status": "unhealthy",

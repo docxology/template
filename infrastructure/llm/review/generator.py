@@ -71,7 +71,7 @@ def get_manuscript_review_system_prompt() -> str:
         try:
             loader = get_default_loader()
             return loader.get_system_prompt("manuscript_review")
-        except Exception as e:
+        except (ImportError, AttributeError, OSError, FileNotFoundError, KeyError) as e:
             logger.debug(f"Could not load system prompt from prompt system: {e}")
 
     return """You are an expert academic manuscript reviewer with extensive experience in peer review for top-tier journals. Your role is to provide thorough, constructive, and professional reviews of research manuscripts.
@@ -441,7 +441,7 @@ def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> tuple
 
         return True, tokens_per_sec
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 — intentional: warmup errors are non-fatal; caller falls back to first actual request
         spinner.stop()
         elapsed = time.time() - start_time
         logger.error(f"Model warmup failed after {elapsed:.1f}s: {e}")
@@ -496,7 +496,7 @@ def _build_retry_prompt(prompt: str, had_off_topic: bool) -> str:
         try:
             composer = PromptComposer()
             return composer.add_retry_prompt(prompt, retry_type="off_topic")
-        except Exception as e:
+        except (ImportError, AttributeError, OSError, KeyError) as e:
             logger.debug(f"PromptComposer retry prompt failed, using plain prefix: {e}")
     return prefix + prompt
 
@@ -549,7 +549,7 @@ def _stream_with_heartbeat(
             f" ({final_tokens_per_sec:.1f} tokens/sec)"
         )
         return "".join(response_chunks)
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 — intentional: fallback to blocking query on any stream failure
         logger.warning(f"Streaming query failed, falling back to blocking query: {type(e).__name__}: {e}")
         return client.query(prompt, options=options)
 
@@ -616,7 +616,7 @@ def generate_review_with_metrics(
             else:
                 response = best_response
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 — intentional: retry loop must continue on any LLM client failure
             if attempt < max_retries:
                 logger.debug(f"Attempt {attempt + 1} failed for {review_name}: {e}")
                 continue
@@ -738,7 +738,7 @@ def generate_translation(
         response = _stream_with_heartbeat(
             client, prompt, options, f"translation ({target_language})", max_tokens, _cfg
         )
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 — intentional: translation errors are non-fatal, return error string
         metrics.generation_time_seconds = time.time() - start_time
         error_response = f"*Error generating translation to {target_language}: {e}*"
         metrics.output_chars = len(error_response)

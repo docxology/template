@@ -244,7 +244,7 @@ class PipelineExecutor:
                     exit_code=1,
                 )
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 — intentional: stage executor isolates all failures into PipelineStageResult
             duration = time.time() - start_time
             logger.error(STAGE_EXCEPTION.format(stage_num=stage_num, error=e))
             return PipelineStageResult(
