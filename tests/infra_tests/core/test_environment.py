@@ -5,7 +5,6 @@ No mocks - uses actual system state and temp directories.
 """
 
 import os
-from pathlib import Path
 
 
 from infrastructure.core.environment import (

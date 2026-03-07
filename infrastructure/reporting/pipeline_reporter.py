@@ -65,12 +65,7 @@ def generate_pipeline_report(
     extras: Optional[ReportExtras] = None,
 ) -> PipelineReport:
     """Generate consolidated pipeline report from stage results and optional extras."""
-    test_results = extras.test_results if extras is not None else None
-    validation_results = extras.validation_results if extras is not None else None
-    performance_metrics = extras.performance_metrics if extras is not None else None
-    error_summary = extras.error_summary if extras is not None else None
-    output_statistics = extras.output_statistics if extras is not None else None
-    project_name = extras.project_name if extras is not None else None
+    e = extras or ReportExtras()
     stages = []
     for result in stage_results:
         status = "passed" if result.get("exit_code", 1) == 0 else "failed"
@@ -83,28 +78,25 @@ def generate_pipeline_report(
             )
         )
 
-    # Add log file info to output_statistics if project_name provided
-    if project_name and output_statistics is not None:
-        log_file = repo_root / "projects" / project_name / "output" / "logs" / "pipeline.log"
-        log_file_info = {
+    # Enrich output_statistics with log file info before passing to report
+    if e.project_name and e.output_statistics is not None:
+        log_file = repo_root / "projects" / e.project_name / "output" / "logs" / "pipeline.log"
+        e.output_statistics["log_file"] = {
             "exists": log_file.exists(),
             "size": log_file.stat().st_size if log_file.exists() else 0,
             "path": str(log_file),
         }
-        output_statistics["log_file"] = log_file_info
 
-    report = PipelineReport(
+    return PipelineReport(
         timestamp=datetime.now().isoformat(),
         total_duration=total_duration,
         stages=stages,
-        test_results=test_results,
-        validation_results=validation_results,
-        performance_metrics=performance_metrics,
-        error_summary=error_summary,
-        output_statistics=output_statistics,
+        test_results=e.test_results,
+        validation_results=e.validation_results,
+        performance_metrics=e.performance_metrics,
+        error_summary=e.error_summary,
+        output_statistics=e.output_statistics,
     )
-
-    return report
 
 
 def save_pipeline_report(

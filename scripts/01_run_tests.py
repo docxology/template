@@ -21,7 +21,6 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Tuple
 
 # Add root to path for infrastructure imports
 sys.path.insert(0, str(Path(__file__).parent.parent))

@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.steganography.config import DocumentMetadata

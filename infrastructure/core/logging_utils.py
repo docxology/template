@@ -419,44 +419,26 @@ def log_resource_usage(stage_name: str = "", logger: Optional[logging.Logger] = 
         logger.debug(f"Failed to get resource usage: {e}")
 
 
-# Public API exports
+# Core logging API — progress utilities, formatters, and constants are
+# importable directly from their respective submodules (logging_progress,
+# logging_formatters, logging_constants).
 __all__ = [
-    # Core functions
     "get_log_level_from_env",
     "setup_logger",
     "get_logger",
     "set_global_log_level",
-    # Context managers
     "log_operation",
     "log_timing",
     "log_function_call",
-    # Utility functions
     "log_success",
     "log_header",
     "log_progress",
     "log_stage",
+    "log_stage_with_eta",
     "log_substep",
-    # Helpers
+    "log_resource_usage",
     "format_error_with_suggestions",
     "format_duration",
-    # Progress utilities
-    "calculate_eta",
-    "calculate_eta_ema",
-    "calculate_eta_with_confidence",
-    "log_progress_bar",
-    "log_stage_with_eta",
-    "log_resource_usage",
-    "Spinner",
-    "log_with_spinner",
-    "StreamingProgress",
-    "log_progress_streaming",
-    # Formatters
-    "JSONFormatter",
-    "TemplateFormatter",
-    # Constants
-    "EMOJIS",
-    "USE_EMOJIS",
-    "USE_STRUCTURED_LOGGING",
 ]
 
 
