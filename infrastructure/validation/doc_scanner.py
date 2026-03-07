@@ -130,10 +130,10 @@ class DocumentationScanner:
 
         verification_results = {
             "link_checker": self._run_link_checker(),
-            "markdown_syntax": self._validate_markdown_syntax(),
-            "commands_tested": self._test_documented_commands(),
+            "markdown_syntax": {"status": "basic_validation_passed"},
+            "commands_tested": {"status": "manual_testing_required", "commands_found": 0},
             "cross_references": self._verify_cross_references(),
-            "circular_references": self._check_circular_references(),
+            "circular_references": {"status": "no_circular_references_detected"},
         }
 
         self.results.statistics["phase6"] = verification_results
@@ -200,14 +200,6 @@ class DocumentationScanner:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def _validate_markdown_syntax(self) -> Dict[str, Any]:
-        """Validate markdown syntax."""
-        return {"status": "basic_validation_passed"}
-
-    def _test_documented_commands(self) -> Dict[str, Any]:
-        """Test documented commands."""
-        return {"status": "manual_testing_required", "commands_found": 0}
-
     def _verify_cross_references(self) -> Dict[str, Any]:
         """Verify cross-references."""
         md_files = find_markdown_files(self.repo_root)
@@ -215,10 +207,6 @@ class DocumentationScanner:
             "status": "verified",
             "total_references": len(identify_cross_references(md_files)),
         }
-
-    def _check_circular_references(self) -> Dict[str, Any]:
-        """Check for circular references."""
-        return {"status": "no_circular_references_detected"}
 
     def _generate_report(self) -> str:
         """Generate comprehensive scan report."""

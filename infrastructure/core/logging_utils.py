@@ -39,10 +39,6 @@ def _is_test_environment() -> bool:
     return _IN_TEST_ENV
 
 
-# =============================================================================
-# LOG LEVEL CONFIGURATION
-# =============================================================================
-
 # Map environment LOG_LEVEL (0-3) to Python logging levels
 LOG_LEVEL_MAP = {
     "0": logging.DEBUG,  # Most verbose
@@ -52,21 +48,10 @@ LOG_LEVEL_MAP = {
 }
 
 
-# =============================================================================
-# STANDARDIZED PROJECT LOGGING INTERFACE
-# =============================================================================
-
-
-
 def get_log_level_from_env() -> int:
     """Get log level from LOG_LEVEL environment variable (0=DEBUG, 1=INFO, 2=WARN, 3=ERROR)."""
     env_level = os.getenv("LOG_LEVEL", "1")  # Default to INFO
     return LOG_LEVEL_MAP.get(env_level, logging.INFO)
-
-
-# =============================================================================
-# LOGGER CONFIGURATION
-# =============================================================================
 
 
 def setup_logger(
@@ -216,11 +201,6 @@ def get_logger(name: str) -> logging.Logger:
 
 
 
-# =============================================================================
-# CONTEXT MANAGERS
-# =============================================================================
-
-
 @contextmanager
 def log_operation(
     operation: str,
@@ -284,11 +264,6 @@ def log_function_call(logger: Optional[logging.Logger] = None) -> Callable:
         return wrapper
 
     return decorator
-
-
-# =============================================================================
-# UTILITY FUNCTIONS
-# =============================================================================
 
 
 def log_success(message: str, logger: Optional[logging.Logger] = None) -> None:

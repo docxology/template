@@ -149,13 +149,11 @@ class TestLLMClientPropertiesPure:
         assert hasattr(client.context, "add_message")
         assert hasattr(client.context, "clear")
 
-    def test_config_immutability(self):
-        """Test config changes don't affect client."""
+    def test_config_stored_on_client(self):
+        """Test that config values passed to LLMClient are accessible via client.config."""
         config = LLMConfig(temperature=0.5)
         client = LLMClient(config=config)
 
-        # Changing external config shouldn't affect client
-        # (config is stored by reference, but we test the pattern)
         assert client.config.temperature == 0.5
 
 
