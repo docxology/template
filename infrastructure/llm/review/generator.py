@@ -64,6 +64,7 @@ try:
 except ImportError:
     PROMPT_SYSTEM_AVAILABLE = False
 
+
 def get_manuscript_review_system_prompt() -> str:
     if PROMPT_SYSTEM_AVAILABLE:
         try:

@@ -308,7 +308,7 @@ def log_header(message: str, logger: Optional[logging.Logger] = None) -> None:
 
     logger.info("")
     logger.info(separator)
-    logger.info("%s%s", prefix, message)
+    logger.info(f"{prefix}{message}")
     logger.info(separator)
 
 

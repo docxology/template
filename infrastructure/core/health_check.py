@@ -232,20 +232,15 @@ class SystemHealthChecker:
         for check_name, check_data in status["checks"].items():
             metrics[f"{check_name}_status"] = 1 if check_data["status"] == "healthy" else 0
 
-        if "memory" in status["checks"]:
-            mem_details = status["checks"]["memory"].get("details", {})
-            if "percent_used" in mem_details:
-                metrics["memory_percent_used"] = mem_details["percent_used"]
-
-        if "cpu" in status["checks"]:
-            cpu_details = status["checks"]["cpu"].get("details", {})
-            if "cpu_percent" in cpu_details:
-                metrics["cpu_percent_used"] = cpu_details["cpu_percent"]
-
-        if "disk" in status["checks"]:
-            disk_details = status["checks"]["disk"].get("details", {})
-            if "percent_used" in disk_details:
-                metrics["disk_percent_used"] = disk_details["percent_used"]
+        for check_key, detail_key, metric_key in [
+            ("memory", "percent_used", "memory_percent_used"),
+            ("cpu", "cpu_percent", "cpu_percent_used"),
+            ("disk", "percent_used", "disk_percent_used"),
+        ]:
+            if check_key in status["checks"]:
+                details = status["checks"][check_key].get("details", {})
+                if detail_key in details:
+                    metrics[metric_key] = details[detail_key]
 
         return metrics
 

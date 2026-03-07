@@ -276,7 +276,7 @@ def run_test_suite(config: TestSuiteConfig) -> tuple[int, dict[str, Any]]:
 
     warning_count = stdout_text.count(" warning") + stderr_text.count(" warning")
     if warning_count > 0:
-        logger.warning("%s tests completed with %d warning(s)", config.label, warning_count)
+        logger.warning(f"{config.label} tests completed with {warning_count} warning(s)")
 
     failed_count = test_results.get("failed", 0)
     should_halt, message = check_test_failures(

@@ -11,6 +11,9 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, TypedDict
 
+from infrastructure.core.config_loader import get_testing_config
+from infrastructure.core.logging_utils import get_logger
+
 
 class InfraResults(TypedDict):
     """Infrastructure test result fields with consistent shape across all loaders."""
@@ -25,9 +28,6 @@ class InfraResults(TypedDict):
     missing_lines: int
     duration_seconds: float
     exit_code: int
-
-from infrastructure.core.config_loader import get_testing_config
-from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 

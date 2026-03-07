@@ -186,14 +186,6 @@ class FileNotFoundError(FileOperationError, builtins.FileNotFoundError):
         suggestions: Optional[list[str]] = None,
         recovery_commands: Optional[list[str]] = None,
     ) -> None:
-        """Initialize file not found error with automatic recovery commands.
-
-        Args:
-            message: Error message
-            context: Error context (should include 'file' key)
-            suggestions: Optional suggestions (auto-generated if None)
-            recovery_commands: Optional commands (auto-generated if None)
-        """
         context = context or {}
         file_path = context.get("file", "")
 
@@ -287,14 +279,6 @@ class MissingDependencyError(DependencyError):
         suggestions: Optional[list[str]] = None,
         recovery_commands: Optional[list[str]] = None,
     ) -> None:
-        """Initialize missing dependency error with automatic installation commands.
-
-        Args:
-            message: Error message
-            context: Error context (should include 'dependency' key)
-            suggestions: Optional suggestions (auto-generated if None)
-            recovery_commands: Optional commands (auto-generated if None)
-        """
         context = context or {}
         dependency = context.get("dependency", "")
 

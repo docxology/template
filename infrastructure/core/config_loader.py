@@ -410,7 +410,7 @@ def _resolve_int_setting(
         try:
             return int(raw)
         except (ValueError, TypeError):
-            logger.debug("%s=%r is not a valid int, ignoring", env_var, raw)
+            logger.debug(f"{env_var}={raw!r} is not a valid int, ignoring")
     config_val = _safe_int_from_dict(config_dict, config_key)
     if config_val is not None:
         return config_val

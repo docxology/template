@@ -361,61 +361,61 @@ def generate_integrity_report(report: IntegrityReport) -> str:
     """
     lines = []
     lines.append("=" * 60)
-    lines.append("🔍 INTEGRITY VERIFICATION REPORT")
+    lines.append("INTEGRITY VERIFICATION REPORT")
     lines.append("=" * 60)
 
     # Overall status
-    status = "✅ PASSED" if report.overall_integrity else "❌ FAILED"
+    status = "PASSED" if report.overall_integrity else "FAILED"
     lines.append(f"Overall Integrity: {status}")
     lines.append("")
 
     # File integrity
-    lines.append("📁 File Integrity:")
+    lines.append("File Integrity:")
     for file_path, integrity in report.file_integrity.items():
-        status = "✅" if integrity else "❌"
-        lines.append(f"  {status} {file_path}")
+        status = "OK" if integrity else "FAIL"
+        lines.append(f"  [{status}] {file_path}")
     lines.append("")
 
     # Cross-reference integrity
-    lines.append("🔗 Cross-Reference Integrity:")
+    lines.append("Cross-Reference Integrity:")
     for ref_type, integrity in report.cross_reference_integrity.items():
-        status = "✅" if integrity else "❌"
-        lines.append(f"  {status} {ref_type}")
+        status = "OK" if integrity else "FAIL"
+        lines.append(f"  [{status}] {ref_type}")
     lines.append("")
 
     # Data consistency
-    lines.append("📊 Data Consistency:")
+    lines.append("Data Consistency:")
     for check_type, integrity in report.data_consistency.items():
-        status = "✅" if integrity else "❌"
-        lines.append(f"  {status} {check_type}")
+        status = "OK" if integrity else "FAIL"
+        lines.append(f"  [{status}] {check_type}")
     lines.append("")
 
     # Academic standards
-    lines.append("🎓 Academic Standards:")
+    lines.append("Academic Standards:")
     for standard, compliance in report.academic_standards.items():
-        status = "✅" if compliance else "⚠️"
-        lines.append(f"  {status} {standard}")
+        status = "OK" if compliance else "WARN"
+        lines.append(f"  [{status}] {standard}")
     lines.append("")
 
     # Issues
     if report.issues:
-        lines.append("❌ Issues Found:")
+        lines.append("Issues Found:")
         for issue in report.issues:
-            lines.append(f"  • {issue}")
+            lines.append(f"  - {issue}")
         lines.append("")
 
     # Warnings
     if report.warnings:
-        lines.append("⚠️  Warnings:")
+        lines.append("Warnings:")
         for warning in report.warnings:
-            lines.append(f"  • {warning}")
+            lines.append(f"  - {warning}")
         lines.append("")
 
     # Recommendations
     if report.recommendations:
-        lines.append("💡 Recommendations:")
+        lines.append("Recommendations:")
         for rec in report.recommendations:
-            lines.append(f"  • {rec}")
+            lines.append(f"  - {rec}")
         lines.append("")
 
     lines.append("=" * 60)
@@ -620,10 +620,6 @@ def create_integrity_manifest(output_dir: Path) -> dict[str, Any]:
         "directory_structure": {},
     }
 
-    # Typed accessors for mutable fields
-    file_hashes: dict[str, Any] = manifest["file_hashes"]
-    dir_structure: dict[str, Any] = manifest["directory_structure"]
-
     if not output_dir.exists():
         return manifest
 
@@ -634,7 +630,7 @@ def create_integrity_manifest(output_dir: Path) -> dict[str, Any]:
             file_hash = calculate_file_hash(item)
             file_size = item.stat().st_size
 
-            file_hashes[rel_path] = {
+            manifest["file_hashes"][rel_path] = {
                 "hash": file_hash,
                 "size": file_size,
                 "modified": item.stat().st_mtime,
@@ -647,7 +643,7 @@ def create_integrity_manifest(output_dir: Path) -> dict[str, Any]:
     for dir_path in output_dir.rglob("*"):
         if dir_path.is_dir():
             rel_path = str(dir_path.relative_to(output_dir))
-            dir_structure[rel_path] = {
+            manifest["directory_structure"][rel_path] = {
                 "file_count": len(list(dir_path.glob("*"))),
                 "total_size": sum(f.stat().st_size for f in dir_path.glob("*") if f.is_file()),
             }
