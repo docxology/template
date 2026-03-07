@@ -1,8 +1,10 @@
-"""Custom exception hierarchy for the Research Project Template.
+"""Raiseable exception hierarchy for the Research Project Template.
 
-This module defines a hierarchical exception structure for consistent error handling
-across all template components. All exceptions inherit from a base TemplateError class
-for easy catching and handling.
+All exceptions inherit from TemplateError for easy broad catching.
+
+Boundary rule:
+  exceptions.py → raiseable exception classes (raise and catch)
+  errors.py     → log message constants (format and print, never raise)
 
 Part of the infrastructure layer (Layer 1) - reusable across all projects.
 """

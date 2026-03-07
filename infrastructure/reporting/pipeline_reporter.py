@@ -673,7 +673,6 @@ def generate_test_report(test_results: Dict[str, Any], output_dir: Path) -> Path
     output_dir.mkdir(parents=True, exist_ok=True)
     report_path = output_dir / "test_results.json"
     with open(report_path, "w", encoding="utf-8") as f:
-        import json
         json.dump(test_results, f, indent=2, default=str)
     return report_path
 
