@@ -175,26 +175,38 @@ def save_pipeline_report(
     # Generate JSON report
     if "json" in formats:
         json_path = output_dir / "pipeline_report.json"
-        with open(json_path, "w") as f:
-            json.dump(report_dict, f, indent=2)
-        saved_files["json"] = json_path
-        logger.info(f"Pipeline report (JSON) saved: {json_path}")
+        try:
+            with open(json_path, "w") as f:
+                json.dump(report_dict, f, indent=2)
+            saved_files["json"] = json_path
+            logger.info(f"Pipeline report (JSON) saved: {json_path}")
+        except OSError as e:
+            logger.error("Failed to write JSON report %s: %s", json_path, e)
+            raise
 
     # Generate Markdown report
     if "markdown" in formats:
         md_path = output_dir / "pipeline_report.md"
-        md_content = generate_markdown_report(report)
-        md_path.write_text(md_content)
-        saved_files["markdown"] = md_path
-        logger.info(f"Pipeline report (Markdown) saved: {md_path}")
+        try:
+            md_content = generate_markdown_report(report)
+            md_path.write_text(md_content)
+            saved_files["markdown"] = md_path
+            logger.info(f"Pipeline report (Markdown) saved: {md_path}")
+        except OSError as e:
+            logger.error("Failed to write Markdown report %s: %s", md_path, e)
+            raise
 
     # Generate HTML report
     if "html" in formats:
         html_path = output_dir / "pipeline_report.html"
-        html_content = generate_html_report(report)
-        html_path.write_text(html_content)
-        saved_files["html"] = html_path
-        logger.info(f"Pipeline report (HTML) saved: {html_path}")
+        try:
+            html_content = generate_html_report(report)
+            html_path.write_text(html_content)
+            saved_files["html"] = html_path
+            logger.info(f"Pipeline report (HTML) saved: {html_path}")
+        except OSError as e:
+            logger.error("Failed to write HTML report %s: %s", html_path, e)
+            raise
 
     return saved_files
 

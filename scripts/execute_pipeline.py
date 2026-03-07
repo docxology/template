@@ -136,7 +136,7 @@ def execute_pipeline(
                 collect_output_statistics,
             )
             from infrastructure.reporting.pipeline_reporter import ReportExtras
-            from infrastructure.core.logging_utils import generate_log_summary
+            from infrastructure.reporting.output_reporter import generate_log_summary
 
             # Collect output statistics
             output_stats = collect_output_statistics(repo_root, project_name)

@@ -221,21 +221,7 @@ def verify_academic_standards(markdown_files: List[Path]) -> Dict[str, bool]:
     Returns:
         Dictionary mapping academic standards to compliance status
     """
-    standards = {
-        "has_abstract": False,
-        "has_introduction": False,
-        "has_methodology": False,
-        "has_results": False,
-        "has_discussion": False,
-        "has_conclusion": False,
-        "has_references": False,
-        "proper_citations": True,
-        "equation_labels": True,
-        "figure_captions": True,
-    }
-
     combined_content = ""
-
     for md_file in markdown_files:
         try:
             with open(md_file, "r", encoding="utf-8") as f:
@@ -243,52 +229,42 @@ def verify_academic_standards(markdown_files: List[Path]) -> Dict[str, bool]:
         except OSError as e:
             logger.warning("Could not read markdown file %s: %s", md_file, e)
 
-    # Check for required sections
     content_lower = combined_content.lower()
 
-    standards["has_abstract"] = bool(
-        re.search(r"\\section\{.*abstract|#\s*abstract", content_lower)
-    )
-    standards["has_introduction"] = bool(
-        re.search(r"\\section\{.*introduction|#\s*introduction", content_lower)
-    )
-    standards["has_methodology"] = bool(
-        re.search(r"\\section\{.*methodology|#\s*methodology|#\s*methods", content_lower)
-    )
-    standards["has_results"] = bool(re.search(r"\\section\{.*results?|#\s*results?", content_lower))
-    standards["has_discussion"] = bool(
-        re.search(r"\\section\{.*discussion|#\s*discussion", content_lower)
-    )
-    standards["has_conclusion"] = bool(
-        re.search(r"\\section\{.*conclusion|#\s*conclusion", content_lower)
-    )
-    standards["has_references"] = bool(
-        re.search(r"\\section\{.*references?|#\s*references?|\\bibliography", content_lower)
-    )
-
-    # Check for citations
     citation_patterns = [
         r"\\cite\{[^}]+\}",
         r"\\[a-z]*cite[a-z]*\{[^}]+\}",
         r"\[\d+\]",
         r"\(\d+\)",
     ]
-
     has_citations = any(re.search(pattern, combined_content) for pattern in citation_patterns)
-    if not has_citations:
-        standards["proper_citations"] = False
 
-    # Check for equation labels
-    equation_labels = re.findall(r"\\label\{eq:[^}]+\}", combined_content)
-    if equation_labels:
-        standards["equation_labels"] = True
-
-    # Check for figure captions
-    figure_captions = re.findall(r"\\caption\{[^}]+\}", combined_content)
-    if figure_captions:
-        standards["figure_captions"] = True
-
-    return standards
+    return {
+        "has_abstract": bool(re.search(r"\\section\{.*abstract|#\s*abstract", content_lower)),
+        "has_introduction": bool(
+            re.search(r"\\section\{.*introduction|#\s*introduction", content_lower)
+        ),
+        "has_methodology": bool(
+            re.search(
+                r"\\section\{.*methodology|#\s*methodology|#\s*methods", content_lower
+            )
+        ),
+        "has_results": bool(re.search(r"\\section\{.*results?|#\s*results?", content_lower)),
+        "has_discussion": bool(
+            re.search(r"\\section\{.*discussion|#\s*discussion", content_lower)
+        ),
+        "has_conclusion": bool(
+            re.search(r"\\section\{.*conclusion|#\s*conclusion", content_lower)
+        ),
+        "has_references": bool(
+            re.search(
+                r"\\section\{.*references?|#\s*references?|\\bibliography", content_lower
+            )
+        ),
+        "proper_citations": has_citations,
+        "equation_labels": bool(re.findall(r"\\label\{eq:[^}]+\}", combined_content)),
+        "figure_captions": bool(re.findall(r"\\caption\{[^}]+\}", combined_content)),
+    }
 
 
 def verify_output_integrity(
