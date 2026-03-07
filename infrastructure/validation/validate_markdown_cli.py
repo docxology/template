@@ -13,15 +13,12 @@ This script handles only CLI argument parsing and I/O.
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 from typing import Optional
 
-# Add infrastructure to path for imports BEFORE any infrastructure imports
-repo_root = Path(__file__).parent.parent
-sys.path.insert(0, str(repo_root))
+from infrastructure.core.logging_utils import get_logger
 
-from infrastructure.core.logging_utils import get_logger  # noqa: E402
+repo_root = Path(__file__).parent.parent
 
 logger = get_logger(__name__)
 
