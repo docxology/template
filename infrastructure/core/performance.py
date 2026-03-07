@@ -116,19 +116,15 @@ class PerformanceMonitor:
         )
 
     def record_operation(self) -> None:
-        """Record an operation."""
         self.operations_count += 1
 
     def record_cache_hit(self) -> None:
-        """Record a cache hit."""
         self.cache_hits += 1
 
     def record_cache_miss(self) -> None:
-        """Record a cache miss."""
         self.cache_misses += 1
 
     def update_memory(self) -> None:
-        """Update peak memory tracking."""
         current = self._get_memory_usage()
         if current > self.peak_memory:
             self.peak_memory = current
@@ -156,23 +152,16 @@ class PerformanceMonitor:
 def performance_context(operation_name: str = "Operation"):
     """Context manager for monitoring operation performance.
 
-    Yields the PerformanceMonitor so callers can record operations.
-    The context manager logs duration on exit; call monitor.stop()
-    explicitly if you need the final PerformanceMetrics object.
-
-    Example:
-        >>> with performance_context("Data processing") as monitor:
-        ...     process_data()
-        ...     monitor.record_operation()
+    Yields the started PerformanceMonitor. Calls monitor.stop() in
+    the finally block so callers can read PerformanceMetrics after exit.
     """
     monitor = PerformanceMonitor()
     monitor.start()
-    _start = time.time()
     try:
         yield monitor
     finally:
-        _duration = time.time() - _start
-        logger.debug(f"{operation_name}: {format_duration(_duration)}")
+        metrics = monitor.stop()
+        logger.debug(f"{operation_name}: {format_duration(metrics.duration)}")
 
 
 def get_system_resources() -> dict[str, Any]:

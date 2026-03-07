@@ -37,7 +37,7 @@ def load_test_results(project_name: str) -> Dict[str, Any]:
                     return data["project"]  # type: ignore
                 else:
                     return data  # type: ignore
-        except Exception as e:
+        except (OSError, json.JSONDecodeError, KeyError) as e:
             logger.warning(f"Could not load results from {results_file}: {e}")
             return {}
     else:
@@ -75,7 +75,7 @@ def load_infrastructure_results() -> Dict[str, Any]:
                         "duration_seconds": infra_data.get("duration_seconds", 0),
                         "exit_code": 0 if infra_data.get("status") == "PASSED" else 1,
                     }
-        except Exception as e:
+        except (OSError, json.JSONDecodeError, KeyError) as e:
             logger.warning(f"Could not load infrastructure results from validation report: {e}")
 
     # Fallback: try coverage JSON files
@@ -91,7 +91,7 @@ def load_infrastructure_results() -> Dict[str, Any]:
                     "covered_lines": totals.get("covered_lines", 0),
                     "missing_lines": totals.get("missing_lines", 0),
                 }
-        except Exception as e:
+        except (OSError, json.JSONDecodeError) as e:
             logger.warning(f"Could not load infrastructure coverage: {e}")
 
     # Fallback: try to extract from HTML coverage if available
@@ -107,7 +107,7 @@ def load_infrastructure_results() -> Dict[str, Any]:
                     "covered_lines": totals.get("covered_lines", 0),
                     "missing_lines": totals.get("missing_lines", 0),
                 }
-        except Exception as e:
+        except (OSError, json.JSONDecodeError) as e:
             logger.warning(f"Could not load HTML coverage: {e}")
 
     logger.warning("No infrastructure test results found")
@@ -164,7 +164,7 @@ def _is_ollama_available() -> bool:
     try:
         import importlib
         return importlib.util.find_spec("ollama") is not None
-    except Exception:
+    except Exception:  # importlib.util.find_spec may raise various internal errors
         return False
 
 

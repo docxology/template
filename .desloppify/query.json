@@ -1,11 +1,11 @@
 {
   "command": "resolve",
   "patterns": [
-    "review::.::holistic::test_strategy::untested_llm_base_template::154111f5"
+    "review::.::holistic::error_consistency::summary_generators_uniform_broad_catch::e0ac9cdf"
   ],
   "status": "fixed",
   "resolved": [
-    "review::.::holistic::test_strategy::untested_llm_base_template::154111f5"
+    "review::.::holistic::error_consistency::summary_generators_uniform_broad_catch::e0ac9cdf"
   ],
   "count": 1,
   "next_command": "desloppify issues",
@@ -17,10 +17,10 @@
   "prev_objective_score": 50.2,
   "prev_strict_score": 64.8,
   "prev_verified_strict_score": 50.1,
-  "attestation": "I have actually added TestResearchTemplateBase to test_templates.py with 3 tests for render happy path, missing variable, and empty template and I am not gaming the score by resolving without fixing.",
+  "attestation": "I have actually narrowed all 4 bare except Exception blocks in test_summary_generator.py to OSError json.JSONDecodeError and KeyError and I am not gaming the score by resolving without fixing.",
   "narrative": {
     "phase": "middle_grind",
-    "headline": "\u26a0 28 security findings \u2014 review before other cleanup. 2058 findings open. Test health (0.0%) needs attention \u2014 run `desloppify next` to start. (10 review findings \u2014 run `desloppify issues`)",
+    "headline": "\u26a0 28 security findings \u2014 review before other cleanup. 2054 findings open. Test health (0.0%) needs attention \u2014 run `desloppify next` to start. (6 review findings \u2014 run `desloppify issues`)",
     "dimensions": {
       "lowest_dimensions": [
         {
@@ -75,8 +75,8 @@
       {
         "type": "issue_queue",
         "detector": "review",
-        "count": 10,
-        "description": "10 review findings need investigation \u2014 run `desloppify issues` to see the work queue",
+        "count": 6,
+        "description": "6 review findings need investigation \u2014 run `desloppify issues` to see the work queue",
         "command": "desloppify issues",
         "impact": 0.0,
         "dimension": "Unknown",
@@ -241,7 +241,7 @@
     "strategy": {
       "fixer_leverage": {
         "auto_fixable_count": 0,
-        "total_count": 2078,
+        "total_count": 2066,
         "coverage": 0.0,
         "impact_ratio": 0.0,
         "recommendation": "none"
@@ -296,7 +296,7 @@
         }
       },
       "can_parallelize": true,
-      "hint": "4 independent workstreams, safe to parallelize. Rescan after each phase to verify. Review: 10 finding(s) \u2014 `desloppify issues`."
+      "hint": "4 independent workstreams, safe to parallelize. Rescan after each phase to verify. Review: 6 finding(s) \u2014 `desloppify issues`."
     },
     "tools": {
       "fixers": [],
@@ -327,9 +327,9 @@
     "milestone": null,
     "primary_action": {
       "command": "desloppify issues",
-      "description": "10 review findings need investigation \u2014 run `desloppify issues` to see the work queue"
+      "description": "6 review findings need investigation \u2014 run `desloppify issues` to see the work queue"
     },
-    "why_now": "4 independent workstreams, safe to parallelize. Rescan after each phase to verify. Review: 10 finding(s) \u2014 `desloppify issues`.",
+    "why_now": "4 independent workstreams, safe to parallelize. Rescan after each phase to verify. Review: 6 finding(s) \u2014 `desloppify issues`.",
     "verification_step": {
       "command": "desloppify scan",
       "reason": "revalidate after changes"

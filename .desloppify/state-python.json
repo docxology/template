@@ -9,8 +9,8 @@
   "verified_strict_score": 50.1,
   "stats": {
     "total": 2635,
-    "open": 2058,
-    "fixed": 68,
+    "open": 2054,
+    "fixed": 72,
     "auto_resolved": 492,
     "wontfix": 5,
     "false_positive": 12,
@@ -30,8 +30,8 @@
         "false_positive": 4
       },
       "3": {
-        "open": 1336,
-        "fixed": 68,
+        "open": 1332,
+        "fixed": 72,
         "auto_resolved": 267,
         "wontfix": 1,
         "false_positive": 8
@@ -75652,16 +75652,22 @@
         "suggestion": "Either have performance_context call monitor.stop() in the finally block and yield or return the resulting PerformanceMetrics, or remove PerformanceMonitor from performance_context entirely and just track time directly, eliminating the misleading yield of an incomplete monitor",
         "reasoning": ""
       },
-      "status": "open",
+      "status": "fixed",
       "note": null,
       "first_seen": "2026-03-07T04:04:38+00:00",
       "last_seen": "2026-03-07T04:04:38+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-07T04:24:06+00:00",
       "reopen_count": 0,
       "lang": "python",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually added monitor.stop in the finally block of performance_context and I am not gaming the score by resolving without fixing.",
+        "attested_at": "2026-03-07T04:24:06+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::high_level_elegance::reporting_module_fifteen_files_low_cohesion::214af327": {
       "id": "review::.::holistic::high_level_elegance::reporting_module_fifteen_files_low_cohesion::214af327",
@@ -75874,16 +75880,22 @@
         "suggestion": "Narrow the catch to `(json.JSONDecodeError, OSError, KeyError)` \u2014 the concrete failure modes for file-not-openable and malformed JSON. Let unexpected errors (e.g., AttributeError) propagate so they surface as bugs rather than silent data gaps.",
         "reasoning": ""
       },
-      "status": "open",
+      "status": "fixed",
       "note": null,
       "first_seen": "2026-03-07T04:04:38+00:00",
       "last_seen": "2026-03-07T04:04:38+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-07T04:24:06+00:00",
       "reopen_count": 0,
       "lang": "python",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually narrowed all 4 bare except Exception blocks in test_summary_generator.py to OSError json.JSONDecodeError and KeyError and I am not gaming the score by resolving without fixing.",
+        "attested_at": "2026-03-07T04:24:06+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::abstraction_fitness::health_check_api_passthrough_wrapper::1842ad8f": {
       "id": "review::.::holistic::abstraction_fitness::health_check_api_passthrough_wrapper::1842ad8f",
@@ -76097,16 +76109,22 @@
         "suggestion": "Add tests/infra_tests/llm/test_manuscript_templates.py that instantiates ManuscriptExecutiveSummary, ManuscriptQualityReview, and ManuscriptMethodologyReview with a stub text string and asserts the rendered output contains the required section headers, without requiring Ollama",
         "reasoning": ""
       },
-      "status": "open",
+      "status": "fixed",
       "note": null,
       "first_seen": "2026-03-07T04:04:38+00:00",
       "last_seen": "2026-03-07T04:04:38+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-07T04:24:06+00:00",
       "reopen_count": 0,
       "lang": "python",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually created test_manuscript_templates.py with 13 tests for all 5 manuscript template classes and I am not gaming the score by resolving without fixing.",
+        "attested_at": "2026-03-07T04:24:06+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::test_strategy::coverage_parser_untested_critical::12182e73": {
       "id": "review::.::holistic::test_strategy::coverage_parser_untested_critical::12182e73",
@@ -76208,16 +76226,22 @@
         "suggestion": "Remove docstrings from these trivial counter-increment methods; the method names are already self-documenting",
         "reasoning": ""
       },
-      "status": "open",
+      "status": "fixed",
       "note": null,
       "first_seen": "2026-03-07T04:04:38+00:00",
       "last_seen": "2026-03-07T04:04:38+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-07T04:24:06+00:00",
       "reopen_count": 0,
       "lang": "python",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually removed trivial docstrings from 4 counter-increment methods in PerformanceMonitor and I am not gaming the score by resolving without fixing.",
+        "attested_at": "2026-03-07T04:24:06+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::ai_generated_debt::network_check_hardcoded_external_call::a30c1fb9": {
       "id": "review::.::holistic::ai_generated_debt::network_check_hardcoded_external_call::a30c1fb9",
@@ -76466,7 +76490,7 @@
       "assessed_at": "2026-03-07T04:04:38+00:00",
       "needs_review_refresh": true,
       "refresh_reason": "review_finding_fixed",
-      "stale_since": "2026-03-07T04:19:25+00:00"
+      "stale_since": "2026-03-07T04:24:06+00:00"
     },
     "abstraction_fitness": {
       "score": 72.0,
@@ -76490,7 +76514,7 @@
       "assessed_at": "2026-03-07T04:04:38+00:00",
       "needs_review_refresh": true,
       "refresh_reason": "review_finding_fixed",
-      "stale_since": "2026-03-07T04:19:48+00:00"
+      "stale_since": "2026-03-07T04:24:06+00:00"
     },
     "ai_generated_debt": {
       "score": 73,
@@ -76498,7 +76522,7 @@
       "assessed_at": "2026-03-07T04:04:38+00:00",
       "needs_review_refresh": true,
       "refresh_reason": "review_finding_fixed",
-      "stale_since": "2026-03-07T04:13:10+00:00"
+      "stale_since": "2026-03-07T04:24:06+00:00"
     },
     "package_organization": {
       "score": 80,
@@ -76529,7 +76553,7 @@
       "assessed_at": "2026-03-07T04:04:38+00:00",
       "needs_review_refresh": true,
       "refresh_reason": "review_finding_fixed",
-      "stale_since": "2026-03-07T04:15:39+00:00"
+      "stale_since": "2026-03-07T04:24:06+00:00"
     }
   },
   "lang_capabilities": {
@@ -78680,13 +78704,13 @@
       "strict_score": 73.0,
       "verified_strict_score": 73.0,
       "checks": 10,
-      "issues": 1,
+      "issues": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.73,
-          "issues": 1,
+          "issues": 0,
           "weighted_failures": 2.7,
           "assessment_score": 73.0,
           "placeholder": false,
@@ -78724,13 +78748,13 @@
       "strict_score": 73.0,
       "verified_strict_score": 73.0,
       "checks": 10,
-      "issues": 1,
+      "issues": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.73,
-          "issues": 1,
+          "issues": 0,
           "weighted_failures": 2.7,
           "assessment_score": 73.0,
           "placeholder": false,
@@ -78878,13 +78902,13 @@
       "strict_score": 72.0,
       "verified_strict_score": 72.0,
       "checks": 10,
-      "issues": 1,
+      "issues": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.72,
-          "issues": 1,
+          "issues": 0,
           "weighted_failures": 2.8,
           "assessment_score": 72.0,
           "placeholder": false,
@@ -78922,13 +78946,13 @@
       "strict_score": 72.0,
       "verified_strict_score": 72.0,
       "checks": 10,
-      "issues": 1,
+      "issues": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.72,
-          "issues": 1,
+          "issues": 0,
           "weighted_failures": 2.8,
           "assessment_score": 72.0,
           "placeholder": false,
