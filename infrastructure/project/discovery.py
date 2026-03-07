@@ -112,17 +112,7 @@ def discover_projects(repo_root: Union[Path, str]) -> list[ProjectInfo]:
 
         if is_valid:
             # It's a standalone project
-            metadata = get_project_metadata(child_dir)
-            project_info = ProjectInfo(
-                name=child_dir.name,
-                path=child_dir,
-                has_src=(child_dir / "src").exists(),
-                has_tests=(child_dir / "tests").exists(),
-                has_scripts=(child_dir / "scripts").exists(),
-                has_manuscript=(child_dir / "manuscript").exists(),
-                metadata=metadata,
-                program="",
-            )
+            project_info = _build_project_info(child_dir)
             projects.append(project_info)
             logger.debug(
                 f"Discovered standalone project: {project_info.name} at {project_info.path}"
@@ -139,6 +129,21 @@ def discover_projects(repo_root: Union[Path, str]) -> list[ProjectInfo]:
                 logger.debug(f"Skipping {child_dir.name}: {message}")
 
     return projects
+
+def _build_project_info(project_dir: Path, program: str = "") -> ProjectInfo:
+    """Build a ProjectInfo from a validated project directory."""
+    metadata = get_project_metadata(project_dir)
+    return ProjectInfo(
+        name=project_dir.name,
+        path=project_dir,
+        has_src=(project_dir / "src").exists(),
+        has_tests=(project_dir / "tests").exists(),
+        has_scripts=(project_dir / "scripts").exists(),
+        has_manuscript=(project_dir / "manuscript").exists(),
+        metadata=metadata,
+        program=program,
+    )
+
 
 def _discover_nested_projects(program_dir: Path, program_name: str) -> list[ProjectInfo]:
     """Discover projects nested within a program directory.
@@ -165,17 +170,7 @@ def _discover_nested_projects(program_dir: Path, program_name: str) -> list[Proj
         is_valid, _ = validate_project_structure(child_dir)
 
         if is_valid:
-            metadata = get_project_metadata(child_dir)
-            project_info = ProjectInfo(
-                name=child_dir.name,
-                path=child_dir,
-                has_src=(child_dir / "src").exists(),
-                has_tests=(child_dir / "tests").exists(),
-                has_scripts=(child_dir / "scripts").exists(),
-                has_manuscript=(child_dir / "manuscript").exists(),
-                metadata=metadata,
-                program=program_name,
-            )
+            project_info = _build_project_info(child_dir, program=program_name)
             nested_projects.append(project_info)
             logger.debug(
                 f"Discovered nested project: {project_info.qualified_name} at {project_info.path}"
