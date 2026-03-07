@@ -198,7 +198,7 @@ def check_test_failures(
     config_key: str = "max_test_failures",
 ) -> tuple[bool, str]:
     """Check if test failures are within tolerance."""
-    env_value = os.environ.get(env_var) or os.environ.get("MAX_TEST_FAILURES")
+    env_value = os.environ.get(env_var)
 
     if env_value is not None:
         try:
@@ -295,8 +295,8 @@ def extract_coverage_percentage(
                     logger.warning(
                         f"Corrupt coverage JSON at {coverage_json_path}: {e} (falling back to stdout parsing)"  # noqa: E501
                     )
-                except Exception as e:
-                    logger.debug(f"Could not read coverage from {coverage_json_path}: {e}")
+                except OSError as e:
+                    logger.warning(f"Could not read coverage from {coverage_json_path}: {e}")
 
             if coverage_found:
                 break

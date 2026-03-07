@@ -9,8 +9,8 @@
   "verified_strict_score": 50.1,
   "stats": {
     "total": 2635,
-    "open": 2063,
-    "fixed": 63,
+    "open": 2058,
+    "fixed": 68,
     "auto_resolved": 492,
     "wontfix": 5,
     "false_positive": 12,
@@ -30,8 +30,8 @@
         "false_positive": 4
       },
       "3": {
-        "open": 1341,
-        "fixed": 63,
+        "open": 1336,
+        "fixed": 68,
         "auto_resolved": 267,
         "wontfix": 1,
         "false_positive": 8
@@ -75797,16 +75797,22 @@
         "suggestion": "Narrow the broad `except Exception` blocks in verify_file_integrity and verify_data_consistency to the specific exceptions that can occur (OSError for file I/O, json.JSONDecodeError for JSON parsing, numpy errors for numpy loads), matching the precise style used in verify_cross_references",
         "reasoning": ""
       },
-      "status": "open",
+      "status": "fixed",
       "note": null,
       "first_seen": "2026-03-07T04:04:38+00:00",
       "last_seen": "2026-03-07T04:04:38+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-07T04:19:25+00:00",
       "reopen_count": 0,
       "lang": "python",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually narrowed all 4 broad except Exception blocks in integrity.py to OSError or specific types and I am not gaming the score by resolving without fixing.",
+        "attested_at": "2026-03-07T04:19:25+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::error_consistency::coverage_parser_double_catch_swallows_errors::7fa4eb68": {
       "id": "review::.::holistic::error_consistency::coverage_parser_double_catch_swallows_errors::7fa4eb68",
@@ -75829,16 +75835,22 @@
         "suggestion": "Replace the bare `except Exception` with `except OSError` (the only other plausible I/O failure) and promote it to `logger.warning` to maintain consistent error visibility across both branches",
         "reasoning": ""
       },
-      "status": "open",
+      "status": "fixed",
       "note": null,
       "first_seen": "2026-03-07T04:04:38+00:00",
       "last_seen": "2026-03-07T04:04:38+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-07T04:19:18+00:00",
       "reopen_count": 0,
       "lang": "python",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually replaced bare except Exception with except OSError and promoted to logger.warning in coverage_parser.py and I am not gaming the score by resolving without fixing.",
+        "attested_at": "2026-03-07T04:19:18+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::error_consistency::summary_generators_uniform_broad_catch::e0ac9cdf": {
       "id": "review::.::holistic::error_consistency::summary_generators_uniform_broad_catch::e0ac9cdf",
@@ -75973,16 +75985,22 @@
         "suggestion": "Remove the hard-coded fallback `or os.environ.get('MAX_TEST_FAILURES')` from line 201. The default parameter value `env_var='MAX_TEST_FAILURES'` already provides the default behavior. If the caller passes a custom env_var and it is unset, the function should fall through to the config_key path, not re-read the default name.",
         "reasoning": ""
       },
-      "status": "open",
+      "status": "fixed",
       "note": null,
       "first_seen": "2026-03-07T04:04:38+00:00",
       "last_seen": "2026-03-07T04:04:38+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-07T04:19:48+00:00",
       "reopen_count": 0,
       "lang": "python",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually removed the hard-coded or os.environ.get MAX_TEST_FAILURES fallback on line 201 of coverage_parser.py and I am not gaming the score by resolving without fixing.",
+        "attested_at": "2026-03-07T04:19:48+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::mid_level_elegance::coverage_parser_polling_inside_parse_function::e7005fa1": {
       "id": "review::.::holistic::mid_level_elegance::coverage_parser_polling_inside_parse_function::e7005fa1",
@@ -76039,16 +76057,22 @@
         "suggestion": "Add a test class in test_templates.py that directly instantiates a minimal ResearchTemplate subclass with a known template_str and asserts both the happy path and the KeyError -> LLMTemplateError path",
         "reasoning": ""
       },
-      "status": "open",
+      "status": "fixed",
       "note": null,
       "first_seen": "2026-03-07T04:04:38+00:00",
       "last_seen": "2026-03-07T04:04:38+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-07T04:19:48+00:00",
       "reopen_count": 0,
       "lang": "python",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually added TestResearchTemplateBase to test_templates.py with 3 tests for render happy path, missing variable, and empty template and I am not gaming the score by resolving without fixing.",
+        "attested_at": "2026-03-07T04:19:48+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::test_strategy::untested_manuscript_template_file::306f4b6e": {
       "id": "review::.::holistic::test_strategy::untested_manuscript_template_file::306f4b6e",
@@ -76106,16 +76130,22 @@
         "suggestion": "Add tests/infra_tests/reporting/test_coverage_parser.py with real pytest-output strings (no mocks) that exercise each parse strategy and the fallback chain, and separately test extract_coverage_percentage with a real temporary JSON file matching the expected structure",
         "reasoning": ""
       },
-      "status": "open",
+      "status": "fixed",
       "note": null,
       "first_seen": "2026-03-07T04:04:38+00:00",
       "last_seen": "2026-03-07T04:04:38+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-07T04:19:48+00:00",
       "reopen_count": 0,
       "lang": "python",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually created tests/infra_tests/reporting/test_coverage_parser.py with 20 passing tests covering all parse strategies and extract_coverage_percentage and I am not gaming the score by resolving without fixing.",
+        "attested_at": "2026-03-07T04:19:48+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::ai_generated_debt::duplicate_review_min_words_constant::c72cb5ea": {
       "id": "review::.::holistic::ai_generated_debt::duplicate_review_min_words_constant::c72cb5ea",
@@ -76433,7 +76463,10 @@
     "error_consistency": {
       "score": 73.0,
       "source": "holistic",
-      "assessed_at": "2026-03-07T04:04:38+00:00"
+      "assessed_at": "2026-03-07T04:04:38+00:00",
+      "needs_review_refresh": true,
+      "refresh_reason": "review_finding_fixed",
+      "stale_since": "2026-03-07T04:19:25+00:00"
     },
     "abstraction_fitness": {
       "score": 72.0,
@@ -76454,7 +76487,10 @@
     "test_strategy": {
       "score": 72,
       "source": "holistic",
-      "assessed_at": "2026-03-07T04:04:38+00:00"
+      "assessed_at": "2026-03-07T04:04:38+00:00",
+      "needs_review_refresh": true,
+      "refresh_reason": "review_finding_fixed",
+      "stale_since": "2026-03-07T04:19:48+00:00"
     },
     "ai_generated_debt": {
       "score": 73,
@@ -76477,7 +76513,10 @@
     "mid_level_elegance": {
       "score": 70.0,
       "source": "holistic",
-      "assessed_at": "2026-03-07T04:04:38+00:00"
+      "assessed_at": "2026-03-07T04:04:38+00:00",
+      "needs_review_refresh": true,
+      "refresh_reason": "review_finding_fixed",
+      "stale_since": "2026-03-07T04:19:48+00:00"
     },
     "low_level_elegance": {
       "score": 78,
@@ -78641,13 +78680,13 @@
       "strict_score": 73.0,
       "verified_strict_score": 73.0,
       "checks": 10,
-      "issues": 3,
+      "issues": 1,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.73,
-          "issues": 3,
+          "issues": 1,
           "weighted_failures": 2.7,
           "assessment_score": 73.0,
           "placeholder": false,
@@ -78729,13 +78768,13 @@
       "strict_score": 70.0,
       "verified_strict_score": 70.0,
       "checks": 10,
-      "issues": 2,
+      "issues": 1,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.7,
-          "issues": 2,
+          "issues": 1,
           "weighted_failures": 3.0,
           "assessment_score": 70.0,
           "placeholder": false,
@@ -78839,13 +78878,13 @@
       "strict_score": 72.0,
       "verified_strict_score": 72.0,
       "checks": 10,
-      "issues": 3,
+      "issues": 1,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.72,
-          "issues": 3,
+          "issues": 1,
           "weighted_failures": 2.8,
           "assessment_score": 72.0,
           "placeholder": false,

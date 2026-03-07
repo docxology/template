@@ -152,3 +152,34 @@ def test_render_missing_var():
     tmpl = SummarizeAbstract()
     with pytest.raises(LLMTemplateError):
         tmpl.render()  # Missing 'text'
+
+
+class TestResearchTemplateBase:
+    """Test the ResearchTemplate base class directly."""
+
+    def test_render_happy_path(self):
+        from infrastructure.llm.templates.base import ResearchTemplate
+
+        class _SimpleTemplate(ResearchTemplate):
+            template_str = "Hello $name, your score is $score."
+
+        result = _SimpleTemplate().render(name="Alice", score=42)
+        assert result == "Hello Alice, your score is 42."
+
+    def test_render_missing_variable_raises_llm_template_error(self):
+        from infrastructure.llm.templates.base import ResearchTemplate
+        from infrastructure.core.exceptions import LLMTemplateError
+
+        class _TwoVarTemplate(ResearchTemplate):
+            template_str = "A=$a B=$b"
+
+        with pytest.raises(LLMTemplateError, match="Missing template variable"):
+            _TwoVarTemplate().render(a="only_one")
+
+    def test_empty_template_renders_empty_string(self):
+        from infrastructure.llm.templates.base import ResearchTemplate
+
+        class _EmptyTemplate(ResearchTemplate):
+            template_str = ""
+
+        assert _EmptyTemplate().render() == ""

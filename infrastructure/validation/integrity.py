@@ -74,7 +74,7 @@ def verify_file_integrity(
                 # Just verify file is readable and not corrupted
                 integrity[str(file_path)] = actual_hash is not None
 
-        except Exception as e:
+        except OSError as e:
             logger.error("Error verifying %s: %s", file_path, e, exc_info=True)
             integrity[str(file_path)] = False
 
@@ -206,7 +206,7 @@ def verify_data_consistency(data_files: List[Path]) -> Dict[str, bool]:
                 with open(data_file, "rb") as f:
                     pickle.load(f)  # nosec B301 — validating project's own output files
 
-        except Exception as e:
+        except (OSError, ValueError, pickle.UnpicklingError) as e:
             logger.warning("Data integrity check failed for %s: %s", data_file, e, exc_info=True)
             consistency["data_integrity"] = False
 
@@ -550,7 +550,7 @@ def check_file_permissions(output_dir: Path) -> PermissionCheck:
             permissions["writable"] = False
             permissions["issues"].append("File read/write test failed")
 
-    except Exception as e:
+    except OSError as e:
         permissions["writable"] = False
         permissions["issues"].append(f"Permission test failed: {e}")
 
@@ -708,7 +708,7 @@ def load_integrity_manifest(manifest_path: Path) -> Optional[Dict[str, Any]]:
         with open(manifest_path, "r") as f:
             result: Optional[Dict[str, Any]] = json.load(f)
             return result
-    except Exception as e:
+    except (OSError, json.JSONDecodeError) as e:
         logger.debug(f"Could not load manifest from {manifest_path}: {e}")
         return None
 
