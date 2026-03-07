@@ -7,7 +7,7 @@ import re
 from dataclasses import asdict
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 from infrastructure.core.file_operations import calculate_file_hash
 from infrastructure.publishing.citations import (
@@ -21,7 +21,7 @@ from infrastructure.core.logging_utils import get_logger
 logger = get_logger(__name__)
 
 
-def create_publication_package(output_dir: Path, metadata: PublicationMetadata) -> Dict[str, Any]:
+def create_publication_package(output_dir: Path, metadata: PublicationMetadata) -> dict[str, Any]:
     """Create a publication package with all necessary files.
 
     Args:
@@ -230,8 +230,8 @@ def create_publication_announcement(metadata: PublicationMetadata) -> str:
 
 
 def validate_publication_readiness(
-    markdown_files: List[Path], pdf_files: List[Path]
-) -> Dict[str, Any]:
+    markdown_files: list[Path], pdf_files: list[Path]
+) -> dict[str, Any]:
     """Validate that the project is ready for publication.
 
     Args:
@@ -242,7 +242,7 @@ def validate_publication_readiness(
         Dictionary with publication readiness assessment
     """
 
-    readiness: Dict[str, Any] = {
+    readiness: dict[str, Any] = {
         "ready_for_publication": True,
         "completeness_score": 0,
         "missing_elements": [],

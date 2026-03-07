@@ -199,6 +199,7 @@ class DocumentationScanner:
                 "errors": result.stderr,
             }
         except Exception as e:
+            logger.warning(f"Link checker subprocess failed: {e}")
             return {"success": False, "error": str(e)}
 
     def _verify_cross_references(self) -> dict[str, Any]:

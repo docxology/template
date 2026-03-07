@@ -77,17 +77,19 @@ def verify_file_integrity(
 
 def verify_cross_references(markdown_files: list[Path]) -> dict[str, bool]:
     """Verify cross-reference integrity in markdown files."""
-    integrity = {
+    integrity: dict[str, bool] = {
         "equations": True,
         "figures": True,
         "tables": True,
         "sections": True,
         "citations": True,
+        "scan_errors": False,
     }
 
     # Collect all labels and references
     labels = set()
     references = set()
+    scan_error_count = 0
 
     for md_file in markdown_files:
         try:
@@ -108,7 +110,10 @@ def verify_cross_references(markdown_files: list[Path]) -> dict[str, bool]:
 
         except OSError as e:
             logger.error(f"Error reading {md_file}: {e}")
-            # Skip unreadable file; do not poison results for files that succeeded
+            scan_error_count += 1
+
+    if scan_error_count > 0:
+        integrity["scan_errors"] = True
 
     # Check if all references have corresponding labels, broken down by type prefix
     missing_labels = references - labels

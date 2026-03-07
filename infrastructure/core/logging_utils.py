@@ -397,6 +397,8 @@ __all__ = [
     "log_live_resource_usage",
     "format_error_with_suggestions",
     "format_duration",
+    "setup_root_log_file_handler",
+    "flush_file_handlers",
 ]
 
 
