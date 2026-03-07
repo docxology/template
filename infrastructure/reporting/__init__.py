@@ -8,16 +8,6 @@ from __future__ import annotations
 
 from pathlib import Path  # noqa: F401
 
-try:
-    from .dashboard_generator import (
-        generate_all_dashboards,
-        generate_matplotlib_dashboard,
-        generate_plotly_dashboard,
-    )
-
-    _DASHBOARD_AVAILABLE = True
-except ImportError:
-    _DASHBOARD_AVAILABLE = False
 from .error_aggregator import (
     ErrorAggregator,
     ErrorEntry,
@@ -36,10 +26,10 @@ from .output_reporter import (
     generate_output_summary,
 )
 from .pipeline_reporter import (
-    generate_error_summary,
     generate_performance_report,
     generate_pipeline_report,
     generate_validation_report,
+    save_error_summary,
     save_pipeline_report,
     save_test_results,
 )
@@ -54,12 +44,25 @@ from .suite_summary_generator import (
 )
 
 
+# Optional imports: dashboard_generator requires matplotlib/plotly which may not be installed
+try:
+    from .dashboard_generator import (
+        generate_all_dashboards,
+        generate_matplotlib_dashboard,
+        generate_plotly_dashboard,
+    )
+
+    _DASHBOARD_AVAILABLE = True
+except ImportError:
+    _DASHBOARD_AVAILABLE = False
+
+
 __all__ = [
     "generate_pipeline_report",
     "generate_validation_report",
     "save_test_results",
     "generate_performance_report",
-    "generate_error_summary",
+    "save_error_summary",
     "save_pipeline_report",
     "ErrorAggregator",
     "ErrorEntry",

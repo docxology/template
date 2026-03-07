@@ -20,6 +20,11 @@ from infrastructure.core.logging_utils import format_duration, get_logger
 
 logger = get_logger(__name__)
 
+# Performance warning thresholds
+_SLOW_STAGE_MULTIPLIER = 2  # warn when a stage takes > N× the pipeline average
+_HIGH_MEMORY_MB = 1024  # warn when a stage RSS exceeds 1 GB
+_HIGH_CPU_PERCENT = 90.0  # warn when CPU usage exceeds this percentage
+
 
 @dataclass
 class ResourceUsage:
@@ -264,18 +269,18 @@ class StagePerformanceTracker:
         avg_duration = sum(durations) / len(durations)
 
         for stage in self.stages:
-            if stage["duration"] > avg_duration * 2 and avg_duration > 0:
+            if stage["duration"] > avg_duration * _SLOW_STAGE_MULTIPLIER and avg_duration > 0:
                 warnings.append(
                     {
                         "type": "slow_stage",
                         "stage": stage["stage_name"],
                         "duration": stage["duration"],
                         "average": avg_duration,
-                        "message": f"Stage {stage['stage_name']} took {format_duration(stage['duration'])} (2x average)",  # noqa: E501
+                        "message": f"Stage {stage['stage_name']} took {format_duration(stage['duration'])} ({_SLOW_STAGE_MULTIPLIER}x average)",  # noqa: E501
                         "suggestion": "Consider optimizing this stage or running it in parallel",
                     }
                 )
-            if stage.get("end_memory_mb", 0) > 1024:
+            if stage.get("end_memory_mb", 0) > _HIGH_MEMORY_MB:
                 warnings.append(
                     {
                         "type": "high_memory",
@@ -285,7 +290,7 @@ class StagePerformanceTracker:
                         "suggestion": "Consider memory optimization or increasing available memory",
                     }
                 )
-            if stage.get("cpu_percent", 0) > 90:
+            if stage.get("cpu_percent", 0) > _HIGH_CPU_PERCENT:
                 warnings.append(
                     {
                         "type": "high_cpu",

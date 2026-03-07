@@ -7,24 +7,15 @@ from pipeline execution data.
 from __future__ import annotations
 
 import json
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Optional
 
-from infrastructure.core.checkpoint import StageResult as _CheckpointStageResult
+from infrastructure.core.checkpoint import StageResult
 from infrastructure.core.logging_utils import format_duration, get_logger
 
 logger = get_logger(__name__)
-
-
-@dataclass
-class ReportingStageResult(_CheckpointStageResult):
-    """Reporting-layer extension of checkpoint StageResult with output and error lists."""
-
-    output_files: list[str] = field(default_factory=list)
-    errors: list[str] = field(default_factory=list)
-    warnings: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -33,7 +24,7 @@ class PipelineReport:
 
     timestamp: str
     total_duration: float
-    stages: list[ReportingStageResult]
+    stages: list[StageResult]
     test_results: Optional[dict[str, Any]] = None
     validation_results: Optional[dict[str, Any]] = None
     performance_metrics: Optional[dict[str, Any]] = None
@@ -58,7 +49,7 @@ def generate_pipeline_report(
     for result in stage_results:
         status = "passed" if result.get("exit_code", 1) == 0 else "failed"
         stages.append(
-            ReportingStageResult(
+            StageResult(
                 name=result.get("name", "unknown"),
                 exit_code=result.get("exit_code", 1),
                 duration=result.get("duration", 0.0),
@@ -522,16 +513,8 @@ def generate_performance_report(performance_metrics: dict[str, Any], output_dir:
     return json_path
 
 
-def generate_error_summary(errors: list[dict[str, Any]], output_dir: Path) -> dict[str, Any]:
-    """Generate error summary report.
-
-    Args:
-        errors: List of error dictionaries
-        output_dir: Output directory path
-
-    Returns:
-        Error summary dictionary
-    """
+def save_error_summary(errors: list[dict[str, Any]], output_dir: Path) -> dict[str, Any]:
+    """Aggregate errors, write JSON and Markdown reports, and return the summary dict."""
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Categorize errors

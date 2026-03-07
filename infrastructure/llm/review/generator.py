@@ -759,44 +759,9 @@ def generate_translation(
 
     start_time = time.time()
     try:
-        try:
-            progress = StreamingProgress(
-                total=max_tokens,
-                message=f"Generating translation ({target_language})",
-                update_interval=0.5,
-            )
-            config = LLMConfig.from_env()
-            heartbeat_monitor = StreamHeartbeatMonitor(
-                operation_name=f"translation ({target_language})",
-                timeout_seconds=timeout,
-                heartbeat_interval=config.heartbeat_interval,
-                stall_threshold=config.stall_threshold,
-                early_warning_threshold=config.early_warning_threshold,
-                logger=logger,
-            )
-            heartbeat_monitor.set_estimated_total(max_tokens)
-            heartbeat_monitor.start_monitoring()
-
-            response_chunks = []
-            tokens_generated = 0
-            try:
-                for chunk in client.stream_query(prompt, options=options):
-                    response_chunks.append(chunk)
-                    tokens_generated += len(chunk.split())
-                    progress.set(tokens_generated)
-                    heartbeat_monitor.update_token_received()
-                total_time = time.time() - heartbeat_monitor.start_time
-                final_tokens_per_sec = tokens_generated / total_time if total_time > 0 else 0
-                progress.finish(
-                    f"    Generated {tokens_generated:,} tokens in {total_time:.1f}s ({final_tokens_per_sec:.1f} tokens/sec)"  # noqa: E501
-                )
-            finally:
-                heartbeat_monitor.stop_monitoring()
-            response = "".join(response_chunks)
-        except Exception as e:
-            logger.debug(f"Streaming query failed, falling back to blocking query: {e}")
-            response = client.query(prompt, options=options)
-
+        response = _stream_with_heartbeat(
+            client, prompt, options, f"translation ({target_language})", max_tokens, _cfg
+        )
     except Exception as e:
         metrics.generation_time_seconds = time.time() - start_time
         error_response = f"*Error generating translation to {target_language}: {e}*"
