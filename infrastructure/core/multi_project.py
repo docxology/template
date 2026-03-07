@@ -238,7 +238,7 @@ class MultiProjectOrchestrator:
             executor = PipelineExecutor(dummy_config)
 
             # Run only the infrastructure tests stage
-            success = executor._run_infrastructure_tests()
+            success = executor.run_infrastructure_tests()
 
             if success:
                 logger.info("✅ Infrastructure tests passed for all projects")

@@ -48,7 +48,6 @@ class FileInventoryManager:
         "slides",
         "tex",
     )
-    DISPLAY_ORDER = list(OUTPUT_CATEGORIES)
 
     def collect_output_files(
         self, output_dir: Path, categories: Optional[List[str]] = None
@@ -200,7 +199,7 @@ class FileInventoryManager:
         lines.append("Generated Files Inventory:")
         lines.append("")
 
-        for category in self.DISPLAY_ORDER:
+        for category in self.OUTPUT_CATEGORIES:
             if category in category_groups:
                 category_entries = category_groups[category]
                 total_size = sum(entry.size for entry in category_entries)
@@ -292,7 +291,7 @@ class FileInventoryManager:
         html_parts.append("<div class='file-inventory'>")
         html_parts.append("<h3>Generated Files Inventory</h3>")
 
-        for category in self.DISPLAY_ORDER:
+        for category in self.OUTPUT_CATEGORIES:
             if category in category_groups:
                 category_entries = category_groups[category]
                 total_size = sum(entry.size for entry in category_entries)

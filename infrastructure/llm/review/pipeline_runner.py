@@ -25,7 +25,7 @@ from infrastructure.llm.review.generator import (
     check_ollama_availability,
     create_review_client,
     extract_manuscript_text,
-    generate_executive_summary,
+    generate_llm_executive_summary,
     generate_improvement_suggestions,
     generate_methodology_review,
     generate_quality_review,
@@ -36,7 +36,7 @@ from infrastructure.llm.review.generator import (
 logger = get_logger(__name__)
 
 REVIEW_GENERATORS = {
-    "executive_summary": generate_executive_summary,
+    "executive_summary": generate_llm_executive_summary,
     "quality_review": generate_quality_review,
     "methodology_review": generate_methodology_review,
     "improvement_suggestions": generate_improvement_suggestions,

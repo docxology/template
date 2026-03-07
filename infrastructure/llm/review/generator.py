@@ -653,7 +653,7 @@ def generate_review_with_metrics(
     return response, metrics
 
 
-def generate_executive_summary(
+def generate_llm_executive_summary(
     client: LLMClient, text: str, model_name: str = ""
 ) -> tuple[str, ReviewMetrics]:
     return generate_review_with_metrics(
@@ -666,6 +666,10 @@ def generate_executive_summary(
         temperature=0.3,
         max_tokens=None,
     )
+
+
+# Backward-compatible alias
+generate_executive_summary = generate_llm_executive_summary
 
 
 def generate_quality_review(

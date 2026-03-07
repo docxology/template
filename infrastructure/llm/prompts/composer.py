@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import re
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from infrastructure.core.exceptions import LLMTemplateError
 from infrastructure.core.logging_utils import get_logger
@@ -66,7 +66,7 @@ class PromptComposer:
 
             # Load and substitute fragments
             fragments = template.get("fragments", {})
-            fragment_values: Dict[str, str] = {}
+            fragment_values: dict[str, str] = {}
 
             for fragment_key, fragment_ref in fragments.items():
                 if "section_structures.json#" in fragment_ref:
@@ -275,7 +275,7 @@ class PromptComposer:
             )
 
     def _build_token_budget_awareness(
-        self, total_tokens: int, section_budgets: Dict[str, int]
+        self, total_tokens: int, section_budgets: dict[str, int]
     ) -> str:
         """Build token budget awareness fragment.
 

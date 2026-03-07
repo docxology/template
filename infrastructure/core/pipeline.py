@@ -385,37 +385,35 @@ class PipelineExecutor:
 
     def _run_setup_environment(self) -> bool:
         """Run environment setup."""
-        logger.info("Running environment setup...")
         return self._run_script("00_setup_environment.py", "--project", self.config.project_name)
 
-    def _run_infrastructure_tests(self) -> bool:
-        """Run infrastructure tests."""
-        logger.info("Running infrastructure tests...")
+    def run_infrastructure_tests(self) -> bool:
+        """Run infrastructure tests (public API used by multi-project orchestrator)."""
         # Provide a project name for report output location; infra tests themselves should not depend on project src.  # noqa: E501
         return self._run_script(
             "01_run_tests.py", "--infra-only", "--verbose", "--project", self.config.project_name
         )
 
+    def _run_infrastructure_tests(self) -> bool:
+        """Run infrastructure tests."""
+        return self.run_infrastructure_tests()
+
     def _run_project_tests(self) -> bool:
         """Run project tests."""
-        logger.info("Running project tests...")
         return self._run_script(
             "01_run_tests.py", "--project-only", "--verbose", "--project", self.config.project_name
         )
 
     def _run_analysis(self) -> bool:
         """Run project analysis."""
-        logger.info("Running project analysis...")
         return self._run_script("02_run_analysis.py", "--project", self.config.project_name)
 
     def _run_pdf_rendering(self) -> bool:
         """Run PDF rendering."""
-        logger.info("Running PDF rendering...")
         return self._run_script("03_render_pdf.py", "--project", self.config.project_name)
 
     def _run_validation(self) -> bool:
         """Run output validation."""
-        logger.info("Running output validation...")
         return self._run_script("04_validate_output.py", "--project", self.config.project_name)
 
     def _run_llm_review(self) -> bool:
@@ -423,7 +421,6 @@ class PipelineExecutor:
 
         Uses allow_skip_code=True to treat exit code 2 (Ollama not available) as success.
         """
-        logger.info("Running LLM scientific review...")
         return self._run_script(
             "06_llm_review.py",
             "--reviews-only",
@@ -437,7 +434,6 @@ class PipelineExecutor:
 
         Uses allow_skip_code=True to treat exit code 2 (no languages configured or Ollama unavailable) as success.
         """
-        logger.info("Running LLM translations...")
         return self._run_script(
             "06_llm_review.py",
             "--translations-only",

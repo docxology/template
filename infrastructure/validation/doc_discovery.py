@@ -14,24 +14,25 @@ from infrastructure.validation.doc_models import DocumentationFile
 
 logger = get_logger(__name__)
 
+_DEFAULT_EXCLUDE_DIRS = {
+    "output",
+    "htmlcov",
+    ".venv",
+    "venv",
+    "__pycache__",
+    ".pytest_cache",
+    ".git",
+    "node_modules",
+    ".tox",
+    "dist",
+    "build",
+    ".mypy_cache",
+}
+
 
 def find_markdown_files(repo_root: Path) -> List[Path]:
     """Find all markdown files excluding output/htmlcov and virtual environments."""
-    exclude_dirs = {
-        "output",
-        "htmlcov",
-        ".venv",
-        "venv",
-        "__pycache__",
-        ".pytest_cache",
-        ".git",
-        "node_modules",
-        ".tox",
-        "dist",
-        "build",
-        ".mypy_cache",
-        "projects_archive",
-    }
+    exclude_dirs = _DEFAULT_EXCLUDE_DIRS | {"projects_archive"}
     md_files = []
     for md_file in repo_root.rglob("*.md"):
         # Skip if any part of the path is in exclude list
@@ -51,20 +52,7 @@ def catalog_agents_readme(md_files: List[Path], repo_root: Path) -> List[str]:
 
 def find_config_files(repo_root: Path) -> Dict[str, Path]:
     """Find configuration files."""
-    exclude_dirs = {
-        "output",
-        "htmlcov",
-        ".venv",
-        "venv",
-        "__pycache__",
-        ".pytest_cache",
-        ".git",
-        "node_modules",
-        ".tox",
-        "dist",
-        "build",
-        ".mypy_cache",
-    }
+    exclude_dirs = _DEFAULT_EXCLUDE_DIRS
     config_patterns = ["pyproject.toml", "config.yaml", "*.toml", "*.yaml", "*.yml"]
     configs = {}
 
@@ -80,21 +68,7 @@ def find_config_files(repo_root: Path) -> Dict[str, Path]:
 
 def find_script_files(repo_root: Path) -> List[Path]:
     """Find all script files (Python and shell) excluding virtual environments."""
-    exclude_dirs = {
-        "output",
-        "htmlcov",
-        ".venv",
-        "venv",
-        "__pycache__",
-        ".pytest_cache",
-        ".git",
-        "node_modules",
-        ".tox",
-        "dist",
-        "build",
-        ".mypy_cache",
-        "tests",
-    }
+    exclude_dirs = _DEFAULT_EXCLUDE_DIRS | {"tests"}
     scripts = []
     for ext in ["*.py", "*.sh"]:
         for script in repo_root.rglob(ext):
@@ -364,12 +338,16 @@ def discover_project_documentation(repo_root: Path) -> Dict[str, Dict[str, Any]]
 
 def _calculate_project_stats(project_data: Dict[str, Any]) -> Dict[str, int]:
     """Calculate documentation statistics for a project."""
-    all_docs = (
-        project_data["documentation_files"]
-        + project_data["manuscript_files"]
+    # documentation_files already contains all docs; sub-lists are subsets of it.
+    # Use only the sub-lists plus any uncategorized docs to avoid double-counting.
+    sub_docs = (
+        project_data["manuscript_files"]
         + project_data["script_docs"]
         + project_data["test_docs"]
     )
+    sub_doc_ids = {id(d) for d in sub_docs}
+    uncategorized = [d for d in project_data["documentation_files"] if id(d) not in sub_doc_ids]
+    all_docs = sub_docs + uncategorized
 
     total_words = sum(doc.word_count for doc in all_docs if hasattr(doc, "word_count"))
     total_lines = sum(doc.line_count for doc in all_docs if hasattr(doc, "line_count"))
