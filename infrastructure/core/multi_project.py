@@ -72,9 +72,7 @@ class MultiProjectOrchestrator:
         """
         logger.info(f"Executing full pipeline for {len(self.config.projects)} projects")
 
-        return self._execute_multi_project_pipeline(
-            run_infra_tests=True, run_llm=True, pipeline_method="execute_full_pipeline"
-        )
+        return self._execute_multi_project_pipeline(run_infra_tests=True, run_llm=True)
 
     def execute_all_projects_core(self) -> MultiProjectResult:
         """Execute core pipeline for all projects (with infrastructure tests, no LLM).
@@ -84,9 +82,7 @@ class MultiProjectOrchestrator:
         """
         logger.info(f"Executing core pipeline for {len(self.config.projects)} projects")
 
-        return self._execute_multi_project_pipeline(
-            run_infra_tests=True, run_llm=False, pipeline_method="execute_core_pipeline"
-        )
+        return self._execute_multi_project_pipeline(run_infra_tests=True, run_llm=False)
 
     def execute_all_projects_full_no_infra(self) -> MultiProjectResult:
         """Execute full pipeline for all projects (no infrastructure tests, with LLM).
@@ -96,9 +92,7 @@ class MultiProjectOrchestrator:
         """
         logger.info(f"Executing full pipeline (no infra) for {len(self.config.projects)} projects")
 
-        return self._execute_multi_project_pipeline(
-            run_infra_tests=False, run_llm=True, pipeline_method="execute_full_pipeline"
-        )
+        return self._execute_multi_project_pipeline(run_infra_tests=False, run_llm=True)
 
     def execute_all_projects_core_no_infra(self) -> MultiProjectResult:
         """Execute core pipeline for all projects (no infrastructure tests, no LLM).
@@ -108,21 +102,16 @@ class MultiProjectOrchestrator:
         """
         logger.info(f"Executing core pipeline (no infra) for {len(self.config.projects)} projects")
 
-        return self._execute_multi_project_pipeline(
-            run_infra_tests=False,
-            run_llm=False,
-            pipeline_method="execute_core_pipeline",
-        )
+        return self._execute_multi_project_pipeline(run_infra_tests=False, run_llm=False)
 
     def _execute_multi_project_pipeline(
-        self, run_infra_tests: bool, run_llm: bool, pipeline_method: str
+        self, run_infra_tests: bool, run_llm: bool
     ) -> MultiProjectResult:
         """Execute pipeline across multiple projects.
 
         Args:
             run_infra_tests: Whether to run infrastructure tests once at start
             run_llm: Whether to include LLM stages
-            pipeline_method: Method name to call on PipelineExecutor
 
         Returns:
             Multi-project execution result
@@ -170,7 +159,7 @@ class MultiProjectOrchestrator:
 
                     # Execute pipeline
                     executor = PipelineExecutor(pipeline_config)
-                    method = getattr(executor, pipeline_method)
+                    method = executor.execute_full_pipeline if run_llm else executor.execute_core_pipeline
                     results = method()
 
                     project_results[project_name] = results
@@ -206,8 +195,6 @@ class MultiProjectOrchestrator:
 
         # Executive reporting is handled by the dedicated pipeline stage
         # (07_generate_executive_report.py), which runs as part of the stage executor.
-        # Calling it here would duplicate all executive summary log lines.
-        # The _run_executive_reporting method below is retained for standalone use only.
 
         total_duration = time.time() - start_time
 
@@ -263,40 +250,3 @@ class MultiProjectOrchestrator:
             logger.error(f"❌ Infrastructure tests failed with exception: {e}")
             return False
 
-    def _run_executive_reporting(self, results: Dict[str, List[PipelineStageResult]]) -> None:
-        """Generate cross-project executive report.
-
-        Args:
-            results: Results from all projects
-        """
-        if len(results) < 2:
-            logger.info("Skipping executive reporting (requires 2+ projects)")
-            return
-
-        logger.info("Generating executive report for cross-project analysis...")
-
-        try:
-            # Import executive report generator
-            from infrastructure.reporting import generate_multi_project_report
-
-            # Extract project names from results
-            project_names = list(results.keys())
-
-            # Generate comprehensive multi-project report
-            output_dir = self.config.repo_root / "output" / "executive_summary"
-            report_files = generate_multi_project_report(
-                self.config.repo_root, project_names, output_dir
-            )
-
-            logger.info("✅ Executive report generated successfully")
-            logger.info(f"  Generated {len(report_files)} report files:")
-            for file_type, path in report_files.items():
-                logger.info(f"    • {file_type.upper()}: {path.name}")
-            logger.info(f"  Reports saved to: {output_dir}")
-
-        except ImportError as e:
-            logger.warning(f"Executive reporting not available: {e}")
-            logger.debug("  infrastructure.reporting module may not be properly configured")
-        except Exception as e:
-            logger.error(f"Executive reporting failed: {e}", exc_info=True)
-            logger.info("  Continuing without executive report (non-critical)")

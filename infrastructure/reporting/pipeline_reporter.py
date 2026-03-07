@@ -7,27 +7,16 @@ from pipeline execution data.
 from __future__ import annotations
 
 import json
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+from infrastructure.core.checkpoint import StageResult
 from infrastructure.core.logging_utils import format_duration, get_logger
+from infrastructure.core.multi_project import MultiProjectResult
 
 logger = get_logger(__name__)
-
-
-@dataclass
-class StageResult:
-    """Result for a single pipeline stage."""
-
-    name: str
-    exit_code: int
-    duration: float
-    status: str  # 'passed', 'failed', 'skipped'
-    output_files: List[str] = field(default_factory=list)
-    errors: List[str] = field(default_factory=list)
-    warnings: List[str] = field(default_factory=list)
 
 
 @dataclass
@@ -45,7 +34,7 @@ class PipelineReport:
 
 
 def generate_multi_project_summary_report(
-    result: Any, projects: List[Any], output_dir: Path
+    result: MultiProjectResult, projects: List[Any], output_dir: Path
 ) -> Dict[str, Path]:
     """Generate comprehensive multi-project summary report.
 
@@ -59,115 +48,46 @@ def generate_multi_project_summary_report(
     """
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Debug: check what type of result object we got
-    logger.debug(f"Result object type: {type(result)}")
-    logger.debug(f"Result object attributes: {dir(result)}")
-
     # Build comprehensive summary
-    successful_projects = getattr(result, "successful_projects", 0)
     total_projects_count = len(projects)
-    failed_projects = getattr(result, "failed_projects", total_projects_count - successful_projects)
 
-    summary = {  # type: ignore
+    summary = {
         "timestamp": datetime.now().isoformat(),
         "total_projects": total_projects_count,
-        "successful_projects": successful_projects,
-        "failed_projects": failed_projects,
-        "total_duration": getattr(result, "total_duration", 0.0),
-        "infra_test_duration": getattr(result, "infra_test_duration", 0.0),
+        "successful_projects": result.successful_projects,
+        "failed_projects": result.failed_projects,
+        "total_duration": result.total_duration,
+        "infra_test_duration": result.infra_test_duration,
         "projects": {},
         "performance_analysis": {},
         "error_aggregation": {},
         "recommendations": [],
     }
 
-    # Collect per-project data with defensive type checking
+    # Collect per-project data
     project_names = [p.name for p in projects]
-    project_results = getattr(result, "project_results", {})
-
-    # Debug: log what we got
-    logger.debug(f"project_results type: {type(project_results)}, value: {project_results}")
-
-    # Ensure project_results is a dict - strengthen validation
-    if not isinstance(project_results, dict):
-        logger.warning(
-            f"project_results is not a dict, got {type(project_results)} - using empty dict"
-        )
-        project_results = {}
-    elif project_results is None:
-        logger.warning("project_results is None - using empty dict")
-        project_results = {}
-    else:
-        # Ensure all values are lists (defensive check)
-        for key, value in project_results.items():
-            if not isinstance(value, list):
-                logger.warning(
-                    f"project_results['{key}'] is not a list, got {type(value)} - converting to empty list"  # noqa: E501
-                )
-                project_results[key] = []
+    project_results = result.project_results
 
     for proj_name in project_names:
-        try:
-            proj_result = project_results.get(proj_name, [])
-            logger.info(
-                f"For project {proj_name}, proj_result type: {type(proj_result)}, len: {len(proj_result) if hasattr(proj_result, '__len__') else 'N/A'}"  # noqa: E501
-            )
+        proj_result = project_results.get(proj_name, [])
 
-            # Handle different result formats defensively
-            if isinstance(proj_result, list) and proj_result:
-                # New format: list of PipelineStageResult objects
-                all_success = all(
-                    result.success for result in proj_result if hasattr(result, "success")
-                )
-                total_duration = sum(
-                    result.duration for result in proj_result if hasattr(result, "duration")
-                )
-                stages_completed = len(proj_result)
-                errors = []
-                for result in proj_result:
-                    if hasattr(result, "error_message") and result.error_message:
-                        errors.append(result.error_message)
-                    elif hasattr(result, "errors") and result.errors:
-                        errors.extend(result.errors)
+        all_success = all(stage.success for stage in proj_result)
+        total_duration = sum(stage.duration for stage in proj_result)
+        errors = [stage.error_message for stage in proj_result if stage.error_message]
 
-                summary["projects"][proj_name] = {  # type: ignore
-                    "success": all_success,
-                    "duration": total_duration,
-                    "stages_completed": stages_completed,
-                    "errors": errors,
-                }
-            elif isinstance(proj_result, dict):
-                # Legacy format: dict with direct keys
-                summary["projects"][proj_name] = {  # type: ignore
-                    "success": proj_result.get("success", False),
-                    "duration": proj_result.get("duration", 0.0),
-                    "stages_completed": proj_result.get("stages_completed", 0),
-                    "errors": proj_result.get("errors", []),
-                }
-            else:
-                # Unknown format or empty
-                logger.debug(f"Unknown project result format for {proj_name}: {type(proj_result)}")
-                summary["projects"][proj_name] = {  # type: ignore
-                    "success": False,
-                    "duration": 0.0,
-                    "stages_completed": 0,
-                    "errors": ["Unknown result format"],
-                }
-        except Exception as e:
-            logger.warning(f"Error processing results for project {proj_name}: {e}")
-            summary["projects"][proj_name] = {  # type: ignore
-                "success": False,
-                "duration": 0.0,
-                "stages_completed": 0,
-                "errors": [str(e)],
-            }
+        summary["projects"][proj_name] = {
+            "success": all_success,
+            "duration": total_duration,
+            "stages_completed": len(proj_result),
+            "errors": errors,
+        }
 
     # Performance analysis with defensive handling
     if project_results:
         try:
             # Collect durations from the projects summary we just built
             durations = []
-            for proj_name, proj_data in summary["projects"].items():  # type: ignore
+            for proj_name, proj_data in summary["projects"].items():
                 if isinstance(proj_data, dict) and proj_data.get("duration", 0) > 0:
                     durations.append(proj_data["duration"])
 
@@ -176,25 +96,25 @@ def generate_multi_project_summary_report(
                     "slowest_project": (
                         max(
                             (
-                                (n, summary["projects"][n]["duration"])  # type: ignore
-                                for n in summary["projects"]  # type: ignore
-                                if summary["projects"][n]["duration"] > 0  # type: ignore
+                                (n, summary["projects"][n]["duration"])
+                                for n in summary["projects"]
+                                if summary["projects"][n]["duration"] > 0
                             ),
                             key=lambda x: x[1],
                         )[0]
-                        if any(summary["projects"][n]["duration"] > 0 for n in summary["projects"])  # type: ignore
+                        if any(summary["projects"][n]["duration"] > 0 for n in summary["projects"])
                         else None
                     ),
                     "fastest_project": (
                         min(
                             (
-                                (n, summary["projects"][n]["duration"])  # type: ignore
-                                for n in summary["projects"]  # type: ignore
-                                if summary["projects"][n]["duration"] > 0  # type: ignore
+                                (n, summary["projects"][n]["duration"])
+                                for n in summary["projects"]
+                                if summary["projects"][n]["duration"] > 0
                             ),
                             key=lambda x: x[1],
                         )[0]
-                        if any(summary["projects"][n]["duration"] > 0 for n in summary["projects"])  # type: ignore
+                        if any(summary["projects"][n]["duration"] > 0 for n in summary["projects"])
                         else None
                     ),
                     "average_duration": sum(durations) / len(durations),
@@ -206,7 +126,7 @@ def generate_multi_project_summary_report(
 
     # Error aggregation
     all_errors = []
-    for proj_name, proj_data in summary["projects"].items():  # type: ignore
+    for proj_name, proj_data in summary["projects"].items():
         errors = proj_data.get("errors", [])
         for err in errors:
             all_errors.append({"project": proj_name, "error": err})
@@ -214,26 +134,26 @@ def generate_multi_project_summary_report(
         "total_errors": len(all_errors),
         "errors_by_project": {
             proj: len(summary["projects"].get(proj, {}).get("errors", []))
-            for proj in project_names  # type: ignore
+            for proj in project_names
         },
     }
 
     # Generate recommendations
-    if failed_projects > 0:
-        summary["recommendations"].append(  # type: ignore
+    if result.failed_projects > 0:
+        summary["recommendations"].append(
             {
                 "priority": "high",
                 "action": "Review failed projects",
-                "details": f"{failed_projects} project(s) failed execution",
+                "details": f"{result.failed_projects} project(s) failed execution",
             }
         )
 
-    if summary["performance_analysis"].get("average_duration", 0) > 300:  # type: ignore  # 5 minutes
-        summary["recommendations"].append(  # type: ignore
+    if summary["performance_analysis"].get("average_duration", 0) > 300:   # 5 minutes
+        summary["recommendations"].append(
             {
                 "priority": "medium",
                 "action": "Consider performance optimization",
-                "details": f"Average project execution time: {summary['performance_analysis']['average_duration']:.1f}s",  # type: ignore  # noqa: E501
+                "details": f"Average project execution time: {summary['performance_analysis']['average_duration']:.1f}s",  # noqa: E501
             }
         )
 
