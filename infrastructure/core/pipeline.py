@@ -66,7 +66,7 @@ class StageSpec(NamedTuple):
     """Specification for a single pipeline stage."""
 
     name: str
-    func: Callable[[], "PipelineStageResult"]
+    func: Callable[[], bool]
     skip: bool = False
 
 

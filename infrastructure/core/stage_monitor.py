@@ -223,7 +223,7 @@ class StagePerformanceTracker:
             "duration": duration,
             "exit_code": exit_code,
             "memory_mb": 0.0,
-            "peak_memory_mb": 0.0,
+            "end_memory_mb": 0.0,
             "cpu_percent": 0.0,
             "io_read_mb": 0.0,
             "io_write_mb": 0.0,
@@ -234,7 +234,7 @@ class StagePerformanceTracker:
                 process = psutil.Process(os.getpid())
                 current_memory = process.memory_info().rss / 1024 / 1024
                 metrics["memory_mb"] = current_memory
-                metrics["peak_memory_mb"] = current_memory
+                metrics["end_memory_mb"] = current_memory
                 metrics["cpu_percent"] = process.cpu_percent(interval=0.1)
 
                 if self.start_io:
@@ -261,7 +261,7 @@ class StagePerformanceTracker:
             return warnings
 
         durations = [s["duration"] for s in self.stages]
-        avg_duration = sum(durations) / len(durations) if durations else 0
+        avg_duration = sum(durations) / len(durations)
 
         for stage in self.stages:
             if stage["duration"] > avg_duration * 2 and avg_duration > 0:
@@ -275,13 +275,13 @@ class StagePerformanceTracker:
                         "suggestion": "Consider optimizing this stage or running it in parallel",
                     }
                 )
-            if stage.get("peak_memory_mb", 0) > 1024:
+            if stage.get("end_memory_mb", 0) > 1024:
                 warnings.append(
                     {
                         "type": "high_memory",
                         "stage": stage["stage_name"],
-                        "memory_mb": stage["peak_memory_mb"],
-                        "message": f"Stage {stage['stage_name']} used {stage['peak_memory_mb']:.0f} MB memory",  # noqa: E501
+                        "memory_mb": stage["end_memory_mb"],
+                        "message": f"Stage {stage['stage_name']} used {stage['end_memory_mb']:.0f} MB memory",  # noqa: E501
                         "suggestion": "Consider memory optimization or increasing available memory",
                     }
                 )
@@ -309,14 +309,10 @@ class StagePerformanceTracker:
         return {
             "total_stages": len(self.stages),
             "total_duration": total_duration,
-            "average_duration": total_duration / len(self.stages) if self.stages else 0,
-            "slowest_stage": (
-                max(self.stages, key=lambda s: s["duration"]) if self.stages else None
-            ),
-            "fastest_stage": (
-                min(self.stages, key=lambda s: s["duration"]) if self.stages else None
-            ),
+            "average_duration": total_duration / len(self.stages),
+            "slowest_stage": max(self.stages, key=lambda s: s["duration"]),
+            "fastest_stage": min(self.stages, key=lambda s: s["duration"]),
             "total_memory_mb": sum(s.get("memory_mb", 0) for s in self.stages),
-            "peak_memory_mb": max((s.get("peak_memory_mb", 0) for s in self.stages), default=0),
+            "peak_memory_mb": max((s.get("end_memory_mb", 0) for s in self.stages), default=0),
             "warnings": self.get_performance_warnings(),
         }

@@ -31,13 +31,12 @@ from infrastructure.core.logging_constants import EMOJIS, USE_EMOJIS, USE_STRUCT
 T = TypeVar("T")
 
 
+_IN_TEST_ENV: bool = bool(os.getenv("PYTEST_CURRENT_TEST") or "pytest" in sys.modules)
+
+
 def _is_test_environment() -> bool:
     """Return True if running inside pytest."""
-    return (
-        os.getenv("PYTEST_CURRENT_TEST") is not None
-        or "pytest" in sys.modules
-        or any("pytest" in str(v) for v in sys.modules.values() if hasattr(v, "__file__"))
-    )
+    return _IN_TEST_ENV
 
 
 # =============================================================================

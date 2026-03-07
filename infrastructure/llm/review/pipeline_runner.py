@@ -8,6 +8,7 @@ from typing import Optional
 
 from infrastructure.core.logging_utils import (
     get_logger,
+    log_substep,
     log_success,
     log_progress,
 )
@@ -29,7 +30,6 @@ from infrastructure.llm.review.generator import (
     generate_methodology_review,
     generate_quality_review,
     generate_translation,
-    log_stage,
     warmup_model,
 )
 
@@ -111,7 +111,7 @@ def run_llm_review_pipeline(
             return 2
 
         # Step 3: Initialize LLM client
-        log_stage("Initializing LLM client...")
+        log_substep("Initializing LLM client...")
         client = create_review_client(model_name)  # type: ignore
 
         if not client.check_connection():

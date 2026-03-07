@@ -10,7 +10,7 @@ import json
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from infrastructure.core.checkpoint import StageResult as _CheckpointStageResult
 from infrastructure.core.logging_utils import format_duration, get_logger
@@ -22,9 +22,9 @@ logger = get_logger(__name__)
 class ReportingStageResult(_CheckpointStageResult):
     """Reporting-layer extension of checkpoint StageResult with output and error lists."""
 
-    output_files: List[str] = field(default_factory=list)
-    errors: List[str] = field(default_factory=list)
-    warnings: List[str] = field(default_factory=list)
+    output_files: list[str] = field(default_factory=list)
+    errors: list[str] = field(default_factory=list)
+    warnings: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -33,24 +33,24 @@ class PipelineReport:
 
     timestamp: str
     total_duration: float
-    stages: List[ReportingStageResult]
-    test_results: Optional[Dict[str, Any]] = None
-    validation_results: Optional[Dict[str, Any]] = None
-    performance_metrics: Optional[Dict[str, Any]] = None
-    error_summary: Optional[Dict[str, Any]] = None
-    output_statistics: Optional[Dict[str, Any]] = None
+    stages: list[ReportingStageResult]
+    test_results: Optional[dict[str, Any]] = None
+    validation_results: Optional[dict[str, Any]] = None
+    performance_metrics: Optional[dict[str, Any]] = None
+    error_summary: Optional[dict[str, Any]] = None
+    output_statistics: Optional[dict[str, Any]] = None
 
 
 def generate_pipeline_report(
-    stage_results: List[Dict[str, Any]],
+    stage_results: list[dict[str, Any]],
     total_duration: float,
     repo_root: Path,
     *,
-    test_results: Optional[Dict[str, Any]] = None,
-    validation_results: Optional[Dict[str, Any]] = None,
-    performance_metrics: Optional[Dict[str, Any]] = None,
-    error_summary: Optional[Dict[str, Any]] = None,
-    output_statistics: Optional[Dict[str, Any]] = None,
+    test_results: Optional[dict[str, Any]] = None,
+    validation_results: Optional[dict[str, Any]] = None,
+    performance_metrics: Optional[dict[str, Any]] = None,
+    error_summary: Optional[dict[str, Any]] = None,
+    output_statistics: Optional[dict[str, Any]] = None,
     project_name: Optional[str] = None,
 ) -> PipelineReport:
     """Generate consolidated pipeline report from stage results and optional extras."""
@@ -91,8 +91,8 @@ def generate_pipeline_report(
 
 
 def save_pipeline_report(
-    report: PipelineReport, output_dir: Path, formats: Optional[List[str]] = None
-) -> Dict[str, Path]:
+    report: PipelineReport, output_dir: Path, formats: Optional[list[str]] = None
+) -> dict[str, Path]:
     """Save pipeline report in multiple formats.
 
     Args:
@@ -436,7 +436,7 @@ def generate_html_report(report: PipelineReport) -> str:
     return html
 
 
-def save_test_results(test_results: Dict[str, Any], output_dir: Path) -> Path:
+def save_test_results(test_results: dict[str, Any], output_dir: Path) -> Path:
     """Write test_results dict to test_results.json and return the path.
 
     Args:
@@ -454,8 +454,8 @@ def save_test_results(test_results: Dict[str, Any], output_dir: Path) -> Path:
 
 
 def generate_validation_report(
-    validation_results: Dict[str, Any], output_dir: Path
-) -> Dict[str, Path]:
+    validation_results: dict[str, Any], output_dir: Path
+) -> dict[str, Path]:
     """Generate validation report as JSON and Markdown; returns paths by format key."""
     output_dir.mkdir(parents=True, exist_ok=True)
     saved_files = {}
@@ -475,7 +475,7 @@ def generate_validation_report(
     return saved_files
 
 
-def generate_validation_markdown(results: Dict[str, Any]) -> str:
+def generate_validation_markdown(results: dict[str, Any]) -> str:
     """Generate Markdown validation report.
 
     Args:
@@ -503,7 +503,7 @@ def generate_validation_markdown(results: Dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def generate_performance_report(performance_metrics: Dict[str, Any], output_dir: Path) -> Path:
+def generate_performance_report(performance_metrics: dict[str, Any], output_dir: Path) -> Path:
     """Generate performance report.
 
     Args:
@@ -522,7 +522,7 @@ def generate_performance_report(performance_metrics: Dict[str, Any], output_dir:
     return json_path
 
 
-def generate_error_summary(errors: List[Dict[str, Any]], output_dir: Path) -> Dict[str, Any]:
+def generate_error_summary(errors: list[dict[str, Any]], output_dir: Path) -> dict[str, Any]:
     """Generate error summary report.
 
     Args:
@@ -535,7 +535,7 @@ def generate_error_summary(errors: List[Dict[str, Any]], output_dir: Path) -> Di
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Categorize errors
-    by_type: Dict[str, List[Dict[str, Any]]] = {}
+    by_type: dict[str, list[dict[str, Any]]] = {}
     for error in errors:
         error_type = error.get("type", "unknown")
         if error_type not in by_type:
@@ -561,7 +561,7 @@ def generate_error_summary(errors: List[Dict[str, Any]], output_dir: Path) -> Di
     return summary
 
 
-def generate_error_markdown(summary: Dict[str, Any]) -> str:
+def generate_error_markdown(summary: dict[str, Any]) -> str:
     """Generate Markdown error summary.
 
     Args:

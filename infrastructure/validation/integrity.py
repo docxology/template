@@ -17,7 +17,7 @@ import json
 import pickle  # noqa: S403 — used for pickle file validation
 import re
 from pathlib import Path
-from typing import Any, Dict, List, Optional, TypedDict
+from typing import Any, Optional, TypedDict
 
 from infrastructure.core.file_operations import calculate_file_hash  # noqa: F401
 from infrastructure.core.logging_utils import get_logger
@@ -29,19 +29,19 @@ class IntegrityReport:
     """Container for integrity verification results."""
 
     def __init__(self) -> None:
-        self.file_integrity: Dict[str, bool] = {}
-        self.cross_reference_integrity: Dict[str, bool] = {}
-        self.data_consistency: Dict[str, bool] = {}
-        self.academic_standards: Dict[str, bool] = {}
+        self.file_integrity: dict[str, bool] = {}
+        self.cross_reference_integrity: dict[str, bool] = {}
+        self.data_consistency: dict[str, bool] = {}
+        self.academic_standards: dict[str, bool] = {}
         self.overall_integrity: bool = True
-        self.issues: List[str] = []
-        self.warnings: List[str] = []
-        self.recommendations: List[str] = []
+        self.issues: list[str] = []
+        self.warnings: list[str] = []
+        self.recommendations: list[str] = []
 
 
 def verify_file_integrity(
-    file_paths: List[Path], expected_hashes: Optional[Dict[str, str]] = None
-) -> Dict[str, bool]:
+    file_paths: list[Path], expected_hashes: Optional[dict[str, str]] = None
+) -> dict[str, bool]:
     """Verify file integrity using hash comparison.
 
     Args:
@@ -82,7 +82,7 @@ def verify_file_integrity(
     return integrity
 
 
-def verify_cross_references(markdown_files: List[Path]) -> Dict[str, bool]:
+def verify_cross_references(markdown_files: list[Path]) -> dict[str, bool]:
     """Verify cross-reference integrity in markdown files.
 
     Args:
@@ -155,7 +155,7 @@ def verify_cross_references(markdown_files: List[Path]) -> Dict[str, bool]:
     return integrity
 
 
-def verify_data_consistency(data_files: List[Path]) -> Dict[str, bool]:
+def verify_data_consistency(data_files: list[Path]) -> dict[str, bool]:
     """Verify data file consistency and integrity.
 
     Args:
@@ -189,7 +189,7 @@ def verify_data_consistency(data_files: List[Path]) -> Dict[str, bool]:
                 # Basic CSV validation
                 with open(data_file, "r") as f:
                     lines = f.readlines()
-                    if len(lines) > 0:
+                    if lines:
                         first_line = lines[0].strip()
                         if "," not in first_line and "\t" not in first_line:
                             consistency["data_integrity"] = False
@@ -212,7 +212,7 @@ def verify_data_consistency(data_files: List[Path]) -> Dict[str, bool]:
     return consistency
 
 
-def verify_academic_standards(markdown_files: List[Path]) -> Dict[str, bool]:
+def verify_academic_standards(markdown_files: list[Path]) -> dict[str, bool]:
     """Verify compliance with academic writing standards.
 
     Args:
@@ -426,9 +426,9 @@ def generate_integrity_report(report: IntegrityReport) -> str:
 class BuildArtifactValidation(TypedDict):
     """Typed result from validate_build_artifacts."""
 
-    expected_files: List[str]
-    missing_files: List[str]
-    unexpected_files: List[str]
+    expected_files: list[str]
+    missing_files: list[str]
+    unexpected_files: list[str]
     validation_passed: bool
 
 
@@ -438,7 +438,7 @@ class PermissionCheck(TypedDict):
     readable: bool
     writable: bool
     executable: bool
-    issues: List[str]
+    issues: list[str]
 
 
 class OutputCompleteness(TypedDict):
@@ -449,12 +449,12 @@ class OutputCompleteness(TypedDict):
     data_complete: bool
     latex_complete: bool
     html_complete: bool
-    missing_outputs: List[str]
-    incomplete_outputs: List[str]
+    missing_outputs: list[str]
+    incomplete_outputs: list[str]
 
 
 def validate_build_artifacts(
-    output_dir: Path, expected_files: Optional[Dict[str, List[str]]] = None
+    output_dir: Path, expected_files: Optional[dict[str, list[str]]] = None
 ) -> BuildArtifactValidation:
     """Validate that all expected build artifacts are present and correct."""
     validation: BuildArtifactValidation = {
@@ -465,7 +465,7 @@ def validate_build_artifacts(
     }
 
     # Expected output structure (callers must supply expected_files for project-specific content)
-    expected_structure: Dict[str, List[str]] = expected_files if expected_files is not None else {}
+    expected_structure: dict[str, list[str]] = expected_files if expected_files is not None else {}
 
     # Check for missing expected files and directories
     for category, files in expected_structure.items():
@@ -603,7 +603,7 @@ def verify_output_completeness(output_dir: Path) -> OutputCompleteness:
     return completeness
 
 
-def create_integrity_manifest(output_dir: Path) -> Dict[str, Any]:
+def create_integrity_manifest(output_dir: Path) -> dict[str, Any]:
     """Create an integrity manifest for all output files.
 
     Args:
@@ -612,7 +612,7 @@ def create_integrity_manifest(output_dir: Path) -> Dict[str, Any]:
     Returns:
         Dictionary with comprehensive integrity manifest
     """
-    manifest: Dict[str, Any] = {
+    manifest: dict[str, Any] = {
         "timestamp": output_dir.stat().st_ctime if output_dir.exists() else None,
         "file_count": 0,
         "total_size": 0,
@@ -621,8 +621,8 @@ def create_integrity_manifest(output_dir: Path) -> Dict[str, Any]:
     }
 
     # Typed accessors for mutable fields
-    file_hashes: Dict[str, Any] = manifest["file_hashes"]
-    dir_structure: Dict[str, Any] = manifest["directory_structure"]
+    file_hashes: dict[str, Any] = manifest["file_hashes"]
+    dir_structure: dict[str, Any] = manifest["directory_structure"]
 
     if not output_dir.exists():
         return manifest
@@ -655,7 +655,7 @@ def create_integrity_manifest(output_dir: Path) -> Dict[str, Any]:
     return manifest
 
 
-def save_integrity_manifest(manifest: Dict[str, Any], output_path: Path) -> None:
+def save_integrity_manifest(manifest: dict[str, Any], output_path: Path) -> None:
     """Save integrity manifest to file.
 
     Args:
@@ -667,7 +667,7 @@ def save_integrity_manifest(manifest: Dict[str, Any], output_path: Path) -> None
         json.dump(manifest, f, indent=2)
 
 
-def load_integrity_manifest(manifest_path: Path) -> Optional[Dict[str, Any]]:
+def load_integrity_manifest(manifest_path: Path) -> Optional[dict[str, Any]]:
     """Load integrity manifest from file.
 
     Args:
@@ -681,7 +681,7 @@ def load_integrity_manifest(manifest_path: Path) -> Optional[Dict[str, Any]]:
 
     try:
         with open(manifest_path, "r") as f:
-            result: Optional[Dict[str, Any]] = json.load(f)
+            result: Optional[dict[str, Any]] = json.load(f)
             return result
     except (OSError, json.JSONDecodeError) as e:
         logger.debug(f"Could not load manifest from {manifest_path}: {e}")
@@ -689,8 +689,8 @@ def load_integrity_manifest(manifest_path: Path) -> Optional[Dict[str, Any]]:
 
 
 def verify_integrity_against_manifest(
-    current_manifest: Dict[str, Any], saved_manifest: Dict[str, Any]
-) -> Dict[str, Any]:
+    current_manifest: dict[str, Any], saved_manifest: dict[str, Any]
+) -> dict[str, Any]:
     """Verify current integrity against a saved manifest.
 
     Args:

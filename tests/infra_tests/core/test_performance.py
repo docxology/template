@@ -367,7 +367,7 @@ class TestStagePerformanceTracker:
             "duration",
             "exit_code",
             "memory_mb",
-            "peak_memory_mb",
+            "end_memory_mb",
             "cpu_percent",
         ]
         for key in expected_keys:
@@ -402,19 +402,19 @@ class TestStagePerformanceTracker:
             {
                 "stage_name": "fast",
                 "duration": 1.0,
-                "peak_memory_mb": 100,
+                "end_memory_mb": 100,
                 "cpu_percent": 50,
             },
             {
                 "stage_name": "slow",
                 "duration": 10.0,
-                "peak_memory_mb": 100,
+                "end_memory_mb": 100,
                 "cpu_percent": 50,
             },
             {
                 "stage_name": "medium",
                 "duration": 2.0,
-                "peak_memory_mb": 100,
+                "end_memory_mb": 100,
                 "cpu_percent": 50,
             },
         ]
@@ -433,7 +433,7 @@ class TestStagePerformanceTracker:
             {
                 "stage_name": "high_mem",
                 "duration": 1.0,
-                "peak_memory_mb": 2048,
+                "end_memory_mb": 2048,
                 "cpu_percent": 50,
             },
         ]
@@ -451,7 +451,7 @@ class TestStagePerformanceTracker:
             {
                 "stage_name": "high_cpu",
                 "duration": 1.0,
-                "peak_memory_mb": 100,
+                "end_memory_mb": 100,
                 "cpu_percent": 95,
             },
         ]
@@ -470,19 +470,19 @@ class TestStagePerformanceTracker:
                 "stage_name": "stage1",
                 "duration": 1.0,
                 "memory_mb": 100,
-                "peak_memory_mb": 150,
+                "end_memory_mb": 150,
             },
             {
                 "stage_name": "stage2",
                 "duration": 2.0,
                 "memory_mb": 200,
-                "peak_memory_mb": 250,
+                "end_memory_mb": 250,
             },
             {
                 "stage_name": "stage3",
                 "duration": 3.0,
                 "memory_mb": 300,
-                "peak_memory_mb": 350,
+                "end_memory_mb": 350,
             },
         ]
 

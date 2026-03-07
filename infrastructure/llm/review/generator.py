@@ -6,13 +6,16 @@ import os
 import re
 import subprocess
 import time
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional
 from pathlib import Path
 
 from infrastructure.core.logging_utils import (
     get_logger,
+    log_substep,
     log_success,
     format_error_with_suggestions,
+)
+from infrastructure.core.logging_progress import (
     log_with_spinner,
     StreamingProgress,
     Spinner,
@@ -104,9 +107,9 @@ def validate_review_quality(
     review_type: str,
     min_words: Optional[int] = None,
     model_name: str = "",
-) -> Tuple[bool, List[str], Dict[str, Any]]:
+) -> tuple[bool, list[str], dict[str, Any]]:
     issues = []
-    details: Dict[str, Any] = {
+    details: dict[str, Any] = {
         "sections_found": [],
         "scores_found": [],
         "format_compliance": {},
@@ -207,13 +210,13 @@ def validate_review_quality(
         details["scores_found"] = scores_found
 
         has_assessment = any(
-            [
+            (
                 "clarity" in response_lower,
                 "structure" in response_lower,
                 "readability" in response_lower,
                 "technical accuracy" in response_lower,
                 "overall quality" in response_lower,
-            ]
+            )
         )
         details["has_assessment"] = has_assessment
 
@@ -237,13 +240,13 @@ def validate_review_quality(
         details["sections_found"] = found_sections
 
         has_methodology_content = any(
-            [
+            (
                 "research design" in response_lower,
                 "methodology" in response_lower,
                 "approach" in response_lower,
                 "methods" in response_lower,
                 "experimental" in response_lower,
-            ]
+            )
         )
         details["has_methodology_content"] = has_methodology_content
 
@@ -267,13 +270,13 @@ def validate_review_quality(
         details["priorities_found"] = found_priorities
 
         has_recommendations = any(
-            [
+            (
                 "recommendation" in response_lower,
                 "suggest" in response_lower,
                 "improve" in response_lower,
                 "fix" in response_lower,
                 "address" in response_lower,
-            ]
+            )
         )
         details["has_recommendations"] = has_recommendations
 
@@ -282,11 +285,11 @@ def validate_review_quality(
 
     elif review_type == "translation":
         has_english = any(
-            [
+            (
                 "english abstract" in response_lower,
                 "## english" in response_lower,
                 "abstract" in response_lower and "english" in response_lower,
-            ]
+            )
         )
         details["has_english_section"] = has_english
 
@@ -327,12 +330,8 @@ def create_review_client(model_name: str) -> LLMClient:
     return LLMClient(config)
 
 
-def log_stage(message: str) -> None:
-    logger.info(f"\n  {message}")
-
-
-def check_ollama_availability() -> Tuple[bool, Optional[str]]:
-    log_stage("Checking Ollama availability...")
+def check_ollama_availability() -> tuple[bool, Optional[str]]:
+    log_substep("Checking Ollama availability...")
     auto_start = os.environ.get("OLLAMA_AUTO_START", "true").lower() == "true"
 
     try:
@@ -392,8 +391,8 @@ def check_ollama_availability() -> Tuple[bool, Optional[str]]:
     return True, model
 
 
-def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> Tuple[bool, float]:
-    log_stage("Warming up model...")
+def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> tuple[bool, float]:
+    log_substep("Warming up model...")
     warmup_timeout = client.config.review_timeout
     logger.info(f"    Timeout: {warmup_timeout:.0f}s for warmup")
 
@@ -471,8 +470,8 @@ def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> Tuple
         return False, 0.0
 
 
-def extract_manuscript_text(pdf_path: Path | str) -> Tuple[Optional[str], ManuscriptMetrics]:
-    log_stage(f"Extracting text from manuscript: {Path(pdf_path).name}")
+def extract_manuscript_text(pdf_path: Path | str) -> tuple[Optional[str], ManuscriptMetrics]:
+    log_substep(f"Extracting text from manuscript: {Path(pdf_path).name}")
     metrics = ManuscriptMetrics()
 
     if isinstance(pdf_path, str):
@@ -587,8 +586,8 @@ def generate_review_with_metrics(
     temperature: float = 0.3,
     max_tokens: Optional[int] = None,
     max_retries: int = 1,
-) -> Tuple[str, ReviewMetrics]:
-    log_stage(f"Generating {review_name}...")
+) -> tuple[str, ReviewMetrics]:
+    log_substep(f"Generating {review_name}...")
 
     if max_tokens is None:
         max_tokens = LLMConfig.from_env().long_max_tokens
@@ -678,7 +677,7 @@ def generate_review_with_metrics(
 
 def generate_executive_summary(
     client: LLMClient, text: str, model_name: str = ""
-) -> Tuple[str, ReviewMetrics]:
+) -> tuple[str, ReviewMetrics]:
     return generate_review_with_metrics(
         client=client,
         text=text,
@@ -693,7 +692,7 @@ def generate_executive_summary(
 
 def generate_quality_review(
     client: LLMClient, text: str, model_name: str = ""
-) -> Tuple[str, ReviewMetrics]:
+) -> tuple[str, ReviewMetrics]:
     return generate_review_with_metrics(
         client=client,
         text=text,
@@ -708,7 +707,7 @@ def generate_quality_review(
 
 def generate_methodology_review(
     client: LLMClient, text: str, model_name: str = ""
-) -> Tuple[str, ReviewMetrics]:
+) -> tuple[str, ReviewMetrics]:
     return generate_review_with_metrics(
         client=client,
         text=text,
@@ -723,7 +722,7 @@ def generate_methodology_review(
 
 def generate_improvement_suggestions(
     client: LLMClient, text: str, model_name: str = ""
-) -> Tuple[str, ReviewMetrics]:
+) -> tuple[str, ReviewMetrics]:
     return generate_review_with_metrics(
         client=client,
         text=text,
@@ -738,11 +737,11 @@ def generate_improvement_suggestions(
 
 def generate_translation(
     client: LLMClient, text: str, language_code: str, model_name: str = ""
-) -> Tuple[str, ReviewMetrics]:
+) -> tuple[str, ReviewMetrics]:
     from infrastructure.llm.review.pipeline_runner import TRANSLATION_LANGUAGES
 
     target_language = TRANSLATION_LANGUAGES.get(language_code, language_code)
-    log_stage(f"Generating translation ({target_language})...")
+    log_substep(f"Generating translation ({target_language})...")
 
     metrics = ReviewMetrics(
         input_chars=len(text), input_words=len(text.split()), input_tokens_est=estimate_tokens(text)

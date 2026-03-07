@@ -197,8 +197,6 @@ class LLMProgressTracker:
 
     def _display(self, throughput: float) -> None:
         """Display current progress."""
-        time.time() - self.start_time
-
         if self.total_tokens:
             percent = (
                 (self.generated_tokens * 100) // self.total_tokens if self.total_tokens > 0 else 0

@@ -15,7 +15,7 @@ import time
 import tracemalloc
 from contextlib import contextmanager
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional, Union
+from typing import Any, Callable, Optional
 
 from infrastructure.core.logging_utils import get_logger
 
@@ -38,7 +38,7 @@ class ProfilingMetrics:
     function_calls: Optional[int] = None
     timestamp: float = field(default_factory=time.time)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for reporting (memory values in MB)."""
         def _bytes_to_mb(b: Optional[int]) -> Optional[float]:
             return b / (1024 * 1024) if b is not None else None
@@ -59,7 +59,7 @@ class CodeProfiler:
     """Comprehensive performance monitoring and profiling via cProfile/tracemalloc."""
 
     def __init__(self):
-        self.metrics_history: List[ProfilingMetrics] = []
+        self.metrics_history: list[ProfilingMetrics] = []
 
     @contextmanager
     def monitor(self, operation_name: str, track_memory: bool = True):
@@ -120,7 +120,7 @@ class CodeProfiler:
         iterations: int = 5,
         warmup_iterations: int = 2,
         **kwargs,
-    ) -> Dict[str, Union[float, List[float]]]:
+    ) -> dict[str, float | list[float]]:
         """Benchmark function performance over multiple iterations."""
         for _ in range(warmup_iterations):
             func(*args, **kwargs)
@@ -152,7 +152,7 @@ class CodeProfiler:
         logger.info(f"Benchmark: {func.__name__} - avg: {avg_time:.4f}s, std: {std_dev:.4f}s")
         return result
 
-    def get_recent_metrics(self, limit: int = 10) -> List[ProfilingMetrics]:
+    def get_recent_metrics(self, limit: int = 10) -> list[ProfilingMetrics]:
         """Return the most recent performance metrics."""
         return self.metrics_history[-limit:]
 
@@ -227,18 +227,18 @@ def monitor_performance(operation_name: str, track_memory: bool = True):
     return decorator
 
 
-def profile_memory_usage(func: Callable, *args, **kwargs) -> Dict[str, Any]:
+def profile_memory_usage(func: Callable, *args, **kwargs) -> dict[str, Any]:
     """Profile memory usage of a function via CodeProfiler."""
     monitor = get_performance_monitor()
-    func_result = None
+    result = None
     with monitor.monitor(func.__name__, track_memory=True):
-        func_result = func(*args, **kwargs)
+        result = func(*args, **kwargs)
     if not monitor.metrics_history:
-        return {"execution_time": 0.0, "memory_current": 0, "memory_peak": 0, "result": func_result}
+        return {"execution_time": 0.0, "memory_current": 0, "memory_peak": 0, "result": result}
     metrics = monitor.metrics_history[-1]
     return {
         "execution_time": metrics.execution_time,
         "memory_current": (metrics.memory_current or 0) // (1024 * 1024),
         "memory_peak": (metrics.memory_peak or 0) // (1024 * 1024),
-        "result": func_result,
+        "result": result,
     }
