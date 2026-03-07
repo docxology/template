@@ -1284,7 +1284,7 @@ def generate_health_radar_chart(summary: ExecutiveSummary, output_dir: Path) -> 
         plt.close(fig)
 
     except Exception as e:
-        logger.error(f"Failed to generate health radar chart: {e}")
+        logger.error(f"Failed to generate health radar chart: {e}", exc_info=True)
 
     return saved_files
 
@@ -1431,7 +1431,7 @@ def generate_health_comparison_chart(
         plt.close(fig)
 
     except Exception as e:
-        logger.error(f"Failed to generate health comparison chart: {e}")
+        logger.error(f"Failed to generate health comparison chart: {e}", exc_info=True)
 
     return saved_files
 
@@ -1660,7 +1660,7 @@ def generate_project_breakdowns(summary: ExecutiveSummary, output_dir: Path) -> 
             plt.close(fig)
 
     except Exception as e:
-        logger.error(f"Failed to generate project breakdowns: {e}")
+        logger.error(f"Failed to generate project breakdowns: {e}", exc_info=True)
 
     return saved_files
 
@@ -1813,7 +1813,7 @@ def generate_pipeline_efficiency_chart(
         plt.close(fig)
 
     except Exception as e:
-        logger.error(f"Failed to generate pipeline efficiency chart: {e}")
+        logger.error(f"Failed to generate pipeline efficiency chart: {e}", exc_info=True)
 
     return saved_files
 
@@ -1926,7 +1926,7 @@ def generate_pipeline_bottlenecks_chart(
         plt.close(fig)
 
     except Exception as e:
-        logger.error(f"Failed to generate pipeline bottlenecks chart: {e}")
+        logger.error(f"Failed to generate pipeline bottlenecks chart: {e}", exc_info=True)
 
     return saved_files
 
@@ -2119,7 +2119,7 @@ def generate_output_distribution_charts(
         plt.close(fig)
 
     except Exception as e:
-        logger.error(f"Failed to generate output distribution charts: {e}")
+        logger.error(f"Failed to generate output distribution charts: {e}", exc_info=True)
 
     return saved_files
 
@@ -2218,7 +2218,7 @@ def generate_output_comparison_chart(
         plt.close(fig)
 
     except Exception as e:
-        logger.error(f"Failed to generate output comparison chart: {e}")
+        logger.error(f"Failed to generate output comparison chart: {e}", exc_info=True)
 
     return saved_files
 
@@ -2391,7 +2391,7 @@ def generate_codebase_complexity_chart(
         plt.close(fig)
 
     except Exception as e:
-        logger.error(f"Failed to generate codebase complexity chart: {e}")
+        logger.error(f"Failed to generate codebase complexity chart: {e}", exc_info=True)
 
     return saved_files
 
@@ -2496,7 +2496,7 @@ def generate_codebase_comparison_chart(
         plt.close(fig)
 
     except Exception as e:
-        logger.error(f"Failed to generate codebase comparison chart: {e}")
+        logger.error(f"Failed to generate codebase comparison chart: {e}", exc_info=True)
 
     return saved_files
 

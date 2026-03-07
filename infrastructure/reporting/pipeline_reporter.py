@@ -25,11 +25,11 @@ class PipelineReport:
     timestamp: str
     total_duration: float
     stages: list[StageResult]
-    test_results: dict[str, Any | None] = None
-    validation_results: dict[str, Any | None] = None
-    performance_metrics: dict[str, Any | None] = None
-    error_summary: dict[str, Any | None] = None
-    output_statistics: dict[str, Any | None] = None
+    test_results: dict[str, Any] | None = None
+    validation_results: dict[str, Any] | None = None
+    performance_metrics: dict[str, Any] | None = None
+    error_summary: dict[str, Any] | None = None
+    output_statistics: dict[str, Any] | None = None
 
 def generate_pipeline_report(
     stage_results: list[dict[str, Any]],

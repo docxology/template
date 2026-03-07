@@ -279,7 +279,7 @@ class LLMClient:
         # Create temporary context for raw query
         messages = [{"role": "user", "content": prompt}]
 
-        response_text, generation_time = self._time_call(
+        response_text, _ = self._time_call(
             lambda: self._generate_response_direct(model_name, messages, options=options)
         )
 

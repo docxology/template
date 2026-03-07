@@ -7,6 +7,8 @@ including dependencies, filesystem, network, and performance metrics.
 from __future__ import annotations
 
 import os
+import socket
+import tempfile
 import time
 from pathlib import Path
 from typing import Any
@@ -84,8 +86,6 @@ class SystemHealthChecker:
         return status
 
     def _check_filesystem(self) -> dict[str, Any]:
-        import tempfile
-
         results: dict[str, Any] = {}
 
         # Check write permissions
@@ -152,8 +152,6 @@ class SystemHealthChecker:
         }
 
     def _check_network(self) -> dict[str, Any]:
-        import socket
-
         results: dict[str, Any] = {}
 
         # Test DNS resolution

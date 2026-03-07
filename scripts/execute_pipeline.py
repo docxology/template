@@ -183,8 +183,8 @@ def execute_pipeline(
             if log_summary:
                 logger.info("  • LOG SUMMARY: log_summary.txt")
 
-        except Exception as e:
-            logger.warning(f"Failed to generate comprehensive pipeline report: {e}")
+        except (ImportError, OSError, KeyError, AttributeError) as e:
+            logger.warning(f"Failed to generate comprehensive pipeline report: {e}", exc_info=True)
 
         # Verify log file after pipeline execution
         log_file = output_dir / "logs" / "pipeline.log"
@@ -195,7 +195,7 @@ def execute_pipeline(
                     logger.info(f"Pipeline log file verified: {log_file} ({size:,} bytes)")
                 else:
                     logger.warning(f"Pipeline log file is empty: {log_file}")
-            except Exception as e:
+            except OSError as e:
                 logger.warning(f"Failed to verify pipeline log file: {e}")
         else:
             logger.warning(f"Pipeline log file not found: {log_file}")

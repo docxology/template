@@ -255,7 +255,8 @@ def validate_publication_readiness(
         try:
             with open(md_file, "r", encoding="utf-8") as f:
                 all_content += f.read()
-        except (OSError, UnicodeDecodeError):
+        except (OSError, UnicodeDecodeError) as e:
+            logger.debug(f"Skipping unreadable file {md_file}: {e}")
             continue
 
     has_abstract = "abstract" in all_content.lower()

@@ -30,9 +30,9 @@ class TemplateError(Exception):
     def __init__(
         self,
         message: str,
-        context: dict[str, Any | None] = None,
-        suggestions: list[str | None] = None,
-        recovery_commands: list[str | None] = None,
+        context: dict[str, Any] | None = None,
+        suggestions: list[str] | None = None,
+        recovery_commands: list[str] | None = None,
     ) -> None:
         self.message = message
         self.context = context or {}
@@ -129,9 +129,9 @@ class FileNotFoundError(FileOperationError, builtins.FileNotFoundError):
     def __init__(
         self,
         message: str,
-        context: dict[str, Any | None] = None,
-        suggestions: list[str | None] = None,
-        recovery_commands: list[str | None] = None,
+        context: dict[str, Any] | None = None,
+        suggestions: list[str] | None = None,
+        recovery_commands: list[str] | None = None,
     ) -> None:
         context = context or {}
         file_path = context.get("file", "")
@@ -180,9 +180,9 @@ class MissingDependencyError(DependencyError):
     def __init__(
         self,
         message: str,
-        context: dict[str, Any | None] = None,
-        suggestions: list[str | None] = None,
-        recovery_commands: list[str | None] = None,
+        context: dict[str, Any] | None = None,
+        suggestions: list[str] | None = None,
+        recovery_commands: list[str] | None = None,
     ) -> None:
         context = context or {}
         dependency = context.get("dependency", "")

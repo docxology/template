@@ -40,7 +40,7 @@ class IntegrityReport:
     recommendations: list[str] = field(default_factory=list)
 
 def verify_file_integrity(
-    file_paths: list[Path], expected_hashes: dict[str, str | None] = None
+    file_paths: list[Path], expected_hashes: dict[str, str] | None = None
 ) -> dict[str, bool]:
     """Verify file integrity using hash comparison."""
     integrity = {}
@@ -396,7 +396,7 @@ class OutputCompleteness(TypedDict):
     incomplete_outputs: list[str]
 
 def validate_build_artifacts(
-    output_dir: Path, expected_files: dict[str, list[str | None]] = None
+    output_dir: Path, expected_files: dict[str, list[str]] | None = None
 ) -> BuildArtifactValidation:
     """Validate that all expected build artifacts are present and correct."""
     validation: BuildArtifactValidation = {

@@ -140,7 +140,7 @@ class PipelineExecutor:
         if self.config.resume:
             return self._resume_pipeline()
 
-        skip_clean = (not self.config.clean) or self.config.resume
+        skip_clean = not self.config.clean
         return self._execute_pipeline(self._build_stage_list(include_llm=True, skip_clean=skip_clean))
 
     def execute_core_pipeline(self) -> list[PipelineStageResult]:
@@ -154,7 +154,7 @@ class PipelineExecutor:
         if self.config.resume:
             return self._resume_pipeline()
 
-        skip_clean = (not self.config.clean) or self.config.resume
+        skip_clean = not self.config.clean
         return self._execute_pipeline(self._build_stage_list(include_llm=False, skip_clean=skip_clean))
 
     def _run_stage_and_checkpoint(

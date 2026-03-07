@@ -123,7 +123,7 @@ class CheckpointManager:
                 json.dump(checkpoint.to_dict(), f, indent=2)
             logger.debug(f"Checkpoint saved: stage {last_stage_completed}/{total_stages}")
             return True
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 — intentional: checkpoint save must not crash the pipeline regardless of failure mode
             logger.error(f"Failed to save checkpoint: {e}", exc_info=True)
             logger.warning(
                 "Checkpoint save failed - pipeline resume will not be available for this run"
@@ -147,7 +147,7 @@ class CheckpointManager:
                 f"Loaded checkpoint: stage {checkpoint.last_stage_completed}/{checkpoint.total_stages}"  # noqa: E501
             )
             return checkpoint
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 — intentional: corrupt/invalid checkpoint must degrade gracefully to fresh run
             logger.warning(f"Failed to load checkpoint: {e}", exc_info=True)
             logger.info("Invalid checkpoint file detected - starting fresh pipeline run")
             return None
@@ -158,7 +158,7 @@ class CheckpointManager:
             try:
                 self.checkpoint_file.unlink()
                 logger.debug("Checkpoint cleared")
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 — intentional: stale checkpoint file is non-fatal
                 logger.warning(f"Failed to clear checkpoint: {e}")
 
     def checkpoint_exists(self) -> bool:
