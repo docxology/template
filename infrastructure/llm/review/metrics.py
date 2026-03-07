@@ -5,6 +5,10 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Dict
 
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
+
 
 @dataclass
 class ReviewMetrics:

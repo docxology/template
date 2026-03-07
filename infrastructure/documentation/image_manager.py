@@ -13,6 +13,10 @@ from typing import List, Optional, Tuple
 
 from .figure_manager import FigureManager
 
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
+
 
 class ImageManager:
     """Manages image insertion and cross-referencing in markdown files."""

@@ -6,6 +6,10 @@ All implementations live in infrastructure.reporting.test_summary_generator.
 from __future__ import annotations
 
 from infrastructure.reporting.test_summary_generator import (  # noqa: F401
+
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
     discover_active_projects,
     generate_markdown_report,
     generate_summary_report,

@@ -5,6 +5,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Dict, Optional
 
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
+
 
 @dataclass
 class RenderingConfig:
@@ -57,7 +61,6 @@ class RenderingConfig:
             RenderingConfig with values from environment or defaults
         """
         import os
-
         config_kwargs: Dict[str, Any] = {}
         env_vars = env if env is not None else os.environ
 

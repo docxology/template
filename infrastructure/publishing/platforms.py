@@ -13,6 +13,10 @@ import requests
 from infrastructure.core.exceptions import PublishingError
 from infrastructure.publishing.models import PublicationMetadata
 
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
+
 #: Default timeout for HTTP requests (seconds)
 REQUEST_TIMEOUT = 30
 

@@ -8,6 +8,10 @@ from typing import Any, Dict, Optional
 
 import yaml
 
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
+
 # Make dotenv optional - only required for credential-based testing
 try:
     from dotenv import load_dotenv

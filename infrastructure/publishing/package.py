@@ -16,6 +16,10 @@ from infrastructure.publishing.citations import (
 )
 from infrastructure.publishing.models import PublicationMetadata
 
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
+
 
 def create_publication_package(output_dir: Path, metadata: PublicationMetadata) -> Dict[str, Any]:
     """Create a publication package with all necessary files.

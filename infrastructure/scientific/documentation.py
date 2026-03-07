@@ -12,6 +12,10 @@ from __future__ import annotations
 import inspect
 from typing import Any, Callable
 
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
+
 
 def generate_scientific_documentation(func: Callable) -> str:
     """Generate scientific documentation for a function.

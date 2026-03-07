@@ -11,11 +11,7 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-try:
-    import psutil
-except ImportError:
-    psutil = None  # type: ignore[assignment]
-
+from infrastructure.core._optional_deps import psutil
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)

@@ -21,11 +21,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Optional, Union
 
-try:
-    import psutil
-except ImportError:
-    psutil = None  # type: ignore[assignment]
-
+from infrastructure.core._optional_deps import psutil
 from infrastructure.core.logging_utils import format_duration, get_logger
 
 logger = get_logger(__name__)

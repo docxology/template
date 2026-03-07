@@ -18,6 +18,10 @@ from typing import List, Set, Tuple
 
 from infrastructure.core.exceptions import FileNotFoundError, NotADirectoryError
 
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
+
 # Regex patterns for validation
 IMG_PATTERN = re.compile(r"!\[[^\]]*\]\(([^\)]+)\)")
 EQ_LABEL_PATTERN = re.compile(r"\\label\{([^}]+)\}")

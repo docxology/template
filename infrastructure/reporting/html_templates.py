@@ -7,6 +7,10 @@ from __future__ import annotations
 
 from typing import Any, Dict
 
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
+
 
 def get_base_html_template() -> str:
     """Get base HTML template with styles.

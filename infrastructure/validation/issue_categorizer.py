@@ -27,6 +27,10 @@ from infrastructure.validation.known_exceptions import (
     is_venv_reference,
 )
 
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
+
 # Type alias for any issue type
 Issue = Union[LinkIssue, AccuracyIssue, CompletenessGap, QualityIssue]
 

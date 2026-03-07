@@ -4,6 +4,10 @@ from __future__ import annotations
 
 from typing import Dict, List, Optional
 
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
+
 
 def format_requirements(
     required_headers: List[str],

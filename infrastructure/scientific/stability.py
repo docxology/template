@@ -14,6 +14,10 @@ from typing import Any, Callable, List, Tuple
 
 import numpy as np
 
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
+
 
 @dataclass
 class StabilityTest:

@@ -6,6 +6,10 @@ from typing import Optional
 
 from infrastructure.llm.templates.base import ResearchTemplate
 
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
+
 
 class SummarizeAbstract(ResearchTemplate):
     """Template for summarizing abstracts."""
@@ -250,7 +254,6 @@ Begin your summary now. Remember: NO repeated sections, NO repeated paragraphs, 
 
         # Extract key terms from title for topic validation
         import re
-
         # Extract significant words from title (3+ characters, not common stop words)
         stop_words = {
             "the",

@@ -13,6 +13,10 @@ from typing import Any, Dict, List, Optional, Tuple
 from .figure_manager import FigureManager
 from .image_manager import ImageManager
 
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
+
 
 class MarkdownIntegration:
     """Integrates figures and references into markdown files."""
