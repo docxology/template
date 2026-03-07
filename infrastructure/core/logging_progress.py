@@ -394,7 +394,6 @@ def log_progress_streaming(
     total: int,
     message: str = "Progress",
     logger: Optional[logging.Logger] = None,
-    show_eta: bool = True,
 ) -> None:
     """Log streaming progress with real-time updates.
 
@@ -403,7 +402,6 @@ def log_progress_streaming(
         total: Total progress value
         message: Progress message
         logger: Logger instance (optional)
-        show_eta: Whether to show estimated time remaining
     """
     if not sys.stderr.isatty():
         # Not a TTY - fall back to plain log line
@@ -414,11 +412,6 @@ def log_progress_streaming(
 
     percent = (current * 100) // total if total > 0 else 0
     status = f"\r{message}: {current}/{total} ({percent}%)"
-
-    if show_eta and current > 0:
-        # Simple ETA calculation would require tracking start time
-        # For now, just show percentage
-        pass
 
     sys.stderr.write(status.ljust(80))
     sys.stderr.flush()

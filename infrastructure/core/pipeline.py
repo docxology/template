@@ -366,10 +366,6 @@ class PipelineExecutor:
             total_stages=self.config.total_stages,
         )
 
-    # Stage execution methods - these will call the actual scripts/commands
-    # For now, these are placeholders that will be implemented to call
-    # the existing bash functions or Python equivalents
-
     def _run_clean_outputs(self) -> bool:
         """Clean output directories for a fresh run.
 

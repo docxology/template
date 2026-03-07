@@ -20,6 +20,11 @@ logger = get_logger(__name__)
 
 T = TypeVar("T")
 
+# Standard exceptions that indicate transient infrastructure failures.
+# Pass to retry_with_backoff(exceptions=TRANSIENT_EXCEPTIONS) or use
+# retry_on_transient_failure() for a pre-configured shorthand.
+TRANSIENT_EXCEPTIONS: tuple[type[Exception], ...] = (IOError, ConnectionError, TimeoutError, OSError)
+
 
 def retry_with_backoff(
     max_attempts: int = 3,
@@ -153,7 +158,7 @@ def retry_on_transient_failure(
     return retry_with_backoff(
         max_attempts=max_attempts,
         initial_delay=initial_delay,
-        exceptions=(IOError, ConnectionError, TimeoutError, OSError),
+        exceptions=TRANSIENT_EXCEPTIONS,
     )
 
 

@@ -22,18 +22,7 @@ except ImportError:
 
     # No-op function if dotenv not available
     def load_dotenv(*args: Any, **kwargs: Any) -> None:  # type: ignore[misc]
-        """Load environment variables from a .env file (no-op fallback).
-
-        This is a fallback implementation used when python-dotenv is not
-        installed. It accepts any arguments but does nothing.
-
-        Args:
-            *args: Variable positional arguments (ignored).
-            **kwargs: Variable keyword arguments (ignored).
-
-        Returns:
-            None: This function has no effect when dotenv is unavailable.
-        """
+        """No-op fallback when python-dotenv is not installed."""
         pass
 
 

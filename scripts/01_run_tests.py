@@ -133,7 +133,8 @@ def run_infrastructure_tests(
     ])
     if not include_slow:
         cmd.extend(["-m", "not slow"])
-    cmd.extend(["-q"])
+    if quiet:
+        cmd.extend(["-q"])
 
     pythonpath_parts = [str(repo_root), str(repo_root / "infrastructure")]
     project_src = project_root / "src"
@@ -419,7 +420,6 @@ def report_results(
     infra_passed = infra_results.get("passed", 0)
     infra_total = infra_results.get("total", 0)
     infra_coverage = infra_results.get("coverage_percent", 0)
-    infra_was_run = infra_total > 0 or infra_exit != 0
 
     project_passed = project_results.get("passed", 0)
     project_total = project_results.get("total", 0)

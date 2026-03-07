@@ -16,6 +16,7 @@ from __future__ import annotations
 import json
 import pickle  # noqa: S403 — used for pickle file validation
 import re
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Optional, TypedDict
 
@@ -25,18 +26,18 @@ from infrastructure.core.logging_utils import get_logger
 logger = get_logger(__name__)
 
 
+@dataclass
 class IntegrityReport:
     """Container for integrity verification results."""
 
-    def __init__(self) -> None:
-        self.file_integrity: dict[str, bool] = {}
-        self.cross_reference_integrity: dict[str, bool] = {}
-        self.data_consistency: dict[str, bool] = {}
-        self.academic_standards: dict[str, bool] = {}
-        self.overall_integrity: bool = True
-        self.issues: list[str] = []
-        self.warnings: list[str] = []
-        self.recommendations: list[str] = []
+    file_integrity: dict[str, bool] = field(default_factory=dict)
+    cross_reference_integrity: dict[str, bool] = field(default_factory=dict)
+    data_consistency: dict[str, bool] = field(default_factory=dict)
+    academic_standards: dict[str, bool] = field(default_factory=dict)
+    overall_integrity: bool = True
+    issues: list[str] = field(default_factory=list)
+    warnings: list[str] = field(default_factory=list)
+    recommendations: list[str] = field(default_factory=list)
 
 
 def verify_file_integrity(
@@ -351,14 +352,7 @@ def verify_output_integrity(
 
 
 def generate_integrity_report(report: IntegrityReport) -> str:
-    """Generate a human-readable integrity report.
-
-    Args:
-        report: IntegrityReport with verification results
-
-    Returns:
-        Formatted integrity report string
-    """
+    """Generate a human-readable integrity report."""
     lines = []
     lines.append("=" * 60)
     lines.append("INTEGRITY VERIFICATION REPORT")
@@ -652,26 +646,14 @@ def create_integrity_manifest(output_dir: Path) -> dict[str, Any]:
 
 
 def save_integrity_manifest(manifest: dict[str, Any], output_path: Path) -> None:
-    """Save integrity manifest to file.
-
-    Args:
-        manifest: Integrity manifest dictionary
-        output_path: Path to save manifest
-    """
+    """Save integrity manifest to JSON file."""
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, "w") as f:
         json.dump(manifest, f, indent=2)
 
 
 def load_integrity_manifest(manifest_path: Path) -> Optional[dict[str, Any]]:
-    """Load integrity manifest from file.
-
-    Args:
-        manifest_path: Path to manifest file
-
-    Returns:
-        Integrity manifest dictionary or None if loading fails
-    """
+    """Load integrity manifest from JSON file, or None on failure."""
     if not manifest_path.exists():
         return None
 

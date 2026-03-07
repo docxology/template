@@ -18,19 +18,6 @@ When uv is available, it uses 'uv sync' for workspace dependency management.
 When uv is unavailable, it falls back to individual package installation via pip.
 All uv operations include proper error handling and informative logging.
 
-Usage Patterns:
-    # Check system readiness
-    python_ok = check_python_version()
-    deps_ok, missing = check_dependencies()
-    tools_ok = check_build_tools()
-
-    # Setup environment
-    dirs_ok = setup_directories(repo_root, "my_project")
-    env_ok = set_environment_variables(repo_root)
-
-    # Validate setup (with new functions)
-    sync_ok, msg = validate_uv_sync_result(repo_root)
-    missing_dirs = validate_directory_structure(repo_root, "my_project")
 """
 
 from __future__ import annotations

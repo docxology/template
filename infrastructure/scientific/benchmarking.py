@@ -16,6 +16,7 @@ from typing import Any, Callable, Dict, List, Optional
 
 import numpy as np
 
+from infrastructure.core._optional_deps import psutil
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
@@ -47,12 +48,7 @@ def benchmark_function(
     Returns:
         BenchmarkResult with performance analysis
     """
-    try:
-        import psutil
-
-        psutil_available = True
-    except ImportError:
-        psutil_available = False
+    psutil_available = psutil is not None
 
     execution_times = []
     memory_usages = []
