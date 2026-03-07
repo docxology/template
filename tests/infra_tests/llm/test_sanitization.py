@@ -28,7 +28,6 @@ class TestInputSanitizer:
         sanitizer = InputSanitizer()
         assert sanitizer.dangerous_patterns is not None
         assert len(sanitizer.dangerous_patterns) > 0
-        assert sanitizer.html_entities is not None
 
     def test_sanitize_prompt_basic(self):
         """Test basic prompt sanitization."""

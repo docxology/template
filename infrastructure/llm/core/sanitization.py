@@ -50,16 +50,6 @@ class InputSanitizer:
         ]
 
 
-        # HTML entities reference table (used by _escape_html_entities via html.escape)
-        self.html_entities = {
-            "<": "&lt;",
-            ">": "&gt;",
-            "&": "&amp;",
-            '"': "&quot;",
-            "'": "&#x27;",
-            "/": "&#x2F;",
-        }
-
     def sanitize_prompt(self, prompt: str, context: Optional[Dict[str, Any]] = None) -> str:
         """Sanitize LLM prompt for security.
 
