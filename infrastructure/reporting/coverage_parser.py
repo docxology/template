@@ -190,9 +190,7 @@ def check_test_failures(
             max_failures = 0
     else:
         testing_config = get_testing_config(repo_root)
-        config_value = getattr(testing_config, config_key, None) or getattr(
-            testing_config, "max_test_failures", 0
-        )
+        config_value = getattr(testing_config, config_key, None)
 
         if config_value is not None:
             max_failures = int(config_value)

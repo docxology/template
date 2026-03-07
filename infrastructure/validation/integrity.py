@@ -80,7 +80,7 @@ def verify_cross_references(markdown_files: list[Path]) -> dict[str, bool]:
         "tables": True,
         "sections": True,
         "citations": True,
-        "scan_errors": False,
+        "scan_healthy": True,
     }
 
     # Collect all labels and references
@@ -110,7 +110,7 @@ def verify_cross_references(markdown_files: list[Path]) -> dict[str, bool]:
             scan_error_count += 1
 
     if scan_error_count > 0:
-        integrity["scan_errors"] = True
+        integrity["scan_healthy"] = False
 
     # Check if all references have corresponding labels, broken down by type prefix
     missing_labels = references - labels
