@@ -13,7 +13,8 @@ from pathlib import Path
 from infrastructure.core.logging_utils import get_logger
 
 from .api import ZenodoClient, ZenodoConfig
-from .core import extract_publication_metadata, generate_citation_bibtex
+from .citations import generate_citation_bibtex
+from .metadata import extract_publication_metadata
 
 logger = get_logger(__name__)
 
