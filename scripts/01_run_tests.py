@@ -26,7 +26,7 @@ from typing import Tuple
 # Add root to path for infrastructure imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from infrastructure.core.logging_utils import get_logger, log_success, log_header, log_substep
+from infrastructure.core.logging_utils import get_logger, log_success, log_header, log_substep, log_resource_usage
 from infrastructure.core.config_loader import get_testing_config
 from infrastructure.core.file_operations import clean_coverage_files
 from infrastructure.reporting.coverage_reporter import (
@@ -370,16 +370,6 @@ def report_results(
             if len(failed_tests) > 5:
                 logger.info(f"    ... and {len(failed_tests) - 5} more failures")
 
-        # Show timeout errors separately if detected
-        # Note: We need to extract timeouts from the raw stdout/stderr since they're not in failed_tests  # noqa: E501
-        timeout_errors = []  # Would need access to raw stdout/stderr here
-        if timeout_errors:
-            logger.info("")
-            logger.info("  ⏰ Timeout Errors:")
-            for i, timeout in enumerate(timeout_errors[:3], 1):
-                logger.info(f"    {i}. {timeout['test']} ({timeout['timeout_duration']})")
-                logger.info(f"       {timeout['suggestion']}")
-
         # Always show debug commands
         logger.info("")
         logger.info("  🔧 Quick Fix Suggestions:")
@@ -478,16 +468,6 @@ def report_results(
                     )
             if len(failed_tests) > 5:
                 logger.info(f"    ... and {len(failed_tests) - 5} more failures")
-
-        # Show timeout errors separately if detected
-        # Note: We need to extract timeouts from the raw stdout/stderr since they're not in failed_tests  # noqa: E501
-        timeout_errors = []  # Would need access to raw stdout/stderr here
-        if timeout_errors:
-            logger.info("")
-            logger.info("  ⏰ Timeout Errors:")
-            for i, timeout in enumerate(timeout_errors[:3], 1):
-                logger.info(f"    {i}. {timeout['test']} ({timeout['timeout_duration']})")
-                logger.info(f"       {timeout['suggestion']}")
 
         # Always show debug commands
         logger.info("")
@@ -689,8 +669,6 @@ def main() -> int:
     log_header(f"STAGE 01: Run Tests (Project: {args.project})", logger)
 
     # Log resource usage at start
-    from infrastructure.core.logging_utils import log_resource_usage
-
     log_resource_usage("Test stage start", logger)
 
     repo_root = Path(__file__).parent.parent

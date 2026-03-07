@@ -148,10 +148,6 @@ def apply_visualization_style():
     })
 
 
-# Apply visualization style on import
-apply_visualization_style()
-
-
 def run_convergence_experiment():
     """Run gradient descent with different step sizes and track convergence."""
     logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
@@ -1291,6 +1287,7 @@ def register_figure():
 
 def main():
     """Main analysis function."""
+    apply_visualization_style()
     # Initialize logger (use print as fallback)
     logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
 

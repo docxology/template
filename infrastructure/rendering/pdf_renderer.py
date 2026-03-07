@@ -698,8 +698,8 @@ class PDFRenderer:
                 # Try to read content anyway for error reporting
                 try:
                     md_content = combined_md.read_text(encoding="utf-8")
-                except Exception:
-                    pass
+                except Exception as read_err:
+                    logger.debug("Failed to read markdown for error reporting: %s", read_err)
 
         try:
             result = subprocess.run(pandoc_to_tex, check=True, capture_output=True, text=True)

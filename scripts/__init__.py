@@ -6,8 +6,11 @@ build pipeline stages. All business logic is in infrastructure/ modules.
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 from typing import Optional
+
+_logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -74,7 +77,7 @@ MENU_SCRIPT_MAPPING = {
 try:
     from infrastructure.llm.review.pipeline_runner import ReviewMode
 except ImportError:
-    pass
+    _logger.debug("LLM review module not available; ReviewMode not exported")
 
 __all__ = [
     "MENU_SCRIPT_MAPPING",

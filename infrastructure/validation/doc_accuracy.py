@@ -235,8 +235,8 @@ def verify_commands(md_files: List[Path], repo_root: Path) -> List[AccuracyIssue
                                             severity="error",
                                         )
                                     )
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug("Failed to check command references in %s: %s", md_file, e)
 
     return issues
 
@@ -273,8 +273,8 @@ def check_file_paths(md_files: List[Path], repo_root: Path) -> List[AccuracyIssu
                                     severity=("warning" if path_type == "directory" else "error"),
                                 )
                             )
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug("Failed to check file paths in %s: %s", md_file, e)
 
     return issues
 
@@ -291,8 +291,8 @@ def validate_config_options(
         try:
             with open(config_files["config.yaml"], "r") as f:
                 config_data["yaml"] = yaml.safe_load(f) or {}
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug("Failed to load config.yaml for validation: %s", e)
 
     # Check documentation for config references
     # This is a simplified check - could be enhanced to actually validate against config schema

@@ -69,8 +69,8 @@ def check_script_documentation(repo_root: Path) -> List[CompletenessGap]:
                                 severity="warning",
                             )
                         )
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug("Failed to check script docstring for %s: %s", script, e)
 
     return gaps
 

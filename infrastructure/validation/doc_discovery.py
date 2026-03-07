@@ -131,8 +131,8 @@ def identify_cross_references(md_files: List[Path]) -> Set[str]:
                 target = match.group(2)
                 if not target.startswith("http") and not target.startswith("#"):
                     cross_refs.add(target)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug("Failed to scan cross-refs in %s: %s", md_file, e)
 
     return cross_refs
 

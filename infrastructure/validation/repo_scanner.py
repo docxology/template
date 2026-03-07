@@ -157,8 +157,8 @@ class RepositoryScanner:
                     for module in self.src_modules:
                         if module in content:
                             self.documented_modules.add(module)
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug("Failed to scan %s for module references: %s", md_file, e)
 
     def _check_code_accuracy(self) -> None:
         """Check code accuracy."""
@@ -217,8 +217,8 @@ class RepositoryScanner:
                         if module not in imports:
                             imports[module] = []
                         imports[module].append(alias.name)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug("Failed to parse imports from script: %s", e)
 
         return imports
 
@@ -307,8 +307,8 @@ class RepositoryScanner:
                                         message=f"Documented script does not exist: {script_ref}",
                                     )
                                 )
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug("Failed to check code accuracy in %s: %s", md_file, e)
 
         self.results.accuracy_issues.extend(issues)
 
@@ -363,8 +363,8 @@ class RepositoryScanner:
                     for script in self.script_files:
                         if script.name in content:
                             documented_scripts.add(script.name)
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug("Failed to check script documentation in %s: %s", md_file, e)
 
         for script in self.script_files:
             if script.name not in documented_scripts and script.name != "comprehensive_doc_scan.py":
@@ -420,17 +420,6 @@ class RepositoryScanner:
     def _check_configuration(self) -> None:
         """Check configuration accuracy."""
         issues = []
-
-        # Check pyproject.toml dependencies
-        pyproject_path = self.repo_root / "pyproject.toml"
-        if pyproject_path.exists():
-            try:
-                pyproject_path.read_text(encoding="utf-8")
-                # Check if dependencies are used
-                # This is a simplified check
-                pass
-            except Exception:
-                pass
 
         # Check config.yaml structure
         config_path = self.repo_root / "project" / "manuscript" / "config.yaml"

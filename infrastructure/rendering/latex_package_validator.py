@@ -80,8 +80,8 @@ def find_kpsewhich() -> Optional[Path]:
         result = subprocess.run(["which", "kpsewhich"], capture_output=True, text=True, check=False)
         if result.returncode == 0 and result.stdout.strip():
             return Path(result.stdout.strip())
-    except Exception:
-        pass
+    except Exception as e:
+        logger.debug("Failed to locate kpsewhich: %s", e)
 
     return None
 
