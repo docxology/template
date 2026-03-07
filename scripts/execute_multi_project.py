@@ -5,6 +5,8 @@ This script provides multi-project pipeline execution functionality extracted
 from run.sh into testable Python code following the thin orchestrator pattern.
 """
 
+from __future__ import annotations
+
 import sys
 from pathlib import Path
 

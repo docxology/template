@@ -43,19 +43,7 @@ def run_comprehensive_audit(
     include_import_validation: bool = True,
     include_placeholder_validation: bool = True,
 ) -> ScanResults:
-    """Run audit across all validation modules.
-
-    Args:
-        repo_root: Repository root directory
-        verbose: Enable verbose logging
-        include_code_validation: Include code block path validation
-        include_directory_validation: Include directory structure validation
-        include_import_validation: Include Python import validation
-        include_placeholder_validation: Include placeholder consistency validation
-
-    Returns:
-        Complete scan results with all issues categorized
-    """
+    """Run audit across all validation modules and return categorized scan results."""
     start_time = time.time()
 
     logger.info("🔍 Starting filepath and reference audit...")
@@ -74,8 +62,7 @@ def run_comprehensive_audit(
             content = md_file.read_text(encoding="utf-8")
             all_headings[str(md_file.relative_to(repo_root))] = extract_headings(content)
         except Exception as e:
-            if verbose:
-                logger.warning(f"Error reading {md_file}: {e}")
+            logger.warning(f"Error reading {md_file}: {e}")
 
     # Phase 3: Run all validations
     scan_results = ScanResults(scan_date=time.strftime("%Y-%m-%d %H:%M:%S"))
@@ -216,16 +203,7 @@ def generate_audit_report(
     output_format: str = "markdown",
     show_green_flags: bool = False,
 ) -> str:
-    """Generate a formatted audit report with severity flag classification.
-
-    Args:
-        scan_results: Complete scan results
-        output_format: Output format ('markdown' or 'json')
-        show_green_flags: Whether to show green flags (known exceptions) in report
-
-    Returns:
-        Formatted report string
-    """
+    """Generate a formatted audit report with red/yellow/green severity flag classification."""
     # Collect all issues
     all_issues = []
     all_issues.extend(scan_results.link_issues)

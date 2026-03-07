@@ -16,6 +16,39 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+_FIX_TEMPLATES: dict[str, dict[str, Any]] = {
+    "test_failure": {
+        "priority": "high",
+        "actions": [
+            "Review test output for failure details",
+            "Run failing tests individually: pytest path/to/test_file.py::test_name",
+            "Check test data and fixtures",
+            "Review recent code changes",
+        ],
+        "documentation": "docs/TESTING_GUIDE.md",
+    },
+    "validation_error": {
+        "priority": "high",
+        "actions": [
+            "Review validation report: output/reports/validation_report.md",
+            "Check PDF compilation logs: output/pdf/*_compile.log",
+            "Verify markdown syntax and references",
+            "Ensure all required files are generated",
+        ],
+        "documentation": "docs/TROUBLESHOOTING_GUIDE.md",
+    },
+    "stage_failure": {
+        "priority": "high",
+        "actions": [
+            "Review stage execution logs",
+            "Check for missing dependencies",
+            "Verify input files exist",
+            "Review error messages above",
+        ],
+        "documentation": "docs/TROUBLESHOOTING_GUIDE.md",
+    },
+}
+
 @dataclass
 class ErrorEntry:
     """Single error or warning entry."""
@@ -117,80 +150,24 @@ class ErrorAggregator:
         }
 
     def get_actionable_fixes(self) -> list[dict[str, Any]]:
-        """Get actionable fixes for errors.
-
-        Returns:
-            List of fix dictionaries with priority and actions
-        """
-        fixes = []
-
-        # Group errors by type and provide fixes
-        error_types = {}  # type: ignore
+        """Return fix recommendations grouped by error type."""
+        error_types: dict[str, list[ErrorEntry]] = {}
         for error in self.errors:
-            if error.type not in error_types:
-                error_types[error.type] = []
-            error_types[error.type].append(error)
+            error_types.setdefault(error.type, []).append(error)
 
+        fixes = []
         for error_type, errors in error_types.items():
-            if error_type == "test_failure":
-                fixes.append(
-                    {
-                        "priority": "high",
-                        "issue": f"{len(errors)} test failure(s)",
-                        "actions": [
-                            "Review test output for failure details",
-                            "Run failing tests individually: pytest path/to/test_file.py::test_name",  # noqa: E501
-                            "Check test data and fixtures",
-                            "Review recent code changes",
-                        ],
-                        "documentation": "docs/TESTING_GUIDE.md",
-                    }
-                )
-            elif error_type == "validation_error":
-                fixes.append(
-                    {
-                        "priority": "high",
-                        "issue": f"{len(errors)} validation error(s)",
-                        "actions": [
-                            "Review validation report: output/reports/validation_report.md",
-                            "Check PDF compilation logs: output/pdf/*_compile.log",
-                            "Verify markdown syntax and references",
-                            "Ensure all required files are generated",
-                        ],
-                        "documentation": "docs/TROUBLESHOOTING_GUIDE.md",
-                    }
-                )
-            elif error_type == "stage_failure":
-                fixes.append(
-                    {
-                        "priority": "high",
-                        "issue": f"{len(errors)} stage failure(s)",
-                        "actions": [
-                            "Review stage execution logs",
-                            "Check for missing dependencies",
-                            "Verify input files exist",
-                            "Review error messages above",
-                        ],
-                        "documentation": "docs/TROUBLESHOOTING_GUIDE.md",
-                    }
-                )
+            template = _FIX_TEMPLATES.get(error_type)
+            if template:
+                fixes.append({"issue": f"{len(errors)} {error_type.replace('_', ' ')}(s)", **template})
             else:
-                # Generic fix
                 fixes.append(
                     {
                         "priority": "medium",
                         "issue": f"{len(errors)} {error_type} error(s)",
-                        "actions": (
-                            errors[0].suggestions
-                            if errors[0].suggestions
-                            else [
-                                "Review error messages",
-                                "Check logs for details",
-                            ]
-                        ),
+                        "actions": errors[0].suggestions or ["Review error messages", "Check logs for details"],
                     }
                 )
-
         return fixes
 
     def save_report(self, output_dir: Path) -> Path:

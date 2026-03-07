@@ -220,14 +220,12 @@ def _wait_for_coverage_file(
         if attempt > 0:
             time.sleep(delay)
         for path in paths:
-            logger.debug(f"Attempt {attempt + 1}/{max_retries}: {path} (exists: {path.exists()})")
             if not path.exists():
                 continue
             file_size = path.stat().st_size
-            logger.debug(f"Coverage file size: {file_size} bytes")
             if file_size >= 100:
                 return path
-            logger.debug(f"Coverage file too small ({file_size} bytes), likely incomplete")
+            logger.debug(f"Attempt {attempt + 1}/{max_retries}: {path} too small ({file_size} bytes)")
     return None
 
 def _parse_coverage_json(path: Path) -> float | None:
@@ -249,15 +247,7 @@ def _parse_coverage_json(path: Path) -> float | None:
 def extract_coverage_percentage(
     stdout_text: str, coverage_json_paths: list[Path]
 ) -> tuple[bool, float | None]:
-    """Extract coverage percentage from defined JSON paths or stdout fallback.
-
-    Args:
-        stdout_text: Stdout text from pytest run to act as fallback
-        coverage_json_paths: List of paths to coverage JSON files to parse
-
-    Returns:
-        tuple (coverage_found, coverage_pct)
-    """
+    """Extract coverage percentage from defined JSON paths or stdout fallback; returns (found, pct)."""
     logger.debug("Looking for coverage files")
 
     ready_path = _wait_for_coverage_file(coverage_json_paths)

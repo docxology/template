@@ -46,14 +46,6 @@ class TemplateError(Exception):
         suggestions: list[str | None] = None,
         recovery_commands: list[str | None] = None,
     ) -> None:
-        """Initialize template error with message, optional context, recovery suggestions, and commands.
-
-        Args:
-            message: Human-readable error description
-            context: Additional information about the error (file paths, line numbers, etc.)
-            suggestions: List of actionable recovery suggestions
-            recovery_commands: List of command-line commands to fix the issue
-        """
         self.message = message
         self.context = context or {}
         self.suggestions = suggestions or []
