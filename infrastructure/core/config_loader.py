@@ -14,7 +14,7 @@ from typing import Any, Dict, List, Optional, TypedDict
 
 from infrastructure.core.logging_utils import get_logger
 
-_logger = get_logger(__name__)
+logger = get_logger(__name__)
 
 
 class AuthorConfig(TypedDict, total=False):
@@ -124,7 +124,7 @@ def validate_config_keys(config: Dict[str, Any], config_path: Path | str = "") -
                 msg = f"Unknown config key '{key}' in {config_path} — did you mean '{matches[0]}'?"
             else:
                 msg = f"Unknown config key '{key}' in {config_path}"
-            _logger.warning(msg)
+            logger.warning(msg)
             warnings.append(msg)
 
     return warnings
@@ -156,9 +156,8 @@ def load_config(config_path: Path | str) -> Optional[ManuscriptConfig]:
             return data  # type: ignore[no-any-return]  # yaml.safe_load returns Any
     except (FileNotFoundError, PermissionError, yaml.YAMLError):
         return None
-    except Exception:
-        # Log unexpected errors but don't fail
-        _logger.warning(f"Unexpected error loading config from {config_path}")
+    except Exception as e:
+        logger.warning(f"Unexpected error loading config from {config_path}: {e}")
         return None
 
 
@@ -202,21 +201,19 @@ def format_author_name(authors: List[AuthorConfig]) -> str:
     if not authors:
         return "Project Author"
 
-    # For single author, return name
-    if len(authors) == 1:
-        return authors[0].get("name", "Project Author")
-
-    # For multiple authors, return first author name
     return authors[0].get("name", "Project Author")
 
 
-def get_config_as_dict(repo_root: Path | str) -> Dict[str, str]:
+def get_config_as_dict(
+    repo_root: Path | str, respect_existing: bool = False
+) -> Dict[str, str]:
     """Get configuration as a dictionary of key-value pairs.
 
     Loads configuration from project/manuscript/config.yaml.
 
     Args:
         repo_root: Root directory of the repository
+        respect_existing: If True, filter out keys already set in os.environ
 
     Returns:
         Dictionary of configuration values (PROJECT_TITLE, AUTHOR_NAME, etc.)
@@ -238,6 +235,11 @@ def get_config_as_dict(repo_root: Path | str) -> Dict[str, str]:
     if paper_title := config.get("paper", {}).get("title"):
         result["PROJECT_TITLE"] = paper_title
 
+    # DOI is independent of authors — extract it first
+    doi = config.get("publication", {}).get("doi", "")
+    if doi:
+        result["DOI"] = doi
+
     # Authors
     if authors := config.get("authors", []):
         result["AUTHOR_NAME"] = format_author_name(authors)
@@ -249,36 +251,14 @@ def get_config_as_dict(repo_root: Path | str) -> Dict[str, str]:
         if email := primary.get("email"):
             result["AUTHOR_EMAIL"] = email
 
-        # DOI
-        doi = config.get("publication", {}).get("doi", "")
-        if doi:
-            result["DOI"] = doi
-
         # Full author details for LaTeX
         author_details = format_author_details(authors, doi)
         if author_details:
             result["AUTHOR_DETAILS"] = author_details
 
-    return result
-
-
-def get_config_as_env_vars(repo_root: Path | str, respect_existing: bool = True) -> Dict[str, str]:
-    """Get configuration as environment variables.
-
-    Args:
-        repo_root: Root directory of the repository
-        respect_existing: If True, don't override existing environment variables
-
-    Returns:
-        Dictionary of environment variable assignments
-    """
-    config_dict = get_config_as_dict(repo_root)
-
     if respect_existing:
-        # Filter out variables that are already set in environment
-        return {k: v for k, v in config_dict.items() if k not in os.environ}
-    else:
-        return config_dict
+        return {k: v for k, v in result.items() if k not in os.environ}
+    return result
 
 
 def find_config_file(repo_root: Path | str, project_name: Optional[str] = None) -> Optional[Path]:
@@ -307,6 +287,16 @@ def find_config_file(repo_root: Path | str, project_name: Optional[str] = None) 
     return None
 
 
+def _load_project_config(
+    repo_root: Path | str, project_name: str
+) -> Optional[ManuscriptConfig]:
+    """Load config for a named project, returning None if unavailable."""
+    config_path = Path(repo_root) / "projects" / project_name / "manuscript" / "config.yaml"
+    if not config_path.exists():
+        return None
+    return load_config(config_path)
+
+
 def get_translation_languages(repo_root: Path | str, project_name: str = "project") -> List[str]:
     """Get list of enabled translation languages from config.
 
@@ -321,15 +311,7 @@ def get_translation_languages(repo_root: Path | str, project_name: str = "projec
         List of language codes (e.g., ['zh', 'hi', 'ru']) if translations
         are enabled, empty list otherwise
     """
-    repo_root = Path(repo_root)
-
-    # Look for config in the project-specific directory
-    config_path = repo_root / "projects" / project_name / "manuscript" / "config.yaml"
-
-    if not config_path.exists():
-        return []
-
-    config = load_config(config_path)
+    config = _load_project_config(repo_root, project_name)
     if not config:
         return []
 
@@ -360,9 +342,6 @@ def get_review_types(repo_root: Path | str, project_name: str = "project") -> Li
         are enabled, empty list if disabled, or ['executive_summary'] as default
         if no config found.
     """
-    repo_root = Path(repo_root)
-
-    # Valid review types that can be configured
     VALID_REVIEW_TYPES = [
         "executive_summary",
         "quality_review",
@@ -370,16 +349,8 @@ def get_review_types(repo_root: Path | str, project_name: str = "project") -> Li
         "improvement_suggestions",
     ]
 
-    # Look for config in the project-specific directory
-    config_path = repo_root / "projects" / project_name / "manuscript" / "config.yaml"
-
-    if not config_path.exists():
-        # Default to single review if no config found
-        return ["executive_summary"]
-
-    config = load_config(config_path)
+    config = _load_project_config(repo_root, project_name)
     if not config:
-        # Default to single review if config can't be loaded
         return ["executive_summary"]
 
     llm_config = config.get("llm", {})
@@ -405,7 +376,7 @@ def get_review_types(repo_root: Path | str, project_name: str = "project") -> Li
     invalid_types = [rt for rt in review_types if rt not in VALID_REVIEW_TYPES]
 
     if invalid_types:
-                _logger.warning(f"Invalid review types ignored: {invalid_types}")
+        logger.warning(f"Invalid review types ignored: {invalid_types}")
 
     # If no valid types after filtering, default to single review
     if not valid_types:
@@ -414,11 +385,23 @@ def get_review_types(repo_root: Path | str, project_name: str = "project") -> Li
     return valid_types
 
 
-def get_testing_config(repo_root: Path | str) -> TestingConfig:
+def _safe_int_from_dict(config_dict: dict, key: str) -> Optional[int]:
+    """Safely extract an integer value from a config dict by key."""
+    val = config_dict.get(key)
+    if val is None:
+        return None
+    try:
+        return int(val)
+    except (ValueError, TypeError):
+        logger.debug("Invalid %s value: %r", key, val)
+        return None
+
+
+def get_testing_config(repo_root: Path | str) -> ResolvedTestingConfig:
     """Get testing configuration from config.yaml.
 
-    Reads the testing section from config.yaml and returns
-    configuration values for test failure tolerance and coverage thresholds.
+    Reads the testing section from config.yaml and returns an immutable
+    ResolvedTestingConfig with all defaults applied.
 
     Configuration priority (highest to lowest):
     1. Environment variables (e.g., INFRA_COVERAGE_THRESHOLD)
@@ -429,82 +412,57 @@ def get_testing_config(repo_root: Path | str) -> TestingConfig:
         repo_root: Root directory of the repository
 
     Returns:
-        Dictionary with testing configuration values:
+        ResolvedTestingConfig with all fields populated:
         - max_test_failures: Maximum acceptable test failures (default: 0)
         - max_infra_test_failures: Maximum acceptable infrastructure test failures (default: 0)
         - max_project_test_failures: Maximum acceptable project test failures (default: 0)
         - infra_coverage_threshold: Minimum infrastructure coverage % (default: 60)
         - project_coverage_threshold: Minimum project coverage % (default: 90)
-        Returns empty dict if config file not found or testing section missing
     """
-    # Default values
-    defaults = {
-        "infra_coverage_threshold": 60,
-        "project_coverage_threshold": 90,
-    }
+    defaults = ResolvedTestingConfig()
 
-    result: Dict[str, Any] = {}
+    infra_threshold = defaults.infra_coverage_threshold
+    project_threshold = defaults.project_coverage_threshold
+    max_test_failures = defaults.max_test_failures
+    max_infra_test_failures = defaults.max_infra_test_failures
+    max_project_test_failures = defaults.max_project_test_failures
 
     # Priority 1: Check environment variables first
     if env_infra := os.environ.get("INFRA_COVERAGE_THRESHOLD"):
         try:
-            result["infra_coverage_threshold"] = int(env_infra)
+            infra_threshold = int(env_infra)
         except (ValueError, TypeError):
-                    _logger.debug("INFRA_COVERAGE_THRESHOLD=%r is not a valid int, ignoring", env_infra)
+            logger.debug("INFRA_COVERAGE_THRESHOLD=%r is not a valid int, ignoring", env_infra)
 
     if env_project := os.environ.get("PROJECT_COVERAGE_THRESHOLD"):
         try:
-            result["project_coverage_threshold"] = int(env_project)
+            project_threshold = int(env_project)
         except (ValueError, TypeError):
-                    _logger.debug("PROJECT_COVERAGE_THRESHOLD=%r is not a valid int, ignoring", env_project)
+            logger.debug("PROJECT_COVERAGE_THRESHOLD=%r is not a valid int, ignoring", env_project)
+
+    env_set_infra = "INFRA_COVERAGE_THRESHOLD" in os.environ
+    env_set_project = "PROJECT_COVERAGE_THRESHOLD" in os.environ
 
     # Priority 2: Load from config file
     config_path = find_config_file(repo_root)
     config = load_config(config_path) if config_path else None
-    testing_config = config.get("testing", {}) if config else {}
+    testing_cfg = config.get("testing", {}) if config else {}
 
+    if (v := _safe_int_from_dict(testing_cfg, "max_test_failures")) is not None:
+        max_test_failures = v
+    if (v := _safe_int_from_dict(testing_cfg, "max_infra_test_failures")) is not None:
+        max_infra_test_failures = v
+    if (v := _safe_int_from_dict(testing_cfg, "max_project_test_failures")) is not None:
+        max_project_test_failures = v
+    if not env_set_infra and (v := _safe_int_from_dict(testing_cfg, "infra_coverage_threshold")) is not None:
+        infra_threshold = v
+    if not env_set_project and (v := _safe_int_from_dict(testing_cfg, "project_coverage_threshold")) is not None:
+        project_threshold = v
 
-    # Read max_test_failures (general/default)
-    if "max_test_failures" in testing_config:
-        try:
-            result["max_test_failures"] = int(testing_config["max_test_failures"])
-        except (ValueError, TypeError):
-            _logger.debug("Invalid max_test_failures value: %r", testing_config["max_test_failures"])
-
-    # Read max_infra_test_failures (infrastructure-specific)
-    if "max_infra_test_failures" in testing_config:
-        try:
-            result["max_infra_test_failures"] = int(testing_config["max_infra_test_failures"])
-        except (ValueError, TypeError):
-            _logger.debug("Invalid max_infra_test_failures value: %r", testing_config["max_infra_test_failures"])
-
-    # Read max_project_test_failures (project-specific)
-    if "max_project_test_failures" in testing_config:
-        try:
-            result["max_project_test_failures"] = int(testing_config["max_project_test_failures"])
-        except (ValueError, TypeError):
-            _logger.debug("Invalid max_project_test_failures value: %r", testing_config["max_project_test_failures"])
-
-    # Read coverage thresholds from config (if not already set by env vars)
-    if "infra_coverage_threshold" not in result:
-        if "infra_coverage_threshold" in testing_config:
-            try:
-                result["infra_coverage_threshold"] = int(testing_config["infra_coverage_threshold"])
-            except (ValueError, TypeError):
-                _logger.debug("Invalid infra_coverage_threshold value: %r", testing_config["infra_coverage_threshold"])
-
-    if "project_coverage_threshold" not in result:
-        if "project_coverage_threshold" in testing_config:
-            try:
-                result["project_coverage_threshold"] = int(
-                    testing_config["project_coverage_threshold"]
-                )
-            except (ValueError, TypeError):
-                _logger.debug("Invalid project_coverage_threshold value: %r", testing_config["project_coverage_threshold"])
-
-    # Priority 3: Apply defaults for any missing values
-    for key, default_val in defaults.items():
-        if key not in result:
-            result[key] = default_val
-
-    return result  # type: ignore[return-value]  # dict matches TestingConfig shape
+    return ResolvedTestingConfig(
+        max_test_failures=max_test_failures,
+        max_infra_test_failures=max_infra_test_failures,
+        max_project_test_failures=max_project_test_failures,
+        infra_coverage_threshold=infra_threshold,
+        project_coverage_threshold=project_threshold,
+    )

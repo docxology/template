@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -175,49 +178,49 @@ class LLMConfig:
             try:
                 config_kwargs["context_window"] = int(os.environ["LLM_CONTEXT_WINDOW"])
             except ValueError:
-                pass  # Use default
+                logger.warning("Invalid LLM_CONTEXT_WINDOW=%r, using default", os.environ["LLM_CONTEXT_WINDOW"])
 
         # Alternative: LLM_NUM_CTX (Ollama parameter name)
         if "LLM_NUM_CTX" in os.environ and "context_window" not in config_kwargs:
             try:
                 config_kwargs["context_window"] = int(os.environ["LLM_NUM_CTX"])
             except ValueError:
-                pass  # Use default
+                logger.warning("Invalid LLM_NUM_CTX=%r, using default", os.environ["LLM_NUM_CTX"])
 
         # Long max tokens for extended responses
         if "LLM_LONG_MAX_TOKENS" in os.environ:
             try:
                 config_kwargs["long_max_tokens"] = int(os.environ["LLM_LONG_MAX_TOKENS"])
             except ValueError:
-                pass  # Use default
+                logger.warning("Invalid LLM_LONG_MAX_TOKENS=%r, using default", os.environ["LLM_LONG_MAX_TOKENS"])
 
         # Max tokens (default response length)
         if "LLM_MAX_TOKENS" in os.environ:
             try:
                 config_kwargs["max_tokens"] = int(os.environ["LLM_MAX_TOKENS"])
             except ValueError:
-                pass  # Use default
+                logger.warning("Invalid LLM_MAX_TOKENS=%r, using default", os.environ["LLM_MAX_TOKENS"])
 
         # Temperature
         if "LLM_TEMPERATURE" in os.environ:
             try:
                 config_kwargs["temperature"] = float(os.environ["LLM_TEMPERATURE"])
             except ValueError:
-                pass  # Use default
+                logger.warning("Invalid LLM_TEMPERATURE=%r, using default", os.environ["LLM_TEMPERATURE"])
 
         # Timeout
         if "LLM_TIMEOUT" in os.environ:
             try:
                 config_kwargs["timeout"] = float(os.environ["LLM_TIMEOUT"])
             except ValueError:
-                pass  # Use default
+                logger.warning("Invalid LLM_TIMEOUT=%r, using default", os.environ["LLM_TIMEOUT"])
 
         # Seed
         if "LLM_SEED" in os.environ:
             try:
                 config_kwargs["seed"] = int(os.environ["LLM_SEED"])
             except ValueError:
-                pass  # Use default
+                logger.warning("Invalid LLM_SEED=%r, using default", os.environ["LLM_SEED"])
 
         # Default model
         if "OLLAMA_MODEL" in os.environ:
@@ -228,13 +231,13 @@ class LLMConfig:
             try:
                 config_kwargs["heartbeat_interval"] = float(os.environ["LLM_HEARTBEAT_INTERVAL"])
             except ValueError:
-                pass  # Use default
+                logger.warning("Invalid LLM_HEARTBEAT_INTERVAL=%r, using default", os.environ["LLM_HEARTBEAT_INTERVAL"])
 
         if "LLM_STALL_THRESHOLD" in os.environ:
             try:
                 config_kwargs["stall_threshold"] = float(os.environ["LLM_STALL_THRESHOLD"])
             except ValueError:
-                pass  # Use default
+                logger.warning("Invalid LLM_STALL_THRESHOLD=%r, using default", os.environ["LLM_STALL_THRESHOLD"])
 
         if "LLM_EARLY_WARNING_THRESHOLD" in os.environ:
             try:
@@ -242,7 +245,7 @@ class LLMConfig:
                     os.environ["LLM_EARLY_WARNING_THRESHOLD"]
                 )
             except ValueError:
-                pass  # Use default
+                logger.warning("Invalid LLM_EARLY_WARNING_THRESHOLD=%r, using default", os.environ["LLM_EARLY_WARNING_THRESHOLD"])
 
         return cls(**config_kwargs)
 
