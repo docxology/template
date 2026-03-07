@@ -274,6 +274,42 @@ def run_project_tests(
         return 1, {}
 
 
+def _report_suite_failure(
+    suite_name: str,
+    results: dict,
+    project_name: str = "",
+) -> None:
+    """Log failure details and fix suggestions for a test suite."""
+    failed = results.get("failed", 0)
+    skipped = results.get("skipped", 0)
+    warnings = results.get("warnings", 0)
+    logger.info(f"{suite_name} Results:")
+    logger.info(f"  ✗ Failed: {failed} test(s) failed")
+    if skipped > 0:
+        logger.info(f"  ⚠ Skipped: {skipped}")
+    if warnings > 0:
+        logger.info(f"  ⚠ Warnings: {warnings}")
+
+    failed_tests = results.get("failed_tests", [])
+    if failed_tests:
+        logger.info("")
+        logger.info("  📋 Failed Tests:")
+        for i, failure in enumerate(failed_tests[:5], 1):
+            logger.info(f"    {i}. {failure['test']}")
+            if failure["error_type"] != "Unknown":
+                logger.info(
+                    f"       {failure['error_type']}: {failure['error_message'][:60]}{'...' if len(failure['error_message']) > 60 else ''}"  # noqa: E501
+                )
+        if len(failed_tests) > 5:
+            logger.info(f"    ... and {len(failed_tests) - 5} more failures")
+
+    logger.info("")
+    logger.info("  🔧 Quick Fix Suggestions:")
+    suite_key = "infrastructure" if suite_name == "Infrastructure" else "project"
+    for suggestion in format_failure_suggestions(failed_tests, suite_key, project_name):
+        logger.info(suggestion)
+
+
 def report_results(
     infra_exit: int,
     project_exit: int,
@@ -345,34 +381,7 @@ def report_results(
             total_exec_time = sum(phases.values())
             logger.info(f"  ⏱ Duration: {_format_duration(total_exec_time)}")
     else:
-        failed = infra_results.get("failed", 0)
-        skipped = infra_results.get("skipped", 0)
-        warnings = infra_results.get("warnings", 0)
-        logger.info("Infrastructure Results:")
-        logger.info(f"  ✗ Failed: {failed} test(s) failed")
-        if skipped > 0:
-            logger.info(f"  ⚠ Skipped: {skipped}")
-        if warnings > 0:
-            logger.info(f"  ⚠ Warnings: {warnings}")
-
-        # Show detailed failure information
-        failed_tests = infra_results.get("failed_tests", [])
-        if failed_tests:
-            logger.info("")
-            logger.info("  📋 Failed Tests:")
-            for i, failure in enumerate(failed_tests[:5], 1):  # Show first 5 failures
-                logger.info(f"    {i}. {failure['test']}")
-                if failure["error_type"] != "Unknown":
-                    logger.info(
-                        f"       {failure['error_type']}: {failure['error_message'][:60]}{'...' if len(failure['error_message']) > 60 else ''}"  # noqa: E501
-                    )
-            if len(failed_tests) > 5:
-                logger.info(f"    ... and {len(failed_tests) - 5} more failures")
-
-        logger.info("")
-        logger.info("  🔧 Quick Fix Suggestions:")
-        for suggestion in format_failure_suggestions(failed_tests, "infrastructure"):
-            logger.info(suggestion)
+        _report_suite_failure("Infrastructure", infra_results)
 
     # Project summary
     logger.info("")  # Add spacing
@@ -403,34 +412,7 @@ def report_results(
             total_exec_time = sum(phases.values())
             logger.info(f"  ⏱ Duration: {_format_duration(total_exec_time)}")
     else:
-        failed = project_results.get("failed", 0)
-        skipped = project_results.get("skipped", 0)
-        warnings = project_results.get("warnings", 0)
-        logger.info("Project Results:")
-        logger.info(f"  ✗ Failed: {failed} test(s) failed")
-        if skipped > 0:
-            logger.info(f"  ⚠ Skipped: {skipped}")
-        if warnings > 0:
-            logger.info(f"  ⚠ Warnings: {warnings}")
-
-        # Show detailed failure information
-        failed_tests = project_results.get("failed_tests", [])
-        if failed_tests:
-            logger.info("")
-            logger.info("  📋 Failed Tests:")
-            for i, failure in enumerate(failed_tests[:5], 1):  # Show first 5 failures
-                logger.info(f"    {i}. {failure['test']}")
-                if failure["error_type"] != "Unknown":
-                    logger.info(
-                        f"       {failure['error_type']}: {failure['error_message'][:60]}{'...' if len(failure['error_message']) > 60 else ''}"  # noqa: E501
-                    )
-            if len(failed_tests) > 5:
-                logger.info(f"    ... and {len(failed_tests) - 5} more failures")
-
-        logger.info("")
-        logger.info("  🔧 Quick Fix Suggestions:")
-        for suggestion in format_failure_suggestions(failed_tests, "project", project_name):
-            logger.info(suggestion)
+        _report_suite_failure("Project", project_results, project_name)
 
     # Overall summary
     logger.info("")  # Add spacing
