@@ -161,6 +161,26 @@ class PipelineExecutor:
         skip_clean = (not self.config.clean) or self.config.resume
         return self._execute_pipeline(self._build_stage_list(include_llm=False, skip_clean=skip_clean))
 
+    def _run_stage_and_checkpoint(
+        self,
+        stage_num: int,
+        stage_spec: StageSpec,
+        results: list[PipelineStageResult],
+        pipeline_start: float,
+    ) -> PipelineStageResult:
+        """Execute a stage, normalize exit-code-2, append to results, and checkpoint on success."""
+        result = self._execute_stage(stage_num, stage_spec.name, stage_spec.func, pipeline_start)
+        if result.exit_code == 2:
+            result = self._as_skip_success(result)
+        results.append(result)
+        if not result.success:
+            logger.error(
+                PIPELINE_STAGE_FAILED.format(stage_num=stage_num, stage_name=stage_spec.name)
+            )
+        else:
+            self._save_checkpoint(pipeline_start, stage_num, results)
+        return result
+
     def _execute_pipeline(self, stages: list[StageSpec]) -> list[PipelineStageResult]:
         """Execute pipeline stages."""
         results: list[PipelineStageResult] = []
@@ -168,31 +188,16 @@ class PipelineExecutor:
 
         executed_stage_num = 0  # sequential over executed (non-skipped) stages only
         for stage_spec in stages:
-            stage_name = stage_spec.name
-            stage_func = stage_spec.func
-            skip_condition = stage_spec.skip
-
-            if skip_condition:
-                logger.info(f"Skipping stage: {stage_name}")
+            if stage_spec.skip:
+                logger.info(f"Skipping stage: {stage_spec.name}")
                 continue
 
             executed_stage_num += 1
-            result = self._execute_stage(executed_stage_num, stage_name, stage_func, pipeline_start)
-            # Exit code 2 means "skipped successfully" (e.g., no LLM languages configured)
-            if result.exit_code == 2:
-                result = self._as_skip_success(result)
-            results.append(result)
-
+            result = self._run_stage_and_checkpoint(
+                executed_stage_num, stage_spec, results, pipeline_start
+            )
             if not result.success:
-                logger.error(
-                    PIPELINE_STAGE_FAILED.format(
-                        stage_num=executed_stage_num, stage_name=stage_name
-                    )
-                )
                 break
-
-            # Save checkpoint after successful executed stage
-            self._save_checkpoint(pipeline_start, executed_stage_num, results)
 
         return results
 
@@ -350,23 +355,12 @@ class PipelineExecutor:
         pipeline_start = checkpoint.pipeline_start_time
         executed_stage_num = len(resumed_results)
         for stage_spec in remaining:
-            stage_name = stage_spec.name
-            stage_func = stage_spec.func
-
             executed_stage_num += 1
-            result = self._execute_stage(executed_stage_num, stage_name, stage_func, pipeline_start)
-            # Exit code 2 means "skipped successfully" (e.g., no LLM languages configured)
-            if result.exit_code == 2:
-                result = self._as_skip_success(result)
-            resumed_results.append(result)
+            result = self._run_stage_and_checkpoint(
+                executed_stage_num, stage_spec, resumed_results, pipeline_start
+            )
             if not result.success:
-                logger.error(
-                    PIPELINE_STAGE_FAILED.format(
-                        stage_num=executed_stage_num, stage_name=stage_name
-                    )
-                )
                 break
-            self._save_checkpoint(pipeline_start, executed_stage_num, resumed_results)
 
         return resumed_results
 
