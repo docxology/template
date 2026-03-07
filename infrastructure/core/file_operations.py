@@ -581,8 +581,6 @@ def calculate_file_hash(file_path: Path, algorithm: str = "sha256") -> Optional[
             while chunk := f.read(8192):
                 hash_func.update(chunk)
         return hash_func.hexdigest()
-    except PermissionError as e:
-        raise FileOperationError(f"Permission denied reading {file_path}: {e}") from e
     except OSError as e:
         logger.debug("Could not hash %s: %s", file_path, e)
         return None

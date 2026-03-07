@@ -208,7 +208,6 @@ def verify_data_consistency(data_files: List[Path]) -> Dict[str, bool]:
         except Exception as e:
             logger.warning("Data integrity check failed for %s: %s", data_file, e, exc_info=True)
             consistency["data_integrity"] = False
-            break
 
     return consistency
 
@@ -472,53 +471,8 @@ def validate_build_artifacts(
     missing_list: List[str] = validation["missing_files"]
     unexpected_list: List[str] = validation["unexpected_files"]
 
-    # Expected output structure (use provided expected_files or default)
-    if expected_files is None:
-        expected_structure = {
-            "pdf": [
-                "01_abstract.pdf",
-                "02_introduction.pdf",
-                "03_methodology.pdf",
-                "04_experimental_results.pdf",
-                "05_discussion.pdf",
-                "06_conclusion.pdf",
-                "07_references.pdf",
-                "10_symbols_glossary.pdf",
-                "project_combined.pdf",
-            ],
-            "tex": [
-                "01_abstract.tex",
-                "02_introduction.tex",
-                "03_methodology.tex",
-                "04_experimental_results.tex",
-                "05_discussion.tex",
-                "06_conclusion.tex",
-                "07_references.tex",
-                "10_symbols_glossary.tex",
-                "project_combined.tex",
-            ],
-            "data": [
-                "convergence_data.npz",
-                "dataset_summary.csv",
-                "example_data.csv",
-                "example_data.npz",
-                "performance_comparison.csv",
-            ],
-            "figures": [
-                "ablation_study.png",
-                "convergence_plot.png",
-                "data_structure.png",
-                "example_figure.png",
-                "experimental_setup.png",
-                "hyperparameter_sensitivity.png",
-                "image_classification_results.png",
-                "recommendation_scalability.png",
-                "scalability_analysis.png",
-                "step_size_analysis.png",
-            ],
-        }
-    else:
-        expected_structure = expected_files
+    # Expected output structure (callers must supply expected_files for project-specific content)
+    expected_structure: Dict[str, List[str]] = expected_files if expected_files is not None else {}
 
     # Check for missing expected files and directories
     for category, files in expected_structure.items():
@@ -546,7 +500,7 @@ def validate_build_artifacts(
                 str(rel_path).startswith(cat) and any(f in str(rel_path) for f in files)
                 for cat, files in expected_structure.items()
             )
-            if not is_expected and item.name != "project_combined.html":
+            if not is_expected:
                 unexpected_list.append(str(rel_path))
 
     return validation
@@ -618,27 +572,14 @@ def verify_output_completeness(output_dir: Path) -> Dict[str, Any]:
 
     # Check PDF completeness
     pdf_dir = output_dir / "pdf"
-    if pdf_dir.exists():
-        expected_pdfs = [
-            "01_abstract.pdf",
-            "02_introduction.pdf",
-            "03_methodology.pdf",
-            "04_experimental_results.pdf",
-            "05_discussion.pdf",
-            "06_conclusion.pdf",
-            "07_references.pdf",
-            "10_symbols_glossary.pdf",
-            "project_combined.pdf",
-        ]
-
-        for pdf_file in expected_pdfs:
-            pdf_path = pdf_dir / pdf_file
-            if not pdf_path.exists():
+    if not pdf_dir.exists():
+        completeness["pdf_complete"] = False
+        missing_outputs.append("PDF directory")
+    else:
+        for pdf_path in pdf_dir.glob("*.pdf"):
+            if pdf_path.stat().st_size == 0:
                 completeness["pdf_complete"] = False
-                missing_outputs.append(f"PDF: {pdf_file}")
-            elif pdf_path.stat().st_size == 0:
-                completeness["pdf_complete"] = False
-                incomplete_outputs.append(f"Empty PDF: {pdf_file}")
+                incomplete_outputs.append(f"Empty PDF: {pdf_path.name}")
 
     # Check figures completeness
     figures_dir = output_dir / "figures"
@@ -646,26 +587,10 @@ def verify_output_completeness(output_dir: Path) -> Dict[str, Any]:
         completeness["figures_complete"] = False
         missing_outputs.append("Figures directory")
     else:
-        expected_figures = [
-            "ablation_study.png",
-            "convergence_plot.png",
-            "data_structure.png",
-            "example_figure.png",
-            "experimental_setup.png",
-            "hyperparameter_sensitivity.png",
-            "image_classification_results.png",
-            "recommendation_scalability.png",
-            "scalability_analysis.png",
-            "step_size_analysis.png",
-        ]
-
-        for fig_file in expected_figures:
-            fig_path = figures_dir / fig_file
-            if not fig_path.exists():
-                completeness["figures_complete"] = False
-                missing_outputs.append(f"Figure: {fig_file}")
-            elif fig_path.stat().st_size < 1000:  # Very small file
-                incomplete_outputs.append(f"Small figure: {fig_file}")
+        figures = list(figures_dir.glob("*.png")) + list(figures_dir.glob("*.pdf"))
+        for fig_path in figures:
+            if fig_path.stat().st_size < 1000:
+                incomplete_outputs.append(f"Small figure: {fig_path.name}")
 
     # Check data completeness
     data_dir = output_dir / "data"
@@ -673,22 +598,11 @@ def verify_output_completeness(output_dir: Path) -> Dict[str, Any]:
         completeness["data_complete"] = False
         missing_outputs.append("Data directory")
     else:
-        expected_data = [
-            "convergence_data.npz",
-            "dataset_summary.csv",
-            "example_data.csv",
-            "example_data.npz",
-            "performance_comparison.csv",
-        ]
-
-        for data_file in expected_data:
-            data_path = data_dir / data_file
-            if not data_path.exists():
+        data_files_found = list(data_dir.iterdir())
+        for data_path in data_files_found:
+            if data_path.is_file() and data_path.stat().st_size == 0:
                 completeness["data_complete"] = False
-                missing_outputs.append(f"Data: {data_file}")
-            elif data_path.stat().st_size == 0:
-                completeness["data_complete"] = False
-                incomplete_outputs.append(f"Empty data: {data_file}")
+                incomplete_outputs.append(f"Empty data: {data_path.name}")
 
     # Check LaTeX completeness
     tex_dir = output_dir / "tex"
@@ -696,35 +610,21 @@ def verify_output_completeness(output_dir: Path) -> Dict[str, Any]:
         completeness["latex_complete"] = False
         missing_outputs.append("LaTeX directory")
     else:
-        expected_tex = [
-            "01_abstract.tex",
-            "02_introduction.tex",
-            "03_methodology.tex",
-            "04_experimental_results.tex",
-            "05_discussion.tex",
-            "06_conclusion.tex",
-            "07_references.tex",
-            "10_symbols_glossary.tex",
-            "project_combined.tex",
-        ]
-
-        for tex_file in expected_tex:
-            tex_path = tex_dir / tex_file
-            if not tex_path.exists():
+        for tex_path in tex_dir.glob("*.tex"):
+            if tex_path.stat().st_size == 0:
                 completeness["latex_complete"] = False
-                missing_outputs.append(f"LaTeX: {tex_file}")
-            elif tex_path.stat().st_size == 0:
-                completeness["latex_complete"] = False
-                incomplete_outputs.append(f"Empty LaTeX: {tex_file}")
+                incomplete_outputs.append(f"Empty LaTeX: {tex_path.name}")
 
-    # Check HTML completeness
-    html_file = output_dir / "project_combined.html"
-    if not html_file.exists():
+    # Check HTML completeness (any HTML file in output root)
+    html_files = list(output_dir.glob("*.html"))
+    if not html_files:
         completeness["html_complete"] = False
-        missing_outputs.append("HTML: project_combined.html")
-    elif html_file.stat().st_size == 0:
-        completeness["html_complete"] = False
-        incomplete_outputs.append("Empty HTML: project_combined.html")
+        missing_outputs.append("HTML output")
+    else:
+        for html_file in html_files:
+            if html_file.stat().st_size == 0:
+                completeness["html_complete"] = False
+                incomplete_outputs.append(f"Empty HTML: {html_file.name}")
 
     return completeness
 
