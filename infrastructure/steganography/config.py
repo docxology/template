@@ -15,6 +15,22 @@ logger = get_logger(__name__)
 
 
 @dataclass
+class DocumentMetadata:
+    """Document identity fields passed to metadata injection functions.
+
+    Groups the repeated (title, authors, hashes, document_id, keywords) tuple
+    that build_document_metadata and build_xmp_packet both require.
+    """
+
+    title: str = ""
+    authors: Optional[List[str]] = None
+    hashes: Optional[Dict[str, str]] = None
+    document_id: str = ""
+    keywords: Optional[List[str]] = None
+    extra: Optional[Dict[str, str]] = None
+
+
+@dataclass
 class SteganographyConfig:
     """Configuration for steganographic PDF post-processing.
 

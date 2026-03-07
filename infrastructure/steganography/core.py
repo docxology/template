@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 from infrastructure.core.logging_utils import get_logger, log_operation
-from infrastructure.steganography.config import SteganographyConfig
+from infrastructure.steganography.config import DocumentMetadata, SteganographyConfig
 
 logger = get_logger(__name__)
 
@@ -315,21 +315,15 @@ class SteganographyProcessor:
             inject_pdf_metadata,
         )
 
-        meta = build_document_metadata(
+        doc = DocumentMetadata(
             title=title,
             authors=authors,
             hashes=self._hashes,
             document_id=self._document_id,
             keywords=keywords,
         )
-        
-        xmp = build_xmp_packet(
-            title=title,
-            authors=authors,
-            hashes=self._hashes,
-            document_id=self._document_id,
-            keywords=keywords,
-        )
+        meta = build_document_metadata(doc)
+        xmp = build_xmp_packet(doc)
         
         manifest_dict = {
             "document_id": self._document_id,

@@ -34,11 +34,7 @@ class SystemHealthChecker:
         }
 
     def get_health_status(self) -> dict[str, Any]:
-        """Get comprehensive health status.
-
-        Returns:
-            Dictionary containing health status for all components
-        """
+        """Get comprehensive health status."""
         status: dict[str, Any] = {
             "timestamp": time.time(),
             "overall_status": "healthy",

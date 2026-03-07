@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from infrastructure.core.logging_utils import get_logger
+from infrastructure.steganography.config import DocumentMetadata
 
 logger = get_logger(__name__)
 
@@ -19,6 +20,8 @@ def inject_pdf_metadata(
     input_pdf: Path,
     output_pdf: Path,
     metadata: Dict[str, str],
+    xmp_string: Optional[str] = None,
+    attachments: Optional[Dict[str, bytes]] = None,
 ) -> Path:
     """Inject metadata into PDF Info dictionary.
 
@@ -29,6 +32,9 @@ def inject_pdf_metadata(
                   ``/Title``, ``/Author``, ``/Subject``, ``/Keywords``,
                   ``/Creator``, ``/Producer``.  Custom keys are also
                   accepted (prefixed with ``/``).
+        xmp_string: Optional XMP XML packet to embed in the PDF.
+        attachments: Optional dict of ``filename`` → ``bytes`` to embed
+                     as PDF file attachments (e.g. hash manifests).
 
     Returns:
         Path to the output PDF.
@@ -58,6 +64,24 @@ def inject_pdf_metadata(
     merged = {**existing, **metadata}
     writer.add_metadata(merged)
 
+    # Embed XMP metadata if provided
+    if xmp_string:
+        try:
+            xmp_bytes = xmp_string.encode("utf-8")
+            writer.xmp_metadata = xmp_bytes  # type: ignore[assignment]
+            logger.debug("XMP metadata stream embedded (%d bytes)", len(xmp_bytes))
+        except Exception as xmp_err:
+            logger.warning("XMP embedding failed (non-fatal): %s", xmp_err)
+
+    # Embed file attachments if provided
+    if attachments:
+        for filename, content in attachments.items():
+            try:
+                writer.add_attachment(filename, content)
+                logger.debug("Attachment embedded: %s (%d bytes)", filename, len(content))
+            except Exception as att_err:
+                logger.warning("Attachment '%s' failed (non-fatal): %s", filename, att_err)
+
     with open(output_pdf, "wb") as fh:
         writer.write(fh)
 
@@ -69,23 +93,11 @@ def inject_pdf_metadata(
     return output_pdf
 
 
-def build_document_metadata(
-    title: str = "",
-    authors: Optional[List[str]] = None,
-    hashes: Optional[Dict[str, str]] = None,
-    document_id: str = "",
-    keywords: Optional[List[str]] = None,
-    extra: Optional[Dict[str, str]] = None,
-) -> Dict[str, str]:
+def build_document_metadata(doc: DocumentMetadata) -> Dict[str, str]:
     """Build a metadata dictionary ready for PDF injection.
 
     Args:
-        title: Document title.
-        authors: List of author names.
-        hashes: Algorithm → digest mapping.
-        document_id: Unique document identifier.
-        keywords: Keyword list (joined with ``;``).
-        extra: Additional custom metadata entries.
+        doc: Document identity fields.
 
     Returns:
         Dictionary of ``/Key`` → string value pairs.
@@ -99,26 +111,24 @@ def build_document_metadata(
         "/ModDate": timestamp,
     }
 
-    if title:
-        meta["/Title"] = title
-    if authors:
-        meta["/Author"] = "; ".join(authors)
-    if keywords:
-        meta["/Keywords"] = "; ".join(keywords)
-    if document_id:
-        meta["/Subject"] = f"Document ID: {document_id}"
-        meta["/DocumentID"] = document_id
+    if doc.title:
+        meta["/Title"] = doc.title
+    if doc.authors:
+        meta["/Author"] = "; ".join(doc.authors)
+    if doc.keywords:
+        meta["/Keywords"] = "; ".join(doc.keywords)
+    if doc.document_id:
+        meta["/Subject"] = f"Document ID: {doc.document_id}"
+        meta["/DocumentID"] = doc.document_id
 
-    # Embed hash values as custom metadata
-    if hashes:
-        for algo, digest in hashes.items():
-            key = f"/Hash_{algo.upper()}"
-            meta[key] = digest
+    if doc.hashes:
+        for algo, digest in doc.hashes.items():
+            meta[f"/Hash_{algo.upper()}"] = digest
 
     meta["/SteganographyTimestamp"] = timestamp
 
-    if extra:
-        for k, v in extra.items():
+    if doc.extra:
+        for k, v in doc.extra.items():
             safe_key = k if k.startswith("/") else f"/{k}"
             meta[safe_key] = str(v)
 
@@ -126,24 +136,14 @@ def build_document_metadata(
     return meta
 
 
-def build_xmp_packet(
-    title: str = "",
-    authors: Optional[List[str]] = None,
-    hashes: Optional[Dict[str, str]] = None,
-    document_id: str = "",
-    keywords: Optional[List[str]] = None,
-) -> str:
+def build_xmp_packet(doc: DocumentMetadata) -> str:
     """Build an XMP metadata XML packet.
 
     This generates a minimal Dublin Core + XMP Basic packet that can be
     embedded in the PDF.
 
     Args:
-        title: Document title.
-        authors: Author list.
-        hashes: Hash algorithm → digest mapping.
-        document_id: Document identifier.
-        keywords: Keyword list.
+        doc: Document identity fields.
 
     Returns:
         XMP XML string.
@@ -151,8 +151,8 @@ def build_xmp_packet(
     timestamp = datetime.now(timezone.utc).isoformat()
 
     authors_xml = ""
-    if authors:
-        items = "\n".join(f"            <rdf:li>{a}</rdf:li>" for a in authors)
+    if doc.authors:
+        items = "\n".join(f"            <rdf:li>{a}</rdf:li>" for a in doc.authors)
         authors_xml = f"""
         <dc:creator>
           <rdf:Seq>
@@ -161,8 +161,8 @@ def build_xmp_packet(
         </dc:creator>"""
 
     keywords_xml = ""
-    if keywords:
-        items = "\n".join(f"            <rdf:li>{k}</rdf:li>" for k in keywords)
+    if doc.keywords:
+        items = "\n".join(f"            <rdf:li>{k}</rdf:li>" for k in doc.keywords)
         keywords_xml = f"""
         <dc:subject>
           <rdf:Bag>
@@ -171,8 +171,8 @@ def build_xmp_packet(
         </dc:subject>"""
 
     hash_xml = ""
-    if hashes:
-        for algo, digest in hashes.items():
+    if doc.hashes:
+        for algo, digest in doc.hashes.items():
             hash_xml += f'\n        <steg:hash_{algo}>{digest}</steg:hash_{algo}>'
 
     xmp = f"""<?xpacket begin="\xef\xbb\xbf" id="W5M0MpCehiHzreSzNTczkc9d"?>
@@ -184,13 +184,13 @@ def build_xmp_packet(
         xmlns:steg="http://ns.research-template.org/steganography/1.0/">
         <dc:title>
           <rdf:Alt>
-            <rdf:li xml:lang="x-default">{title}</rdf:li>
+            <rdf:li xml:lang="x-default">{doc.title}</rdf:li>
           </rdf:Alt>
         </dc:title>{authors_xml}{keywords_xml}
         <xmp:CreateDate>{timestamp}</xmp:CreateDate>
         <xmp:ModifyDate>{timestamp}</xmp:ModifyDate>
         <xmp:CreatorTool>Research Template Steganography</xmp:CreatorTool>
-        <steg:document_id>{document_id}</steg:document_id>{hash_xml}
+        <steg:document_id>{doc.document_id}</steg:document_id>{hash_xml}
     </rdf:Description>
   </rdf:RDF>
 </x:xmpmeta>

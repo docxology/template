@@ -14,6 +14,7 @@ Capabilities demonstrated:
 4. Registering figures for automated `infrastructure.rendering` into the PDF
 """
 # Add project src to path
+import functools
 import sys
 from pathlib import Path
 from typing import Any, Dict, Optional
@@ -742,10 +743,6 @@ def run_stability_analysis():
     if logger:
         logger.info("Running numerical stability analysis...")
 
-    # Define test function for stability analysis
-    def test_func(x):
-        return quadratic_function(x, np.array([[1.0]]), np.array([1.0]))
-
     # Test different input ranges for stability
     test_inputs = [
         np.array([0.0]),  # Standard start point
@@ -756,7 +753,9 @@ def run_stability_analysis():
 
     # Run stability check
     stability_report = check_numerical_stability(
-        func=test_func, test_inputs=test_inputs, tolerance=1e-10
+        func=functools.partial(quadratic_function, A=np.array([[1.0]]), b=np.array([1.0])),
+        test_inputs=test_inputs,
+        tolerance=1e-10,
     )
 
     # Save stability report
@@ -800,10 +799,6 @@ def run_performance_benchmarking():
     if logger:
         logger.info("Running performance benchmarking...")
 
-    # Define test function
-    def test_func(x):
-        return quadratic_function(x, np.array([[1.0]]), np.array([1.0]))
-
     # Different problem scales
     test_inputs = [
         np.array([0.0]),  # Standard case
@@ -813,7 +808,7 @@ def run_performance_benchmarking():
 
     # Run benchmarking
     benchmark_report = benchmark_function(
-        func=test_func,
+        func=functools.partial(quadratic_function, A=np.array([[1.0]]), b=np.array([1.0])),
         test_inputs=test_inputs,
         iterations=50,  # Multiple runs for reliable measurement
     )
