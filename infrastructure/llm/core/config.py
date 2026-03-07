@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
-import logging
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
-logger = logging.getLogger(__name__)
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 @dataclass
@@ -138,6 +139,10 @@ class LLMConfig:
     stall_threshold: float = 60.0  # Seconds without tokens before stall warning
     early_warning_threshold: float = 60.0  # Seconds before first token to trigger early warning
 
+    # Review-specific settings (override via LLM_REVIEW_TIMEOUT, LLM_MAX_INPUT_LENGTH)
+    review_timeout: float = 300.0  # Timeout for review operations (LLM_REVIEW_TIMEOUT)
+    max_input_length: int = 500000  # Max input character length (LLM_MAX_INPUT_LENGTH)
+
     def __init__(self, *args, **kwargs):
         """Initialize config, supporting num_ctx as alias for context_window."""
         # Handle num_ctx -> context_window mapping
@@ -247,6 +252,18 @@ class LLMConfig:
             except ValueError:
                 logger.warning("Invalid LLM_EARLY_WARNING_THRESHOLD=%r, using default", os.environ["LLM_EARLY_WARNING_THRESHOLD"])
 
+        if "LLM_REVIEW_TIMEOUT" in os.environ:
+            try:
+                config_kwargs["review_timeout"] = float(os.environ["LLM_REVIEW_TIMEOUT"])
+            except ValueError:
+                logger.warning("Invalid LLM_REVIEW_TIMEOUT=%r, using default", os.environ["LLM_REVIEW_TIMEOUT"])
+
+        if "LLM_MAX_INPUT_LENGTH" in os.environ:
+            try:
+                config_kwargs["max_input_length"] = int(os.environ["LLM_MAX_INPUT_LENGTH"])
+            except ValueError:
+                logger.warning("Invalid LLM_MAX_INPUT_LENGTH=%r, using default", os.environ["LLM_MAX_INPUT_LENGTH"])
+
         return cls(**config_kwargs)
 
     def with_overrides(self, **kwargs: Any) -> LLMConfig:
@@ -278,6 +295,8 @@ class LLMConfig:
             "long_min_tokens": self.long_min_tokens,
             "system_prompt": self.system_prompt,
             "auto_inject_system_prompt": self.auto_inject_system_prompt,
+            "review_timeout": self.review_timeout,
+            "max_input_length": self.max_input_length,
         }
 
         # Apply overrides
@@ -313,3 +332,4 @@ class LLMConfig:
         options_dict.update(kwargs)
 
         return GenerationOptions(**options_dict)
+

@@ -9,11 +9,7 @@ from pathlib import Path
 from typing import Dict
 
 from infrastructure.core.logging_utils import get_logger, log_success
-from infrastructure.llm.review.generator import (
-    get_max_input_length,
-    get_review_max_tokens,
-    get_review_timeout,
-)
+from infrastructure.llm.core.config import LLMConfig
 from infrastructure.llm.review.metrics import ReviewMetrics, SessionMetrics
 from infrastructure.llm.templates import TRANSLATION_LANGUAGES
 from infrastructure.llm.validation.format import (
@@ -384,7 +380,7 @@ The following items are extracted from the review for easy tracking:
             "timestamp": timestamp,
             "source_pdf": str(pdf_path),
             "reviews_generated": list(reviews.keys()),
-            "max_input_length": get_max_input_length(),
+            "max_input_length": LLMConfig.from_env().max_input_length,
             "manuscript_metrics": {
                 "total_chars": session_metrics.manuscript.total_chars,
                 "total_words": session_metrics.manuscript.total_words,
@@ -404,9 +400,9 @@ The following items are extracted from the review for easy tracking:
                 "temperature_summary": 0.3,
                 "temperature_review": 0.3,
                 "temperature_suggestions": 0.4,
-                "max_tokens": get_review_max_tokens()[0],
-                "max_tokens_source": get_review_max_tokens()[1],
-                "timeout_seconds": get_review_timeout(),
+                "max_tokens": LLMConfig.from_env().long_max_tokens,
+                "max_tokens_source": "long_max_tokens",
+                "timeout_seconds": LLMConfig.from_env().review_timeout,
                 "system_prompt": "manuscript_review",
             },
         }

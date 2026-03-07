@@ -62,10 +62,6 @@ from infrastructure.validation.pdf_validator import extract_text_from_pdf, PDFVa
 
 logger = get_logger(__name__)
 
-DEFAULT_MAX_INPUT_LENGTH = 500000
-DEFAULT_REVIEW_TIMEOUT = 300.0
-
-
 def get_manuscript_review_system_prompt() -> str:
     if PROMPT_SYSTEM_AVAILABLE:
         try:
@@ -94,26 +90,6 @@ Guidelines:
 You are reviewing an academic research manuscript. Treat this as a formal peer review."""
 
 
-def get_max_input_length() -> int:
-    env_value = os.environ.get("LLM_MAX_INPUT_LENGTH")
-    if env_value is not None:
-        try:
-            return int(env_value)
-        except ValueError:
-            logger.warning(f"Invalid LLM_MAX_INPUT_LENGTH value: {env_value}, using default")
-    return DEFAULT_MAX_INPUT_LENGTH
-
-
-def get_review_timeout() -> float:
-    env_value = os.environ.get("LLM_REVIEW_TIMEOUT")
-    if env_value is not None:
-        try:
-            return float(env_value)
-        except ValueError:
-            logger.warning(f"Invalid LLM_REVIEW_TIMEOUT value: {env_value}, using default")
-    return DEFAULT_REVIEW_TIMEOUT
-
-
 def log_timeout_info(timeout: float, operation: str) -> None:
     logger.info(f"    Timeout: {timeout:.0f}s per {operation}")
     if timeout < 60:
@@ -121,16 +97,6 @@ def log_timeout_info(timeout: float, operation: str) -> None:
         logger.info(
             "    Consider: export LLM_REVIEW_TIMEOUT=300 (5 minutes) for better reliability"
         )
-
-
-def get_review_max_tokens() -> Tuple[int, str]:
-    config = LLMConfig.from_env()
-    max_tokens = config.long_max_tokens
-    if os.environ.get("LLM_LONG_MAX_TOKENS"):
-        source = f"environment variable LLM_LONG_MAX_TOKENS={max_tokens}"
-    else:
-        source = f"config default long_max_tokens={max_tokens}"
-    return max_tokens, source
 
 
 def validate_review_quality(
@@ -348,11 +314,15 @@ def validate_review_quality(
 def create_review_client(model_name: str) -> LLMClient:
     config = LLMConfig.from_env()
     config.default_model = model_name
-    config.timeout = get_review_timeout()
+    config.timeout = config.review_timeout
     config.system_prompt = get_manuscript_review_system_prompt()
     config.auto_inject_system_prompt = True
 
-    max_tokens, source = get_review_max_tokens()
+    source = (
+        f"environment variable LLM_LONG_MAX_TOKENS={config.long_max_tokens}"
+        if os.environ.get("LLM_LONG_MAX_TOKENS")
+        else f"config default long_max_tokens={config.long_max_tokens}"
+    )
     logger.debug(f"Review max_tokens configuration: {source}")
     return LLMClient(config)
 
@@ -424,7 +394,7 @@ def check_ollama_availability() -> Tuple[bool, Optional[str]]:
 
 def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> Tuple[bool, float]:
     log_stage("Warming up model...")
-    warmup_timeout = get_review_timeout()
+    warmup_timeout = client.config.review_timeout
     logger.info(f"    Timeout: {warmup_timeout:.0f}s for warmup")
 
     logger.info("    Checking loaded models via Ollama API...")
@@ -520,7 +490,7 @@ def extract_manuscript_text(pdf_path: Path | str) -> Tuple[Optional[str], Manusc
         logger.info(
             f"  Extracted: {metrics.total_chars:,} chars ({metrics.total_words:,} words, ~{metrics.total_tokens_est:,} tokens)"  # noqa: E501
         )
-        max_length = get_max_input_length()
+        max_length = LLMConfig.from_env().max_input_length
 
         if max_length > 0 and len(text) > max_length:
             metrics.truncated = True
@@ -554,7 +524,7 @@ def generate_review_with_metrics(
     log_stage(f"Generating {review_name}...")
 
     if max_tokens is None:
-        max_tokens, _ = get_review_max_tokens()
+        max_tokens = LLMConfig.from_env().long_max_tokens
 
     metrics = ReviewMetrics(
         input_chars=len(text),
@@ -613,7 +583,7 @@ def generate_review_with_metrics(
                 config = LLMConfig.from_env()
                 heartbeat_monitor = StreamHeartbeatMonitor(
                     operation_name=review_name,
-                    timeout_seconds=get_review_timeout(),
+                    timeout_seconds=config.review_timeout,
                     heartbeat_interval=config.heartbeat_interval,
                     stall_threshold=config.stall_threshold,
                     early_warning_threshold=config.early_warning_threshold,
@@ -764,8 +734,9 @@ def generate_translation(
         input_chars=len(text), input_words=len(text.split()), input_tokens_est=estimate_tokens(text)
     )
     client.reset()
-    max_tokens, _ = get_review_max_tokens()
-    timeout = get_review_timeout()
+    _cfg = LLMConfig.from_env()
+    max_tokens = _cfg.long_max_tokens
+    timeout = _cfg.review_timeout
     log_timeout_info(timeout, f"translation ({target_language})")
     template = ManuscriptTranslationAbstract()
     prompt = template.render(text=text, target_language=target_language, max_tokens=max_tokens)
