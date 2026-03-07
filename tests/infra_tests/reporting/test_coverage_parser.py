@@ -11,11 +11,6 @@ from pathlib import Path
 import pytest
 
 from infrastructure.reporting.coverage_parser import (
-    _parse_failures_fallback,
-    _parse_failures_section,
-    _parse_failures_short,
-    _parse_failures_timeout,
-    _parse_failures_verbose,
     check_cov_datafile_support,
     extract_coverage_percentage,
     extract_failed_tests,
@@ -46,75 +41,41 @@ E   Timeout: test timed out after 10 seconds
 """
 
 
-class TestParseFailuresSection:
-    def test_extracts_test_from_failures_section(self):
-        results = _parse_failures_section(FAILURES_SECTION_OUTPUT)
-        assert len(results) == 1
-        assert results[0]["test"] == "testSomething"
-        assert results[0]["error_type"] == "AssertionError"
-
-    def test_returns_empty_for_unrelated_output(self):
-        assert _parse_failures_section("no failures here") == []
-
-
-class TestParseFailuresVerbose:
-    def test_extracts_failed_from_verbose(self):
-        results = _parse_failures_verbose(VERBOSE_OUTPUT)
-        assert len(results) == 1
-        assert results[0]["test"] == "tests/test_foo.py::test_bar"
-
-    def test_ignores_passed_lines(self):
-        results = _parse_failures_verbose("tests/foo.py::test_x PASSED")
-        assert results == []
-
-
-class TestParseFailuresShort:
-    def test_extracts_from_short_lines(self):
-        results = _parse_failures_short(SHORT_OUTPUT)
-        assert len(results) == 2
-        tests = [r["test"] for r in results]
-        assert "tests/test_foo.py::test_one" in tests
-        assert "tests/test_bar.py::test_two" in tests
-
-    def test_extracts_error_type_when_present(self):
-        results = _parse_failures_short(SHORT_OUTPUT)
-        one = next(r for r in results if "test_one" in r["test"])
-        assert one["error_type"] == "AssertionError"
-
-
-class TestParseFailuresTimeout:
-    def test_extracts_timeout_context(self):
-        results = _parse_failures_timeout(TIMEOUT_OUTPUT)
-        assert len(results) == 1
-        assert results[0]["error_type"] == "TimeoutError"
-
-    def test_empty_on_no_timeout(self):
-        assert _parse_failures_timeout("no timeouts here") == []
-
-
-class TestParseFailuresFallback:
-    def test_extracts_failed_line(self):
-        output = "FAILED tests/test_x.py::test_y"
-        results = _parse_failures_fallback(output)
-        assert len(results) == 1
-        assert results[0]["test"] == "tests/test_x.py::test_y"
-
-    def test_empty_on_no_matches(self):
-        assert _parse_failures_fallback("nothing here") == []
-
-
 class TestExtractFailedTests:
     def test_prefers_section_strategy(self):
         results = extract_failed_tests(FAILURES_SECTION_OUTPUT, "")
         assert len(results) == 1
         assert results[0]["test"] == "testSomething"
+        assert results[0]["error_type"] == "AssertionError"
 
     def test_falls_back_to_short_when_no_section(self):
         results = extract_failed_tests(SHORT_OUTPUT, "")
         assert len(results) == 2
+        tests = [r["test"] for r in results]
+        assert "tests/test_foo.py::test_one" in tests
+        assert "tests/test_bar.py::test_two" in tests
+
+    def test_short_strategy_extracts_error_type(self):
+        results = extract_failed_tests(SHORT_OUTPUT, "")
+        one = next(r for r in results if "test_one" in r["test"])
+        assert one["error_type"] == "AssertionError"
+
+    def test_falls_back_to_verbose_format(self):
+        results = extract_failed_tests(VERBOSE_OUTPUT, "")
+        assert len(results) == 1
+        assert results[0]["test"] == "tests/test_foo.py::test_bar"
+
+    def test_timeout_output_detected(self):
+        results = extract_failed_tests(TIMEOUT_OUTPUT, "")
+        assert any(r["error_type"] == "TimeoutError" for r in results)
 
     def test_returns_empty_on_clean_run(self):
         assert extract_failed_tests("1 passed in 0.1s", "") == []
+
+    def test_fallback_for_plain_failed_line(self):
+        results = extract_failed_tests("FAILED tests/test_x.py::test_y", "")
+        assert len(results) == 1
+        assert results[0]["test"] == "tests/test_x.py::test_y"
 
 
 class TestExtractTimeoutErrors:

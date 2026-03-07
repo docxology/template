@@ -43,14 +43,9 @@ from typing import Callable, Optional
 
 import numpy as np
 
-# Add logging support
-try:
-    from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging_utils import get_logger
 
-    logger = get_logger(__name__)
-    LOGGING_AVAILABLE = True
-except ImportError:
-    LOGGING_AVAILABLE = False
+logger = get_logger(__name__)
 
 
 @dataclass
@@ -266,8 +261,7 @@ def gradient_descent(
     converged = False
     objective_history = [objective_func(x)]  # Track initial objective value
 
-    if LOGGING_AVAILABLE and logger:
-        logger.debug(f"Starting gradient descent with x0={x}, step_size={step_size}")
+    logger.debug(f"Starting gradient descent with x0={x}, step_size={step_size}")
 
     while iteration < max_iterations:
         grad = gradient_func(x)
@@ -275,15 +269,13 @@ def gradient_descent(
 
         if verbose and iteration % 100 == 0:
             obj_val = objective_func(x)
-            if LOGGING_AVAILABLE and logger:
-                logger.info(
-                    f"Iteration {iteration}: x={x}, f(x)={obj_val:.6f}, ||∇f||={grad_norm:.6f}"
-                )
+            logger.info(
+                f"Iteration {iteration}: x={x}, f(x)={obj_val:.6f}, ||∇f||={grad_norm:.6f}"
+            )
 
         if grad_norm < tolerance:
             converged = True
-            if LOGGING_AVAILABLE and logger:
-                logger.debug(f"Converged at iteration {iteration} with ||∇f||={grad_norm:.2e}")
+            logger.debug(f"Converged at iteration {iteration} with ||∇f||={grad_norm:.2e}")
             break
 
         # Update: x = x - step_size * ∇f(x)
@@ -296,15 +288,14 @@ def gradient_descent(
     final_obj_value = objective_func(x)
     final_grad_norm = np.linalg.norm(gradient_func(x))
 
-    if LOGGING_AVAILABLE and logger:
-        if converged:
-            logger.info(
-                f"Gradient descent converged in {iteration} iterations, final f(x)={final_obj_value:.6f}"  # noqa: E501
-            )
-        else:
-            logger.warning(
-                f"Gradient descent did not converge within {max_iterations} iterations, final f(x)={final_obj_value:.6f}"  # noqa: E501
-            )
+    if converged:
+        logger.info(
+            f"Gradient descent converged in {iteration} iterations, final f(x)={final_obj_value:.6f}"  # noqa: E501
+        )
+    else:
+        logger.warning(
+            f"Gradient descent did not converge within {max_iterations} iterations, final f(x)={final_obj_value:.6f}"  # noqa: E501
+        )
 
     return OptimizationResult(
         solution=x,

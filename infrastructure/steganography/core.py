@@ -9,6 +9,7 @@ output PDF.
 from __future__ import annotations
 
 import io
+import os
 import shutil
 import tempfile
 from pathlib import Path
@@ -138,7 +139,9 @@ class SteganographyProcessor:
 
     def _make_working_copy(self, input_pdf: Path) -> Path:
         """Copy the input PDF to a temp file for in-place mutations."""
-        tmp = Path(tempfile.mktemp(suffix=".pdf", prefix="steg_"))
+        fd, tmp_str = tempfile.mkstemp(suffix=".pdf", prefix="steg_")
+        os.close(fd)
+        tmp = Path(tmp_str)
         shutil.copy2(str(input_pdf), str(tmp))
         return tmp
 

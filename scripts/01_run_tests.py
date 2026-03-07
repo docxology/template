@@ -133,7 +133,7 @@ def run_infrastructure_tests(
     ])
     if not include_slow:
         cmd.extend(["-m", "not slow"])
-    cmd.extend(["-q", "--tb=short"])
+    cmd.extend(["-q"])
 
     pythonpath_parts = [str(repo_root), str(repo_root / "infrastructure")]
     project_src = project_root / "src"
@@ -237,9 +237,7 @@ def run_project_tests(
     if not include_slow:
         cmd.extend(["-m", "not slow"])
     if quiet:
-        cmd.extend(["-q", "--tb=short"])
-    else:
-        cmd.extend(["--tb=short"])
+        cmd.extend(["-q"])
     if shutil.which("uv"):
         env["PATH"] = f"{os.path.dirname(shutil.which('uv'))}:{env.get('PATH', '')}"
 

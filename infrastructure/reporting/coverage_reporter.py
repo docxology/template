@@ -258,13 +258,13 @@ def generate_test_report(
         coverage_details = {}
 
         # Try to read infrastructure coverage details
-        infra_coverage_json = repo_root / "htmlcov" / "coverage.json"
+        infra_coverage_json = repo_root / "coverage_infra.json"
         infra_coverage = parse_coverage_json(infra_coverage_json)
         if infra_coverage:
             coverage_details["infrastructure"] = infra_coverage
 
         # Try to read project coverage details
-        project_coverage_json = repo_root / "htmlcov" / "coverage.json"
+        project_coverage_json = repo_root / "coverage_project.json"
         project_coverage = parse_coverage_json(project_coverage_json)
         if project_coverage:
             coverage_details["project"] = project_coverage
