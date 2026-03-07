@@ -384,11 +384,8 @@ class PipelineSummaryGenerator:
         percentage = (result.duration * 100) / total_duration if total_duration > 0 else 0
 
         if result.success:
-            # Check if this is the slowest stage
-            if (
-                self._find_slowest_stage([result] * 2)  # Mock comparison
-                and result.duration > 10
-            ):  # Only highlight if > 10 seconds
+            # Highlight as bottleneck if this stage took more than 10 seconds
+            if result.duration > 10:
                 return f"✓ Stage {result.stage_num}: {result.stage_name} ({duration_formatted}, {percentage:.1f}%) ⚠ bottleneck"  # noqa: E501
             else:
                 return f"✓ Stage {result.stage_num}: {result.stage_name} ({duration_formatted}, {percentage:.1f}%)"  # noqa: E501

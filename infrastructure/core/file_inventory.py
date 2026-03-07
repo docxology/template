@@ -67,10 +67,7 @@ class FileInventoryManager:
         entries: List[FileInventoryEntry] = []
 
         # Check if output directory exists and is a directory
-        exists_check = output_dir.exists()
-        is_dir_check = output_dir.is_dir()
-
-        if not exists_check or not is_dir_check:
+        if not output_dir.exists() or not output_dir.is_dir():
             logger.warning(f"Output directory not found: {output_dir}")
             return entries
 

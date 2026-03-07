@@ -154,7 +154,13 @@ def load_config(config_path: Path | str) -> Optional[ManuscriptConfig]:
             if isinstance(data, dict):
                 validate_config_keys(data, config_path)
             return data  # type: ignore[no-any-return]  # yaml.safe_load returns Any
-    except (FileNotFoundError, PermissionError, yaml.YAMLError):
+    except FileNotFoundError:
+        return None
+    except PermissionError as e:
+        logger.warning(f"Permission denied reading config {config_path}: {e}")
+        return None
+    except yaml.YAMLError as e:
+        logger.warning(f"YAML parse error in config {config_path}: {e}")
         return None
 
 

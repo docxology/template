@@ -7,7 +7,7 @@ from their submodules:
     infrastructure.core.exceptions    — full exception hierarchy
     infrastructure.core.config_loader — load_config, get_config_as_dict
     infrastructure.core.environment   — check_python_version, setup_directories
-    infrastructure.core.performance   — CodeProfiler, ProfilingMetrics, etc.
+    infrastructure.core.function_profiler — CodeProfiler, ProfilingMetrics, etc.
     infrastructure.core.checkpoint    — PipelineCheckpoint, StageResult
     infrastructure.core.pipeline      — PipelineConfig, PipelineExecutor
     infrastructure.core.multi_project — MultiProjectConfig, MultiProjectResult

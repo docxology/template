@@ -74,12 +74,6 @@ MENU_SCRIPT_MAPPING = {
     ),
 }
 
-try:
-    from infrastructure.llm.review.pipeline_runner import ReviewMode
-except ImportError:
-    _logger.debug("LLM review module not available; ReviewMode not exported")
-
 __all__ = [
     "MENU_SCRIPT_MAPPING",
-    "ReviewMode",
 ]

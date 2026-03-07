@@ -27,7 +27,6 @@ from infrastructure.core.errors import (
     PIPELINE_EXECUTION_FAILED,
     PIPELINE_STAGES_INCOMPLETE,
     PROJECTS_INCOMPLETE,
-    SUMMARY_FAILED,
 )
 
 logger = get_logger(__name__)
@@ -91,24 +90,6 @@ def create_parser() -> argparse.ArgumentParser:
         "--categories", nargs="+", help="Categories to scan (default: all)"
     )
 
-    # Summary command
-    summary_parser = subparsers.add_parser(
-        "summary", help="Generate pipeline summary (for testing)"
-    )
-    summary_parser.add_argument("--output-dir", type=Path, required=True, help="Output directory")
-    summary_parser.add_argument(
-        "--format",
-        choices=["text", "json", "html"],
-        default="text",
-        help="Output format",
-    )
-    summary_parser.add_argument("--log-file", type=Path, help="Pipeline log file")
-    summary_parser.add_argument(
-        "--skip-infra",
-        action="store_true",
-        help="Whether infrastructure tests were skipped",
-    )
-
     # Project discovery command
     discover_parser = subparsers.add_parser("discover", help="Discover available projects")
     discover_parser.add_argument(
@@ -139,8 +120,6 @@ def main() -> int:
             return handle_multi_project_command(args)
         elif args.command == "inventory":
             return handle_inventory_command(args)
-        elif args.command == "summary":
-            return handle_summary_command(args)
         elif args.command == "discover":
             return handle_discover_command(args)
         else:
@@ -298,47 +277,6 @@ def handle_inventory_command(args: argparse.Namespace) -> int:
 
     except Exception as e:
         logger.error(INVENTORY_FAILED.format(error=e))
-        return 1
-
-
-def handle_summary_command(args: argparse.Namespace) -> int:
-    """Handle summary generation command."""
-    from infrastructure.core.pipeline import PipelineStageResult
-    from infrastructure.core.pipeline_summary import PipelineSummaryGenerator
-
-    logger.info("Generating pipeline summary (for testing)")
-
-    try:
-        # For testing purposes, create a mock summary
-        # In real usage, this would be called with actual stage results
-        generator = PipelineSummaryGenerator()
-
-        # Create mock stage results for demonstration
-
-        mock_results = [
-            PipelineStageResult(1, "Environment Setup", True, 2.5),
-            PipelineStageResult(2, "Infrastructure Tests", True, 15.3),
-            PipelineStageResult(3, "Project Tests", True, 8.7),
-            PipelineStageResult(4, "Project Analysis", True, 12.1),
-            PipelineStageResult(5, "PDF Rendering", True, 45.2),
-            PipelineStageResult(6, "Output Validation", True, 3.8),
-            PipelineStageResult(7, "Copy Outputs", True, 1.2),
-        ]
-
-        summary = generator.generate_summary(
-            mock_results,
-            sum(r.duration for r in mock_results),
-            args.output_dir,
-            args.log_file,
-            args.skip_infra,
-        )
-
-        formatted = generator.format_summary(summary, args.format)
-        print(formatted)
-        return 0
-
-    except Exception as e:
-        logger.error(SUMMARY_FAILED.format(error=e))
         return 1
 
 

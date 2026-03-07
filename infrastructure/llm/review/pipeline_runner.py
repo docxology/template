@@ -162,11 +162,12 @@ def run_llm_review_pipeline(
                 for i, lang_code in enumerate(translation_languages, 1):
                     lang_name = TRANSLATION_LANGUAGES.get(lang_code, lang_code)
                     log_progress(i, len(translation_languages), f"Translation: {lang_name}", logger)
-                    response, metrics = generate_translation(client, text, lang_code, model_name)  # type: ignore
+                    response, metrics = generate_translation(client, text, lang_code, model_name)
                     review_name = f"translation_{lang_code}"
-                    reviews[review_name] = response
                     session_metrics.reviews[review_name] = metrics
-                    save_single_review(review_name, response, output_dir, model_name, metrics)  # type: ignore
+                    if response is not None:
+                        reviews[review_name] = response
+                        save_single_review(review_name, response, output_dir, model_name, metrics)  # type: ignore
             elif mode == ReviewMode.TRANSLATIONS_ONLY:
                 logger.warning("\n⚠️  No translation languages configured")
                 return 2

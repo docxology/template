@@ -43,16 +43,8 @@ class IntegrityReport:
 def verify_file_integrity(
     file_paths: list[Path], expected_hashes: Optional[dict[str, str]] = None
 ) -> dict[str, bool]:
-    """Verify file integrity using hash comparison.
-
-    Args:
-        file_paths: List of file paths to verify
-        expected_hashes: Optional dictionary of expected hashes
-
-    Returns:
-        Dictionary mapping file paths to integrity status
-    """
-    logger.info(f"Verifying integrity of {len(file_paths)} files")
+    """Verify file integrity using hash comparison."""
+    logger.debug(f"Verifying integrity of {len(file_paths)} files")
     integrity = {}
 
     for file_path in file_paths:
@@ -84,15 +76,8 @@ def verify_file_integrity(
 
 
 def verify_cross_references(markdown_files: list[Path]) -> dict[str, bool]:
-    """Verify cross-reference integrity in markdown files.
-
-    Args:
-        markdown_files: List of markdown files to check
-
-    Returns:
-        Dictionary mapping reference types to integrity status
-    """
-    logger.info(f"Verifying cross-references in {len(markdown_files)} files")
+    """Verify cross-reference integrity in markdown files."""
+    logger.debug(f"Verifying cross-references in {len(markdown_files)} files")
     integrity = {
         "equations": True,
         "figures": True,
@@ -157,15 +142,8 @@ def verify_cross_references(markdown_files: list[Path]) -> dict[str, bool]:
 
 
 def verify_data_consistency(data_files: list[Path]) -> dict[str, bool]:
-    """Verify data file consistency and integrity.
-
-    Args:
-        data_files: List of data files to check
-
-    Returns:
-        Dictionary mapping consistency checks to status
-    """
-    logger.info(f"Verifying data consistency for {len(data_files)} files")
+    """Verify data file consistency and integrity."""
+    logger.debug(f"Verifying data consistency for {len(data_files)} files")
     consistency = {
         "file_readable": True,
         "data_integrity": True,
@@ -214,14 +192,7 @@ def verify_data_consistency(data_files: list[Path]) -> dict[str, bool]:
 
 
 def verify_academic_standards(markdown_files: list[Path]) -> dict[str, bool]:
-    """Verify compliance with academic writing standards.
-
-    Args:
-        markdown_files: List of markdown files to check
-
-    Returns:
-        Dictionary mapping academic standards to compliance status
-    """
+    """Verify compliance with academic writing standards."""
     combined_content = ""
     for md_file in markdown_files:
         try:
@@ -271,17 +242,7 @@ def verify_academic_standards(markdown_files: list[Path]) -> dict[str, bool]:
 def verify_output_integrity(
     output_dir: Path, manuscript_dir: Optional[Path] = None
 ) -> IntegrityReport:
-    """Perform comprehensive integrity verification of all outputs.
-
-    Args:
-        output_dir: Output directory to verify
-        manuscript_dir: Optional manuscript directory for academic standards check.
-                       If provided, academic standards will be checked against manuscript
-                       files instead of output markdown files.
-
-    Returns:
-        IntegrityReport with comprehensive verification results
-    """
+    """Perform comprehensive integrity verification of all outputs."""
     report = IntegrityReport()
 
     if not output_dir.exists():

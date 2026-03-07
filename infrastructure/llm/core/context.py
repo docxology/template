@@ -69,22 +69,7 @@ class ConversationContext:
         return [m.to_dict() for m in self.messages]
 
     def clear(self) -> None:
-        """Clear all messages and reset token tracking.
-
-        Removes all messages from the conversation context and resets the
-        estimated token count to zero. Increments the internal clear counter
-        for usage statistics tracking.
-
-        Returns:
-            None
-
-        Example:
-            >>> context = ConversationContext(max_tokens=4096)
-            >>> context.add_message("user", "Hello")
-            >>> context.clear()
-            >>> len(context.messages)
-            0
-        """
+        """Clear all messages and reset token count."""
         messages_before = len(self.messages)
         tokens_before = self.estimated_tokens
 

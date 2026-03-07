@@ -190,7 +190,7 @@ class SystemHealthChecker:
                 results[dep] = "missing"
 
         # Check optional dependencies
-        optional_deps = ["ollama", "scikit-learn", "reportlab"]
+        optional_deps = ["ollama", "reportlab"]
         results["optional"] = {}
         for dep in optional_deps:
             try:

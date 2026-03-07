@@ -715,7 +715,7 @@ def generate_improvement_suggestions(
 
 def generate_translation(
     client: LLMClient, text: str, language_code: str, model_name: str = ""
-) -> tuple[str, ReviewMetrics]:
+) -> tuple[str | None, ReviewMetrics]:
     target_language = TRANSLATION_LANGUAGES.get(language_code, language_code)
     log_substep(f"Generating translation ({target_language})...")
 
@@ -738,12 +738,10 @@ def generate_translation(
         response = _stream_with_heartbeat(
             client, prompt, options, f"translation ({target_language})", max_tokens, _cfg
         )
-    except Exception as e:  # noqa: BLE001 — intentional: translation errors are non-fatal, return error string
+    except Exception as e:  # noqa: BLE001 — intentional: translation errors are non-fatal
         metrics.generation_time_seconds = time.time() - start_time
-        error_response = f"*Error generating translation to {target_language}: {e}*"
-        metrics.output_chars = len(error_response)
-        metrics.output_words = len(error_response.split())
-        return error_response, metrics
+        logger.warning(f"Translation to {target_language} failed: {e}")
+        return None, metrics
 
     metrics.generation_time_seconds = time.time() - start_time
     metrics.output_chars = len(response)
