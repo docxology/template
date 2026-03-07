@@ -278,26 +278,20 @@ class SystemHealthChecker:
         return summary
 
 
-_checker: SystemHealthChecker | None = None
-
-
-def _get_checker() -> SystemHealthChecker:
-    global _checker
-    if _checker is None:
-        _checker = SystemHealthChecker()
-    return _checker
+# Module-level singleton so start_time captures the actual process start for uptime metrics.
+_checker = SystemHealthChecker()
 
 
 def quick_health_check() -> bool:
     """Return True if system is healthy."""
-    return _get_checker().is_healthy()
+    return _checker.is_healthy()
 
 
 def get_health_status() -> dict[str, Any]:
     """Get detailed health status."""
-    return _get_checker().get_health_status()
+    return _checker.get_health_status()
 
 
 def get_health_metrics() -> dict[str, Any]:
     """Get health metrics for monitoring systems."""
-    return _get_checker().get_metrics()
+    return _checker.get_metrics()
