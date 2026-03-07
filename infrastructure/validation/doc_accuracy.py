@@ -185,7 +185,7 @@ def check_links(
                                     )
                                 )
         except Exception as e:
-            logger.warning("Error checking links in %s: %s", md_file, e)
+            logger.warning(f"Error checking links in {md_file}: {e}")
 
     return issues
 
@@ -236,7 +236,7 @@ def verify_commands(md_files: List[Path], repo_root: Path) -> List[AccuracyIssue
                                         )
                                     )
         except Exception as e:
-            logger.debug("Failed to check command references in %s: %s", md_file, e)
+            logger.debug(f"Failed to check command references in {md_file}: {e}")
 
     return issues
 
@@ -274,7 +274,7 @@ def check_file_paths(md_files: List[Path], repo_root: Path) -> List[AccuracyIssu
                                 )
                             )
         except Exception as e:
-            logger.debug("Failed to check file paths in %s: %s", md_file, e)
+            logger.debug(f"Failed to check file paths in {md_file}: {e}")
 
     return issues
 
@@ -292,7 +292,7 @@ def validate_config_options(
             with open(config_files["config.yaml"], "r") as f:
                 config_data["yaml"] = yaml.safe_load(f) or {}
         except Exception as e:
-            logger.debug("Failed to load config.yaml for validation: %s", e)
+            logger.debug(f"Failed to load config.yaml for validation: {e}")
 
     # Check documentation for config references
     # This is a simplified check - could be enhanced to actually validate against config schema
@@ -330,27 +330,27 @@ def run_accuracy_phase(
             content = md_file.read_text(encoding="utf-8")
             all_headings[str(md_file.relative_to(repo_root))] = extract_headings(content)
         except Exception as e:
-            logger.warning("Error reading %s: %s", md_file, e)
+            logger.warning(f"Error reading {md_file}: {e}")
 
     # Check links
     link_issues = check_links(md_files, repo_root, all_headings)
-    logger.info("Found %d link issues", len(link_issues))
+    logger.info(f"Found {len(link_issues)} link issues")
 
     # Verify commands
     command_issues = verify_commands(md_files, repo_root)
-    logger.info("Found %d command accuracy issues", len(command_issues))
+    logger.info(f"Found {len(command_issues)} command accuracy issues")
 
     # Check file paths
     path_issues = check_file_paths(md_files, repo_root)
-    logger.info("Found %d file path issues", len(path_issues))
+    logger.info(f"Found {len(path_issues)} file path issues")
 
     # Validate configuration options
     config_issues = validate_config_options(md_files, config_files)
-    logger.info("Found %d configuration issues", len(config_issues))
+    logger.info(f"Found {len(config_issues)} configuration issues")
 
     # Check terminology consistency
     terminology_issues = check_terminology(md_files)
-    logger.info("Found %d terminology issues", len(terminology_issues))
+    logger.info(f"Found {len(terminology_issues)} terminology issues")
 
     # Combine all accuracy issues
     accuracy_issues = command_issues + path_issues + config_issues + terminology_issues

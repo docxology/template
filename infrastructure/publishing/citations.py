@@ -209,7 +209,7 @@ def extract_citations_from_markdown(markdown_files: List[Path]) -> List[str]:
                 citations.update(matches)
 
         except Exception as e:
-            logger.debug("Cannot extract citations from %s: %s", md_file, e)
+            logger.debug(f"Cannot extract citations from {md_file}: {e}")
             continue
 
     return sorted(list(citations))

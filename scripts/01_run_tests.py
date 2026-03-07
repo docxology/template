@@ -321,7 +321,6 @@ def report_results(
         passed = infra_results.get("passed", 0)
         failed = infra_results.get("failed", 0)
         skipped = infra_results.get("skipped", 0)
-        infra_results.get("total", 0)
         coverage = infra_results.get("coverage_percent", 0)
 
         logger.info("Infrastructure Results:")
@@ -420,7 +419,6 @@ def report_results(
         passed = project_results.get("passed", 0)
         failed = project_results.get("failed", 0)
         skipped = project_results.get("skipped", 0)
-        project_results.get("total", 0)
         coverage = project_results.get("coverage_percent", 0)
 
         logger.info("Project Results:")

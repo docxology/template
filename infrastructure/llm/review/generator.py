@@ -210,13 +210,8 @@ def validate_review_quality(
         details["scores_found"] = scores_found
 
         has_assessment = any(
-            (
-                "clarity" in response_lower,
-                "structure" in response_lower,
-                "readability" in response_lower,
-                "technical accuracy" in response_lower,
-                "overall quality" in response_lower,
-            )
+            kw in response_lower
+            for kw in ("clarity", "structure", "readability", "technical accuracy", "overall quality")
         )
         details["has_assessment"] = has_assessment
 
@@ -240,13 +235,8 @@ def validate_review_quality(
         details["sections_found"] = found_sections
 
         has_methodology_content = any(
-            (
-                "research design" in response_lower,
-                "methodology" in response_lower,
-                "approach" in response_lower,
-                "methods" in response_lower,
-                "experimental" in response_lower,
-            )
+            kw in response_lower
+            for kw in ("research design", "methodology", "approach", "methods", "experimental")
         )
         details["has_methodology_content"] = has_methodology_content
 
@@ -270,13 +260,8 @@ def validate_review_quality(
         details["priorities_found"] = found_priorities
 
         has_recommendations = any(
-            (
-                "recommendation" in response_lower,
-                "suggest" in response_lower,
-                "improve" in response_lower,
-                "fix" in response_lower,
-                "address" in response_lower,
-            )
+            kw in response_lower
+            for kw in ("recommendation", "suggest", "improve", "fix", "address")
         )
         details["has_recommendations"] = has_recommendations
 
@@ -284,12 +269,10 @@ def validate_review_quality(
             issues.append("Missing priority sections or recommendations")
 
     elif review_type == "translation":
-        has_english = any(
-            (
-                "english abstract" in response_lower,
-                "## english" in response_lower,
-                "abstract" in response_lower and "english" in response_lower,
-            )
+        has_english = (
+            "english abstract" in response_lower
+            or "## english" in response_lower
+            or ("abstract" in response_lower and "english" in response_lower)
         )
         details["has_english_section"] = has_english
 

@@ -77,8 +77,8 @@ class SteganographyProcessor:
         logger.info(
             "╔══ Steganography Processing ═══════════════════════════════╗"
         )
-        logger.info("║  Input:  %s", input_pdf.name)
-        logger.info("║  Output: %s", output_pdf.name)
+        logger.info(f"║  Input:  {input_pdf.name}")
+        logger.info(f"║  Output: {output_pdf.name}")
 
         # Start with a working copy
         working_pdf = self._make_working_copy(input_pdf)
@@ -91,7 +91,7 @@ class SteganographyProcessor:
             # 2. Generate document ID
             from infrastructure.steganography.encryption import generate_document_id
             self._document_id = generate_document_id()
-            logger.info("║  Doc-ID: %s", self._document_id)
+            logger.info(f"║  Doc-ID: {self._document_id}")
 
             # 3. Apply overlays and barcodes (merged onto each page)
             if self.config.overlays_enabled or self.config.barcodes_enabled:
@@ -120,7 +120,7 @@ class SteganographyProcessor:
 
             # Copy working file to final destination
             shutil.copy2(str(working_pdf), str(output_pdf))
-            logger.info("║  ✓ Steganography PDF written: %s", output_pdf.name)
+            logger.info(f"║  ✓ Steganography PDF written: {output_pdf.name}")
             logger.info(
                 "╚═══════════════════════════════════════════════════════════╝"
             )
@@ -150,7 +150,7 @@ class SteganographyProcessor:
             pdf_path, algorithms=self.config.hash_algorithms
         )
         for algo, digest in self._hashes.items():
-            logger.info("║  %s: %s", algo.upper(), digest[:32] + "…")
+            logger.info(f"║  {algo.upper()}: {digest[:32] + "…"}")
 
     def _step_overlays_and_barcodes(
         self,
@@ -297,7 +297,7 @@ class SteganographyProcessor:
         # Replace working copy
         working_pdf.unlink()
         out_path.rename(working_pdf)
-        logger.info("║  ✓ Overlays and barcodes applied to %d pages", total_pages)
+        logger.info(f"║  ✓ Overlays and barcodes applied to {total_pages} pages")
         return working_pdf
 
     def _step_metadata(

@@ -89,7 +89,7 @@ def generate_qr_code(
     buf = io.BytesIO()
     img.save(buf, format="PNG")
     buf.seek(0)
-    logger.debug("QR code generated, data length=%d, image size=%d bytes", len(data), buf.getbuffer().nbytes)
+    logger.debug(f"QR code generated, data length={len(data)}, image size={buf.getbuffer().nbytes} bytes")
     return buf.getvalue()
 
 
@@ -126,7 +126,7 @@ def generate_code128(
         "text_distance": 2,
     })
     buf.seek(0)
-    logger.debug("Code128 barcode generated for data: %s…", data[:30])
+    logger.debug(f"Code128 barcode generated for data: {data[:30]}…")
     return buf.getvalue()
 
 
@@ -168,7 +168,7 @@ def build_barcode_payload(
             parts.append(f"{k}:{v}")
 
     payload = "|".join(parts)
-    logger.debug("Barcode payload built: %s", payload[:80])
+    logger.debug(f"Barcode payload built: {payload[:80]}")
     return payload
 
 
@@ -360,7 +360,7 @@ def create_barcode_strip_overlay(
                 mask="auto",
             )
         except Exception as exc:
-            logger.warning("QR code rendering failed for %s: %s", label, exc)
+            logger.warning(f"QR code rendering failed for {label}: {exc}")
 
         # Label centred below QR
         c.saveState()
@@ -393,7 +393,7 @@ def create_barcode_strip_overlay(
         c.drawString(barcode_x_start, label_y, safe_data[:40])
         c.restoreState()
     except Exception as exc:
-        logger.warning("Code128 rendering failed: %s", exc)
+        logger.warning(f"Code128 rendering failed: {exc}")
 
     # ── Timestamp (far right, vertically centred) ────────────────────
     c.saveState()

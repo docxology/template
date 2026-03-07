@@ -74,7 +74,7 @@ def verify_file_integrity(
                 integrity[str(file_path)] = actual_hash is not None
 
         except OSError as e:
-            logger.error("Error verifying %s: %s", file_path, e, exc_info=True)
+            logger.error(f"Error verifying {file_path}: {e}")
             integrity[str(file_path)] = False
 
     passed = sum(1 for v in integrity.values() if v)
@@ -122,7 +122,7 @@ def verify_cross_references(markdown_files: list[Path]) -> dict[str, bool]:
             references.update(eqref_matches)
 
         except OSError as e:
-            logger.error("Error reading %s: %s", md_file, e, exc_info=True)
+            logger.error(f"Error reading {md_file}: {e}")
             # Skip unreadable file; do not poison results for files that succeeded
 
     # Check if all references have corresponding labels, broken down by type prefix
@@ -206,7 +206,7 @@ def verify_data_consistency(data_files: list[Path]) -> dict[str, bool]:
                     pickle.load(f)  # nosec B301 — validating project's own output files
 
         except (OSError, ValueError, pickle.UnpicklingError) as e:
-            logger.warning("Data integrity check failed for %s: %s", data_file, e, exc_info=True)
+            logger.warning(f"Data integrity check failed for {data_file}: {e}")
             consistency["data_integrity"] = False
 
     return consistency
@@ -227,7 +227,7 @@ def verify_academic_standards(markdown_files: list[Path]) -> dict[str, bool]:
             with open(md_file, "r", encoding="utf-8") as f:
                 combined_content += f.read() + "\n"
         except OSError as e:
-            logger.warning("Could not read markdown file %s: %s", md_file, e)
+            logger.warning(f"Could not read markdown file {md_file}: {e}")
 
     content_lower = combined_content.lower()
 

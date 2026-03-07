@@ -65,7 +65,7 @@ def build_api_index(src_dir: str) -> List[ApiEntry]:
             with open(py_path, "r", encoding="utf-8") as fh:
                 tree = ast.parse(fh.read(), filename=py_path)
         except Exception as e:
-            logger.debug("Skipping %s (parse error): %s", py_path, e)
+            logger.debug(f"Skipping {py_path} (parse error): {e}")
             continue
         module = Path(py_path).relative_to(src_dir).as_posix().replace("/", ".")
         # Normalize module names deterministically without branching

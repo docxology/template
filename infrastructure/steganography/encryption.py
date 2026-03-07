@@ -73,7 +73,7 @@ def encrypt_payload(
         "nonce": base64.b64encode(nonce).decode(),
         "key": base64.b64encode(key).decode(),
     }
-    logger.debug("Payload encrypted (AES-256-GCM), ciphertext length=%d", len(ciphertext))
+    logger.debug(f"Payload encrypted (AES-256-GCM), ciphertext length={len(ciphertext)}")
     return result
 
 
@@ -127,7 +127,7 @@ def generate_fingerprint(
         secret = secrets.token_hex(32)
 
     fp = hmac.new(secret.encode("utf-8"), content, hashlib.sha256).hexdigest()
-    logger.debug("HMAC-SHA256 fingerprint: %s…", fp[:16])
+    logger.debug(f"HMAC-SHA256 fingerprint: {fp[:16]}…")
 
     return {"fingerprint": fp, "secret": secret}
 
@@ -187,7 +187,7 @@ def apply_pdf_password(
     with open(output_pdf, "wb") as fh:
         writer.write(fh)
 
-    logger.info("PDF password protection applied → %s", output_pdf.name)
+    logger.info(f"PDF password protection applied → {output_pdf.name}")
     return output_pdf
 
 

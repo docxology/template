@@ -69,18 +69,18 @@ def inject_pdf_metadata(
         try:
             xmp_bytes = xmp_string.encode("utf-8")
             writer.xmp_metadata = xmp_bytes  # type: ignore[assignment]
-            logger.debug("XMP metadata stream embedded (%d bytes)", len(xmp_bytes))
+            logger.debug(f"XMP metadata stream embedded ({len(xmp_bytes)} bytes)")
         except Exception as xmp_err:
-            logger.warning("XMP embedding failed (non-fatal): %s", xmp_err)
+            logger.warning(f"XMP embedding failed (non-fatal): {xmp_err}")
 
     # Embed file attachments if provided
     if attachments:
         for filename, content in attachments.items():
             try:
                 writer.add_attachment(filename, content)
-                logger.debug("Attachment embedded: %s (%d bytes)", filename, len(content))
+                logger.debug(f"Attachment embedded: {filename} ({len(content)} bytes)")
             except Exception as att_err:
-                logger.warning("Attachment '%s' failed (non-fatal): %s", filename, att_err)
+                logger.warning(f"Attachment '{filename}' failed (non-fatal): {att_err}")
 
     with open(output_pdf, "wb") as fh:
         writer.write(fh)
@@ -132,7 +132,7 @@ def build_document_metadata(doc: DocumentMetadata) -> Dict[str, str]:
             safe_key = k if k.startswith("/") else f"/{k}"
             meta[safe_key] = str(v)
 
-    logger.debug("Built document metadata with %d entries", len(meta))
+    logger.debug(f"Built document metadata with {len(meta)} entries")
     return meta
 
 
@@ -196,5 +196,5 @@ def build_xmp_packet(doc: DocumentMetadata) -> str:
 </x:xmpmeta>
 <?xpacket end="w"?>"""
 
-    logger.debug("XMP packet built (%d bytes)", len(xmp))
+    logger.debug(f"XMP packet built ({len(xmp)} bytes)")
     return xmp

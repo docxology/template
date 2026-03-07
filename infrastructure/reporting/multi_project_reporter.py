@@ -39,7 +39,7 @@ def generate_multi_project_report(
     Returns:
         Dictionary mapping file types to saved file paths
     """
-    logger.info("Starting multi-project reporting for %d projects...", len(project_names))
+    logger.info(f"Starting multi-project reporting for {len(project_names)} projects...")
 
     all_files = {}
 
@@ -51,14 +51,14 @@ def generate_multi_project_report(
         dashboard_files = generate_all_dashboards(summary, output_dir)
         all_files.update(dashboard_files)
 
-        logger.info("Multi-project reporting complete. Generated %d files.", len(all_files))
+        logger.info(f"Multi-project reporting complete. Generated {len(all_files)} files.")
         for file_type, path in all_files.items():
-            logger.info("  %s: %s", file_type.upper(), path.name)
+            logger.info(f"  {file_type.upper()}: {path.name}")
 
         return all_files
 
     except Exception as e:
-        logger.error("Multi-project reporting failed: %s", e)
+        logger.error(f"Multi-project reporting failed: {e}")
         raise
 
 
@@ -131,7 +131,7 @@ def generate_multi_project_summary_report(
                     "total_pipeline_time": sum(durations),
                 }
         except (TypeError, KeyError, IndexError, ZeroDivisionError) as e:
-            logger.warning("Error calculating performance analysis: %s", e)
+            logger.warning(f"Error calculating performance analysis: {e}")
             summary["performance_analysis"] = {}
 
     all_errors = []
@@ -170,14 +170,14 @@ def generate_multi_project_summary_report(
     with open(json_file, "w") as f:
         json.dump(summary, f, indent=2)
     saved_files["json"] = json_file
-    logger.info("Multi-project summary saved: %s", json_file)
+    logger.info(f"Multi-project summary saved: {json_file}")
 
     md_file = output_dir / "multi_project_summary.md"
     md_content = _format_multi_project_summary_markdown(summary)
     with open(md_file, "w") as f:
         f.write(md_content)
     saved_files["markdown"] = md_file
-    logger.info("Multi-project summary saved: %s", md_file)
+    logger.info(f"Multi-project summary saved: {md_file}")
 
     return saved_files
 

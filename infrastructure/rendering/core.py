@@ -93,7 +93,7 @@ class RenderManager:
                             else:
                                 error_msg += f" (PDF created: {size_mb:.2f} MB)"
                     except Exception as pdf_check_err:
-                        logger.debug("Failed to check PDF status: %s", pdf_check_err)
+                        logger.debug(f"Failed to check PDF status: {pdf_check_err}")
 
                     logger.warning(error_msg)
 

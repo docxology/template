@@ -39,10 +39,10 @@ def extract_metadata_command(args: argparse.Namespace) -> None:
     manuscript_dir = Path(args.manuscript_dir)
 
     if not manuscript_dir.exists():
-        logger.error("Directory not found: %s", manuscript_dir)
+        logger.error(f"Directory not found: {manuscript_dir}")
         sys.exit(1)
 
-    logger.info("Extracting metadata from: %s", manuscript_dir)
+    logger.info(f"Extracting metadata from: {manuscript_dir}")
     md_files = list(manuscript_dir.glob("*.md"))
 
     if not md_files:
@@ -80,7 +80,7 @@ def generate_citation_command(args: argparse.Namespace) -> None:
     manuscript_dir = Path(args.manuscript_dir)
 
     if not manuscript_dir.exists():
-        logger.error("Directory not found: %s", manuscript_dir)
+        logger.error(f"Directory not found: {manuscript_dir}")
         sys.exit(1)
 
     md_files = list(manuscript_dir.glob("*.md"))
@@ -93,7 +93,7 @@ def generate_citation_command(args: argparse.Namespace) -> None:
     if args.format == "bibtex":
         citation = generate_citation_bibtex(metadata)
     else:
-        logger.error("Unsupported format: %s", args.format)
+        logger.error(f"Unsupported format: {args.format}")
         sys.exit(1)
 
     print(citation)
@@ -128,7 +128,7 @@ def publish_zenodo_command(args: argparse.Namespace) -> None:
 
     output_dir = Path(args.output_dir)
     if not output_dir.exists():
-        logger.error("Directory not found: %s", output_dir)
+        logger.error(f"Directory not found: {output_dir}")
         sys.exit(1)
 
     # Find PDFs
@@ -137,7 +137,7 @@ def publish_zenodo_command(args: argparse.Namespace) -> None:
         logger.error("No PDF files found")
         sys.exit(1)
 
-    logger.info("Publishing %d files to Zenodo", len(pdfs))
+    logger.info(f"Publishing {len(pdfs)} files to Zenodo")
     config = ZenodoConfig(access_token=token, sandbox=True)
     client = ZenodoClient(config=config)
 
@@ -155,14 +155,14 @@ def publish_zenodo_command(args: argparse.Namespace) -> None:
 
     try:
         deposition_id = client.create_deposition(zenodo_metadata)
-        logger.info("Created Zenodo deposition: %s", deposition_id)
+        logger.info(f"Created Zenodo deposition: {deposition_id}")
         for pdf in pdfs:
             client.upload_file(deposition_id, str(pdf))
-            logger.info("Uploaded: %s", pdf.name)
+            logger.info(f"Uploaded: {pdf.name}")
         doi = client.publish(deposition_id)
         print(f"Published successfully! DOI: {doi}")
     except Exception as e:
-        logger.error("Zenodo upload failed: %s", e)
+        logger.error(f"Zenodo upload failed: {e}")
         sys.exit(1)
 
 
@@ -218,7 +218,7 @@ def main() -> None:
     try:
         args.func(args)
     except Exception as e:
-        logger.error("Command failed: %s", e)
+        logger.error(f"Command failed: {e}")
         sys.exit(1)
 
 

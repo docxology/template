@@ -63,7 +63,7 @@ def benchmark_function(
             try:
                 _ = func(test_input)
             except Exception as e:
-                logger.debug("Benchmark warm-up failed for %s: %s", func.__name__, e)
+                logger.debug(f"Benchmark warm-up failed for {func.__name__}: {e}")
 
         # Measure execution time
         start_time = time.perf_counter()
@@ -72,7 +72,7 @@ def benchmark_function(
             try:
                 func(test_input)
             except Exception as e:
-                logger.warning("Benchmark measurement failed for %s: %s", func.__name__, e)
+                logger.warning(f"Benchmark measurement failed for {func.__name__}: {e}")
 
         end_time = time.perf_counter()
         avg_time = (end_time - start_time) / iterations
@@ -85,7 +85,7 @@ def benchmark_function(
                 memory_info = process.memory_info()
                 memory_usages.append(memory_info.rss / 1024 / 1024)  # MB
             except Exception as e:
-                logger.debug("Memory measurement failed: %s", e)
+                logger.debug(f"Memory measurement failed: {e}")
                 memory_usages.append(None)
         else:
             memory_usages.append(None)

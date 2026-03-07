@@ -132,7 +132,7 @@ def identify_cross_references(md_files: List[Path]) -> Set[str]:
                 if not target.startswith("http") and not target.startswith("#"):
                     cross_refs.add(target)
         except Exception as e:
-            logger.debug("Failed to scan cross-refs in %s: %s", md_file, e)
+            logger.debug(f"Failed to scan cross-refs in {md_file}: {e}")
 
     return cross_refs
 
@@ -237,7 +237,7 @@ def analyze_documentation_file(md_file: Path, repo_root: Path) -> DocumentationF
             last_modified=mtime,
         )
     except Exception as e:
-        logger.error("Error analyzing %s: %s", md_file, e)
+        logger.error(f"Error analyzing {md_file}: {e}")
         return DocumentationFile(
             path=str(md_file),
             relative_path=str(md_file.relative_to(repo_root)),
@@ -259,19 +259,19 @@ def run_discovery_phase(repo_root: Path) -> Dict[str, Any]:
 
     # Find all markdown files
     md_files = find_markdown_files(repo_root)
-    logger.info("Found %d markdown files", len(md_files))
+    logger.info(f"Found {len(md_files)} markdown files")
 
     # Catalog AGENTS.md and README.md files
     agents_readme = catalog_agents_readme(md_files, repo_root)
-    logger.info("Found %d AGENTS.md/README.md files", len(agents_readme))
+    logger.info(f"Found {len(agents_readme)} AGENTS.md/README.md files")
 
     # Identify configuration files
     config_files = find_config_files(repo_root)
-    logger.info("Found %d configuration files", len(config_files))
+    logger.info(f"Found {len(config_files)} configuration files")
 
     # Map script files
     script_files = find_script_files(repo_root)
-    logger.info("Found %d script files", len(script_files))
+    logger.info(f"Found {len(script_files)} script files")
 
     # Create documentation hierarchy
     hierarchy = create_hierarchy(md_files, repo_root)

@@ -60,7 +60,7 @@ def main() -> int:
             inject_between_markers,
         )
     except Exception as exc:
-        logger.error("Failed to import glossary_gen from infrastructure/documentation/: %s", exc)
+        logger.error(f"Failed to import glossary_gen from infrastructure/documentation/: {exc}")
         return 1
 
     text = glossary_md.read_text(encoding="utf-8")
@@ -73,7 +73,7 @@ def main() -> int:
 
     if new_text != text:
         glossary_md.write_text(new_text, encoding="utf-8")
-        logger.info("Updated glossary: %s", glossary_md)
+        logger.info(f"Updated glossary: {glossary_md}")
     else:
         logger.info("Glossary up-to-date")
     return 0

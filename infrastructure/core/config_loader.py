@@ -390,7 +390,7 @@ def _safe_int_from_dict(config_dict: dict, key: str) -> Optional[int]:
     try:
         return int(val)
     except (ValueError, TypeError):
-        logger.debug("Invalid %s value: %r", key, val)
+        logger.debug(f"Invalid {key} value: {val!r}")
         return None
 
 

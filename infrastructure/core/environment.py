@@ -98,7 +98,7 @@ def check_dependencies(
     for package in required_packages:
         try:
             __import__(package)
-            logger.debug("Package '%s' available", package)
+            logger.debug(f"Package '{package}' available")
         except ImportError:
             logger.error(f"Package '{package}' not found")
             missing_packages.append(package)
@@ -107,7 +107,7 @@ def check_dependencies(
     for package in optional_packages:
         try:
             __import__(package)
-            logger.debug("Package '%s' available", package)
+            logger.debug(f"Package '{package}' available")
         except ImportError:
             logger.warning(f"Package '{package}' not found (optional)")
             optional_missing.append(package)
@@ -166,7 +166,7 @@ def install_missing_packages(packages: List[str]) -> bool:
             for package in packages:
                 try:
                     __import__(package)
-                    logger.debug("Package '%s' installed successfully", package)
+                    logger.debug(f"Package '{package}' installed successfully")
                 except ImportError:
                     logger.error(f"Package '{package}' installation failed")
                     all_installed = False
@@ -203,7 +203,7 @@ def check_build_tools(required_tools: dict[str, str] | None = None) -> bool:
     all_present = True
     for tool, purpose in required_tools.items():
         if shutil.which(tool):
-            logger.debug("'%s' available (%s)", tool, purpose)
+            logger.debug(f"'{tool}' available ({purpose})")
         else:
             logger.error(f"'{tool}' not found ({purpose})")
             all_present = False
@@ -268,7 +268,7 @@ def setup_directories(
         for directory in directories:
             dir_path = repo_root / directory
             dir_path.mkdir(parents=True, exist_ok=True)
-            logger.debug("Directory ready: %s", directory)
+            logger.debug(f"Directory ready: {directory}")
         log_success(f"All {len(directories)} directories ready", logger)
         return True
     except Exception as e:
@@ -390,7 +390,7 @@ def verify_source_structure(repo_root: Path, project_name: str = "project") -> b
     for directory in required_dirs:
         dir_path = repo_root / directory
         if dir_path.exists() and dir_path.is_dir():
-            logger.debug("Directory found: %s", directory)
+            logger.debug(f"Directory found: {directory}")
         else:
             logger.error(f"Directory not found: {directory}")
             all_present = False
@@ -399,7 +399,7 @@ def verify_source_structure(repo_root: Path, project_name: str = "project") -> b
     for directory in optional_dirs:
         dir_path = repo_root / directory
         if dir_path.exists() and dir_path.is_dir():
-            logger.debug("Directory found: %s (optional)", directory)
+            logger.debug(f"Directory found: {directory} (optional)")
         else:
             logger.warning(f"Directory not found: {directory} (optional)")
 

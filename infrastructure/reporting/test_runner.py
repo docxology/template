@@ -264,7 +264,7 @@ def run_test_suite(config: TestSuiteConfig) -> tuple[int, dict[str, Any]]:
     )
 
     if not coverage_found:
-        logger.warning("No %s coverage percentage found", config.label.lower())
+        logger.warning(f"No {config.label.lower()} coverage percentage found")
 
     test_results = parse_pytest_output(stdout_text, stderr_text, exit_code)
 

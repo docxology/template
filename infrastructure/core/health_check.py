@@ -75,7 +75,6 @@ class SystemHealthChecker:
         return status
 
     def _check_filesystem(self) -> dict[str, Any]:
-        """Check filesystem health and permissions."""
         import tempfile
 
         results: dict[str, Any] = {}

@@ -43,9 +43,9 @@ def compute_file_hashes(
             h = hashlib.new(algo)
             h.update(content)
             results[algo] = h.hexdigest()
-            logger.debug("Computed %s hash for %s: %s…", algo, file_path.name, results[algo][:16])
+            logger.debug(f"Computed {algo} hash for {file_path.name}: {results[algo][:16]}…")
         except ValueError:
-            logger.warning("Unsupported hash algorithm '%s' — skipping", algo)
+            logger.warning(f"Unsupported hash algorithm '{algo}' — skipping")
 
     return results
 
@@ -80,7 +80,7 @@ def write_hash_manifest(
         manifest.update(extra)
 
     output_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
-    logger.info("Hash manifest written → %s", output_path)
+    logger.info(f"Hash manifest written → {output_path}")
     return output_path
 
 

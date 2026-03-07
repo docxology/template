@@ -158,7 +158,7 @@ class RepositoryScanner:
                         if module in content:
                             self.documented_modules.add(module)
                 except Exception as e:
-                    logger.debug("Failed to scan %s for module references: %s", md_file, e)
+                    logger.debug(f"Failed to scan {md_file} for module references: {e}")
 
     def _check_code_accuracy(self) -> None:
         """Check code accuracy."""
@@ -218,7 +218,7 @@ class RepositoryScanner:
                             imports[module] = []
                         imports[module].append(alias.name)
         except Exception as e:
-            logger.debug("Failed to parse imports from script: %s", e)
+            logger.debug(f"Failed to parse imports from script: {e}")
 
         return imports
 
@@ -245,7 +245,7 @@ class RepositoryScanner:
                     return False
             return True
         except Exception as e:
-            logger.debug("Failed to verify imports in module %s: %s", module_name, e)
+            logger.debug(f"Failed to verify imports in module {module_name}: {e}")
             return False
 
     def _check_documented_commands(self) -> None:
@@ -309,7 +309,7 @@ class RepositoryScanner:
                                     )
                                 )
             except Exception as e:
-                logger.debug("Failed to check code accuracy in %s: %s", md_file, e)
+                logger.debug(f"Failed to check code accuracy in {md_file}: {e}")
 
         self.results.accuracy_issues.extend(issues)
 
@@ -365,7 +365,7 @@ class RepositoryScanner:
                         if script.name in content:
                             documented_scripts.add(script.name)
                 except Exception as e:
-                    logger.debug("Failed to check script documentation in %s: %s", md_file, e)
+                    logger.debug(f"Failed to check script documentation in {md_file}: {e}")
 
         for script in self.script_files:
             if script.name not in documented_scripts and script.name != "comprehensive_doc_scan.py":

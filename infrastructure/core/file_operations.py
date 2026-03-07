@@ -579,5 +579,5 @@ def calculate_file_hash(file_path: Path, algorithm: str = "sha256") -> Optional[
                 hash_func.update(chunk)
         return hash_func.hexdigest()
     except OSError as e:
-        logger.debug("Could not hash %s: %s", file_path, e)
+        logger.debug(f"Could not hash {file_path}: {e}")
         return None

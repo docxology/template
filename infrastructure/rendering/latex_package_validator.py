@@ -81,7 +81,7 @@ def find_kpsewhich() -> Optional[Path]:
         if result.returncode == 0 and result.stdout.strip():
             return Path(result.stdout.strip())
     except Exception as e:
-        logger.debug("Failed to locate kpsewhich: %s", e)
+        logger.debug(f"Failed to locate kpsewhich: {e}")
 
     return None
 

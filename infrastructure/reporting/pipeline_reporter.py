@@ -100,7 +100,6 @@ def save_pipeline_report(
     output_dir.mkdir(parents=True, exist_ok=True)
     saved_files = {}
 
-    # Convert to dictionary for serialization
     report_dict = {
         "timestamp": report.timestamp,
         "total_duration": report.total_duration,
@@ -112,7 +111,6 @@ def save_pipeline_report(
         "output_statistics": report.output_statistics,
     }
 
-    # Generate JSON report
     if "json" in formats:
         json_path = output_dir / "pipeline_report.json"
         try:
@@ -121,10 +119,9 @@ def save_pipeline_report(
             saved_files["json"] = json_path
             logger.info(f"Pipeline report (JSON) saved: {json_path}")
         except OSError as e:
-            logger.error("Failed to write JSON report %s: %s", json_path, e)
+            logger.error(f"Failed to write JSON report {json_path}: {e}")
             raise
 
-    # Generate Markdown report
     if "markdown" in formats:
         md_path = output_dir / "pipeline_report.md"
         try:
@@ -133,10 +130,9 @@ def save_pipeline_report(
             saved_files["markdown"] = md_path
             logger.info(f"Pipeline report (Markdown) saved: {md_path}")
         except OSError as e:
-            logger.error("Failed to write Markdown report %s: %s", md_path, e)
+            logger.error(f"Failed to write Markdown report {md_path}: {e}")
             raise
 
-    # Generate HTML report
     if "html" in formats:
         html_path = output_dir / "pipeline_report.html"
         try:
@@ -145,7 +141,7 @@ def save_pipeline_report(
             saved_files["html"] = html_path
             logger.info(f"Pipeline report (HTML) saved: {html_path}")
         except OSError as e:
-            logger.error("Failed to write HTML report %s: %s", html_path, e)
+            logger.error(f"Failed to write HTML report {html_path}: {e}")
             raise
 
     return saved_files
@@ -443,13 +439,11 @@ def generate_validation_report(
     output_dir.mkdir(parents=True, exist_ok=True)
     saved_files = {}
 
-    # Generate JSON report
     json_path = output_dir / "validation_report.json"
     with open(json_path, "w") as f:
         json.dump(validation_results, f, indent=2)
     saved_files["json"] = json_path
 
-    # Generate Markdown report
     md_path = output_dir / "validation_report.md"
     md_content = generate_validation_markdown(validation_results)
     md_path.write_text(md_content)
@@ -513,7 +507,6 @@ def save_error_summary(errors: list[dict[str, Any]], output_dir: Path) -> dict[s
     with open(json_path, "w") as f:
         json.dump(summary, f, indent=2)
 
-    # Generate Markdown report
     md_path = output_dir / "error_summary.md"
     md_content = generate_error_markdown(summary)
     md_path.write_text(md_content)

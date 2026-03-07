@@ -111,10 +111,10 @@ class PipelineExecutor:
             try:
                 self._log_handler.close()
             except Exception as e:
-                logger.debug("Failed to close log handler: %s", e)
+                logger.debug(f"Failed to close log handler: {e}")
 
         self._log_handler = setup_root_log_file_handler(self.log_file)
-        logger.debug("Set up log file handler: %s", self.log_file)
+        logger.debug(f"Set up log file handler: {self.log_file}")
 
     def _build_stage_list(self, include_llm: bool, skip_clean: bool) -> list[StageSpec]:
         """Build canonical stage list."""

@@ -169,7 +169,7 @@ def validate_scientific_best_practices(module: Any) -> Dict[str, Any]:
         source = inspect.getsource(module)
         source_lines = source.split("\n")
     except Exception as e:
-        logger.debug("Could not get source for module %s: %s", module, e)
+        logger.debug(f"Could not get source for module {module}: {e}")
 
     has_try_except = any("try:" in line or "except" in line for line in source_lines)
     has_raise = any("raise" in line for line in source_lines)
@@ -275,7 +275,7 @@ def check_research_compliance(func: Callable) -> Dict[str, Any]:
         compliance["has_error_handling"] = has_error_handling
 
     except Exception as e:
-        logger.debug("Could not analyze function compliance for %s: %s", func, e)
+        logger.debug(f"Could not analyze function compliance for {func}: {e}")
 
     # Calculate compliance score
     weights = {
