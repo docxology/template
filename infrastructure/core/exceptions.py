@@ -220,29 +220,11 @@ class FileNotFoundError(FileOperationError, builtins.FileNotFoundError):
 
 
 class NotADirectoryError(FileOperationError, builtins.NotADirectoryError):
-    """Raised when a path is not a directory when a directory is expected.
-
-    Inherits from both custom FileOperationError and built-in NotADirectoryError
-    for compatibility with standard Python exception handling while providing
-    better context for template-specific file errors.
-
-    Example:
-        >>> raise NotADirectoryError(
-        ...     "Expected directory, found file",
-        ...     context={"path": "/path/to/file.txt"}
-        ... )
-    """
+    """Raised when a path is not a directory when a directory is expected."""
 
 
 class InvalidFileFormatError(FileOperationError):
-    """Raised when file format is invalid or unexpected.
-
-    Example:
-        >>> raise InvalidFileFormatError(
-        ...     "Expected PDF file, got text file",
-        ...     context={"file": "output.pdf", "detected_type": "text/plain"}
-        ... )
-    """
+    """Raised when file format is invalid or unexpected."""
 
     pass
 

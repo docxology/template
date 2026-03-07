@@ -14,7 +14,6 @@ from typing import Any, Dict, List, Optional
 
 from infrastructure.core.checkpoint import StageResult as _CheckpointStageResult
 from infrastructure.core.logging_utils import format_duration, get_logger
-from infrastructure.core.multi_project import MultiProjectResult
 
 logger = get_logger(__name__)
 
@@ -42,224 +41,11 @@ class PipelineReport:
     output_statistics: Optional[Dict[str, Any]] = None
 
 
-def generate_multi_project_summary_report(
-    result: MultiProjectResult, projects: List[Any], output_dir: Path
-) -> Dict[str, Path]:
-    """Generate comprehensive multi-project summary report.
-
-    Args:
-        result: Multi-project execution result
-        projects: List of project objects
-        output_dir: Directory to save reports
-
-    Returns:
-        Dictionary mapping format names to saved file paths
-    """
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    # Build comprehensive summary
-    total_projects_count = len(projects)
-
-    summary = {
-        "timestamp": datetime.now().isoformat(),
-        "total_projects": total_projects_count,
-        "successful_projects": result.successful_projects,
-        "failed_projects": result.failed_projects,
-        "total_duration": result.total_duration,
-        "infra_test_duration": result.infra_test_duration,
-        "projects": {},
-        "performance_analysis": {},
-        "error_aggregation": {},
-        "recommendations": [],
-    }
-
-    # Collect per-project data
-    project_names = [p.name for p in projects]
-    raw_results = result.project_results
-    project_results = raw_results if isinstance(raw_results, dict) else {}
-
-    for proj_name in project_names:
-        raw = project_results.get(proj_name, [])
-        # Defensively ensure we have a list of stage objects; dict values are unknown format
-        proj_result = raw if isinstance(raw, list) else []
-
-        all_success = len(proj_result) > 0 and all(stage.success for stage in proj_result)
-        total_duration = sum(stage.duration for stage in proj_result)
-        errors = [stage.error_message for stage in proj_result if stage.error_message]
-
-        summary["projects"][proj_name] = {
-            "success": all_success,
-            "duration": total_duration,
-            "stages_completed": len(proj_result),
-            "errors": errors,
-        }
-
-    # Performance analysis with defensive handling
-    if project_results:
-        try:
-            # Collect durations from the projects summary we just built
-            durations = []
-            for proj_name, proj_data in summary["projects"].items():
-                if isinstance(proj_data, dict) and proj_data.get("duration", 0) > 0:
-                    durations.append(proj_data["duration"])
-
-            if durations:
-                proj_dur = [
-                    (n, d["duration"])
-                    for n, d in summary["projects"].items()
-                    if isinstance(d, dict) and d.get("duration", 0) > 0
-                ]
-                summary["performance_analysis"] = {
-                    "slowest_project": max(proj_dur, key=lambda x: x[1])[0] if proj_dur else None,
-                    "fastest_project": min(proj_dur, key=lambda x: x[1])[0] if proj_dur else None,
-                    "average_duration": sum(durations) / len(durations),
-                    "total_pipeline_time": sum(durations),
-                }
-        except (TypeError, KeyError, IndexError, ZeroDivisionError) as e:
-            logger.warning(f"Error calculating performance analysis: {e}")
-            summary["performance_analysis"] = {}
-
-    # Error aggregation
-    all_errors = []
-    for proj_name, proj_data in summary["projects"].items():
-        errors = proj_data.get("errors", [])
-        for err in errors:
-            all_errors.append({"project": proj_name, "error": err})
-    summary["error_aggregation"] = {
-        "total_errors": len(all_errors),
-        "errors_by_project": {
-            proj: len(summary["projects"].get(proj, {}).get("errors", []))
-            for proj in project_names
-        },
-    }
-
-    # Generate recommendations
-    if result.failed_projects > 0:
-        summary["recommendations"].append(
-            {
-                "priority": "high",
-                "action": "Review failed projects",
-                "details": f"{result.failed_projects} project(s) failed execution",
-            }
-        )
-
-    if summary["performance_analysis"].get("average_duration", 0) > 300:   # 5 minutes
-        summary["recommendations"].append(
-            {
-                "priority": "medium",
-                "action": "Consider performance optimization",
-                "details": f"Average project execution time: {summary['performance_analysis']['average_duration']:.1f}s",  # noqa: E501
-            }
-        )
-
-    # Save in multiple formats
-    saved_files = {}
-
-    # JSON format
-    json_file = output_dir / "multi_project_summary.json"
-    with open(json_file, "w") as f:
-        json.dump(summary, f, indent=2)
-    saved_files["json"] = json_file
-    logger.info(f"Multi-project summary saved: {json_file}")
-
-    # Markdown format
-    md_file = output_dir / "multi_project_summary.md"
-    md_content = _format_multi_project_summary_markdown(summary)
-    with open(md_file, "w") as f:
-        f.write(md_content)
-    saved_files["markdown"] = md_file
-    logger.info(f"Multi-project summary saved: {md_file}")
-
-    return saved_files
-
-
-def _format_multi_project_summary_markdown(summary: Dict[str, Any]) -> str:
-    """Format multi-project summary as markdown.
-
-    Args:
-        summary: Summary dictionary
-
-    Returns:
-        Formatted markdown string
-    """
-    lines = [
-        "# Multi-Project Execution Summary",
-        "",
-        f"**Generated:** {summary['timestamp']}",
-        "",
-        "## Overview",
-        "",
-        f"- **Total Projects:** {summary['total_projects']}",
-        f"- **Successful:** {summary['successful_projects']}",
-        f"- **Failed:** {summary['failed_projects']}",
-        f"- **Total Duration:** {summary['total_duration']:.1f}s",
-        "",
-    ]
-
-    if summary.get("infra_test_duration", 0) > 0:
-        lines.extend([f"- **Infrastructure Tests:** {summary['infra_test_duration']:.1f}s", ""])
-
-    # Per-project results
-    lines.extend(["## Project Results", ""])
-
-    for proj_name, proj_data in summary["projects"].items():
-        status_icon = "✅" if proj_data["success"] else "❌"
-        lines.append(f"### {status_icon} {proj_name}")
-        lines.append(f"- **Status:** {'Success' if proj_data['success'] else 'Failed'}")
-        lines.append(f"- **Duration:** {proj_data['duration']:.1f}s")
-        lines.append(f"- **Stages Completed:** {proj_data['stages_completed']}")
-
-        if proj_data["errors"]:
-            lines.append("- **Errors:**")
-            for err in proj_data["errors"][:3]:  # Show first 3
-                lines.append(f"  - {err}")
-            if len(proj_data["errors"]) > 3:
-                lines.append(f"  - ... and {len(proj_data['errors']) - 3} more")
-        lines.append("")
-
-    # Performance analysis
-    if summary.get("performance_analysis"):
-        perf = summary["performance_analysis"]
-        lines.extend(
-            [
-                "## Performance Analysis",
-                "",
-                f"- **Slowest Project:** {perf.get('slowest_project', 'N/A')}",
-                f"- **Fastest Project:** {perf.get('fastest_project', 'N/A')}",
-                f"- **Average Duration:** {perf.get('average_duration', 0):.1f}s",
-                f"- **Total Pipeline Time:** {perf.get('total_pipeline_time', 0):.1f}s",
-                "",
-            ]
-        )
-
-    # Error aggregation
-    if summary.get("error_aggregation"):
-        err_agg = summary["error_aggregation"]
-        lines.extend(
-            [
-                "## Error Summary",
-                "",
-                f"- **Total Errors:** {err_agg['total_errors']}",
-                "",
-            ]
-        )
-
-        if err_agg.get("errors_by_project"):
-            lines.append("**Errors by Project:**")
-            for proj, count in err_agg["errors_by_project"].items():
-                if count > 0:
-                    lines.append(f"- {proj}: {count} error(s)")
-            lines.append("")
-
-    # Recommendations
-    if summary.get("recommendations"):
-        lines.extend(["## Recommendations", ""])
-        for rec in summary["recommendations"]:
-            lines.append(f"### {rec['priority'].upper()}: {rec['action']}")
-            lines.append(f"{rec['details']}")
-            lines.append("")
-
-    return "\n".join(lines)
+# Re-exported for backward compatibility; implementation lives in multi_project_reporter
+from infrastructure.reporting.multi_project_reporter import (  # noqa: E402
+    _format_multi_project_summary_markdown,
+    generate_multi_project_summary_report,
+)
 
 
 def generate_pipeline_report(
@@ -449,16 +235,19 @@ def generate_markdown_report(report: PipelineReport) -> str:
     if report.validation_results:
         lines.append("## Validation Results")
         lines.append("")
-        # Add validation details
-        lines.append("Validation checks completed.")
+        for key, value in report.validation_results.items():
+            lines.append(f"- **{key}:** {value}")
         lines.append("")
 
     # Performance metrics section
     if report.performance_metrics:
         lines.append("## Performance Metrics")
         lines.append("")
-        # Add performance details
-        lines.append("Performance tracking completed.")
+        for key, value in report.performance_metrics.items():
+            if isinstance(value, float):
+                lines.append(f"- **{key}:** {value:.2f}")
+            else:
+                lines.append(f"- **{key}:** {value}")
         lines.append("")
 
     # Error summary section
@@ -467,9 +256,13 @@ def generate_markdown_report(report: PipelineReport) -> str:
         lines.append("")
         lines.append(f"**Total Errors:** {report.error_summary.get('total_errors', 0)}")
         lines.append("")
-        # Add error details
-        lines.append("See error details in error summary report.")
-        lines.append("")
+        errors = report.error_summary.get("errors", [])
+        if errors:
+            for err in errors[:5]:
+                lines.append(f"- {err}")
+            if len(errors) > 5:
+                lines.append(f"- ... and {len(errors) - 5} more")
+            lines.append("")
 
     # Output statistics section
     if report.output_statistics:

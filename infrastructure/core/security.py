@@ -390,36 +390,48 @@ class SecurityViolation(Exception):
     pass
 
 
-# Global instances
-_security_validator = SecurityValidator()
-_security_headers = SecurityHeaders()
-_rate_limiter = RateLimiter()
-_security_monitor = SecurityMonitor()
+# Global instances (lazy initialization — avoids import-time side effects)
+_security_validator: SecurityValidator | None = None
+_security_headers: SecurityHeaders | None = None
+_rate_limiter: RateLimiter | None = None
+_security_monitor: SecurityMonitor | None = None
 
 
 def get_security_validator() -> SecurityValidator:
     """Get the global security validator instance."""
+    global _security_validator
+    if _security_validator is None:
+        _security_validator = SecurityValidator()
     return _security_validator
 
 
 def get_security_headers() -> Dict[str, str]:
     """Get security headers."""
+    global _security_headers
+    if _security_headers is None:
+        _security_headers = SecurityHeaders()
     return _security_headers.get_security_headers()
 
 
 def get_rate_limiter() -> RateLimiter:
     """Get the global rate limiter instance."""
+    global _rate_limiter
+    if _rate_limiter is None:
+        _rate_limiter = RateLimiter()
     return _rate_limiter
 
 
 def get_security_monitor() -> SecurityMonitor:
     """Get the global security monitor instance."""
+    global _security_monitor
+    if _security_monitor is None:
+        _security_monitor = SecurityMonitor()
     return _security_monitor
 
 
 def validate_llm_input(prompt: str) -> str:
     """Convenience function for LLM input validation."""
-    return _security_validator.validate_llm_input(prompt)
+    return get_security_validator().validate_llm_input(prompt)
 
 
 def rate_limit(max_requests: int = 100, window_seconds: int = 60):
@@ -464,7 +476,7 @@ def rate_limit(max_requests: int = 100, window_seconds: int = 60):
 
             if not limiter.is_allowed(key):
                 remaining = limiter.get_remaining_requests(key)
-                _security_monitor.log_security_event(
+                get_security_monitor().log_security_event(
                     "rate_limit_exceeded",
                     {
                         "function": f"{func.__module__}.{func.__name__}",

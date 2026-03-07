@@ -195,15 +195,18 @@ class SecurityError(LLMError):
     pass
 
 
-# Global instance
-_input_sanitizer = InputSanitizer()
+# Global instance (lazy initialization — avoids import-time side effects)
+_input_sanitizer: InputSanitizer | None = None
 
 
 def get_input_sanitizer() -> InputSanitizer:
     """Get the global input sanitizer instance."""
+    global _input_sanitizer
+    if _input_sanitizer is None:
+        _input_sanitizer = InputSanitizer()
     return _input_sanitizer
 
 
 def sanitize_llm_input(prompt: str) -> str:
     """Convenience function for LLM input sanitization."""
-    return _input_sanitizer.sanitize_prompt(prompt)
+    return get_input_sanitizer().sanitize_prompt(prompt)
