@@ -48,19 +48,6 @@ TRANSLATION_LANGUAGES = {
 }
 
 
-# Minimum word counts for quality validation
-# Note: improvement_suggestions uses a lower threshold (200) because models often
-# produce focused, actionable output that may be shorter but still high-quality.
-# The retry mechanism catches truly short responses.
-REVIEW_MIN_WORDS = {
-    "executive_summary": 250,
-    "quality_review": 300,
-    "methodology_review": 300,
-    "improvement_suggestions": 200,  # Lower threshold for focused actionable output
-    "translation": 400,  # English abstract + translation (~200 words each)
-}
-
-
 class ManuscriptExecutiveSummary(ResearchTemplate):
     """Template for generating executive summary of a manuscript.
 

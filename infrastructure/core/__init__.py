@@ -63,9 +63,7 @@ from .file_operations import (
     copy_final_deliverables,
 )
 from .health_check import (
-    HealthCheckAPI,
     SystemHealthChecker,
-    get_health_api,
     get_health_metrics,
     get_health_status,
     quick_health_check,
@@ -192,8 +190,6 @@ __all__ = [
     "benchmark_llm_query",
     "profile_memory_usage",
     "SystemHealthChecker",
-    "HealthCheckAPI",
-    "get_health_api",
     "quick_health_check",
     "get_health_status",
     "get_health_metrics",

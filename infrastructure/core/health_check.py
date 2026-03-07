@@ -165,14 +165,12 @@ class SystemHealthChecker:
         except socket.gaierror:
             results["dns_resolution"] = False
 
-        # Test basic connectivity (if requests available)
+        # Test basic TCP connectivity via socket (no external HTTP dependency)
         try:
-            import requests
-
-            response = requests.get("https://httpbin.org/status/200", timeout=5)
-            results["http_connectivity"] = response.status_code == 200
-        except (ImportError, requests.RequestException):
-            results["http_connectivity"] = False  # Not available or failed
+            with socket.create_connection(("1.1.1.1", 80), timeout=5):
+                results["http_connectivity"] = True
+        except OSError:
+            results["http_connectivity"] = False
 
         return results
 
@@ -229,6 +227,39 @@ class SystemHealthChecker:
             "process_uptime_hours": process_uptime / 3600,
         }
 
+    def is_healthy(self) -> bool:
+        """Return True if all health checks pass."""
+        return bool(self.get_health_status()["overall_status"] == "healthy")
+
+    def get_metrics(self) -> Dict[str, Any]:
+        """Return health metrics in a format suitable for monitoring systems."""
+        status = self.get_health_status()
+
+        metrics: Dict[str, Any] = {
+            "health_status": 1 if status["overall_status"] == "healthy" else 0,
+            "timestamp": status["timestamp"],
+        }
+
+        for check_name, check_data in status["checks"].items():
+            metrics[f"{check_name}_status"] = 1 if check_data["status"] == "healthy" else 0
+
+        if "memory" in status["checks"]:
+            mem_details = status["checks"]["memory"].get("details", {})
+            if "percent_used" in mem_details:
+                metrics["memory_percent_used"] = mem_details["percent_used"]
+
+        if "cpu" in status["checks"]:
+            cpu_details = status["checks"]["cpu"].get("details", {})
+            if "cpu_percent" in cpu_details:
+                metrics["cpu_percent_used"] = cpu_details["cpu_percent"]
+
+        if "disk" in status["checks"]:
+            disk_details = status["checks"]["disk"].get("details", {})
+            if "percent_used" in disk_details:
+                metrics["disk_percent_used"] = disk_details["percent_used"]
+
+        return metrics
+
     def _generate_summary(self, status: Dict[str, Any]) -> Dict[str, Any]:
         """Generate summary metrics from health status."""
         checks = status["checks"]
@@ -254,89 +285,27 @@ class SystemHealthChecker:
         return summary
 
 
-class HealthCheckAPI:
-    """REST-like API for health check endpoints."""
-
-    def __init__(self) -> None:
-        self.checker = SystemHealthChecker()
-
-    def get_status(self) -> Dict[str, Any]:
-        """Get system health status."""
-        return self.checker.get_health_status()
-
-    def get_status_summary(self) -> Dict[str, Any]:
-        """Get simplified health status summary."""
-        full_status = self.get_status()
-
-        return {
-            "status": full_status["overall_status"],
-            "timestamp": full_status["timestamp"],
-            "checks_summary": full_status["summary"],
-            "unhealthy_checks": [
-                name
-                for name, check in full_status["checks"].items()
-                if check["status"] == "unhealthy"
-            ],
-        }
-
-    def is_healthy(self) -> bool:
-        """Quick health check - returns True if system is healthy."""
-        status = self.get_status()
-        return bool(status["overall_status"] == "healthy")
-
-    def get_metrics(self) -> Dict[str, Any]:
-        """Get health metrics in a format suitable for monitoring systems."""
-        status = self.get_status()
-
-        metrics = {
-            "health_status": 1 if status["overall_status"] == "healthy" else 0,
-            "timestamp": status["timestamp"],
-        }
-
-        # Add individual check metrics
-        for check_name, check_data in status["checks"].items():
-            metrics[f"{check_name}_status"] = 1 if check_data["status"] == "healthy" else 0
-
-        # Add resource metrics
-        if "memory" in status["checks"]:
-            mem_details = status["checks"]["memory"].get("details", {})
-            if "percent_used" in mem_details:
-                metrics["memory_percent_used"] = mem_details["percent_used"]
-
-        if "cpu" in status["checks"]:
-            cpu_details = status["checks"]["cpu"].get("details", {})
-            if "cpu_percent" in cpu_details:
-                metrics["cpu_percent_used"] = cpu_details["cpu_percent"]
-
-        if "disk" in status["checks"]:
-            disk_details = status["checks"]["disk"].get("details", {})
-            if "percent_used" in disk_details:
-                metrics["disk_percent_used"] = disk_details["percent_used"]
-
-        return metrics
+_checker: Optional[SystemHealthChecker] = None
 
 
-_health_api: Optional[HealthCheckAPI] = None
-
-
-def get_health_api() -> HealthCheckAPI:
-    """Return the module-level HealthCheckAPI, creating it on first call."""
-    global _health_api
-    if _health_api is None:
-        _health_api = HealthCheckAPI()
-    return _health_api
+def _get_checker() -> SystemHealthChecker:
+    """Return the module-level SystemHealthChecker, creating it on first call."""
+    global _checker
+    if _checker is None:
+        _checker = SystemHealthChecker()
+    return _checker
 
 
 def quick_health_check() -> bool:
     """Return True if system is healthy."""
-    return get_health_api().is_healthy()
+    return _get_checker().is_healthy()
 
 
 def get_health_status() -> Dict[str, Any]:
     """Get detailed health status."""
-    return get_health_api().get_status()
+    return _get_checker().get_health_status()
 
 
 def get_health_metrics() -> Dict[str, Any]:
     """Get health metrics for monitoring systems."""
-    return get_health_api().get_metrics()
+    return _get_checker().get_metrics()
