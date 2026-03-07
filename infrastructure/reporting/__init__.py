@@ -43,7 +43,7 @@ from .pipeline_reporter import (
 )
 from .output_organizer import FileType, OutputOrganizer
 from .coverage_reporter import (
-    generate_coverage_test_report,
+    generate_test_report as generate_coverage_test_report,
     parse_pytest_output,
     save_test_report,
 )

@@ -23,6 +23,7 @@ from infrastructure.core.logging_utils import (
     log_operation,
     log_stage_with_eta,
     setup_logger,
+    setup_root_log_file_handler,
 )
 from infrastructure.core.errors import (
     PIPELINE_STAGE_FAILED,
@@ -90,49 +91,20 @@ class PipelineExecutor:
     def _setup_log_file_handler(self) -> None:
         """Set up or recreate the log file handler.
 
-        Creates the log directory and file, and adds a file handler to the root
-        logger. This method is idempotent - it removes any existing handler for
-        this log file before creating a new one.
-
-        This is called both during initialization and after the clean stage runs,
-        since the clean stage may delete the log file.
+        Called during init and after the clean stage (which may delete the log file).
+        Delegates root-logger file handler management to logging_utils.
         """
-        # Ensure log directory exists
         self.log_file.parent.mkdir(parents=True, exist_ok=True)
-
-        # Set up logger for this module
         setup_logger(__name__, log_file=self.log_file)
 
-        # Get root logger
-        root_logger = logging.getLogger()
-
-        # Remove any existing file handler for this log file
-        handlers_to_remove = [
-            h
-            for h in root_logger.handlers
-            if isinstance(h, logging.FileHandler)
-            and hasattr(h, "baseFilename")
-            and Path(h.baseFilename).resolve() == self.log_file.resolve()
-        ]
-        for handler in handlers_to_remove:
-            handler.close()
-            root_logger.removeHandler(handler)
-            logger.debug(f"Removed existing log file handler: {handler.baseFilename}")
-
-        # Also track and close our own handler if it exists
         if self._log_handler is not None:
             try:
                 self._log_handler.close()
             except Exception as e:
-                logger.debug(f"Failed to close log handler: {e}")
+                logger.debug("Failed to close log handler: %s", e)
 
-        # Create new file handler
-        self._log_handler = logging.FileHandler(self.log_file)
-        # File logs without emojis, include logger name for context
-        file_formatter = logging.Formatter("[%(asctime)s] [%(levelname)s] [%(name)s] %(message)s")
-        self._log_handler.setFormatter(file_formatter)
-        root_logger.addHandler(self._log_handler)
-        logger.debug(f"Set up log file handler: {self.log_file}")
+        self._log_handler = setup_root_log_file_handler(self.log_file)
+        logger.debug("Set up log file handler: %s", self.log_file)
 
     def _build_stage_list(self, include_llm: bool, skip_clean: bool) -> list[tuple]:
         """Build canonical stage list.

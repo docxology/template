@@ -66,17 +66,22 @@ class PipelineCheckpoint:
 class CheckpointManager:
     """Manages pipeline checkpoints for resume capability."""
 
-    def __init__(self, checkpoint_dir: Optional[Path] = None, project_name: str = "project"):
+    def __init__(
+        self,
+        checkpoint_dir: Optional[Path] = None,
+        project_name: str = "project",
+        repo_root: Optional[Path] = None,
+    ):
         """Initialize checkpoint manager.
 
         Args:
             checkpoint_dir: Directory for checkpoint files (default: projects/{project_name}/output/.checkpoints)
             project_name: Name of the project (default: "project")
+            repo_root: Repository root path; inferred from __file__ if not provided
         """
         if checkpoint_dir is None:
-            # Default to projects/{project_name}/output/.checkpoints
-            repo_root = Path(__file__).parent.parent.parent
-            checkpoint_dir = repo_root / "projects" / project_name / "output" / ".checkpoints"
+            resolved_root = repo_root if repo_root is not None else Path(__file__).parent.parent.parent
+            checkpoint_dir = resolved_root / "projects" / project_name / "output" / ".checkpoints"
 
         self.checkpoint_dir = Path(checkpoint_dir)
         self.checkpoint_file = self.checkpoint_dir / "pipeline_checkpoint.json"
