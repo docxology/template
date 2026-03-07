@@ -62,7 +62,7 @@ def generate_multi_project_report(
 
         return all_files
 
-    except Exception as e:
+    except (OSError, ValueError, KeyError) as e:
         logger.error(f"Multi-project reporting failed: {e}")
         raise
 

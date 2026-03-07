@@ -23,6 +23,7 @@ All uv operations include proper error handling and informative logging.
 from __future__ import annotations
 
 import os
+import platform
 import shutil
 import subprocess
 import sys
@@ -41,10 +42,9 @@ def check_python_version() -> bool:
         True if Python version is 3.8 or higher, False otherwise
     """
     logger.debug("Checking Python version...")
-    version_info = sys.version_info
-    version_str = f"{version_info.major}.{version_info.minor}.{version_info.micro}"
+    version_str = platform.python_version()
 
-    if version_info.major < 3 or (version_info.major == 3 and version_info.minor < 8):
+    if sys.version_info < (3, 8):
         logger.error(f"Python 3.8+ required, found {version_str}")
         return False
 

@@ -529,11 +529,12 @@ def main() -> int:
     # Initialize result variables
     infra_exit, infra_results = 0, {}
     project_exit, project_results = 0, {}
+    total_phases = int(run_infra) + int(run_project)
 
     # Phase 1: Infrastructure Tests (run unless --project-only specified)
     if run_infra:
         phase_title = "Infrastructure Tests" if run_project else "Infrastructure Tests (Only)"
-        log_header(f"Phase 1/{1 + int(run_project)}: {phase_title}")
+        log_header(f"Phase 1/{total_phases}: {phase_title}")
 
         # Run infrastructure tests first (but don't fail the whole pipeline if they fail)
         infra_exit, infra_results = run_infrastructure_tests(
@@ -547,7 +548,6 @@ def main() -> int:
     # Phase 2: Project Tests (run unless --infra-only specified)
     if run_project:
         phase_num = 2 if run_infra else 1
-        total_phases = 1 + int(run_infra)
         phase_title = (
             f"Project Tests ({args.project})"
             if run_infra

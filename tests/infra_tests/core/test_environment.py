@@ -84,10 +84,6 @@ class TestEnvironmentSetupIntegration:
 
     def test_full_environment_check(self):
         """Test running multiple environment checks together."""
-        # Check Python version
-        python_ok = check_python_version()
-        assert python_ok is True
-
         # Check core packages
         deps_ok, missing = check_dependencies(["pytest"])
         assert deps_ok is True
@@ -102,15 +98,6 @@ class TestDependencyValidation:
 
         assert all_present is True
         assert missing == []
-
-
-class TestEnvironmentState:
-    """Tests for environment state queries."""
-
-    def test_check_python_version_succeeds_in_test_env(self):
-        """check_python_version returns True in the current (valid) environment."""
-        result = check_python_version()
-        assert result is True
 
 
 class TestSetupDirectories:

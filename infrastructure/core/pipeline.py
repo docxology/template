@@ -451,21 +451,22 @@ class PipelineExecutor:
         logger.info("Running output copying...")
 
         # Flush log handlers before copying to ensure log file is written
-        log_verified = self._flush_log_handlers()
-        if not log_verified:
+        self._flush_log_handlers()
+        if not self._verify_log_file():
             logger.warning("Log file not verified before copy - may be missing or empty")
 
         return self._run_script("05_copy_outputs.py", "--project", self.config.project_name)
 
-    def _flush_log_handlers(self) -> bool:
-        """Flush all log handlers and verify log file exists with content.
+    def _flush_log_handlers(self) -> None:
+        """Flush all log handlers to disk."""
+        flush_file_handlers()
+
+    def _verify_log_file(self) -> bool:
+        """Check that the log file exists and has content.
 
         Returns:
             True if log file exists and has content, False otherwise
         """
-        flush_file_handlers()
-
-        # Verify log file exists and has content
         if self.log_file.exists():
             try:
                 size = self.log_file.stat().st_size
@@ -475,7 +476,7 @@ class PipelineExecutor:
                 else:
                     logger.warning(f"Log file exists but is empty: {self.log_file}")
                     return False
-            except Exception as e:
+            except OSError as e:
                 logger.warning(f"Failed to verify log file: {e}")
                 return False
         else:
