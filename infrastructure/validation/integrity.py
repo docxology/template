@@ -189,7 +189,8 @@ def verify_data_consistency(data_files: List[Path]) -> Dict[str, bool]:
                 with open(data_file, "rb") as f:
                     pickle.load(f)  # nosec B301 — validating project's own output files
 
-        except Exception:
+        except Exception as e:
+            logger.warning(f"Data integrity check failed for {data_file}: {e}")
             consistency["data_integrity"] = False
             break
 
@@ -224,7 +225,8 @@ def verify_academic_standards(markdown_files: List[Path]) -> Dict[str, bool]:
         try:
             with open(md_file, "r", encoding="utf-8") as f:
                 combined_content += f.read() + "\n"
-        except Exception:
+        except Exception as e:
+            logger.warning(f"Could not read markdown file {md_file}: {e}")
             standards = {k: False for k in standards}
             break
 
@@ -793,7 +795,8 @@ def load_integrity_manifest(manifest_path: Path) -> Optional[Dict[str, Any]]:
         with open(manifest_path, "r") as f:
             result: Optional[Dict[str, Any]] = json.load(f)
             return result
-    except Exception:
+    except Exception as e:
+        logger.debug(f"Could not load manifest from {manifest_path}: {e}")
         return None
 
 
