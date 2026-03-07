@@ -198,6 +198,8 @@ class StagePerformanceTracker:
     def __init__(self):
         self.stages: list[dict[str, Any]] = []
         self.start_time: Optional[float] = None
+        self.start_memory: float = 0.0
+        self.start_io: Optional[Any] = None
 
     def start_stage(self, stage_name: str) -> None:
         """Start tracking a stage."""
@@ -329,34 +331,31 @@ class StagePerformanceTracker:
 
 @dataclass
 class ProfilingMetrics:
-    """Container for function-level performance measurement results."""
+    """Container for function-level performance measurement results.
+
+    Memory fields store raw bytes from tracemalloc. to_dict() converts to MB.
+    """
 
     operation_name: str
     execution_time: float
-    memory_peak: Optional[int] = None
-    memory_current: Optional[int] = None
-    memory_delta: Optional[int] = None
+    memory_peak: Optional[int] = None    # bytes from tracemalloc
+    memory_current: Optional[int] = None  # bytes from tracemalloc
+    memory_delta: Optional[int] = None    # bytes from tracemalloc
     cpu_time: Optional[float] = None
     function_calls: Optional[int] = None
     timestamp: float = field(default_factory=time.time)
 
-    def __post_init__(self):
-        """Convert memory values to MB."""
-        if self.memory_peak:
-            self.memory_peak = self.memory_peak // (1024 * 1024)
-        if self.memory_current:
-            self.memory_current = self.memory_current // (1024 * 1024)
-        if self.memory_delta:
-            self.memory_delta = self.memory_delta // (1024 * 1024)
-
     def to_dict(self) -> Dict[str, Any]:
-        """Convert to dictionary for reporting."""
+        """Convert to dictionary for reporting (memory values in MB)."""
+        def _bytes_to_mb(b: Optional[int]) -> Optional[int]:
+            return b // (1024 * 1024) if b is not None else None
+
         return {
             "operation": self.operation_name,
             "execution_time_seconds": round(self.execution_time, 3),
-            "memory_peak_mb": self.memory_peak,
-            "memory_current_mb": self.memory_current,
-            "memory_delta_mb": self.memory_delta,
+            "memory_peak_mb": _bytes_to_mb(self.memory_peak),
+            "memory_current_mb": _bytes_to_mb(self.memory_current),
+            "memory_delta_mb": _bytes_to_mb(self.memory_delta),
             "cpu_time_seconds": self.cpu_time,
             "function_calls": self.function_calls,
             "timestamp": self.timestamp,

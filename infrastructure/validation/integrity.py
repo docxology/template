@@ -125,12 +125,30 @@ def verify_cross_references(markdown_files: List[Path]) -> Dict[str, bool]:
         except Exception as e:
             logger.error("Error reading %s: %s", md_file, e, exc_info=True)
 
-    # Check if all references have corresponding labels
+    # Check if all references have corresponding labels, broken down by type prefix
     missing_labels = references - labels
 
     if missing_labels:
         logger.warning(f"Missing labels for references: {missing_labels}")
-        integrity = {k: False for k in integrity}
+        _prefix_to_key = {
+            "eq:": "equations",
+            "fig:": "figures",
+            "tab:": "tables",
+            "sec:": "sections",
+            "cite:": "citations",
+            "ref:": "citations",
+        }
+        for ref in missing_labels:
+            matched = False
+            for prefix, key in _prefix_to_key.items():
+                if ref.startswith(prefix):
+                    integrity[key] = False
+                    matched = True
+                    break
+            if not matched:
+                # Unknown prefix — mark all types as potentially broken
+                for key in integrity:
+                    integrity[key] = False
     else:
         logger.debug(f"Found {len(labels)} labels and {len(references)} references")
 

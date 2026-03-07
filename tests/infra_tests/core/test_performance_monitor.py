@@ -42,15 +42,20 @@ class TestPerformanceMetrics:
 
     def test_memory_converted_to_mb(self):
         """Memory values in bytes are converted to MB in __post_init__."""
-        # 10 MB = 10 * 1024 * 1024 = 10485760 bytes
+        # Memory fields store raw bytes; to_dict() converts to MB
         metrics = ProfilingMetrics(
             operation_name="op",
             execution_time=1.0,
-            memory_peak=10485760,  # 10 MB
-            memory_current=5242880,  # 5 MB
+            memory_peak=10485760,  # 10 MB in bytes
+            memory_current=5242880,  # 5 MB in bytes
         )
-        assert metrics.memory_peak == 10
-        assert metrics.memory_current == 5
+        # Raw bytes preserved on the attribute
+        assert metrics.memory_peak == 10485760
+        assert metrics.memory_current == 5242880
+        # MB conversion happens in to_dict()
+        d = metrics.to_dict()
+        assert d["memory_peak_mb"] == 10
+        assert d["memory_current_mb"] == 5
 
     def test_none_memory_stays_none(self):
         """None memory values remain None after __post_init__."""
