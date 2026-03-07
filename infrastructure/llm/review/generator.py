@@ -668,8 +668,6 @@ def generate_llm_executive_summary(
     )
 
 
-# Backward-compatible alias
-generate_executive_summary = generate_llm_executive_summary
 
 
 def generate_quality_review(

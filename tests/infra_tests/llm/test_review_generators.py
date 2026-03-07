@@ -7,8 +7,8 @@ import pytest
 from infrastructure.llm.core.client import LLMClient
 from infrastructure.llm.review.generator import (
     extract_manuscript_text,
-    generate_executive_summary,
     generate_improvement_suggestions,
+    generate_llm_executive_summary as generate_executive_summary,
     generate_methodology_review,
     generate_quality_review,
     generate_review_with_metrics,
