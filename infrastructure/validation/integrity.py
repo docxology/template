@@ -594,14 +594,14 @@ def save_integrity_manifest(manifest: dict[str, Any], output_path: Path) -> None
     with open(output_path, "w") as f:
         json.dump(manifest, f, indent=2)
 
-def load_integrity_manifest(manifest_path: Path) -> dict[str, Any | None]:
+def load_integrity_manifest(manifest_path: Path) -> dict[str, Any]:
     """Load integrity manifest from JSON file, or None on failure."""
     if not manifest_path.exists():
         return None
 
     try:
         with open(manifest_path, "r") as f:
-            result: dict[str, Any | None] = json.load(f)
+            result: dict[str, Any] = json.load(f)
             return result
     except (OSError, json.JSONDecodeError) as e:
         logger.debug(f"Could not load manifest from {manifest_path}: {e}")

@@ -17,7 +17,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
-def parse_coverage_json(coverage_json_path: Path) -> dict[str, Any | None]:
+def parse_coverage_json(coverage_json_path: Path) -> dict[str, Any]:
     """Parse coverage.json file for detailed per-module coverage data.
 
     Args:

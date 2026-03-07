@@ -107,18 +107,6 @@ class OutputOrganizer:
 
         return None
 
-    def get_subdirectory(self, file_type: FileType) -> str:
-        """
-        Get the subdirectory name for a given file type.
-
-        Args:
-            file_type: FileType enum value
-
-        Returns:
-            Subdirectory name as string
-        """
-        return file_type.subdirectory
-
     def get_output_path(self, file_path: Path, output_dir: Path, file_type: FileType) -> Path:
         """
         Get the organized output path for a file.
@@ -131,7 +119,7 @@ class OutputOrganizer:
         Returns:
             Path to the organized location (output_dir/subdir/filename)
         """
-        subdirectory = self.get_subdirectory(file_type)
+        subdirectory = file_type.subdirectory
         filename = file_path.name if isinstance(file_path, Path) else str(file_path)
 
         return output_dir / subdirectory / filename

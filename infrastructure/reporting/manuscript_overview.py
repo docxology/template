@@ -60,7 +60,7 @@ def extract_pdf_pages_as_images(pdf_path: Path, dpi: int = 300) -> list["PIL.Ima
     except PDFValidationError:
         raise
     except Exception as e:
-        raise PDFValidationError(f"Failed to read PDF {pdf_path}: {e}")
+        raise PDFValidationError(f"Failed to read PDF {pdf_path}: {e}") from e
 
     images = []
 
@@ -73,7 +73,7 @@ def extract_pdf_pages_as_images(pdf_path: Path, dpi: int = 300) -> list["PIL.Ima
             images = _render_pages_simple(reader, dpi)
         except Exception as e2:
             logger.error(f"Simple rendering also failed: {e2}")
-            raise PDFValidationError(f"Failed to render PDF pages: {e2}")
+            raise PDFValidationError(f"Failed to render PDF pages: {e2}") from e2
 
     return images
 

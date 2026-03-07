@@ -300,8 +300,7 @@ def set_global_log_level(level: int) -> None:
     logging.getLogger().setLevel(level)
     for logger_name in logging.Logger.manager.loggerDict:
         logger = logging.getLogger(logger_name)
-        if hasattr(logger, "setLevel"):
-            logger.setLevel(level)
+        logger.setLevel(level)
 
 def log_pipeline_stage_with_eta(
     stage_num: int,
