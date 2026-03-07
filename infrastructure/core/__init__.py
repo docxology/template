@@ -23,8 +23,8 @@ from .checkpoint import CheckpointManager
 from .health_check import SystemHealthChecker
 
 # Logging (primary cross-cutting concern — all callers need these)
+from .logging_helpers import format_duration
 from .logging_utils import (
-    format_duration,
     get_logger,
     log_operation,
     log_stage,

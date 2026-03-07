@@ -6,7 +6,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-import requests
+try:
+    import requests
+except ImportError:
+    requests = None  # type: ignore[assignment]
 
 from infrastructure.core.exceptions import PublishingError, UploadError
 from infrastructure.core.logging_utils import get_logger

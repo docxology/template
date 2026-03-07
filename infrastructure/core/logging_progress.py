@@ -121,13 +121,6 @@ class Spinner:
     SPINNER_CHARS = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
 
     def __init__(self, message: str = "Processing...", stream: Any = None, delay: float = 0.1):
-        """Initialize spinner.
-
-        Args:
-            message: Message to display with spinner
-            stream: Output stream (defaults to stderr)
-            delay: Delay between spinner updates in seconds
-        """
         self.message = message
         self.stream = stream or sys.stderr
         self.delay = delay
@@ -250,12 +243,7 @@ class StreamingProgress:
         self.start_time = time.time()
 
     def update(self, increment: int = 1, custom_message: Optional[str] = None) -> None:
-        """Update progress.
-
-        Args:
-            increment: Number of items completed
-            custom_message: Optional custom message to display
-        """
+        """Update progress by increment, display if throttle interval elapsed."""
         self.current = min(self.current + increment, self.total)
         now = time.time()
 

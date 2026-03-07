@@ -35,7 +35,7 @@ from infrastructure.reporting.coverage_reporter import (
     analyze_coverage_gaps,
     format_failure_suggestions,
 )
-from infrastructure.core.logging_utils import format_duration as _format_duration
+from infrastructure.core.logging_helpers import format_duration as _format_duration
 from infrastructure.core.environment import get_python_command
 from infrastructure.reporting.coverage_parser import check_cov_datafile_support
 from infrastructure.reporting.suite_runner import TestSuiteConfig, run_test_suite

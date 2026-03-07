@@ -176,9 +176,8 @@ class SystemHealthChecker:
         critical_deps = [
             "numpy",
             "matplotlib",
-            "requests",
-            "pyyaml",
-            "psutil",  # For monitoring
+            "pypdf",
+            "yaml",  # pyyaml installs as yaml
         ]
 
         results: dict[str, Any] = {}
@@ -190,7 +189,7 @@ class SystemHealthChecker:
                 results[dep] = "missing"
 
         # Check optional dependencies
-        optional_deps = ["ollama", "reportlab"]
+        optional_deps = ["ollama", "reportlab", "requests", "psutil"]
         results["optional"] = {}
         for dep in optional_deps:
             try:

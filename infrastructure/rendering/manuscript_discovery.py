@@ -8,14 +8,13 @@ reusable across all projects.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 from infrastructure.core.logging_utils import get_logger, log_success
 
 logger = get_logger(__name__)
 
-
-def verify_figures_exist(project_root: Path, manuscript_dir: Path) -> Dict[str, Any]:
+def verify_figures_exist(project_root: Path, manuscript_dir: Path) -> dict[str, Any]:
     """Verify expected figures exist, return status.
 
     Args:
@@ -30,7 +29,7 @@ def verify_figures_exist(project_root: Path, manuscript_dir: Path) -> Dict[str, 
         - total_expected: Total expected figures (currently 0)
     """
     figures_dir = project_root / "output" / "figures"
-    result: Dict[str, Any] = {
+    result: dict[str, Any] = {
         "figures_dir_exists": figures_dir.exists(),
         "found_figures": [],
         "missing_figures": [],
@@ -52,8 +51,7 @@ def verify_figures_exist(project_root: Path, manuscript_dir: Path) -> Dict[str, 
 
     return result
 
-
-def discover_manuscript_files(manuscript_dir: Path) -> List[Path]:
+def discover_manuscript_files(manuscript_dir: Path) -> list[Path]:
     """Discover manuscript files with proper ordering and filtering.
 
     Filters out non-manuscript files and orders files for proper document structure:
@@ -105,11 +103,11 @@ def discover_manuscript_files(manuscript_dir: Path) -> List[Path]:
                     all_md_files.append(f)
 
     # Organize files by category for proper ordering
-    main_sections: List[Path] = []  # 01_*.md - 09_*.md
-    supplemental: List[Path] = []  # S01_*.md - S0N_*.md
-    glossary: List[Path] = []  # 98_*.md
-    references: List[Path] = []  # 99_*.md
-    other: List[Path] = []  # Everything else
+    main_sections: list[Path] = []  # 01_*.md - 09_*.md
+    supplemental: list[Path] = []  # S01_*.md - S0N_*.md
+    glossary: list[Path] = []  # 98_*.md
+    references: list[Path] = []  # 99_*.md
+    other: list[Path] = []  # Everything else
 
     for md_file in all_md_files:
         stem = md_file.stem

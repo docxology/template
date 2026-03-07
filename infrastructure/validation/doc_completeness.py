@@ -5,17 +5,16 @@ from __future__ import annotations
 import re
 from collections import defaultdict
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.validation.doc_models import CompletenessGap, DocumentationFile
 
 logger = get_logger(__name__)
 
-
 def check_feature_documentation(
-    repo_root: Path, documentation_files: List[DocumentationFile]
-) -> List[CompletenessGap]:
+    repo_root: Path, documentation_files: list[DocumentationFile]
+) -> list[CompletenessGap]:
     """Check if all features are documented."""
     gaps = []
     # Check src/ modules are documented
@@ -45,8 +44,7 @@ def check_feature_documentation(
 
     return gaps
 
-
-def check_script_documentation(repo_root: Path) -> List[CompletenessGap]:
+def check_script_documentation(repo_root: Path) -> list[CompletenessGap]:
     """Check if all scripts have documentation."""
     gaps = []
     scripts_dir = repo_root / "scripts"
@@ -74,8 +72,7 @@ def check_script_documentation(repo_root: Path) -> List[CompletenessGap]:
 
     return gaps
 
-
-def check_config_documentation(config_files: Dict[str, Path]) -> List[CompletenessGap]:
+def check_config_documentation(config_files: dict[str, Path]) -> list[CompletenessGap]:
     """Check if configuration options are documented."""
     gaps: list[CompletenessGap] = []
     # Check if config.yaml.example is comprehensive
@@ -84,10 +81,9 @@ def check_config_documentation(config_files: Dict[str, Path]) -> List[Completene
         pass
     return gaps
 
-
 def check_troubleshooting(
-    documentation_files: List[DocumentationFile],
-) -> List[CompletenessGap]:
+    documentation_files: list[DocumentationFile],
+) -> list[CompletenessGap]:
     """Check troubleshooting guide completeness."""
     gaps = []
     has_troubleshooting = any("TROUBLESHOOTING" in d.relative_path for d in documentation_files)
@@ -102,10 +98,9 @@ def check_troubleshooting(
         )
     return gaps
 
-
 def check_workflow_documentation(
-    documentation_files: List[DocumentationFile],
-) -> List[CompletenessGap]:
+    documentation_files: list[DocumentationFile],
+) -> list[CompletenessGap]:
     """Check workflow documentation completeness."""
     gaps = []
     has_workflow = any("WORKFLOW" in d.relative_path for d in documentation_files)
@@ -120,10 +115,9 @@ def check_workflow_documentation(
         )
     return gaps
 
-
 def check_onboarding(
-    documentation_files: List[DocumentationFile],
-) -> List[CompletenessGap]:
+    documentation_files: list[DocumentationFile],
+) -> list[CompletenessGap]:
     """Check new user onboarding completeness."""
     gaps = []
     has_getting_started = any("GETTING_STARTED" in d.relative_path for d in documentation_files)
@@ -140,35 +134,31 @@ def check_onboarding(
         )
     return gaps
 
-
-def check_cross_reference_completeness() -> List[CompletenessGap]:
+def check_cross_reference_completeness() -> list[CompletenessGap]:
     """Check cross-reference completeness."""
     gaps: list[CompletenessGap] = []
     # This could check if related topics are linked
     return gaps
 
-
-def group_gaps_by_category(gaps: List[CompletenessGap]) -> Dict[str, int]:
+def group_gaps_by_category(gaps: list[CompletenessGap]) -> dict[str, int]:
     """Group completeness gaps by category."""
     categories: dict[str, int] = defaultdict(int)
     for gap in gaps:
         categories[gap.category] += 1
     return dict(categories)
 
-
-def group_gaps_by_severity(gaps: List[CompletenessGap]) -> Dict[str, int]:
+def group_gaps_by_severity(gaps: list[CompletenessGap]) -> dict[str, int]:
     """Group completeness gaps by severity."""
     severities: dict[str, int] = defaultdict(int)
     for gap in gaps:
         severities[gap.severity] += 1
     return dict(severities)
 
-
 def run_completeness_phase(
     repo_root: Path,
-    documentation_files: List[DocumentationFile],
-    config_files: Dict[str, Path],
-) -> Tuple[Dict[str, Any], List[CompletenessGap]]:
+    documentation_files: list[DocumentationFile],
+    config_files: dict[str, Path],
+) -> tuple[dict[str, Any], list[CompletenessGap]]:
     """Run Phase 3: Completeness Analysis.
 
     Args:

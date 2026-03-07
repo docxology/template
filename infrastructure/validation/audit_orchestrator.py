@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import time
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.validation.check_links import (
@@ -34,7 +34,6 @@ from infrastructure.validation.issue_categorizer import (
 )
 
 logger = get_logger(__name__)
-
 
 def run_comprehensive_audit(
     repo_root: Path,
@@ -141,17 +140,16 @@ def run_comprehensive_audit(
 
     return scan_results
 
-
 def _validate_single_file(
     md_file: Path,
     content: str,
     repo_root: Path,
-    all_headings: Dict[str, set[str]],
+    all_headings: dict[str, set[str]],
     include_code: bool,
     include_directory: bool,
     include_imports: bool,
     include_placeholders: bool,
-) -> Dict[str, List[Any]]:
+) -> dict[str, list[Any]]:
     """Validate a single markdown file using all available validation modules."""
 
     file_key = str(md_file.relative_to(repo_root))
@@ -199,7 +197,6 @@ def _validate_single_file(
 
     return results
 
-
 def _calculate_statistics(scan_results: ScanResults) -> None:
     """Calculate statistics for the scan results."""
     scan_results.scanned_files = len(scan_results.documentation_files)  # type: ignore
@@ -213,7 +210,6 @@ def _calculate_statistics(scan_results: ScanResults) -> None:
     }
 
     scan_results.statistics = stats
-
 
 def generate_audit_report(
     scan_results: ScanResults,

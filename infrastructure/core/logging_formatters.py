@@ -5,10 +5,9 @@ from __future__ import annotations
 import json
 import logging
 from datetime import datetime
-from typing import ClassVar, Dict
+from typing import ClassVar
 
 from infrastructure.core.logging_constants import EMOJIS, USE_EMOJIS
-
 
 class JSONFormatter(logging.Formatter):
     """JSON formatter for structured logging.
@@ -17,14 +16,7 @@ class JSONFormatter(logging.Formatter):
     """
 
     def format(self, record: logging.LogRecord) -> str:
-        """Format log record as JSON.
-
-        Args:
-            record: Log record to format
-
-        Returns:
-            JSON formatted log message
-        """
+        """Format log record as JSON."""
         log_data = {
             "timestamp": datetime.fromtimestamp(record.created).isoformat(),
             "level": record.levelname,
@@ -42,7 +34,6 @@ class JSONFormatter(logging.Formatter):
 
         return json.dumps(log_data)
 
-
 class TemplateFormatter(logging.Formatter):
     """Custom formatter matching bash logging.sh format.
 
@@ -50,7 +41,7 @@ class TemplateFormatter(logging.Formatter):
     Adds emojis when appropriate and running in a TTY.
     """
 
-    LEVEL_EMOJIS: ClassVar[Dict[int, str]] = {
+    LEVEL_EMOJIS: ClassVar[dict[int, str]] = {
         logging.DEBUG: "",
         logging.INFO: EMOJIS["info"] if USE_EMOJIS else "",
         logging.WARNING: EMOJIS["warning"] if USE_EMOJIS else "",
@@ -58,14 +49,7 @@ class TemplateFormatter(logging.Formatter):
     }  # read-only lookup — do not mutate
 
     def format(self, record: logging.LogRecord) -> str:
-        """Format log record with timestamp and emoji.
-
-        Args:
-            record: Log record to format
-
-        Returns:
-            Formatted log message
-        """
+        """Format log record with timestamp and emoji."""
         # Create timestamp
         timestamp = datetime.fromtimestamp(record.created).strftime("%Y-%m-%d %H:%M:%S")
 

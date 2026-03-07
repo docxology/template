@@ -283,12 +283,11 @@ def run_test_suite(config: TestSuiteConfig) -> tuple[int, dict[str, Any]]:
         config.max_failures_config_key,
     )
 
-    if exit_code == 0:
-        pass  # Caller logs success
-    elif should_halt:
-        logger.error(message)
-    else:
-        logger.warning(message)
-        exit_code = 0
+    if exit_code != 0:
+        if should_halt:
+            logger.error(message)
+        else:
+            logger.warning(message)
+            exit_code = 0
 
     return exit_code, test_results

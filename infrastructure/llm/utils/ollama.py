@@ -23,9 +23,15 @@ import subprocess
 import time
 from typing import Any, Dict, List, Optional, Tuple
 
-import requests
-from requests.exceptions import ConnectionError as RequestsConnectionError
-from requests.exceptions import RequestException, Timeout
+try:
+    import requests
+    from requests.exceptions import ConnectionError as RequestsConnectionError
+    from requests.exceptions import RequestException, Timeout
+except ImportError:
+    requests = None  # type: ignore[assignment]
+    RequestsConnectionError = OSError  # type: ignore[misc,assignment]
+    RequestException = OSError  # type: ignore[misc,assignment]
+    Timeout = OSError  # type: ignore[misc,assignment]
 
 from infrastructure.core.logging_utils import get_logger
 
