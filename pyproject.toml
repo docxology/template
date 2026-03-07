@@ -98,7 +98,7 @@ dev = [
 # uv-specific configuration
 managed = true  # Use uv's virtual environment management
 package = false  # This is not a distributable package
-default-groups = ["dev", "monitoring"]  # Install optional feature groups alongside dev deps
+default-groups = ["dev"]
 
 [tool.uv.workspace]
 # Workspace configuration for multi-project support

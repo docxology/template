@@ -34,10 +34,8 @@ class TestCheckDependencies:
         """Test checking default required packages."""
         all_present, missing = check_dependencies()
 
-        # Core packages should be present in test environment
-        # numpy, matplotlib, pytest, requests are required
-        assert isinstance(all_present, bool)
-        assert isinstance(missing, list)
+        # pytest is always present since we're running tests with it
+        assert "pytest" not in missing
 
     def test_check_specific_packages_present(self):
         """Test checking packages known to be present."""
@@ -72,12 +70,13 @@ class TestCheckDependencies:
         assert all_present is True
         assert missing == []
 
-    def test_returns_tuple(self):
-        """Test that function returns proper tuple type."""
-        result = check_dependencies(["pytest"])
+    def test_all_present_is_false_when_any_missing(self):
+        """all_present flag is False when at least one package is absent."""
+        all_present, missing = check_dependencies(["pytest", "nonexistent_xyz_pkg_9999"])
 
-        assert isinstance(result, tuple)
-        assert len(result) == 2
+        assert all_present is False
+        assert "nonexistent_xyz_pkg_9999" in missing
+        assert "pytest" not in missing
 
 
 class TestEnvironmentSetupIntegration:
@@ -108,15 +107,10 @@ class TestDependencyValidation:
 class TestEnvironmentState:
     """Tests for environment state queries."""
 
-    def test_import_system_working(self):
-        """Test the import system is working correctly."""
-        # Test that we can import and the module has expected attributes
-        import infrastructure.core.environment as env_module
-
-        assert hasattr(env_module, "check_python_version")
-        assert hasattr(env_module, "check_dependencies")
-        assert callable(env_module.check_python_version)
-        assert callable(env_module.check_dependencies)
+    def test_check_python_version_succeeds_in_test_env(self):
+        """check_python_version returns True in the current (valid) environment."""
+        result = check_python_version()
+        assert result is True
 
 
 class TestSetupDirectories:

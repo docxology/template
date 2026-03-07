@@ -267,14 +267,3 @@ class SystemHealthChecker:
         return summary
 
 
-# Capture process start time at import (zero side effects — just reads the clock).
-_PROCESS_START_TIME: float = time.time()
-_checker: SystemHealthChecker | None = None
-
-
-def get_health_checker() -> SystemHealthChecker:
-    """Return the module-level SystemHealthChecker singleton."""
-    global _checker
-    if _checker is None:
-        _checker = SystemHealthChecker(start_time=_PROCESS_START_TIME)
-    return _checker

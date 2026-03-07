@@ -32,9 +32,10 @@ class InfraResults(TypedDict):
 logger = get_logger(__name__)
 
 
-def load_test_results(project_name: str) -> Dict[str, Any]:
+def load_test_results(project_name: str, repo_root: Path | None = None) -> Dict[str, Any]:
     """Load test results from a project's output directory; returns {} if not found."""
-    results_file = Path(f"projects/{project_name}/output/reports/test_results.json")
+    root = repo_root or Path.cwd()
+    results_file = root / "projects" / project_name / "output" / "reports" / "test_results.json"
 
     if results_file.exists():
         try:
@@ -67,12 +68,12 @@ _EMPTY_INFRA_RESULTS: InfraResults = {
 }
 
 
-def load_infrastructure_results() -> InfraResults:
+def load_infrastructure_results(repo_root: Path | None = None) -> InfraResults:
     """Load infrastructure test results from root coverage files."""
+    root = repo_root or Path.cwd()
     base: InfraResults = dict(_EMPTY_INFRA_RESULTS)  # type: ignore[assignment]
 
-    # Try to load from the infrastructure validation report
-    infra_results_file = Path("infrastructure_validation_report.json")
+    infra_results_file = root / "infrastructure_validation_report.json"
     if infra_results_file.exists():
         try:
             with open(infra_results_file, "r") as f:
@@ -96,8 +97,7 @@ def load_infrastructure_results() -> InfraResults:
         except (OSError, json.JSONDecodeError, KeyError) as e:
             logger.warning(f"Could not load infrastructure results from validation report: {e}")
 
-    # Fallback: try coverage JSON files
-    for coverage_path in (Path("coverage_infra.json"), Path("htmlcov/coverage.json")):
+    for coverage_path in (root / "coverage_infra.json", root / "htmlcov" / "coverage.json"):
         if coverage_path.exists():
             try:
                 with open(coverage_path, "r") as f:
@@ -117,9 +117,10 @@ def load_infrastructure_results() -> InfraResults:
     return base
 
 
-def discover_active_projects() -> list:
+def discover_active_projects(repo_root: Path | None = None) -> list:
     """Discover active projects from the projects/ directory."""
-    projects_dir = Path("projects")
+    root = repo_root or Path.cwd()
+    projects_dir = root / "projects"
     if not projects_dir.exists():
         return []
 
@@ -167,13 +168,14 @@ def _is_ollama_available() -> bool:
         return False
 
 
-def generate_summary_report() -> Dict[str, Any]:
+def generate_summary_report(repo_root: Path | None = None) -> Dict[str, Any]:
     """Generate comprehensive test summary report."""
+    root = repo_root or Path.cwd()
     timestamp = datetime.now().isoformat()
-    active_projects = discover_active_projects()
+    active_projects = discover_active_projects(root)
 
-    infra_results = load_infrastructure_results()
-    project_results = {name: load_test_results(name) for name in active_projects}
+    infra_results = load_infrastructure_results(root)
+    project_results = {name: load_test_results(name, root) for name in active_projects}
 
     all_results = [infra_results] + list(project_results.values())
     counts = _aggregate_counts(all_results)
@@ -182,7 +184,7 @@ def generate_summary_report() -> Dict[str, Any]:
     overall_success = all(r.get("exit_code", 1) == 0 for r in all_results)
     infra_coverage = infra_results.get("coverage_percent", 0)
     infra_lines = infra_results.get("total_lines", 0)
-    testing_config = get_testing_config(Path.cwd())
+    testing_config = get_testing_config(root)
 
     report: Dict[str, Any] = {
         "timestamp": timestamp,
