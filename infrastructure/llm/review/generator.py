@@ -52,7 +52,8 @@ from infrastructure.llm.validation.format import (
 )
 
 from infrastructure.llm.review.metrics import ReviewMetrics, ManuscriptInputMetrics, estimate_tokens
-from infrastructure.validation.pdf_validator import extract_text_from_pdf, PDFValidationError
+from infrastructure.validation.pdf_validator import extract_text_from_pdf
+from infrastructure.core.exceptions import PDFValidationError
 
 logger = get_logger(__name__)
 

@@ -236,7 +236,7 @@ def verify_commands(md_files: List[Path], repo_root: Path) -> List[AccuracyIssue
                                         )
                                     )
         except Exception as e:
-            logger.debug(f"Failed to check command references in {md_file}: {e}")
+            logger.warning(f"Failed to check command references in {md_file}: {e}")
 
     return issues
 
@@ -274,7 +274,7 @@ def check_file_paths(md_files: List[Path], repo_root: Path) -> List[AccuracyIssu
                                 )
                             )
         except Exception as e:
-            logger.debug(f"Failed to check file paths in {md_file}: {e}")
+            logger.warning(f"Failed to check file paths in {md_file}: {e}")
 
     return issues
 

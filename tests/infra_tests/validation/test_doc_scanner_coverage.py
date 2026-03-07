@@ -1,75 +1,52 @@
-"""Comprehensive tests for infrastructure/validation/doc_scanner.py.
+"""Coverage tests for infrastructure/validation/doc_scanner.py.
 
-Tests documentation scanning and validation functionality using real implementations.
+Tests documentation scanning functionality using real implementations.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
 from infrastructure.validation import doc_scanner
+from infrastructure.validation.doc_scanner import DocumentationScanner
 
 
 class TestDocScannerCore:
-    """Test core doc scanner functionality."""
+    """Test core doc scanner module."""
 
     def test_module_imports(self):
         """Test that module imports correctly."""
         assert doc_scanner is not None
 
-    def test_has_scanner_functionality(self):
-        """Test that module has scanning functionality."""
-        # Check for common scanner attributes
-        module_attrs = dir(doc_scanner)
-        assert len(module_attrs) > 0
+    def test_scanner_class_exists(self):
+        """Test that DocumentationScanner class is importable."""
+        assert DocumentationScanner is not None
 
-
-class TestDocumentScanning:
-    """Test document scanning functionality."""
-
-    def test_scan_directory(self, tmp_path):
-        """Test scanning a directory for documents."""
-        # Create test files
-        (tmp_path / "readme.md").write_text("# README")
-        (tmp_path / "docs").mkdir()
-        (tmp_path / "docs" / "guide.md").write_text("# Guide")
-
-        if hasattr(doc_scanner, "scan_directory"):
-            results = doc_scanner.scan_directory(tmp_path)
-            assert results is not None
-
-    def test_scan_empty_directory(self, tmp_path):
-        """Test scanning an empty directory."""
-        if hasattr(doc_scanner, "scan_directory"):
-            results = doc_scanner.scan_directory(tmp_path)
-            assert results is not None
-
-
-class TestDocScannerValidation:
-    """Test validation functionality."""
-
-    def test_validate_structure(self, tmp_path):
-        """Test structure validation."""
-        (tmp_path / "README.md").write_text("# README")
-
-        if hasattr(doc_scanner, "validate_structure"):
-            result = doc_scanner.validate_structure(tmp_path)
-            assert isinstance(result, (bool, dict))
-
-    def test_check_completeness(self, tmp_path):
-        """Test completeness checking."""
-        if hasattr(doc_scanner, "check_completeness"):
-            result = doc_scanner.check_completeness(tmp_path)
-            assert result is not None
+    def test_main_function_exists(self):
+        """Test that main() entry point exists."""
+        assert hasattr(doc_scanner, "main")
+        assert callable(doc_scanner.main)
 
 
 class TestDocScannerIntegration:
     """Integration tests for doc scanner."""
 
     def test_full_scan_workflow(self, tmp_path):
-        """Test complete scanning workflow."""
-        # Create documentation structure
-        docs = tmp_path / "docs"
-        docs.mkdir()
-        (docs / "README.md").write_text("# Docs")
-        (docs / "GUIDE.md").write_text("# Guide")
+        """Test that run_full_scan returns results and a report string."""
+        (tmp_path / "README.md").write_text("# README\n\nContent.")
 
-        # Module should be importable and usable
-        assert doc_scanner is not None
+        scanner = DocumentationScanner(tmp_path)
+        results, report = scanner.run_full_scan()
+
+        assert results is not None
+        assert isinstance(report, str)
+        assert len(report) > 0
+
+    def test_phase6_verification_structure(self, tmp_path):
+        """Test that phase6_verification returns expected keys."""
+        scanner = DocumentationScanner(tmp_path)
+
+        result = scanner.phase6_verification()
+
+        assert "link_checker" in result
+        assert "markdown_syntax" in result
+        assert "commands_tested" in result
+        assert "cross_references" in result
+        assert "circular_references" in result

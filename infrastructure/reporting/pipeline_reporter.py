@@ -84,16 +84,7 @@ def generate_pipeline_report(
 def save_pipeline_report(
     report: PipelineReport, output_dir: Path, formats: Optional[list[str]] = None
 ) -> dict[str, Path]:
-    """Save pipeline report in multiple formats.
-
-    Args:
-        report: PipelineReport instance
-        output_dir: Output directory path
-        formats: List of formats to generate ('json', 'html', 'markdown')
-
-    Returns:
-        Dictionary mapping format to file path
-    """
+    """Save pipeline report in multiple formats; returns dict mapping format to path."""
     if formats is None:
         formats = ["json", "html", "markdown"]
 
@@ -132,14 +123,7 @@ def save_pipeline_report(
 
 
 def _generate_pipeline_markdown(report: PipelineReport) -> str:
-    """Generate Markdown format pipeline report.
-
-    Args:
-        report: PipelineReport instance
-
-    Returns:
-        Markdown formatted report
-    """
+    """Generate Markdown format pipeline report."""
     lines = [
         "# Pipeline Execution Report",
         "",
@@ -240,14 +224,7 @@ def _generate_pipeline_markdown(report: PipelineReport) -> str:
 
 
 def generate_html_report(report: PipelineReport) -> str:
-    """Generate HTML format pipeline report.
-
-    Args:
-        report: PipelineReport instance
-
-    Returns:
-        HTML formatted report
-    """
+    """Generate HTML format pipeline report."""
     # Calculate summary statistics
     passed = sum(1 for s in report.stages if s.status == "passed")
     failed = sum(1 for s in report.stages if s.status == "failed")
@@ -518,14 +495,7 @@ def save_error_summary(errors: list[dict[str, Any]], output_dir: Path) -> dict[s
 
 
 def generate_error_markdown(summary: dict[str, Any]) -> str:
-    """Generate Markdown error summary.
-
-    Args:
-        summary: Error summary dictionary
-
-    Returns:
-        Markdown formatted report
-    """
+    """Generate Markdown error summary."""
     lines = [
         "# Error Summary",
         "",
