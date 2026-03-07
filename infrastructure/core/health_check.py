@@ -94,14 +94,14 @@ class SystemHealthChecker:
         except (OSError, IOError):
             results["write_permissions"] = False
 
-        # Check critical directories
-        critical_dirs = [
-            Path("projects"),
-            Path("projects/project"),
-            Path("projects/project/src"),
-            Path("projects/project/output"),
-            Path("infrastructure"),
-        ]
+        # Check critical directories (discover project dirs dynamically)
+        projects_root = Path("projects")
+        critical_dirs = [projects_root, Path("infrastructure")]
+        if projects_root.exists():
+            for p in sorted(projects_root.iterdir()):
+                if p.is_dir() and not p.name.startswith((".", "_")):
+                    critical_dirs.append(p / "src")
+                    critical_dirs.append(p / "output")
 
         results["directories"] = {}
         for dir_path in critical_dirs:

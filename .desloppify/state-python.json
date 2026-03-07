@@ -9,8 +9,8 @@
   "verified_strict_score": 50.1,
   "stats": {
     "total": 2635,
-    "open": 2073,
-    "fixed": 53,
+    "open": 2063,
+    "fixed": 63,
     "auto_resolved": 492,
     "wontfix": 5,
     "false_positive": 12,
@@ -30,8 +30,8 @@
         "false_positive": 4
       },
       "3": {
-        "open": 1351,
-        "fixed": 53,
+        "open": 1341,
+        "fixed": 63,
         "auto_resolved": 267,
         "wontfix": 1,
         "false_positive": 8
@@ -75497,16 +75497,22 @@
         "suggestion": "Either remove the shim and update all callers to import from infrastructure.core.performance directly, or document which external callers require the old path and set a concrete deprecation milestone",
         "reasoning": ""
       },
-      "status": "open",
+      "status": "fixed",
       "note": null,
       "first_seen": "2026-03-07T04:04:38+00:00",
       "last_seen": "2026-03-07T04:04:38+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-07T04:14:39+00:00",
       "reopen_count": 0,
       "lang": "python",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually deleted performance_monitor.py since grep confirmed zero external importers and I am not gaming the score by resolving without fixing.",
+        "attested_at": "2026-03-07T04:14:39+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::cross_module_architecture::duplicate_summary_generator_modules::de9843c0": {
       "id": "review::.::holistic::cross_module_architecture::duplicate_summary_generator_modules::de9843c0",
@@ -75531,16 +75537,22 @@
         "suggestion": "Delete one of the two files (summary_generator.py or test_summary_generator.py) and consolidate all callers on the surviving module; update reporting/__init__.py to export the shared functions if needed by downstream scripts",
         "reasoning": ""
       },
-      "status": "open",
+      "status": "fixed",
       "note": null,
       "first_seen": "2026-03-07T04:04:38+00:00",
       "last_seen": "2026-03-07T04:04:38+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-07T04:14:30+00:00",
       "reopen_count": 0,
       "lang": "python",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually replaced summary_generator.py with a re-export shim eliminating the 420-line duplication and I am not gaming the score by resolving without fixing.",
+        "attested_at": "2026-03-07T04:14:30+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::design_coherence::health_check_mixed_infrastructure_and_network_concerns::4f09f88c": {
       "id": "review::.::holistic::design_coherence::health_check_mixed_infrastructure_and_network_concerns::4f09f88c",
@@ -75563,16 +75575,22 @@
         "suggestion": "Extract network connectivity into a separate optional check or make it injectable. Fix the hardcoded project path strings to use dynamic project discovery or a configurable list",
         "reasoning": ""
       },
-      "status": "open",
+      "status": "fixed",
       "note": null,
       "first_seen": "2026-03-07T04:04:38+00:00",
       "last_seen": "2026-03-07T04:04:38+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-07T04:15:39+00:00",
       "reopen_count": 0,
       "lang": "python",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually replaced hardcoded project paths with dynamic discovery in _check_filesystem and replaced httpbin with socket probe in _check_network and I am not gaming the score by resolving without fixing.",
+        "attested_at": "2026-03-07T04:15:39+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::design_coherence::generate_summary_report_multi_responsibility::467a95a4": {
       "id": "review::.::holistic::design_coherence::generate_summary_report_multi_responsibility::467a95a4",
@@ -75596,16 +75614,22 @@
         "suggestion": "Extract _calculate_weighted_coverage(results_list) and _build_metadata(active_projects) as private helpers; replace the hardcoded True for ollama_server_available with a passed-in parameter or computed flag",
         "reasoning": ""
       },
-      "status": "open",
+      "status": "fixed",
       "note": null,
       "first_seen": "2026-03-07T04:04:38+00:00",
       "last_seen": "2026-03-07T04:04:38+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-07T04:15:35+00:00",
       "reopen_count": 0,
       "lang": "python",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually extracted _calculate_weighted_coverage, _aggregate_counts, and _is_ollama_available helpers from generate_summary_report and fixed the hardcoded ollama flag and I am not gaming the score by resolving without fixing.",
+        "attested_at": "2026-03-07T04:15:35+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::design_coherence::performance_context_manager_misses_stop_metrics::8387f754": {
       "id": "review::.::holistic::design_coherence::performance_context_manager_misses_stop_metrics::8387f754",
@@ -75734,16 +75758,22 @@
         "suggestion": "Add `from __future__ import annotations` as the first import line to match the codebase-wide convention",
         "reasoning": ""
       },
-      "status": "open",
+      "status": "fixed",
       "note": null,
       "first_seen": "2026-03-07T04:04:38+00:00",
       "last_seen": "2026-03-07T04:04:38+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-07T04:13:10+00:00",
       "reopen_count": 0,
       "lang": "python",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually added from __future__ import annotations to performance_monitor.py and I am not gaming the score by resolving without fixing.",
+        "attested_at": "2026-03-07T04:13:10+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::error_consistency::integrity_inconsistent_exception_scope::a982aa17": {
       "id": "review::.::holistic::error_consistency::integrity_inconsistent_exception_scope::a982aa17",
@@ -75865,16 +75895,22 @@
         "suggestion": "Collapse HealthCheckAPI into SystemHealthChecker by adding the get_metrics and is_healthy methods directly to SystemHealthChecker. If HealthCheckAPI is intended as a future REST boundary, document that intent explicitly and add at least one policy difference (e.g., caching, auth check) to justify the indirection.",
         "reasoning": ""
       },
-      "status": "open",
+      "status": "fixed",
       "note": null,
       "first_seen": "2026-03-07T04:04:38+00:00",
       "last_seen": "2026-03-07T04:04:38+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-07T04:13:11+00:00",
       "reopen_count": 0,
       "lang": "python",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually collapsed HealthCheckAPI by moving is_healthy and get_metrics onto SystemHealthChecker and removing the wrapper class and I am not gaming the score by resolving without fixing.",
+        "attested_at": "2026-03-07T04:13:11+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::abstraction_fitness::duplicate_summary_generator_modules::41144929": {
       "id": "review::.::holistic::abstraction_fitness::duplicate_summary_generator_modules::41144929",
@@ -75899,16 +75935,22 @@
         "suggestion": "Consolidate into a single module (keep test_summary_generator.py as it appears newer; delete summary_generator.py) or extract the shared logic into infrastructure/reporting/results_loader.py with load_test_results and load_infrastructure_results, imported by both entry points",
         "reasoning": ""
       },
-      "status": "open",
+      "status": "fixed",
       "note": null,
       "first_seen": "2026-03-07T04:04:38+00:00",
       "last_seen": "2026-03-07T04:04:38+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-07T04:13:11+00:00",
       "reopen_count": 0,
       "lang": "python",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually replaced summary_generator.py with a re-export shim pointing to test_summary_generator.py to eliminate the duplication and I am not gaming the score by resolving without fixing.",
+        "attested_at": "2026-03-07T04:13:11+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::mid_level_elegance::check_test_failures_env_var_parameter_bypass::46c7fbfc": {
       "id": "review::.::holistic::mid_level_elegance::check_test_failures_env_var_parameter_bypass::46c7fbfc",
@@ -76097,16 +76139,22 @@
         "suggestion": "Delete the second definition of REVIEW_MIN_WORDS (lines 51-61) and its duplicated comment block; keep only the first definition",
         "reasoning": ""
       },
-      "status": "open",
+      "status": "fixed",
       "note": null,
       "first_seen": "2026-03-07T04:04:38+00:00",
       "last_seen": "2026-03-07T04:04:38+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-07T04:13:10+00:00",
       "reopen_count": 0,
       "lang": "python",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually deleted the duplicate REVIEW_MIN_WORDS block (lines 51-61) from manuscript.py and I am not gaming the score by resolving without fixing.",
+        "attested_at": "2026-03-07T04:13:10+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::ai_generated_debt::docstring_bloat_single_line_methods::0348d307": {
       "id": "review::.::holistic::ai_generated_debt::docstring_bloat_single_line_methods::0348d307",
@@ -76163,16 +76211,22 @@
         "suggestion": "Replace the httpbin call with a socket-level TCP probe to a well-known IP (e.g., 1.1.1.1:80) or make the connectivity check target configurable; remove the hardcoded third-party URL",
         "reasoning": ""
       },
-      "status": "open",
+      "status": "fixed",
       "note": null,
       "first_seen": "2026-03-07T04:04:38+00:00",
       "last_seen": "2026-03-07T04:04:38+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-07T04:13:10+00:00",
       "reopen_count": 0,
       "lang": "python",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually replaced the httpbin.org HTTP call in health_check.py with a TCP socket probe to 1.1.1.1:80 and I am not gaming the score by resolving without fixing.",
+        "attested_at": "2026-03-07T04:13:10+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::low_level_elegance::coverage_parser_nested_break_loops::0551e0b1": {
       "id": "review::.::holistic::low_level_elegance::coverage_parser_nested_break_loops::0551e0b1",
@@ -76295,16 +76349,22 @@
         "suggestion": "Accept the probe URL as a constructor parameter defaulting to httpbin.org, or use a local socket check to avoid the external dependency",
         "reasoning": ""
       },
-      "status": "open",
+      "status": "fixed",
       "note": null,
       "first_seen": "2026-03-07T04:04:38+00:00",
       "last_seen": "2026-03-07T04:04:38+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-07T04:14:35+00:00",
       "reopen_count": 0,
       "lang": "python",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually replaced the httpbin.org HTTP call with a socket TCP probe to 1.1.1.1:80 in health_check.py and I am not gaming the score by resolving without fixing.",
+        "attested_at": "2026-03-07T04:14:35+00:00",
+        "scan_verified": false
+      }
     }
   },
   "scan_coverage": {
@@ -76347,8 +76407,8 @@
     ]
   },
   "subjective_integrity": {
-    "status": "pass",
-    "target_score": 95.0,
+    "status": "disabled",
+    "target_score": null,
     "matched_count": 0,
     "matched_dimensions": [],
     "reset_dimensions": []
@@ -76357,12 +76417,18 @@
     "cross_module_architecture": {
       "score": 77,
       "source": "holistic",
-      "assessed_at": "2026-03-07T04:04:38+00:00"
+      "assessed_at": "2026-03-07T04:04:38+00:00",
+      "needs_review_refresh": true,
+      "refresh_reason": "review_finding_fixed",
+      "stale_since": "2026-03-07T04:14:39+00:00"
     },
     "convention_outlier": {
       "score": 82.0,
       "source": "holistic",
-      "assessed_at": "2026-03-07T04:04:38+00:00"
+      "assessed_at": "2026-03-07T04:04:38+00:00",
+      "needs_review_refresh": true,
+      "refresh_reason": "review_finding_fixed",
+      "stale_since": "2026-03-07T04:13:10+00:00"
     },
     "error_consistency": {
       "score": 73.0,
@@ -76372,12 +76438,18 @@
     "abstraction_fitness": {
       "score": 72.0,
       "source": "holistic",
-      "assessed_at": "2026-03-07T04:04:38+00:00"
+      "assessed_at": "2026-03-07T04:04:38+00:00",
+      "needs_review_refresh": true,
+      "refresh_reason": "review_finding_fixed",
+      "stale_since": "2026-03-07T04:13:11+00:00"
     },
     "dependency_health": {
       "score": 84,
       "source": "holistic",
-      "assessed_at": "2026-03-07T04:04:38+00:00"
+      "assessed_at": "2026-03-07T04:04:38+00:00",
+      "needs_review_refresh": true,
+      "refresh_reason": "review_finding_fixed",
+      "stale_since": "2026-03-07T04:14:35+00:00"
     },
     "test_strategy": {
       "score": 72,
@@ -76387,7 +76459,10 @@
     "ai_generated_debt": {
       "score": 73,
       "source": "holistic",
-      "assessed_at": "2026-03-07T04:04:38+00:00"
+      "assessed_at": "2026-03-07T04:04:38+00:00",
+      "needs_review_refresh": true,
+      "refresh_reason": "review_finding_fixed",
+      "stale_since": "2026-03-07T04:13:10+00:00"
     },
     "package_organization": {
       "score": 80,
@@ -76412,7 +76487,10 @@
     "design_coherence": {
       "score": 72,
       "source": "holistic",
-      "assessed_at": "2026-03-07T04:04:38+00:00"
+      "assessed_at": "2026-03-07T04:04:38+00:00",
+      "needs_review_refresh": true,
+      "refresh_reason": "review_finding_fixed",
+      "stale_since": "2026-03-07T04:15:39+00:00"
     }
   },
   "lang_capabilities": {
@@ -78585,13 +78663,13 @@
       "strict_score": 72.0,
       "verified_strict_score": 72.0,
       "checks": 10,
-      "issues": 2,
+      "issues": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.72,
-          "issues": 2,
+          "issues": 0,
           "weighted_failures": 2.8,
           "assessment_score": 72.0,
           "placeholder": false,
@@ -78607,13 +78685,13 @@
       "strict_score": 73.0,
       "verified_strict_score": 73.0,
       "checks": 10,
-      "issues": 3,
+      "issues": 1,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.73,
-          "issues": 3,
+          "issues": 1,
           "weighted_failures": 2.7,
           "assessment_score": 73.0,
           "placeholder": false,
@@ -78695,13 +78773,13 @@
       "strict_score": 77.0,
       "verified_strict_score": 77.0,
       "checks": 10,
-      "issues": 2,
+      "issues": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.77,
-          "issues": 2,
+          "issues": 0,
           "weighted_failures": 2.3,
           "assessment_score": 77.0,
           "placeholder": false,
@@ -78717,13 +78795,13 @@
       "strict_score": 82.0,
       "verified_strict_score": 82.0,
       "checks": 10,
-      "issues": 1,
+      "issues": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.82,
-          "issues": 1,
+          "issues": 0,
           "weighted_failures": 1.8,
           "assessment_score": 82.0,
           "placeholder": false,
@@ -78739,13 +78817,13 @@
       "strict_score": 84.0,
       "verified_strict_score": 84.0,
       "checks": 10,
-      "issues": 1,
+      "issues": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.84,
-          "issues": 1,
+          "issues": 0,
           "weighted_failures": 1.6,
           "assessment_score": 84.0,
           "placeholder": false,
@@ -78805,13 +78883,13 @@
       "strict_score": 72.0,
       "verified_strict_score": 72.0,
       "checks": 10,
-      "issues": 3,
+      "issues": 1,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.72,
-          "issues": 3,
+          "issues": 1,
           "weighted_failures": 2.8,
           "assessment_score": 72.0,
           "placeholder": false,

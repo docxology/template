@@ -131,6 +131,43 @@ def discover_active_projects() -> list:
     return sorted(projects)
 
 
+def _calculate_weighted_coverage(
+    results_list: list[Dict[str, Any]],
+) -> float:
+    """Return coverage percentage weighted by lines of code across all suites."""
+    total_lines = sum(r.get("total_lines", 0) for r in results_list)
+    if total_lines == 0:
+        return 0.0
+    weighted_sum = sum(r.get("coverage_percent", 0) * r.get("total_lines", 0) for r in results_list)
+    return weighted_sum / total_lines
+
+
+def _aggregate_counts(results_list: list[Dict[str, Any]]) -> Dict[str, Any]:
+    """Return summed passed/failed/skipped/duration across all suites."""
+    total_passed = sum(r.get("passed", 0) for r in results_list)
+    total_failed = sum(r.get("failed", 0) for r in results_list)
+    total_skipped = sum(r.get("skipped", 0) for r in results_list)
+    total_tests = total_passed + total_failed + total_skipped
+    total_duration = sum(r.get("duration_seconds", 0) for r in results_list)
+    return {
+        "total_tests": total_tests,
+        "total_passed": total_passed,
+        "total_failed": total_failed,
+        "total_skipped": total_skipped,
+        "pass_rate": (total_passed / total_tests * 100) if total_tests > 0 else 0,
+        "total_duration_seconds": total_duration,
+    }
+
+
+def _is_ollama_available() -> bool:
+    """Return True if the ollama package is importable."""
+    try:
+        import importlib
+        return importlib.util.find_spec("ollama") is not None
+    except Exception:
+        return False
+
+
 def generate_summary_report() -> Dict[str, Any]:
     """Generate comprehensive test summary report.
 
@@ -138,74 +175,26 @@ def generate_summary_report() -> Dict[str, Any]:
         Dictionary containing aggregated test results and metadata
     """
     timestamp = datetime.now().isoformat()
-
-    # Discover active projects dynamically
     active_projects = discover_active_projects()
 
-    # Load results from all test suites
     infra_results = load_infrastructure_results()
+    project_results = {name: load_test_results(name) for name in active_projects}
 
-    # Load project results dynamically
-    project_results = {}
-    for project_name in active_projects:
-        project_results[project_name] = load_test_results(project_name)
+    all_results = [infra_results] + list(project_results.values())
+    counts = _aggregate_counts(all_results)
+    weighted_coverage = _calculate_weighted_coverage(all_results)
 
-    # Calculate totals
-    total_passed = infra_results.get("passed", 0)
-    total_failed = infra_results.get("failed", 0)
-    total_skipped = infra_results.get("skipped", 0)
-
-    for results in project_results.values():
-        total_passed += results.get("passed", 0)
-        total_failed += results.get("failed", 0)
-        total_skipped += results.get("skipped", 0)
-
-    total_tests = total_passed + total_failed + total_skipped
-
-    # Calculate weighted coverage (weighted by lines of code)
+    overall_success = all(r.get("exit_code", 1) == 0 for r in all_results)
     infra_coverage = infra_results.get("coverage_percent", 0)
     infra_lines = infra_results.get("total_lines", 0)
+    testing_config = get_testing_config(Path.cwd())
 
-    total_lines = infra_lines
-    weighted_sum = infra_coverage * infra_lines
-
-    for results in project_results.values():
-        proj_coverage = results.get("coverage_percent", 0)
-        proj_lines = results.get("total_lines", 0)
-        total_lines += proj_lines
-        weighted_sum += proj_coverage * proj_lines
-
-    if total_lines > 0:
-        weighted_coverage = weighted_sum / total_lines
-    else:
-        weighted_coverage = 0
-
-    # Calculate execution times
-    infra_duration = infra_results.get("duration_seconds", 0)
-    total_duration = infra_duration
-
-    for results in project_results.values():
-        total_duration += results.get("duration_seconds", 0)
-
-    # Determine overall success
-    overall_success = infra_results.get("exit_code", 1) == 0
-    for results in project_results.values():
-        if results.get("exit_code", 1) != 0:
-            overall_success = False
-            break
-
-    # Create summary report
-    report = {
+    report: Dict[str, Any] = {
         "timestamp": timestamp,
         "test_type": "full_repository_suite",
         "overall_success": overall_success,
         "summary": {
-            "total_tests": total_tests,
-            "total_passed": total_passed,
-            "total_failed": total_failed,
-            "total_skipped": total_skipped,
-            "pass_rate": (total_passed / total_tests * 100) if total_tests > 0 else 0,
-            "total_duration_seconds": total_duration,
+            **counts,
             "weighted_coverage_percent": round(weighted_coverage, 2),
         },
         "infrastructure": {
@@ -217,10 +206,9 @@ def generate_summary_report() -> Dict[str, Any]:
             "total_lines": infra_lines,
             "covered_lines": infra_results.get("covered_lines", 0),
             "missing_lines": infra_results.get("missing_lines", 0),
-            "duration_seconds": infra_duration,
+            "duration_seconds": infra_results.get("duration_seconds", 0),
             "exit_code": infra_results.get("exit_code", 1),
-            "meets_threshold": infra_coverage
-            >= get_testing_config(Path.cwd()).get("infra_coverage_threshold", 60),
+            "meets_threshold": infra_coverage >= testing_config.infra_coverage_threshold,
         },
         "projects": {},
         "metadata": {
@@ -229,7 +217,7 @@ def generate_summary_report() -> Dict[str, Any]:
             "integration_tests_included": True,
             "slow_tests_included": True,
             "ollama_tests_included": True,
-            "ollama_server_available": True,  # Based on successful test execution
+            "ollama_server_available": _is_ollama_available(),
             "test_command": "scripts/01_run_tests.py --include-slow --include-ollama-tests --verbose",  # noqa: E501
             "active_projects": active_projects,
         },
@@ -241,7 +229,6 @@ def generate_summary_report() -> Dict[str, Any]:
         ],
     }
 
-    # Add per-project results dynamically
     for project_name, results in project_results.items():
         proj_coverage = results.get("coverage_percent", 0)
         report["projects"][project_name] = {
@@ -255,8 +242,7 @@ def generate_summary_report() -> Dict[str, Any]:
             "missing_lines": results.get("missing_lines", 0),
             "duration_seconds": results.get("duration_seconds", 0),
             "exit_code": results.get("exit_code", 1),
-            "meets_threshold": proj_coverage
-            >= get_testing_config(Path.cwd()).get("project_coverage_threshold", 90),
+            "meets_threshold": proj_coverage >= testing_config.project_coverage_threshold,
         }
         report["files_generated"].append(f"coverage_project.json ({project_name})")
         report["files_generated"].append(f"htmlcov/index.html ({project_name})")
