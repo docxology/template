@@ -21,7 +21,6 @@ from infrastructure.core.environment import get_python_command, get_subprocess_e
 from infrastructure.core.logging_utils import (
     flush_file_handlers,
     get_logger,
-    log_operation,
     log_pipeline_stage_with_eta,
     setup_logger,
     setup_root_log_file_handler,

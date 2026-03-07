@@ -7,7 +7,6 @@ and report generation.
 import pytest
 
 from infrastructure.validation import doc_scanner
-from infrastructure.validation.doc_accuracy import extract_headings
 from infrastructure.validation.doc_discovery import (
     analyze_documentation_file,
     catalog_agents_readme,
