@@ -60,6 +60,12 @@ class PipelineStageResult:
     error_message: str = ""
     exception_type: str = ""
 
+    @property
+    def is_skipped(self) -> bool:
+        """Stage was skipped: not successful and exited with code 0."""
+        return not self.success and self.exit_code == 0
+
+
 class StageSpec(NamedTuple):
     """Specification for a single pipeline stage."""
 

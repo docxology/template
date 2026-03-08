@@ -34,8 +34,8 @@ class PipelineSummary:
 
     @property
     def executed_stages(self) -> list[PipelineStageResult]:
-        """Stages that were executed (success or non-zero exit)."""
-        return [r for r in self.stage_results if r.success or r.exit_code != 0]
+        """Stages that were actually run (excludes skipped stages)."""
+        return [r for r in self.stage_results if not r.is_skipped]
 
 
 class PipelineSummaryGenerator:
