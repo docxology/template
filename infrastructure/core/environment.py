@@ -20,7 +20,6 @@ logger = get_logger(__name__)
 
 def check_python_version() -> bool:
     """Verify Python 3.8+ is available."""
-    logger.debug("Checking Python version...")
     version_str = platform.python_version()
 
     if sys.version_info < (3, 8):
@@ -42,8 +41,6 @@ def check_dependencies(
     Returns:
         Tuple of (all_present, missing_packages)
     """
-    logger.debug("Checking dependencies...")
-
     if required_packages is None:
         # Core required packages (must be present)
         required_packages = [
@@ -157,8 +154,6 @@ def check_build_tools(required_tools: dict[str, str] | None = None) -> bool:
     Returns:
         True if all tools are available, False otherwise
     """
-    logger.debug("Checking build tools...")
-
     if required_tools is None:
         required_tools = {
             "pandoc": "Document conversion",
@@ -224,8 +219,6 @@ def setup_directories(
     Returns:
         True if all directories created successfully, False otherwise
     """
-    logger.debug("Setting up directory structure...")
-
     if directories is None:
         directories = _project_output_dirs(project_name)
 
@@ -330,8 +323,6 @@ def verify_source_structure(repo_root: Path, project_name: str = "project") -> b
     Returns:
         True if required directories exist, False otherwise
     """
-    logger.debug("Verifying source code structure...")
-
     # Core components (required for template operation)
     required_dirs = [
         "infrastructure",  # Generic tools (build_verifier, figure_manager, etc.)
@@ -381,8 +372,6 @@ def set_environment_variables(repo_root: Path) -> bool:
     Returns:
         True if environment variables set successfully, False otherwise
     """
-    logger.debug("Setting environment variables...")
-
     # Set matplotlib backend for headless operation
     os.environ["MPLBACKEND"] = "Agg"
 

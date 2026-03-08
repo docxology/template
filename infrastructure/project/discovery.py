@@ -284,8 +284,8 @@ def get_project_metadata(project_dir: Path) -> dict:
                         author.get("name", author.get("email", "Unknown"))
                         for author in project_config["authors"]
                     ]
-        except Exception as e:
-            logger.debug(f"Failed to parse {pyproject_path}: {e}")
+        except (OSError, ValueError, KeyError) as e:
+            logger.warning(f"Failed to parse {pyproject_path}: {e}")
 
     # Try manuscript/config.yaml for additional metadata
     config_path = project_dir / "manuscript" / "config.yaml"
@@ -308,8 +308,8 @@ def get_project_metadata(project_dir: Path) -> dict:
                 ]
         except ImportError:
             logger.debug("PyYAML not available, skipping config.yaml")
-        except Exception as e:
-            logger.debug(f"Failed to parse {config_path}: {e}")
+        except (OSError, ValueError, AttributeError) as e:
+            logger.warning(f"Failed to parse {config_path}: {e}")
 
     return metadata
 

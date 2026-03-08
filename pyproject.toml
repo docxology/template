@@ -36,7 +36,6 @@ classifiers = [
 ]
 dependencies = [
   "numpy>=1.22",
-  "matplotlib>=3.7",
   "pyyaml>=6.0",
 ]
 
@@ -64,6 +63,7 @@ rendering = [
 # Optional dashboard generation (lazily imported in dashboard_generator.py)
 dashboard = [
   "plotly>=5.0.0",
+  "matplotlib>=3.7",
 ]
 # Optional .env file loading (used in infrastructure/core/credentials.py, gracefully absent)
 dotenv = [

@@ -190,7 +190,7 @@ def save_review_outputs(
                 )
             else:
                 logger.info(f"  Saved: {full_path} ({metrics.output_words:,} words)")
-        except Exception as e:
+        except OSError as e:
             logger.error(f"Failed to save {name}: {e}", exc_info=True)
             success = False
 
@@ -327,7 +327,7 @@ The following items are extracted from the review for easy tracking:
 """
         combined_path.write_text(combined_content)
         logger.info(f"  Saved combined review: {combined_path}")
-    except Exception as e:
+    except OSError as e:
         logger.error(f"Failed to save combined review: {e}", exc_info=True)
         success = False
 
@@ -397,7 +397,7 @@ The following items are extracted from the review for easy tracking:
         }
         metadata_path.write_text(json.dumps(metadata, indent=2))
         logger.info(f"  Saved metadata: {metadata_path}")
-    except Exception as e:
+    except (OSError, ValueError) as e:
         logger.error(f"Failed to save metadata: {e}", exc_info=True)
         success = False
 
@@ -466,7 +466,7 @@ def save_single_review(
 
         return filepath
 
-    except Exception as e:
+    except OSError as e:
         logger.error(f"Failed to save {review_name}: {e}")
         raise
 
