@@ -47,6 +47,7 @@ class PipelineConfig:
     resume: bool = False
     total_stages: int = 10
 
+
 @dataclass
 class PipelineStageResult:
     """Result from a pipeline stage execution."""

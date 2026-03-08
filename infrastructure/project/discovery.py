@@ -56,6 +56,7 @@ class ProjectInfo:
             return f"{self.program}/{self.name}"
         return self.name
 
+
 def discover_projects(repo_root: Union[Path, str]) -> list[ProjectInfo]:
     """Discover all valid projects in projects/ directory.
 
@@ -129,6 +130,7 @@ def discover_projects(repo_root: Union[Path, str]) -> list[ProjectInfo]:
                 logger.debug(f"Skipping {child_dir.name}: {message}")
 
     return projects
+
 
 def _build_project_info(project_dir: Path, program: str = "") -> ProjectInfo:
     """Build a ProjectInfo from a validated project directory."""

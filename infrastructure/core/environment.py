@@ -236,7 +236,7 @@ def setup_directories(
             logger.debug(f"Directory ready: {directory}")
         log_success(f"All {len(directories)} directories ready", logger)
         return True
-    except Exception as e:
+    except OSError as e:
         logger.error(f"Failed to create directories: {e}", exc_info=True)
         return False
 
@@ -383,21 +383,17 @@ def set_environment_variables(repo_root: Path) -> bool:
     """
     logger.debug("Setting environment variables...")
 
-    try:
-        # Set matplotlib backend for headless operation
-        os.environ["MPLBACKEND"] = "Agg"
+    # Set matplotlib backend for headless operation
+    os.environ["MPLBACKEND"] = "Agg"
 
-        # Ensure UTF-8 encoding
-        os.environ["PYTHONIOENCODING"] = "utf-8"
+    # Ensure UTF-8 encoding
+    os.environ["PYTHONIOENCODING"] = "utf-8"
 
-        # Set project root in environment
-        os.environ["PROJECT_ROOT"] = str(repo_root)
+    # Set project root in environment
+    os.environ["PROJECT_ROOT"] = str(repo_root)
 
-        log_success("Environment variables configured (MPLBACKEND, PYTHONIOENCODING, PROJECT_ROOT)", logger)
-        return True
-    except Exception as e:
-        logger.error(f"Failed to set environment variables: {e}", exc_info=True)
-        return False
+    log_success("Environment variables configured (MPLBACKEND, PYTHONIOENCODING, PROJECT_ROOT)", logger)
+    return True
 
 
 def validate_uv_sync_result(repo_root: Path) -> tuple[bool, str]:

@@ -32,6 +32,11 @@ class PipelineSummary:
     log_file: Path | None = None
     skip_infra: bool = False
 
+    @property
+    def executed_stages(self) -> list[PipelineStageResult]:
+        """Stages that were executed (success or non-zero exit)."""
+        return [r for r in self.stage_results if r.success or r.exit_code != 0]
+
 
 class PipelineSummaryGenerator:
     """Generate pipeline execution summaries."""
@@ -131,7 +136,7 @@ class PipelineSummaryGenerator:
         lines.append("Stage Results:")
 
         # Stage results
-        executed_stages = [r for r in summary.stage_results if r.success or r.exit_code != 0]
+        executed_stages = summary.executed_stages
 
         for result in summary.stage_results:
             stage_display = self._format_stage_result(
@@ -305,7 +310,7 @@ class PipelineSummaryGenerator:
         html_parts.append("<ul class='performance-metrics'>")
         html_parts.append(f"<li>Total Execution Time: {summary.total_duration:.1f}s</li>")
 
-        executed_stages = [r for r in summary.stage_results if r.success or r.exit_code != 0]
+        executed_stages = summary.executed_stages
         if executed_stages:
             avg_time = sum(r.duration for r in executed_stages) / len(executed_stages)
             html_parts.append(f"<li>Average Stage Time: {avg_time:.1f}s</li>")

@@ -141,7 +141,7 @@ def extract_timeout_errors(stdout: str, stderr: str) -> list[dict]:
     timeout_patterns = [
         r"timeout",
         r"pytest_timeout",
-        r"TimeoutError",
+        r"timeouterror",
         r"test.*timed out",
         r"exceeded.*timeout",
     ]

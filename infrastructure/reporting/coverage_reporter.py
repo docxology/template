@@ -299,14 +299,12 @@ def format_coverage_status(coverage_pct: float, threshold: float) -> str:
     """Format coverage percentage with visual indicators and threshold context."""
     if coverage_pct >= threshold:
         return f"✓ {coverage_pct:.1f}% (meets {threshold}% threshold)"
-    elif coverage_pct >= threshold * 0.9:
-        gap = threshold - coverage_pct
+    gap = threshold - coverage_pct
+    if coverage_pct >= threshold * 0.9:
         return f"🟡 {coverage_pct:.1f}% (close to {threshold}% threshold, {gap:.1f}% gap)"
     elif coverage_pct >= threshold * 0.8:
-        gap = threshold - coverage_pct
         return f"⚠️ {coverage_pct:.1f}% (below {threshold}% threshold by {gap:.1f}%)"
     else:
-        gap = threshold - coverage_pct
         return f"❌ {coverage_pct:.1f}% (significantly below {threshold}% threshold by {gap:.1f}%)"
 
 def analyze_coverage_gaps(
@@ -334,11 +332,7 @@ def analyze_coverage_gaps(
             if low_coverage_files:
                 suggestions.append("  📁 Files needing attention:")
                 for file_path, file_cov in low_coverage_files[:5]:
-                    file_name = (
-                        file_path.split("/")[-1]
-                        if "/" in file_path
-                        else file_path.split("\\")[-1]
-                    )
+                    file_name = Path(file_path).name
                     missing_lines = file_coverage[file_path]["missing_lines"]
                     suggestions.append(
                         f"    • {file_name}: {file_cov:.1f}% coverage ({missing_lines} uncovered lines)"  # noqa: E501
@@ -354,11 +348,7 @@ def analyze_coverage_gaps(
             if substantial_files:
                 suggestions.append("  📊 High-impact files to prioritize:")
                 for file_path, data in substantial_files[:3]:
-                    file_name = (
-                        file_path.split("/")[-1]
-                        if "/" in file_path
-                        else file_path.split("\\")[-1]
-                    )
+                    file_name = Path(file_path).name
                     suggestions.append(
                         f"    • {file_name}: {data['total_lines']} lines, {data['coverage_percent']:.1f}% coverage"  # noqa: E501
                     )

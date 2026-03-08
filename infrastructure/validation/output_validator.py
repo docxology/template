@@ -81,9 +81,7 @@ def validate_copied_outputs(output_dir: Path) -> bool:
     if not combined_pdf_found and project_name:
         # Check if we're running validation before copy stage (Stage 6)
         # Find repo root by looking for the "output" directory in the path
-        path_parts = output_dir.parts
         if "output" in path_parts:
-            output_idx = path_parts.index("output")
             repo_root = Path(*path_parts[:output_idx])
             # Get the qualified project path (everything after "output/")
             qualified_path = "/".join(path_parts[output_idx + 1 :])
