@@ -169,7 +169,7 @@ def clean_output_directories(
                             logger.debug(
                                 f"  Archived log file: {log_file.name} → {archive_path.name}"
                             )
-                        except Exception as e:
+                        except (OSError, shutil.Error) as e:
                             logger.warning(f"  Failed to archive log file {log_file.name}: {e}")
 
                     if archived_count > 0:
@@ -303,7 +303,7 @@ def clean_root_output_directory(repo_root: Path, project_names: list[str]) -> bo
         log_success("Root output directory cleaned", logger)
         return True
 
-    except Exception as e:
+    except OSError as e:
         logger.error(f"Failed to clean root output directory: {e}", exc_info=True)
         return False
 
@@ -373,7 +373,7 @@ def clean_coverage_files(repo_root: Path, patterns: list[str] | None = None) -> 
         log_success("Coverage database cleanup completed", logger)
         return True
 
-    except Exception as e:
+    except OSError as e:
         logger.error(f"Failed to clean coverage database files: {e}", exc_info=True)
         return False
 
@@ -450,7 +450,7 @@ def copy_final_deliverables(
         logger.debug(f"Recursively copying: {project_output} → {output_dir}")
         shutil.copytree(project_output, output_dir, dirs_exist_ok=True)
         log_success("Recursively copied project/output/ directory", logger)
-    except Exception as e:
+    except (OSError, shutil.Error) as e:
         msg = f"Failed to copy project output directory: {e}"
         logger.error(msg)
         stats["errors"].append(msg)
@@ -495,7 +495,7 @@ def copy_final_deliverables(
                                 logger.warning(f"  Log file is empty: {log_file.name}")
                             else:
                                 logger.debug(f"  Found log file: {log_file.name} ({size:,} bytes)")
-                        except Exception as e:
+                        except OSError as e:
                             logger.warning(f"  Failed to verify log file {log_file.name}: {e}")
                     logger.info(f"  Found {len(log_files)} log file(s) in {subdir_name}/")
 
@@ -511,7 +511,7 @@ def copy_final_deliverables(
                         }
                     )
                     logger.debug(f"  Copied: {file_path.name} ({file_size:,} bytes)")
-                except Exception as e:
+                except OSError as e:
                     logger.warning(f"  Failed to get size for {file_path}: {e}")
 
             logger.info(f"  {subdir_name}/: {file_count} file(s)")
@@ -545,7 +545,7 @@ def copy_final_deliverables(
                 }
             )
             logger.info(f"  Root PDF: {combined_pdf_dst} ({file_size:,} bytes)")
-        except Exception as e:
+        except (OSError, shutil.Error) as e:
             msg = f"Failed to copy combined PDF to root: {e}"
             logger.warning(msg)
             stats["errors"].append(msg)

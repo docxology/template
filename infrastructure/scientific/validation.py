@@ -23,7 +23,7 @@ class _ValidationResults(TypedDict):
     accuracy_score: float
     details: list[dict[str, Any]]
 
-def validate_scientific_implementation(func: Callable, test_cases: list[Tuple]) -> dict[str, Any]:
+def validate_scientific_implementation(func: Callable, test_cases: list[tuple[Any, Any]]) -> dict[str, Any]:
     """Validate scientific implementation against known test cases.
 
     Args:
@@ -67,7 +67,7 @@ def validate_scientific_implementation(func: Callable, test_cases: list[Tuple]) 
                 }
             )
 
-        except Exception as e:
+        except (TypeError, ValueError, RuntimeError) as e:
             validation_results["failed_tests"] += 1
             validation_results["details"].append(
                 {
@@ -138,7 +138,7 @@ def validate_scientific_best_practices(module: Any) -> dict[str, Any]:
     try:
         source = inspect.getsource(module)
         source_lines = source.split("\n")
-    except Exception as e:
+    except (OSError, TypeError) as e:
         logger.debug(f"Could not get source for module {module}: {e}")
 
     has_try_except = any("try:" in line or "except" in line for line in source_lines)
@@ -243,7 +243,7 @@ def check_research_compliance(func: Callable) -> dict[str, Any]:
         )
         compliance["has_error_handling"] = has_error_handling
 
-    except Exception as e:
+    except (OSError, TypeError) as e:
         logger.debug(f"Could not analyze function compliance for {func}: {e}")
 
     # Calculate compliance score

@@ -58,7 +58,7 @@ def benchmark_function(
         for _ in range(10):
             try:
                 _ = func(test_input)
-            except Exception as e:
+            except (TypeError, ValueError, RuntimeError) as e:
                 logger.debug(f"Benchmark warm-up failed for {func_name}: {e}")
 
         # Measure execution time
@@ -67,7 +67,7 @@ def benchmark_function(
         for _ in range(iterations):
             try:
                 func(test_input)
-            except Exception as e:
+            except (TypeError, ValueError, RuntimeError) as e:
                 logger.warning(f"Benchmark measurement failed for {func_name}: {e}")
 
         end_time = time.perf_counter()
@@ -80,7 +80,7 @@ def benchmark_function(
                 process = psutil.Process(os.getpid())
                 memory_info = process.memory_info()
                 memory_usages.append(memory_info.rss / 1024 / 1024)  # MB
-            except Exception as e:
+            except (OSError, AttributeError) as e:
                 logger.debug(f"Memory measurement failed: {e}")
                 memory_usages.append(None)
         else:
@@ -99,7 +99,7 @@ def benchmark_function(
 
     return BenchmarkResult(
         function_name=func_name,
-        execution_time=avg_execution_time,  # type: ignore
+        execution_time=float(avg_execution_time),
         memory_usage=avg_memory_usage,
         iterations=iterations,
         parameters={"input_count": len(test_inputs)},

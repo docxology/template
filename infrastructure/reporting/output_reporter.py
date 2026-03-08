@@ -294,7 +294,7 @@ def _collect_log_statistics(log_file: Path) -> dict[str, Any]:
                     if len(stats["errors"]) < 10:
                         stats["errors"].append(line.strip())
 
-    except Exception as e:
+    except (OSError, UnicodeDecodeError) as e:
         stats["error"] = f"Failed to parse log file: {e}"
 
     return stats

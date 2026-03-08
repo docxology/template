@@ -426,8 +426,6 @@ def validate_directory_structure(repo_root: Path, project_name: str = "project")
 
 def build_install_commands(dependency: str) -> list[str]:
     """Return OS-appropriate installation commands for a dependency."""
-    import platform
-
     commands: list[str] = []
     system = platform.system().lower()
 
