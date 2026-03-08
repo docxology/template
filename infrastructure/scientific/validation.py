@@ -49,50 +49,23 @@ def validate_scientific_implementation(func: Callable, test_cases: list[Tuple]) 
             if isinstance(actual_output, (int, float)) and isinstance(
                 expected_output, (int, float)
             ):
-                if abs(actual_output - expected_output) < 1e-10:
-                    validation_results["passed_tests"] += 1
-                    validation_results["details"].append(
-                        {
-                            "test_index": i,
-                            "input": test_input,
-                            "expected": expected_output,
-                            "actual": actual_output,
-                            "status": "PASSED",
-                        }
-                    )
-                else:
-                    validation_results["failed_tests"] += 1
-                    validation_results["details"].append(
-                        {
-                            "test_index": i,
-                            "input": test_input,
-                            "expected": expected_output,
-                            "actual": actual_output,
-                            "status": "FAILED",
-                        }
-                    )
-            elif actual_output == expected_output:
+                passed = abs(actual_output - expected_output) < 1e-10
+            else:
+                passed = actual_output == expected_output
+
+            if passed:
                 validation_results["passed_tests"] += 1
-                validation_results["details"].append(
-                    {
-                        "test_index": i,
-                        "input": test_input,
-                        "expected": expected_output,
-                        "actual": actual_output,
-                        "status": "PASSED",
-                    }
-                )
             else:
                 validation_results["failed_tests"] += 1
-                validation_results["details"].append(
-                    {
-                        "test_index": i,
-                        "input": test_input,
-                        "expected": expected_output,
-                        "actual": actual_output,
-                        "status": "FAILED",
-                    }
-                )
+            validation_results["details"].append(
+                {
+                    "test_index": i,
+                    "input": test_input,
+                    "expected": expected_output,
+                    "actual": actual_output,
+                    "status": "PASSED" if passed else "FAILED",
+                }
+            )
 
         except Exception as e:
             validation_results["failed_tests"] += 1

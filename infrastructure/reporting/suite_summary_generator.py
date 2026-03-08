@@ -337,6 +337,33 @@ def generate_markdown_report(data: dict[str, Any]) -> str:
 
     return "\n".join(lines)
 
+def _format_console_summary(report_data: dict[str, Any]) -> str:
+    """Format a console-friendly summary string from report data."""
+    summary = report_data["summary"]
+    infra = report_data["infrastructure"]
+    projects = report_data.get("projects", {})
+    lines = [
+        "",
+        "=" * 80,
+        "FULL REPOSITORY TEST SUITE SUMMARY",
+        "=" * 80,
+        f"Overall Status: {'PASSED' if report_data['overall_success'] else 'FAILED'}",
+        f"Total Tests: {summary['total_tests']:,} ({summary['pass_rate']:.1f}% pass rate)",
+        f"Total Duration: {summary['total_duration_seconds']:.1f}s",
+        f"Weighted Coverage: {summary['weighted_coverage_percent']:.1f}%",
+        "",
+        "Suite Breakdown:",
+        f"  Infrastructure:          {infra['passed']:,} passed ({infra['coverage_percent']:.1f}% coverage)",  # noqa: E501
+    ]
+    for project_name, proj_data in sorted(projects.items()):
+        display_name = project_name[:20] + "..." if len(project_name) > 23 else project_name
+        lines.append(
+            f"  {display_name:<24} {proj_data['passed']:,} passed ({proj_data['coverage_percent']:.1f}% coverage)"  # noqa: E501
+        )
+    lines.append("=" * 80)
+    return "\n".join(lines)
+
+
 def run_test_summary_generation() -> int:
     """Main entry point for generating test summary reports."""
     print("Generating comprehensive test summary reports...")
@@ -365,29 +392,6 @@ def run_test_summary_generation() -> int:
         logger.error(f"Failed to write markdown report to {md_file}: {e}")
         raise
 
-    # Print summary to console
-    summary = report_data["summary"]
-    infra = report_data["infrastructure"]
-    projects = report_data.get("projects", {})
-
-    print("\n" + "=" * 80)
-    print("FULL REPOSITORY TEST SUITE SUMMARY")
-    print("=" * 80)
-    print(f"Overall Status: {'PASSED' if report_data['overall_success'] else 'FAILED'}")
-    print(f"Total Tests: {summary['total_tests']:,} ({summary['pass_rate']:.1f}% pass rate)")
-    print(f"Total Duration: {summary['total_duration_seconds']:.1f}s")
-    print(f"Weighted Coverage: {summary['weighted_coverage_percent']:.1f}%")
-    print()
-    print("Suite Breakdown:")
-    print(
-        f"  Infrastructure:          {infra['passed']:,} passed ({infra['coverage_percent']:.1f}% coverage)"  # noqa: E501
-    )
-    for project_name, proj_data in sorted(projects.items()):
-        # Truncate long project names for display
-        display_name = project_name[:20] + "..." if len(project_name) > 23 else project_name
-        print(
-            f"  {display_name:<24} {proj_data['passed']:,} passed ({proj_data['coverage_percent']:.1f}% coverage)"  # noqa: E501
-        )
-    print("=" * 80)
+    print(_format_console_summary(report_data))
 
     return 0

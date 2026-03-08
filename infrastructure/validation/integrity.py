@@ -313,28 +313,24 @@ def generate_integrity_report(report: IntegrityReport) -> str:
     lines.append(f"Overall Integrity: {status}")
     lines.append("")
 
-    # File integrity
     lines.append("File Integrity:")
     for file_path, integrity in report.file_integrity.items():
         status = "OK" if integrity else "FAIL"
         lines.append(f"  [{status}] {file_path}")
     lines.append("")
 
-    # Cross-reference integrity
     lines.append("Cross-Reference Integrity:")
     for ref_type, integrity in report.cross_reference_integrity.items():
         status = "OK" if integrity else "FAIL"
         lines.append(f"  [{status}] {ref_type}")
     lines.append("")
 
-    # Data consistency
     lines.append("Data Consistency:")
     for check_type, integrity in report.data_consistency.items():
         status = "OK" if integrity else "FAIL"
         lines.append(f"  [{status}] {check_type}")
     lines.append("")
 
-    # Academic standards
     lines.append("Academic Standards:")
     for standard, compliance in report.academic_standards.items():
         status = "OK" if compliance else "WARN"

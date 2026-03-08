@@ -332,16 +332,7 @@ def report_results(
     report: dict,
     project_name: str = "project",
 ) -> None:
-    """Report comprehensive test execution results with detailed breakdowns.
-
-    Args:
-        infra_exit: Infrastructure test exit code
-        project_exit: Project test exit code
-        infra_results: Infrastructure test results
-        project_results: Project test results
-        report: Complete test report with detailed metrics
-        project_name: Name of the project (for debug command suggestions)
-    """
+    """Report comprehensive test execution results with detailed breakdowns."""
 
     log_header("Test Execution Summary", logger)
 
