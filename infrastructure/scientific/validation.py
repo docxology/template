@@ -115,11 +115,9 @@ def validate_scientific_best_practices(module: Any) -> dict[str, Any]:
     if not functions:
         return validation
 
-    # Check docstring coverage
     documented_functions = sum(1 for _, func in functions if inspect.getdoc(func) is not None)
     validation["docstring_coverage"] = documented_functions / len(functions)
 
-    # Check type hints coverage
     typed_functions = 0
     for _, func in functions:
         sig = inspect.signature(func)
@@ -133,7 +131,6 @@ def validate_scientific_best_practices(module: Any) -> dict[str, Any]:
 
     validation["type_hints_coverage"] = typed_functions / len(functions)
 
-    # Check for error handling patterns
     source_lines = []
     try:
         source = inspect.getsource(module)
@@ -145,14 +142,12 @@ def validate_scientific_best_practices(module: Any) -> dict[str, Any]:
     has_raise = any("raise" in line for line in source_lines)
     validation["error_handling"] = has_try_except or has_raise
 
-    # Check for input validation patterns
     has_validation = any(
         "assert" in line or "isinstance" in line or "ValueError" in line or "TypeError" in line
         for line in source_lines
     )
     validation["input_validation"] = has_validation
 
-    # Calculate best practices score
     weights = {
         "docstring_coverage": 0.25,
         "type_hints_coverage": 0.25,
@@ -167,7 +162,6 @@ def validate_scientific_best_practices(module: Any) -> dict[str, Any]:
         + (1.0 if validation["input_validation"] else 0.0) * weights["input_validation"]
     )
 
-    # Generate recommendations
     if validation["docstring_coverage"] < 0.8:  # type: ignore
         validation["recommendations"].append("Add docstrings to undocumented functions")  # type: ignore
 
@@ -204,16 +198,13 @@ def check_research_compliance(func: Callable) -> dict[str, Any]:
         "recommendations": [],
     }
 
-    # Check docstring
     docstring = inspect.getdoc(func)
     if docstring:
         compliance["has_docstring"] = True
 
-        # Check for examples in docstring
         if ">>>" in docstring or "Example" in docstring:
             compliance["has_examples"] = True
 
-    # Check type hints
     signature = inspect.signature(func)
     has_param_hints = any(
         p.annotation != inspect.Parameter.empty for p in signature.parameters.values()
@@ -223,11 +214,9 @@ def check_research_compliance(func: Callable) -> dict[str, Any]:
     if has_param_hints or has_return_hint:
         compliance["has_type_hints"] = True
 
-    # Check naming conventions (should be snake_case)
     if func.__name__.islower() and "_" in func.__name__:
         compliance["follows_naming_conventions"] = True
 
-    # Check source code for error handling patterns
     try:
         source = inspect.getsource(func)
         source_lines = source.split("\n")
@@ -246,7 +235,6 @@ def check_research_compliance(func: Callable) -> dict[str, Any]:
     except (OSError, TypeError) as e:
         logger.debug(f"Could not analyze function compliance for {func}: {e}")
 
-    # Calculate compliance score
     weights = {
         "has_docstring": 0.25,
         "has_type_hints": 0.20,
@@ -263,7 +251,6 @@ def check_research_compliance(func: Callable) -> dict[str, Any]:
 
     compliance["compliance_score"] = score
 
-    # Generate recommendations
     if not compliance["has_docstring"]:
         compliance["recommendations"].append(  # type: ignore
             "Add comprehensive docstring with description and parameters"

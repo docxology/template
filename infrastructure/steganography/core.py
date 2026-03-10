@@ -238,13 +238,12 @@ class SteganographyProcessor:
             # ── Footer overlay (always if overlays enabled) ──────
             if self.config.overlays_enabled:
                 from infrastructure.steganography.overlays import (
+                    FooterConfig,
                     create_footer_overlay,
                     create_invisible_text_overlay,
                 )
 
-                footer_bytes = create_footer_overlay(
-                    page_width,
-                    page_height,
+                footer_cfg = FooterConfig(
                     document_id=ctx.document_id,
                     page_number=page_idx + 1,
                     total_pages=total_pages,
@@ -254,6 +253,7 @@ class SteganographyProcessor:
                     source_filename=ctx.source_filename,
                     source_file_size=ctx.source_file_size,
                 )
+                footer_bytes = create_footer_overlay(page_width, page_height, footer_cfg)
                 footer_page = PdfReader(io.BytesIO(footer_bytes)).pages[0]
                 page.merge_page(footer_page)
 

@@ -9,10 +9,26 @@ document-ID stamps.
 from __future__ import annotations
 
 import io
+from dataclasses import dataclass, field
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
+
+
+@dataclass
+class FooterConfig:
+    """Parameters for the two-line page-footer overlay."""
+
+    document_id: str = ""
+    page_number: int = 1
+    total_pages: int = 1
+    hash_short: str = ""
+    title: str = ""
+    authors: str = ""
+    source_filename: str = ""
+    source_file_size: int = 0
+    font_size: int = 5
 
 # ── Lazy imports ─────────────────────────────────────────────────────────
 
@@ -155,15 +171,7 @@ def create_qr_overlay(
 def create_footer_overlay(
     page_width: float,
     page_height: float,
-    document_id: str,
-    page_number: int,
-    total_pages: int,
-    hash_short: str = "",
-    title: str = "",
-    authors: str = "",
-    source_filename: str = "",
-    source_file_size: int = 0,
-    font_size: int = 5,
+    cfg: FooterConfig,
 ) -> bytes:
     """Generate a two-line footer overlay with comprehensive document metrics.
 
@@ -176,15 +184,7 @@ def create_footer_overlay(
     Args:
         page_width: Target page width in points.
         page_height: Target page height in points.
-        document_id: Unique document identifier string.
-        page_number: Current page number (1-indexed).
-        total_pages: Total number of pages.
-        hash_short: Short hash string (first 16 chars).
-        title: Document title.
-        authors: Author name(s) string.
-        source_filename: Original source PDF filename.
-        source_file_size: Original source PDF file size in bytes.
-        font_size: Font size for footer text.
+        cfg: Footer configuration dataclass.
 
     Returns:
         PDF bytes of the one-page footer overlay.
@@ -197,13 +197,10 @@ def create_footer_overlay(
 
     c.saveState()
 
-    # ── Solid background to mask original PDF footer ─────────────────
-    # We clear the bottom 90pt so our steganography footer is pristine.
+    # Clear the bottom 90pt so our steganography footer is pristine.
     c.setFillColorRGB(1, 1, 1, alpha=1.0)
     c.rect(0, 0, page_width, 90, fill=1, stroke=0)
 
-    # ── Separator line ───────────────────────────────────────────────
-    # Moved higher to 70 to give QR codes more breathing room
     separator_y = 70
     line2_y = 74  # lower line (metrics)
     line1_y = 82  # upper line (title/author)
@@ -215,49 +212,39 @@ def create_footer_overlay(
 
     c.setFillColorRGB(0.3, 0.3, 0.3, alpha=0.7)
 
-    # ── Line 1: Title and author ─────────────────────────────────────
-    c.setFont("Helvetica", font_size)
-    title_short = title[:55] + "…" if len(title) > 55 else title
+    c.setFont("Helvetica", cfg.font_size)
+    title_short = cfg.title[:55] + "…" if len(cfg.title) > 55 else cfg.title
     if title_short:
         c.drawString(margin, line1_y, title_short)
-    if authors:
-        c.drawRightString(page_width - margin, line1_y, authors)
+    if cfg.authors:
+        c.drawRightString(page_width - margin, line1_y, cfg.authors)
 
-    # ── Line 2: Detailed metrics ─────────────────────────────────────
-    c.setFont("Courier", font_size - 0.5)
+    c.setFont("Courier", cfg.font_size - 0.5)
 
-    # Build metrics as evenly-spaced columns
     parts = []
 
-    # Document ID (abbreviated)
-    id_short = document_id[:12] if len(document_id) > 12 else document_id
+    id_short = cfg.document_id[:12] if len(cfg.document_id) > 12 else cfg.document_id
     parts.append(f"ID: {id_short}")
 
-    # Source filename
-    if source_filename:
-        fn_short = source_filename[:20] + "…" if len(source_filename) > 20 else source_filename
+    if cfg.source_filename:
+        fn_short = cfg.source_filename[:20] + "…" if len(cfg.source_filename) > 20 else cfg.source_filename
         parts.append(f"Source: {fn_short}")
 
-    # File size
-    if source_file_size:
-        if source_file_size >= 1024 * 1024:
-            size_str = f"{source_file_size / (1024 * 1024):.1f} MB"
+    if cfg.source_file_size:
+        if cfg.source_file_size >= 1024 * 1024:
+            size_str = f"{cfg.source_file_size / (1024 * 1024):.1f} MB"
         else:
-            size_str = f"{source_file_size / 1024:.1f} KB"
+            size_str = f"{cfg.source_file_size / 1024:.1f} KB"
         parts.append(size_str)
 
-    # Page number
-    parts.append(f"Page {page_number}/{total_pages}")
+    parts.append(f"Page {cfg.page_number}/{cfg.total_pages}")
 
-    # SHA256 — explicitly labeled as hash of source
-    if hash_short:
-        parts.append(f"SHA256 (compiled PDF): {hash_short}")
+    if cfg.hash_short:
+        parts.append(f"SHA256 (compiled PDF): {cfg.hash_short}")
 
-    # Timestamp
     ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     parts.append(ts)
 
-    # Draw parts spread across the line
     metrics_text = "  │  ".join(parts)
     c.drawString(margin, line2_y, metrics_text)
 

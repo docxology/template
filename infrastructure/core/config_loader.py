@@ -247,13 +247,6 @@ def get_config_as_dict(
         return {k: v for k, v in result.items() if k not in os.environ}
     return result
 
-def get_config_as_env_vars(repo_root: Path | str, respect_existing: bool = True) -> dict[str, str]:
-    """Get configuration as environment variables.
-
-    Thin wrapper over get_config_as_dict with respect_existing=True by default.
-    """
-    return get_config_as_dict(repo_root, respect_existing=respect_existing)
-
 def find_config_file(repo_root: Path | str, project_name: str | None = None) -> Path | None:
     """Find the manuscript config file at the standard location.
 

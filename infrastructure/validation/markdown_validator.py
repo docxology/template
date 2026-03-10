@@ -144,15 +144,15 @@ def validate_images(
     return problems
 
 def validate_refs(
-    md_paths: list[str], labels: set[str], anchors: set[str], repo_root: str | Path
+    md_paths: list[str], repo_root: str | Path, labels: set[str], anchors: set[str]
 ) -> list[str]:
     """Validate cross-references, internal links, and external URLs.
 
     Args:
         md_paths: List of markdown file paths to validate
+        repo_root: Root directory of the repository
         labels: Set of valid equation labels
         anchors: Set of valid section anchors
-        repo_root: Root directory of the repository
 
     Returns:
         List of validation problem descriptions
@@ -265,7 +265,7 @@ def validate_markdown(
 
     problems: list[str] = []
     problems += validate_images(md_paths, repo_root)
-    problems += validate_refs(md_paths, labels, anchors, repo_root)
+    problems += validate_refs(md_paths, repo_root, labels, anchors)
     problems += validate_math(md_paths, repo_root)
 
     if problems:

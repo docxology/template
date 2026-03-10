@@ -686,6 +686,51 @@ class LLMClient:
                     context={"url": url, "model": model},
                 )
 
+    def _save_streaming_state(
+        self,
+        full_response: list[str],
+        save_path: Path | None,
+        model_name: str,
+        prompt: str,
+        chunk_count: int,
+        start_time: float,
+        is_error: bool = False,
+        options: GenerationOptions | None = None,
+    ) -> bool:
+        """Save partial or final streaming response and metadata."""
+        from infrastructure.llm.core.response_saver import ResponseMetadata, save_streaming_response
+
+        try:
+            text = "".join(full_response)
+            if save_path is None:
+                suffix = "partial_" if is_error else ""
+                save_path = Path(f"streaming_response_{suffix}{int(time_module.time())}.md")
+
+            metadata = ResponseMetadata(
+                timestamp=datetime.now().isoformat(),
+                model=model_name,
+                prompt=prompt,
+                prompt_length=len(prompt),
+                response_length=len(text),
+                response_tokens_est=len(text) // 4,
+                streaming=True,
+                chunk_count=chunk_count,
+                streaming_time_seconds=time_module.time() - start_time,
+                error_occurred=is_error,
+                partial_response=is_error,
+            )
+            if options and not is_error:
+                metadata.options = {
+                    "temperature": options.temperature,
+                    "max_tokens": options.max_tokens,
+                    "seed": options.seed,
+                }
+            save_streaming_response(text, save_path, metadata)
+            return True
+        except Exception as e:
+            logger.warning(f"Failed to save streaming response: {e}")
+            return False
+
     def stream_query(
         self,
         prompt: str,
@@ -716,7 +761,6 @@ class LLMClient:
             >>> for chunk in client.stream_query("Explain AI", log_progress=True):
             ...     print(chunk, end="")
         """
-        from infrastructure.llm.core.response_saver import ResponseMetadata, save_streaming_response
 
         start_time = time_module.time()
         model_name = model or self.config.default_model
@@ -884,62 +928,17 @@ class LLMClient:
                     )
                     # Save partial response before retry
                     if full_response and save_response and not partial_saved:
-                        try:
-                            partial_text = "".join(full_response)
-                            if save_path is None:
-                                save_path = Path(
-                                    f"streaming_response_partial_{int(time_module.time())}.md"
-                                )
-                            metadata = ResponseMetadata(
-                                timestamp=datetime.now().isoformat(),
-                                model=model_name,
-                                prompt=prompt,
-                                prompt_length=len(prompt),
-                                response_length=len(partial_text),
-                                response_tokens_est=len(partial_text) // 4,
-                                streaming=True,
-                                chunk_count=chunk_count,
-                                error_occurred=True,
-                                partial_response=True,
-                            )
-                            save_streaming_response(partial_text, save_path, metadata)
+                        if self._save_streaming_state(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=True):
                             partial_saved = True
-                            logger.info(
-                                f"Saved partial response ({chunk_count} chunks) before retry"
-                            )
-                        except Exception as save_error:
-                            logger.warning(f"Failed to save partial response: {save_error}")
+                            logger.info(f"Saved partial response ({chunk_count} chunks) before retry")
                     continue
                 else:
                     logger.error(f"Streaming timeout after {retries + 1} attempts: {last_error}")
                     # Save partial response on final failure
                     if full_response and save_response:
-                        try:
-                            partial_text = "".join(full_response)
-                            if save_path is None:
-                                save_path = Path(
-                                    f"streaming_response_partial_{int(time_module.time())}.md"
-                                )
-                            metadata = ResponseMetadata(
-                                timestamp=datetime.now().isoformat(),
-                                model=model_name,
-                                prompt=prompt,
-                                prompt_length=len(prompt),
-                                response_length=len(partial_text),
-                                response_tokens_est=len(partial_text) // 4,
-                                streaming=True,
-                                chunk_count=chunk_count,
-                                streaming_time_seconds=time_module.time() - start_time,
-                                error_occurred=True,
-                                partial_response=True,
-                            )
-                            save_streaming_response(partial_text, save_path, metadata)
+                        if self._save_streaming_state(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=True):
                             partial_saved = True
-                            logger.info(
-                                f"Saved partial response ({chunk_count} chunks) after timeout"
-                            )
-                        except Exception as save_error:
-                            logger.warning(f"Failed to save partial response: {save_error}")
+                            logger.info(f"Saved partial response ({chunk_count} chunks) after timeout")
                     raise LLMConnectionError(
                         f"Streaming timeout ({model_name}): {last_error}",
                         context={
@@ -960,31 +959,9 @@ class LLMClient:
                     )
                     # Save partial response before retry
                     if full_response and save_response and not partial_saved:
-                        try:
-                            partial_text = "".join(full_response)
-                            if save_path is None:
-                                save_path = Path(
-                                    f"streaming_response_partial_{int(time_module.time())}.md"
-                                )
-                            metadata = ResponseMetadata(
-                                timestamp=datetime.now().isoformat(),
-                                model=model_name,
-                                prompt=prompt,
-                                prompt_length=len(prompt),
-                                response_length=len(partial_text),
-                                response_tokens_est=len(partial_text) // 4,
-                                streaming=True,
-                                chunk_count=chunk_count,
-                                error_occurred=True,
-                                partial_response=True,
-                            )
-                            save_streaming_response(partial_text, save_path, metadata)
+                        if self._save_streaming_state(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=True):
                             partial_saved = True
-                            logger.info(
-                                f"Saved partial response ({chunk_count} chunks) before retry"
-                            )
-                        except Exception as save_error:
-                            logger.warning(f"Failed to save partial response: {save_error}")
+                            logger.info(f"Saved partial response ({chunk_count} chunks) before retry")
                     continue
                 else:
                     logger.error(
@@ -992,32 +969,9 @@ class LLMClient:
                     )
                     # Save partial response on final failure
                     if full_response and save_response:
-                        try:
-                            partial_text = "".join(full_response)
-                            if save_path is None:
-                                save_path = Path(
-                                    f"streaming_response_partial_{int(time_module.time())}.md"
-                                )
-                            metadata = ResponseMetadata(
-                                timestamp=datetime.now().isoformat(),
-                                model=model_name,
-                                prompt=prompt,
-                                prompt_length=len(prompt),
-                                response_length=len(partial_text),
-                                response_tokens_est=len(partial_text) // 4,
-                                streaming=True,
-                                chunk_count=chunk_count,
-                                streaming_time_seconds=time_module.time() - start_time,
-                                error_occurred=True,
-                                partial_response=True,
-                            )
-                            save_streaming_response(partial_text, save_path, metadata)
+                        if self._save_streaming_state(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=True):
                             partial_saved = True
-                            logger.info(
-                                f"Saved partial response ({chunk_count} chunks) after connection error"  # noqa: E501
-                            )
-                        except Exception as save_error:
-                            logger.warning(f"Failed to save partial response: {save_error}")
+                            logger.info(f"Saved partial response ({chunk_count} chunks) after connection error")
                     raise LLMConnectionError(
                         f"Streaming connection failed ({model_name}): {last_error}",
                         context={
@@ -1078,33 +1032,8 @@ class LLMClient:
 
         # Save response if requested
         if save_response and not partial_saved:
-            try:
-                if save_path is None:
-                    save_path = Path(f"streaming_response_{int(time_module.time())}.md")
-                metadata = ResponseMetadata(
-                    timestamp=datetime.now().isoformat(),
-                    model=model_name,
-                    prompt=prompt,
-                    prompt_length=len(prompt),
-                    response_length=total_chars,
-                    response_tokens_est=total_tokens_est,
-                    generation_time_seconds=streaming_time,
-                    streaming=True,
-                    chunk_count=chunk_count,
-                    streaming_time_seconds=streaming_time,
-                    error_occurred=error_count > 0,
-                    partial_response=False,
-                )
-                if options:
-                    metadata.options = {
-                        "temperature": options.temperature,
-                        "max_tokens": options.max_tokens,
-                        "seed": options.seed,
-                    }
-                save_streaming_response(full_response_text, save_path, metadata)
-                logger.info(f"Saved streaming response to {save_path}")
-            except Exception as save_error:
-                logger.warning(f"Failed to save streaming response: {save_error}")
+            if self._save_streaming_state(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=error_count > 0, options=options):
+                logger.info("Saved final streaming response")
 
     def stream_short(
         self,
@@ -1114,6 +1043,7 @@ class LLMClient:
         save_response: bool = False,
         save_path: Path | None = None,
         log_progress: bool = True,
+        retries: int = 1,
     ) -> Iterator[str]:
         """Stream a short response with comprehensive logging.
 
@@ -1124,6 +1054,7 @@ class LLMClient:
             save_response: Whether to save response to file
             save_path: Path to save response
             log_progress: Whether to log streaming progress
+            retries: Number of retry attempts on failure
 
         Yields:
             Response chunks
@@ -1144,6 +1075,7 @@ class LLMClient:
             save_response=save_response,
             save_path=save_path,
             log_progress=log_progress,
+            retries=retries,
         )
 
     def stream_long(
@@ -1154,6 +1086,7 @@ class LLMClient:
         save_response: bool = False,
         save_path: Path | None = None,
         log_progress: bool = True,
+        retries: int = 1,
     ) -> Iterator[str]:
         """Stream a comprehensive response with comprehensive logging.
 
@@ -1164,6 +1097,7 @@ class LLMClient:
             save_response: Whether to save response to file
             save_path: Path to save response
             log_progress: Whether to log streaming progress
+            retries: Number of retry attempts on failure
 
         Yields:
             Response chunks
@@ -1184,6 +1118,7 @@ class LLMClient:
             save_response=save_response,
             save_path=save_path,
             log_progress=log_progress,
+            retries=retries,
         )
 
     def get_available_models(self) -> list[str]:

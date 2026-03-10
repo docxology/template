@@ -17,7 +17,6 @@ from infrastructure.core.config_loader import (
     format_author_details,
     format_author_name,
     get_config_as_dict,
-    get_config_as_env_vars,
     get_testing_config,
     get_translation_languages,
     load_config,
@@ -224,8 +223,8 @@ class TestGetConfigAsDict:
         assert result == {"PROJECT_TITLE": "Test"}
 
 
-class TestGetConfigAsEnvVars:
-    """Test get_config_as_env_vars function."""
+class TestGetConfigAsDict:
+    """Test get_config_as_dict respect_existing behaviour."""
 
     def test_respects_existing_env_vars(self, tmp_path, sample_config, monkeypatch):
         """Test that existing environment variables are respected."""
@@ -238,7 +237,7 @@ class TestGetConfigAsEnvVars:
 
         monkeypatch.setenv("PROJECT_TITLE", "Existing Title")
 
-        result = get_config_as_env_vars(tmp_path, respect_existing=True)
+        result = get_config_as_dict(tmp_path, respect_existing=True)
 
         assert "PROJECT_TITLE" not in result  # Existing env var should be respected
         assert "AUTHOR_NAME" in result  # But other vars should be present
@@ -254,7 +253,7 @@ class TestGetConfigAsEnvVars:
 
         monkeypatch.setenv("PROJECT_TITLE", "Existing Title")
 
-        result = get_config_as_env_vars(tmp_path, respect_existing=False)
+        result = get_config_as_dict(tmp_path, respect_existing=False)
 
         assert result["PROJECT_TITLE"] == "Test Paper Title"  # Config value, not env var
 

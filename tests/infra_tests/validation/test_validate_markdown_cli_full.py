@@ -113,7 +113,7 @@ class TestValidateMarkdownCliFunctions:
         md.write_text("# Section {#section}\n\n[Link to section](#section)")
 
         anchors = {"section"}
-        issues = validate_refs([str(md)], set(), anchors, str(tmp_path))
+        issues = validate_refs([str(md)], str(tmp_path), set(), anchors)
 
         # No missing-anchor issues (the bare-URL / non-informative-text checks
         # may fire for other patterns, but the internal link itself is resolved)
@@ -127,7 +127,7 @@ class TestValidateMarkdownCliFunctions:
         md = tmp_path / "doc.md"
         md.write_text("[Link text](#missing)")
 
-        issues = validate_refs([str(md)], set(), set(), str(tmp_path))
+        issues = validate_refs([str(md)], str(tmp_path), set(), set())
 
         anchor_issues = [i for i in issues if "missing" in i.lower() or "Missing" in i]
         assert len(anchor_issues) >= 1

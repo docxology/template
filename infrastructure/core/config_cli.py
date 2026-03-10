@@ -31,7 +31,7 @@ repo_root = Path(__file__).parent.parent.parent
 def main() -> None:
     """Main function to load and export configuration."""
     try:
-        from infrastructure.core.config_loader import YAML_AVAILABLE, get_config_as_env_vars
+        from infrastructure.core.config_loader import YAML_AVAILABLE, get_config_as_dict
     except ImportError as e:
         logger.error(f"Failed to import from infrastructure/core/config_loader.py: {e}")
         logger.error("Falling back to environment variables only")
@@ -65,8 +65,7 @@ Examples:
         logger.error("Falling back to environment variables only")
         return
 
-    # Get configuration respecting existing environment variables
-    env_vars = get_config_as_env_vars(repo_root, respect_existing=True)
+    env_vars = get_config_as_dict(repo_root, respect_existing=True)
 
     # Export as bash variable assignments
     for key, value in env_vars.items():

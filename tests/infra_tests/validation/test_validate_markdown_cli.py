@@ -67,7 +67,7 @@ class TestValidateMarkdownCliMain:
         labels = {"existing_label": str(md_file)}
         anchors = {}
 
-        issues = validate_markdown_cli.validate_refs([str(md_file)], labels, anchors, str(tmp_path))
+        issues = validate_markdown_cli.validate_refs([str(md_file)], str(tmp_path), labels, anchors)
 
         # Should find reference to missing_ref
         assert isinstance(issues, list)
