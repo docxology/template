@@ -14,10 +14,26 @@ import shutil
 import tempfile
 from pathlib import Path
 
+from dataclasses import dataclass, field
+
 from infrastructure.core.logging_utils import get_logger, log_operation
 from infrastructure.steganography.config import DocumentMetadata, SteganographyConfig
 
 logger = get_logger(__name__)
+
+
+@dataclass
+class BarcodeBuildContext:
+    """Metadata fields passed to the barcode strip overlay builder."""
+
+    title: str = ""
+    authors: list[str | None] = field(default_factory=list)
+    keywords: list[str | None] = field(default_factory=list)
+    author_emails: list[str | None] = field(default_factory=list)
+    document_id: str = ""
+    hashes: dict[str, str] = field(default_factory=dict)
+    source_filename: str = ""
+    source_file_size: int = 0
 
 class SteganographyProcessor:
     """Orchestrates steganographic PDF post-processing.
@@ -94,11 +110,17 @@ class SteganographyProcessor:
 
             # 3. Apply overlays and barcodes (merged onto each page)
             if self.config.overlays_enabled or self.config.barcodes_enabled:
-                working_pdf = self._step_overlays_and_barcodes(
-                    working_pdf, input_pdf=input_pdf,
-                    title=title, authors=authors, keywords=keywords,
-                    author_emails=author_emails,
+                bc_ctx = BarcodeBuildContext(
+                    title=title,
+                    authors=authors or [],
+                    keywords=keywords or [],
+                    author_emails=author_emails or [],
+                    document_id=self._document_id,
+                    hashes=self._hashes,
+                    source_filename=input_pdf.name if input_pdf else "",
+                    source_file_size=input_pdf.stat().st_size if input_pdf and input_pdf.exists() else 0,
                 )
+                working_pdf = self._step_overlays_and_barcodes(working_pdf, bc_ctx)
 
             # 4. Inject metadata
             if self.config.metadata_enabled:
@@ -130,8 +152,8 @@ class SteganographyProcessor:
             if working_pdf != input_pdf and working_pdf.exists():
                 try:
                     working_pdf.unlink()
-                except OSError:
-                    pass
+                except OSError as e:
+                    logger.debug(f"Failed to delete working PDF {working_pdf}: {e}")
 
     # ── Private pipeline steps ───────────────────────────────────────
 
@@ -156,11 +178,7 @@ class SteganographyProcessor:
     def _step_overlays_and_barcodes(
         self,
         working_pdf: Path,
-        input_pdf: Path | None = None,
-        title: str = "",
-        authors: list[str | None] = None,
-        keywords: list[str | None] = None,
-        author_emails: list[str | None] = None,
+        ctx: BarcodeBuildContext,
     ) -> Path:
         """Merge overlay and barcode pages onto every page of the PDF."""
         try:
@@ -174,23 +192,19 @@ class SteganographyProcessor:
         writer = PdfWriter()
         total_pages = len(reader.pages)
 
-        # Source file info for metrics
-        source_filename = input_pdf.name if input_pdf else ""
-        source_file_size = input_pdf.stat().st_size if input_pdf and input_pdf.exists() else 0
-
         hash_short = ""
-        if self._hashes:
-            first_algo = next(iter(self._hashes))
-            hash_short = self._hashes[first_algo][:16]
+        if ctx.hashes:
+            first_algo = next(iter(ctx.hashes))
+            hash_short = ctx.hashes[first_algo][:16]
 
         # Build QR overlay data once if in QR mode
         qr_overlay_data = ""
         if self.config.overlays_enabled and self.config.overlay_mode == "qr":
             from infrastructure.steganography.barcodes import build_barcode_payload
             qr_overlay_data = self.config.overlay_qr_data or build_barcode_payload(
-                title=title,
-                hashes=self._hashes,
-                document_id=self._document_id,
+                title=ctx.title,
+                hashes=ctx.hashes,
+                document_id=ctx.document_id,
             )
 
         for page_idx, page in enumerate(reader.pages):
@@ -231,14 +245,14 @@ class SteganographyProcessor:
                 footer_bytes = create_footer_overlay(
                     page_width,
                     page_height,
-                    document_id=self._document_id,
+                    document_id=ctx.document_id,
                     page_number=page_idx + 1,
                     total_pages=total_pages,
                     hash_short=hash_short,
-                    title=title,
-                    authors=", ".join(authors) if authors else "",
-                    source_filename=source_filename,
-                    source_file_size=source_file_size,
+                    title=ctx.title,
+                    authors=", ".join(a for a in ctx.authors if a) if ctx.authors else "",
+                    source_filename=ctx.source_filename,
+                    source_file_size=ctx.source_file_size,
                 )
                 footer_page = PdfReader(io.BytesIO(footer_bytes)).pages[0]
                 page.merge_page(footer_page)
@@ -246,8 +260,8 @@ class SteganographyProcessor:
                 # Invisible text layer (first page only)
                 if page_idx == 0:
                     hidden_data = (
-                        f"STEG_ID:{self._document_id}|"
-                        f"TITLE:{title}|"
+                        f"STEG_ID:{ctx.document_id}|"
+                        f"TITLE:{ctx.title}|"
                         f"HASHES:{hash_short}"
                     )
                     inv_bytes = create_invisible_text_overlay(
@@ -264,26 +278,26 @@ class SteganographyProcessor:
                 )
 
                 qr_payload = build_barcode_payload(
-                    title=title,
-                    hashes=self._hashes,
-                    document_id=self._document_id,
+                    title=ctx.title,
+                    hashes=ctx.hashes,
+                    document_id=ctx.document_id,
                 )
-                c128_payload = f"ID:{self._document_id[:16]}|P:{page_idx + 1}"
+                c128_payload = f"ID:{ctx.document_id[:16]}|P:{page_idx + 1}"
 
                 bc_bytes = create_barcode_strip_overlay(
                     page_width,
                     page_height,
                     qr_data=self.config.barcode_content or qr_payload,
                     code128_data=c128_payload,
-                    title=title,
-                    authors=authors,
-                    keywords=keywords,
-                    author_emails=author_emails,
-                    document_id=self._document_id,
-                    hashes=self._hashes,
-                    source_filename=source_filename,
+                    title=ctx.title,
+                    authors=ctx.authors,
+                    keywords=ctx.keywords,
+                    author_emails=ctx.author_emails,
+                    document_id=ctx.document_id,
+                    hashes=ctx.hashes,
+                    source_filename=ctx.source_filename,
                     total_pages=total_pages,
-                    source_file_size=source_file_size,
+                    source_file_size=ctx.source_file_size,
                 )
                 bc_page = PdfReader(io.BytesIO(bc_bytes)).pages[0]
                 page.merge_page(bc_page)
