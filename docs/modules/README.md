@@ -52,6 +52,7 @@ The `modules/` directory contains documentation for the advanced infrastructure 
 7. **Rendering** - Multi-format output generation (PDF, slides, web)
 8. **Reporting** - Pipeline reporting and error aggregation
 9. **Project** - Project discovery and multi-project orchestration
+10. **Steganography** - Provenance and watermarking (alpha-channel overlays, QR barcodes, PDF metadata)
 
 ## Related Documentation
 

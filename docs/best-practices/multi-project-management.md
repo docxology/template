@@ -16,6 +16,55 @@ When managing multiple research projects, you can leverage the template's struct
 - Manage dependencies across projects
 - Automate common workflows
 
+## 3-Directory Project Lifecycle
+
+The repository uses three sibling directories to manage projects at different stages:
+
+| Directory | Purpose | Rendered by `./run.sh`? |
+|-----------|---------|------------------------|
+| `projects/` | **Active** – ready for the pipeline | ✅ Yes |
+| `projects_in_progress/` | **Work-in-progress** – not yet publication-ready | ❌ No |
+| `projects_archive/` | **Completed / paused** – kept for reference | ❌ No |
+
+**Rules:**
+
+- `./run.sh` only discovers projects under `projects/`. Archive and in-progress directories are ignored.
+- A project retains its full structure (src/, manuscript/, tests/, output/) in any directory, so it can be moved back to `projects/` at any time without modification.
+- Use `projects_in_progress/` while actively writing; move to `projects/` only when ready for a full pipeline render.
+- Use `projects_archive/` for completed or low-priority projects so they do not increase pipeline runtime.
+
+**Moving a project:**
+
+```bash
+# Promote a WIP project to active
+mv projects_in_progress/my_paper projects/my_paper
+
+# Archive a completed project
+mv projects/finished_paper projects_archive/finished_paper
+
+# Return an archived project for revisions
+mv projects_archive/old_paper projects_in_progress/old_paper
+```
+
+**Advanced: running the pipeline against a different directory:**
+
+```python
+from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor
+from pathlib import Path
+
+# Test an in-progress project without moving it
+config = PipelineConfig(
+    project_name="draft_paper",
+    repo_root=Path("."),
+    projects_dir="projects_in_progress",   # override default "projects"
+)
+PipelineExecutor(config).execute_core_pipeline()
+```
+
+Infrastructure modules (`discovery.py`, `script_discovery.py`, `config_loader.py`,
+`checkpoint.py`, and the reporting layer) all accept a `project_dir` or `projects_dir`
+parameter, so this configuration propagates automatically throughout the pipeline.
+
 ## Organizing Multiple Projects
 
 ### Directory Structure
@@ -314,6 +363,46 @@ dependencies = [
 ]
 ```
 
+### ⚠️ Root Venv Dependency Coverage (Critical Rule)
+
+Each project in `projects/` may have its own `pyproject.toml` listing extra dependencies. However, **analysis scripts run with the root `.venv`** (via `02_run_analysis.py`) unless the project has a local `.venv/` directory.
+
+**The rule:** If `projects/<name>/.venv` does **not** exist, all packages in `projects/<name>/pyproject.toml#dependencies` must **also** be declared in the root `pyproject.toml`.
+
+**How to verify:**
+
+```bash
+# For each project without a local venv:
+for project in projects/*/; do
+    if [ ! -d "$project/.venv" ]; then
+        echo "=== $project (uses ROOT venv) ==="
+        grep -A 20 '^dependencies' "$project/pyproject.toml" 2>/dev/null
+    fi
+done
+
+# Verify all needed packages are in root venv:
+.venv/bin/python -c "
+import scipy, pandas, networkx, rdflib, wordcloud, sklearn, requests
+print('All OK')
+"
+```
+
+**Symptoms when violated:**
+
+- `❌ project_name: 4 stages, 7.7s` in multi-project summary (Stage 4 fails in < 1s)
+- No visible import error in console (swallowed by subprocess capture)
+- Project passes when analysis scripts are run standalone (because environment differs)
+
+**Fix:** Add missing packages to root `pyproject.toml`'s core `dependencies`, then `uv sync`.
+
+**Venv selection logic in `02_run_analysis.py`:**
+
+```text
+project has .venv/ + uv available  →  uv run --directory project/ python script.py
+project has .venv/ + no uv        →  get_python_command() + script.py  (warning logged)
+project has no .venv/             →  get_python_command() + script.py  (root venv)
+```
+
 ### Dependency Conflicts
 
 **Resolve conflicts:**
@@ -438,6 +527,34 @@ done
 - Use scripts to enforce
 - Document deviations
 - Regular audits
+
+#### Issue: Multi-project pipeline Stage 4 fails silently in < 1s
+
+**Symptom:** `❌ project_name: 4 stages, 7.7s` with 3 stages obviously fast (clean + setup + tests) and Stage 4 (analysis) never producing output.
+
+**Most common root cause:** Project-specific packages missing from root `.venv` (see [Root Venv Dependency Coverage](#️-root-venv-dependency-coverage-critical-rule) above).
+
+**Diagnosis checklist:**
+
+```bash
+# 1. Check project pipeline log directly:
+cat projects/<name>/output/logs/pipeline.log
+
+# 2. Run analysis stage standalone to see errors:
+python3 scripts/02_run_analysis.py --project <name>
+
+# 3. Run first analysis script directly with root Python:
+.venv/bin/python projects/<name>/scripts/01_*.py
+
+# 4. Check all imports from project's src:
+.venv/bin/python -c "import scipy, pandas, wordcloud" 2>&1
+```
+
+**Other causes to rule out:**
+
+- Script syntax error (run `python -m py_compile script.py`)
+- Missing `conftest.py` adding `src/` to path
+- Data file not found (e.g., `corpus.jsonl` was cleaned)
 
 ## Automation Scripts
 

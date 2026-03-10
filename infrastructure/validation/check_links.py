@@ -18,12 +18,21 @@ import ast
 import re
 import sys
 from pathlib import Path
-from typing import Any, Set
+from typing import Any, Set, TypedDict
 
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.validation.doc_accuracy import extract_headings
 
 logger = get_logger(__name__)
+
+class LinkIssue(TypedDict):
+    """Represents an issue found during validation."""
+    file: str
+    line: int
+    target: str
+    text: str
+    issue: str
+    type: str
 
 def find_all_markdown_files(repo_root: str) -> list[Path]:
     """Find all markdown files in the repository."""
@@ -135,160 +144,134 @@ def extract_code_blocks(content: str, file_path: Path) -> list[dict[str, Any]]:
 
     return code_blocks
 
-def validate_file_paths_in_code(content: str, file_path: Path, repo_root: Path) -> list[dict[str, Any]]:
-    """Validate file path references within code blocks.
-
-    Improved to avoid catching formatting artifacts and better handle multi-line paths.
-    """
+def _check_code_path_match(
+    match: re.Match[str], block: dict[str, Any], content: str, file_path: Path, repo_root: Path
+) -> dict[str, Any] | None:
+    """Validate a single path match in a code block."""
     from infrastructure.validation.known_exceptions import (
         is_code_block_artifact,
         is_mermaid_artifact,
         is_valid_directory_reference,
     )
 
+    path_ref = match.group(0).strip()
+    if len(path_ref) < 3:
+        return None
+
+    if is_code_block_artifact(path_ref) or is_mermaid_artifact(path_ref):
+        return None
+
+    lines = path_ref.split("\n")
+    if any(line.strip().startswith("#") for line in lines if line.strip()):
+        return None
+
+    match_start = match.start()
+    match_end = match.end()
+    context_before = block["content"][max(0, match_start - 10) : match_start]
+    context_after = block["content"][match_end : min(len(block["content"]), match_end + 10)]
+    
+    if ('"' in context_before or "'" in context_before) and ('"' in context_after or "'" in context_after):
+        return None
+
+    if is_valid_directory_reference(path_ref) or not _should_validate_path(path_ref):
+        return None
+
+    resolved_path = _resolve_template_path(path_ref, repo_root)
+    if not (resolved_path and not resolved_path.exists()):
+        return None
+
+    if resolved_path.suffix or not path_ref.endswith("/"):
+        return {
+            "file": str(file_path),
+            "line": block.get("line", 0) + content[: match_start].count("\n"),
+            "target": path_ref,
+            "issue": f"File path in code block does not exist: {path_ref}",
+            "type": "code_block_path",
+        }
+    return None
+
+def validate_file_paths_in_code(content: str, file_path: Path, repo_root: Path) -> list[dict[str, Any]]:
+    """Validate file path references within code blocks.
+
+    Improved to avoid catching formatting artifacts and better handle multi-line paths.
+    """
     issues = []
     code_blocks = extract_code_blocks(content, file_path)
 
+    path_patterns = [
+        r'projects/\{[^}]+\}/[^\'"\s\n\|`\)\]\}]*',
+        r'output/\{[^}]+\}/[^\'"\s\n\|`\)\]\}]*',
+        r'infrastructure/[^\'"\s\n\|`\)\]\}]+',
+        r'scripts/[^\'"\s\n\|`\)\]\}]+',
+        r'projects/[a-zA-Z_][a-zA-Z0-9_]*/[^\'"\s\n\|`\)\]\}]+',
+    ]
+
     for block in code_blocks:
-        # Skip Mermaid diagrams (they often contain path-like strings that aren't real paths)
-        if block["language"] in ["mermaid", "graph", "flowchart"]:
+        if block.get("language") in ["mermaid", "graph", "flowchart"]:
             continue
 
-        # Look for file path patterns in code blocks
-        # Common patterns: projects/{name}/, output/{name}/, infrastructure/, scripts/
-        # Improved patterns that avoid catching formatting artifacts
-        path_patterns = [
-            r'projects/\{[^}]+\}/[^\'"\s\n\|`\)\]\}]*',  # projects/{name}/path (exclude formatting chars)  # noqa: E501
-            r'output/\{[^}]+\}/[^\'"\s\n\|`\)\]\}]*',  # output/{name}/path
-            r'infrastructure/[^\'"\s\n\|`\)\]\}]+',  # infrastructure/path (must have something after)  # noqa: E501
-            r'scripts/[^\'"\s\n\|`\)\]\}]+',  # scripts/path
-            r'projects/[a-zA-Z_][a-zA-Z0-9_]*/[^\'"\s\n\|`\)\]\}]+',  # projects/project_name/path
-        ]
-
         for pattern in path_patterns:
-            for match in re.finditer(pattern, block["content"]):
-                path_ref = match.group(0).strip()
-
-                # Skip empty or very short paths
-                if len(path_ref) < 3:
-                    continue
-
-                # Skip if it's a formatting artifact
-                if is_code_block_artifact(path_ref):
-                    continue
-
-                # Skip if it's a Mermaid artifact
-                if is_mermaid_artifact(path_ref):
-                    continue
-
-                # Skip if it's just a comment line
-                lines = path_ref.split("\n")
-                if any(line.strip().startswith("#") for line in lines if line.strip()):
-                    continue
-
-                # Skip if it's clearly in a string literal (quotes around it)
-                match_start = match.start()
-                match_end = match.end()
-                context_before = block["content"][max(0, match_start - 10) : match_start]
-                context_after = block["content"][
-                    match_end : min(len(block["content"]), match_end + 10)
-                ]
-                if ('"' in context_before or "'" in context_before) and (
-                    '"' in context_after or "'" in context_after
-                ):
-                    continue
-
-                # Skip if it's a valid directory reference
-                if is_valid_directory_reference(path_ref):
-                    continue
-
-                # Skip if it's just a comment or string that doesn't need to exist
-                if not _should_validate_path(path_ref):
-                    continue
-
-                # Check if this path exists
-                resolved_path = _resolve_template_path(path_ref, repo_root)
-                if resolved_path and not resolved_path.exists():
-                    # Only flag if it's clearly a file reference (has extension or doesn't end with /)  # noqa: E501
-                    if resolved_path.suffix or not path_ref.endswith("/"):
-                        issues.append(
-                            {
-                                "file": str(file_path),
-                                "line": block["line"] + content[: match.start()].count("\n"),
-                                "target": path_ref,
-                                "issue": f"File path in code block does not exist: {path_ref}",
-                                "type": "code_block_path",
-                            }
-                        )
+            for match in re.finditer(pattern, block.get("content", "")):
+                issue = _check_code_path_match(match, block, content, file_path, repo_root)
+                if issue:
+                    issues.append(issue)
 
     return issues
 
+# Consolidated path exclusion patterns — single source of truth for all
+# skip/example paths. Avoids hardcoding in function body; extend by adding here.
+_PATH_SKIP_SUBSTRINGS: frozenset[str] = frozenset({
+    # Template/placeholder paths
+    "projects/{name}/", "projects/{project_name}", "{name}/manuscript/config.yaml.example",
+    "your_project_name", "path/to/", "example.com", "your-domain.com",
+    # Generic/example infrastructure paths
+    "infrastructure/<module>", "infrastructure/example", "infrastructure/test_<module>",
+    "infrastructure/example_module", "infrastructure/module/", "infrastructure/new_module/",
+    "infrastructure/my_module/", "infrastructure/utils/", "infrastructure/helpers/",
+    "infrastructure/common/", "infrastructure/shared/", "infrastructure/core.py",
+    "infrastructure/test_core/", "infrastructure/test_specific.py",
+    # Malformed markdown artifacts
+    "infrastructure/AGENTS.md)", "infrastructure/AGENTS.md](../", "scripts/)", "scripts/`",
+    # Example scripts/docs/tests
+    "scripts/custom_check.py", "scripts/extra_checks.py", "scripts/my_script.py",
+    "scripts/process_data.py", "scripts/optimization_analysis.py",
+    "projects/my_project/", "projects/new_project/",
+    "docs/my_guide.md", "docs/new_feature.md",
+    "tests/test_my_feature.py", "tests/test_new_function.py",
+    # Template examples in code blocks
+    "project/tests/", "project/manuscript/", "project/src/",
+})
+
+_PATH_SKIP_KEYWORDS: frozenset[str] = frozenset({
+    "placeholder", "template", "example", "your_", "sample",
+})
+
+
 def _should_validate_path(path_ref: str) -> bool:
-    """Determine if a path reference should be validated."""
-    # Skip references that are obviously placeholders or examples
-    skip_patterns = [
-        "projects/{name}/manuscript/config.yaml.example",
-        "your_project_name",
-        "path/to/",
-        "infrastructure/<module>",  # Template examples
-        "infrastructure/example",  # Example paths
-        "infrastructure/test_<module>",  # Test template
-        "infrastructure/example_module",  # Example module
-        "infrastructure/<module>/",  # Template with trailing slash
-        "infrastructure/example/",  # Example with trailing slash
-        "projects/{project_name}",  # Template project names
-        "example.com",  # Example URLs
-        "your-domain.com",  # Template domains
-        "infrastructure/AGENTS.md)",  # Malformed markdown
-        "infrastructure/AGENTS.md](../",  # Malformed markdown
-        "infrastructure/test_core/",  # Example test structure
-        "scripts/custom_check.py",  # Example script
-        "scripts/extra_checks.py",  # Example script
-        "infrastructure/core.py",  # Generic example
-        "infrastructure/module/",  # Generic template
-        "infrastructure/new_module/",  # Template module
-        "infrastructure/my_module/",  # Example module
-        "infrastructure/utils/",  # Generic utils
-        "infrastructure/helpers/",  # Generic helpers
-        "infrastructure/common/",  # Generic common
-        "infrastructure/shared/",  # Generic shared
-        "scripts/my_script.py",  # Example script
-        "scripts/process_data.py",  # Example script
-        "projects/my_project/",  # Example project
-        "projects/new_project/",  # Example project
-        "docs/my_guide.md",  # Example doc
-        "docs/new_feature.md",  # Example doc
-        "tests/test_my_feature.py",  # Example test
-        "tests/test_new_function.py",  # Example test
-        "scripts/)",  # Malformed path (trailing paren)
-        "scripts/`",  # Malformed path (backtick)
-        "infrastructure/test_specific.py",  # Example test file
-        "infrastructure/test_specific.py::test_function",  # Example pytest path
-    ]
+    """Determine if a path reference should be validated.
 
-    for pattern in skip_patterns:
-        if pattern in path_ref:
-            return False
+    Uses module-level frozensets for skip patterns so additions are centralized
+    and the function body stays focused on structural checks.
+    """
+    # Quick substring match against consolidated exclusion list
+    if any(pattern in path_ref for pattern in _PATH_SKIP_SUBSTRINGS):
+        return False
 
-    # Skip if it contains template variables that can't be resolved
+    # Template variables or angle-bracket placeholders
     if ("{" in path_ref and "}" in path_ref) or ("<" in path_ref and ">" in path_ref):
         return False
 
-    # Skip URLs and email addresses
+    # URLs and email addresses
     if "://" in path_ref or "@" in path_ref:
         return False
 
-    # Skip common documentation placeholders
-    if any(
-        placeholder in path_ref.lower()
-        for placeholder in ["placeholder", "template", "example", "your_", "sample"]
-    ):
+    # Documentation placeholder keywords
+    path_lower = path_ref.lower()
+    if any(kw in path_lower for kw in _PATH_SKIP_KEYWORDS):
         return False
 
-    # Skip malformed paths (containing special chars that indicate parsing errors)
-    # Improved detection of formatting artifacts
-    if any(char in path_ref for char in ["`", ")", "]", "}", "|", "\n", "\r"]):
-        # Check if it's likely a parsing artifact (ends with these chars or contains newlines)
+    # Malformed paths containing formatting artifacts
+    if any(char in path_ref for char in ("`", ")", "]", "}", "|", "\n", "\r")):
         path_stripped = path_ref.rstrip()
         if (
             path_stripped.endswith((")", "]", "}", "`", "|", "\\n"))
@@ -296,22 +279,7 @@ def _should_validate_path(path_ref: str) -> bool:
             or "\r" in path_ref
         ):
             return False
-        # Check for patterns like "infrastructure/\nGeneric" (newline in middle)
         if re.search(r"/\s*\n\s*[A-Z]", path_ref):
-            return False
-
-    # Skip paths that are clearly from code examples in documentation
-    # These are often in markdown code blocks showing example commands
-    example_indicators = [
-        "scripts/optimization_analysis.py",  # Example script name
-        "infrastructure/test_specific.py",  # Example test file
-        "project/tests/",  # Template example
-        "project/manuscript/",  # Template example
-        "project/src/",  # Template example
-    ]
-
-    for indicator in example_indicators:
-        if indicator in path_ref:
             return False
 
     return True
@@ -426,8 +394,9 @@ def validate_python_imports(content: str, file_path: Path, repo_root: Path) -> l
                                 issues.extend(
                                     _validate_import_path(module_name, block, file_path, repo_root)
                                 )
-            except SyntaxError:
+            except SyntaxError as e:
                 # Skip malformed Python code
+                logger.debug(f"Syntax error extracting imports from {file_path.name}: {e}")
                 continue
 
     return issues
@@ -660,7 +629,7 @@ def main() -> int:
     logger.info("Running comprehensive filepath and reference audit")
 
     all_headings: dict[str, Set[str]] = {}
-    issues: dict[str, list[str]] = {
+    issues: dict[str, list[LinkIssue]] = {
         "broken_anchor_links": [],
         "broken_file_refs": [],
         "code_block_paths": [],
@@ -715,12 +684,13 @@ def main() -> int:
                 # Only check for actual heading anchors within the same file
                 if file_key in all_headings and target not in all_headings[file_key]:
                     issues["broken_anchor_links"].append(
-                        {  # type: ignore
+                        {
                             "file": file_key,
                             "line": link["line"],
                             "target": link["target"],
                             "text": link["text"],
                             "issue": "Anchor not found",
+                            "type": "broken_anchor",
                         }
                     )
 
@@ -738,27 +708,28 @@ def main() -> int:
                     exists, msg = check_file_reference(target, md_file, repo_root)
                     if not exists:
                         issues["broken_file_refs"].append(
-                            {  # type: ignore
+                            {
                                 "file": str(md_file.relative_to(repo_root)),
                                 "line": ref["line"],
                                 "target": ref["target"],
                                 "text": ref["text"],
                                 "issue": msg,
+                                "type": "broken_file_ref",
                             }
                         )
 
             # Additional validations
             code_block_issues = validate_file_paths_in_code(content, md_file, repo_root)
-            issues["code_block_paths"].extend(code_block_issues)  # type: ignore
+            issues["code_block_paths"].extend(code_block_issues)
 
             dir_structure_issues = validate_directory_structures(content, md_file, repo_root)
-            issues["directory_structures"].extend(dir_structure_issues)  # type: ignore
+            issues["directory_structures"].extend(dir_structure_issues)
 
             import_issues = validate_python_imports(content, md_file, repo_root)
-            issues["python_imports"].extend(import_issues)  # type: ignore
+            issues["python_imports"].extend(import_issues)
 
             placeholder_issues = validate_placeholder_consistency(content, md_file, repo_root)
-            issues["placeholder_consistency"].extend(placeholder_issues)  # type: ignore
+            issues["placeholder_consistency"].extend(placeholder_issues)
 
         except Exception as e:
             logger.error(f"Error processing {md_file}: {e}")
@@ -766,7 +737,7 @@ def main() -> int:
     # Generate comprehensive report
     return generate_comprehensive_report(issues, len(md_files))
 
-def generate_comprehensive_report(issues: dict[str, list[Any]], total_files: int) -> int:
+def generate_comprehensive_report(issues: dict[str, list[LinkIssue]], total_files: int) -> int:
     """Generate a comprehensive validation report."""
     total_issues = sum(len(issue_list) for issue_list in issues.values())
 

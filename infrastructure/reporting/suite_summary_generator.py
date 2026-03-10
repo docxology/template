@@ -31,10 +31,22 @@ class InfraResults(TypedDict):
 
 logger = get_logger(__name__)
 
-def load_test_results(project_name: str, repo_root: Path | None = None) -> dict[str, Any]:
-    """Load test results from a project's output directory; returns {} if not found."""
+def load_test_results(
+    project_name: str,
+    repo_root: Path | None = None,
+    project_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Load test results from a project's output directory; returns {} if not found.
+
+    Args:
+        project_name: Name of the project.
+        repo_root: Repository root (default: cwd).
+        project_dir: Absolute path to the project directory. When provided,
+            overrides ``repo_root / 'projects' / project_name``.
+    """
     root = repo_root or Path.cwd()
-    results_file = root / "projects" / project_name / "output" / "reports" / "test_results.json"
+    _base = project_dir if project_dir is not None else root / "projects" / project_name
+    results_file = _base / "output" / "reports" / "test_results.json"
 
     if results_file.exists():
         try:

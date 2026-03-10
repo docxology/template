@@ -270,9 +270,10 @@ graph TB
 
 ### Example Projects
 
-The template includes one active project:
+The template includes two active projects:
 
 - **`projects/code_project/`** - Optimization research exemplar (master exemplar)
+- **`projects/medical_ai/`** - Medical AI clinical pipeline (multi-agent governance framework)
 
 **Note:** Archived projects are preserved in `projects_archive/` for reference but are not actively executed.
 
@@ -323,6 +324,7 @@ Projects in `projects_archive/` are **preserved but not executed**:
 **Current Active Projects:**
 
 - `code_project/` - Optimization research exemplar
+- `medical_ai/` - Medical AI multi-agent clinical governance pipeline
 
 **To archive a project:** `mv projects/{name}/ projects_archive/{name}/`
 **To reactivate:** `mv projects_archive/{name}/ projects/{name}/`
@@ -335,6 +337,9 @@ Projects in `projects_archive/` are **preserved but not executed**:
 2. **Clone your new repository**
 3. **Install dependencies**: `uv sync`
 4. **Generate your first document**: `uv run scripts/03_render_pdf.py`
+
+> 🖥️ **Running on a headless cloud server?** See **[CLOUD_DEPLOY.md](CLOUD_DEPLOY.md)** — uv is
+> installed automatically when you run `./run.sh --pipeline`.
 
 **📖 Need help?** See **[Getting Started Guide](docs/guides/getting-started.md)** for beginners, **[Quick Start Cheatsheet](docs/reference/quick-start-cheatsheet.md)** for quick reference, or **[How To Use Guide](docs/core/how-to-use.md)** for guidance from basic usage to advanced workflows.
 

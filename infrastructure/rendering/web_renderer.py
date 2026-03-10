@@ -38,7 +38,7 @@ class WebRenderer:
         logger.info(f"Generating HTML from {source_file}")
 
         try:
-            subprocess.run(cmd, check=True, capture_output=True, text=True)
+            subprocess.run(cmd, check=True, capture_output=True, text=True, timeout=600)
             return output_file
 
         except subprocess.CalledProcessError as e:
@@ -132,7 +132,7 @@ class WebRenderer:
         logger.debug(f"Combined markdown file: {combined_md}")
 
         try:
-            subprocess.run(cmd, check=True, capture_output=True, text=True)
+            subprocess.run(cmd, check=True, capture_output=True, text=True, timeout=600)
         except subprocess.CalledProcessError as e:
             error_msg = "Failed to convert markdown to HTML"
             all_output = ""

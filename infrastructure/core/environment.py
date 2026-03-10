@@ -246,7 +246,7 @@ def check_uv_available() -> bool:
 
 
 def get_python_command() -> list[str]:
-    """Return [sys.executable] for subprocess calls in the active venv."""
+    """Get sys.executable for subprocess calls."""
     return [sys.executable]
 
 

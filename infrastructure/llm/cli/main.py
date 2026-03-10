@@ -23,6 +23,14 @@ from infrastructure.llm.core.config import GenerationOptions, LLMConfig
 logger = get_logger(__name__)
 
 
+class CLIError(Exception):
+    """Raised when a CLI command fails with a known error condition."""
+
+    def __init__(self, message: str, exit_code: int = 1):
+        super().__init__(message)
+        self.exit_code = exit_code
+
+
 def query_command(args: argparse.Namespace) -> None:
     """Handle query command."""
     from infrastructure.llm.utils.ollama import is_ollama_running, select_best_model
@@ -42,9 +50,7 @@ def query_command(args: argparse.Namespace) -> None:
 
     # Check connection first
     if not client.check_connection():
-        logger.error("Cannot connect to Ollama. Is it running?")
-        logger.info("Start with: ollama serve")
-        sys.exit(1)
+        raise CLIError("Cannot connect to Ollama. Is it running? Start with: ollama serve")
 
     # Build generation options
     opts = GenerationOptions(
@@ -55,36 +61,28 @@ def query_command(args: argparse.Namespace) -> None:
 
     prompt = args.prompt
 
-    try:
-        if args.stream:
-            # Streaming output
-            if args.short:
-                response_iter = client.stream_short(prompt, options=opts)
-            elif args.long:
-                response_iter = client.stream_long(prompt, options=opts)
-            else:
-                response_iter = client.stream_query(prompt, options=opts)
-
-            for chunk in response_iter:
-                print(chunk, end="", flush=True)
-            print()  # Final newline
+    if args.stream:
+        # Streaming output
+        if args.short:
+            response_iter = client.stream_short(prompt, options=opts)
+        elif args.long:
+            response_iter = client.stream_long(prompt, options=opts)
         else:
-            # Non-streaming output
-            if args.short:
-                response = client.query_short(prompt, options=opts)
-            elif args.long:
-                response = client.query_long(prompt, options=opts)
-            else:
-                response = client.query(prompt, options=opts)
+            response_iter = client.stream_query(prompt, options=opts)
 
-            print(response)
+        for chunk in response_iter:
+            print(chunk, end="", flush=True)
+        print()  # Final newline
+    else:
+        # Non-streaming output
+        if args.short:
+            response = client.query_short(prompt, options=opts)
+        elif args.long:
+            response = client.query_long(prompt, options=opts)
+        else:
+            response = client.query(prompt, options=opts)
 
-    except KeyboardInterrupt:
-        logger.info("Interrupted")
-        sys.exit(130)
-    except Exception as e:
-        logger.error(f"{e}")
-        sys.exit(1)
+        print(response)
 
 
 def check_command(args: argparse.Namespace) -> None:
@@ -99,12 +97,8 @@ def check_command(args: argparse.Namespace) -> None:
         print(f"  Default model: {config.default_model}")
         print(f"  Temperature: {config.temperature}")
         print(f"  Max tokens: {config.max_tokens}")
-        sys.exit(0)
     else:
-        logger.error("Cannot connect to Ollama")
-        logger.info(f"Tried: {config.base_url}")
-        logger.info("Start Ollama with: ollama serve")
-        sys.exit(1)
+        raise CLIError(f"Cannot connect to Ollama at {config.base_url}. Start with: ollama serve")
 
 
 def models_command(args: argparse.Namespace) -> None:
@@ -113,8 +107,7 @@ def models_command(args: argparse.Namespace) -> None:
     client = LLMClient(config)
 
     if not client.check_connection():
-        logger.error("Cannot connect to Ollama. Is it running?")
-        sys.exit(1)
+        raise CLIError("Cannot connect to Ollama. Is it running?")
 
     models = client.get_available_models()
 
@@ -138,15 +131,13 @@ def template_command(args: argparse.Namespace) -> None:
         return
 
     if not args.name:
-        logger.error("Template name required. Use --list to see available.")
-        sys.exit(1)
+        raise CLIError("Template name required. Use --list to see available.")
 
     config = LLMConfig.from_env()
     client = LLMClient(config)
 
     if not client.check_connection():
-        logger.error("Cannot connect to Ollama.")
-        sys.exit(1)
+        raise CLIError("Cannot connect to Ollama.")
 
     # Read input from stdin or argument
     if args.input:
@@ -155,33 +146,28 @@ def template_command(args: argparse.Namespace) -> None:
         print("Enter text (Ctrl+D to finish):", file=sys.stderr)
         text = sys.stdin.read()
 
-    try:
-        # Apply template - map common variable names
-        template = get_template(args.name)
+    # Apply template - map common variable names
+    template = get_template(args.name)
 
-        # Templates use different variable names - try common ones
-        kwargs = {}
-        if "text" in template.template_str:
-            kwargs["text"] = text
-        elif "code" in template.template_str:
-            kwargs["code"] = text
-        elif "stats" in template.template_str:
-            kwargs["stats"] = text
-        elif "summaries" in template.template_str:
-            kwargs["summaries"] = text
-        else:
-            kwargs["text"] = text  # Default
+    # Templates use different variable names - try common ones
+    kwargs = {}
+    if "text" in template.template_str:
+        kwargs["text"] = text
+    elif "code" in template.template_str:
+        kwargs["code"] = text
+    elif "stats" in template.template_str:
+        kwargs["stats"] = text
+    elif "summaries" in template.template_str:
+        kwargs["summaries"] = text
+    else:
+        kwargs["text"] = text  # Default
 
-        response = client.apply_template(args.name, **kwargs)
-        print(response)
-
-    except Exception as e:
-        logger.error(f"{e}")
-        sys.exit(1)
+    response = client.apply_template(args.name, **kwargs)
+    print(response)
 
 
 def main() -> None:
-    """Main CLI entry point."""
+    """Main CLI entry point — the only place sys.exit() is called."""
     parser = argparse.ArgumentParser(
         description="Query local LLMs via Ollama for research tasks.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -249,7 +235,17 @@ Examples:
         parser.print_help()
         sys.exit(1)
 
-    args.func(args)
+    try:
+        args.func(args)
+    except KeyboardInterrupt:
+        logger.info("Interrupted")
+        sys.exit(130)
+    except CLIError as e:
+        logger.error(str(e))
+        sys.exit(e.exit_code)
+    except Exception as e:
+        logger.error(f"Unexpected error: {e}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

@@ -160,8 +160,8 @@ def _render_pages_with_reportlab(reader: "PdfReader", dpi: int) -> list["PIL.Ima
             # Clean up temp file
             try:
                 os.unlink(temp_pdf_path)
-            except OSError:
-                pass
+            except OSError as e:
+                logger.debug(f"Failed to clean up temp file {temp_pdf_path}: {e}")
 
     return images
 

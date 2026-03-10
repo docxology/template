@@ -22,14 +22,14 @@ __layer__ = "infrastructure"
 
 # Core utilities — always available, used throughout the codebase
 try:
-    from .core.exceptions import (  # type: ignore
+    from .core.exceptions import (
         BuildError,
         ConfigurationError,
         TemplateError,
         ValidationError,
     )
-    from .core.config_loader import load_config  # type: ignore
-    from .core.logging_utils import get_logger  # type: ignore
+    from .core.config_loader import load_config
+    from .core.logging_utils import get_logger
 except ImportError as _core_e:
     raise RuntimeError(f"infrastructure core import failed: {_core_e}") from _core_e
 

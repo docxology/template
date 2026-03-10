@@ -81,7 +81,8 @@ The template now supports **multiple independent projects** within a single repo
 
 **Active Projects:**
 
-- `projects/code_project/` - Optimization research exemplar (master exemplar)
+- `projects/code_project/` — Optimization research exemplar (master exemplar, numerical methods & convergence)
+- `projects/medical_ai/` — Medical AI pipeline (clinical inference framework)
 
 **Note:** Archived projects are preserved in `projects_archive/` for reference but are not actively executed.
 
@@ -112,6 +113,19 @@ Projects in the `projects_archive/` directory are **preserved but not executed**
 
 Projects are automatically discovered when moved to the `projects/` directory.
 
+### Projects In Progress (`projects_in_progress/`)
+
+An optional intermediate staging area for projects that are under active development but not yet ready to run through the full pipeline. Projects here:
+
+- **NOT discovered** by infrastructure discovery functions
+- **NOT listed** in `run.sh` menu
+- **NOT executed** by any pipeline scripts
+- Useful for drafting new project scaffolding before promoting to `projects/`
+
+**Current projects in progress:** `act_inf_metaanalysis`, `cognitive_case_diagrams`, `pragmatism_blake`, `template`
+
+**To promote:** Move `projects_in_progress/{name}/` → `projects/{name}/`
+
 ## 📚 Repository Structure
 
 The template separates **generic infrastructure** from **project-specific code**:
@@ -131,6 +145,9 @@ template/                           # Generic template repository
 │   ├── 03_render_pdf.py
 │   ├── 04_validate_output.py
 │   ├── 05_copy_outputs.py          # Copies final deliverables
+├── run.sh                          # Main interactive + pipeline entry point
+├── secure_run.sh                   # Secure pipeline: run.sh + steganographic post-processing
+├── secure_config.yaml              # Top-level steganography configuration
 ├── tests/                          # Infrastructure tests
 │   ├── AGENTS.md
 │   ├── README.md
@@ -167,7 +184,9 @@ Each directory contains documentation for easy navigation:
 ### Project-Specific (Customizable)
 
 | Directory | AGENTS.md | README.md | Purpose |
-|-----------|-----------|-----------|---------|
+|-----------|-----------|-----------|--------|
+| [`projects/code_project/`](projects/code_project/) | [AGENTS.md](projects/code_project/AGENTS.md) | — | Optimization research exemplar |
+| [`projects/medical_ai/`](projects/medical_ai/) | [AGENTS.md](projects/medical_ai/AGENTS.md) | — | Medical AI clinical pipeline |
 
 ### Documentation Directories
 
@@ -391,12 +410,61 @@ The template provides **three entry points** for pipeline execution:
 ./run.sh --pipeline
 ```
 
-**Alternative: Python Orchestrator**
+### Secure Pipeline (`secure_run.sh`)
+
+A **two-stage wrapper** around the standard pipeline that adds steganographic PDF hardening:
+
+**Stage 1:** Runs `run.sh --pipeline` (full 10-stage manuscript pipeline).
+**Stage 2:** `infrastructure/steganography.SteganographyProcessor` post-processes every PDF,
+producing a companion `*_steganography.pdf` and a `.hashes.json` integrity manifest.
+Original PDFs are always left untouched.
 
 ```bash
-# Core pipeline (no LLM) - Python orchestrator
-python3 scripts/execute_pipeline.py --project {name} --core-only
+# Full secure pipeline (pipeline + steganography)
+./secure_run.sh
+
+# Specific project
+./secure_run.sh --project medical_ai
+
+# Re-process existing PDFs only (skip pipeline re-run)
+./secure_run.sh --steganography-only --project code_project
+
+# Core pipeline only (no LLM) + steganography
+./secure_run.sh --core-only
 ```
+
+**Output files:**
+
+```
+projects/{name}/output/pdf/
+├── {name}_combined.pdf               # Standard output (untouched)
+├── {name}_combined_steganography.pdf # Steganographically hardened copy
+└── {name}_combined.hashes.json       # SHA-256/SHA-512 integrity manifest
+```
+
+**Steganographic techniques:** diagonal watermark overlays, QR + barcode strips, PDF
+metadata/XMP injection, SHA-256/SHA-512 hash manifests, invisible text layers, optional
+AES-256 password encryption.
+
+**Configuration** (`secure_config.yaml` at repo root):
+
+Controls all steganography settings. Any `steganography:` block in a project's
+`manuscript/config.yaml` overrides these repo-level defaults. Key fields:
+
+```yaml
+steganography:
+  overlays_enabled: true       # Diagonal watermark
+  barcodes_enabled: true       # QR + Code128 strip
+  metadata_enabled: true       # PDF metadata + XMP
+  hashing_enabled: true        # SHA-256/512 manifest
+  encryption_enabled: false    # AES-256 password (set pdf_password to enable)
+  overlay_mode: "text"         # "text" | "qr" | "none"
+  overlay_text: "CONFIDENTIAL"
+  overlay_opacity: 0.08        # 0.02 subtle → 0.30 strong
+  output_suffix: "_steganography"
+```
+
+**See also:** [`scripts/AGENTS.md`](scripts/AGENTS.md#secure-entry-point) · [`infrastructure/steganography/`](infrastructure/steganography/)
 
 **Entry Point Comparison**
 
@@ -956,10 +1024,12 @@ python3 -m infrastructure.validation.cli pdf output/{name}/pdf/
 
 ### Quick Reference
 
-- **General Troubleshooting**: [`docs/operational/troubleshooting-guide.md`](docs/operational/troubleshooting-guide.md)
-- **LLM Review Issues**: [`docs/operational/llm-review-troubleshooting.md`](docs/operational/llm-review-troubleshooting.md)
-- **Checkpoint/Resume**: [`docs/operational/checkpoint-resume.md`](docs/operational/checkpoint-resume.md)
-- **Performance Issues**: [`docs/operational/performance-optimization.md`](docs/operational/performance-optimization.md)
+- **General Troubleshooting**: [`docs/operational/troubleshooting/`](docs/operational/troubleshooting/)
+- **Common Errors**: [`docs/operational/troubleshooting/common-errors.md`](docs/operational/troubleshooting/common-errors.md)
+- **LLM Review Issues**: [`docs/operational/troubleshooting/llm-review.md`](docs/operational/troubleshooting/llm-review.md)
+- **Checkpoint/Resume**: [`docs/operational/config/checkpoint-resume.md`](docs/operational/config/checkpoint-resume.md)
+- **Performance Issues**: [`docs/operational/config/performance-optimization.md`](docs/operational/config/performance-optimization.md)
+- **Headless / Cloud Deploy**: [`CLOUD_DEPLOY.md`](CLOUD_DEPLOY.md) ☁️
 
 ### Common Issues
 
@@ -970,8 +1040,8 @@ python3 -m infrastructure.validation.cli pdf output/{name}/pdf/
 python3 scripts/01_run_tests.py
 
 # Or run individually with coverage reports
-python3 -m pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=49
-python3 -m pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-under=70
+python3 -m pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
+python3 -m pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-under=90
 ```
 
 #### Scripts Failing
@@ -1159,10 +1229,13 @@ See [`docs/operational/checkpoint-resume.md`](docs/operational/checkpoint-resume
 ### Internal Documentation
 
 - [`README.md`](README.md) - Project overview and quick start
+- [`CLOUD_DEPLOY.md`](CLOUD_DEPLOY.md) - **Headless / cloud server deployment** ☁️
+- [`RUN_GUIDE.md`](RUN_GUIDE.md) - Full pipeline orchestration reference
 - [`docs/core/how-to-use.md`](docs/core/how-to-use.md) - Usage guide
 - [`docs/core/architecture.md`](docs/core/architecture.md) - System design details
 - [`docs/core/workflow.md`](docs/core/workflow.md) - Development workflow
 - [`projects/README.md`](projects/README.md) - Multi-project management guide
+- [`docs/documentation-index.md`](docs/documentation-index.md) - Full documentation hub
 
 ### External Resources
 

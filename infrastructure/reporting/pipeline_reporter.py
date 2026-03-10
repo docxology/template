@@ -42,8 +42,21 @@ def generate_pipeline_report(
     error_summary: dict[str, Any] | None = None,
     output_statistics: dict[str, Any] | None = None,
     project_name: str | None = None,
+    project_dir: Path | None = None,
 ) -> PipelineReport:
-    """Generate consolidated pipeline report from stage results and optional extras."""
+    """Generate consolidated pipeline report from stage results and optional extras.
+
+    Args:
+        stage_results: List of stage result dicts.
+        total_duration: Total pipeline duration in seconds.
+        repo_root: Repository root directory.
+        project_name: Name of the project (for log-file enrichment).
+        project_dir: Absolute path to the project directory. When given,
+            overrides ``repo_root / 'projects' / project_name`` for log-file
+            path resolution. Pass this when the project lives in a
+            non-default directory such as ``projects_in_progress/``.
+        Other keyword args pass through to PipelineReport fields.
+    """
     stages = []
     for result in stage_results:
         status = "passed" if result.get("exit_code", 1) == 0 else "failed"
@@ -58,7 +71,9 @@ def generate_pipeline_report(
 
     # Enrich a copy of output_statistics with log file info (avoid mutating caller's dict)
     if project_name and output_statistics is not None:
-        log_file = repo_root / "projects" / project_name / "output" / "logs" / "pipeline.log"
+        # Use explicit project_dir if given; fall back to default projects/ location.
+        _log_base = project_dir if project_dir is not None else repo_root / "projects" / project_name
+        log_file = _log_base / "output" / "logs" / "pipeline.log"
         output_statistics = {
             **output_statistics,
             "log_file": {

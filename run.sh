@@ -88,7 +88,22 @@ source "$SCRIPT_DIR/scripts/bash_utils.sh"
 # Check bash compatibility (non-fatal warning)
 check_bash_compatibility || true
 
-# Log uv availability status
+# Detect non-interactive / pipeline invocation early so ensure_uv() fires
+# before any Python code is executed. This enables headless cloud bootstrap.
+# Flags that imply a pipeline run (not just interactive menu or --help):
+_PIPELINE_FLAGS=(--pipeline --infra-tests --project-tests --render-pdf
+                 --reviews --translations --option --all-projects)
+for _arg in "$@"; do
+    for _flag in "${_PIPELINE_FLAGS[@]}"; do
+        if [[ "$_arg" == "$_flag" ]]; then
+            export PIPELINE_MODE=1
+            break 2
+        fi
+    done
+done
+unset _arg _flag _PIPELINE_FLAGS
+
+# Log uv availability status; in PIPELINE_MODE=1, auto-installs uv + runs uv sync
 log_uv_status
 
 # Stage tracking for full pipeline

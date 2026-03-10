@@ -34,7 +34,8 @@ The template provides multiple entry points organized by function:
 - Interactive menu with manuscript pipeline operations (0-9)
 - Full pipeline execution (10 stages displayed as [1/10] to [10/10])
 - Non-interactive: `./run.sh [options]` for direct pipeline operations
-- Non-interactive flags: `--pipeline`, `--infra-tests`, `--project-tests`, `--render-pdf`, `--reviews`, `--translations`
+- Non-interactive flags: `--pipeline`, `--infra-tests`, `--project-tests`, `--render-pdf`, `--reviews`, `--translations`, `--option`, `--all-projects`
+- **Headless bootstrap**: Detects any non-interactive flag before `log_uv_status`, sets `PIPELINE_MODE=1`, which triggers `ensure_uv()` + `uv sync` if `.venv` is absent
 - Sources shared utilities from `scripts/bash_utils.sh`
 
 **Shared Utilities** (`scripts/bash_utils.sh`):
@@ -43,6 +44,91 @@ The template provides multiple entry points organized by function:
 - Logging functions (log_header, log_success, log_error, etc.)
 - Utility functions (format_duration, get_elapsed_time, parse_choice_sequence)
 - File logging functions
+- `check_uv()` — returns 0 if uv is available and functional
+- `ensure_uv()` — **idempotent uv installer**: if uv is absent, downloads via `curl`/`wget` from `https://astral.sh/uv/install.sh`, sources `$HOME/.local/bin/env`, re-checks. Exits 1 on failure.
+- `log_uv_status()` — in `PIPELINE_MODE=1` calls `ensure_uv()` then runs `uv sync` to bootstrap the `.venv`; in interactive mode warns if uv is absent with install hint
+- `get_python_cmd()` — resolves `.venv/bin/python3` → root `.venv` → system `python3`
+
+**Secure Entry Point** (`secure_run.sh` + `secure_config.yaml`):
+
+A **two-stage wrapper** that runs the full pipeline then applies steganographic security
+post-processing to all generated PDFs. Sources `scripts/bash_utils.sh` for logging utilities.
+
+**Stage flow:**
+
+1. `run.sh --pipeline [args]` — executes the standard 10-stage manuscript pipeline
+2. `infrastructure/steganography.SteganographyProcessor` — post-processes every PDF,
+   producing a companion `*_steganography.pdf` and a `.hashes.json` integrity manifest.
+   Original PDFs are always left untouched.
+
+**CLI flags:**
+
+| Flag | Description |
+|------|-------------|
+| `--project <name>` | Target a specific project (default: auto-discover first project) |
+| `--steganography-only` | Skip pipeline; re-process existing PDFs only |
+| `--skip-infra` | Pass-through to `run.sh` to skip infrastructure tests |
+| `--core-only` | Pass-through to `run.sh` for core-only pipeline (no LLM) |
+| `--help` | Show usage and technique summary |
+
+**Usage:**
+
+```bash
+# Full pipeline + steganographic post-processing
+./secure_run.sh
+
+# Specific project
+./secure_run.sh --project medical_ai
+
+# Re-process existing PDFs without re-running the pipeline
+./secure_run.sh --steganography-only --project code_project
+```
+
+**Output files:**
+
+```
+projects/{name}/output/pdf/
+├── {name}_combined.pdf               # Standard output (untouched)
+├── {name}_combined_steganography.pdf # Steganographically hardened copy
+└── {name}_combined.hashes.json       # SHA-256/SHA-512 integrity manifest
+```
+
+**Steganographic techniques applied:**
+
+- Diagonal watermark overlay (configurable text, QR tiles, or none)
+- QR code + Code128 barcode strip at page bottom
+- PDF metadata + XMP packet injection
+- SHA-256/SHA-512 hash computation + manifest file
+- Invisible text layers and document ID fingerprinting
+- Optional AES-256 PDF password protection
+
+**Configuration** (`secure_config.yaml` at repo root):
+
+The repo-level `secure_config.yaml` provides default steganography settings. Any
+`steganography:` section in a project's `manuscript/config.yaml` overrides these defaults.
+When running `secure_run.sh`, steganography is always enabled regardless of config.
+
+```yaml
+steganography:
+  enabled: true
+  overlays_enabled: true      # Diagonal watermark
+  barcodes_enabled: true      # QR + barcode strip
+  metadata_enabled: true      # PDF metadata + XMP injection
+  hashing_enabled: true       # SHA-256/512 manifest
+  encryption_enabled: false   # AES-256 password (set pdf_password to enable)
+
+  overlay_mode: "text"        # "text" | "qr" | "none"
+  overlay_text: "CONFIDENTIAL"
+  overlay_opacity: 0.08       # 0.02 = subtle, 0.08 = standard, 0.30 = strong
+  hash_algorithms: [sha256, sha512]
+  output_suffix: "_steganography"
+```
+
+**Key references:**
+
+- [`infrastructure/steganography/`](../infrastructure/steganography/AGENTS.md) — Module implementation
+- [`secure_config.yaml`](../secure_config.yaml) — Top-level steganography configuration
+- [`CLOUD_DEPLOY.md`](../CLOUD_DEPLOY.md) — Headless deployment guide
 - Sourced by `run.sh`
 
 ### Python Scripts
@@ -518,6 +604,8 @@ Root entry points work with **ANY** project that follows this structure.
 ## See Also
 
 - [`../README.md`](../README.md) - Quick reference
+- [`../CLOUD_DEPLOY.md`](../CLOUD_DEPLOY.md) - **Headless / cloud server deployment guide** ☁️
+- [`../RUN_GUIDE.md`](../RUN_GUIDE.md) - Full pipeline orchestration reference
 - [`../projects/code_project/scripts/`](../projects/code_project/scripts/) - Project scripts example
 - [`../docs/architecture/thin-orchestrator-summary.md`](../docs/architecture/thin-orchestrator-summary.md) - Pattern explanation
 - [`../AGENTS.md`](../AGENTS.md) - system documentation

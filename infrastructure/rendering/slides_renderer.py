@@ -72,7 +72,7 @@ class SlidesRenderer:
         logger.info(f"Generating reveal.js slides from {source_file}")
 
         try:
-            subprocess.run(cmd, check=True, capture_output=True, text=True)
+            subprocess.run(cmd, check=True, capture_output=True, text=True, timeout=600)
             return output_file
 
         except subprocess.CalledProcessError as e:
@@ -121,7 +121,7 @@ class SlidesRenderer:
 
         try:
             # Convert markdown to LaTeX
-            subprocess.run(cmd, check=True, capture_output=True, text=True)
+            subprocess.run(cmd, check=True, capture_output=True, text=True, timeout=600)
 
             # Read LaTeX content and fix figure paths
             tex_content = temp_tex.read_text()

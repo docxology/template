@@ -466,5 +466,36 @@ ollama pull llama3-gradient
 - [`scripts/README.md`](scripts/README.md) - Stage orchestrators documentation
 - [`scripts/AGENTS.md`](scripts/AGENTS.md) - scripts documentation
 - [`AGENTS.md`](AGENTS.md) - system documentation
+- [`CLOUD_DEPLOY.md`](CLOUD_DEPLOY.md) - **Headless / cloud server deployment guide** ⭐
 - [`docs/core/workflow.md`](docs/core/workflow.md) - Development workflow
 - [`docs/operational/build-system.md`](docs/operational/build-system.md) - Detailed build system reference
+
+---
+
+## Headless / Cloud Server Deployment
+
+For a fresh headless server (Ubuntu/Debian), all dependencies including `uv` are installed
+automatically when you invoke any non-interactive pipeline flag:
+
+```bash
+# 1. Install system deps (LaTeX + git + curl)
+sudo apt-get update && sudo apt-get install -y \
+    curl git python3 pandoc \
+    texlive-xetex texlive-latex-extra texlive-fonts-recommended
+
+# 2. Clone the repository
+git clone https://github.com/docxology/template.git && cd template
+
+# 3. Run — uv is installed automatically, .venv is synced
+./run.sh --pipeline
+```
+
+The `MPLBACKEND=Agg` environment variable is required on headless servers (no display):
+
+```bash
+export MPLBACKEND=Agg
+./run.sh --pipeline
+```
+
+> 📖 **Full guide:** See [`CLOUD_DEPLOY.md`](CLOUD_DEPLOY.md) for system prerequisites,
+> optional dependency groups, Docker alternative, Ollama setup, and troubleshooting.

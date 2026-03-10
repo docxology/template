@@ -64,12 +64,18 @@ def generate_output_summary(
 
     logger.info("")
 
-def collect_output_statistics(repo_root: Path, project_name: str = "project") -> dict[str, Any]:
+def collect_output_statistics(
+    repo_root: Path,
+    project_name: str = "project",
+    project_dir: Path | None = None,
+) -> dict[str, Any]:
     """Collect comprehensive output file statistics.
 
     Args:
-        repo_root: Repository root path
-        project_name: Name of the project (default: "project")
+        repo_root: Repository root path.
+        project_name: Name of the project (default: "project").
+        project_dir: Absolute path to the project directory. When provided,
+            overrides ``repo_root / 'projects' / project_name``.
 
     Returns:
         Dictionary with comprehensive output statistics including:
@@ -79,7 +85,7 @@ def collect_output_statistics(repo_root: Path, project_name: str = "project") ->
         - Missing expected files
         - Total size and file count
     """
-    output_dir = repo_root / "projects" / project_name / "output"
+    output_dir = (project_dir if project_dir is not None else repo_root / "projects" / project_name) / "output"
 
     stats = {
         "directories": {},

@@ -172,8 +172,12 @@ def validate_refs(
                 problems.append(
                     f"Missing anchor/label for link (#{link}) in {os.path.relpath(path, repo_root)}"
                 )
-        # Flag bare URLs not inside Markdown links
-        for m in BARE_URL_PATTERN.finditer(text):
+        # Flag bare URLs not inside Markdown links.
+        # Strip fenced code blocks first to avoid false positives on Turtle/SPARQL/RDF URIs
+        # that are syntactically required inside code blocks (e.g. @prefix np: <http://...>)
+        text_no_code = re.sub(r"```[^`]*```", "", text, flags=re.DOTALL)
+        text_no_code = re.sub(r"`[^`]+`", "", text_no_code)  # also strip inline code
+        for m in BARE_URL_PATTERN.finditer(text_no_code):
             problems.append(
                 f"Bare URL found (use informative Markdown link text): '{m.group(0)}' in {os.path.relpath(path, repo_root)}"  # noqa: E501
             )

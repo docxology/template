@@ -52,13 +52,16 @@ def run_llm_review_pipeline(
     mode: str = ReviewMode.ALL,
     project_name: str = "project",
     repo_root: Path | None = None,
+    project_dir: Path | None = None,
 ) -> int:
     """Execute LLM manuscript review orchestration.
 
     Args:
-        mode: Execution mode - ALL (both), REVIEWS_ONLY, or TRANSLATIONS_ONLY
-        project_name: Name of project in projects/ directory
-        repo_root: Optional repository root path
+        mode: Execution mode - ALL (both), REVIEWS_ONLY, or TRANSLATIONS_ONLY.
+        project_name: Name of project directory.
+        repo_root: Optional repository root path.
+        project_dir: Absolute path to the project directory. When provided,
+            overrides ``repo_root / 'projects' / project_name``.
 
     Returns:
         Exit code (0=success, 1=failure, 2=skipped)
@@ -66,7 +69,8 @@ def run_llm_review_pipeline(
     if repo_root is None:
         repo_root = Path.cwd()
 
-    project_output = repo_root / "projects" / project_name / "output"
+    _project_root = project_dir if project_dir is not None else repo_root / "projects" / project_name
+    project_output = _project_root / "output"
 
     # Use project basename for file matching
     project_basename = Path(project_name).name

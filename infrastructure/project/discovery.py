@@ -57,10 +57,13 @@ class ProjectInfo:
         return self.name
 
 
-def discover_projects(repo_root: Union[Path, str]) -> list[ProjectInfo]:
-    """Discover all valid projects in projects/ directory.
+def discover_projects(
+    repo_root: Union[Path, str],
+    projects_dir: str = "projects",
+) -> list[ProjectInfo]:
+    """Discover all valid projects in the active projects directory.
 
-    This function scans the projects/ directory for both:
+    This function scans ``projects_dir`` (default ``projects/``) for both:
     - Standalone projects (direct children with src/ and tests/)
     - Nested projects within program directories (subdirectories that contain projects)
 
@@ -76,13 +79,23 @@ def discover_projects(repo_root: Union[Path, str]) -> list[ProjectInfo]:
     - manuscript/ directory (research manuscript)
 
     Args:
-        repo_root: Repository root directory
+        repo_root: Repository root directory.
+        projects_dir: Name of the active projects directory relative to repo_root.
+            Default ``'projects'``. The three standard directories are:
+
+            - ``projects/``            — active; discovered and rendered by run.sh
+            - ``projects_in_progress/`` — work-in-progress; NOT discovered automatically
+            - ``projects_archive/``     — completed/retired; NOT discovered automatically
+
+            Only pass a non-default value when you explicitly want to run a project
+            from a staging directory.
 
     Returns:
-        List of ProjectInfo objects for valid projects in projects/ only
+        List of ProjectInfo objects for valid projects.
 
     Note:
-        Projects in projects_archive/ are preserved but not discovered or executed.
+        ``projects_archive/`` and ``projects_in_progress/`` are deliberately excluded
+        from the default discovery path to prevent accidental execution.
 
     Examples:
         >>> projects = discover_projects(Path("/path/to/template"))
@@ -93,15 +106,15 @@ def discover_projects(repo_root: Union[Path, str]) -> list[ProjectInfo]:
     """
     if isinstance(repo_root, str):
         repo_root = Path(repo_root)
-    projects_dir = repo_root / "projects"
+    projects_dir_path = repo_root / projects_dir
 
-    if not projects_dir.exists():
-        logger.warning(f"Projects directory not found: {projects_dir}")
+    if not projects_dir_path.exists():
+        logger.warning(f"Projects directory not found: {projects_dir_path}")
         return []
 
     projects = []
 
-    for child_dir in sorted(projects_dir.iterdir()):
+    for child_dir in sorted(projects_dir_path.iterdir()):
         if not child_dir.is_dir():
             continue
 
@@ -313,16 +326,17 @@ def get_project_metadata(project_dir: Path) -> dict:
 
     return metadata
 
-def get_default_project(repo_root: Path) -> ProjectInfo | None:
-    """Get the default project (projects/project).
+def get_default_project(repo_root: Path, projects_dir: str = "projects") -> ProjectInfo | None:
+    """Get the default project (projects/project by default).
 
     Args:
-        repo_root: Repository root directory
+        repo_root: Repository root directory.
+        projects_dir: Active projects directory name (default: ``'projects'``).
 
     Returns:
         ProjectInfo for default project, or None if not found
     """
-    default_project_dir = repo_root / "projects" / "project"
+    default_project_dir = repo_root / projects_dir / "project"
 
     if not default_project_dir.exists():
         return None

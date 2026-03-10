@@ -325,7 +325,19 @@ def generate_analysis_dashboard(
 - **Missing Dependencies**: Run `uv sync` to install dependencies
 - **Test Failures**: Check that numpy/scipy are properly installed
 
-## .cursorrules Compliance
+### Known Issues / Learnings
+
+These issues were discovered during development and are documented here for future reference:
+
+1. **`functools.partial` and `__name__`**: The `optimization_analysis.py` script creates `functools.partial` objects via `make_quadratic_problem()`. When passed to `infrastructure/scientific/stability.py` or `benchmarking.py`, these lack `__name__`. The fix uses a `getattr` chain: `getattr(func, "__name__", getattr(getattr(func, "func", None), "__name__", repr(func)))`.
+
+2. **`project_root` must be module-level**: `optimization_analysis.py` originally used `project_root` inside functions but only defined it in `if __name__ == "__main__":`. Fix: define `project_root = Path(__file__).resolve().parent.parent` at module scope.
+
+3. **`conftest.py` is required**: Without `tests/conftest.py` adding `src/` to `sys.path`, pytest cannot import project modules. This is not optional.
+
+4. **`MPLBACKEND=Agg` in conftest**: Without this, matplotlib tests may try to open display windows and hang. Set `os.environ.setdefault("MPLBACKEND", "Agg")` at the top of `conftest.py`.
+
+> **See also**: [New Project Setup Guide](../../docs/guides/new-project-setup.md) for the full checklist.
 
 This project complies with the template's development standards defined in `.cursorrules/`.
 

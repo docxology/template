@@ -83,6 +83,78 @@ uv sync                              # Re-sync
 
 ---
 
+### ⚠️ Project packages missing from root venv — silent Stage 4 failure
+
+**Symptom:** `❌ act_inf_metaanalysis: 4 stages, 7.7s` — Stage 4 fails in under 1 second with no visible import error in console.
+
+**Root Cause:** Each project sub-directory may have its own `pyproject.toml` declaring extra dependencies (`scipy`, `pandas`, `wordcloud`, `rdflib`, `scikit-learn`, `networkx`, `requests`, etc.). When `02_run_analysis.py` runs analysis scripts, it uses the **root venv** unless the project has a local `.venv` directory. If these packages are only in the project's `pyproject.toml` and not in the root `pyproject.toml`, analysis scripts crash on import immediately — but the error is captured by subprocess and only logged as a stage failure.
+
+**Diagnosis:**
+
+```bash
+# Check what's in the root venv
+.venv/bin/python -c "import scipy, pandas, wordcloud, rdflib, sklearn, networkx" 2>&1
+
+# Check what's in the project's pyproject.toml
+cat projects/<name>/pyproject.toml | grep -A 20 dependencies
+
+# Confirm project has no local venv (so root venv is used)
+ls projects/<name>/.venv 2>/dev/null || echo "No local venv → uses root venv"
+```
+
+**Fix:** Add all project-specific packages to the root `pyproject.toml` core `dependencies` list, then run `uv sync`:
+
+```toml
+# pyproject.toml (root)
+[project]
+dependencies = [
+  "numpy>=1.22",
+  "pyyaml>=6.0",
+  "matplotlib>=3.7",
+  # act_inf_metaanalysis project requirements
+  "scipy>=1.10.0",
+  "pandas>=2.0.0",
+  "networkx>=3.0",
+  "requests>=2.31.0",
+  "rdflib>=7.0.0",
+  "wordcloud>=1.9.0",
+  "scikit-learn>=1.3.0",
+]
+```
+
+```bash
+uv sync   # installs newly listed packages
+./run.sh  # should now pass all projects
+```
+
+**Rule:** If a project has its own `pyproject.toml` but **no** `.venv/` directory, every package in that project's `dependencies` must also be in the root `pyproject.toml`.
+
+---
+
+### `ModuleNotFoundError: No module named 'matplotlib'` in analysis scripts
+
+**Symptom:** `generate_architecture_viz.py` or other analysis scripts fail with `No module named 'matplotlib'`.
+
+**Root Cause:** `matplotlib` was declared only in the `[project.optional-dependencies] dashboard` group in the root `pyproject.toml`. Running `uv sync` (default, no group flags) does not install optional groups.
+
+**Fix:** Move `matplotlib` to core `dependencies`:
+
+```toml
+# pyproject.toml
+[project]
+dependencies = [
+  "numpy>=1.22",
+  "pyyaml>=6.0",
+  "matplotlib>=3.7",  # ← must be in CORE, not optional group
+]
+```
+
+```bash
+uv sync
+```
+
+---
+
 ## Build Errors
 
 ### Pandoc conversion failed
@@ -187,4 +259,81 @@ cat project/output/.checkpoints/pipeline_checkpoint.json | uv run python -m json
 
 ---
 
-**Related:** [Environment Setup](environment-setup.md) | [Build Tools](build-tools.md) | [Main Guide](README.md)
+## Pipeline Stage Errors
+
+### Stage 01: `ModuleNotFoundError` for project packages
+
+**Symptom:** `ModuleNotFoundError: No module named '<package>'` during test collection
+
+**Root Cause:** Missing `tests/conftest.py` that adds `src/` to `sys.path`.
+
+**Fix:** Create `tests/conftest.py`:
+
+```python
+import os, sys
+os.environ.setdefault("MPLBACKEND", "Agg")
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+SRC = os.path.join(ROOT, "src")
+if SRC not in sys.path:
+    sys.path.insert(0, SRC)
+```
+
+---
+
+### Stage 02: `ImportError` in analysis scripts
+
+**Symptom:** `ImportError: cannot import name 'X' from 'infrastructure.core.Y'`
+
+**Root Cause:** Pipeline scripts import symbols that were never defined in the target module (e.g., `format_error_with_suggestions` in `02_run_analysis.py`).
+
+**Prevention:** Run each stage standalone before full pipeline:
+
+```bash
+uv run python scripts/02_run_analysis.py --project <name>
+```
+
+---
+
+### `functools.partial` missing `__name__`
+
+**Symptom:** `AttributeError: 'functools.partial' object has no attribute '__name__'`
+
+**Where:** `infrastructure/scientific/stability.py`, `infrastructure/scientific/benchmarking.py`
+
+**Fix:**
+
+```python
+# ❌ Breaks on partial objects
+name = func.__name__
+
+# ✅ Safe for any callable
+name = getattr(func, "__name__",
+    getattr(getattr(func, "func", None), "__name__", repr(func)))
+```
+
+---
+
+### Undefined `project_root` in scripts
+
+**Symptom:** `NameError: name 'project_root' is not defined`
+
+**Root Cause:** `project_root` used in functions but only defined inside `if __name__ == "__main__":`.
+
+**Fix:** Define as module-level constant:
+
+```python
+from pathlib import Path
+project_root = Path(__file__).resolve().parent.parent
+```
+
+---
+
+### Matplotlib emoji glyph warnings
+
+**Symptom:** `UserWarning: Glyph XXXXX (\N{CLIPBOARD}) missing from font(s) DejaVu Sans`
+
+**Fix:** Replace emoji characters (📋, 📖) with text labels in matplotlib figures. DejaVu Sans does not include emoji codepoints.
+
+---
+
+**Related:** [Environment Setup](environment-setup.md) | [Build Tools](build-tools.md) | [Main Guide](README.md) | [New Project Setup](../../guides/new-project-setup.md)

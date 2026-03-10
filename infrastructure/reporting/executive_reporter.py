@@ -185,8 +185,8 @@ def collect_codebase_metrics(src_dir: Path, scripts_dir: Path | None = None) -> 
                             metrics.methods += 1
                         elif isinstance(node, ast.ClassDef):
                             metrics.classes += 1
-                except SyntaxError:
-                    pass  # Skip files with syntax errors
+                except SyntaxError as e:
+                    logger.debug(f"Syntax error parsing {py_file.name} for metrics: {e}")
 
             except Exception as e:
                 logger.warning(f"Error processing {py_file.name}: {e}")
@@ -372,17 +372,23 @@ def collect_pipeline_metrics(reports_dir: Path) -> PipelineMetrics:
 
     return metrics
 
-def collect_project_metrics(repo_root: Path, project_name: str) -> ProjectMetrics:
+def collect_project_metrics(
+    repo_root: Path,
+    project_name: str,
+    project_dir: Path | None = None,
+) -> ProjectMetrics:
     """Collect all metrics for a single project.
 
     Args:
-        repo_root: Repository root path
-        project_name: Name of the project
+        repo_root: Repository root path.
+        project_name: Name of the project.
+        project_dir: Absolute path to the project directory. When provided,
+            overrides ``repo_root / 'projects' / project_name``.
 
     Returns:
         ProjectMetrics instance
     """
-    project_root = repo_root / "projects" / project_name
+    project_root = project_dir if project_dir is not None else repo_root / "projects" / project_name
 
     logger.info(f"Collecting metrics for project: {project_name}")
 
