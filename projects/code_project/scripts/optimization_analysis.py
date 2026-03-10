@@ -726,13 +726,8 @@ def run_stability_analysis():
     """Assess numerical stability of optimization algorithms."""
     logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
 
-    if not INFRASTRUCTURE_AVAILABLE:
-        if logger:
-            logger.warning("Skipping stability analysis - infrastructure not available")
-        return None
-
-    if logger:
-        logger.info("Running numerical stability analysis...")
+    log = logger.info if logger else lambda msg: print(f"INFO: {msg}")
+    log("Running numerical stability analysis...")
 
     # Test different input ranges for stability
     test_inputs = [
@@ -742,12 +737,44 @@ def run_stability_analysis():
         np.array([0.1]),  # Close to optimum
     ]
 
-    # Run stability check
-    stability_report = check_numerical_stability(
-        func=functools.partial(quadratic_function, A=np.array([[1.0]]), b=np.array([1.0])),
-        test_inputs=test_inputs,
-        tolerance=1e-10,
-    )
+    if INFRASTRUCTURE_AVAILABLE:
+        # Use infrastructure scientific module
+        stability_report = check_numerical_stability(
+            func=functools.partial(quadratic_function, A=np.array([[1.0]]), b=np.array([1.0])),
+            test_inputs=test_inputs,
+            tolerance=1e-10,
+        )
+        stability_data = {
+            "function_name": stability_report.function_name,
+            "stability_score": stability_report.stability_score,
+            "expected_behavior": stability_report.expected_behavior,
+            "actual_behavior": stability_report.actual_behavior,
+            "recommendations": stability_report.recommendations,
+        }
+    else:
+        # Standalone stability analysis: run gradient descent for each test input
+        # and compute stability score based on convergence to known optimum
+        optimal_value = -0.5
+        errors = []
+        for x0 in test_inputs:
+            result = gradient_descent(
+                initial_point=x0,
+                objective_func=lambda x: quadratic_function(x, np.array([[1.0]]), np.array([1.0])),
+                gradient_func=lambda x: compute_gradient(x, np.array([[1.0]]), np.array([1.0])),
+                step_size=0.1,
+                max_iterations=500,
+                tolerance=1e-12,
+            )
+            errors.append(abs(result.objective_value - optimal_value))
+        max_error = max(errors)
+        score = 1.0 if max_error < 1e-6 else max(0.0, 1.0 - np.log10(max_error + 1e-16) / 16)
+        stability_data = {
+            "function_name": "quadratic_function",
+            "stability_score": float(score),
+            "expected_behavior": "Converge to f(x*)=-0.5 for all starting points",
+            "actual_behavior": f"Max error: {max_error:.2e} across {len(test_inputs)} inputs",
+            "recommendations": [] if max_error < 1e-6 else ["Consider adaptive step size"],
+        }
 
     # Save stability report
     output_dir = project_root / "output" / "reports"
@@ -755,23 +782,12 @@ def run_stability_analysis():
 
     import json
 
-    stability_data = {
-        "function_name": stability_report.function_name,
-        "stability_score": stability_report.stability_score,
-        "expected_behavior": stability_report.expected_behavior,
-        "actual_behavior": stability_report.actual_behavior,
-        "recommendations": stability_report.recommendations,
-    }
-
     stability_path = output_dir / "stability_analysis.json"
     with open(stability_path, "w") as f:
         json.dump(stability_data, f, indent=2)
 
-    if logger:
-        logger.info(
-            f"Stability analysis complete - Score: {stability_report.stability_score:.2f}"
-        )
-        logger.info(f"Saved stability report to: {stability_path}")
+    log(f"Stability analysis complete - Score: {stability_data['stability_score']:.2f}")
+    log(f"Saved stability report to: {stability_path}")
 
     return stability_path
 
@@ -780,15 +796,10 @@ def run_performance_benchmarking():
     """Benchmark gradient descent performance."""
     logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
 
-    if not INFRASTRUCTURE_AVAILABLE:
-        if logger:
-            logger.warning(
-                "Skipping performance benchmarking - infrastructure not available"
-            )
-        return None
+    log = logger.info if logger else lambda msg: print(f"INFO: {msg}")
+    log("Running performance benchmarking...")
 
-    if logger:
-        logger.info("Running performance benchmarking...")
+    import time as _time
 
     # Different problem scales
     test_inputs = [
@@ -797,12 +808,48 @@ def run_performance_benchmarking():
         np.array([20.0]),  # Large distance
     ]
 
-    # Run benchmarking
-    benchmark_report = benchmark_function(
-        func=functools.partial(quadratic_function, A=np.array([[1.0]]), b=np.array([1.0])),
-        test_inputs=test_inputs,
-        iterations=50,  # Multiple runs for reliable measurement
-    )
+    if INFRASTRUCTURE_AVAILABLE:
+        # Use infrastructure scientific module
+        benchmark_report = benchmark_function(
+            func=functools.partial(quadratic_function, A=np.array([[1.0]]), b=np.array([1.0])),
+            test_inputs=test_inputs,
+            iterations=50,
+        )
+        benchmark_data = {
+            "function_name": benchmark_report.function_name,
+            "execution_time": benchmark_report.execution_time,
+            "memory_usage": benchmark_report.memory_usage,
+            "iterations": benchmark_report.iterations,
+            "result_summary": benchmark_report.result_summary,
+            "timestamp": benchmark_report.timestamp,
+        }
+        avg_time = benchmark_report.execution_time
+    else:
+        # Standalone benchmark: time gradient_descent calls across inputs
+        timings = []
+        for x0 in test_inputs:
+            elapsed = []
+            for _ in range(50):
+                t0 = _time.perf_counter()
+                gradient_descent(
+                    initial_point=x0,
+                    objective_func=lambda x: quadratic_function(x, np.array([[1.0]]), np.array([1.0])),
+                    gradient_func=lambda x: compute_gradient(x, np.array([[1.0]]), np.array([1.0])),
+                    step_size=0.1,
+                    max_iterations=500,
+                    tolerance=1e-12,
+                )
+                elapsed.append(_time.perf_counter() - t0)
+            timings.append(np.mean(elapsed))
+        avg_time = float(np.mean(timings))
+        benchmark_data = {
+            "function_name": "quadratic_function",
+            "execution_time": avg_time,
+            "memory_usage": 0.0,
+            "iterations": 50,
+            "result_summary": f"Avg {avg_time*1e6:.1f}μs across {len(test_inputs)} inputs",
+            "timestamp": _time.strftime("%Y-%m-%dT%H:%M:%S"),
+        }
 
     # Save benchmark report
     output_dir = project_root / "output" / "reports"
@@ -810,24 +857,12 @@ def run_performance_benchmarking():
 
     import json
 
-    benchmark_data = {
-        "function_name": benchmark_report.function_name,
-        "execution_time": benchmark_report.execution_time,
-        "memory_usage": benchmark_report.memory_usage,
-        "iterations": benchmark_report.iterations,
-        "result_summary": benchmark_report.result_summary,
-        "timestamp": benchmark_report.timestamp,
-    }
-
     benchmark_path = output_dir / "performance_benchmark.json"
     with open(benchmark_path, "w") as f:
         json.dump(benchmark_data, f, indent=2, default=str)
 
-    if logger:
-        logger.info(
-            f"Performance benchmarking complete - Avg time: {benchmark_report.execution_time:.6f}s"
-        )
-        logger.info(f"Saved benchmark report to: {benchmark_path}")
+    log(f"Performance benchmarking complete - Avg time: {avg_time:.6f}s")
+    log(f"Saved benchmark report to: {benchmark_path}")
 
     return benchmark_path
 
@@ -842,7 +877,7 @@ def generate_stability_visualization(stability_path):
     """
     logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
 
-    if not stability_path or not INFRASTRUCTURE_AVAILABLE:
+    if not stability_path:
         return None
 
     if logger:
@@ -940,7 +975,7 @@ def generate_benchmark_visualization(benchmark_path):
     """
     logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
 
-    if not benchmark_path or not INFRASTRUCTURE_AVAILABLE:
+    if not benchmark_path:
         return None
 
     if logger:
@@ -1244,20 +1279,19 @@ def register_figure():
             ),
         ]
 
-        # Add scientific analysis figures if available
-        if INFRASTRUCTURE_AVAILABLE:
-            figures.extend(
-                [
-                    (
-                        "stability_analysis.png",
-                        "Numerical stability analysis results and recommendations",
-                        "fig:stability",
-                    ),
-                    (
-                        "performance_benchmark.png",
-                        "Performance benchmarking results and metrics",
-                        "fig:benchmark",
-                    ),
+        # Add scientific analysis figures (always generated)
+        figures.extend(
+            [
+                (
+                    "stability_analysis.png",
+                    "Numerical stability analysis results and recommendations",
+                    "fig:stability",
+                ),
+                (
+                    "performance_benchmark.png",
+                    "Performance benchmarking results and metrics",
+                    "fig:benchmark",
+                ),
                 ]
             )
 
@@ -1324,17 +1358,12 @@ def main():
             CheckpointManager(checkpoint_dir)  # Initialize checkpoint manager
             log_info("Checkpoint manager initialized")
 
-        # Performance monitoring context (use nullcontext as fallback)
+        # Performance monitoring (decorator-based; not used as context manager)
         from contextlib import nullcontext
 
-        monitor_ctx = (
-            monitor_performance("Optimization analysis pipeline")
-            if INFRASTRUCTURE_AVAILABLE
-            else nullcontext()
-        )
-        with monitor_ctx as monitor:
+        with nullcontext():
             log_info(
-                "Performance monitoring enabled"
+                "Performance monitoring available"
                 if INFRASTRUCTURE_AVAILABLE
                 else "Running without performance monitoring"
             )
@@ -1357,33 +1386,32 @@ def main():
             data_path = save_optimization_results(results)
 
             # Run scientific analysis (if infrastructure available)
-            stability_path = None
-            benchmark_path = None
             stability_plot = None
             benchmark_plot = None
             dashboard_path = None
 
+            # Scientific analysis (works with or without infrastructure)
+            log_info("Running scientific analysis...")
+            log_info("Numerical stability analysis...")
+            stability_path = run_stability_analysis()
+
+            log_info("Performance benchmarking...")
+            benchmark_path = run_performance_benchmarking()
+
+            # Generate scientific visualizations
+            log_info("Generating scientific visualizations...")
+            stability_plot = generate_stability_visualization(stability_path)
+            benchmark_plot = generate_benchmark_visualization(benchmark_path)
+
+            # Generate comprehensive dashboard (requires infrastructure)
             if INFRASTRUCTURE_AVAILABLE:
-                log_info("Running scientific analysis...")
-                log_info("Numerical stability analysis...")
-                stability_path = run_stability_analysis()
-
-                log_info("Performance benchmarking...")
-                benchmark_path = run_performance_benchmarking()
-
-                # Generate scientific visualizations
-                log_info("Generating scientific visualizations...")
-                stability_plot = generate_stability_visualization(stability_path)
-                benchmark_plot = generate_benchmark_visualization(benchmark_path)
-
-                # Generate comprehensive dashboard
                 log_info("Generating analysis dashboard...")
                 dashboard_path = generate_analysis_dashboard(
                     results, stability_path, benchmark_path
                 )
             else:
                 log_warning(
-                    "Infrastructure not available - skipping scientific analysis"
+                    "Infrastructure not available - skipping dashboard generation"
                 )
 
             # Register figures if possible
@@ -1420,23 +1448,9 @@ def main():
                 except Exception as e:
                     log_warning(f"Publishing demonstration failed: {e}")
 
-        # Log final performance metrics
-        if INFRASTRUCTURE_AVAILABLE and monitor:
-            performance_metrics = monitor.stop()
-            log_info("Performance Summary:")
-            log_info(f"Duration: {performance_metrics.duration:.2f}s")
-            log_info(f"Memory: {performance_metrics.resource_usage.memory_mb:.1f}MB")
-
-            # Save performance data
-            output_dir = project_root / "output" / "reports"
-            output_dir.mkdir(parents=True, exist_ok=True)
-
-            import json
-
-            perf_path = output_dir / "analysis_performance.json"
-            with open(perf_path, "w") as f:
-                json.dump(performance_metrics.to_dict(), f, indent=2, default=str)
-            log_info(f"Performance data saved to: {perf_path}")
+        # Performance metrics not available (monitor_performance is a decorator)
+        if INFRASTRUCTURE_AVAILABLE:
+            log_info("Pipeline completed with infrastructure support")
 
         # Log final results
         log_info(f"Generated convergence plot: {convergence_plot}")
