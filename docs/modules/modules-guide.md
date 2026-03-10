@@ -1,6 +1,6 @@
 # 🔬 Modules Guide
 
-> **Guide** to the 9 infrastructure modules
+> **Guide** to the 10 infrastructure modules
 
 **Quick Reference:** [API Reference](../reference/api-reference.md) | [Architecture](../core/architecture.md) | [Infrastructure Docs](../../infrastructure/AGENTS.md)
 
@@ -19,6 +19,7 @@
 | 🎨 **Rendering** | Multi-format output | PDF, slides, web, poster | [Details](guides/rendering-module.md) |
 | 📊 **Reporting** | Pipeline reporting | Reports, error aggregation | [Details](guides/reporting-module.md) |
 | 🔍 **Project** | Project discovery | Multi-project orchestration | — |
+| 🔒 **Steganography** | Provenance & watermarking | Alpha-channel overlays, QR barcodes, PDF metadata | — |
 
 All modules follow the thin orchestrator pattern with test coverage.
 
@@ -108,6 +109,7 @@ def comprehensive_validation(output_dir, manuscript_files):
 | Rendering | pandoc, xelatex | 91% |
 | Reporting | json, pathlib | 75% |
 | Project | pathlib | 85% |
+| Steganography | PIL/Pillow, qrcode, pypdf | 80% |
 
 All modules work independently or together with minimal coupling.
 

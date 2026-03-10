@@ -61,7 +61,8 @@ Archived projects in the `projects_archive/` directory are:
 ```mermaid
 graph TD
     subgraph Active["Active Projects (projects/)"]
-        P1[code_project<br/>Active - Discovered]
+        P1[code_project<br/>Optimization Exemplar - Active]
+        P2[medical_ai<br/>Medical AI CIF - Active]
     end
 
     subgraph Archive["Archived Projects (projects_archive/)"]
@@ -76,12 +77,14 @@ graph TD
     end
 
     P1 -->|Discovered| DISCOVER
+    P2 -->|Discovered| DISCOVER
     A1 -.->|NOT Scanned| DISCOVER
     A2 -.->|NOT Scanned| DISCOVER
 
     DISCOVER -->|Active Projects| RUNSH
     RUNSH -->|Selected Project| PIPELINE
     PIPELINE -->|Executes| P1
+    PIPELINE -->|Executes| P2
 ```
 
 ### Project Lifecycle
@@ -563,7 +566,8 @@ All projects in this directory comply with the template's development standards 
 
 #### Testing Standards Results
 
-- **code_project**: Meets coverage requirements ✅
+- **code_project**: 100% coverage (45 tests), all data-driven ✅
+- **medical_ai**: 173 tests, clinical scenario + integration testing ✅
 - **Combined**: All tests use data, no mocks detected ✅
 
 #### Documentation Standards Results

@@ -90,6 +90,7 @@ graph TD
 | [`development/`](development/) | Development & contribution | contributing, security, roadmap, `testing/` sub-folder |
 | [`best-practices/`](best-practices/) | Best practices | version-control, migration, multi-project, backup-recovery |
 | [`prompts/`](prompts/) | AI prompt templates (9) | manuscript, code, test, feature, refactoring, assessment |
+| [`security/`](security/) | Security & provenance | steganography, hashing, secure execution |
 | [`audit/`](audit/) | Audit reports | documentation-review, filepath-audit |
 
 ## Quick Navigation
@@ -100,6 +101,11 @@ graph TD
 2. [`core/how-to-use.md`](core/how-to-use.md) - Usage guide
 3. [`guides/getting-started.md`](guides/getting-started.md) - Getting started (Levels 1-3)
 4. [`reference/faq.md`](reference/faq.md) - Common questions
+
+### Creating a New Project
+
+1. [`guides/new-project-setup.md`](guides/new-project-setup.md) - **Complete setup checklist** with all pitfalls
+2. [`architecture/thin-orchestrator-summary.md`](architecture/thin-orchestrator-summary.md) - Script pattern
 
 ### Developers Start Here
 
@@ -114,6 +120,7 @@ graph TD
 | Need | Document |
 |------|----------|
 | Get started | [`core/how-to-use.md`](core/how-to-use.md) |
+| **Create a new project** | **[`guides/new-project-setup.md`](guides/new-project-setup.md)** |
 | Understand design | [`architecture/two-layer-architecture.md`](architecture/two-layer-architecture.md) |
 | See examples | [`usage/examples.md`](usage/examples.md) |
 | Find answers | [`reference/faq.md`](reference/faq.md) |

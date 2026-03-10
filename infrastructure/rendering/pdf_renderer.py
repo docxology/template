@@ -125,7 +125,7 @@ class PDFRenderer:
         logger.info(f"Rendering markdown to PDF: {source_file.name} -> {output_file.name}")
 
         try:
-            subprocess.run(cmd, check=True, capture_output=True, text=True)
+            subprocess.run(cmd, check=True, capture_output=True, text=True, timeout=600)
             return output_file
 
         except subprocess.CalledProcessError as e:
@@ -292,7 +292,7 @@ class PDFRenderer:
             cmd = [bibtex_cmd, aux_file.name]
             logger.info(f"Processing bibliography with {bibtex_cmd}...")
 
-            result = subprocess.run(cmd, capture_output=True, text=True, cwd=str(output_dir))
+            result = subprocess.run(cmd, capture_output=True, text=True, cwd=str(output_dir), timeout=600)
 
             if result.returncode != 0 and result.stderr.strip():
                 logger.warning(f"Bibliography processing warning: {result.stderr[:200]}")
@@ -699,7 +699,7 @@ class PDFRenderer:
                     logger.debug(f"Failed to read markdown for error reporting: {read_err}")
 
         try:
-            result = subprocess.run(pandoc_to_tex, check=True, capture_output=True, text=True)
+            result = subprocess.run(pandoc_to_tex, check=True, capture_output=True, text=True, timeout=600)
         except subprocess.CalledProcessError as e:
             raise self._build_pandoc_render_error(e, combined_md, source_files, md_content, pandoc_to_tex)
 
@@ -966,6 +966,7 @@ class PDFRenderer:
                     cmd, check=False,
                     stdout=stdout_sink, stderr=subprocess.STDOUT,
                     cwd=str(output_dir),
+                    timeout=600,
                 )
 
             # Repair truncated .aux file after each pass.
@@ -1013,6 +1014,7 @@ class PDFRenderer:
                         stdout=stdout_sink,
                         stderr=subprocess.STDOUT,
                         cwd=str(output_dir),
+                        timeout=600,
                     )
 
                 # Repair truncated .aux after each pass
@@ -1144,6 +1146,7 @@ class PDFRenderer:
                             cmd, check=False,
                             stdout=stdout_sink, stderr=subprocess.STDOUT,
                             cwd=str(output_dir),
+                            timeout=600,
                         )
                     if not self._validate_pdf_structure(temp_pdf):
                         logger.warning(
@@ -1371,7 +1374,11 @@ class PDFRenderer:
         # This handles the complex case where options contain nested braces (alt={...})
         # We'll use a fallback string replacement after regex for any missed paths
 
-        figures_dir = manuscript_dir.parent / "output" / "figures"
+        # figures_dir must be derived from output_dir (LaTeX compiles in output/pdf/),
+        # NOT from manuscript_dir — which may be output/manuscript/ and would produce
+        # the double-path bug: output/manuscript/../output/figures = output/output/figures.
+        # output_dir is the pdf/ directory; figures/ is its sibling in output/.
+        figures_dir = output_dir.parent / "figures"
         fixed_count = 0
         paths_fixed = []
 

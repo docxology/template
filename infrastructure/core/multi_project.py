@@ -148,10 +148,12 @@ class MultiProjectOrchestrator:
 
             try:
                 with log_operation(f"Pipeline execution for {project_name}"):
-                    # Create pipeline config
+                    # Create pipeline config — derive projects_dir from the project's actual path
+                    # so that projects in projects_in_progress/ or projects_archive/ work correctly.
                     pipeline_config = PipelineConfig(
-                        project_name=project_name,
+                        project_name=project.name,
                         repo_root=self.config.repo_root,
+                        projects_dir=project.path.parent.name,  # e.g. 'projects' or 'projects_in_progress'
                         skip_infra=True,  # Always skip infra tests for individual projects in multi-project mode  # noqa: E501
                         skip_llm=not run_llm,
                         total_stages=10 if run_llm else 8,
@@ -168,9 +170,7 @@ class MultiProjectOrchestrator:
                     # Reporting logic lives at the call-site to avoid a downward dependency
                     # from core/ into the higher-level reporting/ layer.
                     if self.on_project_complete is not None:
-                        output_dir = (
-                            self.config.repo_root / "projects" / project_name / "output"
-                        )
+                        output_dir = pipeline_config.project_dir / "output"
                         try:
                             self.on_project_complete(project_name, results, output_dir)
                         except Exception as e:

@@ -37,15 +37,47 @@ logger = get_logger(__name__)
 
 @dataclass
 class PipelineConfig:
-    """Configuration for pipeline execution."""
+    """Configuration for pipeline execution.
+
+    Attributes:
+        project_name: Name of the project directory (e.g. 'act_inf_metaanalysis').
+        repo_root: Absolute path to the repository root.
+        projects_dir: Name of the active projects directory relative to repo_root.
+            Default 'projects'. Set to 'projects_in_progress' to run a project
+            that hasn't been promoted to the active pool yet.
+        clean: Whether to clean outputs before running.
+        skip_infra: Whether to skip infrastructure tests.
+        skip_llm: Whether to skip LLM stages.
+        resume: Whether to resume from the last checkpoint.
+        total_stages: Total number of pipeline stages (for ETA display).
+    """
 
     project_name: str
     repo_root: Path
+    projects_dir: str = "projects"
     clean: bool = True
     skip_infra: bool = False
     skip_llm: bool = False
     resume: bool = False
     total_stages: int = 10
+
+    @property
+    def project_dir(self) -> Path:
+        """Absolute path to this project's source directory.
+
+        Resolves ``projects_dir`` relative to ``repo_root``, then appends
+        ``project_name``.  This is the single canonical path used throughout
+        the pipeline instead of repeating ``repo_root / 'projects' / project_name``.
+
+        Examples:
+            PipelineConfig(project_name='myproj', repo_root=Path('/repo'))
+            → /repo/projects/myproj
+
+            PipelineConfig(project_name='myproj', repo_root=Path('/repo'),
+                           projects_dir='projects_in_progress')
+            → /repo/projects_in_progress/myproj
+        """
+        return self.repo_root / self.projects_dir / self.project_name
 
 
 @dataclass
@@ -91,7 +123,7 @@ class PipelineExecutor:
         )
 
         # Define log file path (will be created by _setup_log_file_handler)
-        log_dir = config.repo_root / "projects" / config.project_name / "output" / "logs"
+        log_dir = config.project_dir / "output" / "logs"
         log_file = log_dir / "pipeline.log"
         self.log_file = log_file  # Store for later access
         self._log_handler: logging.FileHandler | None = None  # Track our file handler
@@ -499,7 +531,7 @@ class PipelineExecutor:
         env.setdefault("PROJECT_ROOT", str(self.config.repo_root))
 
         # Ensure project src is on PYTHONPATH for stage scripts that import project code.
-        project_src = self.config.repo_root / "projects" / self.config.project_name / "src"
+        project_src = self.config.project_dir / "src"
         pythonpath_parts = [
             str(self.config.repo_root),
             str(self.config.repo_root / "infrastructure"),

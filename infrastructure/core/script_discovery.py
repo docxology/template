@@ -14,18 +14,25 @@ from infrastructure.core.logging_utils import get_logger, log_success
 logger = get_logger(__name__)
 
 
-def discover_analysis_scripts(repo_root: Path, project_name: str = "project") -> list[Path]:
-    """Discover all analysis scripts in projects/{project_name}/scripts/ to execute.
+def discover_analysis_scripts(
+    repo_root: Path,
+    project_name: str = "project",
+    project_dir: Path | None = None,
+) -> list[Path]:
+    """Discover all analysis scripts for a project.
 
     Args:
-        repo_root: Repository root directory
-        project_name: Name of project in projects/ directory (default: "project")
+        repo_root: Repository root directory.
+        project_name: Name of project directory (default: "project").
+        project_dir: Absolute path to the project directory. When provided,
+            ``repo_root`` and ``project_name`` are only used for log messages.
+            Defaults to ``repo_root / 'projects' / project_name``.
 
     Returns:
-        List of Python script paths from projects/{project_name}/scripts/ directory
+        List of Python script paths from the project's scripts/ directory.
 
     Raises:
-        PipelineError: If project scripts directory not found
+        PipelineError: If project scripts directory not found.
 
     Example:
         >>> scripts = discover_analysis_scripts(Path("."), "project")
@@ -34,9 +41,10 @@ def discover_analysis_scripts(repo_root: Path, project_name: str = "project") ->
         >>> scripts = discover_analysis_scripts(Path("."), "myresearch")
         >>> # Discovers scripts in projects/myresearch/scripts/
     """
-    logger.info(f"[STAGE-02] Discovering analysis scripts in projects/{project_name}/...")
+    resolved_dir = project_dir if project_dir is not None else repo_root / "projects" / project_name
+    logger.info(f"[STAGE-02] Discovering analysis scripts in {resolved_dir.relative_to(repo_root)}/...")
 
-    project_scripts_dir = repo_root / "projects" / project_name / "scripts"
+    project_scripts_dir = resolved_dir / "scripts"
 
     if not project_scripts_dir.exists():
         logger.info(
@@ -44,7 +52,7 @@ def discover_analysis_scripts(repo_root: Path, project_name: str = "project") ->
         )
         return []
 
-    # Find all Python scripts in projects/{project_name}/scripts/ except README files
+    # Find all Python scripts in the scripts/ directory except README files
     scripts = sorted(
         [f for f in project_scripts_dir.glob("*.py") if f.is_file() and not f.name.startswith("_")]
     )
@@ -92,7 +100,11 @@ def discover_orchestrators(repo_root: Path) -> list[Path]:
     return available
 
 
-def verify_analysis_outputs(repo_root: Path, project_name: str = "project") -> bool:
+def verify_analysis_outputs(
+    repo_root: Path,
+    project_name: str = "project",
+    project_dir: Path | None = None,
+) -> bool:
     """Verify that analysis generated expected outputs.
 
     Checks whether analysis scripts are present for this project and, if so,
@@ -101,24 +113,27 @@ def verify_analysis_outputs(repo_root: Path, project_name: str = "project") -> b
     directories are empty or absent.
 
     Args:
-        repo_root: Repository root directory
-        project_name: Name of project in projects/ directory (default: "project")
+        repo_root: Repository root directory.
+        project_name: Name of project directory (default: "project").
+        project_dir: Absolute path to the project directory. Defaults to
+            ``repo_root / 'projects' / project_name``.
 
     Returns:
         True if outputs are present or no scripts were expected to run,
         False if scripts exist but no output was generated.
     """
-    logger.info(f"[STAGE-02] Verifying analysis outputs for projects/{project_name}/...")
+    resolved_dir = project_dir if project_dir is not None else repo_root / "projects" / project_name
+    logger.info(f"[STAGE-02] Verifying analysis outputs for {resolved_dir.relative_to(repo_root)}/...")
 
     # Determine whether analysis scripts exist (so we know whether output is expected)
-    scripts_dir = repo_root / "projects" / project_name / "scripts"
+    scripts_dir = resolved_dir / "scripts"
     scripts_exist = scripts_dir.exists() and any(
         f for f in scripts_dir.glob("*.py") if not f.name.startswith("_")
     )
 
     output_dirs = [
-        repo_root / "projects" / project_name / "output" / "figures",
-        repo_root / "projects" / project_name / "output" / "data",
+        resolved_dir / "output" / "figures",
+        resolved_dir / "output" / "data",
     ]
 
     has_any_output = False

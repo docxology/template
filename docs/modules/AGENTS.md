@@ -8,7 +8,7 @@ Technical guide for `docs/modules/` — infrastructure module documentation and 
 
 | File | Purpose |
 |------|---------|
-| `modules-guide.md` | Overview of all 9 infrastructure modules |
+| `modules-guide.md` | Overview of all 10 infrastructure modules |
 | `scientific-simulation-guide.md` | Scientific simulation and analysis system |
 | `pdf-validation.md` | PDF validation system documentation |
 | `guides/integrity-module.md` | Integrity verification module |

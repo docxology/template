@@ -208,22 +208,11 @@ class FigureManager:
         return fig_meta
 
     def get_figure(self, label: str) -> FigureMetadata | None:
-        """Get figure metadata by label.
-
-        Args:
-            label: Figure label
-
-        Returns:
-            FigureMetadata or None
-        """
+        """Get figure metadata by label."""
         return self.figures.get(label)
 
     def get_all_figures(self) -> list[FigureMetadata]:
-        """Get all registered figures.
-
-        Returns:
-            List of FigureMetadata objects
-        """
+        """Get all registered figures."""
         return list(self.figures.values())
 
     def generate_latex_figure_block(self, label: str) -> str:

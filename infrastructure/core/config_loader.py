@@ -78,6 +78,7 @@ class ManuscriptConfig(TypedDict, total=False):
     steganography: SteganographyConfigYAML
     keywords: list[str]
     metadata: dict[str, str]
+    project_config: dict[str, Any]  # passthrough for project-specific config sections
 
 try:
     import yaml
@@ -247,27 +248,32 @@ def get_config_as_dict(
         return {k: v for k, v in result.items() if k not in os.environ}
     return result
 
-def find_config_file(repo_root: Path | str, project_name: str | None = None) -> Path | None:
+def find_config_file(
+    repo_root: Path | str,
+    project_name: str | None = None,
+    projects_dir: str = "projects",
+) -> Path | None:
     """Find the manuscript config file at the standard location.
 
     Args:
-        repo_root: Root directory of the repository
+        repo_root: Root directory of the repository.
         project_name: Name of the project; if None, the first config found under
-                      projects/*/manuscript/ is returned
+                      ``<projects_dir>/*/manuscript/`` is returned.
+        projects_dir: Name of the active projects directory (default: ``'projects'``).
 
     Returns:
-        Path to config.yaml if found, None otherwise
+        Path to config.yaml if found, None otherwise.
     """
     repo_root = Path(repo_root)
 
     if project_name:
-        config_path = repo_root / "projects" / project_name / "manuscript" / "config.yaml"
+        config_path = repo_root / projects_dir / project_name / "manuscript" / "config.yaml"
         if config_path.exists():
             return config_path
         return None
 
-    # Scan for any project config under projects/*/manuscript/config.yaml
-    for config_path in sorted((repo_root / "projects").glob("*/manuscript/config.yaml")):
+    # Scan for any project config under <projects_dir>/*/manuscript/config.yaml
+    for config_path in sorted((repo_root / projects_dir).glob("*/manuscript/config.yaml")):
         return config_path
 
     return None

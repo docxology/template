@@ -74,7 +74,7 @@ def find_kpsewhich() -> Path | None:
 
     # Try which command
     try:
-        result = subprocess.run(["which", "kpsewhich"], capture_output=True, text=True, check=False)
+        result = subprocess.run(["which", "kpsewhich"], capture_output=True, text=True, check=False, timeout=5)
         if result.returncode == 0 and result.stdout.strip():
             return Path(result.stdout.strip())
     except Exception as e:

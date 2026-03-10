@@ -93,7 +93,7 @@ python3 scripts/execute_multi_project.py --no-llm
 python3 -c "from infrastructure.project.discovery import discover_projects; from pathlib import Path; print([p.name for p in discover_projects(Path('.'))])"
 ```
 
-**Active projects:** `code_project`
+**Active projects:** `code_project`, `medical_ai`
 **Archived projects:** Located in `projects_archive/` (not executed by pipeline)
 
 ## Architecture
@@ -157,7 +157,7 @@ avg = calculate_average(data)  # Use tested method
 - **`projects/`** - Active projects (discovered and executed by infrastructure)
 - **`projects_archive/`** - Archived projects (preserved but not executed)
 
-**Current active projects:** `code_project`
+**Current active projects:** `code_project`, `medical_ai`
 
 To archive: `mv projects/{name}/ projects_archive/{name}/`
 To reactivate: `mv projects_archive/{name}/ projects/{name}/`

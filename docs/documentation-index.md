@@ -34,6 +34,19 @@ This index provides an overview of all documentation files in the Research Proje
 2. **[reference/faq.md](reference/faq.md)** - Common questions and solutions
 3. **[operational/build/build-system.md](operational/build/build-system.md)** - Build system details
 4. **[operational/config/performance-optimization.md](operational/config/performance-optimization.md)** - Performance issues
+5. **[operational/troubleshooting/common-errors.md](operational/troubleshooting/common-errors.md#️-project-packages-missing-from-root-venv--silent-stage-4-failure)** - ⚠️ Silent Stage 4 failure pattern
+
+---
+
+> [!IMPORTANT]
+> **Critical Rules for Multi-Project Pipelines (March 2026)**
+>
+> 1. **Root Venv Dependency Coverage** — If `projects/<name>/.venv` does NOT exist, every package in that project's `pyproject.toml` must also be in the root `pyproject.toml`. Violation: Stage 4 fails silently in < 1s. Fix: `uv sync` after adding to root deps.
+> 2. **`matplotlib` in Core Deps** — Must be in `[project.dependencies]`, not `[project.optional-dependencies]`. `uv sync` without flags skips optional groups.
+> 3. **`project_config:` Namespace** — Project-specific `config.yaml` keys that aren't in the `ManuscriptConfig` schema cause WARNING spam. Nest them under `project_config:` to suppress warnings.
+> 4. **Idempotency** — Analysis scripts must skip network calls when output data files already exist.
+>
+> Details: [docs/AGENTS.md](AGENTS.md) | [guides/new-project-setup.md](guides/new-project-setup.md#pitfall-6-project-specific-packages-absent-from-root-venv--silent-stage-4-failure)
 
 ---
 
@@ -65,6 +78,7 @@ Development standards are documented in the `.cursorrules/` directory:
 
 - **[README.md](../README.md)** - Main project overview and quick start
 - **[AGENTS.md](../AGENTS.md)** - System documentation
+- **[CLOUD_DEPLOY.md](../CLOUD_DEPLOY.md)** - **Headless / cloud server deployment guide** ☁️
 - **[core/how-to-use.md](core/how-to-use.md)** - Usage guide (all 12 levels)
 
 ### Quick Reference
@@ -95,6 +109,7 @@ Development standards are documented in the `.cursorrules/` directory:
 - **[guides/figures-and-analysis.md](guides/figures-and-analysis.md)** - Levels 4-6 (Intermediate)
 - **[guides/testing-and-reproducibility.md](guides/testing-and-reproducibility.md)** - Levels 7-9 (Advanced)
 - **[guides/extending-and-automation.md](guides/extending-and-automation.md)** - Levels 10-12 (Expert)
+- **[guides/new-project-setup.md](guides/new-project-setup.md)** - New project checklist (all learnings)
 
 ### Content Authoring
 
@@ -127,7 +142,7 @@ Development standards are documented in the `.cursorrules/` directory:
 
 ## 🧪 **Advanced Modules**
 
-- **[modules/modules-guide.md](modules/modules-guide.md)** - All 9 infrastructure modules
+- **[modules/modules-guide.md](modules/modules-guide.md)** - All 10 infrastructure modules
 - **[reference/api-reference.md](reference/api-reference.md)** - Unified API documentation
 - **[modules/pdf-validation.md](modules/pdf-validation.md)** - PDF validation system
 
@@ -191,6 +206,15 @@ Development standards are documented in the `.cursorrules/` directory:
 
 ---
 
+## 🔒 **Security & Provenance**
+
+- **[security/README.md](security/README.md)** - Security overview
+- **[security/steganography.md](security/steganography.md)** - Alpha-channel watermarking and QR codes
+- **[security/hashing_and_manifests.md](security/hashing_and_manifests.md)** - SHA-256/512 hashing and manifests
+- **[security/secure_execution.md](security/secure_execution.md)** - `secure_run.sh` orchestration and threat model
+
+---
+
 ## 🤖 **AI Prompt Templates**
 
 - **[prompts/README.md](prompts/README.md)** - Navigation guide
@@ -223,7 +247,8 @@ docs/
 │   ├── getting-started.md              # Levels 1-3
 │   ├── figures-and-analysis.md         # Levels 4-6
 │   ├── testing-and-reproducibility.md  # Levels 7-9
-│   └── extending-and-automation.md     # Levels 10-12
+│   ├── extending-and-automation.md     # Levels 10-12
+│   └── new-project-setup.md            # Setup checklist + pitfalls
 │
 ├── architecture/                       # Architecture documentation
 │   ├── two-layer-architecture.md       # Full architecture guide
@@ -294,6 +319,12 @@ docs/
 │   ├── infrastructure_module.md
 │   ├── validation_quality.md
 │   └── comprehensive_assessment.md
+│
+├── security/                           # Security & provenance
+│   ├── README.md
+│   ├── steganography.md
+│   ├── hashing_and_manifests.md
+│   └── secure_execution.md
 │
 └── audit/                              # Audit reports
     ├── documentation-review-report.md

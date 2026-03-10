@@ -191,6 +191,7 @@ class DocumentationScanner:
                 capture_output=True,
                 text=True,
                 cwd=self.repo_root,
+                timeout=300,
             )
             return {
                 "success": result.returncode == 0,

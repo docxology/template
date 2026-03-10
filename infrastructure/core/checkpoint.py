@@ -69,17 +69,25 @@ class CheckpointManager:
         checkpoint_dir: Path | None = None,
         project_name: str = "project",
         repo_root: Path | None = None,
+        project_dir: Path | None = None,
     ):
         """Initialize checkpoint manager.
 
         Args:
-            checkpoint_dir: Directory for checkpoint files (default: projects/{project_name}/output/.checkpoints)
-            project_name: Name of the project (default: "project")
-            repo_root: Repository root path; inferred from __file__ if not provided
+            checkpoint_dir: Explicit directory for checkpoint files. Takes priority
+                over all other arguments.
+            project_name: Name of the project (default: "project").
+            repo_root: Repository root path; inferred from __file__ if not provided.
+            project_dir: Absolute path to the project directory. When given,
+                checkpoint files are stored in ``project_dir/output/.checkpoints``
+                and ``project_name``/``repo_root`` are only used as fallbacks.
         """
         if checkpoint_dir is None:
-            resolved_root = repo_root if repo_root is not None else Path(__file__).parent.parent.parent
-            checkpoint_dir = resolved_root / "projects" / project_name / "output" / ".checkpoints"
+            if project_dir is not None:
+                checkpoint_dir = project_dir / "output" / ".checkpoints"
+            else:
+                resolved_root = repo_root if repo_root is not None else Path(__file__).parent.parent.parent
+                checkpoint_dir = resolved_root / "projects" / project_name / "output" / ".checkpoints"
 
         self.checkpoint_dir = Path(checkpoint_dir)
         self.checkpoint_file = self.checkpoint_dir / "pipeline_checkpoint.json"
