@@ -82,9 +82,13 @@ projects/cognitive_case_diagrams/
 
 # Archived projects
 /projects_archive 
+/projects_in_progress
 
 # Scratch project directories (test artifacts, not real projects)
 projects/project1/
 projects/project2/
 projects/test/
 projects/test_project/
+
+# Desloppify
+.desloppify

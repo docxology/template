@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-03-07T10:11:39.772965",
+  "timestamp": "2026-03-10T16:12:26.155525",
   "infrastructure": {},
   "project": {
     "passed": 39,
@@ -11,9 +11,9 @@
     "discovery_count": 39,
     "collection_errors": 0,
     "execution_phases": {
-      "setup": 2.83,
-      "collection": 2.83,
-      "execution": 2.83
+      "setup": 2.07,
+      "collection": 2.07,
+      "execution": 2.07
     },
     "test_categories": {},
     "coverage_percent": 96.63865546218487,
@@ -29,18 +29,18 @@
   },
   "coverage_details": {
     "project": {
-      "overall_coverage": 97.75280898876404,
-      "total_executed": 87,
+      "overall_coverage": 97.70114942528735,
+      "total_executed": 85,
       "total_missing": 2,
       "total_excluded": 0,
-      "total_lines": 89,
+      "total_lines": 87,
       "file_coverage": {
         "projects/code_project/src/optimizer.py": {
-          "coverage_percent": 97.75280898876404,
-          "executed_lines": 87,
+          "coverage_percent": 97.70114942528735,
+          "executed_lines": 85,
           "missing_lines": 2,
           "excluded_lines": 0,
-          "total_lines": 89
+          "total_lines": 87
         }
       }
     }

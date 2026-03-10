@@ -502,30 +502,119 @@ check_uv() {
     return 1
 }
 
-# Get Python command with uv fallback
+# Ensure uv is installed — auto-installs via the official installer if missing.
+# Safe to call on headless servers; idempotent if uv already present.
+ensure_uv() {
+    if check_uv; then
+        log_info "uv $(uv --version 2>/dev/null) detected"
+        return 0
+    fi
+
+    log_warning "uv not found — attempting automatic installation..."
+    log_info "See: https://docs.astral.sh/uv/getting-started/installation/"
+
+    local install_failed=0
+    if command -v curl >/dev/null 2>&1; then
+        curl -LsSf https://astral.sh/uv/install.sh | sh || install_failed=1
+    elif command -v wget >/dev/null 2>&1; then
+        wget -qO- https://astral.sh/uv/install.sh | sh || install_failed=1
+    else
+        log_error "Cannot install uv: neither curl nor wget is available."
+        log_info "Install curl (e.g. apt-get install -y curl) then re-run."
+        return 1
+    fi
+
+    if [[ $install_failed -ne 0 ]]; then
+        log_error "uv installer script returned an error."
+        return 1
+    fi
+
+    # Source the installer's PATH additions for the current session
+    local env_file="$HOME/.local/bin/env"
+    if [[ -f "$env_file" ]]; then
+        # shellcheck source=/dev/null
+        source "$env_file"
+    fi
+    # Also prepend the default install dir in case env file is absent
+    export PATH="$HOME/.local/bin:$PATH"
+
+    if check_uv; then
+        log_success "uv installed: $(uv --version)"
+        return 0
+    else
+        log_error "uv installation succeeded but uv is still not on PATH."
+        log_info "Add '$HOME/.local/bin' to your PATH and re-run."
+        return 1
+    fi
+}
+
+# Get Python command with environment awareness
 get_python_cmd() {
     # Returns the command to use for Python execution.
-    # Always uses python3 directly. When run.sh is launched via "uv run ./run.sh",
-    # the venv is already activated — wrapping every subprocess in another "uv run"
-    # adds ~300s overhead per invocation due to environment resolution.
-    echo "python3"
+    # Checks for project-specific .venv first, then root .venv to prevent
+    # escaping to global python when run.sh is executed directly.
+    if [[ -n "${CURRENT_PROJECT:-}" ]] && [[ -f "$REPO_ROOT/projects/$CURRENT_PROJECT/.venv/bin/python3" ]]; then
+        echo "$REPO_ROOT/projects/$CURRENT_PROJECT/.venv/bin/python3"
+    elif [[ -f "$REPO_ROOT/.venv/bin/python3" ]]; then
+        echo "$REPO_ROOT/.venv/bin/python3"
+    else
+        echo "python3"
+    fi
 }
 
 # Get pytest command
 get_pytest_cmd() {
     # Returns the command to use for pytest execution.
-    # Always uses python3 -m pytest directly. The venv is already activated
-    # when run.sh is launched via "uv run ./run.sh".
-    echo "python3 -m pytest"
+    local python_cmd=$(get_python_cmd)
+    echo "$python_cmd -m pytest"
 }
 
-# Log uv availability status
+# Log uv availability status.
+# In pipeline / non-interactive mode (PIPELINE_MODE=1), automatically installs uv.
+# In both modes, syncs project-local venv when CURRENT_PROJECT is set and venv is absent.
 log_uv_status() {
-    if check_uv; then
+    if [[ "${PIPELINE_MODE:-0}" == "1" ]]; then
+        # Headless / pipeline mode: ensure uv is available, installing if needed
+        ensure_uv || {
+            log_error "uv is required for pipeline mode but could not be installed."
+            exit 1
+        }
+        # After ensure_uv succeeds, sync dependencies if .venv is absent
+        if [[ ! -f "$REPO_ROOT/.venv/bin/python3" ]]; then
+            log_info "Syncing repo-level dependencies via uv (first run)..."
+            (
+                cd "$REPO_ROOT"
+                uv sync
+            ) || {
+                log_error "uv sync failed — check pyproject.toml and uv.lock."
+                exit 1
+            }
+            log_success "uv sync complete"
+        else
+            log_info "Repo .venv already present — skipping uv sync"
+        fi
+        # Also sync project-local venv if CURRENT_PROJECT is set and its venv is missing
+        if [[ -n "${CURRENT_PROJECT:-}" ]] && \
+           [[ ! -f "$REPO_ROOT/projects/$CURRENT_PROJECT/.venv/bin/python3" ]]; then
+            log_info "Syncing project '${CURRENT_PROJECT}' venv via uv..."
+            (cd "$REPO_ROOT/projects/$CURRENT_PROJECT" && uv sync --all-extras) || {
+                log_warning "uv sync failed for project '$CURRENT_PROJECT' — dependencies may be missing"
+            }
+        fi
+    elif check_uv; then
         log_info "uv package manager detected - venv managed by uv"
+        # Even in interactive mode: auto-sync project venv if CURRENT_PROJECT is set and venv is absent
+        if [[ -n "${CURRENT_PROJECT:-}" ]] && \
+           [[ ! -f "$REPO_ROOT/projects/$CURRENT_PROJECT/.venv/bin/python3" ]]; then
+            log_info "Project venv missing — running uv sync for '${CURRENT_PROJECT}'..."
+            (cd "$REPO_ROOT/projects/$CURRENT_PROJECT" && uv sync --all-extras) || {
+                log_warning "uv sync failed for project '$CURRENT_PROJECT' — dependencies may be missing"
+            }
+        fi
     else
         log_warning "uv package manager not found - using system python3"
         log_info "For better dependency management, install uv: https://github.com/astral-sh/uv"
+        log_info "Or run in pipeline mode (./run.sh --pipeline) for automatic uv installation."
     fi
 }
 

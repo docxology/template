@@ -37,7 +37,6 @@ from infrastructure.core.logging_utils import (
     log_live_resource_usage,
     log_operation,
     log_success,
-    format_error_with_suggestions,
 )
 from infrastructure.core.progress import SubStageProgress
 from infrastructure.core.exceptions import ScriptExecutionError, PipelineError
@@ -245,7 +244,7 @@ def main() -> int:
         return exit_code
 
     except (ScriptExecutionError, PipelineError) as e:
-        logger.error(format_error_with_suggestions(e))
+        logger.error(f"Pipeline error: {e}")
         log_live_resource_usage("Analysis stage end (error)", logger)
         return 1
     except Exception as e:

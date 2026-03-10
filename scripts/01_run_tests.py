@@ -49,13 +49,14 @@ _DISCOVERY_PATTERNS = [
     r"collected\s+(\d+)\s+items?",
     r"found\s+(\d+)\s+tests?",
     r"(\d+)\s+tests?\s+found",
+    r"=+\s+(\d+)\s+tests?\s+collected",
 ]
 
 
 def _discover_tests(cmd: list[str], repo_root: Path, env: dict, label: str) -> None:
     """Run pytest --collect-only and log the discovered test count."""
     discovery_cmd = cmd.copy()
-    discovery_cmd.insert(-1, "--collect-only")
+    discovery_cmd.append("--collect-only")
     log_substep(f"Discovering {label} tests...")
     try:
         result = subprocess.run(

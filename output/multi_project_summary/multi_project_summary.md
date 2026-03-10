@@ -1,37 +1,27 @@
 # Multi-Project Execution Summary
 
-**Generated:** 2026-03-07T10:13:34.755528
+**Generated:** 2026-03-10T16:13:14.459433
 
 ## Overview
 
-- **Total Projects:** 3
-- **Successful:** 3
+- **Total Projects:** 1
+- **Successful:** 1
 - **Failed:** 0
-- **Total Duration:** 121.9s
+- **Total Duration:** 54.4s
 
 ## Project Results
 
 ### ✅ code_project
 - **Status:** Success
-- **Duration:** 43.4s
-- **Stages Completed:** 7
-
-### ✅ cognitive_case_diagrams
-- **Status:** Success
-- **Duration:** 56.0s
-- **Stages Completed:** 7
-
-### ✅ template
-- **Status:** Success
-- **Duration:** 22.6s
+- **Duration:** 54.4s
 - **Stages Completed:** 7
 
 ## Performance Analysis
 
-- **Slowest Project:** cognitive_case_diagrams
-- **Fastest Project:** template
-- **Average Duration:** 40.6s
-- **Total Pipeline Time:** 121.9s
+- **Slowest Project:** code_project
+- **Fastest Project:** code_project
+- **Average Duration:** 54.4s
+- **Total Pipeline Time:** 54.4s
 
 ## Error Summary
 
