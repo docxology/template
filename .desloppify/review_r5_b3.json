@@ -1,0 +1,95 @@
+{
+  "assessments": {
+    "ai_generated_debt": 76,
+    "package_organization": 76
+  },
+  "findings": [
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "restating_inline_comments",
+      "summary": "Inline comments that restate the immediately following code line verbatim, adding no information",
+      "related_files": [
+        "infrastructure/reporting/suite_summary_generator.py",
+        "infrastructure/__init__.py",
+        "infrastructure/validation/integrity.py"
+      ],
+      "evidence": [
+        "suite_summary_generator.py line 302: '# Format project name for display (convert underscores to spaces, title case)' is followed by `project_name.replace('_', ' ').title()` — the comment is a prose restatement of the code",
+        "infrastructure/__init__.py line 23: '# Core utilities — always available, used throughout the codebase' precedes an import block whose content makes the claim self-evident",
+        "integrity.py lines 253-288: section-divider comments '# Find all output files', '# Verify file integrity', '# Check for any file integrity failures', '# Verify cross-references', '# Verify data consistency' each name the single function call immediately below them"
+      ],
+      "suggestion": "Remove comments whose entire content is derivable from the adjacent function name or variable name. Reserve inline comments for non-obvious decisions, edge-case rationale, or external constraints.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "docstring_bloat_trivial_functions",
+      "summary": "Multi-line Args/Returns docstrings on short I/O wrapper functions that need only a one-line summary",
+      "related_files": [
+        "infrastructure/validation/integrity.py"
+      ],
+      "evidence": [
+        "integrity.py lines 562-572: `create_integrity_manifest` carries a 6-line docstring (Args + Returns) for a function whose name, single Path parameter, and dict return type are entirely self-explanatory",
+        "integrity.py lines 630-643: `verify_integrity_against_manifest` has an 8-line docstring restating parameter names (current_manifest, saved_manifest) with no domain context beyond what the type hints already convey",
+        "integrity.py line 609-613: `save_integrity_manifest` is a 3-line function (mkdir + json.dump) with a docstring that adds nothing beyond the function signature"
+      ],
+      "suggestion": "Replace Args/Returns boilerplate on self-evident functions with a single-sentence docstring, or omit the docstring entirely when the function name and type hints are sufficient. Reserve structured docstrings for non-trivial public API functions.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "entry_log_restates_argument",
+      "summary": "Debug entry logs on verification functions echo the input count, which the caller already knows",
+      "related_files": [
+        "infrastructure/validation/integrity.py",
+        "infrastructure/reporting/coverage_parser.py"
+      ],
+      "evidence": [
+        "integrity.py line 47: `logger.debug(f\"Verifying integrity of {len(file_paths)} files\")` — tells the caller what they passed in",
+        "integrity.py line 80: `logger.debug(f\"Verifying cross-references in {len(markdown_files)} files\")` — same pattern repeated",
+        "integrity.py line 146: `logger.debug(f\"Verifying data consistency for {len(data_files)} files\")` — third identical instance in the same module",
+        "coverage_parser.py line 275: `logger.debug(\"Looking for coverage files\")` — states the obvious from the function name `extract_coverage_percentage`"
+      ],
+      "suggestion": "Remove entry-log lines whose content is fully derivable from the function name and its arguments. Log non-obvious state instead: which path was selected, whether a fallback fired, or the final parsed value.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "core_logging_fragmentation",
+      "summary": "infrastructure/core/ fragments a single logging concern across five sibling files without a logging sub-package",
+      "related_files": [
+        "infrastructure/core/logging_utils.py",
+        "infrastructure/core/logging_constants.py",
+        "infrastructure/core/logging_formatters.py",
+        "infrastructure/core/logging_helpers.py",
+        "infrastructure/core/logging_progress.py"
+      ],
+      "evidence": [
+        "Five files share a `logging_` prefix and form one functional concern, yet are flattened into core/ alongside 25+ other files covering pipeline, checkpoint, config, security, credentials, health, menu, retry, and file operations",
+        "logging_constants.py docstring line 3 states it was split out specifically to avoid a circular import between logging_utils and logging_formatters — the split resolved the import cycle but the files were not grouped into a subdirectory, leaving the boundary invisible"
+      ],
+      "suggestion": "Consolidate logging_utils, logging_constants, logging_formatters, logging_helpers, and logging_progress into an `infrastructure/core/logging/` sub-package. Re-export the public API from infrastructure/core/__init__.py so callers are unaffected. This mirrors the sub-package pattern already used in infrastructure/llm/ (core/, review/, utils/, etc.).",
+      "confidence": "high"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "validation_flat_doc_subgroup",
+      "summary": "infrastructure/validation/ has 25 flat files with a dense doc-scanning sub-concern that shares no boundary with PDF/markdown validators",
+      "related_files": [
+        "infrastructure/validation/doc_accuracy.py",
+        "infrastructure/validation/doc_completeness.py",
+        "infrastructure/validation/doc_discovery.py",
+        "infrastructure/validation/doc_models.py",
+        "infrastructure/validation/doc_quality.py",
+        "infrastructure/validation/doc_scanner.py",
+        "infrastructure/validation/repo_scanner.py"
+      ],
+      "evidence": [
+        "Seven files share the `doc_` prefix or are functionally coupled to documentation scanning; they live flat alongside unrelated PDF validators, markdown validators, link validators, and integrity checkers",
+        "validation/__init__.py does not re-export doc_scanner or repo_scanner, indicating these are internal utilities — yet a contributor must scan all 25 flat files to discover this boundary"
+      ],
+      "suggestion": "Group doc_accuracy, doc_completeness, doc_discovery, doc_models, doc_quality, doc_scanner, and repo_scanner into `infrastructure/validation/docs/` to reduce flat file count, make ownership explicit, and mirror the sub-package pattern used in infrastructure/llm/.",
+      "confidence": "medium"
+    }
+  ]
+}

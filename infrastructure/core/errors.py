@@ -1,8 +1,14 @@
-"""Typed error constants for consistent error messaging.
+"""Typed error message constants for consistent log formatting.
 
-This module defines a frozen InfraError dataclass and typed error constants
-for all common error conditions in the infrastructure layer. Error messages
-follow a standardized format: ❌ [CODE] message — suggestion.
+This module defines InfraError constants — formatted log strings for pipeline
+events. It is NOT an exception hierarchy; for raiseable exception types see
+infrastructure.core.exceptions.
+
+Boundary rule:
+  errors.py    → log message constants (format and print, never raise)
+  exceptions.py → raiseable exception classes (raise and catch)
+
+Error messages follow a standardized format: ❌ [CODE] message — suggestion.
 
 Part of the infrastructure layer (Layer 1) - reusable across all projects.
 """

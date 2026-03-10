@@ -9,10 +9,13 @@ Functions:
 from __future__ import annotations
 
 import ast
-import os
 from dataclasses import dataclass
-from typing import Iterable, List
+from pathlib import Path
+from typing import Iterable
 
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
 
 @dataclass
 class ApiEntry:
@@ -30,7 +33,6 @@ class ApiEntry:
     kind: str  # "function" | "class"
     summary: str
 
-
 def _first_sentence(doc: str | None) -> str:
     if not doc:
         return ""
@@ -42,29 +44,26 @@ def _first_sentence(doc: str | None) -> str:
         first = first[:197] + "..."
     return " ".join(first.split())
 
-
 def _iter_py_files(root: str) -> Iterable[str]:
-    for dirpath, _, filenames in os.walk(root):
-        for fname in filenames:
-            if fname.endswith(".py") and (not fname.startswith("_") or fname == "__init__.py"):
-                yield os.path.join(dirpath, fname)
+    for path in Path(root).rglob("*.py"):
+        if not path.name.startswith("_") or path.name == "__init__.py":
+            yield str(path)
 
-
-def build_api_index(src_dir: str) -> List[ApiEntry]:
+def build_api_index(src_dir: str) -> list[ApiEntry]:
     """Scan `src_dir` and collect public functions/classes with summaries.
 
     - Public = names not starting with underscore
     - Uses AST, no imports executed
     """
-    entries: List[ApiEntry] = []
+    entries: list[ApiEntry] = []
     for py_path in _iter_py_files(src_dir):
         try:
             with open(py_path, "r", encoding="utf-8") as fh:
                 tree = ast.parse(fh.read(), filename=py_path)
-        except Exception:
-            # Skip files that fail to parse
+        except Exception as e:
+            logger.debug(f"Skipping {py_path} (parse error): {e}")
             continue
-        module = os.path.relpath(py_path, src_dir).replace(os.sep, ".")
+        module = Path(py_path).relative_to(src_dir).as_posix().replace("/", ".")
         # Normalize module names deterministically without branching
         module = module.removesuffix(".py").removesuffix(".__init__")
 
@@ -91,8 +90,7 @@ def build_api_index(src_dir: str) -> List[ApiEntry]:
     entries.sort(key=lambda e: (e.module, e.name))
     return entries
 
-
-def generate_markdown_table(entries: List[ApiEntry]) -> str:
+def generate_markdown_table(entries: list[ApiEntry]) -> str:
     """Generate a Markdown table from API entries.
 
     Args:
@@ -110,7 +108,6 @@ def generate_markdown_table(entries: List[ApiEntry]) -> str:
     for e in entries:
         lines.append(f"| `{e.module}` | `{e.name}` | {e.kind} | {e.summary} |")
     return "\n".join(lines) + "\n"
-
 
 def inject_between_markers(text: str, begin_marker: str, end_marker: str, content: str) -> str:
     """Replace content between begin_marker and end_marker (inclusive markers preserved)."""

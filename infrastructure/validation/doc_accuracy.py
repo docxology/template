@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any
 
 import yaml
 
@@ -13,8 +13,7 @@ from infrastructure.validation.doc_models import AccuracyIssue, LinkIssue
 
 logger = get_logger(__name__)
 
-
-def extract_headings(content: str) -> Set[str]:
+def extract_headings(content: str) -> set[str]:
     """Extract all heading anchors from markdown."""
     headings = set()
 
@@ -36,8 +35,7 @@ def extract_headings(content: str) -> Set[str]:
 
     return headings
 
-
-def resolve_file_path(target: str, source_file: Path, repo_root: Path) -> Tuple[bool, str, str]:
+def resolve_file_path(target: str, source_file: Path, repo_root: Path) -> tuple[bool, str, str]:
     """Resolve a file path relative to source file.
 
     Returns:
@@ -100,10 +98,9 @@ def resolve_file_path(target: str, source_file: Path, repo_root: Path) -> Tuple[
     except Exception as e:
         return False, f"Error resolving path: {e}", "unknown"
 
-
 def check_links(
-    md_files: List[Path], repo_root: Path, all_headings: Dict[str, Set[str]]
-) -> List[LinkIssue]:
+    md_files: list[Path], repo_root: Path, all_headings: dict[str, set[str]]
+) -> list[LinkIssue]:
     """Check all links in markdown files.
 
     Improved to skip links inside code blocks.
@@ -185,12 +182,11 @@ def check_links(
                                     )
                                 )
         except Exception as e:
-            logger.warning("Error checking links in %s: %s", md_file, e)
+            logger.warning(f"Error checking links in {md_file}: {e}")
 
     return issues
 
-
-def extract_script_name(command: str) -> Optional[str]:
+def extract_script_name(command: str) -> str | None:
     """Extract script name from command."""
     # Look for ./script.sh or python script.py patterns
     match = re.search(r"\./([\w/]+\.(?:sh|py))", command)
@@ -201,8 +197,7 @@ def extract_script_name(command: str) -> Optional[str]:
         return match.group(1)
     return None
 
-
-def verify_commands(md_files: List[Path], repo_root: Path) -> List[AccuracyIssue]:
+def verify_commands(md_files: list[Path], repo_root: Path) -> list[AccuracyIssue]:
     """Verify commands in documentation match actual implementations."""
     issues = []
     command_pattern = re.compile(r"```(?:bash|sh|shell)?\n(.*?)\n```", re.DOTALL)
@@ -235,13 +230,12 @@ def verify_commands(md_files: List[Path], repo_root: Path) -> List[AccuracyIssue
                                             severity="error",
                                         )
                                     )
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(f"Failed to check command references in {md_file}: {e}")
 
     return issues
 
-
-def check_file_paths(md_files: List[Path], repo_root: Path) -> List[AccuracyIssue]:
+def check_file_paths(md_files: list[Path], repo_root: Path) -> list[AccuracyIssue]:
     """Check file paths mentioned in documentation."""
     issues = []
     path_pattern = re.compile(r"`([\w/\.\-]+)`")
@@ -273,15 +267,14 @@ def check_file_paths(md_files: List[Path], repo_root: Path) -> List[AccuracyIssu
                                     severity=("warning" if path_type == "directory" else "error"),
                                 )
                             )
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(f"Failed to check file paths in {md_file}: {e}")
 
     return issues
 
-
 def validate_config_options(
-    md_files: List[Path], config_files: Dict[str, Path]
-) -> List[AccuracyIssue]:
+    md_files: list[Path], config_files: dict[str, Path]
+) -> list[AccuracyIssue]:
     """Validate configuration options mentioned in docs."""
     issues: list[AccuracyIssue] = []
 
@@ -291,26 +284,24 @@ def validate_config_options(
         try:
             with open(config_files["config.yaml"], "r") as f:
                 config_data["yaml"] = yaml.safe_load(f) or {}
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Failed to load config.yaml for validation: {e}")
 
     # Check documentation for config references
     # This is a simplified check - could be enhanced to actually validate against config schema
 
     return issues
 
-
-def check_terminology(md_files: List[Path]) -> List[AccuracyIssue]:
+def check_terminology(md_files: list[Path]) -> list[AccuracyIssue]:
     """Check terminology consistency across documentation."""
     issues: list[AccuracyIssue] = []
     # This would check for inconsistent terminology
     # For now, return empty - could be enhanced with a terminology dictionary
     return issues
 
-
 def run_accuracy_phase(
-    md_files: List[Path], repo_root: Path, config_files: Dict[str, Path]
-) -> Tuple[Dict[str, Any], List[LinkIssue], List[AccuracyIssue], Dict[str, Set[str]]]:
+    md_files: list[Path], repo_root: Path, config_files: dict[str, Path]
+) -> tuple[dict[str, Any], list[LinkIssue], list[AccuracyIssue], dict[str, set[str]]]:
     """Run Phase 2: Accuracy Verification.
 
     Args:
@@ -324,33 +315,33 @@ def run_accuracy_phase(
     logger.info("Phase 2: Accuracy Verification...")
 
     # Collect headings for anchor validation
-    all_headings: Dict[str, Set[str]] = {}
+    all_headings: dict[str, set[str]] = {}
     for md_file in md_files:
         try:
             content = md_file.read_text(encoding="utf-8")
             all_headings[str(md_file.relative_to(repo_root))] = extract_headings(content)
         except Exception as e:
-            logger.warning("Error reading %s: %s", md_file, e)
+            logger.warning(f"Error reading {md_file}: {e}")
 
     # Check links
     link_issues = check_links(md_files, repo_root, all_headings)
-    logger.info("Found %d link issues", len(link_issues))
+    logger.info(f"Found {len(link_issues)} link issues")
 
     # Verify commands
     command_issues = verify_commands(md_files, repo_root)
-    logger.info("Found %d command accuracy issues", len(command_issues))
+    logger.info(f"Found {len(command_issues)} command accuracy issues")
 
     # Check file paths
     path_issues = check_file_paths(md_files, repo_root)
-    logger.info("Found %d file path issues", len(path_issues))
+    logger.info(f"Found {len(path_issues)} file path issues")
 
     # Validate configuration options
     config_issues = validate_config_options(md_files, config_files)
-    logger.info("Found %d configuration issues", len(config_issues))
+    logger.info(f"Found {len(config_issues)} configuration issues")
 
     # Check terminology consistency
     terminology_issues = check_terminology(md_files)
-    logger.info("Found %d terminology issues", len(terminology_issues))
+    logger.info(f"Found {len(terminology_issues)} terminology issues")
 
     # Combine all accuracy issues
     accuracy_issues = command_issues + path_issues + config_issues + terminology_issues

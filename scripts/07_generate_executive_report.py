@@ -104,9 +104,9 @@ def main() -> int:
     log_header("STAGE 10: Executive Reporting", logger)
 
     # Log resource usage at start
-    from infrastructure.core.logging_utils import log_resource_usage
+    from infrastructure.core.logging_utils import log_live_resource_usage
 
-    log_resource_usage("Executive reporting stage start", logger)
+    log_live_resource_usage("Executive reporting stage start", logger)
 
     try:
         repo_root = Path(__file__).parent.parent
@@ -220,13 +220,13 @@ def main() -> int:
         logger.info("  • Visual dashboard: dashboard.{png,pdf,html}")
 
         # Log resource usage at end
-        log_resource_usage("Executive reporting stage end", logger)
+        log_live_resource_usage("Executive reporting stage end", logger)
 
         return 0
 
     except Exception as e:
         logger.error(f"Executive reporting failed: {e}", exc_info=True)
-        log_resource_usage("Executive reporting stage end (error)", logger)
+        log_live_resource_usage("Executive reporting stage end (error)", logger)
         return 1
 
 

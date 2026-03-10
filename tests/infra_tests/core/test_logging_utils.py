@@ -280,13 +280,13 @@ class TestDecorators:
     def test_log_function_call(self, caplog):
         """Test log_function_call decorator."""
         logger = get_logger("test_decorator")
-        logger.setLevel(logging.INFO)  # Set to INFO level
+        logger.setLevel(logging.DEBUG)
 
         @log_function_call(logger)
         def test_function(x: int, y: int) -> int:
             return x + y
 
-        with caplog.at_level("INFO"):
+        with caplog.at_level("DEBUG"):
             result = test_function(2, 3)
 
         assert result == 5

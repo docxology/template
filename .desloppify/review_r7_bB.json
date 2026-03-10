@@ -1,0 +1,152 @@
+{
+  "session": {
+    "id": "ext_20260307_173312_d5ef298f",
+    "token": "cd14a979fb74e10bd77026566dc3f098"
+  },
+  "assessments": {
+    "abstraction_fitness": 74,
+    "dependency_health": 81,
+    "mid_level_elegance": 78,
+    "low_level_elegance": 80
+  },
+  "findings": [
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "llm_config_from_env_repeated_inline",
+      "summary": "LLMConfig.from_env() called 6+ times inside generator.py instead of once at call-site boundary",
+      "related_files": [
+        "infrastructure/llm/review/generator.py",
+        "infrastructure/llm/core/config.py"
+      ],
+      "evidence": [
+        "generator.py line 300: config = LLMConfig.from_env() inside create_review_client()",
+        "generator.py line 474: max_length = LLMConfig.from_env().max_input_length inside extract_manuscript_text()",
+        "generator.py line 575: max_tokens = LLMConfig.from_env().long_max_tokens inside generate_review_with_metrics()",
+        "generator.py line 603: config = LLMConfig.from_env() again inside the retry loop body of generate_review_with_metrics()",
+        "generator.py line 732: _cfg = LLMConfig.from_env() inside generate_translation()",
+        "config.py lines 342/347/352: three module-level accessor functions that each call LLMConfig.from_env() — pure forwarding with no policy added"
+      ],
+      "suggestion": "Resolve env config once at the top of each public entry-point function (create_review_client, generate_review_with_metrics, generate_translation) and thread the resulting LLMConfig object into helpers. The three module-level accessor functions in config.py (get_review_timeout, get_max_input_length, get_review_max_tokens) are pure forwarders with no added policy and should be removed in favour of callers reading the config object directly.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "review_forwarder_functions_no_policy",
+      "summary": "Four top-level review functions (generate_llm_executive_summary, generate_quality_review, generate_methodology_review, generate_improvement_suggestions) are pure keyword-argument forwarders to generate_review_with_metrics with no policy logic",
+      "related_files": [
+        "infrastructure/llm/review/generator.py"
+      ],
+      "evidence": [
+        "generate_llm_executive_summary (lines 660-672): passes client, text, model_name through and hard-codes review_type='executive_summary', template_class=ManuscriptExecutiveSummary, temperature=0.3, max_tokens=None — all constants, no branching",
+        "generate_quality_review (lines 677-689): identical shape, different string constants",
+        "generate_methodology_review (lines 692-704): identical shape",
+        "generate_improvement_suggestions (lines 707-719): identical shape, temperature=0.4",
+        "All four are registered in a dispatch table in pipeline_runner.py — the dispatch table already encodes review_type; the forwarders are a redundant indirection layer"
+      ],
+      "suggestion": "Replace the four forwarder functions with a single data-driven registry dict mapping review_type -> (template_class, temperature) and have pipeline_runner.py call generate_review_with_metrics directly with the resolved parameters. If the public API surface must remain stable, at minimum move the constants into the registry and have the forwarders read from it so the duplication is eliminated.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "doc_scanner_phase_methods_thin_wrappers",
+      "summary": "DocumentationScanner phase methods (phase1–phase4) are thin delegation wrappers with minimal coordination logic, adding an indirection layer over the run_*_phase functions they call",
+      "related_files": [
+        "infrastructure/validation/doc_scanner.py"
+      ],
+      "evidence": [
+        "phase1_discovery (lines 52-64): calls run_discovery_phase, unpacks its dict into self.results fields by accessing string keys — no domain translation or policy",
+        "phase2_accuracy (lines 66-79): calls run_accuracy_phase, stores results — the method body is mechanical assignment",
+        "phase3_completeness (lines 81-89): one-liner delegation, wraps result in dict() for no clear reason",
+        "phase4_quality (lines 91-98): identical pattern",
+        "run_full_scan (lines 314-330) calls all seven phase methods sequentially with no conditional logic — the class adds state storage but not meaningful coordination"
+      ],
+      "suggestion": "Either consolidate the phase delegation into run_full_scan directly (eliminating the phase methods) or justify the class boundary by moving the results-field mapping logic into the phase methods so they do visible translation work rather than mechanical unpacking.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "mixed_return_contracts_in_integrity",
+      "summary": "integrity.py mixes three distinct return-type conventions (TypedDict, @dataclass, plain dict[str, bool]) across sibling functions with no stated boundary rule",
+      "related_files": [
+        "infrastructure/validation/integrity.py"
+      ],
+      "evidence": [
+        "verify_file_integrity, verify_cross_references, verify_data_consistency, verify_academic_standards all return plain dict[str, bool] or dict[str, Any]",
+        "verify_output_integrity returns IntegrityReport (a @dataclass)",
+        "validate_build_artifacts returns BuildArtifactValidation (a TypedDict)",
+        "check_file_permissions returns PermissionCheck (a TypedDict)",
+        "verify_output_completeness returns OutputCompleteness (a TypedDict)",
+        "Three separate structural conventions coexist with no comment explaining why one was chosen for each function"
+      ],
+      "suggestion": "Pick one return-type convention for this module. The @dataclass pattern (IntegrityReport) is the most capable: it supports defaults, methods, and future extension. Converting the TypedDict returns to @dataclasses would make the seam between verify_output_integrity and its sub-callers consistent and allow generate_integrity_report to receive a single typed object rather than ad-hoc dicts.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "generate_review_with_metrics_config_inside_retry_loop",
+      "summary": "LLMConfig.from_env() is called on every retry iteration inside generate_review_with_metrics, re-reading the environment on each loop iteration rather than resolving config once at the boundary",
+      "related_files": [
+        "infrastructure/llm/review/generator.py"
+      ],
+      "evidence": [
+        "Line 575: max_tokens = LLMConfig.from_env().long_max_tokens — before loop",
+        "Line 603: config = LLMConfig.from_env() — inside the for-loop body on every attempt",
+        "_stream_with_heartbeat receives config as a parameter (line 514), making the per-iteration re-read unnecessary",
+        "The config object created at line 603 uses config.review_timeout and config.heartbeat_interval — values that do not change between retries"
+      ],
+      "suggestion": "Resolve config once before the retry loop (alongside max_tokens at line 575) and pass it into _stream_with_heartbeat. This eliminates the per-iteration env read and makes the boundary between the orchestrating function and its helper explicit.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "doc_scanner_unresolved_type_names",
+      "summary": "DocumentationScanner.__init__ uses bare Dict, List, Set, Any type annotations that are never imported, causing a NameError at runtime under strict type-checking",
+      "related_files": [
+        "infrastructure/validation/doc_scanner.py"
+      ],
+      "evidence": [
+        "Line 47: self.all_headings: Dict[str, Set[str]] = {}",
+        "Line 48: self.script_files: List[Path] = []",
+        "Line 49: self.config_files: Dict[str, Path] = {}",
+        "Line 50: self.documentation_structure: Dict[str, List[str]] = defaultdict(list)",
+        "The module imports from __future__ import annotations (line 14) which postpones evaluation, so this silently passes at import time but signals inconsistency: the rest of the file's function signatures use Dict[str, Any] without importing Dict from typing either, yet sibling modules in infrastructure/ consistently use the lowercase builtin generics (dict, list, set)"
+      ],
+      "suggestion": "Replace Dict/List/Set with the lowercase builtin generics (dict, list, set) available in Python 3.10+ which is the project's minimum version. This aligns with the style used throughout the rest of the infrastructure/ codebase.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "publishing_package_legacy_typing_imports",
+      "summary": "publishing/package.py uses legacy uppercase typing aliases (Dict, List) while the rest of the infrastructure codebase uses lowercase generics",
+      "related_files": [
+        "infrastructure/publishing/package.py"
+      ],
+      "evidence": [
+        "Line 10: from typing import Any, Dict, List",
+        "Line 24: def create_publication_package(...) -> Dict[str, Any]:",
+        "Line 233: markdown_files: List[Path], pdf_files: List[Path]",
+        "Line 245: readiness: Dict[str, Any] = {",
+        "integrity.py and suite_summary_generator.py in the same codebase already use lowercase dict/list consistently"
+      ],
+      "suggestion": "Remove Dict and List from the typing import and use dict/list directly. This is a minor but consistent style violation relative to the rest of the infrastructure/ layer.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "dependency_health",
+      "identifier": "requests_not_in_pyproject_for_llm_client",
+      "summary": "infrastructure/llm/core/client.py imports requests at module level, but requests is only declared as a production dependency in pyproject.toml's top-level dependencies — if the llm optional group is used without the base install, the dependency is present; however, the import is unconditional even when Ollama is the only transport used",
+      "related_files": [
+        "infrastructure/llm/core/client.py",
+        "pyproject.toml"
+      ],
+      "evidence": [
+        "pyproject.toml lines 37-43: requests>=2.31.0 is listed as a core production dependency",
+        "llm/core/client.py: import requests is unconditional at module top-level",
+        "The llm dependency group (pyproject.toml line 57) lists only ollama>=0.6.1 — requests is not declared there, meaning the group alone is an incomplete dependency set for the module",
+        "This is low-severity since requests is a core dep, but the grouping signal is misleading"
+      ],
+      "suggestion": "Either move requests into the llm optional group (if llm/core/client.py is only used via the llm group) or add a comment in pyproject.toml clarifying that requests is required by the llm group via the core dependencies. This prevents future contributors from making llm group installs without the base install.",
+      "confidence": "low"
+    }
+  ]
+}

@@ -455,11 +455,12 @@ class TestEdgeCases:
 
     def test_calculate_file_hash_exception(self, tmp_path):
         """Test file hash calculation with real execution."""
+        from infrastructure.core.file_operations import calculate_file_hash
         test_file = tmp_path / "test.txt"
         test_file.write_text("Content")
 
         # Use real hash calculation
-        hash_value = publishing.calculate_file_hash(test_file)
+        hash_value = calculate_file_hash(test_file)
         # Should return a hash string or None
         assert hash_value is None or isinstance(hash_value, str)
 

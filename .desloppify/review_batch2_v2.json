@@ -1,0 +1,171 @@
+{
+  "session": {"id": "ext_20260307_021224_4df4171f", "token": "22da2048a136e386bc3c3b30168bf2a3"},
+  "assessments": {
+    "abstraction_fitness": 62,
+    "dependency_health": 74,
+    "test_strategy": 68
+  },
+  "findings": [
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "duplicate_log_stage_with_eta",
+      "summary": "Two incompatible implementations of log_stage_with_eta exist in sibling modules with different signatures, creating a split-brain abstraction",
+      "related_files": [
+        "infrastructure/core/logging_utils.py",
+        "infrastructure/core/logging_progress.py"
+      ],
+      "evidence": [
+        "logging_utils.py:457 defines log_stage_with_eta(stage_num, total_stages, stage_name, pipeline_start, logger) — used by pipeline.py:266",
+        "logging_progress.py:430 defines log_stage_with_eta(stage, current, total, elapsed_time, logger) — different parameter order and semantics",
+        "logging_utils.py __all__ at line 544 re-exports log_stage_with_eta, masking the divergence",
+        "The logging_utils.py version actually calls calculate_eta from logging_progress yet lives separately — one function should own this"
+      ],
+      "suggestion": "Remove the logging_progress.py copy. Keep the logging_utils.py version (which pipeline.py already uses) and have logging_progress.py import from logging_utils if needed. Alternatively unify into logging_progress.py and update the single caller in pipeline.py.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "log_operation_silent_pure_forward",
+      "summary": "log_operation_silent is a zero-policy passthrough wrapper over log_operation that adds no behaviour",
+      "related_files": [
+        "infrastructure/core/logging_utils.py"
+      ],
+      "evidence": [
+        "logging_utils.py:249-255: log_operation_silent calls log_operation(..., log_completion=False) with no added policy, retry, or translation — it is a 3-line forwarding alias",
+        "The function is exported in __all__ (line 527) and in core/__init__.py, giving it the same public weight as substantive utilities"
+      ],
+      "suggestion": "Replace log_operation_silent with a named constant or a one-line call site. If callers genuinely need a name, make it a module-level alias: log_operation_silent = partial(log_operation, log_completion=False). This avoids the wrapper function overhead while keeping discoverability.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "calculate_file_hash_re_export_in_integrity",
+      "summary": "integrity.py re-exports calculate_file_hash from file_operations via a bare import with noqa F401, creating a leaky abstraction surface",
+      "related_files": [
+        "infrastructure/validation/integrity.py",
+        "infrastructure/core/file_operations.py"
+      ],
+      "evidence": [
+        "integrity.py:23: from infrastructure.core.file_operations import calculate_file_hash  # noqa: F401",
+        "The noqa comment confirms this import exists only to re-export, not to use locally — callers of integrity.py can accidentally import calculate_file_hash through the wrong boundary",
+        "test_publishing_core.py:11 imports calculate_file_hash directly from file_operations, showing the canonical path is already known — re-export is unnecessary"
+      ],
+      "suggestion": "Remove the re-export import from integrity.py. Callers that need calculate_file_hash should import directly from infrastructure.core.file_operations. If a hash utility belongs on the integrity API, wrap it with domain-specific semantics rather than re-exporting raw.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "oversized_logging_utils_hub",
+      "summary": "logging_utils.py acts as a catch-all hub importing from three sibling modules and re-exporting everything through __all__, producing a 700+ line god module",
+      "related_files": [
+        "infrastructure/core/logging_utils.py",
+        "infrastructure/core/logging_formatters.py",
+        "infrastructure/core/logging_helpers.py",
+        "infrastructure/core/logging_progress.py"
+      ],
+      "evidence": [
+        "logging_utils.py lines 24-35 import from logging_formatters, logging_helpers, and logging_progress then re-export all of them through __all__",
+        "__all__ at lines 514-555 contains 32 symbols spanning formatters, helpers, progress bars, and core logging — mixed concerns bundled into one namespace",
+        "Functions like collect_log_statistics (line 666) and generate_log_summary (line 714) are appended at the bottom, unrelated to the core logger setup"
+      ],
+      "suggestion": "Stop using logging_utils as a re-export hub. Let callers import from the specific sub-module they need (logging_formatters, logging_progress, etc.). Trim logging_utils to only the functions that genuinely belong there: get_logger, setup_logger, log-level configuration, and the context managers that combine timing with logging.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "dependency_health",
+      "identifier": "pillow_in_core_dependencies",
+      "summary": "Pillow (pillow>=10.0.0) is a core runtime dependency but is only used in one optional reporting module via a lazy import with graceful fallback",
+      "related_files": [
+        "pyproject.toml",
+        "infrastructure/reporting/manuscript_overview.py"
+      ],
+      "evidence": [
+        "pyproject.toml:45: pillow>=10.0.0 listed under [project] dependencies (always installed)",
+        "infrastructure/reporting/manuscript_overview.py:84,168,234: from PIL import Image wrapped in try/except ImportError with explicit fallback paths — the code is designed for Pillow to be absent",
+        "No other infrastructure file imports from PIL; Pillow is a heavy binary wheel (~10 MB) pulled into every install for one optional report generator"
+      ],
+      "suggestion": "Move pillow to an optional dependency group (e.g., [dependency-groups] reporting = [\"pillow>=10.0.0\"]) matching the pattern already used for plotly and steganography deps. Document that the manuscript overview feature requires the reporting extra.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "dependency_health",
+      "identifier": "reportlab_in_core_dependencies",
+      "summary": "reportlab>=4.0.0 is a core runtime dependency primarily used for steganography/test PDF creation, not core pipeline output",
+      "related_files": [
+        "pyproject.toml",
+        "infrastructure/reporting/manuscript_overview.py",
+        "infrastructure/steganography/core.py"
+      ],
+      "evidence": [
+        "pyproject.toml:46: reportlab>=4.0.0 under [project] dependencies",
+        "Primary production use is in infrastructure/reporting/manuscript_overview.py (imported inside a try block at line 85) and the steganography module — both optional features",
+        "The steganography group in pyproject.toml already exists but does not include reportlab, creating inconsistency in how optional heavy deps are declared"
+      ],
+      "suggestion": "Audit whether reportlab is required by any non-optional pipeline stage. If it is only used in manuscript_overview and steganography, move it to the corresponding optional groups. The existing 'steganography' dependency group is the right home for steganography use; a new 'reporting' group would cover manuscript_overview.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "dependency_health",
+      "identifier": "plotly_optional_but_not_isolated",
+      "summary": "Plotly is correctly placed in an optional group but dashboard_generator.py uses a bare try/import with a warning rather than a clean capability check, making the optional boundary implicit",
+      "related_files": [
+        "pyproject.toml",
+        "infrastructure/reporting/dashboard_generator.py"
+      ],
+      "evidence": [
+        "pyproject.toml:64-66: plotly in [dependency-groups] dashboard — correctly optional",
+        "dashboard_generator.py:957-961: try: import plotly.graph_objects as go ... except ImportError: logger.warning('Plotly not installed, skipping') — the warning fires at call time, not import time, with no structured capability flag",
+        "This pattern means callers cannot detect capability before calling and must rely on parsing log output to know if the dashboard was actually generated"
+      ],
+      "suggestion": "Add a module-level boolean HAS_PLOTLY = True/False detected at import time. Expose a function like is_dashboard_available() -> bool so callers can branch cleanly before invoking the generator, rather than swallowing the ImportError deep inside a generation function.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "rendering_tests_structurally_vacuous",
+      "summary": "Multiple rendering test classes assert only that attributes exist or catch all exceptions silently, providing zero coverage of actual rendering behaviour",
+      "related_files": [
+        "tests/infra_tests/rendering/test_pdf_renderer_full.py"
+      ],
+      "evidence": [
+        "test_pdf_renderer_full.py:31-42: TestPdfRendererClass.test_renderer_init wraps the instantiation in try/except Exception: pass — any failure including import errors is silently swallowed",
+        "test_pdf_renderer_full.py:56-57: duplicate @pytest.mark.skipif decorator on the same method (lines 56 and 57 are identical), indicating copy-paste without review",
+        "test_pdf_renderer_full.py:63-69: test_render_pdf_with_tex calls pdf_renderer.render_pdf inside try/except Exception: pass — a broken renderer will not cause test failure",
+        "test_pdf_renderer_full.py:82-90: test_compile_tex also wraps in bare except: pass"
+      ],
+      "suggestion": "Remove bare except: pass blocks from rendering tests. Either assert on a concrete return value (path exists, non-zero size), or use pytest.raises to assert on the expected exception type. For environment-conditional tests, use pytest.mark.skipif(not shutil.which('xelatex')) without also swallowing errors inside the test body.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "pipeline_tests_use_fake_scripts_not_real_stages",
+      "summary": "PipelineExecutor integration tests fabricate fake script files that write invocation logs rather than exercising real pipeline stage logic",
+      "related_files": [
+        "tests/infra_tests/core/test_pipeline.py"
+      ],
+      "evidence": [
+        "test_pipeline.py:248-290: test_execute_full_pipeline_success creates a 'fake repo' with stub scripts that only write JSON invocation records; asserts check which script filenames were called, not what they produced",
+        "This means the tests verify orchestration bookkeeping (did execute_full_pipeline call the right script names?) but do not verify that any stage function actually produces correct outputs",
+        "The integration test in tests/integration/test_full_pipeline.py does run the real pipeline via subprocess, but the infra_tests version provides false confidence through structural testing without behavioural coverage"
+      ],
+      "suggestion": "Supplement the fake-script pipeline tests with at least one test that exercises a real stage function (e.g., _run_setup_environment or _run_validation) against a minimal real project directory. Keep the orchestration-level tests for fast CI but label them clearly as orchestration-only so coverage gaps are visible.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "no_tests_for_logging_progress_log_stage_with_eta",
+      "summary": "The logging_progress.py copy of log_stage_with_eta has no dedicated tests, creating a dead-code coverage gap on the duplicate implementation",
+      "related_files": [
+        "infrastructure/core/logging_progress.py",
+        "tests/infra_tests/core/test_logging_progress.py"
+      ],
+      "evidence": [
+        "infrastructure/core/logging_progress.py:430-458: log_stage_with_eta defined with a distinct signature (stage, current, total, elapsed_time) that differs from the logging_utils.py version",
+        "No test file imports or exercises this specific overload — the function is a dead variant that accumulates without coverage",
+        "This is compounded by the fact that pipeline.py imports log_stage_with_eta from logging_utils, so the progress variant is never exercised in production either"
+      ],
+      "suggestion": "Delete the logging_progress.py implementation of log_stage_with_eta (it is the duplicate — see abstraction_fitness finding). If retained, add explicit tests that call it with the (stage, current, total, elapsed_time) signature and assert on the formatted log output.",
+      "confidence": "high"
+    }
+  ]
+}

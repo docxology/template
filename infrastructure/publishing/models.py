@@ -3,27 +3,24 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import List, Optional
-
 
 @dataclass
 class PublicationMetadata:
     """Container for publication metadata."""
 
     title: str
-    authors: List[str]
+    authors: list[str]
     abstract: str
-    keywords: List[str]
-    doi: Optional[str] = None
-    journal: Optional[str] = None
-    conference: Optional[str] = None
-    publication_date: Optional[str] = None
-    publisher: Optional[str] = None
+    keywords: list[str]
+    doi: str | None = None
+    journal: str | None = None
+    conference: str | None = None
+    publication_date: str | None = None
+    publisher: str | None = None
     license: str = "CC-BY-4.0"
-    repository_url: Optional[str] = None
+    repository_url: str | None = None
     citation_count: int = 0
     download_count: int = 0
-
 
 @dataclass
 class CitationStyle:

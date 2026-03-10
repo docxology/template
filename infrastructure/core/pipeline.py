@@ -14,15 +14,16 @@ import subprocess
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable, Optional
+from typing import Callable, NamedTuple
 
 from infrastructure.core.checkpoint import CheckpointManager, StageResult
 from infrastructure.core.environment import get_python_command, get_subprocess_env
 from infrastructure.core.logging_utils import (
+    flush_file_handlers,
     get_logger,
-    log_operation,
-    log_stage_with_eta,
+    log_pipeline_stage_with_eta,
     setup_logger,
+    setup_root_log_file_handler,
 )
 from infrastructure.core.errors import (
     PIPELINE_STAGE_FAILED,
@@ -30,9 +31,9 @@ from infrastructure.core.errors import (
     STAGE_EXCEPTION,
     STAGE_FAILED,
 )
+from infrastructure.core.file_operations import clean_output_directories
 
 logger = get_logger(__name__)
-
 
 @dataclass
 class PipelineConfig:
@@ -57,7 +58,19 @@ class PipelineStageResult:
     duration: float
     exit_code: int = 0
     error_message: str = ""
+    exception_type: str = ""
 
+    @property
+    def is_skipped(self) -> bool:
+        """Stage was skipped: not successful and exited with code 0."""
+        return not self.success and self.exit_code == 0
+
+
+class StageSpec(NamedTuple):
+    """Specification for a single pipeline stage."""
+
+    name: str
+    func: Callable[[], bool]
 
 class PipelineExecutor:
     """Execute research project pipeline stages."""
@@ -73,7 +86,9 @@ class PipelineExecutor:
             config: Pipeline configuration
         """
         self.config = config
-        self.checkpoint_manager = CheckpointManager(project_name=config.project_name)
+        self.checkpoint_manager = CheckpointManager(
+            project_name=config.project_name, repo_root=config.repo_root
+        )
 
         # Define log file path (will be created by _setup_log_file_handler)
         log_dir = config.repo_root / "projects" / config.project_name / "output" / "logs"
@@ -88,49 +103,38 @@ class PipelineExecutor:
     def _setup_log_file_handler(self) -> None:
         """Set up or recreate the log file handler.
 
-        Creates the log directory and file, and adds a file handler to the root
-        logger. This method is idempotent - it removes any existing handler for
-        this log file before creating a new one.
-
-        This is called both during initialization and after the clean stage runs,
-        since the clean stage may delete the log file.
+        Called during init and after the clean stage (which may delete the log file).
+        Delegates root-logger file handler management to logging_utils.
         """
-        # Ensure log directory exists
         self.log_file.parent.mkdir(parents=True, exist_ok=True)
-
-        # Set up logger for this module
         setup_logger(__name__, log_file=self.log_file)
 
-        # Get root logger
-        root_logger = logging.getLogger()
-
-        # Remove any existing file handler for this log file
-        handlers_to_remove = [
-            h
-            for h in root_logger.handlers
-            if isinstance(h, logging.FileHandler)
-            and hasattr(h, "baseFilename")
-            and Path(h.baseFilename).resolve() == self.log_file.resolve()
-        ]
-        for handler in handlers_to_remove:
-            handler.close()
-            root_logger.removeHandler(handler)
-            logger.debug(f"Removed existing log file handler: {handler.baseFilename}")
-
-        # Also track and close our own handler if it exists
         if self._log_handler is not None:
             try:
                 self._log_handler.close()
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(f"Failed to close log handler: {e}")
 
-        # Create new file handler
-        self._log_handler = logging.FileHandler(self.log_file)
-        # File logs without emojis, include logger name for context
-        file_formatter = logging.Formatter("[%(asctime)s] [%(levelname)s] [%(name)s] %(message)s")
-        self._log_handler.setFormatter(file_formatter)
-        root_logger.addHandler(self._log_handler)
+        self._log_handler = setup_root_log_file_handler(self.log_file)
         logger.debug(f"Set up log file handler: {self.log_file}")
+
+    def _build_stage_list(self, include_llm: bool, skip_clean: bool) -> list[StageSpec]:
+        """Build canonical stage list for active (non-skipped) stages only."""
+        stages: list[StageSpec] = []
+        if not skip_clean:
+            stages.append(StageSpec("Clean Output Directories", self._run_clean_outputs))
+        stages.append(StageSpec("Environment Setup", self._run_setup_environment))
+        if not self.config.skip_infra:
+            stages.append(StageSpec("Infrastructure Tests", self.run_infrastructure_tests))
+        stages.append(StageSpec("Project Tests", self._run_project_tests))
+        stages.append(StageSpec("Project Analysis", self._run_analysis))
+        stages.append(StageSpec("PDF Rendering", self._run_pdf_rendering))
+        stages.append(StageSpec("Output Validation", self._run_validation))
+        if include_llm and not self.config.skip_llm:
+            stages.append(StageSpec("LLM Scientific Review", self._run_llm_review))
+            stages.append(StageSpec("LLM Translations", self._run_llm_translations))
+        stages.append(StageSpec("Copy Outputs", self._run_copy_outputs))
+        return stages
 
     def execute_full_pipeline(self) -> list[PipelineStageResult]:
         """Execute complete pipeline (tests → analysis → PDF → validate → copy → LLM).
@@ -143,31 +147,8 @@ class PipelineExecutor:
         if self.config.resume:
             return self._resume_pipeline()
 
-        stages: list[tuple] = []
-        # Stage 0 (conceptually): clean output dirs unless resuming or disabled
-        stages.append(
-            (
-                "Clean Output Directories",
-                self._run_clean_outputs,
-                (not self.config.clean) or self.config.resume,
-            )
-        )
-        stages.append(("Environment Setup", self._run_setup_environment))
-        stages.append(
-            (
-                "Infrastructure Tests",
-                self._run_infrastructure_tests,
-                self.config.skip_infra,
-            )
-        )
-        stages.append(("Project Tests", self._run_project_tests))
-        stages.append(("Project Analysis", self._run_analysis))
-        stages.append(("PDF Rendering", self._run_pdf_rendering))
-        stages.append(("Output Validation", self._run_validation))
-        stages.append(("LLM Scientific Review", self._run_llm_review, self.config.skip_llm))
-        stages.append(("LLM Translations", self._run_llm_translations, self.config.skip_llm))
-        stages.append(("Copy Outputs", self._run_copy_outputs))
-        return self._execute_pipeline(stages)
+        skip_clean = not self.config.clean
+        return self._execute_pipeline(self._build_stage_list(include_llm=True, skip_clean=skip_clean))
 
     def execute_core_pipeline(self) -> list[PipelineStageResult]:
         """Execute core pipeline (tests → analysis → PDF → validate → copy).
@@ -180,65 +161,38 @@ class PipelineExecutor:
         if self.config.resume:
             return self._resume_pipeline()
 
-        stages: list[tuple] = []
-        stages.append(
-            (
-                "Clean Output Directories",
-                self._run_clean_outputs,
-                (not self.config.clean) or self.config.resume,
+        skip_clean = not self.config.clean
+        return self._execute_pipeline(self._build_stage_list(include_llm=False, skip_clean=skip_clean))
+
+    def _run_stage_and_checkpoint(
+        self,
+        stage_num: int,
+        stage_spec: StageSpec,
+        results: list[PipelineStageResult],
+        pipeline_start: float,
+    ) -> PipelineStageResult:
+        """Execute a stage, append to results, and checkpoint on success."""
+        result = self._execute_stage(stage_num, stage_spec.name, stage_spec.func, pipeline_start)
+        results.append(result)
+        if not result.success:
+            logger.error(
+                PIPELINE_STAGE_FAILED.format(stage_num=stage_num, stage_name=stage_spec.name)
             )
-        )
-        stages.append(("Environment Setup", self._run_setup_environment))
-        stages.append(
-            (
-                "Infrastructure Tests",
-                self._run_infrastructure_tests,
-                self.config.skip_infra,
-            )
-        )
-        stages.append(("Project Tests", self._run_project_tests))
-        stages.append(("Project Analysis", self._run_analysis))
-        stages.append(("PDF Rendering", self._run_pdf_rendering))
-        stages.append(("Output Validation", self._run_validation))
-        stages.append(("Copy Outputs", self._run_copy_outputs))
-        return self._execute_pipeline(stages)
+        else:
+            self._save_checkpoint(pipeline_start, stage_num, results)
+        return result
 
-    def _execute_pipeline(self, stages: list) -> list[PipelineStageResult]:
-        """Execute pipeline stages.
-
-        Args:
-            stages: List of (stage_name, function, skip_condition) tuples
-
-        Returns:
-            List of stage results
-        """
+    def _execute_pipeline(self, stages: list[StageSpec]) -> list[PipelineStageResult]:
+        """Execute pipeline stages."""
         results: list[PipelineStageResult] = []
         pipeline_start = time.time()
 
-        executed_stage_num = 0  # sequential over executed (non-skipped) stages only
-        for stage_spec in stages:
-            stage_name = stage_spec[0]
-            stage_func = stage_spec[1]
-            skip_condition = stage_spec[2] if len(stage_spec) > 2 else False
-
-            if skip_condition:
-                logger.info(f"Skipping stage: {stage_name}")
-                continue
-
-            executed_stage_num += 1
-            result = self._execute_stage(executed_stage_num, stage_name, stage_func, pipeline_start)
-            results.append(result)
-
+        for stage_num, stage_spec in enumerate(stages, 1):
+            result = self._run_stage_and_checkpoint(
+                stage_num, stage_spec, results, pipeline_start
+            )
             if not result.success:
-                logger.error(
-                    PIPELINE_STAGE_FAILED.format(
-                        stage_num=executed_stage_num, stage_name=stage_name
-                    )
-                )
                 break
-
-            # Save checkpoint after successful executed stage
-            self._save_checkpoint(pipeline_start, executed_stage_num, results)
 
         return results
 
@@ -247,7 +201,7 @@ class PipelineExecutor:
         stage_num: int,
         stage_name: str,
         stage_func: Callable[[], bool],
-        pipeline_start: Optional[float] = None,
+        pipeline_start: float | None = None,
     ) -> PipelineStageResult:
         """Execute single pipeline stage with timing and error handling.
 
@@ -263,15 +217,14 @@ class PipelineExecutor:
 
         # Use enhanced stage logging with ETA if pipeline start time available
         if pipeline_start is not None:
-            log_stage_with_eta(
+            log_pipeline_stage_with_eta(
                 stage_num, self.config.total_stages, stage_name, pipeline_start, logger
             )
         else:
             logger.info(f"Stage {stage_num}: {stage_name}")
 
         try:
-            with log_operation(f"Stage {stage_num}: {stage_name}"):
-                success = stage_func()
+            success = stage_func()
 
             duration = time.time() - start_time
 
@@ -293,7 +246,7 @@ class PipelineExecutor:
                     exit_code=1,
                 )
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 — intentional: stage executor isolates all failures into PipelineStageResult
             duration = time.time() - start_time
             logger.error(STAGE_EXCEPTION.format(stage_num=stage_num, error=e))
             return PipelineStageResult(
@@ -303,7 +256,16 @@ class PipelineExecutor:
                 duration=duration,
                 exit_code=1,
                 error_message=str(e),
+                exception_type=type(e).__name__,
             )
+
+    def _start_fresh(self) -> list[PipelineStageResult]:
+        """Run the pipeline from scratch, bypassing any checkpoint."""
+        skip_clean = not self.config.clean
+        stages = self._build_stage_list(
+            include_llm=not self.config.skip_llm, skip_clean=skip_clean
+        )
+        return self._execute_pipeline(stages)
 
     def _resume_pipeline(self) -> list[PipelineStageResult]:
         """Resume pipeline from checkpoint.
@@ -316,53 +278,15 @@ class PipelineExecutor:
         is_valid, error_message = self.checkpoint_manager.validate_checkpoint()
         if not is_valid:
             logger.warning(f"Checkpoint invalid, starting fresh: {error_message}")
-            # Fall back to fresh run (but force resume off to avoid recursion)
-            original_resume = self.config.resume
-            self.config.resume = False
-            try:
-                return (
-                    self.execute_full_pipeline()
-                    if not self.config.skip_llm
-                    else self.execute_core_pipeline()
-                )
-            finally:
-                self.config.resume = original_resume
+            return self._start_fresh()
 
         checkpoint = self.checkpoint_manager.load_checkpoint()
         if checkpoint is None:
             logger.warning("No checkpoint found, starting fresh")
-            original_resume = self.config.resume
-            self.config.resume = False
-            try:
-                return (
-                    self.execute_full_pipeline()
-                    if not self.config.skip_llm
-                    else self.execute_core_pipeline()
-                )
-            finally:
-                self.config.resume = original_resume
+            return self._start_fresh()
 
-        # Rebuild stage list based on configured pipeline type
-        stages: list[tuple] = []
-        stages.append(
-            ("Clean Output Directories", self._run_clean_outputs, True)
-        )  # never re-run on resume
-        stages.append(("Environment Setup", self._run_setup_environment))
-        stages.append(
-            (
-                "Infrastructure Tests",
-                self._run_infrastructure_tests,
-                self.config.skip_infra,
-            )
-        )
-        stages.append(("Project Tests", self._run_project_tests))
-        stages.append(("Project Analysis", self._run_analysis))
-        stages.append(("PDF Rendering", self._run_pdf_rendering))
-        stages.append(("Output Validation", self._run_validation))
-        if not self.config.skip_llm:
-            stages.append(("LLM Scientific Review", self._run_llm_review))
-            stages.append(("LLM Translations", self._run_llm_translations))
-        stages.append(("Copy Outputs", self._run_copy_outputs))
+        # Rebuild stage list based on configured pipeline type (clean always skipped on resume)
+        stages = self._build_stage_list(include_llm=not self.config.skip_llm, skip_clean=True)
 
         # Convert prior results into PipelineStageResult objects for reporting continuity
         resumed_results: list[PipelineStageResult] = []
@@ -380,13 +304,9 @@ class PipelineExecutor:
         # Identify remaining stages by matching stage names against checkpoint stage_results in-order  # noqa: E501
         completed_names = [sr.name for sr in checkpoint.stage_results]
         completed_idx = 0
-        remaining: list[tuple] = []
+        remaining: list[StageSpec] = []
         for stage_spec in stages:
-            stage_name = stage_spec[0]
-            skip_condition = stage_spec[2] if len(stage_spec) > 2 else False
-            if skip_condition:
-                continue
-
+            stage_name = stage_spec.name
             if (
                 completed_idx < len(completed_names)
                 and stage_name == completed_names[completed_idx]
@@ -400,16 +320,7 @@ class PipelineExecutor:
             logger.warning(
                 "Checkpoint stages did not match configured pipeline stages; starting fresh to avoid inconsistency"  # noqa: E501
             )
-            original_resume = self.config.resume
-            self.config.resume = False
-            try:
-                return (
-                    self.execute_full_pipeline()
-                    if not self.config.skip_llm
-                    else self.execute_core_pipeline()
-                )
-            finally:
-                self.config.resume = original_resume
+            return self._start_fresh()
 
         logger.info(
             f"Resuming from stage {len(resumed_results) + 1} ({len(remaining)} stage(s) remaining)"
@@ -419,33 +330,12 @@ class PipelineExecutor:
         pipeline_start = checkpoint.pipeline_start_time
         executed_stage_num = len(resumed_results)
         for stage_spec in remaining:
-            stage_name = stage_spec[0]
-            stage_func = stage_spec[1]
-            skip_condition = stage_spec[2] if len(stage_spec) > 2 else False
-            if skip_condition:
-                continue
-
             executed_stage_num += 1
-            result = self._execute_stage(executed_stage_num, stage_name, stage_func, pipeline_start)
-            # Handle exit code 2 (skip) as success for LLM stages
-            if hasattr(result, "exit_code") and result.exit_code == 2:
-                # Exit code 2 means "skipped successfully" (e.g., no LLM languages configured)
-                result = PipelineStageResult(
-                    stage_num=result.stage_num,
-                    stage_name=result.stage_name,
-                    success=True,  # Treat skip as success
-                    duration=result.duration,
-                    exit_code=2,  # Preserve original exit code for reporting
-                )
-            resumed_results.append(result)
+            result = self._run_stage_and_checkpoint(
+                executed_stage_num, stage_spec, resumed_results, pipeline_start
+            )
             if not result.success:
-                logger.error(
-                    PIPELINE_STAGE_FAILED.format(
-                        stage_num=executed_stage_num, stage_name=stage_name
-                    )
-                )
                 break
-            self._save_checkpoint(pipeline_start, executed_stage_num, resumed_results)
 
         return resumed_results
 
@@ -478,18 +368,12 @@ class PipelineExecutor:
             total_stages=self.config.total_stages,
         )
 
-    # Stage execution methods - these will call the actual scripts/commands
-    # For now, these are placeholders that will be implemented to call
-    # the existing bash functions or Python equivalents
-
     def _run_clean_outputs(self) -> bool:
         """Clean output directories for a fresh run.
 
         After cleaning, recreates the log file handler since clean_output_directories
         may have deleted the log file.
         """
-        from infrastructure.core.file_operations import clean_output_directories
-
         logger.info("Cleaning output directories...")
         clean_output_directories(self.config.repo_root, self.config.project_name)
 
@@ -502,12 +386,10 @@ class PipelineExecutor:
 
     def _run_setup_environment(self) -> bool:
         """Run environment setup."""
-        logger.info("Running environment setup...")
         return self._run_script("00_setup_environment.py", "--project", self.config.project_name)
 
-    def _run_infrastructure_tests(self) -> bool:
-        """Run infrastructure tests."""
-        logger.info("Running infrastructure tests...")
+    def run_infrastructure_tests(self) -> bool:
+        """Run infrastructure tests (public API used by multi-project orchestrator)."""
         # Provide a project name for report output location; infra tests themselves should not depend on project src.  # noqa: E501
         return self._run_script(
             "01_run_tests.py", "--infra-only", "--verbose", "--project", self.config.project_name
@@ -515,24 +397,20 @@ class PipelineExecutor:
 
     def _run_project_tests(self) -> bool:
         """Run project tests."""
-        logger.info("Running project tests...")
         return self._run_script(
             "01_run_tests.py", "--project-only", "--verbose", "--project", self.config.project_name
         )
 
     def _run_analysis(self) -> bool:
         """Run project analysis."""
-        logger.info("Running project analysis...")
         return self._run_script("02_run_analysis.py", "--project", self.config.project_name)
 
     def _run_pdf_rendering(self) -> bool:
         """Run PDF rendering."""
-        logger.info("Running PDF rendering...")
         return self._run_script("03_render_pdf.py", "--project", self.config.project_name)
 
     def _run_validation(self) -> bool:
         """Run output validation."""
-        logger.info("Running output validation...")
         return self._run_script("04_validate_output.py", "--project", self.config.project_name)
 
     def _run_llm_review(self) -> bool:
@@ -540,7 +418,6 @@ class PipelineExecutor:
 
         Uses allow_skip_code=True to treat exit code 2 (Ollama not available) as success.
         """
-        logger.info("Running LLM scientific review...")
         return self._run_script(
             "06_llm_review.py",
             "--reviews-only",
@@ -554,7 +431,6 @@ class PipelineExecutor:
 
         Uses allow_skip_code=True to treat exit code 2 (no languages configured or Ollama unavailable) as success.
         """
-        logger.info("Running LLM translations...")
         return self._run_script(
             "06_llm_review.py",
             "--translations-only",
@@ -568,34 +444,22 @@ class PipelineExecutor:
         logger.info("Running output copying...")
 
         # Flush log handlers before copying to ensure log file is written
-        log_verified = self._flush_log_handlers()
-        if not log_verified:
+        self._flush_log_handlers()
+        if not self._verify_log_file():
             logger.warning("Log file not verified before copy - may be missing or empty")
 
         return self._run_script("05_copy_outputs.py", "--project", self.config.project_name)
 
-    def _flush_log_handlers(self) -> bool:
-        """Flush all log handlers and verify log file exists with content.
+    def _flush_log_handlers(self) -> None:
+        """Flush all log handlers to disk."""
+        flush_file_handlers()
+
+    def _verify_log_file(self) -> bool:
+        """Check that the log file exists and has content.
 
         Returns:
             True if log file exists and has content, False otherwise
         """
-        import logging
-
-        # Flush all file handlers
-        root_logger = logging.getLogger()
-        for handler in root_logger.handlers:
-            if isinstance(handler, logging.FileHandler):
-                handler.flush()
-
-        # Also flush module-specific loggers
-        for logger_name in logging.Logger.manager.loggerDict:
-            logger_obj = logging.getLogger(logger_name)
-            for handler in logger_obj.handlers:
-                if isinstance(handler, logging.FileHandler):
-                    handler.flush()
-
-        # Verify log file exists and has content
         if self.log_file.exists():
             try:
                 size = self.log_file.stat().st_size
@@ -605,7 +469,7 @@ class PipelineExecutor:
                 else:
                     logger.warning(f"Log file exists but is empty: {self.log_file}")
                     return False
-            except Exception as e:
+            except OSError as e:
                 logger.warning(f"Failed to verify log file: {e}")
                 return False
         else:
@@ -649,7 +513,9 @@ class PipelineExecutor:
 
         try:
             # Stream subprocess output to console for long-running stages; still capture exit code.
-            result = subprocess.run(cmd, cwd=self.config.repo_root, env=env, check=False)
+            result = subprocess.run(
+                cmd, cwd=self.config.repo_root, env=env, check=False, timeout=7200
+            )
 
             # Exit code 0 = success
             if result.returncode == 0:
@@ -661,6 +527,6 @@ class PipelineExecutor:
                 return True
 
             return False
-        except Exception as e:
+        except (OSError, subprocess.SubprocessError, subprocess.TimeoutExpired) as e:
             logger.error(SCRIPT_EXECUTION_FAILED.format(script_name=script_name, error=e))
             return False

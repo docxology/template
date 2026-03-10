@@ -1,0 +1,89 @@
+{
+  "session": {
+    "id": "ext_20260307_183320_0ada9127",
+    "token": "0ab36777ebcb907a357ffa1d2b8d031b"
+  },
+  "assessments": {
+    "cross_module_architecture": 80,
+    "convention_outlier": 68,
+    "error_consistency": 72,
+    "abstraction_fitness": 75
+  },
+  "findings": [
+    {
+      "dimension": "convention_outlier",
+      "identifier": "legacy_typing_imports_in_modern_files",
+      "summary": "Large swath of infrastructure modules use deprecated `from typing import Dict, List, Tuple` instead of the built-in generics used consistently in core/",
+      "related_files": [
+        "infrastructure/validation/audit_orchestrator.py",
+        "infrastructure/validation/output_validator.py",
+        "infrastructure/validation/doc_completeness.py",
+        "infrastructure/rendering/manuscript_discovery.py",
+        "infrastructure/reporting/pipeline_reporter.py",
+        "infrastructure/core/logging_formatters.py"
+      ],
+      "evidence": [
+        "audit_orchestrator.py:12: `from typing import Any, Dict, List` then uses `Dict[str, set[str]]` at line 149 and `Dict[str, List[Any]]` at line 154",
+        "output_validator.py:10: `from typing import Any, Dict` then uses `Dict[str, Any]` throughout",
+        "core/ files (errors.py, health_check.py, logging_helpers.py) consistently use built-in `dict[str, Any]` and `list[str]` without importing from typing — the modern style is established in core but not followed in validation/ and rendering/",
+        "logging_formatters.py:8: `from typing import ClassVar, Dict` — Dict is unnecessary since Python 3.9; ClassVar is still needed"
+      ],
+      "suggestion": "Replace `Dict[X, Y]` / `List[X]` / `Tuple[X, ...]` with lowercase built-in generics `dict[X, Y]` / `list[X]` / `tuple[X, ...]` in all non-core modules. The `from __future__ import annotations` already present in every file makes this safe. Remove the now-unused `Dict`, `List`, `Tuple` names from the typing imports.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "duplicate_format_duration_definition",
+      "summary": "`format_duration` is defined in `logging_helpers.py` but also re-exported through `logging_utils.py` and `core/__init__.py`, creating an ambiguous canonical location",
+      "related_files": [
+        "infrastructure/core/logging_helpers.py",
+        "infrastructure/core/logging_utils.py",
+        "infrastructure/core/__init__.py"
+      ],
+      "evidence": [
+        "logging_helpers.py:35: `def format_duration(seconds: float) -> str:`  — definition lives here",
+        "logging_utils.py:25: `from infrastructure.core.logging_helpers import format_duration, format_error_with_suggestions` — re-exported",
+        "logging_utils.py:399: `'format_duration'` in `__all__`",
+        "core/__init__.py:27-32: `from .logging_utils import format_duration, get_logger, ...` — re-exported a second time",
+        "pipeline_reporter.py:16: `from infrastructure.core.logging_utils import format_duration, get_logger` — callers import from logging_utils, not the canonical helper module",
+        "Result: the function has three import paths with no documented canonical one"
+      ],
+      "suggestion": "Pick one canonical import path (`infrastructure.core.logging_helpers` or `infrastructure.core.logging_utils`) and remove the re-export from the other. Update callers to use the canonical path. The `core/__init__.py` re-export is fine as a convenience facade but the intermediate re-export in `logging_utils` only adds indirection.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "dual_error_summary_writers",
+      "summary": "`pipeline_reporter.save_error_summary()` and `ErrorAggregator.save_report()` both write `error_summary.json` + `error_summary.md` to an output directory with different schemas, creating conflicting write paths for the same artefact",
+      "related_files": [
+        "infrastructure/reporting/pipeline_reporter.py",
+        "infrastructure/reporting/error_aggregator.py",
+        "infrastructure/reporting/__init__.py"
+      ],
+      "evidence": [
+        "pipeline_reporter.py:460-493: `save_error_summary(errors: list[dict], output_dir)` writes `error_summary.json` with keys `{total_errors, errors_by_type, errors}` and delegates markdown to `generate_error_markdown()`",
+        "error_aggregator.py:198-222: `ErrorAggregator.save_report(output_dir)` writes the same filenames `error_summary.json` and `error_summary.md` with a richer schema adding `{actionable_fixes, total_warnings, warnings_by_type}`",
+        "reporting/__init__.py:32,65: both `save_error_summary` (from pipeline_reporter) and `ErrorAggregator` (from error_aggregator) are exported from the same package surface, with no guidance on which to use",
+        "The two functions accept different input types (raw `list[dict]` vs `ErrorAggregator` instance) and produce incompatible JSON schemas for the same filename"
+      ],
+      "suggestion": "Remove the standalone `save_error_summary` / `generate_error_markdown` / `generate_error_markdown` functions from `pipeline_reporter.py`. All callers should use `ErrorAggregator.save_report()` as the single writer. If callers only have a raw `list[dict]`, add a `ErrorAggregator.from_dicts(errors)` class method to hydrate the aggregator before saving.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "validate_copied_outputs_path_introspection_antipattern",
+      "summary": "`validate_copied_outputs` and `validate_output_structure` both reverse-engineer the project name and repo root by parsing `output_dir.parts` instead of accepting them as explicit parameters, creating fragile implicit coupling to the directory layout",
+      "related_files": [
+        "infrastructure/validation/output_validator.py"
+      ],
+      "evidence": [
+        "output_validator.py:39-48: `path_parts = output_dir.parts; if 'output' in path_parts: output_idx = path_parts.index('output'); project_name = output_dir.name` — project identity derived by scanning the path string",
+        "output_validator.py:83-93: same pattern repeated to reconstruct `repo_root` from `path_parts[:output_idx]` when the PDF is not in the output directory",
+        "output_validator.py:421: `validate_output_structure` repeats the same `output_dir.parent.name == 'output'` heuristic to infer project name",
+        "The approach silently produces `project_name = None` for any path that does not contain the literal string 'output', making behaviour unpredictable for projects with unusual paths"
+      ],
+      "suggestion": "Add `project_name: str | None = None` and `repo_root: Path | None = None` as explicit parameters to `validate_copied_outputs` and `validate_output_structure`. Callers already know the project name and repo root at the point of invocation; the path-parsing logic can then be deleted entirely. This removes the implicit coupling to the physical directory layout and makes both functions directly testable.",
+      "confidence": "high"
+    }
+  ]
+}

@@ -1,0 +1,181 @@
+{
+  "assessments": {
+    "dependency_health": 72,
+    "test_strategy": 68,
+    "ai_generated_debt": 55,
+    "package_organization": 74
+  },
+  "findings": [
+    {
+      "dimension": "dependency_health",
+      "identifier": "psutil_guard_inconsistency",
+      "summary": "psutil is guarded via _optional_deps in health_check.py but imported directly (with try/except) inside benchmark_function body in benchmarking.py, bypassing the centralized sentinel",
+      "related_files": [
+        "infrastructure/core/_optional_deps.py",
+        "infrastructure/scientific/benchmarking.py"
+      ],
+      "evidence": [
+        "_optional_deps.py establishes psutil=None sentinel and documents it as the single authoritative import point",
+        "benchmarking.py line 51: `try: import psutil; psutil_available = True` inside benchmark_function — a per-call try/except that ignores _optional_deps"
+      ],
+      "suggestion": "Replace the per-call try/except in benchmarking.py with `from infrastructure.core._optional_deps import psutil` and check `if psutil is None`",
+      "confidence": "high"
+    },
+    {
+      "dimension": "dependency_health",
+      "identifier": "legacy_typing_imports_widespread",
+      "summary": "Legacy typing aliases (List, Dict, Optional, Tuple, Set, Union) are used pervasively across infrastructure despite Python 3.10+ being the minimum and `from __future__ import annotations` being present in most files",
+      "related_files": [
+        "infrastructure/scientific/benchmarking.py",
+        "infrastructure/scientific/validation.py",
+        "infrastructure/scientific/templates.py",
+        "infrastructure/scientific/stability.py",
+        "infrastructure/validation/markdown_validator.py",
+        "infrastructure/validation/doc_models.py",
+        "infrastructure/reporting/executive_reporter.py",
+        "infrastructure/reporting/suite_summary_generator.py",
+        "infrastructure/reporting/dashboard_generator.py",
+        "infrastructure/core/environment.py"
+      ],
+      "evidence": [
+        "99 files returned by grep for `from typing import` with List/Dict/Optional/Tuple variants",
+        "pyproject.toml sets `requires-python = '>=3.10'` and `target-version = 'py312'`",
+        "Most files already have `from __future__ import annotations`, making the legacy aliases unnecessary"
+      ],
+      "suggestion": "Replace `List[X]` with `list[X]`, `Dict[K,V]` with `dict[K,V]`, `Optional[X]` with `X | None`, etc. The `from __future__ import annotations` already in place makes this safe across the entire codebase",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "test_references_nonexistent_attribute",
+      "summary": "TestLoggingBranches in test_optimizer.py manipulates `opt_module.LOGGING_AVAILABLE` but that attribute does not exist in optimizer.py, making the entire TestLoggingBranches and TestImportFallback class series test phantom code",
+      "related_files": [
+        "projects/code_project/tests/test_optimizer.py",
+        "projects/code_project/src/optimizer.py"
+      ],
+      "evidence": [
+        "optimizer.py has no `LOGGING_AVAILABLE` flag — it imports `get_logger` unconditionally and uses `logger` directly",
+        "test_optimizer.py line 639: `opt_module.LOGGING_AVAILABLE = True` — setting an attribute that does not exist in the module under test",
+        "test_optimizer.py line 741: `opt_module.LOGGING_AVAILABLE = False` — same phantom attribute",
+        "TestImportFallback.test_import_error_fallback line 840 asserts `opt_module.LOGGING_AVAILABLE is False` after reload, but the attribute is never defined in the source"
+      ],
+      "suggestion": "Remove the LOGGING_AVAILABLE manipulation tests — they exercise module state that does not exist. If import-guard coverage is needed, restructure optimizer.py to actually have the guard first",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "skip_cascade_masks_failures",
+      "summary": "Multiple test classes in test_optimizer.py use `pytest.skip()` inside test bodies on failure paths rather than asserting, meaning infrastructure failures silently pass CI",
+      "related_files": [
+        "projects/code_project/tests/test_optimizer.py"
+      ],
+      "evidence": [
+        "TestStabilityAnalysis.test_stability_analysis_execution: `else: pytest.skip('Stability analysis returned None')` — a None return becomes a skip, not a failure",
+        "TestPerformanceBenchmarking.test_performance_benchmarking_execution: same pattern",
+        "TestAnalysisDashboard.test_dashboard_generation: same pattern",
+        "These skips hide broken infrastructure integration paths behind a 'skipped' status"
+      ],
+      "suggestion": "Replace `pytest.skip()` fallbacks with explicit `pytest.fail()` or assertions that the path is not reachable. Use `pytest.importorskip` at module level for optional dependencies, not mid-test skip on None returns",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "timing_assertions_flaky",
+      "summary": "TestPerformanceBenchmarks asserts wall-clock timing constraints in non-isolated conditions, making tests flaky on loaded CI machines",
+      "related_files": [
+        "projects/code_project/tests/test_optimizer.py"
+      ],
+      "evidence": [
+        "test_gradient_descent_timing line 400: `assert timing_results[dim]['time'] < 1.0` for each dimension",
+        "test_function_evaluation_speed line 424-426: `assert func_time < 0.2`, `assert grad_time < 0.2` — absolute wall-clock bounds",
+        "No use of `pytest.mark.slow` or `@pytest.mark.skipif` based on CI environment"
+      ],
+      "suggestion": "Either mark as `@pytest.mark.slow` and exclude from default runs, or replace absolute time bounds with relative comparisons (larger input takes more time than smaller input)",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "docstring_bloat_on_trivial_functions",
+      "summary": "Several trivial functions carry multi-line docstrings that restate exactly what the code does, a hallmark AI slop pattern",
+      "related_files": [
+        "infrastructure/core/credentials.py",
+        "projects/code_project/src/optimizer.py"
+      ],
+      "evidence": [
+        "credentials.py lines 25-37: the no-op `load_dotenv` fallback (`pass`) has a 10-line docstring explaining every parameter of a function that does nothing",
+        "optimizer.py gradient_descent docstring is ~50 lines for a standard implementation — includes inline Infrastructure Integration examples that duplicate the module-level docstring",
+        "optimizer.py OptimizationResult docstring restates every field name verbatim as prose ('solution: Final solution point as numpy array')"
+      ],
+      "suggestion": "Trim no-op fallback docstrings to a single line. For OptimizationResult, remove per-field docstring lines that duplicate the field names — the type annotations are sufficient",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "verbose_docstrings_integrity_module",
+      "summary": "integrity.py has multi-line Args/Returns docstrings on every function including trivial load/save helpers, with lines like 'manifest_path: Path to manifest file' that add zero information beyond the parameter name",
+      "related_files": [
+        "infrastructure/validation/integrity.py"
+      ],
+      "evidence": [
+        "load_integrity_manifest (2 meaningful lines of code) has a 10-line docstring with Args and Returns sections",
+        "save_integrity_manifest (3 lines of code) same pattern",
+        "generate_integrity_report has a Returns section explaining it returns 'Formatted integrity report string' — restating the return type"
+      ],
+      "suggestion": "Reserve multi-section docstrings for complex public APIs. One-line docstrings suffice for load/save helpers",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "environment_module_docstring_over_documents_usage",
+      "summary": "infrastructure/core/environment.py module docstring contains a Usage Patterns section with 6 example lines that duplicate the function signatures directly below",
+      "related_files": [
+        "infrastructure/core/environment.py"
+      ],
+      "evidence": [
+        "Lines 21-33 of environment.py contain 'Usage Patterns' with explicit code examples that merely call the functions defined immediately below in the same file",
+        "The docstring is 34 lines long for a module that provides ~6 utility functions"
+      ],
+      "suggestion": "Remove the Usage Patterns section from the module docstring; the functions are self-documenting via their own signatures",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "steganography_in_infrastructure",
+      "summary": "infrastructure/steganography/ is a full subdomain (barcode generation, encryption, PDF overlays, QR codes) unrelated to the generic build/validation infrastructure role of the infrastructure/ layer",
+      "related_files": [
+        "infrastructure/steganography/core.py",
+        "infrastructure/steganography/barcodes.py",
+        "infrastructure/steganography/encryption.py",
+        "infrastructure/steganography/overlays.py",
+        "infrastructure/steganography/hashing.py",
+        "infrastructure/steganography/metadata.py"
+      ],
+      "evidence": [
+        "CLAUDE.md describes infrastructure/ as 'Generic build and validation tools' with modules for logging, config, exceptions, file operations, pipeline, validation, rendering, documentation, publishing, llm, scientific, reporting, project",
+        "Steganography (barcode generation, QR codes, PDF overlays) is a project-specific feature, not a generic infrastructure capability",
+        "6 files with distinct subdomain concerns (barcodes, encryption, overlays, hashing, metadata) exist in infrastructure/ with no documented consumer in active projects"
+      ],
+      "suggestion": "Move infrastructure/steganography/ to a project or projects_archive if it has no current consumer, or elevate to a standalone package if it is intended as reusable infrastructure",
+      "confidence": "high"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "reporting_module_scope_creep",
+      "summary": "infrastructure/reporting/ contains 14 files mixing distinct concerns: test running (test_runner.py), coverage parsing (coverage_parser.py), dashboard generation (dashboard_generator.py), executive reports, HTML templates, and pipeline reporting — several of these belong in different packages",
+      "related_files": [
+        "infrastructure/reporting/test_runner.py",
+        "infrastructure/reporting/coverage_parser.py",
+        "infrastructure/reporting/suite_summary_generator.py",
+        "infrastructure/reporting/dashboard_generator.py"
+      ],
+      "evidence": [
+        "test_runner.py contains pytest subprocess execution logic — test execution infrastructure, not a reporting concern",
+        "coverage_parser.py parses pytest stdout — again a test execution concern, not a reporting concern",
+        "dashboard_generator.py generates visual charts via plotly/matplotlib — closer to rendering than reporting",
+        "suite_summary_generator.py aggregates test results — overlaps with executive_reporter.py and pipeline_reporter.py"
+      ],
+      "suggestion": "Split reporting/: move test_runner.py and coverage_parser.py to infrastructure/testing/ or infrastructure/core/; move dashboard_generator.py to infrastructure/rendering/; keep reporting/ for report-format generation only",
+      "confidence": "medium"
+    }
+  ]
+}

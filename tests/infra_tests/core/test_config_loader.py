@@ -12,11 +12,11 @@ sys.path.insert(0, ROOT)
 
 from infrastructure.core.config_loader import (
     YAML_AVAILABLE,
+    ResolvedTestingConfig,
     find_config_file,
     format_author_details,
     format_author_name,
     get_config_as_dict,
-    get_config_as_env_vars,
     get_testing_config,
     get_translation_languages,
     load_config,
@@ -188,7 +188,7 @@ class TestGetConfigAsDict:
         """Test getting full configuration as dictionary."""
         import yaml
 
-        config_file = tmp_path / "project" / "manuscript" / "config.yaml"
+        config_file = tmp_path / "projects" / "myproject" / "manuscript" / "config.yaml"
         config_file.parent.mkdir(parents=True)
         with open(config_file, "w") as f:
             yaml.dump(sample_config, f)
@@ -213,7 +213,7 @@ class TestGetConfigAsDict:
         import yaml
 
         config = {"paper": {"title": "Test"}}
-        config_file = tmp_path / "project" / "manuscript" / "config.yaml"
+        config_file = tmp_path / "projects" / "myproject" / "manuscript" / "config.yaml"
         config_file.parent.mkdir(parents=True)
         with open(config_file, "w") as f:
             yaml.dump(config, f)
@@ -223,21 +223,21 @@ class TestGetConfigAsDict:
         assert result == {"PROJECT_TITLE": "Test"}
 
 
-class TestGetConfigAsEnvVars:
-    """Test get_config_as_env_vars function."""
+class TestGetConfigAsDict:
+    """Test get_config_as_dict respect_existing behaviour."""
 
     def test_respects_existing_env_vars(self, tmp_path, sample_config, monkeypatch):
         """Test that existing environment variables are respected."""
         import yaml
 
-        config_file = tmp_path / "project" / "manuscript" / "config.yaml"
+        config_file = tmp_path / "projects" / "myproject" / "manuscript" / "config.yaml"
         config_file.parent.mkdir(parents=True)
         with open(config_file, "w") as f:
             yaml.dump(sample_config, f)
 
         monkeypatch.setenv("PROJECT_TITLE", "Existing Title")
 
-        result = get_config_as_env_vars(tmp_path, respect_existing=True)
+        result = get_config_as_dict(tmp_path, respect_existing=True)
 
         assert "PROJECT_TITLE" not in result  # Existing env var should be respected
         assert "AUTHOR_NAME" in result  # But other vars should be present
@@ -246,14 +246,14 @@ class TestGetConfigAsEnvVars:
         """Test not respecting existing environment variables."""
         import yaml
 
-        config_file = tmp_path / "project" / "manuscript" / "config.yaml"
+        config_file = tmp_path / "projects" / "myproject" / "manuscript" / "config.yaml"
         config_file.parent.mkdir(parents=True)
         with open(config_file, "w") as f:
             yaml.dump(sample_config, f)
 
         monkeypatch.setenv("PROJECT_TITLE", "Existing Title")
 
-        result = get_config_as_env_vars(tmp_path, respect_existing=False)
+        result = get_config_as_dict(tmp_path, respect_existing=False)
 
         assert result["PROJECT_TITLE"] == "Test Paper Title"  # Config value, not env var
 
@@ -263,7 +263,7 @@ class TestFindConfigFile:
 
     def test_finds_project_manuscript_config(self, tmp_path):
         """Test finding config in project/manuscript/."""
-        config_file = tmp_path / "project" / "manuscript" / "config.yaml"
+        config_file = tmp_path / "projects" / "myproject" / "manuscript" / "config.yaml"
         config_file.parent.mkdir(parents=True)
         config_file.write_text("test: content")
 
@@ -290,7 +290,7 @@ class TestIntegration:
             "paper": {"title": "Integration Test"},
             "authors": [{"name": "Test Author", "orcid": "0000", "email": "test@example.com"}],
         }
-        config_file = tmp_path / "project" / "manuscript" / "config.yaml"
+        config_file = tmp_path / "projects" / "myproject" / "manuscript" / "config.yaml"
         config_file.parent.mkdir(parents=True)
         with open(config_file, "w") as f:
             yaml.dump(config, f)
@@ -678,14 +678,12 @@ class TestTestingConfig:
 
     def test_get_testing_config_no_config(self, tmp_path):
         """Test get_testing_config with no config file."""
-        # Should return defaults when no config exists
         result = get_testing_config(tmp_path)
-        # Defaults are always returned even without config file
-        assert result == {"infra_coverage_threshold": 60, "project_coverage_threshold": 90}
+        assert result == ResolvedTestingConfig(infra_coverage_threshold=60, project_coverage_threshold=90)
 
     def test_get_testing_config_with_testing_section(self, tmp_path):
         """Test get_testing_config with testing section."""
-        config_path = tmp_path / "project" / "manuscript" / "config.yaml"
+        config_path = tmp_path / "projects" / "myproject" / "manuscript" / "config.yaml"
         config_path.parent.mkdir(parents=True)
         config_path.write_text(
             """
@@ -697,13 +695,13 @@ testing:
         )
 
         result = get_testing_config(tmp_path)
-        expected = {
-            "max_test_failures": 5,
-            "max_infra_test_failures": 2,
-            "max_project_test_failures": 1,
-            "infra_coverage_threshold": 60,
-            "project_coverage_threshold": 90,
-        }
+        expected = ResolvedTestingConfig(
+            max_test_failures=5,
+            max_infra_test_failures=2,
+            max_project_test_failures=1,
+            infra_coverage_threshold=60,
+            project_coverage_threshold=90,
+        )
         assert result == expected
 
 

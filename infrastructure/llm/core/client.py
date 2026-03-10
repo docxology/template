@@ -10,21 +10,26 @@ Provides LLMClient for interacting with Ollama local LLMs with:
 
 from __future__ import annotations
 
+import dataclasses
 import json
 import re
-import time
+import time as time_module
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, Iterator, Optional, Tuple
+from typing import Any, Callable, Iterator, TypeVar
 
-import requests
+_T = TypeVar("_T")
+
+try:
+    import requests
+except ImportError:
+    requests = None  # type: ignore[assignment]
 
 from infrastructure.core.exceptions import LLMConnectionError, LLMError
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.llm.core.config import GenerationOptions, LLMConfig
 from infrastructure.llm.core.context import ConversationContext
-from infrastructure.llm.review.metrics import StreamingMetrics
 from infrastructure.llm.templates import get_template
 
 logger = get_logger(__name__)
@@ -37,19 +42,12 @@ try:
 except ImportError:
     PROMPT_LOADER_AVAILABLE = False
 
-
 def strip_thinking_tags(text: str) -> str:
     """Remove thinking tags from LLM responses.
 
     Some models (e.g., Qwen) output <think>...</think> tags before their
-    actual response. This function removes those tags to extract the
-    final answer.
-
-    Args:
-        text: Response text that may contain thinking tags
-
-    Returns:
-        Text with thinking tags removed
+    actual response. Handles case-insensitive tags and malformed closers
+    (e.g., </think> without a matching opener).
 
     Example:
         >>> text = "<think>Let me think about this...</think>The answer is 42."
@@ -72,7 +70,6 @@ def strip_thinking_tags(text: str) -> str:
 
     return result
 
-
 class ResponseMode(str, Enum):
     """Response generation modes for different use cases."""
 
@@ -80,7 +77,6 @@ class ResponseMode(str, Enum):
     LONG = "long"  # Comprehensive answers (> 500 tokens)
     STRUCTURED = "structured"  # JSON-formatted structured response
     RAW = "raw"  # Raw prompt without modification
-
 
 class LLMClient:
     """Client for interacting with LLM providers (Ollama).
@@ -110,7 +106,7 @@ class LLMClient:
         ... )
     """
 
-    def __init__(self, config: Optional[LLMConfig] = None):
+    def __init__(self, config: LLMConfig | None = None):
         """Initialize LLM client.
 
         Args:
@@ -153,12 +149,19 @@ class LLMClient:
             self.context.add_message("system", self.config.system_prompt)
             self._system_prompt_injected = True
 
+    @staticmethod
+    def _time_call(fn: Callable[[], _T]) -> tuple[_T, float]:
+        """Execute fn() and return (result, elapsed_seconds)."""
+        start = time_module.time()
+        result = fn()
+        return result, time_module.time() - start
+
     def query(
         self,
         prompt: str,
-        model: Optional[str] = None,
+        model: str | None = None,
         reset_context: bool = False,
-        options: Optional[GenerationOptions] = None,
+        options: GenerationOptions | None = None,
     ) -> str:
         """Send a query to the LLM with context management.
 
@@ -178,11 +181,7 @@ class LLMClient:
             >>> opts = GenerationOptions(temperature=0.0, seed=42)
             >>> response = client.query("Explain...", options=opts)
         """
-        import time as time_module
-
-        start_time = time_module.time()
         model_name = model or self.config.default_model
-        prompt_preview = prompt[:100] + "..." if len(prompt) > 100 else prompt
 
         if reset_context:
             logger.info(
@@ -206,58 +205,14 @@ class LLMClient:
                     },
                 )
 
-        # Log query start
-        logger.info(
-            "Starting query",
-            extra={
-                "model": model_name,
-                "prompt_length": len(prompt),
-                "prompt_preview": prompt_preview,
-                "context_messages": len(self.context.messages),
-                "context_tokens_est": self.context.estimated_tokens,
-                "max_tokens": options.max_tokens if options else None,
-                "temperature": options.temperature if options else None,
-                "seed": options.seed if options else None,
-            },
-        )
-
         self.context.add_message("user", prompt)
-        logger.debug(
-            "Added user message to context",
-            extra={
-                "message_length": len(prompt),
-                "context_messages_after": len(self.context.messages),
-                "context_tokens_est_after": self.context.estimated_tokens,
-            },
-        )
 
         try:
-            response_text = self._generate_response(model_name, options=options)
-            generation_time = time_module.time() - start_time
-
-            # Log response received
-            logger.info(
-                "Query completed",
-                extra={
-                    "model": model_name,
-                    "response_length": len(response_text),
-                    "response_tokens_est": len(response_text) // 4,
-                    "generation_time_seconds": generation_time,
-                    "response_preview": (
-                        response_text[:150] + "..." if len(response_text) > 150 else response_text
-                    ),
-                },
+            response_text, generation_time = self._time_call(
+                lambda: self._generate_response(model_name, options=options)
             )
 
             self.context.add_message("assistant", response_text)
-            logger.debug(
-                "Added assistant message to context",
-                extra={
-                    "message_length": len(response_text),
-                    "context_messages_after": len(self.context.messages),
-                    "context_tokens_est_after": self.context.estimated_tokens,
-                },
-            )
 
             return response_text
 
@@ -265,6 +220,7 @@ class LLMClient:
             # Try fallback models
             for fallback in self.config.fallback_models:
                 try:
+                    fallback_start = time_module.time()
                     logger.info(
                         "Retrying with fallback model",
                         extra={
@@ -274,7 +230,7 @@ class LLMClient:
                         },
                     )
                     response_text = self._generate_response(fallback, options=options)
-                    generation_time = time_module.time() - start_time
+                    generation_time = time_module.time() - fallback_start
 
                     logger.info(
                         "Query completed with fallback model",
@@ -288,14 +244,18 @@ class LLMClient:
                     self.context.add_message("assistant", response_text)
                     return response_text
                 except LLMConnectionError:
+                    logger.debug(
+                        "Fallback model failed, trying next",
+                        extra={"fallback_model": fallback},
+                    )
                     continue
             raise
 
     def query_raw(
         self,
         prompt: str,
-        model: Optional[str] = None,
-        options: Optional[GenerationOptions] = None,
+        model: str | None = None,
+        options: GenerationOptions | None = None,
         add_to_context: bool = False,
     ) -> str:
         """Send a raw prompt without system prompt or instructions.
@@ -314,39 +274,13 @@ class LLMClient:
         Example:
             >>> response = client.query_raw("Complete: The quick brown fox")
         """
-        import time as time_module
-
-        start_time = time_module.time()
         model_name = model or self.config.default_model
-        prompt_preview = prompt[:100] + "..." if len(prompt) > 100 else prompt
-
-        logger.info(
-            "Starting raw query (no system prompt)",
-            extra={
-                "model": model_name,
-                "prompt_length": len(prompt),
-                "prompt_preview": prompt_preview,
-                "add_to_context": add_to_context,
-                "max_tokens": options.max_tokens if options else None,
-                "temperature": options.temperature if options else None,
-            },
-        )
 
         # Create temporary context for raw query
         messages = [{"role": "user", "content": prompt}]
 
-        response_text = self._generate_response_direct(model_name, messages, options=options)
-
-        generation_time = time_module.time() - start_time
-
-        logger.info(
-            "Raw query completed",
-            extra={
-                "model": model_name,
-                "response_length": len(response_text),
-                "response_tokens_est": len(response_text) // 4,
-                "generation_time_seconds": generation_time,
-            },
+        response_text, _ = self._time_call(
+            lambda: self._generate_response_direct(model_name, messages, options=options)
         )
 
         if add_to_context:
@@ -379,8 +313,8 @@ class LLMClient:
     def query_short(
         self,
         prompt: str,
-        model: Optional[str] = None,
-        options: Optional[GenerationOptions] = None,
+        model: str | None = None,
+        options: GenerationOptions | None = None,
     ) -> str:
         """Generate a short response (< 150 tokens).
 
@@ -394,52 +328,22 @@ class LLMClient:
         Returns:
             Brief response text
         """
-        import time as time_module
-
-        start_time = time_module.time()
-        model_name = model or self.config.default_model
-
-        logger.info(
-            "Starting short query",
-            extra={
-                "model": model_name,
-                "prompt_length": len(prompt),
-                "max_tokens": self.config.short_max_tokens,
-                "temperature": options.temperature if options else None,
-            },
-        )
-
-        # Create options for short response
-        short_options = GenerationOptions(
+        return self._query_with_mode(
+            prompt,
+            model=model,
             max_tokens=self.config.short_max_tokens,
-            temperature=options.temperature if options else None,
-            seed=options.seed if options else None,
-            stop=options.stop if options else None,
+            instruction=(
+                "Provide a concise, brief response (less than 150 words). "
+                "Be direct and to the point.\n\n"
+            ),
+            options=options,
         )
-
-        instruction = (
-            "Provide a concise, brief response (less than 150 words). "
-            "Be direct and to the point.\n\n"
-        )
-        response = self.query(instruction + prompt, model=model_name, options=short_options)
-
-        generation_time = time_module.time() - start_time
-        logger.info(
-            "Short query completed",
-            extra={
-                "model": model_name,
-                "response_length": len(response),
-                "generation_time_seconds": generation_time,
-            },
-        )
-
-        return response
 
     def query_long(
         self,
         prompt: str,
-        model: Optional[str] = None,
-        options: Optional[GenerationOptions] = None,
+        model: str | None = None,
+        options: GenerationOptions | None = None,
     ) -> str:
         """Generate a comprehensive, detailed response (> 500 tokens).
 
@@ -453,56 +357,49 @@ class LLMClient:
         Returns:
             Detailed response text
         """
-        import time as time_module
-
-        start_time = time_module.time()
-        model_name = model or self.config.default_model
-
-        logger.info(
-            "Starting long query",
-            extra={
-                "model": model_name,
-                "prompt_length": len(prompt),
-                "max_tokens": self.config.long_max_tokens,
-                "temperature": options.temperature if options else None,
-            },
-        )
-
-        # Create options for long response with higher token limit
-        long_options = GenerationOptions(
+        return self._query_with_mode(
+            prompt,
+            model=model,
             max_tokens=self.config.long_max_tokens,
-            temperature=options.temperature if options else None,
-            seed=options.seed if options else None,
-            stop=options.stop if options else None,
+            instruction=(
+                "Provide a comprehensive, detailed response with examples and "
+                "thorough explanation. Use multiple paragraphs if needed.\n\n"
+            ),
+            options=options,
         )
 
-        instruction = (
-            "Provide a comprehensive, detailed response with examples and "
-            "thorough explanation. Use multiple paragraphs if needed.\n\n"
-        )
-        response = self.query(instruction + prompt, model=model_name, options=long_options)
+    def _query_with_mode(
+        self,
+        prompt: str,
+        model: str | None,
+        max_tokens: int,
+        instruction: str,
+        options: GenerationOptions | None = None,
+    ) -> str:
+        """Run query with a fixed token budget and instruction prefix.
 
-        generation_time = time_module.time() - start_time
-        logger.info(
-            "Long query completed",
-            extra={
-                "model": model_name,
-                "response_length": len(response),
-                "response_tokens_est": len(response) // 4,
-                "generation_time_seconds": generation_time,
-            },
+        Keeps token-budget configuration and instruction injection in one place
+        rather than duplicating it across query_short and query_long.
+        """
+        model_name = model or self.config.default_model
+        mode_options = (
+            dataclasses.replace(options, max_tokens=max_tokens)
+            if options
+            else GenerationOptions(max_tokens=max_tokens)
         )
-
+        response, _ = self._time_call(
+            lambda: self.query(instruction + prompt, model=model_name, options=mode_options)
+        )
         return response
 
     def query_structured(
         self,
         prompt: str,
-        schema: Optional[Dict[str, Any]] = None,
-        model: Optional[str] = None,
-        options: Optional[GenerationOptions] = None,
+        schema: dict[str, Any | None] = None,
+        model: str | None = None,
+        options: GenerationOptions | None = None,
         use_native_json: bool = True,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Generate a structured JSON response.
 
         Uses Ollama's native JSON format mode when available for guaranteed
@@ -529,9 +426,6 @@ class LLMClient:
             ... }
             >>> result = client.query_structured("Analyze...", schema=schema)
         """
-        import time as time_module
-
-        start_time = time_module.time()
         model_name = model or self.config.default_model
 
         logger.info(
@@ -574,9 +468,9 @@ class LLMClient:
         # Use raw generation for structured to bypass context issues with JSON
         messages = self.context.get_messages() + [{"role": "user", "content": instruction + prompt}]
 
-        response_text = self._generate_response_direct(model_name, messages, options=struct_options)
-
-        generation_time = time_module.time() - start_time
+        response_text, generation_time = self._time_call(
+            lambda: self._generate_response_direct(model_name, messages, options=struct_options)
+        )
 
         logger.debug(
             "Structured response received",
@@ -645,7 +539,7 @@ class LLMClient:
                 context={"response": response_text[:200]},
             )
 
-    def _generate_response(self, model: str, options: Optional[GenerationOptions] = None) -> str:
+    def _generate_response(self, model: str, options: GenerationOptions | None = None) -> str:
         """Generate response from Ollama API using context.
 
         Args:
@@ -660,8 +554,8 @@ class LLMClient:
     def _generate_response_direct(  # type: ignore
         self,
         model: str,
-        messages: list[Dict[str, Any]],
-        options: Optional[GenerationOptions] = None,
+        messages: list[dict[str, Any]],
+        options: GenerationOptions | None = None,
         retries: int = 1,
     ) -> str:
         """Generate response from Ollama API with direct messages and retry logic.
@@ -684,7 +578,7 @@ class LLMClient:
         opts = options or GenerationOptions()
         ollama_options = opts.to_ollama_options(self.config)
 
-        payload: Dict[str, Any] = {
+        payload: dict[str, Any] = {
             "model": model,
             "messages": messages,
             "stream": False,
@@ -697,6 +591,15 @@ class LLMClient:
 
         last_error = None
 
+        logger.debug(
+            "Sending request to Ollama",
+            extra={
+                "model": model,
+                "message_count": len(messages),
+                "url": url,
+            },
+        )
+
         for attempt in range(retries + 1):
             try:
                 if attempt > 0:
@@ -704,7 +607,7 @@ class LLMClient:
                     logger.debug(
                         f"Retrying request (attempt {attempt + 1}/{retries + 1}) after {wait_time}s..."  # noqa: E501
                     )
-                    time.sleep(wait_time)
+                    time_module.sleep(wait_time)
 
                 response = requests.post(url, json=payload, timeout=self.config.timeout)
                 response.raise_for_status()
@@ -783,13 +686,58 @@ class LLMClient:
                     context={"url": url, "model": model},
                 )
 
+    def _save_streaming_state(
+        self,
+        full_response: list[str],
+        save_path: Path | None,
+        model_name: str,
+        prompt: str,
+        chunk_count: int,
+        start_time: float,
+        is_error: bool = False,
+        options: GenerationOptions | None = None,
+    ) -> bool:
+        """Save partial or final streaming response and metadata."""
+        from infrastructure.llm.core.response_saver import ResponseMetadata, save_streaming_response
+
+        try:
+            text = "".join(full_response)
+            if save_path is None:
+                suffix = "partial_" if is_error else ""
+                save_path = Path(f"streaming_response_{suffix}{int(time_module.time())}.md")
+
+            metadata = ResponseMetadata(
+                timestamp=datetime.now().isoformat(),
+                model=model_name,
+                prompt=prompt,
+                prompt_length=len(prompt),
+                response_length=len(text),
+                response_tokens_est=len(text) // 4,
+                streaming=True,
+                chunk_count=chunk_count,
+                streaming_time_seconds=time_module.time() - start_time,
+                error_occurred=is_error,
+                partial_response=is_error,
+            )
+            if options and not is_error:
+                metadata.options = {
+                    "temperature": options.temperature,
+                    "max_tokens": options.max_tokens,
+                    "seed": options.seed,
+                }
+            save_streaming_response(text, save_path, metadata)
+            return True
+        except Exception as e:
+            logger.warning(f"Failed to save streaming response: {e}")
+            return False
+
     def stream_query(
         self,
         prompt: str,
-        model: Optional[str] = None,
-        options: Optional[GenerationOptions] = None,
+        model: str | None = None,
+        options: GenerationOptions | None = None,
         save_response: bool = False,
-        save_path: Optional[Path] = None,
+        save_path: Path | None = None,
         log_progress: bool = True,
         retries: int = 1,
     ) -> Iterator[str]:
@@ -813,9 +761,6 @@ class LLMClient:
             >>> for chunk in client.stream_query("Explain AI", log_progress=True):
             ...     print(chunk, end="")
         """
-        import time as time_module
-
-        from infrastructure.llm.core.response_saver import ResponseMetadata, save_streaming_response
 
         start_time = time_module.time()
         model_name = model or self.config.default_model
@@ -839,7 +784,7 @@ class LLMClient:
         opts = options or GenerationOptions()
         ollama_options = opts.to_ollama_options(self.config)
 
-        payload: Dict[str, Any] = {
+        payload: dict[str, Any] = {
             "model": model_name,
             "messages": self.context.get_messages(),
             "stream": True,
@@ -855,8 +800,10 @@ class LLMClient:
         last_chunk_time = None
         error_count = 0
         partial_saved = False
+        _timeout_warned = False
 
-        # Initialize metrics
+        # Initialize metrics (imported locally to avoid circular import with review.metrics)
+        from infrastructure.llm.review.metrics import StreamingMetrics  # noqa: PLC0415
         metrics = StreamingMetrics()
 
         for attempt in range(retries + 1):
@@ -866,7 +813,7 @@ class LLMClient:
                     logger.debug(
                         f"Retrying streaming request (attempt {attempt + 1}/{retries + 1}) after {wait_time}s..."  # noqa: E501
                     )
-                    time.sleep(wait_time)
+                    time_module.sleep(wait_time)
 
                 with requests.post(
                     url, json=payload, stream=True, timeout=self.config.timeout
@@ -897,15 +844,16 @@ class LLMClient:
                                             extra={"chunk_count": chunk_count},
                                         )
 
+                                    prev_chunk_time = last_chunk_time
                                     last_chunk_time = current_time
 
                                     # Check for stalled stream (configurable threshold)
                                     if (
-                                        last_chunk_time
-                                        and (current_time - last_chunk_time)
+                                        prev_chunk_time is not None
+                                        and (current_time - prev_chunk_time)
                                         > self.config.stall_threshold
                                     ):
-                                        time_since_last_chunk = current_time - last_chunk_time
+                                        time_since_last_chunk = current_time - prev_chunk_time
                                         logger.error(
                                             f"🚨 Streaming stalled: no tokens received for {time_since_last_chunk:.1f}s",  # noqa: E501
                                             extra={
@@ -937,11 +885,15 @@ class LLMClient:
 
                                     yield chunk
 
-                                    # Log timeout remaining when approaching limit (earlier warnings)  # noqa: E501
+                                    # Log timeout remaining when approaching limit (warn once only)
                                     elapsed = current_time - start_time
-                                    if elapsed > self.config.timeout * 0.3:  # After 30% of timeout
+                                    if (
+                                        not _timeout_warned
+                                        and elapsed > self.config.timeout * 0.3
+                                    ):
                                         remaining = self.config.timeout - elapsed
                                         if remaining > 0:
+                                            _timeout_warned = True
                                             logger.info(
                                                 f"Streaming timeout warning: {remaining:.1f}s remaining",  # noqa: E501
                                                 extra={
@@ -976,62 +928,17 @@ class LLMClient:
                     )
                     # Save partial response before retry
                     if full_response and save_response and not partial_saved:
-                        try:
-                            partial_text = "".join(full_response)
-                            if save_path is None:
-                                save_path = Path(
-                                    f"streaming_response_partial_{int(time_module.time())}.md"
-                                )
-                            metadata = ResponseMetadata(
-                                timestamp=datetime.now().isoformat(),
-                                model=model_name,
-                                prompt=prompt,
-                                prompt_length=len(prompt),
-                                response_length=len(partial_text),
-                                response_tokens_est=len(partial_text) // 4,
-                                streaming=True,
-                                chunk_count=chunk_count,
-                                error_occurred=True,
-                                partial_response=True,
-                            )
-                            save_streaming_response(partial_text, save_path, metadata)
+                        if self._save_streaming_state(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=True):
                             partial_saved = True
-                            logger.info(
-                                f"Saved partial response ({chunk_count} chunks) before retry"
-                            )
-                        except Exception as save_error:
-                            logger.warning(f"Failed to save partial response: {save_error}")
+                            logger.info(f"Saved partial response ({chunk_count} chunks) before retry")
                     continue
                 else:
                     logger.error(f"Streaming timeout after {retries + 1} attempts: {last_error}")
                     # Save partial response on final failure
                     if full_response and save_response:
-                        try:
-                            partial_text = "".join(full_response)
-                            if save_path is None:
-                                save_path = Path(
-                                    f"streaming_response_partial_{int(time_module.time())}.md"
-                                )
-                            metadata = ResponseMetadata(
-                                timestamp=datetime.now().isoformat(),
-                                model=model_name,
-                                prompt=prompt,
-                                prompt_length=len(prompt),
-                                response_length=len(partial_text),
-                                response_tokens_est=len(partial_text) // 4,
-                                streaming=True,
-                                chunk_count=chunk_count,
-                                streaming_time_seconds=time_module.time() - start_time,
-                                error_occurred=True,
-                                partial_response=True,
-                            )
-                            save_streaming_response(partial_text, save_path, metadata)
+                        if self._save_streaming_state(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=True):
                             partial_saved = True
-                            logger.info(
-                                f"Saved partial response ({chunk_count} chunks) after timeout"
-                            )
-                        except Exception as save_error:
-                            logger.warning(f"Failed to save partial response: {save_error}")
+                            logger.info(f"Saved partial response ({chunk_count} chunks) after timeout")
                     raise LLMConnectionError(
                         f"Streaming timeout ({model_name}): {last_error}",
                         context={
@@ -1052,31 +959,9 @@ class LLMClient:
                     )
                     # Save partial response before retry
                     if full_response and save_response and not partial_saved:
-                        try:
-                            partial_text = "".join(full_response)
-                            if save_path is None:
-                                save_path = Path(
-                                    f"streaming_response_partial_{int(time_module.time())}.md"
-                                )
-                            metadata = ResponseMetadata(
-                                timestamp=datetime.now().isoformat(),
-                                model=model_name,
-                                prompt=prompt,
-                                prompt_length=len(prompt),
-                                response_length=len(partial_text),
-                                response_tokens_est=len(partial_text) // 4,
-                                streaming=True,
-                                chunk_count=chunk_count,
-                                error_occurred=True,
-                                partial_response=True,
-                            )
-                            save_streaming_response(partial_text, save_path, metadata)
+                        if self._save_streaming_state(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=True):
                             partial_saved = True
-                            logger.info(
-                                f"Saved partial response ({chunk_count} chunks) before retry"
-                            )
-                        except Exception as save_error:
-                            logger.warning(f"Failed to save partial response: {save_error}")
+                            logger.info(f"Saved partial response ({chunk_count} chunks) before retry")
                     continue
                 else:
                     logger.error(
@@ -1084,32 +969,9 @@ class LLMClient:
                     )
                     # Save partial response on final failure
                     if full_response and save_response:
-                        try:
-                            partial_text = "".join(full_response)
-                            if save_path is None:
-                                save_path = Path(
-                                    f"streaming_response_partial_{int(time_module.time())}.md"
-                                )
-                            metadata = ResponseMetadata(
-                                timestamp=datetime.now().isoformat(),
-                                model=model_name,
-                                prompt=prompt,
-                                prompt_length=len(prompt),
-                                response_length=len(partial_text),
-                                response_tokens_est=len(partial_text) // 4,
-                                streaming=True,
-                                chunk_count=chunk_count,
-                                streaming_time_seconds=time_module.time() - start_time,
-                                error_occurred=True,
-                                partial_response=True,
-                            )
-                            save_streaming_response(partial_text, save_path, metadata)
+                        if self._save_streaming_state(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=True):
                             partial_saved = True
-                            logger.info(
-                                f"Saved partial response ({chunk_count} chunks) after connection error"  # noqa: E501
-                            )
-                        except Exception as save_error:
-                            logger.warning(f"Failed to save partial response: {save_error}")
+                            logger.info(f"Saved partial response ({chunk_count} chunks) after connection error")
                     raise LLMConnectionError(
                         f"Streaming connection failed ({model_name}): {last_error}",
                         context={
@@ -1170,42 +1032,18 @@ class LLMClient:
 
         # Save response if requested
         if save_response and not partial_saved:
-            try:
-                if save_path is None:
-                    save_path = Path(f"streaming_response_{int(time_module.time())}.md")
-                metadata = ResponseMetadata(
-                    timestamp=datetime.now().isoformat(),
-                    model=model_name,
-                    prompt=prompt,
-                    prompt_length=len(prompt),
-                    response_length=total_chars,
-                    response_tokens_est=total_tokens_est,
-                    generation_time_seconds=streaming_time,
-                    streaming=True,
-                    chunk_count=chunk_count,
-                    streaming_time_seconds=streaming_time,
-                    error_occurred=error_count > 0,
-                    partial_response=False,
-                )
-                if options:
-                    metadata.options = {
-                        "temperature": options.temperature,
-                        "max_tokens": options.max_tokens,
-                        "seed": options.seed,
-                    }
-                save_streaming_response(full_response_text, save_path, metadata)
-                logger.info(f"Saved streaming response to {save_path}")
-            except Exception as save_error:
-                logger.warning(f"Failed to save streaming response: {save_error}")
+            if self._save_streaming_state(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=error_count > 0, options=options):
+                logger.info("Saved final streaming response")
 
     def stream_short(
         self,
         prompt: str,
-        model: Optional[str] = None,
-        options: Optional[GenerationOptions] = None,
+        model: str | None = None,
+        options: GenerationOptions | None = None,
         save_response: bool = False,
-        save_path: Optional[Path] = None,
+        save_path: Path | None = None,
         log_progress: bool = True,
+        retries: int = 1,
     ) -> Iterator[str]:
         """Stream a short response with comprehensive logging.
 
@@ -1216,6 +1054,7 @@ class LLMClient:
             save_response: Whether to save response to file
             save_path: Path to save response
             log_progress: Whether to log streaming progress
+            retries: Number of retry attempts on failure
 
         Yields:
             Response chunks
@@ -1236,16 +1075,18 @@ class LLMClient:
             save_response=save_response,
             save_path=save_path,
             log_progress=log_progress,
+            retries=retries,
         )
 
     def stream_long(
         self,
         prompt: str,
-        model: Optional[str] = None,
-        options: Optional[GenerationOptions] = None,
+        model: str | None = None,
+        options: GenerationOptions | None = None,
         save_response: bool = False,
-        save_path: Optional[Path] = None,
+        save_path: Path | None = None,
         log_progress: bool = True,
+        retries: int = 1,
     ) -> Iterator[str]:
         """Stream a comprehensive response with comprehensive logging.
 
@@ -1256,6 +1097,7 @@ class LLMClient:
             save_response: Whether to save response to file
             save_path: Path to save response
             log_progress: Whether to log streaming progress
+            retries: Number of retry attempts on failure
 
         Yields:
             Response chunks
@@ -1276,6 +1118,7 @@ class LLMClient:
             save_response=save_response,
             save_path=save_path,
             log_progress=log_progress,
+            retries=retries,
         )
 
     def get_available_models(self) -> list[str]:
@@ -1311,7 +1154,7 @@ class LLMClient:
         is_available, _ = self.check_connection_detailed(timeout=timeout)
         return is_available
 
-    def check_connection_detailed(self, timeout: float = 2.0) -> Tuple[bool, Optional[str]]:
+    def check_connection_detailed(self, timeout: float = 2.0) -> tuple[bool, str | None]:
         """Check if Ollama server is available with detailed status.
 
         Args:

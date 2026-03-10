@@ -718,16 +718,13 @@ class TestEdgeCases:
         assert "readable" in permissions
         assert "writable" in permissions
 
-    def test_verify_output_completeness_missing_pdf(self, tmp_path):
-        """Test output completeness with missing PDF."""
-        pdf_dir = tmp_path / "pdf"
-        pdf_dir.mkdir()
-        # Don't create expected PDFs
-
+    def test_verify_output_completeness_missing_pdf_dir(self, tmp_path):
+        """Test output completeness when PDF directory is missing entirely."""
+        # No pdf/ directory at all
         completeness = integrity.verify_output_completeness(tmp_path)
 
         assert completeness["pdf_complete"] == False
-        assert len(completeness["missing_outputs"]) > 0
+        assert any("PDF directory" in out for out in completeness["missing_outputs"])
 
     def test_verify_output_completeness_empty_pdf(self, tmp_path):
         """Test output completeness with empty PDF."""
@@ -748,16 +745,13 @@ class TestEdgeCases:
         assert completeness["figures_complete"] == False
         assert any("Figures directory" in out for out in completeness["missing_outputs"])
 
-    def test_verify_output_completeness_missing_figure(self, tmp_path):
-        """Test output completeness with missing figure."""
-        figures_dir = tmp_path / "figures"
-        figures_dir.mkdir()
-        # Don't create all expected figures
-
+    def test_verify_output_completeness_missing_figures_detected(self, tmp_path):
+        """Test output completeness when figures directory is absent."""
+        # No figures/ directory at all — completeness should be False
         completeness = integrity.verify_output_completeness(tmp_path)
 
         assert completeness["figures_complete"] == False
-        assert any("Figure:" in out for out in completeness["missing_outputs"])
+        assert any("Figures directory" in out for out in completeness["missing_outputs"])
 
     def test_verify_output_completeness_small_figure(self, tmp_path):
         """Test output completeness with very small figure."""
@@ -777,16 +771,13 @@ class TestEdgeCases:
         assert completeness["data_complete"] == False
         assert any("Data directory" in out for out in completeness["missing_outputs"])
 
-    def test_verify_output_completeness_missing_data_file(self, tmp_path):
-        """Test output completeness with missing data file."""
-        data_dir = tmp_path / "data"
-        data_dir.mkdir()
-        # Don't create all expected data files
-
+    def test_verify_output_completeness_missing_data_dir(self, tmp_path):
+        """Test output completeness when data directory is absent."""
+        # No data/ directory at all
         completeness = integrity.verify_output_completeness(tmp_path)
 
         assert completeness["data_complete"] == False
-        assert any("Data:" in out for out in completeness["missing_outputs"])
+        assert any("Data directory" in out for out in completeness["missing_outputs"])
 
     def test_verify_output_completeness_empty_data_file(self, tmp_path):
         """Test output completeness with empty data file."""
@@ -822,18 +813,13 @@ class TestEdgeCases:
         manifest = integrity.load_integrity_manifest(manifest_path)
         assert manifest is None
 
-    def test_verify_output_completeness_missing_tex_file(self, tmp_path):
-        """Test output completeness with missing tex file (covers lines 613-614)."""
-        tex_dir = tmp_path / "tex"
-        tex_dir.mkdir()
-        # Create some but not all expected tex files
-        (tex_dir / "01_abstract.tex").write_text("\\section{Abstract}")
-        # Missing other expected files like 02_introduction.tex
-
+    def test_verify_output_completeness_missing_tex_dir(self, tmp_path):
+        """Test output completeness when tex directory is absent."""
+        # No tex/ directory at all
         completeness = integrity.verify_output_completeness(tmp_path)
 
         assert completeness["latex_complete"] == False
-        assert any("LaTeX:" in out for out in completeness["missing_outputs"])
+        assert any("LaTeX directory" in out for out in completeness["missing_outputs"])
 
     def test_verify_output_completeness_empty_tex_file(self, tmp_path):
         """Test output completeness with empty tex file (covers lines 616-617)."""

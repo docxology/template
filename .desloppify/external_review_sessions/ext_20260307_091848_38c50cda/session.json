@@ -1,0 +1,20 @@
+{
+  "session_id": "ext_20260307_091848_38c50cda",
+  "status": "submitted",
+  "runner": "claude",
+  "created_at": "2026-03-07T09:18:48+00:00",
+  "expires_at": "2026-03-08T09:18:48+00:00",
+  "ttl_hours": 24,
+  "token": "639e0c7ffe8a1bcedf9533896a26775d",
+  "attest": "I validated this review was completed without awareness of overall score and is unbiased.",
+  "packet_path": "/Users/4d/Documents/GitHub/template/.desloppify/review_packets/holistic_packet_20260307_091848.json",
+  "blind_packet_path": "/Users/4d/Documents/GitHub/template/.desloppify/review_packet_blind.json",
+  "packet_sha256": "a10fe6a4099691fb72f8926f6197f4ab174da6efcea90d26eb363c24a0f7d899",
+  "template_path": "/Users/4d/Documents/GitHub/template/.desloppify/external_review_sessions/ext_20260307_091848_38c50cda/review_result.template.json",
+  "launch_prompt_path": "/Users/4d/Documents/GitHub/template/.desloppify/external_review_sessions/ext_20260307_091848_38c50cda/claude_launch_prompt.md",
+  "instructions_path": "/Users/4d/Documents/GitHub/template/.desloppify/external_review_sessions/ext_20260307_091848_38c50cda/reviewer_instructions.md",
+  "expected_output_path": "/Users/4d/Documents/GitHub/template/.desloppify/external_review_sessions/ext_20260307_091848_38c50cda/review_result.json",
+  "submitted_at": "2026-03-07T09:24:24+00:00",
+  "submitted_input_file": "/Users/4d/Documents/GitHub/template/.desloppify/external_review_sessions/ext_20260307_091848_38c50cda/review_result.json",
+  "submitted_canonical_file": "/Users/4d/Documents/GitHub/template/.desloppify/external_review_sessions/ext_20260307_091848_38c50cda/canonical_import_20260307_092423.json"
+}

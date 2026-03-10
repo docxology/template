@@ -7,12 +7,12 @@ output directory structure.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 from infrastructure.core.logging_utils import get_logger, log_success
+from infrastructure.project.discovery import discover_projects
 
 logger = get_logger(__name__)
-
 
 def validate_copied_outputs(output_dir: Path) -> bool:
     """Validate all project outputs were copied successfully.
@@ -81,9 +81,7 @@ def validate_copied_outputs(output_dir: Path) -> bool:
     if not combined_pdf_found and project_name:
         # Check if we're running validation before copy stage (Stage 6)
         # Find repo root by looking for the "output" directory in the path
-        path_parts = output_dir.parts
         if "output" in path_parts:
-            output_idx = path_parts.index("output")
             repo_root = Path(*path_parts[:output_idx])
             # Get the qualified project path (everything after "output/")
             qualified_path = "/".join(path_parts[output_idx + 1 :])
@@ -171,8 +169,7 @@ def validate_copied_outputs(output_dir: Path) -> bool:
 
     return validation_passed
 
-
-def validate_root_output_structure(repo_root: Path) -> Dict[str, Any]:
+def validate_root_output_structure(repo_root: Path) -> dict[str, Any]:
     """Validate that root output/ directory structure is correct.
 
     Checks that output/ directory only contains project-specific folders
@@ -199,8 +196,6 @@ def validate_root_output_structure(repo_root: Path) -> Dict[str, Any]:
         }
 
     # Discover valid project names
-    from infrastructure.project.discovery import discover_projects
-
     projects = discover_projects(repo_root)
     project_names = set(p.name for p in projects)
 
@@ -263,8 +258,7 @@ def validate_root_output_structure(repo_root: Path) -> Dict[str, Any]:
 
     return report
 
-
-def collect_detailed_validation_results(output_dir: Path) -> Dict[str, Any]:
+def collect_detailed_validation_results(output_dir: Path) -> dict[str, Any]:
     """Collect detailed validation results for reporting.
 
     Provides comprehensive validation data including file counts, sizes,
@@ -384,8 +378,7 @@ def collect_detailed_validation_results(output_dir: Path) -> Dict[str, Any]:
 
     return validation_results
 
-
-def validate_output_structure(output_dir: Path) -> Dict[str, Any]:
+def validate_output_structure(output_dir: Path) -> dict[str, Any]:
     """Validate complete output directory structure.
 
     Checks:

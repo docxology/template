@@ -10,12 +10,84 @@ import json
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+_FIX_TEMPLATES: dict[str, dict[str, Any]] = {
+    "test_failure": {
+        "priority": "high",
+        "actions": [
+            "Review test output for failure details",
+            "Run failing tests individually: pytest path/to/test_file.py::test_name",
+            "Check test data and fixtures",
+            "Review recent code changes",
+        ],
+        "documentation": "docs/TESTING_GUIDE.md",
+    },
+    "validation_error": {
+        "priority": "high",
+        "actions": [
+            "Review validation report: output/reports/validation_report.md",
+            "Check PDF compilation logs: output/pdf/*_compile.log",
+            "Verify markdown syntax and references",
+            "Ensure all required files are generated",
+        ],
+        "documentation": "docs/TROUBLESHOOTING_GUIDE.md",
+    },
+    "stage_failure": {
+        "priority": "high",
+        "actions": [
+            "Review stage execution logs",
+            "Check for missing dependencies",
+            "Verify input files exist",
+            "Review error messages above",
+        ],
+        "documentation": "docs/TROUBLESHOOTING_GUIDE.md",
+    },
+    "coverage_failure": {
+        "priority": "high",
+        "actions": [
+            "Check coverage report: output/reports/coverage.html",
+            "Add tests for uncovered code paths",
+            "Run: uv run pytest --cov=infrastructure --cov-report=term-missing",
+            "Review coverage threshold in pyproject.toml",
+        ],
+        "documentation": "docs/TESTING_GUIDE.md",
+    },
+    "render_error": {
+        "priority": "high",
+        "actions": [
+            "Check LaTeX compilation logs in output/pdf/",
+            "Verify LaTeX packages are installed: tlmgr install <package>",
+            "Validate markdown syntax before rendering",
+            "Run: python3 -m infrastructure.rendering.latex_package_validator",
+        ],
+        "documentation": "docs/TROUBLESHOOTING_GUIDE.md",
+    },
+    "dependency_error": {
+        "priority": "high",
+        "actions": [
+            "Run: uv sync to install missing dependencies",
+            "Check pyproject.toml for required packages",
+            "Verify system dependencies (pandoc, latex, etc.) are installed",
+            "Review environment variables and PATH settings",
+        ],
+        "documentation": "docs/TROUBLESHOOTING_GUIDE.md",
+    },
+    "script_error": {
+        "priority": "medium",
+        "actions": [
+            "Review script execution logs",
+            "Check script input files exist",
+            "Run script manually with debug logging: LOG_LEVEL=0 python3 <script>",
+            "Verify PYTHONPATH includes project source directories",
+        ],
+        "documentation": "docs/TROUBLESHOOTING_GUIDE.md",
+    },
+}
 
 @dataclass
 class ErrorEntry:
@@ -23,14 +95,14 @@ class ErrorEntry:
 
     type: str  # 'test_failure', 'validation_error', 'stage_failure', etc.
     message: str
-    stage: Optional[str] = None
-    file: Optional[str] = None
-    line: Optional[int] = None
+    stage: str | None = None
+    file: str | None = None
+    line: int | None = None
     severity: str = "error"  # 'error', 'warning', 'info'
-    suggestions: List[str] = field(default_factory=list)
-    context: Dict[str, Any] = field(default_factory=dict)
+    suggestions: list[str] = field(default_factory=list)
+    context: dict[str, Any] = field(default_factory=dict)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return {
             "type": self.type,
@@ -43,25 +115,23 @@ class ErrorEntry:
             "context": self.context,
         }
 
-
 class ErrorAggregator:
     """Aggregate and categorize errors from pipeline execution."""
 
     def __init__(self):
-        """Initialize error aggregator."""
-        self.errors: List[ErrorEntry] = []
-        self.warnings: List[ErrorEntry] = []
+        self.errors: list[ErrorEntry] = []
+        self.warnings: list[ErrorEntry] = []
 
     def add_error(
         self,
         error_type: str,
         message: str,
-        stage: Optional[str] = None,
-        file: Optional[str] = None,
-        line: Optional[int] = None,
+        stage: str | None = None,
+        file: str | None = None,
+        line: int | None = None,
         severity: str = "error",
-        suggestions: Optional[List[str]] = None,
-        context: Optional[Dict[str, Any]] = None,
+        suggestions: list[str | None] = None,
+        context: dict[str, Any | None] = None,
     ) -> None:
         """Add an error or warning.
 
@@ -91,24 +161,20 @@ class ErrorAggregator:
         else:
             self.warnings.append(entry)
 
-    def get_summary(self) -> Dict[str, Any]:
+    def get_summary(self) -> dict[str, Any]:
         """Get error summary.
 
         Returns:
             Dictionary with error summary
         """
         # Categorize errors by type
-        errors_by_type: Dict[str, List[ErrorEntry]] = {}
+        errors_by_type: dict[str, list[ErrorEntry]] = {}
         for error in self.errors:
-            if error.type not in errors_by_type:
-                errors_by_type[error.type] = []
-            errors_by_type[error.type].append(error)
+            errors_by_type.setdefault(error.type, []).append(error)
 
-        warnings_by_type: Dict[str, List[ErrorEntry]] = {}
+        warnings_by_type: dict[str, list[ErrorEntry]] = {}
         for warning in self.warnings:
-            if warning.type not in warnings_by_type:
-                warnings_by_type[warning.type] = []
-            warnings_by_type[warning.type].append(warning)
+            warnings_by_type.setdefault(warning.type, []).append(warning)
 
         return {
             "total_errors": len(self.errors),
@@ -119,81 +185,25 @@ class ErrorAggregator:
             "warnings": [w.to_dict() for w in self.warnings],
         }
 
-    def get_actionable_fixes(self) -> List[Dict[str, Any]]:
-        """Get actionable fixes for errors.
-
-        Returns:
-            List of fix dictionaries with priority and actions
-        """
-        fixes = []
-
-        # Group errors by type and provide fixes
-        error_types = {}  # type: ignore
+    def get_actionable_fixes(self) -> list[dict[str, Any]]:
+        """Return fix recommendations grouped by error type."""
+        error_types: dict[str, list[ErrorEntry]] = {}
         for error in self.errors:
-            if error.type not in error_types:
-                error_types[error.type] = []
-            error_types[error.type].append(error)
+            error_types.setdefault(error.type, []).append(error)
 
+        fixes = []
         for error_type, errors in error_types.items():
-            if error_type == "test_failure":
-                fixes.append(
-                    {
-                        "priority": "high",
-                        "issue": f"{len(errors)} test failure(s)",
-                        "actions": [
-                            "Review test output for failure details",
-                            "Run failing tests individually: pytest path/to/test_file.py::test_name",  # noqa: E501
-                            "Check test data and fixtures",
-                            "Review recent code changes",
-                        ],
-                        "documentation": "docs/TESTING_GUIDE.md",
-                    }
-                )
-            elif error_type == "validation_error":
-                fixes.append(
-                    {
-                        "priority": "high",
-                        "issue": f"{len(errors)} validation error(s)",
-                        "actions": [
-                            "Review validation report: output/reports/validation_report.md",
-                            "Check PDF compilation logs: output/pdf/*_compile.log",
-                            "Verify markdown syntax and references",
-                            "Ensure all required files are generated",
-                        ],
-                        "documentation": "docs/TROUBLESHOOTING_GUIDE.md",
-                    }
-                )
-            elif error_type == "stage_failure":
-                fixes.append(
-                    {
-                        "priority": "high",
-                        "issue": f"{len(errors)} stage failure(s)",
-                        "actions": [
-                            "Review stage execution logs",
-                            "Check for missing dependencies",
-                            "Verify input files exist",
-                            "Review error messages above",
-                        ],
-                        "documentation": "docs/TROUBLESHOOTING_GUIDE.md",
-                    }
-                )
+            template = _FIX_TEMPLATES.get(error_type)
+            if template:
+                fixes.append({"issue": f"{len(errors)} {error_type.replace('_', ' ')}(s)", **template})
             else:
-                # Generic fix
                 fixes.append(
                     {
                         "priority": "medium",
                         "issue": f"{len(errors)} {error_type} error(s)",
-                        "actions": (
-                            errors[0].suggestions
-                            if errors[0].suggestions
-                            else [
-                                "Review error messages",
-                                "Check logs for details",
-                            ]
-                        ),
+                        "actions": errors[0].suggestions or ["Review error messages", "Check logs for details"],
                     }
                 )
-
         return fixes
 
     def save_report(self, output_dir: Path) -> Path:
@@ -222,7 +232,7 @@ class ErrorAggregator:
 
         return json_path
 
-    def _generate_markdown_report(self, summary: Dict[str, Any]) -> str:
+    def _generate_markdown_report(self, summary: dict[str, Any]) -> str:
         """Generate Markdown error summary report.
 
         Args:
@@ -287,10 +297,8 @@ class ErrorAggregator:
 
         return "\n".join(lines)
 
-
 # Global error aggregator instance
-_global_aggregator: Optional[ErrorAggregator] = None
-
+_global_aggregator: ErrorAggregator | None = None
 
 def get_error_aggregator() -> ErrorAggregator:
     """Get global error aggregator instance.
@@ -302,7 +310,6 @@ def get_error_aggregator() -> ErrorAggregator:
     if _global_aggregator is None:
         _global_aggregator = ErrorAggregator()
     return _global_aggregator
-
 
 def reset_error_aggregator() -> None:
     """Reset global error aggregator (for testing)."""

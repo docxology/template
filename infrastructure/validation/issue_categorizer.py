@@ -8,7 +8,7 @@ false positive filtering, and issue grouping for better analysis and reporting.
 from __future__ import annotations
 
 import re
-from typing import Any, Dict, List, Union
+from typing import Any, Union
 
 from infrastructure.validation.doc_models import (
     AccuracyIssue,
@@ -27,11 +27,14 @@ from infrastructure.validation.known_exceptions import (
     is_venv_reference,
 )
 
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
+
 # Type alias for any issue type
 Issue = Union[LinkIssue, AccuracyIssue, CompletenessGap, QualityIssue]
 
-
-def categorize_by_type(issues: List[Issue]) -> Dict[str, List[Issue]]:
+def categorize_by_type(issues: list[Issue]) -> dict[str, list[Issue]]:
     """Categorize issues by their type and severity.
 
     Args:
@@ -77,7 +80,6 @@ def categorize_by_type(issues: List[Issue]) -> Dict[str, List[Issue]]:
             categories["false_positives"].append(issue)
 
     return categories
-
 
 def assign_severity(issue: Issue) -> str:
     """Assign severity level to an issue.
@@ -143,7 +145,6 @@ def assign_severity(issue: Issue) -> str:
 
     # Info issues - minor or informational
     return "info"
-
 
 def is_false_positive(issue: Issue) -> bool:
     """Determine if an issue is likely a false positive.
@@ -224,8 +225,7 @@ def is_false_positive(issue: Issue) -> bool:
 
     return False
 
-
-def filter_false_positives(issues: List[Issue]) -> List[Issue]:
+def filter_false_positives(issues: list[Issue]) -> list[Issue]:
     """Filter out false positive issues from the list.
 
     Args:
@@ -236,8 +236,7 @@ def filter_false_positives(issues: List[Issue]) -> List[Issue]:
     """
     return [issue for issue in issues if not is_false_positive(issue)]
 
-
-def group_related_issues(issues: List[Issue]) -> List[List[Issue]]:
+def group_related_issues(issues: list[Issue]) -> list[list[Issue]]:
     """Group related issues together for better analysis.
 
     Args:
@@ -271,8 +270,7 @@ def group_related_issues(issues: List[Issue]) -> List[List[Issue]]:
 
     return groups  # type: ignore
 
-
-def prioritize_issues(issues: List[Issue]) -> List[Issue]:
+def prioritize_issues(issues: list[Issue]) -> list[Issue]:
     """Sort issues by priority (severity, then type).
 
     Args:
@@ -305,8 +303,7 @@ def prioritize_issues(issues: List[Issue]) -> List[Issue]:
 
     return sorted(issues, key=sort_key)
 
-
-def generate_issue_summary(issues: List[Issue]) -> Dict[str, int]:
+def generate_issue_summary(issues: list[Issue]) -> dict[str, int]:
     """Generate a summary of issues by category and severity.
 
     Args:
@@ -338,7 +335,6 @@ def generate_issue_summary(issues: List[Issue]) -> Dict[str, int]:
 
     return summary
 
-
 def _get_issue_text(issue: Issue) -> str:
     """Extract text content from any issue type."""
     if hasattr(issue, "issue_message"):
@@ -349,13 +345,11 @@ def _get_issue_text(issue: Issue) -> str:
         return str(issue.text)
     return str(issue)
 
-
 def _get_issue_target(issue: Issue) -> str:
     """Extract target/path from any issue type."""
     if hasattr(issue, "target"):
         return str(issue.target)
     return ""
-
 
 def _get_issue_file(issue: Issue) -> str:
     """Extract file path from any issue type."""
@@ -364,7 +358,6 @@ def _get_issue_file(issue: Issue) -> str:
     elif hasattr(issue, "source_file"):
         return str(issue.source_file)
     return "unknown"
-
 
 def _get_issue_type(issue: Issue) -> str:
     """Extract issue type from any issue type."""
@@ -379,7 +372,6 @@ def _get_issue_type(issue: Issue) -> str:
     elif isinstance(issue, QualityIssue):
         return "quality_issue"
     return "unknown"
-
 
 def get_severity_flag(issue: Issue) -> str:
     """Get severity flag for an issue: 'red', 'yellow', or 'green'.
@@ -409,7 +401,6 @@ def get_severity_flag(issue: Issue) -> str:
     else:
         return "green"
 
-
 def is_directory_reference(issue: Issue) -> bool:
     """Check if issue is about a directory reference (which is valid).
 
@@ -434,8 +425,7 @@ def is_directory_reference(issue: Issue) -> bool:
 
     return False
 
-
-def validate_issue_patterns() -> Dict[str, List[str]]:
+def validate_issue_patterns() -> dict[str, list[str]]:
     """Return validation patterns for different issue types.
 
     Returns:

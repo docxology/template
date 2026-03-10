@@ -1,0 +1,135 @@
+{
+  "assessments": {
+    "abstraction_fitness": 62,
+    "dependency_health": 65,
+    "test_strategy": 60
+  },
+  "findings": [
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "thin_review_type_wrappers",
+      "summary": "Four public generator functions are pure forwarding wrappers that add no policy over generate_review_with_metrics",
+      "related_files": ["infrastructure/llm/review/generator.py"],
+      "evidence": [
+        "Lines 675-717: generate_quality_review, generate_methodology_review, generate_improvement_suggestions each forward all args to generate_review_with_metrics with only a different review_type string and template_class constant — no logic, no translation, no guard added",
+        "Line 672: generate_executive_summary = generate_llm_executive_summary creates a redundant alias on top of an already-thin wrapper",
+        "pipeline_runner.py line 39 directly indexes a dict of these wrappers by string key, meaning the wrappers exist solely to bind a name to a call — a data table would eliminate them entirely"
+      ],
+      "suggestion": "Replace the four wrapper functions with a dispatch dict mapping review_type -> (template_class, temperature) and call generate_review_with_metrics directly at the single call site in pipeline_runner.py; remove the backward-compat alias",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "doc_scanner_delegation_wrappers",
+      "summary": "DocumentationScanner private methods exist solely as one-line pass-throughs to module-level functions, documented explicitly as existing only for test access",
+      "related_files": ["infrastructure/validation/doc_scanner.py"],
+      "evidence": [
+        "Lines 52-89: _find_markdown_files, _catalog_agents_readme, _find_config_files, _find_script_files, _analyze_documentation_file, _extract_headings each import and immediately delegate to a module function from doc_discovery or doc_accuracy with the comment 'private method for testing'",
+        "Line 54-56: _find_markdown_files body is: 'from infrastructure.validation.doc_discovery import find_markdown_files' followed by 'return find_markdown_files(self.repo_root)' — zero added behaviour",
+        "Six such wrappers exist, all with identical structure and the same 'private method for testing' rationale"
+      ],
+      "suggestion": "Remove the wrapper methods and test the module-level functions in doc_discovery/doc_accuracy directly; if scanner state is needed, thread it through run_discovery_phase rather than wrapping via self",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "repeated_llmconfig_from_env_calls",
+      "summary": "LLMConfig.from_env() is called multiple times within the same logical operation in generator.py instead of being passed as a dependency",
+      "related_files": ["infrastructure/llm/review/generator.py"],
+      "evidence": [
+        "Lines 571 and 599: generate_review_with_metrics calls LLMConfig.from_env() once for max_tokens at line 571, then again inside the retry loop at line 599 for config — two env reads per attempt",
+        "Line 470: extract_manuscript_text calls LLMConfig.from_env() independently for max_input_length",
+        "Line 730: generate_translation calls LLMConfig.from_env() as local _cfg — a third independent env read in a sibling function with no shared config object"
+      ],
+      "suggestion": "Accept an optional LLMConfig parameter in each function; call from_env() once at the top-level entry point (create_review_client or the pipeline runner) and pass the config down through the call chain",
+      "confidence": "high"
+    },
+    {
+      "dimension": "dependency_health",
+      "identifier": "generate_executive_summary_name_collision",
+      "summary": "Two unrelated functions share the public name generate_executive_summary across infrastructure.llm and infrastructure.reporting, creating a silent wrong-import hazard",
+      "related_files": [
+        "infrastructure/llm/review/generator.py",
+        "infrastructure/reporting/executive_reporter.py",
+        "infrastructure/reporting/__init__.py",
+        "infrastructure/llm/__init__.py"
+      ],
+      "evidence": [
+        "infrastructure/reporting/__init__.py lines 21 and 73: re-exports generate_executive_summary from executive_reporter — signature: (repo_root: Path, project_names: list[str]) -> ExecutiveSummary",
+        "infrastructure/llm/__init__.py lines 109, 196: re-exports generate_executive_summary from llm.review.generator — signature: (client: LLMClient, text: str, model_name: str) -> tuple[str, ReviewMetrics]",
+        "A caller doing 'from infrastructure.reporting import generate_executive_summary' gets the reporting version; 'from infrastructure.llm import generate_executive_summary' gets the LLM version — identical public name, incompatible signatures, no runtime warning"
+      ],
+      "suggestion": "Rename one of the two functions: the LLM version already has generate_llm_executive_summary as its canonical name (line 656) — remove the backward-compat alias at line 672 and remove generate_executive_summary from infrastructure.llm.__all__; give the reporting version a distinct name such as generate_pipeline_summary",
+      "confidence": "high"
+    },
+    {
+      "dimension": "dependency_health",
+      "identifier": "reportlab_unconditional_test_import",
+      "summary": "Test functions import reportlab unconditionally despite it being an optional dependency-group not installed by default",
+      "related_files": ["tests/infra_tests/llm/test_review_generators.py", "pyproject.toml"],
+      "evidence": [
+        "test_review_generators.py lines 46-47: 'from reportlab.lib.pagesizes import letter' and 'from reportlab.pdfgen import canvas' are bare imports inside test functions with no pytest.importorskip guard",
+        "Lines 66-67: same unconditional imports repeated in test_with_pypdf",
+        "pyproject.toml line 62: reportlab is in dependency-groups.rendering, not in project.dependencies — it is not installed by default (uv sync without --group rendering); absence causes ImportError not skip"
+      ],
+      "suggestion": "Add reportlab = pytest.importorskip('reportlab') at module level or use @pytest.mark.skipif(importlib.util.find_spec('reportlab') is None, ...) on the affected tests to convert ImportError into SKIPPED",
+      "confidence": "high"
+    },
+    {
+      "dimension": "dependency_health",
+      "identifier": "phase1_config_files_list_identity_bug",
+      "summary": "doc_scanner.phase1_discovery reconstructs config_files dict by zipping a list with itself, producing wrong path values for all downstream phases",
+      "related_files": ["infrastructure/validation/doc_scanner.py"],
+      "evidence": [
+        "Lines 99-102: self.config_files = {name: self.repo_root / path for name, path in zip(inventory['config_files_list'], inventory['config_files_list'])} — both sides of zip are the same list of basenames, so every value is repo_root/basename instead of the real file path",
+        "The real config dict (with correct full paths) returned by run_discovery_phase is discarded; only its .keys() list survives via inventory['config_files_list']",
+        "phase2_accuracy and phase3_completeness receive self.config_files and will operate on reconstructed wrong paths"
+      ],
+      "suggestion": "Pass the full config_files dict out of run_discovery_phase in the inventory dict and assign it directly: self.config_files = inventory['config_files'] (after adding it to the returned dict in run_discovery_phase)",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "duplicate_pdf_backend_tests",
+      "summary": "test_with_pdfplumber and test_with_pypdf are structurally identical and cannot actually isolate different code paths",
+      "related_files": ["tests/infra_tests/llm/test_review_generators.py"],
+      "evidence": [
+        "Lines 41-81: both tests create a PDF with similar strings and call the same extract_manuscript_text function with no mechanism to force a specific backend library",
+        "Both tests wrap assertions in try/except ValueError allowing the test to pass even if extraction entirely fails — meaning neither test provides a firm assertion",
+        "The test names imply backend isolation (pdfplumber vs pypdf) that does not exist; both will exercise whichever library is installed at runtime"
+      ],
+      "suggestion": "Collapse into a single test_extracts_text_from_real_pdf; if backend-specific coverage is needed, use pytest.importorskip to conditionally import the target library and patch the dispatch to force it, with a firm assert (not try/except) on the extracted text",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "integration_test_misclassification_and_fail_not_skip",
+      "summary": "test_generate_review_with_metrics_real_ollama is misclassified under TestValidateReviewQuality (no requires_ollama mark) and uses pytest.fail instead of skip when Ollama is absent",
+      "related_files": ["tests/infra_tests/llm/test_review_generators.py"],
+      "evidence": [
+        "Line 264: class TestReviewGeneratorsIntegration is marked @pytest.mark.requires_ollama; its body ends at line 280",
+        "Line 349: test_generate_review_with_metrics_real_ollama is indented as a method of TestValidateReviewQuality (which starts at line 282 with no requires_ollama mark), so the class-level mark does not apply",
+        "Lines 354-355: the guard 'if not client.check_connection(): pytest.fail(\"Ollama server is not available!\")' produces a FAILED result in CI without Ollama instead of SKIPPED"
+      ],
+      "suggestion": "Move the test into TestReviewGeneratorsIntegration or add @pytest.mark.requires_ollama directly on the method; replace pytest.fail with pytest.skip for the unavailable-server condition",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "all_generation_logic_excluded_from_default_run",
+      "summary": "All 12 tests covering core LLM generation functions are marked slow and excluded from the default test run, leaving generate_review_with_metrics and its callers at zero coverage in standard CI",
+      "related_files": [
+        "tests/infra_tests/llm/test_review_generators.py",
+        "infrastructure/llm/review/generator.py",
+        "pyproject.toml"
+      ],
+      "evidence": [
+        "pyproject.toml line 121: addopts includes \"-m 'not slow'\" — slow tests are excluded by default",
+        "test_review_generators.py lines 87, 105, 120, 135, 154, 172, 191, 204, 215, 226, 237, 249: all 12 tests covering generate_review_with_metrics and the five individual generate_* functions are @pytest.mark.slow",
+        "The only non-slow tests in this file cover extract_manuscript_text (filesystem utility) and validate_review_quality (pure text logic); the 755-LOC generator.py core (streaming, retry loop, deduplication, warmup) has no coverage in the standard suite"
+      ],
+      "suggestion": "Separate LLM-integration tests (requiring Ollama, mark slow/requires_ollama) from pure-logic tests (prompt assembly, retry counter, validate_review_quality branches, deduplication) that can run without Ollama via a pytest-httpserver stub; only the tests that call the real LLM should remain slow",
+      "confidence": "high"
+    }
+  ]
+}

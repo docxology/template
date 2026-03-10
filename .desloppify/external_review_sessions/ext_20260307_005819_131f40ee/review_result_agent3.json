@@ -1,0 +1,109 @@
+{
+  "session": {
+    "id": "ext_20260307_005819_131f40ee",
+    "token": "ef3ff67f786c9423602dd1f82387a14c"
+  },
+  "assessments": {
+    "high_level_elegance": 72,
+    "mid_level_elegance": 68,
+    "low_level_elegance": 70,
+    "design_coherence": 65
+  },
+  "findings": [
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "logging_utils_god_module",
+      "summary": "logging_utils.py accumulates 119 importers and owns formatting, progress, timing, decorators, emoji constants, and environment detection — too many unrelated responsibilities for one module",
+      "related_files": ["infrastructure/core/logging_utils.py", "infrastructure/core/logging_formatters.py", "infrastructure/core/logging_helpers.py", "infrastructure/core/logging_progress.py"],
+      "evidence": [
+        "logging_utils.py re-exports JSONFormatter, TemplateFormatter, Spinner, StreamingProgress, calculate_eta, calculate_eta_ema, calculate_eta_with_confidence, log_progress_bar, log_progress_streaming, log_with_spinner from split modules, then adds its own ProjectLogger, log_operation, log_timing, log_function_call, log_success, log_header, log_progress, log_stage, log_substep, log_resource_usage, set_global_log_level, EMOJIS dict, USE_EMOJIS flag, USE_STRUCTURED_LOGGING flag, and pytest-environment detection logic all in one file",
+        "The split into logging_formatters/logging_helpers/logging_progress is incomplete: logging_utils still holds the union of all public API in __all__ (700+ lines), so callers import from the hub rather than the focused submodule — no boundary gain was achieved"
+      ],
+      "suggestion": "Give each submodule a stable public path (e.g. callers import log_success from infrastructure.core.logging_success, not from logging_utils). Reduce logging_utils to a thin re-export shim or remove it in favour of direct submodule imports.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "publishing_core_is_pure_reexport",
+      "summary": "infrastructure/publishing/core.py contains no logic of its own — it is entirely noqa:F401 re-exports from citations.py, metadata.py, models.py, and platforms.py, plus one unrelated imported helper from file_operations",
+      "related_files": ["infrastructure/publishing/core.py", "infrastructure/publishing/__init__.py"],
+      "evidence": [
+        "Lines 24-47 of core.py are entirely `from ... import ... # noqa: F401` statements re-exporting symbols from four sibling modules",
+        "The sole non-import line in core.py is `from infrastructure.core.file_operations import calculate_file_hash` followed by `create_publication_package` which uses it — this is the only actual logic in the file",
+        "publishing/__init__.py then re-exports from core.py, adding a third indirection layer (caller -> __init__ -> core -> citations/metadata/platforms)"
+      ],
+      "suggestion": "Collapse core.py into __init__.py so the package surface is explicit in one place, and delete the intermediate hub file. Alternatively, keep core.py only for logic that truly belongs there (create_publication_package) and import the citation/metadata symbols directly in __init__.py from their owning modules.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "llm_client_per_method_timing_duplication",
+      "summary": "query(), query_short(), query_long(), and query_structured() each independently repeat the same start_time/generation_time/logger.debug(\"completed\") timing pattern rather than sharing a single measurement boundary",
+      "related_files": ["infrastructure/llm/core/client.py"],
+      "evidence": [
+        "query() at lines 180, 218: `start_time = time_module.time()` then `generation_time = time_module.time() - start_time` with logger.debug('Query completed', extra={...generation_time_seconds...})",
+        "query_long() at lines 426, 453: identical pattern duplicated verbatim with logger.debug('Long query completed', extra={...})",
+        "query_structured() at lines 500, 545: same pattern a third time with logger.debug('Structured response received', ...)",
+        "query_short() also duplicates the same structure (lines ~370-406)"
+      ],
+      "suggestion": "Extract a single `_timed_generate(prompt, model, options, mode_label)` internal method that handles timing and debug logging once; the four public methods set up their specific options and delegate to it.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "test_env_detection_duplicated_across_get_logger_and_setup_logger",
+      "summary": "The three-line pytest environment detection block is copy-pasted verbatim into both setup_logger() and get_logger(), creating dual maintenance points for the same runtime probe",
+      "related_files": ["infrastructure/core/logging_utils.py"],
+      "evidence": [
+        "setup_logger() lines 257-261: `is_test_env = (os.getenv('PYTEST_CURRENT_TEST') is not None or 'pytest' in sys.modules or any('pytest' in str(v) for v in sys.modules.values() if hasattr(v, '__file__')))`",
+        "get_logger() lines 327-331: identical three-condition expression repeated word-for-word"
+      ],
+      "suggestion": "Extract to a module-level `_is_test_environment() -> bool` function and call it from both sites.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "log_header_dead_assignment",
+      "summary": "log_header() computes a value and immediately discards it with no effect",
+      "related_files": ["infrastructure/core/logging_utils.py"],
+      "evidence": [
+        "Line 515: `EMOJIS['rocket'] if USE_EMOJIS else ''` — the expression is evaluated but the result is never assigned to a variable or used anywhere in the function body"
+      ],
+      "suggestion": "Either assign the result to a variable and use it as a prefix in the log calls, or remove the dead expression entirely.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "verify_cross_references_all_keys_false_on_read_error",
+      "summary": "An exception while reading any single markdown file sets all cross-reference categories to False and breaks the loop — single-file failure contaminates the entire result set",
+      "related_files": ["infrastructure/validation/integrity.py"],
+      "evidence": [
+        "Lines 125-128: `except Exception as e: logger.error(...); integrity = {k: False for k in integrity}; break` — a read error on one file resets all five integrity keys (equations, figures, tables, sections, citations) to False and stops processing remaining files"
+      ],
+      "suggestion": "Record the failing file as an individual error entry and continue processing remaining files; only mark integrity False for the categories where actual missing references were detected.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "llm_client_excessive_parameter_options_spread",
+      "summary": "query_long() manually unpacks options.temperature, options.seed, options.stop field-by-field into a new GenerationOptions rather than merging/inheriting, making callers' options partially silently dropped",
+      "related_files": ["infrastructure/llm/core/client.py"],
+      "evidence": [
+        "Lines 440-445: `long_options = GenerationOptions(max_tokens=self.config.long_max_tokens, temperature=options.temperature if options else None, seed=options.seed if options else None, stop=options.stop if options else None)` — other GenerationOptions fields (top_p, top_k, repeat_penalty, num_ctx) passed by the caller are silently discarded"
+      ],
+      "suggestion": "Use dataclasses.replace(options, max_tokens=self.config.long_max_tokens) if options else GenerationOptions(max_tokens=...) so callers' options are merged rather than partially dropped.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "clean_output_directories_mixed_concerns",
+      "summary": "clean_output_directories() mixes directory enumeration, log archiving, selective file preservation, empty-dir pruning, and subdir creation — five distinct responsibilities in one function body",
+      "related_files": ["infrastructure/core/file_operations.py"],
+      "evidence": [
+        "The function body (lines 96-220) contains: project-name discovery via filesystem scan, call to clean_root_output_directory, log file archiving with timestamped copies, preserved-path logic for corpus/nanopublications files, checkpoint directory skipping, selective _clean_dir_preserving dispatch, and finally recreating the standard subdirectory tree — all sequentially in a single function"
+      ],
+      "suggestion": "Extract archive_logs(), preserve_incremental_files(), and recreate_output_structure() as separate, named helpers so clean_output_directories() reads as a composition of well-named steps.",
+      "confidence": "medium"
+    }
+  ]
+}

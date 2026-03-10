@@ -3,14 +3,13 @@
 from __future__ import annotations
 
 import re
-from typing import Any, Dict, Optional
+from typing import Any
 
 from infrastructure.core.exceptions import LLMTemplateError
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.llm.prompts.loader import PromptFragmentLoader
 
 logger = get_logger(__name__)
-
 
 class PromptComposer:
     """Composes prompts from fragments and templates.
@@ -29,7 +28,7 @@ class PromptComposer:
         ... )
     """
 
-    def __init__(self, loader: Optional[PromptFragmentLoader] = None):
+    def __init__(self, loader: PromptFragmentLoader | None = None):
         """Initialize prompt composer.
 
         Args:
@@ -38,7 +37,7 @@ class PromptComposer:
         self.loader = loader or PromptFragmentLoader()
 
     def compose_template(
-        self, template_ref: str, max_tokens: Optional[int] = None, **variables: Any
+        self, template_ref: str, max_tokens: int | None = None, **variables: Any
     ) -> str:
         """Compose a prompt from a template definition.
 
@@ -66,20 +65,16 @@ class PromptComposer:
 
             # Load and substitute fragments
             fragments = template.get("fragments", {})
-            fragment_values: Dict[str, str] = {}
+            fragment_values: dict[str, str] = {}
 
             for fragment_key, fragment_ref in fragments.items():
-                if fragment_ref.endswith("#test_template"):
-                    # Special handling for section structures
-                    fragment_data = self.loader.load_fragment(fragment_ref)
-                    fragment_values[fragment_key] = self._build_section_structure("test_template")
+                if "section_structures.json#" in fragment_ref:
+                    # Load section structure by key from the fragment ref
+                    structure_key = fragment_ref.split("#", 1)[1]
+                    fragment_values[fragment_key] = self._build_section_structure(structure_key)
                 elif "format_requirements" in fragment_ref:
                     # Build format requirements
-                    self.loader.load_fragment(fragment_ref.replace(".json", ".json"))
                     headers = template.get("section_config", {}).get("headers", [])
-                    if not headers and "section_structure" in fragment_values:
-                        # Extract headers from section structure
-                        headers = ["## Section1", "## Section2"]  # Default for tests
                     fragment_values[fragment_key] = self._build_format_requirements(headers)
                 elif "content_requirements" in fragment_ref:
                     fragment_values[fragment_key] = self._build_content_requirements()
@@ -190,30 +185,26 @@ class PromptComposer:
         Returns:
             Formatted requirements string
         """
-        try:
-            format_data = self.loader.load_fragment("format_requirements.json")
+        format_data = self.loader.load_fragment("format_requirements.json")
 
-            base_template = format_data.get(
-                "base_template",
-                "FORMAT REQUIREMENTS:\n\n1. Use markdown\n2. Headers:\n${headers_list}",
+        base_template = format_data.get("base_template", "")
+        if not base_template:
+            raise LLMTemplateError(
+                "format_requirements.json missing 'base_template' key",
+                context={"fragment": "format_requirements.json"},
             )
-            headers_text = "\n".join(f"  - {h}" for h in headers_list)
 
-            result = base_template.replace("${headers_list}", headers_text)
+        headers_text = "\n".join(f"  - {h}" for h in headers_list)
+        result = base_template.replace("${headers_list}", headers_text)
 
-            # Handle section requirements if present
-            if "section_requirements_template" in format_data:
-                section_template = format_data["section_requirements_template"]
-                result = result.replace("${section_requirements_block}", section_template)
-            else:
-                result = result.replace("${section_requirements_block}", "")
+        # Handle section requirements if present
+        if "section_requirements_template" in format_data:
+            section_template = format_data["section_requirements_template"]
+            result = result.replace("${section_requirements_block}", section_template)
+        else:
+            result = result.replace("${section_requirements_block}", "")
 
-            return result  # type: ignore
-
-        except LLMTemplateError:
-            # Fallback if fragment not found
-            headers_text = "\n".join(f"  - {h}" for h in headers_list)
-            return f"FORMAT REQUIREMENTS:\n\n1. Use markdown\n2. Headers:\n{headers_text}"
+        return result  # type: ignore
 
     def _build_content_requirements(self) -> str:
         """Build content requirements fragment.
@@ -221,28 +212,22 @@ class PromptComposer:
         Returns:
             Formatted content requirements string
         """
-        try:
-            content_data = self.loader.load_fragment("content_requirements.json")
+        content_data = self.loader.load_fragment("content_requirements.json")
 
-            base_template = content_data.get(
-                "base_template",
-                "CONTENT REQUIREMENTS:\n\n${no_hallucination_block}\n${cite_sources_block}",
-            )
-            no_hallucination = content_data.get(
-                "no_hallucination", "1. NO HALLUCINATION: Only use provided content"
-            )
-            cite_sources = content_data.get(
-                "cite_sources", "2. CITE SOURCES: Reference specific sections"
+        base_template = content_data.get("base_template", "")
+        if not base_template:
+            raise LLMTemplateError(
+                "content_requirements.json missing 'base_template' key",
+                context={"fragment": "content_requirements.json"},
             )
 
-            result = base_template.replace("${no_hallucination_block}", no_hallucination)
-            result = result.replace("${cite_sources_block}", cite_sources)
+        no_hallucination = content_data.get("no_hallucination", "")
+        cite_sources = content_data.get("cite_sources", "")
 
-            return result  # type: ignore
+        result = base_template.replace("${no_hallucination_block}", no_hallucination)
+        result = result.replace("${cite_sources_block}", cite_sources)
 
-        except LLMTemplateError:
-            # Fallback
-            return "CONTENT REQUIREMENTS:\n\n1. NO HALLUCINATION: Only use provided content\n2. CITE SOURCES: Reference specific sections"  # noqa: E501
+        return result  # type: ignore
 
     def _build_section_structure(self, structure_key: str) -> str:
         """Build section structure fragment.
@@ -289,7 +274,7 @@ class PromptComposer:
             )
 
     def _build_token_budget_awareness(
-        self, total_tokens: int, section_budgets: Dict[str, int]
+        self, total_tokens: int, section_budgets: dict[str, int]
     ) -> str:
         """Build token budget awareness fragment.
 
@@ -300,40 +285,29 @@ class PromptComposer:
         Returns:
             Formatted token budget string
         """
-        try:
-            budget_data = self.loader.load_fragment("token_budget_awareness.json")
+        budget_data = self.loader.load_fragment("token_budget_awareness.json")
 
-            base_template = budget_data.get(
-                "base_template",
-                "TOKEN BUDGET:\n\n${total_tokens_block}\n${section_budgets_block}",
-            )
-            total_template = budget_data.get(
-                "total_tokens_template", "1. Total: ${total_tokens} tokens"
-            )
-            section_template = budget_data.get(
-                "section_budgets_template", "2. Per section:\n${budgets_list}"
+        base_template = budget_data.get("base_template", "")
+        if not base_template:
+            raise LLMTemplateError(
+                "token_budget_awareness.json missing 'base_template' key",
+                context={"fragment": "token_budget_awareness.json"},
             )
 
-            total_block = total_template.replace("${total_tokens}", str(total_tokens))
+        total_template = budget_data.get("total_tokens_template", "1. Total: ${total_tokens} tokens")
+        section_template = budget_data.get("section_budgets_template", "2. Per section:\n${budgets_list}")
 
-            budgets_list = "\n".join(
-                f"  - {name}: {budget} tokens" for name, budget in section_budgets.items()
-            )
-            section_block = section_template.replace("${budgets_list}", budgets_list)
+        total_block = total_template.replace("${total_tokens}", str(total_tokens))
 
-            result = base_template.replace("${total_tokens_block}", total_block)
-            result = result.replace("${section_budgets_block}", section_block)
+        budgets_list = "\n".join(
+            f"  - {name}: {budget} tokens" for name, budget in section_budgets.items()
+        )
+        section_block = section_template.replace("${budgets_list}", budgets_list)
 
-            return result  # type: ignore
+        result = base_template.replace("${total_tokens_block}", total_block)
+        result = result.replace("${section_budgets_block}", section_block)
 
-        except LLMTemplateError:
-            # Fallback
-            budgets_list = "\n".join(
-                f"  - {name}: {budget} tokens" for name, budget in section_budgets.items()
-            )
-            return (
-                f"TOKEN BUDGET:\n\n1. Total: {total_tokens} tokens\n2. Per section:\n{budgets_list}"
-            )
+        return result  # type: ignore
 
     def _build_validation_hints(
         self, word_count_range: tuple[int, int], required_elements: list[str]
@@ -347,35 +321,27 @@ class PromptComposer:
         Returns:
             Formatted validation hints string
         """
-        try:
-            validation_data = self.loader.load_fragment("validation_hints.json")
+        validation_data = self.loader.load_fragment("validation_hints.json")
 
-            base_template = validation_data.get(
-                "base_template",
-                "VALIDATION:\n\n${word_count_block}\n${required_elements_block}",
-            )
-            word_template = validation_data.get(
-                "word_count_template", "1. Word count: ${min_words}-${max_words}"
-            )
-            elements_template = validation_data.get(
-                "required_elements_template", "2. Required:\n${elements_list}"
+        base_template = validation_data.get("base_template", "")
+        if not base_template:
+            raise LLMTemplateError(
+                "validation_hints.json missing 'base_template' key",
+                context={"fragment": "validation_hints.json"},
             )
 
-            min_words, max_words = word_count_range
-            word_block = word_template.replace("${min_words}", str(min_words)).replace(
-                "${max_words}", str(max_words)
-            )
+        word_template = validation_data.get("word_count_template", "1. Word count: ${min_words}-${max_words}")
+        elements_template = validation_data.get("required_elements_template", "2. Required:\n${elements_list}")
 
-            elements_list = "\n".join(f"  - {elem}" for elem in required_elements)
-            elements_block = elements_template.replace("${elements_list}", elements_list)
+        min_words, max_words = word_count_range
+        word_block = word_template.replace("${min_words}", str(min_words)).replace(
+            "${max_words}", str(max_words)
+        )
 
-            result = base_template.replace("${word_count_block}", word_block)
-            result = result.replace("${required_elements_block}", elements_block)
+        elements_list = "\n".join(f"  - {elem}" for elem in required_elements)
+        elements_block = elements_template.replace("${elements_list}", elements_list)
 
-            return result  # type: ignore
+        result = base_template.replace("${word_count_block}", word_block)
+        result = result.replace("${required_elements_block}", elements_block)
 
-        except LLMTemplateError:
-            # Fallback
-            min_words, max_words = word_count_range
-            elements_list = "\n".join(f"  - {elem}" for elem in required_elements)
-            return f"VALIDATION:\n\n1. Word count: {min_words}-{max_words}\n2. Required:\n{elements_list}"  # noqa: E501
+        return result  # type: ignore

@@ -117,11 +117,11 @@ files = generate_multi_project_report(
 )
 ```
 
-## Test Summary Generation (`test_summary_generator.py`)
+## Test Summary Generation (`suite_summary_generator.py`)
 
 ```python
-from infrastructure.reporting.test_summary_generator import generate_test_summary
-summary = generate_test_summary(test_results)
+from infrastructure.reporting.suite_summary_generator import run_test_summary_generation
+run_test_summary_generation()
 ```
 
 ## Manuscript Overview (`manuscript_overview.py`)

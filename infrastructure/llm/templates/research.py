@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
-from typing import Optional
-
 from infrastructure.llm.templates.base import ResearchTemplate
 
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
 
 class SummarizeAbstract(ResearchTemplate):
     """Template for summarizing abstracts."""
@@ -16,7 +17,6 @@ class SummarizeAbstract(ResearchTemplate):
         "${text}"
     )
 
-
 class LiteratureReview(ResearchTemplate):
     """Template for generating literature reviews."""
 
@@ -25,7 +25,6 @@ class LiteratureReview(ResearchTemplate):
         "literature review paragraph:\n\n"
         "${summaries}"
     )
-
 
 class CodeDocumentation(ResearchTemplate):
     """Template for documenting code."""
@@ -36,7 +35,6 @@ class CodeDocumentation(ResearchTemplate):
         "${code}"
     )
 
-
 class DataInterpretation(ResearchTemplate):
     """Template for interpreting data."""
 
@@ -45,7 +43,6 @@ class DataInterpretation(ResearchTemplate):
         "a scientific interpretation of the trends:\n\n"
         "${stats}"
     )
-
 
 class PaperSummarization(ResearchTemplate):
     """Template for comprehensive paper summarization.
@@ -202,9 +199,9 @@ Begin your summary now. Remember: NO repeated sections, NO repeated paragraphs, 
         year: str,
         source: str,
         text: str,
-        domain: Optional[str] = None,
-        domain_instructions: Optional[str] = None,
-        reference_count: Optional[int] = None,
+        domain: str | None = None,
+        domain_instructions: str | None = None,
+        reference_count: int | None = None,
         references_section_found: bool = False,
     ) -> str:
         """Render template with optional domain-specific instructions and reference info.
@@ -250,7 +247,6 @@ Begin your summary now. Remember: NO repeated sections, NO repeated paragraphs, 
 
         # Extract key terms from title for topic validation
         import re
-
         # Extract significant words from title (3+ characters, not common stop words)
         stop_words = {
             "the",
@@ -321,7 +317,6 @@ Begin your summary now. Remember: NO repeated sections, NO repeated paragraphs, 
 
         return prompt
 
-
 class LiteratureReviewSynthesis(ResearchTemplate):
     """Template for synthesizing multiple paper summaries into a cohesive literature review.
 
@@ -348,7 +343,6 @@ REQUIREMENTS:
 8. Structure as a flowing narrative, not bullet points
 
 Begin your literature review synthesis:"""
-
 
 class ScienceCommunicationNarrative(ResearchTemplate):
     """Template for creating accessible science communication narratives from research papers.
@@ -380,7 +374,6 @@ REQUIREMENTS:
 
 Begin your science communication narrative:"""
 
-
 class ComparativeAnalysis(ResearchTemplate):
     """Template for comparative analysis across multiple research papers.
 
@@ -408,7 +401,6 @@ REQUIREMENTS:
 
 Begin your comparative analysis:"""
 
-
 class ResearchGapIdentification(ResearchTemplate):
     """Template for identifying research gaps from literature analysis.
 
@@ -435,7 +427,6 @@ REQUIREMENTS:
 8. Structure with sections (Current State, Identified Gaps, Recommendations)
 
 Begin your research gap analysis:"""
-
 
 class CitationNetworkAnalysis(ResearchTemplate):
     """Template for analyzing citation relationships and networks between papers.

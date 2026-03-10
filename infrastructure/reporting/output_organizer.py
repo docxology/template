@@ -21,16 +21,16 @@ Usage:
     organizer.copy_combined_pdfs(repo_root, output_dir)
 """
 
+from __future__ import annotations
+
 import shutil
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Dict, List, Optional
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
-
 
 class FileType(Enum):
     """
@@ -58,7 +58,6 @@ class FileType(Enum):
         """Get the subdirectory name for this file type."""
         return self.value[1]
 
-
 @dataclass
 class OrganizationResult:
     """
@@ -76,7 +75,6 @@ class OrganizationResult:
     error_files: int = 0
     created_dirs: int = 0
 
-
 class OutputOrganizer:
     """
     Centralized organizer for executive summary and multi-project outputs.
@@ -86,10 +84,9 @@ class OutputOrganizer:
     """
 
     def __init__(self):
-        """Initialize the OutputOrganizer."""
         self.logger = logger
 
-    def detect_file_type(self, file_path: Path) -> Optional[FileType]:
+    def detect_file_type(self, file_path: Path) -> FileType | None:
         """
         Detect file type from file extension.
 
@@ -110,18 +107,6 @@ class OutputOrganizer:
 
         return None
 
-    def get_subdirectory(self, file_type: FileType) -> str:
-        """
-        Get the subdirectory name for a given file type.
-
-        Args:
-            file_type: FileType enum value
-
-        Returns:
-            Subdirectory name as string
-        """
-        return file_type.subdirectory
-
     def get_output_path(self, file_path: Path, output_dir: Path, file_type: FileType) -> Path:
         """
         Get the organized output path for a file.
@@ -134,7 +119,7 @@ class OutputOrganizer:
         Returns:
             Path to the organized location (output_dir/subdir/filename)
         """
-        subdirectory = self.get_subdirectory(file_type)
+        subdirectory = file_type.subdirectory
         filename = file_path.name if isinstance(file_path, Path) else str(file_path)
 
         return output_dir / subdirectory / filename
@@ -273,7 +258,7 @@ class OutputOrganizer:
         self.logger.info(f"Copied {copied_count} combined PDF files")
         return copied_count
 
-    def get_organized_structure_summary(self, output_dir: Path) -> Dict[str, List[str]]:
+    def get_organized_structure_summary(self, output_dir: Path) -> dict[str, list[str]]:
         """
         Get a summary of the organized file structure.
 

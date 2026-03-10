@@ -9,12 +9,11 @@ from __future__ import annotations
 import tomllib
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Optional, Tuple, Union
+from typing import Union
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
-
 
 @dataclass
 class ProjectInfo:
@@ -58,7 +57,7 @@ class ProjectInfo:
         return self.name
 
 
-def discover_projects(repo_root: Union[Path, str]) -> List[ProjectInfo]:
+def discover_projects(repo_root: Union[Path, str]) -> list[ProjectInfo]:
     """Discover all valid projects in projects/ directory.
 
     This function scans the projects/ directory for both:
@@ -114,17 +113,7 @@ def discover_projects(repo_root: Union[Path, str]) -> List[ProjectInfo]:
 
         if is_valid:
             # It's a standalone project
-            metadata = get_project_metadata(child_dir)
-            project_info = ProjectInfo(
-                name=child_dir.name,
-                path=child_dir,
-                has_src=(child_dir / "src").exists(),
-                has_tests=(child_dir / "tests").exists(),
-                has_scripts=(child_dir / "scripts").exists(),
-                has_manuscript=(child_dir / "manuscript").exists(),
-                metadata=metadata,
-                program="",
-            )
+            project_info = _build_project_info(child_dir)
             projects.append(project_info)
             logger.debug(
                 f"Discovered standalone project: {project_info.name} at {project_info.path}"
@@ -143,7 +132,22 @@ def discover_projects(repo_root: Union[Path, str]) -> List[ProjectInfo]:
     return projects
 
 
-def _discover_nested_projects(program_dir: Path, program_name: str) -> List[ProjectInfo]:
+def _build_project_info(project_dir: Path, program: str = "") -> ProjectInfo:
+    """Build a ProjectInfo from a validated project directory."""
+    metadata = get_project_metadata(project_dir)
+    return ProjectInfo(
+        name=project_dir.name,
+        path=project_dir,
+        has_src=(project_dir / "src").exists(),
+        has_tests=(project_dir / "tests").exists(),
+        has_scripts=(project_dir / "scripts").exists(),
+        has_manuscript=(project_dir / "manuscript").exists(),
+        metadata=metadata,
+        program=program,
+    )
+
+
+def _discover_nested_projects(program_dir: Path, program_name: str) -> list[ProjectInfo]:
     """Discover projects nested within a program directory.
 
     A program directory is a folder that contains multiple related projects,
@@ -168,17 +172,7 @@ def _discover_nested_projects(program_dir: Path, program_name: str) -> List[Proj
         is_valid, _ = validate_project_structure(child_dir)
 
         if is_valid:
-            metadata = get_project_metadata(child_dir)
-            project_info = ProjectInfo(
-                name=child_dir.name,
-                path=child_dir,
-                has_src=(child_dir / "src").exists(),
-                has_tests=(child_dir / "tests").exists(),
-                has_scripts=(child_dir / "scripts").exists(),
-                has_manuscript=(child_dir / "manuscript").exists(),
-                metadata=metadata,
-                program=program_name,
-            )
+            project_info = _build_project_info(child_dir, program=program_name)
             nested_projects.append(project_info)
             logger.debug(
                 f"Discovered nested project: {project_info.qualified_name} at {project_info.path}"
@@ -186,8 +180,7 @@ def _discover_nested_projects(program_dir: Path, program_name: str) -> List[Proj
 
     return nested_projects
 
-
-def validate_project_structure(project_dir: Path) -> Tuple[bool, str]:
+def validate_project_structure(project_dir: Path) -> tuple[bool, str]:
     """Validate that project has required directory structure.
 
     Required directories:
@@ -244,7 +237,6 @@ def validate_project_structure(project_dir: Path) -> Tuple[bool, str]:
 
     return True, "Valid project structure"
 
-
 def get_project_metadata(project_dir: Path) -> dict:
     """Extract metadata from project configuration files.
 
@@ -292,8 +284,8 @@ def get_project_metadata(project_dir: Path) -> dict:
                         author.get("name", author.get("email", "Unknown"))
                         for author in project_config["authors"]
                     ]
-        except Exception as e:
-            logger.debug(f"Failed to parse {pyproject_path}: {e}")
+        except (OSError, ValueError, KeyError) as e:
+            logger.warning(f"Failed to parse {pyproject_path}: {e}")
 
     # Try manuscript/config.yaml for additional metadata
     config_path = project_dir / "manuscript" / "config.yaml"
@@ -316,13 +308,12 @@ def get_project_metadata(project_dir: Path) -> dict:
                 ]
         except ImportError:
             logger.debug("PyYAML not available, skipping config.yaml")
-        except Exception as e:
-            logger.debug(f"Failed to parse {config_path}: {e}")
+        except (OSError, ValueError, AttributeError) as e:
+            logger.warning(f"Failed to parse {config_path}: {e}")
 
     return metadata
 
-
-def get_default_project(repo_root: Path) -> Optional[ProjectInfo]:
+def get_default_project(repo_root: Path) -> ProjectInfo | None:
     """Get the default project (projects/project).
 
     Args:
@@ -341,15 +332,4 @@ def get_default_project(repo_root: Path) -> Optional[ProjectInfo]:
         logger.warning(f"Default project is invalid: {message}")
         return None
 
-    metadata = get_project_metadata(default_project_dir)
-
-    return ProjectInfo(
-        name="project",
-        path=default_project_dir,
-        has_src=(default_project_dir / "src").exists(),
-        has_tests=(default_project_dir / "tests").exists(),
-        has_scripts=(default_project_dir / "scripts").exists(),
-        has_manuscript=(default_project_dir / "manuscript").exists(),
-        metadata=metadata,
-        program="",
-    )
+    return _build_project_info(default_project_dir)

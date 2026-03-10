@@ -13,13 +13,12 @@ import re
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.reporting.output_organizer import FileType, OutputOrganizer
 
 logger = get_logger(__name__)
-
 
 @dataclass
 class ManuscriptMetrics:
@@ -28,11 +27,10 @@ class ManuscriptMetrics:
     sections: int = 0
     total_words: int = 0
     total_lines: int = 0
-    markdown_files: List[str] = field(default_factory=list)
+    markdown_files: list[str] = field(default_factory=list)
     equations: int = 0
     figures: int = 0
     references: int = 0
-
 
 @dataclass
 class CodebaseMetrics:
@@ -44,7 +42,6 @@ class CodebaseMetrics:
     script_lines: int = 0
     methods: int = 0
     classes: int = 0
-
 
 @dataclass
 class TestMetrics:
@@ -58,7 +55,6 @@ class TestMetrics:
     coverage_percent: float = 0.0
     execution_time: float = 0.0
 
-
 @dataclass
 class OutputMetrics:
     """Output metrics for a single project."""
@@ -71,7 +67,6 @@ class OutputMetrics:
     web_outputs: int = 0
     total_outputs: int = 0
 
-
 @dataclass
 class PipelineMetrics:
     """Pipeline metrics for a single project."""
@@ -82,7 +77,6 @@ class PipelineMetrics:
     bottleneck_stage: str = ""
     bottleneck_duration: float = 0.0
     bottleneck_percent: float = 0.0
-
 
 @dataclass
 class ProjectMetrics:
@@ -95,19 +89,17 @@ class ProjectMetrics:
     outputs: OutputMetrics
     pipeline: PipelineMetrics
 
-
 @dataclass
 class ExecutiveSummary:
     """Executive summary aggregating all project metrics."""
 
     timestamp: str
     total_projects: int
-    aggregate_metrics: Dict[str, Any]
-    project_metrics: List[ProjectMetrics]
-    health_scores: Dict[str, Any]  # Project health scores by project name
-    comparative_tables: Dict[str, Any]
-    recommendations: List[str]
-
+    aggregate_metrics: dict[str, Any]
+    project_metrics: list[ProjectMetrics]
+    health_scores: dict[str, Any]  # Project health scores by project name
+    comparative_tables: dict[str, Any]
+    recommendations: list[str]
 
 def collect_manuscript_metrics(manuscript_dir: Path) -> ManuscriptMetrics:
     """Collect manuscript metrics from markdown files.
@@ -157,8 +149,7 @@ def collect_manuscript_metrics(manuscript_dir: Path) -> ManuscriptMetrics:
 
     return metrics
 
-
-def collect_codebase_metrics(src_dir: Path, scripts_dir: Optional[Path] = None) -> CodebaseMetrics:
+def collect_codebase_metrics(src_dir: Path, scripts_dir: Path | None = None) -> CodebaseMetrics:
     """Collect codebase metrics from source and script files.
 
     Args:
@@ -215,7 +206,6 @@ def collect_codebase_metrics(src_dir: Path, scripts_dir: Optional[Path] = None) 
                 logger.warning(f"Error processing {script_file.name}: {e}")
 
     return metrics
-
 
 def collect_test_metrics(reports_dir: Path) -> TestMetrics:
     """Collect test metrics from test reports.
@@ -283,7 +273,6 @@ def collect_test_metrics(reports_dir: Path) -> TestMetrics:
 
     return metrics
 
-
 def collect_output_metrics(output_dir: Path) -> OutputMetrics:
     """Collect output metrics from output directory.
 
@@ -341,7 +330,6 @@ def collect_output_metrics(output_dir: Path) -> OutputMetrics:
 
     return metrics
 
-
 def collect_pipeline_metrics(reports_dir: Path) -> PipelineMetrics:
     """Collect pipeline metrics from pipeline report.
 
@@ -384,7 +372,6 @@ def collect_pipeline_metrics(reports_dir: Path) -> PipelineMetrics:
 
     return metrics
 
-
 def collect_project_metrics(repo_root: Path, project_name: str) -> ProjectMetrics:
     """Collect all metrics for a single project.
 
@@ -415,8 +402,7 @@ def collect_project_metrics(repo_root: Path, project_name: str) -> ProjectMetric
         pipeline=pipeline,
     )
 
-
-def generate_aggregate_metrics(projects: List[ProjectMetrics]) -> Dict[str, Any]:
+def generate_aggregate_metrics(projects: list[ProjectMetrics]) -> dict[str, Any]:
     """Generate aggregate metrics across all projects.
 
     Args:
@@ -429,7 +415,7 @@ def generate_aggregate_metrics(projects: List[ProjectMetrics]) -> Dict[str, Any]
         return {}
 
     # Helper function to calculate statistics
-    def calculate_stats(values: List[float]) -> Dict[str, float]:
+    def calculate_stats(values: list[float]) -> dict[str, float]:
         """Calculate min, max, median, and average for a list of values."""
         if not values:
             return {"min": 0.0, "max": 0.0, "median": 0.0, "avg": 0.0}
@@ -524,8 +510,7 @@ def generate_aggregate_metrics(projects: List[ProjectMetrics]) -> Dict[str, Any]
 
     return aggregates
 
-
-def calculate_project_health_score(project: ProjectMetrics) -> Dict[str, Any]:
+def calculate_project_health_score(project: ProjectMetrics) -> dict[str, Any]:
     """Calculate a health score for a project based on its metrics.
 
     Args:
@@ -566,7 +551,6 @@ def calculate_project_health_score(project: ProjectMetrics) -> Dict[str, Any]:
             "grade": "F",
             "reason": "Poor coverage <70%",
         }
-        score += 0
     max_score += 40
 
     # Test failure rate (30% weight)
@@ -599,7 +583,6 @@ def calculate_project_health_score(project: ProjectMetrics) -> Dict[str, Any]:
                 "grade": "F",
                 "reason": f"High failure rate {failure_rate:.1%}",
             }
-            score += 0
     else:
         factors["test_failures"] = {
             "score": 0,
@@ -636,7 +619,6 @@ def calculate_project_health_score(project: ProjectMetrics) -> Dict[str, Any]:
             "grade": "F",
             "reason": f"Insufficient manuscript ({project.manuscript.total_words} words)",
         }
-        score += 0
     max_score += 20
 
     # Output generation (10% weight)
@@ -673,7 +655,6 @@ def calculate_project_health_score(project: ProjectMetrics) -> Dict[str, Any]:
             "grade": "F",
             "reason": f"Limited outputs ({outputs_generated} files)",
         }
-        score += 0
     max_score += 10
 
     # Calculate overall grade
@@ -703,8 +684,7 @@ def calculate_project_health_score(project: ProjectMetrics) -> Dict[str, Any]:
         "factors": factors,
     }
 
-
-def generate_comparative_tables(projects: List[ProjectMetrics]) -> Dict[str, Any]:
+def generate_comparative_tables(projects: list[ProjectMetrics]) -> dict[str, Any]:
     """Generate comparative tables for all projects.
 
     Args:
@@ -757,8 +737,7 @@ def generate_comparative_tables(projects: List[ProjectMetrics]) -> Dict[str, Any
 
     return tables
 
-
-def generate_recommendations(projects: List[ProjectMetrics]) -> List[str]:
+def generate_recommendations(projects: list[ProjectMetrics]) -> list[str]:
     """Generate actionable recommendations based on comprehensive project metrics analysis.
 
     Args:
@@ -933,8 +912,7 @@ def generate_recommendations(projects: List[ProjectMetrics]) -> List[str]:
 
     return recommendations
 
-
-def generate_executive_summary(repo_root: Path, project_names: List[str]) -> ExecutiveSummary:
+def generate_executive_summary(repo_root: Path, project_names: list[str]) -> ExecutiveSummary:
     """Generate complete executive summary for all projects.
 
     Args:
@@ -976,8 +954,7 @@ def generate_executive_summary(repo_root: Path, project_names: List[str]) -> Exe
     logger.info("Executive summary generated successfully")
     return summary
 
-
-def save_executive_summary(summary: ExecutiveSummary, output_dir: Path) -> Dict[str, Path]:
+def save_executive_summary(summary: ExecutiveSummary, output_dir: Path) -> dict[str, Path]:
     """Save executive summary in multiple formats.
 
     Args:
@@ -1013,7 +990,6 @@ def save_executive_summary(summary: ExecutiveSummary, output_dir: Path) -> Dict[
     logger.info(f"Saved HTML report: {html_path}")
 
     return saved_files
-
 
 def _generate_markdown_report(summary: ExecutiveSummary) -> str:
     """Generate Markdown format executive report."""
@@ -1232,7 +1208,6 @@ def _generate_markdown_report(summary: ExecutiveSummary) -> str:
     )
 
     return "\n".join(lines)
-
 
 def _generate_html_report(summary: ExecutiveSummary) -> str:
     """Generate HTML format executive report."""

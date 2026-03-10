@@ -1,0 +1,153 @@
+{
+  "assessments": {
+    "cross_module_architecture": 72,
+    "convention_outlier": 78,
+    "error_consistency": 65,
+    "abstraction_fitness": 68
+  },
+  "findings": [
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "reporting_imports_pipeline_core_type",
+      "summary": "pipeline_reporter.py imports MultiProjectResult from infrastructure.core.multi_project, creating an upward reporting→core dependency that blurs layer boundaries",
+      "related_files": [
+        "infrastructure/reporting/pipeline_reporter.py",
+        "infrastructure/core/multi_project.py"
+      ],
+      "evidence": [
+        "Line 17 of pipeline_reporter.py: `from infrastructure.core.multi_project import MultiProjectResult`",
+        "reporting is a consumer layer; importing a result dataclass from core.multi_project means the reporting module is coupled to orchestration internals rather than a stable data contract"
+      ],
+      "suggestion": "Define a shared data transfer type (e.g. MultiProjectSummary) in a neutral location such as infrastructure.core.models or infrastructure.reporting itself, and have multi_project.py produce that type rather than having the reporter import from orchestration core.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "health_check_global_singleton_at_import_time",
+      "summary": "health_check.py instantiates a module-level HealthCheckAPI singleton at import time, creating side effects on every import",
+      "related_files": [
+        "infrastructure/core/health_check.py"
+      ],
+      "evidence": [
+        "Line 320: `_health_api = HealthCheckAPI()`  — executed unconditionally at module import",
+        "HealthCheckAPI.__init__ calls SystemHealthChecker.__init__ which records start_time and builds a check dict; this runs psutil.Process on import in any consumer"
+      ],
+      "suggestion": "Use lazy initialization: make `_health_api` start as None and initialize it inside `get_health_api()` on first call. This eliminates import-time side effects.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "performance_global_singleton_at_import_time",
+      "summary": "performance.py also creates a module-level CodeProfiler singleton at import time, mirroring the same import-side-effect pattern as health_check.py",
+      "related_files": [
+        "infrastructure/core/performance.py"
+      ],
+      "evidence": [
+        "Line 524: `_global_monitor = CodeProfiler()` — executed unconditionally at import",
+        "This is a structural duplicate of the pattern in health_check.py; two sibling modules share the same architectural defect"
+      ],
+      "suggestion": "Apply the same lazy-init fix: initialize inside `get_performance_monitor()` on first call rather than at module load.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "stage_list_untyped_tuple_protocol",
+      "summary": "Pipeline stage list uses bare tuple[0]/tuple[1]/tuple[2] positional indexing instead of a named dataclass or NamedTuple, making the protocol implicit and fragile",
+      "related_files": [
+        "infrastructure/core/pipeline.py"
+      ],
+      "evidence": [
+        "_build_stage_list returns list[tuple] and callers use `stage_spec[0]`, `stage_spec[1]`, `stage_spec[2] if len(stage_spec) > 2 else False` in three separate locations (_execute_pipeline, _resume_pipeline lines 187, 335, 364)",
+        "The repeated `len(stage_spec) > 2` guard is a convention smell indicating an ad-hoc protocol rather than a declared structure"
+      ],
+      "suggestion": "Define a StageSpec dataclass or NamedTuple with fields (name, func, skip) and use it throughout _build_stage_list and its callers to make the protocol explicit.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "reporting_init_silent_import_failure",
+      "summary": "infrastructure/reporting/__init__.py silently swallows ImportError for dashboard_generator, leaving three names out of __all__ with no warning, inconsistent with all sibling __init__ files",
+      "related_files": [
+        "infrastructure/reporting/__init__.py"
+      ],
+      "evidence": [
+        "Lines 11-18: `try: from .dashboard_generator import ... except ImportError: pass` — bare pass with no log or fallback stub",
+        "generate_all_dashboards, generate_matplotlib_dashboard, generate_plotly_dashboard are listed in __all__ (lines 66-68) but may not exist at runtime if the import silently failed"
+      ],
+      "suggestion": "Either guard the __all__ entries behind the same try/except, or log a warning on ImportError so callers can distinguish 'optional feature unavailable' from a real import bug.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "pipeline_run_script_broad_exception_swallow",
+      "summary": "_run_script catches bare Exception and returns False, discarding error type and subprocess details, while _execute_stage catches the same broad Exception for a different purpose — two different silent-swallow patterns in the same call chain",
+      "related_files": [
+        "infrastructure/core/pipeline.py"
+      ],
+      "evidence": [
+        "Lines 593-594: `except Exception as e: logger.error(SCRIPT_EXECUTION_FAILED...); return False` — exception is logged but not re-raised, callers receive only a bool",
+        "Lines 270-280: _execute_stage also catches bare Exception and converts to PipelineStageResult with error_message=str(e) — the two handlers compose silently, so a subprocess crash produces a logged error and a False bool but no propagation"
+      ],
+      "suggestion": "These two layers serve different purposes (subprocess I/O vs stage orchestration) but both silently terminate the error chain. At minimum, distinguish OSError/TimeoutExpired from unexpected exceptions in _run_script so callers can tell 'script not found' from 'unexpected crash'.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "mixed_return_strategies_in_verify_functions",
+      "summary": "integrity.py verification functions use inconsistent error strategies: verify_file_integrity returns Dict[str, bool] (encoded error), verify_output_integrity returns an IntegrityReport object, and verify_output_completeness returns Dict[str, Any] — three different return shapes for semantically similar operations",
+      "related_files": [
+        "infrastructure/validation/integrity.py"
+      ],
+      "evidence": [
+        "verify_file_integrity: returns Dict[str, bool] with False values encoding failure",
+        "verify_output_integrity: returns IntegrityReport with .overall_integrity bool and .issues list",
+        "verify_output_completeness: returns Dict[str, Any] with boolean fields and list fields mixed"
+      ],
+      "suggestion": "Standardize the three functions onto IntegrityReport or a Protocol that provides a consistent .passed / .issues interface, so callers can handle all verification results uniformly.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "coverage_parser_nested_retry_suppresses_json_errors",
+      "summary": "extract_coverage_percentage in coverage_parser.py catches json.JSONDecodeError with debug-only logging inside a retry loop, silently treating malformed JSON the same as a missing file",
+      "related_files": [
+        "infrastructure/reporting/coverage_parser.py"
+      ],
+      "evidence": [
+        "Lines 342-347: `except json.JSONDecodeError as e: if is_infra: logger.debug(...)` — the decode error is only logged at DEBUG and only when is_infra=True; for project runs it is completely silent",
+        "A corrupt coverage.json will cause silent fallback to stdout regex parsing with no warning to the operator"
+      ],
+      "suggestion": "Log JSONDecodeError at WARNING level unconditionally (not gated on is_infra), so operators see when a coverage file exists but is corrupt rather than silently getting a degraded result.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "generate_test_report_in_pipeline_reporter_is_dead_wrapper",
+      "summary": "generate_test_report in pipeline_reporter.py is a zero-logic wrapper that ignores its input and returns a hardcoded placeholder path, documented with a comment admitting it delegates to a script",
+      "related_files": [
+        "infrastructure/reporting/pipeline_reporter.py"
+      ],
+      "evidence": [
+        "Lines 683-696: function accepts test_results and output_dir, creates the dir, then returns `output_dir / 'test_results.json'` — no data is written, no results are processed",
+        "Comment on line 693: `# This is a wrapper - actual test report generation is in scripts/01_run_tests.py`"
+      ],
+      "suggestion": "Delete the function or replace it with the real implementation. A function that ignores its arguments and returns a path to a file it did not create is a contract violation that will silently mislead callers.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "health_check_api_adds_no_policy_over_checker",
+      "summary": "HealthCheckAPI is a one-concrete-implementation wrapper around SystemHealthChecker with no added policy: get_status delegates directly, get_status_summary restructures the dict, is_healthy is a one-liner",
+      "related_files": [
+        "infrastructure/core/health_check.py"
+      ],
+      "evidence": [
+        "HealthCheckAPI.get_status (line 264): `return self.checker.get_health_status()` — pure delegation",
+        "HealthCheckAPI.is_healthy (line 282-285): `return bool(status['overall_status'] == 'healthy')` — could be a free function over SystemHealthChecker",
+        "No second implementation of the protocol exists or is hinted at in the codebase"
+      ],
+      "suggestion": "Collapse HealthCheckAPI into SystemHealthChecker directly, or promote the free functions (quick_health_check, get_health_status, get_health_metrics) to use SystemHealthChecker without the intermediate class.",
+      "confidence": "medium"
+    }
+  ]
+}

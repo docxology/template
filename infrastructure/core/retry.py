@@ -11,14 +11,19 @@ from __future__ import annotations
 import random
 import time
 from functools import wraps
-from typing import Any, Callable, Optional, Tuple, Type, TypeVar
+from typing import Any, Callable, Type, TypeVar
 
+from infrastructure.core.exceptions import PipelineError
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
 T = TypeVar("T")
 
+# Standard exceptions that indicate transient infrastructure failures.
+# Pass to retry_with_backoff(exceptions=TRANSIENT_EXCEPTIONS) or use
+# retry_on_transient_failure() for a pre-configured shorthand.
+TRANSIENT_EXCEPTIONS: tuple[type[Exception], ...] = (IOError, ConnectionError, TimeoutError, OSError)
 
 def retry_with_backoff(
     max_attempts: int = 3,
@@ -26,8 +31,8 @@ def retry_with_backoff(
     max_delay: float = 60.0,
     exponential_base: float = 2.0,
     jitter: bool = True,
-    exceptions: Tuple[Type[Exception], ...] = (Exception,),
-    on_retry: Optional[Callable[[int, Exception], None]] = None,
+    exceptions: tuple[Type[Exception], ...] = (Exception,),
+    on_retry: Callable[[int, Exception | None, None]] = None,
 ) -> Callable[[Callable[..., T]], Callable[..., T]]:
     """Decorator to retry a function with exponential backoff.
 
@@ -119,12 +124,11 @@ def retry_with_backoff(
             # Should never reach here, but handle it just in case
             if last_exception:
                 raise last_exception
-            raise RuntimeError(f"{func.__name__} failed after {max_attempts} attempts")
+            raise PipelineError(f"{func.__name__} failed after {max_attempts} attempts")
 
         return wrapper
 
     return decorator
-
 
 def retry_on_transient_failure(
     max_attempts: int = 3, initial_delay: float = 1.0
@@ -152,9 +156,9 @@ def retry_on_transient_failure(
     return retry_with_backoff(
         max_attempts=max_attempts,
         initial_delay=initial_delay,
-        exceptions=(IOError, ConnectionError, TimeoutError, OSError),
+        max_delay=10.0,
+        exceptions=TRANSIENT_EXCEPTIONS,
     )
-
 
 class RetryableOperation:
     """Context manager for retryable operations with manual control.
@@ -193,6 +197,7 @@ class RetryableOperation:
         self.attempt = 0
         self.result = None
         self.succeeded = False
+        self._done = False
 
     def __enter__(self) -> "RetryableOperation":
         """Enter context manager."""
@@ -200,8 +205,8 @@ class RetryableOperation:
 
     def __exit__(
         self,
-        exc_type: Optional[Type[Exception]],
-        exc_val: Optional[Exception],
+        exc_type: Type[Exception | None],
+        exc_val: Exception | None,
         exc_tb: Any,
     ) -> None:
         """Exit context manager."""
@@ -213,6 +218,8 @@ class RetryableOperation:
 
     def __next__(self) -> int:
         """Get next attempt number."""
+        if self._done:
+            raise StopIteration
         self.attempt += 1
         if self.attempt > self.max_attempts:
             raise StopIteration
@@ -226,7 +233,7 @@ class RetryableOperation:
         """
         self.result = result
         self.succeeded = True
-        raise StopIteration  # Exit the retry loop
+        self._done = True  # Signal __next__ to stop iteration
 
     def retry(self, exception: Exception) -> None:
         """Retry operation after delay.

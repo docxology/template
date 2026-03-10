@@ -47,16 +47,16 @@ class TestValidateMarkdownCliFunctions:
         assert "doc.md" in files[0]
 
     def test_collect_symbols(self, tmp_path):
-        """Test collect_symbols function."""
+        """Test collect_symbols function (canonical: labels=LaTeX \\label{}, anchors={#...})."""
         from infrastructure.validation.validate_markdown_cli import collect_symbols
 
         md = tmp_path / "test.md"
-        md.write_text("# Title {#title}\n\n[ref]: http://example.com")
+        md.write_text("# Title {#title}\n\n\\label{eq:one}")
 
         labels, anchors = collect_symbols([str(md)])
 
-        assert "title" in labels
-        assert "ref" in anchors
+        assert "eq:one" in labels  # LaTeX \label{...}
+        assert "title" in anchors  # {#...} section anchors
 
     def test_collect_symbols_empty_file(self, tmp_path):
         """Test collect_symbols with empty file."""
@@ -92,67 +92,68 @@ class TestValidateMarkdownCliFunctions:
         issues = validate_images([str(md)], str(tmp_path))
 
         assert len(issues) == 1
-        assert "not found" in issues[0]
+        assert "Missing image" in issues[0]
 
-    def test_validate_images_url(self, tmp_path):
-        """Test validate_images with URL image."""
+    def test_validate_images_no_refs(self, tmp_path):
+        """Test validate_images with no image references produces no issues."""
         from infrastructure.validation.validate_markdown_cli import validate_images
 
         md = tmp_path / "doc.md"
-        md.write_text("![Alt](http://example.com/img.png)")
+        md.write_text("# Title\n\nNo images here.")
 
         issues = validate_images([str(md)], str(tmp_path))
 
-        # URLs should not be validated
         assert len(issues) == 0
 
     def test_validate_refs_found(self, tmp_path):
-        """Test validate_refs with existing reference."""
+        """Test validate_refs with existing internal anchor reference."""
         from infrastructure.validation.validate_markdown_cli import validate_refs
 
         md = tmp_path / "doc.md"
-        md.write_text("# Section {#section}\n\n[Link](#section)")
+        md.write_text("# Section {#section}\n\n[Link to section](#section)")
 
-        labels = {"section": str(md)}
-        issues = validate_refs([str(md)], labels, {}, str(tmp_path))
+        anchors = {"section"}
+        issues = validate_refs([str(md)], str(tmp_path), set(), anchors)
 
-        assert len(issues) == 0
+        # No missing-anchor issues (the bare-URL / non-informative-text checks
+        # may fire for other patterns, but the internal link itself is resolved)
+        anchor_issues = [i for i in issues if "Missing anchor" in i]
+        assert len(anchor_issues) == 0
 
     def test_validate_refs_missing(self, tmp_path):
-        """Test validate_refs with missing reference."""
+        """Test validate_refs with missing internal anchor reference."""
         from infrastructure.validation.validate_markdown_cli import validate_refs
 
         md = tmp_path / "doc.md"
-        md.write_text("[Link](#missing)")
+        md.write_text("[Link text](#missing)")
 
-        labels = {}
-        issues = validate_refs([str(md)], labels, {}, str(tmp_path))
+        issues = validate_refs([str(md)], str(tmp_path), set(), set())
 
-        assert len(issues) == 1
-        assert "not found" in issues[0]
+        anchor_issues = [i for i in issues if "missing" in i.lower() or "Missing" in i]
+        assert len(anchor_issues) >= 1
 
-    def test_validate_math_balanced(self, tmp_path):
-        """Test validate_math with balanced $ symbols."""
+    def test_validate_math_no_issues(self, tmp_path):
+        """Test validate_math with clean content (no display math constructs)."""
         from infrastructure.validation.validate_markdown_cli import validate_math
 
         md = tmp_path / "doc.md"
-        md.write_text("Math: $E = mc^2$ and $F = ma$")
+        md.write_text("Inline math: $E = mc^2$ is fine.")
 
         issues = validate_math([str(md)], str(tmp_path))
 
         assert len(issues) == 0
 
-    def test_validate_math_unbalanced(self, tmp_path):
-        """Test validate_math with unbalanced $ symbols."""
+    def test_validate_math_double_dollar(self, tmp_path):
+        """Test validate_math flags $$ display math (use equation env instead)."""
         from infrastructure.validation.validate_markdown_cli import validate_math
 
         md = tmp_path / "doc.md"
-        md.write_text("Math: $E = mc^2")
+        md.write_text("$$E = mc^2$$")
 
         issues = validate_math([str(md)], str(tmp_path))
 
-        assert len(issues) == 1
-        assert "Unmatched" in issues[0]
+        assert len(issues) >= 1
+        assert any("equation" in i.lower() or "$$" in i for i in issues)
 
 
 class TestValidateMarkdownMain:

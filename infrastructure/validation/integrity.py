@@ -13,46 +13,39 @@ All functions follow the thin orchestrator pattern and maintain
 
 from __future__ import annotations
 
-import hashlib
 import json
 import os
 import pickle  # noqa: S403 — used for pickle file validation
 import re
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, TypedDict
 
+from infrastructure.core._optional_deps import np
+from infrastructure.core.file_operations import calculate_file_hash
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+_REPORT_SEPARATOR = "=" * 60
 
+@dataclass
 class IntegrityReport:
     """Container for integrity verification results."""
 
-    def __init__(self) -> None:
-        self.file_integrity: Dict[str, bool] = {}
-        self.cross_reference_integrity: Dict[str, bool] = {}
-        self.data_consistency: Dict[str, bool] = {}
-        self.academic_standards: Dict[str, bool] = {}
-        self.overall_integrity: bool = True
-        self.issues: List[str] = []
-        self.warnings: List[str] = []
-        self.recommendations: List[str] = []
-
+    file_integrity: dict[str, bool] = field(default_factory=dict)
+    cross_reference_integrity: dict[str, bool] = field(default_factory=dict)
+    data_consistency: dict[str, bool] = field(default_factory=dict)
+    academic_standards: dict[str, bool] = field(default_factory=dict)
+    overall_integrity: bool = True
+    issues: list[str] = field(default_factory=list)
+    warnings: list[str] = field(default_factory=list)
+    recommendations: list[str] = field(default_factory=list)
 
 def verify_file_integrity(
-    file_paths: List[Path], expected_hashes: Optional[Dict[str, str]] = None
-) -> Dict[str, bool]:
-    """Verify file integrity using hash comparison.
-
-    Args:
-        file_paths: List of file paths to verify
-        expected_hashes: Optional dictionary of expected hashes
-
-    Returns:
-        Dictionary mapping file paths to integrity status
-    """
-    logger.info(f"Verifying integrity of {len(file_paths)} files")
+    file_paths: list[Path], expected_hashes: dict[str, str] | None = None
+) -> dict[str, bool]:
+    """Verify file integrity using hash comparison."""
     integrity = {}
 
     for file_path in file_paths:
@@ -74,7 +67,7 @@ def verify_file_integrity(
                 # Just verify file is readable and not corrupted
                 integrity[str(file_path)] = actual_hash is not None
 
-        except Exception as e:
+        except OSError as e:
             logger.error(f"Error verifying {file_path}: {e}")
             integrity[str(file_path)] = False
 
@@ -82,51 +75,21 @@ def verify_file_integrity(
     logger.info(f"Integrity check complete: {passed}/{len(integrity)} files passed")
     return integrity
 
-
-def calculate_file_hash(file_path: Path, algorithm: str = "sha256") -> Optional[str]:
-    """Calculate hash of a file for integrity verification.
-
-    Args:
-        file_path: Path to file to hash
-        algorithm: Hash algorithm to use
-
-    Returns:
-        Hash string or None if calculation fails
-    """
-    if not file_path.exists():
-        return None
-
-    try:
-        hash_func = hashlib.new(algorithm)
-        with open(file_path, "rb") as f:
-            while chunk := f.read(8192):
-                hash_func.update(chunk)
-        return hash_func.hexdigest()
-    except Exception:
-        return None
-
-
-def verify_cross_references(markdown_files: List[Path]) -> Dict[str, bool]:
-    """Verify cross-reference integrity in markdown files.
-
-    Args:
-        markdown_files: List of markdown files to check
-
-    Returns:
-        Dictionary mapping reference types to integrity status
-    """
-    logger.info(f"Verifying cross-references in {len(markdown_files)} files")
-    integrity = {
+def verify_cross_references(markdown_files: list[Path]) -> dict[str, bool]:
+    """Verify cross-reference integrity in markdown files."""
+    integrity: dict[str, bool] = {
         "equations": True,
         "figures": True,
         "tables": True,
         "sections": True,
         "citations": True,
+        "scan_healthy": True,
     }
 
     # Collect all labels and references
     labels = set()
     references = set()
+    scan_error_count = 0
 
     for md_file in markdown_files:
         try:
@@ -145,33 +108,44 @@ def verify_cross_references(markdown_files: List[Path]) -> Dict[str, bool]:
             references.update(ref_matches)
             references.update(eqref_matches)
 
-        except Exception as e:
+        except OSError as e:
             logger.error(f"Error reading {md_file}: {e}")
-            integrity = {k: False for k in integrity}
-            break
+            scan_error_count += 1
 
-    # Check if all references have corresponding labels
+    if scan_error_count > 0:
+        integrity["scan_healthy"] = False
+
+    # Check if all references have corresponding labels, broken down by type prefix
     missing_labels = references - labels
 
     if missing_labels:
         logger.warning(f"Missing labels for references: {missing_labels}")
-        integrity = {k: False for k in integrity}
+        _prefix_to_key = {
+            "eq:": "equations",
+            "fig:": "figures",
+            "tab:": "tables",
+            "sec:": "sections",
+            "cite:": "citations",
+            "ref:": "citations",
+        }
+        for ref in missing_labels:
+            matched = False
+            for prefix, key in _prefix_to_key.items():
+                if ref.startswith(prefix):
+                    integrity[key] = False
+                    matched = True
+                    break
+            if not matched:
+                # Unknown prefix — mark all reference types as potentially broken
+                for key in ("equations", "figures", "tables", "sections", "citations"):
+                    integrity[key] = False
     else:
         logger.debug(f"Found {len(labels)} labels and {len(references)} references")
 
     return integrity
 
-
-def verify_data_consistency(data_files: List[Path]) -> Dict[str, bool]:
-    """Verify data file consistency and integrity.
-
-    Args:
-        data_files: List of data files to check
-
-    Returns:
-        Dictionary mapping consistency checks to status
-    """
-    logger.info(f"Verifying data consistency for {len(data_files)} files")
+def verify_data_consistency(data_files: list[Path]) -> dict[str, bool]:
+    """Verify data file consistency and integrity."""
     consistency = {
         "file_readable": True,
         "data_integrity": True,
@@ -196,14 +170,14 @@ def verify_data_consistency(data_files: List[Path]) -> Dict[str, bool]:
                 # Basic CSV validation
                 with open(data_file, "r") as f:
                     lines = f.readlines()
-                    if len(lines) > 0:
+                    if lines:
                         first_line = lines[0].strip()
                         if "," not in first_line and "\t" not in first_line:
                             consistency["data_integrity"] = False
             elif file_extension in [".npz", ".npy"]:
                 # NumPy array validation
-                import numpy as np
-
+                if np is None:
+                    continue
                 data = np.load(data_file)
                 if not hasattr(data, "shape"):
                     consistency["data_integrity"] = False
@@ -212,107 +186,63 @@ def verify_data_consistency(data_files: List[Path]) -> Dict[str, bool]:
                 with open(data_file, "rb") as f:
                     pickle.load(f)  # nosec B301 — validating project's own output files
 
-        except Exception:
+        except (OSError, ValueError, pickle.UnpicklingError) as e:
+            logger.warning(f"Data integrity check failed for {data_file}: {e}")
             consistency["data_integrity"] = False
-            break
 
     return consistency
 
-
-def verify_academic_standards(markdown_files: List[Path]) -> Dict[str, bool]:
-    """Verify compliance with academic writing standards.
-
-    Args:
-        markdown_files: List of markdown files to check
-
-    Returns:
-        Dictionary mapping academic standards to compliance status
-    """
-    standards = {
-        "has_abstract": False,
-        "has_introduction": False,
-        "has_methodology": False,
-        "has_results": False,
-        "has_discussion": False,
-        "has_conclusion": False,
-        "has_references": False,
-        "proper_citations": True,
-        "equation_labels": True,
-        "figure_captions": True,
-    }
-
+def verify_academic_standards(markdown_files: list[Path]) -> dict[str, bool]:
+    """Verify compliance with academic writing standards."""
     combined_content = ""
-
     for md_file in markdown_files:
         try:
             with open(md_file, "r", encoding="utf-8") as f:
                 combined_content += f.read() + "\n"
-        except Exception:
-            standards = {k: False for k in standards}
-            break
+        except OSError as e:
+            logger.warning(f"Could not read markdown file {md_file}: {e}")
 
-    # Check for required sections
     content_lower = combined_content.lower()
 
-    standards["has_abstract"] = bool(
-        re.search(r"\\section\{.*abstract|#\s*abstract", content_lower)
-    )
-    standards["has_introduction"] = bool(
-        re.search(r"\\section\{.*introduction|#\s*introduction", content_lower)
-    )
-    standards["has_methodology"] = bool(
-        re.search(r"\\section\{.*methodology|#\s*methodology|#\s*methods", content_lower)
-    )
-    standards["has_results"] = bool(re.search(r"\\section\{.*results?|#\s*results?", content_lower))
-    standards["has_discussion"] = bool(
-        re.search(r"\\section\{.*discussion|#\s*discussion", content_lower)
-    )
-    standards["has_conclusion"] = bool(
-        re.search(r"\\section\{.*conclusion|#\s*conclusion", content_lower)
-    )
-    standards["has_references"] = bool(
-        re.search(r"\\section\{.*references?|#\s*references?|\\bibliography", content_lower)
-    )
-
-    # Check for citations
     citation_patterns = [
         r"\\cite\{[^}]+\}",
         r"\\[a-z]*cite[a-z]*\{[^}]+\}",
         r"\[\d+\]",
         r"\(\d+\)",
     ]
-
     has_citations = any(re.search(pattern, combined_content) for pattern in citation_patterns)
-    if not has_citations:
-        standards["proper_citations"] = False
 
-    # Check for equation labels
-    equation_labels = re.findall(r"\\label\{eq:[^}]+\}", combined_content)
-    if equation_labels:
-        standards["equation_labels"] = True
-
-    # Check for figure captions
-    figure_captions = re.findall(r"\\caption\{[^}]+\}", combined_content)
-    if figure_captions:
-        standards["figure_captions"] = True
-
-    return standards
-
+    return {
+        "has_abstract": bool(re.search(r"\\section\{.*abstract|#\s*abstract", content_lower)),
+        "has_introduction": bool(
+            re.search(r"\\section\{.*introduction|#\s*introduction", content_lower)
+        ),
+        "has_methodology": bool(
+            re.search(
+                r"\\section\{.*methodology|#\s*methodology|#\s*methods", content_lower
+            )
+        ),
+        "has_results": bool(re.search(r"\\section\{.*results?|#\s*results?", content_lower)),
+        "has_discussion": bool(
+            re.search(r"\\section\{.*discussion|#\s*discussion", content_lower)
+        ),
+        "has_conclusion": bool(
+            re.search(r"\\section\{.*conclusion|#\s*conclusion", content_lower)
+        ),
+        "has_references": bool(
+            re.search(
+                r"\\section\{.*references?|#\s*references?|\\bibliography", content_lower
+            )
+        ),
+        "proper_citations": has_citations,
+        "equation_labels": bool(re.findall(r"\\label\{eq:[^}]+\}", combined_content)),
+        "figure_captions": bool(re.findall(r"\\caption\{[^}]+\}", combined_content)),
+    }
 
 def verify_output_integrity(
-    output_dir: Path, manuscript_dir: Optional[Path] = None
+    output_dir: Path, manuscript_dir: Path | None = None
 ) -> IntegrityReport:
-    """Perform comprehensive integrity verification of all outputs.
-
-    Args:
-        output_dir: Output directory to verify
-        manuscript_dir: Optional manuscript directory for academic standards check.
-                       If provided, academic standards will be checked against manuscript
-                       files instead of output markdown files.
-
-    Returns:
-        IntegrityReport with comprehensive verification results
-    """
+    """Perform comprehensive integrity verification of all outputs."""
     report = IntegrityReport()
 
     if not output_dir.exists():
@@ -320,35 +250,25 @@ def verify_output_integrity(
         report.overall_integrity = False
         return report
 
-    # Find all output files
     pdf_files = list(output_dir.rglob("*.pdf"))
     data_files = (
         list(output_dir.rglob("*.csv"))
         + list(output_dir.rglob("*.npz"))
         + list(output_dir.rglob("*.json"))
     )
-    markdown_files = list(output_dir.rglob("*.md"))  # Look for markdown files in output directory
+    markdown_files = list(output_dir.rglob("*.md"))
 
-    # Verify file integrity
     report.file_integrity = verify_file_integrity(pdf_files + data_files)
-
-    # Check for any file integrity failures
     if not all(report.file_integrity.values()):
         report.issues.append("Some output files failed integrity verification")
         report.overall_integrity = False
 
-    # Verify cross-references
     report.cross_reference_integrity = verify_cross_references(markdown_files)
-
-    # Check for any cross-reference failures
     if not all(report.cross_reference_integrity.values()):
         report.issues.append("Cross-reference integrity issues found")
         report.overall_integrity = False
 
-    # Verify data consistency
     report.data_consistency = verify_data_consistency(data_files)
-
-    # Check for any data consistency failures
     if not all(report.data_consistency.values()):
         report.issues.append("Data consistency issues found")
         report.overall_integrity = False
@@ -381,151 +301,107 @@ def verify_output_integrity(
 
     return report
 
-
 def generate_integrity_report(report: IntegrityReport) -> str:
-    """Generate a human-readable integrity report.
-
-    Args:
-        report: IntegrityReport with verification results
-
-    Returns:
-        Formatted integrity report string
-    """
+    """Generate a human-readable integrity report."""
     lines = []
-    lines.append("=" * 60)
-    lines.append("🔍 INTEGRITY VERIFICATION REPORT")
-    lines.append("=" * 60)
+    lines.append(_REPORT_SEPARATOR)
+    lines.append("INTEGRITY VERIFICATION REPORT")
+    lines.append(_REPORT_SEPARATOR)
 
     # Overall status
-    status = "✅ PASSED" if report.overall_integrity else "❌ FAILED"
+    status = "PASSED" if report.overall_integrity else "FAILED"
     lines.append(f"Overall Integrity: {status}")
     lines.append("")
 
-    # File integrity
-    lines.append("📁 File Integrity:")
+    lines.append("File Integrity:")
     for file_path, integrity in report.file_integrity.items():
-        status = "✅" if integrity else "❌"
-        lines.append(f"  {status} {file_path}")
+        status = "OK" if integrity else "FAIL"
+        lines.append(f"  [{status}] {file_path}")
     lines.append("")
 
-    # Cross-reference integrity
-    lines.append("🔗 Cross-Reference Integrity:")
+    lines.append("Cross-Reference Integrity:")
     for ref_type, integrity in report.cross_reference_integrity.items():
-        status = "✅" if integrity else "❌"
-        lines.append(f"  {status} {ref_type}")
+        status = "OK" if integrity else "FAIL"
+        lines.append(f"  [{status}] {ref_type}")
     lines.append("")
 
-    # Data consistency
-    lines.append("📊 Data Consistency:")
+    lines.append("Data Consistency:")
     for check_type, integrity in report.data_consistency.items():
-        status = "✅" if integrity else "❌"
-        lines.append(f"  {status} {check_type}")
+        status = "OK" if integrity else "FAIL"
+        lines.append(f"  [{status}] {check_type}")
     lines.append("")
 
-    # Academic standards
-    lines.append("🎓 Academic Standards:")
+    lines.append("Academic Standards:")
     for standard, compliance in report.academic_standards.items():
-        status = "✅" if compliance else "⚠️"
-        lines.append(f"  {status} {standard}")
+        status = "OK" if compliance else "WARN"
+        lines.append(f"  [{status}] {standard}")
     lines.append("")
 
     # Issues
     if report.issues:
-        lines.append("❌ Issues Found:")
+        lines.append("Issues Found:")
         for issue in report.issues:
-            lines.append(f"  • {issue}")
+            lines.append(f"  - {issue}")
         lines.append("")
 
     # Warnings
     if report.warnings:
-        lines.append("⚠️  Warnings:")
+        lines.append("Warnings:")
         for warning in report.warnings:
-            lines.append(f"  • {warning}")
+            lines.append(f"  - {warning}")
         lines.append("")
 
     # Recommendations
     if report.recommendations:
-        lines.append("💡 Recommendations:")
+        lines.append("Recommendations:")
         for rec in report.recommendations:
-            lines.append(f"  • {rec}")
+            lines.append(f"  - {rec}")
         lines.append("")
 
-    lines.append("=" * 60)
+    lines.append(_REPORT_SEPARATOR)
 
     return "\n".join(lines)
 
+class BuildArtifactValidation(TypedDict):
+    """Typed result from validate_build_artifacts."""
+
+    expected_files: list[str]
+    missing_files: list[str]
+    unexpected_files: list[str]
+    validation_passed: bool
+
+class PermissionCheck(TypedDict):
+    """Typed result from check_file_permissions."""
+
+    readable: bool
+    writable: bool
+    executable: bool
+    issues: list[str]
+
+class OutputCompleteness(TypedDict):
+    """Typed result from verify_output_completeness."""
+
+    pdf_complete: bool
+    figures_complete: bool
+    data_complete: bool
+    latex_complete: bool
+    html_complete: bool
+    missing_outputs: list[str]
+    incomplete_outputs: list[str]
 
 def validate_build_artifacts(
-    output_dir: Path, expected_files: Optional[Dict[str, List[str]]] = None
-) -> Dict[str, Any]:
-    """Validate that all expected build artifacts are present and correct.
-
-    Args:
-        output_dir: Output directory to validate
-        expected_files: Optional dictionary of expected files by category
-
-    Returns:
-        Dictionary with validation results
-    """
-    validation: Dict[str, Any] = {
+    output_dir: Path, expected_files: dict[str, list[str]] | None = None
+) -> BuildArtifactValidation:
+    """Validate that all expected build artifacts are present and correct."""
+    validation: BuildArtifactValidation = {
         "expected_files": [],
         "missing_files": [],
         "unexpected_files": [],
         "validation_passed": True,
     }
 
-    # Typed accessors for list fields
-    expected_list: List[str] = validation["expected_files"]
-    missing_list: List[str] = validation["missing_files"]
-    unexpected_list: List[str] = validation["unexpected_files"]
-
-    # Expected output structure (use provided expected_files or default)
-    if expected_files is None:
-        expected_structure = {
-            "pdf": [
-                "01_abstract.pdf",
-                "02_introduction.pdf",
-                "03_methodology.pdf",
-                "04_experimental_results.pdf",
-                "05_discussion.pdf",
-                "06_conclusion.pdf",
-                "07_references.pdf",
-                "10_symbols_glossary.pdf",
-                "project_combined.pdf",
-            ],
-            "tex": [
-                "01_abstract.tex",
-                "02_introduction.tex",
-                "03_methodology.tex",
-                "04_experimental_results.tex",
-                "05_discussion.tex",
-                "06_conclusion.tex",
-                "07_references.tex",
-                "10_symbols_glossary.tex",
-                "project_combined.tex",
-            ],
-            "data": [
-                "convergence_data.npz",
-                "dataset_summary.csv",
-                "example_data.csv",
-                "example_data.npz",
-                "performance_comparison.csv",
-            ],
-            "figures": [
-                "ablation_study.png",
-                "convergence_plot.png",
-                "data_structure.png",
-                "example_figure.png",
-                "experimental_setup.png",
-                "hyperparameter_sensitivity.png",
-                "image_classification_results.png",
-                "recommendation_scalability.png",
-                "scalability_analysis.png",
-                "step_size_analysis.png",
-            ],
-        }
-    else:
-        expected_structure = expected_files
+    # Expected output structure (callers must supply expected_files for project-specific content)
+    expected_structure: dict[str, list[str]] = expected_files if expected_files is not None else {}
 
     # Check for missing expected files and directories
     for category, files in expected_structure.items():
@@ -533,17 +409,17 @@ def validate_build_artifacts(
         if not category_dir.exists():
             # Missing entire directory
             for expected_file in files:
-                missing_list.append(expected_file)
+                validation["missing_files"].append(expected_file)
                 validation["validation_passed"] = False
         else:
             # Directory exists, check for missing files
             for expected_file in files:
                 expected_path = category_dir / expected_file
                 if not expected_path.exists():
-                    missing_list.append(expected_file)
+                    validation["missing_files"].append(expected_file)
                     validation["validation_passed"] = False
                 else:
-                    expected_list.append(expected_file)
+                    validation["expected_files"].append(expected_file)
 
     # Check for unexpected files (basic check)
     for item in output_dir.rglob("*"):
@@ -553,32 +429,23 @@ def validate_build_artifacts(
                 str(rel_path).startswith(cat) and any(f in str(rel_path) for f in files)
                 for cat, files in expected_structure.items()
             )
-            if not is_expected and item.name != "project_combined.html":
-                unexpected_list.append(str(rel_path))
+            if not is_expected:
+                validation["unexpected_files"].append(str(rel_path))
 
     return validation
 
-
-def check_file_permissions(output_dir: Path) -> Dict[str, Any]:
-    """Check file permissions and accessibility.
-
-    Args:
-        output_dir: Output directory to check
-
-    Returns:
-        Dictionary with permission check results
-    """
-    permissions: Dict[str, Any] = {
+def check_file_permissions(output_dir: Path) -> PermissionCheck:
+    """Check file permissions and accessibility."""
+    permissions: PermissionCheck = {
         "readable": True,
         "writable": True,
-        "executable": True,
+        "executable": os.access(output_dir, os.X_OK) if output_dir.exists() else False,
         "issues": [],
     }
-    issues_list: List[str] = permissions["issues"]
 
     if not output_dir.exists():
         permissions["readable"] = False
-        issues_list.append(f"Output directory does not exist: {output_dir}")
+        permissions["issues"].append(f"Output directory does not exist: {output_dir}")
         return permissions
 
     try:
@@ -593,23 +460,15 @@ def check_file_permissions(output_dir: Path) -> Dict[str, Any]:
             permissions["writable"] = False
             permissions["issues"].append("File read/write test failed")
 
-    except Exception as e:
+    except OSError as e:
         permissions["writable"] = False
-        issues_list.append(f"Permission test failed: {e}")
+        permissions["issues"].append(f"Permission test failed: {e}")
 
     return permissions
 
-
-def verify_output_completeness(output_dir: Path) -> Dict[str, Any]:
-    """Verify that all expected outputs are present and complete.
-
-    Args:
-        output_dir: Output directory to verify
-
-    Returns:
-        Dictionary with completeness verification results
-    """
-    completeness: Dict[str, Any] = {
+def verify_output_completeness(output_dir: Path) -> OutputCompleteness:
+    """Verify that all expected outputs are present and complete."""
+    completeness: OutputCompleteness = {
         "pdf_complete": True,
         "figures_complete": True,
         "data_complete": True,
@@ -619,146 +478,79 @@ def verify_output_completeness(output_dir: Path) -> Dict[str, Any]:
         "incomplete_outputs": [],
     }
 
-    # Typed accessors for list fields
-    missing_outputs: List[str] = completeness["missing_outputs"]
-    incomplete_outputs: List[str] = completeness["incomplete_outputs"]
-
     # Check PDF completeness
     pdf_dir = output_dir / "pdf"
-    if pdf_dir.exists():
-        expected_pdfs = [
-            "01_abstract.pdf",
-            "02_introduction.pdf",
-            "03_methodology.pdf",
-            "04_experimental_results.pdf",
-            "05_discussion.pdf",
-            "06_conclusion.pdf",
-            "07_references.pdf",
-            "10_symbols_glossary.pdf",
-            "project_combined.pdf",
-        ]
-
-        for pdf_file in expected_pdfs:
-            pdf_path = pdf_dir / pdf_file
-            if not pdf_path.exists():
+    if not pdf_dir.exists():
+        completeness["pdf_complete"] = False
+        completeness["missing_outputs"].append("PDF directory")
+    else:
+        for pdf_path in pdf_dir.glob("*.pdf"):
+            if pdf_path.stat().st_size == 0:
                 completeness["pdf_complete"] = False
-                missing_outputs.append(f"PDF: {pdf_file}")
-            elif pdf_path.stat().st_size == 0:
-                completeness["pdf_complete"] = False
-                incomplete_outputs.append(f"Empty PDF: {pdf_file}")
+                completeness["incomplete_outputs"].append(f"Empty PDF: {pdf_path.name}")
 
     # Check figures completeness
     figures_dir = output_dir / "figures"
     if not figures_dir.exists():
         completeness["figures_complete"] = False
-        missing_outputs.append("Figures directory")
-    elif figures_dir.exists():
-        expected_figures = [
-            "ablation_study.png",
-            "convergence_plot.png",
-            "data_structure.png",
-            "example_figure.png",
-            "experimental_setup.png",
-            "hyperparameter_sensitivity.png",
-            "image_classification_results.png",
-            "recommendation_scalability.png",
-            "scalability_analysis.png",
-            "step_size_analysis.png",
-        ]
-
-        for fig_file in expected_figures:
-            fig_path = figures_dir / fig_file
-            if not fig_path.exists():
-                completeness["figures_complete"] = False
-                missing_outputs.append(f"Figure: {fig_file}")
-            elif fig_path.stat().st_size < 1000:  # Very small file
-                incomplete_outputs.append(f"Small figure: {fig_file}")
+        completeness["missing_outputs"].append("Figures directory")
+    else:
+        figures = list(figures_dir.glob("*.png")) + list(figures_dir.glob("*.pdf"))
+        for fig_path in figures:
+            if fig_path.stat().st_size < 1000:
+                completeness["incomplete_outputs"].append(f"Small figure: {fig_path.name}")
 
     # Check data completeness
     data_dir = output_dir / "data"
     if not data_dir.exists():
         completeness["data_complete"] = False
-        missing_outputs.append("Data directory")
-    elif data_dir.exists():
-        expected_data = [
-            "convergence_data.npz",
-            "dataset_summary.csv",
-            "example_data.csv",
-            "example_data.npz",
-            "performance_comparison.csv",
-        ]
-
-        for data_file in expected_data:
-            data_path = data_dir / data_file
-            if not data_path.exists():
+        completeness["missing_outputs"].append("Data directory")
+    else:
+        data_files_found = list(data_dir.iterdir())
+        for data_path in data_files_found:
+            if data_path.is_file() and data_path.stat().st_size == 0:
                 completeness["data_complete"] = False
-                missing_outputs.append(f"Data: {data_file}")
-            elif data_path.stat().st_size == 0:
-                completeness["data_complete"] = False
-                incomplete_outputs.append(f"Empty data: {data_file}")
+                completeness["incomplete_outputs"].append(f"Empty data: {data_path.name}")
 
     # Check LaTeX completeness
     tex_dir = output_dir / "tex"
     if not tex_dir.exists():
         completeness["latex_complete"] = False
-        missing_outputs.append("LaTeX directory")
-    elif tex_dir.exists():
-        expected_tex = [
-            "01_abstract.tex",
-            "02_introduction.tex",
-            "03_methodology.tex",
-            "04_experimental_results.tex",
-            "05_discussion.tex",
-            "06_conclusion.tex",
-            "07_references.tex",
-            "10_symbols_glossary.tex",
-            "project_combined.tex",
-        ]
-
-        for tex_file in expected_tex:
-            tex_path = tex_dir / tex_file
-            if not tex_path.exists():
+        completeness["missing_outputs"].append("LaTeX directory")
+    else:
+        for tex_path in tex_dir.glob("*.tex"):
+            if tex_path.stat().st_size == 0:
                 completeness["latex_complete"] = False
-                missing_outputs.append(f"LaTeX: {tex_file}")
-            elif tex_path.stat().st_size == 0:
-                completeness["latex_complete"] = False
-                incomplete_outputs.append(f"Empty LaTeX: {tex_file}")
+                completeness["incomplete_outputs"].append(f"Empty LaTeX: {tex_path.name}")
 
-    # Check HTML completeness
-    html_file = output_dir / "project_combined.html"
-    if not html_file.exists():
+    # Check HTML completeness (any HTML file in output root)
+    html_files = list(output_dir.glob("*.html"))
+    if not html_files:
         completeness["html_complete"] = False
-        missing_outputs.append("HTML: project_combined.html")
-    elif html_file.stat().st_size == 0:
-        completeness["html_complete"] = False
-        incomplete_outputs.append("Empty HTML: project_combined.html")
+        completeness["missing_outputs"].append("HTML output")
+    else:
+        for html_file in html_files:
+            if html_file.stat().st_size == 0:
+                completeness["html_complete"] = False
+                completeness["incomplete_outputs"].append(f"Empty HTML: {html_file.name}")
 
     return completeness
 
-
-def create_integrity_manifest(output_dir: Path) -> Dict[str, Any]:
-    """Create an integrity manifest for all output files.
-
-    Args:
-        output_dir: Output directory to create manifest for
-
-    Returns:
-        Dictionary with comprehensive integrity manifest
-    """
-    manifest: Dict[str, Any] = {
-        "timestamp": os.path.getctime(output_dir) if output_dir.exists() else None,
+def create_integrity_manifest(output_dir: Path) -> dict[str, Any]:
+    """Create an integrity manifest for all output files."""
+    manifest: dict[str, Any] = {
+        "timestamp": output_dir.stat().st_ctime if output_dir.exists() else None,
         "file_count": 0,
         "total_size": 0,
         "file_hashes": {},
         "directory_structure": {},
     }
 
-    # Typed accessors for mutable fields
-    file_hashes: Dict[str, Any] = manifest["file_hashes"]
-    dir_structure: Dict[str, Any] = manifest["directory_structure"]
-
     if not output_dir.exists():
         return manifest
+
+    file_count = 0
+    total_size = 0
 
     # Calculate file hashes and collect metadata
     for item in output_dir.rglob("*"):
@@ -767,71 +559,52 @@ def create_integrity_manifest(output_dir: Path) -> Dict[str, Any]:
             file_hash = calculate_file_hash(item)
             file_size = item.stat().st_size
 
-            file_hashes[rel_path] = {
+            manifest["file_hashes"][rel_path] = {
                 "hash": file_hash,
                 "size": file_size,
                 "modified": item.stat().st_mtime,
             }
 
-            manifest["file_count"] = int(manifest["file_count"]) + 1
-            manifest["total_size"] = int(manifest["total_size"]) + file_size
+            file_count += 1
+            total_size += file_size
+
+    manifest["file_count"] = file_count
+    manifest["total_size"] = total_size
 
     # Create directory structure
     for dir_path in output_dir.rglob("*"):
         if dir_path.is_dir():
             rel_path = str(dir_path.relative_to(output_dir))
-            dir_structure[rel_path] = {
+            manifest["directory_structure"][rel_path] = {
                 "file_count": len(list(dir_path.glob("*"))),
                 "total_size": sum(f.stat().st_size for f in dir_path.glob("*") if f.is_file()),
             }
 
     return manifest
 
-
-def save_integrity_manifest(manifest: Dict[str, Any], output_path: Path) -> None:
-    """Save integrity manifest to file.
-
-    Args:
-        manifest: Integrity manifest dictionary
-        output_path: Path to save manifest
-    """
+def save_integrity_manifest(manifest: dict[str, Any], output_path: Path) -> None:
+    """Save integrity manifest to JSON file."""
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, "w") as f:
         json.dump(manifest, f, indent=2)
 
-
-def load_integrity_manifest(manifest_path: Path) -> Optional[Dict[str, Any]]:
-    """Load integrity manifest from file.
-
-    Args:
-        manifest_path: Path to manifest file
-
-    Returns:
-        Integrity manifest dictionary or None if loading fails
-    """
+def load_integrity_manifest(manifest_path: Path) -> dict[str, Any] | None:
+    """Load integrity manifest from JSON file, or None on failure."""
     if not manifest_path.exists():
         return None
 
     try:
         with open(manifest_path, "r") as f:
-            result: Optional[Dict[str, Any]] = json.load(f)
+            result: dict[str, Any] = json.load(f)
             return result
-    except Exception:
+    except (OSError, json.JSONDecodeError) as e:
+        logger.debug(f"Could not load manifest from {manifest_path}: {e}")
         return None
 
-
 def verify_integrity_against_manifest(
-    current_manifest: Dict[str, Any], saved_manifest: Dict[str, Any]
-) -> Dict[str, Any]:
-    """Verify current integrity against a saved manifest.
-
-    Args:
-        current_manifest: Current integrity manifest
-        saved_manifest: Saved integrity manifest for comparison
-
-    Returns:
-        Dictionary with integrity verification results
-    """
+    current_manifest: dict[str, Any], saved_manifest: dict[str, Any]
+) -> dict[str, Any]:
+    """Verify current integrity against a saved manifest."""
     verification = {
         "file_count_changed": current_manifest["file_count"] != saved_manifest["file_count"],
         "total_size_changed": current_manifest["total_size"] != saved_manifest["total_size"],

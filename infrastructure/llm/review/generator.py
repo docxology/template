@@ -6,21 +6,23 @@ import os
 import re
 import subprocess
 import time
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
+from typing import Any
 from pathlib import Path
 
 from infrastructure.core.logging_utils import (
     get_logger,
+    log_substep,
     log_success,
     format_error_with_suggestions,
+)
+from infrastructure.core.logging_progress import (
     log_with_spinner,
     StreamingProgress,
     Spinner,
 )
 
-if TYPE_CHECKING:
-    from infrastructure.llm.core.client import LLMClient
-    from infrastructure.llm.core.config import LLMConfig
+from infrastructure.llm.core.client import LLMClient
+from infrastructure.llm.core.config import GenerationOptions, LLMConfig
 
 from infrastructure.llm.utils.ollama import (
     is_ollama_running,
@@ -38,6 +40,7 @@ from infrastructure.llm.templates.manuscript import (
     ManuscriptImprovementSuggestions,
     ManuscriptTranslationAbstract,
     REVIEW_MIN_WORDS,
+    TRANSLATION_LANGUAGES,
 )
 from infrastructure.llm.validation.repetition import (
     detect_repetition,
@@ -48,7 +51,11 @@ from infrastructure.llm.validation.format import (
     check_format_compliance,
 )
 
-from infrastructure.llm.review.metrics import ReviewMetrics, ManuscriptMetrics, estimate_tokens
+from infrastructure.llm.review.metrics import ReviewMetrics, ManuscriptInputMetrics, estimate_tokens
+from infrastructure.validation.pdf_validator import extract_text_from_pdf
+from infrastructure.core.exceptions import PDFValidationError
+
+logger = get_logger(__name__)
 
 # Try to import new prompt system
 try:
@@ -59,12 +66,25 @@ try:
 except ImportError:
     PROMPT_SYSTEM_AVAILABLE = False
 
-from infrastructure.validation.pdf_validator import extract_text_from_pdf, PDFValidationError
-
-logger = get_logger(__name__)
-
-DEFAULT_MAX_INPUT_LENGTH = 500000
-DEFAULT_REVIEW_TIMEOUT = 300.0
+_DEFAULT_REVIEW_SYSTEM_PROMPT = (
+    "You are an expert academic manuscript reviewer with extensive experience in peer review"
+    " for top-tier journals. Your role is to provide thorough, constructive, and professional"
+    " reviews of research manuscripts.\n\n"
+    "Key responsibilities:\n"
+    "1. Analyze the manuscript content carefully and completely\n"
+    "2. Provide specific, actionable feedback with references to the text\n"
+    "3. Maintain a professional, constructive tone\n"
+    "4. Focus exclusively on the manuscript content provided\n"
+    "5. Structure your responses clearly with the requested headers and sections\n\n"
+    "Guidelines:\n"
+    "- Always base your assessment on the actual manuscript text provided\n"
+    "- Do not reference external sources or unrelated materials\n"
+    "- Provide balanced feedback highlighting both strengths and areas for improvement\n"
+    "- Be specific - cite sections, passages, or elements when making observations\n"
+    "- Use markdown formatting for clear structure\n"
+    "- Complete all requested sections with substantive content\n\n"
+    "You are reviewing an academic research manuscript. Treat this as a formal peer review."
+)
 
 
 def get_manuscript_review_system_prompt() -> str:
@@ -72,48 +92,10 @@ def get_manuscript_review_system_prompt() -> str:
         try:
             loader = get_default_loader()
             return loader.get_system_prompt("manuscript_review")
-        except Exception as e:
+        except (ImportError, AttributeError, OSError, FileNotFoundError, KeyError) as e:
             logger.debug(f"Could not load system prompt from prompt system: {e}")
 
-    return """You are an expert academic manuscript reviewer with extensive experience in peer review for top-tier journals. Your role is to provide thorough, constructive, and professional reviews of research manuscripts.
-
-Key responsibilities:
-1. Analyze the manuscript content carefully and completely
-2. Provide specific, actionable feedback with references to the text
-3. Maintain a professional, constructive tone
-4. Focus exclusively on the manuscript content provided
-5. Structure your responses clearly with the requested headers and sections
-
-Guidelines:
-- Always base your assessment on the actual manuscript text provided
-- Do not reference external sources or unrelated materials
-- Provide balanced feedback highlighting both strengths and areas for improvement
-- Be specific - cite sections, passages, or elements when making observations
-- Use markdown formatting for clear structure
-- Complete all requested sections with substantive content
-
-You are reviewing an academic research manuscript. Treat this as a formal peer review."""
-
-
-def get_max_input_length() -> int:
-    env_value = os.environ.get("LLM_MAX_INPUT_LENGTH")
-    if env_value is not None:
-        try:
-            return int(env_value)
-        except ValueError:
-            logger.warning(f"Invalid LLM_MAX_INPUT_LENGTH value: {env_value}, using default")
-    return DEFAULT_MAX_INPUT_LENGTH
-
-
-def get_review_timeout() -> float:
-    env_value = os.environ.get("LLM_REVIEW_TIMEOUT")
-    if env_value is not None:
-        try:
-            return float(env_value)
-        except ValueError:
-            logger.warning(f"Invalid LLM_REVIEW_TIMEOUT value: {env_value}, using default")
-    return DEFAULT_REVIEW_TIMEOUT
-
+    return _DEFAULT_REVIEW_SYSTEM_PROMPT
 
 def log_timeout_info(timeout: float, operation: str) -> None:
     logger.info(f"    Timeout: {timeout:.0f}s per {operation}")
@@ -123,27 +105,14 @@ def log_timeout_info(timeout: float, operation: str) -> None:
             "    Consider: export LLM_REVIEW_TIMEOUT=300 (5 minutes) for better reliability"
         )
 
-
-def get_review_max_tokens() -> Tuple[int, str]:
-    from infrastructure.llm.core.config import LLMConfig
-
-    config = LLMConfig.from_env()
-    max_tokens = config.long_max_tokens
-    if os.environ.get("LLM_LONG_MAX_TOKENS"):
-        source = f"environment variable LLM_LONG_MAX_TOKENS={max_tokens}"
-    else:
-        source = f"config default long_max_tokens={max_tokens}"
-    return max_tokens, source
-
-
 def validate_review_quality(
     response: str,
     review_type: str,
-    min_words: Optional[int] = None,
+    min_words: int | None = None,
     model_name: str = "",
-) -> Tuple[bool, List[str], Dict[str, Any]]:
+) -> tuple[bool, list[str], dict[str, Any]]:
     issues = []
-    details: Dict[str, Any] = {
+    details: dict[str, Any] = {
         "sections_found": [],
         "scores_found": [],
         "format_compliance": {},
@@ -195,180 +164,149 @@ def validate_review_quality(
             f"Too short: {word_count} words (minimum: {min_word_count}, effective: {effective_min} with tolerance)"  # noqa: E501
         )
 
-    if review_type == "executive_summary":
-        header_variations = [
-            (["overview", "summary", "introduction", "abstract"], "overview"),
-            (
-                [
-                    "key contributions",
-                    "contributions",
-                    "main findings",
-                    "key findings",
-                    "highlights",
-                ],
-                "contributions",
-            ),
-            (["methodology", "methods", "approach", "method", "techniques"], "methodology"),
-            (["results", "findings", "principal results", "outcomes", "key results"], "results"),
-            (["significance", "impact", "implications", "importance", "takeaway"], "significance"),
-        ]
-        found_sections = []
-        for variations, section_name in header_variations:
-            if any(v in response_lower for v in variations):
-                found_sections.append(section_name)
-
-        details["sections_found"] = found_sections
-        details["sections_required"] = 1
-
-        if len(found_sections) < 1:
-            issues.append("Missing expected structure (found: none of 5 expected sections)")
-
-    elif review_type == "quality_review":
-        score_patterns = [
-            (r"\*\*score:\s*(\d)/5\*\*", "**Score: X/5**"),
-            (r"score:\s*(\d)/5", "Score: X/5"),
-            (r"\*\*(\d)/5\*\*", "**X/5**"),
-            (r"score\s*:\s*(\d)", "Score: X"),
-            (r"rating\s*:\s*(\d)", "Rating: X"),
-            (r"\[(\d)/5\]", "[X/5]"),
-            (r"(\d)\s*out\s*of\s*5", "X out of 5"),
-            (r"(\d)/5", "X/5"),
-        ]
-
-        scores_found = []
-        for pattern, pattern_name in score_patterns:
-            matches = re.findall(pattern, response_lower)
-            if matches:
-                scores_found.extend([(m, pattern_name) for m in matches])
-
-        details["scores_found"] = scores_found
-
-        has_assessment = any(
-            [
-                "clarity" in response_lower,
-                "structure" in response_lower,
-                "readability" in response_lower,
-                "technical accuracy" in response_lower,
-                "overall quality" in response_lower,
-            ]
-        )
-        details["has_assessment"] = has_assessment
-
-        if not scores_found and not has_assessment:
-            issues.append("Missing scoring or quality assessment")
-
-    elif review_type == "methodology_review":
-        methodology_sections = [
-            (["strengths", "strong points", "advantages", "positives", "pros"], "strengths"),
-            (
-                ["weaknesses", "limitations", "concerns", "issues", "weak points", "cons", "gaps"],
-                "weaknesses",
-            ),
-            (["suggestions", "recommendations", "improvements", "future work"], "recommendations"),
-        ]
-        found_sections = []
-        for variations, section_name in methodology_sections:
-            if any(v in response_lower for v in variations):
-                found_sections.append(section_name)
-
-        details["sections_found"] = found_sections
-
-        has_methodology_content = any(
-            [
-                "research design" in response_lower,
-                "methodology" in response_lower,
-                "approach" in response_lower,
-                "methods" in response_lower,
-                "experimental" in response_lower,
-            ]
-        )
-        details["has_methodology_content"] = has_methodology_content
-
-        if len(found_sections) < 1 and not has_methodology_content:
-            issues.append(f"Missing expected sections (found: {found_sections or 'none'})")
-
-    elif review_type == "improvement_suggestions":
-        priority_variations = [
-            (["high priority", "critical", "urgent", "must fix", "immediate", "major"], "high"),
-            (
-                ["medium priority", "moderate", "should address", "important", "significant"],
-                "medium",
-            ),
-            (["low priority", "minor", "nice to have", "optional", "consider", "cosmetic"], "low"),
-        ]
-        found_priorities = []
-        for variations, priority_name in priority_variations:
-            if any(v in response_lower for v in variations):
-                found_priorities.append(priority_name)
-
-        details["priorities_found"] = found_priorities
-
-        has_recommendations = any(
-            [
-                "recommendation" in response_lower,
-                "suggest" in response_lower,
-                "improve" in response_lower,
-                "fix" in response_lower,
-                "address" in response_lower,
-            ]
-        )
-        details["has_recommendations"] = has_recommendations
-
-        if len(found_priorities) < 1 and not has_recommendations:
-            issues.append("Missing priority sections or recommendations")
-
-    elif review_type == "translation":
-        has_english = any(
-            [
-                "english abstract" in response_lower,
-                "## english" in response_lower,
-                "abstract" in response_lower and "english" in response_lower,
-            ]
-        )
-        details["has_english_section"] = has_english
-
-        translation_keywords = [
-            "translation",
-            "chinese",
-            "hindi",
-            "russian",
-            "中文",
-            "हिंदी",
-            "русский",
-        ]
-        has_translation = any(kw in response_lower for kw in translation_keywords)
-        details["has_translation_section"] = has_translation
-
-        if not has_english:
-            issues.append("Missing English abstract section")
-        if not has_translation:
-            issues.append("Missing translation section")
+    validator = _REVIEW_TYPE_VALIDATORS.get(review_type)
+    if validator:
+        validator(response_lower, details, issues)
 
     is_valid = len(issues) == 0
     return is_valid, issues, details
 
+def _validate_executive_summary_section(
+    response_lower: str, details: dict[str, Any], issues: list[str]
+) -> None:
+    header_variations = [
+        (["overview", "summary", "introduction", "abstract"], "overview"),
+        (
+            ["key contributions", "contributions", "main findings", "key findings", "highlights"],
+            "contributions",
+        ),
+        (["methodology", "methods", "approach", "method", "techniques"], "methodology"),
+        (["results", "findings", "principal results", "outcomes", "key results"], "results"),
+        (["significance", "impact", "implications", "importance", "takeaway"], "significance"),
+    ]
+    found_sections = [
+        name for variations, name in header_variations if any(v in response_lower for v in variations)
+    ]
+    details["sections_found"] = found_sections
+    details["sections_required"] = 1
+    if not found_sections:
+        issues.append("Missing expected structure (found: none of 5 expected sections)")
+
+def _validate_quality_review_section(
+    response_lower: str, details: dict[str, Any], issues: list[str]
+) -> None:
+    score_patterns = [
+        (r"\*\*score:\s*(\d)/5\*\*", "**Score: X/5**"),
+        (r"score:\s*(\d)/5", "Score: X/5"),
+        (r"\*\*(\d)/5\*\*", "**X/5**"),
+        (r"score\s*:\s*(\d)", "Score: X"),
+        (r"rating\s*:\s*(\d)", "Rating: X"),
+        (r"\[(\d)/5\]", "[X/5]"),
+        (r"(\d)\s*out\s*of\s*5", "X out of 5"),
+        (r"(\d)/5", "X/5"),
+    ]
+    scores_found = [
+        (m, name)
+        for pattern, name in score_patterns
+        for m in re.findall(pattern, response_lower)
+    ]
+    details["scores_found"] = scores_found
+    has_assessment = any(
+        kw in response_lower
+        for kw in ("clarity", "structure", "readability", "technical accuracy", "overall quality")
+    )
+    details["has_assessment"] = has_assessment
+    if not scores_found and not has_assessment:
+        issues.append("Missing scoring or quality assessment")
+
+def _validate_methodology_review_section(
+    response_lower: str, details: dict[str, Any], issues: list[str]
+) -> None:
+    methodology_sections = [
+        (["strengths", "strong points", "advantages", "positives", "pros"], "strengths"),
+        (
+            ["weaknesses", "limitations", "concerns", "issues", "weak points", "cons", "gaps"],
+            "weaknesses",
+        ),
+        (["suggestions", "recommendations", "improvements", "future work"], "recommendations"),
+    ]
+    found_sections = [
+        name for variations, name in methodology_sections if any(v in response_lower for v in variations)
+    ]
+    details["sections_found"] = found_sections
+    has_methodology_content = any(
+        kw in response_lower
+        for kw in ("research design", "methodology", "approach", "methods", "experimental")
+    )
+    details["has_methodology_content"] = has_methodology_content
+    if not found_sections and not has_methodology_content:
+        issues.append(f"Missing expected sections (found: {found_sections or 'none'})")
+
+def _validate_improvement_suggestions_section(
+    response_lower: str, details: dict[str, Any], issues: list[str]
+) -> None:
+    priority_variations = [
+        (["high priority", "critical", "urgent", "must fix", "immediate", "major"], "high"),
+        (["medium priority", "moderate", "should address", "important", "significant"], "medium"),
+        (["low priority", "minor", "nice to have", "optional", "consider", "cosmetic"], "low"),
+    ]
+    found_priorities = [
+        name for variations, name in priority_variations if any(v in response_lower for v in variations)
+    ]
+    details["priorities_found"] = found_priorities
+    has_recommendations = any(
+        kw in response_lower
+        for kw in ("recommendation", "suggest", "improve", "fix", "address")
+    )
+    details["has_recommendations"] = has_recommendations
+    if not found_priorities and not has_recommendations:
+        issues.append("Missing priority sections or recommendations")
+
+def _validate_translation_section(
+    response_lower: str, details: dict[str, Any], issues: list[str]
+) -> None:
+    has_english = (
+        "english abstract" in response_lower
+        or "## english" in response_lower
+        or ("abstract" in response_lower and "english" in response_lower)
+    )
+    details["has_english_section"] = has_english
+    has_translation = any(
+        kw in response_lower
+        for kw in ("translation", "chinese", "hindi", "russian", "中文", "हिंदी", "русский")
+    )
+    details["has_translation_section"] = has_translation
+    if not has_english:
+        issues.append("Missing English abstract section")
+    if not has_translation:
+        issues.append("Missing translation section")
+
+# Module-level dispatch table — built once after all validators are defined.
+_REVIEW_TYPE_VALIDATORS: dict[str, Any] = {
+    "executive_summary": _validate_executive_summary_section,
+    "quality_review": _validate_quality_review_section,
+    "methodology_review": _validate_methodology_review_section,
+    "improvement_suggestions": _validate_improvement_suggestions_section,
+    "translation": _validate_translation_section,
+}
 
 def create_review_client(model_name: str) -> LLMClient:
-    from infrastructure.llm.core.client import LLMClient
-    from infrastructure.llm.core.config import LLMConfig
-
     config = LLMConfig.from_env()
     config.default_model = model_name
-    config.timeout = get_review_timeout()
+    config.timeout = config.review_timeout
     config.system_prompt = get_manuscript_review_system_prompt()
     config.auto_inject_system_prompt = True
 
-    max_tokens, source = get_review_max_tokens()
+    source = (
+        f"environment variable LLM_LONG_MAX_TOKENS={config.long_max_tokens}"
+        if os.environ.get("LLM_LONG_MAX_TOKENS")
+        else f"config default long_max_tokens={config.long_max_tokens}"
+    )
     logger.debug(f"Review max_tokens configuration: {source}")
     return LLMClient(config)
 
-
-def log_stage(message: str) -> None:
-    logger.info(f"\n  {message}")
-
-
-def check_ollama_availability() -> Tuple[bool, Optional[str]]:
-    log_stage("Checking Ollama availability...")
+def check_ollama_availability() -> tuple[bool, str | None]:
+    log_substep("Checking Ollama availability...")
     auto_start = os.environ.get("OLLAMA_AUTO_START", "true").lower() == "true"
 
     try:
@@ -380,13 +318,13 @@ def check_ollama_availability() -> Tuple[bool, Optional[str]]:
         logger.error("❌ Unable to check if Ollama is installed")
         return False, None
 
-    logger.info("    Checking Ollama server status...")
+    logger.debug("    Checking Ollama server status...")
 
     max_retries = 3
     for attempt in range(max_retries):
         if attempt > 0:
             wait_time = min(2**attempt, 10)
-            logger.info(f"    Retry {attempt}/{max_retries - 1} in {wait_time}s...")
+            logger.debug(f"    Retry {attempt}/{max_retries - 1} in {wait_time}s...")
             time.sleep(wait_time)
 
         if not is_ollama_running():
@@ -410,16 +348,16 @@ def check_ollama_availability() -> Tuple[bool, Optional[str]]:
             log_success("Ollama server is running", logger)
             break
 
-    logger.info("    Discovering available models...")
+    logger.debug("    Discovering available models...")
     available_models = get_available_models()
     if not available_models:
         logger.warning("❌ No Ollama models available")
         return False, None
 
     model_names = [m.get("name", "unknown") for m in available_models]
-    logger.info(f"    Found {len(model_names)} model(s): {', '.join(model_names[:5])}")
+    logger.debug(f"    Found {len(model_names)} model(s): {', '.join(model_names[:5])}")
 
-    logger.info("    Selecting best model for manuscript review...")
+    logger.debug("    Selecting best model for manuscript review...")
     model = select_best_model()
     if not model:
         logger.warning("❌ Could not select a suitable model")
@@ -427,13 +365,12 @@ def check_ollama_availability() -> Tuple[bool, Optional[str]]:
 
     return True, model
 
-
-def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> Tuple[bool, float]:
-    log_stage("Warming up model...")
-    warmup_timeout = get_review_timeout()
+def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> tuple[bool, float]:
+    log_substep("Warming up model...")
+    warmup_timeout = client.config.review_timeout
     logger.info(f"    Timeout: {warmup_timeout:.0f}s for warmup")
 
-    logger.info("    Checking loaded models via Ollama API...")
+    logger.debug("    Checking loaded models via Ollama API...")
     model_preloaded, loaded_model = check_model_loaded(model_name)
 
     need_preload = False
@@ -500,16 +437,15 @@ def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> Tuple
 
         return True, tokens_per_sec
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 — intentional: warmup errors are non-fatal; caller falls back to first actual request
         spinner.stop()
         elapsed = time.time() - start_time
         logger.error(f"Model warmup failed after {elapsed:.1f}s: {e}")
         return False, 0.0
 
-
-def extract_manuscript_text(pdf_path: Path | str) -> Tuple[Optional[str], ManuscriptMetrics]:
-    log_stage(f"Extracting text from manuscript: {Path(pdf_path).name}")
-    metrics = ManuscriptMetrics()
+def extract_manuscript_text(pdf_path: Path | str) -> tuple[str | None, ManuscriptInputMetrics]:
+    log_substep(f"Extracting text from manuscript: {Path(pdf_path).name}")
+    metrics = ManuscriptInputMetrics()
 
     if isinstance(pdf_path, str):
         pdf_path = Path(pdf_path)
@@ -526,7 +462,7 @@ def extract_manuscript_text(pdf_path: Path | str) -> Tuple[Optional[str], Manusc
         logger.info(
             f"  Extracted: {metrics.total_chars:,} chars ({metrics.total_words:,} words, ~{metrics.total_tokens_est:,} tokens)"  # noqa: E501
         )
-        max_length = get_max_input_length()
+        max_length = LLMConfig.from_env().max_input_length
 
         if max_length > 0 and len(text) > max_length:
             metrics.truncated = True
@@ -545,6 +481,70 @@ def extract_manuscript_text(pdf_path: Path | str) -> Tuple[Optional[str], Manusc
         logger.error(format_error_with_suggestions(e))
         return None, metrics
 
+def _build_retry_prompt(prompt: str, had_off_topic: bool) -> str:
+    """Build a modified prompt for a retry, prepending an off-topic warning if needed."""
+    if not had_off_topic:
+        return prompt
+    prefix = "IMPORTANT: You must review the ACTUAL manuscript text provided below.\\n\\n"
+    if PROMPT_SYSTEM_AVAILABLE:
+        try:
+            composer = PromptComposer()
+            return composer.add_retry_prompt(prompt, retry_type="off_topic")
+        except (ImportError, AttributeError, OSError, KeyError) as e:
+            logger.debug(f"PromptComposer retry prompt failed, using plain prefix: {e}")
+    return prefix + prompt
+
+def _stream_with_heartbeat(
+    client: LLMClient,
+    prompt: str,
+    options: GenerationOptions,
+    review_name: str,
+    estimated_total_tokens: int,
+    config: LLMConfig,
+) -> str:
+    """Stream a query with heartbeat monitoring and progress display.
+
+    Falls back to a blocking query if streaming fails.
+    """
+    try:
+        progress = StreamingProgress(
+            total=estimated_total_tokens,
+            message=f"Generating {review_name}",
+            update_interval=0.5,
+        )
+        heartbeat_monitor = StreamHeartbeatMonitor(
+            operation_name=review_name,
+            timeout_seconds=config.review_timeout,
+            heartbeat_interval=config.heartbeat_interval,
+            stall_threshold=config.stall_threshold,
+            early_warning_threshold=config.early_warning_threshold,
+            logger=logger,
+        )
+        heartbeat_monitor.set_estimated_total(estimated_total_tokens)
+        heartbeat_monitor.start_monitoring()
+
+        response_chunks: list[str] = []
+        tokens_generated = 0
+        start_gen_time = time.time()
+        try:
+            for chunk in client.stream_query(prompt, options=options):
+                response_chunks.append(chunk)
+                tokens_generated += len(chunk.split())
+                progress.set(tokens_generated)
+                heartbeat_monitor.update_token_received()
+        finally:
+            heartbeat_monitor.stop_monitoring()
+
+        total_time = time.time() - start_gen_time
+        final_tokens_per_sec = tokens_generated / total_time if total_time > 0 else 0
+        progress.finish(
+            f"    Generated {tokens_generated:,} tokens in {total_time:.1f}s"
+            f" ({final_tokens_per_sec:.1f} tokens/sec)"
+        )
+        return "".join(response_chunks)
+    except Exception as e:  # noqa: BLE001 — intentional: fallback to blocking query on any stream failure
+        logger.warning(f"Streaming query failed, falling back to blocking query: {type(e).__name__}: {e}")
+        return client.query(prompt, options=options)
 
 def generate_review_with_metrics(
     client: LLMClient,
@@ -554,13 +554,13 @@ def generate_review_with_metrics(
     template_class: type,
     model_name: str = "",
     temperature: float = 0.3,
-    max_tokens: Optional[int] = None,
+    max_tokens: int | None = None,
     max_retries: int = 1,
-) -> Tuple[str, ReviewMetrics]:
-    log_stage(f"Generating {review_name}...")
+) -> tuple[str, ReviewMetrics]:
+    log_substep(f"Generating {review_name}...")
 
     if max_tokens is None:
-        max_tokens, _ = get_review_max_tokens()
+        max_tokens = LLMConfig.from_env().long_max_tokens
 
     metrics = ReviewMetrics(
         input_chars=len(text),
@@ -571,8 +571,6 @@ def generate_review_with_metrics(
     client.reset()
     template = template_class()
     prompt = template.render(text=text, max_tokens=max_tokens)
-    from infrastructure.llm.core.config import GenerationOptions
-
     is_small_model = any(s in model_name.lower() for s in ["3b", "4b", "7b", "8b"])
     adjusted_temp = temperature + 0.1 if is_small_model else temperature
     options = GenerationOptions(temperature=adjusted_temp, max_tokens=max_tokens)
@@ -588,69 +586,12 @@ def generate_review_with_metrics(
                 client.reset()
                 adjusted_temp = min(temperature + 0.15 * attempt, 0.8)
                 options = GenerationOptions(temperature=adjusted_temp, max_tokens=max_tokens)
+                current_prompt = _build_retry_prompt(prompt, had_off_topic)
 
-                if had_off_topic:
-                    if PROMPT_SYSTEM_AVAILABLE:
-                        try:
-                            composer = PromptComposer()
-                            retry_prompt = composer.add_retry_prompt(prompt, retry_type="off_topic")
-                            current_prompt = retry_prompt
-                        except Exception:
-                            current_prompt = (
-                                "IMPORTANT: You must review the ACTUAL manuscript text provided below.\\n\\n"  # noqa: E501
-                                + prompt
-                            )
-                    else:
-                        current_prompt = (
-                            "IMPORTANT: You must review the ACTUAL manuscript text provided below.\\n\\n"  # noqa: E501
-                            + prompt
-                        )
-
-            response_chunks = []
-            tokens_generated = 0
-            start_gen_time = time.time()
-            estimated_total_tokens = max_tokens
-
-            try:
-                progress = StreamingProgress(
-                    total=estimated_total_tokens,
-                    message=f"Generating {review_name}",
-                    update_interval=0.5,
-                )
-
-                from infrastructure.llm.core.config import LLMConfig
-                from infrastructure.llm.utils.heartbeat import StreamHeartbeatMonitor
-
-                config = LLMConfig.from_env()
-                heartbeat_monitor = StreamHeartbeatMonitor(
-                    operation_name=review_name,
-                    timeout_seconds=get_review_timeout(),
-                    heartbeat_interval=config.heartbeat_interval,
-                    stall_threshold=config.stall_threshold,
-                    early_warning_threshold=config.early_warning_threshold,
-                    logger=logger,
-                )
-                heartbeat_monitor.set_estimated_total(estimated_total_tokens)
-                heartbeat_monitor.start_monitoring()
-
-                try:
-                    for chunk in client.stream_query(current_prompt, options=options):
-                        response_chunks.append(chunk)
-                        tokens_generated += len(chunk.split())
-                        progress.set(tokens_generated)
-                        heartbeat_monitor.update_token_received()
-                finally:
-                    heartbeat_monitor.stop_monitoring()
-
-                total_time = time.time() - start_gen_time
-                final_tokens_per_sec = tokens_generated / total_time if total_time > 0 else 0
-                progress.finish(
-                    f"    Generated {tokens_generated:,} tokens in {total_time:.1f}s ({final_tokens_per_sec:.1f} tokens/sec)"  # noqa: E501
-                )
-                response = "".join(response_chunks)
-
-            except Exception:
-                response = client.query(current_prompt, options=options)
+            config = LLMConfig.from_env()
+            response = _stream_with_heartbeat(
+                client, current_prompt, options, review_name, max_tokens, config
+            )
 
             is_valid, issues, details = validate_review_quality(
                 response, review_type, model_name=model_name
@@ -667,8 +608,9 @@ def generate_review_with_metrics(
             else:
                 response = best_response
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 — intentional: retry loop must continue on any LLM client failure
             if attempt < max_retries:
+                logger.debug(f"Attempt {attempt + 1} failed for {review_name}: {e}")
                 continue
             else:
                 metrics.generation_time_seconds = time.time() - start_time
@@ -702,10 +644,9 @@ def generate_review_with_metrics(
     log_success(f"{review_name} generated", logger)
     return response, metrics
 
-
-def generate_executive_summary(
+def generate_llm_executive_summary(
     client: LLMClient, text: str, model_name: str = ""
-) -> Tuple[str, ReviewMetrics]:
+) -> tuple[str, ReviewMetrics]:
     return generate_review_with_metrics(
         client=client,
         text=text,
@@ -717,10 +658,9 @@ def generate_executive_summary(
         max_tokens=None,
     )
 
-
 def generate_quality_review(
     client: LLMClient, text: str, model_name: str = ""
-) -> Tuple[str, ReviewMetrics]:
+) -> tuple[str, ReviewMetrics]:
     return generate_review_with_metrics(
         client=client,
         text=text,
@@ -732,10 +672,9 @@ def generate_quality_review(
         max_tokens=None,
     )
 
-
 def generate_methodology_review(
     client: LLMClient, text: str, model_name: str = ""
-) -> Tuple[str, ReviewMetrics]:
+) -> tuple[str, ReviewMetrics]:
     return generate_review_with_metrics(
         client=client,
         text=text,
@@ -747,10 +686,9 @@ def generate_methodology_review(
         max_tokens=None,
     )
 
-
 def generate_improvement_suggestions(
     client: LLMClient, text: str, model_name: str = ""
-) -> Tuple[str, ReviewMetrics]:
+) -> tuple[str, ReviewMetrics]:
     return generate_review_with_metrics(
         client=client,
         text=text,
@@ -762,24 +700,20 @@ def generate_improvement_suggestions(
         max_tokens=None,
     )
 
-
 def generate_translation(
     client: LLMClient, text: str, language_code: str, model_name: str = ""
-) -> Tuple[str, ReviewMetrics]:
-    from infrastructure.llm.review.pipeline_runner import TRANSLATION_LANGUAGES
-
+) -> tuple[str | None, ReviewMetrics]:
     target_language = TRANSLATION_LANGUAGES.get(language_code, language_code)
-    log_stage(f"Generating translation ({target_language})...")
+    log_substep(f"Generating translation ({target_language})...")
 
     metrics = ReviewMetrics(
         input_chars=len(text), input_words=len(text.split()), input_tokens_est=estimate_tokens(text)
     )
     client.reset()
-    max_tokens, _ = get_review_max_tokens()
-    timeout = get_review_timeout()
+    _cfg = LLMConfig.from_env()
+    max_tokens = _cfg.long_max_tokens
+    timeout = _cfg.review_timeout
     log_timeout_info(timeout, f"translation ({target_language})")
-    from infrastructure.llm.core.config import GenerationOptions
-
     template = ManuscriptTranslationAbstract()
     prompt = template.render(text=text, target_language=target_language, max_tokens=max_tokens)
     is_small_model = any(s in model_name.lower() for s in ["3b", "4b", "7b", "8b"])
@@ -788,49 +722,13 @@ def generate_translation(
 
     start_time = time.time()
     try:
-        try:
-            progress = StreamingProgress(
-                total=max_tokens,
-                message=f"Generating translation ({target_language})",
-                update_interval=0.5,
-            )
-            config = LLMConfig.from_env()
-            heartbeat_monitor = StreamHeartbeatMonitor(
-                operation_name=f"translation ({target_language})",
-                timeout_seconds=timeout,
-                heartbeat_interval=config.heartbeat_interval,
-                stall_threshold=config.stall_threshold,
-                early_warning_threshold=config.early_warning_threshold,
-                logger=logger,
-            )
-            heartbeat_monitor.set_estimated_total(max_tokens)
-            heartbeat_monitor.start_monitoring()
-
-            response_chunks = []
-            tokens_generated = 0
-            try:
-                for chunk in client.stream_query(prompt, options=options):
-                    response_chunks.append(chunk)
-                    tokens_generated += len(chunk.split())
-                    progress.set(tokens_generated)
-                    heartbeat_monitor.update_token_received()
-                total_time = time.time() - heartbeat_monitor.start_time
-                final_tokens_per_sec = tokens_generated / total_time if total_time > 0 else 0
-                progress.finish(
-                    f"    Generated {tokens_generated:,} tokens in {total_time:.1f}s ({final_tokens_per_sec:.1f} tokens/sec)"  # noqa: E501
-                )
-            finally:
-                heartbeat_monitor.stop_monitoring()
-            response = "".join(response_chunks)
-        except Exception:
-            response = client.query(prompt, options=options)
-
-    except Exception as e:
+        response = _stream_with_heartbeat(
+            client, prompt, options, f"translation ({target_language})", max_tokens, _cfg
+        )
+    except Exception as e:  # noqa: BLE001 — intentional: translation errors are non-fatal
         metrics.generation_time_seconds = time.time() - start_time
-        error_response = f"*Error generating translation to {target_language}: {e}*"
-        metrics.output_chars = len(error_response)
-        metrics.output_words = len(error_response.split())
-        return error_response, metrics
+        logger.warning(f"Translation to {target_language} failed: {e}")
+        return None, metrics
 
     metrics.generation_time_seconds = time.time() - start_time
     metrics.output_chars = len(response)

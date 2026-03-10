@@ -1,0 +1,103 @@
+{
+  "assessments": {
+    "cross_module_architecture": 72,
+    "convention_outlier": 80,
+    "error_consistency": 68
+  },
+  "findings": [
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "core-imports-project",
+      "summary": "infrastructure/core/ directly imports infrastructure/project/ at runtime, inverting the intended layer direction",
+      "related_files": [
+        "infrastructure/core/cli.py",
+        "infrastructure/core/multi_project.py",
+        "infrastructure/project/discovery.py"
+      ],
+      "evidence": [
+        "infrastructure/core/cli.py line 35: `from infrastructure.project.discovery import discover_projects` — a direct runtime import",
+        "infrastructure/core/multi_project.py line 21: `from infrastructure.project.discovery import ProjectInfo` — guarded by TYPE_CHECKING, so only a typing concern, but core/cli.py is not guarded",
+        "The holistic context structure shows infrastructure/core/ imported by 10 other directories; infrastructure/project/ imports from infrastructure/core/ (one-way expected direction). core/cli.py reverses this."
+      ],
+      "suggestion": "Move the project-discovery call out of infrastructure/core/cli.py into a higher-level orchestrator (e.g., scripts/ or a new infrastructure/cli.py), keeping core/ free of project/-layer imports. The TYPE_CHECKING guard in multi_project.py is acceptable as-is since it generates no runtime cycle.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "pipeline-reporter-sibling-reexport",
+      "summary": "pipeline_reporter.py re-exports two symbols from its sibling multi_project_reporter.py via a non-top-level import, blurring the boundary between the two modules",
+      "related_files": [
+        "infrastructure/reporting/pipeline_reporter.py",
+        "infrastructure/reporting/multi_project_reporter.py"
+      ],
+      "evidence": [
+        "pipeline_reporter.py line 61: `from infrastructure.reporting.multi_project_reporter import _format_multi_project_summary_markdown, generate_multi_project_summary_report` placed after class definitions (noqa: E402), with a comment saying 'Re-exported for backward compatibility'",
+        "The re-exported function _format_multi_project_summary_markdown is a private (underscore-prefixed) symbol, so callers importing it from pipeline_reporter.py bypass the intended module boundary",
+        "No external callers are verified to require this shim; the holistic context shows no active callers named"
+      ],
+      "suggestion": "Callers should import from multi_project_reporter directly. If backward compat is truly needed, move the re-export to a thin public alias without importing a private symbol, and add a deprecation warning so the shim has a visible sunset path.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "scripts-missing-annotations-future",
+      "summary": "scripts/show_project_info.py omits `from __future__ import annotations` while 15 of 18 sibling scripts in scripts/ include it",
+      "related_files": [
+        "scripts/show_project_info.py"
+      ],
+      "evidence": [
+        "Holistic context sibling_behavior for scripts/: `annotations` present in 16/18 files; outliers listed include show_project_info.py",
+        "Inspecting show_project_info.py: file starts with `import sys` with no __future__ import, but uses `Dict[str, Any]` from typing — inconsistent with the PEP-563 pattern used everywhere else in the scripts/ layer"
+      ],
+      "suggestion": "Add `from __future__ import annotations` as the first import in show_project_info.py to match sibling scripts.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "scripts-missing-log-success",
+      "summary": "Several scripts (show_project_info.py, 06_llm_review.py) omit log_success while it is a shared behavioral convention in 12/18 sibling scripts",
+      "related_files": [
+        "scripts/show_project_info.py",
+        "scripts/06_llm_review.py"
+      ],
+      "evidence": [
+        "Holistic context sibling_behavior for scripts/: log_success present in 12/18 files; outliers include show_project_info.py and 06_llm_review.py",
+        "show_project_info.py imports only `get_logger, log_header, log_substep` — no log_success call at script completion",
+        "All other pipeline-stage scripts (01, 02, 03, 04, 05) call log_success at their completion path"
+      ],
+      "suggestion": "Add a log_success call at the successful exit path of show_project_info.py and 06_llm_review.py to match the shared behavioral protocol of scripts/ siblings.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "save-pipeline-report-unguarded-io",
+      "summary": "save_pipeline_report() performs file I/O without error handling while its sibling run_test_summary_generation() wraps the same pattern in OSError try/except",
+      "related_files": [
+        "infrastructure/reporting/pipeline_reporter.py",
+        "infrastructure/reporting/suite_summary_generator.py"
+      ],
+      "evidence": [
+        "pipeline_reporter.py lines 176-197: three file write operations (json.dump, write_text x2) with no try/except; any OSError propagates uncaught to the caller with no log message",
+        "suite_summary_generator.py lines 384-401: identical write pattern wrapped in `except OSError as e: logger.error(...); raise` — logs the failure before re-raising",
+        "The two functions are in the same package and serve the same reporting purpose, making the inconsistency a genuine boundary defect rather than intentional differentiation"
+      ],
+      "suggestion": "Wrap the three write blocks in pipeline_reporter.save_pipeline_report() with OSError handlers matching the pattern in suite_summary_generator: log the specific file path and error, then re-raise so the caller still fails fast.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "mixed-broad-exception-silent-swallow",
+      "summary": "Multiple dashboard_generator.py chart functions catch broad Exception, log, and then return implicitly None — callers cannot distinguish a failed chart from a missing chart",
+      "related_files": [
+        "infrastructure/reporting/dashboard_generator.py"
+      ],
+      "evidence": [
+        "dashboard_generator.py lines 945-947, 1287-1289, 1434-1436, 1663-1665, 1816-1818, 1929-1931, 2122-2124, 2221-2223, 2394-2396, 2499-2501: pattern `except Exception as e: logger.error(...) [implicit return None]`",
+        "The outer generate_all_dashboards() at line 3408 catches Exception per generator and accumulates failures — so the swallow is partially intentional at the top level, but individual chart functions do not signal failure via return value or raise, making individual chart errors invisible to direct callers",
+        "By contrast, manuscript_overview.py lines 356-379 use `except Exception as e: logger.error(...); raise` for the same class of I/O operation"
+      ],
+      "suggestion": "Chart generation functions should either raise on failure (and let generate_all_dashboards absorb them) or return a typed Optional/Result so callers can act on missing charts. The current pattern silently swallows failures from direct callers that bypass generate_all_dashboards.",
+      "confidence": "medium"
+    }
+  ]
+}

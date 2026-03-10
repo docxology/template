@@ -67,7 +67,7 @@ class TestValidateMarkdownCliMain:
         labels = {"existing_label": str(md_file)}
         anchors = {}
 
-        issues = validate_markdown_cli.validate_refs([str(md_file)], labels, anchors, str(tmp_path))
+        issues = validate_markdown_cli.validate_refs([str(md_file)], str(tmp_path), labels, anchors)
 
         # Should find reference to missing_ref
         assert isinstance(issues, list)
@@ -110,18 +110,18 @@ class TestValidateMarkdownCliHelpers:
         assert len(files) == 0
 
     def test_collect_symbols_with_labels(self, tmp_path):
-        """Test collect_symbols extracts labels."""
+        """Test collect_symbols extracts equation labels."""
         md_file = tmp_path / "test.md"
-        md_file.write_text("# Section {#section-one}\n\nContent")
+        md_file.write_text(r"\label{section-one}" + "\n\nContent")
 
         labels, anchors = validate_markdown_cli.collect_symbols([str(md_file)])
 
         assert "section-one" in labels
 
     def test_collect_symbols_with_anchors(self, tmp_path):
-        """Test collect_symbols extracts anchors."""
+        """Test collect_symbols extracts section anchors."""
         md_file = tmp_path / "test.md"
-        md_file.write_text("[ref1]: https://example.com\n\nContent")
+        md_file.write_text("# Reference {#ref1}\n\nContent")
 
         labels, anchors = validate_markdown_cli.collect_symbols([str(md_file)])
 
@@ -195,5 +195,5 @@ See Section [](#abstract) for details.
 
         # Collect symbols
         labels, anchors = validate_markdown_cli.collect_symbols(files)
-        assert "abstract" in labels
-        assert "intro" in labels
+        assert "abstract" in anchors
+        assert "intro" in anchors

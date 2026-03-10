@@ -1,0 +1,113 @@
+{
+  "assessments": {
+    "abstraction_fitness": 70,
+    "dependency_health": 87,
+    "design_coherence": 68
+  },
+  "findings": [
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "inline_imports_in_hot_path",
+      "summary": "generate_review_with_metrics imports GenerationOptions and LLMConfig inside the retry loop body, not at module top",
+      "related_files": ["infrastructure/llm/review/generator.py"],
+      "evidence": [
+        "Line 574: `from infrastructure.llm.core.config import GenerationOptions` appears inside generate_review_with_metrics after client.reset()",
+        "Lines 621-622: `from infrastructure.llm.core.config import LLMConfig` and `from infrastructure.llm.utils.heartbeat import StreamHeartbeatMonitor` are repeated inside the inner try block of the retry loop",
+        "These modules are also imported at the top of generator.py via TYPE_CHECKING, but the runtime imports are deferred inside the hot path"
+      ],
+      "suggestion": "Move all runtime imports (GenerationOptions, LLMConfig, StreamHeartbeatMonitor) to the module top level in generator.py, removing the inline imports from inside the function body. The TYPE_CHECKING guard is only for type hints; runtime imports belong at module scope.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "string_dispatch_pipeline_method",
+      "summary": "MultiProjectOrchestrator dispatches pipeline type via a string method name passed through four near-identical public methods",
+      "related_files": ["infrastructure/core/multi_project.py"],
+      "evidence": [
+        "Four public methods (execute_all_projects_full, execute_all_projects_core, execute_all_projects_full_no_infra, execute_all_projects_core_no_infra) each call _execute_multi_project_pipeline with a string pipeline_method argument",
+        "Line 173: `method = getattr(executor, pipeline_method)` — string-based dispatch at the call site",
+        "The only variation across all four public methods is two booleans (run_infra_tests, run_llm) and the method name string — the string is entirely redundant since it is determinable from those booleans"
+      ],
+      "suggestion": "Replace the string pipeline_method parameter with the two booleans already being passed. Inside _execute_multi_project_pipeline, derive the executor method directly: `method = executor.execute_full_pipeline if run_llm else executor.execute_core_pipeline`. Remove the four near-identical public methods and expose a single execute_all_projects(run_infra_tests, run_llm) method, or collapse via a 2x2 dispatch table.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "generate_translation_duplicates_streaming_block",
+      "summary": "generate_translation duplicates the full streaming/heartbeat/progress setup block that already exists in generate_review_with_metrics instead of delegating to it",
+      "related_files": ["infrastructure/llm/review/generator.py"],
+      "evidence": [
+        "generate_review_with_metrics (~150 lines) contains streaming+heartbeat+progress setup",
+        "generate_translation (~80 lines) reimplements the identical streaming+heartbeat+progress block with identical variable names (response_chunks, tokens_generated, heartbeat_monitor, progress, start_gen_time)",
+        "All four typed generate_* functions (executive_summary, quality_review, methodology_review, improvement_suggestions) correctly delegate to generate_review_with_metrics, but generate_translation does not"
+      ],
+      "suggestion": "Introduce a ManuscriptTranslation wrapper class (parallel to ManuscriptExecutiveSummary etc.) and route generate_translation through generate_review_with_metrics with review_type='translation'. The language-specific template rendering is the only distinct behavior and can be handled via a template parameter.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "generate_review_with_metrics_mixed_responsibilities",
+      "summary": "generate_review_with_metrics handles retry orchestration, streaming, heartbeat monitoring, progress display, and quality validation in one 150-line function body",
+      "related_files": ["infrastructure/llm/review/generator.py"],
+      "evidence": [
+        "The function body contains: a retry loop (attempts 0..max_retries), a StreamingProgress display, a StreamHeartbeatMonitor lifecycle (start/update/stop), token accumulation from a streaming generator, a fallback to client.query() on streaming failure, quality validation via validate_review_quality, and post-generation deduplication via detect_repetition/deduplicate_sections",
+        "The inner try/except on line 614 catches all streaming exceptions and silently falls back to client.query — a silent swallow inside an already complex flow",
+        "Nested try-except blocks (attempt try, inner streaming try, finally heartbeat stop) at three levels make the control flow hard to follow"
+      ],
+      "suggestion": "Extract the streaming+heartbeat block into a private _stream_with_monitoring(client, prompt, options, review_name) -> str helper that returns the response text. This separates streaming mechanics from retry/validation orchestration. The outer generate_review_with_metrics then becomes: setup -> for attempt: generate -> validate -> break/retry -> post-process.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "pipeline_reporter_defensive_type_patching",
+      "summary": "generate_multi_project_summary_report defensively patches project_results type mid-function, indicating an unclear parameter contract",
+      "related_files": ["infrastructure/reporting/pipeline_reporter.py"],
+      "evidence": [
+        "Lines 80-95: triple isinstance/None checks on project_results (not dict -> empty, None -> empty, per-value list checks with in-place mutation) after already fetching it via getattr",
+        "Line 85-87: `elif project_results is None` branch is unreachable because line 80 already checked `not isinstance(project_results, dict)` — None fails that check first",
+        "Lines 51-52: debug logs dumping full object type and attribute list indicate uncertainty about the parameter type at call-time"
+      ],
+      "suggestion": "Define a typed MultiProjectResult dataclass with a clear project_results: Dict[str, List[PipelineStageResult]] field (already done in multi_project.py). Change this function to accept MultiProjectResult directly instead of Any, and remove all defensive isinstance patching. The existing MultiProjectOrchestrator already produces a well-typed result.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "prompt_composer_string_key_dispatch",
+      "summary": "PromptComposer.compose_template dispatches fragment processing via substring checks on fragment reference strings, requiring updates for each new fragment type",
+      "related_files": ["infrastructure/llm/prompts/composer.py"],
+      "evidence": [
+        "Lines 72-100: a chain of elif branches checking whether the fragment_ref string contains 'format_requirements', 'content_requirements', 'token_budget_awareness', 'validation_hints', or endswith('#test_template')",
+        "Line 78: `self.loader.load_fragment(fragment_ref.replace('.json', '.json'))` — a no-op replace that loads the fragment and immediately discards the result, loading it only for a side effect that doesn't exist",
+        "Adding any new fragment type requires editing this dispatch chain, violating the open-closed principle for what should be a data-driven composition system"
+      ],
+      "suggestion": "Replace the elif chain with a registry: map fragment type keys (e.g. 'format_requirements', 'content_requirements') to builder callables. The builder functions already exist as private methods (_build_format_requirements, _build_content_requirements, etc.). Register them in a dict at class definition and dispatch via dict.get(fragment_type, self._load_generic_fragment).",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "dependency_health",
+      "identifier": "python_barcode_undeclared_dependency",
+      "summary": "python-barcode is used in barcodes.py but not declared in pyproject.toml steganography optional group",
+      "related_files": ["infrastructure/steganography/barcodes.py", "pyproject.toml"],
+      "evidence": [
+        "barcodes.py lines 35-43: _get_barcode() lazily imports 'barcode' (python-barcode package) with a helpful error message",
+        "pyproject.toml steganography group (line 72-73) only declares 'qrcode[pil]>=8.2', not 'python-barcode'",
+        "A user who installs the steganography optional group will get QR code support but not Code128/linear barcode support, with a confusing ImportError at runtime"
+      ],
+      "suggestion": "Add 'python-barcode>=0.15' to the steganography dependency group in pyproject.toml alongside qrcode[pil]. Also add it to the dev group so CI exercises full steganography coverage.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "doc_scanner_wrapper_delegation_chain",
+      "summary": "DocumentationScanner private methods are thin wrappers that import and forward to module-level functions from doc_discovery, adding an indirection layer with no policy",
+      "related_files": ["infrastructure/validation/doc_scanner.py"],
+      "evidence": [
+        "Lines 55-86: _find_markdown_files, _catalog_agents_readme, _find_config_files, _find_script_files, _analyze_documentation_file, and _extract_headings all import from doc_discovery/doc_accuracy and immediately forward their arguments with no transformation",
+        "_find_script_files (line 73-80) is the only one that adds any logic: it also populates self.script_files as a side effect, mixing state mutation into what appears to be a pure delegation wrapper",
+        "Comment 'private method for testing' appears on multiple wrappers, suggesting these exist solely to make the private functions testable rather than to express any domain concept"
+      ],
+      "suggestion": "Test doc_discovery module functions directly rather than via DocumentationScanner wrapper methods. Remove the wrapper methods that purely delegate (find_markdown_files, catalog_agents_readme, find_config_files, analyze_documentation_file, extract_headings) and call the module functions directly from phase methods. For _find_script_files, fold the self.script_files assignment into phase1_discovery.",
+      "confidence": "medium"
+    }
+  ]
+}

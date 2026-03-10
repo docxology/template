@@ -15,47 +15,32 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root / "src"))
 
-# Add infrastructure imports (with graceful fallback)
+# Add infrastructure imports (with graceful null-object fallback)
+repo_root = Path(__file__).parent.parent.parent
+sys.path.insert(0, str(repo_root))
+
 try:
-    # Ensure repo root is on path for infrastructure imports
-    repo_root = Path(__file__).parent.parent.parent
-    sys.path.insert(0, str(repo_root))
+    from infrastructure.core import ProgressBar, get_logger, log_operation, log_success
+    from infrastructure.documentation import generate_glossary
+except ImportError:
+    generate_glossary = None
 
-    try:
-        from infrastructure.core import (ProgressBar, get_logger,
-                                         log_operation, log_success)
-        from infrastructure.documentation import generate_glossary
-    except ImportError:
-        # Fallback when infrastructure is not available
-        generate_glossary = None
+    def get_logger(x):  # type: ignore[misc]
+        return None
 
-        def get_logger(x):
-            return None
+    def log_operation(*args, **kwargs):  # type: ignore[misc]
+        return nullcontext()
 
-        def log_operation(*args, **kwargs):
-            return nullcontext()
+    def log_success(*args, **kwargs):  # type: ignore[misc]
+        return None
 
-        def log_success(*args, **kwargs):
-            return None
-
-        def ProgressBar(*args, **kwargs):
-            return nullcontext()
-
-    INFRASTRUCTURE_AVAILABLE = True
-except ImportError as e:
-    # Initialize logger after potential import failure
-    try:
-        logger = get_logger(__name__) if "get_logger" in globals() else None
-        if logger:
-            logger.warning(f"Infrastructure modules not available: {e}")
-    except Exception:
-        pass  # Silent fallback if logging also fails
-    INFRASTRUCTURE_AVAILABLE = False
+    def ProgressBar(*args, **kwargs):  # type: ignore[misc]
+        return nullcontext()
 
 
 def generate_api_documentation():
     """Generate comprehensive API documentation for the code project."""
-    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+    logger = get_logger(__name__)
 
     if logger:
         logger.info("Generating API documentation...")
@@ -194,10 +179,7 @@ else:
 
 def generate_code_quality_report():
     """Generate code quality and documentation completeness report."""
-    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
-
-    if not INFRASTRUCTURE_AVAILABLE:
-        return None
+    logger = get_logger(__name__)
 
     if logger:
         logger.info("Generating code quality report...")
@@ -227,7 +209,7 @@ def generate_code_quality_report():
 
 def main():
     """Main API documentation generation function."""
-    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+    logger = get_logger(__name__)
 
     if logger:
         logger.info("Starting API documentation generation...")

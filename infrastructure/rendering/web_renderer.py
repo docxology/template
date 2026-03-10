@@ -4,14 +4,12 @@ from __future__ import annotations
 
 import subprocess
 from pathlib import Path
-from typing import List
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.rendering.config import RenderingConfig
 
 logger = get_logger(__name__)
-
 
 class WebRenderer:
     """Handles HTML generation."""
@@ -51,7 +49,7 @@ class WebRenderer:
 
     def render_combined(
         self,
-        source_files: List[Path],
+        source_files: list[Path],
         manuscript_dir: Path,
         project_name: str = "project",
     ) -> Path:
@@ -164,7 +162,7 @@ class WebRenderer:
         logger.info(f"✅ Generated combined HTML: {output_file.name}")
         return output_file
 
-    def _combine_markdown_files(self, source_files: List[Path]) -> str:
+    def _combine_markdown_files(self, source_files: list[Path]) -> str:
         """Combine multiple markdown files into one.
 
         Args:

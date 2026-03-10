@@ -5,12 +5,11 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
-
 
 @dataclass
 class ResponseMetadata:
@@ -22,15 +21,15 @@ class ResponseMetadata:
     prompt_length: int
     response_length: int
     response_tokens_est: int
-    generation_time_seconds: Optional[float] = None
-    options: Optional[Dict[str, Any]] = None
+    generation_time_seconds: float | None = None
+    options: dict[str, Any | None] = None
     streaming: bool = False
-    chunk_count: Optional[int] = None
-    streaming_time_seconds: Optional[float] = None
+    chunk_count: int | None = None
+    streaming_time_seconds: float | None = None
     error_occurred: bool = False
     partial_response: bool = False
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert metadata to dictionary."""
         return {
             "timestamp": self.timestamp,
@@ -47,7 +46,6 @@ class ResponseMetadata:
             "error_occurred": self.error_occurred,
             "partial_response": self.partial_response,
         }
-
 
 def save_response(
     response: str,
@@ -132,7 +130,6 @@ Response:
     )
 
     return output_path
-
 
 def save_streaming_response(
     response: str,

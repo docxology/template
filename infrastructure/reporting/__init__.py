@@ -1,124 +1,69 @@
 """Pipeline reporting module for generating consolidated reports.
 
-This module provides utilities for generating comprehensive reports from
-pipeline execution, including test results, validation results, performance
-metrics, and error summaries.
-
-Part of the infrastructure layer (Layer 1) - reusable across all projects.
+Exports report generators for test results, validation, performance
+metrics, and error summaries from pipeline execution.
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Dict, List
+from pathlib import Path  # noqa: F401
 
-from infrastructure.reporting.dashboard_generator import (
-    generate_all_dashboards,
-    generate_matplotlib_dashboard,
-    generate_plotly_dashboard,
-)
-from infrastructure.reporting.error_aggregator import (
+from .error_aggregator import (
     ErrorAggregator,
     ErrorEntry,
     get_error_aggregator,
     reset_error_aggregator,
 )
-from infrastructure.reporting.executive_reporter import (
+from .executive_reporter import (
     ExecutiveSummary,
     ProjectMetrics,
     collect_project_metrics,
     generate_executive_summary,
     save_executive_summary,
 )
-from infrastructure.reporting.output_reporter import (
+from .output_reporter import (
     collect_output_statistics,
     generate_output_summary,
 )
-from infrastructure.reporting.pipeline_reporter import (
-    generate_error_summary,
+from .pipeline_reporter import (
     generate_performance_report,
     generate_pipeline_report,
-    generate_test_report,
     generate_validation_report,
+    save_error_summary,
     save_pipeline_report,
+    save_test_results,
 )
-from infrastructure.reporting.test_reporter import (
-    generate_test_report as generate_test_report_from_results,
+from .output_organizer import FileType, OutputOrganizer
+from .multi_project_reporter import generate_multi_project_report, generate_multi_project_summary_report
+from .suite_summary_generator import (
+    generate_markdown_report,
+    generate_summary_report,
+    load_infrastructure_results,
+    load_test_results,
+    run_test_summary_generation,
 )
-from infrastructure.reporting.test_reporter import parse_pytest_output, save_test_report
 
 
-def generate_multi_project_report(
-    repo_root: Path, project_names: List[str], output_dir: Path
-) -> Dict[str, Path]:
-    """Orchestrate complete multi-project reporting workflow.
+# Optional imports: dashboard_generator requires matplotlib/plotly which may not be installed
+try:
+    from .dashboard_generator import (
+        generate_all_dashboards,
+        generate_matplotlib_dashboard,
+        generate_plotly_dashboard,
+    )
 
-    This is a convenience function that runs the full executive reporting pipeline:
-    1. Generate executive summary with metrics collection
-    2. Save summary reports (JSON, HTML, Markdown)
-    3. Generate visual dashboards (PNG, PDF, HTML)
-    4. Export CSV data tables
-
-    Args:
-        repo_root: Repository root path
-        project_names: List of project names to include in report
-        output_dir: Directory to save all reports and dashboards
-
-    Returns:
-        Dictionary mapping file types to saved file paths
-
-    Example:
-        >>> from pathlib import Path
-        >>> from infrastructure.reporting import generate_multi_project_report
-        >>>
-        >>> files = generate_multi_project_report(
-        ...     Path("."), ["project1", "project2"], Path("output/executive_summary")
-        ... )
-        >>> print(f"Generated {len(files)} files")
-    """
-    from infrastructure.core.logging_utils import get_logger
-
-    logger = get_logger(__name__)
-
-    logger.info(f"Starting multi-project reporting for {len(project_names)} projects...")
-
-    all_files = {}
-
-    try:
-        # Step 1: Generate executive summary
-        # (executive_reporter.py logs step-level detail)
-        summary = generate_executive_summary(repo_root, project_names)
-
-        # Step 2: Save summary reports
-        summary_files = save_executive_summary(summary, output_dir)
-        all_files.update(summary_files)
-
-        # Step 3: Generate dashboards
-        dashboard_files = generate_all_dashboards(summary, output_dir)
-        all_files.update(dashboard_files)
-
-        logger.info(f"Multi-project reporting complete. Generated {len(all_files)} files.")
-
-        for file_type, path in all_files.items():
-            logger.info(f"  {file_type.upper()}: {path.name}")
-
-        return all_files
-
-    except Exception as e:
-        logger.error(f"Multi-project reporting failed: {e}")
-        raise
+    _DASHBOARD_AVAILABLE = True
+except ImportError:
+    _DASHBOARD_AVAILABLE = False
 
 
 __all__ = [
     "generate_pipeline_report",
-    "generate_test_report",
     "generate_validation_report",
+    "save_test_results",
     "generate_performance_report",
-    "generate_error_summary",
+    "save_error_summary",
     "save_pipeline_report",
-    "parse_pytest_output",
-    "generate_test_report_from_results",
-    "save_test_report",
     "ErrorAggregator",
     "ErrorEntry",
     "get_error_aggregator",
@@ -130,10 +75,13 @@ __all__ = [
     "collect_project_metrics",
     "ProjectMetrics",
     "ExecutiveSummary",
-    "generate_all_dashboards",
-    "generate_matplotlib_dashboard",
-    "generate_plotly_dashboard",
     "generate_multi_project_report",
+    "generate_multi_project_summary_report",
     "OutputOrganizer",
     "FileType",
+    "generate_summary_report",
+    "generate_markdown_report",
+    "load_test_results",
+    "load_infrastructure_results",
+    "run_test_summary_generation",
 ]

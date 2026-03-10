@@ -5,7 +5,11 @@ Provides reusable HTML templates for various report types.
 
 from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
+
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def get_base_html_template() -> str:
@@ -150,7 +154,7 @@ def get_base_html_template() -> str:
 </html>"""
 
 
-def render_summary_cards(cards: list[Dict[str, Any]]) -> str:
+def render_summary_cards(cards: list[dict[str, Any]]) -> str:
     """Render summary cards HTML.
 
     Args:

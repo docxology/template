@@ -1,7 +1,7 @@
 """Tests for scripts/06_llm_review.py - LLM Manuscript Review orchestrator.
 
 Tests cover:
-- ReviewMetrics, ManuscriptMetrics, SessionMetrics dataclasses
+- ReviewMetrics, ManuscriptInputMetrics, SessionMetrics dataclasses
 - estimate_tokens() function
 - get_max_input_length() environment variable handling
 - extract_manuscript_text() with no truncation for normal files
@@ -27,49 +27,12 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "scripts"))
 
 # Import validation functions from infrastructure (now moved there)
 from infrastructure.llm import is_off_topic
+from infrastructure.llm.core.config import get_max_input_length
 
-# Import functions and classes from the review script
-from scripts import (
-    DEFAULT_MAX_INPUT_LENGTH,
-    ManuscriptMetrics,
-    ReviewMetrics,
-    SessionMetrics,
-    estimate_tokens,
-    generate_review_summary,
-    get_max_input_length,
-    save_review_outputs,
-    validate_review_quality,
-)
-
-
-class TestEstimateTokens:
-    """Tests for estimate_tokens() function."""
-
-    def test_empty_string(self):
-        """Test token estimation for empty string."""
-        assert estimate_tokens("") == 0
-
-    def test_short_text(self):
-        """Test token estimation for short text."""
-        # 12 characters -> ~3 tokens
-        assert estimate_tokens("Hello World!") == 3
-
-    def test_longer_text(self):
-        """Test token estimation for longer text."""
-        # 400 characters -> ~100 tokens
-        text = "a" * 400
-        assert estimate_tokens(text) == 100
-
-    def test_realistic_text(self):
-        """Test token estimation for realistic text."""
-        # Typical research text
-        text = """This research presents a novel approach to optimization 
-        using machine learning techniques. The methodology involves 
-        training neural networks on synthetic data and evaluating 
-        performance on real-world datasets."""
-        # ~248 chars -> ~62 tokens
-        result = estimate_tokens(text)
-        assert 50 <= result <= 70
+DEFAULT_MAX_INPUT_LENGTH: int = 500000
+from infrastructure.llm.review.generator import validate_review_quality
+from infrastructure.llm.review.io import SessionMetrics, generate_review_summary, save_review_outputs
+from infrastructure.llm.review.metrics import ManuscriptInputMetrics, ReviewMetrics
 
 
 class TestGetMaxInputLength:
@@ -159,12 +122,12 @@ class TestReviewMetrics:
         assert metrics.generation_time_seconds == 45.5
 
 
-class TestManuscriptMetrics:
-    """Tests for ManuscriptMetrics dataclass."""
+class TestManuscriptInputMetrics:
+    """Tests for ManuscriptInputMetrics dataclass."""
 
     def test_default_values(self):
-        """Test default values for ManuscriptMetrics."""
-        metrics = ManuscriptMetrics()
+        """Test default values for ManuscriptInputMetrics."""
+        metrics = ManuscriptInputMetrics()
         assert metrics.total_chars == 0
         assert metrics.total_words == 0
         assert metrics.total_tokens_est == 0
@@ -172,8 +135,8 @@ class TestManuscriptMetrics:
         assert metrics.truncated_chars == 0
 
     def test_truncated_manuscript(self):
-        """Test ManuscriptMetrics for truncated manuscript."""
-        metrics = ManuscriptMetrics(
+        """Test ManuscriptInputMetrics for truncated manuscript."""
+        metrics = ManuscriptInputMetrics(
             total_chars=100000,
             total_words=15000,
             total_tokens_est=25000,
@@ -191,7 +154,7 @@ class TestSessionMetrics:
     def test_default_values(self):
         """Test default values for SessionMetrics."""
         metrics = SessionMetrics()
-        assert isinstance(metrics.manuscript, ManuscriptMetrics)
+        assert isinstance(metrics.manuscript, ManuscriptInputMetrics)
         assert isinstance(metrics.reviews, dict)
         assert metrics.total_generation_time == 0.0
         assert metrics.model_name == ""
@@ -200,7 +163,7 @@ class TestSessionMetrics:
     def test_with_reviews(self):
         """Test SessionMetrics with review metrics."""
         session = SessionMetrics(
-            manuscript=ManuscriptMetrics(total_chars=50000, total_words=8000),
+            manuscript=ManuscriptInputMetrics(total_chars=50000, total_words=8000),
             model_name="llama3:latest",
             max_input_length=500000,
             total_generation_time=180.5,
@@ -238,7 +201,7 @@ class TestSaveReviewOutputs:
 
             # Create session metrics
             session_metrics = SessionMetrics(
-                manuscript=ManuscriptMetrics(
+                manuscript=ManuscriptInputMetrics(
                     total_chars=50000,
                     total_words=8000,
                     total_tokens_est=12500,
@@ -277,7 +240,7 @@ class TestSaveReviewOutputs:
 
             reviews = {"executive_summary": "Test content"}
             session_metrics = SessionMetrics(
-                manuscript=ManuscriptMetrics(
+                manuscript=ManuscriptInputMetrics(
                     total_chars=10000,
                     total_words=1500,
                     total_tokens_est=2500,
@@ -319,7 +282,7 @@ class TestSaveReviewOutputs:
                 "quality_review": "Quality content",
             }
             session_metrics = SessionMetrics(
-                manuscript=ManuscriptMetrics(total_chars=20000, total_words=3000),
+                manuscript=ManuscriptInputMetrics(total_chars=20000, total_words=3000),
             )
             session_metrics.reviews["executive_summary"] = ReviewMetrics(
                 output_chars=500, output_words=80, generation_time_seconds=20.0
@@ -352,7 +315,7 @@ class TestGenerateReviewSummary:
 
             reviews = {"executive_summary": "Summary content"}
             session_metrics = SessionMetrics(
-                manuscript=ManuscriptMetrics(
+                manuscript=ManuscriptInputMetrics(
                     total_chars=50000,
                     total_words=8000,
                     total_tokens_est=12500,
@@ -378,7 +341,7 @@ class TestGenerateReviewSummary:
 
             # Test with truncated manuscript
             session_metrics = SessionMetrics(
-                manuscript=ManuscriptMetrics(
+                manuscript=ManuscriptInputMetrics(
                     total_chars=600000,
                     truncated=True,
                     truncated_chars=500000,
@@ -402,7 +365,7 @@ class TestGenerateReviewSummary:
                 "methodology_review": "Method content",
             }
             session_metrics = SessionMetrics(
-                manuscript=ManuscriptMetrics(total_chars=50000, total_words=8000),
+                manuscript=ManuscriptInputMetrics(total_chars=50000, total_words=8000),
                 total_generation_time=120.5,
             )
             for name in reviews:
@@ -442,11 +405,12 @@ class TestModuleImports:
 
     def test_all_required_imports_available(self):
         """Test that all required functions/classes are importable."""
-        from scripts import estimate_tokens, main
+        from infrastructure.llm.review.metrics import estimate_tokens
+        from infrastructure.llm.review.pipeline_runner import run_llm_review_pipeline
 
         # All imports should be available
         assert callable(estimate_tokens)
-        assert callable(main)
+        assert callable(run_llm_review_pipeline)
 
 
 class TestIsOffTopic:
@@ -765,7 +729,7 @@ class TestDetectConversationalPhrases:
 
     def test_no_conversational_phrases(self):
         """Test that formal academic text returns empty list."""
-        from scripts import detect_conversational_phrases
+        from infrastructure.llm.validation.format import detect_conversational_phrases
 
         text = """## Methodology Review
         
@@ -775,7 +739,7 @@ class TestDetectConversationalPhrases:
 
     def test_based_on_document_detected(self):
         """Test that 'based on the document you shared' is detected."""
-        from scripts import detect_conversational_phrases
+        from infrastructure.llm.validation.format import detect_conversational_phrases
 
         text = "Based on the document you shared, this appears to be a research paper."
         phrases = detect_conversational_phrases(text)
@@ -783,7 +747,7 @@ class TestDetectConversationalPhrases:
 
     def test_ill_help_you_detected(self):
         """Test that 'I'll help you' is detected."""
-        from scripts import detect_conversational_phrases
+        from infrastructure.llm.validation.format import detect_conversational_phrases
 
         text = "I'll help you understand the key points of this manuscript."
         phrases = detect_conversational_phrases(text)
@@ -791,7 +755,7 @@ class TestDetectConversationalPhrases:
 
     def test_let_me_know_detected(self):
         """Test that 'Let me know if' is detected."""
-        from scripts import detect_conversational_phrases
+        from infrastructure.llm.validation.format import detect_conversational_phrases
 
         text = "Let me know if you need more details about the methodology."
         phrases = detect_conversational_phrases(text)
@@ -799,7 +763,7 @@ class TestDetectConversationalPhrases:
 
     def test_multiple_phrases_detected(self):
         """Test that multiple conversational phrases are all detected."""
-        from scripts import detect_conversational_phrases
+        from infrastructure.llm.validation.format import detect_conversational_phrases
 
         text = """Based on the document you've shared, I'll provide you with analysis.
         Let me know if you have questions. I'd be happy to help further."""
@@ -816,7 +780,7 @@ class TestCheckFormatCompliance:
 
     def test_compliant_response(self):
         """Test that properly formatted response passes."""
-        from scripts import check_format_compliance
+        from infrastructure.llm.validation.format import check_format_compliance
 
         text = """## Overview
         
@@ -837,7 +801,7 @@ class TestCheckFormatCompliance:
 
     def test_emojis_allowed(self):
         """Test that emoji usage is now allowed."""
-        from scripts import check_format_compliance
+        from infrastructure.llm.validation.format import check_format_compliance
 
         text = """## Overview 🔑
         
@@ -849,7 +813,7 @@ class TestCheckFormatCompliance:
 
     def test_tables_allowed(self):
         """Test that table usage is now allowed."""
-        from scripts import check_format_compliance
+        from infrastructure.llm.validation.format import check_format_compliance
 
         text = """## Overview
 
@@ -864,7 +828,7 @@ class TestCheckFormatCompliance:
 
     def test_conversational_violation(self):
         """Test that conversational phrases are flagged."""
-        from scripts import check_format_compliance
+        from infrastructure.llm.validation.format import check_format_compliance
 
         text = """Based on the document you shared, I'll help you understand the key points.
         Let me know if you need more details."""
@@ -876,7 +840,7 @@ class TestCheckFormatCompliance:
 
     def test_emojis_tables_with_conversational_still_fails(self):
         """Test that conversational phrases still fail even with emojis/tables."""
-        from scripts import check_format_compliance
+        from infrastructure.llm.validation.format import check_format_compliance
 
         text = """## Overview 🚀
 
@@ -957,7 +921,7 @@ class TestValidateReviewQualityWithFormatCompliance:
 
     def test_emojis_pass_validation(self):
         """Test that emojis don't cause validation failures."""
-        from scripts import validate_review_quality
+        from infrastructure.llm.review.generator import validate_review_quality
 
         # Response with emoji - should be valid now
         response = (
@@ -994,7 +958,7 @@ class TestValidateReviewQualityWithFormatCompliance:
 
     def test_conversational_phrases_still_flagged(self):
         """Test that conversational phrases are flagged as format issues."""
-        from scripts import validate_review_quality
+        from infrastructure.llm.review.generator import validate_review_quality
 
         # Response with conversational phrases
         response = (

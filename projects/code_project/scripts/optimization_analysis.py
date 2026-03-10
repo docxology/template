@@ -13,7 +13,7 @@ Capabilities demonstrated:
 3. Saving numerical results securely via `infrastructure.validation`
 4. Registering figures for automated `infrastructure.rendering` into the PDF
 """
-# Add project src to path
+import functools
 import sys
 from pathlib import Path
 from typing import Any, Dict, Optional
@@ -21,19 +21,12 @@ from typing import Any, Dict, Optional
 import matplotlib.pyplot as plt
 import numpy as np
 
-project_root = Path(__file__).parent.parent
-sys.path.insert(0, str(project_root / "src"))
+from optimizer import (OptimizationResult, compute_gradient, gradient_descent,
+                       make_quadratic_problem, quadratic_function,
+                       simulate_trajectory)
 
-from optimizer import (OptimizationResult, compute_gradient, gradient_descent,  # noqa: E402
-                       make_quadratic_problem, quadratic_function,  # noqa: E402
-                       simulate_trajectory)  # noqa: E402
-
-# Add infrastructure imports for scientific analysis
+# Infrastructure imports (optional — PYTHONPATH must include repo root)
 try:
-    # Ensure repo root is on path for infrastructure imports
-    repo_root = Path(__file__).parent.parent.parent
-    sys.path.insert(0, str(repo_root))
-
     from infrastructure.core import (CheckpointManager, ProgressBar,
                                      SystemHealthChecker, get_logger,
                                      log_success,
@@ -106,6 +99,9 @@ VIZ_CONFIG = {
     "markers": ["o", "s", "^", "D", "v", "p"],
 }
 
+# Project root: projects/code_project/
+project_root = Path(__file__).resolve().parent.parent
+
 
 def apply_visualization_style():
     """Apply global matplotlib style for publication-quality, accessible figures."""
@@ -145,10 +141,6 @@ def apply_visualization_style():
         "savefig.facecolor": VIZ_CONFIG["figure"]["facecolor"],
         "savefig.edgecolor": "none",
     })
-
-
-# Apply visualization style on import
-apply_visualization_style()
 
 
 def run_convergence_experiment():
@@ -742,10 +734,6 @@ def run_stability_analysis():
     if logger:
         logger.info("Running numerical stability analysis...")
 
-    # Define test function for stability analysis
-    def test_func(x):
-        return quadratic_function(x, np.array([[1.0]]), np.array([1.0]))
-
     # Test different input ranges for stability
     test_inputs = [
         np.array([0.0]),  # Standard start point
@@ -756,7 +744,9 @@ def run_stability_analysis():
 
     # Run stability check
     stability_report = check_numerical_stability(
-        func=test_func, test_inputs=test_inputs, tolerance=1e-10
+        func=functools.partial(quadratic_function, A=np.array([[1.0]]), b=np.array([1.0])),
+        test_inputs=test_inputs,
+        tolerance=1e-10,
     )
 
     # Save stability report
@@ -800,10 +790,6 @@ def run_performance_benchmarking():
     if logger:
         logger.info("Running performance benchmarking...")
 
-    # Define test function
-    def test_func(x):
-        return quadratic_function(x, np.array([[1.0]]), np.array([1.0]))
-
     # Different problem scales
     test_inputs = [
         np.array([0.0]),  # Standard case
@@ -813,7 +799,7 @@ def run_performance_benchmarking():
 
     # Run benchmarking
     benchmark_report = benchmark_function(
-        func=test_func,
+        func=functools.partial(quadratic_function, A=np.array([[1.0]]), b=np.array([1.0])),
         test_inputs=test_inputs,
         iterations=50,  # Multiple runs for reliable measurement
     )
@@ -1296,6 +1282,7 @@ def register_figure():
 
 def main():
     """Main analysis function."""
+    apply_visualization_style()
     # Initialize logger (use print as fallback)
     logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
 

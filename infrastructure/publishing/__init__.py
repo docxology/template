@@ -4,35 +4,45 @@ This module contains utilities for academic publishing workflows, DOI management
 citation generation, and publishing to academic platforms.
 
 Modules:
-    core: Publishing workflow assistance and metadata management
+    citations: Citation format generation (APA, MLA, BibTeX)
+    metadata: Publication metadata extraction and management
+    models: Data models (PublicationMetadata, CitationStyle)
+    package: Publication package creation, checklists, and readiness validation
+    platforms: Academic platform integrations (Zenodo, arXiv, GitHub)
     api: API clients for Zenodo, arXiv, GitHub
 """
 
+from __future__ import annotations
+
 from .api import ZenodoClient, ZenodoConfig
-from .core import (
-    CitationStyle,
-    PublicationMetadata,
-    calculate_complexity_score,
-    calculate_file_hash,
-    create_academic_profile_data,
-    create_github_release,
-    create_publication_announcement,
-    create_publication_package,
-    create_repository_metadata,
-    create_submission_checklist,
+from .citations import (
     extract_citations_from_markdown,
-    extract_publication_metadata,
     generate_citation_apa,
     generate_citation_bibtex,
     generate_citation_mla,
     generate_citations_markdown,
-    generate_doi_badge,
+)
+from .metadata import (
+    calculate_complexity_score,
+    create_academic_profile_data,
+    create_repository_metadata,
+    extract_publication_metadata,
     generate_publication_metrics,
     generate_publication_summary,
+    validate_doi,
+)
+from .models import CitationStyle, PublicationMetadata
+from .package import (
+    create_publication_announcement,
+    create_publication_package,
+    create_submission_checklist,
+    generate_doi_badge,
+    validate_publication_readiness,
+)
+from .platforms import (
+    create_github_release,
     prepare_arxiv_submission,
     publish_to_zenodo,
-    validate_doi,
-    validate_publication_readiness,
 )
 
 __all__ = [
@@ -58,7 +68,6 @@ __all__ = [
     "validate_publication_readiness",
     "generate_publication_metrics",
     "create_repository_metadata",
-    "calculate_file_hash",
     "calculate_complexity_score",
     # Dissemination
     "publish_to_zenodo",

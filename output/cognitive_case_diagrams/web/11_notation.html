@@ -1,0 +1,1899 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Notation and Terminology</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Notation and Terminology</h1>
+</header>
+<h1 id="sec:notation">Appendix: Comprehensive Notation and
+Terminology</h1>
+<p>This appendix collects all notation, symbols, and technical
+terminology used throughout the manuscript. Entries are grouped by
+domain and ordered alphabetically within each section. The <strong>First
+Use</strong> column indicates the section where each term is first
+introduced or defined.</p>
+<h2 id="a.-linguistic-terms">A. Linguistic Terms</h2>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 27%" />
+<col style="width: 22%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Term</th>
+<th style="text-align: center;">Symbol</th>
+<th style="text-align: left;">Definition</th>
+<th style="text-align: center;">First Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Ablative</td>
+<td style="text-align: center;">ABL</td>
+<td style="text-align: left;">Case role encoding origin, source, or
+cause</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Accusative</td>
+<td style="text-align: center;">ACC</td>
+<td style="text-align: left;">Case role encoding patient, theme, or
+direct object</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Active–Stative alignment</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Alignment in which the sole argument S
+splits by agentivity</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Agent-like argument</td>
+<td style="text-align: center;">A</td>
+<td style="text-align: left;">The agent-like argument of a transitive
+clause</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Alignment functor</td>
+<td style="text-align: center;"><span class="math inline">\(F:
+\mathcal{U} \to \mathcal{L}\)</span></td>
+<td style="text-align: left;">Structure-preserving map from universal to
+language-specific case category</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Alignment type</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Systematic pattern governing how S, A, P
+are grouped for case marking</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Case category</td>
+<td style="text-align: center;"><span
+class="math inline">\(\mathcal{C}\)</span></td>
+<td style="text-align: left;">Small category whose objects are case
+roles and morphisms are grammatical relations</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Case frame</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">The set of case roles activated by a
+particular verb or predicate</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Case-typed noun space</td>
+<td style="text-align: center;"><span
+class="math inline">\(N_{\text{NOM}}, N_{\text{ACC}},
+\ldots\)</span></td>
+<td style="text-align: left;">Case-specific vector subspace in a
+case-enriched DisCoCat model</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Categorial grammar</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Grammar assigning each lexical item an
+algebraic type encoding combinatory potential</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Contraction</td>
+<td style="text-align: center;"><span class="math inline">\(a^l \cdot a
+\to 1\)</span></td>
+<td style="text-align: left;">Pregroup reduction eliminating an adjoint
+pair</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Dative</td>
+<td style="text-align: center;">DAT</td>
+<td style="text-align: left;">Case role encoding recipient, goal, or
+beneficiary</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Deep case</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Fillmore’s universal semantic primitive
+(e.g., Agentive, Objective)</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Ergative–Absolutive alignment</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Alignment grouping S = P <span
+class="math inline">\(\neq\)</span> A</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Expansion</td>
+<td style="text-align: center;"><span class="math inline">\(1 \to a
+\cdot a^l\)</span></td>
+<td style="text-align: left;">Pregroup expansion introducing an adjoint
+pair</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Fluid-S</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Alignment in which S marking varies by
+context or volition</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Genitive</td>
+<td style="text-align: center;">GEN</td>
+<td style="text-align: left;">Case role encoding possessor or
+source</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Formal semantics</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Montague’s programme: meaning assigned
+compositionally via truth-conditional functions</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Grammatical relation</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Morphism in a case category relating two
+case roles</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Instrumental</td>
+<td style="text-align: center;">INS</td>
+<td style="text-align: left;">Case role encoding instrument or
+means</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Kāraka</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Pāṇini’s system of deep semantic roles in
+Sanskrit grammar</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Left adjoint</td>
+<td style="text-align: center;"><span
+class="math inline">\(a^l\)</span></td>
+<td style="text-align: left;">Left adjoint type satisfying <span
+class="math inline">\(a^l \cdot a \leq 1\)</span></td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Locative</td>
+<td style="text-align: center;">LOC</td>
+<td style="text-align: left;">Case role encoding location or
+context</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Markedness</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Asymmetry in the formal complexity of
+paradigmatic oppositions</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Monadic semantics</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Song’s extension using monads to model
+sublexical verb-root decomposition</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Nominative</td>
+<td style="text-align: center;">NOM</td>
+<td style="text-align: left;">Case role encoding agent, experiencer, or
+intransitive subject</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Nominative–Accusative alignment</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Alignment grouping S = A <span
+class="math inline">\(\neq\)</span> P</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Passivization</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Syntactic transformation promoting patient
+to subject position</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Patient-like argument</td>
+<td style="text-align: center;">P</td>
+<td style="text-align: left;">The patient-like argument of a transitive
+clause</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Pregroup grammar</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Grammar where types have left and right
+adjoints forming a compact closed category</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Proto-Agent</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Dowty’s cluster of agentive entailments
+(volition, sentience, causation)</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Proto-Patient</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Dowty’s cluster of patient entailments
+(change of state, causal affectedness)</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Right adjoint</td>
+<td style="text-align: center;"><span
+class="math inline">\(a^r\)</span></td>
+<td style="text-align: left;">Right adjoint type satisfying <span
+class="math inline">\(a \cdot a^r \leq 1\)</span></td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Sole argument</td>
+<td style="text-align: center;">S</td>
+<td style="text-align: left;">The sole argument of an intransitive
+clause</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Thematic role</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Semantic relation between a predicate and
+its argument (Agent, Patient, Goal, etc.)</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Tripartite alignment</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Alignment in which S <span
+class="math inline">\(\neq\)</span> A <span
+class="math inline">\(\neq\)</span> P (all three distinguished)</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Verb root decomposition</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Analysis of a verb’s internal causative
+and result-state layers via a monad</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Vocative</td>
+<td style="text-align: center;">VOC</td>
+<td style="text-align: left;">Case role encoding direct address</td>
+<td style="text-align: center;">§2</td>
+</tr>
+</tbody>
+</table>
+<h2 id="b.-category-theory">B. Category Theory</h2>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 27%" />
+<col style="width: 22%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Term</th>
+<th style="text-align: center;">Symbol</th>
+<th style="text-align: left;">Definition</th>
+<th style="text-align: center;">First Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Box</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Node in a string diagram representing a
+morphism</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Cap</td>
+<td style="text-align: center;"><span class="math inline">\(\eta: 1 \to
+a^r \otimes a\)</span></td>
+<td style="text-align: left;">Unit of a compact closure (coevaluation
+map)</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Category</td>
+<td style="text-align: center;"><span
+class="math inline">\(\mathcal{C}\)</span></td>
+<td style="text-align: left;">Collection of objects and morphisms with
+identity and associative composition</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Classifying topos</td>
+<td style="text-align: center;"><span
+class="math inline">\(\mathcal{E}_{\mathbb{T}}\)</span></td>
+<td style="text-align: left;">Canonical topos whose models correspond to
+geometric functors from <span
+class="math inline">\(\mathcal{E}_{\mathbb{T}}\)</span></td>
+<td style="text-align: center;">§6</td>
+</tr>
+<tr>
+<td style="text-align: left;">Codomain</td>
+<td style="text-align: center;"><span
+class="math inline">\(\text{cod}(f)\)</span></td>
+<td style="text-align: left;">Target object of a morphism <span
+class="math inline">\(f\)</span></td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Commutative diagram</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Diagram in which all directed paths with
+the same start and end yield equal composites</td>
+<td style="text-align: center;">§1</td>
+</tr>
+<tr>
+<td style="text-align: left;">Cobordism</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Manifold with boundary connecting two
+lower-dimensional manifolds; domain of TQFT functors</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Compact closed category</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Monoidal category in which every object
+has a left and right dual</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Composition</td>
+<td style="text-align: center;"><span class="math inline">\(g \circ
+f\)</span></td>
+<td style="text-align: left;">Sequential application of morphisms: first
+<span class="math inline">\(f\)</span>, then <span
+class="math inline">\(g\)</span></td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Cup</td>
+<td style="text-align: center;"><span class="math inline">\(\varepsilon:
+a \otimes a^r \to 1\)</span></td>
+<td style="text-align: left;">Counit of a compact closure (evaluation
+map)</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Diagram</td>
+<td style="text-align: center;"><span
+class="math inline">\(D\)</span></td>
+<td style="text-align: left;">DisCoPy representation of a morphism in a
+monoidal category</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\dagger\)</span>-compact closed category</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Compact closed category with a
+contravariant involutive endofunctor <span
+class="math inline">\(\dagger\)</span>; framework for ZX-calculus</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Domain</td>
+<td style="text-align: center;"><span
+class="math inline">\(\text{dom}(f)\)</span></td>
+<td style="text-align: left;">Source object of a morphism <span
+class="math inline">\(f\)</span></td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Fiber bundle</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Projection <span
+class="math inline">\(\pi: E \to B\)</span> whose fibers carry
+role-filler structure; topos-theoretic LoT model</td>
+<td style="text-align: center;">§6</td>
+</tr>
+<tr>
+<td style="text-align: left;">Functor</td>
+<td style="text-align: center;"><span class="math inline">\(F:
+\mathcal{C} \to \mathcal{D}\)</span></td>
+<td style="text-align: left;">Structure-preserving map between
+categories</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Geometric theory</td>
+<td style="text-align: center;"><span
+class="math inline">\(\mathbb{T}\)</span></td>
+<td style="text-align: left;">Theory axiomatized by sequents with finite
+conjunctions, arbitrary disjunctions, existential quantification</td>
+<td style="text-align: center;">§6</td>
+</tr>
+<tr>
+<td style="text-align: left;">Identity morphism</td>
+<td style="text-align: center;"><span
+class="math inline">\(\text{id}_A\)</span></td>
+<td style="text-align: left;">Morphism from <span
+class="math inline">\(A\)</span> to itself satisfying <span
+class="math inline">\(f \circ \text{id} = f = \text{id} \circ
+f\)</span></td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Monad</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Endofunctor with unit and multiplication
+satisfying associativity and unit laws</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Monoidal category</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Category with a bifunctor <span
+class="math inline">\(\otimes\)</span> (tensor product) and unit object
+<span class="math inline">\(I\)</span></td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Morita equivalence</td>
+<td style="text-align: center;"><span
+class="math inline">\(\mathcal{E}_{\mathbb{T}_1} \simeq
+\mathcal{E}_{\mathbb{T}_2}\)</span></td>
+<td style="text-align: left;">Equivalence of classifying toposes
+enabling inter-theoretic transfer</td>
+<td style="text-align: center;">§6</td>
+</tr>
+<tr>
+<td style="text-align: left;">Morphism</td>
+<td style="text-align: center;"><span class="math inline">\(f: A \to
+B\)</span></td>
+<td style="text-align: left;">Arrow between objects in a category;
+encodes a relation or transformation</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Natural transformation</td>
+<td style="text-align: center;"><span class="math inline">\(\alpha: F
+\Rightarrow G\)</span></td>
+<td style="text-align: left;">Family of morphisms <span
+class="math inline">\(\alpha_A: F(A) \to G(A)\)</span> commuting with
+all morphisms</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Object</td>
+<td style="text-align: center;"><span class="math inline">\(A, B,
+\ldots\)</span></td>
+<td style="text-align: left;">Entities in a category; in our framework,
+case roles</td>
+<td style="text-align: center;">§2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Presheaf</td>
+<td style="text-align: center;"><span
+class="math inline">\(\hat{\mathcal{C}} = [\mathcal{C}^{op},
+\textbf{Set}]\)</span></td>
+<td style="text-align: left;">Contravariant functor from <span
+class="math inline">\(\mathcal{C}\)</span> to <strong>Set</strong></td>
+<td style="text-align: center;">§6</td>
+</tr>
+<tr>
+<td style="text-align: left;">Snake equation</td>
+<td style="text-align: center;"><span class="math inline">\((1 \otimes
+\varepsilon) \circ (\eta \otimes 1) = 1\)</span></td>
+<td style="text-align: left;">Zigzag identity: fundamental axiom of
+compact closed categories</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">String diagram</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Planar graph faithfully representing
+morphisms in a monoidal category</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Subobject classifier</td>
+<td style="text-align: center;"><span
+class="math inline">\(\Omega\)</span></td>
+<td style="text-align: left;">Object in a topos playing the role of a
+truth-value object</td>
+<td style="text-align: center;">§6</td>
+</tr>
+<tr>
+<td style="text-align: left;">Swap</td>
+<td style="text-align: center;"><span
+class="math inline">\(\sigma_{A,B}: A \otimes B \to B \otimes
+A\)</span></td>
+<td style="text-align: left;">Braiding morphism permuting two objects in
+a symmetric monoidal category</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Tensor product</td>
+<td style="text-align: center;"><span class="math inline">\(A \otimes
+B\)</span></td>
+<td style="text-align: left;">Monoidal product representing parallel
+composition or concatenation</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Topos</td>
+<td style="text-align: center;"><span
+class="math inline">\(\mathcal{E}\)</span></td>
+<td style="text-align: left;">Category with products, exponentials, and
+a subobject classifier; generalized universe of sets</td>
+<td style="text-align: center;">§6</td>
+</tr>
+<tr>
+<td style="text-align: left;">Universal construction</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Object or morphism characterized by a
+universal property (product, coproduct, limit)</td>
+<td style="text-align: center;">§6</td>
+</tr>
+<tr>
+<td style="text-align: left;">Wire</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Edge in a string diagram representing a
+type (object)</td>
+<td style="text-align: center;">§3</td>
+</tr>
+</tbody>
+</table>
+<h2 id="c.-enriched-categories-and-magnitude">C. Enriched Categories and
+Magnitude</h2>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 27%" />
+<col style="width: 22%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Term</th>
+<th style="text-align: center;">Symbol</th>
+<th style="text-align: left;">Definition</th>
+<th style="text-align: center;">First Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Categorical magnitude</td>
+<td style="text-align: center;"><span class="math inline">\(\lvert X
+\rvert\)</span></td>
+<td style="text-align: left;">Sum <span class="math inline">\(\sum_i
+w_i\)</span> where <span class="math inline">\((w_1, \ldots,
+w_n)\)</span> solves <span class="math inline">\(Z \mathbf{w} =
+\mathbf{1}\)</span>; measures effective number of objects</td>
+<td style="text-align: center;">§5</td>
+</tr>
+<tr>
+<td style="text-align: left;">Composition inequality</td>
+<td style="text-align: center;"><span
+class="math inline">\(\mathcal{V}(A,B) \otimes \mathcal{V}(B,C) \leq
+\mathcal{V}(A,C)\)</span></td>
+<td style="text-align: left;">Enriched analogue of composition: the
+composite hom-value is at least the product of intermediate values</td>
+<td style="text-align: center;">§5</td>
+</tr>
+<tr>
+<td style="text-align: left;">Enriched category</td>
+<td style="text-align: center;"><span
+class="math inline">\(\mathcal{V}\text{-Cat}\)</span></td>
+<td style="text-align: left;">Category whose hom-sets are replaced by
+objects of a monoidal category <span
+class="math inline">\(\mathcal{V}\)</span></td>
+<td style="text-align: center;">§5</td>
+</tr>
+<tr>
+<td style="text-align: left;">Enriched functor</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Structure-preserving map between enriched
+categories respecting hom-values</td>
+<td style="text-align: center;">§5</td>
+</tr>
+<tr>
+<td style="text-align: left;">Hom-value</td>
+<td style="text-align: center;"><span
+class="math inline">\(\mathcal{V}(A,B) \in [0,1]\)</span></td>
+<td style="text-align: left;">Enriched analogue of hom-set; measures
+degree of relation between objects</td>
+<td style="text-align: center;">§5</td>
+</tr>
+<tr>
+<td style="text-align: left;">Identity inequality</td>
+<td style="text-align: center;"><span class="math inline">\(1 \leq
+\mathcal{V}(A,A)\)</span></td>
+<td style="text-align: left;">Every object has maximal self-relatedness
+in the enriched hom</td>
+<td style="text-align: center;">§5</td>
+</tr>
+<tr>
+<td style="text-align: left;">Similarity matrix</td>
+<td style="text-align: center;"><span class="math inline">\(Z_{ij} =
+\mathcal{V}(A_i, A_j)\)</span></td>
+<td style="text-align: left;">Matrix of all pairwise hom-values; used to
+compute categorical magnitude</td>
+<td style="text-align: center;">§5</td>
+</tr>
+<tr>
+<td style="text-align: left;">Lawvere metric space</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Category enriched over <span
+class="math inline">\(([0,\infty], +, 0)\)</span>; generalizes metric
+spaces via enriched categories</td>
+<td style="text-align: center;">§5</td>
+</tr>
+<tr>
+<td style="text-align: left;">Shannon entropy</td>
+<td style="text-align: center;"><span
+class="math inline">\(H\)</span></td>
+<td style="text-align: left;">Information-theoretic measure
+characterized as the unique derivation of a topological operad
+(Bradley)</td>
+<td style="text-align: center;">§5</td>
+</tr>
+<tr>
+<td style="text-align: left;">Topological operad</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Operad with topological structure whose
+derivations connect magnitude to entropy</td>
+<td style="text-align: center;">§5</td>
+</tr>
+<tr>
+<td style="text-align: left;">Weight vector</td>
+<td style="text-align: center;"><span
+class="math inline">\(\mathbf{w}\)</span></td>
+<td style="text-align: left;">Solution to <span
+class="math inline">\(Z\mathbf{w} = \mathbf{1}\)</span>; entries are the
+effective weights of each object</td>
+<td style="text-align: center;">§5</td>
+</tr>
+</tbody>
+</table>
+<h2 id="d.-distributional-semantics-and-llms">D. Distributional
+Semantics and LLMs</h2>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 27%" />
+<col style="width: 22%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Term</th>
+<th style="text-align: center;">Symbol</th>
+<th style="text-align: left;">Definition</th>
+<th style="text-align: center;">First Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Attention mechanism</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Transformer component computing weighted
+relevance between token positions</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Attention weight</td>
+<td style="text-align: center;"><span
+class="math inline">\(\alpha_{ij}\)</span></td>
+<td style="text-align: left;">Softmax-normalized score encoding
+contextual relevance of token <span class="math inline">\(j\)</span> to
+token <span class="math inline">\(i\)</span></td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">BERT</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Bidirectional Encoder Representations from
+Transformers; masked language model producing contextualized
+embeddings</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Contextualized embedding</td>
+<td style="text-align: center;"><span
+class="math inline">\(\mathbf{v}_w^{(c)}\)</span></td>
+<td style="text-align: left;">Vector representation of word <span
+class="math inline">\(w\)</span> that varies with linguistic context
+<span class="math inline">\(c\)</span></td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Compact closure map</td>
+<td style="text-align: center;"><span
+class="math inline">\(\varepsilon_N: N \otimes N \to
+\mathbb{R}\)</span></td>
+<td style="text-align: left;">Inner product implementing pregroup
+contraction in the vector space semantics</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Cosine similarity</td>
+<td style="text-align: center;"><span
+class="math inline">\(\cos(\mathbf{u}, \mathbf{v})\)</span></td>
+<td style="text-align: left;">Similarity measure <span
+class="math inline">\(\frac{\mathbf{u} \cdot \mathbf{v}}{\|\mathbf{u}\|
+\|\mathbf{v}\|}\)</span> between vectors</td>
+<td style="text-align: center;">§5</td>
+</tr>
+<tr>
+<td style="text-align: left;">Distributional Memory</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Baroni–Lenci tensor-based framework
+structuring co-occurrence as (word, relation, word) triples</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">DisCoCat</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Distributional Compositional Categorical
+model; monoidal functor from pregroup grammars to vector spaces</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">DisCoCirc</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Discourse-level extension of DisCoCat with
+persistent entity wires</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Distributional hypothesis</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">The thesis that words occurring in similar
+contexts have similar meanings (Harris 1954, Firth 1957)</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">GloVe</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Global Vectors for Word Representation;
+log-bilinear model of word co-occurrence statistics</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">GPT</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Generative Pre-trained Transformer;
+autoregressive language model</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Meaning functor</td>
+<td style="text-align: center;"><span class="math inline">\(F:
+\mathbf{Preg} \to \mathbf{FVect}\)</span></td>
+<td style="text-align: left;">Monoidal functor assigning vector spaces
+to types and linear maps to derivations</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Noun space</td>
+<td style="text-align: center;"><span
+class="math inline">\(N\)</span></td>
+<td style="text-align: left;">Vector space to which noun types <span
+class="math inline">\(n\)</span> map under the meaning functor</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Parameterized optic</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Categorical construction (Gavranović)
+modeling attention heads as functorial lenses</td>
+<td style="text-align: center;">§9</td>
+</tr>
+<tr>
+<td style="text-align: left;">Self-attention</td>
+<td style="text-align: center;"><span
+class="math inline">\(\text{Attn}(Q,K,V) =
+\text{softmax}(\frac{QK^\top}{\sqrt{d_k}})V\)</span></td>
+<td style="text-align: left;">Core transformer operation computing
+contextualized representations</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Sentence space</td>
+<td style="text-align: center;"><span
+class="math inline">\(S\)</span></td>
+<td style="text-align: left;">Vector space to which sentence type <span
+class="math inline">\(s\)</span> maps under the meaning functor</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Sentence vector</td>
+<td style="text-align: center;"><span
+class="math inline">\(\overrightarrow{\text{sentence}}\)</span></td>
+<td style="text-align: left;">Vector in <span
+class="math inline">\(S\)</span> computed by tensoring and contracting
+word meanings via DisCoCat</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Static embedding</td>
+<td style="text-align: center;"><span
+class="math inline">\(\mathbf{v}_w\)</span></td>
+<td style="text-align: left;">Fixed vector representation of word <span
+class="math inline">\(w\)</span> independent of context (e.g., Word2Vec,
+GloVe)</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Transformer</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Neural architecture using self-attention
+and feed-forward layers for sequence processing</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Word2Vec</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Neural embedding model (Mikolov et
+al. 2013) learning word vectors from local context windows</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Word vector</td>
+<td style="text-align: center;"><span class="math inline">\(\mathbf{v}_w
+\in \mathbb{R}^d\)</span></td>
+<td style="text-align: left;"><span
+class="math inline">\(d\)</span>-dimensional real-valued vector encoding
+distributional properties of word <span
+class="math inline">\(w\)</span></td>
+<td style="text-align: center;">§4</td>
+</tr>
+</tbody>
+</table>
+<h2 id="e.-active-inference-and-cognitive-models">E. Active Inference
+and Cognitive Models</h2>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 27%" />
+<col style="width: 22%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Term</th>
+<th style="text-align: center;">Symbol</th>
+<th style="text-align: left;">Definition</th>
+<th style="text-align: center;">First Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Active inference</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Framework in which perception and action
+are unified as variational free energy minimization</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Active sampling</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Agent’s selection of actions to confirm or
+update case assignments via sensory evidence</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Belief updating</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Bayesian posterior computation: revising
+generative model parameters given new observations</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">CEREBRUM</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Case-Enabled Reasoning Engine with
+Bayesian Representations Using Models; treats AI models as case-bearing
+entities</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Distributional Active Inference
+(DAIF)</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Extension replacing scalar value summaries
+with full return distributions in active inference</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Distributional RL</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Reinforcement learning operating on full
+return distributions rather than scalar expected values</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Free energy</td>
+<td style="text-align: center;"><span
+class="math inline">\(F\)</span></td>
+<td style="text-align: left;">Variational bound on surprisal; <span
+class="math inline">\(F = D_{KL}[q(\theta) \parallel p(\theta \mid o)] -
+\ln p(o)\)</span></td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Free energy principle (FEP)</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">The principle that self-organizing systems
+maintain themselves by minimizing surprisal</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Garden-path reanalysis</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Restructuring of case assignments when
+incoming evidence contradicts the current parse</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Generative model</td>
+<td style="text-align: center;"><span class="math inline">\(p(o,
+s)\)</span></td>
+<td style="text-align: left;">Joint probability model over observations
+<span class="math inline">\(o\)</span> and hidden states <span
+class="math inline">\(s\)</span></td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Markov blanket</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Statistical boundary separating internal
+states from external environment; defines agent boundary</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">N400</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Event-related brain potential peaking
+~400ms post-stimulus; indexes semantic prediction error</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">P600</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Event-related brain potential peaking
+~600ms post-stimulus; indexes syntactic prediction error</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Perceptual inference</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Updating internal beliefs to better
+predict current observations (reduce prediction error)</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Precision weighting</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Weighting of prediction errors by inverse
+variance; enriched morphism weights serve this role</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Prediction error</td>
+<td style="text-align: center;"><span
+class="math inline">\(\varepsilon\)</span></td>
+<td style="text-align: left;">Difference between predicted and observed
+sensory input; drives belief updating</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Push-forward measure</td>
+<td style="text-align: center;"><span class="math inline">\(T_\#
+\mu\)</span></td>
+<td style="text-align: left;">Distribution obtained by transforming a
+base measure <span class="math inline">\(\mu\)</span> through a function
+<span class="math inline">\(T\)</span></td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Situation semantics</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Framework representing meaning as
+relations between situations (Barwise and Perry 1983)</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Surprisal</td>
+<td style="text-align: center;"><span class="math inline">\(-\ln
+p(o)\)</span></td>
+<td style="text-align: left;">Negative log-probability of an observation
+under the generative model</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Variational free energy</td>
+<td style="text-align: center;"><span
+class="math inline">\(F[q]\)</span></td>
+<td style="text-align: left;">Functional upper bound on surprisal
+minimized by approximate posterior <span
+class="math inline">\(q\)</span></td>
+<td style="text-align: center;">§7</td>
+</tr>
+</tbody>
+</table>
+<h2 id="f.-quantum-and-topological-terms">F. Quantum and Topological
+Terms</h2>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 27%" />
+<col style="width: 22%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Term</th>
+<th style="text-align: center;">Symbol</th>
+<th style="text-align: left;">Definition</th>
+<th style="text-align: center;">First Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Amplituhedron</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Positive geometry encoding scattering
+amplitudes; connected to TQNN execution traces</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\dagger\)</span>-compact category</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">See <span
+class="math inline">\(\dagger\)</span>-compact closed category in
+§B</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">CPTP map</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Completely Positive Trace-Preserving map;
+quantum channel between Hilbert spaces</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Density operator</td>
+<td style="text-align: center;"><span
+class="math inline">\(\rho\)</span></td>
+<td style="text-align: left;">Positive semidefinite trace-one operator
+encoding a quantum (or semantic) state</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Execution trace</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Record of operations in a quantum
+computation; connects TQNNs to amplituhedra</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Generalized flow</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Graph-theoretic property ensuring
+deterministic circuit extraction from ZX-diagrams</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Hadamard box</td>
+<td style="text-align: center;"><span
+class="math inline">\(H\)</span></td>
+<td style="text-align: left;">ZX-calculus element implementing the
+Hadamard gate; converts between Z and X bases</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Holographic screen</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Information boundary between interacting
+quantum systems carrying a qubit array</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Pointer state</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Preferred quantum state selected by a QRF;
+determines the measurement basis</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Quantum contextuality</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Quantum correlations that reduce
+cohomological obstructions to semantic alignment</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Quantum discord</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Quantum correlation measure equal to
+integrated semantic information in sheaf framework</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Quantum key distribution (QKD)</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Protocol providing information-theoretic
+security for quantum communication channels</td>
+<td style="text-align: center;">§9</td>
+</tr>
+<tr>
+<td style="text-align: left;">Quantum reference frame (QRF)</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Observer-relative frame selecting pointer
+states and inducing decoherence</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Quantum semantic sheaf</td>
+<td style="text-align: center;"><span class="math inline">\((H, F,
+\rho)\)</span></td>
+<td style="text-align: left;">Triple of Hilbert spaces, CPTP channels,
+and density operators over a communication graph</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Reshetikhin–Turaev invariant</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Topological invariant assigning to a
+ribbon graph a linear map via TQFT</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Sheaf cohomology</td>
+<td style="text-align: center;"><span
+class="math inline">\(H^n(\mathcal{F})\)</span></td>
+<td style="text-align: left;">Cohomological obstruction classes
+governing alignment in a quantum semantic sheaf</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Spin-network</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Graph with edges labeled by
+representations and vertices by intertwiners; TQFT data</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Spider</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Elementary ZX-diagram node (Z-spider or
+X-spider) representing a quantum operation</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">TQFT</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Topological Quantum Field Theory; functor
+from cobordisms to Hilbert spaces</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">TQNN</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Topological Quantum Neural Network; QNN
+reformulated via spin-networks and TQFT</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">Turaev–Viro invariant</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">State-sum TQFT invariant; implements
+quantum error-correcting codes in TQNNs</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">ZX-calculus</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Graphical language for quantum circuits
+using Z-spiders, X-spiders, and Hadamard boxes</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">ZX-diagram</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">String diagram in a <span
+class="math inline">\(\dagger\)</span>-compact closed category
+representing a quantum process</td>
+<td style="text-align: center;">§8</td>
+</tr>
+<tr>
+<td style="text-align: left;">ZX rewrite rule</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Graph-theoretic transformation preserving
+the semantics (linear map) of a ZX-diagram</td>
+<td style="text-align: center;">§8</td>
+</tr>
+</tbody>
+</table>
+<h2 id="g.-logical-and-type-theoretic-terms">G. Logical and
+Type-Theoretic Terms</h2>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 27%" />
+<col style="width: 22%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Term</th>
+<th style="text-align: center;">Symbol</th>
+<th style="text-align: left;">Definition</th>
+<th style="text-align: center;">First Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\beta\)</span>-reduction</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Computational reduction step in <span
+class="math inline">\(\lambda\)</span>-calculus; corresponds to cut
+elimination in proofs</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Church–Rosser property</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Confluence of <span
+class="math inline">\(\beta\)</span>-reduction: all reduction sequences
+converge to the same normal form</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Curry–Howard isomorphism</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Correspondence between proofs and
+programs, propositions and types</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Cut elimination</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Proof normalization procedure removing
+intermediate lemmas; corresponds to <span
+class="math inline">\(\beta\)</span>-reduction</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Graded type theory</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Extension of type theory tracking effects
+(e.g., evidentiality) via graded modalities</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Lambek calculus</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Non-commutative intuitionistic linear
+logic for syntactic type assignment</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Left residual</td>
+<td style="text-align: center;"><span class="math inline">\(A \backslash
+B\)</span></td>
+<td style="text-align: left;">Type of an expression that, given <span
+class="math inline">\(A\)</span> to the left, produces <span
+class="math inline">\(B\)</span></td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Residuation law</td>
+<td style="text-align: center;"><span class="math inline">\(A \otimes B
+\leq C \iff A \leq C / B \iff B \leq A \backslash C\)</span></td>
+<td style="text-align: left;">Fundamental axiom connecting the three
+connectives of the Lambek calculus</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Right residual</td>
+<td style="text-align: center;"><span class="math inline">\(B /
+A\)</span></td>
+<td style="text-align: left;">Type of an expression that, given <span
+class="math inline">\(A\)</span> to the right, produces <span
+class="math inline">\(B\)</span></td>
+<td style="text-align: center;">§3</td>
+</tr>
+</tbody>
+</table>
+<h2 id="h.-ai-and-communication-protocols">H. AI and Communication
+Protocols</h2>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 27%" />
+<col style="width: 22%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Term</th>
+<th style="text-align: center;">Symbol</th>
+<th style="text-align: left;">Definition</th>
+<th style="text-align: center;">First Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">A2A Protocol</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Google’s Agent-to-Agent protocol for
+cross-framework agent communication via HTTP/JSON-RPC</td>
+<td style="text-align: center;">§9</td>
+</tr>
+<tr>
+<td style="text-align: left;">ACP</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Agent Communication Protocol; standardizes
+messaging formats across agents, apps, and humans</td>
+<td style="text-align: center;">§9</td>
+</tr>
+<tr>
+<td style="text-align: left;">ANP</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Agent Network Protocol; three-layer
+architecture for trusted distributed agent interaction</td>
+<td style="text-align: center;">§9</td>
+</tr>
+<tr>
+<td style="text-align: left;">Categorical deep learning</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Deep learning approached through the lens
+of category theory (Gavranović et al.)</td>
+<td style="text-align: center;">§9</td>
+</tr>
+<tr>
+<td style="text-align: left;">Double Categorical Systems Theory
+(DCST)</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Framework using 2-categories (horizontal +
+vertical composition) for explainable autonomous AI</td>
+<td style="text-align: center;">§9</td>
+</tr>
+<tr>
+<td style="text-align: left;">Functorial encryption</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Semantic cryptography: applying a secret
+functor to map plaintext categories into ciphertext categories</td>
+<td style="text-align: center;">§9</td>
+</tr>
+<tr>
+<td style="text-align: left;">lambeq</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Quantum Natural Language Processing
+pipeline compiling DisCoCat diagrams to quantum circuits</td>
+<td style="text-align: center;">§9</td>
+</tr>
+<tr>
+<td style="text-align: left;">MCP</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Model Context Protocol; standardizes how
+AI agents access external tools and data sources</td>
+<td style="text-align: center;">§9</td>
+</tr>
+<tr>
+<td style="text-align: left;">Parameterized optics / lenses</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Categorical constructions modeling neural
+network components (Gavranović); attention heads as optics</td>
+<td style="text-align: center;">§9</td>
+</tr>
+<tr>
+<td style="text-align: left;">QNLP</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Quantum Natural Language Processing;
+quantum computation on DisCoCat sentence diagrams</td>
+<td style="text-align: center;">§9</td>
+</tr>
+<tr>
+<td style="text-align: left;">Semantic cryptography</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Encrypting compositional meaning
+structures (functorial encryption, diagram obfuscation, weight
+masking)</td>
+<td style="text-align: center;">§9</td>
+</tr>
+</tbody>
+</table>
+<h2 id="i.-diagrammatic-reasoning">I. Diagrammatic Reasoning</h2>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 27%" />
+<col style="width: 22%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Term</th>
+<th style="text-align: center;">Symbol</th>
+<th style="text-align: left;">Definition</th>
+<th style="text-align: center;">First Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Cognitively privileged representation</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Representation format that leverages
+perceptual and spatial cognition for inference</td>
+<td style="text-align: center;">§1</td>
+</tr>
+<tr>
+<td style="text-align: left;">Diagram depth</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Length of the longest input-to-output path
+through boxes; measures derivational complexity</td>
+<td style="text-align: center;">§4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Existential graphs</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Peirce’s graphical logic system conducting
+first-order logic entirely diagrammatically</td>
+<td style="text-align: center;">§7</td>
+</tr>
+<tr>
+<td style="text-align: left;">Free ride</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Shimojima’s term: information extracted
+from a diagram without explicit inference steps</td>
+<td style="text-align: center;">§1</td>
+</tr>
+<tr>
+<td style="text-align: left;">Hybrid reasoning</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Giardino’s term: reasoning combining
+perceptual pattern recognition with theoretical knowledge</td>
+<td style="text-align: center;">§1</td>
+</tr>
+<tr>
+<td style="text-align: left;">Inferential instrument</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Manders’s term: a diagram whose spatial
+properties encode proof-relevant information</td>
+<td style="text-align: center;">§6</td>
+</tr>
+<tr>
+<td style="text-align: left;">Joyal–Street theorem</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Soundness and completeness of
+string-diagrammatic reasoning for monoidal categories</td>
+<td style="text-align: center;">§3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Normal form</td>
+<td style="text-align: center;"><span
+class="math inline">\(D_{\text{nf}}\)</span></td>
+<td style="text-align: left;">Canonical form of a diagram obtained by
+rewriting; unique up to the axioms</td>
+<td style="text-align: center;">§4</td>
+</tr>
+</tbody>
+</table>
+<h2 id="j.-notation-conventions">J. Notation Conventions</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Convention</th>
+<th style="text-align: left;">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><span class="math inline">\(\mathcal{C},
+\mathcal{D}\)</span></td>
+<td style="text-align: left;">Categories</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{V}\)</span></td>
+<td style="text-align: left;">Enrichment base (monoidal category,
+typically <span class="math inline">\(([0,1], \cdot, 1)\)</span>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{U}\)</span></td>
+<td style="text-align: left;">Universal (maximal) case category</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{L}\)</span></td>
+<td style="text-align: left;">Language-specific case category</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathcal{E}_{\mathbb{T}}\)</span></td>
+<td style="text-align: left;">Classifying topos of theory <span
+class="math inline">\(\mathbb{T}\)</span></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="math inline">\(f, g,
+h\)</span></td>
+<td style="text-align: left;">Morphisms</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="math inline">\(F,
+G\)</span></td>
+<td style="text-align: left;">Functors</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="math inline">\(\alpha,
+\beta\)</span></td>
+<td style="text-align: left;">Natural transformations</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="math inline">\(n,
+s\)</span></td>
+<td style="text-align: left;">Basic pregroup types: noun, sentence</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="math inline">\(n^l,
+n^r\)</span></td>
+<td style="text-align: left;">Left and right adjoints of type <span
+class="math inline">\(n\)</span></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(n_{\text{NOM}}, n_{\text{ACC}}\)</span></td>
+<td style="text-align: left;">Case-subscripted noun types (e.g.,
+nominative noun, accusative noun)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="math inline">\(N,
+S\)</span></td>
+<td style="text-align: left;">Noun space and sentence space under the
+meaning functor</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(N_{\text{NOM}}, N_{\text{ACC}},
+\ldots\)</span></td>
+<td style="text-align: left;">Case-specific vector subspaces in
+case-enriched DisCoCat</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\overrightarrow{\text{word}}\)</span></td>
+<td style="text-align: left;">Word vector (column vector in noun space
+<span class="math inline">\(N\)</span>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\overleftrightarrow{\text{verb}}\)</span></td>
+<td style="text-align: left;">Verb tensor (element of <span
+class="math inline">\(N \otimes S \otimes N\)</span> for transitive
+verbs)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathbf{Preg}\)</span></td>
+<td style="text-align: left;">Category of pregroup types and
+reductions</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathbf{FVect}\)</span> / <span
+class="math inline">\(\mathbf{FdVect}\)</span></td>
+<td style="text-align: left;">Category of finite-dimensional vector
+spaces and linear maps</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathbf{FHilb}\)</span></td>
+<td style="text-align: left;">Category of finite-dimensional Hilbert
+spaces and linear maps</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathbf{Qubit}\)</span></td>
+<td style="text-align: left;">Category of qubit systems with tensor
+product structure</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\mathbf{Set}\)</span></td>
+<td style="text-align: left;">Category of sets and functions</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\otimes\)</span></td>
+<td style="text-align: left;">Tensor product (monoidal product, type
+concatenation)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\circ\)</span></td>
+<td style="text-align: left;">Composition of morphisms</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\Rightarrow\)</span></td>
+<td style="text-align: left;">Natural transformation between
+functors</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\simeq\)</span></td>
+<td style="text-align: left;">Categorical equivalence</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\leq\)</span></td>
+<td style="text-align: left;">Preorder relation on types
+(derivability)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\gamma\)</span></td>
+<td style="text-align: left;">Discount factor in distributional RL
+return computation</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="math inline">\(w \in
+[0,1]\)</span></td>
+<td style="text-align: left;">Enriched morphism weight (proto-role
+satisfaction degree)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\varepsilon\)</span></td>
+<td style="text-align: left;">Prediction error (active inference); also
+compact closure counit</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\eta\)</span></td>
+<td style="text-align: left;">Compact closure unit (cap); also learning
+rate in some contexts</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(\rho\)</span></td>
+<td style="text-align: left;">Density operator (quantum state)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\([@key]\)</span></td>
+<td style="text-align: left;">Parenthetical citation</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>[-@key]</code></td>
+<td style="text-align: left;">Suppress-author citation</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>\autoref{...}</code></td>
+<td style="text-align: left;">Automatic cross-reference (section or
+figure)</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

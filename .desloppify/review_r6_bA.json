@@ -1,0 +1,144 @@
+{
+  "session": {
+    "id": "ext_20260307_170239_8a819539",
+    "token": "15d719b31b2366fad25abcf3cf3c9883"
+  },
+  "assessments": {
+    "cross_module_architecture": 72,
+    "convention_outlier": 78,
+    "error_consistency": 65
+  },
+  "findings": [
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "llm_imports_validation_exception",
+      "summary": "infrastructure/llm imports PDFValidationError from infrastructure/validation instead of from infrastructure/core/exceptions where it is defined",
+      "related_files": [
+        "infrastructure/llm/review/generator.py",
+        "infrastructure/validation/pdf_validator.py",
+        "infrastructure/core/exceptions.py"
+      ],
+      "evidence": [
+        "generator.py line 55: `from infrastructure.validation.pdf_validator import extract_text_from_pdf, PDFValidationError`",
+        "pdf_validator.py line 21: `from infrastructure.core.exceptions import PDFValidationError` — the class lives in core/exceptions.py",
+        "generator.py line 485 catches PDFValidationError obtained via the re-export path through validation layer, creating a dependency from llm -> validation for a type that belongs to core"
+      ],
+      "suggestion": "In generator.py, import PDFValidationError directly from infrastructure.core.exceptions (where it is defined) rather than re-importing it via infrastructure.validation.pdf_validator. This removes the llm->validation coupling for a pure type import.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "llm_top_init_re_exports_everything",
+      "summary": "infrastructure/llm/__init__.py re-exports the full public surface of all 5 sub-packages (core, templates, validation, utils, review), creating a single hub that couples all sub-packages at import time",
+      "related_files": [
+        "infrastructure/llm/__init__.py"
+      ],
+      "evidence": [
+        "lines 30-121: __init__.py imports 80+ symbols from core, templates, validation, utils, and review sub-packages",
+        "Any import-time failure in any sub-package (e.g., ollama not installed) will cause the entire infrastructure.llm namespace to fail to import",
+        "The optional-import guard for PromptComposer/PromptFragmentLoader (lines 89-94) is the only mitigation, but no similar guard exists for the heavy ollama utils (lines 58-69)"
+      ],
+      "suggestion": "Keep the __init__.py as a thin facade that only re-exports the most common entry points (LLMClient, LLMConfig, get_template). Move advanced symbols (Ollama utils, all validation constants, all metrics classes) to require direct sub-module imports. This reduces blast radius and avoids import-time failures propagating from one optional sub-package to all callers.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "doc_scanner_lazy_imports_in_methods",
+      "summary": "infrastructure/validation/doc_scanner.py uses deferred local imports inside methods rather than declaring its dependencies at module top level, obscuring the actual dependency graph",
+      "related_files": [
+        "infrastructure/validation/doc_scanner.py"
+      ],
+      "evidence": [
+        "line 64: `from infrastructure.validation.doc_discovery import find_markdown_files` inside phase2_accuracy()",
+        "line 91: same import repeated inside phase4_quality()",
+        "line 212: `from infrastructure.validation.doc_discovery import find_markdown_files, identify_cross_references` inside _verify_cross_references()"
+      ],
+      "suggestion": "Move all imports to module top level. The deferred import pattern is only justified when there is a genuine circular import; no such cycle exists here (doc_discovery does not import doc_scanner). Top-level imports make the dependency graph visible and allow linters/tools to detect missing deps at startup.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "mixed_typed_dict_placement",
+      "summary": "TypedDict classes are defined in some modules as plain data containers alongside functional code, while dataclasses are used in others for the same purpose, without a clear boundary rule",
+      "related_files": [
+        "infrastructure/validation/integrity.py",
+        "infrastructure/reporting/suite_summary_generator.py",
+        "infrastructure/reporting/error_aggregator.py",
+        "infrastructure/reporting/pipeline_reporter.py"
+      ],
+      "evidence": [
+        "integrity.py lines 368-395: three TypedDict classes (BuildArtifactValidation, PermissionCheck, OutputCompleteness) defined in the middle of a functional module, after all the functions that use them",
+        "suite_summary_generator.py lines 18-30: InfraResults TypedDict defined near top before functions",
+        "error_aggregator.py uses @dataclass for ErrorEntry; pipeline_reporter.py uses @dataclass for PipelineReport — both in reporting/ — while suite_summary_generator uses TypedDict in the same package"
+      ],
+      "suggestion": "Adopt a single structural container convention per package: prefer @dataclass for mutable aggregates (most reporting types) and TypedDict only for typed dict-return shapes. Place structural type definitions at the top of their module before functions. Consolidate data model classes into a dedicated models.py or similar per-package if multiple modules need the same shapes.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "duplicate_cli_entrypoints_in_validation",
+      "summary": "infrastructure/validation/ has two separate CLI modules (cli.py and validate_pdf_cli.py and validate_markdown_cli.py) following different patterns — one generic dispatcher, two standalone scripts — inconsistent with the single cli.py pattern used in other sub-packages",
+      "related_files": [
+        "infrastructure/validation/cli.py",
+        "infrastructure/validation/validate_pdf_cli.py",
+        "infrastructure/validation/validate_markdown_cli.py"
+      ],
+      "evidence": [
+        "Other sub-packages (rendering, publishing, llm) expose a single cli.py or cli/ sub-package",
+        "validation/ has cli.py (generic dispatcher) plus validate_pdf_cli.py and validate_markdown_cli.py as standalone top-level scripts with overlapping responsibilities"
+      ],
+      "suggestion": "Consolidate validate_pdf_cli.py and validate_markdown_cli.py into cli.py subcommands (already partially done for validate_pdf_cli.py which imports from cli.py). Remove the standalone entrypoints or reduce them to thin shims that delegate to cli.py.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "mixed_error_strategies_llm_review",
+      "summary": "review/generator.py uses three inconsistent failure strategies for different error paths: raise, return None, and return error-string — callers cannot predict which to expect",
+      "related_files": [
+        "infrastructure/llm/review/generator.py"
+      ],
+      "evidence": [
+        "check_ollama_availability() lines 317-367: returns (False, None) on all error paths — no exception raised",
+        "extract_manuscript_text() line 459: returns (None, metrics) when file not found — no exception",
+        "generate_review_with_metrics() line 625: returns an error-string starting with '*Error generating...*' when all retries exhausted — caller must inspect string content to detect failure",
+        "save_single_review() line 476: raises Exception (re-raise) on file write failure — the one path that does raise",
+        "warmup_model() line 448: returns (False, 0.0) on failure — no exception"
+      ],
+      "suggestion": "Establish one strategy per error category: use return tuple (success, value) for optional/degradable operations (warmup, ollama check), raise LLMError subclass for hard failures (file not found for required input, exhausted retries producing no usable output). Document the strategy in module docstring so callers know what to expect. Replace the error-string return from generate_review_with_metrics on retry exhaustion with raising LLMError.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "broad_exception_swallowing_in_validation",
+      "summary": "Multiple modules in infrastructure/validation/ and infrastructure/reporting/ catch bare Exception and only log, with no propagation, silently masking failures mid-pipeline",
+      "related_files": [
+        "infrastructure/validation/doc_accuracy.py",
+        "infrastructure/validation/doc_discovery.py",
+        "infrastructure/reporting/dashboard_generator.py"
+      ],
+      "evidence": [
+        "doc_accuracy.py lines 187-188: `except Exception as e: logger.warning(f'Error checking links in {md_file}: {e}')` — returns empty result silently",
+        "doc_accuracy.py lines 238-239, 276-277: same pattern for command and path reference checks",
+        "doc_discovery.py lines 108-109: `except Exception as e: logger.debug(...)` — cross-reference scan failure is entirely silent at debug level",
+        "dashboard_generator.py has 11 bare `except Exception as e` blocks each logging.error() without re-raising or returning a failure signal"
+      ],
+      "suggestion": "For I/O operations over individual files in a loop (doc_accuracy, doc_discovery), keep the swallow-and-continue pattern but elevate to WARNING and include the file path. For dashboard_generator functions that are called as pipeline stages, propagate a failure signal (return False or raise) instead of silently continuing — callers currently have no way to know a dashboard section failed.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "lost_exception_context_in_reporting",
+      "summary": "Several raise-from-e patterns are missing in infrastructure/reporting/ and infrastructure/llm/ where custom exceptions are raised after catching lower-level ones, losing the original traceback",
+      "related_files": [
+        "infrastructure/reporting/suite_summary_generator.py",
+        "infrastructure/llm/review/io.py"
+      ],
+      "evidence": [
+        "suite_summary_generator.py lines 372-373: `logger.error(...); raise` — correctly re-raises, but the OSError is re-raised without wrapping in a TemplateError, making the exception type inconsistent with the rest of the codebase",
+        "io.py line 199: `except Exception as e: logger.error(..., exc_info=True); success = False` — file save failure sets a flag but does not raise; io.py line 475: `except Exception as e: logger.error(...); raise` — same file, different function, raises. Two inconsistent patterns for the same type of I/O failure in the same module."
+      ],
+      "suggestion": "In io.py, standardize: save_single_review (line 475) raises on failure (correct), but save_review_outputs (line 199) only sets success=False. Either both should raise (to force callers to handle) or both should return a failure signal. Pick one and apply it consistently within the module.",
+      "confidence": "high"
+    }
+  ]
+}

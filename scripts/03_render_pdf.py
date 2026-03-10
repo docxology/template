@@ -639,9 +639,9 @@ def main() -> int:
     log_header(f"STAGE 03: Render PDF (Project: {args.project})", logger)
 
     # Log resource usage at start
-    from infrastructure.core.logging_utils import log_resource_usage
+    from infrastructure.core.logging_utils import log_live_resource_usage
 
-    log_resource_usage("PDF rendering stage start", logger)
+    log_live_resource_usage("PDF rendering stage start", logger)
 
     try:
         # Run rendering pipeline
@@ -659,13 +659,13 @@ def main() -> int:
             logger.error("PDF rendering failed - check logs for details")
 
         # Log resource usage at end
-        log_resource_usage("PDF rendering stage end", logger)
+        log_live_resource_usage("PDF rendering stage end", logger)
 
         return exit_code
 
     except Exception as e:
         logger.error(f"Render pipeline error: {e}", exc_info=True)
-        log_resource_usage("PDF rendering stage end (error)", logger)
+        log_live_resource_usage("PDF rendering stage end (error)", logger)
         return 1
 
 

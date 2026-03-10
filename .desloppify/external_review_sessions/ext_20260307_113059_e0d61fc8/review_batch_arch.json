@@ -1,0 +1,165 @@
+{
+  "session": {
+    "id": "ext_20260307_113059_e0d61fc8",
+    "token": "507c6ee9868e49dd61b5347b86091a8f"
+  },
+  "assessments": {
+    "cross_module_architecture": 74,
+    "package_organization": 78,
+    "dependency_health": 80
+  },
+  "findings": [
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "stale_type_checking_import_wrong_module",
+      "summary": "TYPE_CHECKING block in manuscript_overview.py references non-existent module executive_report (missing trailing 'er')",
+      "related_files": [
+        "infrastructure/reporting/manuscript_overview.py"
+      ],
+      "evidence": [
+        "Line 23: from infrastructure.reporting.executive_report import ExecutiveSummary",
+        "Actual module on disk is infrastructure/reporting/executive_reporter.py — no executive_report.py exists",
+        "This import is guarded by TYPE_CHECKING so it does not fail at runtime, but it is a dead/wrong reference that will break any static analysis tool (mypy) that follows it"
+      ],
+      "suggestion": "Change the import to 'from infrastructure.reporting.executive_reporter import ExecutiveSummary'",
+      "confidence": "high"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "generator_imports_constant_via_pipeline_runner",
+      "summary": "llm/review/generator.py fetches TRANSLATION_LANGUAGES from pipeline_runner, which itself re-imports it from templates.manuscript — a needless indirection through a higher-level module",
+      "related_files": [
+        "infrastructure/llm/review/generator.py",
+        "infrastructure/llm/review/pipeline_runner.py",
+        "infrastructure/llm/templates/manuscript.py"
+      ],
+      "evidence": [
+        "generator.py line 740: from infrastructure.llm.review.pipeline_runner import TRANSLATION_LANGUAGES",
+        "pipeline_runner.py line 16: from infrastructure.llm.templates.manuscript import TRANSLATION_LANGUAGES",
+        "The constant is defined in templates/manuscript.py; generator.py should import it directly from there, not via pipeline_runner, which is a peer/higher orchestration module"
+      ],
+      "suggestion": "In generator.py replace the deferred import with a direct top-level import: 'from infrastructure.llm.templates.manuscript import TRANSLATION_LANGUAGES'",
+      "confidence": "high"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "core_cli_aggregates_orchestration_responsibilities",
+      "summary": "infrastructure/core/cli.py imports MultiProjectOrchestrator and PipelineSummaryGenerator, blending pipeline orchestration into what should be a thin core CLI entry point",
+      "related_files": [
+        "infrastructure/core/cli.py",
+        "infrastructure/core/multi_project.py",
+        "infrastructure/core/pipeline_summary.py"
+      ],
+      "evidence": [
+        "cli.py lines 32-34 import MultiProjectConfig, MultiProjectOrchestrator, PipelineConfig, PipelineExecutor, and PipelineSummaryGenerator all at top-level",
+        "This makes core/cli.py a de facto orchestrator rather than a thin dispatcher, tightly coupling the core CLI to two other submodules of core/"
+      ],
+      "suggestion": "Move orchestration imports inside the handler functions (lazy imports) or extract the orchestration logic into a dedicated scripts/ entry point, leaving cli.py as a pure argument-parser facade",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "reporting_init_exposes_internal_coverage_parser",
+      "summary": "coverage_parser.py docstring explicitly states it is an internal module not re-exported, yet its symbols are used directly by test_runner.py and scripts/01_run_tests.py without going through the __init__.py surface — the boundary intent is documented but not enforced",
+      "related_files": [
+        "infrastructure/reporting/coverage_parser.py",
+        "infrastructure/reporting/test_runner.py",
+        "scripts/01_run_tests.py"
+      ],
+      "evidence": [
+        "coverage_parser.py line 6: 'Internal module: import directly (not re-exported from infrastructure.reporting).'",
+        "test_runner.py line 21: from infrastructure.reporting.coverage_parser import ...",
+        "scripts/01_run_tests.py line 39: from infrastructure.reporting.coverage_parser import check_cov_datafile_support",
+        "The module is not listed in reporting/__init__.py __all__, but external callers still bypass the public surface and import it directly — the 'internal' label is advisory only, not structurally enforced"
+      ],
+      "suggestion": "Either add coverage_parser's public API to reporting/__init__.py and remove the 'internal' disclaimer, or enforce the boundary by marking the file with a leading underscore (_coverage_parser.py) and fixing all import sites",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "core_logging_fragmented_across_five_modules",
+      "summary": "Logging functionality is split across logging_utils.py, logging_constants.py, logging_formatters.py, logging_helpers.py, and logging_progress.py — five files for one cross-cutting concern, creating unnecessary navigation overhead",
+      "related_files": [
+        "infrastructure/core/logging_utils.py",
+        "infrastructure/core/logging_constants.py",
+        "infrastructure/core/logging_formatters.py",
+        "infrastructure/core/logging_helpers.py",
+        "infrastructure/core/logging_progress.py"
+      ],
+      "evidence": [
+        "All five files live at the same level in infrastructure/core/ and serve the single concern of logging",
+        "scripts/01_run_tests.py imports from both logging_utils and logging_helpers in the same file (lines 28 and 37)",
+        "The public __init__.py only re-exports from logging_utils, leaving the other four as undiscoverable implementation details"
+      ],
+      "suggestion": "Consolidate into a single infrastructure/core/logging/ sub-package with a clean __init__.py, or at minimum reduce to two files: logging_utils.py (primary API) and logging_internals.py (formatters, constants)",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "performance_shim_adds_indirection_layer",
+      "summary": "infrastructure/core/performance.py is documented as a backward-compatibility shim that purely re-exports from stage_monitor.py and function_profiler.py, adding an indirection layer without any logic",
+      "related_files": [
+        "infrastructure/core/performance.py",
+        "infrastructure/core/stage_monitor.py",
+        "infrastructure/core/function_profiler.py"
+      ],
+      "evidence": [
+        "performance.py lines 14-28: entire file is re-exports from the two split modules",
+        "Docstring says: 'Import from those modules directly for new code. This shim exists so that existing call sites continue to work'",
+        "The shim perpetuates two canonical locations for the same symbols, which misleads future contributors about which module is authoritative"
+      ],
+      "suggestion": "Migrate remaining call sites to import directly from stage_monitor.py and function_profiler.py, then delete performance.py",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "steganography_module_in_infrastructure",
+      "summary": "infrastructure/steganography/ is a self-contained domain feature (QR codes, barcodes, overlays, encryption) placed alongside generic build infrastructure, which inflates the infrastructure surface and creates a misleading 'everything is infrastructure' pattern",
+      "related_files": [
+        "infrastructure/steganography/hashing.py",
+        "infrastructure/steganography/encryption.py",
+        "infrastructure/steganography/barcodes.py",
+        "infrastructure/steganography/overlays.py"
+      ],
+      "evidence": [
+        "Directory contains 5 files covering encryption, barcode generation, QR codes, and PDF overlays — none of these are generic build/validation utilities",
+        "pyproject.toml lists 'steganography' as an optional dependency group with qrcode[pil] and python-barcode, signalling it is a separable feature",
+        "No other infrastructure module imports from infrastructure.steganography, making it an isolated island"
+      ],
+      "suggestion": "Move to a top-level features/steganography/ or projects/steganography/ directory, or clearly document it as an optional plugin module separate from core infrastructure",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "dependency_health",
+      "identifier": "default_groups_installs_monitoring_unconditionally",
+      "summary": "pyproject.toml default-groups includes 'monitoring' (psutil), meaning every developer install gets psutil even though the code treats it as optional (gracefully absent)",
+      "related_files": [
+        "pyproject.toml",
+        "infrastructure/core/_optional_deps.py",
+        "infrastructure/core/health_check.py"
+      ],
+      "evidence": [
+        "pyproject.toml line 101: default-groups = [\"dev\", \"monitoring\"]",
+        "infrastructure/core/_optional_deps.py and health_check.py wrap psutil in try/except and handle its absence gracefully",
+        "Declaring psutil as a default group defeats the optional/graceful-absent design and adds an unnecessary C-extension dependency to all developer environments"
+      ],
+      "suggestion": "Remove 'monitoring' from default-groups; leave it as an opt-in group. The graceful-absence wrappers already handle the psutil-unavailable case correctly.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "dependency_health",
+      "identifier": "reporting_dashboard_generator_bloated_optional_imports",
+      "summary": "dashboard_generator.py is over 3000 lines and conditionally imports plotly and matplotlib inside functions, creating a large optional module that is difficult to test and maintain as a single file",
+      "related_files": [
+        "infrastructure/reporting/dashboard_generator.py"
+      ],
+      "evidence": [
+        "reporting/__init__.py wraps the entire dashboard_generator import in try/except ImportError (lines 48-57)",
+        "dashboard_generator.py lines 522, 820, 3162: repeated deferred local imports of calculate_project_health_score from executive_reporter within function bodies, suggesting the file grew organically without refactoring",
+        "A 3000+ line file with scattered internal imports is a coupling and maintenance liability regardless of its optional status"
+      ],
+      "suggestion": "Split dashboard_generator.py into dashboard_matplotlib.py and dashboard_plotly.py (matching the existing generate_matplotlib_dashboard / generate_plotly_dashboard split already exported), each with its own optional import guard",
+      "confidence": "medium"
+    }
+  ]
+}

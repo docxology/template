@@ -1,0 +1,122 @@
+{
+  "assessments": {
+    "dependency_health": 88,
+    "test_strategy": 80,
+    "ai_generated_debt": 82,
+    "package_organization": 74
+  },
+  "findings": [
+    {
+      "dimension": "dependency_health",
+      "identifier": "optional_dep_sklearn_undeclared",
+      "summary": "sklearn referenced in health_check optional probe but never declared in any dependency group",
+      "related_files": ["infrastructure/core/health_check.py"],
+      "evidence": [
+        "Line 193: optional_deps = ['ollama', 'scikit-learn', 'reportlab'] — scikit-learn is probed at runtime",
+        "pyproject.toml has no scikit-learn in any dependency-group",
+        "The probe is benign (import-try), but its presence implies callers might expect availability documentation"
+      ],
+      "suggestion": "Either add scikit-learn to a named optional dep-group with a comment, or remove it from the runtime probe list if it is not used anywhere",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "optimization_analysis_untested_orphan",
+      "summary": "projects/code_project/scripts/optimization_analysis.py is 1654 LOC, zero importers, and has no test coverage",
+      "related_files": ["projects/code_project/scripts/optimization_analysis.py"],
+      "evidence": [
+        "existing_findings: 'Untested critical module (1654 LOC, 0 importers) — high blast radius'",
+        "existing_findings: 'orphaned: Orphaned file (1654 LOC): zero importers, not an entry point'",
+        "Contains 2x sys.path mutation at import time, 2x monster functions (>150 LOC)"
+      ],
+      "suggestion": "Extract domain logic into projects/code_project/src/ so it can be unit-tested, reducing the script to a thin orchestrator per the stated architecture contract",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "run_tests_orchestrator_untested",
+      "summary": "scripts/01_run_tests.py is 623 LOC with zero importers and no test coverage despite being core pipeline infrastructure",
+      "related_files": ["scripts/01_run_tests.py"],
+      "evidence": [
+        "existing_findings: 'Untested critical module (623 LOC, 0 importers) — high blast radius'",
+        "existing_findings: 'orphaned: Orphaned file (623 LOC): zero importers, not an entry point'",
+        "Module imports from infrastructure but is itself never imported or tested"
+      ],
+      "suggestion": "Extract the logic-heavy portions (coverage threshold checks, test suite configuration building) into infrastructure/reporting/ so they can be tested independently; the script itself can remain thin",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "docstring_bloat_integrity_trivial_functions",
+      "summary": "integrity.py has Args/Returns docstrings on functions whose signatures are already self-documenting",
+      "related_files": ["infrastructure/validation/integrity.py"],
+      "evidence": [
+        "verify_file_integrity: docstring Args says 'file_paths: List of file paths to verify' — identical to parameter name and type hint",
+        "verify_cross_references: 'markdown_files: List of markdown files to check' — restates the parameter name",
+        "7 such Args/Returns blocks found in this single file where type hints make the prose redundant"
+      ],
+      "suggestion": "Keep the one-line summary only; drop Args/Returns sections when the type annotations and parameter names are already unambiguous",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "verbose_info_logging_in_pure_functions",
+      "summary": "logger.info calls on entry to data-transformation functions add noise without operational value",
+      "related_files": ["infrastructure/validation/integrity.py", "infrastructure/reporting/coverage_reporter.py"],
+      "evidence": [
+        "integrity.py line 55: logger.info(f'Verifying integrity of {len(file_paths)} files') — fires on every call including test calls",
+        "integrity.py line 95: logger.info(f'Verifying cross-references in {len(markdown_files)} files')",
+        "integrity.py line 168: logger.info(f'Verifying data consistency for {len(data_files)} files')",
+        "These are internal library functions, not CLI entry points; info-level entry logging is appropriate only at boundaries"
+      ],
+      "suggestion": "Downgrade these entry-log calls to logger.debug(); reserve logger.info for I/O completion confirmations at the top-level boundary",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "test_runner_misplaced_in_reporting",
+      "summary": "infrastructure/reporting/test_runner.py belongs conceptually in infrastructure/core/ not reporting/",
+      "related_files": ["infrastructure/reporting/test_runner.py"],
+      "evidence": [
+        "test_runner.py provides pytest subprocess execution and retry/coverage loop logic",
+        "It is imported by scripts/01_run_tests.py — an orchestrator script, not a reporting consumer",
+        "The reporting/ directory profile shows this file is zoned 'test' by the analysis tool, indicating the name misleads the scanner",
+        "All other files in reporting/ generate output artifacts (JSON, HTML, markdown, dashboards); test_runner.py drives process execution"
+      ],
+      "suggestion": "Move test_runner.py to infrastructure/core/ (alongside pipeline.py and checkpoint.py) where process-execution utilities live, or create infrastructure/testing/ if the surface grows",
+      "confidence": "high"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "core_init_stale_docstring_reference",
+      "summary": "infrastructure/core/__init__.py docstring references infrastructure.core.performance but that module does not exist",
+      "related_files": ["infrastructure/core/__init__.py"],
+      "evidence": [
+        "Line 10: 'infrastructure.core.performance   — CodeProfiler, ProfilingMetrics, etc.'",
+        "Glob of infrastructure/core/*.py shows no performance.py",
+        "The actual performance monitoring is in infrastructure/core/function_profiler.py"
+      ],
+      "suggestion": "Update the docstring reference from 'infrastructure.core.performance' to 'infrastructure.core.function_profiler'",
+      "confidence": "high"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "logging_oversplit_in_core",
+      "summary": "The logging concern is split across 5 files in infrastructure/core/ creating fragmented navigation",
+      "related_files": [
+        "infrastructure/core/logging_utils.py",
+        "infrastructure/core/logging_constants.py",
+        "infrastructure/core/logging_formatters.py",
+        "infrastructure/core/logging_helpers.py",
+        "infrastructure/core/logging_progress.py"
+      ],
+      "evidence": [
+        "logging_utils.py is the hub (135 importers) and re-imports from the 4 satellite files",
+        "None of the satellite files have independent importers — they exist only to be consumed by logging_utils.py",
+        "This split adds 4 files of indirection without enabling independent reuse or reducing coupling"
+      ],
+      "suggestion": "Collapse logging_constants, logging_formatters, logging_helpers, and logging_progress back into logging_utils.py (or a single logging/ subpackage) to reduce navigation cost; the 434-LOC total is well within single-file range",
+      "confidence": "medium"
+    }
+  ]
+}

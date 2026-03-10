@@ -9,16 +9,25 @@ Part of the infrastructure reporting layer (Layer 1) - reusable across projects.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
-import matplotlib
-
-matplotlib.use("Agg")  # Use non-interactive backend
 import csv
 
-import matplotlib.pyplot as plt
-import numpy as np
-from matplotlib.figure import Figure
+try:
+    import matplotlib.pyplot as plt
+    import numpy as np
+    from matplotlib.figure import Figure
+
+    MATPLOTLIB_AVAILABLE = True
+except ImportError:
+    MATPLOTLIB_AVAILABLE = False
+
+try:
+    import plotly  # noqa: F401 — sentinel import only
+
+    PLOTLY_AVAILABLE = True
+except ImportError:
+    PLOTLY_AVAILABLE = False
 
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.reporting.executive_reporter import ExecutiveSummary, ProjectMetrics
@@ -38,7 +47,7 @@ COLORS = {
 }
 
 
-def create_test_count_chart(projects: List[ProjectMetrics]) -> Figure:
+def create_test_count_chart(projects: list[ProjectMetrics]) -> Figure:
     """Create bar chart showing test counts by project.
 
     Args:
@@ -85,7 +94,7 @@ def create_test_count_chart(projects: List[ProjectMetrics]) -> Figure:
     return fig
 
 
-def create_coverage_chart(projects: List[ProjectMetrics]) -> Figure:
+def create_coverage_chart(projects: list[ProjectMetrics]) -> Figure:
     """Create bar chart showing coverage percentages by project.
 
     Args:
@@ -132,7 +141,7 @@ def create_coverage_chart(projects: List[ProjectMetrics]) -> Figure:
     return fig
 
 
-def create_pipeline_duration_chart(projects: List[ProjectMetrics]) -> Figure:
+def create_pipeline_duration_chart(projects: list[ProjectMetrics]) -> Figure:
     """Create stacked bar chart showing pipeline durations by project.
 
     Args:
@@ -175,7 +184,7 @@ def create_pipeline_duration_chart(projects: List[ProjectMetrics]) -> Figure:
     return fig
 
 
-def create_output_distribution_chart(aggregate: Dict[str, Any]) -> Figure:
+def create_output_distribution_chart(aggregate: dict[str, Any]) -> Figure:
     """Create pie chart showing distribution of output types.
 
     Args:
@@ -238,7 +247,7 @@ def create_output_distribution_chart(aggregate: Dict[str, Any]) -> Figure:
     return fig
 
 
-def create_manuscript_size_chart(projects: List[ProjectMetrics]) -> Figure:
+def create_manuscript_size_chart(projects: list[ProjectMetrics]) -> Figure:
     """Create bar chart showing manuscript word counts by project.
 
     Args:
@@ -276,7 +285,7 @@ def create_manuscript_size_chart(projects: List[ProjectMetrics]) -> Figure:
     return fig
 
 
-def create_manuscript_complexity_chart(projects: List[ProjectMetrics]) -> Figure:
+def create_manuscript_complexity_chart(projects: list[ProjectMetrics]) -> Figure:
     """Create chart showing manuscript complexity metrics.
 
     Args:
@@ -398,7 +407,7 @@ def create_manuscript_complexity_chart(projects: List[ProjectMetrics]) -> Figure
     return fig
 
 
-def create_performance_timeline_chart(projects: List[ProjectMetrics]) -> Figure:
+def create_performance_timeline_chart(projects: list[ProjectMetrics]) -> Figure:
     """Create timeline chart showing performance trends.
 
     Args:
@@ -503,7 +512,7 @@ def create_performance_timeline_chart(projects: List[ProjectMetrics]) -> Figure:
     return fig
 
 
-def create_summary_table(projects: List[ProjectMetrics], aggregate: Dict[str, Any]) -> Figure:
+def create_summary_table(projects: list[ProjectMetrics], aggregate: dict[str, Any]) -> Figure:
     """Create enhanced summary table with key metrics and health scores.
 
     Args:
@@ -610,7 +619,7 @@ def create_summary_table(projects: List[ProjectMetrics], aggregate: Dict[str, An
     return fig
 
 
-def generate_matplotlib_dashboard(summary: ExecutiveSummary, output_dir: Path) -> Dict[str, Path]:
+def generate_matplotlib_dashboard(summary: ExecutiveSummary, output_dir: Path) -> dict[str, Path]:
     """Generate complete dashboard using matplotlib (PNG and PDF).
 
     Args:
@@ -947,22 +956,14 @@ def generate_matplotlib_dashboard(summary: ExecutiveSummary, output_dir: Path) -
     return saved_files
 
 
-def generate_plotly_dashboard(summary: ExecutiveSummary, output_dir: Path) -> Path:
-    """Generate interactive HTML dashboard using plotly.
-
-    Args:
-        summary: ExecutiveSummary instance
-        output_dir: Output directory path
-
-    Returns:
-        Path to saved HTML file
-    """
+def generate_plotly_dashboard(summary: ExecutiveSummary, output_dir: Path) -> Path | None:
+    """Generate interactive HTML dashboard using plotly; returns None if plotly not installed."""
     try:
         import plotly.graph_objects as go
         from plotly.subplots import make_subplots
     except ImportError:
         logger.warning("Plotly not installed, skipping interactive dashboard generation")
-        return None  # type: ignore
+        return None
 
     logger.info("Generating interactive plotly dashboard...")
 
@@ -1172,7 +1173,7 @@ def generate_plotly_dashboard(summary: ExecutiveSummary, output_dir: Path) -> Pa
     return html_path
 
 
-def generate_health_radar_chart(summary: ExecutiveSummary, output_dir: Path) -> Dict[str, Path]:
+def generate_health_radar_chart(summary: ExecutiveSummary, output_dir: Path) -> dict[str, Path]:
     """Generate radar chart for health score factors.
 
     Args:
@@ -1283,14 +1284,14 @@ def generate_health_radar_chart(summary: ExecutiveSummary, output_dir: Path) -> 
         plt.close(fig)
 
     except Exception as e:
-        logger.error(f"Failed to generate health radar chart: {e}")
+        logger.error(f"Failed to generate health radar chart: {e}", exc_info=True)
 
     return saved_files
 
 
 def generate_health_comparison_chart(
     summary: ExecutiveSummary, output_dir: Path
-) -> Dict[str, Path]:
+) -> dict[str, Path]:
     """Generate health score comparison bar chart.
 
     Args:
@@ -1430,12 +1431,12 @@ def generate_health_comparison_chart(
         plt.close(fig)
 
     except Exception as e:
-        logger.error(f"Failed to generate health comparison chart: {e}")
+        logger.error(f"Failed to generate health comparison chart: {e}", exc_info=True)
 
     return saved_files
 
 
-def generate_project_breakdowns(summary: ExecutiveSummary, output_dir: Path) -> Dict[str, Path]:
+def generate_project_breakdowns(summary: ExecutiveSummary, output_dir: Path) -> dict[str, Path]:
     """Generate individual dashboard for each project.
 
     Args:
@@ -1659,14 +1660,14 @@ def generate_project_breakdowns(summary: ExecutiveSummary, output_dir: Path) -> 
             plt.close(fig)
 
     except Exception as e:
-        logger.error(f"Failed to generate project breakdowns: {e}")
+        logger.error(f"Failed to generate project breakdowns: {e}", exc_info=True)
 
     return saved_files
 
 
 def generate_pipeline_efficiency_chart(
     summary: ExecutiveSummary, output_dir: Path
-) -> Dict[str, Path]:
+) -> dict[str, Path]:
     """Generate pipeline efficiency and bottleneck analysis chart.
 
     Args:
@@ -1812,14 +1813,14 @@ def generate_pipeline_efficiency_chart(
         plt.close(fig)
 
     except Exception as e:
-        logger.error(f"Failed to generate pipeline efficiency chart: {e}")
+        logger.error(f"Failed to generate pipeline efficiency chart: {e}", exc_info=True)
 
     return saved_files
 
 
 def generate_pipeline_bottlenecks_chart(
     summary: ExecutiveSummary, output_dir: Path
-) -> Dict[str, Path]:
+) -> dict[str, Path]:
     """Generate detailed pipeline bottlenecks visualization.
 
     Args:
@@ -1925,14 +1926,14 @@ def generate_pipeline_bottlenecks_chart(
         plt.close(fig)
 
     except Exception as e:
-        logger.error(f"Failed to generate pipeline bottlenecks chart: {e}")
+        logger.error(f"Failed to generate pipeline bottlenecks chart: {e}", exc_info=True)
 
     return saved_files
 
 
 def generate_output_distribution_charts(
     summary: ExecutiveSummary, output_dir: Path
-) -> Dict[str, Path]:
+) -> dict[str, Path]:
     """Generate output distribution and comparison charts.
 
     Args:
@@ -2118,14 +2119,14 @@ def generate_output_distribution_charts(
         plt.close(fig)
 
     except Exception as e:
-        logger.error(f"Failed to generate output distribution charts: {e}")
+        logger.error(f"Failed to generate output distribution charts: {e}", exc_info=True)
 
     return saved_files
 
 
 def generate_output_comparison_chart(
     summary: ExecutiveSummary, output_dir: Path
-) -> Dict[str, Path]:
+) -> dict[str, Path]:
     """Generate detailed output comparison visualization.
 
     Args:
@@ -2217,14 +2218,14 @@ def generate_output_comparison_chart(
         plt.close(fig)
 
     except Exception as e:
-        logger.error(f"Failed to generate output comparison chart: {e}")
+        logger.error(f"Failed to generate output comparison chart: {e}", exc_info=True)
 
     return saved_files
 
 
 def generate_codebase_complexity_chart(
     summary: ExecutiveSummary, output_dir: Path
-) -> Dict[str, Path]:
+) -> dict[str, Path]:
     """Generate codebase complexity visualization.
 
     Args:
@@ -2390,14 +2391,14 @@ def generate_codebase_complexity_chart(
         plt.close(fig)
 
     except Exception as e:
-        logger.error(f"Failed to generate codebase complexity chart: {e}")
+        logger.error(f"Failed to generate codebase complexity chart: {e}", exc_info=True)
 
     return saved_files
 
 
 def generate_codebase_comparison_chart(
     summary: ExecutiveSummary, output_dir: Path
-) -> Dict[str, Path]:
+) -> dict[str, Path]:
     """Generate detailed codebase comparison visualization.
 
     Args:
@@ -2495,7 +2496,7 @@ def generate_codebase_comparison_chart(
         plt.close(fig)
 
     except Exception as e:
-        logger.error(f"Failed to generate codebase comparison chart: {e}")
+        logger.error(f"Failed to generate codebase comparison chart: {e}", exc_info=True)
 
     return saved_files
 
@@ -2847,7 +2848,6 @@ def generate_comparative_analysis_csv(summary: ExecutiveSummary, output_dir: Pat
             "manuscript_words": [p.manuscript.total_words for p in projects],
             "manuscript_sections": [p.manuscript.sections for p in projects],
             "codebase_lines": [p.codebase.source_lines for p in projects],
-            "codebase_methods": [p.codebase.methods for p in projects],
             "pipeline_duration": [p.pipeline.total_duration for p in projects],
             "output_total": [p.outputs.total_outputs for p in projects],
         }
@@ -3145,7 +3145,7 @@ def generate_prioritized_recommendations_csv(summary: ExecutiveSummary, output_d
     return csv_path
 
 
-def generate_csv_data_tables(summary: ExecutiveSummary, output_dir: Path) -> Dict[str, Path]:
+def generate_csv_data_tables(summary: ExecutiveSummary, output_dir: Path) -> dict[str, Path]:
     """Generate CSV data tables for dashboard data export.
 
     Args:
@@ -3379,7 +3379,7 @@ def generate_csv_data_tables(summary: ExecutiveSummary, output_dir: Path) -> Dic
     return csv_files
 
 
-def generate_all_dashboards(summary: ExecutiveSummary, output_dir: Path) -> Dict[str, Path]:
+def generate_all_dashboards(summary: ExecutiveSummary, output_dir: Path) -> dict[str, Any]:
     """Generate all dashboard formats including CSV data exports.
 
     Args:
@@ -3387,110 +3387,68 @@ def generate_all_dashboards(summary: ExecutiveSummary, output_dir: Path) -> Dict
         output_dir: Output directory path
 
     Returns:
-        Dictionary of all saved file paths
+        Dictionary of generated file paths. On partial failure the key
+        ``"_errors"`` maps to a list of ``(generator_name, error_message)``
+        tuples so callers can distinguish partial failure from full success.
     """
     logger.info("Generating all dashboard formats...")
 
-    all_files = {}
+    all_files: dict[str, Any] = {}
+    failures: List[str] = []
+
+    def _try(generator_name: str, fn: Any) -> None:
+        try:
+            result = fn()
+            if isinstance(result, dict):
+                all_files.update(result)
+            elif result is not None:
+                all_files[generator_name] = result
+        except Exception as e:
+            logger.warning(f"Could not generate {generator_name}: {e}")
+            failures.append(f"{generator_name}: {e}")
 
     # Generate matplotlib dashboards (PNG + PDF)
     matplotlib_files = generate_matplotlib_dashboard(summary, output_dir)
     all_files.update(matplotlib_files)
 
     # Generate health score visualizations
-    try:
-        health_radar_files = generate_health_radar_chart(summary, output_dir)
-        all_files.update(health_radar_files)
-    except Exception as e:
-        logger.warning(f"Could not generate health radar chart: {e}")
-
-    try:
-        health_comparison_files = generate_health_comparison_chart(summary, output_dir)
-        all_files.update(health_comparison_files)
-    except Exception as e:
-        logger.warning(f"Could not generate health comparison chart: {e}")
+    _try("health_radar_chart", lambda: generate_health_radar_chart(summary, output_dir))
+    _try("health_comparison_chart", lambda: generate_health_comparison_chart(summary, output_dir))
 
     # Generate individual project dashboards
-    try:
-        project_dashboard_files = generate_project_breakdowns(summary, output_dir)
-        all_files.update(project_dashboard_files)
-    except Exception as e:
-        logger.warning(f"Could not generate project dashboards: {e}")
+    _try("project_breakdowns", lambda: generate_project_breakdowns(summary, output_dir))
 
     # Generate pipeline efficiency visualizations
-    try:
-        pipeline_efficiency_files = generate_pipeline_efficiency_chart(summary, output_dir)
-        all_files.update(pipeline_efficiency_files)
-    except Exception as e:
-        logger.warning(f"Could not generate pipeline efficiency chart: {e}")
-
-    try:
-        pipeline_bottlenecks_files = generate_pipeline_bottlenecks_chart(summary, output_dir)
-        all_files.update(pipeline_bottlenecks_files)
-    except Exception as e:
-        logger.warning(f"Could not generate pipeline bottlenecks chart: {e}")
+    _try("pipeline_efficiency_chart", lambda: generate_pipeline_efficiency_chart(summary, output_dir))
+    _try("pipeline_bottlenecks_chart", lambda: generate_pipeline_bottlenecks_chart(summary, output_dir))
 
     # Generate output analysis visualizations
-    try:
-        output_distribution_files = generate_output_distribution_charts(summary, output_dir)
-        all_files.update(output_distribution_files)
-    except Exception as e:
-        logger.warning(f"Could not generate output distribution charts: {e}")
-
-    try:
-        output_comparison_files = generate_output_comparison_chart(summary, output_dir)
-        all_files.update(output_comparison_files)
-    except Exception as e:
-        logger.warning(f"Could not generate output comparison chart: {e}")
+    _try("output_distribution_charts", lambda: generate_output_distribution_charts(summary, output_dir))
+    _try("output_comparison_chart", lambda: generate_output_comparison_chart(summary, output_dir))
 
     # Generate codebase analysis visualizations
-    try:
-        codebase_complexity_files = generate_codebase_complexity_chart(summary, output_dir)
-        all_files.update(codebase_complexity_files)
-    except Exception as e:
-        logger.warning(f"Could not generate codebase complexity chart: {e}")
-
-    try:
-        codebase_comparison_files = generate_codebase_comparison_chart(summary, output_dir)
-        all_files.update(codebase_comparison_files)
-    except Exception as e:
-        logger.warning(f"Could not generate codebase comparison chart: {e}")
+    _try("codebase_complexity_chart", lambda: generate_codebase_complexity_chart(summary, output_dir))
+    _try("codebase_comparison_chart", lambda: generate_codebase_comparison_chart(summary, output_dir))
 
     # Generate plotly dashboard (HTML)
-    try:
-        plotly_file = generate_plotly_dashboard(summary, output_dir)
-        if plotly_file:
-            all_files["html"] = plotly_file
-    except Exception as e:
-        logger.warning(f"Could not generate interactive dashboard: {e}")
+    _try("html", lambda: generate_plotly_dashboard(summary, output_dir))
 
     # Generate CSV data tables
-    try:
-        # Existing aggregate CSV
-        aggregate_csv = generate_csv_data_tables(summary, output_dir)
-        all_files.update(aggregate_csv)
+    def _generate_csvs() -> dict[str, Any]:
+        result: dict[str, Any] = {}
+        result.update(generate_csv_data_tables(summary, output_dir))
+        result["detailed_breakdown_csv"] = generate_detailed_project_breakdown_csv(summary, output_dir)
+        result["comparative_analysis_csv"] = generate_comparative_analysis_csv(summary, output_dir)
+        result["recommendations_csv"] = generate_prioritized_recommendations_csv(summary, output_dir)
+        return result
 
-        # New detailed CSVs
-        detailed_csv = generate_detailed_project_breakdown_csv(summary, output_dir)
-        all_files["detailed_breakdown_csv"] = detailed_csv
-
-        comparative_csv = generate_comparative_analysis_csv(summary, output_dir)
-        all_files["comparative_analysis_csv"] = comparative_csv
-
-        recommendations_csv = generate_prioritized_recommendations_csv(summary, output_dir)
-        all_files["recommendations_csv"] = recommendations_csv
-
-    except Exception as e:
-        logger.warning(f"Could not generate CSV data tables: {e}")
+    _try("csv_data_tables", _generate_csvs)
 
     # Generate manuscript overviews for each project
-    try:
-        manuscript_overview_files = generate_all_manuscript_overviews(
-            summary, output_dir, Path(".")
-        )
-        all_files.update(manuscript_overview_files)
-    except Exception as e:
-        logger.warning(f"Could not generate manuscript overviews: {e}")
+    _try("manuscript_overviews", lambda: generate_all_manuscript_overviews(summary, output_dir, Path(".")))
 
+    if failures:
+        all_files["_errors"] = failures
+        logger.warning(f"Dashboard generation completed with {len(failures)} partial failure(s)")
     logger.info(f"Generated {len(all_files)} dashboard and data file(s)")
     return all_files

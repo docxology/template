@@ -1,0 +1,145 @@
+{
+  "session": {
+    "id": "ext_20260307_001343_078335ee",
+    "token": "90db5d21d1f3266b9666042f548d6476"
+  },
+  "assessments": {
+    "high_level_elegance": 80,
+    "mid_level_elegance": 66,
+    "low_level_elegance": 68,
+    "design_coherence": 65
+  },
+  "findings": [
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "HLE-01",
+      "summary": "infrastructure/core/ holds 27 files — several low-cohesion modules (progress.py, retry.py, health_check.py, script_discovery.py, file_inventory.py, credentials.py, menu.py, cli.py) that are only loosely related to the stated core responsibility of logging/config/exceptions, blurring the package's role.",
+      "related_files": [
+        "infrastructure/core/__init__.py",
+        "infrastructure/core/progress.py",
+        "infrastructure/core/menu.py",
+        "infrastructure/core/cli.py",
+        "infrastructure/core/credentials.py",
+        "infrastructure/core/health_check.py",
+        "infrastructure/core/script_discovery.py",
+        "infrastructure/core/file_inventory.py",
+        "infrastructure/core/retry.py"
+      ],
+      "evidence": "infrastructure/core/__init__.py documents the package as 'Core utilities (logging, config, exceptions)' but the directory contains 27 modules covering CLI menus, credentials, health checks, script discovery, file inventory, and retry logic — responsibilities that belong in more focused packages or alongside their primary consumers.",
+      "suggestion": "Extract cli/menu/credentials into an infrastructure/cli/ package, health_check into infrastructure/monitoring/, and retry into infrastructure/resilience/ or co-locate it with llm/ where retries are most needed. This would reduce core/ to its stated config/logging/exceptions mission.",
+      "confidence": 0.82
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "HLE-02",
+      "summary": "Two parallel performance monitoring modules exist at the same layer with overlapping responsibility and an acknowledged naming collision.",
+      "related_files": [
+        "infrastructure/core/performance.py",
+        "infrastructure/core/performance_monitor.py"
+      ],
+      "evidence": "performance.py line 64: class PerformanceMonitor with docstring 'Named ResourceTracker when disambiguation from performance_monitor.CodeProfiler is needed (both modules expose a class called PerformanceMonitor).' The alias ResourceTracker = PerformanceMonitor is added at line 424 as a workaround. performance_monitor.py independently defines CodeProfiler covering overlapping timing/memory/benchmarking capabilities.",
+      "suggestion": "Consolidate into a single module. If both must exist, establish distinct responsibilities (e.g., performance.py = lightweight stage-level tracking, performance_monitor.py = deep profiling) and remove the alias workaround by renaming the class in one module definitively.",
+      "confidence": 0.95
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "MLE-01",
+      "summary": "generate_multi_project_summary_report accepts result: Any and uses defensive getattr extraction and three-way isinstance branching to normalize project_results, indicating a poorly-defined boundary contract.",
+      "related_files": [
+        "infrastructure/reporting/pipeline_reporter.py"
+      ],
+      "evidence": "Lines 55-95: result is typed Any; project_results is obtained via getattr(result, 'project_results', {}); subsequent isinstance checks handle dict, list, and unknown cases, with logger.warning for each mismatch. Lines 51-52 log debug dumps of dir(result) and type(result) — left in production code. The function accepts two different result shapes (list of PipelineStageResult objects vs legacy dict format) simultaneously.",
+      "suggestion": "Define a typed protocol or dataclass for the result argument instead of Any. Remove the debug dir() dumps. Canonicalize the result format at the producer side (MultiProjectOrchestrator) so the consumer does not need three-way isinstance branching.",
+      "confidence": 0.90
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "MLE-02",
+      "summary": "_resume_pipeline in PipelineExecutor duplicates the 'invalid checkpoint → start fresh' pattern three times with identical try/finally _resuming guard logic.",
+      "related_files": [
+        "infrastructure/core/pipeline.py"
+      ],
+      "evidence": "Lines 308-317, 322-330, and 372-381 all execute the same pattern: set self._resuming = True, call execute_full_pipeline() or execute_core_pipeline(), finally set self._resuming = False. The only difference is the triggering condition (invalid checkpoint, no checkpoint found, stage name mismatch).",
+      "suggestion": "Extract the 'start fresh with resuming guard' logic into a private helper method _start_fresh_pipeline() that accepts the pipeline type selector, then call it from each branch. This removes the duplication and makes the three failure modes read as three lines rather than 27.",
+      "confidence": 0.92
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "MLE-03",
+      "summary": "StagePerformanceTracker.start_stage sets instance attributes (start_memory, start_io) outside __init__, creating a fragile stateful handoff contract where end_stage silently returns {} if called before start_stage.",
+      "related_files": [
+        "infrastructure/core/performance.py"
+      ],
+      "evidence": "StagePerformanceTracker.__init__ (line 265) initializes only self.stages and self.start_time. start_stage (line 269) creates self.start_memory and self.start_io dynamically. end_stage checks self.start_time is None as the guard but accesses self.start_io (set in start_stage) without a guard — if start_stage is not called, AttributeError is raised on line 321 when self.start_io is referenced.",
+      "suggestion": "Initialize start_memory and start_io to sentinel values in __init__. Alternatively, raise an explicit error in end_stage if start_stage was not called, rather than silently returning {} only for the start_time case.",
+      "confidence": 0.85
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "LLE-01",
+      "summary": "collect_log_statistics uses cascading elif on substring checks, which misclassifies lines containing multiple level keywords (e.g., a line with both 'error' and 'debug' counts as 'debug' only because it appears first).",
+      "related_files": [
+        "infrastructure/core/logging_utils.py"
+      ],
+      "evidence": "Lines 620-636: the chain is `if 'debug' in line_lower: elif 'info' in line_lower: elif 'warning' ... elif 'error' ...`. The pattern relies on exclusivity of level keywords in log lines, but formatted log messages may contain level names as content. More importantly, the order prioritizes 'debug' over 'error', so a line like '[DEBUG] Error threshold exceeded' would be counted as debug, not error.",
+      "suggestion": "Use a dedicated parser that matches the known log line format (e.g., `[LEVEL]` bracketed token) rather than substring search. Alternatively, apply a regex anchored to the log format pattern to extract the level field unambiguously.",
+      "confidence": 0.78
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "LLE-02",
+      "summary": "Multiple one-liner methods in PerformanceMonitor carry bloated docstrings with Returns: None sections and multi-sentence descriptions that exceed the code they describe.",
+      "related_files": [
+        "infrastructure/core/performance.py"
+      ],
+      "evidence": "record_cache_hit() (lines 132-147): 13-line docstring for `self.cache_hits += 1`. start() (lines 80-94): includes 'Returns: None' and 'Example' block for a method that initializes four counters. record_operation() (line 128): one-liner body but one-line docstring is acceptable; record_cache_miss() (line 149) is appropriately brief by contrast.",
+      "suggestion": "Trim docstrings on trivial mutator methods to a single sentence. Remove 'Returns: None' sections on void methods. Reserve full Args/Returns/Example blocks for public API methods with non-obvious behavior.",
+      "confidence": 0.88
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "LLE-03",
+      "summary": "profile_function decorator in performance_monitor.py wraps each inner function (decorator, wrapper) with full docstrings that re-describe the wrapping mechanics rather than the domain purpose.",
+      "related_files": [
+        "infrastructure/core/performance_monitor.py"
+      ],
+      "evidence": "Lines 277-305: decorator() has a 5-line docstring describing 'Wrap the target function with performance monitoring.' and wrapper() has a 9-line docstring describing 'Execute the wrapped function with performance monitoring.' Both are internal implementation details of the decorator factory and are never called directly by users.",
+      "suggestion": "Remove docstrings from the inner decorator and wrapper closures. The public API docstring on profile_function() (lines 266-276) is sufficient — inner functions inside a decorator factory do not benefit from user-facing docstrings.",
+      "confidence": 0.87
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "DCH-01",
+      "summary": "Two performance modules with overlapping concerns and an acknowledged naming collision represent an unresolved design split that forces callers to know which module to import from.",
+      "related_files": [
+        "infrastructure/core/performance.py",
+        "infrastructure/core/performance_monitor.py"
+      ],
+      "evidence": "performance.py class PerformanceMonitor docstring (line 64): 'Named ResourceTracker when disambiguation from performance_monitor.CodeProfiler is needed (both modules expose a class called PerformanceMonitor).' The alias `ResourceTracker = PerformanceMonitor` at line 424 is a workaround that documents the collision without resolving it. Both modules expose timing and memory-tracking context managers (performance_context vs CodeProfiler.monitor).",
+      "suggestion": "Merge the two modules or establish a clear responsibility split documented in both module docstrings. One module could own lightweight in-process stage tracking (current PerformanceMonitor/StagePerformanceTracker) while the other owns deep profiling (cProfile, tracemalloc). Rename classes to reflect these roles rather than using an alias.",
+      "confidence": 0.95
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "DCH-02",
+      "summary": "The Optional[logging.Logger] nullable-logger pattern is repeated across 10+ public functions in logging_utils.py, creating a recurring design indirection where callers must decide whether to pass a logger or let the function create one.",
+      "related_files": [
+        "infrastructure/core/logging_utils.py"
+      ],
+      "evidence": "Functions log_success, log_header, log_progress, log_stage, log_substep, log_operation, log_operation_silent, log_timing, log_stage_with_eta, log_resource_usage all accept Optional[logging.Logger] = None and call _resolve_logger() internally. This means callers either pass a logger (making the function a method that should live on a class) or don't (making the logger parameter meaningless boilerplate).",
+      "suggestion": "Either make these module-level functions that use a module-level logger (removing the logger parameter entirely), or group them as methods on a PipelineLogger class that holds a logger instance. The current pattern conflates both designs and results in every call site choosing to pass or omit a parameter with no behavior difference in practice.",
+      "confidence": 0.80
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "DCH-03",
+      "summary": "generate_multi_project_summary_report mixes data aggregation, format computation, and file writing in one function body, violating single responsibility.",
+      "related_files": [
+        "infrastructure/reporting/pipeline_reporter.py"
+      ],
+      "evidence": "The function (lines 35-246) builds the summary dict, computes performance analysis, aggregates errors, generates recommendations, writes a JSON file, and writes a Markdown file — all in one 200-line body. The private _format_multi_project_summary_markdown is extracted for Markdown formatting but no equivalent extraction exists for the data-building phase.",
+      "suggestion": "Extract data collection into a _build_multi_project_summary(result, projects) function returning the summary dict, keeping generate_multi_project_summary_report as a thin coordinator that calls _build_multi_project_summary, _format_multi_project_summary_markdown, and file writes. This makes the data logic independently testable.",
+      "confidence": 0.85
+    }
+  ]
+}

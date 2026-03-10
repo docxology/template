@@ -1,0 +1,188 @@
+{
+  "assessments": {
+    "cross_module_architecture": 78,
+    "convention_outlier": 82,
+    "error_consistency": 72,
+    "abstraction_fitness": 72,
+    "dependency_health": 68,
+    "test_strategy": 82,
+    "ai_generated_debt": 42,
+    "package_organization": 62,
+    "high_level_elegance": 72,
+    "mid_level_elegance": 65,
+    "low_level_elegance": 60,
+    "design_coherence": 58
+  },
+  "findings": [
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "steganography_island_in_infrastructure",
+      "summary": "infrastructure/steganography/ is an isolated island with no other infrastructure module importing it",
+      "related_files": [
+        "infrastructure/steganography/core.py"
+      ],
+      "evidence": [
+        "No other infrastructure module imports from infrastructure.steganography; it is a specialized domain feature in a generic infrastructure layer"
+      ],
+      "suggestion": "Move to infrastructure/publishing/steganography/ to make the optional publishing boundary explicit.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "reporting_module_naming_inconsistency",
+      "summary": "infrastructure/reporting has both *_reporter.py and *_generator.py naming patterns for similar output-producing modules",
+      "related_files": [
+        "infrastructure/reporting/coverage_reporter.py",
+        "infrastructure/reporting/test_summary_generator.py"
+      ],
+      "evidence": [
+        "coverage_reporter.py, pipeline_reporter.py use _reporter suffix; test_summary_generator.py, multi_project_reporter.py use _reporter and _generator interchangeably for the same concern"
+      ],
+      "suggestion": "Standardize on _reporter.py for all report-generating modules in infrastructure/reporting/.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "broad_except_exception_in_llm_modules",
+      "summary": "174 occurrences of bare except Exception across 57 modules with inconsistent handling patterns",
+      "related_files": [
+        "infrastructure/llm/review/generator.py",
+        "infrastructure/core/health_check.py"
+      ],
+      "evidence": [
+        "generator.py line 444: broad except for warmup failure; health_check.py line 55: broad except for check resilience \u2014 some documented intentional, many not"
+      ],
+      "suggestion": "Narrow broad except-Exception clauses to specific exception types where possible; document intentional broad catches with BLE001 noqa comments.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "thin_wrapper_logging_guard",
+      "summary": "optimizer.py wraps infrastructure.core.logging_utils in a try/except ImportError guard that is never needed",
+      "related_files": [
+        "projects/code_project/src/optimizer.py"
+      ],
+      "evidence": [
+        "optimizer.py:47-53: try/except ImportError guard around get_logger with LOGGING_AVAILABLE flag; every log call then guarded by if LOGGING_AVAILABLE and logger"
+      ],
+      "suggestion": "Remove the try/except guard and LOGGING_AVAILABLE flag; import get_logger unconditionally.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "dependency_health",
+      "identifier": "plotly_late_import_not_guarded_at_module_level",
+      "summary": "dashboard_generator.py guards matplotlib but defers plotly import inside a function with no module-level sentinel",
+      "related_files": [
+        "infrastructure/reporting/dashboard_generator.py"
+      ],
+      "evidence": [
+        "dashboard_generator.py:963: 'import plotly.graph_objects as go' deferred inside function body with no PLOTLY_AVAILABLE guard"
+      ],
+      "suggestion": "Add try/except ImportError for plotly at module level with a PLOTLY_AVAILABLE sentinel matching the matplotlib pattern.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "private_api_testing_in_coverage_parser",
+      "summary": "test_coverage_parser.py directly imports and tests private helper functions with leading underscores",
+      "related_files": [
+        "tests/infra_tests/reporting/test_coverage_parser.py"
+      ],
+      "evidence": [
+        "test_coverage_parser.py:14-18: imports _parse_failures_fallback, _parse_failures_section, _parse_failures_short, _parse_failures_timeout, _parse_failures_verbose \u2014 all private"
+      ],
+      "suggestion": "Test only extract_failed_tests() with varied inputs covering each strategy's case.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "legacy_typing_imports_widespread",
+      "summary": "Files use typing.List/Dict/Optional despite from __future__ import annotations everywhere making them unnecessary",
+      "related_files": [
+        "infrastructure/core/environment.py",
+        "infrastructure/steganography/core.py"
+      ],
+      "evidence": [
+        "environment.py line 43: 'from typing import List, Tuple' while from __future__ import annotations is on line 36"
+      ],
+      "suggestion": "Replace List[x], Dict[k,v], Optional[x] with builtin equivalents across infrastructure files.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "reporting_package_fragmentation",
+      "summary": "infrastructure/reporting has 13 modules with overlapping coverage/test concerns making import surface opaque",
+      "related_files": [
+        "infrastructure/reporting/coverage_reporter.py",
+        "infrastructure/reporting/coverage_parser.py"
+      ],
+      "evidence": [
+        "01_run_tests.py lines 31-41: imports from coverage_reporter, coverage_parser, and test_runner separately for the same reporting concern"
+      ],
+      "suggestion": "Consolidate coverage_reporter, coverage_parser into two modules: parsing (input side) and formatting/saving (output side).",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "coverage_json_path_bug_in_generate_test_report",
+      "summary": "generate_test_report reads both infrastructure and project coverage from the same htmlcov/coverage.json path",
+      "related_files": [
+        "infrastructure/reporting/coverage_reporter.py"
+      ],
+      "evidence": [
+        "Lines 261-268: infra_coverage_json and project_coverage_json both point to repo_root / 'htmlcov' / 'coverage.json'"
+      ],
+      "suggestion": "Use coverage_infra.json for infrastructure and coverage_project.json for project coverage paths.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "run_infra_project_tests_duplicate_structure",
+      "summary": "run_infrastructure_tests and run_project_tests share ~70% identical structure with minimal variation",
+      "related_files": [
+        "scripts/01_run_tests.py"
+      ],
+      "evidence": [
+        "Lines 83-174 and 177-274: both functions do identical sequence of start_time, clean, get config, build cmd, setup env, discover, run TestSuiteConfig"
+      ],
+      "suggestion": "Extract _build_test_command() and _run_suite() helpers parametrized by suite type.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "tempfile_mktemp_deprecated",
+      "summary": "steganography/core.py uses deprecated tempfile.mktemp() which has a race condition",
+      "related_files": [
+        "infrastructure/steganography/core.py"
+      ],
+      "evidence": [
+        "Line 141: tmp = Path(tempfile.mktemp(suffix='.pdf', prefix='steg_')) \u2014 mktemp is deprecated"
+      ],
+      "suggestion": "Replace with: fd, tmp_str = tempfile.mkstemp(suffix='.pdf', prefix='steg_'); os.close(fd); tmp = Path(tmp_str)",
+      "confidence": "high"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "optional_logging_available_flag_in_domain_code",
+      "summary": "optimizer.py LOGGING_AVAILABLE boolean guard pattern is not used anywhere else in the codebase",
+      "related_files": [
+        "projects/code_project/src/optimizer.py"
+      ],
+      "evidence": [
+        "Lines 47-53 and 269,278,285,299,304: conditional logging pattern unique to this file; all other modules use unconditional get_logger"
+      ],
+      "suggestion": "Remove LOGGING_AVAILABLE guard. Use standard logger = get_logger(__name__) at module level.",
+      "confidence": "high"
+    }
+  ],
+  "provenance": {
+    "kind": "blind_review_batch_import",
+    "blind": true,
+    "runner": "claude",
+    "run_stamp": "ext_20260307_130929_ca1fe9e8",
+    "created_at": "2026-03-07T13:10:58+00:00",
+    "packet_path": "/Users/4d/Documents/GitHub/template/.desloppify/review_packet_blind.json",
+    "packet_sha256": "e9bcb014770e141901efa972d1f1f6580feea25609996e0f8dadb43015e5cd2d",
+    "external_session_id": "ext_20260307_130929_ca1fe9e8"
+  }
+}

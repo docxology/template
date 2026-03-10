@@ -1,0 +1,128 @@
+{
+  "assessments": {
+    "cross_module_architecture": 74,
+    "dependency_health": 81,
+    "design_coherence": 70
+  },
+  "findings": [
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "multi_project_calls_private_pipeline_method",
+      "summary": "MultiProjectOrchestrator calls a private method on PipelineExecutor to run infra tests, creating a tight coupling to implementation internals",
+      "related_files": [
+        "infrastructure/core/multi_project.py"
+      ],
+      "evidence": [
+        "multi_project.py:241 — `success = executor._run_infrastructure_tests()` calls a name-mangled private method on an instance of PipelineExecutor from a different class, bypassing any public API boundary"
+      ],
+      "suggestion": "Expose a public `run_infrastructure_tests()` method on PipelineExecutor, or extract the subprocess invocation into a standalone function in a shared utilities module that both classes can call directly",
+      "confidence": "high"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "doc_discovery_calls_project_discovery",
+      "summary": "infrastructure/validation/doc_discovery.py imports and calls discover_projects from infrastructure/project/discovery.py, creating a lateral dependency between two infrastructure sub-packages at the same layer",
+      "related_files": [
+        "infrastructure/validation/doc_discovery.py",
+        "infrastructure/project/discovery.py"
+      ],
+      "evidence": [
+        "doc_discovery.py:13 — `from infrastructure.project.discovery import discover_projects`",
+        "doc_discovery.py:145 — `projects = discover_projects(repo_root)` called inside categorize_documentation()",
+        "doc_discovery.py:317 — `projects = discover_projects(repo_root)` called inside discover_project_documentation()",
+        "doc_discovery.py:402 — `projects = discover_projects(repo_root)` called inside validate_project_documentation_integrity()"
+      ],
+      "suggestion": "Accept a pre-resolved list of ProjectInfo objects as a parameter to these functions rather than calling discover_projects() internally; let callers wire the dependency at the orchestration layer",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "reporting_imports_core_multi_project",
+      "summary": "infrastructure/reporting/multi_project_reporter.py imports MultiProjectResult from infrastructure/core, creating a downward dependency from reporting into core, which is the expected direction, but combined with the callback pattern in core that avoids importing reporting, the boundary is asymmetric and fragile",
+      "related_files": [
+        "infrastructure/reporting/multi_project_reporter.py",
+        "infrastructure/core/multi_project.py"
+      ],
+      "evidence": [
+        "multi_project_reporter.py:14 — `from infrastructure.core.multi_project import MultiProjectResult`",
+        "multi_project.py:63-65 — `on_project_complete` callback injected to avoid importing reporting from core, but MultiProjectResult still crosses back into reporting as a data carrier"
+      ],
+      "suggestion": "The callback pattern is correct. Consider moving MultiProjectResult to a shared data-models module (e.g., infrastructure/core/models.py) so the reporting layer imports from models, not from the orchestration logic in core/multi_project.py",
+      "confidence": "low"
+    },
+    {
+      "dimension": "dependency_health",
+      "identifier": "duplicate_exclude_dirs_sets",
+      "summary": "Three separate functions in doc_discovery.py each define their own nearly-identical exclude_dirs set with diverging membership, creating maintenance drift risk",
+      "related_files": [
+        "infrastructure/validation/doc_discovery.py"
+      ],
+      "evidence": [
+        "doc_discovery.py:20-34 — find_markdown_files() defines exclude_dirs with 'projects_archive' included",
+        "doc_discovery.py:54-67 — find_config_files() defines exclude_dirs without 'projects_archive'",
+        "doc_discovery.py:83-97 — find_script_files() defines exclude_dirs without 'projects_archive' but adds 'tests'"
+      ],
+      "suggestion": "Define a module-level DEFAULT_EXCLUDE_DIRS constant and let each function accept an optional override parameter, composing from the default rather than redefining from scratch",
+      "confidence": "high"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "pipeline_summary_generator_multiple_formats_in_one_class",
+      "summary": "PipelineSummaryGenerator conflates three distinct rendering concerns (text, JSON, HTML) in one class alongside data-gathering logic, giving it two separable responsibilities",
+      "related_files": [
+        "infrastructure/core/pipeline_summary.py"
+      ],
+      "evidence": [
+        "pipeline_summary.py:82-97 — format_summary() dispatches to _format_text_summary, _format_json_summary, _format_html_summary all within the same class",
+        "pipeline_summary.py:99-196 — _format_text_summary() is 97 lines of rendering logic with its own private helpers (_get_final_log_path, _find_base_output_dir, _extract_project_name_from_path) that have nothing to do with data collection",
+        "pipeline_summary.py:36-80 — generate_summary() performs data aggregation (slowest/fastest stage, file inventory scan); the same class then renders that data in three formats"
+      ],
+      "suggestion": "Split into a PipelineSummaryCollector (handles generate_summary) and a PipelineSummaryFormatter (handles all format_* methods). The formatter can be a plain module of functions if a class is not warranted",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "generate_multi_project_summary_report_mixed_concerns",
+      "summary": "generate_multi_project_summary_report() in multi_project_reporter.py computes analytics (performance analysis, error aggregation, recommendations) and performs I/O in a single function, mixing business logic with file writing",
+      "related_files": [
+        "infrastructure/reporting/multi_project_reporter.py"
+      ],
+      "evidence": [
+        "multi_project_reporter.py:60-179 — single function builds a summary dict (lines 77-158), then writes JSON (lines 161-168), then writes Markdown (lines 170-177), with inline analytics computation between those two I/O blocks",
+        "multi_project_reporter.py:109-127 — performance analysis computed inline inside the I/O function",
+        "multi_project_reporter.py:129-138 — error aggregation computed inline inside the I/O function"
+      ],
+      "suggestion": "Extract a pure _build_summary_dict(result, projects) function that returns the dict, then have the file-writing caller iterate over formats. This makes the analytics logic independently testable without touching the filesystem",
+      "confidence": "high"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "calculate_project_stats_double_counts_docs",
+      "summary": "_calculate_project_stats() in doc_discovery.py concatenates documentation_files with manuscript_files, script_docs, and test_docs, but those sub-lists are subsets of documentation_files, so word/line counts are double-counted",
+      "related_files": [
+        "infrastructure/validation/doc_discovery.py"
+      ],
+      "evidence": [
+        "doc_discovery.py:366-372 — all_docs = documentation_files + manuscript_files + script_docs + test_docs",
+        "doc_discovery.py:347-355 — discover_project_documentation() appends each doc_info to both documentation_files and whichever sub-list it belongs to (manuscript_files, script_docs, or test_docs), so the same object ends up in both lists"
+      ],
+      "suggestion": "Either populate documentation_files as a catch-all that excludes sub-lists, or compute stats from the sub-lists only (manuscript + script + test + uncategorized), not from the concatenation of both tiers",
+      "confidence": "high"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "pipeline_executor_log_handler_management",
+      "summary": "PipelineExecutor mixes pipeline orchestration with log file handler lifecycle management, including recreating the handler after the clean stage deletes the log directory",
+      "related_files": [
+        "infrastructure/core/pipeline.py"
+      ],
+      "evidence": [
+        "pipeline.py:95-99 — __init__ sets up a log handler before pipeline execution begins",
+        "pipeline.py:370-384 — _run_clean_outputs() calls _setup_log_file_handler() again after the clean stage deletes the log directory",
+        "pipeline.py:460-462 — _run_copy_outputs() calls _flush_log_handlers() and _verify_log_file() before running the copy script, embedding I/O verification logic in the orchestrator"
+      ],
+      "suggestion": "Extract log-file lifecycle into a separate PipelineLogManager class that PipelineExecutor holds as a dependency. PipelineExecutor notifies the manager at stage boundaries (post-clean, pre-copy) rather than implementing that logic itself",
+      "confidence": "medium"
+    }
+  ]
+}

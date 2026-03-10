@@ -1,0 +1,118 @@
+{
+  "assessments": {
+    "cross_module_architecture": 72,
+    "convention_outlier": 63,
+    "ai_generated_debt": 55,
+    "high_level_elegance": 74
+  },
+  "findings": [
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "core_imports_reporting_at_runtime",
+      "summary": "infrastructure/core/multi_project.py imports from infrastructure/reporting inside a method body, blurring the core→reporting direction at runtime",
+      "related_files": ["infrastructure/core/multi_project.py"],
+      "evidence": ["Line 280: `from infrastructure.reporting import generate_multi_project_report` is a deferred import inside a method — this is a core module importing from a higher-level reporting module, violating the expected dependency direction (core should not know about reporting)"],
+      "suggestion": "Invert the dependency: the reporting layer or the multi-project orchestration layer above core should own the call to generate_multi_project_report and pass results back; core should not reach into reporting",
+      "confidence": "high"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "publishing_imports_validation",
+      "summary": "infrastructure/publishing/core.py imports from infrastructure/validation, coupling two sibling layers",
+      "related_files": ["infrastructure/publishing/core.py", "infrastructure/validation/integrity.py"],
+      "evidence": ["Line 20: `from infrastructure.validation.integrity import verify_academic_standards` — publishing imports validation; these are sibling subsystems and the coupling creates a hidden dependency edge that is not documented in the architecture"],
+      "suggestion": "Either accept both as co-equal infrastructure siblings and document the edge, or extract verify_academic_standards into infrastructure/core (if truly generic) so publishing can import it from the lower layer",
+      "confidence": "high"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "markdown_validator_os_path_island",
+      "summary": "infrastructure/validation/markdown_validator.py uses os.path throughout while every sibling infrastructure module uses pathlib exclusively",
+      "related_files": ["infrastructure/validation/markdown_validator.py"],
+      "evidence": ["Lines 109-143: os.path.dirname, os.path.join, os.path.normpath, os.path.isabs, os.path.exists, os.path.basename, os.path.relpath used across validate_images(); the rest of the infrastructure codebase (config_loader.py, environment.py, pipeline.py, publishing/core.py, etc.) operates exclusively on pathlib.Path objects"],
+      "suggestion": "Replace the os.path calls with pathlib equivalents to match the project-wide convention; Path.parent, Path.joinpath, Path.exists(), Path.name, Path.relative_to() cover all usages here",
+      "confidence": "high"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "validate_markdown_cli_duplicate_logic",
+      "summary": "infrastructure/validation/validate_markdown_cli.py re-implements find_markdown_files, collect_symbols, validate_images, validate_refs, and validate_math locally despite identical functions existing in markdown_validator.py",
+      "related_files": ["infrastructure/validation/validate_markdown_cli.py", "infrastructure/validation/markdown_validator.py"],
+      "evidence": ["Lines 55-176 of validate_markdown_cli.py define find_markdown_files, collect_symbols, validate_images, validate_refs, validate_math as standalone functions with comment 'for testing'; the identical function names exist in markdown_validator.py with different signatures (list[str] vs Set/Tuple) — this is a shadow implementation that diverges from the canonical module"],
+      "suggestion": "Remove the shadow functions from the CLI file and import directly from markdown_validator for tests; the comment 'for testing' is not a valid reason to maintain duplicates",
+      "confidence": "high"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "config_cli_dead_branch",
+      "summary": "infrastructure/core/config_cli.py has an if/else branch where both arms execute the same code",
+      "related_files": ["infrastructure/core/config_cli.py"],
+      "evidence": ["Lines 87-91: `if key == 'AUTHOR_DETAILS': value_escaped = value.replace('\"', '\\\\\"') else: value_escaped = value.replace('\"', '\\\\\"')` — both branches are identical; the comment says 'Preserve backslashes for LaTeX in AUTHOR_DETAILS' but no difference is implemented"],
+      "suggestion": "Remove the if/else and keep a single assignment; if the intent was different escaping for AUTHOR_DETAILS, implement it",
+      "confidence": "high"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "dashboard_generator_misplaced_import",
+      "summary": "infrastructure/reporting/dashboard_generator.py has `import csv` between two matplotlib imports, breaking the standard import ordering convention",
+      "related_files": ["infrastructure/reporting/dashboard_generator.py"],
+      "evidence": ["Lines 14-17: `import matplotlib` then `import csv` then `import matplotlib.pyplot as plt` — csv is a stdlib module inserted between two lines of the same third-party import group; every other file groups stdlib and third-party imports conventionally"],
+      "suggestion": "Move `import csv` to the stdlib import block above the matplotlib imports",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "context_py_nosy_logging",
+      "summary": "infrastructure/llm/core/context.py logs entry and exit on every mutation method with full state dumps",
+      "related_files": ["infrastructure/llm/core/context.py"],
+      "evidence": ["add_message() emits two logger.debug calls with full object state (lines 47-57 and 67-77); _prune_context() emits logger.debug on every individual message removed in a while-loop (lines 144-154) and an additional logger.info on completion; clear() emits logger.info before and logger.debug after a two-line operation (lines 103-115); restore_state() emits logger.info and logger.debug bracketing three assignment lines (lines 233-251)"],
+      "suggestion": "Collapse to a single log per public method at DEBUG level; remove the per-iteration prune debug log from the loop body — it generates O(n) log entries per prune operation",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "llm_client_nosy_query_logging",
+      "summary": "LLMClient.query() and query_raw() log entry/exit with full state at INFO level for every single LLM call",
+      "related_files": ["infrastructure/llm/core/client.py"],
+      "evidence": ["query(): logger.info 'Starting query' with model+prompt_length, then logger.info 'Query completed' with model+response_length+generation_time — routine INFO logging for every invocation; query_raw() computes prompt_preview (line 294) but then logs prompt_length rather than the preview, making the preview variable unused in the normal path (lines 296-305)"],
+      "suggestion": "Lower routine per-call logging to DEBUG; the prompt_preview variable in query_raw is computed but not used in the logged fields — either log it or remove the computation",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "environment_py_docstring_bloat",
+      "summary": "infrastructure/core/environment.py has 3-8 line docstrings on trivial delegation functions that restate the obvious",
+      "related_files": ["infrastructure/core/environment.py"],
+      "evidence": ["get_python_command() (lines 316-335): 19-line docstring for a 1-line function `return [sys.executable]`; check_uv_available() (lines 291-313): 11-line docstring with usage example for a 5-line subprocess call; set_environment_variables() (lines 456-494): docstring includes a usage example that just asserts `success is True` — adds no information"],
+      "suggestion": "Trim docstrings to one sentence stating what the function returns; remove trivial examples that just call the function",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "environment_py_log_every_success",
+      "summary": "infrastructure/core/environment.py calls log_success() on every individual package check, tool check, and directory creation",
+      "related_files": ["infrastructure/core/environment.py"],
+      "evidence": ["check_dependencies(): log_success() called inside a for-loop for every package found (lines 100, 109); check_build_tools(): log_success() inside for-loop for each tool (line 221); setup_directories(): log_success() inside for-loop for each directory created (line 284) — in a typical setup this generates dozens of INFO-level lines for entirely expected outcomes"],
+      "suggestion": "Log a single summary at INFO level after the loop (e.g., 'All N packages found'); use DEBUG inside the loop for per-item confirmation",
+      "confidence": "high"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "validate_markdown_cli_misrepresented_as_thin_orchestrator",
+      "summary": "validate_markdown_cli.py claims to be a 'THIN ORCHESTRATOR' but contains substantial business logic duplicating its own infrastructure module",
+      "related_files": ["infrastructure/validation/validate_markdown_cli.py"],
+      "evidence": ["Module docstring line 2: 'This script validates markdown files… All business logic is in infrastructure/markdown_validator.py / This script handles only CLI argument parsing and I/O'; however lines 55-176 implement find_markdown_files, collect_symbols, validate_images, validate_refs, validate_math with full regex logic — the file contradicts its own stated contract"],
+      "suggestion": "Remove the duplicated functions; if tests need direct access to those primitives they should import from markdown_validator, not from the CLI file",
+      "confidence": "high"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "scripts_init_menu_mapping_drift",
+      "summary": "scripts/__init__.py MENU_SCRIPT_MAPPING references script entry point names (function field) that don't match the actual functions in the target scripts",
+      "related_files": ["scripts/__init__.py"],
+      "evidence": ["Entry 0 lists function='run_setup_environment', entry 2 lists function='run_analysis_standalone', entry 4 lists function='run_validation_standalone' — these are symbolic names with no verified binding to actual callables; the mapping is documentation that cannot be validated programmatically and can drift silently from the actual script entry points"],
+      "suggestion": "Either remove the function field (it provides false precision if not verified) or replace it with the actual callable reference imported from each script so drift is caught at import time",
+      "confidence": "medium"
+    }
+  ]
+}

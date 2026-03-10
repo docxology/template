@@ -6,11 +6,13 @@ output directories and files.
 
 from __future__ import annotations
 
+import hashlib
 import shutil
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
+from infrastructure.core.exceptions import FileOperationError
 from infrastructure.core.logging_utils import get_logger, log_success
 
 logger = get_logger(__name__)
@@ -23,7 +25,10 @@ def clean_output_directory(output_dir: Path) -> bool:
         output_dir: Path to top-level output directory
 
     Returns:
-        True if cleanup successful, False otherwise
+        True on success.
+
+    Raises:
+        FileOperationError: If the directory cannot be created or cleaned.
     """
     logger.info("Cleaning output directory...")
 
@@ -33,15 +38,8 @@ def clean_output_directory(output_dir: Path) -> bool:
             output_dir.mkdir(parents=True, exist_ok=True)
             log_success("Created output directory", logger)
             return True
-        except PermissionError as e:
-            logger.error(f"Permission denied creating output directory {output_dir}: {e}")
-            return False
         except OSError as e:
-            logger.error(f"OS error creating output directory {output_dir}: {e}")
-            return False
-        except Exception as e:
-            logger.error(f"Unexpected error creating output directory {output_dir}: {e}")
-            return False
+            raise FileOperationError(f"Failed to create output directory {output_dir}: {e}") from e
 
     # Remove existing contents
     try:
@@ -55,15 +53,8 @@ def clean_output_directory(output_dir: Path) -> bool:
 
         log_success("Output directory cleaned", logger)
         return True
-    except PermissionError as e:
-        logger.error(f"Permission denied cleaning output directory {output_dir}: {e}")
-        return False
     except OSError as e:
-        logger.error(f"OS error cleaning output directory {output_dir}: {e}")
-        return False
-    except Exception as e:
-        logger.error(f"Unexpected error cleaning output directory {output_dir}: {e}")
-        return False
+        raise FileOperationError(f"Failed to clean output directory {output_dir}: {e}") from e
 
 
 def _clean_dir_preserving(
@@ -104,7 +95,7 @@ def _clean_dir_preserving(
 
 
 def clean_output_directories(
-    repo_root: Path, project_name: str = "project", subdirs: List[str] | None = None
+    repo_root: Path, project_name: str = "project", subdirs: list[str] | None = None
 ) -> None:
     """Clean output directories for a fresh pipeline start.
 
@@ -120,12 +111,15 @@ def clean_output_directories(
         project_name: Name of project in projects/ directory (default: "project")
         subdirs: List of subdirectories to recreate. If None, uses default list.
     """
-    # Import project discovery to get list of valid project names
-    from infrastructure.project.discovery import discover_projects
-
-    # Discover all projects to know which folders to keep in output/
-    projects = discover_projects(repo_root)
-    project_names = [p.name for p in projects]
+    # Discover valid project names by scanning the projects/ directory directly.
+    # Using Path scan instead of infrastructure.project.discovery avoids a
+    # circular import: file_operations → project.discovery → core.logging_utils.
+    projects_dir = repo_root / "projects"
+    project_names: list[str] = (
+        [d.name for d in projects_dir.iterdir() if d.is_dir() and not d.name.startswith(".")]
+        if projects_dir.exists()
+        else []
+    )
 
     # Clean root-level directories from output/ before cleaning project-specific directories
     clean_root_output_directory(repo_root, project_names)
@@ -175,7 +169,7 @@ def clean_output_directories(
                             logger.debug(
                                 f"  Archived log file: {log_file.name} → {archive_path.name}"
                             )
-                        except Exception as e:
+                        except (OSError, shutil.Error) as e:
                             logger.warning(f"  Failed to archive log file {log_file.name}: {e}")
 
                     if archived_count > 0:
@@ -309,7 +303,7 @@ def clean_root_output_directory(repo_root: Path, project_names: list[str]) -> bo
         log_success("Root output directory cleaned", logger)
         return True
 
-    except Exception as e:
+    except OSError as e:
         logger.error(f"Failed to clean root output directory: {e}", exc_info=True)
         return False
 
@@ -379,7 +373,7 @@ def clean_coverage_files(repo_root: Path, patterns: list[str] | None = None) -> 
         log_success("Coverage database cleanup completed", logger)
         return True
 
-    except Exception as e:
+    except OSError as e:
         logger.error(f"Failed to clean coverage database files: {e}", exc_info=True)
         return False
 
@@ -421,7 +415,7 @@ def copy_final_deliverables(
             "logs_files": int,
             "combined_pdf": int,
             "total_files": int,
-            "errors": List[str]
+            "errors": list[str]
         }
     """
     logger.info(f"Copying all outputs for project '{project_name}'...")
@@ -456,7 +450,7 @@ def copy_final_deliverables(
         logger.debug(f"Recursively copying: {project_output} → {output_dir}")
         shutil.copytree(project_output, output_dir, dirs_exist_ok=True)
         log_success("Recursively copied project/output/ directory", logger)
-    except Exception as e:
+    except (OSError, shutil.Error) as e:
         msg = f"Failed to copy project output directory: {e}"
         logger.error(msg)
         stats["errors"].append(msg)
@@ -501,7 +495,7 @@ def copy_final_deliverables(
                                 logger.warning(f"  Log file is empty: {log_file.name}")
                             else:
                                 logger.debug(f"  Found log file: {log_file.name} ({size:,} bytes)")
-                        except Exception as e:
+                        except OSError as e:
                             logger.warning(f"  Failed to verify log file {log_file.name}: {e}")
                     logger.info(f"  Found {len(log_files)} log file(s) in {subdir_name}/")
 
@@ -517,7 +511,7 @@ def copy_final_deliverables(
                         }
                     )
                     logger.debug(f"  Copied: {file_path.name} ({file_size:,} bytes)")
-                except Exception as e:
+                except OSError as e:
                     logger.warning(f"  Failed to get size for {file_path}: {e}")
 
             logger.info(f"  {subdir_name}/: {file_count} file(s)")
@@ -529,10 +523,7 @@ def copy_final_deliverables(
     combined_pdf_src = output_dir / "pdf" / f"{project_basename}_combined.pdf"
     combined_pdf_dst = output_dir / f"{project_basename}_combined.pdf"
 
-    if combined_pdf_src.exists():
-        # Use project-specific name
-        pass
-    else:
+    if not combined_pdf_src.exists():
         # Fall back to legacy name
         combined_pdf_src = output_dir / "pdf" / "project_combined.pdf"
         combined_pdf_dst = output_dir / "project_combined.pdf"
@@ -554,7 +545,7 @@ def copy_final_deliverables(
                 }
             )
             logger.info(f"  Root PDF: {combined_pdf_dst} ({file_size:,} bytes)")
-        except Exception as e:
+        except (OSError, shutil.Error) as e:
             msg = f"Failed to copy combined PDF to root: {e}"
             logger.warning(msg)
             stats["errors"].append(msg)
@@ -562,3 +553,31 @@ def copy_final_deliverables(
         logger.debug(f"Combined PDF not found at: {combined_pdf_src}")
 
     return stats
+
+
+def calculate_file_hash(file_path: Path, algorithm: str = "sha256") -> str | None:
+    """Calculate hash of a file for integrity verification.
+
+    Args:
+        file_path: Path to file to hash
+        algorithm: Hash algorithm to use
+
+    Returns:
+        Hash string or None if calculation fails
+    """
+    if not file_path.exists():
+        return None
+
+    try:
+        hash_func = hashlib.new(algorithm)
+    except ValueError as e:
+        raise FileOperationError(f"Unsupported hash algorithm '{algorithm}': {e}") from e
+
+    try:
+        with open(file_path, "rb") as f:
+            while chunk := f.read(8192):
+                hash_func.update(chunk)
+        return hash_func.hexdigest()
+    except OSError as e:
+        logger.debug(f"Could not hash {file_path}: {e}")
+        return None

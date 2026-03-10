@@ -12,9 +12,11 @@ All business logic is in src/pdf_validator.py
 This script handles only I/O and orchestration.
 """
 
+from __future__ import annotations
+
 import sys
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from infrastructure.core.logging_utils import get_logger
 
@@ -34,7 +36,6 @@ except ImportError as e:
         "   Ensure infrastructure/validation/pdf_validator.py exists and is properly formatted"
     )
     sys.exit(1)
-
 
 def print_validation_report(report: dict[str, Any], verbose: bool = False) -> None:
     """
@@ -85,8 +86,7 @@ def print_validation_report(report: dict[str, Any], verbose: bool = False) -> No
     logger.info("=" * 70)
     logger.info("")
 
-
-def main(pdf_path: Optional[Path] = None, n_words: int = 200, verbose: bool = False) -> int:
+def main(pdf_path: Path | None = None, n_words: int = 200, verbose: bool = False) -> int:
     """
     Main validation orchestration.
 
@@ -132,7 +132,6 @@ def main(pdf_path: Optional[Path] = None, n_words: int = 200, verbose: bool = Fa
 
             traceback.print_exc()
         return 2
-
 
 if __name__ == "__main__":
     import argparse

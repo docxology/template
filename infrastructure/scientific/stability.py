@@ -10,10 +10,13 @@ Provides utilities for testing algorithmic stability across input ranges:
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Callable, List, Tuple
+from typing import Any, Callable
 
 import numpy as np
 
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
 
 @dataclass
 class StabilityTest:
@@ -21,15 +24,14 @@ class StabilityTest:
 
     function_name: str
     test_name: str
-    input_range: Tuple[float, float]
+    input_range: tuple[float, float]
     expected_behavior: str
     actual_behavior: str
     stability_score: float
-    recommendations: List[str]
-
+    recommendations: list[str]
 
 def check_numerical_stability(
-    func: Callable, test_inputs: List[Any], tolerance: float = 1e-12
+    func: Callable, test_inputs: list[Any], tolerance: float = 1e-12
 ) -> StabilityTest:
     """Check numerical stability of a function across a range of inputs.
 
@@ -64,7 +66,7 @@ def check_numerical_stability(
 
             results.append((test_input, result, behavior, score))
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 — any function failure is a stability event
             results.append((test_input, None, f"Exception: {e}", 0.0))
 
     # Calculate overall stability score
@@ -81,11 +83,11 @@ def check_numerical_stability(
         recommendations.append("Handle edge cases and invalid inputs gracefully")
 
     return StabilityTest(
-        function_name=func.__name__,
+        function_name=getattr(func, "__name__", getattr(getattr(func, "func", None), "__name__", repr(func))),
         test_name="numerical_stability",
         input_range=(min(test_inputs), max(test_inputs)) if test_inputs else (0, 0),
         expected_behavior="Stable numerical behavior across input range",
         actual_behavior=f"Stability score: {overall_score:.2f}",
-        stability_score=overall_score,  # type: ignore
+        stability_score=float(overall_score),
         recommendations=recommendations,
     )

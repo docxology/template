@@ -13,30 +13,27 @@ This script performs a systematic 7-phase documentation scan:
 
 from __future__ import annotations
 
-import json  # noqa: F401
 import subprocess
 import sys
 from collections import defaultdict
-from dataclasses import asdict, dataclass, field  # noqa: F401
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set, Tuple  # noqa: F401
-
-import yaml  # noqa: F401
+from typing import Any
 
 from infrastructure.core.logging_utils import get_logger, log_header, log_success
 from infrastructure.validation.doc_accuracy import run_accuracy_phase
 from infrastructure.validation.doc_completeness import run_completeness_phase
-from infrastructure.validation.doc_discovery import run_discovery_phase
-from infrastructure.validation.doc_models import (  # noqa: F401
-    AccuracyIssue,
-    CompletenessGap,
-    DocumentationFile,
-    LinkIssue,
-    QualityIssue,
+from infrastructure.validation.doc_discovery import (
+    discover_markdown_files,
+    identify_cross_references,
+    run_discovery_phase,
+)
+from infrastructure.validation.doc_models import (
     ScanResults,
 )
 from infrastructure.validation.doc_quality import run_quality_phase
+
+__all__ = ["DocumentationScanner"]
 
 logger = get_logger(__name__)
 
@@ -47,51 +44,12 @@ class DocumentationScanner:
     def __init__(self, repo_root: Path):
         self.repo_root = repo_root.resolve()
         self.results = ScanResults(scan_date=datetime.now().isoformat())
-        self.all_headings: Dict[str, Set[str]] = {}
-        self.script_files: List[Path] = []
-        self.config_files: Dict[str, Path] = {}
-        self.documentation_structure: Dict[str, List[str]] = defaultdict(list)
+        self.all_headings: dict[str, set[str]] = {}
+        self.script_files: list[Path] = []
+        self.config_files: dict[str, Path] = {}
+        self.documentation_structure: dict[str, list[str]] = defaultdict(list)
 
-    def _find_markdown_files(self) -> List[Path]:
-        """Find all markdown files (private method for testing)."""
-        from infrastructure.validation.doc_discovery import find_markdown_files
-
-        return find_markdown_files(self.repo_root)
-
-    def _catalog_agents_readme(self, md_files: List[Path]) -> List[str]:
-        """Catalog all AGENTS.md and README.md files (private method for testing)."""
-        from infrastructure.validation.doc_discovery import catalog_agents_readme
-
-        return catalog_agents_readme(md_files, self.repo_root)
-
-    def _find_config_files(self) -> Dict[str, Path]:
-        """Find configuration files (private method for testing)."""
-        from infrastructure.validation.doc_discovery import find_config_files
-
-        return find_config_files(self.repo_root)
-
-    def _find_script_files(self) -> List[Path]:
-        """Find all script files (private method for testing)."""
-        from infrastructure.validation.doc_discovery import find_script_files
-
-        script_files = find_script_files(self.repo_root)
-        # Populate self.script_files for test compatibility
-        self.script_files = script_files
-        return script_files
-
-    def _analyze_documentation_file(self, md_file: Path) -> DocumentationFile:
-        """Analyze a documentation file (private method for testing)."""
-        from infrastructure.validation.doc_discovery import analyze_documentation_file
-
-        return analyze_documentation_file(md_file, self.repo_root)
-
-    def _extract_headings(self, content: str) -> Set[str]:
-        """Extract headings from content (private method for testing)."""
-        from infrastructure.validation.doc_accuracy import extract_headings
-
-        return extract_headings(content)
-
-    def phase1_discovery(self) -> Dict[str, Any]:
+    def phase1_discovery(self) -> dict[str, Any]:
         """Phase 1: Discovery and Inventory."""
 
         inventory = run_discovery_phase(self.repo_root)
@@ -99,20 +57,15 @@ class DocumentationScanner:
         # Update results
         self.results.documentation_files = inventory.get("documentation_files", [])
         self.results.total_files = inventory["markdown_files"]
-        self.config_files = {
-            name: self.repo_root / path
-            for name, path in zip(inventory["config_files_list"], inventory["config_files_list"])
-        }
+        self.config_files = inventory["config_files_dict"]
         self.script_files = [self.repo_root / path for path in inventory["script_files_list"]]
 
         self.results.statistics["phase1"] = inventory
         return inventory
 
-    def phase2_accuracy(self) -> Dict[str, Any]:
+    def phase2_accuracy(self) -> dict[str, Any]:
         """Phase 2: Accuracy Verification."""
-        from infrastructure.validation.doc_discovery import find_markdown_files
-
-        md_files = find_markdown_files(self.repo_root)
+        md_files = discover_markdown_files(self.repo_root)
 
         accuracy_report, link_issues, accuracy_issues, all_headings = run_accuracy_phase(
             md_files, self.repo_root, self.config_files
@@ -125,7 +78,7 @@ class DocumentationScanner:
         self.results.statistics["phase2"] = accuracy_report
         return accuracy_report
 
-    def phase3_completeness(self) -> Dict[str, Any]:
+    def phase3_completeness(self) -> dict[str, Any]:
         """Phase 3: Completeness Analysis."""
         completeness_report, gaps = run_completeness_phase(
             self.repo_root, self.results.documentation_files, self.config_files
@@ -135,18 +88,16 @@ class DocumentationScanner:
         self.results.statistics["phase3"] = completeness_report
         return dict(completeness_report)
 
-    def phase4_quality(self) -> Dict[str, Any]:
+    def phase4_quality(self) -> dict[str, Any]:
         """Phase 4: Quality Assessment."""
-        from infrastructure.validation.doc_discovery import find_markdown_files
-
-        md_files = find_markdown_files(self.repo_root)
+        md_files = discover_markdown_files(self.repo_root)
         quality_report, quality_issues = run_quality_phase(md_files, self.repo_root)
 
         self.results.quality_issues.extend(quality_issues)
         self.results.statistics["phase4"] = quality_report
         return quality_report
 
-    def phase5_improvements(self) -> Dict[str, Any]:
+    def phase5_improvements(self) -> dict[str, Any]:
         """Phase 5: Intelligent Improvements."""
         logger.info("Phase 5: Implementing Intelligent Improvements...")
 
@@ -173,16 +124,16 @@ class DocumentationScanner:
         logger.info(f"  Identified {len(improvements)} improvements")
         return improvement_report
 
-    def phase6_verification(self) -> Dict[str, Any]:
+    def phase6_verification(self) -> dict[str, Any]:
         """Phase 6: Verification and Validation."""
         logger.info("Phase 6: Verification and Validation...")
 
         verification_results = {
             "link_checker": self._run_link_checker(),
-            "markdown_syntax": self._validate_markdown_syntax(),
-            "commands_tested": self._test_documented_commands(),
+            "markdown_syntax": {"status": "basic_validation_passed"},
+            "commands_tested": {"status": "manual_testing_required", "commands_found": 0},
             "cross_references": self._verify_cross_references(),
-            "circular_references": self._check_circular_references(),
+            "circular_references": {"status": "no_circular_references_detected"},
         }
 
         self.results.statistics["phase6"] = verification_results
@@ -195,7 +146,7 @@ class DocumentationScanner:
         report = self._generate_report()
         return report
 
-    def _identify_link_fixes(self) -> List[Dict[str, Any]]:
+    def _identify_link_fixes(self) -> list[dict[str, Any]]:
         """Identify link fixes needed."""
         fixes = []
         for issue in self.results.link_issues:
@@ -207,12 +158,11 @@ class DocumentationScanner:
                         "line": issue.line,
                         "target": issue.target,
                         "issue": issue.issue_message,
-                        "fix_needed": True,
                     }
                 )
         return fixes
 
-    def _identify_other_improvements(self) -> List[Dict[str, Any]]:
+    def _identify_other_improvements(self) -> list[dict[str, Any]]:
         """Identify other improvements needed."""
         improvements = []
 
@@ -230,7 +180,7 @@ class DocumentationScanner:
 
         return improvements
 
-    def _run_link_checker(self) -> Dict[str, Any]:
+    def _run_link_checker(self) -> dict[str, Any]:
         """Run the existing link checker."""
         try:
             result = subprocess.run(
@@ -248,32 +198,16 @@ class DocumentationScanner:
                 "errors": result.stderr,
             }
         except Exception as e:
+            logger.warning(f"Link checker subprocess failed: {e}")
             return {"success": False, "error": str(e)}
 
-    def _validate_markdown_syntax(self) -> Dict[str, Any]:
-        """Validate markdown syntax."""
-        return {"status": "basic_validation_passed"}
-
-    def _test_documented_commands(self) -> Dict[str, Any]:
-        """Test documented commands."""
-        return {"status": "manual_testing_required", "commands_found": 0}
-
-    def _verify_cross_references(self) -> Dict[str, Any]:
+    def _verify_cross_references(self) -> dict[str, Any]:
         """Verify cross-references."""
-        from infrastructure.validation.doc_discovery import (
-            find_markdown_files,
-            identify_cross_references,
-        )
-
-        md_files = find_markdown_files(self.repo_root)
+        md_files = discover_markdown_files(self.repo_root)
         return {
             "status": "verified",
             "total_references": len(identify_cross_references(md_files)),
         }
-
-    def _check_circular_references(self) -> Dict[str, Any]:
-        """Check for circular references."""
-        return {"status": "no_circular_references_detected"}
 
     def _generate_report(self) -> str:
         """Generate comprehensive scan report."""
@@ -378,7 +312,7 @@ class DocumentationScanner:
 
         return "\n".join(report_lines)
 
-    def run_full_scan(self) -> Tuple[ScanResults, str]:
+    def run_full_scan(self) -> tuple[ScanResults, str]:
         """Run all 7 phases of the documentation scan."""
         logger.info("Starting Comprehensive Documentation Scan...")
         logger.info("=" * 60)

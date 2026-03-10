@@ -4,13 +4,16 @@ This module provides comprehensive security measures including input validation,
 security headers, rate limiting, and security monitoring.
 """
 
+from __future__ import annotations
+
 import re
 import threading
 import time
 from functools import wraps
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Union
+from typing import Any, Callable, Union
 
+from infrastructure.core.exceptions import SecurityViolation
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
@@ -54,7 +57,7 @@ class SecurityValidator:
             r"\\write\s*\d|\\read\s*\d|\\openout\s*\d|\\openin\s*\d",
         ]
 
-    def validate_llm_input(self, prompt: str, context: Optional[Dict[str, Any]] = None) -> str:
+    def validate_llm_input(self, prompt: str, context: dict[str, Any] | None = None) -> str:
         """Validate and sanitize LLM input.
 
         Args:
@@ -186,7 +189,7 @@ class SecurityHeaders:
     """Security headers for HTTP responses and requests."""
 
     @staticmethod
-    def get_security_headers() -> Dict[str, str]:
+    def get_security_headers() -> dict[str, str]:
         """Get comprehensive security headers.
 
         Returns:
@@ -211,7 +214,7 @@ class SecurityHeaders:
         }
 
     @staticmethod
-    def get_cors_headers(origin: Optional[str] = None) -> Dict[str, str]:
+    def get_cors_headers(origin: str | None = None) -> dict[str, str]:
         """Get CORS headers for cross-origin requests.
 
         Args:
@@ -244,7 +247,7 @@ class RateLimiter:
     def __init__(self, max_requests: int = 100, window_seconds: int = 60):
         self.max_requests = max_requests
         self.window_seconds = window_seconds
-        self.requests: Dict[str, List[float]] = {}
+        self.requests: dict[str, list[float]] = {}
         self._lock = threading.Lock()
 
     def is_allowed(self, key: str) -> bool:
@@ -299,11 +302,11 @@ class SecurityMonitor:
     """Monitor security events and anomalies."""
 
     def __init__(self):
-        self.events: List[Dict[str, Any]] = []
+        self.events: list[dict[str, Any]] = []
         self.max_events = 1000
 
     def log_security_event(
-        self, event_type: str, details: Dict[str, Any], severity: str = "info"
+        self, event_type: str, details: dict[str, Any], severity: str = "info"
     ) -> None:
         """Log a security event.
 
@@ -335,7 +338,7 @@ class SecurityMonitor:
         else:
             logger.info(f"Security event: {event_type} - {details}")
 
-    def get_recent_events(self, limit: int = 100) -> List[Dict[str, Any]]:
+    def get_recent_events(self, limit: int = 100) -> list[dict[str, Any]]:
         """Get recent security events.
 
         Args:
@@ -346,7 +349,7 @@ class SecurityMonitor:
         """
         return self.events[-limit:]
 
-    def get_events_by_type(self, event_type: str) -> List[Dict[str, Any]]:
+    def get_events_by_type(self, event_type: str) -> list[dict[str, Any]]:
         """Get events by type.
 
         Args:
@@ -357,15 +360,15 @@ class SecurityMonitor:
         """
         return [event for event in self.events if event["type"] == event_type]
 
-    def get_security_summary(self) -> Dict[str, Any]:
+    def get_security_summary(self) -> dict[str, Any]:
         """Get security summary statistics.
 
         Returns:
             Dictionary with security statistics
         """
         total_events = len(self.events)
-        events_by_type: Dict[str, int] = {}
-        events_by_severity: Dict[str, int] = {}
+        events_by_type: dict[str, int] = {}
+        events_by_severity: dict[str, int] = {}
 
         for event in self.events:
             event_type = event["type"]
@@ -382,42 +385,49 @@ class SecurityMonitor:
         }
 
 
-class SecurityViolation(Exception):
-    """Exception raised for security violations."""
 
-    pass
-
-
-# Global instances
-_security_validator = SecurityValidator()
-_security_headers = SecurityHeaders()
-_rate_limiter = RateLimiter()
-_security_monitor = SecurityMonitor()
+# Global instances (lazy initialization — avoids import-time side effects)
+_security_validator: SecurityValidator | None = None
+_security_headers: SecurityHeaders | None = None
+_rate_limiter: RateLimiter | None = None
+_security_monitor: SecurityMonitor | None = None
 
 
 def get_security_validator() -> SecurityValidator:
     """Get the global security validator instance."""
+    global _security_validator
+    if _security_validator is None:
+        _security_validator = SecurityValidator()
     return _security_validator
 
 
-def get_security_headers() -> Dict[str, str]:
+def get_security_headers() -> dict[str, str]:
     """Get security headers."""
+    global _security_headers
+    if _security_headers is None:
+        _security_headers = SecurityHeaders()
     return _security_headers.get_security_headers()
 
 
 def get_rate_limiter() -> RateLimiter:
     """Get the global rate limiter instance."""
+    global _rate_limiter
+    if _rate_limiter is None:
+        _rate_limiter = RateLimiter()
     return _rate_limiter
 
 
 def get_security_monitor() -> SecurityMonitor:
     """Get the global security monitor instance."""
+    global _security_monitor
+    if _security_monitor is None:
+        _security_monitor = SecurityMonitor()
     return _security_monitor
 
 
 def validate_llm_input(prompt: str) -> str:
     """Convenience function for LLM input validation."""
-    return _security_validator.validate_llm_input(prompt)
+    return get_security_validator().validate_llm_input(prompt)
 
 
 def rate_limit(max_requests: int = 100, window_seconds: int = 60):
@@ -462,7 +472,7 @@ def rate_limit(max_requests: int = 100, window_seconds: int = 60):
 
             if not limiter.is_allowed(key):
                 remaining = limiter.get_remaining_requests(key)
-                _security_monitor.log_security_event(
+                get_security_monitor().log_security_event(
                     "rate_limit_exceeded",
                     {
                         "function": f"{func.__module__}.{func.__name__}",

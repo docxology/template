@@ -21,11 +21,17 @@ from __future__ import annotations
 
 import subprocess
 import time
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
-import requests
-from requests.exceptions import ConnectionError as RequestsConnectionError
-from requests.exceptions import RequestException, Timeout
+try:
+    import requests
+    from requests.exceptions import ConnectionError as RequestsConnectionError
+    from requests.exceptions import RequestException, Timeout
+except ImportError:
+    requests = None  # type: ignore[assignment]
+    RequestsConnectionError = OSError  # type: ignore[misc,assignment]
+    RequestException = OSError  # type: ignore[misc,assignment]
+    Timeout = OSError  # type: ignore[misc,assignment]
 
 from infrastructure.core.logging_utils import get_logger
 
@@ -63,7 +69,6 @@ DEFAULT_MODEL_PREFERENCES = [
     # Note: qwen3 (non-vl) models use "thinking" mode which requires special handling
 ]
 
-
 def is_ollama_running(base_url: str = "http://localhost:11434", timeout: float = 2.0) -> bool:
     """Check if Ollama server is running and responding."""
     try:
@@ -84,7 +89,6 @@ def is_ollama_running(base_url: str = "http://localhost:11434", timeout: float =
     except RequestException as e:
         logger.debug(f"Ollama server request failed at {base_url}: {e}")
         return False
-
 
 def start_ollama_server(wait_seconds: float = 3.0, max_retries: int = 2) -> bool:
     """Attempt to start the Ollama server with detailed logging.
@@ -145,10 +149,9 @@ def start_ollama_server(wait_seconds: float = 3.0, max_retries: int = 2) -> bool
     logger.error("Failed to start Ollama server after all retries")
     return False
 
-
 def get_available_models(
     base_url: str = "http://localhost:11434", timeout: float = 5.0, retries: int = 2
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     """Get list of available models from Ollama with retry logic.
 
     Args:
@@ -212,8 +215,7 @@ def get_available_models(
 
     return []
 
-
-def get_model_names(base_url: str = "http://localhost:11434") -> List[str]:
+def get_model_names(base_url: str = "http://localhost:11434") -> list[str]:
     """Get list of available model names from Ollama.
 
     Args:
@@ -225,10 +227,9 @@ def get_model_names(base_url: str = "http://localhost:11434") -> List[str]:
     models = get_available_models(base_url)
     return [m["name"] for m in models]
 
-
 def select_best_model(
-    preferences: Optional[List[str]] = None, base_url: str = "http://localhost:11434"
-) -> Optional[str]:
+    preferences: list[str | None] = None, base_url: str = "http://localhost:11434"
+) -> str | None:
     """Select the best available model based on preferences.
 
     Iterates through preference list and returns first available model.
@@ -266,8 +267,7 @@ def select_best_model(
     logger.info(f"No preference matched, using first available: {first}")
     return first
 
-
-def select_small_fast_model(base_url: str = "http://localhost:11434") -> Optional[str]:
+def select_small_fast_model(base_url: str = "http://localhost:11434") -> str | None:
     """Select a small, fast model for testing.
 
     Prioritizes smaller models for faster test execution.
@@ -286,7 +286,6 @@ def select_small_fast_model(base_url: str = "http://localhost:11434") -> Optiona
         "mistral:latest",
     ]
     return select_best_model(fast_preferences, base_url)
-
 
 def ensure_ollama_ready(base_url: str = "http://localhost:11434", auto_start: bool = True) -> bool:
     """Ensure Ollama server is running and has models available."""
@@ -325,10 +324,9 @@ def ensure_ollama_ready(base_url: str = "http://localhost:11434", auto_start: bo
         logger.info(f"  Models: {', '.join(models[:5])} ... and {len(models) - 5} more")
     return True
 
-
 def get_model_info(
     model_name: str, base_url: str = "http://localhost:11434"
-) -> Optional[Dict[str, Any]]:
+) -> dict[str, Any | None]:
     """Get detailed information about a specific model.
 
     Args:
@@ -344,10 +342,9 @@ def get_model_info(
             return model
     return None
 
-
 def check_model_loaded(
     model_name: str, base_url: str = "http://localhost:11434", timeout: float = 2.0
-) -> Tuple[bool, Optional[str]]:
+) -> tuple[bool, str | None]:
     """Check if a model is currently loaded in Ollama's memory.
 
     Uses Ollama's /api/ps endpoint to check which models are currently
@@ -413,14 +410,13 @@ def check_model_loaded(
         logger.warning(f"Request error checking model load status: {e}")
         return (False, None)
 
-
 def preload_model(
     model_name: str,
     base_url: str = "http://localhost:11434",
     timeout: float = 60.0,
     retries: int = 1,
     check_loaded_first: bool = True,
-) -> Tuple[bool, Optional[str]]:
+) -> tuple[bool, str | None]:
     """Preload a model into Ollama's memory with retry logic.
 
     Sends a request to Ollama to load the model into memory, which can

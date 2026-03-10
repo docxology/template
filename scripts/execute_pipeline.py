@@ -5,6 +5,8 @@ This script provides pipeline execution functionality extracted from run.sh
 into testable Python code following the thin orchestrator pattern.
 """
 
+from __future__ import annotations
+
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -13,7 +15,7 @@ from pathlib import Path
 repo_root = Path(__file__).parent.parent
 sys.path.insert(0, str(repo_root))
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging_utils import get_logger, log_header, log_success
 from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor
 from infrastructure.core.pipeline_summary import generate_pipeline_summary
 from infrastructure.core.environment import get_python_command, validate_interpreter
@@ -133,7 +135,7 @@ def execute_pipeline(
                 save_pipeline_report,
                 collect_output_statistics,
             )
-            from infrastructure.core.logging_utils import generate_log_summary
+            from infrastructure.reporting.output_reporter import generate_log_summary
 
             # Collect output statistics
             output_stats = collect_output_statistics(repo_root, project_name)
@@ -181,8 +183,8 @@ def execute_pipeline(
             if log_summary:
                 logger.info("  • LOG SUMMARY: log_summary.txt")
 
-        except Exception as e:
-            logger.warning(f"Failed to generate comprehensive pipeline report: {e}")
+        except (ImportError, OSError, KeyError, AttributeError) as e:
+            logger.warning(f"Failed to generate comprehensive pipeline report: {e}", exc_info=True)
 
         # Verify log file after pipeline execution
         log_file = output_dir / "logs" / "pipeline.log"
@@ -193,7 +195,7 @@ def execute_pipeline(
                     logger.info(f"Pipeline log file verified: {log_file} ({size:,} bytes)")
                 else:
                     logger.warning(f"Pipeline log file is empty: {log_file}")
-            except Exception as e:
+            except OSError as e:
                 logger.warning(f"Failed to verify pipeline log file: {e}")
         else:
             logger.warning(f"Pipeline log file not found: {log_file}")
@@ -244,10 +246,12 @@ def main():
         stage=raw_args.stage,
     )
 
+    log_header(f"Pipeline: {args.project}", logger)
+
     if args.stage:
         return execute_single_stage(args.stage, args.project, repo_root)
 
-    return execute_pipeline(
+    result = execute_pipeline(
         project_name=args.project,
         repo_root=repo_root,
         skip_infra=args.skip_infra,
@@ -255,6 +259,9 @@ def main():
         resume=args.resume,
         core_only=args.core_only,
     )
+    if result == 0:
+        log_success(f"Pipeline complete: {args.project}", logger)
+    return result
 
 
 if __name__ == "__main__":

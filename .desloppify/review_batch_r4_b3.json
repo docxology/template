@@ -1,0 +1,107 @@
+{
+  "assessments": {
+    "error_consistency": 74,
+    "package_organization": 71,
+    "test_strategy": 72
+  },
+  "findings": [
+    {
+      "dimension": "error_consistency",
+      "identifier": "broad_exception_swallow_in_llm_io",
+      "summary": "Multiple broad Exception catches in llm/review/io.py log errors and silently continue without propagating or wrapping",
+      "related_files": [
+        "infrastructure/llm/review/io.py"
+      ],
+      "evidence": [
+        "io.py:205 — `except Exception as e: logger.error(f'Failed to save {name}: {e}'); success = False` — sets a boolean flag but does not raise or return a typed error, allowing callers to proceed with partial output silently",
+        "io.py:342, 411, 481 — same pattern: broad catch, log, return None or False with no context chain"
+      ],
+      "suggestion": "Raise a typed FileOperationError (already defined in infrastructure/core/exceptions.py) or return a result object that callers are forced to inspect, rather than logging and continuing; at minimum wrap the original exception with `chain_exceptions()` so context is preserved",
+      "confidence": "high"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "dual_error_vocabulary_not_always_used",
+      "summary": "errors.py InfraError constants are used inconsistently — some exception paths (e.g., multi_project.py:252, checkpoint.py:130) use raw f-strings instead of the defined constants",
+      "related_files": [
+        "infrastructure/core/checkpoint.py",
+        "infrastructure/core/multi_project.py"
+      ],
+      "evidence": [
+        "checkpoint.py:130 — `logger.error(f'Failed to save checkpoint: {e}')` — raw f-string, bypasses the InfraError constant pattern",
+        "checkpoint.py:154 — `logger.warning(f'Failed to load checkpoint: {e}')` — same raw pattern",
+        "multi_project.py:252 — `logger.error(f'Infrastructure tests failed with exception: {e}')` — raw string, no constant defined for this path despite the pattern being established in errors.py"
+      ],
+      "suggestion": "Define InfraError constants for checkpoint save/load failures and infrastructure test exception cases, then use `.format()` consistently; this keeps all error message wording in one place and makes grep-based audits reliable",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "infrastructure_core_flat_overload",
+      "summary": "infrastructure/core/ contains 32 files mixing concerns: pipeline orchestration, logging (5 files), security, credentials, menu, progress, retry, and CLI — no sub-grouping despite clear affinity clusters",
+      "related_files": [
+        "infrastructure/core/logging_constants.py",
+        "infrastructure/core/logging_formatters.py",
+        "infrastructure/core/logging_helpers.py",
+        "infrastructure/core/logging_progress.py",
+        "infrastructure/core/logging_utils.py",
+        "infrastructure/core/credentials.py",
+        "infrastructure/core/security.py",
+        "infrastructure/core/menu.py",
+        "infrastructure/core/pipeline.py",
+        "infrastructure/core/multi_project.py"
+      ],
+      "evidence": [
+        "`ls infrastructure/core/` returns 32 entries including 5 logging-prefixed files, 2 security/credential files, and standalone menu.py/progress.py/retry.py that share no concern with pipeline.py or config_loader.py",
+        "logging_constants.py, logging_formatters.py, logging_helpers.py, logging_progress.py, logging_utils.py are five files all named with the same prefix but living flat alongside unrelated pipeline and security code"
+      ],
+      "suggestion": "Extract the five logging_* files into infrastructure/core/logging/, credentials.py and security.py into infrastructure/core/security/, and menu.py/progress.py/retry.py into infrastructure/core/ui/ or infrastructure/core/util/; update imports accordingly",
+      "confidence": "high"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "three_markdown_docs_at_infra_root",
+      "summary": "infrastructure/ root contains AGENTS.md, README.md, PAI.md, and SKILL.md — four doc files plus __init__.py with no code, making the root a mixed doc/package directory",
+      "related_files": [
+        "infrastructure/AGENTS.md",
+        "infrastructure/PAI.md",
+        "infrastructure/SKILL.md",
+        "infrastructure/README.md"
+      ],
+      "evidence": [
+        "`ls infrastructure/` lists AGENTS.md, PAI.md, README.md, SKILL.md, __init__.py, and 9 subdirectories — the root is primarily navigational but the presence of 4 markdown files at this level adds noise to directory scans and import path checks"
+      ],
+      "suggestion": "Move PAI.md and SKILL.md to infrastructure/docs/ or the project-level docs/ directory; AGENTS.md and README.md can remain at the root as they are conventional discovery targets",
+      "confidence": "low"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "llm_review_generator_core_paths_gated_behind_slow",
+      "summary": "All substantive tests for generate_review_with_metrics, generate_executive_summary, generate_quality_review, etc. are marked @pytest.mark.slow and excluded from the default test run",
+      "related_files": [
+        "tests/infra_tests/llm/test_review_generators.py"
+      ],
+      "evidence": [
+        "pyproject.toml:121 — `addopts = ... -m 'not slow'` — slow tests are excluded by default",
+        "test_review_generators.py:86-155 — all TestGenerateReviewWithMetrics test methods carry @pytest.mark.slow, meaning generate_review_with_metrics(), generate_executive_summary(), generate_quality_review(), generate_methodology_review(), generate_improvement_suggestions(), and generate_translation() have zero coverage in the standard CI run",
+        "The only non-slow tests in this file cover extract_manuscript_text() file-not-found and PDF-parsing edge cases"
+      ],
+      "suggestion": "Factor out the Ollama-dependent assertion (e.g., checking response length and metric fields) from the logic under test; write deterministic unit tests for validate_review_quality(), the retry loop decision logic, and response post-processing that do not require a live server, so the critical business logic has coverage in the default run",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "pipeline_executor_execute_stage_exception_path_only_via_generic_exception",
+      "summary": "test_execute_stage_failure uses a bare `raise Exception('Test error')` to exercise the catch-all handler, which does not verify that the exception_type field is correctly recorded for domain exceptions",
+      "related_files": [
+        "tests/infra_tests/core/test_pipeline.py"
+      ],
+      "evidence": [
+        "test_pipeline.py:236-246 — the failure test raises `Exception('Test error')` and checks `result.error_message` contains 'Test error', but does not assert `result.exception_type == 'Exception'` nor exercise the path with OSError or subprocess.TimeoutExpired to verify those are handled correctly at the _run_script level",
+        "pipeline.py:537 — `except (OSError, subprocess.SubprocessError, subprocess.TimeoutExpired) as e` — this narrower catch in _run_script is not covered by any test that actually triggers a TimeoutExpired or OSError"
+      ],
+      "suggestion": "Add tests that pass a stage function raising OSError and subprocess.TimeoutExpired to verify exception_type is captured correctly, and add a test for _run_script that simulates a TimeoutExpired to confirm it returns False without raising",
+      "confidence": "medium"
+    }
+  ]
+}

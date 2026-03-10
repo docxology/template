@@ -1,0 +1,459 @@
+{
+  "assessments": {
+    "cross_module_architecture": 78,
+    "convention_outlier": 73,
+    "error_consistency": 80,
+    "abstraction_fitness": 74,
+    "dependency_health": 84,
+    "test_strategy": 80,
+    "ai_generated_debt": 38,
+    "package_organization": 52,
+    "design_coherence": 60,
+    "high_level_elegance": 72,
+    "mid_level_elegance": 65,
+    "low_level_elegance": 70
+  },
+  "findings": [
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "module_level_singleton_instantiation",
+      "summary": "Multiple modules instantiate singletons at import time, creating implicit side effects on module load",
+      "related_files": [
+        "infrastructure/core/health_check.py",
+        "infrastructure/core/security.py",
+        "infrastructure/llm/core/sanitization.py"
+      ],
+      "evidence": [
+        "health_check.py:285: `_checker = SystemHealthChecker()` runs at import time; SystemHealthChecker.__init__ sets start_time and allocates self.checks dict eagerly",
+        "security.py:394-397: four singleton objects instantiated at module level",
+        "sanitization.py:198: `_input_sanitizer = InputSanitizer()` instantiated at module level with dangerous_patterns list compiled on load"
+      ],
+      "suggestion": "Wrap each singleton behind its getter function using lazy initialization (initialize on first call rather than at module import), removing import-time side effects",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "security_error_outside_template_hierarchy",
+      "summary": "SecurityError in llm/core/sanitization.py is a bare Exception subclass disconnected from the TemplateError hierarchy",
+      "related_files": [
+        "infrastructure/llm/core/sanitization.py",
+        "infrastructure/core/exceptions.py"
+      ],
+      "evidence": [
+        "sanitization.py:191-194: `class SecurityError(Exception): pass` \u2014 does not inherit from TemplateError or any subclass",
+        "exceptions.py defines LLMError(TemplateError) which is the correct parent for LLM-layer errors",
+        "Callers that catch TemplateError broadly will miss SecurityError raises from the sanitizer"
+      ],
+      "suggestion": "Change `class SecurityError(Exception)` to `class SecurityError(LLMError)` and import LLMError from infrastructure.core.exceptions, or add SecurityError to the exceptions module",
+      "confidence": "high"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "reporting_package_incomplete_exports",
+      "summary": "infrastructure/reporting/__init__.py omits test_summary_generator and suite_summary_generator from its public API despite them being substantive modules in the package",
+      "related_files": [
+        "infrastructure/reporting/__init__.py",
+        "infrastructure/reporting/test_summary_generator.py",
+        "infrastructure/reporting/suite_summary_generator.py"
+      ],
+      "evidence": [
+        "__init__.py __all__ list has 17 names but excludes generate_summary_report, generate_markdown_report from test_summary_generator",
+        "suite_summary_generator.py exists in the package but is not imported or re-exported from __init__"
+      ],
+      "suggestion": "Either add the missing generators to __init__.py exports or document them as internal-only with a module-level comment; inconsistency suggests the boundary is not intentional",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "mixed_typing_generic_style",
+      "summary": "health_check.py uses legacy typing.Dict/List/Optional while performance.py mixes legacy and builtin generics in the same file",
+      "related_files": [
+        "infrastructure/core/health_check.py",
+        "infrastructure/core/performance.py"
+      ],
+      "evidence": [
+        "health_check.py: `from typing import Any, Dict, List, Optional` then uses Dict[str,Any] and List[str] throughout",
+        "performance.py: imports Dict, List, Optional, Union but also uses lowercase dict[str,Any] and list[dict[str,Any]] in method signatures in the same file",
+        "Both files have `from __future__ import annotations` which makes builtin generics safe, so the legacy forms are unnecessary"
+      ],
+      "suggestion": "Standardize on lowercase builtin generics (dict, list, tuple, optional via X|None) throughout both files; the from __future__ import annotations already enables this",
+      "confidence": "high"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "import_ordering_violation_in_test_summary",
+      "summary": "test_summary_generator.py defines a TypedDict class between two import blocks, violating PEP 8 import ordering",
+      "related_files": [
+        "infrastructure/reporting/test_summary_generator.py"
+      ],
+      "evidence": [
+        "Lines 15-28: InfraResults TypedDict class is defined after stdlib imports but before infrastructure imports on lines 29-30",
+        "Standard ordering is: all imports first, then module-level definitions"
+      ],
+      "suggestion": "Move the InfraResults TypedDict definition to after all imports (after line 32), or move lines 29-30 infrastructure imports to join the other imports at the top",
+      "confidence": "high"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "security_error_not_in_template_hierarchy",
+      "summary": "SecurityError raised throughout sanitization.py is a bare Exception subclass, breaking the project-wide TemplateError catch-all contract",
+      "related_files": [
+        "infrastructure/llm/core/sanitization.py",
+        "infrastructure/core/exceptions.py"
+      ],
+      "evidence": [
+        "sanitization.py raises SecurityError in 8 locations for prompt injection, path traversal, and filename validation",
+        "SecurityError(Exception) defined at sanitization.py:191 \u2014 not connected to TemplateError",
+        "Code that does `except TemplateError` to catch all infrastructure errors will miss these security violations"
+      ],
+      "suggestion": "Inherit SecurityError from LLMError (which inherits from TemplateError) so it participates in the standard exception hierarchy; add it to exceptions.py if it needs to be catchable across modules",
+      "confidence": "high"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "bare_builtins_in_scientific_templates",
+      "summary": "infrastructure/scientific/templates.py raises bare TypeError and ValueError inside template string code rather than using TemplateError subclasses",
+      "related_files": [
+        "infrastructure/scientific/templates.py"
+      ],
+      "evidence": [
+        "templates.py:68: `raise TypeError(...)` inside template string for generated module code",
+        "templates.py:77: `raise ValueError(...)` inside template string for generated module code",
+        "templates.py:98,101: two more bare ValueError raises",
+        "These are in string literals (template content for new project modules), but the file-level functions at lines 68,77 are actual infrastructure code not template strings \u2014 they validate the template generation call itself"
+      ],
+      "suggestion": "Distinguish clearly between template string content (acceptable to use builtins as examples) and actual infrastructure validation code; if the raises at lines 68-77 are in live infrastructure functions, replace with appropriate TemplateError subclasses",
+      "confidence": "low"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "exception_ctor_os_detection",
+      "summary": "MissingDependencyError.__init__ performs OS detection and package manager discovery inside an exception constructor",
+      "related_files": [
+        "infrastructure/core/exceptions.py"
+      ],
+      "evidence": [
+        "Lines 303-333: imports platform and shutil, calls shutil.which('apt-get'), shutil.which('brew'), etc. inside __init__",
+        "OS detection and command generation is infrastructure logic, not exception domain"
+      ],
+      "suggestion": "Extract install command generation to a standalone function in a utility module; exception constructors should only format message data",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "performance_context_dynamic_attr",
+      "summary": "performance_context sets a dynamic attribute monitor.last_metrics not declared on PerformanceMonitor, bypassing the type system",
+      "related_files": [
+        "infrastructure/core/performance.py"
+      ],
+      "evidence": [
+        "Line 170: monitor.last_metrics = metrics  # type: ignore[attr-defined]",
+        "PerformanceMonitor has no last_metrics field; callers must know about this undocumented side effect"
+      ],
+      "suggestion": "Add last_metrics: Optional[PerformanceMetrics] = None as a declared field on PerformanceMonitor",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "module_level_health_checker_instantiation",
+      "summary": "health_check.py instantiates SystemHealthChecker at module import time, triggering network and filesystem side effects on import",
+      "related_files": [
+        "infrastructure/core/health_check.py"
+      ],
+      "evidence": [
+        "Line 285: _checker = SystemHealthChecker() runs at import time",
+        "SystemHealthChecker.__init__ records self.start_time = time.time() and the check methods probe DNS, /proc/uptime, psutil"
+      ],
+      "suggestion": "Use lazy initialization: create _checker only inside get_health_status/quick_health_check, or make _checker = None and initialize on first call",
+      "confidence": "high"
+    },
+    {
+      "dimension": "dependency_health",
+      "identifier": "stdlib_imports_inside_exception_init",
+      "summary": "platform and shutil are imported inside MissingDependencyError.__init__ on every instantiation rather than at module top-level",
+      "related_files": [
+        "infrastructure/core/exceptions.py"
+      ],
+      "evidence": [
+        "Lines 303 and 306: import platform and import shutil inside __init__ body",
+        "These are stdlib modules; importing inside a constructor is unusual and adds per-instantiation overhead"
+      ],
+      "suggestion": "Move stdlib imports to top of exceptions.py module",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "environment_tests_bypass_module_under_test",
+      "summary": "Several tests in TestEnvironmentState and TestEnvironmentSetupIntegration test stdlib/OS behavior rather than infrastructure.core.environment functions",
+      "related_files": [
+        "tests/infra_tests/core/test_environment.py"
+      ],
+      "evidence": [
+        "test_home_directory_accessible: calls Path.home() directly without using any environment module function",
+        "test_current_working_directory: calls Path.cwd() without exercising module",
+        "test_python_executable_exists: reads sys.executable directly",
+        "test_platform_info_available: checks sys.platform directly",
+        "test_version_components: checks sys.version_info attributes"
+      ],
+      "suggestion": "Either remove these tests (they test Python stdlib, not the infrastructure module) or restructure them to call environment module functions and assert on their output",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "mock_usage_in_two_test_files",
+      "summary": "Two test files use MagicMock or patch despite the no-mocks policy",
+      "related_files": [
+        "tests/infra_tests/llm/test_logging.py",
+        "tests/infra_tests/rendering/test_pdf_renderer_missing_coverage.py"
+      ],
+      "evidence": [
+        "Grep confirmed MagicMock/patch present in these two files"
+      ],
+      "suggestion": "Replace mock usage with real implementations: use pytest-httpserver for LLM HTTP calls (already used elsewhere), use real temp files for renderer tests",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "duplicate_suite_summary_modules",
+      "summary": "test_summary_generator.py and suite_summary_generator.py are near-identical ~420-line files with identical function bodies",
+      "related_files": [
+        "infrastructure/reporting/test_summary_generator.py",
+        "infrastructure/reporting/suite_summary_generator.py"
+      ],
+      "evidence": [
+        "Both files define identical functions: load_test_results, load_infrastructure_results, discover_active_projects, _calculate_weighted_coverage, _aggregate_counts, _is_ollama_available, generate_summary_report, generate_markdown_report, run_test_summary_generation",
+        "Line-for-line identical logic in both \u2014 copied-and-forgot pattern"
+      ],
+      "suggestion": "Delete test_summary_generator.py entirely; all callers should import from suite_summary_generator.py directly",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "broken_shim_syntax",
+      "summary": "summary_generator.py has syntactically invalid Python \u2014 a logger assignment is injected mid-import block",
+      "related_files": [
+        "infrastructure/reporting/summary_generator.py"
+      ],
+      "evidence": [
+        "Lines 8-19: `from infrastructure.reporting.suite_summary_generator import (` is followed by `from infrastructure.core.logging_utils import get_logger` and `logger = get_logger(__name__)` before the closing `)` of the first import",
+        "This is not valid Python and cannot be imported \u2014 a copy-paste artifact"
+      ],
+      "suggestion": "Remove summary_generator.py entirely (it was meant to be a re-export shim); update any callers to import from suite_summary_generator directly",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "exception_constructor_os_detection",
+      "summary": "MissingDependencyError.__init__ runs platform detection and shutil.which calls to build recovery commands at exception-raise time",
+      "related_files": [
+        "infrastructure/core/exceptions.py"
+      ],
+      "evidence": [
+        "Lines 303-334: imports platform, calls platform.system().lower(), then calls shutil.which for apt-get/yum/dnf/pacman/brew inside __init__",
+        "This runs shell lookups every time the exception is constructed \u2014 over-engineered and fragile in CI environments"
+      ],
+      "suggestion": "Move OS-specific recovery command generation to a standalone utility function called lazily, not inside __init__",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "docstring_bloat_trivial_exceptions",
+      "summary": "Exception subclasses with pass bodies carry multi-line docstrings including Example: blocks with no behavioral content",
+      "related_files": [
+        "infrastructure/core/exceptions.py"
+      ],
+      "evidence": [
+        "NotADirectoryError: 10-line docstring on a class body of zero lines",
+        "InvalidFileFormatError: Example block on a `pass` body",
+        "MissingConfigurationError, CompilationError, PipelineError: single-sentence docstrings on pass-only classes that provide no insight beyond the name"
+      ],
+      "suggestion": "Reduce exception subclass docstrings to a single descriptive line; remove Example blocks from classes with no custom logic",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "reporting_module_proliferation",
+      "summary": "reporting/ contains 15 files with overlapping naming and unclear ownership boundaries between summary, reporter, generator, and parser roles",
+      "related_files": [
+        "infrastructure/reporting/summary_generator.py",
+        "infrastructure/reporting/suite_summary_generator.py",
+        "infrastructure/reporting/test_summary_generator.py",
+        "infrastructure/reporting/coverage_reporter.py",
+        "infrastructure/reporting/coverage_parser.py",
+        "infrastructure/reporting/test_reporter.py"
+      ],
+      "evidence": [
+        "Three files named *_summary_generator.py with overlapping or duplicated responsibilities",
+        "coverage_parser.py and coverage_reporter.py both handle coverage data with no clear boundary documented",
+        "The __init__.py does not export symbols from coverage_parser, test_reporter, or suite_summary_generator \u2014 they live in the package but are invisible from outside"
+      ],
+      "suggestion": "Consolidate: merge suite/test summary generators; rename coverage_parser into coverage_reporter or clearly document which is the internal parsing layer vs external API; reduce to ~10 well-named files",
+      "confidence": "high"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "infrastructure_init_broad_surface",
+      "summary": "infrastructure/__init__.py re-exports 30+ symbols across 6 subpackages with silent optional-import fallbacks that leave None-valued names in the module namespace",
+      "related_files": [
+        "infrastructure/__init__.py"
+      ],
+      "evidence": [
+        "Lines 25-75: six try/except ImportError blocks; on failure, symbols like generate_all_dashboards are set to None (type: ignore) and still appear in __all__",
+        "__all__ at line 77 lists 35 names including subpackage names ('core', 'validation', etc.) alongside concrete symbols \u2014 ambiguous surface",
+        "Two separate `warnings` imports: `import warnings as _warnings` at line 44 and `import warnings` at line 74"
+      ],
+      "suggestion": "Remove the broad re-export surface from infrastructure/__init__.py; callers should import from subpackages directly; if a convenience layer is needed, limit it to the 4-5 most-used symbols with no None fallbacks in __all__",
+      "confidence": "high"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "security_error_outside_hierarchy",
+      "summary": "SecurityError in sanitization.py inherits from Exception rather than TemplateError, breaking the declared exception hierarchy",
+      "related_files": [
+        "infrastructure/llm/core/sanitization.py",
+        "infrastructure/core/exceptions.py"
+      ],
+      "evidence": [
+        "sanitization.py line 191: `class SecurityError(Exception): pass`",
+        "exceptions.py defines LLMError -> TemplateError as the base for all LLM-layer errors",
+        "SecurityError is raised by InputSanitizer which is called from LLMClient \u2014 it should be in the TemplateError hierarchy"
+      ],
+      "suggestion": "Move SecurityError to infrastructure/core/exceptions.py as a subclass of LLMError (or TemplateError), remove it from sanitization.py",
+      "confidence": "high"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "multi_project_summary_split_concern",
+      "summary": "generate_multi_project_summary_report lives in pipeline_reporter.py but its concern belongs in multi_project_reporter.py",
+      "related_files": [
+        "infrastructure/reporting/pipeline_reporter.py",
+        "infrastructure/reporting/multi_project_reporter.py"
+      ],
+      "evidence": [
+        "pipeline_reporter.py defines generate_multi_project_summary_report starting at line 45, importing MultiProjectResult from infrastructure.core.multi_project",
+        "multi_project_reporter.py exists as a dedicated module for this concern",
+        "The reporting __init__.py exports generate_multi_project_report from multi_project_reporter but pipeline_reporter also contains multi-project logic"
+      ],
+      "suggestion": "Move generate_multi_project_summary_report out of pipeline_reporter.py into multi_project_reporter.py; pipeline_reporter.py should only handle single-project pipeline reports",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "module_level_singleton_side_effect",
+      "summary": "health_check.py instantiates SystemHealthChecker() at module import time, creating a side-effectful singleton that starts a timer on import",
+      "related_files": [
+        "infrastructure/core/health_check.py"
+      ],
+      "evidence": [
+        "Line 285: `_checker = SystemHealthChecker()` at module level",
+        "SystemHealthChecker.__init__ sets `self.start_time = time.time()` \u2014 timer starts at import time, not first use",
+        "The module-level checker is used by quick_health_check() and get_health_status() as pass-through wrappers with no added value"
+      ],
+      "suggestion": "Use lazy initialization: instantiate _checker inside the module-level functions on first call, or use functools.lru_cache on a factory function",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "three_stage_result_types",
+      "summary": "Three distinct 'stage result' dataclasses exist for the same pipeline-stage concept across three modules",
+      "related_files": [
+        "infrastructure/core/checkpoint.py",
+        "infrastructure/core/pipeline.py",
+        "infrastructure/reporting/pipeline_reporter.py"
+      ],
+      "evidence": [
+        "checkpoint.py defines StageResult with fields: name, exit_code, duration, timestamp, completed, status",
+        "pipeline.py defines PipelineStageResult with fields: stage_num, stage_name, success, duration, exit_code, error_message, exception_type",
+        "pipeline_reporter.py defines StageResult(_CheckpointStageResult) adding output_files, errors, warnings",
+        "pipeline_summary.py uses PipelineStageResult while pipeline_reporter.py uses its own StageResult subclass"
+      ],
+      "suggestion": "Consolidate into a single canonical StageResult in infrastructure/core/checkpoint.py (or a dedicated types module) with all fields present from the start; have pipeline.py and pipeline_reporter.py import and use it.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "performance_module_doc_mismatch",
+      "summary": "Module docstring advertises two top-level functions that do not exist at module scope",
+      "related_files": [
+        "infrastructure/core/performance.py"
+      ],
+      "evidence": [
+        "Line 5-6 lists 'get_performance_warnings' as a sub-domain 1 export \u2014 it is a method on StagePerformanceTracker, not a module-level function",
+        "Line 9 lists 'get_code_profiler' as a sub-domain 2 export \u2014 no such function exists anywhere in the file; the actual function is get_performance_monitor()"
+      ],
+      "suggestion": "Remove 'get_performance_warnings' from the module-level export list or add a thin wrapper function. Rename 'get_code_profiler' to 'get_performance_monitor' in the docstring.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "generate_pipeline_report_param_bag",
+      "summary": "generate_pipeline_report has 8 parameters, 6 of which are Optional \u2014 a param bag that leaks report structure into the call site",
+      "related_files": [
+        "infrastructure/reporting/pipeline_reporter.py"
+      ],
+      "evidence": [
+        "def generate_pipeline_report(stage_results, total_duration, repo_root, test_results=None, validation_results=None, performance_metrics=None, error_summary=None, output_statistics=None, project_name=None)",
+        "6 of 9 parameters are Optional; callers must know which optional slots to fill"
+      ],
+      "suggestion": "Introduce a ReportInput dataclass or builder to group the optional fields, so the function signature becomes generate_pipeline_report(stage_results, total_duration, repo_root, extras: ReportInput).",
+      "confidence": "high"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "retry_stopteration_control_flow",
+      "summary": "RetryableOperation.succeed() raises StopIteration to break a for-loop, violating PEP 479 and creating surprising control flow",
+      "related_files": [
+        "infrastructure/core/retry.py"
+      ],
+      "evidence": [
+        "Line 230: raise StopIteration  # Exit the retry loop inside succeed()",
+        "PEP 479 (active since Python 3.7) converts StopIteration raised inside a generator into RuntimeError; this pattern is fragile when used inside a generator or async context"
+      ],
+      "suggestion": "Use a sentinel flag (e.g., self._done = True) and check it in __next__ to stop iteration, rather than raising StopIteration from succeed().",
+      "confidence": "high"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "pipeline_report_stubbed_sections",
+      "summary": "Three sections of generate_markdown_report emit literal placeholder strings instead of real content",
+      "related_files": [
+        "infrastructure/reporting/pipeline_reporter.py"
+      ],
+      "evidence": [
+        "Line 453: lines.append('Validation checks completed.')",
+        "Line 461: lines.append('Performance tracking completed.')",
+        "Line 471: lines.append('See error details in error summary report.')"
+      ],
+      "suggestion": "Either render the actual data from validation_results, performance_metrics, and error_summary dictionaries, or remove the sections entirely if the data is not structured for display.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "performance_context_dynamic_attribute",
+      "summary": "performance_context sets monitor.last_metrics via dynamic attribute assignment requiring a type: ignore comment",
+      "related_files": [
+        "infrastructure/core/performance.py"
+      ],
+      "evidence": [
+        "Line 170: monitor.last_metrics = metrics  # type: ignore[attr-defined]",
+        "PerformanceMonitor does not declare last_metrics as a class attribute, making the yielded object's post-context API invisible to type checkers and IDEs"
+      ],
+      "suggestion": "Add last_metrics: Optional[PerformanceMetrics] = None to PerformanceMonitor.__init__, removing the need for dynamic assignment and the type: ignore.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "bytes_to_mb_return_type_misleading",
+      "summary": "_bytes_to_mb inner function is annotated Optional[int] but silently truncates sub-MB values to 0",
+      "related_files": [
+        "infrastructure/core/performance.py"
+      ],
+      "evidence": [
+        "Line 356-357: def _bytes_to_mb(b: Optional[int]) -> Optional[int]: return b // (1024 * 1024) if b is not None else None",
+        "Integer floor division means any memory usage under 1 MB reports as 0, which is misleading in a profiling context where fine-grained memory is relevant"
+      ],
+      "suggestion": "Return float and use regular division: return b / (1024 * 1024) if b is not None else None, and update the annotation to Optional[float].",
+      "confidence": "medium"
+    }
+  ]
+}

@@ -4,12 +4,13 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import List
 
+from infrastructure.core.logging_utils import get_logger
 from infrastructure.publishing.models import PublicationMetadata
 
+logger = get_logger(__name__)
 
-def format_authors_apa(authors: List[str]) -> str:
+def format_authors_apa(authors: list[str]) -> str:
     """Format authors for APA style.
 
     Args:
@@ -30,8 +31,7 @@ def format_authors_apa(authors: List[str]) -> str:
     # Three or more authors
     return f"{authors[0]}, et al."
 
-
-def format_authors_mla(authors: List[str]) -> str:
+def format_authors_mla(authors: list[str]) -> str:
     """Format authors for MLA style.
 
     Args:
@@ -51,7 +51,6 @@ def format_authors_mla(authors: List[str]) -> str:
 
     # Three or more authors
     return f"{authors[0]}, et al."
-
 
 def generate_citation_bibtex(metadata: PublicationMetadata) -> str:
     """Generate BibTeX citation format.
@@ -85,7 +84,6 @@ def generate_citation_bibtex(metadata: PublicationMetadata) -> str:
 
     return bibtex
 
-
 def generate_citation_apa(metadata: PublicationMetadata) -> str:
     """Generate APA citation format.
 
@@ -105,7 +103,6 @@ def generate_citation_apa(metadata: PublicationMetadata) -> str:
 
     return citation
 
-
 def generate_citation_mla(metadata: PublicationMetadata) -> str:
     """Generate MLA citation format.
 
@@ -124,7 +121,6 @@ def generate_citation_mla(metadata: PublicationMetadata) -> str:
         citation += f" {metadata.repository_url}."
 
     return citation
-
 
 def generate_citations_markdown(metadata: PublicationMetadata) -> str:
     """Generate markdown section with all citation formats.
@@ -176,8 +172,7 @@ If you use this template in your research, please cite:
 
     return section
 
-
-def extract_citations_from_markdown(markdown_files: List[Path]) -> List[str]:
+def extract_citations_from_markdown(markdown_files: list[Path]) -> list[str]:
     """Extract all citations from markdown files.
 
     Args:
@@ -205,7 +200,8 @@ def extract_citations_from_markdown(markdown_files: List[Path]) -> List[str]:
                 matches = re.findall(pattern, content)
                 citations.update(matches)
 
-        except Exception:
+        except Exception as e:
+            logger.debug(f"Cannot extract citations from {md_file}: {e}")
             continue
 
     return sorted(list(citations))

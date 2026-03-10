@@ -10,10 +10,20 @@ Provides comprehensive validation for scientific code:
 from __future__ import annotations
 
 import inspect
-from typing import Any, Callable, Dict, List, Tuple
+from typing import Any, Callable, TypedDict
 
+from infrastructure.core.logging_utils import get_logger
 
-def validate_scientific_implementation(func: Callable, test_cases: List[Tuple]) -> Dict[str, Any]:
+logger = get_logger(__name__)
+
+class _ValidationResults(TypedDict):
+    total_tests: int
+    passed_tests: int
+    failed_tests: int
+    accuracy_score: float
+    details: list[dict[str, Any]]
+
+def validate_scientific_implementation(func: Callable, test_cases: list[tuple[Any, Any]]) -> dict[str, Any]:
     """Validate scientific implementation against known test cases.
 
     Args:
@@ -23,7 +33,7 @@ def validate_scientific_implementation(func: Callable, test_cases: List[Tuple]) 
     Returns:
         Dictionary with validation results
     """
-    validation_results = {
+    validation_results: _ValidationResults = {
         "total_tests": len(test_cases),
         "passed_tests": 0,
         "failed_tests": 0,
@@ -39,54 +49,27 @@ def validate_scientific_implementation(func: Callable, test_cases: List[Tuple]) 
             if isinstance(actual_output, (int, float)) and isinstance(
                 expected_output, (int, float)
             ):
-                if abs(actual_output - expected_output) < 1e-10:
-                    validation_results["passed_tests"] += 1  # type: ignore
-                    validation_results["details"].append(  # type: ignore
-                        {
-                            "test_index": i,
-                            "input": test_input,
-                            "expected": expected_output,
-                            "actual": actual_output,
-                            "status": "PASSED",
-                        }
-                    )
-                else:
-                    validation_results["failed_tests"] += 1  # type: ignore
-                    validation_results["details"].append(  # type: ignore
-                        {
-                            "test_index": i,
-                            "input": test_input,
-                            "expected": expected_output,
-                            "actual": actual_output,
-                            "status": "FAILED",
-                        }
-                    )
-            elif actual_output == expected_output:
-                validation_results["passed_tests"] += 1  # type: ignore
-                validation_results["details"].append(  # type: ignore
-                    {
-                        "test_index": i,
-                        "input": test_input,
-                        "expected": expected_output,
-                        "actual": actual_output,
-                        "status": "PASSED",
-                    }
-                )
+                passed = abs(actual_output - expected_output) < 1e-10
             else:
-                validation_results["failed_tests"] += 1  # type: ignore
-                validation_results["details"].append(  # type: ignore
-                    {
-                        "test_index": i,
-                        "input": test_input,
-                        "expected": expected_output,
-                        "actual": actual_output,
-                        "status": "FAILED",
-                    }
-                )
+                passed = actual_output == expected_output
 
-        except Exception as e:
-            validation_results["failed_tests"] += 1  # type: ignore
-            validation_results["details"].append(  # type: ignore
+            if passed:
+                validation_results["passed_tests"] += 1
+            else:
+                validation_results["failed_tests"] += 1
+            validation_results["details"].append(
+                {
+                    "test_index": i,
+                    "input": test_input,
+                    "expected": expected_output,
+                    "actual": actual_output,
+                    "status": "PASSED" if passed else "FAILED",
+                }
+            )
+
+        except (TypeError, ValueError, RuntimeError) as e:
+            validation_results["failed_tests"] += 1
+            validation_results["details"].append(
                 {
                     "test_index": i,
                     "input": test_input,
@@ -97,15 +80,14 @@ def validate_scientific_implementation(func: Callable, test_cases: List[Tuple]) 
             )
 
     # Calculate accuracy score
-    if validation_results["total_tests"] > 0:  # type: ignore
+    if validation_results["total_tests"] > 0:
         validation_results["accuracy_score"] = (
-            validation_results["passed_tests"] / validation_results["total_tests"]  # type: ignore
+            validation_results["passed_tests"] / validation_results["total_tests"]
         )
 
     return validation_results
 
-
-def validate_scientific_best_practices(module: Any) -> Dict[str, Any]:
+def validate_scientific_best_practices(module: Any) -> dict[str, Any]:
     """Validate that a module follows scientific computing best practices.
 
     Args:
@@ -133,11 +115,9 @@ def validate_scientific_best_practices(module: Any) -> Dict[str, Any]:
     if not functions:
         return validation
 
-    # Check docstring coverage
     documented_functions = sum(1 for _, func in functions if inspect.getdoc(func) is not None)
     validation["docstring_coverage"] = documented_functions / len(functions)
 
-    # Check type hints coverage
     typed_functions = 0
     for _, func in functions:
         sig = inspect.signature(func)
@@ -151,26 +131,23 @@ def validate_scientific_best_practices(module: Any) -> Dict[str, Any]:
 
     validation["type_hints_coverage"] = typed_functions / len(functions)
 
-    # Check for error handling patterns
     source_lines = []
     try:
         source = inspect.getsource(module)
         source_lines = source.split("\n")
-    except Exception:
-        pass
+    except (OSError, TypeError) as e:
+        logger.debug(f"Could not get source for module {module}: {e}")
 
     has_try_except = any("try:" in line or "except" in line for line in source_lines)
     has_raise = any("raise" in line for line in source_lines)
     validation["error_handling"] = has_try_except or has_raise
 
-    # Check for input validation patterns
     has_validation = any(
         "assert" in line or "isinstance" in line or "ValueError" in line or "TypeError" in line
         for line in source_lines
     )
     validation["input_validation"] = has_validation
 
-    # Calculate best practices score
     weights = {
         "docstring_coverage": 0.25,
         "type_hints_coverage": 0.25,
@@ -185,7 +162,6 @@ def validate_scientific_best_practices(module: Any) -> Dict[str, Any]:
         + (1.0 if validation["input_validation"] else 0.0) * weights["input_validation"]
     )
 
-    # Generate recommendations
     if validation["docstring_coverage"] < 0.8:  # type: ignore
         validation["recommendations"].append("Add docstrings to undocumented functions")  # type: ignore
 
@@ -202,8 +178,7 @@ def validate_scientific_best_practices(module: Any) -> Dict[str, Any]:
 
     return validation
 
-
-def check_research_compliance(func: Callable) -> Dict[str, Any]:
+def check_research_compliance(func: Callable) -> dict[str, Any]:
     """Check function compliance with research software standards.
 
     Args:
@@ -223,16 +198,13 @@ def check_research_compliance(func: Callable) -> Dict[str, Any]:
         "recommendations": [],
     }
 
-    # Check docstring
     docstring = inspect.getdoc(func)
     if docstring:
         compliance["has_docstring"] = True
 
-        # Check for examples in docstring
         if ">>>" in docstring or "Example" in docstring:
             compliance["has_examples"] = True
 
-    # Check type hints
     signature = inspect.signature(func)
     has_param_hints = any(
         p.annotation != inspect.Parameter.empty for p in signature.parameters.values()
@@ -242,11 +214,9 @@ def check_research_compliance(func: Callable) -> Dict[str, Any]:
     if has_param_hints or has_return_hint:
         compliance["has_type_hints"] = True
 
-    # Check naming conventions (should be snake_case)
     if func.__name__.islower() and "_" in func.__name__:
         compliance["follows_naming_conventions"] = True
 
-    # Check source code for error handling patterns
     try:
         source = inspect.getsource(func)
         source_lines = source.split("\n")
@@ -262,10 +232,9 @@ def check_research_compliance(func: Callable) -> Dict[str, Any]:
         )
         compliance["has_error_handling"] = has_error_handling
 
-    except Exception:
-        pass
+    except (OSError, TypeError) as e:
+        logger.debug(f"Could not analyze function compliance for {func}: {e}")
 
-    # Calculate compliance score
     weights = {
         "has_docstring": 0.25,
         "has_type_hints": 0.20,
@@ -282,7 +251,6 @@ def check_research_compliance(func: Callable) -> Dict[str, Any]:
 
     compliance["compliance_score"] = score
 
-    # Generate recommendations
     if not compliance["has_docstring"]:
         compliance["recommendations"].append(  # type: ignore
             "Add comprehensive docstring with description and parameters"

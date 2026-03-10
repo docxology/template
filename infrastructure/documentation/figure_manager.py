@@ -8,15 +8,14 @@ from __future__ import annotations
 
 import json
 import shutil
+import time
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any, Dict, List, Optional
-
+from typing import Any
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
-
 
 @dataclass
 class FigureMetadata:
@@ -26,18 +25,18 @@ class FigureMetadata:
     filename: str
     caption: str
     label: str
-    section: Optional[str] = None
+    section: str | None = None
     width: str = "0.8\\textwidth"
     placement: str = "h"
-    generated_by: Optional[str] = None
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    generated_by: str | None = None
+    metadata: dict[str, Any] = field(default_factory=dict)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return asdict(self)
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> FigureMetadata:
+    def from_dict(cls, data: dict[str, Any]) -> FigureMetadata:
         """Create FigureMetadata from dictionary.
 
         Handles flexible field mapping between different registry formats.
@@ -76,11 +75,10 @@ class FigureMetadata:
 
         return cls(**data)
 
-
 class FigureManager:
     """Manages figures with automatic numbering and cross-referencing."""
 
-    def __init__(self, registry_file: Optional[str] = None):
+    def __init__(self, registry_file: str | None = None):
         """Initialize figure manager.
 
         Args:
@@ -91,7 +89,7 @@ class FigureManager:
 
         self.registry_file = Path(registry_file)
         self.registry_file.parent.mkdir(parents=True, exist_ok=True)
-        self.figures: Dict[str, FigureMetadata] = {}
+        self.figures: dict[str, FigureMetadata] = {}
         self.counter = 0
 
         # Load existing registry
@@ -138,8 +136,6 @@ class FigureManager:
         """Backup a corrupted registry file before resetting."""
         if self.registry_file.exists():
             # Generate unique backup filename with timestamp
-            import time
-
             timestamp = time.strftime("%Y%m%d_%H%M%S")
             backup_path = self.registry_file.with_suffix(f".json.corrupted.{timestamp}")
             try:
@@ -158,12 +154,12 @@ class FigureManager:
         self,
         filename: str,
         caption: str,
-        label: Optional[str] = None,
-        section: Optional[str] = None,
+        label: str | None = None,
+        section: str | None = None,
         width: str = "0.8\\textwidth",
         placement: str = "h",
-        generated_by: Optional[str] = None,
-        metadata: Optional[Dict[str, Any]] = None,
+        generated_by: str | None = None,
+        metadata: dict[str, Any | None] = None,
     ) -> FigureMetadata:
         """Register a new figure.
 
@@ -211,7 +207,7 @@ class FigureManager:
 
         return fig_meta
 
-    def get_figure(self, label: str) -> Optional[FigureMetadata]:
+    def get_figure(self, label: str) -> FigureMetadata | None:
         """Get figure metadata by label.
 
         Args:
@@ -222,7 +218,7 @@ class FigureManager:
         """
         return self.figures.get(label)
 
-    def get_all_figures(self) -> List[FigureMetadata]:
+    def get_all_figures(self) -> list[FigureMetadata]:
         """Get all registered figures.
 
         Returns:

@@ -1,0 +1,128 @@
+{
+  "session": {
+    "id": "ext_20260307_044704_2ea1b685",
+    "token": "5ee681e8247190c9447f06e6a9bfb5e5"
+  },
+  "assessments": {
+    "cross_module_architecture": 77,
+    "convention_outlier": 82,
+    "error_consistency": 75,
+    "abstraction_fitness": 83
+  },
+  "findings": [
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "stage_result_duplicate_dataclass",
+      "summary": "StageResult is defined independently in both checkpoint.py and pipeline_reporter.py with overlapping but different fields",
+      "related_files": [
+        "infrastructure/core/checkpoint.py",
+        "infrastructure/reporting/pipeline_reporter.py"
+      ],
+      "evidence": [
+        "checkpoint.py:22-32 defines StageResult with fields: name, exit_code, duration, timestamp, completed, status",
+        "pipeline_reporter.py:23-42 defines a separate StageResult with fields: name, exit_code, duration, status, output_files, errors, warnings",
+        "pipeline_reporter.py imports MultiProjectResult from infrastructure.core.multi_project via TYPE_CHECKING, which itself uses PipelineStageResult from infrastructure.core.pipeline — three coexisting stage result types with overlapping semantics"
+      ],
+      "suggestion": "Consolidate into a single StageResult in infrastructure/core/pipeline.py or a shared models module, and have the reporting layer extend or wrap it rather than redefine it",
+      "confidence": "high"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "reporting_depends_on_core_via_type_checking_only",
+      "summary": "pipeline_reporter.py imports MultiProjectResult from core under TYPE_CHECKING but then calls getattr on live result objects, making the dependency real but invisible to static analysis",
+      "related_files": [
+        "infrastructure/reporting/pipeline_reporter.py",
+        "infrastructure/core/multi_project.py"
+      ],
+      "evidence": [
+        "pipeline_reporter.py:17-18: 'if TYPE_CHECKING: from infrastructure.core.multi_project import MultiProjectResult'",
+        "pipeline_reporter.py:98-99: accesses result.successful_projects, result.failed_projects, result.total_duration, result.project_results at runtime — all live attribute reads on the imported type"
+      ],
+      "suggestion": "Either import MultiProjectResult unconditionally (it is a genuine runtime dependency) or define a narrower Protocol that captures only the attributes the reporter needs, placed in the reporting boundary",
+      "confidence": "high"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "mixed_none_return_and_exception_in_coverage_parsing",
+      "summary": "coverage_parser.py mixes returning None, returning False/None tuples, and raising exceptions across its parsing helpers with no consistent contract",
+      "related_files": [
+        "infrastructure/reporting/coverage_parser.py"
+      ],
+      "evidence": [
+        "coverage_parser.py:257-273: _parse_coverage_json returns Optional[float] (None on failure)",
+        "coverage_parser.py:276-309: extract_coverage_percentage returns tuple[bool, Optional[float]]",
+        "coverage_parser.py:193-230: check_test_failures returns tuple[bool, str]",
+        "coverage_parser.py:41-70: _parse_failures_section returns list[dict] (empty list on no match)",
+        "Four different failure-signalling conventions within a single 310-line module: Optional return, (bool, Optional) tuple, (bool, str) tuple, and empty-list sentinel"
+      ],
+      "suggestion": "Choose one failure convention for the module boundary — (bool, value) tuples are already used by the public API; align the private helpers to return empty collections consistently rather than None",
+      "confidence": "high"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "silent_swallow_in_performance_monitor",
+      "summary": "PerformanceMonitor._get_memory_usage and _get_cpu_percent catch bare Exception and return 0.0 silently, masking genuine psutil failures",
+      "related_files": [
+        "infrastructure/core/performance.py"
+      ],
+      "evidence": [
+        "performance.py:136-139: except Exception: return 0.0 in _get_memory_usage — no log, no propagation",
+        "performance.py:144-148: except Exception: return 0.0 in _get_cpu_percent — no log, no propagation",
+        "health_check.py:62-69 by contrast logs warnings for every failed check, showing an inconsistent standard within the same infrastructure/core/ layer"
+      ],
+      "suggestion": "At minimum log a debug-level warning so failures surface during diagnosis; if psutil attribute errors are expected, catch specifically AttributeError or OSError as done in StagePerformanceTracker.end_stage (performance.py:251)",
+      "confidence": "high"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "test_summary_generator_opens_files_without_error_propagation",
+      "summary": "run_test_summary_generation writes JSON and markdown with bare open() calls that will raise OSError on disk/permission failure but other file reads in the same module are wrapped in try/except",
+      "related_files": [
+        "infrastructure/reporting/test_summary_generator.py"
+      ],
+      "evidence": [
+        "test_summary_generator.py:370-371: bare 'with open(json_file, \"w\") as f:' — no exception handling",
+        "test_summary_generator.py:376-378: bare 'with open(md_file, \"w\") as f:' — no exception handling",
+        "test_summary_generator.py:31-42: load_test_results wraps open() in try/except (OSError, json.JSONDecodeError)",
+        "test_summary_generator.py:58-79: load_infrastructure_results wraps open() in try/except"
+      ],
+      "suggestion": "Wrap the write calls in the same OSError handler pattern used for reads, or let the exception propagate explicitly with a typed raise rather than a silent crash",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "scripts_missing_log_header_and_log_success",
+      "summary": "Several scripts in scripts/ omit log_header and log_success while 14/18 and 12/18 siblings respectively use them, creating inconsistent pipeline output",
+      "related_files": [
+        "scripts/02_run_analysis.py",
+        "scripts/execute_pipeline.py",
+        "scripts/generate_pipeline_reports.py",
+        "scripts/06_llm_review.py"
+      ],
+      "evidence": [
+        "Blind packet conventions data: scripts/ shared_patterns shows log_header used in 14/18 files, log_success in 12/18 files",
+        "scripts/02_run_analysis.py is listed as missing get_logger, log_header, log_success — yet it is a substantive pipeline stage script comparable to siblings that carry all three",
+        "scripts/execute_pipeline.py and scripts/generate_pipeline_reports.py missing log_header and log_success despite being primary pipeline orchestrators"
+      ],
+      "suggestion": "Adopt log_header at entry and log_success at exit uniformly across all substantive pipeline stage scripts to match the established pattern",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "health_check_module_level_singleton_via_global",
+      "summary": "health_check.py exposes three module-level wrapper functions (quick_health_check, get_health_status, get_health_metrics) that do nothing except forward to a lazily created module-level singleton, adding an indirection layer with no policy",
+      "related_files": [
+        "infrastructure/core/health_check.py"
+      ],
+      "evidence": [
+        "health_check.py:291-296: _get_checker() creates and caches SystemHealthChecker in a module global",
+        "health_check.py:299-301: quick_health_check() = _get_checker().is_healthy() — pure forward",
+        "health_check.py:304-306: get_health_status() = _get_checker().get_health_status() — pure forward",
+        "health_check.py:309-311: get_health_metrics() = _get_checker().get_metrics() — pure forward",
+        "performance.py:516-521 follows the same singleton pattern with get_performance_monitor() -> CodeProfiler"
+      ],
+      "suggestion": "Either expose the class directly and let callers instantiate it, or use a module-level instance without the intermediate _get_checker indirection. The pattern is repeated across at least two modules suggesting a structural habit rather than a deliberate design",
+      "confidence": "medium"
+    }
+  ]
+}

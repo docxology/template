@@ -1,7 +1,7 @@
 # Documentation Review Report
 
-**Date**: Generated during comprehensive repo-wide documentation review  
-**Scope**: All documentation files (AGENTS.md, README.md, and related .md files)  
+**Date**: Generated during v0.6.0 repo-wide documentation review (2026-03-10)
+**Scope**: All documentation files (AGENTS.md, README.md, and related .md files)
 **Review Type**: Completeness, Accuracy, Consistency, Redundancy, Technical Correctness
 
 ## Executive Summary

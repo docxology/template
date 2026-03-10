@@ -1,0 +1,174 @@
+{
+  "assessments": {
+    "ai_generated_debt": 62,
+    "package_organization": 68,
+    "high_level_elegance": 74
+  },
+  "findings": [
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "pass_through_docstrings_on_trivial_delegates",
+      "summary": "ProjectLogger carries restating one-liner docstrings on five trivial one-line delegate methods",
+      "related_files": ["infrastructure/core/logging_utils.py"],
+      "evidence": [
+        "Lines 94-112: debug(), info(), warning(), error(), critical() each have a single-sentence docstring ('Log debug message.', 'Log info message.', etc.) on a body that is exactly one self._logger.<level>() call",
+        "These docstrings restate the method name verbatim and add zero information — canonical AI-generation filler",
+        "The pattern appears five times consecutively, consistent with template-expansion rather than authored intent"
+      ],
+      "suggestion": "Remove the docstrings from trivial one-line delegate methods or collapse them to a single note on the class. The method names are self-documenting.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "duplicated_emojis_dict_definition",
+      "summary": "EMOJIS, USE_EMOJIS, and USE_STRUCTURED_LOGGING are defined verbatim in both logging_constants.py and logging_utils.py despite logging_constants.py being created explicitly to eliminate this duplication",
+      "related_files": [
+        "infrastructure/core/logging_constants.py",
+        "infrastructure/core/logging_utils.py"
+      ],
+      "evidence": [
+        "logging_constants.py lines 13-31: defines EMOJIS dict (11 keys), USE_EMOJIS, USE_STRUCTURED_LOGGING",
+        "logging_utils.py lines 210-228: defines an identical EMOJIS dict with the same 11 keys and the same two flag variables independently",
+        "logging_constants.py module docstring explicitly states it exists to 'avoid duplicate definitions and circular import issues' — the problem it was meant to solve is still present in logging_utils.py"
+      ],
+      "suggestion": "Remove EMOJIS, USE_EMOJIS, USE_STRUCTURED_LOGGING from logging_utils.py (lines 210-228) and import them from logging_constants. Update __all__ to export from the single source.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "bloated_docstrings_on_trivial_mutators",
+      "summary": "PerformanceMonitor.start() and record_cache_hit() carry multi-line docstrings with Args/Returns/Example sections for bodies that are 4-6 lines of counter resets",
+      "related_files": ["infrastructure/core/performance.py"],
+      "evidence": [
+        "Lines 80-100: start() has a 14-line docstring (including Args: None, Returns: None, Example showing monitor.start()) for a method that calls time.time() and resets five counters",
+        "Lines 132-147: record_cache_hit() has a 13-line docstring with Args, Returns, Example for self.cache_hits += 1",
+        "Adjacent record_operation() (line 128-130) has only a one-liner docstring for the same type of counter increment — inconsistent verbosity across adjacent methods signals pasted template blocks rather than authored documentation"
+      ],
+      "suggestion": "Trim start() and record_cache_hit() docstrings to a single sentence. The Example sections (showing '>>> if data in cache: monitor.record_cache_hit()') illustrate nothing non-obvious.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "redundant_elif_after_not_exists_guard",
+      "summary": "verify_output_completeness() uses 'if not dir.exists(): ... elif dir.exists():' three times — the elif branch is logically always True and the pattern is copy-paste generation",
+      "related_files": ["infrastructure/validation/integrity.py"],
+      "evidence": [
+        "Line 627: 'if not figures_dir.exists(): ... elif figures_dir.exists():' — the elif is only reachable if the directory was created between the two checks, which cannot happen here",
+        "Lines 654-657 and 677-680: identical pattern repeated for data_dir and tex_dir",
+        "The pdf_dir block (lines 603-623) correctly uses a plain 'if pdf_dir.exists():' — the inconsistency confirms the other three blocks were produced by duplicating a template and prepending a not-exists guard without removing the original positive condition"
+      ],
+      "suggestion": "Replace 'elif dir.exists():' with a plain 'else:' or restructure to a single 'if dir.exists():' block. The not-exists branch that sets flags and appends to missing_outputs should be the else clause.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "two_overlapping_performance_modules",
+      "summary": "performance.py and performance_monitor.py both live in infrastructure/core/ and cover overlapping concerns (timing, memory, benchmarking), resulting in a name-aliasing workaround and a duplicated benchmark_function",
+      "related_files": [
+        "infrastructure/core/performance.py",
+        "infrastructure/core/performance_monitor.py",
+        "infrastructure/core/__init__.py"
+      ],
+      "evidence": [
+        "performance.py line 64: PerformanceMonitor — resource-snapshot class with start/stop pattern",
+        "performance_monitor.py line 60: CodeProfiler — cProfile + tracemalloc class with its own monitor() context manager and benchmark_function",
+        "performance.py line 421: 'ResourceTracker = PerformanceMonitor' alias added to paper over the name confusion between the two classes",
+        "performance_monitor.py line 267: top-level monitor_performance() decorator; performance.py line 422: 'monitor_performance = performance_context' alias — same exported name, different implementations",
+        "benchmark_function appears as both a CodeProfiler method (line 139) and a module-level convenience function (line 362) in the same file, with the module-level version creating a new CodeProfiler() on every call"
+      ],
+      "suggestion": "Merge into a single performance.py: PerformanceMonitor for lightweight resource snapshots, CodeProfiler for cProfile-based profiling. Remove the ResourceTracker alias, the monitor_performance name collision, and the duplicate benchmark_function.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "logging_fragmented_across_five_files",
+      "summary": "The logging subsystem is split across five files (logging_utils.py, logging_constants.py, logging_formatters.py, logging_helpers.py, logging_progress.py) with logging_utils.py acting as a pure re-exporting facade, creating indirection for modules with insufficient mass to justify standalone existence",
+      "related_files": [
+        "infrastructure/core/logging_utils.py",
+        "infrastructure/core/logging_constants.py",
+        "infrastructure/core/logging_formatters.py",
+        "infrastructure/core/logging_helpers.py",
+        "infrastructure/core/logging_progress.py"
+      ],
+      "evidence": [
+        "logging_constants.py is 31 lines defining only 3 symbols — well below the threshold for a justified standalone module",
+        "logging_helpers.py is 88 lines with 2 functions (format_error_with_suggestions, format_duration) that have no reason to live apart from logging_utils.py",
+        "logging_utils.py imports all four siblings and re-exports them in its __all__ (lines 667-706) — it contributes no logic of its own that required the fragmentation",
+        "The EMOJIS duplication (separate finding) is a direct consequence of the fragmentation creating circular-import pressure that led logging_constants.py to be created as a workaround"
+      ],
+      "suggestion": "Consolidate logging_constants.py and logging_helpers.py back into logging_utils.py. Keep logging_formatters.py (JSONFormatter, TemplateFormatter are a coherent, testable unit) and logging_progress.py (Spinner, StreamingProgress are distinct UI primitives) as separate files.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "steganography_as_peer_to_core_infrastructure",
+      "summary": "infrastructure/steganography/ is positioned as a peer package to core/, validation/, and rendering/, despite being a narrow PDF-watermarking feature with no importers outside itself",
+      "related_files": [
+        "infrastructure/steganography/core.py",
+        "infrastructure/steganography/__init__.py"
+      ],
+      "evidence": [
+        "Grep of 'from infrastructure.steganography' across all .py files finds zero imports from any other infrastructure package — the module is self-contained and unused by the rest of infrastructure",
+        "Its domain (PDF watermarking, QR barcodes, hash manifests, PDF encryption) is a publishing/rendering output concern, not a generic infrastructure primitive",
+        "Sitting at the same hierarchy level as core/ or validation/ implies equal generality and discoverability weight, which is misleading for navigability"
+      ],
+      "suggestion": "Move infrastructure/steganography/ under infrastructure/publishing/ or infrastructure/rendering/ where its PDF-output concern is co-located with related packages. Update all imports (only the steganography package itself and its test suite need updating).",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "core_package_surface_area_too_wide",
+      "summary": "infrastructure/core/ contains 27 files covering 8+ distinct sub-domains (logging, config, pipeline, checkpointing, security, health checks, credentials, multi-project orchestration, progress bars), weakening navigability",
+      "related_files": [
+        "infrastructure/core/security.py",
+        "infrastructure/core/health_check.py",
+        "infrastructure/core/credentials.py",
+        "infrastructure/core/multi_project.py",
+        "infrastructure/core/pipeline.py",
+        "infrastructure/core/checkpoint.py",
+        "infrastructure/core/pipeline_summary.py",
+        "infrastructure/core/script_discovery.py"
+      ],
+      "evidence": [
+        "27 Python files confirmed by Glob in a single package",
+        "security.py (SecurityValidator, RateLimiter, SecurityMonitor, SecurityHeaders) has no dependency relationship with logging_formatters.py or progress.py — they share the package only because 'core' acts as a catch-all",
+        "health_check.py and credentials.py import from logging_utils but otherwise have no intra-core dependencies — they are stragglers by the import-affinity criterion",
+        "pipeline.py, checkpoint.py, multi_project.py, pipeline_summary.py, and script_discovery.py form a coherent pipeline-orchestration domain that would read more clearly as a separate infrastructure/pipeline/ package"
+      ],
+      "suggestion": "Extract security.py, health_check.py, credentials.py into infrastructure/security/. Extract pipeline.py, checkpoint.py, multi_project.py, pipeline_summary.py, script_discovery.py into infrastructure/pipeline/. Keep core/ for genuine primitives: logging, config, exceptions, file_operations, retry, performance.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "monitor_performance_name_collision_in_public_api",
+      "summary": "core/__init__.py exports monitor_performance sourced from two different implementations — a context-manager alias in performance.py and a decorator factory in performance_monitor.py — the latter import silently shadows the former",
+      "related_files": [
+        "infrastructure/core/__init__.py",
+        "infrastructure/core/performance.py",
+        "infrastructure/core/performance_monitor.py"
+      ],
+      "evidence": [
+        "performance.py line 422: 'monitor_performance = performance_context' (context-manager alias yielding a PerformanceMonitor)",
+        "performance_monitor.py line 267: 'def monitor_performance(operation_name, track_memory)' (decorator factory returning a wrapped function)",
+        "core/__init__.py line 103: 'from .performance_monitor import monitor_performance' — this import appears after the performance.py import block, silently shadowing the alias",
+        "core/__init__.py __all__ lists 'monitor_performance' once at line 185, but its resolved type depends on import order"
+      ],
+      "suggestion": "Remove the 'monitor_performance = performance_context' alias from performance.py — performance_context is already a well-named export. Expose only the decorator-factory monitor_performance from performance_monitor.py as the single canonical symbol.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "validate_build_artifacts_hardcodes_project_specific_filenames",
+      "summary": "validate_build_artifacts() and verify_output_completeness() in the generic infrastructure validation module hardcode project-specific output filenames (ablation_study.png, convergence_data.npz, recommendation_scalability.png, etc.)",
+      "related_files": ["infrastructure/validation/integrity.py"],
+      "evidence": [
+        "Lines 459-501: expected_structure dict hardcodes 9 PDF names, 9 TeX names, 5 data filenames, 10 figure filenames specific to code_project outputs",
+        "Lines 604-614 and 631-643: verify_output_completeness() independently repeats the same hardcoded lists (ablation_study.png, hyperparameter_sensitivity.png, recommendation_scalability.png, step_size_analysis.png)",
+        "These are domain outputs from a specific research project, not generic infrastructure validators",
+        "An expected_files parameter exists on validate_build_artifacts() indicating intent for configurability, but the hardcoded defaults silently bake in project-specific assumptions for any caller that omits the argument"
+      ],
+      "suggestion": "Remove the hardcoded defaults from both functions. Require callers to supply expected_files explicitly, or define the defaults in projects/code_project/src/ or its config. The infrastructure layer must not know about ablation studies or recommendation scalability figures.",
+      "confidence": "high"
+    }
+  ]
+}

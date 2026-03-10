@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Dict
 
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
 
 @dataclass
 class ReviewMetrics:
@@ -19,9 +21,8 @@ class ReviewMetrics:
     generation_time_seconds: float = 0.0
     preview: str = ""  # First 150 chars of response
 
-
 @dataclass
-class ManuscriptMetrics:
+class ManuscriptInputMetrics:
     """Metrics for the manuscript input."""
 
     total_chars: int = 0
@@ -30,18 +31,16 @@ class ManuscriptMetrics:
     truncated: bool = False
     truncated_chars: int = 0  # Chars after truncation (if any)
 
-
 @dataclass
 class SessionMetrics:
     """Complete metrics for the review session."""
 
-    manuscript: ManuscriptMetrics = field(default_factory=ManuscriptMetrics)
-    reviews: Dict[str, ReviewMetrics] = field(default_factory=dict)
+    manuscript: ManuscriptInputMetrics = field(default_factory=ManuscriptInputMetrics)
+    reviews: dict[str, ReviewMetrics] = field(default_factory=dict)
     total_generation_time: float = 0.0
     model_name: str = ""
     max_input_length: int = 0
     warmup_tokens_per_sec: float = 0.0  # Performance from warmup step
-
 
 @dataclass
 class StreamingMetrics:
@@ -57,7 +56,6 @@ class StreamingMetrics:
     partial_response_saved: bool = False
     first_chunk_time: float = 0.0  # Time to first chunk
     last_chunk_time: float = 0.0  # Time of last chunk
-
 
 def estimate_tokens(text: str) -> int:
     """Estimate token count from text (approximately 4 characters per token).

@@ -2,47 +2,13 @@
 
 from __future__ import annotations
 
-from pathlib import Path
 from typing import Any
 
-# Note: get_logger is imported at function level to avoid circular import
+from infrastructure.core.exceptions import TemplateError
 
 
 def format_error_with_suggestions(error: Any) -> str:
-    """Format error message with context, recovery suggestions, and commands.
-
-    Args:
-        error: TemplateError instance with context, suggestions, and recovery commands
-
-    Returns:
-        Formatted error message string
-
-    Example:
-        >>> from infrastructure.core.exceptions import TemplateError
-        >>> error = TemplateError(
-        ...     "File not found",
-        ...     context={"file": "test.txt", "line": 10},
-        ...     suggestions=["Check file path", "Verify permissions"],
-        ...     recovery_commands=["ls -la test.txt", "cat test.txt"]
-        ... )
-        >>> print(format_error_with_suggestions(error))
-        ❌ File not found
-        <BLANKLINE>
-        📋 Context:
-           • file: test.txt
-           • line: 10
-        <BLANKLINE>
-        🔧 Recovery Options:
-           1. Check file path
-           2. Verify permissions
-        <BLANKLINE>
-        💻 Quick Fix Commands:
-           $ ls -la test.txt
-           $ cat test.txt
-    """
-    # Import here to avoid circular import
-    from infrastructure.core.exceptions import TemplateError
-
+    """Format a TemplateError into a human-readable message with context and recovery suggestions."""
     if not isinstance(error, TemplateError):
         return str(error)
 
@@ -51,13 +17,7 @@ def format_error_with_suggestions(error: Any) -> str:
     if error.context:
         lines.append("\n📋 Context:")
         for key, value in error.context.items():
-            # Format file paths and line numbers specially
-            if key == "file" and isinstance(value, (str, Path)):
-                lines.append(f"   • {key}: {value}")
-            elif key == "line" and isinstance(value, int):
-                lines.append(f"   • {key}: {value}")
-            else:
-                lines.append(f"   • {key}: {value}")
+            lines.append(f"   • {key}: {value}")
 
     if error.suggestions:
         lines.append("\n🔧 Recovery Options:")
@@ -73,20 +33,7 @@ def format_error_with_suggestions(error: Any) -> str:
 
 
 def format_duration(seconds: float) -> str:
-    """Format duration in seconds to human-readable string.
-
-    Args:
-        seconds: Duration in seconds
-
-    Returns:
-        Formatted duration string (e.g., "1m 23s", "45s")
-
-    Example:
-        >>> format_duration(83)
-        '1m 23s'
-        >>> format_duration(45)
-        '45s'
-    """
+    """Format duration in seconds to human-readable string (e.g., '1m 23s', '45s')."""
     if seconds < 60:
         return f"{int(seconds)}s"
 

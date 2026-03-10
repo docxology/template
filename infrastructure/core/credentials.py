@@ -1,10 +1,16 @@
 """Secure credential management for testing and operations."""
 
+from __future__ import annotations
+
 import os
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 import yaml
+
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
 
 # Make dotenv optional - only required for credential-based testing
 try:
@@ -16,18 +22,7 @@ except ImportError:
 
     # No-op function if dotenv not available
     def load_dotenv(*args: Any, **kwargs: Any) -> None:  # type: ignore[misc]
-        """Load environment variables from a .env file (no-op fallback).
-
-        This is a fallback implementation used when python-dotenv is not
-        installed. It accepts any arguments but does nothing.
-
-        Args:
-            *args: Variable positional arguments (ignored).
-            **kwargs: Variable keyword arguments (ignored).
-
-        Returns:
-            None: This function has no effect when dotenv is unavailable.
-        """
+        """No-op fallback when python-dotenv is not installed."""
         pass
 
 
@@ -40,7 +35,7 @@ class CredentialManager:
     - YAML configuration files with environment variable substitution
     """
 
-    def __init__(self, env_file: Optional[Path] = None, config_file: Optional[Path] = None):
+    def __init__(self, env_file: Path | None = None, config_file: Path | None = None):
         """Initialize credential manager.
 
         Args:
@@ -58,7 +53,7 @@ class CredentialManager:
         if config_file and config_file.exists():
             self.config = self._load_yaml_config(config_file)
 
-    def _load_yaml_config(self, config_file: Path) -> Dict[str, Any]:
+    def _load_yaml_config(self, config_file: Path) -> dict[str, Any]:
         """Load YAML config and substitute environment variables."""
         with open(config_file, "r") as f:
             config = yaml.safe_load(f)
@@ -80,7 +75,7 @@ class CredentialManager:
             return obj
         return obj
 
-    def _get_credential(self, key: str, default: Optional[str] = None) -> Optional[str]:
+    def _get_credential(self, key: str, default: str | None = None) -> str | None:
         """Get credential from environment or config.
 
         Args:
@@ -109,7 +104,7 @@ class CredentialManager:
 
         return default
 
-    def get_zenodo_credentials(self, use_sandbox: bool = True) -> Dict[str, Any]:
+    def get_zenodo_credentials(self, use_sandbox: bool = True) -> dict[str, Any]:
         """Get Zenodo API credentials.
 
         Args:
@@ -118,8 +113,8 @@ class CredentialManager:
         Returns:
             Dictionary with token and environment info
         """
-        token_env = "ZENODO_SANDBOX_TOKEN" if use_sandbox else "ZENODO_PROD_TOKEN"
-        token = self._get_credential(token_env)
+        token_env_var = "ZENODO_SANDBOX_TOKEN" if use_sandbox else "ZENODO_PROD_TOKEN"
+        token = self._get_credential(token_env_var)
 
         return {
             "token": token,
@@ -129,7 +124,7 @@ class CredentialManager:
             ),
         }
 
-    def get_github_credentials(self) -> Dict[str, Any]:
+    def get_github_credentials(self) -> dict[str, Any]:
         """Get GitHub API credentials.
 
         Returns:
@@ -141,7 +136,7 @@ class CredentialManager:
             "api_url": "https://api.github.com",
         }
 
-    def get_arxiv_credentials(self) -> Dict[str, Any]:
+    def get_arxiv_credentials(self) -> dict[str, Any]:
         """Get arXiv SWORD API credentials (optional).
 
         Returns:

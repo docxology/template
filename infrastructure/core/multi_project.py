@@ -11,12 +11,14 @@ from __future__ import annotations
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List
+from typing import TYPE_CHECKING, Callable
 
 from infrastructure.core.logging_utils import get_logger, log_operation
 from infrastructure.core.errors import PROJECT_EXCEPTION, PROJECT_FAILED
 from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor, PipelineStageResult
-from infrastructure.project.discovery import ProjectInfo
+
+if TYPE_CHECKING:
+    from infrastructure.project.discovery import ProjectInfo
 
 logger = get_logger(__name__)
 
@@ -36,7 +38,7 @@ class MultiProjectConfig:
 class MultiProjectResult:
     """Result of multi-project execution."""
 
-    project_results: Dict[str, List[PipelineStageResult]]
+    project_results: dict[str, list[PipelineStageResult]]
     infra_test_duration: float = 0.0
     total_duration: float = 0.0
     successful_projects: int = 0
@@ -46,13 +48,21 @@ class MultiProjectResult:
 class MultiProjectOrchestrator:
     """Orchestrate pipeline execution across multiple projects."""
 
-    def __init__(self, config: MultiProjectConfig):
+    def __init__(
+        self,
+        config: MultiProjectConfig,
+        on_project_complete: Callable[[str, list[PipelineStageResult], Path], None] | None = None,
+    ):
         """Initialize multi-project orchestrator.
 
         Args:
             config: Multi-project configuration
+            on_project_complete: Optional callback invoked after each project finishes.
+                Receives (project_name, stage_results, output_dir). Use this at the
+                call-site to generate reports without importing reporting modules here.
         """
         self.config = config
+        self.on_project_complete = on_project_complete
 
     def execute_all_projects_full(self) -> MultiProjectResult:
         """Execute full pipeline for all projects (with infrastructure tests, with LLM).
@@ -62,9 +72,7 @@ class MultiProjectOrchestrator:
         """
         logger.info(f"Executing full pipeline for {len(self.config.projects)} projects")
 
-        return self._execute_multi_project_pipeline(
-            run_infra_tests=True, run_llm=True, pipeline_method="execute_full_pipeline"
-        )
+        return self._execute_multi_project_pipeline(run_infra_tests=True, run_llm=True)
 
     def execute_all_projects_core(self) -> MultiProjectResult:
         """Execute core pipeline for all projects (with infrastructure tests, no LLM).
@@ -74,9 +82,7 @@ class MultiProjectOrchestrator:
         """
         logger.info(f"Executing core pipeline for {len(self.config.projects)} projects")
 
-        return self._execute_multi_project_pipeline(
-            run_infra_tests=True, run_llm=False, pipeline_method="execute_core_pipeline"
-        )
+        return self._execute_multi_project_pipeline(run_infra_tests=True, run_llm=False)
 
     def execute_all_projects_full_no_infra(self) -> MultiProjectResult:
         """Execute full pipeline for all projects (no infrastructure tests, with LLM).
@@ -86,9 +92,7 @@ class MultiProjectOrchestrator:
         """
         logger.info(f"Executing full pipeline (no infra) for {len(self.config.projects)} projects")
 
-        return self._execute_multi_project_pipeline(
-            run_infra_tests=False, run_llm=True, pipeline_method="execute_full_pipeline"
-        )
+        return self._execute_multi_project_pipeline(run_infra_tests=False, run_llm=True)
 
     def execute_all_projects_core_no_infra(self) -> MultiProjectResult:
         """Execute core pipeline for all projects (no infrastructure tests, no LLM).
@@ -98,21 +102,16 @@ class MultiProjectOrchestrator:
         """
         logger.info(f"Executing core pipeline (no infra) for {len(self.config.projects)} projects")
 
-        return self._execute_multi_project_pipeline(
-            run_infra_tests=False,
-            run_llm=False,
-            pipeline_method="execute_core_pipeline",
-        )
+        return self._execute_multi_project_pipeline(run_infra_tests=False, run_llm=False)
 
     def _execute_multi_project_pipeline(
-        self, run_infra_tests: bool, run_llm: bool, pipeline_method: str
+        self, run_infra_tests: bool, run_llm: bool
     ) -> MultiProjectResult:
         """Execute pipeline across multiple projects.
 
         Args:
             run_infra_tests: Whether to run infrastructure tests once at start
             run_llm: Whether to include LLM stages
-            pipeline_method: Method name to call on PipelineExecutor
 
         Returns:
             Multi-project execution result
@@ -160,64 +159,25 @@ class MultiProjectOrchestrator:
 
                     # Execute pipeline
                     executor = PipelineExecutor(pipeline_config)
-                    method = getattr(executor, pipeline_method)
+                    method = executor.execute_full_pipeline if run_llm else executor.execute_core_pipeline
                     results = method()
 
                     project_results[project_name] = results
 
-                    # Generate pipeline report for this project
-                    try:
-                        from infrastructure.reporting import (
-                            collect_output_statistics,
-                            generate_pipeline_report,
-                            save_pipeline_report,
+                    # Notify call-site that this project finished (e.g. for report generation).
+                    # Reporting logic lives at the call-site to avoid a downward dependency
+                    # from core/ into the higher-level reporting/ layer.
+                    if self.on_project_complete is not None:
+                        output_dir = (
+                            self.config.repo_root / "projects" / project_name / "output"
                         )
-
-                        output_dir = self.config.repo_root / "projects" / project_name / "output"
-                        reports_dir = output_dir / "reports"
-                        reports_dir.mkdir(parents=True, exist_ok=True)
-
-                        total_duration = sum(r.duration for r in results)
-                        output_stats = collect_output_statistics(
-                            self.config.repo_root, project_name
-                        )
-
-                        # Generate comprehensive pipeline report
-                        pipeline_report = generate_pipeline_report(
-                            stage_results=[
-                                {
-                                    "name": r.stage_name,
-                                    "exit_code": (
-                                        r.exit_code
-                                        if hasattr(r, "exit_code")
-                                        else (0 if r.success else 1)
-                                    ),
-                                    "duration": r.duration,
-                                    "error_message": (
-                                        r.error_message if hasattr(r, "error_message") else ""
-                                    ),
-                                }
-                                for r in results
-                            ],
-                            total_duration=total_duration,
-                            repo_root=self.config.repo_root,
-                            output_statistics=output_stats,
-                        )
-
-                        # Save report in multiple formats
-                        saved_files = save_pipeline_report(
-                            pipeline_report,
-                            reports_dir,
-                            formats=["json", "html", "markdown"],
-                        )
-                        logger.info(f"Pipeline reports saved to {reports_dir}")
-                        for fmt, path in saved_files.items():
-                            logger.info(f"  • {fmt.upper()}: {path.name}")
-
-                    except Exception as e:
-                        logger.warning(
-                            f"Failed to generate pipeline report for {project_name}: {e}"
-                        )
+                        try:
+                            self.on_project_complete(project_name, results, output_dir)
+                        except Exception as e:
+                            logger.warning(
+                                f"Project completion callback failed for {project_name}: {e}",
+                                exc_info=True,
+                            )
 
                     # Check if all stages succeeded
                     all_success = all(r.success for r in results)
@@ -236,8 +196,6 @@ class MultiProjectOrchestrator:
 
         # Executive reporting is handled by the dedicated pipeline stage
         # (07_generate_executive_report.py), which runs as part of the stage executor.
-        # Calling it here would duplicate all executive summary log lines.
-        # The _run_executive_reporting method below is retained for standalone use only.
 
         total_duration = time.time() - start_time
 
@@ -280,7 +238,7 @@ class MultiProjectOrchestrator:
             executor = PipelineExecutor(dummy_config)
 
             # Run only the infrastructure tests stage
-            success = executor._run_infrastructure_tests()
+            success = executor.run_infrastructure_tests()
 
             if success:
                 logger.info("✅ Infrastructure tests passed for all projects")
@@ -293,40 +251,3 @@ class MultiProjectOrchestrator:
             logger.error(f"❌ Infrastructure tests failed with exception: {e}")
             return False
 
-    def _run_executive_reporting(self, results: Dict[str, List[PipelineStageResult]]) -> None:
-        """Generate cross-project executive report.
-
-        Args:
-            results: Results from all projects
-        """
-        if len(results) < 2:
-            logger.info("Skipping executive reporting (requires 2+ projects)")
-            return
-
-        logger.info("Generating executive report for cross-project analysis...")
-
-        try:
-            # Import executive report generator
-            from infrastructure.reporting import generate_multi_project_report
-
-            # Extract project names from results
-            project_names = list(results.keys())
-
-            # Generate comprehensive multi-project report
-            output_dir = self.config.repo_root / "output" / "executive_summary"
-            report_files = generate_multi_project_report(
-                self.config.repo_root, project_names, output_dir
-            )
-
-            logger.info("✅ Executive report generated successfully")
-            logger.info(f"  Generated {len(report_files)} report files:")
-            for file_type, path in report_files.items():
-                logger.info(f"    • {file_type.upper()}: {path.name}")
-            logger.info(f"  Reports saved to: {output_dir}")
-
-        except ImportError as e:
-            logger.warning(f"Executive reporting not available: {e}")
-            logger.debug("  infrastructure.reporting module may not be properly configured")
-        except Exception as e:
-            logger.error(f"Executive reporting failed: {e}", exc_info=True)
-            logger.info("  Continuing without executive report (non-critical)")

@@ -7,6 +7,13 @@ and report generation.
 import pytest
 
 from infrastructure.validation import doc_scanner
+from infrastructure.validation.doc_discovery import (
+    analyze_documentation_file,
+    catalog_agents_readme,
+    find_config_files,
+    find_markdown_files,
+    find_script_files,
+)
 from infrastructure.validation.doc_scanner import (
     AccuracyIssue,
     CompletenessGap,
@@ -117,8 +124,7 @@ class TestDocumentationScanner:
         (tmp_path / "subdir").mkdir()
         (tmp_path / "subdir" / "doc3.md").write_text("# Doc 3")
 
-        scanner = DocumentationScanner(tmp_path)
-        md_files = scanner._find_markdown_files()
+        md_files = find_markdown_files(tmp_path)
 
         assert len(md_files) == 3
 
@@ -128,9 +134,8 @@ class TestDocumentationScanner:
         (tmp_path / "AGENTS.md").write_text("# Agents")
         (tmp_path / "other.md").write_text("# Other")
 
-        scanner = DocumentationScanner(tmp_path)
-        md_files = scanner._find_markdown_files()
-        agents_readme = scanner._catalog_agents_readme(md_files)
+        md_files = find_markdown_files(tmp_path)
+        agents_readme = catalog_agents_readme(md_files, tmp_path)
 
         assert len(agents_readme) == 2
 
@@ -139,8 +144,7 @@ class TestDocumentationScanner:
         (tmp_path / "pyproject.toml").write_text("[project]")
         (tmp_path / "config.yaml").write_text("key: value")
 
-        scanner = DocumentationScanner(tmp_path)
-        config_files = scanner._find_config_files()
+        config_files = find_config_files(tmp_path)
 
         assert len(config_files) >= 1
 
@@ -151,8 +155,7 @@ class TestDocumentationScanner:
         (scripts_dir / "test.py").write_text("#!/usr/bin/env python3")
         (scripts_dir / "run.sh").write_text("#!/bin/bash")
 
-        scanner = DocumentationScanner(tmp_path)
-        script_files = scanner._find_script_files()
+        script_files = find_script_files(tmp_path)
 
         assert len(script_files) >= 2
 
@@ -170,8 +173,7 @@ print("code block")
 """
         )
 
-        scanner = DocumentationScanner(tmp_path)
-        doc_file = scanner._analyze_documentation_file(md_file)
+        doc_file = analyze_documentation_file(md_file, tmp_path)
 
         assert doc_file.has_links is True
         assert doc_file.has_code_blocks is True

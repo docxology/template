@@ -1,0 +1,142 @@
+{
+  "session": {
+    "id": "ext_20260307_173312_d5ef298f",
+    "token": "cd14a979fb74e10bd77026566dc3f098"
+  },
+  "assessments": {
+    "cross_module_architecture": 82,
+    "high_level_elegance": 84,
+    "convention_outlier": 80,
+    "error_consistency": 83
+  },
+  "findings": [
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "llm_init_god_surface",
+      "summary": "infrastructure/llm/__init__.py re-exports ~60 symbols from 6+ submodules, collapsing all internal boundaries into a single flat namespace",
+      "related_files": [
+        "infrastructure/llm/__init__.py"
+      ],
+      "evidence": [
+        "The file re-exports ConversationContext, LLMClient, LLMConfig, GenerationOptions, Message, ResponseMode from core; all manuscript template classes from templates; all Ollama utility functions from utils; all OutputValidator internals from validation; all review generation functions from review — a total of ~60 names",
+        "The __all__ list spans 84 entries, covering symbols from at least six distinct subpackages",
+        "Two symbols (PromptFragmentLoader, PromptComposer) are conditionally set to None when the import fails, polluting the namespace with sentinels rather than gating access"
+      ],
+      "suggestion": "Restrict infrastructure/llm/__init__.py to the 5–8 symbols callers actually need at the package boundary (LLMClient, LLMConfig, GenerationOptions, get_template). Let callers import from the concrete submodule paths (infrastructure.llm.review.generator, infrastructure.llm.utils, etc.) for the rest. This restores the internal subpackage boundaries that the current __init__ erases.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "reporting_init_boundary_collapse",
+      "summary": "infrastructure/reporting/__init__.py aggregates 30+ symbols from 8 sibling modules, making all internal reporting sub-concerns indistinguishable from one another at the boundary",
+      "related_files": [
+        "infrastructure/reporting/__init__.py"
+      ],
+      "evidence": [
+        "Imports from error_aggregator, executive_reporter, output_reporter, pipeline_reporter, output_organizer, multi_project_reporter, suite_summary_generator, and optionally dashboard_generator — all in a single __init__",
+        "The __all__ list names 30 symbols spanning distinct concerns: pipeline reports, test summaries, error aggregation, output organisation, executive cross-project summaries",
+        "Callers who import from infrastructure.reporting get no signal about which sub-concern they are coupling to"
+      ],
+      "suggestion": "Keep only the top-level orchestration entry points in __init__.py (generate_pipeline_report, save_pipeline_report, ErrorAggregator). Callers needing suite summaries or executive reports should import directly from the submodule.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "doc_scanner_missing_type_imports",
+      "summary": "infrastructure/validation/doc_scanner.py uses typing.Dict/List/Set/Any annotations without importing them, relying on from __future__ import annotations to defer evaluation — a latent runtime failure if annotations are ever resolved",
+      "related_files": [
+        "infrastructure/validation/doc_scanner.py"
+      ],
+      "evidence": [
+        "The file has 'from __future__ import annotations' but no 'from typing import ...' statement, yet uses Dict[str, Set[str]], List[Path], Dict[str, Any] as instance annotation types",
+        "The rest of the codebase (e.g. infrastructure/core/logging_utils.py, infrastructure/reporting/pipeline_reporter.py) uses either lowercase builtins (dict[...], list[...]) or explicit typing imports — doc_scanner.py does neither consistently"
+      ],
+      "suggestion": "Either add the missing 'from typing import Any, Dict, List, Set' import or convert the annotations to the builtin generic forms (dict[...], list[...]) consistent with the rest of the codebase.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "logging_utils_functions_not_in_all",
+      "summary": "Two public functions in infrastructure/core/logging_utils.py (setup_root_log_file_handler, flush_file_handlers) are used by infrastructure/core/pipeline.py but absent from __all__, creating an invisible public surface",
+      "related_files": [
+        "infrastructure/core/logging_utils.py",
+        "infrastructure/core/pipeline.py"
+      ],
+      "evidence": [
+        "infrastructure/core/pipeline.py imports flush_file_handlers and setup_root_log_file_handler directly from infrastructure.core.logging_utils",
+        "logging_utils.__all__ lists 14 names but omits both of these functions",
+        "The module docstring does not mention them either — they are used cross-module but invisible from the declared surface"
+      ],
+      "suggestion": "Add setup_root_log_file_handler and flush_file_handlers to __all__ in logging_utils.py to make the full public contract explicit.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "doc_scanner_legacy_typing_style",
+      "summary": "infrastructure/validation/doc_scanner.py uses typing.Dict/List/Set uppercase generics while every sibling and parent module uses lowercase builtins (dict[...], list[...])",
+      "related_files": [
+        "infrastructure/validation/doc_scanner.py",
+        "infrastructure/validation/integrity.py",
+        "infrastructure/reporting/pipeline_reporter.py",
+        "infrastructure/core/exceptions.py"
+      ],
+      "evidence": [
+        "doc_scanner.py: 'self.all_headings: Dict[str, Set[str]] = {}', 'def phase1_discovery(self) -> Dict[str, Any]:', 'def _identify_link_fixes(self) -> List[Dict[str, Any]]:'",
+        "integrity.py uses 'dict[str, bool]', 'list[Path]'",
+        "pipeline_reporter.py uses 'list[StageResult]', 'dict[str, Path]', 'list[dict[str, Any]]'",
+        "exceptions.py uses 'dict[str, Any]', 'list[str]'"
+      ],
+      "suggestion": "Convert doc_scanner.py annotations to lowercase builtins to match the rest of the codebase.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "mixed_typing_imports_across_core",
+      "summary": "infrastructure/core modules inconsistently use typing.List/Dict/Optional versus builtin generics — some newer files use builtins while older sibling files still import from typing",
+      "related_files": [
+        "infrastructure/core/file_operations.py",
+        "infrastructure/core/environment.py",
+        "infrastructure/core/script_discovery.py",
+        "infrastructure/core/logging_utils.py"
+      ],
+      "evidence": [
+        "file_operations.py: 'from typing import Any, Dict, List, Optional'",
+        "environment.py: 'from typing import List, Tuple'",
+        "script_discovery.py: 'from typing import List'",
+        "logging_utils.py: 'from typing import Any, Callable, Iterator, Optional, TypeVar' — uses Optional[int] while sibling modules use int | None"
+      ],
+      "suggestion": "Migrate all core module type annotations to builtin generics (list[...], dict[...], tuple[...], X | None) and remove the now-unnecessary typing imports for these forms.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "verify_cross_references_silently_skips_unreadable_files",
+      "summary": "In infrastructure/validation/integrity.py, verify_cross_references() catches OSError on unreadable markdown files and silently continues, potentially returning a false-positive 'all references valid' result",
+      "related_files": [
+        "infrastructure/validation/integrity.py"
+      ],
+      "evidence": [
+        "Lines 109–111: 'except OSError as e: logger.error(...) # Skip unreadable file; do not poison results for files that succeeded'",
+        "If all files in the list are unreadable, the function returns the default all-True integrity dict without any indication of failure in the return value",
+        "verify_output_integrity() at line 269 calls verify_cross_references() and checks 'if not all(...)' — a fully-unreadable file set would pass this check silently"
+      ],
+      "suggestion": "Track the number of files that failed to read and surface it in the return value (e.g. add a 'scan_errors' key), or set overall integrity to False when any file could not be read. At minimum, the caller (verify_output_integrity) should receive a signal distinguishing 'no issues found' from 'could not check'.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "doc_scanner_run_link_checker_swallows_exception",
+      "summary": "DocumentationScanner._run_link_checker() catches bare Exception and returns a dict with 'success: False' — the error is swallowed without logging, losing diagnostic information",
+      "related_files": [
+        "infrastructure/validation/doc_scanner.py"
+      ],
+      "evidence": [
+        "Lines 199–201: 'except Exception as e: return {\"success\": False, \"error\": str(e)}'",
+        "No logger.warning or logger.error call before the return — the exception type and context are serialised to a string in the dict but never surfaced to any observer",
+        "The subprocess invocation on lines 186–195 targets a path under repo_utilities/ which does not exist in the visible directory structure, so this branch fires routinely"
+      ],
+      "suggestion": "Add a logger.warning(f'Link checker subprocess failed: {e}') before the return so that diagnostic information is visible in the log stream even when the caller ignores the 'success' field.",
+      "confidence": "high"
+    }
+  ]
+}

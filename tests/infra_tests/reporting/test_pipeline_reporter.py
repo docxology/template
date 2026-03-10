@@ -1,22 +1,47 @@
 from __future__ import annotations
 
 import json
+from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Any
 
 import pytest
 
+from infrastructure.reporting.multi_project_reporter import generate_multi_project_summary_report
 from infrastructure.reporting.pipeline_reporter import (
     generate_error_markdown,
-    generate_error_summary,
+    save_error_summary,
     generate_html_report,
-    generate_markdown_report,
+    _generate_pipeline_markdown,
     generate_performance_report,
     generate_pipeline_report,
-    generate_test_report,
     generate_validation_markdown,
     generate_validation_report,
     save_pipeline_report,
+    save_test_results,
 )
+
+
+@dataclass
+class _MockProject:
+    name: str
+
+
+@dataclass
+class _MockStageResult:
+    success: bool
+    duration: float
+    error_message: str = ""
+    errors: list = field(default_factory=list)
+
+
+@dataclass
+class _MockResult:
+    successful_projects: int = 0
+    failed_projects: int = 0
+    total_duration: float = 0.0
+    infra_test_duration: float = 0.0
+    project_results: Any = field(default_factory=dict)
 
 
 def _stage_results() -> list[dict[str, object]]:
@@ -79,7 +104,7 @@ def test_generate_reports_format_duration_and_success_rate() -> None:
         stage_results=_stage_results(), total_duration=7.0, repo_root=Path(".")
     )
 
-    md_content = generate_markdown_report(report)
+    md_content = _generate_pipeline_markdown(report)
     assert "Success Rate" in md_content
     assert "Stages Passed" in md_content
 
@@ -88,7 +113,7 @@ def test_generate_reports_format_duration_and_success_rate() -> None:
     assert "Stages Executed" in html_content
 
 
-def test_generate_markdown_report_includes_sections() -> None:
+def test__generate_pipeline_markdown_includes_sections() -> None:
     report = generate_pipeline_report(
         stage_results=_stage_results(),
         total_duration=9.5,
@@ -109,7 +134,7 @@ def test_generate_markdown_report_includes_sections() -> None:
         output_statistics={"pdf_files": 2, "figures": 1, "data_files": 3},
     )
 
-    md_content = generate_markdown_report(report)
+    md_content = _generate_pipeline_markdown(report)
     assert "Test Results" in md_content
     assert "Validation Results" in md_content
     assert "Performance Metrics" in md_content
@@ -159,11 +184,11 @@ def test_generate_performance_and_test_reports(tmp_path: Path) -> None:
     path = generate_performance_report(perf, tmp_path)
     assert path.exists()
 
-    test_path = generate_test_report({"summary": {}}, tmp_path)
+    test_path = save_test_results({"summary": {}}, tmp_path)
     assert test_path.name == "test_results.json"
 
 
-def test_generate_error_summary_and_markdown_truncation(tmp_path: Path) -> None:
+def test_save_error_summary_and_markdown_truncation(tmp_path: Path) -> None:
     errors = [
         {
             "type": "stage_failure",
@@ -173,7 +198,7 @@ def test_generate_error_summary_and_markdown_truncation(tmp_path: Path) -> None:
         }
         for i in range(12)
     ]
-    summary = generate_error_summary(errors, tmp_path)
+    summary = save_error_summary(errors, tmp_path)
     assert summary["total_errors"] == 12
     assert summary["errors_by_type"]["stage_failure"] == 12
     assert (tmp_path / "error_summary.json").exists()
@@ -227,14 +252,14 @@ def test_generate_pipeline_report_default_formats(tmp_path: Path) -> None:
     assert "html" in saved
 
 
-def test_generate_markdown_report_empty_sections() -> None:
+def test__generate_pipeline_markdown_empty_sections() -> None:
     """Test markdown report generation with no optional sections."""
     report = generate_pipeline_report(
         stage_results=[{"name": "setup", "exit_code": 0, "duration": 1.0}],
         total_duration=1.0,
         repo_root=Path("."),
     )
-    md_content = generate_markdown_report(report)
+    md_content = _generate_pipeline_markdown(report)
     assert "Pipeline Execution Report" in md_content
     assert "Summary" in md_content
     assert "Stage Results" in md_content
@@ -266,9 +291,9 @@ def test_generate_validation_markdown_empty_checks() -> None:
     assert "Validation Checks" in md
 
 
-def test_generate_error_summary_empty_errors(tmp_path: Path) -> None:
+def test_save_error_summary_empty_errors(tmp_path: Path) -> None:
     """Test error summary with no errors."""
-    summary = generate_error_summary([], tmp_path)
+    summary = save_error_summary([], tmp_path)
     assert summary["total_errors"] == 0
     assert summary["errors_by_type"] == {}
     assert (tmp_path / "error_summary.json").exists()
@@ -303,34 +328,29 @@ def test_generate_error_markdown_with_suggestions() -> None:
 
 def test_stage_result_dataclass_fields() -> None:
     """Test StageResult dataclass with all fields."""
-    from infrastructure.reporting.pipeline_reporter import StageResult
+    from infrastructure.core.checkpoint import StageResult
 
     stage = StageResult(
         name="test",
         exit_code=0,
         duration=1.5,
         status="passed",
-        output_files=["file1.pdf"],
-        errors=["error1"],
-        warnings=["warning1"],
     )
     assert stage.name == "test"
     assert stage.exit_code == 0
     assert stage.duration == 1.5
     assert stage.status == "passed"
-    assert stage.output_files == ["file1.pdf"]
-    assert stage.errors == ["error1"]
-    assert stage.warnings == ["warning1"]
 
 
 def test_pipeline_report_dataclass_fields() -> None:
     """Test PipelineReport dataclass with all fields."""
-    from infrastructure.reporting.pipeline_reporter import PipelineReport, StageResult
+    from infrastructure.reporting.pipeline_reporter import PipelineReport
+    from infrastructure.core.checkpoint import StageResult as ReportingStageResult
 
     report = PipelineReport(
         timestamp="2025-01-01T00:00:00",
         total_duration=5.0,
-        stages=[StageResult(name="test", exit_code=0, duration=1.0, status="passed")],
+        stages=[ReportingStageResult(name="test", exit_code=0, duration=1.0, status="passed")],
         test_results={"summary": {"total_tests": 10}},
         validation_results={"checks": {"pdf": True}},
         performance_metrics={"duration": 5.0},
@@ -349,43 +369,17 @@ class TestGenerateMultiProjectSummaryReport:
 
     def test_generate_with_successful_projects(self, tmp_path: Path) -> None:
         """Test generating summary report with successful projects."""
-        from dataclasses import dataclass
-
-        from infrastructure.reporting.pipeline_reporter import generate_multi_project_summary_report
-
-        @dataclass
-        class MockProject:
-            name: str
-
-        @dataclass
-        class MockStageResult:
-            success: bool
-            duration: float
-            error_message: str = ""
-
-        @dataclass
-        class MockResult:
-            successful_projects: int = 2
-            failed_projects: int = 0
-            total_duration: float = 10.0
-            infra_test_duration: float = 2.0
-            project_results: dict = None
-
-            def __post_init__(self):
-                if self.project_results is None:
-                    self.project_results = {
-                        "project1": [
-                            MockStageResult(True, 3.0),
-                            MockStageResult(True, 2.0),
-                        ],
-                        "project2": [
-                            MockStageResult(True, 2.5),
-                            MockStageResult(True, 2.5),
-                        ],
-                    }
-
-        projects = [MockProject("project1"), MockProject("project2")]
-        result = MockResult()
+        projects = [_MockProject("project1"), _MockProject("project2")]
+        result = _MockResult(
+            successful_projects=2,
+            failed_projects=0,
+            total_duration=10.0,
+            infra_test_duration=2.0,
+            project_results={
+                "project1": [_MockStageResult(True, 3.0), _MockStageResult(True, 2.0)],
+                "project2": [_MockStageResult(True, 2.5), _MockStageResult(True, 2.5)],
+            },
+        )
         output_dir = tmp_path / "output"
 
         saved = generate_multi_project_summary_report(result, projects, output_dir)
@@ -395,7 +389,6 @@ class TestGenerateMultiProjectSummaryReport:
         assert saved["json"].exists()
         assert saved["markdown"].exists()
 
-        # Check JSON content
         data = json.loads(saved["json"].read_text())
         assert data["total_projects"] == 2
         assert data["successful_projects"] == 2
@@ -403,41 +396,17 @@ class TestGenerateMultiProjectSummaryReport:
 
     def test_generate_with_failed_projects(self, tmp_path: Path) -> None:
         """Test generating summary report with failed projects."""
-        from dataclasses import dataclass
-
-        from infrastructure.reporting.pipeline_reporter import generate_multi_project_summary_report
-
-        @dataclass
-        class MockProject:
-            name: str
-
-        @dataclass
-        class MockStageResult:
-            success: bool
-            duration: float
-            error_message: str = ""
-            errors: list = None
-
-            def __post_init__(self):
-                if self.errors is None:
-                    self.errors = []
-
-        @dataclass
-        class MockResult:
-            successful_projects: int = 1
-            failed_projects: int = 1
-            total_duration: float = 8.0
-            project_results: dict = None
-
-            def __post_init__(self):
-                if self.project_results is None:
-                    self.project_results = {
-                        "project1": [MockStageResult(True, 3.0)],
-                        "project2": [MockStageResult(False, 2.0, "Test failed", ["Error 1"])],
-                    }
-
-        projects = [MockProject("project1"), MockProject("project2")]
-        result = MockResult()
+        projects = [_MockProject("project1"), _MockProject("project2")]
+        result = _MockResult(
+            successful_projects=1,
+            failed_projects=1,
+            total_duration=8.0,
+            infra_test_duration=0.0,
+            project_results={
+                "project1": [_MockStageResult(True, 3.0)],
+                "project2": [_MockStageResult(False, 2.0, "Test failed", ["Error 1"])],
+            },
+        )
         output_dir = tmp_path / "output"
 
         saved = generate_multi_project_summary_report(result, projects, output_dir)
@@ -448,27 +417,14 @@ class TestGenerateMultiProjectSummaryReport:
 
     def test_generate_with_empty_project_results(self, tmp_path: Path) -> None:
         """Test generating summary report with empty project results."""
-        from dataclasses import dataclass
-
-        from infrastructure.reporting.pipeline_reporter import generate_multi_project_summary_report
-
-        @dataclass
-        class MockProject:
-            name: str
-
-        @dataclass
-        class MockResult:
-            successful_projects: int = 0
-            failed_projects: int = 1
-            total_duration: float = 0.0
-            project_results: dict = None
-
-            def __post_init__(self):
-                if self.project_results is None:
-                    self.project_results = {"project1": []}
-
-        projects = [MockProject("project1")]
-        result = MockResult()
+        projects = [_MockProject("project1")]
+        result = _MockResult(
+            successful_projects=0,
+            failed_projects=1,
+            total_duration=0.0,
+            infra_test_duration=0.0,
+            project_results={"project1": []},
+        )
         output_dir = tmp_path / "output"
 
         saved = generate_multi_project_summary_report(result, projects, output_dir)
@@ -483,34 +439,16 @@ class TestGenerateMultiProjectSummaryReport:
         The code defensively converts dict values to empty lists, so dict-style results
         will be treated as empty (unknown format).
         """
-        from dataclasses import dataclass
-
-        from infrastructure.reporting.pipeline_reporter import generate_multi_project_summary_report
-
-        @dataclass
-        class MockProject:
-            name: str
-
-        @dataclass
-        class MockResult:
-            successful_projects: int = 1
-            failed_projects: int = 0
-            total_duration: float = 5.0
-            project_results: dict = None
-
-            def __post_init__(self):
-                if self.project_results is None:
-                    self.project_results = {
-                        "project1": {
-                            "success": True,
-                            "duration": 5.0,
-                            "stages_completed": 3,
-                            "errors": [],
-                        }
-                    }
-
-        projects = [MockProject("project1")]
-        result = MockResult()
+        projects = [_MockProject("project1")]
+        result = _MockResult(
+            successful_projects=1,
+            failed_projects=0,
+            total_duration=5.0,
+            infra_test_duration=0.0,
+            project_results={
+                "project1": {"success": True, "duration": 5.0, "stages_completed": 3, "errors": []}
+            },
+        )
         output_dir = tmp_path / "output"
 
         saved = generate_multi_project_summary_report(result, projects, output_dir)
@@ -523,35 +461,14 @@ class TestGenerateMultiProjectSummaryReport:
 
     def test_generate_with_performance_recommendation(self, tmp_path: Path) -> None:
         """Test summary report generates performance recommendation for slow projects."""
-        from dataclasses import dataclass
-
-        from infrastructure.reporting.pipeline_reporter import generate_multi_project_summary_report
-
-        @dataclass
-        class MockProject:
-            name: str
-
-        @dataclass
-        class MockStageResult:
-            success: bool
-            duration: float
-            error_message: str = ""
-
-        @dataclass
-        class MockResult:
-            successful_projects: int = 1
-            failed_projects: int = 0
-            total_duration: float = 600.0
-            project_results: dict = None
-
-            def __post_init__(self):
-                if self.project_results is None:
-                    self.project_results = {
-                        "project1": [MockStageResult(True, 400.0)],
-                    }
-
-        projects = [MockProject("project1")]
-        result = MockResult()
+        projects = [_MockProject("project1")]
+        result = _MockResult(
+            successful_projects=1,
+            failed_projects=0,
+            total_duration=600.0,
+            infra_test_duration=0.0,
+            project_results={"project1": [_MockStageResult(True, 400.0)]},
+        )
         output_dir = tmp_path / "output"
 
         saved = generate_multi_project_summary_report(result, projects, output_dir)
@@ -564,23 +481,14 @@ class TestGenerateMultiProjectSummaryReport:
 
     def test_generate_with_non_dict_project_results(self, tmp_path: Path) -> None:
         """Test handling non-dict project_results attribute."""
-        from dataclasses import dataclass
-
-        from infrastructure.reporting.pipeline_reporter import generate_multi_project_summary_report
-
-        @dataclass
-        class MockProject:
-            name: str
-
-        @dataclass
-        class MockResult:
-            successful_projects: int = 0
-            failed_projects: int = 1
-            total_duration: float = 0.0
-            project_results: str = "invalid"  # Non-dict value
-
-        projects = [MockProject("project1")]
-        result = MockResult()
+        projects = [_MockProject("project1")]
+        result = _MockResult(
+            successful_projects=0,
+            failed_projects=1,
+            total_duration=0.0,
+            infra_test_duration=0.0,
+            project_results="invalid",  # Non-dict value
+        )
         output_dir = tmp_path / "output"
 
         saved = generate_multi_project_summary_report(result, projects, output_dir)
@@ -595,7 +503,7 @@ class TestFormatMultiProjectSummaryMarkdown:
 
     def test_format_basic_markdown(self) -> None:
         """Test basic markdown formatting."""
-        from infrastructure.reporting.pipeline_reporter import (
+        from infrastructure.reporting.multi_project_reporter import (
             _format_multi_project_summary_markdown,
         )
 
@@ -638,7 +546,7 @@ class TestFormatMultiProjectSummaryMarkdown:
 
     def test_format_with_infra_test_duration(self) -> None:
         """Test markdown includes infrastructure test duration."""
-        from infrastructure.reporting.pipeline_reporter import (
+        from infrastructure.reporting.multi_project_reporter import (
             _format_multi_project_summary_markdown,
         )
 
@@ -668,7 +576,7 @@ class TestFormatMultiProjectSummaryMarkdown:
 
     def test_format_with_performance_analysis(self) -> None:
         """Test markdown includes performance analysis."""
-        from infrastructure.reporting.pipeline_reporter import (
+        from infrastructure.reporting.multi_project_reporter import (
             _format_multi_project_summary_markdown,
         )
 
@@ -709,7 +617,7 @@ class TestFormatMultiProjectSummaryMarkdown:
 
     def test_format_with_recommendations(self) -> None:
         """Test markdown includes recommendations."""
-        from infrastructure.reporting.pipeline_reporter import (
+        from infrastructure.reporting.multi_project_reporter import (
             _format_multi_project_summary_markdown,
         )
 
@@ -748,7 +656,7 @@ class TestFormatMultiProjectSummaryMarkdown:
 
     def test_format_with_many_errors(self) -> None:
         """Test markdown truncates error list."""
-        from infrastructure.reporting.pipeline_reporter import (
+        from infrastructure.reporting.multi_project_reporter import (
             _format_multi_project_summary_markdown,
         )
 
@@ -858,7 +766,7 @@ class TestErrorSummaryEdgeCases:
             {"type": "stage_failure", "message": "Another stage failed"},
             {"type": "unknown"},  # Missing message
         ]
-        summary = generate_error_summary(errors, tmp_path)
+        summary = save_error_summary(errors, tmp_path)
 
         assert summary["total_errors"] == 4
         assert summary["errors_by_type"]["stage_failure"] == 2
@@ -880,3 +788,51 @@ class TestErrorSummaryEdgeCases:
         }
         md = generate_error_markdown(summary)
         assert "test_example.py" in md
+
+
+def test_save_pipeline_report_raises_oserror_on_unwritable_dir(tmp_path: Path) -> None:
+    """save_pipeline_report raises OSError when the output directory is not writable."""
+    import stat
+
+    report = generate_pipeline_report(
+        stage_results=[{"name": "setup", "exit_code": 0, "duration": 0.1}],
+        total_duration=0.1,
+        repo_root=tmp_path,
+    )
+
+    # Create a read-only directory so writes will fail
+    output_dir = tmp_path / "readonly_output"
+    output_dir.mkdir()
+    output_dir.chmod(stat.S_IREAD | stat.S_IEXEC)
+
+    try:
+        with pytest.raises(OSError):
+            save_pipeline_report(report, output_dir, formats=["json"])
+    finally:
+        # Restore permissions so pytest cleanup can delete the directory
+        output_dir.chmod(stat.S_IRWXU)
+
+
+def test_generate_pipeline_report_enriches_output_statistics_with_log_file(
+    tmp_path: Path,
+) -> None:
+    """generate_pipeline_report with project_name + output_statistics adds log_file info."""
+    project_name = "test_project"
+    output_stats = {"pdf_files": 2}
+
+    report = generate_pipeline_report(
+        stage_results=[],
+        total_duration=1.0,
+        repo_root=tmp_path,
+        project_name=project_name,
+        output_statistics=output_stats,
+    )
+
+    assert report.output_statistics is not None
+    assert "log_file" in report.output_statistics
+    log_info = report.output_statistics["log_file"]
+    assert "exists" in log_info
+    assert "size" in log_info
+    assert "path" in log_info
+    # Original stats should still be present
+    assert report.output_statistics["pdf_files"] == 2

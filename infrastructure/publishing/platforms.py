@@ -6,20 +6,25 @@ import shutil
 import tarfile
 from datetime import datetime
 from pathlib import Path
-from typing import List
 
-import requests
+try:
+    import requests
+except ImportError:
+    requests = None  # type: ignore[assignment]
 
 from infrastructure.core.exceptions import PublishingError
 from infrastructure.publishing.models import PublicationMetadata
 
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
+
 #: Default timeout for HTTP requests (seconds)
 REQUEST_TIMEOUT = 30
 
-
 def publish_to_zenodo(
     metadata: PublicationMetadata,
-    file_paths: List[Path],
+    file_paths: list[Path],
     access_token: str,
     sandbox: bool = True,
 ) -> str:
@@ -69,7 +74,6 @@ def publish_to_zenodo(
     # Publish
     return client.publish(dep_id)
 
-
 def prepare_arxiv_submission(output_dir: Path, metadata: PublicationMetadata) -> Path:
     """Prepare a submission package for arXiv upload.
 
@@ -116,12 +120,11 @@ def prepare_arxiv_submission(output_dir: Path, metadata: PublicationMetadata) ->
 
     return tar_path
 
-
 def create_github_release(
     tag_name: str,
     release_name: str,
     description: str,
-    assets: List[Path],
+    assets: list[Path],
     token: str,
     repo: str,
 ) -> str:

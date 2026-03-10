@@ -1,0 +1,153 @@
+{
+  "session": {
+    "id": "ext_20260307_113059_e0d61fc8",
+    "token": "507c6ee9868e49dd61b5347b86091a8f"
+  },
+  "assessments": {
+    "high_level_elegance": 74,
+    "mid_level_elegance": 62,
+    "low_level_elegance": 58
+  },
+  "findings": [
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "thin_orchestrator_violation_in_01_run_tests",
+      "summary": "scripts/01_run_tests.py contains substantial non-orchestration logic rather than delegating to infrastructure",
+      "related_files": ["scripts/01_run_tests.py"],
+      "evidence": [
+        "report_results() at line 276 is 330+ lines of inline logging, conditional branching, error-type detection, and suggestion generation — all business logic that belongs in infrastructure/reporting/",
+        "run_infrastructure_tests() and run_project_tests() build complex pytest command lists (lines 108-135, 201-239), manage PYTHONPATH, check uv availability, and call check_cov_datafile_support directly — these are not orchestration concerns",
+        "Lines 377-415 and 476-526: duplicated error-type detection blocks (has_import_errors, has_coverage_errors, has_timeout_errors) appear nearly verbatim in both the infra and project failure paths"
+      ],
+      "suggestion": "Extract report_results() and the command-building logic into infrastructure/reporting/ modules. The script should call one function per phase and let the module handle display logic.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "performance_module_as_shim",
+      "summary": "infrastructure/core/performance.py is a pure re-export shim with no logic, indicating a split that was not fully resolved",
+      "related_files": ["infrastructure/core/performance.py"],
+      "evidence": [
+        "The entire 44-line file is imports and __all__ — it exists only because callers still import from performance.py after the module was split into stage_monitor.py and function_profiler.py",
+        "The docstring admits this is a 'backward-compatible re-export shim', which is a design smell: either callers should have been migrated or the split should not have happened"
+      ],
+      "suggestion": "Either migrate all call sites to import from the canonical sub-modules and delete the shim, or keep performance.py as the canonical module and inline the sub-module content back into it.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "integrity_report_as_mutable_class_not_dataclass",
+      "summary": "IntegrityReport uses a hand-rolled __init__ with plain list/dict assignments instead of a dataclass",
+      "related_files": ["infrastructure/validation/integrity.py"],
+      "evidence": [
+        "Lines 28-39: IntegrityReport.__init__ manually assigns seven attributes that are all straightforward typed fields; no custom logic justifies avoiding @dataclass",
+        "The class has no methods beyond construction — it is a plain data container"
+      ],
+      "suggestion": "Convert IntegrityReport to a @dataclass with field() defaults for the mutable list/dict attributes.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "validate_review_quality_god_function",
+      "summary": "validate_review_quality() is a 200-line conditional dispatch function that handles five structurally different review types in one body",
+      "related_files": ["infrastructure/llm/review/generator.py"],
+      "evidence": [
+        "Lines 104-313: a single function with five elif branches (executive_summary, quality_review, methodology_review, improvement_suggestions, translation), each with different local variables, different pattern lists, and different issue strings",
+        "Each branch is effectively an independent validator; they share only the off-topic and word-count checks at the top"
+      ],
+      "suggestion": "Extract each branch into a dedicated private function (e.g., _validate_executive_summary, _validate_quality_review, etc.) dispatched by a dict. The shared top-level checks remain in validate_review_quality().",
+      "confidence": "high"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "report_results_duplicated_infra_project_blocks",
+      "summary": "report_results() in 01_run_tests.py duplicates the failure-reporting block nearly verbatim for infrastructure and project suites",
+      "related_files": ["scripts/01_run_tests.py"],
+      "evidence": [
+        "Lines 348-415 (infrastructure failure path) and lines 447-526 (project failure path) are structurally identical: same shape of failed_tests iteration, same error-type detection variables, same suggestion strings",
+        "The only differences are the variable names (infra_results vs project_results) and one added has_assertion_errors check in the project path"
+      ],
+      "suggestion": "Extract a _report_suite_failure(suite_name, results, project_name) helper and call it from both failure branches.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "health_check_metrics_repeated_get_pattern",
+      "summary": "get_metrics() repeats the same three-level dict-walk pattern for memory, cpu, and disk without abstraction",
+      "related_files": ["infrastructure/core/health_check.py"],
+      "evidence": [
+        "Lines 235-248: three nearly identical blocks each doing status['checks'][X].get('details', {}).get('Y') and assigning to metrics[Z] — the only variation is the key names"
+      ],
+      "suggestion": "Extract a helper _extract_check_metric(status, check_name, detail_key) and call it three times.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "any_called_with_tuple_literal",
+      "summary": "any() is called with a tuple literal instead of a generator expression, making it always True for non-empty tuples",
+      "related_files": ["infrastructure/llm/review/generator.py"],
+      "evidence": [
+        "Lines 211-219: has_assessment = any((\"clarity\" in response_lower, \"structure\" in response_lower, ...)) — this passes a tuple of booleans to any(), which is correct in result but misleading; if the intent were short-circuit evaluation, a generator expression is required",
+        "The same pattern appears at lines 241-249, 271-279, and 286-293 — four occurrences total",
+        "any((True, False, False)) correctly returns True, but any((False, False, False)) also works correctly — however the style is non-idiomatic and the tuple is fully evaluated before any() sees it, defeating any short-circuit benefit"
+      ],
+      "suggestion": "Replace any((expr1, expr2, ...)) with any([expr1, expr2, ...]) or the idiomatic expr1 or expr2 or ... for simple boolean chains.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "dead_assignment_total_in_report_results",
+      "summary": "Two .get('total', 0) calls in report_results() are assigned to a variable that is immediately discarded",
+      "related_files": ["scripts/01_run_tests.py"],
+      "evidence": [
+        "Line 324: infra_results.get(\"total\", 0) — the return value is not assigned to anything; the line is a no-op",
+        "Line 423: project_results.get(\"total\", 0) — same pattern, return value discarded"
+      ],
+      "suggestion": "Assign to total = infra_results.get(\"total\", 0) and use the variable, or remove the line if it was meant to be used elsewhere.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "generate_integrity_report_emoji_in_programmatic_output",
+      "summary": "generate_integrity_report() embeds emoji characters in the returned string, making the output fragile in non-UTF-8 terminals and harder to parse",
+      "related_files": ["infrastructure/validation/integrity.py"],
+      "evidence": [
+        "Lines 363-419: report strings contain emoji such as 'INTEGRITY VERIFICATION REPORT', 'PASSED', 'FAILED', 'File Integrity:', etc. — these are baked into a programmatic string-builder function, not a display layer"
+      ],
+      "suggestion": "Separate the emoji/decoration layer from the data assembly. Either move emoji to a display-layer caller or use plain ASCII symbols (PASS/FAIL) in the returned string.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "f_string_logging_instead_of_percent_formatting",
+      "summary": "Logging calls throughout the codebase mix f-strings (evaluated eagerly) with %-format strings inconsistently",
+      "related_files": [
+        "infrastructure/core/pipeline.py",
+        "infrastructure/core/health_check.py",
+        "infrastructure/reporting/coverage_parser.py",
+        "scripts/01_run_tests.py"
+      ],
+      "evidence": [
+        "pipeline.py line 142: logger.info(f\"Executing full pipeline...\") — f-string",
+        "pipeline.py line 176: logger.error(PIPELINE_STAGE_FAILED.format(...)) — str.format",
+        "health_check.py line 56: logger.warning(f\"Health check failed for {check_name}: {e}\") — f-string",
+        "integrity.py line 77: logger.error(\"Error verifying %s: %s\", file_path, e, exc_info=True) — %-format",
+        "No single convention is followed; %-format is preferred for logging because it defers string interpolation"
+      ],
+      "suggestion": "Adopt %-format strings as the project-wide logging convention and apply it consistently. Reserve f-strings for non-logging contexts.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "create_integrity_manifest_typed_accessor_workaround",
+      "summary": "create_integrity_manifest() uses unnecessary local typed-alias variables to work around mypy complaints on a dict[str, Any]",
+      "related_files": ["infrastructure/validation/integrity.py"],
+      "evidence": [
+        "Lines 623-626: file_hashes: dict[str, Any] = manifest[\"file_hashes\"] and dir_structure: dict[str, Any] = manifest[\"directory_structure\"] exist solely to give mypy narrower types on a dict that was already typed as dict[str, Any]",
+        "The manifest dict is mutated through both the aliases and direct access to manifest[\"file_count\"] / manifest[\"total_size\"] at lines 643-644, creating two different access patterns for the same object"
+      ],
+      "suggestion": "Use a TypedDict or dataclass for the manifest return type so all fields are typed at the source, eliminating the need for alias workarounds.",
+      "confidence": "medium"
+    }
+  ]
+}

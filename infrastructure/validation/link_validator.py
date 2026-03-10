@@ -8,12 +8,10 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import Dict, List, Set, Tuple
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
-
 
 class LinkValidator:
     """Validates markdown links and file references."""
@@ -25,8 +23,8 @@ class LinkValidator:
             repo_root: Root directory of the repository
         """
         self.repo_root = repo_root
-        self.all_files: Set[Path] = set()
-        self.all_dirs: Set[Path] = set()
+        self.all_files: set[Path] = set()
+        self.all_dirs: set[Path] = set()
         self._scan_repository()
 
     def _scan_repository(self) -> None:
@@ -59,7 +57,7 @@ class LinkValidator:
             elif path.is_dir():
                 self.all_dirs.add(path.relative_to(self.repo_root))
 
-    def extract_markdown_links(self, content: str, file_path: Path) -> List[Tuple[str, str, int]]:
+    def extract_markdown_links(self, content: str, file_path: Path) -> list[tuple[str, str, int]]:
         """Extract all markdown links from content, skipping those inside code blocks.
 
         Args:
@@ -95,7 +93,7 @@ class LinkValidator:
 
         return links
 
-    def resolve_link_target(self, link_target: str, source_file: Path) -> Tuple[Path | None, bool]:
+    def resolve_link_target(self, link_target: str, source_file: Path) -> tuple[Path | None, bool]:
         """Resolve a link target to an absolute path.
 
         Args:
@@ -195,7 +193,7 @@ class LinkValidator:
 
             return None, False
 
-    def validate_file_links(self, file_path: Path) -> Dict[str, List[Dict[str, str]]]:
+    def validate_file_links(self, file_path: Path) -> dict[str, list[dict[str, str]]]:
         """Validate all links in a markdown file.
 
         Args:
@@ -324,7 +322,7 @@ class LinkValidator:
 
         return {"valid": valid_links, "broken": broken_links}
 
-    def validate_all_markdown_files(self) -> Dict[str, Dict[str, List[Dict[str, str]]]]:
+    def validate_all_markdown_files(self) -> dict[str, dict[str, list[dict[str, str]]]]:
         """Validate links in all markdown files in the repository.
 
         Returns:
@@ -345,7 +343,7 @@ class LinkValidator:
         return results
 
     def generate_report(
-        self, validation_results: Dict[str, Dict[str, List[Dict[str, str]]]]
+        self, validation_results: dict[str, dict[str, list[dict[str, str]]]]
     ) -> str:
         """Generate a comprehensive validation report.
 
@@ -425,7 +423,6 @@ class LinkValidator:
 
         return "\n".join(report_lines)
 
-
 def main() -> int:
     """Main entry point for link validation."""
     import argparse
@@ -463,7 +460,6 @@ def main() -> int:
 
     # Return exit code based on validation results
     return 0 if total_broken == 0 else 1
-
 
 if __name__ == "__main__":
     exit(main())

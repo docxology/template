@@ -17,14 +17,13 @@ import sys
 from collections import defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, List, Set
+from typing import Any
 
 import yaml
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
-
 
 @dataclass
 class AccuracyIssue:
@@ -37,7 +36,6 @@ class AccuracyIssue:
     message: str = ""
     details: str = ""
 
-
 @dataclass
 class CompletenessGap:
     """Represents a completeness gap."""
@@ -47,15 +45,13 @@ class CompletenessGap:
     description: str
     severity: str = "warning"
 
-
 @dataclass
 class ScanResults:
     """Container for scan results."""
 
-    accuracy_issues: List[AccuracyIssue] = field(default_factory=list)
-    completeness_gaps: List[CompletenessGap] = field(default_factory=list)
-    statistics: Dict[str, Any] = field(default_factory=dict)
-
+    accuracy_issues: list[AccuracyIssue] = field(default_factory=list)
+    completeness_gaps: list[CompletenessGap] = field(default_factory=list)
+    statistics: dict[str, Any] = field(default_factory=dict)
 
 class RepositoryScanner:
     """Comprehensive repository scanner."""
@@ -63,10 +59,10 @@ class RepositoryScanner:
     def __init__(self, repo_root: Path):
         self.repo_root = repo_root.resolve()
         self.results = ScanResults()
-        self.src_modules: Set[str] = set()
-        self.script_files: List[Path] = []
-        self.test_files: List[Path] = []
-        self.documented_modules: Set[str] = set()
+        self.src_modules: set[str] = set()
+        self.script_files: list[Path] = []
+        self.test_files: list[Path] = []
+        self.documented_modules: set[str] = set()
 
     def scan_all(self) -> ScanResults:
         """Execute all 6 phases of the repository scan.
@@ -157,8 +153,8 @@ class RepositoryScanner:
                     for module in self.src_modules:
                         if module in content:
                             self.documented_modules.add(module)
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug(f"Failed to scan {md_file} for module references: {e}")
 
     def _check_code_accuracy(self) -> None:
         """Check code accuracy."""
@@ -200,7 +196,7 @@ class RepositoryScanner:
         self.results.accuracy_issues.extend(issues)
         logger.info(f"Found {len(issues)} code accuracy issues")
 
-    def _extract_imports(self, file_path: Path) -> Dict[str, List[str]]:
+    def _extract_imports(self, file_path: Path) -> dict[str, list[str]]:
         """Extract imports from Python file."""
         imports: dict[str, list[str]] = {}
         try:
@@ -217,12 +213,12 @@ class RepositoryScanner:
                         if module not in imports:
                             imports[module] = []
                         imports[module].append(alias.name)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Failed to parse imports from script: {e}")
 
         return imports
 
-    def _verify_import(self, script_path: Path, module_name: str, items: List[str]) -> bool:
+    def _verify_import(self, script_path: Path, module_name: str, items: list[str]) -> bool:
         """Verify that imported items exist in module."""
         module_path = self.repo_root / "src" / f"{module_name}.py"
         if not module_path.exists():
@@ -244,7 +240,8 @@ class RepositoryScanner:
                 if item not in defined:
                     return False
             return True
-        except Exception:
+        except Exception as e:
+            logger.debug(f"Failed to verify imports in module {module_name}: {e}")
             return False
 
     def _check_documented_commands(self) -> None:
@@ -307,8 +304,8 @@ class RepositoryScanner:
                                         message=f"Documented script does not exist: {script_ref}",
                                     )
                                 )
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(f"Failed to check code accuracy in {md_file}: {e}")
 
         self.results.accuracy_issues.extend(issues)
 
@@ -363,11 +360,11 @@ class RepositoryScanner:
                     for script in self.script_files:
                         if script.name in content:
                             documented_scripts.add(script.name)
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug(f"Failed to check script documentation in {md_file}: {e}")
 
         for script in self.script_files:
-            if script.name not in documented_scripts and script.name != "comprehensive_doc_scan.py":
+            if script.name not in documented_scripts and not script.name.startswith("_"):
                 gaps.append(
                     CompletenessGap(
                         category="documentation",
@@ -421,17 +418,6 @@ class RepositoryScanner:
         """Check configuration accuracy."""
         issues = []
 
-        # Check pyproject.toml dependencies
-        pyproject_path = self.repo_root / "pyproject.toml"
-        if pyproject_path.exists():
-            try:
-                pyproject_path.read_text(encoding="utf-8")
-                # Check if dependencies are used
-                # This is a simplified check
-                pass
-            except Exception:
-                pass
-
         # Check config.yaml structure
         config_path = self.repo_root / "project" / "manuscript" / "config.yaml"
         example_path = self.repo_root / "project" / "manuscript" / "config.yaml.example"
@@ -483,7 +469,7 @@ class RepositoryScanner:
         issues = []
 
         for script in self.script_files:
-            if script.name.startswith("_") or script.name == "comprehensive_doc_scan.py":
+            if script.name.startswith("_"):
                 continue
 
             try:
@@ -601,7 +587,6 @@ class RepositoryScanner:
 
         return datetime.now().isoformat()
 
-
 def main() -> int:
     """Execute repository-wide accuracy and completeness scan.
 
@@ -642,7 +627,6 @@ def main() -> int:
     logger.info(f"  Warnings: {warning_count}")
 
     return 0 if error_count == 0 else 1
-
 
 if __name__ == "__main__":
     sys.exit(main())

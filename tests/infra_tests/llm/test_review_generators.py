@@ -7,12 +7,13 @@ import pytest
 from infrastructure.llm.core.client import LLMClient
 from infrastructure.llm.review.generator import (
     extract_manuscript_text,
-    generate_executive_summary,
     generate_improvement_suggestions,
+    generate_llm_executive_summary as generate_executive_summary,
     generate_methodology_review,
     generate_quality_review,
     generate_review_with_metrics,
     generate_translation,
+    validate_review_quality,
 )
 
 
@@ -37,14 +38,13 @@ class TestExtractManuscriptText:
         except ValueError as e:
             assert "No PDF parsing library available" in str(e)
 
-    def test_with_pdfplumber(self, tmp_path):
-        """Test extract_manuscript_text with pdfplumber library."""
-        # Create a real PDF with text content
-        pdf_file = tmp_path / "test.pdf"
-
+    def test_extracts_text_from_real_pdf(self, tmp_path):
+        """Test extract_manuscript_text with a real PDF file."""
+        reportlab = pytest.importorskip("reportlab")
         from reportlab.lib.pagesizes import letter
         from reportlab.pdfgen import canvas
 
+        pdf_file = tmp_path / "test.pdf"
         c = canvas.Canvas(str(pdf_file), pagesize=letter)
         c.drawString(100, 750, "Extracted text from page")
         c.drawString(100, 730, "Second line of text")
@@ -55,27 +55,6 @@ class TestExtractManuscriptText:
             assert text is not None
             assert "Extracted text from page" in text
             assert "Second line of text" in text
-        except ValueError as e:
-            assert "No PDF parsing library available" in str(e)
-
-    def test_with_pypdf(self, tmp_path):
-        """Test extract_manuscript_text with pypdf library."""
-        # Create a real PDF with text content
-        pdf_file = tmp_path / "test.pdf"
-
-        from reportlab.lib.pagesizes import letter
-        from reportlab.pdfgen import canvas
-
-        c = canvas.Canvas(str(pdf_file), pagesize=letter)
-        c.drawString(100, 750, "Extracted text")
-        c.drawString(100, 730, "More text content")
-        c.save()
-
-        try:
-            text, metrics = extract_manuscript_text(str(pdf_file))
-            assert text is not None
-            assert "Extracted text" in text
-            assert "More text content" in text
         except ValueError as e:
             assert "No PDF parsing library available" in str(e)
 
@@ -270,7 +249,7 @@ class TestReviewGeneratorsIntegration:
 
         client = LLMClient()
         if not client.check_connection():
-            pytest.fail("Ollama server is not available!")
+            pytest.skip("Ollama server is not available")
 
         manuscript_text = "This is a test manuscript about machine learning and AI."
         result, metrics = generate_executive_summary(client, manuscript_text)
@@ -284,7 +263,7 @@ class TestReviewGeneratorsIntegration:
 
         client = LLMClient()
         if not client.check_connection():
-            pytest.fail("Ollama server is not available!")
+            pytest.skip("Ollama server is not available")
 
         manuscript_text = "Test manuscript about optimization algorithms."
         from infrastructure.llm.templates import ManuscriptExecutiveSummary
@@ -297,3 +276,72 @@ class TestReviewGeneratorsIntegration:
         assert hasattr(metrics, "output_chars")
         assert hasattr(metrics, "generation_time_seconds")
         assert metrics.generation_time_seconds > 0
+
+
+class TestValidateReviewQuality:
+    """Deterministic tests for validate_review_quality() — no Ollama required."""
+
+    def _good_executive_summary(self, n_extra_words: int = 0) -> str:
+        """Build a minimal passing executive summary with required section keywords."""
+        base = (
+            "## Overview\nThis is the overview section of the manuscript. "
+            "## Key Contributions\nThe main findings and contributions are described here. "
+            "## Methodology\nThe methods and approach used in this work. "
+            "## Results\nThe outcomes and principal results of the study. "
+            "## Significance\nThe impact and implications of this research. "
+        )
+        extra = " ".join(f"word{i}" for i in range(n_extra_words))
+        return base + " " + extra
+
+    def test_passes_for_adequate_response(self):
+        """A response with enough words and required sections passes validation."""
+        response = self._good_executive_summary(n_extra_words=300)
+        passed, issues, details = validate_review_quality(response, "executive_summary")
+        assert passed is True, f"Expected pass but got issues: {issues}"
+
+    def test_fails_for_too_short_response(self):
+        """A response with too few words fails with a 'too short' issue."""
+        response = " ".join(f"word{i}" for i in range(5))
+        passed, issues, details = validate_review_quality(
+            response, "executive_summary", min_words=200
+        )
+        assert passed is False
+        assert any("short" in issue.lower() for issue in issues)
+
+    def test_fails_for_too_short_explicit_min(self):
+        """Explicit min_words overrides the default minimum for any review type."""
+        response = "This is a short response with overview content."
+        passed, issues, details = validate_review_quality(
+            response, "executive_summary", min_words=500
+        )
+        assert passed is False
+        assert any("short" in issue.lower() for issue in issues)
+        assert details["word_count"] < 500
+
+    def test_returns_word_count_in_details(self):
+        """Details dict always contains word_count."""
+        response = self._good_executive_summary(n_extra_words=200)
+        _, _, details = validate_review_quality(response, "executive_summary", min_words=10)
+        assert "word_count" in details
+        assert details["word_count"] > 0
+
+    def test_small_model_reduces_minimum_word_count(self):
+        """Small model names lower the effective minimum word threshold by 20%."""
+        # Build a response with sections but borderline word count
+        response = self._good_executive_summary(n_extra_words=200)
+        # Pass with explicit min_words that normal model would require but small won't
+        _, issues_normal, _ = validate_review_quality(
+            response, "executive_summary", min_words=5000
+        )
+        _, issues_small, _ = validate_review_quality(
+            response, "executive_summary", min_words=5000, model_name="llama3-8b"
+        )
+        # Small model has a lower effective minimum (min * 0.8), so it may have fewer issues
+        # Both may still fail for 5000 words but small model's threshold is lower
+        normal_short = any("short" in i.lower() for i in issues_normal)
+        small_short = any("short" in i.lower() for i in issues_small)
+        # Both should flag it as too short for 5000 min, but that's the expected behavior
+        assert normal_short is True
+        assert small_short is True
+
+

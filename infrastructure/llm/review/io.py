@@ -6,14 +6,9 @@ import json
 import re
 from datetime import datetime
 from pathlib import Path
-from typing import Dict
 
 from infrastructure.core.logging_utils import get_logger, log_success
-from infrastructure.llm.review.generator import (
-    get_max_input_length,
-    get_review_max_tokens,
-    get_review_timeout,
-)
+from infrastructure.llm.core.config import LLMConfig
 from infrastructure.llm.review.metrics import ReviewMetrics, SessionMetrics
 from infrastructure.llm.templates import TRANSLATION_LANGUAGES
 from infrastructure.llm.validation.format import (
@@ -23,8 +18,7 @@ from infrastructure.llm.validation.format import (
 
 logger = get_logger(__name__)
 
-
-def extract_action_items(reviews: Dict[str, str]) -> str:
+def extract_action_items(reviews: dict[str, str]) -> str:
     """Extract actionable items from reviews into a TODO checklist.
 
     Args:
@@ -70,13 +64,6 @@ def extract_action_items(reviews: Dict[str, str]) -> str:
             if len(item) > 10 and item not in todos:
                 todos.append(f"[ ] {item[:100]}..." if len(item) > 100 else f"[ ] {item}")
 
-    # Extract from quality review - low scores
-    quality = reviews.get("quality_review", "")
-    for line in quality.split("\n"):
-        if "score:" in line.lower() and any(s in line for s in ["1", "2"]):
-            # Low score found - next few lines might have the issue
-            continue
-
     if not todos:
         todos = [
             "[ ] Review executive summary for accuracy",
@@ -87,8 +74,7 @@ def extract_action_items(reviews: Dict[str, str]) -> str:
 
     return "\n".join(todos[:10])  # Limit to 10 items
 
-
-def calculate_format_compliance_summary(reviews: Dict[str, str]) -> str:
+def calculate_format_compliance_summary(reviews: dict[str, str]) -> str:
     """Calculate format compliance summary across all reviews.
 
     Simplified version - only checks for conversational phrases.
@@ -125,8 +111,7 @@ def calculate_format_compliance_summary(reviews: Dict[str, str]) -> str:
 
     return "\n".join(summary_parts)
 
-
-def calculate_quality_summary(reviews: Dict[str, str]) -> str:
+def calculate_quality_summary(reviews: dict[str, str]) -> str:
     """Calculate overall quality summary from reviews.
 
     Args:
@@ -153,9 +138,8 @@ def calculate_quality_summary(reviews: Dict[str, str]) -> str:
     else:
         return "*Quality scores not available*"
 
-
 def save_review_outputs(
-    reviews: Dict[str, str],
+    reviews: dict[str, str],
     output_dir: Path,
     model_name: str,
     pdf_path: Path,
@@ -206,8 +190,8 @@ def save_review_outputs(
                 )
             else:
                 logger.info(f"  Saved: {full_path} ({metrics.output_words:,} words)")
-        except Exception as e:
-            logger.error(f"Failed to save {name}: {e}")
+        except OSError as e:
+            logger.error(f"Failed to save {name}: {e}", exc_info=True)
             success = False
 
     # Extract action items for TODO checklist
@@ -343,8 +327,8 @@ The following items are extracted from the review for easy tracking:
 """
         combined_path.write_text(combined_content)
         logger.info(f"  Saved combined review: {combined_path}")
-    except Exception as e:
-        logger.error(f"Failed to save combined review: {e}")
+    except OSError as e:
+        logger.error(f"Failed to save combined review: {e}", exc_info=True)
         success = False
 
     # Save metadata with comprehensive metrics
@@ -379,12 +363,13 @@ The following items are extracted from the review for easy tracking:
         compliant_reviews = sum(1 for r in format_compliance_per_review.values() if r["compliant"])
         compliance_rate = (compliant_reviews / total_reviews * 100) if total_reviews > 0 else 100
 
+        llm_config = LLMConfig.from_env()
         metadata = {
             "model": model_name,
             "timestamp": timestamp,
             "source_pdf": str(pdf_path),
             "reviews_generated": list(reviews.keys()),
-            "max_input_length": get_max_input_length(),
+            "max_input_length": llm_config.max_input_length,
             "manuscript_metrics": {
                 "total_chars": session_metrics.manuscript.total_chars,
                 "total_words": session_metrics.manuscript.total_words,
@@ -404,23 +389,22 @@ The following items are extracted from the review for easy tracking:
                 "temperature_summary": 0.3,
                 "temperature_review": 0.3,
                 "temperature_suggestions": 0.4,
-                "max_tokens": get_review_max_tokens()[0],
-                "max_tokens_source": get_review_max_tokens()[1],
-                "timeout_seconds": get_review_timeout(),
+                "max_tokens": llm_config.long_max_tokens,
+                "max_tokens_source": "long_max_tokens",
+                "timeout_seconds": llm_config.review_timeout,
                 "system_prompt": "manuscript_review",
             },
         }
         metadata_path.write_text(json.dumps(metadata, indent=2))
         logger.info(f"  Saved metadata: {metadata_path}")
-    except Exception as e:
-        logger.error(f"Failed to save metadata: {e}")
+    except (OSError, ValueError) as e:
+        logger.error(f"Failed to save metadata: {e}", exc_info=True)
         success = False
 
     if success:
         log_success(f"All reviews saved to {output_dir}", logger)
 
     return success
-
 
 def save_single_review(
     review_name: str,
@@ -482,13 +466,12 @@ def save_single_review(
 
         return filepath
 
-    except Exception as e:
+    except OSError as e:
         logger.error(f"Failed to save {review_name}: {e}")
         raise
 
-
 def generate_review_summary(
-    reviews: Dict[str, str],
+    reviews: dict[str, str],
     output_dir: Path,
     session_metrics: SessionMetrics,
 ) -> None:

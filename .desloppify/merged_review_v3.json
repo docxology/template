@@ -1,0 +1,704 @@
+{
+  "assessments": {
+    "cross_module_architecture": 74,
+    "convention_outlier": 72,
+    "error_consistency": 61,
+    "abstraction_fitness": 78,
+    "dependency_health": 82,
+    "test_strategy": 74,
+    "ai_generated_debt": 62,
+    "package_organization": 58,
+    "high_level_elegance": 65,
+    "mid_level_elegance": 68,
+    "low_level_elegance": 62,
+    "design_coherence": 60
+  },
+  "findings": [
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "scripts_init_dynamic_exec_at_import_time",
+      "summary": "scripts/__init__.py executes a script file via importlib at import time, injecting it into sys.modules as a side effect",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/scripts/__init__.py"
+      ],
+      "evidence": [
+        "Lines 118-123: importlib.util.spec_from_file_location, module_from_spec, and exec_module are called unconditionally at module import time, loading 06_llm_review.py and registering it as scripts.llm_review in sys.modules",
+        "Line 122: sys.modules[_module_name] = _llm_review \u2014 global interpreter state mutated at import time",
+        "Lines 126-127: main = _llm_review.main and ReviewMode = _llm_review.ReviewMode bind names from the dynamically loaded module; any import error in 06_llm_review.py silently corrupts scripts/__init__",
+        "06_llm_review.py is an entry-point script, not a library module; treating it as an importable library by loading it from __init__.py blurs the boundary between orchestration scripts and infrastructure modules"
+      ],
+      "suggestion": "Move ReviewMode and the re-exported LLM functions into an infrastructure module (e.g., infrastructure/llm/review/modes.py). Then scripts/__init__.py can import them with a normal static import, eliminating the dynamic exec and sys.modules mutation.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "scripts_init_bloated_re_export_surface",
+      "summary": "scripts/__init__.py re-exports 25+ symbols from infrastructure modules, turning the scripts package into a second public API surface for infrastructure",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/scripts/__init__.py"
+      ],
+      "evidence": [
+        "Lines 92-114: imports generate_executive_summary, generate_quality_review, generate_methodology_review, generate_improvement_suggestions, validate_review_quality, save_review_outputs, generate_review_summary, ReviewMetrics, ManuscriptMetrics, SessionMetrics, estimate_tokens, get_max_input_length, check_ollama_availability, extract_manuscript_text all from infrastructure subpackages",
+        "Lines 130-133: re-exports is_off_topic, detect_conversational_phrases, check_format_compliance from infrastructure.llm.validation.format",
+        "Lines 138-146: re-exports LLMClient, LLMConfig, is_ollama_running, select_best_model from infrastructure.llm \u2014 all wrapped in a silent except ImportError: pass",
+        "__all__ at lines 156-182 lists 26 symbols, most of which live in infrastructure \u2014 callers who import from scripts are coupled to infrastructure internals through this facade"
+      ],
+      "suggestion": "Remove the re-export surface from scripts/__init__.py. Tests that need LLM infrastructure utilities should import directly from infrastructure.llm.*. scripts/__init__.py should be empty or limited to MENU_SCRIPT_MAPPING.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "file_operations_avoids_project_discovery_circular_import",
+      "summary": "infrastructure/core/file_operations.py uses an inline directory scan to avoid importing infrastructure.project.discovery, documenting a hidden circular dependency risk",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/infrastructure/core/file_operations.py"
+      ],
+      "evidence": [
+        "Lines 114-122: comment reads 'Using Path scan instead of infrastructure.project.discovery avoids a circular import: file_operations -> project.discovery -> core.logging_utils'",
+        "The workaround is functional but documents that the dependency direction between core/ and project/ is bidirectional; project.discovery imports from core (logging_utils), while core would naturally want to call project.discovery",
+        "This is a structural signal that project-level discovery logic is not fully separated from core utilities"
+      ],
+      "suggestion": "Extract the 'list valid project names' capability into a standalone utility that neither core/ nor project/ depends on circularly, or ensure project.discovery is the sole entry point and core modules receive project names as arguments rather than discovering them themselves.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "validation_integrity_re_exports_file_hash",
+      "summary": "infrastructure/validation/integrity.py re-exports calculate_file_hash from infrastructure.core.file_operations with a noqa:F401 comment, creating an unintentional second public import path",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/infrastructure/validation/integrity.py"
+      ],
+      "evidence": [
+        "Line 23: from infrastructure.core.file_operations import calculate_file_hash  # noqa: F401",
+        "The noqa comment suppresses the 'imported but unused' warning; the symbol is re-exported for callers who import it from validation.integrity rather than from its canonical home in core.file_operations",
+        "Grep shows only 3 callers of the integrity module and none import calculate_file_hash through it; the re-export appears to be legacy remnant"
+      ],
+      "suggestion": "Remove the re-export line from integrity.py. Callers that need calculate_file_hash should import it directly from infrastructure.core.file_operations.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "scripts_02_missing_log_header_log_success",
+      "summary": "scripts/02_run_analysis.py omits log_header and the stage-open log_success pattern used by all numbered sibling scripts",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/scripts/02_run_analysis.py",
+        "/Users/4d/Documents/GitHub/template/scripts/00_setup_environment.py",
+        "/Users/4d/Documents/GitHub/template/scripts/01_run_tests.py"
+      ],
+      "evidence": [
+        "Packet sibling_behavior for scripts/: log_header used in 13/18 scripts, log_success used in 11/18 scripts; scripts/02_run_analysis.py listed as outlier missing both",
+        "00_setup_environment.py line 22 imports log_success and log_header; 01_run_tests.py line 29 imports log_success and log_header \u2014 pattern is consistent across peer scripts",
+        "02_run_analysis.py imports log_success (line 37) but not log_header; it produces no stage-open banner analogous to what other numbered scripts emit at their entry point"
+      ],
+      "suggestion": "Add a log_header call at the start of main() in 02_run_analysis.py, matching the pattern used in 00_, 01_, 03_, etc. Import log_header alongside log_success.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "scripts_generate_test_summary_stripped_down",
+      "summary": "scripts/generate_test_summary.py is a 3-line delegation stub with no logger, no log_header, no log_success, and no annotations \u2014 structurally unlike all numbered pipeline scripts",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/scripts/generate_test_summary.py"
+      ],
+      "evidence": [
+        "File body (lines 1-18): imports only Path and sys; no get_logger, no log_header, no log_success, no type annotations; body is a two-line delegation to run_test_summary_generation()",
+        "Packet outliers list confirms all three patterns (get_logger, log_header, log_success) missing",
+        "Sibling scripts (00_, 01_, 02_, 03_) all set up a logger, emit a stage header, and log success/failure \u2014 this file does none of that, making pipeline log output inconsistent for this step"
+      ],
+      "suggestion": "Add a main() wrapper with get_logger, a log_header call, and log_success/failure around run_test_summary_generation(), following the same structure as 01_run_tests.py.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "scripts_execute_pipeline_missing_annotations",
+      "summary": "scripts/execute_pipeline.py is the only numbered pipeline entry point missing from __future__ import annotations, inconsistent with all other scripts in the package",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/scripts/execute_pipeline.py"
+      ],
+      "evidence": [
+        "Packet outliers for scripts/: execute_pipeline.py listed as missing 'annotations'",
+        "All other 15/18 scripts in the directory include from __future__ import annotations as the first import; execute_pipeline.py is one of three outliers, and the only core pipeline executor among them"
+      ],
+      "suggestion": "Add from __future__ import annotations at the top of scripts/execute_pipeline.py after the module docstring.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "camelcase_in_tests_directory",
+      "summary": "tests/ directory contains one camelCase identifier against a codebase that is uniformly snake_case",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/tests"
+      ],
+      "evidence": [
+        "Packet naming_by_directory for 'tests/': snake_case=267, camelCase=1 \u2014 a single camelCase name exists where none is expected",
+        "All other directories show 0 camelCase occurrences; Python naming guidance in the packet explicitly states 'Check for Java-style camelCase leaking in'"
+      ],
+      "suggestion": "Locate the camelCase identifier (likely a function or variable name in an infra_tests file) and rename it to snake_case.",
+      "confidence": "low"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "silent_except_pass_in_validation_and_rendering",
+      "summary": "Multiple modules in validation/ and rendering/ use bare except Exception: pass blocks that silently discard errors with no log, no propagation, and no recovery",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/infrastructure/validation/repo_scanner.py",
+        "/Users/4d/Documents/GitHub/template/infrastructure/validation/doc_accuracy.py",
+        "/Users/4d/Documents/GitHub/template/infrastructure/validation/doc_completeness.py",
+        "/Users/4d/Documents/GitHub/template/infrastructure/validation/doc_discovery.py",
+        "/Users/4d/Documents/GitHub/template/infrastructure/rendering/pdf_renderer.py",
+        "/Users/4d/Documents/GitHub/template/infrastructure/rendering/core.py",
+        "/Users/4d/Documents/GitHub/template/infrastructure/rendering/latex_package_validator.py"
+      ],
+      "evidence": [
+        "repo_scanner.py lines 160-161, 220-221, 310-311, 366-367, 432-433: five separate except Exception: pass blocks; no logger.debug, no re-raise, no recovery action",
+        "doc_accuracy.py lines 238-239, 276-277, 294-295: three except Exception: pass blocks inside validation logic that scans documents for accuracy issues",
+        "doc_completeness.py lines 72-73: except Exception: pass inside a documentation completeness check loop",
+        "doc_discovery.py lines 134-135: except Exception: pass",
+        "pdf_renderer.py lines 701-702: except Exception: pass inside a content-reading fallback path",
+        "rendering/core.py lines 95-96: except Exception: pass with comment 'Ignore errors when checking PDF status'",
+        "latex_package_validator.py lines 83-84: except Exception: pass",
+        "The dominant pattern in the same codebase is except Exception as e: logger.error(..., exc_info=True) or raise, making the silent passes clear outliers"
+      ],
+      "suggestion": "Replace bare except Exception: pass blocks with at minimum logger.debug('...', exc_info=True) so the error is observable under debug logging. Where the exception indicates a real failure rather than an optional probe, raise or propagate it.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "scripts_init_silent_except_importerror_and_except_exception",
+      "summary": "scripts/__init__.py contains two silent exception swallows at import time: one bare except ImportError: pass and one bare except Exception: pass",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/scripts/__init__.py"
+      ],
+      "evidence": [
+        "Lines 144-146: except ImportError: pass wraps import of LLMClient, LLMConfig, is_ollama_running, select_best_model \u2014 if any of these fail for a reason other than the module being absent (e.g., a syntax error in the module), the error is discarded silently",
+        "Lines 152-154: except Exception: pass wraps from scripts.execute_pipeline import execute_pipeline, execute_single_stage and from scripts.execute_multi_project import execute_multi_project \u2014 any import-time exception in these core pipeline scripts is silently swallowed at package load time, leaving execute_pipeline, execute_single_stage, execute_multi_project undefined with no signal to the caller",
+        "Symbols listed in __all__ (lines 178-180) include execute_pipeline, execute_single_stage, execute_multi_project \u2014 if the silent except fires, these names will be absent from __all__ exports with no error at import time"
+      ],
+      "suggestion": "For the ImportError block, add logger.debug(...) so import failures are visible. For the except Exception block around execute_pipeline imports, remove it entirely or replace with except ImportError \u2014 catching all exceptions at package load time can mask genuine bugs in core pipeline code.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "inconsistent_exception_types_in_validation_layer",
+      "summary": "The validation/ layer mixes custom TemplateError subclasses with bare stdlib exceptions, depending on which validator is called",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/infrastructure/validation/markdown_validator.py",
+        "/Users/4d/Documents/GitHub/template/infrastructure/validation/pdf_validator.py",
+        "/Users/4d/Documents/GitHub/template/infrastructure/core/exceptions.py"
+      ],
+      "evidence": [
+        "pdf_validator.py raises PDFValidationError (a TemplateError subclass from infrastructure.core.exceptions) at lines 42, 51, 56, 106",
+        "markdown_validator.py raises FileNotFoundError and NotADirectoryError \u2014 these are the custom dual-inheritance exceptions from infrastructure.core.exceptions (line 19 confirms the import), so they ARE in the hierarchy, but the public raise signature looks like stdlib builtins to call-site readers",
+        "integrity.py at line 23 re-exports calculate_file_hash with noqa:F401 and itself never raises a custom exception \u2014 errors are returned as Dict[str, bool] False values (returns_null pattern per the packet)",
+        "Within the same validation/ package, errors are signalled via: (a) raised TemplateError subclasses (pdf_validator), (b) raised dual-inheritance builtins (markdown_validator), (c) returned bool/dict (integrity), and (d) silent except pass (repo_scanner, doc_accuracy) \u2014 four distinct strategies with no documented layering rationale"
+      ],
+      "suggestion": "Establish a single error contract for the validation layer: raise TemplateError subclasses for unrecoverable failures and return structured results (e.g., a ValidationResult dataclass) for partial/soft failures. Remove the returns_null and silent-pass patterns from public validation functions.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "wide_param_bags_in_llm_client",
+      "summary": "LLMClient accepts a broad config dict with 201 config-bag mentions, mixing connection params, generation options, system prompt injection, streaming, context management, and retry policy in one object",
+      "related_files": [
+        "infrastructure/llm/core/client.py",
+        "infrastructure/llm/core/config.py"
+      ],
+      "evidence": [
+        "review_packet: wide_param_bags entry for infrastructure/llm/core/client.py shows wide_functions=1 and config_bag_mentions=201, the highest in the entire codebase",
+        "LLMConfig dataclass (config.py) mixes connection URL, auth, timeout, retry, streaming, context-window, generation defaults, and system prompt injection into a single flat struct with no sub-grouping",
+        "client.py has chain_count=85 at max_chain_depth=3, indicating substantial indirection layering on top of an already-wide config surface"
+      ],
+      "suggestion": "Split LLMConfig into at least two focused sub-configs (e.g. ConnectionConfig for URL/timeout/retry and GenerationDefaults for temperature/tokens/seed). Pass them as typed arguments rather than one omnibus object. This also reduces chain depth by removing intermediate dispatch logic.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "pass_through_lambda_wrappers_in_tests",
+      "summary": "Test files use named lambdas (obj_func, grad_func, test_func) that only forward to the real function without adding any policy, inflating the pass-through wrapper count to 14 in one file",
+      "related_files": [
+        "projects/code_project/tests/test_optimizer.py",
+        "projects/code_project/scripts/generate_api_docs.py",
+        "projects/code_project/scripts/optimization_analysis.py"
+      ],
+      "evidence": [
+        "review_packet pass_through_wrappers: test_optimizer.py count=14, samples include obj_func->quadratic_function and grad_func->compute_gradient repeated across every test",
+        "generate_api_docs.py count=4; optimization_analysis.py count=2 with test_func->quadratic_function",
+        "These wrappers add no retries, logging, or translation \u2014 they are pure forwarding aliases"
+      ],
+      "suggestion": "Pass quadratic_function and compute_gradient directly as callables to the optimizer under test. Reserve named wrappers only when the test needs to intercept or alter behavior.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "log_operation_silent_is_pure_forwarding_wrapper",
+      "summary": "log_operation_silent is a one-line context manager that only calls log_operation with log_completion=False \u2014 it adds no policy beyond what the parameter already expresses",
+      "related_files": [
+        "infrastructure/core/logging_utils.py"
+      ],
+      "evidence": [
+        "logging_utils.py lines 281-287: log_operation_silent is defined as 'with log_operation(operation, logger, level, log_completion=False): yield' \u2014 the full body is one delegation line",
+        "The docstring reads 'Thin wrapper over log_operation', confirming this is a recognized pass-through with no added behavior beyond renaming"
+      ],
+      "suggestion": "Remove log_operation_silent and have callers pass log_completion=False directly to log_operation. If the pattern is frequent enough to justify a name, document the call-site count; otherwise the wrapper adds import surface with no benefit.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "steganography_overlays_wide_functions",
+      "summary": "infrastructure/steganography/overlays.py contains 2 wide functions with 0 config-bag mentions, meaning broad positional parameter lists rather than a structured config",
+      "related_files": [
+        "infrastructure/steganography/overlays.py"
+      ],
+      "evidence": [
+        "review_packet wide_param_bags: overlays.py wide_functions=2, config_bag_mentions=0 \u2014 the parameters are not packed into a config object, so each call site must pass each value independently",
+        "Sibling file steganography/core.py has wide_functions=1 but config_bag_mentions=37, showing the rest of the module does use config objects"
+      ],
+      "suggestion": "Consolidate the wide parameter lists into the existing SteganographyConfigYAML or a dedicated OverlayConfig dataclass (already partially defined in infrastructure/core/config_loader.py) so call sites pass one typed object instead of a long positional sequence.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "dependency_health",
+      "identifier": "plotly_optional_dep_not_isolated_from_core_tests",
+      "summary": "plotly is listed as an optional dependency-group ('dashboard') but dashboard_generator.py imports matplotlib at module level and lazily imports plotly, meaning the import boundary is not enforced by the package structure",
+      "related_files": [
+        "infrastructure/reporting/dashboard_generator.py",
+        "pyproject.toml"
+      ],
+      "evidence": [
+        "pyproject.toml lines 63-65: plotly is in [dependency-groups] dashboard, declared optional",
+        "dashboard_generator.py lines 16-18: matplotlib and numpy are imported at module level; plotly is imported lazily inside functions",
+        "pyproject.toml dev group (line 89 comment) does NOT include plotly, so CI runs without it; any test that exercises a plotly code path will ImportError silently unless caught"
+      ],
+      "suggestion": "Either add plotly to the dev dependency group so test runs are consistent, or add an explicit 'pytest.importorskip(\"plotly\")' guard at the top of dashboard_generator tests. The current state creates a latent CI failure gap.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "dependency_health",
+      "identifier": "psutil_required_dep_used_for_optional_feature",
+      "summary": "psutil is listed as a required core dependency in pyproject.toml but it is only used for optional resource-usage logging, with a try/except ImportError fallback in the consuming function",
+      "related_files": [
+        "pyproject.toml",
+        "infrastructure/core/logging_utils.py"
+      ],
+      "evidence": [
+        "pyproject.toml line 43: 'psutil>=5.9.0' in [project] dependencies \u2014 this is a hard install-time requirement",
+        "logging_utils.py lines 523-546: log_resource_usage() wraps all psutil access in try/except ImportError and logs a debug message if unavailable \u2014 the code gracefully handles psutil absence",
+        "This means every consumer of the package must install psutil even though the only use is a best-effort debug helper"
+      ],
+      "suggestion": "Move psutil from [project] dependencies to a [dependency-groups] monitoring optional group (similar to how ollama and dotenv are handled). The existing ImportError fallback already handles the absent case correctly.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "mock_violation_in_test_logging",
+      "summary": "tests/infra_tests/llm/test_logging.py uses unittest.mock.patch to simulate network errors, directly contradicting the project's 'No Mocks' policy documented in CLAUDE.md and pyproject.toml comments",
+      "related_files": [
+        "tests/infra_tests/llm/test_logging.py"
+      ],
+      "evidence": [
+        "test_logging.py line 375: 'from unittest.mock import patch'",
+        "test_logging.py line 387: 'with patch(\"infrastructure.llm.core.client.requests.post\", side_effect=requests.exceptions.ConnectionError(...))' \u2014 patches an internal implementation detail",
+        "test_logging.py line 398-410: second patch block for Timeout, same pattern",
+        "CLAUDE.md states: 'ABSOLUTE REQUIREMENT: Never use MagicMock, mocker.patch, unittest.mock, or any mocking framework. HTTP testing: Use pytest-httpserver for local test servers'",
+        "pytest-httpserver is already available (pyproject.toml line 80) and used in the ollama_test_server fixture in the same test file \u2014 so the compliant pattern exists but is not used for error path tests"
+      ],
+      "suggestion": "Replace the two patch() blocks with pytest-httpserver fixtures that respond with 500-level or connection-refused behavior. The existing ollama_test_server fixture in the conftest already demonstrates the correct pattern for this test file.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "styles_module_untested_with_3_importers",
+      "summary": "projects/cognitive_case_diagrams/src/visualization/styles.py has 3 importers but zero direct test coverage per the critical_untested list in the review packet",
+      "related_files": [
+        "projects/cognitive_case_diagrams/src/visualization/styles.py",
+        "projects/cognitive_case_diagrams/tests/test_diagram_generator.py",
+        "projects/cognitive_case_diagrams/tests/test_package_init.py",
+        "projects/cognitive_case_diagrams/tests/test_edge_cases.py"
+      ],
+      "evidence": [
+        "review_packet testing.critical_untested: [{\"file\": \"projects/cognitive_case_diagrams/src/visualization/styles.py\", \"importers\": 3}]",
+        "styles.py defines CASE_COLORS, WIRE_COLORS, DiagramTheme, get_case_color, get_wire_color \u2014 all pure data/logic with no I/O dependencies",
+        "The three test files that import from visualization.styles do so incidentally (e.g. test_diagram_generator.py imports CASE_COLORS at line 34 only to assert a color value inside another test class), not as dedicated coverage for styles.py contract"
+      ],
+      "suggestion": "Add a dedicated TestStyles class in an existing test file (test_edge_cases.py already imports get_case_color and get_wire_color) that verifies: (1) all CaseRole members appear as keys in CASE_COLORS, (2) get_case_color returns the correct hex for each role, (3) get_wire_color handles unknown tokens with the default color, (4) DiagramTheme enum values are the expected strings.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "integration_test_gap_for_pipeline_stages",
+      "summary": "The pipeline's stage-execution and checkpoint-resume logic is tested only at the unit level (test_pipeline.py, test_checkpoint.py); there are no cross-module integration tests verifying that stages hand off correctly through the real pipeline coordinator",
+      "related_files": [
+        "tests/infra_tests/core/test_pipeline.py",
+        "tests/infra_tests/core/test_checkpoint.py",
+        "scripts/execute_pipeline.py",
+        "infrastructure/core/pipeline.py"
+      ],
+      "evidence": [
+        "review_packet testing.total_files=360 but testing.critical_untested lists only styles.py \u2014 however the packet's indirection_hotspots show infrastructure/core/pipeline.py has chain_count=50 at depth 3, indicating substantial orchestration logic",
+        "execute_pipeline.py is the real pipeline entry point but has no corresponding test file in tests/infra_tests/",
+        "test_pipeline.py (14 test functions) and test_checkpoint.py (19 test functions) test units in isolation, but no test exercises resume-from-checkpoint across actual stage boundaries with the real subprocess execution path"
+      ],
+      "suggestion": "Add an integration test (marked @pytest.mark.integration) that runs execute_pipeline.py as a subprocess against a minimal project fixture, verifies at least two stages complete and write the expected checkpoint file, then resumes and verifies the remaining stages run. This would catch coordinator-level regressions not visible in unit tests.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "logging_utils_scope_creep",
+      "summary": "LogAggregator class and collect_log_statistics function live inside logging_utils.py but are never imported anywhere else in the codebase",
+      "related_files": [
+        "infrastructure/core/logging_utils.py"
+      ],
+      "evidence": [
+        "LogAggregator class defined at line 597 of logging_utils.py with full add_message, get_summary, generate_report, and save_to_file methods",
+        "collect_log_statistics function defined at line 698 of logging_utils.py",
+        "Grep for 'LogAggregator' across all .py files returns exactly one match: its own definition site",
+        "Grep for 'collect_log_statistics' across all .py files returns exactly one match: its own definition site",
+        "Neither name appears in logging_utils __all__ export list (lines 551-589)"
+      ],
+      "suggestion": "Delete LogAggregator and collect_log_statistics from logging_utils.py. If they serve a real purpose, move them to a dedicated infrastructure/reporting/log_aggregator.py that is actually imported by callers.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "log_operation_silent_dead_wrapper",
+      "summary": "log_operation_silent is a one-line thin wrapper over log_operation with no callers outside its own file",
+      "related_files": [
+        "infrastructure/core/logging_utils.py"
+      ],
+      "evidence": [
+        "log_operation_silent defined at lines 281-287: 'with log_operation(operation, logger, level, log_completion=False): yield' \u2014 adds nothing except renaming one keyword argument",
+        "Grep for 'log_operation_silent' across all .py files returns only the definition file (infrastructure/core/logging_utils.py)",
+        "It appears in __all__ (line 559 region) but no importer pulls it"
+      ],
+      "suggestion": "Remove log_operation_silent. Callers can pass log_completion=False to log_operation directly. If retained for API stability, document that it exists only as a convenience alias.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "restating_docstring_bloat",
+      "summary": "Trivial utility functions carry multi-line docstrings with Args/Returns sections that restate exactly what the signature already says",
+      "related_files": [
+        "infrastructure/core/logging_utils.py",
+        "infrastructure/core/environment.py"
+      ],
+      "evidence": [
+        "log_success (lines 361-375): 4-line docstring on a 2-line function body; Args section says 'message: Success message' which adds no information beyond the parameter name",
+        "log_header (lines 378-401): 5-line docstring followed by body that calls logger.info four times; Returns nothing, side-effect-only \u2014 docstring Example block duplicates the code",
+        "check_python_version (lines 50-65 of environment.py): docstring says 'Returns: True if Python version is 3.8 or higher, False otherwise' \u2014 the function body is 8 lines, the docstring is 5",
+        "check_build_tools (lines 206-234 of environment.py): identical pattern \u2014 docstring restates arg types and return semantics already visible from the signature"
+      ],
+      "suggestion": "Collapse restating docstrings on sub-10-line utilities to a single summary line. Reserve Args/Returns sections for functions where the parameter contract is genuinely non-obvious.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "nosy_entry_exit_logging",
+      "summary": "Infrastructure functions emit logger.info on every entry ('Checking Python version...', 'Checking dependencies...', 'Setting up directory structure...') without diagnostic value",
+      "related_files": [
+        "infrastructure/core/environment.py",
+        "infrastructure/core/file_operations.py"
+      ],
+      "evidence": [
+        "check_python_version line 56: logger.info('Checking Python version...') \u2014 single-line check that takes <1ms",
+        "check_dependencies line 79: logger.info('Checking dependencies...') before a for-loop over 4 packages",
+        "check_build_tools line 216: logger.info('Checking build tools...')",
+        "setup_directories line 283: logger.info('Setting up directory structure...')",
+        "clean_output_directory line 33: logger.info('Cleaning output directory...')",
+        "Pattern is copy-pasted verbatim across all five environment-check helpers with no additional context"
+      ],
+      "suggestion": "Demote entry announcements to logger.debug. Reserve logger.info for results ('Python 3.11.2 OK', 'pandoc missing'). The current pattern produces redundant noise in normal pipeline runs.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "performance_module_duplication",
+      "summary": "infrastructure/core/ contains two near-identical performance modules: performance.py and performance_monitor.py, both defining CodeProfiler, benchmark_function, and benchmark_llm_query",
+      "related_files": [
+        "infrastructure/core/performance.py",
+        "infrastructure/core/performance_monitor.py"
+      ],
+      "evidence": [
+        "performance.py defines: PerformanceMonitor (line 73), CodeProfiler (line 365), benchmark_function (line 567), benchmark_llm_query (line 539)",
+        "performance_monitor.py defines: CodeProfiler (line 60), benchmark_function (line 362), benchmark_llm_query (line 293) \u2014 same class names, same method signatures",
+        "infrastructure/core/__init__.py imports exclusively from performance.py (lines 92-106), so performance_monitor.py exports are dead at the package boundary",
+        "infrastructure/core/ has 27 files (directory_profiles shows file_count: 27); performance_monitor.py is a leftover split artifact that was never cleaned up"
+      ],
+      "suggestion": "Delete performance_monitor.py. All callers already import from performance.py via core/__init__.py. Verify no direct imports of performance_monitor remain before deletion.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "summary_generator_duplication",
+      "summary": "infrastructure/reporting/ contains two files \u2014 summary_generator.py and test_summary_generator.py \u2014 with identical load_test_results and load_infrastructure_results implementations",
+      "related_files": [
+        "infrastructure/reporting/summary_generator.py",
+        "infrastructure/reporting/test_summary_generator.py"
+      ],
+      "evidence": [
+        "summary_generator.py lines 20-45: load_test_results with identical body to test_summary_generator.py lines 20-45",
+        "summary_generator.py lines 48-89: load_infrastructure_results with identical fallback logic, same JSON key paths, same hardcoded file paths ('infrastructure_validation_report.json', 'coverage_infra.json')",
+        "Both files import the same dependencies (json, datetime, Path, get_testing_config, get_logger)",
+        "reporting/__init__.py does not export either module's load_* functions, suggesting both files are called directly by scripts rather than through the package interface"
+      ],
+      "suggestion": "Merge into a single infrastructure/reporting/test_results_loader.py. Export load_test_results and load_infrastructure_results from reporting/__init__.py. Remove whichever duplicate file has fewer callers.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "core_directory_overload",
+      "summary": "infrastructure/core/ contains 27 files mixing six distinct concerns with no sub-grouping, making ownership boundaries and change scope unpredictable",
+      "related_files": [
+        "infrastructure/core/"
+      ],
+      "evidence": [
+        "directory_profiles shows infrastructure/core/ file_count: 27, total_loc: 9616",
+        "Files span six distinct concerns: logging (logging_utils.py, logging_constants.py, logging_formatters.py, logging_helpers.py, logging_progress.py \u2014 5 files), performance (performance.py, performance_monitor.py \u2014 2 files, one duplicate), pipeline execution (pipeline.py, pipeline_summary.py, checkpoint.py, multi_project.py), security (security.py, credentials.py), environment/setup (environment.py, script_discovery.py, health_check.py), and utilities (menu.py, retry.py, progress.py, file_operations.py, file_inventory.py, errors.py, exceptions.py, config_loader.py, config_cli.py, cli.py)",
+        "avg_fan_in of 9.6 means every file in core/ is imported by ~10 other files on average \u2014 any rename or split creates widespread ripple edits",
+        "Security and health check modules have very different update cadence from config/logging utilities but live at the same directory depth"
+      ],
+      "suggestion": "Extract infrastructure/core/logging/ (5 logging_* files), infrastructure/core/perf/ (performance.py after deleting performance_monitor.py), and infrastructure/core/security/ (security.py, credentials.py) as sub-packages. Keep config_loader, exceptions, errors, environment, pipeline, and multi_project in core/ where their fan-in justifies top-level placement.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "security_misplaced_in_core",
+      "summary": "SecurityValidator, RateLimiter, SecurityHeaders, and SecurityMonitor live in infrastructure/core/security.py, a concern orthogonal to the 'foundation utilities' role that core/ documents for itself",
+      "related_files": [
+        "infrastructure/core/security.py",
+        "infrastructure/core/__init__.py"
+      ],
+      "evidence": [
+        "infrastructure/core/__init__.py module docstring (lines 1-10): 'Foundation utilities \u2014 configuration management, logging, and exception hierarchy'",
+        "security.py implements SecurityValidator with 14 dangerous-pattern regexes, a threading-based RateLimiter, SecurityHeaders dataclass, and SecurityMonitor \u2014 none of which are 'foundation utilities'",
+        "infrastructure/__init__.py module docstring does not list security as a top-level infrastructure sub-module (it lists core, validation, documentation, scientific, llm, rendering, publishing, reporting, steganography)",
+        "security.py is consumed primarily by LLM input validation (validate_llm_input is exported from core/__init__.py line 127) \u2014 its natural home is infrastructure/llm/ or a dedicated infrastructure/security/ package"
+      ],
+      "suggestion": "Move security.py (and credentials.py) to infrastructure/security/ as a first-class sub-package. Update core/__init__.py to re-export the handful of functions used by LLM code. This makes core/ match its stated role and gives security concerns a navigable home.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "multi_project_split_across_core_and_scripts",
+      "summary": "Multi-project orchestration responsibility is split between infrastructure/core/multi_project.py and scripts/execute_multi_project.py with no clear ownership boundary documented",
+      "related_files": [
+        "infrastructure/core/multi_project.py",
+        "scripts/execute_multi_project.py"
+      ],
+      "evidence": [
+        "infrastructure/core/multi_project.py defines MultiProjectOrchestrator with execute_all_projects_full, execute_all_projects_core methods \u2014 business logic",
+        "scripts/execute_multi_project.py is described in CLAUDE.md as the entry point for multi-project runs",
+        "multi_project.py lives in core/ (27-file directory) even though it orchestrates project-level pipelines \u2014 a level above what 'core foundation utilities' implies",
+        "The two-layer architecture documented in CLAUDE.md places scripts as 'thin orchestrators' but multi_project.py in core/ is itself a thick orchestrator importing from pipeline.py, errors.py, and project/discovery.py"
+      ],
+      "suggestion": "Move MultiProjectOrchestrator to infrastructure/project/ (which already has discovery.py and a clear project-management mandate). This aligns ownership: infrastructure/project/ owns all project-lifecycle logic, core/ owns foundation utilities.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "reporting_module_boundary_unclear",
+      "summary": "infrastructure/reporting/ contains 15 files mixing four distinct sub-concerns (test reporting, executive summaries, dashboards, HTML templates) with no internal grouping, making the module's public contract unclear",
+      "related_files": [
+        "infrastructure/reporting/__init__.py",
+        "infrastructure/reporting/pipeline_reporter.py",
+        "infrastructure/reporting/test_reporter.py",
+        "infrastructure/reporting/test_summary_generator.py",
+        "infrastructure/reporting/summary_generator.py",
+        "infrastructure/reporting/dashboard_generator.py",
+        "infrastructure/reporting/html_templates.py"
+      ],
+      "evidence": [
+        "directory_profiles shows infrastructure/reporting/ file_count: 15, total_loc: 9255",
+        "reporting/__init__.py exports 20+ names spanning generate_pipeline_report, generate_coverage_test_report, generate_executive_summary, generate_all_dashboards, OutputOrganizer \u2014 four functionally distinct concerns",
+        "test_reporter.py and coverage_reporter.py both parse pytest JSON output; their split rationale is not documented",
+        "generate_multi_project_summary_report is defined in pipeline_reporter.py (lines 36-80+) even though it is a multi-project concern, not a single-pipeline concern",
+        "html_templates.py is a data-only module (string literals) co-located with algorithmic report generators \u2014 no sub-directory separates static assets from logic"
+      ],
+      "suggestion": "Split reporting/ into reporting/pipeline/ (pipeline_reporter, error_aggregator, output_organizer), reporting/test/ (test_reporter, coverage_reporter, test_summary_generator, summary_generator merged), and reporting/executive/ (executive_reporter, multi_project_reporter, dashboard_generator). This gives each sub-concern a predictable home and shrinks __init__.py's re-export surface.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "stage_tuple_unpacking_protocol",
+      "summary": "Pipeline stage list uses raw tuple indexing instead of a typed protocol, forcing every consumer to know the implicit (name, func[, skip]) arity",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/infrastructure/core/pipeline.py"
+      ],
+      "evidence": [
+        "Line 183-186: `stage_name = stage_spec[0]; stage_func = stage_spec[1]; skip_condition = stage_spec[2] if len(stage_spec) > 2 else False` \u2014 positional indexing repeated in both `_execute_pipeline` and `_resume_pipeline`",
+        "Line 334-365 in `_resume_pipeline` repeats the same three-position unpack logic verbatim, including the `if len(stage_spec) > 2` guard",
+        "The tuple layout is an implicit contract not enforced by any type \u2014 adding a fourth element would silently pass and be ignored"
+      ],
+      "suggestion": "Replace the raw tuple with a `@dataclass` or `NamedTuple` (e.g. `PipelineStage(name, func, skip=False)`) and extract the iteration + skip guard into a single helper so both `_execute_pipeline` and `_resume_pipeline` share one code path.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "review_dispatch_if_chain",
+      "summary": "Review type dispatch in `run_llm_review_pipeline` is an explicit if/elif chain over string literals rather than a mapping, leaking the dispatch contract across two modules",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/infrastructure/llm/review/pipeline_runner.py",
+        "/Users/4d/Documents/GitHub/template/infrastructure/llm/review/generator.py"
+      ],
+      "evidence": [
+        "pipeline_runner.py lines 137-147: four `if/elif` branches on `review_type` string to call the corresponding `generate_*` function \u2014 the same string literals appear in `generator.py` `validate_review_quality` (lines 161, 189, 223, 253, 283)",
+        "Adding a new review type requires changes in at least three places: the if/elif dispatcher, the validator, and the `REVIEW_MIN_WORDS` dict in `manuscript.py`",
+        "The `ReviewMode` class uses bare string constants (line 42-44) with no link to the per-type generator mapping, adding a third encoding of the same concept"
+      ],
+      "suggestion": "Define a `REVIEW_GENERATORS: dict[str, Callable]` mapping at the module boundary in `generator.py` and replace the if/elif chain with a single lookup. The validator can reference the same dict to enumerate known types.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "save_partial_response_duplication_across_error_branches",
+      "summary": "The partial-response-save block inside `stream_query` is copy-pasted verbatim into four separate exception branches, creating 4x maintenance surface for one piece of boundary logic",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/infrastructure/llm/core/client.py"
+      ],
+      "evidence": [
+        "Lines 947-973 (Timeout retry path): constructs `ResponseMetadata`, calls `save_streaming_response`, catches `Exception as save_error`",
+        "Lines 978-1004 (Timeout final failure path): identical block, only `partial_response=True` and `streaming_time_seconds` differ",
+        "Lines 1024-1050 (ConnectionError retry path): third copy of the same block",
+        "Lines 1056-1082 (ConnectionError final failure path): fourth copy \u2014 the only difference from the second copy is the logger message text"
+      ],
+      "suggestion": "Extract the save-partial-response logic into `_save_partial_streaming_response(self, full_response, save_path, prompt, model_name, chunk_count, start_time, partial)` and call it from each exception branch with the varying arguments.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "lru_config_reconstruction_in_hot_path",
+      "summary": "`LLMConfig.from_env()` is called repeatedly inside `generate_review_with_metrics` per-loop iteration rather than being passed in as a parameter",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/infrastructure/llm/review/generator.py"
+      ],
+      "evidence": [
+        "Line 527: `max_tokens = LLMConfig.from_env().long_max_tokens` \u2014 creates a config object when `max_tokens` is None",
+        "Line 583: `config = LLMConfig.from_env()` \u2014 creates another config object inside the per-attempt streaming loop to read `review_timeout`, `heartbeat_interval`, `stall_threshold`, `early_warning_threshold`",
+        "Line 493: `max_length = LLMConfig.from_env().max_input_length` inside `extract_manuscript_text`",
+        "The caller `create_review_client` (line 315) already constructs a `LLMConfig` \u2014 this config is not passed down, so it is reconstructed independently at least 3 times per review generation"
+      ],
+      "suggestion": "Thread the `LLMConfig` instance from `create_review_client` through `generate_review_with_metrics` (and `extract_manuscript_text`) as an explicit parameter rather than reconstructing it at call sites.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "streaming_stall_check_wrong_reference_time",
+      "summary": "The stall detection in `stream_query` compares `current_time - last_chunk_time` but `last_chunk_time` is set to `current_time` on the same iteration, so the condition can never be true within a single chunk",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/infrastructure/llm/core/client.py"
+      ],
+      "evidence": [
+        "Line 870: `last_chunk_time = current_time`",
+        "Lines 873-876: `if (last_chunk_time and (current_time - last_chunk_time) > self.config.stall_threshold)` \u2014 `last_chunk_time` was just assigned `current_time`, so `current_time - last_chunk_time == 0` at this point",
+        "The stall check uses the wrong variable \u2014 it should compare against the time of the *previous* chunk, which would require saving `last_chunk_time` before updating it"
+      ],
+      "suggestion": "Save the previous chunk time before updating: `prev_chunk_time = last_chunk_time; last_chunk_time = current_time` and use `prev_chunk_time` in the stall guard, checking `prev_chunk_time is not None` as the None sentinel.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "timeout_warning_fires_on_every_chunk_after_30pct",
+      "summary": "The 30%-timeout warning in `stream_query` has no rate-limiting guard, so it emits a log message for every single streamed chunk after the threshold is crossed",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/infrastructure/llm/core/client.py"
+      ],
+      "evidence": [
+        "Lines 911-924: `if elapsed > self.config.timeout * 0.3` is checked inside the per-chunk `if chunk:` block with no deduplication or interval guard",
+        "For a model generating 500 tokens past the 30% mark, this emits 500 separate `INFO` log messages with almost identical content",
+        "The condition only checks `remaining > 0`, not 'has this already been logged recently'"
+      ],
+      "suggestion": "Track a boolean `_timeout_warned` flag (or the last-warned elapsed value) outside the chunk loop and only emit the warning the first time (or at most once per 10% of timeout remaining).",
+      "confidence": "high"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "clean_coverage_files_double_glob_prefix",
+      "summary": "`clean_coverage_files` prepends `**/` to patterns that already start with `**/`, producing invalid triple-star globs for recursive patterns",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/infrastructure/core/file_operations.py"
+      ],
+      "evidence": [
+        "Lines 339-342: `glob_pattern = f\"**/{pattern}\" if not pattern.startswith(\"**/\") else pattern` \u2014 the guard `not pattern.startswith(\"**/\")` is correct, but the default patterns on lines 327-329 ALL start with `**/`",
+        "Line 342: `for file_path in repo_root.glob(glob_pattern)` \u2014 because the guard is correct, the existing defaults are passed through unchanged, which is fine",
+        "However the branch `f\"**/{pattern}\"` will fire for any custom caller-supplied pattern that lacks `**/` prefix, e.g. `.coverage` \u2192 `**/.coverage`, which is correct; but a caller passing e.g. `.coverage*` would get `**/.coverage*` while the docstring says 'file patterns' without stating this transformation, creating a surprising implicit rewrite"
+      ],
+      "suggestion": "Document the auto-prefix behavior explicitly in the docstring, or normalize all patterns to be absolute glob patterns and remove the conditional prefix logic.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "copy_final_deliverables_dead_pass_branch",
+      "summary": "A `pass` branch in `copy_final_deliverables` silently does nothing after an existence check, making the intent unreadable",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/infrastructure/core/file_operations.py"
+      ],
+      "evidence": [
+        "Lines 526-532: `if combined_pdf_src.exists(): pass` \u2014 the `pass` branch documents a fallback path but actually performs no action and the comment is on the `else` not the `if`",
+        "The logic flow `if exists: pass; else: reassign` is semantically equivalent to `if not exists: reassign` but reads as if the `if` branch intentionally skips something",
+        "This pattern was likely a placeholder that was never cleaned up"
+      ],
+      "suggestion": "Replace with `if not project_specific_pdf.exists(): combined_pdf_src, combined_pdf_dst = generic_pdf, output_dir / 'project_combined.pdf'` for a direct single-branch form.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "generate_review_with_metrics_mixed_responsibilities",
+      "summary": "`generate_review_with_metrics` combines prompt rendering, retry orchestration, streaming, heartbeat monitoring, progress display, deduplication, and quality validation in a single 140-line body",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/infrastructure/llm/review/generator.py"
+      ],
+      "evidence": [
+        "Lines 513-675 (approx): the function body contains: template render (line 537), retry loop (line 546), temperature adjustment per attempt (line 551), off-topic retry prompt construction (lines 555-569), StreamingProgress lifecycle (lines 577-608), StreamHeartbeatMonitor lifecycle (lines 584-602), fallback to non-streaming query (line 612), quality validation (lines 614-616), best-response tracking (line 619), deduplication post-processing (lines 640-648), and metrics assembly",
+        "The `except Exception: response = client.query(...)` on line 612 silently swallows the streaming failure and falls back \u2014 this control-flow branch is buried inside a 3-level nesting of loops and try blocks",
+        "The function takes 9 parameters (client, text, review_type, review_name, template_class, model_name, temperature, max_tokens, max_retries) \u2014 several of these encode policy decisions that belong in a caller-level config object"
+      ],
+      "suggestion": "Extract at minimum: (1) `_stream_with_heartbeat(client, prompt, options, review_name, config)` for the streaming+monitoring concern; (2) `_build_retry_prompt(prompt, had_off_topic)` for prompt mutation; leaving `generate_review_with_metrics` as a retry loop coordinator.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "pipeline_execute_resume_code_divergence",
+      "summary": "`_execute_pipeline` and the latter half of `_resume_pipeline` implement parallel stage-execution loops with divergent exit-code-2 handling, creating two maintained versions of the same logic",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/infrastructure/core/pipeline.py"
+      ],
+      "evidence": [
+        "Lines 195-202 (`_execute_pipeline`): exit code 2 handled by reconstructing a `PipelineStageResult` with `success=True`",
+        "Lines 370-379 (`_resume_pipeline`): `if hasattr(result, 'exit_code') and result.exit_code == 2` \u2014 uses `hasattr` defensively on a typed dataclass, then reconstructs an identical `PipelineStageResult` with the same fields",
+        "The `hasattr` guard on a `PipelineStageResult` (which always has `exit_code`) is a design smell indicating the two loops were written independently",
+        "Both loops also independently call `self._save_checkpoint(...)` after successful stages without sharing the logic"
+      ],
+      "suggestion": "Extract the stage-execution, exit-code-2 normalization, and checkpoint-save into `_run_single_stage(stage_spec, executed_stage_num, pipeline_start)` returning a `PipelineStageResult`, and call it from both `_execute_pipeline` and the resume loop.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "validate_review_quality_per_type_inline_data",
+      "summary": "`validate_review_quality` encodes per-review-type structural expectations (header lists, score patterns, section variations) inline as local literals, making the function 310 lines of type-keyed conditionals",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/infrastructure/llm/review/generator.py"
+      ],
+      "evidence": [
+        "Lines 161-311: five `if/elif review_type ==` blocks each containing multi-element lists of keyword variations, regex patterns, and section names as string literals",
+        "The `header_variations` list on lines 163-177 has 5 tuples each containing a list of synonyms \u2014 this is data, not logic, but is embedded in a function body",
+        "Adding a new review type requires inserting a new `elif` branch here AND in `pipeline_runner.py`'s dispatcher AND in `REVIEW_MIN_WORDS` \u2014 no single registration point"
+      ],
+      "suggestion": "Define a `REVIEW_TYPE_SPECS: dict[str, ReviewTypeSpec]` module-level mapping where `ReviewTypeSpec` holds expected sections, min-word overrides, and score patterns. Replace the if/elif chain with a lookup into this dict.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "clean_output_directories_mixed_concerns",
+      "summary": "`clean_output_directories` handles log archiving, selective preservation, checkpoint preservation, subdir recreation, and root-level cleanup in a single 120-line function",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/infrastructure/core/file_operations.py"
+      ],
+      "evidence": [
+        "Lines 97-221: the function body sequentially: (1) discovers project names via directory scan (lines 117-122), (2) calls `clean_root_output_directory` (line 125), (3) defines subdirs list (lines 127-138), (4) archives log files with timestamping (lines 151-176), (5) iterates items with checkpoint preservation logic (lines 188-211), (6) recreates subdirectory structure (lines 215-217)",
+        "Log archiving (lines 151-176) is an unrelated concern to directory cleaning and has no dedicated function",
+        "The inline project-name discovery via `projects_dir.iterdir()` (lines 117-122) duplicates logic from `infrastructure/project/discovery.py` with a comment explaining why it avoids the import (circular import)"
+      ],
+      "suggestion": "Extract `_archive_log_files(logs_dir)` for the log-archiving concern. The circular-import workaround in the comment (lines 114-116) is a sign that `clean_output_directories` should not own project discovery \u2014 pass `project_names` as a parameter instead of computing it internally.",
+      "confidence": "medium"
+    }
+  ]
+}

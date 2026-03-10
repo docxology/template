@@ -7,6 +7,10 @@ from typing import Any
 
 from infrastructure.core.exceptions import LLMTemplateError
 
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
+
 
 class ResearchTemplate:
     """Base class for research templates."""

@@ -12,6 +12,10 @@ from __future__ import annotations
 import inspect
 from typing import Any, Callable
 
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
+
 
 def generate_scientific_documentation(func: Callable) -> str:
     """Generate scientific documentation for a function.
@@ -57,14 +61,6 @@ def generate_scientific_documentation(func: Callable) -> str:
 ### {return_info if return_info else "Returns"}
 No return annotation specified.
 
-### Usage Example
-```python
-# Example usage would go here
-result = {func.__name__}(example_input)
-```
-
-### Scientific Context
-This function implements [mathematical concept] with [specific approach].
 """
 
     return documentation

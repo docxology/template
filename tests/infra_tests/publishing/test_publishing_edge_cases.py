@@ -4,7 +4,7 @@ This test suite validates edge cases including DOI validation, minimal
 metadata handling, and publication readiness scenarios.
 """
 
-from infrastructure.publishing import core as publishing
+import infrastructure.publishing as publishing
 
 
 class TestPublishingEdgeCases:

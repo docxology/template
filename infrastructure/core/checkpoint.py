@@ -12,12 +12,11 @@ import json
 import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Optional, Tuple
+from typing import Any
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
-
 
 @dataclass
 class StageResult:
@@ -26,9 +25,9 @@ class StageResult:
     name: str
     exit_code: int
     duration: float
-    timestamp: str
+    timestamp: str = ""
     completed: bool = True
-
+    status: str = ""
 
 @dataclass
 class PipelineCheckpoint:
@@ -62,21 +61,25 @@ class PipelineCheckpoint:
             checkpoint_time=data["checkpoint_time"],
         )
 
-
 class CheckpointManager:
     """Manages pipeline checkpoints for resume capability."""
 
-    def __init__(self, checkpoint_dir: Optional[Path] = None, project_name: str = "project"):
+    def __init__(
+        self,
+        checkpoint_dir: Path | None = None,
+        project_name: str = "project",
+        repo_root: Path | None = None,
+    ):
         """Initialize checkpoint manager.
 
         Args:
             checkpoint_dir: Directory for checkpoint files (default: projects/{project_name}/output/.checkpoints)
             project_name: Name of the project (default: "project")
+            repo_root: Repository root path; inferred from __file__ if not provided
         """
         if checkpoint_dir is None:
-            # Default to projects/{project_name}/output/.checkpoints
-            repo_root = Path(__file__).parent.parent.parent
-            checkpoint_dir = repo_root / "projects" / project_name / "output" / ".checkpoints"
+            resolved_root = repo_root if repo_root is not None else Path(__file__).parent.parent.parent
+            checkpoint_dir = resolved_root / "projects" / project_name / "output" / ".checkpoints"
 
         self.checkpoint_dir = Path(checkpoint_dir)
         self.checkpoint_file = self.checkpoint_dir / "pipeline_checkpoint.json"
@@ -120,14 +123,14 @@ class CheckpointManager:
                 json.dump(checkpoint.to_dict(), f, indent=2)
             logger.debug(f"Checkpoint saved: stage {last_stage_completed}/{total_stages}")
             return True
-        except Exception as e:
-            logger.error(f"Failed to save checkpoint: {e}")
+        except Exception as e:  # noqa: BLE001 — intentional: checkpoint save must not crash the pipeline regardless of failure mode
+            logger.error(f"Failed to save checkpoint: {e}", exc_info=True)
             logger.warning(
                 "Checkpoint save failed - pipeline resume will not be available for this run"
             )
             return False
 
-    def load_checkpoint(self) -> Optional[PipelineCheckpoint]:
+    def load_checkpoint(self) -> PipelineCheckpoint | None:
         """Load pipeline checkpoint.
 
         Returns:
@@ -144,8 +147,8 @@ class CheckpointManager:
                 f"Loaded checkpoint: stage {checkpoint.last_stage_completed}/{checkpoint.total_stages}"  # noqa: E501
             )
             return checkpoint
-        except Exception as e:
-            logger.warning(f"Failed to load checkpoint: {e}")
+        except Exception as e:  # noqa: BLE001 — intentional: corrupt/invalid checkpoint must degrade gracefully to fresh run
+            logger.warning(f"Failed to load checkpoint: {e}", exc_info=True)
             logger.info("Invalid checkpoint file detected - starting fresh pipeline run")
             return None
 
@@ -155,7 +158,7 @@ class CheckpointManager:
             try:
                 self.checkpoint_file.unlink()
                 logger.debug("Checkpoint cleared")
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 — intentional: stale checkpoint file is non-fatal
                 logger.warning(f"Failed to clear checkpoint: {e}")
 
     def checkpoint_exists(self) -> bool:
@@ -173,7 +176,7 @@ class CheckpointManager:
         except Exception:
             return False
 
-    def validate_checkpoint(self) -> Tuple[bool, Optional[str]]:
+    def validate_checkpoint(self) -> tuple[bool, str | None]:
         """Validate checkpoint integrity and consistency.
 
         Returns:

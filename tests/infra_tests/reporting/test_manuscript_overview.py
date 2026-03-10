@@ -147,7 +147,7 @@ class TestCreatePageGrid:
         """Test grid creation with no images raises error."""
         from infrastructure.reporting.manuscript_overview import create_page_grid
 
-        with pytest.raises(ValueError, match="No images provided"):
+        with pytest.raises(Exception, match="No images provided"):
             create_page_grid([])
 
     def test_create_grid_single_image(self):

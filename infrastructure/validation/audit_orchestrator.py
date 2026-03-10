@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import time
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.validation.check_links import (
@@ -20,7 +20,7 @@ from infrastructure.validation.check_links import (
     validate_python_imports,
 )
 from infrastructure.validation.doc_accuracy import check_links
-from infrastructure.validation.doc_discovery import categorize_documentation, find_markdown_files
+from infrastructure.validation.doc_discovery import categorize_documentation, discover_markdown_files
 from infrastructure.validation.doc_models import (
     DocumentationFile,
     LinkIssue,
@@ -35,7 +35,6 @@ from infrastructure.validation.issue_categorizer import (
 
 logger = get_logger(__name__)
 
-
 def run_comprehensive_audit(
     repo_root: Path,
     verbose: bool = False,
@@ -44,25 +43,13 @@ def run_comprehensive_audit(
     include_import_validation: bool = True,
     include_placeholder_validation: bool = True,
 ) -> ScanResults:
-    """Run audit across all validation modules.
-
-    Args:
-        repo_root: Repository root directory
-        verbose: Enable verbose logging
-        include_code_validation: Include code block path validation
-        include_directory_validation: Include directory structure validation
-        include_import_validation: Include Python import validation
-        include_placeholder_validation: Include placeholder consistency validation
-
-    Returns:
-        Complete scan results with all issues categorized
-    """
+    """Run audit across all validation modules and return categorized scan results."""
     start_time = time.time()
 
     logger.info("🔍 Starting filepath and reference audit...")
 
     # Phase 1: Discovery
-    md_files = find_markdown_files(repo_root)
+    md_files = discover_markdown_files(repo_root)
     logger.info(f"📁 Found {len(md_files)} markdown files to audit")
 
     # Get project categorization
@@ -75,8 +62,7 @@ def run_comprehensive_audit(
             content = md_file.read_text(encoding="utf-8")
             all_headings[str(md_file.relative_to(repo_root))] = extract_headings(content)
         except Exception as e:
-            if verbose:
-                logger.warning(f"Error reading {md_file}: {e}")
+            logger.warning(f"Error reading {md_file}: {e}")
 
     # Phase 3: Run all validations
     scan_results = ScanResults(scan_date=time.strftime("%Y-%m-%d %H:%M:%S"))
@@ -141,17 +127,16 @@ def run_comprehensive_audit(
 
     return scan_results
 
-
 def _validate_single_file(
     md_file: Path,
     content: str,
     repo_root: Path,
-    all_headings: Dict[str, set[str]],
+    all_headings: dict[str, set[str]],
     include_code: bool,
     include_directory: bool,
     include_imports: bool,
     include_placeholders: bool,
-) -> Dict[str, List[Any]]:
+) -> dict[str, list[Any]]:
     """Validate a single markdown file using all available validation modules."""
 
     file_key = str(md_file.relative_to(repo_root))
@@ -175,76 +160,29 @@ def _validate_single_file(
     except Exception as e:
         logger.warning(f"Link validation failed for {md_file}: {e}")
 
-    # Code block path validation
-    if include_code:
-        try:
-            code_issues = validate_file_paths_in_code(content, md_file, repo_root)
-            for issue in code_issues:  # type: ignore
-                results["quality_issues"].append(
-                    QualityIssue(
-                        file=file_key,
-                        line=issue.get("line", 0),  # type: ignore
-                        issue_type="code_block_path",
-                        issue_message=issue.get("issue", "Code block path issue"),  # type: ignore
-                        severity="warning",
+    quality_validators = [
+        (include_code, validate_file_paths_in_code, "code_block_path", "warning", "Code block path issue"),
+        (include_directory, validate_directory_structures, "directory_structure", "info", "Directory structure issue"),
+        (include_imports, validate_python_imports, "python_import", "warning", "Python import issue"),
+        (include_placeholders, validate_placeholder_consistency, "placeholder_consistency", "info", "Placeholder consistency issue"),
+    ]
+    for flag, validator_fn, issue_type, severity, default_msg in quality_validators:
+        if flag:
+            try:
+                for issue in validator_fn(content, md_file, repo_root):  # type: ignore
+                    results["quality_issues"].append(
+                        QualityIssue(
+                            file=file_key,
+                            line=issue.get("line", 0),  # type: ignore
+                            issue_type=issue_type,
+                            issue_message=issue.get("issue", default_msg),  # type: ignore
+                            severity=severity,
+                        )
                     )
-                )
-        except Exception as e:
-            logger.warning(f"Code validation failed for {md_file}: {e}")
-
-    # Directory structure validation
-    if include_directory:
-        try:
-            dir_issues = validate_directory_structures(content, md_file, repo_root)
-            for issue in dir_issues:  # type: ignore
-                results["quality_issues"].append(
-                    QualityIssue(
-                        file=file_key,
-                        line=issue.get("line", 0),  # type: ignore
-                        issue_type="directory_structure",
-                        issue_message=issue.get("issue", "Directory structure issue"),  # type: ignore
-                        severity="info",
-                    )
-                )
-        except Exception as e:
-            logger.warning(f"Directory validation failed for {md_file}: {e}")
-
-    # Python import validation
-    if include_imports:
-        try:
-            import_issues = validate_python_imports(content, md_file, repo_root)
-            for issue in import_issues:  # type: ignore
-                results["quality_issues"].append(
-                    QualityIssue(
-                        file=file_key,
-                        line=issue.get("line", 0),  # type: ignore
-                        issue_type="python_import",
-                        issue_message=issue.get("issue", "Python import issue"),  # type: ignore
-                        severity="warning",
-                    )
-                )
-        except Exception as e:
-            logger.warning(f"Import validation failed for {md_file}: {e}")
-
-    # Placeholder consistency validation
-    if include_placeholders:
-        try:
-            placeholder_issues = validate_placeholder_consistency(content, md_file, repo_root)
-            for issue in placeholder_issues:  # type: ignore
-                results["quality_issues"].append(
-                    QualityIssue(
-                        file=file_key,
-                        line=issue.get("line", 0),  # type: ignore
-                        issue_type="placeholder_consistency",
-                        issue_message=issue.get("issue", "Placeholder consistency issue"),  # type: ignore
-                        severity="info",
-                    )
-                )
-        except Exception as e:
-            logger.warning(f"Placeholder validation failed for {md_file}: {e}")
+            except Exception as e:
+                logger.warning(f"{issue_type} validation failed for {md_file}: {e}")
 
     return results
-
 
 def _calculate_statistics(scan_results: ScanResults) -> None:
     """Calculate statistics for the scan results."""
@@ -260,22 +198,12 @@ def _calculate_statistics(scan_results: ScanResults) -> None:
 
     scan_results.statistics = stats
 
-
 def generate_audit_report(
     scan_results: ScanResults,
     output_format: str = "markdown",
     show_green_flags: bool = False,
 ) -> str:
-    """Generate a formatted audit report with severity flag classification.
-
-    Args:
-        scan_results: Complete scan results
-        output_format: Output format ('markdown' or 'json')
-        show_green_flags: Whether to show green flags (known exceptions) in report
-
-    Returns:
-        Formatted report string
-    """
+    """Generate a formatted audit report with red/yellow/green severity flag classification."""
     # Collect all issues
     all_issues = []
     all_issues.extend(scan_results.link_issues)

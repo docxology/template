@@ -33,6 +33,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from infrastructure.core.logging_utils import (
     get_logger,
+    log_header,
+    log_live_resource_usage,
     log_operation,
     log_success,
     format_error_with_suggestions,
@@ -65,9 +67,24 @@ def run_analysis_script(script_path: Path, repo_root: Path, project_name: str = 
     """
     logger.info(f"\n  Running: {project_name}/{script_path.name}")
 
-    cmd = get_python_command() + [str(script_path)]
-
     project_root = repo_root / "projects" / project_name
+
+    # Detect project-local venv: if the project has its own .venv with optional
+    # dependencies (e.g., discopy for cognitive_case_diagrams), use uv run
+    # from the project directory so those dependencies are available.
+    project_venv = project_root / ".venv"
+    if project_venv.is_dir():
+        import shutil
+
+        uv_path = shutil.which("uv")
+        if uv_path:
+            cmd = [uv_path, "run", "--directory", str(project_root), "python", str(script_path)]
+            logger.info(f"  Using project-local venv: {project_venv}")
+        else:
+            cmd = get_python_command() + [str(script_path)]
+            logger.warning("  Project has local .venv but 'uv' not found; using root Python")
+    else:
+        cmd = get_python_command() + [str(script_path)]
 
     # Get clean environment dict with uv compatibility (handles VIRTUAL_ENV warnings)
     env = get_subprocess_env()
@@ -87,10 +104,14 @@ def run_analysis_script(script_path: Path, repo_root: Path, project_name: str = 
     # Set PROJECT_ROOT env var for scripts that need to find resources relative to project
     env["PROJECT_DIR"] = str(project_root)
 
+    # Remove VIRTUAL_ENV to prevent uv from getting confused when switching venvs
+    env.pop("VIRTUAL_ENV", None)
+
     try:
         with log_operation(f"Execute {script_path.name}", logger):
-            # Run from repo_root to prevent uv from creating project-local venvs
-            # Scripts use PROJECT_DIR env var and PYTHONPATH for project-relative paths
+            # When using project-local venv, run from repo_root but let uv
+            # handle the venv via --directory. Otherwise run from repo_root
+            # as before.
             result = subprocess.run(
                 cmd, cwd=str(repo_root), capture_output=False, check=False, env=env
             )
@@ -189,14 +210,10 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    logger.info("\n" + "=" * 60)
-    logger.info(f"STAGE 02: Run Analysis (Project: {args.project})")
-    logger.info("=" * 60)
+    log_header(f"STAGE 02: Run Analysis (Project: {args.project})", logger)
 
     # Log resource usage at start
-    from infrastructure.core.logging_utils import log_resource_usage
-
-    log_resource_usage("Analysis stage start", logger)
+    log_live_resource_usage("Analysis stage start", logger)
 
     try:
         repo_root = Path(__file__).parent.parent
@@ -223,17 +240,17 @@ def main() -> int:
             logger.error("\nAnalysis failed - fix issues and try again")
 
         # Log resource usage at end
-        log_resource_usage("Analysis stage end", logger)
+        log_live_resource_usage("Analysis stage end", logger)
 
         return exit_code
 
     except (ScriptExecutionError, PipelineError) as e:
         logger.error(format_error_with_suggestions(e))
-        log_resource_usage("Analysis stage end (error)", logger)
+        log_live_resource_usage("Analysis stage end (error)", logger)
         return 1
     except Exception as e:
         logger.error(f"Unexpected error: {e}", exc_info=True)
-        log_resource_usage("Analysis stage end (error)", logger)
+        log_live_resource_usage("Analysis stage end (error)", logger)
         return 1
 
 

@@ -1,0 +1,143 @@
+{
+  "session": {
+    "id": "ext_20260307_035901_1114f064",
+    "token": "a72dda5391ee36b604ca1ab9a523dd7d"
+  },
+  "assessments": {
+    "dependency_health": 84,
+    "test_strategy": 72,
+    "ai_generated_debt": 73,
+    "low_level_elegance": 78
+  },
+  "findings": [
+    {
+      "dimension": "test_strategy",
+      "identifier": "untested_llm_base_template",
+      "summary": "ResearchTemplate base class in base.py has no direct tests despite being imported by 3 modules",
+      "related_files": ["infrastructure/llm/templates/base.py"],
+      "evidence": [
+        "base.py defines the sole base class ResearchTemplate with a render() method — the only logic-bearing code in the 22-line file",
+        "Grep across tests/ finds zero direct imports of infrastructure.llm.templates.base or ResearchTemplate",
+        "The holistic_context testing.critical_untested list names base.py (importers: 3) as untested",
+        "test_templates.py imports only SummarizeAbstract, ManuscriptTranslationAbstract, and get_template — never ResearchTemplate directly",
+        "The error path (KeyError -> LLMTemplateError) in render() is the only executable branch and has no isolated test"
+      ],
+      "suggestion": "Add a test class in test_templates.py that directly instantiates a minimal ResearchTemplate subclass with a known template_str and asserts both the happy path and the KeyError -> LLMTemplateError path",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "untested_manuscript_template_file",
+      "summary": "infrastructure/llm/templates/manuscript.py (698 LOC, 3 importers) has no dedicated test file; coverage is only incidental via integration paths",
+      "related_files": ["infrastructure/llm/templates/manuscript.py"],
+      "evidence": [
+        "holistic_context.existing_findings notes 'No direct tests (698 LOC, 3 importers) — covered only via imports from tested modules'",
+        "No test file named test_manuscript.py exists under tests/infra_tests/llm/",
+        "test_review_generators.py exercises ManuscriptExecutiveSummary only via the full review pipeline (requires_ollama path), not as a unit",
+        "The PROMPT_COMPOSER_AVAILABLE branch — try/except fallback logic at line 116-127 — is never independently exercised",
+        "REVIEW_MIN_WORDS dict is defined twice (lines 34 and 55) in the same module; the first definition is silently overwritten before any test can observe the first value"
+      ],
+      "suggestion": "Add tests/infra_tests/llm/test_manuscript_templates.py that instantiates ManuscriptExecutiveSummary, ManuscriptQualityReview, and ManuscriptMethodologyReview with a stub text string and asserts the rendered output contains the required section headers, without requiring Ollama",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "coverage_parser_untested_critical",
+      "summary": "infrastructure/reporting/coverage_parser.py (366 LOC, 1 importer) is flagged as a critical untested module with high blast radius",
+      "related_files": ["infrastructure/reporting/coverage_parser.py"],
+      "evidence": [
+        "holistic_context.existing_findings: 'Untested critical module (366 LOC, 1 importers) — high blast radius'",
+        "The module contains five parse strategy functions (_parse_failures_section, _parse_failures_verbose, _parse_failures_short, _parse_failures_timeout, _parse_failures_fallback) and the cascading extract_failed_tests dispatcher",
+        "No test file references coverage_parser directly in tests/infra_tests/reporting/; test_test_reporter.py exists but coverage_parser is an internal module not re-exported",
+        "extract_coverage_percentage has a 3-attempt retry loop with time.sleep(0.5) — timing-sensitive behaviour with no deterministic test"
+      ],
+      "suggestion": "Add tests/infra_tests/reporting/test_coverage_parser.py with real pytest-output strings (no mocks) that exercise each parse strategy and the fallback chain, and separately test extract_coverage_percentage with a real temporary JSON file matching the expected structure",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "duplicate_review_min_words_constant",
+      "summary": "REVIEW_MIN_WORDS dict is defined identically twice in manuscript.py, with a comment block copy-pasted verbatim between them",
+      "related_files": ["infrastructure/llm/templates/manuscript.py"],
+      "evidence": [
+        "Lines 34-40: first definition of REVIEW_MIN_WORDS with full comment block",
+        "Lines 51-61: identical second definition with the identical comment block (including the same inline comments on 'improvement_suggestions' and 'translation')",
+        "The first definition is silently overwritten at module load time; it has no effect",
+        "The comment block above lines 51-61 reads '# Minimum word counts for quality validation' — same text as above lines 34-40, word for word"
+      ],
+      "suggestion": "Delete the second definition of REVIEW_MIN_WORDS (lines 51-61) and its duplicated comment block; keep only the first definition",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "docstring_bloat_single_line_methods",
+      "summary": "Several single-expression methods in PerformanceMonitor carry multi-line Args/Returns docstrings that restate the function name",
+      "related_files": ["infrastructure/core/performance.py"],
+      "evidence": [
+        "record_operation() (line 118): body is `self.operations_count += 1`; docstring is '\"\"\"Record an operation.\"\"\"' — the docstring adds no information beyond the name",
+        "record_cache_hit() (line 122): body is `self.cache_hits += 1`; docstring '\"\"\"Record a cache hit.\"\"\"'",
+        "record_cache_miss() (line 126): body is `self.cache_misses += 1`; docstring '\"\"\"Record a cache miss.\"\"\"'",
+        "update_memory() (line 130): body is two lines; docstring '\"\"\"Update peak memory tracking.\"\"\"' restates the method name exactly"
+      ],
+      "suggestion": "Remove docstrings from these trivial counter-increment methods; the method names are already self-documenting",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "network_check_hardcoded_external_call",
+      "summary": "_check_network in health_check.py makes an unconditional live HTTP request to httpbin.org, embedding a production side-effect in an infrastructure health function",
+      "related_files": ["infrastructure/core/health_check.py"],
+      "evidence": [
+        "Line 172: `response = requests.get('https://httpbin.org/status/200', timeout=5)` inside SystemHealthChecker._check_network()",
+        "The URL is hardcoded as a third-party service for a unit-level health check",
+        "health_check.py existing_findings note '1x Hardcoded URL in source code'",
+        "get_health_api() returns a module-level singleton, so _check_network fires at any health status query even during import-time side-effect scenarios"
+      ],
+      "suggestion": "Replace the httpbin call with a socket-level TCP probe to a well-known IP (e.g., 1.1.1.1:80) or make the connectivity check target configurable; remove the hardcoded third-party URL",
+      "confidence": "high"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "coverage_parser_nested_break_loops",
+      "summary": "extract_coverage_percentage uses a nested retry loop with dual break statements that obscures the early-exit intent and could be replaced with a simpler found-flag structure",
+      "related_files": ["infrastructure/reporting/coverage_parser.py"],
+      "evidence": [
+        "Lines 254-304: outer loop is `for attempt in range(max_retries)`, inner loop is `for coverage_json_path in coverage_json_paths`",
+        "On success, inner loop sets `coverage_found = True` then breaks; outer loop checks `if coverage_found: break` — two break guards for one logical exit",
+        "The `time.sleep(0.5)` on `attempt > 0` is an embedded timing dependency inside an otherwise pure parsing function",
+        "The function mixes file-polling (retry loop) with JSON parsing in a single 60-line body, violating the single-responsibility visible in sibling parse functions"
+      ],
+      "suggestion": "Extract the polling retry logic into a helper (e.g., _wait_for_coverage_file) that returns the path once available, keeping extract_coverage_percentage as a pure JSON parser; eliminate the dual break pattern",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "health_check_singleton_global_state",
+      "summary": "health_check.py uses a module-level mutable singleton (_health_api) alongside three thin wrapper functions that add no policy, creating unnecessary indirection",
+      "related_files": ["infrastructure/core/health_check.py"],
+      "evidence": [
+        "Line 319: `_health_api: Optional[HealthCheckAPI] = None`",
+        "Lines 322-327: get_health_api() creates it via global keyword",
+        "Lines 330-342: quick_health_check(), get_health_status(), get_health_metrics() are single-expression pass-throughs to get_health_api().method()",
+        "The singleton pattern means repeated calls share state across the module lifetime, but HealthCheckAPI has no stateful fields that justify this — it only delegates to SystemHealthChecker which is instantiated fresh each time",
+        "Callers who import get_health_status() get different observable behaviour than callers who instantiate HealthCheckAPI directly, without any documented contract"
+      ],
+      "suggestion": "Remove the module-level singleton; have quick_health_check(), get_health_status(), and get_health_metrics() each instantiate HealthCheckAPI directly, or document the singleton purpose if shared state is intentional",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "performance_context_monitor_never_stopped",
+      "summary": "performance_context() starts a PerformanceMonitor then logs only elapsed time on exit, leaving the monitor.stop() result unused and the start_time state dangling",
+      "related_files": ["infrastructure/core/performance.py"],
+      "evidence": [
+        "Lines 155-175: performance_context() creates PerformanceMonitor, calls monitor.start(), yields monitor, then logs duration with a separate _start time variable",
+        "monitor.stop() is never called inside the context manager — only documented as a caller responsibility in the docstring",
+        "Two parallel timers exist: monitor.start_time (set in start()) and _start (set at line 170) — they diverge by microseconds and the context manager reports only _start",
+        "The docstring says 'call monitor.stop() explicitly if you need the final PerformanceMetrics object' — but after the context exits, start_time is set and stop() is safe to call, making the interface asymmetric"
+      ],
+      "suggestion": "Either call monitor.stop() inside the finally block and yield both monitor and metrics, or remove the PerformanceMonitor from performance_context() and use only the simple _start timer, making the monitor available only via the CodeProfiler path",
+      "confidence": "medium"
+    }
+  ]
+}

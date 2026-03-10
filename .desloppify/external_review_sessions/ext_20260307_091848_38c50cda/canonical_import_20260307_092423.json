@@ -1,0 +1,313 @@
+{
+  "assessments": {
+    "ai_generated_debt": 68,
+    "abstraction_fitness": 72,
+    "convention_outlier": 74,
+    "error_consistency": 80,
+    "design_coherence": 72,
+    "test_strategy": 74,
+    "cross_module_architecture": 62,
+    "dependency_health": 82,
+    "package_organization": 80,
+    "high_level_elegance": 75,
+    "mid_level_elegance": 70,
+    "low_level_elegance": 78
+  },
+  "findings": [
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "aidbt-01",
+      "summary": "Docstring bloat on trivial wrapper functions in logging_utils.py",
+      "related_files": [
+        "infrastructure/core/logging_utils.py"
+      ],
+      "evidence": [
+        "log_substep has a 10-line docstring for a 2-line function that calls logger.info with an f-string",
+        "log_stage has a 12-line docstring with example output for a 4-line function",
+        "log_success has redundant emoji-selection logic that restates the function name"
+      ],
+      "suggestion": "Reduce docstrings on trivial formatting helpers to a single-line description; remove example-output blocks from functions whose behavior is fully described by their name and signature.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "aidbt-02",
+      "summary": "Three thin module-level pass-through functions in health_check.py wrap a singleton with no added policy",
+      "related_files": [
+        "infrastructure/core/health_check.py"
+      ],
+      "evidence": [
+        "quick_health_check() calls _get_checker().is_healthy() \u2014 one statement, no logic",
+        "get_health_status() calls _get_checker().get_health_status() \u2014 one statement, no logic",
+        "get_health_metrics() calls _get_checker().get_metrics() \u2014 one statement, no logic"
+      ],
+      "suggestion": "Expose a module-level singleton directly or collapse into a single get_health() entry point, eliminating the three one-liner wrappers.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "aidbt-03",
+      "summary": "generate_pipeline_report unpacks ReportExtras field-by-field into locals that are immediately re-used only once",
+      "related_files": [
+        "infrastructure/reporting/pipeline_reporter.py"
+      ],
+      "evidence": [
+        "Lines 68-73 unpack all six fields of extras into identically-named locals",
+        "Each local is then used exactly once when constructing PipelineReport",
+        "Pattern: x = extras.x if extras is not None else None repeated six times reads as AI padding"
+      ],
+      "suggestion": "Use extras or ReportExtras() pattern then reference fields directly in the PipelineReport constructor call.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "absft-01",
+      "summary": "logging_utils.py is a re-export facade that adds no policy \u2014 logic lives in four split modules",
+      "related_files": [
+        "infrastructure/core/logging_utils.py",
+        "infrastructure/core/logging_helpers.py",
+        "infrastructure/core/logging_progress.py",
+        "infrastructure/core/logging_formatters.py"
+      ],
+      "evidence": [
+        "logging_utils imports from logging_helpers, logging_progress, logging_formatters, and logging_constants, then re-exports everything in __all__",
+        "The split was done for file size, not ownership \u2014 callers traverse an extra indirection hop with zero benefit"
+      ],
+      "suggestion": "Either collapse the internal split modules back into logging_utils or promote them to explicit stable public packages with their own __all__.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "absft-02",
+      "summary": "ReportExtras is a single-use parameter bag that duplicates PipelineReport's optional fields",
+      "related_files": [
+        "infrastructure/reporting/pipeline_reporter.py"
+      ],
+      "evidence": [
+        "ReportExtras has six fields that mirror the optional fields of PipelineReport exactly",
+        "Its sole purpose is to bundle the six kwargs of generate_pipeline_report \u2014 never stored, mutated, or reused"
+      ],
+      "suggestion": "Remove ReportExtras and accept the optional fields directly as keyword arguments on generate_pipeline_report.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "logging_module_split_asymmetry",
+      "summary": "logging_helpers.py uses a function-level import to dodge a circular dependency \u2014 no other infrastructure module does this",
+      "related_files": [
+        "infrastructure/core/logging_helpers.py",
+        "infrastructure/core/logging_utils.py"
+      ],
+      "evidence": [
+        "logging_helpers.py has 'from infrastructure.core.exceptions import TemplateError' inside the function body, unlike all sibling modules which import at top level",
+        "logging_utils.py __all__ re-exports EMOJIS, USE_EMOJIS \u2014 symbols that conceptually belong in their own modules"
+      ],
+      "suggestion": "Move the TemplateError import to module level or consolidate logging_helpers into logging_utils.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "reporting_init_conditional_export",
+      "summary": "infrastructure/reporting/__init__.py uses try/except ImportError to set names to None \u2014 pattern absent from sibling __init__.py files",
+      "related_files": [
+        "infrastructure/reporting/__init__.py",
+        "infrastructure/validation/__init__.py"
+      ],
+      "evidence": [
+        "reporting/__init__.py: generate_all_dashboards assigned to None on ImportError",
+        "validation/__init__.py: all imports are unconditional, no None-fallback pattern"
+      ],
+      "suggestion": "Move optional dashboard symbols out of __all__ or raise a clear ImportError at call time rather than silently setting names to None.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "performance_stop_raises_error_context_managers_do_not",
+      "summary": "PerformanceMonitor.stop() raises BuildError but StagePerformanceTracker.end_stage() returns empty dict for same precondition",
+      "related_files": [
+        "infrastructure/core/performance.py"
+      ],
+      "evidence": [
+        "performance.py: 'raise BuildError(\"Monitor not started\")' in PerformanceMonitor.stop()",
+        "performance.py: 'if self.start_time is None: return {}' in StagePerformanceTracker.end_stage() \u2014 same precondition, opposite strategy",
+        "performance_context uses bare finally block that calls stop() unconditionally \u2014 exception in stop() replaces original"
+      ],
+      "suggestion": "Align the two tracker classes on a single error strategy. Guard stop() in performance_context so it does not run when the body raised.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "DC-01",
+      "summary": "performance.py houses two unrelated sub-domains despite explicit acknowledgment they should be split",
+      "related_files": [
+        "infrastructure/core/performance.py"
+      ],
+      "evidence": [
+        "Module docstring explicitly names two distinct sub-domains and anticipates a split into stage_monitor.py and function_profiler.py",
+        "PerformanceMonitor and CodeProfiler have no shared state and zero interdependency"
+      ],
+      "suggestion": "Resolve the circular import root cause and split into stage_monitor.py and function_profiler.py as the module itself recommends.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "DC-02",
+      "summary": "generate_pipeline_report unpacks ReportExtras field-by-field into local variables then re-passes them \u2014 no-op abstraction",
+      "related_files": [
+        "infrastructure/reporting/pipeline_reporter.py"
+      ],
+      "evidence": [
+        "Six consecutive assignments extract every field of extras into local variables only to pass them directly to PipelineReport",
+        "The log-file side-effect modifies output_statistics in place, mixing data mutation with report construction inside a factory function"
+      ],
+      "suggestion": "Pass extras fields directly to PipelineReport or let ReportExtras carry its own to_pipeline_report() conversion so the factory stays pure.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "DC-03",
+      "summary": "logging_utils.py re-exports 30+ items from five split submodules making it a wide aggregation facade with no logic",
+      "related_files": [
+        "infrastructure/core/logging_utils.py"
+      ],
+      "evidence": [
+        "__all__ lists 30 symbols spanning formatters, progress utilities, ETA functions, spinner classes, constants",
+        "Pure re-export hub with no logic beyond get_logger/setup_logger"
+      ],
+      "suggestion": "Shrink __all__ to the core logging API. Callers needing progress utilities should import from their respective submodules directly.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "TS-01",
+      "summary": "Pipeline executor abort-on-failure behavior has no cross-stage integration test",
+      "related_files": [
+        "tests/infra_tests/core/test_pipeline.py",
+        "infrastructure/core/pipeline.py"
+      ],
+      "evidence": [
+        "No test runs execute_core_pipeline with a mid-pipeline failure and verifies subsequent stages are not invoked",
+        "_execute_pipeline breaks on first failure \u2014 core correctness guarantee with no integration-level test"
+      ],
+      "suggestion": "Add a test with one script that exits 1 and verify execute_core_pipeline returns only results up to and including the failing stage.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "TS-02",
+      "summary": "CodeProfiler and monitor_performance decorator have no tests \u2014 only psutil sub-domain is covered",
+      "related_files": [
+        "tests/infra_tests/core/test_performance.py",
+        "infrastructure/core/performance.py"
+      ],
+      "evidence": [
+        "test_performance.py imports only psutil-based classes \u2014 CodeProfiler, ProfilingMetrics, monitor_performance entirely absent",
+        "CodeProfiler.monitor() contains tracemalloc coordination logic that is non-trivial and completely untested"
+      ],
+      "suggestion": "Add tests for CodeProfiler.monitor(), benchmark_function(), and the monitor_performance decorator.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "CMA-01",
+      "summary": "logging_helpers.py has a function-level import creating an implicit circular dependency workaround at the boundary",
+      "related_files": [
+        "infrastructure/core/logging_helpers.py",
+        "infrastructure/core/logging_utils.py",
+        "infrastructure/core/logging_progress.py"
+      ],
+      "evidence": [
+        "logging_helpers.py imports TemplateError inside format_error_with_suggestions to avoid a circular import with logging_utils",
+        "logging_utils imports from logging_progress, which imports from logging_constants \u2014 the split creates a fan-in dependency hub at logging_utils with 5 upstream modules",
+        "The circular import workaround indicates a boundary direction problem: helpers should not depend on the aggregator"
+      ],
+      "suggestion": "Move TemplateError import to module level by resolving the direction: exceptions should be a leaf module imported by helpers without creating a cycle back through logging_utils.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "dependency_health",
+      "identifier": "DEP-01",
+      "summary": "numpy and matplotlib are unconditional runtime deps but only needed in project-specific analysis scripts",
+      "related_files": [
+        "pyproject.toml"
+      ],
+      "evidence": [
+        "numpy and matplotlib listed as core dependencies in pyproject.toml",
+        "Infrastructure code does not use numpy/matplotlib \u2014 they are only needed in projects/*/scripts/ analysis code",
+        "psutil, reportlab, plotly are already guarded with optional import patterns; numpy/matplotlib are not"
+      ],
+      "suggestion": "Move numpy and matplotlib to an optional 'scientific' dependency group and guard infrastructure imports as done for psutil.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "PKG-01",
+      "summary": "infrastructure/core/ contains 20+ files with mixed responsibilities not divided into subpackages",
+      "related_files": [
+        "infrastructure/core/"
+      ],
+      "evidence": [
+        "infrastructure/core/ contains logging_utils, logging_helpers, logging_progress, logging_formatters, logging_constants (5 logging files), performance, health_check, checkpoint, pipeline, config_loader, environment, exceptions (12+ files) all at the same level",
+        "The logging files would naturally group into a logging/ subpackage but remain flat"
+      ],
+      "suggestion": "Consider moving the 5 logging_* files into infrastructure/core/logging/ subpackage to reduce cognitive load when navigating core/.",
+      "confidence": "low"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "HLE-01",
+      "summary": "The logging module split into 5 sibling files blurs the top-level architecture \u2014 users cannot tell which is the public entry point",
+      "related_files": [
+        "infrastructure/core/logging_utils.py",
+        "infrastructure/core/logging_helpers.py",
+        "infrastructure/core/logging_progress.py",
+        "infrastructure/core/logging_formatters.py",
+        "infrastructure/core/logging_constants.py"
+      ],
+      "evidence": [
+        "Five sibling files with 'logging_' prefix exist at the same level \u2014 newcomers cannot tell that logging_utils.py is the public entry point",
+        "The split was done for file-size reasons, not domain ownership \u2014 the architecture doesn't match a natural ownership boundary"
+      ],
+      "suggestion": "Either consolidate the split files back into logging_utils.py (if cohesion is high) or move them into a logging/ subpackage with a clear __init__.py as the public API.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "MLE-01",
+      "summary": "generate_pipeline_report mixes data construction, side-effect mutation, and optional field unpacking in one function body",
+      "related_files": [
+        "infrastructure/reporting/pipeline_reporter.py"
+      ],
+      "evidence": [
+        "Function unpacks ReportExtras, builds stage list, conditionally mutates output_statistics (adds log_file info), then constructs PipelineReport \u2014 three distinct concerns in one function",
+        "The log_file side-effect block (lines 87-94) modifies a dict passed in via extras before feeding it to the report object, creating a hidden mutation at the seam"
+      ],
+      "suggestion": "Separate data preparation (including log_file enrichment) from report object construction. The factory function should receive already-complete data.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "LLE-01",
+      "summary": "Several public functions in logging_utils.py still have verbose Args/Returns docstrings that duplicate type annotations",
+      "related_files": [
+        "infrastructure/core/logging_utils.py"
+      ],
+      "evidence": [
+        "setup_logger has Args: name, level, log_file and Returns: sections that restate the type annotations already present in the signature",
+        "log_operation context manager has a 15-line docstring for a function whose behavior is fully described by name + type signature"
+      ],
+      "suggestion": "Replace multi-section docstrings on well-typed functions with a single summary line. The type annotations are the contract; prose repetition adds noise.",
+      "confidence": "medium"
+    }
+  ],
+  "provenance": {
+    "kind": "blind_review_batch_import",
+    "blind": true,
+    "runner": "claude",
+    "run_stamp": "ext_20260307_091848_38c50cda",
+    "created_at": "2026-03-07T09:24:23+00:00",
+    "packet_path": "/Users/4d/Documents/GitHub/template/.desloppify/review_packet_blind.json",
+    "packet_sha256": "a10fe6a4099691fb72f8926f6197f4ab174da6efcea90d26eb363c24a0f7d899",
+    "external_session_id": "ext_20260307_091848_38c50cda"
+  }
+}

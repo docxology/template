@@ -1,0 +1,129 @@
+{
+  "session": {
+    "id": "ext_20260307_005819_131f40ee",
+    "token": "ef3ff67f786c9423602dd1f82387a14c"
+  },
+  "assessments": {
+    "dependency_health": 78,
+    "test_strategy": 82,
+    "ai_generated_debt": 55,
+    "package_organization": 62
+  },
+  "findings": [
+    {
+      "dimension": "dependency_health",
+      "identifier": "dual_performance_monitoring_libs",
+      "summary": "Two separate modules implement overlapping performance monitoring with different class names, creating a split surface",
+      "related_files": [
+        "infrastructure/core/performance.py",
+        "infrastructure/core/performance_monitor.py"
+      ],
+      "evidence": [
+        "infrastructure/core/performance.py defines PerformanceMonitor (a start/stop resource tracker with ResourceUsage and PerformanceMetrics dataclasses)",
+        "infrastructure/core/performance_monitor.py defines CodeProfiler (a context-manager-based profiler with ProfilingMetrics) and also exports a get_performance_monitor, benchmark_function, monitor_performance decorator",
+        "infrastructure/core/__init__.py imports both at lines 92-101, including the alias 'from .performance_monitor import monitor_performance as monitor_performance_decorator' to disambiguate",
+        "The __init__.py comment at line 68 reads 'Named ResourceTracker when disambiguation from performance_monitor.CodeProfiler is needed (both modules expose a class called PerformanceMonitor)', confirming the naming collision is known but unresolved"
+      ],
+      "suggestion": "Consolidate into a single infrastructure/core/performance.py module with clearly separated concerns (resource tracking vs. code profiling). Eliminate the aliased re-export and the acknowledged naming collision.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "project_test_surface_extremely_thin",
+      "summary": "The entire projects/code_project/tests/ suite is a single test file covering one src module, leaving any additional project src modules untested",
+      "related_files": [
+        "projects/code_project/tests/test_optimizer.py",
+        "projects/code_project/tests/conftest.py"
+      ],
+      "evidence": [
+        "Glob of projects/code_project/tests/**/*.py returns only __init__.py, conftest.py, and test_optimizer.py",
+        "test_optimizer.py imports from src.optimizer exclusively; no other src modules are visible in tests",
+        "The file header claims '100% coverage requirement' but the scope is limited to one module; if other src files exist they are unexercised"
+      ],
+      "suggestion": "Audit all files in projects/code_project/src/ and add corresponding test files for each module to ensure the 90% threshold is met across the full src surface, not just optimizer.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "mock_use_in_llm_test",
+      "summary": "One test file uses MagicMock/unittest.mock despite the project's stated no-mocks policy",
+      "related_files": [
+        "tests/infra_tests/llm/test_logging.py"
+      ],
+      "evidence": [
+        "Grep for 'MagicMock|mocker.patch|unittest.mock' across tests/ returns tests/infra_tests/llm/test_logging.py as the sole match",
+        "The project CLAUDE.md and conftest.py docstring both state 'ABSOLUTE REQUIREMENT: Never use MagicMock, mocker.patch, unittest.mock, or any mocking framework'",
+        "The violation is isolated but directly contradicts a hard architectural rule"
+      ],
+      "suggestion": "Replace the mock-based assertions in test_logging.py with real HTTP server fixtures (pytest-httpserver is already a dev dependency) consistent with the rest of the LLM test suite.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "boilerplate_comprehensive_docstrings",
+      "summary": "Module-level docstrings across infrastructure consistently open with 'comprehensive' and similar inflated adjectives, a strong AI-generation signal",
+      "related_files": [
+        "infrastructure/core/security.py",
+        "infrastructure/core/performance_monitor.py",
+        "infrastructure/validation/check_links.py",
+        "infrastructure/reporting/dashboard_generator.py",
+        "infrastructure/rendering/pdf_renderer.py",
+        "infrastructure/validation/integrity.py"
+      ],
+      "evidence": [
+        "infrastructure/core/security.py line 3: 'This module provides comprehensive security measures including input validation, security headers, rate limiting, and security monitoring.'",
+        "infrastructure/core/performance_monitor.py line 3: 'This module provides comprehensive performance monitoring, benchmarking, and profiling capabilities for research code execution.'",
+        "Grep for 'comprehensive|sophisticated|robust|seamless|enterprise.grade|production.ready|cutting.edge|state.of.the.art' returns 20+ files (hit the head_limit), all in infrastructure/",
+        "The pattern is uniform across modules from different functional domains, indicating copy-paste docstring generation rather than hand-written descriptions"
+      ],
+      "suggestion": "Replace generic superlative-laden module docstrings with concrete single-sentence descriptions of what the module actually does and who its primary callers are. Differentiate descriptions per module rather than using a template phrase.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "security_overbroad_pattern_blocking",
+      "summary": "SecurityValidator blocks legitimate research content (e.g., LaTeX \\usepackage, open() calls, HTTP URLs) that would appear in manuscript text, indicating patterns generated without domain fit analysis",
+      "related_files": [
+        "infrastructure/core/security.py"
+      ],
+      "evidence": [
+        "infrastructure/core/security.py lines 45-55 block: r'\\open\\s*\\(' (catches open() in any prompt), r'\\bpathlib\\.\\w' (blocks discussion of pathlib), r'\\\\usepackage\\s*[\\[{]' and r'\\\\newcommand\\s*\\{' (blocks LaTeX manuscript content in LLM prompts), r'(?i)\\bhttps?://' (blocks any URL reference in a scientific prompt)",
+        "The system is described as LLM input validation for a research manuscript pipeline, yet the patterns would reject prompts containing LaTeX code snippets, URL citations, or file-path discussion — all common in academic writing",
+        "The pattern set reads like a generic 'LLM security checklist' applied without filtering for domain context"
+      ],
+      "suggestion": "Scope the dangerous-pattern checks to the context of user-supplied strings (e.g., author names, abstract fields) rather than applying them uniformly to all LLM prompts. Consider an allowlist approach for known-safe prompt templates rather than a denylist on arbitrary patterns.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "top_level_init_catches_importerror_silently",
+      "summary": "infrastructure/__init__.py catches ImportError on its convenience re-exports and falls through silently, making broken sub-package imports invisible at import time",
+      "related_files": [
+        "infrastructure/__init__.py"
+      ],
+      "evidence": [
+        "infrastructure/__init__.py lines 24-58: a broad try/except ImportError block imports from .core, .documentation, .publishing, .reporting, .validation; on failure it issues warnings.warn with ImportWarning stacklevel=2 but otherwise swallows the error",
+        "ImportWarning is filtered by Python by default in non-debug mode, so users running without -Wd will silently get a partially-populated namespace",
+        "A caller doing 'from infrastructure import validate_pdf_rendering' after a silent import failure receives an AttributeError with no actionable context"
+      ],
+      "suggestion": "Either remove the try/except and let sub-package import errors surface immediately (preferred for a non-distributable internal package), or catch and re-raise with a descriptive RuntimeError that names the missing dependency and points to setup instructions.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "core_init_oversized_re_export_surface",
+      "summary": "infrastructure/core/__init__.py re-exports 100+ symbols from 14 internal modules, making the public surface of 'core' indistinguishable from its full internal implementation",
+      "related_files": [
+        "infrastructure/core/__init__.py"
+      ],
+      "evidence": [
+        "infrastructure/core/__init__.py imports from: checkpoint, config_loader, environment, exceptions, file_inventory, file_operations, health_check, logging_utils, multi_project, performance, performance_monitor, pipeline, pipeline_summary, progress, retry, script_discovery, security — 17 source modules",
+        "The __all__ list contains 110+ exported names spanning unrelated concerns: security validators, pipeline executors, logging helpers, retry decorators, health checkers, and file inventory managers",
+        "Callers outside core have no guidance on which symbols are stable public API vs. implementation details, since everything is promoted to the same flat namespace",
+        "The alias 'monitor_performance_decorator = monitor_performance' exists solely to paper over a naming collision between two internal modules (line 101)"
+      ],
+      "suggestion": "Define a minimal public API in core/__init__.py (exceptions, get_logger, load_config, and pipeline entry points). Have callers of security, health_check, retry, etc. import directly from their sub-modules. This reduces blast radius for internal refactors and makes the intended boundary explicit.",
+      "confidence": "high"
+    }
+  ]
+}

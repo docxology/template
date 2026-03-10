@@ -453,50 +453,6 @@ sys.exit(1)
 
             assert result is False
 
-    def test_run_executive_reporting_import_error(self):
-        """Test executive reporting when import fails."""
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            repo_root = Path(tmp_dir)
-            projects = [
-                ProjectInfo(
-                    name="test",
-                    path=repo_root / "test",
-                    has_src=True,
-                    has_tests=True,
-                    has_scripts=True,
-                    has_manuscript=True,
-                    metadata={},
-                )
-            ]
-            config = MultiProjectConfig(repo_root=repo_root, projects=projects)
-            orchestrator = MultiProjectOrchestrator(config)
-
-            # Should not raise exception even if import fails
-            # (the executive reporting module doesn't exist in our test environment)
-            result = orchestrator._run_executive_reporting({})
-            assert result is None
-
-    def test_run_executive_reporting_single_project(self):
-        """Test executive reporting is skipped for single project."""
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            repo_root = Path(tmp_dir)
-            projects = [
-                ProjectInfo(
-                    name="test",
-                    path=repo_root / "test",
-                    has_src=True,
-                    has_tests=True,
-                    has_scripts=True,
-                    has_manuscript=True,
-                    metadata={},
-                )
-            ]
-            config = MultiProjectConfig(repo_root=repo_root, projects=projects)
-            orchestrator = MultiProjectOrchestrator(config)
-
-            result = orchestrator._run_executive_reporting({"project1": []})
-            assert result is None  # Should be None when import fails or single project
-
     def test_timing_measurement(self):
         """Test that timing is measured correctly."""
         with tempfile.TemporaryDirectory() as tmp_dir:

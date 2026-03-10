@@ -16,7 +16,7 @@ from pathlib import Path
 # Add root to path for infrastructure imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging_utils import get_logger, log_header, log_success
 from infrastructure.reporting.pipeline_reporter import (
     generate_pipeline_report,
     save_pipeline_report,
@@ -37,7 +37,7 @@ def main() -> int:
     project_name = args.project
     total_duration = args.total_duration
 
-    logger.info(f"Generating pipeline reports for project '{project_name}'...")
+    log_header(f"Generate pipeline reports: {project_name}", logger)
 
     try:
         repo_root = Path(__file__).parent.parent
@@ -79,8 +79,9 @@ def main() -> int:
 
         # Save report in multiple formats
         saved_files = save_pipeline_report(report, output_dir, formats=["json", "html", "markdown"])
-        logger.info(
-            f"Pipeline reports saved: {', '.join(str(p.name) for p in saved_files.values())}"
+        log_success(
+            f"Pipeline reports saved: {', '.join(str(p.name) for p in saved_files.values())}",
+            logger,
         )
 
         return 0

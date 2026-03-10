@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any
 
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
 
 @dataclass
 class DocumentationFile:
@@ -19,8 +22,7 @@ class DocumentationFile:
     line_count: int = 0
     has_links: bool = False
     has_code_blocks: bool = False
-    last_modified: Optional[str] = None
-
+    last_modified: str | None = None
 
 @dataclass
 class LinkIssue:
@@ -34,7 +36,6 @@ class LinkIssue:
     issue_message: str
     severity: str = "error"
 
-
 @dataclass
 class AccuracyIssue:
     """Represents an accuracy issue in documentation."""
@@ -45,7 +46,6 @@ class AccuracyIssue:
     issue_message: str
     severity: str = "error"
 
-
 @dataclass
 class CompletenessGap:
     """Represents a documentation completeness gap."""
@@ -54,7 +54,6 @@ class CompletenessGap:
     item: str
     description: str
     severity: str = "warning"
-
 
 @dataclass
 class QualityIssue:
@@ -66,17 +65,16 @@ class QualityIssue:
     issue_message: str
     severity: str = "info"
 
-
 @dataclass
 class ScanResults:
     """Container for all scan results."""
 
     scan_date: str
     total_files: int = 0
-    documentation_files: List[DocumentationFile] = field(default_factory=list)
-    link_issues: List[LinkIssue] = field(default_factory=list)
-    accuracy_issues: List[AccuracyIssue] = field(default_factory=list)
-    completeness_gaps: List[CompletenessGap] = field(default_factory=list)
-    quality_issues: List[QualityIssue] = field(default_factory=list)
-    improvements_made: List[Dict[str, Any]] = field(default_factory=list)
-    statistics: Dict[str, Any] = field(default_factory=dict)
+    documentation_files: list[DocumentationFile] = field(default_factory=list)
+    link_issues: list[LinkIssue] = field(default_factory=list)
+    accuracy_issues: list[AccuracyIssue] = field(default_factory=list)
+    completeness_gaps: list[CompletenessGap] = field(default_factory=list)
+    quality_issues: list[QualityIssue] = field(default_factory=list)
+    improvements_made: list[dict[str, Any]] = field(default_factory=list)
+    statistics: dict[str, Any] = field(default_factory=dict)

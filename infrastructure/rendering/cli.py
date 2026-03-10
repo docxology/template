@@ -3,6 +3,8 @@
 Thin orchestrator wrapping infrastructure.rendering module functionality.
 """
 
+from __future__ import annotations
+
 import argparse
 import sys
 from pathlib import Path
@@ -20,10 +22,10 @@ def render_pdf_command(args: argparse.Namespace) -> None:
     source = Path(args.source)
 
     if not source.exists():
-        logger.error("Source file not found: %s", source)
+        logger.error(f"Source file not found: {source}")
         sys.exit(1)
 
-    logger.info("Rendering PDF: %s", source)
+    logger.info(f"Rendering PDF: {source}")
     output = manager.render_pdf(source)
     print(f"Generated: {output}")
 
@@ -34,10 +36,10 @@ def render_all_command(args: argparse.Namespace) -> None:
     source = Path(args.source)
 
     if not source.exists():
-        logger.error("Source file not found: %s", source)
+        logger.error(f"Source file not found: {source}")
         sys.exit(1)
 
-    logger.info("Rendering all formats: %s", source)
+    logger.info(f"Rendering all formats: {source}")
     outputs = manager.render_all(source)
 
     for output in outputs:
@@ -50,11 +52,11 @@ def render_slides_command(args: argparse.Namespace) -> None:
     source = Path(args.source)
 
     if not source.exists():
-        logger.error("Source file not found: %s", source)
+        logger.error(f"Source file not found: {source}")
         sys.exit(1)
 
     fmt = args.format or "beamer"
-    logger.info("Rendering slides (%s): %s", fmt, source)
+    logger.info(f"Rendering slides ({fmt}): {source}")
     output = manager.render_slides(source, format=fmt)
     print(f"Generated: {output}")
 
@@ -65,10 +67,10 @@ def render_web_command(args: argparse.Namespace) -> None:
     source = Path(args.source)
 
     if not source.exists():
-        logger.error("Source file not found: %s", source)
+        logger.error(f"Source file not found: {source}")
         sys.exit(1)
 
-    logger.info("Rendering web output: %s", source)
+    logger.info(f"Rendering web output: {source}")
     output = manager.render_web(source)
     print(f"Generated: {output}")
 
@@ -115,7 +117,7 @@ def main() -> None:
     try:
         args.func(args)
     except Exception as e:
-        logger.error("Error: %s", e)
+        logger.error(f"Error: {e}")
         sys.exit(1)
 
 

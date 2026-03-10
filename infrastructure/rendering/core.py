@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import List, Optional
 
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.rendering.config import RenderingConfig
@@ -14,15 +13,17 @@ from infrastructure.rendering.web_renderer import WebRenderer
 
 logger = get_logger(__name__)
 
+# Minimum PDF size in MB; PDFs below this are considered empty/corrupted (matches 1000-byte check in pdf_validator)
+_MIN_VALID_PDF_MB = 0.001
 
 class RenderManager:
     """Orchestrates rendering of all output formats."""
 
     def __init__(
         self,
-        config: Optional[RenderingConfig] = None,
-        manuscript_dir: Optional[Path] = None,
-        figures_dir: Optional[Path] = None,
+        config: RenderingConfig | None = None,
+        manuscript_dir: Path | None = None,
+        figures_dir: Path | None = None,
     ):
         self.config = config or RenderingConfig.from_env()
         self.manuscript_dir = manuscript_dir
@@ -32,7 +33,7 @@ class RenderManager:
         self.web_renderer = WebRenderer(self.config)
         self.poster_renderer = PosterRenderer(self.config)
 
-    def render_all(self, source_file: Path) -> List[Path]:
+    def render_all(self, source_file: Path) -> list[Path]:
         """Render all supported formats for a source file.
 
         For markdown files, generates:
@@ -87,13 +88,13 @@ class RenderManager:
                         beamer_pdf = self.slides_renderer.render(source_file, format="beamer")
                         if beamer_pdf.exists():
                             size_mb = beamer_pdf.stat().st_size / (1024 * 1024)
-                            if size_mb < 0.001:  # Less than 1KB
+                            if size_mb < _MIN_VALID_PDF_MB:
                                 error_msg += f" (PDF created but empty: {size_mb:.3f} MB)"
                                 error_msg += f" - Check LaTeX compilation log: {beamer_pdf.parent / beamer_pdf.stem}.log"  # noqa: E501
                             else:
                                 error_msg += f" (PDF created: {size_mb:.2f} MB)"
-                    except Exception:
-                        pass  # Ignore errors when checking PDF status
+                    except Exception as pdf_check_err:
+                        logger.debug(f"Failed to check PDF status: {pdf_check_err}")
 
                     logger.warning(error_msg)
 
@@ -177,7 +178,7 @@ class RenderManager:
 
     def render_combined_pdf(
         self,
-        source_files: List[Path],
+        source_files: list[Path],
         manuscript_dir: Path,
         project_name: str = "project",
     ) -> Path:
@@ -196,7 +197,7 @@ class RenderManager:
 
     def render_combined_web(
         self,
-        source_files: List[Path],
+        source_files: list[Path],
         manuscript_dir: Path,
         project_name: str = "project",
     ) -> Path:

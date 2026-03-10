@@ -24,6 +24,8 @@ Direct imports (recommended):
     from infrastructure.llm.validation import OutputValidator
 """
 
+from __future__ import annotations
+
 # Convenience re-exports from submodules (use direct imports for better clarity)
 from infrastructure.llm.core import (
     ConversationContext,
@@ -35,6 +37,11 @@ from infrastructure.llm.core import (
     save_response,
     save_streaming_response,
     strip_thinking_tags,
+)
+from infrastructure.llm.core.config import (
+    get_max_input_length,
+    get_review_max_tokens,
+    get_review_timeout,
 )
 from infrastructure.llm.templates import (
     REVIEW_MIN_WORDS,
@@ -88,7 +95,7 @@ except ImportError:
 
 # Review generation modules
 from infrastructure.llm.review import (
-    ManuscriptMetrics,
+    ManuscriptInputMetrics,
     ReviewMetrics,
     SessionMetrics,
     StreamingMetrics,
@@ -99,17 +106,14 @@ from infrastructure.llm.review import (
     estimate_tokens,
     extract_action_items,
     extract_manuscript_text,
-    generate_executive_summary,
     generate_improvement_suggestions,
+    generate_llm_executive_summary,
     generate_methodology_review,
     generate_quality_review,
     generate_review_summary,
     generate_review_with_metrics,
     generate_translation,
     get_manuscript_review_system_prompt,
-    get_max_input_length,
-    get_review_max_tokens,
-    get_review_timeout,
     save_review_outputs,
     save_single_review,
     validate_review_quality,
@@ -173,7 +177,7 @@ __all__ = [
     "PromptComposer",
     # Review metrics
     "ReviewMetrics",
-    "ManuscriptMetrics",
+    "ManuscriptInputMetrics",
     "SessionMetrics",
     "StreamingMetrics",
     "estimate_tokens",
@@ -188,7 +192,7 @@ __all__ = [
     "warmup_model",
     "extract_manuscript_text",
     "generate_review_with_metrics",
-    "generate_executive_summary",
+    "generate_llm_executive_summary",
     "generate_quality_review",
     "generate_methodology_review",
     "generate_improvement_suggestions",

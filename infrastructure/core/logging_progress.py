@@ -7,26 +7,13 @@ import sys
 import threading
 import time
 from contextlib import contextmanager
-from typing import Any, Iterator, Optional
+from typing import Any, Iterator
 
+from infrastructure.core.logging_constants import EMOJIS, USE_EMOJIS
+from infrastructure.core.logging_helpers import format_duration
 
-def calculate_eta(elapsed_time: float, completed_items: int, total_items: int) -> Optional[float]:
-    """Calculate estimated time remaining based on current progress.
-
-    Uses simple linear calculation for basic ETA estimation.
-
-    Args:
-        elapsed_time: Time elapsed so far in seconds
-        completed_items: Number of items completed
-        total_items: Total number of items
-
-    Returns:
-        Estimated time remaining in seconds, or None if cannot calculate
-
-    Example:
-        >>> calculate_eta(30.0, 3, 10)
-        70.0  # 30s for 3 items = 10s/item, 7 remaining = 70s
-    """
+def calculate_eta(elapsed_time: float, completed_items: int, total_items: int) -> float | None:
+    """Calculate estimated time remaining using linear extrapolation; returns None if indeterminate."""
     if completed_items <= 0 or total_items <= 0:
         return None
 
@@ -37,35 +24,14 @@ def calculate_eta(elapsed_time: float, completed_items: int, total_items: int) -
     remaining_items = total_items - completed_items
     return avg_time_per_item * remaining_items
 
-
 def calculate_eta_ema(
     elapsed_time: float,
     completed_items: int,
     total_items: int,
-    previous_eta: Optional[float] = None,
+    previous_eta: float | None = None,
     alpha: float = 0.3,
-) -> Optional[float]:
-    """Calculate ETA using exponential moving average for better accuracy.
-
-    EMA provides smoother estimates that adapt to changing performance,
-    reducing the impact of outliers (very fast or slow items).
-
-    Args:
-        elapsed_time: Time elapsed so far in seconds
-        completed_items: Number of items completed
-        total_items: Total number of items
-        previous_eta: Previous ETA estimate (for EMA calculation)
-        alpha: Smoothing factor (0-1), higher = more responsive to recent data
-
-    Returns:
-        Estimated time remaining in seconds, or None if cannot calculate
-
-    Example:
-        >>> # First calculation (no previous ETA)
-        >>> eta1 = calculate_eta_ema(30.0, 3, 10)
-        >>> # Subsequent calculation with EMA smoothing
-        >>> eta2 = calculate_eta_ema(40.0, 4, 10, previous_eta=eta1)
-    """
+) -> float | None:
+    """Calculate ETA using EMA blending; returns seconds remaining or None."""
     if completed_items <= 0 or total_items <= 0:
         return None
 
@@ -87,33 +53,13 @@ def calculate_eta_ema(
     # Ensure ETA is non-negative
     return max(0.0, ema_eta)
 
-
 def calculate_eta_with_confidence(
     elapsed_time: float,
     completed_items: int,
     total_items: int,
-    item_durations: Optional[list[float]] = None,
-) -> tuple[Optional[float], Optional[float], Optional[float]]:
-    """Calculate ETA with confidence intervals (optimistic/pessimistic).
-
-    Provides three estimates:
-    - Optimistic: Based on fastest items
-    - Realistic: Based on average
-    - Pessimistic: Based on slowest items
-
-    Args:
-        elapsed_time: Time elapsed so far in seconds
-        completed_items: Number of items completed
-        total_items: Total number of items
-        item_durations: Optional list of individual item durations for better estimates
-
-    Returns:
-        Tuple of (optimistic_eta, realistic_eta, pessimistic_eta)
-
-    Example:
-        >>> calculate_eta_with_confidence(30.0, 3, 10, [8.0, 10.0, 12.0])
-        (56.0, 70.0, 84.0)  # Based on min/avg/max durations
-    """
+    item_durations: list[float | None] = None,
+) -> tuple[float | None, float | None, float | None]:
+    """Return (optimistic, realistic, pessimistic) ETA tuple based on min/avg/max item duration."""
     if completed_items <= 0 or total_items <= 0:
         return (None, None, None)
 
@@ -140,31 +86,16 @@ def calculate_eta_with_confidence(
 
     return (optimistic, realistic, pessimistic)
 
-
 def log_progress_bar(
     current: int,
     total: int,
     message: str = "Progress",
-    logger: Optional[logging.Logger] = None,
+    logger: logging.Logger | None = None,
     bar_width: int = 40,
 ) -> None:
-    """Display a progress bar in the console.
-
-    Args:
-        current: Current progress value
-        total: Total progress value
-        message: Progress message
-        logger: Logger instance (optional)
-        bar_width: Width of progress bar in characters
-
-    Example:
-        >>> log_progress_bar(3, 10, "Processing files")
-        Processing files: [████████░░░░░░░░░░░░] 30%
-    """
+    """Log a filled/empty block progress bar at the given percentage."""
     if logger is None:
-        from infrastructure.core.logging_utils import get_logger
-
-        logger = get_logger(__name__)
+        logger = logging.getLogger(__name__)
 
     if total == 0:
         logger.info(f"{message}: 0/0 (0%)")
@@ -176,7 +107,6 @@ def log_progress_bar(
 
     logger.info(f"{message}: [{bar}] {percent}%")
 
-
 class Spinner:
     """Animated spinner for long-running operations.
 
@@ -186,18 +116,11 @@ class Spinner:
     SPINNER_CHARS = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
 
     def __init__(self, message: str = "Processing...", stream: Any = None, delay: float = 0.1):
-        """Initialize spinner.
-
-        Args:
-            message: Message to display with spinner
-            stream: Output stream (defaults to stderr)
-            delay: Delay between spinner updates in seconds
-        """
         self.message = message
         self.stream = stream or sys.stderr
         self.delay = delay
         self.stop_event = threading.Event()
-        self.thread: Optional[threading.Thread] = None
+        self.thread: threading.Thread | None = None
         self.idx = 0
 
     def start(self) -> None:
@@ -212,7 +135,7 @@ class Spinner:
         self.thread = threading.Thread(target=self._spin, daemon=True)
         self.thread.start()
 
-    def stop(self, final_message: Optional[str] = None) -> None:
+    def stop(self, final_message: str | None = None) -> None:
         """Stop the spinner animation.
 
         Args:
@@ -256,29 +179,13 @@ class Spinner:
         """Context manager exit."""
         self.stop()
 
-
 @contextmanager
 def log_with_spinner(
     message: str,
-    logger: Optional[logging.Logger] = None,
-    final_message: Optional[str] = None,
+    logger: logging.Logger | None = None,
+    final_message: str | None = None,
 ) -> Iterator[None]:
-    """Context manager for operations with spinner indicator.
-
-    Args:
-        message: Message to display with spinner
-        logger: Logger instance (optional, for final message)
-        final_message: Message to display when done (uses logger if provided)
-
-    Yields:
-        None
-
-    Example:
-        >>> with log_with_spinner("Loading model...", logger):
-        ...     load_model()
-        ⠋ Loading model...
-        ✅ Model loaded
-    """
+    """Context manager that shows a spinner during the block and logs completion."""
     spinner = Spinner(message)
     spinner.start()
 
@@ -288,9 +195,9 @@ def log_with_spinner(
             spinner.stop(final_message)
         elif logger:
             spinner.stop()
-            from infrastructure.core.logging_utils import log_success
-
-            log_success(message.replace("...", " complete"), logger)
+            success_msg = message.replace("...", " complete")
+            emoji = EMOJIS["success"] if USE_EMOJIS else "[SUCCESS]"
+            logger.info(f"{emoji} {success_msg}" if USE_EMOJIS else success_msg)
         else:
             spinner.stop()
     except Exception as e:
@@ -298,7 +205,6 @@ def log_with_spinner(
         if logger:
             logger.error(f"{message} failed: {e}")
         raise
-
 
 class StreamingProgress:
     """Real-time progress indicator for streaming operations.
@@ -313,14 +219,6 @@ class StreamingProgress:
         stream: Any = None,
         update_interval: float = 0.5,
     ):
-        """Initialize streaming progress.
-
-        Args:
-            total: Total number of items
-            message: Progress message
-            stream: Output stream (defaults to stderr)
-            update_interval: Minimum time between updates (seconds)
-        """
         self.total = total
         self.message = message
         self.stream = stream or sys.stderr
@@ -329,13 +227,8 @@ class StreamingProgress:
         self.last_update = 0.0
         self.start_time = time.time()
 
-    def update(self, increment: int = 1, custom_message: Optional[str] = None) -> None:
-        """Update progress.
-
-        Args:
-            increment: Number of items completed
-            custom_message: Optional custom message to display
-        """
+    def update(self, increment: int = 1, custom_message: str | None = None) -> None:
+        """Update progress by increment, display if throttle interval elapsed."""
         self.current = min(self.current + increment, self.total)
         now = time.time()
 
@@ -346,17 +239,12 @@ class StreamingProgress:
         self.last_update = now
         self._display(custom_message)
 
-    def set(self, value: int, custom_message: Optional[str] = None) -> None:
-        """Set progress to specific value.
-
-        Args:
-            value: Current progress value
-            custom_message: Optional custom message to display
-        """
+    def set(self, value: int, custom_message: str | None = None) -> None:
+        """Set progress to a specific value and display."""
         self.current = min(value, self.total)
         self._display(custom_message)
 
-    def _display(self, custom_message: Optional[str] = None) -> None:
+    def _display(self, custom_message: str | None = None) -> None:
         """Display current progress."""
         if not self.stream.isatty():
             return
@@ -369,8 +257,6 @@ class StreamingProgress:
         if self.current > 0 and elapsed > 0:
             rate = self.current / elapsed
             remaining = (self.total - self.current) / rate if rate > 0 else 0
-            from infrastructure.core.logging_helpers import format_duration
-
             eta_str = f" | ETA: {format_duration(remaining)}"
 
         message = custom_message or self.message
@@ -381,12 +267,8 @@ class StreamingProgress:
         self.stream.write(status)
         self.stream.flush()
 
-    def finish(self, final_message: Optional[str] = None) -> None:
-        """Finish progress display.
-
-        Args:
-            final_message: Optional final message to display
-        """
+    def finish(self, final_message: str | None = None) -> None:
+        """Clear progress line and display final message or completion status."""
         if self.stream.isatty():
             self.stream.write("\r" + " " * 80 + "\r")
             self.stream.flush()
@@ -402,13 +284,11 @@ class StreamingProgress:
             )
             self.stream.flush()
 
-
 def log_progress_streaming(
     current: int,
     total: int,
     message: str = "Progress",
-    logger: Optional[logging.Logger] = None,
-    show_eta: bool = True,
+    logger: logging.Logger | None = None,
 ) -> None:
     """Log streaming progress with real-time updates.
 
@@ -417,22 +297,16 @@ def log_progress_streaming(
         total: Total progress value
         message: Progress message
         logger: Logger instance (optional)
-        show_eta: Whether to show estimated time remaining
     """
-    from infrastructure.core.logging_utils import log_progress
-
     if not sys.stderr.isatty():
-        # Not a TTY - use regular progress logging
-        log_progress(current, total, message, logger)
+        # Not a TTY - fall back to plain log line
+        _logger = logger or logging.getLogger(__name__)
+        percent = (current * 100) // total if total > 0 else 0
+        _logger.info(f"[{current}/{total} - {percent}%] {message}")
         return
 
     percent = (current * 100) // total if total > 0 else 0
     status = f"\r{message}: {current}/{total} ({percent}%)"
-
-    if show_eta and current > 0:
-        # Simple ETA calculation would require tracking start time
-        # For now, just show percentage
-        pass
 
     sys.stderr.write(status.ljust(80))
     sys.stderr.flush()
@@ -441,13 +315,12 @@ def log_progress_streaming(
         sys.stderr.write("\n")
         sys.stderr.flush()
 
-
 def log_stage_with_eta(
     stage: str,
     current: int,
     total: int,
     elapsed_time: float,
-    logger: Optional[logging.Logger] = None,
+    logger: logging.Logger | None = None,
 ) -> None:
     """Log stage progress with ETA calculation.
 
@@ -459,11 +332,7 @@ def log_stage_with_eta(
         logger: Logger instance (optional)
     """
     if logger is None:
-        from infrastructure.core.logging_utils import get_logger
-
-        logger = get_logger(__name__)
-
-    from infrastructure.core.logging_helpers import format_duration
+        logger = logging.getLogger(__name__)
 
     eta = calculate_eta(elapsed_time, current, total)
     if eta is not None:
@@ -472,11 +341,10 @@ def log_stage_with_eta(
     else:
         logger.info(f"{stage} [{current}/{total}]")
 
-
 def log_resource_usage(
-    cpu_percent: Optional[float] = None,
-    memory_mb: Optional[float] = None,
-    logger: Optional[logging.Logger] = None,
+    cpu_percent: float | None = None,
+    memory_mb: float | None = None,
+    logger: logging.Logger | None = None,
 ) -> None:
     """Log current resource usage.
 
@@ -486,9 +354,7 @@ def log_resource_usage(
         logger: Logger instance (optional)
     """
     if logger is None:
-        from infrastructure.core.logging_utils import get_logger
-
-        logger = get_logger(__name__)
+        logger = logging.getLogger(__name__)
 
     parts = []
     if cpu_percent is not None:

@@ -6,7 +6,14 @@ Follows No Mocks Policy - all tests use real data and real execution.
 
 from datetime import datetime
 
-
+from infrastructure.validation.doc_accuracy import extract_headings
+from infrastructure.validation.doc_discovery import (
+    analyze_documentation_file,
+    catalog_agents_readme,
+    find_config_files,
+    find_markdown_files,
+    find_script_files,
+)
 from infrastructure.validation.doc_scanner import (
     AccuracyIssue,
     CompletenessGap,
@@ -108,8 +115,7 @@ class TestDocumentationScanner:
         (tmp_path / "output").mkdir()
         (tmp_path / "output" / "skip.md").write_text("# Skip")  # Should be skipped
 
-        scanner = DocumentationScanner(tmp_path)
-        files = scanner._find_markdown_files()
+        files = find_markdown_files(tmp_path)
 
         assert len(files) >= 2
         # Should not include output directory
@@ -122,9 +128,8 @@ class TestDocumentationScanner:
         (tmp_path / "docs").mkdir()
         (tmp_path / "docs" / "AGENTS.md").write_text("# Docs AGENTS")
 
-        scanner = DocumentationScanner(tmp_path)
         md_files = list(tmp_path.glob("**/*.md"))
-        result = scanner._catalog_agents_readme(md_files)
+        result = catalog_agents_readme(md_files, tmp_path)
 
         assert len(result) >= 2
 
@@ -133,8 +138,7 @@ class TestDocumentationScanner:
         (tmp_path / "pyproject.toml").write_text("[project]")
         (tmp_path / "config.yaml").write_text("key: value")
 
-        scanner = DocumentationScanner(tmp_path)
-        configs = scanner._find_config_files()
+        configs = find_config_files(tmp_path)
 
         assert len(configs) >= 1
 
@@ -145,10 +149,9 @@ class TestDocumentationScanner:
         (scripts / "build.py").write_text("# script")
         (scripts / "test.sh").write_text("# shell")
 
-        scanner = DocumentationScanner(tmp_path)
-        scanner._find_script_files()
+        script_files = find_script_files(tmp_path)
 
-        assert len(scanner.script_files) >= 1
+        assert len(script_files) >= 1
 
     def test_analyze_documentation_file(self, tmp_path):
         """Test analyzing a documentation file."""
@@ -166,8 +169,7 @@ More text here.
 """
         )
 
-        scanner = DocumentationScanner(tmp_path)
-        doc = scanner._analyze_documentation_file(md_file)
+        doc = analyze_documentation_file(md_file, tmp_path)
 
         assert doc.name == "test.md"
         assert doc.has_links
@@ -226,16 +228,15 @@ class TestScannerPhases:
         assert "total_issues" in result
 
 
-class TestScannerPrivateMethods:
-    """Test scanner private helper methods."""
+class TestDiscoveryModuleFunctions:
+    """Test module-level discovery functions directly."""
 
     def test_find_markdown_files(self, tmp_path):
         """Test finding markdown files."""
         (tmp_path / "a.md").write_text("# A")
         (tmp_path / "b.md").write_text("# B")
 
-        scanner = DocumentationScanner(tmp_path)
-        files = scanner._find_markdown_files()
+        files = find_markdown_files(tmp_path)
 
         assert len(files) >= 2
 
@@ -244,9 +245,8 @@ class TestScannerPrivateMethods:
         (tmp_path / "AGENTS.md").write_text("# AGENTS")
         (tmp_path / "README.md").write_text("# README")
 
-        scanner = DocumentationScanner(tmp_path)
         md_files = list(tmp_path.glob("*.md"))
-        result = scanner._catalog_agents_readme(md_files)
+        result = catalog_agents_readme(md_files, tmp_path)
 
         assert len(result) == 2
 
@@ -255,17 +255,15 @@ class TestScannerPrivateMethods:
         (tmp_path / "pyproject.toml").write_text("[project]")
         (tmp_path / "setup.cfg").write_text("[metadata]")
 
-        scanner = DocumentationScanner(tmp_path)
-        configs = scanner._find_config_files()
+        configs = find_config_files(tmp_path)
 
         assert len(configs) >= 1
 
-    def test_extract_headings(self, tmp_path):
+    def test_extract_headings(self):
         """Test extracting headings from content."""
         content = "# Title\n## Section\n### Subsection"
 
-        scanner = DocumentationScanner(tmp_path)
-        headings = scanner._extract_headings(content)
+        headings = extract_headings(content)
 
         assert len(headings) >= 3
 
@@ -274,8 +272,7 @@ class TestScannerPrivateMethods:
         md = tmp_path / "test.md"
         md.write_text("# Title\n\n[Link](url)\n\n```code```")
 
-        scanner = DocumentationScanner(tmp_path)
-        doc = scanner._analyze_documentation_file(md)
+        doc = analyze_documentation_file(md, tmp_path)
 
         assert doc.has_links
         assert doc.has_code_blocks

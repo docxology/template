@@ -4,23 +4,38 @@ This module provides comprehensive health monitoring for all system components,
 including dependencies, filesystem, network, and performance metrics.
 """
 
+from __future__ import annotations
+
 import os
+import socket
+import tempfile
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
-import psutil
-
+from infrastructure.core._optional_deps import psutil
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
+
+CRITICAL_RESOURCE_THRESHOLD = 95.0
 
 
 class SystemHealthChecker:
     """Comprehensive system health monitoring."""
 
-    def __init__(self) -> None:
-        self.start_time = time.time()
+    def __init__(
+        self,
+        repo_root: Path | None = None,
+        start_time: float | None = None,
+        network_test_hosts: tuple[str, ...] | None = None,
+    ) -> None:
+        self.start_time = start_time if start_time is not None else time.time()
+        self.repo_root = repo_root or Path.cwd()
+        self._network_dns_host, self._network_tcp_host = (
+            network_test_hosts[:2] if network_test_hosts and len(network_test_hosts) >= 2
+            else ("google.com", "1.1.1.1")
+        )
         self.checks = {
             "filesystem": self._check_filesystem,
             "memory": self._check_memory,
@@ -31,13 +46,9 @@ class SystemHealthChecker:
             "uptime": self._check_uptime,
         }
 
-    def get_health_status(self) -> Dict[str, Any]:
-        """Get comprehensive health status.
-
-        Returns:
-            Dictionary containing health status for all components
-        """
-        status: Dict[str, Any] = {
+    def get_health_status(self) -> dict[str, Any]:
+        """Get comprehensive health status."""
+        status: dict[str, Any] = {
             "timestamp": time.time(),
             "overall_status": "healthy",
             "checks": {},
@@ -54,11 +65,12 @@ class SystemHealthChecker:
                     "details": result,
                     "timestamp": time.time(),
                 }
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 — intentional: check functions are arbitrary; must not propagate
                 logger.warning(f"Health check failed for {check_name}: {e}")
                 status["checks"][check_name] = {
                     "status": "unhealthy",
                     "error": str(e),
+                    "error_type": type(e).__name__,
                     "timestamp": time.time(),
                 }
                 unhealthy_checks.append(check_name)
@@ -75,11 +87,8 @@ class SystemHealthChecker:
 
         return status
 
-    def _check_filesystem(self) -> Dict[str, Any]:
-        """Check filesystem health and permissions."""
-        import tempfile
-
-        results: Dict[str, Any] = {}
+    def _check_filesystem(self) -> dict[str, Any]:
+        results: dict[str, Any] = {}
 
         # Check write permissions
         try:
@@ -89,14 +98,14 @@ class SystemHealthChecker:
         except (OSError, IOError):
             results["write_permissions"] = False
 
-        # Check critical directories
-        critical_dirs = [
-            Path("projects"),
-            Path("projects/project"),
-            Path("projects/project/src"),
-            Path("projects/project/output"),
-            Path("infrastructure"),
-        ]
+        # Check critical directories (discover project dirs dynamically)
+        projects_root = self.repo_root / "projects"
+        critical_dirs = [projects_root, self.repo_root / "infrastructure"]
+        if projects_root.exists():
+            for p in sorted(projects_root.iterdir()):
+                if p.is_dir() and not p.name.startswith((".", "_")):
+                    critical_dirs.append(p / "src")
+                    critical_dirs.append(p / "output")
 
         results["directories"] = {}
         for dir_path in critical_dirs:
@@ -108,83 +117,69 @@ class SystemHealthChecker:
 
         return results
 
-    def _check_memory(self) -> Dict[str, Any]:
-        """Check system memory usage."""
-        try:
-            memory = psutil.virtual_memory()
-            return {
-                "total_mb": memory.total // (1024 * 1024),
-                "available_mb": memory.available // (1024 * 1024),
-                "used_mb": memory.used // (1024 * 1024),
-                "percent_used": memory.percent,
-                "critical_threshold": 95.0,  # Consider critical if > 95% used
-                "is_critical": memory.percent > 95.0,
-            }
-        except ImportError:
+    def _check_memory(self) -> dict[str, Any]:
+        if psutil is None:
             return {"psutil_unavailable": True}
+        memory = psutil.virtual_memory()
+        return {
+            "total_mb": memory.total // (1024 * 1024),
+            "available_mb": memory.available // (1024 * 1024),
+            "used_mb": memory.used // (1024 * 1024),
+            "percent_used": memory.percent,
+            "critical_threshold": CRITICAL_RESOURCE_THRESHOLD,
+            "is_critical": memory.percent > CRITICAL_RESOURCE_THRESHOLD,
+        }
 
-    def _check_cpu(self) -> Dict[str, Any]:
-        """Check CPU usage and load."""
-        try:
-            return {
-                "cpu_percent": psutil.cpu_percent(interval=1),
-                "cpu_count": psutil.cpu_count(),
-                "cpu_count_logical": psutil.cpu_count(logical=True),
-                "load_average": (psutil.getloadavg() if hasattr(psutil, "getloadavg") else None),
-            }
-        except ImportError:
+    def _check_cpu(self) -> dict[str, Any]:
+        if psutil is None:
             return {"psutil_unavailable": True}
+        return {
+            "cpu_percent": psutil.cpu_percent(interval=1),
+            "cpu_count": psutil.cpu_count(),
+            "cpu_count_logical": psutil.cpu_count(logical=True),
+            "load_average": (psutil.getloadavg() if hasattr(psutil, "getloadavg") else None),
+        }
 
-    def _check_disk(self) -> Dict[str, Any]:
-        """Check disk usage."""
-        try:
-            disk = psutil.disk_usage("/")
-            return {
-                "total_gb": disk.total // (1024**3),
-                "used_gb": disk.used // (1024**3),
-                "free_gb": disk.free // (1024**3),
-                "percent_used": disk.percent,
-                "critical_threshold": 95.0,
-                "is_critical": disk.percent > 95.0,
-            }
-        except ImportError:
+    def _check_disk(self) -> dict[str, Any]:
+        if psutil is None:
             return {"psutil_unavailable": True}
+        disk = psutil.disk_usage("/")
+        return {
+            "total_gb": disk.total // (1024**3),
+            "used_gb": disk.used // (1024**3),
+            "free_gb": disk.free // (1024**3),
+            "percent_used": disk.percent,
+            "critical_threshold": CRITICAL_RESOURCE_THRESHOLD,
+            "is_critical": disk.percent > CRITICAL_RESOURCE_THRESHOLD,
+        }
 
-    def _check_network(self) -> Dict[str, Any]:
-        """Check network connectivity."""
-        import socket
-
-        results: Dict[str, Any] = {}
+    def _check_network(self) -> dict[str, Any]:
+        results: dict[str, Any] = {}
 
         # Test DNS resolution
         try:
-            socket.gethostbyname("google.com")
+            socket.gethostbyname(self._network_dns_host)
             results["dns_resolution"] = True
         except socket.gaierror:
             results["dns_resolution"] = False
 
-        # Test basic connectivity (if requests available)
+        # Test basic TCP connectivity via socket (no external HTTP dependency)
         try:
-            import requests
-
-            response = requests.get("https://httpbin.org/status/200", timeout=5)
-            results["http_connectivity"] = response.status_code == 200
-        except (ImportError, requests.RequestException):
-            results["http_connectivity"] = False  # Not available or failed
+            with socket.create_connection((self._network_tcp_host, 80), timeout=5):
+                results["http_connectivity"] = True
+        except OSError:
+            results["http_connectivity"] = False
 
         return results
 
-    def _check_dependencies(self) -> Dict[str, Any]:
-        """Check critical Python dependencies."""
+    def _check_dependencies(self) -> dict[str, Any]:
         critical_deps = [
             "numpy",
             "matplotlib",
-            "requests",
-            "pyyaml",
-            "psutil",  # For monitoring
+            "yaml",  # pyyaml installs as yaml
         ]
 
-        results: Dict[str, Any] = {}
+        results: dict[str, Any] = {}
         for dep in critical_deps:
             try:
                 __import__(dep)
@@ -193,7 +188,7 @@ class SystemHealthChecker:
                 results[dep] = "missing"
 
         # Check optional dependencies
-        optional_deps = ["ollama", "scikit-learn", "reportlab"]
+        optional_deps = ["ollama", "reportlab", "requests", "psutil", "pypdf"]
         results["optional"] = {}
         for dep in optional_deps:
             try:
@@ -204,16 +199,18 @@ class SystemHealthChecker:
 
         return results
 
-    def _check_uptime(self) -> Dict[str, Any]:
-        """Check system uptime and process runtime."""
-        uptime_seconds: Optional[float] = None
+    def _check_uptime(self) -> dict[str, Any]:
+        """Return system and process uptime; falls back from /proc/uptime to psutil.boot_time()."""
+        uptime_seconds: float | None = None
         try:
             with open("/proc/uptime", "r") as f:
                 uptime_seconds = float(f.readline().split()[0])
         except (FileNotFoundError, OSError):
             # Fallback for systems without /proc/uptime
             uptime_seconds = (
-                time.time() - psutil.boot_time() if hasattr(psutil, "boot_time") else None
+                time.time() - psutil.boot_time()
+                if psutil is not None and hasattr(psutil, "boot_time")
+                else None
             )
 
         process_uptime = time.time() - self.start_time
@@ -225,18 +222,45 @@ class SystemHealthChecker:
             "process_uptime_hours": process_uptime / 3600,
         }
 
-    def _generate_summary(self, status: Dict[str, Any]) -> Dict[str, Any]:
-        """Generate summary metrics from health status."""
+    def is_healthy(self) -> bool:
+        """Return True if all health checks pass."""
+        return bool(self.get_health_status()["overall_status"] == "healthy")
+
+    def get_metrics(self) -> dict[str, Any]:
+        """Return health metrics in a format suitable for monitoring systems."""
+        status = self.get_health_status()
+
+        metrics: dict[str, Any] = {
+            "health_status": 1 if status["overall_status"] == "healthy" else 0,
+            "timestamp": status["timestamp"],
+        }
+
+        for check_name, check_data in status["checks"].items():
+            metrics[f"{check_name}_status"] = 1 if check_data["status"] == "healthy" else 0
+
+        for check_key, detail_key, metric_key in [
+            ("memory", "percent_used", "memory_percent_used"),
+            ("cpu", "cpu_percent", "cpu_percent_used"),
+            ("disk", "percent_used", "disk_percent_used"),
+        ]:
+            if check_key in status["checks"]:
+                details = status["checks"][check_key].get("details", {})
+                if detail_key in details:
+                    metrics[metric_key] = details[detail_key]
+
+        return metrics
+
+    def _generate_summary(self, status: dict[str, Any]) -> dict[str, Any]:
         checks = status["checks"]
 
-        summary: Dict[str, Any] = {
+        summary: dict[str, Any] = {
             "total_checks": len(checks),
             "healthy_checks": sum(1 for c in checks.values() if c["status"] == "healthy"),
             "unhealthy_checks": sum(1 for c in checks.values() if c["status"] == "unhealthy"),
         }
 
         # Add critical resource warnings
-        warnings: List[str] = []
+        warnings: list[str] = []
 
         if "memory" in checks and checks["memory"].get("details", {}).get("is_critical"):
             warnings.append("High memory usage detected")
@@ -250,91 +274,3 @@ class SystemHealthChecker:
         return summary
 
 
-class HealthCheckAPI:
-    """REST-like API for health check endpoints."""
-
-    def __init__(self) -> None:
-        self.checker = SystemHealthChecker()
-
-    def get_status(self) -> Dict[str, Any]:
-        """Get system health status."""
-        return self.checker.get_health_status()
-
-    def get_status_summary(self) -> Dict[str, Any]:
-        """Get simplified health status summary."""
-        full_status = self.get_status()
-
-        return {
-            "status": full_status["overall_status"],
-            "timestamp": full_status["timestamp"],
-            "checks_summary": full_status["summary"],
-            "unhealthy_checks": [
-                name
-                for name, check in full_status["checks"].items()
-                if check["status"] == "unhealthy"
-            ],
-        }
-
-    def is_healthy(self) -> bool:
-        """Quick health check - returns True if system is healthy."""
-        status = self.get_status()
-        return bool(status["overall_status"] == "healthy")
-
-    def get_metrics(self) -> Dict[str, Any]:
-        """Get health metrics in a format suitable for monitoring systems."""
-        status = self.get_status()
-
-        metrics = {
-            "health_status": 1 if status["overall_status"] == "healthy" else 0,
-            "timestamp": status["timestamp"],
-        }
-
-        # Add individual check metrics
-        for check_name, check_data in status["checks"].items():
-            metrics[f"{check_name}_status"] = 1 if check_data["status"] == "healthy" else 0
-
-        # Add resource metrics
-        if "memory" in status["checks"]:
-            mem_details = status["checks"]["memory"].get("details", {})
-            if "percent_used" in mem_details:
-                metrics["memory_percent_used"] = mem_details["percent_used"]
-
-        if "cpu" in status["checks"]:
-            cpu_details = status["checks"]["cpu"].get("details", {})
-            if "cpu_percent" in cpu_details:
-                metrics["cpu_percent_used"] = cpu_details["cpu_percent"]
-
-        if "disk" in status["checks"]:
-            disk_details = status["checks"]["disk"].get("details", {})
-            if "percent_used" in disk_details:
-                metrics["disk_percent_used"] = disk_details["percent_used"]
-
-        return metrics
-
-
-# Global instances
-_health_api = HealthCheckAPI()
-
-
-def get_health_api() -> HealthCheckAPI:
-    """Get the global health check API instance."""
-    return _health_api
-
-
-def quick_health_check() -> bool:
-    """Perform a quick health check.
-
-    Returns:
-        True if system is healthy, False otherwise
-    """
-    return _health_api.is_healthy()
-
-
-def get_health_status() -> Dict[str, Any]:
-    """Get detailed health status."""
-    return _health_api.get_status()
-
-
-def get_health_metrics() -> Dict[str, Any]:
-    """Get health metrics for monitoring systems."""
-    return _health_api.get_metrics()

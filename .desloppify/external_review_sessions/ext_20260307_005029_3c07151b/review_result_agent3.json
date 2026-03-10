@@ -1,0 +1,259 @@
+{
+  "session": {
+    "id": "ext_20260307_005029_3c07151b",
+    "token": "6ab13e104a55db5b5e9bb9c2e16924dc"
+  },
+  "assessments": {
+    "high_level_elegance": 72,
+    "mid_level_elegance": 64,
+    "low_level_elegance": 61,
+    "design_coherence": 63
+  },
+  "findings": [
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "HLE-01",
+      "summary": "Two parallel performance modules with overlapping concerns split without clear ownership boundary",
+      "related_files": [
+        "infrastructure/core/performance.py",
+        "infrastructure/core/performance_monitor.py"
+      ],
+      "evidence": [
+        "performance.py exports ResourceUsage, PerformanceMetrics dataclasses with to_dict() and context-manager timing",
+        "performance_monitor.py exports ProfilingMetrics, CodeProfiler with nearly identical context-manager monitor() and to_dict() pattern",
+        "Both live in infrastructure/core/ with no documented distinction of when to use one vs. the other"
+      ],
+      "suggestion": "Merge into a single infrastructure/core/performance.py: CodeProfiler (deep cProfile+tracemalloc) and lightweight PerformanceMetrics are complementary, not separate concerns; clarify the boundary in a single module docstring.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "HLE-02",
+      "summary": "validate_markdown_cli.py carries re-implemented business logic that belongs in the infrastructure validator it wraps",
+      "related_files": [
+        "infrastructure/validation/validate_markdown_cli.py"
+      ],
+      "evidence": [
+        "The file documents itself as a 'THIN ORCHESTRATOR' but defines find_markdown_files(), collect_symbols(), validate_images(), validate_refs(), and validate_math() — all containing regex and file-walking logic",
+        "These functions re-implement subset behaviour of infrastructure/validation/markdown_validator.py without delegating to it",
+        "Inline imports (import os, import re) inside function bodies reinforce these as ad-hoc additions, not deliberate design"
+      ],
+      "suggestion": "Move the logic into infrastructure/validation/markdown_validator.py and expose the CLI helpers as thin wrappers that call the validator; the CLI file should contain only argparse and main().",
+      "confidence": "high"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "HLE-03",
+      "summary": "publishing/core.py is a pure re-export facade with one substantive function, blurring the module boundary",
+      "related_files": [
+        "infrastructure/publishing/core.py"
+      ],
+      "evidence": [
+        "Lines 24-47 import and immediately re-export with '# noqa: F401' from citations, metadata, models, and platforms submodules",
+        "The only logic in core.py is create_publication_package() and create_submission_checklist() — two functions that could live in publishing/package.py",
+        "The re-export pattern forces callers to choose between importing from core.py (unclear) or the submodule (also unclear)"
+      ],
+      "suggestion": "Either make core.py a true facade (move create_publication_package and create_submission_checklist into their natural submodule) or remove it and let __init__.py perform the aggregation explicitly.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "HLE-04",
+      "summary": "LLMConfig name collision between infrastructure/core/config_loader.py and infrastructure/llm/core/config.py",
+      "related_files": [
+        "infrastructure/core/config_loader.py",
+        "infrastructure/llm/core/config.py"
+      ],
+      "evidence": [
+        "infrastructure/core/config_loader.py defines class LLMConfig as a TypedDict representing the YAML schema section",
+        "infrastructure/llm/core/config.py defines class LLMConfig as a dataclass representing Ollama client configuration",
+        "Both are in active use; the identical name across layers creates confusion about which LLMConfig a given import refers to"
+      ],
+      "suggestion": "Rename the YAML schema TypedDict to LLMSectionConfig or ManuscriptLLMConfig in config_loader.py to make the distinction unambiguous.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "MLE-01",
+      "summary": "RenderManager delegates render_pdf and render_web via one-liner methods that add no policy, turning the class into a thin passthrough",
+      "related_files": [
+        "infrastructure/rendering/core.py"
+      ],
+      "evidence": [
+        "render_pdf() is a single-line return self.pdf_renderer.render(source_file)",
+        "render_web() is a single-line return self.web_renderer.render(source_file)",
+        "render_markdown_pdf() is return self.pdf_renderer.render_markdown(source_file)",
+        "render_all() contains meaningful orchestration but the individual delegate methods provide no additional value over direct attribute access"
+      ],
+      "suggestion": "Remove the passthrough delegation methods; callers needing targeted rendering should use render_all() or access the renderer attribute directly. If delegation methods are kept, they should add cross-cutting concerns (logging, error wrapping, metrics).",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "MLE-02",
+      "summary": "render_all() uses bare except Exception silently swallowing slide and HTML failures with only a warning",
+      "related_files": [
+        "infrastructure/rendering/core.py"
+      ],
+      "evidence": [
+        "The Beamer slide failure handler catches Exception, attempts a second render call inside the handler (re-invoking self.slides_renderer.render), and then logs a warning and continues",
+        "The inner second render call in the exception handler can itself raise, caught by a nested bare except Exception: pass at line 95",
+        "HTML failure handler similarly swallows all exceptions with logger.warning and continues",
+        "The final check 'if not outputs: raise TemplateError' may never fire if one format succeeds, even when critical formats fail silently"
+      ],
+      "suggestion": "Replace the bare swallow pattern with explicit, typed exception handling; collect failures into a list and surface them in the return value or raise an aggregated error so callers can decide whether partial output is acceptable.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "MLE-03",
+      "summary": "get_logger re-detects test environment on every call, coupling the logging module to pytest internals at the seam level",
+      "related_files": [
+        "infrastructure/core/logging_utils.py"
+      ],
+      "evidence": [
+        "get_logger() re-runs the three-part pytest detection (PYTEST_CURRENT_TEST env var, 'pytest' in sys.modules, module __file__ scan) on every invocation",
+        "setup_logger() runs the same detection block independently — duplicated logic across two functions called 118+ times across the codebase",
+        "The sys.modules scan 'any(\"pytest\" in str(v) for v in sys.modules.values() if hasattr(v, \"__file__\"))' is O(n) over all loaded modules and fires on every logger acquisition"
+      ],
+      "suggestion": "Compute and cache is_test_env once at module load time as a module-level constant; both get_logger and setup_logger reference the cached value instead of re-detecting.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "MLE-04",
+      "summary": "LLMClient.__init__ mutates config.system_prompt after construction to inject a prompt-system override",
+      "related_files": [
+        "infrastructure/llm/core/client.py"
+      ],
+      "evidence": [
+        "Line 140: self.config.system_prompt = loader.get_system_prompt('manuscript_review') — mutates the shared config object passed in by the caller",
+        "LLMConfig is a dataclass (not frozen), so the mutation persists in the caller's reference",
+        "The mutation is conditional on PROMPT_LOADER_AVAILABLE, auto_inject_system_prompt, and config.system_prompt matching the default string — three implicit guards that are non-obvious at the call site"
+      ],
+      "suggestion": "Make the system prompt override explicit: accept an optional system_prompt parameter in __init__ or create a resolved config copy (dataclasses.replace) instead of mutating the caller's instance.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "LLE-01",
+      "summary": "verify_cross_references sets all integrity keys to False on any single read error, losing partial results",
+      "related_files": [
+        "infrastructure/validation/integrity.py"
+      ],
+      "evidence": [
+        "Line 127: integrity = {k: False for k in integrity} inside the except block — any file read failure resets all five categories (equations, figures, tables, sections, citations) to False",
+        "Same pattern repeated in verify_academic_standards at line 230: standards = {k: False for k in standards} on any read exception",
+        "The break after the reset means subsequent files are not checked, so one unreadable file contaminates the entire report"
+      ],
+      "suggestion": "Track per-file failures separately; set only the affected file's status to False and continue processing remaining files. Aggregate failures at the end rather than short-circuiting on first error.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "LLE-02",
+      "summary": "query_short and query_long duplicate start_time/logging boilerplate that differs only in token limit and instruction text",
+      "related_files": [
+        "infrastructure/llm/core/client.py"
+      ],
+      "evidence": [
+        "query_short() (lines 351-406) and query_long() (lines 408+) share identical structure: record start_time, logger.debug with same extra dict keys, build GenerationOptions, prepend instruction string, call self.query(), log completion time",
+        "The only variation is short_max_tokens vs long_max_tokens and the instruction prefix string",
+        "query_raw() repeats the same start_time + two logger.debug pattern a third time with slightly different extra fields"
+      ],
+      "suggestion": "Extract a private _query_with_length_hint(prompt, max_tokens, instruction, model, options) helper that handles the shared timing/logging pattern; query_short and query_long become two-line wrappers that supply their specific parameters.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "LLE-03",
+      "summary": "Inline imports inside function bodies in validate_markdown_cli.py indicate ad-hoc additions rather than deliberate structure",
+      "related_files": [
+        "infrastructure/validation/validate_markdown_cli.py"
+      ],
+      "evidence": [
+        "find_markdown_files() uses 'import os' inside the function body at line 61",
+        "collect_symbols() uses 'import re' inside the function body at line 97",
+        "validate_images() uses 'import os' and 'import re' inside the function body at lines 119-120",
+        "validate_refs() uses 'import re' inside the function body at line 149"
+      ],
+      "suggestion": "Move all imports to the module top level; inline imports are acceptable for optional heavyweight dependencies or circular-import avoidance, neither of which applies to os and re.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "LLE-04",
+      "summary": "ProfilingMetrics.__post_init__ mutates Optional fields with integer division that silently loses sub-MB precision",
+      "related_files": [
+        "infrastructure/core/performance_monitor.py"
+      ],
+      "evidence": [
+        "Lines 38-43: memory_peak, memory_current, memory_delta are divided by 1024*1024 in-place using //",
+        "The original byte values from tracemalloc are discarded; callers wanting byte precision cannot recover it",
+        "The guard 'if self.memory_peak:' treats 0 bytes as falsy — a valid reading of zero memory delta is silently skipped"
+      ],
+      "suggestion": "Store the raw byte values and expose MB-converted properties (or a to_dict() that converts on output); do not mutate the fields in __post_init__ as this destroys the original measurement.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "DC-01",
+      "summary": "ProjectLogger wraps logging.Logger with one-liner delegate methods that add no logic, creating a gratuitous abstraction layer",
+      "related_files": [
+        "infrastructure/core/logging_utils.py"
+      ],
+      "evidence": [
+        "debug(), info(), warning(), error(), critical() each delegate to self._logger.<method> with identical signature forwarding",
+        "get_project_logger() returns a ProjectLogger; setup_project_logging() calls get_project_logger — both are one-liner wrappers",
+        "The module already exports get_logger() which returns a standard logging.Logger; ProjectLogger exists in parallel without a documented reason why callers need both paths"
+      ],
+      "suggestion": "Remove ProjectLogger or justify it by adding cross-cutting behaviour (structured context, rate limiting, context propagation). If it is only a naming preference, expose the stdlib Logger directly and document the recommended call pattern.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "DC-02",
+      "summary": "clean_output_directories contains archiving, selective-preserve, and recreation logic in one 100+ line function mixing three distinct responsibilities",
+      "related_files": [
+        "infrastructure/core/file_operations.py"
+      ],
+      "evidence": [
+        "The function handles log archiving (lines 151-175), selective file preservation for incremental runs (lines 181-210), directory removal and recreation (lines 187-216), and also calls clean_root_output_directory as a side effect at line 124",
+        "_clean_dir_preserving is extracted as a helper but the caller function is still responsible for deciding which directories need selective cleaning",
+        "The project_names discovery via Path scan (lines 116-121) is explained as avoiding a circular import — a side-effect of tangled layer responsibilities"
+      ],
+      "suggestion": "Split into archive_pipeline_logs(), clean_project_output(preserve=...), and recreate_output_structure() functions; compose them in clean_output_directories(). This makes each responsibility independently testable and the overall flow readable as a composition.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "DC-03",
+      "summary": "InfraError.format() embeds an emoji character (❌) in infrastructure error-message formatting, coupling presentation to the error constant layer",
+      "related_files": [
+        "infrastructure/core/errors.py"
+      ],
+      "evidence": [
+        "InfraError.format() returns 'f\"\\u274c [{self.code}] {self.message...}\"' — the ❌ emoji is hardcoded in the formatting method",
+        "STAGE_FAILED.message already contains '\\u2717 Stage {stage_num} failed' — mixing a checkmark-style character in the message field while format() prepends ❌ creates inconsistent output",
+        "The emoji layer decision is already handled at logging level by logging_utils.py (USE_EMOJIS, EMOJIS dict) — duplicating it in error constants creates two competing styling paths"
+      ],
+      "suggestion": "Remove the hardcoded emoji from InfraError.format(); let the logging layer apply consistent emoji styling. InfraError should produce plain text that the logging formatter decorates.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "DC-04",
+      "summary": "verify_data_consistency imports numpy inside a conditional branch, making module-level dependency optional but silently degrading coverage for .npz/.npy files",
+      "related_files": [
+        "infrastructure/validation/integrity.py"
+      ],
+      "evidence": [
+        "Line 182: 'import numpy as np' is inside the elif branch for .npz/.npy files within verify_data_consistency()",
+        "If numpy is not installed, the ImportError propagates as a generic Exception caught at line 192, which sets data_integrity=False with the message 'No module named numpy' — indistinguishable from a corrupt file",
+        "The function's docstring and callers receive no signal that numpy is required for complete coverage of data file types"
+      ],
+      "suggestion": "Add a try/import numpy at module top level and set a NUMPY_AVAILABLE flag; inside the elif branch, either skip with a warning when unavailable or raise a DependencyError with an actionable message rather than silently marking integrity as False.",
+      "confidence": "medium"
+    }
+  ]
+}

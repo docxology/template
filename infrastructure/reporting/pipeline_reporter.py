@@ -7,28 +7,16 @@ from pipeline execution data.
 from __future__ import annotations
 
 import json
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
-from infrastructure.core.logging_utils import format_duration, get_logger
+from infrastructure.core.checkpoint import StageResult
+from infrastructure.core.logging_helpers import format_duration
+from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
-
-
-@dataclass
-class StageResult:
-    """Result for a single pipeline stage."""
-
-    name: str
-    exit_code: int
-    duration: float
-    status: str  # 'passed', 'failed', 'skipped'
-    output_files: List[str] = field(default_factory=list)
-    errors: List[str] = field(default_factory=list)
-    warnings: List[str] = field(default_factory=list)
-
 
 @dataclass
 class PipelineReport:
@@ -36,344 +24,26 @@ class PipelineReport:
 
     timestamp: str
     total_duration: float
-    stages: List[StageResult]
-    test_results: Optional[Dict[str, Any]] = None
-    validation_results: Optional[Dict[str, Any]] = None
-    performance_metrics: Optional[Dict[str, Any]] = None
-    error_summary: Optional[Dict[str, Any]] = None
-    output_statistics: Optional[Dict[str, Any]] = None
-
-
-def generate_multi_project_summary_report(
-    result: Any, projects: List[Any], output_dir: Path
-) -> Dict[str, Path]:
-    """Generate comprehensive multi-project summary report.
-
-    Args:
-        result: Multi-project execution result
-        projects: List of project objects
-        output_dir: Directory to save reports
-
-    Returns:
-        Dictionary mapping format names to saved file paths
-    """
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    # Debug: check what type of result object we got
-    logger.debug(f"Result object type: {type(result)}")
-    logger.debug(f"Result object attributes: {dir(result)}")
-
-    # Build comprehensive summary
-    successful_projects = getattr(result, "successful_projects", 0)
-    total_projects_count = len(projects)
-    failed_projects = getattr(result, "failed_projects", total_projects_count - successful_projects)
-
-    summary = {  # type: ignore
-        "timestamp": datetime.now().isoformat(),
-        "total_projects": total_projects_count,
-        "successful_projects": successful_projects,
-        "failed_projects": failed_projects,
-        "total_duration": getattr(result, "total_duration", 0.0),
-        "infra_test_duration": getattr(result, "infra_test_duration", 0.0),
-        "projects": {},
-        "performance_analysis": {},
-        "error_aggregation": {},
-        "recommendations": [],
-    }
-
-    # Collect per-project data with defensive type checking
-    project_names = [p.name for p in projects]
-    project_results = getattr(result, "project_results", {})
-
-    # Debug: log what we got
-    logger.debug(f"project_results type: {type(project_results)}, value: {project_results}")
-
-    # Ensure project_results is a dict - strengthen validation
-    if not isinstance(project_results, dict):
-        logger.warning(
-            f"project_results is not a dict, got {type(project_results)} - using empty dict"
-        )
-        project_results = {}
-    elif project_results is None:
-        logger.warning("project_results is None - using empty dict")
-        project_results = {}
-    else:
-        # Ensure all values are lists (defensive check)
-        for key, value in project_results.items():
-            if not isinstance(value, list):
-                logger.warning(
-                    f"project_results['{key}'] is not a list, got {type(value)} - converting to empty list"  # noqa: E501
-                )
-                project_results[key] = []
-
-    for proj_name in project_names:
-        try:
-            proj_result = project_results.get(proj_name, [])
-            logger.info(
-                f"For project {proj_name}, proj_result type: {type(proj_result)}, len: {len(proj_result) if hasattr(proj_result, '__len__') else 'N/A'}"  # noqa: E501
-            )
-
-            # Handle different result formats defensively
-            if isinstance(proj_result, list) and proj_result:
-                # New format: list of PipelineStageResult objects
-                all_success = all(
-                    result.success for result in proj_result if hasattr(result, "success")
-                )
-                total_duration = sum(
-                    result.duration for result in proj_result if hasattr(result, "duration")
-                )
-                stages_completed = len(proj_result)
-                errors = []
-                for result in proj_result:
-                    if hasattr(result, "error_message") and result.error_message:
-                        errors.append(result.error_message)
-                    elif hasattr(result, "errors") and result.errors:
-                        errors.extend(result.errors)
-
-                summary["projects"][proj_name] = {  # type: ignore
-                    "success": all_success,
-                    "duration": total_duration,
-                    "stages_completed": stages_completed,
-                    "errors": errors,
-                }
-            elif isinstance(proj_result, dict):
-                # Legacy format: dict with direct keys
-                summary["projects"][proj_name] = {  # type: ignore
-                    "success": proj_result.get("success", False),
-                    "duration": proj_result.get("duration", 0.0),
-                    "stages_completed": proj_result.get("stages_completed", 0),
-                    "errors": proj_result.get("errors", []),
-                }
-            else:
-                # Unknown format or empty
-                logger.debug(f"Unknown project result format for {proj_name}: {type(proj_result)}")
-                summary["projects"][proj_name] = {  # type: ignore
-                    "success": False,
-                    "duration": 0.0,
-                    "stages_completed": 0,
-                    "errors": ["Unknown result format"],
-                }
-        except Exception as e:
-            logger.warning(f"Error processing results for project {proj_name}: {e}")
-            summary["projects"][proj_name] = {  # type: ignore
-                "success": False,
-                "duration": 0.0,
-                "stages_completed": 0,
-                "errors": [str(e)],
-            }
-
-    # Performance analysis with defensive handling
-    if project_results:
-        try:
-            # Collect durations from the projects summary we just built
-            durations = []
-            for proj_name, proj_data in summary["projects"].items():  # type: ignore
-                if isinstance(proj_data, dict) and proj_data.get("duration", 0) > 0:
-                    durations.append(proj_data["duration"])
-
-            if durations:
-                summary["performance_analysis"] = {
-                    "slowest_project": (
-                        max(
-                            (
-                                (n, summary["projects"][n]["duration"])  # type: ignore
-                                for n in summary["projects"]  # type: ignore
-                                if summary["projects"][n]["duration"] > 0  # type: ignore
-                            ),
-                            key=lambda x: x[1],
-                        )[0]
-                        if any(summary["projects"][n]["duration"] > 0 for n in summary["projects"])  # type: ignore
-                        else None
-                    ),
-                    "fastest_project": (
-                        min(
-                            (
-                                (n, summary["projects"][n]["duration"])  # type: ignore
-                                for n in summary["projects"]  # type: ignore
-                                if summary["projects"][n]["duration"] > 0  # type: ignore
-                            ),
-                            key=lambda x: x[1],
-                        )[0]
-                        if any(summary["projects"][n]["duration"] > 0 for n in summary["projects"])  # type: ignore
-                        else None
-                    ),
-                    "average_duration": sum(durations) / len(durations),
-                    "total_pipeline_time": sum(durations),
-                }
-        except Exception as e:
-            logger.warning(f"Error calculating performance analysis: {e}")
-            summary["performance_analysis"] = {}
-
-    # Error aggregation
-    all_errors = []
-    for proj_name, proj_data in summary["projects"].items():  # type: ignore
-        errors = proj_data.get("errors", [])
-        for err in errors:
-            all_errors.append({"project": proj_name, "error": err})
-    summary["error_aggregation"] = {
-        "total_errors": len(all_errors),
-        "errors_by_project": {
-            proj: len(summary["projects"].get(proj, {}).get("errors", []))
-            for proj in project_names  # type: ignore
-        },
-    }
-
-    # Generate recommendations
-    if failed_projects > 0:
-        summary["recommendations"].append(  # type: ignore
-            {
-                "priority": "high",
-                "action": "Review failed projects",
-                "details": f"{failed_projects} project(s) failed execution",
-            }
-        )
-
-    if summary["performance_analysis"].get("average_duration", 0) > 300:  # type: ignore  # 5 minutes
-        summary["recommendations"].append(  # type: ignore
-            {
-                "priority": "medium",
-                "action": "Consider performance optimization",
-                "details": f"Average project execution time: {summary['performance_analysis']['average_duration']:.1f}s",  # type: ignore  # noqa: E501
-            }
-        )
-
-    # Save in multiple formats
-    saved_files = {}
-
-    # JSON format
-    json_file = output_dir / "multi_project_summary.json"
-    with open(json_file, "w") as f:
-        json.dump(summary, f, indent=2)
-    saved_files["json"] = json_file
-    logger.info(f"Multi-project summary saved: {json_file}")
-
-    # Markdown format
-    md_file = output_dir / "multi_project_summary.md"
-    md_content = _format_multi_project_summary_markdown(summary)
-    with open(md_file, "w") as f:
-        f.write(md_content)
-    saved_files["markdown"] = md_file
-    logger.info(f"Multi-project summary saved: {md_file}")
-
-    return saved_files
-
-
-def _format_multi_project_summary_markdown(summary: Dict[str, Any]) -> str:
-    """Format multi-project summary as markdown.
-
-    Args:
-        summary: Summary dictionary
-
-    Returns:
-        Formatted markdown string
-    """
-    lines = [
-        "# Multi-Project Execution Summary",
-        "",
-        f"**Generated:** {summary['timestamp']}",
-        "",
-        "## Overview",
-        "",
-        f"- **Total Projects:** {summary['total_projects']}",
-        f"- **Successful:** {summary['successful_projects']}",
-        f"- **Failed:** {summary['failed_projects']}",
-        f"- **Total Duration:** {summary['total_duration']:.1f}s",
-        "",
-    ]
-
-    if summary.get("infra_test_duration", 0) > 0:
-        lines.extend([f"- **Infrastructure Tests:** {summary['infra_test_duration']:.1f}s", ""])
-
-    # Per-project results
-    lines.extend(["## Project Results", ""])
-
-    for proj_name, proj_data in summary["projects"].items():
-        status_icon = "✅" if proj_data["success"] else "❌"
-        lines.append(f"### {status_icon} {proj_name}")
-        lines.append(f"- **Status:** {'Success' if proj_data['success'] else 'Failed'}")
-        lines.append(f"- **Duration:** {proj_data['duration']:.1f}s")
-        lines.append(f"- **Stages Completed:** {proj_data['stages_completed']}")
-
-        if proj_data["errors"]:
-            lines.append("- **Errors:**")
-            for err in proj_data["errors"][:3]:  # Show first 3
-                lines.append(f"  - {err}")
-            if len(proj_data["errors"]) > 3:
-                lines.append(f"  - ... and {len(proj_data['errors']) - 3} more")
-        lines.append("")
-
-    # Performance analysis
-    if summary.get("performance_analysis"):
-        perf = summary["performance_analysis"]
-        lines.extend(
-            [
-                "## Performance Analysis",
-                "",
-                f"- **Slowest Project:** {perf.get('slowest_project', 'N/A')}",
-                f"- **Fastest Project:** {perf.get('fastest_project', 'N/A')}",
-                f"- **Average Duration:** {perf.get('average_duration', 0):.1f}s",
-                f"- **Total Pipeline Time:** {perf.get('total_pipeline_time', 0):.1f}s",
-                "",
-            ]
-        )
-
-    # Error aggregation
-    if summary.get("error_aggregation"):
-        err_agg = summary["error_aggregation"]
-        lines.extend(
-            [
-                "## Error Summary",
-                "",
-                f"- **Total Errors:** {err_agg['total_errors']}",
-                "",
-            ]
-        )
-
-        if err_agg.get("errors_by_project"):
-            lines.append("**Errors by Project:**")
-            for proj, count in err_agg["errors_by_project"].items():
-                if count > 0:
-                    lines.append(f"- {proj}: {count} error(s)")
-            lines.append("")
-
-    # Recommendations
-    if summary.get("recommendations"):
-        lines.extend(["## Recommendations", ""])
-        for rec in summary["recommendations"]:
-            lines.append(f"### {rec['priority'].upper()}: {rec['action']}")
-            lines.append(f"{rec['details']}")
-            lines.append("")
-
-    return "\n".join(lines)
-
+    stages: list[StageResult]
+    test_results: dict[str, Any] | None = None
+    validation_results: dict[str, Any] | None = None
+    performance_metrics: dict[str, Any] | None = None
+    error_summary: dict[str, Any] | None = None
+    output_statistics: dict[str, Any] | None = None
 
 def generate_pipeline_report(
-    stage_results: List[Dict[str, Any]],
+    stage_results: list[dict[str, Any]],
     total_duration: float,
     repo_root: Path,
-    test_results: Optional[Dict[str, Any]] = None,
-    validation_results: Optional[Dict[str, Any]] = None,
-    performance_metrics: Optional[Dict[str, Any]] = None,
-    error_summary: Optional[Dict[str, Any]] = None,
-    output_statistics: Optional[Dict[str, Any]] = None,
-    project_name: Optional[str] = None,
+    *,
+    test_results: dict[str, Any] | None = None,
+    validation_results: dict[str, Any] | None = None,
+    performance_metrics: dict[str, Any] | None = None,
+    error_summary: dict[str, Any] | None = None,
+    output_statistics: dict[str, Any] | None = None,
+    project_name: str | None = None,
 ) -> PipelineReport:
-    """Generate consolidated pipeline report.
-
-    Args:
-        stage_results: List of stage result dictionaries
-        total_duration: Total pipeline execution time
-        repo_root: Repository root path
-        test_results: Test execution results (optional)
-        validation_results: Validation results (optional)
-        performance_metrics: Performance metrics (optional)
-        error_summary: Error summary (optional)
-        output_statistics: Output file statistics (optional)
-        project_name: Project name for log file lookup (optional)
-
-    Returns:
-        PipelineReport instance
-    """
+    """Generate consolidated pipeline report from stage results and optional extras."""
     stages = []
     for result in stage_results:
         status = "passed" if result.get("exit_code", 1) == 0 else "failed"
@@ -386,17 +56,19 @@ def generate_pipeline_report(
             )
         )
 
-    # Add log file info to output_statistics if project_name provided
+    # Enrich a copy of output_statistics with log file info (avoid mutating caller's dict)
     if project_name and output_statistics is not None:
         log_file = repo_root / "projects" / project_name / "output" / "logs" / "pipeline.log"
-        log_file_info = {
-            "exists": log_file.exists(),
-            "size": log_file.stat().st_size if log_file.exists() else 0,
-            "path": str(log_file),
+        output_statistics = {
+            **output_statistics,
+            "log_file": {
+                "exists": log_file.exists(),
+                "size": log_file.stat().st_size if log_file.exists() else 0,
+                "path": str(log_file),
+            },
         }
-        output_statistics["log_file"] = log_file_info
 
-    report = PipelineReport(
+    return PipelineReport(
         timestamp=datetime.now().isoformat(),
         total_duration=total_duration,
         stages=stages,
@@ -407,29 +79,16 @@ def generate_pipeline_report(
         output_statistics=output_statistics,
     )
 
-    return report
-
-
 def save_pipeline_report(
-    report: PipelineReport, output_dir: Path, formats: Optional[List[str]] = None
-) -> Dict[str, Path]:
-    """Save pipeline report in multiple formats.
-
-    Args:
-        report: PipelineReport instance
-        output_dir: Output directory path
-        formats: List of formats to generate ('json', 'html', 'markdown')
-
-    Returns:
-        Dictionary mapping format to file path
-    """
+    report: PipelineReport, output_dir: Path, formats: list[str] | None = None
+) -> dict[str, Path]:
+    """Save pipeline report in multiple formats; returns dict mapping format to path."""
     if formats is None:
         formats = ["json", "html", "markdown"]
 
     output_dir.mkdir(parents=True, exist_ok=True)
     saved_files = {}
 
-    # Convert to dictionary for serialization
     report_dict = {
         "timestamp": report.timestamp,
         "total_duration": report.total_duration,
@@ -441,42 +100,27 @@ def save_pipeline_report(
         "output_statistics": report.output_statistics,
     }
 
-    # Generate JSON report
+    formats_to_write = []
     if "json" in formats:
-        json_path = output_dir / "pipeline_report.json"
-        with open(json_path, "w") as f:
-            json.dump(report_dict, f, indent=2)
-        saved_files["json"] = json_path
-        logger.info(f"Pipeline report (JSON) saved: {json_path}")
-
-    # Generate Markdown report
+        formats_to_write.append(("json", output_dir / "pipeline_report.json", json.dumps(report_dict, indent=2)))
     if "markdown" in formats:
-        md_path = output_dir / "pipeline_report.md"
-        md_content = generate_markdown_report(report)
-        md_path.write_text(md_content)
-        saved_files["markdown"] = md_path
-        logger.info(f"Pipeline report (Markdown) saved: {md_path}")
-
-    # Generate HTML report
+        formats_to_write.append(("markdown", output_dir / "pipeline_report.md", _generate_pipeline_markdown(report)))
     if "html" in formats:
-        html_path = output_dir / "pipeline_report.html"
-        html_content = generate_html_report(report)
-        html_path.write_text(html_content)
-        saved_files["html"] = html_path
-        logger.info(f"Pipeline report (HTML) saved: {html_path}")
+        formats_to_write.append(("html", output_dir / "pipeline_report.html", generate_html_report(report)))
+
+    for fmt, path, content in formats_to_write:
+        try:
+            path.write_text(content)
+            saved_files[fmt] = path
+            logger.info(f"Pipeline report ({fmt.upper()}) saved: {path}")
+        except OSError as e:
+            logger.error(f"Failed to write {fmt.upper()} report {path}: {e}")
+            raise
 
     return saved_files
 
-
-def generate_markdown_report(report: PipelineReport) -> str:
-    """Generate Markdown format pipeline report.
-
-    Args:
-        report: PipelineReport instance
-
-    Returns:
-        Markdown formatted report
-    """
+def _generate_pipeline_markdown(report: PipelineReport) -> str:
+    """Generate Markdown format pipeline report."""
     lines = [
         "# Pipeline Execution Report",
         "",
@@ -534,16 +178,19 @@ def generate_markdown_report(report: PipelineReport) -> str:
     if report.validation_results:
         lines.append("## Validation Results")
         lines.append("")
-        # Add validation details
-        lines.append("Validation checks completed.")
+        for key, value in report.validation_results.items():
+            lines.append(f"- **{key}:** {value}")
         lines.append("")
 
     # Performance metrics section
     if report.performance_metrics:
         lines.append("## Performance Metrics")
         lines.append("")
-        # Add performance details
-        lines.append("Performance tracking completed.")
+        for key, value in report.performance_metrics.items():
+            if isinstance(value, float):
+                lines.append(f"- **{key}:** {value:.2f}")
+            else:
+                lines.append(f"- **{key}:** {value}")
         lines.append("")
 
     # Error summary section
@@ -552,9 +199,13 @@ def generate_markdown_report(report: PipelineReport) -> str:
         lines.append("")
         lines.append(f"**Total Errors:** {report.error_summary.get('total_errors', 0)}")
         lines.append("")
-        # Add error details
-        lines.append("See error details in error summary report.")
-        lines.append("")
+        errors = report.error_summary.get("errors", [])
+        if errors:
+            for err in errors[:5]:
+                lines.append(f"- {err}")
+            if len(errors) > 5:
+                lines.append(f"- ... and {len(errors) - 5} more")
+            lines.append("")
 
     # Output statistics section
     if report.output_statistics:
@@ -568,16 +219,8 @@ def generate_markdown_report(report: PipelineReport) -> str:
 
     return "\n".join(lines)
 
-
 def generate_html_report(report: PipelineReport) -> str:
-    """Generate HTML format pipeline report.
-
-    Args:
-        report: PipelineReport instance
-
-    Returns:
-        HTML formatted report
-    """
+    """Generate HTML format pipeline report."""
     # Calculate summary statistics
     passed = sum(1 for s in report.stages if s.status == "passed")
     failed = sum(1 for s in report.stages if s.status == "failed")
@@ -736,62 +379,43 @@ def generate_html_report(report: PipelineReport) -> str:
 
     return html
 
-
-def generate_test_report(test_results: Dict[str, Any], output_dir: Path) -> Path:
-    """Generate test results report.
-
-    Args:
-        test_results: Test results dictionary
-        output_dir: Output directory path
-
-    Returns:
-        Path to saved report
-    """
-    # This is a wrapper - actual test report generation is in scripts/01_run_tests.py
-    # This function can be used to generate additional formatted reports
+def save_test_results(test_results: dict[str, Any], output_dir: Path) -> Path:
+    """Write test_results dict to test_results.json and return the path."""
     output_dir.mkdir(parents=True, exist_ok=True)
-    return output_dir / "test_results.json"
-
+    report_path = output_dir / "test_results.json"
+    with open(report_path, "w", encoding="utf-8") as f:
+        json.dump(test_results, f, indent=2, default=str)
+    return report_path
 
 def generate_validation_report(
-    validation_results: Dict[str, Any], output_dir: Path
-) -> Dict[str, Path]:
-    """Generate validation report.
-
-    Args:
-        validation_results: Validation results dictionary
-        output_dir: Output directory path
-
-    Returns:
-        Dictionary mapping format to file path
-    """
+    validation_results: dict[str, Any], output_dir: Path
+) -> dict[str, Path]:
+    """Generate validation report as JSON and Markdown; returns paths by format key."""
     output_dir.mkdir(parents=True, exist_ok=True)
     saved_files = {}
 
-    # Generate JSON report
     json_path = output_dir / "validation_report.json"
-    with open(json_path, "w") as f:
-        json.dump(validation_results, f, indent=2)
-    saved_files["json"] = json_path
+    try:
+        with open(json_path, "w") as f:
+            json.dump(validation_results, f, indent=2)
+        saved_files["json"] = json_path
+    except OSError as e:
+        logger.error(f"Failed to write validation JSON {json_path}: {e}")
+        raise
 
-    # Generate Markdown report
     md_path = output_dir / "validation_report.md"
-    md_content = generate_validation_markdown(validation_results)
-    md_path.write_text(md_content)
-    saved_files["markdown"] = md_path
+    try:
+        md_content = generate_validation_markdown(validation_results)
+        md_path.write_text(md_content)
+        saved_files["markdown"] = md_path
+    except OSError as e:
+        logger.error(f"Failed to write validation Markdown {md_path}: {e}")
+        raise
 
     return saved_files
 
-
-def generate_validation_markdown(results: Dict[str, Any]) -> str:
-    """Generate Markdown validation report.
-
-    Args:
-        results: Validation results dictionary
-
-    Returns:
-        Markdown formatted report
-    """
+def generate_validation_markdown(results: dict[str, Any]) -> str:
+    """Return Markdown-formatted validation report for the given results dict."""
     lines = [
         "# Validation Report",
         "",
@@ -810,40 +434,26 @@ def generate_validation_markdown(results: Dict[str, Any]) -> str:
 
     return "\n".join(lines)
 
-
-def generate_performance_report(performance_metrics: Dict[str, Any], output_dir: Path) -> Path:
-    """Generate performance report.
-
-    Args:
-        performance_metrics: Performance metrics dictionary
-        output_dir: Output directory path
-
-    Returns:
-        Path to saved report
-    """
+def generate_performance_report(performance_metrics: dict[str, Any], output_dir: Path) -> Path:
+    """Write performance_metrics dict to performance_report.json and return the path."""
     output_dir.mkdir(parents=True, exist_ok=True)
 
     json_path = output_dir / "performance_report.json"
-    with open(json_path, "w") as f:
-        json.dump(performance_metrics, f, indent=2)
+    try:
+        with open(json_path, "w") as f:
+            json.dump(performance_metrics, f, indent=2)
+    except OSError as e:
+        logger.error(f"Failed to write performance report {json_path}: {e}")
+        raise
 
     return json_path
 
-
-def generate_error_summary(errors: List[Dict[str, Any]], output_dir: Path) -> Dict[str, Any]:
-    """Generate error summary report.
-
-    Args:
-        errors: List of error dictionaries
-        output_dir: Output directory path
-
-    Returns:
-        Error summary dictionary
-    """
+def save_error_summary(errors: list[dict[str, Any]], output_dir: Path) -> dict[str, Any]:
+    """Aggregate errors, write JSON and Markdown reports, and return the summary dict."""
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Categorize errors
-    by_type: Dict[str, List[Dict[str, Any]]] = {}
+    by_type: dict[str, list[dict[str, Any]]] = {}
     for error in errors:
         error_type = error.get("type", "unknown")
         if error_type not in by_type:
@@ -856,28 +466,26 @@ def generate_error_summary(errors: List[Dict[str, Any]], output_dir: Path) -> Di
         "errors": errors,
     }
 
-    # Save JSON report
     json_path = output_dir / "error_summary.json"
-    with open(json_path, "w") as f:
-        json.dump(summary, f, indent=2)
+    try:
+        with open(json_path, "w") as f:
+            json.dump(summary, f, indent=2)
+    except OSError as e:
+        logger.error(f"Failed to write error summary JSON {json_path}: {e}")
+        raise
 
-    # Generate Markdown report
     md_path = output_dir / "error_summary.md"
-    md_content = generate_error_markdown(summary)
-    md_path.write_text(md_content)
+    try:
+        md_content = generate_error_markdown(summary)
+        md_path.write_text(md_content)
+    except OSError as e:
+        logger.error(f"Failed to write error summary Markdown {md_path}: {e}")
+        raise
 
     return summary
 
-
-def generate_error_markdown(summary: Dict[str, Any]) -> str:
-    """Generate Markdown error summary.
-
-    Args:
-        summary: Error summary dictionary
-
-    Returns:
-        Markdown formatted report
-    """
+def generate_error_markdown(summary: dict[str, Any]) -> str:
+    """Generate Markdown error summary."""
     lines = [
         "# Error Summary",
         "",

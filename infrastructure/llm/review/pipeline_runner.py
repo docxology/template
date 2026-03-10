@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import time
 from pathlib import Path
-from typing import Optional
 
 from infrastructure.core.logging_utils import (
     get_logger,
+    log_substep,
     log_success,
     log_progress,
 )
@@ -19,22 +19,27 @@ from infrastructure.llm.review.io import (
     generate_review_summary,
 )
 from infrastructure.llm.review.metrics import SessionMetrics
+from infrastructure.llm.core.config import get_max_input_length
 from infrastructure.llm.review.generator import (
     check_ollama_availability,
     create_review_client,
     extract_manuscript_text,
-    generate_executive_summary,
+    generate_llm_executive_summary,
     generate_improvement_suggestions,
     generate_methodology_review,
     generate_quality_review,
     generate_translation,
-    get_max_input_length,
-    log_stage,
     warmup_model,
 )
 
 logger = get_logger(__name__)
 
+REVIEW_GENERATORS = {
+    "executive_summary": generate_llm_executive_summary,
+    "quality_review": generate_quality_review,
+    "methodology_review": generate_methodology_review,
+    "improvement_suggestions": generate_improvement_suggestions,
+}
 
 class ReviewMode:
     """Mode for LLM review execution."""
@@ -43,11 +48,10 @@ class ReviewMode:
     REVIEWS_ONLY = "reviews_only"  # Run only English scientific reviews
     TRANSLATIONS_ONLY = "translations_only"  # Run only translations
 
-
 def run_llm_review_pipeline(
     mode: str = ReviewMode.ALL,
     project_name: str = "project",
-    repo_root: Optional[Path] = None,
+    repo_root: Path | None = None,
 ) -> int:
     """Execute LLM manuscript review orchestration.
 
@@ -104,7 +108,7 @@ def run_llm_review_pipeline(
             return 2
 
         # Step 3: Initialize LLM client
-        log_stage("Initializing LLM client...")
+        log_substep("Initializing LLM client...")
         client = create_review_client(model_name)  # type: ignore
 
         if not client.check_connection():
@@ -134,17 +138,11 @@ def run_llm_review_pipeline(
                     i, len(review_types), f"Review: {review_type.replace('_', ' ').title()}", logger
                 )
 
-                if review_type == "executive_summary":
-                    response, metrics = generate_executive_summary(client, text, model_name)  # type: ignore
-                elif review_type == "quality_review":
-                    response, metrics = generate_quality_review(client, text, model_name)  # type: ignore
-                elif review_type == "methodology_review":
-                    response, metrics = generate_methodology_review(client, text, model_name)  # type: ignore
-                elif review_type == "improvement_suggestions":
-                    response, metrics = generate_improvement_suggestions(client, text, model_name)  # type: ignore
-                else:
+                generator = REVIEW_GENERATORS.get(review_type)
+                if generator is None:
                     logger.warning(f"  Skipping unknown review type: {review_type}")
                     continue
+                response, metrics = generator(client, text, model_name)  # type: ignore
 
                 reviews[review_type] = response
                 session_metrics.reviews[review_type] = metrics
@@ -161,11 +159,12 @@ def run_llm_review_pipeline(
                 for i, lang_code in enumerate(translation_languages, 1):
                     lang_name = TRANSLATION_LANGUAGES.get(lang_code, lang_code)
                     log_progress(i, len(translation_languages), f"Translation: {lang_name}", logger)
-                    response, metrics = generate_translation(client, text, lang_code, model_name)  # type: ignore
+                    response, metrics = generate_translation(client, text, lang_code, model_name)
                     review_name = f"translation_{lang_code}"
-                    reviews[review_name] = response
                     session_metrics.reviews[review_name] = metrics
-                    save_single_review(review_name, response, output_dir, model_name, metrics)  # type: ignore
+                    if response is not None:
+                        reviews[review_name] = response
+                        save_single_review(review_name, response, output_dir, model_name, metrics)  # type: ignore
             elif mode == ReviewMode.TRANSLATIONS_ONLY:
                 logger.warning("\n⚠️  No translation languages configured")
                 return 2

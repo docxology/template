@@ -12,84 +12,37 @@ Modules:
     rendering: Multi-format output generation
     publishing: Academic publishing & dissemination
     reporting: Pipeline reporting & error aggregation
+    steganography: Optional secure PDF post-processing (overlays, barcodes, hashing)
 """
+
+from __future__ import annotations
 
 __version__ = "2.0.0"
 __layer__ = "infrastructure"
 
-# Import commonly-used items for convenient access
+# Core utilities — always available, used throughout the codebase
 try:
-    # Core
-    from .core import (  # type: ignore
+    from .core.exceptions import (  # type: ignore
         BuildError,
         ConfigurationError,
-        ProjectLogger,
         TemplateError,
         ValidationError,
-        get_logger,
-        get_project_logger,
-        load_config,
-        log_operation,
-        log_timing,
-        setup_logger,
-        setup_project_logging,
     )
+    from .core.config_loader import load_config  # type: ignore
+    from .core.logging_utils import get_logger  # type: ignore
+except ImportError as _core_e:
+    raise RuntimeError(f"infrastructure core import failed: {_core_e}") from _core_e
 
-    # Documentation
-    from .documentation import FigureManager, ImageManager, MarkdownIntegration
-
-    # Publishing
-    from .publishing import (
-        extract_publication_metadata,
-        generate_citation_bibtex,
-        publish_to_zenodo,
-    )
-
-    # Reporting
-    from .reporting import generate_pipeline_report, get_error_aggregator
-
-    # Validation
-    from .validation import validate_markdown, validate_pdf_rendering, verify_output_integrity
-except ImportError:
-    # Graceful fallback if imports fail
-    pass
+# All other symbols should be imported from their subpackages directly:
+#   from infrastructure.reporting import generate_pipeline_report
+#   from infrastructure.validation import validate_pdf_rendering
+#   from infrastructure.documentation import FigureManager
 
 __all__ = [
-    # Modules
-    "core",
-    "validation",
-    "documentation",
-    "scientific",
-    "llm",
-    "rendering",
-    "publishing",
-    "reporting",
-    # Core conveniences
-    "get_logger",
-    "setup_logger",
-    "get_project_logger",
-    "setup_project_logging",
-    "ProjectLogger",
-    "log_operation",
-    "log_timing",
     "TemplateError",
     "ConfigurationError",
     "ValidationError",
     "BuildError",
     "load_config",
-    # Validation conveniences
-    "validate_pdf_rendering",
-    "validate_markdown",
-    "verify_output_integrity",
-    # Documentation conveniences
-    "FigureManager",
-    "ImageManager",
-    "MarkdownIntegration",
-    # Publishing conveniences
-    "extract_publication_metadata",
-    "generate_citation_bibtex",
-    "publish_to_zenodo",
-    # Reporting conveniences
-    "generate_pipeline_report",
-    "get_error_aggregator",
+    "get_logger",
 ]

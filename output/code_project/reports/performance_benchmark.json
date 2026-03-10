@@ -1,8 +1,8 @@
 {
-  "function_name": "test_func",
-  "execution_time": 2.3597199469804764e-06,
-  "memory_usage": 402.515625,
+  "function_name": "quadratic_function",
+  "execution_time": 2.991940030672898e-06,
+  "memory_usage": 384.328125,
   "iterations": 50,
-  "result_summary": "Avg time: 0.000002s, Avg memory: 402.5MB",
-  "timestamp": "2026-03-04 13:33:01"
+  "result_summary": "Avg time: 0.000003s, Avg memory: 384.3MB",
+  "timestamp": "2026-03-07 10:11:39"
 }

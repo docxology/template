@@ -10,14 +10,12 @@ from __future__ import annotations
 import json
 import re
 from pathlib import Path
-from typing import List, Tuple
 
 from infrastructure.core.logging_utils import get_logger, log_substep, log_success
 
 logger = get_logger(__name__)
 
-
-def validate_figure_registry(registry_path: Path, manuscript_dir: Path) -> Tuple[bool, List[str]]:
+def validate_figure_registry(registry_path: Path, manuscript_dir: Path) -> tuple[bool, list[str]]:
     """Validate figure registry against manuscript references.
 
     Checks that all figure references in manuscript markdown files are
@@ -35,7 +33,7 @@ def validate_figure_registry(registry_path: Path, manuscript_dir: Path) -> Tuple
     """
     log_substep("Validating figure registry...", logger)
 
-    issues: List[str] = []
+    issues: list[str] = []
 
     # Find figure references FIRST (only in numbered section files, not AGENTS.md/README.md)
     referenced_figures = set()

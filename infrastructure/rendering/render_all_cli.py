@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Wrapper script for rendering all formats."""
 
+from __future__ import annotations
+
 import sys
 from pathlib import Path
 

@@ -1,0 +1,130 @@
+{
+  "assessments": {
+    "abstraction_fitness": 72,
+    "dependency_health": 78,
+    "test_strategy": 81
+  },
+  "findings": [
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "abs-001",
+      "summary": "generate_api_docs.py defines inline fallback stubs (get_logger, log_operation, ProgressBar) that shadow real infrastructure symbols — wide-param implicit flag bag (INFRASTRUCTURE_AVAILABLE) threads through the whole module instead of isolating the optional-dep concern",
+      "related_files": ["projects/code_project/scripts/generate_api_docs.py"],
+      "evidence": [
+        "Lines 32-43: four local stub functions defined inside a try/except to replicate infrastructure.core signatures",
+        "INFRASTRUCTURE_AVAILABLE flag checked at every call site rather than at the boundary: `logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None`",
+        "optimization_analysis.py repeats the identical try/except/INFRASTRUCTURE_AVAILABLE pattern with overlapping stub logic"
+      ],
+      "suggestion": "Extract a single `get_optional_infra()` helper or use a lightweight null-object adapter at the script boundary; the try/except should produce a fully-duck-typed object, not a flag that every call site guards against.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "abs-002",
+      "summary": "Pass-through wrappers in project scripts forward args directly to domain functions with no added policy (obj_func->quadratic_function, grad_func->compute_gradient, test_func->quadratic_function x2)",
+      "related_files": [
+        "projects/code_project/scripts/generate_api_docs.py",
+        "projects/code_project/scripts/optimization_analysis.py"
+      ],
+      "evidence": [
+        "Packet abstractions.pass_through_wrappers: generate_api_docs.py count=4, samples include log_operation->nullcontext and obj_func->quadratic_function",
+        "optimization_analysis.py count=2, both are test_func->quadratic_function aliases",
+        "wrapper_rate overall is 0.003 (low) but concentrated in these two files"
+      ],
+      "suggestion": "Remove the local alias lambdas; pass quadratic_function and compute_gradient directly to optimizer calls. The aliases add indirection without any translation or policy.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "abs-003",
+      "summary": "61 wide parameter bags flagged across the codebase; steganography module has the highest density (metadata.py and overlays.py each have 2 wide functions with no config-bag consolidation)",
+      "related_files": [
+        "infrastructure/steganography/metadata.py",
+        "infrastructure/steganography/overlays.py",
+        "infrastructure/steganography/core.py"
+      ],
+      "evidence": [
+        "Packet wide_param_bags: steganography/metadata.py wide_functions=2 config_bag_mentions=0; overlays.py wide_functions=2 config_bag_mentions=0",
+        "steganography/core.py wide_functions=1 but config_bag_mentions=37, suggesting a config object is available but not consistently threaded through the wide-function callers"
+      ],
+      "suggestion": "Consolidate the wide-function parameters in metadata.py and overlays.py into the SteganographyConfig dataclass already present in infrastructure/steganography/config.py.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "dependency_health",
+      "identifier": "dep-001",
+      "summary": "psutil is listed under the optional 'monitoring' dependency group but is imported unconditionally in multiple core infrastructure modules via _optional_deps, meaning callers silently degrade rather than failing fast on a missing optional",
+      "related_files": [
+        "infrastructure/core/health_check.py",
+        "infrastructure/core/performance.py"
+      ],
+      "evidence": [
+        "health_check.py line 14: `from infrastructure.core._optional_deps import psutil` — used in _check_memory, _check_cpu, _check_disk, _check_uptime with None-guard branches",
+        "performance.py line 27: same import pattern; _get_memory_usage and _get_cpu_percent return 0.0 silently when psutil is None",
+        "pyproject.toml [dependency-groups] monitoring = [psutil>=5.9.0] — opt-in group, not installed by default unless explicitly selected"
+      ],
+      "suggestion": "This pattern is actually the correct graceful-optional approach — but the None-guard branches produce misleading zeroes in monitoring output without any logged warning. Add a one-time warning at module load time when psutil is None so operators know health metrics are unavailable.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "dependency_health",
+      "identifier": "dep-002",
+      "summary": "pyproject.toml default-groups includes 'steganography' and 'dotenv' for all installs despite these being domain-specific optional features, unnecessarily coupling qrcode/python-barcode/python-dotenv into every developer environment",
+      "related_files": ["pyproject.toml"],
+      "evidence": [
+        "Line 101: `default-groups = [\"dev\", \"monitoring\", \"dotenv\", \"steganography\"]`",
+        "steganography group pulls in qrcode[pil]>=8.2 and python-barcode>=0.15 — these are not used by the core infrastructure or any active project (code_project)",
+        "dotenv group pulls in python-dotenv>=1.0.0 — credentials.py uses it with try/except fallback, so it is already optional at runtime"
+      ],
+      "suggestion": "Remove 'steganography' and 'dotenv' from default-groups. Leave them as explicitly opt-in groups (e.g., `uv sync --group steganography`). This keeps the default developer environment minimal and avoids installing ~15 MB of barcode/image libraries by default.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "test-001",
+      "summary": "PipelineExecutor._run_script and the stage execution flow are tested only with trivial sys.exit(0)/sys.exit(1) scripts; the stall detection, checkpoint integration, and stage-skip logic are not exercised cross-module",
+      "related_files": [
+        "tests/infra_tests/core/test_pipeline.py",
+        "infrastructure/core/pipeline.py"
+      ],
+      "evidence": [
+        "test_pipeline.py TestPipelineExecutor uses hand-written minimal scripts that only write to invocations.jsonl and exit 0 — no stage output or stderr is asserted",
+        "The CheckpointManager is overridden at the executor level in tests, meaning checkpoint persistence is not part of any pipeline integration assertion",
+        "Stall detection mentioned in recent commit history (e3ab0c2) but no test directly triggers or verifies the stall detection path"
+      ],
+      "suggestion": "Add at least one integration test that runs the full executor with a script that produces partial output, then asserts checkpoint state and resume behavior, rather than just checking invocation order.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "test-002",
+      "summary": "projects/cognitive_case_diagrams/src/visualization/styles.py is the only file flagged as critical-untested (3 importers) — but an archived/inactive project file with active importers indicates the test coverage boundary is not enforced at project scope",
+      "related_files": [
+        "projects/cognitive_case_diagrams/src/visualization/styles.py"
+      ],
+      "evidence": [
+        "Packet testing.critical_untested: [{file: projects/cognitive_case_diagrams/src/visualization/styles.py, importers: 3}]",
+        "CLAUDE.md states active projects = code_project; cognitive_case_diagrams appears to be active (present in projects/ not projects_archive/) but has no test for styles.py",
+        "Coverage is enforced per-project at 90% threshold but the per-project scope does not catch this file if tests exist elsewhere in the same project"
+      ],
+      "suggestion": "Add a test for styles.py, or archive the cognitive_case_diagrams project to projects_archive/ so the pipeline does not claim 90% coverage while leaving an imported file untested.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "test-003",
+      "summary": "test_metrics.py and test_metadata.py test only dataclass construction and trivial property access; they do not exercise any conditional path or edge case in the underlying modules, providing coverage without meaningful verification",
+      "related_files": [
+        "tests/infra_tests/llm/test_metrics.py",
+        "tests/infra_tests/publishing/test_metadata.py"
+      ],
+      "evidence": [
+        "test_metrics.py: all 6 TestEstimateTokens cases test integer floor-division by 4 with literals; the only interesting edge is empty string (returns 0), already covered",
+        "TestReviewMetrics, TestManuscriptMetrics, TestSessionMetrics, TestStreamingMetrics: each test only sets a field and reads it back — pure dataclass construction with no logic exercised",
+        "test_metadata.py: 5 tests, all happy-path + one missing-file test; no test for multiple markdown files, malformed YAML front-matter, or encoding edge cases in extract_publication_metadata"
+      ],
+      "suggestion": "These tests are not wrong but provide near-zero defect detection for the modules they cover. Add at least one test per module that exercises a non-trivial conditional (e.g., truncation logic in ManuscriptMetrics, or a multi-file conflict resolution in extract_publication_metadata).",
+      "confidence": "low"
+    }
+  ]
+}

@@ -7,12 +7,14 @@ and formatting metadata for LaTeX and bash export. Part of the infrastructure la
 from __future__ import annotations
 
 import difflib
-import logging
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional, TypedDict
+from typing import Any, TypedDict
 
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
 
 class AuthorConfig(TypedDict, total=False):
     name: str
@@ -20,29 +22,23 @@ class AuthorConfig(TypedDict, total=False):
     orcid: str
     email: str
 
-
 class PaperConfig(TypedDict, total=False):
     title: str
-
 
 class PublicationConfig(TypedDict, total=False):
     doi: str
 
-
 class TranslationsConfig(TypedDict, total=False):
     enabled: bool
-    languages: List[str]
-
+    languages: list[str]
 
 class ReviewsConfig(TypedDict, total=False):
     enabled: bool
-    types: List[str]
-
+    types: list[str]
 
 class LLMConfig(TypedDict, total=False):
     translations: TranslationsConfig
     reviews: ReviewsConfig
-
 
 class TestingConfig(TypedDict, total=False):
     max_test_failures: int
@@ -51,6 +47,17 @@ class TestingConfig(TypedDict, total=False):
     infra_coverage_threshold: int
     project_coverage_threshold: int
 
+class SteganographyConfigYAML(TypedDict, total=False):
+    """YAML schema for the steganography config section."""
+    enabled: bool
+    overlays: bool
+    barcodes: bool
+    metadata: bool
+    hashing: bool
+    encryption: bool
+    overlay_text: str
+    overlay_opacity: float
+    pdf_password: str
 
 @dataclass(frozen=True)
 class ResolvedTestingConfig:
@@ -62,16 +69,15 @@ class ResolvedTestingConfig:
     infra_coverage_threshold: int = 60
     project_coverage_threshold: int = 90
 
-
 class ManuscriptConfig(TypedDict, total=False):
     paper: PaperConfig
-    authors: List[AuthorConfig]
+    authors: list[AuthorConfig]
     publication: PublicationConfig
     llm: LLMConfig
     testing: TestingConfig
-    keywords: List[str]
-    metadata: Dict[str, str]
-
+    steganography: SteganographyConfigYAML
+    keywords: list[str]
+    metadata: dict[str, str]
 
 try:
     import yaml
@@ -80,8 +86,7 @@ try:
 except ImportError:
     YAML_AVAILABLE = False
 
-
-def validate_config_keys(config: Dict[str, Any], config_path: Path | str = "") -> List[str]:
+def validate_config_keys(config: dict[str, Any], config_path: Path | str = "") -> list[str]:
     """Validate top-level config keys against known schema.
 
     Logs warnings for unrecognized keys with typo suggestions via
@@ -95,8 +100,7 @@ def validate_config_keys(config: Dict[str, Any], config_path: Path | str = "") -
         List of warning messages for unknown keys
     """
     known_keys = frozenset(ManuscriptConfig.__annotations__.keys())
-    warnings: List[str] = []
-    logger = logging.getLogger(__name__)
+    warnings: list[str] = []
 
     if not isinstance(config, dict):
         return warnings
@@ -113,8 +117,7 @@ def validate_config_keys(config: Dict[str, Any], config_path: Path | str = "") -
 
     return warnings
 
-
-def load_config(config_path: Path | str) -> Optional[ManuscriptConfig]:
+def load_config(config_path: Path | str) -> ManuscriptConfig | None:
     """Load configuration from YAML file.
 
     Validates top-level keys and logs warnings for unrecognized keys.
@@ -138,16 +141,16 @@ def load_config(config_path: Path | str) -> Optional[ManuscriptConfig]:
             if isinstance(data, dict):
                 validate_config_keys(data, config_path)
             return data  # type: ignore[no-any-return]  # yaml.safe_load returns Any
-    except (FileNotFoundError, PermissionError, yaml.YAMLError):
+    except FileNotFoundError:
         return None
-    except Exception:
-        # Log unexpected errors but don't fail
-        logger = logging.getLogger(__name__)
-        logger.warning(f"Unexpected error loading config from {config_path}")
+    except PermissionError as e:
+        logger.warning(f"Permission denied reading config {config_path}: {e}")
+        return None
+    except yaml.YAMLError as e:
+        logger.warning(f"YAML parse error in config {config_path}: {e}")
         return None
 
-
-def format_author_details(authors: List[AuthorConfig], doi: str = "") -> str:
+def format_author_details(authors: list[AuthorConfig], doi: str = "") -> str:
     """Format author details string for LaTeX.
 
     Args:
@@ -174,8 +177,7 @@ def format_author_details(authors: List[AuthorConfig], doi: str = "") -> str:
     # Join with "\\\\ " (double backslash + space) for LaTeX line breaks
     return "\\\\ ".join(parts)
 
-
-def format_author_name(authors: List[AuthorConfig]) -> str:
+def format_author_name(authors: list[AuthorConfig]) -> str:
     """Format author name(s) for display.
 
     Args:
@@ -187,21 +189,18 @@ def format_author_name(authors: List[AuthorConfig]) -> str:
     if not authors:
         return "Project Author"
 
-    # For single author, return name
-    if len(authors) == 1:
-        return authors[0].get("name", "Project Author")
-
-    # For multiple authors, return first author name
     return authors[0].get("name", "Project Author")
 
-
-def get_config_as_dict(repo_root: Path | str) -> Dict[str, str]:
+def get_config_as_dict(
+    repo_root: Path | str, respect_existing: bool = False
+) -> dict[str, str]:
     """Get configuration as a dictionary of key-value pairs.
 
     Loads configuration from project/manuscript/config.yaml.
 
     Args:
         repo_root: Root directory of the repository
+        respect_existing: If True, filter out keys already set in os.environ
 
     Returns:
         Dictionary of configuration values (PROJECT_TITLE, AUTHOR_NAME, etc.)
@@ -223,6 +222,11 @@ def get_config_as_dict(repo_root: Path | str) -> Dict[str, str]:
     if paper_title := config.get("paper", {}).get("title"):
         result["PROJECT_TITLE"] = paper_title
 
+    # DOI is independent of authors — extract it first
+    doi = config.get("publication", {}).get("doi", "")
+    if doi:
+        result["DOI"] = doi
+
     # Authors
     if authors := config.get("authors", []):
         result["AUTHOR_NAME"] = format_author_name(authors)
@@ -234,58 +238,41 @@ def get_config_as_dict(repo_root: Path | str) -> Dict[str, str]:
         if email := primary.get("email"):
             result["AUTHOR_EMAIL"] = email
 
-        # DOI
-        doi = config.get("publication", {}).get("doi", "")
-        if doi:
-            result["DOI"] = doi
-
         # Full author details for LaTeX
         author_details = format_author_details(authors, doi)
         if author_details:
             result["AUTHOR_DETAILS"] = author_details
 
+    if respect_existing:
+        return {k: v for k, v in result.items() if k not in os.environ}
     return result
 
-
-def get_config_as_env_vars(repo_root: Path | str, respect_existing: bool = True) -> Dict[str, str]:
-    """Get configuration as environment variables.
-
-    Args:
-        repo_root: Root directory of the repository
-        respect_existing: If True, don't override existing environment variables
-
-    Returns:
-        Dictionary of environment variable assignments
-    """
-    config_dict = get_config_as_dict(repo_root)
-
-    if respect_existing:
-        # Filter out variables that are already set in environment
-        return {k: v for k, v in config_dict.items() if k not in os.environ}
-    else:
-        return config_dict
-
-
-def find_config_file(repo_root: Path | str) -> Optional[Path]:
+def find_config_file(repo_root: Path | str, project_name: str | None = None) -> Path | None:
     """Find the manuscript config file at the standard location.
 
     Args:
         repo_root: Root directory of the repository
+        project_name: Name of the project; if None, the first config found under
+                      projects/*/manuscript/ is returned
 
     Returns:
-        Path to config.yaml if found at project/manuscript/config.yaml, None otherwise
+        Path to config.yaml if found, None otherwise
     """
     repo_root = Path(repo_root)
 
-    config_path = repo_root / "project" / "manuscript" / "config.yaml"
+    if project_name:
+        config_path = repo_root / "projects" / project_name / "manuscript" / "config.yaml"
+        if config_path.exists():
+            return config_path
+        return None
 
-    if config_path.exists():
+    # Scan for any project config under projects/*/manuscript/config.yaml
+    for config_path in sorted((repo_root / "projects").glob("*/manuscript/config.yaml")):
         return config_path
 
     return None
 
-
-def get_translation_languages(repo_root: Path | str, project_name: str = "project") -> List[str]:
+def get_translation_languages(repo_root: Path | str, project_name: str = "project") -> list[str]:
     """Get list of enabled translation languages from config.
 
     Reads the llm.translations section from config.yaml and returns
@@ -299,15 +286,8 @@ def get_translation_languages(repo_root: Path | str, project_name: str = "projec
         List of language codes (e.g., ['zh', 'hi', 'ru']) if translations
         are enabled, empty list otherwise
     """
-    repo_root = Path(repo_root)
-
-    # Look for config in the project-specific directory
-    config_path = repo_root / "projects" / project_name / "manuscript" / "config.yaml"
-
-    if not config_path.exists():
-        return []
-
-    config = load_config(config_path)
+    config_path = find_config_file(repo_root, project_name)
+    config = load_config(config_path) if config_path else None
     if not config:
         return []
 
@@ -322,8 +302,7 @@ def get_translation_languages(repo_root: Path | str, project_name: str = "projec
     languages = translations_config.get("languages", [])
     return languages if isinstance(languages, list) else []
 
-
-def get_review_types(repo_root: Path | str, project_name: str = "project") -> List[str]:
+def get_review_types(repo_root: Path | str, project_name: str = "project") -> list[str]:
     """Get list of enabled review types from config.
 
     Reads the llm.reviews section from config.yaml and returns
@@ -338,9 +317,6 @@ def get_review_types(repo_root: Path | str, project_name: str = "project") -> Li
         are enabled, empty list if disabled, or ['executive_summary'] as default
         if no config found.
     """
-    repo_root = Path(repo_root)
-
-    # Valid review types that can be configured
     VALID_REVIEW_TYPES = [
         "executive_summary",
         "quality_review",
@@ -348,16 +324,9 @@ def get_review_types(repo_root: Path | str, project_name: str = "project") -> Li
         "improvement_suggestions",
     ]
 
-    # Look for config in the project-specific directory
-    config_path = repo_root / "projects" / project_name / "manuscript" / "config.yaml"
-
-    if not config_path.exists():
-        # Default to single review if no config found
-        return ["executive_summary"]
-
-    config = load_config(config_path)
+    config_path = find_config_file(repo_root, project_name)
+    config = load_config(config_path) if config_path else None
     if not config:
-        # Default to single review if config can't be loaded
         return ["executive_summary"]
 
     llm_config = config.get("llm", {})
@@ -383,9 +352,6 @@ def get_review_types(repo_root: Path | str, project_name: str = "project") -> Li
     invalid_types = [rt for rt in review_types if rt not in VALID_REVIEW_TYPES]
 
     if invalid_types:
-        import logging
-
-        logger = logging.getLogger(__name__)
         logger.warning(f"Invalid review types ignored: {invalid_types}")
 
     # If no valid types after filtering, default to single review
@@ -394,12 +360,44 @@ def get_review_types(repo_root: Path | str, project_name: str = "project") -> Li
 
     return valid_types
 
+def _safe_int_from_dict(config_dict: dict, key: str) -> int | None:
+    """Safely extract an integer value from a config dict by key."""
+    val = config_dict.get(key)
+    if val is None:
+        return None
+    try:
+        return int(val)
+    except (ValueError, TypeError):
+        logger.debug(f"Invalid {key} value: {val!r}")
+        return None
 
-def get_testing_config(repo_root: Path | str) -> TestingConfig:
+def _resolve_int_setting(
+    env_var: str,
+    config_dict: dict,
+    config_key: str,
+    default: int,
+) -> int:
+    """Resolve an int setting with env-var priority over config file.
+
+    Environment variable takes precedence over config file value.
+    Config file takes precedence over default.
+    """
+    raw = os.environ.get(env_var)
+    if raw is not None:
+        try:
+            return int(raw)
+        except (ValueError, TypeError):
+            logger.debug(f"{env_var}={raw!r} is not a valid int, ignoring")
+    config_val = _safe_int_from_dict(config_dict, config_key)
+    if config_val is not None:
+        return config_val
+    return default
+
+def get_testing_config(repo_root: Path | str) -> ResolvedTestingConfig:
     """Get testing configuration from config.yaml.
 
-    Reads the testing section from config.yaml and returns
-    configuration values for test failure tolerance and coverage thresholds.
+    Reads the testing section from config.yaml and returns an immutable
+    ResolvedTestingConfig with all defaults applied.
 
     Configuration priority (highest to lowest):
     1. Environment variables (e.g., INFRA_COVERAGE_THRESHOLD)
@@ -410,81 +408,42 @@ def get_testing_config(repo_root: Path | str) -> TestingConfig:
         repo_root: Root directory of the repository
 
     Returns:
-        Dictionary with testing configuration values:
+        ResolvedTestingConfig with all fields populated:
         - max_test_failures: Maximum acceptable test failures (default: 0)
         - max_infra_test_failures: Maximum acceptable infrastructure test failures (default: 0)
         - max_project_test_failures: Maximum acceptable project test failures (default: 0)
         - infra_coverage_threshold: Minimum infrastructure coverage % (default: 60)
         - project_coverage_threshold: Minimum project coverage % (default: 90)
-        Returns empty dict if config file not found or testing section missing
     """
-    # Default values
-    defaults = {
-        "infra_coverage_threshold": 60,
-        "project_coverage_threshold": 90,
-    }
+    defaults = ResolvedTestingConfig()
 
-    result: Dict[str, Any] = {}
-
-    # Priority 1: Check environment variables first
-    if env_infra := os.environ.get("INFRA_COVERAGE_THRESHOLD"):
-        try:
-            result["infra_coverage_threshold"] = int(env_infra)
-        except (ValueError, TypeError):
-            pass
-
-    if env_project := os.environ.get("PROJECT_COVERAGE_THRESHOLD"):
-        try:
-            result["project_coverage_threshold"] = int(env_project)
-        except (ValueError, TypeError):
-            pass
-
-    # Priority 2: Load from config file
+    # Load config file (env vars take priority, applied inside _resolve_int_setting)
     config_path = find_config_file(repo_root)
     config = load_config(config_path) if config_path else None
-    testing_config = config.get("testing", {}) if config else {}
+    testing_cfg = config.get("testing", {}) if config else {}
 
-    # Read max_test_failures (general/default)
-    if "max_test_failures" in testing_config:
-        try:
-            result["max_test_failures"] = int(testing_config["max_test_failures"])
-        except (ValueError, TypeError):
-            pass  # Invalid value, skip
+    def _int_or_default(key: str, default: int) -> int:
+        v = _safe_int_from_dict(testing_cfg, key)
+        return v if v is not None else default
 
-    # Read max_infra_test_failures (infrastructure-specific)
-    if "max_infra_test_failures" in testing_config:
-        try:
-            result["max_infra_test_failures"] = int(testing_config["max_infra_test_failures"])
-        except (ValueError, TypeError):
-            pass  # Invalid value, skip
-
-    # Read max_project_test_failures (project-specific)
-    if "max_project_test_failures" in testing_config:
-        try:
-            result["max_project_test_failures"] = int(testing_config["max_project_test_failures"])
-        except (ValueError, TypeError):
-            pass  # Invalid value, skip
-
-    # Read coverage thresholds from config (if not already set by env vars)
-    if "infra_coverage_threshold" not in result:
-        if "infra_coverage_threshold" in testing_config:
-            try:
-                result["infra_coverage_threshold"] = int(testing_config["infra_coverage_threshold"])
-            except (ValueError, TypeError):
-                pass
-
-    if "project_coverage_threshold" not in result:
-        if "project_coverage_threshold" in testing_config:
-            try:
-                result["project_coverage_threshold"] = int(
-                    testing_config["project_coverage_threshold"]
-                )
-            except (ValueError, TypeError):
-                pass
-
-    # Priority 3: Apply defaults for any missing values
-    for key, default_val in defaults.items():
-        if key not in result:
-            result[key] = default_val
-
-    return result  # type: ignore[return-value]  # dict matches TestingConfig shape
+    return ResolvedTestingConfig(
+        max_test_failures=_int_or_default("max_test_failures", defaults.max_test_failures),
+        max_infra_test_failures=_int_or_default(
+            "max_infra_test_failures", defaults.max_infra_test_failures
+        ),
+        max_project_test_failures=_int_or_default(
+            "max_project_test_failures", defaults.max_project_test_failures
+        ),
+        infra_coverage_threshold=_resolve_int_setting(
+            "INFRA_COVERAGE_THRESHOLD",
+            testing_cfg,
+            "infra_coverage_threshold",
+            defaults.infra_coverage_threshold,
+        ),
+        project_coverage_threshold=_resolve_int_setting(
+            "PROJECT_COVERAGE_THRESHOLD",
+            testing_cfg,
+            "project_coverage_threshold",
+            defaults.project_coverage_threshold,
+        ),
+    )

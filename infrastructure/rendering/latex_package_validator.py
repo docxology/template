@@ -5,30 +5,28 @@ from __future__ import annotations
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, NamedTuple, Optional
+from typing import NamedTuple
 
 from infrastructure.core.exceptions import ValidationError
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
-
 class PackageStatus(NamedTuple):
     """Status of a LaTeX package."""
 
     name: str
     installed: bool
-    path: Optional[str] = None
-
+    path: str | None = None
 
 @dataclass
 class ValidationReport:
     """LaTeX package validation report."""
 
-    required_packages: List[PackageStatus]
-    optional_packages: List[PackageStatus]
-    missing_required: List[str]
-    missing_optional: List[str]
+    required_packages: list[PackageStatus]
+    optional_packages: list[PackageStatus]
+    missing_required: list[str]
+    missing_optional: list[str]
     all_required_available: bool
 
     def __str__(self) -> str:
@@ -54,8 +52,7 @@ class ValidationReport:
 
         return "\n".join(lines)
 
-
-def find_kpsewhich() -> Optional[Path]:
+def find_kpsewhich() -> Path | None:
     """Locate kpsewhich executable.
 
     Returns:
@@ -80,13 +77,12 @@ def find_kpsewhich() -> Optional[Path]:
         result = subprocess.run(["which", "kpsewhich"], capture_output=True, text=True, check=False)
         if result.returncode == 0 and result.stdout.strip():
             return Path(result.stdout.strip())
-    except Exception:
-        pass
+    except Exception as e:
+        logger.debug(f"Failed to locate kpsewhich: {e}")
 
     return None
 
-
-def check_latex_package(package_name: str, kpsewhich_path: Optional[Path] = None) -> PackageStatus:
+def check_latex_package(package_name: str, kpsewhich_path: Path | None = None) -> PackageStatus:
     """Check if a LaTeX package is installed.
 
     Args:
@@ -129,9 +125,8 @@ def check_latex_package(package_name: str, kpsewhich_path: Optional[Path] = None
         logger.warning(f"Error checking package {package_name}: {e}")
         return PackageStatus(name=package_name, installed=False, path=None)
 
-
 def validate_packages(
-    required: List[str], optional: List[str], kpsewhich_path: Optional[Path] = None
+    required: list[str], optional: list[str], kpsewhich_path: Path | None = None
 ) -> ValidationReport:
     """Validate all required and optional LaTeX packages.
 
@@ -170,8 +165,7 @@ def validate_packages(
 
     return report
 
-
-def get_missing_packages_command(missing: List[str]) -> str:
+def get_missing_packages_command(missing: list[str]) -> str:
     """Generate tlmgr install command for missing packages.
 
     Args:
@@ -184,7 +178,6 @@ def get_missing_packages_command(missing: List[str]) -> str:
         return ""
 
     return f"sudo tlmgr install {' '.join(missing)}"
-
 
 def validate_preamble_packages(strict: bool = False) -> ValidationReport:
     """Validate packages used in the standard preamble.
@@ -248,7 +241,6 @@ def validate_preamble_packages(strict: bool = False) -> ValidationReport:
 
     return report
 
-
 def main() -> None:
     """CLI entry point for package validation."""
     import sys
@@ -276,7 +268,6 @@ def main() -> None:
         sys.exit(1)
 
     sys.exit(0)
-
 
 if __name__ == "__main__":
     main()

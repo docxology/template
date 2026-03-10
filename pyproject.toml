@@ -36,38 +36,48 @@ classifiers = [
 ]
 dependencies = [
   "numpy>=1.22",
-  "matplotlib>=3.7",
-  "pypdf>=5.0",
   "pyyaml>=6.0",
-  "requests>=2.31.0",
-  "python-dotenv>=1.0.0",
-  "psutil>=5.9.0",
-  "pillow>=10.0.0",
-  "reportlab>=4.0.0",
-  "plotly>=5.0.0",  # Interactive dashboard generation
-  "scipy>=1.10.0",  # Scientific computing (active_inference project)
-  "pandas>=2.0.0",  # Data analysis (active_inference project)
-  "seaborn>=0.13.0", # Visualization library (cogsec projects)
-  "networkx>=3.0",   # Graph/network analysis (ento_linguistics domain networks)
-  "rdflib>=7.0.0",   # RDF knowledge graphs (act_inf_metaanalysis)
-  "ollama>=0.6.1",
-  "scikit-learn>=1.7.2",
-  "wordcloud>=1.9.0",  # Word cloud visualizations (act_inf_metaanalysis)
-  "nltk>=3.8.0",       # Natural language processing (ento_linguistics)
-  "spacy>=3.7.0",      # NLP pipeline (ento_linguistics)
 ]
 
 [project.scripts]
 # Development workflow scripts (run with: uv run <script-name>)
-test = "pytest tests/ --cov=infrastructure --cov=projects/act_inf_metaanalysis/src --cov-report=html --cov-fail-under=70"
+test = "pytest tests/ --cov=infrastructure --cov-report=html --cov-fail-under=70"
 test-infra = "pytest tests/infra_tests/ --cov=infrastructure --cov-report=term-missing --cov-report=html --cov-report=json --cov-fail-under=60 --tb=short -m 'not requires_ollama' --ignore=tests/infra_tests/core/test_module_interoperability.py"
-test-project = "pytest projects/act_inf_metaanalysis/tests/ --cov=projects/act_inf_metaanalysis/src --cov-report=term-missing --cov-report=html --cov-report=json --cov-fail-under=90 --tb=short"
-lint = "mypy infrastructure/ projects/act_inf_metaanalysis/src/"
-security = "bandit -r infrastructure/ projects/act_inf_metaanalysis/src/"
-format = "black infrastructure/ projects/act_inf_metaanalysis/src/"
-type-check = "mypy --strict infrastructure/ projects/act_inf_metaanalysis/src/"
+test-project = "pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=term-missing --cov-report=html --cov-report=json --cov-fail-under=90 --tb=short"
+lint = "mypy infrastructure/"
+security = "bandit -r infrastructure/"
+format = "black infrastructure/"
+type-check = "mypy --strict infrastructure/"
 
 [dependency-groups]
+# Optional LLM integration (requires running Ollama server)
+llm = [
+  "ollama>=0.6.1",
+  "requests>=2.31.0",
+]
+# Optional rendering enhancements (lazily imported in manuscript_overview.py and pdf_validator.py)
+rendering = [
+  "reportlab>=4.0.0",
+  "pypdf>=5.0",
+]
+# Optional dashboard generation (lazily imported in dashboard_generator.py)
+dashboard = [
+  "plotly>=5.0.0",
+  "matplotlib>=3.7",
+]
+# Optional .env file loading (used in infrastructure/core/credentials.py, gracefully absent)
+dotenv = [
+  "python-dotenv>=1.0.0",
+]
+# Optional barcode generation for steganography module (gracefully absent)
+steganography = [
+  "qrcode[pil]>=8.2",
+  "python-barcode>=0.15",
+]
+# Optional resource monitoring (gracefully absent via try/except in logging_utils.py)
+monitoring = [
+  "psutil>=5.9.0",
+]
 # Development dependencies (replaces deprecated tool.uv.dev-dependencies)
 dev = [
     "pytest>=7.0",
@@ -81,20 +91,19 @@ dev = [
     "iniconfig>=2.3.0",
     "types-requests>=2.32.4.20260107",
     "types-pyyaml>=6.0.12.20250915",
+    "black>=23.0",
 ]
 
 [tool.uv]
 # uv-specific configuration
 managed = true  # Use uv's virtual environment management
 package = false  # This is not a distributable package
+default-groups = ["dev"]
 
 [tool.uv.workspace]
 # Workspace configuration for multi-project support
 # Supports both standalone projects and nested projects within program directories
-members = [
-    "projects/act_inf_metaanalysis",
-    "projects/ento_linguistics",
-]
+members = []
 exclude = [
     "projects/*/output",
     "projects/*/*/output",
@@ -104,8 +113,8 @@ exclude = [
 
 [tool.pytest.ini_options]
 # Pytest configuration (consolidated from pytest.ini)
-pythonpath = [".", "infrastructure", "projects/act_inf_metaanalysis/src", "projects/ento_linguistics/src"]
-testpaths = ["tests", "projects/act_inf_metaanalysis/tests"]
+pythonpath = [".", "infrastructure", "projects/code_project/src"]
+testpaths = ["tests", "tests/integration"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
@@ -139,7 +148,7 @@ filterwarnings = [
 #   - Infrastructure tests: --cov-datafile=.coverage.infra
 #   - Project tests: --cov-datafile=.coverage.project
 branch = true
-source = ["infrastructure", "projects/act_inf_metaanalysis/src"]
+source = ["infrastructure", "projects/code_project/src"]
 omit = [
     "*/tests/*",
     "*/test_*",

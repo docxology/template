@@ -1,0 +1,130 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Abstract},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{\texorpdfstring{Abstract}{Abstract}}
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Abstract}
+\protect\phantomsection\label{abstract}
+This review unifies four converging research programmes---case systems
+in theoretical linguistics, categorial grammar and its
+string-diagrammatic semantics, enriched and topos-theoretic category
+theory, and active inference as a process theory of cognition---into a
+single coherent framework centred on the \emph{cognitive case diagram}.
+The formal core treats case systems as categories (objects = case roles,
+morphisms = grammatical relations), cross-linguistic alignment types as
+functors between case categories, and sentences as compact-closed string
+diagrams in the DisCoCat (Distributional Compositional Categorical)
+framework. By demonstrating that DisCoCat constitutes the algebraic
+formalization of the distributional programme that modern large language
+models implement empirically---from static word embeddings through
+contextual transformers---we bridge the two traditions of meaning
+(formal and distributional) within a unified categorical architecture.
+These diagrams serve simultaneously as mathematical proofs, cognitive
+representations, and the structural core of generative models under
+active inference: understanding a sentence reduces to constructing the
+case diagram that minimizes variational free energy. We extend this
+framework through Distributional Active Inference, which models full
+distributions over case diagrams rather than point estimates, connecting
+distributional semantics to distributional reinforcement learning via
+enriched-categorical push-forward measures. Graded proto-role structure
+is captured via \([0,1]\)-enriched categories with categorical magnitude
+as a complexity measure, and inter-theoretic translation is formalized
+through Morita-equivalent classifying toposes. Implementation within the
+CEREBRUM (Case-Enabled Reasoning Engine with Bayesian Representations
+for Unified Models) architecture demonstrates practical viability. The
+analysis suggests that the mathematics of case alignment is not merely
+an abstraction of human grammar, but the formal geometry of relational
+meaning itself---the architecture through which cognitive systems
+organize experience into who-does-what-to-whom.
+\end{frame}
+
+\end{document}

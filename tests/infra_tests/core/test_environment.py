@@ -5,11 +5,16 @@ No mocks - uses actual system state and temp directories.
 """
 
 import os
-import sys
-from pathlib import Path
 
 
-from infrastructure.core.environment import check_dependencies, check_python_version
+from infrastructure.core.environment import (
+    check_dependencies,
+    check_python_version,
+    get_subprocess_env,
+    setup_directories,
+    validate_directory_structure,
+    validate_uv_sync_result,
+)
 
 
 class TestCheckPythonVersion:
@@ -17,19 +22,10 @@ class TestCheckPythonVersion:
 
     def test_python_version_check_succeeds(self):
         """Test that Python version check succeeds on current system."""
-        # We're running on Python 3.8+, so this should pass
+        # We're running on Python 3.11+, so this should pass
         result = check_python_version()
 
         assert result is True
-
-    def test_version_info_is_valid(self):
-        """Test that sys.version_info contains expected components."""
-        version = sys.version_info
-
-        assert version.major >= 3
-        assert version.minor >= 0
-        assert version.micro >= 0
-
 
 class TestCheckDependencies:
     """Tests for check_dependencies function."""
@@ -38,10 +34,8 @@ class TestCheckDependencies:
         """Test checking default required packages."""
         all_present, missing = check_dependencies()
 
-        # Core packages should be present in test environment
-        # numpy, matplotlib, pytest, requests are required
-        assert isinstance(all_present, bool)
-        assert isinstance(missing, list)
+        # pytest is always present since we're running tests with it
+        assert "pytest" not in missing
 
     def test_check_specific_packages_present(self):
         """Test checking packages known to be present."""
@@ -76,12 +70,13 @@ class TestCheckDependencies:
         assert all_present is True
         assert missing == []
 
-    def test_returns_tuple(self):
-        """Test that function returns proper tuple type."""
-        result = check_dependencies(["pytest"])
+    def test_all_present_is_false_when_any_missing(self):
+        """all_present flag is False when at least one package is absent."""
+        all_present, missing = check_dependencies(["pytest", "nonexistent_xyz_pkg_9999"])
 
-        assert isinstance(result, tuple)
-        assert len(result) == 2
+        assert all_present is False
+        assert "nonexistent_xyz_pkg_9999" in missing
+        assert "pytest" not in missing
 
 
 class TestEnvironmentSetupIntegration:
@@ -89,80 +84,12 @@ class TestEnvironmentSetupIntegration:
 
     def test_full_environment_check(self):
         """Test running multiple environment checks together."""
-        # Check Python version
-        python_ok = check_python_version()
-        assert python_ok is True
-
         # Check core packages
         deps_ok, missing = check_dependencies(["pytest"])
         assert deps_ok is True
 
-    def test_environment_variables_accessible(self):
-        """Test that environment variables can be accessed."""
-        # Set a test variable
-        os.environ["TEST_ENV_VAR_12345"] = "test_value"
-
-        try:
-            assert os.environ.get("TEST_ENV_VAR_12345") == "test_value"
-        finally:
-            # Clean up
-            del os.environ["TEST_ENV_VAR_12345"]
-
-    def test_path_operations(self, tmp_path):
-        """Test path operations work correctly."""
-        # Create test directory structure
-        test_dir = tmp_path / "test_project"
-        test_dir.mkdir()
-
-        output_dir = test_dir / "output"
-        output_dir.mkdir()
-
-        assert test_dir.exists()
-        assert output_dir.exists()
-        assert test_dir.is_dir()
-
-    def test_current_working_directory(self):
-        """Test current working directory is accessible."""
-        cwd = Path.cwd()
-
-        assert cwd.exists()
-        assert cwd.is_dir()
-
-    def test_home_directory_accessible(self):
-        """Test home directory is accessible."""
-        home = Path.home()
-
-        assert home.exists()
-        assert home.is_dir()
-
-
 class TestDependencyValidation:
     """Tests for dependency validation scenarios."""
-
-    def test_numpy_importable(self):
-        """Test that numpy can be imported."""
-        try:
-            import numpy  # noqa: F401
-
-            can_import = True
-        except ImportError:
-            can_import = False
-
-        # This test documents the current state
-        # numpy should be installed in the test environment
-        assert can_import is True
-
-    def test_pytest_importable(self):
-        """Test that pytest can be imported."""
-        import pytest as _pytest
-
-        assert _pytest is not None
-
-    def test_pathlib_importable(self):
-        """Test that pathlib can be imported."""
-        from pathlib import Path as _Path
-
-        assert _Path is not None
 
     def test_check_standard_library(self):
         """Test checking standard library modules."""
@@ -173,37 +100,113 @@ class TestDependencyValidation:
         assert missing == []
 
 
-class TestEnvironmentState:
-    """Tests for environment state queries."""
+class TestSetupDirectories:
+    """Tests for setup_directories and validate_directory_structure."""
 
-    def test_python_executable_exists(self):
-        """Test Python executable path is valid."""
-        python_path = sys.executable
+    def test_setup_directories_creates_structure(self, tmp_path):
+        """Test that setup_directories creates all expected directories."""
+        result = setup_directories(tmp_path, "test_project")
 
-        assert python_path is not None
-        assert Path(python_path).exists()
+        assert result is True
+        assert (tmp_path / "output" / "test_project").is_dir()
+        assert (tmp_path / "output" / "test_project" / "figures").is_dir()
+        assert (tmp_path / "projects" / "test_project" / "output").is_dir()
 
-    def test_platform_info_available(self):
-        """Test platform information is available."""
-        platform = sys.platform
+    def test_setup_directories_idempotent(self, tmp_path):
+        """Test that running setup twice does not fail."""
+        first = setup_directories(tmp_path, "idempotent_project")
+        second = setup_directories(tmp_path, "idempotent_project")
 
-        assert platform in ["linux", "darwin", "win32", "cygwin"]
+        assert first is True
+        assert second is True
 
-    def test_version_components(self):
-        """Test Python version has all components."""
-        v = sys.version_info
+    def test_setup_directories_custom_list(self, tmp_path):
+        """Test setup_directories with a custom directory list."""
+        custom_dirs = ["custom/a", "custom/b/c"]
+        result = setup_directories(tmp_path, "unused", directories=custom_dirs)
 
-        assert hasattr(v, "major")
-        assert hasattr(v, "minor")
-        assert hasattr(v, "micro")
-        assert hasattr(v, "releaselevel")
+        assert result is True
+        assert (tmp_path / "custom" / "a").is_dir()
+        assert (tmp_path / "custom" / "b" / "c").is_dir()
 
-    def test_import_system_working(self):
-        """Test the import system is working correctly."""
-        # Test that we can import and the module has expected attributes
-        import infrastructure.core.environment as env_module
+    def test_validate_directory_structure_all_present(self, tmp_path):
+        """Test validate_directory_structure returns empty list when all dirs exist."""
+        setup_directories(tmp_path, "valid_project")
+        missing = validate_directory_structure(tmp_path, "valid_project")
 
-        assert hasattr(env_module, "check_python_version")
-        assert hasattr(env_module, "check_dependencies")
-        assert callable(env_module.check_python_version)
-        assert callable(env_module.check_dependencies)
+        assert missing == []
+
+    def test_validate_directory_structure_reports_missing(self, tmp_path):
+        """Test validate_directory_structure reports missing directories."""
+        # Don't create any directories — all should be missing
+        missing = validate_directory_structure(tmp_path, "missing_project")
+
+        assert len(missing) > 0
+        assert all(isinstance(m, str) for m in missing)
+
+    def test_validate_directory_structure_partial(self, tmp_path):
+        """Test validate when some but not all directories exist."""
+        (tmp_path / "output" / "partial_proj").mkdir(parents=True)
+        missing = validate_directory_structure(tmp_path, "partial_proj")
+
+        # Some subdirs will still be missing
+        assert len(missing) > 0
+
+
+class TestGetSubprocessEnv:
+    """Tests for get_subprocess_env."""
+
+    def test_returns_dict(self):
+        """Test that get_subprocess_env returns a dict."""
+        env = get_subprocess_env()
+        assert isinstance(env, dict)
+
+    def test_inherits_parent_env(self):
+        """Test that returned env inherits variables from os.environ."""
+        os.environ["TEST_SUBPROCESS_VAR_99"] = "hello"
+        try:
+            env = get_subprocess_env()
+            assert env.get("TEST_SUBPROCESS_VAR_99") == "hello"
+        finally:
+            del os.environ["TEST_SUBPROCESS_VAR_99"]
+
+    def test_custom_base_env(self):
+        """Test with a custom base env dict."""
+        base = {"MY_VAR": "my_value", "PATH": "/usr/bin"}
+        env = get_subprocess_env(base)
+        assert env["MY_VAR"] == "my_value"
+
+    def test_returns_copy_not_reference(self):
+        """Test that modifying the returned dict does not affect os.environ."""
+        env = get_subprocess_env()
+        env["__TEST_ISOLATION__"] = "should_not_propagate"
+        assert "__TEST_ISOLATION__" not in os.environ
+
+
+class TestValidateUvSyncResult:
+    """Tests for validate_uv_sync_result."""
+
+    def test_returns_false_when_no_venv(self, tmp_path):
+        """Test returns failure when .venv is absent."""
+        (tmp_path / "uv.lock").write_text("placeholder")
+        ok, msg = validate_uv_sync_result(tmp_path)
+
+        assert ok is False
+        assert isinstance(msg, str)
+
+    def test_returns_false_when_no_lock_file(self, tmp_path):
+        """Test returns failure when uv.lock is absent."""
+        (tmp_path / ".venv").mkdir()
+        ok, msg = validate_uv_sync_result(tmp_path)
+
+        assert ok is False
+        assert isinstance(msg, str)
+
+    def test_returns_true_when_both_present(self, tmp_path):
+        """Test returns success when both .venv dir and uv.lock exist."""
+        (tmp_path / ".venv").mkdir()
+        (tmp_path / "uv.lock").write_text("placeholder")
+        ok, msg = validate_uv_sync_result(tmp_path)
+
+        assert ok is True
+        assert isinstance(msg, str)

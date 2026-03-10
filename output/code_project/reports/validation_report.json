@@ -4,9 +4,12 @@
     "PDF validation": true,
     "Markdown validation": true,
     "Output structure": true,
-    "Figure registry": true
+    "Figure registry": false
   },
-  "figure_issues": [],
+  "figure_issues": [
+    "Unregistered figure reference: fig:benchmark",
+    "Unregistered figure reference: fig:stability"
+  ],
   "output_statistics": {
     "detailed_validation": {
       "structure": {
@@ -25,7 +28,7 @@
         "directory_structure": {
           "project_combined_pdf": {
             "exists": true,
-            "size_mb": 1.64,
+            "size_mb": 1.63,
             "readable": true
           },
           "pdf": {
@@ -177,11 +180,11 @@
     },
     "pdf": {
       "files": 10,
-      "size_mb": 1.8101224899291992
+      "size_mb": 1.7969846725463867
     },
     "figures": {
       "files": 7,
-      "size_mb": 1.5364999771118164
+      "size_mb": 1.5189075469970703
     },
     "data": {
       "files": 1,
@@ -190,10 +193,17 @@
   },
   "summary": {
     "total_checks": 4,
-    "passed": 4,
-    "failed": 0,
-    "figure_issues_count": 0,
-    "all_passed": true
+    "passed": 3,
+    "failed": 1,
+    "figure_issues_count": 2,
+    "all_passed": false
   },
-  "recommendations": []
+  "recommendations": [
+    {
+      "priority": "medium",
+      "issue": "2 figure reference issue(s)",
+      "action": "Register missing figures or remove unused references",
+      "file": "projects/code_project/output/figures/figure_registry.json"
+    }
+  ]
 }

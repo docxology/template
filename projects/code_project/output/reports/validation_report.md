@@ -1,10 +1,10 @@
 # Validation Report
 
-**Generated:** 2026-03-04T13:33:40.539987
+**Generated:** 2026-03-07T10:12:15.521355
 
 ## Validation Checks
 
 - ✅ PASS: PDF validation
 - ✅ PASS: Markdown validation
 - ✅ PASS: Output structure
-- ✅ PASS: Figure registry
+- ❌ FAIL: Figure registry

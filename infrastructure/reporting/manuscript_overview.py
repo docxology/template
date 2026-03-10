@@ -11,20 +11,21 @@ from __future__ import annotations
 
 import math
 from pathlib import Path
-from typing import TYPE_CHECKING, Dict, List, Tuple
+from typing import TYPE_CHECKING
 
+from infrastructure.core.exceptions import FileNotFoundError, PDFValidationError, ValidationError
 from infrastructure.core.logging_utils import get_logger
 
 if TYPE_CHECKING:
     import PIL.Image
     from pypdf import PdfReader
 
-    from infrastructure.reporting.executive_report import ExecutiveSummary
+    from infrastructure.reporting.executive_reporter import ExecutiveSummary
 
 logger = get_logger(__name__)
 
 
-def extract_pdf_pages_as_images(pdf_path: Path, dpi: int = 300) -> List["PIL.Image.Image"]:
+def extract_pdf_pages_as_images(pdf_path: Path, dpi: int = 300) -> list["PIL.Image.Image"]:
     """Extract each PDF page as a PIL Image.
 
     Uses pypdf to read PDF pages and renders them as images.
@@ -42,7 +43,7 @@ def extract_pdf_pages_as_images(pdf_path: Path, dpi: int = 300) -> List["PIL.Ima
         ValueError: If PDF is corrupted or has no pages
     """
     if not pdf_path.exists():
-        raise FileNotFoundError(f"PDF file not found: {pdf_path}")
+        raise FileNotFoundError(f"PDF file not found: {pdf_path}", context={"file": str(pdf_path)})
 
     try:
         from pypdf import PdfReader
@@ -53,11 +54,13 @@ def extract_pdf_pages_as_images(pdf_path: Path, dpi: int = 300) -> List["PIL.Ima
     try:
         reader = PdfReader(pdf_path)
         if len(reader.pages) == 0:
-            raise ValueError(f"PDF has no pages: {pdf_path}")
+            raise PDFValidationError(f"PDF has no pages: {pdf_path}")
 
         logger.info(f"Extracting {len(reader.pages)} pages from {pdf_path.name}")
+    except PDFValidationError:
+        raise
     except Exception as e:
-        raise ValueError(f"Failed to read PDF {pdf_path}: {e}")
+        raise PDFValidationError(f"Failed to read PDF {pdf_path}: {e}") from e
 
     images = []
 
@@ -70,12 +73,12 @@ def extract_pdf_pages_as_images(pdf_path: Path, dpi: int = 300) -> List["PIL.Ima
             images = _render_pages_simple(reader, dpi)
         except Exception as e2:
             logger.error(f"Simple rendering also failed: {e2}")
-            raise ValueError(f"Failed to render PDF pages: {e2}")
+            raise PDFValidationError(f"Failed to render PDF pages: {e2}") from e2
 
     return images
 
 
-def _render_pages_with_reportlab(reader: "PdfReader", dpi: int) -> List["PIL.Image.Image"]:
+def _render_pages_with_reportlab(reader: "PdfReader", dpi: int) -> list["PIL.Image.Image"]:
     """Render PDF pages using reportlab for high-quality output."""
     try:
         import os
@@ -138,7 +141,8 @@ def _render_pages_with_reportlab(reader: "PdfReader", dpi: int) -> List["PIL.Ima
                 draw = ImageDraw.Draw(img)
                 try:
                     font = ImageFont.truetype("Helvetica", 12)
-                except Exception:
+                except (OSError, IOError) as e:
+                    logger.debug(f"Could not load Helvetica font: {e}")
                     font = ImageFont.load_default()  # type: ignore
 
                 y_pos = 50
@@ -162,7 +166,7 @@ def _render_pages_with_reportlab(reader: "PdfReader", dpi: int) -> List["PIL.Ima
     return images
 
 
-def _render_pages_simple(reader: "PdfReader", dpi: int) -> List["PIL.Image.Image"]:
+def _render_pages_simple(reader: "PdfReader", dpi: int) -> list["PIL.Image.Image"]:
     """Render PDF pages using simple text extraction and PIL drawing."""
     try:
         from PIL import Image, ImageDraw, ImageFont
@@ -181,7 +185,8 @@ def _render_pages_simple(reader: "PdfReader", dpi: int) -> List["PIL.Image.Image
         # Try to load a font
         try:
             font = ImageFont.truetype("Helvetica", 12)
-        except Exception:
+        except (OSError, IOError) as e:
+            logger.debug(f"Could not load Helvetica font: {e}")
             font = ImageFont.load_default()  # type: ignore
 
         # Extract and render text
@@ -211,10 +216,10 @@ def _render_pages_simple(reader: "PdfReader", dpi: int) -> List["PIL.Image.Image
 
 
 def create_page_grid(
-    images: List["PIL.Image.Image"],
+    images: list["PIL.Image.Image"],
     cols: int = 4,
     padding: int = 10,
-    max_thumb_size: Tuple[int, int] = (600, 800),
+    max_thumb_size: tuple[int, int] = (600, 800),
 ) -> "PIL.Image.Image":
     """Arrange page images in a grid layout.
 
@@ -228,25 +233,12 @@ def create_page_grid(
         Single PIL Image containing the grid layout
     """
     if not images:
-        raise ValueError("No images provided for grid creation")
+        raise ValidationError("No images provided for grid creation")
 
     try:
         from PIL import Image, ImageDraw, ImageFont
     except ImportError:
         raise ImportError("PIL required for image processing")
-    """Arrange page images in a grid layout.
-
-    Args:
-        images: List of PIL Images (one per page)
-        cols: Number of columns in grid (default: 4)
-        padding: Padding between thumbnails in pixels (default: 10)
-        max_thumb_size: Maximum size for each thumbnail (width, height) (default: 600x800)
-
-    Returns:
-        Single PIL Image containing the grid layout
-    """
-    if not images:
-        raise ValueError("No images provided for grid creation")
 
     # Calculate grid dimensions
     num_images = len(images)
@@ -289,7 +281,8 @@ def create_page_grid(
     # Try to load font for page numbers
     try:
         font = ImageFont.truetype("Helvetica", 10)
-    except Exception:
+    except (OSError, IOError) as e:
+        logger.debug(f"Could not load Helvetica font: {e}")
         font = ImageFont.load_default()  # type: ignore
 
     # Place images in grid
@@ -317,7 +310,8 @@ def create_page_grid(
     title = f"Manuscript Overview - {num_images} Pages"
     try:
         title_font = ImageFont.truetype("Helvetica-Bold", 16)
-    except Exception:
+    except (OSError, IOError) as e:
+        logger.debug(f"Could not load Helvetica-Bold font: {e}")
         title_font = ImageFont.load_default()  # type: ignore
 
     draw.text((padding, padding // 2), title, fill="black", font=title_font)
@@ -327,7 +321,7 @@ def create_page_grid(
 
 def generate_manuscript_overview(
     pdf_path: Path, output_dir: Path, project_name: str, dpi: int = 300
-) -> Dict[str, Path]:
+) -> dict[str, Path]:
     """Generate manuscript overview images (PNG and PDF) for a project.
 
     Args:
@@ -355,7 +349,7 @@ def generate_manuscript_overview(
         raise
 
     if not page_images:
-        raise ValueError(f"No pages extracted from {pdf_path}")
+        raise PDFValidationError(f"No pages extracted from {pdf_path}")
 
     logger.info(f"Extracted {len(page_images)} page images")
 
@@ -440,7 +434,7 @@ def _save_image_as_pdf(image: "PIL.Image.Image", pdf_path: Path, title: str) -> 
 
 def generate_all_manuscript_overviews(
     summary: "ExecutiveSummary", output_dir: Path, repo_root: Path
-) -> Dict[str, Path]:
+) -> dict[str, Path]:
     """Generate manuscript overviews for all projects in the executive summary.
 
     Args:

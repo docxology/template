@@ -5,6 +5,8 @@ This script provides multi-project pipeline execution functionality extracted
 from run.sh into testable Python code following the thin orchestrator pattern.
 """
 
+from __future__ import annotations
+
 import sys
 from pathlib import Path
 
@@ -123,7 +125,7 @@ def execute_multi_project(
 
         # Generate comprehensive final summary
         try:
-            from infrastructure.reporting.pipeline_reporter import (
+            from infrastructure.reporting.multi_project_reporter import (
                 generate_multi_project_summary_report,
             )
 

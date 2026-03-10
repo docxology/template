@@ -1,0 +1,190 @@
+{
+  "assessments": {
+    "cross_module_architecture": 74,
+    "convention_outlier": 72,
+    "error_consistency": 61
+  },
+  "findings": [
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "scripts_init_dynamic_exec_at_import_time",
+      "summary": "scripts/__init__.py executes a script file via importlib at import time, injecting it into sys.modules as a side effect",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/scripts/__init__.py"
+      ],
+      "evidence": [
+        "Lines 118-123: importlib.util.spec_from_file_location, module_from_spec, and exec_module are called unconditionally at module import time, loading 06_llm_review.py and registering it as scripts.llm_review in sys.modules",
+        "Line 122: sys.modules[_module_name] = _llm_review — global interpreter state mutated at import time",
+        "Lines 126-127: main = _llm_review.main and ReviewMode = _llm_review.ReviewMode bind names from the dynamically loaded module; any import error in 06_llm_review.py silently corrupts scripts/__init__",
+        "06_llm_review.py is an entry-point script, not a library module; treating it as an importable library by loading it from __init__.py blurs the boundary between orchestration scripts and infrastructure modules"
+      ],
+      "suggestion": "Move ReviewMode and the re-exported LLM functions into an infrastructure module (e.g., infrastructure/llm/review/modes.py). Then scripts/__init__.py can import them with a normal static import, eliminating the dynamic exec and sys.modules mutation.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "scripts_init_bloated_re_export_surface",
+      "summary": "scripts/__init__.py re-exports 25+ symbols from infrastructure modules, turning the scripts package into a second public API surface for infrastructure",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/scripts/__init__.py"
+      ],
+      "evidence": [
+        "Lines 92-114: imports generate_executive_summary, generate_quality_review, generate_methodology_review, generate_improvement_suggestions, validate_review_quality, save_review_outputs, generate_review_summary, ReviewMetrics, ManuscriptMetrics, SessionMetrics, estimate_tokens, get_max_input_length, check_ollama_availability, extract_manuscript_text all from infrastructure subpackages",
+        "Lines 130-133: re-exports is_off_topic, detect_conversational_phrases, check_format_compliance from infrastructure.llm.validation.format",
+        "Lines 138-146: re-exports LLMClient, LLMConfig, is_ollama_running, select_best_model from infrastructure.llm — all wrapped in a silent except ImportError: pass",
+        "__all__ at lines 156-182 lists 26 symbols, most of which live in infrastructure — callers who import from scripts are coupled to infrastructure internals through this facade"
+      ],
+      "suggestion": "Remove the re-export surface from scripts/__init__.py. Tests that need LLM infrastructure utilities should import directly from infrastructure.llm.*. scripts/__init__.py should be empty or limited to MENU_SCRIPT_MAPPING.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "file_operations_avoids_project_discovery_circular_import",
+      "summary": "infrastructure/core/file_operations.py uses an inline directory scan to avoid importing infrastructure.project.discovery, documenting a hidden circular dependency risk",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/infrastructure/core/file_operations.py"
+      ],
+      "evidence": [
+        "Lines 114-122: comment reads 'Using Path scan instead of infrastructure.project.discovery avoids a circular import: file_operations -> project.discovery -> core.logging_utils'",
+        "The workaround is functional but documents that the dependency direction between core/ and project/ is bidirectional; project.discovery imports from core (logging_utils), while core would naturally want to call project.discovery",
+        "This is a structural signal that project-level discovery logic is not fully separated from core utilities"
+      ],
+      "suggestion": "Extract the 'list valid project names' capability into a standalone utility that neither core/ nor project/ depends on circularly, or ensure project.discovery is the sole entry point and core modules receive project names as arguments rather than discovering them themselves.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "validation_integrity_re_exports_file_hash",
+      "summary": "infrastructure/validation/integrity.py re-exports calculate_file_hash from infrastructure.core.file_operations with a noqa:F401 comment, creating an unintentional second public import path",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/infrastructure/validation/integrity.py"
+      ],
+      "evidence": [
+        "Line 23: from infrastructure.core.file_operations import calculate_file_hash  # noqa: F401",
+        "The noqa comment suppresses the 'imported but unused' warning; the symbol is re-exported for callers who import it from validation.integrity rather than from its canonical home in core.file_operations",
+        "Grep shows only 3 callers of the integrity module and none import calculate_file_hash through it; the re-export appears to be legacy remnant"
+      ],
+      "suggestion": "Remove the re-export line from integrity.py. Callers that need calculate_file_hash should import it directly from infrastructure.core.file_operations.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "scripts_02_missing_log_header_log_success",
+      "summary": "scripts/02_run_analysis.py omits log_header and the stage-open log_success pattern used by all numbered sibling scripts",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/scripts/02_run_analysis.py",
+        "/Users/4d/Documents/GitHub/template/scripts/00_setup_environment.py",
+        "/Users/4d/Documents/GitHub/template/scripts/01_run_tests.py"
+      ],
+      "evidence": [
+        "Packet sibling_behavior for scripts/: log_header used in 13/18 scripts, log_success used in 11/18 scripts; scripts/02_run_analysis.py listed as outlier missing both",
+        "00_setup_environment.py line 22 imports log_success and log_header; 01_run_tests.py line 29 imports log_success and log_header — pattern is consistent across peer scripts",
+        "02_run_analysis.py imports log_success (line 37) but not log_header; it produces no stage-open banner analogous to what other numbered scripts emit at their entry point"
+      ],
+      "suggestion": "Add a log_header call at the start of main() in 02_run_analysis.py, matching the pattern used in 00_, 01_, 03_, etc. Import log_header alongside log_success.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "scripts_generate_test_summary_stripped_down",
+      "summary": "scripts/generate_test_summary.py is a 3-line delegation stub with no logger, no log_header, no log_success, and no annotations — structurally unlike all numbered pipeline scripts",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/scripts/generate_test_summary.py"
+      ],
+      "evidence": [
+        "File body (lines 1-18): imports only Path and sys; no get_logger, no log_header, no log_success, no type annotations; body is a two-line delegation to run_test_summary_generation()",
+        "Packet outliers list confirms all three patterns (get_logger, log_header, log_success) missing",
+        "Sibling scripts (00_, 01_, 02_, 03_) all set up a logger, emit a stage header, and log success/failure — this file does none of that, making pipeline log output inconsistent for this step"
+      ],
+      "suggestion": "Add a main() wrapper with get_logger, a log_header call, and log_success/failure around run_test_summary_generation(), following the same structure as 01_run_tests.py.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "scripts_execute_pipeline_missing_annotations",
+      "summary": "scripts/execute_pipeline.py is the only numbered pipeline entry point missing from __future__ import annotations, inconsistent with all other scripts in the package",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/scripts/execute_pipeline.py"
+      ],
+      "evidence": [
+        "Packet outliers for scripts/: execute_pipeline.py listed as missing 'annotations'",
+        "All other 15/18 scripts in the directory include from __future__ import annotations as the first import; execute_pipeline.py is one of three outliers, and the only core pipeline executor among them"
+      ],
+      "suggestion": "Add from __future__ import annotations at the top of scripts/execute_pipeline.py after the module docstring.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "camelcase_in_tests_directory",
+      "summary": "tests/ directory contains one camelCase identifier against a codebase that is uniformly snake_case",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/tests"
+      ],
+      "evidence": [
+        "Packet naming_by_directory for 'tests/': snake_case=267, camelCase=1 — a single camelCase name exists where none is expected",
+        "All other directories show 0 camelCase occurrences; Python naming guidance in the packet explicitly states 'Check for Java-style camelCase leaking in'"
+      ],
+      "suggestion": "Locate the camelCase identifier (likely a function or variable name in an infra_tests file) and rename it to snake_case.",
+      "confidence": "low"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "silent_except_pass_in_validation_and_rendering",
+      "summary": "Multiple modules in validation/ and rendering/ use bare except Exception: pass blocks that silently discard errors with no log, no propagation, and no recovery",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/infrastructure/validation/repo_scanner.py",
+        "/Users/4d/Documents/GitHub/template/infrastructure/validation/doc_accuracy.py",
+        "/Users/4d/Documents/GitHub/template/infrastructure/validation/doc_completeness.py",
+        "/Users/4d/Documents/GitHub/template/infrastructure/validation/doc_discovery.py",
+        "/Users/4d/Documents/GitHub/template/infrastructure/rendering/pdf_renderer.py",
+        "/Users/4d/Documents/GitHub/template/infrastructure/rendering/core.py",
+        "/Users/4d/Documents/GitHub/template/infrastructure/rendering/latex_package_validator.py"
+      ],
+      "evidence": [
+        "repo_scanner.py lines 160-161, 220-221, 310-311, 366-367, 432-433: five separate except Exception: pass blocks; no logger.debug, no re-raise, no recovery action",
+        "doc_accuracy.py lines 238-239, 276-277, 294-295: three except Exception: pass blocks inside validation logic that scans documents for accuracy issues",
+        "doc_completeness.py lines 72-73: except Exception: pass inside a documentation completeness check loop",
+        "doc_discovery.py lines 134-135: except Exception: pass",
+        "pdf_renderer.py lines 701-702: except Exception: pass inside a content-reading fallback path",
+        "rendering/core.py lines 95-96: except Exception: pass with comment 'Ignore errors when checking PDF status'",
+        "latex_package_validator.py lines 83-84: except Exception: pass",
+        "The dominant pattern in the same codebase is except Exception as e: logger.error(..., exc_info=True) or raise, making the silent passes clear outliers"
+      ],
+      "suggestion": "Replace bare except Exception: pass blocks with at minimum logger.debug('...', exc_info=True) so the error is observable under debug logging. Where the exception indicates a real failure rather than an optional probe, raise or propagate it.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "scripts_init_silent_except_importerror_and_except_exception",
+      "summary": "scripts/__init__.py contains two silent exception swallows at import time: one bare except ImportError: pass and one bare except Exception: pass",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/scripts/__init__.py"
+      ],
+      "evidence": [
+        "Lines 144-146: except ImportError: pass wraps import of LLMClient, LLMConfig, is_ollama_running, select_best_model — if any of these fail for a reason other than the module being absent (e.g., a syntax error in the module), the error is discarded silently",
+        "Lines 152-154: except Exception: pass wraps from scripts.execute_pipeline import execute_pipeline, execute_single_stage and from scripts.execute_multi_project import execute_multi_project — any import-time exception in these core pipeline scripts is silently swallowed at package load time, leaving execute_pipeline, execute_single_stage, execute_multi_project undefined with no signal to the caller",
+        "Symbols listed in __all__ (lines 178-180) include execute_pipeline, execute_single_stage, execute_multi_project — if the silent except fires, these names will be absent from __all__ exports with no error at import time"
+      ],
+      "suggestion": "For the ImportError block, add logger.debug(...) so import failures are visible. For the except Exception block around execute_pipeline imports, remove it entirely or replace with except ImportError — catching all exceptions at package load time can mask genuine bugs in core pipeline code.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "inconsistent_exception_types_in_validation_layer",
+      "summary": "The validation/ layer mixes custom TemplateError subclasses with bare stdlib exceptions, depending on which validator is called",
+      "related_files": [
+        "/Users/4d/Documents/GitHub/template/infrastructure/validation/markdown_validator.py",
+        "/Users/4d/Documents/GitHub/template/infrastructure/validation/pdf_validator.py",
+        "/Users/4d/Documents/GitHub/template/infrastructure/core/exceptions.py"
+      ],
+      "evidence": [
+        "pdf_validator.py raises PDFValidationError (a TemplateError subclass from infrastructure.core.exceptions) at lines 42, 51, 56, 106",
+        "markdown_validator.py raises FileNotFoundError and NotADirectoryError — these are the custom dual-inheritance exceptions from infrastructure.core.exceptions (line 19 confirms the import), so they ARE in the hierarchy, but the public raise signature looks like stdlib builtins to call-site readers",
+        "integrity.py at line 23 re-exports calculate_file_hash with noqa:F401 and itself never raises a custom exception — errors are returned as Dict[str, bool] False values (returns_null pattern per the packet)",
+        "Within the same validation/ package, errors are signalled via: (a) raised TemplateError subclasses (pdf_validator), (b) raised dual-inheritance builtins (markdown_validator), (c) returned bool/dict (integrity), and (d) silent except pass (repo_scanner, doc_accuracy) — four distinct strategies with no documented layering rationale"
+      ],
+      "suggestion": "Establish a single error contract for the validation layer: raise TemplateError subclasses for unrecoverable failures and return structured results (e.g., a ValidationResult dataclass) for partial/soft failures. Remove the returns_null and silent-pass patterns from public validation functions.",
+      "confidence": "medium"
+    }
+  ]
+}

@@ -9,6 +9,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Sequence
 
+from infrastructure.core.exceptions import ValidationError
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
+
 
 @dataclass(frozen=True)
 class MenuOption:
@@ -33,22 +38,22 @@ def parse_choice_sequence(raw: str) -> list[str]:
         List of choice tokens (as strings).
 
     Raises:
-        ValueError: If input cannot be parsed into a non-empty choice list.
+        ValidationError: If input cannot be parsed into a non-empty choice list.
     """
 
     cleaned = "".join(ch for ch in raw.strip() if not ch.isspace())
     if not cleaned:
-        raise ValueError("Empty choice")
+        raise ValidationError("Empty choice")
 
     if cleaned.isdigit() and len(cleaned) > 1:
         return list(cleaned)
 
     parts = [p for p in cleaned.split(",") if p]
     if not parts:
-        raise ValueError("No valid choices found")
+        raise ValidationError("No valid choices found")
 
     if any(not p.isdigit() for p in parts):
-        raise ValueError(f"Invalid choice token(s): {parts}")
+        raise ValidationError(f"Invalid choice token(s): {parts}")
 
     return parts
 

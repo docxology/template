@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from string import Template
-from typing import Any, Optional
+from typing import Any
 
 from infrastructure.core.exceptions import LLMTemplateError
 from infrastructure.core.logging_utils import get_logger
@@ -47,20 +47,6 @@ TRANSLATION_LANGUAGES = {
     "de": "German",
 }
 
-
-# Minimum word counts for quality validation
-# Note: improvement_suggestions uses a lower threshold (200) because models often
-# produce focused, actionable output that may be shorter but still high-quality.
-# The retry mechanism catches truly short responses.
-REVIEW_MIN_WORDS = {
-    "executive_summary": 250,
-    "quality_review": 300,
-    "methodology_review": 300,
-    "improvement_suggestions": 200,  # Lower threshold for focused actionable output
-    "translation": 400,  # English abstract + translation (~200 words each)
-}
-
-
 class ManuscriptExecutiveSummary(ResearchTemplate):
     """Template for generating executive summary of a manuscript.
 
@@ -93,8 +79,8 @@ Begin your executive summary now:"""
 
     def render(
         self,
-        text: Optional[str] = None,
-        max_tokens: Optional[int] = None,
+        text: str | None = None,
+        max_tokens: int | None = None,
         **kwargs: Any,
     ) -> str:
         """Render template with enhanced constraints.
@@ -199,7 +185,6 @@ Begin your executive summary now:"""
             **kwargs,
         )
 
-
 class ManuscriptQualityReview(ResearchTemplate):
     """Template for reviewing writing quality of a manuscript.
 
@@ -232,8 +217,8 @@ Begin your quality review now:"""
 
     def render(
         self,
-        text: Optional[str] = None,
-        max_tokens: Optional[int] = None,
+        text: str | None = None,
+        max_tokens: int | None = None,
         **kwargs: Any,
     ) -> str:
         """Render template with enhanced constraints.
@@ -328,7 +313,6 @@ Begin your quality review now:"""
             **kwargs,
         )
 
-
 class ManuscriptMethodologyReview(ResearchTemplate):
     """Template for reviewing methodology and structure of a manuscript.
 
@@ -361,8 +345,8 @@ Begin your methodology review now:"""
 
     def render(
         self,
-        text: Optional[str] = None,
-        max_tokens: Optional[int] = None,
+        text: str | None = None,
+        max_tokens: int | None = None,
         **kwargs: Any,
     ) -> str:
         """Render template with enhanced constraints.
@@ -437,7 +421,6 @@ Begin your methodology review now:"""
             **kwargs,
         )
 
-
 class ManuscriptImprovementSuggestions(ResearchTemplate):
     """Template for generating improvement suggestions for a manuscript.
 
@@ -470,8 +453,8 @@ Begin your improvement suggestions now:"""
 
     def render(
         self,
-        text: Optional[str] = None,
-        max_tokens: Optional[int] = None,
+        text: str | None = None,
+        max_tokens: int | None = None,
         **kwargs: Any,
     ) -> str:
         """Render template with enhanced constraints.
@@ -565,7 +548,6 @@ Begin your improvement suggestions now:"""
             **kwargs,
         )
 
-
 class ManuscriptTranslationAbstract(ResearchTemplate):
     """Template for generating a technical abstract and translating to target language.
 
@@ -598,9 +580,9 @@ Begin with the English abstract, then provide the translation:"""
 
     def render(
         self,
-        text: Optional[str] = None,
-        target_language: Optional[str] = None,
-        max_tokens: Optional[int] = None,
+        text: str | None = None,
+        target_language: str | None = None,
+        max_tokens: int | None = None,
         **kwargs: Any,
     ) -> str:
         """Render template with enhanced constraints.

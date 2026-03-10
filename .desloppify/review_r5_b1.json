@@ -1,0 +1,127 @@
+{
+  "assessments": {
+    "cross_module_architecture": 74,
+    "convention_outlier": 78,
+    "error_consistency": 69
+  },
+  "findings": [
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "llm_review_imports_validation",
+      "summary": "infrastructure/llm/review/generator.py imports directly from infrastructure/validation, creating a lateral cross-subsystem dependency",
+      "related_files": [
+        "infrastructure/llm/review/generator.py",
+        "infrastructure/validation/pdf_validator.py"
+      ],
+      "evidence": [
+        "generator.py line 55: `from infrastructure.validation.pdf_validator import extract_text_from_pdf, PDFValidationError` — the llm/review subsystem reaches into the validation subsystem at runtime with no mediating abstraction",
+        "The llm package's own docstring (llm/__init__.py) lists its submodules as core, templates, validation, review, utils, cli, prompts — validation is a peer infrastructure subpackage, not part of llm"
+      ],
+      "suggestion": "Pass the extracted text as a parameter to generator functions, or move `extract_text_from_pdf` to `infrastructure/core/` so both llm and validation can import from a shared utility without coupling peer subpackages.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "duplicate_generate_executive_summary_symbol",
+      "summary": "`generate_executive_summary` is independently defined in both `infrastructure/reporting/executive_reporter.py` and `infrastructure/llm/review/generator.py`, then re-exported from both package __init__ surfaces under the same name",
+      "related_files": [
+        "infrastructure/reporting/executive_reporter.py",
+        "infrastructure/llm/review/generator.py",
+        "infrastructure/llm/__init__.py",
+        "infrastructure/reporting/__init__.py"
+      ],
+      "evidence": [
+        "infrastructure/reporting/__init__.py line 21: exports `generate_executive_summary` from `executive_reporter`",
+        "infrastructure/llm/__init__.py line 110: exports `generate_executive_summary` from `infrastructure.llm.review` — `generate_llm_executive_summary` also exported at line 111 as an alias for the same llm-side function",
+        "Two sibling top-level packages expose the same public name for different semantics, creating ambiguity for any caller that imports from either `infrastructure.reporting` or `infrastructure.llm`"
+      ],
+      "suggestion": "Remove the `generate_executive_summary` export from `infrastructure/llm/__init__.py`; callers should use `generate_llm_executive_summary` (the already-present alias) to make the distinction explicit. The reporting-side name should remain canonical.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "llm_init_oversized_reexport_surface",
+      "summary": "`infrastructure/llm/__init__.py` unconditionally re-exports 60+ symbols spanning all six llm subpackages, functioning as a hub module with a blast radius covering every internal subpackage",
+      "related_files": [
+        "infrastructure/llm/__init__.py"
+      ],
+      "evidence": [
+        "infrastructure/llm/__init__.py lines 30-122: imports from llm.core, llm.templates, llm.utils, llm.validation, llm.review, and conditionally llm.prompts",
+        "__all__ contains 60+ entries; the module docstring itself says 'Direct imports (recommended)' yet the __init__ contradicts this by pulling everything to the top level",
+        "Any internal rename (e.g., a metrics class) requires updating both the source module and the monolithic __init__ surface simultaneously"
+      ],
+      "suggestion": "Trim `infrastructure/llm/__init__.py` to the 5-8 symbols external callers actually need (LLMClient, LLMConfig, get_template, is_ollama_running, OutputValidator). Enforce the documented 'direct imports' guidance by removing the full subpackage re-export.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "mixed_error_module_adoption",
+      "summary": "`errors.py` (typed InfraError log-message constants) is used by only 3 of 124 infrastructure modules while all others use ad-hoc f-string log messages, making it an unadopted style island",
+      "related_files": [
+        "infrastructure/core/errors.py",
+        "infrastructure/core/pipeline.py",
+        "infrastructure/core/multi_project.py",
+        "infrastructure/core/cli.py"
+      ],
+      "evidence": [
+        "Grep for `from infrastructure.core.errors import` returns 3 files: pipeline.py, multi_project.py, cli.py",
+        "Grep for `from infrastructure.core.exceptions import` returns 27 files — the exception hierarchy is broadly adopted but the parallel error-constant module is nearly unused",
+        "`errors.py` docstring states the boundary rule: 'errors.py -> log message constants; exceptions.py -> raiseable exception classes' — but the convention is honored in only 3 modules, so the codebase has two inconsistent error-messaging styles in production"
+      ],
+      "suggestion": "Either adopt InfraError constants throughout the codebase (replacing ad-hoc f-string log messages in all modules) or remove `errors.py` and consolidate its three constants into the three files that currently use them, eliminating the partial convention.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "logging_split_modules_bypassed_by_callers",
+      "summary": "`logging_utils.py` acts as a facade over four private split modules, but external callers bypass the facade and import directly from the split modules, creating an inconsistent two-tier import pattern within the same subpackage",
+      "related_files": [
+        "infrastructure/core/logging_utils.py",
+        "infrastructure/core/logging_progress.py",
+        "infrastructure/core/logging_constants.py",
+        "infrastructure/llm/review/generator.py"
+      ],
+      "evidence": [
+        "logging_utils.py lines 24-28: imports from `logging_formatters`, `logging_helpers`, `logging_progress`, `logging_constants`, `_optional_deps` as internal split modules",
+        "infrastructure/llm/review/generator.py lines 12-22: imports `log_substep`, `log_success`, `format_error_with_suggestions` from `infrastructure.core.logging_utils` (the facade) AND simultaneously imports `log_with_spinner`, `StreamingProgress`, `Spinner` directly from `infrastructure.core.logging_progress` (a split module) — the same caller uses both layers",
+        "infrastructure/core/logging_constants.py is listed as an untracked file in git status, indicating the split is still evolving without a settled contract"
+      ],
+      "suggestion": "Enforce that all callers import exclusively from `infrastructure.core.logging_utils`. Rename split modules with a leading underscore (`_logging_progress.py` etc.) and add a module-level `__all__` guard in each to make them explicitly private.",
+      "confidence": "medium"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "bare_exception_swallowing_no_reraise",
+      "summary": "Numerous `except Exception` handlers in reporting and validation modules log at warning/error level and silently return a partial result, making successful empty results indistinguishable from suppressed failures",
+      "related_files": [
+        "infrastructure/reporting/dashboard_generator.py",
+        "infrastructure/reporting/executive_reporter.py",
+        "infrastructure/validation/repo_scanner.py"
+      ],
+      "evidence": [
+        "dashboard_generator.py lines 952-955, 1294-1297, 1441-1444, 1670-1673, 1823-1826, 1936-1939, 2129-2132, 2228-2231, 2401-2404, 2506-2509: 10 chart-generator functions each catch `Exception`, log an error, and `return saved_files` — callers cannot tell a partial result from a full one",
+        "executive_reporter.py line 951-952: `except Exception as e: logger.error(...)` with no re-raise inside `generate_executive_summary` loop — metric collection for a project silently produces nothing and execution continues as if all projects succeeded",
+        "repo_scanner.py lines 418-419: `except Exception as e: logger.warning(f'Could not run tests: {e}')` — test runner failures are completely swallowed"
+      ],
+      "suggestion": "For chart generators, either propagate failures or return `Optional[Path]` so callers can detect partial results. For metric collection, re-raise or accumulate errors in a result object. Reserve swallow-and-continue only for genuinely optional side-effects, with an explicit comment explaining why.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "inconsistent_exception_specificity_at_io_boundaries",
+      "summary": "Identical I/O operations (file read/write, JSON parse) alternate between specific exception types and bare `Exception` catches across sibling modules with no consistent rule",
+      "related_files": [
+        "infrastructure/reporting/multi_project_reporter.py",
+        "infrastructure/core/checkpoint.py",
+        "infrastructure/core/file_operations.py"
+      ],
+      "evidence": [
+        "multi_project_reporter.py line 55: `except (OSError, ValueError, KeyError)` — specific and correct for file+JSON I/O",
+        "checkpoint.py lines 129, 153, 165, 180, 237: all five exception handlers for JSON file read/write use bare `except Exception` — same category of operation, different specificity in a sibling module",
+        "file_operations.py has 6 `except OSError` sites and 7 bare `except Exception` sites — mixed within a single module performing uniform file operations"
+      ],
+      "suggestion": "Adopt a codebase rule: I/O boundaries catch `OSError` and `json.JSONDecodeError` specifically; bare `except Exception` is reserved for top-level orchestrator entry points only. Apply this consistently to checkpoint.py and file_operations.py.",
+      "confidence": "high"
+    }
+  ]
+}

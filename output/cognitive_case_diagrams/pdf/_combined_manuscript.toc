@@ -1,0 +1,151 @@
+\contentsline {section}{\numberline {1}Abstract}{6}{section.1}%
+\contentsline {section}{\numberline {2}Introduction}{7}{section.2}%
+\contentsline {subsection}{\numberline {2.1}The Problem of Case Assignment in Cognitive Scenarios}{7}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Why Diagrams? The Cognitive Science of Diagrammatic Reasoning}{7}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Five Converging Research Pillars}{7}{subsection.2.3}%
+\contentsline {subsubsection}{\numberline {2.3.1}Pillar 1: Case Systems, Alignment Typology, and Grammatical Relations}{7}{subsubsection.2.3.1}%
+\contentsline {subsubsection}{\numberline {2.3.2}Pillar 2: Categorial and Type-Theoretic Grammar}{9}{subsubsection.2.3.2}%
+\contentsline {subsubsection}{\numberline {2.3.3}Pillar 3: Categorical Compositional Distributional Semantics (DisCoCat)}{9}{subsubsection.2.3.3}%
+\contentsline {subsubsection}{\numberline {2.3.4}Pillar 4: Enriched Category Theory and Distributional Measures}{9}{subsubsection.2.3.4}%
+\contentsline {subsubsection}{\numberline {2.3.5}Pillar 5: Topos-Theoretic Bridges and Inter-Theoretic Transfer}{9}{subsubsection.2.3.5}%
+\contentsline {subsection}{\numberline {2.4}Unifying Integration: Active Inference and the CEREBRUM Architecture}{9}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}Paper Outline and Chapter Overview}{10}{subsection.2.5}%
+\contentsline {section}{\numberline {3}Case Systems, Grammatical Relations, and Alignment Typology}{11}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Historical Foundations: From Pāṇini to Jakobson, Fillmore, and Mel'čuk}{11}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}The Cross-Linguistic Typological Landscape}{11}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Core Argument Roles}{11}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Alignment Systems}{12}{subsubsection.3.2.2}%
+\contentsline {subsubsection}{\numberline {3.2.3}Extended Case Inventories and the CEREBRUM Framework}{12}{subsubsection.3.2.3}%
+\contentsline {subsection}{\numberline {3.3}Categorical Formalization of Case Systems}{12}{subsection.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.1}Case Categories as Directed Graphs}{12}{subsubsection.3.3.1}%
+\contentsline {subsubsection}{\numberline {3.3.2}Alignment Functors Between Case Categories}{13}{subsubsection.3.3.2}%
+\contentsline {subsubsection}{\numberline {3.3.3}Enriched Morphisms, Proto-Roles, and Graded Structure}{14}{subsubsection.3.3.3}%
+\contentsline {section}{\numberline {4}Categorial Grammar, Pregroup Types, and String Diagrams}{16}{section.4}%
+\contentsline {subsection}{\numberline {4.1}From Phrase Structure Rules to Algebraic Type Assignment}{16}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Lambek's Residuated Syntactic Calculus}{16}{subsection.4.2}%
+\contentsline {subsubsection}{\numberline {4.2.1}Pregroup Grammars and Compact Closed Structure}{16}{subsubsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.3}String Diagrams for Syntactic Derivation}{16}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Case Marking in Type-Logical Categorial Grammar}{17}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}The Curry--Howard Correspondence and Proof-Theoretic Semantics}{19}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.6}Monadic Semantics for Sublexical Root Syntax}{19}{subsection.4.6}%
+\contentsline {subsection}{\numberline {4.7}Passivization as Algebraic Type Permutation}{19}{subsection.4.7}%
+\contentsline {section}{\numberline {5}Categorical Compositional Distributional Semantics (DisCoCat)}{21}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Two Traditions of Meaning: Formal and Distributional}{21}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}From Static Embeddings to Contextual Representations: LLMs as Distributional Models}{21}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}The DisCoCat Compositional Framework}{22}{subsection.5.3}%
+\contentsline {subsubsection}{\numberline {5.3.1}The Key Insight: Shared Compact Closed Structure}{22}{subsubsection.5.3.1}%
+\contentsline {subsubsection}{\numberline {5.3.2}Computing Compositional Sentence Meaning}{22}{subsubsection.5.3.2}%
+\contentsline {subsubsection}{\numberline {5.3.3}Empirical Validation and Disambiguation}{23}{subsubsection.5.3.3}%
+\contentsline {subsection}{\numberline {5.4}Case Enrichment in the DisCoCat Framework}{23}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}The Compact Closure Axiom and Diagrammatic Complexity Metrics}{24}{subsection.5.5}%
+\contentsline {subsubsection}{\numberline {5.5.1}The Snake Equation (Zigzag Identity)}{24}{subsubsection.5.5.1}%
+\contentsline {subsubsection}{\numberline {5.5.2}Diagram Complexity Metrics: Normal Form and Depth}{24}{subsubsection.5.5.2}%
+\contentsline {subsection}{\numberline {5.6}Extensions: From Sentence Meaning to Discourse Coherence}{25}{subsection.5.6}%
+\contentsline {subsubsection}{\numberline {5.6.1}DisCoCirc: Distributional Compositional Circuits}{25}{subsubsection.5.6.1}%
+\contentsline {subsubsection}{\numberline {5.6.2}Case Role Reversal Across Discourse Boundaries}{26}{subsubsection.5.6.2}%
+\contentsline {subsubsection}{\numberline {5.6.3}Quantum NLP and the lambeq Pipeline}{27}{subsubsection.5.6.3}%
+\contentsline {section}{\numberline {6}Enriched Category Theory and Distributional Measures of Language}{28}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Beyond Discrete Categories: Quantitative Grading}{28}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}The \([0,1]\)-Enrichment of Case Categories}{28}{subsection.6.2}%
+\contentsline {subsubsection}{\numberline {6.2.1}Definition}{28}{subsubsection.6.2.1}%
+\contentsline {subsubsection}{\numberline {6.2.2}Interpreting Hom-Values in Linguistic Context}{28}{subsubsection.6.2.2}%
+\contentsline {subsubsection}{\numberline {6.2.3}Implementation via the EnrichedCategory Class}{28}{subsubsection.6.2.3}%
+\contentsline {subsection}{\numberline {6.3}Categorical Magnitude as a Complexity Invariant}{30}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Enriched Functors, Bradley's Language-as-Category Model, and the LLM Connection}{30}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.5}Connection to Lawvere's Metric Spaces and Generalized Logic}{31}{subsection.6.5}%
+\contentsline {section}{\numberline {7}Topos-Theoretic Bridges and Inter-Theoretic Transfer}{32}{section.7}%
+\contentsline {subsection}{\numberline {7.1}From Categories to Toposes: The Translation Problem}{32}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Classifying Toposes and Morita Equivalence}{32}{subsection.7.2}%
+\contentsline {subsubsection}{\numberline {7.2.1}What Is a Topos? Generalized Universes of Sets}{32}{subsubsection.7.2.1}%
+\contentsline {subsubsection}{\numberline {7.2.2}Classifying Toposes of Geometric Theories}{32}{subsubsection.7.2.2}%
+\contentsline {subsection}{\numberline {7.3}Bridge Theorems for the Four Case Theories}{32}{subsection.7.3}%
+\contentsline {subsubsection}{\numberline {7.3.1}Formalizing Case Theories as Geometric Theories}{32}{subsubsection.7.3.1}%
+\contentsline {subsubsection}{\numberline {7.3.2}The Bridge Theorem: Morita Equivalence Chain}{32}{subsubsection.7.3.2}%
+\contentsline {subsection}{\numberline {7.4}Phillips and the Universal Language of Thought}{33}{subsection.7.4}%
+\contentsline {subsection}{\numberline {7.5}Syntactic Learning via Classifying Toposes}{34}{subsection.7.5}%
+\contentsline {subsection}{\numberline {7.6}Diagrammatic Implications of Inter-Theoretic Transfer}{34}{subsection.7.6}%
+\contentsline {section}{\numberline {8}Cognitive Integration: Active Inference, CEREBRUM, and Diagrammatic Reasoning}{35}{section.8}%
+\contentsline {subsection}{\numberline {8.1}The Missing Layer: A Dynamic Process Theory of Cognition}{35}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Active Inference as a Process Theory of Language Understanding}{35}{subsection.8.2}%
+\contentsline {subsubsection}{\numberline {8.2.1}The Free Energy Principle and Surprise Minimization}{35}{subsubsection.8.2.1}%
+\contentsline {subsubsection}{\numberline {8.2.2}Language Understanding as Active Inference over Relational Structure}{35}{subsubsection.8.2.2}%
+\contentsline {subsubsection}{\numberline {8.2.3}Connection to Barwise and Perry's Situation Semantics}{36}{subsubsection.8.2.3}%
+\contentsline {subsection}{\numberline {8.3}Distributional Active Inference: Convergence of Two Distributional Traditions}{36}{subsection.8.3}%
+\contentsline {subsection}{\numberline {8.4}CEREBRUM: The Computational Architecture}{37}{subsection.8.4}%
+\contentsline {subsubsection}{\numberline {8.4.1}Architecture and Design Principles}{37}{subsubsection.8.4.1}%
+\contentsline {subsubsection}{\numberline {8.4.2}Case Roles as Functional Specializations in CEREBRUM}{37}{subsubsection.8.4.2}%
+\contentsline {subsection}{\numberline {8.5}Diagrammatic Reasoning as a Cognitive Process Theory}{37}{subsection.8.5}%
+\contentsline {subsubsection}{\numberline {8.5.1}Diagrams as the Format of Generative Models}{37}{subsubsection.8.5.1}%
+\contentsline {subsubsection}{\numberline {8.5.2}Predictive Processing and Diagrammatic Belief Updating}{38}{subsubsection.8.5.2}%
+\contentsline {subsection}{\numberline {8.6}Total Cognitive Scenario Understanding: The Integrated Framework}{38}{subsection.8.6}%
+\contentsline {subsection}{\numberline {8.7}Computational Verification and Test Suite}{39}{subsection.8.7}%
+\contentsline {subsubsection}{\numberline {8.7.1}Implementation Architecture and Categorical Core}{39}{subsubsection.8.7.1}%
+\contentsline {subsubsection}{\numberline {8.7.2}Test Suite and Coverage Metrics}{39}{subsubsection.8.7.2}%
+\contentsline {section}{\numberline {9}Quantum Active Inference: Topological Diagrams as Semantic Computation}{40}{section.9}%
+\contentsline {subsection}{\numberline {9.1}Topological Quantum Neural Networks and Spin-Network Representations}{40}{subsection.9.1}%
+\contentsline {subsubsection}{\numberline {9.1.1}From Quantum Neural Networks to TQFT}{40}{subsubsection.9.1.1}%
+\contentsline {subsubsection}{\numberline {9.1.2}Universal Quantum Computation via TQNNs}{40}{subsubsection.9.1.2}%
+\contentsline {subsubsection}{\numberline {9.1.3}Quantum Reference Frames and Holographic Screens}{40}{subsubsection.9.1.3}%
+\contentsline {subsection}{\numberline {9.2}The ZX-Calculus: Categorical Quantum Circuit Diagrams}{41}{subsection.9.2}%
+\contentsline {subsubsection}{\numberline {9.2.1}String Diagrams for Quantum Processes}{41}{subsubsection.9.2.1}%
+\contentsline {subsubsection}{\numberline {9.2.2}From DisCoCat to ZX: A Shared Categorical Architecture}{41}{subsubsection.9.2.2}%
+\contentsline {subsection}{\numberline {9.3}Aligning TQNNs with Categorical Distributional Semantics}{41}{subsection.9.3}%
+\contentsline {subsubsection}{\numberline {9.3.1}Common Language: Ribbon and Tensor Diagrams}{41}{subsubsection.9.3.1}%
+\contentsline {subsubsection}{\numberline {9.3.2}Neural Flow as Generalized Flow}{42}{subsubsection.9.3.2}%
+\contentsline {subsection}{\numberline {9.4}Distributional Semantics on Topological Quantum Flow}{42}{subsection.9.4}%
+\contentsline {subsubsection}{\numberline {9.4.1}Meaning Spaces as Hilbert Spaces}{42}{subsubsection.9.4.1}%
+\contentsline {subsubsection}{\numberline {9.4.2}Grafting Distributional Semantics onto the TQNN/ZX Architecture}{42}{subsubsection.9.4.2}%
+\contentsline {subsection}{\numberline {9.5}Semantic Probabilistic Information Transfer as Functorial Flow}{43}{subsection.9.5}%
+\contentsline {subsubsection}{\numberline {9.5.1}Sheaf Cohomology and Semantic Alignment}{43}{subsubsection.9.5.1}%
+\contentsline {subsubsection}{\numberline {9.5.2}Topological Circuit as Semantic Sheaf Skeleton}{43}{subsubsection.9.5.2}%
+\contentsline {subsection}{\numberline {9.6}Implications for Active Inference and Case Assignment}{44}{subsection.9.6}%
+\contentsline {subsubsection}{\numberline {9.6.1}Case Assignment as Quantum Measurement}{44}{subsubsection.9.6.1}%
+\contentsline {subsubsection}{\numberline {9.6.2}From Predictive Processing to Topological Flow}{44}{subsubsection.9.6.2}%
+\contentsline {subsubsection}{\numberline {9.6.3}Quantum Advantage in Semantic Communication}{44}{subsubsection.9.6.3}%
+\contentsline {section}{\numberline {10}Synthetic and Artificial Intelligence: Categorical Foundations}{45}{section.10}%
+\contentsline {subsection}{\numberline {10.1}Compositional Structure in Multi-Agent AI Communication}{45}{subsection.10.1}%
+\contentsline {subsection}{\numberline {10.2}Case Roles as Functional Typing for Agent Systems}{45}{subsection.10.2}%
+\contentsline {subsection}{\numberline {10.3}Categorical Deep Learning: An Algebraic Theory of Architectures}{45}{subsection.10.3}%
+\contentsline {subsection}{\numberline {10.4}String Diagrams as a Foundation for Interpretable AI}{46}{subsection.10.4}%
+\contentsline {subsection}{\numberline {10.5}DisCoCirc and Multi-Turn Agent Dialogue Protocols}{46}{subsection.10.5}%
+\contentsline {subsection}{\numberline {10.6}Compositional Game Theory and Categorical Multi-Agent Equilibria}{47}{subsection.10.6}%
+\contentsline {subsection}{\numberline {10.7}Double Categorical Systems Theory for Explainable Autonomous AI}{47}{subsection.10.7}%
+\contentsline {subsection}{\numberline {10.8}Toward Categorical Communication Standards for AI Agents}{47}{subsection.10.8}%
+\contentsline {subsection}{\numberline {10.9}Quantum Cryptographic Communications and Semantic Security}{47}{subsection.10.9}%
+\contentsline {subsubsection}{\numberline {10.9.1}Quantum Key Distribution for Relational Semantics}{48}{subsubsection.10.9.1}%
+\contentsline {subsubsection}{\numberline {10.9.2}Semantic Cryptography: Encrypting Meaning Structures}{48}{subsubsection.10.9.2}%
+\contentsline {subsubsection}{\numberline {10.9.3}Cognitive Security: Protecting Relational Reasoning}{48}{subsubsection.10.9.3}%
+\contentsline {subsubsection}{\numberline {10.9.4}Prompt Injection as Adversarial Case-Frame Manipulation}{49}{subsubsection.10.9.4}%
+\contentsline {subsubsection}{\numberline {10.9.5}Case-Theoretic Firewalls for Multi-Agent Communication}{49}{subsubsection.10.9.5}%
+\contentsline {subsubsection}{\numberline {10.9.6}Epistemic Case Security in Multi-Agent Systems}{50}{subsubsection.10.9.6}%
+\contentsline {section}{\numberline {11}Conclusion, Contributions, and Future Directions}{51}{section.11}%
+\contentsline {subsection}{\numberline {11.1}Summary of Principal Contributions}{51}{subsection.11.1}%
+\contentsline {subsubsection}{\numberline {11.1.1}C1: Case Categories as a Formal Algebraic Framework}{51}{subsubsection.11.1.1}%
+\contentsline {subsubsection}{\numberline {11.1.2}C2: String Diagrams for Case Derivation Visualization}{51}{subsubsection.11.1.2}%
+\contentsline {subsubsection}{\numberline {11.1.3}C3: Case-Marked DisCoCat, the Distributional--Formal Synthesis, and Discourse Extension}{51}{subsubsection.11.1.3}%
+\contentsline {subsubsection}{\numberline {11.1.4}C4: Enriched Cases, Categorical Magnitude, and Information Theory}{51}{subsubsection.11.1.4}%
+\contentsline {subsubsection}{\numberline {11.1.5}C5: Topos-Theoretic Transfer via Morita Equivalence}{52}{subsubsection.11.1.5}%
+\contentsline {subsubsection}{\numberline {11.1.6}C6: Diagrams as Cognitively Privileged Representations}{52}{subsubsection.11.1.6}%
+\contentsline {subsubsection}{\numberline {11.1.7}C7: Computational Verification and Test Suite}{52}{subsubsection.11.1.7}%
+\contentsline {subsubsection}{\numberline {11.1.8}C8: Quantum Active Inference and Topological Semantic Flow}{52}{subsubsection.11.1.8}%
+\contentsline {subsubsection}{\numberline {11.1.9}C9: Cognitive Security and Case-Theoretic AI Safety}{52}{subsubsection.11.1.9}%
+\contentsline {subsection}{\numberline {11.2}Future Research Directions}{52}{subsection.11.2}%
+\contentsline {subsubsection}{\numberline {11.2.1}F1: Computational Experiments with DisCoCirc and lambeq}{52}{subsubsection.11.2.1}%
+\contentsline {subsubsection}{\numberline {11.2.2}F2: Topos-Theoretic Grammatical Induction from Corpora}{53}{subsubsection.11.2.2}%
+\contentsline {subsubsection}{\numberline {11.2.3}F3: Quantum Case Categories on Near-Term Hardware}{53}{subsubsection.11.2.3}%
+\contentsline {subsubsection}{\numberline {11.2.4}F4: Neural Predictive Processing and Electrophysiological Predictions}{53}{subsubsection.11.2.4}%
+\contentsline {subsubsection}{\numberline {11.2.5}F5: Cross-Modal Case Structure in Embodied Cognition}{53}{subsubsection.11.2.5}%
+\contentsline {subsubsection}{\numberline {11.2.6}F6: Enriched Category Learning from Distributional Data}{53}{subsubsection.11.2.6}%
+\contentsline {subsubsection}{\numberline {11.2.7}F7: Distributional Active Inference for Linguistic Agents}{53}{subsubsection.11.2.7}%
+\contentsline {subsection}{\numberline {11.3}Closing Remarks}{54}{subsection.11.3}%
+\contentsline {section}{\numberline {12}Appendix: Comprehensive Notation and Terminology}{55}{section.12}%
+\contentsline {subsection}{\numberline {12.1}A. Linguistic Terms}{55}{subsection.12.1}%
+\contentsline {subsection}{\numberline {12.2}B. Category Theory}{57}{subsection.12.2}%
+\contentsline {subsection}{\numberline {12.3}C. Enriched Categories and Magnitude}{60}{subsection.12.3}%
+\contentsline {subsection}{\numberline {12.4}D. Distributional Semantics and LLMs}{61}{subsection.12.4}%
+\contentsline {subsection}{\numberline {12.5}E. Active Inference and Cognitive Models}{63}{subsection.12.5}%
+\contentsline {subsection}{\numberline {12.6}F. Quantum and Topological Terms}{65}{subsection.12.6}%
+\contentsline {subsection}{\numberline {12.7}G. Logical and Type-Theoretic Terms}{68}{subsection.12.7}%
+\contentsline {subsection}{\numberline {12.8}H. AI and Communication Protocols}{69}{subsection.12.8}%
+\contentsline {subsection}{\numberline {12.9}I. Diagrammatic Reasoning}{70}{subsection.12.9}%
+\contentsline {subsection}{\numberline {12.10}J. Notation Conventions}{71}{subsection.12.10}%

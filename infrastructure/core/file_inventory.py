@@ -10,7 +10,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Optional
 
 from infrastructure.core.logging_utils import get_logger
 
@@ -35,8 +34,8 @@ class FileInventoryEntry:
 class FileInventoryManager:
     """Manage file inventory and reports."""
 
-    # Standard output categories to scan
-    OUTPUT_CATEGORIES = [
+    # Standard output categories to scan and display
+    OUTPUT_CATEGORIES = (
         "pdf",
         "figures",
         "data",
@@ -47,11 +46,11 @@ class FileInventoryManager:
         "web",
         "slides",
         "tex",
-    ]
+    )
 
     def collect_output_files(
-        self, output_dir: Path, categories: Optional[List[str]] = None
-    ) -> List[FileInventoryEntry]:
+        self, output_dir: Path, categories: list[str] | None = None
+    ) -> list[FileInventoryEntry]:
         """Collect all generated files from output directory.
 
         Args:
@@ -64,13 +63,10 @@ class FileInventoryManager:
         if categories is None:
             categories = self.OUTPUT_CATEGORIES
 
-        entries: List[FileInventoryEntry] = []
+        entries: list[FileInventoryEntry] = []
 
         # Check if output directory exists and is a directory
-        exists_check = output_dir.exists()
-        is_dir_check = output_dir.is_dir()
-
-        if not exists_check or not is_dir_check:
+        if not output_dir.exists() or not output_dir.is_dir():
             logger.warning(f"Output directory not found: {output_dir}")
             return entries
 
@@ -102,7 +98,7 @@ class FileInventoryManager:
 
     def _collect_files_in_directory(
         self, directory: Path, category: str
-    ) -> List[FileInventoryEntry]:
+    ) -> list[FileInventoryEntry]:
         """Collect all files in a directory recursively.
 
         Args:
@@ -156,9 +152,9 @@ class FileInventoryManager:
 
     def generate_inventory_report(
         self,
-        entries: List[FileInventoryEntry],
+        entries: list[FileInventoryEntry],
         output_format: str = "text",
-        base_dir: Optional[Path] = None,
+        base_dir: Path | None = None,
     ) -> str:
         """Generate inventory report (text, json, or html).
 
@@ -181,7 +177,7 @@ class FileInventoryManager:
             return self._generate_text_report(entries, base_dir)
 
     def _generate_text_report(
-        self, entries: List[FileInventoryEntry], base_dir: Optional[Path] = None
+        self, entries: list[FileInventoryEntry], base_dir: Path | None = None
     ) -> str:
         """Generate text format inventory report.
 
@@ -202,21 +198,7 @@ class FileInventoryManager:
         lines.append("Generated Files Inventory:")
         lines.append("")
 
-        # Display order for categories
-        display_order = [
-            "pdf",
-            "figures",
-            "data",
-            "reports",
-            "simulations",
-            "llm",
-            "logs",
-            "web",
-            "slides",
-            "tex",
-        ]
-
-        for category in display_order:
+        for category in self.OUTPUT_CATEGORIES:
             if category in category_groups:
                 category_entries = category_groups[category]
                 total_size = sum(entry.size for entry in category_entries)
@@ -246,7 +228,7 @@ class FileInventoryManager:
         return "\n".join(lines)
 
     def _generate_json_report(
-        self, entries: List[FileInventoryEntry], base_dir: Optional[Path] = None
+        self, entries: list[FileInventoryEntry], base_dir: Path | None = None
     ) -> str:
         """Generate JSON format inventory report.
 
@@ -287,7 +269,7 @@ class FileInventoryManager:
         return json.dumps(result, indent=2)
 
     def _generate_html_report(
-        self, entries: List[FileInventoryEntry], base_dir: Optional[Path] = None
+        self, entries: list[FileInventoryEntry], base_dir: Path | None = None
     ) -> str:
         """Generate HTML format inventory report.
 
@@ -308,21 +290,7 @@ class FileInventoryManager:
         html_parts.append("<div class='file-inventory'>")
         html_parts.append("<h3>Generated Files Inventory</h3>")
 
-        # Display order for categories
-        display_order = [
-            "pdf",
-            "figures",
-            "data",
-            "reports",
-            "simulations",
-            "llm",
-            "logs",
-            "web",
-            "slides",
-            "tex",
-        ]
-
-        for category in display_order:
+        for category in self.OUTPUT_CATEGORIES:
             if category in category_groups:
                 category_entries = category_groups[category]
                 total_size = sum(entry.size for entry in category_entries)
@@ -346,8 +314,8 @@ class FileInventoryManager:
         return "\n".join(html_parts)
 
     def _group_by_category(
-        self, entries: List[FileInventoryEntry]
-    ) -> Dict[str, List[FileInventoryEntry]]:
+        self, entries: list[FileInventoryEntry]
+    ) -> dict[str, list[FileInventoryEntry]]:
         """Group entries by category.
 
         Args:
@@ -356,7 +324,7 @@ class FileInventoryManager:
         Returns:
             Dictionary mapping category names to lists of entries
         """
-        groups: Dict[str, List[FileInventoryEntry]] = {}
+        groups: dict[str, list[FileInventoryEntry]] = {}
         for entry in entries:
             if entry.category not in groups:
                 groups[entry.category] = []
@@ -384,8 +352,8 @@ def format_file_size(bytes_size: int) -> str:
 
 
 def collect_output_files(
-    output_dir: Path, categories: Optional[List[str]] = None
-) -> List[FileInventoryEntry]:
+    output_dir: Path, categories: list[str] | None = None
+) -> list[FileInventoryEntry]:
     """Convenience function to collect output files.
 
     Args:
@@ -400,9 +368,9 @@ def collect_output_files(
 
 
 def generate_inventory_report(
-    entries: List[FileInventoryEntry],
+    entries: list[FileInventoryEntry],
     output_format: str = "text",
-    base_dir: Optional[Path] = None,
+    base_dir: Path | None = None,
 ) -> str:
     """Convenience function to generate inventory report.
 
