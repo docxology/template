@@ -4,9 +4,9 @@ This section presents the experimental results from the gradient descent
 optimization study, including convergence analysis and performance
 comparisons. Every table, figure, and quantitative assertion in this
 section was compiled autonomously by the template's
-\texttt{infrastructure.reporting} subsystem executing
-\href{https://github.com/docxology/template/blob/main/projects/code_project/scripts/optimization_analysis.py}{\texttt{projects/code\_project/scripts/optimization\_analysis.py}}.
-No manual transcription was permitted.
+\texttt{infrastructure.reporting} subsystem executing the
+\href{https://github.com/docxology/template/blob/main/projects/code_project/scripts/optimization_analysis.py}{optimization
+analysis script}. No manual transcription was permitted.
 
 \begin{block}{Convergence Analysis}
 \protect\phantomsection\label{convergence-analysis}
@@ -70,9 +70,8 @@ The optimization results for different step sizes are synthesized
 computationally by orchestrating
 \texttt{infrastructure.reporting.pipeline\_reporter}, feeding directly
 into the
-\href{https://github.com/docxology/template/blob/main/projects/code_project/output/data/optimization_results.csv}{output
-DataFrame \texttt{code\_project/output/data/optimization\_results.csv}}
-that acts as the source of truth for Table 1:
+\href{https://github.com/docxology/template/blob/main/projects/code_project/output/data/optimization_results.csv}{optimization
+results data} that acts as the source of truth for Table 1:
 
 {\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}
@@ -396,9 +395,9 @@ The implementation was validated through the comprehensive
   PyTest.
 \end{itemize}
 
-All tests pass with 100\% branch and statement coverage, ensuring
-implementation correctness across core logic, convergence detection, and
-logging pathways without the use of mocks.
+All tests pass with 96.6\% statement coverage exceeding the 90\%
+threshold, ensuring implementation correctness across core logic,
+convergence detection, and logging pathways without the use of mocks.
 \end{block}
 
 \begin{block}{Discussion}

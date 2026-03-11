@@ -7,7 +7,7 @@ Technical guide for the `docs/` directory — the central documentation hub for 
 ## Directory Structure
 
 | Directory | Purpose |
-|-----------|---------|
+| ---------- | ------- |
 | `core/` | Essential docs: usage guide, architecture overview, workflow |
 | `guides/` | Skill-level guides (Levels 1-12) + new project setup checklist |
 | `architecture/` | System design, two-layer architecture, thin orchestrator |
@@ -31,7 +31,7 @@ Technical guide for the `docs/` directory — the central documentation hub for 
 ## Entry Points
 
 | Audience | Start Here |
-|----------|------------|
+| -------- | ---------- |
 | New user | `core/how-to-use.md` → `guides/getting-started.md` |
 | Developer | `core/architecture.md` → `architecture/two-layer-architecture.md` |
 | **New project** | **`guides/new-project-setup.md`** → `architecture/thin-orchestrator-summary.md` |
@@ -55,11 +55,11 @@ If a project in `projects/<name>/` has its own `pyproject.toml` but **no `.venv/
 
 **Projects and their required root packages:**
 
-| Project | Extra packages needed in root venv |
-|---|---|
-| `act_inf_metaanalysis` | `scipy`, `pandas`, `networkx`, `requests`, `rdflib`, `wordcloud`, `scikit-learn` |
-| `code_project` | has local `.venv/` — no root venv issue |
-| `template` | `matplotlib` (must be core dep, not optional group) |
+| Project | Location | Extra packages needed in root venv |
+| --- | --- | --- |
+| `code_project` | `projects/` (active) | has local `.venv/` — no root venv issue |
+| `act_inf_metaanalysis` | `projects_in_progress/` | `scipy`, `pandas`, `networkx`, `requests`, `rdflib`, `wordcloud`, `scikit-learn` |
+| `template` | `projects_in_progress/` | `matplotlib` (must be core dep, not optional group) |
 
 ### ⚠️ Critical Rule: `matplotlib` Must be in Core Dependencies
 
@@ -90,7 +90,7 @@ This ensures the pipeline remains reproducible and does not make expensive netwo
 Projects are tracked across three sibling directories:
 
 | Directory | Purpose | Discovered by `./run.sh`? |
-|-----------|---------|--------------------------|
+| ---------- | ------- | ------------------------ |
 | `projects/` | **Active** projects for the current pipeline run | ✅ Yes |
 | `projects_in_progress/` | Work-in-progress projects not yet ready for rendering | ❌ No |
 | `projects_archive/` | Completed or paused projects kept for reference | ❌ No |

@@ -28,6 +28,7 @@ Projects are **architecturally isolated** - each operates as if it were the only
 
 ```mermaid
 graph TD
+    subgraph "Project Isolation"
         P1[code_project<br/>The Master Exemplar<br/>📝 Own manuscript<br/>🧪 Own tests<br/>🧠 Own algorithms]
         P2[your_project<br/>Your Research<br/>📝 Own manuscript<br/>🧪 Own tests<br/>🧠 Own algorithms]
 
@@ -40,11 +41,9 @@ graph TD
 
         P1 -->|✅ Import utilities| INFRA
         P2 -->|✅ Import utilities| INFRA
-        P3 -->|✅ Import utilities| INFRA
 
         SCRIPTS -->|✅ Operate on| P1
         SCRIPTS -->|✅ Operate on| P2
-        SCRIPTS -->|✅ Operate on| P3
     end
 ```
 

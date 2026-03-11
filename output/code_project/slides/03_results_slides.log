@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  10 MAR 2026 18:07
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  11 MAR 2026 05:23
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1576,18 +1576,13 @@ ults_slides.nav)
 
 (/Users/4d/Documents/GitHub/template/projects/code_project/output/slides/03_res
 ults_slides.vrb
-Overfull \hbox (4.05138pt too wide) in paragraph at lines 3--10
-[]\TU/lmtt/m/n/10.95 projects/code_project/scripts/optimization_analysis.py[]\T
-U/lmss/m/n/10.95 . 
- []
-
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
 (Font)              scaled to size 7.8961pt on input line 17.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
 (Font)              scaled to size 5.64008pt on input line 17.
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 1
 7.
-(/usr/local/texlive/2026/texmf-dist/tex/latex/lm/omllmm.fd
+ (/usr/local/texlive/2026/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
@@ -1654,13 +1649,13 @@ File: ../figures/step_size_sensitivity.png Graphic file (type bmp)
 Missing character: There is no α (U+03B1) in font [lmsans10-regular]:mapping=te
 x-text;!
 
-Overfull \hbox (7.61992pt too wide) in paragraph at lines 94--95
+Overfull \hbox (7.61992pt too wide) in paragraph at lines 93--94
 []\TU/lmss/m/n/10.95 Converged  
  []
 
 
 LaTeX Warning: Citation `nesterov2013gradient' on page 1 undefined on input lin
-e 115.
+e 114.
 
 File: ../figures/convergence_rate_comparison.png Graphic file (type bmp)
 <../figures/convergence_rate_comparison.png>
@@ -1670,7 +1665,7 @@ File: mt-LatinModernRoman.cfg 2026/02/26 v1.2 microtype config. file: Latin Mod
 ern Roman (RS)
 )
 
-LaTeX Warning: Citation `polyak1964some' on page 1 undefined on input line 180.
+LaTeX Warning: Citation `polyak1964some' on page 1 undefined on input line 179.
 
 
 File: ../figures/algorithm_complexity.png Graphic file (type bmp)
@@ -1685,12 +1680,12 @@ File: ../figures/stability_analysis.png Graphic file (type bmp)
 <../figures/stability_analysis.png>
 
 LaTeX Warning: Reference `eq:convergence_factor' on page 1 undefined on input l
-ine 410.
+ine 409.
 
 LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
-(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 422.
+(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 421.
 )
-Overfull \vbox (3935.41512pt too high) detected at line 538
+Overfull \vbox (3935.44733pt too high) detected at line 537
  []
 
 [1
@@ -1720,7 +1715,7 @@ LaTeX Warning: There were undefined references.
 Here is how much of TeX's memory you used:
  31284 strings out of 468168
  633616 string characters out of 5432816
- 1297238 words of memory out of 5000000
+ 1297237 words of memory out of 5000000
  59418 multiletter control sequences out of 15000+600000
  634214 words of font info for 97 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191

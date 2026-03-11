@@ -167,7 +167,7 @@
 This paper presents a comprehensive analysis of gradient descent
 optimization algorithms, constructed not merely as a mathematical
 exercise, but as the representative computational exemplar of the
-\href{https://github.com/docxology/template}{docxology/template}
+\href{https://github.com/docxology/template}{Research Project Template}
 repository. We implement and evaluate the classical gradient descent
 method with fixed step size for quadratic minimization problems,
 examining convergence behavior across learning rates from
@@ -183,8 +183,9 @@ The key contributions of this work are dual-natured. Methodologically,
 it demonstrates empirical validation of theoretical convergence rates on
 quadratic objective functions and automated complexity analysis.
 Architecturally, it establishes a rigorously enforced development
-standard: (1) a zero-mock testing policy validated by 34 passing tests
-with 100\% coverage (as explicitly asserted in the
+standard: (1) a zero-mock testing policy validated by 39 passing tests
+with 96.6\% coverage exceeding the 90\% threshold (as explicitly
+asserted in the
 \href{https://github.com/docxology/template/blob/main/projects/code_project/tests/test_optimizer.py}{test
 suite}); (2) automated analysis pipelines generating
 publication-quality, accessible visualizations; and (3) deep integration
@@ -210,7 +211,7 @@ testing, scientific infrastructure, pipeline orchestration
 \section{Introduction}\label{introduction}
 
 This \texttt{code\_project} serves as the foundational exemplar for the
-\href{https://github.com/docxology/template}{docxology/template}
+\href{https://github.com/docxology/template}{Research Project Template}
 ecosystem, demonstrating a fully-tested numerical optimization
 implementation securely bracketed by rigorous infrastructure, hermetic
 testing, and extensive documentation architectures. The words you are
@@ -317,7 +318,7 @@ explicitly demonstrates:
   delegate logging, file ops, and reporting to the
   \texttt{infrastructure} core.
 \item
-  \textbf{Zero-Mock Verification}: A strict 34-test validation suite
+  \textbf{Zero-Mock Verification}: A strict 39-test validation suite
   proving numerical accuracy without artificial test boundaries.
 \item
   \textbf{Automated Research Pipelines}: High-precision analyses that
@@ -346,11 +347,13 @@ The core algorithm implements the iterative procedure for unconstrained
 optimization. Crucially, the implementation is designed to be highly
 observable, delegating all logging to
 \texttt{infrastructure.core.logging\_utils.ProjectLogger} and executing
-under the hermetic boundaries defined in
-\href{https://github.com/docxology/template/blob/main/projects/code_project/tests/conftest.py}{\texttt{projects/code\_project/tests/conftest.py}}.
+under the hermetic boundaries defined in the
+\href{https://github.com/docxology/template/blob/main/projects/code_project/tests/conftest.py}{test
+configuration}.
 
-\textbf{Algorithm 1: Gradient Descent (implemented in
-\href{https://github.com/docxology/template/blob/main/projects/code_project/src/optimizer.py\#L42-L138}{\texttt{projects/code\_project/src/optimizer.py}})}
+\textbf{Algorithm 1: Gradient Descent (implemented in the
+\href{https://github.com/docxology/template/blob/main/projects/code_project/src/optimizer.py\#L42-L138}{optimizer
+module})}
 
 \begin{quote}
 \textbf{Input:} Initial point \(x_0\), step size \(\alpha), tolerance
@@ -396,9 +399,9 @@ Rather than writing ad-hoc validation code, the project imports
 This utility subjects the objective function to a barrage of extreme
 inputs (NaN, Inf, \(\pm 10^{10}\)) to calculate a formalized stability
 score. If this score degrades, the
-\href{https://github.com/docxology/template/blob/main/scripts/02_run_analysis.py}{\texttt{scripts/02\_run\_analysis.py}}
-execution deliberately aborts, ensuring the methodology cannot enter
-unrecoverable states.
+\href{https://github.com/docxology/template/blob/main/scripts/02_run_analysis.py}{analysis
+orchestrator} execution deliberately aborts, ensuring the methodology
+cannot enter unrecoverable states.
 
 \subsubsection{Performance Benchmarking}\label{performance-benchmarking}
 
@@ -467,8 +470,8 @@ infrastructure build phase.
 \item
   \textbf{Coverage Gates}: The
   \href{https://github.com/docxology/template/blob/main/.github/workflows/ci.yml}{GitHub
-  Actions CI workflow} enforces a mandatory 100\% branch and statement
-  coverage gate prior to compiling the manuscript to a PDF.
+  Actions CI workflow} enforces a mandatory ≥90\% statement coverage
+  gate prior to compiling the manuscript to a PDF.
 \end{enumerate}
 
 \subsection{Analysis Pipeline \& LaTeX
@@ -495,9 +498,9 @@ This section presents the experimental results from the gradient descent
 optimization study, including convergence analysis and performance
 comparisons. Every table, figure, and quantitative assertion in this
 section was compiled autonomously by the template's
-\texttt{infrastructure.reporting} subsystem executing
-\href{https://github.com/docxology/template/blob/main/projects/code_project/scripts/optimization_analysis.py}{\texttt{projects/code\_project/scripts/optimization\_analysis.py}}.
-No manual transcription was permitted.
+\texttt{infrastructure.reporting} subsystem executing the
+\href{https://github.com/docxology/template/blob/main/projects/code_project/scripts/optimization_analysis.py}{optimization
+analysis script}. No manual transcription was permitted.
 
 \subsection{Convergence Analysis}\label{convergence-analysis-1}
 
@@ -560,9 +563,8 @@ The optimization results for different step sizes are synthesized
 computationally by orchestrating
 \texttt{infrastructure.reporting.pipeline\_reporter}, feeding directly
 into the
-\href{https://github.com/docxology/template/blob/main/projects/code_project/output/data/optimization_results.csv}{output
-DataFrame \texttt{code\_project/output/data/optimization\_results.csv}}
-that acts as the source of truth for Table 1:
+\href{https://github.com/docxology/template/blob/main/projects/code_project/output/data/optimization_results.csv}{optimization
+results data} that acts as the source of truth for Table 1:
 
 {\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}
@@ -876,9 +878,9 @@ The implementation was validated through the comprehensive
   PyTest.
 \end{itemize}
 
-All tests pass with 100\% branch and statement coverage, ensuring
-implementation correctness across core logic, convergence detection, and
-logging pathways without the use of mocks.
+All tests pass with 96.6\% statement coverage exceeding the 90\%
+threshold, ensuring implementation correctness across core logic,
+convergence detection, and logging pathways without the use of mocks.
 
 \subsection{Discussion}\label{discussion}
 
@@ -926,7 +928,7 @@ foundational pillars:
   rendering, and reporting.
 \item
   \textbf{\texttt{tests} Integrity}: Established absolute logical
-  hermeticity through a 34-test integration and infrastructure
+  hermeticity through a 39-test integration and infrastructure
   validation suite operating continuously.
 \item
   \textbf{\texttt{docs} Knowledge Operations}: Adhered structurally to
@@ -937,7 +939,7 @@ foundational pillars:
 
 \subsection{Technical Contributions}\label{technical-contributions}
 
-\subsubsection{100\% Test Coverage
+\subsubsection{96.6\% Test Coverage
 Strategy}\label{test-coverage-strategy}
 
 The hallmark of this implementation is the test matrix:
@@ -945,14 +947,14 @@ The hallmark of this implementation is the test matrix:
 \begin{itemize}
 \tightlist
 \item
-  34 distinct tests traversing execution pipelines, integration flows,
+  39 distinct tests traversing execution pipelines, integration flows,
   and algorithmic bounds.
 \item
   Strict enforcement of zero-mock policies guaranteeing real execution
   dynamics.
 \item
-  CI/CD validation gates requiring 100\% statement and branch coverage
-  before progression.
+  CI/CD validation gates requiring ≥90\% statement coverage before
+  progression.
 \end{itemize}
 
 \subsubsection{Infrastructure-Backed
@@ -1044,7 +1046,7 @@ seamlessly supports projects spanning the full spectrum---from
 prose-focused manuscripts to fully-tested algorithmic ecosystems. The
 optimization study achieved convergence across four step sizes with
 accuracy below \(10^{-4}\) relative error, completely validated by the
-34-test suite at 100\% branch and statement coverage.
+39-test suite at 96.6\% statement coverage exceeding the 90\% threshold.
 
 As the ultimate proof of the template's architecture, consider the
 document you are reading right now. By operating entirely over the
@@ -1089,12 +1091,13 @@ will flag undefined keys as errors.
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{\textless{}!{-}{-} Numbered equation with label {-}{-}\textgreater{}}
-\NormalTok{$$}
+\NormalTok{\textbackslash{}begin\{equation\}}
+\NormalTok{\textbackslash{}label\{eq:gradient\}}
 \NormalTok{\textbackslash{}nabla f(x) = Ax {-} b}
-\NormalTok{$$ \{\#eq:gradient\}}
+\NormalTok{\textbackslash{}end\{equation\}}
 
 \CommentTok{\textless{}!{-}{-} Reference in text {-}{-}\textgreater{}}
-\NormalTok{As shown in @eq:gradient, the gradient...}
+\NormalTok{As shown in Equation \textbackslash{}ref\{eq:gradient\}, the gradient...}
 \end{Highlighting}
 \end{Shaded}
 

@@ -1,8 +1,8 @@
 # Abstract
 
-This paper presents a comprehensive analysis of gradient descent optimization algorithms, constructed not merely as a mathematical exercise, but as the representative computational exemplar of the [docxology/template](https://github.com/docxology/template) repository. We implement and evaluate the classical gradient descent method with fixed step size for quadratic minimization problems, examining convergence behavior across learning rates from $\alpha = 0.01$ to $\alpha = 0.20$. Crucially, the experimental framework is built entirely atop the template's nine `infrastructure` subpackages to guarantee absolute reproducibility and cryptographic output integrity. The very PDF holding these words was deterministically generated via `infrastructure/rendering/pdf_renderer.py` relying on `code_project/scripts/optimization_analysis.py` data.
+This paper presents a comprehensive analysis of gradient descent optimization algorithms, constructed not merely as a mathematical exercise, but as the representative computational exemplar of the [Research Project Template](https://github.com/docxology/template) repository. We implement and evaluate the classical gradient descent method with fixed step size for quadratic minimization problems, examining convergence behavior across learning rates from $\alpha = 0.01$ to $\alpha = 0.20$. Crucially, the experimental framework is built entirely atop the template's nine `infrastructure` subpackages to guarantee absolute reproducibility and cryptographic output integrity. The very PDF holding these words was deterministically generated via `infrastructure/rendering/pdf_renderer.py` relying on `code_project/scripts/optimization_analysis.py` data.
 
-The key contributions of this work are dual-natured. Methodologically, it demonstrates empirical validation of theoretical convergence rates on quadratic objective functions and automated complexity analysis. Architecturally, it establishes a rigorously enforced development standard: (1) a zero-mock testing policy validated by 34 passing tests with 100% coverage (as explicitly asserted in the [test suite](https://github.com/docxology/template/blob/main/projects/code_project/tests/test_optimizer.py)); (2) automated analysis pipelines generating publication-quality, accessible visualizations; and (3) deep integration patterns demonstrating how scientific logic strictly couples with the core infrastructure (e.g., executing `infrastructure.scientific.benchmarking` directly from `projects/code_project/scripts/optimization_analysis.py`).
+The key contributions of this work are dual-natured. Methodologically, it demonstrates empirical validation of theoretical convergence rates on quadratic objective functions and automated complexity analysis. Architecturally, it establishes a rigorously enforced development standard: (1) a zero-mock testing policy validated by 39 passing tests with 96.6% coverage exceeding the 90% threshold (as explicitly asserted in the [test suite](https://github.com/docxology/template/blob/main/projects/code_project/tests/test_optimizer.py)); (2) automated analysis pipelines generating publication-quality, accessible visualizations; and (3) deep integration patterns demonstrating how scientific logic strictly couples with the core infrastructure (e.g., executing `infrastructure.scientific.benchmarking` directly from `projects/code_project/scripts/optimization_analysis.py`).
 
 Results confirm that all tested step sizes converge to the analytical optimum $x^* = 1.0$ with objective value $f(x^*) = -0.5$. The codebase validates the template's modular `tests/` infrastructure and expansive [project documentation](https://github.com/docxology/template/tree/main/projects/code_project/docs) knowledge base, serving as the master exemplar for bridging theoretical algorithm development with production-grade, reproducible computational science.
 
@@ -16,7 +16,7 @@ Results confirm that all tested step sizes converge to the analytical optimum $x
 
 # Introduction
 
-This `code_project` serves as the foundational exemplar for the [docxology/template](https://github.com/docxology/template) ecosystem, demonstrating a fully-tested numerical optimization implementation securely bracketed by rigorous infrastructure, hermetic testing, and extensive documentation architectures. The words you are reading—and the mathematical figures below them—have been programmably generated through an unbreakable custody chain starting from algorithm implementation through strict CI/CD validation to multi-format `.pdf` compilation.
+This `code_project` serves as the foundational exemplar for the [Research Project Template](https://github.com/docxology/template) ecosystem, demonstrating a fully-tested numerical optimization implementation securely bracketed by rigorous infrastructure, hermetic testing, and extensive documentation architectures. The words you are reading—and the mathematical figures below them—have been programmably generated through an unbreakable custody chain starting from algorithm implementation through strict CI/CD validation to multi-format `.pdf` compilation.
 
 ## Template Architecture Context
 
@@ -59,7 +59,7 @@ where $\alpha > 0$ is the step size (learning rate) and $\nabla f(x_k)$ is the g
 As the representative project for the repository, this implementation explicitly demonstrates:
 
 1. **Infrastructure-Coupled Code**: Scientific implementations that delegate logging, file ops, and reporting to the `infrastructure` core.
-2. **Zero-Mock Verification**: A strict 34-test validation suite proving numerical accuracy without artificial test boundaries.
+2. **Zero-Mock Verification**: A strict 39-test validation suite proving numerical accuracy without artificial test boundaries.
 3. **Automated Research Pipelines**: High-precision analyses that generate publication-quality, accessible visualizations automatically.
 4. **Agentic Documentation standards**: Native adherence to the RASP methodology and `AGENTS.md` guidelines, ensuring the logic remains verifiable by both human and artificial intelligence.
 
@@ -77,9 +77,9 @@ This section describes the implementation methodology, explicitly detailing how 
 
 ### Gradient Descent Algorithm
 
-The core algorithm implements the iterative procedure for unconstrained optimization. Crucially, the implementation is designed to be highly observable, delegating all logging to `infrastructure.core.logging_utils.ProjectLogger` and executing under the hermetic boundaries defined in [`projects/code_project/tests/conftest.py`](https://github.com/docxology/template/blob/main/projects/code_project/tests/conftest.py).
+The core algorithm implements the iterative procedure for unconstrained optimization. Crucially, the implementation is designed to be highly observable, delegating all logging to `infrastructure.core.logging_utils.ProjectLogger` and executing under the hermetic boundaries defined in the [test configuration](https://github.com/docxology/template/blob/main/projects/code_project/tests/conftest.py).
 
-**Algorithm 1: Gradient Descent (implemented in [`projects/code_project/src/optimizer.py`](https://github.com/docxology/template/blob/main/projects/code_project/src/optimizer.py#L42-L138))**
+**Algorithm 1: Gradient Descent (implemented in the [optimizer module](https://github.com/docxology/template/blob/main/projects/code_project/src/optimizer.py#L42-L138))**
 
 > **Input:** Initial point $x_0$, step size $\alpha$, tolerance $\epsilon$, max iterations $N_{\max}$
 >
@@ -97,7 +97,7 @@ The methodology explicitly bridges theoretical mathematics with production-grade
 
 ### Numerical Stability Analysis
 
-Rather than writing ad-hoc validation code, the project imports `infrastructure.scientific.stability.check_numerical_stability`. This utility subjects the objective function to a barrage of extreme inputs (NaN, Inf, $\pm 10^{10}$) to calculate a formalized stability score. If this score degrades, the [`scripts/02_run_analysis.py`](https://github.com/docxology/template/blob/main/scripts/02_run_analysis.py) execution deliberately aborts, ensuring the methodology cannot enter unrecoverable states.
+Rather than writing ad-hoc validation code, the project imports `infrastructure.scientific.stability.check_numerical_stability`. This utility subjects the objective function to a barrage of extreme inputs (NaN, Inf, $\pm 10^{10}$) to calculate a formalized stability score. If this score degrades, the [analysis orchestrator](https://github.com/docxology/template/blob/main/scripts/02_run_analysis.py) execution deliberately aborts, ensuring the methodology cannot enter unrecoverable states.
 
 ### Performance Benchmarking
 
@@ -131,7 +131,7 @@ The most critical aspect of the project's methodology is its validation framewor
 
 1. **Integration Testing**: The `tests/integration/` battery ensures that the optimization algorithm, the analysis pipeline, and the `infrastructure.rendering` components operate flawlessly together without simulated data.
 2. **Infrastructure Validation**: The `tests/infra_tests/` suite confirms that the underlying modules (e.g., `pipeline_reporter.py`, `doc_discovery.py`) behave deterministically.
-3. **Coverage Gates**: The [GitHub Actions CI workflow](https://github.com/docxology/template/blob/main/.github/workflows/ci.yml) enforces a mandatory 100% branch and statement coverage gate prior to compiling the manuscript to a PDF.
+3. **Coverage Gates**: The [GitHub Actions CI workflow](https://github.com/docxology/template/blob/main/.github/workflows/ci.yml) enforces a mandatory ≥90% statement coverage gate prior to compiling the manuscript to a PDF.
 
 ## Analysis Pipeline & LaTeX Integration
 
@@ -147,7 +147,7 @@ The research template supports advanced LaTeX customization through the `preambl
 
 # Results
 
-This section presents the experimental results from the gradient descent optimization study, including convergence analysis and performance comparisons. Every table, figure, and quantitative assertion in this section was compiled autonomously by the template's `infrastructure.reporting` subsystem executing [`projects/code_project/scripts/optimization_analysis.py`](https://github.com/docxology/template/blob/main/projects/code_project/scripts/optimization_analysis.py). No manual transcription was permitted.
+This section presents the experimental results from the gradient descent optimization study, including convergence analysis and performance comparisons. Every table, figure, and quantitative assertion in this section was compiled autonomously by the template's `infrastructure.reporting` subsystem executing the [optimization analysis script](https://github.com/docxology/template/blob/main/projects/code_project/scripts/optimization_analysis.py). No manual transcription was permitted.
 
 ## Convergence Analysis
 
@@ -171,7 +171,7 @@ Figure \ref{fig:step_sensitivity} examines how the choice of step size affects t
 
 ## Quantitative Results
 
-The optimization results for different step sizes are synthesized computationally by orchestrating `infrastructure.reporting.pipeline_reporter`, feeding directly into the [output DataFrame `code_project/output/data/optimization_results.csv`](https://github.com/docxology/template/blob/main/projects/code_project/output/data/optimization_results.csv) that acts as the source of truth for Table 1:
+The optimization results for different step sizes are synthesized computationally by orchestrating `infrastructure.reporting.pipeline_reporter`, feeding directly into the [optimization results data](https://github.com/docxology/template/blob/main/projects/code_project/output/data/optimization_results.csv) that acts as the source of truth for Table 1:
 
 | Step Size (α) | Final Solution | Objective Value | Iterations | Converged |
 |---------------|----------------|-----------------|------------|-----------|
@@ -318,7 +318,7 @@ The implementation was validated through the comprehensive `tests/` suite:
 - **Infrastructure tests** covering all underlying mechanisms across `infrastructure.reporting`, `infrastructure.validation`, and `infrastructure.rendering`.
 - **Numerical accuracy** checks verified systematically using PyTest.
 
-All tests pass with 100% branch and statement coverage, ensuring implementation correctness across core logic, convergence detection, and logging pathways without the use of mocks.
+All tests pass with 96.6% statement coverage exceeding the 90% threshold, ensuring implementation correctness across core logic, convergence detection, and logging pathways without the use of mocks.
 
 ## Discussion
 
@@ -341,18 +341,18 @@ This study demonstrated a complete computational research pipeline from algorith
 Operating as the representative exemplar for the Generalized Research Template methodology, the project successfully deployed the three foundational pillars:
 
 1. **`infrastructure` Ecosystem**: Fully leveraged the 9-module infrastructure cluster to handle scientific benchmarking, rendering, and reporting.
-2. **`tests` Integrity**: Established absolute logical hermeticity through a 34-test integration and infrastructure validation suite operating continuously.
+2. **`tests` Integrity**: Established absolute logical hermeticity through a 39-test integration and infrastructure validation suite operating continuously.
 3. **`docs` Knowledge Operations**: Adhered structurally to the RASP methodology, producing verified, accessible output spanning from documentation indices to the final LLM-assisted publication configurations.
 
 ## Technical Contributions
 
-### 100% Test Coverage Strategy
+### 96.6% Test Coverage Strategy
 
 The hallmark of this implementation is the test matrix:
 
-- 34 distinct tests traversing execution pipelines, integration flows, and algorithmic bounds.
+- 39 distinct tests traversing execution pipelines, integration flows, and algorithmic bounds.
 - Strict enforcement of zero-mock policies guaranteeing real execution dynamics.
-- CI/CD validation gates requiring 100% statement and branch coverage before progression.
+- CI/CD validation gates requiring ≥90% statement coverage before progression.
 
 ### Infrastructure-Backed Capabilities
 
@@ -386,7 +386,7 @@ This foundation could be extended to:
 
 ## Final Assessment
 
-This work conclusively demonstrates that the research template seamlessly supports projects spanning the full spectrum—from prose-focused manuscripts to fully-tested algorithmic ecosystems. The optimization study achieved convergence across four step sizes with accuracy below $10^{-4}$ relative error, completely validated by the 34-test suite at 100% branch and statement coverage.
+This work conclusively demonstrates that the research template seamlessly supports projects spanning the full spectrum—from prose-focused manuscripts to fully-tested algorithmic ecosystems. The optimization study achieved convergence across four step sizes with accuracy below $10^{-4}$ relative error, completely validated by the 39-test suite at 96.6% statement coverage exceeding the 90% threshold.
 
 As the ultimate proof of the template's architecture, consider the document you are reading right now. By operating entirely over the `infrastructure` components, the pipeline produced six robust figures, generated quantitative CSVs, and rendered this exact markdown file (`projects/code_project/manuscript/04_conclusion.md`) alongside `config.yaml` flawlessly into a finalized PDF. The `code_project` implementation stands as a fully verified blueprint for automated, reproducible computational research, showcasing the extraordinary depth of the `docxology/template` repository.
 
@@ -422,12 +422,13 @@ All citation keys must exist in `references.bib`. The pipeline will flag undefin
 
 ```markdown
 <!-- Numbered equation with label -->
-$$
+\begin{equation}
+\label{eq:gradient}
 \nabla f(x) = Ax - b
-$$ {#eq:gradient}
+\end{equation}
 
 <!-- Reference in text -->
-As shown in @eq:gradient, the gradient...
+As shown in Equation \ref{eq:gradient}, the gradient...
 ```
 
 Pandoc-crossref resolves `{#eq:label}` and `@eq:label` during rendering. Do **not** use raw `\label{}` / `\ref{}` — the Markdown filter handles this.

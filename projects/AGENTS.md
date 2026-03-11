@@ -62,11 +62,10 @@ Archived projects in the `projects_archive/` directory are:
 graph TD
     subgraph Active["Active Projects (projects/)"]
         P1[code_project<br/>Optimization Exemplar - Active]
-        P2[medical_ai<br/>Medical AI CIF - Active]
     end
 
     subgraph Archive["Archived Projects (projects_archive/)"]
-        A1[code_project<br/>Archived - NOT Discovered]
+        A1[medical_ai<br/>Archived - NOT Discovered]
         A2[blake_active_inference<br/>Archived - NOT Discovered]
     end
 
@@ -77,14 +76,12 @@ graph TD
     end
 
     P1 -->|Discovered| DISCOVER
-    P2 -->|Discovered| DISCOVER
     A1 -.->|NOT Scanned| DISCOVER
     A2 -.->|NOT Scanned| DISCOVER
 
     DISCOVER -->|Active Projects| RUNSH
     RUNSH -->|Selected Project| PIPELINE
     PIPELINE -->|Executes| P1
-    PIPELINE -->|Executes| P2
 ```
 
 ### Project Lifecycle
@@ -272,7 +269,7 @@ python3 scripts/05_copy_outputs.py --project {name}
 
 **Output Organization:**
 
-```
+```text
 output/
 ├── code_project/       # Final deliverables
 │   ├── pdf/                    # Manuscript PDFs
@@ -567,7 +564,6 @@ All projects in this directory comply with the template's development standards 
 #### Testing Standards Results
 
 - **code_project**: 100% coverage (45 tests), all data-driven ✅
-- **medical_ai**: 173 tests, clinical scenario + integration testing ✅
 - **Combined**: All tests use data, no mocks detected ✅
 
 #### Documentation Standards Results
@@ -923,7 +919,7 @@ ls projects/myproject/output/pdf/*_compile.log
 
 **Note:** This project has been archived. Reactivate by moving from `projects_archive/` to `projects/`.
 
-### Active Inference Meta-Analysis (`projects/code_project/`)
+### Optimization Research Exemplar (`projects/code_project/`)
 
 **Standalone Guarantees:**
 

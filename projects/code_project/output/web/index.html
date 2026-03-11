@@ -497,7 +497,7 @@ class="toc-section-number">5.2</span> Technical Contributions</a>
 <ul>
 <li><a href="#test-coverage-strategy"
 id="toc-test-coverage-strategy"><span
-class="toc-section-number">5.2.1</span> 100% Test Coverage
+class="toc-section-number">5.2.1</span> 96.6% Test Coverage
 Strategy</a></li>
 <li><a href="#infrastructure-backed-capabilities"
 id="toc-infrastructure-backed-capabilities"><span
@@ -547,11 +547,11 @@ class="header-section-number">1</span> Abstract</h1>
 <p>This paper presents a comprehensive analysis of gradient descent
 optimization algorithms, constructed not merely as a mathematical
 exercise, but as the representative computational exemplar of the <a
-href="https://github.com/docxology/template">docxology/template</a>
-repository. We implement and evaluate the classical gradient descent
-method with fixed step size for quadratic minimization problems,
-examining convergence behavior across learning rates from <span
-class="math inline">\(\alpha = 0.01\)</span> to <span
+href="https://github.com/docxology/template">Research Project
+Template</a> repository. We implement and evaluate the classical
+gradient descent method with fixed step size for quadratic minimization
+problems, examining convergence behavior across learning rates from
+<span class="math inline">\(\alpha = 0.01\)</span> to <span
 class="math inline">\(\alpha = 0.20\)</span>. Crucially, the
 experimental framework is built entirely atop the template’s nine
 <code>infrastructure</code> subpackages to guarantee absolute
@@ -564,7 +564,8 @@ Methodologically, it demonstrates empirical validation of theoretical
 convergence rates on quadratic objective functions and automated
 complexity analysis. Architecturally, it establishes a rigorously
 enforced development standard: (1) a zero-mock testing policy validated
-by 34 passing tests with 100% coverage (as explicitly asserted in the <a
+by 39 passing tests with 96.6% coverage exceeding the 90% threshold (as
+explicitly asserted in the <a
 href="https://github.com/docxology/template/blob/main/projects/code_project/tests/test_optimizer.py">test
 suite</a>); (2) automated analysis pipelines generating
 publication-quality, accessible visualizations; and (3) deep integration
@@ -587,15 +588,14 @@ zero-mock testing, scientific infrastructure, pipeline orchestration</p>
 <h1 data-number="2" id="introduction"><span
 class="header-section-number">2</span> Introduction</h1>
 <p>This <code>code_project</code> serves as the foundational exemplar
-for the <a
-href="https://github.com/docxology/template">docxology/template</a>
-ecosystem, demonstrating a fully-tested numerical optimization
-implementation securely bracketed by rigorous infrastructure, hermetic
-testing, and extensive documentation architectures. The words you are
-reading—and the mathematical figures below them—have been programmably
-generated through an unbreakable custody chain starting from algorithm
-implementation through strict CI/CD validation to multi-format
-<code>.pdf</code> compilation.</p>
+for the <a href="https://github.com/docxology/template">Research Project
+Template</a> ecosystem, demonstrating a fully-tested numerical
+optimization implementation securely bracketed by rigorous
+infrastructure, hermetic testing, and extensive documentation
+architectures. The words you are reading—and the mathematical figures
+below them—have been programmably generated through an unbreakable
+custody chain starting from algorithm implementation through strict
+CI/CD validation to multi-format <code>.pdf</code> compilation.</p>
 <h2 data-number="2.1" id="template-architecture-context"><span
 class="header-section-number">2.1</span> Template Architecture
 Context</h2>
@@ -674,7 +674,7 @@ explicitly demonstrates:</p>
 <li><strong>Infrastructure-Coupled Code</strong>: Scientific
 implementations that delegate logging, file ops, and reporting to the
 <code>infrastructure</code> core.</li>
-<li><strong>Zero-Mock Verification</strong>: A strict 34-test validation
+<li><strong>Zero-Mock Verification</strong>: A strict 39-test validation
 suite proving numerical accuracy without artificial test
 boundaries.</li>
 <li><strong>Automated Research Pipelines</strong>: High-precision
@@ -701,10 +701,12 @@ Algorithm</h3>
 unconstrained optimization. Crucially, the implementation is designed to
 be highly observable, delegating all logging to
 <code>infrastructure.core.logging_utils.ProjectLogger</code> and
-executing under the hermetic boundaries defined in <a
-href="https://github.com/docxology/template/blob/main/projects/code_project/tests/conftest.py"><code>projects/code_project/tests/conftest.py</code></a>.</p>
-<p><strong>Algorithm 1: Gradient Descent (implemented in <a
-href="https://github.com/docxology/template/blob/main/projects/code_project/src/optimizer.py#L42-L138"><code>projects/code_project/src/optimizer.py</code></a>)</strong></p>
+executing under the hermetic boundaries defined in the <a
+href="https://github.com/docxology/template/blob/main/projects/code_project/tests/conftest.py">test
+configuration</a>.</p>
+<p><strong>Algorithm 1: Gradient Descent (implemented in the <a
+href="https://github.com/docxology/template/blob/main/projects/code_project/src/optimizer.py#L42-L138">optimizer
+module</a>)</strong></p>
 <blockquote>
 <p><strong>Input:</strong> Initial point <span
 class="math inline">\(x_0\)</span>, step size <span
@@ -742,9 +744,9 @@ Analysis</h3>
 This utility subjects the objective function to a barrage of extreme
 inputs (NaN, Inf, <span class="math inline">\(\pm 10^{10}\)</span>) to
 calculate a formalized stability score. If this score degrades, the <a
-href="https://github.com/docxology/template/blob/main/scripts/02_run_analysis.py"><code>scripts/02_run_analysis.py</code></a>
-execution deliberately aborts, ensuring the methodology cannot enter
-unrecoverable states.</p>
+href="https://github.com/docxology/template/blob/main/scripts/02_run_analysis.py">analysis
+orchestrator</a> execution deliberately aborts, ensuring the methodology
+cannot enter unrecoverable states.</p>
 <h3 data-number="3.2.2" id="performance-benchmarking"><span
 class="header-section-number">3.2.2</span> Performance Benchmarking</h3>
 <p>Computational complexity is evaluated not just theoretically, but
@@ -801,8 +803,8 @@ modules (e.g., <code>pipeline_reporter.py</code>,
 <code>doc_discovery.py</code>) behave deterministically.</li>
 <li><strong>Coverage Gates</strong>: The <a
 href="https://github.com/docxology/template/blob/main/.github/workflows/ci.yml">GitHub
-Actions CI workflow</a> enforces a mandatory 100% branch and statement
-coverage gate prior to compiling the manuscript to a PDF.</li>
+Actions CI workflow</a> enforces a mandatory ≥90% statement coverage
+gate prior to compiling the manuscript to a PDF.</li>
 </ol>
 <h2 data-number="3.5" id="analysis-pipeline-latex-integration"><span
 class="header-section-number">3.5</span> Analysis Pipeline &amp; LaTeX
@@ -825,9 +827,9 @@ class="header-section-number">4</span> Results</h1>
 descent optimization study, including convergence analysis and
 performance comparisons. Every table, figure, and quantitative assertion
 in this section was compiled autonomously by the template’s
-<code>infrastructure.reporting</code> subsystem executing <a
-href="https://github.com/docxology/template/blob/main/projects/code_project/scripts/optimization_analysis.py"><code>projects/code_project/scripts/optimization_analysis.py</code></a>.
-No manual transcription was permitted.</p>
+<code>infrastructure.reporting</code> subsystem executing the <a
+href="https://github.com/docxology/template/blob/main/projects/code_project/scripts/optimization_analysis.py">optimization
+analysis script</a>. No manual transcription was permitted.</p>
 <h2 data-number="4.1" id="convergence-analysis-1"><span
 class="header-section-number">4.1</span> Convergence Analysis</h2>
 <h3 data-number="4.1.1" id="convergence-trajectories"><span
@@ -888,10 +890,8 @@ class="header-section-number">4.2</span> Quantitative Results</h2>
 computationally by orchestrating
 <code>infrastructure.reporting.pipeline_reporter</code>, feeding
 directly into the <a
-href="https://github.com/docxology/template/blob/main/projects/code_project/output/data/optimization_results.csv">output
-DataFrame
-<code>code_project/output/data/optimization_results.csv</code></a> that
-acts as the source of truth for Table 1:</p>
+href="https://github.com/docxology/template/blob/main/projects/code_project/output/data/optimization_results.csv">optimization
+results data</a> that acts as the source of truth for Table 1:</p>
 <table>
 <colgroup>
 <col style="width: 21%" />
@@ -1193,9 +1193,10 @@ mechanisms across <code>infrastructure.reporting</code>,
 <li><strong>Numerical accuracy</strong> checks verified systematically
 using PyTest.</li>
 </ul>
-<p>All tests pass with 100% branch and statement coverage, ensuring
-implementation correctness across core logic, convergence detection, and
-logging pathways without the use of mocks.</p>
+<p>All tests pass with 96.6% statement coverage exceeding the 90%
+threshold, ensuring implementation correctness across core logic,
+convergence detection, and logging pathways without the use of
+mocks.</p>
 <h2 data-number="4.8" id="discussion"><span
 class="header-section-number">4.8</span> Discussion</h2>
 <p>The experimental results validate the gradient descent implementation
@@ -1237,7 +1238,7 @@ foundational pillars:</p>
 leveraged the 9-module infrastructure cluster to handle scientific
 benchmarking, rendering, and reporting.</li>
 <li><strong><code>tests</code> Integrity</strong>: Established absolute
-logical hermeticity through a 34-test integration and infrastructure
+logical hermeticity through a 39-test integration and infrastructure
 validation suite operating continuously.</li>
 <li><strong><code>docs</code> Knowledge Operations</strong>: Adhered
 structurally to the RASP methodology, producing verified, accessible
@@ -1247,16 +1248,16 @@ publication configurations.</li>
 <h2 data-number="5.2" id="technical-contributions"><span
 class="header-section-number">5.2</span> Technical Contributions</h2>
 <h3 data-number="5.2.1" id="test-coverage-strategy"><span
-class="header-section-number">5.2.1</span> 100% Test Coverage
+class="header-section-number">5.2.1</span> 96.6% Test Coverage
 Strategy</h3>
 <p>The hallmark of this implementation is the test matrix:</p>
 <ul>
-<li>34 distinct tests traversing execution pipelines, integration flows,
+<li>39 distinct tests traversing execution pipelines, integration flows,
 and algorithmic bounds.</li>
 <li>Strict enforcement of zero-mock policies guaranteeing real execution
 dynamics.</li>
-<li>CI/CD validation gates requiring 100% statement and branch coverage
-before progression.</li>
+<li>CI/CD validation gates requiring ≥90% statement coverage before
+progression.</li>
 </ul>
 <h3 data-number="5.2.2" id="infrastructure-backed-capabilities"><span
 class="header-section-number">5.2.2</span> Infrastructure-Backed
@@ -1324,8 +1325,8 @@ seamlessly supports projects spanning the full spectrum—from
 prose-focused manuscripts to fully-tested algorithmic ecosystems. The
 optimization study achieved convergence across four step sizes with
 accuracy below <span class="math inline">\(10^{-4}\)</span> relative
-error, completely validated by the 34-test suite at 100% branch and
-statement coverage.</p>
+error, completely validated by the 39-test suite at 96.6% statement
+coverage exceeding the 90% threshold.</p>
 <p>As the ultimate proof of the template’s architecture, consider the
 document you are reading right now. By operating entirely over the
 <code>infrastructure</code> components, the pipeline produced six robust
@@ -1361,12 +1362,13 @@ pipeline will flag undefined keys as errors.</p>
 class="header-section-number">6.2</span> Equation Environments</h2>
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- Numbered equation with label --&gt;</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>\nabla f(x) = Ax - b</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>$$ {#eq:gradient}</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- Reference in text --&gt;</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>As shown in @eq:gradient, the gradient...</span></code></pre></div>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>\begin{equation}</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>\label{eq:gradient}</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>\nabla f(x) = Ax - b</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>\end{equation}</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- Reference in text --&gt;</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>As shown in Equation \ref{eq:gradient}, the gradient...</span></code></pre></div>
 <p>Pandoc-crossref resolves <code>{#eq:label}</code> and
 <code>@eq:label</code> during rendering. Do <strong>not</strong> use raw
 <code>\label{}</code> / <code>\ref{}</code> — the Markdown filter

@@ -30,12 +30,13 @@ will flag undefined keys as errors.
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{\textless{}!{-}{-} Numbered equation with label {-}{-}\textgreater{}}
-\NormalTok{$$}
+\NormalTok{\textbackslash{}begin\{equation\}}
+\NormalTok{\textbackslash{}label\{eq:gradient\}}
 \NormalTok{\textbackslash{}nabla f(x) = Ax {-} b}
-\NormalTok{$$ \{\#eq:gradient\}}
+\NormalTok{\textbackslash{}end\{equation\}}
 
 \CommentTok{\textless{}!{-}{-} Reference in text {-}{-}\textgreater{}}
-\NormalTok{As shown in @eq:gradient, the gradient...}
+\NormalTok{As shown in Equation \textbackslash{}ref\{eq:gradient\}, the gradient...}
 \end{Highlighting}
 \end{Shaded}
 
