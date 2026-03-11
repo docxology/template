@@ -119,6 +119,9 @@ jobs:
       - name: Sync dependencies (dev + optional test groups)
         run: uv sync --group rendering --group monitoring
 
+      - name: Install pandoc
+        uses: pandoc/actions/setup@v1
+
       - name: Run infrastructure tests
         env:
           COVERAGE_FILE: .coverage.infra
@@ -175,6 +178,7 @@ jobs:
       - name: Run project tests
         env:
           COVERAGE_FILE: .coverage.project
+          PYTHONPATH: .
         run: >-
           uv run pytest projects/*/tests/
           --cov=projects
