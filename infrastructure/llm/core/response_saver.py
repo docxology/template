@@ -23,7 +23,7 @@ class ResponseMetadata:
     response_length: int
     response_tokens_est: int
     generation_time_seconds: float | None = None
-    options: dict[str, Any | None] = None
+    options: dict[str, Any] | None = None
     streaming: bool = False
     chunk_count: int | None = None
     streaming_time_seconds: float | None = None

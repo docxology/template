@@ -24,7 +24,7 @@ logger = get_logger(__name__)
 # ── Lazy dependency flags ────────────────────────────────────────────────
 
 try:
-    from cryptography.hazmat.primitives.ciphers.aead import AESGCM  # type: ignore
+    from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
     _CRYPTOGRAPHY_AVAILABLE = True
 except ImportError:
@@ -61,10 +61,10 @@ def encrypt_payload(
     _require_cryptography()
 
     if key is None:
-        key = AESGCM.generate_key(bit_length=256)  # type: ignore[attr-defined]
+        key = AESGCM.generate_key(bit_length=256)
 
     nonce = os.urandom(12)  # 96-bit nonce for GCM
-    aesgcm = AESGCM(key)  # type: ignore[attr-defined]
+    aesgcm = AESGCM(key)
     ciphertext = aesgcm.encrypt(nonce, plaintext.encode("utf-8"), None)
 
     result = {
@@ -97,9 +97,9 @@ def decrypt_payload(
     nonce = base64.b64decode(nonce_b64)
     ciphertext = base64.b64decode(ciphertext_b64)
 
-    aesgcm = AESGCM(key)  # type: ignore[attr-defined]
+    aesgcm = AESGCM(key)
     plaintext = aesgcm.decrypt(nonce, ciphertext, None)
-    return plaintext.decode("utf-8")
+    return str(plaintext.decode("utf-8"))
 
 
 # ── HMAC digital fingerprint ────────────────────────────────────────────
@@ -156,7 +156,7 @@ def apply_pdf_password(
         Path to the encrypted PDF.
     """
     try:
-        from pypdf import PdfReader, PdfWriter  # type: ignore
+        from pypdf import PdfReader, PdfWriter
     except ImportError:
         raise ImportError(
             "The 'pypdf' package is required for PDF password protection. "

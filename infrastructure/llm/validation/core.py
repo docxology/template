@@ -166,7 +166,7 @@ class OutputValidator:
 
     @staticmethod
     def validate_complete(
-        content: str, mode: str = "standard", schema: dict[str, Any | None] = None
+        content: str, mode: str = "standard", schema: dict[str, Any] | None = None
     ) -> bool:
         """Comprehensive validation based on mode."""
         if not content or not content.strip():

@@ -21,7 +21,7 @@ def inject_pdf_metadata(
     output_pdf: Path,
     metadata: dict[str, str],
     xmp_string: str | None = None,
-    attachments: dict[str, bytes | None] = None,
+    attachments: dict[str, bytes] | None = None,
 ) -> Path:
     """Inject metadata into PDF Info dictionary.
 
@@ -40,7 +40,7 @@ def inject_pdf_metadata(
         Path to the output PDF.
     """
     try:
-        from pypdf import PdfReader, PdfWriter  # type: ignore
+        from pypdf import PdfReader, PdfWriter
     except ImportError:
         raise ImportError(
             "The 'pypdf' package is required for PDF metadata injection. "
@@ -68,7 +68,7 @@ def inject_pdf_metadata(
     if xmp_string:
         try:
             xmp_bytes = xmp_string.encode("utf-8")
-            writer.xmp_metadata = xmp_bytes  # type: ignore[assignment]
+            writer.xmp_metadata = xmp_bytes
             logger.debug(f"XMP metadata stream embedded ({len(xmp_bytes)} bytes)")
         except Exception as xmp_err:
             logger.warning(f"XMP embedding failed (non-fatal): {xmp_err}")

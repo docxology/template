@@ -385,7 +385,7 @@ def get_review_types(repo_root: Path | str, project_name: str = "project") -> li
     return valid_types
 
 
-def _safe_int_from_dict(config_dict: dict, key: str) -> int | None:
+def _safe_int_from_dict(config_dict: dict[str, Any], key: str) -> int | None:
     """Safely extract an integer value from a config dict by key."""
     val = config_dict.get(key)
     if val is None:
@@ -399,7 +399,7 @@ def _safe_int_from_dict(config_dict: dict, key: str) -> int | None:
 
 def _resolve_int_setting(
     env_var: str,
-    config_dict: dict,
+    config_dict: dict[str, Any],
     config_key: str,
     default: int,
 ) -> int:
@@ -447,7 +447,7 @@ def get_testing_config(repo_root: Path | str) -> ResolvedTestingConfig:
     # Load config file (env vars take priority, applied inside _resolve_int_setting)
     config_path = find_config_file(repo_root)
     config = load_config(config_path) if config_path else None
-    testing_cfg = config.get("testing", {}) if config else {}
+    testing_cfg: dict[str, Any] = dict(config.get("testing", {})) if config else {}
 
     def _int_or_default(key: str, default: int) -> int:
         v = _safe_int_from_dict(testing_cfg, key)

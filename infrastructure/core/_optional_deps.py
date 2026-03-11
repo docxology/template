@@ -12,12 +12,12 @@ Usage:
 from __future__ import annotations
 
 try:
-    import psutil  # type: ignore[import-untyped]
+    import psutil
 except ImportError:
-    psutil = None  # type: ignore[assignment]
+    psutil = None
 
 try:
-    import numpy as np  # type: ignore[import-untyped]
+    import numpy as np
 except ImportError:
     np = None  # type: ignore[assignment]
 

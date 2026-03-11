@@ -1410,9 +1410,9 @@ def generate_health_comparison_chart(
         # Save PNG
         organizer = OutputOrganizer()
         png_path = organizer.get_output_path(
-            "health_scores_comparison.png",
+            "health_scores_comparison.png",  # type: ignore[arg-type]
             output_dir,
-            FileType.PNG,  # type: ignore
+            FileType.PNG,
         )
         fig.savefig(png_path, dpi=300, bbox_inches="tight")
         saved_files["png"] = png_path
@@ -1420,9 +1420,9 @@ def generate_health_comparison_chart(
 
         # Save PDF
         pdf_path = organizer.get_output_path(
-            "health_scores_comparison.pdf",
+            "health_scores_comparison.pdf",  # type: ignore[arg-type]
             output_dir,
-            FileType.PDF,  # type: ignore
+            FileType.PDF,
         )
         fig.savefig(pdf_path, bbox_inches="tight")
         saved_files["pdf"] = pdf_path
@@ -3032,9 +3032,9 @@ def generate_prioritized_recommendations_csv(summary: ExecutiveSummary, output_d
     organizer = OutputOrganizer()
     organizer.ensure_directory_structure(output_dir)
     csv_path = organizer.get_output_path(
-        "recommendations_prioritized.csv",
+        "recommendations_prioritized.csv",  # type: ignore[arg-type]
         output_dir,
-        FileType.CSV,  # type: ignore
+        FileType.CSV,
     )
 
     with open(csv_path, "w", newline="") as f:

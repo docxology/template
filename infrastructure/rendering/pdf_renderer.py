@@ -982,7 +982,7 @@ class PDFRenderer:
             SIGPIPE_EXIT = 141  # 128 + signal 13 (SIGPIPE)
             xelatex_stdout_log = output_dir / "_xelatex_stdout.log"
             with open(xelatex_stdout_log, "w") as stdout_sink:
-                result = subprocess.run(
+                result = subprocess.run(  # type: ignore[assignment]
                     cmd,
                     check=False,
                     stdout=stdout_sink,
@@ -1030,7 +1030,7 @@ class PDFRenderer:
             for run in range(1, max_passes):
                 log_progress_bar(run + 1, max_passes, "LaTeX compilation", bar_width=20)
                 with open(xelatex_stdout_log, "w") as stdout_sink:
-                    result = subprocess.run(
+                    result = subprocess.run(  # type: ignore[assignment]
                         cmd,
                         check=False,
                         stdout=stdout_sink,

@@ -21,7 +21,7 @@ except ImportError:
     DOTENV_AVAILABLE = False
 
     # No-op function if dotenv not available
-    def load_dotenv(*args: Any, **kwargs: Any) -> None:  # type: ignore[misc]
+    def load_dotenv(*args: Any, **kwargs: Any) -> None:
         """No-op fallback when python-dotenv is not installed."""
         pass
 

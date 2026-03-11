@@ -21,7 +21,7 @@ logger = get_logger(__name__)
 
 def _get_qrcode():
     try:
-        import qrcode  # type: ignore
+        import qrcode
 
         return qrcode
     except ImportError:
@@ -33,7 +33,7 @@ def _get_qrcode():
 
 def _get_barcode():
     try:
-        import barcode  # type: ignore
+        import barcode
 
         return barcode
     except ImportError:
@@ -45,9 +45,9 @@ def _get_barcode():
 
 def _get_reportlab():
     try:
-        from reportlab.lib.units import inch, mm  # type: ignore
-        from reportlab.pdfgen import canvas as rl_canvas  # type: ignore
-        from reportlab.lib.utils import ImageReader  # type: ignore
+        from reportlab.lib.units import inch, mm
+        from reportlab.pdfgen import canvas as rl_canvas
+        from reportlab.lib.utils import ImageReader
 
         return rl_canvas, inch, mm, ImageReader
     except ImportError:
@@ -115,7 +115,7 @@ def generate_code128(
         SVG image bytes.
     """
     barcode_mod = _get_barcode()
-    from barcode.writer import SVGWriter  # type: ignore
+    from barcode.writer import SVGWriter
 
     code128 = barcode_mod.get_barcode_class("code128")
     bc = code128(data, writer=SVGWriter())
@@ -141,9 +141,9 @@ def generate_code128(
 
 def build_barcode_payload(
     title: str = "",
-    hashes: dict[str, str | None] = None,
+    hashes: dict[str, str] | None = None,
     document_id: str = "",
-    extra: dict[str, str | None] = None,
+    extra: dict[str, str] | None = None,
 ) -> str:
     """Build a compact barcode payload string.
 
@@ -187,7 +187,7 @@ def build_barcode_payload(
 
 def build_metadata_qr_text(
     title: str = "",
-    authors: list[str | None] = None,
+    authors: list[str] | None = None,
     document_id: str = "",
     **_kwargs,
 ) -> str:
@@ -205,7 +205,7 @@ def build_metadata_qr_text(
 
 def build_citation_qr_text(
     title: str = "",
-    authors: list[str | None] = None,
+    authors: list[str] | None = None,
     **_kwargs,
 ) -> str:
     """Build a compact citation string (≤100 chars)."""
@@ -217,8 +217,8 @@ def build_citation_qr_text(
 
 def build_mailto_qr_text(
     title: str = "",
-    authors: list[str | None] = None,
-    author_emails: list[str | None] = None,
+    authors: list[str] | None = None,
+    author_emails: list[str] | None = None,
     **_kwargs,
 ) -> str:
     """Build a proper mailto: URI that opens an email draft.
@@ -241,7 +241,7 @@ def build_mailto_qr_text(
 
 def build_integrity_qr_text(
     document_id: str = "",
-    hashes: dict[str, str | None] = None,
+    hashes: dict[str, str] | None = None,
     **_kwargs,
 ) -> str:
     """Build a compact integrity hash for the integrity QR (≤100 chars).
@@ -266,11 +266,11 @@ def create_barcode_strip_overlay(
     code128_data: str,
     strip_height: float = 68.0,
     title: str = "",
-    authors: list[str | None] = None,
-    keywords: list[str | None] = None,
-    author_emails: list[str | None] = None,
+    authors: list[str] | None = None,
+    keywords: list[str] | None = None,
+    author_emails: list[str] | None = None,
     document_id: str = "",
-    hashes: dict[str, str | None] = None,
+    hashes: dict[str, str] | None = None,
     source_filename: str = "",
     total_pages: int = 0,
     source_file_size: int = 0,
@@ -381,7 +381,7 @@ def create_barcode_strip_overlay(
         c.drawCentredString(x_cursor + qr_size / 2, label_y, label)
         c.restoreState()
 
-        x_cursor += qr_size + qr_spacing
+        x_cursor += int(qr_size + qr_spacing)
 
     # ── Code128 barcode bars (right side) ────────────────────────────
     barcode_x_start = page_width - code128_width - margin + 10

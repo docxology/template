@@ -23,11 +23,11 @@ class DocumentMetadata:
     """
 
     title: str = ""
-    authors: list[str | None] = None
-    hashes: dict[str, str | None] = None
+    authors: list[str] | None = None
+    hashes: dict[str, str] | None = None
     document_id: str = ""
-    keywords: list[str | None] = None
-    extra: dict[str, str | None] = None
+    keywords: list[str] | None = None
+    extra: dict[str, str] | None = None
 
 
 @dataclass

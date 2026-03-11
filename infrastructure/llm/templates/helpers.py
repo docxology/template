@@ -10,7 +10,7 @@ logger = get_logger(__name__)
 def format_requirements(
     required_headers: list[str],
     markdown_format: bool = True,
-    section_requirements: dict[str, str | None] = None,
+    section_requirements: dict[str, str] | None = None,
 ) -> str:
     """Generate format requirements section for prompts.
 
@@ -40,8 +40,8 @@ def format_requirements(
 
 def token_budget_awareness(
     total_tokens: int | None = None,
-    section_budgets: dict[str, int | None] = None,
-    word_targets: dict[str, tuple | None] = None,
+    section_budgets: dict[str, int] | None = None,
+    word_targets: dict[str, tuple] | None = None,
 ) -> str:
     """Generate token budget awareness hints for prompts.
 
@@ -122,7 +122,7 @@ def content_requirements(
 
 def section_structure(
     sections: list[str],
-    section_descriptions: dict[str, str | None] = None,
+    section_descriptions: dict[str, str] | None = None,
     required_order: bool = True,
 ) -> str:
     """Generate section structure requirements.
@@ -153,8 +153,8 @@ def section_structure(
 
 def validation_hints(
     word_count_range: tuple | None = None,
-    required_elements: list[str | None] = None,
-    format_checks: list[str | None] = None,
+    required_elements: list[str] | None = None,
+    format_checks: list[str] | None = None,
 ) -> str:
     """Generate validation hints that inform the model what will be checked.
 

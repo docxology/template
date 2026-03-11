@@ -145,7 +145,7 @@ def _calculate_weighted_coverage(
     if total_lines == 0:
         return 0.0
     weighted_sum = sum(r.get("coverage_percent", 0) * r.get("total_lines", 0) for r in results_list)
-    return weighted_sum / total_lines
+    return weighted_sum / total_lines  # type: ignore[no-any-return]
 
 
 def _aggregate_counts(results_list: list[dict[str, Any]]) -> dict[str, Any]:
@@ -170,7 +170,7 @@ def _is_ollama_available() -> bool:
     try:
         import importlib
 
-        return importlib.util.find_spec("ollama") is not None
+        return importlib.util.find_spec("ollama") is not None  # type: ignore[attr-defined]
     except (ImportError, ValueError):  # importlib.util.find_spec may raise for invalid names
         return False
 
@@ -185,8 +185,8 @@ def generate_summary_report(repo_root: Path | None = None) -> dict[str, Any]:
     project_results = {name: load_test_results(name, root) for name in active_projects}
 
     all_results = [infra_results] + list(project_results.values())
-    counts = _aggregate_counts(all_results)
-    weighted_coverage = _calculate_weighted_coverage(all_results)
+    counts = _aggregate_counts(all_results)  # type: ignore[arg-type]
+    weighted_coverage = _calculate_weighted_coverage(all_results)  # type: ignore[arg-type]
 
     overall_success = all(r.get("exit_code", 1) == 0 for r in all_results)
     infra_coverage = infra_results.get("coverage_percent", 0)

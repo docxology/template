@@ -37,7 +37,7 @@ class RenderingConfig:
     web_theme: str = "simple"
 
     @classmethod
-    def from_env(cls, env: dict[str, str | None] = None) -> RenderingConfig:
+    def from_env(cls, env: dict[str, str] | None = None) -> RenderingConfig:
         """Create configuration from environment variables.
 
         Supported environment variables:

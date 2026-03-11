@@ -780,16 +780,16 @@ def main() -> int:
 
             # Additional validations
             code_block_issues = validate_file_paths_in_code(content, md_file, repo_root)
-            issues["code_block_paths"].extend(code_block_issues)
+            issues["code_block_paths"].extend(code_block_issues)  # type: ignore[arg-type]
 
             dir_structure_issues = validate_directory_structures(content, md_file, repo_root)
-            issues["directory_structures"].extend(dir_structure_issues)
+            issues["directory_structures"].extend(dir_structure_issues)  # type: ignore[arg-type]
 
             import_issues = validate_python_imports(content, md_file, repo_root)
-            issues["python_imports"].extend(import_issues)
+            issues["python_imports"].extend(import_issues)  # type: ignore[arg-type]
 
             placeholder_issues = validate_placeholder_consistency(content, md_file, repo_root)
-            issues["placeholder_consistency"].extend(placeholder_issues)
+            issues["placeholder_consistency"].extend(placeholder_issues)  # type: ignore[arg-type]
 
         except Exception as e:
             logger.error(f"Error processing {md_file}: {e}")

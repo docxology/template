@@ -53,7 +53,7 @@ def quadratic_function(
     quadratic_term = 0.5 * x.T @ A @ x
     linear_term = b.T @ x
 
-    return quadratic_term - linear_term
+    return float(quadratic_term - linear_term)
 
 
 def compute_gradient(
@@ -74,7 +74,7 @@ def compute_gradient(
         b = np.asarray(b, dtype=float)
 
     # ∇f(x) = A x - b
-    return A @ x - b
+    return np.asarray(A @ x - b)
 
 
 def gradient_descent(
@@ -161,7 +161,7 @@ def gradient_descent(
         objective_value=final_obj_value,
         iterations=iteration,
         converged=converged,
-        gradient_norm=final_grad_norm,
+        gradient_norm=float(final_grad_norm),
         objective_history=objective_history,
     )
 
@@ -240,6 +240,8 @@ def simulate_trajectory(
         verbose=False,
     )
     return {
-        "iterations": list(range(len(result.objective_history))),
-        "objectives": result.objective_history,
+        "iterations": list(range(len(result.objective_history)))
+        if result.objective_history
+        else [],
+        "objectives": result.objective_history if result.objective_history else [],
     }

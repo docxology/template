@@ -49,7 +49,7 @@ class FileInventoryManager:
     )
 
     def collect_output_files(
-        self, output_dir: Path, categories: list[str] | None = None
+        self, output_dir: Path, categories: tuple[str, ...] | list[str] | None = None
     ) -> list[FileInventoryEntry]:
         """Collect all generated files from output directory.
 

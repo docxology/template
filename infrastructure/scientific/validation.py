@@ -27,7 +27,7 @@ class _ValidationResults(TypedDict):
 
 def validate_scientific_implementation(
     func: Callable, test_cases: list[tuple[Any, Any]]
-) -> dict[str, Any]:
+) -> _ValidationResults:
     """Validate scientific implementation against known test cases.
 
     Args:

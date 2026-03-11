@@ -24,7 +24,7 @@ class GenerationOptions:
     top_p: float | None = None
     top_k: int | None = None
     seed: int | None = None
-    stop: list[str | None] = None
+    stop: list[str] | None = None
     format_json: bool = False
     repeat_penalty: float | None = None
     num_ctx: int | None = None

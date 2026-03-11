@@ -398,7 +398,7 @@ class LLMClient:
     def query_structured(
         self,
         prompt: str,
-        schema: dict[str, Any | None] = None,
+        schema: dict[str, Any] | None = None,
         model: str | None = None,
         options: GenerationOptions | None = None,
         use_native_json: bool = True,
@@ -848,7 +848,7 @@ class LLMClient:
                                             extra={"chunk_count": chunk_count},
                                         )
 
-                                    prev_chunk_time = last_chunk_time
+                                    prev_chunk_time: float | None = last_chunk_time
                                     last_chunk_time = current_time
 
                                     # Check for stalled stream (configurable threshold)

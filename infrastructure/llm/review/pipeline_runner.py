@@ -167,7 +167,7 @@ def run_llm_review_pipeline(
                 for i, lang_code in enumerate(translation_languages, 1):
                     lang_name = TRANSLATION_LANGUAGES.get(lang_code, lang_code)
                     log_progress(i, len(translation_languages), f"Translation: {lang_name}", logger)
-                    response, metrics = generate_translation(client, text, lang_code, model_name)
+                    response, metrics = generate_translation(client, text, lang_code, model_name)  # type: ignore[assignment,arg-type]
                     review_name = f"translation_{lang_code}"
                     session_metrics.reviews[review_name] = metrics
                     if response is not None:

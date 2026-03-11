@@ -520,7 +520,7 @@ def copy_final_deliverables(
         "errors": [],
     }
 
-    files_list = []
+    files_list: list[dict[str, Any]] = []
 
     if not project_output.exists():
         msg = f"Project output directory not found: {project_output}"
