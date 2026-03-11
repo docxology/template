@@ -1,6 +1,6 @@
 # Test Results Summary
 
-Generated: 2026-03-11T05:23:22.925933
+Generated: 2026-03-11T14:20:36.411285
 
 ## Infrastructure Tests
 
@@ -10,14 +10,13 @@ Generated: 2026-03-11T05:23:22.925933
 
 ## Project Tests
 
-- Passed: 39
+- Passed: 0
 - Failed: 0
 - Skipped: 0
-- Coverage: 96.64%
 
 ## Summary
 
-- Total Passed: 39
+- Total Passed: 0
 - Total Failed: 0
-- Total Tests: 39
-- Status: ✅ PASSED
+- Total Tests: 0
+- Status: ❌ FAILED

@@ -4,11 +4,11 @@
       "exists": true,
       "file_count": 10,
       "size_mb": "1.82",
-      "total_size_bytes": 1904295,
+      "total_size_bytes": 1909384,
       "largest_files": [
         {
           "name": "code_project_combined.pdf",
-          "size_mb": "1.63",
+          "size_mb": "1.64",
           "path": "pdf/code_project_combined.pdf"
         },
         {
@@ -65,11 +65,11 @@
       "exists": true,
       "file_count": 48,
       "size_mb": "2.20",
-      "total_size_bytes": 2305060,
+      "total_size_bytes": 2310148,
       "largest_files": [
         {
           "name": "03_results_slides.pdf",
-          "size_mb": "1.55",
+          "size_mb": "1.56",
           "path": "slides/03_results_slides.pdf"
         },
         {
@@ -97,8 +97,8 @@
     "figures": {
       "exists": true,
       "file_count": 7,
-      "size_mb": "1.53",
-      "total_size_bytes": 1604614,
+      "size_mb": "1.54",
+      "total_size_bytes": 1609844,
       "largest_files": [
         {
           "name": "algorithm_complexity.png",
@@ -141,7 +141,7 @@
       "exists": true,
       "file_count": 8,
       "size_mb": "0.01",
-      "total_size_bytes": 8437,
+      "total_size_bytes": 7782,
       "largest_files": [
         {
           "name": "validation_report.json",
@@ -185,7 +185,7 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.00",
-      "total_size_bytes": 2655,
+      "total_size_bytes": 2654,
       "largest_files": [
         {
           "name": "pipeline.log",
@@ -199,17 +199,17 @@
     }
   },
   "total_files": 83,
-  "total_size_mb": 5.720741271972656,
+  "total_size_mb": 5.734808921813965,
   "largest_files": [
     {
       "name": "code_project_combined.pdf",
-      "size_mb": "1.63",
+      "size_mb": "1.64",
       "category": "pdf",
       "path": "pdf/code_project_combined.pdf"
     },
     {
       "name": "03_results_slides.pdf",
-      "size_mb": "1.55",
+      "size_mb": "1.56",
       "category": "slides",
       "path": "slides/03_results_slides.pdf"
     },
@@ -282,15 +282,15 @@
     ".csv": 1
   },
   "sizes_by_category": {
-    "pdf": 1.8160772323608398,
+    "pdf": 1.8209304809570312,
     "web": 0.16530323028564453,
-    "slides": 2.1982765197753906,
-    "figures": 1.5302791595458984,
+    "slides": 2.2031288146972656,
+    "figures": 1.5352668762207031,
     "data": 0.0002269744873046875,
-    "reports": 0.008046150207519531,
+    "reports": 0.0074214935302734375,
     "simulations": 0.0,
     "llm": 0.0,
-    "logs": 0.0025320053100585938
+    "logs": 0.0025310516357421875
   },
   "pdf_files": 10,
   "figures": 7,

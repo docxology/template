@@ -1,207 +1,1178 @@
 
 ======================================================================
-[2026-03-11 05:23:14] Multi-Project Pipeline Started
+[2026-03-11 14:19:09] Multi-Project Pipeline Started
 ======================================================================
-[2026-03-11 05:23:14] [INFO] Found 1 projects: code_project
-[2026-03-11 05:23:14] [INFO] Executing core pipeline (no infra) for 1 projects
-[2026-03-11 05:23:14] [INFO] Skipping infrastructure tests (already run or disabled)
-[2026-03-11 05:23:14] [INFO] Project 1/1: code_project
-[2026-03-11 05:23:14] [INFO] Starting: Pipeline execution for code_project
-[2026-03-11 05:23:14] [INFO] Executing core pipeline for project 'code_project'
-[2026-03-11 05:23:14] [INFO] 
-[2026-03-11 05:23:14] [INFO] [1/8] Clean Output Directories (12% complete)
-[2026-03-11 05:23:14] [INFO]   Elapsed: 0s | ETA: 0s
-[2026-03-11 05:23:14] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-11 05:23:14] [INFO] Cleaning output directories...
-[2026-03-11 05:23:14] [INFO] Cleaning root-level directories from output/ directory...
-[2026-03-11 05:23:14] [INFO] Root output directory cleaned
-[2026-03-11 05:23:14] [INFO]   Cleaning projects/code_project/output/...
-[2026-03-11 05:23:14] [INFO]   Archived 1 log file(s) to logs/archive/
-[2026-03-11 05:23:14] [INFO] Cleaned projects/code_project/output/ (recreated subdirectories)
-[2026-03-11 05:23:14] [INFO]   Creating output/code_project/...
-[2026-03-11 05:23:14] [INFO] Cleaned output/code_project/ (recreated subdirectories)
-[2026-03-11 05:23:14] [INFO] Output directories cleaned for project 'code_project' - fresh start
-[2026-03-11 05:23:14] [INFO] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/code_project/output/logs/pipeline.log
-[2026-03-11 05:23:14] [INFO] ✓ Stage 1 completed successfully (0.0s)
-[2026-03-11 05:23:14] [INFO] 
-[2026-03-11 05:23:14] [INFO] [2/8] Environment Setup (25% complete)
-[2026-03-11 05:23:14] [INFO]   Elapsed: 0s | ETA: 0s
-[2026-03-11 05:23:14] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-11 05:23:14] [INFO] 
-[2026-03-11 05:23:14] [INFO] ==================================================
-[2026-03-11 05:23:14] [INFO] STAGE 00: Environment Setup (Project: code_project)
-[2026-03-11 05:23:14] [INFO] ==================================================
-[2026-03-11 05:23:14] [INFO] Cleaning coverage database files...
-[2026-03-11 05:23:16] [INFO] Removed coverage files: .coverage.project, coverage_project.json
-[2026-03-11 05:23:16] [INFO] Coverage database cleanup completed
-[2026-03-11 05:23:16] [INFO] Python 3.12.11 available
-[2026-03-11 05:23:16] [INFO] Checking for uv package manager...
-[2026-03-11 05:23:16] [INFO] Workspace dependencies synced successfully with uv
-[2026-03-11 05:23:16] [INFO] All 2 build tools available
-[2026-03-11 05:23:16] [INFO] All 22 directories ready
-[2026-03-11 05:23:16] [INFO] All 4 required directories present
-[2026-03-11 05:23:16] [INFO] Discovering available projects...
-[2026-03-11 05:23:16] [INFO] Discovered 1 valid project(s):
-[2026-03-11 05:23:16] [INFO]   → code_project: src, tests, scripts, manuscript
-[2026-03-11 05:23:16] [INFO]     Setting up: code_project
-[2026-03-11 05:23:16] [INFO] Environment variables configured (MPLBACKEND, PYTHONIOENCODING, PROJECT_ROOT)
-[2026-03-11 05:23:16] [INFO] 
-[2026-03-11 05:23:16] [INFO] ==================================================
-[2026-03-11 05:23:16] [INFO] Setup Summary
-[2026-03-11 05:23:16] [INFO] ==================================================
-[2026-03-11 05:23:16] [INFO] ✅ PASS: Python version
-[2026-03-11 05:23:16] [INFO] ✅ PASS: Dependencies
-[2026-03-11 05:23:16] [INFO] ✅ PASS: Build tools
-[2026-03-11 05:23:16] [INFO] ✅ PASS: Directory structure
-[2026-03-11 05:23:16] [INFO] ✅ PASS: Source structure
-[2026-03-11 05:23:16] [INFO] ✅ PASS: Project discovery
-[2026-03-11 05:23:16] [INFO] ✅ PASS: Environment variables
-[2026-03-11 05:23:16] [INFO] 
+[2026-03-11 14:19:09] [INFO] Found 2 projects: act_inf_metaanalysis, code_project
+[2026-03-11 14:19:09] [INFO] Executing core pipeline (no infra) for 2 projects
+[2026-03-11 14:19:09] [INFO] Skipping infrastructure tests (already run or disabled)
+[2026-03-11 14:19:09] [INFO] Project 1/2: act_inf_metaanalysis
+[2026-03-11 14:19:09] [INFO] Starting: Pipeline execution for act_inf_metaanalysis
+[2026-03-11 14:19:09] [INFO] Executing core pipeline for project 'act_inf_metaanalysis'
+[2026-03-11 14:19:09] [INFO] 
+[2026-03-11 14:19:09] [INFO] [1/8] Clean Output Directories (12% complete)
+[2026-03-11 14:19:09] [INFO]   Elapsed: 0s | ETA: 0s
+[2026-03-11 14:19:09] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-11 14:19:09] [INFO] Cleaning output directories...
+[2026-03-11 14:19:09] [INFO] Cleaning root-level directories from output/ directory...
+[2026-03-11 14:19:09] [INFO] Root output directory cleaned
+[2026-03-11 14:19:09] [INFO]   Cleaning projects/act_inf_metaanalysis/output/...
+[2026-03-11 14:19:09] [INFO]   Archived 1 log file(s) to logs/archive/
+[2026-03-11 14:19:09] [INFO]   Preserving file for incremental processing: data/corpus.jsonl
+[2026-03-11 14:19:09] [INFO]   Preserving file for incremental processing: data/nanopublications.jsonl
+[2026-03-11 14:19:09] [INFO]   Preserving file for incremental processing: data/nanopublications.trig
+[2026-03-11 14:19:09] [INFO]   Selectively cleaned data/: removed 11 files, preserved 3
+[2026-03-11 14:19:09] [INFO] Cleaned projects/act_inf_metaanalysis/output/ (recreated subdirectories)
+[2026-03-11 14:19:09] [INFO]   Creating output/act_inf_metaanalysis/...
+[2026-03-11 14:19:09] [INFO] Cleaned output/act_inf_metaanalysis/ (recreated subdirectories)
+[2026-03-11 14:19:09] [INFO] Output directories cleaned for project 'act_inf_metaanalysis' - fresh start
+[2026-03-11 14:19:09] [INFO] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/logs/pipeline.log
+[2026-03-11 14:19:09] [INFO] ✓ Stage 1 completed successfully (0.0s)
+[2026-03-11 14:19:09] [INFO] 
+[2026-03-11 14:19:09] [INFO] [2/8] Environment Setup (25% complete)
+[2026-03-11 14:19:09] [INFO]   Elapsed: 0s | ETA: 0s
+[2026-03-11 14:19:09] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-11 14:19:09] [INFO] 
+[2026-03-11 14:19:09] [INFO] ==================================================
+[2026-03-11 14:19:09] [INFO] STAGE 00: Environment Setup (Project: act_inf_metaanalysis)
+[2026-03-11 14:19:09] [INFO] ==================================================
+[2026-03-11 14:19:09] [INFO] Cleaning coverage database files...
+[2026-03-11 14:19:10] [INFO] Coverage database cleanup completed
+[2026-03-11 14:19:10] [INFO] Python 3.12.11 available
+[2026-03-11 14:19:10] [INFO] Checking for uv package manager...
+[2026-03-11 14:19:10] [INFO] Workspace dependencies synced successfully with uv
+[2026-03-11 14:19:10] [INFO] All 2 build tools available
+[2026-03-11 14:19:10] [INFO] All 22 directories ready
+[2026-03-11 14:19:10] [INFO] All 4 required directories present
+[2026-03-11 14:19:10] [INFO] Discovering available projects...
+[2026-03-11 14:19:10] [INFO] Discovered 2 valid project(s):
+[2026-03-11 14:19:10] [INFO]   → act_inf_metaanalysis: src, tests, scripts, manuscript
+[2026-03-11 14:19:10] [INFO]     Setting up: act_inf_metaanalysis
+[2026-03-11 14:19:10] [INFO]     code_project: src, tests, scripts, manuscript
+[2026-03-11 14:19:10] [INFO] Environment variables configured (MPLBACKEND, PYTHONIOENCODING, PROJECT_ROOT)
+[2026-03-11 14:19:10] [INFO] 
+[2026-03-11 14:19:10] [INFO] ==================================================
+[2026-03-11 14:19:10] [INFO] Setup Summary
+[2026-03-11 14:19:10] [INFO] ==================================================
+[2026-03-11 14:19:10] [INFO] ✅ PASS: Python version
+[2026-03-11 14:19:10] [INFO] ✅ PASS: Dependencies
+[2026-03-11 14:19:10] [INFO] ✅ PASS: Build tools
+[2026-03-11 14:19:10] [INFO] ✅ PASS: Directory structure
+[2026-03-11 14:19:10] [INFO] ✅ PASS: Source structure
+[2026-03-11 14:19:10] [INFO] ✅ PASS: Project discovery
+[2026-03-11 14:19:10] [INFO] ✅ PASS: Environment variables
+[2026-03-11 14:19:10] [INFO] 
 ✅ Environment setup complete - ready to proceed
-[2026-03-11 05:23:16] [INFO] ✓ Stage 2 completed successfully (1.9s)
-[2026-03-11 05:23:16] [INFO] 
-[2026-03-11 05:23:16] [INFO] [3/8] Project Tests (37% complete)
-[2026-03-11 05:23:16] [INFO]   Elapsed: 1s | ETA: 3s
-[2026-03-11 05:23:16] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-11 05:23:16] [INFO] 
-[2026-03-11 05:23:16] [INFO] ==================================================
-[2026-03-11 05:23:16] [INFO] STAGE 01: Run Tests (Project: code_project)
-[2026-03-11 05:23:16] [INFO] ==================================================
-[2026-03-11 05:23:16] [INFO] 
-[2026-03-11 05:23:16] [INFO] ==================================================
-[2026-03-11 05:23:16] [INFO] Phase 1/1: Project Tests (code_project) (Only)
-[2026-03-11 05:23:16] [INFO] ==================================================
-[2026-03-11 05:23:16] [INFO] Cleaning coverage database files...
-[2026-03-11 05:23:17] [INFO] Coverage database cleanup completed
-[2026-03-11 05:23:17] [INFO] 
+[2026-03-11 14:19:10] [INFO] ✓ Stage 2 completed successfully (1.4s)
+[2026-03-11 14:19:10] [INFO] 
+[2026-03-11 14:19:10] [INFO] [3/8] Project Tests (37% complete)
+[2026-03-11 14:19:10] [INFO]   Elapsed: 1s | ETA: 2s
+[2026-03-11 14:19:10] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-11 14:19:11] [INFO] 
+[2026-03-11 14:19:11] [INFO] ==================================================
+[2026-03-11 14:19:11] [INFO] STAGE 01: Run Tests (Project: act_inf_metaanalysis)
+[2026-03-11 14:19:11] [INFO] ==================================================
+[2026-03-11 14:19:11] [INFO] 
+[2026-03-11 14:19:11] [INFO] ==================================================
+[2026-03-11 14:19:11] [INFO] Phase 1/1: Project Tests (act_inf_metaanalysis) (Only)
+[2026-03-11 14:19:11] [INFO] ==================================================
+[2026-03-11 14:19:11] [INFO] Cleaning coverage database files...
+[2026-03-11 14:19:11] [INFO] Coverage database cleanup completed
+[2026-03-11 14:19:11] [INFO] 
+  Running project tests for 'act_inf_metaanalysis' (90% coverage threshold)...
+[2026-03-11 14:19:11] [INFO] Test path: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/tests
+[2026-03-11 14:19:11] [INFO] Coverage target: projects/act_inf_metaanalysis/src (90% minimum)
+[2026-03-11 14:19:11] [INFO] 
+  Discovering project 'act_inf_metaanalysis' tests...
+[2026-03-11 14:19:11] [WARNING] Could not parse test count from project 'act_inf_metaanalysis' test discovery
+Running project tests for 'act_inf_metaanalysis'
+./Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/.venv/bin/python3: No module named pytest
+[2026-03-11 14:19:11] [INFO] Running project tests for 'act_inf_metaanalysis'
+[2026-03-11 14:19:12] [WARNING] No project coverage percentage found
+[2026-03-11 14:19:12] [WARNING] Project: All tests passed
+[2026-03-11 14:19:12] [INFO] Project test suite completed in 1.9s
+[2026-03-11 14:19:12] [INFO] Project tests passed
+[2026-03-11 14:19:12] [INFO] Test report saved: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/reports/test_results.json
+[2026-03-11 14:19:12] [INFO] Test summary saved: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/reports/test_results.md
+[2026-03-11 14:19:12] [INFO] 
+[2026-03-11 14:19:12] [INFO] ==================================================
+[2026-03-11 14:19:12] [INFO] Test Execution Summary
+[2026-03-11 14:19:12] [INFO] ==================================================
+[2026-03-11 14:19:12] [INFO] 
+[2026-03-11 14:19:12] [INFO] Infrastructure Results:
+[2026-03-11 14:19:12] [INFO]   ⏭ Skipped (not run in this execution)
+[2026-03-11 14:19:12] [INFO]   📊 Coverage: N/A (tests not executed)
+[2026-03-11 14:19:12] [INFO] 
+[2026-03-11 14:19:12] [INFO] Project Results:
+[2026-03-11 14:19:12] [INFO]   ✓ Passed: 0
+[2026-03-11 14:19:12] [INFO]   📊 Coverage: ❌ 0.0% (significantly below 90.0% threshold by 90.0%)
+[2026-03-11 14:19:12] [INFO]     📊 Project coverage is 90.0% below threshold
+[2026-03-11 14:19:12] [INFO]       • Run with --cov-report=json to enable file-level coverage suggestions
+[2026-03-11 14:19:12] [INFO]       • Target: Reach 90.0% coverage minimum
+[2026-03-11 14:19:12] [INFO]       • Run: pytest --cov-report=html && open htmlcov/index.html
+[2026-03-11 14:19:12] [INFO] 
+[2026-03-11 14:19:12] [INFO] ================================================================
+[2026-03-11 14:19:12] [INFO] Infrastructure: ⏭ SKIPPED (intentionally skipped - use --infra-only to run infrastructure tests)
+[2026-03-11 14:19:12] [INFO] Project:       ✓ PASSED (0/0 tests, 0.0% coverage)
+[2026-03-11 14:19:12] [INFO] ----------------------------------------------------------------
+[2026-03-11 14:19:12] [INFO] Total:         ✓ PASSED (0/0 tests)
+[2026-03-11 14:19:12] [INFO] Coverage:      Infrastructure: N/A | Project: 0.0%
+[2026-03-11 14:19:12] [INFO] ================================================================
+[2026-03-11 14:19:12] [INFO] All tests passed - ready for analysis
+[2026-03-11 14:19:13] [INFO] ✓ Stage 3 completed successfully (2.3s)
+[2026-03-11 14:19:13] [INFO] 
+[2026-03-11 14:19:13] [INFO] [4/8] Project Analysis (50% complete)
+[2026-03-11 14:19:13] [INFO]   Elapsed: 3s | ETA: 3s
+[2026-03-11 14:19:13] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-11 14:19:13] [INFO] 
+[2026-03-11 14:19:13] [INFO] ==================================================
+[2026-03-11 14:19:13] [INFO] STAGE 02: Run Analysis (Project: act_inf_metaanalysis)
+[2026-03-11 14:19:13] [INFO] ==================================================
+[2026-03-11 14:19:13] [INFO] [STAGE-02] Discovering analysis scripts in projects/act_inf_metaanalysis/...
+[2026-03-11 14:19:13] [INFO] Found: 01_literature_search.py (project: act_inf_metaanalysis)
+[2026-03-11 14:19:13] [INFO] Found: 02_meta_analysis_pipeline.py (project: act_inf_metaanalysis)
+[2026-03-11 14:19:13] [INFO] Found: 03_build_knowledge_graph.py (project: act_inf_metaanalysis)
+[2026-03-11 14:19:13] [INFO] Found: 04_generate_figures.py (project: act_inf_metaanalysis)
+[2026-03-11 14:19:13] [INFO] Found: 05_inject_variables.py (project: act_inf_metaanalysis)
+[2026-03-11 14:19:13] [INFO] Found: 06_fulltext_assessment.py (project: act_inf_metaanalysis)
+[2026-03-11 14:19:13] [INFO] [STAGE-02] Executing analysis pipeline...
+[2026-03-11 14:19:13] [INFO]   [1/6] act_inf_metaanalysis/01_literature_search.py
+[2026-03-11 14:19:13] [INFO] 
+  Running: act_inf_metaanalysis/01_literature_search.py
+[2026-03-11 14:19:13] [INFO]   Using project-local venv: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/.venv
+[2026-03-11 14:19:13] [INFO] Starting: Execute 01_literature_search.py
+2026-03-11 14:19:13 [literature.corpus] INFO: Loaded 849 papers from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/data/corpus.jsonl
+2026-03-11 14:19:13 [literature_search] INFO: Resumed existing corpus with 849 papers from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/data/corpus.jsonl
+2026-03-11 14:19:13 [literature_search] INFO: Corpus already populated (849 papers) — skipping network searches. Use --clear-corpus to force a fresh search.
+2026-03-11 14:19:13 [literature.corpus] INFO: Saved 849 papers to /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/data/corpus.jsonl
+2026-03-11 14:19:13 [literature_search] INFO: --- Literature Search Summary (cached) ---
+2026-03-11 14:19:13 [literature_search] INFO: Total unique papers: 849
+2026-03-11 14:19:13 [literature_search] INFO: Corpus saved to: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/data/corpus.jsonl
+/Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/data/corpus.jsonl
+[2026-03-11 14:19:13] [INFO] Completed: Execute 01_literature_search.py (0.1s)
+[2026-03-11 14:19:13] [INFO]     ✅ Completed in 0s
+[2026-03-11 14:19:13] [INFO]   [2/6] act_inf_metaanalysis/02_meta_analysis_pipeline.py
+[2026-03-11 14:19:13] [INFO] 
+  Running: act_inf_metaanalysis/02_meta_analysis_pipeline.py
+[2026-03-11 14:19:13] [INFO]   Using project-local venv: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/.venv
+[2026-03-11 14:19:13] [INFO] Starting: Execute 02_meta_analysis_pipeline.py
+2026-03-11 14:19:13 [meta_analysis] INFO: Loading corpus from: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/data/corpus.jsonl
+2026-03-11 14:19:13 [literature.corpus] INFO: Loaded 849 papers from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/data/corpus.jsonl
+2026-03-11 14:19:13 [meta_analysis] INFO: Loaded 847 papers (filtered >= 2000)
+2026-03-11 14:19:13 [meta_analysis] INFO: --- Subfield Classification ---
+2026-03-11 14:19:13 [analysis.subfield_classifier] INFO: No subfield_keywords in config; using defaults
+2026-03-11 14:19:15 [meta_analysis] INFO: Subfield distribution: {'A1_formal': 67, 'A2_philosophy': 68, 'B_tools': 182, 'C1_neuroscience': 158, 'C2_robotics': 136, 'C3_language': 63, 'C4_psychiatry': 36, 'C5_biology': 137}
+2026-03-11 14:19:15 [meta_analysis] INFO: Subfield classification completed in 1.6s
+2026-03-11 14:19:15 [meta_analysis] INFO: --- Subfield Timeline ---
+2026-03-11 14:19:15 [meta_analysis] INFO: Subfield timeline: 8 subfields with temporal data
+2026-03-11 14:19:15 [meta_analysis] INFO: --- Temporal Analysis ---
+2026-03-11 14:19:15 [meta_analysis] INFO: Period: 2005-2026
+2026-03-11 14:19:15 [meta_analysis] INFO: Peak year: 2025
+2026-03-11 14:19:15 [meta_analysis] INFO: CAGR: 16.99%
+2026-03-11 14:19:15 [meta_analysis] INFO: Total papers with year: 845
+2026-03-11 14:19:15 [meta_analysis] INFO: Temporal analysis completed in 0.0s
+2026-03-11 14:19:15 [meta_analysis] INFO: --- Text Processing ---
+2026-03-11 14:19:15 [meta_analysis] INFO: TF-IDF matrix: 805 docs x 500 features (0.1s)
+2026-03-11 14:19:15 [meta_analysis] INFO: TF-IDF data saved: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/data/tfidf_data.json (3.7 MB)
+2026-03-11 14:19:15 [meta_analysis] INFO: --- Topic Modeling ---
+2026-03-11 14:19:15 [meta_analysis] INFO:   Topic 0: learning, agent, model, active, agents
+2026-03-11 14:19:15 [meta_analysis] INFO:   Topic 1: energy, free, inference, principle, variational
+2026-03-11 14:19:15 [meta_analysis] INFO:   Topic 2: predictive, cognitive, brain, prediction, processing
+2026-03-11 14:19:15 [meta_analysis] INFO:   Topic 3: states, beliefs, internal, external, markov
+2026-03-11 14:19:15 [meta_analysis] INFO:   Topic 4: fep, systems, ai, principle, networks
+2026-03-11 14:19:15 [meta_analysis] INFO: Topic modeling completed in 0.2s
+2026-03-11 14:19:15 [meta_analysis] INFO: --- Citation Network ---
+2026-03-11 14:19:15 [meta_analysis] INFO: Building reference normalization index...
+2026-03-11 14:19:15 [analysis.citation_network] INFO: Reference index built: 3236 entries from 847 papers
+2026-03-11 14:19:15 [meta_analysis] INFO: Reference index: 3236 entries from 847 papers
+2026-03-11 14:19:15 [meta_analysis] INFO: Reference normalization: 1678/30633 refs resolved to corpus papers (5.5%)
+2026-03-11 14:19:15 [meta_analysis] INFO: Network: 847 nodes, 1678 edges
+2026-03-11 14:19:15 [meta_analysis] INFO: Density: 0.0023
+2026-03-11 14:19:15 [meta_analysis] INFO: Components: 567
+2026-03-11 14:19:15 [meta_analysis] INFO: Citation network completed in 0.1s
+2026-03-11 14:19:15 [analysis.citation_network] INFO: Community detection: 571 communities from 847 nodes
+2026-03-11 14:19:15 [meta_analysis] INFO: Citation graph saved: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/data/citation_graph.gml (847 nodes, 1678 edges)
+2026-03-11 14:19:15 [meta_analysis] INFO: --- Pipeline Complete ---
+2026-03-11 14:19:15 [meta_analysis] INFO: Papers analyzed: 847
+2026-03-11 14:19:15 [meta_analysis] INFO: Subfields: 8
+2026-03-11 14:19:15 [meta_analysis] INFO: Topics extracted: 5
+2026-03-11 14:19:15 [meta_analysis] INFO: Citation edges: 1678
+2026-03-11 14:19:15 [meta_analysis] INFO: Total pipeline time: 2.2s
+2026-03-11 14:19:15 [meta_analysis] INFO: Output directory: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output
+/Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/data/subfield_classification.json
+/Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/data/subfield_timeline.json
+/Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/data/temporal_analysis.json
+/Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/data/topics.json
+/Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/data/citation_network.json
+[2026-03-11 14:19:15] [INFO] Completed: Execute 02_meta_analysis_pipeline.py (2.4s)
+[2026-03-11 14:19:15] [INFO]     ✅ Completed in 2s
+[2026-03-11 14:19:15] [INFO]   Progress: 2/6 (33%) - Elapsed: 2s | ETA: 5s
+[2026-03-11 14:19:15] [INFO]   [3/6] act_inf_metaanalysis/03_build_knowledge_graph.py
+[2026-03-11 14:19:15] [INFO] 
+  Running: act_inf_metaanalysis/03_build_knowledge_graph.py
+[2026-03-11 14:19:15] [INFO]   Using project-local venv: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/.venv
+[2026-03-11 14:19:15] [INFO] Starting: Execute 03_build_knowledge_graph.py
+2026-03-11 14:19:15 [build_knowledge_graph] INFO: Auto-loaded config: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/manuscript/config.yaml
+2026-03-11 14:19:15 [knowledge_graph.schema] INFO: Configured 8 hypothesis categories: ['FEP_UNIVERSALITY', 'AIF_OPTIMALITY', 'MARKOV_BLANKET_REALISM', 'PREDICTIVE_CODING', 'SCALABILITY', 'CLINICAL_UTILITY', 'MORPHOGENESIS', 'LANGUAGE_AIF']
+2026-03-11 14:19:15 [knowledge_graph.hypothesis] INFO: Active hypotheses: 8 configured
+2026-03-11 14:19:15 [build_knowledge_graph] INFO: Loading corpus from: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/data/corpus.jsonl
+2026-03-11 14:19:15 [literature.corpus] INFO: Loaded 849 papers from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/data/corpus.jsonl
+2026-03-11 14:19:15 [build_knowledge_graph] INFO: Loaded 849 papers (filtered >= 1960)
+2026-03-11 14:19:15 [build_knowledge_graph] INFO: Nanopublications already exist (2795 nanopubs from 798 papers) — skipping LLM extraction. Use --clear-assertions to force re-extraction.
+2026-03-11 14:19:15 [build_knowledge_graph] INFO: Loaded 2795 assertions from existing nanopublications
+2026-03-11 14:19:15 [build_knowledge_graph] INFO: Total assertions available: 2795
+2026-03-11 14:19:15 [build_knowledge_graph] INFO: Nanopublications on disk: 2795 (from 798 unique papers) → /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/data/nanopublications.jsonl
+2026-03-11 14:19:23 [knowledge_graph.nanopublication] INFO: 📄 Wrote 2795 nanopublication(s) in RDF/TriG → /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/data/nanopublications.trig
+2026-03-11 14:19:23 [build_knowledge_graph] INFO: --- Hypothesis Scoring ---
+2026-03-11 14:19:23 [build_knowledge_graph] INFO:   FEP_UNIVERSALITY: +0.384 (supports)
+2026-03-11 14:19:23 [build_knowledge_graph] INFO:   AIF_OPTIMALITY: +0.239 (supports)
+2026-03-11 14:19:23 [build_knowledge_graph] INFO:   MARKOV_BLANKET_REALISM: +0.219 (supports)
+2026-03-11 14:19:23 [build_knowledge_graph] INFO:   PREDICTIVE_CODING: +0.916 (supports)
+2026-03-11 14:19:23 [build_knowledge_graph] INFO:   SCALABILITY: +0.680 (supports)
+2026-03-11 14:19:23 [build_knowledge_graph] INFO:   CLINICAL_UTILITY: +0.419 (supports)
+2026-03-11 14:19:23 [build_knowledge_graph] INFO:   MORPHOGENESIS: +0.397 (supports)
+2026-03-11 14:19:23 [build_knowledge_graph] INFO:   LANGUAGE_AIF: +0.475 (supports)
+2026-03-11 14:19:23 [build_knowledge_graph] INFO: --- Temporal Trends ---
+2026-03-11 14:19:23 [build_knowledge_graph] INFO: --- Assertion Summary ---
+2026-03-11 14:19:23 [build_knowledge_graph] INFO: Assertion summary: {'supports': 1275, 'neutral': 1499, 'contradicts': 21}
+2026-03-11 14:19:23 [build_knowledge_graph] INFO: --- Knowledge Graph Summary ---
+2026-03-11 14:19:23 [build_knowledge_graph] INFO: Papers: 849
+2026-03-11 14:19:23 [build_knowledge_graph] INFO: Assertions: 2795 (from 798 unique papers)
+2026-03-11 14:19:23 [build_knowledge_graph] INFO: Hypotheses scored: 8
+2026-03-11 14:19:23 [build_knowledge_graph] INFO: Output directory: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output
+/Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/data/nanopublications.jsonl
+/Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/data/nanopublications.trig
+/Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/data/hypothesis_scores.json
+/Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/data/hypothesis_trends.json
+/Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/data/assertion_summary.json
+[2026-03-11 14:19:24] [INFO] Completed: Execute 03_build_knowledge_graph.py (8.4s)
+[2026-03-11 14:19:24] [INFO]     ✅ Completed in 8s
+[2026-03-11 14:19:24] [INFO]   [4/6] act_inf_metaanalysis/04_generate_figures.py
+[2026-03-11 14:19:24] [INFO] 
+  Running: act_inf_metaanalysis/04_generate_figures.py
+[2026-03-11 14:19:24] [INFO]   Using project-local venv: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/.venv
+[2026-03-11 14:19:24] [INFO] Starting: Execute 04_generate_figures.py
+2026-03-11 14:19:24 [generate_figures] INFO: --- Field Overview Figures ---
+2026-03-11 14:19:24 [generate_figures] INFO:   Generated: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/subfield_distribution.png
+2026-03-11 14:19:24 [generate_figures] INFO: --- Temporal Figures ---
+2026-03-11 14:19:24 [generate_figures] INFO:   Generated: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/growth_curve.png
+2026-03-11 14:19:24 [generate_figures] INFO:   Generated: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/subfield_timeline.png
+2026-03-11 14:19:24 [generate_figures] INFO: --- Citation Network Figures ---
+2026-03-11 14:19:25 [generate_figures] INFO:   Generated: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/citation_network.png
+2026-03-11 14:19:25 [generate_figures] INFO:   Generated: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/degree_distribution.png
+2026-03-11 14:19:25 [generate_figures] INFO: --- Hypothesis Figures ---
+2026-03-11 14:19:25 [generate_figures] INFO:   Generated: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/hypothesis_dashboard.png
+2026-03-11 14:19:25 [generate_figures] INFO:   Generated: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/evidence_timeline.png
+2026-03-11 14:19:25 [generate_figures] INFO: --- Advanced Figures ---
+2026-03-11 14:19:26 [visualization.advanced_plots] INFO: 📊 Word cloud saved: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/word_cloud.png (40 terms)
+2026-03-11 14:19:26 [generate_figures] INFO:   Generated: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/word_cloud.png
+2026-03-11 14:19:26 [visualization.advanced_plots] INFO: 📊 Topic-term bars saved: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/topic_term_bars.png (5 topics)
+2026-03-11 14:19:26 [generate_figures] INFO:   Generated: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/topic_term_bars.png
+2026-03-11 14:19:27 [visualization.advanced_plots] INFO: 📊 PCA embeddings saved: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/pca_embeddings.png (805 docs)
+2026-03-11 14:19:27 [generate_figures] INFO:   Generated: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/pca_embeddings.png
+2026-03-11 14:19:27 [visualization.advanced_plots] INFO: 📊 Term heatmap saved: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/term_heatmap.png (20 terms × 8 subfields)
+2026-03-11 14:19:27 [generate_figures] INFO:   Generated: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/term_heatmap.png
+2026-03-11 14:19:27 [visualization.advanced_plots] INFO: 📊 Dendrogram saved: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/dendrogram.png (8 subfields)
+2026-03-11 14:19:27 [generate_figures] INFO:   Generated: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/dendrogram.png
+2026-03-11 14:19:28 [visualization.advanced_plots] INFO: 📊 Co-occurrence matrix saved: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/cooccurrence_matrix.png (30 terms)
+2026-03-11 14:19:28 [generate_figures] INFO:   Generated: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/cooccurrence_matrix.png
+2026-03-11 14:19:28 [generate_figures] INFO: --- Assertion Figures ---
+2026-03-11 14:19:28 [generate_figures] INFO:   Generated: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/assertion_breakdown.png
+2026-03-11 14:19:28 [generate_figures] INFO:   Generated: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/assertion_summary.png
+2026-03-11 14:19:28 [generate_figures] INFO: --- Summary: 16 figures generated ---
+2026-03-11 14:19:28 [generate_figures] INFO: --- Registering Figures ---
+2026-03-11 14:19:28 [generate_figures] INFO:   Registered field_summary.png -> fig:field_summary
+2026-03-11 14:19:28 [generate_figures] INFO:   Registered subfield_distribution.png -> fig:subfield_distribution
+2026-03-11 14:19:28 [generate_figures] INFO:   Registered growth_curve.png -> fig:growth_curve
+2026-03-11 14:19:28 [generate_figures] INFO:   Registered subfield_timeline.png -> fig:subfield_timeline
+2026-03-11 14:19:28 [generate_figures] INFO:   Registered citation_network.png -> fig:citation_network
+2026-03-11 14:19:28 [generate_figures] INFO:   Registered degree_distribution.png -> fig:degree_distribution
+2026-03-11 14:19:28 [generate_figures] INFO:   Registered hypothesis_dashboard.png -> fig:hypothesis_dashboard
+2026-03-11 14:19:28 [generate_figures] INFO:   Registered evidence_timeline.png -> fig:evidence_timeline
+2026-03-11 14:19:28 [generate_figures] INFO:   Registered word_cloud.png -> fig:word_cloud
+2026-03-11 14:19:28 [generate_figures] INFO:   Registered topic_term_bars.png -> fig:topic_term_bars
+2026-03-11 14:19:28 [generate_figures] INFO:   Registered pca_embeddings.png -> fig:pca_embeddings
+2026-03-11 14:19:28 [generate_figures] INFO:   Registered term_heatmap.png -> fig:term_heatmap
+2026-03-11 14:19:28 [generate_figures] INFO:   Registered dendrogram.png -> fig:dendrogram
+2026-03-11 14:19:28 [generate_figures] INFO:   Registered cooccurrence_matrix.png -> fig:cooccurrence_matrix
+2026-03-11 14:19:28 [generate_figures] INFO:   Registered assertion_breakdown.png -> fig:assertion_breakdown
+2026-03-11 14:19:28 [generate_figures] INFO:   Registered assertion_summary.png -> fig:assertion_summary
+  Generated: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/field_summary.png
+/Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/field_summary.png
+/Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/subfield_distribution.png
+/Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/growth_curve.png
+/Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/subfield_timeline.png
+/Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/citation_network.png
+/Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/degree_distribution.png
+/Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/hypothesis_dashboard.png
+/Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/evidence_timeline.png
+/Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/word_cloud.png
+/Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/topic_term_bars.png
+/Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/pca_embeddings.png
+/Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/term_heatmap.png
+/Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/dendrogram.png
+/Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/cooccurrence_matrix.png
+/Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/assertion_breakdown.png
+/Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/figures/assertion_summary.png
+[2026-03-11 14:19:28] [INFO] Completed: Execute 04_generate_figures.py (4.2s)
+[2026-03-11 14:19:28] [INFO]     ✅ Completed in 4s
+[2026-03-11 14:19:28] [INFO]   Progress: 4/6 (66%) - Elapsed: 15s | ETA: 5s
+[2026-03-11 14:19:28] [INFO]   [5/6] act_inf_metaanalysis/05_inject_variables.py
+[2026-03-11 14:19:28] [INFO] 
+  Running: act_inf_metaanalysis/05_inject_variables.py
+[2026-03-11 14:19:28] [INFO]   Using project-local venv: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/.venv
+[2026-03-11 14:19:28] [INFO] Starting: Execute 05_inject_variables.py
+[2026-03-11 14:19:28] [INFO] Starting: Manuscript variable injection
+[2026-03-11 14:19:28] [INFO] Computing variables from pipeline output: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output
+[2026-03-11 14:19:28] [INFO] CORPUS_SIZE = 849
+[2026-03-11 14:19:28] [INFO] Computed 123 template variables from pipeline output
+[2026-03-11 14:19:28] [INFO] Computed 123 template variables
+[2026-03-11 14:19:28] [INFO] Injected 5 variables into 00_abstract.md
+[2026-03-11 14:19:28] [INFO] Injected 4 variables into 01_introduction.md
+[2026-03-11 14:19:28] [INFO] Injected 1 variables into 02_methods_overview.md
+[2026-03-11 14:19:28] [INFO] Injected 3 variables into 02a_methods_retrieval.md
+[2026-03-11 14:19:28] [INFO] Injected 3 variables into 02b_methods_extraction.md
+[2026-03-11 14:19:28] [INFO] Injected 1 variables into 02e_methods_viz_injection.md
+[2026-03-11 14:19:28] [WARNING] Unresolved variables in 02e_methods_viz_injection.md: VAR_NAME
+[2026-03-11 14:19:28] [INFO] Injected 61 variables into 03_results_hypothesis.md
+[2026-03-11 14:19:28] [INFO] Injected 57 variables into 03a_results_field_overview.md
+[2026-03-11 14:19:28] [INFO] Injected 26 variables into 03b_results_subfields.md
+[2026-03-11 14:19:28] [INFO] Injected 4 variables into 03c_results_text_analytics.md
+[2026-03-11 14:19:28] [INFO] Injected 20 variables into 03d_results_citation_network.md
+[2026-03-11 14:19:28] [INFO] Injected 14 variables into 04_conclusion.md
+[2026-03-11 14:19:28] [INFO] Injected 1 variables into 06_appendix_technical.md
+[2026-03-11 14:19:28] [WARNING] Unresolved template variables found:
+[2026-03-11 14:19:28] [WARNING]   02e_methods_viz_injection.md: VAR_NAME
+[2026-03-11 14:19:28] [INFO] Variable injection complete: 200 variables injected across 13 files
+[2026-03-11 14:19:28] [INFO] Rendered manuscript files written to: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript
+[2026-03-11 14:19:28] [INFO] Completed: Execute 05_inject_variables.py (0.1s)
+[2026-03-11 14:19:28] [INFO]     ✅ Completed in 0s
+[2026-03-11 14:19:28] [INFO]   [6/6] act_inf_metaanalysis/06_fulltext_assessment.py
+[2026-03-11 14:19:28] [INFO] 
+  Running: act_inf_metaanalysis/06_fulltext_assessment.py
+[2026-03-11 14:19:28] [INFO]   Using project-local venv: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/.venv
+[2026-03-11 14:19:28] [INFO] Starting: Execute 06_fulltext_assessment.py
+2026-03-11 14:19:28 [fulltext_assessment] INFO: Loading corpus from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/data/corpus.jsonl
+2026-03-11 14:19:28 [literature.corpus] INFO: Loaded 849 papers from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/data/corpus.jsonl
+2026-03-11 14:19:28 [fulltext_assessment] INFO: Loaded 849 papers
+2026-03-11 14:19:28 [fulltext_assessment] INFO: Assessment saved to /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/data/fulltext_assessment.json
+
+=== Full-Text Availability Assessment ===
+Total papers: 849
+
+Abstract coverage: 807/849 (95.1%)
+
+Open access: 765/849 (90.1%)
+  Not OA: 84
+  Unknown: 0
+
+PDF availability: 727/849 (85.6%)
+
+Full-text source breakdown:
+  arxiv: 463
+  publisher: 156
+  none: 122
+  repository: 48
+  semantic_scholar: 44
+  openalex: 16
+
+Full-text format:
+  latex_source_and_pdf: 491 (57.8%)
+  publisher_pdf_only: 251 (29.6%)
+  no_fulltext_available: 107 (12.6%)
+
+Identifier coverage:
+  doi: 462
+  arxiv_id: 491
+  s2_id: 80
+  openalex_id: 306
+
+Top PDF domains:
+  arxiv.org: 506
+  www.frontiersin.org: 58
+  link.springer.com: 21
+  www.mdpi.com: 15
+  journals.plos.org: 14
+  doi.org: 10
+  academic.oup.com: 9
+  royalsocietypublishing.org: 8
+  psyarxiv.com: 8
+  www.nature.com: 7
+[2026-03-11 14:19:28] [INFO] Completed: Execute 06_fulltext_assessment.py (0.1s)
+[2026-03-11 14:19:28] [INFO]     ✅ Completed in 0s
+[2026-03-11 14:19:28] [INFO]   Progress: 6/6 (100%) - Elapsed: 15s | ETA: 0s
+[2026-03-11 14:19:28] [INFO] Analysis scripts completed: 6/6 (act_inf_metaanalysis/01_literature_search.py, act_inf_metaanalysis/02_meta_analysis_pipeline.py, act_inf_metaanalysis/03_build_knowledge_graph.py, act_inf_metaanalysis/04_generate_figures.py, act_inf_metaanalysis/05_inject_variables.py, act_inf_metaanalysis/06_fulltext_assessment.py)
+[2026-03-11 14:19:28] [INFO] [STAGE-02] Verifying analysis outputs for projects/act_inf_metaanalysis/...
+[2026-03-11 14:19:28] [INFO] Output directory has 17 file(s): figures
+[2026-03-11 14:19:28] [INFO] Output directory has 14 file(s): data
+[2026-03-11 14:19:28] [INFO] Analysis complete - ready for PDF rendering
+[2026-03-11 14:19:28] [INFO] ✓ Stage 4 completed successfully (15.6s)
+[2026-03-11 14:19:28] [INFO] 
+[2026-03-11 14:19:28] [INFO] [5/8] PDF Rendering (62% complete)
+[2026-03-11 14:19:28] [INFO]   Elapsed: 19s | ETA: 11s
+[2026-03-11 14:19:28] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-11 14:19:28] [INFO] 
+[2026-03-11 14:19:28] [INFO] ==================================================
+[2026-03-11 14:19:28] [INFO] STAGE 03: Render PDF (Project: act_inf_metaanalysis)
+[2026-03-11 14:19:28] [INFO] ==================================================
+[2026-03-11 14:19:28] [INFO] Executing PDF rendering pipeline for project 'act_inf_metaanalysis'...
+[2026-03-11 14:19:28] [INFO] Rendering from injected manuscript directory: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript
+[2026-03-11 14:19:28] [INFO] Running pre-flight LaTeX package validation...
+[2026-03-11 14:19:28] [INFO] Validating 12 required and 11 optional LaTeX packages...
+[2026-03-11 14:19:30] [INFO] ✓ All LaTeX packages available
+[2026-03-11 14:19:30] [INFO] Verifying figures from analysis stage...
+[2026-03-11 14:19:30] [INFO] Found 16 figure(s) in figures/
+[2026-03-11 14:19:30] [INFO]   Found figures: assertion_breakdown.png, assertion_summary.png, citation_network.png
+[2026-03-11 14:19:30] [INFO]   ... and 13 more
+[2026-03-11 14:19:30] [INFO] Discovered 19 manuscript file(s):
+[2026-03-11 14:19:30] [INFO]   Main sections (17):
+[2026-03-11 14:19:30] [INFO]     • 00_abstract.md
+[2026-03-11 14:19:30] [INFO]     • 01_introduction.md
+[2026-03-11 14:19:30] [INFO]     • 02_methods_overview.md
+[2026-03-11 14:19:30] [INFO]     • 02a_methods_retrieval.md
+[2026-03-11 14:19:30] [INFO]     • 02b_methods_extraction.md
+[2026-03-11 14:19:30] [INFO]     • 02c_methods_bibliometrics.md
+[2026-03-11 14:19:30] [INFO]     • 02d_methods_knowledge_graph.md
+[2026-03-11 14:19:30] [INFO]     • 02e_methods_viz_injection.md
+[2026-03-11 14:19:30] [INFO]     • 03_results_hypothesis.md
+[2026-03-11 14:19:30] [INFO]     • 03a_results_field_overview.md
+[2026-03-11 14:19:30] [INFO]     • 03b_results_subfields.md
+[2026-03-11 14:19:30] [INFO]     • 03c_results_text_analytics.md
+[2026-03-11 14:19:30] [INFO]     • 03d_results_citation_network.md
+[2026-03-11 14:19:30] [INFO]     • 04_conclusion.md
+[2026-03-11 14:19:30] [INFO]     • 04a_discussion.md
+[2026-03-11 14:19:30] [INFO]     • 05_appendix_tooling.md
+[2026-03-11 14:19:30] [INFO]     • 06_appendix_technical.md
+[2026-03-11 14:19:30] [INFO]   Glossary (1):
+[2026-03-11 14:19:30] [INFO]     • 98_symbols_glossary.md
+[2026-03-11 14:19:30] [INFO]   References (1):
+[2026-03-11 14:19:30] [INFO]     • 99_references.md
+[2026-03-11 14:19:30] [INFO] 
+============================================================
+[2026-03-11 14:19:30] [INFO] MANUSCRIPT COMPOSITION - Project: act_inf_metaanalysis
+[2026-03-11 14:19:30] [INFO] ============================================================
+[2026-03-11 14:19:30] [INFO] Markdown sections (19):
+[2026-03-11 14:19:30] [INFO]   • 00_abstract.md                           (   2.4 KB)
+[2026-03-11 14:19:30] [INFO]   • 01_introduction.md                       (  11.7 KB)
+[2026-03-11 14:19:30] [INFO]   • 02_methods_overview.md                   (   1.6 KB)
+[2026-03-11 14:19:30] [INFO]   • 02a_methods_retrieval.md                 (   3.6 KB)
+[2026-03-11 14:19:30] [INFO]   • 02b_methods_extraction.md                (   9.2 KB)
+[2026-03-11 14:19:30] [INFO]   • 02c_methods_bibliometrics.md             (   2.9 KB)
+[2026-03-11 14:19:30] [INFO]   • 02d_methods_knowledge_graph.md           (   7.0 KB)
+[2026-03-11 14:19:30] [INFO]   • 02e_methods_viz_injection.md             (   2.2 KB)
+[2026-03-11 14:19:30] [INFO]   • 03_results_hypothesis.md                 (   9.1 KB)
+[2026-03-11 14:19:30] [INFO]   • 03a_results_field_overview.md            (   6.2 KB)
+[2026-03-11 14:19:30] [INFO]   • 03b_results_subfields.md                 (  11.8 KB)
+[2026-03-11 14:19:30] [INFO]   • 03c_results_text_analytics.md            (   6.3 KB)
+[2026-03-11 14:19:30] [INFO]   • 03d_results_citation_network.md          (   3.3 KB)
+[2026-03-11 14:19:30] [INFO]   • 04_conclusion.md                         (  12.4 KB)
+[2026-03-11 14:19:30] [INFO]   • 04a_discussion.md                        (   6.0 KB)
+[2026-03-11 14:19:30] [INFO]   • 05_appendix_tooling.md                   (  20.2 KB)
+[2026-03-11 14:19:30] [INFO]   • 06_appendix_technical.md                 (   8.2 KB)
+[2026-03-11 14:19:30] [INFO]   • 98_symbols_glossary.md                   (   8.8 KB)
+[2026-03-11 14:19:30] [INFO]   • 99_references.md                         (   0.3 KB)
+[2026-03-11 14:19:30] [INFO]   Total markdown:                          ( 133.2 KB)
+[2026-03-11 14:19:30] [INFO] ============================================================
+
+[2026-03-11 14:19:30] [INFO] Initialized RenderManager from infrastructure.rendering
+[2026-03-11 14:19:30] [INFO]   [1/19] 00_abstract.md
+[2026-03-11 14:19:30] [INFO] Rendering Markdown file: 00_abstract.md
+[2026-03-11 14:19:30] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/00_abstract.md
+[2026-03-11 14:19:30] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/slides/00_abstract_slides.tex with xelatex
+[2026-03-11 14:19:32] [INFO] LaTeX compilation completed in 2.01s
+[2026-03-11 14:19:32] [INFO] Generated beamer slides: 00_abstract_slides.pdf
+[2026-03-11 14:19:32] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/00_abstract.md
+[2026-03-11 14:19:32] [INFO] Successfully rendered 2 format(s) for 00_abstract.md
+[2026-03-11 14:19:32] [INFO] Generated: 00_abstract_slides.pdf
+[2026-03-11 14:19:32] [INFO] Generated: 00_abstract.html
+[2026-03-11 14:19:32] [INFO]     ✅ Completed in 2s
+[2026-03-11 14:19:32] [INFO]   [2/19] 01_introduction.md
+[2026-03-11 14:19:32] [INFO] Rendering Markdown file: 01_introduction.md
+[2026-03-11 14:19:32] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/01_introduction.md
+[2026-03-11 14:19:33] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/slides/01_introduction_slides.tex with xelatex
+[2026-03-11 14:19:34] [INFO] LaTeX compilation completed in 1.96s
+[2026-03-11 14:19:34] [INFO] Generated beamer slides: 01_introduction_slides.pdf
+[2026-03-11 14:19:34] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/01_introduction.md
+[2026-03-11 14:19:35] [INFO] Successfully rendered 2 format(s) for 01_introduction.md
+[2026-03-11 14:19:35] [INFO] Generated: 01_introduction_slides.pdf
+[2026-03-11 14:19:35] [INFO] Generated: 01_introduction.html
+[2026-03-11 14:19:35] [INFO]     ✅ Completed in 2s
+[2026-03-11 14:19:35] [INFO]   [3/19] 02_methods_overview.md
+[2026-03-11 14:19:35] [INFO] Rendering Markdown file: 02_methods_overview.md
+[2026-03-11 14:19:35] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/02_methods_overview.md
+[2026-03-11 14:19:35] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/slides/02_methods_overview_slides.tex with xelatex
+[2026-03-11 14:19:37] [INFO] LaTeX compilation completed in 1.95s
+[2026-03-11 14:19:37] [INFO] Generated beamer slides: 02_methods_overview_slides.pdf
+[2026-03-11 14:19:37] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/02_methods_overview.md
+[2026-03-11 14:19:37] [INFO] Successfully rendered 2 format(s) for 02_methods_overview.md
+[2026-03-11 14:19:37] [INFO] Generated: 02_methods_overview_slides.pdf
+[2026-03-11 14:19:37] [INFO] Generated: 02_methods_overview.html
+[2026-03-11 14:19:37] [INFO]     ✅ Completed in 2s
+[2026-03-11 14:19:37] [INFO]   [4/19] 02a_methods_retrieval.md
+[2026-03-11 14:19:37] [INFO] Rendering Markdown file: 02a_methods_retrieval.md
+[2026-03-11 14:19:37] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/02a_methods_retrieval.md
+[2026-03-11 14:19:37] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/slides/02a_methods_retrieval_slides.tex with xelatex
+[2026-03-11 14:19:39] [INFO] LaTeX compilation completed in 1.94s
+[2026-03-11 14:19:39] [INFO] Generated beamer slides: 02a_methods_retrieval_slides.pdf
+[2026-03-11 14:19:39] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/02a_methods_retrieval.md
+[2026-03-11 14:19:39] [INFO] Successfully rendered 2 format(s) for 02a_methods_retrieval.md
+[2026-03-11 14:19:39] [INFO] Generated: 02a_methods_retrieval_slides.pdf
+[2026-03-11 14:19:39] [INFO] Generated: 02a_methods_retrieval.html
+[2026-03-11 14:19:39] [INFO]     ✅ Completed in 2s
+[2026-03-11 14:19:39] [INFO]   [5/19] 02b_methods_extraction.md
+[2026-03-11 14:19:39] [INFO] Rendering Markdown file: 02b_methods_extraction.md
+[2026-03-11 14:19:39] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/02b_methods_extraction.md
+[2026-03-11 14:19:39] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/slides/02b_methods_extraction_slides.tex with xelatex
+[2026-03-11 14:19:41] [INFO] LaTeX compilation completed in 2.10s
+[2026-03-11 14:19:41] [INFO] Generated beamer slides: 02b_methods_extraction_slides.pdf
+[2026-03-11 14:19:41] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/02b_methods_extraction.md
+[2026-03-11 14:19:41] [INFO] Successfully rendered 2 format(s) for 02b_methods_extraction.md
+[2026-03-11 14:19:41] [INFO] Generated: 02b_methods_extraction_slides.pdf
+[2026-03-11 14:19:41] [INFO] Generated: 02b_methods_extraction.html
+[2026-03-11 14:19:41] [INFO]     ✅ Completed in 2s
+[2026-03-11 14:19:41] [INFO]   [6/19] 02c_methods_bibliometrics.md
+[2026-03-11 14:19:41] [INFO] Rendering Markdown file: 02c_methods_bibliometrics.md
+[2026-03-11 14:19:41] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/02c_methods_bibliometrics.md
+[2026-03-11 14:19:41] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/slides/02c_methods_bibliometrics_slides.tex with xelatex
+[2026-03-11 14:19:43] [INFO] LaTeX compilation completed in 1.99s
+[2026-03-11 14:19:43] [INFO] Generated beamer slides: 02c_methods_bibliometrics_slides.pdf
+[2026-03-11 14:19:43] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/02c_methods_bibliometrics.md
+[2026-03-11 14:19:43] [INFO] Successfully rendered 2 format(s) for 02c_methods_bibliometrics.md
+[2026-03-11 14:19:43] [INFO] Generated: 02c_methods_bibliometrics_slides.pdf
+[2026-03-11 14:19:43] [INFO] Generated: 02c_methods_bibliometrics.html
+[2026-03-11 14:19:43] [INFO]     ✅ Completed in 2s
+[2026-03-11 14:19:43] [INFO]   [7/19] 02d_methods_knowledge_graph.md
+[2026-03-11 14:19:43] [INFO] Rendering Markdown file: 02d_methods_knowledge_graph.md
+[2026-03-11 14:19:43] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/02d_methods_knowledge_graph.md
+[2026-03-11 14:19:43] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/slides/02d_methods_knowledge_graph_slides.tex with xelatex
+[2026-03-11 14:19:45] [INFO] LaTeX compilation completed in 2.08s
+[2026-03-11 14:19:45] [INFO] Generated beamer slides: 02d_methods_knowledge_graph_slides.pdf
+[2026-03-11 14:19:45] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/02d_methods_knowledge_graph.md
+[2026-03-11 14:19:45] [INFO] Successfully rendered 2 format(s) for 02d_methods_knowledge_graph.md
+[2026-03-11 14:19:45] [INFO] Generated: 02d_methods_knowledge_graph_slides.pdf
+[2026-03-11 14:19:45] [INFO] Generated: 02d_methods_knowledge_graph.html
+[2026-03-11 14:19:45] [INFO]     ✅ Completed in 2s
+[2026-03-11 14:19:45] [INFO]   [8/19] 02e_methods_viz_injection.md
+[2026-03-11 14:19:45] [INFO] Rendering Markdown file: 02e_methods_viz_injection.md
+[2026-03-11 14:19:45] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/02e_methods_viz_injection.md
+[2026-03-11 14:19:45] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/slides/02e_methods_viz_injection_slides.tex with xelatex
+[2026-03-11 14:19:47] [INFO] LaTeX compilation completed in 1.93s
+[2026-03-11 14:19:47] [INFO] Generated beamer slides: 02e_methods_viz_injection_slides.pdf
+[2026-03-11 14:19:47] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/02e_methods_viz_injection.md
+[2026-03-11 14:19:47] [INFO] Successfully rendered 2 format(s) for 02e_methods_viz_injection.md
+[2026-03-11 14:19:47] [INFO] Generated: 02e_methods_viz_injection_slides.pdf
+[2026-03-11 14:19:47] [INFO] Generated: 02e_methods_viz_injection.html
+[2026-03-11 14:19:47] [INFO]     ✅ Completed in 1s
+[2026-03-11 14:19:47] [INFO]   [9/19] 03_results_hypothesis.md
+[2026-03-11 14:19:47] [INFO] Rendering Markdown file: 03_results_hypothesis.md
+[2026-03-11 14:19:47] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/03_results_hypothesis.md
+[2026-03-11 14:19:47] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/slides/03_results_hypothesis_slides.tex with xelatex
+[2026-03-11 14:19:51] [INFO] LaTeX compilation completed in 3.20s
+[2026-03-11 14:19:51] [INFO] Generated beamer slides: 03_results_hypothesis_slides.pdf
+[2026-03-11 14:19:51] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/03_results_hypothesis.md
+[2026-03-11 14:19:51] [INFO] Successfully rendered 2 format(s) for 03_results_hypothesis.md
+[2026-03-11 14:19:51] [INFO] Generated: 03_results_hypothesis_slides.pdf
+[2026-03-11 14:19:51] [INFO] Generated: 03_results_hypothesis.html
+[2026-03-11 14:19:51] [INFO]     ✅ Completed in 3s
+[2026-03-11 14:19:51] [INFO]   [10/19] 03a_results_field_overview.md
+[2026-03-11 14:19:51] [INFO] Rendering Markdown file: 03a_results_field_overview.md
+[2026-03-11 14:19:51] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/03a_results_field_overview.md
+[2026-03-11 14:19:51] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/slides/03a_results_field_overview_slides.tex with xelatex
+[2026-03-11 14:19:54] [INFO] LaTeX compilation completed in 3.16s
+[2026-03-11 14:19:54] [INFO] Generated beamer slides: 03a_results_field_overview_slides.pdf
+[2026-03-11 14:19:54] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/03a_results_field_overview.md
+[2026-03-11 14:19:54] [INFO] Successfully rendered 2 format(s) for 03a_results_field_overview.md
+[2026-03-11 14:19:54] [INFO] Generated: 03a_results_field_overview_slides.pdf
+[2026-03-11 14:19:54] [INFO] Generated: 03a_results_field_overview.html
+[2026-03-11 14:19:54] [INFO]     ✅ Completed in 3s
+[2026-03-11 14:19:54] [INFO]   [11/19] 03b_results_subfields.md
+[2026-03-11 14:19:54] [INFO] Rendering Markdown file: 03b_results_subfields.md
+[2026-03-11 14:19:54] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/03b_results_subfields.md
+[2026-03-11 14:19:54] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/slides/03b_results_subfields_slides.tex with xelatex
+[2026-03-11 14:19:56] [INFO] LaTeX compilation completed in 2.07s
+[2026-03-11 14:19:56] [INFO] Generated beamer slides: 03b_results_subfields_slides.pdf
+[2026-03-11 14:19:56] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/03b_results_subfields.md
+[2026-03-11 14:19:56] [INFO] Successfully rendered 2 format(s) for 03b_results_subfields.md
+[2026-03-11 14:19:56] [INFO] Generated: 03b_results_subfields_slides.pdf
+[2026-03-11 14:19:56] [INFO] Generated: 03b_results_subfields.html
+[2026-03-11 14:19:56] [INFO]     ✅ Completed in 2s
+[2026-03-11 14:19:56] [INFO]   [12/19] 03c_results_text_analytics.md
+[2026-03-11 14:19:56] [INFO] Rendering Markdown file: 03c_results_text_analytics.md
+[2026-03-11 14:19:56] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/03c_results_text_analytics.md
+[2026-03-11 14:19:56] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/slides/03c_results_text_analytics_slides.tex with xelatex
+[2026-03-11 14:20:00] [INFO] LaTeX compilation completed in 4.18s
+[2026-03-11 14:20:00] [INFO] Generated beamer slides: 03c_results_text_analytics_slides.pdf
+[2026-03-11 14:20:00] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/03c_results_text_analytics.md
+[2026-03-11 14:20:00] [INFO] Successfully rendered 2 format(s) for 03c_results_text_analytics.md
+[2026-03-11 14:20:00] [INFO] Generated: 03c_results_text_analytics_slides.pdf
+[2026-03-11 14:20:00] [INFO] Generated: 03c_results_text_analytics.html
+[2026-03-11 14:20:00] [INFO]     ✅ Completed in 4s
+[2026-03-11 14:20:00] [INFO]   [13/19] 03d_results_citation_network.md
+[2026-03-11 14:20:00] [INFO] Rendering Markdown file: 03d_results_citation_network.md
+[2026-03-11 14:20:00] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/03d_results_citation_network.md
+[2026-03-11 14:20:00] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/slides/03d_results_citation_network_slides.tex with xelatex
+[2026-03-11 14:20:03] [INFO] LaTeX compilation completed in 2.47s
+[2026-03-11 14:20:03] [INFO] Generated beamer slides: 03d_results_citation_network_slides.pdf
+[2026-03-11 14:20:03] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/03d_results_citation_network.md
+[2026-03-11 14:20:03] [INFO] Successfully rendered 2 format(s) for 03d_results_citation_network.md
+[2026-03-11 14:20:03] [INFO] Generated: 03d_results_citation_network_slides.pdf
+[2026-03-11 14:20:03] [INFO] Generated: 03d_results_citation_network.html
+[2026-03-11 14:20:03] [INFO]     ✅ Completed in 2s
+[2026-03-11 14:20:03] [INFO]   [14/19] 04_conclusion.md
+[2026-03-11 14:20:03] [INFO] Rendering Markdown file: 04_conclusion.md
+[2026-03-11 14:20:03] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/04_conclusion.md
+[2026-03-11 14:20:03] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/slides/04_conclusion_slides.tex with xelatex
+[2026-03-11 14:20:05] [INFO] LaTeX compilation completed in 1.95s
+[2026-03-11 14:20:05] [INFO] Generated beamer slides: 04_conclusion_slides.pdf
+[2026-03-11 14:20:05] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/04_conclusion.md
+[2026-03-11 14:20:05] [INFO] Successfully rendered 2 format(s) for 04_conclusion.md
+[2026-03-11 14:20:05] [INFO] Generated: 04_conclusion_slides.pdf
+[2026-03-11 14:20:05] [INFO] Generated: 04_conclusion.html
+[2026-03-11 14:20:05] [INFO]     ✅ Completed in 2s
+[2026-03-11 14:20:05] [INFO]   [15/19] 04a_discussion.md
+[2026-03-11 14:20:05] [INFO] Rendering Markdown file: 04a_discussion.md
+[2026-03-11 14:20:05] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/04a_discussion.md
+[2026-03-11 14:20:05] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/slides/04a_discussion_slides.tex with xelatex
+[2026-03-11 14:20:07] [INFO] LaTeX compilation completed in 1.96s
+[2026-03-11 14:20:07] [INFO] Generated beamer slides: 04a_discussion_slides.pdf
+[2026-03-11 14:20:07] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/04a_discussion.md
+[2026-03-11 14:20:07] [INFO] Successfully rendered 2 format(s) for 04a_discussion.md
+[2026-03-11 14:20:07] [INFO] Generated: 04a_discussion_slides.pdf
+[2026-03-11 14:20:07] [INFO] Generated: 04a_discussion.html
+[2026-03-11 14:20:07] [INFO]     ✅ Completed in 2s
+[2026-03-11 14:20:07] [INFO]   [16/19] 05_appendix_tooling.md
+[2026-03-11 14:20:07] [INFO] Rendering Markdown file: 05_appendix_tooling.md
+[2026-03-11 14:20:07] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/05_appendix_tooling.md
+[2026-03-11 14:20:07] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/slides/05_appendix_tooling_slides.tex with xelatex
+[2026-03-11 14:20:09] [INFO] LaTeX compilation completed in 2.11s
+[2026-03-11 14:20:09] [INFO] Generated beamer slides: 05_appendix_tooling_slides.pdf
+[2026-03-11 14:20:09] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/05_appendix_tooling.md
+[2026-03-11 14:20:09] [INFO] Successfully rendered 2 format(s) for 05_appendix_tooling.md
+[2026-03-11 14:20:09] [INFO] Generated: 05_appendix_tooling_slides.pdf
+[2026-03-11 14:20:09] [INFO] Generated: 05_appendix_tooling.html
+[2026-03-11 14:20:09] [INFO]     ✅ Completed in 2s
+[2026-03-11 14:20:09] [INFO]   [17/19] 06_appendix_technical.md
+[2026-03-11 14:20:09] [INFO] Rendering Markdown file: 06_appendix_technical.md
+[2026-03-11 14:20:09] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/06_appendix_technical.md
+[2026-03-11 14:20:09] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/slides/06_appendix_technical_slides.tex with xelatex
+[2026-03-11 14:20:12] [INFO] LaTeX compilation completed in 2.10s
+[2026-03-11 14:20:12] [INFO] Generated beamer slides: 06_appendix_technical_slides.pdf
+[2026-03-11 14:20:12] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/06_appendix_technical.md
+[2026-03-11 14:20:12] [INFO] Successfully rendered 2 format(s) for 06_appendix_technical.md
+[2026-03-11 14:20:12] [INFO] Generated: 06_appendix_technical_slides.pdf
+[2026-03-11 14:20:12] [INFO] Generated: 06_appendix_technical.html
+[2026-03-11 14:20:12] [INFO]     ✅ Completed in 2s
+[2026-03-11 14:20:12] [INFO]   [18/19] 98_symbols_glossary.md
+[2026-03-11 14:20:12] [INFO] Rendering Markdown file: 98_symbols_glossary.md
+[2026-03-11 14:20:12] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/98_symbols_glossary.md
+[2026-03-11 14:20:12] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/slides/98_symbols_glossary_slides.tex with xelatex
+[2026-03-11 14:20:14] [INFO] LaTeX compilation completed in 2.03s
+[2026-03-11 14:20:14] [INFO] Generated beamer slides: 98_symbols_glossary_slides.pdf
+[2026-03-11 14:20:14] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/98_symbols_glossary.md
+[2026-03-11 14:20:14] [INFO] Successfully rendered 2 format(s) for 98_symbols_glossary.md
+[2026-03-11 14:20:14] [INFO] Generated: 98_symbols_glossary_slides.pdf
+[2026-03-11 14:20:14] [INFO] Generated: 98_symbols_glossary.html
+[2026-03-11 14:20:14] [INFO]     ✅ Completed in 2s
+[2026-03-11 14:20:14] [INFO]   [19/19] 99_references.md
+[2026-03-11 14:20:14] [INFO] Rendering Markdown file: 99_references.md
+[2026-03-11 14:20:14] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/99_references.md
+[2026-03-11 14:20:14] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/slides/99_references_slides.tex with xelatex
+[2026-03-11 14:20:16] [INFO] LaTeX compilation completed in 1.95s
+[2026-03-11 14:20:16] [INFO] Generated beamer slides: 99_references_slides.pdf
+[2026-03-11 14:20:16] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/manuscript/99_references.md
+[2026-03-11 14:20:16] [INFO] Successfully rendered 2 format(s) for 99_references.md
+[2026-03-11 14:20:16] [INFO] Generated: 99_references_slides.pdf
+[2026-03-11 14:20:16] [INFO] Generated: 99_references.html
+[2026-03-11 14:20:16] [INFO]     ✅ Completed in 2s
+[2026-03-11 14:20:16] [INFO] 
+============================================================
+[2026-03-11 14:20:16] [INFO] Generating combined PDF manuscript...
+[2026-03-11 14:20:16] [INFO] Rendering combined PDF from 19 files...
+[2026-03-11 14:20:16] [INFO] 
+============================================================
+[2026-03-11 14:20:16] [INFO] COMBINED MANUSCRIPT RENDERING
+[2026-03-11 14:20:16] [INFO] ============================================================
+[2026-03-11 14:20:16] [INFO] Combining 19 section(s):
+[2026-03-11 14:20:16] [INFO]   [ 1/19] 00_abstract.md                           (   2.4 KB)
+[2026-03-11 14:20:16] [INFO]   [ 2/19] 01_introduction.md                       (  11.7 KB)
+[2026-03-11 14:20:16] [INFO]   [ 3/19] 02_methods_overview.md                   (   1.6 KB)
+[2026-03-11 14:20:16] [INFO]   [ 4/19] 02a_methods_retrieval.md                 (   3.6 KB)
+[2026-03-11 14:20:16] [INFO]   [ 5/19] 02b_methods_extraction.md                (   9.2 KB)
+[2026-03-11 14:20:16] [INFO]   [ 6/19] 02c_methods_bibliometrics.md             (   2.9 KB)
+[2026-03-11 14:20:16] [INFO]   [ 7/19] 02d_methods_knowledge_graph.md           (   7.0 KB)
+[2026-03-11 14:20:16] [INFO]   [ 8/19] 02e_methods_viz_injection.md             (   2.2 KB)
+[2026-03-11 14:20:16] [INFO]   [ 9/19] 03_results_hypothesis.md                 (   9.1 KB)
+[2026-03-11 14:20:16] [INFO]   [10/19] 03a_results_field_overview.md            (   6.2 KB)
+[2026-03-11 14:20:16] [INFO]   [11/19] 03b_results_subfields.md                 (  11.8 KB)
+[2026-03-11 14:20:16] [INFO]   [12/19] 03c_results_text_analytics.md            (   6.3 KB)
+[2026-03-11 14:20:16] [INFO]   [13/19] 03d_results_citation_network.md          (   3.3 KB)
+[2026-03-11 14:20:16] [INFO]   [14/19] 04_conclusion.md                         (  12.4 KB)
+[2026-03-11 14:20:16] [INFO]   [15/19] 04a_discussion.md                        (   6.0 KB)
+[2026-03-11 14:20:16] [INFO]   [16/19] 05_appendix_tooling.md                   (  20.2 KB)
+[2026-03-11 14:20:16] [INFO]   [17/19] 06_appendix_technical.md                 (   8.2 KB)
+[2026-03-11 14:20:16] [INFO]   [18/19] 98_symbols_glossary.md                   (   8.8 KB)
+[2026-03-11 14:20:16] [INFO]   [19/19] 99_references.md                         (   0.3 KB)
+[2026-03-11 14:20:16] [INFO]   Total input size:                                ( 133.2 KB)
+[2026-03-11 14:20:16] [INFO] ============================================================
+
+[2026-03-11 14:20:16] [INFO] Converting combined markdown to LaTeX...
+[2026-03-11 14:20:16] [INFO] ✓ Disabled lmodern package to prevent XeLaTeX font conflicts
+[2026-03-11 14:20:16] [INFO] ✓ Fixed 16 figure path(s)
+[2026-03-11 14:20:16] [INFO] ✓ Extracted preamble from preamble.md
+[2026-03-11 14:20:16] [INFO] ✓ Inserted title page (\maketitle), TOC, and newpage after \begin{document}
+[2026-03-11 14:20:16] [INFO] ✓ Inserted early \bibdata hook for .aux buffer safety
+[2026-03-11 14:20:16] [INFO] Verifying 16 figure reference(s)...
+[2026-03-11 14:20:16] [WARNING]   ✗ Missing: hypothesis_dashboard.png
+[2026-03-11 14:20:16] [WARNING]   ✗ Missing: evidence_timeline.png
+[2026-03-11 14:20:16] [WARNING]   ✗ Missing: assertion_breakdown.png
+[2026-03-11 14:20:16] [WARNING]   ✗ Missing: assertion_summary.png
+[2026-03-11 14:20:16] [WARNING]   ✗ Missing: field_summary.png
+[2026-03-11 14:20:16] [WARNING]   ✗ Missing: growth_curve.png
+[2026-03-11 14:20:16] [WARNING]   ✗ Missing: subfield_distribution.png
+[2026-03-11 14:20:16] [WARNING]   ✗ Missing: subfield_timeline.png
+[2026-03-11 14:20:16] [WARNING]   ✗ Missing: topic_term_bars.png
+[2026-03-11 14:20:16] [WARNING]   ✗ Missing: word_cloud.png
+[2026-03-11 14:20:16] [WARNING]   ✗ Missing: pca_embeddings.png
+[2026-03-11 14:20:16] [WARNING]   ✗ Missing: term_heatmap.png
+[2026-03-11 14:20:16] [WARNING]   ✗ Missing: dendrogram.png
+[2026-03-11 14:20:16] [WARNING]   ✗ Missing: cooccurrence_matrix.png
+[2026-03-11 14:20:16] [WARNING]   ✗ Missing: citation_network.png
+[2026-03-11 14:20:16] [WARNING]   ✗ Missing: degree_distribution.png
+[2026-03-11 14:20:16] [INFO]   Found: 0/16 figures
+[2026-03-11 14:20:16] [WARNING]   Missing 16 figure(s): hypothesis_dashboard.png, evidence_timeline.png, assertion_breakdown.png, assertion_summary.png, field_summary.png
+[2026-03-11 14:20:16] [WARNING]   ... and 11 more missing figures
+[2026-03-11 14:20:16] [INFO] Rendering combined manuscript to PDF: act_inf_metaanalysis_combined.pdf
+[2026-03-11 14:20:16] [INFO]   Source files: 19
+[2026-03-11 14:20:16] [INFO]   Bibliography: references.bib
+[2026-03-11 14:20:16] [INFO]   LaTeX compilation pass 1/4...
+[2026-03-11 14:20:20] [INFO]   Bibliography processing...
+[2026-03-11 14:20:20] [INFO] Processing bibliography with bibtex...
+[2026-03-11 14:20:31] [INFO] 
+✅ Successfully combined 19 sections
+[2026-03-11 14:20:31] [INFO]    Output: act_inf_metaanalysis_combined.pdf
+[2026-03-11 14:20:31] [INFO]    Size: 2957.9 KB (2.89 MB)
+[2026-03-11 14:20:31] [INFO]    Location: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/pdf
+[2026-03-11 14:20:31] [INFO]    Duration: 14.31 seconds
+[2026-03-11 14:20:31] [INFO] ✅ Generated combined PDF: act_inf_metaanalysis_combined.pdf
+[2026-03-11 14:20:31] [INFO] 
+============================================================
+[2026-03-11 14:20:31] [INFO] Generating combined HTML manuscript...
+[2026-03-11 14:20:31] [INFO] Rendering combined HTML from 19 files...
+[2026-03-11 14:20:31] [INFO] 
+============================================================
+[2026-03-11 14:20:31] [INFO] COMBINED HTML RENDERING
+[2026-03-11 14:20:31] [INFO] ============================================================
+[2026-03-11 14:20:31] [INFO] Combining 19 section(s):
+[2026-03-11 14:20:31] [INFO]   [ 1/19] 00_abstract.md                           (   2.4 KB)
+[2026-03-11 14:20:31] [INFO]   [ 2/19] 01_introduction.md                       (  11.7 KB)
+[2026-03-11 14:20:31] [INFO]   [ 3/19] 02_methods_overview.md                   (   1.6 KB)
+[2026-03-11 14:20:31] [INFO]   [ 4/19] 02a_methods_retrieval.md                 (   3.6 KB)
+[2026-03-11 14:20:31] [INFO]   [ 5/19] 02b_methods_extraction.md                (   9.2 KB)
+[2026-03-11 14:20:31] [INFO]   [ 6/19] 02c_methods_bibliometrics.md             (   2.9 KB)
+[2026-03-11 14:20:31] [INFO]   [ 7/19] 02d_methods_knowledge_graph.md           (   7.0 KB)
+[2026-03-11 14:20:31] [INFO]   [ 8/19] 02e_methods_viz_injection.md             (   2.2 KB)
+[2026-03-11 14:20:31] [INFO]   [ 9/19] 03_results_hypothesis.md                 (   9.1 KB)
+[2026-03-11 14:20:31] [INFO]   [10/19] 03a_results_field_overview.md            (   6.2 KB)
+[2026-03-11 14:20:31] [INFO]   [11/19] 03b_results_subfields.md                 (  11.8 KB)
+[2026-03-11 14:20:31] [INFO]   [12/19] 03c_results_text_analytics.md            (   6.3 KB)
+[2026-03-11 14:20:31] [INFO]   [13/19] 03d_results_citation_network.md          (   3.3 KB)
+[2026-03-11 14:20:31] [INFO]   [14/19] 04_conclusion.md                         (  12.4 KB)
+[2026-03-11 14:20:31] [INFO]   [15/19] 04a_discussion.md                        (   6.0 KB)
+[2026-03-11 14:20:31] [INFO]   [16/19] 05_appendix_tooling.md                   (  20.2 KB)
+[2026-03-11 14:20:31] [INFO]   [17/19] 06_appendix_technical.md                 (   8.2 KB)
+[2026-03-11 14:20:31] [INFO]   [18/19] 98_symbols_glossary.md                   (   8.8 KB)
+[2026-03-11 14:20:31] [INFO]   [19/19] 99_references.md                         (   0.3 KB)
+[2026-03-11 14:20:31] [INFO]   Total input size:                                ( 133.2 KB)
+[2026-03-11 14:20:31] [INFO] ============================================================
+
+[2026-03-11 14:20:31] [INFO] Converting combined markdown to HTML...
+[2026-03-11 14:20:31] [INFO] ✓ Embedded CSS styling in index.html
+[2026-03-11 14:20:31] [INFO] ✅ Generated combined HTML: index.html
+[2026-03-11 14:20:31] [INFO] 
+Rendering Summary:
+[2026-03-11 14:20:31] [INFO]   Individual files processed: 19
+[2026-03-11 14:20:31] [INFO]   Markdown files: 19
+[2026-03-11 14:20:31] [INFO] 
+============================================================
+[2026-03-11 14:20:31] [INFO] RENDERING RESULTS SUMMARY
+[2026-03-11 14:20:31] [INFO] ============================================================
+[2026-03-11 14:20:31] [INFO] Project: act_inf_metaanalysis
+[2026-03-11 14:20:31] [INFO] 
+📕 Combined Manuscript PDF:
+[2026-03-11 14:20:31] [INFO]    act_inf_metaanalysis_combined.pdf          2957.9 KB
+[2026-03-11 14:20:31] [INFO]    Location: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/pdf/act_inf_metaanalysis_combined.pdf
+[2026-03-11 14:20:31] [INFO] 
+🌐 Combined Manuscript HTML:
+[2026-03-11 14:20:31] [INFO]    index.html                                  182.4 KB
+[2026-03-11 14:20:31] [INFO]    Location: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/web/index.html
+[2026-03-11 14:20:31] [INFO] 
+🌐 Web Outputs (19):
+[2026-03-11 14:20:31] [INFO]    00_abstract.html                              6.3 KB
+[2026-03-11 14:20:31] [INFO]    01_introduction.html                         14.7 KB
+[2026-03-11 14:20:31] [INFO]    02_methods_overview.html                      5.6 KB
+[2026-03-11 14:20:31] [INFO]    02a_methods_retrieval.html                    7.9 KB
+[2026-03-11 14:20:31] [INFO]    02b_methods_extraction.html                  14.5 KB
+[2026-03-11 14:20:31] [INFO]    02c_methods_bibliometrics.html                6.9 KB
+[2026-03-11 14:20:31] [INFO]    02d_methods_knowledge_graph.html             12.6 KB
+[2026-03-11 14:20:31] [INFO]    02e_methods_viz_injection.html                6.3 KB
+[2026-03-11 14:20:31] [INFO]    03_results_hypothesis.html                   12.9 KB
+[2026-03-11 14:20:31] [INFO]    03a_results_field_overview.html               9.8 KB
+[2026-03-11 14:20:31] [INFO]    03b_results_subfields.html                   16.4 KB
+[2026-03-11 14:20:31] [INFO]    03c_results_text_analytics.html               8.9 KB
+[2026-03-11 14:20:31] [INFO]    03d_results_citation_network.html             6.9 KB
+[2026-03-11 14:20:31] [INFO]    04_conclusion.html                           17.1 KB
+[2026-03-11 14:20:31] [INFO]    04a_discussion.html                          10.2 KB
+[2026-03-11 14:20:31] [INFO]    05_appendix_tooling.html                     20.4 KB
+[2026-03-11 14:20:31] [INFO]    06_appendix_technical.html                   15.2 KB
+[2026-03-11 14:20:31] [INFO]    98_symbols_glossary.html                     16.4 KB
+[2026-03-11 14:20:31] [INFO]    99_references.html                            4.0 KB
+[2026-03-11 14:20:31] [INFO] 
+📊 Presentation Slides (19):
+[2026-03-11 14:20:31] [INFO]    00_abstract_slides.pdf                       16.6 KB
+[2026-03-11 14:20:31] [INFO]    01_introduction_slides.pdf                   35.0 KB
+[2026-03-11 14:20:31] [INFO]    02_methods_overview_slides.pdf               15.0 KB
+[2026-03-11 14:20:31] [INFO]    02a_methods_retrieval_slides.pdf             21.9 KB
+[2026-03-11 14:20:31] [INFO]    02b_methods_extraction_slides.pdf            37.9 KB
+[2026-03-11 14:20:31] [INFO]    02c_methods_bibliometrics_slides.pdf         25.2 KB
+[2026-03-11 14:20:31] [INFO]    02d_methods_knowledge_graph_slides.pdf       35.4 KB
+[2026-03-11 14:20:31] [INFO]    02e_methods_viz_injection_slides.pdf         17.5 KB
+[2026-03-11 14:20:31] [INFO]    03_results_hypothesis_slides.pdf            559.1 KB
+[2026-03-11 14:20:31] [INFO]    03a_results_field_overview_slides.pdf       550.5 KB
+[2026-03-11 14:20:31] [INFO]    03b_results_subfields_slides.pdf             29.6 KB
+[2026-03-11 14:20:31] [INFO]    03c_results_text_analytics_slides.pdf      1439.0 KB
+[2026-03-11 14:20:31] [INFO]    03d_results_citation_network_slides.pdf     200.3 KB
+[2026-03-11 14:20:31] [INFO]    04_conclusion_slides.pdf                     38.5 KB
+[2026-03-11 14:20:31] [INFO]    04a_discussion_slides.pdf                    24.8 KB
+[2026-03-11 14:20:31] [INFO]    05_appendix_tooling_slides.pdf               39.9 KB
+[2026-03-11 14:20:31] [INFO]    06_appendix_technical_slides.pdf             46.8 KB
+[2026-03-11 14:20:31] [INFO]    98_symbols_glossary_slides.pdf               36.0 KB
+[2026-03-11 14:20:31] [INFO]    99_references_slides.pdf                      4.0 KB
+[2026-03-11 14:20:31] [INFO] 
+📦 Total Output Size: 3140.3 KB (3.07 MB)
+[2026-03-11 14:20:31] [INFO] ============================================================
+
+[2026-03-11 14:20:31] [INFO] PDF rendering pipeline completed
+[2026-03-11 14:20:31] [INFO] Verifying PDF outputs...
+[2026-03-11 14:20:31] [INFO] Generated 1 PDF file(s)
+[2026-03-11 14:20:31] [INFO]   📕 act_inf_metaanalysis_combined.pdf (2.89 MB) ✓
+[2026-03-11 14:20:31] [INFO] 
+✅ Bibliography file found and will be processed
+[2026-03-11 14:20:31] [INFO] 
+✅ Combined manuscript PDF successfully generated!
+[2026-03-11 14:20:31] [INFO]   File size: 2.89 MB
+[2026-03-11 14:20:31] [INFO]   Valid PDFs: 1/1
+[2026-03-11 14:20:31] [INFO] PDF rendering complete - ready for validation
+[2026-03-11 14:20:31] [INFO] ✓ Stage 5 completed successfully (63.3s)
+[2026-03-11 14:20:31] [INFO] 
+[2026-03-11 14:20:31] [INFO] [6/8] Output Validation (75% complete)
+[2026-03-11 14:20:31] [INFO]   Elapsed: 1m 22s | ETA: 27s
+[2026-03-11 14:20:31] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-11 14:20:32] [INFO] 
+[2026-03-11 14:20:32] [INFO] ==================================================
+[2026-03-11 14:20:32] [INFO] STAGE 04: Validate Output (Project: act_inf_metaanalysis)
+[2026-03-11 14:20:32] [INFO] ==================================================
+[2026-03-11 14:20:32] [INFO]   [1/2] Running PDF validation...
+[2026-03-11 14:20:32] [INFO] 
+  Validating PDF files...
+[2026-03-11 14:20:32] [INFO] PDF valid: act_inf_metaanalysis_combined.pdf (3028857 bytes)
+[2026-03-11 14:20:32] [INFO]   [1/2] PDF validation: ✅ PASSED
+[2026-03-11 14:20:32] [INFO]   [2/2] Running Markdown validation...
+[2026-03-11 14:20:32] [INFO] 
+  Validating markdown files...
+[2026-03-11 14:20:32] [INFO] Found 20 markdown file(s)
+[2026-03-11 14:20:32] [INFO] Running markdown validation...
+[2026-03-11 14:20:32] [INFO]   Found 10 validation note(s):
+[2026-03-11 14:20:32] [INFO]     • Equation missing \label{...} in projects/act_inf_metaanalysis/manuscript/02d_methods_knowledge_graph.md
+[2026-03-11 14:20:32] [INFO]     • Equation missing \label{...} in projects/act_inf_metaanalysis/manuscript/02d_methods_knowledge_graph.md
+[2026-03-11 14:20:32] [INFO]     • Equation missing \label{...} in projects/act_inf_metaanalysis/manuscript/06_appendix_technical.md
+[2026-03-11 14:20:32] [INFO]     • Equation missing \label{...} in projects/act_inf_metaanalysis/manuscript/06_appendix_technical.md
+[2026-03-11 14:20:32] [INFO]     • Equation missing \label{...} in projects/act_inf_metaanalysis/manuscript/06_appendix_technical.md
+[2026-03-11 14:20:32] [INFO]     ... and 5 more
+[2026-03-11 14:20:32] [INFO]   (Markdown validation notes are non-critical)
+[2026-03-11 14:20:32] [INFO]   [2/2] Markdown validation: ✅ PASSED
+[2026-03-11 14:20:32] [INFO] 
+  Verifying output structure...
+[2026-03-11 14:20:32] [INFO] Output structure is valid
+[2026-03-11 14:20:32] [INFO] 
+  Validating figure registry...
+[2026-03-11 14:20:32] [INFO] Figure registry loaded: 16 figure(s)
+[2026-03-11 14:20:32] [INFO] All 16 figure references verified
+[2026-03-11 14:20:32] [INFO] 
+  Generating validation report...
+[2026-03-11 14:20:32] [INFO] Validation reports saved: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/reports/validation_report.json, /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/reports/validation_report.md
+[2026-03-11 14:20:32] [INFO] 
+============================================================
+[2026-03-11 14:20:32] [INFO] VALIDATION SUMMARY
+[2026-03-11 14:20:32] [INFO] ============================================================
+[2026-03-11 14:20:32] [INFO] Project: act_inf_metaanalysis
+[2026-03-11 14:20:32] [INFO] Timestamp: 2026-03-11 14:20:32
+[2026-03-11 14:20:32] [INFO] 
+[2026-03-11 14:20:32] [INFO] Individual Check Results:
+[2026-03-11 14:20:32] [INFO]   ✅ PASS: PDF validation
+[2026-03-11 14:20:32] [INFO]   ✅ PASS: Markdown validation
+[2026-03-11 14:20:32] [INFO]   ✅ PASS: Output structure
+[2026-03-11 14:20:32] [INFO]   ✅ PASS: Figure registry
+[2026-03-11 14:20:32] [INFO] 
+[2026-03-11 14:20:32] [INFO] Output Structure Status:
+[2026-03-11 14:20:32] [INFO]   ✅ Output directory structure is valid
+[2026-03-11 14:20:32] [INFO] 
+[2026-03-11 14:20:32] [INFO] ============================================================
+[2026-03-11 14:20:32] [INFO] ✅ VALIDATION COMPLETE - All checks passed!
+[2026-03-11 14:20:32] [INFO]   → Pipeline can proceed to next stage
+[2026-03-11 14:20:32] [INFO] ✓ Stage 6 completed successfully (0.5s)
+[2026-03-11 14:20:32] [INFO] 
+[2026-03-11 14:20:32] [INFO] [7/8] Copy Outputs (87% complete)
+[2026-03-11 14:20:32] [INFO]   Elapsed: 1m 22s | ETA: 11s
+[2026-03-11 14:20:32] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-11 14:20:32] [INFO] Running output copying...
+[2026-03-11 14:20:32] [INFO] 
+[2026-03-11 14:20:32] [INFO] ==================================================
+[2026-03-11 14:20:32] [INFO] STAGE 05: Copy Outputs (Project: act_inf_metaanalysis)
+[2026-03-11 14:20:32] [INFO] ==================================================
+[2026-03-11 14:20:32] [INFO] Cleaning root-level directories from output/ directory...
+[2026-03-11 14:20:32] [INFO] Root output directory cleaned
+[2026-03-11 14:20:32] [INFO] Cleaning output directory...
+[2026-03-11 14:20:32] [INFO] Output directory cleaned
+[2026-03-11 14:20:32] [INFO] Copying all outputs for project 'act_inf_metaanalysis'...
+[2026-03-11 14:20:32] [INFO] Recursively copied project/output/ directory
+[2026-03-11 14:20:32] [INFO]   pdf/: 10 file(s)
+[2026-03-11 14:20:32] [INFO]   web/: 21 file(s)
+[2026-03-11 14:20:32] [INFO]   slides/: 142 file(s)
+[2026-03-11 14:20:32] [INFO]   figures/: 17 file(s)
+[2026-03-11 14:20:32] [INFO]   data/: 14 file(s)
+[2026-03-11 14:20:32] [INFO]   reports/: 4 file(s)
+[2026-03-11 14:20:32] [INFO]   simulations/: 0 file(s)
+[2026-03-11 14:20:32] [INFO]   llm/: 0 file(s)
+[2026-03-11 14:20:32] [INFO]   Found 1 log file(s) in logs/
+[2026-03-11 14:20:32] [INFO]   logs/: 1 file(s)
+[2026-03-11 14:20:32] [INFO] Copied combined PDF to root (2.89 MB)
+[2026-03-11 14:20:32] [INFO]   Root PDF: /Users/4d/Documents/GitHub/template/output/act_inf_metaanalysis/act_inf_metaanalysis_combined.pdf (3,028,857 bytes)
+[2026-03-11 14:20:32] [INFO] Validating copied outputs...
+[2026-03-11 14:20:32] [INFO] Combined PDF valid (2.89 MB)
+[2026-03-11 14:20:32] [INFO] pdf/ valid (10 files, 3.39 MB)
+[2026-03-11 14:20:32] [INFO] web/ valid (21 files, 0.52 MB)
+[2026-03-11 14:20:32] [INFO] slides/ valid (142 files, 4.71 MB)
+[2026-03-11 14:20:32] [INFO] figures/ valid (17 files, 2.54 MB)
+[2026-03-11 14:20:32] [INFO] data/ valid (14 files, 12.51 MB)
+[2026-03-11 14:20:32] [INFO] reports/ valid (4 files, 0.01 MB)
+[2026-03-11 14:20:32] [INFO] logs/ valid (1 files, 0.00 MB)
+[2026-03-11 14:20:32] [INFO] 
+OUTPUT STATISTICS REPORT
+============================================================
+
+Output Directory: /Users/4d/Documents/GitHub/template/output/act_inf_metaanalysis
+
+Total Files: 209
+Total Size: 23.67 MB
+
+Files by Category:
+  • pdf: 10 files (3.39 MB)
+  • web: 21 files (0.52 MB)
+  • slides: 142 files (4.71 MB)
+  • figures: 17 files (2.54 MB)
+  • data: 14 files (12.51 MB)
+  • reports: 4 files (0.01 MB)
+  • logs: 1 files (0.00 MB)
+
+Largest Files:
+  • nanopublications.trig: 4.97 MB (data)
+  • tfidf_data.json: 3.55 MB (data)
+  • act_inf_metaanalysis_combined.pdf: 2.89 MB (pdf)
+  • corpus.jsonl: 2.37 MB (data)
+  • 03c_results_text_analytics_slides.pdf: 1.41 MB (slides)
+
+File Types:
+  • .log: 22 file(s)
+  • .aux: 20 file(s)
+  • .pdf: 20 file(s)
+  • .tex: 20 file(s)
+  • .toc: 20 file(s)
+  • .html: 20 file(s)
+  • .nav: 19 file(s)
+  • .snm: 19 file(s)
+  • .png: 16 file(s)
+  • .json: 13 file(s)
+
+[2026-03-11 14:20:32] [INFO] Detailed output statistics saved to: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/reports/output_statistics.txt
+[2026-03-11 14:20:32] [INFO] Output statistics JSON saved to: /Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/output/reports/output_statistics.json
+[2026-03-11 14:20:32] [INFO] 
+============================================================
+[2026-03-11 14:20:32] [INFO] Output Copying Summary
+[2026-03-11 14:20:32] [INFO] ============================================================
+[2026-03-11 14:20:32] [INFO] 
+Output directory: /Users/4d/Documents/GitHub/template/output/act_inf_metaanalysis
+[2026-03-11 14:20:32] [INFO] 
+Files copied by directory:
+[2026-03-11 14:20:32] [INFO]   • PDF files: 10
+[2026-03-11 14:20:32] [INFO]   • Web files: 21
+[2026-03-11 14:20:32] [INFO]   • Slides files: 142
+[2026-03-11 14:20:32] [INFO]   • Figures: 17
+[2026-03-11 14:20:32] [INFO]   • Data files: 14
+[2026-03-11 14:20:32] [INFO]   • Reports: 4
+[2026-03-11 14:20:32] [INFO]   • Simulations: 0
+[2026-03-11 14:20:32] [INFO]   • LLM reviews: 0
+[2026-03-11 14:20:32] [INFO]   • Log files: 1
+[2026-03-11 14:20:32] [INFO]   • Combined PDF (root): 1
+[2026-03-11 14:20:32] [INFO] 
+  Total files copied: 209
+[2026-03-11 14:20:32] [INFO] 
+Directory structure:
+[2026-03-11 14:20:32] [INFO]   ✓ project_combined_pdf: 2.89 MB
+[2026-03-11 14:20:32] [INFO]   ✓ pdf: 10 files, 3.39 MB
+[2026-03-11 14:20:32] [INFO]   ✓ web: 21 files, 0.52 MB
+[2026-03-11 14:20:32] [INFO]   ✓ slides: 142 files, 4.71 MB
+[2026-03-11 14:20:32] [INFO]   ✓ figures: 17 files, 2.54 MB
+[2026-03-11 14:20:32] [INFO]   ✓ data: 14 files, 12.51 MB
+[2026-03-11 14:20:32] [INFO]   ✓ reports: 4 files, 0.01 MB
+[2026-03-11 14:20:32] [INFO]   ✓ simulations: 0 files, 0.0 MB
+[2026-03-11 14:20:32] [INFO]   ✓ llm: 0 files, 0.0 MB
+[2026-03-11 14:20:32] [INFO]   ✓ logs: 1 files, 0.0 MB
+[2026-03-11 14:20:32] [INFO] 
+[2026-03-11 14:20:32] [INFO] 
+✅ Output copying complete - all project outputs ready!
+[2026-03-11 14:20:32] [INFO] ✓ Stage 7 completed successfully (0.4s)
+[2026-03-11 14:20:32] [INFO] ✅ Project 'act_inf_metaanalysis' completed successfully
+[2026-03-11 14:20:32] [INFO] Completed: Pipeline execution for act_inf_metaanalysis (83.4s)
+[2026-03-11 14:20:32] [INFO] Project 2/2: code_project
+[2026-03-11 14:20:32] [INFO] Starting: Pipeline execution for code_project
+[2026-03-11 14:20:32] [INFO] Executing core pipeline for project 'code_project'
+[2026-03-11 14:20:32] [INFO] 
+[2026-03-11 14:20:32] [INFO] [1/8] Clean Output Directories (12% complete)
+[2026-03-11 14:20:32] [INFO]   Elapsed: 0s | ETA: 0s
+[2026-03-11 14:20:32] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-11 14:20:32] [INFO] Cleaning output directories...
+[2026-03-11 14:20:32] [INFO] Cleaning root-level directories from output/ directory...
+[2026-03-11 14:20:32] [INFO] Root output directory cleaned
+[2026-03-11 14:20:32] [INFO]   Cleaning projects/code_project/output/...
+[2026-03-11 14:20:32] [INFO]   Archived 1 log file(s) to logs/archive/
+[2026-03-11 14:20:32] [INFO] Cleaned projects/code_project/output/ (recreated subdirectories)
+[2026-03-11 14:20:32] [INFO]   Creating output/code_project/...
+[2026-03-11 14:20:32] [INFO] Cleaned output/code_project/ (recreated subdirectories)
+[2026-03-11 14:20:32] [INFO] Output directories cleaned for project 'code_project' - fresh start
+[2026-03-11 14:20:32] [INFO] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/code_project/output/logs/pipeline.log
+[2026-03-11 14:20:32] [INFO] ✓ Stage 1 completed successfully (0.0s)
+[2026-03-11 14:20:32] [INFO] 
+[2026-03-11 14:20:32] [INFO] [2/8] Environment Setup (25% complete)
+[2026-03-11 14:20:32] [INFO]   Elapsed: 0s | ETA: 0s
+[2026-03-11 14:20:32] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-11 14:20:32] [INFO] 
+[2026-03-11 14:20:32] [INFO] ==================================================
+[2026-03-11 14:20:32] [INFO] STAGE 00: Environment Setup (Project: code_project)
+[2026-03-11 14:20:32] [INFO] ==================================================
+[2026-03-11 14:20:32] [INFO] Cleaning coverage database files...
+[2026-03-11 14:20:34] [INFO] Coverage database cleanup completed
+[2026-03-11 14:20:34] [INFO] Python 3.12.11 available
+[2026-03-11 14:20:34] [INFO] Checking for uv package manager...
+[2026-03-11 14:20:34] [INFO] Workspace dependencies synced successfully with uv
+[2026-03-11 14:20:34] [INFO] All 2 build tools available
+[2026-03-11 14:20:34] [INFO] All 22 directories ready
+[2026-03-11 14:20:34] [INFO] All 4 required directories present
+[2026-03-11 14:20:34] [INFO] Discovering available projects...
+[2026-03-11 14:20:34] [INFO] Discovered 2 valid project(s):
+[2026-03-11 14:20:34] [INFO]     act_inf_metaanalysis: src, tests, scripts, manuscript
+[2026-03-11 14:20:34] [INFO]   → code_project: src, tests, scripts, manuscript
+[2026-03-11 14:20:34] [INFO]     Setting up: code_project
+[2026-03-11 14:20:34] [INFO] Environment variables configured (MPLBACKEND, PYTHONIOENCODING, PROJECT_ROOT)
+[2026-03-11 14:20:34] [INFO] 
+[2026-03-11 14:20:34] [INFO] ==================================================
+[2026-03-11 14:20:34] [INFO] Setup Summary
+[2026-03-11 14:20:34] [INFO] ==================================================
+[2026-03-11 14:20:34] [INFO] ✅ PASS: Python version
+[2026-03-11 14:20:34] [INFO] ✅ PASS: Dependencies
+[2026-03-11 14:20:34] [INFO] ✅ PASS: Build tools
+[2026-03-11 14:20:34] [INFO] ✅ PASS: Directory structure
+[2026-03-11 14:20:34] [INFO] ✅ PASS: Source structure
+[2026-03-11 14:20:34] [INFO] ✅ PASS: Project discovery
+[2026-03-11 14:20:34] [INFO] ✅ PASS: Environment variables
+[2026-03-11 14:20:34] [INFO] 
+✅ Environment setup complete - ready to proceed
+[2026-03-11 14:20:34] [INFO] ✓ Stage 2 completed successfully (1.4s)
+[2026-03-11 14:20:34] [INFO] 
+[2026-03-11 14:20:34] [INFO] [3/8] Project Tests (37% complete)
+[2026-03-11 14:20:34] [INFO]   Elapsed: 1s | ETA: 2s
+[2026-03-11 14:20:34] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-11 14:20:34] [INFO] 
+[2026-03-11 14:20:34] [INFO] ==================================================
+[2026-03-11 14:20:34] [INFO] STAGE 01: Run Tests (Project: code_project)
+[2026-03-11 14:20:34] [INFO] ==================================================
+[2026-03-11 14:20:34] [INFO] 
+[2026-03-11 14:20:34] [INFO] ==================================================
+[2026-03-11 14:20:34] [INFO] Phase 1/1: Project Tests (code_project) (Only)
+[2026-03-11 14:20:34] [INFO] ==================================================
+[2026-03-11 14:20:34] [INFO] Cleaning coverage database files...
+[2026-03-11 14:20:35] [INFO] Coverage database cleanup completed
+[2026-03-11 14:20:35] [INFO] 
   Running project tests for 'code_project' (90% coverage threshold)...
-[2026-03-11 05:23:17] [INFO] Test path: /Users/4d/Documents/GitHub/template/projects/code_project/tests
-[2026-03-11 05:23:17] [INFO] Coverage target: projects/code_project/src (90% minimum)
-[2026-03-11 05:23:17] [INFO] 
+[2026-03-11 14:20:35] [INFO] Test path: /Users/4d/Documents/GitHub/template/projects/code_project/tests
+[2026-03-11 14:20:35] [INFO] Coverage target: projects/code_project/src (90% minimum)
+[2026-03-11 14:20:35] [INFO] 
   Discovering project 'code_project' tests...
-[2026-03-11 05:23:19] [INFO] Discovered 39 project 'code_project' tests
+[2026-03-11 14:20:35] [WARNING] Could not parse test count from project 'code_project' test discovery
 Running project tests for 'code_project'
-============================= test session starts ==============================
-.......platform darwin -- Python 3.12.11, pytest-9.0.2, pluggy-1.6.0 -- /Users/4d/Documents/GitHub/template/projects/code_project/.venv/bin/python3
-.cachedir: .pytest_cache
-rootdir: /Users/4d/Documents/GitHub/template/projects/code_project
-.configfile: pyproject.toml
-..plugins: cov-7.0.0
-...collecting ... collected 39 items
-
-.projects/code_project/tests/test_optimizer.py::TestQuadraticFunction::test_simple_quadratic PASSED [  2%]
-.projects/code_project/tests/test_optimizer.py::TestQuadraticFunction::test_multidimensional_quadratic PASSED [  5%]
-.projects/code_project/tests/test_optimizer.py::TestQuadraticFunction::test_default_parameters PASSED [  7%]
-.projects/code_project/tests/test_optimizer.py::TestQuadraticFunction::test_dimension_mismatch_A PASSED [ 10%]
-.projects/code_project/tests/test_optimizer.py::TestQuadraticFunction::test_dimension_mismatch_b PASSED [ 12%]
-.projects/code_project/tests/test_optimizer.py::TestQuadraticFunction::test_zero_input PASSED [ 15%]
-.projects/code_project/tests/test_optimizer.py::TestQuadraticFunction::test_large_input PASSED [ 17%]
-.projects/code_project/tests/test_optimizer.py::TestQuadraticFunction::test_negative_input PASSED [ 20%]
-.projects/code_project/tests/test_optimizer.py::TestComputeGradient::test_simple_gradient PASSED [ 23%]
-.projects/code_project/tests/test_optimizer.py::TestComputeGradient::test_multidimensional_gradient PASSED [ 25%]
-.projects/code_project/tests/test_optimizer.py::TestComputeGradient::test_default_gradient PASSED [ 28%]
-.projects/code_project/tests/test_optimizer.py::TestGradientDescent::test_convergence_to_optimum PASSED [ 30%]
-.projects/code_project/tests/test_optimizer.py::TestGradientDescent::test_max_iterations_reached PASSED [ 33%]
-.projects/code_project/tests/test_optimizer.py::TestGradientDescent::test_already_converged PASSED [ 35%]
-.projects/code_project/tests/test_optimizer.py::TestGradientDescent::test_multidimensional_convergence PASSED [ 38%]
-.projects/code_project/tests/test_optimizer.py::TestGradientDescent::test_parameter_validation PASSED [ 41%]
-.projects/code_project/tests/test_optimizer.py::TestGradientDescent::test_invalid_initial_point PASSED [ 43%]
-.projects/code_project/tests/test_optimizer.py::TestGradientDescent::test_gradient_descent_performance PASSED [ 46%]
-.projects/code_project/tests/test_optimizer.py::TestGradientDescent::test_numerical_stability PASSED [ 48%]
-.projects/code_project/tests/test_optimizer.py::TestOptimizationResult::test_result_creation PASSED [ 51%]
-.projects/code_project/tests/test_optimizer.py::TestPerformanceBenchmarks::test_gradient_descent_timing PASSED [ 53%]
-.projects/code_project/tests/test_optimizer.py::TestPerformanceBenchmarks::test_function_evaluation_speed PASSED [ 56%]
-.projects/code_project/tests/test_optimizer.py::TestStabilityAnalysis::test_stability_analysis_execution PASSED [ 58%]
-.projects/code_project/tests/test_optimizer.py::TestStabilityAnalysis::test_stability_visualization PASSED [ 61%]
-.projects/code_project/tests/test_optimizer.py::TestPerformanceBenchmarking::test_performance_benchmarking_execution PASSED [ 64%]
-.projects/code_project/tests/test_optimizer.py::TestPerformanceBenchmarking::test_performance_visualization PASSED [ 66%]
-.projects/code_project/tests/test_optimizer.py::TestAnalysisDashboard::test_dashboard_generation PASSED [ 69%]
-.projects/code_project/tests/test_optimizer.py::TestAnalysisDashboard::test_dashboard_with_analysis_data PASSED [ 71%]
-.projects/code_project/tests/test_optimizer.py::TestMakeQuadraticProblem::test_returns_callable_pair PASSED [ 74%]
-.projects/code_project/tests/test_optimizer.py::TestMakeQuadraticProblem::test_objective_matches_quadratic_function PASSED [ 76%]
-.projects/code_project/tests/test_optimizer.py::TestMakeQuadraticProblem::test_gradient_matches_compute_gradient PASSED [ 79%]
-.projects/code_project/tests/test_optimizer.py::TestMakeQuadraticProblem::test_factory_usable_with_gradient_descent PASSED [ 82%]
-.projects/code_project/tests/test_optimizer.py::TestMakeQuadraticProblem::test_factory_with_default_params PASSED [ 84%]
-.projects/code_project/tests/test_optimizer.py::TestMakeQuadraticProblem::test_factory_multidimensional PASSED [ 87%]
-.projects/code_project/tests/test_optimizer.py::TestSimulateTrajectory::test_returns_dict_with_expected_keys PASSED [ 89%]
-.projects/code_project/tests/test_optimizer.py::TestSimulateTrajectory::test_objectives_decrease_toward_optimum PASSED [ 92%]
-.projects/code_project/tests/test_optimizer.py::TestSimulateTrajectory::test_iterations_and_objectives_same_length PASSED [ 94%]
-.projects/code_project/tests/test_optimizer.py::TestSimulateTrajectory::test_iterations_are_sequential PASSED [ 97%]
-.projects/code_project/tests/test_optimizer.py::TestSimulateTrajectory::test_default_params_produce_valid_trajectory PASSED [100%]
-
-================================ tests coverage ================================
-..______________ coverage: platform darwin, python 3.12.11-final-0 _______________
-
-Name                                     Stmts   Miss Branch BrPart   Cover   Missing
--------------------------------------------------------------------------------------
-..projects/code_project/src/optimizer.py      87      2     32      2  96.64%   132-133, 229->232
--------------------------------------------------------------------------------------
-.TOTAL                                       87      2     32      2  96.64%
-Coverage HTML written to dir htmlcov
-.Coverage JSON written to file coverage_project.json
-..Required test coverage of 90% reached. Total coverage: 96.64%
-.============================== 39 passed in 2.53s ==============================
-[2026-03-11 05:23:22] [INFO] Running project tests for 'code_project'
-[2026-03-11 05:23:22] [INFO] ✓ Found coverage: 96.6%
-[2026-03-11 05:23:22] [INFO] Project test suite completed in 6.3s
-[2026-03-11 05:23:22] [INFO] Project tests passed
-[2026-03-11 05:23:22] [INFO] Test report saved: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/test_results.json
-[2026-03-11 05:23:22] [INFO] Test summary saved: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/test_results.md
-[2026-03-11 05:23:22] [INFO] 
-[2026-03-11 05:23:22] [INFO] ==================================================
-[2026-03-11 05:23:22] [INFO] Test Execution Summary
-[2026-03-11 05:23:22] [INFO] ==================================================
-[2026-03-11 05:23:22] [INFO] 
-[2026-03-11 05:23:22] [INFO] Infrastructure Results:
-[2026-03-11 05:23:22] [INFO]   ⏭ Skipped (not run in this execution)
-[2026-03-11 05:23:22] [INFO]   📊 Coverage: N/A (tests not executed)
-[2026-03-11 05:23:22] [INFO] 
-[2026-03-11 05:23:22] [INFO] Project Results:
-[2026-03-11 05:23:22] [INFO]   ✓ Passed: 39
-[2026-03-11 05:23:22] [INFO]   📊 Coverage: ✓ 96.6% (meets 90.0% threshold)
-[2026-03-11 05:23:22] [INFO]   ⏱ Duration: 7s
-[2026-03-11 05:23:22] [INFO] 
-[2026-03-11 05:23:22] [INFO] ================================================================
-[2026-03-11 05:23:22] [INFO] Infrastructure: ⏭ SKIPPED (intentionally skipped - use --infra-only to run infrastructure tests)
-[2026-03-11 05:23:22] [INFO] Project:       ✓ PASSED (39/39 tests, 96.6% coverage)
-[2026-03-11 05:23:22] [INFO] ----------------------------------------------------------------
-[2026-03-11 05:23:22] [INFO] Total:         ✓ PASSED (39/39 tests)
-[2026-03-11 05:23:22] [INFO] Coverage:      Infrastructure: N/A | Project: 96.6%
-[2026-03-11 05:23:22] [INFO] Duration:      7s
-[2026-03-11 05:23:22] [INFO] ================================================================
-[2026-03-11 05:23:22] [INFO] All tests passed - ready for analysis
-[2026-03-11 05:23:22] [INFO] ✓ Stage 3 completed successfully (6.7s)
-[2026-03-11 05:23:22] [INFO] 
-[2026-03-11 05:23:22] [INFO] [4/8] Project Analysis (50% complete)
-[2026-03-11 05:23:22] [INFO]   Elapsed: 8s | ETA: 8s
-[2026-03-11 05:23:22] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-11 05:23:23] [INFO] 
-[2026-03-11 05:23:23] [INFO] ==================================================
-[2026-03-11 05:23:23] [INFO] STAGE 02: Run Analysis (Project: code_project)
-[2026-03-11 05:23:23] [INFO] ==================================================
-[2026-03-11 05:23:23] [INFO] [STAGE-02] Discovering analysis scripts in projects/code_project/...
-[2026-03-11 05:23:23] [INFO] Found: generate_api_docs.py (project: code_project)
-[2026-03-11 05:23:23] [INFO] Found: optimization_analysis.py (project: code_project)
-[2026-03-11 05:23:23] [INFO] [STAGE-02] Executing analysis pipeline...
-[2026-03-11 05:23:23] [INFO]   [1/2] code_project/generate_api_docs.py
-[2026-03-11 05:23:23] [INFO] 
+./Users/4d/Documents/GitHub/template/projects/act_inf_metaanalysis/.venv/bin/python3: No module named pytest
+[2026-03-11 14:20:35] [INFO] Running project tests for 'code_project'
+[2026-03-11 14:20:36] [WARNING] No project coverage percentage found
+[2026-03-11 14:20:36] [WARNING] Project: All tests passed
+[2026-03-11 14:20:36] [INFO] Project test suite completed in 2.0s
+[2026-03-11 14:20:36] [INFO] Project tests passed
+[2026-03-11 14:20:36] [INFO] Test report saved: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/test_results.json
+[2026-03-11 14:20:36] [INFO] Test summary saved: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/test_results.md
+[2026-03-11 14:20:36] [INFO] 
+[2026-03-11 14:20:36] [INFO] ==================================================
+[2026-03-11 14:20:36] [INFO] Test Execution Summary
+[2026-03-11 14:20:36] [INFO] ==================================================
+[2026-03-11 14:20:36] [INFO] 
+[2026-03-11 14:20:36] [INFO] Infrastructure Results:
+[2026-03-11 14:20:36] [INFO]   ⏭ Skipped (not run in this execution)
+[2026-03-11 14:20:36] [INFO]   📊 Coverage: N/A (tests not executed)
+[2026-03-11 14:20:36] [INFO] 
+[2026-03-11 14:20:36] [INFO] Project Results:
+[2026-03-11 14:20:36] [INFO]   ✓ Passed: 0
+[2026-03-11 14:20:36] [INFO]   📊 Coverage: ❌ 0.0% (significantly below 90.0% threshold by 90.0%)
+[2026-03-11 14:20:36] [INFO]     📊 Project coverage is 90.0% below threshold
+[2026-03-11 14:20:36] [INFO]       • Run with --cov-report=json to enable file-level coverage suggestions
+[2026-03-11 14:20:36] [INFO]       • Target: Reach 90.0% coverage minimum
+[2026-03-11 14:20:36] [INFO]       • Run: pytest --cov-report=html && open htmlcov/index.html
+[2026-03-11 14:20:36] [INFO] 
+[2026-03-11 14:20:36] [INFO] ================================================================
+[2026-03-11 14:20:36] [INFO] Infrastructure: ⏭ SKIPPED (intentionally skipped - use --infra-only to run infrastructure tests)
+[2026-03-11 14:20:36] [INFO] Project:       ✓ PASSED (0/0 tests, 0.0% coverage)
+[2026-03-11 14:20:36] [INFO] ----------------------------------------------------------------
+[2026-03-11 14:20:36] [INFO] Total:         ✓ PASSED (0/0 tests)
+[2026-03-11 14:20:36] [INFO] Coverage:      Infrastructure: N/A | Project: 0.0%
+[2026-03-11 14:20:36] [INFO] ================================================================
+[2026-03-11 14:20:36] [INFO] All tests passed - ready for analysis
+[2026-03-11 14:20:36] [INFO] ✓ Stage 3 completed successfully (2.3s)
+[2026-03-11 14:20:36] [INFO] 
+[2026-03-11 14:20:36] [INFO] [4/8] Project Analysis (50% complete)
+[2026-03-11 14:20:36] [INFO]   Elapsed: 3s | ETA: 3s
+[2026-03-11 14:20:36] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-11 14:20:36] [INFO] 
+[2026-03-11 14:20:36] [INFO] ==================================================
+[2026-03-11 14:20:36] [INFO] STAGE 02: Run Analysis (Project: code_project)
+[2026-03-11 14:20:36] [INFO] ==================================================
+[2026-03-11 14:20:36] [INFO] [STAGE-02] Discovering analysis scripts in projects/code_project/...
+[2026-03-11 14:20:36] [INFO] Found: generate_api_docs.py (project: code_project)
+[2026-03-11 14:20:36] [INFO] Found: optimization_analysis.py (project: code_project)
+[2026-03-11 14:20:36] [INFO] [STAGE-02] Executing analysis pipeline...
+[2026-03-11 14:20:36] [INFO]   [1/2] code_project/generate_api_docs.py
+[2026-03-11 14:20:36] [INFO] 
   Running: code_project/generate_api_docs.py
-[2026-03-11 05:23:23] [INFO]   Using project-local venv: /Users/4d/Documents/GitHub/template/projects/code_project/.venv
-[2026-03-11 05:23:23] [INFO] Starting: Execute generate_api_docs.py
-[2026-03-11 05:23:23] [INFO] Completed: Execute generate_api_docs.py (0.1s)
-[2026-03-11 05:23:23] [INFO]     ✅ Completed in 0s
-[2026-03-11 05:23:23] [INFO]   [2/2] code_project/optimization_analysis.py
-[2026-03-11 05:23:23] [INFO] 
+[2026-03-11 14:20:36] [INFO]   Using project-local venv: /Users/4d/Documents/GitHub/template/projects/code_project/.venv
+[2026-03-11 14:20:36] [INFO] Starting: Execute generate_api_docs.py
+[2026-03-11 14:20:36] [INFO] Completed: Execute generate_api_docs.py (0.1s)
+[2026-03-11 14:20:36] [INFO]     ✅ Completed in 0s
+[2026-03-11 14:20:36] [INFO]   [2/2] code_project/optimization_analysis.py
+[2026-03-11 14:20:36] [INFO] 
   Running: code_project/optimization_analysis.py
-[2026-03-11 05:23:23] [INFO]   Using project-local venv: /Users/4d/Documents/GitHub/template/projects/code_project/.venv
-[2026-03-11 05:23:23] [INFO] Starting: Execute optimization_analysis.py
-[2026-03-11 05:23:23] [INFO] Starting optimization analysis pipeline
-[2026-03-11 05:23:23] [INFO] Project root: /Users/4d/Documents/GitHub/template/projects/code_project
-[2026-03-11 05:23:23] [INFO] Running system health check...
-[2026-03-11 05:23:23] [INFO] System health check passed
-[2026-03-11 05:23:23] [INFO] Checkpoint manager initialized
-[2026-03-11 05:23:23] [INFO] Performance monitoring available
-[2026-03-11 05:23:23] [INFO] Running convergence experiments...
+[2026-03-11 14:20:36] [INFO]   Using project-local venv: /Users/4d/Documents/GitHub/template/projects/code_project/.venv
+[2026-03-11 14:20:36] [INFO] Starting: Execute optimization_analysis.py
+[2026-03-11 14:20:37] [INFO] Starting optimization analysis pipeline
+[2026-03-11 14:20:37] [INFO] Project root: /Users/4d/Documents/GitHub/template/projects/code_project
+[2026-03-11 14:20:37] [INFO] Running system health check...
+[2026-03-11 14:20:37] [INFO] System health check passed
+[2026-03-11 14:20:37] [INFO] Checkpoint manager initialized
+[2026-03-11 14:20:37] [INFO] Performance monitoring available
+[2026-03-11 14:20:37] [INFO] Running convergence experiments...
   Step sizes [███████░░░░░░░░░░░░░░░░░░░░░░░] 1/4 (25%) ETA: 0s  Step sizes [███████░░░░░░░░░░░░░░░░░░░░░░░] 1/4 (25%) ETA: 0s
 Running convergence experiments...
 Testing step size: 0.01
@@ -212,397 +1183,397 @@ Testing step size: 0.1
   Converged: False, Final value: -0.5000
 Testing step size: 0.2
   Converged: True, Final value: -0.5000
-[2026-03-11 05:23:23] [INFO]   ✅ Completed: Step sizes (0s)
-[2026-03-11 05:23:23] [INFO] Generating traditional analysis outputs...
-[2026-03-11 05:23:23] [INFO] Generating convergence plot...
-[2026-03-11 05:23:23] [INFO] Saved convergence plot to: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/convergence_plot.png
-[2026-03-11 05:23:23] [INFO] Generating step size sensitivity plot...
-[2026-03-11 05:23:24] [INFO] Saved step size sensitivity plot to: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/step_size_sensitivity.png
-[2026-03-11 05:23:24] [INFO] Generating convergence rate comparison plot...
-[2026-03-11 05:23:24] [INFO] Saved convergence rate comparison plot to: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/convergence_rate_comparison.png
-[2026-03-11 05:23:24] [INFO] Generating algorithm complexity visualization...
-[2026-03-11 05:23:24] [INFO] Saved algorithm complexity visualization to: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/algorithm_complexity.png
-[2026-03-11 05:23:24] [INFO] Saving optimization results...
-[2026-03-11 05:23:24] [INFO] Saved results to: /Users/4d/Documents/GitHub/template/projects/code_project/output/data/optimization_results.csv
-[2026-03-11 05:23:24] [INFO] Running scientific analysis...
-[2026-03-11 05:23:24] [INFO] Numerical stability analysis...
-[2026-03-11 05:23:24] [INFO] Running numerical stability analysis...
-[2026-03-11 05:23:24] [INFO] Stability analysis complete - Score: 1.00
-[2026-03-11 05:23:24] [INFO] Saved stability report to: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/stability_analysis.json
-[2026-03-11 05:23:24] [INFO] Performance benchmarking...
-[2026-03-11 05:23:24] [INFO] Running performance benchmarking...
-[2026-03-11 05:23:24] [INFO] Performance benchmarking complete - Avg time: 0.000002s
-[2026-03-11 05:23:24] [INFO] Saved benchmark report to: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/performance_benchmark.json
-[2026-03-11 05:23:24] [INFO] Generating scientific visualizations...
-[2026-03-11 05:23:24] [INFO] Generating stability visualization...
-[2026-03-11 05:23:25] [INFO] Saved stability visualization to: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/stability_analysis.png
-[2026-03-11 05:23:25] [INFO] Generating benchmark visualization...
-[2026-03-11 05:23:25] [INFO] Saved benchmark visualization to: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/performance_benchmark.png
-[2026-03-11 05:23:25] [INFO] Generating analysis dashboard...
-[2026-03-11 05:23:25] [INFO] Generating analysis dashboard...
-[2026-03-11 05:23:25] [INFO] Saved analysis dashboard to: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/analysis_dashboard.html
-[2026-03-11 05:23:25] [INFO] Registered figure with label: fig:convergence
-[2026-03-11 05:23:25] [INFO] Registered figure with label: fig:step_sensitivity
-[2026-03-11 05:23:25] [INFO] Registered figure with label: fig:convergence_rate
-[2026-03-11 05:23:25] [INFO] Registered figure with label: fig:complexity
-[2026-03-11 05:23:25] [INFO] Registered figure with label: fig:stability
-[2026-03-11 05:23:25] [INFO] Registered figure with label: fig:benchmark
-[2026-03-11 05:23:25] [INFO] Validating generated outputs...
-[2026-03-11 05:23:25] [INFO] Validating generated outputs...
-[2026-03-11 05:23:25] [INFO] Integrity check complete: 6/6 files passed
-[2026-03-11 05:23:25] [INFO] Output integrity validation passed
-[2026-03-11 05:23:25] [INFO] Saved validation report to: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/output_validation.json
-[2026-03-11 05:23:25] [INFO] Generating publishing materials...
-[2026-03-11 05:23:25] [INFO] Publishing materials saved to: /Users/4d/Documents/GitHub/template/projects/code_project/output/citations
-[2026-03-11 05:23:25] [INFO] Publishing integration demonstration...
-[2026-03-11 05:23:25] [INFO] Publishing interfaces available: Zenodo, arXiv, GitHub releases
-[2026-03-11 05:23:25] [INFO] Publication metadata extracted and formatted
-[2026-03-11 05:23:25] [INFO] Pipeline completed with infrastructure support
-[2026-03-11 05:23:25] [INFO] Generated convergence plot: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/convergence_plot.png
-[2026-03-11 05:23:25] [INFO] Generated sensitivity plot: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/step_size_sensitivity.png
-[2026-03-11 05:23:25] [INFO] Generated rate comparison plot: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/convergence_rate_comparison.png
-[2026-03-11 05:23:25] [INFO] Generated complexity visualization: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/algorithm_complexity.png
-[2026-03-11 05:23:25] [INFO] Generated data: /Users/4d/Documents/GitHub/template/projects/code_project/output/data/optimization_results.csv
-[2026-03-11 05:23:25] [INFO] Generated stability report: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/stability_analysis.json
-[2026-03-11 05:23:25] [INFO] Generated benchmark report: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/performance_benchmark.json
-[2026-03-11 05:23:25] [INFO] Generated stability visualization: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/stability_analysis.png
-[2026-03-11 05:23:25] [INFO] Generated benchmark visualization: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/performance_benchmark.png
-[2026-03-11 05:23:25] [INFO] Generated analysis dashboard: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/analysis_dashboard.html
-[2026-03-11 05:23:25] [INFO] Generated validation report: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/output_validation.json
-[2026-03-11 05:23:25] [INFO] Generated publishing materials and citations
-[2026-03-11 05:23:25] [INFO] Optimization analysis pipeline completed successfully
-[2026-03-11 05:23:25] [INFO] Completed: Execute optimization_analysis.py (2.3s)
-[2026-03-11 05:23:25] [INFO]     ✅ Completed in 2s
-[2026-03-11 05:23:25] [INFO]   Progress: 2/2 (100%) - Elapsed: 2s | ETA: 0s
-[2026-03-11 05:23:25] [INFO] Analysis scripts completed: 2/2 (code_project/generate_api_docs.py, code_project/optimization_analysis.py)
-[2026-03-11 05:23:25] [INFO] [STAGE-02] Verifying analysis outputs for projects/code_project/...
-[2026-03-11 05:23:25] [INFO] Output directory has 7 file(s): figures
-[2026-03-11 05:23:25] [INFO] Output directory has 1 file(s): data
-[2026-03-11 05:23:25] [INFO] Analysis complete - ready for PDF rendering
-[2026-03-11 05:23:25] [INFO] ✓ Stage 4 completed successfully (2.6s)
-[2026-03-11 05:23:25] [INFO] 
-[2026-03-11 05:23:25] [INFO] [5/8] PDF Rendering (62% complete)
-[2026-03-11 05:23:25] [INFO]   Elapsed: 11s | ETA: 6s
-[2026-03-11 05:23:25] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-11 05:23:25] [INFO] 
-[2026-03-11 05:23:25] [INFO] ==================================================
-[2026-03-11 05:23:25] [INFO] STAGE 03: Render PDF (Project: code_project)
-[2026-03-11 05:23:25] [INFO] ==================================================
-[2026-03-11 05:23:25] [INFO] Executing PDF rendering pipeline for project 'code_project'...
-[2026-03-11 05:23:25] [INFO] Running pre-flight LaTeX package validation...
-[2026-03-11 05:23:25] [INFO] Validating 12 required and 11 optional LaTeX packages...
-[2026-03-11 05:23:28] [INFO] ✓ All LaTeX packages available
-[2026-03-11 05:23:28] [INFO] Verifying figures from analysis stage...
-[2026-03-11 05:23:28] [INFO] Found 6 figure(s) in figures/
-[2026-03-11 05:23:28] [INFO]   Found figures: algorithm_complexity.png, convergence_plot.png, convergence_rate_comparison.png
-[2026-03-11 05:23:28] [INFO]   ... and 3 more
-[2026-03-11 05:23:28] [INFO] Discovered 6 manuscript file(s):
-[2026-03-11 05:23:28] [INFO]   Main sections (5):
-[2026-03-11 05:23:28] [INFO]     • 00_abstract.md
-[2026-03-11 05:23:28] [INFO]     • 01_introduction.md
-[2026-03-11 05:23:28] [INFO]     • 02_methodology.md
-[2026-03-11 05:23:28] [INFO]     • 03_results.md
-[2026-03-11 05:23:28] [INFO]     • 04_conclusion.md
-[2026-03-11 05:23:28] [INFO]   Supplemental (1):
-[2026-03-11 05:23:28] [INFO]     • SYNTAX.md
-[2026-03-11 05:23:28] [INFO] 
+[2026-03-11 14:20:37] [INFO]   ✅ Completed: Step sizes (0s)
+[2026-03-11 14:20:37] [INFO] Generating traditional analysis outputs...
+[2026-03-11 14:20:37] [INFO] Generating convergence plot...
+[2026-03-11 14:20:37] [INFO] Saved convergence plot to: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/convergence_plot.png
+[2026-03-11 14:20:37] [INFO] Generating step size sensitivity plot...
+[2026-03-11 14:20:37] [INFO] Saved step size sensitivity plot to: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/step_size_sensitivity.png
+[2026-03-11 14:20:37] [INFO] Generating convergence rate comparison plot...
+[2026-03-11 14:20:37] [INFO] Saved convergence rate comparison plot to: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/convergence_rate_comparison.png
+[2026-03-11 14:20:37] [INFO] Generating algorithm complexity visualization...
+[2026-03-11 14:20:38] [INFO] Saved algorithm complexity visualization to: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/algorithm_complexity.png
+[2026-03-11 14:20:38] [INFO] Saving optimization results...
+[2026-03-11 14:20:38] [INFO] Saved results to: /Users/4d/Documents/GitHub/template/projects/code_project/output/data/optimization_results.csv
+[2026-03-11 14:20:38] [INFO] Running scientific analysis...
+[2026-03-11 14:20:38] [INFO] Numerical stability analysis...
+[2026-03-11 14:20:38] [INFO] Running numerical stability analysis...
+[2026-03-11 14:20:38] [INFO] Stability analysis complete - Score: 1.00
+[2026-03-11 14:20:38] [INFO] Saved stability report to: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/stability_analysis.json
+[2026-03-11 14:20:38] [INFO] Performance benchmarking...
+[2026-03-11 14:20:38] [INFO] Running performance benchmarking...
+[2026-03-11 14:20:38] [INFO] Performance benchmarking complete - Avg time: 0.000002s
+[2026-03-11 14:20:38] [INFO] Saved benchmark report to: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/performance_benchmark.json
+[2026-03-11 14:20:38] [INFO] Generating scientific visualizations...
+[2026-03-11 14:20:38] [INFO] Generating stability visualization...
+[2026-03-11 14:20:38] [INFO] Saved stability visualization to: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/stability_analysis.png
+[2026-03-11 14:20:38] [INFO] Generating benchmark visualization...
+[2026-03-11 14:20:38] [INFO] Saved benchmark visualization to: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/performance_benchmark.png
+[2026-03-11 14:20:38] [INFO] Generating analysis dashboard...
+[2026-03-11 14:20:38] [INFO] Generating analysis dashboard...
+[2026-03-11 14:20:38] [INFO] Saved analysis dashboard to: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/analysis_dashboard.html
+[2026-03-11 14:20:38] [INFO] Registered figure with label: fig:convergence
+[2026-03-11 14:20:38] [INFO] Registered figure with label: fig:step_sensitivity
+[2026-03-11 14:20:38] [INFO] Registered figure with label: fig:convergence_rate
+[2026-03-11 14:20:38] [INFO] Registered figure with label: fig:complexity
+[2026-03-11 14:20:38] [INFO] Registered figure with label: fig:stability
+[2026-03-11 14:20:38] [INFO] Registered figure with label: fig:benchmark
+[2026-03-11 14:20:38] [INFO] Validating generated outputs...
+[2026-03-11 14:20:38] [INFO] Validating generated outputs...
+[2026-03-11 14:20:38] [INFO] Integrity check complete: 6/6 files passed
+[2026-03-11 14:20:38] [INFO] Output integrity validation passed
+[2026-03-11 14:20:38] [INFO] Saved validation report to: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/output_validation.json
+[2026-03-11 14:20:38] [INFO] Generating publishing materials...
+[2026-03-11 14:20:38] [INFO] Publishing materials saved to: /Users/4d/Documents/GitHub/template/projects/code_project/output/citations
+[2026-03-11 14:20:38] [INFO] Publishing integration demonstration...
+[2026-03-11 14:20:38] [INFO] Publishing interfaces available: Zenodo, arXiv, GitHub releases
+[2026-03-11 14:20:38] [INFO] Publication metadata extracted and formatted
+[2026-03-11 14:20:38] [INFO] Pipeline completed with infrastructure support
+[2026-03-11 14:20:38] [INFO] Generated convergence plot: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/convergence_plot.png
+[2026-03-11 14:20:38] [INFO] Generated sensitivity plot: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/step_size_sensitivity.png
+[2026-03-11 14:20:38] [INFO] Generated rate comparison plot: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/convergence_rate_comparison.png
+[2026-03-11 14:20:38] [INFO] Generated complexity visualization: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/algorithm_complexity.png
+[2026-03-11 14:20:38] [INFO] Generated data: /Users/4d/Documents/GitHub/template/projects/code_project/output/data/optimization_results.csv
+[2026-03-11 14:20:38] [INFO] Generated stability report: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/stability_analysis.json
+[2026-03-11 14:20:38] [INFO] Generated benchmark report: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/performance_benchmark.json
+[2026-03-11 14:20:38] [INFO] Generated stability visualization: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/stability_analysis.png
+[2026-03-11 14:20:38] [INFO] Generated benchmark visualization: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/performance_benchmark.png
+[2026-03-11 14:20:38] [INFO] Generated analysis dashboard: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/analysis_dashboard.html
+[2026-03-11 14:20:38] [INFO] Generated validation report: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/output_validation.json
+[2026-03-11 14:20:38] [INFO] Generated publishing materials and citations
+[2026-03-11 14:20:38] [INFO] Optimization analysis pipeline completed successfully
+[2026-03-11 14:20:38] [INFO] Completed: Execute optimization_analysis.py (2.1s)
+[2026-03-11 14:20:38] [INFO]     ✅ Completed in 2s
+[2026-03-11 14:20:38] [INFO]   Progress: 2/2 (100%) - Elapsed: 2s | ETA: 0s
+[2026-03-11 14:20:38] [INFO] Analysis scripts completed: 2/2 (code_project/generate_api_docs.py, code_project/optimization_analysis.py)
+[2026-03-11 14:20:38] [INFO] [STAGE-02] Verifying analysis outputs for projects/code_project/...
+[2026-03-11 14:20:38] [INFO] Output directory has 7 file(s): figures
+[2026-03-11 14:20:38] [INFO] Output directory has 1 file(s): data
+[2026-03-11 14:20:38] [INFO] Analysis complete - ready for PDF rendering
+[2026-03-11 14:20:38] [INFO] ✓ Stage 4 completed successfully (2.4s)
+[2026-03-11 14:20:38] [INFO] 
+[2026-03-11 14:20:38] [INFO] [5/8] PDF Rendering (62% complete)
+[2026-03-11 14:20:38] [INFO]   Elapsed: 6s | ETA: 3s
+[2026-03-11 14:20:38] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-11 14:20:38] [INFO] 
+[2026-03-11 14:20:38] [INFO] ==================================================
+[2026-03-11 14:20:38] [INFO] STAGE 03: Render PDF (Project: code_project)
+[2026-03-11 14:20:38] [INFO] ==================================================
+[2026-03-11 14:20:38] [INFO] Executing PDF rendering pipeline for project 'code_project'...
+[2026-03-11 14:20:38] [INFO] Running pre-flight LaTeX package validation...
+[2026-03-11 14:20:38] [INFO] Validating 12 required and 11 optional LaTeX packages...
+[2026-03-11 14:20:40] [INFO] ✓ All LaTeX packages available
+[2026-03-11 14:20:40] [INFO] Verifying figures from analysis stage...
+[2026-03-11 14:20:40] [INFO] Found 6 figure(s) in figures/
+[2026-03-11 14:20:40] [INFO]   Found figures: algorithm_complexity.png, convergence_plot.png, convergence_rate_comparison.png
+[2026-03-11 14:20:40] [INFO]   ... and 3 more
+[2026-03-11 14:20:40] [INFO] Discovered 6 manuscript file(s):
+[2026-03-11 14:20:40] [INFO]   Main sections (5):
+[2026-03-11 14:20:40] [INFO]     • 00_abstract.md
+[2026-03-11 14:20:40] [INFO]     • 01_introduction.md
+[2026-03-11 14:20:40] [INFO]     • 02_methodology.md
+[2026-03-11 14:20:40] [INFO]     • 03_results.md
+[2026-03-11 14:20:40] [INFO]     • 04_conclusion.md
+[2026-03-11 14:20:40] [INFO]   Supplemental (1):
+[2026-03-11 14:20:40] [INFO]     • SYNTAX.md
+[2026-03-11 14:20:40] [INFO] 
 ============================================================
-[2026-03-11 05:23:28] [INFO] MANUSCRIPT COMPOSITION - Project: code_project
-[2026-03-11 05:23:28] [INFO] ============================================================
-[2026-03-11 05:23:28] [INFO] Markdown sections (6):
-[2026-03-11 05:23:28] [INFO]   • 00_abstract.md                           (   2.3 KB)
-[2026-03-11 05:23:28] [INFO]   • 01_introduction.md                       (   3.8 KB)
-[2026-03-11 05:23:28] [INFO]   • 02_methodology.md                        (   4.7 KB)
-[2026-03-11 05:23:28] [INFO]   • 03_results.md                            (  11.4 KB)
-[2026-03-11 05:23:28] [INFO]   • 04_conclusion.md                         (   4.4 KB)
-[2026-03-11 05:23:28] [INFO]   • SYNTAX.md                                (   3.2 KB)
-[2026-03-11 05:23:28] [INFO]   Total markdown:                          (  29.7 KB)
-[2026-03-11 05:23:28] [INFO] ============================================================
+[2026-03-11 14:20:40] [INFO] MANUSCRIPT COMPOSITION - Project: code_project
+[2026-03-11 14:20:40] [INFO] ============================================================
+[2026-03-11 14:20:40] [INFO] Markdown sections (6):
+[2026-03-11 14:20:40] [INFO]   • 00_abstract.md                           (   2.3 KB)
+[2026-03-11 14:20:40] [INFO]   • 01_introduction.md                       (   3.8 KB)
+[2026-03-11 14:20:40] [INFO]   • 02_methodology.md                        (   4.7 KB)
+[2026-03-11 14:20:40] [INFO]   • 03_results.md                            (  11.4 KB)
+[2026-03-11 14:20:40] [INFO]   • 04_conclusion.md                         (   4.4 KB)
+[2026-03-11 14:20:40] [INFO]   • SYNTAX.md                                (   3.2 KB)
+[2026-03-11 14:20:40] [INFO]   Total markdown:                          (  29.7 KB)
+[2026-03-11 14:20:40] [INFO] ============================================================
 
-[2026-03-11 05:23:28] [INFO] Initialized RenderManager from infrastructure.rendering
-[2026-03-11 05:23:28] [INFO]   [1/6] 00_abstract.md
-[2026-03-11 05:23:28] [INFO] Rendering Markdown file: 00_abstract.md
-[2026-03-11 05:23:28] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/00_abstract.md
-[2026-03-11 05:23:28] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/code_project/output/slides/00_abstract_slides.tex with xelatex
-[2026-03-11 05:23:30] [INFO] LaTeX compilation completed in 2.48s
-[2026-03-11 05:23:30] [INFO] Generated beamer slides: 00_abstract_slides.pdf
-[2026-03-11 05:23:30] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/00_abstract.md
-[2026-03-11 05:23:30] [INFO] Successfully rendered 2 format(s) for 00_abstract.md
-[2026-03-11 05:23:30] [INFO] Generated: 00_abstract_slides.pdf
-[2026-03-11 05:23:30] [INFO] Generated: 00_abstract.html
-[2026-03-11 05:23:30] [INFO]     ✅ Completed in 2s
-[2026-03-11 05:23:30] [INFO]   [2/6] 01_introduction.md
-[2026-03-11 05:23:30] [INFO] Rendering Markdown file: 01_introduction.md
-[2026-03-11 05:23:30] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/01_introduction.md
-[2026-03-11 05:23:30] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/code_project/output/slides/01_introduction_slides.tex with xelatex
-[2026-03-11 05:23:33] [INFO] LaTeX compilation completed in 2.79s
-[2026-03-11 05:23:33] [INFO] Generated beamer slides: 01_introduction_slides.pdf
-[2026-03-11 05:23:33] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/01_introduction.md
-[2026-03-11 05:23:33] [INFO] Successfully rendered 2 format(s) for 01_introduction.md
-[2026-03-11 05:23:33] [INFO] Generated: 01_introduction_slides.pdf
-[2026-03-11 05:23:33] [INFO] Generated: 01_introduction.html
-[2026-03-11 05:23:33] [INFO]     ✅ Completed in 2s
-[2026-03-11 05:23:33] [INFO]   [3/6] 02_methodology.md
-[2026-03-11 05:23:33] [INFO] Rendering Markdown file: 02_methodology.md
-[2026-03-11 05:23:33] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/02_methodology.md
-[2026-03-11 05:23:34] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/code_project/output/slides/02_methodology_slides.tex with xelatex
-[2026-03-11 05:23:37] [INFO] LaTeX compilation completed in 3.35s
-[2026-03-11 05:23:37] [INFO] Generated beamer slides: 02_methodology_slides.pdf
-[2026-03-11 05:23:37] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/02_methodology.md
-[2026-03-11 05:23:37] [INFO] Successfully rendered 2 format(s) for 02_methodology.md
-[2026-03-11 05:23:37] [INFO] Generated: 02_methodology_slides.pdf
-[2026-03-11 05:23:37] [INFO] Generated: 02_methodology.html
-[2026-03-11 05:23:37] [INFO]     ✅ Completed in 3s
-[2026-03-11 05:23:37] [INFO]   [4/6] 03_results.md
-[2026-03-11 05:23:37] [INFO] Rendering Markdown file: 03_results.md
-[2026-03-11 05:23:37] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/03_results.md
-[2026-03-11 05:23:37] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/code_project/output/slides/03_results_slides.tex with xelatex
-[2026-03-11 05:23:45] [INFO] LaTeX compilation completed in 7.87s
-[2026-03-11 05:23:45] [INFO] Generated beamer slides: 03_results_slides.pdf
-[2026-03-11 05:23:45] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/03_results.md
-[2026-03-11 05:23:45] [INFO] Successfully rendered 2 format(s) for 03_results.md
-[2026-03-11 05:23:45] [INFO] Generated: 03_results_slides.pdf
-[2026-03-11 05:23:45] [INFO] Generated: 03_results.html
-[2026-03-11 05:23:45] [INFO]     ✅ Completed in 7s
-[2026-03-11 05:23:45] [INFO]   [5/6] 04_conclusion.md
-[2026-03-11 05:23:45] [INFO] Rendering Markdown file: 04_conclusion.md
-[2026-03-11 05:23:45] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/04_conclusion.md
-[2026-03-11 05:23:45] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/code_project/output/slides/04_conclusion_slides.tex with xelatex
-[2026-03-11 05:23:47] [INFO] LaTeX compilation completed in 2.36s
-[2026-03-11 05:23:47] [INFO] Generated beamer slides: 04_conclusion_slides.pdf
-[2026-03-11 05:23:47] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/04_conclusion.md
-[2026-03-11 05:23:47] [INFO] Successfully rendered 2 format(s) for 04_conclusion.md
-[2026-03-11 05:23:47] [INFO] Generated: 04_conclusion_slides.pdf
-[2026-03-11 05:23:47] [INFO] Generated: 04_conclusion.html
-[2026-03-11 05:23:47] [INFO]     ✅ Completed in 2s
-[2026-03-11 05:23:47] [INFO]   [6/6] SYNTAX.md
-[2026-03-11 05:23:47] [INFO] Rendering Markdown file: SYNTAX.md
-[2026-03-11 05:23:47] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/SYNTAX.md
-[2026-03-11 05:23:48] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/code_project/output/slides/SYNTAX_slides.tex with xelatex
-[2026-03-11 05:23:50] [INFO] LaTeX compilation completed in 2.33s
-[2026-03-11 05:23:50] [INFO] Generated beamer slides: SYNTAX_slides.pdf
-[2026-03-11 05:23:50] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/SYNTAX.md
-[2026-03-11 05:23:50] [INFO] Successfully rendered 2 format(s) for SYNTAX.md
-[2026-03-11 05:23:50] [INFO] Generated: SYNTAX_slides.pdf
-[2026-03-11 05:23:50] [INFO] Generated: SYNTAX.html
-[2026-03-11 05:23:50] [INFO]     ✅ Completed in 2s
-[2026-03-11 05:23:50] [INFO] 
+[2026-03-11 14:20:40] [INFO] Initialized RenderManager from infrastructure.rendering
+[2026-03-11 14:20:40] [INFO]   [1/6] 00_abstract.md
+[2026-03-11 14:20:40] [INFO] Rendering Markdown file: 00_abstract.md
+[2026-03-11 14:20:40] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/00_abstract.md
+[2026-03-11 14:20:40] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/code_project/output/slides/00_abstract_slides.tex with xelatex
+[2026-03-11 14:20:43] [INFO] LaTeX compilation completed in 2.04s
+[2026-03-11 14:20:43] [INFO] Generated beamer slides: 00_abstract_slides.pdf
+[2026-03-11 14:20:43] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/00_abstract.md
+[2026-03-11 14:20:43] [INFO] Successfully rendered 2 format(s) for 00_abstract.md
+[2026-03-11 14:20:43] [INFO] Generated: 00_abstract_slides.pdf
+[2026-03-11 14:20:43] [INFO] Generated: 00_abstract.html
+[2026-03-11 14:20:43] [INFO]     ✅ Completed in 2s
+[2026-03-11 14:20:43] [INFO]   [2/6] 01_introduction.md
+[2026-03-11 14:20:43] [INFO] Rendering Markdown file: 01_introduction.md
+[2026-03-11 14:20:43] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/01_introduction.md
+[2026-03-11 14:20:43] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/code_project/output/slides/01_introduction_slides.tex with xelatex
+[2026-03-11 14:20:45] [INFO] LaTeX compilation completed in 2.08s
+[2026-03-11 14:20:45] [INFO] Generated beamer slides: 01_introduction_slides.pdf
+[2026-03-11 14:20:45] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/01_introduction.md
+[2026-03-11 14:20:45] [INFO] Successfully rendered 2 format(s) for 01_introduction.md
+[2026-03-11 14:20:45] [INFO] Generated: 01_introduction_slides.pdf
+[2026-03-11 14:20:45] [INFO] Generated: 01_introduction.html
+[2026-03-11 14:20:45] [INFO]     ✅ Completed in 2s
+[2026-03-11 14:20:45] [INFO]   [3/6] 02_methodology.md
+[2026-03-11 14:20:45] [INFO] Rendering Markdown file: 02_methodology.md
+[2026-03-11 14:20:45] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/02_methodology.md
+[2026-03-11 14:20:45] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/code_project/output/slides/02_methodology_slides.tex with xelatex
+[2026-03-11 14:20:47] [INFO] LaTeX compilation completed in 2.02s
+[2026-03-11 14:20:47] [INFO] Generated beamer slides: 02_methodology_slides.pdf
+[2026-03-11 14:20:47] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/02_methodology.md
+[2026-03-11 14:20:47] [INFO] Successfully rendered 2 format(s) for 02_methodology.md
+[2026-03-11 14:20:47] [INFO] Generated: 02_methodology_slides.pdf
+[2026-03-11 14:20:47] [INFO] Generated: 02_methodology.html
+[2026-03-11 14:20:47] [INFO]     ✅ Completed in 2s
+[2026-03-11 14:20:47] [INFO]   [4/6] 03_results.md
+[2026-03-11 14:20:47] [INFO] Rendering Markdown file: 03_results.md
+[2026-03-11 14:20:47] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/03_results.md
+[2026-03-11 14:20:47] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/code_project/output/slides/03_results_slides.tex with xelatex
+[2026-03-11 14:20:54] [INFO] LaTeX compilation completed in 6.78s
+[2026-03-11 14:20:54] [INFO] Generated beamer slides: 03_results_slides.pdf
+[2026-03-11 14:20:54] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/03_results.md
+[2026-03-11 14:20:54] [INFO] Successfully rendered 2 format(s) for 03_results.md
+[2026-03-11 14:20:54] [INFO] Generated: 03_results_slides.pdf
+[2026-03-11 14:20:54] [INFO] Generated: 03_results.html
+[2026-03-11 14:20:54] [INFO]     ✅ Completed in 6s
+[2026-03-11 14:20:54] [INFO]   [5/6] 04_conclusion.md
+[2026-03-11 14:20:54] [INFO] Rendering Markdown file: 04_conclusion.md
+[2026-03-11 14:20:54] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/04_conclusion.md
+[2026-03-11 14:20:54] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/code_project/output/slides/04_conclusion_slides.tex with xelatex
+[2026-03-11 14:20:56] [INFO] LaTeX compilation completed in 1.94s
+[2026-03-11 14:20:56] [INFO] Generated beamer slides: 04_conclusion_slides.pdf
+[2026-03-11 14:20:56] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/04_conclusion.md
+[2026-03-11 14:20:56] [INFO] Successfully rendered 2 format(s) for 04_conclusion.md
+[2026-03-11 14:20:56] [INFO] Generated: 04_conclusion_slides.pdf
+[2026-03-11 14:20:56] [INFO] Generated: 04_conclusion.html
+[2026-03-11 14:20:56] [INFO]     ✅ Completed in 2s
+[2026-03-11 14:20:56] [INFO]   [6/6] SYNTAX.md
+[2026-03-11 14:20:56] [INFO] Rendering Markdown file: SYNTAX.md
+[2026-03-11 14:20:56] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/SYNTAX.md
+[2026-03-11 14:20:56] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/code_project/output/slides/SYNTAX_slides.tex with xelatex
+[2026-03-11 14:20:58] [INFO] LaTeX compilation completed in 1.97s
+[2026-03-11 14:20:58] [INFO] Generated beamer slides: SYNTAX_slides.pdf
+[2026-03-11 14:20:58] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/SYNTAX.md
+[2026-03-11 14:20:58] [INFO] Successfully rendered 2 format(s) for SYNTAX.md
+[2026-03-11 14:20:58] [INFO] Generated: SYNTAX_slides.pdf
+[2026-03-11 14:20:58] [INFO] Generated: SYNTAX.html
+[2026-03-11 14:20:58] [INFO]     ✅ Completed in 2s
+[2026-03-11 14:20:58] [INFO] 
 ============================================================
-[2026-03-11 05:23:50] [INFO] Generating combined PDF manuscript...
-[2026-03-11 05:23:50] [INFO] Rendering combined PDF from 6 files...
-[2026-03-11 05:23:50] [INFO] 
+[2026-03-11 14:20:58] [INFO] Generating combined PDF manuscript...
+[2026-03-11 14:20:58] [INFO] Rendering combined PDF from 6 files...
+[2026-03-11 14:20:58] [INFO] 
 ============================================================
-[2026-03-11 05:23:50] [INFO] COMBINED MANUSCRIPT RENDERING
-[2026-03-11 05:23:50] [INFO] ============================================================
-[2026-03-11 05:23:50] [INFO] Combining 6 section(s):
-[2026-03-11 05:23:50] [INFO]   [ 1/6] 00_abstract.md                           (   2.3 KB)
-[2026-03-11 05:23:50] [INFO]   [ 2/6] 01_introduction.md                       (   3.8 KB)
-[2026-03-11 05:23:50] [INFO]   [ 3/6] 02_methodology.md                        (   4.7 KB)
-[2026-03-11 05:23:50] [INFO]   [ 4/6] 03_results.md                            (  11.4 KB)
-[2026-03-11 05:23:50] [INFO]   [ 5/6] 04_conclusion.md                         (   4.4 KB)
-[2026-03-11 05:23:50] [INFO]   [ 6/6] SYNTAX.md                                (   3.2 KB)
-[2026-03-11 05:23:50] [INFO]   Total input size:                                (  29.7 KB)
-[2026-03-11 05:23:50] [INFO] ============================================================
+[2026-03-11 14:20:58] [INFO] COMBINED MANUSCRIPT RENDERING
+[2026-03-11 14:20:58] [INFO] ============================================================
+[2026-03-11 14:20:58] [INFO] Combining 6 section(s):
+[2026-03-11 14:20:58] [INFO]   [ 1/6] 00_abstract.md                           (   2.3 KB)
+[2026-03-11 14:20:58] [INFO]   [ 2/6] 01_introduction.md                       (   3.8 KB)
+[2026-03-11 14:20:58] [INFO]   [ 3/6] 02_methodology.md                        (   4.7 KB)
+[2026-03-11 14:20:58] [INFO]   [ 4/6] 03_results.md                            (  11.4 KB)
+[2026-03-11 14:20:58] [INFO]   [ 5/6] 04_conclusion.md                         (   4.4 KB)
+[2026-03-11 14:20:58] [INFO]   [ 6/6] SYNTAX.md                                (   3.2 KB)
+[2026-03-11 14:20:58] [INFO]   Total input size:                                (  29.7 KB)
+[2026-03-11 14:20:58] [INFO] ============================================================
 
-[2026-03-11 05:23:50] [INFO] Converting combined markdown to LaTeX...
-[2026-03-11 05:23:50] [INFO] ✓ Disabled lmodern package to prevent XeLaTeX font conflicts
-[2026-03-11 05:23:50] [INFO] ✓ Fixed 6 figure path(s)
-[2026-03-11 05:23:50] [INFO] ✓ Extracted preamble from preamble.md
-[2026-03-11 05:23:50] [INFO] ✓ Inserted title page (\maketitle), TOC, and newpage after \begin{document}
-[2026-03-11 05:23:50] [INFO] ✓ Inserted \bibliography{references} before \end{document}
-[2026-03-11 05:23:50] [INFO] ✓ Inserted early \bibdata hook for .aux buffer safety
-[2026-03-11 05:23:50] [INFO] Verifying 6 figure reference(s)...
-[2026-03-11 05:23:50] [INFO]   Found: 6/6 figures
-[2026-03-11 05:23:50] [INFO] Rendering combined manuscript to PDF: code_project_combined.pdf
-[2026-03-11 05:23:50] [INFO]   Source files: 6
-[2026-03-11 05:23:50] [INFO]   Bibliography: references.bib
-[2026-03-11 05:23:50] [INFO]   LaTeX compilation pass 1/4...
-[2026-03-11 05:23:55] [INFO]   Bibliography processing...
-[2026-03-11 05:23:55] [INFO] Processing bibliography with bibtex...
-[2026-03-11 05:24:08] [INFO] 
+[2026-03-11 14:20:58] [INFO] Converting combined markdown to LaTeX...
+[2026-03-11 14:20:58] [INFO] ✓ Disabled lmodern package to prevent XeLaTeX font conflicts
+[2026-03-11 14:20:58] [INFO] ✓ Fixed 6 figure path(s)
+[2026-03-11 14:20:58] [INFO] ✓ Extracted preamble from preamble.md
+[2026-03-11 14:20:58] [INFO] ✓ Inserted title page (\maketitle), TOC, and newpage after \begin{document}
+[2026-03-11 14:20:58] [INFO] ✓ Inserted \bibliography{references} before \end{document}
+[2026-03-11 14:20:58] [INFO] ✓ Inserted early \bibdata hook for .aux buffer safety
+[2026-03-11 14:20:58] [INFO] Verifying 6 figure reference(s)...
+[2026-03-11 14:20:58] [INFO]   Found: 6/6 figures
+[2026-03-11 14:20:58] [INFO] Rendering combined manuscript to PDF: code_project_combined.pdf
+[2026-03-11 14:20:58] [INFO]   Source files: 6
+[2026-03-11 14:20:58] [INFO]   Bibliography: references.bib
+[2026-03-11 14:20:58] [INFO]   LaTeX compilation pass 1/4...
+[2026-03-11 14:21:02] [INFO]   Bibliography processing...
+[2026-03-11 14:21:02] [INFO] Processing bibliography with bibtex...
+[2026-03-11 14:21:12] [INFO] 
 ✅ Successfully combined 6 sections
-[2026-03-11 05:24:08] [INFO]    Output: code_project_combined.pdf
-[2026-03-11 05:24:08] [INFO]    Size: 1674.0 KB (1.63 MB)
-[2026-03-11 05:24:08] [INFO]    Location: /Users/4d/Documents/GitHub/template/projects/code_project/output/pdf
-[2026-03-11 05:24:08] [INFO]    Duration: 17.36 seconds
-[2026-03-11 05:24:08] [INFO] ✅ Generated combined PDF: code_project_combined.pdf
-[2026-03-11 05:24:08] [INFO] 
+[2026-03-11 14:21:12] [INFO]    Output: code_project_combined.pdf
+[2026-03-11 14:21:12] [INFO]    Size: 1679.0 KB (1.64 MB)
+[2026-03-11 14:21:12] [INFO]    Location: /Users/4d/Documents/GitHub/template/projects/code_project/output/pdf
+[2026-03-11 14:21:12] [INFO]    Duration: 13.68 seconds
+[2026-03-11 14:21:12] [INFO] ✅ Generated combined PDF: code_project_combined.pdf
+[2026-03-11 14:21:12] [INFO] 
 ============================================================
-[2026-03-11 05:24:08] [INFO] Generating combined HTML manuscript...
-[2026-03-11 05:24:08] [INFO] Rendering combined HTML from 6 files...
-[2026-03-11 05:24:08] [INFO] 
+[2026-03-11 14:21:12] [INFO] Generating combined HTML manuscript...
+[2026-03-11 14:21:12] [INFO] Rendering combined HTML from 6 files...
+[2026-03-11 14:21:12] [INFO] 
 ============================================================
-[2026-03-11 05:24:08] [INFO] COMBINED HTML RENDERING
-[2026-03-11 05:24:08] [INFO] ============================================================
-[2026-03-11 05:24:08] [INFO] Combining 6 section(s):
-[2026-03-11 05:24:08] [INFO]   [ 1/6] 00_abstract.md                           (   2.3 KB)
-[2026-03-11 05:24:08] [INFO]   [ 2/6] 01_introduction.md                       (   3.8 KB)
-[2026-03-11 05:24:08] [INFO]   [ 3/6] 02_methodology.md                        (   4.7 KB)
-[2026-03-11 05:24:08] [INFO]   [ 4/6] 03_results.md                            (  11.4 KB)
-[2026-03-11 05:24:08] [INFO]   [ 5/6] 04_conclusion.md                         (   4.4 KB)
-[2026-03-11 05:24:08] [INFO]   [ 6/6] SYNTAX.md                                (   3.2 KB)
-[2026-03-11 05:24:08] [INFO]   Total input size:                                (  29.7 KB)
-[2026-03-11 05:24:08] [INFO] ============================================================
+[2026-03-11 14:21:12] [INFO] COMBINED HTML RENDERING
+[2026-03-11 14:21:12] [INFO] ============================================================
+[2026-03-11 14:21:12] [INFO] Combining 6 section(s):
+[2026-03-11 14:21:12] [INFO]   [ 1/6] 00_abstract.md                           (   2.3 KB)
+[2026-03-11 14:21:12] [INFO]   [ 2/6] 01_introduction.md                       (   3.8 KB)
+[2026-03-11 14:21:12] [INFO]   [ 3/6] 02_methodology.md                        (   4.7 KB)
+[2026-03-11 14:21:12] [INFO]   [ 4/6] 03_results.md                            (  11.4 KB)
+[2026-03-11 14:21:12] [INFO]   [ 5/6] 04_conclusion.md                         (   4.4 KB)
+[2026-03-11 14:21:12] [INFO]   [ 6/6] SYNTAX.md                                (   3.2 KB)
+[2026-03-11 14:21:12] [INFO]   Total input size:                                (  29.7 KB)
+[2026-03-11 14:21:12] [INFO] ============================================================
 
-[2026-03-11 05:24:08] [INFO] Converting combined markdown to HTML...
-[2026-03-11 05:24:08] [INFO] ✓ Embedded CSS styling in index.html
-[2026-03-11 05:24:08] [INFO] ✅ Generated combined HTML: index.html
-[2026-03-11 05:24:08] [INFO] 
+[2026-03-11 14:21:12] [INFO] Converting combined markdown to HTML...
+[2026-03-11 14:21:12] [INFO] ✓ Embedded CSS styling in index.html
+[2026-03-11 14:21:12] [INFO] ✅ Generated combined HTML: index.html
+[2026-03-11 14:21:12] [INFO] 
 Rendering Summary:
-[2026-03-11 05:24:08] [INFO]   Individual files processed: 6
-[2026-03-11 05:24:08] [INFO]   Markdown files: 6
-[2026-03-11 05:24:08] [INFO] 
+[2026-03-11 14:21:12] [INFO]   Individual files processed: 6
+[2026-03-11 14:21:12] [INFO]   Markdown files: 6
+[2026-03-11 14:21:12] [INFO] 
 ============================================================
-[2026-03-11 05:24:08] [INFO] RENDERING RESULTS SUMMARY
-[2026-03-11 05:24:08] [INFO] ============================================================
-[2026-03-11 05:24:08] [INFO] Project: code_project
-[2026-03-11 05:24:08] [INFO] 
+[2026-03-11 14:21:12] [INFO] RENDERING RESULTS SUMMARY
+[2026-03-11 14:21:12] [INFO] ============================================================
+[2026-03-11 14:21:12] [INFO] Project: code_project
+[2026-03-11 14:21:12] [INFO] 
 📕 Combined Manuscript PDF:
-[2026-03-11 05:24:08] [INFO]    code_project_combined.pdf                  1674.0 KB
-[2026-03-11 05:24:08] [INFO]    Location: /Users/4d/Documents/GitHub/template/projects/code_project/output/pdf/code_project_combined.pdf
-[2026-03-11 05:24:08] [INFO] 
+[2026-03-11 14:21:12] [INFO]    code_project_combined.pdf                  1679.0 KB
+[2026-03-11 14:21:12] [INFO]    Location: /Users/4d/Documents/GitHub/template/projects/code_project/output/pdf/code_project_combined.pdf
+[2026-03-11 14:21:12] [INFO] 
 🌐 Combined Manuscript HTML:
-[2026-03-11 05:24:08] [INFO]    index.html                                   67.1 KB
-[2026-03-11 05:24:08] [INFO]    Location: /Users/4d/Documents/GitHub/template/projects/code_project/output/web/index.html
-[2026-03-11 05:24:08] [INFO] 
+[2026-03-11 14:21:12] [INFO]    index.html                                   67.1 KB
+[2026-03-11 14:21:12] [INFO]    Location: /Users/4d/Documents/GitHub/template/projects/code_project/output/web/index.html
+[2026-03-11 14:21:12] [INFO] 
 🌐 Web Outputs (6):
-[2026-03-11 05:24:08] [INFO]    00_abstract.html                              6.4 KB
-[2026-03-11 05:24:08] [INFO]    01_introduction.html                          8.6 KB
-[2026-03-11 05:24:08] [INFO]    02_methodology.html                          10.2 KB
-[2026-03-11 05:24:08] [INFO]    03_results.html                              22.0 KB
-[2026-03-11 05:24:08] [INFO]    04_conclusion.html                            9.2 KB
-[2026-03-11 05:24:08] [INFO]    SYNTAX.html                                  16.1 KB
-[2026-03-11 05:24:08] [INFO] 
+[2026-03-11 14:21:12] [INFO]    00_abstract.html                              6.4 KB
+[2026-03-11 14:21:12] [INFO]    01_introduction.html                          8.6 KB
+[2026-03-11 14:21:12] [INFO]    02_methodology.html                          10.2 KB
+[2026-03-11 14:21:12] [INFO]    03_results.html                              22.0 KB
+[2026-03-11 14:21:12] [INFO]    04_conclusion.html                            9.2 KB
+[2026-03-11 14:21:12] [INFO]    SYNTAX.html                                  16.1 KB
+[2026-03-11 14:21:12] [INFO] 
 📊 Presentation Slides (6):
-[2026-03-11 05:24:08] [INFO]    00_abstract_slides.pdf                       17.9 KB
-[2026-03-11 05:24:08] [INFO]    01_introduction_slides.pdf                   29.9 KB
-[2026-03-11 05:24:08] [INFO]    02_methodology_slides.pdf                    37.9 KB
-[2026-03-11 05:24:08] [INFO]    03_results_slides.pdf                      1591.7 KB
-[2026-03-11 05:24:08] [INFO]    04_conclusion_slides.pdf                     28.1 KB
-[2026-03-11 05:24:08] [INFO]    SYNTAX_slides.pdf                            34.7 KB
-[2026-03-11 05:24:08] [INFO] 
-📦 Total Output Size: 1741.1 KB (1.70 MB)
-[2026-03-11 05:24:08] [INFO] ============================================================
+[2026-03-11 14:21:12] [INFO]    00_abstract_slides.pdf                       17.9 KB
+[2026-03-11 14:21:12] [INFO]    01_introduction_slides.pdf                   29.9 KB
+[2026-03-11 14:21:12] [INFO]    02_methodology_slides.pdf                    37.9 KB
+[2026-03-11 14:21:12] [INFO]    03_results_slides.pdf                      1596.7 KB
+[2026-03-11 14:21:12] [INFO]    04_conclusion_slides.pdf                     28.1 KB
+[2026-03-11 14:21:12] [INFO]    SYNTAX_slides.pdf                            34.7 KB
+[2026-03-11 14:21:12] [INFO] 
+📦 Total Output Size: 1746.1 KB (1.71 MB)
+[2026-03-11 14:21:12] [INFO] ============================================================
 
-[2026-03-11 05:24:08] [INFO] PDF rendering pipeline completed
-[2026-03-11 05:24:08] [INFO] Verifying PDF outputs...
-[2026-03-11 05:24:08] [INFO] Generated 1 PDF file(s)
-[2026-03-11 05:24:08] [INFO]   📕 code_project_combined.pdf (1.63 MB) ✓
-[2026-03-11 05:24:08] [INFO] 
+[2026-03-11 14:21:12] [INFO] PDF rendering pipeline completed
+[2026-03-11 14:21:12] [INFO] Verifying PDF outputs...
+[2026-03-11 14:21:12] [INFO] Generated 1 PDF file(s)
+[2026-03-11 14:21:12] [INFO]   📕 code_project_combined.pdf (1.64 MB) ✓
+[2026-03-11 14:21:12] [INFO] 
 ✅ Bibliography file found and will be processed
-[2026-03-11 05:24:08] [INFO] 
+[2026-03-11 14:21:12] [INFO] 
 ✅ Combined manuscript PDF successfully generated!
-[2026-03-11 05:24:08] [INFO]   File size: 1.63 MB
-[2026-03-11 05:24:08] [INFO]   Valid PDFs: 1/1
-[2026-03-11 05:24:08] [INFO] PDF rendering complete - ready for validation
-[2026-03-11 05:24:08] [INFO] ✓ Stage 5 completed successfully (43.3s)
-[2026-03-11 05:24:08] [INFO] 
-[2026-03-11 05:24:08] [INFO] [6/8] Output Validation (75% complete)
-[2026-03-11 05:24:08] [INFO]   Elapsed: 54s | ETA: 18s
-[2026-03-11 05:24:08] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-11 05:24:09] [INFO] 
-[2026-03-11 05:24:09] [INFO] ==================================================
-[2026-03-11 05:24:09] [INFO] STAGE 04: Validate Output (Project: code_project)
-[2026-03-11 05:24:09] [INFO] ==================================================
-[2026-03-11 05:24:09] [INFO]   [1/2] Running PDF validation...
-[2026-03-11 05:24:09] [INFO] 
+[2026-03-11 14:21:12] [INFO]   File size: 1.64 MB
+[2026-03-11 14:21:12] [INFO]   Valid PDFs: 1/1
+[2026-03-11 14:21:12] [INFO] PDF rendering complete - ready for validation
+[2026-03-11 14:21:13] [INFO] ✓ Stage 5 completed successfully (34.2s)
+[2026-03-11 14:21:13] [INFO] 
+[2026-03-11 14:21:13] [INFO] [6/8] Output Validation (75% complete)
+[2026-03-11 14:21:13] [INFO]   Elapsed: 40s | ETA: 13s
+[2026-03-11 14:21:13] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-11 14:21:13] [INFO] 
+[2026-03-11 14:21:13] [INFO] ==================================================
+[2026-03-11 14:21:13] [INFO] STAGE 04: Validate Output (Project: code_project)
+[2026-03-11 14:21:13] [INFO] ==================================================
+[2026-03-11 14:21:13] [INFO]   [1/2] Running PDF validation...
+[2026-03-11 14:21:13] [INFO] 
   Validating PDF files...
-[2026-03-11 05:24:09] [INFO] PDF valid: code_project_combined.pdf (1714196 bytes)
-[2026-03-11 05:24:09] [INFO]   [1/2] PDF validation: ✅ PASSED
-[2026-03-11 05:24:09] [INFO]   [2/2] Running Markdown validation...
-[2026-03-11 05:24:09] [INFO] 
+[2026-03-11 14:21:13] [INFO] PDF valid: code_project_combined.pdf (1719285 bytes)
+[2026-03-11 14:21:13] [INFO]   [1/2] PDF validation: ✅ PASSED
+[2026-03-11 14:21:13] [INFO]   [2/2] Running Markdown validation...
+[2026-03-11 14:21:13] [INFO] 
   Validating markdown files...
-[2026-03-11 05:24:09] [INFO] Found 9 markdown file(s)
-[2026-03-11 05:24:09] [INFO] Running markdown validation...
-[2026-03-11 05:24:09] [INFO] Markdown validation passed (no issues found)
-[2026-03-11 05:24:09] [INFO]   [2/2] Markdown validation: ✅ PASSED
-[2026-03-11 05:24:09] [INFO] 
+[2026-03-11 14:21:13] [INFO] Found 9 markdown file(s)
+[2026-03-11 14:21:13] [INFO] Running markdown validation...
+[2026-03-11 14:21:13] [INFO] Markdown validation passed (no issues found)
+[2026-03-11 14:21:13] [INFO]   [2/2] Markdown validation: ✅ PASSED
+[2026-03-11 14:21:13] [INFO] 
   Verifying output structure...
-[2026-03-11 05:24:09] [INFO] Output structure is valid
-[2026-03-11 05:24:09] [INFO] 
+[2026-03-11 14:21:13] [INFO] Output structure is valid
+[2026-03-11 14:21:13] [INFO] 
   Validating figure registry...
-[2026-03-11 05:24:09] [INFO] Figure registry loaded: 6 figure(s)
-[2026-03-11 05:24:09] [INFO] All 6 figure references verified
-[2026-03-11 05:24:09] [INFO] 
+[2026-03-11 14:21:13] [INFO] Figure registry loaded: 6 figure(s)
+[2026-03-11 14:21:13] [INFO] All 6 figure references verified
+[2026-03-11 14:21:13] [INFO] 
   Generating validation report...
-[2026-03-11 05:24:09] [INFO] Validation reports saved: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/validation_report.json, /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/validation_report.md
-[2026-03-11 05:24:09] [INFO] 
+[2026-03-11 14:21:13] [INFO] Validation reports saved: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/validation_report.json, /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/validation_report.md
+[2026-03-11 14:21:13] [INFO] 
 ============================================================
-[2026-03-11 05:24:09] [INFO] VALIDATION SUMMARY
-[2026-03-11 05:24:09] [INFO] ============================================================
-[2026-03-11 05:24:09] [INFO] Project: code_project
-[2026-03-11 05:24:09] [INFO] Timestamp: 2026-03-11 05:24:09
-[2026-03-11 05:24:09] [INFO] 
-[2026-03-11 05:24:09] [INFO] Individual Check Results:
-[2026-03-11 05:24:09] [INFO]   ✅ PASS: PDF validation
-[2026-03-11 05:24:09] [INFO]   ✅ PASS: Markdown validation
-[2026-03-11 05:24:09] [INFO]   ✅ PASS: Output structure
-[2026-03-11 05:24:09] [INFO]   ✅ PASS: Figure registry
-[2026-03-11 05:24:09] [INFO] 
-[2026-03-11 05:24:09] [INFO] Output Structure Status:
-[2026-03-11 05:24:09] [INFO]   ✅ Output directory structure is valid
-[2026-03-11 05:24:09] [INFO] 
-[2026-03-11 05:24:09] [INFO] ============================================================
-[2026-03-11 05:24:09] [INFO] ✅ VALIDATION COMPLETE - All checks passed!
-[2026-03-11 05:24:09] [INFO]   → Pipeline can proceed to next stage
-[2026-03-11 05:24:09] [INFO] ✓ Stage 6 completed successfully (0.4s)
-[2026-03-11 05:24:09] [INFO] 
-[2026-03-11 05:24:09] [INFO] [7/8] Copy Outputs (87% complete)
-[2026-03-11 05:24:09] [INFO]   Elapsed: 54s | ETA: 7s
-[2026-03-11 05:24:09] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-11 05:24:09] [INFO] Running output copying...
-[2026-03-11 05:24:09] [INFO] 
-[2026-03-11 05:24:09] [INFO] ==================================================
-[2026-03-11 05:24:09] [INFO] STAGE 05: Copy Outputs (Project: code_project)
-[2026-03-11 05:24:09] [INFO] ==================================================
-[2026-03-11 05:24:09] [INFO] Cleaning root-level directories from output/ directory...
-[2026-03-11 05:24:09] [INFO] Root output directory cleaned
-[2026-03-11 05:24:09] [INFO] Cleaning output directory...
-[2026-03-11 05:24:09] [INFO] Output directory cleaned
-[2026-03-11 05:24:09] [INFO] Copying all outputs for project 'code_project'...
-[2026-03-11 05:24:09] [INFO] Recursively copied project/output/ directory
-[2026-03-11 05:24:09] [INFO]   pdf/: 10 file(s)
-[2026-03-11 05:24:09] [INFO]   web/: 8 file(s)
-[2026-03-11 05:24:09] [INFO]   slides/: 48 file(s)
-[2026-03-11 05:24:09] [INFO]   figures/: 7 file(s)
-[2026-03-11 05:24:09] [INFO]   data/: 1 file(s)
-[2026-03-11 05:24:09] [INFO]   reports/: 8 file(s)
-[2026-03-11 05:24:09] [INFO]   simulations/: 0 file(s)
-[2026-03-11 05:24:09] [INFO]   llm/: 0 file(s)
-[2026-03-11 05:24:09] [INFO]   Found 1 log file(s) in logs/
-[2026-03-11 05:24:09] [INFO]   logs/: 1 file(s)
-[2026-03-11 05:24:09] [INFO] Copied combined PDF to root (1.63 MB)
-[2026-03-11 05:24:09] [INFO]   Root PDF: /Users/4d/Documents/GitHub/template/output/code_project/code_project_combined.pdf (1,714,196 bytes)
-[2026-03-11 05:24:09] [INFO] Validating copied outputs...
-[2026-03-11 05:24:09] [INFO] Combined PDF valid (1.63 MB)
-[2026-03-11 05:24:09] [INFO] pdf/ valid (10 files, 1.82 MB)
-[2026-03-11 05:24:09] [INFO] web/ valid (8 files, 0.17 MB)
-[2026-03-11 05:24:09] [INFO] slides/ valid (48 files, 2.20 MB)
-[2026-03-11 05:24:09] [INFO] figures/ valid (7 files, 1.53 MB)
-[2026-03-11 05:24:09] [INFO] data/ valid (1 files, 0.00 MB)
-[2026-03-11 05:24:09] [INFO] reports/ valid (8 files, 0.01 MB)
-[2026-03-11 05:24:09] [INFO] logs/ valid (1 files, 0.00 MB)
-[2026-03-11 05:24:09] [INFO] 
+[2026-03-11 14:21:13] [INFO] VALIDATION SUMMARY
+[2026-03-11 14:21:13] [INFO] ============================================================
+[2026-03-11 14:21:13] [INFO] Project: code_project
+[2026-03-11 14:21:13] [INFO] Timestamp: 2026-03-11 14:21:13
+[2026-03-11 14:21:13] [INFO] 
+[2026-03-11 14:21:13] [INFO] Individual Check Results:
+[2026-03-11 14:21:13] [INFO]   ✅ PASS: PDF validation
+[2026-03-11 14:21:13] [INFO]   ✅ PASS: Markdown validation
+[2026-03-11 14:21:13] [INFO]   ✅ PASS: Output structure
+[2026-03-11 14:21:13] [INFO]   ✅ PASS: Figure registry
+[2026-03-11 14:21:13] [INFO] 
+[2026-03-11 14:21:13] [INFO] Output Structure Status:
+[2026-03-11 14:21:13] [INFO]   ✅ Output directory structure is valid
+[2026-03-11 14:21:13] [INFO] 
+[2026-03-11 14:21:13] [INFO] ============================================================
+[2026-03-11 14:21:13] [INFO] ✅ VALIDATION COMPLETE - All checks passed!
+[2026-03-11 14:21:13] [INFO]   → Pipeline can proceed to next stage
+[2026-03-11 14:21:13] [INFO] ✓ Stage 6 completed successfully (0.3s)
+[2026-03-11 14:21:13] [INFO] 
+[2026-03-11 14:21:13] [INFO] [7/8] Copy Outputs (87% complete)
+[2026-03-11 14:21:13] [INFO]   Elapsed: 40s | ETA: 5s
+[2026-03-11 14:21:13] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-11 14:21:13] [INFO] Running output copying...
+[2026-03-11 14:21:13] [INFO] 
+[2026-03-11 14:21:13] [INFO] ==================================================
+[2026-03-11 14:21:13] [INFO] STAGE 05: Copy Outputs (Project: code_project)
+[2026-03-11 14:21:13] [INFO] ==================================================
+[2026-03-11 14:21:13] [INFO] Cleaning root-level directories from output/ directory...
+[2026-03-11 14:21:13] [INFO] Root output directory cleaned
+[2026-03-11 14:21:13] [INFO] Cleaning output directory...
+[2026-03-11 14:21:13] [INFO] Output directory cleaned
+[2026-03-11 14:21:13] [INFO] Copying all outputs for project 'code_project'...
+[2026-03-11 14:21:13] [INFO] Recursively copied project/output/ directory
+[2026-03-11 14:21:13] [INFO]   pdf/: 10 file(s)
+[2026-03-11 14:21:13] [INFO]   web/: 8 file(s)
+[2026-03-11 14:21:13] [INFO]   slides/: 48 file(s)
+[2026-03-11 14:21:13] [INFO]   figures/: 7 file(s)
+[2026-03-11 14:21:13] [INFO]   data/: 1 file(s)
+[2026-03-11 14:21:13] [INFO]   reports/: 8 file(s)
+[2026-03-11 14:21:13] [INFO]   simulations/: 0 file(s)
+[2026-03-11 14:21:13] [INFO]   llm/: 0 file(s)
+[2026-03-11 14:21:13] [INFO]   Found 1 log file(s) in logs/
+[2026-03-11 14:21:13] [INFO]   logs/: 1 file(s)
+[2026-03-11 14:21:13] [INFO] Copied combined PDF to root (1.64 MB)
+[2026-03-11 14:21:13] [INFO]   Root PDF: /Users/4d/Documents/GitHub/template/output/code_project/code_project_combined.pdf (1,719,285 bytes)
+[2026-03-11 14:21:13] [INFO] Validating copied outputs...
+[2026-03-11 14:21:13] [INFO] Combined PDF valid (1.64 MB)
+[2026-03-11 14:21:13] [INFO] pdf/ valid (10 files, 1.82 MB)
+[2026-03-11 14:21:13] [INFO] web/ valid (8 files, 0.17 MB)
+[2026-03-11 14:21:13] [INFO] slides/ valid (48 files, 2.20 MB)
+[2026-03-11 14:21:13] [INFO] figures/ valid (7 files, 1.54 MB)
+[2026-03-11 14:21:13] [INFO] data/ valid (1 files, 0.00 MB)
+[2026-03-11 14:21:13] [INFO] reports/ valid (8 files, 0.01 MB)
+[2026-03-11 14:21:13] [INFO] logs/ valid (1 files, 0.00 MB)
+[2026-03-11 14:21:13] [INFO] 
 OUTPUT STATISTICS REPORT
 ============================================================
 
 Output Directory: /Users/4d/Documents/GitHub/template/output/code_project
 
 Total Files: 83
-Total Size: 5.72 MB
+Total Size: 5.73 MB
 
 Files by Category:
   • pdf: 10 files (1.82 MB)
   • web: 8 files (0.17 MB)
   • slides: 48 files (2.20 MB)
-  • figures: 7 files (1.53 MB)
+  • figures: 7 files (1.54 MB)
   • data: 1 files (0.00 MB)
   • reports: 8 files (0.01 MB)
   • logs: 1 files (0.00 MB)
 
 Largest Files:
-  • code_project_combined.pdf: 1.63 MB (pdf)
-  • 03_results_slides.pdf: 1.55 MB (slides)
+  • code_project_combined.pdf: 1.64 MB (pdf)
+  • 03_results_slides.pdf: 1.56 MB (slides)
   • algorithm_complexity.png: 0.35 MB (figures)
   • convergence_plot.png: 0.30 MB (figures)
   • convergence_rate_comparison.png: 0.28 MB (figures)
@@ -619,63 +1590,64 @@ File Types:
   • .vrb: 6 file(s)
   • .png: 6 file(s)
 
-[2026-03-11 05:24:09] [INFO] Detailed output statistics saved to: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/output_statistics.txt
-[2026-03-11 05:24:09] [INFO] Output statistics JSON saved to: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/output_statistics.json
-[2026-03-11 05:24:09] [INFO] 
+[2026-03-11 14:21:13] [INFO] Detailed output statistics saved to: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/output_statistics.txt
+[2026-03-11 14:21:13] [INFO] Output statistics JSON saved to: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/output_statistics.json
+[2026-03-11 14:21:13] [INFO] 
 ============================================================
-[2026-03-11 05:24:09] [INFO] Output Copying Summary
-[2026-03-11 05:24:09] [INFO] ============================================================
-[2026-03-11 05:24:09] [INFO] 
+[2026-03-11 14:21:13] [INFO] Output Copying Summary
+[2026-03-11 14:21:13] [INFO] ============================================================
+[2026-03-11 14:21:13] [INFO] 
 Output directory: /Users/4d/Documents/GitHub/template/output/code_project
-[2026-03-11 05:24:09] [INFO] 
+[2026-03-11 14:21:13] [INFO] 
 Files copied by directory:
-[2026-03-11 05:24:09] [INFO]   • PDF files: 10
-[2026-03-11 05:24:09] [INFO]   • Web files: 8
-[2026-03-11 05:24:09] [INFO]   • Slides files: 48
-[2026-03-11 05:24:09] [INFO]   • Figures: 7
-[2026-03-11 05:24:09] [INFO]   • Data files: 1
-[2026-03-11 05:24:09] [INFO]   • Reports: 8
-[2026-03-11 05:24:09] [INFO]   • Simulations: 0
-[2026-03-11 05:24:09] [INFO]   • LLM reviews: 0
-[2026-03-11 05:24:09] [INFO]   • Log files: 1
-[2026-03-11 05:24:09] [INFO]   • Combined PDF (root): 1
-[2026-03-11 05:24:09] [INFO] 
+[2026-03-11 14:21:13] [INFO]   • PDF files: 10
+[2026-03-11 14:21:13] [INFO]   • Web files: 8
+[2026-03-11 14:21:13] [INFO]   • Slides files: 48
+[2026-03-11 14:21:13] [INFO]   • Figures: 7
+[2026-03-11 14:21:13] [INFO]   • Data files: 1
+[2026-03-11 14:21:13] [INFO]   • Reports: 8
+[2026-03-11 14:21:13] [INFO]   • Simulations: 0
+[2026-03-11 14:21:13] [INFO]   • LLM reviews: 0
+[2026-03-11 14:21:13] [INFO]   • Log files: 1
+[2026-03-11 14:21:13] [INFO]   • Combined PDF (root): 1
+[2026-03-11 14:21:13] [INFO] 
   Total files copied: 83
-[2026-03-11 05:24:09] [INFO] 
+[2026-03-11 14:21:13] [INFO] 
 Directory structure:
-[2026-03-11 05:24:09] [INFO]   ✓ project_combined_pdf: 1.63 MB
-[2026-03-11 05:24:09] [INFO]   ✓ pdf: 10 files, 1.82 MB
-[2026-03-11 05:24:09] [INFO]   ✓ web: 8 files, 0.17 MB
-[2026-03-11 05:24:09] [INFO]   ✓ slides: 48 files, 2.2 MB
-[2026-03-11 05:24:09] [INFO]   ✓ figures: 7 files, 1.53 MB
-[2026-03-11 05:24:09] [INFO]   ✓ data: 1 files, 0.0 MB
-[2026-03-11 05:24:09] [INFO]   ✓ reports: 8 files, 0.01 MB
-[2026-03-11 05:24:09] [INFO]   ✓ simulations: 0 files, 0.0 MB
-[2026-03-11 05:24:09] [INFO]   ✓ llm: 0 files, 0.0 MB
-[2026-03-11 05:24:09] [INFO]   ✓ logs: 1 files, 0.0 MB
-[2026-03-11 05:24:09] [INFO] 
-[2026-03-11 05:24:09] [INFO] 
+[2026-03-11 14:21:13] [INFO]   ✓ project_combined_pdf: 1.64 MB
+[2026-03-11 14:21:13] [INFO]   ✓ pdf: 10 files, 1.82 MB
+[2026-03-11 14:21:13] [INFO]   ✓ web: 8 files, 0.17 MB
+[2026-03-11 14:21:13] [INFO]   ✓ slides: 48 files, 2.2 MB
+[2026-03-11 14:21:13] [INFO]   ✓ figures: 7 files, 1.54 MB
+[2026-03-11 14:21:13] [INFO]   ✓ data: 1 files, 0.0 MB
+[2026-03-11 14:21:13] [INFO]   ✓ reports: 8 files, 0.01 MB
+[2026-03-11 14:21:13] [INFO]   ✓ simulations: 0 files, 0.0 MB
+[2026-03-11 14:21:13] [INFO]   ✓ llm: 0 files, 0.0 MB
+[2026-03-11 14:21:13] [INFO]   ✓ logs: 1 files, 0.0 MB
+[2026-03-11 14:21:13] [INFO] 
+[2026-03-11 14:21:13] [INFO] 
 ✅ Output copying complete - all project outputs ready!
-[2026-03-11 05:24:09] [INFO] ✓ Stage 7 completed successfully (0.4s)
-[2026-03-11 05:24:09] [INFO] ✅ Project 'code_project' completed successfully
-[2026-03-11 05:24:09] [INFO] Completed: Pipeline execution for code_project (55.4s)
-[2026-03-11 05:24:09] [INFO] Multi-project execution completed: 1 successful, 0 failed
-[2026-03-11 05:24:09] [INFO] 
-[2026-03-11 05:24:09] [INFO] ==================================================
-[2026-03-11 05:24:09] [INFO] MULTI-PROJECT EXECUTION RESULTS
-[2026-03-11 05:24:09] [INFO] ==================================================
-[2026-03-11 05:24:09] [INFO] Operation: multi-project core execution (no infra)
-[2026-03-11 05:24:09] [INFO] Total Projects: 1
-[2026-03-11 05:24:09] [INFO] Successful: 1
-[2026-03-11 05:24:09] [INFO] Failed: 0
-[2026-03-11 05:24:09] [INFO] Success Rate: 100.0%
-[2026-03-11 05:24:09] [INFO] Total Duration: 55.4s
-[2026-03-11 05:24:09] [INFO] Average per Project: 55.4s
-[2026-03-11 05:24:09] [INFO] Project Status:
-[2026-03-11 05:24:09] [INFO]   ✅ code_project: 7 stages, 55.4s
-[2026-03-11 05:24:09] [INFO] Multi-project summary saved: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.json
-[2026-03-11 05:24:09] [INFO] Multi-project summary saved: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.md
-[2026-03-11 05:24:09] [INFO] Multi-project summary reports generated:
-[2026-03-11 05:24:09] [INFO]   • JSON: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.json
-[2026-03-11 05:24:09] [INFO]   • MARKDOWN: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.md
-[2026-03-11 05:24:09] [INFO] 🎉 All projects completed successfully!
+[2026-03-11 14:21:13] [INFO] ✓ Stage 7 completed successfully (0.3s)
+[2026-03-11 14:21:13] [INFO] ✅ Project 'code_project' completed successfully
+[2026-03-11 14:21:13] [INFO] Completed: Pipeline execution for code_project (40.9s)
+[2026-03-11 14:21:13] [INFO] Multi-project execution completed: 2 successful, 0 failed
+[2026-03-11 14:21:13] [INFO] 
+[2026-03-11 14:21:13] [INFO] ==================================================
+[2026-03-11 14:21:13] [INFO] MULTI-PROJECT EXECUTION RESULTS
+[2026-03-11 14:21:13] [INFO] ==================================================
+[2026-03-11 14:21:13] [INFO] Operation: multi-project core execution (no infra)
+[2026-03-11 14:21:13] [INFO] Total Projects: 2
+[2026-03-11 14:21:13] [INFO] Successful: 2
+[2026-03-11 14:21:13] [INFO] Failed: 0
+[2026-03-11 14:21:13] [INFO] Success Rate: 100.0%
+[2026-03-11 14:21:13] [INFO] Total Duration: 124.3s
+[2026-03-11 14:21:13] [INFO] Average per Project: 62.2s
+[2026-03-11 14:21:13] [INFO] Project Status:
+[2026-03-11 14:21:13] [INFO]   ✅ act_inf_metaanalysis: 7 stages, 83.4s
+[2026-03-11 14:21:13] [INFO]   ✅ code_project: 7 stages, 40.9s
+[2026-03-11 14:21:13] [INFO] Multi-project summary saved: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.json
+[2026-03-11 14:21:13] [INFO] Multi-project summary saved: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.md
+[2026-03-11 14:21:13] [INFO] Multi-project summary reports generated:
+[2026-03-11 14:21:13] [INFO]   • JSON: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.json
+[2026-03-11 14:21:13] [INFO]   • MARKDOWN: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.md
+[2026-03-11 14:21:13] [INFO] 🎉 All projects completed successfully!
