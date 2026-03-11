@@ -110,8 +110,8 @@ test-infra + test-project                                   │
 uvx ruff check infrastructure/ projects/*/src/ && uvx ruff format --check infrastructure/ projects/*/src/
 
 # Tests with coverage isolation
-uv run pytest tests/infra_tests/ --cov=infrastructure --cov-datafile=.coverage.infra --cov-fail-under=60 -m "not requires_ollama"
-uv run pytest projects/*/tests/ --cov=projects --cov-datafile=.coverage.project --cov-fail-under=90 -m "not requires_ollama"
+COVERAGE_FILE=.coverage.infra uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60 -m "not requires_ollama"
+COVERAGE_FILE=.coverage.project uv run pytest projects/*/tests/ --cov=projects --cov-fail-under=90 -m "not requires_ollama"
 
 # Security
 uv run pip-audit && uv run bandit -r -ll infrastructure/ scripts/ projects/ --exclude projects_archive,projects_in_progress

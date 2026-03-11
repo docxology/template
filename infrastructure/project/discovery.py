@@ -326,6 +326,8 @@ def get_project_metadata(project_dir: Path) -> dict:
             logger.debug("PyYAML not available, skipping config.yaml")
         except (OSError, ValueError, AttributeError) as e:
             logger.warning(f"Failed to parse {config_path}: {e}")
+        except Exception as e:
+            logger.warning(f"Failed to parse {config_path}: {e}")
 
     return metadata
 

@@ -41,6 +41,10 @@ def discover_markdown_files(repo_root: Path) -> list[Path]:
     return sorted(md_files)
 
 
+# Alias for backward compatibility with tests and other consumers
+find_markdown_files = discover_markdown_files
+
+
 def catalog_agents_readme(md_files: list[Path], repo_root: Path) -> list[str]:
     """Catalog all AGENTS.md and README.md files."""
     agents_readme = []

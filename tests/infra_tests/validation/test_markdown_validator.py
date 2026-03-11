@@ -192,7 +192,7 @@ class TestValidateRefs:
         manuscript.mkdir()
         (manuscript / "test.md").write_text("Reference to \\eqref{eq:missing}")
 
-        problems = validate_refs([str(manuscript / "test.md")], set(), set(), tmp_path)
+        problems = validate_refs([str(manuscript / "test.md")], str(manuscript), set(), set())
 
         assert len(problems) == 1
         assert "Missing equation label for \\eqref{eq:missing}" in problems[0]
@@ -204,7 +204,7 @@ class TestValidateRefs:
         manuscript.mkdir()
         (manuscript / "test.md").write_text("Link to [section](#missing_anchor)")
 
-        problems = validate_refs([str(manuscript / "test.md")], set(), set(), tmp_path)
+        problems = validate_refs([str(manuscript / "test.md")], str(manuscript), set(), set())
 
         assert len(problems) == 1
         assert "Missing anchor/label for link (#missing_anchor)" in problems[0]
@@ -216,7 +216,7 @@ class TestValidateRefs:
         manuscript.mkdir()
         (manuscript / "test.md").write_text("Visit https://example.com for more info")
 
-        problems = validate_refs([str(manuscript / "test.md")], set(), set(), tmp_path)
+        problems = validate_refs([str(manuscript / "test.md")], str(manuscript), set(), set())
 
         assert len(problems) == 1
         assert "Bare URL found" in problems[0]
@@ -228,7 +228,7 @@ class TestValidateRefs:
         manuscript.mkdir()
         (manuscript / "test.md").write_text("[https://example.com](https://example.com)")
 
-        problems = validate_refs([str(manuscript / "test.md")], set(), set(), tmp_path)
+        problems = validate_refs([str(manuscript / "test.md")], str(manuscript), set(), set())
 
         # The regex patterns can detect multiple issues with the same text
         assert len(problems) >= 1

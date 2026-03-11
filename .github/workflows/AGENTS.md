@@ -145,16 +145,14 @@ uvx ruff format --check infrastructure/ projects/*/src/
 uv run mypy infrastructure/ projects/*/src/
 
 # Reproduce infrastructure tests locally
-uv run pytest tests/infra_tests/ \
+COVERAGE_FILE=.coverage.infra uv run pytest tests/infra_tests/ \
   --cov=infrastructure \
-  --cov-datafile=.coverage.infra \
   --cov-fail-under=60 \
   -m "not requires_ollama"
 
 # Reproduce project tests locally
-uv run pytest projects/*/tests/ \
+COVERAGE_FILE=.coverage.project uv run pytest projects/*/tests/ \
   --cov=projects \
-  --cov-datafile=.coverage.project \
   --cov-fail-under=90 \
   -m "not requires_ollama"
 
@@ -189,15 +187,13 @@ uv run pytest tests/infra_tests/test_foo.py::TestClass::test_method -s --pdb
 ### Coverage below threshold
 ```bash
 # Infrastructure report
-uv run pytest tests/infra_tests/ \
-  --cov=infrastructure --cov-report=html \
-  --cov-datafile=.coverage.infra
+COVERAGE_FILE=.coverage.infra uv run pytest tests/infra_tests/ \
+  --cov=infrastructure --cov-report=html
 open htmlcov/index.html
 
 # Project report
-uv run pytest projects/*/tests/ \
-  --cov=projects --cov-report=html \
-  --cov-datafile=.coverage.project
+COVERAGE_FILE=.coverage.project uv run pytest projects/*/tests/ \
+  --cov=projects --cov-report=html
 open htmlcov/index.html
 ```
 

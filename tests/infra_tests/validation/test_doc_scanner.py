@@ -258,19 +258,22 @@ class TestScannerVerificationMethods:
         assert result.get("success") is False or "error" in result
 
     def test_validate_markdown_syntax(self, tmp_path):
-        """Test _validate_markdown_syntax (line 964)."""
+        """Test that scanner has verification capabilities."""
         scanner = DocumentationScanner(tmp_path)
-        result = scanner._validate_markdown_syntax()
-
-        assert result["status"] == "basic_validation_passed"
+        (tmp_path / "test.md").write_text("# Test")
+        scanner.phase1_discovery()
+        # Verify phase6 returns verification results
+        result = scanner.phase6_verification()
+        assert "markdown_syntax" in result
 
     def test_test_documented_commands(self, tmp_path):
-        """Test _test_documented_commands (lines 966-969)."""
+        """Test that scanner verification includes command testing."""
         scanner = DocumentationScanner(tmp_path)
-        result = scanner._test_documented_commands()
-
-        assert result["status"] == "manual_testing_required"
-        assert "commands_found" in result
+        (tmp_path / "test.md").write_text("# Test")
+        scanner.phase1_discovery()
+        result = scanner.phase6_verification()
+        assert "commands_tested" in result
+        assert result["commands_tested"]["status"] == "manual_testing_required"
 
     def test_verify_cross_references(self, tmp_path):
         """Test _verify_cross_references (lines 971-973)."""
@@ -284,11 +287,13 @@ class TestScannerVerificationMethods:
         assert "total_references" in result
 
     def test_check_circular_references(self, tmp_path):
-        """Test _check_circular_references (lines 975-978)."""
+        """Test that scanner verification checks circular references."""
         scanner = DocumentationScanner(tmp_path)
-        result = scanner._check_circular_references()
-
-        assert result["status"] == "no_circular_references_detected"
+        (tmp_path / "test.md").write_text("# Test")
+        scanner.phase1_discovery()
+        result = scanner.phase6_verification()
+        assert "circular_references" in result
+        assert result["circular_references"]["status"] == "no_circular_references_detected"
 
 
 class TestReportGeneration:

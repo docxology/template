@@ -29,11 +29,24 @@ from infrastructure.validation.doc_discovery import (
     run_discovery_phase,
 )
 from infrastructure.validation.doc_models import (
+    AccuracyIssue,
+    CompletenessGap,
+    DocumentationFile,
+    LinkIssue,
+    QualityIssue,
     ScanResults,
 )
 from infrastructure.validation.doc_quality import run_quality_phase
 
-__all__ = ["DocumentationScanner"]
+__all__ = [
+    "DocumentationScanner",
+    "AccuracyIssue",
+    "CompletenessGap",
+    "DocumentationFile",
+    "LinkIssue",
+    "QualityIssue",
+    "ScanResults",
+]
 
 logger = get_logger(__name__)
 

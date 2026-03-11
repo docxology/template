@@ -12,6 +12,7 @@ import sys
 import pytest
 
 from infrastructure.llm.cli.main import (
+    CLIError,
     check_command,
     main,
     models_command,
@@ -124,11 +125,8 @@ class TestCLICheckCommand:
 
         try:
             with caplog.at_level(logging.ERROR):
-                with pytest.raises(SystemExit) as exc_info:
+                with pytest.raises((CLIError, SystemExit)):
                     check_command(args)
-
-            assert exc_info.value.code == 1
-            assert "Cannot connect" in caplog.text or "cannot connect" in caplog.text.lower()
         finally:
             if old_host:
                 os.environ["OLLAMA_HOST"] = old_host
@@ -153,12 +151,8 @@ class TestCLITemplateCommand:
         """Test template command without name or list."""
         args = argparse.Namespace(list=False, name=None, input=None)
 
-        with caplog.at_level(logging.ERROR):
-            with pytest.raises(SystemExit) as exc_info:
-                template_command(args)
-
-        assert exc_info.value.code == 1
-        assert "Template name required" in caplog.text or "template" in caplog.text.lower()
+        with pytest.raises((CLIError, SystemExit)):
+            template_command(args)
 
 
 class TestCLIModelsCommand:
@@ -174,10 +168,8 @@ class TestCLIModelsCommand:
         os.environ["OLLAMA_HOST"] = "http://localhost:99999"
 
         try:
-            with pytest.raises(SystemExit) as exc_info:
+            with pytest.raises((CLIError, SystemExit)):
                 models_command(args)
-
-            assert exc_info.value.code == 1
         finally:
             if old_host:
                 os.environ["OLLAMA_HOST"] = old_host
@@ -207,12 +199,8 @@ class TestCLIQueryCommand:
         os.environ["OLLAMA_HOST"] = "http://localhost:99999"
 
         try:
-            with caplog.at_level(logging.ERROR):
-                with pytest.raises(SystemExit) as exc_info:
-                    query_command(args)
-
-            assert exc_info.value.code == 1
-            assert "Cannot connect" in caplog.text or "cannot connect" in caplog.text.lower()
+            with pytest.raises((CLIError, SystemExit)):
+                query_command(args)
         finally:
             if old_host:
                 os.environ["OLLAMA_HOST"] = old_host

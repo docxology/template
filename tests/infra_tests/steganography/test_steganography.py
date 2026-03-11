@@ -219,11 +219,15 @@ class TestOverlays:
         not _has_reportlab(), reason="reportlab not installed"
     )
     def test_create_footer_overlay(self):
-        from infrastructure.steganography.overlays import create_footer_overlay
+        from infrastructure.steganography.overlays import create_footer_overlay, FooterConfig
 
-        pdf_bytes = create_footer_overlay(
-            612, 792, document_id="abc123", page_number=1, total_pages=5, hash_short="deadbeef"
+        cfg = FooterConfig(
+            document_id="abc123",
+            page_number=1,
+            total_pages=5,
+            hash_short="deadbeef",
         )
+        pdf_bytes = create_footer_overlay(612, 792, cfg)
         assert isinstance(pdf_bytes, bytes)
         assert pdf_bytes.startswith(b"%PDF")
 

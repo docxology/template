@@ -116,17 +116,18 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Sync dependencies
-        run: uv sync
+      - name: Sync dependencies (dev + optional test groups)
+        run: uv sync --group rendering --group monitoring
 
       - name: Run infrastructure tests
+        env:
+          COVERAGE_FILE: .coverage.infra
         run: >-
           uv run pytest tests/infra_tests/
           --cov=infrastructure
           --cov-report=term-missing
           --cov-report=xml:coverage-infra.xml
           --cov-fail-under=60
-          --cov-datafile=.coverage.infra
           --durations=10
           -m "not requires_ollama"
 
@@ -168,17 +169,18 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Sync dependencies
-        run: uv sync
+      - name: Sync dependencies (dev + optional test groups)
+        run: uv sync --group rendering --group monitoring
 
       - name: Run project tests
+        env:
+          COVERAGE_FILE: .coverage.project
         run: >-
           uv run pytest projects/*/tests/
           --cov=projects
           --cov-report=term-missing
           --cov-report=xml:coverage-project.xml
           --cov-fail-under=90
-          --cov-datafile=.coverage.project
           --durations=10
           -m "not requires_ollama"
 
