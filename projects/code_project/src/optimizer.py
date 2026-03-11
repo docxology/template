@@ -152,7 +152,7 @@ def gradient_descent(
             f"Gradient descent converged in {iteration} iterations, final f(x)={final_obj_value:.6f}"  # noqa: E501
         )
     else:
-        logger.warning(
+        logger.debug(
             f"Gradient descent did not converge within {max_iterations} iterations, final f(x)={final_obj_value:.6f}"  # noqa: E501
         )
 

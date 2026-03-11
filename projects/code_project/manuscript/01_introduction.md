@@ -1,6 +1,6 @@
 # Introduction
 
-This `code_project` serves as the foundational exemplar for the [docxology/template](https://github.com/docxology/template) ecosystem, demonstrating a fully-tested numerical optimization implementation securely bracketed by rigorous infrastructure, hermetic testing, and extensive documentation architectures. The words you are reading—and the mathematical figures below them—have been programmably generated through an unbreakable custody chain starting from algorithm implementation through strict CI/CD validation to multi-format `.pdf` compilation.
+This `code_project` serves as the foundational exemplar for the [Research Project Template](https://github.com/docxology/template) ecosystem, demonstrating a fully-tested numerical optimization implementation securely bracketed by rigorous infrastructure, hermetic testing, and extensive documentation architectures. The words you are reading—and the mathematical figures below them—have been programmably generated through an unbreakable custody chain starting from algorithm implementation through strict CI/CD validation to multi-format `.pdf` compilation.
 
 ## Template Architecture Context
 
@@ -43,6 +43,6 @@ where $\alpha > 0$ is the step size (learning rate) and $\nabla f(x_k)$ is the g
 As the representative project for the repository, this implementation explicitly demonstrates:
 
 1. **Infrastructure-Coupled Code**: Scientific implementations that delegate logging, file ops, and reporting to the `infrastructure` core.
-2. **Zero-Mock Verification**: A strict 34-test validation suite proving numerical accuracy without artificial test boundaries.
+2. **Zero-Mock Verification**: A strict 39-test validation suite proving numerical accuracy without artificial test boundaries.
 3. **Automated Research Pipelines**: High-precision analyses that generate publication-quality, accessible visualizations automatically.
 4. **Agentic Documentation standards**: Native adherence to the RASP methodology and `AGENTS.md` guidelines, ensuring the logic remains verifiable by both human and artificial intelligence.

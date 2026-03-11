@@ -6,9 +6,9 @@ This section describes the implementation methodology, explicitly detailing how 
 
 ### Gradient Descent Algorithm
 
-The core algorithm implements the iterative procedure for unconstrained optimization. Crucially, the implementation is designed to be highly observable, delegating all logging to `infrastructure.core.logging_utils.ProjectLogger` and executing under the hermetic boundaries defined in [`projects/code_project/tests/conftest.py`](https://github.com/docxology/template/blob/main/projects/code_project/tests/conftest.py).
+The core algorithm implements the iterative procedure for unconstrained optimization. Crucially, the implementation is designed to be highly observable, delegating all logging to `infrastructure.core.logging_utils.ProjectLogger` and executing under the hermetic boundaries defined in the [test configuration](https://github.com/docxology/template/blob/main/projects/code_project/tests/conftest.py).
 
-**Algorithm 1: Gradient Descent (implemented in [`projects/code_project/src/optimizer.py`](https://github.com/docxology/template/blob/main/projects/code_project/src/optimizer.py#L42-L138))**
+**Algorithm 1: Gradient Descent (implemented in the [optimizer module](https://github.com/docxology/template/blob/main/projects/code_project/src/optimizer.py#L42-L138))**
 
 > **Input:** Initial point $x_0$, step size $\alpha$, tolerance $\epsilon$, max iterations $N_{\max}$
 >
@@ -26,7 +26,7 @@ The methodology explicitly bridges theoretical mathematics with production-grade
 
 ### Numerical Stability Analysis
 
-Rather than writing ad-hoc validation code, the project imports `infrastructure.scientific.stability.check_numerical_stability`. This utility subjects the objective function to a barrage of extreme inputs (NaN, Inf, $\pm 10^{10}$) to calculate a formalized stability score. If this score degrades, the [`scripts/02_run_analysis.py`](https://github.com/docxology/template/blob/main/scripts/02_run_analysis.py) execution deliberately aborts, ensuring the methodology cannot enter unrecoverable states.
+Rather than writing ad-hoc validation code, the project imports `infrastructure.scientific.stability.check_numerical_stability`. This utility subjects the objective function to a barrage of extreme inputs (NaN, Inf, $\pm 10^{10}$) to calculate a formalized stability score. If this score degrades, the [analysis orchestrator](https://github.com/docxology/template/blob/main/scripts/02_run_analysis.py) execution deliberately aborts, ensuring the methodology cannot enter unrecoverable states.
 
 ### Performance Benchmarking
 
@@ -60,7 +60,7 @@ The most critical aspect of the project's methodology is its validation framewor
 
 1. **Integration Testing**: The `tests/integration/` battery ensures that the optimization algorithm, the analysis pipeline, and the `infrastructure.rendering` components operate flawlessly together without simulated data.
 2. **Infrastructure Validation**: The `tests/infra_tests/` suite confirms that the underlying modules (e.g., `pipeline_reporter.py`, `doc_discovery.py`) behave deterministically.
-3. **Coverage Gates**: The [GitHub Actions CI workflow](https://github.com/docxology/template/blob/main/.github/workflows/ci.yml) enforces a mandatory 100% branch and statement coverage gate prior to compiling the manuscript to a PDF.
+3. **Coverage Gates**: The [GitHub Actions CI workflow](https://github.com/docxology/template/blob/main/.github/workflows/ci.yml) enforces a mandatory ≥90% statement coverage gate prior to compiling the manuscript to a PDF.
 
 ## Analysis Pipeline & LaTeX Integration
 

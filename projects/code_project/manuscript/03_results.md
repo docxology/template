@@ -1,6 +1,6 @@
 # Results
 
-This section presents the experimental results from the gradient descent optimization study, including convergence analysis and performance comparisons. Every table, figure, and quantitative assertion in this section was compiled autonomously by the template's `infrastructure.reporting` subsystem executing [`projects/code_project/scripts/optimization_analysis.py`](https://github.com/docxology/template/blob/main/projects/code_project/scripts/optimization_analysis.py). No manual transcription was permitted.
+This section presents the experimental results from the gradient descent optimization study, including convergence analysis and performance comparisons. Every table, figure, and quantitative assertion in this section was compiled autonomously by the template's `infrastructure.reporting` subsystem executing the [optimization analysis script](https://github.com/docxology/template/blob/main/projects/code_project/scripts/optimization_analysis.py). No manual transcription was permitted.
 
 ## Convergence Analysis
 
@@ -24,7 +24,7 @@ Figure \ref{fig:step_sensitivity} examines how the choice of step size affects t
 
 ## Quantitative Results
 
-The optimization results for different step sizes are synthesized computationally by orchestrating `infrastructure.reporting.pipeline_reporter`, feeding directly into the [output DataFrame `code_project/output/data/optimization_results.csv`](https://github.com/docxology/template/blob/main/projects/code_project/output/data/optimization_results.csv) that acts as the source of truth for Table 1:
+The optimization results for different step sizes are synthesized computationally by orchestrating `infrastructure.reporting.pipeline_reporter`, feeding directly into the [optimization results data](https://github.com/docxology/template/blob/main/projects/code_project/output/data/optimization_results.csv) that acts as the source of truth for Table 1:
 
 | Step Size (α) | Final Solution | Objective Value | Iterations | Converged |
 |---------------|----------------|-----------------|------------|-----------|
@@ -171,7 +171,7 @@ The implementation was validated through the comprehensive `tests/` suite:
 - **Infrastructure tests** covering all underlying mechanisms across `infrastructure.reporting`, `infrastructure.validation`, and `infrastructure.rendering`.
 - **Numerical accuracy** checks verified systematically using PyTest.
 
-All tests pass with 100% branch and statement coverage, ensuring implementation correctness across core logic, convergence detection, and logging pathways without the use of mocks.
+All tests pass with 96.6% statement coverage exceeding the 90% threshold, ensuring implementation correctness across core logic, convergence detection, and logging pathways without the use of mocks.
 
 ## Discussion
 
