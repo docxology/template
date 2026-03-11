@@ -34,6 +34,7 @@ jobs:
   lint:
     name: Lint & Type Check
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: read
     steps:
@@ -66,6 +67,7 @@ jobs:
   verify-no-mocks:
     name: Verify No Mocks Policy
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     needs: [lint]
     permissions:
       contents: read
@@ -93,6 +95,7 @@ jobs:
   test-infra:
     name: "Infra Tests (${{ matrix.os }}, Python ${{ matrix.python-version }})"
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
     needs: [verify-no-mocks]
     permissions:
       contents: read
@@ -135,6 +138,8 @@ jobs:
           flags: infrastructure
           name: infra-coverage
           fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Job 4 — Project Tests (matrix: ubuntu + macos × Python 3.10–3.12)
@@ -142,6 +147,7 @@ jobs:
   test-project:
     name: "Project Tests (${{ matrix.os }}, Python ${{ matrix.python-version }})"
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
     needs: [verify-no-mocks]
     permissions:
       contents: read
@@ -184,6 +190,8 @@ jobs:
           flags: projects
           name: project-coverage
           fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Job 5 — Validate Manuscripts
@@ -191,6 +199,7 @@ jobs:
   validate:
     name: Validate Manuscripts
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     needs: [lint]
     permissions:
       contents: read
@@ -243,6 +252,7 @@ jobs:
   security:
     name: Security Scan
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     needs: [lint]
     permissions:
       contents: read
@@ -280,6 +290,7 @@ jobs:
   performance:
     name: Performance Check
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     needs: [test-infra, test-project]
     permissions:
       contents: read

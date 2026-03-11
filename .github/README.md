@@ -166,8 +166,12 @@ Set in **Settings → Branches → main**:
 ```
 Required status checks:
   Lint & Type Check
-  Infra Tests (ubuntu-latest, 3.10/3.11/3.12)
-  Project Tests (ubuntu-latest, 3.10/3.11/3.12)
+  Infra Tests (ubuntu-latest, Python 3.10)
+  Infra Tests (ubuntu-latest, Python 3.11)
+  Infra Tests (ubuntu-latest, Python 3.12)
+  Project Tests (ubuntu-latest, Python 3.10)
+  Project Tests (ubuntu-latest, Python 3.11)
+  Project Tests (ubuntu-latest, Python 3.12)
   Validate Manuscripts
   Security Scan
   Performance Check

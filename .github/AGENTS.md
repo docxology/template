@@ -19,6 +19,7 @@ The `.github/` directory contains GitHub-specific configuration and automation f
 │   └── documentation.md         # Documentation update template
 └── workflows/
     ├── AGENTS.md                # CI/CD workflow documentation
+    ├── README.md                # Quick reference
     ├── ci.yml                   # Main CI/CD pipeline (7 jobs)
     ├── stale.yml                # Auto-label and close stale issues/PRs
     └── release.yml              # Create GitHub Releases on version tags
@@ -35,11 +36,11 @@ The `.github/` directory contains GitHub-specific configuration and automation f
 **Pipeline Jobs:**
 
 | # | Job | Depends on | Python | Runner |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | 1 | `lint` — Ruff + mypy | — | 3.12 | ubuntu |
 | 2 | `verify-no-mocks` | lint | 3.12 | ubuntu |
-| 3 | `test-infra` — 60% coverage | verify-no-mocks | 3.10–3.12 × ubuntu+macos |
-| 4 | `test-project` — 90% coverage | verify-no-mocks | 3.10–3.12 × ubuntu+macos |
+| 3 | `test-infra` — 60% coverage | verify-no-mocks | 3.10–3.12 | ubuntu+macos |
+| 4 | `test-project` — 90% coverage | verify-no-mocks | 3.10–3.12 | ubuntu+macos |
 | 5 | `validate` — manuscript markdown | lint | 3.12 | ubuntu |
 | 6 | `security` — pip-audit + bandit | lint | 3.12 | ubuntu |
 | 7 | `performance` — import ≤ 5 s | test-infra + test-project | 3.12 | ubuntu |
@@ -48,7 +49,7 @@ Coverage is uploaded to **Codecov** after each test job (3.12/ubuntu-latest only
 
 ### Stale Workflow (`workflows/stale.yml`)
 
-Runs daily. Issues → stale after 60 days, closed after 14 more. PRs → stale after 30 days, closed after 14 more. Exempt labels: `pinned`, `security`, `in-progress`, `blocked`.
+Runs daily. Issues → stale after 60 days, closed after 14 more. PRs → stale after 30 days, closed after 14 more. Exempt labels: `pinned`, `security`, `in-progress`, `blocked`, `do-not-close`.
 
 ### Release Workflow (`workflows/release.yml`)
 
@@ -57,6 +58,7 @@ Triggered by `v*.*.*` tag pushes. Generates a commit-based changelog and creates
 ## Dependabot (`dependabot.yml`)
 
 Automated weekly dependency updates for GitHub Actions and Python (pip/uv), with:
+
 - **PR limit:** 5 open PRs per ecosystem
 - **Labels:** `dependencies`, `automated`, ecosystem-specific label
 - **Grouped updates:** dev-tools (pytest, mypy, ruff…) and scientific-core (numpy, scipy…) batched separately
@@ -80,12 +82,12 @@ Automated weekly dependency updates for GitHub Actions and Python (pip/uv), with
 required_status_checks:
   contexts:
     - "Lint & Type Check"
-    - "Infra Tests (ubuntu-latest, 3.10)"
-    - "Infra Tests (ubuntu-latest, 3.11)"
-    - "Infra Tests (ubuntu-latest, 3.12)"
-    - "Project Tests (ubuntu-latest, 3.10)"
-    - "Project Tests (ubuntu-latest, 3.11)"
-    - "Project Tests (ubuntu-latest, 3.12)"
+    - "Infra Tests (ubuntu-latest, Python 3.10)"
+    - "Infra Tests (ubuntu-latest, Python 3.11)"
+    - "Infra Tests (ubuntu-latest, Python 3.12)"
+    - "Project Tests (ubuntu-latest, Python 3.10)"
+    - "Project Tests (ubuntu-latest, Python 3.11)"
+    - "Project Tests (ubuntu-latest, Python 3.12)"
     - "Validate Manuscripts"
     - "Security Scan"
     - "Performance Check"

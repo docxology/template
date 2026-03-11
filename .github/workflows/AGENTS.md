@@ -9,6 +9,7 @@ The `workflows/` directory contains GitHub Actions workflows that automate the c
 ```
 .github/workflows/
 ├── AGENTS.md       # This technical documentation
+├── README.md       # Quick reference
 ├── ci.yml          # Main CI/CD pipeline (7 jobs)
 ├── stale.yml       # Auto-label and close stale issues/PRs
 └── release.yml     # Create GitHub Releases on version tags
