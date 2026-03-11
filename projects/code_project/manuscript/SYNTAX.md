@@ -24,12 +24,13 @@ All citation keys must exist in `references.bib`. The pipeline will flag undefin
 
 ```markdown
 <!-- Numbered equation with label -->
-$$
+\begin{equation}
+\label{eq:gradient}
 \nabla f(x) = Ax - b
-$$ {#eq:gradient}
+\end{equation}
 
 <!-- Reference in text -->
-As shown in @eq:gradient, the gradient...
+As shown in Equation \ref{eq:gradient}, the gradient...
 ```
 
 Pandoc-crossref resolves `{#eq:label}` and `@eq:label` during rendering. Do **not** use raw `\label{}` / `\ref{}` — the Markdown filter handles this.

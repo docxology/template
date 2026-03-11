@@ -148,7 +148,7 @@ def gradient_descent(
     final_grad_norm = np.linalg.norm(gradient_func(x))
 
     if converged:
-        logger.info(
+        logger.debug(
             f"Gradient descent converged in {iteration} iterations, final f(x)={final_obj_value:.6f}"  # noqa: E501
         )
     else:

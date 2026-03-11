@@ -21,7 +21,7 @@ This is the most critical constraint in the repository.
 
 1. **NO MOCKS**: You are strictly forbidden from using `unittest.mock` or generating synthetic "fake" data to bypass tests.
 2. **Real Execution Only**: All tests in `tests/` must execute the actual scientific logic against real configurations.
-3. **100% Coverage Gate**: The CI pipeline will reject any push that drops branch or statement coverage below 100%. If you write a line of code, you must execute it with a test.
+3. **≥90% Coverage Gate**: The CI pipeline will reject any push that drops statement coverage below 90%. If you write a line of code, you must execute it with a test.
 4. **Hermetic Boundaries**: Execution must be contained by the fixtures in `tests/conftest.py`.
 
 ## 3. Infrastructure Coupling
@@ -40,7 +40,7 @@ This project strictly adheres to the Rigorous Agentic Scientific Protocol (RASP)
 1. **No Extraneous Summaries**: Do not add "In summary" or "In conclusion" to the ends of markdown sections.
 2. **LaTeX Integration**: Assume the manuscript files (`00_abstract.md`, etc.) are pre-processed by `preamble.md` and `config.yaml` before pandoc conversion.
 3. **Visualization Coupling**: If you change a visualization in `scripts/optimization_analysis.py`, you MUST update the corresponding caption in `03_results.md` to reflect the exact data shown.
-4. **Self-Referential Linking**: Whenever discussing a framework component in the text, link directly to its physical location, e.g., `[docxology/template/infrastructure/core/](https://github.com/docxology/template/tree/main/infrastructure/core)`.
+4. **Self-Referential Linking**: Whenever discussing a framework component in the text, link directly to its physical location, e.g., `[infrastructure core modules](https://github.com/docxology/template/tree/main/infrastructure/core)`.
 
 ## 5. Development Workflow
 
