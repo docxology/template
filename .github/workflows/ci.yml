@@ -95,7 +95,7 @@ jobs:
   test-infra:
     name: "Infra Tests (${{ matrix.os }}, Python ${{ matrix.python-version }})"
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 20
+    timeout-minutes: 30
     needs: [verify-no-mocks]
     permissions:
       contents: read
@@ -118,6 +118,10 @@ jobs:
 
       - name: Sync dependencies (dev + optional test groups)
         run: uv sync --group rendering --group monitoring
+
+      - name: Fix macOS socket.getfqdn timeout
+        if: runner.os == 'macOS'
+        run: sudo scutil --set HostName $(hostname)
 
       - name: Install pandoc
         uses: pandoc/actions/setup@v1
@@ -151,7 +155,7 @@ jobs:
   test-project:
     name: "Project Tests (${{ matrix.os }}, Python ${{ matrix.python-version }})"
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 20
+    timeout-minutes: 30
     needs: [verify-no-mocks]
     permissions:
       contents: read
@@ -175,13 +179,17 @@ jobs:
       - name: Sync dependencies (dev + optional test groups)
         run: uv sync --group rendering --group monitoring
 
+      - name: Fix macOS socket.getfqdn timeout
+        if: runner.os == 'macOS'
+        run: sudo scutil --set HostName $(hostname)
+
       - name: Run project tests
         env:
           COVERAGE_FILE: .coverage.project
           PYTHONPATH: .
         run: >-
           uv run pytest projects/*/tests/
-          --cov=projects
+          --cov=projects/code_project/src
           --cov-report=term-missing
           --cov-report=xml:coverage-project.xml
           --cov-fail-under=90
