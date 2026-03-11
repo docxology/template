@@ -152,7 +152,7 @@ COVERAGE_FILE=.coverage.infra uv run pytest tests/infra_tests/ \
 
 # Reproduce project tests locally
 COVERAGE_FILE=.coverage.project uv run pytest projects/*/tests/ \
-  --cov=projects \
+  --cov=projects/code_project/src \
   --cov-fail-under=90 \
   -m "not requires_ollama"
 
@@ -193,7 +193,7 @@ open htmlcov/index.html
 
 # Project report
 COVERAGE_FILE=.coverage.project uv run pytest projects/*/tests/ \
-  --cov=projects --cov-report=html
+  --cov=projects/code_project/src --cov-report=html
 open htmlcov/index.html
 ```
 
