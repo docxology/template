@@ -1,20 +1,67 @@
 # .github/dependabot.yml
 version: 2
 updates:
-  # Maintain dependencies for GitHub Actions
+  # ───────────────────────────────────────────
+  # GitHub Actions — weekly, max 5 open PRs
+  # ───────────────────────────────────────────
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "automated"
+      - "github-actions"
     commit-message:
-      prefix: "chore(deps)"
+      prefix: "chore(ci)"
       include: "scope"
+    groups:
+      actions-minor:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
 
-  # Maintain dependencies for uv configuration
+  # ───────────────────────────────────────────
+  # Python (uv / pip) — weekly, grouped
+  # ───────────────────────────────────────────
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "automated"
+      - "python"
     commit-message:
       prefix: "chore(deps)"
       include: "scope"
+    groups:
+      # Dev/testing tools batched — lower risk, single PR
+      dev-tools:
+        patterns:
+          - "pytest*"
+          - "mypy*"
+          - "ruff*"
+          - "black*"
+          - "bandit*"
+          - "pip-audit*"
+          - "types-*"
+          - "iniconfig*"
+        update-types: ["minor", "patch"]
+      # Core scientific deps batched separately
+      scientific-core:
+        patterns:
+          - "numpy*"
+          - "scipy*"
+          - "pandas*"
+          - "matplotlib*"
+          - "scikit-learn*"
+          - "networkx*"
+        update-types: ["minor", "patch"]

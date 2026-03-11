@@ -1,20 +1,44 @@
 ---
 name: Feature Request
-about: Suggest an idea for this project
-title: "[FEATURE] "
-labels: enhancement
-assignees: ''
+about: Suggest an improvement or new capability for the template
+title: "[FEATURE] <short description>"
+labels: ["enhancement", "needs-triage"]
+assignees: ""
 
 ---
 
-## Description
+## Summary
 
-Brief description of the feature
+<!-- One-sentence description of the feature. -->
 
-## Expected Behavior / Use Case
+## Motivation / Use Case
 
-What should this feature do and why is it useful?
+<!-- Why is this needed? What problem does it solve? -->
 
-## Proposed Implementation (Optional)
+## Proposed Implementation
 
-How would you approach implementing this?
+<!-- How would you approach implementing this? Be as specific as you can. -->
+
+## Alternatives Considered
+
+<!-- What other approaches did you consider, and why did you discard them? -->
+
+## Affected Components
+
+<!-- Check all that apply -->
+- [ ] `infrastructure/`
+- [ ] `scripts/` (pipeline entry points)
+- [ ] `projects/` (project scaffolding)
+- [ ] `.github/` (CI/CD)
+- [ ] Documentation
+- [ ] Other: <!-- describe -->
+
+## Priority
+
+- [ ] Low — nice to have
+- [ ] Medium — useful for many users
+- [ ] High — blocking a workflow
+
+## Additional Context
+
+<!-- Links, related issues, examples from other projects, etc. -->

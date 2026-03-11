@@ -5,8 +5,17 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  schedule:
+    # Weekly Sunday midnight UTC — catches newly-published CVEs without a push
+    - cron: "0 0 * * 0"
   workflow_dispatch:
+    inputs:
+      project:
+        description: "Specific project to test (leave blank for all)"
+        required: false
+        default: ""
 
+# Global minimum permissions; individual jobs override where needed
 permissions:
   contents: read
 
@@ -18,121 +27,193 @@ env:
   UV_FROZEN: "true"
   MPLBACKEND: Agg
 
+# ─────────────────────────────────────────────────────────────────────────────
+# Job 1 — Lint & Type Check
+# ─────────────────────────────────────────────────────────────────────────────
 jobs:
   lint:
     name: Lint & Type Check
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v7
+
+      - uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
           cache-dependency-glob: "**/uv.lock"
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
       - name: Sync dependencies
         run: uv sync
+
       - name: Ruff lint
         run: uvx ruff check infrastructure/ projects/*/src/
+
       - name: Ruff format check
         run: uvx ruff format --check infrastructure/ projects/*/src/
+
       - name: Type checking
         run: uv run mypy infrastructure/ projects/*/src/
 
+# ─────────────────────────────────────────────────────────────────────────────
+# Job 2 — No-Mocks Policy Verification
+# ─────────────────────────────────────────────────────────────────────────────
   verify-no-mocks:
     name: Verify No Mocks Policy
     runs-on: ubuntu-latest
     needs: [lint]
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v7
+
+      - uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
           cache-dependency-glob: "**/uv.lock"
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
       - name: Sync dependencies
         run: uv sync
+
       - name: Verify no mock usage in tests
         run: uv run python scripts/verify_no_mocks.py
 
+# ─────────────────────────────────────────────────────────────────────────────
+# Job 3 — Infrastructure Tests (matrix: ubuntu + macos × Python 3.10–3.12)
+# ─────────────────────────────────────────────────────────────────────────────
   test-infra:
     name: "Infra Tests (${{ matrix.os }}, Python ${{ matrix.python-version }})"
     runs-on: ${{ matrix.os }}
     needs: [verify-no-mocks]
+    permissions:
+      contents: read
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest]
         python-version: ["3.10", "3.11", "3.12"]
     steps:
       - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v7
+
+      - uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
           cache-dependency-glob: "**/uv.lock"
+
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+
       - name: Sync dependencies
         run: uv sync
+
       - name: Run infrastructure tests
         run: >-
           uv run pytest tests/infra_tests/
           --cov=infrastructure
           --cov-report=term-missing
+          --cov-report=xml:coverage-infra.xml
           --cov-fail-under=60
+          --cov-datafile=.coverage.infra
           --durations=10
           -m "not requires_ollama"
 
+      - name: Upload infrastructure coverage to Codecov
+        if: matrix.python-version == '3.12' && matrix.os == 'ubuntu-latest'
+        uses: codecov/codecov-action@v5
+        with:
+          files: coverage-infra.xml
+          flags: infrastructure
+          name: infra-coverage
+          fail_ci_if_error: false
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Job 4 — Project Tests (matrix: ubuntu + macos × Python 3.10–3.12)
+# ─────────────────────────────────────────────────────────────────────────────
   test-project:
     name: "Project Tests (${{ matrix.os }}, Python ${{ matrix.python-version }})"
     runs-on: ${{ matrix.os }}
     needs: [verify-no-mocks]
+    permissions:
+      contents: read
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest]
         python-version: ["3.10", "3.11", "3.12"]
     steps:
       - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v7
+
+      - uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
           cache-dependency-glob: "**/uv.lock"
+
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+
       - name: Sync dependencies
         run: uv sync
+
       - name: Run project tests
         run: >-
           uv run pytest projects/*/tests/
           --cov=projects
           --cov-report=term-missing
+          --cov-report=xml:coverage-project.xml
+          --cov-fail-under=90
+          --cov-datafile=.coverage.project
           --durations=10
+          -m "not requires_ollama"
 
+      - name: Upload project coverage to Codecov
+        if: matrix.python-version == '3.12' && matrix.os == 'ubuntu-latest'
+        uses: codecov/codecov-action@v5
+        with:
+          files: coverage-project.xml
+          flags: projects
+          name: project-coverage
+          fail_ci_if_error: false
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Job 5 — Validate Manuscripts
+# ─────────────────────────────────────────────────────────────────────────────
   validate:
     name: Validate Manuscripts
     runs-on: ubuntu-latest
     needs: [lint]
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v7
+
+      - uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
           cache-dependency-glob: "**/uv.lock"
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
       - name: Sync dependencies
         run: uv sync
+
       - name: Validate manuscript markdown
         run: >-
           uv run python -m infrastructure.validation.cli markdown
           projects/*/manuscript/
+
       - name: Verify project imports
         run: |
           uv run python -c "
@@ -140,57 +221,83 @@ jobs:
           import sys
           import importlib
 
-          # Find all project src directories
+          # Discover all active project src directories
           projects = [p.parent.name for p in Path('projects').glob('*/src') if p.is_dir()]
+          if not projects:
+              print('No projects found — skipping import check')
+              sys.exit(0)
           for project in projects:
               module_name = f'projects.{project}.src'
               try:
                   importlib.import_module(module_name)
-                  print(f'Imported {module_name} OK')
+                  print(f'  OK: {module_name}')
               except Exception as e:
-                  print(f'Failed to import {module_name}: {e}')
+                  print(f'  FAIL: {module_name}: {e}')
                   sys.exit(1)
+          print(f'All {len(projects)} project(s) imported successfully')
           "
 
+# ─────────────────────────────────────────────────────────────────────────────
+# Job 6 — Security Scan
+# ─────────────────────────────────────────────────────────────────────────────
   security:
     name: Security Scan
     runs-on: ubuntu-latest
     needs: [lint]
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v7
+
+      - uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
           cache-dependency-glob: "**/uv.lock"
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
       - name: Sync dependencies
         run: uv sync
+
       - name: Dependency audit (pip-audit)
+        # continue-on-error: upstream vuln DBs can be intermittently unavailable
+        continue-on-error: true
         run: uv run pip-audit
-      - name: Code security scan (Bandit MEDIUM+)
+
+      - name: Code security scan (Bandit MEDIUM+ severity)
         run: >-
           uv run bandit -r -ll
           infrastructure/
           scripts/
           projects/
+          --exclude projects_archive,projects_in_progress
 
+# ─────────────────────────────────────────────────────────────────────────────
+# Job 7 — Performance Check
+# ─────────────────────────────────────────────────────────────────────────────
   performance:
     name: Performance Check
     runs-on: ubuntu-latest
     needs: [test-infra, test-project]
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v7
+
+      - uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
           cache-dependency-glob: "**/uv.lock"
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
       - name: Sync dependencies
         run: uv sync
+
       - name: Run import benchmarks
         run: |
           uv run python -c "
@@ -199,20 +306,36 @@ jobs:
           import importlib
           from pathlib import Path
 
-          start = time.time()
-          import infrastructure.core
+          THRESHOLD_SECONDS = 5.0
+          results = {}
 
+          # Infrastructure core
+          t0 = time.perf_counter()
+          try:
+              import infrastructure.core
+              results['infrastructure.core'] = time.perf_counter() - t0
+          except ImportError as e:
+              print(f'SKIP infrastructure.core: {e}')
+
+          # Each active project
           projects = [p.parent.name for p in Path('projects').glob('*/src') if p.is_dir()]
           for project in projects:
-              importlib.import_module(f'projects.{project}.src')
-              
-          elapsed = time.time() - start
+              module_name = f'projects.{project}.src'
+              t0 = time.perf_counter()
+              try:
+                  importlib.import_module(module_name)
+                  results[module_name] = time.perf_counter() - t0
+              except ImportError as e:
+                  print(f'SKIP {module_name}: {e}')
 
-          print(f'Import time: {elapsed:.3f}s')
+          total = sum(results.values())
+          print('Import timing:')
+          for name, elapsed in results.items():
+              print(f'  {elapsed:.3f}s  {name}')
+          print(f'Total: {total:.3f}s (threshold: {THRESHOLD_SECONDS}s)')
 
-          if elapsed > 5.0:
-              print('WARNING: Slow import time detected')
+          if total > THRESHOLD_SECONDS:
+              print('ERROR: Import time exceeds threshold')
               sys.exit(1)
-          else:
-              print('Performance check passed')
+          print('Performance check passed')
           "

@@ -1,366 +1,223 @@
-# .github/ - GitHub Integration
+<div align="center">
 
-GitHub-specific configuration and automation ensuring code quality, collaborative development, and continuous integration. Includes CI/CD workflows, issue templates, and integration features.
+# 🔬 Research Project Template
 
-## Overview
+**Production-grade scaffold for reproducible academic research**
 
-```mermaid
-graph TD
-    subgraph GitHubIntegration[".github/ - GitHub Integration"]
-        WORKFLOWS[workflows/<br/>CI/CD pipelines<br/>Automated testing]
-        AGENTS[AGENTS.md<br/>Technical documentation<br/>GitHub integration guide]
-        README[README.md<br/>Quick reference<br/>This file]
-    end
+[![CI](https://github.com/docxology/template/actions/workflows/ci.yml/badge.svg)](https://github.com/docxology/template/actions/workflows/ci.yml)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue?logo=python&logoColor=white)](https://www.python.org/)
+[![uv](https://img.shields.io/badge/package%20manager-uv-purple?logo=astral)](https://docs.astral.sh/uv/)
+[![Ruff](https://img.shields.io/badge/linter-ruff-orange?logo=ruff)](https://docs.astral.sh/ruff/)
+[![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-green)](../LICENSE)
+[![Version](https://img.shields.io/badge/version-3.0.0-informational)](../pyproject.toml)
 
-    subgraph Automation["Automation Features"]
-        CI[CI Pipeline<br/>Quality assurance<br/>Multi-version testing]
-        QUALITY[Code Quality<br/>Linting & formatting<br/>Ruff integration]
-        TESTING[Test Coverage<br/>Automated testing<br/>Coverage reports]
-    end
+[**⚡ Quick Start**](#-quick-start) · [**📐 Architecture**](#-architecture) · [**🔄 CI/CD Pipeline**](#-cicd-pipeline) · [**📋 Templates**](#-issue--pr-templates) · [**🔧 Configuration**](#-configuration)
 
-    subgraph Collaboration["Collaboration Features"]
-        TEMPLATES[Issue Templates<br/>Structured reporting<br/>Bug reports & features]
-        PROTECTION[Branch Protection<br/>Quality gates<br/>Required reviews]
-        WORKFLOW[Workflow Automation<br/>Automated checks<br/>Status reporting]
-    end
+</div>
 
-    AGENTS --> WORKFLOWS
-    WORKFLOWS --> CI
-    CI --> QUALITY
-    CI --> TESTING
-    AGENTS --> TEMPLATES
-    TEMPLATES --> PROTECTION
-    PROTECTION --> WORKFLOW
+---
 
-    classDef docs fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef automation fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef collaboration fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+## ⚡ Quick Start
 
-    class AGENTS,README docs
-    class CI,QUALITY,TESTING automation
-    class TEMPLATES,PROTECTION,WORKFLOW collaboration
-```
-
-## Quick Start
-
-### CI/CD Status
 ```bash
-# Check workflow status
-gh workflow list
+# 1. Clone / use template
+gh repo create my-research --template docxology/template --private
+cd my-research
 
-# View recent runs
-gh run list --workflow=CI
+# 2. Install dependencies (uv required)
+uv sync
 
-# Check current branch status
-gh workflow view CI --ref=main
+# 3. Run the full 10-stage pipeline
+./run.sh --pipeline
+
+# 4. Outputs land in output/{project-name}/
 ```
 
-### Local CI Simulation
-```bash
-# Simulate CI environment locally
-export CI=true
-export GITHUB_ACTIONS=true
+> **Don't have `uv`?** Install it: `curl -Ls https://astral.sh/uv/install.sh | sh`
 
-# Run linting (matches CI)
-uvx ruff check infrastructure/ projects/act_inf_metaanalysis/src/
-uvx ruff format --check infrastructure/ projects/act_inf_metaanalysis/src/
+---
 
-# Run tests with coverage (matches CI)
-uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
-uv run pytest projects/act_inf_metaanalysis/tests/ --cov=projects/act_inf_metaanalysis/src --cov-fail-under=90
+## 📐 Architecture
+
+```
+template/
+├── infrastructure/          ← Generic reusable library (Layer 1)
+│   ├── core/                   logging, pipeline, checkpointing
+│   ├── rendering/              PDF + LaTeX generation
+│   ├── validation/             markdown + PDF QA
+│   ├── scientific/             benchmarking, numerical stability
+│   ├── reporting/              executive reports, dashboards
+│   └── steganography/          cryptographic watermarking
+│
+├── projects/{name}/         ← Your research project (Layer 2)
+│   ├── src/                    domain-specific algorithms
+│   ├── tests/                  project test suite (≥90% coverage)
+│   ├── scripts/                thin orchestrators → import from src/
+│   ├── manuscript/             markdown → PDF pipeline
+│   │   └── config.yaml         paper metadata, LLM/translation opts
+│   └── output/                 generated artefacts (disposable)
+│
+├── scripts/                 ← Generic pipeline entry points (00–07)
+├── output/{name}/           ← Final deliverables (PDF, web, data)
+├── run.sh                   ← Main interactive + pipeline entry point
+└── secure_run.sh            ← Pipeline + steganographic PDF hardening
 ```
 
-## Key Features
+**Key pattern:** business logic lives in `projects/{name}/src/` — scripts are **thin orchestrators** that import and call it. Violating this breaks the architecture.
 
-### Continuous Integration
-- **Automated testing** across Python versions (3.10, 3.11, 3.12)
-- **Code quality checks** with Ruff linting and formatting
-- **Coverage validation** (60% infrastructure, 90% project minimum)
-- **Multi-platform support** (Ubuntu latest)
+---
 
-### Quality Assurance
-- **Branch protection** with required status checks
-- **Automated PR validation** before merge
-- **Coverage reporting** with codecov integration
-- **Security scanning** (future enhancement)
+## 🔄 CI/CD Pipeline
 
-### Collaboration Tools
-- **Issue templates** for structured bug reports
-- **PR templates** for consistent pull requests
-- **Automated labeling** and triage
-- **Status reporting** for all contributions
+### Workflows
 
-## CI Pipeline
+| Workflow | Trigger | Purpose |
+|---|---|---|
+| [`ci.yml`](workflows/ci.yml) | push · PR · weekly · manual | Full 7-job quality gate |
+| [`stale.yml`](workflows/stale.yml) | Daily 01:00 UTC | Close inactive issues/PRs |
+| [`release.yml`](workflows/release.yml) | `v*.*.*` tag · manual | GitHub Release with changelog |
 
-### Workflow Triggers
-```yaml
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+### CI Job Flow
+
 ```
-
-### Pipeline Jobs
-
-#### Lint & Type Check (`lint`)
-- **Python Version:** 3.12
-- **Scope:** `infrastructure/` and `projects/act_inf_metaanalysis/src/`
-- **Tools:** Ruff (linting + formatting), mypy (type checking)
-- **Duration:** ~30 seconds
-
-#### Infrastructure Tests (`test-infra`)
-- **Python Versions:** 3.10, 3.11, 3.12 (matrix)
-- **Scope:** `tests/infra_tests/` with 60% coverage minimum
-- **Duration:** ~2-3 minutes per version
-
-#### Project Tests (`test-project`)
-- **Python Versions:** 3.10, 3.11, 3.12 (matrix)
-- **Scope:** `projects/act_inf_metaanalysis/tests/` with 90% coverage minimum
-- **Duration:** ~2-3 minutes per version
-
-#### Validate Manuscripts (`validate`)
-- **Python Version:** 3.12
-- **Scope:** Manuscript markdown validation and project import verification
-- **Depends on:** `lint`
-
-#### Security Scan (`security`)
-- **Python Version:** 3.12
-- **Scope:** Dependency audit (`pip-audit`) and code scan (`bandit`)
-- **Depends on:** `lint`
-
-#### Performance Check (`performance`)
-- **Python Version:** 3.12
-- **Scope:** Import time benchmarks (must complete under 5 seconds)
-- **Depends on:** `test-infra`, `test-project`
-
-### Status Checks
-```bash
-# Required status checks for main branch
-- lint (Python 3.12)
-- test-infra (Python 3.10, 3.11, 3.12)
-- test-project (Python 3.10, 3.11, 3.12)
-- validate
-- security
-- performance
-```
-
-## Branch Protection
-
-### Recommended Setup
-```yaml
-# GitHub Branch Protection Rules
-required_status_checks:
-  - lint
-  - test-infra (3.10)
-  - test-infra (3.11)
-  - test-infra (3.12)
-  - test-project (3.10)
-  - test-project (3.11)
-  - test-project (3.12)
-  - validate
-  - security
-  - performance
-
-required_pull_request_reviews:
-  required_approving_review_count: 1
-
-restrictions: null
+lint ──────────────────────────────────────────────────────┐
+ └─► verify-no-mocks                                        │
+      ├─► test-infra  [ubuntu+mac × 3.10/3.11/3.12]  ≥60% │
+      ├─► test-project [ubuntu+mac × 3.10/3.11/3.12]  ≥90% │
+      ├─► validate    [manuscript markdown + imports]        │
+      └─► security    [pip-audit + bandit MEDIUM+]           │
+test-infra + test-project                                   │
+ └─► performance     [import time ≤ 5 s]                   ◄┘
 ```
 
 ### Quality Gates
-- **Code must pass linting** (Ruff check + format)
-- **Tests must pass** on both Python versions
-- **Coverage requirements** must be met
-- **PR review required** before merge
 
-## Issue Templates
+| Gate | Tool | Threshold |
+|---|---|---|
+| Code style | Ruff | zero violations |
+| Formatting | Ruff | zero diffs |
+| Type safety | mypy | no errors |
+| No mocks | `verify_no_mocks.py` | zero mock usage |
+| Infra coverage | pytest-cov | **≥ 60%** |
+| Project coverage | pytest-cov | **≥ 90%** |
+| Security | Bandit MEDIUM+ | zero findings |
+| Performance | import timer | **≤ 5 s** |
 
-### Available Templates
-- **Bug Report:** Structured bug reporting with reproduction steps
-- **Feature Request:** Feature proposals with use cases
-- **Documentation:** Documentation improvements and corrections
+### Simulate CI Locally
 
-### Template Structure
-```markdown
-## Description
-Brief description of the issue/feature
+```bash
+# Lint
+uvx ruff check infrastructure/ projects/*/src/ && uvx ruff format --check infrastructure/ projects/*/src/
 
-## Expected Behavior
-What should happen?
+# Tests with coverage isolation
+uv run pytest tests/infra_tests/ --cov=infrastructure --cov-datafile=.coverage.infra --cov-fail-under=60 -m "not requires_ollama"
+uv run pytest projects/*/tests/ --cov=projects --cov-datafile=.coverage.project --cov-fail-under=90 -m "not requires_ollama"
 
-## Actual Behavior
-What actually happens?
-
-## Steps to Reproduce
-1. Step 1
-2. Step 2
-3. Step 3
-
-## Environment
-- OS: [e.g., macOS, Ubuntu]
-- Python: [e.g., 3.10, 3.11]
-- Browser: [if applicable]
+# Security
+uv run pip-audit && uv run bandit -r -ll infrastructure/ scripts/ projects/ --exclude projects_archive,projects_in_progress
 ```
 
-## Pull Request Template
+---
 
-### Required Sections
-- **Description:** Brief description of changes
-- **Type of Change:** Bug fix, new feature, documentation update, etc.
-- **Testing:** What tests were added/modified
-- **Checklist:** Code standards, documentation updates, etc.
+## 📦 Dependency Management
 
-## Workflow Management
+[`dependabot.yml`](dependabot.yml) — weekly automated PRs for both ecosystems:
 
-### Common Commands
+| Ecosystem | Group | Max open PRs |
+|---|---|---|
+| GitHub Actions | all minor/patch batched | 5 |
+| Python (pip/uv) | `dev-tools` (pytest, mypy, ruff…) | 5 |
+| Python (pip/uv) | `scientific-core` (numpy, scipy…) | 5 |
+
+Labels added automatically: `dependencies` · `automated` · ecosystem tag.
+
+---
+
+## 📋 Issue & PR Templates
+
+### Issues → [New Issue](https://github.com/docxology/template/issues/new/choose)
+
+| Template | Labels | Best for |
+|---|---|---|
+| [🐛 Bug Report](ISSUE_TEMPLATE/bug_report.md) | `bug` · `needs-triage` | Reproducible errors with log output and pipeline stage |
+| [✨ Feature Request](ISSUE_TEMPLATE/feature_request.md) | `enhancement` · `needs-triage` | New capabilities with priority and alternatives |
+| [📝 Documentation](ISSUE_TEMPLATE/documentation.md) | `documentation` · `needs-triage` | Incorrect, missing, or outdated docs with file paths |
+
+> 💬 **Questions?** Use [GitHub Discussions](https://github.com/docxology/template/discussions) — blank issues are disabled.
+
+### Pull Requests → [PR Template](PULL_REQUEST_TEMPLATE.md)
+
+The PR template enforces:
+- ✅ Linked issue(s)
+- ✅ Type-of-change classification
+- ✅ Pipeline stage(s) affected
+- ✅ Test evidence (local run confirmation)
+- ✅ **No-mocks policy confirmation** (zero `MagicMock`/`mocker.patch`)
+- ✅ Thin Orchestrator pattern compliance
+
+---
+
+## 🔧 Configuration
+
+### Branch Protection (Recommended)
+
+Set in **Settings → Branches → main**:
+
+```
+Required status checks:
+  Lint & Type Check
+  Infra Tests (ubuntu-latest, 3.10/3.11/3.12)
+  Project Tests (ubuntu-latest, 3.10/3.11/3.12)
+  Validate Manuscripts
+  Security Scan
+  Performance Check
+
+Require PR review before merging: 1 approver
+```
+
+### Secrets Needed
+
+| Secret | Required for |
+|---|---|
+| `CODECOV_TOKEN` | Coverage upload to Codecov (optional but recommended) |
+
+---
+
+## 🔍 Troubleshooting
+
 ```bash
-# List workflows
+# Workflow status
 gh workflow list
-
-# View workflow details
-gh workflow view CI
-
-# Run workflow manually (if workflow_dispatch enabled)
-gh workflow run CI
-
-# Check workflow status
 gh run list --workflow=CI --limit=5
+
+# View failure logs
+gh run view <run-id> --log-failed
+
+# Re-run failed jobs only
+gh run rerun <run-id> --failed
+
+# Fix linting locally
+uvx ruff check infrastructure/ projects/*/src/ --fix
+uvx ruff format infrastructure/ projects/*/src/
 ```
 
-### Debugging Failures
-```bash
-# View failed run logs
-gh run view <run-id> --log
+---
 
-# Download artifacts
-gh run download <run-id>
+## 📂 Navigation
 
-# Rerun failed jobs
-gh run rerun <run-id>
-```
+| Directory | Purpose |
+|---|---|
+| [`workflows/`](workflows/) | CI/CD workflow YAML files |
+| [`ISSUE_TEMPLATE/`](ISSUE_TEMPLATE/) | Structured issue templates |
+| [`PULL_REQUEST_TEMPLATE.md`](PULL_REQUEST_TEMPLATE.md) | PR checklist |
+| [`dependabot.yml`](dependabot.yml) | Automated dependency updates |
+| [`AGENTS.md`](AGENTS.md) | Deep technical CI/CD documentation |
+| [`workflows/AGENTS.md`](workflows/AGENTS.md) | Per-workflow technical docs |
 
-## Integration Points
+---
 
-### With Repository
-- **Automatic execution** on pushes to main and pull requests
-- **Status reporting** to GitHub UI
-- **Coverage badges** linked to codecov
-- **Branch protection** integration
+<div align="center">
 
-### With Development
-- **Pre-merge validation** ensures code quality
-- **Automated feedback** on pull requests
-- **Coverage tracking** over time
-- **Multi-version compatibility** assurance
+**[📖 Root AGENTS.md](../AGENTS.md)** · **[🚀 How To Use](../docs/core/how-to-use.md)** · **[🏗️ Architecture](../docs/core/architecture.md)** · **[🐛 Issues](https://github.com/docxology/template/issues)** · **[💬 Discussions](https://github.com/docxology/template/discussions)**
 
-## Customization
-
-### Adding New Workflows
-```yaml
-# .github/workflows/new-workflow.yml
-name: New Workflow
-on:
-  push:
-    branches: [main]
-
-jobs:
-  new-job:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: New step
-        run: echo "Custom workflow logic"
-```
-
-### Modifying CI Pipeline
-1. Edit `workflows/ci.yml`
-2. Test changes locally first
-3. Commit and create pull request
-4. Monitor CI results
-5. Update documentation if needed
-
-## Troubleshooting
-
-### Common Issues
-
-#### Workflow Not Triggering
-```bash
-# Check workflow file syntax
-gh workflow run --list
-
-# Verify trigger conditions match
-# Check branch name, file paths, etc.
-```
-
-#### Linting Failures
-```bash
-# Fix locally first
-uvx ruff check infrastructure/ projects/act_inf_metaanalysis/src/ --fix
-uvx ruff format infrastructure/ projects/act_inf_metaanalysis/src/
-
-# Commit fixes
-git add .
-git commit -m "fix: linting issues"
-```
-
-#### Test Failures
-```bash
-# Run infrastructure tests locally
-uv run pytest tests/infra_tests/ -v
-
-# Run project tests locally
-uv run pytest projects/act_inf_metaanalysis/tests/ -v
-
-# Debug specific test
-uv run pytest tests/infra_tests/test_specific.py::TestClass::test_method -s
-```
-
-#### Coverage Issues
-```bash
-# Check infrastructure coverage locally
-uv run pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
-open htmlcov/index.html
-
-# Check project coverage locally
-uv run pytest projects/act_inf_metaanalysis/tests/ --cov=projects/act_inf_metaanalysis/src --cov-report=html
-open htmlcov/index.html
-```
-
-## Security
-
-### Secret Management
-- **GitHub Secrets:** Encrypted storage for tokens
-- **Environment Variables:** Secure value injection
-- **Access Control:** Minimal required permissions
-- **Audit Logging:** Secret access tracking
-
-### Security Scanning
-```yaml
-# Active in CI security job
-- name: Dependency audit
-  run: uv run pip-audit
-- name: Code security scan
-  run: uv run bandit -r infrastructure/ projects/act_inf_metaanalysis/src/
-```
-
-## Monitoring
-
-### Pipeline Metrics
-- **Success Rate:** Percentage of successful builds
-- **Build Duration:** Average execution time
-- **Coverage Trends:** Test coverage over time
-- **Failure Patterns:** Common failure modes
-
-### Integration Monitoring
-- **Status Checks:** Real-time build status
-- **Coverage Reports:** Automated coverage uploads
-- **Performance Tracking:** Build time monitoring
-- **Quality Metrics:** Automated quality assessment
-
-## See Also
-
-- [`AGENTS.md`](AGENTS.md) - Complete GitHub integration guide
-- [`workflows/AGENTS.md`](workflows/AGENTS.md) - CI/CD workflow documentation
-- [`../docs/development/CONTRIBUTING.md`](../docs/development/CONTRIBUTING.md) - Contribution guidelines
-- [`../docs/operational/CI_CD_INTEGRATION.md`](../docs/operational/CI_CD_INTEGRATION.md) - CI/CD integration guide
+</div>
