@@ -47,6 +47,7 @@ TRANSLATION_LANGUAGES = {
     "de": "German",
 }
 
+
 class ManuscriptExecutiveSummary(ResearchTemplate):
     """Template for generating executive summary of a manuscript.
 
@@ -185,6 +186,7 @@ Begin your executive summary now:"""
             **kwargs,
         )
 
+
 class ManuscriptQualityReview(ResearchTemplate):
     """Template for reviewing writing quality of a manuscript.
 
@@ -313,6 +315,7 @@ Begin your quality review now:"""
             **kwargs,
         )
 
+
 class ManuscriptMethodologyReview(ResearchTemplate):
     """Template for reviewing methodology and structure of a manuscript.
 
@@ -420,6 +423,7 @@ Begin your methodology review now:"""
             validation_hints=validation,
             **kwargs,
         )
+
 
 class ManuscriptImprovementSuggestions(ResearchTemplate):
     """Template for generating improvement suggestions for a manuscript.
@@ -547,6 +551,7 @@ Begin your improvement suggestions now:"""
             validation_hints=validation,
             **kwargs,
         )
+
 
 class ManuscriptTranslationAbstract(ResearchTemplate):
     """Template for generating a technical abstract and translating to target language.

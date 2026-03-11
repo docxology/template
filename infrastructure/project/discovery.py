@@ -15,6 +15,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+
 @dataclass
 class ProjectInfo:
     """Information about a discovered project.
@@ -193,6 +194,7 @@ def _discover_nested_projects(program_dir: Path, program_name: str) -> list[Proj
 
     return nested_projects
 
+
 def validate_project_structure(project_dir: Path) -> tuple[bool, str]:
     """Validate that project has required directory structure.
 
@@ -249,6 +251,7 @@ def validate_project_structure(project_dir: Path) -> tuple[bool, str]:
         logger.debug(f"{project_dir.name}: Optional manuscript/ directory not found")
 
     return True, "Valid project structure"
+
 
 def get_project_metadata(project_dir: Path) -> dict:
     """Extract metadata from project configuration files.
@@ -325,6 +328,7 @@ def get_project_metadata(project_dir: Path) -> dict:
             logger.warning(f"Failed to parse {config_path}: {e}")
 
     return metadata
+
 
 def get_default_project(repo_root: Path, projects_dir: str = "projects") -> ProjectInfo | None:
     """Get the default project (projects/project by default).

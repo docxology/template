@@ -8,6 +8,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+
 @dataclass
 class ReviewMetrics:
     """Metrics for a single review generation."""
@@ -21,6 +22,7 @@ class ReviewMetrics:
     generation_time_seconds: float = 0.0
     preview: str = ""  # First 150 chars of response
 
+
 @dataclass
 class ManuscriptInputMetrics:
     """Metrics for the manuscript input."""
@@ -30,6 +32,7 @@ class ManuscriptInputMetrics:
     total_tokens_est: int = 0
     truncated: bool = False
     truncated_chars: int = 0  # Chars after truncation (if any)
+
 
 @dataclass
 class SessionMetrics:
@@ -41,6 +44,7 @@ class SessionMetrics:
     model_name: str = ""
     max_input_length: int = 0
     warmup_tokens_per_sec: float = 0.0  # Performance from warmup step
+
 
 @dataclass
 class StreamingMetrics:
@@ -56,6 +60,7 @@ class StreamingMetrics:
     partial_response_saved: bool = False
     first_chunk_time: float = 0.0  # Time to first chunk
     last_chunk_time: float = 0.0  # Time of last chunk
+
 
 def estimate_tokens(text: str) -> int:
     """Estimate token count from text (approximately 4 characters per token).

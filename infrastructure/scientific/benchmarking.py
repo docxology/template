@@ -21,6 +21,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+
 @dataclass
 class BenchmarkResult:
     """Container for benchmark results."""
@@ -32,6 +33,7 @@ class BenchmarkResult:
     parameters: dict[str, Any]
     result_summary: str
     timestamp: str
+
 
 def benchmark_function(
     func: Callable, test_inputs: list[Any], iterations: int = 100
@@ -51,7 +53,9 @@ def benchmark_function(
     execution_times = []
     memory_usages = []
 
-    func_name = getattr(func, "__name__", getattr(getattr(func, "func", None), "__name__", repr(func)))
+    func_name = getattr(
+        func, "__name__", getattr(getattr(func, "func", None), "__name__", repr(func))
+    )
 
     for test_input in test_inputs:
         # Warm up
@@ -106,6 +110,7 @@ def benchmark_function(
         result_summary=result_summary,
         timestamp=time.strftime("%Y-%m-%d %H:%M:%S"),
     )
+
 
 def generate_performance_report(benchmark_results: list[BenchmarkResult]) -> str:
     """Generate a performance analysis report.

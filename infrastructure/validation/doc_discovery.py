@@ -29,6 +29,7 @@ _DEFAULT_EXCLUDE_DIRS = {
     ".mypy_cache",
 }
 
+
 def discover_markdown_files(repo_root: Path) -> list[Path]:
     """Find all markdown files excluding output/htmlcov and virtual environments."""
     exclude_dirs = _DEFAULT_EXCLUDE_DIRS | {"projects_archive"}
@@ -39,6 +40,7 @@ def discover_markdown_files(repo_root: Path) -> list[Path]:
             md_files.append(md_file)
     return sorted(md_files)
 
+
 def catalog_agents_readme(md_files: list[Path], repo_root: Path) -> list[str]:
     """Catalog all AGENTS.md and README.md files."""
     agents_readme = []
@@ -46,6 +48,7 @@ def catalog_agents_readme(md_files: list[Path], repo_root: Path) -> list[str]:
         if md_file.name in ("AGENTS.md", "README.md"):
             agents_readme.append(str(md_file.relative_to(repo_root)))
     return sorted(agents_readme)
+
 
 def find_config_files(repo_root: Path) -> dict[str, Path]:
     """Find configuration files."""
@@ -62,6 +65,7 @@ def find_config_files(repo_root: Path) -> dict[str, Path]:
 
     return configs
 
+
 def find_script_files(repo_root: Path) -> list[Path]:
     """Find all script files (Python and shell) excluding virtual environments."""
     exclude_dirs = _DEFAULT_EXCLUDE_DIRS | {"tests"}
@@ -76,6 +80,7 @@ def find_script_files(repo_root: Path) -> list[Path]:
 
     return sorted(scripts)
 
+
 def create_hierarchy(md_files: list[Path], repo_root: Path) -> dict[str, list[str]]:
     """Create documentation hierarchy map."""
     hierarchy = defaultdict(list)
@@ -86,6 +91,7 @@ def create_hierarchy(md_files: list[Path], repo_root: Path) -> dict[str, list[st
             directory = "root"
         hierarchy[directory].append(rel_path)
     return dict(hierarchy)
+
 
 def identify_cross_references(md_files: list[Path]) -> Set[str]:
     """Identify cross-reference patterns."""
@@ -103,6 +109,7 @@ def identify_cross_references(md_files: list[Path]) -> Set[str]:
             logger.debug(f"Failed to scan cross-refs in {md_file}: {e}")
 
     return cross_refs
+
 
 def categorize_documentation(md_files: list[Path], repo_root: Path) -> dict[str, list[str]]:
     """Categorize documentation files."""
@@ -141,6 +148,7 @@ def categorize_documentation(md_files: list[Path], repo_root: Path) -> dict[str,
 
     return dict(categories)
 
+
 def _get_project_category(rel_path: str, project_names: set[str]) -> str | None:
     """Determine if a file belongs to a specific project and return category."""
     # Check if path contains projects/{name}/
@@ -161,6 +169,7 @@ def _get_project_category(rel_path: str, project_names: set[str]) -> str | None:
                 return f"project_{project_name}"
 
     return None
+
 
 def analyze_documentation_file(md_file: Path, repo_root: Path) -> DocumentationFile:
     """Analyze a documentation file and extract metadata."""
@@ -210,6 +219,7 @@ def analyze_documentation_file(md_file: Path, repo_root: Path) -> DocumentationF
             name=md_file.name,
         )
 
+
 def run_discovery_phase(repo_root: Path) -> dict[str, Any]:
     """Run Phase 1: Discovery and Inventory.
 
@@ -222,7 +232,7 @@ def run_discovery_phase(repo_root: Path) -> dict[str, Any]:
     logger.info("Phase 1: Discovery and Inventory...")
 
     # Find all markdown files
-    md_files = find_markdown_files(repo_root)
+    md_files = discover_markdown_files(repo_root)
     logger.info(f"Found {len(md_files)} markdown files")
 
     # Catalog AGENTS.md and README.md files
@@ -269,6 +279,7 @@ def run_discovery_phase(repo_root: Path) -> dict[str, Any]:
 
     return inventory
 
+
 def discover_project_documentation(repo_root: Path) -> dict[str, dict[str, Any]]:
     """Discover documentation organized by project.
 
@@ -279,7 +290,7 @@ def discover_project_documentation(repo_root: Path) -> dict[str, dict[str, Any]]
         Dictionary mapping project names to their documentation metadata
     """
     projects = discover_projects(repo_root)
-    md_files = find_markdown_files(repo_root)
+    md_files = discover_markdown_files(repo_root)
 
     project_docs = {}
 
@@ -325,14 +336,13 @@ def discover_project_documentation(repo_root: Path) -> dict[str, dict[str, Any]]
 
     return project_docs
 
+
 def _calculate_project_stats(project_data: dict[str, Any]) -> dict[str, int]:
     """Calculate documentation statistics for a project."""
     # documentation_files already contains all docs; sub-lists are subsets of it.
     # Use only the sub-lists plus any uncategorized docs to avoid double-counting.
     sub_docs = (
-        project_data["manuscript_files"]
-        + project_data["script_docs"]
-        + project_data["test_docs"]
+        project_data["manuscript_files"] + project_data["script_docs"] + project_data["test_docs"]
     )
     sub_doc_ids = {id(d) for d in sub_docs}
     uncategorized = [d for d in project_data["documentation_files"] if id(d) not in sub_doc_ids]
@@ -355,6 +365,7 @@ def _calculate_project_stats(project_data: dict[str, Any]) -> dict[str, int]:
         "files_with_links": has_links,
         "files_with_code": has_code_blocks,
     }
+
 
 def validate_project_documentation_integrity(repo_root: Path) -> dict[str, list[str]]:
     """Validate documentation integrity across projects.
@@ -393,6 +404,7 @@ def validate_project_documentation_integrity(repo_root: Path) -> dict[str, list[
 
     return issues
 
+
 def get_audit_context(repo_root: Path) -> dict[str, Any]:
     """Get comprehensive context for audit operations.
 
@@ -403,7 +415,7 @@ def get_audit_context(repo_root: Path) -> dict[str, Any]:
         Dictionary with audit context including projects, configs, and hierarchy
     """
     projects = discover_projects(repo_root)
-    md_files = find_markdown_files(repo_root)
+    md_files = discover_markdown_files(repo_root)
     config_files = find_config_files(repo_root)
     hierarchy = create_hierarchy(md_files, repo_root)
     categories = categorize_documentation(md_files, repo_root)

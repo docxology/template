@@ -8,6 +8,7 @@ Usage:
     if psutil is None:
         return {}
 """
+
 from __future__ import annotations
 
 try:

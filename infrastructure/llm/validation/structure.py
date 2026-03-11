@@ -9,6 +9,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+
 def validate_section_completeness(
     response: str, required_headers: list[str], flexible: bool = True
 ) -> tuple[bool, list[str], dict[str, Any]]:
@@ -60,6 +61,7 @@ def validate_section_completeness(
     is_complete = len(missing_headers) == 0
     return is_complete, missing_headers, details
 
+
 def extract_structured_sections(response: str) -> dict[str, str]:
     """Extract markdown sections from response into structured data.
 
@@ -97,6 +99,7 @@ def extract_structured_sections(response: str) -> dict[str, str]:
         sections[current_header] = "\n".join(current_content).strip()
 
     return sections
+
 
 def validate_response_structure(
     response: str,

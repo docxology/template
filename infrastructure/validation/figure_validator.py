@@ -15,6 +15,7 @@ from infrastructure.core.logging_utils import get_logger, log_substep, log_succe
 
 logger = get_logger(__name__)
 
+
 def validate_figure_registry(registry_path: Path, manuscript_dir: Path) -> tuple[bool, list[str]]:
     """Validate figure registry against manuscript references.
 

@@ -153,7 +153,7 @@ class MultiProjectOrchestrator:
                     pipeline_config = PipelineConfig(
                         project_name=project.name,
                         repo_root=self.config.repo_root,
-                        projects_dir=project.path.parent.name,  # e.g. 'projects' or 'projects_in_progress'
+                        projects_dir=project.path.parent.name,  # e.g. 'projects'  # noqa: E501
                         skip_infra=True,  # Always skip infra tests for individual projects in multi-project mode  # noqa: E501
                         skip_llm=not run_llm,
                         total_stages=10 if run_llm else 8,
@@ -161,7 +161,11 @@ class MultiProjectOrchestrator:
 
                     # Execute pipeline
                     executor = PipelineExecutor(pipeline_config)
-                    method = executor.execute_full_pipeline if run_llm else executor.execute_core_pipeline
+                    method = (
+                        executor.execute_full_pipeline
+                        if run_llm
+                        else executor.execute_core_pipeline
+                    )
                     results = method()
 
                     project_results[project_name] = results
@@ -250,4 +254,3 @@ class MultiProjectOrchestrator:
         except Exception as e:
             logger.error(f"❌ Infrastructure tests failed with exception: {e}")
             return False
-

@@ -14,6 +14,7 @@ from infrastructure.core.logging_utils import get_logger, log_success
 
 logger = get_logger(__name__)
 
+
 def verify_figures_exist(project_root: Path, manuscript_dir: Path) -> dict[str, Any]:
     """Verify expected figures exist, return status.
 
@@ -50,6 +51,7 @@ def verify_figures_exist(project_root: Path, manuscript_dir: Path) -> dict[str, 
         logger.warning(f"⚠️  Figures directory exists but is empty: {figures_dir}")
 
     return result
+
 
 def discover_manuscript_files(manuscript_dir: Path) -> list[Path]:
     """Discover manuscript files with proper ordering and filtering.

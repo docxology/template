@@ -15,6 +15,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+
 class PromptFragmentLoader:
     """Loads prompt fragments from JSON/YAML files with caching.
 
@@ -203,8 +204,10 @@ class PromptFragmentLoader:
         self._fragment_cache.clear()
         self._template_cache.clear()
 
+
 # Global loader instance for convenience
 _default_loader: PromptFragmentLoader | None = None
+
 
 def get_default_loader() -> PromptFragmentLoader:
     """Get the default global fragment loader instance.

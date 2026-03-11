@@ -9,6 +9,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+
 @dataclass
 class GenerationOptions:
     """Per-query generation options for LLM requests.
@@ -78,6 +79,7 @@ class GenerationOptions:
             options["num_ctx"] = config.context_window
 
         return options
+
 
 @dataclass
 class LLMConfig:
@@ -181,7 +183,9 @@ class LLMConfig:
             try:
                 config_kwargs["context_window"] = int(os.environ["LLM_CONTEXT_WINDOW"])
             except ValueError:
-                logger.warning("Invalid LLM_CONTEXT_WINDOW=%r, using default", os.environ["LLM_CONTEXT_WINDOW"])
+                logger.warning(
+                    "Invalid LLM_CONTEXT_WINDOW=%r, using default", os.environ["LLM_CONTEXT_WINDOW"]
+                )
 
         # Alternative: LLM_NUM_CTX (Ollama parameter name)
         if "LLM_NUM_CTX" in os.environ and "context_window" not in config_kwargs:
@@ -195,21 +199,28 @@ class LLMConfig:
             try:
                 config_kwargs["long_max_tokens"] = int(os.environ["LLM_LONG_MAX_TOKENS"])
             except ValueError:
-                logger.warning("Invalid LLM_LONG_MAX_TOKENS=%r, using default", os.environ["LLM_LONG_MAX_TOKENS"])
+                logger.warning(
+                    "Invalid LLM_LONG_MAX_TOKENS=%r, using default",
+                    os.environ["LLM_LONG_MAX_TOKENS"],
+                )
 
         # Max tokens (default response length)
         if "LLM_MAX_TOKENS" in os.environ:
             try:
                 config_kwargs["max_tokens"] = int(os.environ["LLM_MAX_TOKENS"])
             except ValueError:
-                logger.warning("Invalid LLM_MAX_TOKENS=%r, using default", os.environ["LLM_MAX_TOKENS"])
+                logger.warning(
+                    "Invalid LLM_MAX_TOKENS=%r, using default", os.environ["LLM_MAX_TOKENS"]
+                )
 
         # Temperature
         if "LLM_TEMPERATURE" in os.environ:
             try:
                 config_kwargs["temperature"] = float(os.environ["LLM_TEMPERATURE"])
             except ValueError:
-                logger.warning("Invalid LLM_TEMPERATURE=%r, using default", os.environ["LLM_TEMPERATURE"])
+                logger.warning(
+                    "Invalid LLM_TEMPERATURE=%r, using default", os.environ["LLM_TEMPERATURE"]
+                )
 
         # Timeout
         if "LLM_TIMEOUT" in os.environ:
@@ -234,13 +245,19 @@ class LLMConfig:
             try:
                 config_kwargs["heartbeat_interval"] = float(os.environ["LLM_HEARTBEAT_INTERVAL"])
             except ValueError:
-                logger.warning("Invalid LLM_HEARTBEAT_INTERVAL=%r, using default", os.environ["LLM_HEARTBEAT_INTERVAL"])
+                logger.warning(
+                    "Invalid LLM_HEARTBEAT_INTERVAL=%r, using default",
+                    os.environ["LLM_HEARTBEAT_INTERVAL"],
+                )
 
         if "LLM_STALL_THRESHOLD" in os.environ:
             try:
                 config_kwargs["stall_threshold"] = float(os.environ["LLM_STALL_THRESHOLD"])
             except ValueError:
-                logger.warning("Invalid LLM_STALL_THRESHOLD=%r, using default", os.environ["LLM_STALL_THRESHOLD"])
+                logger.warning(
+                    "Invalid LLM_STALL_THRESHOLD=%r, using default",
+                    os.environ["LLM_STALL_THRESHOLD"],
+                )
 
         if "LLM_EARLY_WARNING_THRESHOLD" in os.environ:
             try:
@@ -248,19 +265,27 @@ class LLMConfig:
                     os.environ["LLM_EARLY_WARNING_THRESHOLD"]
                 )
             except ValueError:
-                logger.warning("Invalid LLM_EARLY_WARNING_THRESHOLD=%r, using default", os.environ["LLM_EARLY_WARNING_THRESHOLD"])
+                logger.warning(
+                    "Invalid LLM_EARLY_WARNING_THRESHOLD=%r, using default",
+                    os.environ["LLM_EARLY_WARNING_THRESHOLD"],
+                )
 
         if "LLM_REVIEW_TIMEOUT" in os.environ:
             try:
                 config_kwargs["review_timeout"] = float(os.environ["LLM_REVIEW_TIMEOUT"])
             except ValueError:
-                logger.warning("Invalid LLM_REVIEW_TIMEOUT=%r, using default", os.environ["LLM_REVIEW_TIMEOUT"])
+                logger.warning(
+                    "Invalid LLM_REVIEW_TIMEOUT=%r, using default", os.environ["LLM_REVIEW_TIMEOUT"]
+                )
 
         if "LLM_MAX_INPUT_LENGTH" in os.environ:
             try:
                 config_kwargs["max_input_length"] = int(os.environ["LLM_MAX_INPUT_LENGTH"])
             except ValueError:
-                logger.warning("Invalid LLM_MAX_INPUT_LENGTH=%r, using default", os.environ["LLM_MAX_INPUT_LENGTH"])
+                logger.warning(
+                    "Invalid LLM_MAX_INPUT_LENGTH=%r, using default",
+                    os.environ["LLM_MAX_INPUT_LENGTH"],
+                )
 
         return cls(**config_kwargs)
 
@@ -331,15 +356,19 @@ class LLMConfig:
 
         return GenerationOptions(**options_dict)
 
+
 # Module-level accessors so callers don't need to instantiate LLMConfig.
+
 
 def get_review_timeout() -> float:
     """Return the review timeout in seconds (from env or default)."""
     return LLMConfig.from_env().review_timeout
 
+
 def get_max_input_length() -> int:
     """Return the maximum input character length (from env or default)."""
     return LLMConfig.from_env().max_input_length
+
 
 def get_review_max_tokens() -> tuple[int, str]:
     """Return (max_tokens, source_label) for review generation."""

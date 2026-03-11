@@ -37,6 +37,7 @@ except ImportError as e:
 else:
     import_error = None  # type: ignore[assignment]
 
+
 # Helper function for tests
 def _repo_root() -> str:
     """Get repository root path (for testing).
@@ -45,6 +46,7 @@ def _repo_root() -> str:
         str: Path to repository root
     """
     return str(repo_root)
+
 
 def main(manuscript_path: Path | None = None, strict: bool = False) -> int:
     """Main function to run markdown validation.
@@ -97,6 +99,7 @@ def main(manuscript_path: Path | None = None, strict: bool = False) -> int:
     except Exception as e:
         logger.error(f"❌ Unexpected error: {e}")
         return 1
+
 
 if __name__ == "__main__":
     import argparse

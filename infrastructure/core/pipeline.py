@@ -35,6 +35,7 @@ from infrastructure.core.file_operations import clean_output_directories
 
 logger = get_logger(__name__)
 
+
 @dataclass
 class PipelineConfig:
     """Configuration for pipeline execution.
@@ -103,6 +104,7 @@ class StageSpec(NamedTuple):
 
     name: str
     func: Callable[[], bool]
+
 
 class PipelineExecutor:
     """Execute research project pipeline stages."""
@@ -180,7 +182,9 @@ class PipelineExecutor:
             return self._resume_pipeline()
 
         skip_clean = not self.config.clean
-        return self._execute_pipeline(self._build_stage_list(include_llm=True, skip_clean=skip_clean))
+        return self._execute_pipeline(
+            self._build_stage_list(include_llm=True, skip_clean=skip_clean)
+        )
 
     def execute_core_pipeline(self) -> list[PipelineStageResult]:
         """Execute core pipeline (tests → analysis → PDF → validate → copy).
@@ -194,7 +198,9 @@ class PipelineExecutor:
             return self._resume_pipeline()
 
         skip_clean = not self.config.clean
-        return self._execute_pipeline(self._build_stage_list(include_llm=False, skip_clean=skip_clean))
+        return self._execute_pipeline(
+            self._build_stage_list(include_llm=False, skip_clean=skip_clean)
+        )
 
     def _run_stage_and_checkpoint(
         self,
@@ -220,9 +226,7 @@ class PipelineExecutor:
         pipeline_start = time.time()
 
         for stage_num, stage_spec in enumerate(stages, 1):
-            result = self._run_stage_and_checkpoint(
-                stage_num, stage_spec, results, pipeline_start
-            )
+            result = self._run_stage_and_checkpoint(stage_num, stage_spec, results, pipeline_start)
             if not result.success:
                 break
 
@@ -294,9 +298,7 @@ class PipelineExecutor:
     def _start_fresh(self) -> list[PipelineStageResult]:
         """Run the pipeline from scratch, bypassing any checkpoint."""
         skip_clean = not self.config.clean
-        stages = self._build_stage_list(
-            include_llm=not self.config.skip_llm, skip_clean=skip_clean
-        )
+        stages = self._build_stage_list(include_llm=not self.config.skip_llm, skip_clean=skip_clean)
         return self._execute_pipeline(stages)
 
     def _resume_pipeline(self) -> list[PipelineStageResult]:

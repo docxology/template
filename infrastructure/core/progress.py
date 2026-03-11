@@ -21,6 +21,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+
 class ProgressBar:
     """Simple text-based progress bar for terminal output.
 
@@ -131,6 +132,7 @@ class ProgressBar:
         if self.task:
             logger.info(f"  ✅ Completed: {self.task} ({format_duration(elapsed)})")
 
+
 class LLMProgressTracker:
     """Progress tracker for LLM operations with token-based progress.
 
@@ -234,6 +236,7 @@ class LLMProgressTracker:
             f"  ✅ {self.task} complete: {self.generated_tokens} tokens in {format_duration(elapsed)} "  # noqa: E501
             f"({throughput:.1f} tokens/sec)"
         )
+
 
 class SubStageProgress:
     """Track progress across multiple sub-stages within a main stage.

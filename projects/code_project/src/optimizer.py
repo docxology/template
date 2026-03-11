@@ -130,9 +130,7 @@ def gradient_descent(
 
         if verbose and iteration % 100 == 0:
             obj_val = objective_func(x)
-            logger.info(
-                f"Iteration {iteration}: x={x}, f(x)={obj_val:.6f}, ||∇f||={grad_norm:.6f}"
-            )
+            logger.info(f"Iteration {iteration}: x={x}, f(x)={obj_val:.6f}, ||∇f||={grad_norm:.6f}")
 
         if grad_norm < tolerance:
             converged = True

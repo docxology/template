@@ -69,6 +69,7 @@ DEFAULT_MODEL_PREFERENCES = [
     # Note: qwen3 (non-vl) models use "thinking" mode which requires special handling
 ]
 
+
 def is_ollama_running(base_url: str = "http://localhost:11434", timeout: float = 2.0) -> bool:
     """Check if Ollama server is running and responding."""
     try:
@@ -89,6 +90,7 @@ def is_ollama_running(base_url: str = "http://localhost:11434", timeout: float =
     except RequestException as e:
         logger.debug(f"Ollama server request failed at {base_url}: {e}")
         return False
+
 
 def start_ollama_server(wait_seconds: float = 3.0, max_retries: int = 2) -> bool:
     """Attempt to start the Ollama server with detailed logging.
@@ -148,6 +150,7 @@ def start_ollama_server(wait_seconds: float = 3.0, max_retries: int = 2) -> bool
 
     logger.error("Failed to start Ollama server after all retries")
     return False
+
 
 def get_available_models(
     base_url: str = "http://localhost:11434", timeout: float = 5.0, retries: int = 2
@@ -215,6 +218,7 @@ def get_available_models(
 
     return []
 
+
 def get_model_names(base_url: str = "http://localhost:11434") -> list[str]:
     """Get list of available model names from Ollama.
 
@@ -226,6 +230,7 @@ def get_model_names(base_url: str = "http://localhost:11434") -> list[str]:
     """
     models = get_available_models(base_url)
     return [m["name"] for m in models]
+
 
 def select_best_model(
     preferences: list[str | None] = None, base_url: str = "http://localhost:11434"
@@ -267,6 +272,7 @@ def select_best_model(
     logger.info(f"No preference matched, using first available: {first}")
     return first
 
+
 def select_small_fast_model(base_url: str = "http://localhost:11434") -> str | None:
     """Select a small, fast model for testing.
 
@@ -286,6 +292,7 @@ def select_small_fast_model(base_url: str = "http://localhost:11434") -> str | N
         "mistral:latest",
     ]
     return select_best_model(fast_preferences, base_url)
+
 
 def ensure_ollama_ready(base_url: str = "http://localhost:11434", auto_start: bool = True) -> bool:
     """Ensure Ollama server is running and has models available."""
@@ -324,6 +331,7 @@ def ensure_ollama_ready(base_url: str = "http://localhost:11434", auto_start: bo
         logger.info(f"  Models: {', '.join(models[:5])} ... and {len(models) - 5} more")
     return True
 
+
 def get_model_info(
     model_name: str, base_url: str = "http://localhost:11434"
 ) -> dict[str, Any | None]:
@@ -341,6 +349,7 @@ def get_model_info(
         if model["name"] == model_name or model_name in model["name"]:
             return model
     return None
+
 
 def check_model_loaded(
     model_name: str, base_url: str = "http://localhost:11434", timeout: float = 2.0
@@ -409,6 +418,7 @@ def check_model_loaded(
     except RequestException as e:
         logger.warning(f"Request error checking model load status: {e}")
         return (False, None)
+
 
 def preload_model(
     model_name: str,

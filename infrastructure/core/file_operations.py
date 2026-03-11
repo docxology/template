@@ -193,13 +193,14 @@ def clean_output_directories(
                         continue
 
                     # Check if this subdirectory contains any preserved files
-                    has_preserved = any(
-                        p.parts[0] == item.name for p in preserved_relative_paths
-                    )
+                    has_preserved = any(p.parts[0] == item.name for p in preserved_relative_paths)
                     if has_preserved:
                         # Selectively clean: remove everything except preserved files
                         _clean_dir_preserving(
-                            item, output_dir, preserved_relative_paths, logger,
+                            item,
+                            output_dir,
+                            preserved_relative_paths,
+                            logger,
                         )
                     else:
                         shutil.rmtree(item)
@@ -378,12 +379,20 @@ def clean_coverage_files(repo_root: Path, patterns: list[str] | None = None) -> 
         return False
 
 
-def _process_subdirectories(output_dir: Path, stats: dict[str, Any], files_list: list[dict[str, Any]]) -> None:
+def _process_subdirectories(
+    output_dir: Path, stats: dict[str, Any], files_list: list[dict[str, Any]]
+) -> None:
     """Process output subdirectories, verifying contents and updating stats."""
     subdirs = {
-        "pdf": "pdf_files", "web": "web_files", "slides": "slides_files",
-        "figures": "figures_files", "data": "data_files", "reports": "reports_files",
-        "simulations": "simulations_files", "llm": "llm_files", "logs": "logs_files",
+        "pdf": "pdf_files",
+        "web": "web_files",
+        "slides": "slides_files",
+        "figures": "figures_files",
+        "data": "data_files",
+        "reports": "reports_files",
+        "simulations": "simulations_files",
+        "llm": "llm_files",
+        "logs": "logs_files",
     }
 
     for subdir_name, stats_key in subdirs.items():
@@ -419,18 +428,23 @@ def _process_subdirectories(output_dir: Path, stats: dict[str, Any], files_list:
             for file_path in file_items:
                 try:
                     file_size = file_path.stat().st_size
-                    files_list.append({
-                        "path": str(file_path.resolve()),
-                        "size": file_size,
-                        "category": subdir_name,
-                    })
+                    files_list.append(
+                        {
+                            "path": str(file_path.resolve()),
+                            "size": file_size,
+                            "category": subdir_name,
+                        }
+                    )
                     logger.debug(f"  Copied: {file_path.name} ({file_size:,} bytes)")
                 except OSError as e:
                     logger.warning(f"  Failed to get size for {file_path}: {e}")
 
             logger.info(f"  {subdir_name}/: {file_count} file(s)")
 
-def _copy_combined_pdf(output_dir: Path, project_basename: str, stats: dict[str, Any], files_list: list[dict[str, Any]]) -> None:
+
+def _copy_combined_pdf(
+    output_dir: Path, project_basename: str, stats: dict[str, Any], files_list: list[dict[str, Any]]
+) -> None:
     """Copy combined PDF to root of output directory for convenient access."""
     combined_pdf_src = output_dir / "pdf" / f"{project_basename}_combined.pdf"
     combined_pdf_dst = output_dir / f"{project_basename}_combined.pdf"
@@ -445,11 +459,13 @@ def _copy_combined_pdf(output_dir: Path, project_basename: str, stats: dict[str,
             file_size = combined_pdf_src.stat().st_size
             log_success(f"Copied combined PDF to root ({file_size / (1024 * 1024):.2f} MB)", logger)
             stats["combined_pdf"] = 1
-            files_list.append({
-                "path": str(combined_pdf_dst.resolve()),
-                "size": file_size,
-                "category": "pdf",
-            })
+            files_list.append(
+                {
+                    "path": str(combined_pdf_dst.resolve()),
+                    "size": file_size,
+                    "category": "pdf",
+                }
+            )
             logger.info(f"  Root PDF: {combined_pdf_dst} ({file_size:,} bytes)")
         except (OSError, shutil.Error) as e:
             msg = f"Failed to copy combined PDF to root: {e}"
@@ -490,9 +506,18 @@ def copy_final_deliverables(
     project_output = project_root / "projects" / project_name / "output"
 
     stats: dict[str, Any] = {
-        "pdf_files": 0, "web_files": 0, "slides_files": 0, "figures_files": 0,
-        "data_files": 0, "reports_files": 0, "simulations_files": 0, "llm_files": 0,
-        "logs_files": 0, "combined_pdf": 0, "total_files": 0, "errors": [],
+        "pdf_files": 0,
+        "web_files": 0,
+        "slides_files": 0,
+        "figures_files": 0,
+        "data_files": 0,
+        "reports_files": 0,
+        "simulations_files": 0,
+        "llm_files": 0,
+        "logs_files": 0,
+        "combined_pdf": 0,
+        "total_files": 0,
+        "errors": [],
     }
 
     files_list = []

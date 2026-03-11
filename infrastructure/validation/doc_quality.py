@@ -11,6 +11,7 @@ from infrastructure.validation.doc_models import QualityIssue
 
 logger = get_logger(__name__)
 
+
 def assess_clarity(
     content: str, md_file: Path, lines: list[str], repo_root: Path
 ) -> list[QualityIssue]:
@@ -46,6 +47,7 @@ def assess_clarity(
 
     return issues
 
+
 def assess_actionability(
     content: str, md_file: Path, lines: list[str], repo_root: Path
 ) -> list[QualityIssue]:
@@ -68,6 +70,7 @@ def assess_actionability(
     # This is a simplified check
     return issues
 
+
 def assess_maintainability(
     content: str, md_file: Path, lines: list[str], repo_root: Path
 ) -> list[QualityIssue]:
@@ -89,6 +92,7 @@ def assess_maintainability(
     # Check for duplicate content
     # This could be enhanced
     return issues
+
 
 def check_formatting(
     content: str, md_file: Path, lines: list[str], repo_root: Path
@@ -129,12 +133,14 @@ def check_formatting(
 
     return issues
 
+
 def group_quality_by_type(issues: list[QualityIssue]) -> dict[str, int]:
     """Group quality issues by type."""
     types: dict[str, int] = defaultdict(int)
     for issue in issues:
         types[issue.issue_type] += 1
     return dict(types)
+
 
 def group_quality_by_severity(issues: list[QualityIssue]) -> dict[str, int]:
     """Group quality issues by severity."""
@@ -143,7 +149,10 @@ def group_quality_by_severity(issues: list[QualityIssue]) -> dict[str, int]:
         severities[issue.severity] += 1
     return dict(severities)
 
-def run_quality_phase(md_files: list[Path], repo_root: Path) -> tuple[dict[str, Any], list[QualityIssue]]:
+
+def run_quality_phase(
+    md_files: list[Path], repo_root: Path
+) -> tuple[dict[str, Any], list[QualityIssue]]:
     """Run Phase 4: Quality Assessment.
 
     Args:

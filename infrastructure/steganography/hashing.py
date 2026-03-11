@@ -17,6 +17,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+
 def compute_file_hashes(
     file_path: Path,
     algorithms: list[str] | None = None,
@@ -47,6 +48,7 @@ def compute_file_hashes(
             logger.warning(f"Unsupported hash algorithm '{algo}' — skipping")
 
     return results
+
 
 def write_hash_manifest(
     pdf_path: Path,
@@ -80,6 +82,7 @@ def write_hash_manifest(
     output_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     logger.info(f"Hash manifest written → {output_path}")
     return output_path
+
 
 def compute_content_hash(content: bytes, algorithm: str = "sha256") -> str:
     """Compute a hash of arbitrary byte content.

@@ -265,9 +265,7 @@ class RateLimiter:
                 self.requests[key] = []
 
             # Remove old requests outside the window
-            self.requests[key] = [
-                ts for ts in self.requests[key] if now - ts < self.window_seconds
-            ]
+            self.requests[key] = [ts for ts in self.requests[key] if now - ts < self.window_seconds]
 
             # Check if under limit
             if len(self.requests[key]) < self.max_requests:
@@ -291,9 +289,7 @@ class RateLimiter:
                 return self.max_requests
 
             # Clean old requests
-            self.requests[key] = [
-                ts for ts in self.requests[key] if now - ts < self.window_seconds
-            ]
+            self.requests[key] = [ts for ts in self.requests[key] if now - ts < self.window_seconds]
 
             return max(0, self.max_requests - len(self.requests[key]))
 
@@ -383,7 +379,6 @@ class SecurityMonitor:
             "events_by_severity": events_by_severity,
             "most_recent_event": self.events[-1] if self.events else None,
         }
-
 
 
 # Global instances (lazy initialization — avoids import-time side effects)

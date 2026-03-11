@@ -18,6 +18,7 @@ from infrastructure.llm.validation.format import (
 
 logger = get_logger(__name__)
 
+
 def extract_action_items(reviews: dict[str, str]) -> str:
     """Extract actionable items from reviews into a TODO checklist.
 
@@ -74,6 +75,7 @@ def extract_action_items(reviews: dict[str, str]) -> str:
 
     return "\n".join(todos[:10])  # Limit to 10 items
 
+
 def calculate_format_compliance_summary(reviews: dict[str, str]) -> str:
     """Calculate format compliance summary across all reviews.
 
@@ -111,6 +113,7 @@ def calculate_format_compliance_summary(reviews: dict[str, str]) -> str:
 
     return "\n".join(summary_parts)
 
+
 def calculate_quality_summary(reviews: dict[str, str]) -> str:
     """Calculate overall quality summary from reviews.
 
@@ -137,6 +140,7 @@ def calculate_quality_summary(reviews: dict[str, str]) -> str:
         return f"**Average Quality Score:** {avg_score:.1f}/5 ({len(scores)} criteria evaluated)"
     else:
         return "*Quality scores not available*"
+
 
 def save_review_outputs(
     reviews: dict[str, str],
@@ -406,6 +410,7 @@ The following items are extracted from the review for easy tracking:
 
     return success
 
+
 def save_single_review(
     review_name: str,
     content: str,
@@ -469,6 +474,7 @@ def save_single_review(
     except OSError as e:
         logger.error(f"Failed to save {review_name}: {e}")
         raise
+
 
 def generate_review_summary(
     reviews: dict[str, str],

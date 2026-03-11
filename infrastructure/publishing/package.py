@@ -153,7 +153,7 @@ def create_submission_checklist(metadata: PublicationMetadata) -> str:
 ---
 
 *This checklist was auto-generated from your project metadata. Update as needed for specific conference/journal requirements.*
-"""
+"""  # noqa: E501
 
     return checklist
 

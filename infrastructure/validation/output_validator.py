@@ -14,6 +14,7 @@ from infrastructure.project.discovery import discover_projects
 
 logger = get_logger(__name__)
 
+
 def validate_copied_outputs(output_dir: Path) -> bool:
     """Validate all project outputs were copied successfully.
 
@@ -169,6 +170,7 @@ def validate_copied_outputs(output_dir: Path) -> bool:
 
     return validation_passed
 
+
 def validate_root_output_structure(repo_root: Path) -> dict[str, Any]:
     """Validate that root output/ directory structure is correct.
 
@@ -257,6 +259,7 @@ def validate_root_output_structure(repo_root: Path) -> dict[str, Any]:
         logger.warning(f"Root output structure invalid: {len(issues)} issues found")
 
     return report
+
 
 def collect_detailed_validation_results(output_dir: Path) -> dict[str, Any]:
     """Collect detailed validation results for reporting.
@@ -377,6 +380,7 @@ def collect_detailed_validation_results(output_dir: Path) -> dict[str, Any]:
         )
 
     return validation_results
+
 
 def validate_output_structure(output_dir: Path) -> dict[str, Any]:
     """Validate complete output directory structure.

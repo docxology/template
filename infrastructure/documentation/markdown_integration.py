@@ -17,6 +17,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+
 class MarkdownIntegration:
     """Integrates figures and references into markdown files."""
 

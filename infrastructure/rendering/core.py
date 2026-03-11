@@ -13,8 +13,10 @@ from infrastructure.rendering.web_renderer import WebRenderer
 
 logger = get_logger(__name__)
 
-# Minimum PDF size in MB; PDFs below this are considered empty/corrupted (matches 1000-byte check in pdf_validator)
+# Minimum PDF size in MB; PDFs below this are considered empty/corrupted
+# (matches 1000-byte check in pdf_validator)
 _MIN_VALID_PDF_MB = 0.001
+
 
 class RenderManager:
     """Orchestrates rendering of all output formats."""

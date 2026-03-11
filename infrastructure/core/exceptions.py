@@ -19,6 +19,7 @@ from typing import Any
 # BASE EXCEPTION
 # =============================================================================
 
+
 class TemplateError(Exception):
     """Base exception for all template-related errors.
 
@@ -47,81 +48,98 @@ class TemplateError(Exception):
 
         super().__init__(full_message)
 
+
 # =============================================================================
 # CONFIGURATION ERRORS
 # =============================================================================
+
 
 class ConfigurationError(TemplateError):
     """Raised when configuration is invalid or missing."""
 
     pass
 
+
 class MissingConfigurationError(ConfigurationError):
     """Raised when required configuration is missing."""
 
     pass
+
 
 class InvalidConfigurationError(ConfigurationError):
     """Raised when configuration values are invalid."""
 
     pass
 
+
 # =============================================================================
 # VALIDATION ERRORS
 # =============================================================================
+
 
 class ValidationError(TemplateError):
     """Raised when validation fails."""
 
     pass
 
+
 class MarkdownValidationError(ValidationError):
     """Raised when markdown validation fails."""
 
     pass
+
 
 class PDFValidationError(ValidationError):
     """Raised when PDF validation fails."""
 
     pass
 
+
 class DataValidationError(ValidationError):
     """Raised when data validation fails."""
 
     pass
 
+
 # =============================================================================
 # BUILD ERRORS
 # =============================================================================
+
 
 class BuildError(TemplateError):
     """Raised when build process fails."""
 
     pass
 
+
 class CompilationError(BuildError):
     """Raised when compilation (LaTeX, etc.) fails."""
 
     pass
+
 
 class ScriptExecutionError(BuildError):
     """Raised when script execution fails."""
 
     pass
 
+
 class PipelineError(BuildError):
     """Raised when pipeline orchestration fails."""
 
     pass
 
+
 # =============================================================================
 # FILE/IO ERRORS
 # =============================================================================
+
 
 class FileOperationError(TemplateError):
     """Raised when file operations fail."""
 
     pass
+
 
 class FileNotFoundError(FileOperationError, builtins.FileNotFoundError):
     """Raised when a required file is not found; auto-generates recovery commands."""
@@ -157,22 +175,27 @@ class FileNotFoundError(FileOperationError, builtins.FileNotFoundError):
 
         super().__init__(message, context, suggestions, recovery_commands)
 
+
 class NotADirectoryError(FileOperationError, builtins.NotADirectoryError):
     """Raised when a path is not a directory when a directory is expected."""
+
 
 class InvalidFileFormatError(FileOperationError):
     """Raised when file format is invalid or unexpected."""
 
     pass
 
+
 # =============================================================================
 # DEPENDENCY ERRORS
 # =============================================================================
+
 
 class DependencyError(TemplateError):
     """Raised when dependencies are missing or invalid."""
 
     pass
+
 
 class MissingDependencyError(DependencyError):
     """Raised when a required dependency is missing; auto-generates install commands."""
@@ -198,136 +221,167 @@ class MissingDependencyError(DependencyError):
 
         # Auto-generate installation commands based on common package managers
         if recovery_commands is None and dependency:
-            from infrastructure.core.environment import build_install_commands  # deferred: circular import guard
+            from infrastructure.core.environment import (
+                build_install_commands,
+            )  # deferred: circular import guard
+
             recovery_commands = build_install_commands(dependency)
 
         super().__init__(message, context, suggestions, recovery_commands)
+
 
 class VersionMismatchError(DependencyError):
     """Raised when dependency version is incompatible."""
 
     pass
 
+
 # =============================================================================
 # TEST ERRORS
 # =============================================================================
+
 
 class TestError(TemplateError):
     """Raised when test execution or validation fails."""
 
     pass
 
+
 class InsufficientCoverageError(TestError):
     """Raised when test coverage is insufficient."""
 
     pass
 
+
 # =============================================================================
 # INTEGRATION ERRORS
 # =============================================================================
+
 
 class IntegrationError(TemplateError):
     """Raised when component integration fails."""
 
     pass
 
+
 # =============================================================================
 # LITERATURE SEARCH ERRORS
 # =============================================================================
+
 
 class LiteratureSearchError(TemplateError):
     """Raised when literature search operations fail."""
 
     pass
 
+
 class APIRateLimitError(LiteratureSearchError):
     """Raised when API rate limits are exceeded."""
 
     pass
+
 
 class InvalidQueryError(LiteratureSearchError):
     """Raised when search query is invalid."""
 
     pass
 
+
 # =============================================================================
 # LLM ERRORS
 # =============================================================================
+
 
 class LLMError(TemplateError):
     """Base exception for LLM operations."""
 
     pass
 
+
 class LLMConnectionError(LLMError):
     """Raised when connecting to LLM provider fails."""
 
     pass
+
 
 class LLMTemplateError(LLMError):
     """Raised when template processing fails."""
 
     pass
 
+
 class ContextLimitError(LLMError):
     """Raised when token limit is exceeded."""
 
     pass
 
+
 # =============================================================================
 # SECURITY ERRORS
 # =============================================================================
+
 
 class SecurityViolation(TemplateError):
     """Raised when a security constraint is violated."""
 
     pass
 
+
 # =============================================================================
 # RENDERING ERRORS
 # =============================================================================
+
 
 class RenderingError(TemplateError):
     """Base exception for rendering operations."""
 
     pass
 
+
 class FormatError(RenderingError):
     """Raised when output format is invalid or unsupported."""
 
     pass
+
 
 class TemplateRenderingError(RenderingError):
     """Raised when rendering a template fails."""
 
     pass
 
+
 # =============================================================================
 # PUBLISHING ERRORS
 # =============================================================================
+
 
 class PublishingError(TemplateError):
     """Base exception for publishing operations."""
 
     pass
 
+
 class UploadError(PublishingError):
     """Raised when file upload fails."""
 
     pass
+
 
 class MetadataError(PublishingError):
     """Raised when metadata validation fails."""
 
     pass
 
+
 # =============================================================================
 # UTILITY FUNCTIONS
 # =============================================================================
 
+
 def raise_with_context(exception_class: type[TemplateError], message: str, **context: Any) -> None:
     """Raise exception_class(message) with the given keyword arguments as context."""
     raise exception_class(message, context=context)
+
 
 def format_file_context(file_path: Path | str, line: int | None = None) -> dict[str, Any]:
     """Return a context dict with 'file' and optionally 'line' keys."""
@@ -335,6 +389,7 @@ def format_file_context(file_path: Path | str, line: int | None = None) -> dict[
     if line is not None:
         context["line"] = line
     return context
+
 
 def chain_exceptions(new_exception: TemplateError, original: Exception) -> TemplateError:
     """Set new_exception.__cause__ = original, store original info in context, and return it."""

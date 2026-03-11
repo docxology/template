@@ -33,7 +33,8 @@ class SystemHealthChecker:
         self.start_time = start_time if start_time is not None else time.time()
         self.repo_root = repo_root or Path.cwd()
         self._network_dns_host, self._network_tcp_host = (
-            network_test_hosts[:2] if network_test_hosts and len(network_test_hosts) >= 2
+            network_test_hosts[:2]
+            if network_test_hosts and len(network_test_hosts) >= 2
             else ("google.com", "1.1.1.1")
         )
         self.checks = {
@@ -272,5 +273,3 @@ class SystemHealthChecker:
             summary["warnings"] = warnings
 
         return summary
-
-

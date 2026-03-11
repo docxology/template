@@ -18,9 +18,11 @@ logger = get_logger(__name__)
 
 # ── Lazy imports ─────────────────────────────────────────────────────────
 
+
 def _get_qrcode():
     try:
         import qrcode  # type: ignore
+
         return qrcode
     except ImportError:
         raise ImportError(
@@ -28,9 +30,11 @@ def _get_qrcode():
             "Install it with: pip install qrcode[pil]"
         )
 
+
 def _get_barcode():
     try:
         import barcode  # type: ignore
+
         return barcode
     except ImportError:
         raise ImportError(
@@ -38,11 +42,13 @@ def _get_barcode():
             "Install it with: pip install python-barcode"
         )
 
+
 def _get_reportlab():
     try:
         from reportlab.lib.units import inch, mm  # type: ignore
         from reportlab.pdfgen import canvas as rl_canvas  # type: ignore
         from reportlab.lib.utils import ImageReader  # type: ignore
+
         return rl_canvas, inch, mm, ImageReader
     except ImportError:
         raise ImportError(
@@ -50,7 +56,9 @@ def _get_reportlab():
             "Install it with: pip install reportlab"
         )
 
+
 # ── QR Code ──────────────────────────────────────────────────────────────
+
 
 def generate_qr_code(
     data: str,
@@ -82,10 +90,14 @@ def generate_qr_code(
     buf = io.BytesIO()
     img.save(buf, format="PNG")
     buf.seek(0)
-    logger.debug(f"QR code generated, data length={len(data)}, image size={buf.getbuffer().nbytes} bytes")
+    logger.debug(
+        f"QR code generated, data length={len(data)}, image size={buf.getbuffer().nbytes} bytes"
+    )
     return buf.getvalue()
 
+
 # ── Code128 linear barcode ───────────────────────────────────────────────
+
 
 def generate_code128(
     data: str,
@@ -109,18 +121,23 @@ def generate_code128(
     bc = code128(data, writer=SVGWriter())
 
     buf = io.BytesIO()
-    bc.write(buf, options={
-        "module_width": module_width,
-        "module_height": module_height,
-        "quiet_zone": 2,
-        "font_size": 6,
-        "text_distance": 2,
-    })
+    bc.write(
+        buf,
+        options={
+            "module_width": module_width,
+            "module_height": module_height,
+            "quiet_zone": 2,
+            "font_size": 6,
+            "text_distance": 2,
+        },
+    )
     buf.seek(0)
     logger.debug(f"Code128 barcode generated for data: {data[:30]}…")
     return buf.getvalue()
 
+
 # ── Barcode data builder ─────────────────────────────────────────────────
+
 
 def build_barcode_payload(
     title: str = "",
@@ -160,11 +177,13 @@ def build_barcode_payload(
     logger.debug(f"Barcode payload built: {payload[:80]}")
     return payload
 
+
 # ── QR code content builders (COMPACT — ≤100 chars for phone scanning) ──
 #
 # Phone cameras need low-density QR codes to scan reliably at small sizes.
 # Each builder targets ≤100 characters to stay at QR version 5 or below,
 # which produces a ~37×37 module grid — easily scannable at 40–50pt.
+
 
 def build_metadata_qr_text(
     title: str = "",
@@ -183,6 +202,7 @@ def build_metadata_qr_text(
     parts.append(ts)
     return " | ".join(parts)
 
+
 def build_citation_qr_text(
     title: str = "",
     authors: list[str | None] = None,
@@ -193,6 +213,7 @@ def build_citation_qr_text(
     year = datetime.now(timezone.utc).strftime("%Y")
     cite = f"{author} ({year}). {title[:50]}."
     return cite[:100]
+
 
 def build_mailto_qr_text(
     title: str = "",
@@ -207,6 +228,7 @@ def build_mailto_qr_text(
     """
     if author_emails:
         import urllib.parse
+
         email = author_emails[0]
         subject_raw = title[:40] if title else "Inquiry"
         subject = urllib.parse.quote(subject_raw)
@@ -215,6 +237,7 @@ def build_mailto_qr_text(
     # Fallback: just show name
     name = authors[0] if authors else "Author"
     return f"Contact {name}"
+
 
 def build_integrity_qr_text(
     document_id: str = "",
@@ -232,7 +255,9 @@ def build_integrity_qr_text(
         parts.append(f"ID {document_id[:12]}")
     return " | ".join(parts)
 
+
 # ── Full barcode strip overlay ───────────────────────────────────────────
+
 
 def create_barcode_strip_overlay(
     page_width: float,
@@ -305,7 +330,9 @@ def create_barcode_strip_overlay(
 
     # 1. Metadata QR
     meta_text = build_metadata_qr_text(
-        title=title, authors=authors, document_id=document_id,
+        title=title,
+        authors=authors,
+        document_id=document_id,
     )
     qr_items.append(("Metadata", meta_text))
 
@@ -315,13 +342,16 @@ def create_barcode_strip_overlay(
 
     # 3. Contact QR (mailto: link)
     contact_text = build_mailto_qr_text(
-        title=title, authors=authors, author_emails=author_emails,
+        title=title,
+        authors=authors,
+        author_emails=author_emails,
     )
     qr_items.append(("Contact", contact_text))
 
     # 4. Integrity QR (compact hash)
     integrity_text = build_integrity_qr_text(
-        document_id=document_id, hashes=hashes,
+        document_id=document_id,
+        hashes=hashes,
     )
     qr_items.append(("Integrity", integrity_text))
 

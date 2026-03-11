@@ -9,6 +9,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+
 @dataclass
 class DocumentationFile:
     """Represents a documentation file with metadata."""
@@ -24,6 +25,7 @@ class DocumentationFile:
     has_code_blocks: bool = False
     last_modified: str | None = None
 
+
 @dataclass
 class LinkIssue:
     """Represents a link or reference issue."""
@@ -36,6 +38,7 @@ class LinkIssue:
     issue_message: str
     severity: str = "error"
 
+
 @dataclass
 class AccuracyIssue:
     """Represents an accuracy issue in documentation."""
@@ -46,6 +49,7 @@ class AccuracyIssue:
     issue_message: str
     severity: str = "error"
 
+
 @dataclass
 class CompletenessGap:
     """Represents a documentation completeness gap."""
@@ -54,6 +58,7 @@ class CompletenessGap:
     item: str
     description: str
     severity: str = "warning"
+
 
 @dataclass
 class QualityIssue:
@@ -64,6 +69,7 @@ class QualityIssue:
     issue_type: str
     issue_message: str
     severity: str = "info"
+
 
 @dataclass
 class ScanResults:

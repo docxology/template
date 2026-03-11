@@ -9,6 +9,7 @@ from typing import ClassVar
 
 from infrastructure.core.logging_constants import EMOJIS, USE_EMOJIS
 
+
 class JSONFormatter(logging.Formatter):
     """JSON formatter for structured logging.
 
@@ -33,6 +34,7 @@ class JSONFormatter(logging.Formatter):
             log_data.update(record.extra_fields)
 
         return json.dumps(log_data)
+
 
 class TemplateFormatter(logging.Formatter):
     """Custom formatter matching bash logging.sh format.

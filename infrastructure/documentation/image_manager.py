@@ -16,6 +16,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+
 class ImageManager:
     """Manages image insertion and cross-referencing in markdown files."""
 
@@ -79,9 +80,7 @@ class ImageManager:
 
         return True
 
-    def _find_insertion_point(
-        self, content: str, section: str | None, position: str
-    ) -> int | None:
+    def _find_insertion_point(self, content: str, section: str | None, position: str) -> int | None:
         """Find insertion point in markdown content.
 
         Args:

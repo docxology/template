@@ -1,14 +1,14 @@
 {
-  "timestamp": "2026-03-10T16:13:14.459433",
+  "timestamp": "2026-03-10T18:08:24.844439",
   "total_projects": 1,
   "successful_projects": 1,
   "failed_projects": 0,
-  "total_duration": 54.434914112091064,
+  "total_duration": 73.11681199073792,
   "infra_test_duration": 0.0,
   "projects": {
     "code_project": {
       "success": true,
-      "duration": 54.429694414138794,
+      "duration": 73.11034846305847,
       "stages_completed": 7,
       "errors": []
     }
@@ -16,8 +16,8 @@
   "performance_analysis": {
     "slowest_project": "code_project",
     "fastest_project": "code_project",
-    "average_duration": 54.429694414138794,
-    "total_pipeline_time": 54.429694414138794
+    "average_duration": 73.11034846305847,
+    "total_pipeline_time": 73.11034846305847
   },
   "error_aggregation": {
     "total_errors": 0,

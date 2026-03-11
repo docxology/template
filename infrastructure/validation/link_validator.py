@@ -13,6 +13,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+
 class LinkValidator:
     """Validates markdown links and file references."""
 
@@ -423,6 +424,7 @@ class LinkValidator:
 
         return "\n".join(report_lines)
 
+
 def main() -> int:
     """Main entry point for link validation."""
     import argparse
@@ -460,6 +462,7 @@ def main() -> int:
 
     # Return exit code based on validation results
     return 0 if total_broken == 0 else 1
+
 
 if __name__ == "__main__":
     exit(main())

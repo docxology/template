@@ -17,6 +17,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+
 @dataclass
 class FigureMetadata:
     """Metadata for a figure."""
@@ -74,6 +75,7 @@ class FigureMetadata:
             data["metadata"] = {}
 
         return cls(**data)
+
 
 class FigureManager:
     """Manages figures with automatic numbering and cross-referencing."""

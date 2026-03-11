@@ -11,6 +11,7 @@ from infrastructure.publishing.models import PublicationMetadata
 
 logger = get_logger(__name__)
 
+
 def extract_publication_metadata(markdown_files: list[Path]) -> PublicationMetadata:
     """Extract publication metadata from markdown files.
 
@@ -115,6 +116,7 @@ def extract_publication_metadata(markdown_files: list[Path]) -> PublicationMetad
 
     return metadata
 
+
 def validate_doi(doi: str) -> bool:
     """Validate DOI format and checksum.
 
@@ -138,6 +140,7 @@ def validate_doi(doi: str) -> bool:
 
     # DOI is valid if format matches
     return True
+
 
 def generate_publication_summary(metadata: PublicationMetadata) -> str:
     """Generate a publication summary for repository README.
@@ -176,6 +179,7 @@ def generate_publication_summary(metadata: PublicationMetadata) -> str:
 
     return summary
 
+
 def create_academic_profile_data(metadata: PublicationMetadata) -> dict[str, Any]:
     """Create academic profile data for ORCID, ResearchGate, etc.
 
@@ -206,6 +210,7 @@ def create_academic_profile_data(metadata: PublicationMetadata) -> dict[str, Any
         ]
 
     return profile_data
+
 
 def generate_publication_metrics(metadata: PublicationMetadata) -> dict[str, Any]:
     """Generate publication metrics for reporting.
@@ -242,6 +247,7 @@ def generate_publication_metrics(metadata: PublicationMetadata) -> dict[str, Any
     }
 
     return metrics
+
 
 def calculate_complexity_score(metadata: PublicationMetadata) -> int:
     """Calculate a complexity score for the publication.
@@ -309,6 +315,7 @@ def calculate_complexity_score(metadata: PublicationMetadata) -> int:
         score += 5
 
     return min(score, 100)
+
 
 def create_repository_metadata(metadata: PublicationMetadata) -> str:
     """Create repository metadata JSON for GitHub/GitLab.

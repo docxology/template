@@ -20,7 +20,10 @@ from infrastructure.validation.check_links import (
     validate_python_imports,
 )
 from infrastructure.validation.doc_accuracy import check_links
-from infrastructure.validation.doc_discovery import categorize_documentation, discover_markdown_files
+from infrastructure.validation.doc_discovery import (
+    categorize_documentation,
+    discover_markdown_files,
+)
 from infrastructure.validation.doc_models import (
     DocumentationFile,
     LinkIssue,
@@ -34,6 +37,7 @@ from infrastructure.validation.issue_categorizer import (
 )
 
 logger = get_logger(__name__)
+
 
 def run_comprehensive_audit(
     repo_root: Path,
@@ -127,6 +131,7 @@ def run_comprehensive_audit(
 
     return scan_results
 
+
 def _validate_single_file(
     md_file: Path,
     content: str,
@@ -161,10 +166,34 @@ def _validate_single_file(
         logger.warning(f"Link validation failed for {md_file}: {e}")
 
     quality_validators = [
-        (include_code, validate_file_paths_in_code, "code_block_path", "warning", "Code block path issue"),
-        (include_directory, validate_directory_structures, "directory_structure", "info", "Directory structure issue"),
-        (include_imports, validate_python_imports, "python_import", "warning", "Python import issue"),
-        (include_placeholders, validate_placeholder_consistency, "placeholder_consistency", "info", "Placeholder consistency issue"),
+        (
+            include_code,
+            validate_file_paths_in_code,
+            "code_block_path",
+            "warning",
+            "Code block path issue",
+        ),
+        (
+            include_directory,
+            validate_directory_structures,
+            "directory_structure",
+            "info",
+            "Directory structure issue",
+        ),
+        (
+            include_imports,
+            validate_python_imports,
+            "python_import",
+            "warning",
+            "Python import issue",
+        ),
+        (
+            include_placeholders,
+            validate_placeholder_consistency,
+            "placeholder_consistency",
+            "info",
+            "Placeholder consistency issue",
+        ),
     ]
     for flag, validator_fn, issue_type, severity, default_msg in quality_validators:
         if flag:
@@ -184,6 +213,7 @@ def _validate_single_file(
 
     return results
 
+
 def _calculate_statistics(scan_results: ScanResults) -> None:
     """Calculate statistics for the scan results."""
     scan_results.scanned_files = len(scan_results.documentation_files)  # type: ignore
@@ -197,6 +227,7 @@ def _calculate_statistics(scan_results: ScanResults) -> None:
     }
 
     scan_results.statistics = stats
+
 
 def generate_audit_report(
     scan_results: ScanResults,

@@ -18,6 +18,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+
 @dataclass
 class StabilityTest:
     """Container for numerical stability test results."""
@@ -29,6 +30,7 @@ class StabilityTest:
     actual_behavior: str
     stability_score: float
     recommendations: list[str]
+
 
 def check_numerical_stability(
     func: Callable, test_inputs: list[Any], tolerance: float = 1e-12
@@ -83,7 +85,9 @@ def check_numerical_stability(
         recommendations.append("Handle edge cases and invalid inputs gracefully")
 
     return StabilityTest(
-        function_name=getattr(func, "__name__", getattr(getattr(func, "func", None), "__name__", repr(func))),
+        function_name=getattr(
+            func, "__name__", getattr(getattr(func, "func", None), "__name__", repr(func))
+        ),
         test_name="numerical_stability",
         input_range=(min(test_inputs), max(test_inputs)) if test_inputs else (0, 0),
         expected_behavior="Stable numerical behavior across input range",

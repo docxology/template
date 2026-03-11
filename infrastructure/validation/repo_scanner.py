@@ -25,6 +25,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+
 @dataclass
 class AccuracyIssue:
     """Represents an accuracy issue."""
@@ -36,6 +37,7 @@ class AccuracyIssue:
     message: str = ""
     details: str = ""
 
+
 @dataclass
 class CompletenessGap:
     """Represents a completeness gap."""
@@ -45,6 +47,7 @@ class CompletenessGap:
     description: str
     severity: str = "warning"
 
+
 @dataclass
 class ScanResults:
     """Container for scan results."""
@@ -52,6 +55,7 @@ class ScanResults:
     accuracy_issues: list[AccuracyIssue] = field(default_factory=list)
     completeness_gaps: list[CompletenessGap] = field(default_factory=list)
     statistics: dict[str, Any] = field(default_factory=dict)
+
 
 class RepositoryScanner:
     """Comprehensive repository scanner."""
@@ -587,6 +591,7 @@ class RepositoryScanner:
 
         return datetime.now().isoformat()
 
+
 def main() -> int:
     """Execute repository-wide accuracy and completeness scan.
 
@@ -627,6 +632,7 @@ def main() -> int:
     logger.info(f"  Warnings: {warning_count}")
 
     return 0 if error_count == 0 else 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

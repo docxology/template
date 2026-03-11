@@ -23,7 +23,13 @@ T = TypeVar("T")
 # Standard exceptions that indicate transient infrastructure failures.
 # Pass to retry_with_backoff(exceptions=TRANSIENT_EXCEPTIONS) or use
 # retry_on_transient_failure() for a pre-configured shorthand.
-TRANSIENT_EXCEPTIONS: tuple[type[Exception], ...] = (IOError, ConnectionError, TimeoutError, OSError)
+TRANSIENT_EXCEPTIONS: tuple[type[Exception], ...] = (
+    IOError,
+    ConnectionError,
+    TimeoutError,
+    OSError,
+)
+
 
 def retry_with_backoff(
     max_attempts: int = 3,
@@ -130,6 +136,7 @@ def retry_with_backoff(
 
     return decorator
 
+
 def retry_on_transient_failure(
     max_attempts: int = 3, initial_delay: float = 1.0
 ) -> Callable[[Callable[..., T]], Callable[..., T]]:
@@ -159,6 +166,7 @@ def retry_on_transient_failure(
         max_delay=10.0,
         exceptions=TRANSIENT_EXCEPTIONS,
     )
+
 
 class RetryableOperation:
     """Context manager for retryable operations with manual control.

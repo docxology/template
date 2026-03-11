@@ -17,6 +17,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+
 def parse_coverage_json(coverage_json_path: Path) -> dict[str, Any] | None:
     """Parse coverage.json file for detailed per-module coverage data.
 
@@ -76,6 +77,7 @@ def parse_coverage_json(coverage_json_path: Path) -> dict[str, Any] | None:
     except (json.JSONDecodeError, IOError) as e:
         logger.warning(f"Failed to parse coverage JSON file {coverage_json_path}: {e}")
         return None
+
 
 def parse_pytest_output(stdout: str, stderr: str, exit_code: int) -> dict[str, Any]:
     """Parse pytest stdout/stderr and exit_code into structured test metrics."""
@@ -192,6 +194,7 @@ def parse_pytest_output(stdout: str, stderr: str, exit_code: int) -> dict[str, A
 
     return results
 
+
 def generate_test_report(
     infra_results: dict[str, Any],
     project_results: dict[str, Any],
@@ -241,6 +244,7 @@ def generate_test_report(
 
     return report
 
+
 def save_test_report(report: dict[str, Any], output_dir: Path) -> tuple[Path, Path]:
     """Save test report to JSON and generate Markdown summary.
 
@@ -286,7 +290,9 @@ def save_test_report(report: dict[str, Any], output_dir: Path) -> tuple[Path, Pa
             f.write(f"- Total Passed: {report['summary']['total_passed']}\n")
             f.write(f"- Total Failed: {report['summary']['total_failed']}\n")
             f.write(f"- Total Tests: {report['summary']['total_tests']}\n")
-            f.write(f"- Status: {'✅ PASSED' if report['summary']['all_passed'] else '❌ FAILED'}\n")
+            f.write(
+                f"- Status: {'✅ PASSED' if report['summary']['all_passed'] else '❌ FAILED'}\n"
+            )
     except OSError as e:
         logger.error(f"Failed to write test report markdown: {e}")
         raise
@@ -294,6 +300,7 @@ def save_test_report(report: dict[str, Any], output_dir: Path) -> tuple[Path, Pa
     logger.info(f"Test summary saved: {md_path}")
 
     return (json_path, md_path)
+
 
 def format_coverage_status(coverage_pct: float, threshold: float) -> str:
     """Format coverage percentage with visual indicators and threshold context."""
@@ -306,6 +313,7 @@ def format_coverage_status(coverage_pct: float, threshold: float) -> str:
         return f"⚠️ {coverage_pct:.1f}% (below {threshold}% threshold by {gap:.1f}%)"
     else:
         return f"❌ {coverage_pct:.1f}% (significantly below {threshold}% threshold by {gap:.1f}%)"
+
 
 def analyze_coverage_gaps(
     results: dict[str, Any], threshold: float, test_type: str, report: dict[str, Any]
@@ -366,6 +374,7 @@ def analyze_coverage_gaps(
 
     return suggestions
 
+
 def format_failure_suggestions(
     failed_tests: list, test_suite: str, project_name: str = ""
 ) -> list[str]:
@@ -376,9 +385,7 @@ def format_failure_suggestions(
     """
     suggestions: list[str] = []
 
-    has_import_errors = any(
-        "import" in str(f) or "module" in str(f).lower() for f in failed_tests
-    )
+    has_import_errors = any("import" in str(f) or "module" in str(f).lower() for f in failed_tests)
     has_assertion_errors = any("assertion" in str(f).lower() for f in failed_tests)
     has_coverage_errors = any(
         "coverage" in str(f).lower()
@@ -390,10 +397,16 @@ def format_failure_suggestions(
 
     if has_import_errors:
         if test_suite == "infrastructure":
-            suggestions.append("    - Missing dependencies: pip install pytest-httpserver pytest-timeout")
-            suggestions.append("    - Import path issues: check PYTHONPATH includes repository root")
+            suggestions.append(
+                "    - Missing dependencies: pip install pytest-httpserver pytest-timeout"
+            )
+            suggestions.append(
+                "    - Import path issues: check PYTHONPATH includes repository root"
+            )
         else:
-            suggestions.append("    - Missing project dependencies: check pyproject.toml and uv sync")
+            suggestions.append(
+                "    - Missing project dependencies: check pyproject.toml and uv sync"
+            )
             suggestions.append("    - Import path issues: verify project src/ directory structure")
 
     if has_assertion_errors and test_suite != "infrastructure":
@@ -401,32 +414,62 @@ def format_failure_suggestions(
         suggestions.append("    - Check test data generation and reproducibility")
 
     if has_coverage_errors:
-        suggestions.append("    - Coverage database corruption: files automatically cleaned and retried")
-        suggestions.append("    - If errors persist: rm -f .coverage* coverage_*.json && rerun tests")
+        suggestions.append(
+            "    - Coverage database corruption: files automatically cleaned and retried"
+        )
+        suggestions.append(
+            "    - If errors persist: rm -f .coverage* coverage_*.json && rerun tests"
+        )
         if test_suite == "infrastructure":
-            suggestions.append("    - To skip coverage temporarily: pytest --no-cov tests/infra_tests/")
-            suggestions.append("    - Coverage isolation: infrastructure and project tests use separate data files")
+            suggestions.append(
+                "    - To skip coverage temporarily: pytest --no-cov tests/infra_tests/"
+            )
+            suggestions.append(
+                "    - Coverage isolation: infrastructure and project tests use separate data files"
+            )
         else:
-            suggestions.append(f"    - Coverage isolation: project tests use separate data file (.coverage.project)")
+            suggestions.append(
+                "    - Coverage isolation: project tests use separate data file (.coverage.project)"
+            )
 
     if has_timeout_errors:
         suggestions.append("    - Timeout issues: increase with --timeout=60 or PYTEST_TIMEOUT=60")
         if test_suite == "infrastructure":
-            suggestions.append("    - Identify slow tests: pytest --durations=10 tests/infra_tests/")
+            suggestions.append(
+                "    - Identify slow tests: pytest --durations=10 tests/infra_tests/"
+            )
             suggestions.append("    - Skip slow tests: pytest -m 'not slow' tests/infra_tests/")
         else:
-            suggestions.append(f"    - Identify slow tests: pytest --durations=10 projects/{project_name}/tests/")
-            suggestions.append(f"    - Skip slow tests: pytest -m 'not slow' projects/{project_name}/tests/")
+            suggestions.append(
+                f"    - Identify slow tests: pytest --durations=10 projects/{project_name}/tests/"
+            )
+            suggestions.append(
+                f"    - Skip slow tests: pytest -m 'not slow' projects/{project_name}/tests/"
+            )
 
     if test_suite == "infrastructure":
-        suggestions.append("    - Run individual failing tests: pytest tests/infra_tests/<test_file> -v")
-        suggestions.append("    - Debug with full traceback: pytest tests/infra_tests/<test_file> -s --tb=long")
-        suggestions.append("    - Run infrastructure tests only: python3 scripts/01_run_tests.py --infrastructure-only")
+        suggestions.append(
+            "    - Run individual failing tests: pytest tests/infra_tests/<test_file> -v"
+        )
+        suggestions.append(
+            "    - Debug with full traceback: pytest tests/infra_tests/<test_file> -s --tb=long"
+        )
+        suggestions.append(
+            "    - Run infrastructure tests only: python3 scripts/01_run_tests.py --infrastructure-only"
+        )
         suggestions.append("    - Check test environment: python3 scripts/00_setup_environment.py")
     else:
-        suggestions.append(f"    - Run individual failing tests: pytest projects/{project_name}/tests/<test_file> -v")
-        suggestions.append(f"    - Debug with full traceback: pytest projects/{project_name}/tests/<test_file> -s --tb=long")
-        suggestions.append(f"    - Run project tests only: python3 scripts/01_run_tests.py --project {project_name} --project-only")
-        suggestions.append(f"    - Check project structure: verify projects/{project_name}/src/ and tests/ exist")
+        suggestions.append(
+            f"    - Run individual failing tests: pytest projects/{project_name}/tests/<test_file> -v"
+        )
+        suggestions.append(
+            f"    - Debug with full traceback: pytest projects/{project_name}/tests/<test_file> -s --tb=long"
+        )
+        suggestions.append(
+            f"    - Run project tests only: python3 scripts/01_run_tests.py --project {project_name} --project-only"
+        )
+        suggestions.append(
+            f"    - Check project structure: verify projects/{project_name}/src/ and tests/ exist"
+        )
 
     return suggestions

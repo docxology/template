@@ -41,12 +41,14 @@ REVIEW_GENERATORS = {
     "improvement_suggestions": generate_improvement_suggestions,
 }
 
+
 class ReviewMode:
     """Mode for LLM review execution."""
 
     ALL = "all"  # Run both reviews and translations
     REVIEWS_ONLY = "reviews_only"  # Run only English scientific reviews
     TRANSLATIONS_ONLY = "translations_only"  # Run only translations
+
 
 def run_llm_review_pipeline(
     mode: str = ReviewMode.ALL,
@@ -69,7 +71,9 @@ def run_llm_review_pipeline(
     if repo_root is None:
         repo_root = Path.cwd()
 
-    _project_root = project_dir if project_dir is not None else repo_root / "projects" / project_name
+    _project_root = (
+        project_dir if project_dir is not None else repo_root / "projects" / project_name
+    )
     project_output = _project_root / "output"
 
     # Use project basename for file matching

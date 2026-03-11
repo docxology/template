@@ -32,9 +32,11 @@ T = TypeVar("T")
 
 _IN_TEST_ENV: bool = bool(os.getenv("PYTEST_CURRENT_TEST") or "pytest" in sys.modules)
 
+
 def _is_test_environment() -> bool:
     """Return True if running inside pytest."""
     return _IN_TEST_ENV
+
 
 # Map environment LOG_LEVEL (0-3) to Python logging levels
 LOG_LEVEL_MAP = {
@@ -44,10 +46,12 @@ LOG_LEVEL_MAP = {
     "3": logging.ERROR,  # Errors only
 }
 
+
 def get_log_level_from_env() -> int:
     """Get log level from LOG_LEVEL environment variable (0=DEBUG, 1=INFO, 2=WARN, 3=ERROR)."""
     env_level = os.getenv("LOG_LEVEL", "1")  # Default to INFO
     return LOG_LEVEL_MAP.get(env_level, logging.INFO)
+
 
 def setup_logger(
     name: str, level: int | None = None, log_file: Path | str | None = None
@@ -108,6 +112,7 @@ def setup_logger(
 
     return logger
 
+
 def setup_root_log_file_handler(log_file: Path) -> logging.FileHandler:
     """Add a file handler to the root logger, replacing any existing one for this path.
 
@@ -133,11 +138,10 @@ def setup_root_log_file_handler(log_file: Path) -> logging.FileHandler:
             root_logger.removeHandler(h)
 
     handler = logging.FileHandler(log_file)
-    handler.setFormatter(
-        logging.Formatter("[%(asctime)s] [%(levelname)s] [%(name)s] %(message)s")
-    )
+    handler.setFormatter(logging.Formatter("[%(asctime)s] [%(levelname)s] [%(name)s] %(message)s"))
     root_logger.addHandler(handler)
     return handler
+
 
 def flush_file_handlers() -> None:
     """Flush all FileHandlers on the root logger and all named loggers.
@@ -155,6 +159,7 @@ def flush_file_handlers() -> None:
         for handler in logger_obj.handlers:
             if isinstance(handler, logging.FileHandler):
                 handler.flush()
+
 
 def get_logger(name: str) -> logging.Logger:
     """Return a logger configured with standard handlers for the given name."""
@@ -185,6 +190,7 @@ def get_logger(name: str) -> logging.Logger:
 
     return logger
 
+
 @contextmanager
 def log_operation(
     operation: str,
@@ -193,7 +199,10 @@ def log_operation(
     min_duration_to_log: float = 0.1,
     log_completion: bool = True,
 ) -> Iterator[None]:
-    """Context manager that logs operation start, completion (if above min_duration), and failure."""
+    """Context manager that logs operation start, completion, and failure.
+
+    Completion is only logged if above min_duration.
+    """
     logger = logger or get_logger(__name__)
 
     logger.log(level, f"Starting: {operation}")
@@ -210,6 +219,7 @@ def log_operation(
         logger.error(f"Failed: {operation} after {duration:.1f}s - {e}")
         raise
 
+
 @contextmanager
 def log_timing(label: str, logger: logging.Logger | None = None) -> Iterator[None]:
     """Context manager that logs elapsed time for label on exit."""
@@ -221,6 +231,7 @@ def log_timing(label: str, logger: logging.Logger | None = None) -> Iterator[Non
     finally:
         duration = time.time() - start_time
         logger.info(f"{label}: {duration:.1f}s")
+
 
 def log_function_call(logger: logging.Logger | None = None) -> Callable:
     """Decorator that logs function calls at DEBUG level with elapsed time and error reporting."""
@@ -247,6 +258,7 @@ def log_function_call(logger: logging.Logger | None = None) -> Callable:
 
     return decorator
 
+
 def log_success(message: str, logger: logging.Logger | None = None) -> None:
     """Log message at INFO level prefixed with the success emoji."""
     logger = logger or get_logger(__name__)
@@ -254,8 +266,10 @@ def log_success(message: str, logger: logging.Logger | None = None) -> None:
     emoji = EMOJIS["success"] if USE_EMOJIS else "[SUCCESS]"
     logger.info(f"{emoji} {message}" if USE_EMOJIS else message)
 
+
 _HEADER_SEPARATOR_WIDTH = 50
 _STAGE_SEPARATOR_WIDTH = 46
+
 
 def log_header(message: str, logger: logging.Logger | None = None) -> None:
     """Log a section header with visual emphasis (separator + message + separator)."""
@@ -269,14 +283,14 @@ def log_header(message: str, logger: logging.Logger | None = None) -> None:
     logger.info(f"{prefix}{message}")
     logger.info(separator)
 
-def log_progress(
-    current: int, total: int, task: str, logger: logging.Logger | None = None
-) -> None:
+
+def log_progress(current: int, total: int, task: str, logger: logging.Logger | None = None) -> None:
     """Log a progress update with current position, total, and percentage."""
     logger = logger or get_logger(__name__)
 
     percent = (current * 100) // total if total > 0 else 0
     logger.info(f"[{current}/{total} - {percent}%] {task}")
+
 
 def log_stage(
     stage_num: int,
@@ -292,11 +306,13 @@ def log_stage(
     logger.info(f"[{stage_num}/{total_stages}] {stage_name}")
     logger.info(separator)
 
+
 def log_substep(message: str, logger: logging.Logger | None = None) -> None:
     """Log a pipeline sub-step message with standard indentation."""
     logger = logger or get_logger(__name__)
 
     logger.info(f"\n  {message}")
+
 
 def set_global_log_level(level: int) -> None:
     """Set log level on the root logger and all named loggers."""
@@ -304,6 +320,7 @@ def set_global_log_level(level: int) -> None:
     for logger_name in logging.Logger.manager.loggerDict:
         logger = logging.getLogger(logger_name)
         logger.setLevel(level)
+
 
 def log_pipeline_stage_with_eta(
     stage_num: int,
@@ -333,6 +350,7 @@ def log_pipeline_stage_with_eta(
 
     logger.info(separator)
 
+
 def log_live_resource_usage(stage_name: str = "", logger: logging.Logger | None = None) -> None:
     """Log current resource usage via live psutil sampling (if psutil available)."""
     logger = logger or get_logger(__name__)
@@ -359,6 +377,7 @@ def log_live_resource_usage(stage_name: str = "", logger: logging.Logger | None 
     except (OSError, AttributeError) as e:
         logger.debug(f"Failed to get resource usage: {e}")
 
+
 # Core logging API — progress utilities, formatters, and constants are
 # importable directly from their respective submodules (logging_progress,
 # logging_formatters, logging_constants).
@@ -381,4 +400,3 @@ __all__ = [
     "flush_file_handlers",
     "format_error_with_suggestions",
 ]
-

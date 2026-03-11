@@ -17,6 +17,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+
 class InputSanitizer:
     """Comprehensive input sanitization for LLM operations."""
 
@@ -186,13 +187,16 @@ class InputSanitizer:
             return text[:max_length] + "...[truncated]"
         return text
 
+
 class SecurityError(LLMError):
     """Exception raised for security violations in LLM operations."""
 
     pass
 
+
 # Global instance (lazy initialization — avoids import-time side effects)
 _input_sanitizer: InputSanitizer | None = None
+
 
 def get_input_sanitizer() -> InputSanitizer:
     """Get the global input sanitizer instance."""
@@ -200,6 +204,7 @@ def get_input_sanitizer() -> InputSanitizer:
     if _input_sanitizer is None:
         _input_sanitizer = InputSanitizer()
     return _input_sanitizer
+
 
 def sanitize_llm_input(prompt: str) -> str:
     """Convenience function for LLM input sanitization."""

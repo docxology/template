@@ -92,6 +92,7 @@ VENV_PATTERNS: list[str] = [
     "site-packages/",
 ]
 
+
 def is_valid_directory_reference(target: str) -> bool:
     """Check if target is a valid directory reference.
 
@@ -133,6 +134,7 @@ def is_valid_directory_reference(target: str) -> bool:
 
     return False
 
+
 def is_template_pattern(target: str) -> bool:
     """Check if target contains template placeholders.
 
@@ -148,6 +150,7 @@ def is_template_pattern(target: str) -> bool:
         if re.search(pattern, target):
             return True
     return False
+
 
 def is_code_example(target: str) -> bool:
     """Check if target is a code example pattern.
@@ -171,6 +174,7 @@ def is_code_example(target: str) -> bool:
             return True
     return False
 
+
 def is_mermaid_artifact(target: str) -> bool:
     """Check if target contains Mermaid diagram artifacts.
 
@@ -190,6 +194,7 @@ def is_mermaid_artifact(target: str) -> bool:
         return True
     return False
 
+
 def is_table_artifact(target: str) -> bool:
     """Check if target is a table formatting artifact.
 
@@ -208,6 +213,7 @@ def is_table_artifact(target: str) -> bool:
     if target.endswith(("]", ")", "`")):
         return True
     return False
+
 
 def is_code_block_artifact(target: str) -> bool:
     """Check if target is a code block formatting artifact.
@@ -231,6 +237,7 @@ def is_code_block_artifact(target: str) -> bool:
         return True
     return False
 
+
 def is_latex_reference(target: str) -> bool:
     """Check if target is a LaTeX reference.
 
@@ -246,6 +253,7 @@ def is_latex_reference(target: str) -> bool:
         if re.search(pattern, target):
             return True
     return False
+
 
 def is_venv_reference(target: str) -> bool:
     """Check if target is a virtual environment reference.

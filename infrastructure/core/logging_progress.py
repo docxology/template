@@ -12,8 +12,12 @@ from typing import Any, Iterator
 from infrastructure.core.logging_constants import EMOJIS, USE_EMOJIS
 from infrastructure.core.logging_helpers import format_duration
 
+
 def calculate_eta(elapsed_time: float, completed_items: int, total_items: int) -> float | None:
-    """Calculate estimated time remaining using linear extrapolation; returns None if indeterminate."""
+    """Calculate estimated time remaining using linear extrapolation.
+
+    Returns None if indeterminate.
+    """
     if completed_items <= 0 or total_items <= 0:
         return None
 
@@ -23,6 +27,7 @@ def calculate_eta(elapsed_time: float, completed_items: int, total_items: int) -
     avg_time_per_item = elapsed_time / completed_items
     remaining_items = total_items - completed_items
     return avg_time_per_item * remaining_items
+
 
 def calculate_eta_ema(
     elapsed_time: float,
@@ -52,6 +57,7 @@ def calculate_eta_ema(
 
     # Ensure ETA is non-negative
     return max(0.0, ema_eta)
+
 
 def calculate_eta_with_confidence(
     elapsed_time: float,
@@ -86,6 +92,7 @@ def calculate_eta_with_confidence(
 
     return (optimistic, realistic, pessimistic)
 
+
 def log_progress_bar(
     current: int,
     total: int,
@@ -106,6 +113,7 @@ def log_progress_bar(
     bar = "█" * filled + "░" * (bar_width - filled)
 
     logger.info(f"{message}: [{bar}] {percent}%")
+
 
 class Spinner:
     """Animated spinner for long-running operations.
@@ -179,6 +187,7 @@ class Spinner:
         """Context manager exit."""
         self.stop()
 
+
 @contextmanager
 def log_with_spinner(
     message: str,
@@ -205,6 +214,7 @@ def log_with_spinner(
         if logger:
             logger.error(f"{message} failed: {e}")
         raise
+
 
 class StreamingProgress:
     """Real-time progress indicator for streaming operations.
@@ -284,6 +294,7 @@ class StreamingProgress:
             )
             self.stream.flush()
 
+
 def log_progress_streaming(
     current: int,
     total: int,
@@ -315,6 +326,7 @@ def log_progress_streaming(
         sys.stderr.write("\n")
         sys.stderr.flush()
 
+
 def log_stage_with_eta(
     stage: str,
     current: int,
@@ -340,6 +352,7 @@ def log_stage_with_eta(
         logger.info(f"{stage} [{current}/{total}] - ETA: {eta_str}")
     else:
         logger.info(f"{stage} [{current}/{total}]")
+
 
 def log_resource_usage(
     cpu_percent: float | None = None,

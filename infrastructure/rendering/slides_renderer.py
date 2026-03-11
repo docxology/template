@@ -13,6 +13,7 @@ from infrastructure.rendering.latex_utils import compile_latex
 
 logger = get_logger(__name__)
 
+
 class SlidesRenderer:
     """Handles slide generation (Beamer/Reveal.js)."""
 

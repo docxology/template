@@ -13,6 +13,7 @@ from infrastructure.validation.doc_models import AccuracyIssue, LinkIssue
 
 logger = get_logger(__name__)
 
+
 def extract_headings(content: str) -> set[str]:
     """Extract all heading anchors from markdown."""
     headings = set()
@@ -34,6 +35,7 @@ def extract_headings(content: str) -> set[str]:
             headings.add(anchor)
 
     return headings
+
 
 def resolve_file_path(target: str, source_file: Path, repo_root: Path) -> tuple[bool, str, str]:
     """Resolve a file path relative to source file.
@@ -97,6 +99,7 @@ def resolve_file_path(target: str, source_file: Path, repo_root: Path) -> tuple[
                 return False, f"File does not exist: {target_path}", "file"
     except Exception as e:
         return False, f"Error resolving path: {e}", "unknown"
+
 
 def check_links(
     md_files: list[Path], repo_root: Path, all_headings: dict[str, set[str]]
@@ -186,6 +189,7 @@ def check_links(
 
     return issues
 
+
 def extract_script_name(command: str) -> str | None:
     """Extract script name from command."""
     # Look for ./script.sh or python script.py patterns
@@ -196,6 +200,7 @@ def extract_script_name(command: str) -> str | None:
     if match:
         return match.group(1)
     return None
+
 
 def verify_commands(md_files: list[Path], repo_root: Path) -> list[AccuracyIssue]:
     """Verify commands in documentation match actual implementations."""
@@ -235,6 +240,7 @@ def verify_commands(md_files: list[Path], repo_root: Path) -> list[AccuracyIssue
 
     return issues
 
+
 def check_file_paths(md_files: list[Path], repo_root: Path) -> list[AccuracyIssue]:
     """Check file paths mentioned in documentation."""
     issues = []
@@ -272,6 +278,7 @@ def check_file_paths(md_files: list[Path], repo_root: Path) -> list[AccuracyIssu
 
     return issues
 
+
 def validate_config_options(
     md_files: list[Path], config_files: dict[str, Path]
 ) -> list[AccuracyIssue]:
@@ -292,12 +299,14 @@ def validate_config_options(
 
     return issues
 
+
 def check_terminology(md_files: list[Path]) -> list[AccuracyIssue]:
     """Check terminology consistency across documentation."""
     issues: list[AccuracyIssue] = []
     # This would check for inconsistent terminology
     # For now, return empty - could be enhanced with a terminology dictionary
     return issues
+
 
 def run_accuracy_phase(
     md_files: list[Path], repo_root: Path, config_files: dict[str, Path]

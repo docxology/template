@@ -30,6 +30,7 @@ try:
 except ImportError:
     _CRYPTOGRAPHY_AVAILABLE = False
 
+
 def _require_cryptography() -> None:
     """Raise ImportError with guidance if ``cryptography`` is missing."""
     if not _CRYPTOGRAPHY_AVAILABLE:
@@ -38,7 +39,9 @@ def _require_cryptography() -> None:
             "Install it with: pip install cryptography"
         )
 
+
 # ── AES-256-GCM payload encryption ──────────────────────────────────────
+
 
 def encrypt_payload(
     plaintext: str,
@@ -72,6 +75,7 @@ def encrypt_payload(
     logger.debug(f"Payload encrypted (AES-256-GCM), ciphertext length={len(ciphertext)}")
     return result
 
+
 def decrypt_payload(
     ciphertext_b64: str,
     nonce_b64: str,
@@ -97,7 +101,9 @@ def decrypt_payload(
     plaintext = aesgcm.decrypt(nonce, ciphertext, None)
     return plaintext.decode("utf-8")
 
+
 # ── HMAC digital fingerprint ────────────────────────────────────────────
+
 
 def generate_fingerprint(
     content: bytes,
@@ -124,7 +130,9 @@ def generate_fingerprint(
 
     return {"fingerprint": fp, "secret": secret}
 
+
 # ── PDF password protection ─────────────────────────────────────────────
+
 
 def apply_pdf_password(
     input_pdf: Path,
@@ -166,9 +174,7 @@ def apply_pdf_password(
 
     # Copy existing metadata
     if reader.metadata:
-        writer.add_metadata(
-            {k: v for k, v in reader.metadata.items() if isinstance(v, str)}
-        )
+        writer.add_metadata({k: v for k, v in reader.metadata.items() if isinstance(v, str)})
 
     writer.encrypt(
         user_password=user_password,
@@ -180,6 +186,7 @@ def apply_pdf_password(
 
     logger.info(f"PDF password protection applied → {output_pdf.name}")
     return output_pdf
+
 
 def generate_document_id() -> str:
     """Generate a unique document identifier (UUID4-style hex token)."""

@@ -30,6 +30,7 @@ INTERNAL_LINK_PATTERN = re.compile(r"\(#([^\)]+)\)")
 LINK_PATTERN = re.compile(r"\[([^\]]+)\]\((https?://[^\)]+)\)")
 BARE_URL_PATTERN = re.compile(r"(?<!\]\()https?://\S+")
 
+
 def find_markdown_files(markdown_dir: str | Path) -> list[str]:
     """Find all markdown files in the specified directory.
 
@@ -57,6 +58,7 @@ def find_markdown_files(markdown_dir: str | Path) -> list[str]:
 
     return [str(markdown_dir / f) for f in sorted(os.listdir(markdown_dir)) if f.endswith(".md")]
 
+
 def collect_symbols(md_paths: list[str]) -> tuple[set[str], set[str]]:
     """Collect all equation labels and section anchors from markdown files.
 
@@ -74,6 +76,7 @@ def collect_symbols(md_paths: list[str]) -> tuple[set[str], set[str]]:
         labels.update(EQ_LABEL_PATTERN.findall(text))
         anchors.update(ANCHOR_PATTERN.findall(text))
     return labels, anchors
+
 
 def validate_images(
     md_paths: list[str],
@@ -143,6 +146,7 @@ def validate_images(
                 )
     return problems
 
+
 def validate_refs(
     md_paths: list[str], repo_root: str | Path, labels: set[str], anchors: set[str]
 ) -> list[str]:
@@ -191,6 +195,7 @@ def validate_refs(
                 )
     return problems
 
+
 def validate_math(md_paths: list[str], repo_root: str | Path) -> list[str]:
     """Validate mathematical equation formatting and labeling.
 
@@ -235,6 +240,7 @@ def validate_math(md_paths: list[str], repo_root: str | Path) -> list[str]:
                     seen_labels.add(lab)
     return problems
 
+
 def validate_markdown(
     markdown_dir: str | Path, repo_root: str | Path, strict: bool = False
 ) -> tuple[list[str], int]:
@@ -277,6 +283,7 @@ def validate_markdown(
         return (problems, exit_code)
     else:
         return ([], 0)
+
 
 def find_manuscript_directory(repo_root: str | Path, project_name: str = "project") -> Path:
     """Find the manuscript directory at the standard location.

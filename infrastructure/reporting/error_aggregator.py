@@ -89,6 +89,7 @@ _FIX_TEMPLATES: dict[str, dict[str, Any]] = {
     },
 }
 
+
 @dataclass
 class ErrorEntry:
     """Single error or warning entry."""
@@ -114,6 +115,7 @@ class ErrorEntry:
             "suggestions": self.suggestions,
             "context": self.context,
         }
+
 
 class ErrorAggregator:
     """Aggregate and categorize errors from pipeline execution."""
@@ -195,13 +197,16 @@ class ErrorAggregator:
         for error_type, errors in error_types.items():
             template = _FIX_TEMPLATES.get(error_type)
             if template:
-                fixes.append({"issue": f"{len(errors)} {error_type.replace('_', ' ')}(s)", **template})
+                fixes.append(
+                    {"issue": f"{len(errors)} {error_type.replace('_', ' ')}(s)", **template}
+                )
             else:
                 fixes.append(
                     {
                         "priority": "medium",
                         "issue": f"{len(errors)} {error_type} error(s)",
-                        "actions": errors[0].suggestions or ["Review error messages", "Check logs for details"],
+                        "actions": errors[0].suggestions
+                        or ["Review error messages", "Check logs for details"],
                     }
                 )
         return fixes
@@ -297,8 +302,10 @@ class ErrorAggregator:
 
         return "\n".join(lines)
 
+
 # Global error aggregator instance
 _global_aggregator: ErrorAggregator | None = None
+
 
 def get_error_aggregator() -> ErrorAggregator:
     """Get global error aggregator instance.
@@ -310,6 +317,7 @@ def get_error_aggregator() -> ErrorAggregator:
     if _global_aggregator is None:
         _global_aggregator = ErrorAggregator()
     return _global_aggregator
+
 
 def reset_error_aggregator() -> None:
     """Reset global error aggregator (for testing)."""

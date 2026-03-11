@@ -12,6 +12,7 @@ from infrastructure.validation.doc_models import CompletenessGap, DocumentationF
 
 logger = get_logger(__name__)
 
+
 def check_feature_documentation(
     repo_root: Path, documentation_files: list[DocumentationFile]
 ) -> list[CompletenessGap]:
@@ -44,6 +45,7 @@ def check_feature_documentation(
 
     return gaps
 
+
 def check_script_documentation(repo_root: Path) -> list[CompletenessGap]:
     """Check if all scripts have documentation."""
     gaps = []
@@ -72,6 +74,7 @@ def check_script_documentation(repo_root: Path) -> list[CompletenessGap]:
 
     return gaps
 
+
 def check_config_documentation(config_files: dict[str, Path]) -> list[CompletenessGap]:
     """Check if configuration options are documented."""
     gaps: list[CompletenessGap] = []
@@ -80,6 +83,7 @@ def check_config_documentation(config_files: dict[str, Path]) -> list[Completene
         # This could be enhanced to check all options are documented
         pass
     return gaps
+
 
 def check_troubleshooting(
     documentation_files: list[DocumentationFile],
@@ -98,6 +102,7 @@ def check_troubleshooting(
         )
     return gaps
 
+
 def check_workflow_documentation(
     documentation_files: list[DocumentationFile],
 ) -> list[CompletenessGap]:
@@ -114,6 +119,7 @@ def check_workflow_documentation(
             )
         )
     return gaps
+
 
 def check_onboarding(
     documentation_files: list[DocumentationFile],
@@ -134,11 +140,13 @@ def check_onboarding(
         )
     return gaps
 
+
 def check_cross_reference_completeness() -> list[CompletenessGap]:
     """Check cross-reference completeness."""
     gaps: list[CompletenessGap] = []
     # This could check if related topics are linked
     return gaps
+
 
 def group_gaps_by_category(gaps: list[CompletenessGap]) -> dict[str, int]:
     """Group completeness gaps by category."""
@@ -147,12 +155,14 @@ def group_gaps_by_category(gaps: list[CompletenessGap]) -> dict[str, int]:
         categories[gap.category] += 1
     return dict(categories)
 
+
 def group_gaps_by_severity(gaps: list[CompletenessGap]) -> dict[str, int]:
     """Group completeness gaps by severity."""
     severities: dict[str, int] = defaultdict(int)
     for gap in gaps:
         severities[gap.severity] += 1
     return dict(severities)
+
 
 def run_completeness_phase(
     repo_root: Path,

@@ -25,14 +25,17 @@ from infrastructure.validation.doc_accuracy import extract_headings
 
 logger = get_logger(__name__)
 
+
 class LinkIssue(TypedDict):
     """Represents an issue found during validation."""
+
     file: str
     line: int
     target: str
     text: str
     issue: str
     type: str
+
 
 def find_all_markdown_files(repo_root: str) -> list[Path]:
     """Find all markdown files in the repository."""
@@ -57,7 +60,10 @@ def find_all_markdown_files(repo_root: str) -> list[Path]:
         md_files.append(md_file)
     return sorted(md_files)
 
-def extract_links(content: str, file_path: Path) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
+
+def extract_links(
+    content: str, file_path: Path
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
     """Extract internal links, external links, and file references from markdown."""
     internal_links = []
     external_links = []
@@ -113,6 +119,7 @@ def extract_links(content: str, file_path: Path) -> tuple[list[dict[str, Any]], 
 
     return internal_links, external_links, file_refs
 
+
 def extract_code_blocks(content: str, file_path: Path) -> list[dict[str, Any]]:
     """Extract code blocks from markdown content for validation.
 
@@ -144,6 +151,7 @@ def extract_code_blocks(content: str, file_path: Path) -> list[dict[str, Any]]:
 
     return code_blocks
 
+
 def _check_code_path_match(
     match: re.Match[str], block: dict[str, Any], content: str, file_path: Path, repo_root: Path
 ) -> dict[str, Any] | None:
@@ -169,8 +177,10 @@ def _check_code_path_match(
     match_end = match.end()
     context_before = block["content"][max(0, match_start - 10) : match_start]
     context_after = block["content"][match_end : min(len(block["content"]), match_end + 10)]
-    
-    if ('"' in context_before or "'" in context_before) and ('"' in context_after or "'" in context_after):
+
+    if ('"' in context_before or "'" in context_before) and (
+        '"' in context_after or "'" in context_after
+    ):
         return None
 
     if is_valid_directory_reference(path_ref) or not _should_validate_path(path_ref):
@@ -183,14 +193,17 @@ def _check_code_path_match(
     if resolved_path.suffix or not path_ref.endswith("/"):
         return {
             "file": str(file_path),
-            "line": block.get("line", 0) + content[: match_start].count("\n"),
+            "line": block.get("line", 0) + content[:match_start].count("\n"),
             "target": path_ref,
             "issue": f"File path in code block does not exist: {path_ref}",
             "type": "code_block_path",
         }
     return None
 
-def validate_file_paths_in_code(content: str, file_path: Path, repo_root: Path) -> list[dict[str, Any]]:
+
+def validate_file_paths_in_code(
+    content: str, file_path: Path, repo_root: Path
+) -> list[dict[str, Any]]:
     """Validate file path references within code blocks.
 
     Improved to avoid catching formatting artifacts and better handle multi-line paths.
@@ -218,33 +231,67 @@ def validate_file_paths_in_code(content: str, file_path: Path, repo_root: Path) 
 
     return issues
 
+
 # Consolidated path exclusion patterns — single source of truth for all
 # skip/example paths. Avoids hardcoding in function body; extend by adding here.
-_PATH_SKIP_SUBSTRINGS: frozenset[str] = frozenset({
-    # Template/placeholder paths
-    "projects/{name}/", "projects/{project_name}", "{name}/manuscript/config.yaml.example",
-    "your_project_name", "path/to/", "example.com", "your-domain.com",
-    # Generic/example infrastructure paths
-    "infrastructure/<module>", "infrastructure/example", "infrastructure/test_<module>",
-    "infrastructure/example_module", "infrastructure/module/", "infrastructure/new_module/",
-    "infrastructure/my_module/", "infrastructure/utils/", "infrastructure/helpers/",
-    "infrastructure/common/", "infrastructure/shared/", "infrastructure/core.py",
-    "infrastructure/test_core/", "infrastructure/test_specific.py",
-    # Malformed markdown artifacts
-    "infrastructure/AGENTS.md)", "infrastructure/AGENTS.md](../", "scripts/)", "scripts/`",
-    # Example scripts/docs/tests
-    "scripts/custom_check.py", "scripts/extra_checks.py", "scripts/my_script.py",
-    "scripts/process_data.py", "scripts/optimization_analysis.py",
-    "projects/my_project/", "projects/new_project/",
-    "docs/my_guide.md", "docs/new_feature.md",
-    "tests/test_my_feature.py", "tests/test_new_function.py",
-    # Template examples in code blocks
-    "project/tests/", "project/manuscript/", "project/src/",
-})
+_PATH_SKIP_SUBSTRINGS: frozenset[str] = frozenset(
+    {
+        # Template/placeholder paths
+        "projects/{name}/",
+        "projects/{project_name}",
+        "{name}/manuscript/config.yaml.example",
+        "your_project_name",
+        "path/to/",
+        "example.com",
+        "your-domain.com",
+        # Generic/example infrastructure paths
+        "infrastructure/<module>",
+        "infrastructure/example",
+        "infrastructure/test_<module>",
+        "infrastructure/example_module",
+        "infrastructure/module/",
+        "infrastructure/new_module/",
+        "infrastructure/my_module/",
+        "infrastructure/utils/",
+        "infrastructure/helpers/",
+        "infrastructure/common/",
+        "infrastructure/shared/",
+        "infrastructure/core.py",
+        "infrastructure/test_core/",
+        "infrastructure/test_specific.py",
+        # Malformed markdown artifacts
+        "infrastructure/AGENTS.md)",
+        "infrastructure/AGENTS.md](../",
+        "scripts/)",
+        "scripts/`",
+        # Example scripts/docs/tests
+        "scripts/custom_check.py",
+        "scripts/extra_checks.py",
+        "scripts/my_script.py",
+        "scripts/process_data.py",
+        "scripts/optimization_analysis.py",
+        "projects/my_project/",
+        "projects/new_project/",
+        "docs/my_guide.md",
+        "docs/new_feature.md",
+        "tests/test_my_feature.py",
+        "tests/test_new_function.py",
+        # Template examples in code blocks
+        "project/tests/",
+        "project/manuscript/",
+        "project/src/",
+    }
+)
 
-_PATH_SKIP_KEYWORDS: frozenset[str] = frozenset({
-    "placeholder", "template", "example", "your_", "sample",
-})
+_PATH_SKIP_KEYWORDS: frozenset[str] = frozenset(
+    {
+        "placeholder",
+        "template",
+        "example",
+        "your_",
+        "sample",
+    }
+)
 
 
 def _should_validate_path(path_ref: str) -> bool:
@@ -284,6 +331,7 @@ def _should_validate_path(path_ref: str) -> bool:
 
     return True
 
+
 def _resolve_template_path(path_ref: str, repo_root: Path) -> Path | None:
     """Resolve template paths like projects/{name}/ to actual paths."""
     try:
@@ -320,7 +368,10 @@ def _resolve_template_path(path_ref: str, repo_root: Path) -> Path | None:
     except Exception:
         return None
 
-def validate_directory_structures(content: str, file_path: Path, repo_root: Path) -> list[dict[str, Any]]:
+
+def validate_directory_structures(
+    content: str, file_path: Path, repo_root: Path
+) -> list[dict[str, Any]]:
     """Validate directory structure examples against actual filesystem."""
     issues: list[dict[str, str]] = []
 
@@ -355,6 +406,7 @@ def validate_directory_structures(content: str, file_path: Path, repo_root: Path
 
     return issues
 
+
 def _is_real_path_item(item_name: str) -> bool:
     """Check if a directory tree item looks like a real file/directory."""
     # Skip obvious placeholders or comments
@@ -366,6 +418,7 @@ def _is_real_path_item(item_name: str) -> bool:
         return False
 
     return True
+
 
 def validate_python_imports(content: str, file_path: Path, repo_root: Path) -> list[dict[str, Any]]:
     """Validate Python import statements in code blocks."""
@@ -400,6 +453,7 @@ def validate_python_imports(content: str, file_path: Path, repo_root: Path) -> l
                 continue
 
     return issues
+
 
 def _validate_import_path(
     module_name: str, block: dict[str, Any], file_path: Path, repo_root: Path
@@ -480,7 +534,10 @@ def _validate_import_path(
 
     return issues
 
-def validate_placeholder_consistency(content: str, file_path: Path, repo_root: Path) -> list[dict[str, Any]]:
+
+def validate_placeholder_consistency(
+    content: str, file_path: Path, repo_root: Path
+) -> list[dict[str, Any]]:
     """Validate consistency of {name} placeholders vs actual project names."""
     issues: list[dict[str, str]] = []
 
@@ -558,6 +615,7 @@ def validate_placeholder_consistency(content: str, file_path: Path, repo_root: P
 
     return issues
 
+
 def _get_actual_project_names(repo_root: Path) -> list[str]:
     """Get list of actual project names from projects/ directory."""
     projects_dir = repo_root / "projects"
@@ -570,6 +628,7 @@ def _get_actual_project_names(repo_root: Path) -> list[str]:
             project_names.append(item.name)
 
     return project_names
+
 
 def check_file_reference(target: str, source_file: Path, repo_root: Path) -> tuple[bool, str]:
     """Check if a file reference resolves correctly."""
@@ -618,6 +677,7 @@ def check_file_reference(target: str, source_file: Path, repo_root: Path) -> tup
             return False, f"File or directory does not exist: {target_path}"
     except Exception as e:
         return False, f"Error resolving path: {e}"
+
 
 def main() -> int:
     """Main function to check all documentation links and references comprehensively."""
@@ -737,6 +797,7 @@ def main() -> int:
     # Generate comprehensive report
     return generate_comprehensive_report(issues, len(md_files))
 
+
 def generate_comprehensive_report(issues: dict[str, list[LinkIssue]], total_files: int) -> int:
     """Generate a comprehensive validation report."""
     total_issues = sum(len(issue_list) for issue_list in issues.values())
@@ -816,6 +877,7 @@ def generate_comprehensive_report(issues: dict[str, list[LinkIssue]], total_file
     logger.info("   python scripts/audit_filepaths.py")
 
     return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

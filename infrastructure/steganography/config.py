@@ -13,6 +13,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+
 @dataclass
 class DocumentMetadata:
     """Document identity fields passed to metadata injection functions.
@@ -27,6 +28,7 @@ class DocumentMetadata:
     document_id: str = ""
     keywords: list[str | None] = None
     extra: dict[str, str | None] = None
+
 
 @dataclass
 class SteganographyConfig:

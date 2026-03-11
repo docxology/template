@@ -8,6 +8,7 @@ Provides templates for new scientific modules and workflows:
 
 from __future__ import annotations
 
+
 def create_scientific_module_template(module_name: str) -> str:
     """Create a template for a new scientific module.
 
@@ -105,6 +106,7 @@ def function2(data: list[float], threshold: float = 0.0) -> tuple[list[float], f
 '''
     return template
 
+
 def create_scientific_test_suite(module_name: str) -> str:
     """Create a comprehensive test suite for a scientific module.
 
@@ -192,6 +194,7 @@ if __name__ == "__main__":
     pytest.main([__file__])
 '''
     return test_content
+
 
 def create_scientific_workflow_template(workflow_name: str) -> str:
     """Create a template for scientific research workflows.

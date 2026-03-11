@@ -18,6 +18,7 @@ from infrastructure.rendering.latex_utils import compile_latex
 
 logger = get_logger(__name__)
 
+
 def _parse_missing_package_error(log_file: Path) -> str | None:
     """Parse LaTeX log for missing package errors.
 
@@ -53,6 +54,7 @@ def _parse_missing_package_error(log_file: Path) -> str | None:
         logger.debug(f"Error parsing log file for package errors: {e}")
 
     return None
+
 
 class PDFRenderer:
     """Handles PDF generation logic."""
@@ -292,7 +294,9 @@ class PDFRenderer:
             cmd = [bibtex_cmd, aux_file.name]
             logger.info(f"Processing bibliography with {bibtex_cmd}...")
 
-            result = subprocess.run(cmd, capture_output=True, text=True, cwd=str(output_dir), timeout=600)
+            result = subprocess.run(
+                cmd, capture_output=True, text=True, cwd=str(output_dir), timeout=600
+            )
 
             if result.returncode != 0 and result.stderr.strip():
                 logger.warning(f"Bibliography processing warning: {result.stderr[:200]}")
@@ -424,7 +428,9 @@ class PDFRenderer:
             for line in text.strip().split("\n"):
                 line_lower = line.lower()
                 has_position = "position" in line_lower and (
-                    "unbalanced" in line_lower or "parenthesis" in line_lower or "error" in line_lower
+                    "unbalanced" in line_lower
+                    or "parenthesis" in line_lower
+                    or "error" in line_lower
                 )
                 has_error = "unbalanced" in line_lower or "parenthesis" in line_lower
                 if has_position:
@@ -447,7 +453,10 @@ class PDFRenderer:
         elif not error_lines:
             error_msg += f"\n\nPandoc failed with return code {e.returncode} (no output captured)"
 
-        context_info: dict = {"source": str(combined_md), "target": str(combined_md.with_suffix(".tex"))}
+        context_info: dict = {
+            "source": str(combined_md),
+            "target": str(combined_md.with_suffix(".tex")),
+        }
         suggestions: list[str] = []
 
         if combined_md.exists():
@@ -468,10 +477,12 @@ class PDFRenderer:
                     if line_num <= len(lines):
                         context_info["error_line_content"] = lines[line_num - 1]
                     suggestions.append(
-                        f"Check character position {pos} (line {line_num}) in combined markdown file"
+                        f"Check character position {pos} "
+                        f"(line {line_num}) in combined markdown file"
                     )
                     suggestions.append(
-                        f"Review content around position: {repr(md_content[max(0, pos - 20):min(len(md_content), pos + 20)])}"
+                        f"Review content around position: "
+                        f"{repr(md_content[max(0, pos - 20) : min(len(md_content), pos + 20)])}"
                     )
                 else:
                     context_info["first_200_chars"] = md_content[:200]
@@ -535,7 +546,8 @@ class PDFRenderer:
                         context_info["problematic_file"] = str(source_file)
                         context_info["problematic_file_index"] = i + 1
                         logger.error(
-                            f"  Error likely in source file {i + 1}/{len(source_files)}: {source_file.name}"
+                            f"  Error likely in source file "
+                            f"{i + 1}/{len(source_files)}: {source_file.name}"
                         )
                         file_pos = position_info - current_pos
                         line_num = file_content[:file_pos].count("\n") + 1
@@ -550,17 +562,21 @@ class PDFRenderer:
                                 actual_line = line_num - (len(snippet_lines) - j - 1)
                                 marker = (
                                     " >>> "
-                                    if start + sum(len(l) + 1 for l in snippet_lines[:j]) <= file_pos
+                                    if start + sum(len(l) + 1 for l in snippet_lines[:j])
+                                    <= file_pos
                                     < start + sum(len(l) + 1 for l in snippet_lines[: j + 1])
                                     else "     "
                                 )
-                                logger.error(f"    {marker}Line {actual_line}: {repr(snippet_line)}")
+                                logger.error(
+                                    f"    {marker}Line {actual_line}: {repr(snippet_line)}"
+                                )
                         else:
                             logger.error(f"    {repr(context_snippet)}")
                         if file_pos < len(file_content):
                             char_at_pos = file_content[file_pos]
                             logger.error(
-                                f"  Character at error position: {repr(char_at_pos)} (ord: {ord(char_at_pos)})"
+                                f"  Character at error position: "
+                                f"{repr(char_at_pos)} (ord: {ord(char_at_pos)})"
                             )
                         break
 
@@ -699,9 +715,13 @@ class PDFRenderer:
                     logger.debug(f"Failed to read markdown for error reporting: {read_err}")
 
         try:
-            result = subprocess.run(pandoc_to_tex, check=True, capture_output=True, text=True, timeout=600)
+            result = subprocess.run(
+                pandoc_to_tex, check=True, capture_output=True, text=True, timeout=600
+            )
         except subprocess.CalledProcessError as e:
-            raise self._build_pandoc_render_error(e, combined_md, source_files, md_content, pandoc_to_tex)
+            raise self._build_pandoc_render_error(
+                e, combined_md, source_files, md_content, pandoc_to_tex
+            )
 
         # Read and process LaTeX content
         tex_content = combined_tex.read_text()
@@ -796,7 +816,7 @@ class PDFRenderer:
             if begin_doc_idx > 0:
                 tex_preamble = tex_content[:begin_doc_idx]
                 tex_body = tex_content[begin_doc_idx:]
-                
+
                 # Check if \maketitle is already present in the body
                 if "\\maketitle" in tex_body:
                     logger.debug(
@@ -819,7 +839,7 @@ class PDFRenderer:
                     logger.info(
                         r"✓ Inserted title page (\maketitle), TOC, and newpage after \begin{document}"  # noqa: E501
                     )
-                
+
                 tex_content = tex_preamble + tex_body
 
         # Insert \bibliography{references} before \end{document} if not already present.
@@ -963,8 +983,10 @@ class PDFRenderer:
             xelatex_stdout_log = output_dir / "_xelatex_stdout.log"
             with open(xelatex_stdout_log, "w") as stdout_sink:
                 result = subprocess.run(
-                    cmd, check=False,
-                    stdout=stdout_sink, stderr=subprocess.STDOUT,
+                    cmd,
+                    check=False,
+                    stdout=stdout_sink,
+                    stderr=subprocess.STDOUT,
                     cwd=str(output_dir),
                     timeout=600,
                 )
@@ -980,15 +1002,15 @@ class PDFRenderer:
             log_file = output_dir / "_combined_manuscript.log"
             log_content = log_file.read_text() if log_file.exists() else ""
             is_fatal = result.returncode > 1 and result.returncode != SIGPIPE_EXIT
-            if "Fatal error occurred" in log_content or (
-                is_fatal and not temp_pdf.exists()
-            ):
+            if "Fatal error occurred" in log_content or (is_fatal and not temp_pdf.exists()):
                 raise RenderingError(
                     "XeLaTeX compilation failed (pass 1)",
                     context={"source": str(combined_tex), "output": str(output_file)},
                 )
             if result.returncode == SIGPIPE_EXIT:
-                logger.debug(f"  xelatex exited with {SIGPIPE_EXIT} (SIGPIPE) — expected on large documents")
+                logger.debug(
+                    f"  xelatex exited with {SIGPIPE_EXIT} (SIGPIPE) — expected on large documents"
+                )
 
             # Process bibliography if it exists
             if bib_exists:
@@ -1143,8 +1165,10 @@ class PDFRenderer:
                     )
                     with open(xelatex_stdout_log, "w") as stdout_sink:
                         subprocess.run(
-                            cmd, check=False,
-                            stdout=stdout_sink, stderr=subprocess.STDOUT,
+                            cmd,
+                            check=False,
+                            stdout=stdout_sink,
+                            stderr=subprocess.STDOUT,
                             cwd=str(output_dir),
                             timeout=600,
                         )

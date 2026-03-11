@@ -29,6 +29,7 @@ logger = get_logger(__name__)
 
 _REPORT_SEPARATOR = "=" * 60
 
+
 @dataclass
 class IntegrityReport:
     """Container for integrity verification results."""
@@ -41,6 +42,7 @@ class IntegrityReport:
     issues: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
     recommendations: list[str] = field(default_factory=list)
+
 
 def verify_file_integrity(
     file_paths: list[Path], expected_hashes: dict[str, str] | None = None
@@ -74,6 +76,7 @@ def verify_file_integrity(
     passed = sum(1 for v in integrity.values() if v)
     logger.info(f"Integrity check complete: {passed}/{len(integrity)} files passed")
     return integrity
+
 
 def verify_cross_references(markdown_files: list[Path]) -> dict[str, bool]:
     """Verify cross-reference integrity in markdown files."""
@@ -144,6 +147,7 @@ def verify_cross_references(markdown_files: list[Path]) -> dict[str, bool]:
 
     return integrity
 
+
 def verify_data_consistency(data_files: list[Path]) -> dict[str, bool]:
     """Verify data file consistency and integrity."""
     consistency = {
@@ -192,6 +196,7 @@ def verify_data_consistency(data_files: list[Path]) -> dict[str, bool]:
 
     return consistency
 
+
 def verify_academic_standards(markdown_files: list[Path]) -> dict[str, bool]:
     """Verify compliance with academic writing standards."""
     combined_content = ""
@@ -218,26 +223,19 @@ def verify_academic_standards(markdown_files: list[Path]) -> dict[str, bool]:
             re.search(r"\\section\{.*introduction|#\s*introduction", content_lower)
         ),
         "has_methodology": bool(
-            re.search(
-                r"\\section\{.*methodology|#\s*methodology|#\s*methods", content_lower
-            )
+            re.search(r"\\section\{.*methodology|#\s*methodology|#\s*methods", content_lower)
         ),
         "has_results": bool(re.search(r"\\section\{.*results?|#\s*results?", content_lower)),
-        "has_discussion": bool(
-            re.search(r"\\section\{.*discussion|#\s*discussion", content_lower)
-        ),
-        "has_conclusion": bool(
-            re.search(r"\\section\{.*conclusion|#\s*conclusion", content_lower)
-        ),
+        "has_discussion": bool(re.search(r"\\section\{.*discussion|#\s*discussion", content_lower)),
+        "has_conclusion": bool(re.search(r"\\section\{.*conclusion|#\s*conclusion", content_lower)),
         "has_references": bool(
-            re.search(
-                r"\\section\{.*references?|#\s*references?|\\bibliography", content_lower
-            )
+            re.search(r"\\section\{.*references?|#\s*references?|\\bibliography", content_lower)
         ),
         "proper_citations": has_citations,
         "equation_labels": bool(re.findall(r"\\label\{eq:[^}]+\}", combined_content)),
         "figure_captions": bool(re.findall(r"\\caption\{[^}]+\}", combined_content)),
     }
+
 
 def verify_output_integrity(
     output_dir: Path, manuscript_dir: Path | None = None
@@ -301,6 +299,7 @@ def verify_output_integrity(
 
     return report
 
+
 def generate_integrity_report(report: IntegrityReport) -> str:
     """Generate a human-readable integrity report."""
     lines = []
@@ -362,6 +361,7 @@ def generate_integrity_report(report: IntegrityReport) -> str:
 
     return "\n".join(lines)
 
+
 class BuildArtifactValidation(TypedDict):
     """Typed result from validate_build_artifacts."""
 
@@ -370,6 +370,7 @@ class BuildArtifactValidation(TypedDict):
     unexpected_files: list[str]
     validation_passed: bool
 
+
 class PermissionCheck(TypedDict):
     """Typed result from check_file_permissions."""
 
@@ -377,6 +378,7 @@ class PermissionCheck(TypedDict):
     writable: bool
     executable: bool
     issues: list[str]
+
 
 class OutputCompleteness(TypedDict):
     """Typed result from verify_output_completeness."""
@@ -388,6 +390,7 @@ class OutputCompleteness(TypedDict):
     html_complete: bool
     missing_outputs: list[str]
     incomplete_outputs: list[str]
+
 
 def validate_build_artifacts(
     output_dir: Path, expected_files: dict[str, list[str]] | None = None
@@ -434,6 +437,7 @@ def validate_build_artifacts(
 
     return validation
 
+
 def check_file_permissions(output_dir: Path) -> PermissionCheck:
     """Check file permissions and accessibility."""
     permissions: PermissionCheck = {
@@ -465,6 +469,7 @@ def check_file_permissions(output_dir: Path) -> PermissionCheck:
         permissions["issues"].append(f"Permission test failed: {e}")
 
     return permissions
+
 
 def verify_output_completeness(output_dir: Path) -> OutputCompleteness:
     """Verify that all expected outputs are present and complete."""
@@ -536,6 +541,7 @@ def verify_output_completeness(output_dir: Path) -> OutputCompleteness:
 
     return completeness
 
+
 def create_integrity_manifest(output_dir: Path) -> dict[str, Any]:
     """Create an integrity manifest for all output files."""
     manifest: dict[str, Any] = {
@@ -582,11 +588,13 @@ def create_integrity_manifest(output_dir: Path) -> dict[str, Any]:
 
     return manifest
 
+
 def save_integrity_manifest(manifest: dict[str, Any], output_path: Path) -> None:
     """Save integrity manifest to JSON file."""
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, "w") as f:
         json.dump(manifest, f, indent=2)
+
 
 def load_integrity_manifest(manifest_path: Path) -> dict[str, Any] | None:
     """Load integrity manifest from JSON file, or None on failure."""
@@ -600,6 +608,7 @@ def load_integrity_manifest(manifest_path: Path) -> dict[str, Any] | None:
     except (OSError, json.JSONDecodeError) as e:
         logger.debug(f"Could not load manifest from {manifest_path}: {e}")
         return None
+
 
 def verify_integrity_against_manifest(
     current_manifest: dict[str, Any], saved_manifest: dict[str, Any]

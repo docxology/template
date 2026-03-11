@@ -21,6 +21,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+
 @dataclass
 class ProfilingMetrics:
     """Container for function-level performance measurement results.
@@ -30,15 +31,16 @@ class ProfilingMetrics:
 
     operation_name: str
     execution_time: float
-    memory_peak: int | None = None    # bytes from tracemalloc
+    memory_peak: int | None = None  # bytes from tracemalloc
     memory_current: int | None = None  # bytes from tracemalloc
-    memory_delta: int | None = None    # bytes from tracemalloc
+    memory_delta: int | None = None  # bytes from tracemalloc
     cpu_time: float | None = None
     function_calls: int | None = None
     timestamp: float = field(default_factory=time.time)
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for reporting (memory values in MB)."""
+
         def _bytes_to_mb(b: int | None) -> float | None:
             return b / (1024 * 1024) if b is not None else None
 
@@ -52,6 +54,7 @@ class ProfilingMetrics:
             "function_calls": self.function_calls,
             "timestamp": self.timestamp,
         }
+
 
 class CodeProfiler:
     """Comprehensive performance monitoring and profiling via cProfile/tracemalloc."""
@@ -197,7 +200,9 @@ class CodeProfiler:
 
         return "\n".join(report_lines)
 
+
 _global_monitor: CodeProfiler | None = None
+
 
 def get_performance_monitor() -> CodeProfiler:
     """Return the global CodeProfiler instance, creating it on first call."""
@@ -205,6 +210,7 @@ def get_performance_monitor() -> CodeProfiler:
     if _global_monitor is None:
         _global_monitor = CodeProfiler()
     return _global_monitor
+
 
 def monitor_performance(operation_name: str, track_memory: bool = True):
     """Decorator for monitoring function performance via the global CodeProfiler."""
@@ -220,6 +226,7 @@ def monitor_performance(operation_name: str, track_memory: bool = True):
         return wrapper
 
     return decorator
+
 
 def profile_memory_usage(func: Callable, *args, **kwargs) -> dict[str, Any]:
     """Profile memory usage of a function via CodeProfiler."""

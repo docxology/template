@@ -1,8 +1,8 @@
 {
   "function_name": "quadratic_function",
-  "execution_time": 1.5822133354959078e-06,
+  "execution_time": 2.588053345486211e-06,
   "memory_usage": null,
   "iterations": 50,
-  "result_summary": "Avg time: 0.000002s",
-  "timestamp": "2026-03-10 16:12:38"
+  "result_summary": "Avg time: 0.000003s",
+  "timestamp": "2026-03-10 18:07:24"
 }

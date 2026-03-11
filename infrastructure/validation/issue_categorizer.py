@@ -34,6 +34,7 @@ logger = get_logger(__name__)
 # Type alias for any issue type
 Issue = Union[LinkIssue, AccuracyIssue, CompletenessGap, QualityIssue]
 
+
 def categorize_by_type(issues: list[Issue]) -> dict[str, list[Issue]]:
     """Categorize issues by their type and severity.
 
@@ -80,6 +81,7 @@ def categorize_by_type(issues: list[Issue]) -> dict[str, list[Issue]]:
             categories["false_positives"].append(issue)
 
     return categories
+
 
 def assign_severity(issue: Issue) -> str:
     """Assign severity level to an issue.
@@ -145,6 +147,7 @@ def assign_severity(issue: Issue) -> str:
 
     # Info issues - minor or informational
     return "info"
+
 
 def is_false_positive(issue: Issue) -> bool:
     """Determine if an issue is likely a false positive.
@@ -225,6 +228,7 @@ def is_false_positive(issue: Issue) -> bool:
 
     return False
 
+
 def filter_false_positives(issues: list[Issue]) -> list[Issue]:
     """Filter out false positive issues from the list.
 
@@ -235,6 +239,7 @@ def filter_false_positives(issues: list[Issue]) -> list[Issue]:
         List with false positives removed
     """
     return [issue for issue in issues if not is_false_positive(issue)]
+
 
 def group_related_issues(issues: list[Issue]) -> list[list[Issue]]:
     """Group related issues together for better analysis.
@@ -270,6 +275,7 @@ def group_related_issues(issues: list[Issue]) -> list[list[Issue]]:
 
     return groups  # type: ignore
 
+
 def prioritize_issues(issues: list[Issue]) -> list[Issue]:
     """Sort issues by priority (severity, then type).
 
@@ -303,6 +309,7 @@ def prioritize_issues(issues: list[Issue]) -> list[Issue]:
 
     return sorted(issues, key=sort_key)
 
+
 def generate_issue_summary(issues: list[Issue]) -> dict[str, int]:
     """Generate a summary of issues by category and severity.
 
@@ -335,6 +342,7 @@ def generate_issue_summary(issues: list[Issue]) -> dict[str, int]:
 
     return summary
 
+
 def _get_issue_text(issue: Issue) -> str:
     """Extract text content from any issue type."""
     if hasattr(issue, "issue_message"):
@@ -345,11 +353,13 @@ def _get_issue_text(issue: Issue) -> str:
         return str(issue.text)
     return str(issue)
 
+
 def _get_issue_target(issue: Issue) -> str:
     """Extract target/path from any issue type."""
     if hasattr(issue, "target"):
         return str(issue.target)
     return ""
+
 
 def _get_issue_file(issue: Issue) -> str:
     """Extract file path from any issue type."""
@@ -358,6 +368,7 @@ def _get_issue_file(issue: Issue) -> str:
     elif hasattr(issue, "source_file"):
         return str(issue.source_file)
     return "unknown"
+
 
 def _get_issue_type(issue: Issue) -> str:
     """Extract issue type from any issue type."""
@@ -372,6 +383,7 @@ def _get_issue_type(issue: Issue) -> str:
     elif isinstance(issue, QualityIssue):
         return "quality_issue"
     return "unknown"
+
 
 def get_severity_flag(issue: Issue) -> str:
     """Get severity flag for an issue: 'red', 'yellow', or 'green'.
@@ -401,6 +413,7 @@ def get_severity_flag(issue: Issue) -> str:
     else:
         return "green"
 
+
 def is_directory_reference(issue: Issue) -> bool:
     """Check if issue is about a directory reference (which is valid).
 
@@ -424,6 +437,7 @@ def is_directory_reference(issue: Issue) -> bool:
         return True
 
     return False
+
 
 def validate_issue_patterns() -> dict[str, list[str]]:
     """Return validation patterns for different issue types.

@@ -15,6 +15,7 @@ from infrastructure.steganography.config import DocumentMetadata
 
 logger = get_logger(__name__)
 
+
 def inject_pdf_metadata(
     input_pdf: Path,
     output_pdf: Path,
@@ -91,6 +92,7 @@ def inject_pdf_metadata(
     )
     return output_pdf
 
+
 def build_document_metadata(doc: DocumentMetadata) -> dict[str, str]:
     """Build a metadata dictionary ready for PDF injection.
 
@@ -133,6 +135,7 @@ def build_document_metadata(doc: DocumentMetadata) -> dict[str, str]:
     logger.debug(f"Built document metadata with {len(meta)} entries")
     return meta
 
+
 def build_xmp_packet(doc: DocumentMetadata) -> str:
     """Build an XMP metadata XML packet.
 
@@ -170,7 +173,7 @@ def build_xmp_packet(doc: DocumentMetadata) -> str:
     hash_xml = ""
     if doc.hashes:
         for algo, digest in doc.hashes.items():
-            hash_xml += f'\n        <steg:hash_{algo}>{digest}</steg:hash_{algo}>'
+            hash_xml += f"\n        <steg:hash_{algo}>{digest}</steg:hash_{algo}>"
 
     xmp = f"""<?xpacket begin="\xef\xbb\xbf" id="W5M0MpCehiHzreSzNTczkc9d"?>
 <x:xmpmeta xmlns:x="adobe:ns:meta/">

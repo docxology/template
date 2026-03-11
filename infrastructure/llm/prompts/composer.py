@@ -11,6 +11,7 @@ from infrastructure.llm.prompts.loader import PromptFragmentLoader
 
 logger = get_logger(__name__)
 
+
 class PromptComposer:
     """Composes prompts from fragments and templates.
 
@@ -294,8 +295,12 @@ class PromptComposer:
                 context={"fragment": "token_budget_awareness.json"},
             )
 
-        total_template = budget_data.get("total_tokens_template", "1. Total: ${total_tokens} tokens")
-        section_template = budget_data.get("section_budgets_template", "2. Per section:\n${budgets_list}")
+        total_template = budget_data.get(
+            "total_tokens_template", "1. Total: ${total_tokens} tokens"
+        )
+        section_template = budget_data.get(
+            "section_budgets_template", "2. Per section:\n${budgets_list}"
+        )
 
         total_block = total_template.replace("${total_tokens}", str(total_tokens))
 
@@ -330,8 +335,12 @@ class PromptComposer:
                 context={"fragment": "validation_hints.json"},
             )
 
-        word_template = validation_data.get("word_count_template", "1. Word count: ${min_words}-${max_words}")
-        elements_template = validation_data.get("required_elements_template", "2. Required:\n${elements_list}")
+        word_template = validation_data.get(
+            "word_count_template", "1. Word count: ${min_words}-${max_words}"
+        )
+        elements_template = validation_data.get(
+            "required_elements_template", "2. Required:\n${elements_list}"
+        )
 
         min_words, max_words = word_count_range
         word_block = word_template.replace("${min_words}", str(min_words)).replace(

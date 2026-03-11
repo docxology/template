@@ -13,6 +13,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+
 def generate_output_summary(
     output_dir: Path,
     stats: dict[str, Any],
@@ -64,6 +65,7 @@ def generate_output_summary(
 
     logger.info("")
 
+
 def collect_output_statistics(
     repo_root: Path,
     project_name: str = "project",
@@ -85,7 +87,9 @@ def collect_output_statistics(
         - Missing expected files
         - Total size and file count
     """
-    output_dir = (project_dir if project_dir is not None else repo_root / "projects" / project_name) / "output"
+    output_dir = (
+        project_dir if project_dir is not None else repo_root / "projects" / project_name
+    ) / "output"
 
     stats = {
         "directories": {},
@@ -206,6 +210,7 @@ def collect_output_statistics(
 
     return stats
 
+
 def generate_detailed_output_report(output_dir: Path, stats: dict[str, Any]) -> str:
     """Generate detailed output statistics report.
 
@@ -261,9 +266,11 @@ def generate_detailed_output_report(output_dir: Path, stats: dict[str, Any]) -> 
 
     return "\n".join(lines)
 
+
 # =============================================================================
 # LOG ANALYSIS
 # =============================================================================
+
 
 def _collect_log_statistics(log_file: Path) -> dict[str, Any]:
     """Collect statistics from a log file."""
@@ -304,6 +311,7 @@ def _collect_log_statistics(log_file: Path) -> dict[str, Any]:
         stats["error"] = f"Failed to parse log file: {e}"
 
     return stats
+
 
 def generate_log_summary(log_file: Path, output_file: Path | None = None) -> str:
     """Generate summary report from log file.

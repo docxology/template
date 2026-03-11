@@ -8,6 +8,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+
 class SummarizeAbstract(ResearchTemplate):
     """Template for summarizing abstracts."""
 
@@ -16,6 +17,7 @@ class SummarizeAbstract(ResearchTemplate):
         "highlighting the main contribution, methodology, and results:\n\n"
         "${text}"
     )
+
 
 class LiteratureReview(ResearchTemplate):
     """Template for generating literature reviews."""
@@ -26,6 +28,7 @@ class LiteratureReview(ResearchTemplate):
         "${summaries}"
     )
 
+
 class CodeDocumentation(ResearchTemplate):
     """Template for documenting code."""
 
@@ -35,6 +38,7 @@ class CodeDocumentation(ResearchTemplate):
         "${code}"
     )
 
+
 class DataInterpretation(ResearchTemplate):
     """Template for interpreting data."""
 
@@ -43,6 +47,7 @@ class DataInterpretation(ResearchTemplate):
         "a scientific interpretation of the trends:\n\n"
         "${stats}"
     )
+
 
 class PaperSummarization(ResearchTemplate):
     """Template for comprehensive paper summarization.
@@ -247,6 +252,7 @@ Begin your summary now. Remember: NO repeated sections, NO repeated paragraphs, 
 
         # Extract key terms from title for topic validation
         import re
+
         # Extract significant words from title (3+ characters, not common stop words)
         stop_words = {
             "the",
@@ -317,6 +323,7 @@ Begin your summary now. Remember: NO repeated sections, NO repeated paragraphs, 
 
         return prompt
 
+
 class LiteratureReviewSynthesis(ResearchTemplate):
     """Template for synthesizing multiple paper summaries into a cohesive literature review.
 
@@ -343,6 +350,7 @@ REQUIREMENTS:
 8. Structure as a flowing narrative, not bullet points
 
 Begin your literature review synthesis:"""
+
 
 class ScienceCommunicationNarrative(ResearchTemplate):
     """Template for creating accessible science communication narratives from research papers.
@@ -374,6 +382,7 @@ REQUIREMENTS:
 
 Begin your science communication narrative:"""
 
+
 class ComparativeAnalysis(ResearchTemplate):
     """Template for comparative analysis across multiple research papers.
 
@@ -401,6 +410,7 @@ REQUIREMENTS:
 
 Begin your comparative analysis:"""
 
+
 class ResearchGapIdentification(ResearchTemplate):
     """Template for identifying research gaps from literature analysis.
 
@@ -427,6 +437,7 @@ REQUIREMENTS:
 8. Structure with sections (Current State, Identified Gaps, Recommendations)
 
 Begin your research gap analysis:"""
+
 
 class CitationNetworkAnalysis(ResearchTemplate):
     """Template for analyzing citation relationships and networks between papers.

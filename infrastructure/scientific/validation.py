@@ -16,6 +16,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+
 class _ValidationResults(TypedDict):
     total_tests: int
     passed_tests: int
@@ -23,7 +24,10 @@ class _ValidationResults(TypedDict):
     accuracy_score: float
     details: list[dict[str, Any]]
 
-def validate_scientific_implementation(func: Callable, test_cases: list[tuple[Any, Any]]) -> dict[str, Any]:
+
+def validate_scientific_implementation(
+    func: Callable, test_cases: list[tuple[Any, Any]]
+) -> dict[str, Any]:
     """Validate scientific implementation against known test cases.
 
     Args:
@@ -86,6 +90,7 @@ def validate_scientific_implementation(func: Callable, test_cases: list[tuple[An
         )
 
     return validation_results
+
 
 def validate_scientific_best_practices(module: Any) -> dict[str, Any]:
     """Validate that a module follows scientific computing best practices.
@@ -177,6 +182,7 @@ def validate_scientific_best_practices(module: Any) -> dict[str, Any]:
         validation["recommendations"].append("Add input validation to prevent invalid arguments")  # type: ignore
 
     return validation
+
 
 def check_research_compliance(func: Callable) -> dict[str, Any]:
     """Check function compliance with research software standards.

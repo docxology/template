@@ -11,6 +11,7 @@ from infrastructure.rendering.config import RenderingConfig
 
 logger = get_logger(__name__)
 
+
 class WebRenderer:
     """Handles HTML generation."""
 

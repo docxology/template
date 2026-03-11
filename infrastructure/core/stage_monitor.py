@@ -26,6 +26,7 @@ _SLOW_STAGE_MULTIPLIER = 2  # warn when a stage takes > N× the pipeline average
 _HIGH_MEMORY_MB = 1024  # warn when a stage RSS exceeds 1 GB
 _HIGH_CPU_PERCENT = 90.0  # warn when CPU usage exceeds this percentage
 
+
 @dataclass
 class ResourceUsage:
     """Resource usage metrics for a stage or operation."""
@@ -46,6 +47,7 @@ class ResourceUsage:
             "io_write_mb": self.io_write_mb,
         }
 
+
 @dataclass
 class PerformanceMetrics:
     """Performance metrics for a stage or operation."""
@@ -65,6 +67,7 @@ class PerformanceMetrics:
             "cache_hits": self.cache_hits,
             "cache_misses": self.cache_misses,
         }
+
 
 class PerformanceMonitor:
     """Resource-usage monitor tracking timing, memory, and operation counts."""
@@ -143,6 +146,7 @@ class PerformanceMonitor:
             logger.debug(f"Failed to get CPU percent: {e}")
             return 0.0
 
+
 @contextmanager
 def performance_context(operation_name: str = "Operation"):
     """Context manager for monitoring operation performance.
@@ -161,6 +165,7 @@ def performance_context(operation_name: str = "Operation"):
             logger.debug(f"{operation_name}: {format_duration(metrics.duration)}")
         except BuildError as e:
             logger.debug(f"performance_context stop failed for {operation_name}: {e}")
+
 
 def get_system_resources() -> dict[str, Any]:
     """Return current system resource information."""
@@ -186,6 +191,7 @@ def get_system_resources() -> dict[str, Any]:
     except (OSError, AttributeError) as e:
         logger.warning(f"Failed to get system resources: {e}")
         return {}
+
 
 class StagePerformanceTracker:
     """Track performance metrics for pipeline stages."""
@@ -240,9 +246,7 @@ class StagePerformanceTracker:
                 if self.start_io:
                     current_io = process.io_counters()
                     io_read_mb = (current_io.read_bytes - self.start_io.read_bytes) / 1024 / 1024
-                    io_write_mb = (
-                        current_io.write_bytes - self.start_io.write_bytes
-                    ) / 1024 / 1024
+                    io_write_mb = (current_io.write_bytes - self.start_io.write_bytes) / 1024 / 1024
             except AttributeError as e:
                 logger.debug(f"psutil attribute not available on this platform: {e}")
 

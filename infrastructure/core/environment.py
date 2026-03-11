@@ -381,7 +381,9 @@ def set_environment_variables(repo_root: Path) -> bool:
     # Set project root in environment
     os.environ["PROJECT_ROOT"] = str(repo_root)
 
-    log_success("Environment variables configured (MPLBACKEND, PYTHONIOENCODING, PROJECT_ROOT)", logger)
+    log_success(
+        "Environment variables configured (MPLBACKEND, PYTHONIOENCODING, PROJECT_ROOT)", logger
+    )
     return True
 
 

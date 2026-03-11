@@ -6,6 +6,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+
 def format_requirements(
     required_headers: list[str],
     markdown_format: bool = True,
@@ -35,6 +36,7 @@ def format_requirements(
             lines.append(f"   - {section}: {req}")
 
     return "\n".join(lines)
+
 
 def token_budget_awareness(
     total_tokens: int | None = None,
@@ -68,6 +70,7 @@ def token_budget_awareness(
             lines.append(f"   - {section}: {min_words}-{max_words} words")
 
     return "\n".join(lines)
+
 
 def content_requirements(
     no_hallucination: bool = True,
@@ -116,6 +119,7 @@ def content_requirements(
 
     return "\n".join(lines)
 
+
 def section_structure(
     sections: list[str],
     section_descriptions: dict[str, str | None] = None,
@@ -145,6 +149,7 @@ def section_structure(
             lines.append(f"   {i}. {section}")
 
     return "\n".join(lines)
+
 
 def validation_hints(
     word_count_range: tuple | None = None,

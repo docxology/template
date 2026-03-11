@@ -12,12 +12,14 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+
 class PackageStatus(NamedTuple):
     """Status of a LaTeX package."""
 
     name: str
     installed: bool
     path: str | None = None
+
 
 @dataclass
 class ValidationReport:
@@ -52,6 +54,7 @@ class ValidationReport:
 
         return "\n".join(lines)
 
+
 def find_kpsewhich() -> Path | None:
     """Locate kpsewhich executable.
 
@@ -74,13 +77,16 @@ def find_kpsewhich() -> Path | None:
 
     # Try which command
     try:
-        result = subprocess.run(["which", "kpsewhich"], capture_output=True, text=True, check=False, timeout=5)
+        result = subprocess.run(
+            ["which", "kpsewhich"], capture_output=True, text=True, check=False, timeout=5
+        )
         if result.returncode == 0 and result.stdout.strip():
             return Path(result.stdout.strip())
     except Exception as e:
         logger.debug(f"Failed to locate kpsewhich: {e}")
 
     return None
+
 
 def check_latex_package(package_name: str, kpsewhich_path: Path | None = None) -> PackageStatus:
     """Check if a LaTeX package is installed.
@@ -125,6 +131,7 @@ def check_latex_package(package_name: str, kpsewhich_path: Path | None = None) -
         logger.warning(f"Error checking package {package_name}: {e}")
         return PackageStatus(name=package_name, installed=False, path=None)
 
+
 def validate_packages(
     required: list[str], optional: list[str], kpsewhich_path: Path | None = None
 ) -> ValidationReport:
@@ -165,6 +172,7 @@ def validate_packages(
 
     return report
 
+
 def get_missing_packages_command(missing: list[str]) -> str:
     """Generate tlmgr install command for missing packages.
 
@@ -178,6 +186,7 @@ def get_missing_packages_command(missing: list[str]) -> str:
         return ""
 
     return f"sudo tlmgr install {' '.join(missing)}"
+
 
 def validate_preamble_packages(strict: bool = False) -> ValidationReport:
     """Validate packages used in the standard preamble.
@@ -241,6 +250,7 @@ def validate_preamble_packages(strict: bool = False) -> ValidationReport:
 
     return report
 
+
 def main() -> None:
     """CLI entry point for package validation."""
     import sys
@@ -268,6 +278,7 @@ def main() -> None:
         sys.exit(1)
 
     sys.exit(0)
+
 
 if __name__ == "__main__":
     main()

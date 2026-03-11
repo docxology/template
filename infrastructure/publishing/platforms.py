@@ -22,6 +22,7 @@ logger = get_logger(__name__)
 #: Default timeout for HTTP requests (seconds)
 REQUEST_TIMEOUT = 30
 
+
 def publish_to_zenodo(
     metadata: PublicationMetadata,
     file_paths: list[Path],
@@ -74,6 +75,7 @@ def publish_to_zenodo(
     # Publish
     return client.publish(dep_id)
 
+
 def prepare_arxiv_submission(output_dir: Path, metadata: PublicationMetadata) -> Path:
     """Prepare a submission package for arXiv upload.
 
@@ -119,6 +121,7 @@ def prepare_arxiv_submission(output_dir: Path, metadata: PublicationMetadata) ->
         tar.add(submission_dir, arcname="")
 
     return tar_path
+
 
 def create_github_release(
     tag_name: str,

@@ -18,6 +18,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+
 @dataclass
 class PipelineReport:
     """Complete pipeline execution report."""
@@ -30,6 +31,7 @@ class PipelineReport:
     performance_metrics: dict[str, Any] | None = None
     error_summary: dict[str, Any] | None = None
     output_statistics: dict[str, Any] | None = None
+
 
 def generate_pipeline_report(
     stage_results: list[dict[str, Any]],
@@ -72,7 +74,9 @@ def generate_pipeline_report(
     # Enrich a copy of output_statistics with log file info (avoid mutating caller's dict)
     if project_name and output_statistics is not None:
         # Use explicit project_dir if given; fall back to default projects/ location.
-        _log_base = project_dir if project_dir is not None else repo_root / "projects" / project_name
+        _log_base = (
+            project_dir if project_dir is not None else repo_root / "projects" / project_name
+        )
         log_file = _log_base / "output" / "logs" / "pipeline.log"
         output_statistics = {
             **output_statistics,
@@ -93,6 +97,7 @@ def generate_pipeline_report(
         error_summary=error_summary,
         output_statistics=output_statistics,
     )
+
 
 def save_pipeline_report(
     report: PipelineReport, output_dir: Path, formats: list[str] | None = None
@@ -117,11 +122,17 @@ def save_pipeline_report(
 
     formats_to_write = []
     if "json" in formats:
-        formats_to_write.append(("json", output_dir / "pipeline_report.json", json.dumps(report_dict, indent=2)))
+        formats_to_write.append(
+            ("json", output_dir / "pipeline_report.json", json.dumps(report_dict, indent=2))
+        )
     if "markdown" in formats:
-        formats_to_write.append(("markdown", output_dir / "pipeline_report.md", _generate_pipeline_markdown(report)))
+        formats_to_write.append(
+            ("markdown", output_dir / "pipeline_report.md", _generate_pipeline_markdown(report))
+        )
     if "html" in formats:
-        formats_to_write.append(("html", output_dir / "pipeline_report.html", generate_html_report(report)))
+        formats_to_write.append(
+            ("html", output_dir / "pipeline_report.html", generate_html_report(report))
+        )
 
     for fmt, path, content in formats_to_write:
         try:
@@ -133,6 +144,7 @@ def save_pipeline_report(
             raise
 
     return saved_files
+
 
 def _generate_pipeline_markdown(report: PipelineReport) -> str:
     """Generate Markdown format pipeline report."""
@@ -233,6 +245,7 @@ def _generate_pipeline_markdown(report: PipelineReport) -> str:
         lines.append("")
 
     return "\n".join(lines)
+
 
 def generate_html_report(report: PipelineReport) -> str:
     """Generate HTML format pipeline report."""
@@ -394,6 +407,7 @@ def generate_html_report(report: PipelineReport) -> str:
 
     return html
 
+
 def save_test_results(test_results: dict[str, Any], output_dir: Path) -> Path:
     """Write test_results dict to test_results.json and return the path."""
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -401,6 +415,7 @@ def save_test_results(test_results: dict[str, Any], output_dir: Path) -> Path:
     with open(report_path, "w", encoding="utf-8") as f:
         json.dump(test_results, f, indent=2, default=str)
     return report_path
+
 
 def generate_validation_report(
     validation_results: dict[str, Any], output_dir: Path
@@ -429,6 +444,7 @@ def generate_validation_report(
 
     return saved_files
 
+
 def generate_validation_markdown(results: dict[str, Any]) -> str:
     """Return Markdown-formatted validation report for the given results dict."""
     lines = [
@@ -449,6 +465,7 @@ def generate_validation_markdown(results: dict[str, Any]) -> str:
 
     return "\n".join(lines)
 
+
 def generate_performance_report(performance_metrics: dict[str, Any], output_dir: Path) -> Path:
     """Write performance_metrics dict to performance_report.json and return the path."""
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -462,6 +479,7 @@ def generate_performance_report(performance_metrics: dict[str, Any], output_dir:
         raise
 
     return json_path
+
 
 def save_error_summary(errors: list[dict[str, Any]], output_dir: Path) -> dict[str, Any]:
     """Aggregate errors, write JSON and Markdown reports, and return the summary dict."""
@@ -498,6 +516,7 @@ def save_error_summary(errors: list[dict[str, Any]], output_dir: Path) -> dict[s
         raise
 
     return summary
+
 
 def generate_error_markdown(summary: dict[str, Any]) -> str:
     """Generate Markdown error summary."""

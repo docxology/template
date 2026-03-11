@@ -18,6 +18,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+
 @dataclass
 class StageResult:
     """Result of a pipeline stage execution."""
@@ -28,6 +29,7 @@ class StageResult:
     timestamp: str = ""
     completed: bool = True
     status: str = ""
+
 
 @dataclass
 class PipelineCheckpoint:
@@ -61,6 +63,7 @@ class PipelineCheckpoint:
             checkpoint_time=data["checkpoint_time"],
         )
 
+
 class CheckpointManager:
     """Manages pipeline checkpoints for resume capability."""
 
@@ -86,8 +89,12 @@ class CheckpointManager:
             if project_dir is not None:
                 checkpoint_dir = project_dir / "output" / ".checkpoints"
             else:
-                resolved_root = repo_root if repo_root is not None else Path(__file__).parent.parent.parent
-                checkpoint_dir = resolved_root / "projects" / project_name / "output" / ".checkpoints"
+                resolved_root = (
+                    repo_root if repo_root is not None else Path(__file__).parent.parent.parent
+                )
+                checkpoint_dir = (
+                    resolved_root / "projects" / project_name / "output" / ".checkpoints"
+                )
 
         self.checkpoint_dir = Path(checkpoint_dir)
         self.checkpoint_file = self.checkpoint_dir / "pipeline_checkpoint.json"

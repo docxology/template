@@ -272,7 +272,9 @@ class PipelineSummaryGenerator:
         html_parts.append("<h2>Pipeline Summary</h2>")
         if summary.failed_stages:
             failed_names = ", ".join(r.stage_name for r in summary.failed_stages)
-            html_parts.append(f"<p class='error'>Pipeline completed with failures: {failed_names}</p>")
+            html_parts.append(
+                f"<p class='error'>Pipeline completed with failures: {failed_names}</p>"
+            )
         else:
             html_parts.append("<p class='success'>All stages completed successfully!</p>")
 
@@ -343,9 +345,7 @@ class PipelineSummaryGenerator:
 
         return "\n".join(html_parts)
 
-    def _find_slowest_stage(
-        self, results: list[PipelineStageResult]
-    ) -> PipelineStageResult | None:
+    def _find_slowest_stage(self, results: list[PipelineStageResult]) -> PipelineStageResult | None:
         """Find the slowest stage.
 
         Args:
@@ -360,9 +360,7 @@ class PipelineSummaryGenerator:
 
         return max(successful_results, key=lambda r: r.duration)
 
-    def _find_fastest_stage(
-        self, results: list[PipelineStageResult]
-    ) -> PipelineStageResult | None:
+    def _find_fastest_stage(self, results: list[PipelineStageResult]) -> PipelineStageResult | None:
         """Find the fastest stage (excluding stage 1 which is usually setup).
 
         Args:
@@ -443,7 +441,7 @@ class PipelineSummaryGenerator:
             output_idx = parts.index("output")
             projects_idx = parts.index("projects")
             if projects_idx < output_idx:
-                return Path("output").joinpath(*parts[output_idx + 1:])
+                return Path("output").joinpath(*parts[output_idx + 1 :])
         return log_file
 
     def _find_base_output_dir(self, inventory: list[FileInventoryEntry]) -> Path | None:

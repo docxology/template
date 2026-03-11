@@ -11,6 +11,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+
 @dataclass
 class ResponseMetadata:
     """Metadata for a saved LLM response."""
@@ -46,6 +47,7 @@ class ResponseMetadata:
             "error_occurred": self.error_occurred,
             "partial_response": self.partial_response,
         }
+
 
 def save_response(
     response: str,
@@ -130,6 +132,7 @@ Response:
     )
 
     return output_path
+
 
 def save_streaming_response(
     response: str,

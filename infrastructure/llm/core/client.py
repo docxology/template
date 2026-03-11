@@ -26,11 +26,11 @@ try:
 except ImportError:
     requests = None  # type: ignore[assignment]
 
-from infrastructure.core.exceptions import LLMConnectionError, LLMError
-from infrastructure.core.logging_utils import get_logger
-from infrastructure.llm.core.config import GenerationOptions, LLMConfig
-from infrastructure.llm.core.context import ConversationContext
-from infrastructure.llm.templates import get_template
+from infrastructure.core.exceptions import LLMConnectionError, LLMError  # noqa: E402
+from infrastructure.core.logging_utils import get_logger  # noqa: E402
+from infrastructure.llm.core.config import GenerationOptions, LLMConfig  # noqa: E402
+from infrastructure.llm.core.context import ConversationContext  # noqa: E402
+from infrastructure.llm.templates import get_template  # noqa: E402
 
 logger = get_logger(__name__)
 
@@ -41,6 +41,7 @@ try:
     PROMPT_LOADER_AVAILABLE = True
 except ImportError:
     PROMPT_LOADER_AVAILABLE = False
+
 
 def strip_thinking_tags(text: str) -> str:
     """Remove thinking tags from LLM responses.
@@ -70,6 +71,7 @@ def strip_thinking_tags(text: str) -> str:
 
     return result
 
+
 class ResponseMode(str, Enum):
     """Response generation modes for different use cases."""
 
@@ -77,6 +79,7 @@ class ResponseMode(str, Enum):
     LONG = "long"  # Comprehensive answers (> 500 tokens)
     STRUCTURED = "structured"  # JSON-formatted structured response
     RAW = "raw"  # Raw prompt without modification
+
 
 class LLMClient:
     """Client for interacting with LLM providers (Ollama).
@@ -804,6 +807,7 @@ class LLMClient:
 
         # Initialize metrics (imported locally to avoid circular import with review.metrics)
         from infrastructure.llm.review.metrics import StreamingMetrics  # noqa: PLC0415
+
         metrics = StreamingMetrics()
 
         for attempt in range(retries + 1):
@@ -887,10 +891,7 @@ class LLMClient:
 
                                     # Log timeout remaining when approaching limit (warn once only)
                                     elapsed = current_time - start_time
-                                    if (
-                                        not _timeout_warned
-                                        and elapsed > self.config.timeout * 0.3
-                                    ):
+                                    if not _timeout_warned and elapsed > self.config.timeout * 0.3:
                                         remaining = self.config.timeout - elapsed
                                         if remaining > 0:
                                             _timeout_warned = True
@@ -928,17 +929,37 @@ class LLMClient:
                     )
                     # Save partial response before retry
                     if full_response and save_response and not partial_saved:
-                        if self._save_streaming_state(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=True):
+                        if self._save_streaming_state(
+                            full_response,
+                            save_path,
+                            model_name,
+                            prompt,
+                            chunk_count,
+                            start_time,
+                            is_error=True,
+                        ):
                             partial_saved = True
-                            logger.info(f"Saved partial response ({chunk_count} chunks) before retry")
+                            logger.info(
+                                f"Saved partial response ({chunk_count} chunks) before retry"
+                            )
                     continue
                 else:
                     logger.error(f"Streaming timeout after {retries + 1} attempts: {last_error}")
                     # Save partial response on final failure
                     if full_response and save_response:
-                        if self._save_streaming_state(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=True):
+                        if self._save_streaming_state(
+                            full_response,
+                            save_path,
+                            model_name,
+                            prompt,
+                            chunk_count,
+                            start_time,
+                            is_error=True,
+                        ):
                             partial_saved = True
-                            logger.info(f"Saved partial response ({chunk_count} chunks) after timeout")
+                            logger.info(
+                                f"Saved partial response ({chunk_count} chunks) after timeout"
+                            )
                     raise LLMConnectionError(
                         f"Streaming timeout ({model_name}): {last_error}",
                         context={
@@ -959,9 +980,19 @@ class LLMClient:
                     )
                     # Save partial response before retry
                     if full_response and save_response and not partial_saved:
-                        if self._save_streaming_state(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=True):
+                        if self._save_streaming_state(
+                            full_response,
+                            save_path,
+                            model_name,
+                            prompt,
+                            chunk_count,
+                            start_time,
+                            is_error=True,
+                        ):
                             partial_saved = True
-                            logger.info(f"Saved partial response ({chunk_count} chunks) before retry")
+                            logger.info(
+                                f"Saved partial response ({chunk_count} chunks) before retry"
+                            )
                     continue
                 else:
                     logger.error(
@@ -969,9 +1000,19 @@ class LLMClient:
                     )
                     # Save partial response on final failure
                     if full_response and save_response:
-                        if self._save_streaming_state(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=True):
+                        if self._save_streaming_state(
+                            full_response,
+                            save_path,
+                            model_name,
+                            prompt,
+                            chunk_count,
+                            start_time,
+                            is_error=True,
+                        ):
                             partial_saved = True
-                            logger.info(f"Saved partial response ({chunk_count} chunks) after connection error")
+                            logger.info(
+                                f"Saved partial response ({chunk_count} chunks) after connection error"
+                            )
                     raise LLMConnectionError(
                         f"Streaming connection failed ({model_name}): {last_error}",
                         context={
@@ -1032,7 +1073,16 @@ class LLMClient:
 
         # Save response if requested
         if save_response and not partial_saved:
-            if self._save_streaming_state(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=error_count > 0, options=options):
+            if self._save_streaming_state(
+                full_response,
+                save_path,
+                model_name,
+                prompt,
+                chunk_count,
+                start_time,
+                is_error=error_count > 0,
+                options=options,
+            ):
                 logger.info("Saved final streaming response")
 
     def stream_short(

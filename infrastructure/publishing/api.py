@@ -19,6 +19,7 @@ logger = get_logger(__name__)
 #: Default timeout for HTTP requests (seconds)
 REQUEST_TIMEOUT = 30
 
+
 @dataclass
 class ZenodoConfig:
     access_token: str
@@ -48,6 +49,7 @@ class ZenodoConfig:
         if self.base_url:
             return self.base_url
         return "https://sandbox.zenodo.org/api" if self.sandbox else "https://zenodo.org/api"
+
 
 class ZenodoClient:
     """Client for Zenodo API."""

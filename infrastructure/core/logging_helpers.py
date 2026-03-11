@@ -8,7 +8,10 @@ from infrastructure.core.exceptions import TemplateError
 
 
 def format_error_with_suggestions(error: Any) -> str:
-    """Format a TemplateError into a human-readable message with context and recovery suggestions."""
+    """Format a TemplateError into a human-readable message.
+
+    Includes context and recovery suggestions.
+    """
     if not isinstance(error, TemplateError):
         return str(error)
 

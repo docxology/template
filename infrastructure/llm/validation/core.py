@@ -22,6 +22,7 @@ from infrastructure.llm.validation.repetition import deduplicate_sections, detec
 
 logger = get_logger(__name__)
 
+
 class OutputValidator:
     """Validates LLM outputs for quality and correctness."""
 
@@ -248,6 +249,7 @@ class OutputValidator:
         return deduplicate_sections(
             content, max_repetitions, mode="balanced", min_content_preservation=0.3
         )
+
 
 # Note: Functions are imported at module level above for use in OutputValidator methods
 __all__ = [

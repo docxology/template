@@ -37,6 +37,7 @@ except ImportError as e:
     )
     sys.exit(1)
 
+
 def print_validation_report(report: dict[str, Any], verbose: bool = False) -> None:
     """
     Print validation report to stdout in human-readable format.
@@ -86,6 +87,7 @@ def print_validation_report(report: dict[str, Any], verbose: bool = False) -> No
     logger.info("=" * 70)
     logger.info("")
 
+
 def main(pdf_path: Path | None = None, n_words: int = 200, verbose: bool = False) -> int:
     """
     Main validation orchestration.
@@ -132,6 +134,7 @@ def main(pdf_path: Path | None = None, n_words: int = 200, verbose: bool = False
 
             traceback.print_exc()
         return 2
+
 
 if __name__ == "__main__":
     import argparse

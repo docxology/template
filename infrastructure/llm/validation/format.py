@@ -102,6 +102,7 @@ ON_TOPIC_SIGNALS = [
     r"the study",
 ]
 
+
 def has_on_topic_signals(text: str) -> bool:
     """Check if response contains clear on-topic indicators.
 
@@ -118,6 +119,7 @@ def has_on_topic_signals(text: str) -> bool:
             signals_found += 1
     # If we find 2+ on-topic signals, it's clearly on-topic
     return signals_found >= 2
+
 
 def detect_conversational_phrases(text: str) -> list[str]:
     """Detect conversational AI phrases in response text.
@@ -137,6 +139,7 @@ def detect_conversational_phrases(text: str) -> list[str]:
             if match:
                 phrases_found.append(match.group(0)[:50])
     return phrases_found
+
 
 def check_format_compliance(response: str) -> tuple[bool, list[str], dict[str, Any]]:
     """Check response for format compliance issues.
@@ -167,6 +170,7 @@ def check_format_compliance(response: str) -> tuple[bool, list[str], dict[str, A
 
     is_compliant = len(issues) == 0
     return is_compliant, issues, details
+
 
 def is_off_topic(text: str) -> bool:
     """Check if response contains off-topic indicators.

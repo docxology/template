@@ -32,6 +32,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+
 class FileType(Enum):
     """
     Enumeration of supported file types for output organization.
@@ -58,6 +59,7 @@ class FileType(Enum):
         """Get the subdirectory name for this file type."""
         return self.value[1]
 
+
 @dataclass
 class OrganizationResult:
     """
@@ -74,6 +76,7 @@ class OrganizationResult:
     skipped_files: int = 0
     error_files: int = 0
     created_dirs: int = 0
+
 
 class OutputOrganizer:
     """

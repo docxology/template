@@ -109,6 +109,7 @@ def extract_text_from_pdf(pdf_path: Path) -> str:
         f"Details: {'; '.join(error_details)}"
     )
 
+
 def _extract_with_pypdf(pdf_path: Path) -> str:
     """Extract text using pypdf library."""
 
@@ -126,6 +127,7 @@ def _extract_with_pypdf(pdf_path: Path) -> str:
 
         return "\n".join(text_parts)
 
+
 def _extract_with_pdfplumber(pdf_path: Path) -> str:
     """Extract text using pdfplumber library."""
     import pdfplumber
@@ -138,6 +140,7 @@ def _extract_with_pdfplumber(pdf_path: Path) -> str:
                 text_parts.append(page_text)
 
     return "\n\n".join(text_parts)
+
 
 def _extract_with_pypdf2(pdf_path: Path) -> str:
     """Extract text using PyPDF2 library."""
@@ -152,6 +155,7 @@ def _extract_with_pypdf2(pdf_path: Path) -> str:
                 text_parts.append(page_text)
 
     return "\n\n".join(text_parts)
+
 
 def scan_for_issues(text: str) -> dict[str, int]:
     """
@@ -202,6 +206,7 @@ def scan_for_issues(text: str) -> dict[str, int]:
 
     return issues
 
+
 def decode_pdf_hex_strings(text: str) -> str:
     """
     Decode PDF hex-encoded strings (e.g., /x45/x78 -> Ex) to readable text.
@@ -244,6 +249,7 @@ def decode_pdf_hex_strings(text: str) -> str:
 
     return decoded
 
+
 def extract_first_n_words(text: str, n: int = 200) -> str:
     """
     Extract the first N words from text, preserving punctuation.
@@ -272,6 +278,7 @@ def extract_first_n_words(text: str, n: int = 200) -> str:
 
     # Join back with single spaces
     return " ".join(selected_words)
+
 
 def validate_pdf_rendering(pdf_path: Path, n_words: int = 200) -> dict[str, Any]:
     """

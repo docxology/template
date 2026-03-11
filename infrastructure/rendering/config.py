@@ -9,6 +9,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+
 @dataclass
 class RenderingConfig:
     """Configuration for rendering output."""
@@ -60,6 +61,7 @@ class RenderingConfig:
             RenderingConfig with values from environment or defaults
         """
         import os
+
         config_kwargs: dict[str, Any] = {}
         env_vars = env if env is not None else os.environ
 

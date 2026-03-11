@@ -12,6 +12,7 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+
 @dataclass
 class Message:
     """A single message in the conversation."""
@@ -23,6 +24,7 @@ class Message:
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for API."""
         return {"role": self.role, "content": self.content}
+
 
 class ConversationContext:
     """Manages conversation history and token limits."""

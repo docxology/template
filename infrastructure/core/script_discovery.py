@@ -42,7 +42,9 @@ def discover_analysis_scripts(
         >>> # Discovers scripts in projects/myresearch/scripts/
     """
     resolved_dir = project_dir if project_dir is not None else repo_root / "projects" / project_name
-    logger.info(f"[STAGE-02] Discovering analysis scripts in {resolved_dir.relative_to(repo_root)}/...")
+    logger.info(
+        f"[STAGE-02] Discovering analysis scripts in {resolved_dir.relative_to(repo_root)}/..."
+    )
 
     project_scripts_dir = resolved_dir / "scripts"
 
@@ -123,7 +125,9 @@ def verify_analysis_outputs(
         False if scripts exist but no output was generated.
     """
     resolved_dir = project_dir if project_dir is not None else repo_root / "projects" / project_name
-    logger.info(f"[STAGE-02] Verifying analysis outputs for {resolved_dir.relative_to(repo_root)}/...")
+    logger.info(
+        f"[STAGE-02] Verifying analysis outputs for {resolved_dir.relative_to(repo_root)}/..."
+    )
 
     # Determine whether analysis scripts exist (so we know whether output is expected)
     scripts_dir = resolved_dir / "scripts"
