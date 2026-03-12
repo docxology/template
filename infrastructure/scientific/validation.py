@@ -18,6 +18,7 @@ logger = get_logger(__name__)
 
 
 class _ValidationResults(TypedDict):
+    """TypedDict for holding the results of scientific validation."""
     total_tests: int
     passed_tests: int
     failed_tests: int

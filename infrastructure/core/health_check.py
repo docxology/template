@@ -30,6 +30,7 @@ class SystemHealthChecker:
         start_time: float | None = None,
         network_test_hosts: tuple[str, ...] | None = None,
     ) -> None:
+        """Initialize system health checker."""
         self.start_time = start_time if start_time is not None else time.time()
         self.repo_root = repo_root or Path.cwd()
         self._network_dns_host, self._network_tcp_host = (

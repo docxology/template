@@ -55,6 +55,7 @@ class DocumentationScanner:
     """Main scanner class for comprehensive documentation analysis."""
 
     def __init__(self, repo_root: Path):
+        """Initialize the scanner with repository root path."""
         self.repo_root = repo_root.resolve()
         self.results = ScanResults(scan_date=datetime.now().isoformat())
         self.all_headings: dict[str, set[str]] = {}

@@ -8,6 +8,8 @@ This directory contains the **Layer 1** generic tools that power the research te
 - **Validation**: File integrity, PDF/Markdown checking (`output_validator.py`, `audit_orchestrator.py`).
 - **Rendering**: PDF generation logic.
 - **LLM**: Local model integration for reviews.
+- **Project**: Multi-project discovery and validation.
+- **Steganography**: Cryptographic PDF watermarking and metadata injection.
 
 ## 🤖 Agent Guidelines
 - **Import Rules**: Can import from standard libs. **Cannot** import from `projects/` (prevents circular dependency).

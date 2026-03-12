@@ -1,0 +1,13 @@
+[2026-03-12 13:42:19,962] [INFO] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/template/output/logs/pipeline.log
+[2026-03-12 13:42:19,962] [INFO] ✓ Stage 1 completed successfully (0.0s)
+[2026-03-12 13:42:19,962] [INFO] 
+[2026-03-12 13:42:19,962] [INFO] [2/8] Environment Setup (25% complete)
+[2026-03-12 13:42:19,962] [INFO]   Elapsed: 0s | ETA: 0s
+[2026-03-12 13:42:19,962] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-12 13:42:20,949] [INFO] ✓ Stage 2 completed successfully (1.0s)
+[2026-03-12 13:42:20,949] [INFO] 
+[2026-03-12 13:42:20,949] [INFO] [3/8] Project Tests (37% complete)
+[2026-03-12 13:42:20,949] [INFO]   Elapsed: 0s | ETA: 1s
+[2026-03-12 13:42:20,949] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-12 13:42:31,893] [ERROR] ❌ [STAGE_FAILED] ✗ Stage 3 failed
+[2026-03-12 13:42:31,893] [ERROR] ❌ [PIPELINE_STAGE_FAILED] Pipeline failed at stage 3: Project Tests — Check stage logs for details

@@ -60,6 +60,7 @@ class CodeProfiler:
     """Comprehensive performance monitoring and profiling via cProfile/tracemalloc."""
 
     def __init__(self):
+        """Initialize empty metrics history."""
         self.metrics_history: list[ProfilingMetrics] = []
 
     @contextmanager
@@ -216,8 +217,10 @@ def monitor_performance(operation_name: str, track_memory: bool = True):
     """Decorator for monitoring function performance via the global CodeProfiler."""
 
     def decorator(func):
+        """Decorator function wrapping the target function."""
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
+            """Inner wrapper that executes with monitoring."""
             monitor = get_performance_monitor()
             op_name = operation_name or f"{func.__module__}.{func.__qualname__}"
             with monitor.monitor(op_name, track_memory):

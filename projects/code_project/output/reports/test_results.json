@@ -1,33 +1,6 @@
 {
-  "timestamp": "2026-03-12T12:35:43.960092",
-  "infrastructure": {
-    "passed": 2875,
-    "failed": 2,
-    "skipped": 6,
-    "total": 2883,
-    "warnings": 1,
-    "exit_code": 0,
-    "discovery_count": 2895,
-    "collection_errors": 0,
-    "execution_phases": {
-      "setup": 506.56,
-      "collection": 506.56,
-      "execution": 506.56
-    },
-    "test_categories": {},
-    "failed_tests": [
-      {
-        "test": "tests/infra_tests/llm/test_cli.py::TestCLIWithOllama::test_check_command_success",
-        "error_type": "Unknown",
-        "error_message": "Failed (use --tb=short for details)"
-      },
-      {
-        "test": "tests/infra_tests/llm/test_llm_review.py::TestLLMReviewIntegration::test_generate_review_with_real_llm",
-        "error_type": "Unknown",
-        "error_message": "Failed (use --tb=short for details)"
-      }
-    ]
-  },
+  "timestamp": "2026-03-12T13:41:40.259820",
+  "infrastructure": {},
   "project": {
     "passed": 39,
     "failed": 0,
@@ -38,36 +11,36 @@
     "discovery_count": 39,
     "collection_errors": 0,
     "execution_phases": {
-      "setup": 3.67,
-      "collection": 3.67,
-      "execution": 3.67
+      "setup": 2.04,
+      "collection": 2.04,
+      "execution": 2.04
     },
     "test_categories": {},
     "coverage_percent": 96.63865546218487,
     "failed_tests": []
   },
   "summary": {
-    "total_passed": 2914,
-    "total_failed": 2,
-    "total_skipped": 6,
-    "total_tests": 2922,
+    "total_passed": 39,
+    "total_failed": 0,
+    "total_skipped": 0,
+    "total_tests": 39,
     "all_passed": true,
     "project_coverage": 96.63865546218487
   },
   "coverage_details": {
     "project": {
-      "overall_coverage": 97.75280898876404,
-      "total_executed": 87,
+      "overall_coverage": 97.70114942528735,
+      "total_executed": 85,
       "total_missing": 2,
       "total_excluded": 0,
-      "total_lines": 89,
+      "total_lines": 87,
       "file_coverage": {
         "projects/code_project/src/optimizer.py": {
-          "coverage_percent": 97.75280898876404,
-          "executed_lines": 87,
+          "coverage_percent": 97.70114942528735,
+          "executed_lines": 85,
           "missing_lines": 2,
           "excluded_lines": 0,
-          "total_lines": 89
+          "total_lines": 87
         }
       }
     }

@@ -237,9 +237,11 @@ def log_function_call(logger: logging.Logger | None = None) -> Callable:
     """Decorator that logs function calls at DEBUG level with elapsed time and error reporting."""
 
     def decorator(func: Callable[..., T]) -> Callable[..., T]:
+        """Wrap the target function to log its execution."""
         func_logger = logger or get_logger(func.__module__)
 
         def wrapper(*args: Any, **kwargs: Any) -> T:
+            """Execute the wrapped function with logging."""
             func_logger.debug(f"Calling: {func.__name__}")
             start_time = time.time()
             try:

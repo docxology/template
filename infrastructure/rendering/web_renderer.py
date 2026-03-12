@@ -16,6 +16,7 @@ class WebRenderer:
     """Handles HTML generation."""
 
     def __init__(self, config: RenderingConfig):
+        """Initialize the web renderer with configuration."""
         self.config = config
 
     def render(self, source_file: Path) -> Path:

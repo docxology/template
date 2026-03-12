@@ -30,6 +30,7 @@ class ConversationContext:
     """Manages conversation history and token limits."""
 
     def __init__(self, max_tokens: int = 262144):  # Default to 256K for large-context models
+        """Initialize conversation context."""
         self.messages: list[Message] = []
         self.max_tokens = max_tokens
         self.estimated_tokens = 0

@@ -88,6 +88,7 @@ _DEFAULT_REVIEW_SYSTEM_PROMPT = (
 
 
 def get_manuscript_review_system_prompt() -> str:
+    """Get the system prompt for manuscript review."""
     if PROMPT_SYSTEM_AVAILABLE:
         try:
             loader = get_default_loader()
@@ -99,6 +100,7 @@ def get_manuscript_review_system_prompt() -> str:
 
 
 def log_timeout_info(timeout: float, operation: str) -> None:
+    """Log information about timeout settings."""
     logger.info(f"    Timeout: {timeout:.0f}s per {operation}")
     if timeout < 60:
         logger.warning(f"    ⚠️  Low timeout ({timeout:.0f}s) - may cause failures for slow models")
@@ -113,6 +115,7 @@ def validate_review_quality(
     min_words: int | None = None,
     model_name: str = "",
 ) -> tuple[bool, list[str], dict[str, Any]]:
+    """Validate the quality and formatting of an LLM review response."""
     issues = []
     details: dict[str, Any] = {
         "sections_found": [],
@@ -303,6 +306,7 @@ _REVIEW_TYPE_VALIDATORS: dict[str, Any] = {
 
 
 def create_review_client(model_name: str) -> LLMClient:
+    """Create an LLM client specialized for reviews."""
     config = LLMConfig.from_env()
     config.default_model = model_name
     config.timeout = config.review_timeout
@@ -319,6 +323,7 @@ def create_review_client(model_name: str) -> LLMClient:
 
 
 def check_ollama_availability() -> tuple[bool, str | None]:
+    """Check if Ollama server and models are available."""
     log_substep("Checking Ollama availability...")
     auto_start = os.environ.get("OLLAMA_AUTO_START", "true").lower() == "true"
 
@@ -380,6 +385,7 @@ def check_ollama_availability() -> tuple[bool, str | None]:
 
 
 def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> tuple[bool, float]:
+    """Pre-load the model into GPU memory and generate a quick test response."""
     log_substep("Warming up model...")
     warmup_timeout = client.config.review_timeout
     logger.info(f"    Timeout: {warmup_timeout:.0f}s for warmup")
@@ -459,6 +465,7 @@ def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> tuple
 
 
 def extract_manuscript_text(pdf_path: Path | str) -> tuple[str | None, ManuscriptInputMetrics]:
+    """Extract and validate text from a manuscript PDF."""
     log_substep(f"Extracting text from manuscript: {Path(pdf_path).name}")
     metrics = ManuscriptInputMetrics()
 
@@ -577,6 +584,7 @@ def generate_review_with_metrics(
     max_tokens: int | None = None,
     max_retries: int = 1,
 ) -> tuple[str, ReviewMetrics]:
+    """Generate a review using a specified template and record execution metrics."""
     log_substep(f"Generating {review_name}...")
 
     if max_tokens is None:
@@ -668,6 +676,7 @@ def generate_review_with_metrics(
 def generate_llm_executive_summary(
     client: LLMClient, text: str, model_name: str = ""
 ) -> tuple[str, ReviewMetrics]:
+    """Generate an executive summary of the manuscript using an LLM."""
     return generate_review_with_metrics(
         client=client,
         text=text,
@@ -683,6 +692,7 @@ def generate_llm_executive_summary(
 def generate_quality_review(
     client: LLMClient, text: str, model_name: str = ""
 ) -> tuple[str, ReviewMetrics]:
+    """Generate a quality review of the manuscript using an LLM."""
     return generate_review_with_metrics(
         client=client,
         text=text,
@@ -698,6 +708,7 @@ def generate_quality_review(
 def generate_methodology_review(
     client: LLMClient, text: str, model_name: str = ""
 ) -> tuple[str, ReviewMetrics]:
+    """Generate a methodology review of the manuscript using an LLM."""
     return generate_review_with_metrics(
         client=client,
         text=text,
@@ -713,6 +724,7 @@ def generate_methodology_review(
 def generate_improvement_suggestions(
     client: LLMClient, text: str, model_name: str = ""
 ) -> tuple[str, ReviewMetrics]:
+    """Generate improvement suggestions for the manuscript using an LLM."""
     return generate_review_with_metrics(
         client=client,
         text=text,
@@ -728,6 +740,7 @@ def generate_improvement_suggestions(
 def generate_translation(
     client: LLMClient, text: str, language_code: str, model_name: str = ""
 ) -> tuple[str | None, ReviewMetrics]:
+    """Generate a translated abstract for the manuscript."""
     target_language = TRANSLATION_LANGUAGES.get(language_code, language_code)
     log_substep(f"Generating translation ({target_language})...")
 

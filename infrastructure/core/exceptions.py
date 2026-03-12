@@ -35,6 +35,7 @@ class TemplateError(Exception):
         suggestions: list[str] | None = None,
         recovery_commands: list[str] | None = None,
     ) -> None:
+        """Initialize template error with context and recovery suggestions."""
         self.message = message
         self.context = context or {}
         self.suggestions = suggestions or []
@@ -151,6 +152,7 @@ class FileNotFoundError(FileOperationError, builtins.FileNotFoundError):
         suggestions: list[str] | None = None,
         recovery_commands: list[str] | None = None,
     ) -> None:
+        """Initialize file not found error with recovery commands."""
         context = context or {}
         file_path = context.get("file", "")
 
@@ -207,6 +209,7 @@ class MissingDependencyError(DependencyError):
         suggestions: list[str] | None = None,
         recovery_commands: list[str] | None = None,
     ) -> None:
+        """Initialize missing dependency error with install commands."""
         context = context or {}
         dependency = context.get("dependency", "")
 

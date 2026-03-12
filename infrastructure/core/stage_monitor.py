@@ -73,6 +73,7 @@ class PerformanceMonitor:
     """Resource-usage monitor tracking timing, memory, and operation counts."""
 
     def __init__(self):
+        """Initialize performance monitor."""
         self.start_time: float | None = None
         self.start_memory: float | None = None
         self.peak_memory: float = 0.0
@@ -113,15 +114,19 @@ class PerformanceMonitor:
         )
 
     def record_operation(self) -> None:
+        """Record a single operation execution."""
         self.operations_count += 1
 
     def record_cache_hit(self) -> None:
+        """Record a cache hit."""
         self.cache_hits += 1
 
     def record_cache_miss(self) -> None:
+        """Record a cache miss."""
         self.cache_misses += 1
 
     def update_memory(self) -> None:
+        """Update peak memory usage."""
         current = self._get_memory_usage()
         if current > self.peak_memory:
             self.peak_memory = current
@@ -202,6 +207,7 @@ class StagePerformanceTracker:
         high_memory_mb: float = _HIGH_MEMORY_MB,
         high_cpu_percent: float = _HIGH_CPU_PERCENT,
     ):
+        """Initialize stage performance tracker."""
         self.stages: list[dict[str, Any]] = []
         self.start_time: float | None = None
         self.start_memory: float = 0.0

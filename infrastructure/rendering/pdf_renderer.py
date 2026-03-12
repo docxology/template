@@ -60,6 +60,7 @@ class PDFRenderer:
     """Handles PDF generation logic."""
 
     def __init__(self, config: RenderingConfig):
+        """Initialize the PDF renderer with configuration."""
         self.config = config
 
     def render(self, source_file: Path, output_name: str | None = None) -> Path:

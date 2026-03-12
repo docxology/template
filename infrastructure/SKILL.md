@@ -20,6 +20,7 @@ The `infrastructure/` package provides generic, reusable functionality for resea
 | `reporting/` | Pipeline reports, error aggregation, dashboards | `generate_pipeline_report`, `get_error_aggregator` |
 | `scientific/` | Benchmarking, numerical stability, scientific templates | `benchmark_function`, `check_numerical_stability` |
 | `project/` | Multi-project discovery and validation | `discover_projects`, `validate_project_structure` |
+| `steganography/` | Cryptographic PDF watermarking and verification | `SteganographyProcessor`, `StegoParams` |
 
 ## Import Patterns
 

@@ -12,6 +12,7 @@ Modules:
     rendering: Multi-format output generation
     publishing: Academic publishing & dissemination
     reporting: Pipeline reporting & error aggregation
+    project: Multi-project management and discovery
     steganography: Optional secure PDF post-processing (overlays, barcodes, hashing)
 """
 

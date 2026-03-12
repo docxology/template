@@ -68,11 +68,20 @@ infrastructure/
 │   ├── api.py               # Platform API clients (Zenodo)
 │   ├── citations.py         # Citation generation
 │   └── SKILL.md, AGENTS.md, README.md
-└── reporting/      # Pipeline reporting & error aggregation
-    ├── pipeline_reporter.py  # Pipeline report generation
-    ├── error_aggregator.py   # Error collection & categorization
-    ├── executive_reporter.py # Cross-project summaries
-    ├── dashboard_generator.py # Visual dashboards
+├── reporting/      # Pipeline reporting & error aggregation
+│   ├── pipeline_reporter.py  # Pipeline report generation
+│   ├── error_aggregator.py   # Error collection & categorization
+│   ├── executive_reporter.py # Cross-project summaries
+│   ├── dashboard_generator.py # Visual dashboards
+│   └── SKILL.md, AGENTS.md, README.md
+└── steganography/  # Secure PDF post-processing
+    ├── core.py              # Steganography orchestration
+    ├── config.py            # Steganography configuration
+    ├── overlays.py          # Diagonal text overlays
+    ├── barcodes.py          # QR and barcode generation
+    ├── metadata.py          # PDF metadata and XMP injection
+    ├── hashing.py           # SHA-256 integrity manifests
+    ├── encryption.py        # AES-256 PDF encryption
     └── SKILL.md, AGENTS.md, README.md
 ```
 

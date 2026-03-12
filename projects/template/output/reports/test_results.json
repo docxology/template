@@ -1,0 +1,70 @@
+{
+  "timestamp": "2026-03-12T13:42:31.836793",
+  "infrastructure": {},
+  "project": {
+    "passed": 33,
+    "failed": 3,
+    "skipped": 0,
+    "total": 36,
+    "warnings": 0,
+    "exit_code": 1,
+    "discovery_count": 36,
+    "collection_errors": 0,
+    "execution_phases": {
+      "setup": 8.5,
+      "execution": 8.5
+    },
+    "test_categories": {},
+    "coverage_percent": 92.90322580645162,
+    "failed_tests": [
+      {
+        "test": "projects/template/tests/test_meta.py::TestDiscoverProjects::test_discovers_three_projects",
+        "error_type": "Unknown",
+        "error_message": "Run with -v for details"
+      },
+      {
+        "test": "projects/template/tests/test_meta.py::TestDiscoverProjects::test_known_projects_present",
+        "error_type": "Unknown",
+        "error_message": "Run with -v for details"
+      },
+      {
+        "test": "projects/template/tests/test_meta.py::TestBuildInfrastructureReport::test_report_has_projects",
+        "error_type": "Unknown",
+        "error_message": "Run with -v for details"
+      }
+    ]
+  },
+  "summary": {
+    "total_passed": 33,
+    "total_failed": 3,
+    "total_skipped": 0,
+    "total_tests": 36,
+    "all_passed": false,
+    "project_coverage": 92.90322580645162
+  },
+  "coverage_details": {
+    "project": {
+      "overall_coverage": 92.90322580645162,
+      "total_executed": 144,
+      "total_missing": 11,
+      "total_excluded": 0,
+      "total_lines": 155,
+      "file_coverage": {
+        "projects/template/src/template/__init__.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 3,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 3
+        },
+        "projects/template/src/template/introspection.py": {
+          "coverage_percent": 92.76315789473685,
+          "executed_lines": 141,
+          "missing_lines": 11,
+          "excluded_lines": 0,
+          "total_lines": 152
+        }
+      }
+    }
+  }
+}

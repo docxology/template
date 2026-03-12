@@ -18,6 +18,7 @@ class SlidesRenderer:
     """Handles slide generation (Beamer/Reveal.js)."""
 
     def __init__(self, config: RenderingConfig):
+        """Initialize the slides renderer with configuration."""
         self.config = config
 
     def render(

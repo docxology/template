@@ -22,6 +22,7 @@ class InputSanitizer:
     """Comprehensive input sanitization for LLM operations."""
 
     def __init__(self):
+        """Initialize the input sanitizer and load target patterns."""
         # Dangerous patterns to filter
         self.dangerous_patterns = [
             # System prompt injection attempts

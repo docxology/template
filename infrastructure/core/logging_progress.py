@@ -124,6 +124,7 @@ class Spinner:
     SPINNER_CHARS = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
 
     def __init__(self, message: str = "Processing...", stream: Any = None, delay: float = 0.1):
+        """Initialize animated spinner."""
         self.message = message
         self.stream = stream or sys.stderr
         self.delay = delay
@@ -229,6 +230,7 @@ class StreamingProgress:
         stream: Any = None,
         update_interval: float = 0.5,
     ):
+        """Initialize real-time streaming progress indicator."""
         self.total = total
         self.message = message
         self.stream = stream or sys.stderr

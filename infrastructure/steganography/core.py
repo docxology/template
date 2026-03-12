@@ -48,6 +48,7 @@ class SteganographyProcessor:
     """
 
     def __init__(self, config: SteganographyConfig | None = None):
+        """Initialize steganography processor with configuration."""
         self.config = config or SteganographyConfig()
         self._document_id: str = ""
         self._hashes: dict[str, str] = {}

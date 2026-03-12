@@ -27,6 +27,7 @@ class RenderManager:
         manuscript_dir: Path | None = None,
         figures_dir: Path | None = None,
     ):
+        """Initialize the render manager with configuration and directories."""
         self.config = config or RenderingConfig.from_env()
         self.manuscript_dir = manuscript_dir
         self.figures_dir = figures_dir

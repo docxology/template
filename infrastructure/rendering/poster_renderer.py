@@ -15,6 +15,7 @@ class PosterRenderer:
     """Handles scientific poster generation."""
 
     def __init__(self, config: RenderingConfig):
+        """Initialize the poster renderer with configuration."""
         self.config = config
 
     def render(self, source_file: Path) -> Path:

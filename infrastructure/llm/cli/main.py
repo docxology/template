@@ -27,6 +27,7 @@ class CLIError(Exception):
     """Raised when a CLI command fails with a known error condition."""
 
     def __init__(self, message: str, exit_code: int = 1):
+        """Initialize CLI error with message and exit code."""
         super().__init__(message)
         self.exit_code = exit_code
 

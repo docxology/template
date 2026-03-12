@@ -22,6 +22,7 @@ REQUEST_TIMEOUT = 30
 
 @dataclass
 class ZenodoConfig:
+    """Configuration for Zenodo API client."""
     access_token: str
     sandbox: bool = True
     base_url: str | None = None
@@ -55,6 +56,7 @@ class ZenodoClient:
     """Client for Zenodo API."""
 
     def __init__(self, config: ZenodoConfig):
+        """Initialize Zenodo client with configuration."""
         self.config = config
         self.headers = {"Authorization": f"Bearer {config.access_token}"}
 

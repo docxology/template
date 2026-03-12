@@ -4,7 +4,7 @@
       "exists": true,
       "file_count": 10,
       "size_mb": "1.82",
-      "total_size_bytes": 1909152,
+      "total_size_bytes": 1906277,
       "largest_files": [
         {
           "name": "code_project_combined.pdf",
@@ -64,12 +64,12 @@
     "slides": {
       "exists": true,
       "file_count": 64,
-      "size_mb": "2.39",
-      "total_size_bytes": 2501618,
+      "size_mb": "2.38",
+      "total_size_bytes": 2498619,
       "largest_files": [
         {
           "name": "03_results_slides.pdf",
-          "size_mb": "1.54",
+          "size_mb": "1.53",
           "path": "slides/03_results_slides.pdf"
         },
         {
@@ -97,8 +97,8 @@
     "figures": {
       "exists": true,
       "file_count": 7,
-      "size_mb": "1.52",
-      "total_size_bytes": 1588839,
+      "size_mb": "1.51",
+      "total_size_bytes": 1587704,
       "largest_files": [
         {
           "name": "algorithm_complexity.png",
@@ -196,7 +196,7 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.00",
-      "total_size_bytes": 2655,
+      "total_size_bytes": 2654,
       "largest_files": [
         {
           "name": "pipeline.log",
@@ -210,7 +210,7 @@
     }
   },
   "total_files": 103,
-  "total_size_mb": 5.937379837036133,
+  "total_size_mb": 5.930694580078125,
   "largest_files": [
     {
       "name": "code_project_combined.pdf",
@@ -220,7 +220,7 @@
     },
     {
       "name": "03_results_slides.pdf",
-      "size_mb": "1.54",
+      "size_mb": "1.53",
       "category": "slides",
       "path": "slides/03_results_slides.pdf"
     },
@@ -293,15 +293,15 @@
     ".csv": 1
   },
   "sizes_by_category": {
-    "pdf": 1.820709228515625,
+    "pdf": 1.817967414855957,
     "web": 0.1941671371459961,
-    "slides": 2.3857288360595703,
-    "figures": 1.5152349472045898,
+    "slides": 2.382868766784668,
+    "figures": 1.5141525268554688,
     "data": 0.01096343994140625,
     "reports": 0.008044242858886719,
     "simulations": 0.0,
     "llm": 0.0,
-    "logs": 0.0025320053100585938
+    "logs": 0.0025310516357421875
   },
   "pdf_files": 10,
   "figures": 7,

@@ -87,6 +87,7 @@ class OutputOrganizer:
     """
 
     def __init__(self):
+        """Initialize the output organizer."""
         self.logger = logger
 
     def detect_file_type(self, file_path: Path) -> FileType | None:

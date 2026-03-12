@@ -232,6 +232,7 @@ flowchart LR
 ```
 
 ### Core Infrastructure
+
 - **[core/](core/)** - Fundamental utilities (logging, configuration, progress tracking)
 - **Exception handling** - Custom exception hierarchy and error handling
 
@@ -241,12 +242,22 @@ flowchart LR
 - **[validation/](validation/)** - Quality assurance and content validation
 
 ### External Integrations
+
 - **[llm/](llm/)** - Local Large Language Model integration
 - **[publishing/](publishing/)** - Academic publishing workflows
 - **[scientific/](scientific/)** - Scientific computing utilities
 
 ### Reporting & Quality
+
 - **[reporting/](reporting/)** - Pipeline reporting and error aggregation
+
+### Project Management
+
+- **[project/](project/)** - Multi-project discovery, validation, and lifecycle management
+
+### Security & Integrity
+
+- **[steganography/](steganography/)** - Cryptographic watermarking, PDF metadata injection, and hashing
 
 ## Usage in Projects
 

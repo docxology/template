@@ -61,6 +61,7 @@ class RepositoryScanner:
     """Comprehensive repository scanner."""
 
     def __init__(self, repo_root: Path):
+        """Initialize repository scanner with root path."""
         self.repo_root = repo_root.resolve()
         self.results = ScanResults()
         self.src_modules: set[str] = set()
