@@ -37,6 +37,6 @@ Performance benchmarking spans problem dimensions $d \in \{1, 2, 5, 10, 20, 50\}
 ## Computational Environment
 
 - **Python**: 3.12.11
-- **NumPy**: 2.4.1
+- **NumPy**: 1.26.4
 - **Platform**: Darwin arm64
-- **Generated**: 2026-03-12T18:59:02Z
+- **Generated**: 2026-03-12T19:35:59Z

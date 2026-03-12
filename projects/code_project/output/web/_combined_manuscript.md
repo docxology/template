@@ -435,9 +435,9 @@ Performance benchmarking spans problem dimensions $d \in \{1, 2, 5, 10, 20, 50\}
 ## Computational Environment
 
 - **Python**: 3.12.11
-- **NumPy**: 2.4.1
+- **NumPy**: 1.26.4
 - **Platform**: Darwin arm64
-- **Generated**: 2026-03-12T18:59:02Z
+- **Generated**: 2026-03-12T19:35:59Z
 
 
 
@@ -467,9 +467,9 @@ The analysis pipeline produced the following artifacts, each validated by `infra
 | Category                           | Count                  |
 | ---------------------------------- | ---------------------- |
 | Publication-quality figures        | 7   |
-| Structured data files (CSV/JSON)   | 2 |
-| Analysis reports                   | 6   |
-| **Total artifacts**                | **15** |
+| Structured data files (CSV/JSON)   | 3 |
+| Analysis reports                   | 10   |
+| **Total artifacts**                | **20** |
 
 ## Numerical Validation Summary
 
