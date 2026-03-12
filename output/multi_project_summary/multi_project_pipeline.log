@@ -917,3 +917,924 @@ Coverage HTML written to dir htmlcov
 [2026-03-12 13:42:32] [ERROR] ❌ Some projects failed
 [2026-03-12 13:42:32] [ERROR]    Failed projects:
 [2026-03-12 13:42:32] [ERROR]      - template
+
+======================================================================
+[2026-03-12 13:55:10] Multi-Project Pipeline Started
+======================================================================
+[2026-03-12 13:55:10] [INFO] Found 2 projects: code_project, template
+[2026-03-12 13:55:10] [INFO] Executing core pipeline (no infra) for 2 projects
+[2026-03-12 13:55:10] [INFO] Skipping infrastructure tests (already run or disabled)
+[2026-03-12 13:55:10] [INFO] Project 1/2: code_project
+[2026-03-12 13:55:10] [INFO] Starting: Pipeline execution for code_project
+[2026-03-12 13:55:10] [INFO] Executing core pipeline for project 'code_project'
+[2026-03-12 13:55:10] [INFO] 
+[2026-03-12 13:55:10] [INFO] [1/8] Clean Output Directories (12% complete)
+[2026-03-12 13:55:10] [INFO]   Elapsed: 0s | ETA: 0s
+[2026-03-12 13:55:10] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-12 13:55:10] [INFO] Cleaning output directories...
+[2026-03-12 13:55:10] [INFO] Cleaning root-level directories from output/ directory...
+[2026-03-12 13:55:10] [INFO] Removed root-level directories: figures
+[2026-03-12 13:55:10] [INFO] Root output directory cleaned
+[2026-03-12 13:55:10] [INFO]   Cleaning projects/code_project/output/...
+[2026-03-12 13:55:10] [INFO]   Archived 1 log file(s) to logs/archive/
+[2026-03-12 13:55:11] [INFO] Cleaned projects/code_project/output/ (recreated subdirectories)
+[2026-03-12 13:55:11] [INFO]   Cleaning output/code_project/...
+[2026-03-12 13:55:11] [INFO]   Archived 1 log file(s) to logs/archive/
+[2026-03-12 13:55:11] [INFO] Cleaned output/code_project/ (recreated subdirectories)
+[2026-03-12 13:55:11] [INFO] Output directories cleaned for project 'code_project' - fresh start
+[2026-03-12 13:55:11] [INFO] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/code_project/output/logs/pipeline.log
+[2026-03-12 13:55:11] [INFO] ✓ Stage 1 completed successfully (0.0s)
+[2026-03-12 13:55:11] [INFO] 
+[2026-03-12 13:55:11] [INFO] [2/8] Environment Setup (25% complete)
+[2026-03-12 13:55:11] [INFO]   Elapsed: 0s | ETA: 0s
+[2026-03-12 13:55:11] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-12 13:55:11] [INFO] 
+[2026-03-12 13:55:11] [INFO] ==================================================
+[2026-03-12 13:55:11] [INFO] STAGE 00: Environment Setup (Project: code_project)
+[2026-03-12 13:55:11] [INFO] ==================================================
+[2026-03-12 13:55:11] [INFO] Cleaning coverage database files...
+[2026-03-12 13:55:12] [INFO] Removed coverage files: coverage_project.json
+[2026-03-12 13:55:12] [INFO] Coverage database cleanup completed
+[2026-03-12 13:55:12] [INFO] Python 3.12.11 available
+[2026-03-12 13:55:12] [INFO] Checking for uv package manager...
+[2026-03-12 13:55:12] [INFO] Workspace dependencies synced successfully with uv
+[2026-03-12 13:55:12] [INFO] All 2 build tools available
+[2026-03-12 13:55:12] [INFO] All 22 directories ready
+[2026-03-12 13:55:12] [INFO] All 4 required directories present
+[2026-03-12 13:55:12] [INFO] Discovering available projects...
+[2026-03-12 13:55:12] [INFO] Discovered 2 valid project(s):
+[2026-03-12 13:55:12] [INFO]   → code_project: src, tests, scripts, manuscript
+[2026-03-12 13:55:12] [INFO]     Setting up: code_project
+[2026-03-12 13:55:12] [INFO]     template: src, tests, scripts, manuscript
+[2026-03-12 13:55:12] [INFO] Environment variables configured (MPLBACKEND, PYTHONIOENCODING, PROJECT_ROOT)
+[2026-03-12 13:55:12] [INFO] 
+[2026-03-12 13:55:12] [INFO] ==================================================
+[2026-03-12 13:55:12] [INFO] Setup Summary
+[2026-03-12 13:55:12] [INFO] ==================================================
+[2026-03-12 13:55:12] [INFO] ✅ PASS: Python version
+[2026-03-12 13:55:12] [INFO] ✅ PASS: Dependencies
+[2026-03-12 13:55:12] [INFO] ✅ PASS: Build tools
+[2026-03-12 13:55:12] [INFO] ✅ PASS: Directory structure
+[2026-03-12 13:55:12] [INFO] ✅ PASS: Source structure
+[2026-03-12 13:55:12] [INFO] ✅ PASS: Project discovery
+[2026-03-12 13:55:12] [INFO] ✅ PASS: Environment variables
+[2026-03-12 13:55:12] [INFO] 
+✅ Environment setup complete - ready to proceed
+[2026-03-12 13:55:12] [INFO] ✓ Stage 2 completed successfully (1.8s)
+[2026-03-12 13:55:12] [INFO] 
+[2026-03-12 13:55:12] [INFO] [3/8] Project Tests (37% complete)
+[2026-03-12 13:55:12] [INFO]   Elapsed: 1s | ETA: 3s
+[2026-03-12 13:55:12] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-12 13:55:13] [INFO] 
+[2026-03-12 13:55:13] [INFO] ==================================================
+[2026-03-12 13:55:13] [INFO] STAGE 01: Run Tests (Project: code_project)
+[2026-03-12 13:55:13] [INFO] ==================================================
+[2026-03-12 13:55:13] [INFO] 
+[2026-03-12 13:55:13] [INFO] ==================================================
+[2026-03-12 13:55:13] [INFO] Phase 1/1: Project Tests (code_project) (Only)
+[2026-03-12 13:55:13] [INFO] ==================================================
+[2026-03-12 13:55:13] [INFO] Cleaning coverage database files...
+[2026-03-12 13:55:13] [INFO] Coverage database cleanup completed
+[2026-03-12 13:55:13] [WARNING] Unknown config key 'experiment' in /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/config.yaml
+[2026-03-12 13:55:13] [INFO] 
+  Running project tests for 'code_project' (90% coverage threshold)...
+[2026-03-12 13:55:13] [INFO] Test path: /Users/4d/Documents/GitHub/template/projects/code_project/tests
+[2026-03-12 13:55:13] [INFO] Coverage target: projects/code_project/src (90% minimum)
+[2026-03-12 13:55:14] [INFO] 
+  Discovering project 'code_project' tests...
+[2026-03-12 13:55:15] [INFO] Discovered 39 project 'code_project' tests
+Running project tests for 'code_project'
+============================= test session starts ==============================
+.......platform darwin -- Python 3.12.11, pytest-9.0.2, pluggy-1.6.0 -- /Users/4d/Documents/GitHub/template/.venv/bin/python3
+.cachedir: .pytest_cache
+rootdir: /Users/4d/Documents/GitHub/template/projects/code_project
+.configfile: pyproject.toml
+........plugins: timeout-2.4.0, asyncio-1.3.0, pytest_httpserver-1.1.3, cov-7.0.0
+.asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+...collecting ... collected 39 items
+
+.projects/code_project/tests/test_optimizer.py::TestQuadraticFunction::test_simple_quadratic PASSED [  2%]
+.projects/code_project/tests/test_optimizer.py::TestQuadraticFunction::test_multidimensional_quadratic PASSED [  5%]
+.projects/code_project/tests/test_optimizer.py::TestQuadraticFunction::test_default_parameters PASSED [  7%]
+.projects/code_project/tests/test_optimizer.py::TestQuadraticFunction::test_dimension_mismatch_A PASSED [ 10%]
+.projects/code_project/tests/test_optimizer.py::TestQuadraticFunction::test_dimension_mismatch_b PASSED [ 12%]
+.projects/code_project/tests/test_optimizer.py::TestQuadraticFunction::test_zero_input PASSED [ 15%]
+.projects/code_project/tests/test_optimizer.py::TestQuadraticFunction::test_large_input PASSED [ 17%]
+.projects/code_project/tests/test_optimizer.py::TestQuadraticFunction::test_negative_input PASSED [ 20%]
+.projects/code_project/tests/test_optimizer.py::TestComputeGradient::test_simple_gradient PASSED [ 23%]
+.projects/code_project/tests/test_optimizer.py::TestComputeGradient::test_multidimensional_gradient PASSED [ 25%]
+.projects/code_project/tests/test_optimizer.py::TestComputeGradient::test_default_gradient PASSED [ 28%]
+.projects/code_project/tests/test_optimizer.py::TestGradientDescent::test_convergence_to_optimum PASSED [ 30%]
+.projects/code_project/tests/test_optimizer.py::TestGradientDescent::test_max_iterations_reached PASSED [ 33%]
+.projects/code_project/tests/test_optimizer.py::TestGradientDescent::test_already_converged PASSED [ 35%]
+.projects/code_project/tests/test_optimizer.py::TestGradientDescent::test_multidimensional_convergence PASSED [ 38%]
+.projects/code_project/tests/test_optimizer.py::TestGradientDescent::test_parameter_validation PASSED [ 41%]
+.projects/code_project/tests/test_optimizer.py::TestGradientDescent::test_invalid_initial_point PASSED [ 43%]
+.projects/code_project/tests/test_optimizer.py::TestGradientDescent::test_gradient_descent_performance PASSED [ 46%]
+.projects/code_project/tests/test_optimizer.py::TestGradientDescent::test_numerical_stability PASSED [ 48%]
+.projects/code_project/tests/test_optimizer.py::TestOptimizationResult::test_result_creation PASSED [ 51%]
+.projects/code_project/tests/test_optimizer.py::TestPerformanceBenchmarks::test_gradient_descent_timing PASSED [ 53%]
+.projects/code_project/tests/test_optimizer.py::TestPerformanceBenchmarks::test_function_evaluation_speed PASSED [ 56%]
+.projects/code_project/tests/test_optimizer.py::TestStabilityAnalysis::test_stability_analysis_execution PASSED [ 58%]
+.projects/code_project/tests/test_optimizer.py::TestStabilityAnalysis::test_stability_visualization PASSED [ 61%]
+.projects/code_project/tests/test_optimizer.py::TestPerformanceBenchmarking::test_performance_benchmarking_execution PASSED [ 64%]
+.projects/code_project/tests/test_optimizer.py::TestPerformanceBenchmarking::test_performance_visualization PASSED [ 66%]
+.projects/code_project/tests/test_optimizer.py::TestAnalysisDashboard::test_dashboard_generation PASSED [ 69%]
+.projects/code_project/tests/test_optimizer.py::TestAnalysisDashboard::test_dashboard_with_analysis_data PASSED [ 71%]
+.projects/code_project/tests/test_optimizer.py::TestMakeQuadraticProblem::test_returns_callable_pair PASSED [ 74%]
+.projects/code_project/tests/test_optimizer.py::TestMakeQuadraticProblem::test_objective_matches_quadratic_function PASSED [ 76%]
+.projects/code_project/tests/test_optimizer.py::TestMakeQuadraticProblem::test_gradient_matches_compute_gradient PASSED [ 79%]
+.projects/code_project/tests/test_optimizer.py::TestMakeQuadraticProblem::test_factory_usable_with_gradient_descent PASSED [ 82%]
+.projects/code_project/tests/test_optimizer.py::TestMakeQuadraticProblem::test_factory_with_default_params PASSED [ 84%]
+.projects/code_project/tests/test_optimizer.py::TestMakeQuadraticProblem::test_factory_multidimensional PASSED [ 87%]
+.projects/code_project/tests/test_optimizer.py::TestSimulateTrajectory::test_returns_dict_with_expected_keys PASSED [ 89%]
+.projects/code_project/tests/test_optimizer.py::TestSimulateTrajectory::test_objectives_decrease_toward_optimum PASSED [ 92%]
+.projects/code_project/tests/test_optimizer.py::TestSimulateTrajectory::test_iterations_and_objectives_same_length PASSED [ 94%]
+.projects/code_project/tests/test_optimizer.py::TestSimulateTrajectory::test_iterations_are_sequential PASSED [ 97%]
+.projects/code_project/tests/test_optimizer.py::TestSimulateTrajectory::test_default_params_produce_valid_trajectory PASSED [100%]
+
+================================ tests coverage ================================
+..______________ coverage: platform darwin, python 3.12.11-final-0 _______________
+
+Name                                     Stmts   Miss Branch BrPart   Cover   Missing
+-------------------------------------------------------------------------------------
+..projects/code_project/src/optimizer.py      87      2     32      2  96.64%   132-133, 229->232
+-------------------------------------------------------------------------------------
+.TOTAL                                       87      2     32      2  96.64%
+Coverage HTML written to dir htmlcov
+.Coverage JSON written to file coverage_project.json
+..Required test coverage of 90% reached. Total coverage: 96.64%
+.============================== 39 passed in 2.04s ==============================
+[2026-03-12 13:55:18] [INFO] Running project tests for 'code_project'
+[2026-03-12 13:55:18] [INFO] ✓ Found coverage: 96.6%
+[2026-03-12 13:55:18] [WARNING] Unknown config key 'experiment' in /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/config.yaml
+[2026-03-12 13:55:18] [INFO] Project test suite completed in 5.5s
+[2026-03-12 13:55:18] [INFO] Project tests passed
+[2026-03-12 13:55:18] [INFO] Test report saved: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/test_results.json
+[2026-03-12 13:55:18] [INFO] Test summary saved: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/test_results.md
+[2026-03-12 13:55:18] [INFO] 
+[2026-03-12 13:55:18] [INFO] ==================================================
+[2026-03-12 13:55:18] [INFO] Test Execution Summary
+[2026-03-12 13:55:18] [INFO] ==================================================
+[2026-03-12 13:55:18] [INFO] 
+[2026-03-12 13:55:18] [INFO] Infrastructure Results:
+[2026-03-12 13:55:18] [INFO]   ⏭ Skipped (not run in this execution)
+[2026-03-12 13:55:18] [INFO]   📊 Coverage: N/A (tests not executed)
+[2026-03-12 13:55:18] [INFO] 
+[2026-03-12 13:55:18] [INFO] Project Results:
+[2026-03-12 13:55:18] [INFO]   ✓ Passed: 39
+[2026-03-12 13:55:18] [INFO]   📊 Coverage: ✓ 96.6% (meets 90.0% threshold)
+[2026-03-12 13:55:18] [INFO]   ⏱ Duration: 6s
+[2026-03-12 13:55:18] [INFO] 
+[2026-03-12 13:55:18] [INFO] ================================================================
+[2026-03-12 13:55:18] [INFO] Infrastructure: ⏭ SKIPPED (intentionally skipped - use --infra-only to run infrastructure tests)
+[2026-03-12 13:55:18] [INFO] Project:       ✓ PASSED (39/39 tests, 96.6% coverage)
+[2026-03-12 13:55:18] [INFO] ----------------------------------------------------------------
+[2026-03-12 13:55:18] [INFO] Total:         ✓ PASSED (39/39 tests)
+[2026-03-12 13:55:18] [INFO] Coverage:      Infrastructure: N/A | Project: 96.6%
+[2026-03-12 13:55:18] [INFO] Duration:      6s
+[2026-03-12 13:55:18] [INFO] ================================================================
+[2026-03-12 13:55:18] [INFO] All tests passed - ready for analysis
+[2026-03-12 13:55:18] [INFO] ✓ Stage 3 completed successfully (5.9s)
+[2026-03-12 13:55:18] [INFO] 
+[2026-03-12 13:55:18] [INFO] [4/8] Project Analysis (50% complete)
+[2026-03-12 13:55:18] [INFO]   Elapsed: 7s | ETA: 7s
+[2026-03-12 13:55:18] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-12 13:55:18] [INFO] 
+[2026-03-12 13:55:18] [INFO] ==================================================
+[2026-03-12 13:55:18] [INFO] STAGE 02: Run Analysis (Project: code_project)
+[2026-03-12 13:55:18] [INFO] ==================================================
+[2026-03-12 13:55:18] [INFO] [STAGE-02] Discovering analysis scripts in projects/code_project/...
+[2026-03-12 13:55:18] [INFO] Found: generate_api_docs.py (project: code_project)
+[2026-03-12 13:55:18] [INFO] Found: optimization_analysis.py (project: code_project)
+[2026-03-12 13:55:18] [INFO] Found: z_generate_manuscript_variables.py (project: code_project)
+[2026-03-12 13:55:18] [INFO] [STAGE-02] Executing analysis pipeline...
+[2026-03-12 13:55:18] [INFO]   [1/3] code_project/generate_api_docs.py
+[2026-03-12 13:55:18] [INFO] 
+  Running: code_project/generate_api_docs.py
+[2026-03-12 13:55:18] [INFO] Starting: Execute generate_api_docs.py
+[2026-03-12 13:55:18] [INFO]     ✅ Completed in 0s
+[2026-03-12 13:55:18] [INFO]   [2/3] code_project/optimization_analysis.py
+[2026-03-12 13:55:18] [INFO] 
+  Running: code_project/optimization_analysis.py
+[2026-03-12 13:55:18] [INFO] Starting: Execute optimization_analysis.py
+[2026-03-12 13:55:19] [INFO] Starting optimization analysis pipeline
+[2026-03-12 13:55:19] [INFO] Project root: /Users/4d/Documents/GitHub/template/projects/code_project
+[2026-03-12 13:55:19] [INFO] Running system health check...
+[2026-03-12 13:55:19] [INFO] System health check passed
+[2026-03-12 13:55:19] [INFO] Checkpoint manager initialized
+[2026-03-12 13:55:19] [INFO] Performance monitoring available
+[2026-03-12 13:55:19] [INFO] Running convergence experiments...
+  Step sizes [███████░░░░░░░░░░░░░░░░░░░░░░░] 1/4 (25%) ETA: 0s  Step sizes [███████░░░░░░░░░░░░░░░░░░░░░░░] 1/4 (25%) ETA: 0s
+Running convergence experiments...
+Testing step size: 0.01
+  Converged: False, Final value: -0.5000
+Testing step size: 0.1
+  Converged: True, Final value: -0.5000
+Testing step size: 0.5
+  Converged: True, Final value: -0.5000
+Testing step size: 1.0
+  Converged: True, Final value: -0.5000
+Testing step size: 1.5
+  Converged: True, Final value: -0.5000
+Testing step size: 2.5
+  Converged: False, Final value: inf
+[2026-03-12 13:55:19] [INFO]   ✅ Completed: Step sizes (0s)
+[2026-03-12 13:55:19] [INFO] Generating traditional analysis outputs...
+[2026-03-12 13:55:19] [INFO] Generating convergence plot...
+[2026-03-12 13:55:19] [INFO] Saved convergence plot to: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/convergence_plot.png
+[2026-03-12 13:55:19] [INFO] Generating step size sensitivity plot...
+[2026-03-12 13:55:19] [INFO] Saved step size sensitivity plot to: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/step_size_sensitivity.png
+[2026-03-12 13:55:19] [INFO] Generating convergence rate comparison plot...
+[2026-03-12 13:55:19] [INFO] Saved convergence rate comparison plot to: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/convergence_rate_comparison.png
+[2026-03-12 13:55:19] [INFO] Generating algorithm complexity visualization...
+[2026-03-12 13:55:20] [INFO] Saved algorithm complexity visualization to: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/algorithm_complexity.png
+[2026-03-12 13:55:20] [INFO] Saving optimization results...
+[2026-03-12 13:55:20] [INFO] Saved results to: /Users/4d/Documents/GitHub/template/projects/code_project/output/data/optimization_results.csv
+[2026-03-12 13:55:20] [INFO] Running scientific analysis...
+[2026-03-12 13:55:20] [INFO] Numerical stability analysis...
+[2026-03-12 13:55:20] [INFO] Running numerical stability analysis...
+[2026-03-12 13:55:20] [INFO] Stability analysis complete - Score: 1.00
+[2026-03-12 13:55:20] [INFO] Saved stability report to: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/stability_analysis.json
+[2026-03-12 13:55:20] [INFO] Performance benchmarking...
+[2026-03-12 13:55:20] [INFO] Running performance benchmarking...
+[2026-03-12 13:55:20] [INFO] Performance benchmarking complete - Avg time: 0.000002s
+[2026-03-12 13:55:20] [INFO] Saved benchmark report to: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/performance_benchmark.json
+[2026-03-12 13:55:20] [INFO] Generating scientific visualizations...
+[2026-03-12 13:55:20] [INFO] Generating stability visualization...
+[2026-03-12 13:55:20] [INFO] Saved stability visualization to: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/stability_analysis.png
+[2026-03-12 13:55:20] [INFO] Generating benchmark visualization...
+[2026-03-12 13:55:20] [INFO] Saved benchmark visualization to: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/performance_benchmark.png
+[2026-03-12 13:55:20] [INFO] Generating analysis dashboard...
+[2026-03-12 13:55:20] [INFO] Generating analysis dashboard...
+[2026-03-12 13:55:20] [INFO] Saved analysis dashboard to: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/analysis_dashboard.html
+[2026-03-12 13:55:20] [INFO] Registered figure with label: fig:convergence
+[2026-03-12 13:55:20] [INFO] Registered figure with label: fig:step_sensitivity
+[2026-03-12 13:55:20] [INFO] Registered figure with label: fig:convergence_rate
+[2026-03-12 13:55:20] [INFO] Registered figure with label: fig:complexity
+[2026-03-12 13:55:20] [INFO] Registered figure with label: fig:stability
+[2026-03-12 13:55:20] [INFO] Registered figure with label: fig:benchmark
+[2026-03-12 13:55:20] [INFO] Validating generated outputs...
+[2026-03-12 13:55:20] [INFO] Validating generated outputs...
+[2026-03-12 13:55:20] [INFO] Integrity check complete: 7/7 files passed
+[2026-03-12 13:55:20] [INFO] Output integrity validation passed
+[2026-03-12 13:55:20] [INFO] Saved validation report to: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/output_validation.json
+[2026-03-12 13:55:20] [INFO] Generating publishing materials...
+[2026-03-12 13:55:20] [INFO] Publishing materials saved to: /Users/4d/Documents/GitHub/template/projects/code_project/output/citations
+[2026-03-12 13:55:20] [INFO] Publishing integration demonstration...
+[2026-03-12 13:55:20] [INFO] Publishing interfaces available: Zenodo, arXiv, GitHub releases
+[2026-03-12 13:55:20] [INFO] Publication metadata extracted and formatted
+[2026-03-12 13:55:20] [INFO] Pipeline completed with infrastructure support
+[2026-03-12 13:55:20] [INFO] Generated convergence plot: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/convergence_plot.png
+[2026-03-12 13:55:20] [INFO] Generated sensitivity plot: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/step_size_sensitivity.png
+[2026-03-12 13:55:20] [INFO] Generated rate comparison plot: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/convergence_rate_comparison.png
+[2026-03-12 13:55:20] [INFO] Generated complexity visualization: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/algorithm_complexity.png
+[2026-03-12 13:55:20] [INFO] Generated data: /Users/4d/Documents/GitHub/template/projects/code_project/output/data/optimization_results.csv
+[2026-03-12 13:55:20] [INFO] Generated stability report: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/stability_analysis.json
+[2026-03-12 13:55:20] [INFO] Generated benchmark report: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/performance_benchmark.json
+[2026-03-12 13:55:20] [INFO] Generated stability visualization: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/stability_analysis.png
+[2026-03-12 13:55:20] [INFO] Generated benchmark visualization: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/performance_benchmark.png
+[2026-03-12 13:55:20] [INFO] Generated analysis dashboard: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/analysis_dashboard.html
+[2026-03-12 13:55:20] [INFO] Generated validation report: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/output_validation.json
+[2026-03-12 13:55:20] [INFO] Generated publishing materials and citations
+[2026-03-12 13:55:20] [INFO] Optimization analysis pipeline completed successfully
+[2026-03-12 13:55:20] [INFO] Completed: Execute optimization_analysis.py (2.1s)
+[2026-03-12 13:55:20] [INFO]     ✅ Completed in 2s
+[2026-03-12 13:55:20] [INFO]   Progress: 2/3 (66%) - Elapsed: 2s | ETA: 1s
+[2026-03-12 13:55:20] [INFO]   [3/3] code_project/z_generate_manuscript_variables.py
+[2026-03-12 13:55:20] [INFO] 
+  Running: code_project/z_generate_manuscript_variables.py
+[2026-03-12 13:55:20] [INFO] Starting: Execute z_generate_manuscript_variables.py
+[2026-03-12 13:55:21] [INFO] Generating manuscript variables...
+[2026-03-12 13:55:21] [INFO] Generated 51 manuscript variables
+[2026-03-12 13:55:21] [INFO] Saved 51 variables to /Users/4d/Documents/GitHub/template/projects/code_project/output/data/manuscript_variables.json
+[2026-03-12 13:55:21] [INFO] Substituted 74 variables across 11 files
+[2026-03-12 13:55:21] [INFO] Substituted manuscript files written to: /Users/4d/Documents/GitHub/template/projects/code_project/output/manuscript
+[2026-03-12 13:55:21] [INFO]     ✅ Completed in 0s
+[2026-03-12 13:55:21] [INFO]   Progress: 3/3 (100%) - Elapsed: 2s | ETA: 0s
+[2026-03-12 13:55:21] [INFO] Analysis scripts completed: 3/3 (code_project/generate_api_docs.py, code_project/optimization_analysis.py, code_project/z_generate_manuscript_variables.py)
+[2026-03-12 13:55:21] [INFO] [STAGE-02] Verifying analysis outputs for projects/code_project/...
+[2026-03-12 13:55:21] [INFO] Output directory has 7 file(s): figures
+[2026-03-12 13:55:21] [INFO] Output directory has 3 file(s): data
+[2026-03-12 13:55:21] [INFO] Analysis complete - ready for PDF rendering
+[2026-03-12 13:55:21] [INFO] ✓ Stage 4 completed successfully (2.4s)
+[2026-03-12 13:55:21] [INFO] 
+[2026-03-12 13:55:21] [INFO] [5/8] PDF Rendering (62% complete)
+[2026-03-12 13:55:21] [INFO]   Elapsed: 10s | ETA: 6s
+[2026-03-12 13:55:21] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-12 13:55:21] [INFO] 
+[2026-03-12 13:55:21] [INFO] ==================================================
+[2026-03-12 13:55:21] [INFO] STAGE 03: Render PDF (Project: code_project)
+[2026-03-12 13:55:21] [INFO] ==================================================
+[2026-03-12 13:55:21] [INFO] Executing PDF rendering pipeline for project 'code_project'...
+[2026-03-12 13:55:21] [INFO] Rendering from injected manuscript directory: /Users/4d/Documents/GitHub/template/projects/code_project/output/manuscript
+[2026-03-12 13:55:21] [INFO] Running pre-flight LaTeX package validation...
+[2026-03-12 13:55:21] [INFO] Validating 12 required and 11 optional LaTeX packages...
+[2026-03-12 13:55:23] [INFO] ✓ All LaTeX packages available
+[2026-03-12 13:55:23] [INFO] Verifying figures from analysis stage...
+[2026-03-12 13:55:23] [INFO] Found 6 figure(s) in figures/
+[2026-03-12 13:55:23] [INFO]   Found figures: algorithm_complexity.png, convergence_plot.png, convergence_rate_comparison.png
+[2026-03-12 13:55:23] [INFO]   ... and 3 more
+[2026-03-12 13:55:23] [INFO] Discovered 8 manuscript file(s):
+[2026-03-12 13:55:23] [INFO]   Main sections (7):
+[2026-03-12 13:55:23] [INFO]     • 00_abstract.md
+[2026-03-12 13:55:23] [INFO]     • 01_introduction.md
+[2026-03-12 13:55:23] [INFO]     • 02_methodology.md
+[2026-03-12 13:55:23] [INFO]     • 03_results.md
+[2026-03-12 13:55:23] [INFO]     • 04_conclusion.md
+[2026-03-12 13:55:23] [INFO]     • 05_experimental_setup.md
+[2026-03-12 13:55:23] [INFO]     • 06_reproducibility.md
+[2026-03-12 13:55:23] [INFO]   Supplemental (1):
+[2026-03-12 13:55:23] [INFO]     • SYNTAX.md
+[2026-03-12 13:55:23] [INFO] 
+============================================================
+[2026-03-12 13:55:23] [INFO] MANUSCRIPT COMPOSITION - Project: code_project
+[2026-03-12 13:55:23] [INFO] ============================================================
+[2026-03-12 13:55:23] [INFO] Markdown sections (8):
+[2026-03-12 13:55:23] [INFO]   • 00_abstract.md                           (   2.5 KB)
+[2026-03-12 13:55:23] [INFO]   • 01_introduction.md                       (   3.8 KB)
+[2026-03-12 13:55:23] [INFO]   • 02_methodology.md                        (   4.7 KB)
+[2026-03-12 13:55:23] [INFO]   • 03_results.md                            (  11.7 KB)
+[2026-03-12 13:55:23] [INFO]   • 04_conclusion.md                         (   4.4 KB)
+[2026-03-12 13:55:23] [INFO]   • 05_experimental_setup.md                 (   1.7 KB)
+[2026-03-12 13:55:23] [INFO]   • 06_reproducibility.md                    (   2.7 KB)
+[2026-03-12 13:55:23] [INFO]   • SYNTAX.md                                (   3.2 KB)
+[2026-03-12 13:55:23] [INFO]   Total markdown:                          (  34.7 KB)
+[2026-03-12 13:55:23] [INFO] ============================================================
+
+[2026-03-12 13:55:23] [INFO] Initialized RenderManager from infrastructure.rendering
+[2026-03-12 13:55:23] [INFO]   [1/8] 00_abstract.md
+[2026-03-12 13:55:23] [INFO] Rendering Markdown file: 00_abstract.md
+[2026-03-12 13:55:23] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/code_project/output/manuscript/00_abstract.md
+[2026-03-12 13:55:23] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/code_project/output/slides/00_abstract_slides.tex with xelatex
+[2026-03-12 13:55:24] [INFO] LaTeX compilation completed in 1.90s
+[2026-03-12 13:55:24] [INFO] Generated beamer slides: 00_abstract_slides.pdf
+[2026-03-12 13:55:24] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/code_project/output/manuscript/00_abstract.md
+[2026-03-12 13:55:24] [INFO] Successfully rendered 2 format(s) for 00_abstract.md
+[2026-03-12 13:55:24] [INFO] Generated: 00_abstract_slides.pdf
+[2026-03-12 13:55:24] [INFO] Generated: 00_abstract.html
+[2026-03-12 13:55:24] [INFO]     ✅ Completed in 1s
+[2026-03-12 13:55:24] [INFO]   [2/8] 01_introduction.md
+[2026-03-12 13:55:24] [INFO] Rendering Markdown file: 01_introduction.md
+[2026-03-12 13:55:24] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/code_project/output/manuscript/01_introduction.md
+[2026-03-12 13:55:25] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/code_project/output/slides/01_introduction_slides.tex with xelatex
+[2026-03-12 13:55:27] [INFO] LaTeX compilation completed in 1.96s
+[2026-03-12 13:55:27] [INFO] Generated beamer slides: 01_introduction_slides.pdf
+[2026-03-12 13:55:27] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/code_project/output/manuscript/01_introduction.md
+[2026-03-12 13:55:27] [INFO] Successfully rendered 2 format(s) for 01_introduction.md
+[2026-03-12 13:55:27] [INFO] Generated: 01_introduction_slides.pdf
+[2026-03-12 13:55:27] [INFO] Generated: 01_introduction.html
+[2026-03-12 13:55:27] [INFO]     ✅ Completed in 2s
+[2026-03-12 13:55:27] [INFO]   [3/8] 02_methodology.md
+[2026-03-12 13:55:27] [INFO] Rendering Markdown file: 02_methodology.md
+[2026-03-12 13:55:27] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/code_project/output/manuscript/02_methodology.md
+[2026-03-12 13:55:27] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/code_project/output/slides/02_methodology_slides.tex with xelatex
+[2026-03-12 13:55:29] [INFO] LaTeX compilation completed in 2.02s
+[2026-03-12 13:55:29] [INFO] Generated beamer slides: 02_methodology_slides.pdf
+[2026-03-12 13:55:29] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/code_project/output/manuscript/02_methodology.md
+[2026-03-12 13:55:29] [INFO] Successfully rendered 2 format(s) for 02_methodology.md
+[2026-03-12 13:55:29] [INFO] Generated: 02_methodology_slides.pdf
+[2026-03-12 13:55:29] [INFO] Generated: 02_methodology.html
+[2026-03-12 13:55:29] [INFO]     ✅ Completed in 2s
+[2026-03-12 13:55:29] [INFO]   [4/8] 03_results.md
+[2026-03-12 13:55:29] [INFO] Rendering Markdown file: 03_results.md
+[2026-03-12 13:55:29] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/code_project/output/manuscript/03_results.md
+[2026-03-12 13:55:29] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/code_project/output/slides/03_results_slides.tex with xelatex
+[2026-03-12 13:55:36] [INFO] LaTeX compilation completed in 6.82s
+[2026-03-12 13:55:36] [INFO] Generated beamer slides: 03_results_slides.pdf
+[2026-03-12 13:55:36] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/code_project/output/manuscript/03_results.md
+[2026-03-12 13:55:36] [INFO] Successfully rendered 2 format(s) for 03_results.md
+[2026-03-12 13:55:36] [INFO] Generated: 03_results_slides.pdf
+[2026-03-12 13:55:36] [INFO] Generated: 03_results.html
+[2026-03-12 13:55:36] [INFO]     ✅ Completed in 6s
+[2026-03-12 13:55:36] [INFO]   [5/8] 04_conclusion.md
+[2026-03-12 13:55:36] [INFO] Rendering Markdown file: 04_conclusion.md
+[2026-03-12 13:55:36] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/code_project/output/manuscript/04_conclusion.md
+[2026-03-12 13:55:36] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/code_project/output/slides/04_conclusion_slides.tex with xelatex
+[2026-03-12 13:55:38] [INFO] LaTeX compilation completed in 1.96s
+[2026-03-12 13:55:38] [INFO] Generated beamer slides: 04_conclusion_slides.pdf
+[2026-03-12 13:55:38] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/code_project/output/manuscript/04_conclusion.md
+[2026-03-12 13:55:38] [INFO] Successfully rendered 2 format(s) for 04_conclusion.md
+[2026-03-12 13:55:38] [INFO] Generated: 04_conclusion_slides.pdf
+[2026-03-12 13:55:38] [INFO] Generated: 04_conclusion.html
+[2026-03-12 13:55:38] [INFO]     ✅ Completed in 2s
+[2026-03-12 13:55:38] [INFO]   [6/8] 05_experimental_setup.md
+[2026-03-12 13:55:38] [INFO] Rendering Markdown file: 05_experimental_setup.md
+[2026-03-12 13:55:38] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/code_project/output/manuscript/05_experimental_setup.md
+[2026-03-12 13:55:38] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/code_project/output/slides/05_experimental_setup_slides.tex with xelatex
+[2026-03-12 13:55:40] [INFO] LaTeX compilation completed in 1.99s
+[2026-03-12 13:55:40] [INFO] Generated beamer slides: 05_experimental_setup_slides.pdf
+[2026-03-12 13:55:40] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/code_project/output/manuscript/05_experimental_setup.md
+[2026-03-12 13:55:40] [INFO] Successfully rendered 2 format(s) for 05_experimental_setup.md
+[2026-03-12 13:55:40] [INFO] Generated: 05_experimental_setup_slides.pdf
+[2026-03-12 13:55:40] [INFO] Generated: 05_experimental_setup.html
+[2026-03-12 13:55:40] [INFO]     ✅ Completed in 2s
+[2026-03-12 13:55:40] [INFO]   [7/8] 06_reproducibility.md
+[2026-03-12 13:55:40] [INFO] Rendering Markdown file: 06_reproducibility.md
+[2026-03-12 13:55:40] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/code_project/output/manuscript/06_reproducibility.md
+[2026-03-12 13:55:40] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/code_project/output/slides/06_reproducibility_slides.tex with xelatex
+[2026-03-12 13:55:42] [INFO] LaTeX compilation completed in 2.00s
+[2026-03-12 13:55:42] [INFO] Generated beamer slides: 06_reproducibility_slides.pdf
+[2026-03-12 13:55:42] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/code_project/output/manuscript/06_reproducibility.md
+[2026-03-12 13:55:42] [INFO] Successfully rendered 2 format(s) for 06_reproducibility.md
+[2026-03-12 13:55:42] [INFO] Generated: 06_reproducibility_slides.pdf
+[2026-03-12 13:55:42] [INFO] Generated: 06_reproducibility.html
+[2026-03-12 13:55:42] [INFO]     ✅ Completed in 2s
+[2026-03-12 13:55:42] [INFO]   [8/8] SYNTAX.md
+[2026-03-12 13:55:42] [INFO] Rendering Markdown file: SYNTAX.md
+[2026-03-12 13:55:42] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/code_project/output/manuscript/SYNTAX.md
+[2026-03-12 13:55:42] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/code_project/output/slides/SYNTAX_slides.tex with xelatex
+[2026-03-12 13:55:44] [INFO] LaTeX compilation completed in 2.02s
+[2026-03-12 13:55:44] [INFO] Generated beamer slides: SYNTAX_slides.pdf
+[2026-03-12 13:55:44] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/code_project/output/manuscript/SYNTAX.md
+[2026-03-12 13:55:44] [INFO] Successfully rendered 2 format(s) for SYNTAX.md
+[2026-03-12 13:55:44] [INFO] Generated: SYNTAX_slides.pdf
+[2026-03-12 13:55:44] [INFO] Generated: SYNTAX.html
+[2026-03-12 13:55:44] [INFO]     ✅ Completed in 2s
+[2026-03-12 13:55:44] [INFO] 
+============================================================
+[2026-03-12 13:55:44] [INFO] Generating combined PDF manuscript...
+[2026-03-12 13:55:44] [INFO] Rendering combined PDF from 8 files...
+[2026-03-12 13:55:44] [INFO] 
+============================================================
+[2026-03-12 13:55:44] [INFO] COMBINED MANUSCRIPT RENDERING
+[2026-03-12 13:55:44] [INFO] ============================================================
+[2026-03-12 13:55:44] [INFO] Combining 8 section(s):
+[2026-03-12 13:55:44] [INFO]   [ 1/8] 00_abstract.md                           (   2.5 KB)
+[2026-03-12 13:55:44] [INFO]   [ 2/8] 01_introduction.md                       (   3.8 KB)
+[2026-03-12 13:55:44] [INFO]   [ 3/8] 02_methodology.md                        (   4.7 KB)
+[2026-03-12 13:55:44] [INFO]   [ 4/8] 03_results.md                            (  11.7 KB)
+[2026-03-12 13:55:44] [INFO]   [ 5/8] 04_conclusion.md                         (   4.4 KB)
+[2026-03-12 13:55:44] [INFO]   [ 6/8] 05_experimental_setup.md                 (   1.7 KB)
+[2026-03-12 13:55:44] [INFO]   [ 7/8] 06_reproducibility.md                    (   2.7 KB)
+[2026-03-12 13:55:44] [INFO]   [ 8/8] SYNTAX.md                                (   3.2 KB)
+[2026-03-12 13:55:44] [INFO]   Total input size:                                (  34.7 KB)
+[2026-03-12 13:55:44] [INFO] ============================================================
+
+[2026-03-12 13:55:44] [INFO] Converting combined markdown to LaTeX...
+[2026-03-12 13:55:45] [INFO] ✓ Disabled lmodern package to prevent XeLaTeX font conflicts
+[2026-03-12 13:55:45] [INFO] ✓ Fixed 6 figure path(s)
+[2026-03-12 13:55:45] [INFO] ✓ Extracted preamble from preamble.md
+[2026-03-12 13:55:45] [INFO] ✓ Inserted title page (\maketitle), TOC, and newpage after \begin{document}
+[2026-03-12 13:55:45] [INFO] ✓ Inserted \bibliography{references} before \end{document}
+[2026-03-12 13:55:45] [INFO] ✓ Inserted early \bibdata hook for .aux buffer safety
+[2026-03-12 13:55:45] [INFO] Verifying 6 figure reference(s)...
+[2026-03-12 13:55:45] [INFO]   Found: 6/6 figures
+[2026-03-12 13:55:45] [INFO] Rendering combined manuscript to PDF: code_project_combined.pdf
+[2026-03-12 13:55:45] [INFO]   Source files: 8
+[2026-03-12 13:55:45] [INFO]   Bibliography: references.bib
+[2026-03-12 13:55:45] [INFO]   LaTeX compilation pass 1/4...
+[2026-03-12 13:55:48] [INFO]   Bibliography processing...
+[2026-03-12 13:55:48] [INFO] Processing bibliography with bibtex...
+[2026-03-12 13:55:58] [INFO] 
+✅ Successfully combined 8 sections
+[2026-03-12 13:55:58] [INFO]    Output: code_project_combined.pdf
+[2026-03-12 13:55:58] [INFO]    Size: 1664.5 KB (1.63 MB)
+[2026-03-12 13:55:58] [INFO]    Location: /Users/4d/Documents/GitHub/template/projects/code_project/output/pdf
+[2026-03-12 13:55:58] [INFO]    Duration: 13.64 seconds
+[2026-03-12 13:55:58] [INFO] ✅ Generated combined PDF: code_project_combined.pdf
+[2026-03-12 13:55:58] [INFO] 
+============================================================
+[2026-03-12 13:55:58] [INFO] Generating combined HTML manuscript...
+[2026-03-12 13:55:58] [INFO] Rendering combined HTML from 8 files...
+[2026-03-12 13:55:58] [INFO] 
+============================================================
+[2026-03-12 13:55:58] [INFO] COMBINED HTML RENDERING
+[2026-03-12 13:55:58] [INFO] ============================================================
+[2026-03-12 13:55:58] [INFO] Combining 8 section(s):
+[2026-03-12 13:55:58] [INFO]   [ 1/8] 00_abstract.md                           (   2.5 KB)
+[2026-03-12 13:55:58] [INFO]   [ 2/8] 01_introduction.md                       (   3.8 KB)
+[2026-03-12 13:55:58] [INFO]   [ 3/8] 02_methodology.md                        (   4.7 KB)
+[2026-03-12 13:55:58] [INFO]   [ 4/8] 03_results.md                            (  11.7 KB)
+[2026-03-12 13:55:58] [INFO]   [ 5/8] 04_conclusion.md                         (   4.4 KB)
+[2026-03-12 13:55:58] [INFO]   [ 6/8] 05_experimental_setup.md                 (   1.7 KB)
+[2026-03-12 13:55:58] [INFO]   [ 7/8] 06_reproducibility.md                    (   2.7 KB)
+[2026-03-12 13:55:58] [INFO]   [ 8/8] SYNTAX.md                                (   3.2 KB)
+[2026-03-12 13:55:58] [INFO]   Total input size:                                (  34.7 KB)
+[2026-03-12 13:55:58] [INFO] ============================================================
+
+[2026-03-12 13:55:58] [INFO] Converting combined markdown to HTML...
+[2026-03-12 13:55:58] [INFO] ✓ Embedded CSS styling in index.html
+[2026-03-12 13:55:58] [INFO] ✅ Generated combined HTML: index.html
+[2026-03-12 13:55:58] [INFO] 
+Rendering Summary:
+[2026-03-12 13:55:58] [INFO]   Individual files processed: 8
+[2026-03-12 13:55:58] [INFO]   Markdown files: 8
+[2026-03-12 13:55:58] [INFO] 
+============================================================
+[2026-03-12 13:55:58] [INFO] RENDERING RESULTS SUMMARY
+[2026-03-12 13:55:58] [INFO] ============================================================
+[2026-03-12 13:55:58] [INFO] Project: code_project
+[2026-03-12 13:55:58] [INFO] 
+📕 Combined Manuscript PDF:
+[2026-03-12 13:55:58] [INFO]    code_project_combined.pdf                  1664.5 KB
+[2026-03-12 13:55:58] [INFO]    Location: /Users/4d/Documents/GitHub/template/projects/code_project/output/pdf/code_project_combined.pdf
+[2026-03-12 13:55:58] [INFO] 
+🌐 Combined Manuscript HTML:
+[2026-03-12 13:55:58] [INFO]    index.html                                   77.0 KB
+[2026-03-12 13:55:58] [INFO]    Location: /Users/4d/Documents/GitHub/template/projects/code_project/output/web/index.html
+[2026-03-12 13:55:58] [INFO] 
+🌐 Web Outputs (8):
+[2026-03-12 13:55:58] [INFO]    00_abstract.html                              6.6 KB
+[2026-03-12 13:55:58] [INFO]    01_introduction.html                          8.6 KB
+[2026-03-12 13:55:58] [INFO]    02_methodology.html                          10.2 KB
+[2026-03-12 13:55:58] [INFO]    03_results.html                              22.8 KB
+[2026-03-12 13:55:58] [INFO]    04_conclusion.html                            9.2 KB
+[2026-03-12 13:55:58] [INFO]    05_experimental_setup.html                    6.4 KB
+[2026-03-12 13:55:58] [INFO]    06_reproducibility.html                       7.3 KB
+[2026-03-12 13:55:58] [INFO]    SYNTAX.html                                  16.1 KB
+[2026-03-12 13:55:58] [INFO] 
+📊 Presentation Slides (8):
+[2026-03-12 13:55:58] [INFO]    00_abstract_slides.pdf                       18.2 KB
+[2026-03-12 13:55:58] [INFO]    01_introduction_slides.pdf                   29.8 KB
+[2026-03-12 13:55:58] [INFO]    02_methodology_slides.pdf                    37.9 KB
+[2026-03-12 13:55:58] [INFO]    03_results_slides.pdf                      1574.8 KB
+[2026-03-12 13:55:58] [INFO]    04_conclusion_slides.pdf                     27.7 KB
+[2026-03-12 13:55:58] [INFO]    05_experimental_setup_slides.pdf             21.9 KB
+[2026-03-12 13:55:58] [INFO]    06_reproducibility_slides.pdf                22.7 KB
+[2026-03-12 13:55:58] [INFO]    SYNTAX_slides.pdf                            34.7 KB
+[2026-03-12 13:55:58] [INFO] 
+📦 Total Output Size: 1741.5 KB (1.70 MB)
+[2026-03-12 13:55:58] [INFO] ============================================================
+
+[2026-03-12 13:55:58] [INFO] PDF rendering pipeline completed
+[2026-03-12 13:55:58] [INFO] Verifying PDF outputs...
+[2026-03-12 13:55:58] [INFO] Generated 1 PDF file(s)
+[2026-03-12 13:55:58] [INFO]   📕 code_project_combined.pdf (1.63 MB) ✓
+[2026-03-12 13:55:58] [INFO] 
+✅ Bibliography file found and will be processed
+[2026-03-12 13:55:58] [INFO] 
+✅ Combined manuscript PDF successfully generated!
+[2026-03-12 13:55:58] [INFO]   File size: 1.63 MB
+[2026-03-12 13:55:58] [INFO]   Valid PDFs: 1/1
+[2026-03-12 13:55:58] [INFO] PDF rendering complete - ready for validation
+[2026-03-12 13:55:59] [INFO] ✓ Stage 5 completed successfully (37.9s)
+[2026-03-12 13:55:59] [INFO] 
+[2026-03-12 13:55:59] [INFO] [6/8] Output Validation (75% complete)
+[2026-03-12 13:55:59] [INFO]   Elapsed: 48s | ETA: 16s
+[2026-03-12 13:55:59] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-12 13:55:59] [INFO] 
+[2026-03-12 13:55:59] [INFO] ==================================================
+[2026-03-12 13:55:59] [INFO] STAGE 04: Validate Output (Project: code_project)
+[2026-03-12 13:55:59] [INFO] ==================================================
+[2026-03-12 13:55:59] [INFO]   [1/2] Running PDF validation...
+[2026-03-12 13:55:59] [INFO] 
+  Validating PDF files...
+[2026-03-12 13:55:59] [INFO] PDF valid: code_project_combined.pdf (1704428 bytes)
+[2026-03-12 13:55:59] [INFO]   [1/2] PDF validation: ✅ PASSED
+[2026-03-12 13:55:59] [INFO]   [2/2] Running Markdown validation...
+[2026-03-12 13:55:59] [INFO] 
+  Validating markdown files...
+[2026-03-12 13:55:59] [INFO] Found 11 markdown file(s)
+[2026-03-12 13:55:59] [INFO] Running markdown validation...
+[2026-03-12 13:55:59] [INFO] Markdown validation passed (no issues found)
+[2026-03-12 13:55:59] [INFO]   [2/2] Markdown validation: ✅ PASSED
+[2026-03-12 13:55:59] [INFO] 
+  Verifying output structure...
+[2026-03-12 13:55:59] [INFO] Output structure is valid
+[2026-03-12 13:55:59] [INFO] 
+  Validating figure registry...
+[2026-03-12 13:55:59] [INFO] Figure registry loaded: 6 figure(s)
+[2026-03-12 13:55:59] [INFO] All 6 figure references verified
+[2026-03-12 13:55:59] [INFO] 
+  Generating validation report...
+[2026-03-12 13:55:59] [INFO] Validation reports saved: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/validation_report.json, /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/validation_report.md
+[2026-03-12 13:55:59] [INFO] 
+============================================================
+[2026-03-12 13:55:59] [INFO] VALIDATION SUMMARY
+[2026-03-12 13:55:59] [INFO] ============================================================
+[2026-03-12 13:55:59] [INFO] Project: code_project
+[2026-03-12 13:55:59] [INFO] Timestamp: 2026-03-12 13:55:59
+[2026-03-12 13:55:59] [INFO] 
+[2026-03-12 13:55:59] [INFO] Individual Check Results:
+[2026-03-12 13:55:59] [INFO]   ✅ PASS: PDF validation
+[2026-03-12 13:55:59] [INFO]   ✅ PASS: Markdown validation
+[2026-03-12 13:55:59] [INFO]   ✅ PASS: Output structure
+[2026-03-12 13:55:59] [INFO]   ✅ PASS: Figure registry
+[2026-03-12 13:55:59] [INFO] 
+[2026-03-12 13:55:59] [INFO] Output Structure Status:
+[2026-03-12 13:55:59] [INFO]   ✅ Output directory structure is valid
+[2026-03-12 13:55:59] [INFO] 
+[2026-03-12 13:55:59] [INFO] ============================================================
+[2026-03-12 13:55:59] [INFO] ✅ VALIDATION COMPLETE - All checks passed!
+[2026-03-12 13:55:59] [INFO]   → Pipeline can proceed to next stage
+[2026-03-12 13:55:59] [INFO] ✓ Stage 6 completed successfully (0.4s)
+[2026-03-12 13:55:59] [INFO] 
+[2026-03-12 13:55:59] [INFO] [7/8] Copy Outputs (87% complete)
+[2026-03-12 13:55:59] [INFO]   Elapsed: 48s | ETA: 6s
+[2026-03-12 13:55:59] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-12 13:55:59] [INFO] Running output copying...
+[2026-03-12 13:55:59] [INFO] 
+[2026-03-12 13:55:59] [INFO] ==================================================
+[2026-03-12 13:55:59] [INFO] STAGE 05: Copy Outputs (Project: code_project)
+[2026-03-12 13:55:59] [INFO] ==================================================
+[2026-03-12 13:55:59] [INFO] Cleaning root-level directories from output/ directory...
+[2026-03-12 13:55:59] [INFO] Root output directory cleaned
+[2026-03-12 13:55:59] [INFO] Cleaning output directory...
+[2026-03-12 13:55:59] [INFO] Output directory cleaned
+[2026-03-12 13:55:59] [INFO] Copying all outputs for project 'code_project'...
+[2026-03-12 13:55:59] [INFO] Recursively copied project/output/ directory
+[2026-03-12 13:55:59] [INFO]   pdf/: 10 file(s)
+[2026-03-12 13:55:59] [INFO]   web/: 10 file(s)
+[2026-03-12 13:55:59] [INFO]   slides/: 64 file(s)
+[2026-03-12 13:55:59] [INFO]   figures/: 7 file(s)
+[2026-03-12 13:55:59] [INFO]   data/: 3 file(s)
+[2026-03-12 13:55:59] [INFO]   reports/: 8 file(s)
+[2026-03-12 13:55:59] [INFO]   simulations/: 0 file(s)
+[2026-03-12 13:55:59] [INFO]   llm/: 0 file(s)
+[2026-03-12 13:55:59] [INFO]   Found 1 log file(s) in logs/
+[2026-03-12 13:55:59] [INFO]   logs/: 1 file(s)
+[2026-03-12 13:55:59] [INFO] Copied combined PDF to root (1.63 MB)
+[2026-03-12 13:55:59] [INFO]   Root PDF: /Users/4d/Documents/GitHub/template/output/code_project/code_project_combined.pdf (1,704,428 bytes)
+[2026-03-12 13:55:59] [INFO] Validating copied outputs...
+[2026-03-12 13:55:59] [INFO] Combined PDF valid (1.63 MB)
+[2026-03-12 13:55:59] [INFO] pdf/ valid (10 files, 1.82 MB)
+[2026-03-12 13:55:59] [INFO] web/ valid (10 files, 0.19 MB)
+[2026-03-12 13:55:59] [INFO] slides/ valid (64 files, 2.39 MB)
+[2026-03-12 13:55:59] [INFO] figures/ valid (7 files, 1.52 MB)
+[2026-03-12 13:55:59] [INFO] data/ valid (3 files, 0.01 MB)
+[2026-03-12 13:55:59] [INFO] reports/ valid (8 files, 0.01 MB)
+[2026-03-12 13:55:59] [INFO] logs/ valid (1 files, 0.00 MB)
+[2026-03-12 13:55:59] [INFO] 
+OUTPUT STATISTICS REPORT
+============================================================
+
+Output Directory: /Users/4d/Documents/GitHub/template/output/code_project
+
+Total Files: 103
+Total Size: 5.94 MB
+
+Files by Category:
+  • pdf: 10 files (1.82 MB)
+  • web: 10 files (0.19 MB)
+  • slides: 64 files (2.39 MB)
+  • figures: 7 files (1.52 MB)
+  • data: 3 files (0.01 MB)
+  • reports: 8 files (0.01 MB)
+  • logs: 1 files (0.00 MB)
+
+Largest Files:
+  • code_project_combined.pdf: 1.63 MB (pdf)
+  • 03_results_slides.pdf: 1.54 MB (slides)
+  • algorithm_complexity.png: 0.38 MB (figures)
+  • convergence_rate_comparison.png: 0.30 MB (figures)
+  • step_size_sensitivity.png: 0.24 MB (figures)
+
+File Types:
+  • .log: 11 file(s)
+  • .html: 10 file(s)
+  • .aux: 9 file(s)
+  • .pdf: 9 file(s)
+  • .tex: 9 file(s)
+  • .toc: 9 file(s)
+  • .snm: 8 file(s)
+  • .vrb: 8 file(s)
+  • .nav: 8 file(s)
+  • .json: 8 file(s)
+
+[2026-03-12 13:55:59] [INFO] Detailed output statistics saved to: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/output_statistics.txt
+[2026-03-12 13:55:59] [INFO] Output statistics JSON saved to: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/output_statistics.json
+[2026-03-12 13:55:59] [INFO] 
+============================================================
+[2026-03-12 13:55:59] [INFO] Output Copying Summary
+[2026-03-12 13:55:59] [INFO] ============================================================
+[2026-03-12 13:55:59] [INFO] 
+Output directory: /Users/4d/Documents/GitHub/template/output/code_project
+[2026-03-12 13:55:59] [INFO] 
+Files copied by directory:
+[2026-03-12 13:55:59] [INFO]   • PDF files: 10
+[2026-03-12 13:55:59] [INFO]   • Web files: 10
+[2026-03-12 13:55:59] [INFO]   • Slides files: 64
+[2026-03-12 13:55:59] [INFO]   • Figures: 7
+[2026-03-12 13:55:59] [INFO]   • Data files: 3
+[2026-03-12 13:55:59] [INFO]   • Reports: 8
+[2026-03-12 13:55:59] [INFO]   • Simulations: 0
+[2026-03-12 13:55:59] [INFO]   • LLM reviews: 0
+[2026-03-12 13:55:59] [INFO]   • Log files: 1
+[2026-03-12 13:55:59] [INFO]   • Combined PDF (root): 1
+[2026-03-12 13:55:59] [INFO] 
+  Total files copied: 103
+[2026-03-12 13:55:59] [INFO] 
+Directory structure:
+[2026-03-12 13:55:59] [INFO]   ✓ project_combined_pdf: 1.63 MB
+[2026-03-12 13:55:59] [INFO]   ✓ pdf: 10 files, 1.82 MB
+[2026-03-12 13:55:59] [INFO]   ✓ web: 10 files, 0.19 MB
+[2026-03-12 13:55:59] [INFO]   ✓ slides: 64 files, 2.39 MB
+[2026-03-12 13:55:59] [INFO]   ✓ figures: 7 files, 1.52 MB
+[2026-03-12 13:55:59] [INFO]   ✓ data: 3 files, 0.01 MB
+[2026-03-12 13:55:59] [INFO]   ✓ reports: 8 files, 0.01 MB
+[2026-03-12 13:55:59] [INFO]   ✓ simulations: 0 files, 0.0 MB
+[2026-03-12 13:55:59] [INFO]   ✓ llm: 0 files, 0.0 MB
+[2026-03-12 13:55:59] [INFO]   ✓ logs: 1 files, 0.0 MB
+[2026-03-12 13:55:59] [INFO] 
+[2026-03-12 13:55:59] [INFO] 
+✅ Output copying complete - all project outputs ready!
+[2026-03-12 13:55:59] [INFO] ✓ Stage 7 completed successfully (0.3s)
+[2026-03-12 13:55:59] [INFO] ✅ Project 'code_project' completed successfully
+[2026-03-12 13:55:59] [INFO] Completed: Pipeline execution for code_project (48.8s)
+[2026-03-12 13:55:59] [INFO] Project 2/2: template
+[2026-03-12 13:55:59] [INFO] Starting: Pipeline execution for template
+[2026-03-12 13:55:59] [INFO] Executing core pipeline for project 'template'
+[2026-03-12 13:55:59] [INFO] 
+[2026-03-12 13:55:59] [INFO] [1/8] Clean Output Directories (12% complete)
+[2026-03-12 13:55:59] [INFO]   Elapsed: 0s | ETA: 0s
+[2026-03-12 13:55:59] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-12 13:55:59] [INFO] Cleaning output directories...
+[2026-03-12 13:55:59] [INFO] Cleaning root-level directories from output/ directory...
+[2026-03-12 13:55:59] [INFO] Root output directory cleaned
+[2026-03-12 13:55:59] [INFO]   Cleaning projects/template/output/...
+[2026-03-12 13:55:59] [INFO]   Archived 1 log file(s) to logs/archive/
+[2026-03-12 13:55:59] [INFO] Cleaned projects/template/output/ (recreated subdirectories)
+[2026-03-12 13:55:59] [INFO]   Cleaning output/template/...
+[2026-03-12 13:55:59] [INFO] Cleaned output/template/ (recreated subdirectories)
+[2026-03-12 13:55:59] [INFO] Output directories cleaned for project 'template' - fresh start
+[2026-03-12 13:55:59] [INFO] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/template/output/logs/pipeline.log
+[2026-03-12 13:55:59] [INFO] ✓ Stage 1 completed successfully (0.0s)
+[2026-03-12 13:55:59] [INFO] 
+[2026-03-12 13:55:59] [INFO] [2/8] Environment Setup (25% complete)
+[2026-03-12 13:55:59] [INFO]   Elapsed: 0s | ETA: 0s
+[2026-03-12 13:55:59] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-12 13:55:59] [INFO] 
+[2026-03-12 13:55:59] [INFO] ==================================================
+[2026-03-12 13:55:59] [INFO] STAGE 00: Environment Setup (Project: template)
+[2026-03-12 13:55:59] [INFO] ==================================================
+[2026-03-12 13:55:59] [INFO] Cleaning coverage database files...
+[2026-03-12 13:56:00] [INFO] Removed coverage files: .coverage.project, coverage_project.json
+[2026-03-12 13:56:00] [INFO] Coverage database cleanup completed
+[2026-03-12 13:56:00] [INFO] Python 3.12.11 available
+[2026-03-12 13:56:00] [INFO] Checking for uv package manager...
+[2026-03-12 13:56:00] [INFO] Workspace dependencies synced successfully with uv
+[2026-03-12 13:56:00] [INFO] All 2 build tools available
+[2026-03-12 13:56:00] [INFO] All 22 directories ready
+[2026-03-12 13:56:00] [INFO] All 4 required directories present
+[2026-03-12 13:56:00] [INFO] Discovering available projects...
+[2026-03-12 13:56:00] [INFO] Discovered 2 valid project(s):
+[2026-03-12 13:56:00] [INFO]     code_project: src, tests, scripts, manuscript
+[2026-03-12 13:56:00] [INFO]   → template: src, tests, scripts, manuscript
+[2026-03-12 13:56:00] [INFO]     Setting up: template
+[2026-03-12 13:56:00] [INFO] Environment variables configured (MPLBACKEND, PYTHONIOENCODING, PROJECT_ROOT)
+[2026-03-12 13:56:00] [INFO] 
+[2026-03-12 13:56:00] [INFO] ==================================================
+[2026-03-12 13:56:00] [INFO] Setup Summary
+[2026-03-12 13:56:00] [INFO] ==================================================
+[2026-03-12 13:56:00] [INFO] ✅ PASS: Python version
+[2026-03-12 13:56:00] [INFO] ✅ PASS: Dependencies
+[2026-03-12 13:56:00] [INFO] ✅ PASS: Build tools
+[2026-03-12 13:56:00] [INFO] ✅ PASS: Directory structure
+[2026-03-12 13:56:00] [INFO] ✅ PASS: Source structure
+[2026-03-12 13:56:00] [INFO] ✅ PASS: Project discovery
+[2026-03-12 13:56:00] [INFO] ✅ PASS: Environment variables
+[2026-03-12 13:56:00] [INFO] 
+✅ Environment setup complete - ready to proceed
+[2026-03-12 13:56:00] [INFO] ✓ Stage 2 completed successfully (1.0s)
+[2026-03-12 13:56:00] [INFO] 
+[2026-03-12 13:56:00] [INFO] [3/8] Project Tests (37% complete)
+[2026-03-12 13:56:00] [INFO]   Elapsed: 1s | ETA: 1s
+[2026-03-12 13:56:00] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-12 13:56:01] [INFO] 
+[2026-03-12 13:56:01] [INFO] ==================================================
+[2026-03-12 13:56:01] [INFO] STAGE 01: Run Tests (Project: template)
+[2026-03-12 13:56:01] [INFO] ==================================================
+[2026-03-12 13:56:01] [INFO] 
+[2026-03-12 13:56:01] [INFO] ==================================================
+[2026-03-12 13:56:01] [INFO] Phase 1/1: Project Tests (template) (Only)
+[2026-03-12 13:56:01] [INFO] ==================================================
+[2026-03-12 13:56:01] [INFO] Cleaning coverage database files...
+[2026-03-12 13:56:01] [INFO] Coverage database cleanup completed
+[2026-03-12 13:56:01] [WARNING] Unknown config key 'experiment' in /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/config.yaml
+[2026-03-12 13:56:01] [INFO] 
+  Running project tests for 'template' (90% coverage threshold)...
+[2026-03-12 13:56:01] [INFO] Test path: /Users/4d/Documents/GitHub/template/projects/template/tests
+[2026-03-12 13:56:01] [INFO] Coverage target: projects/template/src (90% minimum)
+[2026-03-12 13:56:02] [INFO] 
+  Discovering project 'template' tests...
+[2026-03-12 13:56:02] [INFO] Discovered 36 project 'template' tests
+Running project tests for 'template'
+============================= test session starts ==============================
+......platform darwin -- Python 3.12.11, pytest-9.0.2, pluggy-1.6.0
+rootdir: /Users/4d/Documents/GitHub/template/projects/template
+.configfile: pyproject.toml
+........plugins: timeout-2.4.0, asyncio-1.3.0, pytest_httpserver-1.1.3, cov-7.0.0
+.asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 36 items
+
+.................................projects/template/tests/test_meta.py .........FF..................F..... [ 97%]
+..                                                                        [100%]
+
+=================================== FAILURES ===================================
+.______________ TestDiscoverProjects.test_discovers_three_projects ______________
+.projects/template/tests/test_meta.py:94: in test_discovers_three_projects
+    assert len(projects) >= 3, f"Expected ≥3 projects, got {len(projects)}: {names}"
+E   AssertionError: Expected ≥3 projects, got 2: ['code_project', 'template']
+E   assert 2 >= 3
+...E    +  where 2 = len([ProjectInfo(name='code_project', path=PosixPath('/Users/4d/Documents/GitHub/template/projects/code_project'), has_man...enabled': False}}, 'testing': {'max_test_failures': 0, 'max_infra_test_failures': 3, 'max_project_test_failures': 0}})])
+----------------------------- Captured stdout call -----------------------------
+[2026-03-12 13:56:04] [INFO] Discovered 2 projects
+------------------------------ Captured log call -------------------------------
+..INFO     template.introspection:introspection.py:216 Discovered 2 projects
+._______________ TestDiscoverProjects.test_known_projects_present _______________
+.projects/template/tests/test_meta.py:101: in test_known_projects_present
+    assert not missing, f"Missing projects: {missing}"
+E   AssertionError: Missing projects: {'medical_ai'}
+E   assert not {'medical_ai'}
+----------------------------- Captured stdout call -----------------------------
+[2026-03-12 13:56:04] [INFO] Discovered 2 projects
+------------------------------ Captured log call -------------------------------
+..INFO     template.introspection:introspection.py:216 Discovered 2 projects
+.____________ TestBuildInfrastructureReport.test_report_has_projects ____________
+.projects/template/tests/test_meta.py:219: in test_report_has_projects
+.    assert report.project_count >= 3
+E   AssertionError: assert 2 >= 3
+.......E    +  where 2 = InfrastructureReport(repo_root=PosixPath('/Users/4d/Documents/GitHub/template'), infrastructure_version='2.0.0', modul...ocuments/GitHub/template/scripts/07_generate_executive_report.py'))], total_python_files=34984, total_test_files=10892).project_count
+----------------------------- Captured stdout call -----------------------------
+[2026-03-12 13:56:05] [INFO] Discovered 10 infrastructure modules
+[2026-03-12 13:56:05] [INFO] Discovered 2 projects
+[2026-03-12 13:56:05] [INFO] Discovered 8 pipeline stages
+[2026-03-12 13:56:06] [INFO] Infrastructure report: 10 modules, 2 projects, 8 stages, 34984 Python files
+------------------------------ Captured log call -------------------------------
+..INFO     template.introspection:introspection.py:152 Discovered 10 infrastructure modules
+..INFO     template.introspection:introspection.py:216 Discovered 2 projects
+..INFO     template.introspection:introspection.py:250 Discovered 8 pipeline stages
+..INFO     template.introspection:introspection.py:328 Infrastructure report: 10 modules, 2 projects, 8 stages, 34984 Python files
+================================ tests coverage ================================
+..______________ coverage: platform darwin, python 3.12.11-final-0 _______________
+
+Name                                              Stmts   Miss  Cover   Missing
+-------------------------------------------------------------------------------
+.projects/template/src/template/__init__.py            3      0   100%
+.projects/template/src/template/introspection.py     152     11    93%   135-140, 179, 186-187, 271-273, 315-316
+-------------------------------------------------------------------------------
+TOTAL                                               155     11    93%
+Coverage HTML written to dir htmlcov
+.Coverage JSON written to file coverage_project.json
+..Required test coverage of 90% reached. Total coverage: 92.90%
+=========================== short test summary info ============================
+.FAILED projects/template/tests/test_meta.py::TestDiscoverProjects::test_discovers_three_projects
+.FAILED projects/template/tests/test_meta.py::TestDiscoverProjects::test_known_projects_present
+.FAILED projects/template/tests/test_meta.py::TestBuildInfrastructureReport::test_report_has_projects
+.========================= 3 failed, 33 passed in 8.81s =========================
+[2026-03-12 13:56:12] [INFO] Running project tests for 'template'
+[2026-03-12 13:56:12] [INFO] ✓ Found coverage: 92.9%
+[2026-03-12 13:56:12] [WARNING] Unknown config key 'experiment' in /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/config.yaml
+[2026-03-12 13:56:12] [ERROR] Project: 3 failure(s) exceeds tolerance (max: 0)
+[2026-03-12 13:56:12] [INFO] Project test suite completed in 11.1s
+[2026-03-12 13:56:12] [INFO] Test report saved: /Users/4d/Documents/GitHub/template/projects/template/output/reports/test_results.json
+[2026-03-12 13:56:12] [INFO] Test summary saved: /Users/4d/Documents/GitHub/template/projects/template/output/reports/test_results.md
+[2026-03-12 13:56:12] [INFO] 
+[2026-03-12 13:56:12] [INFO] ==================================================
+[2026-03-12 13:56:12] [INFO] Test Execution Summary
+[2026-03-12 13:56:12] [INFO] ==================================================
+[2026-03-12 13:56:12] [INFO] 
+[2026-03-12 13:56:12] [INFO] Infrastructure Results:
+[2026-03-12 13:56:12] [INFO]   ⏭ Skipped (not run in this execution)
+[2026-03-12 13:56:12] [INFO]   📊 Coverage: N/A (tests not executed)
+[2026-03-12 13:56:12] [INFO] 
+[2026-03-12 13:56:12] [INFO] Project Results:
+[2026-03-12 13:56:12] [INFO]   ✗ Failed: 3 test(s) failed
+[2026-03-12 13:56:12] [INFO] 
+[2026-03-12 13:56:12] [INFO]   📋 Failed Tests:
+[2026-03-12 13:56:12] [INFO]     1. projects/template/tests/test_meta.py::TestDiscoverProjects::test_discovers_three_projects
+[2026-03-12 13:56:12] [INFO]     2. projects/template/tests/test_meta.py::TestDiscoverProjects::test_known_projects_present
+[2026-03-12 13:56:12] [INFO]     3. projects/template/tests/test_meta.py::TestBuildInfrastructureReport::test_report_has_projects
+[2026-03-12 13:56:12] [INFO] 
+[2026-03-12 13:56:12] [INFO]   🔧 Quick Fix Suggestions:
+[2026-03-12 13:56:12] [INFO]     - Run individual failing tests: pytest projects/template/tests/<test_file> -v
+[2026-03-12 13:56:12] [INFO]     - Debug with full traceback: pytest projects/template/tests/<test_file> -s --tb=long
+[2026-03-12 13:56:12] [INFO]     - Run project tests only: python3 scripts/01_run_tests.py --project template --project-only
+[2026-03-12 13:56:12] [INFO]     - Check project structure: verify projects/template/src/ and tests/ exist
+[2026-03-12 13:56:12] [INFO] 
+[2026-03-12 13:56:12] [INFO] ================================================================
+[2026-03-12 13:56:12] [INFO] Infrastructure: ✓ PASSED (0/0 tests, 0.0% coverage)
+[2026-03-12 13:56:12] [INFO] Project:       ✗ FAILED (3 test(s) failed)
+[2026-03-12 13:56:12] [INFO] ----------------------------------------------------------------
+[2026-03-12 13:56:12] [INFO] Total:         ✗ FAILED (project tests failed)
+[2026-03-12 13:56:12] [ERROR] Project tests failed - pipeline cannot continue until tests pass
+[2026-03-12 13:56:12] [INFO] Fix the failing tests shown above and re-run the pipeline
+[2026-03-12 13:56:12] [INFO] Run 'pytest projects/{project_name}/tests/ -v' for detailed failure information
+[2026-03-12 13:56:12] [ERROR] ❌ [STAGE_FAILED] ✗ Stage 3 failed
+[2026-03-12 13:56:12] [ERROR] ❌ [PIPELINE_STAGE_FAILED] Pipeline failed at stage 3: Project Tests — Check stage logs for details
+[2026-03-12 13:56:12] [ERROR] ❌ [PROJECT_FAILED] Project 'template' failed — Check project logs for details
+[2026-03-12 13:56:12] [INFO] Completed: Pipeline execution for template (12.5s)
+[2026-03-12 13:56:12] [INFO] Multi-project execution completed: 1 successful, 1 failed
+[2026-03-12 13:56:12] [INFO] 
+[2026-03-12 13:56:12] [INFO] ==================================================
+[2026-03-12 13:56:12] [INFO] MULTI-PROJECT EXECUTION RESULTS
+[2026-03-12 13:56:12] [INFO] ==================================================
+[2026-03-12 13:56:12] [INFO] Operation: multi-project core execution (no infra)
+[2026-03-12 13:56:12] [INFO] Total Projects: 2
+[2026-03-12 13:56:12] [INFO] Successful: 1
+[2026-03-12 13:56:12] [INFO] Failed: 1
+[2026-03-12 13:56:12] [INFO] Success Rate: 50.0%
+[2026-03-12 13:56:12] [INFO] Total Duration: 61.2s
+[2026-03-12 13:56:12] [INFO] Average per Project: 30.6s
+[2026-03-12 13:56:12] [INFO] Project Status:
+[2026-03-12 13:56:12] [INFO]   ✅ code_project: 7 stages, 48.7s
+[2026-03-12 13:56:12] [INFO]   ❌ template: 3 stages, 12.5s
+[2026-03-12 13:56:12] [INFO] Multi-project summary saved: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.json
+[2026-03-12 13:56:12] [INFO] Multi-project summary saved: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.md
+[2026-03-12 13:56:12] [INFO] Multi-project summary reports generated:
+[2026-03-12 13:56:12] [INFO]   • JSON: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.json
+[2026-03-12 13:56:12] [INFO]   • MARKDOWN: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.md
+[2026-03-12 13:56:12] [ERROR] ❌ Some projects failed
+[2026-03-12 13:56:12] [ERROR]    Failed projects:
+[2026-03-12 13:56:12] [ERROR]      - template

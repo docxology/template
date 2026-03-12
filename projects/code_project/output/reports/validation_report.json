@@ -25,7 +25,7 @@
         "directory_structure": {
           "project_combined_pdf": {
             "exists": true,
-            "size_mb": 1.62,
+            "size_mb": 1.63,
             "readable": true
           },
           "pdf": {
@@ -177,11 +177,11 @@
     },
     "pdf": {
       "files": 10,
-      "size_mb": 1.817967414855957
+      "size_mb": 1.8213443756103516
     },
     "figures": {
       "files": 7,
-      "size_mb": 1.5141525268554688
+      "size_mb": 1.5164175033569336
     },
     "data": {
       "files": 3,

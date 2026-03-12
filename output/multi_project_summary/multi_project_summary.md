@@ -1,32 +1,32 @@
 # Multi-Project Execution Summary
 
-**Generated:** 2026-03-12T13:42:32.042879
+**Generated:** 2026-03-12T13:56:12.382987
 
 ## Overview
 
 - **Total Projects:** 2
 - **Successful:** 1
 - **Failed:** 1
-- **Total Duration:** 59.0s
+- **Total Duration:** 61.2s
 
 ## Project Results
 
 ### ✅ code_project
 - **Status:** Success
-- **Duration:** 47.1s
+- **Duration:** 48.7s
 - **Stages Completed:** 7
 
 ### ❌ template
 - **Status:** Failed
-- **Duration:** 11.9s
+- **Duration:** 12.5s
 - **Stages Completed:** 3
 
 ## Performance Analysis
 
 - **Slowest Project:** code_project
 - **Fastest Project:** template
-- **Average Duration:** 29.5s
-- **Total Pipeline Time:** 59.0s
+- **Average Duration:** 30.6s
+- **Total Pipeline Time:** 61.2s
 
 ## Error Summary
 

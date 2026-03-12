@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>05_experimental_setup</title>
+  <title>document</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -169,62 +169,9 @@
       vertical-align: middle;
     }
   </style>
-  <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
-  type="text/javascript"></script>
 </head>
 <body>
-<h1 id="experimental-setup">Experimental Setup</h1>
-<p>This section details the complete experimental configuration used to
-generate the results in this study. Every parameter value below is
-injected programmatically from <code>config.yaml</code> and the analysis
-pipeline — no value is hardcoded in the manuscript source.</p>
-<h2 id="problem-definition">Problem Definition</h2>
-<p>The optimization target is the quadratic objective function:</p>
-<p><span class="math display">\[\begin{equation}
-\label{eq:quadratic_objective}
-f(x) = \frac{1}{2} x^T A x - b^T x
-\end{equation}\]</span></p>
-<p>with <span class="math inline">\(A = [[1.0]]\)</span> and <span
-class="math inline">\(b = [1.0]\)</span>, yielding the analytical
-optimum at <span class="math inline">\(x^* = 1.0\)</span> with <span
-class="math inline">\(f(x^*) = -0.5\)</span>.</p>
-<h2 id="parameter-space">Parameter Space</h2>
-<p>The experiment systematically varies the gradient descent step size
-across 6 values:</p>
-<ul>
-<li><span class="math inline">\(\\alpha = 0.01\)</span>
-(conservative)</li>
-<li><span class="math inline">\(\\alpha = 0.1\)</span> (moderate)</li>
-<li><span class="math inline">\(\\alpha = 0.5\)</span> (aggressive)</li>
-<li><span class="math inline">\(\\alpha = 1.0\)</span> (very
-aggressive)</li>
-<li><span class="math inline">\(\\alpha = 1.5\)</span></li>
-<li><span class="math inline">\(\\alpha = 2.5\)</span></li>
-</ul>
-<p>All runs start from the initial point <span class="math inline">\(x_0
-= 0.0\)</span> and use a convergence tolerance of <span
-class="math inline">\(\|{\nabla f}\| &lt; 10^{-8}\)</span> with a
-maximum iteration limit of <span class="math inline">\(N_{\max} =
-1000\)</span>.</p>
-<h2 id="numerical-stability-grid">Numerical Stability Grid</h2>
-<p>To validate robustness, the optimizer is exercised across a grid of 8
-starting points and 6 step sizes, producing 48 total evaluations. This
-comprehensive sweep confirms that convergence is not an artifact of a
-narrow parameter choice.</p>
-<h2 id="dimensional-scaling">Dimensional Scaling</h2>
-<p>Performance benchmarking spans problem dimensions <span
-class="math inline">\(d \in \{1, 2, 5, 10, 20, 50\}\)</span>, from the
-scalar case (<span class="math inline">\(d = 1\)</span>) to moderate
-dimensionality (<span class="math inline">\(d = 50\)</span>), using
-identity-Hessian quadratics to isolate algorithmic scaling from problem
-conditioning effects.</p>
-<h2 id="computational-environment">Computational Environment</h2>
-<ul>
-<li><strong>Python</strong>: 3.12.11</li>
-<li><strong>NumPy</strong>: 2.4.1</li>
-<li><strong>Platform</strong>: Darwin arm64</li>
-<li><strong>Generated</strong>: 2026-03-12T20:55:21Z</li>
-</ul>
+<h1 id="document">Document</h1>
+<p>Content here.</p>
 </body>
 </html>
