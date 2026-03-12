@@ -497,8 +497,7 @@ class="toc-section-number">5.2</span> Technical Contributions</a>
 <ul>
 <li><a href="#test-coverage-strategy"
 id="toc-test-coverage-strategy"><span
-class="toc-section-number">5.2.1</span> 96.6% Test Coverage
-Strategy</a></li>
+class="toc-section-number">5.2.1</span> Test Coverage Strategy</a></li>
 <li><a href="#infrastructure-backed-capabilities"
 id="toc-infrastructure-backed-capabilities"><span
 class="toc-section-number">5.2.2</span> Infrastructure-Backed
@@ -515,30 +514,73 @@ class="toc-section-number">5.5</span> Future Extensions</a></li>
 <li><a href="#final-assessment" id="toc-final-assessment"><span
 class="toc-section-number">5.6</span> Final Assessment</a></li>
 </ul></li>
+<li><a href="#experimental-setup-1" id="toc-experimental-setup-1"><span
+class="toc-section-number">6</span> Experimental Setup</a>
+<ul>
+<li><a href="#problem-definition" id="toc-problem-definition"><span
+class="toc-section-number">6.1</span> Problem Definition</a></li>
+<li><a href="#parameter-space" id="toc-parameter-space"><span
+class="toc-section-number">6.2</span> Parameter Space</a></li>
+<li><a href="#numerical-stability-grid"
+id="toc-numerical-stability-grid"><span
+class="toc-section-number">6.3</span> Numerical Stability Grid</a></li>
+<li><a href="#dimensional-scaling" id="toc-dimensional-scaling"><span
+class="toc-section-number">6.4</span> Dimensional Scaling</a></li>
+<li><a href="#computational-environment"
+id="toc-computational-environment"><span
+class="toc-section-number">6.5</span> Computational Environment</a></li>
+</ul></li>
+<li><a href="#reproducibility-certification"
+id="toc-reproducibility-certification"><span
+class="toc-section-number">7</span> Reproducibility Certification</a>
+<ul>
+<li><a href="#configuration-provenance"
+id="toc-configuration-provenance"><span
+class="toc-section-number">7.1</span> Configuration Provenance</a></li>
+<li><a href="#generated-artifact-registry"
+id="toc-generated-artifact-registry"><span
+class="toc-section-number">7.2</span> Generated Artifact
+Registry</a></li>
+<li><a href="#numerical-validation-summary"
+id="toc-numerical-validation-summary"><span
+class="toc-section-number">7.3</span> Numerical Validation Summary</a>
+<ul>
+<li><a href="#convergence-verification"
+id="toc-convergence-verification"><span
+class="toc-section-number">7.3.1</span> Convergence
+Verification</a></li>
+<li><a href="#numerical-stability" id="toc-numerical-stability"><span
+class="toc-section-number">7.3.2</span> Numerical Stability</a></li>
+</ul></li>
+<li><a href="#madlib-injection-verification"
+id="toc-madlib-injection-verification"><span
+class="toc-section-number">7.4</span> Madlib Injection
+Verification</a></li>
+</ul></li>
 <li><a href="#manuscript-syntax-reference"
 id="toc-manuscript-syntax-reference"><span
-class="toc-section-number">6</span> Manuscript Syntax Reference</a>
+class="toc-section-number">8</span> Manuscript Syntax Reference</a>
 <ul>
 <li><a href="#citation-syntax-pandoc"
 id="toc-citation-syntax-pandoc"><span
-class="toc-section-number">6.1</span> Citation Syntax (Pandoc)</a></li>
+class="toc-section-number">8.1</span> Citation Syntax (Pandoc)</a></li>
 <li><a href="#equation-environments"
 id="toc-equation-environments"><span
-class="toc-section-number">6.2</span> Equation Environments</a></li>
+class="toc-section-number">8.2</span> Equation Environments</a></li>
 <li><a href="#figure-references" id="toc-figure-references"><span
-class="toc-section-number">6.3</span> Figure References</a></li>
+class="toc-section-number">8.3</span> Figure References</a></li>
 <li><a href="#table-references" id="toc-table-references"><span
-class="toc-section-number">6.4</span> Table References</a></li>
+class="toc-section-number">8.4</span> Table References</a></li>
 <li><a href="#preamble-injection" id="toc-preamble-injection"><span
-class="toc-section-number">6.5</span> Preamble Injection</a></li>
+class="toc-section-number">8.5</span> Preamble Injection</a></li>
 <li><a href="#bibtex-entry-format" id="toc-bibtex-entry-format"><span
-class="toc-section-number">6.6</span> BibTeX Entry Format</a></li>
+class="toc-section-number">8.6</span> BibTeX Entry Format</a></li>
 <li><a href="#section-numbering" id="toc-section-numbering"><span
-class="toc-section-number">6.7</span> Section Numbering</a></li>
+class="toc-section-number">8.7</span> Section Numbering</a></li>
 <li><a href="#prose-conventions" id="toc-prose-conventions"><span
-class="toc-section-number">6.8</span> Prose Conventions</a></li>
+class="toc-section-number">8.8</span> Prose Conventions</a></li>
 <li><a href="#see-also" id="toc-see-also"><span
-class="toc-section-number">6.9</span> See Also</a></li>
+class="toc-section-number">8.9</span> See Also</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -550,9 +592,10 @@ exercise, but as the representative computational exemplar of the <a
 href="https://github.com/docxology/template">Research Project
 Template</a> repository. We implement and evaluate the classical
 gradient descent method with fixed step size for quadratic minimization
-problems, examining convergence behavior across learning rates from
+problems, examining convergence behavior across 6 learning rates from
 <span class="math inline">\(\alpha = 0.01\)</span> to <span
-class="math inline">\(\alpha = 0.20\)</span>. Crucially, the
+class="math inline">\(\alpha = 2.5\)</span>, spanning conservative,
+near-optimal, aggressive, and divergent regimes. Crucially, the
 experimental framework is built entirely atop the template’s nine
 <code>infrastructure</code> subpackages to guarantee absolute
 reproducibility and cryptographic output integrity. The very PDF holding
@@ -562,10 +605,11 @@ these words was deterministically generated via
 <p>The key contributions of this work are dual-natured.
 Methodologically, it demonstrates empirical validation of theoretical
 convergence rates on quadratic objective functions and automated
-complexity analysis. Architecturally, it establishes a rigorously
-enforced development standard: (1) a zero-mock testing policy validated
-by 39 passing tests with 96.6% coverage exceeding the 90% threshold (as
-explicitly asserted in the <a
+complexity analysis across four distinct agency categories.
+Architecturally, it establishes a rigorously enforced development
+standard: (1) a zero-mock testing policy validated by a comprehensive
+passing test suite exceeding the 90% coverage threshold (as explicitly
+asserted in the <a
 href="https://github.com/docxology/template/blob/main/projects/code_project/tests/test_optimizer.py">test
 suite</a>); (2) automated analysis pipelines generating
 publication-quality, accessible visualizations; and (3) deep integration
@@ -573,11 +617,13 @@ patterns demonstrating how scientific logic strictly couples with the
 core infrastructure (e.g., executing
 <code>infrastructure.scientific.benchmarking</code> directly from
 <code>projects/code_project/scripts/optimization_analysis.py</code>).</p>
-<p>Results confirm that all tested step sizes converge to the analytical
-optimum <span class="math inline">\(x^* = 1.0\)</span> with objective
-value <span class="math inline">\(f(x^*) = -0.5\)</span>. The codebase
-validates the template’s modular <code>tests/</code> infrastructure and
-expansive <a
+<p>Results confirm that 4 of 6 tested step sizes converge to the
+analytical optimum <span class="math inline">\(x^* = 1.0\)</span> with
+objective value <span class="math inline">\(f(x^*) = -0.5\)</span>,
+while divergent step sizes (<span class="math inline">\(\alpha \geq
+2\)</span>) demonstrate the theoretically predicted instability. The
+codebase validates the template’s modular <code>tests/</code>
+infrastructure and expansive <a
 href="https://github.com/docxology/template/tree/main/projects/code_project/docs">project
 documentation</a> knowledge base, serving as the master exemplar for
 bridging theoretical algorithm development with production-grade,
@@ -674,8 +720,8 @@ explicitly demonstrates:</p>
 <li><strong>Infrastructure-Coupled Code</strong>: Scientific
 implementations that delegate logging, file ops, and reporting to the
 <code>infrastructure</code> core.</li>
-<li><strong>Zero-Mock Verification</strong>: A strict 39-test validation
-suite proving numerical accuracy without artificial test
+<li><strong>Zero-Mock Verification</strong>: A strict comprehensive
+validation suite proving numerical accuracy without artificial test
 boundaries.</li>
 <li><strong>Automated Research Pipelines</strong>: High-precision
 analyses that generate publication-quality, accessible visualizations
@@ -842,29 +888,32 @@ updates the solution using the rule <span class="math inline">\(x_{k+1}
 = x_k - \alpha \nabla f(x_k)\)</span>.</p>
 <figure id="fig:convergence">
 <img src="../output/figures/convergence_plot.png"
-alt="Gradient descent convergence trajectories for four step sizes (\alpha = 0.01, 0.05, 0.1, 0.2) on the quadratic f(x) = \frac{1}{2}x^2 - x. Larger \alpha values reach the analytical minimum f(x^*) = -0.5 in fewer iterations, with \alpha = 0.2 converging in $$9 iterations versus $$165 for \alpha = 0.01." />
+alt="Gradient descent convergence trajectories for 6 step sizes (\\alpha = 0.01, \\alpha = 0.1, \\alpha = 0.5, \\alpha = 1.0, \\alpha = 1.5, \\alpha = 2.5) on the quadratic f(x) = \frac{1}{2}x^2 - x. Larger step sizes reach the analytical minimum f(x^*) = -0.5 faster, while \alpha \geq 2 diverges. The fastest convergence occurs at \alpha = 1.0 (1 iterations)." />
 <figcaption aria-hidden="true">Gradient descent convergence trajectories
-for four step sizes (<span class="math inline">\(\alpha = 0.01, 0.05,
-0.1, 0.2\)</span>) on the quadratic <span class="math inline">\(f(x) =
-\frac{1}{2}x^2 - x\)</span>. Larger <span
-class="math inline">\(\alpha\)</span> values reach the analytical
-minimum <span class="math inline">\(f(x^*) = -0.5\)</span> in fewer
-iterations, with <span class="math inline">\(\alpha = 0.2\)</span>
-converging in $$9 iterations versus $$165 for <span
-class="math inline">\(\alpha = 0.01\)</span>.</figcaption>
+for 6 step sizes (<span class="math inline">\(\\alpha = 0.01, \\alpha =
+0.1, \\alpha = 0.5, \\alpha = 1.0, \\alpha = 1.5, \\alpha =
+2.5\)</span>) on the quadratic <span class="math inline">\(f(x) =
+\frac{1}{2}x^2 - x\)</span>. Larger step sizes reach the analytical
+minimum <span class="math inline">\(f(x^*) = -0.5\)</span> faster, while
+<span class="math inline">\(\alpha \geq 2\)</span> diverges. The fastest
+convergence occurs at <span class="math inline">\(\alpha = 1.0\)</span>
+(1 iterations).</figcaption>
 </figure>
 <p><strong>Key observations from Figure <span
 class="math inline">\(\ref{fig:convergence}\)</span>:</strong></p>
 <ol type="1">
-<li><strong>Step size impact</strong>: Larger step sizes (<span
-class="math inline">\(\alpha = 0.2\)</span>) exhibit faster initial
-progress but may show oscillatory behavior near convergence</li>
-<li><strong>Convergence rate</strong>: All tested step sizes eventually
-converge to the analytical optimum at <span class="math inline">\(x^* =
-1\)</span></li>
-<li><strong>Stability</strong>: Conservative step sizes (<span
-class="math inline">\(\alpha = 0.01\)</span>) demonstrate smooth,
-monotonic convergence with minimal oscillations</li>
+<li><strong>Step size impact</strong>: Larger step sizes exhibit faster
+initial progress; <span class="math inline">\(\alpha = 1.0\)</span>
+converges in 1 iteration(s)</li>
+<li><strong>Agency categories</strong>: Conservative (<span
+class="math inline">\(\alpha \leq 0.1\)</span>), near-optimal (<span
+class="math inline">\(0.3 \leq \alpha \leq 1.0\)</span>), aggressive
+(<span class="math inline">\(1 &lt; \alpha &lt; 2\)</span>), and
+divergent (<span class="math inline">\(\alpha \geq 2\)</span>)</li>
+<li><strong>Stability boundary</strong>: The critical threshold is <span
+class="math inline">\(\alpha = 2\)</span> for this unit-Hessian problem;
+<span class="math inline">\(\alpha &lt; 2\)</span> converges, <span
+class="math inline">\(\alpha \geq 2\)</span> diverges</li>
 </ol>
 <h3 data-number="4.1.2" id="step-size-sensitivity-analysis"><span
 class="header-section-number">4.1.2</span> Step Size Sensitivity
@@ -876,13 +925,14 @@ quality. The analysis reveals the trade-off between convergence speed
 and numerical stability.</p>
 <figure id="fig:step_sensitivity">
 <img src="../output/figures/step_size_sensitivity.png"
-alt="Step size sensitivity analysis across 10 values (alpha from 0.005 to 0.4). Left panel: iterations to convergence decrease geometrically with step size on log–log axes. Right panel: all step sizes achieve the optimal objective value of -0.5 from the initial value of 0, confirming robust convergence across the full range." />
-<figcaption aria-hidden="true">Step size sensitivity analysis across 10
-values (alpha from 0.005 to 0.4). Left panel: iterations to convergence
-decrease geometrically with step size on log–log axes. Right panel: all
-step sizes achieve the optimal objective value of -0.5 from the initial
-value of 0, confirming robust convergence across the full
-range.</figcaption>
+alt="Step size sensitivity analysis spanning all four agency categories (conservative, near-optimal, aggressive, divergent). Left panel: iterations to convergence vs step size, with points colour-coded by category. Right panel: final objective values showing convergent settings clustering at f(x^*) = -0.5 while divergent settings fail to reach the optimum." />
+<figcaption aria-hidden="true">Step size sensitivity analysis spanning
+all four agency categories (conservative, near-optimal, aggressive,
+divergent). Left panel: iterations to convergence vs step size, with
+points colour-coded by category. Right panel: final objective values
+showing convergent settings clustering at <span
+class="math inline">\(f(x^*) = -0.5\)</span> while divergent settings
+fail to reach the optimum.</figcaption>
 </figure>
 <h2 data-number="4.2" id="quantitative-results"><span
 class="header-section-number">4.2</span> Quantitative Results</h2>
@@ -891,8 +941,11 @@ computationally by orchestrating
 <code>infrastructure.reporting.pipeline_reporter</code>, feeding
 directly into the <a
 href="https://github.com/docxology/template/blob/main/projects/code_project/output/data/optimization_results.csv">optimization
-results data</a> that acts as the source of truth for Table 1:</p>
+results data</a> that acts as the source of truth for Table <span
+class="math inline">\(\ref{tab:opt_results}\)</span>:</p>
 <table>
+<caption>Optimization results showing solution accuracy and convergence
+speed for different step sizes. </caption>
 <colgroup>
 <col style="width: 21%" />
 <col style="width: 22%" />
@@ -940,8 +993,6 @@ results data</a> that acts as the source of truth for Table 1:</p>
 </tr>
 </tbody>
 </table>
-<p><strong>Table 1:</strong> Optimization results showing solution
-accuracy and convergence speed for different step sizes.</p>
 <h2 data-number="4.3" id="convergence-rate-analysis"><span
 class="header-section-number">4.3</span> Convergence Rate Analysis</h2>
 <h3 data-number="4.3.1" id="theoretical-vs-empirical-convergence"><span
@@ -955,14 +1006,15 @@ comparative analysis of convergence rates across different step sizes,
 validating theoretical predictions against empirical results.</p>
 <figure id="fig:convergence_rate">
 <img src="../output/figures/convergence_rate_comparison.png"
-alt="Convergence rate comparison on logarithmic scale. Each step size exhibits linear convergence in \log \|x_k - x^*\|, with slopes corresponding to the contraction factor \rho = 1 - 2\alpha(1-\alpha). The dashed tolerance line at \varepsilon = 10^{-6} marks the convergence criterion." />
+alt="Convergence rate comparison on logarithmic scale. Each step size’s error |f(x) - f(x^*)| is plotted per iteration. Converging settings show downward-sloping lines with slopes determined by the contraction factor \rho = |1 - \alpha|, while divergent settings show upward trajectories. The dashed tolerance line at \varepsilon = 10^{-8} marks the convergence criterion." />
 <figcaption aria-hidden="true">Convergence rate comparison on
-logarithmic scale. Each step size exhibits linear convergence in <span
-class="math inline">\(\log \|x_k - x^*\|\)</span>, with slopes
-corresponding to the contraction factor <span class="math inline">\(\rho
-= 1 - 2\alpha(1-\alpha)\)</span>. The dashed tolerance line at <span
-class="math inline">\(\varepsilon = 10^{-6}\)</span> marks the
-convergence criterion.</figcaption>
+logarithmic scale. Each step size’s error <span
+class="math inline">\(|f(x) - f(x^*)|\)</span> is plotted per iteration.
+Converging settings show downward-sloping lines with slopes determined
+by the contraction factor <span class="math inline">\(\rho = |1 -
+\alpha|\)</span>, while divergent settings show upward trajectories. The
+dashed tolerance line at <span class="math inline">\(\varepsilon =
+10^{-8}\)</span> marks the convergence criterion.</figcaption>
 </figure>
 <p>The theoretical convergence rate for our quadratic problem
 satisfies:</p>
@@ -978,9 +1030,11 @@ satisfies:</p>
 \frac{\|x_{k+1} - x^*\|^2}{\|x_k - x^*\|^2} \leq 1 - 2(0.5)(1 - 0.5) =
 0.5
 \end{equation}\]</span></p>
-<p>However, our empirical analysis uses more conservative step sizes
-(<span class="math inline">\(\alpha \leq 0.2\)</span>) to ensure
-stability.</p>
+<p>Our experimental analysis uses step sizes spanning <span
+class="math inline">\(\alpha = 0.01\)</span> to <span
+class="math inline">\(\alpha = 2.5\)</span>, including both conservative
+and aggressive settings to demonstrate the full spectrum of convergence
+behavior.</p>
 <h3 data-number="4.3.2" id="error-bounds"><span
 class="header-section-number">4.3.2</span> Error Bounds</h3>
 <p>The error after <span class="math inline">\(k\)</span> iterations is
@@ -994,14 +1048,15 @@ x^*\|
 \frac{\lambda_{\max}}{\lambda_{\min}}\)</span> is the condition number.
 For our test problem with <span class="math inline">\(A = I\)</span>, we
 have <span class="math inline">\(\kappa = 1\)</span>, which yields a
-convergence factor of <span class="math inline">\(\rho = 0\)</span>.
-This reflects the perfectly conditioned nature of the identity-matrix
-quadratic: a single exact step with optimal step size <span
-class="math inline">\(\alpha = 1\)</span> would reach the minimum. In
-practice, our conservative step sizes (<span
-class="math inline">\(\alpha \leq 0.2\)</span>) trade per-iteration
-progress for stability, resulting in the measured iteration counts shown
-in Table 1.</p>
+contraction factor of <span class="math inline">\(\rho = |1 -
+\alpha|\)</span>. This means <span class="math inline">\(\alpha =
+1\)</span> is the exact Newton step (converging in one iteration), step
+sizes <span class="math inline">\(\alpha &lt; 1\)</span> converge
+monotonically, <span class="math inline">\(1 &lt; \alpha &lt; 2\)</span>
+converge with oscillation, and <span class="math inline">\(\alpha \geq
+2\)</span> diverge. The measured iteration counts in Table <span
+class="math inline">\(\ref{tab:opt_results}\)</span> confirm this
+theoretical prediction across all 6 tested settings.</p>
 <h3 data-number="4.3.3" id="performance-metrics"><span
 class="header-section-number">4.3.3</span> Performance Metrics</h3>
 <p><strong>Iteration Complexity</strong>: The number of iterations
@@ -1046,19 +1101,21 @@ complex problems</li>
 </ul>
 <h3 data-number="4.4.2" id="solution-accuracy"><span
 class="header-section-number">4.4.2</span> Solution Accuracy</h3>
-<p>All tested step sizes achieved the analytical optimum within
+<p>4 of 6 tested step sizes achieved the analytical optimum within
 numerical precision:</p>
 <ul>
-<li>Target solution: <span class="math inline">\(x = 1.0000\)</span>
-(relative error <span class="math inline">\(&lt; 10^{-4}\)</span>)</li>
-<li>Target objective: <span class="math inline">\(f(x) =
--0.5000\)</span> (absolute error <span class="math inline">\(&lt;
-10^{-6}\)</span>)</li>
+<li>Target solution: <span class="math inline">\(x = 1.0\)</span>
+(relative error <span class="math inline">\(&lt; 10^{-4}\)</span> for
+converged settings)</li>
+<li>Target objective: <span class="math inline">\(f(x) = -0.5\)</span>
+(absolute error <span class="math inline">\(&lt; 10^{-8}\)</span> for
+converged settings)</li>
 </ul>
-<p>This confirms that gradient descent with fixed step size reliably
-solves convex quadratic problems across a wide range of learning rates,
-consistent with the theoretical convergence guarantees established in
-Section 2.</p>
+<p>Divergent step sizes (<span class="math inline">\(\alpha \geq
+2\)</span>) confirm the theoretical instability boundary, demonstrating
+that gradient descent with fixed step size requires <span
+class="math inline">\(\alpha &lt; 2/\lambda_{\max}\)</span> for
+convergence on quadratic objectives.</p>
 <h2 data-number="4.5" id="algorithm-characteristics"><span
 class="header-section-number">4.5</span> Algorithm Characteristics</h2>
 <h3 data-number="4.5.1" id="strengths"><span
@@ -1091,17 +1148,15 @@ characteristics, including time and space complexity analysis across
 different problem scales.</p>
 <figure id="fig:complexity">
 <img src="../output/figures/algorithm_complexity.png"
-alt="Algorithm performance analysis in four panels: (TL) empirical iteration counts per step size, (TR) solution accuracy as \log_{10} |f(x) - f(x^*)| with the \varepsilon = 10^{-6} tolerance line, (BL) theoretical bound 1/(2\alpha(1-\alpha)) overlaid on empirical iterations in log scale, (BR) contraction factor \rho = 1 - 2\alpha(1-\alpha) per step size with the optimal \rho = 0.5 reference." />
+alt="Algorithm performance analysis in four panels: (TL) empirical iteration counts per step size, colour-coded by agency category, (TR) solution accuracy as \log_{10} |f(x) - f(x^*)| with the \varepsilon = 10^{-8} tolerance line, (BL) theoretical bound overlaid on empirical iterations in log scale, (BR) contraction factor \rho = |1-\alpha| per step size." />
 <figcaption aria-hidden="true">Algorithm performance analysis in four
-panels: (TL) empirical iteration counts per step size, (TR) solution
-accuracy as <span class="math inline">\(\log_{10} |f(x) -
-f(x^*)|\)</span> with the <span class="math inline">\(\varepsilon =
-10^{-6}\)</span> tolerance line, (BL) theoretical bound <span
-class="math inline">\(1/(2\alpha(1-\alpha))\)</span> overlaid on
-empirical iterations in log scale, (BR) contraction factor <span
-class="math inline">\(\rho = 1 - 2\alpha(1-\alpha)\)</span> per step
-size with the optimal <span class="math inline">\(\rho = 0.5\)</span>
-reference.</figcaption>
+panels: (TL) empirical iteration counts per step size, colour-coded by
+agency category, (TR) solution accuracy as <span
+class="math inline">\(\log_{10} |f(x) - f(x^*)|\)</span> with the <span
+class="math inline">\(\varepsilon = 10^{-8}\)</span> tolerance line,
+(BL) theoretical bound overlaid on empirical iterations in log scale,
+(BR) contraction factor <span class="math inline">\(\rho =
+|1-\alpha|\)</span> per step size.</figcaption>
 </figure>
 <p>The algorithm demonstrates efficient performance for small-scale
 optimization problems:</p>
@@ -1112,9 +1167,9 @@ computation</li>
 <li><strong>Space complexity</strong>: <span
 class="math inline">\(O(d)\)</span> for storing variables and
 gradients</li>
-<li><strong>Convergence</strong>: Typically <span
-class="math inline">\(&lt; 20\)</span> iterations for this quadratic
-problem</li>
+<li><strong>Convergence</strong>: Fastest at <span
+class="math inline">\(\alpha = 1.0\)</span> (1 iteration), average 372
+iterations</li>
 <li><strong>Scalability</strong>: Memory-efficient implementation
 suitable for high-dimensional problems</li>
 </ul>
@@ -1143,19 +1198,17 @@ Analysis</h3>
 <p>Figure <span class="math inline">\(\ref{fig:stability}\)</span> maps
 the optimizer’s accuracy across a grid of 8 starting points (<span
 class="math inline">\(x_0 \in [-50, 50]\)</span>) and 6 step sizes
-(<span class="math inline">\(\alpha \in [0.01, 0.4]\)</span>), directly
+(<span class="math inline">\(\alpha \in [0.01, 0.9]\)</span>), directly
 exercising <code>gradient_descent()</code>,
 <code>quadratic_function()</code>, and <code>compute_gradient()</code>
 across the parameter space.</p>
 <figure id="fig:stability">
 <img src="../output/figures/stability_analysis.png"
-alt="Numerical stability heatmap: each cell shows \log_{10} |f(x) - f(x^*)| for a (starting point, step size) combination, with 48 total evaluations. All cells achieve errors below 10^{-6}, confirming uniform stability. The right panel reports the aggregate stability score from check_numerical_stability()." />
+alt="Numerical stability heatmap: each cell shows \log_{10} |f(x) - f(x^*)| for a (starting point, step size) combination, with 48 total evaluations. The right panel reports the aggregate stability score of 1.00 from check_numerical_stability()." />
 <figcaption aria-hidden="true">Numerical stability heatmap: each cell
 shows <span class="math inline">\(\log_{10} |f(x) - f(x^*)|\)</span> for
 a (starting point, step size) combination, with 48 total evaluations.
-All cells achieve errors below <span
-class="math inline">\(10^{-6}\)</span>, confirming uniform stability.
-The right panel reports the aggregate stability score from
+The right panel reports the aggregate stability score of 1.00 from
 <code>check_numerical_stability()</code>.</figcaption>
 </figure>
 <h3 data-number="4.6.4" id="performance-metrics-summary"><span
@@ -1173,11 +1226,11 @@ iterations across all test cases</li>
 <p><strong>Numerical Accuracy:</strong></p>
 <ul>
 <li>Solution precision: <span class="math inline">\(&lt;
-10^{-4}\)</span> relative error</li>
+10^{-4}\)</span> relative error (for converged step sizes)</li>
 <li>Objective accuracy: <span class="math inline">\(&lt;
-10^{-6}\)</span> absolute error</li>
+10^{-8}\)</span> absolute error (for converged step sizes)</li>
 <li>Gradient tolerance: <span class="math inline">\(&lt;
-10^{-6}\)</span> achieved in all cases</li>
+10^{-8}\)</span> achieved for converged cases</li>
 </ul>
 <h2 data-number="4.7" id="validation"><span
 class="header-section-number">4.7</span> Validation</h2>
@@ -1193,16 +1246,16 @@ mechanisms across <code>infrastructure.reporting</code>,
 <li><strong>Numerical accuracy</strong> checks verified systematically
 using PyTest.</li>
 </ul>
-<p>All tests pass with 96.6% statement coverage exceeding the 90%
-threshold, ensuring implementation correctness across core logic,
-convergence detection, and logging pathways without the use of
-mocks.</p>
+<p>All tests pass with coverage exceeding the 90% threshold, ensuring
+implementation correctness across core logic, convergence detection, and
+logging pathways without the use of mocks.</p>
 <h2 data-number="4.8" id="discussion"><span
 class="header-section-number">4.8</span> Discussion</h2>
 <p>The experimental results validate the gradient descent implementation
 and confirm the theoretical convergence predictions from Section 2. The
-monotonic relationship between step size and iteration count (Table 1)
-aligns with the convergence factor analysis in Equation <span
+monotonic relationship between step size and iteration count (Table
+<span class="math inline">\(\ref{tab:opt_results}\)</span>) aligns with
+the convergence factor analysis in Equation <span
 class="math inline">\(\ref{eq:convergence_factor}\)</span>, while the
 uniform solution accuracy across all step sizes demonstrates the
 robustness of the convergence criterion <span
@@ -1238,8 +1291,8 @@ foundational pillars:</p>
 leveraged the 9-module infrastructure cluster to handle scientific
 benchmarking, rendering, and reporting.</li>
 <li><strong><code>tests</code> Integrity</strong>: Established absolute
-logical hermeticity through a 39-test integration and infrastructure
-validation suite operating continuously.</li>
+logical hermeticity through a comprehensive integration and
+infrastructure validation suite operating continuously.</li>
 <li><strong><code>docs</code> Knowledge Operations</strong>: Adhered
 structurally to the RASP methodology, producing verified, accessible
 output spanning from documentation indices to the final LLM-assisted
@@ -1248,12 +1301,11 @@ publication configurations.</li>
 <h2 data-number="5.2" id="technical-contributions"><span
 class="header-section-number">5.2</span> Technical Contributions</h2>
 <h3 data-number="5.2.1" id="test-coverage-strategy"><span
-class="header-section-number">5.2.1</span> 96.6% Test Coverage
-Strategy</h3>
+class="header-section-number">5.2.1</span> Test Coverage Strategy</h3>
 <p>The hallmark of this implementation is the test matrix:</p>
 <ul>
-<li>39 distinct tests traversing execution pipelines, integration flows,
-and algorithmic bounds.</li>
+<li>Comprehensive tests traversing execution pipelines, integration
+flows, and algorithmic bounds.</li>
 <li>Strict enforcement of zero-mock policies guaranteeing real execution
 dynamics.</li>
 <li>CI/CD validation gates requiring ≥90% statement coverage before
@@ -1338,12 +1390,191 @@ blueprint for automated, reproducible computational research, showcasing
 the extraordinary depth of the <code>docxology/template</code>
 repository.</p>
 <hr />
-<h1 data-number="6" id="manuscript-syntax-reference"><span
-class="header-section-number">6</span> Manuscript Syntax Reference</h1>
+<h1 data-number="6" id="experimental-setup-1"><span
+class="header-section-number">6</span> Experimental Setup</h1>
+<p>This section details the complete experimental configuration used to
+generate the results in this study. Every parameter value below is
+injected programmatically from <code>config.yaml</code> and the analysis
+pipeline — no value is hardcoded in the manuscript source.</p>
+<h2 data-number="6.1" id="problem-definition"><span
+class="header-section-number">6.1</span> Problem Definition</h2>
+<p>The optimization target is the quadratic objective function:</p>
+<p><span class="math display">\[\begin{equation}
+\label{eq:quadratic_objective}
+f(x) = \frac{1}{2} x^T A x - b^T x
+\end{equation}\]</span></p>
+<p>with <span class="math inline">\(A = [[1.0]]\)</span> and <span
+class="math inline">\(b = [1.0]\)</span>, yielding the analytical
+optimum at <span class="math inline">\(x^* = 1.0\)</span> with <span
+class="math inline">\(f(x^*) = -0.5\)</span>.</p>
+<h2 data-number="6.2" id="parameter-space"><span
+class="header-section-number">6.2</span> Parameter Space</h2>
+<p>The experiment systematically varies the gradient descent step size
+across 6 values:</p>
+<ul>
+<li><span class="math inline">\(\\alpha = 0.01\)</span>
+(conservative)</li>
+<li><span class="math inline">\(\\alpha = 0.1\)</span> (moderate)</li>
+<li><span class="math inline">\(\\alpha = 0.5\)</span> (aggressive)</li>
+<li><span class="math inline">\(\\alpha = 1.0\)</span> (very
+aggressive)</li>
+<li><span class="math inline">\(\\alpha = 1.5\)</span></li>
+<li><span class="math inline">\(\\alpha = 2.5\)</span></li>
+</ul>
+<p>All runs start from the initial point <span class="math inline">\(x_0
+= 0.0\)</span> and use a convergence tolerance of <span
+class="math inline">\(\|{\nabla f}\| &lt; 10^{-8}\)</span> with a
+maximum iteration limit of <span class="math inline">\(N_{\max} =
+1000\)</span>.</p>
+<h2 data-number="6.3" id="numerical-stability-grid"><span
+class="header-section-number">6.3</span> Numerical Stability Grid</h2>
+<p>To validate robustness, the optimizer is exercised across a grid of 8
+starting points and 6 step sizes, producing 48 total evaluations. This
+comprehensive sweep confirms that convergence is not an artifact of a
+narrow parameter choice.</p>
+<h2 data-number="6.4" id="dimensional-scaling"><span
+class="header-section-number">6.4</span> Dimensional Scaling</h2>
+<p>Performance benchmarking spans problem dimensions <span
+class="math inline">\(d \in \{1, 2, 5, 10, 20, 50\}\)</span>, from the
+scalar case (<span class="math inline">\(d = 1\)</span>) to moderate
+dimensionality (<span class="math inline">\(d = 50\)</span>), using
+identity-Hessian quadratics to isolate algorithmic scaling from problem
+conditioning effects.</p>
+<h2 data-number="6.5" id="computational-environment"><span
+class="header-section-number">6.5</span> Computational Environment</h2>
+<ul>
+<li><strong>Python</strong>: 3.12.11</li>
+<li><strong>NumPy</strong>: 2.4.1</li>
+<li><strong>Platform</strong>: Darwin arm64</li>
+<li><strong>Generated</strong>: 2026-03-12T18:59:02Z</li>
+</ul>
+<hr />
+<h1 data-number="7" id="reproducibility-certification"><span
+class="header-section-number">7</span> Reproducibility
+Certification</h1>
+<p>This section provides a machine-verifiable reproducibility
+certificate for the complete study. Every metric below is computed by
+the analysis pipeline and injected into the manuscript at render time —
+establishing a cryptographic chain of custody from configuration to
+publication.</p>
+<h2 data-number="7.1" id="configuration-provenance"><span
+class="header-section-number">7.1</span> Configuration Provenance</h2>
+<table>
+<colgroup>
+<col style="width: 61%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Config hash (SHA-256, truncated)</td>
+<td><code>82a75e78f9447329</code></td>
+</tr>
+<tr>
+<td>Paper version</td>
+<td>2.0</td>
+</tr>
+<tr>
+<td>First author</td>
+<td>Research Template Author</td>
+</tr>
+<tr>
+<td>Keyword count</td>
+<td>optimization algorithms, gradient descent, convergence analysis,
+numerical methods, mathematical programming, reproducible research,
+infrastructure automation</td>
+</tr>
+</tbody>
+</table>
+<p>The configuration hash changes whenever any parameter in
+<code>config.yaml</code> is modified, ensuring that every rendered PDF
+is traceable to a specific configuration state.</p>
+<h2 data-number="7.2" id="generated-artifact-registry"><span
+class="header-section-number">7.2</span> Generated Artifact
+Registry</h2>
+<p>The analysis pipeline produced the following artifacts, each
+validated by
+<code>infrastructure.validation.output_validator</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Publication-quality figures</td>
+<td>7</td>
+</tr>
+<tr>
+<td>Structured data files (CSV/JSON)</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Analysis reports</td>
+<td>6</td>
+</tr>
+<tr>
+<td><strong>Total artifacts</strong></td>
+<td><strong>15</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="7.3" id="numerical-validation-summary"><span
+class="header-section-number">7.3</span> Numerical Validation
+Summary</h2>
+<h3 data-number="7.3.1" id="convergence-verification"><span
+class="header-section-number">7.3.1</span> Convergence Verification</h3>
+<p>All 6 tested step sizes converged to the analytical optimum: No</p>
+<ul>
+<li>Fastest convergence: <span class="math inline">\(\alpha =
+1.0\)</span> (1 iterations)</li>
+<li>Slowest convergence: <span class="math inline">\(\alpha =
+0.01\)</span> (1000 iterations)</li>
+<li>Average iterations: 372</li>
+</ul>
+<h3 data-number="7.3.2" id="numerical-stability"><span
+class="header-section-number">7.3.2</span> Numerical Stability</h3>
+<p>Stability score from
+<code>infrastructure.scientific.stability</code>: <strong>1.00</strong>
+(out of 1.00)</p>
+<p>The stability analysis tested 48 parameter combinations (8 starting
+points <span class="math inline">\(\times\)</span> 6 step sizes),
+confirming uniform convergence across the entire parameter space.</p>
+<h2 data-number="7.4" id="madlib-injection-verification"><span
+class="header-section-number">7.4</span> Madlib Injection
+Verification</h2>
+<p>This manuscript demonstrates the template’s “madlib” capability:
+every quantitative claim is injected from computed data at render time.
+The substitution system processed the following variables:</p>
+<ul>
+<li><strong>Configuration variables</strong>: Drawn from
+<code>manuscript/config.yaml</code> (<code>experiment:</code>
+section)</li>
+<li><strong>Result variables</strong>: Computed from
+<code>output/data/optimization_results.csv</code></li>
+<li><strong>Stability variables</strong>: Extracted from
+<code>output/reports/stability_analysis.json</code></li>
+<li><strong>Provenance variables</strong>: Generated at substitution
+time (timestamps, hashes, versions)</li>
+</ul>
+<p>To verify: modifying any value in <code>config.yaml</code> and
+re-running the pipeline will automatically update every corresponding
+claim in this document. No manual transcription is required or
+permitted.</p>
+<hr />
+<h1 data-number="8" id="manuscript-syntax-reference"><span
+class="header-section-number">8</span> Manuscript Syntax Reference</h1>
 <p>Formatting and syntax conventions for manuscript Markdown files in
 the <code>code_project</code> exemplar.</p>
-<h2 data-number="6.1" id="citation-syntax-pandoc"><span
-class="header-section-number">6.1</span> Citation Syntax (Pandoc)</h2>
+<h2 data-number="8.1" id="citation-syntax-pandoc"><span
+class="header-section-number">8.1</span> Citation Syntax (Pandoc)</h2>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- Single citation --&gt;</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">@knuth1997</span><span class="co">]</span></span>
@@ -1358,8 +1589,8 @@ class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb1-1"><
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>@knuth1997 showed that...</span></code></pre></div>
 <p>All citation keys must exist in <code>references.bib</code>. The
 pipeline will flag undefined keys as errors.</p>
-<h2 data-number="6.2" id="equation-environments"><span
-class="header-section-number">6.2</span> Equation Environments</h2>
+<h2 data-number="8.2" id="equation-environments"><span
+class="header-section-number">8.2</span> Equation Environments</h2>
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- Numbered equation with label --&gt;</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>\begin{equation}</span>
@@ -1373,8 +1604,8 @@ class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb2-1"><
 <code>@eq:label</code> during rendering. Do <strong>not</strong> use raw
 <code>\label{}</code> / <code>\ref{}</code> — the Markdown filter
 handles this.</p>
-<h2 data-number="6.3" id="figure-references"><span
-class="header-section-number">6.3</span> Figure References</h2>
+<h2 data-number="8.3" id="figure-references"><span
+class="header-section-number">8.3</span> Figure References</h2>
 <div class="sourceCode" id="cb3"><pre
 class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- Figure with label --&gt;</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="al">![Convergence plot showing objective value vs iteration](figures/convergence_plot.png)</span>{#fig:convergence width=80%}</span>
@@ -1388,8 +1619,8 @@ time</li>
 (prevents float-too-large warnings)</li>
 <li>Captions should be descriptive (they appear in the PDF)</li>
 </ul>
-<h2 data-number="6.4" id="table-references"><span
-class="header-section-number">6.4</span> Table References</h2>
+<h2 data-number="8.4" id="table-references"><span
+class="header-section-number">8.4</span> Table References</h2>
 <div class="sourceCode" id="cb4"><pre
 class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- Table with label --&gt;</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Step Size <span class="pp">|</span> Iterations <span class="pp">|</span> Converged <span class="pp">|</span></span>
@@ -1400,8 +1631,8 @@ class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb4-1"><
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- Reference in text --&gt;</span></span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>@tbl:performance shows...</span></code></pre></div>
-<h2 data-number="6.5" id="preamble-injection"><span
-class="header-section-number">6.5</span> Preamble Injection</h2>
+<h2 data-number="8.5" id="preamble-injection"><span
+class="header-section-number">8.5</span> Preamble Injection</h2>
 <p><code>preamble.md</code> contains raw LaTeX injected before the
 document body:</p>
 <div class="sourceCode" id="cb5"><pre
@@ -1418,8 +1649,8 @@ class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb5-1"><
 <li>Do <strong>not</strong> duplicate package imports already in the
 infrastructure renderer</li>
 </ul>
-<h2 data-number="6.6" id="bibtex-entry-format"><span
-class="header-section-number">6.6</span> BibTeX Entry Format</h2>
+<h2 data-number="8.6" id="bibtex-entry-format"><span
+class="header-section-number">8.6</span> BibTeX Entry Format</h2>
 <div class="sourceCode" id="cb6"><pre
 class="sourceCode bibtex"><code class="sourceCode bibtex"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="va">@article</span>{<span class="ot">knuth1997</span>,</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">author</span>  = {Donald E. Knuth},</span>
@@ -1435,8 +1666,8 @@ class="sourceCode bibtex"><code class="sourceCode bibtex"><span id="cb6-1"><a hr
 <li>All entries must have at minimum: <code>author</code>,
 <code>title</code>, <code>year</code></li>
 </ul>
-<h2 data-number="6.7" id="section-numbering"><span
-class="header-section-number">6.7</span> Section Numbering</h2>
+<h2 data-number="8.7" id="section-numbering"><span
+class="header-section-number">8.7</span> Section Numbering</h2>
 <pre class="text"><code>00_abstract.md    → Section 0 (unnumbered in PDF)
 01_introduction.md → Section 1
 02_methodology.md  → Section 2
@@ -1445,8 +1676,8 @@ class="header-section-number">6.7</span> Section Numbering</h2>
 <p>Files are assembled in lexicographic order by
 <code>infrastructure.rendering.pdf_renderer.py</code>. The
 <code>00_</code> prefix ensures the abstract renders first.</p>
-<h2 data-number="6.8" id="prose-conventions"><span
-class="header-section-number">6.8</span> Prose Conventions</h2>
+<h2 data-number="8.8" id="prose-conventions"><span
+class="header-section-number">8.8</span> Prose Conventions</h2>
 <ul>
 <li>No “In summary” or “In conclusion” at section ends (RASP
 standard)</li>
@@ -1455,8 +1686,8 @@ standard)</li>
 <code>src/optimizer.py</code>, not “the optimizer module”</li>
 <li>Keep paragraphs focused — one idea per paragraph</li>
 </ul>
-<h2 data-number="6.9" id="see-also"><span
-class="header-section-number">6.9</span> See Also</h2>
+<h2 data-number="8.9" id="see-also"><span
+class="header-section-number">8.9</span> See Also</h2>
 <ul>
 <li><a href="AGENTS.md">AGENTS.md</a> — RASP protocol and AI agent
 constraints</li>

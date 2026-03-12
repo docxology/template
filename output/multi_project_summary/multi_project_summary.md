@@ -1,32 +1,27 @@
 # Multi-Project Execution Summary
 
-**Generated:** 2026-03-11T14:21:13.883477
+**Generated:** 2026-03-12T11:59:44.182912
 
 ## Overview
 
-- **Total Projects:** 2
-- **Successful:** 2
+- **Total Projects:** 1
+- **Successful:** 1
 - **Failed:** 0
-- **Total Duration:** 124.3s
+- **Total Duration:** 51.5s
 
 ## Project Results
 
-### ✅ act_inf_metaanalysis
-- **Status:** Success
-- **Duration:** 83.4s
-- **Stages Completed:** 7
-
 ### ✅ code_project
 - **Status:** Success
-- **Duration:** 40.9s
+- **Duration:** 51.5s
 - **Stages Completed:** 7
 
 ## Performance Analysis
 
-- **Slowest Project:** act_inf_metaanalysis
+- **Slowest Project:** code_project
 - **Fastest Project:** code_project
-- **Average Duration:** 62.2s
-- **Total Pipeline Time:** 124.3s
+- **Average Duration:** 51.5s
+- **Total Pipeline Time:** 51.5s
 
 ## Error Summary
 

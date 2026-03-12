@@ -1,0 +1,76 @@
+\frametitle{Experimental Setup}
+\protect\phantomsection\label{experimental-setup}
+This section details the complete experimental configuration used to
+generate the results in this study. Every parameter value below is
+injected programmatically from \texttt{config.yaml} and the analysis
+pipeline --- no value is hardcoded in the manuscript source.
+
+\begin{block}{Problem Definition}
+\protect\phantomsection\label{problem-definition}
+The optimization target is the quadratic objective function:
+
+\begin{equation}
+\label{eq:quadratic_objective}
+f(x) = \frac{1}{2} x^T A x - b^T x
+\end{equation}
+
+with \(A = [[1.0]]\) and \(b = [1.0]\), yielding the analytical optimum
+at \(x^* = 1.0\) with \(f(x^*) = -0.5\).
+\end{block}
+
+\begin{block}{Parameter Space}
+\protect\phantomsection\label{parameter-space}
+The experiment systematically varies the gradient descent step size
+across 6 values:
+
+\begin{itemize}
+\tightlist
+\item
+  \(\\alpha = 0.01\) (conservative)
+\item
+  \(\\alpha = 0.1\) (moderate)
+\item
+  \(\\alpha = 0.5\) (aggressive)
+\item
+  \(\\alpha = 1.0\) (very aggressive)
+\item
+  \(\\alpha = 1.5\)
+\item
+  \(\\alpha = 2.5\)
+\end{itemize}
+
+All runs start from the initial point \(x_0 = 0.0\) and use a
+convergence tolerance of \(\|{\nabla f}\| < 10^{-8}\) with a maximum
+iteration limit of \(N_{\max} = 1000\).
+\end{block}
+
+\begin{block}{Numerical Stability Grid}
+\protect\phantomsection\label{numerical-stability-grid}
+To validate robustness, the optimizer is exercised across a grid of 8
+starting points and 6 step sizes, producing 48 total evaluations. This
+comprehensive sweep confirms that convergence is not an artifact of a
+narrow parameter choice.
+\end{block}
+
+\begin{block}{Dimensional Scaling}
+\protect\phantomsection\label{dimensional-scaling}
+Performance benchmarking spans problem dimensions
+\(d \in \{1, 2, 5, 10, 20, 50\}\), from the scalar case (\(d = 1\)) to
+moderate dimensionality (\(d = 50\)), using identity-Hessian quadratics
+to isolate algorithmic scaling from problem conditioning effects.
+\end{block}
+
+\begin{block}{Computational Environment}
+\protect\phantomsection\label{computational-environment}
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Python}: 3.12.11
+\item
+  \textbf{NumPy}: 2.4.1
+\item
+  \textbf{Platform}: Darwin arm64
+\item
+  \textbf{Generated}: 2026-03-12T18:59:02Z
+\end{itemize}
+\end{block}

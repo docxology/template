@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  11 MAR 2026 14:20
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  12 MAR 2026 11:59
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1636,26 +1636,59 @@ LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
 (Font)              scaled to size 5.1503pt on input line 28.
 
-Missing character: There is no ∼ (U+223C) in font [lmsans10-regular]:mapping=te
-x-text;!
-Missing character: There is no ∼ (U+223C) in font [lmsans10-regular]:mapping=te
-x-text;!
-Missing character: There is no ∼ (U+223C) in font [lmsans10-regular]:mapping=te
-x-text;!
-Missing character: There is no ∼ (U+223C) in font [lmsans10-regular]:mapping=te
-x-text;!
+
+! LaTeX Error: There's no line here to end.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.28 iterations).}
+                  \label{fig:convergence}
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.28 iterations).}
+                  \label{fig:convergence}
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.28 iterations).}
+                  \label{fig:convergence}
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
 File: ../figures/step_size_sensitivity.png Graphic file (type bmp)
 <../figures/step_size_sensitivity.png>
 Missing character: There is no α (U+03B1) in font [lmsans10-regular]:mapping=te
 x-text;!
 
-Overfull \hbox (7.61992pt too wide) in paragraph at lines 93--94
+Overfull \hbox (7.61992pt too wide) in paragraph at lines 96--97
+[]\TU/lmss/m/n/10.95 Converged  
+ []
+
+Missing character: There is no α (U+03B1) in font [lmsans10-regular]:mapping=te
+x-text;!
+
+Overfull \hbox (7.61992pt too wide) in paragraph at lines 110--111
 []\TU/lmss/m/n/10.95 Converged  
  []
 
 
 LaTeX Warning: Citation `nesterov2013gradient' on page 1 undefined on input lin
-e 114.
+e 127.
 
 File: ../figures/convergence_rate_comparison.png Graphic file (type bmp)
 <../figures/convergence_rate_comparison.png>
@@ -1665,7 +1698,7 @@ File: mt-LatinModernRoman.cfg 2026/02/26 v1.2 microtype config. file: Latin Mod
 ern Roman (RS)
 )
 
-LaTeX Warning: Citation `polyak1964some' on page 1 undefined on input line 179.
+LaTeX Warning: Citation `polyak1964some' on page 1 undefined on input line 195.
 
 
 File: ../figures/algorithm_complexity.png Graphic file (type bmp)
@@ -1680,12 +1713,12 @@ File: ../figures/stability_analysis.png Graphic file (type bmp)
 <../figures/stability_analysis.png>
 
 LaTeX Warning: Reference `eq:convergence_factor' on page 1 undefined on input l
-ine 409.
+ine 427.
 
 LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
-(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 421.
+(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 440.
 )
-Overfull \vbox (3935.44733pt too high) detected at line 537
+Overfull \vbox (4026.53606pt too high) detected at line 556
  []
 
 [1
@@ -1713,13 +1746,13 @@ LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 31284 strings out of 468168
- 633616 string characters out of 5432816
- 1297238 words of memory out of 5000000
- 59418 multiletter control sequences out of 15000+600000
+ 31290 strings out of 468168
+ 633718 string characters out of 5432816
+ 1301362 words of memory out of 5000000
+ 59424 multiletter control sequences out of 15000+600000
  634214 words of font info for 97 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 128i,11n,123p,1086b,1339s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 128i,12n,123p,1086b,1220s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on /Users/4d/Documents/GitHub/template/projects/code_project/out
 put/slides/03_results_slides.pdf (1 page).

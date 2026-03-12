@@ -97,9 +97,10 @@ exercise, but as the representative computational exemplar of the
 \href{https://github.com/docxology/template}{Research Project Template}
 repository. We implement and evaluate the classical gradient descent
 method with fixed step size for quadratic minimization problems,
-examining convergence behavior across learning rates from
-\(\alpha = 0.01\) to \(\alpha = 0.20\). Crucially, the experimental
-framework is built entirely atop the template's nine
+examining convergence behavior across 6 learning rates from
+\(\alpha = 0.01\) to \(\alpha = 2.5\), spanning conservative,
+near-optimal, aggressive, and divergent regimes. Crucially, the
+experimental framework is built entirely atop the template's nine
 \texttt{infrastructure} subpackages to guarantee absolute
 reproducibility and cryptographic output integrity. The very PDF holding
 these words was deterministically generated via
@@ -108,11 +109,11 @@ these words was deterministically generated via
 
 The key contributions of this work are dual-natured. Methodologically,
 it demonstrates empirical validation of theoretical convergence rates on
-quadratic objective functions and automated complexity analysis.
-Architecturally, it establishes a rigorously enforced development
-standard: (1) a zero-mock testing policy validated by 39 passing tests
-with 96.6\% coverage exceeding the 90\% threshold (as explicitly
-asserted in the
+quadratic objective functions and automated complexity analysis across
+four distinct agency categories. Architecturally, it establishes a
+rigorously enforced development standard: (1) a zero-mock testing policy
+validated by a comprehensive passing test suite exceeding the 90\%
+coverage threshold (as explicitly asserted in the
 \href{https://github.com/docxology/template/blob/main/projects/code_project/tests/test_optimizer.py}{test
 suite}); (2) automated analysis pipelines generating
 publication-quality, accessible visualizations; and (3) deep integration
@@ -121,10 +122,11 @@ core infrastructure (e.g., executing
 \texttt{infrastructure.scientific.benchmarking} directly from
 \texttt{projects/code\_project/scripts/optimization\_analysis.py}).
 
-Results confirm that all tested step sizes converge to the analytical
-optimum \(x^* = 1.0\) with objective value \(f(x^*) = -0.5\). The
-codebase validates the template's modular \texttt{tests/} infrastructure
-and expansive
+Results confirm that 4 of 6 tested step sizes converge to the analytical
+optimum \(x^* = 1.0\) with objective value \(f(x^*) = -0.5\), while
+divergent step sizes (\(\alpha \geq 2\)) demonstrate the theoretically
+predicted instability. The codebase validates the template's modular
+\texttt{tests/} infrastructure and expansive
 \href{https://github.com/docxology/template/tree/main/projects/code_project/docs}{project
 documentation} knowledge base, serving as the master exemplar for
 bridging theoretical algorithm development with production-grade,

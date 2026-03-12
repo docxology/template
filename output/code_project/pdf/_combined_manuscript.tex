@@ -148,6 +148,10 @@
 
 % Cross-references and citations
 \usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    allcolors=red
+}
 \usepackage[capitalise,noabbrev]{cleveref}
 \usepackage{natbib}
 
@@ -170,9 +174,10 @@ exercise, but as the representative computational exemplar of the
 \href{https://github.com/docxology/template}{Research Project Template}
 repository. We implement and evaluate the classical gradient descent
 method with fixed step size for quadratic minimization problems,
-examining convergence behavior across learning rates from
-\(\alpha = 0.01\) to \(\alpha = 0.20\). Crucially, the experimental
-framework is built entirely atop the template's nine
+examining convergence behavior across 6 learning rates from
+\(\alpha = 0.01\) to \(\alpha = 2.5\), spanning conservative,
+near-optimal, aggressive, and divergent regimes. Crucially, the
+experimental framework is built entirely atop the template's nine
 \texttt{infrastructure} subpackages to guarantee absolute
 reproducibility and cryptographic output integrity. The very PDF holding
 these words was deterministically generated via
@@ -181,11 +186,11 @@ these words was deterministically generated via
 
 The key contributions of this work are dual-natured. Methodologically,
 it demonstrates empirical validation of theoretical convergence rates on
-quadratic objective functions and automated complexity analysis.
-Architecturally, it establishes a rigorously enforced development
-standard: (1) a zero-mock testing policy validated by 39 passing tests
-with 96.6\% coverage exceeding the 90\% threshold (as explicitly
-asserted in the
+quadratic objective functions and automated complexity analysis across
+four distinct agency categories. Architecturally, it establishes a
+rigorously enforced development standard: (1) a zero-mock testing policy
+validated by a comprehensive passing test suite exceeding the 90\%
+coverage threshold (as explicitly asserted in the
 \href{https://github.com/docxology/template/blob/main/projects/code_project/tests/test_optimizer.py}{test
 suite}); (2) automated analysis pipelines generating
 publication-quality, accessible visualizations; and (3) deep integration
@@ -194,10 +199,11 @@ core infrastructure (e.g., executing
 \texttt{infrastructure.scientific.benchmarking} directly from
 \texttt{projects/code\_project/scripts/optimization\_analysis.py}).
 
-Results confirm that all tested step sizes converge to the analytical
-optimum \(x^* = 1.0\) with objective value \(f(x^*) = -0.5\). The
-codebase validates the template's modular \texttt{tests/} infrastructure
-and expansive
+Results confirm that 4 of 6 tested step sizes converge to the analytical
+optimum \(x^* = 1.0\) with objective value \(f(x^*) = -0.5\), while
+divergent step sizes (\(\alpha \geq 2\)) demonstrate the theoretically
+predicted instability. The codebase validates the template's modular
+\texttt{tests/} infrastructure and expansive
 \href{https://github.com/docxology/template/tree/main/projects/code_project/docs}{project
 documentation} knowledge base, serving as the master exemplar for
 bridging theoretical algorithm development with production-grade,
@@ -318,8 +324,8 @@ explicitly demonstrates:
   delegate logging, file ops, and reporting to the
   \texttt{infrastructure} core.
 \item
-  \textbf{Zero-Mock Verification}: A strict 39-test validation suite
-  proving numerical accuracy without artificial test boundaries.
+  \textbf{Zero-Mock Verification}: A strict comprehensive validation
+  suite proving numerical accuracy without artificial test boundaries.
 \item
   \textbf{Automated Research Pipelines}: High-precision analyses that
   generate publication-quality, accessible visualizations automatically.
@@ -513,13 +519,13 @@ the rule \(x_{k+1} = x_k - \alpha \nabla f(x_k)\).
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={Gradient descent convergence trajectories for four step sizes (\textbackslash alpha = 0.01, 0.05, 0.1, 0.2) on the quadratic f(x) = \textbackslash frac\{1\}\{2\}x\^{}2 - x. Larger \textbackslash alpha values reach the analytical minimum f(x\^{}*) = -0.5 in fewer iterations, with \textbackslash alpha = 0.2 converging in \$\$9 iterations versus \$\$165 for \textbackslash alpha = 0.01.}]{../figures/convergence_plot.png}}
-\caption{Gradient descent convergence trajectories for four step sizes
-(\(\alpha = 0.01, 0.05, 0.1, 0.2\)) on the quadratic
-\(f(x) = \frac{1}{2}x^2 - x\). Larger \(\alpha) values reach the
-analytical minimum \(f(x^*) = -0.5\) in fewer iterations, with
-\(\alpha = 0.2\) converging in \$\sim\$9 iterations versus \$\sim\$165
-for \(\alpha = 0.01\).}\label{fig:convergence}
+\pandocbounded{\includegraphics[keepaspectratio,alt={Gradient descent convergence trajectories for 6 step sizes (\textbackslash\textbackslash alpha = 0.01, \textbackslash\textbackslash alpha = 0.1, \textbackslash\textbackslash alpha = 0.5, \textbackslash\textbackslash alpha = 1.0, \textbackslash\textbackslash alpha = 1.5, \textbackslash\textbackslash alpha = 2.5) on the quadratic f(x) = \textbackslash frac\{1\}\{2\}x\^{}2 - x. Larger step sizes reach the analytical minimum f(x\^{}*) = -0.5 faster, while \textbackslash alpha \textbackslash geq 2 diverges. The fastest convergence occurs at \textbackslash alpha = 1.0 (1 iterations).}]{../figures/convergence_plot.png}}
+\caption{Gradient descent convergence trajectories for 6 step sizes
+(\(\\alpha = 0.01, \\alpha = 0.1, \\alpha = 0.5, \\alpha = 1.0, \\alpha = 1.5, \\alpha = 2.5\))
+on the quadratic \(f(x) = \frac{1}{2}x^2 - x\). Larger step sizes reach
+the analytical minimum \(f(x^*) = -0.5\) faster, while \(\alpha \geq 2\)
+diverges. The fastest convergence occurs at \(\alpha = 1.0\) (1
+iterations).}\label{fig:convergence}
 \end{figure}
 
 \textbf{Key observations from Figure \ref{fig:convergence}:}
@@ -528,15 +534,16 @@ for \(\alpha = 0.01\).}\label{fig:convergence}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  \textbf{Step size impact}: Larger step sizes (\(\alpha = 0.2\))
-  exhibit faster initial progress but may show oscillatory behavior near
-  convergence
+  \textbf{Step size impact}: Larger step sizes exhibit faster initial
+  progress; \(\alpha = 1.0\) converges in 1 iteration(s)
 \item
-  \textbf{Convergence rate}: All tested step sizes eventually converge
-  to the analytical optimum at \(x^* = 1\)
+  \textbf{Agency categories}: Conservative (\(\alpha \leq 0.1\)),
+  near-optimal (\(0.3 \leq \alpha \leq 1.0\)), aggressive
+  (\(1 < \alpha < 2\)), and divergent (\(\alpha \geq 2\))
 \item
-  \textbf{Stability}: Conservative step sizes (\(\alpha = 0.01\))
-  demonstrate smooth, monotonic convergence with minimal oscillations
+  \textbf{Stability boundary}: The critical threshold is \(\alpha = 2\)
+  for this unit-Hessian problem; \(\alpha < 2\) converges,
+  \(\alpha \geq 2\) diverges
 \end{enumerate}
 
 \subsubsection{Step Size Sensitivity
@@ -548,13 +555,13 @@ the trade-off between convergence speed and numerical stability.
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={Step size sensitivity analysis across 10 values (alpha from 0.005 to 0.4). Left panel: iterations to convergence decrease geometrically with step size on log--log axes. Right panel: all step sizes achieve the optimal objective value of -0.5 from the initial value of 0, confirming robust convergence across the full range.}]{../figures/step_size_sensitivity.png}}
-\caption{Step size sensitivity analysis across 10 values (alpha from
-0.005 to 0.4). Left panel: iterations to convergence decrease
-geometrically with step size on log--log axes. Right panel: all step
-sizes achieve the optimal objective value of -0.5 from the initial value
-of 0, confirming robust convergence across the full
-range.}\label{fig:step_sensitivity}
+\pandocbounded{\includegraphics[keepaspectratio,alt={Step size sensitivity analysis spanning all four agency categories (conservative, near-optimal, aggressive, divergent). Left panel: iterations to convergence vs step size, with points colour-coded by category. Right panel: final objective values showing convergent settings clustering at f(x\^{}*) = -0.5 while divergent settings fail to reach the optimum.}]{../figures/step_size_sensitivity.png}}
+\caption{Step size sensitivity analysis spanning all four agency
+categories (conservative, near-optimal, aggressive, divergent). Left
+panel: iterations to convergence vs step size, with points colour-coded
+by category. Right panel: final objective values showing convergent
+settings clustering at \(f(x^*) = -0.5\) while divergent settings fail
+to reach the optimum.}\label{fig:step_sensitivity}
 \end{figure}
 
 \subsection{Quantitative Results}\label{quantitative-results}
@@ -564,15 +571,31 @@ computationally by orchestrating
 \texttt{infrastructure.reporting.pipeline\_reporter}, feeding directly
 into the
 \href{https://github.com/docxology/template/blob/main/projects/code_project/output/data/optimization_results.csv}{optimization
-results data} that acts as the source of truth for Table 1:
+results data} that acts as the source of truth for Table
+\ref{tab:opt_results}:
 
-{\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2113}}
   >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2254}}
   >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2394}}
   >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1690}}
   >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1549}}@{}}
+\caption{Optimization results showing solution accuracy and convergence
+speed for different step sizes. \label{tab:opt_results}}\tabularnewline
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Step Size (α)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Final Solution
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Objective Value
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Iterations
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Converged
+\end{minipage} \\
+\midrule\noalign{}
+\endfirsthead
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
 Step Size (α)
@@ -594,10 +617,6 @@ Converged
 0.10 & 1.0000 & -0.5000 & 17 & Yes \\
 0.20 & 1.0000 & -0.5000 & 9 & Yes \\
 \end{longtable}
-}
-
-\textbf{Table 1:} Optimization results showing solution accuracy and
-convergence speed for different step sizes.
 
 \subsection{Convergence Rate Analysis}\label{convergence-rate-analysis}
 
@@ -613,12 +632,13 @@ predictions against empirical results.
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={Convergence rate comparison on logarithmic scale. Each step size exhibits linear convergence in \textbackslash log \textbackslash\mid x\_k - x\^{}*\textbackslash\mid, with slopes corresponding to the contraction factor \textbackslash rho = 1 - 2\textbackslash alpha(1-\textbackslash alpha). The dashed tolerance line at \textbackslash varepsilon = 10\^{}\{-6\} marks the convergence criterion.}]{../figures/convergence_rate_comparison.png}}
+\pandocbounded{\includegraphics[keepaspectratio,alt={Convergence rate comparison on logarithmic scale. Each step size's error \mid f(x) - f(x\^{}*)\mid{} is plotted per iteration. Converging settings show downward-sloping lines with slopes determined by the contraction factor \textbackslash rho = \mid1 - \textbackslash alpha\mid, while divergent settings show upward trajectories. The dashed tolerance line at \textbackslash varepsilon = 10\^{}\{-8\} marks the convergence criterion.}]{../figures/convergence_rate_comparison.png}}
 \caption{Convergence rate comparison on logarithmic scale. Each step
-size exhibits linear convergence in \(\log \|x_k - x^*\|\), with slopes
-corresponding to the contraction factor
-\(\rho = 1 - 2\alpha(1-\alpha)\). The dashed tolerance line at
-\(\varepsilon = 10^{-6}\) marks the convergence
+size's error \(|f(x) - f(x^*)|\) is plotted per iteration. Converging
+settings show downward-sloping lines with slopes determined by the
+contraction factor \(\rho = |1 - \alpha|\), while divergent settings
+show upward trajectories. The dashed tolerance line at
+\(\varepsilon = 10^{-8}\) marks the convergence
 criterion.}\label{fig:convergence_rate}
 \end{figure}
 
@@ -636,8 +656,9 @@ For the optimal step size \(\alpha = 0.5\), this bound becomes:
 \frac{\|x_{k+1} - x^*\|^2}{\|x_k - x^*\|^2} \leq 1 - 2(0.5)(1 - 0.5) = 0.5
 \end{equation}
 
-However, our empirical analysis uses more conservative step sizes
-(\(\alpha \leq 0.2\)) to ensure stability.
+Our experimental analysis uses step sizes spanning \(\alpha = 0.01\) to
+\(\alpha = 2.5\), including both conservative and aggressive settings to
+demonstrate the full spectrum of convergence behavior.
 
 \subsubsection{Error Bounds}\label{error-bounds}
 
@@ -650,12 +671,13 @@ The error after \(k\) iterations is bounded by:
 
 where \(\kappa = \frac{\lambda_{\max}}{\lambda_{\min}}\) is the
 condition number. For our test problem with \(A = I\), we have
-\(\kappa = 1\), which yields a convergence factor of \(\rho = 0\). This
-reflects the perfectly conditioned nature of the identity-matrix
-quadratic: a single exact step with optimal step size \(\alpha = 1\)
-would reach the minimum. In practice, our conservative step sizes
-(\(\alpha \leq 0.2\)) trade per-iteration progress for stability,
-resulting in the measured iteration counts shown in Table 1.
+\(\kappa = 1\), which yields a contraction factor of
+\(\rho = |1 - \alpha|\). This means \(\alpha = 1\) is the exact Newton
+step (converging in one iteration), step sizes \(\alpha < 1\) converge
+monotonically, \(1 < \alpha < 2\) converge with oscillation, and
+\(\alpha \geq 2\) diverge. The measured iteration counts in Table
+\ref{tab:opt_results} confirm this theoretical prediction across all 6
+tested settings.
 
 \subsubsection{Performance Metrics}\label{performance-metrics}
 
@@ -707,21 +729,23 @@ speed:
 
 \subsubsection{Solution Accuracy}\label{solution-accuracy}
 
-All tested step sizes achieved the analytical optimum within numerical
-precision:
+4 of 6 tested step sizes achieved the analytical optimum within
+numerical precision:
 
 \begin{itemize}
 \tightlist
 \item
-  Target solution: \(x = 1.0000\) (relative error \(< 10^{-4}\))
+  Target solution: \(x = 1.0\) (relative error \(< 10^{-4}\) for
+  converged settings)
 \item
-  Target objective: \(f(x) = -0.5000\) (absolute error \(< 10^{-6}\))
+  Target objective: \(f(x) = -0.5\) (absolute error \(< 10^{-8}\) for
+  converged settings)
 \end{itemize}
 
-This confirms that gradient descent with fixed step size reliably solves
-convex quadratic problems across a wide range of learning rates,
-consistent with the theoretical convergence guarantees established in
-Section 2.
+Divergent step sizes (\(\alpha \geq 2\)) confirm the theoretical
+instability boundary, demonstrating that gradient descent with fixed
+step size requires \(\alpha < 2/\lambda_{\max}\) for convergence on
+quadratic objectives.
 
 \subsection{Algorithm Characteristics}\label{algorithm-characteristics}
 
@@ -764,14 +788,13 @@ analysis across different problem scales.
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={Algorithm performance analysis in four panels: (TL) empirical iteration counts per step size, (TR) solution accuracy as \textbackslash log\_\{10\} \mid f(x) - f(x\^{}*)\mid{} with the \textbackslash varepsilon = 10\^{}\{-6\} tolerance line, (BL) theoretical bound 1/(2\textbackslash alpha(1-\textbackslash alpha)) overlaid on empirical iterations in log scale, (BR) contraction factor \textbackslash rho = 1 - 2\textbackslash alpha(1-\textbackslash alpha) per step size with the optimal \textbackslash rho = 0.5 reference.}]{../figures/algorithm_complexity.png}}
+\pandocbounded{\includegraphics[keepaspectratio,alt={Algorithm performance analysis in four panels: (TL) empirical iteration counts per step size, colour-coded by agency category, (TR) solution accuracy as \textbackslash log\_\{10\} \mid f(x) - f(x\^{}*)\mid{} with the \textbackslash varepsilon = 10\^{}\{-8\} tolerance line, (BL) theoretical bound overlaid on empirical iterations in log scale, (BR) contraction factor \textbackslash rho = \mid1-\textbackslash alpha\mid{} per step size.}]{../figures/algorithm_complexity.png}}
 \caption{Algorithm performance analysis in four panels: (TL) empirical
-iteration counts per step size, (TR) solution accuracy as
-\(\log_{10} |f(x) - f(x^*)|\) with the \(\varepsilon = 10^{-6}\)
-tolerance line, (BL) theoretical bound \(1/(2\alpha(1-\alpha))\)
+iteration counts per step size, colour-coded by agency category, (TR)
+solution accuracy as \(\log_{10} |f(x) - f(x^*)|\) with the
+\(\varepsilon = 10^{-8}\) tolerance line, (BL) theoretical bound
 overlaid on empirical iterations in log scale, (BR) contraction factor
-\(\rho = 1 - 2\alpha(1-\alpha)\) per step size with the optimal
-\(\rho = 0.5\) reference.}\label{fig:complexity}
+\(\rho = |1-\alpha|\) per step size.}\label{fig:complexity}
 \end{figure}
 
 The algorithm demonstrates efficient performance for small-scale
@@ -786,8 +809,8 @@ optimization problems:
   \textbf{Space complexity}: \(O(d)\) for storing variables and
   gradients
 \item
-  \textbf{Convergence}: Typically \(< 20\) iterations for this quadratic
-  problem
+  \textbf{Convergence}: Fastest at \(\alpha = 1.0\) (1 iteration),
+  average 372 iterations
 \item
   \textbf{Scalability}: Memory-efficient implementation suitable for
   high-dimensional problems
@@ -816,18 +839,17 @@ Analysis}\label{numerical-stability-analysis-1}
 
 Figure \ref{fig:stability} maps the optimizer's accuracy across a grid
 of 8 starting points (\(x_0 \in [-50, 50]\)) and 6 step sizes
-(\(\alpha \in [0.01, 0.4]\)), directly exercising
+(\(\alpha \in [0.01, 0.9]\)), directly exercising
 \texttt{gradient\_descent()}, \texttt{quadratic\_function()}, and
 \texttt{compute\_gradient()} across the parameter space.
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={Numerical stability heatmap: each cell shows \textbackslash log\_\{10\} \mid f(x) - f(x\^{}*)\mid{} for a (starting point, step size) combination, with 48 total evaluations. All cells achieve errors below 10\^{}\{-6\}, confirming uniform stability. The right panel reports the aggregate stability score from check\_numerical\_stability().}]{../figures/stability_analysis.png}}
+\pandocbounded{\includegraphics[keepaspectratio,alt={Numerical stability heatmap: each cell shows \textbackslash log\_\{10\} \mid f(x) - f(x\^{}*)\mid{} for a (starting point, step size) combination, with 48 total evaluations. The right panel reports the aggregate stability score of 1.00 from check\_numerical\_stability().}]{../figures/stability_analysis.png}}
 \caption{Numerical stability heatmap: each cell shows
 \(\log_{10} |f(x) - f(x^*)|\) for a (starting point, step size)
-combination, with 48 total evaluations. All cells achieve errors below
-\(10^{-6}\), confirming uniform stability. The right panel reports the
-aggregate stability score from
+combination, with 48 total evaluations. The right panel reports the
+aggregate stability score of 1.00 from
 \protect\texttt{check\_numerical\_stability()}.}\label{fig:stability}
 \end{figure}
 
@@ -851,11 +873,13 @@ Summary}\label{performance-metrics-summary}
 \begin{itemize}
 \tightlist
 \item
-  Solution precision: \(< 10^{-4}\) relative error
+  Solution precision: \(< 10^{-4}\) relative error (for converged step
+  sizes)
 \item
-  Objective accuracy: \(< 10^{-6}\) absolute error
+  Objective accuracy: \(< 10^{-8}\) absolute error (for converged step
+  sizes)
 \item
-  Gradient tolerance: \(< 10^{-6}\) achieved in all cases
+  Gradient tolerance: \(< 10^{-8}\) achieved for converged cases
 \end{itemize}
 
 \subsection{Validation}\label{validation}
@@ -878,23 +902,24 @@ The implementation was validated through the comprehensive
   PyTest.
 \end{itemize}
 
-All tests pass with 96.6\% statement coverage exceeding the 90\%
-threshold, ensuring implementation correctness across core logic,
-convergence detection, and logging pathways without the use of mocks.
+All tests pass with coverage exceeding the 90\% threshold, ensuring
+implementation correctness across core logic, convergence detection, and
+logging pathways without the use of mocks.
 
 \subsection{Discussion}\label{discussion}
 
 The experimental results validate the gradient descent implementation
 and confirm the theoretical convergence predictions from Section 2. The
-monotonic relationship between step size and iteration count (Table 1)
-aligns with the convergence factor analysis in Equation
-\ref{eq:convergence_factor}, while the uniform solution accuracy across
-all step sizes demonstrates the robustness of the convergence criterion
-\(\|\nabla f(x)\| < \epsilon\). The automated analysis pipeline
-successfully generated six publication-quality visualizations and
-structured numerical outputs, validating the template's end-to-end
-research workflow from algorithmic implementation through automated
-infrastructure-driven reporting and manuscript integration.
+monotonic relationship between step size and iteration count (Table
+\ref{tab:opt_results}) aligns with the convergence factor analysis in
+Equation \ref{eq:convergence_factor}, while the uniform solution
+accuracy across all step sizes demonstrates the robustness of the
+convergence criterion \(\|\nabla f(x)\| < \epsilon\). The automated
+analysis pipeline successfully generated six publication-quality
+visualizations and structured numerical outputs, validating the
+template's end-to-end research workflow from algorithmic implementation
+through automated infrastructure-driven reporting and manuscript
+integration.
 
 \emph{As a meta-architectural note: the perfect embedding of these
 outputs into this document, including all dynamic references (e.g.,
@@ -928,7 +953,7 @@ foundational pillars:
   rendering, and reporting.
 \item
   \textbf{\texttt{tests} Integrity}: Established absolute logical
-  hermeticity through a 39-test integration and infrastructure
+  hermeticity through a comprehensive integration and infrastructure
   validation suite operating continuously.
 \item
   \textbf{\texttt{docs} Knowledge Operations}: Adhered structurally to
@@ -939,15 +964,14 @@ foundational pillars:
 
 \subsection{Technical Contributions}\label{technical-contributions}
 
-\subsubsection{96.6\% Test Coverage
-Strategy}\label{test-coverage-strategy}
+\subsubsection{Test Coverage Strategy}\label{test-coverage-strategy}
 
 The hallmark of this implementation is the test matrix:
 
 \begin{itemize}
 \tightlist
 \item
-  39 distinct tests traversing execution pipelines, integration flows,
+  Comprehensive tests traversing execution pipelines, integration flows,
   and algorithmic bounds.
 \item
   Strict enforcement of zero-mock policies guaranteeing real execution
@@ -1057,6 +1081,194 @@ alongside \texttt{config.yaml} flawlessly into a finalized PDF. The
 \texttt{code\_project} implementation stands as a fully verified
 blueprint for automated, reproducible computational research, showcasing
 the extraordinary depth of the \texttt{docxology/template} repository.
+
+\newpage
+
+\section{Experimental Setup}\label{experimental-setup-1}
+
+This section details the complete experimental configuration used to
+generate the results in this study. Every parameter value below is
+injected programmatically from \texttt{config.yaml} and the analysis
+pipeline --- no value is hardcoded in the manuscript source.
+
+\subsection{Problem Definition}\label{problem-definition}
+
+The optimization target is the quadratic objective function:
+
+\begin{equation}
+\label{eq:quadratic_objective}
+f(x) = \frac{1}{2} x^T A x - b^T x
+\end{equation}
+
+with \(A = [[1.0]]\) and \(b = [1.0]\), yielding the analytical optimum
+at \(x^* = 1.0\) with \(f(x^*) = -0.5\).
+
+\subsection{Parameter Space}\label{parameter-space}
+
+The experiment systematically varies the gradient descent step size
+across 6 values:
+
+\begin{itemize}
+\tightlist
+\item
+  \(\\alpha = 0.01\) (conservative)
+\item
+  \(\\alpha = 0.1\) (moderate)
+\item
+  \(\\alpha = 0.5\) (aggressive)
+\item
+  \(\\alpha = 1.0\) (very aggressive)
+\item
+  \(\\alpha = 1.5\)
+\item
+  \(\\alpha = 2.5\)
+\end{itemize}
+
+All runs start from the initial point \(x_0 = 0.0\) and use a
+convergence tolerance of \(\|{\nabla f}\| < 10^{-8}\) with a maximum
+iteration limit of \(N_{\max} = 1000\).
+
+\subsection{Numerical Stability Grid}\label{numerical-stability-grid}
+
+To validate robustness, the optimizer is exercised across a grid of 8
+starting points and 6 step sizes, producing 48 total evaluations. This
+comprehensive sweep confirms that convergence is not an artifact of a
+narrow parameter choice.
+
+\subsection{Dimensional Scaling}\label{dimensional-scaling}
+
+Performance benchmarking spans problem dimensions
+\(d \in \{1, 2, 5, 10, 20, 50\}\), from the scalar case (\(d = 1\)) to
+moderate dimensionality (\(d = 50\)), using identity-Hessian quadratics
+to isolate algorithmic scaling from problem conditioning effects.
+
+\subsection{Computational Environment}\label{computational-environment}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Python}: 3.12.11
+\item
+  \textbf{NumPy}: 2.4.1
+\item
+  \textbf{Platform}: Darwin arm64
+\item
+  \textbf{Generated}: 2026-03-12T18:59:02Z
+\end{itemize}
+
+\newpage
+
+\section{Reproducibility
+Certification}\label{reproducibility-certification}
+
+This section provides a machine-verifiable reproducibility certificate
+for the complete study. Every metric below is computed by the analysis
+pipeline and injected into the manuscript at render time ---
+establishing a cryptographic chain of custody from configuration to
+publication.
+
+\subsection{Configuration Provenance}\label{configuration-provenance}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.6111}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.3889}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Property
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Value
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Config hash (SHA-256, truncated) & \texttt{82a75e78f9447329} \\
+Paper version & 2.0 \\
+First author & Research Template Author \\
+Keyword count & optimization algorithms, gradient descent, convergence
+analysis, numerical methods, mathematical programming, reproducible
+research, infrastructure automation \\
+\end{longtable}
+}
+
+The configuration hash changes whenever any parameter in
+\texttt{config.yaml} is modified, ensuring that every rendered PDF is
+traceable to a specific configuration state.
+
+\subsection{Generated Artifact
+Registry}\label{generated-artifact-registry}
+
+The analysis pipeline produced the following artifacts, each validated
+by \texttt{infrastructure.validation.output\_validator}:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Category & Count \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Publication-quality figures & 7 \\
+Structured data files (CSV/JSON) & 2 \\
+Analysis reports & 6 \\
+\textbf{Total artifacts} & \textbf{15} \\
+\end{longtable}
+}
+
+\subsection{Numerical Validation
+Summary}\label{numerical-validation-summary}
+
+\subsubsection{Convergence Verification}\label{convergence-verification}
+
+All 6 tested step sizes converged to the analytical optimum: No
+
+\begin{itemize}
+\tightlist
+\item
+  Fastest convergence: \(\alpha = 1.0\) (1 iterations)
+\item
+  Slowest convergence: \(\alpha = 0.01\) (1000 iterations)
+\item
+  Average iterations: 372
+\end{itemize}
+
+\subsubsection{Numerical Stability}\label{numerical-stability}
+
+Stability score from \texttt{infrastructure.scientific.stability}:
+\textbf{1.00} (out of 1.00)
+
+The stability analysis tested 48 parameter combinations (8 starting
+points \(\times\) 6 step sizes), confirming uniform convergence across
+the entire parameter space.
+
+\subsection{Madlib Injection
+Verification}\label{madlib-injection-verification}
+
+This manuscript demonstrates the template's ``madlib'' capability: every
+quantitative claim is injected from computed data at render time. The
+substitution system processed the following variables:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Configuration variables}: Drawn from
+  \texttt{manuscript/config.yaml} (\texttt{experiment:} section)
+\item
+  \textbf{Result variables}: Computed from
+  \texttt{output/data/optimization\_results.csv}
+\item
+  \textbf{Stability variables}: Extracted from
+  \texttt{output/reports/stability\_analysis.json}
+\item
+  \textbf{Provenance variables}: Generated at substitution time
+  (timestamps, hashes, versions)
+\end{itemize}
+
+To verify: modifying any value in \texttt{config.yaml} and re-running
+the pipeline will automatically update every corresponding claim in this
+document. No manual transcription is required or permitted.
 
 \newpage
 

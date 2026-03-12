@@ -2,15 +2,15 @@
 
 **Title:** Optimization Algorithm Performance Analysis
 
-**Description:** Comparative analysis of gradient descent optimization with step sizes [0.01, 0.05, 0.1, 0.2]
+**Description:** Comparative analysis of gradient descent optimization with step sizes [0.01, 0.1, 0.5, 1.0, 1.5, 2.5]
 
 **Algorithm:** Gradient Descent
 
-**Best Step Size:** 0.2
+**Best Step Size:** 0.5
 
 **Final Objective:** -0.500000
 
-**Iterations:** 84
+**Iterations:** 28
 
 ## Citations
 
@@ -23,7 +23,7 @@
   publisher = {Self-published},
   url = {},
   license = {MIT},
-  abstract = {Comparative analysis of gradient descent optimization with step sizes [0.01, 0.05, 0.1, 0.2]},
+  abstract = {Comparative analysis of gradient descent optimization with step sizes [0.01, 0.1, 0.5, 1.0, 1.5, 2.5]},
   keywords = {optimization, gradient descent, numerical analysis}
 }
 

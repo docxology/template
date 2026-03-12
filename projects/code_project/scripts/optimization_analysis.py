@@ -14,12 +14,14 @@ Capabilities demonstrated:
 4. Registering figures for automated `infrastructure.rendering` into the PDF
 """
 import functools
+import json
 import sys
 from pathlib import Path
 from typing import Any, Dict, Optional
 
 import matplotlib.pyplot as plt
 import numpy as np
+import yaml
 
 from optimizer import (OptimizationResult, compute_gradient, gradient_descent,
                        make_quadratic_problem, quadratic_function,
@@ -143,6 +145,44 @@ def apply_visualization_style():
     })
 
 
+def _load_experiment_config():
+    """Load experiment parameters from config.yaml."""
+    config_path = project_root / "manuscript" / "config.yaml"
+    if config_path.exists():
+        with open(config_path, "r") as f:
+            config = yaml.safe_load(f)
+        return config.get("experiment", {})
+    return {}
+
+
+def _agency_category(alpha):
+    """Classify a step size into its agency category for H=I quadratic.
+
+    For the quadratic f(x) = 0.5*x^T*x - b^T*x with Hessian H=I,
+    the contraction factor is rho = |1 - alpha|.
+      rho < 1  => converges
+      rho >= 1 => diverges
+    """
+    if alpha < 0.3:
+        return "Conservative", "#2196F3"  # blue
+    elif alpha <= 1.0:
+        return "Near-optimal", "#4CAF50"  # green
+    elif alpha < 2.0:
+        return "Aggressive", "#FF9800"  # amber
+    else:
+        return "Divergent", "#F44336"  # red
+
+
+def _save_figure_data(data, name, output_dir):
+    """Save companion data file alongside a figure."""
+    data_dir = output_dir / "data"
+    data_dir.mkdir(parents=True, exist_ok=True)
+    data_path = data_dir / f"{name}.json"
+    with open(data_path, "w") as f:
+        json.dump(data, f, indent=2, default=str)
+    return data_path
+
+
 def run_convergence_experiment():
     """Run gradient descent with different step sizes and track convergence."""
     logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
@@ -150,12 +190,15 @@ def run_convergence_experiment():
     if logger:
         logger.info("Running convergence experiments...")
 
-    # Define test problem: f(x) = (1/2) x^2 - x, optimum at x = 1
-    obj_func, grad_func = make_quadratic_problem(np.array([[1.0]]), np.array([1.0]))
+    exp_config = _load_experiment_config()
+    A = np.array(exp_config.get("quadratic_A", [[1.0]]), dtype=float)
+    b = np.array(exp_config.get("quadratic_b", [1.0]), dtype=float)
+    obj_func, grad_func = make_quadratic_problem(A, b)
 
-    # Different step sizes to test
-    step_sizes = [0.01, 0.05, 0.1, 0.2]
-    initial_point = np.array([0.0])  # Start far from optimum
+    step_sizes = exp_config.get("step_sizes", [0.01, 0.1, 0.5, 1.0, 1.5, 2.5])
+    initial_point = np.array([exp_config.get("initial_point", 0.0)])
+    max_iter = exp_config.get("max_iterations", 1000)
+    tol = exp_config.get("tolerance", 1e-8)
 
     results = {}
 
@@ -168,8 +211,8 @@ def run_convergence_experiment():
             objective_func=obj_func,
             gradient_func=grad_func,
             step_size=step_size,
-            max_iterations=100,
-            tolerance=1e-8,
+            max_iterations=max_iter,
+            tolerance=tol,
             verbose=False,
         )
 
@@ -185,12 +228,15 @@ def run_convergence_experiment_with_progress(progress_bar):
     """Run gradient descent with different step sizes and track convergence with progress bar."""
     print("Running convergence experiments...")
 
-    # Define test problem: f(x) = (1/2) x^2 - x, optimum at x = 1
-    obj_func, grad_func = make_quadratic_problem(np.array([[1.0]]), np.array([1.0]))
+    exp_config = _load_experiment_config()
+    A = np.array(exp_config.get("quadratic_A", [[1.0]]), dtype=float)
+    b = np.array(exp_config.get("quadratic_b", [1.0]), dtype=float)
+    obj_func, grad_func = make_quadratic_problem(A, b)
 
-    # Different step sizes to test
-    step_sizes = [0.01, 0.05, 0.1, 0.2]
-    initial_point = np.array([0.0])  # Start far from optimum
+    step_sizes = exp_config.get("step_sizes", [0.01, 0.1, 0.5, 1.0, 1.5, 2.5])
+    initial_point = np.array([exp_config.get("initial_point", 0.0)])
+    max_iter = exp_config.get("max_iterations", 1000)
+    tol = exp_config.get("tolerance", 1e-8)
 
     results = {}
 
@@ -202,8 +248,8 @@ def run_convergence_experiment_with_progress(progress_bar):
             objective_func=obj_func,
             gradient_func=grad_func,
             step_size=step_size,
-            max_iterations=100,
-            tolerance=1e-8,
+            max_iterations=max_iter,
+            tolerance=tol,
             verbose=False,
         )
 
@@ -222,7 +268,7 @@ def run_convergence_experiment_with_progress(progress_bar):
 def generate_convergence_plot(results):
     """Generate convergence plot showing objective value vs iteration.
     
-    Uses colorblind-safe palette and accessibility-optimized settings.
+    Uses agency-category colors and handles divergent trajectories.
     """
     logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
 
@@ -232,29 +278,38 @@ def generate_convergence_plot(results):
     # Create figure with enhanced styling
     fig, ax = plt.subplots(figsize=VIZ_CONFIG["figure"]["figsize_single"])
 
-    # Use colorblind-safe palette
-    colors = VIZ_CONFIG["palette"]
-    markers = VIZ_CONFIG["markers"]
     step_sizes = list(results.keys())
+    plot_data = {}
 
-    for i, step_size in enumerate(step_sizes):
+    for step_size in step_sizes:
         result = results[step_size]
+        category, color = _agency_category(step_size)
 
-        # Simulate the trajectory to get intermediate values
-        trajectory = simulate_trajectory(step_size, max_iter=result.iterations + 10)
+        # Limit trajectory length for readability
+        max_plot_iters = min(result.iterations + 5, 50)
+        trajectory = simulate_trajectory(step_size, max_iter=max_plot_iters)
+
+        # Clip extreme values for divergent cases
+        objectives = np.array(trajectory["objectives"], dtype=float)
+        objectives = np.clip(objectives, -10, 100)
 
         ax.plot(
             trajectory["iterations"],
-            trajectory["objectives"],
-            color=colors[i % len(colors)],
+            objectives,
+            color=color,
             linewidth=VIZ_CONFIG["lines"]["linewidth"],
-            label=f"Step size α = {step_size}",
-            marker=markers[i % len(markers)],
+            label=f"α = {step_size} ({category})",
+            marker="o",
             markersize=VIZ_CONFIG["lines"]["markersize"],
             markeredgewidth=VIZ_CONFIG["lines"]["markeredgewidth"],
             markerfacecolor="white",
             markevery=max(1, len(trajectory["iterations"]) // 8),
         )
+        plot_data[str(step_size)] = {
+            "category": category,
+            "iterations": trajectory["iterations"],
+            "objectives": [float(o) for o in objectives],
+        }
 
     # Add optimal value reference line
     ax.axhline(
@@ -278,19 +333,7 @@ def generate_convergence_plot(results):
         title="Learning Rate",
         title_fontsize=VIZ_CONFIG["fonts"]["legend"],
     )
-    ax.set_ylim(bottom=-0.6)
-
-    # Add annotation for convergence
-    ax.annotate(
-        "All step sizes converge to optimal x* = 1.0",
-        xy=(0.98, 0.15),
-        xycoords="axes fraction",
-        fontsize=VIZ_CONFIG["fonts"]["annotation"],
-        style="italic",
-        color=VIZ_CONFIG["colors"]["neutral"],
-        ha="right",
-        bbox=dict(boxstyle="round,pad=0.3", facecolor="white", alpha=0.8, edgecolor="none"),
-    )
+    ax.set_ylim(bottom=-0.7, top=10)
 
     plt.tight_layout()
 
@@ -303,6 +346,9 @@ def generate_convergence_plot(results):
         plot_path, dpi=300, bbox_inches="tight", facecolor="white", edgecolor="none"
     )
     plt.close()
+
+    # Save companion data
+    _save_figure_data(plot_data, "convergence_plot", project_root / "output")
 
     if logger:
         logger.info(f"Saved convergence plot to: {plot_path}")
@@ -478,9 +524,10 @@ def generate_convergence_rate_plot(results):
     markers = VIZ_CONFIG["markers"]
     step_sizes = list(results.keys())
 
-    for i, step_size in enumerate(step_sizes):
-        # Simulate trajectory with more points for rate analysis
-        trajectory = simulate_trajectory(step_size, max_iter=100)
+    for step_size in step_sizes:
+        category, color = _agency_category(step_size)
+        # Limit trajectory to avoid overflow for divergent step sizes
+        trajectory = simulate_trajectory(step_size, max_iter=30)
 
         iterations = trajectory["iterations"]
         objectives = trajectory["objectives"]
@@ -493,10 +540,10 @@ def generate_convergence_rate_plot(results):
         ax.plot(
             iterations[:max_plot_iter],
             errors[:max_plot_iter],
-            color=colors[i % len(colors)],
+            color=color,
             linewidth=VIZ_CONFIG["lines"]["linewidth"],
-            label=f"Step size α = {step_size}",
-            marker=markers[i % len(markers)],
+            label=f"α = {step_size} ({category})",
+            marker="o",
             markersize=VIZ_CONFIG["lines"]["markersize"],
             markerfacecolor="white",
             markeredgewidth=VIZ_CONFIG["lines"]["markeredgewidth"],
@@ -516,7 +563,7 @@ def generate_convergence_rate_plot(results):
         title_fontsize=VIZ_CONFIG["fonts"]["legend"],
     )
     ax.set_yscale("log")
-    ax.set_ylim(1e-8, 1e1)
+    ax.set_ylim(1e-12, 1e4)
 
     # Add convergence threshold annotation
     ax.axhline(
@@ -574,16 +621,16 @@ def generate_complexity_visualization(results):
         err = abs(obj_val - optimal_value)
         log_errors.append(np.log10(max(err, 1e-16)))  # floor at 1e-16
 
-    # Compute theoretical complexity: 1 / (2α(1−α)) and contraction factor
+    # Compute theoretical complexity and contraction factor: ρ = |1 - α|
     theoretical_complexity = []
     contraction_factors = []
     for alpha in step_sizes:
-        if alpha < 1.0:
+        rho = abs(1 - alpha)
+        contraction_factors.append(rho)
+        if rho > 0 and rho < 1:
             theoretical_complexity.append(1.0 / (2 * alpha * (1 - alpha)))
-            contraction_factors.append(1 - 2 * alpha * (1 - alpha))
         else:
             theoretical_complexity.append(float("inf"))
-            contraction_factors.append(1.0)
 
     fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(13, 10))
     fig.suptitle(
@@ -598,12 +645,13 @@ def generate_complexity_visualization(results):
     success_color = VIZ_CONFIG["colors"]["success"]
     quaternary_color = VIZ_CONFIG["colors"]["quaternary"]
 
-    # (1) Empirical iterations — unchanged
+    # Use agency-category colors for bars
+    bar_colors = [_agency_category(s)[1] for s in step_sizes]
     bars1 = ax1.bar(
         range(len(step_sizes)),
         iterations,
         tick_label=[f"α={s}" for s in step_sizes],
-        color=bar_color,
+        color=bar_colors,
         alpha=0.85,
     )
     ax1.set_xlabel("Step Size", fontsize=11, fontweight="medium")

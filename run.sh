@@ -171,7 +171,7 @@ except Exception as e:
         return 1
     fi
 
-    log_info "Discovered ${#PROJECT_LIST[@]} projects: ${PROJECT_LIST[*]}"
+    log_info "Discovered ${#PROJECT_LIST[@]} projects: ${PROJECT_LIST[*]+${PROJECT_LIST[*]}}"
     return 0
 }
 
@@ -1176,12 +1176,13 @@ except Exception as e:
     rm -f /tmp/project_list.txt
 
     # Set default project if it exists
-    if [[ " ${PROJECT_LIST[*]} " == *" project "* ]]; then
+    if [[ ${#PROJECT_LIST[@]} -gt 0 ]] && [[ " ${PROJECT_LIST[*]} " == *" project "* ]]; then
         CURRENT_PROJECT="project"
     elif [[ ${#PROJECT_LIST[@]} -gt 0 ]]; then
         CURRENT_PROJECT="${PROJECT_LIST[0]}"
     else
-        log_error "No valid projects found"
+        log_error "No valid projects found in projects/ directory"
+        log_info "Ensure projects have src/ and tests/ subdirectories"
         exit 1
     fi
 
@@ -1199,13 +1200,13 @@ except Exception as e:
                     exit 1
                 fi
                 # Validate project exists (but don't exit on validation failure if --help follows)
-                if [[ " ${PROJECT_LIST[*]} " != *" $2 "* ]]; then
+                if [[ ${#PROJECT_LIST[@]} -eq 0 ]] || [[ " ${PROJECT_LIST[*]} " != *" $2 "* ]]; then
                     # Check if --help is coming next
                     if [[ "${3:-}" == "--help" ]] || [[ "${3:-}" == "-h" ]]; then
                         show_help
                         exit 0
                     fi
-                    log_error "Project '$2' not found. Available: ${PROJECT_LIST[*]}"
+                    log_error "Project '$2' not found. Available: ${PROJECT_LIST[*]+${PROJECT_LIST[*]}}"
                     exit 1
                 fi
                 CURRENT_PROJECT="$2"

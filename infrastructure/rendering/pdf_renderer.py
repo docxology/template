@@ -674,7 +674,7 @@ class PDFRenderer:
         # The --natbib flag ensures that LaTeX \cite{} commands are properly formatted.
 
         # Add resource paths for figure resolution
-        figures_dir = manuscript_dir.parent / "output" / "figures"
+        figures_dir = Path(self.config.figures_dir)
         pandoc_to_tex.extend(
             [
                 "--resource-path=" + str(manuscript_dir),
@@ -879,7 +879,7 @@ class PDFRenderer:
         combined_tex.write_text(tex_content)
 
         # Verify figure files exist before compilation
-        figures_dir = manuscript_dir.parent / "output" / "figures"
+        figures_dir = Path(self.config.figures_dir)
 
         fig_pattern = r"\\includegraphics(?:\[[^\]]*\])?\{([^}]+)\}"
         referenced_figures = re.findall(fig_pattern, tex_content)

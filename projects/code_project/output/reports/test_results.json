@@ -1,24 +1,48 @@
 {
-  "timestamp": "2026-03-11T14:20:36.411285",
+  "timestamp": "2026-03-12T11:59:00.071767",
   "infrastructure": {},
   "project": {
-    "passed": 0,
+    "passed": 39,
     "failed": 0,
     "skipped": 0,
-    "total": 0,
+    "total": 39,
     "warnings": 0,
-    "exit_code": 1,
-    "discovery_count": 0,
+    "exit_code": 0,
+    "discovery_count": 39,
     "collection_errors": 0,
-    "execution_phases": {},
+    "execution_phases": {
+      "setup": 2.27,
+      "collection": 2.27,
+      "execution": 2.27
+    },
     "test_categories": {},
+    "coverage_percent": 96.63865546218487,
     "failed_tests": []
   },
   "summary": {
-    "total_passed": 0,
+    "total_passed": 39,
     "total_failed": 0,
     "total_skipped": 0,
-    "total_tests": 0,
-    "all_passed": false
+    "total_tests": 39,
+    "all_passed": true,
+    "project_coverage": 96.63865546218487
+  },
+  "coverage_details": {
+    "project": {
+      "overall_coverage": 97.70114942528735,
+      "total_executed": 85,
+      "total_missing": 2,
+      "total_excluded": 0,
+      "total_lines": 87,
+      "file_coverage": {
+        "projects/code_project/src/optimizer.py": {
+          "coverage_percent": 97.70114942528735,
+          "executed_lines": 85,
+          "missing_lines": 2,
+          "excluded_lines": 0,
+          "total_lines": 87
+        }
+      }
+    }
   }
 }

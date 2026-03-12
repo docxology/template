@@ -106,8 +106,8 @@ explicitly demonstrates:
   delegate logging, file ops, and reporting to the
   \texttt{infrastructure} core.
 \item
-  \textbf{Zero-Mock Verification}: A strict 39-test validation suite
-  proving numerical accuracy without artificial test boundaries.
+  \textbf{Zero-Mock Verification}: A strict comprehensive validation
+  suite proving numerical accuracy without artificial test boundaries.
 \item
   \textbf{Automated Research Pipelines}: High-precision analyses that
   generate publication-quality, accessible visualizations automatically.

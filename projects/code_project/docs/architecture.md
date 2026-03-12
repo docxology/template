@@ -6,9 +6,15 @@ The `code_project` exemplar is designed around a strict separation of concerns, 
 2. **`scripts/` (Thin Orchestrators)**: Scripts coordinate the flow of data. They import from `src/`, compute results, and immediately pass those results to the `infrastructure/` layer. They do not contain math.
 3. **`infrastructure/` (Core Operations)**: Handles all side-effects: logging, PDF rendering, metric generation, and validation.
 
+## Target Flow Model
+
 ```mermaid
 graph TD
     A[scripts/optimization_analysis.py] -->|Imports pure math from| B[src/optimizer.py]
     A -->|Passes results to| C[infrastructure.scientific]
     A -->|Passes metrics to| D[infrastructure.reporting]
 ```
+
+## Infrastructure Boundaries
+
+In this architecture, scientists write business logic in `src/`, and AI/Automated systems manage the `infrastructure/`. The `scripts/` directory serves as the sole bridge between these domains. Dependency direction strictly goes from `scripts/` inwards to `src/` and downwards to `infrastructure/`. `src/` modules should never import from `scripts/` or `infrastructure/`.

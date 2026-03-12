@@ -1,0 +1,170 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}[fragile]{Experimental Setup}
+\protect\phantomsection\label{experimental-setup}
+This section details the complete experimental configuration used to
+generate the results in this study. Every parameter value below is
+injected programmatically from \texttt{config.yaml} and the analysis
+pipeline --- no value is hardcoded in the manuscript source.
+
+\begin{block}{Problem Definition}
+\protect\phantomsection\label{problem-definition}
+The optimization target is the quadratic objective function:
+
+\begin{equation}
+\label{eq:quadratic_objective}
+f(x) = \frac{1}{2} x^T A x - b^T x
+\end{equation}
+
+with \(A = [[1.0]]\) and \(b = [1.0]\), yielding the analytical optimum
+at \(x^* = 1.0\) with \(f(x^*) = -0.5\).
+\end{block}
+
+\begin{block}{Parameter Space}
+\protect\phantomsection\label{parameter-space}
+The experiment systematically varies the gradient descent step size
+across 6 values:
+
+\begin{itemize}
+\tightlist
+\item
+  \(\\alpha = 0.01\) (conservative)
+\item
+  \(\\alpha = 0.1\) (moderate)
+\item
+  \(\\alpha = 0.5\) (aggressive)
+\item
+  \(\\alpha = 1.0\) (very aggressive)
+\item
+  \(\\alpha = 1.5\)
+\item
+  \(\\alpha = 2.5\)
+\end{itemize}
+
+All runs start from the initial point \(x_0 = 0.0\) and use a
+convergence tolerance of \(\|{\nabla f}\| < 10^{-8}\) with a maximum
+iteration limit of \(N_{\max} = 1000\).
+\end{block}
+
+\begin{block}{Numerical Stability Grid}
+\protect\phantomsection\label{numerical-stability-grid}
+To validate robustness, the optimizer is exercised across a grid of 8
+starting points and 6 step sizes, producing 48 total evaluations. This
+comprehensive sweep confirms that convergence is not an artifact of a
+narrow parameter choice.
+\end{block}
+
+\begin{block}{Dimensional Scaling}
+\protect\phantomsection\label{dimensional-scaling}
+Performance benchmarking spans problem dimensions
+\(d \in \{1, 2, 5, 10, 20, 50\}\), from the scalar case (\(d = 1\)) to
+moderate dimensionality (\(d = 50\)), using identity-Hessian quadratics
+to isolate algorithmic scaling from problem conditioning effects.
+\end{block}
+
+\begin{block}{Computational Environment}
+\protect\phantomsection\label{computational-environment}
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Python}: 3.12.11
+\item
+  \textbf{NumPy}: 2.4.1
+\item
+  \textbf{Platform}: Darwin arm64
+\item
+  \textbf{Generated}: 2026-03-12T18:59:02Z
+\end{itemize}
+\end{block}
+\end{frame}
+
+\end{document}
