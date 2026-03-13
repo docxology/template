@@ -44,16 +44,17 @@ class OutputValidator:
 
     @staticmethod
     def validate_length(content: str, min_len: int = 0, max_len: int | None = None) -> bool:
-        """Validate output length."""
+        """Validate output length.
+
+        Returns True if within bounds, False if too short or too long.
+        """
         length = len(content)
         if length < min_len:
-            raise ValidationError(
-                f"Output too short ({length} < {min_len})", context={"length": length}
-            )
+            logger.warning(f"Output too short ({length} < {min_len})")
+            return False
         if max_len and length > max_len:
-            raise ValidationError(
-                f"Output too long ({length} > {max_len})", context={"length": length}
-            )
+            logger.warning(f"Output too long ({length} > {max_len})")
+            return False
         return True
 
     @staticmethod

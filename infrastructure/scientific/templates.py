@@ -9,14 +9,7 @@ Provides templates for new scientific modules and workflows:
 from __future__ import annotations
 
 def create_scientific_module_template(module_name: str) -> str:
-    """Create a template for a new scientific module.
-
-    Args:
-        module_name: Name of the module to create
-
-    Returns:
-        Python module template content
-    """
+    """Create a template for a new scientific module."""
     template = f'''"""Scientific module: {module_name}.
 
 This module implements [mathematical concept/algorithm] following
@@ -106,14 +99,7 @@ def function2(data: list[float], threshold: float = 0.0) -> tuple[list[float], f
     return template
 
 def create_scientific_test_suite(module_name: str) -> str:
-    """Create a comprehensive test suite for a scientific module.
-
-    Args:
-        module_name: Name of the module to create tests for
-
-    Returns:
-        Python test file content as string
-    """
+    """Create a comprehensive test suite for a scientific module."""
     test_content = f'''"""Test suite for {module_name} module.
 
 This test suite provides comprehensive validation for scientific functions
@@ -194,14 +180,7 @@ if __name__ == "__main__":
     return test_content
 
 def create_scientific_workflow_template(workflow_name: str) -> str:
-    """Create a template for scientific research workflows.
-
-    Args:
-        workflow_name: Name of the workflow
-
-    Returns:
-        Python workflow template content
-    """
+    """Create a template for scientific research workflows."""
     template = f'''#!/usr/bin/env python3
 """Scientific research workflow: {workflow_name}.
 

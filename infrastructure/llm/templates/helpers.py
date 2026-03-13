@@ -11,16 +11,7 @@ def format_requirements(
     markdown_format: bool = True,
     section_requirements: dict[str, str | None] = None,
 ) -> str:
-    """Generate format requirements section for prompts.
-
-    Args:
-        required_headers: List of required markdown section headers (e.g., ["## Overview", "## Results"])
-        markdown_format: Whether to use markdown formatting
-        section_requirements: Optional dict mapping section names to specific requirements
-
-    Returns:
-        Formatted requirements string
-    """
+    """Generate format requirements section for prompts."""
     lines = ["FORMAT REQUIREMENTS:"]
 
     if markdown_format:
@@ -41,16 +32,7 @@ def token_budget_awareness(
     section_budgets: dict[str, int | None] = None,
     word_targets: dict[str, tuple | None] = None,
 ) -> str:
-    """Generate token budget awareness hints for prompts.
-
-    Args:
-        total_tokens: Total token budget available
-        section_budgets: Optional dict mapping section names to approximate token budgets
-        word_targets: Optional dict mapping section names to (min, max) word counts
-
-    Returns:
-        Formatted token budget awareness string
-    """
+    """Generate token budget awareness hints for prompts."""
     lines = ["TOKEN BUDGET AWARENESS:"]
 
     if total_tokens:
@@ -75,17 +57,7 @@ def content_requirements(
     evidence_based: bool = True,
     no_meta_commentary: bool = True,
 ) -> str:
-    """Generate content quality requirements section.
-
-    Args:
-        no_hallucination: Require no invented details
-        cite_sources: Require citation of sources
-        evidence_based: Require evidence-based claims
-        no_meta_commentary: Prohibit meta-commentary about being AI
-
-    Returns:
-        Formatted content requirements string
-    """
+    """Generate content quality requirements section."""
     lines = ["CONTENT QUALITY REQUIREMENTS:"]
 
     if no_hallucination:
@@ -121,16 +93,7 @@ def section_structure(
     section_descriptions: dict[str, str | None] = None,
     required_order: bool = True,
 ) -> str:
-    """Generate section structure requirements.
-
-    Args:
-        sections: List of required section names/headers
-        section_descriptions: Optional dict mapping section names to descriptions
-        required_order: Whether sections must appear in the specified order
-
-    Returns:
-        Formatted section structure string
-    """
+    """Generate section structure requirements."""
     lines = ["SECTION STRUCTURE:"]
 
     if required_order:
@@ -151,16 +114,7 @@ def validation_hints(
     required_elements: list[str | None] = None,
     format_checks: list[str | None] = None,
 ) -> str:
-    """Generate validation hints that inform the model what will be checked.
-
-    Args:
-        word_count_range: Optional (min, max) word count tuple
-        required_elements: Optional list of required elements (e.g., ["scores", "headers"])
-        format_checks: Optional list of format checks that will be performed
-
-    Returns:
-        Formatted validation hints string
-    """
+    """Generate validation hints that inform the model what will be checked."""
     lines = ["VALIDATION HINTS (what will be checked):"]
 
     if word_count_range:

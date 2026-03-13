@@ -32,7 +32,7 @@ def retry_with_backoff(
     exponential_base: float = 2.0,
     jitter: bool = True,
     exceptions: tuple[Type[Exception], ...] = (Exception,),
-    on_retry: Callable[[int, Exception | None, None]] = None,
+    on_retry: Callable[[int, Exception | None], None] | None = None,
 ) -> Callable[[Callable[..., T]], Callable[..., T]]:
     """Decorator to retry a function with exponential backoff.
 

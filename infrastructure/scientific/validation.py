@@ -24,15 +24,7 @@ class _ValidationResults(TypedDict):
     details: list[dict[str, Any]]
 
 def validate_scientific_implementation(func: Callable, test_cases: list[tuple[Any, Any]]) -> dict[str, Any]:
-    """Validate scientific implementation against known test cases.
-
-    Args:
-        func: Function to validate
-        test_cases: List of (input, expected_output) tuples
-
-    Returns:
-        Dictionary with validation results
-    """
+    """Validate scientific implementation against known test cases."""
     validation_results: _ValidationResults = {
         "total_tests": len(test_cases),
         "passed_tests": 0,
@@ -79,7 +71,6 @@ def validate_scientific_implementation(func: Callable, test_cases: list[tuple[An
                 }
             )
 
-    # Calculate accuracy score
     if validation_results["total_tests"] > 0:
         validation_results["accuracy_score"] = (
             validation_results["passed_tests"] / validation_results["total_tests"]
@@ -88,14 +79,7 @@ def validate_scientific_implementation(func: Callable, test_cases: list[tuple[An
     return validation_results
 
 def validate_scientific_best_practices(module: Any) -> dict[str, Any]:
-    """Validate that a module follows scientific computing best practices.
-
-    Args:
-        module: Python module to validate
-
-    Returns:
-        Dictionary with validation results
-    """
+    """Validate that a module follows scientific computing best practices."""
     validation = {
         "docstring_coverage": 0.0,
         "type_hints_coverage": 0.0,
@@ -179,14 +163,7 @@ def validate_scientific_best_practices(module: Any) -> dict[str, Any]:
     return validation
 
 def check_research_compliance(func: Callable) -> dict[str, Any]:
-    """Check function compliance with research software standards.
-
-    Args:
-        func: Function to check
-
-    Returns:
-        Dictionary with compliance assessment
-    """
+    """Check function compliance with research software standards."""
     compliance = {
         "has_docstring": False,
         "has_type_hints": False,

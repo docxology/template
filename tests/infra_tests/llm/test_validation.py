@@ -56,16 +56,14 @@ class TestLengthValidation:
         assert OutputValidator.validate_length(content, min_len=0, max_len=100) is True
 
     def test_validate_length_too_short(self):
-        """Test content too short raises error."""
+        """Test content too short returns False."""
         content = "short"
-        with pytest.raises(ValidationError):
-            OutputValidator.validate_length(content, min_len=100)
+        assert OutputValidator.validate_length(content, min_len=100) is False
 
     def test_validate_length_too_long(self):
-        """Test content too long raises error."""
+        """Test content too long returns False."""
         content = "x" * 1000
-        with pytest.raises(ValidationError):
-            OutputValidator.validate_length(content, max_len=100)
+        assert OutputValidator.validate_length(content, max_len=100) is False
 
     def test_validate_length_minimum_only(self):
         """Test minimum length constraint only."""

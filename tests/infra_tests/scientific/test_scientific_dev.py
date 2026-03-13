@@ -194,7 +194,7 @@ def well_documented_function(x: float) -> float:
 
         assert validation["docstring_coverage"] == 1.0
         assert validation["type_hints_coverage"] == 1.0
-        assert validation["error_handling"] == True
+        assert validation["error_handling"] is True
         assert validation["best_practices_score"] > 0.8
 
     def test_validate_scientific_best_practices_poor_module(self, tmp_path):
@@ -289,9 +289,9 @@ class TestResearchCompliance:
 
         compliance = check_research_compliance(well_documented_function)
 
-        assert compliance["has_docstring"] == True
-        assert compliance["has_type_hints"] == True
-        assert compliance["has_examples"] == True
+        assert compliance["has_docstring"] is True
+        assert compliance["has_type_hints"] is True
+        assert compliance["has_examples"] is True
         assert compliance["compliance_score"] > 0.6
 
     def test_check_research_compliance_poor_function(self):
@@ -302,8 +302,8 @@ class TestResearchCompliance:
 
         compliance = check_research_compliance(poor_function)
 
-        assert compliance["has_docstring"] == False
-        assert compliance["has_type_hints"] == False
+        assert compliance["has_docstring"] is False
+        assert compliance["has_type_hints"] is False
         assert compliance["compliance_score"] < 0.5
         assert len(compliance["recommendations"]) > 0
 
