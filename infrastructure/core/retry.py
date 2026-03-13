@@ -10,8 +10,9 @@ from __future__ import annotations
 
 import random
 import time
+import types
 from functools import wraps
-from typing import Any, Callable, Type, TypeVar
+from typing import Any, Callable, TypeVar
 
 from infrastructure.core.logging_utils import get_logger
 
@@ -195,9 +196,9 @@ class RetryableOperation:
 
     def __exit__(
         self,
-        exc_type: Type[Exception | None],
-        exc_val: Exception | None,
-        exc_tb: Any,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: types.TracebackType | None,
     ) -> None:
         """Exit context manager."""
         return None  # Don't suppress exceptions

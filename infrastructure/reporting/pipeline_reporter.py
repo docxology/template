@@ -10,13 +10,20 @@ import json
 from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, TypedDict
 
 from infrastructure.core.checkpoint import StageResult
 from infrastructure.core.logging_helpers import format_duration
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
+
+
+class _StageResultDict(TypedDict, total=False):
+    name: str
+    exit_code: int
+    duration: float
+
 
 @dataclass
 class PipelineReport:
@@ -32,7 +39,7 @@ class PipelineReport:
     output_statistics: dict[str, Any] | None = None
 
 def generate_pipeline_report(
-    stage_results: list[dict[str, Any]],
+    stage_results: list[_StageResultDict],
     total_duration: float,
     repo_root: Path,
     *,

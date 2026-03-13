@@ -326,7 +326,7 @@ def ensure_ollama_ready(base_url: str = "http://localhost:11434", auto_start: bo
 
 def get_model_info(
     model_name: str, base_url: str = "http://localhost:11434"
-) -> dict[str, Any]:
+) -> dict[str, Any] | None:
     """Get detailed information about a specific model.
 
     Args:

@@ -505,7 +505,7 @@ class LLMClient:
         """
         return self._generate_response_direct(model, self.context.get_messages(), options=options)
 
-    def _generate_response_direct(  # type: ignore
+    def _generate_response_direct(  # type: ignore[override]  # subclass broadens signature (adds retries param)
         self,
         model: str,
         messages: list[dict[str, Any]],

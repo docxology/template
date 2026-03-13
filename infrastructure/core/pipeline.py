@@ -12,6 +12,7 @@ import logging
 import os
 import subprocess
 import time
+from typing import Callable
 
 from infrastructure.core.checkpoint import CheckpointManager, StageResult
 from infrastructure.core.environment import get_python_command, get_subprocess_env

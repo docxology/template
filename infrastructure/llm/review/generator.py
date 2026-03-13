@@ -551,7 +551,7 @@ def generate_review_with_metrics(
     text: str,
     review_type: str,
     review_name: str,
-    template_class: type,
+    template_class: type[Any],
     model_name: str = "",
     temperature: float = 0.3,
     max_tokens: int | None = None,

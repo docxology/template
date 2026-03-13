@@ -7,7 +7,7 @@ infrastructure.scientific for stability analysis and benchmarking.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Callable, Optional
+from typing import Callable
 
 import numpy as np
 
@@ -25,11 +25,11 @@ class OptimizationResult:
     iterations: int
     converged: bool
     gradient_norm: float
-    objective_history: Optional[list[float]] = None
+    objective_history: list[float] | None = None
 
 
 def quadratic_function(
-    x: np.ndarray, A: Optional[np.ndarray] = None, b: Optional[np.ndarray] = None
+    x: np.ndarray, A: np.ndarray | None = None, b: np.ndarray | None = None
 ) -> float:
     """Evaluate f(x) = (1/2) x^T A x - b^T x. A defaults to identity, b to ones."""
     x = np.asarray(x, dtype=float)
@@ -57,7 +57,7 @@ def quadratic_function(
 
 
 def compute_gradient(
-    x: np.ndarray, A: Optional[np.ndarray] = None, b: Optional[np.ndarray] = None
+    x: np.ndarray, A: np.ndarray | None = None, b: np.ndarray | None = None
 ) -> np.ndarray:
     """Compute ∇f(x) = A x - b for the quadratic objective. A defaults to identity, b to ones."""
     x = np.asarray(x, dtype=float)
@@ -169,8 +169,8 @@ def gradient_descent(
 
 
 def make_quadratic_problem(
-    A: Optional[np.ndarray] = None,
-    b: Optional[np.ndarray] = None,
+    A: np.ndarray | None = None,
+    b: np.ndarray | None = None,
 ) -> tuple[Callable[[np.ndarray], float], Callable[[np.ndarray], np.ndarray]]:
     """Create paired (objective, gradient) callables for a quadratic problem.
 
@@ -203,9 +203,9 @@ def make_quadratic_problem(
 def simulate_trajectory(
     step_size: float,
     max_iter: int = 50,
-    A: Optional[np.ndarray] = None,
-    b: Optional[np.ndarray] = None,
-    initial_point: Optional[np.ndarray] = None,
+    A: np.ndarray | None = None,
+    b: np.ndarray | None = None,
+    initial_point: np.ndarray | None = None,
 ) -> dict[str, list]:
     """Run gradient descent and return iteration/objective history.
 

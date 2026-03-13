@@ -26,7 +26,7 @@ class OutputValidator:
     """Validates LLM outputs for quality and correctness."""
 
     @staticmethod
-    def validate_json(content: str) -> dict[str, Any]:
+    def validate_json(content: str) -> Any:
         """Validate and parse JSON output."""
         try:
             # Try to find JSON block if wrapped in markdown

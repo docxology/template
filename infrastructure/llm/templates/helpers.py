@@ -9,7 +9,7 @@ logger = get_logger(__name__)
 def format_requirements(
     required_headers: list[str],
     markdown_format: bool = True,
-    section_requirements: dict[str, str | None] = None,
+    section_requirements: dict[str, str | None] | None = None,
 ) -> str:
     """Generate format requirements section for prompts."""
     lines = ["FORMAT REQUIREMENTS:"]
@@ -90,7 +90,7 @@ def content_requirements(
 
 def section_structure(
     sections: list[str],
-    section_descriptions: dict[str, str | None] = None,
+    section_descriptions: dict[str, str | None] | None = None,
     required_order: bool = True,
 ) -> str:
     """Generate section structure requirements."""
