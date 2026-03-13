@@ -300,7 +300,9 @@ class LLMClient:
     ) -> str:
         """Generate a short response (< 150 tokens).
 
-        Configures generation for concise, direct answers.
+        Blocking variant. The streaming counterpart stream_short() accepts
+        additional params (save_response, save_path, retries) that are not
+        available here — use stream_short() when response persistence is needed.
 
         Args:
             prompt: User prompt

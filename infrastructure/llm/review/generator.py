@@ -699,7 +699,7 @@ def generate_improvement_suggestions(
     )
 
 def generate_translation(
-    client: LLMClient, text: str, language_code: str, model_name: str = ""
+    client: LLMClient, text: str, model_name: str = "", language_code: str = ""
 ) -> tuple[str | None, ReviewMetrics]:
     target_language = TRANSLATION_LANGUAGES.get(language_code, language_code)
     log_substep(f"Generating translation ({target_language})...")
