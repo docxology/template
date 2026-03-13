@@ -332,7 +332,7 @@ def check_ollama_availability() -> tuple[bool, str | None]:
                 logger.info("    Ollama not running, attempting to start automatically...")
                 if ensure_ollama_ready(auto_start=True):
                     log_success("Ollama server started and ready", logger)
-                    break
+                    break  # auto-start succeeded — server is ready
                 else:
                     if attempt == max_retries - 1:
                         logger.warning(
@@ -346,7 +346,7 @@ def check_ollama_availability() -> tuple[bool, str | None]:
                 return False, None
         else:
             log_success("Ollama server is running", logger)
-            break
+            break  # server already running — no start needed
 
     logger.debug("    Discovering available models...")
     available_models = get_available_models()

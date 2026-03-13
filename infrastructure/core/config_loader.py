@@ -278,7 +278,8 @@ def find_config_file(
 
     return None
 
-# Re-export query functions from config_queries for backwards compatibility
+# Re-export query functions from config_queries for backwards compatibility.
+# TODO: Remove these re-exports after all callers are updated to import from config_queries directly.
 from infrastructure.core.config_queries import (  # noqa: E402, F401
     get_review_types,
     get_testing_config,

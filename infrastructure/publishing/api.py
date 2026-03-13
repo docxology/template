@@ -62,7 +62,7 @@ class ZenodoClient:
         Returns:
             Deposition ID
         """
-        url = f"{self.config.api_base_url}/api/deposit/depositions"
+        url = f"{self.config.api_base_url}/deposit/depositions"
         payload = {"metadata": metadata}
 
         try:
@@ -77,7 +77,7 @@ class ZenodoClient:
     def upload_file(self, bucket: str, file_path: str) -> None:
         """Upload file to bucket."""
         filename = Path(file_path).name
-        url = f"{self.config.api_base_url}/api/files/{bucket}/{filename}"
+        url = f"{self.config.api_base_url}/files/{bucket}/{filename}"
 
         try:
             with open(file_path, "rb") as f:
@@ -94,7 +94,7 @@ class ZenodoClient:
         Returns:
             DOI
         """
-        url = f"{self.config.api_base_url}/api/deposit/depositions/{deposition_id}/actions/publish"
+        url = f"{self.config.api_base_url}/deposit/depositions/{deposition_id}/actions/publish"
 
         try:
             response = requests.post(url, headers=self.headers, timeout=REQUEST_TIMEOUT)

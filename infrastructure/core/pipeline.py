@@ -268,7 +268,9 @@ class PipelineExecutor:
                 )
             )
 
-        # Identify remaining stages by matching stage names against checkpoint stage_results in-order  # noqa: E501
+        # Identify remaining stages by matching stage names against checkpoint stage_results in-order.
+        # Sequential pointer (not set) because order must be preserved: a stage is only "done" if
+        # it was the NEXT expected stage in sequence, preventing false-matches on duplicate names.
         completed_names = [sr.name for sr in checkpoint.stage_results]
         completed_idx = 0
         remaining: list[StageSpec] = []

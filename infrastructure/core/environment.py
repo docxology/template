@@ -270,7 +270,8 @@ def validate_directory_structure(repo_root: Path, project_name: str = "project")
     return missing
 
 
-# Re-export dependency functions from env_deps for backwards compatibility
+# Re-export dependency functions from env_deps for backwards compatibility.
+# TODO: Remove these re-exports after all callers are updated to import from env_deps directly.
 from infrastructure.core.env_deps import (  # noqa: E402, F401
     build_install_commands,
     check_build_tools,

@@ -33,7 +33,6 @@ def ollama_test_server():
             model = request_data.get("model", "gemma3:4b")
             messages = request_data.get("messages", [])
             format_type = request_data.get("format")  # Check for JSON format
-            request_data.get("options", {})  # Extract options for streaming
         except (ValueError, KeyError, TypeError):
             # Fallback when request body cannot be parsed
             is_stream = False

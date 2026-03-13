@@ -84,6 +84,7 @@ def run_llm_review_pipeline(
         pdf_path = generic_pdf
         logger.warning(
             f"Using legacy PDF filename: {generic_pdf.name}. Consider upgrading to project-specific naming."  # noqa: E501
+            # TODO: Remove legacy fallback after all projects use {project_name}_combined.pdf naming
         )
     else:
         pdf_path = project_specific_pdf  # Use expected filename in error message

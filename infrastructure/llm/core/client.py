@@ -417,6 +417,9 @@ class LLMClient:
         Returns:
             Parsed JSON response as dictionary
 
+        Raises:
+            LLMError: If response cannot be parsed as JSON or is flagged as off-topic.
+
         Example:
             >>> schema = {
             ...     "type": "object",
@@ -831,7 +834,7 @@ class LLMClient:
         log_progress: bool = True,
         retries: int = 1,
     ) -> Iterator[str]:
-        """Stream a comprehensive response with comprehensive logging.
+        """Stream a comprehensive response with detailed logging.
 
         Delegates to :func:`infrastructure.llm.core._client_streaming.stream_long_impl`.
 

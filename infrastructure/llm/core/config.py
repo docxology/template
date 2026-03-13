@@ -154,16 +154,16 @@ class LLMConfig:
         for f in fields(self):
             if f.name not in kwargs:
                 if f.default != MISSING:
-                    object.__setattr__(self, f.name, f.default)
+                    setattr(self, f.name, f.default)
                 elif f.default_factory != MISSING:
                     factory = f.default_factory
-                    object.__setattr__(self, f.name, factory())
+                    setattr(self, f.name, factory())
 
         # Override with provided kwargs
         valid_field_names = {f.name for f in fields(self)}
         for key, value in kwargs.items():
             if key in valid_field_names:
-                object.__setattr__(self, key, value)
+                setattr(self, key, value)
 
     @classmethod
     def from_env(cls) -> LLMConfig:

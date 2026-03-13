@@ -12,7 +12,8 @@ from typing import Any, Iterator
 from infrastructure.core.logging_constants import EMOJIS, USE_EMOJIS
 from infrastructure.core.logging_helpers import format_duration
 
-# Re-export ETA functions from eta module for backwards compatibility
+# Re-export ETA functions from eta module for backwards compatibility.
+# TODO: Remove these re-exports after all callers are updated to import from eta directly.
 from infrastructure.core.eta import (  # noqa: F401
     calculate_eta,
     calculate_eta_ema,
