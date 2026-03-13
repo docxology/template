@@ -95,7 +95,7 @@ class RenderManager:
                                 error_msg += f" - Check LaTeX compilation log: {beamer_pdf.parent / beamer_pdf.stem}.log"  # noqa: E501
                             else:
                                 error_msg += f" (PDF created: {size_mb:.2f} MB)"
-                    except Exception as pdf_check_err:
+                    except (OSError, AttributeError) as pdf_check_err:
                         logger.debug(f"Failed to check PDF status: {pdf_check_err}")
 
                     logger.warning(error_msg)

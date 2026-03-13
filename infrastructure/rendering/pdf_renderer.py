@@ -55,7 +55,7 @@ def _parse_missing_package_error(log_file: Path) -> str | None:
             package_name = sty_file.replace(".sty", "")
             return package_name
 
-    except Exception as e:
+    except (OSError, UnicodeDecodeError) as e:
         logger.debug(f"Error parsing log file for package errors: {e}")
 
     return None
@@ -194,7 +194,7 @@ class PDFRenderer:
 
                 # Write the repaired content
                 aux_file.write_text("\n".join(lines) + "\n", encoding="utf-8")
-        except Exception as e:
+        except (OSError, UnicodeDecodeError) as e:
             logger.debug(f"  .aux repair skipped: {e}")
 
     def _validate_pdf_structure(self, pdf_path: Path) -> bool:
@@ -571,7 +571,7 @@ class PDFRenderer:
                         break
 
                     current_pos += file_size + separator_size
-                except Exception as ex:
+                except (OSError, ValueError) as ex:
                     logger.debug(f"Error analyzing file {i + 1} ({source_file.name}): {ex}")
 
         return RenderingError(error_msg, context=context_info, suggestions=suggestions)
@@ -696,12 +696,12 @@ class PDFRenderer:
                         logger.warning(f"  • {err}")
                     # Note: These are warnings only, don't block PDF generation
                     logger.info("  (These are warnings - PDF generation will proceed)")
-            except Exception as e:
+            except (OSError, UnicodeDecodeError) as e:
                 logger.debug(f"Pre-validation check failed: {e}")
                 # Try to read content anyway for error reporting
                 try:
                     md_content = combined_md.read_text(encoding="utf-8")
-                except Exception as read_err:
+                except (OSError, UnicodeDecodeError) as read_err:
                     logger.debug(f"Failed to read markdown for error reporting: {read_err}")
 
         try:

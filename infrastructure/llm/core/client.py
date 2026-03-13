@@ -136,7 +136,7 @@ class LLMClient:
                 loader = get_default_loader()
                 # Try to get manuscript review system prompt
                 self.config.system_prompt = loader.get_system_prompt("manuscript_review")
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001  # loader failure is expected; fall through to no system prompt
                 logger.debug(f"Could not load system prompt from prompt system: {e}")
 
         # Inject system prompt if configured
