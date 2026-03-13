@@ -121,11 +121,6 @@ def retry_with_backoff(
 
                     time.sleep(delay)
 
-            # Should never reach here, but handle it just in case
-            if last_exception:
-                raise last_exception
-            raise PipelineError(f"{func.__name__} failed after {max_attempts} attempts")
-
         return wrapper
 
     return decorator

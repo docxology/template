@@ -116,18 +116,22 @@ def validation_hints(
 ) -> str:
     """Generate validation hints that inform the model what will be checked."""
     lines = ["VALIDATION HINTS (what will be checked):"]
+    n = 0
 
     if word_count_range:
         min_words, max_words = word_count_range
-        lines.append(f"1. Word count: Must be between {min_words} and {max_words} words")
+        n += 1
+        lines.append(f"{n}. Word count: Must be between {min_words} and {max_words} words")
 
     if required_elements:
-        lines.append("2. Required elements:")
+        n += 1
+        lines.append(f"{n}. Required elements:")
         for element in required_elements:
             lines.append(f"   - {element}")
 
     if format_checks:
-        lines.append("3. Format compliance checks:")
+        n += 1
+        lines.append(f"{n}. Format compliance checks:")
         for check in format_checks:
             lines.append(f"   - {check}")
 

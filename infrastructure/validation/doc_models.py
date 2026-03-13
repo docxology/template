@@ -78,3 +78,5 @@ class ScanResults:
     quality_issues: list[QualityIssue] = field(default_factory=list)
     improvements_made: list[dict[str, Any]] = field(default_factory=list)
     statistics: dict[str, Any] = field(default_factory=dict)
+    scanned_files: int = 0
+    scan_duration: float = 0.0

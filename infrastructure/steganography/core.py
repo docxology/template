@@ -117,8 +117,8 @@ class SteganographyProcessor:
                     author_emails=author_emails or [],
                     document_id=self._document_id,
                     hashes=self._hashes,
-                    source_filename=input_pdf.name if input_pdf else "",
-                    source_file_size=input_pdf.stat().st_size if input_pdf and input_pdf.exists() else 0,
+                    source_filename=input_pdf.name,
+                    source_file_size=input_pdf.stat().st_size,
                 )
                 working_pdf = self._step_overlays_and_barcodes(working_pdf, bc_ctx)
 

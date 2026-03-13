@@ -182,11 +182,8 @@ class OutputValidator:
         elif mode == "long":
             return OutputValidator.validate_long_response(content)
         elif mode == "structured" and schema:
-            try:
-                data = OutputValidator.validate_json(content)
-                return OutputValidator.validate_structure(data, schema)
-            except json.JSONDecodeError as e:
-                raise ValidationError(f"Invalid JSON for structured mode: {e}")
+            data = OutputValidator.validate_json(content)
+            return OutputValidator.validate_structure(data, schema)
 
         return True
 

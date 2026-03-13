@@ -13,13 +13,12 @@ from typing import Any
 
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.validation.check_links import (
-    extract_headings,
     validate_directory_structures,
     validate_file_paths_in_code,
     validate_placeholder_consistency,
     validate_python_imports,
 )
-from infrastructure.validation.doc_accuracy import check_links
+from infrastructure.validation.doc_accuracy import check_links, extract_headings
 from infrastructure.validation.doc_discovery import categorize_documentation, discover_markdown_files
 from infrastructure.validation.doc_models import (
     DocumentationFile,
@@ -117,10 +116,10 @@ def run_comprehensive_audit(
             )
 
     # Phase 4: Calculate statistics
-    scan_results.scan_duration = time.time() - start_time  # type: ignore
+    scan_results.scan_duration = time.time() - start_time
     _calculate_statistics(scan_results)
 
-    logger.info(f"✅ Audit completed in {scan_results.scan_duration:.2f}s")  # type: ignore
+    logger.info(f"✅ Audit completed in {scan_results.scan_duration:.2f}s")
     logger.info(
         f"📊 Found {len(scan_results.link_issues) + len(scan_results.accuracy_issues) + len(scan_results.quality_issues)} total issues"  # noqa: E501
     )
@@ -186,7 +185,7 @@ def _validate_single_file(
 
 def _calculate_statistics(scan_results: ScanResults) -> None:
     """Calculate statistics for the scan results."""
-    scan_results.scanned_files = len(scan_results.documentation_files)  # type: ignore
+    scan_results.scanned_files = len(scan_results.documentation_files)
 
     # Calculate statistics by issue type
     stats = {
@@ -234,8 +233,8 @@ def generate_audit_report(
         return json.dumps(
             {
                 "scan_date": scan_results.scan_date,
-                "total_files": scan_results.scanned_files,  # type: ignore
-                "scan_duration": scan_results.scan_duration,  # type: ignore
+                "total_files": scan_results.scanned_files,
+                "scan_duration": scan_results.scan_duration,
                 "statistics": scan_results.statistics,
                 "severity_flags": {
                     "red": len(red_flags),
@@ -256,8 +255,8 @@ def generate_audit_report(
         "# 📊 Comprehensive Filepath and Reference Audit Report",
         "",
         f"**Generated:** {scan_results.scan_date}",
-        f"**Files Scanned:** {scan_results.scanned_files}",  # type: ignore
-        f"**Scan Duration:** {scan_results.scan_duration:.2f} seconds",  # type: ignore
+        f"**Files Scanned:** {scan_results.scanned_files}",
+        f"**Scan Duration:** {scan_results.scan_duration:.2f} seconds",
         "",
         "## 📈 Executive Summary",
         "",

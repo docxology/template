@@ -146,13 +146,6 @@ def run_pytest_stream(
             sys.stdout.write(current_line)
             sys.stdout.flush()
 
-    for line in list(recent_lines)[-3:]:
-        if ("passed" in line or "failed" in line or "skipped" in line) and not any(
-            k in line for k in _SUMMARY_KEYWORDS
-        ):
-            sys.stdout.write(line)
-            sys.stdout.flush()
-
     process.wait()
     return process.returncode, "".join(stdout_buf), ""
 

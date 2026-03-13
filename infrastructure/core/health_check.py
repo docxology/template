@@ -224,7 +224,7 @@ class SystemHealthChecker:
 
     def is_healthy(self) -> bool:
         """Return True if all health checks pass."""
-        return bool(self.get_health_status()["overall_status"] == "healthy")
+        return self.get_health_status()["overall_status"] == "healthy"
 
     def get_metrics(self) -> dict[str, Any]:
         """Return health metrics in a format suitable for monitoring systems."""

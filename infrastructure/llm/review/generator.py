@@ -578,6 +578,7 @@ def generate_review_with_metrics(
     start_time = time.time()
     best_response = ""
     had_off_topic = False
+    config = LLMConfig.from_env()
 
     for attempt in range(max_retries + 1):
         try:
@@ -588,7 +589,6 @@ def generate_review_with_metrics(
                 options = GenerationOptions(temperature=adjusted_temp, max_tokens=max_tokens)
                 current_prompt = _build_retry_prompt(prompt, had_off_topic)
 
-            config = LLMConfig.from_env()
             response = _stream_with_heartbeat(
                 client, current_prompt, options, review_name, max_tokens, config
             )
@@ -603,9 +603,7 @@ def generate_review_with_metrics(
 
             if is_valid:
                 break
-            elif attempt < max_retries:
-                continue
-            else:
+            elif attempt == max_retries:
                 response = best_response
 
         except Exception as e:  # noqa: BLE001 — intentional: retry loop must continue on any LLM client failure
