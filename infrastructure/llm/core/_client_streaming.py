@@ -65,19 +65,7 @@ def stream_query_impl(
     """
     start_time = time_module.time()
     model_name = model or config.default_model
-    prompt_preview = prompt[:100] + "..." if len(prompt) > 100 else prompt
-
-    # Log streaming start
-    logger.info(
-        "Starting streaming query",
-        extra={
-            "model": model_name,
-            "prompt_length": len(prompt),
-            "prompt_preview": prompt_preview,
-            "max_tokens": options.max_tokens if options else None,
-            "temperature": options.temperature if options else None,
-        },
-    )
+    logger.debug("Starting streaming query model=%s", model_name)
 
     context.add_message("user", prompt)
     url = f"{config.base_url}/api/chat"
@@ -313,21 +301,6 @@ def stream_query_impl(
     metrics.partial_response_saved = partial_saved
     if last_chunk_time:
         metrics.last_chunk_time = last_chunk_time - start_time
-
-    # Log streaming completion
-    logger.info(
-        "Streaming completed",
-        extra={
-            "model": model_name,
-            "chunk_count": chunk_count,
-            "total_chars": total_chars,
-            "total_tokens_est": total_tokens_est,
-            "streaming_time_seconds": streaming_time,
-            "chunks_per_second": metrics.chunks_per_second,
-            "bytes_per_second": metrics.bytes_per_second,
-            "error_count": error_count,
-        },
-    )
 
     # Add full response to context
     context.add_message("assistant", full_response_text)

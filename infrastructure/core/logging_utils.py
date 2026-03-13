@@ -55,15 +55,12 @@ def setup_logger(
     """Configure and return a logger with console handler and optional file handler."""
     logger = logging.getLogger(name)
 
-    # Set level from environment or parameter
     if level is None:
         level = get_log_level_from_env()
     logger.setLevel(level)
 
-    # Remove existing handlers to avoid duplicates
     logger.handlers.clear()
 
-    # Check if we're in test environment (pytest)
     is_test_env = _is_test_environment()
 
     console_handler = logging.StreamHandler(sys.stdout)
@@ -73,27 +70,21 @@ def setup_logger(
         console_handler.setFormatter(TemplateFormatter())
     logger.addHandler(console_handler)
 
-    # File handler (optional, works in both environments)
     if log_file:
         log_path = Path(log_file)
         log_path.parent.mkdir(parents=True, exist_ok=True)
         file_handler = logging.FileHandler(log_path)
-        # File logs without emojis
         file_formatter = logging.Formatter("[%(asctime)s] [%(levelname)s] %(message)s")
         file_handler.setFormatter(file_formatter)
         logger.addHandler(file_handler)
 
-    # Set propagation based on environment (caplog requires propagation)
     logger.propagate = is_test_env
 
-    # In test environment, ensure root logger is configured to receive propagated logs
+    # caplog requires propagation: clean root logger handlers that would double-emit
     if is_test_env:
         root_logger = logging.getLogger()
-        # Ensure root logger level allows the logs through
         if root_logger.level > logger.level:
             root_logger.setLevel(logger.level)
-        # Remove any stdout/stderr handlers from root logger that might interfere with caplog
-        # (pytest's caplog will add its own handler)
         root_handlers_to_remove = [
             h
             for h in root_logger.handlers
@@ -102,7 +93,6 @@ def setup_logger(
         ]
         for h in root_handlers_to_remove:
             root_logger.removeHandler(h)
-        # Ensure root logger has at least WARNING level to not filter out our logs
         if root_logger.level == logging.NOTSET:
             root_logger.setLevel(logging.WARNING)
 

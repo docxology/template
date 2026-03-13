@@ -82,13 +82,9 @@ class ResponseMode(str, Enum):
 class LLMClient:
     """Client for interacting with LLM providers (Ollama).
 
-    Provides multiple query methods for different use cases:
-    - query(): Standard conversational query
-    - query_raw(): Send prompt without modification
-    - query_short(): Brief responses (< 150 tokens)
-    - query_long(): Comprehensive responses (> 500 tokens)
-    - query_structured(): JSON-formatted responses
-    - stream_*(): Streaming variants of above
+    Manages conversation context, system prompt injection, and provides
+    both blocking and streaming query variants. All inputs are sanitized
+    before sending; structured queries parse JSON responses automatically.
 
     Example:
         >>> client = LLMClient()
@@ -185,26 +181,10 @@ class LLMClient:
         model_name = model or self.config.default_model
 
         if reset_context:
-            logger.info(
-                "Resetting context",
-                extra={
-                    "model": model_name,
-                    "reason": "reset_context=True",
-                    "context_messages_before": len(self.context.messages),
-                },
-            )
             self.context.clear()
             self._system_prompt_injected = False
             if self.config.auto_inject_system_prompt:
                 self._inject_system_prompt()
-                logger.debug(
-                    "System prompt re-injected after context reset",
-                    extra={
-                        "system_prompt_length": (
-                            len(self.config.system_prompt) if self.config.system_prompt else 0
-                        )
-                    },
-                )
 
         prompt = sanitize_llm_input(prompt)
         self.context.add_message("user", prompt)
@@ -433,20 +413,7 @@ class LLMClient:
         """
         model_name = model or self.config.default_model
 
-        logger.info(
-            "Starting structured query (JSON)",
-            extra={
-                "model": model_name,
-                "prompt_length": len(prompt),
-                "has_schema": schema is not None,
-                "use_native_json": use_native_json,
-                "schema_keys": (
-                    list(schema.keys())
-                    if schema and isinstance(schema, dict) and "properties" in schema
-                    else None
-                ),
-            },
-        )
+        logger.debug("Starting structured query (JSON) model=%s", model_name)
 
         # Configure for JSON output
         struct_options = options or GenerationOptions()
@@ -477,16 +444,6 @@ class LLMClient:
             lambda: self._generate_response_direct(model_name, messages, options=struct_options)
         )
 
-        logger.debug(
-            "Structured response received",
-            extra={
-                "model": model_name,
-                "response_length": len(response_text),
-                "generation_time_seconds": generation_time,
-                "response_preview": response_text[:200],
-            },
-        )
-
         # Add to context
         self.context.add_message("user", instruction + prompt)
         self.context.add_message("assistant", response_text)
@@ -494,14 +451,6 @@ class LLMClient:
         # Parse and validate JSON response
         try:
             parsed = json.loads(response_text)
-            logger.info(
-                "Structured query completed (JSON parsed successfully)",
-                extra={
-                    "model": model_name,
-                    "response_keys": (list(parsed.keys()) if isinstance(parsed, dict) else None),
-                    "generation_time_seconds": generation_time,
-                },
-            )
             return parsed  # type: ignore
         except json.JSONDecodeError as e:
             # Try to extract JSON if wrapped
