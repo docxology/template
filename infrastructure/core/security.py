@@ -15,6 +15,7 @@ from typing import Any, Callable, Union
 
 from infrastructure.core.exceptions import SecurityViolation
 from infrastructure.core.logging_utils import get_logger
+from infrastructure.llm.core.sanitization import sanitize_llm_input as _sanitize_llm_input
 
 logger = get_logger(__name__)
 
@@ -430,8 +431,8 @@ def get_security_monitor() -> SecurityMonitor:
 
 
 def validate_llm_input(prompt: str) -> str:
-    """Convenience function for LLM input validation."""
-    return get_security_validator().validate_llm_input(prompt)
+    """Validate LLM input. Deprecated: use infrastructure.llm.core.sanitization.sanitize_llm_input directly."""
+    return _sanitize_llm_input(prompt)
 
 
 def rate_limit(max_requests: int = 100, window_seconds: int = 60):
