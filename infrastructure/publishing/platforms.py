@@ -191,4 +191,4 @@ def create_github_release(
         return html_url  # type: ignore
 
     except requests.exceptions.RequestException as e:
-        raise PublishingError(f"GitHub release failed: {e}")
+        raise PublishingError(f"GitHub release failed: {e}") from e

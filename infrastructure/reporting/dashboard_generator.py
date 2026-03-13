@@ -949,7 +949,7 @@ def generate_matplotlib_dashboard(summary: ExecutiveSummary, output_dir: Path) -
 
         plt.close(fig)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 — matplotlib may raise any exception type
         logger.error(f"Error generating matplotlib dashboard: {e}")
         plt.close("all")
 
@@ -1283,7 +1283,7 @@ def generate_health_radar_chart(summary: ExecutiveSummary, output_dir: Path) -> 
 
         plt.close(fig)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 — matplotlib may raise any exception type
         logger.error(f"Failed to generate health radar chart: {e}", exc_info=True)
 
     return saved_files
@@ -1430,7 +1430,7 @@ def generate_health_comparison_chart(
 
         plt.close(fig)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 — matplotlib may raise any exception type
         logger.error(f"Failed to generate health comparison chart: {e}", exc_info=True)
 
     return saved_files
@@ -1659,7 +1659,7 @@ def generate_project_breakdowns(summary: ExecutiveSummary, output_dir: Path) -> 
 
             plt.close(fig)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 — matplotlib may raise any exception type
         logger.error(f"Failed to generate project breakdowns: {e}", exc_info=True)
 
     return saved_files
@@ -1812,7 +1812,7 @@ def generate_pipeline_efficiency_chart(
 
         plt.close(fig)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 — matplotlib may raise any exception type
         logger.error(f"Failed to generate pipeline efficiency chart: {e}", exc_info=True)
 
     return saved_files
@@ -1925,7 +1925,7 @@ def generate_pipeline_bottlenecks_chart(
 
         plt.close(fig)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 — matplotlib may raise any exception type
         logger.error(f"Failed to generate pipeline bottlenecks chart: {e}", exc_info=True)
 
     return saved_files
@@ -2118,7 +2118,7 @@ def generate_output_distribution_charts(
 
         plt.close(fig)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 — matplotlib may raise any exception type
         logger.error(f"Failed to generate output distribution charts: {e}", exc_info=True)
 
     return saved_files
@@ -2217,7 +2217,7 @@ def generate_output_comparison_chart(
 
         plt.close(fig)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 — matplotlib may raise any exception type
         logger.error(f"Failed to generate output comparison chart: {e}", exc_info=True)
 
     return saved_files
@@ -2390,7 +2390,7 @@ def generate_codebase_complexity_chart(
 
         plt.close(fig)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 — matplotlib may raise any exception type
         logger.error(f"Failed to generate codebase complexity chart: {e}", exc_info=True)
 
     return saved_files
@@ -2495,7 +2495,7 @@ def generate_codebase_comparison_chart(
 
         plt.close(fig)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 — matplotlib may raise any exception type
         logger.error(f"Failed to generate codebase comparison chart: {e}", exc_info=True)
 
     return saved_files
@@ -3403,7 +3403,7 @@ def generate_all_dashboards(summary: ExecutiveSummary, output_dir: Path) -> dict
                 all_files.update(result)
             elif result is not None:
                 all_files[generator_name] = result
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 — generator dispatch may raise any exception type
             logger.warning(f"Could not generate {generator_name}: {e}")
             failures.append(f"{generator_name}: {e}")
 

@@ -22,21 +22,21 @@ def _get_qrcode():
     try:
         import qrcode  # type: ignore
         return qrcode
-    except ImportError:
+    except ImportError as e:
         raise ImportError(
             "The 'qrcode' package is required for QR code generation. "
             "Install it with: pip install qrcode[pil]"
-        )
+        ) from e
 
 def _get_barcode():
     try:
         import barcode  # type: ignore
         return barcode
-    except ImportError:
+    except ImportError as e:
         raise ImportError(
             "The 'python-barcode' package is required for linear barcode generation. "
             "Install it with: pip install python-barcode"
-        )
+        ) from e
 
 def _get_reportlab():
     try:
@@ -44,11 +44,11 @@ def _get_reportlab():
         from reportlab.pdfgen import canvas as rl_canvas  # type: ignore
         from reportlab.lib.utils import ImageReader  # type: ignore
         return rl_canvas, inch, mm, ImageReader
-    except ImportError:
+    except ImportError as e:
         raise ImportError(
             "The 'reportlab' package is required for barcode rendering. "
             "Install it with: pip install reportlab"
-        )
+        ) from e
 
 # ── QR Code ──────────────────────────────────────────────────────────────
 

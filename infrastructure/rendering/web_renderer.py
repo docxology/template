@@ -45,7 +45,7 @@ class WebRenderer:
             raise RenderingError(
                 f"Failed to render HTML: {e.stderr}",
                 context={"source": str(source_file)},
-            )
+            ) from e
 
     def render_combined(
         self,
@@ -152,7 +152,7 @@ class WebRenderer:
                     "Check for special characters or encoding issues",
                     f"Review Pandoc command: {' '.join(cmd)}",
                 ],
-            )
+            ) from e
 
         # Embed CSS styling in the generated HTML
         if output_file.exists():
@@ -211,7 +211,7 @@ class WebRenderer:
                         "Ensure file is UTF-8 encoded",
                         "Remove any non-UTF-8 characters from the file",
                     ],
-                )
+                ) from e
             except Exception as e:
                 raise RenderingError(
                     f"Failed to read markdown file: {md_file.name}",
@@ -226,7 +226,7 @@ class WebRenderer:
                         "Check file permissions",
                         "Ensure file is valid markdown",
                     ],
-                )
+                ) from e
 
         # Join with newlines, ensuring proper spacing
         combined = "\n\n".join(combined_parts)

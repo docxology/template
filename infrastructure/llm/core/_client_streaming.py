@@ -219,7 +219,7 @@ def stream_query_impl(
             # Success - break retry loop
             break
 
-        except requests.exceptions.Timeout:
+        except requests.exceptions.Timeout as e:
             error_count += 1
             metrics.error_count = error_count
             last_error = f"Timeout after {config.timeout}s"
@@ -248,7 +248,7 @@ def stream_query_impl(
                         "model": model_name,
                         "chunks_received": chunk_count,
                     },
-                )
+                ) from e
 
         except requests.exceptions.ConnectionError as e:
             error_count += 1
@@ -281,7 +281,7 @@ def stream_query_impl(
                         "model": model_name,
                         "chunks_received": chunk_count,
                     },
-                )
+                ) from e
 
         except requests.exceptions.RequestException as e:
             error_count += 1
@@ -294,7 +294,7 @@ def stream_query_impl(
                     "model": model_name,
                     "chunks_received": chunk_count,
                 },
-            )
+            ) from e
 
     # Calculate final metrics
     end_time = time_module.time()

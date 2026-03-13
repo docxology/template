@@ -138,7 +138,7 @@ class PDFRenderer:
             raise RenderingError(
                 f"Failed to render markdown to PDF: {e.stderr}",
                 context={"source": str(source_file), "target": str(output_file)},
-            )
+            ) from e
 
     def _repair_truncated_aux(self, aux_file: Path) -> None:
         """Repair a truncated .aux file by removing the last incomplete entry.
@@ -707,7 +707,7 @@ class PDFRenderer:
         try:
             subprocess.run(pandoc_to_tex, check=True, capture_output=True, text=True, timeout=600)
         except subprocess.CalledProcessError as e:
-            raise self._build_pandoc_render_error(e, combined_md, source_files, md_content, pandoc_to_tex)
+            raise self._build_pandoc_render_error(e, combined_md, source_files, md_content, pandoc_to_tex) from e
 
         # Read and process LaTeX content
         tex_content = combined_tex.read_text()
@@ -1222,7 +1222,7 @@ class PDFRenderer:
             raise RenderingError(
                 f"Failed to compile LaTeX to PDF: {e.stderr or e.stdout}",
                 context={"source": str(combined_tex), "output": str(output_file)},
-            )
+            ) from e
 
     def _log_pdf_success(
         self, output_file: Path, source_files: list[Path], start_time: float
@@ -1298,7 +1298,7 @@ class PDFRenderer:
                         "Ensure file is UTF-8 encoded",
                         "Remove any non-UTF-8 characters from the file",
                     ],
-                )
+                ) from e
             except Exception as e:
                 raise RenderingError(
                     f"Failed to read markdown file: {md_file.name}",
@@ -1313,7 +1313,7 @@ class PDFRenderer:
                         "Check file permissions",
                         "Ensure file is valid markdown",
                     ],
-                )
+                ) from e
 
         # Join with newlines, ensuring proper spacing
         combined = "\n\n".join(combined_parts)

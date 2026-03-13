@@ -47,8 +47,8 @@ def extract_pdf_pages_as_images(pdf_path: Path, dpi: int = 300) -> list["PIL.Ima
 
     try:
         from pypdf import PdfReader
-    except ImportError:
-        raise ImportError("pypdf library required for PDF processing")
+    except ImportError as e:
+        raise ImportError("pypdf library required for PDF processing") from e
 
     # Read PDF
     try:
@@ -88,8 +88,8 @@ def _render_pages_with_reportlab(reader: "PdfReader", dpi: int) -> list["PIL.Ima
         from reportlab.lib.pagesizes import letter
         from reportlab.lib.utils import ImageReader  # noqa: F401
         from reportlab.pdfgen import canvas
-    except ImportError:
-        raise ImportError("reportlab and PIL required for advanced rendering")
+    except ImportError as e:
+        raise ImportError("reportlab and PIL required for advanced rendering") from e
 
     images = []
 
@@ -170,8 +170,8 @@ def _render_pages_simple(reader: "PdfReader", dpi: int) -> list["PIL.Image.Image
     """Render PDF pages using simple text extraction and PIL drawing."""
     try:
         from PIL import Image, ImageDraw, ImageFont
-    except ImportError:
-        raise ImportError("PIL required for PDF rendering")
+    except ImportError as e:
+        raise ImportError("PIL required for PDF rendering") from e
 
     images = []
 
@@ -237,8 +237,8 @@ def create_page_grid(
 
     try:
         from PIL import Image, ImageDraw, ImageFont
-    except ImportError:
-        raise ImportError("PIL required for image processing")
+    except ImportError as e:
+        raise ImportError("PIL required for image processing") from e
 
     # Calculate grid dimensions
     num_images = len(images)
@@ -393,8 +393,8 @@ def _save_image_as_pdf(image: "PIL.Image.Image", pdf_path: Path, title: str) -> 
         from reportlab.lib.pagesizes import letter
         from reportlab.lib.utils import ImageReader
         from reportlab.pdfgen import canvas
-    except ImportError:
-        raise ImportError("reportlab required for PDF output")
+    except ImportError as e:
+        raise ImportError("reportlab required for PDF output") from e
 
     # Create PDF with the image
     c = canvas.Canvas(str(pdf_path), pagesize=letter)

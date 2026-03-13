@@ -40,7 +40,7 @@ class OutputValidator:
             raise ValidationError(
                 "LLM output is not valid JSON",
                 context={"error": str(e), "content": content[:100]},
-            )
+            ) from e
 
     @staticmethod
     def validate_length(content: str, min_len: int = 0, max_len: int | None = None) -> bool:

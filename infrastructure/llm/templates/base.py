@@ -22,4 +22,4 @@ class ResearchTemplate:
         try:
             return Template(self.template_str).substitute(**kwargs)
         except KeyError as e:
-            raise LLMTemplateError(f"Missing template variable: {e}", context={"required": str(e)})
+            raise LLMTemplateError(f"Missing template variable: {e}", context={"required": str(e)}) from e

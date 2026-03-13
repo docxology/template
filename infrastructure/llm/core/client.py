@@ -503,7 +503,7 @@ class LLMClient:
                 },
             )
             return parsed  # type: ignore
-        except json.JSONDecodeError:
+        except json.JSONDecodeError as e:
             # Try to extract JSON if wrapped
             if "{" in response_text and "}" in response_text:
                 start = response_text.index("{")
@@ -531,7 +531,7 @@ class LLMClient:
                     raise LLMError(
                         "Failed to parse structured response as JSON",
                         context={"error": str(e), "response": response_text[:200]},
-                    )
+                    ) from e
             logger.error(
                 "Structured response is not valid JSON",
                 extra={
@@ -542,7 +542,7 @@ class LLMClient:
             raise LLMError(
                 "Structured response must be valid JSON",
                 context={"response": response_text[:200]},
-            )
+            ) from e
 
     def _generate_response(self, model: str, options: GenerationOptions | None = None) -> str:
         """Generate response from Ollama API using context.
@@ -638,7 +638,7 @@ class LLMClient:
 
                 return content
 
-            except requests.exceptions.Timeout:
+            except requests.exceptions.Timeout as e:
                 last_error = f"Timeout after {self.config.timeout}s"
                 if attempt < retries:
                     logger.debug(
@@ -654,7 +654,7 @@ class LLMClient:
                             "model": model,
                             "timeout": self.config.timeout,
                         },
-                    )
+                    ) from e
 
             except requests.exceptions.ConnectionError as e:
                 last_error = f"Connection error: {e}"
@@ -668,7 +668,7 @@ class LLMClient:
                     raise LLMConnectionError(
                         f"Failed to connect to Ollama ({model}): {last_error}",
                         context={"url": url, "model": model},
-                    )
+                    ) from e
 
             except requests.exceptions.HTTPError as e:
                 # Don't retry HTTP errors (4xx, 5xx) - they're not transient
@@ -681,7 +681,7 @@ class LLMClient:
                         "model": model,
                         "status_code": (response.status_code if "response" in locals() else None),
                     },
-                )
+                ) from e
 
             except requests.exceptions.RequestException as e:
                 last_error = f"Request error: {e}"
@@ -689,7 +689,7 @@ class LLMClient:
                 raise LLMConnectionError(
                     f"Failed to connect to Ollama ({model}): {last_error}",
                     context={"url": url, "model": model},
-                )
+                ) from e
 
     def _save_streaming_state(
         self,

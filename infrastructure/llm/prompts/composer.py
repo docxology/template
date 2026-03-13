@@ -144,7 +144,7 @@ class PromptComposer:
             raise LLMTemplateError(
                 f"Failed to compose template {template_ref}",
                 context={"error": str(e), "template_ref": template_ref},
-            )
+            ) from e
 
     def add_retry_prompt(self, base_prompt: str, retry_type: str = "off_topic") -> str:
         """Add a retry prompt to reinforce requirements.
@@ -271,7 +271,7 @@ class PromptComposer:
             raise LLMTemplateError(
                 f"Failed to build section structure for '{structure_key}'",
                 context={"error": str(e)},
-            )
+            ) from e
 
     def _build_token_budget_awareness(
         self, total_tokens: int, section_budgets: dict[str, int]

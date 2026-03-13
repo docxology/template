@@ -72,7 +72,7 @@ class ZenodoClient:
             response.raise_for_status()
             return str(response.json()["id"])
         except requests.exceptions.RequestException as e:
-            raise PublishingError(f"Failed to create deposition: {e}")
+            raise PublishingError(f"Failed to create deposition: {e}") from e
 
     def upload_file(self, bucket: str, file_path: str) -> None:
         """Upload file to bucket."""
@@ -84,9 +84,9 @@ class ZenodoClient:
                 response = requests.put(url, data=f, headers=self.headers, timeout=REQUEST_TIMEOUT)
                 response.raise_for_status()
         except OSError as e:
-            raise UploadError(f"File access failed: {e}")
+            raise UploadError(f"File access failed: {e}") from e
         except requests.exceptions.RequestException as e:
-            raise UploadError(f"Upload failed: {e}")
+            raise UploadError(f"Upload failed: {e}") from e
 
     def publish(self, deposition_id: str) -> str:
         """Publish deposition.
@@ -101,4 +101,4 @@ class ZenodoClient:
             response.raise_for_status()
             return response.json()["doi"]  # type: ignore
         except requests.exceptions.RequestException as e:
-            raise PublishingError(f"Publication failed: {e}")
+            raise PublishingError(f"Publication failed: {e}") from e

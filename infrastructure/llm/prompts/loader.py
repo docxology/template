@@ -91,12 +91,12 @@ class PromptFragmentLoader:
             raise LLMTemplateError(
                 f"Invalid JSON in prompt file: {filepath}",
                 context={"error": str(e), "filepath": str(filepath)},
-            )
+            ) from e
         except Exception as e:
             raise LLMTemplateError(
                 f"Failed to load prompt file: {filepath}",
                 context={"error": str(e), "filepath": str(filepath)},
-            )
+            ) from e
 
     def _resolve_reference(self, reference: str, subdirectory: str = "fragments") -> Any:
         """Resolve a fragment reference like "file.json#key".

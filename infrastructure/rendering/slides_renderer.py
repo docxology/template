@@ -79,7 +79,7 @@ class SlidesRenderer:
             raise RenderingError(
                 f"Failed to render slides: {e.stderr}",
                 context={"source": str(source_file), "format": "revealjs"},
-            )
+            ) from e
 
     def _render_beamer_with_paths(
         self,
@@ -195,7 +195,7 @@ class SlidesRenderer:
                     "format": "beamer",
                     "log_file": str(log_file) if log_file.exists() else None,
                 },
-            )
+            ) from e
 
     def _fix_figure_paths(self, tex_content: str, output_dir: Path, figures_dir: Path) -> str:
         """Fix figure paths in LaTeX content for proper compilation.
