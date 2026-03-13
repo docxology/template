@@ -8,11 +8,17 @@ import time
 import unicodedata
 from pathlib import Path
 
-import yaml
-
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.core.logging_progress import log_progress_bar
+from infrastructure.rendering._pdf_latex_helpers import (
+    check_latex_log_for_graphics_errors,
+    extract_preamble,
+    fix_figure_paths,
+    fix_math_delimiters,
+    generate_title_page_body,
+    generate_title_page_preamble,
+)
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_utils import compile_latex
 
@@ -904,7 +910,44 @@ class PDFRenderer:
                 if len(missing_figures) > 5:
                     logger.warning(f"  ... and {len(missing_figures) - 5} more missing figures")
 
-        # Now compile LaTeX to PDF using xelatex
+        # Compile LaTeX to PDF with multi-pass xelatex
+        return self._compile_latex_to_pdf(
+            combined_tex=combined_tex,
+            combined_md=combined_md,
+            output_dir=output_dir,
+            output_file=output_file,
+            bib_file=bib_file,
+            bib_exists=bib_exists,
+            source_files=source_files,
+        )
+
+    def _compile_latex_to_pdf(
+        self,
+        combined_tex: Path,
+        combined_md: Path,
+        output_dir: Path,
+        output_file: Path,
+        bib_file: Path,
+        bib_exists: bool,
+        source_files: list[Path],
+    ) -> Path:
+        """Run multi-pass xelatex compilation with bibliography processing.
+
+        Args:
+            combined_tex: Path to the combined .tex file
+            combined_md: Path to the combined .md file (for logging)
+            output_dir: Directory for compilation output
+            output_file: Final PDF output path
+            bib_file: Path to bibliography file
+            bib_exists: Whether bibliography file exists
+            source_files: Original source files (for logging)
+
+        Returns:
+            Path to generated PDF
+
+        Raises:
+            RenderingError: If compilation fails
+        """
         # IMPORTANT:
         # 1. -shell-escape is required for XeTeX to properly determine PNG image
         #    dimensions. Without this flag, XeTeX cannot read PNG bounding box information
@@ -1028,7 +1071,7 @@ class PDFRenderer:
                     consecutive_failures += 1
 
                     if output_file.exists():
-                        logger.warning(f"⚠️  PDF generated but with warnings (run {run + 1})")
+                        logger.warning(f"PDF generated but with warnings (run {run + 1})")
                         # Reset failure count if we have a PDF
                         consecutive_failures = 0
                         break
@@ -1076,7 +1119,7 @@ class PDFRenderer:
                                 )
                         else:
                             logger.warning(
-                                f"⚠️  LaTeX compilation failed (run {run + 1}), continuing..."
+                                f"LaTeX compilation failed (run {run + 1}), continuing..."
                             )
 
                             if missing_pkg:
@@ -1138,7 +1181,7 @@ class PDFRenderer:
                 # Validate PDF structure before accepting it
                 if not self._validate_pdf_structure(temp_pdf):
                     logger.warning(
-                        "⚠️  PDF structurally invalid (truncated xref/%%EOF). "
+                        "PDF structurally invalid (truncated xref/%%EOF). "
                         "Re-running xelatex for recovery pass..."
                     )
                     with open(xelatex_stdout_log, "w") as stdout_sink:
@@ -1150,41 +1193,21 @@ class PDFRenderer:
                         )
                     if not self._validate_pdf_structure(temp_pdf):
                         logger.warning(
-                            "⚠️  PDF still invalid after recovery pass. "
+                            "PDF still invalid after recovery pass. "
                             "Proceeding with best-effort output."
                         )
                 # Rename temporary PDF to final name
                 temp_pdf.rename(output_file)
-                # NEW: Log successful combination with output size
+                # Log successful combination with output size
                 if output_file.exists():
-                    output_size_kb = output_file.stat().st_size / 1024
-                    logger.info(f"\n✅ Successfully combined {len(source_files)} sections")
-                    logger.info(f"   Output: {output_file.name}")
-                    logger.info(
-                        f"   Size: {output_size_kb:.1f} KB ({output_size_kb / 1024:.2f} MB)"
-                    )
-                    logger.info(f"   Location: {output_file.parent}")
-
-                    # Log performance metrics
-                    end_time = time.time()
-                    total_duration = end_time - start_time
-                    logger.info(f"   Duration: {total_duration:.2f} seconds")
+                    self._log_pdf_success(output_file, source_files, start_time)
 
                 # Note: Temporary files (_combined_manuscript.md, .tex, .log, .bbl, .aux)
                 # are preserved for debugging and reference purposes
                 return output_file
             elif output_file.exists():
-                # NEW: Log successful combination with output size
-                output_size_kb = output_file.stat().st_size / 1024
-                logger.info(f"\n✅ Successfully combined {len(source_files)} sections")
-                logger.info(f"   Output: {output_file.name}")
-                logger.info(f"   Size: {output_size_kb:.1f} KB ({output_size_kb / 1024:.2f} MB)")
-                logger.info(f"   Location: {output_file.parent}")
-
-                # Log performance metrics
-                end_time = time.time()
-                total_duration = end_time - start_time
-                logger.info(f"   Duration: {total_duration:.2f} seconds")
+                # Log successful combination with output size
+                self._log_pdf_success(output_file, source_files, start_time)
 
                 # Note: Temporary files (_combined_manuscript.md, .tex, .log, .bbl, .aux)
                 # are preserved for debugging and reference purposes
@@ -1200,6 +1223,19 @@ class PDFRenderer:
                 f"Failed to compile LaTeX to PDF: {e.stderr or e.stdout}",
                 context={"source": str(combined_tex), "output": str(output_file)},
             )
+
+    def _log_pdf_success(
+        self, output_file: Path, source_files: list[Path], start_time: float
+    ) -> None:
+        """Log successful PDF generation with size and duration metrics."""
+        output_size_kb = output_file.stat().st_size / 1024
+        logger.info(f"\nSuccessfully combined {len(source_files)} sections")
+        logger.info(f"   Output: {output_file.name}")
+        logger.info(f"   Size: {output_size_kb:.1f} KB ({output_size_kb / 1024:.2f} MB)")
+        logger.info(f"   Location: {output_file.parent}")
+        end_time = time.time()
+        total_duration = end_time - start_time
+        logger.info(f"   Duration: {total_duration:.2f} seconds")
 
     def _combine_markdown_files(self, source_files: list[Path]) -> str:
         """Combine multiple markdown files into one.
@@ -1315,536 +1351,25 @@ class PDFRenderer:
         return combined
 
     def _extract_preamble(self, preamble_file: Path) -> str:
-        """Extract LaTeX preamble from markdown file.
-
-        Looks for content between ```latex and ``` blocks.
-        Handles various markdown code fence formats.
-
-        Args:
-            preamble_file: Path to preamble.md file
-
-        Returns:
-            LaTeX preamble content or empty string if not found
-        """
-        try:
-            content = preamble_file.read_text()
-        except Exception as e:
-            logger.warning(f"Failed to read preamble file: {e}")
-            return ""
-
-        # Look for ```latex ... ``` blocks (handles various line ending styles)
-
-        # Pattern handles different line endings and optional whitespace
-        pattern = r"```\s*latex\s*\n(.*?)\n\s*```"
-        matches = re.findall(pattern, content, re.DOTALL)
-
-        if matches:
-            # Combine all latex blocks
-            preamble_lines = [match.strip() for match in matches]
-            result = "\n".join(preamble_lines)
-            logger.debug(f"Extracted {len(matches)} LaTeX preamble block(s) ({len(result)} chars)")
-            return result
-        else:
-            logger.debug(f"No LaTeX code blocks found in {preamble_file.name}")
-            return ""
+        """Extract LaTeX preamble from markdown file. Delegates to module-level helper."""
+        return extract_preamble(preamble_file)
 
     def _fix_figure_paths(self, tex_content: str, manuscript_dir: Path, output_dir: Path) -> str:
-        r"""Fix figure paths in LaTeX content for proper compilation.
-
-        Converts relative paths like ../output/figures/ to paths relative to the
-        LaTeX compilation directory, ensuring \includegraphics commands work correctly.
-
-        The LaTeX compiler runs from output/pdf/, so figures in output/figures/
-        should be referenced as ../figures/filename.png
-
-        Args:
-            tex_content: LaTeX content to process
-            manuscript_dir: Directory containing manuscript files
-            output_dir: Output directory where LaTeX is compiled (typically output/pdf/)
-
-        Returns:
-            LaTeX content with corrected figure paths
-        """
-        # Pattern to match \includegraphics with or without options
-        # Handles both \includegraphics{path} and \includegraphics[options]{path}
-        # Note: This basic pattern may miss \pandocbounded with nested braces in alt={}
-        pattern = r"\\includegraphics(?:\[[^\]]*\])?\{([^}]+)\}"
-
-        # Additional pattern for \pandocbounded{\includegraphics[...]{path}}
-        # This handles the complex case where options contain nested braces (alt={...})
-        # We'll use a fallback string replacement after regex for any missed paths
-
-        # figures_dir must be derived from output_dir (LaTeX compiles in output/pdf/),
-        # NOT from manuscript_dir — which may be output/manuscript/ and would produce
-        # the double-path bug: output/manuscript/../output/figures = output/output/figures.
-        # output_dir is the pdf/ directory; figures/ is its sibling in output/.
-        figures_dir = output_dir.parent / "figures"
-        fixed_count = 0
-        paths_fixed = []
-
-        def normalize_path(path_str: str) -> str:
-            """Normalize path to handle Unicode and encoding issues."""
-            # Normalize Unicode characters using NFC (composition form)
-            normalized = unicodedata.normalize("NFC", path_str)
-            return normalized
-
-        def extract_filename(path_str: str) -> str:
-            """Extract filename from various path formats."""
-            # Normalize first
-            path_str = normalize_path(path_str)
-
-            # Handle various path formats
-            path_variations = [
-                "../output/figures/",
-                "output/figures/",
-                "../figures/",
-                "./figures/",
-            ]
-
-            for prefix in path_variations:
-                if prefix in path_str:
-                    return path_str.split(prefix)[-1]
-
-            # If no prefix matched, could be just a filename or absolute path
-            if "/" in path_str or "\\" in path_str:
-                # Split by last / or \
-                return re.split(r"[/\\]", path_str)[-1]
-            else:
-                # Just a filename
-                return path_str
-
-        def fix_path(match: re.Match[str]) -> str:
-            r"""Fix a single includegraphics path to be relative to the compilation directory.
-
-            Transforms figure paths from various formats (absolute, manuscript-relative,
-            etc.) to paths relative to the LaTeX compilation directory (output/pdf/).
-            Preserves any optional parameters like width or height specifications.
-
-            Args:
-                match: Regular expression match object containing:
-                    - group(0): The full \\includegraphics command
-                    - group(1): The figure path within braces
-
-            Returns:
-                The corrected \\includegraphics command with path relative to ../figures/.
-
-            Note:
-                - Logs a warning if the referenced figure file does not exist
-                - Still returns the fixed path even for missing files to allow
-                  compilation to continue with other content
-            """
-            nonlocal fixed_count
-
-            old_path = match.group(1)
-            original_path = old_path
-
-            # Check if already in correct format
-            if old_path.startswith("../figures/"):
-                return match.group(0)
-
-            # Extract filename, handling encoding issues
-            filename = extract_filename(old_path)
-
-            # Build new path relative to compilation directory
-            # Since we're compiling in output_dir (output/pdf), figures are in ../figures/
-            new_path = f"../figures/{filename}"
-
-            # Verify the figure file exists (try both normalized and non-normalized)
-            fig_full_path = figures_dir / filename
-            fig_normalized = figures_dir / normalize_path(filename)
-
-            file_exists = fig_full_path.exists() or fig_normalized.exists()
-
-            if file_exists:
-                fixed_count += 1
-                paths_fixed.append(f"{original_path} → {new_path}")
-                # Preserve options if present
-                full_match = match.group(0)
-                if "[" in full_match:
-                    # Extract options
-                    options_start = full_match.find("[")
-                    options_end = full_match.find("]")
-                    options = full_match[options_start : options_end + 1]
-                    return f"\\includegraphics{options}{{{new_path}}}"
-                else:
-                    return f"\\includegraphics{{{new_path}}}"
-            else:
-                logger.warning(f"⚠️  Figure file not found: {fig_full_path}")
-                fixed_count += 1
-                paths_fixed.append(f"{original_path} → {new_path} (FILE NOT FOUND)")
-                # Still return fixed path so compilation continues
-                full_match = match.group(0)
-                if "[" in full_match:
-                    options_start = full_match.find("[")
-                    options_end = full_match.find("]")
-                    options = full_match[options_start : options_end + 1]
-                    return f"\\includegraphics{options}{{{new_path}}}"
-                else:
-                    return f"\\includegraphics{{{new_path}}}"
-
-        # Apply path fixes
-        tex_content = re.sub(pattern, fix_path, tex_content)
-
-        # Fallback: Simple string replacement for paths the regex missed
-        # This handles \pandocbounded{\includegraphics[...,alt={...}]{../output/figures/xxx.png}}
-        # where nested braces in options break the regex pattern
-        remaining_old_paths = tex_content.count("../output/figures/")
-        if remaining_old_paths > 0:
-            tex_content = tex_content.replace("../output/figures/", "../figures/")
-            fixed_count += remaining_old_paths
-            logger.info(f"✓ Fixed {remaining_old_paths} additional figure path(s) via fallback")
-
-        # Second fallback: Handle bare "figures/" paths (no ../ prefix)
-        # These come from markdown ![...](figures/xxx.png) references that Pandoc
-        # converts to \includegraphics{figures/xxx.png}. Since LaTeX compiles
-        # from output/pdf/, these need to become ../figures/xxx.png.
-        # We match the pattern "]{figures/" inside \includegraphics commands
-        # to avoid false positives in regular text.
-        bare_figure_count = tex_content.count("]{figures/")
-        if bare_figure_count > 0:
-            tex_content = tex_content.replace("]{figures/", "]{../figures/")
-            fixed_count += bare_figure_count
-            logger.info(f"✓ Fixed {bare_figure_count} bare figure path(s) via second fallback")
-
-        if fixed_count > 0:
-            logger.info(f"✓ Fixed {fixed_count} figure path(s)")
-            for path_info in paths_fixed[:10]:  # Show first 10
-                logger.debug(f"  {path_info}")
-            if len(paths_fixed) > 10:
-                logger.debug(f"  ... and {len(paths_fixed) - 10} more")
-        else:
-            # No paths fixed - check if there are any figure references at all
-            if pattern and re.search(pattern, tex_content):
-                logger.debug("No figure paths needed fixing (already in correct format)")
-
-        return tex_content
+        """Fix figure paths in LaTeX content. Delegates to module-level helper."""
+        return fix_figure_paths(tex_content, manuscript_dir, output_dir)
 
     def _fix_math_delimiters(self, tex_content: str) -> str:
-        r"""Fix broken math delimiters from Pandoc conversion.
-
-        Pandoc incorrectly converts \[ and \] to {[} and {]}, breaking math mode.
-        This function fixes these issues and restores proper LaTeX math formatting.
-
-        Args:
-            tex_content: LaTeX content with broken math delimiters
-
-        Returns:
-            LaTeX content with fixed math delimiters
-        """
-        fixed_count = 0
-
-        # Helper function to fix math content
-        def fix_math_content(content: str) -> str:
-            """Fix broken patterns within math content."""
-            # 1. Remove all nested {[} and {]} that Pandoc incorrectly inserted
-            content = re.sub(r"\{\[\}", "", content)
-            content = re.sub(r"\{\]\}", "", content)
-
-            # 2. Fix \mathbb{E}\emph{\{q(s}\tau)\} -> \mathbb{E}_{q(s_\tau)}
-            # Pattern: \mathbb{E}\emph{\{q(s}\tau)\} or \mathbb{E}\emph{\{o}\tau)\}
-            content = re.sub(
-                r"\\mathbb\{E\}\\emph\{\\\{([^}]+)\}([a-zA-Z_]+)\\\}\)",
-                r"\\mathbb{E}_{\1_\2}",
-                content,
-            )
-
-            # 3. Fix broken subscripts: s\_\tau -> s_\tau, o\_\tau -> o_\tau
-            content = re.sub(r"([a-zA-Z])\\_([a-zA-Z_]+)", r"\1_\2", content)
-
-            # 4. Remove remaining \emph{} wrappers
-            content = re.sub(r"\\emph\{([^}]+)\}", r"\1", content)
-
-            # 5. Fix \textbar to \mid
-            content = re.sub(r"\\textbar", r"\\mid", content)
-
-            return content
-
-        # Step 1: Fix display math with labels: {[} ... {]}\label{eq:...}{]}
-        # Use greedy matching to find the LAST {]} before \label
-        # Pattern: {[} ... (everything) ... {]}\label{...}{]}
-        pattern_with_label = r"\{\[\}(.*)\{\]\}\\label\{([^}]+)\}\{\]\}"
-
-        def fix_display_math_with_label(match: re.Match[str]) -> str:
-            r"""Fix display math blocks that include equation labels.
-
-            Handles the pattern {[} ... {]}\\label{eq:...}{]} which Pandoc incorrectly
-            generates, converting it back to proper LaTeX: \\[...\\label{...}\\].
-
-            Args:
-                match: Regular expression match object containing:
-                    - group(1): The math content between delimiters
-                    - group(2): The equation label name
-
-            Returns:
-                Properly formatted LaTeX display math with label.
-            """
-            nonlocal fixed_count
-            math_content = match.group(1)
-            label_name = match.group(2)
-
-            math_content = fix_math_content(math_content)
-            fixed_count += 1
-            return f"\\[{math_content}\\label{{{label_name}}}\\]"
-
-        # Step 2: Fix display math without labels: {[} ... {]}
-        # Match greedily to get the last {]} in a paragraph/block
-        pattern_no_label = r"\{\[\}([^{]*?)\{\]\}(?!\\label)(?=\s|$)"
-
-        def fix_display_math_no_label(match: re.Match[str]) -> str:
-            r"""Fix display math blocks without equation labels.
-
-            Handles the pattern {[} ... {]} which Pandoc incorrectly generates,
-            converting it back to proper LaTeX display math: \\[...\\].
-
-            Args:
-                match: Regular expression match object containing:
-                    - group(1): The math content between delimiters
-
-            Returns:
-                Properly formatted LaTeX display math without label.
-            """
-            nonlocal fixed_count
-            math_content = match.group(1)
-
-            math_content = fix_math_content(math_content)
-            fixed_count += 1
-            return f"\\[{math_content}\\]"
-
-        # Apply fixes: first with labels (greedy), then without
-        tex_content = re.sub(
-            pattern_with_label,
-            fix_display_math_with_label,
-            tex_content,
-            flags=re.DOTALL,
-        )
-        tex_content = re.sub(
-            pattern_no_label,
-            fix_display_math_no_label,
-            tex_content,
-            flags=re.DOTALL | re.MULTILINE,
-        )
-
-        # Step 3: Fix remaining issues globally
-        tex_content = re.sub(r"\\textbar", r"\\mid", tex_content)
-
-        # Fix broken Greek letters with error handling
-        greek_letters = [
-            "tau",
-            "pi",
-            "Theta",
-            "alpha",
-            "beta",
-            "gamma",
-            "lambda",
-            "kappa",
-            "sigma",
-            "phi",
-            "eta",
-        ]
-        for greek in greek_letters:
-            try:
-                # Match: backslash + greek_letter + backslash + close-paren
-                # In the LaTeX, we see: \tau\) and want: \tau)
-                # Build pattern as: \\tau\\) (escaping each backslash for regex)
-                pattern = r"\\" + greek + r"\\\)"
-                replacement = "\\\\" + greek + ")"
-                tex_content = re.sub(pattern, replacement, tex_content)
-            except re.error as e:
-                logger.warning(f"Failed to fix Greek letter '{greek}': {e}. Skipping this pattern.")
-                continue
-            except Exception as e:
-                logger.warning(
-                    f"Unexpected error fixing Greek letter '{greek}': {e}. Skipping this pattern."
-                )
-                continue
-
-        if fixed_count > 0:
-            logger.info(f"✓ Fixed {fixed_count} math delimiter(s)")
-
-        return tex_content
+        """Fix broken math delimiters from Pandoc conversion. Delegates to module-level helper."""
+        return fix_math_delimiters(tex_content)
 
     def _check_latex_log_for_graphics_errors(self, log_file: Path) -> dict[str, list[str]]:
-        """Parse LaTeX log file for graphics-related errors and warnings.
-
-        Args:
-            log_file: Path to LaTeX .log file
-
-        Returns:
-            Dictionary with graphics issues found
-        """
-        result: dict[str, list[str]] = {
-            "graphics_errors": [],
-            "graphics_warnings": [],
-            "missing_files": [],
-        }
-
-        if not log_file.exists():
-            return result
-
-        try:
-            log_content = log_file.read_text(errors="ignore")
-
-            # Look for common graphics-related error patterns
-
-            # Pattern for file not found errors
-            file_not_found = re.findall(r"File `([^`]+)` not found", log_content)
-            result["missing_files"].extend(file_not_found)
-
-            # Pattern for graphics package warnings
-            graphics_warnings = re.findall(
-                r"((?:Package graphics|Graphics Error).*?)(?=\n(?:!|\s*$))",
-                log_content,
-                re.IGNORECASE,
-            )
-            result["graphics_warnings"].extend(graphics_warnings)
-
-            # Check for undefined control sequences related to graphics
-            if r"\includegraphics" in log_content and "Undefined" in log_content:
-                result["graphics_errors"].append(
-                    "includegraphics command undefined - graphicx package may not be loaded"
-                )
-
-            return result
-
-        except Exception as e:
-            logger.warning(f"Error parsing LaTeX log: {e}")
-            return result
+        """Parse LaTeX log for graphics errors. Delegates to module-level helper."""
+        return check_latex_log_for_graphics_errors(log_file)
 
     def _generate_title_page_preamble(self, manuscript_dir: Path) -> str:
-        """Generate LaTeX title page preamble commands from config.yaml metadata.
-
-        These commands (\\title, \\author, \\date) must be in the preamble
-        (before \\begin{document}).
-
-        Args:
-            manuscript_dir: Directory containing manuscript files and config.yaml
-
-        Returns:
-            LaTeX preamble commands for title page, or empty string if config not found
-        """
-        config_file = manuscript_dir / "config.yaml"
-
-        if not config_file.exists():
-            logger.debug(f"Config file not found: {config_file}")
-            return ""
-
-        try:
-            with open(config_file, "r") as f:
-                config = yaml.safe_load(f)
-
-            if not config:
-                return ""
-
-            # Extract metadata
-            paper = config.get("paper", {})
-            authors = config.get("authors", [])
-
-            title = paper.get("title", "Research Paper")
-            subtitle = paper.get("subtitle", "")
-            date = paper.get("date", "")
-            doi = config.get("publication", {}).get("doi", "")
-
-            # Build preamble commands (must be before \begin{document})
-            preamble_lines = [
-                f"\\title{{{title}}}",
-            ]
-            # Add subtitle if present
-            if subtitle:
-                preamble_lines[-1] = f"\\title{{{title}\\\\\\normalsize {subtitle}}}"
-
-            # Add authors with proper formatting (including email, affiliation, ORCID)
-            if authors:
-                author_blocks = []
-                for author in authors:
-                    if "name" not in author:
-                        continue
-
-                    name = author["name"]
-                    parts = [name]
-
-                    # Add affiliation if present
-                    if "affiliation" in author:
-                        parts.append(f"\\\\\\footnotesize{{{author['affiliation']}}}")
-
-                    # Add email if present
-                    if "email" in author:
-                        parts.append(f"\\\\\\footnotesize{{\\texttt{{{author['email']}}}}}")
-
-                    # Add ORCID if present (with hyperlink)
-                    if "orcid" in author:
-                        orcid = author["orcid"]
-                        parts.append(
-                            f"\\\\\\footnotesize{{\\href{{https://orcid.org/{orcid}}}{{ORCID: {orcid}}}}}"  # noqa: E501
-                        )
-
-                    # Join all parts for this author
-                    author_block = "".join(parts)
-                    author_blocks.append(author_block)
-
-                if author_blocks:
-                    # Use standard \and for multiple authors, but tight formatting within each
-                    author_str = " \\\\and ".join(author_blocks)
-
-                    # Add DOI and Date to the author block for tight vertical layout
-                    extras = []
-                    if doi:
-                        extras.append(f"\\href{{https://doi.org/{doi}}}{{DOI: {doi}}}")
-
-                    if date:
-                        extras.append(date)
-
-                    if extras:
-                        # Add extras with small vertical space and small font
-                        author_str += " \\\\ " + " \\\\ ".join(
-                            [f"\\footnotesize{{{e}}}" for e in extras]
-                        )
-
-                    preamble_lines.append(f"\\author{{{author_str}}}")
-
-            if date:
-                preamble_lines.append(f"\\date{{{date}}}")
-            else:
-                preamble_lines.append(r"\date{\today}")
-
-            logger.debug(f"Generated title page preamble with {len(preamble_lines)} commands")
-            return "\n".join(preamble_lines)
-
-        except Exception as e:
-            logger.warning(f"Error reading config.yaml: {e}")
-            return ""
+        """Generate title page preamble from config.yaml. Delegates to module-level helper."""
+        return generate_title_page_preamble(manuscript_dir)
 
     def _generate_title_page_body(self, manuscript_dir: Path) -> str:
-        """Generate LaTeX title page body command from config.yaml metadata.
-
-        The \\maketitle command must be called AFTER \\begin{document}.
-
-        Args:
-            manuscript_dir: Directory containing manuscript files and config.yaml
-
-        Returns:
-            LaTeX \\maketitle command with proper formatting, or empty string if config not found
-        """
-        config_file = manuscript_dir / "config.yaml"
-
-        if not config_file.exists():
-            return ""
-
-        try:
-            with open(config_file, "r") as f:
-                config = yaml.safe_load(f)
-
-            if not config:
-                return ""
-
-            # Build body commands (must be after \begin{document})
-            body_lines = [
-                "\\maketitle",
-                "\\thispagestyle{empty}",
-            ]
-
-            logger.debug(f"Generated title page body with {len(body_lines)} commands")
-            return "\n".join(body_lines)
-
-        except Exception as e:
-            logger.warning(f"Error reading config.yaml: {e}")
-            return ""
+        """Generate title page body from config.yaml. Delegates to module-level helper."""
+        return generate_title_page_body(manuscript_dir)

@@ -744,6 +744,7 @@ class LLMClient:
         """Stream response from LLM with comprehensive logging and error recovery.
 
         Yields response chunks as they arrive for real-time display.
+        Delegates to :func:`infrastructure.llm.core._client_streaming.stream_query_impl`.
 
         Args:
             prompt: User prompt
@@ -761,279 +762,20 @@ class LLMClient:
             >>> for chunk in client.stream_query("Explain AI", log_progress=True):
             ...     print(chunk, end="")
         """
+        from infrastructure.llm.core._client_streaming import stream_query_impl
 
-        start_time = time_module.time()
-        model_name = model or self.config.default_model
-        prompt_preview = prompt[:100] + "..." if len(prompt) > 100 else prompt
-
-        # Log streaming start
-        logger.info(
-            "Starting streaming query",
-            extra={
-                "model": model_name,
-                "prompt_length": len(prompt),
-                "prompt_preview": prompt_preview,
-                "max_tokens": options.max_tokens if options else None,
-                "temperature": options.temperature if options else None,
-            },
+        yield from stream_query_impl(
+            config=self.config,
+            context=self.context,
+            save_streaming_state_fn=self._save_streaming_state,
+            prompt=prompt,
+            model=model,
+            options=options,
+            save_response=save_response,
+            save_path=save_path,
+            log_progress=log_progress,
+            retries=retries,
         )
-
-        self.context.add_message("user", prompt)
-        url = f"{self.config.base_url}/api/chat"
-
-        opts = options or GenerationOptions()
-        ollama_options = opts.to_ollama_options(self.config)
-
-        payload: dict[str, Any] = {
-            "model": model_name,
-            "messages": self.context.get_messages(),
-            "stream": True,
-            "options": ollama_options,
-        }
-
-        if opts.format_json:
-            payload["format"] = "json"
-
-        full_response = []
-        chunk_count = 0
-        first_chunk_time = None
-        last_chunk_time = None
-        error_count = 0
-        partial_saved = False
-        _timeout_warned = False
-
-        # Initialize metrics (imported locally to avoid circular import with review.metrics)
-        from infrastructure.llm.review.metrics import StreamingMetrics  # noqa: PLC0415
-        metrics = StreamingMetrics()
-
-        for attempt in range(retries + 1):
-            try:
-                if attempt > 0:
-                    wait_time = min((attempt + 1) * 1.0, 5.0)
-                    logger.debug(
-                        f"Retrying streaming request (attempt {attempt + 1}/{retries + 1}) after {wait_time}s..."  # noqa: E501
-                    )
-                    time_module.sleep(wait_time)
-
-                with requests.post(
-                    url, json=payload, stream=True, timeout=self.config.timeout
-                ) as r:
-                    r.raise_for_status()
-
-                    for line in r.iter_lines():
-                        current_time = time_module.time()
-
-                        # Note: Early warning is handled by StreamHeartbeatMonitor in review/translation scripts  # noqa: E501
-                        # This avoids duplicate warnings. Stall detection after first token is handled below.  # noqa: E501
-
-                        if line:
-                            try:
-                                data = json.loads(line)
-                                chunk = data.get("message", {}).get("content", "")
-
-                                if chunk:
-                                    chunk_count += 1
-                                    full_response.append(chunk)
-
-                                    # Track timing
-                                    if first_chunk_time is None:
-                                        first_chunk_time = current_time
-                                        metrics.first_chunk_time = current_time - start_time
-                                        logger.debug(
-                                            f"First chunk received after {metrics.first_chunk_time:.2f}s",  # noqa: E501
-                                            extra={"chunk_count": chunk_count},
-                                        )
-
-                                    prev_chunk_time = last_chunk_time
-                                    last_chunk_time = current_time
-
-                                    # Check for stalled stream (configurable threshold)
-                                    if (
-                                        prev_chunk_time is not None
-                                        and (current_time - prev_chunk_time)
-                                        > self.config.stall_threshold
-                                    ):
-                                        time_since_last_chunk = current_time - prev_chunk_time
-                                        logger.error(
-                                            f"🚨 Streaming stalled: no tokens received for {time_since_last_chunk:.1f}s",  # noqa: E501
-                                            extra={
-                                                "model": model_name,
-                                                "time_since_last_chunk": time_since_last_chunk,
-                                                "stall_threshold": self.config.stall_threshold,
-                                                "total_elapsed": current_time - start_time,
-                                                "timeout_remaining": max(
-                                                    0,
-                                                    self.config.timeout
-                                                    - (current_time - start_time),
-                                                ),
-                                                "token_count": chunk_count,
-                                            },
-                                        )
-
-                                    # Log chunk progress (DEBUG level)
-                                    if log_progress:
-                                        logger.debug(
-                                            f"Streaming chunk {chunk_count}",
-                                            extra={
-                                                "chunk_size": len(chunk),
-                                                "accumulated_chars": sum(
-                                                    len(c) for c in full_response
-                                                ),
-                                                "chunk_count": chunk_count,
-                                            },
-                                        )
-
-                                    yield chunk
-
-                                    # Log timeout remaining when approaching limit (warn once only)
-                                    elapsed = current_time - start_time
-                                    if (
-                                        not _timeout_warned
-                                        and elapsed > self.config.timeout * 0.3
-                                    ):
-                                        remaining = self.config.timeout - elapsed
-                                        if remaining > 0:
-                                            _timeout_warned = True
-                                            logger.info(
-                                                f"Streaming timeout warning: {remaining:.1f}s remaining",  # noqa: E501
-                                                extra={
-                                                    "model": model_name,
-                                                    "elapsed": elapsed,
-                                                    "timeout": self.config.timeout,
-                                                    "remaining": remaining,
-                                                    "progress": f"{chunk_count} chunks, {sum(len(c) for c in full_response)} chars",  # noqa: E501
-                                                },
-                                            )
-
-                            except json.JSONDecodeError as e:
-                                logger.warning(
-                                    f"Failed to parse streaming chunk: {e}",
-                                    extra={"line": line[:100]},
-                                )
-                                error_count += 1
-                                metrics.error_count = error_count
-                                continue
-
-                # Success - break retry loop
-                break
-
-            except requests.exceptions.Timeout:
-                error_count += 1
-                metrics.error_count = error_count
-                last_error = f"Timeout after {self.config.timeout}s"
-
-                if attempt < retries:
-                    logger.debug(
-                        f"Streaming timeout (attempt {attempt + 1}/{retries + 1}), will retry..."
-                    )
-                    # Save partial response before retry
-                    if full_response and save_response and not partial_saved:
-                        if self._save_streaming_state(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=True):
-                            partial_saved = True
-                            logger.info(f"Saved partial response ({chunk_count} chunks) before retry")
-                    continue
-                else:
-                    logger.error(f"Streaming timeout after {retries + 1} attempts: {last_error}")
-                    # Save partial response on final failure
-                    if full_response and save_response:
-                        if self._save_streaming_state(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=True):
-                            partial_saved = True
-                            logger.info(f"Saved partial response ({chunk_count} chunks) after timeout")
-                    raise LLMConnectionError(
-                        f"Streaming timeout ({model_name}): {last_error}",
-                        context={
-                            "url": url,
-                            "model": model_name,
-                            "chunks_received": chunk_count,
-                        },
-                    )
-
-            except requests.exceptions.ConnectionError as e:
-                error_count += 1
-                metrics.error_count = error_count
-                last_error = f"Connection error: {e}"
-
-                if attempt < retries:
-                    logger.debug(
-                        f"Streaming connection error (attempt {attempt + 1}/{retries + 1}), will retry..."  # noqa: E501
-                    )
-                    # Save partial response before retry
-                    if full_response and save_response and not partial_saved:
-                        if self._save_streaming_state(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=True):
-                            partial_saved = True
-                            logger.info(f"Saved partial response ({chunk_count} chunks) before retry")
-                    continue
-                else:
-                    logger.error(
-                        f"Streaming connection error after {retries + 1} attempts: {last_error}"
-                    )
-                    # Save partial response on final failure
-                    if full_response and save_response:
-                        if self._save_streaming_state(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=True):
-                            partial_saved = True
-                            logger.info(f"Saved partial response ({chunk_count} chunks) after connection error")
-                    raise LLMConnectionError(
-                        f"Streaming connection failed ({model_name}): {last_error}",
-                        context={
-                            "url": url,
-                            "model": model_name,
-                            "chunks_received": chunk_count,
-                        },
-                    )
-
-            except requests.exceptions.RequestException as e:
-                error_count += 1
-                metrics.error_count = error_count
-                logger.error(f"Streaming request error ({model_name}): {e}")
-                raise LLMConnectionError(
-                    f"Stream failed ({model_name}): {e}",
-                    context={
-                        "url": url,
-                        "model": model_name,
-                        "chunks_received": chunk_count,
-                    },
-                )
-
-        # Calculate final metrics
-        end_time = time_module.time()
-        streaming_time = end_time - start_time
-        full_response_text = strip_thinking_tags("".join(full_response))
-        total_chars = len(full_response_text)
-        total_tokens_est = total_chars // 4
-
-        metrics.chunk_count = chunk_count
-        metrics.total_chars = total_chars
-        metrics.total_tokens_est = total_tokens_est
-        metrics.streaming_time_seconds = streaming_time
-        metrics.chunks_per_second = chunk_count / streaming_time if streaming_time > 0 else 0.0
-        metrics.bytes_per_second = total_chars / streaming_time if streaming_time > 0 else 0.0
-        metrics.error_count = error_count
-        metrics.partial_response_saved = partial_saved
-        if last_chunk_time:
-            metrics.last_chunk_time = last_chunk_time - start_time
-
-        # Log streaming completion
-        logger.info(
-            "Streaming completed",
-            extra={
-                "model": model_name,
-                "chunk_count": chunk_count,
-                "total_chars": total_chars,
-                "total_tokens_est": total_tokens_est,
-                "streaming_time_seconds": streaming_time,
-                "chunks_per_second": metrics.chunks_per_second,
-                "bytes_per_second": metrics.bytes_per_second,
-                "error_count": error_count,
-            },
-        )
-
-        # Add full response to context
-        self.context.add_message("assistant", full_response_text)
-
-        # Save response if requested
-        if save_response and not partial_saved:
-            if self._save_streaming_state(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=error_count > 0, options=options):
-                logger.info("Saved final streaming response")
 
     def stream_short(
         self,
@@ -1047,6 +789,8 @@ class LLMClient:
     ) -> Iterator[str]:
         """Stream a short response with comprehensive logging.
 
+        Delegates to :func:`infrastructure.llm.core._client_streaming.stream_short_impl`.
+
         Args:
             prompt: User prompt
             model: Model to use
@@ -1059,19 +803,15 @@ class LLMClient:
         Yields:
             Response chunks
         """
-        short_options = GenerationOptions(
-            max_tokens=self.config.short_max_tokens,
-            temperature=options.temperature if options else None,
-            seed=options.seed if options else None,
-        )
-        instruction = (
-            "Provide a concise, brief response (less than 150 words). "
-            "Be direct and to the point.\n\n"
-        )
-        yield from self.stream_query(
-            instruction + prompt,
-            model,
-            options=short_options,
+        from infrastructure.llm.core._client_streaming import stream_short_impl
+
+        yield from stream_short_impl(
+            config=self.config,
+            context=self.context,
+            save_streaming_state_fn=self._save_streaming_state,
+            prompt=prompt,
+            model=model,
+            options=options,
             save_response=save_response,
             save_path=save_path,
             log_progress=log_progress,
@@ -1090,6 +830,8 @@ class LLMClient:
     ) -> Iterator[str]:
         """Stream a comprehensive response with comprehensive logging.
 
+        Delegates to :func:`infrastructure.llm.core._client_streaming.stream_long_impl`.
+
         Args:
             prompt: User prompt
             model: Model to use
@@ -1102,19 +844,15 @@ class LLMClient:
         Yields:
             Response chunks
         """
-        long_options = GenerationOptions(
-            max_tokens=self.config.long_max_tokens,
-            temperature=options.temperature if options else None,
-            seed=options.seed if options else None,
-        )
-        instruction = (
-            "Provide a comprehensive, detailed response with examples and "
-            "thorough explanation. Use multiple paragraphs if needed.\n\n"
-        )
-        yield from self.stream_query(
-            instruction + prompt,
-            model,
-            options=long_options,
+        from infrastructure.llm.core._client_streaming import stream_long_impl
+
+        yield from stream_long_impl(
+            config=self.config,
+            context=self.context,
+            save_streaming_state_fn=self._save_streaming_state,
+            prompt=prompt,
+            model=model,
+            options=options,
             save_response=save_response,
             save_path=save_path,
             log_progress=log_progress,

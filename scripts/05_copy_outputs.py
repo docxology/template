@@ -30,11 +30,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from infrastructure.core.logging_utils import get_logger, log_success, log_header
-from infrastructure.core.file_operations import (
+from infrastructure.core.file_cleanup import (
     clean_output_directory,
     clean_root_output_directory,
-    copy_final_deliverables,
 )
+from infrastructure.core.file_operations import copy_final_deliverables
 from infrastructure.validation.output_validator import (
     validate_copied_outputs,
     validate_output_structure,

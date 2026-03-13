@@ -93,7 +93,6 @@ def collect_output_statistics(
         "total_size_mb": 0.0,
         "largest_files": [],
         "missing_expected_files": [],
-        "file_counts_by_type": {},
         "sizes_by_category": {},
     }
 

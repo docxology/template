@@ -55,6 +55,7 @@ class RenderManager:
             raise TemplateError(f"Source file does not exist: {source_file}")
 
         outputs = []
+        format_errors: list[tuple[str, Exception]] = []
 
         # Validate file format
         supported_formats = [".tex", ".md"]
@@ -80,6 +81,7 @@ class RenderManager:
                     outputs.append(self.render_slides(source_file, format="beamer"))
                     logger.debug("Beamer slides rendered successfully")
                 except Exception as e:
+                    format_errors.append(("beamer", e))
                     # Enhanced error reporting for Beamer slide failures
                     error_msg = f"Failed to render Beamer slides: {str(e)}"
 
@@ -113,11 +115,24 @@ class RenderManager:
                     outputs.append(self.web_renderer.render(source_file))
                     logger.debug("HTML web version rendered successfully")
                 except Exception as e:
+                    format_errors.append(("html", e))
                     logger.warning(f"Failed to render HTML: {e}")
                     # Continue - some formats may still succeed
 
             if not outputs:
-                raise TemplateError(f"No outputs generated for {source_file.name}")
+                failed_formats = ", ".join(f"{fmt}: {err}" for fmt, err in format_errors)
+                raise TemplateError(
+                    f"No outputs generated for {source_file.name}. "
+                    f"All formats failed: {failed_formats}"
+                )
+
+            if format_errors:
+                failed_names = ", ".join(fmt for fmt, _ in format_errors)
+                logger.warning(
+                    f"Partial success for {source_file.name}: "
+                    f"{len(outputs)} format(s) succeeded, "
+                    f"{len(format_errors)} failed ({failed_names})"
+                )
 
             logger.info(f"Successfully rendered {len(outputs)} format(s) for {source_file.name}")
             return outputs

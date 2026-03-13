@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import subprocess
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import NamedTuple
@@ -243,8 +244,6 @@ def validate_preamble_packages(strict: bool = False) -> ValidationReport:
 
 def main() -> None:
     """CLI entry point for package validation."""
-    import sys
-
     print("LaTeX Package Validator")
     print("=" * 60)
 

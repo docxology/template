@@ -29,7 +29,7 @@ from infrastructure.core.environment import (
     verify_source_structure,
     set_environment_variables,
 )
-from infrastructure.core.file_operations import clean_coverage_files
+from infrastructure.core.file_cleanup import clean_coverage_files
 
 # Set up logger for this module
 logger = get_logger(__name__)
