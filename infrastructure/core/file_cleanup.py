@@ -17,14 +17,11 @@ from infrastructure.core.logging_utils import get_logger, log_success
 logger = get_logger(__name__)
 
 
-def clean_output_directory(output_dir: Path) -> bool:
+def clean_output_directory(output_dir: Path) -> None:
     """Clean top-level output directory before copying.
 
     Args:
         output_dir: Path to top-level output directory
-
-    Returns:
-        True on success.
 
     Raises:
         FileOperationError: If the directory cannot be created or cleaned.
@@ -36,7 +33,7 @@ def clean_output_directory(output_dir: Path) -> bool:
         try:
             output_dir.mkdir(parents=True, exist_ok=True)
             log_success("Created output directory", logger)
-            return True
+            return
         except OSError as e:
             raise FileOperationError(f"Failed to create output directory {output_dir}: {e}") from e
 
@@ -51,7 +48,6 @@ def clean_output_directory(output_dir: Path) -> bool:
                 logger.debug(f"  Removed file: {item.name}")
 
         log_success("Output directory cleaned", logger)
-        return True
     except OSError as e:
         raise FileOperationError(f"Failed to clean output directory {output_dir}: {e}") from e
 

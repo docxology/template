@@ -430,7 +430,7 @@ def generate_review_summary(
     total_output_chars = 0
     total_output_words = 0
 
-    for name, content in reviews.items():
+    for name in reviews:
         metrics = session_metrics.reviews.get(name, ReviewMetrics())
         total_output_chars += metrics.output_chars
         total_output_words += metrics.output_words

@@ -84,7 +84,7 @@ def calculate_format_compliance_summary(reviews: dict[str, str]) -> str:
     total_reviews = len(reviews)
     conversational_count = 0
 
-    for name, content in reviews.items():
+    for content in reviews.values():
         phrases = detect_conversational_phrases(content)
         if phrases:
             conversational_count += 1
