@@ -237,15 +237,15 @@ Examples:
 
     try:
         args.func(args)
-    except KeyboardInterrupt:
+    except KeyboardInterrupt as e:
         logger.info("Interrupted")
-        raise SystemExit(130)
+        raise SystemExit(130) from e
     except CLIError as e:
         logger.error(str(e))
-        raise SystemExit(e.exit_code)
+        raise SystemExit(e.exit_code) from e
     except Exception as e:
         logger.error(f"Unexpected error: {e}")
-        raise SystemExit(1)
+        raise SystemExit(1) from e
 
 
 if __name__ == "__main__":

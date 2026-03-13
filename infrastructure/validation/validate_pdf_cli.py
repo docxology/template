@@ -35,7 +35,7 @@ except ImportError as e:
     logger.error(
         "   Ensure infrastructure/validation/pdf_validator.py exists and is properly formatted"
     )
-    raise SystemExit(1)
+    raise SystemExit(1) from e
 
 def print_validation_report(report: dict[str, Any], verbose: bool = False) -> None:
     """

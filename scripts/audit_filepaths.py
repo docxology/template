@@ -125,7 +125,7 @@ Examples:
 
     except Exception as e:
         logger.error(f"Audit failed: {e}", exc_info=args.verbose)
-        raise SystemExit(1)
+        raise SystemExit(1) from e
 
 
 if __name__ == "__main__":

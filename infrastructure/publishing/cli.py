@@ -162,7 +162,7 @@ def publish_zenodo_command(args: argparse.Namespace) -> None:
         print(f"Published successfully! DOI: {doi}")
     except Exception as e:
         logger.error(f"Zenodo upload failed: {e}")
-        raise SystemExit(1)
+        raise SystemExit(1) from e
 
 
 def main() -> None:
@@ -218,7 +218,7 @@ def main() -> None:
         args.func(args)
     except Exception as e:
         logger.error(f"Command failed: {e}")
-        raise SystemExit(1)
+        raise SystemExit(1) from e
 
 
 if __name__ == "__main__":

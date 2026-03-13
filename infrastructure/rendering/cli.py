@@ -117,7 +117,7 @@ def main() -> None:
         args.func(args)
     except Exception as e:
         logger.error(f"Error: {e}")
-        raise SystemExit(1)
+        raise SystemExit(1) from e
 
 
 if __name__ == "__main__":
