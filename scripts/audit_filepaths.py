@@ -124,11 +124,7 @@ Examples:
         raise SystemExit(0 if total_issues == 0 else 1)
 
     except Exception as e:
-        logger.error(f"Audit failed: {e}")
-        if args.verbose:
-            import traceback
-
-            traceback.print_exc()
+        logger.error(f"Audit failed: {e}", exc_info=args.verbose)
         raise SystemExit(1)
 
 

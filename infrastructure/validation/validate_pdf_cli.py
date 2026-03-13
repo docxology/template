@@ -126,11 +126,7 @@ def main(pdf_path: Path | None = None, n_words: int = 200, verbose: bool = False
         logger.error(f"Validation Error: {e}")
         return 2
     except Exception as e:
-        logger.error(f"Unexpected Error: {e}")
-        if verbose:
-            import traceback
-
-            traceback.print_exc()
+        logger.error(f"Unexpected Error: {e}", exc_info=verbose)
         return 2
 
 if __name__ == "__main__":

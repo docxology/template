@@ -144,18 +144,18 @@ def categorize_documentation(md_files: list[Path], repo_root: Path) -> dict[str,
 def _get_project_category(rel_path: str, project_names: set[str]) -> str | None:
     """Determine if a file belongs to a specific project and return category."""
     # Check if path contains projects/{name}/
-    if rel_path.startswith("projects/"):
-        parts = rel_path.split("/")
-        if len(parts) >= 2 and parts[1] in project_names:
-            project_name = parts[1]
+    path_parts = Path(rel_path).parts
+    if path_parts and path_parts[0] == "projects":
+        if len(path_parts) >= 2 and path_parts[1] in project_names:
+            project_name = path_parts[1]
             # Determine sub-category within project
-            if "manuscript/" in rel_path:
+            if "manuscript" in path_parts:
                 return f"project_manuscript_{project_name}"
-            elif "scripts/" in rel_path:
+            elif "scripts" in path_parts:
                 return f"project_scripts_{project_name}"
-            elif "tests/" in rel_path:
+            elif "tests" in path_parts:
                 return f"project_tests_{project_name}"
-            elif "src/" in rel_path:
+            elif "src" in path_parts:
                 return f"project_src_{project_name}"
             else:
                 return f"project_{project_name}"
