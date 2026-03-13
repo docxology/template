@@ -30,6 +30,7 @@ from infrastructure.core.exceptions import LLMConnectionError, LLMError
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.llm.core.config import GenerationOptions, LLMConfig
 from infrastructure.llm.core.context import ConversationContext
+from infrastructure.llm.core.sanitization import sanitize_llm_input
 from infrastructure.llm.templates import get_template
 
 logger = get_logger(__name__)
@@ -205,6 +206,7 @@ class LLMClient:
                     },
                 )
 
+        prompt = sanitize_llm_input(prompt)
         self.context.add_message("user", prompt)
 
         try:
@@ -764,6 +766,7 @@ class LLMClient:
         """
         from infrastructure.llm.core._client_streaming import stream_query_impl
 
+        prompt = sanitize_llm_input(prompt)
         yield from stream_query_impl(
             config=self.config,
             context=self.context,

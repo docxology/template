@@ -49,7 +49,7 @@ def validate_figure_registry(registry_path: Path, manuscript_dir: Path) -> tuple
                 content = md_file.read_text()
                 refs = figure_ref_pattern.findall(content)
                 referenced_figures.update(refs)
-            except Exception as e:
+            except (OSError, UnicodeDecodeError) as e:
                 logger.warning(f"Could not read {md_file.name}: {e}")
 
     # Check registry validity before early return
@@ -63,7 +63,7 @@ def validate_figure_registry(registry_path: Path, manuscript_dir: Path) -> tuple
                     f"Figure registry loaded: {len(registered_figures)} figure(s)",
                     logger,
                 )
-        except Exception as e:
+        except (OSError, json.JSONDecodeError, ValueError) as e:
             issues.append(f"Failed to load figure registry: {e}")
             return False, issues
     else:

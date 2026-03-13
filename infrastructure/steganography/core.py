@@ -73,6 +73,7 @@ class SteganographyProcessor:
             title: Document title (used in barcodes/metadata).
             authors: Author names for metadata.
             keywords: Keyword list for metadata.
+            author_emails: Optional list of author email addresses for barcode metadata.
 
         Returns:
             Path to the generated steganography PDF.

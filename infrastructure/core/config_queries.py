@@ -151,7 +151,9 @@ def get_testing_config(repo_root: Path | str) -> "ResolvedTestingConfig":
     ResolvedTestingConfig with all defaults applied.
 
     Configuration priority (highest to lowest):
-    1. Environment variables (e.g., INFRA_COVERAGE_THRESHOLD)
+    1. Environment variables — applies to infra_coverage_threshold
+       (INFRA_COVERAGE_THRESHOLD) and project_coverage_threshold
+       (PROJECT_COVERAGE_THRESHOLD) only; other fields use config file only.
     2. Config file (project/manuscript/config.yaml)
     3. Default values
 

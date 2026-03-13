@@ -316,7 +316,7 @@ def run_render_pipeline(project_name: str = "project") -> int:
                     logger.error(
                         f"  Combined markdown file size: {combined_md_path.stat().st_size} bytes"
                     )
-            except Exception:
+            except OSError:
                 pass
 
             logger.warning("  This is an unexpected error - please report this issue")
