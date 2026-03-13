@@ -173,7 +173,7 @@ class MultiProjectOrchestrator:
                         output_dir = pipeline_config.project_dir / "output"
                         try:
                             self.on_project_complete(project_name, results, output_dir)
-                        except Exception as e:
+                        except Exception as e:  # noqa: BLE001 - callback can raise anything
                             logger.warning(
                                 f"Project completion callback failed for {project_name}: {e}",
                                 exc_info=True,
@@ -189,7 +189,7 @@ class MultiProjectOrchestrator:
                         logger.error(PROJECT_FAILED.format(project_name=project_name))
                         # Continue with other projects even if one fails
 
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 - pipeline execution can raise varied exceptions
                 failed_projects += 1
                 logger.error(PROJECT_EXCEPTION.format(project_name=project_name, error=e))
                 project_results[project_name] = []
@@ -247,7 +247,7 @@ class MultiProjectOrchestrator:
                 logger.error("❌ Infrastructure tests failed")
                 return False
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 - infra tests can raise varied exceptions
             logger.error(f"❌ Infrastructure tests failed with exception: {e}")
             return False
 

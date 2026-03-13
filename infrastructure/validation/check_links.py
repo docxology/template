@@ -317,7 +317,7 @@ def _resolve_template_path(path_ref: str, repo_root: Path) -> Path | None:
             return None
         else:
             return repo_root / path_ref
-    except Exception:
+    except OSError:
         return None
 
 def validate_directory_structures(content: str, file_path: Path, repo_root: Path) -> list[dict[str, Any]]:
@@ -616,7 +616,7 @@ def check_file_reference(target: str, source_file: Path, repo_root: Path) -> tup
             if md_path.exists() and md_path.is_file():
                 return True, str(md_path.relative_to(repo_root_resolved))
             return False, f"File or directory does not exist: {target_path}"
-    except Exception as e:
+    except OSError as e:
         return False, f"Error resolving path: {e}"
 
 def main() -> int:
@@ -643,7 +643,7 @@ def main() -> int:
         try:
             content = md_file.read_text(encoding="utf-8")
             all_headings[str(md_file.relative_to(repo_root))] = extract_headings(content)
-        except Exception as e:
+        except (OSError, UnicodeDecodeError) as e:
             logger.error(f"Error reading {md_file}: {e}")
 
     # Second pass: comprehensive validation
@@ -731,7 +731,7 @@ def main() -> int:
             placeholder_issues = validate_placeholder_consistency(content, md_file, repo_root)
             issues["placeholder_consistency"].extend(placeholder_issues)
 
-        except Exception as e:
+        except (OSError, UnicodeDecodeError) as e:
             logger.error(f"Error processing {md_file}: {e}")
 
     # Generate comprehensive report

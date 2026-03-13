@@ -144,7 +144,7 @@ def collect_manuscript_metrics(manuscript_dir: Path) -> ManuscriptMetrics:
             citations = re.findall(r"@\w+|\\cite\{.*?\}", content)
             metrics.references += len(citations)
 
-        except Exception as e:
+        except (OSError, UnicodeDecodeError) as e:
             logger.warning(f"Error processing {md_file.name}: {e}")
 
     return metrics
@@ -188,7 +188,7 @@ def collect_codebase_metrics(src_dir: Path, scripts_dir: Path | None = None) -> 
                 except SyntaxError as e:
                     logger.debug(f"Syntax error parsing {py_file.name} for metrics: {e}")
 
-            except Exception as e:
+            except (OSError, UnicodeDecodeError) as e:
                 logger.warning(f"Error processing {py_file.name}: {e}")
 
     # Process script files
@@ -202,7 +202,7 @@ def collect_codebase_metrics(src_dir: Path, scripts_dir: Path | None = None) -> 
                 lines = [l.strip() for l in content.splitlines()]
                 code_lines = [l for l in lines if l and not l.startswith("#")]
                 metrics.script_lines += len(code_lines)
-            except Exception as e:
+            except (OSError, UnicodeDecodeError) as e:
                 logger.warning(f"Error processing {script_file.name}: {e}")
 
     return metrics
@@ -267,7 +267,7 @@ def collect_test_metrics(reports_dir: Path) -> TestMetrics:
             f"Successfully extracted test metrics: {metrics.total_tests} tests, {metrics.coverage_percent:.1f}% coverage"  # noqa: E501
         )
 
-    except Exception as e:
+    except (OSError, json.JSONDecodeError, KeyError, ValueError) as e:
         logger.warning(f"Error loading test report: {e}")
         logger.debug("Exception details", exc_info=True)
 
@@ -367,7 +367,7 @@ def collect_pipeline_metrics(reports_dir: Path) -> PipelineMetrics:
                     metrics.bottleneck_duration / metrics.total_duration * 100
                 )
 
-    except Exception as e:
+    except (OSError, json.JSONDecodeError, KeyError, ValueError) as e:
         logger.warning(f"Error loading pipeline report: {e}")
 
     return metrics
@@ -936,7 +936,7 @@ def generate_executive_summary(repo_root: Path, project_names: list[str]) -> Exe
         try:
             metrics = collect_project_metrics(repo_root, project_name)
             project_metrics.append(metrics)
-        except Exception as e:
+        except (OSError, json.JSONDecodeError, KeyError, ValueError, UnicodeDecodeError) as e:
             logger.error(f"Error collecting metrics for {project_name}: {e}")
 
     # Generate aggregates, comparisons, recommendations

@@ -171,7 +171,7 @@ else:
             logger.info("API documentation generation completed")
         return documentation_files
 
-    except Exception as e:
+    except (OSError, ImportError, ValueError) as e:
         if logger:
             logger.warning(f"API documentation generation failed: {e}")
         return None
@@ -201,7 +201,7 @@ def generate_code_quality_report():
             logger.info("Code quality analysis completed")
         return quality_report
 
-    except Exception as e:
+    except (OSError, ImportError, ValueError) as e:
         if logger:
             logger.warning(f"Code quality analysis failed: {e}")
         return None
@@ -235,7 +235,7 @@ def main():
                 )
             return 1  # Exit with error code
 
-    except Exception as e:
+    except (OSError, ImportError, ValueError) as e:
         error_msg = f"API documentation generation failed: {e}"
         if logger:
             logger.error(error_msg)

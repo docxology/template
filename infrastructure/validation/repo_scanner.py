@@ -153,7 +153,7 @@ class RepositoryScanner:
                     for module in self.src_modules:
                         if module in content:
                             self.documented_modules.add(module)
-                except Exception as e:
+                except (OSError, UnicodeDecodeError) as e:
                     logger.debug(f"Failed to scan {md_file} for module references: {e}")
 
     def _check_code_accuracy(self) -> None:
@@ -180,7 +180,7 @@ class RepositoryScanner:
                                         details=f"Functions/classes: {imports[imp]}",
                                     )
                                 )
-            except Exception as e:
+            except (OSError, UnicodeDecodeError, SyntaxError) as e:
                 issues.append(
                     AccuracyIssue(
                         category="import",
@@ -213,7 +213,7 @@ class RepositoryScanner:
                         if module not in imports:
                             imports[module] = []
                         imports[module].append(alias.name)
-        except Exception as e:
+        except (OSError, UnicodeDecodeError, SyntaxError) as e:
             logger.debug(f"Failed to parse imports from script: {e}")
 
         return imports
@@ -240,7 +240,7 @@ class RepositoryScanner:
                 if item not in defined:
                     return False
             return True
-        except Exception as e:
+        except (OSError, UnicodeDecodeError, SyntaxError) as e:
             logger.debug(f"Failed to verify imports in module {module_name}: {e}")
             return False
 
@@ -304,7 +304,7 @@ class RepositoryScanner:
                                         message=f"Documented script does not exist: {script_ref}",
                                     )
                                 )
-            except Exception as e:
+            except (OSError, UnicodeDecodeError) as e:
                 logger.debug(f"Failed to check code accuracy in {md_file}: {e}")
 
         self.results.accuracy_issues.extend(issues)
@@ -360,7 +360,7 @@ class RepositoryScanner:
                     for script in self.script_files:
                         if script.name in content:
                             documented_scripts.add(script.name)
-                except Exception as e:
+                except (OSError, UnicodeDecodeError) as e:
                     logger.debug(f"Failed to check script documentation in {md_file}: {e}")
 
         for script in self.script_files:
@@ -411,7 +411,7 @@ class RepositoryScanner:
             logger.warning("Test suite timed out")
         except FileNotFoundError:
             logger.warning("pytest not found (may need to install dependencies)")
-        except Exception as e:
+        except (subprocess.SubprocessError, OSError) as e:
             logger.warning(f"Could not run tests: {e}")
 
     def _check_configuration(self) -> None:
@@ -439,7 +439,7 @@ class RepositoryScanner:
                             message="Config structure may not match example",
                         )
                     )
-            except Exception as e:
+            except (OSError, yaml.YAMLError, ValueError) as e:
                 issues.append(
                     AccuracyIssue(
                         category="configuration",
@@ -503,7 +503,7 @@ class RepositoryScanner:
                             message="Script may not follow thin orchestrator pattern (no src/ imports)",  # noqa: E501
                         )
                     )
-            except Exception as e:
+            except (OSError, UnicodeDecodeError, SyntaxError) as e:
                 issues.append(
                     AccuracyIssue(
                         category="architecture",

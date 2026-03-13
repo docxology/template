@@ -31,7 +31,7 @@ def extract_preamble(preamble_file: Path) -> str:
     """
     try:
         content = preamble_file.read_text()
-    except Exception as e:
+    except (OSError, UnicodeDecodeError) as e:
         logger.warning(f"Failed to read preamble file: {e}")
         return ""
 
@@ -357,7 +357,7 @@ def fix_math_delimiters(tex_content: str) -> str:
         except re.error as e:
             logger.warning(f"Failed to fix Greek letter '{greek}': {e}. Skipping this pattern.")
             continue
-        except Exception as e:
+        except (TypeError, ValueError) as e:
             logger.warning(
                 f"Unexpected error fixing Greek letter '{greek}': {e}. Skipping this pattern."
             )
@@ -412,7 +412,7 @@ def check_latex_log_for_graphics_errors(log_file: Path) -> dict[str, list[str]]:
 
         return result
 
-    except Exception as e:
+    except (OSError, UnicodeDecodeError) as e:
         logger.warning(f"Error parsing LaTeX log: {e}")
         return result
 
@@ -516,7 +516,7 @@ def generate_title_page_preamble(manuscript_dir: Path) -> str:
         logger.debug(f"Generated title page preamble with {len(preamble_lines)} commands")
         return "\n".join(preamble_lines)
 
-    except Exception as e:
+    except (OSError, yaml.YAMLError, KeyError, ValueError) as e:
         logger.warning(f"Error reading config.yaml: {e}")
         return ""
 
@@ -553,6 +553,6 @@ def generate_title_page_body(manuscript_dir: Path) -> str:
         logger.debug(f"Generated title page body with {len(body_lines)} commands")
         return "\n".join(body_lines)
 
-    except Exception as e:
+    except (OSError, yaml.YAMLError, KeyError, ValueError) as e:
         logger.warning(f"Error reading config.yaml: {e}")
         return ""

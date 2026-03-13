@@ -95,7 +95,7 @@ def resolve_file_path(target: str, source_file: Path, repo_root: Path) -> tuple[
                     if dir_path.exists() and dir_path.is_dir():
                         return False, f"File does not exist: {target_path}", "file"
                 return False, f"File does not exist: {target_path}", "file"
-    except Exception as e:
+    except OSError as e:
         return False, f"Error resolving path: {e}", "unknown"
 
 def check_links(
@@ -181,7 +181,7 @@ def check_links(
                                         severity=severity,
                                     )
                                 )
-        except Exception as e:
+        except (OSError, UnicodeDecodeError) as e:
             logger.warning(f"Error checking links in {md_file}: {e}")
 
     return issues
@@ -230,7 +230,7 @@ def verify_commands(md_files: list[Path], repo_root: Path) -> list[AccuracyIssue
                                             severity="error",
                                         )
                                     )
-        except Exception as e:
+        except (OSError, UnicodeDecodeError) as e:
             logger.warning(f"Failed to check command references in {md_file}: {e}")
 
     return issues
@@ -267,7 +267,7 @@ def check_file_paths(md_files: list[Path], repo_root: Path) -> list[AccuracyIssu
                                     severity=("warning" if path_type == "directory" else "error"),
                                 )
                             )
-        except Exception as e:
+        except (OSError, UnicodeDecodeError) as e:
             logger.warning(f"Failed to check file paths in {md_file}: {e}")
 
     return issues
@@ -284,7 +284,7 @@ def validate_config_options(
         try:
             with open(config_files["config.yaml"], "r") as f:
                 config_data["yaml"] = yaml.safe_load(f) or {}
-        except Exception as e:
+        except (OSError, yaml.YAMLError, ValueError) as e:
             logger.debug(f"Failed to load config.yaml for validation: {e}")
 
     # Check documentation for config references
@@ -320,7 +320,7 @@ def run_accuracy_phase(
         try:
             content = md_file.read_text(encoding="utf-8")
             all_headings[str(md_file.relative_to(repo_root))] = extract_headings(content)
-        except Exception as e:
+        except (OSError, UnicodeDecodeError) as e:
             logger.warning(f"Error reading {md_file}: {e}")
 
     # Check links

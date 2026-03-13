@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import subprocess
 from pathlib import Path
 
 from infrastructure.core.logging_utils import get_logger
@@ -80,7 +81,7 @@ class RenderManager:
                     logger.debug("Rendering Beamer slides...")
                     outputs.append(self.render_slides(source_file, format="beamer"))
                     logger.debug("Beamer slides rendered successfully")
-                except Exception as e:
+                except (OSError, subprocess.SubprocessError, ValueError) as e:
                     format_errors.append(("beamer", e))
                     # Enhanced error reporting for Beamer slide failures
                     error_msg = f"Failed to render Beamer slides: {str(e)}"
@@ -114,7 +115,7 @@ class RenderManager:
                     logger.debug("Rendering HTML web version...")
                     outputs.append(self.web_renderer.render(source_file))
                     logger.debug("HTML web version rendered successfully")
-                except Exception as e:
+                except (OSError, subprocess.SubprocessError, ValueError) as e:
                     format_errors.append(("html", e))
                     logger.warning(f"Failed to render HTML: {e}")
                     # Continue - some formats may still succeed
@@ -140,7 +141,7 @@ class RenderManager:
         except TemplateError:
             # Re-raise TemplateError as-is
             raise
-        except Exception as e:
+        except (OSError, subprocess.SubprocessError, ValueError) as e:
             logger.error(f"Unexpected error during rendering of {source_file.name}: {e}")
             raise TemplateError(f"Rendering failed: {e}") from e
 

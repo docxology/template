@@ -59,7 +59,7 @@ def extract_pdf_pages_as_images(pdf_path: Path, dpi: int = 300) -> list["PIL.Ima
         logger.info(f"Extracting {len(reader.pages)} pages from {pdf_path.name}")
     except PDFValidationError:
         raise
-    except Exception as e:
+    except (OSError, ValueError) as e:
         raise PDFValidationError(f"Failed to read PDF {pdf_path}: {e}") from e
 
     images = []
@@ -67,7 +67,7 @@ def extract_pdf_pages_as_images(pdf_path: Path, dpi: int = 300) -> list["PIL.Ima
     # Try advanced rendering first (reportlab)
     try:
         images = _render_pages_with_reportlab(reader, dpi)
-    except Exception as e:
+    except (ImportError, OSError, ValueError) as e:
         logger.warning(f"Advanced rendering failed, falling back to simple rendering: {e}")
         try:
             images = _render_pages_simple(reader, dpi)
@@ -204,7 +204,7 @@ def _render_pages_simple(reader: "PdfReader", dpi: int) -> list["PIL.Image.Image
                     if y_position > height - 100:
                         break
 
-        except Exception as e:
+        except (OSError, ValueError, KeyError) as e:
             logger.warning(f"Failed to extract text from page {i + 1}: {e}")
 
         # Add page number
@@ -478,7 +478,7 @@ def generate_all_manuscript_overviews(
             logger.info(
                 f"Generated overview files for {project_name}: {list(overview_files.keys())}"
             )
-        except Exception as e:
+        except (OSError, ImportError, ValueError, PDFValidationError) as e:
             logger.warning(f"Failed to generate manuscript overview for {project_name}: {e}")
             continue
 

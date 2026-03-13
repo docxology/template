@@ -60,7 +60,7 @@ def run_comprehensive_audit(
         try:
             content = md_file.read_text(encoding="utf-8")
             all_headings[str(md_file.relative_to(repo_root))] = extract_headings(content)
-        except Exception as e:
+        except (OSError, UnicodeDecodeError) as e:
             logger.warning(f"Error reading {md_file}: {e}")
 
     # Phase 3: Run all validations
@@ -103,7 +103,7 @@ def run_comprehensive_audit(
             )
             scan_results.documentation_files.append(doc_file)
 
-        except Exception as e:
+        except (OSError, UnicodeDecodeError, ValueError) as e:
             logger.error(f"Error processing {md_file}: {e}")
             scan_results.quality_issues.append(
                 QualityIssue(
@@ -156,7 +156,7 @@ def _validate_single_file(
                     severity=issue.severity,
                 )
             )
-    except Exception as e:
+    except (OSError, UnicodeDecodeError, ValueError) as e:
         logger.warning(f"Link validation failed for {md_file}: {e}")
 
     quality_validators = [
@@ -178,7 +178,7 @@ def _validate_single_file(
                             severity=severity,
                         )
                     )
-            except Exception as e:
+            except (OSError, UnicodeDecodeError, ValueError) as e:
                 logger.warning(f"{issue_type} validation failed for {md_file}: {e}")
 
     return results
