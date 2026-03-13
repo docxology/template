@@ -168,7 +168,7 @@ def build_barcode_payload(
 
 def build_metadata_qr_text(
     title: str = "",
-    authors: list[str | None] = None,
+    authors: list[str] | None = None,
     document_id: str = "",
     **_kwargs,
 ) -> str:
@@ -185,7 +185,7 @@ def build_metadata_qr_text(
 
 def build_citation_qr_text(
     title: str = "",
-    authors: list[str | None] = None,
+    authors: list[str] | None = None,
     **_kwargs,
 ) -> str:
     """Build a compact citation string (≤100 chars)."""
@@ -196,7 +196,7 @@ def build_citation_qr_text(
 
 def build_mailto_qr_text(
     title: str = "",
-    authors: list[str | None] = None,
+    authors: list[str] | None = None,
     author_emails: list[str | None] = None,
     **_kwargs,
 ) -> str:
@@ -241,7 +241,7 @@ def create_barcode_strip_overlay(
     code128_data: str,
     strip_height: float = 68.0,
     title: str = "",
-    authors: list[str | None] = None,
+    authors: list[str] | None = None,
     keywords: list[str | None] = None,
     author_emails: list[str | None] = None,
     document_id: str = "",

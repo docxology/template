@@ -395,7 +395,7 @@ class LLMClient:
     def query_structured(
         self,
         prompt: str,
-        schema: dict[str, Any | None] = None,
+        schema: dict[str, Any] | None = None,
         model: str | None = None,
         options: GenerationOptions | None = None,
         use_native_json: bool = True,

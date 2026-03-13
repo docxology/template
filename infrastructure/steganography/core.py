@@ -27,9 +27,9 @@ class BarcodeBuildContext:
     """Metadata fields passed to the barcode strip overlay builder."""
 
     title: str = ""
-    authors: list[str | None] = field(default_factory=list)
-    keywords: list[str | None] = field(default_factory=list)
-    author_emails: list[str | None] = field(default_factory=list)
+    authors: list[str] = field(default_factory=list)
+    keywords: list[str] = field(default_factory=list)
+    author_emails: list[str] = field(default_factory=list)
     document_id: str = ""
     hashes: dict[str, str] = field(default_factory=dict)
     source_filename: str = ""
@@ -60,9 +60,9 @@ class SteganographyProcessor:
         input_pdf: Path,
         output_pdf: Path | None = None,
         title: str = "",
-        authors: list[str | None] = None,
-        keywords: list[str | None] = None,
-        author_emails: list[str | None] = None,
+        authors: list[str] | None = None,
+        keywords: list[str] | None = None,
+        author_emails: list[str] | None = None,
     ) -> Path:
         """Run all enabled steganographic techniques on *input_pdf*.
 
@@ -319,8 +319,8 @@ class SteganographyProcessor:
         self,
         working_pdf: Path,
         title: str = "",
-        authors: list[str | None] = None,
-        keywords: list[str | None] = None,
+        authors: list[str] | None = None,
+        keywords: list[str] | None = None,
     ) -> Path:
         """Inject metadata into the PDF."""
         import json
@@ -396,9 +396,9 @@ def process_pdf(
     output_pdf: Path | None = None,
     config: SteganographyConfig | None = None,
     title: str = "",
-    authors: list[str | None] = None,
-    keywords: list[str | None] = None,
-    author_emails: list[str | None] = None,
+    authors: list[str] | None = None,
+    keywords: list[str] | None = None,
+    author_emails: list[str] | None = None,
 ) -> Path:
     """Convenience function — create a processor and run it.
 

@@ -159,7 +159,7 @@ class FigureManager:
         width: str = "0.8\\textwidth",
         placement: str = "h",
         generated_by: str | None = None,
-        metadata: dict[str, Any | None] = None,
+        metadata: dict[str, Any] | None = None,
     ) -> FigureMetadata:
         """Register a new figure.
 

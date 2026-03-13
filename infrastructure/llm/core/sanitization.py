@@ -49,7 +49,7 @@ class InputSanitizer:
             r"on\w+\s*=|javascript:|vbscript:",
         ]
 
-    def sanitize_prompt(self, prompt: str, context: dict[str, Any | None] = None) -> str:
+    def sanitize_prompt(self, prompt: str, context: dict[str, Any] | None = None) -> str:
         """Sanitize LLM prompt for security.
 
         Args:
@@ -84,7 +84,7 @@ class InputSanitizer:
         return prompt
 
     def validate_file_input(
-        self, file_path: Path, allowed_extensions: list[str | None] = None
+        self, file_path: Path, allowed_extensions: list[str] | None = None
     ) -> bool:
         """Validate file input for security.
 

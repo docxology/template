@@ -130,8 +130,8 @@ class ErrorAggregator:
         file: str | None = None,
         line: int | None = None,
         severity: str = "error",
-        suggestions: list[str | None] = None,
-        context: dict[str, Any | None] = None,
+        suggestions: list[str] | None = None,
+        context: dict[str, Any] | None = None,
     ) -> None:
         """Add an error or warning.
 

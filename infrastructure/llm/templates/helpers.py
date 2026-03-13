@@ -29,8 +29,8 @@ def format_requirements(
 
 def token_budget_awareness(
     total_tokens: int | None = None,
-    section_budgets: dict[str, int | None] = None,
-    word_targets: dict[str, tuple | None] = None,
+    section_budgets: dict[str, int] | None = None,
+    word_targets: dict[str, tuple[int, int]] | None = None,
 ) -> str:
     """Generate token budget awareness hints for prompts."""
     lines = ["TOKEN BUDGET AWARENESS:"]
@@ -110,9 +110,9 @@ def section_structure(
     return "\n".join(lines)
 
 def validation_hints(
-    word_count_range: tuple | None = None,
-    required_elements: list[str | None] = None,
-    format_checks: list[str | None] = None,
+    word_count_range: tuple[int, int] | None = None,
+    required_elements: list[str] | None = None,
+    format_checks: list[str] | None = None,
 ) -> str:
     """Generate validation hints that inform the model what will be checked."""
     lines = ["VALIDATION HINTS (what will be checked):"]

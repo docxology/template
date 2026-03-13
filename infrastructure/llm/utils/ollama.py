@@ -228,7 +228,7 @@ def get_model_names(base_url: str = "http://localhost:11434") -> list[str]:
     return [m["name"] for m in models]
 
 def select_best_model(
-    preferences: list[str | None] = None, base_url: str = "http://localhost:11434"
+    preferences: list[str] | None = None, base_url: str = "http://localhost:11434"
 ) -> str | None:
     """Select the best available model based on preferences.
 
@@ -326,7 +326,7 @@ def ensure_ollama_ready(base_url: str = "http://localhost:11434", auto_start: bo
 
 def get_model_info(
     model_name: str, base_url: str = "http://localhost:11434"
-) -> dict[str, Any | None]:
+) -> dict[str, Any]:
     """Get detailed information about a specific model.
 
     Args:
