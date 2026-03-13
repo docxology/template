@@ -68,7 +68,6 @@ def run_render_pipeline(project_name: str = "project") -> int:
         logger.info("Transferring control to project-specific renderer...")
 
         from infrastructure.core.environment import get_python_command
-        import subprocess
 
         cmd = get_python_command() + [str(override_script)]
         try:

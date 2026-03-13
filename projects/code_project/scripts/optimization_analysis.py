@@ -14,7 +14,6 @@ Capabilities demonstrated:
 4. Registering figures for automated `infrastructure.rendering` into the PDF
 """
 import functools
-import json
 import sys
 from pathlib import Path
 from typing import Any, Dict, Optional
