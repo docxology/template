@@ -40,7 +40,7 @@ class TestExtractManuscriptText:
 
     def test_extracts_text_from_real_pdf(self, tmp_path):
         """Test extract_manuscript_text with a real PDF file."""
-        reportlab = pytest.importorskip("reportlab")
+        pytest.importorskip("reportlab")
         from reportlab.lib.pagesizes import letter
         from reportlab.pdfgen import canvas
 

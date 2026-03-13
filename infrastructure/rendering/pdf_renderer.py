@@ -705,7 +705,7 @@ class PDFRenderer:
                     logger.debug(f"Failed to read markdown for error reporting: {read_err}")
 
         try:
-            result = subprocess.run(pandoc_to_tex, check=True, capture_output=True, text=True, timeout=600)
+            subprocess.run(pandoc_to_tex, check=True, capture_output=True, text=True, timeout=600)
         except subprocess.CalledProcessError as e:
             raise self._build_pandoc_render_error(e, combined_md, source_files, md_content, pandoc_to_tex)
 

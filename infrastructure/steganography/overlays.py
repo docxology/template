@@ -9,7 +9,7 @@ document-ID stamps.
 from __future__ import annotations
 
 import io
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from infrastructure.core.logging_utils import get_logger
 

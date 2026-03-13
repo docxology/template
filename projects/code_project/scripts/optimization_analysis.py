@@ -29,8 +29,7 @@ from optimizer import (OptimizationResult, compute_gradient, gradient_descent,
 try:
     from infrastructure.core import (CheckpointManager, ProgressBar,
                                      SystemHealthChecker, get_logger,
-                                     log_success,
-                                     monitor_performance)
+                                     log_success)
     from infrastructure.core.exceptions import (BuildError,
                                                 ScriptExecutionError,
                                                 TemplateError, ValidationError)

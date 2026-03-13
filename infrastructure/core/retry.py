@@ -13,7 +13,6 @@ import time
 from functools import wraps
 from typing import Any, Callable, Type, TypeVar
 
-from infrastructure.core.exceptions import PipelineError
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
@@ -89,14 +88,10 @@ def retry_with_backoff(
                 Exception: The last exception encountered after all retry
                     attempts have been exhausted.
             """
-            last_exception = None
-
             for attempt in range(1, max_attempts + 1):
                 try:
                     return func(*args, **kwargs)
                 except exceptions as e:
-                    last_exception = e
-
                     if attempt >= max_attempts:
                         # Final attempt failed, log and re-raise
                         logger.error(f"{func.__name__} failed after {max_attempts} attempts: {e}")
