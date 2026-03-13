@@ -6,7 +6,6 @@ Thin orchestrator wrapping infrastructure.rendering module functionality.
 from __future__ import annotations
 
 import argparse
-import sys
 from pathlib import Path
 
 from infrastructure.core.logging_utils import get_logger
@@ -23,7 +22,7 @@ def render_pdf_command(args: argparse.Namespace) -> None:
 
     if not source.exists():
         logger.error(f"Source file not found: {source}")
-        sys.exit(1)
+        raise SystemExit(1)
 
     logger.info(f"Rendering PDF: {source}")
     output = manager.render_pdf(source)
@@ -37,7 +36,7 @@ def render_all_command(args: argparse.Namespace) -> None:
 
     if not source.exists():
         logger.error(f"Source file not found: {source}")
-        sys.exit(1)
+        raise SystemExit(1)
 
     logger.info(f"Rendering all formats: {source}")
     outputs = manager.render_all(source)
@@ -53,7 +52,7 @@ def render_slides_command(args: argparse.Namespace) -> None:
 
     if not source.exists():
         logger.error(f"Source file not found: {source}")
-        sys.exit(1)
+        raise SystemExit(1)
 
     fmt = args.format or "beamer"
     logger.info(f"Rendering slides ({fmt}): {source}")
@@ -68,7 +67,7 @@ def render_web_command(args: argparse.Namespace) -> None:
 
     if not source.exists():
         logger.error(f"Source file not found: {source}")
-        sys.exit(1)
+        raise SystemExit(1)
 
     logger.info(f"Rendering web output: {source}")
     output = manager.render_web(source)
@@ -112,13 +111,13 @@ def main() -> None:
 
     if not hasattr(args, "func"):
         parser.print_help()
-        sys.exit(1)
+        raise SystemExit(1)
 
     try:
         args.func(args)
     except Exception as e:
         logger.error(f"Error: {e}")
-        sys.exit(1)
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

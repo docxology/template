@@ -167,7 +167,7 @@ def template_command(args: argparse.Namespace) -> None:
 
 
 def main() -> None:
-    """Main CLI entry point — the only place sys.exit() is called."""
+    """Main CLI entry point."""
     parser = argparse.ArgumentParser(
         description="Query local LLMs via Ollama for research tasks.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -233,19 +233,19 @@ Examples:
 
     if not hasattr(args, "func"):
         parser.print_help()
-        sys.exit(1)
+        raise SystemExit(1)
 
     try:
         args.func(args)
     except KeyboardInterrupt:
         logger.info("Interrupted")
-        sys.exit(130)
+        raise SystemExit(130)
     except CLIError as e:
         logger.error(str(e))
-        sys.exit(e.exit_code)
+        raise SystemExit(e.exit_code)
     except Exception as e:
         logger.error(f"Unexpected error: {e}")
-        sys.exit(1)
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

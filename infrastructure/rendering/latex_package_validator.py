@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import subprocess
-import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import NamedTuple
@@ -254,7 +253,7 @@ def main() -> None:
     else:
         print("❌ kpsewhich not found - cannot validate packages")
         print("   Please install BasicTeX or MacTeX")
-        sys.exit(1)
+        raise SystemExit(1)
 
     print()
 
@@ -264,9 +263,9 @@ def main() -> None:
 
     # Exit with error if required packages are missing
     if not report.all_required_available:
-        sys.exit(1)
+        raise SystemExit(1)
 
-    sys.exit(0)
+    raise SystemExit(0)
 
 if __name__ == "__main__":
     main()

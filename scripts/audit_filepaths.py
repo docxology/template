@@ -121,7 +121,7 @@ Examples:
                     logger.warning(f"   • {category.replace('_', ' ').title()}: {count}")
 
         # Exit with appropriate code
-        sys.exit(0 if total_issues == 0 else 1)
+        raise SystemExit(0 if total_issues == 0 else 1)
 
     except Exception as e:
         logger.error(f"Audit failed: {e}")
@@ -129,7 +129,7 @@ Examples:
             import traceback
 
             traceback.print_exc()
-        sys.exit(1)
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

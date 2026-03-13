@@ -287,7 +287,7 @@ def main():
     # Validate results
     if not validate_workflow_results(results):
         logger.error("Workflow validation failed")
-        sys.exit(1)
+        raise SystemExit(1)
 
     # Generate final report
     report_content = generate_workflow_report(results, reproducibility_report)
