@@ -732,7 +732,7 @@ class LLMClient:
         Yields:
             Response chunks
         """
-        from infrastructure.llm.core._client_streaming import stream_short_impl
+        from infrastructure.llm.core._streaming_shortcuts import stream_short_impl
 
         yield from stream_short_impl(
             config=self.config,
@@ -773,7 +773,7 @@ class LLMClient:
         Yields:
             Response chunks
         """
-        from infrastructure.llm.core._client_streaming import stream_long_impl
+        from infrastructure.llm.core._streaming_shortcuts import stream_long_impl
 
         yield from stream_long_impl(
             config=self.config,

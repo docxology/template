@@ -26,17 +26,15 @@ class TestExtractManuscriptText:
         assert text is None
 
     def test_no_pdf_library_raises_error(self, tmp_path):
-        """Test extract_manuscript_text returns None when no PDF library available or error."""
-        # Create a dummy PDF file
+        """Test extract_manuscript_text raises PDFValidationError for a corrupt/tiny file."""
+        from infrastructure.core.exceptions import PDFValidationError
+
+        # Create a dummy PDF file (too small to be a valid PDF)
         pdf_file = tmp_path / "test.pdf"
         pdf_file.write_bytes(b"dummy pdf content")
 
-        try:
-            text, metrics = extract_manuscript_text(str(pdf_file))
-            if text is None:
-                assert metrics.total_chars == 0
-        except ValueError as e:
-            assert "No PDF parsing library available" in str(e)
+        with pytest.raises(PDFValidationError):
+            extract_manuscript_text(str(pdf_file))
 
     def test_extracts_text_from_real_pdf(self, tmp_path):
         """Test extract_manuscript_text with a real PDF file."""
