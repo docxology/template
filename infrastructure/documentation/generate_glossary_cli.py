@@ -23,14 +23,20 @@ def _ensure_glossary_file(path: Path) -> None:
     if path.exists():
         return
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(
-        "# API Symbols Glossary\n\n"
-        "This glossary is auto-generated from the public API in `src/`.\n\n"
-        "<!-- BEGIN: AUTO-API-GLOSSARY -->\n"
-        "No public APIs detected in `src/`.\n"
-        "<!-- END: AUTO-API-GLOSSARY -->\n",
-        encoding="utf-8",
-    )
+    _tmp = path.with_suffix(path.suffix + ".tmp")
+    try:
+        _tmp.write_text(
+            "# API Symbols Glossary\n\n"
+            "This glossary is auto-generated from the public API in `src/`.\n\n"
+            "<!-- BEGIN: AUTO-API-GLOSSARY -->\n"
+            "No public APIs detected in `src/`.\n"
+            "<!-- END: AUTO-API-GLOSSARY -->\n",
+            encoding="utf-8",
+        )
+        _tmp.replace(path)
+    except Exception:
+        _tmp.unlink(missing_ok=True)
+        raise
 
 
 def main() -> int:
@@ -72,7 +78,13 @@ def main() -> int:
     new_text = inject_between_markers(text, begin, end, table)
 
     if new_text != text:
-        glossary_md.write_text(new_text, encoding="utf-8")
+        _tmp = glossary_md.with_suffix(glossary_md.suffix + ".tmp")
+        try:
+            _tmp.write_text(new_text, encoding="utf-8")
+            _tmp.replace(glossary_md)
+        except Exception:
+            _tmp.unlink(missing_ok=True)
+            raise
         logger.info(f"Updated glossary: {glossary_md}")
     else:
         logger.info("Glossary up-to-date")

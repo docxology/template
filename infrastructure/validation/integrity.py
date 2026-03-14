@@ -585,8 +585,14 @@ def create_integrity_manifest(output_dir: Path) -> dict[str, Any]:
 def save_integrity_manifest(manifest: dict[str, Any], output_path: Path) -> None:
     """Save integrity manifest to JSON file."""
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(output_path, "w") as f:
-        json.dump(manifest, f, indent=2)
+    _tmp = output_path.with_suffix(output_path.suffix + ".tmp")
+    try:
+        with open(_tmp, "w") as f:
+            json.dump(manifest, f, indent=2)
+        _tmp.replace(output_path)
+    except Exception:
+        _tmp.unlink(missing_ok=True)
+        raise
 
 def load_integrity_manifest(manifest_path: Path) -> dict[str, Any] | None:
     """Load integrity manifest from JSON file, or None on failure."""

@@ -124,7 +124,13 @@ def validate_links_command(args: argparse.Namespace) -> None:
 
     if args.output:
         output_path = Path(args.output)
-        output_path.write_text(report, encoding="utf-8")
+        _tmp = output_path.with_suffix(output_path.suffix + ".tmp")
+        try:
+            _tmp.write_text(report, encoding="utf-8")
+            _tmp.replace(output_path)
+        except Exception:
+            _tmp.unlink(missing_ok=True)
+            raise
         logger.info(f"Report saved to: {output_path}")
     else:
         logger.info(report)

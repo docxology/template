@@ -193,7 +193,13 @@ class PDFRenderer:
                         break
 
                 # Write the repaired content
-                aux_file.write_text("\n".join(lines) + "\n", encoding="utf-8")
+                _tmp = aux_file.with_suffix(aux_file.suffix + ".tmp")
+                try:
+                    _tmp.write_text("\n".join(lines) + "\n", encoding="utf-8")
+                    _tmp.replace(aux_file)
+                except Exception:
+                    _tmp.unlink(missing_ok=True)
+                    raise
         except (OSError, UnicodeDecodeError) as e:  # noqa: BLE001 — .aux repair is best-effort; skip on failure
             logger.debug(f"  .aux repair skipped: {e}")
 
@@ -636,7 +642,13 @@ class PDFRenderer:
         combined_md = output_dir / "_combined_manuscript.md"
         combined_content = self._combine_markdown_files(source_files)
         # Write with explicit UTF-8 encoding
-        combined_md.write_text(combined_content, encoding="utf-8")
+        _tmp = combined_md.with_suffix(combined_md.suffix + ".tmp")
+        try:
+            _tmp.write_text(combined_content, encoding="utf-8")
+            _tmp.replace(combined_md)
+        except Exception:
+            _tmp.unlink(missing_ok=True)
+            raise
         logger.debug(
             f"Combined markdown written to: {combined_md} ({len(combined_content)} characters)"
         )
@@ -862,7 +874,13 @@ class PDFRenderer:
                 )
                 logger.info("✓ Inserted early \\bibdata hook for .aux buffer safety")
 
-        combined_tex.write_text(tex_content)
+        _tmp = combined_tex.with_suffix(combined_tex.suffix + ".tmp")
+        try:
+            _tmp.write_text(tex_content)
+            _tmp.replace(combined_tex)
+        except Exception:
+            _tmp.unlink(missing_ok=True)
+            raise
 
         # Verify figure files exist before compilation
         figures_dir = manuscript_dir.parent / "output" / "figures"

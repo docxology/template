@@ -131,7 +131,13 @@ class SlidesRenderer:
                 tex_content = self._fix_figure_paths(tex_content, output_dir, figures_dir)
 
             # Write fixed LaTeX back
-            temp_tex.write_text(tex_content)
+            _tmp = temp_tex.with_suffix(temp_tex.suffix + ".tmp")
+            try:
+                _tmp.write_text(tex_content)
+                _tmp.replace(temp_tex)
+            except Exception:
+                _tmp.unlink(missing_ok=True)
+                raise
 
             # Compile LaTeX to PDF
             compile_latex(temp_tex, output_dir, compiler=self.config.latex_compiler)

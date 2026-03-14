@@ -1166,7 +1166,13 @@ def generate_plotly_dashboard(summary: ExecutiveSummary, output_dir: Path) -> Pa
         "<head>",
         "<head>\n<title>Executive Dashboard - Research Template</title>",
     )
-    html_path.write_text(html_content)
+    _tmp = html_path.with_suffix(html_path.suffix + ".tmp")
+    try:
+        _tmp.write_text(html_content)
+        _tmp.replace(html_path)
+    except Exception:
+        _tmp.unlink(missing_ok=True)
+        raise
 
     logger.info(f"Saved interactive HTML dashboard: {html_path}")
 

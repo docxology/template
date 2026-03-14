@@ -453,7 +453,14 @@ def main() -> int:
     total_broken = sum(len(file_results["broken"]) for file_results in results.values())
 
     if args.output:
-        Path(args.output).write_text(report, encoding="utf-8")
+        _output_path = Path(args.output)
+        _tmp = _output_path.with_suffix(_output_path.suffix + ".tmp")
+        try:
+            _tmp.write_text(report, encoding="utf-8")
+            _tmp.replace(_output_path)
+        except Exception:
+            _tmp.unlink(missing_ok=True)
+            raise
         logger.info(f"Report written to {args.output}")
     else:
         logger.info(report)

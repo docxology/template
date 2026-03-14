@@ -125,7 +125,13 @@ class MarkdownIntegration:
             markdown_content += self.figure_manager.generate_latex_figure_block(fig_meta.label)
             markdown_content += "\n```\n\n"
 
-        output_file.write_text(markdown_content, encoding="utf-8")
+        _tmp = output_file.with_suffix(output_file.suffix + ".tmp")
+        try:
+            _tmp.write_text(markdown_content, encoding="utf-8")
+            _tmp.replace(output_file)
+        except Exception:
+            _tmp.unlink(missing_ok=True)
+            raise
 
         return output_file
 
@@ -168,7 +174,13 @@ class MarkdownIntegration:
                             updated += 1
 
         # Write back
-        markdown_file.write_text(content, encoding="utf-8")
+        _tmp = markdown_file.with_suffix(markdown_file.suffix + ".tmp")
+        try:
+            _tmp.write_text(content, encoding="utf-8")
+            _tmp.replace(markdown_file)
+        except Exception:
+            _tmp.unlink(missing_ok=True)
+            raise
 
         return updated
 

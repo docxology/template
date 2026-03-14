@@ -94,7 +94,13 @@ class WebRenderer:
         # Combine markdown files
         combined_md = output_dir / "_combined_manuscript.md"
         combined_content = self._combine_markdown_files(source_files)
-        combined_md.write_text(combined_content, encoding="utf-8")
+        _tmp = combined_md.with_suffix(combined_md.suffix + ".tmp")
+        try:
+            _tmp.write_text(combined_content, encoding="utf-8")
+            _tmp.replace(combined_md)
+        except Exception:
+            _tmp.unlink(missing_ok=True)
+            raise
         logger.debug(
             f"Combined markdown written to: {combined_md} ({len(combined_content)} characters)"
         )
@@ -290,7 +296,13 @@ class WebRenderer:
                     return
 
             # Write modified HTML back
-            html_file.write_text(html_content, encoding="utf-8")
+            _tmp = html_file.with_suffix(html_file.suffix + ".tmp")
+            try:
+                _tmp.write_text(html_content, encoding="utf-8")
+                _tmp.replace(html_file)
+            except Exception:
+                _tmp.unlink(missing_ok=True)
+                raise
             logger.debug(f"Embedded CSS from {css_file.name} into {html_file.name}")
 
         except Exception as e:  # noqa: BLE001

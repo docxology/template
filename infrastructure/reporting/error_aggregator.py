@@ -222,13 +222,25 @@ class ErrorAggregator:
         summary["actionable_fixes"] = self.get_actionable_fixes()
 
         json_path = output_dir / "error_summary.json"
-        with open(json_path, "w") as f:
-            json.dump(summary, f, indent=2)
+        _tmp = json_path.with_suffix(json_path.suffix + ".tmp")
+        try:
+            with open(_tmp, "w") as f:
+                json.dump(summary, f, indent=2)
+            _tmp.replace(json_path)
+        except Exception:
+            _tmp.unlink(missing_ok=True)
+            raise
 
         # Generate markdown report
         md_path = output_dir / "error_summary.md"
         md_content = self._generate_markdown_report(summary)
-        md_path.write_text(md_content)
+        _tmp = md_path.with_suffix(md_path.suffix + ".tmp")
+        try:
+            _tmp.write_text(md_content)
+            _tmp.replace(md_path)
+        except Exception:
+            _tmp.unlink(missing_ok=True)
+            raise
 
         return json_path
 

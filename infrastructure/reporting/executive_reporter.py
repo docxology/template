@@ -976,22 +976,40 @@ def save_executive_summary(summary: ExecutiveSummary, output_dir: Path) -> dict[
 
     # Save JSON (machine-readable)
     json_path = organizer.get_output_path("consolidated_report.json", output_dir, FileType.JSON)
-    with open(json_path, "w") as f:
-        json.dump(asdict(summary), f, indent=2, default=str)
+    _tmp = json_path.with_suffix(json_path.suffix + ".tmp")
+    try:
+        with open(_tmp, "w") as f:
+            json.dump(asdict(summary), f, indent=2, default=str)
+        _tmp.replace(json_path)
+    except Exception:
+        _tmp.unlink(missing_ok=True)
+        raise
     saved_files["json"] = json_path
     logger.info(f"Saved JSON report: {json_path}")
 
     # Save Markdown (human-readable)
     md_path = organizer.get_output_path("consolidated_report.md", output_dir, FileType.MARKDOWN)
     md_content = _generate_markdown_report(summary)
-    md_path.write_text(md_content)
+    _tmp = md_path.with_suffix(md_path.suffix + ".tmp")
+    try:
+        _tmp.write_text(md_content)
+        _tmp.replace(md_path)
+    except Exception:
+        _tmp.unlink(missing_ok=True)
+        raise
     saved_files["markdown"] = md_path
     logger.info(f"Saved Markdown report: {md_path}")
 
     # Save HTML (styled)
     html_path = organizer.get_output_path("consolidated_report.html", output_dir, FileType.HTML)
     html_content = _generate_html_report(summary)
-    html_path.write_text(html_content)
+    _tmp = html_path.with_suffix(html_path.suffix + ".tmp")
+    try:
+        _tmp.write_text(html_content)
+        _tmp.replace(html_path)
+    except Exception:
+        _tmp.unlink(missing_ok=True)
+        raise
     saved_files["html"] = html_path
     logger.info(f"Saved HTML report: {html_path}")
 

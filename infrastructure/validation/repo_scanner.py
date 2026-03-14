@@ -601,7 +601,13 @@ def main() -> int:
     # Generate report
     report = scanner.generate_report()
     report_path = repo_root / "docs" / "REPO_ACCURACY_COMPLETENESS_REPORT.md"
-    report_path.write_text(report, encoding="utf-8")
+    _tmp = report_path.with_suffix(report_path.suffix + ".tmp")
+    try:
+        _tmp.write_text(report, encoding="utf-8")
+        _tmp.replace(report_path)
+    except Exception:
+        _tmp.unlink(missing_ok=True)
+        raise
 
     logger.info("\n" + "=" * 70)
     logger.info("SCAN COMPLETE")

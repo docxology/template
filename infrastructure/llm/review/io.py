@@ -288,7 +288,13 @@ def save_review_outputs(
 ---
 
 """
-            filepath.write_text(header + content)
+            _tmp = filepath.with_suffix(filepath.suffix + ".tmp")
+            try:
+                _tmp.write_text(header + content)
+                _tmp.replace(filepath)
+            except Exception:
+                _tmp.unlink(missing_ok=True)
+                raise
             # Log with full absolute path and word count
             full_path = filepath.resolve()
             if name.startswith("translation_"):
@@ -309,7 +315,13 @@ def save_review_outputs(
         combined_content = _build_combined_review_content(
             reviews, model_name, pdf_path, session_metrics, timestamp, date_str,
         )
-        combined_path.write_text(combined_content)
+        _tmp = combined_path.with_suffix(combined_path.suffix + ".tmp")
+        try:
+            _tmp.write_text(combined_content)
+            _tmp.replace(combined_path)
+        except Exception:
+            _tmp.unlink(missing_ok=True)
+            raise
         logger.info(f"  Saved combined review: {combined_path}")
     except OSError as e:
         logger.error(f"Failed to save combined review: {e}", exc_info=True)
@@ -321,7 +333,13 @@ def save_review_outputs(
         metadata = _build_review_metadata(
             reviews, model_name, pdf_path, session_metrics, timestamp,
         )
-        metadata_path.write_text(json.dumps(metadata, indent=2))
+        _tmp = metadata_path.with_suffix(metadata_path.suffix + ".tmp")
+        try:
+            _tmp.write_text(json.dumps(metadata, indent=2))
+            _tmp.replace(metadata_path)
+        except Exception:
+            _tmp.unlink(missing_ok=True)
+            raise
         logger.info(f"  Saved metadata: {metadata_path}")
     except (OSError, ValueError) as e:
         logger.error(f"Failed to save metadata: {e}", exc_info=True)
@@ -375,7 +393,13 @@ def save_single_review(
 
     # Write file
     try:
-        filepath.write_text(header + content)
+        _tmp = filepath.with_suffix(filepath.suffix + ".tmp")
+        try:
+            _tmp.write_text(header + content)
+            _tmp.replace(filepath)
+        except Exception:
+            _tmp.unlink(missing_ok=True)
+            raise
 
         # Log with full absolute path and word count
         full_path = filepath.resolve()

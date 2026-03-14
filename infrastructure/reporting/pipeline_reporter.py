@@ -132,7 +132,13 @@ def save_pipeline_report(
 
     for fmt, path, content in formats_to_write:
         try:
-            path.write_text(content)
+            _tmp = path.with_suffix(path.suffix + ".tmp")
+            try:
+                _tmp.write_text(content)
+                _tmp.replace(path)
+            except Exception:
+                _tmp.unlink(missing_ok=True)
+                raise
             saved_files[fmt] = path
             logger.info(f"Pipeline report ({fmt.upper()}) saved: {path}")
         except OSError as e:
@@ -405,8 +411,14 @@ def save_test_results(test_results: dict[str, Any], output_dir: Path) -> Path:
     """Write test_results dict to test_results.json and return the path."""
     output_dir.mkdir(parents=True, exist_ok=True)
     report_path = output_dir / "test_results.json"
-    with open(report_path, "w", encoding="utf-8") as f:
-        json.dump(test_results, f, indent=2, default=str)
+    _tmp = report_path.with_suffix(report_path.suffix + ".tmp")
+    try:
+        with open(_tmp, "w", encoding="utf-8") as f:
+            json.dump(test_results, f, indent=2, default=str)
+        _tmp.replace(report_path)
+    except Exception:
+        _tmp.unlink(missing_ok=True)
+        raise
     return report_path
 
 def generate_validation_report(
@@ -418,8 +430,14 @@ def generate_validation_report(
 
     json_path = output_dir / "validation_report.json"
     try:
-        with open(json_path, "w") as f:
-            json.dump(validation_results, f, indent=2)
+        _tmp = json_path.with_suffix(json_path.suffix + ".tmp")
+        try:
+            with open(_tmp, "w") as f:
+                json.dump(validation_results, f, indent=2)
+            _tmp.replace(json_path)
+        except Exception:
+            _tmp.unlink(missing_ok=True)
+            raise
         saved_files["json"] = json_path
     except OSError as e:
         logger.error(f"Failed to write validation JSON {json_path}: {e}")
@@ -428,7 +446,13 @@ def generate_validation_report(
     md_path = output_dir / "validation_report.md"
     try:
         md_content = generate_validation_markdown(validation_results)
-        md_path.write_text(md_content)
+        _tmp = md_path.with_suffix(md_path.suffix + ".tmp")
+        try:
+            _tmp.write_text(md_content)
+            _tmp.replace(md_path)
+        except Exception:
+            _tmp.unlink(missing_ok=True)
+            raise
         saved_files["markdown"] = md_path
     except OSError as e:
         logger.error(f"Failed to write validation Markdown {md_path}: {e}")
@@ -462,8 +486,14 @@ def generate_performance_report(performance_metrics: dict[str, Any], output_dir:
 
     json_path = output_dir / "performance_report.json"
     try:
-        with open(json_path, "w") as f:
-            json.dump(performance_metrics, f, indent=2)
+        _tmp = json_path.with_suffix(json_path.suffix + ".tmp")
+        try:
+            with open(_tmp, "w") as f:
+                json.dump(performance_metrics, f, indent=2)
+            _tmp.replace(json_path)
+        except Exception:
+            _tmp.unlink(missing_ok=True)
+            raise
     except OSError as e:
         logger.error(f"Failed to write performance report {json_path}: {e}")
         raise
@@ -490,8 +520,14 @@ def save_error_summary(errors: list[dict[str, Any]], output_dir: Path) -> dict[s
 
     json_path = output_dir / "error_summary.json"
     try:
-        with open(json_path, "w") as f:
-            json.dump(summary, f, indent=2)
+        _tmp = json_path.with_suffix(json_path.suffix + ".tmp")
+        try:
+            with open(_tmp, "w") as f:
+                json.dump(summary, f, indent=2)
+            _tmp.replace(json_path)
+        except Exception:
+            _tmp.unlink(missing_ok=True)
+            raise
     except OSError as e:
         logger.error(f"Failed to write error summary JSON {json_path}: {e}")
         raise
@@ -499,7 +535,13 @@ def save_error_summary(errors: list[dict[str, Any]], output_dir: Path) -> dict[s
     md_path = output_dir / "error_summary.md"
     try:
         md_content = generate_error_markdown(summary)
-        md_path.write_text(md_content)
+        _tmp = md_path.with_suffix(md_path.suffix + ".tmp")
+        try:
+            _tmp.write_text(md_content)
+            _tmp.replace(md_path)
+        except Exception:
+            _tmp.unlink(missing_ok=True)
+            raise
     except OSError as e:
         logger.error(f"Failed to write error summary Markdown {md_path}: {e}")
         raise
