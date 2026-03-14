@@ -315,11 +315,13 @@ _REVIEW_TYPE_VALIDATORS: dict[str, _ValidatorFn] = {
 }
 
 def create_review_client(model_name: str) -> LLMClient:
-    config = OllamaClientConfig.from_env()
-    config.default_model = model_name
-    config.timeout = config.review_timeout
-    config.system_prompt = get_manuscript_review_system_prompt()
-    config.auto_inject_system_prompt = True
+    base = OllamaClientConfig.from_env()
+    config = base.with_overrides(
+        default_model=model_name,
+        timeout=base.review_timeout,
+        system_prompt=get_manuscript_review_system_prompt(),
+        auto_inject_system_prompt=True,
+    )
 
     source = (
         f"environment variable LLM_LONG_MAX_TOKENS={config.long_max_tokens}"
@@ -729,7 +731,12 @@ def generate_methodology_review(
 def generate_improvement_suggestions(
     client: LLMClient, text: str, model_name: str = ""
 ) -> tuple[str, ReviewMetrics]:
-    """Named public API entry point for improvement suggestions (ManuscriptImprovementSuggestions template)."""
+    """Named public API entry point for improvement suggestions (ManuscriptImprovementSuggestions template).
+
+    Uses temperature=0.4 (vs 0.3 for other reviews) because generative ideation
+    benefits from higher diversity — the task is proposing novel directions, not
+    accurate analysis.
+    """
     return generate_review_with_metrics(
         client=client,
         text=text,

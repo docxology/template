@@ -237,8 +237,9 @@ def _build_review_metadata(
         "total_generation_time_seconds": round(session_metrics.total_generation_time, 2),
         "config": {
             "temperature_summary": 0.3,
-            "temperature_review": 0.3,
-            "temperature_suggestions": 0.4,
+            "temperature_review": 0.3,  # quality_review
+            "temperature_methodology": 0.3,  # same as quality: structured factual analysis
+            "temperature_suggestions": 0.4,  # higher: creative ideation benefits from diversity
             "max_tokens": llm_config.long_max_tokens,
             "max_tokens_source": "long_max_tokens",
             "timeout_seconds": llm_config.review_timeout,

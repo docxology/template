@@ -22,20 +22,11 @@ from typing import Any
 import yaml
 
 from infrastructure.core.logging_utils import get_logger
-from infrastructure.validation.doc_models import CompletenessGap
+from infrastructure.validation.doc_models import CompletenessGap, ScanAccuracyIssue
+
+AccuracyIssue = ScanAccuracyIssue  # backward-compat alias
 
 logger = get_logger(__name__)
-
-@dataclass
-class AccuracyIssue:
-    """Represents an accuracy issue."""
-
-    category: str
-    severity: str
-    file: str
-    line: int = 0
-    message: str = ""
-    details: str = ""
 
 @dataclass
 class ScanResults:

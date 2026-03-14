@@ -25,17 +25,8 @@ logger = get_logger(__name__)
 class InputSanitizer:
     """Comprehensive input sanitization for LLM operations."""
 
-    # LLM-specific patterns extending the core SecurityValidator patterns.
-    _LLM_EXTRA_PATTERNS: tuple[str, ...] = (
-        # Dangerous LaTeX commands — \{ anchors prevent matching \readability etc.
-        r"\\input\s*\{|\\include\s*\{|\\usepackage\s*[\[{]|\\newcommand\s*\{",
-        r"\\write\s*\d|\\read\s*\d|\\openout\s*\d|\\openin\s*\d",
-    )
-
     def __init__(self) -> None:
-        # Delegate core pattern detection to the shared SecurityValidator; add LLM-specific patterns.
-        core_patterns = get_security_validator().dangerous_patterns
-        self.dangerous_patterns = core_patterns + list(self._LLM_EXTRA_PATTERNS)
+        self.dangerous_patterns = get_security_validator().dangerous_patterns
 
     def sanitize_prompt(self, prompt: str, context: dict[str, Any] | None = None) -> str:
         """Sanitize LLM prompt for security.

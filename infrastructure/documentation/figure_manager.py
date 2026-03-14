@@ -91,8 +91,6 @@ class FigureManager:
         self.registry_file.parent.mkdir(parents=True, exist_ok=True)
         self.figures: dict[str, FigureMetadata] = {}
         self.counter = 0
-
-        # Load existing registry
         self._load_registry()
 
     def _load_registry(self) -> None:
@@ -176,17 +174,13 @@ class FigureManager:
         Returns:
             FigureMetadata object
         """
-        # Generate label if not provided
         if label is None:
             base_name = Path(filename).stem
-            # Clean label (remove special chars, use underscores)
             label = f"fig:{base_name}"
 
-        # Generate figure ID
         figure_id = f"figure_{self.counter:03d}"
         self.counter += 1
 
-        # Create metadata
         fig_meta = FigureMetadata(
             figure_id=figure_id,
             filename=filename,
@@ -199,10 +193,7 @@ class FigureManager:
             metadata=metadata or {},
         )
 
-        # Register
         self.figures[label] = fig_meta
-
-        # Save registry
         self._save_registry()
 
         return fig_meta

@@ -5,8 +5,9 @@ security headers, rate limiting, and security monitoring.
 
 API style note:
 - SecurityValidator, RateLimiter, SecurityMonitor are stateful classes (hold config/state).
-- get_security_headers(), get_cors_headers(), validate_llm_input() are module-level
-  convenience functions for stateless one-off checks. Both styles are intentional.
+- get_security_headers(), get_cors_headers() are module-level convenience functions
+  for stateless one-off checks. validate_llm_input() is deprecated; use
+  infrastructure.llm.core.sanitization.sanitize_llm_input() instead.
 """
 
 from __future__ import annotations
@@ -70,12 +71,9 @@ class SecurityValidator:
     def validate_llm_input(self, prompt: str, context: dict[str, Any] | None = None) -> str:
         """Validate and sanitize LLM input.
 
-        Args:
-            prompt: Input prompt to validate
-            context: Additional validation context
-
-        Returns:
-            Sanitized prompt
+        Deprecated: use ``infrastructure.llm.core.sanitization.sanitize_llm_input`` instead.
+        That function calls ``InputSanitizer`` which delegates pattern detection to this class
+        and adds LLM-specific whitespace and length handling. Retained here for test compatibility.
 
         Raises:
             SecurityViolation: If input contains dangerous content
@@ -106,17 +104,14 @@ class SecurityValidator:
         """
         path_obj = Path(path)
 
-        # Check for directory traversal
         if ".." in str(path):
             raise SecurityViolation("Directory traversal detected")
 
-        # Resolve path to check for symlinks
         try:
             resolved = path_obj.resolve()
         except (OSError, RuntimeError) as e:
             raise SecurityViolation("Invalid path") from e
 
-        # Check path length
         if len(str(path)) > self.limits["path_length"]:
             raise SecurityViolation("Path too long")
 
@@ -326,25 +321,11 @@ class SecurityMonitor:
             logger.info(f"Security event: {event_type} - {details}")
 
     def get_recent_events(self, limit: int = 100) -> list[dict[str, Any]]:
-        """Get recent security events.
-
-        Args:
-            limit: Maximum number of events to return
-
-        Returns:
-            List of recent security events
-        """
+        """Get recent security events."""
         return self.events[-limit:]
 
     def get_events_by_type(self, event_type: str) -> list[dict[str, Any]]:
-        """Get events by type.
-
-        Args:
-            event_type: Type of events to retrieve
-
-        Returns:
-            List of events of specified type
-        """
+        """Get events by type."""
         return [event for event in self.events if event["type"] == event_type]
 
     def get_security_summary(self) -> dict[str, Any]:

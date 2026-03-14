@@ -43,6 +43,17 @@ class AccuracyIssue:
     severity: str = "error"
 
 @dataclass
+class ScanAccuracyIssue:
+    """Accuracy issue found during repository-wide scanning (repo_scanner)."""
+
+    category: str
+    severity: str
+    file: str
+    line: int = 0
+    message: str = ""
+    details: str = ""
+
+@dataclass
 class CompletenessGap:
     """Represents a documentation completeness gap."""
 
