@@ -211,7 +211,7 @@ def detect_repetition(
     unique_count = 0
 
     # Use larger comparison window (400 chars instead of 200)
-    for i, (chunk, normalized) in enumerate(zip(chunks, normalized_chunks)):
+    for _, (chunk, normalized) in enumerate(zip(chunks, normalized_chunks)):
         chunk_hash = hash(normalized[:400])
 
         if chunk_hash in seen_hashes:

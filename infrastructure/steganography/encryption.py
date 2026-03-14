@@ -153,7 +153,7 @@ def apply_pdf_password(
         raise ImportError(
             "The 'pypdf' package is required for PDF password protection. "
             "Install it with: pip install pypdf"
-        )
+        ) from None
 
     if owner_password is None:
         owner_password = user_password

@@ -339,7 +339,7 @@ def validate_directory_structures(content: str, file_path: Path, repo_root: Path
             tree_content = match.group(1)
             lines = tree_content.split("\n")
 
-            for line_no, line in enumerate(lines):
+            for _, line in enumerate(lines):
                 # Look for directory/file patterns like "├── file.py" or "└── dir/"
                 dir_pattern = re.search(r"[├└]──\s*([^\s]+)", line.strip())
                 if dir_pattern:

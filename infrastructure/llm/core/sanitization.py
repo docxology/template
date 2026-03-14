@@ -86,8 +86,8 @@ class InputSanitizer:
         # Resolve path to prevent traversal attacks
         try:
             resolved = file_path.resolve()
-        except (OSError, RuntimeError):
-            raise SecurityError("Invalid file path")
+        except (OSError, RuntimeError) as e:
+            raise SecurityError("Invalid file path") from e
 
         # Check for directory traversal attempts
         if ".." in str(file_path) or not resolved.exists():

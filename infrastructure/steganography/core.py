@@ -187,7 +187,7 @@ class SteganographyProcessor:
         except ImportError:
             raise ImportError(
                 "The 'pypdf' package is required. Install with: pip install pypdf"
-            )
+            ) from None
 
         reader = PdfReader(str(working_pdf))
         writer = PdfWriter()

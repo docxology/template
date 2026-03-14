@@ -358,7 +358,7 @@ class LinkValidator:
         total_broken_links = 0
         broken_links_details = []
 
-        for file_path, file_results in validation_results.items():
+        for _, file_results in validation_results.items():
             valid_count = len(file_results["valid"])
             broken_count = len(file_results["broken"])
 

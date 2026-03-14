@@ -43,7 +43,7 @@ def _get_reportlab():
         raise ImportError(
             "The 'reportlab' package is required for overlay generation. "
             "Install it with: pip install reportlab"
-        )
+        ) from None
 
 # ── Public API ───────────────────────────────────────────────────────────
 
