@@ -125,7 +125,7 @@ class FigureManager:
                 self._backup_corrupted_registry()
                 self.figures = {}
                 self.counter = 0
-            except Exception as e:
+            except (ValueError, KeyError, TypeError, OSError) as e:
                 # Other errors (e.g., malformed data structure)
                 logger.warning(f"Figure registry corrupted (unexpected error): {e}")
                 self._backup_corrupted_registry()
@@ -141,7 +141,7 @@ class FigureManager:
             try:
                 shutil.copy2(self.registry_file, backup_path)
                 logger.info(f"Corrupted registry backed up to: {backup_path}")
-            except Exception as backup_error:
+            except (OSError, shutil.Error) as backup_error:
                 logger.error(f"Failed to backup corrupted registry: {backup_error}")
 
     def _save_registry(self) -> None:

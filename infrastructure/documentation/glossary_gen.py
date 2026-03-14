@@ -60,7 +60,7 @@ def build_api_index(src_dir: str) -> list[ApiEntry]:
         try:
             with open(py_path, "r", encoding="utf-8") as fh:
                 tree = ast.parse(fh.read(), filename=py_path)
-        except Exception as e:
+        except (SyntaxError, OSError, ValueError) as e:
             logger.debug(f"Skipping {py_path} (parse error): {e}")
             continue
         module = Path(py_path).relative_to(src_dir).as_posix().replace("/", ".")

@@ -69,7 +69,7 @@ def inject_pdf_metadata(
             xmp_bytes = xmp_string.encode("utf-8")
             writer.xmp_metadata = xmp_bytes  # type: ignore[assignment]
             logger.debug(f"XMP metadata stream embedded ({len(xmp_bytes)} bytes)")
-        except Exception as xmp_err:
+        except Exception as xmp_err:  # noqa: BLE001 — pypdf exceptions vary by PDF structure
             logger.warning(f"XMP embedding failed (non-fatal): {xmp_err}")
 
     # Embed file attachments if provided
@@ -78,7 +78,7 @@ def inject_pdf_metadata(
             try:
                 writer.add_attachment(filename, content)
                 logger.debug(f"Attachment embedded: {filename} ({len(content)} bytes)")
-            except Exception as att_err:
+            except Exception as att_err:  # noqa: BLE001 — pypdf exceptions vary by PDF structure
                 logger.warning(f"Attachment '{filename}' failed (non-fatal): {att_err}")
 
     with open(output_pdf, "wb") as fh:

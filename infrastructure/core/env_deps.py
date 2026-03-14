@@ -124,7 +124,7 @@ def install_missing_packages(packages: list[str]) -> bool:
         else:
             logger.error(f"uv installation failed (exit code: {result.returncode})")
             return False
-    except Exception as e:
+    except (subprocess.SubprocessError, OSError) as e:
         logger.error(f"Failed to install packages: {e}", exc_info=True)
         return False
 

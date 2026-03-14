@@ -204,7 +204,7 @@ class OutputOrganizer:
                 shutil.move(str(file_path), str(target_path))
                 self.logger.info(f"Moved {file_path.name} -> {target_path.relative_to(directory)}")
                 result.moved_files += 1
-            except Exception as e:
+            except (OSError, shutil.Error) as e:
                 self.logger.error(f"Failed to move {file_path}: {e}")
                 result.error_files += 1
 
@@ -250,7 +250,7 @@ class OutputOrganizer:
                     shutil.copy2(str(combined_pdf), str(target_path))
                     self.logger.info(f"Copied combined PDF: {combined_pdf.name}")
                     copied_count += 1
-                except Exception as e:
+                except (OSError, shutil.Error) as e:
                     self.logger.error(f"Failed to copy {combined_pdf}: {e}")
             else:
                 self.logger.debug(f"No combined PDF found for project: {project_dir.name}")

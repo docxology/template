@@ -79,7 +79,7 @@ class PipelineExecutor:
         if self._log_handler is not None:
             try:
                 self._log_handler.close()
-            except Exception as e:
+            except OSError as e:
                 logger.debug(f"Failed to close log handler: {e}")
 
         self._log_handler = setup_root_log_file_handler(self.log_file)

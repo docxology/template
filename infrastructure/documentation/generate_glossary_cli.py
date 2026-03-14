@@ -59,7 +59,7 @@ def main() -> int:
             generate_markdown_table,
             inject_between_markers,
         )
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001 — dynamic import; any import error is handled identically
         logger.error(f"Failed to import glossary_gen from infrastructure/documentation/: {exc}")
         return 1
 

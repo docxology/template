@@ -240,7 +240,7 @@ class CheckpointManager:
 
             return True, None
 
-        except Exception as e:
+        except (OSError, json.JSONDecodeError, ValueError, KeyError) as e:
             return (
                 False,
                 f"Checkpoint validation failed: {e} - checkpoint file may be corrupted, starting fresh pipeline run",  # noqa: E501

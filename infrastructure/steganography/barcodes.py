@@ -341,7 +341,7 @@ def create_barcode_strip_overlay(
                 preserveAspectRatio=True,
                 mask="auto",
             )
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001 — reportlab rendering exceptions vary by backend
             logger.warning(f"QR code rendering failed for {label}: {exc}")
 
         # Label centred below QR
@@ -374,7 +374,7 @@ def create_barcode_strip_overlay(
         c.setFillColorRGB(0.4, 0.4, 0.4)
         c.drawString(barcode_x_start, label_y, safe_data[:40])
         c.restoreState()
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001 — reportlab rendering exceptions vary by backend
         logger.warning(f"Code128 rendering failed: {exc}")
 
     # ── Timestamp (far right, vertically centred) ────────────────────
