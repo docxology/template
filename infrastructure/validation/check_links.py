@@ -25,14 +25,18 @@ from infrastructure.validation.doc_accuracy import extract_headings
 
 logger = get_logger(__name__)
 
-class LinkIssue(TypedDict):
-    """Represents an issue found during validation."""
+class LinkCheckResult(TypedDict):
+    """Represents a single link check result from the link checker."""
     file: str
     line: int
     target: str
     text: str
     issue: str
     type: str
+
+
+# Backwards-compatible alias
+LinkIssue = LinkCheckResult
 
 def find_all_markdown_files(repo_root: str) -> list[Path]:
     """Find all markdown files in the repository."""

@@ -28,25 +28,25 @@ class InputSanitizer:
             r"(?i)\bignore\s+previous\s+instructions\b",
             r"(?i)\boverride\s+system\s+prompt\b",
             r"(?i)\bchange\s+your\s+persona\b",
-            # Code execution attempts
-            r"(?i)\bexec\(|\beval\(|\bsubprocess\.|\bos\.system\b",
+            # Code execution attempts — \s* catches evasion via whitespace (e.g. "exec (")
+            r"(?i)\bexec\s*\(|\beval\s*\(|\bsubprocess\.\w|\bos\.system\s*\(",
             r"(?i)\bimport\s+os\b|\bimport\s+subprocess\b",
             r"(?i)\bshell\s*[:=]|\bbash\s*[:=]|\bcmd\s*[:=]",
-            # File system access
-            r"(?i)\bopen\(|\bfile\(|\bpathlib\.|\bos\.path\b",
+            # File system access — \.\w prevents matching bare "pathlib" as a word
+            r"(?i)\bopen\s*\(|\bfile\s*\(|\bpathlib\.\w|\bos\.path\.\w",
             r"(?i)\bread\s+file\b|\bwrite\s+file\b|\bdelete\s+file\b",
-            # Network access (http without :// to avoid blocking legitimate URLs)
-            r"(?i)\brequests\.|\burllib\.|\bsocket\.",
+            # Network access — \w prevents matching "requests" as a standalone word
+            r"(?i)\brequests\.\w|\burllib\.\w|\bsocket\.\w|\bhttps?://",
             r"(?i)\bconnect\s+to\b|\bdownload\s+from\b|\bupload\s+to\b",
-            # Dangerous LaTeX commands
-            r"\\input|\\include|\\usepackage|\\newcommand",
-            r"\\write|\\read|\\openout|\\openin",
-            # SQL injection patterns
-            r"(?i)(select|insert|update|delete|drop|create)\s+.*from",
+            # Dangerous LaTeX commands — \{ anchors prevent matching \readability etc.
+            r"\\input\s*\{|\\include\s*\{|\\usepackage\s*[\[{]|\\newcommand\s*\{",
+            r"\\write\s*\d|\\read\s*\d|\\openout\s*\d|\\openin\s*\d",
+            # SQL injection patterns — \b anchors on both sides reduce false positives
+            r"(?i)\b(select|insert|update|delete|drop|create)\b\s+.*\bfrom\b",
             r"(?i)union\s+select|information_schema",
-            # XSS attempts
-            r"<script|<iframe|<object|<embed",
-            r"on\w+\s*=|javascript:|vbscript:",
+            # XSS attempts — [\s>/] prevents matching "<scripted>" etc.
+            r"(?i)<script[\s>/]|<iframe[\s>/]|<object[\s>/]|<embed[\s>/]",
+            r"(?i)\bon\w+\s*=|javascript:|vbscript:",
         ]
 
     def sanitize_prompt(self, prompt: str, context: dict[str, Any] | None = None) -> str:

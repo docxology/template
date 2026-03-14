@@ -16,6 +16,7 @@ from infrastructure.core.logging_utils import get_logger
 from infrastructure.llm.core._text_utils import strip_thinking_tags
 from infrastructure.llm.core.config import GenerationOptions, LLMConfig
 from infrastructure.llm.core.context import ConversationContext
+from infrastructure.llm.core.sanitization import sanitize_llm_input
 
 logger = get_logger(__name__)
 
@@ -334,6 +335,7 @@ def stream_short_impl(
     Yields:
         Response chunks
     """
+    prompt = sanitize_llm_input(prompt)
     short_options = GenerationOptions(
         max_tokens=config.short_max_tokens,
         temperature=options.temperature if options else None,
@@ -386,6 +388,7 @@ def stream_long_impl(
     Yields:
         Response chunks
     """
+    prompt = sanitize_llm_input(prompt)
     long_options = GenerationOptions(
         max_tokens=config.long_max_tokens,
         temperature=options.temperature if options else None,
