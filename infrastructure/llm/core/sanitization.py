@@ -28,7 +28,7 @@ class InputSanitizer:
         r"\\write\s*\d|\\read\s*\d|\\openout\s*\d|\\openin\s*\d",
     )
 
-    def __init__(self):
+    def __init__(self) -> None:
         # Delegate core pattern detection to the shared SecurityValidator; add LLM-specific patterns.
         core_patterns = get_security_validator().dangerous_patterns
         self.dangerous_patterns = core_patterns + list(self._LLM_EXTRA_PATTERNS)

@@ -166,7 +166,20 @@ def validate_formatting(content: str) -> bool:
 def validate_complete(
     content: str, mode: ResponseMode | str = "standard", schema: dict[str, Any] | None = None
 ) -> bool:
-    """Comprehensive validation based on mode."""
+    """Validate LLM response content based on the response mode.
+
+    Args:
+        content: Response text to validate.
+        mode: Expected response mode — short, long, structured, standard, or raw.
+        schema: Required when mode is ``structured``; ignored otherwise.
+
+    Returns:
+        True when the content meets the mode's requirements.
+
+    Raises:
+        ValidationError: If content is empty, or if mode is ``structured`` and
+            *schema* is None.
+    """
     if not content or not content.strip():
         raise ValidationError("Empty response")
 

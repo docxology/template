@@ -16,6 +16,9 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+# Minimum coverage fraction considered acceptable for docstrings and type hints
+_COVERAGE_THRESHOLD = 0.8
+
 class _ValidationResults(TypedDict):
     total_tests: int
     passed_tests: int
@@ -144,8 +147,11 @@ def validate_scientific_best_practices(module: Any) -> dict[str, Any]:
         + (1.0 if validation["input_validation"] else 0.0) * weights["input_validation"]
     )
 
-    if validation["docstring_coverage"] < 0.8:        validation["recommendations"].append("Add docstrings to undocumented functions")
-    if validation["type_hints_coverage"] < 0.8:        validation["recommendations"].append(            "Add type hints to function parameters and return values"
+    if validation["docstring_coverage"] < _COVERAGE_THRESHOLD:
+        validation["recommendations"].append("Add docstrings to undocumented functions")
+    if validation["type_hints_coverage"] < _COVERAGE_THRESHOLD:
+        validation["recommendations"].append(
+            "Add type hints to function parameters and return values"
         )
 
     if not validation["error_handling"]:
@@ -155,7 +161,13 @@ def validate_scientific_best_practices(module: Any) -> dict[str, Any]:
     return validation
 
 def check_research_compliance(func: Callable[..., Any]) -> dict[str, Any]:
-    """Check function compliance with research software standards."""
+    """Check function compliance with research software standards.
+
+    Uses ``inspect.getsource`` to analyse source text. If the source is
+    unavailable (e.g. C extensions, frozen modules), the ``has_error_handling``
+    and ``has_input_validation`` checks are silently skipped and left False.
+    The compliance_score is computed only from the checks that can be evaluated.
+    """
     compliance = {
         "has_docstring": False,
         "has_type_hints": False,

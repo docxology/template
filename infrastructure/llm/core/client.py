@@ -165,7 +165,7 @@ class LLMClient:
         self.context.add_message("user", prompt)
 
         try:
-            response_text, generation_time = self._time_call(
+            response_text, _ = self._time_call(
                 lambda: self._generate_response_direct(model_name, self.context.get_messages(), options=options)
             )
 
@@ -605,6 +605,9 @@ class LLMClient:
                     f"Failed to connect to Ollama ({model}): {last_error}",
                     context={"url": url, "model": model},
                 ) from e
+
+        # Unreachable: all loop paths either return or raise. Here for type-checker completeness.
+        raise RuntimeError(f"Retry loop exited unexpectedly for model {model!r}")
 
     def _save_streaming_state(
         self,
