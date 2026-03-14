@@ -7,7 +7,6 @@ functions that operate on data parameters rather than instance state.
 from __future__ import annotations
 
 import re
-import unicodedata
 from pathlib import Path
 
 import yaml

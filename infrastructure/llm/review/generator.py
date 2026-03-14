@@ -16,7 +16,6 @@ from infrastructure.core.logging_utils import (
     get_logger,
     log_substep,
     log_success,
-    format_error_with_suggestions,
 )
 from infrastructure.core.logging_progress import (
     log_with_spinner,
