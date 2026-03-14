@@ -9,12 +9,29 @@ from __future__ import annotations
 import hashlib
 import shutil
 from pathlib import Path
-from typing import Any
+from typing import Any, TypedDict
 
 from infrastructure.core.exceptions import FileOperationError
 from infrastructure.core.logging_utils import get_logger, log_success
 
 logger = get_logger(__name__)
+
+class CopyStats(TypedDict):
+    """Typed structure for copy_final_deliverables return value."""
+
+    pdf_files: int
+    web_files: int
+    slides_files: int
+    figures_files: int
+    data_files: int
+    reports_files: int
+    simulations_files: int
+    llm_files: int
+    logs_files: int
+    combined_pdf: int
+    total_files: int
+    errors: list[str]
+
 
 # Output subdirectory name → stats dict key mapping (module-level constant).
 _SUBDIR_STATS_KEYS: dict[str, str] = {
@@ -24,7 +41,7 @@ _SUBDIR_STATS_KEYS: dict[str, str] = {
 }
 
 
-def _process_subdirectories(output_dir: Path, stats: dict[str, Any], files_list: list[dict[str, Any]]) -> None:
+def _collect_subdirectory_stats(output_dir: Path, stats: CopyStats, files_list: list[dict[str, Any]]) -> None:
     """Process output subdirectories, verifying contents and updating stats."""
     for subdir_name, stats_key in _SUBDIR_STATS_KEYS.items():
         subdir = output_dir / subdir_name
@@ -70,7 +87,7 @@ def _process_subdirectories(output_dir: Path, stats: dict[str, Any], files_list:
 
             logger.info(f"  {subdir_name}/: {file_count} file(s)")
 
-def _copy_combined_pdf(output_dir: Path, project_basename: str, stats: dict[str, Any], files_list: list[dict[str, Any]]) -> None:
+def _copy_combined_pdf(output_dir: Path, project_basename: str, stats: CopyStats, files_list: list[dict[str, Any]]) -> None:
     """Copy combined PDF to root of output directory for convenient access."""
     combined_pdf_src = output_dir / "pdf" / f"{project_basename}_combined.pdf"
     combined_pdf_dst = output_dir / f"{project_basename}_combined.pdf"
@@ -101,7 +118,7 @@ def _copy_combined_pdf(output_dir: Path, project_basename: str, stats: dict[str,
 
 def copy_final_deliverables(
     project_root: Path, output_dir: Path, project_name: str = "project"
-) -> dict[str, Any]:
+) -> CopyStats:
     """Copy all project outputs to top-level output directory.
 
     Recursively copies entire projects/{project_name}/output/ directory structure, preserving:
@@ -129,7 +146,7 @@ def copy_final_deliverables(
 
     project_output = project_root / "projects" / project_name / "output"
 
-    stats: dict[str, Any] = {
+    stats: CopyStats = {
         "pdf_files": 0, "web_files": 0, "slides_files": 0, "figures_files": 0,
         "data_files": 0, "reports_files": 0, "simulations_files": 0, "llm_files": 0,
         "logs_files": 0, "combined_pdf": 0, "total_files": 0, "errors": [],
@@ -155,7 +172,7 @@ def copy_final_deliverables(
         return stats
 
     # Process subdirectories for verifying contents and updating stats
-    _process_subdirectories(output_dir, stats, files_list)
+    _collect_subdirectory_stats(output_dir, stats, files_list)
 
     # Copy combined PDF to root for convenient access
     _copy_combined_pdf(output_dir, Path(project_name).name, stats, files_list)

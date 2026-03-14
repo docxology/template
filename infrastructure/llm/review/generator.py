@@ -309,7 +309,17 @@ def create_review_client(model_name: str) -> LLMClient:
     logger.debug(f"Review max_tokens configuration: {source}")
     return LLMClient(config)
 
-def check_ollama_availability() -> tuple[bool, str | None]:
+def select_and_start_ollama_model() -> tuple[bool, str | None]:
+    """Ensure Ollama is running and select the best available model.
+
+    Verifies the Ollama binary is installed, starts the server if it is not
+    already running (up to 3 attempts with exponential backoff), then queries
+    the available model list and selects the best candidate for manuscript review.
+
+    Returns:
+        (True, model_name) on success, (False, None) if Ollama is unavailable
+        or no suitable model is found.
+    """
     log_substep("Checking Ollama availability...")
     auto_start = os.environ.get("OLLAMA_AUTO_START", "true").lower() == "true"
 
@@ -322,13 +332,10 @@ def check_ollama_availability() -> tuple[bool, str | None]:
         logger.error("❌ Unable to check if Ollama is installed")
         return False, None
 
-    logger.debug("    Checking Ollama server status...")
-
     max_retries = 3
     for attempt in range(max_retries):
         if attempt > 0:
             wait_time = min(2**attempt, 10)
-            logger.debug(f"    Retry {attempt}/{max_retries - 1} in {wait_time}s...")
             time.sleep(wait_time)
 
         if not is_ollama_running():
@@ -350,7 +357,6 @@ def check_ollama_availability() -> tuple[bool, str | None]:
             log_success("Ollama server is running", logger)
             break  # server already running — no start needed
 
-    logger.debug("    Discovering available models...")
     available_models = get_available_models()
     if not available_models:
         logger.warning("❌ No Ollama models available")
@@ -358,8 +364,6 @@ def check_ollama_availability() -> tuple[bool, str | None]:
 
     model_names = [m.get("name", "unknown") for m in available_models]
     logger.debug(f"    Found {len(model_names)} model(s): {', '.join(model_names[:5])}")
-
-    logger.debug("    Selecting best model for manuscript review...")
     model = select_best_model()
     if not model:
         logger.warning("❌ Could not select a suitable model")

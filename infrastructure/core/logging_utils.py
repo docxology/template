@@ -47,11 +47,13 @@ from infrastructure.core.logging_constants import EMOJIS, USE_EMOJIS, USE_STRUCT
 # Type variable for generic context manager
 T = TypeVar("T")
 
-_IN_TEST_ENV: bool = bool(os.getenv("PYTEST_CURRENT_TEST") or "pytest" in sys.modules)
-
 def _is_test_environment() -> bool:
-    """Return True if running inside pytest."""
-    return _IN_TEST_ENV
+    """Return True if running inside pytest.
+
+    Evaluated on every call (not cached) so that late pytest imports and
+    PYTEST_CURRENT_TEST set after module import are correctly detected.
+    """
+    return bool(os.getenv("PYTEST_CURRENT_TEST") or "pytest" in sys.modules)
 
 # Map environment LOG_LEVEL (0-3) to Python logging levels
 LOG_LEVEL_MAP = {

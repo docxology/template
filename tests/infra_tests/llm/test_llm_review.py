@@ -997,8 +997,8 @@ class TestLLMReviewIntegration:
         # If Ollama can't be started, ensure_ollama_for_tests will fail loudly
         pass
 
-    def test_check_ollama_availability(self):
-        """Test Ollama availability check."""
+    def test_select_and_start_ollama_model(self):
+        """Test Ollama model selection and startup."""
         from infrastructure.llm.utils.ollama import (
             get_available_models,
             is_ollama_running,

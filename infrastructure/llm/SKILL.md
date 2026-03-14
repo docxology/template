@@ -92,7 +92,7 @@ ratio = calculate_unique_content_ratio(response_text)
 
 ```python
 from infrastructure.llm import (
-    create_review_client, check_ollama_availability, warmup_model,
+    create_review_client, select_and_start_ollama_model, warmup_model,
     extract_manuscript_text, generate_review_with_metrics,
     generate_executive_summary, generate_quality_review,
     generate_methodology_review, generate_improvement_suggestions,

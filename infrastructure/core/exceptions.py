@@ -15,6 +15,8 @@ import builtins
 from pathlib import Path
 from typing import Any
 
+from infrastructure.core.install_commands import build_install_commands
+
 # =============================================================================
 # BASE EXCEPTION
 # =============================================================================
@@ -198,7 +200,6 @@ class MissingDependencyError(DependencyError):
 
         # Auto-generate installation commands based on common package managers
         if recovery_commands is None and dependency:
-            from infrastructure.core.env_deps import build_install_commands  # deferred: avoids cycle exceptions→env_deps→logging_utils→logging_helpers→exceptions
             recovery_commands = build_install_commands(dependency)
 
         super().__init__(message, context, suggestions, recovery_commands)

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from infrastructure.llm.review.generator import (
-    check_ollama_availability,
+    select_and_start_ollama_model,
     create_review_client,
     extract_manuscript_text,
     generate_improvement_suggestions,
@@ -41,7 +41,7 @@ __all__ = [
     "get_manuscript_review_system_prompt",
     "validate_review_quality",
     "create_review_client",
-    "check_ollama_availability",
+    "select_and_start_ollama_model",
     "warmup_model",
     "extract_manuscript_text",
     "generate_review_with_metrics",

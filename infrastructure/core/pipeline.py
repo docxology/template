@@ -354,32 +354,27 @@ class PipelineExecutor:
         return True
 
     def _run_setup_environment(self) -> bool:
-        """Run environment setup."""
         return self._run_script("00_setup_environment.py", "--project", self.config.project_name)
 
     def run_infrastructure_tests(self) -> bool:
-        """Run infrastructure tests (public API used by multi-project orchestrator)."""
+        """Public API used by multi-project orchestrator."""
         # Provide a project name for report output location; infra tests themselves should not depend on project src.  # noqa: E501
         return self._run_script(
             "01_run_tests.py", "--infra-only", "--verbose", "--project", self.config.project_name
         )
 
     def _run_project_tests(self) -> bool:
-        """Run project tests."""
         return self._run_script(
             "01_run_tests.py", "--project-only", "--verbose", "--project", self.config.project_name
         )
 
     def _run_analysis(self) -> bool:
-        """Run project analysis."""
         return self._run_script("02_run_analysis.py", "--project", self.config.project_name)
 
     def _run_pdf_rendering(self) -> bool:
-        """Run PDF rendering."""
         return self._run_script("03_render_pdf.py", "--project", self.config.project_name)
 
     def _run_validation(self) -> bool:
-        """Run output validation."""
         return self._run_script("04_validate_output.py", "--project", self.config.project_name)
 
     def _run_llm_review(self) -> bool:

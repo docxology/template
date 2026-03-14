@@ -21,7 +21,7 @@ from infrastructure.llm.review.io import (
 from infrastructure.llm.review.metrics import SessionMetrics
 from infrastructure.llm.core.config import get_max_input_length
 from infrastructure.llm.review.generator import (
-    check_ollama_availability,
+    select_and_start_ollama_model,
     create_review_client,
     extract_manuscript_text,
     generate_llm_executive_summary,
@@ -89,7 +89,7 @@ def run_llm_review_pipeline(
 
     try:
         # Step 1: Check Ollama availability
-        available, model_name = check_ollama_availability()
+        available, model_name = select_and_start_ollama_model()
 
         if not available:
             logger.warning("\n⚠️  Skipping LLM review - Ollama not available")

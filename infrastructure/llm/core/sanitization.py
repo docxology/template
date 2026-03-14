@@ -103,8 +103,9 @@ class InputSanitizer:
 
         # Check file size (prevent DoS)
         max_size = 50 * 1024 * 1024  # 50MB limit
-        if resolved.stat().st_size > max_size:
-            raise SecurityError(f"File too large: {resolved.stat().st_size} bytes")
+        file_stat = resolved.stat()
+        if file_stat.st_size > max_size:
+            raise SecurityError(f"File too large: {file_stat.st_size} bytes")
 
         return True
 
