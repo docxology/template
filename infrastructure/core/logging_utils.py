@@ -8,6 +8,23 @@ scripts in the template. It integrates with the bash logging.sh format and provi
 - Integration with environment-based configuration
 
 Part of the infrastructure layer (Layer 1) - reusable across all projects.
+
+## Logging module map (all six modules are intentional — each has a distinct role):
+
+| Module              | Import pattern                    | Purpose                                    |
+|---------------------|-----------------------------------|--------------------------------------------|
+| logging_utils.py    | get_logger, log_substep, etc.     | **Primary entry point** — use this module  |
+| logging_constants.py| USE_EMOJIS, LOG_LEVEL, etc.       | Runtime env-var constants (internal use)   |
+| logging_helpers.py  | format_error_with_suggestions, …  | Formatting helpers used by logging_utils   |
+| logging_config.py   | setup_logger, configure_logging   | Handler/formatter setup (called once)      |
+| logging_filters.py  | SensitiveDataFilter, etc.         | Log record filters for sensitive data      |
+| logging_progress.py | Spinner, StreamingProgress, etc.  | Progress display (animated output)         |
+
+Callers should import from `logging_utils` for all everyday logging needs.
+Direct imports from the other five modules are for specialised use only.
+
+Module-level `logger = get_logger(__name__)` is the approved pattern — get_logger()
+initialises lazily and is safe to call at import time.
 """
 
 from __future__ import annotations

@@ -395,14 +395,14 @@ class TestGetReviewTypes:
 
     def test_returns_default_when_no_config(self, tmp_path):
         """Test returns default review type when config file doesn't exist."""
-        from infrastructure.core.config_loader import get_review_types
+        from infrastructure.core.config_queries import get_review_types
 
         result = get_review_types(tmp_path)
         assert result == ["executive_summary"]
 
     def test_returns_default_when_config_cant_load(self, tmp_path):
         """Test returns default review type when config can't be loaded."""
-        from infrastructure.core.config_loader import get_review_types
+        from infrastructure.core.config_queries import get_review_types
 
         config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
         config_file.parent.mkdir(parents=True)
@@ -415,7 +415,7 @@ class TestGetReviewTypes:
         """Test returns empty list when reviews are disabled."""
         import yaml
 
-        from infrastructure.core.config_loader import get_review_types
+        from infrastructure.core.config_queries import get_review_types
 
         config = {
             "llm": {
@@ -437,7 +437,7 @@ class TestGetReviewTypes:
         """Test returns default review type when no llm section in config."""
         import yaml
 
-        from infrastructure.core.config_loader import get_review_types
+        from infrastructure.core.config_queries import get_review_types
 
         config = {"paper": {"title": "Test"}}
         config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
@@ -452,7 +452,7 @@ class TestGetReviewTypes:
         """Test returns default review type when no reviews section in config."""
         import yaml
 
-        from infrastructure.core.config_loader import get_review_types
+        from infrastructure.core.config_queries import get_review_types
 
         config = {"llm": {"translations": {"enabled": True, "languages": ["zh"]}}}
         config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
@@ -467,7 +467,7 @@ class TestGetReviewTypes:
         """Test returns review type list when reviews are enabled."""
         import yaml
 
-        from infrastructure.core.config_loader import get_review_types
+        from infrastructure.core.config_queries import get_review_types
 
         config = {
             "llm": {
@@ -489,7 +489,7 @@ class TestGetReviewTypes:
         """Test returns single review type when only one configured."""
         import yaml
 
-        from infrastructure.core.config_loader import get_review_types
+        from infrastructure.core.config_queries import get_review_types
 
         config = {"llm": {"reviews": {"enabled": True, "types": ["executive_summary"]}}}
         config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
@@ -504,7 +504,7 @@ class TestGetReviewTypes:
         """Test returns default review type when types list is empty."""
         import yaml
 
-        from infrastructure.core.config_loader import get_review_types
+        from infrastructure.core.config_queries import get_review_types
 
         config = {"llm": {"reviews": {"enabled": True, "types": []}}}
         config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
@@ -521,7 +521,7 @@ class TestGetReviewTypes:
 
         import yaml
 
-        from infrastructure.core.config_loader import get_review_types
+        from infrastructure.core.config_queries import get_review_types
 
         # Capture warnings
         with tmp_path.joinpath("test.log").open("w") as log_file:
@@ -557,7 +557,7 @@ class TestGetReviewTypes:
         """Test returns default review type when all configured types are invalid."""
         import yaml
 
-        from infrastructure.core.config_loader import get_review_types
+        from infrastructure.core.config_queries import get_review_types
 
         config = {
             "llm": {
@@ -579,7 +579,7 @@ class TestGetReviewTypes:
         """Test returns default review type when types is not a list."""
         import yaml
 
-        from infrastructure.core.config_loader import get_review_types
+        from infrastructure.core.config_queries import get_review_types
 
         config = {
             "llm": {
@@ -601,7 +601,7 @@ class TestGetReviewTypes:
         """Test returns all valid review types when all are configured."""
         import yaml
 
-        from infrastructure.core.config_loader import get_review_types
+        from infrastructure.core.config_queries import get_review_types
 
         config = {
             "llm": {

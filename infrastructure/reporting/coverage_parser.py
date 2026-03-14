@@ -16,7 +16,7 @@ from pathlib import Path
 
 from infrastructure.core.environment import get_python_command
 from infrastructure.core.logging_utils import get_logger
-from infrastructure.core.config_loader import get_testing_config
+from infrastructure.core.config_queries import get_testing_config
 
 logger = get_logger(__name__)
 

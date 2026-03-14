@@ -11,7 +11,7 @@ from infrastructure.core.logging_utils import (
     log_success,
     log_progress,
 )
-from infrastructure.core.config_loader import get_translation_languages, get_review_types
+from infrastructure.core.config_queries import get_translation_languages, get_review_types
 from infrastructure.llm.templates.manuscript import TRANSLATION_LANGUAGES
 from infrastructure.llm.review.io import (
     save_review_outputs,

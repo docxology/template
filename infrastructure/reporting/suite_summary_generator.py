@@ -11,7 +11,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, TypedDict
 
-from infrastructure.core.config_loader import get_testing_config
+from infrastructure.core.config_queries import get_testing_config
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.project.discovery import discover_projects
 

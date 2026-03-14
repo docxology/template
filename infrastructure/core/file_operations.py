@@ -16,16 +16,17 @@ from infrastructure.core.logging_utils import get_logger, log_success
 
 logger = get_logger(__name__)
 
+# Output subdirectory name → stats dict key mapping (module-level constant).
+_SUBDIR_STATS_KEYS: dict[str, str] = {
+    "pdf": "pdf_files", "web": "web_files", "slides": "slides_files",
+    "figures": "figures_files", "data": "data_files", "reports": "reports_files",
+    "simulations": "simulations_files", "llm": "llm_files", "logs": "logs_files",
+}
+
 
 def _process_subdirectories(output_dir: Path, stats: dict[str, Any], files_list: list[dict[str, Any]]) -> None:
     """Process output subdirectories, verifying contents and updating stats."""
-    subdirs = {
-        "pdf": "pdf_files", "web": "web_files", "slides": "slides_files",
-        "figures": "figures_files", "data": "data_files", "reports": "reports_files",
-        "simulations": "simulations_files", "llm": "llm_files", "logs": "logs_files",
-    }
-
-    for subdir_name, stats_key in subdirs.items():
+    for subdir_name, stats_key in _SUBDIR_STATS_KEYS.items():
         subdir = output_dir / subdir_name
         if subdir.exists():
             all_items = list(subdir.glob("**/*"))
