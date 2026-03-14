@@ -6,7 +6,10 @@ import os
 import re
 import subprocess
 import time
-from typing import Any
+from typing import Any, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from infrastructure.llm.templates.base import ResearchTemplate
 from pathlib import Path
 
 from infrastructure.core.logging_utils import (
@@ -551,7 +554,7 @@ def generate_review_with_metrics(
     text: str,
     review_type: str,
     review_name: str,
-    template_class: type[Any],
+    template_class: type[ResearchTemplate],
     model_name: str = "",
     temperature: float = 0.3,
     max_tokens: int | None = None,

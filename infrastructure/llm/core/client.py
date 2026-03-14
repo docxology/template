@@ -16,7 +16,7 @@ import time as time_module
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Callable, Iterator, TypeVar
+from typing import Any, Callable, Iterator, TypeVar, cast
 
 _T = TypeVar("_T")
 
@@ -424,15 +424,15 @@ class LLMClient:
 
         # Parse and validate JSON response
         try:
-            parsed = json.loads(response_text)
-            return parsed  # type: ignore
+            parsed = cast(dict[str, Any], json.loads(response_text))
+            return parsed
         except json.JSONDecodeError as e:
             # Try to extract JSON if wrapped
             if "{" in response_text and "}" in response_text:
                 start = response_text.index("{")
                 end = response_text.rindex("}") + 1
                 try:
-                    parsed = json.loads(response_text[start:end])
+                    parsed = cast(dict[str, Any], json.loads(response_text[start:end]))
                     logger.warning(
                         "Structured response required JSON extraction (wrapped in text)",
                         extra={
@@ -441,7 +441,7 @@ class LLMClient:
                             "original_length": len(response_text),
                         },
                     )
-                    return parsed  # type: ignore
+                    return parsed
                 except json.JSONDecodeError as e:
                     logger.error(
                         "Failed to parse structured response as JSON",
