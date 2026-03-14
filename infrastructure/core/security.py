@@ -111,7 +111,7 @@ class SecurityValidator:
         path_obj = Path(path)
 
         # Check for directory traversal
-        if ".." in str(path) or path_obj.is_absolute():
+        if ".." in str(path):
             raise SecurityViolation("Directory traversal detected")
 
         # Resolve path to check for symlinks

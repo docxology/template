@@ -607,7 +607,7 @@ def generate_review_with_metrics(
             if is_valid:
                 break
             elif attempt == max_retries:
-                response = best_response
+                response = best_response or response
 
         except Exception as e:  # noqa: BLE001 — intentional: retry loop must continue on any LLM client failure
             if attempt < max_retries:
