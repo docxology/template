@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>04_results</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h1 id="results">Results</h1>
+<p>The Docxology Template was evaluated through a multi-project pipeline
+execution, measuring test coverage, pipeline timing, output integrity,
+and steganographic performance across three heterogeneous exemplar
+projects.</p>
+<h2 id="multi-project-pipeline-execution">Multi-Project Pipeline
+Execution</h2>
+<p>All three projects were executed through the full eight-stage
+pipeline using the <code>run.sh</code> interactive orchestrator with the
+“all projects core (fast)” configuration, which skips infrastructure
+tests and LLM review to isolate project-level performance.</p>
+<table>
+<thead>
+<tr>
+<th>Project</th>
+<th>Stages</th>
+<th>Duration</th>
+<th>Tests</th>
+<th>Coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>code_project</code></td>
+<td>7</td>
+<td>43.4s</td>
+<td>58/58</td>
+<td>96.6%</td>
+</tr>
+<tr>
+<td><code>cognitive_case_diagrams</code></td>
+<td>7</td>
+<td>56.0s</td>
+<td>257/257</td>
+<td>~96%</td>
+</tr>
+<tr>
+<td><code>template</code></td>
+<td>7</td>
+<td>22.6s</td>
+<td>36/36</td>
+<td>90%+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Overall success rate</strong>: 100.0% (3/3 projects)
+<strong>Total pipeline duration</strong>: 121.9s <strong>Average per
+project</strong>: 40.6s</p>
+<p>The <code>cognitive_case_diagrams</code> project, with its 257 tests
+and 25+ programmatically generated figures via 17 DisCoPy renderers,
+represents the most computationally intensive exemplar—yet completes in
+under one minute.</p>
+<h2 id="infrastructure-test-suite">Infrastructure Test Suite</h2>
+<p>The infrastructure layer is validated by a separate test suite of
+significant scale:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Test files</td>
+<td>148</td>
+</tr>
+<tr>
+<td>Total tests</td>
+<td>3,053</td>
+</tr>
+<tr>
+<td>Infrastructure coverage threshold</td>
+<td>60% (achieved: 83%+)</td>
+</tr>
+<tr>
+<td>Zero-mock violations</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Real filesystem operations</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Real subprocess invocations</td>
+<td>✓</td>
+</tr>
+</tbody>
+</table>
+<p>This test suite exercises all ten infrastructure modules, including
+the rendering pipeline (Pandoc/XeLaTeX integration), steganographic
+operations (alpha-channel overlay, QR injection), and LLM client
+interactions (real HTTP calls to Ollama).</p>
+<h2 id="infrastructure-module-inventory">Infrastructure Module
+Inventory</h2>
+<p>The introspection module (<code>template.introspection</code>)
+programmatically enumerates the infrastructure layer, confirming the
+following module distribution:</p>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 20%" />
+<col style="width: 23%" />
+<col style="width: 23%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>Module</th>
+<th style="text-align: center;">Python Files</th>
+<th style="text-align: center;">Has AGENTS.md</th>
+<th style="text-align: center;">Has README.md</th>
+<th>Key Exports</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>core</code></td>
+<td style="text-align: center;">28</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td><code>get_logger</code>, <code>load_config</code>,
+<code>TemplateError</code></td>
+</tr>
+<tr>
+<td><code>documentation</code></td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td><code>FigureManager</code>, <code>generate_glossary</code></td>
+</tr>
+<tr>
+<td><code>llm</code></td>
+<td style="text-align: center;">30</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>LLM review, literature search, translation</td>
+</tr>
+<tr>
+<td><code>project</code></td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td><code>_discover_project</code>, workspace management</td>
+</tr>
+<tr>
+<td><code>publishing</code></td>
+<td style="text-align: center;">9</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>Citation generation (APA, BibTeX, MLA), Zenodo</td>
+</tr>
+<tr>
+<td><code>rendering</code></td>
+<td style="text-align: center;">12</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>PDF rendering, Pandoc filters, HTML reports</td>
+</tr>
+<tr>
+<td><code>reporting</code></td>
+<td style="text-align: center;">14</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>Coverage parsing, executive reports</td>
+</tr>
+<tr>
+<td><code>scientific</code></td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td><code>check_numerical_stability</code>,
+<code>benchmark_function</code></td>
+</tr>
+<tr>
+<td><code>steganography</code></td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>Metadata injection, QR overlays, hashing</td>
+</tr>
+<tr>
+<td><code>validation</code></td>
+<td style="text-align: center;">22</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>PDF validation, Markdown checking, CLI</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td style="text-align: center;"><strong>137</strong></td>
+<td style="text-align: center;"><strong>10/10</strong></td>
+<td style="text-align: center;"><strong>10/10</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>All ten modules have complete documentation coverage (both
+<code>AGENTS.md</code> and <code>README.md</code>), confirming the
+Documentation Duality standard.</p>
+<h2 id="pipeline-stage-execution">Pipeline Stage Execution</h2>
+<p>The eight pipeline stages execute sequentially with strict error
+propagation:</p>
+<table>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 18%" />
+<col style="width: 34%" />
+<col style="width: 31%" />
+</colgroup>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Script</th>
+<th>Responsibility</th>
+<th>Failure Mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>00</td>
+<td><code>00_setup_environment.py</code></td>
+<td>Environment validation</td>
+<td>Hard fail</td>
+</tr>
+<tr>
+<td>01</td>
+<td><code>01_run_tests.py</code></td>
+<td>Test execution + coverage</td>
+<td>Configurable tolerance</td>
+</tr>
+<tr>
+<td>02</td>
+<td><code>02_run_analysis.py</code></td>
+<td>Script invocation</td>
+<td>Hard fail</td>
+</tr>
+<tr>
+<td>03</td>
+<td><code>03_render_pdf.py</code></td>
+<td>Pandoc + XeLaTeX</td>
+<td>Hard fail</td>
+</tr>
+<tr>
+<td>04</td>
+<td><code>04_validate_output.py</code></td>
+<td>PDF integrity</td>
+<td>Warning + report</td>
+</tr>
+<tr>
+<td>05</td>
+<td><code>05_copy_outputs.py</code></td>
+<td>Output organization</td>
+<td>Soft fail</td>
+</tr>
+<tr>
+<td>06</td>
+<td><code>06_llm_review.py</code></td>
+<td>LLM-assisted review</td>
+<td>Skippable</td>
+</tr>
+<tr>
+<td>07</td>
+<td><code>07_generate_executive_report.py</code></td>
+<td>Report aggregation</td>
+<td>Soft fail</td>
+</tr>
+</tbody>
+</table>
+<h2 id="steganographic-performance">Steganographic Performance</h2>
+<p>The steganography subsystem
+(<code>infrastructure.steganography</code>) was benchmarked across all
+three project PDFs:</p>
+<table>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 11%" />
+<col style="width: 16%" />
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 11%" />
+</colgroup>
+<thead>
+<tr>
+<th>Project</th>
+<th style="text-align: center;">Pages</th>
+<th style="text-align: center;">Metadata</th>
+<th style="text-align: center;">SHA-256</th>
+<th style="text-align: center;">Overlay</th>
+<th style="text-align: center;">QR Code</th>
+<th style="text-align: center;">Total</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>code_project</code></td>
+<td style="text-align: center;">20</td>
+<td style="text-align: center;">&lt; 0.3s</td>
+<td style="text-align: center;">&lt; 0.05s</td>
+<td style="text-align: center;">&lt; 0.8s</td>
+<td style="text-align: center;">&lt; 0.4s</td>
+<td style="text-align: center;">&lt; 1.5s</td>
+</tr>
+<tr>
+<td><code>cognitive_case_diagrams</code></td>
+<td style="text-align: center;">77</td>
+<td style="text-align: center;">&lt; 0.3s</td>
+<td style="text-align: center;">&lt; 0.05s</td>
+<td style="text-align: center;">&lt; 2.0s</td>
+<td style="text-align: center;">&lt; 0.4s</td>
+<td style="text-align: center;">&lt; 2.8s</td>
+</tr>
+<tr>
+<td><code>template</code></td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">&lt; 0.3s</td>
+<td style="text-align: center;">&lt; 0.05s</td>
+<td style="text-align: center;">&lt; 0.3s</td>
+<td style="text-align: center;">&lt; 0.4s</td>
+<td style="text-align: center;">&lt; 1.0s</td>
+</tr>
+</tbody>
+</table>
+<p>The steganographic watermark survives standard PDF operations
+(viewing, printing) but is detectable through pixel-level analysis of
+the alpha channel. Performance scales linearly with page count,
+dominated by the alpha-channel overlay phase.</p>
+<h2 id="self-referential-analysis">Self-Referential Analysis</h2>
+<p>This manuscript is itself a product of the template pipeline,
+demonstrating its self-referential capability. The <code>template</code>
+project’s <code>src/template/introspection.py</code> module
+programmatically analyzes the repository and generates three
+architecture figures:</p>
+<p><img src="figures/architecture_overview.png"
+alt="Two-Layer Architecture Overview" /> <em>Figure 1: The Two-Layer
+Architecture separating infrastructure modules from project
+workspaces.</em></p>
+<p><img src="figures/pipeline_stages.png" alt="Pipeline Stage Flow" />
+<em>Figure 2: The eight-stage build pipeline from environment setup
+through executive reporting.</em></p>
+<p><img src="figures/module_inventory.png"
+alt="Infrastructure Module Inventory" /> <em>Figure 3: Python file count
+per infrastructure module, with documentation status
+indicators.</em></p>
+<h2 id="comparative-feature-analysis">Comparative Feature Analysis</h2>
+<p>To contextualize the Docxology Template’s contributions, we compare
+its feature set against established tools:</p>
+<table>
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 14%" />
+<col style="width: 7%" />
+<col style="width: 11%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>Feature</th>
+<th style="text-align: center;">Docxology</th>
+<th style="text-align: center;">Snakemake</th>
+<th style="text-align: center;">Nextflow</th>
+<th style="text-align: center;">CWL</th>
+<th style="text-align: center;">Quarto</th>
+<th style="text-align: center;">Jupyter Book</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pipeline orchestration</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>Manuscript rendering</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Testing enforcement</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>Coverage thresholds</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>Cryptographic provenance</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>Multi-project management</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>AI-agent documentation</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>Interactive TUI</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>Zero-mock policy</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+</tr>
+</tbody>
+</table>
+<p>The Docxology Template is, to our knowledge, the only open-source
+system that integrates all nine capabilities within a single cohesive
+architecture.</p>
+<h2 id="test-quality-metrics">Test Quality Metrics</h2>
+<p>The Zero-Mock testing policy produces measurably higher-fidelity
+tests:</p>
+<ul>
+<li><strong>Zero mock objects</strong> across all test suites (verified
+by automated scanning for <code>unittest.mock</code>,
+<code>MagicMock</code>, and <code>patch</code> imports).</li>
+<li><strong>Real filesystem operations</strong>: Tests create, read,
+validate, and delete actual files in temporary directories.</li>
+<li><strong>Real subprocess calls</strong>: Pipeline stage tests invoke
+actual <code>pytest</code>, <code>pandoc</code>, and
+<code>xelatex</code> subprocesses.</li>
+<li><strong>Marker-based skip logic</strong>: Tests requiring optional
+services (Ollama, network) use <code>@pytest.mark.requires_ollama</code>
+for graceful degradation.</li>
+<li><strong>Categorical axiom verification</strong>: The
+<code>cognitive_case_diagrams</code> project tests validate identity
+morphisms, composition, weight multiplication, and the triangle
+inequality on real enriched category objects.</li>
+</ul>
+</body>
+</html>

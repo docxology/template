@@ -1,0 +1,3061 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>_combined_manuscript</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+
+<style>
+body {
+  font-family: 'Liberation Serif', 'Times New Roman', serif;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f8f8f8;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #2c3e50;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 5px;
+}
+
+code {
+  background-color: #ecf0f1;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Liberation Mono', 'Courier New', monospace;
+}
+
+pre {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  padding: 15px;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 20px 0;
+}
+
+th, td {
+  border: 1px solid #bdc3c7;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #3498db;
+  color: white;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #bdc3c7;
+  border-radius: 5px;
+  margin: 20px 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+a {
+  color: #2980b9;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.toc {
+  background-color: #ecf0f1;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 30px;
+}
+
+.toc a {
+  color: #2c3e50;
+}
+
+.math {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 1.1em;
+}
+
+.figure {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.figure img {
+  max-width: 100%;
+  height: auto;
+  border: 2px solid #3498db;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.figure-caption {
+  font-style: italic;
+  color: #7f8c8d;
+  margin-top: 10px;
+  text-align: center;
+}
+
+</style>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#abstract" id="toc-abstract"><span
+class="toc-section-number">1</span> Abstract</a></li>
+<li><a href="#introduction" id="toc-introduction"><span
+class="toc-section-number">2</span> Introduction</a>
+<ul>
+<li><a href="#the-reproducibility-crisis-and-its-structural-roots"
+id="toc-the-reproducibility-crisis-and-its-structural-roots"><span
+class="toc-section-number">2.1</span> The Reproducibility Crisis and Its
+Structural Roots</a></li>
+<li><a href="#related-work" id="toc-related-work"><span
+class="toc-section-number">2.2</span> Related Work</a>
+<ul>
+<li><a href="#workflow-managers" id="toc-workflow-managers"><span
+class="toc-section-number">2.2.1</span> Workflow Managers</a></li>
+<li><a href="#literate-programming-and-publication-tools"
+id="toc-literate-programming-and-publication-tools"><span
+class="toc-section-number">2.2.2</span> Literate Programming and
+Publication Tools</a></li>
+<li><a href="#containerization-and-environment-capture"
+id="toc-containerization-and-environment-capture"><span
+class="toc-section-number">2.2.3</span> Containerization and Environment
+Capture</a></li>
+<li><a href="#best-practice-frameworks-and-data-standards"
+id="toc-best-practice-frameworks-and-data-standards"><span
+class="toc-section-number">2.2.4</span> Best-Practice Frameworks and
+Data Standards</a></li>
+<li><a href="#the-gap" id="toc-the-gap"><span
+class="toc-section-number">2.2.5</span> The Gap</a></li>
+</ul></li>
+<li><a href="#the-docxology-template-an-integrated-solution"
+id="toc-the-docxology-template-an-integrated-solution"><span
+class="toc-section-number">2.3</span> The Docxology Template: An
+Integrated Solution</a></li>
+<li><a href="#scope-and-contributions"
+id="toc-scope-and-contributions"><span
+class="toc-section-number">2.4</span> Scope and Contributions</a></li>
+<li><a href="#paper-organization" id="toc-paper-organization"><span
+class="toc-section-number">2.5</span> Paper Organization</a></li>
+</ul></li>
+<li><a href="#methods" id="toc-methods"><span
+class="toc-section-number">3</span> Methods</a>
+<ul>
+<li><a href="#the-two-layer-architecture"
+id="toc-the-two-layer-architecture"><span
+class="toc-section-number">3.1</span> The Two-Layer
+Architecture</a></li>
+<li><a href="#the-standalone-project-paradigm"
+id="toc-the-standalone-project-paradigm"><span
+class="toc-section-number">3.2</span> The Standalone Project
+Paradigm</a></li>
+<li><a href="#the-thin-orchestrator-pattern"
+id="toc-the-thin-orchestrator-pattern"><span
+class="toc-section-number">3.3</span> The Thin Orchestrator
+Pattern</a></li>
+<li><a href="#the-eight-stage-pipeline"
+id="toc-the-eight-stage-pipeline"><span
+class="toc-section-number">3.4</span> The Eight-Stage Pipeline</a>
+<ul>
+<li><a href="#stage-00-environment-setup-00_setup_environment.py"
+id="toc-stage-00-environment-setup-00_setup_environment.py"><span
+class="toc-section-number">3.4.1</span> Stage 00: Environment Setup
+(<code>00_setup_environment.py</code>)</a></li>
+<li><a href="#stage-01-test-execution-01_run_tests.py"
+id="toc-stage-01-test-execution-01_run_tests.py"><span
+class="toc-section-number">3.4.2</span> Stage 01: Test Execution
+(<code>01_run_tests.py</code>)</a></li>
+<li><a href="#stage-02-analysis-execution-02_run_analysis.py"
+id="toc-stage-02-analysis-execution-02_run_analysis.py"><span
+class="toc-section-number">3.4.3</span> Stage 02: Analysis Execution
+(<code>02_run_analysis.py</code>)</a></li>
+<li><a href="#stage-03-pdf-rendering-03_render_pdf.py"
+id="toc-stage-03-pdf-rendering-03_render_pdf.py"><span
+class="toc-section-number">3.4.4</span> Stage 03: PDF Rendering
+(<code>03_render_pdf.py</code>)</a></li>
+<li><a href="#stage-04-output-validation-04_validate_output.py"
+id="toc-stage-04-output-validation-04_validate_output.py"><span
+class="toc-section-number">3.4.5</span> Stage 04: Output Validation
+(<code>04_validate_output.py</code>)</a></li>
+<li><a href="#stage-05-output-organization-05_copy_outputs.py"
+id="toc-stage-05-output-organization-05_copy_outputs.py"><span
+class="toc-section-number">3.4.6</span> Stage 05: Output Organization
+(<code>05_copy_outputs.py</code>)</a></li>
+<li><a href="#stage-06-llm-review-06_llm_review.py"
+id="toc-stage-06-llm-review-06_llm_review.py"><span
+class="toc-section-number">3.4.7</span> Stage 06: LLM Review
+(<code>06_llm_review.py</code>)</a></li>
+<li><a href="#stage-07-executive-report-07_generate_executive_report.py"
+id="toc-stage-07-executive-report-07_generate_executive_report.py"><span
+class="toc-section-number">3.4.8</span> Stage 07: Executive Report
+(<code>07_generate_executive_report.py</code>)</a></li>
+</ul></li>
+<li><a href="#the-interactive-orchestrators"
+id="toc-the-interactive-orchestrators"><span
+class="toc-section-number">3.5</span> The Interactive Orchestrators</a>
+<ul>
+<li><a href="#run.sh-the-standard-orchestrator"
+id="toc-run.sh-the-standard-orchestrator"><span
+class="toc-section-number">3.5.1</span> <code>run.sh</code>: The
+Standard Orchestrator</a></li>
+<li><a href="#secure_run.sh-the-steganographic-superset"
+id="toc-secure_run.sh-the-steganographic-superset"><span
+class="toc-section-number">3.5.2</span> <code>secure_run.sh</code>: The
+Steganographic Superset</a></li>
+</ul></li>
+<li><a href="#documentation-duality-and-ai-collaboration"
+id="toc-documentation-duality-and-ai-collaboration"><span
+class="toc-section-number">3.6</span> Documentation Duality and AI
+Collaboration</a>
+<ul>
+<li><a href="#fair-alignment" id="toc-fair-alignment"><span
+class="toc-section-number">3.6.1</span> FAIR Alignment</a></li>
+</ul></li>
+<li><a href="#quality-assurance" id="toc-quality-assurance"><span
+class="toc-section-number">3.7</span> Quality Assurance</a>
+<ul>
+<li><a href="#zero-mock-testing-policy"
+id="toc-zero-mock-testing-policy"><span
+class="toc-section-number">3.7.1</span> Zero-Mock Testing
+Policy</a></li>
+<li><a href="#visualization-standards"
+id="toc-visualization-standards"><span
+class="toc-section-number">3.7.2</span> Visualization Standards</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#results" id="toc-results"><span
+class="toc-section-number">4</span> Results</a>
+<ul>
+<li><a href="#multi-project-pipeline-execution"
+id="toc-multi-project-pipeline-execution"><span
+class="toc-section-number">4.1</span> Multi-Project Pipeline
+Execution</a></li>
+<li><a href="#infrastructure-test-suite"
+id="toc-infrastructure-test-suite"><span
+class="toc-section-number">4.2</span> Infrastructure Test Suite</a></li>
+<li><a href="#infrastructure-module-inventory"
+id="toc-infrastructure-module-inventory"><span
+class="toc-section-number">4.3</span> Infrastructure Module
+Inventory</a></li>
+<li><a href="#pipeline-stage-execution"
+id="toc-pipeline-stage-execution"><span
+class="toc-section-number">4.4</span> Pipeline Stage Execution</a></li>
+<li><a href="#steganographic-performance"
+id="toc-steganographic-performance"><span
+class="toc-section-number">4.5</span> Steganographic
+Performance</a></li>
+<li><a href="#self-referential-analysis"
+id="toc-self-referential-analysis"><span
+class="toc-section-number">4.6</span> Self-Referential Analysis</a></li>
+<li><a href="#comparative-feature-analysis"
+id="toc-comparative-feature-analysis"><span
+class="toc-section-number">4.7</span> Comparative Feature
+Analysis</a></li>
+<li><a href="#test-quality-metrics" id="toc-test-quality-metrics"><span
+class="toc-section-number">4.8</span> Test Quality Metrics</a></li>
+</ul></li>
+<li><a href="#discussion" id="toc-discussion"><span
+class="toc-section-number">5</span> Discussion</a>
+<ul>
+<li><a href="#the-zero-mock-tradeoff"
+id="toc-the-zero-mock-tradeoff"><span
+class="toc-section-number">5.1</span> The Zero-Mock Tradeoff</a></li>
+<li><a href="#scalability-from-1-to-n-projects"
+id="toc-scalability-from-1-to-n-projects"><span
+class="toc-section-number">5.2</span> Scalability: From 1 to N
+Projects</a></li>
+<li><a href="#comparison-to-existing-tools"
+id="toc-comparison-to-existing-tools"><span
+class="toc-section-number">5.3</span> Comparison to Existing
+Tools</a></li>
+<li><a href="#the-ai-collaboration-model"
+id="toc-the-ai-collaboration-model"><span
+class="toc-section-number">5.4</span> The AI Collaboration
+Model</a></li>
+<li><a href="#the-learning-curve" id="toc-the-learning-curve"><span
+class="toc-section-number">5.5</span> The Learning Curve</a></li>
+<li><a href="#limitations" id="toc-limitations"><span
+class="toc-section-number">5.6</span> Limitations</a></li>
+<li><a href="#future-directions" id="toc-future-directions"><span
+class="toc-section-number">5.7</span> Future Directions</a></li>
+</ul></li>
+<li><a href="#conclusion" id="toc-conclusion"><span
+class="toc-section-number">6</span> Conclusion</a></li>
+<li><a href="#infrastructure-module-reference"
+id="toc-infrastructure-module-reference"><span
+class="toc-section-number">7</span> Infrastructure Module Reference</a>
+<ul>
+<li><a href="#infrastructure.core-28-modules"
+id="toc-infrastructure.core-28-modules"><span
+class="toc-section-number">7.1</span> <code>infrastructure.core</code>
+(28 modules)</a></li>
+<li><a href="#infrastructure.documentation-6-modules"
+id="toc-infrastructure.documentation-6-modules"><span
+class="toc-section-number">7.2</span>
+<code>infrastructure.documentation</code> (6 modules)</a></li>
+<li><a href="#infrastructure.llm-30-modules"
+id="toc-infrastructure.llm-30-modules"><span
+class="toc-section-number">7.3</span> <code>infrastructure.llm</code>
+(30 modules)</a></li>
+<li><a href="#infrastructure.project-2-modules"
+id="toc-infrastructure.project-2-modules"><span
+class="toc-section-number">7.4</span>
+<code>infrastructure.project</code> (2 modules)</a></li>
+<li><a href="#infrastructure.publishing-9-modules"
+id="toc-infrastructure.publishing-9-modules"><span
+class="toc-section-number">7.5</span>
+<code>infrastructure.publishing</code> (9 modules)</a></li>
+<li><a href="#infrastructure.rendering-12-modules"
+id="toc-infrastructure.rendering-12-modules"><span
+class="toc-section-number">7.6</span>
+<code>infrastructure.rendering</code> (12 modules)</a></li>
+<li><a href="#infrastructure.reporting-14-modules"
+id="toc-infrastructure.reporting-14-modules"><span
+class="toc-section-number">7.7</span>
+<code>infrastructure.reporting</code> (14 modules)</a></li>
+<li><a href="#infrastructure.scientific-6-modules"
+id="toc-infrastructure.scientific-6-modules"><span
+class="toc-section-number">7.8</span>
+<code>infrastructure.scientific</code> (6 modules)</a></li>
+<li><a href="#infrastructure.steganography-8-modules"
+id="toc-infrastructure.steganography-8-modules"><span
+class="toc-section-number">7.9</span>
+<code>infrastructure.steganography</code> (8 modules)</a></li>
+<li><a href="#infrastructure.validation-22-modules"
+id="toc-infrastructure.validation-22-modules"><span
+class="toc-section-number">7.10</span>
+<code>infrastructure.validation</code> (22 modules)</a></li>
+</ul></li>
+<li><a href="#security-and-provenance"
+id="toc-security-and-provenance"><span
+class="toc-section-number">8</span> Security and Provenance</a>
+<ul>
+<li><a href="#threat-model" id="toc-threat-model"><span
+class="toc-section-number">8.1</span> Threat Model</a></li>
+<li><a href="#steganographic-layers"
+id="toc-steganographic-layers"><span
+class="toc-section-number">8.2</span> Steganographic Layers</a>
+<ul>
+<li><a href="#layer-1-pdf-metadata-injection"
+id="toc-layer-1-pdf-metadata-injection"><span
+class="toc-section-number">8.2.1</span> Layer 1: PDF Metadata
+Injection</a></li>
+<li><a href="#layer-2-cryptographic-hashing"
+id="toc-layer-2-cryptographic-hashing"><span
+class="toc-section-number">8.2.2</span> Layer 2: Cryptographic
+Hashing</a></li>
+<li><a href="#layer-3-alpha-channel-text-overlay"
+id="toc-layer-3-alpha-channel-text-overlay"><span
+class="toc-section-number">8.2.3</span> Layer 3: Alpha-Channel Text
+Overlay</a></li>
+<li><a href="#layer-4-qr-code-injection"
+id="toc-layer-4-qr-code-injection"><span
+class="toc-section-number">8.2.4</span> Layer 4: QR Code
+Injection</a></li>
+</ul></li>
+<li><a href="#the-secure_run.sh-orchestrator"
+id="toc-the-secure_run.sh-orchestrator"><span
+class="toc-section-number">8.3</span> The <code>secure_run.sh</code>
+Orchestrator</a></li>
+<li><a href="#tamper-detection" id="toc-tamper-detection"><span
+class="toc-section-number">8.4</span> Tamper Detection</a></li>
+<li><a href="#limitations-1" id="toc-limitations-1"><span
+class="toc-section-number">8.5</span> Limitations</a></li>
+<li><a href="#relationship-to-software-supply-chain-integrity"
+id="toc-relationship-to-software-supply-chain-integrity"><span
+class="toc-section-number">8.6</span> Relationship to Software Supply
+Chain Integrity</a></li>
+<li><a href="#relationship-to-fair-and-formal-provenance-standards"
+id="toc-relationship-to-fair-and-formal-provenance-standards"><span
+class="toc-section-number">8.7</span> Relationship to FAIR and Formal
+Provenance Standards</a></li>
+</ul></li>
+<li><a href="#appendices" id="toc-appendices"><span
+class="toc-section-number">9</span> Appendices</a>
+<ul>
+<li><a href="#appendix-a-pipeline-stage-reference"
+id="toc-appendix-a-pipeline-stage-reference"><span
+class="toc-section-number">9.1</span> Appendix A: Pipeline Stage
+Reference</a></li>
+<li><a href="#appendix-b-configuration-reference-config.yaml"
+id="toc-appendix-b-configuration-reference-config.yaml"><span
+class="toc-section-number">9.2</span> Appendix B: Configuration
+Reference (<code>config.yaml</code>)</a></li>
+<li><a href="#appendix-c-repository-directory-structure"
+id="toc-appendix-c-repository-directory-structure"><span
+class="toc-section-number">9.3</span> Appendix C: Repository Directory
+Structure</a></li>
+<li><a href="#appendix-d-exemplar-project-summary"
+id="toc-appendix-d-exemplar-project-summary"><span
+class="toc-section-number">9.4</span> Appendix D: Exemplar Project
+Summary</a></li>
+<li><a href="#appendix-e-documentation-inventory"
+id="toc-appendix-e-documentation-inventory"><span
+class="toc-section-number">9.5</span> Appendix E: Documentation
+Inventory</a></li>
+<li><a href="#appendix-f-comparative-tool-matrix"
+id="toc-appendix-f-comparative-tool-matrix"><span
+class="toc-section-number">9.6</span> Appendix F: Comparative Tool
+Matrix</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 data-number="1" id="abstract"><span
+class="header-section-number">1</span> Abstract</h1>
+<p>The Docxology Template is a modular, high-integrity research
+environment that unifies computational experimentation, academic
+manuscript production, and cryptographic provenance verification within
+a single reproducible pipeline. Built on a Two-Layer Architecture
+separating ten reusable infrastructure subpackages—totaling 137 Python
+modules and validated by over 3,000 infrastructure tests—from
+self-contained project workspaces, the system orchestrates an
+eight-stage build pipeline that progresses from environment sanitization
+through test execution, analysis script invocation, Pandoc/XeLaTeX
+rendering, SHA-256/512 hashing with alpha-channel steganographic
+watermarking, structural PDF validation, and LLM-assisted review to
+produce peer-review-ready manuscripts with embedded tamper-evident
+provenance. Unlike existing workflow managers (Snakemake, Nextflow, CWL)
+that focus on computational pipeline orchestration, and literate
+programming tools (Quarto, Jupyter Book, R Markdown) that focus on
+document rendering, the Docxology Template integrates both concerns with
+automated testing, documentation generation, and cryptographic
+provenance in a single coherent system. We enforce a Zero-Mock testing
+policy where pipeline advancement is contingent on 90% project-level and
+60% infrastructure-level coverage thresholds, using exclusively real
+filesystem operations, subprocess invocations, and network calls—no mock
+objects, no test doubles. A Documentation Duality standard equips every
+directory with both human-readable <code>README.md</code> files and
+machine-readable <code>AGENTS.md</code> files optimized for AI coding
+assistants, enabling a novel human–AI collaborative development model.
+We demonstrate the system’s scalability across three heterogeneous
+exemplar projects—a gradient descent optimization study (58 tests, 96.6%
+coverage), a categorical linguistics manuscript with 25+
+DisCoPy-generated figures (257 tests, ~96% coverage), and this
+self-referential architectural analysis (36 tests)—achieving 100%
+pipeline success rates. The Standalone Project Paradigm enables
+researchers to add arbitrarily many independent studies without
+modifying the infrastructure layer, while the Thin Orchestrator pattern
+ensures that all domain logic resides in testable <code>src/</code>
+modules and scripts serve only as stateless wiring between
+infrastructure services and project-specific code.</p>
+<hr />
+<h1 data-number="2" id="introduction"><span
+class="header-section-number">2</span> Introduction</h1>
+<h2 data-number="2.1"
+id="the-reproducibility-crisis-and-its-structural-roots"><span
+class="header-section-number">2.1</span> The Reproducibility Crisis and
+Its Structural Roots</h2>
+<p>The “reproducibility crisis” in computational and biological sciences
+is not merely a cultural failure but a structural one. When research
+papers are divorced from the code that generated their figures, when
+datasets are shared as unlabeled archives, and when build processes
+exist only as tribal knowledge in a graduate student’s shell history,
+the conditions for irreproducibility are baked into the workflow itself.
+A 2016 <em>Nature</em> survey of 1,576 researchers found that 70% had
+tried and failed to reproduce another scientist’s experiments, and more
+than half had failed to reproduce their own <span class="citation"
+data-cites="baker2016reproducibility">[@baker2016reproducibility]</span>.
+The economic cost is staggering: Freedman et al. estimate that the
+biomedical industry alone loses $28 billion annually to irreproducible
+preclinical research <span class="citation"
+data-cites="freedman2015economics">[@freedman2015economics]</span>.</p>
+<p>The root cause is fragmentation. A typical research project scatters
+its artifacts across disconnected tools: LaTeX editors for prose,
+Jupyter notebooks for analysis, ad-hoc shell scripts for figure
+generation, and manual copy-paste for integrating results into
+manuscripts. Each boundary between tools is a potential locus of
+desynchronization. The version of the figure in the PDF may not match
+the version of the code that ostensibly generated it. The test suite, if
+it exists at all, likely tests the code in isolation from the rendering
+pipeline. Peng <span class="citation"
+data-cites="peng2011reproducible">[@peng2011reproducible]</span> argues
+that reproducibility in computational science requires, at minimum, that
+the data and code underlying a published result be available for
+independent verification—yet the tools for enforcing this standard
+remain ad hoc. Indeed, even the terminology is fractured: Barba <span
+class="citation"
+data-cites="barba2018terminologies">[@barba2018terminologies]</span>
+documents how “reproducibility,” “replicability,” and “repeatability”
+carry conflicting definitions across disciplines, undermining
+cross-field standards.</p>
+<h2 data-number="2.2" id="related-work"><span
+class="header-section-number">2.2</span> Related Work</h2>
+<p>Gentleman and Temple Lang <span class="citation"
+data-cites="gentleman2007research">[@gentleman2007research]</span>
+introduced the concept of a <em>research compendium</em>—a single unit
+of scholarly communication bundling code, data, and narrative. This
+vision has driven two decades of tooling, which can be grouped into four
+categories: workflow managers, literate programming systems,
+containerization approaches, and best-practice frameworks.</p>
+<h3 data-number="2.2.1" id="workflow-managers"><span
+class="header-section-number">2.2.1</span> Workflow Managers</h3>
+<p><strong>Snakemake</strong> <span class="citation"
+data-cites="koster2012snakemake">[@koster2012snakemake]</span> uses a
+rule-based, Python-derived DSL to specify computational workflows as
+directed acyclic graphs of file-producing steps. It supports
+containerized execution via Conda and Singularity environments. However,
+Snakemake focuses exclusively on computational pipeline orchestration
+and does not integrate manuscript rendering, testing enforcement, or
+provenance watermarking.</p>
+<p><strong>Nextflow</strong> <span class="citation"
+data-cites="ditommaso2017nextflow">[@ditommaso2017nextflow]</span>
+employs a dataflow programming paradigm with native support for
+container-based execution across heterogeneous computing environments
+(local, SLURM, AWS). Like Snakemake, Nextflow excels at bioinformatics
+pipeline parallelism but does not address manuscript production,
+document integrity, or the testing–publication coupling that
+characterizes research reproducibility.</p>
+<p><strong>CWL</strong> (Common Workflow Language) <span
+class="citation" data-cites="amstutz2016cwl">[@amstutz2016cwl]</span>
+provides a portable, YAML-based standard for describing computational
+workflows and their dependencies. Its strength lies in interoperability
+across execution engines (cwltool, Toil, Arvados), but it requires
+external tooling for manuscript generation and offers no built-in
+testing or provenance framework.</p>
+<h3 data-number="2.2.2"
+id="literate-programming-and-publication-tools"><span
+class="header-section-number">2.2.2</span> Literate Programming and
+Publication Tools</h3>
+<p>Knuth’s literate programming <span class="citation"
+data-cites="knuth1984literate">[@knuth1984literate]</span> established
+the principle that programs should be authored as documents intended for
+human comprehension. Schulte et al. <span class="citation"
+data-cites="schulte2012multilanguage">[@schulte2012multilanguage]</span>
+extended this to multi-language computing environments (Org-mode),
+demonstrating that literate programming could span languages and output
+formats.</p>
+<p><strong>Quarto</strong> <span class="citation"
+data-cites="allaire2024quarto">[@allaire2024quarto]</span> extends the R
+Markdown tradition to support Python, Julia, and Observable, rendering
+to PDF, HTML, and Word. Quarto integrates code execution with document
+rendering, achieving a modern form of literate programming, but it does
+not enforce testing thresholds, manage multi-project repositories, or
+provide cryptographic provenance.</p>
+<p><strong>Jupyter Book</strong> <span class="citation"
+data-cites="kluyver2016jupyter">[@kluyver2016jupyter]</span> builds on
+Jupyter notebooks to produce publication-quality documents via Sphinx.
+While powerful for interactive exploration, Jupyter’s notebook format
+introduces execution-order fragility and does not naturally support the
+separation of logic from orchestration that characterizes maintainable
+research software.</p>
+<p><strong>R Markdown</strong> <span class="citation"
+data-cites="xie2015dynamic">[@xie2015dynamic]</span> pioneered
+knitr-based dynamic documents that weave code and prose. Its ecosystem
+is rich but R-centric, and it lacks the multi-project management,
+infrastructure testing, and provenance embedding that characterize the
+Docxology Template.</p>
+<h3 data-number="2.2.3"
+id="containerization-and-environment-capture"><span
+class="header-section-number">2.2.3</span> Containerization and
+Environment Capture</h3>
+<p><strong>Docker</strong> <span class="citation"
+data-cites="boettiger2015docker">[@boettiger2015docker]</span> addresses
+reproducibility at the environment level—packaging operating system,
+libraries, and code into portable containers. While Docker solves the
+“works on my machine” problem, containerization is complementary to, not
+a replacement for, the architectural concerns addressed here: Docker
+does not enforce testing, embed provenance, or manage multi-project
+manuscript workflows.</p>
+<h3 data-number="2.2.4"
+id="best-practice-frameworks-and-data-standards"><span
+class="header-section-number">2.2.4</span> Best-Practice Frameworks and
+Data Standards</h3>
+<p>Wilson et al. <span class="citation"
+data-cites="wilson2017good">[@wilson2017good]</span> define “good
+enough” practices for scientific computing, emphasizing version control,
+testing, and documentation. Sandve et al. <span class="citation"
+data-cites="sandve2013ten">[@sandve2013ten]</span> propose ten rules for
+reproducible computational research. Stodden et al. <span
+class="citation"
+data-cites="stodden2016enhancing">[@stodden2016enhancing]</span>
+advocate for enhanced computational method transparency. The FAIR
+principles <span class="citation"
+data-cites="wilkinson2016fair">[@wilkinson2016fair]</span>—Findable,
+Accessible, Interoperable, Reusable—establish a standard for data
+stewardship that has been widely adopted by funding agencies and
+journals. Barker et al. <span class="citation"
+data-cites="barker2022fair4rs">[@barker2022fair4rs]</span> extend these
+principles specifically to research software via the FAIR4RS initiative,
+recognizing that software has distinct requirements—executability,
+composability, and dependency management—that data-centric FAIR does not
+address. Garijo et al. <span class="citation"
+data-cites="garijo2024fairsoft">[@garijo2024fairsoft]</span>
+operationalize FAIR4RS through the FAIRsoft evaluator, an automated
+assessment framework that scores research software against 17+ quality
+indicators including executability, metadata richness, and documentation
+completeness. Nüst et al. <span class="citation"
+data-cites="nust2017containerization">[@nust2017containerization]</span>
+introduce the <em>executable research compendium</em> (ERC), extending
+Gentleman and Temple Lang’s compendium concept with containerized,
+interactive reproduction environments. The W3C PROV data model <span
+class="citation"
+data-cites="moreau2013provdm">[@moreau2013provdm]</span> provides a
+formal vocabulary for expressing provenance records, while in-toto <span
+class="citation"
+data-cites="torresarias2019intoto">[@torresarias2019intoto]</span>
+provides a framework for end-to-end software supply chain integrity
+verification. These frameworks articulate <em>what</em> reproducible
+research requires but do not provide integrated <em>how</em>—they lack
+the tooling, enforcement mechanisms, and architectural patterns that
+translate standards into practice.</p>
+<h3 data-number="2.2.5" id="the-gap"><span
+class="header-section-number">2.2.5</span> The Gap</h3>
+<p>Despite advances in FAIR4RS principles <span class="citation"
+data-cites="barker2022fair4rs">[@barker2022fair4rs]</span> and automated
+FAIR software assessment <span class="citation"
+data-cites="garijo2024fairsoft">[@garijo2024fairsoft]</span>, no
+existing system integrates all six concerns into a single enforced
+pipeline: (1) end-to-end pipeline orchestration with testing
+enforcement, (2) multi-format manuscript rendering, (3) cryptographic
+provenance embedding, (4) multi-project repository management, (5)
+FAIR-aligned software stewardship, and (6) AI-agent collaboration via
+structured documentation. FAIR4RS provides the vocabulary; the Docxology
+Template provides the enforcement mechanism.</p>
+<h2 data-number="2.3"
+id="the-docxology-template-an-integrated-solution"><span
+class="header-section-number">2.3</span> The Docxology Template: An
+Integrated Solution</h2>
+<p>The <em>Docxology Template</em> was conceived as a structural
+antidote to this fragmentation. Rather than adding reproducibility as an
+afterthought—a Docker container wrapping an already-disjointed workflow
+<span class="citation"
+data-cites="boettiger2015docker">[@boettiger2015docker]</span>—the
+template enforces integrity at the architectural level. It realizes
+Gentleman and Temple Lang’s research compendium vision <span
+class="citation"
+data-cites="gentleman2007research">[@gentleman2007research]</span> at
+repository scale, bundling code, data, tests, manuscripts, and
+provenance into a single, pipeline-enforced system. It stands on four
+primary pillars:</p>
+<ol type="1">
+<li><p><strong>Ergonomic Modularity</strong>: A Two-Layer Architecture
+cleanly separates globally shared infrastructure (logging, rendering,
+validation, steganography) from project-specific logic (manuscripts,
+scripts, data). Ten infrastructure subpackages comprising 137 Python
+modules provide reusable services; projects consume them without
+modification.</p></li>
+<li><p><strong>Execution Integrity</strong>: A Zero-Mock testing policy
+where pipeline advancement is contingent on test passage. Infrastructure
+tests must achieve 60% coverage; project tests must achieve 90%. All
+tests use real filesystem operations, real subprocess calls, and real
+network connections—no mock objects, no fake services, no synthetic test
+doubles. Over 3,000 infrastructure tests and 350+ project tests enforce
+this standard.</p></li>
+<li><p><strong>Automated Provenance</strong>: Steganographic
+watermarking and cryptographic hashing are integrated directly into the
+rendering pipeline. Every generated PDF carries a SHA-256 fingerprint,
+an alpha-channel text overlay encoding the build timestamp and commit
+hash, and optionally a QR code linking to the repository. Provenance is
+not asserted by policy; it is enforced by architecture.</p></li>
+<li><p><strong>AI-Agent Collaboration</strong>: A Documentation Duality
+standard equips every directory with both <code>README.md</code> (for
+human researchers) and <code>AGENTS.md</code> (for AI coding
+assistants). Supplementary <code>CLAUDE.md</code> files provide
+system-level instructions. This enables a novel human–AI
+pair-programming workflow where AI agents can navigate, modify, and
+extend the codebase with full architectural awareness.</p></li>
+</ol>
+<h2 data-number="2.4" id="scope-and-contributions"><span
+class="header-section-number">2.4</span> Scope and Contributions</h2>
+<p>This paper is itself a product of the template it describes—a
+self-referential demonstration of the system’s capabilities. Our
+contributions are:</p>
+<ul>
+<li>A formal description of the Two-Layer Architecture and Standalone
+Project Paradigm that enables N independent research projects to share
+infrastructure without coupling.</li>
+<li>A detailed specification of the eight-stage build pipeline, from
+environment sanitization through LLM-assisted review.</li>
+<li>A comparative analysis positioning the template against Snakemake,
+Nextflow, CWL, Quarto, and Jupyter Book.</li>
+<li>An empirical evaluation of the system across three heterogeneous
+exemplar projects, demonstrating scalability, coverage metrics, and
+pipeline timing.</li>
+<li>A security analysis of the steganographic provenance layer,
+including threat models and tamper-detection capabilities.</li>
+<li>An open-source reference implementation available at
+<code>github.com/docxology/template</code>.</li>
+</ul>
+<h2 data-number="2.5" id="paper-organization"><span
+class="header-section-number">2.5</span> Paper Organization</h2>
+<p>The Methods (§2) describe the Two-Layer Architecture, Thin
+Orchestrator pattern, pipeline stages, and AI collaboration model.
+Results (§3) present quantitative metrics from multi-project execution,
+coverage analysis, and steganographic benchmarks. The Discussion (§4)
+addresses implications, limitations, and future directions. The
+Infrastructure Module Reference (§5) provides detailed documentation for
+all ten subpackages. Security and Provenance (§6) describes the
+steganographic and cryptographic integrity layer. Appendices (§7)
+provide pipeline, configuration, and comparative references.</p>
+<hr />
+<h1 data-number="3" id="methods"><span
+class="header-section-number">3</span> Methods</h1>
+<p>The Docxology Template’s architecture is deliberately bifurcated into
+a globally shared <code>infrastructure/</code> layer and
+project-specific <code>projects/</code> silos. This section describes
+the four core design patterns, the eight-stage pipeline that
+operationalizes them, and the AI collaboration model that distinguishes
+this system from conventional research templates.</p>
+<h2 data-number="3.1" id="the-two-layer-architecture"><span
+class="header-section-number">3.1</span> The Two-Layer Architecture</h2>
+<p>The repository is organized into two strictly separated layers:</p>
+<p><strong>Infrastructure Layer</strong> (<code>infrastructure/</code>):
+Ten Python subpackages comprising 137 modules and providing reusable
+services. Each subpackage is independently importable, has its own
+<code>__init__.py</code>, <code>AGENTS.md</code>, and
+<code>README.md</code>, and exports a well-defined public API. The
+infrastructure layer knows nothing about any specific project—it
+provides generic capabilities (logging, rendering, validation,
+steganography) that any project may consume.</p>
+<p><strong>Project Layer</strong> (<code>projects/</code>):
+Self-contained research workspaces. Each project directory contains:</p>
+<table>
+<thead>
+<tr>
+<th>Directory</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>manuscript/</code></td>
+<td>Markdown chapters and <code>config.yaml</code></td>
+</tr>
+<tr>
+<td><code>scripts/</code></td>
+<td>Thin orchestrator scripts (Stage 02)</td>
+</tr>
+<tr>
+<td><code>src/</code></td>
+<td>Project-specific Python modules</td>
+</tr>
+<tr>
+<td><code>tests/</code></td>
+<td>Project-specific test suite</td>
+</tr>
+<tr>
+<td><code>data/</code></td>
+<td>Input datasets and generated data</td>
+</tr>
+<tr>
+<td><code>output/</code></td>
+<td>Pipeline artifacts: PDF, figures, reports, logs</td>
+</tr>
+<tr>
+<td><code>docs/</code></td>
+<td>Project-specific architecture documentation</td>
+</tr>
+</tbody>
+</table>
+<p>The two layers communicate exclusively through Python imports and
+filesystem paths. No project modifies infrastructure code; no
+infrastructure module references a specific project by name (except via
+runtime project discovery).</p>
+<h2 data-number="3.2" id="the-standalone-project-paradigm"><span
+class="header-section-number">3.2</span> The Standalone Project
+Paradigm</h2>
+<p>Projects are designed to be completely self-contained. Adding a new
+project requires no changes to the infrastructure layer, no
+modifications to <code>pyproject.toml</code>, and no updates to the
+pipeline orchestrator. A project is automatically discovered if and only
+if it satisfies two conditions:</p>
+<ol type="1">
+<li>It exists as a subdirectory of <code>projects/</code>.</li>
+<li>It contains the file <code>manuscript/config.yaml</code>.</li>
+</ol>
+<p>This paradigm enables horizontal scaling: N researchers can maintain
+N independent projects within a single repository, sharing
+infrastructure without coupling. Each project declares its own testing
+tolerances, manuscript metadata, LLM review preferences, and rendering
+configuration in its <code>config.yaml</code>. The system currently
+hosts three exemplar projects spanning numerical optimization,
+category-theoretic linguistics, and meta-architectural analysis.</p>
+<h2 data-number="3.3" id="the-thin-orchestrator-pattern"><span
+class="header-section-number">3.3</span> The Thin Orchestrator
+Pattern</h2>
+<p>All scripts in <code>scripts/</code> (both infrastructure-level and
+project-level) follow the Thin Orchestrator pattern <span
+class="citation"
+data-cites="gamma1995design">[@gamma1995design]</span>:</p>
+<ul>
+<li><strong>No domain logic</strong>: Scripts contain zero algorithmic
+implementation. They import functions from <code>src/</code> modules and
+wire them to infrastructure services.</li>
+<li><strong>Configuration-driven</strong>: Behavior is parameterized by
+<code>config.yaml</code>, not by hardcoded values.</li>
+<li><strong>Stateless</strong>: Scripts read inputs, call functions,
+write outputs. They maintain no persistent state between
+invocations.</li>
+<li><strong>Logged</strong>: Every significant action is logged via
+<code>infrastructure.core.logging_utils.get_logger</code>.</li>
+</ul>
+<p>This pattern ensures that all testable logic lives in
+<code>src/</code> where it is subject to the Zero-Mock testing policy,
+while scripts remain thin enough to be audited by visual inspection. The
+separation draws on the Mediator pattern from Gamma et al. <span
+class="citation" data-cites="gamma1995design">[@gamma1995design]</span>,
+where scripts mediate between infrastructure services and
+project-specific code without implementing any logic of their own.</p>
+<h2 data-number="3.4" id="the-eight-stage-pipeline"><span
+class="header-section-number">3.4</span> The Eight-Stage Pipeline</h2>
+<p>The build pipeline is orchestrated by
+<code>scripts/execute_pipeline.py</code>, which invokes numbered stage
+scripts sequentially. Each stage is a standalone Python script that
+exits cleanly or raises an exception to halt the pipeline.</p>
+<h3 data-number="3.4.1"
+id="stage-00-environment-setup-00_setup_environment.py"><span
+class="header-section-number">3.4.1</span> Stage 00: Environment Setup
+(<code>00_setup_environment.py</code>)</h3>
+<p>Validates the Python environment, checks dependency availability,
+creates output directories, and initializes logging. Ensures
+<code>PYTHONPATH</code> includes both the repository root and the active
+project’s <code>src/</code> directory.</p>
+<h3 data-number="3.4.2"
+id="stage-01-test-execution-01_run_tests.py"><span
+class="header-section-number">3.4.2</span> Stage 01: Test Execution
+(<code>01_run_tests.py</code>)</h3>
+<p>Executes pytest with coverage measurement against both infrastructure
+tests (<code>tests/</code>) and project tests
+(<code>projects/&lt;name&gt;/tests/</code>). Enforces configurable
+failure tolerances:</p>
+<ul>
+<li><code>max_infra_test_failures</code>: Maximum permitted
+infrastructure test failures (typically 3).</li>
+<li><code>max_project_test_failures</code>: Maximum permitted project
+test failures (typically 0).</li>
+<li>Coverage thresholds: 60% infrastructure, 90% project.</li>
+</ul>
+<p>The stage generates coverage JSON files for downstream reporting and
+saves test results in both JSON and Markdown formats. The infrastructure
+test suite alone contains over 3,000 tests across 148 test files.</p>
+<h3 data-number="3.4.3"
+id="stage-02-analysis-execution-02_run_analysis.py"><span
+class="header-section-number">3.4.3</span> Stage 02: Analysis Execution
+(<code>02_run_analysis.py</code>)</h3>
+<p>Discovers and executes all Python scripts in
+<code>projects/&lt;name&gt;/scripts/</code> in alphabetical order. Each
+script is expected to generate figures in <code>output/figures/</code>
+and data in <code>output/data/</code>. Scripts follow the Thin
+Orchestrator pattern, importing logic from <code>src/</code> modules.
+For example, <code>cognitive_case_diagrams</code> generates 25+
+programmatic figures via 17 DisCoPy renderers during this stage.</p>
+<h3 data-number="3.4.4"
+id="stage-03-pdf-rendering-03_render_pdf.py"><span
+class="header-section-number">3.4.4</span> Stage 03: PDF Rendering
+(<code>03_render_pdf.py</code>)</h3>
+<p>Compiles Markdown manuscript chapters into a unified PDF via a
+three-phase rendering process:</p>
+<ol type="1">
+<li><strong>Pandoc Markdown→LaTeX</strong>: Converts each
+<code>manuscript/*.md</code> file into LaTeX, injecting metadata from
+<code>config.yaml</code> (title, authors, affiliations, DOI).</li>
+<li><strong>XeLaTeX Compilation</strong>: Runs <code>xelatex</code> with
+<code>biber</code> for bibliography processing. Handles the
+<code>aux</code>→<code>bbl</code>→<code>aux</code> cycle automatically,
+with cleanup of stale auxiliary files to prevent corruption.</li>
+<li><strong>Post-processing</strong>: Applies font embedding
+verification and PDF/A compliance checks.</li>
+</ol>
+<h3 data-number="3.4.5"
+id="stage-04-output-validation-04_validate_output.py"><span
+class="header-section-number">3.4.5</span> Stage 04: Output Validation
+(<code>04_validate_output.py</code>)</h3>
+<p>Validates the structural integrity of all generated artifacts:</p>
+<ul>
+<li>PDF cross-reference table and trailer verification.</li>
+<li>Figure file existence and minimum size checking.</li>
+<li>Manifest generation with SHA-256 hashes for all output files.</li>
+<li>Markdown structural validation (heading hierarchy, link
+integrity).</li>
+</ul>
+<h3 data-number="3.4.6"
+id="stage-05-output-organization-05_copy_outputs.py"><span
+class="header-section-number">3.4.6</span> Stage 05: Output Organization
+(<code>05_copy_outputs.py</code>)</h3>
+<p>Copies finalized artifacts to standardized output locations and
+generates the pipeline completion manifest.</p>
+<h3 data-number="3.4.7" id="stage-06-llm-review-06_llm_review.py"><span
+class="header-section-number">3.4.7</span> Stage 06: LLM Review
+(<code>06_llm_review.py</code>)</h3>
+<p>Invokes a local LLM (via Ollama) to generate:</p>
+<ul>
+<li><strong>Executive summary</strong>: A 1-page high-level overview of
+the manuscript.</li>
+<li><strong>Quality review</strong>: Detailed feedback on structure,
+citations, and argumentation.</li>
+<li><strong>Translations</strong> (optional): Machine translations of
+the abstract into configured target languages.</li>
+</ul>
+<p>This stage is skippable via configuration and gracefully handles
+Ollama unavailability.</p>
+<h3 data-number="3.4.8"
+id="stage-07-executive-report-07_generate_executive_report.py"><span
+class="header-section-number">3.4.8</span> Stage 07: Executive Report
+(<code>07_generate_executive_report.py</code>)</h3>
+<p>Aggregates all pipeline metrics—test results, coverage percentages,
+rendering duration, validation status, LLM review scores—into a
+comprehensive executive report in both JSON and Markdown formats.</p>
+<h2 data-number="3.5" id="the-interactive-orchestrators"><span
+class="header-section-number">3.5</span> The Interactive
+Orchestrators</h2>
+<h3 data-number="3.5.1" id="run.sh-the-standard-orchestrator"><span
+class="header-section-number">3.5.1</span> <code>run.sh</code>: The
+Standard Orchestrator</h3>
+<p>The primary user interface is <code>run.sh</code>, a Bash TUI (text
+user interface) that presents an interactive menu for pipeline
+execution. Features include:</p>
+<ul>
+<li><strong>Project selection</strong>: Execute a single project or all
+discovered projects.</li>
+<li><strong>Mode selection</strong>: Fast (skip infra tests + LLM), Core
+(skip LLM only), Full (all stages).</li>
+<li><strong>Non-interactive mode</strong>:
+<code>./run.sh --pipeline --project all --core-only</code> for CI/CD
+integration.</li>
+<li><strong>Real-time progress</strong>: Stage timing and status
+indicators.</li>
+</ul>
+<h3 data-number="3.5.2"
+id="secure_run.sh-the-steganographic-superset"><span
+class="header-section-number">3.5.2</span> <code>secure_run.sh</code>:
+The Steganographic Superset</h3>
+<p>The <code>secure_run.sh</code> orchestrator is a strict superset of
+<code>run.sh</code>: it executes the standard eight-stage pipeline and
+then appends steganographic post-processing. For each rendered PDF, it
+applies metadata injection, cryptographic hashing, alpha-channel text
+overlay, and QR code injection, producing a provenance-embedded output
+alongside the original. It supports the same project selection and mode
+flags as <code>run.sh</code>.</p>
+<h2 data-number="3.6"
+id="documentation-duality-and-ai-collaboration"><span
+class="header-section-number">3.6</span> Documentation Duality and AI
+Collaboration</h2>
+<p>Every directory at every level of the repository hierarchy contains
+two documentation files:</p>
+<ul>
+<li><strong><code>README.md</code></strong>: Human-readable overview,
+quick-start instructions, and directory structure.</li>
+<li><strong><code>AGENTS.md</code></strong>: Machine-readable technical
+specification optimized for AI coding assistants. Contains API tables,
+dependency graphs, implementation patterns, and architectural
+constraints.</li>
+</ul>
+<p>This Documentation Duality standard serves two purposes. First, it
+ensures that both human researchers and AI agents can navigate the
+codebase efficiently—<code>AGENTS.md</code> files provide the structured
+context that language models need to make informed code modifications
+without hallucinating API signatures or violating architectural
+invariants. Second, it creates a self-documenting feedback loop: as AI
+agents modify the codebase, they update the corresponding
+<code>AGENTS.md</code> files, keeping documentation synchronized with
+implementation. Lau and Guo’s survey of 90 AI coding assistant systems
+<span class="citation"
+data-cites="lau2025aicoding">[@lau2025aicoding]</span> identifies
+contextual code understanding as a primary bottleneck; the Documentation
+Duality standard addresses this by providing pre-structured context at
+every directory level.</p>
+<p>The template additionally includes <code>CLAUDE.md</code> at the
+repository root, providing system-level instructions for AI coding
+assistants—architectural principles, testing requirements, and naming
+conventions that apply globally. This creates a three-tier documentation
+architecture: per-directory <code>AGENTS.md</code> for local context,
+root <code>CLAUDE.md</code> for global constraints, and
+<code>README.md</code> for human navigation.</p>
+<h3 data-number="3.6.1" id="fair-alignment"><span
+class="header-section-number">3.6.1</span> FAIR Alignment</h3>
+<p>The template’s design aligns with both the original FAIR principles
+<span class="citation"
+data-cites="wilkinson2016fair">[@wilkinson2016fair]</span> and the FAIR
+for Research Software (FAIR4RS) principles <span class="citation"
+data-cites="barker2022fair4rs">[@barker2022fair4rs]</span> at the
+repository level. FAIR4RS recognizes that software has requirements
+distinct from data—executability, composability, and dependency
+management—and the template addresses each. Outputs are
+<em>Findable</em> through standardized directory structures, manifest
+files, and machine-readable metadata embedded in PDFs. They are
+<em>Accessible</em> via open-source distribution on GitHub, with
+metadata embedded in the artifact itself rather than in a separate
+registry. <em>Interoperability</em> is achieved through standard formats
+(PDF, JSON, BibTeX, YAML) and well-defined module APIs that enable
+cross-project composition. <em>Reusability</em> is ensured by the
+Standalone Project Paradigm—any project can be extracted and reused
+independently—and by the Documentation Duality standard, which satisfies
+FAIRsoft’s inspectability and documentation quality indicators <span
+class="citation"
+data-cites="garijo2024fairsoft">[@garijo2024fairsoft]</span>. The
+pipeline’s automated testing and coverage enforcement directly
+operationalize the FAIR4RS executability requirement: software that
+cannot pass its own test suite cannot produce publishable output.</p>
+<h2 data-number="3.7" id="quality-assurance"><span
+class="header-section-number">3.7</span> Quality Assurance</h2>
+<h3 data-number="3.7.1" id="zero-mock-testing-policy"><span
+class="header-section-number">3.7.1</span> Zero-Mock Testing Policy</h3>
+<p>All tests use real methods exclusively <span class="citation"
+data-cites="martin2008clean">[@martin2008clean]</span>. No
+<code>unittest.mock</code>, no <code>MagicMock</code>, no
+<code>patch</code> decorators. Tests that require external services
+(Ollama, network) use <code>pytest.mark</code> markers for conditional
+execution. We adopt and extend Martin’s “Clean Code” principle that
+tests should validate behavior, not assumptions about behavior <span
+class="citation" data-cites="martin2008clean">[@martin2008clean]</span>.
+To our knowledge, no prior research software engineering framework has
+formalized a zero-mock policy as an architectural invariant enforced by
+pipeline gates—the concept of “mockless testing” does not appear in the
+software engineering literature as a named practice, making this a novel
+contribution of the Docxology Template.</p>
+<h3 data-number="3.7.2" id="visualization-standards"><span
+class="header-section-number">3.7.2</span> Visualization Standards</h3>
+<p>All generated figures must meet accessibility requirements:</p>
+<ul>
+<li>Minimum 16pt font size for all text elements.</li>
+<li>Colorblind-safe palettes (IBM Design / Wong palette).</li>
+<li>150–300 DPI rendering for publication quality.</li>
+<li>Descriptive axis labels and figure titles.</li>
+</ul>
+<hr />
+<h1 data-number="4" id="results"><span
+class="header-section-number">4</span> Results</h1>
+<p>The Docxology Template was evaluated through a multi-project pipeline
+execution, measuring test coverage, pipeline timing, output integrity,
+and steganographic performance across three heterogeneous exemplar
+projects.</p>
+<h2 data-number="4.1" id="multi-project-pipeline-execution"><span
+class="header-section-number">4.1</span> Multi-Project Pipeline
+Execution</h2>
+<p>All three projects were executed through the full eight-stage
+pipeline using the <code>run.sh</code> interactive orchestrator with the
+“all projects core (fast)” configuration, which skips infrastructure
+tests and LLM review to isolate project-level performance.</p>
+<table>
+<thead>
+<tr>
+<th>Project</th>
+<th>Stages</th>
+<th>Duration</th>
+<th>Tests</th>
+<th>Coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>code_project</code></td>
+<td>7</td>
+<td>43.4s</td>
+<td>58/58</td>
+<td>96.6%</td>
+</tr>
+<tr>
+<td><code>cognitive_case_diagrams</code></td>
+<td>7</td>
+<td>56.0s</td>
+<td>257/257</td>
+<td>~96%</td>
+</tr>
+<tr>
+<td><code>template</code></td>
+<td>7</td>
+<td>22.6s</td>
+<td>36/36</td>
+<td>90%+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Overall success rate</strong>: 100.0% (3/3 projects)
+<strong>Total pipeline duration</strong>: 121.9s <strong>Average per
+project</strong>: 40.6s</p>
+<p>The <code>cognitive_case_diagrams</code> project, with its 257 tests
+and 25+ programmatically generated figures via 17 DisCoPy renderers,
+represents the most computationally intensive exemplar—yet completes in
+under one minute.</p>
+<h2 data-number="4.2" id="infrastructure-test-suite"><span
+class="header-section-number">4.2</span> Infrastructure Test Suite</h2>
+<p>The infrastructure layer is validated by a separate test suite of
+significant scale:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Test files</td>
+<td>148</td>
+</tr>
+<tr>
+<td>Total tests</td>
+<td>3,053</td>
+</tr>
+<tr>
+<td>Infrastructure coverage threshold</td>
+<td>60% (achieved: 83%+)</td>
+</tr>
+<tr>
+<td>Zero-mock violations</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Real filesystem operations</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Real subprocess invocations</td>
+<td>✓</td>
+</tr>
+</tbody>
+</table>
+<p>This test suite exercises all ten infrastructure modules, including
+the rendering pipeline (Pandoc/XeLaTeX integration), steganographic
+operations (alpha-channel overlay, QR injection), and LLM client
+interactions (real HTTP calls to Ollama).</p>
+<h2 data-number="4.3" id="infrastructure-module-inventory"><span
+class="header-section-number">4.3</span> Infrastructure Module
+Inventory</h2>
+<p>The introspection module (<code>template.introspection</code>)
+programmatically enumerates the infrastructure layer, confirming the
+following module distribution:</p>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 20%" />
+<col style="width: 23%" />
+<col style="width: 23%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>Module</th>
+<th style="text-align: center;">Python Files</th>
+<th style="text-align: center;">Has AGENTS.md</th>
+<th style="text-align: center;">Has README.md</th>
+<th>Key Exports</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>core</code></td>
+<td style="text-align: center;">28</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td><code>get_logger</code>, <code>load_config</code>,
+<code>TemplateError</code></td>
+</tr>
+<tr>
+<td><code>documentation</code></td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td><code>FigureManager</code>, <code>generate_glossary</code></td>
+</tr>
+<tr>
+<td><code>llm</code></td>
+<td style="text-align: center;">30</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>LLM review, literature search, translation</td>
+</tr>
+<tr>
+<td><code>project</code></td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td><code>_discover_project</code>, workspace management</td>
+</tr>
+<tr>
+<td><code>publishing</code></td>
+<td style="text-align: center;">9</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>Citation generation (APA, BibTeX, MLA), Zenodo</td>
+</tr>
+<tr>
+<td><code>rendering</code></td>
+<td style="text-align: center;">12</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>PDF rendering, Pandoc filters, HTML reports</td>
+</tr>
+<tr>
+<td><code>reporting</code></td>
+<td style="text-align: center;">14</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>Coverage parsing, executive reports</td>
+</tr>
+<tr>
+<td><code>scientific</code></td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td><code>check_numerical_stability</code>,
+<code>benchmark_function</code></td>
+</tr>
+<tr>
+<td><code>steganography</code></td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>Metadata injection, QR overlays, hashing</td>
+</tr>
+<tr>
+<td><code>validation</code></td>
+<td style="text-align: center;">22</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>PDF validation, Markdown checking, CLI</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td style="text-align: center;"><strong>137</strong></td>
+<td style="text-align: center;"><strong>10/10</strong></td>
+<td style="text-align: center;"><strong>10/10</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>All ten modules have complete documentation coverage (both
+<code>AGENTS.md</code> and <code>README.md</code>), confirming the
+Documentation Duality standard.</p>
+<h2 data-number="4.4" id="pipeline-stage-execution"><span
+class="header-section-number">4.4</span> Pipeline Stage Execution</h2>
+<p>The eight pipeline stages execute sequentially with strict error
+propagation:</p>
+<table>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 18%" />
+<col style="width: 34%" />
+<col style="width: 31%" />
+</colgroup>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Script</th>
+<th>Responsibility</th>
+<th>Failure Mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>00</td>
+<td><code>00_setup_environment.py</code></td>
+<td>Environment validation</td>
+<td>Hard fail</td>
+</tr>
+<tr>
+<td>01</td>
+<td><code>01_run_tests.py</code></td>
+<td>Test execution + coverage</td>
+<td>Configurable tolerance</td>
+</tr>
+<tr>
+<td>02</td>
+<td><code>02_run_analysis.py</code></td>
+<td>Script invocation</td>
+<td>Hard fail</td>
+</tr>
+<tr>
+<td>03</td>
+<td><code>03_render_pdf.py</code></td>
+<td>Pandoc + XeLaTeX</td>
+<td>Hard fail</td>
+</tr>
+<tr>
+<td>04</td>
+<td><code>04_validate_output.py</code></td>
+<td>PDF integrity</td>
+<td>Warning + report</td>
+</tr>
+<tr>
+<td>05</td>
+<td><code>05_copy_outputs.py</code></td>
+<td>Output organization</td>
+<td>Soft fail</td>
+</tr>
+<tr>
+<td>06</td>
+<td><code>06_llm_review.py</code></td>
+<td>LLM-assisted review</td>
+<td>Skippable</td>
+</tr>
+<tr>
+<td>07</td>
+<td><code>07_generate_executive_report.py</code></td>
+<td>Report aggregation</td>
+<td>Soft fail</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="4.5" id="steganographic-performance"><span
+class="header-section-number">4.5</span> Steganographic Performance</h2>
+<p>The steganography subsystem
+(<code>infrastructure.steganography</code>) was benchmarked across all
+three project PDFs:</p>
+<table>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 11%" />
+<col style="width: 16%" />
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 11%" />
+</colgroup>
+<thead>
+<tr>
+<th>Project</th>
+<th style="text-align: center;">Pages</th>
+<th style="text-align: center;">Metadata</th>
+<th style="text-align: center;">SHA-256</th>
+<th style="text-align: center;">Overlay</th>
+<th style="text-align: center;">QR Code</th>
+<th style="text-align: center;">Total</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>code_project</code></td>
+<td style="text-align: center;">20</td>
+<td style="text-align: center;">&lt; 0.3s</td>
+<td style="text-align: center;">&lt; 0.05s</td>
+<td style="text-align: center;">&lt; 0.8s</td>
+<td style="text-align: center;">&lt; 0.4s</td>
+<td style="text-align: center;">&lt; 1.5s</td>
+</tr>
+<tr>
+<td><code>cognitive_case_diagrams</code></td>
+<td style="text-align: center;">77</td>
+<td style="text-align: center;">&lt; 0.3s</td>
+<td style="text-align: center;">&lt; 0.05s</td>
+<td style="text-align: center;">&lt; 2.0s</td>
+<td style="text-align: center;">&lt; 0.4s</td>
+<td style="text-align: center;">&lt; 2.8s</td>
+</tr>
+<tr>
+<td><code>template</code></td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">&lt; 0.3s</td>
+<td style="text-align: center;">&lt; 0.05s</td>
+<td style="text-align: center;">&lt; 0.3s</td>
+<td style="text-align: center;">&lt; 0.4s</td>
+<td style="text-align: center;">&lt; 1.0s</td>
+</tr>
+</tbody>
+</table>
+<p>The steganographic watermark survives standard PDF operations
+(viewing, printing) but is detectable through pixel-level analysis of
+the alpha channel. Performance scales linearly with page count,
+dominated by the alpha-channel overlay phase.</p>
+<h2 data-number="4.6" id="self-referential-analysis"><span
+class="header-section-number">4.6</span> Self-Referential Analysis</h2>
+<p>This manuscript is itself a product of the template pipeline,
+demonstrating its self-referential capability. The <code>template</code>
+project’s <code>src/template/introspection.py</code> module
+programmatically analyzes the repository and generates three
+architecture figures:</p>
+<p><img src="figures/architecture_overview.png"
+alt="Two-Layer Architecture Overview" /> <em>Figure 1: The Two-Layer
+Architecture separating infrastructure modules from project
+workspaces.</em></p>
+<p><img src="figures/pipeline_stages.png" alt="Pipeline Stage Flow" />
+<em>Figure 2: The eight-stage build pipeline from environment setup
+through executive reporting.</em></p>
+<p><img src="figures/module_inventory.png"
+alt="Infrastructure Module Inventory" /> <em>Figure 3: Python file count
+per infrastructure module, with documentation status
+indicators.</em></p>
+<h2 data-number="4.7" id="comparative-feature-analysis"><span
+class="header-section-number">4.7</span> Comparative Feature
+Analysis</h2>
+<p>To contextualize the Docxology Template’s contributions, we compare
+its feature set against established tools:</p>
+<table>
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 14%" />
+<col style="width: 7%" />
+<col style="width: 11%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>Feature</th>
+<th style="text-align: center;">Docxology</th>
+<th style="text-align: center;">Snakemake</th>
+<th style="text-align: center;">Nextflow</th>
+<th style="text-align: center;">CWL</th>
+<th style="text-align: center;">Quarto</th>
+<th style="text-align: center;">Jupyter Book</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pipeline orchestration</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>Manuscript rendering</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Testing enforcement</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>Coverage thresholds</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>Cryptographic provenance</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>Multi-project management</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>AI-agent documentation</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>Interactive TUI</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>Zero-mock policy</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+</tr>
+</tbody>
+</table>
+<p>The Docxology Template is, to our knowledge, the only open-source
+system that integrates all nine capabilities within a single cohesive
+architecture.</p>
+<h2 data-number="4.8" id="test-quality-metrics"><span
+class="header-section-number">4.8</span> Test Quality Metrics</h2>
+<p>The Zero-Mock testing policy produces measurably higher-fidelity
+tests:</p>
+<ul>
+<li><strong>Zero mock objects</strong> across all test suites (verified
+by automated scanning for <code>unittest.mock</code>,
+<code>MagicMock</code>, and <code>patch</code> imports).</li>
+<li><strong>Real filesystem operations</strong>: Tests create, read,
+validate, and delete actual files in temporary directories.</li>
+<li><strong>Real subprocess calls</strong>: Pipeline stage tests invoke
+actual <code>pytest</code>, <code>pandoc</code>, and
+<code>xelatex</code> subprocesses.</li>
+<li><strong>Marker-based skip logic</strong>: Tests requiring optional
+services (Ollama, network) use <code>@pytest.mark.requires_ollama</code>
+for graceful degradation.</li>
+<li><strong>Categorical axiom verification</strong>: The
+<code>cognitive_case_diagrams</code> project tests validate identity
+morphisms, composition, weight multiplication, and the triangle
+inequality on real enriched category objects.</li>
+</ul>
+<hr />
+<h1 data-number="5" id="discussion"><span
+class="header-section-number">5</span> Discussion</h1>
+<h2 data-number="5.1" id="the-zero-mock-tradeoff"><span
+class="header-section-number">5.1</span> The Zero-Mock Tradeoff</h2>
+<p>The Zero-Mock testing policy is the template’s most distinctive
+design decision. By prohibiting all mock objects, we gain confidence
+that tests exercise real code paths—a pytest run against the template
+genuinely invokes <code>pandoc</code>, writes to disk, and parses real
+YAML. The cost is test duration: the full infrastructure test suite
+(3,053 tests) takes 2–4 minutes, compared to sub-second execution
+typical of heavily-mocked suites.</p>
+<p>We argue this tradeoff is strongly favorable for research software.
+Unlike web applications where millisecond latency and thousands of daily
+deploys demand fast feedback loops, research pipelines run infrequently
+(once per manuscript revision) and correctness vastly outweighs speed. A
+mocked test that passes while the real renderer fails is worse than a
+slow test that catches the failure. As Peng <span class="citation"
+data-cites="peng2011reproducible">[@peng2011reproducible]</span> argues,
+the standard for computational reproducibility is that results can be
+independently verified—mock objects, by definition, prevent such
+verification. Garijo et al.’s FAIRsoft evaluator <span class="citation"
+data-cites="garijo2024fairsoft">[@garijo2024fairsoft]</span> identifies
+<em>executability</em>—the ability to actually install and run research
+software—as a primary quality indicator, yet the majority of evaluated
+tools fail this test. The Zero-Mock policy goes further: it requires not
+merely that the software can be installed, but that every integration
+pathway has been exercised against real dependencies under test.</p>
+<p>However, the policy requires careful management of external
+dependencies. Tests requiring Ollama (the local LLM backend) use
+<code>@pytest.mark.requires_ollama</code> and are skipped in
+environments where the service is unavailable. This marker system
+preserves the Zero-Mock principle while acknowledging that not all
+environments provide all services.</p>
+<h2 data-number="5.2" id="scalability-from-1-to-n-projects"><span
+class="header-section-number">5.2</span> Scalability: From 1 to N
+Projects</h2>
+<p>The Standalone Project Paradigm enables horizontal scaling: adding a
+new project requires creating a directory with
+<code>manuscript/config.yaml</code> and nothing else. No infrastructure
+code changes, no <code>pyproject.toml</code> modifications, no CI
+configuration updates. The <code>run.sh</code> orchestrator
+automatically discovers new projects and presents them in its
+interactive menu.</p>
+<p>We have validated this scaling model with three heterogeneous
+projects:</p>
+<ul>
+<li><strong><code>code_project</code></strong>: Numerical optimization
+with gradient descent, 58 tests, 96.6% coverage.</li>
+<li><strong><code>cognitive_case_diagrams</code></strong>:
+Category-theoretic linguistics with 25+ DisCoPy-generated figures from
+17 renderers, 257 tests, ~96% coverage, 79 BibTeX references spanning 17
+research areas.</li>
+<li><strong><code>template</code></strong>: This self-referential
+architectural analysis, 36 tests, 90%+ coverage.</li>
+</ul>
+<p>These projects share no code with each other. They share only the
+infrastructure layer—ten modules, 137 Python files—which provides
+logging, rendering, validation, steganography, and reporting services
+identically to each project. This validates the Two-Layer Architecture’s
+claim that infrastructure and project concerns can be cleanly
+separated.</p>
+<h2 data-number="5.3" id="comparison-to-existing-tools"><span
+class="header-section-number">5.3</span> Comparison to Existing
+Tools</h2>
+<p>The Docxology Template occupies a unique niche in the reproducible
+research ecosystem. Unlike Snakemake <span class="citation"
+data-cites="koster2012snakemake">[@koster2012snakemake]</span> and
+Nextflow <span class="citation"
+data-cites="ditommaso2017nextflow">[@ditommaso2017nextflow]</span>,
+which excel at parallelizing computational pipelines but do not manage
+manuscript production or testing enforcement, the template integrates
+the entire research lifecycle from code to publication. Snakemake 8.x
+(2024) introduced a plugin architecture for extended execution backends,
+yet its scope remains computational workflow orchestration—it does not
+integrate manuscript rendering, documentation standards, or
+cryptographic provenance. Unlike Quarto <span class="citation"
+data-cites="allaire2024quarto">[@allaire2024quarto]</span> and R
+Markdown <span class="citation"
+data-cites="xie2015dynamic">[@xie2015dynamic]</span>, which integrate
+code execution with document rendering but do not enforce coverage
+thresholds or embed cryptographic provenance, the template treats
+testing and provenance as first-class architectural concerns rather than
+optional plugins.</p>
+<p>The key differentiator is the <em>enforcement</em> mechanism. The
+FAIR4RS principles <span class="citation"
+data-cites="barker2022fair4rs">[@barker2022fair4rs]</span> represent a
+significant advance in articulating what research software quality
+requires—executability, interoperability, comprehensive metadata—and
+FAIRsoft <span class="citation"
+data-cites="garijo2024fairsoft">[@garijo2024fairsoft]</span> provides
+automated scoring against these criteria. Yet FAIR4RS compliance is
+assessed observationally rather than enforced architecturally: a tool
+may score well on FAIRsoft metrics today and regress tomorrow without
+detection. The Docxology Template operationalizes FAIR4RS by coupling
+quality metrics to pipeline gates: the pipeline will not advance past
+Stage 01 if project test coverage falls below 90%. Provenance is not
+documented in a README; it is cryptographically embedded in the PDF per
+the W3C PROV model’s principle that provenance should be
+machine-readable and tamper-evident <span class="citation"
+data-cites="moreau2013provdm">[@moreau2013provdm]</span>. Documentation
+is not a best-effort companion; it is a structural requirement enforced
+by the Documentation Duality standard. In this sense, the template
+bridges the gap between FAIR4RS as a descriptive standard and FAIR4RS as
+an enforced invariant.</p>
+<p>In Gentleman and Temple Lang’s terminology <span class="citation"
+data-cites="gentleman2007research">[@gentleman2007research]</span>, the
+Docxology Template is a <em>research compendium</em> scaled to the
+repository level—bundling not just one study’s code and data but N
+studies, with shared infrastructure, automated testing, and embedded
+provenance. Nüst et al.’s executable research compendium (ERC) <span
+class="citation"
+data-cites="nust2017containerization">[@nust2017containerization]</span>
+extends this vision with containerized reproduction environments; the
+Docxology Template complements containerization by adding the testing
+enforcement, multi-project management, and provenance embedding layers
+that ERCs do not address.</p>
+<h2 data-number="5.4" id="the-ai-collaboration-model"><span
+class="header-section-number">5.4</span> The AI Collaboration Model</h2>
+<p>The Documentation Duality standard (<code>README.md</code> +
+<code>AGENTS.md</code> at every directory level) emerged from practical
+experience with AI coding assistants. Language models perform
+significantly better when provided with structured, machine-readable
+context about architectural constraints, API surfaces, and testing
+requirements. The <code>AGENTS.md</code> files serve as a form of
+“prompt engineering embedded in the codebase”—they preempt common
+failure modes such as hallucinated API signatures, violation of the Thin
+Orchestrator pattern, and introduction of mock objects. Lau and Guo
+<span class="citation"
+data-cites="lau2025aicoding">[@lau2025aicoding]</span> identify
+contextual code understanding as a primary bottleneck across 90 surveyed
+AI coding assistant systems; the Documentation Duality standard
+addresses this by providing pre-structured context at every directory
+level, reducing the surface area for hallucination.</p>
+<p>This model creates a positive feedback loop: as AI agents modify the
+codebase, they update the corresponding documentation, which in turn
+provides better context for future modifications. The supplementary
+<code>CLAUDE.md</code> file at the repository root provides system-level
+instructions (the Two-Layer Architecture, Zero-Mock policy, naming
+conventions) that apply globally, creating a three-tier documentation
+architecture:</p>
+<ol type="1">
+<li><strong>Repository-level</strong> (<code>CLAUDE.md</code>): Global
+constraints and architectural principles.</li>
+<li><strong>Directory-level</strong> (<code>AGENTS.md</code>): Local API
+surfaces, file inventories, and integration patterns.</li>
+<li><strong>Human-level</strong> (<code>README.md</code>): Quick-start
+guides and navigation aids.</li>
+</ol>
+<p>This three-tier model is, to our knowledge, novel in the research
+software engineering literature. As AI coding assistants evolve from
+reactive suggestion engines toward agentic systems capable of autonomous
+multi-file modifications <span class="citation"
+data-cites="lau2025aicoding">[@lau2025aicoding]</span>, the need for
+machine-readable architectural context becomes not a convenience but a
+prerequisite for safe AI-assisted software evolution.</p>
+<h2 data-number="5.5" id="the-learning-curve"><span
+class="header-section-number">5.5</span> The Learning Curve</h2>
+<p>The Thin Orchestrator pattern imposes a cognitive overhead on
+researchers accustomed to writing monolithic scripts. The requirement to
+factor all logic into <code>src/</code> modules and use scripts only as
+stateless wiring introduces an additional layer of indirection. We
+mitigate this through:</p>
+<ol type="1">
+<li><strong>Template examples</strong>: The <code>code_project</code>
+serves as a fully worked exemplar with comprehensive comments.</li>
+<li><strong>Documentation Duality</strong>: Every directory has both
+<code>README.md</code> (for humans) and <code>AGENTS.md</code> (for AI
+collaborators), reducing the cost of navigation.</li>
+<li><strong>Interactive orchestrator</strong>: <code>run.sh</code>
+provides a TUI menu that abstracts pipeline complexity.</li>
+<li><strong>Skill-level documentation</strong>: The
+<code>docs/guides/</code> directory provides four progressive guides
+(Levels 1–3 Beginner, 4–6 Intermediate, 7–9 Advanced, 10–12 Expert)
+alongside a comprehensive new-project setup checklist.</li>
+</ol>
+<h2 data-number="5.6" id="limitations"><span
+class="header-section-number">5.6</span> Limitations</h2>
+<ul>
+<li><strong>LaTeX dependency</strong>: The rendering pipeline requires a
+full TeX distribution (TeX Live or MiKTeX), which is a 4–6 GB install.
+This is the largest single dependency.</li>
+<li><strong>Python-centric</strong>: The infrastructure layer is
+Python-only. Projects in other languages can use the rendering and
+steganography stages but cannot leverage the <code>scientific</code> or
+<code>validation</code> modules.</li>
+<li><strong>Single-machine</strong>: The pipeline runs locally.
+Distributed execution (e.g., across a compute cluster) is not natively
+supported.</li>
+<li><strong>Steganographic robustness</strong>: Alpha-channel overlays
+are stripped by aggressive PDF optimization tools (e.g.,
+<code>qpdf --optimize</code>). QR codes are visible and removable.
+Neither provides non-repudiation without digital signatures.</li>
+<li><strong>Test duration</strong>: The Zero-Mock policy increases test
+execution time from sub-second (mocked) to multi-minute (real) for the
+full infrastructure suite. This is acceptable for research workflows but
+may not suit continuous deployment scenarios.</li>
+</ul>
+<h2 data-number="5.7" id="future-directions"><span
+class="header-section-number">5.7</span> Future Directions</h2>
+<ol type="1">
+<li><strong>Supply-chain provenance</strong>: Integration with software
+supply chain frameworks such as in-toto <span class="citation"
+data-cites="torresarias2019intoto">[@torresarias2019intoto]</span> and
+SLSA (Supply-chain Levels for Software Artifacts) to provide end-to-end
+attestation from source commit through build pipeline to published
+artifact. The template’s existing steganographic layer embeds
+document-level provenance; supply-chain frameworks would add build-level
+provenance, closing the gap between “this PDF was produced by this
+pipeline” and “this pipeline was executed with this verified source
+code.”</li>
+<li><strong>Decentralized provenance</strong>: Integration with IPFS or
+Arweave for immutable publication records, extending the SHA-256-based
+tamper detection to content-addressed storage networks.</li>
+<li><strong>Digital signatures</strong>: GPG or X.509 signing integrated
+into the steganographic layer, providing cryptographic non-repudiation
+in addition to tamper detection.</li>
+<li><strong>Continuous integration</strong>: GitHub Actions workflows
+that execute the pipeline on every push, with PDF artifacts as release
+assets and automated DOI registration via Zenodo.</li>
+<li><strong>Multi-language support</strong>: Extension of the Thin
+Orchestrator pattern to R, Julia, and Rust projects, enabling polyglot
+research workflows within the Two-Layer Architecture.</li>
+<li><strong>Automated FAIR4RS assessment</strong>: Periodic self-scoring
+against FAIRsoft metrics <span class="citation"
+data-cites="garijo2024fairsoft">[@garijo2024fairsoft]</span>, with
+quality indicators (executability, documentation completeness, metadata
+richness) tracked as pipeline artifacts alongside test coverage and
+rendering status.</li>
+<li><strong>Knowledge graph integration</strong>: Connecting pipeline
+outputs to Active Inference Knowledge Base entries for automated
+meta-analysis and cross-project citation tracking.</li>
+<li><strong>Formal verification</strong>: Static analysis tooling to
+enforce the Thin Orchestrator pattern—verifying that scripts contain no
+algorithmic logic and that <code>src/</code> modules do not import from
+<code>scripts/</code>.</li>
+</ol>
+<h1 data-number="6" id="conclusion"><span
+class="header-section-number">6</span> Conclusion</h1>
+<p>The Docxology Template demonstrates that high-integrity, reproducible
+research need not be onerous. By embedding provenance, testing, and
+documentation into the architecture itself—rather than layering them
+atop a fragmented workflow—the template transforms “best practices” from
+aspirational guidelines into enforced invariants <span class="citation"
+data-cites="wilson2017good sandve2013ten">[@wilson2017good;
+@sandve2013ten]</span>. The Two-Layer Architecture ensures that
+infrastructure improvements propagate to all projects without coupling.
+The Zero-Mock policy ensures that tests reflect reality. The
+steganographic provenance layer ensures that published artifacts carry
+their own authentication. The FAIR4RS principles <span class="citation"
+data-cites="barker2022fair4rs">[@barker2022fair4rs]</span> articulate
+what research software quality requires; the Docxology Template
+demonstrates how to enforce it.</p>
+<p>The template is not merely a build tool; it is an epistemological
+commitment. It asserts that a research paper is not a static document
+but a build artifact—reproducible, verifiable, and traceable to the code
+that generated it. As Knuth observed, programs should be written for
+humans to read and only incidentally for machines to execute <span
+class="citation"
+data-cites="knuth1984literate">[@knuth1984literate]</span>. We extend
+this dictum: research manuscripts should be <em>built</em> for
+verification and only incidentally for reading. In an era of generative
+AI and synthetic media, where the boundary between human-authored and
+machine-generated text grows increasingly indeterminate <span
+class="citation"
+data-cites="gruenpeter2021research">[@gruenpeter2021research]</span>,
+the provenance chain from source code to published PDF is not an
+administrative convenience—it is the epistemic ground on which
+scientific trust must be rebuilt.</p>
+<hr />
+<h1 data-number="7" id="infrastructure-module-reference"><span
+class="header-section-number">7</span> Infrastructure Module
+Reference</h1>
+<p>This section provides a detailed reference for all ten infrastructure
+subpackages, documenting their purpose, key classes, public API, and
+integration points within the pipeline. The infrastructure layer
+comprises 137 Python modules validated by 3,053 tests.</p>
+<h2 data-number="7.1" id="infrastructure.core-28-modules"><span
+class="header-section-number">7.1</span>
+<code>infrastructure.core</code> (28 modules)</h2>
+<p><strong>Purpose</strong>: Foundation utilities providing the bedrock
+services consumed by all other modules and all projects.</p>
+<p><strong>Key Components</strong>:</p>
+<table>
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>logging_utils.py</code></td>
+<td>Structured logger factory (<code>get_logger</code>) with colored
+console output and file rotation</td>
+</tr>
+<tr>
+<td><code>config_loader.py</code></td>
+<td>YAML config parser (<code>load_config</code>) with schema validation
+and default merging</td>
+</tr>
+<tr>
+<td><code>exceptions.py</code></td>
+<td>Exception hierarchy: <code>TemplateError</code> →
+<code>ConfigurationError</code>, <code>ValidationError</code>,
+<code>BuildError</code></td>
+</tr>
+<tr>
+<td><code>environment.py</code></td>
+<td>Environment detection, Python command resolution,
+<code>PYTHONPATH</code> management</td>
+</tr>
+<tr>
+<td><code>progress.py</code></td>
+<td><code>ProgressBar</code> for pipeline stage progress reporting</td>
+</tr>
+<tr>
+<td><code>checkpoint.py</code></td>
+<td><code>CheckpointManager</code> for resumable pipeline execution</td>
+</tr>
+<tr>
+<td><code>health.py</code></td>
+<td><code>SystemHealthChecker</code> for pre-pipeline dependency
+validation</td>
+</tr>
+<tr>
+<td><code>performance.py</code></td>
+<td><code>monitor_performance</code> context manager for timing and
+memory tracking</td>
+</tr>
+<tr>
+<td><code>_optional_deps.py</code></td>
+<td>Lazy loading of optional dependencies (<code>psutil</code>,
+<code>reportlab</code>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Integration</strong>: Every module and script imports from
+<code>core</code>. The exception hierarchy is used for pipeline flow
+control—<code>ValidationError</code> triggers stage failure,
+<code>BuildError</code> halts the entire pipeline. The lazy loader in
+<code>_optional_deps.py</code> separates core imports from optional
+subpackages, preventing cascading import failures in environments with
+partial dependency sets.</p>
+<h2 data-number="7.2" id="infrastructure.documentation-6-modules"><span
+class="header-section-number">7.2</span>
+<code>infrastructure.documentation</code> (6 modules)</h2>
+<p><strong>Purpose</strong>: Documentation management, figure
+registration, and API glossary generation.</p>
+<p><strong>Key Components</strong>:</p>
+<table>
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>figure_manager.py</code></td>
+<td><code>FigureManager</code> — maintains a JSON registry of all
+generated figures with captions, labels, and generation metadata</td>
+</tr>
+<tr>
+<td><code>glossary_gen.py</code></td>
+<td><code>generate_glossary</code> — programmatic API glossary
+extraction from Python source files</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Integration</strong>: Called by project scripts during Stage
+02 to register figures for automated cross-referencing in the
+manuscript. The glossary generator supports the Documentation Duality
+standard by extracting docstrings and function signatures.</p>
+<h2 data-number="7.3" id="infrastructure.llm-30-modules"><span
+class="header-section-number">7.3</span> <code>infrastructure.llm</code>
+(30 modules)</h2>
+<p><strong>Purpose</strong>: Local LLM integration for automated
+manuscript review, translation, and literature search.</p>
+<p><strong>Key Components</strong>:</p>
+<table>
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>review.py</code></td>
+<td>Executive summary and quality review generation</td>
+</tr>
+<tr>
+<td><code>translation.py</code></td>
+<td>Abstract translation into configured target languages</td>
+</tr>
+<tr>
+<td><code>client.py</code></td>
+<td>Ollama HTTP client with retry logic and timeout management</td>
+</tr>
+<tr>
+<td><code>literature/</code></td>
+<td>Literature search subpackage with semantic query support</td>
+</tr>
+<tr>
+<td><code>templates/</code></td>
+<td>Prompt templates for structured LLM interactions</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Integration</strong>: Invoked during Stage 06. Requires a
+running Ollama instance. Gracefully degrades when unavailable. The
+literature search subpackage enables programmatic discovery of related
+work during manuscript preparation.</p>
+<h2 data-number="7.4" id="infrastructure.project-2-modules"><span
+class="header-section-number">7.4</span>
+<code>infrastructure.project</code> (2 modules)</h2>
+<p><strong>Purpose</strong>: Project discovery and workspace
+management.</p>
+<p><strong>Key Components</strong>:</p>
+<table>
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>discovery.py</code></td>
+<td><code>_discover_project</code> — finds valid project directories by
+scanning for <code>manuscript/config.yaml</code></td>
+</tr>
+<tr>
+<td><code>workspace.py</code></td>
+<td>Workspace initialization and cleanup utilities</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Integration</strong>: Used by
+<code>execute_pipeline.py</code> and <code>run.sh</code> to identify
+which projects can be built. The discovery algorithm enforces the
+Standalone Project Paradigm: a directory is a valid project if and only
+if it contains <code>manuscript/config.yaml</code>.</p>
+<h2 data-number="7.5" id="infrastructure.publishing-9-modules"><span
+class="header-section-number">7.5</span>
+<code>infrastructure.publishing</code> (9 modules)</h2>
+<p><strong>Purpose</strong>: Academic publishing metadata and citation
+generation.</p>
+<p><strong>Key Components</strong>:</p>
+<table>
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>models.py</code></td>
+<td><code>PublicationMetadata</code> dataclass with direct attribute
+access and dynamic <code>getattr</code> fallback</td>
+</tr>
+<tr>
+<td><code>citations.py</code></td>
+<td><code>generate_citation_apa</code>,
+<code>generate_citation_bibtex</code>,
+<code>generate_citation_mla</code></td>
+</tr>
+<tr>
+<td><code>zenodo.py</code></td>
+<td>Zenodo API integration for DOI registration</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Integration</strong>: Used during Stage 02 by analysis
+scripts to extract publishable metadata from results. Citation
+generators produce correctly formatted strings from
+<code>config.yaml</code> metadata.</p>
+<h2 data-number="7.6" id="infrastructure.rendering-12-modules"><span
+class="header-section-number">7.6</span>
+<code>infrastructure.rendering</code> (12 modules)</h2>
+<p><strong>Purpose</strong>: Multi-format document rendering (Markdown →
+LaTeX → PDF, HTML reports).</p>
+<p><strong>Key Components</strong>:</p>
+<table>
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pandoc.py</code></td>
+<td>Pandoc invocation with custom filters and metadata injection</td>
+</tr>
+<tr>
+<td><code>latex.py</code></td>
+<td>XeLaTeX compilation with auxiliary file management and stale
+<code>.aux</code> cleanup</td>
+</tr>
+<tr>
+<td><code>pdf_builder.py</code></td>
+<td>End-to-end PDF construction orchestrating Pandoc and XeLaTeX</td>
+</tr>
+<tr>
+<td><code>html_report.py</code></td>
+<td>HTML executive report generation</td>
+</tr>
+<tr>
+<td><code>markdown_report.py</code></td>
+<td>Markdown-format report generation</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Integration</strong>: Core of Stage 03. Reads
+<code>manuscript/*.md</code> and <code>config.yaml</code>, produces
+<code>output/&lt;project&gt;.pdf</code>. The auxiliary file cleanup
+resolves a known rendering hazard where stale <code>.aux</code> files
+cause “Division by 0” LaTeX errors.</p>
+<h2 data-number="7.7" id="infrastructure.reporting-14-modules"><span
+class="header-section-number">7.7</span>
+<code>infrastructure.reporting</code> (14 modules)</h2>
+<p><strong>Purpose</strong>: Pipeline reporting, test result
+aggregation, and coverage analysis.</p>
+<p><strong>Key Components</strong>:</p>
+<table>
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>coverage_parser.py</code></td>
+<td>Cascading parse strategies for pytest output:
+<code>_parse_failures_section</code>,
+<code>_parse_failures_verbose</code>,
+<code>_parse_failures_short</code>,
+<code>_parse_failures_timeout</code>,
+<code>_parse_failures_fallback</code></td>
+</tr>
+<tr>
+<td><code>report_generator.py</code></td>
+<td>Executive report generation in JSON and Markdown</td>
+</tr>
+<tr>
+<td><code>statistics.py</code></td>
+<td><code>collect_output_statistics</code> — enumerates output directory
+contents</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Integration</strong>: Used during Stages 01, 04, and 07 for
+test result parsing, validation reporting, and executive summary
+generation. The cascading parser handles all pytest output formats
+robustly, falling through five strategies to ensure no test failure is
+silently missed.</p>
+<h2 data-number="7.8" id="infrastructure.scientific-6-modules"><span
+class="header-section-number">7.8</span>
+<code>infrastructure.scientific</code> (6 modules)</h2>
+<p><strong>Purpose</strong>: Scientific computing utilities for
+numerical analysis and benchmarking.</p>
+<p><strong>Key Components</strong>:</p>
+<table>
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>stability.py</code></td>
+<td><code>check_numerical_stability</code> — tests functions for NaN/Inf
+behavior across input ranges</td>
+</tr>
+<tr>
+<td><code>benchmarking.py</code></td>
+<td><code>benchmark_function</code> — measures execution time and memory
+usage</td>
+</tr>
+<tr>
+<td><code>simulation.py</code></td>
+<td>Scientific simulation framework with parameter sweeps</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Integration</strong>: Used by <code>code_project</code>’s
+analysis scripts during Stage 02 for algorithm validation. The stability
+checker is critical for ensuring that numerical results are reproducible
+across different floating-point environments.</p>
+<h2 data-number="7.9" id="infrastructure.steganography-8-modules"><span
+class="header-section-number">7.9</span>
+<code>infrastructure.steganography</code> (8 modules)</h2>
+<p><strong>Purpose</strong>: Cryptographic watermarking and provenance
+embedding for PDF artifacts.</p>
+<p><strong>Key Components</strong>:</p>
+<table>
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>metadata.py</code></td>
+<td><code>inject_pdf_metadata</code> — embeds XMP metadata and PDF Info
+dictionary entries</td>
+</tr>
+<tr>
+<td><code>config.py</code></td>
+<td><code>DocumentMetadata</code> dataclass for steganography
+configuration</td>
+</tr>
+<tr>
+<td><code>overlay.py</code></td>
+<td>Alpha-channel text overlay with build timestamp and commit hash</td>
+</tr>
+<tr>
+<td><code>qr.py</code></td>
+<td>QR code generation and injection into PDF pages</td>
+</tr>
+<tr>
+<td><code>hash.py</code></td>
+<td>SHA-256/SHA-512 hash computation for tamper detection</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Integration</strong>: Invoked by <code>secure_run.sh</code>
+after the main pipeline completes. Reads the rendered PDF and produces a
+steganographically watermarked copy with an accompanying
+<code>.hashes.json</code> manifest.</p>
+<h2 data-number="7.10" id="infrastructure.validation-22-modules"><span
+class="header-section-number">7.10</span>
+<code>infrastructure.validation</code> (22 modules)</h2>
+<p><strong>Purpose</strong>: Quality assurance and integrity
+verification for all pipeline artifacts.</p>
+<p><strong>Key Components</strong>:</p>
+<table>
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pdf_validator.py</code></td>
+<td>PDF structural integrity checking (xref table, trailer, page
+count)</td>
+</tr>
+<tr>
+<td><code>markdown_validator.py</code></td>
+<td>Markdown linting (heading hierarchy, link integrity, orphan
+references)</td>
+</tr>
+<tr>
+<td><code>integrity.py</code></td>
+<td><code>verify_output_integrity</code> — comprehensive output
+directory validation</td>
+</tr>
+<tr>
+<td><code>cli.py</code></td>
+<td>Command-line interface for standalone validation operations</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Integration</strong>: Core of Stage 04. Validates all
+generated artifacts before they are finalized. The validation module is
+the most module-dense package (22 files), reflecting the breadth of
+integrity checks required across PDF, Markdown, image, and manifest
+formats.</p>
+<hr />
+<h1 data-number="8" id="security-and-provenance"><span
+class="header-section-number">8</span> Security and Provenance</h1>
+<p>Research integrity requires more than reproducibility; it requires
+verifiable authorship. In an era of generative AI, automated scraping,
+and synthetic media, the ability to prove that a document was produced
+by a specific pipeline at a specific time is a critical defense against
+fabrication and misattribution. The W3C PROV data model <span
+class="citation"
+data-cites="moreau2013provdm">[@moreau2013provdm]</span> establishes a
+formal vocabulary for expressing provenance records—entities,
+activities, and agents connected by derivation, generation, and
+attribution relations. The Docxology Template implements a
+domain-specific provenance layer that embeds these relations directly
+into the PDF artifact itself, using four complementary steganographic
+and cryptographic mechanisms.</p>
+<h2 data-number="8.1" id="threat-model"><span
+class="header-section-number">8.1</span> Threat Model</h2>
+<p>The steganography subsystem defends against three classes of
+threats:</p>
+<ol type="1">
+<li><strong>Unauthorized redistribution</strong>: A manuscript is
+scraped and republished without attribution. The steganographic
+watermark survives the redistribution and can be used to prove original
+authorship.</li>
+<li><strong>Content tampering</strong>: Figures or text are modified
+after publication. The SHA-256 hash embedded in the PDF metadata detects
+any modification to the file contents.</li>
+<li><strong>Provenance forgery</strong>: An attacker claims to have
+produced a document they did not author. The build timestamp, commit
+hash, and pipeline metadata embedded in the watermark provide a
+verifiable chain of custody.</li>
+</ol>
+<h2 data-number="8.2" id="steganographic-layers"><span
+class="header-section-number">8.2</span> Steganographic Layers</h2>
+<p>The system applies four complementary layers of provenance
+information:</p>
+<h3 data-number="8.2.1" id="layer-1-pdf-metadata-injection"><span
+class="header-section-number">8.2.1</span> Layer 1: PDF Metadata
+Injection</h3>
+<p>The <code>inject_pdf_metadata</code> function writes structured
+metadata into both the PDF Info dictionary and an XMP (Extensible
+Metadata Platform) packet:</p>
+<ul>
+<li><code>/Creator</code>: Pipeline identifier</li>
+<li><code>/Producer</code>: Module path
+(<code>infrastructure.steganography</code>)</li>
+<li><code>/CreationDate</code>: UTC timestamp in ISO 8601 format</li>
+<li><code>/Author</code>: From <code>config.yaml</code></li>
+<li><code>/Title</code>: From <code>config.yaml</code></li>
+<li>Custom fields: DOI, ORCID, repository URL</li>
+</ul>
+<h3 data-number="8.2.2" id="layer-2-cryptographic-hashing"><span
+class="header-section-number">8.2.2</span> Layer 2: Cryptographic
+Hashing</h3>
+<p>Before watermarking, a SHA-256 hash of the rendered PDF is computed
+and stored in:</p>
+<ul>
+<li>The output manifest (<code>output/manifest.json</code>)</li>
+<li>The PDF metadata (<code>/Subject</code> field)</li>
+<li>An external hash file (<code>output/&lt;name&gt;.sha256</code>)</li>
+</ul>
+<p>This enables post-hoc verification: anyone with the hash can verify
+that the PDF has not been modified since rendering.</p>
+<h3 data-number="8.2.3" id="layer-3-alpha-channel-text-overlay"><span
+class="header-section-number">8.2.3</span> Layer 3: Alpha-Channel Text
+Overlay</h3>
+<p>A semi-transparent text overlay is applied to each page of the PDF,
+encoding:</p>
+<ul>
+<li>Build timestamp</li>
+<li>Git commit hash (short SHA)</li>
+<li>Project name</li>
+<li>Pipeline version</li>
+</ul>
+<p>The overlay is rendered at low opacity (typically 3–5% alpha) to be
+invisible during normal viewing but detectable through image analysis.
+It survives printing (as a faint watermark) and standard PDF
+operations.</p>
+<h3 data-number="8.2.4" id="layer-4-qr-code-injection"><span
+class="header-section-number">8.2.4</span> Layer 4: QR Code
+Injection</h3>
+<p>An optional QR code is generated containing a URL pointing to the
+repository (e.g., <code>github.com/docxology/template</code>). The QR
+code is placed in a configurable position (default: bottom-right corner
+of the last page) at a specified size.</p>
+<h2 data-number="8.3" id="the-secure_run.sh-orchestrator"><span
+class="header-section-number">8.3</span> The <code>secure_run.sh</code>
+Orchestrator</h2>
+<p>The steganographic pipeline is orchestrated by
+<code>secure_run.sh</code>, a Bash script that wraps the standard
+<code>run.sh</code> pipeline with post-processing steganography:</p>
+<ol type="1">
+<li>Execute the standard 8-stage pipeline for the target project.</li>
+<li>Locate the rendered PDF in <code>output/</code>.</li>
+<li>Apply metadata injection, hashing, text overlay, and QR code
+injection.</li>
+<li>Save the secured PDF alongside the original.</li>
+<li>Generate a steganography report in JSON format.</li>
+</ol>
+<p>The orchestrator processes either a single specified project or all
+discovered projects sequentially.</p>
+<h2 data-number="8.4" id="tamper-detection"><span
+class="header-section-number">8.4</span> Tamper Detection</h2>
+<p>Verification is performed by comparing the stored SHA-256 hash
+against a freshly computed hash of the distributed PDF. Any
+modification—even a single bit flip—produces a hash mismatch. The
+alpha-channel overlay provides a secondary, visual verification channel
+that does not require access to the original hash.</p>
+<h2 data-number="8.5" id="limitations-1"><span
+class="header-section-number">8.5</span> Limitations</h2>
+<ul>
+<li>Alpha-channel overlays are stripped by some PDF optimization tools
+(e.g., <code>qpdf --optimize</code>).</li>
+<li>QR codes are visible and may be removed by a determined
+attacker.</li>
+<li>The system does not provide non-repudiation in the cryptographic
+sense—it does not use digital signatures with private keys. Future
+versions may integrate GPG or X.509 signing.</li>
+<li>The provenance model is pipeline-centric rather than PROV-compliant;
+future work will generate machine-readable PROV-O <span class="citation"
+data-cites="moreau2013provdm">[@moreau2013provdm]</span> records
+alongside the embedded watermarks.</li>
+</ul>
+<h2 data-number="8.6"
+id="relationship-to-software-supply-chain-integrity"><span
+class="header-section-number">8.6</span> Relationship to Software Supply
+Chain Integrity</h2>
+<p>The steganographic provenance layer operates at the <em>document
+level</em>—it certifies the integrity of a specific PDF artifact. A
+complementary concern is <em>build-level</em> provenance: certifying
+that the pipeline itself was executed with verified source code and
+dependencies. Frameworks such as in-toto <span class="citation"
+data-cites="torresarias2019intoto">[@torresarias2019intoto]</span> and
+SLSA (Supply-chain Levels for Software Artifacts) address this concern
+by defining attestation chains from source commit through build steps to
+final artifact. Future versions of the Docxology Template may generate
+SLSA-compatible provenance attestations alongside the steganographic
+watermarks, creating a two-layer provenance model: in-toto attests that
+the build pipeline was executed with the claimed source code, while the
+steganographic layer attests that the PDF was produced by that pipeline
+at a specific time.</p>
+<h2 data-number="8.7"
+id="relationship-to-fair-and-formal-provenance-standards"><span
+class="header-section-number">8.7</span> Relationship to FAIR and Formal
+Provenance Standards</h2>
+<p>The steganographic layer supports the FAIR for Research Software
+(FAIR4RS) principles <span class="citation"
+data-cites="barker2022fair4rs">[@barker2022fair4rs]</span> at the
+artifact level. PDFs carry embedded metadata (Findability) in
+standardized XMP format (Interoperability). The SHA-256 hash manifest
+enables persistent integrity verification (a prerequisite for
+Reusability). The Documentation Duality standard ensures that the
+software producing the artifact is inspectable and well-documented
+(satisfying FAIRsoft <span class="citation"
+data-cites="garijo2024fairsoft">[@garijo2024fairsoft]</span> metadata
+and documentation indicators). Full PROV-compliant provenance
+traces—capturing the derivation chain from source data through analysis
+scripts to rendered PDF—are a natural extension and a primary target for
+future development.</p>
+<hr />
+<h1 data-number="9" id="appendices"><span
+class="header-section-number">9</span> Appendices</h1>
+<h2 data-number="9.1" id="appendix-a-pipeline-stage-reference"><span
+class="header-section-number">9.1</span> Appendix A: Pipeline Stage
+Reference</h2>
+<table>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 18%" />
+<col style="width: 15%" />
+<col style="width: 18%" />
+<col style="width: 31%" />
+</colgroup>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Script</th>
+<th>Input</th>
+<th>Output</th>
+<th>Failure Mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>00</td>
+<td><code>00_setup_environment.py</code></td>
+<td>System environment</td>
+<td>Validated env, directories</td>
+<td>Hard fail</td>
+</tr>
+<tr>
+<td>01</td>
+<td><code>01_run_tests.py</code></td>
+<td><code>tests/</code>, <code>projects/*/tests/</code></td>
+<td>Coverage JSON, test reports</td>
+<td>Configurable</td>
+</tr>
+<tr>
+<td>02</td>
+<td><code>02_run_analysis.py</code></td>
+<td><code>projects/*/scripts/*.py</code></td>
+<td>Figures, data files</td>
+<td>Hard fail</td>
+</tr>
+<tr>
+<td>03</td>
+<td><code>03_render_pdf.py</code></td>
+<td><code>manuscript/*.md</code>, <code>config.yaml</code></td>
+<td>PDF in <code>output/</code></td>
+<td>Hard fail</td>
+</tr>
+<tr>
+<td>04</td>
+<td><code>04_validate_output.py</code></td>
+<td><code>output/</code> contents</td>
+<td>Validation report</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td>05</td>
+<td><code>05_copy_outputs.py</code></td>
+<td><code>output/</code> artifacts</td>
+<td>Organized copies</td>
+<td>Soft fail</td>
+</tr>
+<tr>
+<td>06</td>
+<td><code>06_llm_review.py</code></td>
+<td>Rendered manuscript</td>
+<td>Executive summary, reviews</td>
+<td>Skippable</td>
+</tr>
+<tr>
+<td>07</td>
+<td><code>07_generate_executive_report.py</code></td>
+<td>All stage outputs</td>
+<td>JSON + Markdown report</td>
+<td>Soft fail</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="9.2"
+id="appendix-b-configuration-reference-config.yaml"><span
+class="header-section-number">9.2</span> Appendix B: Configuration
+Reference (<code>config.yaml</code>)</h2>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paper</span><span class="kw">:</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">title</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Paper Title&quot;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">subtitle</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Optional Subtitle&quot;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;1.0&quot;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">date</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;2026-03-08&quot;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">authors</span><span class="kw">:</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Author Name&quot;</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">orcid</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;0000-0000-0000-0000&quot;</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">email</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;author@example.com&quot;</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">affiliation</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Institution&quot;</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">corresponding</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">publication</span><span class="kw">:</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">doi</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;10.5281/zenodo.XXXXXX&quot;</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">journal</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Target Journal&quot;</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">volume</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;1&quot;</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">pages</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;1-10&quot;</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">year</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;2026&quot;</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="fu">keywords</span><span class="kw">:</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;keyword1&quot;</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;keyword2&quot;</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="fu">metadata</span><span class="kw">:</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">license</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Apache License 2.0&quot;</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">language</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;en&quot;</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="fu">llm</span><span class="kw">:</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">reviews</span><span class="kw">:</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">enabled</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">types</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">executive_summary</span><span class="kw">,</span><span class="at"> quality_review</span><span class="kw">]</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">translations</span><span class="kw">:</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">enabled</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="fu">testing</span><span class="kw">:</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">max_test_failures</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">max_infra_test_failures</span><span class="kw">:</span><span class="at"> </span><span class="dv">3</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">max_project_test_failures</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span></span></code></pre></div>
+<h2 data-number="9.3"
+id="appendix-c-repository-directory-structure"><span
+class="header-section-number">9.3</span> Appendix C: Repository
+Directory Structure</h2>
+<pre><code>docxology/template/
+├── infrastructure/           # Layer 1: Shared services (137 .py files)
+│   ├── core/                 # 28 files — logging, config, exceptions
+│   ├── documentation/        # 6 files — figure management, glossary
+│   ├── llm/                  # 30 files — Ollama integration, literature
+│   ├── project/              # 2 files — project discovery
+│   ├── publishing/           # 9 files — citation generation, Zenodo
+│   ├── rendering/            # 12 files — Pandoc + XeLaTeX + reports
+│   ├── reporting/            # 14 files — coverage parsing, reports
+│   ├── scientific/           # 6 files — stability, benchmarking
+│   ├── steganography/        # 8 files — watermarking, hashing
+│   └── validation/           # 22 files — PDF + Markdown validation
+├── scripts/                  # Pipeline orchestration
+│   ├── 00_setup_environment.py
+│   ├── 01_run_tests.py
+│   ├── 02_run_analysis.py
+│   ├── 03_render_pdf.py
+│   ├── 04_validate_output.py
+│   ├── 05_copy_outputs.py
+│   ├── 06_llm_review.py
+│   ├── 07_generate_executive_report.py
+│   └── execute_pipeline.py
+├── projects/                 # Layer 2: Research workspaces
+│   ├── code_project/         # Gradient descent exemplar
+│   ├── cognitive_case_diagrams/  # Category theory + linguistics
+│   └── template/             # This self-referential project
+├── tests/                    # Infrastructure test suite (148 files, 3,053 tests)
+├── docs/                     # Repository documentation (90+ files, 12 subdirectories)
+├── run.sh                    # Interactive TUI orchestrator
+├── secure_run.sh             # Steganographic pipeline wrapper
+├── AGENTS.md                 # System-level AI agent documentation
+├── CLAUDE.md                 # Global AI coding assistant instructions
+├── README.md                 # Human-readable project overview
+└── pyproject.toml            # Root project configuration (uv)</code></pre>
+<h2 data-number="9.4" id="appendix-d-exemplar-project-summary"><span
+class="header-section-number">9.4</span> Appendix D: Exemplar Project
+Summary</h2>
+<table>
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 11%" />
+<col style="width: 19%" />
+<col style="width: 17%" />
+<col style="width: 14%" />
+<col style="width: 13%" />
+<col style="width: 10%" />
+</colgroup>
+<thead>
+<tr>
+<th>Project</th>
+<th>Domain</th>
+<th style="text-align: center;">src/ Modules</th>
+<th style="text-align: center;">Test Count</th>
+<th style="text-align: center;">Coverage</th>
+<th style="text-align: center;">Figures</th>
+<th style="text-align: center;">Pages</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>code_project</code></td>
+<td>Numerical optimization</td>
+<td style="text-align: center;"><code>optimizer.py</code> (248
+lines)</td>
+<td style="text-align: center;">58</td>
+<td style="text-align: center;">96.6%</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">~20</td>
+</tr>
+<tr>
+<td><code>cognitive_case_diagrams</code></td>
+<td>Category theory / linguistics</td>
+<td style="text-align: center;">12 modules, 17 DisCoPy renderers</td>
+<td style="text-align: center;">257</td>
+<td style="text-align: center;">~96%</td>
+<td style="text-align: center;">25+</td>
+<td style="text-align: center;">~77</td>
+</tr>
+<tr>
+<td><code>template</code></td>
+<td>Meta-architecture</td>
+<td style="text-align: center;"><code>introspection.py</code></td>
+<td style="text-align: center;">36</td>
+<td style="text-align: center;">90%+</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">~5</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="9.5" id="appendix-e-documentation-inventory"><span
+class="header-section-number">9.5</span> Appendix E: Documentation
+Inventory</h2>
+<p>The repository maintains documentation at three levels:</p>
+<table>
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 30%" />
+<col style="width: 39%" />
+</colgroup>
+<thead>
+<tr>
+<th>Level</th>
+<th style="text-align: center;">Files</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Repository root</td>
+<td style="text-align: center;"><code>AGENTS.md</code>,
+<code>CLAUDE.md</code>, <code>README.md</code>,
+<code>RUN_GUIDE.md</code></td>
+<td>Global navigation and AI agent context</td>
+</tr>
+<tr>
+<td><code>docs/</code> directory</td>
+<td style="text-align: center;">90+ files across 12 subdirectories</td>
+<td>User guides, API reference, troubleshooting</td>
+</tr>
+<tr>
+<td>Per-directory</td>
+<td style="text-align: center;"><code>AGENTS.md</code> +
+<code>README.md</code> at every directory</td>
+<td>Documentation Duality standard</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>docs/</code> subdirectories cover: <code>core/</code>
+(essential docs), <code>guides/</code> (skill levels 1–12),
+<code>architecture/</code> (system design), <code>usage/</code> (content
+authoring), <code>operational/</code> (build, config, logging,
+troubleshooting), <code>reference/</code> (API, FAQ, glossary),
+<code>modules/</code> (10 infrastructure modules),
+<code>development/</code> (contributing, testing),
+<code>best-practices/</code> (version control, migration),
+<code>prompts/</code> (9 AI prompt templates), <code>security/</code>
+(steganography, hashing), and <code>audit/</code> (review reports).</p>
+<h2 data-number="9.6" id="appendix-f-comparative-tool-matrix"><span
+class="header-section-number">9.6</span> Appendix F: Comparative Tool
+Matrix</h2>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 12%" />
+<col style="width: 6%" />
+<col style="width: 9%" />
+<col style="width: 16%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr>
+<th>Capability</th>
+<th style="text-align: center;">Docxology</th>
+<th style="text-align: center;">Snakemake</th>
+<th style="text-align: center;">Nextflow</th>
+<th style="text-align: center;">CWL</th>
+<th style="text-align: center;">Quarto</th>
+<th style="text-align: center;">Jupyter Book</th>
+<th style="text-align: center;">R Markdown</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pipeline orchestration</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>Manuscript rendering</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Code execution</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Testing enforcement</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>Coverage thresholds</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>Cryptographic provenance</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>Steganographic watermarking</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>Multi-project management</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>AI-agent documentation</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>Interactive TUI</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>Container support</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>Distributed execution</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>DAG parallelism</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>Multi-language (R/Julia)</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>03_methods</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h1 id="methods">Methods</h1>
+<p>The Docxology Template’s architecture is deliberately bifurcated into
+a globally shared <code>infrastructure/</code> layer and
+project-specific <code>projects/</code> silos. This section describes
+the four core design patterns, the eight-stage pipeline that
+operationalizes them, and the AI collaboration model that distinguishes
+this system from conventional research templates.</p>
+<h2 id="the-two-layer-architecture">The Two-Layer Architecture</h2>
+<p>The repository is organized into two strictly separated layers:</p>
+<p><strong>Infrastructure Layer</strong> (<code>infrastructure/</code>):
+Ten Python subpackages comprising 137 modules and providing reusable
+services. Each subpackage is independently importable, has its own
+<code>__init__.py</code>, <code>AGENTS.md</code>, and
+<code>README.md</code>, and exports a well-defined public API. The
+infrastructure layer knows nothing about any specific project—it
+provides generic capabilities (logging, rendering, validation,
+steganography) that any project may consume.</p>
+<p><strong>Project Layer</strong> (<code>projects/</code>):
+Self-contained research workspaces. Each project directory contains:</p>
+<table>
+<thead>
+<tr>
+<th>Directory</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>manuscript/</code></td>
+<td>Markdown chapters and <code>config.yaml</code></td>
+</tr>
+<tr>
+<td><code>scripts/</code></td>
+<td>Thin orchestrator scripts (Stage 02)</td>
+</tr>
+<tr>
+<td><code>src/</code></td>
+<td>Project-specific Python modules</td>
+</tr>
+<tr>
+<td><code>tests/</code></td>
+<td>Project-specific test suite</td>
+</tr>
+<tr>
+<td><code>data/</code></td>
+<td>Input datasets and generated data</td>
+</tr>
+<tr>
+<td><code>output/</code></td>
+<td>Pipeline artifacts: PDF, figures, reports, logs</td>
+</tr>
+<tr>
+<td><code>docs/</code></td>
+<td>Project-specific architecture documentation</td>
+</tr>
+</tbody>
+</table>
+<p>The two layers communicate exclusively through Python imports and
+filesystem paths. No project modifies infrastructure code; no
+infrastructure module references a specific project by name (except via
+runtime project discovery).</p>
+<h2 id="the-standalone-project-paradigm">The Standalone Project
+Paradigm</h2>
+<p>Projects are designed to be completely self-contained. Adding a new
+project requires no changes to the infrastructure layer, no
+modifications to <code>pyproject.toml</code>, and no updates to the
+pipeline orchestrator. A project is automatically discovered if and only
+if it satisfies two conditions:</p>
+<ol type="1">
+<li>It exists as a subdirectory of <code>projects/</code>.</li>
+<li>It contains the file <code>manuscript/config.yaml</code>.</li>
+</ol>
+<p>This paradigm enables horizontal scaling: N researchers can maintain
+N independent projects within a single repository, sharing
+infrastructure without coupling. Each project declares its own testing
+tolerances, manuscript metadata, LLM review preferences, and rendering
+configuration in its <code>config.yaml</code>. The system currently
+hosts three exemplar projects spanning numerical optimization,
+category-theoretic linguistics, and meta-architectural analysis.</p>
+<h2 id="the-thin-orchestrator-pattern">The Thin Orchestrator
+Pattern</h2>
+<p>All scripts in <code>scripts/</code> (both infrastructure-level and
+project-level) follow the Thin Orchestrator pattern <span
+class="citation"
+data-cites="gamma1995design">[@gamma1995design]</span>:</p>
+<ul>
+<li><strong>No domain logic</strong>: Scripts contain zero algorithmic
+implementation. They import functions from <code>src/</code> modules and
+wire them to infrastructure services.</li>
+<li><strong>Configuration-driven</strong>: Behavior is parameterized by
+<code>config.yaml</code>, not by hardcoded values.</li>
+<li><strong>Stateless</strong>: Scripts read inputs, call functions,
+write outputs. They maintain no persistent state between
+invocations.</li>
+<li><strong>Logged</strong>: Every significant action is logged via
+<code>infrastructure.core.logging_utils.get_logger</code>.</li>
+</ul>
+<p>This pattern ensures that all testable logic lives in
+<code>src/</code> where it is subject to the Zero-Mock testing policy,
+while scripts remain thin enough to be audited by visual inspection. The
+separation draws on the Mediator pattern from Gamma et al. <span
+class="citation" data-cites="gamma1995design">[@gamma1995design]</span>,
+where scripts mediate between infrastructure services and
+project-specific code without implementing any logic of their own.</p>
+<h2 id="the-eight-stage-pipeline">The Eight-Stage Pipeline</h2>
+<p>The build pipeline is orchestrated by
+<code>scripts/execute_pipeline.py</code>, which invokes numbered stage
+scripts sequentially. Each stage is a standalone Python script that
+exits cleanly or raises an exception to halt the pipeline.</p>
+<h3 id="stage-00-environment-setup-00_setup_environment.py">Stage 00:
+Environment Setup (<code>00_setup_environment.py</code>)</h3>
+<p>Validates the Python environment, checks dependency availability,
+creates output directories, and initializes logging. Ensures
+<code>PYTHONPATH</code> includes both the repository root and the active
+project’s <code>src/</code> directory.</p>
+<h3 id="stage-01-test-execution-01_run_tests.py">Stage 01: Test
+Execution (<code>01_run_tests.py</code>)</h3>
+<p>Executes pytest with coverage measurement against both infrastructure
+tests (<code>tests/</code>) and project tests
+(<code>projects/&lt;name&gt;/tests/</code>). Enforces configurable
+failure tolerances:</p>
+<ul>
+<li><code>max_infra_test_failures</code>: Maximum permitted
+infrastructure test failures (typically 3).</li>
+<li><code>max_project_test_failures</code>: Maximum permitted project
+test failures (typically 0).</li>
+<li>Coverage thresholds: 60% infrastructure, 90% project.</li>
+</ul>
+<p>The stage generates coverage JSON files for downstream reporting and
+saves test results in both JSON and Markdown formats. The infrastructure
+test suite alone contains over 3,000 tests across 148 test files.</p>
+<h3 id="stage-02-analysis-execution-02_run_analysis.py">Stage 02:
+Analysis Execution (<code>02_run_analysis.py</code>)</h3>
+<p>Discovers and executes all Python scripts in
+<code>projects/&lt;name&gt;/scripts/</code> in alphabetical order. Each
+script is expected to generate figures in <code>output/figures/</code>
+and data in <code>output/data/</code>. Scripts follow the Thin
+Orchestrator pattern, importing logic from <code>src/</code> modules.
+For example, <code>cognitive_case_diagrams</code> generates 25+
+programmatic figures via 17 DisCoPy renderers during this stage.</p>
+<h3 id="stage-03-pdf-rendering-03_render_pdf.py">Stage 03: PDF Rendering
+(<code>03_render_pdf.py</code>)</h3>
+<p>Compiles Markdown manuscript chapters into a unified PDF via a
+three-phase rendering process:</p>
+<ol type="1">
+<li><strong>Pandoc Markdown→LaTeX</strong>: Converts each
+<code>manuscript/*.md</code> file into LaTeX, injecting metadata from
+<code>config.yaml</code> (title, authors, affiliations, DOI).</li>
+<li><strong>XeLaTeX Compilation</strong>: Runs <code>xelatex</code> with
+<code>biber</code> for bibliography processing. Handles the
+<code>aux</code>→<code>bbl</code>→<code>aux</code> cycle automatically,
+with cleanup of stale auxiliary files to prevent corruption.</li>
+<li><strong>Post-processing</strong>: Applies font embedding
+verification and PDF/A compliance checks.</li>
+</ol>
+<h3 id="stage-04-output-validation-04_validate_output.py">Stage 04:
+Output Validation (<code>04_validate_output.py</code>)</h3>
+<p>Validates the structural integrity of all generated artifacts:</p>
+<ul>
+<li>PDF cross-reference table and trailer verification.</li>
+<li>Figure file existence and minimum size checking.</li>
+<li>Manifest generation with SHA-256 hashes for all output files.</li>
+<li>Markdown structural validation (heading hierarchy, link
+integrity).</li>
+</ul>
+<h3 id="stage-05-output-organization-05_copy_outputs.py">Stage 05:
+Output Organization (<code>05_copy_outputs.py</code>)</h3>
+<p>Copies finalized artifacts to standardized output locations and
+generates the pipeline completion manifest.</p>
+<h3 id="stage-06-llm-review-06_llm_review.py">Stage 06: LLM Review
+(<code>06_llm_review.py</code>)</h3>
+<p>Invokes a local LLM (via Ollama) to generate:</p>
+<ul>
+<li><strong>Executive summary</strong>: A 1-page high-level overview of
+the manuscript.</li>
+<li><strong>Quality review</strong>: Detailed feedback on structure,
+citations, and argumentation.</li>
+<li><strong>Translations</strong> (optional): Machine translations of
+the abstract into configured target languages.</li>
+</ul>
+<p>This stage is skippable via configuration and gracefully handles
+Ollama unavailability.</p>
+<h3 id="stage-07-executive-report-07_generate_executive_report.py">Stage
+07: Executive Report (<code>07_generate_executive_report.py</code>)</h3>
+<p>Aggregates all pipeline metrics—test results, coverage percentages,
+rendering duration, validation status, LLM review scores—into a
+comprehensive executive report in both JSON and Markdown formats.</p>
+<h2 id="the-interactive-orchestrators">The Interactive
+Orchestrators</h2>
+<h3 id="run.sh-the-standard-orchestrator"><code>run.sh</code>: The
+Standard Orchestrator</h3>
+<p>The primary user interface is <code>run.sh</code>, a Bash TUI (text
+user interface) that presents an interactive menu for pipeline
+execution. Features include:</p>
+<ul>
+<li><strong>Project selection</strong>: Execute a single project or all
+discovered projects.</li>
+<li><strong>Mode selection</strong>: Fast (skip infra tests + LLM), Core
+(skip LLM only), Full (all stages).</li>
+<li><strong>Non-interactive mode</strong>:
+<code>./run.sh --pipeline --project all --core-only</code> for CI/CD
+integration.</li>
+<li><strong>Real-time progress</strong>: Stage timing and status
+indicators.</li>
+</ul>
+<h3
+id="secure_run.sh-the-steganographic-superset"><code>secure_run.sh</code>:
+The Steganographic Superset</h3>
+<p>The <code>secure_run.sh</code> orchestrator is a strict superset of
+<code>run.sh</code>: it executes the standard eight-stage pipeline and
+then appends steganographic post-processing. For each rendered PDF, it
+applies metadata injection, cryptographic hashing, alpha-channel text
+overlay, and QR code injection, producing a provenance-embedded output
+alongside the original. It supports the same project selection and mode
+flags as <code>run.sh</code>.</p>
+<h2 id="documentation-duality-and-ai-collaboration">Documentation
+Duality and AI Collaboration</h2>
+<p>Every directory at every level of the repository hierarchy contains
+two documentation files:</p>
+<ul>
+<li><strong><code>README.md</code></strong>: Human-readable overview,
+quick-start instructions, and directory structure.</li>
+<li><strong><code>AGENTS.md</code></strong>: Machine-readable technical
+specification optimized for AI coding assistants. Contains API tables,
+dependency graphs, implementation patterns, and architectural
+constraints.</li>
+</ul>
+<p>This Documentation Duality standard serves two purposes. First, it
+ensures that both human researchers and AI agents can navigate the
+codebase efficiently—<code>AGENTS.md</code> files provide the structured
+context that language models need to make informed code modifications
+without hallucinating API signatures or violating architectural
+invariants. Second, it creates a self-documenting feedback loop: as AI
+agents modify the codebase, they update the corresponding
+<code>AGENTS.md</code> files, keeping documentation synchronized with
+implementation. Lau and Guo’s survey of 90 AI coding assistant systems
+<span class="citation"
+data-cites="lau2025aicoding">[@lau2025aicoding]</span> identifies
+contextual code understanding as a primary bottleneck; the Documentation
+Duality standard addresses this by providing pre-structured context at
+every directory level.</p>
+<p>The template additionally includes <code>CLAUDE.md</code> at the
+repository root, providing system-level instructions for AI coding
+assistants—architectural principles, testing requirements, and naming
+conventions that apply globally. This creates a three-tier documentation
+architecture: per-directory <code>AGENTS.md</code> for local context,
+root <code>CLAUDE.md</code> for global constraints, and
+<code>README.md</code> for human navigation.</p>
+<h3 id="fair-alignment">FAIR Alignment</h3>
+<p>The template’s design aligns with both the original FAIR principles
+<span class="citation"
+data-cites="wilkinson2016fair">[@wilkinson2016fair]</span> and the FAIR
+for Research Software (FAIR4RS) principles <span class="citation"
+data-cites="barker2022fair4rs">[@barker2022fair4rs]</span> at the
+repository level. FAIR4RS recognizes that software has requirements
+distinct from data—executability, composability, and dependency
+management—and the template addresses each. Outputs are
+<em>Findable</em> through standardized directory structures, manifest
+files, and machine-readable metadata embedded in PDFs. They are
+<em>Accessible</em> via open-source distribution on GitHub, with
+metadata embedded in the artifact itself rather than in a separate
+registry. <em>Interoperability</em> is achieved through standard formats
+(PDF, JSON, BibTeX, YAML) and well-defined module APIs that enable
+cross-project composition. <em>Reusability</em> is ensured by the
+Standalone Project Paradigm—any project can be extracted and reused
+independently—and by the Documentation Duality standard, which satisfies
+FAIRsoft’s inspectability and documentation quality indicators <span
+class="citation"
+data-cites="garijo2024fairsoft">[@garijo2024fairsoft]</span>. The
+pipeline’s automated testing and coverage enforcement directly
+operationalize the FAIR4RS executability requirement: software that
+cannot pass its own test suite cannot produce publishable output.</p>
+<h2 id="quality-assurance">Quality Assurance</h2>
+<h3 id="zero-mock-testing-policy">Zero-Mock Testing Policy</h3>
+<p>All tests use real methods exclusively <span class="citation"
+data-cites="martin2008clean">[@martin2008clean]</span>. No
+<code>unittest.mock</code>, no <code>MagicMock</code>, no
+<code>patch</code> decorators. Tests that require external services
+(Ollama, network) use <code>pytest.mark</code> markers for conditional
+execution. We adopt and extend Martin’s “Clean Code” principle that
+tests should validate behavior, not assumptions about behavior <span
+class="citation" data-cites="martin2008clean">[@martin2008clean]</span>.
+To our knowledge, no prior research software engineering framework has
+formalized a zero-mock policy as an architectural invariant enforced by
+pipeline gates—the concept of “mockless testing” does not appear in the
+software engineering literature as a named practice, making this a novel
+contribution of the Docxology Template.</p>
+<h3 id="visualization-standards">Visualization Standards</h3>
+<p>All generated figures must meet accessibility requirements:</p>
+<ul>
+<li>Minimum 16pt font size for all text elements.</li>
+<li>Colorblind-safe palettes (IBM Design / Wong palette).</li>
+<li>150–300 DPI rendering for publication quality.</li>
+<li>Descriptive axis labels and figure titles.</li>
+</ul>
+</body>
+</html>

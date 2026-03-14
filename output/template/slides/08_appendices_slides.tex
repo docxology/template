@@ -1,0 +1,406 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{\textbf{#1}}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+\usepackage{caption}
+% Make caption package work with longtable
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\section{Appendices}\label{appendices}
+
+\begin{frame}[fragile]{Appendix A: Pipeline Stage Reference}
+\protect\phantomsection\label{appendix-a-pipeline-stage-reference}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1591}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1818}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1591}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1818}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.3182}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Stage
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Script
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Input
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Output
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Failure Mode
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+00 & \texttt{00\_setup\_environment.py} & System environment & Validated
+env, directories & Hard fail \\
+01 & \texttt{01\_run\_tests.py} & \texttt{tests/},
+\texttt{projects/*/tests/} & Coverage JSON, test reports &
+Configurable \\
+02 & \texttt{02\_run\_analysis.py} & \texttt{projects/*/scripts/*.py} &
+Figures, data files & Hard fail \\
+03 & \texttt{03\_render\_pdf.py} & \texttt{manuscript/*.md},
+\texttt{config.yaml} & PDF in \texttt{output/} & Hard fail \\
+04 & \texttt{04\_validate\_output.py} & \texttt{output/} contents &
+Validation report & Warning \\
+05 & \texttt{05\_copy\_outputs.py} & \texttt{output/} artifacts &
+Organized copies & Soft fail \\
+06 & \texttt{06\_llm\_review.py} & Rendered manuscript & Executive
+summary, reviews & Skippable \\
+07 & \texttt{07\_generate\_executive\_report.py} & All stage outputs &
+JSON + Markdown report & Soft fail \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{frame}
+
+\begin{frame}[fragile]{Appendix B: Configuration Reference
+(\texttt{config.yaml})}
+\protect\phantomsection\label{appendix-b-configuration-reference-config.yaml}
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{paper}\KeywordTok{:}
+\AttributeTok{  }\FunctionTok{title}\KeywordTok{:}\AttributeTok{ }\StringTok{"Paper Title"}
+\AttributeTok{  }\FunctionTok{subtitle}\KeywordTok{:}\AttributeTok{ }\StringTok{"Optional Subtitle"}
+\AttributeTok{  }\FunctionTok{version}\KeywordTok{:}\AttributeTok{ }\StringTok{"1.0"}
+\AttributeTok{  }\FunctionTok{date}\KeywordTok{:}\AttributeTok{ }\StringTok{"2026{-}03{-}08"}
+
+\FunctionTok{authors}\KeywordTok{:}
+\AttributeTok{  }\KeywordTok{{-}}\AttributeTok{ }\FunctionTok{name}\KeywordTok{:}\AttributeTok{ }\StringTok{"Author Name"}
+\AttributeTok{    }\FunctionTok{orcid}\KeywordTok{:}\AttributeTok{ }\StringTok{"0000{-}0000{-}0000{-}0000"}
+\AttributeTok{    }\FunctionTok{email}\KeywordTok{:}\AttributeTok{ }\StringTok{"author@example.com"}
+\AttributeTok{    }\FunctionTok{affiliation}\KeywordTok{:}\AttributeTok{ }\StringTok{"Institution"}
+\AttributeTok{    }\FunctionTok{corresponding}\KeywordTok{:}\AttributeTok{ }\CharTok{true}
+
+\FunctionTok{publication}\KeywordTok{:}
+\AttributeTok{  }\FunctionTok{doi}\KeywordTok{:}\AttributeTok{ }\StringTok{"10.5281/zenodo.XXXXXX"}
+\AttributeTok{  }\FunctionTok{journal}\KeywordTok{:}\AttributeTok{ }\StringTok{"Target Journal"}
+\AttributeTok{  }\FunctionTok{volume}\KeywordTok{:}\AttributeTok{ }\StringTok{"1"}
+\AttributeTok{  }\FunctionTok{pages}\KeywordTok{:}\AttributeTok{ }\StringTok{"1{-}10"}
+\AttributeTok{  }\FunctionTok{year}\KeywordTok{:}\AttributeTok{ }\StringTok{"2026"}
+
+\FunctionTok{keywords}\KeywordTok{:}
+\AttributeTok{  }\KeywordTok{{-}}\AttributeTok{ }\StringTok{"keyword1"}
+\AttributeTok{  }\KeywordTok{{-}}\AttributeTok{ }\StringTok{"keyword2"}
+
+\FunctionTok{metadata}\KeywordTok{:}
+\AttributeTok{  }\FunctionTok{license}\KeywordTok{:}\AttributeTok{ }\StringTok{"Apache License 2.0"}
+\AttributeTok{  }\FunctionTok{language}\KeywordTok{:}\AttributeTok{ }\StringTok{"en"}
+
+\FunctionTok{llm}\KeywordTok{:}
+\AttributeTok{  }\FunctionTok{reviews}\KeywordTok{:}
+\AttributeTok{    }\FunctionTok{enabled}\KeywordTok{:}\AttributeTok{ }\CharTok{true}
+\AttributeTok{    }\FunctionTok{types}\KeywordTok{:}\AttributeTok{ }\KeywordTok{[}\AttributeTok{executive\_summary}\KeywordTok{,}\AttributeTok{ quality\_review}\KeywordTok{]}
+\AttributeTok{  }\FunctionTok{translations}\KeywordTok{:}
+\AttributeTok{    }\FunctionTok{enabled}\KeywordTok{:}\AttributeTok{ }\CharTok{false}
+
+\FunctionTok{testing}\KeywordTok{:}
+\AttributeTok{  }\FunctionTok{max\_test\_failures}\KeywordTok{:}\AttributeTok{ }\DecValTok{0}
+\AttributeTok{  }\FunctionTok{max\_infra\_test\_failures}\KeywordTok{:}\AttributeTok{ }\DecValTok{3}
+\AttributeTok{  }\FunctionTok{max\_project\_test\_failures}\KeywordTok{:}\AttributeTok{ }\DecValTok{0}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}[fragile]{Appendix C: Repository Directory Structure}
+\protect\phantomsection\label{appendix-c-repository-directory-structure}
+\begin{verbatim}
+docxology/template/
+├── infrastructure/           # Layer 1: Shared services (137 .py files)
+│   ├── core/                 # 28 files — logging, config, exceptions
+│   ├── documentation/        # 6 files — figure management, glossary
+│   ├── llm/                  # 30 files — Ollama integration, literature
+│   ├── project/              # 2 files — project discovery
+│   ├── publishing/           # 9 files — citation generation, Zenodo
+│   ├── rendering/            # 12 files — Pandoc + XeLaTeX + reports
+│   ├── reporting/            # 14 files — coverage parsing, reports
+│   ├── scientific/           # 6 files — stability, benchmarking
+│   ├── steganography/        # 8 files — watermarking, hashing
+│   └── validation/           # 22 files — PDF + Markdown validation
+├── scripts/                  # Pipeline orchestration
+│   ├── 00_setup_environment.py
+│   ├── 01_run_tests.py
+│   ├── 02_run_analysis.py
+│   ├── 03_render_pdf.py
+│   ├── 04_validate_output.py
+│   ├── 05_copy_outputs.py
+│   ├── 06_llm_review.py
+│   ├── 07_generate_executive_report.py
+│   └── execute_pipeline.py
+├── projects/                 # Layer 2: Research workspaces
+│   ├── code_project/         # Gradient descent exemplar
+│   ├── cognitive_case_diagrams/  # Category theory + linguistics
+│   └── template/             # This self-referential project
+├── tests/                    # Infrastructure test suite (148 files, 3,053 tests)
+├── docs/                     # Repository documentation (90+ files, 12 subdirectories)
+├── run.sh                    # Interactive TUI orchestrator
+├── secure_run.sh             # Steganographic pipeline wrapper
+├── AGENTS.md                 # System-level AI agent documentation
+├── CLAUDE.md                 # Global AI coding assistant instructions
+├── README.md                 # Human-readable project overview
+└── pyproject.toml            # Root project configuration (uv)
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Appendix D: Exemplar Project Summary}
+\protect\phantomsection\label{appendix-d-exemplar-project-summary}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1324}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1176}}
+  >{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1912}}
+  >{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1765}}
+  >{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1471}}
+  >{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1324}}
+  >{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1029}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Project
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Domain
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+src/ Modules
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Test Count
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Coverage
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Figures
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Pages
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\texttt{code\_project} & Numerical optimization & \texttt{optimizer.py}
+(248 lines) & 58 & 96.6\% & 6 & \textasciitilde20 \\
+\texttt{cognitive\_case\_diagrams} & Category theory / linguistics & 12
+modules, 17 DisCoPy renderers & 257 & \textasciitilde96\% & 25+ &
+\textasciitilde77 \\
+\texttt{template} & Meta-architecture & \texttt{introspection.py} & 36 &
+90\%+ & 3 & \textasciitilde5 \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{frame}
+
+\begin{frame}[fragile]{Appendix E: Documentation Inventory}
+\protect\phantomsection\label{appendix-e-documentation-inventory}
+The repository maintains documentation at three levels:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3043}}
+  >{\centering\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3043}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3913}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Level
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Files
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Purpose
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+Repository root & \texttt{AGENTS.md}, \texttt{CLAUDE.md},
+\texttt{README.md}, \texttt{RUN\_GUIDE.md} & Global navigation and AI
+agent context \\
+\texttt{docs/} directory & 90+ files across 12 subdirectories & User
+guides, API reference, troubleshooting \\
+Per-directory & \texttt{AGENTS.md} + \texttt{README.md} at every
+directory & Documentation Duality standard \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+The \texttt{docs/} subdirectories cover: \texttt{core/} (essential
+docs), \texttt{guides/} (skill levels 1--12), \texttt{architecture/}
+(system design), \texttt{usage/} (content authoring),
+\texttt{operational/} (build, config, logging, troubleshooting),
+\texttt{reference/} (API, FAQ, glossary), \texttt{modules/} (10
+infrastructure modules), \texttt{development/} (contributing, testing),
+\texttt{best-practices/} (version control, migration), \texttt{prompts/}
+(9 AI prompt templates), \texttt{security/} (steganography, hashing),
+and \texttt{audit/} (review reports).
+\end{frame}
+
+\begin{frame}{Appendix F: Comparative Tool Matrix}
+\protect\phantomsection\label{appendix-f-comparative-tool-matrix}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1446}}
+  >{\centering\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1325}}
+  >{\centering\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1325}}
+  >{\centering\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1205}}
+  >{\centering\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.0602}}
+  >{\centering\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.0964}}
+  >{\centering\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1687}}
+  >{\centering\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1446}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Capability
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Docxology
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Snakemake
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Nextflow
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+CWL
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Quarto
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Jupyter Book
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+R Markdown
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+Pipeline orchestration & ✓ & ✓ & ✓ & ✓ & --- & --- & --- \\
+Manuscript rendering & ✓ & --- & --- & --- & ✓ & ✓ & ✓ \\
+Code execution & ✓ & ✓ & ✓ & ✓ & ✓ & ✓ & ✓ \\
+Testing enforcement & ✓ & --- & --- & --- & --- & --- & --- \\
+Coverage thresholds & ✓ & --- & --- & --- & --- & --- & --- \\
+Cryptographic provenance & ✓ & --- & --- & --- & --- & --- & --- \\
+Steganographic watermarking & ✓ & --- & --- & --- & --- & --- & --- \\
+Multi-project management & ✓ & --- & --- & --- & --- & --- & --- \\
+AI-agent documentation & ✓ & --- & --- & --- & --- & --- & --- \\
+Interactive TUI & ✓ & --- & --- & --- & --- & --- & --- \\
+Container support & --- & ✓ & ✓ & ✓ & --- & --- & --- \\
+Distributed execution & --- & ✓ & ✓ & ✓ & --- & --- & --- \\
+DAG parallelism & --- & ✓ & ✓ & ✓ & --- & --- & --- \\
+Multi-language (R/Julia) & --- & ✓ & --- & ✓ & ✓ & ✓ & ✓ \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{frame}
+
+\end{document}

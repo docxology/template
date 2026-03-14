@@ -1,0 +1,12 @@
+\beamer@slide {security-and-provenance}{1}
+\beamer@slide {threat-model}{1}
+\beamer@slide {steganographic-layers}{1}
+\beamer@slide {layer-1-pdf-metadata-injection}{1}
+\beamer@slide {layer-2-cryptographic-hashing}{1}
+\beamer@slide {layer-3-alpha-channel-text-overlay}{1}
+\beamer@slide {layer-4-qr-code-injection}{1}
+\beamer@slide {the-secure_run.sh-orchestrator}{1}
+\beamer@slide {tamper-detection}{1}
+\beamer@slide {limitations}{1}
+\beamer@slide {relationship-to-software-supply-chain-integrity}{1}
+\beamer@slide {relationship-to-fair-and-formal-provenance-standards}{1}

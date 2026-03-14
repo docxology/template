@@ -1,0 +1,53 @@
+This is BibTeX, Version 0.99e (TeX Live 2026)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: _combined_manuscript.aux
+The style file: plainnat.bst
+Illegal, another \bibdata command---line 324 of file _combined_manuscript.aux
+ : \bibdata
+ :         {references}
+I'm skipping whatever remains of this command
+Database file #1: references.bib
+Warning--entry type for "allaire2024quarto" isn't style-file defined
+--line 155 of file references.bib
+You've used 27 entries,
+            2773 wiz_defined-function locations,
+            779 strings with 11211 characters,
+and the built_in function-call counts, 16102 in all, are:
+= -- 1354
+> -- 1326
+< -- 12
++ -- 447
+- -- 420
+* -- 1482
+:= -- 2597
+add.period$ -- 108
+call.type$ -- 27
+change.case$ -- 216
+chr.to.int$ -- 27
+cite$ -- 54
+duplicate$ -- 574
+empty$ -- 1040
+format.name$ -- 455
+if$ -- 3260
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 28
+newline$ -- 170
+num.names$ -- 108
+pop$ -- 406
+preamble$ -- 1
+purify$ -- 191
+quote$ -- 0
+skip$ -- 496
+stack$ -- 0
+substring$ -- 454
+swap$ -- 48
+text.length$ -- 2
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 282
+warning$ -- 0
+while$ -- 111
+width$ -- 0
+write$ -- 404
+(There was 1 error message)
