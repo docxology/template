@@ -23,7 +23,7 @@ from typing import Any, Callable, Iterator, TypeVar
 # Import from split modules
 from infrastructure.core.logging_formatters import JSONFormatter, TemplateFormatter
 from infrastructure.core.logging_helpers import format_duration, format_error_with_suggestions
-from infrastructure.core.logging_progress import calculate_eta
+from infrastructure.core.eta import calculate_eta
 from infrastructure.core._optional_deps import psutil
 from infrastructure.core.logging_constants import EMOJIS, USE_EMOJIS, USE_STRUCTURED_LOGGING
 
