@@ -22,8 +22,11 @@ _T = TypeVar("_T")
 
 try:
     import requests
-except ImportError:
-    requests = None  # type: ignore[assignment]
+except ImportError as _requests_import_error:
+    raise ImportError(
+        "The 'requests' package is required for LLM connectivity. "
+        "Install it with: pip install requests"
+    ) from _requests_import_error
 
 from infrastructure.core.exceptions import LLMConnectionError, LLMError
 from infrastructure.core.logging_utils import get_logger
@@ -582,15 +585,16 @@ class LLMClient:
                     ) from e
 
             except requests.exceptions.HTTPError as e:
-                # Don't retry HTTP errors (4xx, 5xx) - they're not transient
-                error_msg = f"HTTP {response.status_code}: {response.text[:200] if 'response' in locals() else str(e)}"  # noqa: E501
+                # Don't retry HTTP errors (4xx, 5xx) - they're not transient.
+                # response is always defined here: raise_for_status() requires a response object.
+                error_msg = f"HTTP {response.status_code}: {response.text[:200]}"
                 logger.error(f"HTTP error from Ollama ({model}): {error_msg}")
                 raise LLMConnectionError(
                     f"Ollama HTTP error ({model}): {error_msg}",
                     context={
                         "url": url,
                         "model": model,
-                        "status_code": (response.status_code if "response" in locals() else None),
+                        "status_code": response.status_code,
                     },
                 ) from e
 

@@ -8,22 +8,12 @@ from __future__ import annotations
 
 from pathlib import Path  # noqa: F401
 
+# Pipeline stage reporters (used during pipeline execution)
 from .error_aggregator import (
     ErrorAggregator,
     ErrorEntry,
     get_error_aggregator,
     reset_error_aggregator,
-)
-from .executive_reporter import (
-    ExecutiveSummary,
-    ProjectMetrics,
-    collect_project_metrics,
-    generate_executive_summary,
-    save_executive_summary,
-)
-from .output_reporter import (
-    collect_output_statistics,
-    generate_output_summary,
 )
 from .pipeline_reporter import (
     generate_performance_report,
@@ -33,8 +23,25 @@ from .pipeline_reporter import (
     save_pipeline_report,
     save_test_results,
 )
+
+# Output & statistics reporters (post-pipeline)
+from .output_reporter import (
+    collect_output_statistics,
+    generate_output_summary,
+)
 from .output_organizer import FileType, OutputOrganizer
+
+# Executive & multi-project reporters (cross-project summaries)
+from .executive_reporter import (
+    ExecutiveSummary,
+    ProjectMetrics,
+    collect_project_metrics,
+    generate_executive_summary,
+    save_executive_summary,
+)
 from .multi_project_reporter import generate_multi_project_report, generate_multi_project_summary_report
+
+# Test suite summary generator
 from .suite_summary_generator import (
     generate_markdown_report,
     generate_summary_report,

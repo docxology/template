@@ -270,6 +270,7 @@ class RateLimiter:
                 self.requests[key].append(now)
                 return True
 
+        # Intentionally outside the lock — reached only when request count is at the limit
         return False
 
     def get_remaining_requests(self, key: str) -> int:

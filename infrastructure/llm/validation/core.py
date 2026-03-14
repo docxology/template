@@ -185,6 +185,7 @@ def validate_complete(
         data = validate_json(content)
         return validate_structure(data, schema)
 
+    # RAW and standard modes: only the empty-content check above applies
     return True
 
 
