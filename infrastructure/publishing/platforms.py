@@ -13,14 +13,12 @@ except ImportError:
     requests = None  # type: ignore[assignment]
 
 from infrastructure.core.exceptions import PublishingError
+from infrastructure.publishing.api import REQUEST_TIMEOUT
 from infrastructure.publishing.models import PublicationMetadata
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
-
-#: Default timeout for HTTP requests (seconds)
-REQUEST_TIMEOUT = 30
 
 def publish_to_zenodo(
     metadata: PublicationMetadata,
