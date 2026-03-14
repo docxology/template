@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.logging_utils import get_logger
+from infrastructure.publishing.citations import generate_citation_apa
 from infrastructure.publishing.models import PublicationMetadata
 
 logger = get_logger(__name__)
@@ -148,8 +149,6 @@ def generate_publication_summary(metadata: PublicationMetadata) -> str:
     Returns:
         Markdown formatted publication summary
     """
-    from infrastructure.publishing.citations import generate_citation_apa
-
     summary = f"""## 📚 Publication Information
 
 **Title**: {metadata.title}

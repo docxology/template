@@ -234,14 +234,6 @@ def get_cors_headers(origin: str | None = None) -> dict[str, str]:
     return headers
 
 
-# Keep SecurityHeaders as a backwards-compatible namespace shim.
-class SecurityHeaders:
-    """Namespace for security header helpers (use module-level functions directly)."""
-
-    get_security_headers = staticmethod(_build_security_headers)
-    get_cors_headers = staticmethod(get_cors_headers)
-
-
 class RateLimiter:
     """Simple in-memory rate limiter.
 

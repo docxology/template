@@ -3,15 +3,36 @@
 This module contains utilities for validating documents, PDFs, markdown files,
 and ensuring data integrity across the research project.
 
-Modules:
+## Module groups (22 files — logical namespaces within the flat package)
+
+**Content validators** (validate specific file types):
     pdf_validator: PDF rendering validation
     markdown_validator: Markdown file validation
+    figure_validator: Figure registry validation
+
+**Integrity & links**:
     integrity: File integrity and cross-reference validation
-    check_links: Documentation link verification
-    audit_orchestrator: Comprehensive audit coordination
-    issue_categorizer: Issue categorization and filtering
+    link_validator: Markdown link resolution and checking
+    check_links: Documentation link verification CLI
+
+**Documentation scanning**:
     doc_scanner: Comprehensive documentation scanning
-    repo_scanner: Repository-wide accuracy and completeness scanning
+    doc_discovery: Documentation file discovery utilities
+    doc_models: Data models for documentation scanning
+
+**Repository-wide scanning**:
+    repo_scanner: Repository accuracy and completeness scanning
+    audit_orchestrator: Comprehensive multi-module audit coordination
+    issue_categorizer: Issue categorization and filtering
+
+**CLI entry points**:
+    cli: Unified validation CLI interface
+    validate_markdown_cli: Standalone markdown validation script
+    validate_pdf_cli: Standalone PDF validation script
+
+**Output validation**:
+    output_validator: Pipeline output validation
+    output_statistics: Output statistics collection
 """
 
 from __future__ import annotations

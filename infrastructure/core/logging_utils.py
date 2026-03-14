@@ -23,6 +23,12 @@ Part of the infrastructure layer (Layer 1) - reusable across all projects.
 Callers should import from `logging_utils` for all everyday logging needs.
 Direct imports from the other five modules are for specialised use only.
 
+## Stability contract
+
+The public API of this module (get_logger, log_substep, log_success, etc.) is frozen.
+Adding or renaming public functions requires updating all callers — treat this as a
+codebase-wide breaking change. Prefer adding optional kwargs over new functions.
+
 Module-level `logger = get_logger(__name__)` is the approved pattern — get_logger()
 initialises lazily and is safe to call at import time.
 """
