@@ -23,8 +23,18 @@ logger = get_logger(__name__)
 # Lazy import to match client.py pattern
 try:
     import requests
-except ImportError:
-    requests = None  # type: ignore[assignment]
+except ImportError as _import_err:
+    _requests_import_error = _import_err
+
+    class _RequestsStub:
+        """Raises ImportError with clear message on any attribute access."""
+
+        def __getattr__(self, name: str) -> Any:
+            raise ImportError(
+                "LLM streaming requires the 'requests' package: pip install requests"
+            ) from _requests_import_error
+
+    requests = _RequestsStub()  # type: ignore[assignment]
 
 
 def stream_query_impl(
