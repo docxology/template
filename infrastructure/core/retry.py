@@ -92,8 +92,6 @@ def retry_with_backoff(
 
                     time.sleep(delay)
 
-            raise RuntimeError(f"{func.__name__} failed after {max_attempts} attempts")  # unreachable
-
         return wrapper
 
     return decorator

@@ -91,16 +91,17 @@ def main(pdf_path: Path | None = None, n_words: int = 200, verbose: bool = False
     Main validation orchestration.
 
     Args:
-        pdf_path: Path to PDF file (defaults to project_combined.pdf)
+        pdf_path: Path to PDF file (defaults to first *combined*.pdf found in output/pdf/)
         n_words: Number of words to extract for preview
         verbose: Enable verbose output
 
     Returns:
         Exit code: 0 for success, 1 for issues found, 2 for errors
     """
-    # Default to project combined PDF if not specified
+    # Default to first project combined PDF found (project-specific naming like code_project_combined.pdf)
     if pdf_path is None:
-        pdf_path = repo_root / "output" / "pdf" / "project_combined.pdf"
+        candidates = sorted((repo_root / "output" / "pdf").glob("*combined*.pdf"))
+        pdf_path = candidates[0] if candidates else repo_root / "output" / "pdf" / "project_combined.pdf"
 
     # Validate PDF exists
     if not pdf_path.exists():
