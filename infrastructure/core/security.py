@@ -418,7 +418,7 @@ def get_security_monitor() -> SecurityMonitor:
     return _security_monitor
 
 
-def rate_limit(max_requests: int = 100, window_seconds: int = 60):
+def rate_limit(max_requests: int = 100, window_seconds: int = 60) -> Callable[..., Any]:
     """Decorator for rate limiting functions.
 
     Args:
@@ -426,7 +426,7 @@ def rate_limit(max_requests: int = 100, window_seconds: int = 60):
         window_seconds: Time window in seconds
     """
 
-    def decorator(func: Callable) -> Callable:
+    def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
         """Wrap the target function with rate limiting.
 
         Args:
@@ -438,7 +438,7 @@ def rate_limit(max_requests: int = 100, window_seconds: int = 60):
         limiter = RateLimiter(max_requests, window_seconds)
 
         @wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
             """Execute the wrapped function with rate limit enforcement.
 
             Checks if the function call is within rate limits before
