@@ -2852,7 +2852,7 @@ def generate_comparative_analysis_csv(summary: ExecutiveSummary, output_dir: Pat
             "output_total": [p.outputs.total_outputs for p in projects],
         }
 
-        def calculate_percentile_and_rank(value, values_list, higher_is_better=True):
+        def calculate_percentile_and_rank(value: float, values_list: list[float], higher_is_better: bool = True) -> tuple[float, int]:
             """Calculate percentile rank for a value in a list."""
             if not values_list:
                 return (
@@ -2879,7 +2879,7 @@ def generate_comparative_analysis_csv(summary: ExecutiveSummary, output_dir: Pat
 
             return percentile, rank
 
-        def get_performance_rating(percentile, higher_is_better=True):
+        def get_performance_rating(percentile: float, higher_is_better: bool = True) -> str:
             """Convert percentile to performance rating."""
             if higher_is_better:
                 if percentile >= 80:

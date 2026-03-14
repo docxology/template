@@ -173,7 +173,7 @@ def validate_interpreter() -> bool:
     return True
 
 
-def get_subprocess_env(base_env: dict | None = None) -> dict:
+def get_subprocess_env(base_env: dict[str, str] | None = None) -> dict[str, str]:
     """Return env dict with VIRTUAL_ENV stripped when uv is active (avoids warnings).
 
     Args:

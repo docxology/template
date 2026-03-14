@@ -31,7 +31,7 @@ class StabilityTest:
     recommendations: list[str]
 
 def check_numerical_stability(
-    func: Callable, test_inputs: list[Any], tolerance: float = 1e-12
+    func: Callable[..., Any], test_inputs: list[Any], tolerance: float = 1e-12
 ) -> StabilityTest:
     """Check numerical stability of a function across a range of inputs.
 

@@ -12,7 +12,7 @@ import os
 import time
 from contextlib import contextmanager
 from dataclasses import dataclass, field
-from typing import Any, TypedDict
+from typing import Any, Iterator, TypedDict
 
 from infrastructure.core._optional_deps import psutil
 from infrastructure.core.exceptions import BuildError
@@ -160,7 +160,7 @@ class PerformanceMonitor:
             return 0.0
 
 @contextmanager
-def performance_context(operation_name: str = "Operation"):
+def performance_context(operation_name: str = "Operation") -> Iterator["PerformanceMonitor"]:
     """Context manager for monitoring operation performance.
 
     Yields the started PerformanceMonitor. After the with-block, callers

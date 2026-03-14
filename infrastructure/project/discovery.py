@@ -9,7 +9,7 @@ from __future__ import annotations
 import tomllib
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Union
+from typing import Any, Union
 
 from infrastructure.core.logging_utils import get_logger
 
@@ -250,7 +250,7 @@ def validate_project_structure(project_dir: Path) -> tuple[bool, str]:
 
     return True, "Valid project structure"
 
-def get_project_metadata(project_dir: Path) -> dict:
+def get_project_metadata(project_dir: Path) -> dict[str, Any]:
     """Extract metadata from project configuration files.
 
     Checks the following sources in priority order:

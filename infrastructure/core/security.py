@@ -22,7 +22,7 @@ logger = get_logger(__name__)
 class SecurityValidator:
     """Comprehensive input validation and security checks."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         # Maximum sizes for different input types
         self.limits = {
             "prompt_length": 100000,  # Max LLM prompt length
@@ -248,7 +248,7 @@ class RateLimiter:
     Thread-safe: all mutations to the requests dict are guarded by a Lock.
     """
 
-    def __init__(self, max_requests: int = 100, window_seconds: int = 60):
+    def __init__(self, max_requests: int = 100, window_seconds: int = 60) -> None:
         self.max_requests = max_requests
         self.window_seconds = window_seconds
         self.requests: dict[str, list[float]] = {}
@@ -305,7 +305,7 @@ class RateLimiter:
 class SecurityMonitor:
     """Monitor security events and anomalies."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.events: list[dict[str, Any]] = []
         self.max_events = 1000
 

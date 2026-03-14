@@ -125,7 +125,7 @@ def load_infrastructure_results(repo_root: Path | None = None) -> InfraResults:
     logger.warning("No infrastructure test results found")
     return base
 
-def discover_active_projects(repo_root: Path | None = None) -> list:
+def discover_active_projects(repo_root: Path | None = None) -> list[str]:
     """Discover active projects from the projects/ directory."""
     root = repo_root or Path.cwd()
     return sorted(p.name for p in discover_projects(root))

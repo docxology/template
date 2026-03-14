@@ -34,7 +34,7 @@ class BenchmarkResult:
     timestamp: str
 
 def benchmark_function(
-    func: Callable, test_inputs: list[Any], iterations: int = 100
+    func: Callable[..., Any], test_inputs: list[Any], iterations: int = 100
 ) -> BenchmarkResult:
     """Benchmark function performance across multiple inputs.
 

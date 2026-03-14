@@ -23,7 +23,7 @@ class _ValidationResults(TypedDict):
     accuracy_score: float
     details: list[dict[str, Any]]
 
-def validate_scientific_implementation(func: Callable, test_cases: list[tuple[Any, Any]]) -> dict[str, Any]:
+def validate_scientific_implementation(func: Callable[..., Any], test_cases: list[tuple[Any, Any]]) -> dict[str, Any]:
     """Validate scientific implementation against known test cases."""
     validation_results: _ValidationResults = {
         "total_tests": len(test_cases),
@@ -154,7 +154,7 @@ def validate_scientific_best_practices(module: Any) -> dict[str, Any]:
         validation["recommendations"].append("Add input validation to prevent invalid arguments")
     return validation
 
-def check_research_compliance(func: Callable) -> dict[str, Any]:
+def check_research_compliance(func: Callable[..., Any]) -> dict[str, Any]:
     """Check function compliance with research software standards."""
     compliance = {
         "has_docstring": False,

@@ -309,7 +309,7 @@ def format_coverage_status(coverage_pct: float, threshold: float) -> str:
 
 def analyze_coverage_gaps(
     results: dict[str, Any], threshold: float, test_type: str, report: dict[str, Any]
-) -> list:
+) -> list[str]:
     """Analyze coverage gaps and return actionable improvement suggestions."""
     suggestions = []
     coverage = results.get("coverage_percent", 0)
@@ -367,7 +367,7 @@ def analyze_coverage_gaps(
     return suggestions
 
 def format_failure_suggestions(
-    failed_tests: list, test_suite: str, project_name: str = ""
+    failed_tests: list[dict[str, Any]], test_suite: str, project_name: str = ""
 ) -> list[str]:
     """Return fix suggestions based on failure patterns in failed_tests.
 
