@@ -16,7 +16,7 @@ from infrastructure.core.logging_utils import get_logger
 from infrastructure.llm.core._text_utils import strip_thinking_tags
 from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig
 from infrastructure.llm.core.context import ConversationContext
-from infrastructure.llm.core.sanitization import sanitize_llm_input
+
 
 logger = get_logger(__name__)
 

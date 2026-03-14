@@ -260,8 +260,10 @@ def log_success(message: str, logger: logging.Logger | None = None) -> None:
     """Log message at INFO level prefixed with the success emoji."""
     logger = logger or get_logger(__name__)
 
-    emoji = EMOJIS["success"] if USE_EMOJIS else "[SUCCESS]"
-    logger.info(f"{emoji} {message}" if USE_EMOJIS else message)
+    if USE_EMOJIS:
+        logger.info(f"{EMOJIS['success']} {message}")
+    else:
+        logger.info(message)
 
 _HEADER_SEPARATOR_WIDTH = 50
 _STAGE_SEPARATOR_WIDTH = 46

@@ -655,7 +655,7 @@ class LLMClient:
                 }
             save_streaming_response(text, save_path, metadata)
             return True
-        except Exception as e:
+        except (OSError, ValueError) as e:
             logger.warning(f"Failed to save streaming response: {e}")
             return False
 

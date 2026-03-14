@@ -27,24 +27,7 @@ class ZenodoConfig:
 
     @property
     def api_base_url(self) -> str:
-        """Get the Zenodo API base URL.
-
-        Returns the configured base URL if explicitly set, otherwise returns
-        the appropriate Zenodo API endpoint based on the sandbox setting.
-
-        Returns:
-            str: The base URL for API requests. Either the custom base_url if
-                configured, or 'https://sandbox.zenodo.org/api' for sandbox mode,
-                or 'https://zenodo.org/api' for production mode.
-
-        Example:
-            >>> config = ZenodoConfig(access_token="token", sandbox=True)
-            >>> config.api_base_url
-            'https://sandbox.zenodo.org/api'
-            >>> config = ZenodoConfig(access_token="token", sandbox=False)
-            >>> config.api_base_url
-            'https://zenodo.org/api'
-        """
+        """Return base_url if set, else sandbox or production Zenodo API endpoint."""
         if self.base_url:
             return self.base_url
         return "https://sandbox.zenodo.org/api" if self.sandbox else "https://zenodo.org/api"

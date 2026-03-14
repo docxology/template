@@ -188,7 +188,10 @@ def calculate_file_hash(file_path: Path, algorithm: str = "sha256") -> str | Non
         algorithm: Hash algorithm to use
 
     Returns:
-        Hash string or None if file is missing or calculation fails
+        Hash string, or None if file does not exist or cannot be read
+
+    Raises:
+        FileOperationError: If the algorithm is unsupported
     """
     if not file_path.exists():
         return None

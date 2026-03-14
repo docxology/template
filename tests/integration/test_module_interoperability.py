@@ -140,7 +140,7 @@ class TestModuleInteroperability:
     def test_configuration_independence(self):
         """Test that module configurations are independent."""
         from infrastructure.literature.core import LiteratureConfig
-        from infrastructure.llm.config import LLMConfig
+        from infrastructure.llm.core.config import LLMConfig
         from infrastructure.rendering.config import RenderingConfig
 
         lit_config = LiteratureConfig()

@@ -28,22 +28,10 @@ def stream_short_impl(
     log_progress: bool = True,
     retries: int = 1,
 ) -> Iterator[str]:
-    """Stream a short response with comprehensive logging.
+    """Stream a concise response (≤150 words) with standard logging.
 
-    Args:
-        config: LLM configuration
-        context: Conversation context
-        save_streaming_state_fn: Callback to save streaming state
-        prompt: User prompt
-        model: Model to use
-        options: Additional options
-        save_response: Whether to save response to file
-        save_path: Path to save response
-        log_progress: Whether to log streaming progress
-        retries: Number of retry attempts on failure
-
-    Yields:
-        Response chunks
+    Same parameters as stream_long_impl but uses short_max_tokens and a brevity instruction.
+    Yields response chunks.
     """
     prompt = sanitize_llm_input(prompt)
     short_options = GenerationOptions(
@@ -81,22 +69,10 @@ def stream_long_impl(
     log_progress: bool = True,
     retries: int = 1,
 ) -> Iterator[str]:
-    """Stream a comprehensive response with comprehensive logging.
+    """Stream a comprehensive, detailed response with standard logging.
 
-    Args:
-        config: LLM configuration
-        context: Conversation context
-        save_streaming_state_fn: Callback to save streaming state
-        prompt: User prompt
-        model: Model to use
-        options: Additional options
-        save_response: Whether to save response to file
-        save_path: Path to save response
-        log_progress: Whether to log streaming progress
-        retries: Number of retry attempts on failure
-
-    Yields:
-        Response chunks
+    Same parameters as stream_short_impl but uses long_max_tokens and a thoroughness instruction.
+    Yields response chunks.
     """
     prompt = sanitize_llm_input(prompt)
     long_options = GenerationOptions(

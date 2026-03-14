@@ -69,15 +69,12 @@ class InputSanitizer:
 
     def validate_file_input(
         self, file_path: Path, allowed_extensions: list[str] | None = None
-    ) -> bool:
+    ) -> None:
         """Validate file input for security.
 
         Args:
             file_path: Path to file
             allowed_extensions: List of allowed file extensions
-
-        Returns:
-            True if file is safe to process
 
         Raises:
             SecurityError: If file input is unsafe
@@ -107,7 +104,6 @@ class InputSanitizer:
         if file_stat.st_size > max_size:
             raise SecurityError(f"File too large: {file_stat.st_size} bytes")
 
-        return True
 
     def sanitize_filename(self, filename: str) -> str:
         """Sanitize filename for safe file operations.
