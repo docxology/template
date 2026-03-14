@@ -163,7 +163,7 @@ class LLMClient:
 
         try:
             response_text, generation_time = self._time_call(
-                lambda: self._generate_response(model_name, options=options)
+                lambda: self._generate_response_direct(model_name, self.context.get_messages(), options=options)
             )
 
             self.context.add_message("assistant", response_text)
@@ -183,7 +183,7 @@ class LLMClient:
                             "attempt": self.config.fallback_models.index(fallback) + 1,
                         },
                     )
-                    response_text = self._generate_response(fallback, options=options)
+                    response_text = self._generate_response_direct(fallback, self.context.get_messages(), options=options)
                     generation_time = time_module.time() - fallback_start
 
                     logger.info(
@@ -466,18 +466,6 @@ class LLMClient:
                 "Structured response must be valid JSON",
                 context={"response": response_text[:200]},
             ) from e
-
-    def _generate_response(self, model: str, options: GenerationOptions | None = None) -> str:
-        """Generate response from Ollama API using context.
-
-        Args:
-            model: Model name
-            options: Generation options
-
-        Returns:
-            Generated text
-        """
-        return self._generate_response_direct(model, self.context.get_messages(), options=options)
 
     def _generate_response_direct(
         self,
