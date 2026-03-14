@@ -11,6 +11,7 @@ API style note:
 
 from __future__ import annotations
 
+import functools
 import re
 import threading
 import time
@@ -388,34 +389,22 @@ class SecurityMonitor:
 
 
 
-# Global instances (lazy initialization — avoids import-time side effects)
-_security_validator: SecurityValidator | None = None
-_rate_limiter: RateLimiter | None = None
-_security_monitor: SecurityMonitor | None = None
-
-
+@functools.lru_cache(maxsize=1)
 def get_security_validator() -> SecurityValidator:
-    """Get the global security validator instance."""
-    global _security_validator
-    if _security_validator is None:
-        _security_validator = SecurityValidator()
-    return _security_validator
+    """Get the global security validator instance (lazily initialized)."""
+    return SecurityValidator()
 
 
+@functools.lru_cache(maxsize=1)
 def get_rate_limiter() -> RateLimiter:
-    """Get the global rate limiter instance."""
-    global _rate_limiter
-    if _rate_limiter is None:
-        _rate_limiter = RateLimiter()
-    return _rate_limiter
+    """Get the global rate limiter instance (lazily initialized)."""
+    return RateLimiter()
 
 
+@functools.lru_cache(maxsize=1)
 def get_security_monitor() -> SecurityMonitor:
-    """Get the global security monitor instance."""
-    global _security_monitor
-    if _security_monitor is None:
-        _security_monitor = SecurityMonitor()
-    return _security_monitor
+    """Get the global security monitor instance (lazily initialized)."""
+    return SecurityMonitor()
 
 
 def rate_limit(max_requests: int = 100, window_seconds: int = 60) -> Callable[..., Any]:

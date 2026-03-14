@@ -197,14 +197,10 @@ class CodeProfiler:
 
         return "\n".join(report_lines)
 
-_global_monitor: CodeProfiler | None = None
-
+@functools.lru_cache(maxsize=1)
 def get_performance_monitor() -> CodeProfiler:
-    """Return the global CodeProfiler instance, creating it on first call."""
-    global _global_monitor
-    if _global_monitor is None:
-        _global_monitor = CodeProfiler()
-    return _global_monitor
+    """Return the global CodeProfiler instance (lazily initialized)."""
+    return CodeProfiler()
 
 def monitor_performance(operation_name: str, track_memory: bool = True) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
     """Decorator for monitoring function performance via the global CodeProfiler."""

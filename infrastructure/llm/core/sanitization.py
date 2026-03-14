@@ -7,6 +7,7 @@ LLMClient before each outbound request.
 
 from __future__ import annotations
 
+import functools
 import html
 import re
 from pathlib import Path
@@ -174,16 +175,10 @@ class InputSanitizer:
             return text[:max_length] + "...[truncated]"
         return text
 
-# SecurityError is defined in infrastructure.core.exceptions and imported above.
-# Global instance (lazy initialization — avoids import-time side effects)
-_input_sanitizer: InputSanitizer | None = None
-
+@functools.lru_cache(maxsize=1)
 def get_input_sanitizer() -> InputSanitizer:
-    """Get the global input sanitizer instance."""
-    global _input_sanitizer
-    if _input_sanitizer is None:
-        _input_sanitizer = InputSanitizer()
-    return _input_sanitizer
+    """Get the global input sanitizer instance (lazily initialized)."""
+    return InputSanitizer()
 
 def sanitize_llm_input(prompt: str) -> str:
     """Convenience function for LLM input sanitization."""

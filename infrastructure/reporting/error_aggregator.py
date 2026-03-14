@@ -6,6 +6,7 @@ encountered during pipeline execution.
 
 from __future__ import annotations
 
+import functools
 import json
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -309,21 +310,11 @@ class ErrorAggregator:
 
         return "\n".join(lines)
 
-# Global error aggregator instance
-_global_aggregator: ErrorAggregator | None = None
-
+@functools.lru_cache(maxsize=1)
 def get_error_aggregator() -> ErrorAggregator:
-    """Get global error aggregator instance.
-
-    Returns:
-        ErrorAggregator instance
-    """
-    global _global_aggregator
-    if _global_aggregator is None:
-        _global_aggregator = ErrorAggregator()
-    return _global_aggregator
+    """Get global error aggregator instance (lazily initialized)."""
+    return ErrorAggregator()
 
 def reset_error_aggregator() -> None:
     """Reset global error aggregator (for testing)."""
-    global _global_aggregator
-    _global_aggregator = None
+    get_error_aggregator.cache_clear()

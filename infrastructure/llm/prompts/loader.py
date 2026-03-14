@@ -6,6 +6,7 @@ with caching and validation support.
 
 from __future__ import annotations
 
+import functools
 import json
 from pathlib import Path
 from typing import Any
@@ -203,16 +204,7 @@ class PromptFragmentLoader:
         self._fragment_cache.clear()
         self._template_cache.clear()
 
-# Global loader instance for convenience
-_default_loader: PromptFragmentLoader | None = None
-
+@functools.lru_cache(maxsize=1)
 def get_default_loader() -> PromptFragmentLoader:
-    """Get the default global fragment loader instance.
-
-    Returns:
-        PromptFragmentLoader instance
-    """
-    global _default_loader
-    if _default_loader is None:
-        _default_loader = PromptFragmentLoader()
-    return _default_loader
+    """Get the default global fragment loader instance (lazily initialized)."""
+    return PromptFragmentLoader()
