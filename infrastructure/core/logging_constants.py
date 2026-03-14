@@ -25,9 +25,6 @@ EMOJIS = {
     "chart": "📊",
 }
 
-# Module-level constants (USE_EMOJIS, USE_STRUCTURED_LOGGING) are kept for backwards compatibility.
-# Prefer the getter functions below for all new code — they allow env-var overrides after import.
-
 @functools.lru_cache(maxsize=None)
 def get_emoji_enabled() -> bool:
     """Return True if emoji output is enabled (NO_EMOJI unset and stdout is a TTY)."""
@@ -38,9 +35,3 @@ def get_emoji_enabled() -> bool:
 def get_structured_logging_enabled() -> bool:
     """Return True if structured (JSON) logging is enabled via STRUCTURED_LOGGING env var."""
     return os.getenv("STRUCTURED_LOGGING", "false").lower() == "true"
-
-
-# Kept for backwards compatibility — evaluated lazily at first access via the functions above.
-# New code should call get_emoji_enabled() / get_structured_logging_enabled() directly.
-USE_EMOJIS: bool = get_emoji_enabled()
-USE_STRUCTURED_LOGGING: bool = get_structured_logging_enabled()

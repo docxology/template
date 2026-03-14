@@ -7,7 +7,7 @@ import logging
 from datetime import datetime
 from typing import ClassVar
 
-from infrastructure.core.logging_constants import EMOJIS, USE_EMOJIS
+from infrastructure.core.logging_constants import EMOJIS, get_emoji_enabled
 
 class JSONFormatter(logging.Formatter):
     """JSON formatter for structured logging.
@@ -41,20 +41,21 @@ class TemplateFormatter(logging.Formatter):
     Adds emojis when appropriate and running in a TTY.
     """
 
-    LEVEL_EMOJIS: ClassVar[dict[int, str]] = {
+    _LEVEL_EMOJI_KEYS: ClassVar[dict[int, str]] = {
         logging.DEBUG: "",
-        logging.INFO: EMOJIS["info"] if USE_EMOJIS else "",
-        logging.WARNING: EMOJIS["warning"] if USE_EMOJIS else "",
-        logging.ERROR: EMOJIS["error"] if USE_EMOJIS else "",
-    }  # read-only lookup — do not mutate
+        logging.INFO: "info",
+        logging.WARNING: "warning",
+        logging.ERROR: "error",
+    }
 
     def format(self, record: logging.LogRecord) -> str:
         """Format log record with timestamp and emoji."""
         # Create timestamp
         timestamp = datetime.fromtimestamp(record.created).strftime("%Y-%m-%d %H:%M:%S")
 
-        # Get emoji for level
-        emoji = self.LEVEL_EMOJIS.get(record.levelno, "")
+        # Get emoji for level (evaluated at format time so env changes are respected)
+        emoji_key = self._LEVEL_EMOJI_KEYS.get(record.levelno, "")
+        emoji = EMOJIS[emoji_key] if (emoji_key and get_emoji_enabled()) else ""
         emoji_str = f"{emoji} " if emoji else ""
 
         # Format message

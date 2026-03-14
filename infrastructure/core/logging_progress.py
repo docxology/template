@@ -14,7 +14,7 @@ from infrastructure.core.eta import (
     calculate_eta_ema,
     calculate_eta_with_confidence,
 )
-from infrastructure.core.logging_constants import EMOJIS, USE_EMOJIS
+from infrastructure.core.logging_constants import EMOJIS, get_emoji_enabled
 from infrastructure.core.logging_helpers import format_duration
 
 __all__ = [
@@ -134,8 +134,8 @@ def log_with_spinner(
         elif logger:
             spinner.stop()
             success_msg = message.replace("...", " complete")
-            emoji = EMOJIS["success"] if USE_EMOJIS else "[SUCCESS]"
-            logger.info(f"{emoji} {success_msg}" if USE_EMOJIS else success_msg)
+            emoji = EMOJIS["success"] if get_emoji_enabled() else "[SUCCESS]"
+            logger.info(f"{emoji} {success_msg}" if get_emoji_enabled() else success_msg)
         else:
             spinner.stop()
     except Exception as e:

@@ -22,8 +22,10 @@ from pathlib import Path
 # Add repo root to path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
+from infrastructure.core.logging_constants import get_emoji_enabled as _get_emoji_enabled
+USE_EMOJIS = _get_emoji_enabled()
+
 from infrastructure.core.logging_utils import (
-    USE_EMOJIS,
     TemplateFormatter,
     get_log_level_from_env,
     get_logger,

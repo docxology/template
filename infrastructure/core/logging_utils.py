@@ -48,7 +48,7 @@ from infrastructure.core.logging_formatters import JSONFormatter, TemplateFormat
 from infrastructure.core.logging_helpers import format_duration, format_error_with_suggestions
 from infrastructure.core.eta import calculate_eta
 from infrastructure.core._optional_deps import psutil
-from infrastructure.core.logging_constants import EMOJIS, USE_EMOJIS, USE_STRUCTURED_LOGGING
+from infrastructure.core.logging_constants import EMOJIS, get_emoji_enabled, get_structured_logging_enabled
 
 # Type variable for generic context manager
 T = TypeVar("T")
@@ -89,7 +89,7 @@ def setup_logger(
     is_test_env = _is_test_environment()
 
     console_handler = logging.StreamHandler(sys.stdout)
-    if USE_STRUCTURED_LOGGING:
+    if get_structured_logging_enabled():
         console_handler.setFormatter(JSONFormatter())
     else:
         console_handler.setFormatter(TemplateFormatter())
@@ -264,7 +264,7 @@ def log_success(message: str, logger: logging.Logger | None = None) -> None:
     """Log message at INFO level prefixed with the success emoji."""
     logger = logger or get_logger(__name__)
 
-    if USE_EMOJIS:
+    if get_emoji_enabled():
         logger.info(f"{EMOJIS['success']} {message}")
     else:
         logger.info(message)
@@ -276,7 +276,7 @@ def log_header(message: str, logger: logging.Logger | None = None) -> None:
     """Log a section header with visual emphasis (separator + message + separator)."""
     logger = logger or get_logger(__name__)
 
-    prefix = EMOJIS["rocket"] + " " if USE_EMOJIS else ""
+    prefix = EMOJIS["rocket"] + " " if get_emoji_enabled() else ""
     separator = "=" * _HEADER_SEPARATOR_WIDTH
 
     logger.info("")
