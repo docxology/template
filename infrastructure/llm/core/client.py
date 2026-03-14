@@ -12,7 +12,6 @@ from __future__ import annotations
 
 import dataclasses
 import json
-import re
 import time as time_module
 from datetime import datetime
 from enum import Enum
@@ -28,6 +27,7 @@ except ImportError:
 
 from infrastructure.core.exceptions import LLMConnectionError, LLMError
 from infrastructure.core.logging_utils import get_logger
+from infrastructure.llm.core._text_utils import strip_thinking_tags
 from infrastructure.llm.core.config import GenerationOptions, LLMConfig
 from infrastructure.llm.core.context import ConversationContext
 from infrastructure.llm.core.sanitization import sanitize_llm_input
@@ -42,34 +42,6 @@ try:
     PROMPT_LOADER_AVAILABLE = True
 except ImportError:
     PROMPT_LOADER_AVAILABLE = False
-
-def strip_thinking_tags(text: str) -> str:
-    """Remove thinking tags from LLM responses.
-
-    Some models (e.g., Qwen) output <think>...</think> tags before their
-    actual response. Handles case-insensitive tags and malformed closers
-    (e.g., </think> without a matching opener).
-
-    Example:
-        >>> text = "<think>Let me think about this...</think>The answer is 42."
-        >>> strip_thinking_tags(text)
-        'The answer is 42.'
-    """
-    if not text:
-        return text
-
-    # Remove <think>...</think> tags (case-insensitive, handles whitespace)
-    # Pattern matches: <think>...</think>, <think >...</think>, <THINK>...</THINK>, etc.
-    pattern = r"<think[^>]*>.*?</think>"
-    result = re.sub(pattern, "", text, flags=re.IGNORECASE | re.DOTALL)
-
-    # Also handle </think> without opening tag (malformed)
-    result = re.sub(r"</think>", "", result, flags=re.IGNORECASE)
-
-    # Clean up extra whitespace that might result
-    result = result.strip()
-
-    return result
 
 class ResponseMode(str, Enum):
     """Response generation modes for different use cases."""

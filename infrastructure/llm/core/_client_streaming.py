@@ -13,6 +13,7 @@ from typing import Any, Callable, Iterator
 
 from infrastructure.core.exceptions import LLMConnectionError
 from infrastructure.core.logging_utils import get_logger
+from infrastructure.llm.core._text_utils import strip_thinking_tags
 from infrastructure.llm.core.config import GenerationOptions, LLMConfig
 from infrastructure.llm.core.context import ConversationContext
 
@@ -23,13 +24,6 @@ try:
     import requests
 except ImportError:
     requests = None  # type: ignore[assignment]
-
-
-def _strip_thinking_tags_inline(text: str) -> str:
-    """Import and delegate to the canonical strip_thinking_tags."""
-    from infrastructure.llm.core.client import strip_thinking_tags
-
-    return strip_thinking_tags(text)
 
 
 def stream_query_impl(
@@ -287,7 +281,7 @@ def stream_query_impl(
     # Calculate final metrics
     end_time = time_module.time()
     streaming_time = end_time - start_time
-    full_response_text = _strip_thinking_tags_inline("".join(full_response))
+    full_response_text = strip_thinking_tags("".join(full_response))
     total_chars = len(full_response_text)
     total_tokens_est = total_chars // 4
 
