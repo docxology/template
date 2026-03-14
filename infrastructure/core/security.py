@@ -427,34 +427,10 @@ def rate_limit(max_requests: int = 100, window_seconds: int = 60) -> Callable[..
     """
 
     def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
-        """Wrap the target function with rate limiting.
-
-        Args:
-            func: The function to be decorated with rate limiting.
-
-        Returns:
-            Callable: Wrapped function that enforces rate limits.
-        """
         limiter = RateLimiter(max_requests, window_seconds)
 
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
-            """Execute the wrapped function with rate limit enforcement.
-
-            Checks if the function call is within rate limits before
-            execution. Logs security events when limits are exceeded.
-
-            Args:
-                *args: Positional arguments passed to the wrapped function.
-                **kwargs: Keyword arguments passed to the wrapped function.
-
-            Returns:
-                The return value from the wrapped function.
-
-            Raises:
-                SecurityViolation: If the rate limit has been exceeded
-                    for this function.
-            """
             # Use function name as rate limit key (could be enhanced with user ID/IP)
             key = f"{func.__module__}.{func.__name__}"
 
