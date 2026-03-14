@@ -46,7 +46,9 @@ class RenderManager:
             List of paths to generated output files
 
         Raises:
-            TemplateError: If rendering fails or source file doesn't exist
+            TemplateError: If source file doesn't exist, if the file format
+                is not supported (.tex or .md), or if all output formats fail
+                to render.
         """
         from infrastructure.core.exceptions import TemplateError
 
@@ -77,7 +79,7 @@ class RenderManager:
                 # 1. Beamer slides for presentation
                 try:
                     logger.debug("Rendering Beamer slides...")
-                    outputs.append(self.render_slides(source_file, format="beamer"))
+                    outputs.append(self.render_slides(source_file, output_format="beamer"))
                     logger.debug("Beamer slides rendered successfully")
                 except (OSError, subprocess.SubprocessError, ValueError) as e:  # noqa: BLE001 — tracked in format_errors; raises if all formats fail
                     format_errors.append(("beamer", e))
@@ -167,11 +169,11 @@ class RenderManager:
         """
         return self.pdf_renderer.render(source_file)
 
-    def render_slides(self, source_file: Path, format: str = "beamer") -> Path:
+    def render_slides(self, source_file: Path, output_format: str = "beamer") -> Path:
         """Render slides with figure path resolution."""
         return self.slides_renderer.render(
             source_file,
-            format=format,
+            format=output_format,
             manuscript_dir=self.manuscript_dir,
             figures_dir=self.figures_dir,
         )

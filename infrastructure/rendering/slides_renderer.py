@@ -135,7 +135,7 @@ class SlidesRenderer:
             try:
                 _tmp.write_text(tex_content)
                 _tmp.replace(temp_tex)
-            except Exception:
+            except OSError:
                 _tmp.unlink(missing_ok=True)
                 raise
 

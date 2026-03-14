@@ -408,7 +408,7 @@ def _atomic_write_json(path: Path, data: dict[str, Any], **dump_kwargs: Any) -> 
         with open(_tmp, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2, **dump_kwargs)
         _tmp.replace(path)
-    except Exception:
+    except (OSError, ValueError):
         _tmp.unlink(missing_ok=True)
         raise
 
@@ -419,7 +419,7 @@ def _atomic_write_text(path: Path, content: str) -> None:
     try:
         _tmp.write_text(content)
         _tmp.replace(path)
-    except Exception:
+    except OSError:
         _tmp.unlink(missing_ok=True)
         raise
 

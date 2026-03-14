@@ -56,7 +56,7 @@ def render_slides_command(args: argparse.Namespace) -> None:
 
     fmt = args.format or "beamer"
     logger.info(f"Rendering slides ({fmt}): {source}")
-    output = manager.render_slides(source, format=fmt)
+    output = manager.render_slides(source, output_format=fmt)
     print(f"Generated: {output}")
 
 
