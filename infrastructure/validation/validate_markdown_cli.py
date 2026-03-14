@@ -39,11 +39,7 @@ else:
 
 # Helper function for tests
 def _repo_root() -> str:
-    """Get repository root path (for testing).
-
-    Returns:
-        str: Path to repository root
-    """
+    """Get repository root path (for testing)."""
     return str(repo_root)
 
 def main(manuscript_path: Path | None = None, strict: bool = False) -> int:

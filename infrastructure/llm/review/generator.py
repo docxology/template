@@ -1,4 +1,13 @@
-"""Review generation utilities for manuscript review operations."""
+"""Review generation utilities for manuscript review operations.
+
+Error contract design:
+- Text extraction helpers (extract_manuscript_text) return (None, metrics) on failure
+  so the pipeline can report a graceful skip rather than aborting on missing files.
+- LLM response validation (llm/validation/core.py) raises ValidationError immediately —
+  an invalid response from the LLM is a programmer error or model failure that cannot
+  be meaningfully recovered from in-line.
+- These are intentionally different contracts for different failure domains.
+"""
 
 from __future__ import annotations
 
@@ -670,6 +679,12 @@ def generate_review_with_metrics(
 def generate_llm_executive_summary(
     client: LLMClient, text: str, model_name: str = ""
 ) -> tuple[str, ReviewMetrics]:
+    """Named public API entry point for executive summary reviews.
+
+    Binds review_type='executive_summary' and ManuscriptExecutiveSummary template.
+    Callers use the named function rather than the generic generate_review_with_metrics
+    to avoid having to know the template class and review_type string.
+    """
     return generate_review_with_metrics(
         client=client,
         text=text,
@@ -684,6 +699,7 @@ def generate_llm_executive_summary(
 def generate_quality_review(
     client: LLMClient, text: str, model_name: str = ""
 ) -> tuple[str, ReviewMetrics]:
+    """Named public API entry point for quality reviews (ManuscriptQualityReview template)."""
     return generate_review_with_metrics(
         client=client,
         text=text,
@@ -698,6 +714,7 @@ def generate_quality_review(
 def generate_methodology_review(
     client: LLMClient, text: str, model_name: str = ""
 ) -> tuple[str, ReviewMetrics]:
+    """Named public API entry point for methodology reviews (ManuscriptMethodologyReview template)."""
     return generate_review_with_metrics(
         client=client,
         text=text,
@@ -712,6 +729,7 @@ def generate_methodology_review(
 def generate_improvement_suggestions(
     client: LLMClient, text: str, model_name: str = ""
 ) -> tuple[str, ReviewMetrics]:
+    """Named public API entry point for improvement suggestions (ManuscriptImprovementSuggestions template)."""
     return generate_review_with_metrics(
         client=client,
         text=text,

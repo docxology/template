@@ -53,19 +53,10 @@ class InputSanitizer:
         if not isinstance(prompt, str):
             raise SecurityError("Prompt must be a string")
 
-        # Remove null bytes and other control characters
         prompt = self._remove_control_characters(prompt)
-
-        # Check for dangerous patterns
         self._check_dangerous_patterns(prompt)
-
-        # Sanitize HTML entities
         prompt = self._escape_html_entities(prompt)
-
-        # Remove excessive whitespace
         prompt = self._normalize_whitespace(prompt)
-
-        # Limit prompt length
         prompt = self._limit_length(prompt)
 
         logger.debug(f"Sanitized prompt: {len(prompt)} characters")
@@ -125,28 +116,18 @@ class InputSanitizer:
         if not filename or not isinstance(filename, str):
             raise SecurityError("Invalid filename")
 
-        # Remove path separators
         filename = re.sub(r"[\/\\]", "_", filename)
-
-        # Remove dangerous characters
         filename = re.sub(r'[<>:"|?*]', "_", filename)
-
-        # Remove control characters
         filename = re.sub(r"[\x00-\x1f\x7f-\x9f]", "", filename)
-
-        # Limit length
         filename = filename[:255]
 
-        # Ensure not empty after sanitization
         if not filename.strip():
             filename = "unnamed_file"
 
         return filename
 
     def _remove_control_characters(self, text: str) -> str:
-        """Remove control characters from text."""
-        # Remove null bytes and other dangerous control characters
-        # Keep newlines, tabs, and spaces
+        """Remove control characters from text, preserving newlines, tabs, and spaces."""
         return re.sub(r"[\x00-\x08\x0b-\x0c\x0e-\x1f\x7f-\x9f]", "", text)
 
     def _check_dangerous_patterns(self, text: str) -> None:
@@ -157,14 +138,17 @@ class InputSanitizer:
                 raise SecurityError("Dangerous content detected in input")
 
     def _escape_html_entities(self, text: str) -> str:
-        """Escape HTML entities for safety."""
+        """Escape HTML entities in LLM-bound prompts.
+
+        Intentional security measure: escaping angle brackets and quotes prevents
+        prompt injection via HTML/XML fragments in research text. LLM backends
+        receive the escaped form; callers should not unescape the result.
+        """
         return html.escape(text, quote=True)
 
     def _normalize_whitespace(self, text: str) -> str:
         """Normalize excessive whitespace."""
-        # Replace multiple spaces with single space
         text = re.sub(r" +", " ", text)
-        # Replace multiple newlines with double newline
         text = re.sub(r"\n\s*\n\s*\n+", "\n\n", text)
         return text.strip()
 

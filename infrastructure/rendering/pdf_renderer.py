@@ -707,7 +707,7 @@ class PDFRenderer:
 
         # Fix broken math delimiters from Pandoc conversion
         try:
-            tex_content = self._fix_math_delimiters(tex_content)
+            tex_content = fix_math_delimiters(tex_content)
         except Exception as e:  # noqa: BLE001
             logger.warning(
                 f"Math delimiter fixing failed: {e}. Continuing with original LaTeX content."
@@ -716,13 +716,13 @@ class PDFRenderer:
             # Continue with original tex_content - it may still compile
 
         # Fix figure paths for LaTeX compilation
-        tex_content = self._fix_figure_paths(tex_content, manuscript_dir, output_dir)
+        tex_content = fix_figure_paths(tex_content, manuscript_dir, output_dir)
 
         # Extract and apply preamble directly to LaTeX
         preamble_file = manuscript_dir / "preamble.md"
         preamble_content = ""
         if preamble_file.exists():
-            preamble_content = self._extract_preamble(preamble_file)
+            preamble_content = extract_preamble(preamble_file)
             if preamble_content:
                 logger.info(f"✓ Extracted preamble from {preamble_file.name}")
             else:
@@ -731,8 +731,8 @@ class PDFRenderer:
             logger.debug(f"No preamble file found at {preamble_file}")
 
         # Generate title page preamble and body commands from config.yaml
-        title_page_preamble = self._generate_title_page_preamble(manuscript_dir)
-        title_page_body = self._generate_title_page_body(manuscript_dir)
+        title_page_preamble = generate_title_page_preamble(manuscript_dir)
+        title_page_body = generate_title_page_body(manuscript_dir)
 
         # Ensure graphicx package is always included (required for \includegraphics)
         # Check preamble_content (from preamble.md), not tex_content (Pandoc output)
@@ -1157,7 +1157,7 @@ class PDFRenderer:
 
                     # Check for graphics-specific issues
                     if run == max_passes - 1:  # Last pass
-                        graphics_issues = self._check_latex_log_for_graphics_errors(log_file)
+                        graphics_issues = check_latex_log_for_graphics_errors(log_file)
                         if graphics_issues["graphics_errors"]:
                             for error in graphics_issues["graphics_errors"]:
                                 logger.warning(f"  Graphics error: {error}")
@@ -1342,26 +1342,3 @@ class PDFRenderer:
 
         return combined
 
-    def _extract_preamble(self, preamble_file: Path) -> str:
-        """Extract LaTeX preamble from markdown file. Delegates to module-level helper."""
-        return extract_preamble(preamble_file)
-
-    def _fix_figure_paths(self, tex_content: str, manuscript_dir: Path, output_dir: Path) -> str:
-        """Fix figure paths in LaTeX content. Delegates to module-level helper."""
-        return fix_figure_paths(tex_content, manuscript_dir, output_dir)
-
-    def _fix_math_delimiters(self, tex_content: str) -> str:
-        """Fix broken math delimiters from Pandoc conversion. Delegates to module-level helper."""
-        return fix_math_delimiters(tex_content)
-
-    def _check_latex_log_for_graphics_errors(self, log_file: Path) -> dict[str, list[str]]:
-        """Parse LaTeX log for graphics errors. Delegates to module-level helper."""
-        return check_latex_log_for_graphics_errors(log_file)
-
-    def _generate_title_page_preamble(self, manuscript_dir: Path) -> str:
-        """Generate title page preamble from config.yaml. Delegates to module-level helper."""
-        return generate_title_page_preamble(manuscript_dir)
-
-    def _generate_title_page_body(self, manuscript_dir: Path) -> str:
-        """Generate title page body from config.yaml. Delegates to module-level helper."""
-        return generate_title_page_body(manuscript_dir)

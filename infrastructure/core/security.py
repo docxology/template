@@ -88,28 +88,18 @@ class SecurityValidator:
                 f"Prompt too long: {len(prompt)} > {self.limits['prompt_length']}"
             )
 
-        # Check for dangerous patterns
         for pattern in self.dangerous_patterns:
             if re.search(pattern, prompt, re.IGNORECASE):
                 logger.warning(f"Security pattern detected: {pattern}")
                 raise SecurityViolation("Input contains potentially dangerous content")
 
-        # Sanitize HTML entities
         prompt = self._sanitize_html(prompt)
-
-        # Normalize whitespace
         prompt = self._normalize_whitespace(prompt)
 
         return prompt
 
     def validate_file_path(self, path: Union[str, Path]) -> Path:
         """Validate file path for security.
-
-        Args:
-            path: File path to validate
-
-        Returns:
-            Validated Path object
 
         Raises:
             SecurityViolation: If path is unsafe
@@ -150,13 +140,9 @@ class SecurityValidator:
         if len(filename) > self.limits["filename_length"]:
             raise SecurityViolation("Filename too long")
 
-        # Remove dangerous characters
         sanitized = re.sub(r'[<>:"|?*\x00-\x1f\x7f-\x9f]', "_", filename)
-
-        # Remove path separators
         sanitized = re.sub(r"[\/\\]", "_", sanitized)
 
-        # Ensure not empty after sanitization
         if not sanitized.strip():
             sanitized = "unnamed_file"
 
@@ -188,9 +174,7 @@ class SecurityValidator:
 
     def _normalize_whitespace(self, text: str) -> str:
         """Normalize excessive whitespace."""
-        # Replace multiple spaces with single space
         text = re.sub(r" +", " ", text)
-        # Replace multiple newlines with double newline
         text = re.sub(r"\n\s*\n\s*\n+", "\n\n", text)
         return text.strip()
 

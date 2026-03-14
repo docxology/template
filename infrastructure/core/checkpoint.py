@@ -125,7 +125,6 @@ class CheckpointManager:
         )
 
         try:
-            # Ensure checkpoint directory exists
             self._ensure_checkpoint_dir()
             with open(self.checkpoint_file, "w") as f:
                 json.dump(checkpoint.to_dict(), f, indent=2)

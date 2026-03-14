@@ -96,13 +96,6 @@ def retry_on_transient_failure(
 
     Convenience wrapper around retry_with_backoff that catches common
     transient failure exceptions (IOError, ConnectionError, TimeoutError).
-
-    Args:
-        max_attempts: Maximum number of attempts (default: 3)
-        initial_delay: Initial delay in seconds (default: 1.0)
-
-    Returns:
-        Decorator function
     """
     return retry_with_backoff(
         max_attempts=max_attempts,
