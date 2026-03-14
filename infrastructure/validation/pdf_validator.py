@@ -161,26 +161,20 @@ def scan_for_issues(text: str) -> dict[str, int]:
             'total_issues': int
         }
     """
-    issues = {
-        "unresolved_references": 0,
-        "warnings": 0,
-        "errors": 0,
-        "missing_citations": 0,
-    }
-
-    # Count unresolved references (??)
-    issues["unresolved_references"] = len(re.findall(r"\?\?", text))
-
-    # Count warnings (case-insensitive)
-    issues["warnings"] = len(re.findall(r"\[WARNING\]|Warning:", text, re.IGNORECASE))
-
-    # Count errors (case-insensitive, but exclude common false positives)
-    # Match [ERROR] or "Error:" only when it appears to be a system message
+    # Count each issue type directly — no default-then-overwrite
+    unresolved_references = len(re.findall(r"\?\?", text))
+    warnings = len(re.findall(r"\[WARNING\]|Warning:", text, re.IGNORECASE))
+    # Match [ERROR] or "Error:" only when it appears to be a system message.
     # Exclude scientific terms like "standard error:", "final error:", "measurement error:"
-    issues["errors"] = len(re.findall(r"\[ERROR\]|^\s*Error:\s|Error:\s+[A-Z]", text, re.MULTILINE))
+    errors = len(re.findall(r"\[ERROR\]|^\s*Error:\s|Error:\s+[A-Z]", text, re.MULTILINE))
+    missing_citations = len(re.findall(r"\[\?\]", text))
 
-    # Count missing citations [?]
-    issues["missing_citations"] = len(re.findall(r"\[\?\]", text))
+    issues = {
+        "unresolved_references": unresolved_references,
+        "warnings": warnings,
+        "errors": errors,
+        "missing_citations": missing_citations,
+    }
 
     # Total issues
     issues["total_issues"] = sum(issues.values())
