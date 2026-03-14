@@ -316,8 +316,8 @@ def run_render_pipeline(project_name: str = "project") -> int:
                     logger.error(
                         f"  Combined markdown file size: {combined_md_path.stat().st_size} bytes"
                     )
-            except OSError:
-                pass
+            except OSError as stat_err:
+                logger.debug(f"  Could not stat combined markdown file: {stat_err}")
 
             logger.warning("  This is an unexpected error - please report this issue")
             # Don't fail the entire pipeline for combined PDF generation
