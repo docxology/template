@@ -19,7 +19,7 @@ CLI Usage:
 
 Direct imports (recommended):
     from infrastructure.llm.core.client import LLMClient
-    from infrastructure.llm.core.config import LLMConfig, GenerationOptions
+    from infrastructure.llm.core.config import OllamaClientConfig, GenerationOptions
     from infrastructure.llm.templates import get_template
     from infrastructure.llm.validation import validate_complete
 """
@@ -31,7 +31,7 @@ from infrastructure.llm.core import (
     ConversationContext,
     GenerationOptions,
     LLMClient,
-    LLMConfig,
+    OllamaClientConfig,
     Message,
     ResponseMode,
     save_response,
@@ -135,7 +135,7 @@ __all__ = [
     "ResponseMode",
     "strip_thinking_tags",
     # Configuration
-    "LLMConfig",
+    "OllamaClientConfig",
     "GenerationOptions",
     # Context management
     "ConversationContext",

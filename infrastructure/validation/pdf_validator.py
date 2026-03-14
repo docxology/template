@@ -77,7 +77,7 @@ def extract_text_from_pdf(pdf_path: Path) -> str:
         except ImportError:
             logger.debug(f"{method_name} library not available, skipping")
             continue
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 — PDF library exceptions vary by backend
             error_msg = f"{method_name} extraction failed: {e}"
             logger.debug(error_msg)
             last_error = e
@@ -96,7 +96,7 @@ def extract_text_from_pdf(pdf_path: Path) -> str:
                 error_details.append("File does not have valid PDF header")
             else:
                 error_details.append(f"PDF header detected: {header[:8].decode(errors='replace')}")
-    except Exception as diag_error:
+    except Exception as diag_error:  # noqa: BLE001 — diagnostic read, any OS error is acceptable
         error_details.append(f"Could not read PDF header: {diag_error}")
 
     error_details.append(f"File size: {file_size} bytes")

@@ -185,7 +185,7 @@ class SlidesRenderer:
 
                     error_msg += f"\n\nSuggestions:\n- Check LaTeX log file: {log_file}\n- Verify LaTeX syntax in generated .tex file: {temp_tex}\n- Ensure all referenced figures exist\n- Check for missing LaTeX packages"  # noqa: E501
 
-                except Exception as log_error:
+                except Exception as log_error:  # noqa: BLE001
                     error_msg += f"\n\nCould not read LaTeX log file: {log_error}"
 
             raise RenderingError(

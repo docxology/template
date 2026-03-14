@@ -199,7 +199,7 @@ def clean_output_directories(
                     else:
                         shutil.rmtree(item)
                 else:
-                    # Root-level files: preserve if in the set (legacy compat)
+                    # Root-level files: preserve if in the preserve set (incremental pipeline)
                     if Path(item.name) in preserved_relative_paths:
                         logger.debug(f"  Preserving file for incremental processing: {item.name}")
                     else:

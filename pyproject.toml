@@ -35,6 +35,8 @@ classifiers = [
     "Topic :: Text Processing :: Markup",
 ]
 dependencies = [
+  # numpy and matplotlib are core because infrastructure/scientific/ uses them for
+  # benchmarking and figure generation — not optional for projects using this template
   "numpy>=1.22",
   "pyyaml>=6.0",
   "matplotlib>=3.7",

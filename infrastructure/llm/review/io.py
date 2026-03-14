@@ -7,7 +7,7 @@ from datetime import datetime
 from pathlib import Path
 
 from infrastructure.core.logging_utils import get_logger, log_success
-from infrastructure.llm.core.config import LLMConfig
+from infrastructure.llm.core.config import OllamaClientConfig
 from infrastructure.llm.review.metrics import ReviewMetrics, SessionMetrics
 from infrastructure.llm.review.review_analysis import (
     calculate_format_compliance_summary,
@@ -213,7 +213,7 @@ def _build_review_metadata(
     compliant_reviews = sum(1 for r in format_compliance_per_review.values() if r["compliant"])
     compliance_rate = (compliant_reviews / total_reviews * 100) if total_reviews > 0 else 100
 
-    llm_config = LLMConfig.from_env()
+    llm_config = OllamaClientConfig.from_env()
     return {
         "model": model_name,
         "timestamp": timestamp,

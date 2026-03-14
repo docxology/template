@@ -115,7 +115,7 @@ def main() -> None:
 
     try:
         args.func(args)
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.error(f"Error: {e}")
         raise SystemExit(1) from e
 

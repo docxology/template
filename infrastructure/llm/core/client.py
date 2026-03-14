@@ -28,7 +28,7 @@ except ImportError:
 from infrastructure.core.exceptions import LLMConnectionError, LLMError
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.llm.core._text_utils import strip_thinking_tags
-from infrastructure.llm.core.config import GenerationOptions, LLMConfig
+from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig
 from infrastructure.llm.core.context import ConversationContext
 from infrastructure.llm.core.sanitization import sanitize_llm_input
 from infrastructure.llm.templates import get_template
@@ -75,13 +75,13 @@ class LLMClient:
         ... )
     """
 
-    def __init__(self, config: LLMConfig | None = None):
+    def __init__(self, config: OllamaClientConfig | None = None):
         """Initialize LLM client.
 
         Args:
-            config: LLMConfig instance. If None, loads from environment.
+            config: OllamaClientConfig instance. If None, loads from environment.
         """
-        self.config = config or LLMConfig.from_env()
+        self.config = config or OllamaClientConfig.from_env()
         self.context = ConversationContext(max_tokens=self.config.context_window)
         self._system_prompt_injected = False
 

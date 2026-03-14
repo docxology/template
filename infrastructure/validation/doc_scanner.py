@@ -198,7 +198,7 @@ class DocumentationScanner:
                 "output": result.stdout,
                 "errors": result.stderr,
             }
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.warning(f"Link checker subprocess failed: {e}")
             return {"success": False, "error": str(e)}
 

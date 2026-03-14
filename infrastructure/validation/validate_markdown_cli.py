@@ -94,7 +94,7 @@ def main(manuscript_path: Path | None = None, strict: bool = False) -> int:
     except FileNotFoundError as e:
         logger.error(f"❌ Error: {e}")
         return 1
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.error(f"❌ Unexpected error: {e}")
         return 1
 

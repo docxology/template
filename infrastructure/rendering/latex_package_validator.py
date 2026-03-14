@@ -121,7 +121,7 @@ def check_latex_package(package_name: str, kpsewhich_path: Path | None = None) -
     except subprocess.TimeoutExpired:
         logger.warning(f"Timeout checking package {package_name}")
         return PackageStatus(name=package_name, installed=False, path=None)
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.warning(f"Error checking package {package_name}: {e}")
         return PackageStatus(name=package_name, installed=False, path=None)
 

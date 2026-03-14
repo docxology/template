@@ -102,7 +102,7 @@ def identify_cross_references(md_files: list[Path]) -> Set[str]:
                 target = match.group(2)
                 if not target.startswith("http") and not target.startswith("#"):
                     cross_refs.add(target)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.debug(f"Failed to scan cross-refs in {md_file}: {e}")
 
     return cross_refs
@@ -204,7 +204,7 @@ def analyze_documentation_file(md_file: Path, repo_root: Path) -> DocumentationF
             has_code_blocks=has_code_blocks,
             last_modified=mtime,
         )
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.error(f"Error analyzing {md_file}: {e}")
         return DocumentationFile(
             path=str(md_file),

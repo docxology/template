@@ -212,7 +212,7 @@ class WebRenderer:
                         "Remove any non-UTF-8 characters from the file",
                     ],
                 ) from e
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 raise RenderingError(
                     f"Failed to read markdown file: {md_file.name}",
                     context={
@@ -293,6 +293,6 @@ class WebRenderer:
             html_file.write_text(html_content, encoding="utf-8")
             logger.debug(f"Embedded CSS from {css_file.name} into {html_file.name}")
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.warning(f"Failed to embed CSS: {e}")
             # Don't fail the entire process if CSS embedding fails

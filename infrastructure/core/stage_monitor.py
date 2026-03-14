@@ -12,7 +12,7 @@ import os
 import time
 from contextlib import contextmanager
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, TypedDict
 
 from infrastructure.core._optional_deps import psutil
 from infrastructure.core.exceptions import BuildError
@@ -20,6 +20,18 @@ from infrastructure.core.logging_helpers import format_duration
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
+
+class StageMetricsDict(TypedDict, total=False):
+    """Typed dict for per-stage performance metrics collected by StagePerformanceTracker."""
+
+    stage_name: str
+    duration: float
+    exit_code: int
+    memory_mb: float
+    cpu_percent: float
+    io_read_mb: float
+    io_write_mb: float
+
 
 # Performance warning thresholds
 _SLOW_STAGE_MULTIPLIER = 2  # warn when a stage takes > N× the pipeline average
@@ -88,7 +100,11 @@ class PerformanceMonitor:
         self.cache_misses = 0
 
     def stop(self) -> PerformanceMetrics:
-        """Stop monitoring and return metrics."""
+        """Stop monitoring and return metrics.
+
+        Raises:
+            BuildError: If stop() is called before start().
+        """
         if self.start_time is None:
             raise BuildError("Monitor not started")
 
@@ -196,7 +212,7 @@ class StagePerformanceTracker:
         high_memory_mb: float = _HIGH_MEMORY_MB,
         high_cpu_percent: float = _HIGH_CPU_PERCENT,
     ):
-        self.stages: list[dict[str, Any]] = []
+        self.stages: list[StageMetricsDict] = []
         self.start_time: float | None = None
         self.start_memory: float = 0.0
         self.start_io: Any | None = None
@@ -246,7 +262,7 @@ class StagePerformanceTracker:
             except AttributeError as e:
                 logger.debug(f"psutil attribute not available on this platform: {e}")
 
-        metrics = {
+        metrics: StageMetricsDict = {
             "stage_name": stage_name,
             "duration": duration,
             "exit_code": exit_code,
@@ -261,9 +277,9 @@ class StagePerformanceTracker:
 
         return metrics
 
-    def get_performance_warnings(self) -> list[dict[str, Any]]:
+    def get_performance_warnings(self) -> list[StageMetricsDict]:
         """Return performance warnings for stages."""
-        warnings: list[dict[str, Any]] = []
+        warnings: list[StageMetricsDict] = []
 
         if not self.stages:
             return warnings

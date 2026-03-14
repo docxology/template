@@ -5,6 +5,7 @@ from __future__ import annotations
 import time
 from pathlib import Path
 
+from infrastructure.core.exceptions import PDFValidationError
 from infrastructure.core.logging_utils import (
     get_logger,
     log_substep,
@@ -98,7 +99,11 @@ def run_llm_review_pipeline(
         session_metrics.model_name = model_name  # type: ignore
 
         # Step 2: Extract manuscript text
-        text, manuscript_metrics = extract_manuscript_text(pdf_path)
+        try:
+            text, manuscript_metrics = extract_manuscript_text(pdf_path)
+        except PDFValidationError as e:
+            logger.error(f"Cannot generate reviews: manuscript PDF is invalid — {e}")
+            return 2
         session_metrics.manuscript = manuscript_metrics
 
         if not text:

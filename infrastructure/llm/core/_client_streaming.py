@@ -14,7 +14,7 @@ from typing import Any, Callable, Iterator
 from infrastructure.core.exceptions import LLMConnectionError
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.llm.core._text_utils import strip_thinking_tags
-from infrastructure.llm.core.config import GenerationOptions, LLMConfig
+from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig
 from infrastructure.llm.core.context import ConversationContext
 from infrastructure.llm.core.sanitization import sanitize_llm_input
 
@@ -28,7 +28,7 @@ except ImportError:
 
 
 def stream_query_impl(
-    config: LLMConfig,
+    config: OllamaClientConfig,
     context: ConversationContext,
     save_streaming_state_fn: Callable[..., bool],
     prompt: str,
@@ -307,7 +307,7 @@ def stream_query_impl(
 
 
 def stream_short_impl(
-    config: LLMConfig,
+    config: OllamaClientConfig,
     context: ConversationContext,
     save_streaming_state_fn: Callable[..., bool],
     prompt: str,
@@ -360,7 +360,7 @@ def stream_short_impl(
 
 
 def stream_long_impl(
-    config: LLMConfig,
+    config: OllamaClientConfig,
     context: ConversationContext,
     save_streaming_state_fn: Callable[..., bool],
     prompt: str,

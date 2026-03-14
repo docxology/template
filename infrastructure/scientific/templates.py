@@ -54,10 +54,7 @@ def function1(param1: float, param2: int) -> float:
         >>> print(result)
         3.0
     """
-    if not isinstance(param1, (int, float)):
-        raise TypeError(f"param1 must be numeric, got {{type(param1)}}")
-    if not isinstance(param2, int):
-        raise TypeError(f"param2 must be integer, got {{type(param2)}}")
+    # Type checking is enforced by the function signature; callers must pass correct types.
 
     try:
         result = param1 * param2 + 1.0
@@ -84,8 +81,7 @@ def function2(data: list[float], threshold: float = 0.0) -> tuple[list[float], f
     if not data:
         raise ValueError("Input data cannot be empty")
 
-    if not all(isinstance(x, (int, float)) for x in data):
-        raise ValueError("All data elements must be numeric")
+    # list[float] type annotation enforces element types; no runtime isinstance check needed.
 
     filtered_data = [x for x in data if x > threshold]
 

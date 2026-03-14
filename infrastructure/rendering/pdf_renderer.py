@@ -230,8 +230,8 @@ class PDFRenderer:
                 )
                 return False
             return True
-        except Exception as e:
-            logger.debug(f"  PDF validation skipped: {e}")
+        except Exception as e:  # noqa: BLE001 — LaTeX subprocess exceptions vary
+logger.debug(f"  PDF validation skipped: {e}")
             return False
 
     def _process_bibliography(self, tex_file: Path, output_dir: Path, bib_file: Path) -> bool:
@@ -307,7 +307,7 @@ class PDFRenderer:
             logger.debug(f"✓ Bibliography processed: {bibtex_cmd} {aux_file.stem}")
             return True
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.warning(f"Bibliography processing failed: {e}", exc_info=True)
             return False
 
@@ -494,8 +494,8 @@ class PDFRenderer:
                 suggestions.append(
                     "Try converting individual markdown files to identify the problematic file"
                 )
-            except Exception as ex:
-                logger.debug(f"Error gathering context: {ex}")
+            except Exception as ex:  # noqa: BLE001 — LaTeX subprocess exceptions vary
+logger.debug(f"Error gathering context: {ex}")
                 suggestions.append(f"Could not read combined markdown file: {ex}")
 
         suggestions += [
@@ -722,7 +722,7 @@ class PDFRenderer:
         # Fix broken math delimiters from Pandoc conversion
         try:
             tex_content = self._fix_math_delimiters(tex_content)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.warning(
                 f"Math delimiter fixing failed: {e}. Continuing with original LaTeX content."
             )
@@ -1038,8 +1038,8 @@ class PDFRenderer:
                 logger.info("  Bibliography processing...")
                 try:
                     self._process_bibliography(combined_tex, output_dir, bib_file)
-                except Exception as bib_error:
-                    logger.warning(f"  Bibliography processing failed: {bib_error}")
+                except Exception as bib_error:  # noqa: BLE001 — bibtex/biber exceptions vary
+logger.warning(f"  Bibliography processing failed: {bib_error}")
                     logger.warning("  Continuing PDF generation without bibliography processing")
                     # Don't fail the entire PDF generation for bibliography issues
 
@@ -1299,7 +1299,7 @@ class PDFRenderer:
                         "Remove any non-UTF-8 characters from the file",
                     ],
                 ) from e
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 raise RenderingError(
                     f"Failed to read markdown file: {md_file.name}",
                     context={

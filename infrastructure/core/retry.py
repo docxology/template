@@ -50,15 +50,6 @@ def retry_with_backoff(
 
     Returns:
         Decorator function
-
-    Example:
-        >>> @retry_with_backoff(max_attempts=3, initial_delay=1.0)
-        ... def fetch_data():
-        ...     # May raise ConnectionError
-        ...     return requests.get("https://api.example.com")
-        >>>
-        >>> # Will retry up to 3 times with exponential backoff
-        >>> data = fetch_data()
     """
 
     def decorator(func: Callable[..., T]) -> Callable[..., T]:
@@ -114,14 +105,6 @@ def retry_on_transient_failure(
 
     Returns:
         Decorator function
-
-    Example:
-        >>> @retry_on_transient_failure()
-        ... def read_file(path):
-        ...     return open(path).read()
-        >>>
-        >>> # Will retry on IOError (file locks, network issues, etc.)
-        >>> content = read_file("data.txt")
     """
     return retry_with_backoff(
         max_attempts=max_attempts,
@@ -131,19 +114,7 @@ def retry_on_transient_failure(
     )
 
 class RetryableOperation:
-    """Context manager for retryable operations with manual control.
-
-    Useful when you need more control over retry logic than a decorator provides.
-
-    Example:
-        >>> with RetryableOperation(max_attempts=3) as op:
-        ...     for attempt in op:
-        ...         try:
-        ...             result = risky_operation()
-        ...             op.succeed(result)
-        ...         except TransientError as e:
-        ...             op.retry(e)
-    """
+    """Context manager for retryable operations with manual retry control."""
 
     def __init__(
         self,

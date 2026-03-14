@@ -25,7 +25,7 @@ from infrastructure.core.logging_progress import (
 )
 
 from infrastructure.llm.core.client import LLMClient
-from infrastructure.llm.core.config import GenerationOptions, LLMConfig
+from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig
 
 from infrastructure.llm.utils.ollama import (
     is_ollama_running,
@@ -55,6 +55,10 @@ from infrastructure.llm.validation.format import (
 )
 
 from infrastructure.llm.review.metrics import ReviewMetrics, ManuscriptInputMetrics, estimate_tokens
+# Cross-subsystem import: llm/review depends on validation/pdf_validator for text extraction.
+# This is an intentional seam — PDF text extraction lives in validation because it is also
+# used by the output validator. If this becomes a problem, move extract_text_from_pdf to
+# infrastructure/core/pdf_utils.py so both subsystems can import without circular deps.
 from infrastructure.validation.pdf_validator import extract_text_from_pdf
 from infrastructure.core.exceptions import PDFValidationError
 
@@ -295,7 +299,7 @@ _REVIEW_TYPE_VALIDATORS: dict[str, _ValidatorFn] = {
 }
 
 def create_review_client(model_name: str) -> LLMClient:
-    config = LLMConfig.from_env()
+    config = OllamaClientConfig.from_env()
     config.default_model = model_name
     config.timeout = config.review_timeout
     config.system_prompt = get_manuscript_review_system_prompt()
@@ -427,11 +431,13 @@ def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> tuple
         elapsed = time.time() - start_time
         response = "".join(response_chunks)
 
-        if first_token_time:
+        if first_token_time is not None:
+            # first_token_time is when the first token arrived; generation_time excludes TTFT
             generation_time = elapsed - (first_token_time - start_time)
             output_tokens = len(response.split()) * 1.3
             tokens_per_sec = output_tokens / generation_time if generation_time > 0 else 0
         else:
+            # No tokens received — streaming produced no output
             tokens_per_sec = 0
 
         log_success(f"Warmup complete ({elapsed:.1f}s)", logger)
@@ -450,6 +456,14 @@ def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> tuple
         return False, 0.0
 
 def extract_manuscript_text(pdf_path: Path | str) -> tuple[str | None, ManuscriptInputMetrics]:
+    """Extract text from a manuscript PDF for LLM review.
+
+    Returns:
+        (text, metrics) where text is None if the PDF file does not exist.
+
+    Raises:
+        PDFValidationError: If the file exists but cannot be read or is invalid.
+    """
     log_substep(f"Extracting text from manuscript: {Path(pdf_path).name}")
     metrics = ManuscriptInputMetrics()
 
@@ -468,7 +482,7 @@ def extract_manuscript_text(pdf_path: Path | str) -> tuple[str | None, Manuscrip
         logger.info(
             f"  Extracted: {metrics.total_chars:,} chars ({metrics.total_words:,} words, ~{metrics.total_tokens_est:,} tokens)"  # noqa: E501
         )
-        max_length = LLMConfig.from_env().max_input_length
+        max_length = OllamaClientConfig.from_env().max_input_length
 
         if max_length > 0 and len(text) > max_length:
             metrics.truncated = True
@@ -483,9 +497,8 @@ def extract_manuscript_text(pdf_path: Path | str) -> tuple[str | None, Manuscrip
             logger.info("  Sending full manuscript to LLM (no truncation)")
 
         return text, metrics
-    except PDFValidationError as e:
-        logger.error(format_error_with_suggestions(e))
-        return None, metrics
+    except PDFValidationError:
+        raise
 
 def _build_retry_prompt(prompt: str, had_off_topic: bool) -> str:
     """Build a modified prompt for a retry, prepending an off-topic warning if needed."""
@@ -506,7 +519,7 @@ def _stream_with_heartbeat(
     options: GenerationOptions,
     review_name: str,
     estimated_total_tokens: int,
-    config: LLMConfig,
+    config: OllamaClientConfig,
 ) -> str:
     """Stream a query with heartbeat monitoring and progress display.
 
@@ -566,7 +579,7 @@ def generate_review_with_metrics(
     log_substep(f"Generating {review_name}...")
 
     if max_tokens is None:
-        max_tokens = LLMConfig.from_env().long_max_tokens
+        max_tokens = OllamaClientConfig.from_env().long_max_tokens
 
     metrics = ReviewMetrics(
         input_chars=len(text),
@@ -585,7 +598,7 @@ def generate_review_with_metrics(
     best_response = ""
     response = ""  # Initialize before loop — assigned in each iteration's try block
     had_off_topic = False
-    config = LLMConfig.from_env()
+    config = OllamaClientConfig.from_env()
 
     for attempt in range(max_retries + 1):
         try:
@@ -714,7 +727,7 @@ def generate_translation(
         input_chars=len(text), input_words=len(text.split()), input_tokens_est=estimate_tokens(text)
     )
     client.reset()
-    _cfg = LLMConfig.from_env()
+    _cfg = OllamaClientConfig.from_env()
     max_tokens = _cfg.long_max_tokens
     timeout = _cfg.review_timeout
     log_timeout_info(timeout, f"translation ({target_language})")

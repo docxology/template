@@ -70,7 +70,7 @@ def validate_no_mocks(tests_dir: Path, repo_root: Path) -> list[str]:
 
                     relative_path = py_file.relative_to(repo_root)
                     all_output.append(f"{relative_path}:{line_num}: {line_str}")
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.warning(f"Error reading {py_file}: {e}")
 
     return all_output

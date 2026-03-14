@@ -12,6 +12,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, TypedDict
 
+from infrastructure.core.exceptions import InvalidConfigurationError
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
@@ -127,7 +128,10 @@ def load_config(config_path: Path | str) -> ManuscriptConfig | None:
         config_path: Path to config.yaml file
 
     Returns:
-        ManuscriptConfig dictionary, or None if file doesn't exist or can't be loaded
+        ManuscriptConfig dictionary, or None if file doesn't exist
+
+    Raises:
+        InvalidConfigurationError: If the file exists but contains invalid YAML
     """
     if not YAML_AVAILABLE:
         return None
@@ -148,8 +152,9 @@ def load_config(config_path: Path | str) -> ManuscriptConfig | None:
         logger.warning(f"Permission denied reading config {config_path}: {e}")
         return None
     except yaml.YAMLError as e:
-        logger.warning(f"YAML parse error in config {config_path}: {e}")
-        return None
+        raise InvalidConfigurationError(
+            f"YAML parse error in config {config_path}: {e}"
+        ) from e
 
 def format_author_details(authors: list[AuthorConfig], doi: str = "") -> str:
     """Format author details string for LaTeX.

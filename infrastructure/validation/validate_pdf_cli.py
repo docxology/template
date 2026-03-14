@@ -126,7 +126,7 @@ def main(pdf_path: Path | None = None, n_words: int = 200, verbose: bool = False
     except PDFValidationError as e:
         logger.error(f"Validation Error: {e}")
         return 2
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.error(f"Unexpected Error: {e}", exc_info=verbose)
         return 2
 

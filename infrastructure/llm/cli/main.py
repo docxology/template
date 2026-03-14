@@ -18,7 +18,7 @@ import sys
 
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.llm.core.client import LLMClient
-from infrastructure.llm.core.config import GenerationOptions, LLMConfig
+from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig
 
 logger = get_logger(__name__)
 
@@ -35,7 +35,7 @@ def query_command(args: argparse.Namespace) -> None:
     """Handle query command."""
     from infrastructure.llm.utils.ollama import is_ollama_running, select_best_model
 
-    config = LLMConfig.from_env()
+    config = OllamaClientConfig.from_env()
 
     # Apply command-line overrides
     if args.model:
@@ -87,7 +87,7 @@ def query_command(args: argparse.Namespace) -> None:
 
 def check_command(args: argparse.Namespace) -> None:
     """Handle check command - verify Ollama connection."""
-    config = LLMConfig.from_env()
+    config = OllamaClientConfig.from_env()
     client = LLMClient(config)
 
     logger.info(f"Checking connection to {config.base_url}")
@@ -103,7 +103,7 @@ def check_command(args: argparse.Namespace) -> None:
 
 def models_command(args: argparse.Namespace) -> None:
     """Handle models command - list available models."""
-    config = LLMConfig.from_env()
+    config = OllamaClientConfig.from_env()
     client = LLMClient(config)
 
     if not client.check_connection():
@@ -133,7 +133,7 @@ def template_command(args: argparse.Namespace) -> None:
     if not args.name:
         raise CLIError("Template name required. Use --list to see available.")
 
-    config = LLMConfig.from_env()
+    config = OllamaClientConfig.from_env()
     client = LLMClient(config)
 
     if not client.check_connection():
