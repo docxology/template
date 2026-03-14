@@ -141,7 +141,7 @@ class LLMConfig:
     review_timeout: float = 300.0  # Timeout for review operations (LLM_REVIEW_TIMEOUT)
     max_input_length: int = 500000  # Max input character length (LLM_MAX_INPUT_LENGTH)
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, **kwargs: Any):
         """Initialize config, supporting num_ctx as alias for context_window."""
         # Handle num_ctx -> context_window mapping
         if "num_ctx" in kwargs and "context_window" not in kwargs:
@@ -149,6 +149,13 @@ class LLMConfig:
 
         # Manually initialize all dataclass fields
         from dataclasses import MISSING, fields
+
+        valid_field_names = {f.name for f in fields(self)}
+
+        # Reject unknown kwargs so typos surface immediately
+        unknown = set(kwargs) - valid_field_names
+        if unknown:
+            raise ValueError(f"LLMConfig received unknown keyword arguments: {sorted(unknown)}")
 
         # Set all fields with defaults first
         for f in fields(self):
@@ -160,10 +167,8 @@ class LLMConfig:
                     setattr(self, f.name, factory())
 
         # Override with provided kwargs
-        valid_field_names = {f.name for f in fields(self)}
         for key, value in kwargs.items():
-            if key in valid_field_names:
-                setattr(self, key, value)
+            setattr(self, key, value)
 
     @classmethod
     def from_env(cls) -> LLMConfig:
@@ -293,6 +298,9 @@ class LLMConfig:
             "long_min_tokens": self.long_min_tokens,
             "system_prompt": self.system_prompt,
             "auto_inject_system_prompt": self.auto_inject_system_prompt,
+            "heartbeat_interval": self.heartbeat_interval,
+            "stall_threshold": self.stall_threshold,
+            "early_warning_threshold": self.early_warning_threshold,
             "review_timeout": self.review_timeout,
             "max_input_length": self.max_input_length,
         }

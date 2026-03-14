@@ -1,0 +1,52 @@
+This is BibTeX, Version 0.99d (TeX Live 2025)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: _combined_manuscript.aux
+The style file: plainnat.bst
+Illegal, another \bibdata command---line 766 of file _combined_manuscript.aux
+ : \bibdata
+ :         {references}
+I'm skipping whatever remains of this command
+Database file #1: references.bib
+Warning--empty publisher in lambek2004fine
+You've used 76 entries,
+            2773 wiz_defined-function locations,
+            1060 strings with 21894 characters,
+and the built_in function-call counts, 33358 in all, are:
+= -- 3045
+> -- 1853
+< -- 61
++ -- 642
+- -- 565
+* -- 2455
+:= -- 5249
+add.period$ -- 323
+call.type$ -- 76
+change.case$ -- 404
+chr.to.int$ -- 75
+cite$ -- 153
+duplicate$ -- 1535
+empty$ -- 2753
+format.name$ -- 671
+if$ -- 7017
+int.to.chr$ -- 2
+int.to.str$ -- 1
+missing$ -- 58
+newline$ -- 477
+num.names$ -- 310
+pop$ -- 843
+preamble$ -- 1
+purify$ -- 336
+quote$ -- 0
+skip$ -- 1188
+stack$ -- 0
+substring$ -- 860
+swap$ -- 149
+text.length$ -- 8
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 816
+warning$ -- 1
+while$ -- 293
+width$ -- 0
+write$ -- 1138
+(There was 1 error message)

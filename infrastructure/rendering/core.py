@@ -85,8 +85,11 @@ class RenderManager:
                     error_msg = f"Failed to render Beamer slides: {str(e)}"
 
                     # Check if PDF was created but is empty (0.0 KB)
+                    # Derive expected path from config — do NOT re-invoke the renderer
                     try:
-                        beamer_pdf = self.slides_renderer.render(source_file, format="beamer")
+                        beamer_pdf = (
+                            Path(self.config.slides_dir) / f"{source_file.stem}_slides.pdf"
+                        )
                         if beamer_pdf.exists():
                             size_mb = beamer_pdf.stat().st_size / (1024 * 1024)
                             if size_mb < _MIN_VALID_PDF_MB:

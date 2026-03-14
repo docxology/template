@@ -24,20 +24,20 @@ class InputSanitizer:
         # Dangerous patterns to filter
         self.dangerous_patterns = [
             # System prompt injection attempts
-            r"(?i)system\s*prompt\s*[:=]",
-            r"(?i)ignore\s+previous\s+instructions",
-            r"(?i)override\s+system\s+prompt",
-            r"(?i)change\s+your\s+persona",
+            r"(?i)\bsystem\s*prompt\s*[:=]",
+            r"(?i)\bignore\s+previous\s+instructions\b",
+            r"(?i)\boverride\s+system\s+prompt\b",
+            r"(?i)\bchange\s+your\s+persona\b",
             # Code execution attempts
-            r"(?i)exec\(|eval\(|subprocess\.|os\.system",
-            r"(?i)import\s+os|import\s+subprocess",
-            r"(?i)shell\s*[:=]|bash\s*[:=]|cmd\s*[:=]",
+            r"(?i)\bexec\(|\beval\(|\bsubprocess\.|\bos\.system\b",
+            r"(?i)\bimport\s+os\b|\bimport\s+subprocess\b",
+            r"(?i)\bshell\s*[:=]|\bbash\s*[:=]|\bcmd\s*[:=]",
             # File system access
-            r"(?i)open\(|file\(|pathlib\.|os\.path",
-            r"(?i)read\s+file|write\s+file|delete\s+file",
-            # Network access
-            r"(?i)requests\.|urllib\.|socket\.|http",
-            r"(?i)connect\s+to|download\s+from|upload\s+to",
+            r"(?i)\bopen\(|\bfile\(|\bpathlib\.|\bos\.path\b",
+            r"(?i)\bread\s+file\b|\bwrite\s+file\b|\bdelete\s+file\b",
+            # Network access (http without :// to avoid blocking legitimate URLs)
+            r"(?i)\brequests\.|\burllib\.|\bsocket\.",
+            r"(?i)\bconnect\s+to\b|\bdownload\s+from\b|\bupload\s+to\b",
             # Dangerous LaTeX commands
             r"\\input|\\include|\\usepackage|\\newcommand",
             r"\\write|\\read|\\openout|\\openin",

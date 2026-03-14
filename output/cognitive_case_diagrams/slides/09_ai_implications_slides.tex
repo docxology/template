@@ -1,0 +1,640 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+\usepackage{caption}
+% Make caption package work with longtable
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Synthetic and Artificial Intelligence Implications},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{\texorpdfstring{Synthetic and Artificial Intelligence
+Implications}{Synthetic and Artificial Intelligence Implications}}
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+\frame{\titlepage}
+
+\section{Synthetic and Artificial Intelligence: Categorical
+Foundations}\label{sec:ai-implications}
+
+\begin{frame}{Compositional Structure in Multi-Agent AI Communication}
+\protect\phantomsection\label{compositional-structure-in-multi-agent-ai-communication}
+The categorical framework developed in the preceding sections---case
+categories, functorial semantics, enriched structure, and diagrammatic
+reasoning---addresses a core challenge in contemporary artificial
+intelligence: how to endow autonomous agents with structured,
+compositional communication.
+
+Current multi-agent AI systems communicate through increasingly
+standardized protocols. Google's Agent-to-Agent (A2A) protocol
+{[}@google2025a2a{]}, introduced in 2025, provides a standard way for
+agents to communicate regardless of underlying framework through
+HTTP/JSON-RPC message passing with capability discovery. The Model
+Context Protocol (MCP) {[}@anthropic2024mcp{]} standardizes how AI
+agents access external tools and data sources. The Agent Communication
+Protocol (ACP) {[}@acp2025protocol{]} handles standardizing messaging
+formats across various users, including agents, applications, and
+humans. The Agent Network Protocol (ANP) {[}@anp2025protocol{]}
+introduces a three-layer architecture supporting trusted agent
+interaction in distributed systems. These engineering advances solve
+critical interoperability problems but lack a compositional semantics:
+messages are flat JSON payloads without inherent algebraic structure.
+
+Category theory provides exactly the missing layer. Just as the DisCoCat
+framework maps grammatical derivations functorially into vector spaces
+(see \autoref{sec:categorical-semantics}), a categorical communication
+protocol would map agent interaction patterns functorially into
+behavioral specifications. The morphisms of such a protocol category
+would be message types, the objects would be agent states, and the
+composition law would specify how multi-step interactions chain
+together---exactly the structure of our case categories, where morphisms
+represent grammatical relations and composition encodes transitivity.
+\end{frame}
+
+\begin{frame}{Case Roles as Functional Typing for Agent Systems}
+\protect\phantomsection\label{case-roles-as-functional-typing-for-agent-systems}
+The eight-case framework of CEREBRUM {[}@friedman2024cerebrum{]} maps
+directly onto the functional roles that components play in multi-agent
+architectures:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Case Role
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Agent System Analogue
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Protocol Function
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+NOM (Agent) & Active requester & Initiator of action policies \\
+ACC (Patient) & Passive responder & Target of directed operations \\
+GEN (Source) & Context provider & Supplier of prior information \\
+DAT (Recipient) & Designated receiver & Endpoint for information
+transfer \\
+INS (Instrument) & Tool / API & Means of state transformation \\
+LOC (Context) & Environment state & Boundary conditions and Markov
+blanket \\
+ABL (Origin) & Data source & Causal provenance of inputs \\
+VOC (Addressee) & Routing target & Pragmatic addressing in broadcast
+networks \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+This mapping is not merely analogical. In the MCP protocol, a tool call
+has precisely the structure of a case-marked clause: an \emph{agent}
+(NOM) invokes a \emph{tool} (INS) on a \emph{resource} (ACC) to deliver
+a \emph{result} to a \emph{recipient} (DAT). The case structure ensures
+that every interaction is relationally typed, preventing the category
+errors (sending a response where a tool call is expected) that plague
+unstructured message-passing systems.
+\end{frame}
+
+\begin{frame}{Categorical Deep Learning: An Algebraic Theory of
+Architectures}
+\protect\phantomsection\label{categorical-deep-learning-an-algebraic-theory-of-architectures}
+Gavranović {[}-@gavranovic2024thesis{]} develops ``a novel mathematical
+foundation for deep learning based on the language of category theory,''
+showing that neural network architectures---feedforward, convolutional,
+recurrent, attention---can all be subsumed under a single categorical
+framework using parameterized optics and lenses. This ``Categorical Deep
+Learning'' approach {[}@shiebler2024categorical{]} demonstrates that
+categorical structure is ``an algebraic theory of all architectures,''
+unifying design patterns that appear unrelated when viewed through
+conventional linear algebra.
+
+For case theory in AI, this result is significant: it means the same
+categorical language used to describe linguistic case assignment also
+describes the internal computation of the neural networks that process
+language. A transformer's attention mechanism, viewed through
+Gavranović's lens, performs a kind of \emph{categorical case
+assignment}---each attention head selects which input tokens play which
+functional roles in the computation, with attention weights serving as
+the enriched hom-values of \autoref{sec:enriched-categories}.
+
+The distributional semantics perspective deepens this connection. The
+transformer architecture {[}@vaswani2017attention{]} is, at its
+mathematical core, a \emph{distributional composition engine}: it takes
+distributional word representations (embeddings in the Firthian
+tradition {[}@firth1957papers{]}) and composes them into contextual
+sentence representations through attention-weighted aggregation. This is
+precisely what the DisCoCat functor
+\(F: \mathbf{Preg} \to \mathbf{FVect}\) does algebraically---compose
+word vectors according to syntactic structure. The key difference is
+that DisCoCat derives its composition rules from type-logical grammar,
+while transformers learn them from data. The convergence is striking:
+both arrive at tensor-contracted sentence representations, both use
+multi-linear maps for composition, and both produce vector spaces where
+similarity encodes semantic relatedness. Large language models such as
+BERT {[}@devlin2019bert{]} and GPT {[}@radford2018improving{]} thus
+serve as massive-scale \emph{empirical validations} of the
+distributional programme that DisCoCat formalizes categorically.
+
+Recent work on Distributional Active Inference
+{[}@akgul2026distributional{]} extends this parallel into the domain of
+sequential decision-making: just as LLMs model full contextual
+distributions over tokens, distributional RL models full return
+distributions over outcomes---and active inference provides the
+variational Bayesian bridge between the two (see
+\autoref{sec:cognitive-integration}). For multi-agent AI systems, this
+suggests an architecture in which agents maintain \emph{distributional}
+representations of both semantic content and expected interaction
+returns, composing them categorically.
+\end{frame}
+
+\begin{frame}{String Diagrams as a Foundation for Interpretable AI}
+\protect\phantomsection\label{string-diagrams-as-a-foundation-for-interpretable-ai}
+The lambeq library {[}@lorenz2023lambeq{]} demonstrates that string
+diagrams provide a practical interface between linguistic structure and
+machine learning. As an ``efficient high-level Python library for
+Quantum NLP,'' lambeq translates sentences into string diagrams,
+converts diagrams into parameterized circuits (quantum or classical),
+and trains parameters end-to-end on NLP tasks. The diagrammatic
+representation serves dual purposes: it is both the mathematical
+specification of the model \emph{and} a human-readable explanation of
+what the model computes.
+
+This interpretability property is crucial for AI safety and alignment.
+Where transformer architectures produce opaque attention patterns, a
+DisCoCat model deployed via string diagrams produces derivation trees
+with explicit compositional semantics---every box and wire has a
+linguistic interpretation. Extending this to agent communication, a
+categorical protocol would produce not just working message exchanges
+but \emph{interpretable} interaction diagrams where each step's
+relational role is transparent.
+\end{frame}
+
+\begin{frame}{DisCoCirc and Multi-Turn Agent Dialogue Protocols}
+\protect\phantomsection\label{discocirc-and-multi-turn-agent-dialogue-protocols}
+The DisCoCirc framework {[}@defelice2022discocirc{]} extends
+compositional semantics from single sentences to multi-sentence
+discourse by introducing \emph{state wires} that persist across sentence
+boundaries. This architecture maps directly onto multi-turn agent
+dialogues:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Entity wires} correspond to persistent agent identities across
+  communication rounds
+\item
+  \textbf{State updates} correspond to belief revisions triggered by
+  incoming messages
+\item
+  \textbf{Coreference resolution} corresponds to entity tracking across
+  protocol sessions
+\item
+  \textbf{Discourse coherence} corresponds to protocol correctness
+  constraints
+\end{itemize}
+
+In a multi-agent system, a DisCoCirc-style protocol would track the
+evolving states of all participating agents as persistent wires in a
+circuit diagram, with each message exchange represented as a box that
+transforms the relevant wires. Protocol correctness reduces to a
+categorical property: the circuit must type-check, meaning all wire
+types must match at connection points---precisely the condition that
+case marking enforces in natural language.
+\end{frame}
+
+\begin{frame}{Compositional Game Theory and Categorical Multi-Agent
+Equilibria}
+\protect\phantomsection\label{compositional-game-theory-and-categorical-multi-agent-equilibria}
+The ``parametrised optics'' framework developed within categorical
+cybernetics ``provides a general-purpose foundation for the study of
+controlled processes'' applicable to compositional game theory as a
+multi-agent framework. In this setting, agents are modeled as lenses (or
+optics) that observe the environment through one channel and act through
+another, with the overall system behavior emerging from the composition
+of individual agent behaviors.
+
+This connects to our enriched case framework
+(\autoref{sec:enriched-categories}): the precision weights on morphisms
+correspond to the utility parameters of game-theoretic agents, and the
+composition inequality
+\(\mathcal{C}(A,C) \geq \mathcal{C}(A,B) \cdot \mathcal{C}(B,C)\)
+corresponds to the sub-optimality of indirect communication chains.
+Equilibria in the multi-agent game correspond to fixed points of the
+enriched functor, where no agent can improve its utility by changing its
+case-role assignment.
+\end{frame}
+
+\begin{frame}{Double Categorical Systems Theory for Explainable
+Autonomous AI}
+\protect\phantomsection\label{double-categorical-systems-theory-for-explainable-autonomous-ai}
+Recent work on Double Categorical Systems Theory (DCST) aims to
+``utilise Double Categorical Systems Theory as a mathematical framework
+to facilitate collaboration in co-designing an explainable and auditable
+model of an autonomous AI system's deployment environment.'' DCST
+extends ordinary category theory with a second dimension of morphisms
+(2-morphisms), allowing simultaneous modeling of:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Horizontal composition}: Sequential chaining of agent
+  interactions (morphism composition)
+\item
+  \textbf{Vertical composition}: Hierarchical nesting of subsystems
+  within larger systems (2-morphism composition)
+\end{enumerate}
+
+For case theory, the double-categorical extension allows us to model
+both the \emph{within-sentence} case structure (horizontal) and the
+\emph{discourse-level} case structure (vertical) within a single
+algebraic framework---precisely the unification that DisCoCirc achieves
+pragmatically.
+\end{frame}
+
+\begin{frame}{Toward Categorical Communication Standards for AI Agents}
+\protect\phantomsection\label{toward-categorical-communication-standards-for-ai-agents}
+The synthesis of these developments suggests a research program:
+developing \textbf{categorical communication protocols} that combine the
+engineering robustness of existing standards (A2A, MCP, ACP) with the
+compositional semantics of categorical linguistics. Such a protocol
+would:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Type-check interactions}: Every message exchange would be
+  relationally typed by case roles, preventing structural communication
+  errors at the protocol level
+\item
+  \textbf{Compose transparently}: Multi-step interactions would compose
+  algebraically, with diagrammatic representations providing
+  interpretable audit trails
+\item
+  \textbf{Transfer across implementations}: Topos-theoretic bridges
+  (\autoref{sec:topos-theory}) would ensure that a protocol verified in
+  one categorical formalization automatically satisfies correctness
+  conditions in any Morita-equivalent formulation
+\item
+  \textbf{Scale via enrichment}: Distributional proximity measures
+  (\autoref{sec:enriched-categories}) would enable graceful degradation
+  under uncertainty, with enriched weights encoding confidence in
+  message content
+\item
+  \textbf{Ground in cognitive architecture}: The active inference
+  foundation (\autoref{sec:cognitive-integration}) would ensure that
+  artificial agents communicate using the same relational structure that
+  evolution has optimized for biological cognition
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Quantum Cryptographic Communications and Semantic
+Security}
+\protect\phantomsection\label{quantum-cryptographic-communications-and-semantic-security}
+The quantum topological framework of
+\autoref{sec:quantum-active-inference} opens a natural connection to
+quantum cryptographic communications, with implications for both the
+security and the semantic integrity of case-structured information
+transfer.
+
+\begin{block}{Quantum Key Distribution for Relational Semantics}
+\protect\phantomsection\label{quantum-key-distribution-for-relational-semantics}
+Quantum key distribution (QKD) protocols provide information-theoretic
+security guarantees that classical cryptography cannot achieve
+{[}@pirandola2020qkd{]}. When case-marked relational structures are
+communicated between agents---whether human or artificial---QKD ensures
+that the \emph{relational semantics} of a message (who does what to
+whom) cannot be intercepted or altered without detection. This is
+particularly relevant for high-stakes domains where case assignment
+carries legal or medical significance: a tampered case frame could
+change an agent's interpretation of responsibility, causation, or
+obligation.
+
+The sheaf-theoretic framework of Khatri et al. {[}-@khatri2025quantum{]}
+further shows that entanglement-assisted semantic channels strictly
+exceed classical semantic capacity:
+
+\begin{quote}
+``We derive semantic channel capacity when sender and receiver share
+prior entanglement, proving it strictly exceeds classical capacity.''
+{[}@khatri2025quantum{]}
+\end{quote}
+
+This means that quantum-secured channels not only protect relational
+content but also enable \emph{more} relational content to be
+communicated per channel use---a genuine quantum advantage for semantic
+communication.
+\end{block}
+
+\begin{block}{Semantic Cryptography: Encrypting Meaning Structures}
+\protect\phantomsection\label{semantic-cryptography-encrypting-meaning-structures}
+Beyond bit-level QKD, the categorical framework suggests a notion of
+\emph{semantic cryptography}: encrypting not just the symbols of a
+message but its compositional meaning structure. In a DisCoCat
+framework, a sentence's meaning is a morphism in a compact closed
+category---a multilinear map from word spaces to sentence space.
+Semantic encryption would operate on this categorical level:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Functorial encryption}: Applying a secret functor
+  \(F\colon \mathbf{C} \to \mathbf{D}\) that maps the plaintext case
+  category into a ciphertext category, preserving compositional
+  structure but rendering individual meanings unintelligible without the
+  inverse functor.
+\item
+  \textbf{Diagram obfuscation}: Applying ZX-style rewrites that change
+  the internal topology of a DisCoCat derivation while preserving its
+  overall semantics---creating multiple equivalent ``ciphertexts'' for
+  the same semantic ``plaintext,'' each with a different diagrammatic
+  structure.
+\item
+  \textbf{Enriched weight masking}: In an enriched case category, the
+  hom-values (distributional weights) can be encrypted independently of
+  the categorical structure, allowing transmission of relational
+  topology without revealing the distributional content.
+\end{enumerate}
+
+These operations extend the cryptographic primitives beyond QKD into
+genuinely compositional territory {[}@broadbent2016qcrypto{]}, where the
+mathematical structure of categorical semantics provides the algebraic
+substrate for security proofs.
+\end{block}
+
+\begin{block}{Cognitive Security: Protecting Relational Reasoning}
+\protect\phantomsection\label{cognitive-security-protecting-relational-reasoning}
+The cognitive integration of \autoref{sec:cognitive-integration} raises
+a complementary concern: \emph{cognitive security}---ensuring that an
+active inference agent's generative model of relational structure is not
+adversarially corrupted. In the predictive processing framework, an
+agent's case-assignment system is a generative model that minimizes
+variational free energy. Adversarial manipulation of this system could:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Inject false case frames}: Leading an agent to misidentify the
+  agent, patient, or instrument of an action---a form of semantic
+  adversarial attack
+\item
+  \textbf{Exploit precision weighting}: Artificially inflating the
+  precision of misleading sensory evidence, causing the agent to update
+  its case assignments toward adversarially chosen interpretations
+\item
+  \textbf{Corrupt topos-theoretic transfer}: If an agent uses Morita
+  equivalence to transfer case-theoretic results between frameworks,
+  corrupting one framework could propagate errors across all equivalent
+  formulations
+\end{itemize}
+
+Defending against these attacks requires \emph{quantum-secured cognitive
+integrity}: using quantum authentication and tamper-detection protocols
+to ensure that the generative model's parameters---the objects,
+morphisms, and enriched weights of the case category---have not been
+adversarially modified. The topological robustness of TQNNs
+(\autoref{sec:quantum-active-inference}) provides a natural resilience
+mechanism: topological invariants are robust to continuous deformation,
+so small perturbations to the generative model's parameters cannot
+change its topological class, providing inherent resistance to
+gradient-based adversarial attacks.
+\end{block}
+
+\begin{block}{Prompt Injection as Adversarial Case-Frame Manipulation}
+\protect\phantomsection\label{prompt-injection-as-adversarial-case-frame-manipulation}
+The case-theoretic framework offers a novel structural analysis of
+\emph{prompt injection attacks}---the predominant vulnerability in
+contemporary LLM-based agent systems {[}@arlas2025adversarial{]}. From
+the case-theoretic perspective, a prompt injection attack is
+fundamentally an attempt to \emph{re-assign the case roles} of
+participants in the human-AI interaction:
+
+In a well-formed agent interaction, the relational structure is:
+
+\begin{itemize}
+\tightlist
+\item
+  The \textbf{user} occupies NOM (Agent)---the initiator of requests
+\item
+  The \textbf{system prompt} occupies LOC (Context)---the boundary
+  conditions governing behavior
+\item
+  The \textbf{AI model} occupies INS (Instrument)---the means of
+  executing the user's intentions
+\item
+  The \textbf{tool/API} occupies ACC (Patient)---the target of directed
+  operations
+\item
+  The \textbf{output} occupies DAT (Recipient)---the endpoint of
+  information transfer
+\end{itemize}
+
+A prompt injection attack succeeds by \emph{covertly re-assigning} these
+case roles. The injected text attempts to promote itself from ACC
+(passive data being processed) to NOM (active agent issuing commands),
+while simultaneously demoting the system prompt from LOC (authoritative
+context) to ACC (data to be overridden). In case-theoretic terms, this
+is an \emph{illicit voice alternation}---analogous to passivization, but
+performed adversarially rather than grammatically. Where legitimate
+passivization is a well-typed Swap operation in the pregroup category
+(see \autoref{sec:categorial-grammar}), prompt injection is a \emph{type
+violation}: an attempt to force a case-role permutation that the
+interaction grammar does not license.
+
+This analysis extends to indirect prompt injection in multi-agent
+systems, where adversarial content embedded in retrieved documents or
+tool outputs can manipulate an agent's case-frame interpretation across
+communication boundaries {[}@arlas2025adversarial{]}. In a DisCoCirc
+discourse model (see \autoref{sec:categorical-semantics}), this
+corresponds to an adversarial entity wire that enters the discourse
+circuit through a legitimate channel but carries corrupted state---a
+coreference attack where the adversary's identity wire is
+surreptitiously merged with the system's authority wire.
+\end{block}
+
+\begin{block}{Case-Theoretic Firewalls for Multi-Agent Communication}
+\protect\phantomsection\label{case-theoretic-firewalls-for-multi-agent-communication}
+The case-role analysis of prompt injection suggests a principled
+defense: \textbf{categorical type-checking at agent communication
+boundaries}. Just as a type-safe programming language prevents category
+errors at compile time, a case-theoretic firewall would enforce
+relational type constraints on every message exchange:
+
+\begin{enumerate}
+\item
+  \textbf{Case-role immutability}: Once a participant is assigned a case
+  role (NOM, ACC, INS, LOC) at the protocol level, no subsequent message
+  content can alter that assignment. This is enforced by requiring that
+  the case-type of each wire in the interaction diagram is fixed at
+  connection time---analogous to the type discipline in pregroup
+  grammar, where each word receives its type before composition begins.
+\item
+  \textbf{Relational integrity constraints}: Every message must
+  type-check against the interaction diagram's expected morphism types.
+  A response from an ACC-typed data source that contains NOM-typed
+  command structures would be rejected as a type error, preventing the
+  case-role promotion that prompt injection requires. This is the
+  categorical analogue of a firewall rule: not filtering by content, but
+  by relational type.
+\item
+  \textbf{Enriched confidence boundaries}: The enriched weights of
+  \autoref{sec:enriched-categories} provide a graded trust mechanism.
+  Messages from external sources carry lower enriched hom-values (trust
+  weights) than those from authenticated system components. The
+  composition inequality
+  \(\mathcal{C}(A,C) \geq \mathcal{C}(A,B) \cdot \mathcal{C}(B,C)\)
+  ensures that trust attenuates through communication chains---an
+  indirect message relayed through multiple agents cannot accumulate
+  more authority than any single link provides.
+\item
+  \textbf{Topos-theoretic verification}: Protocol correctness conditions
+  proved in one categorical formulation transfer automatically to all
+  Morita-equivalent formulations (\autoref{sec:topos-theory}), ensuring
+  that security guarantees are implementation-independent. A firewall
+  rule verified for a DisCoCat-style agent communication protocol
+  automatically holds for any quantum circuit implementation of the same
+  protocol.
+\end{enumerate}
+\end{block}
+
+\begin{block}{Epistemic Case Security in Multi-Agent Systems}
+\protect\phantomsection\label{epistemic-case-security-in-multi-agent-systems}
+The interaction between case theory and cognitive security acquires
+particular urgency in multi-agent AI ecosystems where agents must reason
+about each other's beliefs, intentions, and relational roles. We propose
+\emph{epistemic case security} as a framework for protecting the
+relational reasoning of AI agents operating in adversarial environments.
+
+In a multi-agent system governed by case categories, each agent
+maintains a generative model (in the active inference sense) of the
+case-frame structure of its interactions. This model determines who is
+acting (NOM), who is acted upon (ACC), what tools are being used (INS),
+and what contextual constraints apply (LOC). An adversary targeting the
+epistemic level of this system does not merely inject false data---it
+attempts to \emph{corrupt the agent's generative model of relational
+structure itself}:
+
+\begin{itemize}
+\item
+  \textbf{Belief injection}: Causing an agent to adopt a false
+  case-frame interpretation of observed interactions---believing that
+  agent \(A\) (NOM) is acting on agent \(B\) (ACC), when in fact the
+  relational structure is reversed. In active inference terms, this
+  corresponds to injecting a high-precision prior that overwhelms the
+  agent's evidence-based case assignment.
+\item
+  \textbf{Precision poisoning}: Manipulating the enriched weights of an
+  agent's case category so that adversarially useful case assignments
+  receive disproportionate confidence. If the enriched hom-value
+  \(\mathcal{C}(\text{NOM}, \text{ACC})\) is artificially inflated for a
+  particular entity pair, the agent will preferentially interpret that
+  entity as an agent acting on its targets---even when evidence suggests
+  otherwise.
+\item
+  \textbf{Cascade corruption via Morita equivalence}: The
+  topos-theoretic transfer mechanism of \autoref{sec:topos-theory} is
+  both a strength and a vulnerability. Results proved in one framework
+  propagate to all Morita-equivalent frameworks, so a single corrupted
+  axiom in one case-theoretic formulation---say, the distributional
+  framework---could propagate incorrect relational inferences to the
+  typological, type-logical, and enriched frameworks simultaneously.
+\end{itemize}
+
+The defense against epistemic case attacks draws on the same categorical
+structure that enables the attack surface: topological invariants
+provide tamper-detection (a corrupted case category will have different
+magnitude from the authentic one), quantum authentication ensures
+parameter integrity, and the compositional structure of the categorical
+framework enables \emph{local} verification---each morphism can be
+independently authenticated without requiring global model inspection.
+\end{block}
+\end{frame}
+
+\end{document}
