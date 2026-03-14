@@ -39,7 +39,7 @@ def extract_publication_metadata(markdown_files: list[Path]) -> PublicationMetad
             # Only use this content if it contains actual research content (not template content)
             if "Research Project Template" not in content and ("#" in content or "**" in content):
                 combined_content = content
-        except Exception as e:
+        except (OSError, UnicodeDecodeError) as e:
             logger.warning(f"Could not read metadata from {markdown_files[0]}: {e}")
             combined_content = ""
 

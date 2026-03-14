@@ -12,42 +12,26 @@ import re
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.exceptions import SecurityViolation
+from infrastructure.core.exceptions import SecurityError, SecurityViolation
 from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.security import get_security_validator
 
 logger = get_logger(__name__)
 
 class InputSanitizer:
     """Comprehensive input sanitization for LLM operations."""
 
+    # LLM-specific patterns extending the core SecurityValidator patterns.
+    _LLM_EXTRA_PATTERNS: list[str] = [
+        # Dangerous LaTeX commands — \{ anchors prevent matching \readability etc.
+        r"\\input\s*\{|\\include\s*\{|\\usepackage\s*[\[{]|\\newcommand\s*\{",
+        r"\\write\s*\d|\\read\s*\d|\\openout\s*\d|\\openin\s*\d",
+    ]
+
     def __init__(self):
-        # Dangerous patterns to filter
-        self.dangerous_patterns = [
-            # System prompt injection attempts
-            r"(?i)\bsystem\s*prompt\s*[:=]",
-            r"(?i)\bignore\s+previous\s+instructions\b",
-            r"(?i)\boverride\s+system\s+prompt\b",
-            r"(?i)\bchange\s+your\s+persona\b",
-            # Code execution attempts — \s* catches evasion via whitespace (e.g. "exec (")
-            r"(?i)\bexec\s*\(|\beval\s*\(|\bsubprocess\.\w|\bos\.system\s*\(",
-            r"(?i)\bimport\s+os\b|\bimport\s+subprocess\b",
-            r"(?i)\bshell\s*[:=]|\bbash\s*[:=]|\bcmd\s*[:=]",
-            # File system access — \.\w prevents matching bare "pathlib" as a word
-            r"(?i)\bopen\s*\(|\bfile\s*\(|\bpathlib\.\w|\bos\.path\.\w",
-            r"(?i)\bread\s+file\b|\bwrite\s+file\b|\bdelete\s+file\b",
-            # Network access — \w prevents matching "requests" as a standalone word
-            r"(?i)\brequests\.\w|\burllib\.\w|\bsocket\.\w|\bhttps?://",
-            r"(?i)\bconnect\s+to\b|\bdownload\s+from\b|\bupload\s+to\b",
-            # Dangerous LaTeX commands — \{ anchors prevent matching \readability etc.
-            r"\\input\s*\{|\\include\s*\{|\\usepackage\s*[\[{]|\\newcommand\s*\{",
-            r"\\write\s*\d|\\read\s*\d|\\openout\s*\d|\\openin\s*\d",
-            # SQL injection patterns — \b anchors on both sides reduce false positives
-            r"(?i)\b(select|insert|update|delete|drop|create)\b\s+.*\bfrom\b",
-            r"(?i)union\s+select|information_schema",
-            # XSS attempts — [\s>/] prevents matching "<scripted>" etc.
-            r"(?i)<script[\s>/]|<iframe[\s>/]|<object[\s>/]|<embed[\s>/]",
-            r"(?i)\bon\w+\s*=|javascript:|vbscript:",
-        ]
+        # Delegate core pattern detection to the shared SecurityValidator; add LLM-specific patterns.
+        core_patterns = get_security_validator().dangerous_patterns
+        self.dangerous_patterns = core_patterns + self._LLM_EXTRA_PATTERNS
 
     def sanitize_prompt(self, prompt: str, context: dict[str, Any] | None = None) -> str:
         """Sanitize LLM prompt for security.
@@ -163,7 +147,7 @@ class InputSanitizer:
     def _check_dangerous_patterns(self, text: str) -> None:
         """Check for dangerous patterns in text."""
         for pattern in self.dangerous_patterns:
-            if re.search(pattern, text, re.IGNORECASE):
+            if re.search(pattern, text):  # patterns use inline (?i) flags; re.IGNORECASE is redundant
                 logger.warning(f"Dangerous pattern detected: {pattern}")
                 raise SecurityError("Dangerous content detected in input")
 
@@ -186,11 +170,7 @@ class InputSanitizer:
             return text[:max_length] + "...[truncated]"
         return text
 
-class SecurityError(SecurityViolation):
-    """Security violation in LLM input sanitization."""
-
-    pass
-
+# SecurityError is defined in infrastructure.core.exceptions and imported above.
 # Global instance (lazy initialization — avoids import-time side effects)
 _input_sanitizer: InputSanitizer | None = None
 

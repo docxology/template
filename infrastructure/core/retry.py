@@ -92,6 +92,10 @@ def retry_with_backoff(
 
                     time.sleep(delay)
 
+            # This branch is unreachable: the loop always either returns or raises.
+            # The explicit raise satisfies the type checker (return type T, not T | None).
+            raise RuntimeError(f"{func.__name__} retry loop exhausted without returning or raising")
+
         return wrapper
 
     return decorator

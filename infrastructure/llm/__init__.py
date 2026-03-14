@@ -113,7 +113,6 @@ from infrastructure.llm.review import (
     calculate_quality_summary,
     check_ollama_availability,
     create_review_client,
-    estimate_tokens,
     extract_action_items,
     extract_manuscript_text,
     generate_improvement_suggestions,
@@ -200,8 +199,7 @@ __all__ = [
     "ManuscriptInputMetrics",
     "SessionMetrics",
     "StreamingMetrics",
-    "estimate_tokens",
-    # Review generation
+    # Review generation  (estimate_tokens already listed above under validation)
     "get_manuscript_review_system_prompt",
     "get_max_input_length",
     "get_review_timeout",

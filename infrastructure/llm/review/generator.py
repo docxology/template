@@ -6,7 +6,7 @@ import os
 import re
 import subprocess
 import time
-from typing import Any, TYPE_CHECKING
+from typing import Any, Callable, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from infrastructure.llm.templates.base import ResearchTemplate
@@ -285,7 +285,8 @@ def _validate_translation_section(
         issues.append("Missing translation section")
 
 # Module-level dispatch table — built once after all validators are defined.
-_REVIEW_TYPE_VALIDATORS: dict[str, Any] = {
+_ValidatorFn = Callable[[str, dict[str, Any], list[str]], None]
+_REVIEW_TYPE_VALIDATORS: dict[str, _ValidatorFn] = {
     "executive_summary": _validate_executive_summary_section,
     "quality_review": _validate_quality_review_section,
     "methodology_review": _validate_methodology_review_section,
@@ -578,6 +579,7 @@ def generate_review_with_metrics(
 
     start_time = time.time()
     best_response = ""
+    response = ""  # Initialize before loop — assigned in each iteration's try block
     had_off_topic = False
     config = LLMConfig.from_env()
 

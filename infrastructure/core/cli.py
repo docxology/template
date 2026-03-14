@@ -129,7 +129,7 @@ def main() -> int:
             return 1
 
     except Exception as e:  # noqa: BLE001 - top-level CLI handler must catch all
-        logger.error(CLI_COMMAND_FAILED.format(error=e))
+        logger.error(CLI_COMMAND_FAILED.format(error=f"{type(e).__name__}: {e}"))
         return 1
 
 
@@ -175,7 +175,7 @@ def handle_pipeline_command(args: argparse.Namespace) -> int:
             return 1
 
     except Exception as e:  # noqa: BLE001 - pipeline execution can raise varied exceptions
-        logger.error(PIPELINE_EXECUTION_FAILED.format(error=e))
+        logger.error(PIPELINE_EXECUTION_FAILED.format(error=f"{type(e).__name__}: {e}"))
         return 1
 
 
@@ -254,7 +254,7 @@ def handle_multi_project_command(args: argparse.Namespace) -> int:
             return 1
 
     except Exception as e:  # noqa: BLE001 - multi-project execution can raise varied exceptions
-        logger.error(MULTI_PROJECT_FAILED.format(error=e))
+        logger.error(MULTI_PROJECT_FAILED.format(error=f"{type(e).__name__}: {e}"))
         return 1
 
 

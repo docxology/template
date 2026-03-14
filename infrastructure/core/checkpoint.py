@@ -181,7 +181,8 @@ class CheckpointManager:
         try:
             checkpoint = self.load_checkpoint()
             return checkpoint is not None
-        except Exception:
+        except Exception as e:  # noqa: BLE001 — intentional: corrupt/missing checkpoint must return False
+            logger.debug(f"checkpoint_exists check failed (treating as no checkpoint): {type(e).__name__}: {e}")
             return False
 
     def validate_checkpoint(self) -> tuple[bool, str | None]:

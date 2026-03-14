@@ -283,6 +283,17 @@ class SecurityViolation(TemplateError):
 
     pass
 
+
+class SecurityError(SecurityViolation):
+    """Security violation in LLM input sanitization.
+
+    Subclass of SecurityViolation kept for backwards compatibility with call
+    sites that catch SecurityError specifically. Prefer catching SecurityViolation
+    at higher layers.
+    """
+
+    pass
+
 # =============================================================================
 # RENDERING ERRORS
 # =============================================================================
