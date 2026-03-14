@@ -264,3 +264,8 @@ disallow_untyped_defs = true
 [[tool.mypy.overrides]]
 module = "infrastructure.rendering.*"
 disallow_untyped_defs = true
+
+[tool.bandit]
+# B101: assert_used — asserts are used as internal invariants in infrastructure code.
+# Suppressing B101 reduces noise without compromising security review of real issues.
+skips = ["B101"]
