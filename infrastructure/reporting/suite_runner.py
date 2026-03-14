@@ -146,7 +146,11 @@ def run_pytest_stream(
             sys.stdout.write(current_line)
             sys.stdout.flush()
 
-    process.wait()
+    try:
+        process.wait(timeout=600)  # 10-minute hard ceiling for any test suite
+    except subprocess.TimeoutExpired:
+        process.kill()
+        process.wait()
     return process.returncode, "".join(stdout_buf), ""
 
 
