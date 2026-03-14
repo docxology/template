@@ -8,7 +8,6 @@ from pathlib import Path
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.pdf_renderer import PDFRenderer
-from infrastructure.rendering.poster_renderer import render_poster
 from infrastructure.rendering.slides_renderer import SlidesRenderer
 from infrastructure.rendering.web_renderer import WebRenderer
 
