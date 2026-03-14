@@ -231,7 +231,7 @@ class PDFRenderer:
                 return False
             return True
         except Exception as e:  # noqa: BLE001 — LaTeX subprocess exceptions vary
-logger.debug(f"  PDF validation skipped: {e}")
+            logger.debug(f"  PDF validation skipped: {e}")
             return False
 
     def _process_bibliography(self, tex_file: Path, output_dir: Path, bib_file: Path) -> bool:
@@ -495,7 +495,7 @@ class PDFRenderer:
                     "Try converting individual markdown files to identify the problematic file"
                 )
             except Exception as ex:  # noqa: BLE001 — LaTeX subprocess exceptions vary
-logger.debug(f"Error gathering context: {ex}")
+                logger.debug(f"Error gathering context: {ex}")
                 suggestions.append(f"Could not read combined markdown file: {ex}")
 
         suggestions += [
@@ -1039,7 +1039,7 @@ class PDFRenderer:
                 try:
                     self._process_bibliography(combined_tex, output_dir, bib_file)
                 except Exception as bib_error:  # noqa: BLE001 — bibtex/biber exceptions vary
-logger.warning(f"  Bibliography processing failed: {bib_error}")
+                    logger.warning(f"  Bibliography processing failed: {bib_error}")
                     logger.warning("  Continuing PDF generation without bibliography processing")
                     # Don't fail the entire PDF generation for bibliography issues
 
