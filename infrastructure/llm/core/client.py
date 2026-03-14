@@ -14,7 +14,6 @@ import dataclasses
 import json
 import time as time_module
 from datetime import datetime
-from enum import Enum
 from pathlib import Path
 from typing import Any, Callable, Iterator, TypeVar, cast
 
@@ -31,7 +30,7 @@ except ImportError as _requests_import_error:
 from infrastructure.core.exceptions import LLMConnectionError, LLMError
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.llm.core._text_utils import strip_thinking_tags
-from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig
+from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig, ResponseMode
 from infrastructure.llm.core.context import ConversationContext
 from infrastructure.llm.core.sanitization import sanitize_llm_input
 from infrastructure.llm.templates import get_template
@@ -46,13 +45,9 @@ try:
 except ImportError:
     PROMPT_LOADER_AVAILABLE = False
 
-class ResponseMode(str, Enum):
-    """Response generation modes for different use cases."""
-
-    SHORT = "short"  # Brief answers (< 150 tokens)
-    LONG = "long"  # Comprehensive answers (> 500 tokens)
-    STRUCTURED = "structured"  # JSON-formatted structured response
-    RAW = "raw"  # Raw prompt without modification
+# ResponseMode is defined in config.py (alongside GenerationOptions) to avoid
+# a validation→client import cycle. Re-exported here for backwards compatibility.
+__all__ = ["LLMClient", "ResponseMode"]
 
 class LLMClient:
     """Client for interacting with LLM providers (Ollama).

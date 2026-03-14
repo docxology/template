@@ -35,7 +35,9 @@ class LinkCheckResult(TypedDict):
     type: str
 
 
-# Backwards-compatible alias
+# Backwards-compatible alias — remove once all call sites use LinkCheckResult.
+# Remaining call sites as of 2026-03-14: audit_orchestrator.py, issue_categorizer.py.
+# Do not add new usages.
 LinkIssue = LinkCheckResult
 
 def find_all_markdown_files(repo_root: str) -> list[Path]:

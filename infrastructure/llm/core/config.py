@@ -3,11 +3,22 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from enum import Enum
 from typing import Any
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
+
+
+class ResponseMode(str, Enum):
+    """Response generation modes for different use cases."""
+
+    SHORT = "short"  # Brief answers (< 150 tokens)
+    LONG = "long"  # Comprehensive answers (> 500 tokens)
+    STRUCTURED = "structured"  # JSON-formatted structured response
+    RAW = "raw"  # Raw prompt without modification
+
 
 @dataclass
 class GenerationOptions:
@@ -354,5 +365,7 @@ def get_review_max_tokens() -> tuple[int, str]:
     cfg = OllamaClientConfig.from_env()
     return cfg.long_max_tokens, "long_max_tokens"
 
-# Backward-compatibility alias (deprecated — use OllamaClientConfig)
+# Backward-compatibility alias — remove once all call sites use OllamaClientConfig.
+# Remaining call sites as of 2026-03-14: infrastructure/llm/__init__.py re-export.
+# Do not add new usages.
 LLMConfig = OllamaClientConfig

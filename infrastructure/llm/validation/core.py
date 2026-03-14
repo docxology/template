@@ -16,7 +16,7 @@ from typing import Any
 
 from infrastructure.core.exceptions import ValidationError
 from infrastructure.core.logging_utils import get_logger
-from infrastructure.llm.core.client import ResponseMode
+from infrastructure.llm.core.config import ResponseMode
 
 # Import from split modules
 from infrastructure.llm.validation.repetition import deduplicate_sections, detect_repetition
