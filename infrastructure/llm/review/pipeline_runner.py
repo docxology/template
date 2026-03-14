@@ -76,16 +76,9 @@ def run_llm_review_pipeline(
     project_basename = Path(project_name).name
     pdf_dir = project_output / "pdf"
     project_specific_pdf = pdf_dir / f"{project_basename}_combined.pdf"
-    generic_pdf = pdf_dir / "project_combined.pdf"
 
     if project_specific_pdf.exists():
         pdf_path = project_specific_pdf
-    elif generic_pdf.exists():
-        pdf_path = generic_pdf
-        logger.warning(
-            f"Using legacy PDF filename: {generic_pdf.name}. Consider upgrading to project-specific naming."  # noqa: E501
-            # TODO: Remove legacy fallback after all projects use {project_name}_combined.pdf naming
-        )
     else:
         pdf_path = project_specific_pdf  # Use expected filename in error message
 

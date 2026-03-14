@@ -61,7 +61,6 @@ def extract_text_from_pdf(pdf_path: Path) -> str:
     extraction_methods = [
         ("pypdf", _extract_with_pypdf),
         ("pdfplumber", _extract_with_pdfplumber),
-        ("PyPDF2", _extract_with_pypdf2),
     ]
 
     last_error = None
@@ -101,7 +100,7 @@ def extract_text_from_pdf(pdf_path: Path) -> str:
         error_details.append(f"Could not read PDF header: {diag_error}")
 
     error_details.append(f"File size: {file_size} bytes")
-    error_details.append("Tried extraction methods: pypdf, pdfplumber, PyPDF2")
+    error_details.append("Tried extraction methods: pypdf, pdfplumber")
 
     raise PDFValidationError(
         f"Failed to extract text from PDF after trying all available methods. "
@@ -133,20 +132,6 @@ def _extract_with_pdfplumber(pdf_path: Path) -> str:
     text_parts = []
     with pdfplumber.open(pdf_path) as pdf:
         for page in pdf.pages:
-            page_text = page.extract_text()
-            if page_text:
-                text_parts.append(page_text)
-
-    return "\n\n".join(text_parts)
-
-def _extract_with_pypdf2(pdf_path: Path) -> str:
-    """Extract text using PyPDF2 library."""
-    import PyPDF2
-
-    text_parts = []
-    with open(pdf_path, "rb") as file:
-        pdf_reader = PyPDF2.PdfReader(file)
-        for page in pdf_reader.pages:
             page_text = page.extract_text()
             if page_text:
                 text_parts.append(page_text)
