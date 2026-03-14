@@ -281,20 +281,7 @@ def prioritize_issues(issues: list[Issue]) -> list[Issue]:
     """
 
     def sort_key(issue: Issue) -> tuple[int, str, str]:
-        """Generate a sort key tuple for prioritizing issues.
-
-        Creates a tuple for sorting issues by severity (critical first),
-        then by issue type, then by file path for consistent ordering.
-
-        Args:
-            issue: The issue to generate a sort key for. Can be any issue
-                type (LinkIssue, AccuracyIssue, CompletenessGap, QualityIssue).
-
-        Returns:
-            tuple: A 3-element tuple of (severity_order, issue_type, file_path)
-                where severity_order is an integer (0=critical, 1=error,
-                2=warning, 3=info, 4=unknown).
-        """
+        """Sort by severity (critical first), then type, then file path."""
         severity = assign_severity(issue)
         severity_order = {"critical": 0, "error": 1, "warning": 2, "info": 3}
         issue_type = _get_issue_type(issue)

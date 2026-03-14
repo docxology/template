@@ -95,7 +95,7 @@ class SystemHealthChecker:
             with tempfile.NamedTemporaryFile(mode="w", delete=True) as f:
                 f.write("health_check_test")
             results["write_permissions"] = True
-        except (OSError, IOError):
+        except OSError:
             results["write_permissions"] = False
 
         # Check critical directories (discover project dirs dynamically)
