@@ -79,7 +79,7 @@ class RenderManager:
                     logger.debug("Rendering Beamer slides...")
                     outputs.append(self.render_slides(source_file, format="beamer"))
                     logger.debug("Beamer slides rendered successfully")
-                except (OSError, subprocess.SubprocessError, ValueError) as e:
+                except (OSError, subprocess.SubprocessError, ValueError) as e:  # noqa: BLE001 — tracked in format_errors; raises if all formats fail
                     format_errors.append(("beamer", e))
                     # Enhanced error reporting for Beamer slide failures
                     error_msg = f"Failed to render Beamer slides: {str(e)}"
@@ -116,7 +116,7 @@ class RenderManager:
                     logger.debug("Rendering HTML web version...")
                     outputs.append(self.web_renderer.render(source_file))
                     logger.debug("HTML web version rendered successfully")
-                except (OSError, subprocess.SubprocessError, ValueError) as e:
+                except (OSError, subprocess.SubprocessError, ValueError) as e:  # noqa: BLE001 — tracked in format_errors; raises if all formats fail
                     format_errors.append(("html", e))
                     logger.warning(f"Failed to render HTML: {e}")
                     # Continue - some formats may still succeed

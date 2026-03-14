@@ -55,7 +55,7 @@ def _parse_missing_package_error(log_file: Path) -> str | None:
             package_name = sty_file.replace(".sty", "")
             return package_name
 
-    except (OSError, UnicodeDecodeError) as e:
+    except (OSError, UnicodeDecodeError) as e:  # noqa: BLE001 — optional log inspection; return None on failure
         logger.debug(f"Error parsing log file for package errors: {e}")
 
     return None
@@ -194,7 +194,7 @@ class PDFRenderer:
 
                 # Write the repaired content
                 aux_file.write_text("\n".join(lines) + "\n", encoding="utf-8")
-        except (OSError, UnicodeDecodeError) as e:
+        except (OSError, UnicodeDecodeError) as e:  # noqa: BLE001 — .aux repair is best-effort; skip on failure
             logger.debug(f"  .aux repair skipped: {e}")
 
     def _validate_pdf_structure(self, pdf_path: Path) -> bool:
@@ -571,7 +571,7 @@ class PDFRenderer:
                         break
 
                     current_pos += file_size + separator_size
-                except (OSError, ValueError) as ex:
+                except (OSError, ValueError) as ex:  # noqa: BLE001 — error context gathering is best-effort
                     logger.debug(f"Error analyzing file {i + 1} ({source_file.name}): {ex}")
 
         return RenderingError(error_msg, context=context_info, suggestions=suggestions)
@@ -696,7 +696,7 @@ class PDFRenderer:
                         logger.warning(f"  • {err}")
                     # Note: These are warnings only, don't block PDF generation
                     logger.info("  (These are warnings - PDF generation will proceed)")
-            except (OSError, UnicodeDecodeError) as e:
+            except (OSError, UnicodeDecodeError) as e:  # noqa: BLE001 — pre-validation is advisory; PDF generation continues
                 logger.debug(f"Pre-validation check failed: {e}")
                 # Try to read content anyway for error reporting
                 try:

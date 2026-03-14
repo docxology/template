@@ -99,7 +99,7 @@ def get_manuscript_review_system_prompt() -> str:
         try:
             loader = get_default_loader()
             return loader.get_system_prompt("manuscript_review")
-        except (ImportError, AttributeError, OSError, FileNotFoundError, KeyError) as e:
+        except (ImportError, AttributeError, OSError, FileNotFoundError, KeyError) as e:  # noqa: BLE001 — fall back to built-in default prompt
             logger.debug(f"Could not load system prompt from prompt system: {e}")
 
     return _DEFAULT_REVIEW_SYSTEM_PROMPT
@@ -332,7 +332,7 @@ def select_and_start_ollama_model() -> tuple[bool, str | None]:
         if result.returncode != 0:
             logger.error("❌ Ollama command not found. Install Ollama: https://ollama.ai")
             return False, None
-    except (subprocess.SubprocessError, FileNotFoundError):
+    except (subprocess.SubprocessError, FileNotFoundError):  # noqa: BLE001 — failure propagated as (False, None) return value
         logger.error("❌ Unable to check if Ollama is installed")
         return False, None
 

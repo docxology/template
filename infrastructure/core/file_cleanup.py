@@ -170,7 +170,7 @@ def clean_output_directories(
                             logger.debug(
                                 f"  Archived log file: {log_file.name} → {archive_path.name}"
                             )
-                        except (OSError, shutil.Error) as e:
+                        except (OSError, shutil.Error) as e:  # noqa: BLE001 — archive is best-effort; continue with remaining files
                             logger.warning(f"  Failed to archive log file {log_file.name}: {e}")
 
                     if archived_count > 0:
@@ -304,7 +304,7 @@ def clean_root_output_directory(repo_root: Path, project_names: list[str]) -> bo
         log_success("Root output directory cleaned", logger)
         return True
 
-    except OSError as e:
+    except OSError as e:  # noqa: BLE001 — caller receives False; bool return avoids forcing caller to catch
         logger.error(f"Failed to clean root output directory: {e}", exc_info=True)
         return False
 

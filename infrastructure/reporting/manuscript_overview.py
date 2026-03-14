@@ -67,7 +67,7 @@ def extract_pdf_pages_as_images(pdf_path: Path, dpi: int = 300) -> list["PIL.Ima
     # Try advanced rendering first (reportlab)
     try:
         images = _render_pages_with_reportlab(reader, dpi)
-    except (ImportError, OSError, ValueError) as e:
+    except (ImportError, OSError, ValueError) as e:  # noqa: BLE001 — fall back to simple rendering path
         logger.warning(f"Advanced rendering failed, falling back to simple rendering: {e}")
         try:
             images = _render_pages_simple(reader, dpi)
@@ -375,7 +375,7 @@ def generate_manuscript_overview(
         # Convert PIL image to PDF using reportlab
         _save_image_as_pdf(grid_image, pdf_output_path, project_name)
         logger.info(f"Saved PDF overview: {pdf_output_path}")
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 — PDF output is optional; PNG is the primary deliverable
         logger.warning(f"Failed to save PDF overview: {e}")
         # Don't fail the whole operation if PDF save fails
         pdf_output_path = None

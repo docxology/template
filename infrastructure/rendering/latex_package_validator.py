@@ -77,7 +77,7 @@ def find_kpsewhich() -> Path | None:
         result = subprocess.run(["which", "kpsewhich"], capture_output=True, text=True, check=False, timeout=5)
         if result.returncode == 0 and result.stdout.strip():
             return Path(result.stdout.strip())
-    except (OSError, subprocess.TimeoutExpired) as e:
+    except (OSError, subprocess.TimeoutExpired) as e:  # noqa: BLE001 — kpsewhich lookup is optional; return None
         logger.debug(f"Failed to locate kpsewhich: {e}")
 
     return None

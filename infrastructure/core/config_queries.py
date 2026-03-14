@@ -116,7 +116,7 @@ def _safe_int_from_dict(config_dict: dict, key: str) -> int | None:
         return None
     try:
         return int(val)
-    except (ValueError, TypeError):
+    except (ValueError, TypeError):  # noqa: BLE001 — return None; caller uses default
         logger.debug(f"Invalid {key} value: {val!r}")
         return None
 
@@ -136,7 +136,7 @@ def _resolve_int_setting(
     if raw is not None:
         try:
             return int(raw)
-        except (ValueError, TypeError):
+        except (ValueError, TypeError):  # noqa: BLE001 — fall through to config_dict then default
             logger.debug(f"{env_var}={raw!r} is not a valid int, ignoring")
     config_val = _safe_int_from_dict(config_dict, config_key)
     if config_val is not None:
