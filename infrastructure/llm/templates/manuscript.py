@@ -108,7 +108,7 @@ Begin your executive summary now:"""
                     max_tokens=max_tokens,
                     **kwargs,
                 )
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 — prompt composer fallback; any failure falls through to built-in impl
                 logger.debug(f"Failed to use prompt composer, falling back: {e}")
 
         # Fallback implementation
