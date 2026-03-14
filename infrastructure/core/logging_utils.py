@@ -187,8 +187,6 @@ def get_logger(name: str) -> logging.Logger:
             # Force reconfiguration by clearing handlers and calling setup_logger
             logger.handlers.clear()
             return setup_logger(name)
-        # Ensure propagation is enabled even if handlers exist
-        logger.propagate = True
     else:
         # Non-test environment: always ensure propagate=False.
         # Python's default is propagate=True, which means messages fire once via

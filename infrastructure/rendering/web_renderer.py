@@ -98,7 +98,7 @@ class WebRenderer:
         try:
             _tmp.write_text(combined_content, encoding="utf-8")
             _tmp.replace(combined_md)
-        except Exception:
+        except OSError:
             _tmp.unlink(missing_ok=True)
             raise
         logger.debug(
@@ -218,7 +218,7 @@ class WebRenderer:
                         "Remove any non-UTF-8 characters from the file",
                     ],
                 ) from e
-            except Exception as e:  # noqa: BLE001
+            except OSError as e:
                 raise RenderingError(
                     f"Failed to read markdown file: {md_file.name}",
                     context={
@@ -300,11 +300,11 @@ class WebRenderer:
             try:
                 _tmp.write_text(html_content, encoding="utf-8")
                 _tmp.replace(html_file)
-            except Exception:
+            except OSError:
                 _tmp.unlink(missing_ok=True)
                 raise
             logger.debug(f"Embedded CSS from {css_file.name} into {html_file.name}")
 
-        except Exception as e:  # noqa: BLE001
+        except OSError as e:
             logger.warning(f"Failed to embed CSS: {e}")
             # Don't fail the entire process if CSS embedding fails

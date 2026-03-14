@@ -103,6 +103,15 @@ def get_manuscript_review_system_prompt() -> str:
 
     return _DEFAULT_REVIEW_SYSTEM_PROMPT
 
+_SMALL_MODEL_SUFFIXES = frozenset(["3b", "4b", "7b", "8b"])
+
+
+def _is_small_model(model_name: str) -> bool:
+    """Return True if model_name indicates a small parameter-count model."""
+    lower = model_name.lower()
+    return any(s in lower for s in _SMALL_MODEL_SUFFIXES)
+
+
 def log_timeout_info(timeout: float, operation: str) -> None:
     logger.info(f"    Timeout: {timeout:.0f}s per {operation}")
     if timeout < 60:
@@ -152,9 +161,8 @@ def validate_review_quality(
     if not is_format_compliant:
         details["format_warnings"] = format_issues
 
-    is_small_model = any(s in model_name.lower() for s in ["3b", "4b", "7b", "8b"])
     default_min = REVIEW_MIN_WORDS.get(review_type, 200)
-    if is_small_model:
+    if _is_small_model(model_name):
         default_min = int(default_min * 0.8)
     min_word_count = min_words or default_min
 
@@ -589,8 +597,7 @@ def generate_review_with_metrics(
     client.reset()
     template = template_class()
     prompt = template.render(text=text, max_tokens=max_tokens)
-    is_small_model = any(s in model_name.lower() for s in ["3b", "4b", "7b", "8b"])
-    adjusted_temp = temperature + 0.1 if is_small_model else temperature
+    adjusted_temp = temperature + 0.1 if _is_small_model(model_name) else temperature
     options = GenerationOptions(temperature=adjusted_temp, max_tokens=max_tokens)
 
     start_time = time.time()
@@ -732,8 +739,7 @@ def generate_translation(
     log_timeout_info(timeout, f"translation ({target_language})")
     template = ManuscriptTranslationAbstract()
     prompt = template.render(text=text, target_language=target_language, max_tokens=max_tokens)
-    is_small_model = any(s in model_name.lower() for s in ["3b", "4b", "7b", "8b"])
-    temperature = 0.4 if is_small_model else 0.3
+    temperature = 0.4 if _is_small_model(model_name) else 0.3
     options = GenerationOptions(temperature=temperature, max_tokens=max_tokens)
 
     start_time = time.time()

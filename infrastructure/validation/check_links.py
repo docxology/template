@@ -35,11 +35,6 @@ class LinkCheckResult(TypedDict):
     type: str
 
 
-# Backwards-compatible alias — remove once all call sites use LinkCheckResult.
-# Remaining call sites as of 2026-03-14: audit_orchestrator.py, issue_categorizer.py.
-# Do not add new usages.
-LinkIssue = LinkCheckResult
-
 def find_all_markdown_files(repo_root: str) -> list[Path]:
     """Find all markdown files in the repository."""
     repo_path = Path(repo_root)
@@ -635,7 +630,7 @@ def main() -> int:
     logger.info("Running comprehensive filepath and reference audit")
 
     all_headings: dict[str, Set[str]] = {}
-    issues: dict[str, list[LinkIssue]] = {
+    issues: dict[str, list[LinkCheckResult]] = {
         "broken_anchor_links": [],
         "broken_file_refs": [],
         "code_block_paths": [],
@@ -743,7 +738,7 @@ def main() -> int:
     # Generate comprehensive report
     return generate_comprehensive_report(issues, len(md_files))
 
-def generate_comprehensive_report(issues: dict[str, list[LinkIssue]], total_files: int) -> int:
+def generate_comprehensive_report(issues: dict[str, list[LinkCheckResult]], total_files: int) -> int:
     """Generate a comprehensive validation report."""
     total_issues = sum(len(issue_list) for issue_list in issues.values())
 

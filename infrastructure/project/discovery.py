@@ -11,6 +11,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Union
 
+try:
+    import yaml as _yaml
+except ImportError:
+    _yaml = None  # type: ignore[assignment]
+
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
@@ -303,26 +308,25 @@ def get_project_metadata(project_dir: Path) -> dict[str, Any]:
     # Try manuscript/config.yaml for additional metadata
     config_path = project_dir / "manuscript" / "config.yaml"
     if config_path.exists():
-        try:
-            import yaml
-
-            with open(config_path) as f:
-                config_data = yaml.safe_load(f)
-
-            if config_data and "paper" in config_data:
-                paper_config = config_data["paper"]
-                if "title" in paper_config:
-                    metadata["title"] = paper_config["title"]
-
-            if config_data and "authors" in config_data:
-                # Manuscript authors override pyproject authors
-                metadata["authors"] = [
-                    author.get("name", "Unknown") for author in config_data["authors"]
-                ]
-        except ImportError:
+        if _yaml is None:
             logger.debug("PyYAML not available, skipping config.yaml")
-        except (OSError, ValueError, AttributeError) as e:
-            logger.warning(f"Failed to parse {config_path}: {e}")
+        else:
+            try:
+                with open(config_path) as f:
+                    config_data = _yaml.safe_load(f)
+
+                if config_data and "paper" in config_data:
+                    paper_config = config_data["paper"]
+                    if "title" in paper_config:
+                        metadata["title"] = paper_config["title"]
+
+                if config_data and "authors" in config_data:
+                    # Manuscript authors override pyproject authors
+                    metadata["authors"] = [
+                        author.get("name", "Unknown") for author in config_data["authors"]
+                    ]
+            except (OSError, ValueError, AttributeError) as e:
+                logger.warning(f"Failed to parse {config_path}: {e}")
 
     return metadata
 

@@ -351,18 +351,26 @@ class OllamaClientConfig:
         return GenerationOptions(**options_dict)
 
 # Module-level accessors so callers don't need to instantiate OllamaClientConfig.
+# All three read from a single from_env() call to avoid redundant env lookups.
+
+def _get_env_config() -> "OllamaClientConfig":
+    """Return a config instance populated from the current environment."""
+    return OllamaClientConfig.from_env()
+
 
 def get_review_timeout() -> float:
     """Return the review timeout in seconds (from env or default)."""
-    return OllamaClientConfig.from_env().review_timeout
+    return _get_env_config().review_timeout
+
 
 def get_max_input_length() -> int:
     """Return the maximum input character length (from env or default)."""
-    return OllamaClientConfig.from_env().max_input_length
+    return _get_env_config().max_input_length
+
 
 def get_review_max_tokens() -> tuple[int, str]:
     """Return (max_tokens, source_label) for review generation."""
-    cfg = OllamaClientConfig.from_env()
+    cfg = _get_env_config()
     return cfg.long_max_tokens, "long_max_tokens"
 
 # Backward-compatibility alias — remove once all call sites use OllamaClientConfig.
