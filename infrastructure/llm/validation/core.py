@@ -6,6 +6,14 @@ Provides comprehensive validation including:
 - Citation extraction
 - Formatting quality checks
 - Repetition detection for LLM output loops
+
+Error contract:
+- Schema-level validators (validate_json, validate_structure) raise ValidationError
+  on failure because callers cannot recover from invalid structure.
+- Signal validators (validate_length, validate_short_response, validate_long_response,
+  validate_formatting) return bool so callers can choose to warn, log, or retry.
+- validate_complete raises ValidationError for structural problems (empty, bad schema)
+  and returns bool for format/length problems.
 """
 
 from __future__ import annotations
@@ -183,8 +191,9 @@ def validate_complete(
     if not content or not content.strip():
         raise ValidationError("Empty response")
 
-    # Basic formatting check
-    if not validate_formatting(content):
+    # Basic formatting check — result is used for standard/raw modes below
+    formatting_ok = validate_formatting(content)
+    if not formatting_ok:
         logger.warning("Response has formatting issues")
 
     # Mode-specific validation
@@ -198,8 +207,8 @@ def validate_complete(
         data = validate_json(content)
         return validate_structure(data, schema)
 
-    # RAW and standard modes: only the empty-content check above applies
-    return True
+    # RAW and standard modes: validate formatting (non-empty already checked above)
+    return formatting_ok
 
 
 def validate_no_repetition(

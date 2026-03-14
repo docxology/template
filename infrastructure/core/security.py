@@ -2,6 +2,11 @@
 
 This module provides comprehensive security measures including input validation,
 security headers, rate limiting, and security monitoring.
+
+API style note:
+- SecurityValidator, RateLimiter, SecurityMonitor are stateful classes (hold config/state).
+- get_security_headers(), get_cors_headers(), validate_llm_input() are module-level
+  convenience functions for stateless one-off checks. Both styles are intentional.
 """
 
 from __future__ import annotations

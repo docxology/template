@@ -73,7 +73,7 @@ def parse_coverage_json(coverage_json_path: Path) -> dict[str, Any] | None:
             "file_coverage": file_coverage,
         }
 
-    except (json.JSONDecodeError, IOError) as e:
+    except (json.JSONDecodeError, OSError) as e:
         logger.warning(f"Failed to parse coverage JSON file {coverage_json_path}: {e}")
         return None
 

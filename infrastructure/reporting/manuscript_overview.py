@@ -71,7 +71,7 @@ def extract_pdf_pages_as_images(pdf_path: Path, dpi: int = 300) -> list["PIL.Ima
         logger.warning(f"Advanced rendering failed, falling back to simple rendering: {e}")
         try:
             images = _render_pages_simple(reader, dpi)
-        except Exception as e2:
+        except (OSError, ValueError, RuntimeError, ImportError) as e2:
             logger.error(f"Simple rendering also failed: {e2}")
             raise PDFValidationError(f"Failed to render PDF pages: {e2}") from e2
 

@@ -204,7 +204,7 @@ class LinkValidator:
         """
         try:
             content = file_path.read_text(encoding="utf-8")
-        except (UnicodeDecodeError, IOError) as e:
+        except (UnicodeDecodeError, OSError) as e:
             logger.warning(f"Could not read {file_path}: {e}")
             return {"valid": [], "broken": []}
 

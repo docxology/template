@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from infrastructure.core.logging_utils import get_logger
+from infrastructure.llm.validation.core import estimate_tokens
 
 logger = get_logger(__name__)
 
@@ -57,13 +58,5 @@ class StreamingMetrics:
     first_chunk_time: float = 0.0  # Time to first chunk
     last_chunk_time: float = 0.0  # Time of last chunk
 
-def estimate_tokens(text: str) -> int:
-    """Estimate token count from text (approximately 4 characters per token).
-
-    Args:
-        text: Input text
-
-    Returns:
-        Estimated token count
-    """
-    return len(text) // 4
+# estimate_tokens imported from infrastructure.llm.validation.core
+__all__ = ["ReviewMetrics", "StreamingMetrics", "estimate_tokens"]

@@ -82,9 +82,13 @@ class InputSanitizer:
         Raises:
             SecurityError: If file input is unsafe
         """
-        # Check if path is absolute (potential directory traversal)
+        # LLM-provided paths must be relative: absolute paths from untrusted input
+        # risk referencing arbitrary system locations (e.g. /etc/passwd).
+        # Note: SecurityValidator.validate_file_path() allows absolute paths because
+        # it validates infrastructure-owned paths (output dirs, config files) which
+        # are trusted and always absolute. These are different threat models.
         if file_path.is_absolute():
-            raise SecurityError("Absolute paths not allowed")
+            raise SecurityError("Absolute paths not allowed in LLM input")
 
         # Resolve path to prevent traversal attacks
         try:
