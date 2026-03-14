@@ -69,6 +69,7 @@ llm = [
 rendering = [
   "reportlab>=4.0.0",
   "pypdf>=5.0",
+  "pdfplumber>=0.11.0",
 ]
 # Optional dashboard generation (lazily imported in dashboard_generator.py)
 dashboard = [
