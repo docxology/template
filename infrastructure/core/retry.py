@@ -64,15 +64,13 @@ def retry_with_backoff(
                         logger.error(f"{func.__name__} failed after {max_attempts} attempts: {e}")
                         raise
 
-                    # Calculate delay with exponential backoff
                     delay = min(initial_delay * (exponential_base ** (attempt - 1)), max_delay)
 
-                    # Add jitter to prevent synchronized retries
+                    # Add jitter to prevent synchronized retries (thundering herd)
                     if jitter:
                         jitter_amount = delay * 0.1 * random.random()
                         delay += jitter_amount
 
-                    # Call retry callback if provided
                     if on_retry:
                         on_retry(attempt, e)
                     else:
@@ -189,7 +187,6 @@ class RetryableOperation:
             logger.error(f"Operation failed after {self.max_attempts} attempts: {exception}")
             raise exception
 
-        # Calculate delay
         delay = min(
             self.initial_delay * (self.exponential_base ** (self.attempt - 1)),
             self.max_delay,

@@ -235,12 +235,12 @@ def generate_publication_metrics(metadata: PublicationMetadata) -> dict[str, Any
         "license_type": metadata.license,
         "has_doi": bool(metadata.doi),
         "publication_type": ("software" if "template" in metadata.title.lower() else "article"),
-        "complexity_score": calculate_complexity_score(metadata),
+        "complexity_score": calculate_metadata_richness_score(metadata),
     }
 
     return metrics
 
-def calculate_complexity_score(metadata: PublicationMetadata) -> int:
+def calculate_metadata_richness_score(metadata: PublicationMetadata) -> int:
     """Calculate a complexity score for the publication.
 
     Args:

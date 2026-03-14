@@ -49,8 +49,8 @@ def _jaccard_similarity(text1: str, text2: str) -> float:
 
     return len(intersection) / len(union) if union else 0.0
 
-def _tfidf_cosine_similarity(text1: str, text2: str) -> float:
-    """Calculate TF-IDF cosine similarity for semantic matching."""
+def _tf_cosine_similarity(text1: str, text2: str) -> float:
+    """Calculate TF cosine similarity for semantic matching."""
     # Tokenize and count
     words1 = Counter(text1.split())
     words2 = Counter(text2.split())
@@ -118,10 +118,10 @@ def _calculate_similarity(text1: str, text2: str, method: str = "hybrid") -> flo
     if method == "jaccard":
         return _jaccard_similarity(norm1, norm2)
     elif method == "tfidf":
-        return _tfidf_cosine_similarity(norm1, norm2)
+        return _tf_cosine_similarity(norm1, norm2)
     else:  # hybrid
         jaccard_sim = _jaccard_similarity(norm1, norm2)
-        tfidf_sim = _tfidf_cosine_similarity(norm1, norm2)
+        tfidf_sim = _tf_cosine_similarity(norm1, norm2)
         sequence_sim = _sequence_similarity(norm1, norm2)
 
         # Weighted combination: favor TF-IDF and sequence similarity
