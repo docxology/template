@@ -39,7 +39,7 @@ def inject_pdf_metadata(
         Path to the output PDF.
     """
     try:
-        from pypdf import PdfReader, PdfWriter  # type: ignore
+        from pypdf import PdfReader, PdfWriter  # type: ignore[import-untyped]
     except ImportError:
         raise ImportError(
             "The 'pypdf' package is required for PDF metadata injection. "

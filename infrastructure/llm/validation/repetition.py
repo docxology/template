@@ -188,7 +188,7 @@ def detect_repetition(
     ]
 
     # Try each pattern to find the best split
-    chunks = []  # type: ignore
+    chunks = []
     for pattern in section_patterns:
         parts = re.split(pattern, text)
         valid_parts = [p.strip() for p in parts if len(p.strip()) >= min_chunk_size]

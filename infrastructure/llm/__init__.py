@@ -100,8 +100,8 @@ try:
     from infrastructure.llm.prompts import PromptComposer, PromptFragmentLoader
 except ImportError:
     # Prompt system not available - set to None for optional usage
-    PromptFragmentLoader = None  # type: ignore
-    PromptComposer = None  # type: ignore
+    PromptFragmentLoader = None  # type: ignore[assignment]
+    PromptComposer = None  # type: ignore[assignment]
 
 # Review generation modules
 from infrastructure.llm.review import (

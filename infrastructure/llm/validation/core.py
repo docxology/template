@@ -33,7 +33,7 @@ def validate_json(content: str) -> Any:
         elif "```" in content:
             content = content.split("```")[1].split("```")[0]
 
-        return json.loads(content.strip())  # type: ignore
+        return json.loads(content.strip())
     except json.JSONDecodeError as e:
         raise ValidationError(
             "LLM output is not valid JSON",
@@ -125,7 +125,7 @@ def _check_type(value: Any, expected_type: str) -> bool:
     expected = type_map.get(expected_type)
     if expected is None:
         return True
-    return isinstance(value, expected)  # type: ignore
+    return isinstance(value, expected)
 
 
 def validate_citations(content: str) -> list[str]:

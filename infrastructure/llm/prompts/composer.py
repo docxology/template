@@ -136,7 +136,7 @@ class PromptComposer:
                     "${section_structure}", fragment_values["section_structure"]
                 )
 
-            return result  # type: ignore
+            return result
 
         except Exception as e:
             if isinstance(e, LLMTemplateError):
@@ -204,7 +204,7 @@ class PromptComposer:
         else:
             result = result.replace("${section_requirements_block}", "")
 
-        return result  # type: ignore
+        return result
 
     def _build_content_requirements(self) -> str:
         """Build content requirements fragment.
@@ -227,7 +227,7 @@ class PromptComposer:
         result = base_template.replace("${no_hallucination_block}", no_hallucination)
         result = result.replace("${cite_sources_block}", cite_sources)
 
-        return result  # type: ignore
+        return result
 
     def _build_section_structure(self, structure_key: str) -> str:
         """Build section structure fragment.
@@ -307,7 +307,7 @@ class PromptComposer:
         result = base_template.replace("${total_tokens_block}", total_block)
         result = result.replace("${section_budgets_block}", section_block)
 
-        return result  # type: ignore
+        return result
 
     def _build_validation_hints(
         self, word_count_range: tuple[int, int], required_elements: list[str]
@@ -344,4 +344,4 @@ class PromptComposer:
         result = base_template.replace("${word_count_block}", word_block)
         result = result.replace("${required_elements_block}", elements_block)
 
-        return result  # type: ignore
+        return result

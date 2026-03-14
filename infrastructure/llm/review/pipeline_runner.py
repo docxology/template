@@ -96,7 +96,7 @@ def run_llm_review_pipeline(
             logger.warning("\n⚠️  Skipping LLM review - Ollama not available")
             return 2
 
-        session_metrics.model_name = model_name  # type: ignore
+        session_metrics.model_name = model_name
 
         # Step 2: Extract manuscript text
         try:
@@ -112,7 +112,7 @@ def run_llm_review_pipeline(
 
         # Step 3: Initialize LLM client
         log_substep("Initializing LLM client...")
-        client = create_review_client(model_name)  # type: ignore
+        client = create_review_client(model_name)
 
         if not client.check_connection():
             logger.error("Failed to connect to Ollama")
@@ -121,7 +121,7 @@ def run_llm_review_pipeline(
         log_success("LLM client initialized", logger)
 
         # Step 3.5: Warmup model
-        warmup_success, tokens_per_sec = warmup_model(client, text[:1000], model_name)  # type: ignore
+        warmup_success, tokens_per_sec = warmup_model(client, text[:1000], model_name)
         if not warmup_success:
             logger.error("Model warmup failed - cannot proceed with reviews")
             return 1
@@ -145,11 +145,11 @@ def run_llm_review_pipeline(
                 if generator is None:
                     logger.warning(f"  Skipping unknown review type: {review_type}")
                     continue
-                response, metrics = generator(client, text, model_name)  # type: ignore
+                response, metrics = generator(client, text, model_name)
 
                 reviews[review_type] = response
                 session_metrics.reviews[review_type] = metrics
-                save_single_review(review_type, response, output_dir, model_name, metrics)  # type: ignore
+                save_single_review(review_type, response, output_dir, model_name, metrics)
 
         # Translations
         if mode != ReviewMode.REVIEWS_ONLY:
@@ -167,7 +167,7 @@ def run_llm_review_pipeline(
                     session_metrics.reviews[review_name] = metrics
                     if response is not None:
                         reviews[review_name] = response
-                        save_single_review(review_name, response, output_dir, model_name, metrics)  # type: ignore
+                        save_single_review(review_name, response, output_dir, model_name, metrics)
             elif mode == ReviewMode.TRANSLATIONS_ONLY:
                 logger.warning("\n⚠️  No translation languages configured")
                 return 2
@@ -179,7 +179,7 @@ def run_llm_review_pipeline(
         session_metrics.total_generation_time = time.time() - total_start
 
         # Step 5: Save outputs
-        if not save_review_outputs(reviews, output_dir, model_name, pdf_path, session_metrics):  # type: ignore
+        if not save_review_outputs(reviews, output_dir, model_name, pdf_path, session_metrics):
             logger.error("Failed to save some review outputs")
             return 1
 

@@ -311,15 +311,15 @@ def discover_project_documentation(repo_root: Path) -> dict[str, dict[str, Any]]
             rel_path = str(md_file.relative_to(repo_root))
             if rel_path.startswith(project_prefix):
                 doc_info = analyze_documentation_file(md_file, repo_root)
-                project_docs[project.name]["documentation_files"].append(doc_info)  # type: ignore
+                project_docs[project.name]["documentation_files"].append(doc_info)
 
                 # Categorize within project
                 if "manuscript/" in rel_path:
-                    project_docs[project.name]["manuscript_files"].append(doc_info)  # type: ignore
+                    project_docs[project.name]["manuscript_files"].append(doc_info)
                 elif "scripts/" in rel_path:
-                    project_docs[project.name]["script_docs"].append(doc_info)  # type: ignore
+                    project_docs[project.name]["script_docs"].append(doc_info)
                 elif "tests/" in rel_path:
-                    project_docs[project.name]["test_docs"].append(doc_info)  # type: ignore
+                    project_docs[project.name]["test_docs"].append(doc_info)
 
         # Calculate statistics
         project_docs[project.name]["statistics"] = _calculate_project_stats(

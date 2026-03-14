@@ -99,6 +99,6 @@ class ZenodoClient:
         try:
             response = requests.post(url, headers=self.headers, timeout=REQUEST_TIMEOUT)
             response.raise_for_status()
-            return response.json()["doi"]  # type: ignore
+            return response.json()["doi"]
         except requests.exceptions.RequestException as e:
             raise PublishingError(f"Publication failed: {e}") from e

@@ -143,7 +143,7 @@ def _render_pages_with_reportlab(reader: "PdfReader", dpi: int) -> list["PIL.Ima
                     font = ImageFont.truetype("Helvetica", 12)
                 except (OSError, IOError) as e:
                     logger.debug(f"Could not load Helvetica font: {e}")
-                    font = ImageFont.load_default()  # type: ignore
+                    font = ImageFont.load_default()
 
                 y_pos = 50
                 for line in lines[:30]:
@@ -187,7 +187,7 @@ def _render_pages_simple(reader: "PdfReader", dpi: int) -> list["PIL.Image.Image
             font = ImageFont.truetype("Helvetica", 12)
         except (OSError, IOError) as e:
             logger.debug(f"Could not load Helvetica font: {e}")
-            font = ImageFont.load_default()  # type: ignore
+            font = ImageFont.load_default()
 
         # Extract and render text
         try:
@@ -283,7 +283,7 @@ def create_page_grid(
         font = ImageFont.truetype("Helvetica", 10)
     except (OSError, IOError) as e:
         logger.debug(f"Could not load Helvetica font: {e}")
-        font = ImageFont.load_default()  # type: ignore
+        font = ImageFont.load_default()
 
     # Place images in grid
     for i, img in enumerate(resized_images):
@@ -312,7 +312,7 @@ def create_page_grid(
         title_font = ImageFont.truetype("Helvetica-Bold", 16)
     except (OSError, IOError) as e:
         logger.debug(f"Could not load Helvetica-Bold font: {e}")
-        title_font = ImageFont.load_default()  # type: ignore
+        title_font = ImageFont.load_default()
 
     draw.text((padding, padding // 2), title, fill="black", font=title_font)
 
@@ -378,7 +378,7 @@ def generate_manuscript_overview(
     except Exception as e:
         logger.warning(f"Failed to save PDF overview: {e}")
         # Don't fail the whole operation if PDF save fails
-        pdf_output_path = None  # type: ignore
+        pdf_output_path = None
 
     result = {png_path.name: png_path}
     if pdf_output_path and pdf_output_path.exists():

@@ -198,7 +198,7 @@ def create_academic_profile_data(metadata: PublicationMetadata) -> dict[str, Any
 
     if metadata.doi:
         profile_data["identifiers"] = [
-            {  # type: ignore
+            {
                 "type": "doi",
                 "value": metadata.doi,
                 "url": f"https://doi.org/{metadata.doi}",

@@ -549,12 +549,12 @@ class RepositoryScanner:
         # Group by category
         by_category = defaultdict(list)
         for gap in self.results.completeness_gaps:
-            by_category[gap.category].append(gap)  # type: ignore
+            by_category[gap.category].append(gap)
 
         for category, gaps in sorted(by_category.items()):
             lines.append(f"### {category.title()} Gaps ({len(gaps)})")
             lines.append("")
-            for gap in gaps:  # type: ignore
+            for gap in gaps:
                 lines.append(f"- **{gap.severity.upper()}**: {gap.item}")
                 lines.append(f"  - {gap.description}")
             lines.append("")

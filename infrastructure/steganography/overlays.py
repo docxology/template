@@ -35,9 +35,9 @@ class FooterConfig:
 def _get_reportlab():
     """Lazily import reportlab components."""
     try:
-        from reportlab.lib.pagesizes import letter  # type: ignore
-        from reportlab.lib.units import inch  # type: ignore
-        from reportlab.pdfgen import canvas as rl_canvas  # type: ignore
+        from reportlab.lib.pagesizes import letter  # type: ignore[import-untyped]
+        from reportlab.lib.units import inch  # type: ignore[import-untyped]
+        from reportlab.pdfgen import canvas as rl_canvas  # type: ignore[import-untyped]
         return rl_canvas, letter, inch
     except ImportError:
         raise ImportError(
@@ -125,7 +125,7 @@ def create_qr_overlay(
     """
     rl_canvas_mod, _letter, _inch = _get_reportlab()
     try:
-        from reportlab.lib.utils import ImageReader  # type: ignore
+        from reportlab.lib.utils import ImageReader  # type: ignore[import-untyped]
         from infrastructure.steganography.barcodes import generate_qr_code
     except ImportError as exc:
         raise ImportError(

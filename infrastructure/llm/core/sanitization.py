@@ -12,7 +12,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.exceptions import SecurityError, SecurityViolation
+from infrastructure.core.exceptions import SecurityError
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.core.security import get_security_validator
 

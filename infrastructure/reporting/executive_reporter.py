@@ -460,7 +460,7 @@ def generate_aggregate_metrics(projects: list[ProjectMetrics]) -> dict[str, Any]
             "total_equations": sum(p.manuscript.equations for p in projects),
             "total_figures": sum(p.manuscript.figures for p in projects),
             "total_references": sum(p.manuscript.references for p in projects),
-            "words_stats": calculate_stats(manuscript_words),  # type: ignore
+            "words_stats": calculate_stats(manuscript_words),
         },
         "codebase": {
             "total_source_lines": sum(p.codebase.source_lines for p in projects),
@@ -975,21 +975,21 @@ def save_executive_summary(summary: ExecutiveSummary, output_dir: Path) -> dict[
     saved_files = {}
 
     # Save JSON (machine-readable)
-    json_path = organizer.get_output_path("consolidated_report.json", output_dir, FileType.JSON)  # type: ignore
+    json_path = organizer.get_output_path("consolidated_report.json", output_dir, FileType.JSON)
     with open(json_path, "w") as f:
         json.dump(asdict(summary), f, indent=2, default=str)
     saved_files["json"] = json_path
     logger.info(f"Saved JSON report: {json_path}")
 
     # Save Markdown (human-readable)
-    md_path = organizer.get_output_path("consolidated_report.md", output_dir, FileType.MARKDOWN)  # type: ignore
+    md_path = organizer.get_output_path("consolidated_report.md", output_dir, FileType.MARKDOWN)
     md_content = _generate_markdown_report(summary)
     md_path.write_text(md_content)
     saved_files["markdown"] = md_path
     logger.info(f"Saved Markdown report: {md_path}")
 
     # Save HTML (styled)
-    html_path = organizer.get_output_path("consolidated_report.html", output_dir, FileType.HTML)  # type: ignore
+    html_path = organizer.get_output_path("consolidated_report.html", output_dir, FileType.HTML)
     html_content = _generate_html_report(summary)
     html_path.write_text(html_content)
     saved_files["html"] = html_path

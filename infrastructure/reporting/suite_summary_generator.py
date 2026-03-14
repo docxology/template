@@ -54,9 +54,9 @@ def load_test_results(
                 data = json.load(f)
                 # Extract project results from the nested structure
                 if "project" in data:
-                    return data["project"]  # type: ignore
+                    return data["project"]
                 else:
-                    return data  # type: ignore
+                    return data
         except (OSError, json.JSONDecodeError, KeyError) as e:
             logger.warning(f"Could not load results from {results_file}: {e}")
             return {}

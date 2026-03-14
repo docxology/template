@@ -95,7 +95,7 @@ def run_comprehensive_audit(
                 relative_path=str(md_file.relative_to(repo_root)),
                 directory=str(md_file.parent.relative_to(repo_root)),
                 name=md_file.name,
-                category=doc_categories.get(str(md_file.relative_to(repo_root)), ""),  # type: ignore
+                category=doc_categories.get(str(md_file.relative_to(repo_root)), ""),
                 word_count=len(content.split()),
                 line_count=len(content.splitlines()),
                 has_links="[" in content and "]" in content,
@@ -139,7 +139,7 @@ def _validate_single_file(
     """Validate a single markdown file using all available validation modules."""
 
     file_key = str(md_file.relative_to(repo_root))
-    results = {"link_issues": [], "accuracy_issues": [], "quality_issues": []}  # type: ignore
+    results = {"link_issues": [], "accuracy_issues": [], "quality_issues": []}
 
     # Link validation using doc_accuracy
     try:
@@ -168,13 +168,13 @@ def _validate_single_file(
     for flag, validator_fn, issue_type, severity, default_msg in quality_validators:
         if flag:
             try:
-                for issue in validator_fn(content, md_file, repo_root):  # type: ignore
+                for issue in validator_fn(content, md_file, repo_root):
                     results["quality_issues"].append(
                         QualityIssue(
                             file=file_key,
-                            line=issue.get("line", 0),  # type: ignore
+                            line=issue.get("line", 0),
                             issue_type=issue_type,
-                            issue_message=issue.get("issue", default_msg),  # type: ignore
+                            issue_message=issue.get("issue", default_msg),
                             severity=severity,
                         )
                     )
@@ -206,9 +206,9 @@ def generate_audit_report(
     # Collect all issues
     all_issues = []
     all_issues.extend(scan_results.link_issues)
-    all_issues.extend(scan_results.accuracy_issues)  # type: ignore
-    all_issues.extend(scan_results.quality_issues)  # type: ignore
-    all_issues.extend(scan_results.completeness_gaps)  # type: ignore
+    all_issues.extend(scan_results.accuracy_issues)
+    all_issues.extend(scan_results.quality_issues)
+    all_issues.extend(scan_results.completeness_gaps)
 
     # Filter false positives and categorize by severity flag
     red_flags = []
@@ -225,7 +225,7 @@ def generate_audit_report(
             green_flags.append(issue)
 
     # Generate summary statistics
-    summary = generate_issue_summary(all_issues)  # type: ignore
+    summary = generate_issue_summary(all_issues)
 
     if output_format == "json":
         import json
@@ -307,7 +307,7 @@ def generate_audit_report(
 
     # Show red flags first (critical issues)
     if red_flags:
-        prioritized_red = prioritize_issues(red_flags)  # type: ignore
+        prioritized_red = prioritize_issues(red_flags)
         report_lines.extend(
             [
                 "## 🔴 Red Flags (Critical Issues)",
@@ -316,7 +316,7 @@ def generate_audit_report(
                 "",
             ]
         )
-        for issue in prioritized_red[:20]:  # type: ignore[assignment]
+        for issue in prioritized_red[:20]:
             issue_type = getattr(issue, "issue_type", "unknown")
             target = getattr(issue, "target", "N/A")
             report_lines.extend(
@@ -334,7 +334,7 @@ def generate_audit_report(
 
     # Show yellow flags second (warnings)
     if yellow_flags:
-        prioritized_yellow = prioritize_issues(yellow_flags)  # type: ignore
+        prioritized_yellow = prioritize_issues(yellow_flags)
         report_lines.extend(
             [
                 "## 🟡 Yellow Flags (Warnings)",
@@ -342,7 +342,7 @@ def generate_audit_report(
                 f"**{len(yellow_flags)} warnings** that should be reviewed:",
             ]
         )
-        for issue in prioritized_yellow[:15]:  # type: ignore[assignment]
+        for issue in prioritized_yellow[:15]:
             issue_type = getattr(issue, "issue_type", "unknown")
             target = getattr(issue, "target", "N/A")
             report_lines.extend(

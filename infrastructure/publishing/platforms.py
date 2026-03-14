@@ -188,7 +188,7 @@ def create_github_release(
                     timeout=REQUEST_TIMEOUT,
                 )  # noqa: E501
 
-        return html_url  # type: ignore
+        return html_url
 
     except requests.exceptions.RequestException as e:
         raise PublishingError(f"GitHub release failed: {e}") from e

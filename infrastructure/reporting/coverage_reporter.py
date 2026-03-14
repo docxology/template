@@ -60,7 +60,7 @@ def parse_coverage_json(coverage_json_path: Path) -> dict[str, Any] | None:
         total_executed = sum(data["executed_lines"] for data in file_coverage.values())
         total_missing = sum(data["missing_lines"] for data in file_coverage.values())
         total_excluded = sum(data["excluded_lines"] for data in file_coverage.values())
-        total_lines = total_executed + total_missing + total_excluded  # type: ignore
+        total_lines = total_executed + total_missing + total_excluded
 
         overall_coverage = (total_executed / total_lines * 100) if total_lines > 0 else 0.0
 
@@ -160,7 +160,7 @@ def parse_pytest_output(stdout: str, stderr: str, exit_code: int) -> dict[str, A
     }
 
     for phase, pattern in timing_patterns.items():
-        match = re.search(pattern, stdout, re.DOTALL)  # type: ignore
+        match = re.search(pattern, stdout, re.DOTALL)
         if match:
             if phase == "execution" and len(match.groups()) > 1:
                 results["execution_phases"][phase] = float(match.group(2))

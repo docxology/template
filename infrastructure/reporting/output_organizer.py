@@ -107,7 +107,7 @@ class OutputOrganizer:
 
         return None
 
-    def get_output_path(self, file_path: Path, output_dir: Path, file_type: FileType) -> Path:
+    def get_output_path(self, file_path: str | Path, output_dir: Path, file_type: FileType) -> Path:
         """
         Get the organized output path for a file.
 

@@ -71,7 +71,7 @@ class PromptFragmentLoader:
 
         # Check cache
         if filepath_str in self._fragment_cache:
-            return self._fragment_cache[filepath_str]  # type: ignore
+            return self._fragment_cache[filepath_str]
 
         if not filepath.exists():
             raise LLMTemplateError(
@@ -85,7 +85,7 @@ class PromptFragmentLoader:
 
             # Cache the loaded data
             self._fragment_cache[filepath_str] = data
-            return data  # type: ignore
+            return data
 
         except json.JSONDecodeError as e:
             raise LLMTemplateError(
@@ -165,7 +165,7 @@ class PromptFragmentLoader:
             >>> loader = PromptFragmentLoader()
             >>> template = loader.load_template("manuscript_reviews.json#manuscript_executive_summary")
         """
-        return self._resolve_reference(reference, subdirectory="templates")  # type: ignore
+        return self._resolve_reference(reference, subdirectory="templates")
 
     def load_composition(self, reference: str) -> Any:
         """Load a composition rule.
@@ -195,7 +195,7 @@ class PromptFragmentLoader:
 
         # Handle both direct string and dict with "content" key
         if isinstance(fragment, dict):
-            return fragment.get("content", str(fragment))  # type: ignore
+            return fragment.get("content", str(fragment))
         return str(fragment)
 
     def clear_cache(self) -> None:
