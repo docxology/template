@@ -217,7 +217,11 @@ class LLMClient:
     ) -> str:
         """Send a raw prompt without system prompt or instructions.
 
-        Bypasses context and system prompt injection for direct LLM interaction.
+        Bypasses context, system prompt injection, AND input sanitization
+        (``sanitize_llm_input`` is intentionally not called here). Use only
+        when the caller has already validated the prompt or when sanitization
+        would interfere with the intended low-level interaction (e.g. testing
+        raw model behaviour). Prefer ``query()`` for user-facing prompts.
 
         Args:
             prompt: Raw prompt to send

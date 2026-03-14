@@ -12,6 +12,9 @@ import re
 from pathlib import Path
 from typing import Any
 
+# SecurityError is a subclass of SecurityViolation (see infrastructure/core/exceptions.py).
+# Both names are valid here; SecurityError is used for backwards compatibility with
+# call sites that catch SecurityError specifically.
 from infrastructure.core.exceptions import SecurityError
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.core.security import get_security_validator

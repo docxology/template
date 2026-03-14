@@ -37,7 +37,8 @@ class ReviewsConfig(TypedDict, total=False):
     enabled: bool
     types: list[str]
 
-class LLMConfig(TypedDict, total=False):
+class LLMYAMLConfig(TypedDict, total=False):
+    """YAML config schema for the ``llm:`` section of config.yaml."""
     translations: TranslationsConfig
     reviews: ReviewsConfig
 
@@ -74,7 +75,7 @@ class ManuscriptConfig(TypedDict, total=False):
     paper: PaperConfig
     authors: list[AuthorConfig]
     publication: PublicationConfig
-    llm: LLMConfig
+    llm: LLMYAMLConfig
     testing: TestingConfig
     steganography: SteganographyConfigYAML
     keywords: list[str]
