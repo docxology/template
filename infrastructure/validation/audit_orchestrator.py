@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Audit orchestrator that coordinates all validation modules for filepath and reference auditing.
 
 This module provides a unified interface for running audits across all validation modules,

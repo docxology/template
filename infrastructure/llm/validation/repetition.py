@@ -5,10 +5,19 @@ from __future__ import annotations
 import math
 import re
 from collections import Counter
+from typing import NamedTuple
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
+
+
+class RepetitionResult(NamedTuple):
+    """Result of detect_repetition. Positional unpacking (bool, list, float) still works."""
+
+    found: bool
+    examples: list[str]
+    unique_ratio: float
 
 def _normalize_for_comparison(text: str) -> str:
     """Normalize text for comparison by removing whitespace variations.
@@ -161,7 +170,7 @@ def detect_repetition(
     min_chunk_size: int = 100,
     similarity_threshold: float = 0.8,
     similarity_method: str = "hybrid",
-) -> tuple[bool, list[str], float]:
+) -> RepetitionResult:
     """Detect repetitive content in LLM output with improved semantic detection.
 
     Uses hybrid similarity methods to better identify true repetition vs.
@@ -174,10 +183,11 @@ def detect_repetition(
         similarity_method: Similarity method ("jaccard", "tfidf", "hybrid")
 
     Returns:
-        Tuple of (has_repetition, list of repeated chunks, unique content ratio)
+        RepetitionResult with fields: found, examples, unique_ratio.
+        Supports positional unpacking: found, examples, ratio = detect_repetition(text)
     """
     if not text or len(text) < min_chunk_size * 2:
-        return False, [], 1.0
+        return RepetitionResult(False, [], 1.0)
 
     # Split by common section markers with better pattern matching
     section_patterns = [
@@ -200,7 +210,7 @@ def detect_repetition(
         chunks = [p.strip() for p in text.split("\n\n") if len(p.strip()) >= min_chunk_size]
 
     if len(chunks) < 2:
-        return False, [], 1.0
+        return RepetitionResult(False, [], 1.0)
 
     # Normalize chunks for comparison
     normalized_chunks = [_normalize_for_comparison(c) for c in chunks]
@@ -239,7 +249,7 @@ def detect_repetition(
 
     has_repetition = len(duplicates) > 0 or unique_ratio < 0.7
 
-    return has_repetition, duplicates, unique_ratio
+    return RepetitionResult(has_repetition, duplicates, unique_ratio)
 
 def _deduplicate_paragraphs(
     text: str,
@@ -253,7 +263,7 @@ def _deduplicate_paragraphs(
         return text
 
     original_length = len(text)
-    seen_content: dict[str, Dict] = {}
+    seen_content: dict[str, dict] = {}
     result_paragraphs = []
     removed_count = 0
 
@@ -314,9 +324,14 @@ def deduplicate_sections(
 
     Args:
         text: The text to deduplicate
-        max_repetitions: Maximum times a section can appear
-        mode: Deduplication mode ("conservative", "balanced", "aggressive")
-        similarity_threshold: Similarity threshold above which content is considered duplicate
+        max_repetitions: Maximum times a section can appear. Overridden by mode when
+            mode is "conservative" (floor 3) or "aggressive" (ceiling 1).
+        mode: Deduplication mode ("conservative", "balanced", "aggressive"). When not
+            "balanced", mode overrides the caller-supplied similarity_threshold and
+            max_repetitions to enforce preset bounds.
+        similarity_threshold: Similarity threshold above which content is considered
+            duplicate. Overridden by mode when mode is "conservative" (floor 0.9) or
+            "aggressive" (ceiling 0.7). Pass mode="balanced" to use this value as-is.
         min_content_preservation: Minimum fraction of original content to preserve
 
     Returns:
@@ -347,7 +362,7 @@ def deduplicate_sections(
         )
 
     # Track seen sections with semantic similarity
-    seen_sections: dict[str, Dict] = {}  # key -> {"count": int, "text": str}
+    seen_sections: dict[str, dict] = {}  # key -> {"count": int, "text": str}
     result_parts = []
     removed_count = 0
 

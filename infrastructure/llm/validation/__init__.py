@@ -26,6 +26,7 @@ from infrastructure.llm.validation.format import (
     is_off_topic,
 )
 from infrastructure.llm.validation.repetition import (
+    RepetitionResult,
     calculate_unique_content_ratio,
     deduplicate_sections,
     detect_repetition,
@@ -48,6 +49,7 @@ __all__ = [
     "validate_complete",
     "validate_no_repetition",
     "clean_repetitive_output",
+    "RepetitionResult",
     "detect_repetition",
     "calculate_unique_content_ratio",
     "deduplicate_sections",

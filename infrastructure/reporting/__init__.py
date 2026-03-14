@@ -52,9 +52,9 @@ try:
         generate_plotly_dashboard,
     )
 
-    _DASHBOARD_AVAILABLE = True
+    DASHBOARD_AVAILABLE = True
 except ImportError:
-    _DASHBOARD_AVAILABLE = False
+    DASHBOARD_AVAILABLE = False
 
 
 __all__ = [
@@ -84,4 +84,5 @@ __all__ = [
     "load_test_results",
     "load_infrastructure_results",
     "run_test_summary_generation",
+    "DASHBOARD_AVAILABLE",
 ]

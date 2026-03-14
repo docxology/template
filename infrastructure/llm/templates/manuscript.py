@@ -587,6 +587,9 @@ Begin with the English abstract, then provide the translation:"""
     ) -> str:
         """Render template with enhanced constraints.
 
+        Note: This signature has 4 positional params (vs. 3 in sibling classes) because
+        translation requires a target_language that other review templates do not need.
+
         Args:
             text: Manuscript text (required)
             target_language: Target language name (required)

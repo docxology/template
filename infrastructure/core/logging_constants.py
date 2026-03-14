@@ -25,8 +25,8 @@ EMOJIS = {
     "chart": "📊",
 }
 
-# Module-level constants kept for backwards compatibility; lazily evaluated functions below
-# are preferred for new call sites since they allow test code to override env vars after import.
+# Module-level constants (USE_EMOJIS, USE_STRUCTURED_LOGGING) are kept for backwards compatibility.
+# Prefer the getter functions below for all new code — they allow env-var overrides after import.
 
 @functools.lru_cache(maxsize=None)
 def get_emoji_enabled() -> bool:
