@@ -62,33 +62,8 @@ def retry_with_backoff(
     """
 
     def decorator(func: Callable[..., T]) -> Callable[..., T]:
-        """Wrap the target function with retry logic.
-
-        Args:
-            func: The function to be decorated with retry behavior.
-
-        Returns:
-            Callable[..., T]: Wrapped function that retries on failure.
-        """
-
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> T:
-            """Execute the wrapped function with exponential backoff retry.
-
-            Attempts to execute the function up to max_attempts times,
-            with exponential backoff delays between retries.
-
-            Args:
-                *args: Positional arguments passed to the wrapped function.
-                **kwargs: Keyword arguments passed to the wrapped function.
-
-            Returns:
-                T: The return value from the wrapped function on success.
-
-            Raises:
-                Exception: The last exception encountered after all retry
-                    attempts have been exhausted.
-            """
             for attempt in range(1, max_attempts + 1):
                 try:
                     return func(*args, **kwargs)
@@ -116,6 +91,8 @@ def retry_with_backoff(
                         )
 
                     time.sleep(delay)
+
+            raise RuntimeError(f"{func.__name__} failed after {max_attempts} attempts")  # unreachable
 
         return wrapper
 

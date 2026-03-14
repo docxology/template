@@ -43,7 +43,7 @@ def categorize_by_type(issues: list[Issue]) -> dict[str, list[Issue]]:
     Returns:
         Dictionary mapping category names to lists of issues
     """
-    categories = {  # type: ignore
+    categories: dict[str, list[Issue]] = {
         "critical": [],
         "error": [],
         "warning": [],
@@ -249,26 +249,26 @@ def group_related_issues(issues: list[Issue]) -> list[list[Issue]]:
         return []
 
     # Group by file first
-    file_groups: dict[str, list[str]] = {}
+    file_groups: dict[str, list[Issue]] = {}
     for issue in issues:
         file_key = _get_issue_file(issue)
         if file_key not in file_groups:
             file_groups[file_key] = []
-        file_groups[file_key].append(issue)  # type: ignore
+        file_groups[file_key].append(issue)
 
     # Within each file, group by issue type
-    groups: list[dict[str, str]] = []
+    groups: list[list[Issue]] = []
     for file_issues in file_groups.values():
-        type_groups: dict[str, list[str]] = {}
-        for issue in file_issues:  # type: ignore
+        type_groups: dict[str, list[Issue]] = {}
+        for issue in file_issues:
             issue_type = _get_issue_type(issue)
             if issue_type not in type_groups:
                 type_groups[issue_type] = []
-            type_groups[issue_type].append(issue)  # type: ignore
+            type_groups[issue_type].append(issue)
 
-        groups.extend(type_groups.values())  # type: ignore
+        groups.extend(type_groups.values())
 
-    return groups  # type: ignore
+    return groups
 
 def prioritize_issues(issues: list[Issue]) -> list[Issue]:
     """Sort issues by priority (severity, then type).

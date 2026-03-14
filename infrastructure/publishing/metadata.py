@@ -216,8 +216,6 @@ def generate_publication_metrics(metadata: PublicationMetadata) -> dict[str, Any
     Returns:
         Dictionary with publication metrics
     """
-    from infrastructure.publishing.metadata import calculate_complexity_score
-
     # Calculate various metrics
     title_length = len(metadata.title)
     abstract_length = len(metadata.abstract)

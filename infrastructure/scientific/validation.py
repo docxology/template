@@ -80,7 +80,7 @@ def validate_scientific_implementation(func: Callable, test_cases: list[tuple[An
 
 def validate_scientific_best_practices(module: Any) -> dict[str, Any]:
     """Validate that a module follows scientific computing best practices."""
-    validation = {
+    validation: dict[str, Any] = {
         "docstring_coverage": 0.0,
         "type_hints_coverage": 0.0,
         "error_handling": False,
@@ -140,26 +140,18 @@ def validate_scientific_best_practices(module: Any) -> dict[str, Any]:
     }
 
     validation["best_practices_score"] = (
-        validation["docstring_coverage"] * weights["docstring_coverage"]  # type: ignore
-        + validation["type_hints_coverage"] * weights["type_hints_coverage"]  # type: ignore
-        + (1.0 if validation["error_handling"] else 0.0) * weights["error_handling"]
+        validation["docstring_coverage"] * weights["docstring_coverage"]        + validation["type_hints_coverage"] * weights["type_hints_coverage"]        + (1.0 if validation["error_handling"] else 0.0) * weights["error_handling"]
         + (1.0 if validation["input_validation"] else 0.0) * weights["input_validation"]
     )
 
-    if validation["docstring_coverage"] < 0.8:  # type: ignore
-        validation["recommendations"].append("Add docstrings to undocumented functions")  # type: ignore
-
-    if validation["type_hints_coverage"] < 0.8:  # type: ignore
-        validation["recommendations"].append(  # type: ignore
-            "Add type hints to function parameters and return values"
+    if validation["docstring_coverage"] < 0.8:        validation["recommendations"].append("Add docstrings to undocumented functions")
+    if validation["type_hints_coverage"] < 0.8:        validation["recommendations"].append(            "Add type hints to function parameters and return values"
         )
 
     if not validation["error_handling"]:
-        validation["recommendations"].append("Add proper error handling with try/except blocks")  # type: ignore
-
+        validation["recommendations"].append("Add proper error handling with try/except blocks")
     if not validation["input_validation"]:
-        validation["recommendations"].append("Add input validation to prevent invalid arguments")  # type: ignore
-
+        validation["recommendations"].append("Add input validation to prevent invalid arguments")
     return validation
 
 def check_research_compliance(func: Callable) -> dict[str, Any]:
@@ -229,23 +221,17 @@ def check_research_compliance(func: Callable) -> dict[str, Any]:
     compliance["compliance_score"] = score
 
     if not compliance["has_docstring"]:
-        compliance["recommendations"].append(  # type: ignore
-            "Add comprehensive docstring with description and parameters"
+        compliance["recommendations"].append(            "Add comprehensive docstring with description and parameters"
         )
 
     if not compliance["has_type_hints"]:
-        compliance["recommendations"].append("Add type hints to parameters and return value")  # type: ignore
-
+        compliance["recommendations"].append("Add type hints to parameters and return value")
     if not compliance["has_examples"]:
-        compliance["recommendations"].append("Add usage examples in docstring")  # type: ignore
-
+        compliance["recommendations"].append("Add usage examples in docstring")
     if not compliance["has_error_handling"]:
-        compliance["recommendations"].append("Add proper error handling for edge cases")  # type: ignore
-
+        compliance["recommendations"].append("Add proper error handling for edge cases")
     if not compliance["has_input_validation"]:
-        compliance["recommendations"].append("Add input validation to prevent invalid arguments")  # type: ignore
-
+        compliance["recommendations"].append("Add input validation to prevent invalid arguments")
     if not compliance["follows_naming_conventions"]:
-        compliance["recommendations"].append("Use snake_case naming convention for functions")  # type: ignore
-
+        compliance["recommendations"].append("Use snake_case naming convention for functions")
     return compliance

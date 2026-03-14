@@ -342,8 +342,6 @@ def check_ollama_availability() -> tuple[bool, str | None]:
                             "❌ Failed to start Ollama server automatically after retries"
                         )
                         return False, None
-                    else:
-                        continue
             else:
                 logger.warning("❌ Ollama server is not running")
                 return False, None

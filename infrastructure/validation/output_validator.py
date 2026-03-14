@@ -97,7 +97,6 @@ def validate_copied_outputs(output_dir: Path) -> bool:
                 log_success(f"Combined PDF valid ({size_mb:.2f} MB)", logger)
                 combined_pdf_found = True
 
-        # Legacy filename support removed
         if not combined_pdf_found:
             logger.debug(f"Project-specific PDF not found in {pdf_dir}")
 
@@ -129,7 +128,6 @@ def validate_copied_outputs(output_dir: Path) -> bool:
                 )
                 combined_pdf_found = True
 
-            # Legacy filename support removed
             if not combined_pdf_found:
                 logger.debug(f"Project-specific PDF not found in source {source_pdf_dir}")
 
@@ -356,7 +354,7 @@ def collect_detailed_validation_results(output_dir: Path) -> ValidationResultDic
     for missing_file in validation_results["structure"].get("missing_files", []):
         if missing_file == "project_combined.pdf":
             validation_results["issues_by_severity"]["critical"].append(
-                f"Missing expected file: {missing_file} (legacy filename - consider using project-specific naming)"  # noqa: E501
+                f"Missing expected file: {missing_file}"
             )
         elif "_combined.pdf" in missing_file:
             project_name = missing_file.replace("_combined.pdf", "")
@@ -488,7 +486,6 @@ def validate_output_structure(output_dir: Path) -> dict[str, Any]:
                         f"Combined PDF found in source directory ({pdf_size_mb:.2f} MB) - validation before copy stage"  # noqa: E501
                     )
 
-                # Legacy filename support removed
                 if not combined_pdf_found:
                     logger.debug(f"Project-specific PDF not found in source {source_pdf_dir}")
 
@@ -500,8 +497,6 @@ def validate_output_structure(output_dir: Path) -> dict[str, Any]:
             "No project name detected in directory structure, skipping specific PDF validation"
         )
 
-    # Legacy filename check removed - modern projects use project-specific naming
-    # All projects should use {project_name}_combined.pdf format
 
     # Populate directory structure metadata
     pdf_key = "project_combined_pdf"  # Default key for backward compatibility

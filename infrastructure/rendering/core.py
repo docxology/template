@@ -8,7 +8,7 @@ from pathlib import Path
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.pdf_renderer import PDFRenderer
-from infrastructure.rendering.poster_renderer import PosterRenderer
+from infrastructure.rendering.poster_renderer import render_poster
 from infrastructure.rendering.slides_renderer import SlidesRenderer
 from infrastructure.rendering.web_renderer import WebRenderer
 
@@ -32,7 +32,6 @@ class RenderManager:
         self.pdf_renderer = PDFRenderer(self.config)
         self.slides_renderer = SlidesRenderer(self.config)
         self.web_renderer = WebRenderer(self.config)
-        self.poster_renderer = PosterRenderer(self.config)
 
     def render_all(self, source_file: Path) -> list[Path]:
         """Render all supported formats for a source file.

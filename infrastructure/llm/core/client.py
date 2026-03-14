@@ -479,7 +479,7 @@ class LLMClient:
         """
         return self._generate_response_direct(model, self.context.get_messages(), options=options)
 
-    def _generate_response_direct(  # type: ignore[override]  # subclass broadens signature (adds retries param)
+    def _generate_response_direct(
         self,
         model: str,
         messages: list[dict[str, Any]],
@@ -806,37 +806,12 @@ class LLMClient:
             return self.config.fallback_models
 
     def check_connection(self, timeout: float = 2.0) -> bool:
-        """Check if Ollama server is available.
-
-        Args:
-            timeout: Connection timeout in seconds
-
-        Returns:
-            True if Ollama is accessible, False otherwise
-
-        Example:
-            >>> if client.check_connection():
-            ...     print("Ollama is ready")
-        """
+        """Return True if the Ollama server is reachable."""
         is_available, _ = self.check_connection_detailed(timeout=timeout)
         return is_available
 
     def check_connection_detailed(self, timeout: float = 2.0) -> tuple[bool, str | None]:
-        """Check if Ollama server is available with detailed status.
-
-        Args:
-            timeout: Connection timeout in seconds
-
-        Returns:
-            Tuple of (is_available: bool, error_message: str | None)
-            - is_available: True if Ollama is accessible
-            - error_message: Error description if unavailable, None if available
-
-        Example:
-            >>> is_available, error = client.check_connection_detailed()
-            >>> if not is_available:
-            ...     print(f"Ollama unavailable: {error}")
-        """
+        """Return (is_available, error_message) for the Ollama server."""
         try:
             response = requests.get(f"{self.config.base_url}/api/tags", timeout=timeout)
             if response.status_code == 200:

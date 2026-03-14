@@ -12,7 +12,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.exceptions import LLMError, SecurityViolation
+from infrastructure.core.exceptions import SecurityViolation
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
@@ -186,12 +186,8 @@ class InputSanitizer:
             return text[:max_length] + "...[truncated]"
         return text
 
-class SecurityError(SecurityViolation, LLMError):
-    """Exception raised for security violations in LLM operations.
-
-    Inherits from both SecurityViolation (for broad security catch-alls)
-    and LLMError (for LLM subsystem catch-alls).
-    """
+class SecurityError(SecurityViolation):
+    """Security violation in LLM input sanitization."""
 
     pass
 

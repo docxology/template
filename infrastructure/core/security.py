@@ -117,8 +117,8 @@ class SecurityValidator:
         # Resolve path to check for symlinks
         try:
             resolved = path_obj.resolve()
-        except (OSError, RuntimeError):
-            raise SecurityViolation("Invalid path")
+        except (OSError, RuntimeError) as e:
+            raise SecurityViolation("Invalid path") from e
 
         # Check path length
         if len(str(path)) > self.limits["path_length"]:
@@ -189,57 +189,57 @@ class SecurityValidator:
         return text.strip()
 
 
+def _build_security_headers() -> dict[str, str]:
+    """Return comprehensive HTTP security headers."""
+    return {
+        # Prevent clickjacking
+        "X-Frame-Options": "DENY",
+        "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'",  # noqa: E501
+        # Prevent MIME sniffing
+        "X-Content-Type-Options": "nosniff",
+        # Enable XSS protection
+        "X-XSS-Protection": "1; mode=block",
+        # Prevent referrer leakage
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        # HSTS (if HTTPS is enabled)
+        # 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+        # Prevent caching of sensitive content
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0",
+    }
+
+
+def get_cors_headers(origin: str | None = None) -> dict[str, str]:
+    """Get CORS headers for cross-origin requests.
+
+    Args:
+        origin: Allowed origin (None for deny all)
+
+    Returns:
+        Dictionary of CORS headers
+    """
+    headers = {
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        "Access-Control-Max-Age": "86400",  # 24 hours
+    }
+
+    if origin:
+        headers["Access-Control-Allow-Origin"] = origin
+        headers["Access-Control-Allow-Credentials"] = "true"
+    else:
+        headers["Access-Control-Allow-Origin"] = "null"
+
+    return headers
+
+
+# Keep SecurityHeaders as a backwards-compatible namespace shim.
 class SecurityHeaders:
-    """Security headers for HTTP responses and requests."""
+    """Namespace for security header helpers (use module-level functions directly)."""
 
-    @staticmethod
-    def get_security_headers() -> dict[str, str]:
-        """Get comprehensive security headers.
-
-        Returns:
-            Dictionary of security headers
-        """
-        return {
-            # Prevent clickjacking
-            "X-Frame-Options": "DENY",
-            "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'",  # noqa: E501
-            # Prevent MIME sniffing
-            "X-Content-Type-Options": "nosniff",
-            # Enable XSS protection
-            "X-XSS-Protection": "1; mode=block",
-            # Prevent referrer leakage
-            "Referrer-Policy": "strict-origin-when-cross-origin",
-            # HSTS (if HTTPS is enabled)
-            # 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
-            # Prevent caching of sensitive content
-            "Cache-Control": "no-cache, no-store, must-revalidate",
-            "Pragma": "no-cache",
-            "Expires": "0",
-        }
-
-    @staticmethod
-    def get_cors_headers(origin: str | None = None) -> dict[str, str]:
-        """Get CORS headers for cross-origin requests.
-
-        Args:
-            origin: Allowed origin (None for deny all)
-
-        Returns:
-            Dictionary of CORS headers
-        """
-        headers = {
-            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-            "Access-Control-Allow-Headers": "Content-Type, Authorization",
-            "Access-Control-Max-Age": "86400",  # 24 hours
-        }
-
-        if origin:
-            headers["Access-Control-Allow-Origin"] = origin
-            headers["Access-Control-Allow-Credentials"] = "true"
-        else:
-            headers["Access-Control-Allow-Origin"] = "null"
-
-        return headers
+    get_security_headers = staticmethod(_build_security_headers)
+    get_cors_headers = staticmethod(get_cors_headers)
 
 
 class RateLimiter:
@@ -392,7 +392,6 @@ class SecurityMonitor:
 
 # Global instances (lazy initialization — avoids import-time side effects)
 _security_validator: SecurityValidator | None = None
-_security_headers: SecurityHeaders | None = None
 _rate_limiter: RateLimiter | None = None
 _security_monitor: SecurityMonitor | None = None
 
@@ -407,10 +406,7 @@ def get_security_validator() -> SecurityValidator:
 
 def get_security_headers() -> dict[str, str]:
     """Get security headers."""
-    global _security_headers
-    if _security_headers is None:
-        _security_headers = SecurityHeaders()
-    return _security_headers.get_security_headers()
+    return _build_security_headers()
 
 
 def get_rate_limiter() -> RateLimiter:
@@ -427,11 +423,6 @@ def get_security_monitor() -> SecurityMonitor:
     if _security_monitor is None:
         _security_monitor = SecurityMonitor()
     return _security_monitor
-
-
-def validate_llm_input(prompt: str) -> str:
-    """Validate LLM input. Deprecated: use SecurityValidator.validate_llm_input directly."""
-    return SecurityValidator().validate_llm_input(prompt)
 
 
 def rate_limit(max_requests: int = 100, window_seconds: int = 60):

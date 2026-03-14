@@ -21,7 +21,7 @@ Direct imports (recommended):
     from infrastructure.llm.core.client import LLMClient
     from infrastructure.llm.core.config import LLMConfig, GenerationOptions
     from infrastructure.llm.templates import get_template
-    from infrastructure.llm.validation import OutputValidator
+    from infrastructure.llm.validation import validate_complete
 """
 
 from __future__ import annotations
@@ -72,17 +72,27 @@ from infrastructure.llm.validation import (
     OFF_TOPIC_PATTERNS_ANYWHERE,
     OFF_TOPIC_PATTERNS_START,
     ON_TOPIC_SIGNALS,
-    OutputValidator,
     calculate_unique_content_ratio,
     check_format_compliance,
+    clean_repetitive_output,
     deduplicate_sections,
     detect_conversational_phrases,
     detect_repetition,
+    estimate_tokens,
     extract_structured_sections,
     has_on_topic_signals,
     is_off_topic,
+    validate_citations,
+    validate_complete,
+    validate_formatting,
+    validate_json,
+    validate_length,
+    validate_long_response,
+    validate_no_repetition,
     validate_response_structure,
     validate_section_completeness,
+    validate_short_response,
+    validate_structure,
 )
 
 # Optional prompt system imports
@@ -144,7 +154,17 @@ __all__ = [
     "REVIEW_MIN_WORDS",
     "TRANSLATION_LANGUAGES",
     # Validation
-    "OutputValidator",
+    "validate_json",
+    "validate_length",
+    "estimate_tokens",
+    "validate_short_response",
+    "validate_long_response",
+    "validate_structure",
+    "validate_citations",
+    "validate_formatting",
+    "validate_complete",
+    "validate_no_repetition",
+    "clean_repetitive_output",
     "detect_repetition",
     "calculate_unique_content_ratio",
     "deduplicate_sections",

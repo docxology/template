@@ -9,8 +9,19 @@ import time
 from contextlib import contextmanager
 from typing import Any, Iterator
 
+from infrastructure.core.eta import (
+    calculate_eta,
+    calculate_eta_ema,
+    calculate_eta_with_confidence,
+)
 from infrastructure.core.logging_constants import EMOJIS, USE_EMOJIS
 from infrastructure.core.logging_helpers import format_duration
+
+__all__ = [
+    "calculate_eta",
+    "calculate_eta_ema",
+    "calculate_eta_with_confidence",
+]
 
 
 def log_progress_bar(
