@@ -22,6 +22,7 @@ from typing import Any
 import yaml
 
 from infrastructure.core.logging_utils import get_logger
+from infrastructure.validation.doc_models import CompletenessGap
 
 logger = get_logger(__name__)
 
@@ -35,15 +36,6 @@ class AccuracyIssue:
     line: int = 0
     message: str = ""
     details: str = ""
-
-@dataclass
-class CompletenessGap:
-    """Represents a completeness gap."""
-
-    category: str
-    item: str
-    description: str
-    severity: str = "warning"
 
 @dataclass
 class ScanResults:
