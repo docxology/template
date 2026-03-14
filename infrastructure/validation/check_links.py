@@ -322,37 +322,42 @@ def _resolve_template_path(path_ref: str, repo_root: Path) -> Path | None:
         return None
 
 def validate_directory_structures(content: str, file_path: Path, repo_root: Path) -> list[dict[str, Any]]:
-    """Validate directory structure examples against actual filesystem."""
-    issues: list[dict[str, str]] = []
+    """Validate directory structure examples in markdown against actual filesystem.
 
-    # Look for directory tree patterns in code blocks and regular text
+    Scans code blocks for tree diagrams (├── / └── patterns) and checks that
+    referenced files and directories actually exist relative to repo_root.
+    """
+    issues: list[dict[str, Any]] = []
+
     tree_patterns = [
-        r"```\n([^`]*?)```",  # Code blocks
-        r"```\w+\n([^`]*?)```",  # Code blocks with language
+        r"```\n([^`]*?)```",
+        r"```\w+\n([^`]*?)```",
     ]
 
     for pattern in tree_patterns:
         for match in re.finditer(pattern, content, re.DOTALL):
             tree_content = match.group(1)
-            lines = tree_content.split("\n")
-
-            for _, line in enumerate(lines):
-                # Look for directory/file patterns like "├── file.py" or "└── dir/"
-                dir_pattern = re.search(r"[├└]──\s*([^\s]+)", line.strip())
-                if dir_pattern:
-                    item_name = dir_pattern.group(1)
-                    # Skip if it's a comment or not a real path
-                    if not _is_real_path_item(item_name):
-                        continue
-
-                    # Try to resolve relative to current file's directory
-                    if file_path.parent.name in ["docs", "infrastructure", "scripts"]:
-                        # Documentation files might reference various paths
-                        continue
-
-                    # For now, just flag obvious issues
-                    if "nonexistent" in item_name or "example" in item_name.lower():
-                        continue
+            for line in tree_content.split("\n"):
+                dir_match = re.search(r"[├└]──\s*([^\s]+)", line.strip())
+                if not dir_match:
+                    continue
+                item_name = dir_match.group(1)
+                if not _is_real_path_item(item_name):
+                    continue
+                # Documentation files reference illustrative paths — skip
+                if file_path.parent.name in ("docs", "infrastructure", "scripts"):
+                    continue
+                # Check existence relative to repo root
+                candidate = repo_root / item_name.rstrip("/")
+                if not candidate.exists():
+                    line_num = content[: match.start()].count("\n") + 1
+                    issues.append({
+                        "file": str(file_path),
+                        "line": line_num,
+                        "target": item_name,
+                        "issue": f"Directory tree references '{item_name}' which does not exist",
+                        "type": "missing_tree_item",
+                    })
 
     return issues
 
@@ -483,7 +488,7 @@ def _validate_import_path(
 
 def validate_placeholder_consistency(content: str, file_path: Path, repo_root: Path) -> list[dict[str, Any]]:
     """Validate consistency of {name} placeholders vs actual project names."""
-    issues: list[dict[str, str]] = []
+    issues: list[dict[str, Any]] = []
 
     # Find all placeholder usage
     placeholder_pattern = re.compile(r"\{([^}]+)\}")
@@ -550,7 +555,7 @@ def validate_placeholder_consistency(content: str, file_path: Path, repo_root: P
                 issues.append(
                     {
                         "file": str(file_path),
-                        "line": content[: match.start()].count("\n") + 1,  # type: ignore[dict-item]
+                        "line": content[: match.start()].count("\n") + 1,
                         "target": match.group(0),
                         "issue": f"Using placeholder {{name}} when specific project names exist: {project_names}",  # noqa: E501
                         "type": "placeholder_inconsistency",

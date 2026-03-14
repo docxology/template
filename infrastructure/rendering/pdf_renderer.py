@@ -243,34 +243,8 @@ class PDFRenderer:
     def _process_bibliography(self, tex_file: Path, output_dir: Path, bib_file: Path) -> bool:
         """Process bibliography using bibtex/biber.
 
-        SECURITY AND COMPATIBILITY CONSIDERATIONS:
-
-        BibTeX operates in "paranoid" mode by default (openout_any=p) which restricts
-        file access across directories. This causes two issues:
-
-        1. Bibliography File Access: BibTeX cannot read the bibliography file if it's
-           in a different directory than the LaTeX compilation directory. Solution: Copy
-           the bibliography file into the compilation directory before running bibtex.
-
-        2. Output File Restrictions: BibTeX refuses to write to the .blg (log) file
-           in directories other than the compilation directory. This is a security
-           restriction and is not critical - the bibliography still gets processed
-           correctly even though the log file isn't written.
-
-        COMPILATION WORKFLOW:
-        - The .aux file (auxiliary) contains citation references from the LaTeX document
-        - BibTeX reads the .aux file to find what citations are needed
-        - BibTeX reads the .bib file to find the bibliography entries
-        - BibTeX writes a .bbl file with formatted bibliography entries
-        - LaTeX then includes the .bbl file in the final document
-
-        Args:
-            tex_file: Path to the LaTeX file
-            output_dir: Directory containing LaTeX auxiliary files
-            bib_file: Path to bibliography file
-
-        Returns:
-            True if bibliography processing succeeded, False otherwise
+        Copies the .bib file into the compilation directory (BibTeX's paranoid mode
+        restricts cross-directory access), then runs bibtex against the .aux file.
         """
         # Check if bibliography file exists
         if not bib_file.exists():

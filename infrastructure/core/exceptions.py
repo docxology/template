@@ -17,10 +17,6 @@ from typing import Any
 
 from infrastructure.core.install_commands import build_install_commands
 
-# =============================================================================
-# BASE EXCEPTION
-# =============================================================================
-
 class TemplateError(Exception):
     """Base exception for all template-related errors.
 
@@ -49,10 +45,6 @@ class TemplateError(Exception):
 
         super().__init__(full_message)
 
-# =============================================================================
-# CONFIGURATION ERRORS
-# =============================================================================
-
 class ConfigurationError(TemplateError):
     """Raised when configuration is invalid or missing."""
 
@@ -67,10 +59,6 @@ class InvalidConfigurationError(ConfigurationError):
     """Raised when configuration values are invalid."""
 
     pass
-
-# =============================================================================
-# VALIDATION ERRORS
-# =============================================================================
 
 class ValidationError(TemplateError):
     """Raised when validation fails."""
@@ -92,10 +80,6 @@ class DataValidationError(ValidationError):
 
     pass
 
-# =============================================================================
-# BUILD ERRORS
-# =============================================================================
-
 class BuildError(TemplateError):
     """Raised when build process fails."""
 
@@ -115,10 +99,6 @@ class PipelineError(BuildError):
     """Raised when pipeline orchestration fails."""
 
     pass
-
-# =============================================================================
-# FILE/IO ERRORS
-# =============================================================================
 
 class FileOperationError(TemplateError):
     """Raised when file operations fail."""
@@ -167,10 +147,6 @@ class InvalidFileFormatError(FileOperationError):
 
     pass
 
-# =============================================================================
-# DEPENDENCY ERRORS
-# =============================================================================
-
 class DependencyError(TemplateError):
     """Raised when dependencies are missing or invalid."""
 
@@ -209,10 +185,6 @@ class VersionMismatchError(DependencyError):
 
     pass
 
-# =============================================================================
-# TEST ERRORS
-# =============================================================================
-
 class TestError(TemplateError):
     """Raised when test execution or validation fails."""
 
@@ -223,18 +195,10 @@ class InsufficientCoverageError(TestError):
 
     pass
 
-# =============================================================================
-# INTEGRATION ERRORS
-# =============================================================================
-
 class IntegrationError(TemplateError):
     """Raised when component integration fails."""
 
     pass
-
-# =============================================================================
-# LITERATURE SEARCH ERRORS
-# =============================================================================
 
 class LiteratureSearchError(TemplateError):
     """Raised when literature search operations fail."""
@@ -250,10 +214,6 @@ class InvalidQueryError(LiteratureSearchError):
     """Raised when search query is invalid."""
 
     pass
-
-# =============================================================================
-# LLM ERRORS
-# =============================================================================
 
 class LLMError(TemplateError):
     """Base exception for LLM operations."""
@@ -275,15 +235,10 @@ class ContextLimitError(LLMError):
 
     pass
 
-# =============================================================================
-# SECURITY ERRORS
-# =============================================================================
-
 class SecurityViolation(TemplateError):
     """Raised when a security constraint is violated."""
 
     pass
-
 
 class SecurityError(SecurityViolation):
     """Security violation in LLM input sanitization.
@@ -294,10 +249,6 @@ class SecurityError(SecurityViolation):
     """
 
     pass
-
-# =============================================================================
-# RENDERING ERRORS
-# =============================================================================
 
 class RenderingError(TemplateError):
     """Base exception for rendering operations."""
@@ -314,10 +265,6 @@ class TemplateRenderingError(RenderingError):
 
     pass
 
-# =============================================================================
-# PUBLISHING ERRORS
-# =============================================================================
-
 class PublishingError(TemplateError):
     """Base exception for publishing operations."""
 
@@ -332,10 +279,6 @@ class MetadataError(PublishingError):
     """Raised when metadata validation fails."""
 
     pass
-
-# =============================================================================
-# UTILITY FUNCTIONS
-# =============================================================================
 
 def raise_with_context(exception_class: type[TemplateError], message: str, **context: Any) -> None:
     """Raise exception_class(message) with the given keyword arguments as context."""

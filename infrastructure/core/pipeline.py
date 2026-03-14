@@ -93,7 +93,7 @@ class PipelineExecutor:
         stages.append(StageSpec("Environment Setup", self._run_setup_environment))
         if not self.config.skip_infra:
             stages.append(StageSpec("Infrastructure Tests", self.run_infrastructure_tests))
-        stages.append(StageSpec("Project Tests", self._run_project_tests))
+        stages.append(StageSpec("Project Tests", self.run_project_tests))
         stages.append(StageSpec("Project Analysis", self._run_analysis))
         stages.append(StageSpec("PDF Rendering", self._run_pdf_rendering))
         stages.append(StageSpec("Output Validation", self._run_validation))
@@ -363,7 +363,7 @@ class PipelineExecutor:
             "01_run_tests.py", "--infra-only", "--verbose", "--project", self.config.project_name
         )
 
-    def _run_project_tests(self) -> bool:
+    def run_project_tests(self) -> bool:
         return self._run_script(
             "01_run_tests.py", "--project-only", "--verbose", "--project", self.config.project_name
         )

@@ -189,7 +189,7 @@ class SecurityValidator:
         return text.strip()
 
 
-def _build_security_headers() -> dict[str, str]:
+def get_security_headers() -> dict[str, str]:
     """Return comprehensive HTTP security headers."""
     return {
         # Prevent clickjacking
@@ -395,11 +395,6 @@ def get_security_validator() -> SecurityValidator:
     if _security_validator is None:
         _security_validator = SecurityValidator()
     return _security_validator
-
-
-def get_security_headers() -> dict[str, str]:
-    """Get security headers."""
-    return _build_security_headers()
 
 
 def get_rate_limiter() -> RateLimiter:
