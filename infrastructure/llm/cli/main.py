@@ -167,8 +167,8 @@ def template_command(args: argparse.Namespace) -> None:
     print(response)
 
 
-def main() -> None:
-    """Main CLI entry point."""
+def create_parser() -> argparse.ArgumentParser:
+    """Build and return the CLI argument parser."""
     parser = argparse.ArgumentParser(
         description="Query local LLMs via Ollama for research tasks.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -230,6 +230,12 @@ Examples:
     )
     template_parser.set_defaults(func=template_command)
 
+    return parser
+
+
+def main() -> None:
+    """Main CLI entry point."""
+    parser = create_parser()
     args = parser.parse_args()
 
     if not hasattr(args, "func"):

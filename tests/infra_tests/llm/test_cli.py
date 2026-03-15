@@ -14,6 +14,7 @@ import pytest
 from infrastructure.llm.cli.main import (
     CLIError,
     check_command,
+    create_parser,
     main,
     models_command,
     query_command,
@@ -34,19 +35,8 @@ class TestCLIArgumentParsing:
         assert exc_info.value.code == 1
 
     def test_query_command_parsing(self, monkeypatch):
-        """Test query command argument parsing."""
-        parser = argparse.ArgumentParser()
-        subparsers = parser.add_subparsers(dest="command")
-
-        query_parser = subparsers.add_parser("query")
-        query_parser.add_argument("prompt")
-        query_parser.add_argument("--short", action="store_true")
-        query_parser.add_argument("--long", action="store_true")
-        query_parser.add_argument("--stream", action="store_true")
-        query_parser.add_argument("--model", type=str, default=None)
-        query_parser.add_argument("--temperature", type=float, default=None)
-        query_parser.add_argument("--max-tokens", type=int, default=None)
-        query_parser.add_argument("--seed", type=int, default=None)
+        """Test query command argument parsing using the real parser."""
+        parser = create_parser()
 
         # Test basic query
         args = parser.parse_args(["query", "test prompt"])
@@ -72,32 +62,20 @@ class TestCLIArgumentParsing:
         assert args.seed == 42
 
     def test_check_command_parsing(self):
-        """Test check command exists."""
-        parser = argparse.ArgumentParser()
-        subparsers = parser.add_subparsers(dest="command")
-        subparsers.add_parser("check")
-
+        """Test check command exists in the real parser."""
+        parser = create_parser()
         args = parser.parse_args(["check"])
         assert args.command == "check"
 
     def test_models_command_parsing(self):
-        """Test models command exists."""
-        parser = argparse.ArgumentParser()
-        subparsers = parser.add_subparsers(dest="command")
-        subparsers.add_parser("models")
-
+        """Test models command exists in the real parser."""
+        parser = create_parser()
         args = parser.parse_args(["models"])
         assert args.command == "models"
 
     def test_template_command_parsing(self):
-        """Test template command parsing."""
-        parser = argparse.ArgumentParser()
-        subparsers = parser.add_subparsers(dest="command")
-
-        template_parser = subparsers.add_parser("template")
-        template_parser.add_argument("name", nargs="?", default=None)
-        template_parser.add_argument("--list", action="store_true")
-        template_parser.add_argument("--input", type=str, default=None)
+        """Test template command parsing using the real parser."""
+        parser = create_parser()
 
         # List templates
         args = parser.parse_args(["template", "--list"])
