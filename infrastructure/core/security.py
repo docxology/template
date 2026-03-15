@@ -75,6 +75,9 @@ class SecurityValidator:
         That function calls ``InputSanitizer`` which delegates pattern detection to this class
         and adds LLM-specific whitespace and length handling. Retained here for test compatibility.
 
+        Sunset plan: remove after tests/infra_tests/core/test_security.py migrates its
+        ``validate_llm_input`` assertions to ``sanitize_llm_input``. Target: next major cleanup session.
+
         Raises:
             SecurityViolation: If input contains dangerous content
         """

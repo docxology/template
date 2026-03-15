@@ -726,7 +726,7 @@ def generate_llm_executive_summary(
 def generate_quality_review(
     client: LLMClient, text: str, model_name: str = ""
 ) -> tuple[str, ReviewMetrics]:
-    """Named public API entry point for quality reviews (ManuscriptQualityReview template)."""
+    """Quality review using ManuscriptQualityReview template, temperature=0.3."""
     return generate_review_with_metrics(
         client=client,
         text=text,
@@ -742,7 +742,7 @@ def generate_quality_review(
 def generate_methodology_review(
     client: LLMClient, text: str, model_name: str = ""
 ) -> tuple[str, ReviewMetrics]:
-    """Named public API entry point for methodology reviews (ManuscriptMethodologyReview template)."""
+    """Methodology review using ManuscriptMethodologyReview template, temperature=0.3."""
     return generate_review_with_metrics(
         client=client,
         text=text,

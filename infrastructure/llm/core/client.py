@@ -388,6 +388,7 @@ class LLMClient:
             ... }
             >>> result = client.query_structured("Analyze...", schema=schema)
         """
+        prompt = sanitize_llm_input(prompt)
         model_name = model or self.config.default_model
 
         logger.debug("Starting structured query (JSON) model=%s", model_name)

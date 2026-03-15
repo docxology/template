@@ -10,7 +10,7 @@ import difflib
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, TypedDict
+from typing import Any, TypedDict, cast
 
 from infrastructure.core.exceptions import InvalidConfigurationError
 from infrastructure.core.logging_utils import get_logger
@@ -166,7 +166,7 @@ def load_config(config_path: Path | str) -> ManuscriptConfig | None:
             data = yaml.safe_load(f)
             if isinstance(data, dict):
                 validate_config_keys(data, config_path)
-            return data  # type: ignore[no-any-return]  # yaml.safe_load returns Any
+            return cast(ManuscriptConfig, data)
     except FileNotFoundError:
         return None
     except PermissionError as e:
