@@ -593,7 +593,10 @@ def _stream_with_heartbeat(
         logger.warning(
             f"Streaming query failed, falling back to blocking query: {type(e).__name__}: {e}"
         )
-        return client.query(prompt, options=options)
+        try:
+            return client.query(prompt, options=options)
+        except Exception as block_err:
+            raise block_err from e
 
 
 def generate_review_with_metrics(

@@ -20,7 +20,7 @@ from __future__ import annotations
 
 import json
 import re
-from typing import Any
+from typing import Any, Literal
 
 from infrastructure.core.exceptions import ValidationError
 from infrastructure.core.logging_utils import get_logger
@@ -87,7 +87,7 @@ def validate_long_response(content: str, min_tokens: int = 500) -> bool:
     return True
 
 
-def validate_structure(content: dict[str, Any], schema: dict[str, Any]) -> bool:
+def validate_structure(content: dict[str, Any], schema: dict[str, Any]) -> Literal[True]:
     """Validate structured response against schema.
 
     Returns True on success. Raises ValidationError on failure (never returns False).
