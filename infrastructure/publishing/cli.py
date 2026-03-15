@@ -58,16 +58,16 @@ def extract_metadata_command(args: argparse.Namespace) -> None:
 
 
 def generate_citation_command(args: argparse.Namespace) -> None:
-    """Generate a formatted citation from manuscript metadata.
+    """Generate a BibTeX citation from manuscript metadata.
 
-    Extracts metadata from manuscript markdown files and generates a citation
-    in the requested format (currently BibTeX only). The citation is printed
+    Extracts metadata from manuscript markdown files and generates a citation.
+    Currently only BibTeX format is implemented. The citation is printed
     to stdout for easy copying or redirection.
 
     Args:
         args: Argparse namespace containing:
             - manuscript_dir (str): Path to directory containing markdown files.
-            - format (str): Citation format ('bibtex', 'apa', or 'mla').
+            - format (str): Citation format (only 'bibtex' is supported).
 
     Returns:
         None. Prints the formatted citation to stdout.
@@ -193,9 +193,9 @@ def main() -> None:
     cite_parser.add_argument("manuscript_dir", help="Manuscript directory")
     cite_parser.add_argument(
         "--format",
-        choices=["bibtex", "apa", "mla"],
+        choices=["bibtex"],  # Only bibtex is implemented; apa/mla are not yet supported
         default="bibtex",
-        help="Citation format",
+        help="Citation format (only 'bibtex' is currently implemented)",
     )
     cite_parser.set_defaults(func=generate_citation_command)
 

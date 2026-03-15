@@ -803,12 +803,18 @@ class LLMClient:
             return self.config.fallback_models
 
     def check_connection(self, timeout: float = 2.0) -> bool:
-        """Return True if the Ollama server is reachable."""
+        """Return True if the Ollama server is reachable.
+
+        Use check_connection_detailed() when you need the failure reason.
+        """
         is_available, _ = self.check_connection_detailed(timeout=timeout)
         return is_available
 
     def check_connection_detailed(self, timeout: float = 2.0) -> tuple[bool, str | None]:
-        """Return (is_available, error_message) for the Ollama server."""
+        """Return (is_available, error_message) for the Ollama server.
+
+        Use check_connection() when only the boolean result is needed.
+        """
         try:
             response = requests.get(f"{self.config.base_url}/api/tags", timeout=timeout)
             if response.status_code == 200:

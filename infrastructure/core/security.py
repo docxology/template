@@ -231,6 +231,10 @@ class RateLimiter:
     """Simple in-memory rate limiter.
 
     Thread-safe: all mutations to the requests dict are guarded by a Lock.
+
+    Note: This class is available for LLM call throttling but is not currently
+    wired into LLMClient. Wire via dependency injection when rate-limit enforcement
+    is needed for Ollama requests.
     """
 
     def __init__(self, max_requests: int = 100, window_seconds: int = 60) -> None:

@@ -755,7 +755,7 @@ def generate_translation(
         input_chars=len(text), input_words=len(text.split()), input_tokens_est=estimate_tokens(text)
     )
     client.reset()
-    _cfg = OllamaClientConfig.from_env()
+    _cfg = client.config  # Use the caller-provided client config, not a fresh from_env() read
     max_tokens = _cfg.long_max_tokens
     timeout = _cfg.review_timeout
     logger.info(f"    Timeout: {timeout:.0f}s per translation ({target_language})")
