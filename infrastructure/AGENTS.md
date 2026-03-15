@@ -20,7 +20,7 @@ infrastructure/
 │   ├── multi_project.py    # Multi-project orchestration
 │   ├── checkpoint.py       # Pipeline state persistence
 │   ├── retry.py            # Exponential backoff retries
-│   ├── performance.py      # Resource monitoring
+│   ├── function_profiler.py # Function-level performance profiling
 │   ├── security.py         # Security & rate limiting
 │   ├── environment.py      # Environment setup & validation
 │   ├── file_operations.py  # File I/O utilities
@@ -160,13 +160,13 @@ infrastructure/
 - `def get_file_size_mb(file_path: Path) -> float:`
 - `def calculate_directory_size(directory: Path) -> int:`
 
-#### performance.py
+#### function_profiler.py
 
-- `class PerformanceMonitor:`
-- `def get_system_resources() -> Dict[str, Any]:`
-- `def monitor_performance(func: Callable) -> Callable:`
-- `def log_performance_stats(stats: Dict[str, Any], logger: Optional[logging.Logger] = None) -> None:`
-- `def format_performance_report(stats: Dict[str, Any]) -> str:`
+- `class ProfilingMetrics:`
+- `class CodeProfiler:`
+- `def get_performance_monitor() -> CodeProfiler:`
+- `def monitor_performance(operation_name: str, track_memory: bool = True) -> Callable:`
+- `def profile_memory_usage(func: Callable, *args, **kwargs) -> dict[str, Any]:`
 
 ### Validation Module
 
@@ -373,9 +373,9 @@ infrastructure/
   - `retry_with_backoff` - Exponential backoff retries
   - `RetryableOperation` - Retryable operation wrapper
 
-- `performance.py` - Performance monitoring
-  - `PerformanceMonitor` - Resource usage tracking
-  - `get_system_resources` - System resource queries
+- `function_profiler.py` - Function-level performance profiling
+  - `CodeProfiler` - cProfile/tracemalloc-based profiling
+  - `monitor_performance` - Decorator for function monitoring
 
 - `environment.py` - Environment setup and validation
   - Dependency checking and installation
@@ -395,8 +395,9 @@ infrastructure/
 ```python
 from infrastructure.core import (
     get_logger, TemplateError, load_config,
-    CheckpointManager, ProgressBar, PerformanceMonitor
+    CheckpointManager, ProgressBar
 )
+from infrastructure.core.function_profiler import CodeProfiler
 ```
 
 ### Validation Module (`validation/`)
@@ -462,11 +463,11 @@ python3 -m infrastructure.documentation.cli generate-api src/
 
 **Scientific computing utilities.**
 
-- `scientific_dev.py` - Scientific development tools
-  - Numerical stability checking
-  - Performance benchmarking
-  - Scientific documentation generation
-  - Best practices validation
+- `benchmarking.py` - Performance benchmarking utilities
+- `stability.py` - Numerical stability checking
+- `validation.py` - Scientific best practices validation
+- `documentation.py` - Scientific documentation generation
+- `templates.py` - Module/workflow scaffolding templates
 
 ### LLM Module (`llm/`)
 
@@ -827,8 +828,8 @@ Planned additions:
 
 - [`README.md`](README.md) - Quick start guide for all modules
 - [`SKILL.md`](SKILL.md) - Top-level infrastructure skill
-- [`../.cursorrules/AGENTS.md`](../.cursorrules/AGENTS.md) - Development standards
-- [`../.cursorrules/infrastructure_modules.md`](../.cursorrules/infrastructure_modules.md) - Infrastructure standards
+- [`../docs/best-practices/best-practices.md`](../docs/best-practices/best-practices.md) - Development best practices
+- [`../docs/reference/api-reference.md`](../docs/reference/api-reference.md) - API reference
 
 **System Documentation:**
 

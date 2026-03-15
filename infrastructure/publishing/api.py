@@ -63,9 +63,10 @@ class ZenodoClient:
         except requests.exceptions.RequestException as e:
             raise PublishingError(f"Failed to create deposition: {e}") from e
 
-    def upload_file(self, deposition_id: str, file_path: str) -> None:
+    def upload_file(self, deposition_id: str, file_path: str | Path) -> None:
         """Upload file to deposition."""
-        filename = Path(file_path).name
+        file_path = Path(file_path)
+        filename = file_path.name
         url = f"{self.config.api_base_url}/deposit/depositions/{deposition_id}/files/{filename}"
 
         try:

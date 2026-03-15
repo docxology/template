@@ -380,7 +380,7 @@ class SteganographyProcessor:
 # ── Convenience function ─────────────────────────────────────────────────
 
 
-def process_pdf(
+def embed_steganography(
     input_pdf: Path,
     output_pdf: Path | None = None,
     config: SteganographyConfig | None = None,
@@ -390,6 +390,11 @@ def process_pdf(
     author_emails: list[str] | None = None,
 ) -> Path:
     """Convenience function — create a processor and run it.
+
+    Usage::
+
+        from infrastructure.steganography import embed_steganography
+        embed_steganography(Path("paper.pdf"), title="My Paper")
 
     Args:
         input_pdf: Source PDF.
@@ -414,3 +419,7 @@ def process_pdf(
         keywords=keywords,
         author_emails=author_emails,
     )
+
+
+# Backwards-compatibility alias
+process_pdf = embed_steganography

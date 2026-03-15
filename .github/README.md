@@ -11,7 +11,7 @@
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-green)](../LICENSE)
 [![Version](https://img.shields.io/badge/version-3.0.0-informational)](../pyproject.toml)
 
-[**⚡ Quick Start**](#-quick-start) · [**📐 Architecture**](#-architecture) · [**🔄 CI/CD Pipeline**](#-cicd-pipeline) · [**📋 Templates**](#-issue--pr-templates) · [**🔧 Configuration**](#-configuration)
+[**⚡ Quick Start**](#quick-start) · [**📐 Architecture**](#architecture) · [**🔄 CI/CD Pipeline**](#cicd-pipeline) · [**📋 Templates**](#issue--pr-templates) · [**🔧 Configuration**](#configuration)
 
 </div>
 
@@ -49,7 +49,7 @@ template/
 │   ├── reporting/              executive reports, dashboards
 │   └── steganography/          cryptographic watermarking
 │
-├── projects/{name}/         ← Your research project (Layer 2)
+├── projects/{name}/         ← Your active research projects, these will be rendered (Layer 2)
 │   ├── src/                    domain-specific algorithms
 │   ├── tests/                  project test suite (≥90% coverage)
 │   ├── scripts/                thin orchestrators → import from src/
@@ -57,6 +57,8 @@ template/
 │   │   └── config.yaml         paper metadata, LLM/translation opts
 │   └── output/                 generated artefacts (disposable)
 │
+├── projects_archive/        ← Archived/historical projects (preserved)
+├── projects_in_progress/    ← Staging area for projects which may be on back burner
 ├── scripts/                 ← Generic pipeline entry points (00–07)
 ├── output/{name}/           ← Final deliverables (PDF, web, data)
 ├── run.sh                   ← Main interactive + pipeline entry point
@@ -107,11 +109,11 @@ test-infra + test-project                                   │
 
 ```bash
 # Lint
-uvx ruff check infrastructure/ projects/*/src/ && uvx ruff format --check infrastructure/ projects/*/src/
+uv run ruff check infrastructure/ projects/*/src/ && uv run ruff format --check infrastructure/ projects/*/src/
 
 # Tests with coverage isolation
-COVERAGE_FILE=.coverage.infra uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60 -m "not requires_ollama"
-COVERAGE_FILE=.coverage.project uv run pytest projects/*/tests/ --cov=projects/code_project/src --cov-fail-under=90 -m "not requires_ollama"
+uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60 -m "not requires_ollama"
+uv run pytest projects/*/tests/ --cov-fail-under=90 -m "not requires_ollama"
 
 # Security
 uv run pip-audit && uv run bandit -r -ll infrastructure/ scripts/ projects/ --exclude projects_archive,projects_in_progress
@@ -148,6 +150,7 @@ Labels added automatically: `dependencies` · `automated` · ecosystem tag.
 ### Pull Requests → [PR Template](PULL_REQUEST_TEMPLATE.md)
 
 The PR template enforces:
+
 - ✅ Linked issue(s)
 - ✅ Type-of-change classification
 - ✅ Pipeline stage(s) affected

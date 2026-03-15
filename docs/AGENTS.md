@@ -20,6 +20,7 @@ Technical guide for the `docs/` directory — the central documentation hub for 
 | `prompts/` | AI prompt templates (9 expert prompts) |
 | `audit/` | Audit reports and findings |
 | `security/` | Security documentation and policies |
+| `rules/` | Development standards and guidelines (formerly .cursorrules) |
 
 ## Key Conventions
 
@@ -36,6 +37,7 @@ Technical guide for the `docs/` directory — the central documentation hub for 
 | Developer | `core/architecture.md` → `architecture/two-layer-architecture.md` |
 | **New project** | **`guides/new-project-setup.md`** → `architecture/thin-orchestrator-summary.md` |
 | Contributor | `development/contributing.md` → `development/testing/` |
+| AI Agent | `rules/AGENTS.md` → `rules/README.md` |
 | Troubleshooter | `operational/troubleshooting/` → `reference/faq.md` |
 
 ## Learnings & Known Issues

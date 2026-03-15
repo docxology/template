@@ -1,94 +1,56 @@
 {
-<<<<<<< HEAD
-  "pipeline_start_time": 1773348910.996465,
-=======
-  "pipeline_start_time": 1773532261.41859,
->>>>>>> desloppify/code-health
+  "pipeline_start_time": 1773589801.013367,
   "last_stage_completed": 6,
   "stage_results": [
     {
       "name": "Clean Output Directories",
       "exit_code": 0,
-<<<<<<< HEAD
-      "duration": 0.01578211784362793,
-      "timestamp": "2026-03-12 13:55:59",
-=======
-      "duration": 0.013743162155151367,
-      "timestamp": "2026-03-14 16:51:48",
->>>>>>> desloppify/code-health
+      "duration": 0.0171201229095459,
+      "timestamp": "2026-03-15 08:50:55",
       "completed": true,
       "status": ""
     },
     {
       "name": "Environment Setup",
       "exit_code": 0,
-<<<<<<< HEAD
-      "duration": 1.7925686836242676,
-      "timestamp": "2026-03-12 13:55:59",
-=======
-      "duration": 1.6036088466644287,
-      "timestamp": "2026-03-14 16:51:48",
->>>>>>> desloppify/code-health
+      "duration": 1.729172945022583,
+      "timestamp": "2026-03-15 08:50:55",
       "completed": true,
       "status": ""
     },
     {
       "name": "Project Tests",
       "exit_code": 0,
-<<<<<<< HEAD
-      "duration": 5.870851039886475,
-      "timestamp": "2026-03-12 13:55:59",
-=======
-      "duration": 6.887044668197632,
-      "timestamp": "2026-03-14 16:51:48",
->>>>>>> desloppify/code-health
+      "duration": 7.097415924072266,
+      "timestamp": "2026-03-15 08:50:55",
       "completed": true,
       "status": ""
     },
     {
       "name": "Project Analysis",
       "exit_code": 0,
-<<<<<<< HEAD
-      "duration": 2.438693046569824,
-      "timestamp": "2026-03-12 13:55:59",
-=======
-      "duration": 2.3746848106384277,
-      "timestamp": "2026-03-14 16:51:48",
->>>>>>> desloppify/code-health
+      "duration": 2.690671682357788,
+      "timestamp": "2026-03-15 08:50:55",
       "completed": true,
       "status": ""
     },
     {
       "name": "PDF Rendering",
       "exit_code": 0,
-<<<<<<< HEAD
-      "duration": 37.8944046497345,
-      "timestamp": "2026-03-12 13:55:59",
-=======
-      "duration": 36.25745105743408,
-      "timestamp": "2026-03-14 16:51:48",
->>>>>>> desloppify/code-health
+      "duration": 42.86946415901184,
+      "timestamp": "2026-03-15 08:50:55",
       "completed": true,
       "status": ""
     },
     {
       "name": "Output Validation",
       "exit_code": 0,
-<<<<<<< HEAD
-      "duration": 0.3929579257965088,
-      "timestamp": "2026-03-12 13:55:59",
-=======
-      "duration": 0.3998262882232666,
-      "timestamp": "2026-03-14 16:51:48",
->>>>>>> desloppify/code-health
+      "duration": 0.40738987922668457,
+      "timestamp": "2026-03-15 08:50:55",
       "completed": true,
       "status": ""
     }
   ],
   "total_stages": 8,
-<<<<<<< HEAD
-  "checkpoint_time": 1773348959.40528
-=======
-  "checkpoint_time": 1773532308.9586089
->>>>>>> desloppify/code-health
+  "checkpoint_time": 1773589855.829874
 }

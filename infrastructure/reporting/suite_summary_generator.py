@@ -85,7 +85,7 @@ _EMPTY_INFRA_RESULTS: InfraResults = {
 def load_infrastructure_results(repo_root: Path | None = None) -> InfraResults:
     """Load infrastructure test results from root coverage files."""
     root = repo_root or Path.cwd()
-    base: InfraResults = dict(_EMPTY_INFRA_RESULTS)  # type: ignore[assignment]
+    base: InfraResults = dict(_EMPTY_INFRA_RESULTS)  # type: ignore[assignment]  # dict() returns Dict[str, Any]; narrowed by _EMPTY_INFRA_RESULTS keys
 
     infra_results_file = root / "infrastructure_validation_report.json"
     if infra_results_file.exists():

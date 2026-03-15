@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  12 MAR 2026 13:55
-=======
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  14 MAR 2026 16:51
->>>>>>> desloppify/code-health
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  15 MAR 2026 08:50
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1722,11 +1718,7 @@ ine 427.
 LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
 (Font)              Font shape `TU/lmss/m/sl' tried instead on input line 440.
 )
-<<<<<<< HEAD
-Overfull \vbox (4026.53606pt too high) detected at line 556
-=======
-Overfull \vbox (3935.44733pt too high) detected at line 538
->>>>>>> desloppify/code-health
+Overfull \vbox (4026.50385pt too high) detected at line 556
  []
 
 [1

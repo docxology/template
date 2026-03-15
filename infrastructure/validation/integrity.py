@@ -590,7 +590,13 @@ def create_integrity_manifest(output_dir: Path) -> dict[str, Any]:
 
 
 def save_integrity_manifest(manifest: dict[str, Any], output_path: Path) -> None:
-    """Save integrity manifest to JSON file."""
+    """Save integrity manifest to JSON file.
+
+    Raises:
+        OSError: If the file cannot be written (intentionally not caught — callers
+            must handle write failures, unlike ``load_integrity_manifest`` which
+            returns None on failure because a missing manifest is a normal state).
+    """
     output_path.parent.mkdir(parents=True, exist_ok=True)
     _tmp = output_path.with_suffix(output_path.suffix + ".tmp")
     try:
@@ -604,7 +610,13 @@ def save_integrity_manifest(manifest: dict[str, Any], output_path: Path) -> None
 
 
 def load_integrity_manifest(manifest_path: Path) -> dict[str, Any] | None:
-    """Load integrity manifest from JSON file, or None on failure."""
+    """Load integrity manifest from JSON file, or None on failure.
+
+    Returns None (rather than raising) because a missing or corrupt manifest is
+    a normal state during first runs and after output directory cleanup. This is
+    intentionally asymmetric with ``save_integrity_manifest`` which raises on
+    write failure.
+    """
     if not manifest_path.exists():
         return None
 

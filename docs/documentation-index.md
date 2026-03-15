@@ -23,7 +23,7 @@ This index provides an overview of all documentation files in the Research Proje
 ### 🏗️ **Contributor / Maintainer**
 
 1. **[development/contributing.md](development/contributing.md)** - Contribution guidelines
-2. **[.cursorrules/AGENTS.md](../.cursorrules/AGENTS.md)** - Development standards
+2. **[.cursorrules/AGENTS.md](rules/AGENTS.md)** - Development standards
 3. **[guides/testing-and-reproducibility.md](guides/testing-and-reproducibility.md)** - TDD workflow (Levels 7-9)
 4. **[development/testing/testing-guide.md](development/testing/testing-guide.md)** - Testing requirements
 5. **[development/code-of-conduct.md](development/code-of-conduct.md)** - Community standards
@@ -54,23 +54,23 @@ This index provides an overview of all documentation files in the Research Proje
 
 Development standards are documented in the `.cursorrules/` directory:
 
-- **[`.cursorrules/AGENTS.md`](../.cursorrules/AGENTS.md)** - Overview and navigation guide
-- **[`.cursorrules/README.md`](../.cursorrules/README.md)** - Quick reference and patterns
-- **[`.cursorrules/error_handling.md`](../.cursorrules/error_handling.md)** - Exception handling patterns
-- **[`.cursorrules/security.md`](../.cursorrules/security.md)** - Security standards
-- **[`.cursorrules/python_logging.md`](../.cursorrules/python_logging.md)** - Logging standards
-- **[`.cursorrules/infrastructure_modules.md`](../.cursorrules/infrastructure_modules.md)** - Infrastructure module development
-- **[`.cursorrules/testing_standards.md`](../.cursorrules/testing_standards.md)** - Testing patterns
-- **[`.cursorrules/documentation_standards.md`](../.cursorrules/documentation_standards.md)** - Documentation writing guide
-- **[`.cursorrules/type_hints_standards.md`](../.cursorrules/type_hints_standards.md)** - Type annotation patterns
-- **[`.cursorrules/llm_standards.md`](../.cursorrules/llm_standards.md)** - LLM/Ollama integration
-- **[`.cursorrules/code_style.md`](../.cursorrules/code_style.md)** - Code formatting
-- **[`.cursorrules/git_workflow.md`](../.cursorrules/git_workflow.md)** - Git workflow
-- **[`.cursorrules/api_design.md`](../.cursorrules/api_design.md)** - API design
-- **[`.cursorrules/manuscript_style.md`](../.cursorrules/manuscript_style.md)** - Manuscript formatting
-- **[`.cursorrules/reporting.md`](../.cursorrules/reporting.md)** - Reporting module standards
-- **[`.cursorrules/refactoring.md`](../.cursorrules/refactoring.md)** - Refactoring standards
-- **[`.cursorrules/folder_structure.md`](../.cursorrules/folder_structure.md)** - Folder structure
+- **[`.cursorrules/AGENTS.md`](rules/AGENTS.md)** - Overview and navigation guide
+- **[`.cursorrules/README.md`](rules/README.md)** - Quick reference and patterns
+- **[`.cursorrules/error_handling.md`](rules/error_handling.md)** - Exception handling patterns
+- **[`.cursorrules/security.md`](rules/security.md)** - Security standards
+- **[`.cursorrules/python_logging.md`](rules/python_logging.md)** - Logging standards
+- **[`.cursorrules/infrastructure_modules.md`](rules/infrastructure_modules.md)** - Infrastructure module development
+- **[`.cursorrules/testing_standards.md`](rules/testing_standards.md)** - Testing patterns
+- **[`.cursorrules/documentation_standards.md`](rules/documentation_standards.md)** - Documentation writing guide
+- **[`.cursorrules/type_hints_standards.md`](rules/type_hints_standards.md)** - Type annotation patterns
+- **[`.cursorrules/llm_standards.md`](rules/llm_standards.md)** - LLM/Ollama integration
+- **[`.cursorrules/code_style.md`](rules/code_style.md)** - Code formatting
+- **[`.cursorrules/git_workflow.md`](rules/git_workflow.md)** - Git workflow
+- **[`.cursorrules/api_design.md`](rules/api_design.md)** - API design
+- **[`.cursorrules/manuscript_style.md`](rules/manuscript_style.md)** - Manuscript formatting
+- **[`.cursorrules/reporting.md`](rules/reporting.md)** - Reporting module standards
+- **[`.cursorrules/refactoring.md`](rules/refactoring.md)** - Refactoring standards
+- **[`.cursorrules/folder_structure.md`](rules/folder_structure.md)** - Folder structure
 
 ---
 

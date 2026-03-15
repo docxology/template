@@ -42,7 +42,7 @@ The `tests/` directory ensures **test coverage** for all modules (90% project mi
 
 **NON-NEGOTIABLE REQUIREMENT**: Under no circumstances use `MagicMock`, `mocker.patch`, `unittest.mock`, or any mocking framework. All tests must use **data** and **computations only**.
 
-**See `MOCK_ELIMINATION_GUIDE.md`** for systematic elimination plan.
+**See the No Mocks Policy section below** for implementation patterns.
 
 This is a fundamental testing principle that ensures:
 
@@ -247,9 +247,12 @@ tests/
 Configures test environment:
 
 ```python
-"""Pytest configuration for template infrastructure tests."""
+"""Pytest configuration for template tests."""
 import os
 import sys
+from pathlib import Path
+
+import pytest
 
 # Force headless backend for matplotlib in tests
 os.environ.setdefault("MPLBACKEND", "Agg")
@@ -257,28 +260,34 @@ os.environ.setdefault("MPLBACKEND", "Agg")
 # Add paths for imports
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
+# Remove tests/ directory from path if present to prevent shadowing
+TESTS_DIR = os.path.join(ROOT, "tests")
+if TESTS_DIR in sys.path:
+    sys.path.remove(TESTS_DIR)
+
 # Add ROOT to path so we can import infrastructure as a package
 # Ensure ROOT is FIRST in path to avoid shadowing by tests/infra_tests
 if ROOT in sys.path:
     sys.path.remove(ROOT)
 sys.path.insert(0, ROOT)
 
-# Remove tests/ directory from path if present to prevent shadowing
-TESTS_DIR = os.path.join(ROOT, "tests")
-if TESTS_DIR in sys.path:
-    sys.path.remove(TESTS_DIR)
+# CRITICAL: Import and cache the real infrastructure module NOW
+import infrastructure as _real_infra
+sys.modules["infrastructure"] = _real_infra
 
-# Add src/ to path for scientific modules (if it exists)
-SRC = os.path.join(ROOT, "src")
-if os.path.exists(SRC) and SRC not in sys.path:
-    sys.path.insert(0, SRC)
-
-# Add project src/ directories to path for project modules
-# Projects are discovered dynamically, so we add both known projects
-for project_name in ["code_project"]:
+# Add projects/*/src/ to path for project modules (active projects only)
+# Projects are discovered dynamically from the projects/ directory.
+active_projects = []
+projects_dir = os.path.join(ROOT, "projects")
+if os.path.exists(projects_dir):
+    for item in os.listdir(projects_dir):
+        item_path = os.path.join(projects_dir, item)
+        if os.path.isdir(item_path) and not item.startswith((".", "_")):
+            active_projects.append(item)
+for project_name in active_projects:
     project_src = os.path.join(ROOT, "projects", project_name, "src")
     if os.path.exists(project_src) and project_src not in sys.path:
-    sys.path.insert(0, PROJECT_SRC)
+        sys.path.insert(0, project_src)
 ```
 
 This allows tests to import directly:
@@ -576,7 +585,7 @@ def test_something():
 
 ### Automatic Execution
 
-`scripts/01_run_tests.py` (orchestrated by `scripts/run_all.py`) automatically:
+`scripts/01_run_tests.py` (orchestrated by `scripts/execute_pipeline.py` or `run.sh`) automatically:
 
 1. **Runs infrastructure tests** with 60% coverage requirement
 2. **Runs project tests** with 90% coverage requirement

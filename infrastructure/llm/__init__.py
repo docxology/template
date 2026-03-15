@@ -17,10 +17,25 @@ CLI Usage:
     python3 -m infrastructure.llm.cli.main check
     python3 -m infrastructure.llm.cli.main models
 
-Import directly from submodules:
-    from infrastructure.llm.core.client import LLMClient
-    from infrastructure.llm.core.config import OllamaClientConfig, GenerationOptions
-    from infrastructure.llm.templates import get_template
-    from infrastructure.llm.validation import validate_complete, is_off_topic
-    from infrastructure.llm.review.generator import generate_review_with_metrics
+Usage::
+
+    from infrastructure.llm import LLMClient, OllamaClientConfig, GenerationOptions
+    from infrastructure.llm import get_template, validate_complete, is_off_topic
+    from infrastructure.llm import generate_review_with_metrics
 """
+
+from infrastructure.llm.core.client import LLMClient
+from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig
+from infrastructure.llm.review.generator import generate_review_with_metrics
+from infrastructure.llm.templates import get_template
+from infrastructure.llm.validation import is_off_topic, validate_complete
+
+__all__ = [
+    "GenerationOptions",
+    "LLMClient",
+    "OllamaClientConfig",
+    "generate_review_with_metrics",
+    "get_template",
+    "is_off_topic",
+    "validate_complete",
+]

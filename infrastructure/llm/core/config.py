@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any
+from typing import Any, ClassVar
 
 from infrastructure.core.logging_utils import get_logger
 
@@ -154,7 +154,12 @@ class OllamaClientConfig:
     max_input_length: int = 500000  # Max input character length (LLM_MAX_INPUT_LENGTH)
 
     def __init__(self, **kwargs: Any):
-        """Initialize config, supporting num_ctx as alias for context_window."""
+        """Initialize config, supporting num_ctx as alias for context_window.
+
+        Manual __init__ exists because @dataclass-generated __init__ cannot handle
+        the num_ctx→context_window alias or reject unknown kwargs with a clear error.
+        Uses dataclasses.fields() internally so it stays in sync with field additions.
+        """
         # Handle num_ctx -> context_window mapping
         if "num_ctx" in kwargs and "context_window" not in kwargs:
             kwargs["context_window"] = kwargs.pop("num_ctx")
@@ -182,125 +187,48 @@ class OllamaClientConfig:
         for key, value in kwargs.items():
             setattr(self, key, value)
 
+    # Environment variable → (config_key, cast_fn) mappings for from_env().
+    # LLM_NUM_CTX is handled specially (only used if context_window not already set).
+    # OLLAMA_MODEL is a plain string (no cast needed, handled inline).
+    _ENV_MAPPINGS: ClassVar[dict[str, tuple[str, type]]] = {
+        "LLM_CONTEXT_WINDOW": ("context_window", int),
+        "LLM_LONG_MAX_TOKENS": ("long_max_tokens", int),
+        "LLM_MAX_TOKENS": ("max_tokens", int),
+        "LLM_TEMPERATURE": ("temperature", float),
+        "LLM_TIMEOUT": ("timeout", float),
+        "LLM_SEED": ("seed", int),
+        "LLM_HEARTBEAT_INTERVAL": ("heartbeat_interval", float),
+        "LLM_STALL_THRESHOLD": ("stall_threshold", float),
+        "LLM_EARLY_WARNING_THRESHOLD": ("early_warning_threshold", float),
+        "LLM_REVIEW_TIMEOUT": ("review_timeout", float),
+        "LLM_MAX_INPUT_LENGTH": ("max_input_length", int),
+    }
+
     @classmethod
     def from_env(cls) -> OllamaClientConfig:
         """Create configuration from environment variables."""
         import os
 
-        # Read OLLAMA_HOST if set
         base_url = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
-
-        # Read LLM configuration from environment variables
         config_kwargs: dict[str, Any] = {"base_url": base_url}
 
-        # Context window (128K default for gemma3:4b)
-        if "LLM_CONTEXT_WINDOW" in os.environ:
-            try:
-                config_kwargs["context_window"] = int(os.environ["LLM_CONTEXT_WINDOW"])
-            except ValueError:
-                logger.warning(
-                    "Invalid LLM_CONTEXT_WINDOW=%r, using default", os.environ["LLM_CONTEXT_WINDOW"]
-                )
+        for env_var, (config_key, cast_fn) in cls._ENV_MAPPINGS.items():
+            if env_var in os.environ:
+                try:
+                    config_kwargs[config_key] = cast_fn(os.environ[env_var])
+                except ValueError:
+                    logger.warning("Invalid %s=%r, using default", env_var, os.environ[env_var])
 
-        # Alternative: LLM_NUM_CTX (Ollama parameter name)
+        # LLM_NUM_CTX: alternative for context_window (only if not already set)
         if "LLM_NUM_CTX" in os.environ and "context_window" not in config_kwargs:
             try:
                 config_kwargs["context_window"] = int(os.environ["LLM_NUM_CTX"])
             except ValueError:
                 logger.warning("Invalid LLM_NUM_CTX=%r, using default", os.environ["LLM_NUM_CTX"])
 
-        # Long max tokens for extended responses
-        if "LLM_LONG_MAX_TOKENS" in os.environ:
-            try:
-                config_kwargs["long_max_tokens"] = int(os.environ["LLM_LONG_MAX_TOKENS"])
-            except ValueError:
-                logger.warning(
-                    "Invalid LLM_LONG_MAX_TOKENS=%r, using default",
-                    os.environ["LLM_LONG_MAX_TOKENS"],
-                )
-
-        # Max tokens (default response length)
-        if "LLM_MAX_TOKENS" in os.environ:
-            try:
-                config_kwargs["max_tokens"] = int(os.environ["LLM_MAX_TOKENS"])
-            except ValueError:
-                logger.warning(
-                    "Invalid LLM_MAX_TOKENS=%r, using default", os.environ["LLM_MAX_TOKENS"]
-                )
-
-        # Temperature
-        if "LLM_TEMPERATURE" in os.environ:
-            try:
-                config_kwargs["temperature"] = float(os.environ["LLM_TEMPERATURE"])
-            except ValueError:
-                logger.warning(
-                    "Invalid LLM_TEMPERATURE=%r, using default", os.environ["LLM_TEMPERATURE"]
-                )
-
-        # Timeout
-        if "LLM_TIMEOUT" in os.environ:
-            try:
-                config_kwargs["timeout"] = float(os.environ["LLM_TIMEOUT"])
-            except ValueError:
-                logger.warning("Invalid LLM_TIMEOUT=%r, using default", os.environ["LLM_TIMEOUT"])
-
-        # Seed
-        if "LLM_SEED" in os.environ:
-            try:
-                config_kwargs["seed"] = int(os.environ["LLM_SEED"])
-            except ValueError:
-                logger.warning("Invalid LLM_SEED=%r, using default", os.environ["LLM_SEED"])
-
-        # Default model
+        # OLLAMA_MODEL: plain string, no cast
         if "OLLAMA_MODEL" in os.environ:
             config_kwargs["default_model"] = os.environ["OLLAMA_MODEL"]
-
-        # Heartbeat monitoring settings
-        if "LLM_HEARTBEAT_INTERVAL" in os.environ:
-            try:
-                config_kwargs["heartbeat_interval"] = float(os.environ["LLM_HEARTBEAT_INTERVAL"])
-            except ValueError:
-                logger.warning(
-                    "Invalid LLM_HEARTBEAT_INTERVAL=%r, using default",
-                    os.environ["LLM_HEARTBEAT_INTERVAL"],
-                )
-
-        if "LLM_STALL_THRESHOLD" in os.environ:
-            try:
-                config_kwargs["stall_threshold"] = float(os.environ["LLM_STALL_THRESHOLD"])
-            except ValueError:
-                logger.warning(
-                    "Invalid LLM_STALL_THRESHOLD=%r, using default",
-                    os.environ["LLM_STALL_THRESHOLD"],
-                )
-
-        if "LLM_EARLY_WARNING_THRESHOLD" in os.environ:
-            try:
-                config_kwargs["early_warning_threshold"] = float(
-                    os.environ["LLM_EARLY_WARNING_THRESHOLD"]
-                )
-            except ValueError:
-                logger.warning(
-                    "Invalid LLM_EARLY_WARNING_THRESHOLD=%r, using default",
-                    os.environ["LLM_EARLY_WARNING_THRESHOLD"],
-                )
-
-        if "LLM_REVIEW_TIMEOUT" in os.environ:
-            try:
-                config_kwargs["review_timeout"] = float(os.environ["LLM_REVIEW_TIMEOUT"])
-            except ValueError:
-                logger.warning(
-                    "Invalid LLM_REVIEW_TIMEOUT=%r, using default", os.environ["LLM_REVIEW_TIMEOUT"]
-                )
-
-        if "LLM_MAX_INPUT_LENGTH" in os.environ:
-            try:
-                config_kwargs["max_input_length"] = int(os.environ["LLM_MAX_INPUT_LENGTH"])
-            except ValueError:
-                logger.warning(
-                    "Invalid LLM_MAX_INPUT_LENGTH=%r, using default",
-                    os.environ["LLM_MAX_INPUT_LENGTH"],
-                )
 
         return cls(**config_kwargs)
 
@@ -317,28 +245,9 @@ class OllamaClientConfig:
             >>> config = OllamaClientConfig()
             >>> custom = config.with_overrides(default_model="mistral", temperature=0.3)
         """
-        # Get current values as dict
-        current_values = {
-            "base_url": self.base_url,
-            "timeout": self.timeout,
-            "default_model": self.default_model,
-            "fallback_models": self.fallback_models,
-            "temperature": self.temperature,
-            "max_tokens": self.max_tokens,
-            "top_p": self.top_p,
-            "context_window": self.context_window,
-            "seed": self.seed,
-            "short_max_tokens": self.short_max_tokens,
-            "long_max_tokens": self.long_max_tokens,
-            "long_min_tokens": self.long_min_tokens,
-            "system_prompt": self.system_prompt,
-            "auto_inject_system_prompt": self.auto_inject_system_prompt,
-            "heartbeat_interval": self.heartbeat_interval,
-            "stall_threshold": self.stall_threshold,
-            "early_warning_threshold": self.early_warning_threshold,
-            "review_timeout": self.review_timeout,
-            "max_input_length": self.max_input_length,
-        }
+        from dataclasses import fields as dc_fields
+
+        current_values = {f.name: getattr(self, f.name) for f in dc_fields(self)}
 
         # Apply overrides
         current_values.update(kwargs)

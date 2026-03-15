@@ -163,7 +163,7 @@ class RenderManager:
         """Render slides with figure path resolution."""
         return self.slides_renderer.render(
             source_file,
-            format=output_format,
+            output_format=output_format,
             manuscript_dir=self.manuscript_dir,
             figures_dir=self.figures_dir,
         )

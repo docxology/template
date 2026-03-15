@@ -122,7 +122,7 @@ def stream_query_impl(
     error_count = 0
     partial_saved = False
     _timeout_warned = False
-    last_error = ""
+    last_error_msg = ""
 
     # Initialize metrics (imported locally to avoid circular import with review.metrics)
     from infrastructure.llm.review.metrics import StreamingMetrics  # noqa: PLC0415
@@ -227,71 +227,33 @@ def stream_query_impl(
             # Success - break retry loop
             break
 
-        except requests.exceptions.Timeout as e:
+        except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
             error_count += 1
             metrics.error_count = error_count
-            last_error = f"Timeout after {config.timeout}s"
+            is_timeout = isinstance(e, requests.exceptions.Timeout)
+            error_label = "timeout" if is_timeout else "connection error"
+            last_error_msg = f"Timeout after {config.timeout}s" if is_timeout else f"Connection error: {e}"
 
             if attempt < retries:
                 logger.debug(
-                    f"Streaming timeout (attempt {attempt + 1}/{retries + 1}), will retry..."
+                    f"Streaming {error_label} (attempt {attempt + 1}/{retries + 1}), will retry..."
                 )
-                # Save partial response before retry
                 partial_saved = _try_save_partial(
                     full_response, save_response, partial_saved, save_streaming_state_fn,
                     save_path, model_name, prompt, chunk_count, start_time, "before retry",
                 )
                 continue
-            else:
-                logger.error(f"Streaming timeout after {retries + 1} attempts: {last_error}")
-                # Save partial response on final failure
-                partial_saved = _try_save_partial(
-                    full_response, save_response, partial_saved, save_streaming_state_fn,
-                    save_path, model_name, prompt, chunk_count, start_time, "after timeout",
-                    skip_if_already_saved=False,
-                )
-                raise LLMConnectionError(
-                    f"Streaming timeout ({model_name}): {last_error}",
-                    context={
-                        "url": url,
-                        "model": model_name,
-                        "chunks_received": chunk_count,
-                    },
-                ) from e
 
-        except requests.exceptions.ConnectionError as e:
-            error_count += 1
-            metrics.error_count = error_count
-            last_error = f"Connection error: {e}"
-
-            if attempt < retries:
-                logger.debug(
-                    f"Streaming connection error (attempt {attempt + 1}/{retries + 1}), will retry..."  # noqa: E501
-                )
-                # Save partial response before retry
-                partial_saved = _try_save_partial(
-                    full_response, save_response, partial_saved, save_streaming_state_fn,
-                    save_path, model_name, prompt, chunk_count, start_time, "before retry",
-                )
-                continue
-            else:
-                logger.error(
-                    f"Streaming connection error after {retries + 1} attempts: {last_error}"
-                )
-                # Save partial response on final failure
-                partial_saved = _try_save_partial(
-                    full_response, save_response, partial_saved, save_streaming_state_fn,
-                    save_path, model_name, prompt, chunk_count, start_time, "after connection error",
-                    skip_if_already_saved=False,
-                )
-                raise LLMConnectionError(
-                    f"Streaming connection failed ({model_name}): {last_error}",
-                    context={
-                        "url": url,
-                        "model": model_name,
-                        "chunks_received": chunk_count,
-                    },
-                ) from e
+            logger.error(f"Streaming {error_label} after {retries + 1} attempts: {last_error_msg}")
+            partial_saved = _try_save_partial(
+                full_response, save_response, partial_saved, save_streaming_state_fn,
+                save_path, model_name, prompt, chunk_count, start_time, f"after {error_label}",
+                skip_if_already_saved=False,
+            )
+            raise LLMConnectionError(
+                f"Streaming {error_label} ({model_name}): {last_error_msg}",
+                context={"url": url, "model": model_name, "chunks_received": chunk_count},
+            ) from e
 
         except requests.exceptions.RequestException as e:
             error_count += 1
@@ -299,11 +261,7 @@ def stream_query_impl(
             logger.error(f"Streaming request error ({model_name}): {e}")
             raise LLMConnectionError(
                 f"Stream failed ({model_name}): {e}",
-                context={
-                    "url": url,
-                    "model": model_name,
-                    "chunks_received": chunk_count,
-                },
+                context={"url": url, "model": model_name, "chunks_received": chunk_count},
             ) from e
 
     # Calculate final metrics

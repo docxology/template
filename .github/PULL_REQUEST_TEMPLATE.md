@@ -26,13 +26,14 @@ Closes #<!-- issue number(s) -->
 - [ ] `04_validate_output` — output validation
 - [ ] `05_copy_outputs` — copy final deliverables
 - [ ] `06_llm_review` — LLM review (optional)
+- [ ] `07_generate_executive_report` — cross-project reporting
 - [ ] `infrastructure/` — core library
 - [ ] `.github/` — CI/CD only
 - [ ] None / documentation only
 
 ## Testing
 
-- [ ] All existing tests pass (`uv run pytest tests/ projects/*/tests/ -m "not requires_ollama"`)
+- [ ] All existing tests pass (`uv run pytest`)
 - [ ] New tests added for any new functionality
 - [ ] Coverage requirements met (infra ≥ 60%, projects ≥ 90%)
 - [ ] Tested locally with `./run.sh --pipeline` or relevant stage

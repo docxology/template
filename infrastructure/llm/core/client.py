@@ -527,7 +527,7 @@ class LLMClient:
         if opts.format_json:
             payload["format"] = "json"
 
-        last_error = None
+        last_error: str = ""  # accumulates last failure reason across retry attempts
 
         logger.debug(
             "Sending request to Ollama",

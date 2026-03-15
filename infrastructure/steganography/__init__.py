@@ -16,24 +16,29 @@ the module does nothing unless explicitly enabled in ``config.yaml``.
 
 Usage::
 
-    from infrastructure.steganography import process_pdf, SteganographyConfig
+    from infrastructure.steganography import embed_steganography, SteganographyConfig
     from pathlib import Path
 
     # Quick — all techniques enabled
-    process_pdf(Path("paper.pdf"))
+    embed_steganography(Path("paper.pdf"))
 
     # Configurable
     config = SteganographyConfig(enabled=True, encryption_enabled=False)
-    process_pdf(Path("paper.pdf"), config=config, title="My Paper")
+    embed_steganography(Path("paper.pdf"), config=config, title="My Paper")
 """
 
 from __future__ import annotations
 
 from infrastructure.steganography.config import SteganographyConfig
-from infrastructure.steganography.core import SteganographyProcessor, process_pdf
+from infrastructure.steganography.core import (
+    SteganographyProcessor,
+    embed_steganography,
+    process_pdf,
+)
 
 __all__ = [
     "SteganographyConfig",
     "SteganographyProcessor",
+    "embed_steganography",
     "process_pdf",
 ]

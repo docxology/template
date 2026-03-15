@@ -2242,7 +2242,6 @@ cognitive-case-diagrams = [
     { name = "networkx", version = "3.6.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
 ]
 dashboard = [
-    { name = "matplotlib" },
     { name = "plotly" },
 ]
 dev = [
@@ -2302,10 +2301,7 @@ cognitive-case-diagrams = [
     { name = "discopy", specifier = ">=1.0.0" },
     { name = "networkx", specifier = ">=3.0" },
 ]
-dashboard = [
-    { name = "matplotlib", specifier = ">=3.7" },
-    { name = "plotly", specifier = ">=5.0.0" },
-]
+dashboard = [{ name = "plotly", specifier = ">=5.0.0" }]
 dev = [
     { name = "bandit", specifier = ">=1.7.0" },
     { name = "black", specifier = ">=23.0" },

@@ -1,16 +1,8 @@
 {
   "function_name": "quadratic_function",
-<<<<<<< HEAD
-  "execution_time": 2.0002798798183597e-06,
+  "execution_time": 1.8397202560057242e-06,
   "memory_usage": null,
   "iterations": 50,
   "result_summary": "Avg time: 0.000002s",
-  "timestamp": "2026-03-12 13:55:20"
-=======
-  "execution_time": 0.0014066035867047807,
-  "memory_usage": 0.0,
-  "iterations": 50,
-  "result_summary": "Avg 1406.6\u03bcs across 3 inputs",
-  "timestamp": "2026-03-14T16:51:11"
->>>>>>> desloppify/code-health
+  "timestamp": "2026-03-15 08:50:11"
 }

@@ -41,6 +41,7 @@ graph TD
         FAQ[reference/faq.md<br/>Common Questions]
         CHEATSHEET[reference/quick-start-cheatsheet.md<br/>Command Reference]
         API[reference/api-reference.md<br/>Unified API Docs]
+        RULES[rules/AGENTS.md<br/>Development Standards]
     end
 
     README --> DOC_INDEX
@@ -62,6 +63,7 @@ graph TD
 
     FAQ --> CHEATSHEET
     CHEATSHEET --> API
+    API --> RULES
 
     classDef entry fill:#e3f2fd,stroke:#1565c0,stroke-width:3px
     classDef core fill:#fff3e0,stroke:#e65100,stroke-width:2px
@@ -92,6 +94,7 @@ graph TD
 | [`prompts/`](prompts/) | AI prompt templates (9) | manuscript, code, test, feature, refactoring, assessment |
 | [`security/`](security/) | Security & provenance | steganography, hashing, secure execution |
 | [`audit/`](audit/) | Audit reports | documentation-review, filepath-audit |
+| [`rules/`](rules/) | Project Rules | AGENTS, README, testing, manuscript, etc. |
 
 ## Quick Navigation
 

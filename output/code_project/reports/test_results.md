@@ -1,10 +1,6 @@
 # Test Results Summary
 
-<<<<<<< HEAD
-Generated: 2026-03-12T13:55:18.614291
-=======
-Generated: 2026-03-14T16:51:09.849679
->>>>>>> desloppify/code-health
+Generated: 2026-03-15T08:50:09.752762
 
 ## Infrastructure Tests
 

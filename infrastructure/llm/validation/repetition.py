@@ -13,7 +13,11 @@ logger = get_logger(__name__)
 
 
 class RepetitionResult(NamedTuple):
-    """Result of detect_repetition. Positional unpacking (bool, list, float) still works."""
+    """Result of detect_repetition.
+
+    NamedTuple is intentional: 7 call sites use positional unpacking
+    (``found, examples, ratio = detect_repetition(text)``).
+    """
 
     found: bool
     examples: list[str]

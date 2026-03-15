@@ -30,7 +30,13 @@ logger = get_logger(__name__)
 
 @dataclass
 class RepoScanResults:
-    """Container for scan results."""
+    """Container for repository scan results.
+
+    Attributes:
+        accuracy_issues: Import verification failures, missing commands, etc.
+        completeness_gaps: Missing documentation, tests, or thin-orchestrator violations.
+        statistics: Aggregate metrics produced by each scan phase.
+    """
 
     accuracy_issues: list[ScanAccuracyIssue] = field(default_factory=list)
     completeness_gaps: list[CompletenessGap] = field(default_factory=list)

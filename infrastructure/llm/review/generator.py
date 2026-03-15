@@ -73,6 +73,7 @@ logger = get_logger(__name__)
 from infrastructure.llm.core._prompt_availability import PROMPT_SYSTEM_AVAILABLE
 
 if PROMPT_SYSTEM_AVAILABLE:
+    from infrastructure.llm.core._prompt_availability import get_default_loader
     from infrastructure.llm.prompts.composer import PromptComposer
 
 _DEFAULT_REVIEW_SYSTEM_PROMPT = (
@@ -605,6 +606,24 @@ def _stream_with_heartbeat(
             raise block_err from e
 
 
+def _deduplicate_response(response: str, best_response: str) -> str:
+    """Deduplicate a review response if heavily repetitive; fall back to best_response."""
+    has_rep, _, unique_ratio = detect_repetition(response, similarity_threshold=0.8)
+    if not (has_rep and unique_ratio < 0.3):
+        return response
+    original_length = len(response)
+    deduped = deduplicate_sections(
+        response,
+        max_repetitions=2,
+        mode="conservative",
+        similarity_threshold=0.9,
+        min_content_preservation=0.8,
+    )
+    if len(deduped) / original_length < 0.7:
+        return best_response
+    return deduped
+
+
 def generate_review_with_metrics(
     client: LLMClient,
     text: str,
@@ -679,19 +698,7 @@ def generate_review_with_metrics(
                 logger.error(f"Error generating {review_name}: {e}")
                 return None, metrics
 
-    original_length = len(response)
-    has_rep, _, unique_ratio = detect_repetition(response, similarity_threshold=0.8)
-    if has_rep and unique_ratio < 0.3:
-        response = deduplicate_sections(
-            response,
-            max_repetitions=2,
-            mode="conservative",
-            similarity_threshold=0.9,
-            min_content_preservation=0.8,
-        )
-        reduction_ratio = len(response) / original_length
-        if reduction_ratio < 0.7:
-            response = best_response
+    response = _deduplicate_response(response, best_response)
 
     metrics.generation_time_seconds = time.time() - start_time
     metrics.output_chars = len(response)
