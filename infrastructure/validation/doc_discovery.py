@@ -386,7 +386,7 @@ def validate_project_documentation_integrity(repo_root: Path) -> dict[str, list[
 
         # Check for required documentation
         if not project.has_manuscript:
-            project_issues.append("Project has manuscript directory but no AGENTS.md")
+            project_issues.append("Project has no manuscript directory")
 
         if project.has_scripts and not any((project.path / "scripts").glob("*.md")):
             project_issues.append("Project has scripts directory but no documentation")

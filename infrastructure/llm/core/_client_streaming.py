@@ -165,15 +165,12 @@ def stream_query_impl(
                                         },
                                     )
 
-                                # Log chunk progress (DEBUG level)
+                                # Log chunk progress (DEBUG level) — only size, not accumulated sum
                                 if log_progress:
                                     logger.debug(
                                         f"Streaming chunk {chunk_count}",
                                         extra={
                                             "chunk_size": len(chunk),
-                                            "accumulated_chars": sum(
-                                                len(c) for c in full_response
-                                            ),
                                             "chunk_count": chunk_count,
                                         },
                                     )

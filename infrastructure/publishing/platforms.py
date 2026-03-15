@@ -181,12 +181,13 @@ def create_github_release(
             with open(asset, "rb") as f:
                 upload_headers = headers.copy()
                 upload_headers["Content-Type"] = "application/octet-stream"
-                requests.post(
+                upload_resp = requests.post(
                     f"{upload_url}?name={name}",
                     headers=upload_headers,
                     data=f,
                     timeout=REQUEST_TIMEOUT,
-                )  # noqa: E501
+                )
+                upload_resp.raise_for_status()
 
         return html_url
 

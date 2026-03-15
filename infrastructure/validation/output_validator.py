@@ -39,6 +39,50 @@ class ValidationResultDict(TypedDict):
 logger = get_logger(__name__)
 
 
+def _find_combined_pdf(output_dir: Path, project_name: str) -> tuple[Path, float] | None:
+    """Locate the combined PDF for a project, checking three locations.
+
+    Search order:
+    1. ``output_dir/{project_name}_combined.pdf`` (root, post-copy)
+    2. ``output_dir/pdf/{project_name}_combined.pdf`` (original generation location)
+    3. ``projects/{project_name}/output/pdf/{project_name}_combined.pdf`` (source, pre-copy)
+
+    Returns:
+        Tuple of (path, size_mb) if found, or None if not found in any location.
+    """
+    filename = f"{project_name}_combined.pdf"
+
+    # 1. Root directory (after copy outputs stage)
+    root_pdf = output_dir / filename
+    if root_pdf.exists() and root_pdf.stat().st_size > 0:
+        return root_pdf, root_pdf.stat().st_size / (1024 * 1024)
+
+    # 2. pdf/ subdirectory (original generation location)
+    pdf_dir = output_dir / "pdf"
+    if pdf_dir.exists():
+        pdf_in_dir = pdf_dir / filename
+        if pdf_in_dir.exists() and pdf_in_dir.stat().st_size > 0:
+            return pdf_in_dir, pdf_in_dir.stat().st_size / (1024 * 1024)
+
+    # 3. Source project directory (for Stage 6 validation before copy)
+    path_parts = output_dir.parts
+    if "output" in path_parts:
+        output_idx = path_parts.index("output")
+        repo_root = Path(*path_parts[:output_idx])
+        qualified_path = "/".join(path_parts[output_idx + 1:])
+        source_pdf_dir = repo_root / "projects" / qualified_path / "output" / "pdf"
+    else:
+        source_pdf_dir = output_dir.parent.parent / "projects" / project_name / "output" / "pdf"
+
+    logger.debug("PDF not found in output directory, checking source: %s", source_pdf_dir.parent)
+    if source_pdf_dir.exists():
+        source_pdf = source_pdf_dir / filename
+        if source_pdf.exists() and source_pdf.stat().st_size > 0:
+            return source_pdf, source_pdf.stat().st_size / (1024 * 1024)
+
+    return None
+
+
 def validate_copied_outputs(output_dir: Path) -> bool:
     """Validate all project outputs were copied successfully.
 
@@ -59,78 +103,16 @@ def validate_copied_outputs(output_dir: Path) -> bool:
 
     validation_passed = True
 
-    # Check combined PDF - try project-specific first, then fallback to generic
-    # First check if this looks like a project-specific output directory
-    project_name = None
-    # Extract project name from output directory path
-    # For nested projects like output/cognitive_integrity/cogsec_multiagent_3_practical,
-    # we need to use the directory name (cogsec_multiagent_3_practical) for the PDF filename
-    # Check if we're in an output directory structure by looking for "output" in ancestors
-    path_parts = output_dir.parts
-    if "output" in path_parts:
-        output_idx = path_parts.index("output")
-        # Project name is the leaf directory name (for PDF filename matching)
-        project_name = output_dir.name
+    # Check combined PDF using shared location logic
+    project_name = output_dir.name if "output" in output_dir.parts else None
 
     combined_pdf_found = False
-
-    # Look for combined PDF in root directory first (after copy outputs stage)
-    # Then check pdf/ directory for backward compatibility
-    pdf_dir = output_dir / "pdf"
-
     if project_name:
-        # Try project-specific filename in root directory (copied location)
-        project_pdf_in_root = output_dir / f"{project_name}_combined.pdf"
-
-        if project_pdf_in_root.exists() and project_pdf_in_root.stat().st_size > 0:
-            size_mb = project_pdf_in_root.stat().st_size / (1024 * 1024)
+        pdf_result = _find_combined_pdf(output_dir, project_name)
+        if pdf_result:
+            _pdf_path, size_mb = pdf_result
             log_success(f"Combined PDF valid ({size_mb:.2f} MB)", logger)
             combined_pdf_found = True
-
-    # Fallback: check pdf/ directory (original generation location)
-    if not combined_pdf_found and pdf_dir.exists():
-        if project_name:
-            # Try project-specific filename in pdf/ directory
-            project_pdf_in_pdf_dir = pdf_dir / f"{project_name}_combined.pdf"
-
-            if project_pdf_in_pdf_dir.exists() and project_pdf_in_pdf_dir.stat().st_size > 0:
-                size_mb = project_pdf_in_pdf_dir.stat().st_size / (1024 * 1024)
-                log_success(f"Combined PDF valid ({size_mb:.2f} MB)", logger)
-                combined_pdf_found = True
-
-        if not combined_pdf_found:
-            logger.debug(f"Project-specific PDF not found in {pdf_dir}")
-
-    # If PDF not found in output directory, check source directory (for Stage 6 validation before copy)  # noqa: E501
-    if not combined_pdf_found and project_name:
-        # Check if we're running validation before copy stage (Stage 6)
-        # Find repo root by looking for the "output" directory in the path
-        if "output" in path_parts:
-            repo_root = Path(*path_parts[:output_idx])
-            # Get the qualified project path (everything after "output/")
-            qualified_path = "/".join(path_parts[output_idx + 1 :])
-            source_project_dir = repo_root / "projects" / qualified_path
-        else:
-            repo_root = output_dir.parent.parent  # fallback
-            source_project_dir = repo_root / "projects" / project_name
-        source_output_dir = source_project_dir / "output"
-        source_pdf_dir = source_output_dir / "pdf"
-
-        logger.debug(f"PDF not found in output directory, checking source: {source_output_dir}")
-
-        if source_pdf_dir.exists():
-            # Try project-specific filename in source pdf/ directory (use basename for filename)
-            source_project_pdf = source_pdf_dir / f"{project_name}_combined.pdf"
-
-            if source_project_pdf.exists() and source_project_pdf.stat().st_size > 0:
-                size_mb = source_project_pdf.stat().st_size / (1024 * 1024)
-                logger.info(
-                    f"Combined PDF found in source directory ({size_mb:.2f} MB) - validation before copy stage"  # noqa: E501
-                )
-                combined_pdf_found = True
-
-            if not combined_pdf_found:
-                logger.debug(f"Project-specific PDF not found in source {source_pdf_dir}")
 
     if not combined_pdf_found:
         logger.error("Combined manuscript PDF missing or empty")
@@ -434,72 +416,33 @@ def validate_output_structure(output_dir: Path) -> dict[str, Any]:
         result["issues"].append("Output directory does not exist")
         return result
 
-    # Check combined PDF - try project-specific first, then fallback to generic
-    project_name = None
-    if output_dir.parent.name == "output" and output_dir.name != "output":
-        project_name = output_dir.name
+    # Check combined PDF using shared location logic
+    project_name = (
+        output_dir.name
+        if output_dir.parent.name == "output" and output_dir.name != "output"
+        else None
+    )
 
     combined_pdf_found = False
     pdf_file = None
     pdf_size_mb = 0.0
 
-    pdf_dir = output_dir / "pdf"
-
-    # Check for PDF in output directory first, then source directory as fallback
     if project_name:
-        # Try project-specific filename first in pdf/ directory
-        project_pdf = pdf_dir / f"{project_name}_combined.pdf"
-        if project_pdf.exists():
-            size_bytes = project_pdf.stat().st_size
-            pdf_size_mb = size_bytes / (1024 * 1024)
+        pdf_result = _find_combined_pdf(output_dir, project_name)
+        if pdf_result:
+            pdf_file, pdf_size_mb = pdf_result
             combined_pdf_found = True
-            pdf_file = project_pdf
-
-            # PDF should typically be > 100KB
+            size_bytes = int(pdf_size_mb * 1024 * 1024)
             if size_bytes < 100 * 1024:
                 result["suspicious_sizes"].append(
                     f"Combined PDF is unusually small: {pdf_size_mb:.2f} MB"
                 )
         else:
-            # PDF not found in output directory, check source directory (for validation before copy stage)  # noqa: E501
-            repo_root = output_dir.parent.parent  # output/ -> repo_root/
-            source_project_dir = repo_root / "projects" / project_name
-            source_output_dir = source_project_dir / "output"
-            source_pdf_dir = source_output_dir / "pdf"
-
-            logger.debug(f"PDF not found in output directory, checking source: {source_output_dir}")
-
-            if source_pdf_dir.exists():
-                # Try project-specific filename in source pdf/ directory
-                source_project_pdf = source_pdf_dir / f"{project_name}_combined.pdf"
-
-                if source_project_pdf.exists() and source_project_pdf.stat().st_size > 0:
-                    size_bytes = source_project_pdf.stat().st_size
-                    pdf_size_mb = size_bytes / (1024 * 1024)
-                    combined_pdf_found = True
-                    pdf_file = source_project_pdf
-
-                    # PDF should typically be > 100KB
-                    if size_bytes < 100 * 1024:
-                        result["suspicious_sizes"].append(
-                            f"Combined PDF is unusually small: {pdf_size_mb:.2f} MB"
-                        )
-
-                    logger.debug(
-                        f"Combined PDF found in source directory ({pdf_size_mb:.2f} MB) - validation before copy stage"  # noqa: E501
-                    )
-
-                if not combined_pdf_found:
-                    logger.debug(f"Project-specific PDF not found in source {source_pdf_dir}")
-
-            if not combined_pdf_found:
-                result["missing_files"].append(f"{project_name}_combined.pdf")
+            result["missing_files"].append(f"{project_name}_combined.pdf")
     else:
-        # No project name detected, cannot validate specific PDF
         logger.debug(
             "No project name detected in directory structure, skipping specific PDF validation"
         )
-
 
     # Populate directory structure metadata
     pdf_key = "project_combined_pdf"  # Default key for backward compatibility
