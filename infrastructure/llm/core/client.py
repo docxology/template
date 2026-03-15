@@ -723,16 +723,26 @@ class LLMClient:
         log_progress: bool = True,
         retries: int = 1,
     ) -> Iterator[str]:
-        """Stream a short (≤150 word) response, binding client config/context."""
-        from infrastructure.llm.core._streaming_shortcuts import stream_short_impl
+        """Stream a concise response (≤150 words) with a brevity instruction prepended."""
+        from infrastructure.llm.core._client_streaming import stream_query_impl
+        from infrastructure.llm.core.sanitization import sanitize_llm_input
 
-        yield from stream_short_impl(
-            config=self.config,
-            context=self.context,
-            save_streaming_state_fn=self._save_streaming_state,
-            prompt=prompt,
-            model=model,
-            options=options,
+        short_options = GenerationOptions(
+            max_tokens=self.config.short_max_tokens,
+            temperature=options.temperature if options else None,
+            seed=options.seed if options else None,
+        )
+        instruction = (
+            "Provide a concise, brief response (less than 150 words). "
+            "Be direct and to the point.\n\n"
+        )
+        yield from stream_query_impl(
+            self.config,
+            self.context,
+            self._save_streaming_state,
+            instruction + sanitize_llm_input(prompt),
+            model,
+            options=short_options,
             save_response=save_response,
             save_path=save_path,
             log_progress=log_progress,
@@ -749,16 +759,26 @@ class LLMClient:
         log_progress: bool = True,
         retries: int = 1,
     ) -> Iterator[str]:
-        """Stream a comprehensive long response, binding client config/context."""
-        from infrastructure.llm.core._streaming_shortcuts import stream_long_impl
+        """Stream a comprehensive long response with a thoroughness instruction prepended."""
+        from infrastructure.llm.core._client_streaming import stream_query_impl
+        from infrastructure.llm.core.sanitization import sanitize_llm_input
 
-        yield from stream_long_impl(
-            config=self.config,
-            context=self.context,
-            save_streaming_state_fn=self._save_streaming_state,
-            prompt=prompt,
-            model=model,
-            options=options,
+        long_options = GenerationOptions(
+            max_tokens=self.config.long_max_tokens,
+            temperature=options.temperature if options else None,
+            seed=options.seed if options else None,
+        )
+        instruction = (
+            "Provide a comprehensive, detailed response with examples and "
+            "thorough explanation. Use multiple paragraphs if needed.\n\n"
+        )
+        yield from stream_query_impl(
+            self.config,
+            self.context,
+            self._save_streaming_state,
+            instruction + sanitize_llm_input(prompt),
+            model,
+            options=long_options,
             save_response=save_response,
             save_path=save_path,
             log_progress=log_progress,
