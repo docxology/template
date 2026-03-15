@@ -36,14 +36,7 @@ from infrastructure.llm.templates.research import (
 
 logger = get_logger(__name__)
 
-# Try to import prompt composer system
-try:
-    from infrastructure.llm.prompts.composer import PromptComposer  # noqa: F401
-
-    PROMPT_COMPOSER_AVAILABLE = True
-except ImportError:
-    PROMPT_COMPOSER_AVAILABLE = False
-    logger.debug("Prompt composer not available, using template system")
+from infrastructure.llm.core._prompt_availability import PROMPT_COMPOSER_AVAILABLE  # noqa: F401
 
 
 # Registry of available templates

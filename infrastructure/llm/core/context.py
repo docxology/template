@@ -41,7 +41,7 @@ class ConversationContext:
         self._clear_count = 0
 
     def add_message(self, role: str, content: str) -> None:
-        """Add a message to context."""
+        """Append a message; prunes oldest history when token budget is exceeded.
         # Simple estimation: 1 token ~= 4 chars
         tokens = len(content) // 4
 
@@ -66,11 +66,11 @@ class ConversationContext:
         self._total_tokens_estimated += tokens
 
     def get_messages(self) -> list[dict[str, Any]]:
-        """Get messages formatted for API."""
+        """Return messages as list of {'role', 'content'} dicts for Ollama API."""
         return [m.to_dict() for m in self.messages]
 
     def clear(self) -> None:
-        """Clear all messages and reset token count."""
+        """Discard all messages and reset token estimate; system prompt is not re-added."""
         messages_before = len(self.messages)
         tokens_before = self.estimated_tokens
 

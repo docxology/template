@@ -18,14 +18,10 @@ from infrastructure.llm.templates.helpers import (
 
 logger = get_logger(__name__)
 
-# Try to import prompt composer system
-try:
-    from infrastructure.llm.prompts.composer import PromptComposer
+from infrastructure.llm.core._prompt_availability import PROMPT_COMPOSER_AVAILABLE
 
-    PROMPT_COMPOSER_AVAILABLE = True
-except ImportError:
-    PROMPT_COMPOSER_AVAILABLE = False
-    logger.debug("Prompt composer not available, using template system")
+if PROMPT_COMPOSER_AVAILABLE:
+    from infrastructure.llm.prompts.composer import PromptComposer
 
 # Minimum word counts for quality validation
 # Note: improvement_suggestions uses a lower threshold (200) because models often

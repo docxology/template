@@ -190,16 +190,6 @@ def stream_query_impl(
                                         },
                                     )
 
-                                # Log chunk progress (DEBUG level) — only size, not accumulated sum
-                                if log_progress:
-                                    logger.debug(
-                                        f"Streaming chunk {chunk_count}",
-                                        extra={
-                                            "chunk_size": len(chunk),
-                                            "chunk_count": chunk_count,
-                                        },
-                                    )
-
                                 yield chunk
 
                                 # Log timeout remaining when approaching limit (warn once only)

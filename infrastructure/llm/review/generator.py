@@ -72,14 +72,10 @@ from infrastructure.core.exceptions import PDFValidationError
 
 logger = get_logger(__name__)
 
-# Try to import new prompt system
-try:
-    from infrastructure.llm.prompts.loader import get_default_loader
-    from infrastructure.llm.prompts.composer import PromptComposer
+from infrastructure.llm.core._prompt_availability import PROMPT_SYSTEM_AVAILABLE
 
-    PROMPT_SYSTEM_AVAILABLE = True
-except ImportError:
-    PROMPT_SYSTEM_AVAILABLE = False
+if PROMPT_SYSTEM_AVAILABLE:
+    from infrastructure.llm.prompts.composer import PromptComposer
 
 _DEFAULT_REVIEW_SYSTEM_PROMPT = (
     "You are an expert academic manuscript reviewer with extensive experience in peer review"
@@ -320,6 +316,10 @@ _REVIEW_TYPE_VALIDATORS: dict[str, _ValidatorFn] = {
 
 
 def create_review_client(model_name: str) -> LLMClient:
+    """Build an LLMClient configured for manuscript review: review timeout, system prompt injected.
+
+    Side effect: reads LLM_LONG_MAX_TOKENS env var and logs the token limit source at DEBUG.
+    """
     base = OllamaClientConfig.from_env()
     config = base.with_overrides(
         default_model=model_name,
