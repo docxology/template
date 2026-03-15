@@ -4,6 +4,7 @@ Tests slides rendering functionality using real implementations.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
+import subprocess
 from pathlib import Path
 
 
@@ -38,7 +39,7 @@ class TestSlidesRendererClass:
             result = renderer.render(source, format="revealjs")
             # If successful, should return a path
             assert result is not None or isinstance(result, Path)
-        except Exception:
+        except (RenderingError, OSError, subprocess.SubprocessError):
             # Expected to fail if pandoc not available
             pass
 
@@ -56,7 +57,7 @@ class TestSlidesRendererClass:
             result = renderer.render(source, format="beamer")
             # If successful, should return a path
             assert result is not None or isinstance(result, Path)
-        except Exception:
+        except (RenderingError, OSError, subprocess.SubprocessError):
             # Expected to fail if LaTeX not available
             pass
 
@@ -77,7 +78,7 @@ class TestRevealJsRendering:
         try:
             result = renderer._render_revealjs(source, output)
             assert result == output or isinstance(result, Path)
-        except Exception:
+        except (RenderingError, OSError, subprocess.SubprocessError):
             # Expected to fail if pandoc not available
             pass
 
@@ -117,7 +118,7 @@ class TestBeamerRendering:
             result = renderer._render_beamer_with_paths(source, output, None, None)
             # If successful, should return a path
             assert result is not None or isinstance(result, Path)
-        except Exception:
+        except (RenderingError, OSError, subprocess.SubprocessError):
             # Expected to fail if dependencies not available
             pass
 
@@ -139,7 +140,7 @@ class TestBeamerRendering:
             result = renderer._render_beamer_with_paths(source, output, manuscript_dir, figures_dir)
             # If successful, should return a path
             assert result is not None or isinstance(result, Path)
-        except Exception:
+        except (RenderingError, OSError, subprocess.SubprocessError):
             # Expected to fail if dependencies not available
             pass
 
@@ -266,7 +267,7 @@ class TestBeamerRenderingAdditional:
             try:
                 result = slides_renderer.render_beamer(str(md))
                 assert result is not None or isinstance(result, Path)
-            except Exception:
+            except (RenderingError, OSError, subprocess.SubprocessError):
                 # Expected to fail if dependencies not available
                 pass
 
@@ -280,7 +281,7 @@ class TestBeamerRenderingAdditional:
             try:
                 result = slides_renderer.render_beamer(str(md), theme="Madrid")
                 assert result is not None or isinstance(result, Path)
-            except Exception:
+            except (RenderingError, OSError, subprocess.SubprocessError):
                 # Expected to fail if dependencies not available
                 pass
 
@@ -298,7 +299,7 @@ class TestRevealJsRenderingAdditional:
             try:
                 result = slides_renderer.render_revealjs(str(md))
                 assert result is not None or isinstance(result, Path)
-            except Exception:
+            except (RenderingError, OSError, subprocess.SubprocessError):
                 # Expected to fail if pandoc not available
                 pass
 
@@ -312,7 +313,7 @@ class TestRevealJsRenderingAdditional:
             try:
                 result = slides_renderer.render_revealjs(str(md), theme="moon")
                 assert result is not None or isinstance(result, Path)
-            except Exception:
+            except (RenderingError, OSError, subprocess.SubprocessError):
                 # Expected to fail if pandoc not available
                 pass
 
@@ -350,7 +351,7 @@ class TestSlideTemplates:
             try:
                 result = slides_renderer.apply_template(str(md), template="default")
                 assert result is not None
-            except Exception:
+            except (RenderingError, OSError, subprocess.SubprocessError):
                 # Expected to fail if function not available
                 pass
 

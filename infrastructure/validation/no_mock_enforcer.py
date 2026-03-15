@@ -70,7 +70,7 @@ def validate_no_mocks(tests_dir: Path, repo_root: Path) -> list[str]:
 
                     relative_path = py_file.relative_to(repo_root)
                     violations.append(f"{relative_path}:{line_num}: {line_str}")
-        except Exception as e:  # noqa: BLE001
+        except (OSError, UnicodeDecodeError) as e:
             logger.warning(f"Error reading {py_file}: {e}")
 
     return violations

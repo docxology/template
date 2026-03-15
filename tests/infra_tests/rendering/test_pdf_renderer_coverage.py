@@ -4,6 +4,7 @@ Tests PDF rendering functionality using real implementations.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
+import subprocess
 from pathlib import Path
 
 
@@ -37,7 +38,7 @@ class TestPDFRendererClass:
             result = renderer.render(tex_file)
             # If successful, should return a path
             assert result is not None or isinstance(result, Path)
-        except Exception:
+        except (RenderingError, OSError, subprocess.SubprocessError):
             # Expected to fail if LaTeX not available
             pass
 
@@ -55,7 +56,7 @@ class TestPDFRendererClass:
             result = renderer.render(md_file)
             # If successful, should return a path
             assert result is not None or isinstance(result, Path)
-        except Exception:
+        except (RenderingError, OSError, subprocess.SubprocessError):
             # Expected to fail if pandoc not available
             pass
 
@@ -98,7 +99,7 @@ class TestRenderMarkdown:
             result = renderer.render_markdown(md_file)
             # If successful, should return a path
             assert result is not None or isinstance(result, Path)
-        except Exception:
+        except (RenderingError, OSError, subprocess.SubprocessError):
             # Expected to fail if pandoc not available
             pass
 
@@ -134,7 +135,7 @@ class TestRenderMarkdown:
             result = renderer.render_markdown(md_file, output_name="custom.pdf")
             # If successful, should contain custom name
             assert "custom" in str(result) or True
-        except Exception:
+        except (RenderingError, OSError, subprocess.SubprocessError):
             # Expected to fail if pandoc not available
             pass
 
@@ -160,7 +161,7 @@ class TestBibliographyProcessing:
             result = renderer._process_bibliography(tex_file, tmp_path / "pdf", bib_file)
             # Should return boolean
             assert isinstance(result, bool)
-        except Exception:
+        except (RenderingError, OSError, subprocess.SubprocessError):
             # Expected to fail if bibtex not available or other errors
             pass
 
@@ -202,7 +203,7 @@ authors:
             result = renderer.render_combined(source_files, tmp_path / "manuscript")
             # If successful, should return a path
             assert result is not None or isinstance(result, Path)
-        except Exception:
+        except (RenderingError, OSError, subprocess.SubprocessError):
             # Expected to fail if pandoc/LaTeX not available
             pass
 
@@ -237,7 +238,7 @@ class TestPdfRendering:
             try:
                 result = pdf_renderer.render_pdf(str(tex))
                 assert result is not None or isinstance(result, Path)
-            except Exception:
+            except (RenderingError, OSError, subprocess.SubprocessError):
                 # Expected to fail if LaTeX not available
                 pass
 
@@ -251,7 +252,7 @@ class TestPdfRendering:
             try:
                 result = pdf_renderer.render_markdown_to_pdf(str(md))
                 assert result is not None or isinstance(result, Path)
-            except Exception:
+            except (RenderingError, OSError, subprocess.SubprocessError):
                 # Expected to fail if pandoc not available
                 pass
 
@@ -269,7 +270,7 @@ class TestLatexCompilation:
             try:
                 result = pdf_renderer.compile_latex(str(tex))
                 assert result is not None or isinstance(result, Path)
-            except Exception:
+            except (RenderingError, OSError, subprocess.SubprocessError):
                 # Expected to fail if LaTeX not available
                 pass
 
@@ -283,7 +284,7 @@ class TestLatexCompilation:
             try:
                 result = pdf_renderer.compile_latex(str(tex), passes=2)
                 assert result is not None or isinstance(result, Path)
-            except Exception:
+            except (RenderingError, OSError, subprocess.SubprocessError):
                 # Expected to fail if LaTeX not available
                 pass
 
@@ -307,7 +308,7 @@ class TestPandocIntegration:
             try:
                 result = pdf_renderer.pandoc_convert(str(md), "pdf")
                 assert result is not None or isinstance(result, Path)
-            except Exception:
+            except (RenderingError, OSError, subprocess.SubprocessError):
                 # Expected to fail if pandoc not available
                 pass
 
@@ -347,7 +348,7 @@ class TestRenderOptions:
             try:
                 result = pdf_renderer.render_pdf(str(tex), engine="xelatex")
                 assert result is not None or isinstance(result, Path)
-            except Exception:
+            except (RenderingError, OSError, subprocess.SubprocessError):
                 # Expected to fail if LaTeX not available
                 pass
 
