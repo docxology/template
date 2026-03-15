@@ -16,7 +16,7 @@ import pytest
 from infrastructure.scientific.benchmarking import (
     BenchmarkResult,
     benchmark_function,
-    generate_performance_report,
+    format_benchmark_report,
 )
 
 
@@ -197,11 +197,11 @@ class TestBenchmarkFunction:
 
 
 class TestGeneratePerformanceReport:
-    """Test generate_performance_report function."""
+    """Test format_benchmark_report function."""
 
     def test_generate_report_empty_results(self):
         """Test report generation with empty results list."""
-        report = generate_performance_report([])
+        report = format_benchmark_report([])
 
         assert report == "No benchmark results to analyze."
 
@@ -219,7 +219,7 @@ class TestGeneratePerformanceReport:
             )
         ]
 
-        report = generate_performance_report(results)
+        report = format_benchmark_report(results)
 
         assert "Performance Analysis Report" in report
         assert "Summary Statistics" in report
@@ -234,7 +234,7 @@ class TestGeneratePerformanceReport:
             BenchmarkResult("func3", 0.100, 50.0, 100, {}, "Slow", "2024-01-15 10:00:02"),
         ]
 
-        report = generate_performance_report(results)
+        report = format_benchmark_report(results)
 
         assert "func1" in report
         assert "func2" in report
@@ -253,7 +253,7 @@ class TestGeneratePerformanceReport:
             ),
         ]
 
-        report = generate_performance_report(results)
+        report = format_benchmark_report(results)
 
         assert "Performance Optimization" in report
         assert "Consider optimizing" in report
@@ -270,7 +270,7 @@ class TestGeneratePerformanceReport:
             ),
         ]
 
-        report = generate_performance_report(results)
+        report = format_benchmark_report(results)
 
         assert "Memory Optimization" in report
         assert "Review memory usage" in report
@@ -282,7 +282,7 @@ class TestGeneratePerformanceReport:
             BenchmarkResult("func2", 0.002, None, 100, {}, "No memory", "2024-01-15 10:00:01"),
         ]
 
-        report = generate_performance_report(results)
+        report = format_benchmark_report(results)
 
         assert "Performance Analysis Report" in report
         assert "N/A" in report  # Memory should show N/A
@@ -296,7 +296,7 @@ class TestGeneratePerformanceReport:
             BenchmarkResult("no_memory", 0.002, None, 100, {}, "No memory", "2024-01-15 10:00:01"),
         ]
 
-        report = generate_performance_report(results)
+        report = format_benchmark_report(results)
 
         assert "30.0" in report or "30" in report
         assert "N/A" in report
@@ -309,7 +309,7 @@ class TestGeneratePerformanceReport:
             )
         ]
 
-        report = generate_performance_report(results)
+        report = format_benchmark_report(results)
 
         assert "| Function |" in report
         assert "| Exec Time (s) |" in report
@@ -323,7 +323,7 @@ class TestGeneratePerformanceReport:
             BenchmarkResult("fast_func", 0.001, 10.0, 100, {}, "Fast", "2024-01-15 10:00:00")
         ]
 
-        report = generate_performance_report(results)
+        report = format_benchmark_report(results)
 
         assert "## Recommendations" in report
 
@@ -335,7 +335,7 @@ class TestGeneratePerformanceReport:
             BenchmarkResult("medium", 0.050, 10.0, 100, {}, "Medium", "2024-01-15 10:00:02"),
         ]
 
-        report = generate_performance_report(results)
+        report = format_benchmark_report(results)
 
         # Slow should appear before fast in the table
         slow_pos = report.find("`slow`")
@@ -349,7 +349,7 @@ class TestGeneratePerformanceReport:
             for i in range(5)
         ]
 
-        report = generate_performance_report(results)
+        report = format_benchmark_report(results)
 
         # Count "Consider optimizing" occurrences - should be at most 3
         optimize_count = report.count("Consider optimizing")
@@ -373,7 +373,7 @@ class TestBenchmarkIntegration:
             result = benchmark_function(func, [10.0, 50.0, 100.0], iterations=20)
             results.append(result)
 
-        report = generate_performance_report(results)
+        report = format_benchmark_report(results)
 
         assert "func1" in report
         assert "func2" in report

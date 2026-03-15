@@ -156,20 +156,7 @@ class RenderManager:
         return self.pdf_renderer.render_markdown(source_file)
 
     def render_pdf(self, source_file: Path) -> Path:
-        """Render a source file to PDF format.
-
-        Delegates to the PDFRenderer for actual rendering. Supports both LaTeX (.tex)
-        and Markdown (.md) source files.
-
-        Args:
-            source_file: Path to the source file to render. Must be a .tex or .md file.
-
-        Returns:
-            Path to the generated PDF file.
-
-        Raises:
-            RenderingError: If the source file format is unsupported or rendering fails.
-        """
+        """Render a .tex or .md source file to PDF."""
         return self.pdf_renderer.render(source_file)
 
     def render_slides(self, source_file: Path, output_format: str = "beamer") -> Path:
@@ -182,20 +169,7 @@ class RenderManager:
         )
 
     def render_web(self, source_file: Path) -> Path:
-        """Render a source file to HTML web format.
-
-        Delegates to the WebRenderer for actual rendering. Converts Markdown files
-        to standalone HTML pages suitable for web viewing.
-
-        Args:
-            source_file: Path to the Markdown source file to render.
-
-        Returns:
-            Path to the generated HTML file.
-
-        Raises:
-            RenderingError: If the source file cannot be read or rendering fails.
-        """
+        """Render a Markdown source file to standalone HTML."""
         return self.web_renderer.render(source_file)
 
     def render_combined_pdf(

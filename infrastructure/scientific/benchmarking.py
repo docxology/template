@@ -112,15 +112,8 @@ def benchmark_function(
     )
 
 
-def generate_performance_report(benchmark_results: list[BenchmarkResult]) -> str:
-    """Generate a performance analysis report.
-
-    Args:
-        benchmark_results: List of benchmark results to analyze
-
-    Returns:
-        Markdown formatted performance report
-    """
+def format_benchmark_report(benchmark_results: list[BenchmarkResult]) -> str:
+    """Format a Markdown performance analysis report from benchmark results."""
     if not benchmark_results:
         return "No benchmark results to analyze."
 
@@ -178,3 +171,7 @@ def generate_performance_report(benchmark_results: list[BenchmarkResult]) -> str
     report.append("")
 
     return "\n".join(report)
+
+
+# Deprecated alias — use format_benchmark_report instead
+generate_performance_report = format_benchmark_report

@@ -723,22 +723,7 @@ class LLMClient:
         log_progress: bool = True,
         retries: int = 1,
     ) -> Iterator[str]:
-        """Stream a short response with comprehensive logging.
-
-        Delegates to :func:`infrastructure.llm.core._client_streaming.stream_short_impl`.
-
-        Args:
-            prompt: User prompt
-            model: Model to use
-            options: Additional options
-            save_response: Whether to save response to file
-            save_path: Path to save response
-            log_progress: Whether to log streaming progress
-            retries: Number of retry attempts on failure
-
-        Yields:
-            Response chunks
-        """
+        """Stream a short (≤150 word) response, binding client config/context."""
         from infrastructure.llm.core._streaming_shortcuts import stream_short_impl
 
         yield from stream_short_impl(
@@ -764,22 +749,7 @@ class LLMClient:
         log_progress: bool = True,
         retries: int = 1,
     ) -> Iterator[str]:
-        """Stream a comprehensive response with detailed logging.
-
-        Delegates to :func:`infrastructure.llm.core._client_streaming.stream_long_impl`.
-
-        Args:
-            prompt: User prompt
-            model: Model to use
-            options: Additional options
-            save_response: Whether to save response to file
-            save_path: Path to save response
-            log_progress: Whether to log streaming progress
-            retries: Number of retry attempts on failure
-
-        Yields:
-            Response chunks
-        """
+        """Stream a comprehensive long response, binding client config/context."""
         from infrastructure.llm.core._streaming_shortcuts import stream_long_impl
 
         yield from stream_long_impl(
