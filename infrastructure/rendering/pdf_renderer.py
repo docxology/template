@@ -56,7 +56,7 @@ def _parse_missing_package_error(log_file: Path) -> str | None:
             package_name = sty_file.replace(".sty", "")
             return package_name
 
-    except (OSError, UnicodeDecodeError) as e:  # noqa: BLE001 — optional log inspection; return None on failure
+    except OSError as e:  # optional log inspection; UnicodeDecodeError is pre-empted by errors="ignore"
         logger.debug(f"Error parsing log file for package errors: {e}")
 
     return None
