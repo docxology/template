@@ -121,7 +121,7 @@ class OllamaClientConfig:
     # Override with OLLAMA_MODEL env var for quality reviews
     default_model: str = "gemma3:4b"  # Reliable default with predictable name
     fallback_models: list[str] = field(
-        default_factory=lambda: ["gemma2:2b", "gemma3:4b", "mistral"]
+        default_factory=lambda: ["gemma2:2b", "mistral"]
     )
 
     # Generation settings

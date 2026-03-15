@@ -21,11 +21,8 @@ _T = TypeVar("_T")
 
 try:
     import requests
-except ImportError as _requests_import_error:
-    raise ImportError(
-        "The 'requests' package is required for LLM connectivity. "
-        "Install it with: pip install requests"
-    ) from _requests_import_error
+except ImportError:
+    requests = None  # type: ignore[assignment]
 
 from infrastructure.core.exceptions import LLMConnectionError, LLMError
 from infrastructure.core.logging_utils import get_logger
@@ -85,6 +82,11 @@ class LLMClient:
         Args:
             config: OllamaClientConfig instance. If None, loads from environment.
         """
+        if requests is None:
+            raise ImportError(
+                "The 'requests' package is required for LLM connectivity. "
+                "Install it with: pip install requests"
+            )
         self.config = config or OllamaClientConfig.from_env()
         self.context = ConversationContext(max_tokens=self.config.context_window)
         self._system_prompt_injected = False

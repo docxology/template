@@ -6,9 +6,9 @@ Import from here instead of duplicating the try/except block.
 
 from __future__ import annotations
 
-import logging
+from infrastructure.core.logging_utils import get_logger
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 try:
     from infrastructure.llm.prompts.composer import PromptComposer  # noqa: F401

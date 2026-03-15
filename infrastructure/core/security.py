@@ -29,6 +29,36 @@ logger = get_logger(__name__)
 class SecurityValidator:
     """Comprehensive input validation and security checks."""
 
+    # Dangerous patterns to block — class-level constant, built once at class definition.
+    # \b anchors prevent substring false-positives (e.g. "hexec" won't match "exec").
+    # \s* between identifier and ( catches evasion via whitespace (e.g. "exec (").
+    _DANGEROUS_PATTERNS: list[str] = [
+        # System prompt injection — exact injected phrases
+        r"(?i)system\s*prompt\s*[:=]",
+        r"(?i)\bignore\s+previous\s+instructions\b",
+        r"(?i)\boverride\s+system\s+prompt\b",
+        r"(?i)change\s+your\s+persona",
+        # Python code execution — built-ins and subprocess (\b anchors to identifier boundary)
+        r"(?i)\bexec\s*\(|\beval\s*\(|\bsubprocess\.\w|\bos\.system\s*\(",
+        r"(?i)\bimport\s+os\b|\bimport\s+subprocess\b",
+        r"(?i)shell\s*[:=]|bash\s*[:=]|cmd\s*[:=]",
+        # File system access — open/file builtins and path libraries
+        r"(?i)\bopen\s*\(|\bfile\s*\(|\bpathlib\.\w|\bos\.path\.\w",
+        r"(?i)\bread\s+file\b|\bwrite\s+file\b|\bdelete\s+file\b",
+        # Network access — library prefixes (\b prevents partial matches like "urllib2")
+        r"(?i)\brequests\.\w|\burllib\.\w|\bsocket\.\w|\bhttps?://",
+        r"(?i)connect\s+to|download\s+from|upload\s+to",
+        # SQL injection — DML/DDL keywords (\b on both sides reduces false positives)
+        r"(?i)\b(select|insert|update|delete|drop|create)\b\s+.*\bfrom\b",
+        r"(?i)union\s+select|information_schema",
+        # XSS — HTML injection tags ([\s>/] prevents matching "<scripted" etc.)
+        r"(?i)<script[\s>/]|<iframe[\s>/]|<object[\s>/]|<embed[\s>/]",
+        r"(?i)\bon\w+\s*=|javascript:|vbscript:",
+        # LaTeX injection — commands that read/write files or include external content
+        r"\\input\s*\{|\\include\s*\{|\\usepackage\s*[\[{]|\\newcommand\s*\{",
+        r"\\write\s*\d|\\read\s*\d|\\openout\s*\d|\\openin\s*\d",
+    ]
+
     def __init__(self) -> None:
         # Maximum sizes for different input types
         self.limits = {
@@ -37,36 +67,7 @@ class SecurityValidator:
             "path_length": 4096,  # Max path length
             "content_size": 50 * 1024 * 1024,  # 50MB max content size
         }
-
-        # Dangerous patterns to block.
-        # \b anchors prevent substring false-positives (e.g. "hexec" won't match "exec").
-        # \s* between identifier and ( catches evasion via whitespace (e.g. "exec (").
-        self.dangerous_patterns = [
-            # System prompt injection — exact injected phrases
-            r"(?i)system\s*prompt\s*[:=]",
-            r"(?i)\bignore\s+previous\s+instructions\b",
-            r"(?i)\boverride\s+system\s+prompt\b",
-            r"(?i)change\s+your\s+persona",
-            # Python code execution — built-ins and subprocess (\b anchors to identifier boundary)
-            r"(?i)\bexec\s*\(|\beval\s*\(|\bsubprocess\.\w|\bos\.system\s*\(",
-            r"(?i)\bimport\s+os\b|\bimport\s+subprocess\b",
-            r"(?i)shell\s*[:=]|bash\s*[:=]|cmd\s*[:=]",
-            # File system access — open/file builtins and path libraries
-            r"(?i)\bopen\s*\(|\bfile\s*\(|\bpathlib\.\w|\bos\.path\.\w",
-            r"(?i)\bread\s+file\b|\bwrite\s+file\b|\bdelete\s+file\b",
-            # Network access — library prefixes (\b prevents partial matches like "urllib2")
-            r"(?i)\brequests\.\w|\burllib\.\w|\bsocket\.\w|\bhttps?://",
-            r"(?i)connect\s+to|download\s+from|upload\s+to",
-            # SQL injection — DML/DDL keywords (\b on both sides reduces false positives)
-            r"(?i)\b(select|insert|update|delete|drop|create)\b\s+.*\bfrom\b",
-            r"(?i)union\s+select|information_schema",
-            # XSS — HTML injection tags ([\s>/] prevents matching "<scripted" etc.)
-            r"(?i)<script[\s>/]|<iframe[\s>/]|<object[\s>/]|<embed[\s>/]",
-            r"(?i)\bon\w+\s*=|javascript:|vbscript:",
-            # LaTeX injection — commands that read/write files or include external content
-            r"\\input\s*\{|\\include\s*\{|\\usepackage\s*[\[{]|\\newcommand\s*\{",
-            r"\\write\s*\d|\\read\s*\d|\\openout\s*\d|\\openin\s*\d",
-        ]
+        self.dangerous_patterns = self._DANGEROUS_PATTERNS
 
     def validate_llm_input(self, prompt: str, context: dict[str, Any] | None = None) -> str:
         """Validate and sanitize LLM input.

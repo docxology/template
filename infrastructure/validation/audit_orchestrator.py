@@ -52,11 +52,11 @@ def run_comprehensive_audit(
     """Run audit across all validation modules and return categorized scan results."""
     start_time = time.time()
 
-    logger.info("🔍 Starting filepath and reference audit...")
+    logger.info("Starting filepath and reference audit...")
 
     # Phase 1: Discovery
     md_files = discover_markdown_files(repo_root)
-    logger.info(f"📁 Found {len(md_files)} markdown files to audit")
+    logger.info(f"Found {len(md_files)} markdown files to audit")
 
     # Get project categorization
     doc_categories = categorize_documentation(md_files, repo_root)
@@ -78,7 +78,7 @@ def run_comprehensive_audit(
     # Process each file
     for i, md_file in enumerate(md_files):
         if verbose and (i + 1) % 10 == 0:
-            logger.info(f"🔄 Processed {i + 1}/{len(md_files)} files...")
+            logger.info(f"Processed {i + 1}/{len(md_files)} files...")
 
         content = file_contents.get(md_file)
         if content is None:
@@ -131,9 +131,9 @@ def run_comprehensive_audit(
     scan_results.scan_duration = time.time() - start_time
     _populate_statistics(scan_results)
 
-    logger.info(f"✅ Audit completed in {scan_results.scan_duration:.2f}s")
+    logger.info(f"Audit completed in {scan_results.scan_duration:.2f}s")
     logger.info(
-        f"📊 Found {len(scan_results.link_issues) + len(scan_results.accuracy_issues) + len(scan_results.quality_issues)} total issues"  # noqa: E501
+        f"Found {len(scan_results.link_issues) + len(scan_results.accuracy_issues) + len(scan_results.quality_issues)} total issues"  # noqa: E501
     )
 
     return scan_results
