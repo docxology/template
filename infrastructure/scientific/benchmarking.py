@@ -172,6 +172,3 @@ def format_benchmark_report(benchmark_results: list[BenchmarkResult]) -> str:
 
     return "\n".join(report)
 
-
-# Deprecated alias — use format_benchmark_report instead
-generate_performance_report = format_benchmark_report

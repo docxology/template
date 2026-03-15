@@ -163,7 +163,7 @@ def generate_multi_project_summary_report(
         try:
             _tmp.write_text(json.dumps(summary, indent=2))
             _tmp.replace(json_file)
-        except Exception:
+        except OSError:
             _tmp.unlink(missing_ok=True)
             raise
         saved_files["json"] = json_file
@@ -178,7 +178,7 @@ def generate_multi_project_summary_report(
         try:
             _tmp.write_text(_format_multi_project_summary_markdown(summary))
             _tmp.replace(md_file)
-        except Exception:
+        except OSError:
             _tmp.unlink(missing_ok=True)
             raise
         saved_files["markdown"] = md_file
